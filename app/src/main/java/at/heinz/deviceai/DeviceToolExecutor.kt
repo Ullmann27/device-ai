@@ -161,12 +161,12 @@ class DeviceToolExecutor(
 
             "take_screenshot" ->
                 "out=/sdcard/Download/device-ai-$(date +%Y%m%d-%H%M%S).png; " +
-                    "screencap -p \"\\$out\" && echo \"Gespeichert: \\$out\""
+                    "screencap -p \"\$out\" && echo \"Gespeichert: \$out\""
 
             "record_screen" -> {
                 val seconds = intArg(call, "seconds", 15).coerceIn(5, 60)
                 "out=/sdcard/Download/device-ai-recording-$(date +%Y%m%d-%H%M%S).mp4; " +
-                    "screenrecord --time-limit $seconds \"\\$out\"; echo \"Gespeichert: \\$out\""
+                    "screenrecord --time-limit $seconds \"\$out\"; echo \"Gespeichert: \$out\""
             }
 
             "open_android_settings" -> {
