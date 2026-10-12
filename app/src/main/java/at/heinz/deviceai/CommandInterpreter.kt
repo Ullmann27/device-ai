@@ -50,14 +50,14 @@ class CommandInterpreter(private val context: Context) {
             lower.contains("screenshot") || lower.contains("bildschirmfoto") ->
                 CommandPlan(
                     "Screenshot",
-                    "out=/sdcard/Download/device-ai-$(date +%Y%m%d-%H%M%S).png; screencap -p \"$out\" && echo \"Gespeichert: $out\""
+                    "out=/sdcard/Download/device-ai-$(date +%Y%m%d-%H%M%S).png; screencap -p \"\$out\" && echo \"Gespeichert: \$out\""
                 )
 
             lower.contains("installiere") && lower.contains("apk") ->
                 CommandPlan(
                     "Neueste APK installieren",
                     "apk=$(ls -t /sdcard/Download/*.apk 2>/dev/null | head -n 1); " +
-                        "if [ -n \"$apk\" ]; then echo \"Installiere: $apk\"; pm install -r \"$apk\"; " +
+                        "if [ -n \"\$apk\" ]; then echo \"Installiere: \$apk\"; pm install -r \"\$apk\"; " +
                         "else echo \"Keine APK direkt im Download-Ordner gefunden.\"; fi",
                     needsConfirmation = true
                 )
