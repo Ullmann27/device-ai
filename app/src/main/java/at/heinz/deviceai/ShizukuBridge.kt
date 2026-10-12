@@ -19,6 +19,7 @@ class ShizukuBridge(
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var shell: IDeviceShell? = null
+    private var listenersRegistered = false
 
     private val binderReceived = Shizuku.OnBinderReceivedListener {
         onStatus("Shizuku-Dienst gefunden")
@@ -62,11 +63,22 @@ class ShizukuBridge(
     }
 
     fun start() {
-        Shizuku.addBinderReceivedListener(binderReceived)
-        Shizuku.addBinderDeadListener(binderDead)
-        Shizuku.addRequestPermissionResultListener(permissionResult)
+        if (!listenersRegistered) {
+            Shizuku.addBinderReceivedListener(binderReceived)
+            Shizuku.addBinderDeadListener(binderDead)
+            Shizuku.addRequestPermissionResultListener(permissionResult)
+            listenersRegistered = true
+        }
+        refresh()
+    }
 
-        if (runCatching { Shizuku.pingBinder() }.getOrDefault(false)) {
+    fun refresh() {
+        if (isReady()) {
+            onStatus("Bereit · Shell UID über Shizuku")
+            return
+        }
+
+        if (isShizukuRunning()) {
             ensurePermissionAndBind()
         } else {
             onStatus("Shizuku ist noch nicht gestartet")
@@ -74,9 +86,12 @@ class ShizukuBridge(
     }
 
     fun stop() {
-        runCatching { Shizuku.removeBinderReceivedListener(binderReceived) }
-        runCatching { Shizuku.removeBinderDeadListener(binderDead) }
-        runCatching { Shizuku.removeRequestPermissionResultListener(permissionResult) }
+        if (listenersRegistered) {
+            runCatching { Shizuku.removeBinderReceivedListener(binderReceived) }
+            runCatching { Shizuku.removeBinderDeadListener(binderDead) }
+            runCatching { Shizuku.removeRequestPermissionResultListener(permissionResult) }
+            listenersRegistered = false
+        }
         runCatching { Shizuku.unbindUserService(userServiceArgs, connection, false) }
     }
 
@@ -84,12 +99,16 @@ class ShizukuBridge(
         ensurePermissionAndBind(forceRequest = true)
     }
 
-    fun isReady(): Boolean = shell?.asBinder()?.pingBinder() == true
+    fun isShizukuRunning(): Boolean =
+        runCatching { Shizuku.pingBinder() }.getOrDefault(false)
+
+    fun isReady(): Boolean =
+        shell?.asBinder()?.pingBinder() == true
 
     fun execute(command: String, callback: (String) -> Unit) {
         val service = shell
         if (service == null) {
-            callback("Noch nicht verbunden. Starte Shizuku und tippe auf „Shizuku verbinden“.")
+            callback("Noch nicht verbunden. Starte Shizuku und verbinde Device AI.")
             return
         }
 
@@ -121,9 +140,15 @@ class ShizukuBridge(
     }
 
     private fun bindShellService() {
-        if (isReady()) return
+        if (isReady()) {
+            onStatus("Bereit · Shell UID über Shizuku")
+            return
+        }
+
         onStatus("Verbinde Shell-Dienst …")
         runCatching { Shizuku.bindUserService(userServiceArgs, connection) }
-            .onFailure { onStatus("Verbindung fehlgeschlagen: ${it.message ?: it.javaClass.simpleName}") }
+            .onFailure {
+                onStatus("Verbindung fehlgeschlagen: ${it.message ?: it.javaClass.simpleName}")
+            }
     }
 }
