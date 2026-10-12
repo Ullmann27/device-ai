@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: device-ai-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DEVICE_AI_TOKEN
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-6-luna
+      - key: WEB_SEARCH_ENABLED
+        value: "true"
