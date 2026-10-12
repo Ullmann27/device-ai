@@ -18,7 +18,7 @@ object ToolRegistry {
         ToolSpec("get_app_info", "App-Info lesen", "Liest Paket- und Versionsinformationen.", Risk.READ_ONLY, required = setOf("packageOrName")),
         ToolSpec("list_processes", "Prozesse prüfen", "Liest aktive Prozesse und CPU-Nutzung.", Risk.READ_ONLY),
         ToolSpec("read_logcat", "Logcat analysieren", "Liest aktuelle Android-Logs.", Risk.READ_ONLY, optional = setOf("packageOrName", "lines")),
-        ToolSpec("launch_app", "App starten", "Startet eine installierte App.", Risk.READ_ONLY, required = setOf("packageOrName")),
+        ToolSpec("launch_app", "App starten", "Startet eine installierte App.", Risk.CONFIRM, required = setOf("packageOrName")),
         ToolSpec("stop_app", "App stoppen", "Stoppt eine laufende App.", Risk.CONFIRM, required = setOf("packageOrName")),
         ToolSpec("restart_app", "App neu starten", "Stoppt und startet eine App.", Risk.CONFIRM, required = setOf("packageOrName")),
         ToolSpec("install_apk", "APK installieren", "Installiert eine lokale APK aus gemeinsamem Speicher.", Risk.CONFIRM, required = setOf("path")),
@@ -29,7 +29,7 @@ object ToolRegistry {
         ToolSpec("get_large_files", "Große Dateien finden", "Findet große Dateien in freigegebenen Ordnern.", Risk.READ_ONLY, optional = setOf("roots", "limit")),
         ToolSpec("move_file", "Datei verschieben", "Verschiebt eine Datei innerhalb des freigegebenen Speichers.", Risk.CONFIRM, required = setOf("source", "destination")),
         ToolSpec("delete_file", "Datei löschen", "Löscht eine Datei im freigegebenen Speicher.", Risk.DESTRUCTIVE, required = setOf("path")),
-        ToolSpec("take_screenshot", "Screenshot erstellen", "Erstellt auf ausdrücklichen Nutzerauftrag einen Screenshot.", Risk.READ_ONLY),
+        ToolSpec("take_screenshot", "Screenshot erstellen", "Erstellt auf ausdrücklichen Nutzerauftrag einen Screenshot.", Risk.CONFIRM),
         ToolSpec("record_screen", "Bildschirm aufnehmen", "Nimmt den Bildschirm für eine begrenzte Zeit auf.", Risk.CONFIRM, optional = setOf("seconds")),
         ToolSpec("open_android_settings", "Android-Einstellungen öffnen", "Öffnet eine Android-Einstellungsseite.", Risk.CONFIRM, required = setOf("page")),
         ToolSpec("get_network_summary", "Netzwerk prüfen", "Liest eine kompakte Netzwerkübersicht.", Risk.READ_ONLY)

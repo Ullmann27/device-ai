@@ -1,0 +1,335 @@
+package at.heinz.deviceai
+
+import java.util.concurrent.Callable
+import java.util.concurrent.CancellationException
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+
+data class ToolProposal(val toolName: String, val arguments: Map<String, Any?>) {
+    fun validate(): String? {
+        if (toolName.equals("shell", true) || toolName.equals("run_shell", true)) {
+            return "Raw shell proposals are not supported."
+        }
+        if (arguments.keys.any { it.equals("command", true) || it.equals("shell", true) || it.equals("script", true) }) {
+            return "Command-like arguments are not supported."
+        }
+        if (arguments.size > 16 || arguments.any { (key, value) ->
+                !key.matches(Regex("[A-Za-z][A-Za-z0-9_]{0,63}")) ||
+                    !isStructuredValue(value) || !validArgumentType(toolName, key, value)
+            }) return "Tool arguments must match a bounded registered-tool schema."
+        return ToolRegistry.validate(ToolCallRequest("proposal", toolName, arguments))
+    }
+
+    private fun isStructuredValue(value: Any?): Boolean = when (value) {
+        null, is Boolean -> true
+        is Number -> value.toDouble().isFinite() && value.toDouble() % 1.0 == 0.0
+        is String -> value.length <= 4_096
+        is List<*> -> value.size <= 100 && value.all { it is String && isStructuredValue(it) }
+        else -> false
+    }
+
+    private fun validArgumentType(name: String, key: String, value: Any?): Boolean = when (key) {
+        "lines", "limit", "seconds" -> value is Number || value is String && value.toIntOrNull() != null
+        "userOnly" -> value is Boolean || value is String &&
+            (value.equals("true", true) || value.equals("false", true))
+        "roots" -> (name == "find_files" || name == "get_large_files") &&
+            (value is String || value is List<*> && value.all { it is String })
+        else -> value is String
+    }
+
+    fun invocation(callId: String): ToolInvocation {
+        require(validate() == null) { validate() ?: "Invalid tool proposal." }
+        return ToolInvocation(callId, ToolCallRequest(callId, toolName, arguments))
+    }
+}
+
+data class ToolInvocation(val id: String, val request: ToolCallRequest) {
+    init {
+        require(id.isNotBlank() && id.length <= 128 && request.callId == id)
+    }
+}
+
+enum class ToolExecutionStatus { SUCCEEDED, REJECTED, FAILED, TIMED_OUT, CANCELLED }
+
+data class ToolExecutionRecord(
+    val callId: String,
+    val toolName: String,
+    val risk: Risk?,
+    val sanitizedArguments: Map<String, Any?>,
+    val decisionReason: String,
+    val status: ToolExecutionStatus,
+    val elapsedMillis: Long,
+    val outputLength: Int = 0
+)
+
+data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord)
+
+data class ToolPolicy(
+    val readOnlyEnabled: Boolean = false,
+    val destructiveEnabled: Boolean = false,
+    val maxCalls: Int = 4,
+    val timeoutMillis: Long = 10_000,
+    val maxOutputCharacters: Int = 8_000
+) {
+    init {
+        require(maxCalls in 0..64 && timeoutMillis in 1..120_000 && maxOutputCharacters in 1..60_000)
+    }
+}
+
+fun interface ToolRunner {
+    fun execute(request: ToolCallRequest): String
+}
+
+class ToolGate(
+    private val policy: ToolPolicy,
+    private val runner: ToolRunner,
+    private val clock: () -> Long = System::nanoTime
+) {
+    private val calls = AtomicInteger()
+    private val cancelled = AtomicBoolean()
+    private val activeFutures = ConcurrentHashMap.newKeySet<Future<String>>()
+
+    fun cancel() {
+        cancelled.set(true)
+        activeFutures.forEach { it.cancel(true) }
+    }
+
+    fun execute(
+        invocation: ToolInvocation,
+        userConfirmed: Boolean = false,
+        destructiveConfirmed: Boolean = false
+    ): ToolExecutionResult {
+        val request = invocation.request
+        val spec = ToolRegistry.get(request.name)
+        val start = clock()
+        fun result(status: ToolExecutionStatus, reason: String, output: String? = null): ToolExecutionResult {
+            val elapsed = ((clock() - start).coerceAtLeast(0) / 1_000_000)
+            return ToolExecutionResult(
+                output,
+                ToolExecutionRecord(
+                    request.callId, request.name, spec?.risk, sanitizeArguments(request.arguments),
+                    reason, status, elapsed, output?.length ?: 0
+                )
+            )
+        }
+
+        if (cancelled.get()) return result(ToolExecutionStatus.CANCELLED, "Task cancelled.")
+        val validation = ToolProposal(request.name, request.arguments).validate()
+        if (validation != null) return result(ToolExecutionStatus.REJECTED, validation)
+        when (spec!!.risk) {
+            Risk.READ_ONLY -> if (!policy.readOnlyEnabled) {
+                return result(ToolExecutionStatus.REJECTED, "Read-only tools are disabled by operator policy.")
+            }
+            Risk.CONFIRM -> if (!userConfirmed) {
+                return result(ToolExecutionStatus.REJECTED, "Explicit user confirmation is required.")
+            }
+            Risk.DESTRUCTIVE -> {
+                if (!policy.destructiveEnabled || !userConfirmed || !destructiveConfirmed) {
+                    return result(ToolExecutionStatus.REJECTED, "Destructive policy and explicit strong confirmation are required.")
+                }
+            }
+        }
+
+        val reservedCall = calls.getAndIncrement()
+        if (reservedCall >= policy.maxCalls) {
+            calls.decrementAndGet()
+            return result(ToolExecutionStatus.REJECTED, "Tool-call budget exhausted.")
+        }
+        val executor = Executors.newSingleThreadExecutor { runnable ->
+            Thread(runnable, "device-ai-tool").apply { isDaemon = true }
+        }
+        return try {
+            val future = executor.submit(Callable { runner.execute(request) })
+            activeFutures += future
+            if (cancelled.get()) future.cancel(true)
+            val output = try {
+                future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
+            } catch (_: TimeoutException) {
+                future.cancel(true)
+                return result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
+            }
+            if (cancelled.get()) {
+                result(ToolExecutionStatus.CANCELLED, "Task cancelled.", output.take(policy.maxOutputCharacters))
+            } else {
+                val limited = output.take(policy.maxOutputCharacters)
+                result(ToolExecutionStatus.SUCCEEDED, "Allowed by tool policy.", limited)
+            }
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            result(ToolExecutionStatus.CANCELLED, "Tool execution interrupted.")
+        } catch (_: CancellationException) {
+            result(ToolExecutionStatus.CANCELLED, "Tool execution cancelled.")
+        } catch (_: Exception) {
+            result(ToolExecutionStatus.FAILED, "Tool execution failed.")
+        } finally {
+            activeFutures.removeIf { it.isDone }
+            executor.shutdownNow()
+        }
+    }
+
+    private fun sanitizeArguments(arguments: Map<String, Any?>): Map<String, Any?> =
+        arguments.mapValues { (key, value) ->
+            if (key.contains(Regex("password|token|secret|credential|authorization", RegexOption.IGNORE_CASE))) {
+                "[REDACTED]"
+            } else {
+                when (value) {
+                    is String -> "[STRING ${value.length.coerceAtMost(4_096)} chars]"
+                    is Number, is Boolean, null -> value
+                    is List<*> -> "[LIST ${value.size.coerceAtMost(100)} items]"
+                    else -> "[UNSUPPORTED]"
+                }
+            }
+        }
+}
+
+@JvmInline
+value class SkillId(val value: String) {
+    init { require(value.matches(Regex("[a-z][a-z0-9_.-]{1,63}"))) }
+}
+
+@JvmInline
+value class SkillVersion(val value: String) {
+    init { require(value.matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))) }
+}
+
+enum class SkillCapability { DEVICE_DIAGNOSTICS, APP_MANAGEMENT, FILE_READ, RESEARCH }
+enum class SkillSource { BUILT_IN, IMPORTED, USER }
+enum class SkillStatus { DISABLED, ENABLED }
+
+data class SkillDependency(val id: SkillId, val version: SkillVersion)
+
+data class Skill(
+    val id: SkillId,
+    val version: SkillVersion,
+    val name: String,
+    val description: String,
+    val capabilities: Set<SkillCapability>,
+    val dependencies: Set<SkillDependency> = emptySet(),
+    val source: SkillSource = SkillSource.BUILT_IN,
+    val status: SkillStatus = SkillStatus.DISABLED,
+    val toolNames: Set<String> = emptySet()
+) {
+    init {
+        require(name.isNotBlank() && description.isNotBlank())
+        require(toolNames.all { ToolRegistry.get(it) != null })
+    }
+}
+
+data class SkillKey(val id: SkillId, val version: SkillVersion)
+data class SkillAuditEvent(val action: String, val key: SkillKey)
+
+class SkillGraph {
+    private val skills = linkedMapOf<SkillKey, Skill>()
+    private val audit = mutableListOf<SkillAuditEvent>()
+
+    @Synchronized
+    fun install(skill: Skill) = installAll(listOf(skill))
+
+    @Synchronized
+    fun installAll(additions: Collection<Skill>) {
+        val combined = skills.toMutableMap()
+        additions.forEach { skill ->
+            val key = SkillKey(skill.id, skill.version)
+            require(key !in combined) { "Duplicate skill version: $key" }
+            combined[key] = skill.copy(status = SkillStatus.DISABLED)
+        }
+        combined.forEach { (key, skill) ->
+            skill.dependencies.forEach { dependency ->
+                require(SkillKey(dependency.id, dependency.version) in combined) {
+                    "Missing skill dependency: ${dependency.id}@${dependency.version}"
+                }
+            }
+            require(skill.dependencies.none { SkillKey(it.id, it.version) == key }) {
+                "A skill cannot depend on itself."
+            }
+        }
+        val visiting = mutableSetOf<SkillKey>()
+        val visited = mutableSetOf<SkillKey>()
+        fun visit(key: SkillKey) {
+            if (key in visiting) error("Skill dependency cycle detected.")
+            if (!visited.add(key)) return
+            visiting += key
+            combined.getValue(key).dependencies.forEach { visit(SkillKey(it.id, it.version)) }
+            visiting -= key
+        }
+        combined.keys.forEach(::visit)
+        skills.clear()
+        skills.putAll(combined)
+        additions.forEach { audit += SkillAuditEvent("installed", SkillKey(it.id, it.version)) }
+    }
+
+    @Synchronized
+    fun activate(key: SkillKey): Skill {
+        val skill = skills[key] ?: error("Unknown skill version.")
+        require(skill.dependencies.all { skills[SkillKey(it.id, it.version)]?.status == SkillStatus.ENABLED }) {
+            "All skill dependencies must be enabled first."
+        }
+        return skill.copy(status = SkillStatus.ENABLED).also {
+            skills[key] = it
+            audit += SkillAuditEvent("enabled", key)
+        }
+    }
+
+    @Synchronized
+    fun disable(key: SkillKey): Skill {
+        val skill = skills[key] ?: error("Unknown skill version.")
+        require(skills.values.none { it.status == SkillStatus.ENABLED && SkillDependency(key.id, key.version) in it.dependencies }) {
+            "Enabled dependents must be disabled first."
+        }
+        return skill.copy(status = SkillStatus.DISABLED).also {
+            skills[key] = it
+            audit += SkillAuditEvent("disabled", key)
+        }
+    }
+
+    @Synchronized fun get(key: SkillKey): Skill? = skills[key]
+    @Synchronized fun all(): List<Skill> = skills.values.sortedWith(compareBy({ it.id.value }, { it.version.value }))
+    @Synchronized fun auditTrail(): List<SkillAuditEvent> = audit.toList()
+}
+
+interface SkillImplementation {
+    val key: SkillKey
+    fun execute(arguments: Map<String, Map<String, Any?>>, gate: ToolGate): List<ToolExecutionResult>
+}
+
+class DeviceStatusSkillImplementation(
+    override val key: SkillKey = SkillKey(SkillId("device_status"), SkillVersion("1.0.0"))
+) : SkillImplementation {
+    override fun execute(
+        arguments: Map<String, Map<String, Any?>>,
+        gate: ToolGate
+    ): List<ToolExecutionResult> = listOf("get_device_info", "get_battery_info").mapIndexed { index, name ->
+        val proposal = ToolProposal(name, arguments[name].orEmpty())
+        require(proposal.validate() == null)
+        gate.execute(proposal.invocation("device-status-${index + 1}"))
+    }
+}
+
+object BuiltInSkills {
+    val deviceStatus = Skill(
+        id = SkillId("device_status"),
+        version = SkillVersion("1.0.0"),
+        name = "Device status",
+        description = "Reads basic device and battery information through registered read-only tools.",
+        capabilities = setOf(SkillCapability.DEVICE_DIAGNOSTICS),
+        toolNames = setOf("get_device_info", "get_battery_info")
+    )
+}
+
+class DeviceToolExecutorRunner(private val executor: DeviceToolExecutor) : ToolRunner {
+    override fun execute(request: ToolCallRequest): String {
+        val completed = java.util.concurrent.CountDownLatch(1)
+        var output: String? = null
+        executor.execute(request) {
+            output = it
+            completed.countDown()
+        }
+        completed.await()
+        return output.orEmpty()
+    }
+}
