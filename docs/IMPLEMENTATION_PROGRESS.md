@@ -1,6 +1,6 @@
 # Implementation Progress
 
-**Current phase:** Part 4 (bounded agent, tools and research), stacked on the Part 3 head.
+**Current phase:** Part 5 (local inference), continuing on the Part 4 stack above Part 3.
 Parts 1–2 are merged to `main`. This PR is not approved for merging.
 
 ## Status
@@ -16,7 +16,9 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 | Android Keystore EC signer | IMPLEMENTED |
 | Typed/versioned skills, dependency validation, activation and audit | IMPLEMENTED |
 | Registered-tool proposals, bounded argument validation and risk gate | IMPLEMENTED |
-| Confirmation UI / asynchronous cancellation of an active Shizuku shell process | PARTIAL |
+| Explicit confirmation contract and stronger destructive approval path | IMPLEMENTED |
+| Confirmation UI and operator-policy wiring | PLANNED |
+| Cancellation of an already-running Shizuku shell process | PARTIAL |
 | Bounded orchestration, memory retrieval, evaluated experience and model reputation update | IMPLEMENTED |
 | Allowlisted checkpoint codec and safe pre-tool resume | IMPLEMENTED |
 | Automatic process-death checkpoint persistence / exactly-once tool recovery | PLANNED |
@@ -26,7 +28,11 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 | Evaluated source trust update and MemoryWritePolicy research path | IMPLEMENTED |
 | Detailed source-trust/model-reputation evidence persistence | PLANNED |
 | Approval UI, MainActivity integration and production orchestration wiring | PLANNED |
-| LiteRT-LM runtime, model catalog/import and local inference | PLANNED |
+| SHA-256-verified `.litertlm` import/catalog and persisted capability manifest | IMPLEMENTED |
+| CPU LiteRT-LM load/unload, streaming, cancellation and usage metrics | IMPLEMENTED |
+| Registry-only structured tool proposals with automatic tool execution disabled | IMPLEMENTED |
+| Device/emulator inference using imported FunctionGemma model bytes | PARTIAL |
+| LiteRT-LM integration with MainActivity, SAF import UI and the Part 4 orchestrator | PLANNED |
 | llama.cpp fallback/benchmark runtime | PLANNED |
 
 ## Part 3 validation
@@ -46,16 +52,27 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 - Added `docs/AGENT_TOOLS_AND_RESEARCH.md`.
 - Upstream reference paths and license details are recorded there; implementation adapted
   patterns without direct source-code copying.
+- The Part 4 workflow run `38297272299` ended `action_required` with zero jobs and no failed
+  job logs. This is an external workflow-approval gate, not an observed compile/test failure.
+
+## Part 5 changes
+- Added `app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt` and
+  `LiteRtLmLocalModelRuntime.kt`.
+- Added the pinned-version dependency `com.google.ai.edge.litertlm:litertlm-android:0.18.0`.
+- Added `LocalModelCatalogTest.kt` for hash, size, metadata, version and capability validation.
+- Function-call schemas are derived only from registered `ToolSpec` entries; calls are emitted
+  as typed proposals and never automatically dispatched by LiteRT-LM.
 
 ## Validation and limitations
-- Kotlin 2.4.20 standalone compilation of the cognitive/agent production sources against
-  Android 36 stubs passed after initial compiler findings were repaired.
-- All 64 available root and cognitive JVM tests passed using the repository's JUnit 4.13.2
-  dependency; the standalone source compilation uses a stub for the Android-bound executor
-  bridge, so it does not replace the Android Gradle build.
+- Kotlin 2.4.20 standalone compilation of cognitive, agent, research and local-model production
+  sources passed against Android 36 and LiteRT-LM API-shape stubs. This checks Kotlin source
+  consistency but does not verify the downloaded `0.18.0` AAR's binary compatibility.
+- All 66 available root, cognitive and local-model-catalog JVM tests passed using JUnit 4.13.2.
+  Standalone production compilation uses stubs for the Android-bound executor and LiteRT-LM
+  library, so it does not replace the Android Gradle build.
 - Local `gradle :app:testDebugUnitTest :app:assembleDebug` could not resolve Android Gradle
   Plugin 8.10.0 in this sandbox; no `gradlew` is checked in. Full Part 4 validation must use
-  the PR branch Android workflow.
+  the PR branch Android workflow, which currently ends `action_required` before creating jobs.
 - Keystore instrumentation cannot be executed in this sandbox. The JVM signer contract tests
   are not a claim of a device-backed Keystore run.
 - Checkpoints are not automatically persisted and resume is prohibited after tool execution.
@@ -66,7 +83,14 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 - Research claim comparison is a deterministic baseline, not a semantic evaluator or a
   substitute for independent expert verification. No live-network endpoint was exercised by
   the deterministic tests.
+- LiteRT-LM `0.18.0` passed the dependency advisory check. This environment could not resolve
+  Google Maven to download the AAR; native Android build validation must therefore come from
+  GitHub Actions after the workflow approval gate is cleared.
+- The catalog supports local byte import only; no model weights are bundled or downloaded.
+  FunctionGemma mobile-optimized 270M is the documented small-model path and remains subject
+  to its separate Gemma terms. No real model bytes or on-device inference run are claimed.
 
 ## Next
-Complete Part 4 Android CI and review findings. Then implement the real LiteRT-LM local
-runtime, model lifecycle/import and streaming path on this branch before any merge request.
+Clear the Android workflow approval gate, validate the Part 4/5 sources in Android CI, and
+connect the runtime to the existing chat/agent orchestration only after device-level inference
+and explicit user confirmation are available.

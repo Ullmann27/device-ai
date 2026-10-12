@@ -26,6 +26,18 @@ class ResearchTest {
             HttpReadOnlyResearchProvider.ResearchUrlValidator.validate(URI("https://192.168.1.1/"))
         }
         assertThrows(IllegalArgumentException::class.java) {
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validate(URI("https://203.0.113.10/"))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validate(URI("https://[::1]/"))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validate(URI("https://[2001:1::1]/"))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            ResearchProviderPolicy(totalTimeoutMillis = 0)
+        }
+        assertThrows(IllegalArgumentException::class.java) {
             HttpReadOnlyResearchProvider.ResearchUrlValidator.validate(URI("https://router.home.arpa/"))
         }
         assertThrows(IllegalArgumentException::class.java) {

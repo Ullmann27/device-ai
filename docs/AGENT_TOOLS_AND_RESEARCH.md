@@ -46,7 +46,8 @@ They are not connected to `MainActivity`, the cloud backend, or an autonomous UI
 - `ResearchProvider` is provider-neutral; the simulated implementation supports deterministic
   tests. `HttpReadOnlyResearchProvider` uses HTTPS GET only, rejects non-HTTPS schemes,
   credentials, nonstandard ports, private/reserved/local DNS targets, unsafe redirect targets,
-  unsupported MIME types, and oversized responses. Redirects are revalidated manually.
+  unsupported MIME types, and oversized responses. Connections are pinned to validated public
+  addresses and redirects are revalidated manually.
 - Research documents carry URL, retrieval time, content hash, MIME type, source identity,
   bounded extracted content, and citations. `BaselineClaimExtractor` is deterministic;
   `ClaimExtractor` is the extension point for a future model-assisted extractor.
@@ -55,16 +56,30 @@ They are not connected to `MainActivity`, the cloud backend, or an autonomous UI
   Research memory writes pass through Part 3 `MemoryWritePolicy`; source trust changes only
   through an explicit evaluated observation.
 
-### Signing and remaining integration
+### Signing and local inference
 
 - `AndroidKeystoreIdentitySigner` provides EC P-256 / SHA256withECDSA signing through Android
   Keystore. It is isolated from the JVM `IdentitySigner` contract. Instrumentation execution
   is not available in this sandbox; no device Keystore run is claimed.
-- No approval UI, `MainActivity` orchestration, automatic durable checkpoint store, detailed
-  trust/reputation evidence persistence, or live-network research integration is included.
-- No LiteRT-LM runtime/model import or local inference path is implemented in this phase.
-  The pinned LiteRT-LM and AI Edge Gallery sources were inspected for API/lifecycle patterns;
-  no upstream code was copied.
+- `LocalModelCatalog` imports a caller-provided `.litertlm` stream into app-private storage,
+  verifies a caller-supplied SHA-256, inspects native model metadata, and keeps schema-versioned
+  capability manifests. The catalog does not download or bundle model weights.
+- `LiteRtLmLocalModelRuntime` implements CPU load/unload, streaming callbacks, native
+  cancellation, bounded output, token/latency metrics, and structured function-call proposals
+  as data. Tool schemas come only from `ToolRegistry`; `automaticToolCalling` is disabled and
+  the provider's execution method fails closed. Proposals still require the Part 4 `ToolGate`.
+- A small model import path is the LiteRT Community
+  [`functiongemma-270m-ft-mobile-actions`](https://huggingface.co/litert-community/functiongemma-270m-ft-mobile-actions)
+  repository's `.litertlm` mobile model (for example `mobile_actions_q8_ekv1024.litertlm`).
+  It is distributed under the Gemma terms. The model is not included; users must obtain it
+  under its own license and import its bytes locally. The runtime requires no cloud LLM API
+  once a compatible model has been imported.
+- The implementation has not been exercised with native inference on a physical Android
+  device or emulator in this sandbox. The current runtime selects CPU only; GPU/NPU fallback,
+  import UI/SAF wiring, and connection to `MainActivity` remain future integration work.
+- No approval UI, `MainActivity` orchestration, automatic durable checkpoint store, or detailed
+  trust/reputation evidence persistence is included. The read-only HTTP provider is not yet
+  wired into the production UI.
 
 ## Validation
 
@@ -84,9 +99,11 @@ Patterns were adapted, not copied, from:
 - `google-ai-edge/LiteRT-LM` (`b1faae7b13e1f71a507df4082c934db200f48b30`), Apache-2.0:
   `docs/api/kotlin/getting_started.md`,
   `agents/skills/create-litert-lm-android-demo-app/references/inference_implementation.md`,
-  and `kotlin/java/com/google/ai/edge/litertlm/Config.kt`.
+  `kotlin/java/com/google/ai/edge/litertlm/Config.kt`, `Engine.kt`, `Conversation.kt`,
+  `Message.kt`, `Tool.kt`, `ModelInfo.kt`, and `example/ToolMain.kt`.
 - `google-ai-edge/gallery` (`b9c459406fb8ab6e256b4b6032e843b73a7336d7`), Apache-2.0:
-  `Android/src/app/src/main/java/com/google/ai/edge/gallery/ui/llmchat/LlmChatViewModel.kt`.
+  `Android/src/app/src/main/java/com/google/ai/edge/gallery/ui/llmchat/LlmChatViewModel.kt` and
+  `Android/src/app/src/main/java/com/google/ai/edge/gallery/ui/modelmanager/ModelManagerViewModel.kt`.
 
 The reference pack retains the upstream license texts under
 `docs/open_source_reference_pack/licenses/`.

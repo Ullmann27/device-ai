@@ -1,11 +1,17 @@
 package at.heinz.deviceai.cognitive
 
 import java.io.ByteArrayOutputStream
-import java.net.HttpURLConnection
+import java.io.IOException
 import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.net.URI
-import java.net.URL
+import java.net.Socket
 import java.util.Locale
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.HttpsURLConnection
 
 data class ResearchRequest(val query: String, val url: String, val maxBytes: Int = 512_000) {
     init {
@@ -41,12 +47,14 @@ data class ResearchProviderPolicy(
     val allowedHosts: Set<String> = emptySet(),
     val connectTimeoutMillis: Int = 5_000,
     val readTimeoutMillis: Int = 8_000,
+    val totalTimeoutMillis: Int = 30_000,
     val maxBytes: Int = 512_000,
     val maxRedirects: Int = 3,
     val maxContentCharacters: Int = 32_000
 ) {
     init {
         require(connectTimeoutMillis in 1..30_000 && readTimeoutMillis in 1..30_000)
+        require(totalTimeoutMillis in 1..120_000)
         require(maxBytes in 1..2_000_000 && maxRedirects in 0..5 && maxContentCharacters in 1..100_000)
         require(allowedHosts.all { it.isNotBlank() && it == it.lowercase(Locale.ROOT) })
     }
@@ -76,16 +84,27 @@ class HttpReadOnlyResearchProvider(
         require(request.maxBytes <= policy.maxBytes)
         var uri = URI(request.url)
         var redirects = 0
+        val deadlineNanos = System.nanoTime() + policy.totalTimeoutMillis * 1_000_000L
         while (true) {
-            ResearchUrlValidator.validate(uri, policy.allowedHosts)
-            val connection = (uri.toURL().openConnection() as HttpURLConnection).apply {
+            val validatedAddresses = ResearchUrlValidator.validate(uri, policy.allowedHosts)
+            val remainingMillis = remainingTimeoutMillis(deadlineNanos)
+            val host = uri.host.removePrefix("[").removeSuffix("]")
+            val connection = (uri.toURL().openConnection(Proxy.NO_PROXY) as HttpsURLConnection).apply {
                 requestMethod = "GET"
                 instanceFollowRedirects = false
-                connectTimeout = policy.connectTimeoutMillis
-                readTimeout = policy.readTimeoutMillis
+                connectTimeout = minOf(policy.connectTimeoutMillis, remainingMillis)
+                readTimeout = minOf(policy.readTimeoutMillis, remainingMillis)
+                sslSocketFactory = PinnedResearchTlsSocketFactory(
+                    host, validatedAddresses, policy.connectTimeoutMillis, deadlineNanos
+                )
                 setRequestProperty("Accept", "text/html,text/plain,application/json,application/xml")
                 setRequestProperty("User-Agent", "DeviceAI-Research/1.0")
             }
+            val timeoutTask = REQUEST_TIMEOUTS.schedule(
+                { connection.disconnect() },
+                remainingMillis.toLong(),
+                TimeUnit.MILLISECONDS
+            )
             try {
                 val status = connection.responseCode
                 if (status in 300..399) {
@@ -102,7 +121,7 @@ class HttpReadOnlyResearchProvider(
                 require(mime in SAFE_MIME_TYPES) { "Unsupported research MIME type." }
                 val announced = connection.contentLengthLong
                 require(announced < 0 || announced <= request.maxBytes) { "Research response is too large." }
-                val body = connection.inputStream.use { readLimited(it, request.maxBytes) }
+                val body = connection.inputStream.use { readLimited(it, request.maxBytes, deadlineNanos) }
                 val rawText = String(body, Charsets.UTF_8)
                 val content = rawText
                     .replace(Regex("<script\\b[^>]*>[\\s\\S]*?</script\\s*>", RegexOption.IGNORE_CASE), " ")
@@ -113,7 +132,7 @@ class HttpReadOnlyResearchProvider(
                     .take(policy.maxContentCharacters)
                 require(content.isNotBlank()) { "Research document is empty." }
                 val finalUrl = uri.toASCIIString()
-                val host = uri.host.lowercase(Locale.ROOT)
+                val sourceHost = uri.host.lowercase(Locale.ROOT).removePrefix("[").removeSuffix("]")
                 val title = Regex(
                     "<title\\b[^>]*>(.*?)</title\\s*>",
                     setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
@@ -125,20 +144,22 @@ class HttpReadOnlyResearchProvider(
                     retrievedAt = now(),
                     contentHash = sha256Hex(content),
                     mimeType = mime,
-                    source = SourceIdentity(host, host),
+                    source = SourceIdentity(sourceHost, sourceHost),
                     content = content
                 )
                 return ResearchResult(listOf(document), listOf(document.citation()))
             } finally {
+                timeoutTask.cancel(false)
                 connection.disconnect()
             }
         }
     }
 
-    private fun readLimited(input: java.io.InputStream, maximum: Int): ByteArray {
+    private fun readLimited(input: java.io.InputStream, maximum: Int, deadlineNanos: Long): ByteArray {
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(8_192)
         while (true) {
+            remainingTimeoutMillis(deadlineNanos)
             val read = input.read(buffer)
             if (read < 0) break
             require(output.size() + read <= maximum) { "Research response is too large." }
@@ -147,13 +168,19 @@ class HttpReadOnlyResearchProvider(
         return output.toByteArray()
     }
 
+    private fun remainingTimeoutMillis(deadlineNanos: Long): Int {
+        val remainingNanos = deadlineNanos - System.nanoTime()
+        require(remainingNanos > 0) { "Research request exceeded its total time limit." }
+        return ((remainingNanos + 999_999) / 1_000_000).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    }
+
     object ResearchUrlValidator {
-        fun validate(uri: URI, allowedHosts: Set<String> = emptySet()) {
+        fun validate(uri: URI, allowedHosts: Set<String> = emptySet()): List<InetAddress> {
             require(uri.scheme.equals("https", ignoreCase = true)) { "Research supports HTTPS only." }
             require(uri.userInfo == null && uri.host != null && (uri.port == -1 || uri.port == 443)) {
                 "Unsafe research URL authority."
             }
-            val host = uri.host.lowercase(Locale.ROOT).trimEnd('.')
+            val host = uri.host.removePrefix("[").removeSuffix("]").lowercase(Locale.ROOT).trimEnd('.')
             require(host.contains('.') || host.contains(':')) { "Single-label research hosts are blocked." }
             require(uri.rawQuery.orEmpty().split('&').none {
                 it.substringBefore('=').matches(Regex("(?i).*(token|secret|password|credential|api[_-]?key|authorization).*"))
@@ -169,7 +196,9 @@ class HttpReadOnlyResearchProvider(
             }
             val addresses = runCatching { InetAddress.getAllByName(host) }
                 .getOrElse { throw IllegalArgumentException("Research host could not be resolved.") }
+            require(addresses.size in 1..16) { "Research host returned an unsafe number of addresses." }
             require(addresses.isNotEmpty() && addresses.all(::isPublicAddress)) { "Private or reserved network targets are blocked." }
+            return addresses.toList()
         }
 
         private fun isPublicAddress(address: InetAddress): Boolean {
@@ -179,17 +208,93 @@ class HttpReadOnlyResearchProvider(
             if (bytes.size == 4) {
                 val first = bytes[0].toInt() and 0xff
                 val second = bytes[1].toInt() and 0xff
+                val third = bytes[2].toInt() and 0xff
                 if (first == 0 || first == 10 || first == 127 || first >= 224) return false
                 if (first == 100 && second in 64..127) return false
                 if (first == 169 && second == 254 || first == 172 && second in 16..31 ||
                     first == 192 && second == 168 || first == 192 && second == 0 ||
-                    first == 198 && second in 18..19) return false
+                    first == 192 && second == 2 || first == 192 && second == 88 && third == 99 ||
+                    first == 198 && second in 18..19 || first == 198 && second == 51 && third == 100 ||
+                    first == 203 && second == 0 && third == 113) return false
             } else if (bytes.size == 16) {
                 val first = bytes[0].toInt() and 0xff
-                if ((first and 0xfe) == 0xfc || first == 0x20 && (bytes[1].toInt() and 0xff) == 0x01 &&
-                    (bytes[2].toInt() and 0xff) == 0x0d && (bytes[3].toInt() and 0xff) == 0xb8) return false
+                if (bytes.take(10).all { it == 0.toByte() } &&
+                    (bytes[10].toInt() and 0xff) == 0xff && (bytes[11].toInt() and 0xff) == 0xff) {
+                    return isPublicAddress(InetAddress.getByAddress(bytes.copyOfRange(12, 16)))
+                }
+                if (bytes.take(12).all { it == 0.toByte() }) {
+                    return isPublicAddress(InetAddress.getByAddress(bytes.copyOfRange(12, 16)))
+                }
+                val second = bytes[1].toInt() and 0xff
+                val third = bytes[2].toInt() and 0xff
+                val fourth = bytes[3].toInt() and 0xff
+                if ((first and 0xe0) != 0x20 || (first and 0xfe) == 0xfc ||
+                    first == 0x20 && second == 0x01 && third in 0..1 ||
+                    first == 0x20 && second == 0x01 && third == 0x0d && fourth == 0xb8 ||
+                    first == 0x20 && second == 0x02) return false
             }
             return true
+        }
+    }
+
+    private class PinnedResearchTlsSocketFactory(
+        private val host: String,
+        private val addresses: List<InetAddress>,
+        private val connectTimeoutMillis: Int,
+        private val requestDeadlineNanos: Long
+    ) : SSLSocketFactory() {
+        private val delegate = SSLSocketFactory.getDefault() as SSLSocketFactory
+
+        override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
+        override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
+
+        override fun createSocket(host: String, port: Int): Socket = connectPinned(port)
+
+        override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket =
+            connectPinned(port, localHost, localPort)
+
+        override fun createSocket(address: InetAddress, port: Int): Socket = connectPinned(port)
+
+        override fun createSocket(
+            address: InetAddress,
+            port: Int,
+            localAddress: InetAddress,
+            localPort: Int
+        ): Socket = connectPinned(port, localAddress, localPort)
+
+        override fun createSocket(socket: Socket, host: String, port: Int, autoClose: Boolean): Socket {
+            require(socket.inetAddress in addresses) { "TLS socket target did not use a validated address." }
+            return delegate.createSocket(socket, this.host, port, autoClose)
+        }
+
+        override fun createSocket(): Socket =
+            throw IOException("Unpinned TLS socket creation is not permitted for research.")
+
+        private fun connectPinned(
+            port: Int,
+            localAddress: InetAddress? = null,
+            localPort: Int = 0
+        ): Socket {
+            var failure: IOException? = null
+            val connectDeadlineNanos = minOf(
+                requestDeadlineNanos,
+                System.nanoTime() + connectTimeoutMillis * 1_000_000L
+            )
+            for (address in addresses) {
+                val remainingNanos = connectDeadlineNanos - System.nanoTime()
+                if (remainingNanos <= 0) break
+                val socket = Socket()
+                try {
+                    if (localAddress != null) socket.bind(InetSocketAddress(localAddress, localPort))
+                    val timeout = ((remainingNanos + 999_999) / 1_000_000).toInt()
+                    socket.connect(InetSocketAddress(address, port), timeout)
+                    return delegate.createSocket(socket, host, port, true)
+                } catch (e: IOException) {
+                    failure = e
+                    runCatching { socket.close() }
+                }
+            }
+            throw failure ?: IOException("Could not connect to a validated research address.")
         }
     }
 
@@ -197,6 +302,9 @@ class HttpReadOnlyResearchProvider(
         private val SAFE_MIME_TYPES = setOf(
             "text/html", "text/plain", "application/json", "application/xml", "text/xml"
         )
+        private val REQUEST_TIMEOUTS = Executors.newSingleThreadScheduledExecutor { runnable ->
+            Thread(runnable, "device-ai-research-timeout").apply { isDaemon = true }
+        }
     }
 }
 
