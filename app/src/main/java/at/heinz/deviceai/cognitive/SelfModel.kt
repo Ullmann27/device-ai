@@ -73,5 +73,20 @@ class SelfModel private constructor(
 
     companion object {
         fun uncertain() = SelfModel(Capability.values().associateWith { CapabilityEstimate() }, emptyList())
+
+        internal fun restored(
+            estimates: Map<Capability, CapabilityEstimate>,
+            evidence: List<CapabilityEvidence>
+        ): SelfModel {
+            require(estimates.keys == Capability.values().toSet()) { "incomplete self-model estimates" }
+            require(evidence.map { it.taskId to it.capability }.distinct().size == evidence.size) {
+                "duplicate self-model evidence"
+            }
+            require(evidence.all {
+                it.taskId.isNotBlank() && it.evaluator.isNotBlank() &&
+                    it.predictedConfidence.isUnit() && it.actualScore.isUnit()
+            }) { "invalid self-model evidence" }
+            return SelfModel(estimates.toMap(), evidence.toList())
+        }
     }
 }

@@ -1,32 +1,55 @@
 # Implementation Progress
 
-**Current phase:** Part 3 (Memory + Model Ecology) starting on branch `copilot/part3-memory-model-ecology`. Parts 1–2 are merged to `main`; cognitive research components remain disconnected from the production UI.
+**Current phase:** Part 3 (Memory + Model Ecology). Parts 1–2 are merged to `main`.
+Research components remain disconnected from the production UI and Shizuku path.
 
 ## Modules (package `at.heinz.deviceai.cognitive`)
 | Module | Status |
 |---|---|
-| CognitiveGenome, BehaviorBounds, UpdateLimits | IMPLEMENTED |
-| IdentityState, IdentityHistory (integrity hash chain) | IMPLEMENTED |
-| BehaviorProfile, BehaviorEvidence/Proposal/Policy/History | IMPLEMENTED |
-| SelfModel, CapabilityEvidence, calibration | IMPLEMENTED |
+| CognitiveGenome, IdentityState, identity history and integrity hashes | IMPLEMENTED |
+| BehaviorProfile, behavior evidence/policy/history | IMPLEMENTED |
+| SelfModel, capability evidence/calibration | IMPLEMENTED |
 | IdentityDrift, IdentityUpdateValidator, AdaptiveIdentity | IMPLEMENTED |
-| CognitiveCore primitives, ModelEngine, Memory, ExperienceStore, ModelRouter, SkillGraph | INTERFACE ONLY |
-| Persistence/export-import to disk | PARTIAL (text `export()` only) |
-| Cryptographic signatures (Keystore) | PLANNED |
-| Orchestrator, ModelReputation, SourceTrust, UI integration | PLANNED |
+| Typed MemoryRecord, provenance, validation, store/retrieval and graph | IMPLEMENTED |
+| Claim evidence and support/contradiction/supersession graph | IMPLEMENTED |
+| MemoryWritePolicy and privacy classes | IMPLEMENTED |
+| Immutable Experience record/store/similarity retrieval | IMPLEMENTED |
+| Provider-neutral adapters, evaluated model reputation and explainable routing | IMPLEMENTED |
+| Domain-aware source identity/observation/trust profiles | IMPLEMENTED |
+| Versioned identity/memory/experience archive and app-private persistence API | IMPLEMENTED |
+| IdentitySigner abstraction | INTERFACE ONLY |
+| Android Keystore signer, production model adapters, MainActivity integration | PLANNED |
 
-## Files
-Added: `cognitive/{CognitiveGenome,IdentityState,CognitiveCore,BehaviorProfile,BehaviorUpdate,SelfModel,IdentityDrift,IdentityUpdateValidator,AdaptiveIdentity}.kt`,
-tests `IdentityStateTest`, `AdaptiveIdentityTest`, docs `COGNITIVE_ARCHITECTURE.md`, `IDENTITY_AND_SELF_MODEL.md`.
-Modified: `.github/workflows/android.yml` (added `copilot/**` push trigger). Part 1 files were reworked
-(`signature` -> `integrityHash`, typed behavior/self model). No existing Device AI source was modified.
+## Part 3 changes
+- Added `cognitive/MemoryEcology.kt` and `cognitive/CognitivePersistence.kt`.
+- Expanded `cognitive/CognitiveCore.kt` with the immutable Experience record and removed its
+  unused ModelRouter placeholder in favor of an executable explainable router.
+- Added `cognitive/MemoryEcologyTest.kt` and `cognitive/CognitivePersistenceTest.kt`.
+- Added `docs/MEMORY_AND_MODEL_ECOLOGY.md`.
+- Extended `cognitive/SelfModel.kt` with validated explicit restoration for archive import.
 
-## Validated
-- Cognitive package + tests compiled with kotlinc 2.4 and run with JUnit 4.13.2 locally: 30 tests passed.
-- Parts 1–2 were validated by GitHub Actions after merge preparation: workflow run `38290353572` passed `:app:testDebugUnitTest`, `:app:assembleDebug`, and APK artifact upload for commit `7cea7553b2e50bcbf18fed0b8fe338264106e8ca`.
+## Validation
+- Standalone Kotlin 2.4.20 compilation of all cognitive production sources passed.
+- All 44 cognitive JVM tests passed when compiled with Kotlin 2.4.20 and run on JUnit 4.13.2.
+- Gradle `:app:testDebugUnitTest` was attempted locally but could not resolve the uncached
+  Android Gradle plugin in this sandbox.
+- Starting-commit GitHub Actions run `38292636376` passed `:app:testDebugUnitTest` and
+  `:app:assembleDebug`; it predates the Part 3 changes and does not validate them.
+- Current Part 3 test/build result and workflow run ID: pending.
 
-## Known limitations
-Hash is not a signature; state is in-memory only; thresholds are untuned defaults; drift weights are heuristic.
+## Limitations
+- The archive uses explicit typed IdentityState/genome/memory/experience fields, schema
+  versioning, identity/genome binding, SHA-256 corruption detection, forbidden-policy-flag
+  validation, atomic replacement where supported, and a last-known-good backup. The caller
+  must pass an app-private directory such as Android `Context.filesDir`.
+- SHA-256 is an integrity/content hash, not a signature. `IdentitySigner` has no production
+  implementation; only a test signer exists.
+- Model/source trust stores are in-memory; their summary reputations in `IdentityState` are
+  persisted, but detailed evidence logs are not.
+- No real model provider or production UI integration is included. Retrieval/trust policies
+  are deterministic starter policies, not calibrated production heuristics.
 
 ## Next
-Part 3: typed memory/provenance, experience store, persistence, model adapters/reputation/router, source trust/claims, privacy/write policy, and tests. No production UI wiring or real external model provider in this phase.
+Part 4 should evaluate retrieval/routing against representative tasks, add isolated Android
+Keystore-backed signing and persistence wiring, and only then consider production UI/provider
+integration under explicit privacy and resource policies.
