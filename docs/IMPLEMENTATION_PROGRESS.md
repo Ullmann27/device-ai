@@ -21,12 +21,13 @@ Research components remain disconnected from the production UI and Shizuku path.
 | Android Keystore signer, production model adapters, MainActivity integration | PLANNED |
 
 ## Part 3 changes
-- Added `cognitive/MemoryEcology.kt` and `cognitive/CognitivePersistence.kt`.
-- Expanded `cognitive/CognitiveCore.kt` with the immutable Experience record and removed its
-  unused ModelRouter placeholder in favor of an executable explainable router.
-- Added `cognitive/MemoryEcologyTest.kt` and `cognitive/CognitivePersistenceTest.kt`.
+- Modified `app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt` and
+  `SelfModel.kt`.
+- Added `app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt` and
+  `CognitivePersistence.kt`.
+- Added `app/src/test/java/at/heinz/deviceai/cognitive/MemoryEcologyTest.kt` and
+  `CognitivePersistenceTest.kt`.
 - Added `docs/MEMORY_AND_MODEL_ECOLOGY.md`.
-- Extended `cognitive/SelfModel.kt` with validated explicit restoration for archive import.
 
 ## Validation
 - Standalone Kotlin 2.4.20 compilation of all cognitive production sources passed.
@@ -35,7 +36,10 @@ Research components remain disconnected from the production UI and Shizuku path.
   Android Gradle plugin in this sandbox.
 - Starting-commit GitHub Actions run `38292636376` passed `:app:testDebugUnitTest` and
   `:app:assembleDebug`; it predates the Part 3 changes and does not validate them.
-- Current Part 3 test/build result and workflow run ID: pending.
+- Part 3 code commit `96827ee1aa2560646f1c6f3fa2d90d4f04b0d033` triggered workflow
+  `38294241993`, which ended `action_required` with zero jobs; no Android test/build ran.
+- `parallel_validation`: no code-review findings; CodeQL reported no analyzable code in the
+  changed languages. The review backend itself was unavailable in this environment.
 
 ## Limitations
 - The archive uses explicit typed IdentityState/genome/memory/experience fields, schema
@@ -48,6 +52,8 @@ Research components remain disconnected from the production UI and Shizuku path.
   persisted, but detailed evidence logs are not.
 - No real model provider or production UI integration is included. Retrieval/trust policies
   are deterministic starter policies, not calibrated production heuristics.
+- Android CI for the Part 3 commit remains pending workflow approval; the requested
+  `:app:testDebugUnitTest` and `:app:assembleDebug` CI confirmation is not yet available.
 
 ## Next
 Part 4 should evaluate retrieval/routing against representative tasks, add isolated Android
