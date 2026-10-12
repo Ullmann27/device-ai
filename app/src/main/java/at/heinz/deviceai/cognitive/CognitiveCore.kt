@@ -1,5 +1,7 @@
 package at.heinz.deviceai.cognitive
 
+import at.heinz.deviceai.Skill
+
 data class Observation(val source: String, val content: String)
 data class MemoryItem(val content: String, val provenance: String)
 data class ModelRequest(val prompt: String, val context: List<MemoryItem> = emptyList())
@@ -43,8 +45,6 @@ data class Checkpoint(val identity: IdentityState, val note: String)
 interface ModelEngine { val id: String; fun ask(request: ModelRequest): Candidate }
 interface Memory { fun add(item: MemoryItem); fun retrieve(query: String, limit: Int = 5): List<MemoryItem> }
 interface ExperienceStore { fun store(e: Experience); fun all(): List<Experience> }
-interface SkillGraph { fun register(name: String, dependsOn: List<String> = emptyList()); fun skills(): Set<String> }
-
 /** Primitive operations of the cognitive core. */
 interface CognitiveCore {
     fun observe(o: Observation)
@@ -57,6 +57,6 @@ interface CognitiveCore {
     fun updateSelfModel(e: Evaluation)
     /** Proposal only; applied solely with operator approval. */
     fun proposeBehaviorUpdate(p: BehaviorProposal): UpdateDecision
-    fun registerSkill(name: String, dependsOn: List<String> = emptyList())
+    fun registerSkill(skill: Skill)
     fun createCheckpoint(note: String): Checkpoint
 }
