@@ -6,9 +6,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.system.exitProcess
 
-class ShellUserService : IDeviceShell.Stub() {
-
-    constructor()
+class ShellUserService() : IDeviceShell.Stub() {
 
     @Keep
     constructor(context: Context) : this()
