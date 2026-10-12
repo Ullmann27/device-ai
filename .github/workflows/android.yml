@@ -2,7 +2,7 @@ name: Build Device AI APK
 
 on:
   push:
-    branches: [ "main", "v0.2-redesign", "v0.3-agent" ]
+    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:

@@ -9,7 +9,7 @@ class IdentityStateTest {
     @Test fun initialStateIsMinimal() {
         val s = IdentityState.initial(genome)
         assertNull(s.chosenName); assertEquals(1, s.generation)
-        assertEquals("uncertain", s.selfModelRoot); assertTrue(s.verify())
+        assertEquals(0, s.selfModel[Capability.CODING].evaluatedTaskCount); assertTrue(s.verify())
         assertEquals(genome.hash(), s.cognitiveGenomeHash)
     }
 
