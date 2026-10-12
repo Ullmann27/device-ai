@@ -1,6 +1,6 @@
 # Implementation Progress
 
-**Current phase:** Part 2 (Adaptive Identity) on branch `copilot/main-task-review`. Not connected to the production UI.
+**Current phase:** Part 3 (Memory + Model Ecology) starting on branch `copilot/part3-memory-model-ecology`. Parts 1–2 are merged to `main`; cognitive research components remain disconnected from the production UI.
 
 ## Modules (package `at.heinz.deviceai.cognitive`)
 | Module | Status |
@@ -23,11 +23,10 @@ Modified: `.github/workflows/android.yml` (added `copilot/**` push trigger). Par
 
 ## Validated
 - Cognitive package + tests compiled with kotlinc 2.4 and run with JUnit 4.13.2 locally: 30 tests passed.
-- NOT validated in the sandbox: Gradle `testDebugUnitTest` / `assembleDebug` (Android plugin unreachable).
-- GitHub Actions run result: see status in the final report of the session; update here once known.
+- Parts 1–2 were validated by GitHub Actions after merge preparation: workflow run `38290353572` passed `:app:testDebugUnitTest`, `:app:assembleDebug`, and APK artifact upload for commit `7cea7553b2e50bcbf18fed0b8fe338264106e8ca`.
 
 ## Known limitations
 Hash is not a signature; state is in-memory only; thresholds are untuned defaults; drift weights are heuristic.
 
 ## Next
-Part 3: memory + experience store, persistence, Keystore signing, orchestrator wiring.
+Part 3: typed memory/provenance, experience store, persistence, model adapters/reputation/router, source trust/claims, privacy/write policy, and tests. No production UI wiring or real external model provider in this phase.
