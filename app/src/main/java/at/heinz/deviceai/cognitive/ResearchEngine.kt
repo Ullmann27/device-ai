@@ -169,7 +169,12 @@ object ResearchUrlCanonicalizer {
     }
 }
 
-data class ResearchGap(val questionId: String, val reason: String, val suggestedQuery: String) {
+data class ResearchGap(
+    val questionId: String,
+    val reason: String,
+    val suggestedQuery: String,
+    val counterEvidence: Boolean = false
+) {
     init { require(questionId.isNotBlank() && reason.length <= 256 && suggestedQuery.length <= 512) }
 }
 
@@ -627,18 +632,29 @@ class DeepResearchEngine(
         val contradictions = graph.relationships.filter { it.relation == ClaimRelation.CONTRADICTS }
         contradictions.forEach { edge ->
             claims.firstOrNull { it.id == edge.fromClaimId }?.let { claim ->
-                gaps += ResearchGap("q0", "Conflicting evidence needs checking.", "Find counter-evidence for: ${claim.text}".take(512))
+                gaps += ResearchGap(
+                    "q0", "Conflicting evidence needs checking.",
+                    "Find counter-evidence for: ${claim.text}".take(512), counterEvidence = true
+                )
             }
         }
         if (mode != ResearchMode.QUICK && gaps.isNotEmpty() && budget.maxFollowUpQueries > 0 &&
             sources.size < budget.maxSourcesFetched && hasTimeBudget()) {
             setPhase(ResearchPhase.FOLLOW_UP, id)
-            val remainingCounterAttempts = (budget.maxCounterEvidenceAttempts -
+            var remainingCounterAttempts = (budget.maxCounterEvidenceAttempts -
                 plan.paths.count { it.query.counterEvidence }).coerceAtLeast(0)
-            val followups = gaps.distinctBy { it.suggestedQuery }
-                .take(minOf(budget.maxFollowUpQueries, remainingCounterAttempts))
+            val followups = gaps.distinctBy { it.suggestedQuery }.filter { gap ->
+                if (!gap.counterEvidence) true
+                else if (remainingCounterAttempts > 0) {
+                    remainingCounterAttempts--
+                    true
+                } else false
+            }.take(budget.maxFollowUpQueries)
             val extraPaths = followups.mapIndexed { index, gap ->
-                ResearchSearchPath("follow-$index", ResearchQuery(gap.suggestedQuery, gap.questionId, counterEvidence = true))
+                ResearchSearchPath(
+                    "follow-$index",
+                    ResearchQuery(gap.suggestedQuery, gap.questionId, counterEvidence = gap.counterEvidence)
+                )
             }
             if (discovery.isGeneralSearchAvailable) {
                 val followUpStarted = now().coerceAtLeast(started)

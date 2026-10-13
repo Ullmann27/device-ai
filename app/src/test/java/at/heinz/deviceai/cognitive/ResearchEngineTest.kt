@@ -99,6 +99,7 @@ class ResearchEngineTest {
         val dossier = engine.research("wireless charging support", ResearchMode.STANDARD)
         assertTrue(discoveryCalls > 1)
         assertTrue(dossier.gaps.isNotEmpty())
+        assertTrue(dossier.gaps.any { it.counterEvidence })
         assertTrue(dossier.graph.relationships.any { it.relation == ClaimRelation.CONTRADICTS })
         assertTrue(dossier.graph.claims.any { it.validationState == ValidationState.CONTRADICTED })
         assertTrue(dossier.sources.size <= ResearchBudgetPolicy.forMode(ResearchMode.STANDARD).maxSourcesFetched)
@@ -173,7 +174,10 @@ class ResearchEngineTest {
             val dossier = ResearchDossier(
                 "a".repeat(32), 10, 11, plan, ResearchPhase.PARTIAL, listOf(source),
                 ResearchEvidenceGraph(emptyList(), emptyList(), emptyList(), emptyMap(), emptyMap()),
-                listOf(ResearchGap("q0", "No sources", "provide a URL")),
+                listOf(
+                    ResearchGap("q0", "No sources", "provide a URL"),
+                    ResearchGap("q0", "Check conflicting evidence", "find counter evidence", counterEvidence = true)
+                ),
                 ResearchSynthesisOutput("General web search is not configured."),
                 setOf(source.contentHash), false, "No provider",
                 listOf(ResearchRound(1, ResearchPhase.FETCH, listOf("search-0"), listOf(source.canonicalUrl), 10, 11))

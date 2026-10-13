@@ -124,7 +124,10 @@ class FileResearchDossierStore(private val directory: File) :
         writeDoubleMap(value.graph.coverage)
         writeInt(value.graph.independentSourceCounts.size)
         value.graph.independentSourceCounts.toSortedMap().forEach { (key, count) -> writeString(key); writeInt(count) }
-        writeInt(value.gaps.size); value.gaps.forEach { writeString(it.questionId); writeString(it.reason); writeString(it.suggestedQuery) }
+        writeInt(value.gaps.size); value.gaps.forEach {
+            writeString(it.questionId); writeString(it.reason); writeString(it.suggestedQuery)
+            writeBoolean(it.counterEvidence)
+        }
         writeNullableString(value.synthesis?.text)
         writeStrings(value.completedSourceHashes.toList())
         writeBoolean(value.generalSearchAvailable); writeNullableString(value.partialReason)
@@ -172,7 +175,9 @@ class FileResearchDossierStore(private val directory: File) :
         }
         val coverage = readDoubleMap(256)
         val independent = List(readCount(256)) { readString(128) to readInt() }.toMap()
-        val gaps = List(readCount(32)) { ResearchGap(readString(64), readString(256), readString(512)) }
+        val gaps = List(readCount(32)) {
+            ResearchGap(readString(64), readString(256), readString(512), readBoolean())
+        }
         val synthesis = readNullableString(8_000)?.let(::ResearchSynthesisOutput)
         val hashes = readStrings(24, 64).toSet()
         val generalSearchAvailable = readBoolean()
@@ -280,7 +285,7 @@ class FileResearchDossierStore(private val directory: File) :
 
     companion object {
         private const val MAGIC = "DEVICE_AI_RESEARCH"
-        private const val SCHEMA_VERSION = 2
+        private const val SCHEMA_VERSION = 3
         private const val MAX_BYTES = 1_000_000
         private const val MAX_STRING_BYTES = 32_000
         private const val CHECKSUM_BYTES = 32
