@@ -7,7 +7,7 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 | Module | Status |
 |---|---|
 | Cognitive identity, behavior, self-model and adaptive identity | IMPLEMENTED |
-| Typed memory, provenance, claims, retrieval, write policy and graph | IMPLEMENTED |
+| Typed memory, provenance, claims, retrieval, write policy and graph | IMPLEMENTED — bounded agent now uses explainable hybrid lexical/entity/temporal/validation ranking with optional semantic/source-trust hooks |
 | Experience records/store and similarity retrieval | IMPLEMENTED |
 | Model adapters, evaluated reputation and explainable routing | IMPLEMENTED |
 | Source identity, evaluated source trust and domain profiles | IMPLEMENTED |
@@ -15,13 +15,13 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 | JVM `IdentitySigner` contract | INTERFACE ONLY |
 | Android Keystore EC signer | IMPLEMENTED |
 | Typed/versioned skills, dependency validation, activation and audit | IMPLEMENTED |
-| Registered-tool proposals, bounded argument validation and risk gate | IMPLEMENTED |
+| Registered-tool proposals, bounded argument validation and risk gate | IMPLEMENTED |\n| Tool call replay/idempotency guard | PARTIAL — duplicate call IDs are rejected within a ToolGate lifetime; durable cross-process receipts remain planned |
 | Explicit confirmation contract and stronger destructive approval path | IMPLEMENTED |
 | Confirmation UI and operator-policy wiring | PLANNED |
 | Cancellation of an already-running Shizuku shell process | PARTIAL |
 | Bounded orchestration, memory retrieval, evaluated experience and model reputation update | IMPLEMENTED |
 | Allowlisted checkpoint codec and safe pre-tool resume | IMPLEMENTED |
-| Automatic process-death checkpoint persistence / exactly-once tool recovery | PLANNED |
+| Automatic process-death checkpoint persistence / exactly-once tool recovery | PARTIAL — durable checksum-verified checkpoints with conservative pre-tool resume; post-tool exactly-once recovery remains planned |
 | Read-only HTTPS research provider, source metadata and citations | IMPLEMENTED |
 | Baseline claim extraction and independent-domain corroboration | IMPLEMENTED |
 | Claim-language contradiction/support quality beyond deterministic heuristics | PARTIAL |
@@ -90,7 +90,20 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   FunctionGemma mobile-optimized 270M is the documented small-model path and remains subject
   to its separate Gemma terms. No real model bytes or on-device inference run are claimed.
 
+## Deep Research P0 continuation
+- Added `FileAgentCheckpointStore` with bounded binary envelopes, SHA-256 integrity validation,
+  atomic replacement, corruption rejection and explicit discard.
+- `BoundedAgentOrchestrator` now persists state transitions and can conservatively resume only
+  pre-tool states; checkpoints at/after the tool proposal boundary require operator review so a
+  process restart cannot silently duplicate a side effect.
+- Added duplicate `callId` rejection inside `ToolGate`.
+- Replaced the bounded agent's token-overlap-only memory lookup with an explainable hybrid
+  retriever combining BM25-like lexical relevance, tag/entity overlap, temporal relevance,
+  validation/provenance quality, recency and optional semantic/source-trust scorers.
+- Added deterministic tests for checkpoint corruption/recovery, replay rejection and hybrid
+  ranking/privacy behavior.
+
 ## Next
-Clear the Android workflow approval gate, validate the Part 4/5 sources in Android CI, and
-connect the runtime to the existing chat/agent orchestration only after device-level inference
-and explicit user confirmation are available.
+Validate this P0 continuation in Android CI, then add durable tool execution receipts for
+cross-process exactly-once recovery and wire the local LiteRT-LM runtime into the Android chat
+surface behind explicit user confirmation and model-install state.
