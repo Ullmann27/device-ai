@@ -4,6 +4,16 @@
 
 Device AI Continuum is the next architecture layer above the local-first Android assistant.
 
+### Phase 1 implementation status
+
+The Phase 1 foundation is implemented in `app/src/main/java/at/heinz/deviceai/continuum/`.
+The AgentActivity context-compiler adapter exists but is disabled by default
+(`CONTINUUM_CONTEXT_COMPILER_ENABLED=false`); the existing local path, ToolGate, and explicit
+Deep Research opt-in therefore remain the default behavior. See
+[`CONTINUUM_PHASE1.md`](CONTINUUM_PHASE1.md) for the separate implementation, CI, and device
+verification status. Implemented source code is not a claim of device or distributed-node
+verification.
+
 The target is not to place a frontier-scale model on a phone. The target is to build one persistent personal assistant whose effective capability can approach frontier-assistant quality on defined tasks by combining:
 
 - a portable signed identity/state seed,
@@ -62,8 +72,9 @@ Strategy Selector
   ├─ FAST
   ├─ STANDARD
   ├─ DEEP
-  ├─ RESEARCH
+  ├─ RESEARCH_BACKED
   ├─ MULTI_CANDIDATE
+  ├─ VERIFY_ONLY
   └─ TOOL_PLAN
   ↓
 Internal reasoning / research / verification

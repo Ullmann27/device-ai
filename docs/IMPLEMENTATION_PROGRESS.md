@@ -1,7 +1,7 @@
 # Implementation Progress
 
-**Current phase:** Part 5 (local inference), continuing on the Part 4 stack above Part 3.
-Parts 1–2 are merged to `main`. This PR is not approved for merging.
+**Current phase:** Continuum Phase 1 foundation on top of the Part 5 local-inference stack.
+The Continuum work is stacked on PR #6 and is not approved for merging independently.
 
 ## Status
 | Module | Status |
@@ -160,3 +160,45 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   `action_required` with zero jobs, so no fresh Android result or APK artifact exists; repository
   workflow approval is required. No live-network, imported-model, physical-device, Fold-layout,
   or device-cancellation validation is claimed. See `docs/DEEP_RESEARCH_ENGINE.md`.
+
+## Continuum Phase 1 foundation
+- Implemented version-1 `ContinuumSeed`/`AiSeedKernel`, typed owner public-identity reference,
+  authorized-node identities, strict current-version rejection, deterministic encoding, SHA-256
+  binding, and a `SignedContinuumSeed` envelope using the existing `IdentitySigner` interface.
+- Implemented canonical content-addressed object IDs and state roots plus a bounded immutable
+  file store with integrity verification, metadata binding, atomic replacement, path validation,
+  and app-private storage as its intended deployment boundary.
+- Implemented bounded context compilation with explicit privacy filtering, deterministic priority,
+  credential-pattern redaction, and untrusted-evidence delimiters. Hybrid-memory results can be
+  supplied explicitly; the compiler does not start research.
+- Implemented the typed strategy selector, hard budget enforcer, cancellable/deadline-bounded
+  data-only candidate/critic/verifier/judge orchestration, and a provider-neutral local compute
+  registry/scheduler with owner authorization, manifest/result verifier seams, expiry, revocation,
+  and bounded task/result metadata.
+- Implemented Cognitive RAID policy/planning metadata, the ten-family typed benchmark corpus
+  (support/citation coverage, contradiction detection, tool proposals, calls, harness latency,
+  context size, correction, and recovery metrics), and an abstraction-level model-continuity
+  harness.
+- AgentActivity can opt into the context adapter only through
+  `CONTINUUM_CONTEXT_COMPILER_ENABLED`; this build flag defaults to `false`. Deep Research remains
+  explicitly opt-in, device actions still pass through ToolGate, and no compute node is enrolled
+  automatically.
+- Fourteen focused Continuum tests passed in a standalone Kotlin/JVM test run with temporary
+  dependency/JUnit stubs. Backend `node --check` and `git diff --check` passed. This is useful
+  source-level evidence, not the Android Gradle test result.
+
+### Continuum validation status
+- **IMPLEMENTED:** the source-level foundations listed above; tests are checked in.
+- **CI VERIFIED:** no CI result for these new changes is claimed yet. The previous inherited
+  baseline on commit `3923aac` succeeded in workflow run `38349968863`; it predates the Continuum
+  source changes.
+- **NOT YET DEVICE VERIFIED:** Android Keystore signing for a Continuum seed, physical-device
+  inference with the context flag enabled, persistence behavior on device, and real compute-node
+  execution have not been tested. The context feature flag remains off by default.
+- **FUTURE:** encrypted replicas, internet/object storage, remote compute/network listeners,
+  distributed scheduling, automatic recovery from a replica, and any physical battery/thermal
+  claims. No Astra/frontier capability claim is made.
+- In this sandbox, `gradle :app:testDebugUnitTest` fails during plugin resolution because
+  Android Gradle Plugin `8.10.0` is unavailable; it did not reach Kotlin compilation or test
+  execution. `:app:assembleDebug` and the requested APK artifact therefore remain unverified here.
+  The repository Actions workflow must validate the committed Phase 1 changes.
