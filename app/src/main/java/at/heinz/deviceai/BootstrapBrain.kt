@@ -3,7 +3,7 @@ package at.heinz.deviceai
 import java.util.Locale
 
 /** Initial deterministic cognition. Never present these rules as an LLM. */
-enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL }
+enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL, TRAIN }
 
 data class BootstrapDecision(
     val kind: BootstrapKind,
@@ -18,9 +18,18 @@ object BootstrapBrain {
         "(?i)\\b(passwort|password|kennwort|pin|iban|bic|kreditkarte|api[ _-]?key|secret|token|tanf?nummer|zugangscode)\\b"
     )
 
-    fun decide(utterance: String, facts: List<String>): BootstrapDecision {
+    fun decide(utterance: String, facts: List<String>,
+               learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
         val text = utterance.trim().take(2_048)
         val low = text.lowercase(Locale.ROOT)
+        if (low.startsWith("trainiere:")) {
+            val candidate = BootstrapTraining.parse(text)
+            return if (candidate == null) BootstrapDecision(BootstrapKind.REPLY,
+                "Format: Trainiere: <dein Satz> => Akku | Speicher | Downloads | Apps | Gerät | Netzwerk.")
+            else BootstrapDecision(BootstrapKind.TRAIN,
+                message = "Ich lerne den Befehl erst nach deiner Bestätigung.",
+                fact = candidate.first, tool = candidate.second)
+        }
         if (low.startsWith("merke dir:") || low.startsWith("merk dir:")) {
             val fact = text.substringAfter(':').trim()
             return if (fact.length in 3..320 && !unsafe.containsMatchIn(fact)) {
@@ -50,9 +59,14 @@ object BootstrapBrain {
                 "Downloads, Apps, Lumo-Fehler und Geräteinformationen prüfen. " +
                 "Für Webrecherche tippe auf WEB RECHERCHE und gib direkte HTTPS-Quellen an. " +
                 "Schreiben: „Merke dir: ...“, Abrufen: „Was weißt du?“, Löschen: „Vergiss alles“. " +
+                "Du kannst mir neue Nur-Lese-Befehle beibringen mit „Trainiere: <Satz> => Akku“. " +
                 "Freies Sprachdenken und autonomes Lernen sind noch Forschungsziele.")
         fun tool(name: String, args: Map<String, Any?> = emptyMap()): BootstrapDecision =
             BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name, arguments = args)
+        BootstrapTraining.resolve(text, learnedCommands)?.let { name ->
+            return BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name,
+                arguments = if (name == "list_files") mapOf("path" to "/sdcard/Download") else emptyMap())
+        }
         if ("fehler lumo" in low || ("lumo" in low && "logcat" in low))
             return tool("read_logcat", mapOf("packageOrName" to "Lumo", "lines" to 180))
         if ("lumo" in low && ("prüf" in low || "version" in low || "installiert" in low))

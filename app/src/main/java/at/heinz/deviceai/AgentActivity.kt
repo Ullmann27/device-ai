@@ -139,6 +139,7 @@ class AgentActivity : Activity() {
     private lateinit var input: EditText
     private lateinit var sendButton: Button
     private lateinit var bootstrapMemory: BootstrapMemoryStore
+    @Volatile private var activeBootstrapGate: ToolGate? = null
     private var voiceEngine: TextToSpeech? = null
     private var voiceReady = false
     private var voiceEnabled = false
@@ -196,7 +197,7 @@ class AgentActivity : Activity() {
         voiceEngine = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
                 val language = voiceEngine?.setLanguage(Locale.GERMAN)
-                voiceReady = language != TextToSpeech.LANG_MISSING_DATA && language != TextToSpeech.LANG_NOT_SUPPORTED
+                voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
             }
         }
@@ -216,6 +217,9 @@ class AgentActivity : Activity() {
         executor = DeviceToolExecutor(this, bridge)
 
         setContentView(buildUi())
+        BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands()).let {
+            bootstrapMemory.recordAssessment(it.passed, it.total)
+        }
         savedInstanceState?.getString(COMPOSER_DRAFT_KEY)?.let { draft ->
             input.setText(draft)
             input.setSelection(draft.length)
@@ -610,6 +614,9 @@ class AgentActivity : Activity() {
             setOnClickListener { showResearchModeDialog() }
         }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
         card.addView(buttons, matchWidth(top = 10))
+        card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
+            setOnClickListener { showBootstrapTraining() }
+        }, matchWidth(top = 7))
         return card
     }
 
@@ -752,7 +759,9 @@ class AgentActivity : Activity() {
             runResearch(request, researchMode)
             return
         }
-        val decision = BootstrapBrain.decide(request, bootstrapMemory.facts())
+        val decision = BootstrapBrain.decide(
+            request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
+        )
         if (decision.kind == BootstrapKind.DEVICE_TOOL && !bridge.isReady()) {
             addToolActivity("SHIZUKU NICHT BEREIT · Auftrag nicht ausgeführt")
             addAssistantMessage("Für diesen nur lesenden Geräteauftrag benötige ich Shizuku. " +
@@ -780,6 +789,7 @@ class AgentActivity : Activity() {
                     "hilft aber beim gezielten Auswerten meiner Antworten.")
             }
             BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(decision)
+            BootstrapKind.TRAIN -> confirmBootstrapTraining(decision)
             BootstrapKind.REPLY -> addAssistantMessage(decision.message)
         }
         addToolActivity("STARTKERN · lokales Gespräch")
@@ -795,14 +805,18 @@ class AgentActivity : Activity() {
         setBusy(true)
         addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
         val id = "bootstrap-" + UUID.randomUUID().toString()
+        val gate = createToolGate()
+        activeBootstrapGate = gate
         localAgentExecutor.execute {
             val result = runCatching {
                 val proposal = ToolProposal(name, decision.arguments)
                 require(proposal.validate() == null)
-                createToolGate().execute(proposal.invocation(id))
+                gate.execute(proposal.invocation(id))
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
+                if (activeBootstrapGate !== gate) return@runOnUiThread
+                activeBootstrapGate = null
                 activeLocalRequest = false
                 setBusy(false)
                 val value = result.fold(
@@ -817,6 +831,56 @@ class AgentActivity : Activity() {
                 addToolActivity("STARTKERN · Geräteprüfung beendet")
             }
         }
+    }
+
+    private fun confirmBootstrapTraining(decision: BootstrapDecision) {
+        val phrase = checkNotNull(decision.fact)
+        val name = checkNotNull(decision.tool)
+        AlertDialog.Builder(this)
+            .setTitle("Device AI einen Befehl beibringen")
+            .setMessage("Wenn du künftig „$phrase“ schreibst, frage ich nur die lesende Funktion " +
+                "„${ToolRegistry.label(name)}“ an. Keine zusätzlichen Berechtigungen. " +
+                "Das ist ein bestätigtes Lernbeispiel, keine Änderung neuronaler Modellgewichte.")
+            .setNegativeButton("Nicht lernen") { _, _ ->
+                addAssistantMessage("Diesen Befehl habe ich nicht übernommen.")
+            }
+            .setPositiveButton("Beibringen") { _, _ ->
+                val success = bootstrapMemory.teach(phrase, name)
+                val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
+                bootstrapMemory.recordAssessment(report.passed, report.total)
+                addAssistantMessage(if (success) "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. " +
+                    "Trainingscheck: ${report.passed}/${report.total}."
+                    else "Lernbeispiel nicht übernommen (Duplikat oder Speicherlimit).")
+            }.show()
+    }
+
+    private fun showBootstrapTraining() {
+        val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
+        bootstrapMemory.recordAssessment(report.passed, report.total)
+        val detail = buildString {
+            append("Regressionsprüfung: ${report.passed}/${report.total} Aufgaben bestanden.\n")
+            append("Gelernte Befehlssätze: ${bootstrapMemory.learnedCommands().size}/24.\n")
+            append("Feedback: ${bootstrapMemory.positiveCount} positiv, ${bootstrapMemory.negativeCount} negativ.\n\n")
+            append("Beibringen: Trainiere: Prüfe meine Energie => Akku\n")
+            append("Erst nach Freigabe speichere ich die Zuordnung.\n")
+            append("Es werden keine neuronalen Modellgewichte trainiert.\n")
+            append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
+            if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Device AI · Lernlabor")
+            .setMessage(detail)
+            .setPositiveButton("Schließen", null)
+            .setNeutralButton("Gelernte Befehle löschen") { _, _ ->
+                AlertDialog.Builder(this)
+                    .setTitle("Gelernte Befehle löschen?")
+                    .setMessage("Entfernt nur die erlernten Befehlssätze.")
+                    .setNegativeButton("Abbrechen", null)
+                    .setPositiveButton("Löschen") { _, _ ->
+                        bootstrapMemory.clearTraining()
+                        addAssistantMessage("Gelernte Befehlssätze gelöscht.")
+                    }.show()
+            }.show()
     }
 
     private fun showConfirmForget() {
@@ -836,6 +900,8 @@ class AgentActivity : Activity() {
         val text = buildString {
             append("Eigener Startkern ohne Modellimport.\\n\\n")
             append("Gemerkte Fakten: ${facts.size}/32\\n")
+            append("Gelernte Befehle: ${bootstrapMemory.learnedCommands().size}/24\\n")
+            append("Letzter Prüfstand: ${bootstrapMemory.curriculumPassed}/${bootstrapMemory.curriculumTotal}\\n")
             append("Feedback hilfreich: ${bootstrapMemory.positiveCount}\\n")
             append("Feedback nicht hilfreich: ${bootstrapMemory.negativeCount}\\n\\n")
             append("Nur auf ausdrückliches „Merke dir: ...“ wird gespeichert.\\n")
@@ -1669,6 +1735,11 @@ class AgentActivity : Activity() {
         activeChatCancellation?.cancel()
         activeOrchestrator?.cancel()
         activeReasoningRouter?.cancel()
+        activeBootstrapGate?.let {
+            it.cancel()
+            addToolActivity("STARTKERN · Abbruch angefordert; externe Aktion kann noch laufen")
+            return
+        }
         stopDevelopmentJob()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
