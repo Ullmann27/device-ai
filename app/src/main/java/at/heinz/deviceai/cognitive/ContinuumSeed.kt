@@ -150,11 +150,11 @@ object ContinuumSeedCodec {
                 out.writeBoundedString(seed.ownerIdentityReference)
                 val nodes = seed.authorizedNodeIds.map { it.value }.sorted()
                 out.writeInt(nodes.size)
-                nodes.forEach(out::writeBoundedString)
+                nodes.forEach { out.writeBoundedString(it) }
                 out.writeBoundedString(seed.currentStateRoot.value)
                 val migrations = seed.migrationHistoryReferences.sorted()
                 out.writeInt(migrations.size)
-                migrations.forEach(out::writeBoundedString)
+                migrations.forEach { out.writeBoundedString(it) }
                 out.writeLong(seed.createdAtMillis)
             }
         }.toByteArray().also {
