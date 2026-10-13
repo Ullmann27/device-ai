@@ -74,6 +74,7 @@ import at.heinz.deviceai.cognitive.ResearchPromptBoundary
 import at.heinz.deviceai.cognitive.ResearchProviderPolicy
 import at.heinz.deviceai.cognitive.ResearchSynthesisOutput
 import at.heinz.deviceai.cognitive.ResearchSynthesizer
+import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider
 import at.heinz.deviceai.cognitive.WebLearningInbox
 import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.cognitive.WebLearningCandidate
@@ -232,6 +233,10 @@ class AgentActivity : Activity() {
         executor = DeviceToolExecutor(this, bridge)
 
         setContentView(buildUi())
+        val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
+        neuralMonitor.text = if (previousTraining != null)
+            "NEURON · Bereits gelernt · Tippe TRAINING oder HÄRTETEST"
+        else "NEURON · Bereit · Tippe JETZT TRAINIEREN"
         BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands()).let {
             bootstrapMemory.recordAssessment(it.passed, it.total)
         }
@@ -443,7 +448,7 @@ class AgentActivity : Activity() {
         }
         pane.addView(keyboardTitle, matchWidth())
 
-        neuralMonitor = textView("NEURON · Kein Training aktiv", 11f, CYAN, true).apply {
+        neuralMonitor = textView("NEURON · Bereit · Training per Knopf starten", 11f, CYAN, true).apply {
             contentDescription = "Neuronaler Lernfortschritt und Trainingsfehler"
             setPadding(dp(8), dp(5), dp(8), dp(3))
         }
@@ -645,6 +650,22 @@ class AgentActivity : Activity() {
         card.addView(buttons, matchWidth(top = 10))
         card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
             setOnClickListener { showBootstrapTraining() }
+        }, matchWidth(top = 7))
+        card.addView(actionButton("NEURON · JETZT TRAINIEREN", accent = true).apply {
+            setOnClickListener {
+                val existing = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
+                if (existing == null) handleNeuralRequest("Neuron Demo") else {
+                    AlertDialog.Builder(this@AgentActivity)
+                        .setTitle("Neuron ist bereits trainiert")
+                        .setMessage("Für zusätzliche eigene Beispiele nutze LERN-GESPRÄCH. " +
+                            "Ein neuer Demo-Durchgang würde bestehende Gewichte ersetzen. " +
+                            "Du kannst außerdem die unbekannten Testsätze prüfen.")
+                        .setNegativeButton("Schließen", null)
+                        .setNeutralButton("Härtetest") { _, _ -> handleNeuralRequest("Neuron Härtetest") }
+                        .setPositiveButton("Weiter lernen") { _, _ -> beginNeuralCoach() }
+                        .show()
+                }
+            }
         }, matchWidth(top = 7))
         card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
             setOnClickListener { beginNeuralCoach() }
@@ -1248,8 +1269,10 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Explizite Web-Recherche")
             .setMessage(
-                "Webzugriff startet nur nach dieser Auswahl. Allgemeine Websuche ist nicht konfiguriert; " +
-                    "füge direkte HTTPS-Quell-URLs in die Frage ein. Seiteninhalte gelten als nicht vertrauenswürdig."
+                "Suche nach einem Thema in der deutschsprachigen Wikipedia (kein API-Schlüssel nötig). " +
+                    "Die Suchfrage wird erst nach deiner Bestätigung an Wikimedia gesendet. " +
+                    "Du kannst alternativ direkte HTTPS-Quellen im Chat angeben. " +
+                    "Quellen bleiben unüberprüfte Inhalte und werden nicht automatisch gelernt."
             )
             .setItems(choices) { _, index ->
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
@@ -1259,12 +1282,9 @@ class AgentActivity : Activity() {
                 val arm = { resume: Boolean ->
                     researchResumeRequested = resume
                     researchArmed = true
-                    activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Quelle(n) als HTTPS-URL angeben"
-                    input.hint = "Recherchefrage und direkte HTTPS-Quell-URL(s)…"
-                    Toast.makeText(
-                        this, "Web-Recherche ${researchMode.name} aktiviert – nur für die nächste Eingabe.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Thema oder HTTPS-URL"
+                    input.hint = "Thema recherchieren oder direkte HTTPS-URL…"
+                    showResearchTopicDialog()
                 }
                 if (pending != null && saved != null && pending.phase !in setOf(ResearchPhase.COMPLETE)) {
                     AlertDialog.Builder(this)
@@ -1280,6 +1300,35 @@ class AgentActivity : Activity() {
             }
             .setNegativeButton("Abbrechen", null)
             .show()
+    }
+
+    private fun showResearchTopicDialog() {
+        val topic = EditText(this).apply {
+            hint = "Thema, z. B. Wie funktionieren Solarzellen?"
+            setSingleLine(true)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+            setPadding(dp(14), dp(13), dp(14), dp(13))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Device AI · Wikipedia durchsuchen")
+            .setMessage("Gib ein Thema ein. Nach der Bestätigung wird diese Suchfrage an Wikimedia gesendet. " +
+                "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
+                "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
+            .setView(topic)
+            .setNegativeButton("Abbrechen") { _, _ -> researchArmed = false }
+            .setNeutralButton("Im Chat schreiben") { _, _ ->
+                input.requestFocus()
+            }
+            .setPositiveButton("JETZT SUCHEN") { _, _ ->
+                val value = topic.text.toString().trim()
+                if (value.length !in 3..200) {
+                    Toast.makeText(this, "Bitte ein Thema mit 3–200 Zeichen eingeben.", Toast.LENGTH_LONG).show()
+                } else if (!busy) {
+                    researchArmed = false
+                    addUserMessage(value)
+                    runResearch(value, researchMode)
+                }
+            }.show()
     }
 
     private fun runResearch(question: String, mode: ResearchMode) {
@@ -1310,7 +1359,8 @@ class AgentActivity : Activity() {
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
         val engine = DeepResearchEngine(
-            discovery = at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
+            discovery = if (urls.isEmpty()) WikipediaResearchDiscoveryProvider() else
+                at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
             provider = HttpReadOnlyResearchProvider(
                 ResearchProviderPolicy(
                     totalTimeoutMillis = budget.totalDeadlineMillis.toInt(),
@@ -1364,7 +1414,13 @@ class AgentActivity : Activity() {
                         append(dossier.synthesis?.text ?: "Keine Synthese verfügbar.")
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
-                            append("\n\nAllgemeine Websuche ist nicht eingerichtet; recherchiert wurden nur direkte HTTPS-Quellen.")
+                            append("\n\nDirekte HTTPS-Quellen wurden verwendet.")
+                        } else {
+                            append("\n\nRecherche über die deutschsprachige Wikipedia. " +
+                                "Das ist keine vollständige Suche im gesamten Internet.")
+                        }
+                        if (dossier.sources.isEmpty()) {
+                            append("\n\nKeine abrufbaren Quellen. Prüfe Internetverbindung und Suchbegriff.")
                         }
                         if (localRuntime.state != LocalModelState.READY) {
                             append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
@@ -2511,12 +2567,16 @@ class AgentActivity : Activity() {
             background = rounded(if (user) USER_BUBBLE else ASSISTANT_BUBBLE, 18, if (user) null else BORDER)
         }
 
+        // Never use a fixed 620dp bubble: on a Fold with a sidebar, the
+        // conversation pane can be much narrower than the device width.
         row.addView(
             bubble,
             LinearLayout.LayoutParams(
-                if (resources.configuration.screenWidthDp >= 700) dp(620) else dp(310),
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+            ).apply {
+                if (user) marginStart = dp(24) else marginEnd = dp(24)
+            }
         )
 
         chatContainer.addView(
