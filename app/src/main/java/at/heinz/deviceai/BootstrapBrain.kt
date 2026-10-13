@@ -22,6 +22,15 @@ object BootstrapBrain {
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
         val text = utterance.trim().take(2_048)
         val low = text.lowercase(Locale.ROOT)
+        // The deterministic intent recognizer must not mistake a dangerous mixed
+        // request or forged role header for permission to run a harmless-looking tool.
+        if (Regex("""(?i)^(system|developer|assistant|tool)\\s*:""").containsMatchIn(text) ||
+            Regex("""(?i)\\b(lösch\\w*|entfern\\w*|deinstallier\\w*|installier\\w*|verschieb\\w*|starte\\w*|stoppe?\\w*|überweis\\w*|bezahl\\w*)\\b""").containsMatchIn(text)
+        ) return BootstrapDecision(
+            BootstrapKind.REPLY,
+            "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
+                "Der eigene Startkern führt deshalb keinerlei Gerätewerkzeug aus."
+        )
         if (low.startsWith("trainiere:")) {
             val candidate = BootstrapTraining.parse(text)
             return if (candidate == null) BootstrapDecision(BootstrapKind.REPLY,
