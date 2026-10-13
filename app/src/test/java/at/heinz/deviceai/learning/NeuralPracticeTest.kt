@@ -4,6 +4,12 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NeuralPracticeTest {
+    @Test fun explicitManualRehearsalRequiresNeuralCommand() {
+        assertEquals(NeuralCommandKind.PRACTICE,NeuralCommandParser.parse("Neuron üben")!!.kind)
+        assertEquals(NeuralCommandKind.PRACTICE,NeuralCommandParser.parse("Neuron wiederholen")!!.kind)
+        assertNull(NeuralCommandParser.parse("übe zufällig"))
+    }
+
     @Test fun emptyModelHasNoApprovedTrainingData() {
         val lab=NeuralDialogue()
         assertEquals(0,lab.lessonCount())

@@ -666,7 +666,7 @@ class AgentActivity : Activity() {
                             "Du kannst außerdem die unbekannten Testsätze prüfen.")
                         .setNegativeButton("Schließen", null)
                         .setNeutralButton("Härtetest") { _, _ -> handleNeuralRequest("Neuron Härtetest") }
-                        .setPositiveButton("Weiter lernen") { _, _ -> beginNeuralCoach() }
+                        .setPositiveButton("JETZT WEITERÜBEN") { _, _ -> handleNeuralRequest("Neuron üben") }
                         .show()
                 }
             }
@@ -1006,12 +1006,17 @@ class AgentActivity : Activity() {
             addAssistantMessage("Lernbeispiel abgelehnt: kein zulässiger, unkritischer Speichertext.")
             return
         }
-        val changes = command.kind in setOf(NeuralCommandKind.DEMO, NeuralCommandKind.TEACH, NeuralCommandKind.RESET)
+        val changes = command.kind in setOf(NeuralCommandKind.DEMO, NeuralCommandKind.TEACH,
+            NeuralCommandKind.RESET, NeuralCommandKind.PRACTICE)
         if (!changes) { runNeuralCommand(command); return }
         val description = when (command.kind) {
             NeuralCommandKind.DEMO -> "Trainiert ein kleines Netz auf 16 künstlichen Gruß-/Frage-Beispielen, prüft 8 getrennte Testsätze. " +
                 "Maximal 4000 Schritte und 2 Sekunden Training. Keine privaten Chatverläufe, keine Gerätewerkzeuge. " +
                 "Bestehende neuronale Beispiele werden nicht überschrieben."
+            NeuralCommandKind.PRACTICE -> "Übt mit deinen bereits bestätigten Sprachbeispielen in einem " +
+                "begrenzten Durchgang mit maximal 200 neuronalen Aktualisierungen. " +
+                "Unabhängige Prüfaufgaben entscheiden, ob die neuen Gewichte übernommen werden. " +
+                "Bei einer Verschlechterung bleibt der bisherige Lernstand unverändert."
             NeuralCommandKind.TEACH -> "Dieses Beispiel ausdrücklich lernen: „${command.text}“ → ${if (command.label == 0) "Gruß" else "Frage"}. " +
                 "Maximal 800 Schritte. Es werden lokale Gewichte verändert, keine Berechtigungen."
             else -> "Entfernt nur die Gewichte und Beispiele dieses neuronalen Experiments. Fakten, Befehle und Identität bleiben erhalten."
@@ -1053,6 +1058,22 @@ class AgentActivity : Activity() {
                             "nicht allgemeines Sprachverstehen."
                     }
                     NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
+                    NeuralCommandKind.PRACTICE -> {
+                        val practice = lab.practice(
+                            steps = 200, cancelled = cancellation::get, onProgress = progressCallback
+                        )
+                        save = practice.accepted
+                        measurement = "Neuronaler Wiederholungszyklus: " +
+                            "${practice.completedSteps}/200 Gewichtsaktualisierungen; " +
+                            "Trainingsverlust %.5f → %.5f. ".format(
+                                Locale.ROOT, practice.trainingLossBefore, practice.trainingLossAfter
+                            ) +
+                            "Unbekannte Prüfbeispiele: ${practice.unfamiliarBefore.correct}/12 → " +
+                            "${practice.unfamiliarAfter.correct}/12. " +
+                            (if (save) "Verbesserte Gewichte zur Speicherung vorbereitet. "
+                            else "Bisherige Gewichte beibehalten. ") + practice.reason
+                        measurement!!
+                    }
                     NeuralCommandKind.TEACH -> {
                         val training = lab.teach(command.text, command.label, true, cancellation::get, progressCallback)
                         save = !training.stoppedEarly
@@ -1179,7 +1200,7 @@ class AgentActivity : Activity() {
             val practice = NeuralPracticeScheduler(this@AgentActivity)
             append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS")
                 .append(" · ").append(practice.lastStatus).append("\n")
-            append("Neuron Demo · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
+            append("Neuron Demo · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())

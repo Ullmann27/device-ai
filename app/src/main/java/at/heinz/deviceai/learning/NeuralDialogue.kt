@@ -140,7 +140,7 @@ class NeuralDialogue {
 
     @Synchronized fun status(): String = "Neuronales Gesprächsexperiment: ${lessons.size}/64 Beispiele, ${model.updates} Gewichtsaktualisierungen. " +
         "32 Eingaben, 8 versteckte Neuronen, 1 Ausgabe. Kein Sprachmodell.\n" +
-        "Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß · Neuron zurücksetzen"
+        "Neuron Demo · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß · Neuron zurücksetzen"
     @Synchronized fun reset() { model = TinyNeuralNetwork(32, 42); lessons = emptyList() }
     @Synchronized fun save(): ByteArray = LearningSnapshot.encode { out ->
         out.writeInt(0x44444331)
@@ -195,7 +195,7 @@ class NeuralDialogue {
     }
 }
 
-enum class NeuralCommandKind { STATUS, DEMO, PREDICT, TEACH, RESET, UNFAMILIAR_TEST }
+enum class NeuralCommandKind { STATUS, DEMO, PREDICT, TEACH, RESET, UNFAMILIAR_TEST, PRACTICE }
 data class NeuralCommand(val kind: NeuralCommandKind, val text: String = "", val label: Int = 0)
 object NeuralCommandParser {
     fun parse(input: String): NeuralCommand? {
@@ -205,6 +205,8 @@ object NeuralCommandParser {
         return when {
             low == "neuron" || low == "neuron status" -> NeuralCommand(NeuralCommandKind.STATUS)
             low == "neuron demo" -> NeuralCommand(NeuralCommandKind.DEMO)
+            low == "neuron üben" || low == "neuron wiederholen" ->
+                NeuralCommand(NeuralCommandKind.PRACTICE)
             low == "neuron härtetest" || low == "neuron generalisierung" ||
                 low == "neuron ood" -> NeuralCommand(NeuralCommandKind.UNFAMILIAR_TEST)
             low == "neuron zurücksetzen" -> NeuralCommand(NeuralCommandKind.RESET)
