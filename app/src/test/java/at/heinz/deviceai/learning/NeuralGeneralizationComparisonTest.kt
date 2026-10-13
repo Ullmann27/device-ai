@@ -21,17 +21,17 @@ class NeuralGeneralizationComparisonTest {
 
     @Test fun charBigramsAreBoundedReproducibleAndNeverEncodeLabels() {
         val lab=NeuralGeneralizationComparison
-        val a=lab.features("Willkommen Zuhause",lab.Encoder.CHAR_BIGRAM)
-        val b=lab.features("Wieviel kostet es?",lab.Encoder.CHAR_BIGRAM)
+        val a=lab.features("Willkommen Zuhause",NeuralGeneralizationComparison.Encoder.CHAR_BIGRAM)
+        val b=lab.features("Wieviel kostet es?",NeuralGeneralizationComparison.Encoder.CHAR_BIGRAM)
         assertEquals(32,a.size)
         assertTrue(a.all { it==0.0 || it==1.0 })
-        assertEquals(a,lab.features("Willkommen Zuhause",lab.Encoder.CHAR_BIGRAM))
+        assertEquals(a,lab.features("Willkommen Zuhause",NeuralGeneralizationComparison.Encoder.CHAR_BIGRAM))
         assertNotEquals(a,b)
         assertThrows(IllegalArgumentException::class.java) {
-            lab.features("",lab.Encoder.CHAR_BIGRAM)
+            lab.features("",NeuralGeneralizationComparison.Encoder.CHAR_BIGRAM)
         }
         assertThrows(IllegalArgumentException::class.java) {
-            lab.features("a".repeat(321),lab.Encoder.CHAR_BIGRAM)
+            lab.features("a".repeat(321),NeuralGeneralizationComparison.Encoder.CHAR_BIGRAM)
         }
     }
 
