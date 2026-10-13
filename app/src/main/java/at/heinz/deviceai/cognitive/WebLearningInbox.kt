@@ -15,6 +15,21 @@ data class WebLearningCandidate(
 )
 
 object WebLearningInbox {
+    /** Bounded recall of explicitly reviewed source-notes; not a claim of objective truth. */
+    fun summarizeSavedNotes(notes: List<WebLearningCandidate>): String {
+        if (notes.isEmpty()) return "Ich habe noch keine ausdrücklich übernommenen Internet-Quellenhinweise. " +
+            "Öffne zuerst WEB RECHERCHE und dann INTERNET · LERNSTOFF PRÜFEN."
+        return buildString {
+            append("Deine geprüften Quellenhinweise (keine unabhängig bewiesenen Fakten):")
+            notes.take(24).forEachIndexed { index, note ->
+                append("\\n\\n").append(index + 1).append(". ").append(note.text.take(240))
+                append("\\nQuelle: ").append(note.sourceUrl.take(220))
+                append("\\nSHA-256: ").append(note.sourceHash.take(16))
+                if (note.contradictory) append(" · Widerspruch")
+            }
+        }.take(12_000)
+    }
+
     fun candidates(dossier: ResearchDossier): List<WebLearningCandidate> {
         val canonical = dossier.sources.associateBy { it.canonicalUrl }
         return dossier.graph.claims.asSequence()

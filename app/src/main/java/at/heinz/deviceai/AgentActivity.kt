@@ -797,6 +797,19 @@ class AgentActivity : Activity() {
             handleNeuralCoachInput(request)
             return
         }
+        if (request.equals("Was hast du aus dem Internet gelernt?", true) ||
+            request.equals("Zeige Internetwissen", true) ||
+            request.equals("Web Wissen", true)
+        ) {
+            input.text.clear()
+            addUserMessage(request)
+            val notes = runCatching { WebLearningJournal(this).notes() }
+            addAssistantMessage(notes.fold(
+                onSuccess = WebLearningInbox::summarizeSavedNotes,
+                onFailure = { "Quellnotizen nicht lesbar; bestehende Daten wurden nicht verändert." }
+            ))
+            return
+        }
         if (NeuralDialogue.accepts(request)) {
             input.text.clear()
             addUserMessage(request)
@@ -1134,7 +1147,9 @@ class AgentActivity : Activity() {
                 .setMessage("Noch keine überprüfbaren Recherche-Aussagen. Wähle WEB RECHERCHE und gib eine direkte HTTPS-Quelladresse an. " +
                     "Bisher ausdrücklich gespeicherte, aber nicht als wahr bestätigte Quellnotizen: ${learned.getOrNull().orEmpty().size}. " +
                     "Ohne Modellimport kannst du Informationen recherchieren, aber beliebige Webseiten sind keine geprüfte Wahrheit.")
-                .setPositiveButton("Schließen", null).show()
+                .setPositiveButton("Schließen", null)
+                .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
+                .show()
             return
         }
         val titles = candidates.map { note ->
@@ -1145,7 +1160,30 @@ class AgentActivity : Activity() {
                 "kein automatisch trainiertes Sprachmodell, keine Geräteberechtigung. " +
                 "Bereits geprüft: ${learned.getOrNull().orEmpty().size}/24.")
             .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
-            .setNegativeButton("Schließen", null).show()
+            .setNegativeButton("Schließen", null)
+            .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
+            .show()
+    }
+
+    private fun showSavedWebNotes() {
+        val stored = runCatching { WebLearningJournal(this).notes() }
+        val content = stored.fold(
+            onSuccess = WebLearningInbox::summarizeSavedNotes,
+            onFailure = { "Quellnotizen beschädigt; Originaldaten bleiben unverändert." }
+        )
+        AlertDialog.Builder(this).setTitle("Device AI · Quellen-Gedächtnis")
+            .setMessage(content)
+            .setPositiveButton("Schließen", null)
+            .setNeutralButton("Quellnotizen löschen") { _, _ ->
+                AlertDialog.Builder(this)
+                    .setTitle("Alle Quellenhinweise löschen?")
+                    .setMessage("Löscht nur ausdrücklich gespeicherte Quellenhinweise, nicht neuronale Gewichte oder die Continuum-Identität.")
+                    .setNegativeButton("Abbrechen", null)
+                    .setPositiveButton("Löschen") { _, _ ->
+                        val done = WebLearningJournal(this).clear()
+                        addAssistantMessage(if (done) "Quellen-Gedächtnis geleert." else "Löschen fehlgeschlagen.")
+                    }.show()
+            }.show()
     }
 
     private fun showWebLearningCandidate(note: WebLearningCandidate) {

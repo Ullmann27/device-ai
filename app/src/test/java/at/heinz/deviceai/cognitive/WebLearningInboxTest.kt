@@ -23,6 +23,16 @@ class WebLearningInboxTest {
         "fact-1",text,ProvenanceType.EXTERNAL_SOURCE,urls,createdAt=12345678L
     )
 
+    @Test fun retrievalPreservesCitationsAndNeverClaimsWorldTruth() {
+        val s = WebLearningCandidate("e".repeat(64), "https://study.example.org/a",
+            "c".repeat(64), "Eine nachprüfbare Beispielaussage.", 1, false)
+        val summary = WebLearningInbox.summarizeSavedNotes(listOf(s))
+        assertTrue(summary.contains("keine unabhängig bewiesenen Fakten"))
+        assertTrue(summary.contains(s.sourceUrl))
+        assertTrue(summary.contains(s.sourceHash.take(16)))
+        assertTrue(WebLearningInbox.summarizeSavedNotes(emptyList()).contains("noch keine"))
+    }
+
     @Test fun retainsSourceHashAndEvidenceWithoutAutomaticallyTrustingIt() {
         val s=source("https://example.org/page","a".repeat(64))
         val candidates=WebLearningInbox.candidates(dossier(
