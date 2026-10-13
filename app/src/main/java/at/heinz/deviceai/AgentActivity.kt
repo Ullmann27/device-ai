@@ -77,6 +77,7 @@ import at.heinz.deviceai.cognitive.ResearchSynthesizer
 import at.heinz.deviceai.cognitive.WebLearningInbox
 import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.cognitive.WebLearningCandidate
+import at.heinz.deviceai.cognitive.GroundedWebRecall
 import at.heinz.deviceai.localmodel.ImportedLocalModel
 import at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
@@ -816,6 +817,19 @@ class AgentActivity : Activity() {
             handleNeuralRequest(request)
             return
         }
+        // Only knowledge questions reach the local source retrieval. Never use
+        // sources as executable plans, tools or independent factual authority.
+        if (GroundedWebRecall.topicOf(request) != null) {
+            val sourceAnswer = runCatching {
+                GroundedWebRecall.answer(request, WebLearningJournal(this).notes())
+            }.getOrElse {
+                "Quellen-Gedächtnis nicht lesbar; keine bestehenden Daten verändert."
+            }
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(sourceAnswer ?: "Keine Quellenfrage erkannt.")
+            return
+        }
         // Web research remains explicit opt-in; never infer internet permission from prose.
         if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
             input.text.clear()
@@ -1069,6 +1083,7 @@ class AgentActivity : Activity() {
             append("Korrigiere: <alter Fakt> => <neuer Fakt> · Widerrufe: <Fakt>\n\n")
             append(bootstrapMemory.neuralReport()).append("\n")
             append("Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
+            append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
