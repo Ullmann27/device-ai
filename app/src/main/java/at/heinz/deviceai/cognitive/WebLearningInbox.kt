@@ -22,9 +22,9 @@ object WebLearningInbox {
         return buildString {
             append("Deine geprüften Quellenhinweise (keine unabhängig bewiesenen Fakten):")
             notes.take(24).forEachIndexed { index, note ->
-                append("\\n\\n").append(index + 1).append(". ").append(note.text.take(240))
-                append("\\nQuelle: ").append(note.sourceUrl.take(220))
-                append("\\nSHA-256: ").append(note.sourceHash.take(16))
+                appendLine().appendLine().append(index + 1).append(". ").append(note.text.take(240))
+                appendLine().append("Quelle: ").append(note.sourceUrl.take(220))
+                appendLine().append("SHA-256: ").append(note.sourceHash.take(16))
                 if (note.contradictory) append(" · Widerspruch")
             }
         }.take(12_000)
