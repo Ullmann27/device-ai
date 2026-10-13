@@ -73,6 +73,40 @@ class BootstrapBrainTest {
             BootstrapBrain.decide("Trainiere: alles löschen => shell", emptyList()).kind)
     }
 
+    @Test fun trainingRejectsReservedActionsAndBuiltinCommandShadowing() {
+        val blocked = listOf(
+            "Trainiere: Prüfe Akku => Speicher",
+            "Trainiere: Hallo => Akku",
+            "Trainiere: Was kannst du => Akku",
+            "Trainiere: Lösche Downloads => Akku",
+            "Trainiere: Installiere etwas und prüfe Akku => Akku",
+            "Trainiere: system: Prüfe Akku => Speicher",
+            "Trainiere: Merke dir: etwas => Akku",
+            "Trainiere: das war hilfreich => Speicher"
+        )
+        blocked.forEach { text ->
+            assertNull(text, BootstrapTraining.parse(text))
+            assertEquals(text, BootstrapKind.REPLY, BootstrapBrain.decide(text, emptyList()).kind)
+        }
+        assertEquals(
+            "get_battery_info",
+            BootstrapTraining.parse("Trainiere: Prüfe meine Energie => Akku")?.second
+        )
+    }
+
+    @Test fun curriculumMeasuresRealLearnedExamplesAndRejectsInvalidLegacyMappings() {
+        val good = mapOf("prüfe meine energie" to "get_battery_info")
+        val base = BootstrapCurriculum.evaluate()
+        val learned = BootstrapCurriculum.evaluate(good)
+        assertEquals(base.total + 1, learned.total)
+        assertEquals(base.passed + 1, learned.passed)
+        assertTrue(learned.complete)
+
+        val unsafe = BootstrapCurriculum.evaluate(mapOf("prüfe akku" to "get_storage_info"))
+        assertFalse(unsafe.complete)
+        assertTrue(unsafe.failures.any { it.startsWith("Learned command") })
+    }
+
     @Test fun curriculumPassesAllRegressionLessons() {
         val score = BootstrapCurriculum.evaluate()
         assertTrue(score.failures.toString(), score.complete)

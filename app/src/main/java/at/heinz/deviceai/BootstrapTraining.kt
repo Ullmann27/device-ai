@@ -16,11 +16,30 @@ object BootstrapTraining {
     fun normalize(value: String): String =
         value.trim().lowercase(Locale.ROOT).replace(Regex("\\s+"), " ")
 
+    private val forbiddenTrainingWords = Regex(
+        """(?i)\b(lösch\w*|entfern\w*|deinstallier\w*|installier\w*|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*|passwort|password|pin|iban|token|secret)\b"""
+    )
+    private val reservedRoles = Regex("""(?i)^(system|developer|assistant|tool|user)\s*:""")
+    private val reservedCommands = setOf(
+        "hallo", "hi", "hey", "servus", "guten morgen", "guten tag",
+        "wer bist du", "wie heißt du", "was kannst du", "hilfe", "befehle",
+        "was weißt du", "erinnerungen", "das war hilfreich", "gut gemacht",
+        "das war nicht hilfreich", "das ist falsch", "vergiss alles",
+        "lernspeicher löschen", "lösche meine erinnerungen"
+    )
+
     fun validate(phrase: String, tool: String): Pair<String, String>? {
         val key = normalize(phrase)
         if (tool !in allowlist.values || ToolRegistry.risk(tool) != Risk.READ_ONLY ||
             key.length !in 4..90 || !key.matches(Regex("[a-z0-9äöüß .,!?:-]+"))) return null
-        if (listOf("trainiere:", "merke dir:", "vergiss ", "lösche ").any(key::startsWith)) return null
+        if (forbiddenTrainingWords.containsMatchIn(key) || reservedRoles.containsMatchIn(key) ||
+            key in reservedCommands ||
+            listOf("trainiere:", "merke dir:", "merk dir:", "vergiss ", "lösche ").any(key::startsWith)
+        ) return null
+        // A trained phrase must not override the built-in device intents.
+        // The current built-in recognizer runs after learned mappings; without
+        // this check an owner could accidentally remap "Prüfe Akku" to storage.
+        if (BootstrapBrain.decide(key, emptyList()).kind != BootstrapKind.REPLY) return null
         return key to tool
     }
 
@@ -76,6 +95,17 @@ object BootstrapCurriculum {
             if (got.kind != lesson.kind || (lesson.tool != null && got.tool != lesson.tool))
                 errors.add(lesson.label)
         }
-        return BootstrapTrainingReport(lessons.size, lessons.size - errors.size, errors)
+        // Measure actual learned phrase recognition, not just the fixed curriculum.
+        // Invalid/stale imported entries must fail closed rather than count as learning.
+        learned.entries.take(24).forEachIndexed { index, (phrase, expectedTool) ->
+            val resolved = BootstrapTraining.resolve(phrase, learned)
+            val response = BootstrapBrain.decide(phrase, emptyList(), learned)
+            if (resolved != expectedTool || response.kind != BootstrapKind.DEVICE_TOOL ||
+                response.tool != expectedTool ||
+                ToolRegistry.risk(expectedTool) != Risk.READ_ONLY
+            ) errors.add("Learned command " + (index + 1))
+        }
+        val evaluated = lessons.size + learned.size.coerceAtMost(24)
+        return BootstrapTrainingReport(evaluated, evaluated - errors.size, errors)
     }
 }
