@@ -7,7 +7,9 @@ data class NeuralDialogueReport(
     val after: NeuralEvaluation,
     val holdout: NeuralEvaluation,
     val holdoutBefore: NeuralEvaluation,
-    val training: NeuralTraining
+    val training: NeuralTraining,
+    val unfamiliarBefore: NeuralEvaluation,
+    val unfamiliarAfter: NeuralEvaluation
 )
 
 /** Experimental dialogue classification, NOT language generation or a factual authority.
@@ -40,11 +42,13 @@ class NeuralDialogue {
         val train = examples(DEMO_TRAINING)
         val before = candidate.evaluate(train)
         val holdoutBefore = candidate.evaluate(examples(DEMO_HOLDOUT))
+        val unfamiliarBefore = candidate.evaluate(examples(UNFAMILIAR_HOLDOUT))
         val result = candidate.train(train, 4000, cancelled = cancelled, onProgress = onProgress)
         val after = candidate.evaluate(train)
         val holdout = candidate.evaluate(examples(DEMO_HOLDOUT))
         if (!result.stoppedEarly && !cancelled()) { model = candidate; lessons = DEMO_TRAINING.toList() }
-        return NeuralDialogueReport(before, after, holdout, holdoutBefore, result)
+        return NeuralDialogueReport(before, after, holdout, holdoutBefore, result,
+            unfamiliarBefore, candidate.evaluate(examples(UNFAMILIAR_HOLDOUT)))
     }
     @Synchronized fun teach(
         text: String, label: Int, approved: Boolean, cancelled: () -> Boolean = { false },
@@ -73,6 +77,10 @@ class NeuralDialogue {
         return "$response\nNeuronales Experiment: $label, Modellscore ${String.format(Locale.ROOT, "%.3f", if (score < 0.5) 1-score else score)}. " +
             "Die Zuordnung wurde neuronal gelernt; dieser Antworttext ist vorgegeben. Noch keine freie Sprachgenerierung."
     }
+    /** OOD benchmark; never trains or modifies weights. Unknown word tokens by design. */
+    @Synchronized fun unfamiliarEvaluation(): NeuralEvaluation =
+        model.evaluate(examples(UNFAMILIAR_HOLDOUT))
+
     @Synchronized fun status(): String = "Neuronales Gesprächsexperiment: ${lessons.size}/64 Beispiele, ${model.updates} Gewichtsaktualisierungen. " +
         "32 Eingaben, 8 versteckte Neuronen, 1 Ausgabe. Kein Sprachmodell.\n" +
         "Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß · Neuron zurücksetzen"
@@ -95,6 +103,14 @@ class NeuralDialogue {
         val DEMO_HOLDOUT = listOf(
             "hallo guten tag" to 0, "servus guten morgen" to 0, "hey guten tag" to 0, "hallo servus" to 0,
             "was lernst du" to 1, "wie kannst du helfen" to 1, "wer weiß das" to 1, "wie geht das" to 1
+        )
+        // Frozen novel-vocabulary corpus. Deliberately no tokens from DEMO_TRAINING.
+        val UNFAMILIAR_HOLDOUT = listOf(
+            "moin" to 0, "grüß gott" to 0, "tachchen" to 0,
+            "willkommen zurück" to 0, "schönen abend" to 0, "na ihr" to 0,
+            "woher stammt silizium" to 1, "warum leuchten sterne" to 1,
+            "welche zeit herrscht" to 1, "wann beginnt sommer" to 1,
+            "wo liegt graz" to 1, "wieviel kostet brot" to 1
         )
         fun accepts(text: String): Boolean {
             val key = text.trim().lowercase(Locale.ROOT)
@@ -122,7 +138,7 @@ class NeuralDialogue {
     }
 }
 
-enum class NeuralCommandKind { STATUS, DEMO, PREDICT, TEACH, RESET }
+enum class NeuralCommandKind { STATUS, DEMO, PREDICT, TEACH, RESET, UNFAMILIAR_TEST }
 data class NeuralCommand(val kind: NeuralCommandKind, val text: String = "", val label: Int = 0)
 object NeuralCommandParser {
     fun parse(input: String): NeuralCommand? {
@@ -132,6 +148,8 @@ object NeuralCommandParser {
         return when {
             low == "neuron" || low == "neuron status" -> NeuralCommand(NeuralCommandKind.STATUS)
             low == "neuron demo" -> NeuralCommand(NeuralCommandKind.DEMO)
+            low == "neuron härtetest" || low == "neuron generalisierung" ||
+                low == "neuron ood" -> NeuralCommand(NeuralCommandKind.UNFAMILIAR_TEST)
             low == "neuron zurücksetzen" -> NeuralCommand(NeuralCommandKind.RESET)
             low.startsWith("neuron:") -> text.substringAfter(':').trim().takeIf { it.length in 1..320 }
                 ?.let { NeuralCommand(NeuralCommandKind.PREDICT, it) }

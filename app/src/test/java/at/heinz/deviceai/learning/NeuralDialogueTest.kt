@@ -4,6 +4,27 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NeuralDialogueTest {
+    @Test fun frozenUnseenVocabularyEvaluationDoesNotTrainOrLeakTrainingPhrases() {
+        val unknown = NeuralDialogue.UNFAMILIAR_HOLDOUT
+        assertEquals(12, unknown.size)
+        val trainedWords = NeuralDialogue.DEMO_TRAINING.flatMap { it.first.split(" ") }.toSet()
+        val testWords = unknown.flatMap { it.first.split(" ") }.toSet()
+        assertTrue("Unseen benchmark overlaps training data: " + trainedWords.intersect(testWords),
+            trainedWords.intersect(testWords).isEmpty())
+        val lab = NeuralDialogue()
+        val initial = lab.save()
+        val initialMetrics = lab.unfamiliarEvaluation()
+        assertEquals(12, initialMetrics.total)
+        assertArrayEquals(initial,lab.save())
+        val result = lab.trainDemo(true)
+        assertEquals(initialMetrics,result.unfamiliarBefore)
+        assertEquals(12,result.unfamiliarAfter.total)
+        assertEquals(result.unfamiliarAfter,lab.unfamiliarEvaluation())
+        val snapshot=lab.save()
+        lab.unfamiliarEvaluation()
+        assertArrayEquals(snapshot,lab.save())
+    }
+
     @Test fun explicitDemoLearnsThenPersistsConversationalClassifier() {
         val lab = NeuralDialogue()
         assertTrue(lab.reply("hallo").contains("noch nicht trainiert"))

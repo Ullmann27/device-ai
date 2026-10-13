@@ -962,6 +962,14 @@ class AgentActivity : Activity() {
                 val message = when (command.kind) {
                     NeuralCommandKind.STATUS -> lab.status()
                     NeuralCommandKind.PREDICT -> lab.reply(command.text)
+                    NeuralCommandKind.UNFAMILIAR_TEST -> {
+                        val measure = lab.unfamiliarEvaluation()
+                        "Neuronaler Härtetest (12 neue Beispielsätze mit unbekanntem Wortschatz): " +
+                            "${measure.correct}/${measure.total} erkannt, Fehler: " +
+                            "%.4f".format(Locale.ROOT, measure.loss) +
+                            ". Kein erneutes Training. Das misst nur die Gruß-/Frage-Erkennung, " +
+                            "nicht allgemeines Sprachverstehen."
+                    }
                     NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
                     NeuralCommandKind.TEACH -> {
                         val training = lab.teach(command.text, command.label, true, cancellation::get, progressCallback)
@@ -977,6 +985,7 @@ class AgentActivity : Activity() {
                             "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
                             "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
                             "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
+                            "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
                             "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
                             "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
                         measurement!!
@@ -997,8 +1006,11 @@ class AgentActivity : Activity() {
                 }
                 result.fold(onSuccess = { (message, bytes, measurement) ->
                     val saved = bytes == null || runCatching { bootstrapMemory.saveNeuralSnapshot(bytes, measurement) }.getOrDefault(false)
-                    neuralMonitor.text = if (saved) "NEURON · Ergebnis lokal gesichert" else
-                        "NEURON · Sicherung fehlgeschlagen, bisheriger Stand erhalten"
+                    neuralMonitor.text = when {
+                        !saved -> "NEURON · Sicherung fehlgeschlagen, bisheriger Stand erhalten"
+                        bytes == null -> "NEURON · Auswertung, Gewichte unverändert"
+                        else -> "NEURON · Ergebnis lokal gesichert"
+                    }
                     addAssistantMessage(if (saved) message else "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich.")
                 }, onFailure = {
                     neuralMonitor.text = "NEURON · Training fehlgeschlagen, vorheriger Stand erhalten"
@@ -1082,7 +1094,7 @@ class AgentActivity : Activity() {
             append("Prüfe Wissen: Nova | besitzt | Betriebssystem\n")
             append("Korrigiere: <alter Fakt> => <neuer Fakt> · Widerrufe: <Fakt>\n\n")
             append(bootstrapMemory.neuralReport()).append("\n")
-            append("Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
+            append("Neuron Demo · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
