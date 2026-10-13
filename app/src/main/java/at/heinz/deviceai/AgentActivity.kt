@@ -151,6 +151,7 @@ class AgentActivity : Activity() {
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
+    private var activeChatCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
     private val devController = DevelopmentUiController { "dev-" + UUID.randomUUID() }
     @Volatile private var activeDevCoordinator: DevelopmentCoordinator? = null
@@ -209,6 +210,7 @@ class AgentActivity : Activity() {
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
+            activeChatCancellation?.cancel()
             activeDevCoordinator?.cancel()
             activeResearchCancellation?.cancel()
             localRuntime.cancel()
@@ -737,6 +739,7 @@ class AgentActivity : Activity() {
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
+                if (activeResearchCancellation !== cancellation) return@runOnUiThread
                 activeResearchCancellation = null
                 activeLocalRequest = false
                 input.hint = "Was soll ich auf deinem Gerät tun?"
@@ -998,6 +1001,8 @@ class AgentActivity : Activity() {
         }
         activeLocalRequest = true
         localRuntimeError = null
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        activeChatCancellation = cancellation
         setBusy(true)
         addToolActivity("Lokales Modell plant …")
         planCard.visibility = View.GONE
@@ -1006,6 +1011,7 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, observations ->
+                cancellation.throwIfCancelled()
                 val state = continuumState
                 val compiledContext = state?.let { runtimeState ->
                     runCatching {
@@ -1031,6 +1037,7 @@ class AgentActivity : Activity() {
                         .advise("chat-$turnId", task, compiledContext?.text ?: task)
                         .also { activeReasoningRouter = null }
                 } else null
+                cancellation.throwIfCancelled()
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user."
                 val promptBody = buildString {
                     append("You are Device AI running on-device. Use registered tools only; never generate or execute shell commands.\n")
@@ -1064,7 +1071,7 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
-                var generation = generateLocal { callback ->
+                var generation = generateLocal(cancellation) { callback ->
                     if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
                     else localRuntime.respondToTools(toolResponses, callback)
                 }
@@ -1075,7 +1082,7 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = generateLocal { callback -> localRuntime.respondToTools(rejected, callback) }
+                    generation = generateLocal(cancellation) { callback -> localRuntime.respondToTools(rejected, callback) }
                     generation.failure?.let { error(it) }
                 }
                 AgentModelOutput(
@@ -1091,25 +1098,39 @@ class AgentActivity : Activity() {
             },
             experienceStore = experienceStore,
             approvalProvider = AgentToolApprovalProvider { proposal, risk ->
+                cancellation.throwIfCancelled()
                 if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
                 val latch = CountDownLatch(1)
                 var approval = AgentToolApproval(false)
                 runOnUiThread {
+                    if (isFinishing || isDestroyed || runCatching { cancellation.throwIfCancelled() }.isFailure) {
+                        latch.countDown()
+                        return@runOnUiThread
+                    }
                     showStructuredToolConfirmation(proposal, risk == Risk.DESTRUCTIVE) { approved ->
                         approval = AgentToolApproval(approved, approved && risk == Risk.DESTRUCTIVE)
                         latch.countDown()
                     }
                 }
-                if (latch.await(120, TimeUnit.SECONDS)) approval else AgentToolApproval(false)
+                val approvalDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
+                while (!latch.await(10, TimeUnit.MILLISECONDS)) {
+                    cancellation.throwIfCancelled()
+                    if (System.nanoTime() >= approvalDeadline) return@AgentToolApprovalProvider AgentToolApproval(false)
+                }
+                cancellation.throwIfCancelled()
+                approval
             },
             checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
-            callIdPrefix = "local-$turnId"
+            callIdPrefix = "local-$turnId",
+            cancellation = cancellation
         )
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching { orchestrator.run(agentTask) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
+                if (activeChatCancellation !== cancellation) return@runOnUiThread
+                activeChatCancellation = null
                 activeOrchestrator = null
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
@@ -1388,23 +1409,30 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        if (activeDevCoordinator != null) {
+            // Keep the single-assistant lane busy until the cancelled worker has returned.
+            stopDevelopmentJob()
+            return
+        }
         activeResearchCancellation?.cancel()
-        activeResearchCancellation = null
         input.hint = "Was soll ich auf deinem Gerät tun?"
+        activeChatCancellation?.cancel()
         activeOrchestrator?.cancel()
         activeReasoningRouter?.cancel()
         stopDevelopmentJob()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
         activeLocalRequest = false
-        setBusy(false)
+        setBusy(true)
         addToolActivity("Lokale Anfrage abgebrochen · ein bereits gestarteter Shizuku-Befehl kann extern weiterlaufen")
         refreshLocalModelUi()
     }
 
     private fun generateLocal(
+        cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
+        cancellation?.throwIfCancelled()
         val completed = CountDownLatch(1)
         val response = StringBuilder()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
@@ -1430,16 +1458,21 @@ class AgentActivity : Activity() {
                 is LocalInferenceEvent.Completed -> completed.countDown()
             }
         }
-        val started = runCatching { start(callback) }
+        val started = runCatching { cancellation?.throwIfCancelled(); start(callback) }
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
-        if (!completed.await(120, TimeUnit.SECONDS)) {
+        val generationDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
+        while (!completed.await(10, TimeUnit.MILLISECONDS)) {
+            cancellation?.throwIfCancelled()
+            if (System.nanoTime() < generationDeadline) continue
             localRuntime.cancel()
             localRuntimeError = "Local generation exceeded its 120-second limit."
             runOnUiThread { refreshLocalModelUi() }
             return LocalGeneration("", null, emptyList(), "Local generation exceeded its 120-second limit.")
         }
+        cancellation?.throwIfCancelled()
         val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
         while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
+            cancellation?.throwIfCancelled()
             Thread.sleep(10)
         }
         if (localRuntime.state == LocalModelState.GENERATING) {
@@ -2041,3 +2074,4 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
+

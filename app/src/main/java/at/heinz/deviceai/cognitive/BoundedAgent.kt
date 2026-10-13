@@ -170,7 +170,8 @@ class BoundedAgentOrchestrator(
     private val limits: AgentLimits = AgentLimits(),
     private val checkpointStore: AgentCheckpointStore? = null,
     private val clock: () -> Long = System::currentTimeMillis,
-    private val callIdPrefix: String = UUID.randomUUID().toString()
+    private val callIdPrefix: String = UUID.randomUUID().toString(),
+    private val cancellation: DeliberationCancellation = DeliberationCancellation()
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -184,9 +185,13 @@ class BoundedAgentOrchestrator(
     fun checkpoint(task: String, state: AgentState, retries: Int = 0): AgentCheckpoint =
         AgentCheckpoint(1, task, state, steps, calls, retries, audit.toList())
 
-    fun cancel() = toolGate.cancel()
+    fun cancel() {
+        cancellation.cancel()
+        toolGate.cancel()
+    }
 
     fun run(task: String): AgentRunResult {
+        cancellation.throwIfCancelled()
         checkpointStore?.clear()
         return runFrom(task, null)
     }
@@ -243,6 +248,7 @@ class BoundedAgentOrchestrator(
         val modelIds = mutableListOf<String>()
 
         fun transition(state: AgentState, detail: String) {
+            cancellation.throwIfCancelled()
             if (steps >= limits.maxSteps) throw StepLimitReached()
             steps++
             audit += AgentAuditEvent(audit.size, state, detail.take(256))
@@ -313,6 +319,7 @@ class BoundedAgentOrchestrator(
                 }
                 transition(AgentState.EVALUATE, "Result evaluated.")
                 lastEvaluation = evaluator.evaluate(lastOutput, lastRecord)
+                cancellation.throwIfCancelled()
                 modelReputation?.updateAfterEvaluation(
                     chosen.modelId,
                     ModelCapability.TOOL_USE,
@@ -404,3 +411,4 @@ class BoundedAgentOrchestrator(
         )
     }
 }
+

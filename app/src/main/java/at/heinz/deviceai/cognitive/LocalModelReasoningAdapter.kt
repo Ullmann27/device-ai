@@ -13,16 +13,64 @@ class LocalModelReasoningAdapter(
     private val nowMillis: () -> Long = System::currentTimeMillis,
     private val modelIdProvider: () -> String? = {
         runtime.loadedModel?.let { "${it.id}@${it.version}" }
-    }
+    },
+    private val nowNanos: () -> Long = System::nanoTime
 ) : ContinuumReasoningAdapter {
+
+    @Volatile private var cancelled = false
+    private var pinnedModel: String? = null
+
+    /** Cancellation is sticky for this job; reuse for sequential passes, never for a new job. */
+    override fun cancel() {
+        cancelled = true
+        runCatching { runtime.cancel() }
+    }
 
     override fun execute(request: ReasoningPassRequest): ReasoningPassResult {
         require(request.prompt.length <= MAX_RUNTIME_PROMPT) {
             "Reasoning prompt exceeds local runtime limit; no silent clipping."
         }
-        val modelId = checkNotNull(modelIdProvider()) { "No local model loaded; no cloud fallback." }
         val started = nowMillis()
-        awaitReady(request.deadlineMillis)
+        val startNanos = nowNanos()
+        val remainingMillis = request.deadlineMillis - started
+        // All production callers are bounded to 60s; cap independently even on clock rollback.
+        val budgetNanos = remainingMillis.coerceAtMost(MAX_PASS_MILLIS) * 1_000_000L
+        val modelId = checkNotNull(modelIdProvider()) { "No local model loaded; no cloud fallback." }
+        val modelFingerprint = "$modelId|${runtime.loadedModel?.sha256.orEmpty()}"
+
+        fun gate() {
+            if (cancelled || Thread.currentThread().isInterrupted) {
+                throw CancellationException("Local reasoning cancelled.")
+            }
+            val elapsed = nowNanos() - startNanos
+            check(remainingMillis > 0 && elapsed >= 0 && elapsed < budgetNanos &&
+                nowMillis() < request.deadlineMillis) { "Reasoning pass deadline expired." }
+            check(modelIdProvider() == modelId &&
+                "$modelId|${runtime.loadedModel?.sha256.orEmpty()}" == modelFingerprint &&
+                (pinnedModel == null || pinnedModel == modelFingerprint)) {
+                "Local model changed during reasoning; output discarded."
+            }
+        }
+
+        try {
+            gate()
+            while (runtime.state != LocalModelState.READY) {
+                check(runtime.state != LocalModelState.EMPTY && runtime.state != LocalModelState.FAILED) {
+                    "Local model is unavailable."
+                }
+                Thread.sleep(WAIT_SLICE_MILLIS)
+                gate()
+            }
+            gate()
+        } catch (interrupted: InterruptedException) {
+            cancel()
+            Thread.currentThread().interrupt()
+            throw CancellationException("Interrupted while waiting for model.")
+        } catch (failure: Exception) {
+            cancel()
+            throw failure
+        }
+        pinnedModel = modelFingerprint
 
         val latch = CountDownLatch(1)
         val lock = Any()
@@ -40,72 +88,66 @@ class LocalModelReasoningAdapter(
             latch.countDown()
         }
 
-        runtime.streamThinking(request.prompt, LocalInferenceCallback { event ->
-            when (event) {
-                is LocalInferenceEvent.TextDelta -> synchronized(lock) {
-                    if (!done) {
-                        if (text.length + event.text.length > request.maxOutputChars) {
-                            end(IllegalArgumentException("Reasoning output exceeded limit."))
-                        } else {
-                            text.append(event.text)
+        try {
+            gate()
+            runtime.streamThinking(request.prompt, LocalInferenceCallback { event ->
+                when (event) {
+                    is LocalInferenceEvent.TextDelta -> synchronized(lock) {
+                        if (!done) {
+                            if (text.length + event.text.length > request.maxOutputChars) {
+                                end(IllegalArgumentException("Reasoning output exceeded limit."))
+                            } else {
+                                text.append(event.text)
+                            }
                         }
                     }
+                    is LocalInferenceEvent.Completed -> end(null)
+                    is LocalInferenceEvent.Cancelled -> end(CancellationException("Local inference cancelled."))
+                    is LocalInferenceEvent.Failed -> end(IllegalStateException(event.message))
+                    is LocalInferenceEvent.ToolProposal,
+                    is LocalInferenceEvent.ToolProposalRejected,
+                    is LocalInferenceEvent.ToolBatchRejected -> {
+                        synchronized(lock) { toolEvents++ }
+                        end(SecurityException("Reasoning worker attempted a tool proposal."))
+                    }
                 }
-                is LocalInferenceEvent.Completed -> end(null)
-                is LocalInferenceEvent.Cancelled -> end(CancellationException("Local inference cancelled."))
-                is LocalInferenceEvent.Failed -> end(IllegalStateException(event.message))
-                is LocalInferenceEvent.ToolProposal,
-                is LocalInferenceEvent.ToolProposalRejected,
-                is LocalInferenceEvent.ToolBatchRejected -> {
-                    synchronized(lock) { toolEvents++ }
-                    end(SecurityException("Reasoning worker attempted a tool proposal."))
-                }
-            }
-        })
+            })
 
-        val remaining = request.deadlineMillis - nowMillis()
-        val finished = try {
-            remaining > 0 && latch.await(remaining, TimeUnit.MILLISECONDS)
+            // Do not depend on the native runtime emitting a terminal event after cancellation.
+            while (true) {
+                gate()
+                if (latch.await(WAIT_SLICE_MILLIS, TimeUnit.MILLISECONDS)) break
+            }
+            gate()
+            synchronized(lock) {
+                if (toolEvents > 0) throw SecurityException("Reasoning worker attempted a tool proposal.")
+                failure?.let { throw it }
+            }
+            val output = synchronized(lock) { text.toString() }
+            return ReasoningPassResult(
+                modelId = modelId,
+                text = output,
+                latencyMillis = ((nowNanos() - startNanos) / 1_000_000L).coerceAtLeast(0)
+            )
         } catch (interrupted: InterruptedException) {
-            runtime.cancel()
+            cancel()
             Thread.currentThread().interrupt()
             throw CancellationException("Reasoning interrupted.")
-        }
-        if (!finished) {
-            runtime.cancel()
-            throw IllegalStateException("Reasoning pass deadline expired.")
-        }
-        synchronized(lock) {
-            failure?.let {
-                runtime.cancel()
-                throw it
-            }
-            check(toolEvents == 0)
-        }
-        val output = synchronized(lock) { text.toString() }
-        return ReasoningPassResult(
-            modelId = modelId,
-            text = output,
-            latencyMillis = (nowMillis() - started).coerceAtLeast(0)
-        )
-    }
-
-    private fun awaitReady(deadlineMillis: Long) {
-        while (runtime.state != LocalModelState.READY) {
-            check(runtime.state != LocalModelState.EMPTY && runtime.state != LocalModelState.FAILED) {
-                "Local model is unavailable."
-            }
-            check(nowMillis() < deadlineMillis) { "Local model not ready before deadline." }
-            try {
-                Thread.sleep(5)
-            } catch (interrupted: InterruptedException) {
-                Thread.currentThread().interrupt()
-                throw CancellationException("Interrupted while waiting for model.")
+        } catch (failure: Exception) {
+            cancel()
+            throw failure
+        } finally {
+            synchronized(lock) {
+                // Ignore late text/terminal callbacks after this pass has returned.
+                done = true
             }
         }
     }
 
     private companion object {
         const val MAX_RUNTIME_PROMPT = 16_000
+        const val MAX_PASS_MILLIS = 60_000L
+        const val WAIT_SLICE_MILLIS = 10L
     }
 }
+

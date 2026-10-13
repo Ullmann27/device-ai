@@ -21,6 +21,10 @@ data class CrystallizedSkillCandidate(
         require(successRate.isFinite() && successRate in 0.0..1.0)
         require(meanEvaluationScore.isFinite() && meanEvaluationScore in 0.0..1.0)
         require(sourceExperienceIds.size == occurrenceCount)
+        require(sourceExperienceIds.none(String::isBlank) && sourceExperienceIds.distinct().size == occurrenceCount) {
+            "Skill evidence must identify distinct experiences."
+        }
+        require(requiresOwnerApproval) { "Skill candidates cannot bypass owner approval." }
     }
 
     val eligibleForOwnerReview: Boolean get() = promotionBlockedReason == null
@@ -43,7 +47,16 @@ class ExperienceCompiler(
 ) {
     fun compile(experiences: Collection<Experience>): List<CrystallizedSkillCandidate> {
         require(experiences.size <= 100_000)
-        val eligibleExperiences = experiences.filter {
+        val unique = linkedMapOf<String, Experience>()
+        experiences.forEach { experience ->
+            val previous = unique[experience.id]
+            if (previous != null && previous != experience) {
+                // Check before filtering: an ineligible conflicting record is still an integrity failure.
+                throw SecurityException("Conflicting experience identity; skill compilation blocked.")
+            }
+            unique[experience.id] = experience
+        }
+        val eligibleExperiences = unique.values.filter {
             it.toolIds.isNotEmpty() &&
                 it.toolIds.size <= 32 &&
                 it.toolIds.all { tool -> ToolRegistry.get(tool) != null }
@@ -92,3 +105,4 @@ class ExperienceCompiler(
             )
     }
 }
+

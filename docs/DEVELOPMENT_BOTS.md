@@ -28,4 +28,7 @@ DevelopmentReviewRegressionTest includes a scripted increment correction, full r
 
 ## Still requires verification
 
-Full Android compilation, Gradle tests, SAF/device/lifecycle behavior, APK artifact, real local-model JSON reliability/latency, and import/selection UX. The Activity's SAF import maps display names only and caps read size separately; oversized selections are rejected by the controller. Restart recovery is unavailable; jobs are not persisted. Applying edits, running generated tests, building/installing APKs or pushing changes from the in-app bots are absent by design. Any future execution requires typed least-privilege owner-authorized capabilities behind ToolGate.
+Baseline PR #19 head `e12693ffa41bcb8f9096cb57654901535691263e` passed actual `:app:testDebugUnitTest`, `:app:assembleDebug` and APK upload in workflow run `38376951781`. This is evidence for that head only; inspect a fresh run after further commits. PR descriptions and scripted demonstrations are not test evidence.
+
+SAF/device/lifecycle behavior, real local-model JSON reliability/latency, native cancellation and import/selection UX still need device verification. The Activity's SAF import maps display names only and caps read size separately; oversized selections are rejected by the controller. Restart recovery is unavailable; jobs are not persisted. Applying edits, running generated tests, building/installing APKs or pushing changes from the in-app bots are absent by design. Any future execution requires typed least-privilege owner-authorized capabilities behind ToolGate.
+

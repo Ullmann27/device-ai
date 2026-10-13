@@ -30,6 +30,7 @@ class ChatReasoningRouter(
 
     fun cancel() {
         cancellation.cancel()
+        runCatching { adapter.cancel() }
         cancelRuntime()
     }
 
@@ -96,3 +97,4 @@ class ChatReasoningRouter(
         }
     }
 }
+

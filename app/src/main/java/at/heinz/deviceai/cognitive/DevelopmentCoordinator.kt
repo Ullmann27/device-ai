@@ -15,6 +15,7 @@ class DevelopmentCoordinator(
 
     fun cancel() {
         cancelled = true
+        runCatching { adapter.cancel() }
         runCatching(cancelRuntime)
     }
 
@@ -163,3 +164,4 @@ class DevelopmentCoordinator(
             "{\"summary\":str,\"edits\":[{\"path\":str,\"expectedBaseSha256\":str,\"replacement\":str(full file),\"rationale\":str}],\"notes\":[str]}") +
             "Edit only selected paths; copy each source sha256. At most ${DevelopmentOutputParser.MAX_EDITS} edits.\n" + context(task)
 }
+

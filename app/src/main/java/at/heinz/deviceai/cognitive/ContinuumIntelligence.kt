@@ -155,6 +155,9 @@ data class ReasoningPassResult(
 
 fun interface ContinuumReasoningAdapter {
     fun execute(request: ReasoningPassRequest): ReasoningPassResult
+
+    /** Optional cancellation for adapters that wait on an asynchronous local runtime. */
+    fun cancel() {}
 }
 
 data class ContinuumIntelligenceRequest(
@@ -295,3 +298,4 @@ class ContinuumIntelligenceCoordinator(
         append("Return one final answer only.")
     }.take(24_000)
 }
+
