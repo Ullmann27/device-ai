@@ -135,3 +135,5 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   ended `action_required` before creating jobs (zero jobs). Therefore this commit has not yet
   received Android unit-test/build validation and no new APK artifact was produced. Repository
   workflow approval is required before the requested CI/artifact exit criterion can be met.
+- Maintainer-triggered validation is being retried from the current PR head so GitHub Actions can
+  run the full Android test/build path even though the Copilot-authored workflow runs required approval.
