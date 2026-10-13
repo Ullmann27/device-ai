@@ -59,6 +59,8 @@ commit `adf399432dd43c4c37e39ac633d0eb58ee35dc71`. It predates the Deep Research
 this branch and does not validate them. A fresh green run/artifact is still required. This
 sandbox could not resolve Android Gradle Plugin 8.10.0, so its Gradle test/build tasks could
 not run locally.
+The research-head workflow run `38349576117` ended `action_required` with zero jobs, so it
+produced neither test/build results nor an APK; repository workflow approval is required.
 
 No physical-device inference is claimed. Importing and running a real model, native runtime
 compatibility, tool behavior through Shizuku, cancellation behavior, performance/thermal

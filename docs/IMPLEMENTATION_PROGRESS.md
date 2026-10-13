@@ -129,7 +129,7 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   `:app:assembleDebug`, and APK upload on commit
   `adf399432dd43c4c37e39ac633d0eb58ee35dc71` (artifact
   `DeviceAI-v0.3-debug-apk`, id `11787331710`). This validates the receipt/local-first branch
-  before the Deep Research engine changes, not the current uncommitted research diff.
+  before the Deep Research engine changes, not commit `1550c533`.
 - The available standalone Kotlin compiler compiled the receipt, ToolGate and cognitive-agent
   sources; a deterministic smoke check passed receipt round-trip, success replay suppression,
   STARTED ambiguity blocking and raw-shell rejection. `node --check backend/src/server.js`
@@ -155,6 +155,8 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   selection, verified claims, independent sources, and MemoryWritePolicy approval.
 - The standalone cognitive source compile and 11 deterministic research-engine tests passed
   using temporary test/API stubs. Backend syntax and `git diff --check` passed. Android Gradle
-  tests/build cannot run locally because plugin `8.10.0` cannot be resolved; fresh branch CI is
-  pending. No live-network, imported-model, physical-device, Fold-layout, or device-cancellation
-  validation is claimed. See `docs/DEEP_RESEARCH_ENGINE.md`.
+  tests/build cannot run locally because plugin `8.10.0` cannot be resolved. Workflow run
+  `38349576117` for commit `1550c53346e8f375f9d9948eb2098b74104310f6` ended
+  `action_required` with zero jobs, so no fresh Android result or APK artifact exists; repository
+  workflow approval is required. No live-network, imported-model, physical-device, Fold-layout,
+  or device-cancellation validation is claimed. See `docs/DEEP_RESEARCH_ENGINE.md`.

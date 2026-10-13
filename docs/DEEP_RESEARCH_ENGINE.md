@@ -91,7 +91,9 @@ summary is used and disclosed.
 GitHub Actions run `38341592364` passed backend syntax, `:app:testDebugUnitTest`,
 `:app:assembleDebug`, and upload of `DeviceAI-v0.3-debug-apk` (artifact `11787331710`) on the
 pre-research head `adf399432dd43c4c37e39ac633d0eb58ee35dc71`. New research changes still need a
-fresh CI run; the sandbox cannot resolve Android Gradle Plugin 8.10.0. The new engine's
+fresh CI run. Run `38349576117` for research commit `1550c53346e8f375f9d9948eb2098b74104310f6`
+ended `action_required` with zero jobs; repository workflow approval is required. The sandbox
+cannot resolve Android Gradle Plugin 8.10.0. The new engine's
 standalone Kotlin compile and deterministic JVM tests are locally exercised with temporary
 API/JUnit stubs, but this is not a substitute for Android Gradle CI. No live network, imported
 model, physical-device inference, Fold layout, or on-device cancellation behavior has been
