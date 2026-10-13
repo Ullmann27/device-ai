@@ -1,14 +1,8 @@
 package at.heinz.deviceai.cognitive
 
-import java.security.MessageDigest
-
 /** Data-only development workers: nothing in this file executes, writes or applies anything. */
 
 fun utf8Bytes(value: String): Int = value.toByteArray(Charsets.UTF_8).size
-
-fun sha256Hex(value: String): String =
-    MessageDigest.getInstance("SHA-256").digest(value.toByteArray(Charsets.UTF_8))
-        .joinToString("") { "%02x".format(it) }
 
 enum class DevelopmentRole { DEVELOPER, CRITIC, TEST_DESIGNER, JUDGE }
 
