@@ -59,10 +59,10 @@ data class ReasoningTaskProfile(
 
 object ReasoningStrategySelector {
     fun select(profile: ReasoningTaskProfile): ReasoningStrategy = when {
-        profile.explicitStrategy != null -> profile.explicitStrategy
+        profile.expectedToolUse -> ReasoningStrategy.TOOL_PLAN
         profile.verifyExistingAnswer -> ReasoningStrategy.VERIFY_ONLY
         profile.factualFreshnessNeeded -> ReasoningStrategy.RESEARCH_BACKED
-        profile.expectedToolUse -> ReasoningStrategy.TOOL_PLAN
+        profile.explicitStrategy != null -> profile.explicitStrategy
         profile.ambiguity >= 0.8 -> ReasoningStrategy.MULTI_CANDIDATE
         profile.ambiguity >= 0.5 -> ReasoningStrategy.DEEP
         profile.ambiguity >= 0.2 -> ReasoningStrategy.STANDARD
@@ -149,49 +149,82 @@ class BoundedDeliberationOrchestrator(
         strategy: ReasoningStrategy,
         budget: DeliberationBudget = DeliberationBudget.forStrategy(strategy),
         cancellation: DeliberationCancellation = DeliberationCancellation(),
-        onCheckpoint: (Int) -> Unit = {}
+        onCheckpoint: (Int) -> Unit = {},
+        existingAnswer: String? = null
     ): DeliberationResult {
         require(task.isNotBlank() && task.length <= 8_192)
-        val deadline = nowNanos() + budget.maxWallTimeMillis * 1_000_000L
+        require(task.toByteArray(Charsets.UTF_8).size <= budget.maxContextBytes) {
+            "Task exceeds the deliberation context byte budget."
+        }
+        val started = nowNanos()
         var calls = 0
 
-        fun beforeCall() {
+        fun checkLive() {
             cancellation.throwIfCancelled()
-            require(nowNanos() <= deadline) { "Deliberation wall-time budget exceeded." }
-            require(calls < budget.maxModelCalls) { "Deliberation model-call budget exceeded." }
-            calls++
-            if (calls % budget.checkpointEveryCalls == 0) onCheckpoint(calls)
+            if (Thread.currentThread().isInterrupted) {
+                throw CancellationException("Deliberation interrupted.")
+            }
+            require(nowNanos() - started < budget.maxWallTimeMillis * 1_000_000L) {
+                "Deliberation wall-time budget exceeded."
+            }
         }
 
+        fun checkedText(text: String): String {
+            require(text.isNotBlank()) { "Empty thinking output." }
+            require(text.length <= MAX_PASS_TEXT &&
+                text.toByteArray(Charsets.UTF_8).size <= MAX_PASS_TEXT) {
+                "Thinking output limit exceeded; silent truncation is forbidden."
+            }
+            return text
+        }
+
+        fun call(operation: () -> String): String {
+            checkLive()
+            require(calls < budget.maxModelCalls) {
+                "Deliberation model-call budget exceeded."
+            }
+            calls++
+            val result = checkedText(operation())
+            checkLive()
+            if (calls % budget.checkpointEveryCalls == 0) {
+                onCheckpoint(calls)
+                checkLive()
+            }
+            return result
+        }
+
+        checkLive()
         val branchCount = when (strategy) {
             ReasoningStrategy.MULTI_CANDIDATE -> minOf(4, budget.maxCandidateBranches)
-            ReasoningStrategy.DEEP, ReasoningStrategy.RESEARCH_BACKED -> minOf(2, budget.maxCandidateBranches)
+            ReasoningStrategy.DEEP, ReasoningStrategy.RESEARCH_BACKED ->
+                minOf(2, budget.maxCandidateBranches)
             else -> 1
         }
-        val candidates = (0 until branchCount).map { index ->
-            beforeCall()
-            DeliberationCandidate("candidate-" + index, generator.generate(task, index).take(MAX_PASS_TEXT))
+        val candidates = if (strategy == ReasoningStrategy.VERIFY_ONLY) {
+            require(budget.maxVerifierPasses > 0) { "VERIFY_ONLY requires a verifier." }
+            listOf(DeliberationCandidate("existing-answer", checkedText(
+                requireNotNull(existingAnswer) { "VERIFY_ONLY requires an existing answer." }
+            )))
+        } else {
+            (0 until branchCount).map { index ->
+                DeliberationCandidate("candidate-$index", call { generator.generate(task, index) })
+            }
         }
 
         val critiques = mutableListOf<DeliberationCritique>()
         candidates.take(budget.maxCriticPasses).forEach { candidate ->
-            beforeCall()
-            critiques += DeliberationCritique(candidate.id, critic.critique(task, candidate).take(MAX_PASS_TEXT))
+            critiques += DeliberationCritique(candidate.id, call { critic.critique(task, candidate) })
         }
-
         val verifications = mutableListOf<DeliberationVerification>()
         candidates.take(budget.maxVerifierPasses).forEach { candidate ->
-            beforeCall()
-            verifications += DeliberationVerification(candidate.id, verifier.verify(task, candidate).take(MAX_PASS_TEXT))
+            verifications += DeliberationVerification(candidate.id, call { verifier.verify(task, candidate) })
         }
-
         val finalText = if (candidates.size == 1 && critiques.isEmpty() && verifications.isEmpty()) {
             candidates.single().text
         } else {
-            beforeCall()
-            judge.choose(task, candidates, critiques, verifications).take(MAX_PASS_TEXT)
+            call { judge.choose(task, candidates, critiques, verifications) }
         }
-
+        checkLive()
         return DeliberationResult(strategy, finalText, candidates, critiques, verifications, calls)
     }
 }
