@@ -5,6 +5,10 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.widget.ImageView
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -97,8 +101,9 @@ class AgentActivity : Activity() {
         private val BORDER = Color.rgb(48, 64, 87)
         private val TEXT = Color.rgb(245, 248, 253)
         private val MUTED = Color.rgb(155, 169, 191)
-        private val ACCENT = Color.rgb(111, 143, 255)
-        private val ACCENT_DARK = Color.rgb(54, 76, 154)
+        private val ACCENT = Color.rgb(71, 143, 255)
+        private val ACCENT_DARK = Color.rgb(37, 87, 224)
+        private val CYAN = Color.rgb(44, 208, 255)
         private val GREEN = Color.rgb(78, 214, 145)
         private val AMBER = Color.rgb(255, 192, 82)
         private val RED = Color.rgb(255, 102, 112)
@@ -412,46 +417,66 @@ class AgentActivity : Activity() {
     }
 
     private fun buildHeader(wide: Boolean): View {
-        val row = LinearLayout(this).apply {
+        val hero = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val top = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-
-        val titleBox = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-        }
-        titleBox.addView(textView("Device AI", if (wide) 30f else 26f, TEXT, true))
-        titleBox.addView(
-            textView("Frag. Plane. Führe sicher aus.", 13f, MUTED).apply {
-                setPadding(0, dp(2), 0, 0)
-            }
+        val heading = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        heading.addView(
+            textView("FRAG. PLANE. FÜHRE SICHER AUS.", 9.5f, Color.rgb(151, 190, 255), true)
+                .apply { letterSpacing = 0.13f }
         )
-
-        row.addView(
-            titleBox,
-            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        heading.addView(
+            textView("Device AI", if (wide) 32f else 27f, TEXT, true).apply {
+                val styled = SpannableString("Device AI")
+                styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                text = styled
+                setShadowLayer(dp(7).toFloat(), 0f, 0f, Color.rgb(24, 86, 178))
+            },
+            matchWidth(top = 3)
         )
-
+        heading.addView(
+            textView("Dein privater KI-Assistent direkt auf Android.",
+                if (wide) 12.5f else 11.5f, MUTED),
+            matchWidth(top = 3)
+        )
+        top.addView(heading, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        top.addView(ImageView(this).apply {
+            setImageResource(R.drawable.device_ai_robot)
+            contentDescription = "Device AI Roboter-Maskottchen"
+            scaleType = ImageView.ScaleType.FIT_CENTER
+        }, LinearLayout.LayoutParams(dp(if (wide) 126 else 82), dp(if (wide) 112 else 87)).apply {
+            marginStart = dp(3)
+        })
+        top.addView(
+            actionButton("⚙", compact = true).apply {
+                contentDescription = "Cloud-Einstellungen"
+                setOnClickListener { showCloudSettings() }
+            },
+            LinearLayout.LayoutParams(dp(42), dp(42)).apply { marginStart = dp(4) }
+        )
+        hero.addView(top, matchWidth())
         if (!wide) {
-            row.addView(
+            val secondary = LinearLayout(this).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                orientation = LinearLayout.HORIZONTAL
+            }
+            secondary.addView(
+                textView("LOKAL · SICHER · DEIN ASSISTENT", 10f, Color.rgb(114, 191, 255)),
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            )
+            secondary.addView(
                 actionButton("EXPERT", compact = true).apply {
                     setOnClickListener {
                         startActivity(Intent(this@AgentActivity, MainActivity::class.java))
                     }
                 },
-                LinearLayout.LayoutParams(dp(88), dp(42)).apply { marginEnd = dp(7) }
+                LinearLayout.LayoutParams(dp(76), dp(33))
             )
+            hero.addView(secondary, matchWidth(top = 2))
         }
-
-        row.addView(
-            actionButton("⚙", compact = true).apply {
-                contentDescription = "Cloud-Einstellungen"
-                setOnClickListener { showCloudSettings() }
-            },
-            LinearLayout.LayoutParams(dp(50), dp(42))
-        )
-
-        return row
+        return hero
     }
 
     private fun buildStatusRow(): View {
@@ -519,10 +544,29 @@ class AgentActivity : Activity() {
     }
 
     private fun buildLocalModelCard(): View {
-        val card = verticalCard().apply { setPadding(dp(12), dp(10), dp(12), dp(10)) }
-        card.addView(textView("LOKALES MODELL · CPU", 11f, ACCENT, true))
+        val card = verticalCard().apply {
+            background = roundedGradient(Color.rgb(10, 29, 61), Color.rgb(14, 24, 49), 18, Color.rgb(24, 127, 243))
+            setPadding(dp(12), dp(11), dp(12), dp(11))
+        }
+        val masthead = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val label = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        label.addView(textView("LOKALES MODELL · CPU", 11f, CYAN, true))
+        label.addView(textView("KI-MODELL", 16f, TEXT, true), matchWidth(top = 5))
+        masthead.addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        masthead.addView(
+            ImageView(this).apply {
+                setImageResource(R.drawable.device_ai_model_stack)
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                contentDescription = "Verbundenes Modell-Paket mit blauen Leiterbahnen"
+            },
+            LinearLayout.LayoutParams(dp(128), dp(76))
+        )
+        card.addView(masthead, matchWidth())
         modelCardText = textView("Kein Modell installiert. Importiere eine kompatible .litertlm-Datei.", 12f, MUTED)
-            .apply { setPadding(0, dp(6), 0, dp(8)) }
+            .apply { setPadding(0, dp(2), 0, dp(9)) }
         card.addView(modelCardText)
         val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         localActionButton = actionButton("MODELL LADEN", accent = true).apply {
@@ -530,23 +574,16 @@ class AgentActivity : Activity() {
                 if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
             }
         }
-        actions.addView(localActionButton, LinearLayout.LayoutParams(0, dp(39), 1f))
+        actions.addView(localActionButton, LinearLayout.LayoutParams(0, dp(43), 1f))
         actions.addView(
             actionButton("MODELL IMPORTIEREN").apply { setOnClickListener { showModelImportDialog() } },
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(7) }
+            LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) }
         )
         card.addView(actions)
         return card
     }
 
     private fun buildQuickActions(): View {
-        val horizontal = HorizontalScrollView(this).apply {
-            isHorizontalScrollBarEnabled = false
-        }
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-        }
-
         val actions = listOf(
             "Lumo prüfen" to "Prüfe die installierte Lumo-Version und ob eine neuere Lumo APK in Downloads liegt.",
             "Fehler Lumo" to "Prüfe Lumo auf aktuelle Fehler und analysiere Logcat.",
@@ -556,36 +593,49 @@ class AgentActivity : Activity() {
             "Entwicklung" to "",
             "Web" to "Recherchiere die neuesten Android-16- und Shizuku-Änderungen und nenne Quellen."
         )
-
-        actions.forEach { (label, command) ->
-            row.addView(
-                chip(label).apply {
-                    setOnClickListener {
-                        if (label == "Web") {
-                            showResearchModeDialog()
-                        } else if (label == "Entwicklung") {
-                            showDevelopmentDialog()
-                        } else {
+        fun createAction(label: String, command: String): Button =
+            chip(label).apply {
+                setOnClickListener {
+                    when (label) {
+                        "Web" -> showResearchModeDialog()
+                        "Entwicklung" -> showDevelopmentDialog()
+                        else -> {
                             input.setText(command)
                             input.setSelection(command.length)
                         }
                     }
-                },
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    dp(42)
-                ).apply { marginEnd = dp(7) }
-            )
+                }
+            }
+        if (resources.configuration.screenWidthDp >= 700) {
+            val scroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            actions.forEach { (label, command) ->
+                row.addView(createAction(label, command),
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(46)).apply {
+                        marginEnd = dp(7)
+                    })
+            }
+            scroll.addView(row)
+            return scroll
         }
-
-        horizontal.addView(row)
-        return horizontal
+        // On a phone, no action is clipped off-screen or hidden behind horizontal scrolling.
+        val grid = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        actions.chunked(3).forEachIndexed { index, group ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            group.forEachIndexed { j, (label, command) ->
+                row.addView(createAction(label, command),
+                    LinearLayout.LayoutParams(0, dp(45), 1f).apply { if (j > 0) marginStart = dp(6) })
+            }
+            repeat(3 - group.size) { row.addView(View(this), LinearLayout.LayoutParams(0, dp(45), 1f)) }
+            grid.addView(row, matchWidth(top = if (index > 0) 6 else 0))
+        }
+        return grid
     }
 
     private fun buildComposer(): View {
         val shell = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = rounded(PANEL, 21, BORDER)
+            background = roundedGradient(Color.rgb(12, 28, 60), Color.rgb(10, 20, 39), 21, Color.rgb(32, 112, 231))
             setPadding(dp(7), dp(7), dp(7), dp(7))
         }
 
@@ -596,7 +646,7 @@ class AgentActivity : Activity() {
             textSize = 15f
             minLines = 1
             maxLines = 4
-            background = null
+            background = rounded(Color.rgb(9, 19, 37), 14, Color.rgb(40, 112, 226))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
@@ -2114,7 +2164,11 @@ class AgentActivity : Activity() {
             isAllCaps = false
             setTypeface(typeface, Typeface.BOLD)
             setTextColor(TEXT)
-            background = rounded(if (accent) ACCENT_DARK else SURFACE, 13, BORDER)
+            background = if (accent) {
+                roundedGradient(Color.rgb(27, 133, 246), Color.rgb(53, 78, 236), 13, Color.rgb(81, 187, 255))
+            } else {
+                roundedGradient(Color.rgb(29, 42, 65), SURFACE, 13, BORDER)
+            }
             setPadding(if (compact) dp(7) else dp(12), 0, if (compact) dp(7) else dp(12), 0)
             minWidth = 0
             minHeight = 0
@@ -2123,7 +2177,7 @@ class AgentActivity : Activity() {
     private fun verticalCard(): LinearLayout =
         LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = rounded(PANEL_2, 18, BORDER)
+            background = roundedGradient(Color.rgb(19, 35, 59), Color.rgb(19, 28, 46), 18, BORDER)
         }
 
     private fun textView(
@@ -2150,6 +2204,15 @@ class AgentActivity : Activity() {
             cornerRadius = dp(radius).toFloat()
             if (strokeColor != null) setStroke(dp(1), strokeColor)
         }
+
+    private fun roundedGradient(
+        start: Int, end: Int, radius: Int, stroke: Int
+    ): GradientDrawable = GradientDrawable(
+        GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(start, end)
+    ).apply {
+        cornerRadius = dp(radius).toFloat()
+        setStroke(dp(1), stroke)
+    }
 
     private fun matchWidth(top: Int = 0) =
         LinearLayout.LayoutParams(
