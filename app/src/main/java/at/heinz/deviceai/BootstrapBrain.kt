@@ -22,6 +22,9 @@ object BootstrapBrain {
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
         val text = utterance.trim().take(2_048)
         val low = text.lowercase(Locale.ROOT)
+        // Explicit memory deletion stays available, but always requires an Android confirmation.
+        if (low == "lösche meine erinnerungen" || low == "lernspeicher löschen")
+            return BootstrapDecision(BootstrapKind.FORGET)
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
         if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
