@@ -51,7 +51,7 @@ data class AdaptiveReasoningSelection(
 class TaskComplexityAnalyzer {
     fun analyze(input: TaskComplexityInput): TaskComplexityAssessment {
         val words = input.request.lowercase(Locale.ROOT)
-            .split(Regex("[^\p{L}\p{N}_]+")).toSet()
+            .split(Regex("""[^\\p{L}\\p{N}_]+""")).toSet()
         val ambiguity = maxOf(input.ambiguity, if (words.any {
             it in setOf("alternatives", "alternative", "varianten", "options")
         }) 0.85 else 0.0)
