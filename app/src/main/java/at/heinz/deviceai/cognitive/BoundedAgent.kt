@@ -93,6 +93,8 @@ object AgentCheckpointCodec {
     private const val MAGIC = "DEVICE_AI_AGENT_CHECKPOINT"
     private const val MAX_BYTES = 64 * 1024
 
+    internal fun maxEncodedBytes(): Int = MAX_BYTES
+
     fun encode(checkpoint: AgentCheckpoint): ByteArray {
         val bytes = ByteArrayOutputStream().also { buffer ->
             DataOutputStream(buffer).use { out ->
@@ -164,6 +166,7 @@ class BoundedAgentOrchestrator(
     },
     private val modelReputation: ModelReputationStore? = null,
     private val limits: AgentLimits = AgentLimits(),
+    private val checkpointStore: AgentCheckpointStore? = null,
     private val clock: () -> Long = System::currentTimeMillis
 ) {
     private val audit = mutableListOf<AgentAuditEvent>()
@@ -176,12 +179,33 @@ class BoundedAgentOrchestrator(
 
     fun cancel() = toolGate.cancel()
 
-    fun run(task: String): AgentRunResult = runFrom(task, null)
+    fun run(task: String): AgentRunResult {
+        checkpointStore?.clear()
+        return runFrom(task, null)
+    }
+
+    fun resumeSaved(): AgentRunResult? {
+        val saved = checkpointStore?.load() ?: return null
+        if (saved.state !in RESUMABLE_STATES) {
+            return AgentRunResult(
+                response = "Saved agent run requires operator review before retry.",
+                state = saved.state,
+                auditTrail = saved.auditTrail,
+                experience = null,
+                blocker = "The last checkpoint is at or after a tool proposal boundary; automatic resume is disabled to prevent duplicated side effects."
+            )
+        }
+        return resume(saved)
+    }
+
+    fun discardSavedCheckpoint() {
+        checkpointStore?.clear()
+    }
 
     fun resume(checkpoint: AgentCheckpoint): AgentRunResult {
-        require(checkpoint.state in setOf(
-            AgentState.OBSERVE, AgentState.RETRIEVE, AgentState.PLAN, AgentState.MODEL, AgentState.VALIDATE
-        )) { "Only checkpoints before tool execution can be resumed safely." }
+        require(checkpoint.state in RESUMABLE_STATES) {
+            "Only checkpoints before tool proposal/execution can be resumed safely."
+        }
         return runFrom(checkpoint.task, checkpoint)
     }
 
@@ -193,7 +217,12 @@ class BoundedAgentOrchestrator(
         calls = checkpoint?.toolCalls ?: 0
         checkpoint?.auditTrail?.let(audit::addAll)
         val startedAt = clock()
-        val retrieved = memories().let { MemoryRetriever.retrieve(task, it, 8) }
+        val retrieved = HybridMemoryRetriever.retrieve(
+            query = task,
+            records = memories(),
+            limit = 8,
+            nowMillis = startedAt
+        ).map { it.memory }
         val currentRun = runIndex++
         var currentReflection: AgentReflection? = null
         var lastOutput = ""
@@ -210,6 +239,7 @@ class BoundedAgentOrchestrator(
             if (steps >= limits.maxSteps) throw StepLimitReached()
             steps++
             audit += AgentAuditEvent(audit.size, state, detail.take(256))
+            checkpointStore?.save(checkpoint(task, state, retry))
         }
 
         try {
@@ -318,14 +348,17 @@ class BoundedAgentOrchestrator(
             val blocker = if (lastEvaluation.success) null else
                 "Retry budget exhausted: ${lastEvaluation.notes.ifBlank { "evaluation failed" }}"
             transition(AgentState.RESPOND, if (blocker == null) "Response ready." else "Structured blocker returned.")
-            return AgentRunResult(
+            val result = AgentRunResult(
                 if (blocker == null) lastOutput else blocker,
                 AgentState.RESPOND,
                 audit.toList(),
                 resultExperience,
                 blocker
             )
+            checkpointStore?.clear()
+            return result
         } catch (_: StepLimitReached) {
+            checkpointStore?.clear()
             return AgentRunResult(
                 "Agent step budget exhausted.",
                 audit.lastOrNull()?.state ?: AgentState.OBSERVE,
@@ -343,4 +376,14 @@ class BoundedAgentOrchestrator(
     }
 
     private class StepLimitReached : RuntimeException()
+
+    companion object {
+        private val RESUMABLE_STATES = setOf(
+            AgentState.OBSERVE,
+            AgentState.RETRIEVE,
+            AgentState.PLAN,
+            AgentState.MODEL,
+            AgentState.VALIDATE
+        )
+    }
 }
