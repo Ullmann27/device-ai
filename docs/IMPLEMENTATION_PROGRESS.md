@@ -131,3 +131,7 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   and `git diff --check` passed.
 - Local Gradle unit tests/build still cannot resolve Android Gradle Plugin 8.10.0 in this
   sandbox. The updated PR-head Android workflow is the required full validation.
+- The post-change workflow run `38336739607` on commit `8f82df43d1c01f853600bdee2bc50324ee53de85`
+  ended `action_required` before creating jobs (zero jobs). Therefore this commit has not yet
+  received Android unit-test/build validation and no new APK artifact was produced. Repository
+  workflow approval is required before the requested CI/artifact exit criterion can be met.

@@ -56,7 +56,10 @@ the call is blocked rather than blindly retried.
 The previously green Android workflow run `38332404439` passed backend syntax, unit tests,
 `assembleDebug`, and APK upload for the earlier commit
 `25d2bf1b059d0664880821de73ef83ed449ac75a`. It does not validate these newer changes. The
-current branch needs a fresh green Android CI run and a `DeviceAI-v0.3-debug-apk` artifact.
+post-change workflow run `38336739607` on commit
+`8f82df43d1c01f853600bdee2bc50324ee53de85` was `action_required` with zero jobs, so it did
+not run tests, build the APK or upload an artifact. Repository workflow approval is required
+before a fresh green Android run and `DeviceAI-v0.3-debug-apk` artifact can be produced.
 This sandbox could not resolve Android Gradle Plugin 8.10.0, so its Gradle test/build tasks
 could not run locally.
 
