@@ -15,6 +15,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.speech.RecognizerIntent
+import android.speech.tts.TextToSpeech
+import java.util.Locale
 import android.text.InputType
 import android.view.Gravity
 import android.view.WindowInsets
@@ -136,6 +138,11 @@ class AgentActivity : Activity() {
     private lateinit var chatContainer: LinearLayout
     private lateinit var input: EditText
     private lateinit var sendButton: Button
+    private lateinit var bootstrapMemory: BootstrapMemoryStore
+    private var voiceEngine: TextToSpeech? = null
+    private var voiceReady = false
+    private var voiceEnabled = false
+    private var voiceButton: Button? = null
     private var dashboardSection: View? = null
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -184,6 +191,15 @@ class AgentActivity : Activity() {
         window.navigationBarColor = BG
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
+        bootstrapMemory = BootstrapMemoryStore(this)
+        voiceEnabled = bootstrapMemory.voiceEnabled
+        voiceEngine = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                val language = voiceEngine?.setLanguage(Locale.GERMAN)
+                voiceReady = language != TextToSpeech.LANG_MISSING_DATA && language != TextToSpeech.LANG_NOT_SUPPORTED
+                if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
+            }
+        }
         backend = AgentBackendClient(this)
         modelCatalog = LocalModelCatalog(
             java.io.File(filesDir, "local-models"),
@@ -210,10 +226,10 @@ class AgentActivity : Activity() {
         showPendingReceiptReview()
         continuumStartupNote?.let(::addToolActivity)
         addAssistantMessage(
-            "Device AI ist lokal-first. AUTO und LOKAL nutzen das installierte LiteRT-LM-Modell; " +
-                "ONLINE bleibt ein optionaler Cloud-Modus."
+            "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
+                "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
+                "Mit „Was kannst du?“ erfährst du meine aktuellen Fähigkeiten."
         )
-        modelCatalog.all().firstOrNull()?.let { loadModel(it) }
     }
 
     override fun onResume() {
@@ -241,6 +257,9 @@ class AgentActivity : Activity() {
             }
         }
         localAgentExecutor.shutdownNow()
+        voiceEngine?.stop()
+        voiceEngine?.shutdown()
+        voiceEngine = null
         if (::bridge.isInitialized) bridge.stop()
         super.onDestroy()
     }
@@ -366,7 +385,7 @@ class AgentActivity : Activity() {
         dashboard.addView(buildHeader(wide))
         dashboard.addView(buildStatusRow(), matchWidth(top = 12))
         dashboard.addView(buildModeRow(), matchWidth(top = 10))
-        dashboard.addView(buildLocalModelCard(), matchWidth(top = 10))
+        dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
         dashboard.addView(buildQuickActions(), matchWidth(top = 10))
 
         planCard = verticalCard().apply {
@@ -498,8 +517,8 @@ class AgentActivity : Activity() {
         }
 
         shizukuBadge = statusBadge("● SHIZUKU …", AMBER)
-        cloudBadge = statusBadge("● CLOUD …", AMBER)
-        localBadge = statusBadge("● NO MODEL", AMBER)
+        cloudBadge = statusBadge("● WEB FREIGABE", CYAN)
+        localBadge = statusBadge("● KERN AKTIV", GREEN)
 
         row.addView(
             shizukuBadge,
@@ -525,9 +544,9 @@ class AgentActivity : Activity() {
         }
 
         val choices = listOf(
-            AssistantMode.AUTO to "AUTO",
-            AssistantMode.CLOUD to "ONLINE",
-            AssistantMode.LOCAL to "LOKAL"
+            AssistantMode.AUTO to "DIALOG",
+            AssistantMode.CLOUD to "INTERNET",
+            AssistantMode.LOCAL to "GERÄT"
         )
 
         choices.forEachIndexed { index, (value, label) ->
@@ -540,7 +559,10 @@ class AgentActivity : Activity() {
                 minHeight = 0
                 minWidth = 0
                 setPadding(dp(8), 0, dp(8), 0)
-                setOnClickListener { setMode(value) }
+                setOnClickListener {
+                    if (value == AssistantMode.CLOUD) showResearchModeDialog()
+                    else setMode(value)
+                }
             }
             modeButtons[value] = button
             card.addView(
@@ -555,43 +577,39 @@ class AgentActivity : Activity() {
         return card
     }
 
-    private fun buildLocalModelCard(): View {
+    // Core is immediately usable, even on an offline phone with no imported model.
+    private fun buildBootstrapCoreCard(): View {
         val card = verticalCard().apply {
-            background = roundedGradient(Color.rgb(10, 29, 61), Color.rgb(14, 24, 49), 18, Color.rgb(24, 127, 243))
+            background = roundedGradient(Color.rgb(10, 29, 61), Color.rgb(14, 24, 49),
+                18, Color.rgb(24, 127, 243))
             setPadding(dp(12), dp(11), dp(12), dp(11))
         }
-        val masthead = LinearLayout(this).apply {
+        val top = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val label = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        label.addView(textView("LOKALES MODELL · CPU", 11f, CYAN, true))
-        label.addView(textView("KI-MODELL", 16f, TEXT, true), matchWidth(top = 5))
-        masthead.addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        masthead.addView(
-            ImageView(this).apply {
-                setImageResource(R.drawable.device_ai_model_stack)
-                scaleType = ImageView.ScaleType.FIT_CENTER
-                contentDescription = "Verbundenes Modell-Paket mit blauen Leiterbahnen"
-            },
-            LinearLayout.LayoutParams(dp(128), dp(76))
-        )
-        card.addView(masthead, matchWidth())
-        modelCardText = textView("Kein Modell installiert. Importiere eine kompatible .litertlm-Datei.", 12f, MUTED)
-            .apply { setPadding(0, dp(2), 0, dp(9)) }
-        card.addView(modelCardText)
-        val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        localActionButton = actionButton("MODELL LADEN", accent = true).apply {
-            setOnClickListener {
-                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
-            }
-        }
-        actions.addView(localActionButton, LinearLayout.LayoutParams(0, dp(43), 1f))
-        actions.addView(
-            actionButton("MODELL IMPORTIEREN").apply { setOnClickListener { showModelImportDialog() } },
-            LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) }
-        )
-        card.addView(actions)
+        val text = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        text.addView(textView("DEVICE AI · EIGENER STARTKERN", 12f, CYAN, true))
+        text.addView(textView("BEREIT · OHNE MODELLIMPORT", 13.5f, TEXT, true),
+            matchWidth(top = 5))
+        top.addView(text, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        top.addView(ImageView(this).apply {
+            setImageResource(R.drawable.device_ai_model_stack)
+            contentDescription = "Continuum-Kern, lokal verbunden"
+        }, LinearLayout.LayoutParams(dp(106), dp(75)))
+        card.addView(top)
+        card.addView(textView(
+            "Eigene Regeln, nachprüfbare Lernschritte und lokale Erinnerung. Kein vortrainiertes Sprachmodell. " +
+                "Freies KI-Sprachdenken wird erst erforscht – keine simulierte Intelligenz.", 12.2f, MUTED
+        ), matchWidth(top = 4))
+        val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        buttons.addView(actionButton("LERNSPEICHER", accent = true).apply {
+            setOnClickListener { showBootstrapMemory() }
+        }, LinearLayout.LayoutParams(0, dp(43), 1f))
+        buttons.addView(actionButton("WEB RECHERCHE").apply {
+            setOnClickListener { showResearchModeDialog() }
+        }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
+        card.addView(buttons, matchWidth(top = 10))
         return card
     }
 
@@ -681,6 +699,20 @@ class AgentActivity : Activity() {
             setOnClickListener { newSession() }
         }
 
+        voiceButton = actionButton(if (voiceEnabled) "TON AN" else "TON AUS", compact = true).apply {
+            contentDescription = "Sprachausgabe ein- oder ausschalten"
+            setOnClickListener {
+                voiceEnabled = !voiceEnabled
+                bootstrapMemory.voiceEnabled = voiceEnabled
+                voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
+                if (voiceEnabled) {
+                    if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
+                    else Toast.makeText(this@AgentActivity,
+                        "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
+                } else voiceEngine?.stop()
+            }
+        }
+
         sendButton = actionButton("SENDEN", accent = true).apply {
             setOnClickListener {
                 if (busy && activeLocalRequest) cancelLocalRequest() else sendCurrentInput()
@@ -690,7 +722,11 @@ class AgentActivity : Activity() {
         actions.addView(mic, LinearLayout.LayoutParams(dp(49), dp(43)))
         actions.addView(
             newChat,
-            LinearLayout.LayoutParams(dp(68), dp(43)).apply { marginStart = dp(6) }
+            LinearLayout.LayoutParams(dp(49), dp(43)).apply { marginStart = dp(5) }
+        )
+        actions.addView(
+            voiceButton,
+            LinearLayout.LayoutParams(dp(62), dp(43)).apply { marginStart = dp(5) }
         )
         actions.addView(
             sendButton,
@@ -703,55 +739,124 @@ class AgentActivity : Activity() {
 
     private fun sendCurrentInput() {
         if (busy) return
-        val text = input.text.toString().trim()
-        if (text.isBlank()) {
+        val request = input.text.toString().trim()
+        if (request.isBlank()) {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
-
-        val researchSelected = ResearchOptInPolicy.shouldResearch(text, researchArmed)
-        val route = LocalFirstPolicy.route(mode, localRuntime.state == LocalModelState.READY)
-        when (ComposerUiPolicy.submission(
-            route, localRuntime.loadedModel != null, backend.isConfigured(), researchSelected
-        )) {
-            DraftSubmission.READY -> Unit
-            DraftSubmission.NEEDS_LOCAL_MODEL -> {
-                addToolActivity("Kein lokales Modell geladen · Entwurf bleibt erhalten")
-                Toast.makeText(this, "Bitte zuerst ein lokales Modell laden. Text bleibt erhalten.", Toast.LENGTH_LONG).show()
-                return
-            }
-            DraftSubmission.NEEDS_CLOUD_SETUP -> {
-                addToolActivity("ONLINE nicht konfiguriert · Entwurf bleibt erhalten")
-                Toast.makeText(this, "Bitte ONLINE konfigurieren. Text bleibt erhalten.", Toast.LENGTH_LONG).show()
-                return
-            }
-        }
-        agentLoops = 0
-        input.text.clear()
-        addUserMessage(text)
-
-        if (researchSelected) {
+        // Web research remains explicit opt-in; never infer internet permission from prose.
+        if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
+            input.text.clear()
+            addUserMessage(request)
             researchArmed = false
-            runResearch(text, researchMode)
+            runResearch(request, researchMode)
             return
         }
-        researchArmed = false
-        when (route) {
-            AssistantRoute.LOCAL_MODEL -> runLocal(text)
-            AssistantRoute.CLOUD -> {
-                if (backend.isConfigured()) {
-                    runCloud(text, emptyList())
-                } else {
-                    addAssistantMessage("Online-Modus ist nicht eingerichtet. Tippe oben auf ⚙ und hinterlege HTTPS-Backend und Device-Token.")
-                }
+        val decision = BootstrapBrain.decide(request, bootstrapMemory.facts())
+        if (decision.kind == BootstrapKind.DEVICE_TOOL && !bridge.isReady()) {
+            addToolActivity("SHIZUKU NICHT BEREIT · Auftrag nicht ausgeführt")
+            addAssistantMessage("Für diesen nur lesenden Geräteauftrag benötige ich Shizuku. " +
+                "Bitte verbinde es zuerst. Dein Text bleibt im Eingabefeld.")
+            return
+        }
+        // Explicit memory writes or deletions are never performed by unseen model output.
+        input.text.clear()
+        addUserMessage(request)
+        when (decision.kind) {
+            BootstrapKind.REMEMBER -> {
+                val stored = bootstrapMemory.addFact(checkNotNull(decision.fact))
+                addAssistantMessage(if (stored) "Gemerkt. Diese Information liegt nur in meinem lokalen Lernspeicher. " +
+                    "Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
+                    else "Ich konnte das nicht speichern (bereits bekannt oder Speichergrenze erreicht).")
             }
-            AssistantRoute.MODEL_SETUP_REQUIRED -> {
-                addAssistantMessage(
-                    "Kein lokales Modell ist geladen. Importiere eine kompatible .litertlm-Datei und lade sie oben. " +
-                        "AUTO verwendet keine Cloud als stillen Ersatz; ONLINE kann separat gewählt werden."
+            BootstrapKind.FORGET -> showConfirmForget()
+            BootstrapKind.FEEDBACK_POSITIVE -> {
+                bootstrapMemory.recordFeedback(true)
+                addAssistantMessage("Danke. Die positive Rückmeldung wurde als lokales Feedback erfasst.")
+            }
+            BootstrapKind.FEEDBACK_NEGATIVE -> {
+                bootstrapMemory.recordFeedback(false)
+                addAssistantMessage("Danke. Ich habe die negative Rückmeldung erfasst. Sie verbessert mich nicht automatisch, " +
+                    "hilft aber beim gezielten Auswerten meiner Antworten.")
+            }
+            BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(decision)
+            BootstrapKind.REPLY -> addAssistantMessage(decision.message)
+        }
+        addToolActivity("STARTKERN · lokales Gespräch")
+    }
+
+    private fun executeBootstrapReadOnly(decision: BootstrapDecision) {
+        val name = checkNotNull(decision.tool)
+        if (ToolRegistry.risk(name) != Risk.READ_ONLY) {
+            addAssistantMessage("Sicherheitsprüfung: Geräteaktion nicht freigegeben.")
+            return
+        }
+        activeLocalRequest = true
+        setBusy(true)
+        addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
+        val id = "bootstrap-" + UUID.randomUUID().toString()
+        localAgentExecutor.execute {
+            val result = runCatching {
+                val proposal = ToolProposal(name, decision.arguments)
+                require(proposal.validate() == null)
+                createToolGate().execute(proposal.invocation(id))
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                activeLocalRequest = false
+                setBusy(false)
+                val value = result.fold(
+                    onSuccess = { item ->
+                        if (item.record.status == ToolExecutionStatus.SUCCEEDED)
+                            "${ToolRegistry.label(name)}:\\n" + (item.output ?: "Kein Ergebnis.")
+                        else "Geräteaktion nicht abgeschlossen: ${item.record.decisionReason}"
+                    },
+                    onFailure = { "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
                 )
+                addAssistantMessage(value.take(3_000))
+                addToolActivity("STARTKERN · Geräteprüfung beendet")
             }
         }
+    }
+
+    private fun showConfirmForget() {
+        AlertDialog.Builder(this)
+            .setTitle("Lokalen Lernspeicher löschen?")
+            .setMessage("Alle ausdrücklich gemerkten Fakten werden dauerhaft aus dem Bootstrap-Lernspeicher entfernt. " +
+                "Der separate Continuum-Identitätsspeicher bleibt unverändert.")
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("Fakten löschen") { _, _ ->
+                bootstrapMemory.clearFacts()
+                addAssistantMessage("Der lokale Fakten-Lernspeicher wurde geleert.")
+            }.show()
+    }
+
+    private fun showBootstrapMemory() {
+        val facts = bootstrapMemory.facts()
+        val text = buildString {
+            append("Eigener Startkern ohne Modellimport.\\n\\n")
+            append("Gemerkte Fakten: ${facts.size}/32\\n")
+            append("Feedback hilfreich: ${bootstrapMemory.positiveCount}\\n")
+            append("Feedback nicht hilfreich: ${bootstrapMemory.negativeCount}\\n\\n")
+            append("Nur auf ausdrückliches „Merke dir: ...“ wird gespeichert.\\n")
+            append("Weder Chatverläufe noch Internetseiten werden automatisch als Wahrheit gespeichert.\\n")
+            append("Sprachausgabe verwendet Android-TTS; Spracheingabe den verfügbaren Android-Dienst.\\n")
+            append("Privater App-Speicher, derzeit noch ohne zusätzliche Inhaltsverschlüsselung.\\n\\n")
+            append(if (facts.isEmpty()) "Noch keine eigenen Fakten." else
+                facts.mapIndexed { i, fact -> "${i + 1}. $fact" }.joinToString("\\n"))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · Lernstatus")
+            .setMessage(text)
+            .setPositiveButton("Schließen", null)
+            .setNeutralButton("Fakten löschen") { _, _ -> showConfirmForget() }
+            .show()
+    }
+
+    private fun speakBootstrap(message: String) {
+        if (!voiceEnabled || !voiceReady) return
+        val plain = message.take(380)
+        voiceEngine?.speak(plain, TextToSpeech.QUEUE_FLUSH, null, "device-ai-voice")
     }
 
     private fun showResearchModeDialog() {
@@ -1788,7 +1893,12 @@ class AgentActivity : Activity() {
     }
 
     private fun refreshLocalModelUi() {
-        if (!::modelCardText.isInitialized || !::localBadge.isInitialized) return
+        if (!::localBadge.isInitialized) return
+        if (!::modelCardText.isInitialized) {
+            localBadge.text = "● KERN AKTIV"
+            localBadge.setTextColor(GREEN)
+            return
+        }
         val models = runCatching { modelCatalog.all() }.getOrDefault(emptyList())
         val loaded = localRuntime.loadedModel
         val state = when {
@@ -1861,9 +1971,9 @@ class AgentActivity : Activity() {
         applyModeStyles()
         addToolActivity(
             when (value) {
-                AssistantMode.AUTO -> "AUTO · lokales Modell zuerst; kein stiller Cloud-Fallback"
-                AssistantMode.CLOUD -> "ONLINE · optionaler Cloud-Modus"
-                AssistantMode.LOCAL -> "LOKAL · keine Cloud-Anfrage"
+                AssistantMode.AUTO -> "DIALOG · eigener Startkern aktiv"
+                AssistantMode.CLOUD -> "INTERNET · nur nach Freigabe und direkten HTTPS-Quellen"
+                AssistantMode.LOCAL -> "GERÄT · lokale Diagnose über Shizuku"
             }
         )
         refreshLocalModelUi()
@@ -1895,13 +2005,9 @@ class AgentActivity : Activity() {
 
     private fun updateCloudBadge() {
         val configured = backend.isConfigured()
-        cloudBadge.text = if (configured) "● CLOUD BEREIT" else "● CLOUD SETUP"
-        cloudBadge.setTextColor(if (configured) GREEN else AMBER)
-        cloudBadge.background = rounded(
-            if (configured) Color.rgb(17, 49, 35) else Color.rgb(51, 39, 18),
-            14,
-            if (configured) Color.rgb(38, 99, 70) else Color.rgb(100, 75, 30)
-        )
+        cloudBadge.text = "● WEB AUF ANFRAGE"
+        cloudBadge.setTextColor(CYAN)
+        cloudBadge.background = rounded(PANEL, 14, BORDER)
     }
 
     private fun showCloudSettings() {
@@ -1992,6 +2098,7 @@ class AgentActivity : Activity() {
 
     private fun addAssistantMessage(value: String) {
         addBubble(value, user = false)
+        speakBootstrap(value)
     }
 
     private fun addBubble(value: String, user: Boolean) {
@@ -2079,6 +2186,7 @@ class AgentActivity : Activity() {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
             putExtra(RecognizerIntent.EXTRA_PROMPT, "Was soll Device AI tun?")
+            putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         }
         try {
             startActivityForResult(intent, SPEECH_REQUEST)
