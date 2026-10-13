@@ -73,9 +73,11 @@ No third-party source was vendored or translated. Mathematical methods were impl
 | AIMA Java | MIT, `AIMA3e/LICENCE.md`, blob `330e89b7fb83cd0e699262e9cbe0a6d5d017623f`; `FOLFCAsk.java` | Bounded forward chaining, much narrower language; no AIMA dependency |
 | River | BSD-3-Clause, `main/LICENSE`, blob `c3a351f973d0b1b38eadc6ae72917bfc5ce24f8e`; `river/naive_bayes/multinomial.py`, blob `ddb4e127f21879e6148b71f0546f4d0e84ec74d6` | Small original Kotlin multinomial NB; no Python/numpy/scipy runtime |
 | Micrograd | MIT, `master/LICENSE`, blob `3d89960112452062baf36bb13d43a92028fc0f0e`; `micrograd/engine.py`, blob `afd82cc573777421cfec2437a402539a82b70203` | Chain-rule reference; direct dense backprop instead of a scalar autograd graph |
-| MicroGPT | Author's blog and original gist inspected; MIT claim not independently located in the retrieved author text | No code copied; transformer deferred, not needed for the first measured network |
+| MicroGPT | MIT, explicitly declared by author `karpathy` in gist comment 5999841; verified via GitHub's public comments API page 3 | No code copied; transformer deferred, not needed for the first measured network |
 | JSoar | BSD-3-Clause, `maven/LICENSE.txt`, blob `ec95ba9ee989cf622f0b451cd642420f00cb3ae3` | Decision-cycle reference; no whole architecture dependency |
 | EJML | Apache-2.0, `SNAPSHOT/LICENSE-2.0.txt`, blob `e454a52586f29b8ce8a6799163eac1f875e9ac01` | Arrays suffice for 273 parameters; no EJML modules added. Current Android compatibility/APK overhead not tested |
+
+MicroGPT author declaration: https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95?permalink_comment_id=5999841#gistcomment-5999841 .
 
 Primary URLs: https://github.com/aimacode/aima-java ; https://github.com/online-ml/river ; https://github.com/karpathy/micrograd ; https://karpathy.github.io/2026/02/12/microgpt/ ; https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95 ; https://github.com/soartech/jsoar ; https://github.com/lessthanoptimal/ejml . Any future source copying needs preserved notices and exact revision licensing review.
 
