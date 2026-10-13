@@ -4,6 +4,21 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class NeuralPracticeTest {
+    @Test fun trainingCorpusFingerprintChangesOnlyAfterApprovedNewExamples() {
+        val lab = NeuralDialogue()
+        val empty = lab.lessonFingerprint()
+        assertEquals(empty, NeuralDialogue.restore(lab.save()).lessonFingerprint())
+        lab.teach("Servus, ich grüße dich", 0, true)
+        val newFingerprint = lab.lessonFingerprint()
+        assertNotEquals(empty, newFingerprint)
+        val copy = NeuralDialogue.restore(lab.save())
+        assertEquals(newFingerprint, copy.lessonFingerprint())
+        copy.practice(80)
+        assertEquals(newFingerprint, copy.lessonFingerprint())
+        copy.teach("Kannst du helfen", 1, true)
+        assertNotEquals(newFingerprint, copy.lessonFingerprint())
+    }
+
     @Test fun explicitManualRehearsalRequiresNeuralCommand() {
         assertEquals(NeuralCommandKind.PRACTICE,NeuralCommandParser.parse("Neuron üben")!!.kind)
         assertEquals(NeuralCommandKind.PRACTICE,NeuralCommandParser.parse("Neuron wiederholen")!!.kind)

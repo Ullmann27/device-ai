@@ -92,6 +92,17 @@ class NeuralDialogue {
     }
     @Synchronized fun lessonCount(): Int = lessons.size
 
+    /** Content fingerprint over explicitly approved examples only (not passwords, chat logs or URLs). */
+    @Synchronized fun lessonFingerprint(): String {
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+        lessons.sortedWith(compareBy<Pair<String, Int>> { it.first }.thenBy { it.second }).forEach { (text, label) ->
+            digest.update(label.toByte())
+            digest.update(text.toByteArray(Charsets.UTF_8))
+            digest.update(0.toByte())
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
     /** Repeat a small bounded neural learning cycle using ONLY already approved lessons.
      * Candidate weights are discarded if tests regress or the cycle is cancelled.
      * This is not self-supervised web learning or a generative language model.

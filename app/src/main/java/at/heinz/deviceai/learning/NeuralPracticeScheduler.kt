@@ -10,24 +10,42 @@ import at.heinz.deviceai.BootstrapMemoryStore
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 
-/** Opt-in scheduled practice of ONLY user-confirmed labels; charging-only, no internet. */
+/**
+ * Explicitly opted-in learning conductor for the EXISTING local 273-weight classifier.
+ *
+ * - While UI is visible: short opportunities without charging (activity checks battery/power saver).
+ * - Background: JobScheduler permits small cycles when charging, not a permanent process.
+ * - When three cycles do not improve generalization, stop weight updates until new APPROVED lessons.
+ * - All prior weights are retained unless frozen holdouts and user-approved training improve.
+ * No network, always-listening microphone, device tool call or unreviewed self-labeling.
+ */
 class NeuralPracticeScheduler(context: Context) {
     private val app = context.applicationContext
     private val prefs = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val jobs get() = app.getSystemService(JobScheduler::class.java)
 
     val enabled: Boolean get() = prefs.getBoolean("enabled", false)
-    val lastStatus: String get() = prefs.getString("status", "Noch kein automatisches Üben.")
-        ?: "Noch keine Messung."
+    val lastStatus: String get() = prefs.getString("status", "Noch kein Lernzyklus.")
+        ?: "Noch kein Lernzyklus."
+    val attempts: Int get() = prefs.getInt("attempts", 0)
+    val improvements: Int get() = prefs.getInt("improvements", 0)
+    val waitingForExperience: Boolean get() =
+        enabled && prefs.getInt("stagnant", 0) >= 3
 
     fun enable(): Boolean {
-        val lab = runCatching { BootstrapMemoryStore(app).neuralSnapshot()?.let(NeuralDialogue::restore) }.getOrNull()
+        val lab = runCatching {
+            BootstrapMemoryStore(app).neuralSnapshot()?.let(NeuralDialogue::restore)
+        }.getOrNull()
         if (lab == null || lab.lessonCount() == 0) return false
         if (!schedule()) return false
-        val saved = prefs.edit().putBoolean("enabled", true).putInt("stagnant", 0)
-            .putString("status", "Aktiv: Wiederholung beim Laden, frühestens alle 15 Minuten.").commit()
-        if (!saved) jobs.cancel(JOB_ID)
-        return saved
+        val success = prefs.edit()
+            .putBoolean("enabled", true)
+            .putInt("stagnant", 0)
+            .putString("fingerprint", lab.lessonFingerprint())
+            .putString("status", "Lernbereit: im Vordergrund und beim Laden im Hintergrund.")
+            .commit()
+        if (!success) jobs.cancel(JOB_ID)
+        return success
     }
 
     fun restoreIfEnabled() {
@@ -36,21 +54,76 @@ class NeuralPracticeScheduler(context: Context) {
 
     fun disable() {
         prefs.edit().putBoolean("enabled", false)
-            .putString("status", "Automatisches Üben ausgeschaltet.").commit()
+            .putString("status", "Automatisches Üben ausgeschaltet. Gewichte bleiben erhalten.").commit()
         jobs.cancel(JOB_ID)
     }
 
-    internal fun record(message: String, accepted: Boolean) {
-        if (!enabled) return
-        val stagnant = if (accepted) 0 else (prefs.getInt("stagnant", 0) + 1).coerceAtMost(3)
-        prefs.edit().putInt("stagnant", stagnant)
-            .putString("status", message.take(450)).putLong("last_run", System.currentTimeMillis()).commit()
-        if (stagnant >= 3) {
-            prefs.edit().putBoolean("enabled", false)
-                .putString("status", "Nach drei Übungszyklen ohne Fortschritt pausiert. " +
-                    "Neue bestätigte Beispiele nötig. Letztes Ergebnis: " + message.take(170)).commit()
-            jobs.cancel(JOB_ID)
+    /**
+     * One bounded cycle, also usable from the visible app's background executor.
+     * Caller must not invoke on main thread. Serialized across JobService and foreground.
+     */
+    fun practiceOnce(cancelled: () -> Boolean = { false },
+        progress: (NeuralLearningProgress) -> Unit = {}
+    ): String {
+        if (!enabled || cancelled()) return "Lernzyklus nicht aktiv."
+        if (!RUNNING.compareAndSet(false, true)) return "Bereits ein Lernzyklus aktiv."
+        try {
+            val memory = BootstrapMemoryStore(app)
+            val original = memory.neuralSnapshot()
+                ?: return record("Kein trainierter neuronaler Lernstand vorhanden.", false, "")
+            val model = NeuralDialogue.restore(original)
+            if (model.lessonCount() == 0)
+                return record("Keine bestätigten Lernbeispiele vorhanden.", false, model.lessonFingerprint())
+            val fingerprint = model.lessonFingerprint()
+            if (!canPractice(fingerprint)) {
+                val waiting = "Lernbereit: Ich warte auf ein neues bestätigtes Sprachbeispiel. " +
+                    "Die bisherigen Wiederholungen haben keinen weiteren Fortschritt gebracht."
+                prefs.edit().putString("status", waiting).apply()
+                return waiting
+            }
+            val result = model.practice(steps = 200, cancelled = cancelled, onProgress = progress)
+            if (cancelled() || !enabled) return "Übungsdurchgang abgebrochen; nichts gespeichert."
+            if (!result.accepted)
+                return record("200er-Zyklus verworfen: " + result.reason +
+                    "; neuer Wortschatz " + result.unfamiliarAfter.correct + "/12.", false, fingerprint)
+            val report = "Lernzyklus: " + result.completedSteps + " Updates; Verlust " +
+                "%.5f → %.5f".format(Locale.ROOT, result.trainingLossBefore,result.trainingLossAfter) +
+                "; Härtetest " + result.unfamiliarBefore.correct + "/12 → " +
+                result.unfamiliarAfter.correct + "/12."
+            val saved = !cancelled() && enabled &&
+                memory.compareAndSaveNeuralSnapshot(original,model.save(),report)
+            return record(if(saved) report else
+                "Neue Gewichte nicht übernommen: Speicherstand wurde verändert oder Speichern fehlgeschlagen.",
+                saved, fingerprint)
+        } catch (error: Exception) {
+            if (cancelled()) return "Übungsdurchgang abgebrochen."
+            return record("Lernzyklus fehlgeschlagen: " + error.javaClass.simpleName,false,"")
+        } finally { RUNNING.set(false) }
+    }
+
+    private fun canPractice(fingerprint: String): Boolean {
+        if (prefs.getString("fingerprint", "") != fingerprint) {
+            // New approved examples resume the already consented, periodic learning cycle.
+            prefs.edit().putInt("stagnant", 0).putString("fingerprint", fingerprint).commit()
         }
+        return prefs.getInt("stagnant", 0) < 3
+    }
+
+    private fun record(text: String, improved: Boolean, fingerprint: String): String {
+        val old = prefs.getInt("stagnant", 0)
+        val misses = if (improved) 0 else (old + 1).coerceAtMost(3)
+        val message = if (misses >= 3)
+            text + " Nächste Gewichtsübungen erst nach neuen bestätigten Beispielen."
+        else text
+        prefs.edit()
+            .putInt("stagnant", misses)
+            .putString("fingerprint", fingerprint)
+            .putInt("attempts", (attempts + 1).coerceAtMost(1000000))
+            .putInt("improvements", (improvements + if(improved) 1 else 0).coerceAtMost(1000000))
+            .putString("status", message.take(500))
+            .putLong("last_run", System.currentTimeMillis())
+            .commit()
+        return message
     }
 
     private fun schedule(): Boolean {
@@ -58,19 +131,19 @@ class NeuralPracticeScheduler(context: Context) {
             .setRequiresCharging(true)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE)
             .setPeriodic(PERIOD_MS)
-            .setPersisted(true)
-            .build()
+            .setPersisted(true).build()
         return jobs.schedule(info) == JobScheduler.RESULT_SUCCESS
     }
 
     companion object {
+        private val RUNNING = AtomicBoolean(false)
         private const val PREFS = "device_ai_neural_practice_v1"
         const val JOB_ID = 620132
         const val PERIOD_MS = 15 * 60 * 1000L
     }
 }
 
-/** JobScheduler worker: bounded local SGD, frozen regression checks, no tools or microphone. */
+/** One short scheduled learning opportunity, limited by Android's background policy. */
 class NeuralPracticeJobService : JobService() {
     private val cancelled = AtomicBoolean(false)
     private var worker: Thread? = null
@@ -80,41 +153,8 @@ class NeuralPracticeJobService : JobService() {
         if (!scheduler.enabled) return false
         cancelled.set(false)
         worker = Thread({
-            try {
-                val memory = BootstrapMemoryStore(applicationContext)
-                val original = memory.neuralSnapshot()
-                if (original == null) {
-                    scheduler.record("Kein trainiertes neuronales Experiment vorhanden.", false)
-                    return@Thread
-                }
-                val model = NeuralDialogue.restore(original)
-                if (model.lessonCount() == 0) {
-                    scheduler.record("Keine bestätigten Lernbeispiele vorhanden.", false)
-                    return@Thread
-                }
-                val result = model.practice(steps = 200, cancelled = cancelled::get)
-                if (cancelled.get() || !scheduler.enabled) return@Thread
-                if (!result.accepted) {
-                    scheduler.record("Lernzyklus " + result.completedSteps + "/200, verworfen: " +
-                        result.reason + ". Härtetest: " + result.unfamiliarAfter.correct + "/12.", false)
-                    return@Thread
-                }
-                val report = "Lokaler Lernzyklus: " + result.completedSteps +
-                    " Gewichtsaktualisierungen; Trainingsfehler " +
-                    "%.5f → %.5f".format(Locale.ROOT, result.trainingLossBefore, result.trainingLossAfter) +
-                    "; Härtetest " + result.unfamiliarBefore.correct + "/12 → " +
-                    result.unfamiliarAfter.correct + "/12."
-                val saved = scheduler.enabled && !cancelled.get() &&
-                    memory.compareAndSaveNeuralSnapshot(original, model.save(), report)
-                scheduler.record(if (saved) report else
-                    "Nicht gespeichert: Ein neuerer Lernstand oder Speicherfehler liegt vor.", saved)
-            } catch (error: Exception) {
-                if (!cancelled.get()) scheduler.record(
-                    "Übung fehlgeschlagen: " + error.javaClass.simpleName, false
-                )
-            } finally {
-                if (!cancelled.get()) jobFinished(params, false)
-            }
+            try { scheduler.practiceOnce(cancelled::get) }
+            finally { if (!cancelled.get()) jobFinished(params, false) }
         }, "device-ai-neural-practice").apply { isDaemon = true; start() }
         return true
     }

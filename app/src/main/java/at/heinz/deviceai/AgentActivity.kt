@@ -162,6 +162,34 @@ class AgentActivity : Activity() {
     private lateinit var neuralProgress: ProgressBar
     private var neuralAutoButton: Button? = null
     private val neuralCoach = NeuralLearningCoach()
+    private var foregroundLearningActive = false
+    private val foregroundLearningCheck = object : Runnable {
+        override fun run() {
+            if (!foregroundLearningActive || isFinishing || isDestroyed) return
+            val scheduler = NeuralPracticeScheduler(this@AgentActivity)
+            if (scheduler.enabled && !busy && !localAgentExecutor.isShutdown) {
+                val battery = getSystemService(android.content.Context.BATTERY_SERVICE)
+                    as android.os.BatteryManager
+                val charge = battery.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                val power = getSystemService(android.content.Context.POWER_SERVICE)
+                    as android.os.PowerManager
+                if (charge >= 30 && !power.isPowerSaveMode) {
+                    localAgentExecutor.execute {
+                        val status = scheduler.practiceOnce()
+                        runOnUiThread {
+                            if (foregroundLearningActive && !busy && !isFinishing && !isDestroyed) {
+                                neuralMonitor.text = "NEURON · " + status.take(140)
+                                refreshNeuralPracticeUi()
+                            }
+                        }
+                    }
+                } else if (!busy) {
+                    neuralMonitor.text = "NEURON · Lernt wieder, sobald Akku ≥30 % und Energiesparen aus ist"
+                }
+            }
+            if (foregroundLearningActive) mainHandler.postDelayed(this, 60_000L)
+        }
+    }
     private var dashboardSection: View? = null
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -265,6 +293,15 @@ class AgentActivity : Activity() {
         if (::cloudBadge.isInitialized) updateCloudBadge()
         if (::modelCatalog.isInitialized) refreshLocalModelUi()
         refreshNeuralPracticeUi()
+        foregroundLearningActive = true
+        mainHandler.removeCallbacks(foregroundLearningCheck)
+        mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
+    }
+
+    override fun onPause() {
+        foregroundLearningActive = false
+        mainHandler.removeCallbacks(foregroundLearningCheck)
+        super.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -273,6 +310,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        foregroundLearningActive = false
+        mainHandler.removeCallbacks(foregroundLearningCheck)
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
@@ -940,10 +979,14 @@ class AgentActivity : Activity() {
         if (practice.enabled) {
             AlertDialog.Builder(this)
                 .setTitle("Automatisches neuronales Üben")
-                .setMessage("Aktiviert: Android versucht beim Laden frühestens alle 15 Minuten einen " +
-                    "begrenzten Übungszyklus mit bereits bestätigten Beispielen. " +
-                    "Nach drei erfolglosen Zyklen pausiert das Training.\n\n" +
-                    "Letztes Ergebnis: " + practice.lastStatus)
+                .setMessage("Im sichtbaren Chat prüfe ich etwa einmal pro Minute, ob ein kurzer " +
+                    "Lernzyklus sinnvoll ist (Akku mindestens 30 %, kein Energiesparmodus). " +
+                    "Im Hintergrund plant Android beim Laden zusätzliche Zyklen, ungefähr alle 15 Minuten. " +
+                    "Nach drei ergebnislosen Zyklen bleiben die Gewichte erhalten. " +
+                    "Sobald du mir weitere bestätigte Beispiele beibringst, übe ich automatisch weiter.\n\n" +
+                    "Bisherige Versuche: " + practice.attempts +
+                    " · Verbesserungen: " + practice.improvements +
+                    "\nLetztes Ergebnis: " + practice.lastStatus)
                 .setNegativeButton("Weiterlaufen lassen", null)
                 .setPositiveButton("AUTO-ÜBEN STOPPEN") { _, _ ->
                     practice.disable()
@@ -954,14 +997,16 @@ class AgentActivity : Activity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Wiederkehrendes neuronales Üben erlauben?")
-            .setMessage("Device AI kann bereits bestätigte Sprachbeispiele wiederholt üben und dabei " +
-                "die 273 neuronalen Gewichte anpassen. Das geschieht nur beim Laden des Geräts " +
-                "und höchstens in kurzen, von Android geplanten Zyklen (frühestens alle 15 Minuten). " +
-                "Nach jedem Durchgang prüft Device AI Trainingsfehler und unabhängige Prüfbeispiele. " +
-                "Schlechtere Ergebnisse werden verworfen; nach drei erfolglosen Versuchen stoppt es.\n\n" +
-                "Keine automatische Übernahme von Gesprächsaufnahmen oder Internetseiten. " +
-                "Kein dauerhaft laufender Hintergrundprozess und kein großes Sprachmodell.\n\n" +
-                "Letzter Status: " + practice.lastStatus)
+            .setMessage("Du erlaubst kleine, wiederholte Trainingsdurchgänge der 273 Gewichte auf " +
+                "deinen bereits bestätigten Sprachbeispielen. Während die App sichtbar ist, " +
+                "sucht Device AI etwa jede Minute eine Lerngelegenheit (Akku ≥30 %, kein Energiesparen). " +
+                "Android plant beim Laden weitere Hintergrundübungen etwa alle 15 Minuten. " +
+                "Die genauen Laufzeiten werden vom Betriebssystem bestimmt.\n\n" +
+                "Unbekannte Prüfbeispiele schützen vor Verschlechterung. Nach drei " +
+                "nicht verbesserten Durchgängen wartet die KI auf neue bestätigte Beispiele " +
+                "und lernt dann erneut. Die Einwilligung bleibt widerrufbar.\n\n" +
+                "Keine heimlichen Mikrofonaufnahmen, keine automatische Übernahme von Webseiten " +
+                "und kein generatives Sprachmodell.\n\nLetztes Ergebnis: " + practice.lastStatus)
             .setNegativeButton("Abbrechen", null)
             .setPositiveButton("AUTO-ÜBEN ERLAUBEN") { _, _ ->
                 val started = runCatching { practice.enable() }.getOrDefault(false)
@@ -978,11 +1023,12 @@ class AgentActivity : Activity() {
     private fun refreshNeuralPracticeUi() {
         if (!::neuralMonitor.isInitialized) return
         val practice = NeuralPracticeScheduler(this)
-        neuralAutoButton?.text = if (practice.enabled) "AUTO-ÜBEN · AN (LADEBETRIEB)" else "AUTO-ÜBEN · AUS"
+        neuralAutoButton?.text = if (practice.enabled) "AUTO-LERNEN · AN" else "AUTO-LERNEN · AUS"
         if (!busy) {
             neuralMonitor.text = if (practice.enabled)
-                "NEURON · Automatisches Üben geplant · " + practice.lastStatus.take(140)
-            else "NEURON · Auto-Üben aus · " + practice.lastStatus.take(140)
+                "NEURON · AUTO-LERNEN · " + practice.attempts + " Zyklen, " +
+                    practice.improvements + " Verbesserungen · " + practice.lastStatus.take(110)
+            else "NEURON · Auto-Lernen aus · " + practice.lastStatus.take(140)
         }
     }
 
@@ -1198,7 +1244,9 @@ class AgentActivity : Activity() {
             append("Korrigiere: <alter Fakt> => <neuer Fakt> · Widerrufe: <Fakt>\n\n")
             append(bootstrapMemory.neuralReport()).append("\n")
             val practice = NeuralPracticeScheduler(this@AgentActivity)
-            append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS")
+            append("AUTO-LERNEN: ").append(if (practice.enabled) "AN" else "AUS")
+                .append(" · Versuche: ").append(practice.attempts)
+                .append(", Verbesserungen: ").append(practice.improvements)
                 .append(" · ").append(practice.lastStatus).append("\n")
             append("Neuron Demo · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
