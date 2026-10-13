@@ -33,6 +33,13 @@ class MentorSourceNotebook(context:Context) {
                 .also(::checkSource)
         }
     }
+    /** Restores an exact-source-bound associative model, rebuilding older notebooks on read. */
+    fun conceptNetwork():MentorConceptNetwork=synchronized(LOCK) {
+        val current=entries()
+        val encoded=prefs.getString("associations",null)
+        if(encoded==null)MentorConceptNetwork.build(current)
+        else MentorConceptNetwork.restore(encoded,current)
+    }
     fun add(newItems:List<MentorSource>):Int=synchronized(LOCK) {
         newItems.forEach(::checkSource)
         val old=entries()
@@ -41,7 +48,11 @@ class MentorSourceNotebook(context:Context) {
         val data=JSONArray()
         for (item in merged) data.put(JSONObject().put("subject",item.subject).put("url",item.url)
             .put("sha",item.sha).put("excerpt",item.excerpt))
-        check(prefs.edit().putString("entries",data.toString()).commit())
+        // Compute a new graph before the write. Both records and graph are published
+        // atomically in one SharedPreferences editor, or neither replaces the old state.
+        val network=MentorConceptNetwork.build(merged).serialize()
+        check(prefs.edit().putString("entries",data.toString())
+            .putString("associations",network).commit())
         added
     }
     fun record(subject:String,found:Int,message:String) {
@@ -53,7 +64,9 @@ class MentorSourceNotebook(context:Context) {
             check(edit.commit())
         }
     }
-    fun clear():Boolean=synchronized(LOCK){prefs.edit().remove("entries").commit()}
+    fun clear():Boolean=synchronized(LOCK){
+        prefs.edit().remove("entries").remove("associations").commit()
+    }
     companion object {
         private val LOCK=Any()
         fun checkSource(x:MentorSource) {
