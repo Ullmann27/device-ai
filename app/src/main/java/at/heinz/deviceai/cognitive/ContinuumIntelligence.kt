@@ -38,6 +38,7 @@ data class IntelligenceTaskAssessment(
 
 object ContinuumTaskClassifier {
     private val wordSplitter = Regex("""[^\p{L}\p{N}_]+""")
+    private val shortPrefixStems = setOf("prüf")
     private const val EXACT_WORD_MAX_LENGTH = 4
 
     fun classify(request: String, requestedStrategy: ReasoningStrategy? = null): IntelligenceTaskAssessment {
@@ -114,6 +115,7 @@ object ContinuumTaskClassifier {
         needles.any { needle ->
             when {
                 needle.contains(' ') -> text.contains(needle)
+                needle in shortPrefixStems -> words.any { it.startsWith(needle) }
                 needle.length <= EXACT_WORD_MAX_LENGTH -> words.any { it == needle }
                 else -> words.any { it.startsWith(needle) }
             }
