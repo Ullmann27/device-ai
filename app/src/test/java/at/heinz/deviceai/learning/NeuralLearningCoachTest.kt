@@ -8,8 +8,8 @@ class NeuralLearningCoachTest {
         val coach = NeuralLearningCoach()
         assertNull(coach.accept("hallo"))
         assertTrue(coach.begin().message.contains("LERN-GESPRÄCH"))
-        assertNull(coach.accept("Servus, mein Freund").approvedLesson)
-        assertNull(coach.accept("andere Antwort").approvedLesson)
+        assertNull(coach.accept("Servus, mein Freund")?.approvedLesson)
+        assertNull(coach.accept("andere Antwort")?.approvedLesson)
         val result = coach.accept("Gruß")!!
         assertEquals(NeuralCommandKind.TEACH, result.approvedLesson!!.kind)
         assertEquals(0, result.approvedLesson!!.label)
