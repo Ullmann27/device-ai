@@ -48,10 +48,12 @@ object BootstrapBrain {
         }
         if (low == "vergiss alles" || low == "lösche meine erinnerungen" ||
             low == "lernspeicher löschen") return BootstrapDecision(BootstrapKind.FORGET)
-        if (low == "das war hilfreich" || low == "gut gemacht") return
-            BootstrapDecision(BootstrapKind.FEEDBACK_POSITIVE)
-        if (low == "das war nicht hilfreich" || low == "das ist falsch") return
-            BootstrapDecision(BootstrapKind.FEEDBACK_NEGATIVE)
+        if (low == "das war hilfreich" || low == "gut gemacht") return BootstrapDecision(
+            BootstrapKind.FEEDBACK_POSITIVE
+        )
+        if (low == "das war nicht hilfreich" || low == "das ist falsch") return BootstrapDecision(
+            BootstrapKind.FEEDBACK_NEGATIVE
+        )
         if (low.contains("was weißt du") || low.contains("was hast du dir gemerkt") ||
             low == "erinnerungen") return BootstrapDecision(BootstrapKind.REPLY,
                 if (facts.isEmpty()) "Ich habe noch keine ausdrücklich bestätigten Fakten gespeichert." else
