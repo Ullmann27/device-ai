@@ -37,16 +37,21 @@ data class IntelligenceTaskAssessment(
 }
 
 object ContinuumTaskClassifier {
+    private val wordSplitter = Regex("""[^\p{L}\p{N}_]+""")
+    private val shortPrefixStems = setOf("prüf")
+    private const val EXACT_WORD_MAX_LENGTH = 4
+
     fun classify(request: String, requestedStrategy: ReasoningStrategy? = null): IntelligenceTaskAssessment {
         require(request.isNotBlank() && request.length <= 16_000)
         val text = request.lowercase(Locale.ROOT)
+        val words = text.split(wordSplitter).filter { it.isNotEmpty() }
 
-        val research = containsAny(text, "latest", "heute", "aktuell", "news", "quelle", "quellen", "recherch")
-        val code = containsAny(text, "code", "kotlin", "java", "gradle", "github", "compile", "build", "repository", "repo")
-        val device = containsAny(text, "android", "shizuku", "akku", "battery", "app", "apk", "speicher", "logcat", "gerät")
-        val memory = containsAny(text, "erinner", "memory", "gemerkt", "weißt du noch", "vorher")
-        val verify = containsAny(text, "prüf", "verify", "kontroll", "stimmt das", "gegenprüf")
-        val plan = containsAny(text, "plan", "schritt", "strategie", "roadmap", "vorgehen")
+        val research = containsAny(text, words, "latest", "heute", "aktuell", "news", "quelle", "quellen", "recherch")
+        val code = containsAny(text, words, "code", "kotlin", "java", "gradle", "github", "compile", "build", "repository", "repo")
+        val device = containsAny(text, words, "android", "shizuku", "akku", "battery", "app", "apk", "speicher", "logcat", "gerät")
+        val memory = containsAny(text, words, "erinner", "memory", "gemerkt", "weißt du noch", "vorher")
+        val verify = containsAny(text, words, "prüf", "verify", "kontroll", "stimmt das", "gegenprüf")
+        val plan = containsAny(text, words, "plan", "schritt", "strategie", "roadmap", "vorgehen")
 
         val taskClass = when {
             research -> IntelligenceTaskClass.RESEARCH
@@ -83,14 +88,14 @@ object ContinuumTaskClassifier {
             request.length >= 200 -> 0.35
             else -> 0.15
         }
-        if (containsAny(text, "mehrere", "vergleich", "widerspruch", "constraint", "bedingung", "komplex")) {
+        if (containsAny(text, words, "mehrere", "vergleich", "widerspruch", "constraint", "bedingung", "komplex")) {
             complexity += 0.15
         }
         if (research || verify) complexity += 0.1
         complexity = complexity.coerceIn(0.0, 1.0)
 
         val expectedToolUse = device && containsAny(
-            text, "öffne", "starte", "stoppe", "install", "lösche", "suche", "zeige", "prüfe", "finde"
+            text, words, "öffne", "starte", "stoppe", "install", "lösche", "suche", "zeige", "prüfe", "finde"
         )
 
         return IntelligenceTaskAssessment(
@@ -105,8 +110,16 @@ object ContinuumTaskClassifier {
         )
     }
 
-    private fun containsAny(text: String, vararg needles: String): Boolean =
-        needles.any(text::contains)
+    /** Multi-word needles use substring match; short words must match exactly; longer ones as word prefix. */
+    private fun containsAny(text: String, words: List<String>, vararg needles: String): Boolean =
+        needles.any { needle ->
+            when {
+                needle.contains(' ') -> text.contains(needle)
+                needle in shortPrefixStems -> words.any { it.startsWith(needle) }
+                needle.length <= EXACT_WORD_MAX_LENGTH -> words.any { it == needle }
+                else -> words.any { it.startsWith(needle) }
+            }
+        }
 }
 
 enum class ReasoningPassRole { CANDIDATE, CRITIC, VERIFIER, JUDGE }
