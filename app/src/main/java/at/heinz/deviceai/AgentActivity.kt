@@ -26,7 +26,13 @@ import at.heinz.deviceai.cognitive.AgentModel
 import at.heinz.deviceai.cognitive.AgentModelOutput
 import at.heinz.deviceai.cognitive.AgentToolApproval
 import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
+import at.heinz.deviceai.cognitive.AiContextCompiler
+import at.heinz.deviceai.cognitive.AiContextInput
+import at.heinz.deviceai.cognitive.AiContextPolicy
+import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
 import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator
+import at.heinz.deviceai.cognitive.ContinuumRuntimeState
+import at.heinz.deviceai.cognitive.ContinuumRuntimeStore
 import at.heinz.deviceai.cognitive.Evaluation
 import at.heinz.deviceai.cognitive.FileAgentCheckpointStore
 import at.heinz.deviceai.cognitive.InMemoryExperienceStore
@@ -95,6 +101,12 @@ class AgentActivity : Activity() {
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
     private lateinit var receiptStore: FileToolExecutionReceiptStore
+    private lateinit var continuumStore: ContinuumRuntimeStore
+    @Volatile private var continuumState: ContinuumRuntimeState? = null
+    private var continuumStartupNote: String? = null
+    private val contextCompiler = AiContextCompiler(
+        AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)
+    )
 
     private lateinit var shizukuBadge: TextView
     private lateinit var cloudBadge: TextView
@@ -145,6 +157,7 @@ class AgentActivity : Activity() {
         )
         localRuntime = LiteRtLmLocalModelRuntime(modelCatalog, java.io.File(cacheDir, "litertlm"))
         receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
+        initializeContinuum()
         bridge = ShizukuBridge(this) { message ->
             runOnUiThread {
                 if (::shizukuBadge.isInitialized) updateShizukuBadge(message)
@@ -157,6 +170,7 @@ class AgentActivity : Activity() {
         updateCloudBadge()
         refreshLocalModelUi()
         showPendingReceiptReview()
+        continuumStartupNote?.let(::addToolActivity)
         addAssistantMessage(
             "Device AI ist lokal-first. AUTO und LOKAL nutzen das installierte LiteRT-LM-Modell; " +
                 "ONLINE bleibt ein optionaler Cloud-Modus."
@@ -959,18 +973,41 @@ class AgentActivity : Activity() {
         addToolActivity("Lokales Modell plant …")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
-        val agentTask = "[local-turn:$turnId]\n${text.take(7_900)}"
+        val agentTask = text.take(7_900)
         var submittedToolObservationCount = 0
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, observations ->
+                val state = continuumState
+                val compiledContext = state?.let { runtimeState ->
+                    runCatching {
+                        contextCompiler.compile(
+                            AiContextInput(
+                                seed = runtimeState.seed,
+                                genome = runtimeState.archive.genome,
+                                identityState = runtimeState.archive.identityState,
+                                userRequest = task,
+                                memories = memories,
+                                activeTaskSummary = reflection?.correction?.take(1_024),
+                                unresolvedContradictions = memories
+                                    .filter { memory -> memory.validationState.name == "CONTRADICTED" }
+                                    .map { memory -> memory.content.take(512) },
+                                model = imported
+                            )
+                        )
+                    }.getOrNull()
+                }
                 val prompt = buildString {
                     append("You are Device AI running on-device. Use registered tools only; never generate or execute shell commands.\n")
-                    append("User task:\n").append(task.take(7_900))
-                    if (memories.isNotEmpty()) {
-                        append("\n\nRelevant local memory:\n")
-                        memories.take(8).forEach { append("- ").append(it.content.take(512)).append('\n') }
+                    if (compiledContext != null) {
+                        append(compiledContext.text)
+                    } else {
+                        append("User task:\n").append(task.take(7_900))
+                        if (memories.isNotEmpty()) {
+                            append("\n\nRelevant local memory:\n")
+                            memories.take(8).forEach { append("- ").append(it.content.take(512)).append('\n') }
+                        }
+                        reflection?.let { append("\n\nCorrection: ").append(it.correction.take(512)) }
                     }
-                    reflection?.let { append("\n\nCorrection: ").append(it.correction.take(512)) }
                     if (observations.isNotEmpty()) {
                         append("\n\nTool observations:\n")
                         observations.take(4).forEach {
@@ -1044,6 +1081,7 @@ class AgentActivity : Activity() {
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     addAssistantMessage(run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." })
                     persistRequestedMemory(text, run.experience?.evaluation)
+                    checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
                     localRuntimeError = error.message ?: "Local inference failed."
@@ -1087,6 +1125,65 @@ class AgentActivity : Activity() {
                     privacyClass = decision.privacyClass
                 )
             )
+        }
+    }
+
+    private fun initializeContinuum() {
+        runCatching {
+            continuumStore = ContinuumRuntimeStore(
+                baseDirectory = java.io.File(filesDir, "continuum"),
+                signer = AndroidKeystoreIdentitySigner()
+            )
+            continuumStore.openOrCreate()
+        }.onSuccess { state ->
+            continuumState = state
+            state.archive.memories.forEach(memoryStore::put)
+            state.archive.experiences.forEach(experienceStore::store)
+            continuumStartupNote = buildString {
+                append("CONTINUUM · generation ").append(state.manifest.generation)
+                if (state.seedLoadSource.name != "PRIMARY" || state.archiveLoadSource.name != "PRIMARY") {
+                    append(" · recovered from verified LKG")
+                } else {
+                    append(" · verified")
+                }
+            }
+        }.onFailure { error ->
+            continuumState = null
+            continuumStartupNote =
+                "CONTINUUM · unavailable; persistent state failed closed: " +
+                    (error.message ?: error.javaClass.simpleName).take(180)
+        }
+    }
+
+    private fun checkpointContinuumAsync() {
+        if (!::continuumStore.isInitialized || localAgentExecutor.isShutdown) return
+        localAgentExecutor.execute {
+            val state = continuumState ?: return@execute
+            val memories = memoryStore.all()
+            val experiences = experienceStore.all()
+            runCatching {
+                continuumStore.checkpoint(
+                    current = state,
+                    memories = memories,
+                    experiences = experiences
+                )
+            }.onSuccess { updated ->
+                continuumState = updated
+                runOnUiThread {
+                    if (!isFinishing && !isDestroyed) {
+                        addToolActivity("CONTINUUM · state generation " + updated.manifest.generation + " committed")
+                    }
+                }
+            }.onFailure { error ->
+                runOnUiThread {
+                    if (!isFinishing && !isDestroyed) {
+                        addToolActivity(
+                            "CONTINUUM · checkpoint failed closed · " +
+                                (error.message ?: error.javaClass.simpleName).take(140)
+                        )
+                    }
+                }
+            }
         }
     }
 

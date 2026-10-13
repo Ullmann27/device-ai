@@ -58,16 +58,26 @@ class CognitiveArchiveStore(private val directory: File, private val identityId:
         writeAtomically(primary, encoded)
     }
 
-    @Synchronized fun load(): ArchiveLoadResult? {
+    @Synchronized fun load(): ArchiveLoadResult? = loadCandidates().firstOrNull()
+
+    /**
+     * Returns every independently validated archive candidate, primary first.
+     * Continuum uses this to reconcile a signed state root after a process dies
+     * between archive and seed commits.
+     */
+    @Synchronized fun loadCandidates(): List<ArchiveLoadResult> {
+        val candidates = mutableListOf<ArchiveLoadResult>()
         if (primary.exists()) {
             runCatching { readValidated(primary) }
-                .getOrNull()?.let { return ArchiveLoadResult(it, ArchiveLoadSource.PRIMARY) }
+                .getOrNull()
+                ?.let { candidates += ArchiveLoadResult(it, ArchiveLoadSource.PRIMARY) }
         }
         if (backup.exists()) {
             runCatching { readValidated(backup) }
-                .getOrNull()?.let { return ArchiveLoadResult(it, ArchiveLoadSource.LAST_KNOWN_GOOD) }
+                .getOrNull()
+                ?.let { candidates += ArchiveLoadResult(it, ArchiveLoadSource.LAST_KNOWN_GOOD) }
         }
-        return null
+        return candidates
     }
 
     fun export(archive: CognitiveArchive): String {

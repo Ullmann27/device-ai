@@ -1,11 +1,19 @@
 # Implementation Progress
 
-**Current phase:** Part 5 (local inference), continuing on the Part 4 stack above Part 3.
-Parts 1–2 are merged to `main`. This PR is not approved for merging.
+**Current phase:** Continuum Phase 1 on top of the local-first + Deep Research stack.
+Parts 1–2 are merged to `main`. Continuum remains stacked development and is not approved for merging to `main`.
 
 ## Status
 | Module | Status |
 |---|---|
+| Continuum signed seed / state-root / LKG recovery | IMPLEMENTED + CI VERIFIED |
+| Continuum content-addressed object store | IMPLEMENTED + CI VERIFIED |
+| Continuum AiContextCompiler | IMPLEMENTED + CI VERIFIED — wired into normal local chat |
+| Continuum bounded deliberation + Candidate/Critic/Judge foundation | IMPLEMENTED + CI VERIFIED — production multi-pass use remains next phase |
+| Continuum local Compute Fabric protocol / node registry / scheduler | IMPLEMENTED + CI VERIFIED — no remote networking yet |
+| Cognitive RAID metadata / recovery assessment | IMPLEMENTED + CI VERIFIED |
+| Continuum benchmark + model-mortality abstraction | IMPLEMENTED + CI VERIFIED |
+| Continuum physical-device recovery / real model continuity | NOT YET DEVICE VERIFIED |
 | Cognitive identity, behavior, self-model and adaptive identity | IMPLEMENTED |
 | Typed memory, provenance, claims, retrieval, write policy and graph | IMPLEMENTED — bounded agent now uses explainable hybrid lexical/entity/temporal/validation ranking with optional semantic/source-trust hooks |
 | Experience records/store and similarity retrieval | IMPLEMENTED |
@@ -160,3 +168,11 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   `action_required` with zero jobs, so no fresh Android result or APK artifact exists; repository
   workflow approval is required. No live-network, imported-model, physical-device, Fold-layout,
   or device-cancellation validation is claimed. See `docs/DEEP_RESEARCH_ENGINE.md`.
+
+
+## Continuum Phase 1 validation — 2026-10-13
+- Direct implementation PR #9 and CI mirror PR #10 are stacked on the Deep Research branch; neither is merged.
+- GitHub Actions run `38352139983` passed backend syntax, `:app:testDebugUnitTest`, `:app:assembleDebug`, and APK upload on commit `307bbca0223e88b68e3787c3f2abec79fd260017`.
+- Produced artifact `DeviceAI-v0.3-debug-apk`, artifact id `11791048577`, digest `sha256:4630f259ff781babb094d31e701b198bbd33f584845b62343d54dbbcc8ec2a3f`.
+- The Continuum runtime now persists a signed seed and immutable state-root manifest, reconciles archive/seed crash windows using validated primary/LKG candidates, restores persisted memory/experience state on startup, and routes local prompt construction through `AiContextCompiler`.
+- This is CI evidence only. Real LiteRT-LM inference, Fold performance, Keystore-backed recovery after actual process/device loss, and distributed compute remain unverified on hardware.
