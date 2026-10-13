@@ -136,7 +136,7 @@ class AgentActivity : Activity() {
     private lateinit var chatContainer: LinearLayout
     private lateinit var input: EditText
     private lateinit var sendButton: Button
-    private var dashboardSection: LinearLayout? = null
+    private var dashboardSection: View? = null
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
 
@@ -384,7 +384,19 @@ class AgentActivity : Activity() {
             setPadding(dp(4), dp(8), dp(4), dp(7))
         }
         dashboard.addView(activityText, matchWidth())
-        pane.addView(dashboard, matchWidth())
+        // The dashboard must scroll independently: otherwise its fixed-height cards
+        // can push the composer under the system navigation bar on narrow displays.
+        val dashboardScroll = ScrollView(this).apply {
+            isFillViewport = false
+            clipToPadding = false
+            setPadding(0, 0, 0, dp(6))
+        }
+        dashboardScroll.addView(dashboard, matchWidth())
+        dashboardSection = dashboardScroll
+        pane.addView(
+            dashboardScroll,
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+        )
 
         keyboardTitle = textView("Device AI · Nachricht", 15f, ACCENT, true).apply {
             visibility = View.GONE
@@ -408,7 +420,7 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
-                1f
+                2f
             )
         )
 
