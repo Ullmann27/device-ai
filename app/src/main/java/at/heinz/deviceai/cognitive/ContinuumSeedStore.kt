@@ -57,6 +57,9 @@ class FileContinuumSeedStore(
     fun requireLoad(): ContinuumSeedLoadResult =
         load() ?: error("No valid Continuum seed is available.")
 
+    @Synchronized
+    fun hasStoredState(): Boolean = primary.isFile || backup.isFile
+
     private fun readValidated(file: File): ContinuumSeed {
         require(file.length() in 1..MAX_SEED_FILE_BYTES.toLong()) { "Invalid Continuum seed file size." }
         val envelope = ContinuumSeedCodec.decodeEnvelope(file.readBytes())
