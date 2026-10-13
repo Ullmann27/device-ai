@@ -12,6 +12,19 @@ data class NeuralDialogueReport(
     val unfamiliarAfter: NeuralEvaluation
 )
 
+data class NeuralPracticeReport(
+    val attemptedSteps: Int,
+    val completedSteps: Int,
+    val accepted: Boolean,
+    val reason: String,
+    val trainingLossBefore: Double,
+    val trainingLossAfter: Double,
+    val heldoutBefore: NeuralEvaluation,
+    val heldoutAfter: NeuralEvaluation,
+    val unfamiliarBefore: NeuralEvaluation,
+    val unfamiliarAfter: NeuralEvaluation
+)
+
 /** Experimental dialogue classification, NOT language generation or a factual authority.
  * Corpus is explicit, local and bounded. No chat logs/web text are implicitly learned.
  * Training is transactional: cancelled/partial training is never published.
@@ -77,6 +90,50 @@ class NeuralDialogue {
         return "$response\nNeuronales Experiment: $label, Modellscore ${String.format(Locale.ROOT, "%.3f", if (score < 0.5) 1-score else score)}. " +
             "Die Zuordnung wurde neuronal gelernt; dieser Antworttext ist vorgegeben. Noch keine freie Sprachgenerierung."
     }
+    @Synchronized fun lessonCount(): Int = lessons.size
+
+    /** Repeat a small bounded neural learning cycle using ONLY already approved lessons.
+     * Candidate weights are discarded if tests regress or the cycle is cancelled.
+     * This is not self-supervised web learning or a generative language model.
+     */
+    @Synchronized fun practice(
+        steps: Int = 200,
+        cancelled: () -> Boolean = { false },
+        onProgress: (NeuralLearningProgress) -> Unit = {}
+    ): NeuralPracticeReport {
+        require(steps in 1..300)
+        require(lessons.isNotEmpty()) { "Keine bestätigten neuronalen Beispiele vorhanden." }
+        val candidate = TinyNeuralNetwork.restore(model.save())
+        val trainingExamples = examples(lessons)
+        val trainingBefore = candidate.evaluate(trainingExamples)
+        val knownBefore = candidate.evaluate(examples(DEMO_HOLDOUT))
+        val unfamiliarBefore = candidate.evaluate(examples(UNFAMILIAR_HOLDOUT))
+        val result = candidate.train(
+            trainingExamples, steps, maxMillis = 1_200,
+            cancelled = cancelled, onProgress = onProgress
+        )
+        val trainingAfter = candidate.evaluate(trainingExamples)
+        val knownAfter = candidate.evaluate(examples(DEMO_HOLDOUT))
+        val unfamiliarAfter = candidate.evaluate(examples(UNFAMILIAR_HOLDOUT))
+        val accepted = !result.stoppedEarly && !cancelled() &&
+            trainingAfter.loss + 0.000001 < trainingBefore.loss &&
+            knownAfter.correct >= knownBefore.correct &&
+            knownAfter.loss <= knownBefore.loss + 0.02 &&
+            unfamiliarAfter.correct >= unfamiliarBefore.correct &&
+            unfamiliarAfter.loss <= unfamiliarBefore.loss + 0.02
+        val reason = when {
+            result.stoppedEarly || cancelled() -> "Abgebrochen oder Zeitlimit"
+            !accepted -> "Keine sichere Verbesserung auf Trainings- und unabhängigen Prüfbeispielen"
+            else -> "Trainingsverlust verbessert; unabhängige Tests nicht verschlechtert"
+        }
+        if (accepted) model = candidate
+        return NeuralPracticeReport(
+            steps, result.steps, accepted, reason,
+            trainingBefore.loss, trainingAfter.loss,
+            knownBefore, knownAfter, unfamiliarBefore, unfamiliarAfter
+        )
+    }
+
     /** OOD benchmark; never trains or modifies weights. Unknown word tokens by design. */
     @Synchronized fun unfamiliarEvaluation(): NeuralEvaluation =
         model.evaluate(examples(UNFAMILIAR_HOLDOUT))
