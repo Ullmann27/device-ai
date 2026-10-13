@@ -36,6 +36,18 @@ import at.heinz.deviceai.cognitive.MemoryType
 import at.heinz.deviceai.cognitive.MemoryWriteContext
 import at.heinz.deviceai.cognitive.MemoryWritePolicy
 import at.heinz.deviceai.cognitive.ProvenanceType
+import at.heinz.deviceai.cognitive.DeepResearchEngine
+import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer
+import at.heinz.deviceai.cognitive.FileResearchDossierStore
+import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider
+import at.heinz.deviceai.cognitive.ResearchBudgetPolicy
+import at.heinz.deviceai.cognitive.ResearchMode
+import at.heinz.deviceai.cognitive.ResearchOptInPolicy
+import at.heinz.deviceai.cognitive.ResearchPhase
+import at.heinz.deviceai.cognitive.ResearchPromptBoundary
+import at.heinz.deviceai.cognitive.ResearchProviderPolicy
+import at.heinz.deviceai.cognitive.ResearchSynthesisOutput
+import at.heinz.deviceai.cognitive.ResearchSynthesizer
 import at.heinz.deviceai.localmodel.ImportedLocalModel
 import at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
@@ -102,6 +114,10 @@ class AgentActivity : Activity() {
     private var sessionId = UUID.randomUUID().toString()
     private var busy = false
     private var activeLocalRequest = false
+    private var researchArmed = false
+    private var researchResumeRequested = false
+    private var researchMode = ResearchMode.STANDARD
+    private var activeResearchCancellation: at.heinz.deviceai.cognitive.ResearchCancellation? = null
     private var agentLoops = 0
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
@@ -159,6 +175,7 @@ class AgentActivity : Activity() {
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
+            activeResearchCancellation?.cancel()
             localRuntime.cancel()
             if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
                 runCatching { localRuntime.unload() }
@@ -452,8 +469,12 @@ class AgentActivity : Activity() {
             row.addView(
                 chip(label).apply {
                     setOnClickListener {
-                        input.setText(command)
-                        input.setSelection(command.length)
+                        if (label == "Web") {
+                            showResearchModeDialog()
+                        } else {
+                            input.setText(command)
+                            input.setSelection(command.length)
+                        }
                     }
                 },
                 LinearLayout.LayoutParams(
@@ -535,6 +556,12 @@ class AgentActivity : Activity() {
         agentLoops = 0
         addUserMessage(text)
 
+        if (ResearchOptInPolicy.shouldResearch(text, researchArmed)) {
+            researchArmed = false
+            runResearch(text, researchMode)
+            return
+        }
+        researchArmed = false
         when (LocalFirstPolicy.route(mode, localRuntime.state == LocalModelState.READY)) {
             AssistantRoute.LOCAL_MODEL -> runLocal(text)
             AssistantRoute.CLOUD -> {
@@ -549,6 +576,149 @@ class AgentActivity : Activity() {
                     "Kein lokales Modell ist geladen. Importiere eine kompatible .litertlm-Datei und lade sie oben. " +
                         "AUTO verwendet keine Cloud als stillen Ersatz; ONLINE kann separat gewählt werden."
                 )
+            }
+        }
+    }
+
+    private fun showResearchModeDialog() {
+        val choices = arrayOf(
+            "QUICK · wenige Quellen, 15 s",
+            "STANDARD · zwei Wellen, 45 s",
+            "DEEP · Gegenbelege, 90 s"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Explizite Web-Recherche")
+            .setMessage(
+                "Webzugriff startet nur nach dieser Auswahl. Allgemeine Websuche ist nicht konfiguriert; " +
+                    "füge direkte HTTPS-Quell-URLs in die Frage ein. Seiteninhalte gelten als nicht vertrauenswürdig."
+            )
+            .setItems(choices) { _, index ->
+                researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
+                val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+                val pending = runCatching { checkpointStore.load() }.getOrNull()
+                val saved = runCatching { checkpointStore.loadDossier() }.getOrNull()
+                val arm = { resume: Boolean ->
+                    researchResumeRequested = resume
+                    researchArmed = true
+                    activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Quelle(n) als HTTPS-URL angeben"
+                    input.hint = "Recherchefrage und direkte HTTPS-Quell-URL(s)…"
+                    Toast.makeText(
+                        this, "Web-Recherche ${researchMode.name} aktiviert – nur für die nächste Eingabe.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                if (pending != null && saved != null && pending.phase !in setOf(ResearchPhase.COMPLETE)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Unvollständige Recherche")
+                        .setMessage("Gespeicherte Frage: ${saved.plan.question.take(512)}\n\nFortsetzen lädt bereits gespeicherte Quellen nicht erneut.")
+                        .setNeutralButton("Fortsetzen") { _, _ -> arm(true) }
+                        .setPositiveButton("Neu starten") { _, _ -> arm(false) }
+                        .setNegativeButton("Abbrechen", null)
+                        .show()
+                } else {
+                    arm(false)
+                }
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun runResearch(question: String, mode: ResearchMode) {
+        if (!ResearchOptInPolicy.shouldResearch(question, explicitButtonSelected = true)) return
+        activeLocalRequest = true
+        activeResearchCancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+        setBusy(true)
+        val urls = Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE)
+            .findAll(question).map { it.value.trimEnd('.', ',', ';', ')', ']') }.distinct().take(24).toList()
+        val budget = ResearchBudgetPolicy.forMode(mode)
+        activityText.text = "RESEARCH · PLANNING · ${mode.name}"
+        addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
+        val localSynthesis = ResearchSynthesizer { input ->
+            if (localRuntime.state != LocalModelState.READY) {
+                DeterministicResearchSynthesizer().synthesize(input)
+            } else {
+                val generation = generateLocal { callback ->
+                    localRuntime.stream(ResearchPromptBoundary.build(input), callback)
+                }
+                if (generation.failure != null || generation.proposal != null || generation.response.isBlank()) {
+                    DeterministicResearchSynthesizer().synthesize(input)
+                } else {
+                    ResearchSynthesisOutput(generation.response.trim().take(8_000))
+                }
+            }
+        }
+        val researchStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+        val shouldResume = researchResumeRequested
+        researchResumeRequested = false
+        val engine = DeepResearchEngine(
+            discovery = at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
+            provider = HttpReadOnlyResearchProvider(
+                ResearchProviderPolicy(
+                    totalTimeoutMillis = budget.totalDeadlineMillis.toInt(),
+                    maxBytes = budget.maxBytesPerSource,
+                    maxRedirects = budget.maxRedirects
+                )
+            ),
+            synthesizer = localSynthesis,
+            checkpointStore = researchStore,
+            dossierRepository = researchStore,
+            onSynthesisTimeout = { localRuntime.cancel() }
+        )
+        val cancellation = activeResearchCancellation!!
+        val reportPhase: (ResearchPhase) -> Unit = { phase ->
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed) {
+                    val label = when (phase) {
+                        ResearchPhase.PLAN, ResearchPhase.DISCOVERY -> "PLANNING"
+                        ResearchPhase.FETCH -> "FETCHING"
+                        ResearchPhase.EXTRACT, ResearchPhase.GRAPH, ResearchPhase.GAP_ANALYSIS -> "CHECKING"
+                        ResearchPhase.FOLLOW_UP -> "FOLLOW-UP"
+                        ResearchPhase.SYNTHESIZE -> "SYNTHESIZING"
+                        ResearchPhase.COMPLETE -> "DONE"
+                        ResearchPhase.PARTIAL -> "PARTIAL"
+                    }
+                    activityText.text = "RESEARCH · $label"
+                    addToolActivity("Research $label")
+                }
+            }
+        }
+        localAgentExecutor.execute {
+            val result = runCatching {
+                val savedQuestion = runCatching { researchStore.loadLatest()?.plan?.question }.getOrNull()
+                val canResume = shouldResume && savedQuestion == question
+                if (shouldResume && !canResume) {
+                    error("Fortsetzen nicht möglich: Frage stimmt nicht exakt mit dem gespeicherten Checkpoint überein.")
+                }
+                val resumed = if (canResume) engine.resume(cancellation, reportPhase) else null
+                resumed ?: engine.research(question, mode, urls, cancellation, reportPhase)
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                activeResearchCancellation = null
+                activeLocalRequest = false
+                input.hint = "Was soll ich auf deinem Gerät tun?"
+                result.onSuccess { dossier ->
+                    val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
+                        .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
+                    val body = buildString {
+                        append(dossier.synthesis?.text ?: "Keine Synthese verfügbar.")
+                        if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
+                        if (!dossier.generalSearchAvailable) {
+                            append("\n\nAllgemeine Websuche ist nicht eingerichtet; recherchiert wurden nur direkte HTTPS-Quellen.")
+                        }
+                        if (localRuntime.state != LocalModelState.READY) {
+                            append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
+                        }
+                        dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
+                    }
+                    addAssistantMessage(body.take(8_000))
+                    addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
+                }.onFailure { error ->
+                    addAssistantMessage("Recherche abgebrochen oder fehlgeschlagen: ${error.message?.take(256) ?: "unbekannter Fehler"}")
+                    addToolActivity("RESEARCH · PARTIAL")
+                }
+                setBusy(false)
+                refreshLocalModelUi()
             }
         }
     }
@@ -921,6 +1091,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        activeResearchCancellation?.cancel()
+        activeResearchCancellation = null
+        input.hint = "Was soll ich auf deinem Gerät tun?"
         activeOrchestrator?.cancel()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."

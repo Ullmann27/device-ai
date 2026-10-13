@@ -53,16 +53,22 @@ the call is blocked rather than blindly retried.
 
 ## Validation boundary
 
-The previously green Android workflow run `38332404439` passed backend syntax, unit tests,
-`assembleDebug`, and APK upload for the earlier commit
-`25d2bf1b059d0664880821de73ef83ed449ac75a`. It does not validate these newer changes. The
-post-change workflow run `38336739607` on commit
-`8f82df43d1c01f853600bdee2bc50324ee53de85` was `action_required` with zero jobs, so it did
-not run tests, build the APK or upload an artifact. Repository workflow approval is required
-before a fresh green Android run and `DeviceAI-v0.3-debug-apk` artifact can be produced.
-This sandbox could not resolve Android Gradle Plugin 8.10.0, so its Gradle test/build tasks
-could not run locally.
+GitHub Actions run `38341592364` passed backend syntax, `:app:testDebugUnitTest`,
+`:app:assembleDebug`, and uploaded `DeviceAI-v0.3-debug-apk` (artifact `11787331710`) for
+commit `adf399432dd43c4c37e39ac633d0eb58ee35dc71`. It predates the Deep Research changes in
+this branch and does not validate them. A fresh green run/artifact is still required. This
+sandbox could not resolve Android Gradle Plugin 8.10.0, so its Gradle test/build tasks could
+not run locally.
 
 No physical-device inference is claimed. Importing and running a real model, native runtime
 compatibility, tool behavior through Shizuku, cancellation behavior, performance/thermal
 limits, and Fold-device layout still require physical Fold testing.
+
+## Explicit Deep Research
+
+Web access is opt-in through the **Web** action and a QUICK, STANDARD, or DEEP selection.
+Normal LOCAL/AUTO chat never triggers it implicitly. Research is read-only, uses HTTPS seed
+URLs supplied in the prompt, and clearly reports that general web discovery is not configured.
+A ready LiteRT-LM model may synthesize bounded evidence; model-generated tool proposals are
+discarded in this path. See [`DEEP_RESEARCH_ENGINE.md`](DEEP_RESEARCH_ENGINE.md) for budgets,
+claim/evidence graphs, trust, injection boundaries, persistence and resume behavior.

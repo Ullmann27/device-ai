@@ -13,10 +13,17 @@ import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.HttpsURLConnection
 
-data class ResearchRequest(val query: String, val url: String, val maxBytes: Int = 512_000) {
+data class ResearchRequest(
+    val query: String,
+    val url: String,
+    val maxBytes: Int = 512_000,
+    val timeoutMillis: Int = 30_000,
+    val maxRedirects: Int = 3
+) {
     init {
         require(query.isNotBlank() && query.length <= 2_048 && url.isNotBlank() && url.length <= 4_096)
         require(maxBytes in 1..2_000_000)
+        require(timeoutMillis in 1..30_000 && maxRedirects in 0..5)
     }
 }
 
@@ -84,7 +91,8 @@ class HttpReadOnlyResearchProvider(
         require(request.maxBytes <= policy.maxBytes)
         var uri = URI(request.url)
         var redirects = 0
-        val deadlineNanos = System.nanoTime() + policy.totalTimeoutMillis * 1_000_000L
+        val deadlineNanos = System.nanoTime() +
+            minOf(policy.totalTimeoutMillis, request.timeoutMillis) * 1_000_000L
         while (true) {
             val validatedAddresses = ResearchUrlValidator.validate(uri, policy.allowedHosts)
             val remainingMillis = remainingTimeoutMillis(deadlineNanos)
@@ -92,8 +100,8 @@ class HttpReadOnlyResearchProvider(
             val connection = (uri.toURL().openConnection(Proxy.NO_PROXY) as HttpsURLConnection).apply {
                 requestMethod = "GET"
                 instanceFollowRedirects = false
-                connectTimeout = minOf(policy.connectTimeoutMillis, remainingMillis)
-                readTimeout = minOf(policy.readTimeoutMillis, remainingMillis)
+                connectTimeout = minOf(policy.connectTimeoutMillis, request.timeoutMillis, remainingMillis)
+                readTimeout = minOf(policy.readTimeoutMillis, request.timeoutMillis, remainingMillis)
                 sslSocketFactory = PinnedResearchTlsSocketFactory(
                     host, validatedAddresses, policy.connectTimeoutMillis, deadlineNanos
                 )
@@ -108,7 +116,9 @@ class HttpReadOnlyResearchProvider(
             try {
                 val status = connection.responseCode
                 if (status in 300..399) {
-                    require(redirects < policy.maxRedirects) { "Too many research redirects." }
+                    require(redirects < minOf(policy.maxRedirects, request.maxRedirects)) {
+                        "Too many research redirects."
+                    }
                     val location = connection.getHeaderField("Location")
                         ?: throw IllegalArgumentException("Redirect has no location.")
                     uri = uri.resolve(location)

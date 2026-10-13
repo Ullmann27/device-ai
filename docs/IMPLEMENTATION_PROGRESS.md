@@ -35,6 +35,10 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
 | Device/emulator inference using imported FunctionGemma model bytes | PARTIAL |
 | LiteRT-LM integration with AgentActivity, SAF import UI and the Part 4 orchestrator | IMPLEMENTED — model import/load states and registry-only proposals are wired; real device inference is not verified |
 | llama.cpp fallback/benchmark runtime | PLANNED |
+| QUICK/STANDARD/DEEP research budgets, plans, direct-source discovery and bounded fetch | IMPLEMENTED — current UI uses direct HTTPS seeds; no general search provider is configured |
+| Research evidence graph, gap/falsification follow-up, source trust snapshots and hostile-page boundary | IMPLEMENTED — deterministic lexical evidence matching remains heuristic, not calibrated |
+| Versioned dossier/checkpoint persistence and URL/hash replay avoidance on resume | IMPLEMENTED — bounded excerpts persist; full page bodies do not |
+| AgentActivity opt-in research selection and local text-only synthesis | IMPLEMENTED — ordinary LOCAL/AUTO chat remains web-silent; live network/model use is unverified |
 
 ## Part 3 validation
 - Standalone Kotlin 2.4.20 compilation of all cognitive production sources passed.
@@ -121,19 +125,36 @@ Parts 1–2 are merged to `main`. This PR is not approved for merging.
   labeled USER-ONLY in MainActivity.
 - `docs/LOCAL_FIRST_PROTOTYPE.md` records the safety boundary, import process, CI evidence and
   Fold-device work still outstanding.
-- The prior green GitHub Actions run `38332404439` validates commit
-  `25d2bf1b059d0664880821de73ef83ed449ac75a`, before this receipt/local-first implementation.
-  Current changes require a fresh green Android workflow and APK artifact; no physical-device
-  inference or Fold validation is claimed.
+- GitHub Actions run `38341592364` passed backend syntax, `:app:testDebugUnitTest`,
+  `:app:assembleDebug`, and APK upload on commit
+  `adf399432dd43c4c37e39ac633d0eb58ee35dc71` (artifact
+  `DeviceAI-v0.3-debug-apk`, id `11787331710`). This validates the receipt/local-first branch
+  before the Deep Research engine changes, not the current uncommitted research diff.
 - The available standalone Kotlin compiler compiled the receipt, ToolGate and cognitive-agent
   sources; a deterministic smoke check passed receipt round-trip, success replay suppression,
   STARTED ambiguity blocking and raw-shell rejection. `node --check backend/src/server.js`
   and `git diff --check` passed.
-- Local Gradle unit tests/build still cannot resolve Android Gradle Plugin 8.10.0 in this
-  sandbox. The updated PR-head Android workflow is the required full validation.
-- The post-change workflow run `38336739607` on commit `8f82df43d1c01f853600bdee2bc50324ee53de85`
-  ended `action_required` before creating jobs (zero jobs). Therefore this commit has not yet
-  received Android unit-test/build validation and no new APK artifact was produced. Repository
-  workflow approval is required before the requested CI/artifact exit criterion can be met.
-- Maintainer-triggered validation is being retried from the current PR head so GitHub Actions can
-  run the full Android test/build path even though the Copilot-authored workflow runs required approval.
+- Local Gradle tasks still cannot resolve Android Gradle Plugin 8.10.0 in this sandbox; the
+  current research changes need a fresh PR-head Android workflow run and APK artifact.
+
+## Deep Research engine
+- Added bounded QUICK/STANDARD/DEEP plans, a planner adapter contract, discovery abstraction,
+  canonical HTTPS URL handling, deduplication, domain fan-out, byte/time/redirect/source/claim
+  budgets, and cooperative cancellation.
+- Added evidence graph nodes/links for claims and sources, explicit support/contradiction/
+  duplicate/unknown relations, explainable evaluated-vs-unknown trust snapshots, applicability
+  date/version metadata, gap analysis and bounded counter-evidence follow-up. Lexical matching is
+  explicitly heuristic and does not claim calibrated probabilities.
+- Added text-only synthesis contract and hostile-source prompt boundary. The AgentActivity Web
+  action requires explicit QUICK/STANDARD/DEEP opt-in; model proposals from synthesis are
+  discarded. Ordinary local chat does not contact the web. No general search provider or
+  credential is configured; direct HTTPS seed URLs are supported.
+- Added schema-versioned, bounded, SHA-256-protected atomic dossier/checkpoint persistence.
+  Resume requires matching state and skips completed canonical URLs; saved evidence is limited to
+  bounded excerpts, not full downloaded documents. Long-term research memory requires explicit
+  selection, verified claims, independent sources, and MemoryWritePolicy approval.
+- The standalone cognitive source compile and 11 deterministic research-engine tests passed
+  using temporary test/API stubs. Backend syntax and `git diff --check` passed. Android Gradle
+  tests/build cannot run locally because plugin `8.10.0` cannot be resolved; fresh branch CI is
+  pending. No live-network, imported-model, physical-device, Fold-layout, or device-cancellation
+  validation is claimed. See `docs/DEEP_RESEARCH_ENGINE.md`.
