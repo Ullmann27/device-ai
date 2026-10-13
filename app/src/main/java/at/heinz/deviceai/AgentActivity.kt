@@ -1200,10 +1200,20 @@ class AgentActivity : Activity() {
                         measurement!!
                     }
                     NeuralCommandKind.TEACH -> {
-                        val training = lab.teach(command.text, command.label, true, cancellation::get, progressCallback)
-                        save = !training.stoppedEarly
-                        measurement = if (save) "Eigenes neuronales Beispiel gelernt. ${training.steps} Schritte; kein neuer unabhängiger Holdout-Messlauf."
-                            else "Training abgebrochen; Gewichte nicht übernommen."
+                        val audit = lab.teachWithAudit(
+                            command.text, command.label, true, cancellation::get, progressCallback
+                        )
+                        save = audit.accepted
+                        val expected = if (command.label == 1) audit.newExampleScoreAfter
+                                       else 1.0 - audit.newExampleScoreAfter
+                        measurement = "NEURON · LEHRPROBE: " +
+                            (if (audit.accepted) "Lernschritt übernommen. " else "Lernschritt verworfen. ") +
+                            "Gewichtsaktualisierungen: ${audit.training.steps}/800. " +
+                            "Neuer Satz: %.1f%% Klassifikationswert. ".format(Locale.ROOT, expected * 100.0) +
+                            "Ältere bestätigte Beispiele: ${audit.retainedBefore}/${audit.retainedTotal} → " +
+                            "${audit.retainedAfter}/${audit.retainedTotal}. " +
+                            audit.reason +
+                            " · Kontrollgruppe: bisher bestätigte Beispiele, kein unabhängiger Sprachtest."
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {

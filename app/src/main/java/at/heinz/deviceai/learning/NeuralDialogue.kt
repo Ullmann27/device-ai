@@ -25,6 +25,22 @@ data class NeuralPracticeReport(
     val unfamiliarAfter: NeuralEvaluation
 )
 
+/** Measured, transactional outcome of one human-approved labeled lesson.
+ * Prior examples exclude an explicitly corrected label for the same phrase.
+ */
+data class NeuralTeachingAudit(
+    val training: NeuralTraining,
+    val accepted: Boolean,
+    val retainedBefore: Int,
+    val retainedAfter: Int,
+    val retainedTotal: Int,
+    val priorLoss: Double?,
+    val afterLoss: Double?,
+    val newExampleScoreBefore: Double,
+    val newExampleScoreAfter: Double,
+    val reason: String
+)
+
 /** Experimental dialogue classification, NOT language generation or a factual authority.
  * Corpus is explicit, local and bounded. No chat logs/web text are implicitly learned.
  * Training is transactional: cancelled/partial training is never published.
@@ -66,15 +82,52 @@ class NeuralDialogue {
     @Synchronized fun teach(
         text: String, label: Int, approved: Boolean, cancelled: () -> Boolean = { false },
         onProgress: (NeuralLearningProgress) -> Unit = {}
-    ): NeuralTraining {
+    ): NeuralTraining = teachWithAudit(text, label, approved, cancelled, onProgress).training
+
+    /**
+     * Rehearse all previously approved examples, then test whether the proposed weights
+     * learn the new lesson *without reducing* accuracy on the other approved lessons.
+     * A deliberately corrected label supersedes the old label for that exact sentence.
+     * Rejected attempts NEVER change the model or the persisted example list.
+     */
+    @Synchronized fun teachWithAudit(
+        text: String, label: Int, approved: Boolean, cancelled: () -> Boolean = { false },
+        onProgress: (NeuralLearningProgress) -> Unit = {}
+    ): NeuralTeachingAudit {
         require(approved && label in 0..1 && words(text).isNotEmpty())
         require(lessons.size < 64 || lessons.any { it.first == text })
-        // An explicit corrected label replaces the old label, never trains both accidentally.
-        val nextLessons = lessons.filterNot { it.first == text } + (text to label)
+        val previous = lessons.filterNot { it.first == text }
+        val nextLessons = previous + (text to label)
+        val priorExamples = if (previous.isNotEmpty()) examples(previous) else null
+        val priorBefore = priorExamples?.let(model::evaluate)
+        val incoming = features(text)
+        val incomingBefore = model.predict(incoming)
         val candidate = TinyNeuralNetwork.restore(model.save())
-        val result = candidate.train(examples(nextLessons), 800, cancelled = cancelled, onProgress = onProgress)
-        if (!result.stoppedEarly && !cancelled()) { model = candidate; lessons = nextLessons }
-        return result
+        val training = candidate.train(
+            examples(nextLessons), 800, cancelled = cancelled, onProgress = onProgress
+        )
+        val priorAfter = priorExamples?.let(candidate::evaluate)
+        val incomingAfter = candidate.predict(incoming)
+        // 0.55/0.45 is a modest classification confidence gate, not semantic certainty.
+        val learnedNewExample = if (label == 1) incomingAfter >= 0.55 else incomingAfter <= 0.45
+        val retained = priorBefore == null || (
+            priorAfter!!.correct >= priorBefore.correct &&
+            priorAfter.loss <= priorBefore.loss + 0.075
+        )
+        val accepted = !training.stoppedEarly && !cancelled() && learnedNewExample && retained
+        val reason = when {
+            training.stoppedEarly || cancelled() -> "Abgebrochen oder Zeitlimit; alter Stand erhalten"
+            !learnedNewExample -> "Neuer Satz noch nicht zuverlässig als Gruß/Frage erkannt"
+            !retained -> "Bestehende bestätigte Sprachbeispiele würden schlechter erkannt"
+            else -> "Neuer Satz erkannt und bestätigte ältere Beispiele behalten"
+        }
+        if (accepted) { model = candidate; lessons = nextLessons }
+        return NeuralTeachingAudit(
+            training, accepted,
+            priorBefore?.correct ?: 0, priorAfter?.correct ?: 0, previous.size,
+            priorBefore?.loss, priorAfter?.loss,
+            incomingBefore, incomingAfter, reason
+        )
     }
     @Synchronized fun reply(text: String): String {
         val inputWords = words(text)
