@@ -32,6 +32,8 @@ class LocalModelReasoningAdapterTest {
         val result = adapter(rt).execute(request())
         assertEquals("answer", result.text)
         assertEquals("fake@1", result.modelId)
+        assertTrue(rt.thinkingUsed)
+        assertFalse(rt.agentConversationUsed)
     }
 
     @Test
@@ -56,7 +58,7 @@ class LocalModelReasoningAdapterTest {
         assertThrows(IllegalArgumentException::class.java) {
             adapter(rt).execute(request("p".repeat(16_001)))
         }
-        assertFalse(rt.streamed)
+        assertFalse(rt.thinkingUsed)
     }
 
     @Test
@@ -74,7 +76,7 @@ class LocalModelReasoningAdapterTest {
         assertThrows(IllegalStateException::class.java) {
             LocalModelReasoningAdapter(rt, modelIdProvider = { null }).execute(request())
         }
-        assertFalse(rt.streamed)
+        assertFalse(rt.thinkingUsed)
     }
 
     private fun completed() = LocalInferenceEvent.Completed(
@@ -85,11 +87,16 @@ class LocalModelReasoningAdapterTest {
         override val state = LocalModelState.READY
         override val loadedModel: ImportedLocalModel? = null
         var cancelled = false
-        var streamed = false
+        var thinkingUsed = false
+        var agentConversationUsed = false
         override fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit) = error("unused")
         override fun unload(callback: (Result<Unit>) -> Unit) = callback(Result.success(Unit))
         override fun stream(prompt: String, callback: LocalInferenceCallback) {
-            streamed = true
+            agentConversationUsed = true
+            error("Reasoning workers must not use the agent conversation.")
+        }
+        override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
+            thinkingUsed = true
             behavior(callback)
         }
         override fun cancel() { cancelled = true }

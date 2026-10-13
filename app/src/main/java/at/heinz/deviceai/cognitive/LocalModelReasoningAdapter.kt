@@ -40,7 +40,7 @@ class LocalModelReasoningAdapter(
             latch.countDown()
         }
 
-        runtime.stream(request.prompt, LocalInferenceCallback { event ->
+        runtime.streamThinking(request.prompt, LocalInferenceCallback { event ->
             when (event) {
                 is LocalInferenceEvent.TextDelta -> synchronized(lock) {
                     if (!done) {

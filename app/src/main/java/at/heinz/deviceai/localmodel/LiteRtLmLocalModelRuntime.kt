@@ -64,6 +64,9 @@ interface LocalModelRuntime {
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
+    fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
+        error("This runtime does not provide isolated tool-free thinking.")
+    }
     fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
         val continuation = responses.joinToString("\n") { "${it.toolName}: ${it.response}" }
         stream(continuation, callback)
@@ -91,6 +94,7 @@ class LiteRtLmLocalModelRuntime(
 
     private var engine: Engine? = null
     private var conversation: Conversation? = null
+    private var inferenceConversation: Conversation? = null
     private var inferenceActive = false
     private var pendingUnload: ((Result<Unit>) -> Unit)? = null
 
@@ -156,7 +160,12 @@ class LiteRtLmLocalModelRuntime(
 
     override fun stream(prompt: String, callback: LocalInferenceCallback) {
         require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS)
-        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback)
+        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback, false)
+    }
+
+    override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
+        require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS)
+        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback, true)
     }
 
     override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
@@ -164,16 +173,36 @@ class LiteRtLmLocalModelRuntime(
         val contents: List<Content> = responses.map { Content.ToolResponse(it.toolName, it.response) }
         val characterCount = responses.sumOf { it.response.length }
         require(characterCount <= MAX_PROMPT_CHARACTERS)
-        streamMessage(Message.tool(Contents.of(contents)), characterCount, callback)
+        streamMessage(Message.tool(Contents.of(contents)), characterCount, callback, false)
     }
 
-    private fun streamMessage(message: Message, promptCharacters: Int, callback: LocalInferenceCallback) {
+    private fun streamMessage(
+        message: Message,
+        promptCharacters: Int,
+        callback: LocalInferenceCallback,
+        isolatedThinking: Boolean
+    ) {
         val activeConversation: Conversation
         val startNanos = System.nanoTime()
         val inputTokens: Int?
         synchronized(lock) {
             check(state == LocalModelState.READY) { "A local model is not ready." }
-            activeConversation = checkNotNull(conversation)
+            activeConversation = if (isolatedThinking) {
+                checkNotNull(engine).createConversation(
+                    ConversationConfig(
+                        systemInstruction = Contents.of(
+                            "You are a data-only reasoning worker for Device AI. " +
+                                "You have no tools and no authority to act."
+                        ),
+                        tools = emptyList(),
+                        automaticToolCalling = false,
+                        maxOutputToken = MAX_OUTPUT_TOKENS
+                    )
+                )
+            } else {
+                checkNotNull(conversation)
+            }
+            inferenceConversation = activeConversation
             inferenceActive = true
             state = LocalModelState.GENERATING
             inputTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
@@ -186,8 +215,16 @@ class LiteRtLmLocalModelRuntime(
 
         fun finish(event: LocalInferenceEvent?) {
             if (!finished.compareAndSet(false, true)) return
-            if (event != null && !outputLimitReached.get()) deliver(callback, event)
+            if (isolatedThinking) {
+                background.execute {
+                    runCatching { if (activeConversation.isAlive) activeConversation.close() }
+                }
+            }
+            synchronized(lock) {
+                if (inferenceConversation === activeConversation) inferenceConversation = null
+            }
             finishInference()
+            if (event != null && !outputLimitReached.get()) deliver(callback, event)
         }
 
         try {
@@ -292,7 +329,7 @@ class LiteRtLmLocalModelRuntime(
     override fun cancel() {
         val active = synchronized(lock) {
             if (state != LocalModelState.GENERATING && state != LocalModelState.UNLOADING) null
-            else conversation
+            else inferenceConversation ?: conversation
         }
         runCatching { active?.cancelProcess() }
     }
@@ -303,7 +340,7 @@ class LiteRtLmLocalModelRuntime(
             check(state != LocalModelState.LOADING && state != LocalModelState.UNLOADING) {
                 "Local model lifecycle operation is already in progress."
             }
-            activeConversation = conversation
+            activeConversation = inferenceConversation ?: conversation
             if (inferenceActive) {
                 state = LocalModelState.UNLOADING
                 pendingUnload = callback
@@ -338,6 +375,7 @@ class LiteRtLmLocalModelRuntime(
             val oldConversation = conversation
             val oldEngine = engine
             conversation = null
+            inferenceConversation = null
             engine = null
             loadedModel = null
             oldConversation to oldEngine
