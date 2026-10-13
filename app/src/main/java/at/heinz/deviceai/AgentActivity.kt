@@ -10,6 +10,9 @@ import at.heinz.deviceai.learning.NeuralPracticeScheduler
 import at.heinz.deviceai.learning.NeuralCuriosityRadar
 import at.heinz.deviceai.learning.NeuralTransferExperiment
 import at.heinz.deviceai.learning.NeuralGeneralizationComparison
+import at.heinz.deviceai.learning.MentorStudyScheduler
+import at.heinz.deviceai.learning.MentorSourceNotebook
+import at.heinz.deviceai.learning.MentorSource
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -269,6 +272,7 @@ class AgentActivity : Activity() {
 
         setContentView(buildUi())
         NeuralPracticeScheduler(this).restoreIfEnabled()
+        MentorStudyScheduler(this).restore()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
             "NEURON · Bereits gelernt · Tippe TRAINING oder HÄRTETEST"
@@ -728,6 +732,9 @@ class AgentActivity : Activity() {
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
         card.addView(neuralCuriosityButton, matchWidth(top = 7))
+        card.addView(actionButton("MENTOR · FACHWISSEN FORSCHEN", accent = true).apply {
+            setOnClickListener { showMentorStudyDialog() }
+        }, matchWidth(top = 7))
         card.addView(actionButton("INTERNET · LERNSTOFF PRÜFEN").apply {
             setOnClickListener { showWebLearningInbox() }
         }, matchWidth(top = 7))
@@ -1482,6 +1489,110 @@ class AgentActivity : Activity() {
                     "Quellenhinweis mit URL und Inhalts-Hash gespeichert. Noch keine bestätigte Wahrheit. " +
                         "Öffne INTERNET · LERNSTOFF PRÜFEN für weitere Kandidaten."
                     else "Quellenhinweis nicht gespeichert (Widerspruch, Duplikat, Speicherlimit oder Fehler).")
+            }.show()
+    }
+
+    /**
+     * The mentor cycle explores multiple subject areas with public sources only.
+     * It does not edit neural weights, authorize commands, or mark third-party claims as true.
+     */
+    private fun showMentorStudyDialog() {
+        val scheduler = MentorStudyScheduler(this)
+        val notebook = scheduler.notebook
+        val status = "Aktiv: " + if (notebook.enabled) "JA" else "NEIN"
+        val details = status + "\nRecherchen: " + notebook.attempts +
+            "\nDurchgänge mit neuen Quellen: " + notebook.successes +
+            "\nBeobachtungen: " + runCatching { notebook.entries().size }.getOrDefault(0) +
+            "\nLetzter Stand: " + notebook.status +
+            "\n\nLehrplan: 30 Fachgebiete, rotierend. Android plant bei Ladebetrieb und " +
+            "Internetverbindung ungefähr alle 6 Stunden neue Recherchen. " +
+            "Jede Quelle bleibt als unbestätigte Beobachtung mit URL und SHA-256 getrennt gespeichert. " +
+            "Kein automatisches Lernen von Geräteaktionen und keine heimlichen Sprachaufnahmen."
+        AlertDialog.Builder(this)
+            .setTitle("Device AI · Mentor und Wissensforschung")
+            .setMessage(details)
+            .setNeutralButton("Quellen ansehen") { _, _ -> showMentorSources() }
+            .setNegativeButton(if(notebook.enabled) "STOPPEN" else "Schließen") { _, _ ->
+                if(notebook.enabled) {
+                    scheduler.disable()
+                    addAssistantMessage("Wissensforscher angehalten. Gespeicherte Quellen bleiben erhalten.")
+                }
+            }
+            .setPositiveButton(if(notebook.enabled) "JETZT FORSCHEN" else "FORSCHUNG ERLAUBEN") { _, _ ->
+                if(notebook.enabled) runMentorStudyNow() else {
+                    val enabled = runCatching { scheduler.enable() }.getOrDefault(false)
+                    addAssistantMessage(if(enabled)
+                        "Mentor aktiv: Ich kann nun bei Ladebetrieb verschiedene Fachgebiete " +
+                            "erforschen. Für einen sofortigen Durchgang öffne MENTOR erneut."
+                    else "Android konnte den Forschungsauftrag nicht einrichten.")
+                }
+            }.show()
+    }
+
+    private fun runMentorStudyNow() {
+        if(busy || localAgentExecutor.isShutdown) return
+        val scheduler=MentorStudyScheduler(this)
+        if(!scheduler.notebook.enabled) return
+        activeLocalRequest=true
+        setBusy(true)
+        activityText.text="MENTOR · FORSCHT NACH NEUEN QUELLEN"
+        localAgentExecutor.execute {
+            val outcome=runCatching { scheduler.runOnce() }
+            runOnUiThread {
+                if(isFinishing || isDestroyed)return@runOnUiThread
+                activeLocalRequest=false
+                setBusy(false)
+                addAssistantMessage(outcome.getOrElse {
+                    "Studium fehlgeschlagen; alte Daten erhalten."
+                } + "\nMENTOR: Ergebnisse stehen unter FACHWISSEN FORSCHEN → Quellen ansehen.")
+            }
+        }
+    }
+
+    private fun showMentorSources() {
+        val notebook=MentorSourceNotebook(this)
+        val notes=runCatching { notebook.entries() }.getOrElse {
+            addAssistantMessage("Studiennotizen unlesbar; keine Daten überschrieben.")
+            return
+        }
+        if(notes.isEmpty()) {
+            AlertDialog.Builder(this).setTitle("Mentor · Quellenbibliothek")
+                .setMessage("Noch keine Quellenbeobachtungen. Starte die Forschung. " +
+                    "Eine erfolgreiche Recherche hängt von erreichbaren Wikipedia-Seiten ab.")
+                .setPositiveButton("Schließen",null).show()
+            return
+        }
+        val labels=notes.map { it.subject+" · "+it.excerpt.take(70) }.toTypedArray()
+        AlertDialog.Builder(this).setTitle("Mentor · " + notes.size + " Quellen (unbestätigt)")
+            .setItems(labels) { _, index -> showMentorSourceDetail(notes[index]) }
+            .setNegativeButton("Schließen",null)
+            .setNeutralButton("Beobachtungen löschen") { _, _ ->
+                AlertDialog.Builder(this).setTitle("Studiennotizen löschen?")
+                    .setMessage("Löscht nur automatisch gesammelte, noch nicht bestätigte Internet-Beobachtungen.")
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("Löschen") { _, _ ->
+                        val success=notebook.clear()
+                        addAssistantMessage(if(success) "Mentor-Quellenbibliothek geleert." else "Löschen fehlgeschlagen.")
+                    }.show()
+            }.show()
+    }
+
+    private fun showMentorSourceDetail(note: MentorSource) {
+        AlertDialog.Builder(this)
+            .setTitle("Mentor · " + note.subject)
+            .setMessage(note.excerpt + "\n\nQuelle: " + note.url +
+                "\nSHA-256: " + note.sha.take(20) +
+                "\n\nDiese Internet-Aussage ist nicht unabhängig überprüft.")
+            .setNegativeButton("Nicht übernehmen",null)
+            .setPositiveButton("ALS QUELLENNOTIZ FREIGEBEN") { _, _ ->
+                val digest=java.security.MessageDigest.getInstance("SHA-256")
+                    .digest((note.sha+"\n"+note.excerpt).toByteArray(Charsets.UTF_8))
+                    .joinToString("") { "%02x".format(it) }
+                val source=WebLearningCandidate(digest,note.url,note.sha,note.excerpt,1,false)
+                val saved=runCatching { WebLearningJournal(this).approve(source) }.getOrDefault(false)
+                addAssistantMessage(if(saved) "Quellenbeobachtung als weiterhin unbestätigter, " +
+                    "vom Benutzer freigegebener Hinweis gespeichert. Jetzt im Quellen-Gedächtnis abrufbar."
+                    else "Keine Übernahme (Duplikat, Speicherkapazität oder Fehler).")
             }.show()
     }
 
