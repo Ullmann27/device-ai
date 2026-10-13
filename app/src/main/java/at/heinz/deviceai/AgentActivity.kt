@@ -86,7 +86,7 @@ class AgentActivity : Activity() {
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
-        private const val DEV_MAX_SOURCE_READ_BYTES = 16_384
+        private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private val BG = Color.rgb(7, 10, 16)
         private val PANEL = Color.rgb(15, 21, 31)
         private val PANEL_2 = Color.rgb(21, 29, 42)
@@ -163,6 +163,7 @@ class AgentActivity : Activity() {
     private var devStopButton: Button? = null
     private var devExportButton: Button? = null
     private var devPickButton: Button? = null
+    private var devClearButton: Button? = null
     private var devGoalInput: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1270,6 +1271,13 @@ class AgentActivity : Activity() {
             }
         }
         box.addView(devPickButton, matchWidth(top = 8))
+        devClearButton = actionButton("QUELLENAUSWAHL LEEREN").apply {
+            setOnClickListener {
+                devController.clearSources()
+                refreshDevelopmentUi()
+            }
+        }
+        box.addView(devClearButton, matchWidth(top = 4))
         devSourcesView = textView("", 12f, TEXT)
         box.addView(devSourcesView, matchWidth(top = 6))
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -1314,15 +1322,18 @@ class AgentActivity : Activity() {
         else st.sources.joinToString("\n") { "• ${it.path} (${it.content.toByteArray(Charsets.UTF_8).size} B · sha256 ${it.sha256.take(12)}…)" }
         devStatusView?.text = st.status + (st.error?.let { "\n$it" } ?: "")
         devPreviewView?.text = st.preview.orEmpty()
-        devStartButton?.isEnabled = st.canEdit && !busy
-        devPickButton?.isEnabled = st.canEdit
+        devStartButton?.isEnabled = st.canStart && !busy
+        devPickButton?.isEnabled = st.canStart
+        devClearButton?.isEnabled = st.canStart && st.sources.isNotEmpty()
         devStopButton?.isEnabled = st.canStop
         devExportButton?.isEnabled = st.canExport
     }
 
     private fun loadDevelopmentSources(uris: List<Uri>) {
-        if (!devController.state.canEdit || localAgentExecutor.isShutdown) return
-        localAgentExecutor.execute {
+        if (uris.isEmpty() || localAgentExecutor.isShutdown || !devController.beginSourceImport()) return
+        refreshDevelopmentUi()
+        try {
+            localAgentExecutor.execute {
             val loaded = uris.map { uri ->
                 runCatching {
                     val name = contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)
@@ -1343,8 +1354,14 @@ class AgentActivity : Activity() {
                     r.onSuccess { (name, text) -> devController.addSource(name, text) }
                         .onFailure { Toast.makeText(this, it.message ?: "Quelle nicht lesbar.", Toast.LENGTH_LONG).show() }
                 }
+                devController.finishSourceImport()
                 refreshDevelopmentUi()
             }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            devController.finishSourceImport()
+            refreshDevelopmentUi()
+            Toast.makeText(this, "Dateiauswahl konnte nicht gestartet werden.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -1963,7 +1980,12 @@ class AgentActivity : Activity() {
                 val uris = mutableListOf<Uri>()
                 data.data?.let(uris::add)
                 data.clipData?.let { clip -> for (i in 0 until clip.itemCount) uris += clip.getItemAt(i).uri }
-                loadDevelopmentSources(uris.take(at.heinz.deviceai.cognitive.DevelopmentLimits.MAX_SOURCES))
+                val unique = uris.distinct()
+                if (unique.size > at.heinz.deviceai.cognitive.DevelopmentLimits.MAX_SOURCES) {
+                    Toast.makeText(this, "Maximal vier Quellen auswählen; keine Datei wurde geladen.", Toast.LENGTH_LONG).show()
+                } else {
+                    loadDevelopmentSources(unique)
+                }
             }
             DEV_EXPORT_REQUEST -> {
                 val uri = data?.data

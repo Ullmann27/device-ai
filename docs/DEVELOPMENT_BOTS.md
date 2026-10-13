@@ -10,7 +10,7 @@ All reviewers receive the selected source snapshots and complete developer outpu
 
 The first UI slice accepts at most four selected sources, totaling 4,000 UTF-8 bytes by default. Selection now rejects excess content immediately. SAF document display names are snapshot labels, NOT proof of repository location. Their SHA-256 identifies the selected content only, not current GitHub state. There is no apply/push capability. Before any future apply feature, add explicit owner-confirmed repository-relative path mapping and revalidate the live destination hash. Duplicate labels are rejected. Source text remains untrusted evidence.
 
-Changed goals/sources invalidate old proposal export. Active jobs copy the source list. Cancellation is checked again after state notifications and after model calls; elapsed monotonic time bounds the job even if wall-clock time moves backward.
+Changed goals/sources invalidate old proposal export. Launching an asynchronous SAF source read now immediately revokes any previous proposal, blocks Start and repeated imports until the read finishes, and keeps old sources available if the picker yields nothing. The UI provides a clear-selection action, and rejects more than four selected URIs explicitly instead of silently ignoring some. SAF reads are capped at the same 4,000-byte limit enforced by the controller. Active jobs copy the source list. Cancellation is checked again after state notifications and after model calls; elapsed monotonic time bounds the job even if wall-clock time moves backward.
 
 ## Verification
 

@@ -8,11 +8,13 @@ data class DevelopmentUiState(
     val sources: List<SourceSnapshot> = emptyList(),
     val status: String = "Idle. Select source text and describe one development task.",
     val preview: String? = null,
-    val error: String? = null
+    val error: String? = null,
+    val sourceImportPending: Boolean = false
 ) {
     val canEdit: Boolean get() = phase != DevelopmentUiPhase.RUNNING
+    val canStart: Boolean get() = canEdit && !sourceImportPending
     val canStop: Boolean get() = phase == DevelopmentUiPhase.RUNNING
-    val canExport: Boolean get() = phase == DevelopmentUiPhase.DONE && preview != null
+    val canExport: Boolean get() = phase == DevelopmentUiPhase.DONE && preview != null && !sourceImportPending
 }
 
 /** UI-thread-confined controller; no I/O and no execution capabilities. */
@@ -25,6 +27,20 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
 
     fun setGoal(goal: String) {
         if (state.canEdit && goal != state.goal) state = edited().copy(goal = goal)
+    }
+
+
+    /** Revoke an old proposal immediately while SAF reads are still queued off the UI thread. */
+    fun beginSourceImport(): Boolean {
+        if (!state.canStart) return false
+        state = edited().copy(sourceImportPending = true, status = "Reading selected source files…")
+        return true
+    }
+
+    fun finishSourceImport() {
+        if (!state.sourceImportPending) return
+        state = state.copy(sourceImportPending = false,
+            status = "Source selection finished. Review the files before starting.")
     }
 
     fun addSource(path: String, content: String): Boolean {
@@ -47,11 +63,11 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
     }
 
     fun clearSources() {
-        if (state.canEdit) state = edited().copy(sources = emptyList())
+        if (state.canStart) state = edited().copy(sources = emptyList())
     }
 
     fun start(modelReady: Boolean): DevelopmentTask? {
-        if (!state.canEdit) return null
+        if (!state.canStart) return null
         if (!modelReady) {
             state = state.copy(phase = DevelopmentUiPhase.FAILED, preview = null,
                 error = "No local model loaded. Load a local model first; there is no cloud fallback.",

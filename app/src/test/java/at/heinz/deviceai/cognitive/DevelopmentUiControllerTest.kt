@@ -82,6 +82,53 @@ class DevelopmentUiControllerTest {
     }
 
     @Test
+    fun pendingSourceReadBlocksStartAndImmediatelyRevokesStaleProposal() {
+        val c = controller()
+        assertNotNull(c.start(true))
+        c.onOutcome(completed())
+        assertNotNull(c.exportText())
+
+        assertTrue(c.beginSourceImport())
+        assertTrue(c.state.sourceImportPending)
+        assertFalse(c.state.canStart)
+        assertFalse(c.state.canExport)
+        assertNull(c.exportText())
+        assertNull(c.start(true))
+        assertFalse(c.beginSourceImport())
+        assertTrue(c.addSource("app/NewFile.kt", "fun extra() = 3\n"))
+
+        c.finishSourceImport()
+        assertFalse(c.state.sourceImportPending)
+        assertTrue(c.state.canStart)
+        assertEquals(2, c.state.sources.size)
+        assertNull(c.exportText())
+        assertNotNull(c.start(true))
+    }
+
+    @Test
+    fun failedOrCancelledSourcePickerLeavesExistingSelectionUsable() {
+        val c = controller()
+        assertTrue(c.beginSourceImport())
+        c.finishSourceImport() // picker returned no readable files
+        assertTrue(c.state.canStart)
+        assertEquals(1, c.state.sources.size)
+        c.clearSources()
+        assertEquals(0, c.state.sources.size)
+        assertTrue(c.beginSourceImport())
+        c.clearSources() // disallowed while asynchronous selection is in flight
+        assertFalse(c.state.canStart)
+        c.finishSourceImport()
+        assertEquals(0, c.state.sources.size)
+    }
+
+    @Test
+    fun runningJobCannotBeginAnotherSourceImport() {
+        val c = controller()
+        assertNotNull(c.start(true))
+        assertFalse(c.beginSourceImport())
+    }
+
+    @Test
     fun sourceSelectionRejectsForbiddenDuplicateAndExcessFiles() {
         val c = controller()
         assertFalse(c.addSource(".git/config", "x"))
