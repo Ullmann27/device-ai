@@ -41,8 +41,10 @@ ToolGate, or explicit Deep Research path.
 
 ### CI VERIFIED
 
-- No CI result for the new Continuum source changes is claimed until the Actions run for their
-  committed head completes.
+- No CI result for the new Continuum source changes is claimed. Android workflow run
+  [38352336772](https://github.com/Ullmann27/device-ai/actions/runs/38352336772) for the
+  implementation commit ended `action_required` with zero jobs, zero failed-job logs, and zero
+  artifacts. It did not run Android tests or produce an APK.
 - The inherited baseline at commit `3923aac` passed workflow run
   [38349968863](https://github.com/Ullmann27/device-ai/actions/runs/38349968863). That run
   predates the Phase 1 implementation and is not evidence that this code compiled or passed

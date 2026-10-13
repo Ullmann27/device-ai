@@ -189,9 +189,10 @@ The Continuum work is stacked on PR #6 and is not approved for merging independe
 
 ### Continuum validation status
 - **IMPLEMENTED:** the source-level foundations listed above; tests are checked in.
-- **CI VERIFIED:** no CI result for these new changes is claimed yet. The previous inherited
-  baseline on commit `3923aac` succeeded in workflow run `38349968863`; it predates the Continuum
-  source changes.
+- **CI VERIFIED:** no CI result for the new Continuum changes is claimed. Android workflow run
+  `38352336772` for the implementation commit ended `action_required` with zero jobs, zero failed
+  job logs, and zero artifacts; it did not execute tests or build an APK. The inherited baseline
+  on commit `3923aac` succeeded in run `38349968863`, but that predates the Continuum code.
 - **NOT YET DEVICE VERIFIED:** Android Keystore signing for a Continuum seed, physical-device
   inference with the context flag enabled, persistence behavior on device, and real compute-node
   execution have not been tested. The context feature flag remains off by default.
