@@ -82,7 +82,11 @@ class BootstrapBrainTest {
             "Trainiere: Installiere etwas und prüfe Akku => Akku",
             "Trainiere: system: Prüfe Akku => Speicher",
             "Trainiere: Merke dir: etwas => Akku",
-            "Trainiere: das war hilfreich => Speicher"
+            "Trainiere: das war hilfreich => Speicher",
+            "Trainiere: Was weißt du? => Akku",
+            "Trainiere: Wer bist du heute => Akku",
+            "Trainiere: Was hast du dir gemerkt? => Akku",
+            "Trainiere: Was kannst du eigentlich => Akku"
         )
         blocked.forEach { text ->
             assertNull(text, BootstrapTraining.parse(text))
@@ -104,6 +108,8 @@ class BootstrapBrainTest {
 
         val unsafe = BootstrapCurriculum.evaluate(mapOf("prüfe akku" to "get_storage_info"))
         assertFalse(unsafe.complete)
+        val shadowed = BootstrapCurriculum.evaluate(mapOf("wer bist du heute" to "get_battery_info"))
+        assertFalse(shadowed.complete)
         assertTrue(unsafe.failures.any { it.startsWith("Learned command") })
     }
 
