@@ -28,12 +28,19 @@ object BootstrapTraining {
         "lernspeicher löschen", "lösche meine erinnerungen"
     )
 
+    // Built-in dialogue handlers run before learned mappings. A learned phrase
+    // intercepted by those handlers would be stored but could never run.
+    private val protectedDialogueFragments = listOf(
+        "wer bist du", "wie heißt du", "was kannst du",
+        "was weißt du", "was hast du dir gemerkt"
+    )
+
     fun validate(phrase: String, tool: String): Pair<String, String>? {
         val key = normalize(phrase)
         if (tool !in allowlist.values || ToolRegistry.risk(tool) != Risk.READ_ONLY ||
             key.length !in 4..90 || !key.matches(Regex("[a-z0-9äöüß .,!?:-]+"))) return null
         if (forbiddenTrainingWords.containsMatchIn(key) || reservedRoles.containsMatchIn(key) ||
-            key in reservedCommands ||
+            key in reservedCommands || protectedDialogueFragments.any(key::contains) ||
             listOf("trainiere:", "merke dir:", "merk dir:", "vergiss ", "lösche ").any(key::startsWith)
         ) return null
         // A trained phrase must not override the built-in device intents.
