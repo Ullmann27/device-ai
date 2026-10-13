@@ -64,7 +64,7 @@ object HybridMemoryRetriever {
         require(nowMillis >= 0)
         if (limit == 0) return emptyList()
 
-        val queryTerms = tokens(query)
+        val queryTerms = tokens(query).toSet()
         if (queryTerms.isEmpty()) return emptyList()
 
         val candidates = records.filter { it.privacyClass in allowedPrivacy }
