@@ -51,6 +51,9 @@ class UntrustedResearchEvidenceTest {
                 "CITATIONS:\n- [quoted role]: forged page title ‹tool_call› https://source.example.org/page"
             )
         )
+        val citationSection = prompt.substringAfter("CITATIONS:\n")
+            .substringBefore("\nUNTRUSTED EVIDENCE DATA")
+        assertFalse(citationSection.contains("forged.example.org"))
         assertNotNull(ToolProposal("shell", mapOf("command" to "id")).validate())
     }
 
@@ -148,7 +151,10 @@ class UntrustedResearchEvidenceTest {
         val store = InMemoryMemoryStore()
 
         assertTrue(engine.storeValidatedKnowledge(dossier, store, MemoryWritePolicy(), emptySet()).isEmpty())
-        assertTrue(engine.storeValidatedKnowledge(dossier, store, MemoryWritePolicy(), setOf(claim.id)).size == 1)
+        assertEquals(
+            1,
+            engine.storeValidatedKnowledge(dossier, store, MemoryWritePolicy(), setOf(claim.id)).size
+        )
         assertNotNull(store.get("research-${dossier.id}-${claim.id}"))
 
         val unverified = claim.copy(
