@@ -13,6 +13,8 @@ import android.os.Looper
 import android.speech.RecognizerIntent
 import android.text.InputType
 import android.view.Gravity
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -87,6 +89,7 @@ class AgentActivity : Activity() {
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
+        private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private val BG = Color.rgb(7, 10, 16)
         private val PANEL = Color.rgb(15, 21, 31)
         private val PANEL_2 = Color.rgb(21, 29, 42)
@@ -128,6 +131,9 @@ class AgentActivity : Activity() {
     private lateinit var chatContainer: LinearLayout
     private lateinit var input: EditText
     private lateinit var sendButton: Button
+    private var dashboardSection: LinearLayout? = null
+    private var keyboardTitle: TextView? = null
+    private var keyboardCompact = false
 
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
@@ -171,6 +177,7 @@ class AgentActivity : Activity() {
 
         window.statusBarColor = BG
         window.navigationBarColor = BG
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         backend = AgentBackendClient(this)
         modelCatalog = LocalModelCatalog(
@@ -188,6 +195,10 @@ class AgentActivity : Activity() {
         executor = DeviceToolExecutor(this, bridge)
 
         setContentView(buildUi())
+        savedInstanceState?.getString(COMPOSER_DRAFT_KEY)?.let { draft ->
+            input.setText(draft)
+            input.setSelection(draft.length)
+        }
         bridge.start()
         updateCloudBadge()
         refreshLocalModelUi()
@@ -205,6 +216,11 @@ class AgentActivity : Activity() {
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
         if (::modelCatalog.isInitialized) refreshLocalModelUi()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (::input.isInitialized) outState.putString(COMPOSER_DRAFT_KEY, input.text.toString())
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
@@ -250,6 +266,29 @@ class AgentActivity : Activity() {
             )
         }
 
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            window.setDecorFitsSystemWindows(false)
+            root.setOnApplyWindowInsetsListener { view, insets ->
+                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                val ime = insets.getInsets(WindowInsets.Type.ime())
+                val viewport = ComposerUiPolicy.viewport(
+                    bars.top, bars.bottom, ime.bottom,
+                    insets.isVisible(WindowInsets.Type.ime()), wide
+                )
+                if (view.paddingLeft != bars.left || view.paddingTop != viewport.top ||
+                    view.paddingRight != bars.right || view.paddingBottom != viewport.bottom
+                ) {
+                    view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
+                }
+                if (keyboardCompact != viewport.compactDashboard) {
+                    keyboardCompact = viewport.compactDashboard
+                    dashboardSection?.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
+                    keyboardTitle?.visibility = if (keyboardCompact) View.VISIBLE else View.GONE
+                }
+                insets
+            }
+            root.post { root.requestApplyInsets() }
+        }
         return root
     }
 
@@ -317,11 +356,13 @@ class AgentActivity : Activity() {
             )
         }
 
-        pane.addView(buildHeader(wide))
-        pane.addView(buildStatusRow(), matchWidth(top = 12))
-        pane.addView(buildModeRow(), matchWidth(top = 10))
-        pane.addView(buildLocalModelCard(), matchWidth(top = 10))
-        pane.addView(buildQuickActions(), matchWidth(top = 10))
+        val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        dashboardSection = dashboard
+        dashboard.addView(buildHeader(wide))
+        dashboard.addView(buildStatusRow(), matchWidth(top = 12))
+        dashboard.addView(buildModeRow(), matchWidth(top = 10))
+        dashboard.addView(buildLocalModelCard(), matchWidth(top = 10))
+        dashboard.addView(buildQuickActions(), matchWidth(top = 10))
 
         planCard = verticalCard().apply {
             visibility = View.GONE
@@ -332,12 +373,19 @@ class AgentActivity : Activity() {
             setPadding(0, dp(7), 0, 0)
         }
         planCard.addView(planText)
-        pane.addView(planCard, matchWidth(top = 10))
+        dashboard.addView(planCard, matchWidth(top = 10))
 
         activityText = textView("Bereit", 12f, MUTED).apply {
             setPadding(dp(4), dp(8), dp(4), dp(7))
         }
-        pane.addView(activityText, matchWidth())
+        dashboard.addView(activityText, matchWidth())
+        pane.addView(dashboard, matchWidth())
+
+        keyboardTitle = textView("Device AI · Nachricht", 15f, ACCENT, true).apply {
+            visibility = View.GONE
+            setPadding(dp(4), dp(3), 0, dp(6))
+        }
+        pane.addView(keyboardTitle, matchWidth())
 
         chatScroll = ScrollView(this).apply {
             isFillViewport = true
@@ -546,9 +594,10 @@ class AgentActivity : Activity() {
             setHintTextColor(Color.rgb(103, 119, 143))
             setTextColor(TEXT)
             textSize = 15f
-            minLines = 2
-            maxLines = 5
+            minLines = 1
+            maxLines = 4
             background = null
+            imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
@@ -598,17 +647,34 @@ class AgentActivity : Activity() {
             return
         }
 
-        input.text.clear()
+        val researchSelected = ResearchOptInPolicy.shouldResearch(text, researchArmed)
+        val route = LocalFirstPolicy.route(mode, localRuntime.state == LocalModelState.READY)
+        when (ComposerUiPolicy.submission(
+            route, localRuntime.loadedModel != null, backend.isConfigured(), researchSelected
+        )) {
+            DraftSubmission.READY -> Unit
+            DraftSubmission.NEEDS_LOCAL_MODEL -> {
+                addToolActivity("Kein lokales Modell geladen · Entwurf bleibt erhalten")
+                Toast.makeText(this, "Bitte zuerst ein lokales Modell laden. Text bleibt erhalten.", Toast.LENGTH_LONG).show()
+                return
+            }
+            DraftSubmission.NEEDS_CLOUD_SETUP -> {
+                addToolActivity("ONLINE nicht konfiguriert · Entwurf bleibt erhalten")
+                Toast.makeText(this, "Bitte ONLINE konfigurieren. Text bleibt erhalten.", Toast.LENGTH_LONG).show()
+                return
+            }
+        }
         agentLoops = 0
+        input.text.clear()
         addUserMessage(text)
 
-        if (ResearchOptInPolicy.shouldResearch(text, researchArmed)) {
+        if (researchSelected) {
             researchArmed = false
             runResearch(text, researchMode)
             return
         }
         researchArmed = false
-        when (LocalFirstPolicy.route(mode, localRuntime.state == LocalModelState.READY)) {
+        when (route) {
             AssistantRoute.LOCAL_MODEL -> runLocal(text)
             AssistantRoute.CLOUD -> {
                 if (backend.isConfigured()) {
