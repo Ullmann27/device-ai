@@ -99,7 +99,8 @@ object BootstrapBrain {
             BootstrapKind.REPLY, "Ich kann dich begrüßen, per Android-TTS sprechen, Sprachtexte entgegennehmen, " +
                 "Fakten auf Wunsch speichern, Feedback zählen und mit Shizuku lesend Akku, Speicher, " +
                 "Downloads, Apps, Lumo-Fehler und Geräteinformationen prüfen. " +
-                "Für Webrecherche tippe auf WEB RECHERCHE und gib direkte HTTPS-Quellen an. " +
+                "Für Internetrecherche tippe auf WEB RECHERCHE, wähle QUICK, STANDARD oder DEEP " +
+                "und suche ein Thema in der deutschsprachigen Wikipedia. Eigene HTTPS-Quellen sind ebenfalls möglich. " +
                 "Schreiben: „Merke dir: ...“, Abrufen: „Was weißt du?“, Löschen: „Vergiss alles“. " +
                 "Du kannst mir neue Nur-Lese-Befehle beibringen mit „Trainiere: <Satz> => Akku“. " +
                 "Beziehungen: Merke dir: Fakt: Nova | ist | Mobilgerät. " +
