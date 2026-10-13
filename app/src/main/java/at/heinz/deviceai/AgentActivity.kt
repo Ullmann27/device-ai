@@ -31,6 +31,8 @@ import at.heinz.deviceai.cognitive.AiContextInput
 import at.heinz.deviceai.cognitive.AiContextPolicy
 import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
 import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator
+import at.heinz.deviceai.cognitive.ChatReasoningRouter
+import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter
 import at.heinz.deviceai.cognitive.ContinuumRuntimeState
 import at.heinz.deviceai.cognitive.ContinuumRuntimeStore
 import at.heinz.deviceai.cognitive.Evaluation
@@ -143,6 +145,7 @@ class AgentActivity : Activity() {
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
+    @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -996,7 +999,14 @@ class AgentActivity : Activity() {
                         )
                     }.getOrNull()
                 }
-                val prompt = buildString {
+                val advisory = if (observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
+                    ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })
+                        .also { activeReasoningRouter = it }
+                        .advise("chat-$turnId", task, compiledContext?.text ?: task)
+                        .also { activeReasoningRouter = null }
+                } else null
+                val promptTail = "\nRequest at most one registered structured tool, or answer the user."
+                val promptBody = buildString {
                     append("You are Device AI running on-device. Use registered tools only; never generate or execute shell commands.\n")
                     if (compiledContext != null) {
                         append(compiledContext.text)
@@ -1015,8 +1025,8 @@ class AgentActivity : Activity() {
                                 .append(it.output.orEmpty().take(2_000)).append('\n')
                         }
                     }
-                    append("\nRequest at most one registered structured tool, or answer the user.")
-                }.take(15_500)
+                }
+                val prompt = ChatReasoningRouter.composePrompt(promptBody, advisory, promptTail, 15_500)
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 val toolResponses = newObservations.take(4).map {
@@ -1192,6 +1202,7 @@ class AgentActivity : Activity() {
         activeResearchCancellation = null
         input.hint = "Was soll ich auf deinem Gerät tun?"
         activeOrchestrator?.cancel()
+        activeReasoningRouter?.cancel()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
         activeLocalRequest = false
