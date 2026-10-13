@@ -30,7 +30,7 @@ class ContinuumStateTest {
         val dir = Files.createTempDirectory("continuum-corrupt-test").toFile()
         try {
             val store = FileContinuumObjectStore(dir)
-            val metadata = store.put(ContinuumObjectType.CRITICAL_BLOCK_FOR_TEST(), "abc".toByteArray(), 1)
+            val metadata = store.put(ContinuumObjectType.IDENTITY_SNAPSHOT, "abc".toByteArray(), 1)
             val file = dir.listFiles { item -> item.name.endsWith(".obj") }!!.single()
             val bytes = file.readBytes()
             bytes[bytes.lastIndex] = (bytes.last().toInt() xor 0x01).toByte()
@@ -56,7 +56,4 @@ class ContinuumStateTest {
             dir.deleteRecursively()
         }
     }
-
-    private fun ContinuumObjectType.CompanionStub(): ContinuumObjectType = ContinuumObjectType.MEMORY_BLOCK
-    private fun ContinuumObjectType.CRITICAL_BLOCK_FOR_TEST(): ContinuumObjectType = ContinuumObjectType.IDENTITY_SNAPSHOT
 }
