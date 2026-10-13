@@ -93,6 +93,7 @@ class ToolGate(
     private val calls = AtomicInteger()
     private val cancelled = AtomicBoolean()
     private val activeFutures = ConcurrentHashMap.newKeySet<Future<String>>()
+    private val consumedCallIds = ConcurrentHashMap.newKeySet<String>()
 
     fun cancel() {
         cancelled.set(true)
@@ -139,6 +140,10 @@ class ToolGate(
         if (reservedCall >= policy.maxCalls) {
             calls.decrementAndGet()
             return result(ToolExecutionStatus.REJECTED, "Tool-call budget exhausted.")
+        }
+        if (!consumedCallIds.add(request.callId)) {
+            calls.decrementAndGet()
+            return result(ToolExecutionStatus.REJECTED, "Duplicate tool call id rejected by replay guard.")
         }
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
