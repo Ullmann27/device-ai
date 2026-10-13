@@ -265,32 +265,8 @@ data class UntrustedResearchSnippet(val sourceUrl: String, val title: String?, v
     init { require(sourceUrl.length <= 4_096 && (title?.length ?: 0) <= 256 && text.length <= 2_048) }
 }
 
-internal fun sanitizeUntrustedResearchText(text: String, maxCharacters: Int): String {
-    require(maxCharacters >= 0)
-    val truncated = text.length > maxCharacters
-    val end = if (truncated && maxCharacters > 0 &&
-        Character.isHighSurrogate(text[maxCharacters - 1]) && Character.isLowSurrogate(text[maxCharacters])
-    ) maxCharacters - 1 else minOf(text.length, maxCharacters)
-    val sanitized = buildString {
-        text.substring(0, end).replace("<<<", "[quoted marker]").codePoints().forEach { codePoint ->
-            when {
-                Character.isISOControl(codePoint) ||
-                    Character.getType(codePoint) == Character.FORMAT.toInt() ||
-                    Character.getType(codePoint) == Character.SURROGATE.toInt() -> {
-                    append("[U+")
-                        .append(codePoint.toString(16).uppercase(Locale.ROOT).padStart(4, '0'))
-                        .append(']')
-                }
-                Character.getType(codePoint) == Character.LINE_SEPARATOR.toInt() ||
-                    Character.getType(codePoint) == Character.PARAGRAPH_SEPARATOR.toInt() -> append(' ')
-                codePoint == '<'.code -> append('‹')
-                codePoint == '>'.code -> append('›')
-                else -> appendCodePoint(codePoint)
-            }
-        }
-    }.replace(Regex("(?i)\\b(system|developer|assistant|user)\\s*:"), "[quoted role]:")
-    return if (truncated) "$sanitized [TRUNCATED]" else sanitized
-}
+internal fun sanitizeUntrustedResearchText(text: String, maxCharacters: Int): String =
+    BoundedResearchTextSanitizer.sanitize(text, maxCharacters)
 
 data class ResearchSynthesisInput(
     val question: String,
