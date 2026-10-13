@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.security.MessageDigest
 
 data class ToolProposal(val toolName: String, val arguments: Map<String, Any?>) {
     fun validate(): String? {
@@ -88,7 +89,9 @@ fun interface ToolRunner {
 class ToolGate(
     private val policy: ToolPolicy,
     private val runner: ToolRunner,
-    private val clock: () -> Long = System::nanoTime
+    private val clock: () -> Long = System::nanoTime,
+    private val receiptStore: ToolExecutionReceiptStore? = null,
+    private val receiptClock: () -> Long = System::currentTimeMillis
 ) {
     private val calls = AtomicInteger()
     private val cancelled = AtomicBoolean()
@@ -98,6 +101,26 @@ class ToolGate(
     fun cancel() {
         cancelled.set(true)
         activeFutures.forEach { it.cancel(true) }
+    }
+
+    fun recordProposal(invocation: ToolInvocation): ToolExecutionReceipt? {
+        val request = invocation.request
+        val validation = ToolProposal(request.name, request.arguments).validate()
+        require(validation == null) { validation ?: "Invalid tool proposal." }
+        val spec = checkNotNull(ToolRegistry.get(request.name))
+        val store = receiptStore ?: return null
+        val proposedAt = receiptClock().coerceAtLeast(0)
+        return store.propose(
+            ToolExecutionReceipt(
+                callId = request.callId,
+                toolName = request.name,
+                argumentFingerprint = toolArgumentFingerprint(request.arguments),
+                sanitizedArguments = sanitizeArguments(request.arguments),
+                risk = spec.risk,
+                createdAtMillis = proposedAt,
+                transitions = listOf(ToolReceiptTransition(ToolReceiptState.PROPOSED, proposedAt))
+            )
+        )
     }
 
     fun execute(
@@ -119,19 +142,62 @@ class ToolGate(
             )
         }
 
-        if (cancelled.get()) return result(ToolExecutionStatus.CANCELLED, "Task cancelled.")
+        if (cancelled.get()) {
+            runCatching {
+                val prior = receiptStore?.get(request.callId)
+                if (prior != null && prior.state in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
+                    receiptStore.transition(
+                        request.callId, prior.state, ToolReceiptState.CANCELLED, receiptClock().coerceAtLeast(0)
+                    )
+                }
+            }
+            return result(ToolExecutionStatus.CANCELLED, "Task cancelled.")
+        }
         val validation = ToolProposal(request.name, request.arguments).validate()
         if (validation != null) return result(ToolExecutionStatus.REJECTED, validation)
+        var receipt = try {
+            recordProposal(invocation)
+        } catch (_: Exception) {
+            return result(ToolExecutionStatus.REJECTED, "Durable tool receipt could not be verified or saved.")
+        }
+        when (receipt?.state) {
+            ToolReceiptState.SUCCEEDED -> return result(
+                ToolExecutionStatus.SUCCEEDED,
+                "This call id already completed; its tool was not run again."
+            )
+            ToolReceiptState.STARTED -> return result(
+                ToolExecutionStatus.REJECTED,
+                "This call id has an ambiguous prior outcome and requires operator review; it was not retried."
+            )
+            ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED,
+            ToolReceiptState.REJECTED -> return result(
+                receipt.state.toExecutionStatus(),
+                "This call id already has a terminal receipt; it was not retried."
+            )
+            else -> Unit
+        }
+        fun rejectWithReceipt(status: ToolExecutionStatus, reason: String): ToolExecutionResult {
+            val current = receipt
+            if (current != null) {
+                val terminal = if (status == ToolExecutionStatus.CANCELLED) ToolReceiptState.CANCELLED
+                else ToolReceiptState.REJECTED
+                receiptStore?.transition(request.callId, current.state, terminal, receiptClock().coerceAtLeast(0))
+            }
+            return result(status, reason)
+        }
         when (spec!!.risk) {
             Risk.READ_ONLY -> if (!policy.readOnlyEnabled) {
-                return result(ToolExecutionStatus.REJECTED, "Read-only tools are disabled by operator policy.")
+                return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Read-only tools are disabled by operator policy.")
             }
             Risk.CONFIRM -> if (!userConfirmed) {
-                return result(ToolExecutionStatus.REJECTED, "Explicit user confirmation is required.")
+                return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Explicit user confirmation is required.")
             }
             Risk.DESTRUCTIVE -> {
                 if (!policy.destructiveEnabled || !userConfirmed || !destructiveConfirmed) {
-                    return result(ToolExecutionStatus.REJECTED, "Destructive policy and explicit strong confirmation are required.")
+                    return rejectWithReceipt(
+                        ToolExecutionStatus.REJECTED,
+                        "Destructive policy and explicit strong confirmation are required."
+                    )
                 }
             }
         }
@@ -139,11 +205,44 @@ class ToolGate(
         val reservedCall = calls.getAndIncrement()
         if (reservedCall >= policy.maxCalls) {
             calls.decrementAndGet()
-            return result(ToolExecutionStatus.REJECTED, "Tool-call budget exhausted.")
+            return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Tool-call budget exhausted.")
         }
         if (!consumedCallIds.add(request.callId)) {
             calls.decrementAndGet()
-            return result(ToolExecutionStatus.REJECTED, "Duplicate tool call id rejected by replay guard.")
+            return rejectWithReceipt(ToolExecutionStatus.REJECTED, "Duplicate tool call id rejected by replay guard.")
+        }
+        if (receipt != null) {
+            if (receipt.state == ToolReceiptState.PROPOSED) {
+                receipt = receiptStore?.transition(
+                    request.callId, ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED,
+                    receiptClock().coerceAtLeast(0)
+                )
+            }
+            receipt = receiptStore?.transition(
+                request.callId, ToolReceiptState.APPROVED, ToolReceiptState.STARTED,
+                receiptClock().coerceAtLeast(0)
+            )
+            if (receipt == null) {
+                calls.decrementAndGet()
+                return result(
+                    ToolExecutionStatus.REJECTED,
+                    "Durable receipt state changed; execution was blocked for operator review."
+                )
+            }
+        }
+        fun persistTerminal(state: ToolReceiptState, output: String?): Boolean {
+            val store = receiptStore ?: return true
+            val digest = output?.takeIf { it.isNotEmpty() }?.let {
+                MessageDigest.getInstance("SHA-256").digest(it.toByteArray()).joinToString("") { byte ->
+                    "%02x".format(byte)
+                }
+            }
+            return runCatching {
+                store.transition(
+                    request.callId, ToolReceiptState.STARTED, state, receiptClock().coerceAtLeast(0),
+                    output?.length ?: 0, digest
+                ) != null
+            }.getOrDefault(false)
         }
         val executor = Executors.newSingleThreadExecutor { runnable ->
             Thread(runnable, "device-ai-tool").apply { isDaemon = true }
@@ -156,25 +255,48 @@ class ToolGate(
                 future.get(policy.timeoutMillis, TimeUnit.MILLISECONDS)
             } catch (_: TimeoutException) {
                 future.cancel(true)
-                return result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
+                val saved = persistTerminal(ToolReceiptState.TIMED_OUT, null)
+                return result(
+                    ToolExecutionStatus.TIMED_OUT,
+                    if (saved) "Tool execution timed out."
+                    else "Tool timed out and its outcome is ambiguous; operator review is required."
+                )
             }
             if (cancelled.get()) {
-                result(ToolExecutionStatus.CANCELLED, "Task cancelled.", output.take(policy.maxOutputCharacters))
+                val saved = persistTerminal(ToolReceiptState.CANCELLED, null)
+                result(
+                    ToolExecutionStatus.CANCELLED,
+                    if (saved) "Task cancelled." else "Cancellation outcome is ambiguous; operator review is required.",
+                    output.take(policy.maxOutputCharacters)
+                )
             } else {
                 val limited = output.take(policy.maxOutputCharacters)
-                result(ToolExecutionStatus.SUCCEEDED, "Allowed by tool policy.", limited)
+                val saved = persistTerminal(ToolReceiptState.SUCCEEDED, limited)
+                result(
+                    if (saved) ToolExecutionStatus.SUCCEEDED else ToolExecutionStatus.FAILED,
+                    if (saved) "Allowed by tool policy."
+                    else "Tool returned, but its completion receipt could not be committed; operator review is required.",
+                    limited
+                )
             }
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
+            persistTerminal(ToolReceiptState.CANCELLED, null)
             result(ToolExecutionStatus.CANCELLED, "Tool execution interrupted.")
         } catch (_: CancellationException) {
+            persistTerminal(ToolReceiptState.CANCELLED, null)
             result(ToolExecutionStatus.CANCELLED, "Tool execution cancelled.")
+        } catch (_: TimeoutException) {
+            persistTerminal(ToolReceiptState.TIMED_OUT, null)
+            result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
         } catch (_: Exception) {
+            persistTerminal(ToolReceiptState.FAILED, null)
             result(ToolExecutionStatus.FAILED, "Tool execution failed.")
         } finally {
             activeFutures.removeIf { it.isDone }
             executor.shutdownNow()
         }
+
     }
 
     private fun sanitizeArguments(arguments: Map<String, Any?>): Map<String, Any?> =
@@ -184,7 +306,8 @@ class ToolGate(
             } else {
                 when (value) {
                     is String -> "[STRING ${value.length.coerceAtMost(4_096)} chars]"
-                    is Number, is Boolean, null -> value
+                    is Number -> "[NUMBER]"
+                    is Boolean, null -> value
                     is List<*> -> "[LIST ${value.size.coerceAtMost(100)} items]"
                     else -> "[UNSUPPORTED]"
                 }

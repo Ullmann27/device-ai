@@ -6,11 +6,13 @@ import at.heinz.deviceai.ToolExecutionRecord
 import at.heinz.deviceai.ToolExecutionStatus
 import at.heinz.deviceai.ToolGate
 import at.heinz.deviceai.ToolProposal
+import at.heinz.deviceai.ToolReceiptState
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.security.MessageDigest
+import java.util.UUID
 
 enum class AgentState {
     OBSERVE, RETRIEVE, PLAN, MODEL, VALIDATE, TOOL_PROPOSAL, GATED_EXECUTION,
@@ -167,8 +169,13 @@ class BoundedAgentOrchestrator(
     private val modelReputation: ModelReputationStore? = null,
     private val limits: AgentLimits = AgentLimits(),
     private val checkpointStore: AgentCheckpointStore? = null,
-    private val clock: () -> Long = System::currentTimeMillis
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val callIdPrefix: String = UUID.randomUUID().toString()
 ) {
+    init {
+        require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
+    }
+
     private val audit = mutableListOf<AgentAuditEvent>()
     private var steps = 0
     private var calls = 0
@@ -261,7 +268,10 @@ class BoundedAgentOrchestrator(
                             "agent-${calls + 1}", proposal.toolName, null, emptyMap(), "Agent tool-call budget exhausted.",
                             ToolExecutionStatus.REJECTED, 0
                         )
-                        toolObservations += AgentToolObservation(proposal.toolName, lastRecord.status, null)
+                        toolObservations += AgentToolObservation(
+                            proposal.toolName, lastRecord.status, lastRecord.decisionReason
+                        )
+                        continue
                     } else {
                         calls++
                         val invalid = proposal.validate()
@@ -270,15 +280,22 @@ class BoundedAgentOrchestrator(
                                 "agent-$calls", proposal.toolName, null, emptyMap(), invalid,
                                 ToolExecutionStatus.REJECTED, 0
                             )
-                            toolObservations += AgentToolObservation(proposal.toolName, lastRecord.status, null)
+                            toolObservations += AgentToolObservation(proposal.toolName, lastRecord.status, invalid)
                         } else {
                             transition(AgentState.GATED_EXECUTION, "Tool policy gate evaluated.")
                             usedTools += proposal.toolName
                             val risk = ToolRegistry.get(proposal.toolName)!!.risk
-                            val approval = if (risk == Risk.READ_ONLY) AgentToolApproval(false)
-                            else approvalProvider.requestApproval(proposal, risk)
+                            val invocation = proposal.invocation("$callIdPrefix-$calls")
+                            val priorReceipt = toolGate.recordProposal(invocation)
+                            val requiresReview = priorReceipt != null &&
+                                priorReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)
+                            val approval = if (risk == Risk.READ_ONLY || requiresReview) {
+                                AgentToolApproval(false)
+                            } else {
+                                approvalProvider.requestApproval(proposal, risk)
+                            }
                             val execution = toolGate.execute(
-                                proposal.invocation("agent-$calls"),
+                                invocation,
                                 approval.userConfirmed,
                                 approval.destructiveConfirmed
                             )
@@ -287,7 +304,7 @@ class BoundedAgentOrchestrator(
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output
                             )
-                            if (execution.record.status == ToolExecutionStatus.SUCCEEDED) continue
+                            continue
                         }
                     }
                     lastOutput = chosen.response
