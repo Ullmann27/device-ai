@@ -41,7 +41,7 @@ object BootstrapTraining {
             key.length !in 4..90 || !key.matches(Regex("[a-z0-9äöüß .,!?:-]+"))) return null
         if (forbiddenTrainingWords.containsMatchIn(key) || reservedRoles.containsMatchIn(key) ||
             key in reservedCommands || protectedDialogueFragments.any(key::contains) ||
-            listOf("trainiere:", "merke dir:", "merk dir:", "vergiss ", "lösche ").any(key::startsWith)
+            listOf("trainiere:", "merke dir:", "merk dir:", "vergiss ", "lösche ", "prüfe wissen:", "korrigiere:", "widerrufe:", "neuron").any(key::startsWith)
         ) return null
         // A trained phrase must not override the built-in device intents.
         // The current built-in recognizer runs after learned mappings; without
@@ -116,3 +116,4 @@ object BootstrapCurriculum {
         return BootstrapTrainingReport(evaluated, evaluated - errors.size, errors)
     }
 }
+

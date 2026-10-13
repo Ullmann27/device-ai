@@ -1,5 +1,9 @@
 package at.heinz.deviceai
 
+import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.learning.NeuralCommand
+import at.heinz.deviceai.learning.NeuralCommandKind
+import at.heinz.deviceai.learning.NeuralCommandParser
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -140,6 +144,7 @@ class AgentActivity : Activity() {
     private lateinit var sendButton: Button
     private lateinit var bootstrapMemory: BootstrapMemoryStore
     @Volatile private var activeBootstrapGate: ToolGate? = null
+    @Volatile private var activeNeuralCancellation: java.util.concurrent.atomic.AtomicBoolean? = null
     private var voiceEngine: TextToSpeech? = null
     private var voiceReady = false
     private var voiceEnabled = false
@@ -260,6 +265,7 @@ class AgentActivity : Activity() {
                 runCatching { localRuntime.unload() }
             }
         }
+        activeNeuralCancellation?.set(true)
         localAgentExecutor.shutdownNow()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
@@ -751,6 +757,12 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        if (NeuralDialogue.accepts(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            handleNeuralRequest(request)
+            return
+        }
         // Web research remains explicit opt-in; never infer internet permission from prose.
         if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
             input.text.clear()
@@ -778,6 +790,17 @@ class AgentActivity : Activity() {
                     "Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
                     else "Ich konnte das nicht speichern (bereits bekannt oder Speichergrenze erreicht).")
             }
+            BootstrapKind.REVISE -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Gespeicherte Information ändern?")
+                    .setMessage("Bisher: ${decision.fact}\nNeu: ${decision.replacementFact ?: "Widerrufen"}\nAbgeleitete Antworten werden neu berechnet.")
+                    .setNegativeButton("Abbrechen", null)
+                    .setPositiveButton("Bestätigen") { _, _ ->
+                        val saved = bootstrapMemory.reviseFact(checkNotNull(decision.fact), decision.replacementFact)
+                        addAssistantMessage(if (saved) "Information geändert; bisherige Ableitungen sind verworfen."
+                            else "Nicht geändert: Information fehlt, ist unverändert oder konnte nicht gespeichert werden.")
+                    }.show()
+            }
             BootstrapKind.FORGET -> showConfirmForget()
             BootstrapKind.FEEDBACK_POSITIVE -> {
                 bootstrapMemory.recordFeedback(true)
@@ -793,6 +816,84 @@ class AgentActivity : Activity() {
             BootstrapKind.REPLY -> addAssistantMessage(decision.message)
         }
         addToolActivity("STARTKERN · lokales Gespräch")
+    }
+
+    private fun handleNeuralRequest(request: String) {
+        if (busy) { addAssistantMessage("Bitte warte auf die laufende Aufgabe."); return }
+        val command = NeuralCommandParser.parse(request)
+        if (command == null) {
+            addAssistantMessage("Neuron Status · Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß | Frage · Neuron zurücksetzen")
+            return
+        }
+        if (command.kind == NeuralCommandKind.TEACH &&
+            BootstrapBrain.decide("Merke dir: ${command.text}", emptyList()).kind != BootstrapKind.REMEMBER) {
+            addAssistantMessage("Lernbeispiel abgelehnt: kein zulässiger, unkritischer Speichertext.")
+            return
+        }
+        val changes = command.kind in setOf(NeuralCommandKind.DEMO, NeuralCommandKind.TEACH, NeuralCommandKind.RESET)
+        if (!changes) { runNeuralCommand(command); return }
+        val description = when (command.kind) {
+            NeuralCommandKind.DEMO -> "Trainiert ein kleines Netz auf 16 künstlichen Gruß-/Frage-Beispielen, prüft 8 getrennte Testsätze. " +
+                "Maximal 4000 Schritte und 2 Sekunden Training. Keine privaten Chatverläufe, keine Gerätewerkzeuge. " +
+                "Bestehende neuronale Beispiele werden nicht überschrieben."
+            NeuralCommandKind.TEACH -> "Dieses Beispiel ausdrücklich lernen: „${command.text}“ → ${if (command.label == 0) "Gruß" else "Frage"}. " +
+                "Maximal 800 Schritte. Es werden lokale Gewichte verändert, keine Berechtigungen."
+            else -> "Entfernt nur die Gewichte und Beispiele dieses neuronalen Experiments. Fakten, Befehle und Identität bleiben erhalten."
+        }
+        AlertDialog.Builder(this).setTitle("Neuronales Experiment")
+            .setMessage(description).setNegativeButton("Abbrechen", null)
+            .setPositiveButton("Bestätigen") { _, _ -> if (!busy) runNeuralCommand(command) }.show()
+    }
+
+    private fun runNeuralCommand(command: NeuralCommand) {
+        if (busy || localAgentExecutor.isShutdown) return
+        val cancellation = java.util.concurrent.atomic.AtomicBoolean(false)
+        activeNeuralCancellation = cancellation
+        activeLocalRequest = true
+        setBusy(true)
+        localAgentExecutor.execute {
+            val result = runCatching {
+                val lab = if (command.kind == NeuralCommandKind.RESET) NeuralDialogue() else
+                    bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore) ?: NeuralDialogue()
+                var save = false
+                var measurement: String? = null
+                val message = when (command.kind) {
+                    NeuralCommandKind.STATUS -> lab.status()
+                    NeuralCommandKind.PREDICT -> lab.reply(command.text)
+                    NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
+                    NeuralCommandKind.TEACH -> {
+                        val training = lab.teach(command.text, command.label, true, cancellation::get)
+                        save = !training.stoppedEarly
+                        measurement = if (save) "Eigenes neuronales Beispiel gelernt. ${training.steps} Schritte; kein neuer unabhängiger Holdout-Messlauf."
+                            else "Training abgebrochen; Gewichte nicht übernommen."
+                        measurement!!
+                    }
+                    NeuralCommandKind.DEMO -> {
+                        val measured = lab.trainDemo(true, cancellation::get)
+                        save = !measured.training.stoppedEarly
+                        measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
+                            "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
+                            "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
+                            "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
+                            "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
+                            "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
+                        measurement!!
+                    }
+                }
+                Triple(message, if (save) lab.save() else null, measurement)
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed || activeNeuralCancellation !== cancellation) return@runOnUiThread
+                activeNeuralCancellation = null
+                activeLocalRequest = false
+                setBusy(false)
+                if (cancellation.get()) { addAssistantMessage("Neuronales Experiment abgebrochen; nichts gespeichert."); return@runOnUiThread }
+                result.fold(onSuccess = { (message, bytes, measurement) ->
+                    val saved = bytes == null || runCatching { bootstrapMemory.saveNeuralSnapshot(bytes, measurement) }.getOrDefault(false)
+                    addAssistantMessage(if (saved) message else "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich.")
+                }, onFailure = { addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.") })
+            }
+        }
     }
 
     private fun executeBootstrapReadOnly(decision: BootstrapDecision) {
@@ -863,7 +964,13 @@ class AgentActivity : Activity() {
             append("Feedback: ${bootstrapMemory.positiveCount} positiv, ${bootstrapMemory.negativeCount} negativ.\n\n")
             append("Beibringen: Trainiere: Prüfe meine Energie => Akku\n")
             append("Erst nach Freigabe speichere ich die Zuordnung.\n")
-            append("Es werden keine neuronalen Modellgewichte trainiert.\n")
+            append("Befehlslernen: bestätigte Zuordnungen plus statistische Vorschläge; Vorschläge führen nichts aus.\n")
+            append("Wissen: Merke dir: Fakt: Nova | ist | Mobilgerät\n")
+            append("Merke dir: Regel: Mobilgerät | besitzt | Betriebssystem\n")
+            append("Prüfe Wissen: Nova | besitzt | Betriebssystem\n")
+            append("Korrigiere: <alter Fakt> => <neuer Fakt> · Widerrufe: <Fakt>\n\n")
+            append(bootstrapMemory.neuralReport()).append("\n")
+            append("Neuron Demo · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
@@ -871,6 +978,7 @@ class AgentActivity : Activity() {
             .setTitle("Device AI · Lernlabor")
             .setMessage(detail)
             .setPositiveButton("Schließen", null)
+            .setNegativeButton("Neuronales Experiment") { _, _ -> handleNeuralRequest("Neuron Demo") }
             .setNeutralButton("Gelernte Befehle löschen") { _, _ ->
                 AlertDialog.Builder(this)
                     .setTitle("Gelernte Befehle löschen?")
@@ -1725,6 +1833,11 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        activeNeuralCancellation?.let {
+            it.set(true)
+            addToolActivity("NEURON · Abbruch angefordert; Gewichte werden nicht übernommen")
+            return
+        }
         if (activeDevCoordinator != null) {
             // Keep the single-assistant lane busy until the cancelled worker has returned.
             stopDevelopmentJob()
@@ -2416,4 +2529,5 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
+
 

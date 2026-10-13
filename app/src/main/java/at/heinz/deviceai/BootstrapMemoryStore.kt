@@ -17,6 +17,28 @@ class BootstrapMemoryStore(context: Context) {
         return prefs.edit().putStringSet("facts", (old + fact).toSet()).commit()
     }
 
+    @Synchronized fun reviseFact(previous: String, replacement: String?): Boolean {
+        val revised = at.heinz.deviceai.learning.KnowledgeRevision.replace(facts(), previous, replacement)
+            ?: return false
+        return prefs.edit().putStringSet("facts", revised.toSet()).commit()
+    }
+
+    fun neuralSnapshot(): ByteArray? {
+        val encoded = prefs.getString("neural_dialogue_v1", null) ?: return null
+        require(encoded.length <= 90_000) { "Neuronaler Speicher ist zu groß" }
+        return java.util.Base64.getDecoder().decode(encoded)
+    }
+
+    fun saveNeuralSnapshot(bytes: ByteArray, report: String? = null): Boolean {
+        at.heinz.deviceai.learning.NeuralDialogue.restore(bytes) // Validate before writing.
+        val edit = prefs.edit().putString("neural_dialogue_v1", java.util.Base64.getEncoder().encodeToString(bytes))
+        if (report != null) edit.putString("neural_report", report.take(4000))
+        return edit.commit()
+    }
+
+    fun neuralReport(): String = prefs.getString("neural_report", null)
+        ?: "Noch kein neuronaler Messlauf."
+
     fun clearFacts() {
         prefs.edit().remove("facts").commit()
     }
@@ -69,3 +91,4 @@ class BootstrapMemoryStore(context: Context) {
 
     companion object { const val MAX_FACTS = 32 }
 }
+

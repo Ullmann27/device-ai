@@ -1,16 +1,21 @@
 package at.heinz.deviceai
 
 import java.util.Locale
+import at.heinz.deviceai.learning.KnowledgeSyntax
+import at.heinz.deviceai.learning.StructuredKnowledge
+import at.heinz.deviceai.learning.OnlineNaiveBayes
+import at.heinz.deviceai.learning.NeuralDialogue
 
 /** Initial deterministic cognition. Never present these rules as an LLM. */
-enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL, TRAIN }
+enum class BootstrapKind { REPLY, REMEMBER, FORGET, FEEDBACK_POSITIVE, FEEDBACK_NEGATIVE, DEVICE_TOOL, TRAIN, REVISE }
 
 data class BootstrapDecision(
     val kind: BootstrapKind,
     val message: String = "",
     val fact: String? = null,
     val tool: String? = null,
-    val arguments: Map<String, Any?> = emptyMap()
+    val arguments: Map<String, Any?> = emptyMap(),
+    val replacementFact: String? = null
 )
 
 object BootstrapBrain {
@@ -20,7 +25,9 @@ object BootstrapBrain {
 
     fun decide(utterance: String, facts: List<String>,
                learnedCommands: Map<String, String> = emptyMap()): BootstrapDecision {
-        val text = utterance.trim().take(2_048)
+        if (utterance.length > 2_048) return BootstrapDecision(BootstrapKind.REPLY,
+            "Eingabe zu lang; bitte höchstens 2048 Zeichen. Es wurde nichts ausgeführt.")
+        val text = utterance.trim()
         val low = text.lowercase(Locale.ROOT)
         // Explicit memory deletion stays available, but always requires an Android confirmation.
         if (low == "lösche meine erinnerungen" || low == "lernspeicher löschen")
@@ -34,6 +41,26 @@ object BootstrapBrain {
             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
                 "Der eigene Startkern führt deshalb keinerlei Gerätewerkzeug aus."
         )
+        if (NeuralDialogue.accepts(text)) return BootstrapDecision(BootstrapKind.REPLY,
+            "Neuronales Experiment: Öffne das Lernlabor. Neuron Demo · Neuron: Hallo")
+        if (low.startsWith("korrigiere:") || low.startsWith("widerrufe:")) {
+            val parts = text.substringAfter(':').split("=>").map(String::trim)
+            val correcting = low.startsWith("korrigiere:")
+            val old = parts.first()
+            val replacement = if (correcting) parts.getOrNull(1) else null
+            if (parts.size != (if (correcting) 2 else 1) || old !in facts ||
+                (correcting && (replacement == null || unsafe.containsMatchIn(replacement) ||
+                    KnowledgeSyntax.statement(replacement) == null)))
+                return BootstrapDecision(BootstrapKind.REPLY,
+                    "Nicht geändert. Format: Korrigiere: <exakter alter Fakt> => Fakt: Name | Beziehung | Wert; oder Widerrufe: <exakter Fakt>.")
+            return BootstrapDecision(BootstrapKind.REVISE, fact = old, replacementFact = replacement)
+        }
+        if (low.startsWith("prüfe wissen:")) {
+            val query = KnowledgeSyntax.literal(text.substringAfter(':'))
+                ?: return BootstrapDecision(BootstrapKind.REPLY, "Format: Prüfe Wissen: Name | Beziehung | Wert")
+            return BootstrapDecision(BootstrapKind.REPLY, runCatching { StructuredKnowledge().query(facts, query).describe() }
+                .getOrDefault("UNGEKLÄRT – gespeicherte Fakten überschreiten die zulässigen Grenzen."))
+        }
         if (low.startsWith("trainiere:")) {
             val candidate = BootstrapTraining.parse(text)
             return if (candidate == null) BootstrapDecision(BootstrapKind.REPLY,
@@ -44,7 +71,8 @@ object BootstrapBrain {
         }
         if (low.startsWith("merke dir:") || low.startsWith("merk dir:")) {
             val fact = text.substringAfter(':').trim()
-            return if (fact.length in 3..320 && !unsafe.containsMatchIn(fact)) {
+            return if (fact.length in 3..320 && !unsafe.containsMatchIn(fact) &&
+                (!KnowledgeSyntax.isStructured(fact) || KnowledgeSyntax.statement(fact) != null)) {
                 BootstrapDecision(BootstrapKind.REMEMBER, fact = fact)
             } else BootstrapDecision(BootstrapKind.REPLY,
                 "Das kann ich nicht speichern: Bitte 3–320 Zeichen, ohne Passwörter, Zugangsdaten oder Bankdaten.")
@@ -74,6 +102,10 @@ object BootstrapBrain {
                 "Für Webrecherche tippe auf WEB RECHERCHE und gib direkte HTTPS-Quellen an. " +
                 "Schreiben: „Merke dir: ...“, Abrufen: „Was weißt du?“, Löschen: „Vergiss alles“. " +
                 "Du kannst mir neue Nur-Lese-Befehle beibringen mit „Trainiere: <Satz> => Akku“. " +
+                "Beziehungen: Merke dir: Fakt: Nova | ist | Mobilgerät. " +
+                "Regeln: Merke dir: Regel: Mobilgerät | besitzt | Betriebssystem. " +
+                "Fragen: Prüfe Wissen: Nova | besitzt | Betriebssystem. " +
+                "Neuron Demo startet nach Freigabe ein echtes neuronales Lernexperiment. " +
                 "Freies Sprachdenken und autonomes Lernen sind noch Forschungsziele.")
         fun tool(name: String, args: Map<String, Any?> = emptyMap()): BootstrapDecision =
             BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name, arguments = args)
@@ -97,9 +129,23 @@ object BootstrapBrain {
             BootstrapKind.REPLY, "Internetrecherche ist nur nach deiner Freigabe aktiv. " +
                 "Tippe WEB RECHERCHE und nenne eine direkte HTTPS-Quelle. " +
                 "Die Inhalte werden als untrusted data behandelt, nicht als Befehle.")
+        if (text.length <= 320 && learnedCommands.isNotEmpty()) {
+            val learner = OnlineNaiveBayes()
+            learnedCommands.entries.take(24).forEach { (phrase, target) ->
+                if (BootstrapTraining.validate(phrase, target) != null)
+                    runCatching { learner.learn(phrase, target, approved = true) }
+            }
+            learner.predict(text)?.let { suggestion ->
+                val example = learnedCommands.entries.firstOrNull { it.value == suggestion.label && BootstrapTraining.validate(it.key, it.value) != null }
+                if (example != null) return BootstrapDecision(BootstrapKind.REPLY,
+                    "Vermutung aus deinen bestätigten Beispielen: ${ToolRegistry.label(suggestion.label)}. " +
+                        "Nichts ausgeführt. Falls passend, schreibe den bestätigten Befehl: „${example.key}“.")
+            }
+        }
         return BootstrapDecision(BootstrapKind.REPLY,
             "Das kann mein eigener Startkern noch nicht verlässlich beantworten. " +
                 "Ich erfinde keine Antwort. Probiere „Was kannst du?“, eine Geräteprüfung, " +
                 "oder lerne mir etwas ausdrücklich mit „Merke dir: ...“.")
     }
 }
+
