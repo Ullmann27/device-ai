@@ -8,6 +8,8 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.speech.RecognizerIntent
 import android.text.InputType
 import android.view.Gravity
@@ -19,18 +21,58 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import at.heinz.deviceai.cognitive.AgentEvaluator
+import at.heinz.deviceai.cognitive.AgentModel
+import at.heinz.deviceai.cognitive.AgentModelOutput
+import at.heinz.deviceai.cognitive.AgentToolApproval
+import at.heinz.deviceai.cognitive.AgentToolApprovalProvider
+import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator
+import at.heinz.deviceai.cognitive.Evaluation
+import at.heinz.deviceai.cognitive.FileAgentCheckpointStore
+import at.heinz.deviceai.cognitive.InMemoryExperienceStore
+import at.heinz.deviceai.cognitive.InMemoryMemoryStore
+import at.heinz.deviceai.cognitive.MemoryRecord
+import at.heinz.deviceai.cognitive.MemoryType
+import at.heinz.deviceai.cognitive.MemoryWriteContext
+import at.heinz.deviceai.cognitive.MemoryWritePolicy
+import at.heinz.deviceai.cognitive.ProvenanceType
+import at.heinz.deviceai.cognitive.DeepResearchEngine
+import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer
+import at.heinz.deviceai.cognitive.FileResearchDossierStore
+import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider
+import at.heinz.deviceai.cognitive.ResearchBudgetPolicy
+import at.heinz.deviceai.cognitive.ResearchMode
+import at.heinz.deviceai.cognitive.ResearchOptInPolicy
+import at.heinz.deviceai.cognitive.ResearchPhase
+import at.heinz.deviceai.cognitive.ResearchPromptBoundary
+import at.heinz.deviceai.cognitive.ResearchProviderPolicy
+import at.heinz.deviceai.cognitive.ResearchSynthesisOutput
+import at.heinz.deviceai.cognitive.ResearchSynthesizer
+import at.heinz.deviceai.localmodel.ImportedLocalModel
+import at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime
+import at.heinz.deviceai.localmodel.LocalInferenceEvent
+import at.heinz.deviceai.localmodel.LocalModelBackend
+import at.heinz.deviceai.localmodel.LocalModelCatalog
+import at.heinz.deviceai.localmodel.LocalModelRuntime
+import at.heinz.deviceai.localmodel.LocalModelState
+import at.heinz.deviceai.localmodel.LocalToolResponse
+import at.heinz.deviceai.localmodel.NativeLiteRtModelInspector
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import java.util.UUID
 
 class AgentActivity : Activity() {
-
-    private enum class AgentMode {
-        AUTO,
-        CLOUD,
-        LOCAL
-    }
+    private data class LocalGeneration(
+        val response: String,
+        val proposal: ToolProposal?,
+        val rejectedToolResponses: List<LocalToolResponse>,
+        val failure: String?
+    )
 
     companion object {
         private const val SPEECH_REQUEST = 2207
+        private const val MODEL_IMPORT_REQUEST = 2208
         private val BG = Color.rgb(7, 10, 16)
         private val PANEL = Color.rgb(15, 21, 31)
         private val PANEL_2 = Color.rgb(21, 29, 42)
@@ -48,12 +90,17 @@ class AgentActivity : Activity() {
     }
 
     private lateinit var bridge: ShizukuBridge
-    private lateinit var interpreter: CommandInterpreter
     private lateinit var executor: DeviceToolExecutor
     private lateinit var backend: AgentBackendClient
+    private lateinit var modelCatalog: LocalModelCatalog
+    private lateinit var localRuntime: LocalModelRuntime
+    private lateinit var receiptStore: FileToolExecutionReceiptStore
 
     private lateinit var shizukuBadge: TextView
     private lateinit var cloudBadge: TextView
+    private lateinit var localBadge: TextView
+    private lateinit var modelCardText: TextView
+    private lateinit var localActionButton: Button
     private lateinit var activityText: TextView
     private lateinit var planCard: LinearLayout
     private lateinit var planText: TextView
@@ -62,12 +109,28 @@ class AgentActivity : Activity() {
     private lateinit var input: EditText
     private lateinit var sendButton: Button
 
-    private val modeButtons = linkedMapOf<AgentMode, Button>()
-    private var mode = AgentMode.AUTO
+    private val modeButtons = linkedMapOf<AssistantMode, Button>()
+    private var mode = AssistantMode.AUTO
     private var sessionId = UUID.randomUUID().toString()
     private var busy = false
+    private var activeLocalRequest = false
+    private var researchArmed = false
+    private var researchResumeRequested = false
+    private var researchMode = ResearchMode.STANDARD
+    private var activeResearchCancellation: at.heinz.deviceai.cognitive.ResearchCancellation? = null
     private var agentLoops = 0
-    private var pendingUserText: String? = null
+    private var pendingModelImport: Triple<String, String, String>? = null
+    private var modelImportActive = false
+    private var modelUnloading = false
+    private var localRuntimeError: String? = null
+    private var lifecycleTimeout: Runnable? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val localAgentExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "device-ai-local-agent").apply { isDaemon = true }
+    }
+    private val memoryStore = InMemoryMemoryStore()
+    private val experienceStore = InMemoryExperienceStore()
+    private var activeOrchestrator: BoundedAgentOrchestrator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,8 +138,13 @@ class AgentActivity : Activity() {
         window.statusBarColor = BG
         window.navigationBarColor = BG
 
-        interpreter = CommandInterpreter(this)
         backend = AgentBackendClient(this)
+        modelCatalog = LocalModelCatalog(
+            java.io.File(filesDir, "local-models"),
+            NativeLiteRtModelInspector()
+        )
+        localRuntime = LiteRtLmLocalModelRuntime(modelCatalog, java.io.File(cacheDir, "litertlm"))
+        receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
         bridge = ShizukuBridge(this) { message ->
             runOnUiThread {
                 if (::shizukuBadge.isInitialized) updateShizukuBadge(message)
@@ -87,21 +155,33 @@ class AgentActivity : Activity() {
         setContentView(buildUi())
         bridge.start()
         updateCloudBadge()
-
+        refreshLocalModelUi()
+        showPendingReceiptReview()
         addAssistantMessage(
-            "Bereit. Du kannst mir normale Aufträge geben. " +
-                "Im Auto-Modus nutze ich die Cloud-KI, sobald dein HTTPS-Backend eingerichtet ist, " +
-                "sonst arbeite ich lokal über Shizuku."
+            "Device AI ist lokal-first. AUTO und LOKAL nutzen das installierte LiteRT-LM-Modell; " +
+                "ONLINE bleibt ein optionaler Cloud-Modus."
         )
+        modelCatalog.all().firstOrNull()?.let { loadModel(it) }
     }
 
     override fun onResume() {
         super.onResume()
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
+        if (::modelCatalog.isInitialized) refreshLocalModelUi()
     }
 
     override fun onDestroy() {
+        clearLifecycleTimeout()
+        if (::localRuntime.isInitialized) {
+            activeOrchestrator?.cancel()
+            activeResearchCancellation?.cancel()
+            localRuntime.cancel()
+            if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
+                runCatching { localRuntime.unload() }
+            }
+        }
+        localAgentExecutor.shutdownNow()
         if (::bridge.isInitialized) bridge.stop()
         super.onDestroy()
     }
@@ -197,6 +277,7 @@ class AgentActivity : Activity() {
         pane.addView(buildHeader(wide))
         pane.addView(buildStatusRow(), matchWidth(top = 12))
         pane.addView(buildModeRow(), matchWidth(top = 10))
+        pane.addView(buildLocalModelCard(), matchWidth(top = 10))
         pane.addView(buildQuickActions(), matchWidth(top = 10))
 
         planCard = verticalCard().apply {
@@ -290,14 +371,19 @@ class AgentActivity : Activity() {
 
         shizukuBadge = statusBadge("● SHIZUKU …", AMBER)
         cloudBadge = statusBadge("● CLOUD …", AMBER)
+        localBadge = statusBadge("● NO MODEL", AMBER)
 
         row.addView(
             shizukuBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginEnd = dp(5) }
+            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginEnd = dp(4) }
+        )
+        row.addView(
+            localBadge,
+            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4); marginEnd = dp(4) }
         )
         row.addView(
             cloudBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(5) }
+            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4) }
         )
         return row
     }
@@ -311,9 +397,9 @@ class AgentActivity : Activity() {
         }
 
         val choices = listOf(
-            AgentMode.AUTO to "AUTO",
-            AgentMode.CLOUD to "ONLINE",
-            AgentMode.LOCAL to "LOKAL"
+            AssistantMode.AUTO to "AUTO",
+            AssistantMode.CLOUD to "ONLINE",
+            AssistantMode.LOCAL to "LOKAL"
         )
 
         choices.forEachIndexed { index, (value, label) ->
@@ -341,6 +427,27 @@ class AgentActivity : Activity() {
         return card
     }
 
+    private fun buildLocalModelCard(): View {
+        val card = verticalCard().apply { setPadding(dp(12), dp(10), dp(12), dp(10)) }
+        card.addView(textView("LOKALES MODELL · CPU", 11f, ACCENT, true))
+        modelCardText = textView("Kein Modell installiert. Importiere eine kompatible .litertlm-Datei.", 12f, MUTED)
+            .apply { setPadding(0, dp(6), 0, dp(8)) }
+        card.addView(modelCardText)
+        val actions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        localActionButton = actionButton("MODELL LADEN", accent = true).apply {
+            setOnClickListener {
+                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+            }
+        }
+        actions.addView(localActionButton, LinearLayout.LayoutParams(0, dp(39), 1f))
+        actions.addView(
+            actionButton("MODELL IMPORTIEREN").apply { setOnClickListener { showModelImportDialog() } },
+            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(7) }
+        )
+        card.addView(actions)
+        return card
+    }
+
     private fun buildQuickActions(): View {
         val horizontal = HorizontalScrollView(this).apply {
             isHorizontalScrollBarEnabled = false
@@ -362,8 +469,12 @@ class AgentActivity : Activity() {
             row.addView(
                 chip(label).apply {
                     setOnClickListener {
-                        input.setText(command)
-                        input.setSelection(command.length)
+                        if (label == "Web") {
+                            showResearchModeDialog()
+                        } else {
+                            input.setText(command)
+                            input.setSelection(command.length)
+                        }
                     }
                 },
                 LinearLayout.LayoutParams(
@@ -414,7 +525,9 @@ class AgentActivity : Activity() {
         }
 
         sendButton = actionButton("SENDEN", accent = true).apply {
-            setOnClickListener { sendCurrentInput() }
+            setOnClickListener {
+                if (busy && activeLocalRequest) cancelLocalRequest() else sendCurrentInput()
+            }
         }
 
         actions.addView(mic, LinearLayout.LayoutParams(dp(49), dp(43)))
@@ -440,26 +553,172 @@ class AgentActivity : Activity() {
         }
 
         input.text.clear()
-        pendingUserText = text
         agentLoops = 0
         addUserMessage(text)
 
-        when (mode) {
-            AgentMode.LOCAL -> runLocal(text)
-            AgentMode.CLOUD -> {
+        if (ResearchOptInPolicy.shouldResearch(text, researchArmed)) {
+            researchArmed = false
+            runResearch(text, researchMode)
+            return
+        }
+        researchArmed = false
+        when (LocalFirstPolicy.route(mode, localRuntime.state == LocalModelState.READY)) {
+            AssistantRoute.LOCAL_MODEL -> runLocal(text)
+            AssistantRoute.CLOUD -> {
                 if (backend.isConfigured()) {
                     runCloud(text, emptyList())
                 } else {
                     addAssistantMessage("Online-Modus ist nicht eingerichtet. Tippe oben auf ⚙ und hinterlege HTTPS-Backend und Device-Token.")
                 }
             }
-            AgentMode.AUTO -> {
-                if (backend.isConfigured()) {
-                    runCloud(text, emptyList())
-                } else {
-                    addToolActivity("Cloud nicht eingerichtet · lokaler Fallback")
-                    runLocal(text)
+            AssistantRoute.MODEL_SETUP_REQUIRED -> {
+                addAssistantMessage(
+                    "Kein lokales Modell ist geladen. Importiere eine kompatible .litertlm-Datei und lade sie oben. " +
+                        "AUTO verwendet keine Cloud als stillen Ersatz; ONLINE kann separat gewählt werden."
+                )
+            }
+        }
+    }
+
+    private fun showResearchModeDialog() {
+        val choices = arrayOf(
+            "QUICK · wenige Quellen, 15 s",
+            "STANDARD · zwei Wellen, 45 s",
+            "DEEP · Gegenbelege, 90 s"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Explizite Web-Recherche")
+            .setMessage(
+                "Webzugriff startet nur nach dieser Auswahl. Allgemeine Websuche ist nicht konfiguriert; " +
+                    "füge direkte HTTPS-Quell-URLs in die Frage ein. Seiteninhalte gelten als nicht vertrauenswürdig."
+            )
+            .setItems(choices) { _, index ->
+                researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
+                val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+                val pending = runCatching { checkpointStore.load() }.getOrNull()
+                val saved = runCatching { checkpointStore.loadDossier() }.getOrNull()
+                val arm = { resume: Boolean ->
+                    researchResumeRequested = resume
+                    researchArmed = true
+                    activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Quelle(n) als HTTPS-URL angeben"
+                    input.hint = "Recherchefrage und direkte HTTPS-Quell-URL(s)…"
+                    Toast.makeText(
+                        this, "Web-Recherche ${researchMode.name} aktiviert – nur für die nächste Eingabe.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
+                if (pending != null && saved != null && pending.phase !in setOf(ResearchPhase.COMPLETE)) {
+                    AlertDialog.Builder(this)
+                        .setTitle("Unvollständige Recherche")
+                        .setMessage("Gespeicherte Frage: ${saved.plan.question.take(512)}\n\nFortsetzen lädt bereits gespeicherte Quellen nicht erneut.")
+                        .setNeutralButton("Fortsetzen") { _, _ -> arm(true) }
+                        .setPositiveButton("Neu starten") { _, _ -> arm(false) }
+                        .setNegativeButton("Abbrechen", null)
+                        .show()
+                } else {
+                    arm(false)
+                }
+            }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun runResearch(question: String, mode: ResearchMode) {
+        if (!ResearchOptInPolicy.shouldResearch(question, explicitButtonSelected = true)) return
+        activeLocalRequest = true
+        activeResearchCancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+        setBusy(true)
+        val urls = Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE)
+            .findAll(question).map { it.value.trimEnd('.', ',', ';', ')', ']') }.distinct().take(24).toList()
+        val budget = ResearchBudgetPolicy.forMode(mode)
+        activityText.text = "RESEARCH · PLANNING · ${mode.name}"
+        addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
+        val localSynthesis = ResearchSynthesizer { input ->
+            if (localRuntime.state != LocalModelState.READY) {
+                DeterministicResearchSynthesizer().synthesize(input)
+            } else {
+                val generation = generateLocal { callback ->
+                    localRuntime.stream(ResearchPromptBoundary.build(input), callback)
+                }
+                if (generation.failure != null || generation.proposal != null || generation.response.isBlank()) {
+                    DeterministicResearchSynthesizer().synthesize(input)
+                } else {
+                    ResearchSynthesisOutput(generation.response.trim().take(8_000))
+                }
+            }
+        }
+        val researchStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+        val shouldResume = researchResumeRequested
+        researchResumeRequested = false
+        val engine = DeepResearchEngine(
+            discovery = at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
+            provider = HttpReadOnlyResearchProvider(
+                ResearchProviderPolicy(
+                    totalTimeoutMillis = budget.totalDeadlineMillis.toInt(),
+                    maxBytes = budget.maxBytesPerSource,
+                    maxRedirects = budget.maxRedirects
+                )
+            ),
+            synthesizer = localSynthesis,
+            checkpointStore = researchStore,
+            dossierRepository = researchStore,
+            onSynthesisTimeout = { localRuntime.cancel() }
+        )
+        val cancellation = activeResearchCancellation!!
+        val reportPhase: (ResearchPhase) -> Unit = { phase ->
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed) {
+                    val label = when (phase) {
+                        ResearchPhase.PLAN, ResearchPhase.DISCOVERY -> "PLANNING"
+                        ResearchPhase.FETCH -> "FETCHING"
+                        ResearchPhase.EXTRACT, ResearchPhase.GRAPH, ResearchPhase.GAP_ANALYSIS -> "CHECKING"
+                        ResearchPhase.FOLLOW_UP -> "FOLLOW-UP"
+                        ResearchPhase.SYNTHESIZE -> "SYNTHESIZING"
+                        ResearchPhase.COMPLETE -> "DONE"
+                        ResearchPhase.PARTIAL -> "PARTIAL"
+                    }
+                    activityText.text = "RESEARCH · $label"
+                    addToolActivity("Research $label")
+                }
+            }
+        }
+        localAgentExecutor.execute {
+            val result = runCatching {
+                val savedQuestion = runCatching { researchStore.loadLatest()?.plan?.question }.getOrNull()
+                val canResume = shouldResume && savedQuestion == question
+                if (shouldResume && !canResume) {
+                    error("Fortsetzen nicht möglich: Frage stimmt nicht exakt mit dem gespeicherten Checkpoint überein.")
+                }
+                val resumed = if (canResume) engine.resume(cancellation, reportPhase) else null
+                resumed ?: engine.research(question, mode, urls, cancellation, reportPhase)
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                activeResearchCancellation = null
+                activeLocalRequest = false
+                input.hint = "Was soll ich auf deinem Gerät tun?"
+                result.onSuccess { dossier ->
+                    val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
+                        .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
+                    val body = buildString {
+                        append(dossier.synthesis?.text ?: "Keine Synthese verfügbar.")
+                        if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
+                        if (!dossier.generalSearchAvailable) {
+                            append("\n\nAllgemeine Websuche ist nicht eingerichtet; recherchiert wurden nur direkte HTTPS-Quellen.")
+                        }
+                        if (localRuntime.state != LocalModelState.READY) {
+                            append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
+                        }
+                        dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
+                    }
+                    addAssistantMessage(body.take(8_000))
+                    addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
+                }.onFailure { error ->
+                    addAssistantMessage("Recherche abgebrochen oder fehlgeschlagen: ${error.message?.take(256) ?: "unbekannter Fehler"}")
+                    addToolActivity("RESEARCH · PARTIAL")
+                }
+                setBusy(false)
+                refreshLocalModelUi()
             }
         }
     }
@@ -482,17 +741,9 @@ class AgentActivity : Activity() {
         ) { result ->
             result.onFailure { error ->
                 setBusy(false)
-                val fallback = pendingUserText
-                if (mode == AgentMode.AUTO && outputs.isEmpty() && !fallback.isNullOrBlank()) {
-                    addToolActivity("Cloud nicht erreichbar · lokaler Fallback")
-                    runLocal(fallback)
-                } else {
-                    addAssistantMessage("Cloud-Fehler: ${error.message ?: error.javaClass.simpleName}")
-                }
+                addAssistantMessage("Cloud-Fehler: ${error.message ?: error.javaClass.simpleName}")
             }.onSuccess { reply ->
-                if (!reply.message.isNullOrBlank()) {
-                    addAssistantMessage(reply.message)
-                }
+                reply.message?.takeIf(String::isNotBlank)?.let(::addAssistantMessage)
                 if (reply.citations.isNotEmpty()) {
                     addCitations(reply.citations)
                 }
@@ -501,7 +752,6 @@ class AgentActivity : Activity() {
                     planCard.visibility = View.GONE
                     addToolActivity("Fertig")
                     setBusy(false)
-                    pendingUserText = null
                 } else {
                     renderCloudPlan(reply.toolCalls)
                     executeCloudCalls(reply.toolCalls, 0, mutableListOf())
@@ -528,47 +778,119 @@ class AgentActivity : Activity() {
             return
         }
 
+        val preparedReceipt = runCatching {
+            createToolGate().recordProposal(ToolInvocation(call.callId, call))
+        }.getOrElse {
+            outputs += ToolOutput(call.callId, "TOOL_REJECTED: durable receipt could not be verified.")
+            executeCloudCalls(calls, index + 1, outputs)
+            return
+        }
         val risk = ToolRegistry.risk(call.name)
         val executeNow = {
-            executeTool(call) { result ->
+            executeTool(call, true, risk == Risk.DESTRUCTIVE) { result ->
                 outputs += ToolOutput(call.callId, result)
                 executeCloudCalls(calls, index + 1, outputs)
             }
         }
 
         when (risk) {
-            Risk.READ_ONLY -> executeNow()
+            Risk.READ_ONLY -> executeTool(call, false, false) { result ->
+                outputs += ToolOutput(call.callId, result)
+                executeCloudCalls(calls, index + 1, outputs)
+            }
             Risk.CONFIRM -> {
-                showToolConfirmation(call, destructive = false) { allowed ->
+                if (preparedReceipt != null &&
+                    preparedReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
+                    executeTool(call, false, false) { result ->
+                        outputs += ToolOutput(call.callId, result)
+                        executeCloudCalls(calls, index + 1, outputs)
+                    }
+                } else showToolConfirmation(call, destructive = false) { allowed ->
                     if (allowed) {
                         executeNow()
                     } else {
-                        outputs += ToolOutput(call.callId, "USER_DENIED: Nutzer hat die Aktion nicht freigegeben.")
-                        executeCloudCalls(calls, index + 1, outputs)
+                        executeTool(call, false, false) { result ->
+                            outputs += ToolOutput(call.callId, result)
+                            executeCloudCalls(calls, index + 1, outputs)
+                        }
                     }
                 }
             }
             Risk.DESTRUCTIVE -> {
-                showToolConfirmation(call, destructive = true) { allowed ->
+                if (preparedReceipt != null &&
+                    preparedReceipt.state !in setOf(ToolReceiptState.PROPOSED, ToolReceiptState.APPROVED)) {
+                    executeTool(call, false, false) { result ->
+                        outputs += ToolOutput(call.callId, result)
+                        executeCloudCalls(calls, index + 1, outputs)
+                    }
+                } else showToolConfirmation(call, destructive = true) { allowed ->
                     if (allowed) {
                         executeNow()
                     } else {
-                        outputs += ToolOutput(call.callId, "USER_DENIED: Nutzer hat die destruktive Aktion nicht freigegeben.")
-                        executeCloudCalls(calls, index + 1, outputs)
+                        executeTool(call, false, false) { result ->
+                            outputs += ToolOutput(call.callId, result)
+                            executeCloudCalls(calls, index + 1, outputs)
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun executeTool(call: ToolCallRequest, done: (String) -> Unit) {
+    private fun executeTool(
+        call: ToolCallRequest,
+        userConfirmed: Boolean,
+        destructiveConfirmed: Boolean,
+        done: (String) -> Unit
+    ) {
         val label = ToolRegistry.label(call.name)
         addToolActivity("⏳ $label")
-        executor.execute(call) { result ->
-            val preview = result.replace("\n", " ").take(120)
-            addToolActivity("✓ $label · $preview")
-            done(result)
+        Thread({
+            val execution = createToolGate().execute(
+                ToolInvocation(call.callId, call), userConfirmed, destructiveConfirmed
+            )
+            val result = execution.output ?: "TOOL_${execution.record.status}: ${execution.record.decisionReason}"
+            runOnUiThread {
+                val preview = result.replace("\n", " ").take(120)
+                addToolActivity("${execution.record.status} · $label · $preview")
+                done(result)
+            }
+        }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
+    }
+
+    private fun createToolGate() = ToolGate(
+        ToolPolicy(readOnlyEnabled = true, destructiveEnabled = true),
+        DeviceToolExecutorRunner(executor),
+        receiptStore = receiptStore
+    )
+
+    private fun showPendingReceiptReview() {
+        val receipts = runCatching { receiptStore.all() }
+            .getOrElse {
+                addToolActivity("ERROR · durable receipt store invalid; tool execution fails closed")
+                AlertDialog.Builder(this)
+                    .setTitle("Tool receipt validation failed")
+                    .setMessage("Persisted tool state is corrupt or unsupported. Device tools remain blocked until operator review.")
+                    .setPositiveButton("OK", null)
+                    .show()
+                return
+            }
+        val uncertain = receipts.filter {
+            it.state == ToolReceiptState.STARTED ||
+                it.state in setOf(ToolReceiptState.FAILED, ToolReceiptState.TIMED_OUT, ToolReceiptState.CANCELLED) &&
+                it.transitions.any { transition -> transition.state == ToolReceiptState.STARTED }
         }
+        if (uncertain.isEmpty()) return
+        addToolActivity("${uncertain.size} tool call(s) require operator review")
+        AlertDialog.Builder(this)
+            .setTitle("Previous tool outcome requires review")
+            .setMessage(
+                uncertain.take(12).joinToString("\n") {
+                    "• ${ToolRegistry.label(it.toolName)} · ${it.callId.take(32)} · ${it.state}"
+                } + "\n\nThe outcome may be unknown. These call ids will not be retried automatically."
+            )
+            .setPositiveButton("Understood", null)
+            .show()
     }
 
     private fun showToolConfirmation(
@@ -576,95 +898,258 @@ class AgentActivity : Activity() {
         destructive: Boolean,
         callback: (Boolean) -> Unit
     ) {
-        val spec = ToolRegistry.get(call.name)
-        val args = if (call.arguments.isEmpty()) {
-            "Keine Parameter"
-        } else {
-            call.arguments.entries.joinToString("\n") { "• ${it.key}: ${it.value}" }
-        }
+        showStructuredToolConfirmation(ToolProposal(call.name, call.arguments), destructive, callback)
+    }
 
+    private fun showStructuredToolConfirmation(
+        proposal: ToolProposal,
+        destructive: Boolean,
+        callback: (Boolean) -> Unit
+    ) {
+        val spec = ToolRegistry.get(proposal.toolName)
+        val message = "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
+            "Reason: ${spec?.description ?: "Tool is not registered."}\n\n" +
+            "Arguments:\n${safeArgumentSummary(proposal.arguments)}"
         AlertDialog.Builder(this)
-            .setTitle(if (destructive) "Kritische Aktion" else "Aktion freigeben")
-            .setMessage(
-                "${spec?.label ?: call.name}\n\n" +
-                    "${spec?.description.orEmpty()}\n\n$args" +
-                    if (destructive) "\n\nDiese Aktion verändert oder löscht Daten." else ""
-            )
+            .setTitle(if (destructive) "Kritische Aktion bestätigen" else "Aktion freigeben")
+            .setMessage(message)
             .setNegativeButton("Ablehnen") { _, _ -> callback(false) }
-            .setPositiveButton(if (destructive) "Bewusst ausführen" else "Ausführen") { _, _ ->
-                callback(true)
+            .setPositiveButton(if (destructive) "Weiter prüfen" else "Ausführen") { _, _ ->
+                if (!destructive) {
+                    callback(true)
+                } else {
+                    AlertDialog.Builder(this)
+                        .setTitle("Starke Bestätigung erforderlich")
+                        .setMessage("Diese Aktion kann Daten verändern oder löschen.\n\n$message")
+                        .setNegativeButton("Abbrechen") { _, _ -> callback(false) }
+                        .setPositiveButton("Destruktiv ausführen") { _, _ -> callback(true) }
+                        .setOnCancelListener { callback(false) }
+                        .show()
+                }
             }
             .setOnCancelListener { callback(false) }
             .show()
     }
 
+    private fun safeArgumentSummary(arguments: Map<String, Any?>): String =
+        if (arguments.isEmpty()) "Keine Parameter"
+        else arguments.entries.take(16).joinToString("\n") { (key, value) ->
+            val summary = when {
+                key.contains(Regex("password|token|secret|credential|authorization", RegexOption.IGNORE_CASE)) ->
+                    "[REDACTED]"
+                value is String -> "[Text, ${value.length.coerceAtMost(4_096)} Zeichen]"
+                value is List<*> -> "[Liste, ${value.size.coerceAtMost(100)} Elemente]"
+                value is Number || value is Boolean -> value.toString().take(32)
+                else -> "[Wert]"
+            }
+            "• ${key.take(64)}: $summary"
+        }
+
     private fun runLocal(text: String) {
-        val plan = interpreter.interpret(text)
-        if (plan == null) {
+        val imported = localRuntime.loadedModel
+        if (imported == null || localRuntime.state != LocalModelState.READY) {
             setBusy(false)
-            addAssistantMessage("Der lokale Interpreter konnte den Auftrag nicht lesen.")
+            addAssistantMessage("Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.")
+            refreshLocalModelUi()
             return
         }
-
-        renderLocalPlan(plan)
-        when (plan.risk) {
-            Risk.READ_ONLY -> executeLocalPlan(plan)
-            Risk.CONFIRM -> showLocalPlanConfirmation(plan, false)
-            Risk.DESTRUCTIVE -> showLocalPlanConfirmation(plan, true)
-        }
-    }
-
-    private fun showLocalPlanConfirmation(plan: CommandPlan, destructive: Boolean) {
-        AlertDialog.Builder(this)
-            .setTitle(if (destructive) "Kritischer lokaler Auftrag" else plan.title)
-            .setMessage(
-                plan.steps.joinToString("\n") { "• ${it.label}" } +
-                    if (destructive) "\n\nDer Auftrag enthält eine destruktive Aktion." else ""
-            )
-            .setNegativeButton("Abbrechen") { _, _ ->
-                setBusy(false)
-                addToolActivity("Lokaler Auftrag abgebrochen")
-            }
-            .setPositiveButton("Ausführen") { _, _ -> executeLocalPlan(plan) }
-            .setOnCancelListener {
-                setBusy(false)
-                addToolActivity("Lokaler Auftrag abgebrochen")
-            }
-            .show()
-    }
-
-    private fun executeLocalPlan(plan: CommandPlan) {
-        if (!bridge.isReady()) {
-            setBusy(false)
-            addAssistantMessage("Shizuku ist nicht verbunden. Starte Shizuku und erteile Device AI Zugriff.")
-            return
-        }
-
+        activeLocalRequest = true
+        localRuntimeError = null
         setBusy(true)
-        val results = mutableListOf<String>()
-
-        fun runStep(index: Int) {
-            if (index >= plan.steps.size) {
-                planCard.visibility = View.GONE
-                addAssistantMessage(
-                    results.joinToString("\n\n").ifBlank { "Auftrag abgeschlossen." }
+        addToolActivity("Lokales Modell plant …")
+        planCard.visibility = View.GONE
+        val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
+        val agentTask = "[local-turn:$turnId]\n${text.take(7_900)}"
+        var submittedToolObservationCount = 0
+        val orchestrator = BoundedAgentOrchestrator(
+            model = AgentModel { task, memories, reflection, observations ->
+                val prompt = buildString {
+                    append("You are Device AI running on-device. Use registered tools only; never generate or execute shell commands.\n")
+                    append("User task:\n").append(task.take(7_900))
+                    if (memories.isNotEmpty()) {
+                        append("\n\nRelevant local memory:\n")
+                        memories.take(8).forEach { append("- ").append(it.content.take(512)).append('\n') }
+                    }
+                    reflection?.let { append("\n\nCorrection: ").append(it.correction.take(512)) }
+                    if (observations.isNotEmpty()) {
+                        append("\n\nTool observations:\n")
+                        observations.take(4).forEach {
+                            append("- ").append(it.toolName).append(" [").append(it.status.name).append("]: ")
+                                .append(it.output.orEmpty().take(2_000)).append('\n')
+                        }
+                    }
+                    append("\nRequest at most one registered structured tool, or answer the user.")
+                }.take(15_500)
+                val newObservations = observations.drop(submittedToolObservationCount)
+                if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
+                val toolResponses = newObservations.take(4).map {
+                    LocalToolResponse(
+                        it.toolName,
+                        org.json.JSONObject()
+                            .put("status", it.status.name)
+                            .put("output", it.output?.take(6_000) ?: org.json.JSONObject.NULL)
+                            .toString()
+                    )
+                }
+                var generation = generateLocal { callback ->
+                    if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
+                    else localRuntime.respondToTools(toolResponses, callback)
+                }
+                generation.failure?.let { error(it) }
+                var rejectionRecoveries = 0
+                while (generation.rejectedToolResponses.isNotEmpty()) {
+                    if (++rejectionRecoveries > 1) {
+                        error("The model repeated a rejected tool request; no tool was executed.")
+                    }
+                    val rejected = generation.rejectedToolResponses
+                    generation = generateLocal { callback -> localRuntime.respondToTools(rejected, callback) }
+                    generation.failure?.let { error(it) }
+                }
+                AgentModelOutput(
+                    "litertlm:${imported.id}@${imported.version}",
+                    generation.response,
+                    generation.proposal
                 )
-                addToolActivity("Lokal fertig")
+            },
+            memories = { memoryStore.all() },
+            toolGate = createToolGate(),
+            evaluator = AgentEvaluator { response, _ ->
+                Evaluation(response.isNotBlank(), if (response.isNotBlank()) 0.8 else 0.2, "On-device response evaluated.")
+            },
+            experienceStore = experienceStore,
+            approvalProvider = AgentToolApprovalProvider { proposal, risk ->
+                if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
+                val latch = CountDownLatch(1)
+                var approval = AgentToolApproval(false)
+                runOnUiThread {
+                    showStructuredToolConfirmation(proposal, risk == Risk.DESTRUCTIVE) { approved ->
+                        approval = AgentToolApproval(approved, approved && risk == Risk.DESTRUCTIVE)
+                        latch.countDown()
+                    }
+                }
+                if (latch.await(120, TimeUnit.SECONDS)) approval else AgentToolApproval(false)
+            },
+            checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
+            callIdPrefix = "local-$turnId"
+        )
+        activeOrchestrator = orchestrator
+        localAgentExecutor.execute {
+            val result = runCatching { orchestrator.run(agentTask) }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                activeOrchestrator = null
+                activeLocalRequest = false
+                planCard.visibility = View.GONE
+                result.onSuccess { run ->
+                    if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
+                    addAssistantMessage(run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." })
+                    persistRequestedMemory(text, run.experience?.evaluation)
+                    addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
+                }.onFailure { error ->
+                    localRuntimeError = error.message ?: "Local inference failed."
+                    addAssistantMessage("Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}")
+                    addToolActivity("ERROR · lokale Inferenz")
+                }
                 setBusy(false)
-                pendingUserText = null
-                return
-            }
-
-            val step = plan.steps[index]
-            addToolActivity("⏳ ${step.label}")
-            bridge.execute(step.shellCommand) { result ->
-                results += "✓ ${step.label}\n$result"
-                addToolActivity("✓ ${step.label}")
-                runStep(index + 1)
+                refreshLocalModelUi()
             }
         }
+    }
 
-        runStep(0)
+    private fun persistRequestedMemory(request: String, evaluation: Evaluation?) {
+        val explicit = Regex("\\b(remember|memorize|merke dir|merk dir)\\b", RegexOption.IGNORE_CASE)
+            .containsMatchIn(request)
+        val sensitive = Regex("password|token|secret|credential|api[-_ ]?key", RegexOption.IGNORE_CASE)
+            .containsMatchIn(request)
+        val confidence = evaluation?.score ?: 0.0
+        val decision = MemoryWritePolicy().decide(
+            MemoryWriteContext(
+                memoryType = MemoryType.SEMANTIC,
+                provenance = ProvenanceType.USER_PROVIDED,
+                confidence = confidence,
+                explicitlyRequested = explicit,
+                containsPersonalInformation = true,
+                containsSensitiveInformation = sensitive
+            )
+        )
+        if (!decision.shouldWrite || sensitive || evaluation?.success != true) return
+        val now = System.currentTimeMillis()
+        runCatching {
+            memoryStore.put(
+                MemoryRecord(
+                    id = "user-${UUID.randomUUID()}",
+                    type = MemoryType.SEMANTIC,
+                    content = request.take(2_048),
+                    provenance = ProvenanceType.USER_PROVIDED,
+                    confidence = confidence,
+                    createdAt = now,
+                    updatedAt = now,
+                    privacyClass = decision.privacyClass
+                )
+            )
+        }
+    }
+
+    private fun cancelLocalRequest() {
+        activeResearchCancellation?.cancel()
+        activeResearchCancellation = null
+        input.hint = "Was soll ich auf deinem Gerät tun?"
+        activeOrchestrator?.cancel()
+        localRuntime.cancel()
+        localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
+        activeLocalRequest = false
+        setBusy(false)
+        addToolActivity("Lokale Anfrage abgebrochen · ein bereits gestarteter Shizuku-Befehl kann extern weiterlaufen")
+        refreshLocalModelUi()
+    }
+
+    private fun generateLocal(
+        start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
+    ): LocalGeneration {
+        val completed = CountDownLatch(1)
+        val response = StringBuilder()
+        val rejectedResponses = mutableListOf<LocalToolResponse>()
+        var proposal: ToolProposal? = null
+        var failure: String? = null
+        runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
+        val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
+            when (event) {
+                is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                    response.append(event.text.take(8_000 - response.length))
+                }
+                is LocalInferenceEvent.ToolProposal -> if (proposal == null) proposal = event.proposal
+                is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
+                    event.name,
+                    org.json.JSONObject()
+                        .put("status", "REJECTED")
+                        .put("reason", event.reason.take(512))
+                        .toString()
+                )
+                is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
+                is LocalInferenceEvent.Failed -> { failure = event.message; completed.countDown() }
+                LocalInferenceEvent.Cancelled -> { failure = "Local generation cancelled."; completed.countDown() }
+                is LocalInferenceEvent.Completed -> completed.countDown()
+            }
+        }
+        val started = runCatching { start(callback) }
+        if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
+        if (!completed.await(120, TimeUnit.SECONDS)) {
+            localRuntime.cancel()
+            localRuntimeError = "Local generation exceeded its 120-second limit."
+            runOnUiThread { refreshLocalModelUi() }
+            return LocalGeneration("", null, emptyList(), "Local generation exceeded its 120-second limit.")
+        }
+        val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)
+        while (localRuntime.state == LocalModelState.GENERATING && System.nanoTime() < readyDeadline) {
+            Thread.sleep(10)
+        }
+        if (localRuntime.state == LocalModelState.GENERATING) {
+            localRuntime.cancel()
+            localRuntimeError = "Local runtime did not finish generation."
+            runOnUiThread { refreshLocalModelUi() }
+            return LocalGeneration("", null, emptyList(), "Local runtime did not finish generation.")
+        }
+        return LocalGeneration(response.toString(), proposal, rejectedResponses.toList(), failure)
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
@@ -680,28 +1165,231 @@ class AgentActivity : Activity() {
         }.joinToString("\n")
     }
 
-    private fun renderLocalPlan(plan: CommandPlan) {
-        planCard.visibility = View.VISIBLE
-        planText.text = plan.steps.mapIndexed { index, step ->
-            val badge = when (step.risk) {
-                Risk.READ_ONLY -> "SICHER"
-                Risk.CONFIRM -> "FREIGABE"
-                Risk.DESTRUCTIVE -> "KRITISCH"
+    private fun showModelImportDialog() {
+        val fields = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(18), dp(4), dp(18), 0)
+        }
+        val id = EditText(this).apply {
+            hint = "model-id (z. B. functiongemma)"
+            inputType = InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+        }
+        val version = EditText(this).apply {
+            hint = "version (z. B. 1.0.0)"
+            inputType = InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+        }
+        val digest = EditText(this).apply {
+            hint = "SHA-256 der Modelldatei"
+            inputType = InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+        }
+        fields.addView(textView("Es werden keine Modelldaten heruntergeladen. CPU-Textmodelle mit LiteRT-LM-Unterstützung sind erforderlich.", 12f, MUTED))
+        fields.addView(id, matchWidth(top = 8))
+        fields.addView(version, matchWidth(top = 4))
+        fields.addView(digest, matchWidth(top = 4))
+        AlertDialog.Builder(this)
+            .setTitle("Lokales Modell importieren")
+            .setView(fields)
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("Datei auswählen") { _, _ ->
+                val modelId = id.text.toString().trim()
+                val modelVersion = version.text.toString().trim()
+                val sha256 = digest.text.toString().trim().lowercase()
+                if (!modelId.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
+                    !modelVersion.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
+                    !sha256.matches(Regex("[a-f0-9]{64}"))) {
+                    Toast.makeText(this, "Bitte Model-ID, Version und gültigen SHA-256 angeben.", Toast.LENGTH_LONG).show()
+                    return@setPositiveButton
+                }
+                pendingModelImport = Triple(modelId, modelVersion, sha256)
+                val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "application/octet-stream"
+                }
+                startActivityForResult(picker, MODEL_IMPORT_REQUEST)
             }
-            "${index + 1}. ${step.label} · $badge"
-        }.joinToString("\n")
+            .show()
     }
 
-    private fun setMode(value: AgentMode) {
+    private fun chooseInstalledModel() {
+        val models = modelCatalog.all()
+        if (models.isEmpty()) {
+            refreshLocalModelUi()
+            Toast.makeText(this, "NO MODEL · importiere zuerst eine .litertlm-Datei.", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) {
+            Toast.makeText(this, "Entlade zuerst das aktuell geladene Modell.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val labels = models.map { "${it.id} · ${it.version}" }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Installiertes Modell auswählen")
+            .setItems(labels) { _, selected -> loadModel(models[selected]) }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun loadModel(model: ImportedLocalModel) {
+        if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
+        localRuntimeError = null
+        refreshLocalModelUi()
+        scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
+        localRuntime.load(model.id, model.version) { result ->
+            runOnUiThread {
+                clearLifecycleTimeout()
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                result.onFailure {
+                    localRuntimeError = it.message ?: "Model compatibility could not be verified."
+                    Toast.makeText(this, "Modellfehler: ${it.message ?: "Kompatibilität unbekannt"}", Toast.LENGTH_LONG).show()
+                }
+                if (result.isSuccess) localRuntimeError = null
+                refreshLocalModelUi()
+            }
+        }
+        refreshLocalModelUi()
+    }
+
+    private fun unloadModel() {
+        localRuntimeError = null
+        modelUnloading = true
+        localRuntime.cancel()
+        scheduleLifecycleTimeout("Model unload exceeded 120 seconds; native cleanup may still be in progress.")
+        runCatching {
+            localRuntime.unload { result ->
+                runOnUiThread {
+                    clearLifecycleTimeout()
+                    modelUnloading = false
+                    if (isFinishing || isDestroyed) return@runOnUiThread
+                    result.onFailure {
+                        localRuntimeError = it.message ?: "Model unload failed."
+                        Toast.makeText(this, "Modell konnte nicht entladen werden.", Toast.LENGTH_LONG).show()
+                    }
+                    if (result.isSuccess) localRuntimeError = null
+                    refreshLocalModelUi()
+                }
+            }
+        }.onFailure {
+            modelUnloading = false
+            localRuntimeError = it.message ?: "Model unload could not start."
+            Toast.makeText(this, "Modell-Lifecycle ist bereits beschäftigt.", Toast.LENGTH_SHORT).show()
+        }
+        refreshLocalModelUi()
+    }
+
+    private fun importModel(uri: Uri) {
+        val metadata = pendingModelImport ?: return
+        pendingModelImport = null
+        modelImportActive = true
+        localRuntimeError = null
+        refreshLocalModelUi()
+        scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.")
+        localAgentExecutor.execute {
+            val result = runCatching {
+                val source = contentResolver.openInputStream(uri)
+                    ?: error("Dokument kann nicht geöffnet werden.")
+                modelCatalog.import(metadata.first, metadata.second, source, metadata.third)
+            }
+            runOnUiThread {
+                clearLifecycleTimeout()
+                modelImportActive = false
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                result.onSuccess { model ->
+                    localRuntimeError = null
+                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
+                    refreshLocalModelUi()
+                    loadModel(model)
+                }.onFailure { error ->
+                    localRuntimeError = error.message ?: "Model import failed."
+                    addAssistantMessage("Modellimport fehlgeschlagen: ${error.message ?: "Kompatibilität unbekannt"}")
+                    refreshLocalModelUi()
+                }
+            }
+        }
+    }
+
+    private fun refreshLocalModelUi() {
+        if (!::modelCardText.isInitialized || !::localBadge.isInitialized) return
+        val models = runCatching { modelCatalog.all() }.getOrDefault(emptyList())
+        val loaded = localRuntime.loadedModel
+        val state = when {
+            localRuntimeError != null -> LocalModelUiState.ERROR
+            modelImportActive || modelUnloading -> LocalModelUiState.LOADING
+            else -> LocalFirstPolicy.modelUiState(
+                localRuntime.state, models.isNotEmpty(), mode == AssistantMode.LOCAL
+            )
+        }
+        val label = when (state) {
+            LocalModelUiState.NO_MODEL -> "NO MODEL"
+            LocalModelUiState.INSTALLED -> "INSTALLED"
+            LocalModelUiState.READY -> "READY"
+            LocalModelUiState.LOADING -> "LOADING"
+            LocalModelUiState.GENERATING -> "GENERATING"
+            LocalModelUiState.ERROR -> "ERROR"
+            LocalModelUiState.OFFLINE -> "OFFLINE"
+        }
+        val color = when (state) {
+            LocalModelUiState.READY -> GREEN
+            LocalModelUiState.GENERATING, LocalModelUiState.LOADING -> AMBER
+            LocalModelUiState.ERROR -> RED
+            LocalModelUiState.OFFLINE, LocalModelUiState.NO_MODEL, LocalModelUiState.INSTALLED -> MUTED
+        }
+        localBadge.text = "● $label"
+        localBadge.setTextColor(color)
+        localBadge.background = rounded(PANEL, 14, BORDER)
+        val shown = loaded ?: models.firstOrNull()
+        modelCardText.text = when {
+            localRuntimeError != null -> "ERROR · ${localRuntimeError!!.take(256)}"
+            modelImportActive -> "LOADING · Datei wird geprüft und sicher importiert."
+            modelUnloading -> "LOADING · Modell wird entladen."
+            loaded == null && models.isEmpty() ->
+                "NO MODEL · Importiere eine kompatible .litertlm-Datei. Kein Download oder Modellgewicht ist enthalten."
+            loaded == null && shown != null ->
+                "${shown.id} · ${shown.version} installiert, noch nicht geladen. Tippe MODELL LADEN.\n" +
+                    "CPU: ${shown.capabilities.supportedBackends.contains(LocalModelBackend.CPU)} · " +
+                    "Funktionen: ${shown.capabilities.functionCalling}"
+            shown != null -> {
+                val caps = shown.capabilities
+                "${shown.id} · ${shown.version} · LiteRT-LM\n" +
+                    "CPU baseline · ${caps.supportedBackends.sortedBy { it.name }.joinToString()} · " +
+                    "Text ${caps.text} · Vision ${caps.vision} · Audio ${caps.audio} · " +
+                    "Function calling ${caps.functionCalling} · Context ${caps.maxContextTokens} tokens\n" +
+                    if (state == LocalModelUiState.OFFLINE) "LOCAL-only · Cloud wird nicht verwendet." else "Ready for on-device inference."
+            }
+            else -> "Kompatibilität des Modells ist unbekannt."
+        }
+        if (::localActionButton.isInitialized) {
+            localActionButton.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
+            localActionButton.isEnabled = !busy && !modelUnloading && (loaded != null || models.isNotEmpty())
+        }
+    }
+
+    private fun scheduleLifecycleTimeout(message: String) {
+        clearLifecycleTimeout()
+        lifecycleTimeout = Runnable {
+            localRuntimeError = message
+            refreshLocalModelUi()
+        }.also { mainHandler.postDelayed(it, 120_000) }
+    }
+
+    private fun clearLifecycleTimeout() {
+        lifecycleTimeout?.let(mainHandler::removeCallbacks)
+        lifecycleTimeout = null
+    }
+
+    private fun setMode(value: AssistantMode) {
         mode = value
         applyModeStyles()
         addToolActivity(
             when (value) {
-                AgentMode.AUTO -> "Auto-Modus · Cloud mit lokalem Fallback"
-                AgentMode.CLOUD -> "Online-Modus · Cloud-KI erzwungen"
-                AgentMode.LOCAL -> "Lokaler Modus · keine Cloud-Anfrage"
+                AssistantMode.AUTO -> "AUTO · lokales Modell zuerst; kein stiller Cloud-Fallback"
+                AssistantMode.CLOUD -> "ONLINE · optionaler Cloud-Modus"
+                AssistantMode.LOCAL -> "LOKAL · keine Cloud-Anfrage"
             }
         )
+        refreshLocalModelUi()
     }
 
     private fun applyModeStyles() {
@@ -815,7 +1503,6 @@ class AgentActivity : Activity() {
         }
         sessionId = UUID.randomUUID().toString()
         agentLoops = 0
-        pendingUserText = null
         planCard.visibility = View.GONE
         chatContainer.removeAllViews()
         addAssistantMessage("Neue Sitzung gestartet. Was soll ich tun?")
@@ -897,10 +1584,11 @@ class AgentActivity : Activity() {
     private fun setBusy(value: Boolean) {
         busy = value
         if (::sendButton.isInitialized) {
-            sendButton.isEnabled = !value
-            sendButton.text = if (value) "ARBEITET …" else "SENDEN"
-            sendButton.alpha = if (value) 0.65f else 1f
+            sendButton.isEnabled = true
+            sendButton.text = if (value && activeLocalRequest) "STOPPEN" else if (value) "ARBEITET …" else "SENDEN"
+            sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
         }
+        if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
     }
 
     private fun scrollToBottom() {
@@ -925,12 +1613,19 @@ class AgentActivity : Activity() {
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SPEECH_REQUEST && resultCode == RESULT_OK) {
-            val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-            val spoken = matches?.firstOrNull()
-            if (!spoken.isNullOrBlank()) {
-                input.setText(spoken)
-                input.setSelection(spoken.length)
+        when (requestCode) {
+            SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
+                val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val spoken = matches?.firstOrNull()
+                if (!spoken.isNullOrBlank()) {
+                    input.setText(spoken)
+                    input.setSelection(spoken.length)
+                }
+            }
+            MODEL_IMPORT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) importModel(uri)
+                else pendingModelImport = null
             }
         }
     }

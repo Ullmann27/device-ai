@@ -10,9 +10,9 @@ import com.google.ai.edge.litertlm.Conversation
 import com.google.ai.edge.litertlm.ConversationConfig
 import com.google.ai.edge.litertlm.Engine
 import com.google.ai.edge.litertlm.EngineConfig
+import com.google.ai.edge.litertlm.Message
 import com.google.ai.edge.litertlm.MessageCallback
 import com.google.ai.edge.litertlm.OpenApiTool
-import com.google.ai.edge.litertlm.ToolCall
 import com.google.ai.edge.litertlm.tool
 import org.json.JSONArray
 import org.json.JSONObject
@@ -36,7 +36,12 @@ data class LocalInferenceMetrics(
 sealed interface LocalInferenceEvent {
     data class TextDelta(val text: String) : LocalInferenceEvent
     data class ToolProposal(val proposal: at.heinz.deviceai.ToolProposal) : LocalInferenceEvent
-    data class ToolProposalRejected(val name: String, val reason: String) : LocalInferenceEvent
+    data class ToolProposalRejected(
+        val name: String,
+        val reason: String,
+        val arguments: Map<String, Any?> = emptyMap()
+    ) : LocalInferenceEvent
+    data class ToolBatchRejected(val responses: List<LocalToolResponse>) : LocalInferenceEvent
     data class Completed(val metrics: LocalInferenceMetrics) : LocalInferenceEvent
     data object Cancelled : LocalInferenceEvent
     data class Failed(val message: String) : LocalInferenceEvent
@@ -46,12 +51,23 @@ fun interface LocalInferenceCallback {
     fun onEvent(event: LocalInferenceEvent)
 }
 
+data class LocalToolResponse(val toolName: String, val response: String) {
+    init {
+        require(toolName.isNotBlank() && toolName.length <= 128)
+        require(response.length <= 8_000)
+    }
+}
+
 interface LocalModelRuntime {
     val state: LocalModelState
     val loadedModel: ImportedLocalModel?
     fun load(id: String, version: String, callback: (Result<ImportedLocalModel>) -> Unit)
     fun unload(callback: (Result<Unit>) -> Unit = {})
     fun stream(prompt: String, callback: LocalInferenceCallback)
+    fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
+        val continuation = responses.joinToString("\n") { "${it.toolName}: ${it.response}" }
+        stream(continuation, callback)
+    }
     fun cancel()
 }
 
@@ -140,6 +156,18 @@ class LiteRtLmLocalModelRuntime(
 
     override fun stream(prompt: String, callback: LocalInferenceCallback) {
         require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS)
+        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback)
+    }
+
+    override fun respondToTools(responses: List<LocalToolResponse>, callback: LocalInferenceCallback) {
+        require(responses.isNotEmpty() && responses.size <= MAX_TOOL_RESPONSES)
+        val contents: List<Content> = responses.map { Content.ToolResponse(it.toolName, it.response) }
+        val characterCount = responses.sumOf { it.response.length }
+        require(characterCount <= MAX_PROMPT_CHARACTERS)
+        streamMessage(Message.tool(Contents.of(contents)), characterCount, callback)
+    }
+
+    private fun streamMessage(message: Message, promptCharacters: Int, callback: LocalInferenceCallback) {
         val activeConversation: Conversation
         val startNanos = System.nanoTime()
         val inputTokens: Int?
@@ -164,18 +192,38 @@ class LiteRtLmLocalModelRuntime(
 
         try {
             activeConversation.sendMessageAsync(
-                Contents.of(prompt),
+                message,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
                         if (message.toolCalls.isNotEmpty()) {
-                            message.toolCalls.forEach { toolCall ->
+                            if (message.toolCalls.size > 1) {
+                                if (message.toolCalls.size > MAX_TOOL_RESPONSES) {
+                                    deliver(callback, LocalInferenceEvent.Failed("Local model proposed too many tools; none were run."))
+                                    runCatching { activeConversation.cancelProcess() }
+                                    return
+                                }
+                                deliver(
+                                    callback,
+                                    LocalInferenceEvent.ToolBatchRejected(
+                                        message.toolCalls.map {
+                                            LocalToolResponse(
+                                                it.name,
+                                                """{"status":"REJECTED","reason":"Only one registered tool proposal is permitted per step."}"""
+                                            )
+                                        }
+                                    )
+                                )
+                            } else {
+                                val toolCall = message.toolCalls.single()
                                 val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
                                 val event = if (validation == null) {
                                     LocalInferenceEvent.ToolProposal(
                                         at.heinz.deviceai.ToolProposal(toolCall.name, toolCall.arguments)
                                     )
                                 } else {
-                                    LocalInferenceEvent.ToolProposalRejected(toolCall.name, validation)
+                                    LocalInferenceEvent.ToolProposalRejected(
+                                        toolCall.name, validation, toolCall.arguments
+                                    )
                                 }
                                 deliver(callback, event)
                             }
@@ -209,7 +257,7 @@ class LiteRtLmLocalModelRuntime(
                         finish(
                             LocalInferenceEvent.Completed(
                                 LocalInferenceMetrics(
-                                    promptCharacters = prompt.length,
+                                    promptCharacters = promptCharacters,
                                     responseCharacters = responseCharacters[0],
                                     streamedChunks = chunks[0],
                                     inputTokens = inputTokens,
@@ -345,6 +393,7 @@ class LiteRtLmLocalModelRuntime(
     private companion object {
         const val MAX_PROMPT_CHARACTERS = 16_000
         const val MAX_RESPONSE_CHARACTERS = 64_000
+        const val MAX_TOOL_RESPONSES = 4
         const val MAX_OUTPUT_TOKENS = 512
     }
 }

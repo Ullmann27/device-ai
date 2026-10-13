@@ -107,7 +107,12 @@ class MainActivity : Activity() {
 
         content.addView(buildHeader())
         content.addView(buildConnectionCard(), matchWidth(top = 14))
-        content.addView(buildCommandCard(), matchWidth(top = 14))
+        content.addView(
+            textView("Manuelle Expert-Eingabe · niemals durch das lokale Modell aufrufbar", 12f, AMBER, bold = true)
+                .apply { setPadding(dp(4), dp(10), dp(4), 0) },
+            matchWidth(top = 10)
+        )
+        content.addView(buildCommandCard(), matchWidth(top = 6))
         content.addView(buildQuickActions(), matchWidth(top = 14))
 
         planCard = verticalCard().apply {
@@ -150,7 +155,7 @@ class MainActivity : Activity() {
         left.addView(textView("Device AI", 31f, TEXT, bold = true))
         left.addView(
             textView(
-                "Dein lokaler Android-Agent",
+                "EXPERT · USER-ONLY · SHIZUKU",
                 14f,
                 MUTED
             ).apply { setPadding(0, dp(3), 0, 0) }
