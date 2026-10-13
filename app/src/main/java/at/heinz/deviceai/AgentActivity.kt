@@ -45,6 +45,9 @@ import at.heinz.deviceai.cognitive.MemoryWriteContext
 import at.heinz.deviceai.cognitive.MemoryWritePolicy
 import at.heinz.deviceai.cognitive.ProvenanceType
 import at.heinz.deviceai.cognitive.DeepResearchEngine
+import at.heinz.deviceai.cognitive.DevelopmentCoordinator
+import at.heinz.deviceai.cognitive.DevelopmentUiController
+import at.heinz.deviceai.cognitive.DevelopmentUiPhase
 import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer
 import at.heinz.deviceai.cognitive.FileResearchDossierStore
 import at.heinz.deviceai.cognitive.HttpReadOnlyResearchProvider
@@ -81,6 +84,9 @@ class AgentActivity : Activity() {
     companion object {
         private const val SPEECH_REQUEST = 2207
         private const val MODEL_IMPORT_REQUEST = 2208
+        private const val DEV_SOURCE_REQUEST = 2209
+        private const val DEV_EXPORT_REQUEST = 2210
+        private const val DEV_MAX_SOURCE_READ_BYTES = 16_384
         private val BG = Color.rgb(7, 10, 16)
         private val PANEL = Color.rgb(15, 21, 31)
         private val PANEL_2 = Color.rgb(21, 29, 42)
@@ -146,6 +152,17 @@ class AgentActivity : Activity() {
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
+    private val devController = DevelopmentUiController { "dev-" + UUID.randomUUID() }
+    @Volatile private var activeDevCoordinator: DevelopmentCoordinator? = null
+    private var devDialog: AlertDialog? = null
+    private var devStatusView: TextView? = null
+    private var devSourcesView: TextView? = null
+    private var devPreviewView: TextView? = null
+    private var devStartButton: Button? = null
+    private var devStopButton: Button? = null
+    private var devExportButton: Button? = null
+    private var devPickButton: Button? = null
+    private var devGoalInput: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,6 +209,7 @@ class AgentActivity : Activity() {
         clearLifecycleTimeout()
         if (::localRuntime.isInitialized) {
             activeOrchestrator?.cancel()
+            activeDevCoordinator?.cancel()
             activeResearchCancellation?.cancel()
             localRuntime.cancel()
             if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
@@ -270,6 +288,11 @@ class AgentActivity : Activity() {
                     startActivity(Intent(this@AgentActivity, MainActivity::class.java))
                 }
             },
+            matchWidth(top = 8)
+        )
+
+        side.addView(
+            actionButton("Entwicklungsaufgabe").apply { setOnClickListener { showDevelopmentDialog() } },
             matchWidth(top = 8)
         )
 
@@ -479,6 +502,7 @@ class AgentActivity : Activity() {
             "Downloads" to "Zeig meine Downloads.",
             "Speicher" to "Welche Dateien brauchen am meisten Speicher?",
             "Akku" to "Prüfe Akku und Ladezustand.",
+            "Entwicklung" to "",
             "Web" to "Recherchiere die neuesten Android-16- und Shizuku-Änderungen und nenne Quellen."
         )
 
@@ -488,6 +512,8 @@ class AgentActivity : Activity() {
                     setOnClickListener {
                         if (label == "Web") {
                             showResearchModeDialog()
+                        } else if (label == "Entwicklung") {
+                            showDevelopmentDialog()
                         } else {
                             input.setText(command)
                             input.setSelection(command.length)
@@ -1197,12 +1223,177 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun showDevelopmentDialog() {
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        box.addView(textView(
+            "Ein Entwicklungsauftrag: Developer, Critic, TestDesigner und Judge laufen nacheinander auf dem geladenen " +
+                "lokalen Modell und liefern EINEN prüfbaren Vorschlag. Nichts wird angewendet, kompiliert, getestet oder gepusht. " +
+                "Quelltext wird als nicht vertrauenswürdige Daten behandelt.", 12f, MUTED))
+        devGoalInput = EditText(this).apply {
+            hint = "Entwicklungsziel für diese App…"
+            setText(devController.state.goal)
+            minLines = 2
+        }
+        box.addView(devGoalInput, matchWidth(top = 8))
+        devPickButton = actionButton("QUELLTEXT WÄHLEN (SAF)").apply {
+            setOnClickListener {
+                val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                }
+                startActivityForResult(picker, DEV_SOURCE_REQUEST)
+            }
+        }
+        box.addView(devPickButton, matchWidth(top = 8))
+        devSourcesView = textView("", 12f, TEXT)
+        box.addView(devSourcesView, matchWidth(top = 6))
+        val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        devStartButton = actionButton("START", accent = true).apply { setOnClickListener { startDevelopmentJob() } }
+        devStopButton = actionButton("STOP").apply { setOnClickListener { cancelLocalRequest() } }
+        devExportButton = actionButton("EXPORT").apply {
+            setOnClickListener {
+                if (devController.exportText() == null) return@setOnClickListener
+                val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TITLE, "device-ai-proposal.patch.txt")
+                }
+                startActivityForResult(create, DEV_EXPORT_REQUEST)
+            }
+        }
+        listOf(devStartButton!!, devStopButton!!, devExportButton!!).forEach {
+            row.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
+        }
+        box.addView(row, matchWidth(top = 8))
+        devStatusView = textView("", 12f, AMBER, true)
+        box.addView(devStatusView, matchWidth(top = 8))
+        devPreviewView = textView("", 11f, TEXT).apply { setTextIsSelectable(true) }
+        box.addView(devPreviewView, matchWidth(top = 6))
+        val scroll = ScrollView(this).apply { addView(box) }
+        devDialog = AlertDialog.Builder(this)
+            .setTitle("Entwicklungsassistent")
+            .setView(scroll)
+            .setPositiveButton("Schließen", null)
+            .setOnDismissListener {
+                devController.setGoal(devGoalInput?.text?.toString().orEmpty())
+                devDialog = null
+            }
+            .show()
+        refreshDevelopmentUi()
+    }
+
+    private fun refreshDevelopmentUi() {
+        if (devDialog == null) return
+        val st = devController.state
+        devSourcesView?.text = if (st.sources.isEmpty()) "Keine Quellen gewählt."
+        else st.sources.joinToString("\n") { "• ${it.path} (${it.content.toByteArray(Charsets.UTF_8).size} B · sha256 ${it.sha256.take(12)}…)" }
+        devStatusView?.text = st.status + (st.error?.let { "\n$it" } ?: "")
+        devPreviewView?.text = st.preview.orEmpty()
+        devStartButton?.isEnabled = st.canEdit && !busy
+        devPickButton?.isEnabled = st.canEdit
+        devStopButton?.isEnabled = st.canStop
+        devExportButton?.isEnabled = st.canExport
+    }
+
+    private fun loadDevelopmentSources(uris: List<Uri>) {
+        if (!devController.state.canEdit || localAgentExecutor.isShutdown) return
+        localAgentExecutor.execute {
+            val loaded = uris.map { uri ->
+                runCatching {
+                    val name = contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)
+                        ?.use { c -> if (c.moveToFirst()) c.getString(0) else null } ?: error("Dateiname unbekannt.")
+                    val bytes = contentResolver.openInputStream(uri)?.use { it.readNBytes(DEV_MAX_SOURCE_READ_BYTES + 1) }
+                        ?: error("Dokument kann nicht geöffnet werden.")
+                    require(bytes.size <= DEV_MAX_SOURCE_READ_BYTES) { "$name ist größer als $DEV_MAX_SOURCE_READ_BYTES Bytes; kleinere Auswahl treffen." }
+                    val text = Charsets.UTF_8.newDecoder()
+                        .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+                        .decode(java.nio.ByteBuffer.wrap(bytes)).toString()
+                    name to text
+                }
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                loaded.forEach { r ->
+                    r.onSuccess { (name, text) -> devController.addSource(name, text) }
+                        .onFailure { Toast.makeText(this, it.message ?: "Quelle nicht lesbar.", Toast.LENGTH_LONG).show() }
+                }
+                refreshDevelopmentUi()
+            }
+        }
+    }
+
+    private fun startDevelopmentJob() {
+        if (busy || localAgentExecutor.isShutdown) {
+            Toast.makeText(this, "Der Assistent arbeitet noch; bitte zuerst stoppen.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        devController.setGoal(devGoalInput?.text?.toString().orEmpty())
+        val task = devController.start(localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null)
+        if (task == null) {
+            refreshDevelopmentUi()
+            return
+        }
+        val coordinator = DevelopmentCoordinator(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })
+        activeDevCoordinator = coordinator
+        activeLocalRequest = true
+        setBusy(true)
+        refreshDevelopmentUi()
+        localAgentExecutor.execute {
+            val outcome = coordinator.run(task) { state ->
+                runOnUiThread {
+                    if (!isFinishing && !isDestroyed) {
+                        devController.onJobState(state)
+                        refreshDevelopmentUi()
+                    }
+                }
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                devController.onOutcome(outcome)
+                if (activeDevCoordinator === coordinator) activeDevCoordinator = null
+                activeLocalRequest = false
+                setBusy(false)
+                refreshDevelopmentUi()
+            }
+        }
+    }
+
+    private fun stopDevelopmentJob() {
+        activeDevCoordinator?.let {
+            devController.stop()
+            it.cancel()
+            refreshDevelopmentUi()
+        }
+    }
+
+    private fun exportDevelopmentProposal(uri: Uri) {
+        val text = devController.exportText() ?: return
+        localAgentExecutor.execute {
+            val result = runCatching {
+                contentResolver.openOutputStream(uri, "wt")?.use { it.write(text.toByteArray(Charsets.UTF_8)) }
+                    ?: error("Ziel kann nicht geöffnet werden.")
+            }
+            runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                Toast.makeText(this,
+                    if (result.isSuccess) "Vorschlag exportiert (nur Text, nichts angewendet)." else "Export fehlgeschlagen.",
+                    Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun cancelLocalRequest() {
         activeResearchCancellation?.cancel()
         activeResearchCancellation = null
         input.hint = "Was soll ich auf deinem Gerät tun?"
         activeOrchestrator?.cancel()
         activeReasoningRouter?.cancel()
+        stopDevelopmentJob()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
         activeLocalRequest = false
@@ -1734,6 +1925,16 @@ class AgentActivity : Activity() {
                 val uri = data?.data
                 if (resultCode == RESULT_OK && uri != null) importModel(uri)
                 else pendingModelImport = null
+            }
+            DEV_SOURCE_REQUEST -> if (resultCode == RESULT_OK && data != null) {
+                val uris = mutableListOf<Uri>()
+                data.data?.let(uris::add)
+                data.clipData?.let { clip -> for (i in 0 until clip.itemCount) uris += clip.getItemAt(i).uri }
+                loadDevelopmentSources(uris.take(at.heinz.deviceai.cognitive.DevelopmentLimits.MAX_SOURCES))
+            }
+            DEV_EXPORT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) exportDevelopmentProposal(uri)
             }
         }
     }
