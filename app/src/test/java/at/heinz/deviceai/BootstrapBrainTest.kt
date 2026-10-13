@@ -53,6 +53,10 @@ class BootstrapBrainTest {
         assertEquals(BootstrapKind.DEVICE_TOOL, BootstrapBrain.decide("Installierte Apps", emptyList()).kind)
         assertEquals(BootstrapKind.DEVICE_TOOL,
             BootstrapBrain.decide("Prüfe die installierte Lumo-Version", emptyList()).kind)
+        assertEquals(BootstrapKind.FORGET,
+            BootstrapBrain.decide("Lösche meine Erinnerungen", emptyList()).kind)
+        assertEquals(BootstrapKind.FORGET,
+            BootstrapBrain.decide("Lernspeicher löschen", emptyList()).kind)
     }
 
     @Test fun supervisedTrainingIsReadOnlyAndRequiresExactMatch() {
