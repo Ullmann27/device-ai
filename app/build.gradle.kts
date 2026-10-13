@@ -1,3 +1,6 @@
+// Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
+val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -13,6 +16,13 @@ android {
         targetSdk = 36
         versionCode = 4
         versionName = "0.3.1"
+        manifestPlaceholders["appLabel"] = if (deviceAiPreview) "Device AI Preview" else "Device AI"
+    }
+
+    buildTypes {
+        getByName("debug") {
+            if (deviceAiPreview) applicationIdSuffix = ".preview"
+        }
     }
 
     buildFeatures {

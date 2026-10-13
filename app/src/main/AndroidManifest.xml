@@ -8,7 +8,7 @@
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_device_ai"
-        android:label="Device AI"
+        android:label="${appLabel}"
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"
         android:theme="@style/AppTheme">
