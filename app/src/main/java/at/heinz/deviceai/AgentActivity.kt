@@ -8,6 +8,7 @@ import at.heinz.deviceai.learning.NeuralLearningCoach
 import at.heinz.deviceai.learning.NeuralLearningProgress
 import at.heinz.deviceai.learning.NeuralPracticeScheduler
 import at.heinz.deviceai.learning.NeuralCuriosityRadar
+import at.heinz.deviceai.learning.NeuralTransferExperiment
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -1125,6 +1126,26 @@ class AgentActivity : Activity() {
                 val message = when (command.kind) {
                     NeuralCommandKind.STATUS -> lab.status()
                     NeuralCommandKind.PREDICT -> lab.reply(command.text)
+                    NeuralCommandKind.STRUCTURE_LAB -> {
+                        val measured = NeuralTransferExperiment.run(
+                            cancelled = cancellation::get, progress = progressCallback
+                        )
+                        val finished = !measured.training.stoppedEarly && !cancellation.get()
+                        "Sprachlabor – zweites, vollständig eigeninitialisiertes neuronales Netz " +
+                            "(Wortanfänge, Wortmerkmale und Satzform statt nur ganze Wörter):\n" +
+                            if (!finished) "Experiment abgebrochen, keine Änderungen gespeichert."
+                            else "Bekannte Testmuster: ${measured.known.correct}/8.\n" +
+                                "Unbekannter Wortschatz: ${measured.unseenBefore.correct}/12 → " +
+                                "${measured.unseenAfter.correct}/12.\n" +
+                                "Zusätzlicher Gegenbeispieltest (andere Frageanfänge und Grußformeln): " +
+                                "${measured.challengeBefore.correct}/10 → " +
+                                "${measured.challengeAfter.correct}/10.\n" +
+                                "Training: ${measured.training.steps} Schritte; beide Prüfgruppen waren nicht im Training. " +
+                                "Das sind nur synthetische Forschungsdaten. " +
+                                "Wortanfänge helfen bei manchen neuen Formulierungen, " +
+                                "ersetzen aber kein echtes Bedeutungsverständnis. " +
+                                "Dein bestehendes neuronales Gedächtnis bleibt unverändert."
+                    }
                     NeuralCommandKind.UNFAMILIAR_TEST -> {
                         val measure = lab.unfamiliarEvaluation()
                         "Neuronaler Härtetest (12 neue Beispielsätze mit unbekanntem Wortschatz): " +
@@ -1278,7 +1299,7 @@ class AgentActivity : Activity() {
                 .append(" · Versuche: ").append(practice.attempts)
                 .append(", Verbesserungen: ").append(practice.improvements)
                 .append(" · ").append(practice.lastStatus).append("\n")
-            append("Neuron Demo · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
+            append("Neuron Demo · Neuron Sprachlabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
