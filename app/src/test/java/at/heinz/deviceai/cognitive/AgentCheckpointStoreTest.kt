@@ -9,11 +9,12 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import kotlin.io.path.createTempDirectory
 
 class AgentCheckpointStoreTest {
     @Test
     fun fileStoreRoundTripsAndRejectsCorruption() {
-        val directory = createTempDir(prefix = "device-ai-agent-checkpoint-")
+        val directory = createTempDirectory("device-ai-agent-checkpoint-").toFile()
         try {
             val store = FileAgentCheckpointStore(directory)
             val checkpoint = AgentCheckpoint(
@@ -51,7 +52,7 @@ class AgentCheckpointStoreTest {
 
     @Test
     fun safeCheckpointResumesAndToolBoundaryRequiresOperatorReview() {
-        val directory = createTempDir(prefix = "device-ai-agent-resume-")
+        val directory = createTempDirectory("device-ai-agent-resume-").toFile()
         try {
             val store = FileAgentCheckpointStore(directory)
             val safe = AgentCheckpoint(
