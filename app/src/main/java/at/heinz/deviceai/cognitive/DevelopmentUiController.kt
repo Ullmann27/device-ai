@@ -15,22 +15,30 @@ data class DevelopmentUiState(
     val canExport: Boolean get() = phase == DevelopmentUiPhase.DONE && preview != null
 }
 
-/** Pure, UI-thread-confined state machine behind the development dialog. No Android types, no I/O. */
+/** UI-thread-confined controller; no I/O and no execution capabilities. */
 class DevelopmentUiController(private val newTaskId: () -> String) {
     var state = DevelopmentUiState()
         private set
 
+    private fun edited() = state.copy(phase = DevelopmentUiPhase.IDLE, preview = null, error = null,
+        status = "Input changed. Start a new review; previous proposal is invalidated.")
+
     fun setGoal(goal: String) {
-        if (state.canEdit) state = state.copy(goal = goal)
+        if (state.canEdit && goal != state.goal) state = edited().copy(goal = goal)
     }
 
     fun addSource(path: String, content: String): Boolean {
         if (!state.canEdit) return false
         return try {
+            val budget = DevelopmentLimits.DEFAULT_SOURCE_BYTES
+            require(utf8Bytes(content) <= budget) { "$path exceeds the $budget-byte source budget; select a smaller file." }
+            require(state.sources.sumOf { utf8Bytes(it.content) } <= budget - utf8Bytes(content)) {
+                "Selected sources exceed $budget UTF-8 bytes; select a smaller source set."
+            }
             val snapshot = SourceSnapshot.of(path, content)
             require(state.sources.none { it.path == path }) { "$path is already selected." }
             require(state.sources.size < DevelopmentLimits.MAX_SOURCES) { "At most ${DevelopmentLimits.MAX_SOURCES} source files." }
-            state = state.copy(sources = state.sources + snapshot, error = null)
+            state = edited().copy(sources = state.sources + snapshot)
             true
         } catch (e: IllegalArgumentException) {
             state = state.copy(error = e.message ?: "Source rejected.")
@@ -39,10 +47,9 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
     }
 
     fun clearSources() {
-        if (state.canEdit) state = state.copy(sources = emptyList(), error = null)
+        if (state.canEdit) state = edited().copy(sources = emptyList())
     }
 
-    /** Returns the task to run on a worker thread, or null with a visible error. No cloud fallback exists. */
     fun start(modelReady: Boolean): DevelopmentTask? {
         if (!state.canEdit) return null
         if (!modelReady) {
@@ -52,7 +59,7 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
             return null
         }
         val task = try {
-            DevelopmentTask(newTaskId(), state.goal.trim(), state.sources)
+            DevelopmentTask(newTaskId(), state.goal.trim(), state.sources.toList())
         } catch (e: IllegalArgumentException) {
             state = state.copy(phase = DevelopmentUiPhase.FAILED, preview = null, error = e.message ?: "Invalid task.",
                 status = "Failed: invalid task.")
@@ -74,7 +81,6 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         })
     }
 
-    /** Stop request: the caller must also cancel the coordinator. The terminal outcome is still delivered via [onOutcome]. */
     fun stop() {
         if (state.canStop) state = state.copy(status = "Stopping…")
     }
@@ -82,18 +88,16 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
     fun onOutcome(outcome: DevelopmentOutcome) {
         if (state.phase != DevelopmentUiPhase.RUNNING) return
         state = when (outcome.state) {
-            DevelopmentJobState.COMPLETED -> state.copy(
-                phase = DevelopmentUiPhase.DONE, preview = outcome.proposal!!.render(), error = null,
+            DevelopmentJobState.COMPLETED -> state.copy(phase = DevelopmentUiPhase.DONE,
+                preview = outcome.proposal!!.render(), error = null,
                 status = "Proposal ready for review. Nothing was applied, compiled or tested.")
-            DevelopmentJobState.CANCELLED -> state.copy(
-                phase = DevelopmentUiPhase.CANCELLED, preview = null, error = null, status = "Stopped by user.")
-            else -> state.copy(
-                phase = DevelopmentUiPhase.FAILED, preview = null,
+            DevelopmentJobState.CANCELLED -> state.copy(phase = DevelopmentUiPhase.CANCELLED,
+                preview = null, error = null, status = "Stopped by user.")
+            else -> state.copy(phase = DevelopmentUiPhase.FAILED, preview = null,
                 error = outcome.failure?.let { "${it.kind}: ${it.message}" } ?: outcome.state.name,
                 status = if (outcome.state == DevelopmentJobState.TIMED_OUT) "Timed out." else "Failed.")
         }
     }
 
-    /** Export text for an explicit user gesture; null unless a finished proposal exists. */
     fun exportText(): String? = if (state.canExport) state.preview else null
 }
