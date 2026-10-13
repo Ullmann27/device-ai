@@ -1192,9 +1192,11 @@ class AgentActivity : Activity() {
         val candidates = dossier?.let(WebLearningInbox::candidates).orEmpty()
         if (candidates.isEmpty()) {
             AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
-                .setMessage("Noch keine überprüfbaren Recherche-Aussagen. Wähle WEB RECHERCHE und gib eine direkte HTTPS-Quelladresse an. " +
-                    "Bisher ausdrücklich gespeicherte, aber nicht als wahr bestätigte Quellnotizen: ${learned.getOrNull().orEmpty().size}. " +
-                    "Ohne Modellimport kannst du Informationen recherchieren, aber beliebige Webseiten sind keine geprüfte Wahrheit.")
+                .setMessage("Noch keine gespeicherten Recherche-Aussagen vorhanden. " +
+                    "Tippe auf WEB RECHERCHE, wähle einen Suchmodus und gib ein Thema ein. " +
+                    "Device AI kann dazu deutschsprachige Wikipedia-Artikel suchen, ohne dass du eine URL kennen musst. " +
+                    "Bereits gespeicherte Quellenhinweise: ${learned.getOrNull().orEmpty().size}. " +
+                    "Internetquellen werden erst nach deiner ausdrücklichen Freigabe als Notizen übernommen.")
                 .setPositiveButton("Schließen", null)
                 .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
                 .show()
@@ -1203,10 +1205,11 @@ class AgentActivity : Activity() {
         val titles = candidates.map { note ->
             (if (note.contradictory) "⚠ WIDERSPRUCH · " else "QUELLE · ") + note.text.take(88)
         }.toTypedArray()
-        AlertDialog.Builder(this).setTitle("Internet-Lernstoff · Quellen prüfen")
-            .setMessage("Aussagen aus der letzten Recherche. Nur auf deine Freigabe als QUELLENNOTIZ gespeichert; " +
-                "kein automatisch trainiertes Sprachmodell, keine Geräteberechtigung. " +
-                "Bereits geprüft: ${learned.getOrNull().orEmpty().size}/24.")
+        // Android AlertController uses the message ScrollView INSTEAD OF the
+        // item ListView when setMessage() and setItems() are both supplied.
+        // Render the clickable list alone; the detail dialog explains consent.
+        AlertDialog.Builder(this)
+            .setTitle("Internet-Lernstoff · ${candidates.size} Quellen · ${learned.getOrNull().orEmpty().size}/24 gespeichert")
             .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
             .setNegativeButton("Schließen", null)
             .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
@@ -1236,11 +1239,11 @@ class AgentActivity : Activity() {
 
     private fun showWebLearningCandidate(note: WebLearningCandidate) {
         val message = buildString {
-            append(note.text).append("\\n\\nQuelle: ").append(note.sourceUrl)
-            append("\\nInhalts-Hash: ").append(note.sourceHash.take(16))
-            append("\\nUnabhängige Quellen: ").append(note.sourceCount)
-            append("\\nStatus: ").append(if (note.contradictory) "WIDERSPRUCH" else "Nicht unabhängig wahrheitsgeprüft")
-            append("\\n\\nEin bestätigter Quellenhinweis ist keine neuronale Gewichtsänderung.")
+            append(note.text).append("\n\nQuelle: ").append(note.sourceUrl)
+            append("\nInhalts-Hash: ").append(note.sourceHash.take(16))
+            append("\nUnabhängige Quellen: ").append(note.sourceCount)
+            append("\nStatus: ").append(if (note.contradictory) "WIDERSPRUCH" else "Nicht unabhängig wahrheitsgeprüft")
+            append("\n\nEin bestätigter Quellenhinweis ist keine neuronale Gewichtsänderung.")
         }
         AlertDialog.Builder(this).setTitle("Lernkandidat aus dem Internet")
             .setMessage(message)
@@ -1262,18 +1265,15 @@ class AgentActivity : Activity() {
 
     private fun showResearchModeDialog() {
         val choices = arrayOf(
-            "QUICK · wenige Quellen, 15 s",
-            "STANDARD · zwei Wellen, 45 s",
-            "DEEP · Gegenbelege, 90 s"
+            "QUICK · Wikipedia-Thema · bis 15 Sekunden",
+            "STANDARD · mehr Quellen · bis 45 Sekunden",
+            "DEEP · Gegenbelege · bis 90 Sekunden"
         )
+        // IMPORTANT: Never combine setMessage() with setItems() in a platform
+        // AlertDialog. The message panel hides the item list on Android/Fold.
+        // The next dialog contains the privacy explanation and search input.
         AlertDialog.Builder(this)
-            .setTitle("Explizite Web-Recherche")
-            .setMessage(
-                "Suche nach einem Thema in der deutschsprachigen Wikipedia (kein API-Schlüssel nötig). " +
-                    "Die Suchfrage wird erst nach deiner Bestätigung an Wikimedia gesendet. " +
-                    "Du kannst alternativ direkte HTTPS-Quellen im Chat angeben. " +
-                    "Quellen bleiben unüberprüfte Inhalte und werden nicht automatisch gelernt."
-            )
+            .setTitle("WEB RECHERCHE · Suchmodus auswählen")
             .setItems(choices) { _, index ->
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
                 val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
