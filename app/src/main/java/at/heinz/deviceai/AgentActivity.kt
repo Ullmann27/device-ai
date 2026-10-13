@@ -13,6 +13,7 @@ import at.heinz.deviceai.learning.NeuralGeneralizationComparison
 import at.heinz.deviceai.learning.MentorStudyScheduler
 import at.heinz.deviceai.learning.MentorSourceNotebook
 import at.heinz.deviceai.learning.MentorSource
+import at.heinz.deviceai.learning.MentorRecall
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -903,6 +904,16 @@ class AgentActivity : Activity() {
             handleNeuralRequest(request)
             return
         }
+        if (MentorRecall.topic(request) != null) {
+            val reply = runCatching {
+                MentorRecall.answer(request,MentorSourceNotebook(this).entries())
+            }.getOrElse { "Mentor: Quellenbibliothek unlesbar; bisherige Daten wurden nicht verändert." }
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(reply ?: "Mentor: Kein Thema erkannt.")
+            return
+        }
+
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -1346,6 +1357,11 @@ class AgentActivity : Activity() {
                 .append(" · ").append(practice.lastStatus).append("\n")
             append("Neuron Demo · Neuron Sprachlabor · Neuron Vergleichslabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
+            val mentor = MentorSourceNotebook(this@AgentActivity)
+            append("MENTOR-FORSCHUNG: ").append(if(mentor.enabled) "AN" else "AUS")
+                .append(" · ").append(mentor.attempts).append(" Versuche · ")
+                .append(mentor.successes).append(" mit neuen Quellen.\n")
+            append("Mentor aus Quellen befragen: Mentor Wissen: Fotosynthese Pflanzen\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
