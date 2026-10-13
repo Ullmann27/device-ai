@@ -143,7 +143,8 @@ object HybridMemoryRetriever {
                 )
             }
             .filterNotNull()
-            .filter { it.score.total > 0.0 }
+            // Relevant contradicted/stale memories remain visible with a low score so
+            // the agent can reason about conflicts instead of silently forgetting them.
             .sortedWith(
                 compareByDescending<ScoredMemory> { it.score.total }
                     .thenByDescending { it.memory.updatedAt }
