@@ -24,8 +24,8 @@ object BootstrapBrain {
         val low = text.lowercase(Locale.ROOT)
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
-        if (Regex("""(?i)^(system|developer|assistant|tool)\\s*:""").containsMatchIn(text) ||
-            Regex("""(?i)\\b(lösch\\w*|entfern\\w*|deinstallier\\w*|installier\\w*|verschieb\\w*|starte\\w*|stoppe?\\w*|überweis\\w*|bezahl\\w*)\\b""").containsMatchIn(text)
+        if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
+            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier\w*|installier\w*|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
         ) return BootstrapDecision(
             BootstrapKind.REPLY,
             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
