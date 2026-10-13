@@ -9,6 +9,7 @@ import at.heinz.deviceai.learning.NeuralLearningProgress
 import at.heinz.deviceai.learning.NeuralPracticeScheduler
 import at.heinz.deviceai.learning.NeuralCuriosityRadar
 import at.heinz.deviceai.learning.NeuralTransferExperiment
+import at.heinz.deviceai.learning.NeuralGeneralizationComparison
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -1126,6 +1127,33 @@ class AgentActivity : Activity() {
                 val message = when (command.kind) {
                     NeuralCommandKind.STATUS -> lab.status()
                     NeuralCommandKind.PREDICT -> lab.reply(command.text)
+                    NeuralCommandKind.COMPARE_LAB -> {
+                        val trials = NeuralGeneralizationComparison.run(
+                            cancelled = cancellation::get, onProgress = progressCallback
+                        )
+                        if (trials.size != 4 || cancellation.get() || trials.any { it.stoppedEarly })
+                            "Vergleichslabor abgebrochen; dein gespeichertes Netz bleibt unverändert."
+                        else buildString {
+                            append("NEURON · VIERFACHER A/B-TEST (keine Gewichte übernommen)\n")
+                            append("32-Eingabe-Netze, je 3.000 Updates, gleiche Seeds.\n")
+                            trials.forEach { trial ->
+                                append("\n")
+                                append(if (trial.encoder == NeuralGeneralizationComparison.Encoder.FIRST_LETTER)
+                                    "Wortanfang" else "Zeichenpaare")
+                                append(" · ").append(trial.examples).append(" Trainingssätze")
+                                append(": bekannte ").append(trial.familiar.correct).append("/8")
+                                append(", Wörtertest ").append(trial.unfamiliar.correct).append("/12")
+                                append(", Gegenbeispiele ").append(trial.counterexamples.correct).append("/10")
+                                append(", neue Kontrollgruppe ").append(trial.fresh.correct).append("/20")
+                                append(" · Wörtertest-Überlappung ")
+                                    .append(trial.unfamiliarOverlapTokens).append(" Wörter\n")
+                            }
+                            append("\nDas vergleicht Datenvielfalt und Sprachmerkmale getrennt. " +
+                                "Die Testsätze sind synthetisch, inzwischen für die Forschung sichtbar " +
+                                "und keine unabhängigen Belege für allgemeine Intelligenz. " +
+                                "Keine eigenen Daten, Internetinhalte oder Gerätewerkzeuge eingesetzt.")
+                        }
+                    }
                     NeuralCommandKind.STRUCTURE_LAB -> {
                         val measured = NeuralTransferExperiment.run(
                             cancelled = cancellation::get, progress = progressCallback
@@ -1299,7 +1327,7 @@ class AgentActivity : Activity() {
                 .append(" · Versuche: ").append(practice.attempts)
                 .append(", Verbesserungen: ").append(practice.improvements)
                 .append(" · ").append(practice.lastStatus).append("\n")
-            append("Neuron Demo · Neuron Sprachlabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
+            append("Neuron Demo · Neuron Sprachlabor · Neuron Vergleichslabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
