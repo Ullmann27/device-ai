@@ -6,6 +6,7 @@ import at.heinz.deviceai.learning.NeuralCommandKind
 import at.heinz.deviceai.learning.NeuralCommandParser
 import at.heinz.deviceai.learning.NeuralLearningCoach
 import at.heinz.deviceai.learning.NeuralLearningProgress
+import at.heinz.deviceai.learning.NeuralPracticeScheduler
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -159,6 +160,7 @@ class AgentActivity : Activity() {
     private var voiceButton: Button? = null
     private lateinit var neuralMonitor: TextView
     private lateinit var neuralProgress: ProgressBar
+    private var neuralAutoButton: Button? = null
     private val neuralCoach = NeuralLearningCoach()
     private var dashboardSection: View? = null
     private var keyboardTitle: TextView? = null
@@ -233,6 +235,7 @@ class AgentActivity : Activity() {
         executor = DeviceToolExecutor(this, bridge)
 
         setContentView(buildUi())
+        NeuralPracticeScheduler(this).restoreIfEnabled()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
             "NEURON · Bereits gelernt · Tippe TRAINING oder HÄRTETEST"
@@ -261,6 +264,7 @@ class AgentActivity : Activity() {
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
         if (::modelCatalog.isInitialized) refreshLocalModelUi()
+        refreshNeuralPracticeUi()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -670,6 +674,11 @@ class AgentActivity : Activity() {
         card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
             setOnClickListener { beginNeuralCoach() }
         }, matchWidth(top = 7))
+        neuralAutoButton = actionButton("AUTO-ÜBEN · AUS").apply {
+            contentDescription = "Kontrolliertes wiederkehrendes neuronales Training aktivieren oder deaktivieren"
+            setOnClickListener { showNeuralPracticeDialog() }
+        }
+        card.addView(neuralAutoButton, matchWidth(top = 7))
         card.addView(actionButton("INTERNET · LERNSTOFF PRÜFEN").apply {
             setOnClickListener { showWebLearningInbox() }
         }, matchWidth(top = 7))
@@ -925,6 +934,58 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Periodic practice is an opt-in charging-only Android Job, not a busy loop. */
+    private fun showNeuralPracticeDialog() {
+        val practice = NeuralPracticeScheduler(this)
+        if (practice.enabled) {
+            AlertDialog.Builder(this)
+                .setTitle("Automatisches neuronales Üben")
+                .setMessage("Aktiviert: Android versucht beim Laden frühestens alle 15 Minuten einen " +
+                    "begrenzten Übungszyklus mit bereits bestätigten Beispielen. " +
+                    "Nach drei erfolglosen Zyklen pausiert das Training.\n\n" +
+                    "Letztes Ergebnis: " + practice.lastStatus)
+                .setNegativeButton("Weiterlaufen lassen", null)
+                .setPositiveButton("AUTO-ÜBEN STOPPEN") { _, _ ->
+                    practice.disable()
+                    refreshNeuralPracticeUi()
+                    addAssistantMessage("Wiederkehrendes lokales Üben ausgeschaltet. Vorhandene Gewichte bleiben erhalten.")
+                }.show()
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Wiederkehrendes neuronales Üben erlauben?")
+            .setMessage("Device AI kann bereits bestätigte Sprachbeispiele wiederholt üben und dabei " +
+                "die 273 neuronalen Gewichte anpassen. Das geschieht nur beim Laden des Geräts " +
+                "und höchstens in kurzen, von Android geplanten Zyklen (frühestens alle 15 Minuten). " +
+                "Nach jedem Durchgang prüft Device AI Trainingsfehler und unabhängige Prüfbeispiele. " +
+                "Schlechtere Ergebnisse werden verworfen; nach drei erfolglosen Versuchen stoppt es.\n\n" +
+                "Keine automatische Übernahme von Gesprächsaufnahmen oder Internetseiten. " +
+                "Kein dauerhaft laufender Hintergrundprozess und kein großes Sprachmodell.\n\n" +
+                "Letzter Status: " + practice.lastStatus)
+            .setNegativeButton("Abbrechen", null)
+            .setPositiveButton("AUTO-ÜBEN ERLAUBEN") { _, _ ->
+                val started = runCatching { practice.enable() }.getOrDefault(false)
+                refreshNeuralPracticeUi()
+                addAssistantMessage(if (started)
+                    "Automatisches Wiederholungslernen eingerichtet. Android führt die begrenzten Übungszyklen " +
+                        "bei erfüllten Bedingungen aus. Über AUTO-ÜBEN kannst du es jederzeit stoppen."
+                else "AUTO-ÜBEN konnte nicht aktiviert werden: Es sind noch keine ausdrücklich bestätigten " +
+                        "neuronalen Sprachbeispiele gespeichert oder Android hat die Planung abgelehnt. " +
+                        "Tippe zuerst NEURON · JETZT TRAINIEREN bzw. LERN-GESPRÄCH.")
+            }.show()
+    }
+
+    private fun refreshNeuralPracticeUi() {
+        if (!::neuralMonitor.isInitialized) return
+        val practice = NeuralPracticeScheduler(this)
+        neuralAutoButton?.text = if (practice.enabled) "AUTO-ÜBEN · AN (LADEBETRIEB)" else "AUTO-ÜBEN · AUS"
+        if (!busy) {
+            neuralMonitor.text = if (practice.enabled)
+                "NEURON · Automatisches Üben geplant · " + practice.lastStatus.take(140)
+            else "NEURON · Auto-Üben aus · " + practice.lastStatus.take(140)
+        }
+    }
+
     private fun updateNeuralTrainingProgress(progress: NeuralLearningProgress) {
         val percent = (progress.step * 100 / progress.total).coerceIn(0, 100)
         neuralProgress.progress = percent
@@ -1115,6 +1176,9 @@ class AgentActivity : Activity() {
             append("Prüfe Wissen: Nova | besitzt | Betriebssystem\n")
             append("Korrigiere: <alter Fakt> => <neuer Fakt> · Widerrufe: <Fakt>\n\n")
             append(bootstrapMemory.neuralReport()).append("\n")
+            val practice = NeuralPracticeScheduler(this@AgentActivity)
+            append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS")
+                .append(" · ").append(practice.lastStatus).append("\n")
             append("Neuron Demo · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß\n")
             append("Internetquellen fragen: Was weißt du über Solarzellen Sonnenlicht?\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
