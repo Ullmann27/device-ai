@@ -91,6 +91,8 @@ class NeuralDialogue {
             "Die Zuordnung wurde neuronal gelernt; dieser Antworttext ist vorgegeben. Noch keine freie Sprachgenerierung."
     }
     @Synchronized fun lessonCount(): Int = lessons.size
+    @Synchronized fun hasLesson(text: String): Boolean =
+        lessons.any { (phrase, _) -> phrase.equals(text.trim(), ignoreCase = true) }
 
     /** Content fingerprint over explicitly approved examples only (not passwords, chat logs or URLs). */
     @Synchronized fun lessonFingerprint(): String {

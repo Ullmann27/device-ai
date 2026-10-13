@@ -7,6 +7,7 @@ import at.heinz.deviceai.learning.NeuralCommandParser
 import at.heinz.deviceai.learning.NeuralLearningCoach
 import at.heinz.deviceai.learning.NeuralLearningProgress
 import at.heinz.deviceai.learning.NeuralPracticeScheduler
+import at.heinz.deviceai.learning.NeuralCuriosityRadar
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -161,6 +162,8 @@ class AgentActivity : Activity() {
     private lateinit var neuralMonitor: TextView
     private lateinit var neuralProgress: ProgressBar
     private var neuralAutoButton: Button? = null
+    private var neuralCuriosityButton: Button? = null
+    private val neuralCuriosityRadar = NeuralCuriosityRadar()
     private val neuralCoach = NeuralLearningCoach()
     private var foregroundLearningActive = false
     private val foregroundLearningCheck = object : Runnable {
@@ -718,6 +721,11 @@ class AgentActivity : Activity() {
             setOnClickListener { showNeuralPracticeDialog() }
         }
         card.addView(neuralAutoButton, matchWidth(top = 7))
+        neuralCuriosityButton = actionButton("LERN-RADAR · Noch keine Frage").apply {
+            isEnabled = false
+            setOnClickListener { showNeuralCuriosityQuestion() }
+        }
+        card.addView(neuralCuriosityButton, matchWidth(top = 7))
         card.addView(actionButton("INTERNET · LERNSTOFF PRÜFEN").apply {
             setOnClickListener { showWebLearningInbox() }
         }, matchWidth(top = 7))
@@ -974,6 +982,25 @@ class AgentActivity : Activity() {
     }
 
     /** Periodic practice is an opt-in charging-only Android Job, not a busy loop. */
+    private fun showNeuralCuriosityQuestion() {
+        val proposed = neuralCuriosityRadar.consume() ?: return
+        neuralCuriosityButton?.isEnabled = false
+        neuralCuriosityButton?.text = "LERN-RADAR · Noch keine Frage"
+        if (!NeuralPracticeScheduler(this).enabled) return
+        // A separate confirmation is required before neural weights change.
+        AlertDialog.Builder(this).setTitle("Device AI möchte von dir lernen")
+            .setMessage("Diesen Satz habe ich als mögliches Lernbeispiel vorgemerkt:\n\n" +
+                proposed + "\n\nIst es ein Gruß oder eine Frage? " +
+                "Es wird erst nach deiner zusätzlichen Trainingsfreigabe dauerhaft gespeichert.")
+            .setNegativeButton("Ignorieren", null)
+            .setNeutralButton("FRAGE") { _, _ ->
+                handleNeuralRequest("Neuron lerne: " + proposed + " => Frage")
+            }
+            .setPositiveButton("GRUSS") { _, _ ->
+                handleNeuralRequest("Neuron lerne: " + proposed + " => Gruß")
+            }.show()
+    }
+
     private fun showNeuralPracticeDialog() {
         val practice = NeuralPracticeScheduler(this)
         if (practice.enabled) {
@@ -990,6 +1017,9 @@ class AgentActivity : Activity() {
                 .setNegativeButton("Weiterlaufen lassen", null)
                 .setPositiveButton("AUTO-ÜBEN STOPPEN") { _, _ ->
                     practice.disable()
+                    neuralCuriosityRadar.clear()
+                    neuralCuriosityButton?.isEnabled = false
+                    neuralCuriosityButton?.text = "LERN-RADAR · Noch keine Frage"
                     refreshNeuralPracticeUi()
                     addAssistantMessage("Wiederkehrendes lokales Üben ausgeschaltet. Vorhandene Gewichte bleiben erhalten.")
                 }.show()
@@ -2678,6 +2708,17 @@ class AgentActivity : Activity() {
 
     private fun addUserMessage(value: String) {
         addBubble(value, user = true)
+        val radarEnabled = NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
+        if (radarEnabled && neuralCuriosityRadar.peek() == null) {
+            val known = runCatching {
+                bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore)
+                    ?.hasLesson(value) ?: false
+            }.getOrDefault(false)
+            if (neuralCuriosityRadar.offer(value, active = true, alreadyTaught = known)) {
+                neuralCuriosityButton?.isEnabled = true
+                neuralCuriosityButton?.text = "LERN-RADAR · BEISPIEL ANSEHEN"
+            }
+        }
     }
 
     private fun addAssistantMessage(value: String) {
