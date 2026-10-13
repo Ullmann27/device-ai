@@ -1,10 +1,10 @@
-// Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
-val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+// Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
+val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
 
 android {
     namespace = "at.heinz.deviceai"
