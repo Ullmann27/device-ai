@@ -74,6 +74,9 @@ import at.heinz.deviceai.cognitive.ResearchPromptBoundary
 import at.heinz.deviceai.cognitive.ResearchProviderPolicy
 import at.heinz.deviceai.cognitive.ResearchSynthesisOutput
 import at.heinz.deviceai.cognitive.ResearchSynthesizer
+import at.heinz.deviceai.cognitive.WebLearningInbox
+import at.heinz.deviceai.cognitive.WebLearningJournal
+import at.heinz.deviceai.cognitive.WebLearningCandidate
 import at.heinz.deviceai.localmodel.ImportedLocalModel
 import at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
@@ -645,6 +648,9 @@ class AgentActivity : Activity() {
         card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
             setOnClickListener { beginNeuralCoach() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("INTERNET · LERNSTOFF PRÜFEN").apply {
+            setOnClickListener { showWebLearningInbox() }
+        }, matchWidth(top = 7))
         return card
     }
 
@@ -1112,6 +1118,62 @@ class AgentActivity : Activity() {
         voiceEngine?.speak(plain, TextToSpeech.QUEUE_FLUSH, null, "device-ai-voice")
     }
 
+    private fun showWebLearningInbox() {
+        val dossier = runCatching {
+            FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest()
+        }.getOrNull()
+        val journal = WebLearningJournal(this)
+        val learned = runCatching { journal.notes() }
+        if (learned.isFailure) {
+            addAssistantMessage("Quellen-Lernspeicher beschädigt. Kein Inhalt übernommen; alte Daten nicht überschrieben.")
+            return
+        }
+        val candidates = dossier?.let(WebLearningInbox::candidates).orEmpty()
+        if (candidates.isEmpty()) {
+            AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
+                .setMessage("Noch keine überprüfbaren Recherche-Aussagen. Wähle WEB RECHERCHE und gib eine direkte HTTPS-Quelladresse an. " +
+                    "Bisher ausdrücklich gespeicherte, aber nicht als wahr bestätigte Quellnotizen: ${learned.getOrNull().orEmpty().size}. " +
+                    "Ohne Modellimport kannst du Informationen recherchieren, aber beliebige Webseiten sind keine geprüfte Wahrheit.")
+                .setPositiveButton("Schließen", null).show()
+            return
+        }
+        val titles = candidates.map { note ->
+            (if (note.contradictory) "⚠ WIDERSPRUCH · " else "QUELLE · ") + note.text.take(88)
+        }.toTypedArray()
+        AlertDialog.Builder(this).setTitle("Internet-Lernstoff · Quellen prüfen")
+            .setMessage("Aussagen aus der letzten Recherche. Nur auf deine Freigabe als QUELLENNOTIZ gespeichert; " +
+                "kein automatisch trainiertes Sprachmodell, keine Geräteberechtigung. " +
+                "Bereits geprüft: ${learned.getOrNull().orEmpty().size}/24.")
+            .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
+            .setNegativeButton("Schließen", null).show()
+    }
+
+    private fun showWebLearningCandidate(note: WebLearningCandidate) {
+        val message = buildString {
+            append(note.text).append("\\n\\nQuelle: ").append(note.sourceUrl)
+            append("\\nInhalts-Hash: ").append(note.sourceHash.take(16))
+            append("\\nUnabhängige Quellen: ").append(note.sourceCount)
+            append("\\nStatus: ").append(if (note.contradictory) "WIDERSPRUCH" else "Nicht unabhängig wahrheitsgeprüft")
+            append("\\n\\nEin bestätigter Quellenhinweis ist keine neuronale Gewichtsänderung.")
+        }
+        AlertDialog.Builder(this).setTitle("Lernkandidat aus dem Internet")
+            .setMessage(message)
+            .setNegativeButton("Nicht übernehmen", null)
+            .setNeutralButton("Neuron-Coach") { _, _ ->
+                // Safe bridge: external text is *only* a user-reviewed lesson proposal,
+                // never a system instruction, an automatic label or a device action.
+                beginNeuralCoach()
+                if (neuralCoach.isActive()) handleNeuralCoachInput(note.text.take(320))
+            }
+            .setPositiveButton("Als Quellenhinweis merken") { _, _ ->
+                val stored = runCatching { WebLearningJournal(this).approve(note) }.getOrDefault(false)
+                addAssistantMessage(if (stored)
+                    "Quellenhinweis mit URL und Inhalts-Hash gespeichert. Noch keine bestätigte Wahrheit. " +
+                        "Öffne INTERNET · LERNSTOFF PRÜFEN für weitere Kandidaten."
+                    else "Quellenhinweis nicht gespeichert (Widerspruch, Duplikat, Speicherlimit oder Fehler).")
+            }.show()
+    }
+
     private fun showResearchModeDialog() {
         val choices = arrayOf(
             "QUICK · wenige Quellen, 15 s",
@@ -1245,6 +1307,11 @@ class AgentActivity : Activity() {
                         dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
                     }
                     addAssistantMessage(body.take(8_000))
+                    val queue = WebLearningInbox.candidates(dossier)
+                    if (queue.isNotEmpty()) {
+                        addAssistantMessage("Ich habe ${queue.size} Quellen-Aussagen als Lernkandidaten erkannt. " +
+                            "Prüfe sie über INTERNET · LERNSTOFF PRÜFEN. Noch keine automatische Wissensübernahme.")
+                    }
                     addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
                 }.onFailure { error ->
                     addAssistantMessage("Recherche abgebrochen oder fehlgeschlagen: ${error.message?.take(256) ?: "unbekannter Fehler"}")
