@@ -29,7 +29,10 @@ class NeuralDialogue {
     }
     private fun examples(data: List<Pair<String, Int>>) = data.map { NeuralExample(features(it.first), it.second) }
 
-    @Synchronized fun trainDemo(approved: Boolean, cancelled: () -> Boolean = { false }): NeuralDialogueReport {
+    @Synchronized fun trainDemo(
+        approved: Boolean, cancelled: () -> Boolean = { false },
+        onProgress: (NeuralLearningProgress) -> Unit = {}
+    ): NeuralDialogueReport {
         require(approved)
         // Isolated reference experiment. Existing custom lessons require an explicit reset first.
         require(lessons.isEmpty()) { "Experiment zuerst ausdrücklich zurücksetzen; eigene Beispiele bleiben erhalten." }
@@ -37,19 +40,22 @@ class NeuralDialogue {
         val train = examples(DEMO_TRAINING)
         val before = candidate.evaluate(train)
         val holdoutBefore = candidate.evaluate(examples(DEMO_HOLDOUT))
-        val result = candidate.train(train, 4000, cancelled = cancelled)
+        val result = candidate.train(train, 4000, cancelled = cancelled, onProgress = onProgress)
         val after = candidate.evaluate(train)
         val holdout = candidate.evaluate(examples(DEMO_HOLDOUT))
         if (!result.stoppedEarly && !cancelled()) { model = candidate; lessons = DEMO_TRAINING.toList() }
         return NeuralDialogueReport(before, after, holdout, holdoutBefore, result)
     }
-    @Synchronized fun teach(text: String, label: Int, approved: Boolean, cancelled: () -> Boolean = { false }): NeuralTraining {
+    @Synchronized fun teach(
+        text: String, label: Int, approved: Boolean, cancelled: () -> Boolean = { false },
+        onProgress: (NeuralLearningProgress) -> Unit = {}
+    ): NeuralTraining {
         require(approved && label in 0..1 && words(text).isNotEmpty())
         require(lessons.size < 64 || lessons.any { it.first == text })
         // An explicit corrected label replaces the old label, never trains both accidentally.
         val nextLessons = lessons.filterNot { it.first == text } + (text to label)
         val candidate = TinyNeuralNetwork.restore(model.save())
-        val result = candidate.train(examples(nextLessons), 800, cancelled = cancelled)
+        val result = candidate.train(examples(nextLessons), 800, cancelled = cancelled, onProgress = onProgress)
         if (!result.stoppedEarly && !cancelled()) { model = candidate; lessons = nextLessons }
         return result
     }

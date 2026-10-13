@@ -4,6 +4,8 @@ import at.heinz.deviceai.learning.NeuralDialogue
 import at.heinz.deviceai.learning.NeuralCommand
 import at.heinz.deviceai.learning.NeuralCommandKind
 import at.heinz.deviceai.learning.NeuralCommandParser
+import at.heinz.deviceai.learning.NeuralLearningCoach
+import at.heinz.deviceai.learning.NeuralLearningProgress
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -30,6 +32,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -149,6 +152,9 @@ class AgentActivity : Activity() {
     private var voiceReady = false
     private var voiceEnabled = false
     private var voiceButton: Button? = null
+    private lateinit var neuralMonitor: TextView
+    private lateinit var neuralProgress: ProgressBar
+    private val neuralCoach = NeuralLearningCoach()
     private var dashboardSection: View? = null
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -433,6 +439,19 @@ class AgentActivity : Activity() {
         }
         pane.addView(keyboardTitle, matchWidth())
 
+        neuralMonitor = textView("NEURON · Kein Training aktiv", 11f, CYAN, true).apply {
+            contentDescription = "Neuronaler Lernfortschritt und Trainingsfehler"
+            setPadding(dp(8), dp(5), dp(8), dp(3))
+        }
+        pane.addView(neuralMonitor, matchWidth())
+        neuralProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            isIndeterminate = false
+            contentDescription = "Fortschritt des lokalen neuronalen Trainings"
+        }
+        pane.addView(neuralProgress, matchWidth())
+
         chatScroll = ScrollView(this).apply {
             isFillViewport = true
             clipToPadding = false
@@ -623,6 +642,9 @@ class AgentActivity : Activity() {
         card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
             setOnClickListener { showBootstrapTraining() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
+            setOnClickListener { beginNeuralCoach() }
+        }, matchWidth(top = 7))
         return card
     }
 
@@ -757,6 +779,18 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        if (request.equals("Neuron Tutor", true) || request.equals("Neuron Gespräch", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            beginNeuralCoach()
+            return
+        }
+        if (neuralCoach.isActive() && !NeuralDialogue.accepts(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            handleNeuralCoachInput(request)
+            return
+        }
         if (NeuralDialogue.accepts(request)) {
             input.text.clear()
             addUserMessage(request)
@@ -818,6 +852,33 @@ class AgentActivity : Activity() {
         addToolActivity("STARTKERN · lokales Gespräch")
     }
 
+    private fun beginNeuralCoach() {
+        if (busy) {
+            addAssistantMessage("Bitte warte, bis der aktuelle Lernschritt beendet ist.")
+            return
+        }
+        val message = neuralCoach.begin().message
+        addAssistantMessage(message)
+        neuralMonitor.text = "NEURON · Gesprächstraining: Bitte Beispiel sagen oder schreiben"
+    }
+
+    private fun handleNeuralCoachInput(request: String) {
+        val outcome = neuralCoach.accept(request) ?: return
+        addAssistantMessage(outcome.message)
+        if (outcome.closed) neuralMonitor.text = "NEURON · Lern-Gespräch beendet"
+        outcome.approvedLesson?.let { lesson ->
+            handleNeuralRequest("Neuron lerne: ${lesson.text} => ${if (lesson.label == 0) "Gruß" else "Frage"}")
+        }
+    }
+
+    private fun updateNeuralTrainingProgress(progress: NeuralLearningProgress) {
+        val percent = (progress.step * 100 / progress.total).coerceIn(0, 100)
+        neuralProgress.progress = percent
+        neuralMonitor.text = "NEURON · ${progress.step}/${progress.total} Updates · " +
+            "Fehler: %.4f · %d/%d Trainingsbeispiele".format(
+                Locale.ROOT, progress.loss, progress.correct, progress.examples)
+    }
+
     private fun handleNeuralRequest(request: String) {
         if (busy) { addAssistantMessage("Bitte warte auf die laufende Aufgabe."); return }
         val command = NeuralCommandParser.parse(request)
@@ -848,11 +909,19 @@ class AgentActivity : Activity() {
     private fun runNeuralCommand(command: NeuralCommand) {
         if (busy || localAgentExecutor.isShutdown) return
         val cancellation = java.util.concurrent.atomic.AtomicBoolean(false)
+        neuralProgress.progress = 0
+        neuralMonitor.text = "NEURON · Training wird vorbereitet"
         activeNeuralCancellation = cancellation
         activeLocalRequest = true
         setBusy(true)
         localAgentExecutor.execute {
             val result = runCatching {
+                val progressCallback: (NeuralLearningProgress) -> Unit = { p ->
+                    runOnUiThread {
+                        if (!isFinishing && !isDestroyed && activeNeuralCancellation === cancellation)
+                            updateNeuralTrainingProgress(p)
+                    }
+                }
                 val lab = if (command.kind == NeuralCommandKind.RESET) NeuralDialogue() else
                     bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore) ?: NeuralDialogue()
                 var save = false
@@ -862,14 +931,14 @@ class AgentActivity : Activity() {
                     NeuralCommandKind.PREDICT -> lab.reply(command.text)
                     NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
                     NeuralCommandKind.TEACH -> {
-                        val training = lab.teach(command.text, command.label, true, cancellation::get)
+                        val training = lab.teach(command.text, command.label, true, cancellation::get, progressCallback)
                         save = !training.stoppedEarly
                         measurement = if (save) "Eigenes neuronales Beispiel gelernt. ${training.steps} Schritte; kein neuer unabhängiger Holdout-Messlauf."
                             else "Training abgebrochen; Gewichte nicht übernommen."
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {
-                        val measured = lab.trainDemo(true, cancellation::get)
+                        val measured = lab.trainDemo(true, cancellation::get, progressCallback)
                         save = !measured.training.stoppedEarly
                         measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
                             "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
@@ -887,11 +956,21 @@ class AgentActivity : Activity() {
                 activeNeuralCancellation = null
                 activeLocalRequest = false
                 setBusy(false)
-                if (cancellation.get()) { addAssistantMessage("Neuronales Experiment abgebrochen; nichts gespeichert."); return@runOnUiThread }
+                if (cancellation.get()) {
+                    neuralMonitor.text = "NEURON · Abgebrochen, keine Gewichte übernommen"
+                    neuralProgress.progress = 0
+                    addAssistantMessage("Neuronales Experiment abgebrochen; nichts gespeichert.")
+                    return@runOnUiThread
+                }
                 result.fold(onSuccess = { (message, bytes, measurement) ->
                     val saved = bytes == null || runCatching { bootstrapMemory.saveNeuralSnapshot(bytes, measurement) }.getOrDefault(false)
+                    neuralMonitor.text = if (saved) "NEURON · Ergebnis lokal gesichert" else
+                        "NEURON · Sicherung fehlgeschlagen, bisheriger Stand erhalten"
                     addAssistantMessage(if (saved) message else "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich.")
-                }, onFailure = { addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.") })
+                }, onFailure = {
+                    neuralMonitor.text = "NEURON · Training fehlgeschlagen, vorheriger Stand erhalten"
+                    addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.")
+                })
             }
         }
     }
@@ -2389,6 +2468,9 @@ class AgentActivity : Activity() {
                 if (!spoken.isNullOrBlank()) {
                     input.setText(spoken)
                     input.setSelection(spoken.length)
+                    // Only in the explicitly activated learning conversation: a
+                    // recognized phrase goes to the supervised coach, never ToolGate.
+                    if (neuralCoach.isActive() && !busy) sendCurrentInput()
                 }
             }
             MODEL_IMPORT_REQUEST -> {

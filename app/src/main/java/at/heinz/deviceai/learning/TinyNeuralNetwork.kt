@@ -12,6 +12,15 @@ data class NeuralExample(val inputs: List<Double>, val label: Int)
 data class NeuralEvaluation(val loss: Double, val correct: Int, val total: Int)
 data class NeuralTraining(val steps: Int, val elapsedNanos: Long, val stoppedEarly: Boolean)
 
+/** Transient training telemetry. No weights or private examples leave this device. */
+data class NeuralLearningProgress(
+    val step: Int,
+    val total: Int,
+    val loss: Double,
+    val correct: Int,
+    val examples: Int
+)
+
 /** Original tiny dense MLP: bounded inputs -> 8 tanh units -> one binary logit.
  * Analytic backpropagation + SGD; no pretrained weights, autograd graph, network, or tools.
  * Caller owns data approval and scheduling. Never run training on Android's UI thread.
@@ -61,7 +70,8 @@ class TinyNeuralNetwork(val inputSize: Int, private val seed: Long = 42) {
     @Synchronized fun train(
         examples: List<NeuralExample>, steps: Int, learningRate: Double = 0.1,
         maxMillis: Long = 2000, cancelled: () -> Boolean = { false },
-        nowNanos: () -> Long = System::nanoTime
+        nowNanos: () -> Long = System::nanoTime,
+        onProgress: (NeuralLearningProgress) -> Unit = {}
     ): NeuralTraining {
         require(examples.size in 1..128 && steps in 1..5000)
         require(learningRate.isFinite() && learningRate in 0.0001..0.2 && maxMillis in 1..5000)
@@ -90,6 +100,10 @@ class TinyNeuralNetwork(val inputSize: Int, private val seed: Long = 42) {
             weights = DoubleArray(next.size) { next[it].coerceIn(-16.0, 16.0) }
             updates++
             completed++
+            if (completed == 1 || completed % 100 == 0 || completed == steps) {
+                val check = evaluate(examples)
+                onProgress(NeuralLearningProgress(completed, steps, check.loss, check.correct, check.total))
+            }
         }
         return NeuralTraining(completed, (nowNanos() - start).coerceAtLeast(0), completed < steps)
     }
