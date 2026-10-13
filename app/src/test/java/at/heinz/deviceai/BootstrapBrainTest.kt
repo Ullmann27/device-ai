@@ -50,6 +50,9 @@ class BootstrapBrainTest {
             assertNull(utterance, decision.tool)
         }
         assertEquals(BootstrapKind.DEVICE_TOOL, BootstrapBrain.decide("Prüfe Akku", emptyList()).kind)
+        assertEquals(BootstrapKind.DEVICE_TOOL, BootstrapBrain.decide("Installierte Apps", emptyList()).kind)
+        assertEquals(BootstrapKind.DEVICE_TOOL,
+            BootstrapBrain.decide("Prüfe die installierte Lumo-Version", emptyList()).kind)
     }
 
     @Test fun supervisedTrainingIsReadOnlyAndRequiresExactMatch() {
