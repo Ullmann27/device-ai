@@ -47,6 +47,36 @@ class ContinuumLearningCore(
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
 
+    /** Offline public curriculum: no owner interaction, no network and no private data.
+     * Runs once per persisted model. Holdout gates reject regressions.
+     */
+    fun bootstrapOfflineCurriculum(cancelled:()->Boolean={false}):ContinualLearningReport? =
+        synchronized(CORE_LOCK) {
+            if (loadModel().updates > 0 || store.all().any {
+                    it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation=="offline-bootstrap"
+                }) return@synchronized null
+            val baseline=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(baseline.save())
+            val before=candidate.evaluateIntent(INTENT_BOOTSTRAP)
+            val holdoutBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val otherBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val train=candidate.trainIntent(INTENT_BOOTSTRAP,steps=650,maxMillis=2500,cancelled=cancelled)
+            val after=candidate.evaluateIntent(INTENT_BOOTSTRAP)
+            val holdoutAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val otherAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val accepted=!cancelled() && !train.stoppedEarly &&
+                after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
+                retains(otherBefore,otherAfter)
+            if(accepted) saveModel(candidate.save())
+            val reason=if(accepted) "Öffentliches Offline-Curriculum verbessert; Holdouts geschützt"
+                else "Offline-Kandidat verworfen; bisherige Gewichte erhalten"
+            appendAudit("offline-bootstrap",accepted,train.steps,before,after,
+                holdoutBefore,holdoutAfter,emptyList(),reason)
+            ContinualLearningReport("offline-bootstrap",accepted,train.steps,0,before,after,
+                holdoutBefore,holdoutAfter,emptyList(),reason)
+        }
+
     fun teachIntent(
         text:String,
         label:Int,
