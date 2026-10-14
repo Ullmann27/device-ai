@@ -6,6 +6,11 @@ services:
     buildCommand: npm install --omit=dev
     startCommand: npm start
     healthCheckPath: /health
+    plan: starter
+    disk:
+      name: continuum-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: "20"
@@ -17,3 +22,23 @@ services:
         value: gpt-6-luna
       - key: WEB_SEARCH_ENABLED
         value: "true"
+      - key: CONTINUUM_DAEMON_ENABLED
+        value: "true"
+      - key: CONTINUUM_STATE_PATH
+        value: "/var/data/continuum-research-state.json"
+      - key: CONTINUUM_RESEARCH_INTERVAL_MS
+        value: "1200000"
+      - key: CONTINUUM_DAILY_CYCLE_LIMIT
+        value: "48"
+      - key: CONTINUUM_BRAIN_FACTORY_ENABLED
+        value: "true"
+      - key: CONTINUUM_BRAIN_STATE_PATH
+        value: "/var/data/continuum-brain-state.json"
+      - key: CONTINUUM_BRAIN_EVERY_SUCCESSFUL_CYCLES
+        value: "6"
+      - key: CONTINUUM_BRAIN_CHALLENGERS
+        value: "3"
+      - key: CONTINUUM_BRAIN_DATASET_LIMIT
+        value: "10"
+      - key: CONTINUUM_BRAIN_MAX_CASES
+        value: "4"

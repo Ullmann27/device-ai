@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node src/server.js",
     "worker": "node src/continuum-worker.js",
-    "check": "node --check src/server.js && node --check src/continuum-state.js && node --check src/continuum-daemon.js && node --check src/continuum-worker.js",
+    "check": "node --check src/server.js && node --check src/continuum-state.js && node --check src/continuum-daemon.js && node --check src/continuum-worker.js && node --check src/prompt-library.js && node --check src/brain-factory.js",
     "test": "node --test test/*.test.js"
   },
   "dependencies": {

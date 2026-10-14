@@ -134,12 +134,16 @@ export class ContinuumResearchDaemon {
     }
   }
 
-  start() {
+  start(onCycle = null) {
     if (this.running) return;
+    if (onCycle !== null && typeof onCycle !== "function") throw new Error("onCycle must be a function");
     this.running = true;
     const tick = async () => {
       if (!this.running) return;
-      try { await this.runOnce(); } catch (error) {
+      try {
+        const result = await this.runOnce();
+        if (onCycle) await onCycle(result, this.store.load(this.now()));
+      } catch (error) {
         console.error("Continuum research cycle failed:", error instanceof Error ? error.message : error);
       }
       if (this.running) this.timer = setTimeout(tick, this.minIntervalMs);

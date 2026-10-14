@@ -1,7 +1,10 @@
 import crypto from "node:crypto";
+import path from "node:path";
 import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
+import { ContinuumResearchDaemon, createOpenAiResearchFunction } from "./continuum-daemon.js";
+import { BrainFactory, createOpenAiBrainFactoryAdapters } from "./brain-factory.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -20,6 +23,22 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-6-luna";
 const OPENAI_BASE_URL = (process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1").replace(/\/+$/, "");
 const WEB_SEARCH_ENABLED = (process.env.WEB_SEARCH_ENABLED ?? "true").toLowerCase() !== "false";
 const PORT = Number(process.env.PORT ?? 8080);
+const CONTINUUM_DAEMON_ENABLED = (process.env.CONTINUUM_DAEMON_ENABLED ?? "false").toLowerCase() === "true";
+const BRAIN_FACTORY_ENABLED = (process.env.CONTINUUM_BRAIN_FACTORY_ENABLED ?? "false").toLowerCase() === "true";
+const CONTINUUM_STATE_PATH = process.env.CONTINUUM_STATE_PATH ??
+  path.join(process.cwd(), "data", "continuum-research-state.json");
+const BRAIN_STATE_PATH = process.env.CONTINUUM_BRAIN_STATE_PATH ??
+  path.join(process.cwd(), "data", "continuum-brain-state.json");
+const CONTINUUM_RESEARCH_INTERVAL_MS = Number(process.env.CONTINUUM_RESEARCH_INTERVAL_MS ?? 20 * 60 * 1000);
+const CONTINUUM_DAILY_CYCLE_LIMIT = Number(process.env.CONTINUUM_DAILY_CYCLE_LIMIT ?? 48);
+const BRAIN_FACTORY_EVERY_SUCCESSFUL_CYCLES = Math.max(1,
+  Number(process.env.CONTINUUM_BRAIN_EVERY_SUCCESSFUL_CYCLES ?? 6));
+const CONTINUUM_RESEARCH_MODEL = process.env.CONTINUUM_RESEARCH_MODEL ?? OPENAI_MODEL;
+const CONTINUUM_BRAIN_MODEL = process.env.CONTINUUM_BRAIN_MODEL ?? OPENAI_MODEL;
+
+let continuumDaemon = null;
+let brainFactory = null;
+let lastBrainEvolutionSuccessfulCycle = 0;
 
 const sessions = new Map();
 const SESSION_TTL_MS = 6 * 60 * 60 * 1000;
@@ -243,8 +262,23 @@ app.get("/health", (_req, res) => {
     ok: true,
     service: "device-ai-backend",
     model: OPENAI_MODEL,
-    web_search: WEB_SEARCH_ENABLED
+    web_search: WEB_SEARCH_ENABLED,
+    continuum_daemon: Boolean(continuumDaemon),
+    brain_factory: Boolean(brainFactory)
   });
+});
+
+app.get("/v1/continuum/status", auth, (_req, res) => {
+  try {
+    res.json({
+      daemon: continuumDaemon ? continuumDaemon.status() : null,
+      brain: brainFactory ? brainFactory.status() : null,
+      autonomousResearchEnabled: Boolean(continuumDaemon),
+      brainEvolutionEnabled: Boolean(brainFactory)
+    });
+  } catch (error) {
+    res.status(500).json({ error: (error instanceof Error ? error.message : String(error)).slice(0, 500) });
+  }
 });
 
 app.post("/v1/agent/turn", auth, async (req, res) => {
@@ -317,6 +351,75 @@ setInterval(() => {
   }
 }, 30 * 60 * 1000).unref();
 
-app.listen(PORT, "0.0.0.0", () => {
+function startContinuumServices() {
+  if (!CONTINUUM_DAEMON_ENABLED) return;
+
+  continuumDaemon = new ContinuumResearchDaemon({
+    statePath: CONTINUUM_STATE_PATH,
+    minIntervalMs: CONTINUUM_RESEARCH_INTERVAL_MS,
+    dailyCycleLimit: CONTINUUM_DAILY_CYCLE_LIMIT,
+    research: createOpenAiResearchFunction({
+      apiKey: OPENAI_API_KEY,
+      model: CONTINUUM_RESEARCH_MODEL,
+      baseUrl: OPENAI_BASE_URL
+    })
+  });
+
+  if (BRAIN_FACTORY_ENABLED) {
+    const adapters = createOpenAiBrainFactoryAdapters({
+      apiKey: OPENAI_API_KEY,
+      model: CONTINUUM_BRAIN_MODEL,
+      baseUrl: OPENAI_BASE_URL,
+      maxCases: Number(process.env.CONTINUUM_BRAIN_MAX_CASES ?? 4)
+    });
+    brainFactory = new BrainFactory({
+      statePath: BRAIN_STATE_PATH,
+      generateCandidates: adapters.generateCandidates,
+      evaluateCandidate: adapters.evaluateCandidate,
+      challengerCount: Number(process.env.CONTINUUM_BRAIN_CHALLENGERS ?? 3),
+      datasetLimit: Number(process.env.CONTINUUM_BRAIN_DATASET_LIMIT ?? 10)
+    });
+  }
+
+  continuumDaemon.start(async (result, researchState) => {
+    if (!brainFactory || !result?.success) return;
+    const successfulCycles = Number(result.summary?.successfulCycles ?? 0);
+    if (successfulCycles <= 0 ||
+        successfulCycles % BRAIN_FACTORY_EVERY_SUCCESSFUL_CYCLES !== 0 ||
+        successfulCycles === lastBrainEvolutionSuccessfulCycle) return;
+
+    lastBrainEvolutionSuccessfulCycle = successfulCycles;
+    try {
+      const evolved = await brainFactory.evolve(researchState);
+      console.log("Continuum Brain Factory:", JSON.stringify({
+        promoted: evolved.promoted ?? false,
+        championBefore: evolved.championBefore ?? null,
+        championAfter: evolved.championAfter ?? null,
+        skipped: evolved.skipped ?? false,
+        reason: evolved.reason ?? null
+      }));
+    } catch (error) {
+      console.error("Continuum Brain Factory cycle failed:",
+        error instanceof Error ? error.message : error);
+    }
+  });
+
+  console.log("Device AI Continuum research daemon enabled.");
+  if (brainFactory) console.log("Device AI Brain Factory enabled.");
+}
+
+startContinuumServices();
+
+const httpServer = app.listen(PORT, "0.0.0.0", () => {
   console.log("Device AI backend listening on port " + PORT);
 });
+
+function shutdown(signal) {
+  console.log("Device AI backend stopping on " + signal);
+  continuumDaemon?.stop();
+  httpServer.close(() => process.exit(0));
+  setTimeout(() => process.exit(1), 10_000).unref();
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

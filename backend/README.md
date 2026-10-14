@@ -51,3 +51,30 @@ CONTINUUM_DAEMON_ENABLED=true npm run worker
 
 Für echten Dauerbetrieb muss der Prozess auf einem ständig laufenden Server oder Background Worker betrieben werden und sein
 `CONTINUUM_STATE_PATH` auf persistentem Speicher liegen. Ein nicht installierter Android-Client kann selbst keinen Code ausführen.
+
+## Brain Factory
+
+Die Brain Factory ist ein eval-gesteuerter Prompt-/Strategie-Evolutionspfad über dem Research Daemon:
+
+1. Aus Wissenslücken, schwacher Themenabdeckung und widersprüchlichen Beobachtungen wird ein Benchmark-Dataset gebaut.
+2. Der aktuelle Champion und kurze Fehlersignale erzeugen mehrere Challenger-Strategien.
+3. Jeder Challenger beantwortet dieselben Benchmarkfälle.
+4. Ein separater Grader bewertet Quality, Grounding, Unsicherheitskalibrierung, Planungsqualität und Safety.
+5. Safety- und Grounding-Floors sind harte Gates.
+6. Nur ein Challenger, der den Champion um eine Mindestmarge schlägt, wird promoviert.
+7. Abgelehnte Kandidaten erzeugen kurze operative Reflexionen für spätere Generationen.
+8. Die unveränderliche Governance liegt außerhalb des mutierbaren Prompt-Genoms und wird per Hash gebunden.
+
+Die Factory verändert **Prompts/Strategien, nicht eigenmächtig Programmcode**. Codeänderungen bleiben im GitHub-/CI-/Review-Pfad.
+
+### Always-on Deployment
+
+`render.yaml` beschreibt einen einzelnen bezahlten Render-Webdienst mit persistentem Disk-State unter `/var/data`.
+Damit teilen API, Research Daemon und Brain Factory denselben persistenten Zustand. Ein Persistent Disk ist bei Render
+nicht für Free-Services verfügbar; die Konfiguration darf daher erst bewusst als kostenpflichtiger Dienst aktiviert werden.
+
+Authentifizierter Diagnose-Endpunkt:
+
+- `GET /v1/continuum/status`
+
+Er liefert nur aggregierte Lern-/Forschungsmetriken und keinen geheimen Prompt- oder Credential-Inhalt.
