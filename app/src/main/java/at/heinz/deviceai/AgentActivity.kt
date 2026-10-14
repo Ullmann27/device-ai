@@ -15,6 +15,7 @@ import at.heinz.deviceai.learning.MentorSourceNotebook
 import at.heinz.deviceai.learning.MentorSource
 import at.heinz.deviceai.learning.MentorRecall
 import at.heinz.deviceai.learning.MentorAssociativeRecall
+import at.heinz.deviceai.learning.MentorSemanticRecall
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -905,6 +906,18 @@ class AgentActivity : Activity() {
             handleNeuralRequest(request)
             return
         }
+        if (MentorSemanticRecall.topic(request) != null) {
+            val reply = runCatching {
+                val notebook = MentorSourceNotebook(this)
+                MentorSemanticRecall.answer(request, notebook.entries(), notebook.semanticModel())
+            }.getOrElse {
+                "Mentor: Verteilungsmodell nicht lesbar; alte Quellen und Lernstände bleiben unverändert."
+            }
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(reply ?: "Mentor: Kein Begriff erkannt.")
+            return
+        }
         if (MentorAssociativeRecall.topic(request) != null) {
             val reply = runCatching {
                 val notebook = MentorSourceNotebook(this)
@@ -1376,6 +1389,7 @@ class AgentActivity : Activity() {
                 .append(mentor.successes).append(" mit neuen Quellen.\n")
             append("Mentor aus Quellen befragen: Mentor Wissen: Fotosynthese Pflanzen\n")
             append("Assoziationen prüfen: Mentor Verbindungen: Fotosynthese\n")
+            append("Verteilungsmuster prüfen: Mentor Ähnlich: Pflanze\n")
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
@@ -1535,11 +1549,14 @@ class AgentActivity : Activity() {
             "\nBeobachtungen: " + runCatching { notebook.entries().size }.getOrDefault(0) +
             "\nBegriffe im Lernnetz: " + runCatching { notebook.conceptNetwork().vocabularySize }.getOrDefault(0) +
             "\nGelernte Begriffspaare: " + runCatching { notebook.conceptNetwork().edgeCount }.getOrDefault(0) +
+            "\nVerteilungswörter: " + runCatching { notebook.semanticModel().vocabularySize }.getOrDefault(0) +
+            "\nAktive Repräsentationsdimensionen: " + runCatching { notebook.semanticModel().activeDimensions }.getOrDefault(0) +
             "\nLetzter Stand: " + notebook.status +
             "\n\nLehrplan: 30 Fachgebiete, rotierend. Android plant bei Ladebetrieb und " +
             "Internetverbindung ungefähr alle 6 Stunden neue Recherchen. " +
-            "Quellen bleiben unbestätigt, das lokale Begriffsnetz lernt lediglich Wortbeziehungen. " +
-            "Im Chat: Mentor Verbindungen: Fotosynthese. " +
+            "Quellen bleiben unbestätigt. Zusätzlich zum direkten Begriffsnetz lernt ein kleines " +
+            "lokales Verteilungsmodell ähnliche Kontexte über mehrere Quellen. " +
+            "Im Chat: Mentor Verbindungen: Fotosynthese oder Mentor Ähnlich: Pflanze. " +
             "Kein automatisches Lernen von Geräteaktionen und keine heimlichen Sprachaufnahmen."
         AlertDialog.Builder(this)
             .setTitle("Device AI · Mentor und Wissensforschung")

@@ -40,6 +40,13 @@ class MentorSourceNotebook(context:Context) {
         if(encoded==null)MentorConceptNetwork.build(current)
         else MentorConceptNetwork.restore(encoded,current)
     }
+    /** Restores the source-bound distributional representation learned from the same notes. */
+    fun semanticModel():MentorSemanticModel=synchronized(LOCK) {
+        val current=entries()
+        val encoded=prefs.getString("semantics",null)
+        if(encoded==null)MentorSemanticModel.build(current)
+        else MentorSemanticModel.restore(encoded,current)
+    }
     fun add(newItems:List<MentorSource>):Int=synchronized(LOCK) {
         newItems.forEach(::checkSource)
         val old=entries()
@@ -51,8 +58,10 @@ class MentorSourceNotebook(context:Context) {
         // Compute a new graph before the write. Both records and graph are published
         // atomically in one SharedPreferences editor, or neither replaces the old state.
         val network=MentorConceptNetwork.build(merged).serialize()
+        val semantics=MentorSemanticModel.build(merged).serialize()
         check(prefs.edit().putString("entries",data.toString())
-            .putString("associations",network).commit())
+            .putString("associations",network)
+            .putString("semantics",semantics).commit())
         added
     }
     fun record(subject:String,found:Int,message:String) {
@@ -65,7 +74,7 @@ class MentorSourceNotebook(context:Context) {
         }
     }
     fun clear():Boolean=synchronized(LOCK){
-        prefs.edit().remove("entries").remove("associations").commit()
+        prefs.edit().remove("entries").remove("associations").remove("semantics").commit()
     }
     companion object {
         private val LOCK=Any()
