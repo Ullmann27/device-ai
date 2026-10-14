@@ -54,6 +54,29 @@ jobs:
       - name: Run unit tests
         run: gradle :app:testDebugUnitTest --stacktrace
 
+      - name: Summarize JVM test results
+        run: |
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          reports = glob.glob('app/build/test-results/testDebugUnitTest/TEST-*.xml')
+          assert reports, 'Missing JVM test evidence'
+          totals = {key: 0 for key in ('tests', 'failures', 'errors', 'skipped')}
+          for path in reports:
+              root = ET.parse(path).getroot()
+              for key in totals:
+                  totals[key] += int(root.get(key, '0'))
+          print('JVM results:', totals)
+          assert totals['tests'] > 0 and totals['failures'] == 0 and totals['errors'] == 0
+          PY
+
+      - name: Upload unit test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceAI-unit-test-results
+          path: app/build/test-results/testDebugUnitTest/TEST-*.xml
+          if-no-files-found: warn
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
 
@@ -73,3 +96,4 @@ jobs:
           name: DeviceAI-v0.3.1-preview-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+

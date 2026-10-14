@@ -31,7 +31,7 @@ class ResearchHttpTransportTest {
             resolved+=host
             return (ips[host]?:listOf("8.8.8.8")).map { InetAddress.getByName(it) }
         }
-        override fun open(uri:URI):HttpsURLConnection { opened+=uri.toString();return responses.getValue(uri.toString()) }
+        override fun open(uri:URI,addresses:List<InetAddress>,timeoutMillis:Int):HttpsURLConnection { opened+=uri.toString();return responses.getValue(uri.toString()) }
     }
     private fun request(url:String,maxBytes:Int=1000,maxRedirects:Int=2)=ResearchRequest("approved topic",url,maxBytes,1000,maxRedirects)
 

@@ -49,5 +49,8 @@ dependencies {
     implementation("dev.rikka.shizuku:provider:13.1.5")
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.18.0")
 
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
     testImplementation("junit:junit:4.13.2")
 }
+

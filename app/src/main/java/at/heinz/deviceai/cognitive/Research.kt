@@ -3,14 +3,11 @@ package at.heinz.deviceai.cognitive
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.InetAddress
-import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.URI
-import java.net.Socket
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.HttpsURLConnection
 
 data class ResearchRequest(
@@ -85,12 +82,12 @@ class SimulatedResearchProvider(
 
 internal interface ResearchHttpEnvironment {
     fun resolve(host:String):List<InetAddress>
-    fun open(uri:URI):HttpsURLConnection
+    fun open(uri:URI,addresses:List<InetAddress>,timeoutMillis:Int):HttpsURLConnection
 }
 
 private object PublicResearchHttpEnvironment:ResearchHttpEnvironment {
     override fun resolve(host:String)=InetAddress.getAllByName(host).toList()
-    override fun open(uri:URI)=uri.toURL().openConnection(Proxy.NO_PROXY) as HttpsURLConnection
+    override fun open(uri:URI,addresses:List<InetAddress>,timeoutMillis:Int)=PinnedResearchHttpsConnection(uri,addresses,timeoutMillis)
 }
 
 class HttpReadOnlyResearchProvider private constructor(
@@ -117,16 +114,12 @@ class HttpReadOnlyResearchProvider private constructor(
             accessCheck()
             val validatedAddresses = ResearchUrlValidator.validate(uri, policy.allowedHosts,network::resolve)
             val remainingMillis = remainingTimeoutMillis(deadlineNanos)
-            val host = uri.host.removePrefix("[").removeSuffix("]")
-            val connection = network.open(uri).apply {
+            val connection = network.open(uri,validatedAddresses,remainingMillis).apply {
                 requestMethod = "GET"
                 useCaches = false
                 instanceFollowRedirects = false
                 connectTimeout = minOf(policy.connectTimeoutMillis, request.timeoutMillis, remainingMillis)
                 readTimeout = minOf(policy.readTimeoutMillis, request.timeoutMillis, remainingMillis)
-                sslSocketFactory = PinnedResearchTlsSocketFactory(
-                    host, validatedAddresses, policy.connectTimeoutMillis, deadlineNanos
-                )
                 setRequestProperty("Accept", "text/html,text/plain,application/json,application/xml")
                 setRequestProperty("User-Agent", "DeviceAI-Research/1.0")
             }
@@ -271,67 +264,6 @@ class HttpReadOnlyResearchProvider private constructor(
                     first == 0x20 && second == 0x02) return false
             }
             return true
-        }
-    }
-
-    private class PinnedResearchTlsSocketFactory(
-        private val host: String,
-        private val addresses: List<InetAddress>,
-        private val connectTimeoutMillis: Int,
-        private val requestDeadlineNanos: Long
-    ) : SSLSocketFactory() {
-        private val delegate = SSLSocketFactory.getDefault() as SSLSocketFactory
-
-        override fun getDefaultCipherSuites(): Array<String> = delegate.defaultCipherSuites
-        override fun getSupportedCipherSuites(): Array<String> = delegate.supportedCipherSuites
-
-        override fun createSocket(host: String, port: Int): Socket = connectPinned(port)
-
-        override fun createSocket(host: String, port: Int, localHost: InetAddress, localPort: Int): Socket =
-            connectPinned(port, localHost, localPort)
-
-        override fun createSocket(address: InetAddress, port: Int): Socket = connectPinned(port)
-
-        override fun createSocket(
-            address: InetAddress,
-            port: Int,
-            localAddress: InetAddress,
-            localPort: Int
-        ): Socket = connectPinned(port, localAddress, localPort)
-
-        override fun createSocket(socket: Socket, host: String, port: Int, autoClose: Boolean): Socket {
-            require(socket.inetAddress in addresses) { "TLS socket target did not use a validated address." }
-            return delegate.createSocket(socket, this.host, port, autoClose)
-        }
-
-        override fun createSocket(): Socket =
-            throw IOException("Unpinned TLS socket creation is not permitted for research.")
-
-        private fun connectPinned(
-            port: Int,
-            localAddress: InetAddress? = null,
-            localPort: Int = 0
-        ): Socket {
-            var failure: IOException? = null
-            val connectDeadlineNanos = minOf(
-                requestDeadlineNanos,
-                System.nanoTime() + connectTimeoutMillis * 1_000_000L
-            )
-            for (address in addresses) {
-                val remainingNanos = connectDeadlineNanos - System.nanoTime()
-                if (remainingNanos <= 0) break
-                val socket = Socket()
-                try {
-                    if (localAddress != null) socket.bind(InetSocketAddress(localAddress, localPort))
-                    val timeout = ((remainingNanos + 999_999) / 1_000_000).toInt()
-                    socket.connect(InetSocketAddress(address, port), timeout)
-                    return delegate.createSocket(socket, host, port, true)
-                } catch (e: IOException) {
-                    failure = e
-                    runCatching { socket.close() }
-                }
-            }
-            throw failure ?: IOException("Could not connect to a validated research address.")
         }
     }
 
