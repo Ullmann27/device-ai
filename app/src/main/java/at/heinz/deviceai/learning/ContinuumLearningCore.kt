@@ -72,14 +72,17 @@ class ContinuumLearningCore(
         val training=(INTENT_BOOTSTRAP+replay).takeLast(96)
         val before=candidate.evaluateIntent(training)
         val holdoutBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
+        val otherBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
         val train=candidate.trainIntent(
             training,steps=650,maxMillis=2500,cancelled=cancelled
         )
         val after=candidate.evaluateIntent(training)
         val holdoutAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+        val otherAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val otherRetained=retains(otherBefore,otherAfter)
         val newScore=candidate.intentScore(experience.content)
         val learnedNew=if(label==1)newScore>=0.55 else newScore<=0.45
-        val accepted=!cancelled() && !train.stoppedEarly && learnedNew &&
+        val accepted=!cancelled() && !train.stoppedEarly && learnedNew && otherRetained &&
             after.loss+1e-7<before.loss &&
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.035
@@ -92,6 +95,7 @@ class ContinuumLearningCore(
         val reason=when {
             cancelled() || train.stoppedEarly -> "Abgebrochen; Snapshot unverändert"
             !learnedNew -> "Neue bestätigte Lektion noch nicht ausreichend gelernt"
+            !otherRetained -> "Gemeinsame Gewichte würden semantisches Wissen verschlechtern"
             holdoutAfter.correct<holdoutBefore.correct -> "Intent-Holdout würde Treffer verlieren"
             holdoutAfter.loss>holdoutBefore.loss+0.035 -> "Intent-Holdout-Verlust überschreitet Regressionsgrenze"
             after.loss>=before.loss-1e-7 -> "Replay-Trainingsverlust nicht verbessert"
@@ -110,7 +114,7 @@ class ContinuumLearningCore(
         cancelled:()->Boolean={false}
     ):ContinualLearningReport? = synchronized(CORE_LOCK) {
         if(sources.isEmpty())return@synchronized null
-        sources.forEach(MentorSourceNotebook::checkSource)
+        sources.forEach(MentorSourceValidation::checkSource)
         val ids=mutableListOf<String>()
         sources.forEach { source ->
             val experience=LearningExperienceFactory.create(
@@ -138,12 +142,16 @@ class ContinuumLearningCore(
         val candidate=TrainableSubwordEncoder.restore(baseline.save())
         val before=candidate.evaluateSemantic(training)
         val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val protectedIntent=(INTENT_HOLDOUT+ownerIntentReplay()).take(128)
+        val otherBefore=candidate.evaluateIntent(protectedIntent)
         val train=candidate.trainSemantic(
             training,steps=550,maxMillis=2500,cancelled=cancelled
         )
         val after=candidate.evaluateSemantic(training)
         val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
-        val accepted=!cancelled() && !train.stoppedEarly &&
+        val otherAfter=candidate.evaluateIntent(protectedIntent)
+        val otherRetained=retains(otherBefore,otherAfter)
+        val accepted=!cancelled() && !train.stoppedEarly && otherRetained &&
             after.loss+1e-7<before.loss &&
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.045
@@ -155,6 +163,7 @@ class ContinuumLearningCore(
         }
         val reason=when {
             cancelled() || train.stoppedEarly -> "Abgebrochen; Snapshot unverändert"
+            !otherRetained -> "Gemeinsame Gewichte würden Intent oder persönliche Lektionen verschlechtern"
             holdoutAfter.correct<holdoutBefore.correct -> "Semantik-Holdout würde Treffer verlieren"
             holdoutAfter.loss>holdoutBefore.loss+0.045 -> "Semantik-Holdout-Verlust überschreitet Regressionsgrenze"
             after.loss>=before.loss-1e-7 -> "Quellen-Replay-Verlust nicht verbessert"
@@ -229,6 +238,44 @@ class ContinuumLearningCore(
     fun intentScore(text:String):Double=synchronized(CORE_LOCK) { loadModel().intentScore(text) }
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
+
+    /** Owner-selected SWB1 only. Checksum is integrity, not a publisher signature.
+     * Independent local evaluation protects both tasks and private owner lessons.
+     * This method never replaces the experience ledger or command permissions.
+     */
+    fun importSnapshot(bytes:ByteArray):ContinualLearningReport=synchronized(CORE_LOCK) {
+        require(bytes.size==32960) { "Ungültige SWB1-Dateigröße" }
+        val candidate=TrainableSubwordEncoder.restore(bytes)
+        val baseline=loadModel()
+        val intentBefore=baseline.evaluateIntent(INTENT_HOLDOUT)
+        val intentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+        val semanticBefore=baseline.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val semanticAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val replay=ownerIntentReplay()
+        val replayRetained=replay.isEmpty() || retains(baseline.evaluateIntent(replay),candidate.evaluateIntent(replay))
+        val gained=intentAfter.loss+semanticAfter.loss<intentBefore.loss+semanticBefore.loss-0.001
+        val accepted=retains(intentBefore,intentAfter) && retains(semanticBefore,semanticAfter) && replayRetained && gained
+        val reason=when {
+            !retains(intentBefore,intentAfter) -> "Import verworfen: lokaler Intent-Holdout verschlechtert"
+            !retains(semanticBefore,semanticAfter) -> "Import verworfen: lokaler Semantik-Holdout verschlechtert"
+            !replayRetained -> "Import verworfen: persönliche Intent-Lektionen würden verschlechtert"
+            !gained -> "Import unverändert: kein zusätzlicher gemessener Lerngewinn"
+            else -> "Import übernommen: beide lokalen Aufgaben und persönliche Lektionen geprüft"
+        }
+        if(accepted)saveModel(candidate.save())
+        appendAudit("snapshot-import",accepted,0,intentBefore,intentAfter,semanticBefore,semanticAfter,emptyList(),reason)
+        ContinualLearningReport("snapshot-import",accepted,0,replay.size,intentBefore,intentAfter,
+            semanticBefore,semanticAfter,emptyList(),reason)
+    }
+
+    private fun ownerIntentReplay():List<SubwordIntentExample> =
+        store.replay(LearningExperienceType.INTENT_LABEL,96).mapNotNull { item ->
+            val label=item.annotation?.toIntOrNull()
+            if(label in 0..1)SubwordIntentExample(item.content,label!!) else null
+        }
+
+    private fun retains(before:SubwordEvaluation,after:SubwordEvaluation):Boolean =
+        after.correct>=before.correct && after.loss<=before.loss+0.015
 
     private fun appendAudit(
         task:String,
@@ -327,3 +374,4 @@ class ContinuumLearningCore(
         )
     }
 }
+

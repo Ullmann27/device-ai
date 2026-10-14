@@ -1,3 +1,4 @@
+import {neuralStatus} from "./neural-core.mjs";
 // Deterministic, offline Continuum progress observations.
 // Activity counters are not evidence of intelligence or model improvement.
 const LIMIT = 64;
@@ -27,7 +28,7 @@ export function captureProgressSample(state, at = Date.now()) {
       quarantined,
       citationCoverage: ratio(explicit, beliefs.length)
     },
-    benchmark: "NOT_EVALUATED"
+    benchmark: state?.neural ? neuralStatus(state.neural) : "NOT_EVALUATED"
   };
   return sample;
 }
@@ -80,11 +81,16 @@ export function formatProgressReport(history, current) {
     "**Wissensqualität:** "+m.active+" aktive Überzeugungen · "+m.explicitlyCited+" mit expliziter Quellenreferenz · "+m.quarantined+" in Quarantäne",
     "**Zitationsabdeckung:** "+percent,
     "**Trend:** "+trend.status+(trend.change==null?"":" · "+(trend.change*100).toFixed(1)+" Prozentpunkte"),
-    "**Neuronale Testleistung:** NICHT GEMESSEN (kein lokaler Held-out-Benchmark an diese Console angeschlossen)",
+    current.benchmark === "NOT_EVALUATED"
+      ? "**Neuronale Testleistung:** NICHT GEMESSEN (kein lokaler Held-out-Benchmark an diese Console angeschlossen)"
+      : "**Neuronaler Audit (separat, klein, selbst verfasst):** Intent "+current.benchmark.audit.intent.correct+"/"+current.benchmark.audit.intent.total+
+        " · Semantik "+current.benchmark.audit.semantic.correct+"/"+current.benchmark.audit.semantic.total+
+        " · Gewichtsupdates "+current.benchmark.updates+" · übernommene Runden "+current.benchmark.accepted+"/"+current.benchmark.rounds,
+
     "",
     "_Mehr Recherche, mehr Speicher und höhere interne Rewards sind keine Belege für bessere Modellleistung. "+
     "Eine Zitation ist nicht automatisch eine geprüfte wahre Aussage. "+
-    "Neue Modellgewichte dürfen erst nach einem echten Testlauf und einer getrennten Freigabe übernommen werden._"
+    "Modellfreigaben verwenden getrennte Validierungs- und Replay-Prüfungen; der Audit steuert keine Freigabe._"
   ].join("\n");
 }
 
@@ -137,3 +143,4 @@ export function assessLearningCandidate(baseline, candidate, {
   return {decision:"ELIGIBLE_FOR_INDEPENDENT_REVIEW",reason:"POLICY_THRESHOLDS_MET",
     taskDeltas:deltas};
 }
+

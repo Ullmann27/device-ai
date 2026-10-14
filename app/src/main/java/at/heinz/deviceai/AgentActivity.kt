@@ -117,6 +117,7 @@ class AgentActivity : Activity() {
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
+        private const val NEURAL_IMPORT_REQUEST = 2211
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private val BG = Color.rgb(7, 10, 16)
@@ -1482,7 +1483,18 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
-            .setNeutralButton("SERVERKERN") { _, _ -> showRemoteContinuumStatus() }
+            .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ ->
+                AlertDialog.Builder(this)
+                    .setTitle("GitHub-Lernstand übernehmen")
+                    .setMessage("Wähle neural-public.bin aus deinem Continuum-Lernlauf. Die App prüft Dateiintegrität, beide lokalen Testaufgaben und deine persönlichen Intent-Lektionen. Bei Rückschritten bleibt der bisherige Stand erhalten. Deine Erinnerungen werden weder ersetzt noch hochgeladen.")
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("Datei wählen") { _, _ ->
+                        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type="*/*"
+                        },NEURAL_IMPORT_REQUEST)
+                    }.show()
+            }
             .setPositiveButton("Schließen",null)
             .show()
     }
@@ -3208,6 +3220,33 @@ class AgentActivity : Activity() {
                     if (neuralCoach.isActive() && !busy) sendCurrentInput()
                 }
             }
+            NEURAL_IMPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null && !localAgentExecutor.isShutdown) {
+                    localAgentExecutor.execute {
+                        val result=runCatching {
+                            val bytes=contentResolver.openInputStream(uri)?.use { stream ->
+                                val out=java.io.ByteArrayOutputStream()
+                                val buffer=ByteArray(4096)
+                                while(out.size()<=32960) {
+                                    val count=stream.read(buffer,0,minOf(buffer.size,32961-out.size()))
+                                    if(count<0)break
+                                    if(count==0)error("Dateianbieter liefert keine Daten")
+                                    out.write(buffer,0,count)
+                                }
+                                out.toByteArray()
+                            } ?: error("Datei nicht lesbar")
+                            check(!Thread.currentThread().isInterrupted) { "Import abgebrochen" }
+                            ContinuumLearningCore(filesDir).importSnapshot(bytes)
+                        }
+                        runOnUiThread {
+                            if(!isFinishing && !isDestroyed) {
+                                addAssistantMessage(result.fold({ it.reason },{ "Lernstand nicht übernommen: "+(it.message ?: "ungültige Datei") }))
+                            }
+                        }
+                    }
+                }
+            }
             MODEL_IMPORT_REQUEST -> {
                 val uri = data?.data
                 if (resultCode == RESULT_OK && uri != null) importModel(uri)
@@ -3346,5 +3385,6 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
+
 
 

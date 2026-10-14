@@ -11,8 +11,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 
-/** A researched excerpt is evidence, not trusted knowledge or a neural training label. */
-data class MentorSource(val subject:String,val url:String,val sha:String,val excerpt:String)
 
 class MentorSourceNotebook(context:Context) {
     private val prefs=context.applicationContext.getSharedPreferences("device_ai_mentor_studies_v1",Context.MODE_PRIVATE)
@@ -78,11 +76,7 @@ class MentorSourceNotebook(context:Context) {
     }
     companion object {
         private val LOCK=Any()
-        fun checkSource(x:MentorSource) {
-            require(x.subject.length in 3..80 && x.url.startsWith("https://de.wikipedia.org/wiki/") &&
-                x.url.length<=420 && x.sha.matches(Regex("[0-9a-f]{64}")) &&
-                x.excerpt.length in 20..400)
-        }
+        fun checkSource(x:MentorSource) = MentorSourceValidation.checkSource(x)
     }
 }
 
@@ -179,3 +173,4 @@ class MentorStudyJobService:JobService() {
         return false
     }
 }
+
