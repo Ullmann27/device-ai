@@ -29,17 +29,25 @@ class GeneralWebDiscoveryProvider(
         /** Deliberately conservative: never trust arbitrary HTML links as search results. */
         fun parseSearchResults(html: String): List<ResearchSourceCandidate> {
             require(html.length <= 150_000)
-            val matches = Regex("""https://[^\\s"<>{}]{4,1800}""", RegexOption.IGNORE_CASE)
-                .findAll(html)
-            return matches.mapNotNull { match ->
-                val url = match.value.replace("&amp;", "&").trimEnd(')', '.', ',', ';')
+            // Only links from the result markup are candidates, never arbitrary text,
+            // analytics, scripts or embedded tracking URLs.
+            val anchors = Regex("""(?is)<a\\b([^>]{0,2400})>""").findAll(html)
+            val href = Regex("""(?i)\\bhref\\s*=\\s*["'](https://[^"'<>\\s]{1,1800})["']""")
+            return anchors.mapNotNull { anchor ->
+                val raw = href.find(anchor.groupValues[1])?.groupValues?.get(1) ?: return@mapNotNull null
+                val url = raw.replace("&amp;", "&")
                 val uri = runCatching { java.net.URI(url) }.getOrNull() ?: return@mapNotNull null
-                if (uri.scheme != "https" || uri.host.isNullOrBlank() || uri.userInfo != null) return@mapNotNull null
-                if (uri.host.endsWith("google.com") || uri.host.endsWith("google.at")) return@mapNotNull null
-                if (uri.host.endsWith(".local") || uri.host.endsWith(".internal") ||
-                    uri.host.endsWith(".test") || uri.host.endsWith(".invalid") ||
-                    uri.host == "localhost" || uri.port !in listOf(-1, 443)) return@mapNotNull null
-                ResearchSourceCandidate(url, uri.host, "general-web-search")
+                if (uri.scheme != "https" || uri.host.isNullOrBlank() || uri.userInfo != null ||
+                    uri.port !in listOf(-1, 443)) return@mapNotNull null
+                val host = uri.host.lowercase(java.util.Locale.ROOT).trimEnd('.')
+                if (!host.contains('.') || host == "localhost" ||
+                    host == "google.com" || host.endsWith(".google.com") ||
+                    host == "google.at" || host.endsWith(".google.at") ||
+                    host.endsWith(".local") || host.endsWith(".localhost") ||
+                    host.endsWith(".internal") || host.endsWith(".lan") ||
+                    host.endsWith(".test") || host.endsWith(".invalid") ||
+                    host.endsWith(".example")) return@mapNotNull null
+                ResearchSourceCandidate(url, host, "general-web-search")
             }.distinctBy { it.url }.take(8).toList()
         }
 
