@@ -60,6 +60,9 @@ jobs:
             echo "CONTINUUM_COPILOT=0" >> "$GITHUB_ENV"
           fi
 
+      - name: Test Baby Core and public-web guard
+        run: node --test .github/continuum/baby-core.test.mjs
+
       - name: Run Continuum
         env:
           GITHUB_TOKEN: ${{ github.token }}
