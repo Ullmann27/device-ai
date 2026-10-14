@@ -5,6 +5,20 @@ import org.junit.Test
 import java.nio.file.Files
 
 class ContinuumLearningCoreTest {
+    @Test fun bothOfflineStagesRunWithoutUserTrainingAndDoNotRepeat() {
+        val dir=Files.createTempDirectory("continuum-dual-bootstrap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            assertNotNull(core.bootstrapOfflineCurriculum())
+            assertNotNull(core.bootstrapSemanticCurriculum())
+            assertEquals(2,core.status().experiences.audits)
+            assertEquals(0,core.status().experiences.intentLabels)
+            assertNull(ContinuumLearningCore(dir).bootstrapOfflineCurriculum())
+            assertNull(ContinuumLearningCore(dir).bootstrapSemanticCurriculum())
+            assertEquals(2,core.status().experiences.audits)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun semanticBootstrapIsAuditedIdempotentAndProtectsIntent() {
         val dir=Files.createTempDirectory("continuum-semantic-bootstrap").toFile()
         try {
