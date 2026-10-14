@@ -5,6 +5,24 @@ import org.junit.Test
 import java.nio.file.Files
 
 class ContinuumLearningCoreTest {
+    @Test fun offlineBootstrapNeedsNoOwnerLessonsAndRunsOnlyOnce() {
+        val dir=Files.createTempDirectory("continuum-autonomous-bootstrap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val before=core.modelSnapshot()
+            val report=core.bootstrapOfflineCurriculum()!!
+            assertEquals("offline-bootstrap",report.task)
+            assertTrue(report.steps>0)
+            assertEquals(0,core.status().experiences.intentLabels)
+            assertEquals(0,core.status().experiences.userFacts)
+            assertEquals(1,core.status().experiences.audits)
+            if(report.accepted) assertFalse(before.contentEquals(core.modelSnapshot()))
+            else assertArrayEquals(before,core.modelSnapshot())
+            assertNull(core.bootstrapOfflineCurriculum())
+            assertEquals(1,ContinuumLearningCore(dir).status().experiences.audits)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun confirmedIntentUsesReplayHoldoutAndPersistsOnlyAcceptedCandidate() {
         val dir=Files.createTempDirectory("continuum-learning-core").toFile()
         try {
