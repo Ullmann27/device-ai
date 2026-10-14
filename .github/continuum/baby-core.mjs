@@ -6,6 +6,10 @@ const SKILLS = [
   "source-critique",
   "synthesis",
   "communication",
+  "dialogue-pragmatics",
+  "affect-understanding",
+  "planning",
+  "memory-retrieval",
   "self-check"
 ];
 
@@ -80,12 +84,20 @@ export function analyzeInstruction(text) {
 
 export function buildDeepResearchPlan(question) {
   const q = clean(question, 600);
-  return [
+  const lower=q.toLocaleLowerCase("de-DE");
+  const plan=[
     { id:"mechanism", question:q + " — Welche Mechanismen und Architekturen funktionieren nachweislich?", skill:"research" },
     { id:"evidence", question:q + " — Welche starken empirischen Ergebnisse und Benchmarks gibt es?", skill:"source-critique" },
     { id:"failure", question:q + " — Welche Grenzen, Fehlschläge, Gegenbeispiele und offenen Probleme sind bekannt?", skill:"source-critique" },
     { id:"implementation", question:q + " — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?", skill:"instruction-decomposition" }
   ];
+  if(/sprache|dialog|emotion|benutzer|kommunik|grammar|language|conversation/.test(lower)){
+    plan.push({id:"interaction",question:q+" — Welche Methoden für Dialogpragmatik, Benutzerfeedback, Emotionssignale und natürliche Interaktion sind empirisch belastbar?",skill:"dialogue-pragmatics"});
+  }
+  if(/plan|denken|zerleg|reason|selbst|ziel|entscheidung/.test(lower)){
+    plan.push({id:"metacognition",question:q+" — Welche Methoden für Aufgabenzerlegung, Selbstüberwachung, Planung und Wahl des nächsten Lernziels sind empirisch belastbar?",skill:"planning"});
+  }
+  return plan.slice(0,6);
 }
 
 export function ingestEvidence(babyInput, {
@@ -97,24 +109,37 @@ export function ingestEvidence(babyInput, {
   const inferredUncertainty = uncertainty == null
     ? Math.max(0.12, 0.72 - evidenceFactor)
     : clamp(Number(uncertainty), 0.05, 0.95);
-  const sentences = splitClaims(answer).slice(0, 8);
+  const sentences = splitClaims(answer).slice(0, 10);
   const added = [];
   for (const sentence of sentences) {
     const normalized = sentence.toLocaleLowerCase("de-DE");
     const id = "belief-" + sha256(normalized).slice(0, 20);
     if (baby.beliefs.some(x => x.id === id)) continue;
+    const refIndices=[...sentence.matchAll(/\[(\d{1,2})\]/g)]
+      .map(m=>Number(m[1])-1).filter(i=>i>=0&&i<citations.length);
+    const supported=refIndices.length
+      ? [...new Set(refIndices)].map(i=>citations[i])
+      : citations.slice(0,Math.min(3,citations.length));
     const contradictionIds = baby.beliefs
       .filter(old => looksContradictory(old.text, sentence))
       .map(x => x.id).slice(0, 6);
-    const confidence = clamp(1 - inferredUncertainty - contradictionIds.length * 0.08, 0.12, 0.92);
+    const diversity=new Set(supported.map(x=>x.source??domainOf(x.url))).size;
+    const meanRelevance=supported.length
+      ? supported.reduce((n,x)=>n+Math.min(6,Number(x.relevance??2)),0)/supported.length : 0;
+    const markerPenalty=refIndices.length?0:0.16;
+    const supportGain=Math.min(.28,supported.length*.055+diversity*.04+meanRelevance*.018);
+    const confidence = clamp(.56 + supportGain - inferredUncertainty*.34 - markerPenalty -
+      contradictionIds.length * 0.08, 0.08, 0.92);
     baby.beliefs.push({
       id,
-      text: sentence,
+      text: sentence.replace(/^#+\s*/,""),
       query: clean(query, 400),
       confidence,
       uncertainty: 1 - confidence,
-      status: confidence >= 0.7 ? "GROUNDED_OBSERVATION" : "PROVISIONAL",
-      citationUrls: citations.map(x => x.url).filter(Boolean).slice(0, 10),
+      status: confidence >= 0.68 && supported.length>0 ? "GROUNDED_OBSERVATION" : "PROVISIONAL",
+      citationUrls: supported.map(x => x.url).filter(Boolean).slice(0, 8),
+      supportCount:supported.length,
+      sourceDiversity:diversity,
       contradictionIds,
       createdAt: now,
       lastValidatedAt: now
@@ -238,6 +263,8 @@ function splitClaims(text) {
   return String(text).split(/(?<=[.!?])\s+/)
     .map(x=>clean(x,500))
     .filter(x=>x.length>=45 && x.length<=500)
+    .filter(x=>x.split(/\s+/).length>=7)
+    .filter(x=>!/^#+\s*[^.!?]+$/.test(x))
     .filter((x,i,a)=>a.indexOf(x)===i);
 }
 
