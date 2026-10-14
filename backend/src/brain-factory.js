@@ -45,10 +45,20 @@ export function buildBrainDataset(continuumState, limit = 12) {
       priority: 1.2 + Number(obs.uncertainty ?? 0)
     });
   }
-  return cases
+  const ranked = cases
     .sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id))
-    .filter((item, i, all) => all.findIndex((x) => x.task === item.task) === i)
-    .slice(0, bounded);
+    .filter((item, i, all) => all.findIndex((x) => x.task === item.task) === i);
+
+  const selected = [];
+  for (const type of ["open_gap", "coverage", "adversarial_review"]) {
+    const representative = ranked.find((x) => x.type === type);
+    if (representative && selected.length < bounded) selected.push(representative);
+  }
+  for (const item of ranked) {
+    if (selected.length >= bounded) break;
+    if (!selected.some((x) => x.id === item.id)) selected.push(item);
+  }
+  return selected;
 }
 
 export function createInitialBrainState(now = Date.now()) {
