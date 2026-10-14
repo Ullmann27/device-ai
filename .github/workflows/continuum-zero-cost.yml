@@ -35,7 +35,11 @@ jobs:
         run: |
           mkdir -p .continuum
           git fetch origin continuum-state:refs/remotes/origin/continuum-state 2>/dev/null || true
-          git show origin/continuum-state:.continuum/state.json > .continuum/state.json 2>/dev/null || true
+          if git show origin/continuum-state:.continuum/state.json > .continuum/state.json 2>/dev/null; then
+            test -s .continuum/state.json || rm -f .continuum/state.json
+          else
+            rm -f .continuum/state.json
+          fi
 
       - name: Set up Node 20
         uses: actions/setup-node@v4
@@ -47,6 +51,15 @@ jobs:
         continue-on-error: true
         run: npm install -g @github/copilot@latest
 
+      - name: Detect Copilot CLI
+        shell: bash
+        run: |
+          if command -v copilot >/dev/null 2>&1; then
+            echo "CONTINUUM_COPILOT=1" >> "$GITHUB_ENV"
+          else
+            echo "CONTINUUM_COPILOT=0" >> "$GITHUB_ENV"
+          fi
+
       - name: Run Continuum
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -55,11 +68,7 @@ jobs:
           CONTINUUM_ISSUE: "20"
           CONTINUUM_COMMENT: ${{ github.event.comment.body || '' }}
           CONTINUUM_COMMENT_USER: ${{ github.event.comment.user.login || '' }}
-        run: |
-          if command -v copilot >/dev/null 2>&1; then
-            echo "CONTINUUM_COPILOT=1" >> "$GITHUB_ENV"
-          fi
-          node .github/continuum/zero-cost-core.mjs
+        run: node .github/continuum/zero-cost-core.mjs
 
       - name: Persist learned state on dedicated branch
         shell: bash

@@ -49,7 +49,9 @@ function freshState() {
 
 function loadState() {
   if (!fs.existsSync(STATE_FILE)) return freshState();
-  const state = JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
+  const raw = fs.readFileSync(STATE_FILE, "utf8").trim();
+  if (!raw) return freshState();
+  const state = JSON.parse(raw);
   if (state.schemaVersion !== 1) throw new Error("Unsupported state schema");
   if (state.integrityHash !== hashState(state)) throw new Error("Continuum state integrity mismatch");
   return state;
