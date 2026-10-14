@@ -76,7 +76,7 @@ object LearningExperienceFactory {
         listOf(type.name,provenance.name,trust.name,content,annotation.orEmpty(),sourceRef.orEmpty())
             .forEach { value ->
                 digest.update(value.toByteArray(Charsets.UTF_8))
-                digest.update(0)
+                digest.update(0.toByte())
             }
         return digest.digest().joinToString("") { "%02x".format(it) }
     }
