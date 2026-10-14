@@ -283,12 +283,17 @@ class AgentActivity : Activity() {
         // Public, bundled examples only. No internet access or owner-labelled data.
         Thread({
             runCatching {
-                ContinuumLearningCore(filesDir).bootstrapOfflineCurriculum()
-            }.onSuccess { report ->
-                if (report != null) runOnUiThread {
-                    addToolActivity("CONTINUUM · Offline-Basistraining: " +
-                        if (report.accepted) "angenommen (" + report.steps + " Updates)"
-                        else "Kandidat verworfen (Holdout-Schutz)")
+                val core = ContinuumLearningCore(filesDir)
+                val intent = core.bootstrapOfflineCurriculum()
+                val semantic = core.bootstrapSemanticCurriculum()
+                listOfNotNull(intent, semantic)
+            }.onSuccess { reports ->
+                if (reports.isNotEmpty()) runOnUiThread {
+                    reports.forEach { report ->
+                        addToolActivity("CONTINUUM · " + report.task + ": " +
+                            if (report.accepted) "angenommen (" + report.steps + " Schritte)"
+                            else "Kandidat verworfen (Holdout-Schutz)")
+                    }
                 }
             }.onFailure { error ->
                 runOnUiThread {
