@@ -31,7 +31,10 @@ jobs:
           node-version: "20"
 
       - name: Validate backend syntax
-        run: node --check backend/src/server.js
+        run: npm --prefix backend run check
+
+      - name: Test autonomous continuum backend
+        run: npm --prefix backend test
 
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
