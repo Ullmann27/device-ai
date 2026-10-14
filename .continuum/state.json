@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 4,
-  "generation": 10,
+  "schemaVersion": 5,
+  "generation": 11,
   "createdAt": 1791957546095,
-  "updatedAt": 1791958643284,
+  "updatedAt": 1791958865911,
   "topics": [
     {
       "id": "topic-01",
@@ -3656,9 +3656,22 @@
         ],
         "complexity": 0.3881818181818182
       }
+    },
+    {
+      "at": 1791958865079,
+      "user": "Ullmann27",
+      "text": "/status",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [],
+        "complexity": 0.0031818181818181815
+      }
     }
   ],
-  "integrityHash": "8ef4fd44c9c126bb5f45500ade6a3b59187c32ed9d18dd2331b49fd3a83ef2e8",
+  "integrityHash": "433d2cc3cd2fd070f549084e551f1c17fd6759262f02fe80c693a31db422feaf",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3688,7 +3701,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791958642628,
+    "updatedAt": 1791958865077,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4542,20 +4555,27 @@
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 2,
-      "meanLength": 155.5,
-      "meanUrgency": 0.35,
+      "total": 3,
+      "meanLength": 106,
+      "meanUrgency": 0.3499999999999999,
       "speechActs": {
-        "STATEMENT": 1,
+        "STATEMENT": 2,
         "QUESTION": 1
       },
       "affects": {
-        "NEUTRAL": 2
+        "NEUTRAL": 3
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
       }
     },
     "ownerRules": []
+  },
+  "worldModel": {
+    "schemaVersion": 1,
+    "createdAt": 1791958865069,
+    "updatedAt": 1791958865069,
+    "hypotheses": [],
+    "history": []
   }
 }
