@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {createBabyState,analyzeInstruction,ingestEvidence,addGoal,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
+import {createBabyState,migrateBabyState,analyzeInstruction,observeInteraction,addOwnerRule,ingestEvidence,addGoal,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
 import {isBlockedAddress,extractPage} from "./public-web.mjs";
 
 test("baby extracts interaction structure and constraints",()=>{
@@ -54,4 +54,26 @@ test("html extraction strips active content and preserves public links",()=>{
   assert.ok(page.text.includes("Persistent memory"));
   assert.ok(!page.text.includes("alert(1)"));
   assert.deepEqual(page.links,["https://example.org/paper"]);
+});
+
+
+test("legacy overconfident beliefs are downgraded until revalidated",()=>{
+  const legacy=createBabyState(100);
+  legacy.schemaVersion=1;
+  legacy.beliefs=[{id:"belief-old",text:"An old broad claim with insufficient precise support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
+  const migrated=migrateBabyState(legacy,200);
+  assert.equal(migrated.schemaVersion,2);
+  assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
+  assert.ok(migrated.beliefs[0].confidence<=.55);
+});
+
+test("interaction profile and explicit owner rules learn without becoming web beliefs",()=>{
+  let state=createBabyState(100);
+  const observed=observeInteraction(state,"Bitte recherchiere das jetzt dringend, aber ohne kostenpflichtige APIs.",200);
+  state=observed.baby;
+  assert.equal(state.interactionProfile.total,1);
+  assert.equal(observed.analysis.affect,"URGENT");
+  const ruled=addOwnerRule(state,"Antworte auf Deutsch und nenne messbare Fortschritte.",300);
+  assert.equal(ruled.baby.ownerRules.length,1);
+  assert.equal(ruled.baby.beliefs.length,0);
 });

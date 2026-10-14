@@ -15,7 +15,7 @@ const SKILLS = [
 
 export function createBabyState(now = Date.now()) {
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     createdAt: now,
     updatedAt: now,
     beliefs: [],
@@ -24,13 +24,31 @@ export function createBabyState(now = Date.now()) {
     skills: Object.fromEntries(SKILLS.map(id => [id, {
       id, trials: 0, rewardSum: 0, successCount: 0, lastReward: null, lastAt: null
     }])),
-    counters: { observations: 0, plans: 0, contradictions: 0 }
+    counters: { observations: 0, plans: 0, contradictions: 0 },
+    interactionProfile: {
+      total:0, meanLength:0, meanUrgency:0,
+      speechActs:{}, affects:{}, constraints:{}
+    },
+    ownerRules: []
   };
 }
 
 export function migrateBabyState(value, now = Date.now()) {
-  if (!value || value.schemaVersion !== 1) return createBabyState(now);
+  if (!value) return createBabyState(now);
   const state = structuredClone(value);
+  if(state.schemaVersion===1){
+    state.schemaVersion=2;
+    state.beliefs=(Array.isArray(state.beliefs)?state.beliefs:[]).map(b=>{
+      if(Number.isFinite(b.supportCount))return b;
+      const confidence=Math.min(.55,Number(b.confidence??.4));
+      return {...b,confidence,uncertainty:1-confidence,status:"PROVISIONAL",
+        supportCount:Array.isArray(b.citationUrls)?Math.min(3,b.citationUrls.length):0,
+        sourceDiversity:0};
+    });
+    state.interactionProfile={total:0,meanLength:0,meanUrgency:0,speechActs:{},affects:{},constraints:{}};
+    state.ownerRules=[];
+  }
+  if(state.schemaVersion!==2)return createBabyState(now);
   state.beliefs = Array.isArray(state.beliefs) ? state.beliefs.slice(-256) : [];
   state.goals = Array.isArray(state.goals) ? state.goals.slice(-128) : [];
   state.episodes = Array.isArray(state.episodes) ? state.episodes.slice(-128) : [];
@@ -41,7 +59,42 @@ export function migrateBabyState(value, now = Date.now()) {
     };
   }
   state.counters = state.counters ?? { observations: 0, plans: 0, contradictions: 0 };
+  state.interactionProfile=state.interactionProfile??{total:0,meanLength:0,meanUrgency:0,speechActs:{},affects:{},constraints:{}};
+  state.ownerRules=Array.isArray(state.ownerRules)?state.ownerRules.slice(-32):[];
   return state;
+}
+
+export function observeInteraction(babyInput,text,now=Date.now()){
+  const baby=migrateBabyState(babyInput,now);
+  const analysis=analyzeInstruction(text);
+  const p=baby.interactionProfile;
+  const n=p.total;
+  p.total=n+1;
+  p.meanLength=(p.meanLength*n+String(text).length)/(n+1);
+  p.meanUrgency=(p.meanUrgency*n+analysis.urgency)/(n+1);
+  p.speechActs[analysis.speechAct]=(p.speechActs[analysis.speechAct]??0)+1;
+  p.affects[analysis.affect]=(p.affects[analysis.affect]??0)+1;
+  for(const constraint of analysis.constraints){
+    const key=clean(constraint.toLocaleLowerCase("de-DE"),80);
+    p.constraints[key]=(p.constraints[key]??0)+1;
+  }
+  baby.updatedAt=now;
+  return {baby,analysis};
+}
+
+export function addOwnerRule(babyInput,text,now=Date.now()){
+  const baby=migrateBabyState(babyInput,now);
+  const cleaned=clean(text,600);
+  if(cleaned.length<5)return {baby,rule:null};
+  const id="rule-"+sha256(cleaned.toLocaleLowerCase("de-DE")).slice(0,20);
+  let rule=baby.ownerRules.find(x=>x.id===id);
+  if(!rule){
+    rule={id,text:cleaned,createdAt:now,provenance:"USER_EXPLICIT",active:true};
+    baby.ownerRules.push(rule);
+    baby.ownerRules=baby.ownerRules.slice(-32);
+  }
+  baby.updatedAt=now;
+  return {baby,rule};
 }
 
 export function analyzeInstruction(text) {
@@ -114,7 +167,7 @@ export function ingestEvidence(babyInput, {
   for (const sentence of sentences) {
     const normalized = sentence.toLocaleLowerCase("de-DE");
     const id = "belief-" + sha256(normalized).slice(0, 20);
-    if (baby.beliefs.some(x => x.id === id)) continue;
+    const existing=baby.beliefs.find(x=>x.id===id);
     const refIndices=[...sentence.matchAll(/\[(\d{1,2})\]/g)]
       .map(m=>Number(m[1])-1).filter(i=>i>=0&&i<citations.length);
     const supported=refIndices.length
@@ -130,7 +183,7 @@ export function ingestEvidence(babyInput, {
     const supportGain=Math.min(.28,supported.length*.055+diversity*.04+meanRelevance*.018);
     const confidence = clamp(.56 + supportGain - inferredUncertainty*.34 - markerPenalty -
       contradictionIds.length * 0.08, 0.08, 0.92);
-    baby.beliefs.push({
+    const candidate={
       id,
       text: sentence.replace(/^#+\s*/,""),
       query: clean(query, 400),
@@ -141,11 +194,24 @@ export function ingestEvidence(babyInput, {
       supportCount:supported.length,
       sourceDiversity:diversity,
       contradictionIds,
-      createdAt: now,
+      createdAt: existing?.createdAt??now,
       lastValidatedAt: now
-    });
+    };
+    if(existing){
+      const mergedUrls=[...new Set([...(existing.citationUrls??[]),...candidate.citationUrls])].slice(0,8);
+      Object.assign(existing,candidate,{
+        confidence:Math.max(Number(existing.confidence??0),candidate.confidence),
+        uncertainty:1-Math.max(Number(existing.confidence??0),candidate.confidence),
+        status:(existing.status==="GROUNDED_OBSERVATION"||candidate.status==="GROUNDED_OBSERVATION")?"GROUNDED_OBSERVATION":"PROVISIONAL",
+        citationUrls:mergedUrls,
+        supportCount:Math.max(Number(existing.supportCount??0),candidate.supportCount),
+        sourceDiversity:Math.max(Number(existing.sourceDiversity??0),candidate.sourceDiversity)
+      });
+    }else{
+      baby.beliefs.push(candidate);
+      added.push(id);
+    }
     baby.counters.contradictions += contradictionIds.length;
-    added.push(id);
   }
   baby.counters.observations += 1;
   const goals = [];
@@ -255,7 +321,9 @@ export function babyStatus(babyInput) {
       trials:s.trials,
       meanReward:s.trials ? s.rewardSum/s.trials : null,
       successRate:s.trials ? s.successCount/s.trials : null
-    }))
+    })),
+    interactionProfile:baby.interactionProfile,
+    ownerRules:baby.ownerRules.filter(x=>x.active).length
   };
 }
 
