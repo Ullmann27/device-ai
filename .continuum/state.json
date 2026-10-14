@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 20,
+  "generation": 21,
   "createdAt": 1791957546095,
-  "updatedAt": 1791959896455,
+  "updatedAt": 1791959960727,
   "topics": [
     {
       "id": "topic-01",
@@ -3928,9 +3928,24 @@
         "clauses": [],
         "complexity": 0.0031818181818181815
       }
+    },
+    {
+      "at": 1791959959936,
+      "user": "Ullmann27",
+      "text": "/memory continual learning experience replay catastrophic forgetting",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [
+          "/memory continual learning experience replay catastrophic forgetting"
+        ],
+        "complexity": 0.13090909090909092
+      }
     }
   ],
-  "integrityHash": "cbbe1df3f539ec262083258861351c5c37318728c3fc9cddbab8840d3c2400a8",
+  "integrityHash": "76d9f1108eb44f21a95e1848e2af6057aa48a702c969b91a3cb8bc544407756d",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3960,7 +3975,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791959896460,
+    "updatedAt": 1791959960732,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4876,7 +4891,7 @@
         "priority": 1.2,
         "attempts": 0,
         "rewardSum": 0,
-        "status": "OPEN",
+        "status": "SATISFIED",
         "createdAt": 1791959895636,
         "lastTriedAt": null
       }
@@ -5041,6 +5056,14 @@
         "reward": 10,
         "reflection": "Deep Research verband 6 Teilpläne, 16 Quellen und 3 Quellentypen.",
         "createdAt": 1791959611733
+      },
+      {
+        "id": "episode-c3355cc2e4308959fc40",
+        "goalId": null,
+        "success": true,
+        "reward": 9,
+        "reflection": "Expliziter Memory-Retrieval für: continual learning experience replay catastrophic forgetting · Treffer 10",
+        "createdAt": 1791959959943
       }
     ],
     "skills": {
@@ -5118,28 +5141,28 @@
       },
       "memory-retrieval": {
         "id": "memory-retrieval",
-        "trials": 1,
-        "rewardSum": 8.27997225973682,
-        "successCount": 1,
-        "lastReward": 8.27997225973682,
-        "lastAt": 1791959609714
+        "trials": 2,
+        "rewardSum": 17.27997225973682,
+        "successCount": 2,
+        "lastReward": 9,
+        "lastAt": 1791959959943
       }
     },
     "counters": {
       "observations": 20,
-      "plans": 20,
+      "plans": 21,
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 12,
-      "meanLength": 63.25,
-      "meanUrgency": 0.35000000000000003,
+      "total": 13,
+      "meanLength": 63.61538461538461,
+      "meanUrgency": 0.35,
       "speechActs": {
-        "STATEMENT": 10,
+        "STATEMENT": 11,
         "QUESTION": 2
       },
       "affects": {
-        "NEUTRAL": 12
+        "NEUTRAL": 13
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
@@ -5150,7 +5173,7 @@
   "worldModel": {
     "schemaVersion": 2,
     "createdAt": 1791958865069,
-    "updatedAt": 1791959895638,
+    "updatedAt": 1791959959935,
     "hypotheses": [
       {
         "id": "hyp-804e497294cae0847046",
@@ -5214,7 +5237,7 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791959895638,
+        "createdAt": 1791959959934,
         "lastTestedAt": null,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
@@ -5239,7 +5262,7 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791959895638,
+        "createdAt": 1791959959935,
         "lastTestedAt": null,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
