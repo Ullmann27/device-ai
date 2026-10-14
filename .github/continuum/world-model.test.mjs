@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {createWorldModel,proposeHypothesis,selectHypothesisTest,evaluateHypothesisEvidence,worldModelStatus} from "./world-model.mjs";
+import {createWorldModel,migrateWorldModel,proposeHypothesis,selectHypothesisTest,evaluateHypothesisEvidence,worldModelStatus} from "./world-model.mjs";
 
 test("world model keeps hypotheses provisional until independent support arrives",()=>{
   let model=createWorldModel(100);
@@ -74,7 +74,7 @@ test("migration recalibrates a legacy one-cycle supported hypothesis back to pro
     supportEvidence:[{id:"ev-old",classification:"SUPPORT",overlap:.5,domains:["doi.org","publisher.example"],text:"support",createdAt:120}],
     contradictEvidence:[],inconclusiveEvidence:[],createdAt:100,lastTestedAt:120,testQuestions:["test"]
   }];
-  const migrated=(await import("./world-model.mjs")).migrateWorldModel(model,200);
+  const migrated=migrateWorldModel(model,200);
   assert.equal(migrated.schemaVersion,2);
   assert.equal(migrated.hypotheses[0].status,"PROVISIONAL");
   assert.equal(migrated.hypotheses[0].independentSupportEvents,1);
