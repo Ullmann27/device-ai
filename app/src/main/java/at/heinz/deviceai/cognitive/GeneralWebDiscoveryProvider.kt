@@ -29,10 +29,10 @@ class GeneralWebDiscoveryProvider(
         /** Deliberately conservative: never trust arbitrary HTML links as search results. */
         fun parseSearchResults(html: String): List<ResearchSourceCandidate> {
             require(html.length <= 150_000)
-            val matches = Regex("""<a[^>]+href="(https://[^"]{1,1800})"[^>]*>""", RegexOption.IGNORE_CASE)
+            val matches = Regex("""https://[^\\s"<>{}]{4,1800}""", RegexOption.IGNORE_CASE)
                 .findAll(html)
             return matches.mapNotNull { match ->
-                val url = match.groupValues[1].replace("&amp;", "&")
+                val url = match.value.replace("&amp;", "&").trimEnd(')', '.', ',', ';')
                 val uri = runCatching { java.net.URI(url) }.getOrNull() ?: return@mapNotNull null
                 if (uri.scheme != "https" || uri.host.isNullOrBlank() || uri.userInfo != null) return@mapNotNull null
                 if (uri.host.endsWith("google.com") || uri.host.endsWith("google.at")) return@mapNotNull null
