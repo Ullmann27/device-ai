@@ -1135,7 +1135,7 @@ class AgentActivity : Activity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Wiederkehrendes neuronales Üben erlauben?")
-            .setMessage("Du erlaubst kleine, wiederholte Trainingsdurchgänge der 273 Gewichte auf " +
+            .setMessage("Du erlaubst kleine, wiederholte Trainingsdurchgänge des lokalen Sprachklassifikators auf " +
                 "deinen bereits bestätigten Sprachbeispielen. Während die App sichtbar ist, " +
                 "sucht Device AI etwa jede Minute eine Lerngelegenheit (Akku ≥30 %, kein Energiesparen). " +
                 "Android plant beim Laden weitere Hintergrundübungen etwa alle 15 Minuten. " +
@@ -1152,9 +1152,12 @@ class AgentActivity : Activity() {
                 addAssistantMessage(if (started)
                     "Automatisches Wiederholungslernen eingerichtet. Android führt die begrenzten Übungszyklen " +
                         "bei erfüllten Bedingungen aus. Über AUTO-ÜBEN kannst du es jederzeit stoppen."
-                else "AUTO-ÜBEN konnte nicht aktiviert werden: Es sind noch keine ausdrücklich bestätigten " +
-                        "neuronalen Sprachbeispiele gespeichert oder Android hat die Planung abgelehnt. " +
-                        "Tippe zuerst NEURON · JETZT TRAINIEREN bzw. LERN-GESPRÄCH.")
+                else "AUTO-ÜBEN ist noch nicht bereit. Es fehlen bestätigte Sprachbeispiele " +
+                        "oder Android hat die Hintergrundplanung abgelehnt. " +
+                        "Wichtig: JETZT TRAINIEREN erzeugt nur ein getrenntes Demo-Modell und " +
+                        "schaltet AUTO-ÜBEN nicht frei. Öffne NEURON · LERN-GESPRÄCH, " +
+                        "gib einen Gruß oder eine Frage ein und bestätige das Beispiel " +
+                        "sowie die Trainingsfreigabe. Versuche AUTO-ÜBEN danach erneut.")
             }.show()
     }
 
