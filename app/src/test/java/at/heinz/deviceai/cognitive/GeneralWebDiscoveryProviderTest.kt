@@ -19,8 +19,9 @@ class GeneralWebDiscoveryProviderTest {
             """<a href="https://www.nasa.gov/science/">NASA</a>"""
         }
         val results = provider.discover(ResearchQuery("space", "q0"))
-        assertEquals("https://www.nasa.gov/science/", results.single().url)
-        assertEquals(0, fallback.calls)
+        assertEquals("https://www.nasa.gov/science/", results.first().url)
+        assertEquals(2, results.size)
+        assertEquals(1, fallback.calls)
     }
 
     @Test fun fallsBackOnSearchFailure() {
@@ -34,4 +35,16 @@ class GeneralWebDiscoveryProviderTest {
         val html = """<a href="https://localhost/admin">Local</a><a href="http://public.org/">HTTP</a><a href="https://router.local/">Local</a><a href="https://example.org:8443/">Port</a>"""
         assertTrue(GeneralWebDiscoveryProvider.parseSearchResults(html).isEmpty())
     }
+    @Test fun doesNotExtractUrlsFromPlainTextOrScripts() {
+        val html = """<script>const tracking = "https://www.example.net/tracker"</script><p>https://www.example.com</p>"""
+        assertTrue(GeneralWebDiscoveryProvider.parseSearchResults(html).isEmpty())
+    }
+
+    @Test fun capsDistinctSearchSources() {
+        val html = (1..30).joinToString("") { i ->
+            """<a href="https://public${i}.org/article">Source</a>"""
+        }
+        assertEquals(8, GeneralWebDiscoveryProvider.parseSearchResults(html).size)
+    }
+
 }
