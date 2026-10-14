@@ -52,9 +52,15 @@ class ContinuumLearningCore(
      */
     fun bootstrapOfflineCurriculum(cancelled:()->Boolean={false}):ContinualLearningReport? =
         synchronized(CORE_LOCK) {
-            if (loadModel().updates > 0 || store.all().any {
+            // Audit is the idempotency marker, including rejected candidates.
+            // Imported weights or owner lessons must never be silently retrained.
+            if (store.all().any {
                     it.type==LearningExperienceType.TRAINING_AUDIT &&
                     it.annotation=="offline-bootstrap"
+                } || loadModel().updates > 0 ||
+                store.all().any {
+                    it.type==LearningExperienceType.INTENT_LABEL ||
+                    it.type==LearningExperienceType.USER_FACT
                 }) return@synchronized null
             val baseline=loadModel()
             val candidate=TrainableSubwordEncoder.restore(baseline.save())
