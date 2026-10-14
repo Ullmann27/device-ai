@@ -45,11 +45,11 @@ class ApprovedWebToolGateTest {
         val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery()) { url ->
             reads++
             ResearchDocument(url, "Example", 1L, "a".repeat(64), "text/plain",
-                SourceIdentity("example.org", "https://example.org"), "Verified test content")
+                SourceIdentity("www.wikipedia.org", "www.wikipedia.org"), "Verified test content")
         }
         assertFalse(gate.request(WebToolRequest.Read("http://example.org")))
         assertFalse(gate.request(WebToolRequest.Read("https://user@example.org")))
-        val page = WebToolRequest.Read("https://example.org/page")
+        val page = WebToolRequest.Read("https://www.wikipedia.org/page")
         assertTrue(gate.request(page))
         assertEquals("web_read", gate.execute(page)!!.operation)
         assertEquals(1, reads)
@@ -66,4 +66,13 @@ class ApprovedWebToolGateTest {
         assertNull(gate.execute(search))
         assertEquals(0, discovery.calls)
     }
+    @Test fun blocksLocalAndReservedHostsBeforeGrant() {
+        val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery())
+        for (url in listOf(
+            "https://localhost/path", "https://router.local/path",
+            "https://host.internal/path", "https://example.invalid/path",
+            "https://www.example.org:8443/path"
+        )) assertFalse(url, gate.request(WebToolRequest.Read(url)))
+    }
+
 }
