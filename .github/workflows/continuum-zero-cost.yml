@@ -74,6 +74,7 @@ jobs:
         shell: bash
         run: |
           cp .continuum/state.json /tmp/continuum-state.json
+          rm -f .continuum/state.json
           if git show-ref --verify --quiet refs/remotes/origin/continuum-state; then
             git switch -C continuum-state origin/continuum-state
           else
