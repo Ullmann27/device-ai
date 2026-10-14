@@ -212,6 +212,7 @@ class AgentActivity : Activity() {
     private var sessionId = UUID.randomUUID().toString()
     private var busy = false
     private var activeLocalRequest = false
+    private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
     private var researchArmed = false
     private var researchResumeRequested = false
     private var researchMode = ResearchMode.STANDARD
@@ -956,10 +957,25 @@ class AgentActivity : Activity() {
         }
         // Web research remains explicit opt-in; never infer internet permission from prose.
         if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
-            input.text.clear()
-            addUserMessage(request)
             researchArmed = false
-            runResearch(request, researchMode)
+            if (internetConsent.request(request)) {
+                AlertDialog.Builder(this)
+                    .setTitle("Internetzugriff freigeben?")
+                    .setMessage("Continuum darf für diese eine Frage öffentliche HTTPS-Quellen abrufen. Die Suchfrage wird an Wikimedia gesendet. Keine Freigabe für Geräteaktionen oder zukünftige Anfragen.\\n\\n" + request.take(512))
+                    .setNegativeButton("Ablehnen") { _, _ ->
+                        internetConsent.cancel()
+                        addToolActivity("WEB · Zugriff abgelehnt")
+                    }
+                    .setPositiveButton("Einmal erlauben") { _, _ ->
+                        if (internetConsent.approve(request)) {
+                            input.text.clear()
+                            addUserMessage(request)
+                            runResearch(request, researchMode)
+                        }
+                    }.show()
+            } else {
+                addToolActivity("WEB · Internetmodus AUS oder ungültige Frage")
+            }
             return
         }
         val decision = BootstrapBrain.decide(
@@ -1883,7 +1899,7 @@ class AgentActivity : Activity() {
             setPadding(dp(14), dp(13), dp(14), dp(13))
         }
         AlertDialog.Builder(this)
-            .setTitle("Device AI · Wikipedia durchsuchen")
+            .setTitle("Device AI · Internet auf Nachfrage")
             .setMessage("Gib ein Thema ein. Nach der Bestätigung wird diese Suchfrage an Wikimedia gesendet. " +
                 "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
                 "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
