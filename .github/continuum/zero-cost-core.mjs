@@ -14,6 +14,7 @@ import {
   evaluateHypothesisEvidence,worldModelStatus
 } from "./world-model.mjs";
 import {isOwnerComment} from "./console-policy.mjs";
+import {captureProgressSample,appendProgressSample,formatProgressReport} from "./progress-watcher.mjs";
 
 const STATE_FILE = ".continuum/state.json";
 const EVENT = process.env.CONTINUUM_EVENT ?? "workflow_dispatch";
@@ -129,6 +130,8 @@ function saveState(state) {
   state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   state.strategyRewardVersion=2;
+  state.progressHistory=appendProgressSample(state.progressHistory,
+    captureProgressSample(state,state.updatedAt));
   state.integrityHash = hashState(state);
   fs.mkdirSync(".continuum", { recursive: true });
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
@@ -815,6 +818,7 @@ function statusText(state) {
     ).join(" · "),
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
     "**Evidenz-Audit:** "+bs.explicitlyCited+" Aussagen mit expliziter Quellenreferenz · "+bs.unattributedOrLegacy+" nicht explizit belegte Aussagen · "+bs.quarantinedBeliefs+" quarantänisierte Aussagen",
+    "**Fortschrittswächter:** "+(state.progressHistory?.length??0)+" gespeicherte Messpunkte · neuronale Modellqualität: noch nicht extern benchmarked",
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
     "**Selbst-Curriculum:** "+bs.curriculumOpen+" aktuell offene Skill-Lernziele",
@@ -890,6 +894,9 @@ try {
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if(lower === "/progress") {
+      await reply(formatProgressReport(state.progressHistory,
+        captureProgressSample(state)));
     } else if(lower==="/audit"){
       const audit=babyStatus(state.baby);
       const quarantine=(state.baby.quarantinedBeliefs??[]).slice(-8);
@@ -979,7 +986,7 @@ try {
         : lower.startsWith("/ask ") ? body.slice(5).trim()
         : body;
       if (!query) {
-        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/audit`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
+        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/progress`, `/audit`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
       } else {
         const turn = await researchTurn(state, query, true);
         state.cycles.push({ at:Date.now(), query, success:true, sourceCount:turn.sources.length, interactive:true });
