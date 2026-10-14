@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {createBabyState,migrateBabyState,analyzeInstruction,observeInteraction,addOwnerRule,ingestEvidence,addGoal,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
+import {createBabyState,migrateBabyState,analyzeInstruction,observeInteraction,addOwnerRule,ingestEvidence,addGoal,refreshSkillCurriculum,retrieveMemory,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
 import {isBlockedAddress,extractPage} from "./public-web.mjs";
 
 test("baby extracts interaction structure and constraints",()=>{
@@ -76,4 +76,32 @@ test("interaction profile and explicit owner rules learn without becoming web be
   const ruled=addOwnerRule(state,"Antworte auf Deutsch und nenne messbare Fortschritte.",300);
   assert.equal(ruled.baby.ownerRules.length,1);
   assert.equal(ruled.baby.beliefs.length,0);
+});
+
+
+test("weak skills autonomously create curriculum goals and competent skills close them",()=>{
+  let state=createBabyState(100);
+  state=refreshSkillCurriculum(state,110);
+  assert.ok(state.goals.some(g=>g.origin==="SKILL_CURRICULUM:affect-understanding"&&g.status==="OPEN"));
+  const goal=state.goals.find(g=>g.origin==="SKILL_CURRICULUM:affect-understanding");
+  state=recordOutcome(state,{goalId:goal.id,skills:["affect-understanding"],success:true,reward:8,reflection:"first",now:120});
+  state=recordOutcome(state,{goalId:goal.id,skills:["affect-understanding"],success:true,reward:9,reflection:"second",now:130});
+  state=refreshSkillCurriculum(state,140);
+  assert.equal(state.goals.find(g=>g.origin==="SKILL_CURRICULUM:affect-understanding").status,"SATISFIED");
+});
+
+test("memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts",()=>{
+  let state=createBabyState(100);
+  state=addOwnerRule(state,"Antworte bei technischen Fragen mit messbaren Testergebnissen.",110).baby;
+  state=ingestEvidence(state,{
+    query:"continual learning replay",
+    answer:"Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed [1].",
+    citations:[{title:"Replay",url:"https://example.org/replay",source:"paper"}],
+    uncertainty:.15,now:120
+  }).baby;
+  state=recordOutcome(state,{skills:["research"],success:true,reward:8,reflection:"Replay research found useful retention evidence",now:130});
+  const rows=retrieveMemory(state,"technischen Testergebnissen replay learning",8);
+  assert.ok(rows.some(x=>x.kind==="OWNER_RULE"));
+  assert.ok(rows.some(x=>x.kind==="BELIEF"));
+  assert.ok(rows.some(x=>x.kind==="EPISODE"));
 });

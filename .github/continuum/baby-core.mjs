@@ -1,5 +1,18 @@
 import crypto from "node:crypto";
 
+const SKILL_CURRICULUM = {
+  "instruction-decomposition":"Welche Methoden und Benchmarks verbessern die Zerlegung komplexer Benutzeraufträge in überprüfbare Teilziele?",
+  "research":"Welche Methoden verbessern autonome Informationssuche, Quellenabdeckung und Rechercheeffizienz bei KI-Agenten?",
+  "source-critique":"Welche Verfahren bewerten Quellenqualität, Widersprüche, Unabhängigkeit und Evidenzstärke robust?",
+  "synthesis":"Welche Verfahren erzeugen aus mehreren Quellen präzise, widerspruchsbewusste und zitierbare Synthesen?",
+  "communication":"Welche Verfahren verbessern adaptive, verständliche und nutzerorientierte Kommunikation persönlicher KI-Assistenten?",
+  "dialogue-pragmatics":"Welche empirisch robusten Verfahren lernen Dialogpragmatik, Gesprächskontext und implizite Benutzerabsichten?",
+  "affect-understanding":"Welche empirisch robusten Verfahren erkennen emotionale und soziale Signale in Textdialogen ohne sie zu überinterpretieren?",
+  "planning":"Welche Verfahren verbessern hierarchische Planung, Aufgabenzerlegung, Selbstüberwachung und Zielauswahl bei KI-Agenten?",
+  "memory-retrieval":"Welche Gedächtnisarchitekturen verbessern episodischen und semantischen Abruf, Relevanzranking und Langzeitkonsistenz bei KI-Agenten?",
+  "self-check":"Welche Evaluator-, Verifier- und Self-Check-Verfahren erkennen Fehler und Regressionen bei autonomen KI-Agenten?"
+};
+
 const SKILLS = [
   "instruction-decomposition",
   "research",
@@ -258,6 +271,71 @@ export function addGoal(babyInput, text, origin = "USER", priority = 0.6, now = 
   return goal;
 }
 
+export function refreshSkillCurriculum(babyInput,now=Date.now()){
+  const baby=migrateBabyState(babyInput,now);
+  for(const [skillId,question] of Object.entries(SKILL_CURRICULUM)){
+    const skill=baby.skills[skillId];
+    const mean=skill?.trials ? skill.rewardSum/skill.trials : null;
+    const origin="SKILL_CURRICULUM:"+skillId;
+    const existing=baby.goals.find(g=>g.origin===origin);
+    const competent=(skill?.trials??0)>=2 && mean!==null && mean>=7.5;
+    if(competent){
+      if(existing)existing.status="SATISFIED";
+      continue;
+    }
+    const priority=(skill?.trials??0)===0 ? 1.45 :
+      (skill?.trials??0)<2 ? 1.2 :
+      mean!==null&&mean<6.5 ? 1.35 : .95;
+    if(existing){
+      existing.status="OPEN";
+      existing.priority=Math.max(existing.priority,priority);
+    }else{
+      addGoal(baby,question,origin,priority,now);
+    }
+  }
+  baby.updatedAt=now;
+  return baby;
+}
+
+export function retrieveMemory(babyInput,query,limit=6){
+  const baby=migrateBabyState(babyInput);
+  const q=tokens(query);
+  const scoreText=(text)=>{
+    const t=tokens(text);
+    if(!q.size||!t.size)return 0;
+    const overlap=[...q].filter(x=>t.has(x)).length;
+    return overlap/q.size;
+  };
+  const rows=[];
+  for(const rule of baby.ownerRules.filter(x=>x.active)){
+    rows.push({kind:"OWNER_RULE",id:rule.id,text:rule.text,score:.75+scoreText(rule.text)*1.8,confidence:1});
+  }
+  for(const belief of baby.beliefs){
+    const overlap=scoreText(belief.text);
+    if(overlap<=0)continue;
+    rows.push({
+      kind:"BELIEF",id:belief.id,text:belief.text,
+      score:overlap*2+Number(belief.confidence??.3)*.65+(belief.status==="GROUNDED_OBSERVATION"?.25:0),
+      confidence:Number(belief.confidence??.3),status:belief.status
+    });
+  }
+  for(const episode of baby.episodes){
+    const overlap=scoreText(episode.reflection);
+    if(overlap<=0)continue;
+    rows.push({
+      kind:"EPISODE",id:episode.id,text:episode.reflection,
+      score:overlap*1.6+Number(episode.reward??0)/20,
+      confidence:null,status:episode.success?"SUCCESS":"FAILURE"
+    });
+  }
+  for(const goal of baby.goals.filter(x=>x.status==="OPEN")){
+    const overlap=scoreText(goal.text);
+    if(overlap<=0)continue;
+    rows.push({kind:"OPEN_GOAL",id:goal.id,text:goal.text,score:overlap*1.7+goal.priority*.25,confidence:null,status:goal.status});
+  }
+  return rows.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,Math.max(1,Math.min(12,limit)));
+}
+
 export function selectGoal(babyInput, now = Date.now()) {
   const baby = migrateBabyState(babyInput, now);
   return baby.goals.filter(x => x.status === "OPEN").map(goal => {
@@ -323,7 +401,8 @@ export function babyStatus(babyInput) {
       successRate:s.trials ? s.successCount/s.trials : null
     })),
     interactionProfile:baby.interactionProfile,
-    ownerRules:baby.ownerRules.filter(x=>x.active).length
+    ownerRules:baby.ownerRules.filter(x=>x.active).length,
+    curriculumOpen:baby.goals.filter(x=>x.status==="OPEN"&&String(x.origin).startsWith("SKILL_CURRICULUM:")).length
   };
 }
 
