@@ -26,7 +26,7 @@ const DEFAULT_TOPICS = [
 function freshState() {
   const now = Date.now();
   const state = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generation: 1,
     createdAt: now,
     updatedAt: now,
@@ -52,8 +52,15 @@ function loadState() {
   const raw = fs.readFileSync(STATE_FILE, "utf8").trim();
   if (!raw) return freshState();
   const state = JSON.parse(raw);
-  if (state.schemaVersion !== 1) throw new Error("Unsupported state schema");
   if (state.integrityHash !== hashState(state)) throw new Error("Continuum state integrity mismatch");
+  if (state.schemaVersion === 1) {
+    const migrated = freshState();
+    migrated.lessons = Array.isArray(state.lessons) ? state.lessons.slice(-128) : [];
+    migrated.interactions = Array.isArray(state.interactions) ? state.interactions.slice(-128) : [];
+    migrated.generation = Math.max(2, Number(state.generation ?? 1) + 1);
+    return migrated;
+  }
+  if (state.schemaVersion !== 2) throw new Error("Unsupported state schema");
   return state;
 }
 
@@ -125,22 +132,84 @@ function nextTarget(state) {
   return { type: "topic", text: ranked[0].name, topicId: ranked[0].id };
 }
 
-async function research(query) {
+async function research(query, interactive = false) {
+  const searchQueries = await planSearchQueries(query, interactive);
   const results = [];
-  await Promise.allSettled([
-    wikipedia(query).then(x => results.push(...x)),
-    openAlex(query).then(x => results.push(...x)),
-    crossref(query).then(x => results.push(...x))
-  ]);
+  for (const searchQuery of searchQueries.slice(0, 5)) {
+    await Promise.allSettled([
+      wikipedia(searchQuery).then(x => results.push(...x.map(v => ({...v, searchQuery})))),
+      openAlex(searchQuery).then(x => results.push(...x.map(v => ({...v, searchQuery})))),
+      crossref(searchQuery).then(x => results.push(...x.map(v => ({...v, searchQuery})))),
+      arxiv(searchQuery).then(x => results.push(...x.map(v => ({...v, searchQuery}))))
+    ]);
+  }
   const deduped = [];
   const seen = new Set();
   for (const item of results) {
     const key = (item.url || item.title).toLocaleLowerCase("de-DE");
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    deduped.push(item);
+    item.relevance = relevance(item, searchQueries);
+    if (item.relevance >= 1.25) deduped.push(item);
   }
-  return deduped.slice(0, 9);
+  deduped.sort((a,b) => b.relevance - a.relevance ||
+    sourceWeight(b.source) - sourceWeight(a.source) ||
+    a.title.localeCompare(b.title));
+  return { sources: deduped.slice(0, 12), searchQueries };
+}
+
+async function planSearchQueries(query, interactive) {
+  const q = String(query).trim();
+  const queries = [q];
+  const lower = q.toLocaleLowerCase("de-DE");
+  if (/autonom|wissenslück|forschungsfrage|agent/.test(lower)) {
+    queries.push(
+      "autonomous AI agents continual learning knowledge gap detection curiosity-driven exploration",
+      "self improving research agents uncertainty driven planning evaluator optimizer",
+      "active learning epistemic uncertainty autonomous scientific discovery agents"
+    );
+  }
+  if (/continual|vergess|lernen/.test(lower)) {
+    queries.push("continual learning catastrophic forgetting experience replay online learning");
+  }
+  if (/reason|denken|überleg|search/.test(lower)) {
+    queries.push("AI reasoning search test-time compute self-reflection agents");
+  }
+  if (/android|on-device|handy|apk/.test(lower)) {
+    queries.push("on-device AI Android continual learning edge inference local language model");
+  }
+  if (interactive && process.env.CONTINUUM_COPILOT === "1") {
+    const planned = runCopilot([
+      "Erzeuge 5 präzise Suchanfragen für wissenschaftliche und technische Recherche.",
+      "Gib nur eine Suchanfrage pro Zeile aus, keine Erklärungen.",
+      "Nutze englische Fachbegriffe, wenn sie bessere Treffer liefern.",
+      "Thema: " + q
+    ].join("\n"), "gpt-6-luna", 1);
+    if (planned?.text) {
+      for (const line of planned.text.split(/\r?\n/)) {
+        const cleaned = line.replace(/^[-*\d.)\s]+/, "").trim();
+        if (cleaned.length >= 8 && cleaned.length <= 220) queries.push(cleaned);
+      }
+    }
+  }
+  return dedupe(queries).slice(0, 6);
+}
+
+function relevance(item, queries) {
+  const title = new Set(tokenize(item.title));
+  const text = new Set(tokenize(item.text));
+  const terms = new Set(queries.flatMap(tokenize));
+  let score = 0;
+  for (const term of terms) {
+    if (title.has(term)) score += 2.4;
+    if (text.has(term)) score += 0.45;
+  }
+  if (/agent|learning|reason|uncertainty|model|artificial|intelligence|neural|benchmark|evaluation/i.test(item.title)) score += 1.0;
+  return score;
+}
+
+function sourceWeight(source) {
+  return ({ arXiv:4, OpenAlex:3, Crossref:2, Wikipedia:1 }[source] ?? 0);
 }
 
 async function wikipedia(query) {
@@ -175,6 +244,32 @@ async function openAlex(query) {
       work.publication_year ? "Publikationsjahr " + work.publication_year : ""
     ].filter(Boolean).join(". "), 2600)
   })).filter(x => x.text.length > 40 && /^https:/.test(x.url ?? ""));
+}
+
+async function arxiv(query) {
+  const words = tokenize(query).slice(0, 10).join(" ");
+  if (!words) return [];
+  const url = "https://export.arxiv.org/api/query?search_query=all%3A" +
+    encodeURIComponent(words) + "&start=0&max_results=3&sortBy=submittedDate&sortOrder=descending";
+  const response = await fetch(url, {
+    headers: { "User-Agent": "DeviceAI-Continuum/0.2 (https://github.com/Ullmann27/device-ai)" },
+    signal: AbortSignal.timeout(12000)
+  });
+  if (!response.ok) throw new Error("arXiv HTTP " + response.status);
+  const xml = await response.text();
+  const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map(m => m[1]);
+  return entries.map(entry => {
+    const title = decodeXml((entry.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "").replace(/\s+/g," ").trim());
+    const summary = decodeXml((entry.match(/<summary>([\s\S]*?)<\/summary>/)?.[1] ?? "").replace(/\s+/g," ").trim());
+    const id = decodeXml((entry.match(/<id>([\s\S]*?)<\/id>/)?.[1] ?? "").trim());
+    return { source:"arXiv", title, url:id, text:clean(title + ". " + summary,2600) };
+  }).filter(x => x.title && /^https:/.test(x.url) && x.text.length > 80);
+}
+
+function decodeXml(value) {
+  return String(value)
+    .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")
+    .replace(/&quot;/g,'"').replace(/&#39;/g,"'");
 }
 
 async function crossref(query) {
@@ -271,6 +366,31 @@ function relatedConcepts(state, query, limit = 8) {
   return Object.entries(scores).sort((a,b) => b[1]-a[1]).slice(0,limit).map(x => x[0]);
 }
 
+function runCopilot(prompt, model = "auto", maxCredits = 2) {
+  if (process.env.CONTINUUM_COPILOT !== "1") return null;
+  const run = spawnSync("copilot", [
+    "-p", prompt, "-s", "--model", model,
+    "--max-ai-credits", String(maxCredits), "--no-ask-user"
+  ], {
+    encoding: "utf8",
+    timeout: 120000,
+    env: { ...process.env, GITHUB_TOKEN: TOKEN }
+  });
+  if (run.status === 0 && run.stdout?.trim()) return { text: clean(run.stdout, 9000), model };
+  if (model !== "auto") {
+    const fallback = spawnSync("copilot", [
+      "-p", prompt, "-s", "--model", "auto",
+      "--max-ai-credits", String(maxCredits), "--no-ask-user"
+    ], {
+      encoding: "utf8",
+      timeout: 120000,
+      env: { ...process.env, GITHUB_TOKEN: TOKEN }
+    });
+    if (fallback.status === 0 && fallback.stdout?.trim()) return { text: clean(fallback.stdout,9000), model:"auto" };
+  }
+  return null;
+}
+
 async function maybeCopilot(query, evidence) {
   if (EVENT !== "issue_comment" || process.env.CONTINUUM_COPILOT !== "1") return null;
   const prompt = [
@@ -284,13 +404,7 @@ async function maybeCopilot(query, evidence) {
     "EVIDENZ:",
     ...evidence.map((s,i) => "[" + (i+1) + "] " + s.title + " — " + s.url + "\n" + s.text.slice(0,1400))
   ].join("\n");
-  const run = spawnSync("copilot", ["-p", prompt, "-s"], {
-    encoding: "utf8",
-    timeout: 90000,
-    env: { ...process.env, GITHUB_TOKEN: TOKEN }
-  });
-  if (run.status !== 0 || !run.stdout?.trim()) return null;
-  return clean(run.stdout, 7000);
+  return runCopilot(prompt, "gpt-6-astra", 2);
 }
 
 function makeObservation(query, sources, answer) {
@@ -310,20 +424,23 @@ function makeObservation(query, sources, answer) {
 }
 
 async function researchTurn(state, query, interact = false) {
-  const sources = await research(query);
-  if (!sources.length) throw new Error("Keine belastbare öffentliche Quelle gefunden.");
+  const retrieval = await research(query, interact);
+  const sources = retrieval.sources;
+  if (!sources.length) throw new Error("Keine hinreichend relevante öffentliche Quelle gefunden.");
   learnGraph(state, sources.map(x => x.text));
   const deterministic = synthesize(query, sources, state);
   const copilot = interact ? await maybeCopilot(query, sources) : null;
-  const answer = copilot || deterministic.text ||
+  const answer = copilot?.text || deterministic.text ||
     "Quellen wurden gefunden, aber für eine belastbare Synthese reicht der extrahierte Text noch nicht.";
   const observation = makeObservation(query, sources, answer);
+  observation.searchQueries = retrieval.searchQueries;
+  observation.synthesisModel = copilot?.model ?? "zero-cost-retrieval";
   if (!state.observations.some(x => x.id === observation.id)) state.observations.push(observation);
   state.queue.push(
     "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: " + query,
     "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: " + query
   );
-  return { observation, answer, sources, copilot: Boolean(copilot) };
+  return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null };
 }
 
 function statusText(state) {
