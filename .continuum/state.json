@@ -1,8 +1,8 @@
 {
   "schemaVersion": 4,
-  "generation": 8,
+  "generation": 9,
   "createdAt": 1791957546095,
-  "updatedAt": 1791958433895,
+  "updatedAt": 1791958565132,
   "topics": [
     {
       "id": "topic-01",
@@ -3532,9 +3532,22 @@
         "clauses": [],
         "complexity": 0.0031818181818181815
       }
+    },
+    {
+      "at": 1791958564281,
+      "user": "Ullmann27",
+      "text": "/status",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [],
+        "complexity": 0.0031818181818181815
+      }
     }
   ],
-  "integrityHash": "fd5cf267a4fc3f092d47543aa8dce2bf226c0882c7b58bce67737bdc54382b41",
+  "integrityHash": "237c0510cdfe79014be7cf8f1ae2049205abeef953b8c827045852207d1092bc",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3562,17 +3575,17 @@
     }
   ],
   "baby": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791958295409,
+    "updatedAt": 1791958564279,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
         "text": "Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Mechanismen und Architekturen funktionieren nachweislich?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/j.patcog.2026.114745",
           "https://arxiv.org/abs/2608.29772",
@@ -3582,15 +3595,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958277271,
-        "lastValidatedAt": 1791958277271
+        "lastValidatedAt": 1791958277271,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-b589195ff02011f5b5a1",
         "text": "[1] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Mechanismen und Architekturen funktionieren nachweislich?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/j.patcog.2026.114745",
           "https://arxiv.org/abs/2608.29772",
@@ -3600,15 +3615,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958277271,
-        "lastValidatedAt": 1791958277271
+        "lastValidatedAt": 1791958277271,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-0cabe373331de088fd99",
         "text": "[2] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Mechanismen und Architekturen funktionieren nachweislich?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/j.patcog.2026.114745",
           "https://arxiv.org/abs/2608.29772",
@@ -3618,15 +3635,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958277271,
-        "lastValidatedAt": 1791958277271
+        "lastValidatedAt": 1791958277271,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-29c343a5ca3a1a88ba7c",
         "text": "[3] Continual learning and catastrophic forgetting.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Mechanismen und Architekturen funktionieren nachweislich?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/j.patcog.2026.114745",
           "https://arxiv.org/abs/2608.29772",
@@ -3636,15 +3655,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958277271,
-        "lastValidatedAt": 1791958277271
+        "lastValidatedAt": 1791958277271,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-9abe0d3cc43d190b314e",
         "text": "[4] SAGE learns a predictive world model that generates two online intrinsic signals: fear, which estimates short-horizon predictive risk and model uncertainty, and curiosity, which measures novelty through prediction error.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Mechanismen und Architekturen funktionieren nachweislich?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/j.patcog.2026.114745",
           "https://arxiv.org/abs/2608.29772",
@@ -3654,15 +3675,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958277271,
-        "lastValidatedAt": 1791958277271
+        "lastValidatedAt": 1791958277271,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-9219917fb4f803e98773",
         "text": "Continual learning and catastrophic forgetting.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3671,15 +3694,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958282557,
-        "lastValidatedAt": 1791958282557
+        "lastValidatedAt": 1791958282557,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-e6611a503b501f7f27d2",
         "text": "[1] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3688,15 +3713,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958282557,
-        "lastValidatedAt": 1791958282557
+        "lastValidatedAt": 1791958282557,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-5454e8263b7c063a42ab",
         "text": "[2] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3705,15 +3732,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958282557,
-        "lastValidatedAt": 1791958282557
+        "lastValidatedAt": 1791958282557,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-8060e3bf77dfd726fa58",
         "text": "[3] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3722,15 +3751,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958282557,
-        "lastValidatedAt": 1791958282557
+        "lastValidatedAt": 1791958282557,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-d56ae79fc3fd3529df7f",
         "text": "[4] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3739,15 +3770,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958282557,
-        "lastValidatedAt": 1791958282557
+        "lastValidatedAt": 1791958282557,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-b8b11e810240232834cc",
         "text": "[4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche Grenzen, Fehlschläge, Gegenbeispiele und offenen Probleme sind bekannt?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
           "https://doi.org/10.1016/j.patcog.2026.114745",
@@ -3756,15 +3789,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958289591,
-        "lastValidatedAt": 1791958289591
+        "lastValidatedAt": 1791958289591,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-7b2773e770a91d4243af",
         "text": "Ueber die bewegende Kraft der Wärme und die Gesetze, welche sich daraus für die Wärmelehre selbst ableiten lassen.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1002/andp.18501550403",
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -3774,15 +3809,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958293425,
-        "lastValidatedAt": 1791958293425
+        "lastValidatedAt": 1791958293425,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-3ccc44608dac8d1d3514",
         "text": "[1] Continual learning and catastrophic forgetting.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1002/andp.18501550403",
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -3792,15 +3829,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958293425,
-        "lastValidatedAt": 1791958293425
+        "lastValidatedAt": 1791958293425,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-a2bab8333155917fdd55",
         "text": "[2] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1002/andp.18501550403",
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -3810,15 +3849,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958293425,
-        "lastValidatedAt": 1791958293425
+        "lastValidatedAt": 1791958293425,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-400e518777ee41e6f245",
         "text": "[3] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1002/andp.18501550403",
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -3828,15 +3869,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958293425,
-        "lastValidatedAt": 1791958293425
+        "lastValidatedAt": 1791958293425,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-d9f73c7c01f0eb71e3ed",
         "text": "[4] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte? — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
-        "confidence": 0.9,
-        "uncertainty": 0.09999999999999998,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.1002/andp.18501550403",
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -3846,15 +3889,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958293425,
-        "lastValidatedAt": 1791958293425
+        "lastValidatedAt": 1791958293425,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-d632f88c8bc2a9b571c1",
         "text": "### mechanism Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte?",
-        "confidence": 0.8745454545454545,
-        "uncertainty": 0.12545454545454549,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.48550/arxiv.2608.29772",
           "https://doi.org/10.24963/ijcai.2019/463",
@@ -3864,15 +3909,17 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958295408,
-        "lastValidatedAt": 1791958295408
+        "lastValidatedAt": 1791958295408,
+        "supportCount": 3,
+        "sourceDiversity": 0
       },
       {
         "id": "belief-294b620e47e7a62b9ac6",
         "text": "[5] ### evidence Continual learning and catastrophic forgetting.",
         "query": "Wie sollte ein lernender persönlicher KI-Kern Benutzeranweisungen zerlegen, natürliche Sprache und emotionale Signale verstehen, Unsicherheit erkennen, aus Interaktionen lernen und selbst entscheiden, welche Fähigkeit oder Wissenslücke er als Nächstes trainieren oder erforschen sollte?",
-        "confidence": 0.8745454545454545,
-        "uncertainty": 0.12545454545454549,
-        "status": "GROUNDED_OBSERVATION",
+        "confidence": 0.55,
+        "uncertainty": 0.44999999999999996,
+        "status": "PROVISIONAL",
         "citationUrls": [
           "https://doi.org/10.48550/arxiv.2608.29772",
           "https://doi.org/10.24963/ijcai.2019/463",
@@ -3882,7 +3929,9 @@
         ],
         "contradictionIds": [],
         "createdAt": 1791958295408,
-        "lastValidatedAt": 1791958295408
+        "lastValidatedAt": 1791958295408,
+        "supportCount": 3,
+        "sourceDiversity": 0
       }
     ],
     "goals": [
@@ -4081,6 +4130,19 @@
       "observations": 5,
       "plans": 5,
       "contradictions": 0
-    }
+    },
+    "interactionProfile": {
+      "total": 1,
+      "meanLength": 7,
+      "meanUrgency": 0.35,
+      "speechActs": {
+        "STATEMENT": 1
+      },
+      "affects": {
+        "NEUTRAL": 1
+      },
+      "constraints": {}
+    },
+    "ownerRules": []
   }
 }
