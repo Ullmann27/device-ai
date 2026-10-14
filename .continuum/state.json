@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 19,
+  "generation": 20,
   "createdAt": 1791957546095,
-  "updatedAt": 1791959841164,
+  "updatedAt": 1791959896455,
   "topics": [
     {
       "id": "topic-01",
@@ -3915,9 +3915,22 @@
         "clauses": [],
         "complexity": 0.0031818181818181815
       }
+    },
+    {
+      "at": 1791959895639,
+      "user": "Ullmann27",
+      "text": "/status",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [],
+        "complexity": 0.0031818181818181815
+      }
     }
   ],
-  "integrityHash": "bd129def63ac8f52176083b70e5ac704604f4e7d34abc4b05d8968fcdb1e9d36",
+  "integrityHash": "cbbe1df3f539ec262083258861351c5c37318728c3fc9cddbab8840d3c2400a8",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3947,7 +3960,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791959840476,
+    "updatedAt": 1791959896460,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4844,6 +4857,28 @@
         "status": "OPEN",
         "createdAt": 1791959611725,
         "lastTriedAt": null
+      },
+      {
+        "id": "goal-1b41e58e65606ed6fe70",
+        "text": "Welche empirisch robusten Verfahren erkennen emotionale und soziale Signale in Textdialogen ohne sie zu überinterpretieren?",
+        "origin": "SKILL_CURRICULUM:affect-understanding",
+        "priority": 1.2,
+        "attempts": 0,
+        "rewardSum": 0,
+        "status": "OPEN",
+        "createdAt": 1791959895636,
+        "lastTriedAt": null
+      },
+      {
+        "id": "goal-8b39a1c014f0a038734d",
+        "text": "Welche Gedächtnisarchitekturen verbessern episodischen und semantischen Abruf, Relevanzranking und Langzeitkonsistenz bei KI-Agenten?",
+        "origin": "SKILL_CURRICULUM:memory-retrieval",
+        "priority": 1.2,
+        "attempts": 0,
+        "rewardSum": 0,
+        "status": "OPEN",
+        "createdAt": 1791959895636,
+        "lastTriedAt": null
       }
     ],
     "episodes": [
@@ -5096,15 +5131,15 @@
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 11,
-      "meanLength": 68.36363636363636,
+      "total": 12,
+      "meanLength": 63.25,
       "meanUrgency": 0.35000000000000003,
       "speechActs": {
-        "STATEMENT": 9,
+        "STATEMENT": 10,
         "QUESTION": 2
       },
       "affects": {
-        "NEUTRAL": 11
+        "NEUTRAL": 12
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
@@ -5115,7 +5150,7 @@
   "worldModel": {
     "schemaVersion": 2,
     "createdAt": 1791958865069,
-    "updatedAt": 1791959840476,
+    "updatedAt": 1791959895638,
     "hypotheses": [
       {
         "id": "hyp-804e497294cae0847046",
@@ -5179,7 +5214,7 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791959840475,
+        "createdAt": 1791959895638,
         "lastTestedAt": null,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
@@ -5204,7 +5239,7 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791959840476,
+        "createdAt": 1791959895638,
         "lastTestedAt": null,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
