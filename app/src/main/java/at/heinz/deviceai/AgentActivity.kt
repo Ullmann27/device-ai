@@ -1853,6 +1853,19 @@ class AgentActivity : Activity() {
     }
 
     private fun showResearchModeDialog() {
+        if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
+            AlertDialog.Builder(this)
+                .setTitle("Internet ist ausgeschaltet")
+                .setMessage("Der Webzugang ist deaktiviert. Möchtest du auf 'Auf Nachfrage' umschalten?")
+                .setNegativeButton("Abbrechen", null)
+                .setPositiveButton("Auf Nachfrage") { _, _ ->
+                    internetConsent.setMode(at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+                    getSharedPreferences("continuum-internet", MODE_PRIVATE).edit()
+                        .putString("mode", "ASK").apply()
+                    showResearchModeDialog()
+                }.show()
+            return
+        }
         val choices = arrayOf(
             "QUICK · Wikipedia-Thema · bis 15 Sekunden",
             "STANDARD · mehr Quellen · bis 45 Sekunden",
@@ -1921,6 +1934,12 @@ class AgentActivity : Activity() {
 
     /** Approval is checked again at the final network entry point. */
     private fun confirmInternetResearch(question: String, selectedMode: ResearchMode) {
+        internetConsent.setMode(
+            if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
+                    .getString("mode", "ASK") == "OFF")
+                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
+        )
         if (!internetConsent.request(question)) {
             addToolActivity("WEB · Anfrage nicht erlaubt")
             return
