@@ -3,6 +3,10 @@ name: Build Device AI APK
 on:
   push:
     branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**" ]
+    paths-ignore:
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-zero-cost.yml"
+      - ".continuum/**"
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
