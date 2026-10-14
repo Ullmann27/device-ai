@@ -1040,9 +1040,11 @@ class AgentActivity : Activity() {
         if (!NeuralPracticeScheduler(this).enabled) return
         // A separate confirmation is required before neural weights change.
         AlertDialog.Builder(this).setTitle("Device AI möchte von dir lernen")
-            .setMessage("Diesen Satz habe ich als mögliches Lernbeispiel vorgemerkt:\n\n" +
+            .setMessage("Der gemeinsame Subword-Lernkern ist bei diesem Satz noch unsicher. " +
+                "Der Satz liegt bis zu deiner Entscheidung nur flüchtig im Lern-Radar:\n\n" +
                 proposed + "\n\nIst es ein Gruß oder eine Frage? " +
-                "Es wird erst nach deiner zusätzlichen Trainingsfreigabe dauerhaft gespeichert.")
+                "Erst nach deiner Klassifikation UND der zusätzlichen Trainingsfreigabe entsteht " +
+                "eine persistente Owner-Confirmed-Experience.")
             .setNegativeButton("Ignorieren", null)
             .setNeutralButton("FRAGE") { _, _ ->
                 handleNeuralRequest("Neuron lerne: " + proposed + " => Frage")
@@ -2994,9 +2996,14 @@ class AgentActivity : Activity() {
                 bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore)
                     ?.hasLesson(value) ?: false
             }.getOrDefault(false)
-            if (neuralCuriosityRadar.offer(value, active = true, alreadyTaught = known)) {
+            val coreUncertain = runCatching {
+                val score=ContinuumLearningCore(filesDir).intentScore(value)
+                score in 0.35..0.65
+            }.getOrDefault(true)
+            if (coreUncertain &&
+                neuralCuriosityRadar.offer(value, active = true, alreadyTaught = known)) {
                 neuralCuriosityButton?.isEnabled = true
-                neuralCuriosityButton?.text = "LERN-RADAR · BEISPIEL ANSEHEN"
+                neuralCuriosityButton?.text = "LERN-RADAR · UNSICHERES BEISPIEL"
             }
         }
     }
