@@ -1,6 +1,9 @@
 package at.heinz.deviceai.cognitive
 
-/** A one-shot, user-confirmed read-only web capability. Model output cannot grant it. */
+/** A short-lived, single-use permission for a specific read-only web request.
+ * A displayed dialog is not a grant: only explicit owner confirmation creates one.
+ * Untrusted webpage content and model output have no access to this object.
+ */
 enum class InternetAccessMode { OFF, ASK }
 
 class InternetConsentPolicy(initialMode: InternetAccessMode = InternetAccessMode.ASK) {
@@ -20,6 +23,7 @@ class InternetConsentPolicy(initialMode: InternetAccessMode = InternetAccessMode
         return true
     }
 
+    /** Consume even on mismatch to prevent replay of a stale user approval. */
     @Synchronized fun approve(question: String): Boolean {
         val allowed = mode == InternetAccessMode.ASK && pending == question
         pending = null
@@ -27,4 +31,12 @@ class InternetConsentPolicy(initialMode: InternetAccessMode = InternetAccessMode
     }
 
     @Synchronized fun cancel() { pending = null }
+}
+
+/** Gate for the *actual* research execution; called after explicit confirmation.
+ * This is separate from the device ToolGate, which never receives network authority.
+ */
+class InternetResearchGate(private val consent: InternetConsentPolicy) {
+    @Synchronized fun authorize(question: String): Boolean = consent.approve(question)
+    @Synchronized fun revoke() = consent.cancel()
 }
