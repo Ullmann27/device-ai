@@ -169,8 +169,8 @@ test("daily tournament budget prevents runaway agent loops", async () => {
       now: () => now++,
       dailyTournamentLimit: 1,
       generate: async () => [
-        { question: "Q one long?", hypothesis: "A sufficiently long hypothesis with evidence and a falsifiable prediction for testing.", evidenceRefs: ["https://a.example"], uncertainty: .5, testQuestions: ["Test question one?"] },
-        { question: "Q two long?", hypothesis: "Another sufficiently long hypothesis with evidence and a falsifiable prediction for testing.", evidenceRefs: ["https://b.example"], uncertainty: .5, testQuestions: ["Test question two?"] }
+        { question: "Q one long?", hypothesis: "A sufficiently long hypothesis with evidence and a falsifiable prediction for testing.", evidenceRefs: ["https://example.org/evals"], uncertainty: .5, testQuestions: ["Test question one?"] },
+        { question: "Q two long?", hypothesis: "Another sufficiently long hypothesis with evidence and a falsifiable prediction for testing.", evidenceRefs: ["https://example.net/memory"], uncertainty: .5, testQuestions: ["Test question two?"] }
       ],
       reflect: async () => ({ validityRisks: "risk", missingEvidence: "missing", falsificationTest: "test", score: .7 }),
       compare: async () => ({ winner: "A", reason: "better grounded hypothesis" }),
