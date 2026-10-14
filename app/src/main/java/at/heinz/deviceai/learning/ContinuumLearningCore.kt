@@ -269,6 +269,31 @@ class ContinuumLearningCore(
         )
     }
 
+    /** Experimental decoder: uses the exact active encoder snapshot, never private
+     * experiences as decoder training data and never replaces production chat.
+     */
+    fun decoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).status()
+    }
+
+    fun trainExperimentalDecoder(
+        training:DecoderCorpus,
+        audit:DecoderCorpus,
+        steps:Int=600,
+        cancelled:()->Boolean={false}
+    ):DecoderExperimentResult=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).trainExperiment(
+            training,audit,loadModel().save(),steps,cancelled
+        )
+    }
+
+    fun experimentalDecoderContinuation(prompt:String,maxBytes:Int=48):DecoderGeneration?=
+        synchronized(CORE_LOCK) {
+            ContinuumDecoderBridge(directory).experimentalContinuation(
+                prompt,loadModel().save(),maxBytes
+            )
+        }
+
     fun intentScore(text:String):Double=synchronized(CORE_LOCK) { loadModel().intentScore(text) }
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
