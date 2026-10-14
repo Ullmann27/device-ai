@@ -26,7 +26,7 @@ const DEFAULT_TOPICS = [
 function freshState() {
   const now = Date.now();
   const state = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     generation: 1,
     createdAt: now,
     updatedAt: now,
@@ -41,6 +41,7 @@ function freshState() {
     edges: {},
     cycles: [],
     interactions: [],
+    strategyStats: defaultStrategyStats(),
     integrityHash: ""
   };
   state.integrityHash = hashState(state);
@@ -58,9 +59,17 @@ function loadState() {
     migrated.lessons = Array.isArray(state.lessons) ? state.lessons.slice(-128) : [];
     migrated.interactions = Array.isArray(state.interactions) ? state.interactions.slice(-128) : [];
     migrated.generation = Math.max(2, Number(state.generation ?? 1) + 1);
+    migrated.integrityHash = hashState(migrated);
     return migrated;
   }
-  if (state.schemaVersion !== 2) throw new Error("Unsupported state schema");
+  if (state.schemaVersion === 2) {
+    const migrated = structuredClone(state);
+    migrated.schemaVersion = 3;
+    migrated.strategyStats = defaultStrategyStats();
+    migrated.integrityHash = hashState(migrated);
+    return migrated;
+  }
+  if (state.schemaVersion !== 3) throw new Error("Unsupported state schema");
   return state;
 }
 
@@ -123,6 +132,40 @@ function learnGraph(state, texts) {
   }
 }
 
+function defaultStrategyStats() {
+  return [
+    { id:"technical-broad", attempts:0, rewardSum:0, lastReward:null },
+    { id:"academic-replay", attempts:0, rewardSum:0, lastReward:null },
+    { id:"uncertainty-curiosity", attempts:0, rewardSum:0, lastReward:null },
+    { id:"adversarial-evidence", attempts:0, rewardSum:0, lastReward:null }
+  ];
+}
+
+function chooseResearchStrategy(state) {
+  if (!Array.isArray(state.strategyStats) || !state.strategyStats.length) state.strategyStats = defaultStrategyStats();
+  const total = state.strategyStats.reduce((n,s)=>n+s.attempts,0) + 1;
+  return state.strategyStats
+    .map(s => ({
+      ...s,
+      ucb: s.attempts === 0 ? Number.POSITIVE_INFINITY :
+        (s.rewardSum / s.attempts) + Math.sqrt(2 * Math.log(total) / s.attempts)
+    }))
+    .sort((a,b) => b.ucb - a.ucb || a.id.localeCompare(b.id))[0].id;
+}
+
+function recordStrategyReward(state, id, sources) {
+  const stat = state.strategyStats.find(x=>x.id===id);
+  if (!stat) return 0;
+  const diversity = new Set(sources.map(x=>x.source)).size;
+  const meanRelevance = sources.length ?
+    sources.reduce((n,x)=>n+Number(x.relevance ?? 0),0)/sources.length : 0;
+  const reward = Math.min(10, meanRelevance + diversity * 0.65 + Math.min(2, sources.length * 0.12));
+  stat.attempts += 1;
+  stat.rewardSum += reward;
+  stat.lastReward = reward;
+  return reward;
+}
+
 function nextTarget(state) {
   if (state.queue.length) return { type: "queue", text: state.queue.shift() };
   const ranked = state.topics.map(t => {
@@ -132,8 +175,8 @@ function nextTarget(state) {
   return { type: "topic", text: ranked[0].name, topicId: ranked[0].id };
 }
 
-async function research(query, interactive = false) {
-  const searchQueries = await planSearchQueries(query, interactive);
+async function research(query, interactive = false, strategyId = "technical-broad") {
+  const searchQueries = await planSearchQueries(query, interactive, strategyId);
   const results = [];
   for (const searchQuery of searchQueries.slice(0, 5)) {
     await Promise.allSettled([
@@ -158,7 +201,7 @@ async function research(query, interactive = false) {
   return { sources: deduped.slice(0, 12), searchQueries };
 }
 
-async function planSearchQueries(query, interactive) {
+async function planSearchQueries(query, interactive, strategyId) {
   const q = String(query).trim();
   const queries = [q];
   const lower = q.toLocaleLowerCase("de-DE");
@@ -177,6 +220,22 @@ async function planSearchQueries(query, interactive) {
   }
   if (/android|on-device|handy|apk/.test(lower)) {
     queries.push("on-device AI Android continual learning edge inference local language model");
+  }
+  if (strategyId === "academic-replay") {
+    queries.push(
+      q + " experience replay catastrophic forgetting benchmark",
+      q + " meta-learning rehearsal continual learning"
+    );
+  } else if (strategyId === "uncertainty-curiosity") {
+    queries.push(
+      q + " epistemic uncertainty curiosity information gain active learning",
+      q + " novelty detection knowledge gaps exploration"
+    );
+  } else if (strategyId === "adversarial-evidence") {
+    queries.push(
+      q + " limitations failure modes negative results evaluation",
+      q + " critique benchmark reproducibility independent evidence"
+    );
   }
   if (interactive && process.env.CONTINUUM_COPILOT === "1") {
     const planned = runCopilot([
@@ -424,17 +483,24 @@ function makeObservation(query, sources, answer) {
 }
 
 async function researchTurn(state, query, interact = false) {
-  const retrieval = await research(query, interact);
+  const strategyId = chooseResearchStrategy(state);
+  const retrieval = await research(query, interact, strategyId);
   const sources = retrieval.sources;
-  if (!sources.length) throw new Error("Keine hinreichend relevante öffentliche Quelle gefunden.");
+  if (!sources.length) {
+    recordStrategyReward(state, strategyId, []);
+    throw new Error("Keine hinreichend relevante öffentliche Quelle gefunden.");
+  }
   learnGraph(state, sources.map(x => x.text));
   const deterministic = synthesize(query, sources, state);
   const copilot = interact ? await maybeCopilot(query, sources) : null;
   const answer = copilot?.text || deterministic.text ||
     "Quellen wurden gefunden, aber für eine belastbare Synthese reicht der extrahierte Text noch nicht.";
-  const observation = makeObservation(query, sources, answer);
+  const citationSources = copilot?.text ? sources : deterministic.citations;
+  const observation = makeObservation(query, citationSources, answer);
   observation.searchQueries = retrieval.searchQueries;
   observation.synthesisModel = copilot?.model ?? "zero-cost-retrieval";
+  observation.retrievalStrategy = strategyId;
+  observation.retrievalReward = recordStrategyReward(state, strategyId, sources);
   if (!state.observations.some(x => x.id === observation.id)) state.observations.push(observation);
   state.queue.push(
     "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: " + query,
@@ -456,6 +522,9 @@ function statusText(state) {
     "**Offene Forschungsfragen:** " + state.queue.length,
     "**Gelernte Begriffe:** " + Object.keys(state.concepts).length,
     "**Gelernte Begriffsverbindungen:** " + Object.keys(state.edges).length,
+    "**Recherche-Strategien:** " + state.strategyStats.map(s =>
+      s.id + "=" + (s.attempts ? (s.rewardSum/s.attempts).toFixed(2) : "neu")
+    ).join(" · "),
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
     "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
