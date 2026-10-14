@@ -18,8 +18,8 @@ class GeneralWebDiscoveryProvider(
         val primary = runCatching {
             parseSearchResults(fetchHtml(searchUrl(text)))
         }.getOrDefault(emptyList())
-        if (primary.isNotEmpty()) return primary.take(8)
-        return runCatching { wikipedia.discover(query) }.getOrDefault(emptyList()).take(6)
+        val secondary = runCatching { wikipedia.discover(query) }.getOrDefault(emptyList())
+        return (primary + secondary).distinctBy { it.url }.take(8)
     }
 
     companion object {
