@@ -1,8 +1,8 @@
 {
   "schemaVersion": 4,
-  "generation": 7,
+  "generation": 8,
   "createdAt": 1791957546095,
-  "updatedAt": 1791958323586,
+  "updatedAt": 1791958433895,
   "topics": [
     {
       "id": "topic-01",
@@ -3519,9 +3519,22 @@
         "clauses": [],
         "complexity": 0.0031818181818181815
       }
+    },
+    {
+      "at": 1791958433046,
+      "user": "Ullmann27",
+      "text": "/status",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [],
+        "complexity": 0.0031818181818181815
+      }
     }
   ],
-  "integrityHash": "a0f2bbba3c0904477ebd08a7f276c347c60b050dedbc02310198bdf845ea8048",
+  "integrityHash": "fd5cf267a4fc3f092d47543aa8dce2bf226c0882c7b58bce67737bdc54382b41",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -4030,6 +4043,38 @@
         "successCount": 5,
         "lastReward": 9.62,
         "lastAt": 1791958295409
+      },
+      "dialogue-pragmatics": {
+        "id": "dialogue-pragmatics",
+        "trials": 0,
+        "rewardSum": 0,
+        "successCount": 0,
+        "lastReward": null,
+        "lastAt": null
+      },
+      "affect-understanding": {
+        "id": "affect-understanding",
+        "trials": 0,
+        "rewardSum": 0,
+        "successCount": 0,
+        "lastReward": null,
+        "lastAt": null
+      },
+      "planning": {
+        "id": "planning",
+        "trials": 0,
+        "rewardSum": 0,
+        "successCount": 0,
+        "lastReward": null,
+        "lastAt": null
+      },
+      "memory-retrieval": {
+        "id": "memory-retrieval",
+        "trials": 0,
+        "rewardSum": 0,
+        "successCount": 0,
+        "lastReward": null,
+        "lastAt": null
       }
     },
     "counters": {
