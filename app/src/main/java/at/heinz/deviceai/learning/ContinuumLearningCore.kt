@@ -373,6 +373,14 @@ class ContinuumLearningCore(
     }
     fun dialogueHistory():List<ContinuumDialogueTurn> = synchronized(CORE_LOCK) { dialogue.history() }
 
+    /** Explicit local public-package import. Verification precedes all writes and
+     * model acceptance still depends on frozen local benchmarks and owner replay.
+     */
+    fun importPublicPackage(model:ByteArray,manifest:String):ContinualLearningReport {
+        ContinuumPublicModelPackage.verify(model,manifest)
+        return importSnapshot(model)
+    }
+
     /** Owner-selected SWB1 only. Checksum is integrity, not a publisher signature.
      * Independent local evaluation protects both tasks and private owner lessons.
      * This method never replaces the experience ledger or command permissions.
