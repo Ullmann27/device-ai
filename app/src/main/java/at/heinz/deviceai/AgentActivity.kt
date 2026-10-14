@@ -949,14 +949,9 @@ class AgentActivity : Activity() {
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
-            val sourceAnswer = runCatching {
-                GroundedWebRecall.answer(request, WebLearningJournal(this).notes())
-            }.getOrElse {
-                "Quellen-Gedächtnis nicht lesbar; keine bestehenden Daten verändert."
-            }
             input.text.clear()
             addUserMessage(request)
-            addAssistantMessage(sourceAnswer ?: "Keine Quellenfrage erkannt.")
+            runContinuumDialogue(request, sourceFallback = true)
             return
         }
         // Web research remains explicit opt-in; never infer internet permission from prose.
@@ -1018,9 +1013,46 @@ class AgentActivity : Activity() {
             }
             BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(decision)
             BootstrapKind.TRAIN -> confirmBootstrapTraining(decision)
-            BootstrapKind.REPLY -> addAssistantMessage(decision.message)
+            BootstrapKind.REPLY -> if(decision.allowNeuralRecall)runContinuumDialogue(request)
+                else addAssistantMessage(decision.message)
         }
         addToolActivity("STARTKERN · lokales Gespräch")
+    }
+
+    /** Explicit memory questions and otherwise-unhandled conversation only.
+     * The neural result is display text and can never enter the device ToolGate.
+     */
+    private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {
+        if(busy || localAgentExecutor.isShutdown)return
+        setBusy(true)
+        localAgentExecutor.execute {
+            val result=runCatching {
+                val core=ContinuumLearningCore(filesDir)
+                // Existing confirmed Android memories remain authoritative. This
+                // also reconnects installations whose facts predate Learning Core v2.
+                bootstrapMemory.facts().forEach(core::recordOwnerFact)
+                val reviewedNotes=WebLearningJournal(this).notes()
+                core.synchronizeReviewedWebObservations(reviewedNotes.filter {
+                    !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
+                }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
+                val turn=core.replyFromMemory(request.take(512))
+                val legacyFallback=sourceFallback && !turn.grounded
+                val answer=if(legacyFallback)GroundedWebRecall.answer(request,reviewedNotes) ?: turn.answer else turn.answer
+                val evidence=if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
+                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen"
+                answer to evidence
+            }
+            runOnUiThread {
+                if(isFinishing || isDestroyed)return@runOnUiThread
+                setBusy(false)
+                result.onSuccess { (answer,evidence) ->
+                    addAssistantMessage(answer)
+                    addToolActivity(evidence)
+                }.onFailure {
+                    addAssistantMessage("Continuum-Gedächtnis nicht lesbar: "+(it.message ?: "Prüfung fehlgeschlagen")+". Bestehende Lernstände bleiben erhalten.")
+                }
+            }
+        }
     }
 
     private fun beginNeuralCoach() {
@@ -1465,6 +1497,8 @@ class AgentActivity : Activity() {
                     append("Als gelernt markiert: ").append(core.experiences.learned).append("\n\n")
                     append("Trainierbarer Subword-Encoder: ").append(core.parameters).append(" Parameter\n")
                     append("Gewichtsupdates: ").append(core.modelUpdates).append("\n")
+                    append("Aktives SWB1-Modell: ").append(ContinuumLearningCore(filesDir).modelHash().take(16)).append("\n")
+                    append("Persistente Dialogzüge: ").append(ContinuumLearningCore(filesDir).dialogueHistory().size).append("/8\n")
                     append("Intent-Holdout: ").append(core.intentHoldout.correct).append("/")
                         .append(core.intentHoldout.total).append(" · Verlust ")
                         .append("%.4f".format(Locale.ROOT,core.intentHoldout.loss)).append("\n")

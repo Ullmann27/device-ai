@@ -6,6 +6,8 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.Locale
 
+data class ReviewedWebObservation(val text:String,val url:String,val sourceHash:String)
+
 data class ContinualLearningReport(
     val task:String,
     val accepted:Boolean,
@@ -43,6 +45,7 @@ class ContinuumLearningCore(
     private val store=FileLearningExperienceStore(directory)
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
+    private val dialogue=ContinuumMemoryDialogue(directory)
 
     fun teachIntent(
         text:String,
@@ -176,6 +179,35 @@ class ContinuumLearningCore(
         )
     }
 
+    /** Already owner-reviewed notes join retrieval, never become truth labels. */
+    private fun reviewedExperience(note:ReviewedWebObservation):LearningExperience {
+        require(note.text.length in 20..400 && note.url.length in 10..400 && note.sourceHash.matches(Regex("[a-f0-9]{64}")))
+        val uri=java.net.URI(note.url)
+        require(uri.scheme=="https" && !uri.host.isNullOrBlank() && uri.userInfo==null)
+        return LearningExperienceFactory.create(
+            LearningExperienceType.SOURCE_TEXT,LearningProvenance.REVIEWED_WEB_SOURCE,
+            LearningTrustClass.SOURCE_OBSERVATION,LearningStatus.OBSERVED,note.text,
+            sourceRef=note.url+"#sha256="+note.sourceHash,now=nowMillis()
+        )
+    }
+
+    fun recordReviewedWebObservation(content:String,url:String,sourceHash:String):Boolean=synchronized(CORE_LOCK) {
+        store.append(reviewedExperience(ReviewedWebObservation(content,url,sourceHash)))
+    }
+
+    /** Mirror the current reviewed notebook so removed/disputed notes cannot survive
+     * as a second hidden source of answers. Validate before mutating the ledger.
+     */
+    fun synchronizeReviewedWebObservations(notes:List<ReviewedWebObservation>)=synchronized(CORE_LOCK) {
+        require(notes.size<=24)
+        val live=notes.map(::reviewedExperience)
+        val ids=live.map { it.id }.toSet()
+        val old=store.all().filter { it.provenance==LearningProvenance.REVIEWED_WEB_SOURCE }
+        if(old.any { it.id !in ids && it.status!=LearningStatus.REVOKED })dialogue.clear()
+        old.filter { it.id !in ids }.forEach { store.updateStatus(it.id,LearningStatus.REVOKED,nowMillis()) }
+        live.forEach { store.append(it);store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
+    }
+
     fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
         val item=LearningExperienceFactory.create(
             LearningExperienceType.USER_FACT,
@@ -189,6 +221,7 @@ class ContinuumLearningCore(
     }
 
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
+        dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,content.trim(),
             LearningStatus.REVOKED,nowMillis()
@@ -196,6 +229,7 @@ class ContinuumLearningCore(
     }
 
     fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) {
+        dialogue.clear()
         store.updateMatching(
             LearningExperienceType.USER_FACT,null,
             LearningStatus.REVOKED,nowMillis()
@@ -238,6 +272,11 @@ class ContinuumLearningCore(
     fun intentScore(text:String):Double=synchronized(CORE_LOCK) { loadModel().intentScore(text) }
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
+    fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }
+    fun replyFromMemory(input:String):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
+        dialogue.reply(loadModel().save(),store.all(),input,nowMillis())
+    }
+    fun dialogueHistory():List<ContinuumDialogueTurn> = synchronized(CORE_LOCK) { dialogue.history() }
 
     /** Owner-selected SWB1 only. Checksum is integrity, not a publisher signature.
      * Independent local evaluation protects both tasks and private owner lessons.

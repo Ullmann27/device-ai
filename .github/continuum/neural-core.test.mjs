@@ -95,3 +95,12 @@ test('neural curiosity proposes a source-bound question without inventing belief
  assert.equal(state.replay[0].trust,'PUBLIC_OBSERVATION');
  assert.equal(selectNeuralResearchTarget(createNeuralState()),null);
 });
+
+test('every persisted dialogue turn identifies the exact immutable model used',()=>{
+ const state={neural:createNeuralState(),lessons:[{id:'fact',text:'Sternenreise ist mein Projekt.'}],baby:{beliefs:[]}};
+ const before=state.neural.modelHash;
+ const reply=dialogueTurn(state,'Erzähl mir etwas über Sternenreise',100);
+ assert.equal(reply.modelHash,before);
+ assert.equal(state.dialogue.turns[0].modelHash,before);
+ assert.equal(state.neural.modelHash,before);
+});

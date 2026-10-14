@@ -15,7 +15,8 @@ data class BootstrapDecision(
     val fact: String? = null,
     val tool: String? = null,
     val arguments: Map<String, Any?> = emptyMap(),
-    val replacementFact: String? = null
+    val replacementFact: String? = null,
+    val allowNeuralRecall: Boolean = false
 )
 
 object BootstrapBrain {
@@ -146,7 +147,8 @@ object BootstrapBrain {
         return BootstrapDecision(BootstrapKind.REPLY,
             "Das kann mein eigener Startkern noch nicht verlässlich beantworten. " +
                 "Ich erfinde keine Antwort. Probiere „Was kannst du?“, eine Geräteprüfung, " +
-                "oder lerne mir etwas ausdrücklich mit „Merke dir: ...“.")
+                "oder lerne mir etwas ausdrücklich mit „Merke dir: ...“.", allowNeuralRecall = true)
     }
 }
+
 

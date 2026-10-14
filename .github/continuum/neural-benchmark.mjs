@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import {createNeuralState,trainRound,exportWeights,neuralStatus} from './neural-core.mjs';
 import {SubwordEncoder,sha256,buckets} from './portable-subword.mjs';
+import {rankDialogueMemories} from './neural-dialogue.mjs';
 let state=createNeuralState();const baseline=neuralStatus(state);
 for(let i=0;i<3;i++)state=trainRound(state,{now:0}).state;
 const bytes=exportWeights(state),model=SubwordEncoder.restore(bytes);
@@ -11,3 +12,7 @@ fs.writeFileSync('app/src/test/resources/continuum-neural-swb1.properties',`sha2
 const report={description:'Three resumed offline rounds; small authored audit excluded from selection.',baseline,active:neuralStatus(state),rounds:state.history};
 fs.writeFileSync('docs/neural-benchmark-example.json',JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({baseline:baseline.audit,active:report.active.audit,accepted:state.accepted,updates:model.updates}));
+
+const memory='Mein Projekt heißt Sternenreise und untersucht Pflanzen.',query='Erzähl mir etwas über Sternenreise';
+const hit=rankDialogueMemories(bytes,query,[{id:'test',text:memory}])[0];
+fs.writeFileSync('app/src/test/resources/continuum-dialogue.properties',`memory=${memory}\nquery=${query}\nscore=${hit.score}\nsemantic=${hit.semantic}\n`,'utf8');

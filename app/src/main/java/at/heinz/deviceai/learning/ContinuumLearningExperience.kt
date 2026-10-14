@@ -15,7 +15,7 @@ enum class LearningExperienceType {
     INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT,
     USER_FACT, COMMAND_MAPPING, USER_FEEDBACK
 }
-enum class LearningProvenance { USER_CONFIRMED, MENTOR_WIKIPEDIA, SYNTHETIC_FIXTURE, LOCAL_TRAINING }
+enum class LearningProvenance { USER_CONFIRMED, MENTOR_WIKIPEDIA, SYNTHETIC_FIXTURE, LOCAL_TRAINING, REVIEWED_WEB_SOURCE }
 enum class LearningTrustClass { OWNER_CONFIRMED, SOURCE_OBSERVATION, SYNTHETIC, SYSTEM_MEASUREMENT }
 enum class LearningStatus { OBSERVED, CONFIRMED, LEARNED, REPLAY_PENDING, REJECTED, REVOKED }
 
@@ -286,3 +286,4 @@ private object LearningExperienceCodec {
     }
     private fun readNullable(input:DataInputStream):String?=if(input.readBoolean())readString(input) else null
 }
+
