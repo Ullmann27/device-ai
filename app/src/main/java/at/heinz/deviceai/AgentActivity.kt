@@ -740,6 +740,23 @@ class AgentActivity : Activity() {
         card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
             setOnClickListener { beginNeuralCoach() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("LERNEN STARTEN · ANLEITUNG").apply {
+            contentDescription = "Zeigt die Schritte zum ersten bestätigten Lernbeispiel und zum anschließenden Auto-Üben"
+            setOnClickListener {
+                AlertDialog.Builder(this@AgentActivity)
+                    .setTitle("Continuum · Erstes Lernen")
+                    .setMessage("Der lokale Lernkern startet ohne persönliche Beispiele. Deshalb stehen Experiences und Gewichtsupdates zunächst auf 0.\\n\\n" +
+                        "1. Tippe NEURON · LERN-GESPRÄCH.\\n" +
+                        "2. Schreibe einen einfachen Gruß oder eine Frage in den Chat.\\n" +
+                        "3. Bestätige die Einordnung und anschließend ausdrücklich das Training.\\n" +
+                        "4. Wiederhole dies mit mehreren unterschiedlichen Beispielen.\\n" +
+                        "5. Öffne AUTO-ÜBEN erneut, um das Wiederholungslernen zu erlauben.\\n\\n" +
+                        "JETZT TRAINIEREN startet dagegen nur eine getrennte Demo. Webquellen werden niemals ungeprüft zu persönlichen Trainingsfakten.")
+                    .setNegativeButton("Schließen", null)
+                    .setPositiveButton("LERN-GESPRÄCH STARTEN") { _, _ -> beginNeuralCoach() }
+                    .show()
+            }
+        }, matchWidth(top = 7))
         neuralAutoButton = actionButton("AUTO-ÜBEN · AUS").apply {
             contentDescription = "Kontrolliertes wiederkehrendes neuronales Training aktivieren oder deaktivieren"
             setOnClickListener { showNeuralPracticeDialog() }
