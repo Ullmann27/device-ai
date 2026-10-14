@@ -1914,8 +1914,25 @@ class AgentActivity : Activity() {
                     Toast.makeText(this, "Bitte ein Thema mit 3–200 Zeichen eingeben.", Toast.LENGTH_LONG).show()
                 } else if (!busy) {
                     researchArmed = false
-                    addUserMessage(value)
-                    runResearch(value, researchMode)
+                    confirmInternetResearch(value, researchMode)
+                }
+            }.show()
+    }
+
+    /** Approval is checked again at the final network entry point. */
+    private fun confirmInternetResearch(question: String, selectedMode: ResearchMode) {
+        if (!internetConsent.request(question)) {
+            addToolActivity("WEB · Anfrage nicht erlaubt")
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Internetzugriff einmal erlauben?")
+            .setMessage("Diese Frage wird zur Recherche an öffentliche Dienste übertragen. Gilt nur für diese Anfrage.\\n\\n" + question.take(512))
+            .setNegativeButton("Ablehnen") { _, _ -> internetConsent.cancel() }
+            .setPositiveButton("Einmal erlauben") { _, _ ->
+                if (internetConsent.approve(question) && !busy) {
+                    addUserMessage(question)
+                    runResearch(question, selectedMode)
                 }
             }.show()
     }
