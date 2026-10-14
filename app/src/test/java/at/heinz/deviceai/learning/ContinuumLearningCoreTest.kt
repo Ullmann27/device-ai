@@ -5,6 +5,22 @@ import org.junit.Test
 import java.nio.file.Files
 
 class ContinuumLearningCoreTest {
+    @Test fun semanticBootstrapIsAuditedIdempotentAndProtectsIntent() {
+        val dir=Files.createTempDirectory("continuum-semantic-bootstrap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val before=core.modelSnapshot()
+            val report=core.bootstrapSemanticCurriculum()!!
+            assertEquals("offline-semantic-bootstrap",report.task)
+            assertTrue(report.steps>0)
+            assertEquals(0,core.status().experiences.sourceObservations)
+            assertEquals(1,core.status().experiences.audits)
+            if(report.accepted) assertFalse(before.contentEquals(core.modelSnapshot()))
+            else assertArrayEquals(before,core.modelSnapshot())
+            assertNull(ContinuumLearningCore(dir).bootstrapSemanticCurriculum())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun offlineBootstrapDoesNotModifyOwnerData() {
         val dir=Files.createTempDirectory("continuum-owner-bootstrap").toFile()
         try {
