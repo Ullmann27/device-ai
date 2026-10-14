@@ -54,7 +54,8 @@ object MentorCuriosityPlanner {
             ).take(64).toList()
         if(candidates.isEmpty())return fixed
 
-        val index=((attempt/4L + attempt)%candidates.size).toInt()
+        val dynamicOrdinal=(attempt-attempt/4L-1L).coerceAtLeast(0L)
+        val index=(dynamicOrdinal%candidates.size).toInt()
         val term=candidates[index]
         val label=term.replaceFirstChar {
             if(it.isLowerCase())it.titlecase(Locale.GERMAN) else it.toString()
