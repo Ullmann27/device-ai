@@ -28,6 +28,11 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
+            android:name=".learning.ContinuumAutonomousJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
             android:name=".learning.MentorStudyJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
