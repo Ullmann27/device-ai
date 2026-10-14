@@ -75,6 +75,22 @@ class WebResearchIntegrationTest {
         })
     }
 
+    @Test fun stoppingDuringPrimarySearchRevokesFallbackAndAnyLaterNetworkAccess() {
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        val call=WebToolRequest.Search("topic")
+        val session=gate.approve(gate.prepare(call)!!,ResearchMode.QUICK)!!
+        var fallbacks=0
+        val discovery=GeneralWebDiscoveryProvider(object:ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable=false
+            override fun discover(query:ResearchQuery):List<ResearchSourceCandidate> { fallbacks++;return emptyList() }
+        },checkAccess=session::checkActive,fetchHtml={session.cancel();"<rss><channel/></rss>"})
+        assertThrows(IllegalStateException::class.java) {
+            session.execute(call) { discovery.discover(ResearchQuery("topic","q")) }
+        }
+        assertEquals(0,fallbacks)
+        assertThrows(IllegalStateException::class.java) { session.execute(call) { error("must not run") } }
+    }
+
     @Test fun ordinaryChatNeverRequestsNetworkAndExplicitToolsDo() {
         assertNull(WebToolRequest.fromChat("Wie funktionieren Solarzellen?",false))
         assertEquals(WebToolRequest.Search("Solarzellen"),WebToolRequest.fromChat("web_search: Solarzellen",false))

@@ -2766,6 +2766,9 @@ class AgentActivity : Activity() {
     }
 
     private fun cancelLocalRequest() {
+        webToolGate.cancel()
+        activeWebResearchSession?.cancel()
+        approvedModelWebSession.getAndSet(null)?.cancel()
         activeNeuralCancellation?.let {
             it.set(true)
             addToolActivity("NEURON · Abbruch angefordert; Gewichte werden nicht übernommen")
