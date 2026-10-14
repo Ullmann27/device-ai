@@ -247,7 +247,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
   const deduped = [];
   const seen = new Set();
   for (const item of results) {
-    const key = (item.url || item.title).toLocaleLowerCase("de-DE");
+    const key = sourceIdentity(item);
     if (!key || seen.has(key)) continue;
     seen.add(key);
     item.relevance = relevance(item, searchQueries);
@@ -259,7 +259,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
   }
   for (const item of github) {
     item.relevance = relevance(item,searchQueries) + 0.8;
-    const key=(item.url||item.title).toLocaleLowerCase("de-DE");
+    const key=sourceIdentity(item);
     if(!seen.has(key) && item.relevance>=1.25 && domainGate(item,searchQueries)){seen.add(key);deduped.push(item);}
   }
 
@@ -274,7 +274,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
   }) : [];
   for(const page of crawled){
     page.relevance=relevance(page,searchQueries)+Number(page.relevance||0);
-    const key=(page.url||page.title).toLocaleLowerCase("de-DE");
+    const key=sourceIdentity(page);
     if(!seen.has(key) && page.relevance>=0.7 && domainGate(page,searchQueries)){seen.add(key);deduped.push(page);}
   }
   deduped.sort((a,b)=>b.relevance-a.relevance||sourceWeight(b.source)-sourceWeight(a.source));
@@ -367,6 +367,19 @@ function domainGate(item,queries){
   const text=(String(item.title??"")+" "+String(item.text??"")).toLocaleLowerCase("en-US");
   const strongAi=/(artificial intelligence|machine learning|deep learning|neural|\bai\b|\bagent(s|ic)?\b|llm|large language model|language model|continual learning|active learning|reinforcement learning|transformer|natural language processing|dialogue system|conversational agent|affective computing|autonomous agent|catastrophic forgetting|world model|metacognitive|task decomposition|hierarchical planning)/i.test(text);
   return strongAi;
+}
+
+function sourceIdentity(item){
+  const rawTitle=String(item?.title??"").split("|")[0]
+    .toLocaleLowerCase("en-US")
+    .replace(/[^\p{L}\p{N}]+/gu," ").trim();
+  if(rawTitle.length>=24)return "title:"+rawTitle.slice(0,240);
+  try{
+    const u=new URL(String(item?.url??""));
+    if(u.hostname.toLocaleLowerCase("en-US")==="doi.org")
+      return "doi:"+decodeURIComponent(u.pathname).toLocaleLowerCase("en-US");
+    return "url:"+u.hostname.toLocaleLowerCase("en-US")+u.pathname.replace(/\/$/,"");
+  }catch{return "raw:"+String(item?.url??item?.title??"").toLocaleLowerCase("en-US");}
 }
 
 function sourceWeight(source) {
@@ -712,7 +725,7 @@ async function deepResearchTurn(state,query){
   const allSources=[],parts=[];
   for(const step of plan){
     const strategyId=chooseResearchStrategy(state);
-    const retrieval=await research(step.question,false,strategyId);
+    const retrieval=await research(step.searchQuery??step.question,false,strategyId);
     if(!retrieval.sources.length)continue;
     const reward=recordStrategyReward(state,strategyId,retrieval.sources);
     allSources.push(...retrieval.sources);
@@ -745,7 +758,7 @@ async function deepResearchTurn(state,query){
   const citations=copilot?.text?unique:unique.filter(s=>fallback.includes(s.title)||fallback.includes(s.url)).slice(0,12);
   const observation=makeObservation(query,citations.length?citations:unique.slice(0,12),answer);
   observation.deepResearch=true;
-  observation.plan=plan.map(x=>({id:x.id,question:x.question,skill:x.skill}));
+  observation.plan=plan.map(x=>({id:x.id,question:x.question,searchQuery:x.searchQuery??x.question,skill:x.skill}));
   observation.synthesisModel=copilot?.model??"multi-pass-zero-cost";
   if(!state.observations.some(x=>x.id===observation.id))state.observations.push(observation);
   const finalReward=Math.min(10,parts.length*1.4+new Set(unique.map(x=>x.source)).size*.7+Math.min(3,unique.length*.12));
