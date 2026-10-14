@@ -161,7 +161,7 @@ export class HypothesisTournament {
           testQuestions: item.testQuestions ?? item.test_questions ?? [],
           createdAt: this.now()
         });
-        if (!candidate.evidenceRefs.length) continue;
+        if (!candidate.evidenceRefs.length || !evidenceRefsAreGrounded(candidate.evidenceRefs, context)) continue;
         const critique = await this.reflect({ governance: IMMUTABLE_GOVERNANCE, hypothesis: candidate, context });
         candidate.critiques.push({
           createdAt: this.now(),
@@ -221,7 +221,7 @@ export class HypothesisTournament {
           testQuestions: childRaw.testQuestions ?? childRaw.test_questions ?? [],
           createdAt: this.now()
         });
-        if (evolved.evidenceRefs.length) {
+        if (evolved.evidenceRefs.length && evidenceRefsAreGrounded(evolved.evidenceRefs, context)) {
           const critique = await this.reflect({ governance: IMMUTABLE_GOVERNANCE, hypothesis: evolved, context });
           evolved.critiques.push({
             createdAt: this.now(),
@@ -445,6 +445,16 @@ export function validateState(state) {
   }
   if (state.integrityHash !== hashState(state)) throw new Error("Hypothesis state integrity mismatch.");
   return state;
+}
+
+function evidenceRefsAreGrounded(refs, context) {
+  const allowed = new Set(
+    (context?.observations ?? []).flatMap((observation) => [
+      observation.id,
+      ...(observation.citations ?? [])
+    ])
+  );
+  return refs.length > 0 && refs.every((ref) => allowed.has(ref));
 }
 
 function updateElo(winner, loser, k = 24) {
