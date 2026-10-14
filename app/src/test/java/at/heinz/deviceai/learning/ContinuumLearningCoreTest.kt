@@ -64,6 +64,24 @@ class ContinuumLearningCoreTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun ownerFactsAndCommandsAreAuditableAndRevocableWithoutTrainingAuthority() {
+        val dir=Files.createTempDirectory("continuum-learning-owner").toFile()
+        try {
+            var now=350L
+            val core=ContinuumLearningCore(dir) { now++ }
+            val before=core.modelSnapshot()
+            assertTrue(core.recordOwnerFact("Fakt: Nova | ist | Mobilgerät"))
+            assertTrue(core.recordCommandMapping("Prüfe meine Energie","get_battery_info"))
+            assertEquals(1,core.status().experiences.userFacts)
+            assertEquals(1,core.status().experiences.commandMappings)
+            assertArrayEquals(before,core.modelSnapshot())
+            assertEquals(1,core.revokeOwnerFact("Fakt: Nova | ist | Mobilgerät"))
+            assertEquals(1,core.revokeAllCommandMappings())
+            assertEquals(2,core.status().experiences.revoked)
+            assertArrayEquals(before,core.modelSnapshot())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun modelAndExperienceStateSurviveFreshCoordinatorInstance() {
         val dir=Files.createTempDirectory("continuum-learning-persist").toFile()
         try {

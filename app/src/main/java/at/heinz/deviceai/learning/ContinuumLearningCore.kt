@@ -167,6 +167,53 @@ class ContinuumLearningCore(
         )
     }
 
+    fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
+        val item=LearningExperienceFactory.create(
+            LearningExperienceType.USER_FACT,
+            LearningProvenance.USER_CONFIRMED,
+            LearningTrustClass.OWNER_CONFIRMED,
+            LearningStatus.CONFIRMED,
+            content.trim(),
+            now=nowMillis()
+        )
+        store.append(item)
+    }
+
+    fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
+        store.updateMatching(
+            LearningExperienceType.USER_FACT,content.trim(),
+            LearningStatus.REVOKED,nowMillis()
+        )
+    }
+
+    fun revokeAllOwnerFacts():Int=synchronized(CORE_LOCK) {
+        store.updateMatching(
+            LearningExperienceType.USER_FACT,null,
+            LearningStatus.REVOKED,nowMillis()
+        )
+    }
+
+    fun recordCommandMapping(phrase:String,tool:String):Boolean=synchronized(CORE_LOCK) {
+        require(phrase.trim().length in 3..320 && tool.matches(Regex("[a-z_]{2,64}")))
+        val item=LearningExperienceFactory.create(
+            LearningExperienceType.COMMAND_MAPPING,
+            LearningProvenance.USER_CONFIRMED,
+            LearningTrustClass.OWNER_CONFIRMED,
+            LearningStatus.CONFIRMED,
+            phrase.trim(),
+            annotation=tool,
+            now=nowMillis()
+        )
+        store.append(item)
+    }
+
+    fun revokeAllCommandMappings():Int=synchronized(CORE_LOCK) {
+        store.updateMatching(
+            LearningExperienceType.COMMAND_MAPPING,null,
+            LearningStatus.REVOKED,nowMillis()
+        )
+    }
+
     fun status():ContinuumLearningStatus=synchronized(CORE_LOCK) {
         val model=loadModel()
         ContinuumLearningStatus(

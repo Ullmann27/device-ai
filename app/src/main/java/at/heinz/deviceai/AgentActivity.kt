@@ -980,9 +980,11 @@ class AgentActivity : Activity() {
         addUserMessage(request)
         when (decision.kind) {
             BootstrapKind.REMEMBER -> {
-                val stored = bootstrapMemory.addFact(checkNotNull(decision.fact))
-                addAssistantMessage(if (stored) "Gemerkt. Diese Information liegt nur in meinem lokalen Lernspeicher. " +
-                    "Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
+                val fact=checkNotNull(decision.fact)
+                val stored = bootstrapMemory.addFact(fact)
+                if(stored)runCatching { ContinuumLearningCore(filesDir).recordOwnerFact(fact) }
+                addAssistantMessage(if (stored) "Gemerkt. Diese Information liegt im lokalen Lernspeicher und als " +
+                    "Owner-Confirmed-Experience im Continuum-Lernkern. Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
                     else "Ich konnte das nicht speichern (bereits bekannt oder Speichergrenze erreicht).")
             }
             BootstrapKind.REVISE -> {
@@ -991,8 +993,15 @@ class AgentActivity : Activity() {
                     .setMessage("Bisher: ${decision.fact}\nNeu: ${decision.replacementFact ?: "Widerrufen"}\nAbgeleitete Antworten werden neu berechnet.")
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Bestätigen") { _, _ ->
-                        val saved = bootstrapMemory.reviseFact(checkNotNull(decision.fact), decision.replacementFact)
-                        addAssistantMessage(if (saved) "Information geändert; bisherige Ableitungen sind verworfen."
+                        val previous=checkNotNull(decision.fact)
+                        val saved = bootstrapMemory.reviseFact(previous, decision.replacementFact)
+                        if(saved)runCatching {
+                            val core=ContinuumLearningCore(filesDir)
+                            core.revokeOwnerFact(previous)
+                            decision.replacementFact?.let(core::recordOwnerFact)
+                        }
+                        addAssistantMessage(if (saved) "Information geändert; bisherige Ableitungen und die alte " +
+                            "Continuum-Experience sind widerrufen."
                             else "Nicht geändert: Information fehlt, ist unverändert oder konnte nicht gespeichert werden.")
                     }.show()
             }
@@ -1372,6 +1381,7 @@ class AgentActivity : Activity() {
             }
             .setPositiveButton("Beibringen") { _, _ ->
                 val success = bootstrapMemory.teach(phrase, name)
+                if(success)runCatching { ContinuumLearningCore(filesDir).recordCommandMapping(phrase,name) }
                 val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
                 bootstrapMemory.recordAssessment(report.passed, report.total)
                 addAssistantMessage(if (success) "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. " +
@@ -1431,7 +1441,8 @@ class AgentActivity : Activity() {
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Löschen") { _, _ ->
                         bootstrapMemory.clearTraining()
-                        addAssistantMessage("Gelernte Befehlssätze gelöscht.")
+                        runCatching { ContinuumLearningCore(filesDir).revokeAllCommandMappings() }
+                        addAssistantMessage("Gelernte Befehlssätze gelöscht; zugehörige Continuum-Experiences widerrufen.")
                     }.show()
             }.show()
     }
@@ -1444,8 +1455,11 @@ class AgentActivity : Activity() {
                     append("Persistenter gemeinsamer Lernkern v2\n\n")
                     append("Experiences: ").append(core.experiences.total).append("/256\n")
                     append("Bestätigte Intent-Lektionen: ").append(core.experiences.intentLabels).append("\n")
+                    append("Owner-Fakten: ").append(core.experiences.userFacts).append("\n")
+                    append("Bestätigte Befehlszuordnungen: ").append(core.experiences.commandMappings).append("\n")
                     append("Unbestätigte Mentor-Quellen: ").append(core.experiences.sourceObservations).append("\n")
                     append("Trainings-Audits: ").append(core.experiences.audits).append("\n")
+                    append("Widerrufene Experiences: ").append(core.experiences.revoked).append("\n")
                     append("Replay ausstehend: ").append(core.experiences.replayPending).append("\n")
                     append("Als gelernt markiert: ").append(core.experiences.learned).append("\n\n")
                     append("Trainierbarer Subword-Encoder: ").append(core.parameters).append(" Parameter\n")
@@ -1480,7 +1494,8 @@ class AgentActivity : Activity() {
             .setNegativeButton("Abbrechen", null)
             .setPositiveButton("Fakten löschen") { _, _ ->
                 bootstrapMemory.clearFacts()
-                addAssistantMessage("Der lokale Fakten-Lernspeicher wurde geleert.")
+                runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
+                addAssistantMessage("Der lokale Fakten-Lernspeicher wurde geleert; zugehörige Continuum-Experiences wurden widerrufen.")
             }.show()
     }
 

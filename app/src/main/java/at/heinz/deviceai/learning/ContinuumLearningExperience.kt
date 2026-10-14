@@ -11,10 +11,13 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 
-enum class LearningExperienceType { INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT }
+enum class LearningExperienceType {
+    INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT,
+    USER_FACT, COMMAND_MAPPING, USER_FEEDBACK
+}
 enum class LearningProvenance { USER_CONFIRMED, MENTOR_WIKIPEDIA, SYNTHETIC_FIXTURE, LOCAL_TRAINING }
 enum class LearningTrustClass { OWNER_CONFIRMED, SOURCE_OBSERVATION, SYNTHETIC, SYSTEM_MEASUREMENT }
-enum class LearningStatus { OBSERVED, CONFIRMED, LEARNED, REPLAY_PENDING, REJECTED }
+enum class LearningStatus { OBSERVED, CONFIRMED, LEARNED, REPLAY_PENDING, REJECTED, REVOKED }
 
 data class LearningExperience(
     val id:String,
@@ -89,7 +92,10 @@ data class LearningExperienceStats(
     val replayPending:Int,
     val sourceObservations:Int,
     val intentLabels:Int,
-    val audits:Int
+    val audits:Int,
+    val userFacts:Int,
+    val commandMappings:Int,
+    val revoked:Int
 )
 
 class FileLearningExperienceStore(private val directory:File) {
@@ -126,6 +132,25 @@ class FileLearningExperienceStore(private val directory:File) {
             true
         }
 
+    fun updateMatching(
+        type:LearningExperienceType,
+        content:String?=null,
+        status:LearningStatus,
+        now:Long=System.currentTimeMillis()
+    ):Int = synchronized(FILE_LOCK) {
+        require(now>=0)
+        val current=loadValidated()
+        var changed=0
+        val next=current.map { item ->
+            if(item.type==type && (content==null || item.content==content) && item.status!=status) {
+                changed++
+                item.copy(status=status,updatedAt=maxOf(now,item.updatedAt))
+            } else item
+        }
+        if(changed>0)save(next)
+        changed
+    }
+
     fun replay(type:LearningExperienceType,limit:Int=64):List<LearningExperience> =
         synchronized(FILE_LOCK) {
             require(limit in 1..128)
@@ -146,7 +171,10 @@ class FileLearningExperienceStore(private val directory:File) {
             replayPending=items.count { it.status==LearningStatus.REPLAY_PENDING },
             sourceObservations=items.count { it.type==LearningExperienceType.SOURCE_TEXT },
             intentLabels=items.count { it.type==LearningExperienceType.INTENT_LABEL },
-            audits=items.count { it.type==LearningExperienceType.TRAINING_AUDIT }
+            audits=items.count { it.type==LearningExperienceType.TRAINING_AUDIT },
+            userFacts=items.count { it.type==LearningExperienceType.USER_FACT },
+            commandMappings=items.count { it.type==LearningExperienceType.COMMAND_MAPPING },
+            revoked=items.count { it.status==LearningStatus.REVOKED }
         )
     }
 
@@ -196,8 +224,8 @@ private object LearningExperienceCodec {
                 out.writeInt(MAGIC);out.writeInt(items.size)
                 items.forEach { e ->
                     out.writeUTF(e.id)
-                    out.writeInt(e.type.ordinal);out.writeInt(e.provenance.ordinal)
-                    out.writeInt(e.trust.ordinal);out.writeInt(e.status.ordinal)
+                    out.writeUTF(e.type.name);out.writeUTF(e.provenance.name)
+                    out.writeUTF(e.trust.name);out.writeUTF(e.status.name)
                     writeString(out,e.content)
                     writeNullable(out,e.annotation);writeNullable(out,e.sourceRef)
                     out.writeUTF(e.contentHash);out.writeLong(e.createdAt);out.writeLong(e.updatedAt)
@@ -224,10 +252,10 @@ private object LearningExperienceCodec {
             val result=List(count) {
                 LearningExperience(
                     id=input.readUTF(),
-                    type=LearningExperienceType.values()[input.readInt().also { require(it in LearningExperienceType.values().indices) }],
-                    provenance=LearningProvenance.values()[input.readInt().also { require(it in LearningProvenance.values().indices) }],
-                    trust=LearningTrustClass.values()[input.readInt().also { require(it in LearningTrustClass.values().indices) }],
-                    status=LearningStatus.values()[input.readInt().also { require(it in LearningStatus.values().indices) }],
+                    type=LearningExperienceType.valueOf(input.readUTF()),
+                    provenance=LearningProvenance.valueOf(input.readUTF()),
+                    trust=LearningTrustClass.valueOf(input.readUTF()),
+                    status=LearningStatus.valueOf(input.readUTF()),
                     content=readString(input),
                     annotation=readNullable(input),
                     sourceRef=readNullable(input),
