@@ -2,8 +2,8 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import {
-  createBabyState, migrateBabyState, analyzeInstruction, buildDeepResearchPlan,
-  ingestEvidence, addGoal, selectGoal, recordOutcome, babyStatus
+  createBabyState, migrateBabyState, analyzeInstruction, observeInteraction, addOwnerRule,
+  buildDeepResearchPlan, ingestEvidence, addGoal, selectGoal, recordOutcome, babyStatus
 } from "./baby-core.mjs";
 import {
   fetchPublicPage, crawlPublicWeb, searchGitHubRepositories
@@ -505,7 +505,7 @@ function runCopilot(prompt, model = "auto", maxCredits = 2) {
   return null;
 }
 
-async function maybeCopilot(query, evidence) {
+async function maybeCopilot(query, evidence, state = null) {
   if (EVENT !== "issue_comment" || process.env.CONTINUUM_COPILOT !== "1") return null;
   const prompt = [
     "Du bist die interaktive Oberfläche des Device-AI-Continuum-Kerns.",
@@ -515,6 +515,11 @@ async function maybeCopilot(query, evidence) {
     "",
     "FRAGE: " + query,
     "",
+    ...(state?.baby?.ownerRules?.filter(x=>x.active).length ? [
+      "EXPLIZITE NUTZERREGELN FÜR KOMMUNIKATION/PROJEKT:",
+      ...state.baby.ownerRules.filter(x=>x.active).slice(-12).map(x=>"- "+x.text),
+      ""
+    ] : []),
     "EVIDENZ:",
     ...evidence.map((s,i) => "[" + (i+1) + "] " + s.title + " — " + s.url + "\n" + s.text.slice(0,1400))
   ].join("\n");
@@ -550,7 +555,7 @@ async function researchTurn(state, query, interact = false, goalId = null) {
   }
   learnGraph(state, sources.map(x => x.text));
   const deterministic = synthesize(query, sources, state);
-  const copilot = interact ? await maybeCopilot(query, sources) : null;
+  const copilot = interact ? await maybeCopilot(query, sources, state) : null;
   const answer = copilot?.text || deterministic.text ||
     "Quellen wurden gefunden, aber für eine belastbare Synthese reicht der extrahierte Text noch nicht.";
   const citationSources = copilot?.text ? sources : deterministic.citations;
@@ -618,7 +623,7 @@ async function deepResearchTurn(state,query){
     const k=s.url||s.title;if(!k||seen.has(k))continue;seen.add(k);unique.push(s);if(unique.length>=16)break;
   }
   if(!unique.length)throw new Error("Deep Research fand keine hinreichend relevante öffentliche Evidenz.");
-  const copilot=await maybeCopilot(query,unique);
+  const copilot=await maybeCopilot(query,unique,state);
   const fallback=parts.map(p=>"### "+p.step.id+"\n"+p.text).join("\n\n");
   const answer=copilot?.text||fallback;
   const citations=copilot?.text?unique:unique.filter(s=>fallback.includes(s.title)||fallback.includes(s.url)).slice(0,12);
@@ -677,6 +682,7 @@ function statusText(state) {
     ).join(" · "),
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
+    "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
     "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
@@ -733,10 +739,30 @@ try {
   if (EVENT === "issue_comment") {
     const body = COMMENT;
     const lower = body.toLocaleLowerCase("de-DE");
-    const interactionAnalysis=analyzeInstruction(body);
+    const observed=observeInteraction(state.baby,body);
+    state.baby=observed.baby;
+    const interactionAnalysis=observed.analysis;
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if (lower.startsWith("/rule ")) {
+      const added=addOwnerRule(state.baby,body.slice(6));
+      state.baby=added.baby;
+      if(!added.rule)await reply("Verwendung: `/rule <explizite Kommunikations- oder Projektregel>`");
+      else await reply("## Continuum · Nutzerregel\n\nGespeichert: **"+added.rule.text+"**\n\nDie Regel wird als explizite Nutzerpräferenz getrennt von Webwissen geführt.");
+    } else if (lower.startsWith("/feedback ")) {
+      const feedback=body.slice(10).trim();
+      const good=/^(good|gut|positiv|richtig|ja)\b/i.test(feedback);
+      const bad=/^(bad|schlecht|negativ|falsch|nein)\b/i.test(feedback);
+      if(!good&&!bad)await reply("Verwendung: `/feedback good <Hinweis>` oder `/feedback bad <Hinweis>`");
+      else{
+        state.baby=recordOutcome(state.baby,{
+          skills:["communication","self-check"],
+          success:good,reward:good?8:2,
+          reflection:"Explizites Nutzerfeedback: "+clean(feedback,500)
+        });
+        await reply("## Continuum · Feedback gelernt\n\nKommunikations- und Self-Check-Skill wurden mit **"+(good?"positivem":"negativem")+"** Nutzerfeedback aktualisiert.");
+      }
     } else if (lower.startsWith("/learn ")) {
       const lesson = clean(body.slice(7),1200);
       const id = "lesson-" + crypto.createHash("sha256").update(lesson).digest("hex").slice(0,20);
