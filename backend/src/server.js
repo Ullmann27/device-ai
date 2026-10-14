@@ -5,6 +5,8 @@ import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import { ContinuumResearchDaemon, createOpenAiResearchFunction } from "./continuum-daemon.js";
 import { BrainFactory, createOpenAiBrainFactoryAdapters } from "./brain-factory.js";
+import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothesis-tournament.js";
+import { mergeResearchQuestions } from "./continuum-state.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -35,10 +37,19 @@ const BRAIN_FACTORY_EVERY_SUCCESSFUL_CYCLES = Math.max(1,
   Number(process.env.CONTINUUM_BRAIN_EVERY_SUCCESSFUL_CYCLES ?? 6));
 const CONTINUUM_RESEARCH_MODEL = process.env.CONTINUUM_RESEARCH_MODEL ?? OPENAI_MODEL;
 const CONTINUUM_BRAIN_MODEL = process.env.CONTINUUM_BRAIN_MODEL ?? OPENAI_MODEL;
+const HYPOTHESIS_TOURNAMENT_ENABLED =
+  (process.env.CONTINUUM_HYPOTHESIS_TOURNAMENT_ENABLED ?? "false").toLowerCase() === "true";
+const HYPOTHESIS_STATE_PATH = process.env.CONTINUUM_HYPOTHESIS_STATE_PATH ??
+  path.join(process.cwd(), "data", "continuum-hypotheses.json");
+const HYPOTHESIS_MODEL = process.env.CONTINUUM_HYPOTHESIS_MODEL ?? OPENAI_MODEL;
+const HYPOTHESIS_EVERY_SUCCESSFUL_CYCLES = Math.max(1,
+  Number(process.env.CONTINUUM_HYPOTHESIS_EVERY_SUCCESSFUL_CYCLES ?? 12));
 
 let continuumDaemon = null;
 let brainFactory = null;
+let hypothesisTournament = null;
 let lastBrainEvolutionSuccessfulCycle = 0;
+let lastHypothesisTournamentSuccessfulCycle = 0;
 
 const sessions = new Map();
 const SESSION_TTL_MS = 6 * 60 * 60 * 1000;
@@ -273,8 +284,10 @@ app.get("/v1/continuum/status", auth, (_req, res) => {
     res.json({
       daemon: continuumDaemon ? continuumDaemon.status() : null,
       brain: brainFactory ? brainFactory.status() : null,
+      hypotheses: hypothesisTournament ? hypothesisTournament.status() : null,
       autonomousResearchEnabled: Boolean(continuumDaemon),
-      brainEvolutionEnabled: Boolean(brainFactory)
+      brainEvolutionEnabled: Boolean(brainFactory),
+      hypothesisTournamentEnabled: Boolean(hypothesisTournament)
     });
   } catch (error) {
     res.status(500).json({ error: (error instanceof Error ? error.message : String(error)).slice(0, 500) });
@@ -371,6 +384,23 @@ function startContinuumServices() {
     });
   }
 
+  if (HYPOTHESIS_TOURNAMENT_ENABLED) {
+    const adapters = createOpenAiHypothesisAdapters({
+      apiKey: OPENAI_API_KEY,
+      model: HYPOTHESIS_MODEL,
+      baseUrl: OPENAI_BASE_URL
+    });
+    hypothesisTournament = new HypothesisTournament({
+      statePath: HYPOTHESIS_STATE_PATH,
+      generate: adapters.generate,
+      reflect: adapters.reflect,
+      compare: adapters.compare,
+      evolve: adapters.evolve,
+      hypothesesPerRound: Number(process.env.CONTINUUM_HYPOTHESIS_COUNT ?? 4),
+      dailyTournamentLimit: Number(process.env.CONTINUUM_HYPOTHESIS_DAILY_LIMIT ?? 2)
+    });
+  }
+
   continuumDaemon = new ContinuumResearchDaemon({
     statePath: CONTINUUM_STATE_PATH,
     minIntervalMs: CONTINUUM_RESEARCH_INTERVAL_MS,
@@ -384,30 +414,63 @@ function startContinuumServices() {
   });
 
   continuumDaemon.start(async (result, researchState) => {
-    if (!brainFactory || !result?.success) return;
+    if (!result?.success) return;
     const successfulCycles = Number(result.summary?.successfulCycles ?? 0);
-    if (successfulCycles <= 0 ||
-        successfulCycles % BRAIN_FACTORY_EVERY_SUCCESSFUL_CYCLES !== 0 ||
-        successfulCycles === lastBrainEvolutionSuccessfulCycle) return;
 
-    lastBrainEvolutionSuccessfulCycle = successfulCycles;
-    try {
-      const evolved = await brainFactory.evolve(researchState);
-      console.log("Continuum Brain Factory:", JSON.stringify({
-        promoted: evolved.promoted ?? false,
-        championBefore: evolved.championBefore ?? null,
-        championAfter: evolved.championAfter ?? null,
-        skipped: evolved.skipped ?? false,
-        reason: evolved.reason ?? null
-      }));
-    } catch (error) {
-      console.error("Continuum Brain Factory cycle failed:",
-        error instanceof Error ? error.message : error);
+    if (brainFactory &&
+        successfulCycles > 0 &&
+        successfulCycles % BRAIN_FACTORY_EVERY_SUCCESSFUL_CYCLES === 0 &&
+        successfulCycles !== lastBrainEvolutionSuccessfulCycle) {
+      lastBrainEvolutionSuccessfulCycle = successfulCycles;
+      try {
+        const evolved = await brainFactory.evolve(researchState);
+        console.log("Continuum Brain Factory:", JSON.stringify({
+          promoted: evolved.promoted ?? false,
+          championBefore: evolved.championBefore ?? null,
+          championAfter: evolved.championAfter ?? null,
+          skipped: evolved.skipped ?? false,
+          reason: evolved.reason ?? null
+        }));
+      } catch (error) {
+        console.error("Continuum Brain Factory cycle failed:",
+          error instanceof Error ? error.message : error);
+      }
+    }
+
+    if (hypothesisTournament &&
+        successfulCycles > 0 &&
+        successfulCycles % HYPOTHESIS_EVERY_SUCCESSFUL_CYCLES === 0 &&
+        successfulCycles !== lastHypothesisTournamentSuccessfulCycle) {
+      lastHypothesisTournamentSuccessfulCycle = successfulCycles;
+      try {
+        const tournament = await hypothesisTournament.run(researchState);
+        if (!tournament.skipped && tournament.researchQuestions?.length) {
+          const latest = continuumDaemon.store.load();
+          const withQuestions = mergeResearchQuestions(
+            latest,
+            tournament.researchQuestions,
+            "HYPOTHESIS",
+            Date.now()
+          );
+          continuumDaemon.store.save(withQuestions, Date.now());
+        }
+        console.log("Continuum Hypothesis Tournament:", JSON.stringify({
+          generation: tournament.generation ?? null,
+          leaders: tournament.leaders?.map((x) => x.id) ?? [],
+          newResearchQuestions: tournament.researchQuestions?.length ?? 0,
+          skipped: tournament.skipped ?? false,
+          reason: tournament.reason ?? null
+        }));
+      } catch (error) {
+        console.error("Continuum Hypothesis Tournament failed:",
+          error instanceof Error ? error.message : error);
+      }
     }
   });
 
   console.log("Device AI Continuum research daemon enabled.");
   if (brainFactory) console.log("Device AI Brain Factory enabled.");
+  if (hypothesisTournament) console.log("Device AI Hypothesis Tournament enabled.");
 }
 
 startContinuumServices();

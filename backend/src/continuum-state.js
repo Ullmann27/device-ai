@@ -149,11 +149,38 @@ export function makeGap(question, sourceObservationId, now = Date.now()) {
     id,
     question: normalized,
     sourceObservationId,
+    sourceKind: "OBSERVATION",
+    sourceRef: sourceObservationId,
     createdAt: now,
     lastTriedAt: null,
     attempts: 0,
     resolved: false
   };
+}
+
+export function mergeResearchQuestions(state, questions, sourceKind = "HYPOTHESIS", now = Date.now()) {
+  const next = structuredClone(state);
+  for (const item of (Array.isArray(questions) ? questions : []).slice(0, 32)) {
+    const question = cleanText(item?.question ?? item, 260);
+    if (question.length < 8) continue;
+    const sourceRef = cleanText(item?.hypothesisId ?? item?.sourceRef ?? "", 120) || null;
+    const id = "gap-" + sha256(question.toLocaleLowerCase("de-DE")).slice(0, 24);
+    const existing = next.gaps.find((x) => x.id === id);
+    if (existing) continue;
+    next.gaps.push({
+      id,
+      question,
+      sourceObservationId: null,
+      sourceKind: cleanText(sourceKind, 40) || "HYPOTHESIS",
+      sourceRef,
+      createdAt: now,
+      lastTriedAt: null,
+      attempts: 0,
+      resolved: false
+    });
+  }
+  next.gaps = next.gaps.slice(-MAX_GAPS);
+  return next;
 }
 
 export function mergeObservation(state, observation, now = Date.now()) {

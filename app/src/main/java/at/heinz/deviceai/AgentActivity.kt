@@ -1507,7 +1507,9 @@ class AgentActivity : Activity() {
                         append("Always-on Research: ")
                             .append(if(remote.autonomousResearchEnabled) "AKTIV" else "AUS").append("\n")
                         append("Brain Factory: ")
-                            .append(if(remote.brainEvolutionEnabled) "AKTIV" else "AUS").append("\n\n")
+                            .append(if(remote.brainEvolutionEnabled) "AKTIV" else "AUS").append("\n")
+                        append("Hypothesen-Turnier: ")
+                            .append(if(remote.hypothesisTournamentEnabled) "AKTIV" else "AUS").append("\n\n")
                         remote.researchGeneration?.let { append("Research-Generation: ").append(it).append("\n") }
                         remote.cycles?.let { append("Forschungszyklen: ").append(it) }
                         if(remote.successfulCycles!=null || remote.failedCycles!=null) {
@@ -1525,6 +1527,10 @@ class AgentActivity : Activity() {
                             append("Champion-Score: ").append("%.3f".format(Locale.ROOT,it)).append("\n")
                         }
                         remote.championId?.let { append("Champion: ").append(it.take(48)).append("\n") }
+                        remote.hypothesisGeneration?.let { append("\nHypothesen-Generation: ").append(it).append("\n") }
+                        remote.hypotheses?.let { append("Hypothesen im Turnierarchiv: ").append(it).append("\n") }
+                        remote.tournaments?.let { append("Abgeschlossene Turniere: ").append(it).append("\n") }
+                        remote.hypothesisLeaderElo?.let { append("Führender Elo-Wert: ").append(it).append("\n") }
                         append("\nDer Serverkern arbeitet unabhängig von der installierten APK. " +
                             "Web-Beobachtungen bleiben unbestätigt und erhalten keine Geräteautorität.")
                     }

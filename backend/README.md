@@ -78,3 +78,19 @@ Authentifizierter Diagnose-Endpunkt:
 - `GET /v1/continuum/status`
 
 Er liefert nur aggregierte Lern-/Forschungsmetriken und keinen geheimen Prompt- oder Credential-Inhalt.
+
+## Hypothesis Tournament
+
+Nach genügend belegten Forschungszyklen kann optional ein Hypothesen-Turnier laufen:
+
+- Generation Agent erzeugt mehrere ausdrücklich spekulative Hypothesen aus bereits gespeicherter Evidenz.
+- Reflection Agent sucht Gültigkeitsrisiken, fehlende Evidenz und Falsifikationstests.
+- Ranking Agent führt paarweise Vergleiche durch; Elo-Werte bilden die relative Turnierhistorie ab.
+- Evolution Agent kombiniert starke Hypothesen und muss die vorhandene Kritik adressieren.
+- Die Sieger erzeugen ausschließlich neue **prüfbare Forschungsfragen**.
+- Diese Fragen gehen als `sourceKind=HYPOTHESIS` zurück in die normale Research-Agenda.
+- Erst der read-only Research Daemon kann später mit echten Quellen daraus neue `WEB_OBSERVATION`-Einträge erzeugen.
+- Hypothesen bleiben immer `authority=NONE`; es gibt keine automatische Beförderung zum Fakt.
+
+Das Turnier ist budgetiert und standardmäßig außerhalb der Render-Blueprint-Konfiguration deaktiviert; der Blueprint aktiviert
+es bewusst nur für den vorgesehenen persistenten Always-on-Dienst.

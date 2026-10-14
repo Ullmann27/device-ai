@@ -23,7 +23,12 @@ data class RemoteContinuumStatus(
     val championId: String?,
     val championScore: Double?,
     val candidates: Int?,
-    val reflections: Int?
+    val reflections: Int?,
+    val hypothesisTournamentEnabled: Boolean,
+    val hypothesisGeneration: Int?,
+    val hypotheses: Int?,
+    val tournaments: Int?,
+    val hypothesisLeaderElo: Int?
 )
 
 class AgentBackendClient(private val context: Context) {
@@ -183,6 +188,7 @@ class AgentBackendClient(private val context: Context) {
     private fun parseContinuumStatus(json: JSONObject): RemoteContinuumStatus {
         val daemon = json.optJSONObject("daemon")
         val brain = json.optJSONObject("brain")
+        val hypotheses = json.optJSONObject("hypotheses")
         fun JSONObject?.intOrNull(key: String): Int? =
             this?.takeIf { it.has(key) && !it.isNull(key) }?.optInt(key)
         fun JSONObject?.longOrNull(key: String): Long? =
@@ -206,7 +212,12 @@ class AgentBackendClient(private val context: Context) {
             championId = brain.stringOrNull("championId"),
             championScore = brain.doubleOrNull("championScore"),
             candidates = brain.intOrNull("candidates"),
-            reflections = brain.intOrNull("reflections")
+            reflections = brain.intOrNull("reflections"),
+            hypothesisTournamentEnabled = json.optBoolean("hypothesisTournamentEnabled", false),
+            hypothesisGeneration = hypotheses.intOrNull("generation"),
+            hypotheses = hypotheses.intOrNull("hypotheses"),
+            tournaments = hypotheses.intOrNull("tournaments"),
+            hypothesisLeaderElo = hypotheses.intOrNull("leaderElo")
         )
     }
 

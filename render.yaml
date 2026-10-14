@@ -44,3 +44,13 @@ services:
         value: "4"
       - key: CONTINUUM_BRAIN_DAILY_GENERATION_LIMIT
         value: "4"
+      - key: CONTINUUM_HYPOTHESIS_TOURNAMENT_ENABLED
+        value: "true"
+      - key: CONTINUUM_HYPOTHESIS_STATE_PATH
+        value: "/var/data/continuum-hypotheses.json"
+      - key: CONTINUUM_HYPOTHESIS_EVERY_SUCCESSFUL_CYCLES
+        value: "12"
+      - key: CONTINUUM_HYPOTHESIS_COUNT
+        value: "4"
+      - key: CONTINUUM_HYPOTHESIS_DAILY_LIMIT
+        value: "2"
