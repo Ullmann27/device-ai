@@ -105,6 +105,7 @@ import java.util.concurrent.TimeUnit
 import java.util.UUID
 
 class AgentActivity : Activity() {
+    private var pendingContinuumPackageModel:ByteArray?=null
     private data class LocalGeneration(
         val response: String,
         val proposal: ToolProposal?,
@@ -118,6 +119,8 @@ class AgentActivity : Activity() {
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
         private const val NEURAL_IMPORT_REQUEST = 2211
+        private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
+        private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private val BG = Color.rgb(7, 10, 16)
@@ -3403,6 +3406,64 @@ class AgentActivity : Activity() {
                     // Only in the explicitly activated learning conversation: a
                     // recognized phrase goes to the supervised coach, never ToolGate.
                     if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                }
+            }
+            CONTINUUM_PACKAGE_MODEL_REQUEST -> {
+                if(resultCode==RESULT_OK && data?.data!=null) {
+                    val modelUri=data.data!!
+                    val bytes=runCatching {
+                        contentResolver.openInputStream(modelUri)?.use { stream ->
+                            val out=java.io.ByteArrayOutputStream()
+                            val buffer=ByteArray(4096)
+                            while(out.size()<=32960) {
+                                val read=stream.read(buffer,0,minOf(buffer.size,32961-out.size()))
+                                if(read<0)break
+                                require(read>0) { "Modelldatei nicht lesbar" }
+                                out.write(buffer,0,read)
+                            }
+                            out.toByteArray()
+                        } ?: error("Modell nicht lesbar")
+                    }.getOrNull()
+                    if(bytes?.size==32960) {
+                        pendingContinuumPackageModel=bytes
+                        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type="*/*"
+                        },CONTINUUM_PACKAGE_MANIFEST_REQUEST)
+                    } else {
+                        pendingContinuumPackageModel=null
+                        addAssistantMessage("Öffentliches Modellpaket: ungültige SWB1-Dateigröße")
+                    }
+                } else pendingContinuumPackageModel=null
+            }
+            CONTINUUM_PACKAGE_MANIFEST_REQUEST -> {
+                val model=pendingContinuumPackageModel
+                pendingContinuumPackageModel=null
+                if(resultCode==RESULT_OK && data?.data!=null && model!=null &&
+                    !localAgentExecutor.isShutdown) {
+                    val uri=data.data!!
+                    localAgentExecutor.execute {
+                        val result=runCatching {
+                            val manifest=contentResolver.openInputStream(uri)?.use { stream ->
+                                val out=java.io.ByteArrayOutputStream()
+                                val buffer=ByteArray(2048)
+                                while(out.size()<=16384) {
+                                    val count=stream.read(buffer,0,minOf(buffer.size,16385-out.size()))
+                                    if(count<0)break
+                                    require(count>0) { "Manifest nicht lesbar" }
+                                    out.write(buffer,0,count)
+                                }
+                                out.toString("UTF-8")
+                            } ?: error("Manifest nicht lesbar")
+                            ContinuumLearningCore(filesDir).importPublicPackage(model,manifest)
+                        }
+                        runOnUiThread {
+                            if(!isFinishing && !isDestroyed) {
+                                addAssistantMessage(result.fold({it.reason},
+                                    {"Modellpaket abgelehnt: "+(it.message ?: "ungültiges Paket")}))
+                            }
+                        }
+                    }
                 }
             }
             NEURAL_IMPORT_REQUEST -> {
