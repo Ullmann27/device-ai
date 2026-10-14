@@ -105,3 +105,22 @@ test("memory retrieval ranks explicit owner rules and grounded beliefs without t
   assert.ok(rows.some(x=>x.kind==="BELIEF"));
   assert.ok(rows.some(x=>x.kind==="EPISODE"));
 });
+
+
+test("deep research plan uses distinct focused search queries for interaction and metacognition",()=>{
+  const plan=buildDeepResearchPlan("Wie lernt ein Assistent Sprache, Emotion, Planung und Gedächtnis?");
+  const interaction=plan.find(x=>x.id==="interaction");
+  const meta=plan.find(x=>x.id==="metacognition");
+  assert.ok(interaction.searchQuery.includes("affective computing"));
+  assert.ok(interaction.searchQuery.includes("dialogue pragmatics"));
+  assert.ok(meta.searchQuery.includes("hierarchical planning"));
+  assert.ok(meta.searchQuery.includes("memory retrieval"));
+});
+
+test("html extraction removes navigation chrome before learning",()=>{
+  const page=extractPage('<html><head><title>Agent Paper</title></head><body><nav>Skip to main content Register Login</nav><header>Open Menu</header><main><p>Dialogue agents can adapt from explicit user feedback and calibrated uncertainty.</p></main><footer>Privacy Statement</footer></body></html>',
+    "https://example.org/paper","text/html");
+  assert.ok(page.text.includes("Dialogue agents"));
+  assert.ok(!page.text.includes("Register Login"));
+  assert.ok(!page.text.includes("Privacy Statement"));
+});

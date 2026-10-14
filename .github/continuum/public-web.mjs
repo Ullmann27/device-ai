@@ -125,7 +125,8 @@ export function extractPage(html,url,contentType="text/html"){
   if(isHtml){
     body=body.replace(/<script\b[\s\S]*?<\/script>/gi," ")
       .replace(/<style\b[\s\S]*?<\/style>/gi," ")
-      .replace(/<noscript\b[\s\S]*?<\/noscript>/gi," ");
+      .replace(/<noscript\b[\s\S]*?<\/noscript>/gi," ")
+      .replace(/<(nav|header|footer|aside|form)\b[\s\S]*?<\/\1>/gi," ");
     for(const match of html.matchAll(/<a\b[^>]*href\s*=\s*["']([^"'#]+)["'][^>]*>/gi)){
       try{
         const target=new URL(decodeEntities(match[1]),url);
@@ -135,7 +136,9 @@ export function extractPage(html,url,contentType="text/html"){
     }
     body=body.replace(/<[^>]+>/g," ");
   }
-  const text=decodeEntities(body).replace(/\s+/g," ").trim().slice(0,18000);
+  const text=decodeEntities(body)
+    .replace(/\b(skip to main content|skip to main navigation|open menu|site footer|register login|privacy statement)\b/gi," ")
+    .replace(/\s+/g," ").trim().slice(0,18000);
   return {source:"PublicWeb",title:title||new URL(url).hostname,url,text,links:[...new Set(links)].slice(0,80)};
 }
 

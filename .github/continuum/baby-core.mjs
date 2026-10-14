@@ -152,16 +152,46 @@ export function buildDeepResearchPlan(question) {
   const q = clean(question, 600);
   const lower=q.toLocaleLowerCase("de-DE");
   const plan=[
-    { id:"mechanism", question:q + " — Welche Mechanismen und Architekturen funktionieren nachweislich?", skill:"research" },
-    { id:"evidence", question:q + " — Welche starken empirischen Ergebnisse und Benchmarks gibt es?", skill:"source-critique" },
-    { id:"failure", question:q + " — Welche Grenzen, Fehlschläge, Gegenbeispiele und offenen Probleme sind bekannt?", skill:"source-critique" },
-    { id:"implementation", question:q + " — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?", skill:"instruction-decomposition" }
+    {
+      id:"mechanism",
+      question:q + " — Welche Mechanismen und Architekturen funktionieren nachweislich?",
+      searchQuery:"personal AI assistant continual learning architecture adaptive memory online learning",
+      skill:"research"
+    },
+    {
+      id:"evidence",
+      question:q + " — Welche starken empirischen Ergebnisse und Benchmarks gibt es?",
+      searchQuery:"AI agent continual adaptation benchmark retention generalization calibration evaluation",
+      skill:"source-critique"
+    },
+    {
+      id:"failure",
+      question:q + " — Welche Grenzen, Fehlschläge, Gegenbeispiele und offenen Probleme sind bekannt?",
+      searchQuery:"adaptive AI agent failure modes regression negative results benchmark continual learning",
+      skill:"source-critique"
+    },
+    {
+      id:"implementation",
+      question:q + " — Welche konkreten Implementierungsbausteine lassen sich daraus ableiten?",
+      searchQuery:"personal AI assistant architecture memory active learning planner verifier implementation",
+      skill:"instruction-decomposition"
+    }
   ];
   if(/sprache|dialog|emotion|benutzer|kommunik|grammar|language|conversation/.test(lower)){
-    plan.push({id:"interaction",question:q+" — Welche Methoden für Dialogpragmatik, Benutzerfeedback, Emotionssignale und natürliche Interaktion sind empirisch belastbar?",skill:"dialogue-pragmatics"});
+    plan.push({
+      id:"interaction",
+      question:q+" — Welche Methoden für Dialogpragmatik, Benutzerfeedback, Emotionssignale und natürliche Interaktion sind empirisch belastbar?",
+      searchQuery:"dialogue pragmatics affective computing conversational agents user modeling user feedback preference learning emotion recognition benchmark",
+      skill:"dialogue-pragmatics"
+    });
   }
-  if(/plan|denken|zerleg|reason|selbst|ziel|entscheidung/.test(lower)){
-    plan.push({id:"metacognition",question:q+" — Welche Methoden für Aufgabenzerlegung, Selbstüberwachung, Planung und Wahl des nächsten Lernziels sind empirisch belastbar?",skill:"planning"});
+  if(/plan|denken|zerleg|reason|selbst|ziel|entscheidung|gedächtnis|memory|unsicher/.test(lower)){
+    plan.push({
+      id:"metacognition",
+      question:q+" — Welche Methoden für Aufgabenzerlegung, Selbstüberwachung, Planung, Memory-Retrieval und Wahl des nächsten Lernziels sind empirisch belastbar?",
+      searchQuery:"LLM agents hierarchical planning task decomposition metacognitive monitoring memory retrieval uncertainty calibration goal selection benchmark",
+      skill:"planning"
+    });
   }
   return plan.slice(0,6);
 }
