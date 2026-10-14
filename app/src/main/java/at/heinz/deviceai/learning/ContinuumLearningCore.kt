@@ -83,6 +83,40 @@ class ContinuumLearningCore(
                 holdoutBefore,holdoutAfter,emptyList(),reason)
         }
 
+    /** Bounded autonomous public semantic curriculum, no network or owner labels.
+     * Only attempts after the initial bootstrap and at most once per local model.
+     */
+    fun bootstrapSemanticCurriculum(cancelled:()->Boolean={false}):ContinualLearningReport? =
+        synchronized(CORE_LOCK) {
+            if (store.all().any {
+                    it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation=="offline-semantic-bootstrap"
+                } || store.all().any {
+                    it.type==LearningExperienceType.INTENT_LABEL ||
+                    it.type==LearningExperienceType.USER_FACT
+                }) return@synchronized null
+            val baseline=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(baseline.save())
+            val before=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
+            val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val intentBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val train=candidate.trainSemantic(SEMANTIC_BOOTSTRAP,steps=550,
+                maxMillis=2500,cancelled=cancelled)
+            val after=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
+            val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val intentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val accepted=!cancelled() && !train.stoppedEarly &&
+                after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
+                retains(intentBefore,intentAfter)
+            if(accepted)saveModel(candidate.save())
+            val reason=if(accepted) "Öffentliches Semantiktraining verbessert; Holdouts geschützt"
+                else "Semantikkandidat verworfen; bisherige Gewichte erhalten"
+            appendAudit("offline-semantic-bootstrap",accepted,train.steps,before,after,
+                holdoutBefore,holdoutAfter,emptyList(),reason)
+            ContinualLearningReport("offline-semantic-bootstrap",accepted,train.steps,0,
+                before,after,holdoutBefore,holdoutAfter,emptyList(),reason)
+        }
+
     fun teachIntent(
         text:String,
         label:Int,
