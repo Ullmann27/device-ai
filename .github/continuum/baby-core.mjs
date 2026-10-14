@@ -512,7 +512,7 @@ const TOPIC_STOPWORDS = new Set([
 
 function topicTokens(value) {
   const words = String(value??"").toLocaleLowerCase("de-DE")
-    .normalize("NFKC").split(/[^\\p{L}\\p{N}]+/u)
+    .normalize("NFKC").split(/[^\p{L}\p{N}]+/u)
     .filter(x => x.length >= 5 && !TOPIC_STOPWORDS.has(x));
   return new Set(words.map(x => {
     if (/^(lern|learning|learner|trainier|training)/.test(x)) return "learning";
