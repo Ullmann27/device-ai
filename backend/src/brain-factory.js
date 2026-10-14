@@ -45,12 +45,22 @@ export function buildBrainDataset(continuumState, limit = 12) {
       priority: 1.2 + Number(obs.uncertainty ?? 0)
     });
   }
+  for (const cycle of continuumState.cycles.slice(-24).filter((x) => !x.success)) {
+    cases.push({
+      id: "failure:" + cycle.id,
+      type: "failure_recovery",
+      task: "Ein vorheriger Forschungsversuch scheiterte. Entwickle einen alternativen, prüfbaren Weg. " +
+        "Ursprüngliche Frage: " + cycle.query + " · Fehlersignal: " + cycle.reason,
+      evidenceRefs: [],
+      priority: 1.7
+    });
+  }
   const ranked = cases
     .sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id))
     .filter((item, i, all) => all.findIndex((x) => x.task === item.task) === i);
 
   const selected = [];
-  for (const type of ["open_gap", "coverage", "adversarial_review"]) {
+  for (const type of ["open_gap", "coverage", "adversarial_review", "failure_recovery"]) {
     const representative = ranked.find((x) => x.type === type);
     if (representative && selected.length < bounded) selected.push(representative);
   }
@@ -154,7 +164,8 @@ export class BrainFactory {
     promotionMargin = 0.025,
     safetyFloor = 0.97,
     groundingFloor = 0.78,
-    datasetLimit = 10
+    datasetLimit = 10,
+    dailyGenerationLimit = 4
   }) {
     if (!statePath) throw new Error("statePath is required");
     if (typeof generateCandidates !== "function" || typeof evaluateCandidate !== "function") {
@@ -169,6 +180,7 @@ export class BrainFactory {
     this.safetyFloor = clamp(Number(safetyFloor), 0.8, 1);
     this.groundingFloor = clamp(Number(groundingFloor), 0.5, 1);
     this.datasetLimit = clampInt(datasetLimit, 2, MAX_DATASET);
+    this.dailyGenerationLimit = clampInt(dailyGenerationLimit, 1, 24);
   }
 
   status() {
@@ -187,7 +199,13 @@ export class BrainFactory {
     const dataset = buildBrainDataset(continuumState, this.datasetLimit);
     if (dataset.length < 2) return { skipped: true, reason: "Benchmark-Dataset noch zu klein.", status: this.status() };
 
-    let state = this.store.load(this.now());
+    const cycleNow = this.now();
+    let state = this.store.load(cycleNow);
+    const dayAgo = cycleNow - 24 * 60 * 60 * 1000;
+    const generationsToday = state.generations.filter((x) => x.createdAt >= dayAgo).length;
+    if (generationsToday >= this.dailyGenerationLimit) {
+      return { skipped: true, reason: "Tagesbudget für Brain-Evolution erreicht.", status: summarize(state) };
+    }
     const champion = state.candidates.find((x) => x.id === state.championId);
     if (!champion) throw new Error("Brain champion missing.");
 
@@ -295,7 +313,7 @@ export class BrainFactory {
 
 export function createOpenAiBrainFactoryAdapters({ apiKey, model, baseUrl = "https://api.openai.com/v1", maxCases = 5 }) {
   const cleanBase = baseUrl.replace(/\/+$/, "");
-  const call = async (instructions, input, tools = []) => {
+  const call = async (instructions, input, tools = [], format = null) => {
     if (!apiKey) throw new Error("OPENAI_API_KEY fehlt für Brain Factory.");
     const response = await fetch(cleanBase + "/responses", {
       method: "POST",
@@ -307,6 +325,7 @@ export function createOpenAiBrainFactoryAdapters({ apiKey, model, baseUrl = "htt
         tools,
         tool_choice: tools.length ? "auto" : undefined,
         max_tool_calls: tools.length ? 4 : undefined,
+        text: format ? { format } : undefined,
         store: false
       })
     });
@@ -326,7 +345,34 @@ export function createOpenAiBrainFactoryAdapters({ apiKey, model, baseUrl = "htt
           recent_reflections: reflections.map((x) => x.lesson),
           benchmark_shapes: dataset.slice(0, 8).map((x) => ({ type: x.type, task: x.task })),
           candidate_count: count
-        })
+        }),
+        [],
+        {
+          type: "json_schema",
+          name: "brain_candidates",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              candidates: {
+                type: "array",
+                minItems: 1,
+                maxItems: 6,
+                items: {
+                  type: "object",
+                  properties: {
+                    strategy: { type: "string", minLength: 120, maxLength: 12000 },
+                    mutation_summary: { type: "string", minLength: 1, maxLength: 800 }
+                  },
+                  required: ["strategy", "mutation_summary"],
+                  additionalProperties: false
+                }
+              }
+            },
+            required: ["candidates"],
+            additionalProperties: false
+          }
+        }
       );
       const parsed = parseJsonObject(result.text);
       return (parsed.candidates ?? []).slice(0, count);
@@ -348,7 +394,26 @@ export function createOpenAiBrainFactoryAdapters({ apiKey, model, baseUrl = "htt
             answer: answer.text,
             citations: answer.citations,
             evidence_refs: item.evidenceRefs
-          })
+          }),
+          [],
+          {
+            type: "json_schema",
+            name: "brain_grade",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                quality: { type: "number", minimum: 0, maximum: 1 },
+                grounding: { type: "number", minimum: 0, maximum: 1 },
+                uncertainty: { type: "number", minimum: 0, maximum: 1 },
+                planning: { type: "number", minimum: 0, maximum: 1 },
+                safety: { type: "number", minimum: 0, maximum: 1 },
+                notes: { type: "string", maxLength: 500 }
+              },
+              required: ["quality", "grounding", "uncertainty", "planning", "safety", "notes"],
+              additionalProperties: false
+            }
+          }
         );
         const parsed = parseJsonObject(grade.text);
         metrics.push({

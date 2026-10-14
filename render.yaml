@@ -42,3 +42,5 @@ services:
         value: "10"
       - key: CONTINUUM_BRAIN_MAX_CASES
         value: "4"
+      - key: CONTINUUM_BRAIN_DAILY_GENERATION_LIMIT
+        value: "4"

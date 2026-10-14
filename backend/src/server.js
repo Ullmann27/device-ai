@@ -366,7 +366,8 @@ function startContinuumServices() {
       generateCandidates: adapters.generateCandidates,
       evaluateCandidate: adapters.evaluateCandidate,
       challengerCount: Number(process.env.CONTINUUM_BRAIN_CHALLENGERS ?? 3),
-      datasetLimit: Number(process.env.CONTINUUM_BRAIN_DATASET_LIMIT ?? 10)
+      datasetLimit: Number(process.env.CONTINUUM_BRAIN_DATASET_LIMIT ?? 10),
+      dailyGenerationLimit: Number(process.env.CONTINUUM_BRAIN_DAILY_GENERATION_LIMIT ?? 4)
     });
   }
 

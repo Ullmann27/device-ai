@@ -35,6 +35,18 @@ test("dataset prioritizes gaps, low coverage and uncertain observations", () => 
   assert.ok(dataset.some((x) => x.type === "adversarial_review"));
 });
 
+test("dataset includes recent failed cycles as recovery benchmarks", () => {
+  const state = continuumFixture();
+  state.cycles.push({
+    id: "cycle-failed", targetType: "topic", targetId: "topic-01",
+    query: "KI Evaluationsmethoden", strategy: "baseline", success: false,
+    reason: "Keine unabhängigen Quellen gefunden", observationId: null,
+    startedAt: 1300, completedAt: 1400
+  });
+  const dataset = buildBrainDataset(state, 8);
+  assert.ok(dataset.some((x) => x.type === "failure_recovery"));
+});
+
 test("immutable governance cannot be mutated by challenger", () => {
   assert.throws(() => makeCandidate({
     parentId: "brain-parent",

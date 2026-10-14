@@ -195,22 +195,42 @@ export function createOpenAiResearchFunction({
           "AKTIVE PROMOVIERTE FORSCHUNGSSTRATEGIE:",
           activeStrategy,
           "",
-          "Antworte ausschließlich als JSON-Objekt mit summary, next_questions, contradictions, uncertainty und topic_hint.",
-          "summary ist eine vorsichtige Synthese; next_questions enthält höchstens 6 offene Forschungsfragen.",
-          "uncertainty ist eine Zahl 0..1."
+          "Ermittle belastbare Quellen und identifiziere, was als Nächstes untersucht werden sollte."
         ].join("\n"),
         input: [{
           role: "user",
           content: [
             "Forschungsziel: " + query,
             "Strategie: " + strategy,
-            "Zieltyp: " + target.type,
-            "Ermittle belastbare Quellen und identifiziere, was als Nächstes untersucht werden sollte."
+            "Zieltyp: " + target.type
           ].join("\n")
         }],
         tools: [{ type: "web_search" }],
         tool_choice: "auto",
         max_tool_calls: 6,
+        text: {
+          format: {
+            type: "json_schema",
+            name: "continuum_research_observation",
+            strict: true,
+            schema: {
+              type: "object",
+              properties: {
+                summary: { type: "string", minLength: 40, maxLength: 5000 },
+                next_questions: {
+                  type: "array",
+                  maxItems: 6,
+                  items: { type: "string", minLength: 8, maxLength: 260 }
+                },
+                contradictions: { type: "string", maxLength: 1200 },
+                uncertainty: { type: "number", minimum: 0, maximum: 1 },
+                topic_hint: { type: "string", maxLength: 160 }
+              },
+              required: ["summary", "next_questions", "contradictions", "uncertainty", "topic_hint"],
+              additionalProperties: false
+            }
+          }
+        },
         store: false
       })
     });
