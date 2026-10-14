@@ -5,6 +5,19 @@ import org.junit.Test
 import java.nio.file.Files
 
 class ContinuumLearningCoreTest {
+    @Test fun offlineBootstrapDoesNotModifyOwnerData() {
+        val dir=Files.createTempDirectory("continuum-owner-bootstrap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            assertTrue(core.recordOwnerFact("Meine bevorzugte Sprache ist Deutsch."))
+            val before=core.modelSnapshot()
+            assertNull(core.bootstrapOfflineCurriculum())
+            assertArrayEquals(before,core.modelSnapshot())
+            assertEquals(1,core.status().experiences.userFacts)
+            assertEquals(0,core.status().experiences.audits)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun offlineBootstrapNeedsNoOwnerLessonsAndRunsOnlyOnce() {
         val dir=Files.createTempDirectory("continuum-autonomous-bootstrap").toFile()
         try {
