@@ -19,7 +19,12 @@ data class WebToolResult(
 class ApprovedWebToolGate(
     private val consent: InternetConsentPolicy,
     private val discovery: ResearchDiscoveryProvider,
-    private val reader: (String) -> ResearchDocument? = { null }
+    private val reader: (String) -> ResearchDocument? = { url ->
+        HttpReadOnlyResearchProvider(
+            ResearchProviderPolicy(maxBytes = 96_000, totalTimeoutMillis = 12_000, maxRedirects = 2)
+        ).retrieve(ResearchRequest("owner-approved-web-read", url,
+            maxBytes = 96_000, timeoutMillis = 12_000, maxRedirects = 2)).documents.firstOrNull()
+    }
 ) {
     private var pending: WebToolRequest? = null
 
