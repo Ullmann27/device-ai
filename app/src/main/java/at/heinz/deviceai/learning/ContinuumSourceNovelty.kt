@@ -25,7 +25,7 @@ object ContinuumSourceNovelty {
     fun markCompleted(base:File,sources:List<MentorSource>) = synchronized(lock) {
         val old=completedHashes(base)
         val merged=(old+sources.map { it.sha.lowercase() }.filter(shaPattern::matches))
-            .takeLast(120).sorted()
+            .sorted().takeLast(120)
         val target=journal(base)
         target.parentFile?.mkdirs()
         val tmp=File(target.parentFile,target.name+".tmp")
