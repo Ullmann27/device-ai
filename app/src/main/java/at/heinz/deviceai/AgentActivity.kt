@@ -2033,7 +2033,7 @@ class AgentActivity : Activity() {
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
         val engine = DeepResearchEngine(
-            discovery = if (urls.isEmpty()) WikipediaResearchDiscoveryProvider() else
+            discovery = if (urls.isEmpty()) at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider() else
                 at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
             provider = HttpReadOnlyResearchProvider(
                 ResearchProviderPolicy(
@@ -2090,8 +2090,7 @@ class AgentActivity : Activity() {
                         if (!dossier.generalSearchAvailable) {
                             append("\n\nDirekte HTTPS-Quellen wurden verwendet.")
                         } else {
-                            append("\n\nRecherche über die deutschsprachige Wikipedia. " +
-                                "Das ist keine vollständige Suche im gesamten Internet.")
+                            append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
                         }
                         if (dossier.sources.isEmpty()) {
                             append("\n\nKeine abrufbaren Quellen. Prüfe Internetverbindung und Suchbegriff.")
