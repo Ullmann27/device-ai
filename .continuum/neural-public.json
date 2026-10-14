@@ -1,20 +1,20 @@
 {
   "format": "SWB1",
   "version": 1,
-  "modelHash": "a6818c128513105fc06109eeef99216cefd793f199fc52bd35447b2e8ba3c2e7",
-  "updates": 12000,
-  "rounds": 1,
-  "accepted": 1,
+  "modelHash": "5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1",
+  "updates": 13000,
+  "rounds": 2,
+  "accepted": 2,
   "paused": false,
-  "replay": 14,
+  "replay": 17,
   "audit": {
     "intent": {
-      "loss": 0.0923332196161876,
+      "loss": 0.08650731388419043,
       "correct": 20,
       "total": 20
     },
     "semantic": {
-      "loss": 0.6911080816892325,
+      "loss": 0.6907500762226857,
       "correct": 13,
       "total": 20
     }
