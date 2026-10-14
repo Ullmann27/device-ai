@@ -1482,8 +1482,69 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
+            .setNeutralButton("SERVERKERN") { _, _ -> showRemoteContinuumStatus() }
             .setPositiveButton("Schließen",null)
             .show()
+    }
+
+    private fun showRemoteContinuumStatus() {
+        if (!backend.isConfigured()) {
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Serverkern")
+                .setMessage("Noch kein HTTPS-Backend samt Device-Token konfiguriert. " +
+                    "Der lokale Lernkern bleibt davon unabhängig erhalten.")
+                .setNegativeButton("Cloud einrichten") { _, _ -> showCloudSettings() }
+                .setPositiveButton("Schließen", null)
+                .show()
+            return
+        }
+        addToolActivity("CONTINUUM · Serverkernstatus wird gelesen …")
+        backend.continuumStatus { result ->
+            result.fold(
+                onSuccess = { remote ->
+                    addToolActivity("CONTINUUM · Serverkernstatus empfangen")
+                    val text = buildString {
+                        append("Always-on Research: ")
+                            .append(if(remote.autonomousResearchEnabled) "AKTIV" else "AUS").append("\n")
+                        append("Brain Factory: ")
+                            .append(if(remote.brainEvolutionEnabled) "AKTIV" else "AUS").append("\n\n")
+                        remote.researchGeneration?.let { append("Research-Generation: ").append(it).append("\n") }
+                        remote.cycles?.let { append("Forschungszyklen: ").append(it) }
+                        if(remote.successfulCycles!=null || remote.failedCycles!=null) {
+                            append(" · erfolgreich ").append(remote.successfulCycles ?: 0)
+                            append(" · fehlgeschlagen ").append(remote.failedCycles ?: 0)
+                        }
+                        append("\n")
+                        remote.observations?.let { append("Quellenbeobachtungen: ").append(it).append("\n") }
+                        remote.citationCount?.let { append("Zitationen: ").append(it).append("\n") }
+                        remote.openGaps?.let { append("Offene Wissenslücken: ").append(it).append("\n") }
+                        remote.brainGeneration?.let { append("\nBrain-Generation: ").append(it).append("\n") }
+                        remote.candidates?.let { append("Evaluierte Strategiekandidaten: ").append(it).append("\n") }
+                        remote.reflections?.let { append("Gespeicherte Fehlersignale: ").append(it).append("\n") }
+                        remote.championScore?.let {
+                            append("Champion-Score: ").append("%.3f".format(Locale.ROOT,it)).append("\n")
+                        }
+                        remote.championId?.let { append("Champion: ").append(it.take(48)).append("\n") }
+                        append("\nDer Serverkern arbeitet unabhängig von der installierten APK. " +
+                            "Web-Beobachtungen bleiben unbestätigt und erhalten keine Geräteautorität.")
+                    }
+                    AlertDialog.Builder(this)
+                        .setTitle("Continuum · Serverkern")
+                        .setMessage(text)
+                        .setPositiveButton("Schließen", null)
+                        .show()
+                },
+                onFailure = { error ->
+                    addToolActivity("CONTINUUM · Serverstatus fehlgeschlagen")
+                    AlertDialog.Builder(this)
+                        .setTitle("Continuum · Serverkern")
+                        .setMessage("Status nicht abrufbar: " +
+                            (error.message ?: error.javaClass.simpleName).take(300))
+                        .setPositiveButton("Schließen", null)
+                        .show()
+                }
+            )
+        }
     }
 
     private fun showConfirmForget() {

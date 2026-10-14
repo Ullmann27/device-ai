@@ -9,6 +9,23 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+data class RemoteContinuumStatus(
+    val autonomousResearchEnabled: Boolean,
+    val brainEvolutionEnabled: Boolean,
+    val researchGeneration: Long?,
+    val observations: Int?,
+    val openGaps: Int?,
+    val cycles: Int?,
+    val successfulCycles: Int?,
+    val failedCycles: Int?,
+    val citationCount: Int?,
+    val brainGeneration: Int?,
+    val championId: String?,
+    val championScore: Double?,
+    val candidates: Int?,
+    val reflections: Int?
+)
+
 class AgentBackendClient(private val context: Context) {
     companion object {
         private const val PREFS = "device_ai_cloud"
@@ -44,6 +61,28 @@ class AgentBackendClient(private val context: Context) {
         Thread {
             val result = runCatching {
                 request("GET", "$base/health", null, authenticated = false)
+            }
+            mainHandler.post { callback(result) }
+        }.start()
+    }
+
+    fun continuumStatus(callback: (Result<RemoteContinuumStatus>) -> Unit) {
+        val base = backendUrl()
+        val token = SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("Cloud-KI ist noch nicht eingerichtet.")))
+            return
+        }
+        Thread {
+            val result = runCatching {
+                val raw = request(
+                    "GET",
+                    "$base/v1/continuum/status",
+                    null,
+                    authenticated = true,
+                    token = token
+                )
+                parseContinuumStatus(JSONObject(raw))
             }
             mainHandler.post { callback(result) }
         }.start()
@@ -139,6 +178,36 @@ class AgentBackendClient(private val context: Context) {
             throw IllegalStateException(message)
         }
         return text
+    }
+
+    private fun parseContinuumStatus(json: JSONObject): RemoteContinuumStatus {
+        val daemon = json.optJSONObject("daemon")
+        val brain = json.optJSONObject("brain")
+        fun JSONObject?.intOrNull(key: String): Int? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optInt(key)
+        fun JSONObject?.longOrNull(key: String): Long? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optLong(key)
+        fun JSONObject?.doubleOrNull(key: String): Double? =
+            this?.takeIf { it.has(key) && !it.isNull(key) }?.optDouble(key)
+                ?.takeIf { it.isFinite() }
+        fun JSONObject?.stringOrNull(key: String): String? =
+            this?.optString(key)?.takeIf { it.isNotBlank() && it != "null" }
+        return RemoteContinuumStatus(
+            autonomousResearchEnabled = json.optBoolean("autonomousResearchEnabled", false),
+            brainEvolutionEnabled = json.optBoolean("brainEvolutionEnabled", false),
+            researchGeneration = daemon.longOrNull("generation"),
+            observations = daemon.intOrNull("observations"),
+            openGaps = daemon.intOrNull("openGaps"),
+            cycles = daemon.intOrNull("cycles"),
+            successfulCycles = daemon.intOrNull("successfulCycles"),
+            failedCycles = daemon.intOrNull("failedCycles"),
+            citationCount = daemon.intOrNull("citationCount"),
+            brainGeneration = brain.intOrNull("generation"),
+            championId = brain.stringOrNull("championId"),
+            championScore = brain.doubleOrNull("championScore"),
+            candidates = brain.intOrNull("candidates"),
+            reflections = brain.intOrNull("reflections")
+        )
     }
 
     private fun parseReply(json: JSONObject): AgentReply {
