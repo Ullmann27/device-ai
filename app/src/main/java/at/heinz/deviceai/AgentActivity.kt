@@ -1985,6 +1985,20 @@ class AgentActivity : Activity() {
     }
 
     private fun runResearch(question: String, mode: ResearchMode) {
+        // The research engine runs only after the one-shot owner confirmation.
+        // A typed WebToolRequest mirrors the authorized operation without
+        // executing another independent network request.
+        val requestType: at.heinz.deviceai.cognitive.WebToolRequest =
+            if (Regex("""https://[^\\s<>"']+""", RegexOption.IGNORE_CASE).containsMatchIn(question))
+                at.heinz.deviceai.cognitive.WebToolRequest.Read(
+                    Regex("""https://[^\\s<>"']+""", RegexOption.IGNORE_CASE)
+                        .find(question)!!.value.trimEnd('.', ',', ';', ')', ']')
+                )
+            else at.heinz.deviceai.cognitive.WebToolRequest.Search(question.take(512))
+        addToolActivity("WEB · " + when (requestType) {
+            is at.heinz.deviceai.cognitive.WebToolRequest.Search -> "web_search"
+            is at.heinz.deviceai.cognitive.WebToolRequest.Read -> "web_read"
+        })
         // Both UI paths require explicit one-time consent before entering this method.
         // A persisted OFF switch fails closed even if a permission dialog was opened earlier.
         if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
