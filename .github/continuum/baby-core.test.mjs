@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {createBabyState,migrateBabyState,analyzeInstruction,observeInteraction,addOwnerRule,ingestEvidence,addGoal,refreshSkillCurriculum,retrieveMemory,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
+import {createBabyState,migrateBabyState,analyzeInstruction,observeInteraction,addOwnerRule,ingestEvidence,addGoal,refreshSkillCurriculum,retrieveMemory,evaluateMemoryRetrieval,selectGoal,recordOutcome,babyStatus,buildDeepResearchPlan} from "./baby-core.mjs";
 import {isBlockedAddress,extractPage} from "./public-web.mjs";
 
 test("baby extracts interaction structure and constraints",()=>{
@@ -123,4 +123,32 @@ test("html extraction removes navigation chrome before learning",()=>{
   assert.ok(page.text.includes("Dialogue agents"));
   assert.ok(!page.text.includes("Register Login"));
   assert.ok(!page.text.includes("Privacy Statement"));
+});
+
+
+test("baby memory migration removes navigation noise and merges citation-marker duplicates",()=>{
+  const legacy=createBabyState(100);
+  legacy.schemaVersion=2;
+  legacy.beliefs=[
+    {id:"a",text:"[1] Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed.",confidence:.7,status:"GROUNDED_OBSERVATION",citationUrls:["https://a.example/p"],supportCount:1,sourceDiversity:1,contradictionIds:[],createdAt:100,lastValidatedAt:100},
+    {id:"b",text:"[2] Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed.",confidence:.75,status:"GROUNDED_OBSERVATION",citationUrls:["https://b.example/p"],supportCount:1,sourceDiversity:1,contradictionIds:[],createdAt:110,lastValidatedAt:110},
+    {id:"noise",text:"Skip to main content Open Menu Current Archives Register Login Privacy Statement",confidence:.9,status:"GROUNDED_OBSERVATION",citationUrls:["https://noise.example"],supportCount:1,sourceDiversity:1,contradictionIds:[],createdAt:120,lastValidatedAt:120}
+  ];
+  legacy.skills["memory-retrieval"]={id:"memory-retrieval",trials:2,rewardSum:18,successCount:2,lastReward:9,lastAt:120};
+  const migrated=migrateBabyState(legacy,200);
+  assert.equal(migrated.schemaVersion,3);
+  assert.equal(migrated.beliefs.length,1);
+  assert.equal(migrated.beliefs[0].citationUrls.length,2);
+  assert.equal(migrated.skills["memory-retrieval"].trials,0);
+});
+
+test("memory retrieval reward depends on relevance quality rather than raw hit count",()=>{
+  const good=[
+    {kind:"OWNER_RULE",score:2.5,confidence:1},
+    {kind:"BELIEF",score:2.4,status:"GROUNDED_OBSERVATION",confidence:.8},
+    {kind:"EPISODE",score:1.8,status:"SUCCESS"}
+  ];
+  const weak=Array.from({length:10},(_,i)=>({kind:"BELIEF",score:.15,status:"PROVISIONAL",confidence:.2,id:String(i)}));
+  assert.ok(evaluateMemoryRetrieval(good)>evaluateMemoryRetrieval(weak));
+  assert.ok(evaluateMemoryRetrieval([])<5);
 });
