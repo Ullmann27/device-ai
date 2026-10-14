@@ -3,7 +3,8 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import {
   createBabyState, migrateBabyState, analyzeInstruction, observeInteraction, addOwnerRule,
-  buildDeepResearchPlan, ingestEvidence, addGoal, selectGoal, recordOutcome, babyStatus
+  buildDeepResearchPlan, ingestEvidence, addGoal, refreshSkillCurriculum, retrieveMemory,
+  selectGoal, recordOutcome, babyStatus
 } from "./baby-core.mjs";
 import {
   fetchPublicPage, crawlPublicWeb, searchGitHubRepositories
@@ -218,7 +219,7 @@ function recordStrategyReward(state, id, sources) {
 }
 
 function nextTarget(state) {
-  state.baby = migrateBabyState(state.baby);
+  state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   const hypothesis=(state.generation%2===0)?selectHypothesisTest(state.worldModel):null;
   if(hypothesis)return {type:"world-test",text:hypothesis.testQuestions[hypothesis.attempts%hypothesis.testQuestions.length],hypothesisId:hypothesis.id};
@@ -566,6 +567,14 @@ async function maybeCopilot(query, evidence, state = null) {
       ...state.baby.ownerRules.filter(x=>x.active).slice(-12).map(x=>"- "+x.text),
       ""
     ] : []),
+    ...(state ? (()=>{
+      const memory=retrieveMemory(state.baby,query,6);
+      return memory.length ? [
+        "RELEVANTE EIGENE ERINNERUNG (Kontext, keine neue Evidenz; aktuelle Quellen haben Vorrang):",
+        ...memory.map(m=>"- ["+m.kind+"] "+m.text+" · score="+m.score.toFixed(2)),
+        ""
+      ] : [];
+    })() : []),
     "EVIDENZ:",
     ...evidence.map((s,i) => "[" + (i+1) + "] " + s.title + " — " + s.url + "\n" + s.text.slice(0,1400))
   ].join("\n");
@@ -622,9 +631,17 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
       "Welcher messbare Benchmark würde den Fortschritt bei dieser Frage am besten prüfen?"
     ]
   });
+  const goalOrigin=goalId
+    ? String(epistemic.baby.goals.find(g=>g.id===goalId)?.origin??"")
+    : "";
+  const goalSkill=goalOrigin.startsWith("SKILL_CURRICULUM:")
+    ? goalOrigin.slice("SKILL_CURRICULUM:".length)
+    : "";
+  const turnSkills=["research","source-critique","synthesis","self-check"];
+  if(goalSkill)turnSkills.push(goalSkill);
   state.baby = recordOutcome(epistemic.baby,{
     goalId,
-    skills:["research","source-critique","synthesis","self-check"],
+    skills:[...new Set(turnSkills)],
     success:true,
     reward:observation.retrievalReward,
     reflection:"Rechercheweg "+strategyId+" lieferte "+sources.length+" relevante Quellen; Synthese="+observation.synthesisModel
@@ -641,6 +658,7 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
       confidence:tested.hypothesis.confidence
     }:null;
   }
+  state.baby=refreshSkillCurriculum(state.baby);
   const nextBabyGoal=selectGoal(state.baby);
   if(nextBabyGoal)state.queue.push(nextBabyGoal.text);
   state.queue.push(
@@ -784,6 +802,7 @@ function statusText(state) {
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
+    "**Selbst-Curriculum:** "+bs.curriculumOpen+" aktuell offene Skill-Lernziele",
     "**World-Model:** "+ws.total+" Hypothesen · "+ws.supported+" unterstützt · "+ws.disputed+" umstritten · "+ws.provisional+" vorläufig · "+ws.evidenceTests+" Falsifikationstests",
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
@@ -850,6 +869,17 @@ try {
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if(lower.startsWith("/memory ")){
+      const query=body.slice(8).trim();
+      const memory=retrieveMemory(state.baby,query,10);
+      const bodyText=memory.length
+        ? memory.map(m=>"- **"+m.kind+"** · score "+m.score.toFixed(2)+"\n  "+m.text).join("\n")
+        : "Dazu wurde noch keine relevante eigene Erinnerung gefunden.";
+      state.baby=recordOutcome(state.baby,{
+        skills:["memory-retrieval"],success:true,reward:memory.length?Math.min(9,5+memory.length*.5):3,
+        reflection:"Expliziter Memory-Retrieval für: "+clean(query,240)+" · Treffer "+memory.length
+      });
+      await reply("## Continuum · Memory Retrieval\n\n"+bodyText);
     } else if(lower==="/hypotheses"){
       syncWorldModelFromBaby(state);
       const items=state.worldModel.hypotheses
@@ -915,7 +945,7 @@ try {
         : lower.startsWith("/ask ") ? body.slice(5).trim()
         : body;
       if (!query) {
-        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
+        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
       } else {
         const turn = await researchTurn(state, query, true);
         state.cycles.push({ at:Date.now(), query, success:true, sourceCount:turn.sources.length, interactive:true });
