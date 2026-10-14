@@ -631,11 +631,14 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
       "Welcher messbare Benchmark würde den Fortschritt bei dieser Frage am besten prüfen?"
     ]
   });
-  const goalSkill=goalId
-    ? String(epistemic.baby.goals.find(g=>g.id===goalId)?.origin??"").replace(/^SKILL_CURRICULUM:/,"")
+  const goalOrigin=goalId
+    ? String(epistemic.baby.goals.find(g=>g.id===goalId)?.origin??"")
+    : "";
+  const goalSkill=goalOrigin.startsWith("SKILL_CURRICULUM:")
+    ? goalOrigin.slice("SKILL_CURRICULUM:".length)
     : "";
   const turnSkills=["research","source-critique","synthesis","self-check"];
-  if(goalSkill&&goalSkill!=="")turnSkills.push(goalSkill);
+  if(goalSkill)turnSkills.push(goalSkill);
   state.baby = recordOutcome(epistemic.baby,{
     goalId,
     skills:[...new Set(turnSkills)],
