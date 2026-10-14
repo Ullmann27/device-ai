@@ -42,7 +42,11 @@ class ApprovedWebToolGateTest {
 
     @Test fun readRequiresHttpsAndNeverExecutesWithoutPermission() {
         var reads = 0
-        val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery()) { reads++ }
+        val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery()) { url ->
+            reads++
+            ResearchDocument(url, "Example", 1L, "a".repeat(64), "text/plain",
+                SourceIdentity("example.org", "https://example.org"), "Verified test content")
+        }
         assertFalse(gate.request(WebToolRequest.Read("http://example.org")))
         assertFalse(gate.request(WebToolRequest.Read("https://user@example.org")))
         val page = WebToolRequest.Read("https://example.org/page")
