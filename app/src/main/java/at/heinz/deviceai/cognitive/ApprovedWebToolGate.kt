@@ -18,7 +18,7 @@ data class WebToolResult(
 
 class ApprovedWebToolGate(
     private val consent: InternetConsentPolicy,
-    private val discovery: ResearchDiscoveryProvider,
+    private val discovery: ResearchDiscoveryProvider = GeneralWebDiscoveryProvider(),
     private val reader: (String) -> ResearchDocument? = { url ->
         HttpReadOnlyResearchProvider(
             ResearchProviderPolicy(maxBytes = 96_000, totalTimeoutMillis = 12_000, maxRedirects = 2)
