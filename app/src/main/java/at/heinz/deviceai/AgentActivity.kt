@@ -302,6 +302,7 @@ class AgentActivity : Activity() {
                 }
             }
         }, "continuum-offline-bootstrap").apply { isDaemon = true; start() }
+        at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
