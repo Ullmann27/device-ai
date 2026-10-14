@@ -1,6 +1,13 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
+import {
+  createBabyState, migrateBabyState, analyzeInstruction, buildDeepResearchPlan,
+  ingestEvidence, addGoal, selectGoal, recordOutcome, babyStatus
+} from "./baby-core.mjs";
+import {
+  fetchPublicPage, crawlPublicWeb, searchGitHubRepositories
+} from "./public-web.mjs";
 
 const STATE_FILE = ".continuum/state.json";
 const EVENT = process.env.CONTINUUM_EVENT ?? "workflow_dispatch";
@@ -20,13 +27,15 @@ const DEFAULT_TOPICS = [
   "kleine lokale Sprachmodelle und CPU-Inferenz",
   "Android On-Device AI und LiteRT",
   "Agent-Evaluation, Benchmarking und Trace Grading",
-  "selbstüberwachtes Repräsentationslernen"
+  "selbstüberwachtes Repräsentationslernen",
+  "Dialogpragmatik, Emotionserkennung und natürliche Benutzerinteraktion",
+  "kognitive Architekturen, Weltmodelle und hierarchische Planung"
 ];
 
 function freshState() {
   const now = Date.now();
   const state = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     generation: 1,
     createdAt: now,
     updatedAt: now,
@@ -42,6 +51,7 @@ function freshState() {
     cycles: [],
     interactions: [],
     strategyStats: defaultStrategyStats(),
+    baby: createBabyState(now),
     integrityHash: ""
   };
   state.integrityHash = hashState(state);
@@ -69,7 +79,15 @@ function loadState() {
     migrated.integrityHash = hashState(migrated);
     return migrated;
   }
-  if (state.schemaVersion !== 3) throw new Error("Unsupported state schema");
+  if (state.schemaVersion === 3) {
+    const migrated = structuredClone(state);
+    migrated.schemaVersion = 4;
+    migrated.baby = createBabyState();
+    migrated.integrityHash = hashState(migrated);
+    return migrated;
+  }
+  if (state.schemaVersion !== 4) throw new Error("Unsupported state schema");
+  state.baby = migrateBabyState(state.baby);
   return state;
 }
 
@@ -83,6 +101,7 @@ function saveState(state) {
   state.queue = dedupe(state.queue).slice(0, 64);
   state.concepts = trimObject(state.concepts, 800);
   state.edges = trimObject(state.edges, 2400);
+  state.baby = migrateBabyState(state.baby);
   state.integrityHash = hashState(state);
   fs.mkdirSync(".continuum", { recursive: true });
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
@@ -167,6 +186,9 @@ function recordStrategyReward(state, id, sources) {
 }
 
 function nextTarget(state) {
+  state.baby = migrateBabyState(state.baby);
+  const babyGoal = selectGoal(state.baby);
+  if (babyGoal) return { type:"baby-goal", text:babyGoal.text, babyGoalId:babyGoal.id };
   if (state.queue.length) return { type: "queue", text: state.queue.shift() };
   const ranked = state.topics.map(t => {
     const age = t.lastAt ? Math.min(3, (Date.now() - t.lastAt) / 86400000) : 4;
@@ -195,10 +217,32 @@ async function research(query, interactive = false, strategyId = "technical-broa
     item.relevance = relevance(item, searchQueries);
     if (item.relevance >= 1.25) deduped.push(item);
   }
+  const github = [];
+  for (const searchQuery of searchQueries.slice(0, 2)) {
+    github.push(...await searchGitHubRepositories(searchQuery,TOKEN,3));
+  }
+  for (const item of github) {
+    item.relevance = relevance(item,searchQueries) + 0.8;
+    const key=(item.url||item.title).toLocaleLowerCase("de-DE");
+    if(!seen.has(key) && item.relevance>=1.25){seen.add(key);deduped.push(item);}
+  }
+
   deduped.sort((a,b) => b.relevance - a.relevance ||
     sourceWeight(b.source) - sourceWeight(a.source) ||
     a.title.localeCompare(b.title));
-  return { sources: deduped.slice(0, 12), searchQueries };
+
+  const initial=deduped.slice(0,10);
+  const crawlSeeds=initial.filter(x=>/^https:/.test(x.url||"")).slice(0,4).map(x=>x.url);
+  const crawled=crawlSeeds.length ? await crawlPublicWeb({
+    seeds:crawlSeeds,query,maxPages:4,maxDepth:1,maxDomains:4
+  }) : [];
+  for(const page of crawled){
+    page.relevance=relevance(page,searchQueries)+Number(page.relevance||0);
+    const key=(page.url||page.title).toLocaleLowerCase("de-DE");
+    if(!seen.has(key) && page.relevance>=0.7){seen.add(key);deduped.push(page);}
+  }
+  deduped.sort((a,b)=>b.relevance-a.relevance||sourceWeight(b.source)-sourceWeight(a.source));
+  return { sources: deduped.slice(0, 14), searchQueries };
 }
 
 async function planSearchQueries(query, interactive, strategyId) {
@@ -268,7 +312,7 @@ function relevance(item, queries) {
 }
 
 function sourceWeight(source) {
-  return ({ arXiv:4, OpenAlex:3, Crossref:2, Wikipedia:1 }[source] ?? 0);
+  return ({ arXiv:5, GitHub:4, OpenAlex:3, PublicWeb:2.5, Crossref:2, Wikipedia:1 }[source] ?? 0);
 }
 
 async function wikipedia(query) {
@@ -482,7 +526,7 @@ function makeObservation(query, sources, answer) {
   };
 }
 
-async function researchTurn(state, query, interact = false) {
+async function researchTurn(state, query, interact = false, goalId = null) {
   const strategyId = chooseResearchStrategy(state);
   const retrieval = await research(query, interact, strategyId);
   const sources = retrieval.sources;
@@ -502,6 +546,26 @@ async function researchTurn(state, query, interact = false) {
   observation.retrievalStrategy = strategyId;
   observation.retrievalReward = recordStrategyReward(state, strategyId, sources);
   if (!state.observations.some(x => x.id === observation.id)) state.observations.push(observation);
+
+  const epistemic = ingestEvidence(state.baby,{
+    query,
+    answer,
+    citations:observation.citations,
+    uncertainty:Math.max(0.08,1-Math.min(0.9,observation.retrievalReward/11)),
+    nextQuestions:[
+      "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: "+query,
+      "Welcher messbare Benchmark würde den Fortschritt bei dieser Frage am besten prüfen?"
+    ]
+  });
+  state.baby = recordOutcome(epistemic.baby,{
+    goalId,
+    skills:["research","source-critique","synthesis","self-check"],
+    success:true,
+    reward:observation.retrievalReward,
+    reflection:"Rechercheweg "+strategyId+" lieferte "+sources.length+" relevante Quellen; Synthese="+observation.synthesisModel
+  });
+  const nextBabyGoal=selectGoal(state.baby);
+  if(nextBabyGoal)state.queue.push(nextBabyGoal.text);
   state.queue.push(
     "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: " + query,
     "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: " + query
@@ -509,9 +573,81 @@ async function researchTurn(state, query, interact = false) {
   return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null };
 }
 
+async function deepResearchTurn(state,query){
+  state.baby=migrateBabyState(state.baby);
+  const rootGoal=addGoal(state.baby,query,"USER_DEEP_RESEARCH",1.5);
+  const plan=buildDeepResearchPlan(query);
+  const allSources=[],parts=[];
+  for(const step of plan){
+    const strategyId=chooseResearchStrategy(state);
+    const retrieval=await research(step.question,false,strategyId);
+    if(!retrieval.sources.length)continue;
+    const reward=recordStrategyReward(state,strategyId,retrieval.sources);
+    allSources.push(...retrieval.sources);
+    const part=synthesize(step.question,retrieval.sources,state);
+    parts.push({step,text:part.text,reward,sources:retrieval.sources});
+    learnGraph(state,retrieval.sources.map(x=>x.text));
+    const epi=ingestEvidence(state.baby,{
+      query:step.question,answer:part.text,citations:part.citations,
+      uncertainty:Math.max(0.08,1-Math.min(.9,reward/11)),
+      nextQuestions:["Welche Evidenz würde diesen Teilplan am stärksten falsifizieren?"]
+    });
+    state.baby=recordOutcome(epi.baby,{
+      goalId:rootGoal?.id,
+      skills:[step.skill,"research","self-check"],
+      success:true,reward,
+      reflection:"Deep-Research-Teil "+step.id+" mit Strategie "+strategyId+" und "+retrieval.sources.length+" Quellen."
+    });
+  }
+  const unique=[];const seen=new Set();
+  for(const s of allSources.sort((a,b)=>(b.relevance||0)-(a.relevance||0))){
+    const k=s.url||s.title;if(!k||seen.has(k))continue;seen.add(k);unique.push(s);if(unique.length>=16)break;
+  }
+  if(!unique.length)throw new Error("Deep Research fand keine hinreichend relevante öffentliche Evidenz.");
+  const copilot=await maybeCopilot(query,unique);
+  const fallback=parts.map(p=>"### "+p.step.id+"\n"+p.text).join("\n\n");
+  const answer=copilot?.text||fallback;
+  const citations=copilot?.text?unique:unique.filter(s=>fallback.includes(s.title)||fallback.includes(s.url)).slice(0,12);
+  const observation=makeObservation(query,citations.length?citations:unique.slice(0,12),answer);
+  observation.deepResearch=true;
+  observation.plan=plan.map(x=>({id:x.id,question:x.question,skill:x.skill}));
+  observation.synthesisModel=copilot?.model??"multi-pass-zero-cost";
+  if(!state.observations.some(x=>x.id===observation.id))state.observations.push(observation);
+  const finalReward=Math.min(10,parts.length*1.4+new Set(unique.map(x=>x.source)).size*.7+Math.min(3,unique.length*.12));
+  const epi=ingestEvidence(state.baby,{
+    query,answer,citations:observation.citations,uncertainty:Math.max(.08,1-finalReward/11),
+    nextQuestions:plan.map(x=>x.question)
+  });
+  state.baby=recordOutcome(epi.baby,{
+    goalId:rootGoal?.id,
+    skills:["instruction-decomposition","research","source-critique","synthesis","communication","self-check"],
+    success:true,reward:finalReward,
+    reflection:"Deep Research verband "+parts.length+" Teilpläne, "+unique.length+" Quellen und "+new Set(unique.map(x=>x.source)).size+" Quellentypen."
+  });
+  return {observation,answer,sources:unique,copilot:Boolean(copilot),synthesisModel:copilot?.model??null,deep:true};
+}
+
+async function directUrlTurn(state,value){
+  const page=await fetchPublicPage(value);
+  learnGraph(state,[page.text]);
+  const copilot=await maybeCopilot("Fasse diese öffentliche Seite zusammen, nenne Kernaussagen, Unsicherheiten und was als Nächstes geprüft werden sollte.",[page]);
+  const answer=copilot?.text||page.text.slice(0,5000);
+  const observation=makeObservation(page.url,[page],answer);
+  observation.directUrl=true;
+  if(!state.observations.some(x=>x.id===observation.id))state.observations.push(observation);
+  const epi=ingestEvidence(state.baby,{
+    query:page.url,answer,citations:[{url:page.url,source:"PublicWeb"}],
+    uncertainty:.45,nextQuestions:["Welche unabhängige Quelle bestätigt oder widerlegt die Kernaussagen dieser Seite?"]
+  });
+  state.baby=recordOutcome(epi.baby,{skills:["research","source-critique","communication"],success:true,reward:6.5,
+    reflection:"Direkte öffentliche URL gelesen und als einzelne Quelle markiert."});
+  return {observation,answer,sources:[page],copilot:Boolean(copilot),synthesisModel:copilot?.model??null};
+}
+
 function statusText(state) {
   const top = Object.entries(state.concepts).sort((a,b) => b[1]-a[1]).slice(0,10).map(x=>x[0]).join(", ");
   const successes = state.cycles.filter(x=>x.success).length;
+  const bs=babyStatus(state.baby);
   return [
     "## Continuum · Zero-Cost Status",
     "",
@@ -525,6 +661,8 @@ function statusText(state) {
     "**Recherche-Strategien:** " + state.strategyStats.map(s =>
       s.id + "=" + (s.attempts ? (s.rewardSum/s.attempts).toFixed(2) : "neu")
     ).join(" · "),
+    "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
+    "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
     "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
@@ -581,7 +719,8 @@ try {
   if (EVENT === "issue_comment") {
     const body = COMMENT;
     const lower = body.toLocaleLowerCase("de-DE");
-    state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000) });
+    const interactionAnalysis=analyzeInstruction(body);
+    state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
     } else if (lower.startsWith("/learn ")) {
@@ -590,12 +729,28 @@ try {
       if (!state.lessons.some(x=>x.id===id)) state.lessons.push({id,text:lesson,createdAt:Date.now(),provenance:"USER_EXPLICIT"});
       learnGraph(state,[lesson]);
       await reply("## Continuum · Lektion übernommen\n\nAls **explizite Nutzerlektion** gespeichert: " + lesson + "\n\nSie wird nicht mit Webquellen gleichgesetzt.");
+    } else if(lower.startsWith("/deep ")){
+      const query=body.slice(6).trim();
+      if(!query)await reply("Verwendung: `/deep <Forschungsfrage>`");
+      else{
+        const turn=await deepResearchTurn(state,query);
+        state.cycles.push({at:Date.now(),query,success:true,sourceCount:turn.sources.length,interactive:true,deep:true});
+        await reply(formatResearch(query,turn,state));
+      }
+    } else if(lower.startsWith("/url ")){
+      const value=body.slice(5).trim();
+      if(!value)await reply("Verwendung: `/url https://öffentliche-seite.example/...`");
+      else{
+        const turn=await directUrlTurn(state,value);
+        state.cycles.push({at:Date.now(),query:value,success:true,sourceCount:1,interactive:true,directUrl:true});
+        await reply(formatResearch(value,turn,state));
+      }
     } else {
       const query = lower.startsWith("/research ") ? body.slice(10).trim()
         : lower.startsWith("/ask ") ? body.slice(5).trim()
         : body;
       if (!query) {
-        await reply("Schreibe eine Frage, `/research <Thema>`, `/learn <Text>` oder `/status`.");
+        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
       } else {
         const turn = await researchTurn(state, query, true);
         state.cycles.push({ at:Date.now(), query, success:true, sourceCount:turn.sources.length, interactive:true });
@@ -605,7 +760,7 @@ try {
   } else {
     const target = nextTarget(state);
     try {
-      const turn = await researchTurn(state,target.text,false);
+      const turn = await researchTurn(state,target.text,false,target.babyGoalId??null);
       state.cycles.push({ at:Date.now(), query:target.text, success:true, sourceCount:turn.sources.length, interactive:false });
       if (target.topicId) {
         const topic=state.topics.find(x=>x.id===target.topicId);
