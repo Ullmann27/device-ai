@@ -960,10 +960,14 @@ class AgentActivity : Activity() {
         // Web research remains explicit opt-in; never infer internet permission from prose.
         if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
             researchArmed = false
+            internetConsent.setMode(if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
+                    .getString("mode", "ASK") == "OFF")
+                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
             if (internetConsent.request(request)) {
                 AlertDialog.Builder(this)
                     .setTitle("Internetzugriff freigeben?")
-                    .setMessage("Continuum darf für diese eine Frage öffentliche HTTPS-Quellen abrufen. Die Suchfrage wird an Wikimedia gesendet. Keine Freigabe für Geräteaktionen oder zukünftige Anfragen.\\n\\n" + request.take(512))
+                    .setMessage("Continuum darf für diese eine Frage öffentliche HTTPS-Quellen abrufen. Die Suchfrage wird an öffentliche Suchanbieter gesendet; Wikipedia kann als Rückfall dienen. Keine Freigabe für Geräteaktionen oder zukünftige Anfragen.\\n\\n" + request.take(512))
                     .setNegativeButton("Ablehnen") { _, _ ->
                         internetConsent.cancel()
                         addToolActivity("WEB · Zugriff abgelehnt")
@@ -1989,9 +1993,9 @@ class AgentActivity : Activity() {
         // A typed WebToolRequest mirrors the authorized operation without
         // executing another independent network request.
         val requestType: at.heinz.deviceai.cognitive.WebToolRequest =
-            if (Regex("""https://[^\\s<>"']+""", RegexOption.IGNORE_CASE).containsMatchIn(question))
+            if (Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE).containsMatchIn(question))
                 at.heinz.deviceai.cognitive.WebToolRequest.Read(
-                    Regex("""https://[^\\s<>"']+""", RegexOption.IGNORE_CASE)
+                    Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE)
                         .find(question)!!.value.trimEnd('.', ',', ';', ')', ']')
                 )
             else at.heinz.deviceai.cognitive.WebToolRequest.Search(question.take(512))
