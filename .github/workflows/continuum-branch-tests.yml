@@ -1,0 +1,25 @@
+name: Continuum Branch Regression Tests
+
+on:
+  push:
+    branches:
+      - "copilot/**"
+    paths:
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-branch-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  continuum-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run deterministic Baby Core and World Model regressions
+        run: node --test .github/continuum/*.test.mjs

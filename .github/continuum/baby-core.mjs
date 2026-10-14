@@ -32,6 +32,7 @@ export function createBabyState(now = Date.now()) {
     createdAt: now,
     updatedAt: now,
     beliefs: [],
+    quarantinedBeliefs: [],
     goals: [],
     episodes: [],
     skills: Object.fromEntries(SKILLS.map(id => [id, {
@@ -80,7 +81,28 @@ export function migrateBabyState(value, now = Date.now()) {
       };
     }
   }
-  state.beliefs = consolidateBeliefs(Array.isArray(state.beliefs) ? state.beliefs : []).slice(-256);
+  // Re-audit old evidence on every load. Quarantined material is retained for review,
+  // not silently converted into trusted knowledge or dropped without an audit trail.
+  state.quarantinedBeliefs = Array.isArray(state.quarantinedBeliefs)
+    ? state.quarantinedBeliefs.slice(-64) : [];
+  const reviewed = [];
+  for (const belief of consolidateBeliefs(Array.isArray(state.beliefs) ? state.beliefs : [])) {
+    const rejection = beliefQualityReason(belief.query, belief.text);
+    if (rejection) {
+      state.quarantinedBeliefs = quarantineBelief(state.quarantinedBeliefs, belief, rejection, now);
+      continue;
+    }
+    // Older confidence scores were based on source counts, not on an explicit claim
+    // citation. Recalibrate once; repeated migrations must be idempotent.
+    if (belief.status === "GROUNDED_OBSERVATION" && belief.evidenceMode !== "EXPLICIT_CITATION") {
+      belief.status = "PROVISIONAL";
+      belief.confidence = Math.min(Number(belief.confidence ?? .4), .62);
+      belief.uncertainty = 1 - belief.confidence;
+      belief.evidenceMode = "LEGACY_UNVERIFIED";
+    }
+    reviewed.push(belief);
+  }
+  state.beliefs = reviewed.slice(-256);
   state.goals = Array.isArray(state.goals) ? state.goals.slice(-128) : [];
   state.episodes = Array.isArray(state.episodes) ? state.episodes.slice(-128) : [];
   state.skills = state.skills && typeof state.skills === "object" ? state.skills : {};
@@ -218,7 +240,7 @@ export function ingestEvidence(babyInput, {
   query, answer, citations = [], uncertainty = null, nextQuestions = [], now = Date.now()
 }) {
   const baby = migrateBabyState(babyInput, now);
-  const sourceDiversity = new Set(citations.map(x => x.source ?? domainOf(x.url))).size;
+  const sourceDiversity = new Set(citations.map(x => domainOf(x.url)).filter(Boolean)).size;
   const evidenceFactor = Math.min(0.52, citations.length * 0.055 + sourceDiversity * 0.045);
   const inferredUncertainty = uncertainty == null
     ? Math.max(0.12, 0.72 - evidenceFactor)
@@ -226,18 +248,26 @@ export function ingestEvidence(babyInput, {
   const sentences = splitClaims(answer).slice(0, 10);
   const added = [];
   for (const sentence of sentences) {
+    const quality = beliefQualityReason(query, sentence);
+    if (quality) {
+      baby.quarantinedBeliefs = quarantineBelief(baby.quarantinedBeliefs, {
+        id: "belief-" + sha256(sentence.toLocaleLowerCase("de-DE")).slice(0, 20),
+        text: sentence, query
+      }, quality, now);
+      continue;
+    }
     const normalized = sentence.toLocaleLowerCase("de-DE");
     const id = "belief-" + sha256(normalized).slice(0, 20);
     const existing=baby.beliefs.find(x=>x.id===id);
     const refIndices=[...sentence.matchAll(/\[(\d{1,2})\]/g)]
       .map(m=>Number(m[1])-1).filter(i=>i>=0&&i<citations.length);
     const supported=refIndices.length
-      ? [...new Set(refIndices)].map(i=>citations[i])
-      : citations.slice(0,Math.min(3,citations.length));
+      ? [...new Set(refIndices)].map(i=>citations[i]).filter(x=>isValidCitationUrl(x?.url))
+      : citations.slice(0,Math.min(3,citations.length)).filter(x=>isValidCitationUrl(x?.url));
     const contradictionIds = baby.beliefs
       .filter(old => looksContradictory(old.text, sentence))
       .map(x => x.id).slice(0, 6);
-    const diversity=new Set(supported.map(x=>x.source??domainOf(x.url))).size;
+    const diversity=new Set(supported.map(x=>domainOf(x.url)).filter(Boolean)).size;
     const meanRelevance=supported.length
       ? supported.reduce((n,x)=>n+Math.min(6,Number(x.relevance??2)),0)/supported.length : 0;
     const markerPenalty=refIndices.length?0:0.16;
@@ -250,8 +280,10 @@ export function ingestEvidence(babyInput, {
       query: clean(query, 400),
       confidence,
       uncertainty: 1 - confidence,
-      status: confidence >= 0.68 && supported.length>0 ? "GROUNDED_OBSERVATION" : "PROVISIONAL",
-      citationUrls: supported.map(x => x.url).filter(Boolean).slice(0, 8),
+      status: confidence >= 0.68 && supported.length>0 && refIndices.length>0
+        ? "GROUNDED_OBSERVATION" : "PROVISIONAL",
+      evidenceMode: refIndices.length && supported.length>0 ? "EXPLICIT_CITATION" : "ATTRIBUTED_UNVERIFIED",
+      citationUrls: supported.map(x => x.url).slice(0, 8),
       supportCount:supported.length,
       sourceDiversity:diversity,
       contradictionIds,
@@ -263,7 +295,10 @@ export function ingestEvidence(babyInput, {
       Object.assign(existing,candidate,{
         confidence:Math.max(Number(existing.confidence??0),candidate.confidence),
         uncertainty:1-Math.max(Number(existing.confidence??0),candidate.confidence),
-        status:(existing.status==="GROUNDED_OBSERVATION"||candidate.status==="GROUNDED_OBSERVATION")?"GROUNDED_OBSERVATION":"PROVISIONAL",
+        status:(existing.evidenceMode==="EXPLICIT_CITATION"&&existing.status==="GROUNDED_OBSERVATION")||
+          candidate.status==="GROUNDED_OBSERVATION" ? "GROUNDED_OBSERVATION":"PROVISIONAL",
+        evidenceMode:candidate.evidenceMode==="EXPLICIT_CITATION"||existing.evidenceMode==="EXPLICIT_CITATION"
+          ? "EXPLICIT_CITATION":"ATTRIBUTED_UNVERIFIED",
         citationUrls:mergedUrls,
         supportCount:Math.max(Number(existing.supportCount??0),candidate.supportCount),
         sourceDiversity:Math.max(Number(existing.sourceDiversity??0),candidate.sourceDiversity)
@@ -446,6 +481,7 @@ export function babyStatus(babyInput) {
   const baby = migrateBabyState(babyInput);
   return {
     beliefs:baby.beliefs.length,
+    quarantinedBeliefs:baby.quarantinedBeliefs.length,
     grounded:baby.beliefs.filter(x=>x.status==="GROUNDED_OBSERVATION").length,
     provisional:baby.beliefs.filter(x=>x.status==="PROVISIONAL").length,
     contradictions:baby.counters.contradictions,
@@ -462,6 +498,63 @@ export function babyStatus(babyInput) {
     ownerRules:baby.ownerRules.filter(x=>x.active).length,
     curriculumOpen:baby.goals.filter(x=>x.status==="OPEN"&&String(x.origin).startsWith("SKILL_CURRICULUM:")).length
   };
+}
+
+const TOPIC_STOPWORDS = new Set([
+  "welche","welcher","welches","methoden","method","methods","empirisch","empirical",
+  "sollte","sollen","können","könnte","unter","diese","dieser","wurde","werden",
+  "einen","einer","eine","nicht","durch","gegen","ohne","dabei","between",
+  "which","should","could","would","their","about","there","using","with",
+  "from","does","have","that","these","those","robust","evidence","based",
+  "improve","improves","improving","vergleichen","verbessern","mehreren",
+  "systemen","system","systems","approach","approaches","starke","strong"
+]);
+
+function topicTokens(value) {
+  const words = String(value??"").toLocaleLowerCase("de-DE")
+    .normalize("NFKC").split(/[^\\p{L}\\p{N}]+/u)
+    .filter(x => x.length >= 5 && !TOPIC_STOPWORDS.has(x));
+  return new Set(words.map(x => {
+    if (/^(lern|learning|learner|trainier|training)/.test(x)) return "learning";
+    if (/^(gedächtn|memory|retriev|erinner)/.test(x)) return "memory";
+    if (/^(agent|assistent|assistant)/.test(x)) return "assistant";
+    if (/^(dialog|gespräch|conversation)/.test(x)) return "dialogue";
+    if (/^(forsch|research|recherch)/.test(x)) return "research";
+    if (/^(vergess|forget)/.test(x)) return "forgetting";
+    if (/^(unsicher|uncertaint)/.test(x)) return "uncertainty";
+    if (/^(plan|planung)/.test(x)) return "planning";
+    return x;
+  }));
+}
+
+function beliefQualityReason(query,text) {
+  if (!sanitizeBeliefText(text)) return "NON_CLAIM_OR_NAVIGATION";
+  const q = topicTokens(query);
+  // A missing legacy query must not cause irreversible removal.
+  if (q.size < 2) return null;
+  const claim = topicTokens(text);
+  if (![...q].some(token => claim.has(token))) return "OFF_TOPIC";
+  return null;
+}
+
+function quarantineBelief(previous, belief, reason, now) {
+  const items = Array.isArray(previous) ? previous.slice(-64) : [];
+  const id = String(belief.id ?? "belief-" + sha256(String(belief.text))).slice(0,80);
+  if (!items.some(item=>item.id===id && item.reason===reason)) {
+    items.push({
+      id, reason, query:clean(belief.query,240), text:clean(belief.text,500),
+      citationUrls:Array.isArray(belief.citationUrls)?belief.citationUrls.slice(0,6):[],
+      auditedAt:now
+    });
+  }
+  return items.slice(-64);
+}
+
+function isValidCitationUrl(value) {
+  try {
+    const url = new URL(String(value??""));
+    return ["http:","https:"].includes(url.protocol) && !url.username && !url.password;
+  } catch { return false; }
 }
 
 function consolidateBeliefs(values){

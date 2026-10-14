@@ -60,9 +60,9 @@ test("html extraction strips active content and preserves public links",()=>{
 test("legacy overconfident beliefs are downgraded until revalidated",()=>{
   const legacy=createBabyState(100);
   legacy.schemaVersion=1;
-  legacy.beliefs=[{id:"belief-old",text:"An old broad claim with insufficient precise support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
+  legacy.beliefs=[{id:"belief-old",text:"Experience replay can reduce catastrophic forgetting but this claim still lacks sufficient independent support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
   const migrated=migrateBabyState(legacy,200);
-  assert.equal(migrated.schemaVersion,2);
+  assert.equal(migrated.schemaVersion,3);
   assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
   assert.ok(migrated.beliefs[0].confidence<=.55);
 });
@@ -151,4 +151,52 @@ test("memory retrieval reward depends on relevance quality rather than raw hit c
   const weak=Array.from({length:10},(_,i)=>({kind:"BELIEF",score:.15,status:"PROVISIONAL",confidence:.2,id:String(i)}));
   assert.ok(evaluateMemoryRetrieval(good)>evaluateMemoryRetrieval(weak));
   assert.ok(evaluateMemoryRetrieval([])<5);
+});
+
+test("retrospective audit quarantines unrelated historical research without destroying provenance",()=>{
+  const state=createBabyState(100);
+  state.beliefs=[
+    {id:"physics-off-topic",text:"Rudolf Clausius formulated important thermodynamic statements about the nature of heat and entropy.",
+      query:"How does an AI assistant improve continual learning and memory retrieval?",
+      status:"GROUNDED_OBSERVATION",confidence:.92,citationUrls:["https://example.org/heat"],createdAt:110},
+    {id:"replay-on-topic",text:"Experience replay can reduce forgetting during continual learning by reusing older training examples.",
+      query:"How does an AI assistant improve continual learning and memory retrieval?",
+      status:"GROUNDED_OBSERVATION",confidence:.91,citationUrls:["https://example.org/replay"],createdAt:115}
+  ];
+  const migrated=migrateBabyState(state,200);
+  assert.deepEqual(migrated.beliefs.map(x=>x.id),["replay-on-topic"]);
+  assert.equal(migrated.beliefs[0].status,"PROVISIONAL");
+  assert.equal(migrated.quarantinedBeliefs[0].reason,"OFF_TOPIC");
+  assert.equal(migrated.quarantinedBeliefs[0].citationUrls[0],"https://example.org/heat");
+  assert.deepEqual(migrateBabyState(migrated,210).quarantinedBeliefs,migrated.quarantinedBeliefs);
+});
+
+test("new off-topic content stays quarantined even with several citation markers",()=>{
+  const state=createBabyState(100);
+  const result=ingestEvidence(state,{
+    query:"continual learning memory replay in artificial intelligence",
+    answer:"Rudolf Clausius developed theoretical work on classical heat engines and thermodynamic entropy [1].",
+    citations:[{url:"https://example.org/heat",title:"Heat studies",source:"Paper"}],now:200
+  });
+  assert.equal(result.baby.beliefs.length,0);
+  assert.equal(result.baby.quarantinedBeliefs.length,1);
+  assert.equal(babyStatus(result.baby).quarantinedBeliefs,1);
+});
+
+test("uncited attribution and invalid evidence URLs cannot promote a claim",()=>{
+  const citations=[
+    {url:"https://research.example/one",source:"OpenAlex"},
+    {url:"https://other.example/two",source:"OpenAlex"},
+    {url:"javascript:alert(1)",source:"Unknown"}
+  ];
+  const r=ingestEvidence(createBabyState(100),{
+    query:"continual learning catastrophic forgetting",
+    answer:"Continual learning methods can reduce catastrophic forgetting by replaying carefully selected older examples.",
+    citations,uncertainty:.05,now:200
+  });
+  assert.equal(r.baby.beliefs.length,1);
+  assert.equal(r.baby.beliefs[0].status,"PROVISIONAL");
+  assert.equal(r.baby.beliefs[0].sourceDiversity,2);
+  assert.equal(r.baby.beliefs[0].citationUrls.length,2);
+  assert.equal(r.baby.beliefs[0].evidenceMode,"ATTRIBUTED_UNVERIFIED");
 });
