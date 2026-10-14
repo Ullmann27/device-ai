@@ -15,7 +15,7 @@ data class WebToolResult(\n    val operation: String,\n    val sources: List<Res
 class ApprovedWebToolGate(
     private val consent: InternetConsentPolicy,
     private val discovery: ResearchDiscoveryProvider,
-    private val reader: (String) -> ResearchDocument
+    private val reader: (String) -> ResearchDocument?
 ) {
     private var pending: WebToolRequest? = null
 
@@ -51,7 +51,7 @@ class ApprovedWebToolGate(
             )
             is WebToolRequest.Read -> {
                 val document = reader(call.url)
-                WebToolResult("web_read", listOf(ResearchSourceCandidate(document.url, document.title)), listOf(document))
+                WebToolResult("web_read", document?.let { listOf(ResearchSourceCandidate(it.url, it.title)) }.orEmpty(), listOfNotNull(document))
             }
         }
     }
