@@ -104,7 +104,7 @@ function recomputeHypothesis(h){
   const contradictDomains=new Set(h.contradictEvidence.flatMap(x=>x.domains??[])).size;
   let confidence=clamp(
     Number(h.baseConfidence??.35) +
-      Math.min(.24,supportEvents*.08+supportDomains*.025) -
+      Math.min(.28,supportEvents*.10+supportDomains*.025) -
       Math.min(.48,contradictEvents*.18+contradictDomains*.06) -
       Math.min(.12,(h.inconclusiveEvidence?.length??0)*.015),
     .05,.95
