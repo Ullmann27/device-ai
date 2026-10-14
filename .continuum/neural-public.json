@@ -1,0 +1,26 @@
+{
+  "format": "SWB1",
+  "version": 1,
+  "modelHash": "a6818c128513105fc06109eeef99216cefd793f199fc52bd35447b2e8ba3c2e7",
+  "updates": 12000,
+  "rounds": 1,
+  "accepted": 1,
+  "paused": false,
+  "replay": 14,
+  "audit": {
+    "intent": {
+      "loss": 0.0923332196161876,
+      "correct": 20,
+      "total": 20
+    },
+    "semantic": {
+      "loss": 0.6911080816892325,
+      "correct": 13,
+      "total": 20
+    }
+  },
+  "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+  "lastDecision": "MULTITASK_GATE_PASSED",
+  "privacy": "PUBLIC_AND_CURATED_TRAINING_ONLY",
+  "codeSha": "a3bca34f4f2843875bd907954991ee9a5d9638ed"
+}
