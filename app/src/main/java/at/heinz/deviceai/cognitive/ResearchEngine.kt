@@ -165,7 +165,7 @@ object ResearchUrlCanonicalizer {
         val query = uri.rawQuery.orEmpty().split('&').filter(String::isNotBlank)
             .filterNot { trackingParameters.matches(it.substringBefore('=')) }
             .sorted().joinToString("&").ifBlank { null }
-        return URI("https", null, host, -1, path, query, null).toASCIIString()
+        return URI("https://"+host+path+(query?.let { "?"+it } ?: "")).toASCIIString()
     }
 }
 
@@ -970,3 +970,4 @@ class DeepResearchEngine(
         const val CHECKPOINT_MAX_AGE_MILLIS = 7L * 24 * 60 * 60 * 1_000
     }
 }
+

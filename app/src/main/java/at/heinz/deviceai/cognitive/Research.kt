@@ -83,22 +83,44 @@ class SimulatedResearchProvider(
     }
 }
 
-class HttpReadOnlyResearchProvider(
-    private val policy: ResearchProviderPolicy = ResearchProviderPolicy(),
-    private val now: () -> Long = System::currentTimeMillis
+internal interface ResearchHttpEnvironment {
+    fun resolve(host:String):List<InetAddress>
+    fun open(uri:URI):HttpsURLConnection
+}
+
+private object PublicResearchHttpEnvironment:ResearchHttpEnvironment {
+    override fun resolve(host:String)=InetAddress.getAllByName(host).toList()
+    override fun open(uri:URI)=uri.toURL().openConnection(Proxy.NO_PROXY) as HttpsURLConnection
+}
+
+class HttpReadOnlyResearchProvider private constructor(
+    private val policy: ResearchProviderPolicy,
+    private val now: () -> Long,
+    private val accessCheck: () -> Unit,
+    private val network:ResearchHttpEnvironment
 ) : ResearchProvider {
-    override fun retrieve(request: ResearchRequest): ResearchResult {
+    constructor(policy:ResearchProviderPolicy=ResearchProviderPolicy(),now:()->Long=System::currentTimeMillis,
+        accessCheck:()->Unit={}):this(policy,now,accessCheck,PublicResearchHttpEnvironment)
+    internal constructor(network:ResearchHttpEnvironment,policy:ResearchProviderPolicy=ResearchProviderPolicy(),
+        now:()->Long=System::currentTimeMillis,accessCheck:()->Unit={}):this(policy,now,accessCheck,network)
+    override fun retrieve(request: ResearchRequest): ResearchResult = fetch(request,false)
+    /** Raw bounded markup is for discovery parsers only, never a model instruction. */
+    fun retrieveMarkup(request:ResearchRequest):ResearchResult = fetch(request,true)
+    private fun fetch(request:ResearchRequest,keepMarkup:Boolean):ResearchResult {
+        accessCheck()
         require(request.maxBytes <= policy.maxBytes)
         var uri = URI(request.url)
         var redirects = 0
         val deadlineNanos = System.nanoTime() +
             minOf(policy.totalTimeoutMillis, request.timeoutMillis) * 1_000_000L
         while (true) {
-            val validatedAddresses = ResearchUrlValidator.validate(uri, policy.allowedHosts)
+            accessCheck()
+            val validatedAddresses = ResearchUrlValidator.validate(uri, policy.allowedHosts,network::resolve)
             val remainingMillis = remainingTimeoutMillis(deadlineNanos)
             val host = uri.host.removePrefix("[").removeSuffix("]")
-            val connection = (uri.toURL().openConnection(Proxy.NO_PROXY) as HttpsURLConnection).apply {
+            val connection = network.open(uri).apply {
                 requestMethod = "GET"
+                useCaches = false
                 instanceFollowRedirects = false
                 connectTimeout = minOf(policy.connectTimeoutMillis, request.timeoutMillis, remainingMillis)
                 readTimeout = minOf(policy.readTimeoutMillis, request.timeoutMillis, remainingMillis)
@@ -133,13 +155,7 @@ class HttpReadOnlyResearchProvider(
                 require(announced < 0 || announced <= request.maxBytes) { "Research response is too large." }
                 val body = connection.inputStream.use { readLimited(it, request.maxBytes, deadlineNanos) }
                 val rawText = String(body, Charsets.UTF_8)
-                val content = rawText
-                    .replace(Regex("<script\\b[^>]*>[\\s\\S]*?</script\\s*>", RegexOption.IGNORE_CASE), " ")
-                    .replace(Regex("<style\\b[^>]*>[\\s\\S]*?</style\\s*>", RegexOption.IGNORE_CASE), " ")
-                    .replace(Regex("<[^>]+>"), " ")
-                    .replace(Regex("\\s+"), " ")
-                    .trim()
-                    .take(policy.maxContentCharacters)
+                val content=responseText(rawText,mime,keepMarkup,policy.maxContentCharacters)
                 require(content.isNotBlank()) { "Research document is empty." }
                 val finalUrl = uri.toASCIIString()
                 val sourceHost = uri.host.lowercase(Locale.ROOT).removePrefix("[").removeSuffix("]")
@@ -179,13 +195,15 @@ class HttpReadOnlyResearchProvider(
     }
 
     private fun remainingTimeoutMillis(deadlineNanos: Long): Int {
+        accessCheck()
+        require(!Thread.currentThread().isInterrupted) { "Research request cancelled" }
         val remainingNanos = deadlineNanos - System.nanoTime()
         require(remainingNanos > 0) { "Research request exceeded its total time limit." }
         return ((remainingNanos + 999_999) / 1_000_000).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
     object ResearchUrlValidator {
-        fun validate(uri: URI, allowedHosts: Set<String> = emptySet()): List<InetAddress> {
+        fun validateSyntax(uri:URI,allowedHosts:Set<String> = emptySet()) {
             require(uri.scheme.equals("https", ignoreCase = true)) { "Research supports HTTPS only." }
             require(uri.userInfo == null && uri.host != null && (uri.port == -1 || uri.port == 443)) {
                 "Unsafe research URL authority."
@@ -193,7 +211,9 @@ class HttpReadOnlyResearchProvider(
             val host = uri.host.removePrefix("[").removeSuffix("]").lowercase(Locale.ROOT).trimEnd('.')
             require(host.contains('.') || host.contains(':')) { "Single-label research hosts are blocked." }
             require(uri.rawQuery.orEmpty().split('&').none {
-                it.substringBefore('=').matches(Regex("(?i).*(token|secret|password|credential|api[_-]?key|authorization).*"))
+                var key=it.substringBefore('=')
+                repeat(3) { key=runCatching { java.net.URLDecoder.decode(key,"UTF-8") }.getOrDefault(key) }
+                key.matches(Regex("(?i).*(token|secret|password|credential|api[_-]?key|authorization).*"))
             }) { "Credential-like URL parameters are not accepted." }
             require(host !in setOf("localhost", "localhost.localdomain") && !host.endsWith(".local") &&
                 !host.endsWith(".localhost") && !host.endsWith(".internal") && !host.endsWith(".lan") &&
@@ -204,7 +224,14 @@ class HttpReadOnlyResearchProvider(
             if (allowedHosts.isNotEmpty()) {
                 require(allowedHosts.any { host == it || host.endsWith(".$it") }) { "Research host is not allowlisted." }
             }
-            val addresses = runCatching { InetAddress.getAllByName(host) }
+            if(host.contains(':') || host.matches(Regex("[0-9.]+"))) {
+                require(runCatching { isPublicAddress(InetAddress.getByName(host)) }.getOrDefault(false)) { "Private or reserved address literal" }
+            }
+        }
+        fun validate(uri:URI,allowedHosts:Set<String> = emptySet(),resolve:(String)->List<InetAddress> = {InetAddress.getAllByName(it).toList()}):List<InetAddress> {
+            validateSyntax(uri,allowedHosts)
+            val host=uri.host.removePrefix("[").removeSuffix("]").lowercase(Locale.ROOT).trimEnd('.')
+            val addresses = runCatching { resolve(host) }
                 .getOrElse { throw IllegalArgumentException("Research host could not be resolved.") }
             require(addresses.size in 1..16) { "Research host returned an unsafe number of addresses." }
             require(addresses.isNotEmpty() && addresses.all(::isPublicAddress)) { "Private or reserved network targets are blocked." }
@@ -309,8 +336,15 @@ class HttpReadOnlyResearchProvider(
     }
 
     companion object {
+        fun responseText(raw:String,mime:String,keepMarkup:Boolean,limit:Int):String {
+            require(limit in 1..100000)
+            if(keepMarkup || mime !in setOf("text/html"))return raw.trim().take(limit)
+            return raw.replace(Regex("<script\\b[^>]*>[\\s\\S]*?</script\\s*>",RegexOption.IGNORE_CASE)," ")
+                .replace(Regex("<style\\b[^>]*>[\\s\\S]*?</style\\s*>",RegexOption.IGNORE_CASE)," ")
+                .replace(Regex("<[^>]+>")," ").replace(Regex("\\s+")," ").trim().take(limit)
+        }
         private val SAFE_MIME_TYPES = setOf(
-            "text/html", "text/plain", "application/json", "application/xml", "text/xml"
+            "text/html", "text/plain", "application/json", "application/xml", "text/xml", "application/rss+xml"
         )
         private val REQUEST_TIMEOUTS = Executors.newSingleThreadScheduledExecutor { runnable ->
             Thread(runnable, "device-ai-research-timeout").apply { isDaemon = true }
@@ -463,3 +497,4 @@ class ResearchPipeline(
     private fun tokens(text: String) = text.lowercase(Locale.ROOT)
         .split(Regex("[^\\p{L}\\p{N}']+")).filter(String::isNotBlank).toSet()
 }
+

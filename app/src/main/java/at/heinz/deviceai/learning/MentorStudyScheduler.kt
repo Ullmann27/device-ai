@@ -1,15 +1,12 @@
 package at.heinz.deviceai.learning
 
-import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
 import android.app.job.JobService
-import android.content.ComponentName
 import android.content.Context
 import at.heinz.deviceai.cognitive.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.concurrent.atomic.AtomicBoolean
 
 
 class MentorSourceNotebook(context:Context) {
@@ -18,7 +15,7 @@ class MentorSourceNotebook(context:Context) {
     val attempts:Long get()=prefs.getLong("attempts",0)
     val successes:Long get()=prefs.getLong("successes",0)
     val status:String get()=prefs.getString("status","Noch kein Studienzyklus.") ?: "Kein Status"
-    fun enable():Boolean=prefs.edit().putBoolean("enabled",true).putString("status","Forschung freigegeben; warte auf Ladebetrieb.").commit()
+    fun enable():Boolean=prefs.edit().putBoolean("enabled",true).putString("status","Mentor bereit; jede Internetrecherche benötigt eine einmalige Freigabe.").commit()
     fun disable():Boolean=prefs.edit().putBoolean("enabled",false).putString("status","Forschung angehalten.").commit()
     fun entries():List<MentorSource> = synchronized(LOCK) {
         val text=prefs.getString("entries","[]") ?: "[]"
@@ -80,24 +77,14 @@ class MentorSourceNotebook(context:Context) {
     }
 }
 
-/** One bounded topic study; never downloads model weights or grants tool authority. */
+/** Converts an already owner-approved dossier; performs no network access. */
 class MentorResearchCycle {
-    fun read(topic:MentorCurriculum.Topic):List<MentorSource> {
-        val policy=ResearchBudgetPolicy.forMode(ResearchMode.QUICK)
-        val engine=DeepResearchEngine(
-            discovery=WikipediaResearchDiscoveryProvider(),
-            provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
-                maxBytes=policy.maxBytesPerSource,
-                totalTimeoutMillis=policy.totalDeadlineMillis.toInt()
-            ))
-        )
-        val dossier=engine.research(topic.query,ResearchMode.QUICK)
+    fun sources(area:String,dossier:ResearchDossier):List<MentorSource> {
         val claims=WebLearningInbox.candidates(dossier).filter { !it.contradictory }.take(3)
-            .map { MentorSource(topic.area,it.sourceUrl,it.sourceHash,it.text.take(390)) }
-        val excerpts=if(claims.isEmpty()) dossier.sources.filter { it.duplicateOf==null }.take(2)
-            .map { source -> MentorSource(topic.area,source.canonicalUrl,source.contentHash,
-                source.snippet.replace(Regex("\\s+")," ").trim().take(390)) }
-        else emptyList()
+            .map { MentorSource(area,it.sourceUrl,it.sourceHash,it.text.take(390)) }
+        val excerpts=if(claims.isEmpty())dossier.sources.filter { it.duplicateOf==null }.take(2)
+            .map { MentorSource(area,it.canonicalUrl,it.contentHash,
+                it.snippet.replace(Regex("\\s+")," ").trim().take(390)) } else emptyList()
         return (claims+excerpts).filter { runCatching { MentorSourceNotebook.checkSource(it) }.isSuccess }
             .distinctBy { it.sha+it.excerpt }.take(3)
     }
@@ -107,70 +94,23 @@ class MentorStudyScheduler(context:Context) {
     private val app=context.applicationContext
     private val jobs get()=app.getSystemService(JobScheduler::class.java)
     val notebook get()=MentorSourceNotebook(app)
-    fun enable():Boolean {
-        if(!schedule())return false
-        if(!notebook.enable()){jobs.cancel(JOB_ID);return false}
-        return true
-    }
+    fun enable():Boolean { jobs.cancel(JOB_ID);return notebook.enable() }
     fun disable(){notebook.disable();jobs.cancel(JOB_ID)}
-    fun restore(){if(notebook.enabled && jobs.getPendingJob(JOB_ID)==null)schedule()}
+    // Legacy schedules have no one-shot owner grant and cannot perform network I/O.
+    fun restore(){jobs.cancel(JOB_ID)}
     fun runOnce(cancelled:()->Boolean={false}):String {
-        val book=notebook
-        if(!book.enabled || cancelled())return "Wissensforscher ausgeschaltet."
-        if(!BUSY.compareAndSet(false,true))return "Ein Studienzyklus läuft bereits."
-        var topic=MentorCurriculum.select(book.attempts)
-        try {
-            topic=MentorCuriosityPlanner.select(book.attempts,book.entries())
-            val found=MentorResearchCycle().read(topic)
-            if(cancelled() || !book.enabled)return "Studium abgebrochen."
-            val count=book.add(found)
-            val coreReport=if(found.isEmpty())null else runCatching {
-                ContinuumLearningCore(app.filesDir).learnFromSources(found,cancelled)
-            }.getOrNull()
-            val msg=(if(count>0) "Neue unbestätigte Quellenbeobachtungen: "+count
-                else "Keine neuen Quellen; kein Wissen erfunden.") +
-                when {
-                    coreReport==null -> ""
-                    coreReport.accepted -> " · Continuum-Repräsentation verbessert"
-                    else -> " · Continuum-Kandidat verworfen: "+coreReport.reason
-                }
-            book.record(topic.area,count,msg)
-            return topic.area+": "+msg
-        } catch(e:Exception) {
-            if(cancelled())return "Studium abgebrochen."
-            val msg="Recherche fehlgeschlagen ("+e.javaClass.simpleName+"); keine Daten erfunden."
-            runCatching { book.record(topic.area,0,msg) }
-            return topic.area+": "+msg
-        } finally { BUSY.set(false) }
-    }
-    private fun schedule():Boolean {
-        val job=JobInfo.Builder(JOB_ID,ComponentName(app,MentorStudyJobService::class.java))
-            .setRequiresCharging(true).setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-            .setPeriodic(PERIOD_MS).setPersisted(true).build()
-        return jobs.schedule(job)==JobScheduler.RESULT_SUCCESS
+        jobs.cancel(JOB_ID)
+        return "Internet auf Nachfrage: Forschungsfrage im Chat einmal freigeben."
     }
     companion object {
         const val JOB_ID=620133
-        const val PERIOD_MS=60*60*1000L
-        private val BUSY=AtomicBoolean(false)
     }
 }
+/** Installed upgrades can retain an old job. Cancel it without any I/O. */
 class MentorStudyJobService:JobService() {
-    private val cancelled=AtomicBoolean(false)
-    private var worker:Thread?=null
     override fun onStartJob(params:JobParameters):Boolean {
-        if(!MentorStudyScheduler(this).notebook.enabled)return false
-        cancelled.set(false)
-        worker=Thread({
-            try {MentorStudyScheduler(applicationContext).runOnce(cancelled::get)}
-            finally {if(!cancelled.get())jobFinished(params,false)}
-        },"device-ai-studies").apply {isDaemon=true;start()}
-        return true
-    }
-    override fun onStopJob(params:JobParameters):Boolean {
-        cancelled.set(true)
-        worker?.interrupt()
+        MentorStudyScheduler(this).restore()
         return false
     }
+    override fun onStopJob(params:JobParameters)=false
 }
-

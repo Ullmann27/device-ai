@@ -4,97 +4,72 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ApprovedWebToolGateTest {
-    private class FakeDiscovery : ResearchDiscoveryProvider {
-        var calls = 0
-        override val isGeneralSearchAvailable = true
-        override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
-            calls++
-            return listOf(ResearchSourceCandidate("https://example.org/public", "Example"))
-        }
-    }
-
     @Test fun searchRequiresExactOneShotAuthorization() {
-        val consent = InternetConsentPolicy()
-        val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(consent, discovery) { error("read must not run") }
-        val search = WebToolRequest.Search("solar energy")
-        assertNull(gate.execute(search))
-        assertTrue(gate.request(search))
-        assertNull(gate.execute(WebToolRequest.Search("different query")))
-        assertEquals(0, discovery.calls)
-        assertTrue(gate.request(search))
-        assertEquals(1, gate.execute(search)!!.sources.size)
-        assertEquals(1, discovery.calls)
-        assertNull(gate.execute(search))
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        val search=WebToolRequest.Search("solar energy")
+        val session=gate.approve(gate.prepare(search)!!,ResearchMode.QUICK)!!
+        var calls=0
+        assertThrows(IllegalStateException::class.java) { session.execute(WebToolRequest.Search("different")) { calls++ } }
+        assertEquals(0,calls)
+        session.execute(search) { calls++ }
+        assertEquals(1,calls)
+        assertThrows(IllegalStateException::class.java) { session.execute(search) { calls++ } }
+        assertEquals(1,calls)
     }
 
     @Test fun disabledModeCancelsPendingCall() {
-        val consent = InternetConsentPolicy()
-        val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(consent, discovery) { null }
-        val search = WebToolRequest.Search("weather")
-        assertTrue(gate.request(search))
+        val consent=InternetConsentPolicy();val gate=ApprovedWebToolGate(consent)
+        val search=WebToolRequest.Search("weather")
+        val ticket=gate.prepare(search)!!
         consent.setMode(InternetAccessMode.OFF)
-        assertNull(gate.execute(search))
-        assertEquals(0, discovery.calls)
-        assertFalse(gate.request(search))
+        assertNull(gate.approve(ticket,ResearchMode.QUICK))
+        assertNull(gate.prepare(search))
     }
 
-    @Test fun readRequiresHttpsAndNeverExecutesWithoutPermission() {
-        var reads = 0
-        val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery()) { url ->
-            reads++
-            ResearchDocument(url, "Example", 1L, "a".repeat(64), "text/plain",
-                SourceIdentity("www.wikipedia.org", "www.wikipedia.org"), "Verified test content")
+    @Test fun readRequiresHttpsAndCannotExpandToAnotherSource() {
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        assertNull(gate.prepare(WebToolRequest.Read("http://example.org")))
+        assertNull(gate.prepare(WebToolRequest.Read("https://user@example.org")))
+        val call=WebToolRequest.Read("https://www.wikipedia.org/page")
+        val session=gate.approve(gate.prepare(call)!!,ResearchMode.QUICK)!!
+        var reads=0
+        val provider=session.provider(object:ResearchProvider {
+            override fun retrieve(request:ResearchRequest):ResearchResult { reads++;return ResearchResult(emptyList(),emptyList()) }
+        })
+        assertThrows(IllegalStateException::class.java) { provider.retrieve(ResearchRequest("q",call.url)) }
+        session.execute(call) {
+            assertThrows(IllegalArgumentException::class.java) { provider.retrieve(ResearchRequest("q","https://www.nasa.gov/")) }
+            provider.retrieve(ResearchRequest("q",call.url))
         }
-        assertFalse(gate.request(WebToolRequest.Read("http://example.org")))
-        assertFalse(gate.request(WebToolRequest.Read("https://user@example.org")))
-        val page = WebToolRequest.Read("https://www.wikipedia.org/page")
-        assertTrue(gate.request(page))
-        assertEquals("web_read", gate.execute(page)!!.operation)
-        assertEquals(1, reads)
-        assertNull(gate.execute(page))
-        assertEquals(1, reads)
+        assertEquals(1,reads)
     }
 
     @Test fun cancellationNeverCallsProvider() {
-        val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(InternetConsentPolicy(), discovery) { null }
-        val search = WebToolRequest.Search("topic")
-        assertTrue(gate.request(search))
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        val ticket=gate.prepare(WebToolRequest.Search("topic"))!!
         gate.cancel()
-        assertNull(gate.execute(search))
-        assertEquals(0, discovery.calls)
+        assertNull(gate.approve(ticket,ResearchMode.QUICK))
     }
+
     @Test fun blocksLocalAndReservedHostsBeforeGrant() {
-        val gate = ApprovedWebToolGate(InternetConsentPolicy(), FakeDiscovery())
-        for (url in listOf(
-            "https://localhost/path", "https://router.local/path",
-            "https://host.internal/path", "https://example.invalid/path",
-            "https://www.example.org:8443/path"
-        )) assertFalse(url, gate.request(WebToolRequest.Read(url)))
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        for(url in listOf("https://localhost/path","https://router.local/path","https://host.internal/path",
+            "https://example.invalid/path","https://www.example.org:8443/path","https://127.0.0.1/"))
+            assertNull(url,gate.prepare(WebToolRequest.Read(url)))
     }
 
     @Test fun invalidReplacementRevokesOldConsent() {
-        val consent = InternetConsentPolicy()
-        val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(consent, discovery)
-        val request = WebToolRequest.Search("climate")
-        assertTrue(gate.request(request))
-        assertFalse(gate.request(WebToolRequest.Search("")))
-        assertNull(gate.execute(request))
-        assertFalse(consent.approve("search:climate"))
-        assertEquals(0, discovery.calls)
+        val consent=InternetConsentPolicy();val gate=ApprovedWebToolGate(consent)
+        val ticket=gate.prepare(WebToolRequest.Search("climate"))!!
+        assertNull(gate.prepare(WebToolRequest.Search("")))
+        assertNull(gate.approve(ticket,ResearchMode.QUICK))
     }
 
-    @Test fun mismatchedExecuteRevokesPendingConsent() {
-        val consent = InternetConsentPolicy()
-        val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(consent, discovery)
-        assertTrue(gate.request(WebToolRequest.Search("climate")))
-        assertNull(gate.execute(WebToolRequest.Search("other")))
-        assertFalse(consent.approve("search:climate"))
-        assertEquals(0, discovery.calls)
+    @Test fun mismatchedApprovalRevokesPendingConsent() {
+        val gate=ApprovedWebToolGate(InternetConsentPolicy())
+        val old=gate.prepare(WebToolRequest.Search("climate"))!!
+        val current=gate.prepare(WebToolRequest.Search("other"))!!
+        assertNull(gate.approve(old,ResearchMode.QUICK))
+        assertNull(gate.approve(current,ResearchMode.QUICK))
     }
-
 }

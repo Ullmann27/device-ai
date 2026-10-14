@@ -4,9 +4,7 @@ import org.xml.sax.Attributes
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.StringReader
-import java.net.HttpURLConnection
 import java.net.URLEncoder
 import java.net.URL
 import javax.xml.parsers.SAXParserFactory
@@ -15,14 +13,16 @@ import javax.xml.parsers.SAXParserFactory
  * Results remain untrusted research sources, not training facts or tool instructions.
  */
 class WikipediaResearchDiscoveryProvider(
-    private val readXml: (String) -> String = ::fetchSearchResponse
+    private val checkAccess: () -> Unit = {},
+    private val readXml: ((String) -> String)? = null
 ) : ResearchDiscoveryProvider {
-    override val isGeneralSearchAvailable = true
+    override val isGeneralSearchAvailable = false
 
     override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
         val text = query.text.trim().replace(Regex("\\s+"), " ").take(180)
         if (text.isBlank()) return emptyList()
-        return parseSearchResponse(readXml(searchUrl(text))).take(6)
+        checkAccess()
+        return parseSearchResponse(readXml?.invoke(searchUrl(text)) ?: fetchSearchResponse(searchUrl(text),checkAccess)).take(6)
     }
 
     companion object {
@@ -66,7 +66,7 @@ class WikipediaResearchDiscoveryProvider(
                     val title = attrs.getValue("title")?.trim() ?: return
                     if (title.length !in 2..140 || !title.matches(Regex("[\\p{L}\\p{N} _().,:\\-]+"))) return
                     results += ResearchSourceCandidate(
-                        "https://de.wikipedia.org/wiki/" + title.replace(' ', '_'),
+                        "https://de.wikipedia.org/wiki/" + URLEncoder.encode(title.replace(' ', '_'),"UTF-8").replace("+","%20"),
                         title, "wikipedia-search"
                     )
                 }
@@ -82,31 +82,12 @@ class WikipediaResearchDiscoveryProvider(
             return results.distinctBy { it.url }
         }
 
-        private fun fetchSearchResponse(endpoint: String): String {
-            val url = URL(endpoint)
-            require(url.protocol == "https" && url.host == "de.wikipedia.org" && url.path == "/w/api.php")
-            val connection = url.openConnection() as HttpURLConnection
-            try {
-                connection.requestMethod = "GET"
-                connection.instanceFollowRedirects = false
-                connection.connectTimeout = 3_500
-                connection.readTimeout = 4_500
-                connection.setRequestProperty("User-Agent",
-                    "DeviceAIContinuum/0.3.1 (https://github.com/Ullmann27/device-ai)")
-                connection.setRequestProperty("Accept", "application/xml")
-                require(connection.responseCode == 200) { "Wikipedia-Suche HTTP " + connection.responseCode }
-                val bytes = ByteArrayOutputStream()
-                connection.inputStream.use { stream ->
-                    val buffer = ByteArray(4096)
-                    while (true) {
-                        val count = stream.read(buffer)
-                        if (count < 0) break
-                        require(bytes.size() + count <= 64_000) { "Wikipedia-Suchergebnis zu groß" }
-                        bytes.write(buffer, 0, count)
-                    }
-                }
-                return bytes.toString("UTF-8")
-            } finally { connection.disconnect() }
+        private fun fetchSearchResponse(endpoint:String,check:()->Unit):String {
+            val url=URL(endpoint)
+            require(url.protocol=="https"&&url.host=="de.wikipedia.org"&&url.path=="/w/api.php")
+            check()
+            return HttpReadOnlyResearchProvider(ResearchProviderPolicy(allowedHosts=setOf("de.wikipedia.org"),maxBytes=64000,maxContentCharacters=80000,totalTimeoutMillis=6500,maxRedirects=0),accessCheck=check)
+                .retrieveMarkup(ResearchRequest("Wikipedia fallback",endpoint,maxBytes=64000,timeoutMillis=6500,maxRedirects=0)).documents.first().content
         }
     }
 }

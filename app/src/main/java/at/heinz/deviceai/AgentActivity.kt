@@ -213,6 +213,9 @@ class AgentActivity : Activity() {
     private var busy = false
     private var activeLocalRequest = false
     private val internetConsent = at.heinz.deviceai.cognitive.InternetConsentPolicy()
+    private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
+    private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
+    private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
     private var researchArmed = false
     private var researchResumeRequested = false
     private var researchMode = ResearchMode.STANDARD
@@ -315,6 +318,9 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         foregroundLearningActive = false
+        webToolGate.cancel()
+        approvedModelWebSession.getAndSet(null)?.cancel()
+        activeWebResearchSession?.cancel()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         super.onPause()
     }
@@ -957,30 +963,15 @@ class AgentActivity : Activity() {
             runContinuumDialogue(request, sourceFallback = true)
             return
         }
-        // Web research remains explicit opt-in; never infer internet permission from prose.
-        if (ResearchOptInPolicy.shouldResearch(request, researchArmed)) {
-            researchArmed = false
-            internetConsent.setMode(if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
-                    .getString("mode", "ASK") == "OFF")
-                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
-            if (internetConsent.request(request)) {
-                AlertDialog.Builder(this)
-                    .setTitle("Internetzugriff freigeben?")
-                    .setMessage("Continuum darf für diese eine Frage öffentliche HTTPS-Quellen abrufen. Die Suchfrage wird an öffentliche Suchanbieter gesendet; Wikipedia kann als Rückfall dienen. Keine Freigabe für Geräteaktionen oder zukünftige Anfragen.\\n\\n" + request.take(512))
-                    .setNegativeButton("Ablehnen") { _, _ ->
-                        internetConsent.cancel()
-                        addToolActivity("WEB · Zugriff abgelehnt")
-                    }
-                    .setPositiveButton("Einmal erlauben") { _, _ ->
-                        if (at.heinz.deviceai.cognitive.InternetResearchGate(internetConsent).authorize(request)) {
-                            input.text.clear()
-                            addUserMessage(request)
-                            runResearch(request, researchMode)
-                        }
-                    }.show()
-            } else {
-                addToolActivity("WEB · Internetmodus AUS oder ungültige Frage")
+        // A plain question never implies internet permission. Explicit web tools
+        // and an armed research button both go through the same owner dialog.
+        val webRequest=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(request,researchArmed)
+        if(webRequest!=null) {
+            researchArmed=false
+            confirmWebRequest(webRequest,researchMode) { session ->
+                if(session!=null && !busy) {
+                    input.text.clear();addUserMessage(request);runResearch(session)
+                } else session?.cancel()
             }
             return
         }
@@ -1764,8 +1755,8 @@ class AgentActivity : Activity() {
             "\nVerteilungswörter: " + runCatching { notebook.semanticModel().vocabularySize }.getOrDefault(0) +
             "\nAktive Repräsentationsdimensionen: " + runCatching { notebook.semanticModel().activeDimensions }.getOrDefault(0) +
             "\nLetzter Stand: " + notebook.status +
-            "\n\nLehrplan: 30 Start-Fachgebiete plus quellengestützte Vertiefungen. Android plant bei Ladebetrieb und " +
-            "Internetverbindung ungefähr stündlich neue Recherchen. " +
+            "\n\nLehrplan: 30 Start-Fachgebiete plus quellengestützte Vertiefungen. Mentor nutzt im " +
+            "Internetmodus Auf Nachfrage ausschließlich einzeln bestätigte Recherchen. " +
             "Quellen bleiben unbestätigt. Zusätzlich zum direkten Begriffsnetz lernt ein kleines " +
             "lokales Verteilungsmodell ähnliche Kontexte über mehrere Quellen. " +
             "Im Chat: Mentor Verbindungen: Fotosynthese oder Mentor Ähnlich: Pflanze. " +
@@ -1784,31 +1775,17 @@ class AgentActivity : Activity() {
                 if(notebook.enabled) runMentorStudyNow() else {
                     val enabled = runCatching { scheduler.enable() }.getOrDefault(false)
                     addAssistantMessage(if(enabled)
-                        "Mentor aktiv: Ich kann nun bei Ladebetrieb verschiedene Fachgebiete " +
-                            "erforschen. Für einen sofortigen Durchgang öffne MENTOR erneut."
+                        "Mentor bereit: Jede Internetrecherche benötigt eine eigene Freigabe. Öffne MENTOR erneut für einen vorgeschlagenen Forschungsauftrag."
                     else "Android konnte den Forschungsauftrag nicht einrichten.")
                 }
             }.show()
     }
 
     private fun runMentorStudyNow() {
-        if(busy || localAgentExecutor.isShutdown) return
-        val scheduler=MentorStudyScheduler(this)
-        if(!scheduler.notebook.enabled) return
-        activeLocalRequest=true
-        setBusy(true)
-        activityText.text="MENTOR · FORSCHT NACH NEUEN QUELLEN"
-        localAgentExecutor.execute {
-            val outcome=runCatching { scheduler.runOnce() }
-            runOnUiThread {
-                if(isFinishing || isDestroyed)return@runOnUiThread
-                activeLocalRequest=false
-                setBusy(false)
-                addAssistantMessage(outcome.getOrElse {
-                    "Studium fehlgeschlagen; alte Daten erhalten."
-                } + "\nMENTOR: Ergebnisse stehen unter FACHWISSEN FORSCHEN → Quellen ansehen.")
-            }
-        }
+        if(busy || localAgentExecutor.isShutdown)return
+        val notebook=MentorSourceNotebook(this)
+        val topic=at.heinz.deviceai.learning.MentorCuriosityPlanner.select(notebook.attempts,notebook.entries())
+        confirmInternetResearch(topic.query,ResearchMode.QUICK,topic.area)
     }
 
     private fun showMentorSources() {
@@ -1899,7 +1876,7 @@ class AgentActivity : Activity() {
             return
         }
         val choices = arrayOf(
-            "QUICK · Wikipedia-Thema · bis 15 Sekunden",
+            "QUICK · Websuche und Wikipedia-Fallback · bis 15 Sekunden",
             "STANDARD · mehr Quellen · bis 45 Sekunden",
             "DEEP · Gegenbelege · bis 90 Sekunden"
         )
@@ -1945,7 +1922,7 @@ class AgentActivity : Activity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Device AI · Internet auf Nachfrage")
-            .setMessage("Gib ein Thema ein. Nach der Bestätigung wird diese Suchfrage an Wikimedia gesendet. " +
+            .setMessage("Gib ein Thema oder eine HTTPS-URL ein. Erst nach einmaliger Freigabe wird ein Thema an die öffentliche Bing-Websuche gesendet; bei fehlenden Ergebnissen wird Wikipedia versucht. " +
                 "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
                 "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
             .setView(topic)
@@ -1964,58 +1941,44 @@ class AgentActivity : Activity() {
             }.show()
     }
 
-    /** Approval is checked again at the final network entry point. */
-    private fun confirmInternetResearch(question: String, selectedMode: ResearchMode) {
-        internetConsent.setMode(
-            if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
-                    .getString("mode", "ASK") == "OFF")
-                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
-        )
-        if (!internetConsent.request(question)) {
-            addToolActivity("WEB · Anfrage nicht erlaubt")
-            return
+    private fun confirmInternetResearch(question:String,selectedMode:ResearchMode,mentorArea:String?=null) {
+        val call=at.heinz.deviceai.cognitive.WebToolRequest.fromChat(question,true)?:return
+        confirmWebRequest(call,selectedMode) { session ->
+            if(session!=null && !busy){addUserMessage(question);runResearch(session,mentorArea)} else session?.cancel()
+        }
+    }
+
+    /** Only this positive UI action mints a session. A dialog's exact ticket is
+     * consumed, so a stale callback cannot approve a replacement request. */
+    private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
+        completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
+        internetConsent.setMode(if(getSharedPreferences("continuum-internet",MODE_PRIVATE).getString("mode","ASK")=="OFF")
+            at.heinz.deviceai.cognitive.InternetAccessMode.OFF else at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+        val approval=webToolGate.prepare(call)
+        if(approval==null){
+            addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
+            completed(null);return
         }
         AlertDialog.Builder(this)
             .setTitle("Internetzugriff einmal erlauben?")
-            .setMessage("Diese Frage wird zur Recherche an öffentliche Dienste übertragen. Gilt nur für diese Anfrage.\\n\\n" + question.take(512))
-            .setNegativeButton("Ablehnen") { _, _ -> internetConsent.cancel() }
-            .setPositiveButton("Einmal erlauben") { _, _ ->
-                if (!busy && at.heinz.deviceai.cognitive.InternetResearchGate(internetConsent).authorize(question)) {
-                    addUserMessage(question)
-                    runResearch(question, selectedMode)
-                }
-            }.show()
+            .setMessage((if(call is at.heinz.deviceai.cognitive.WebToolRequest.Search)
+                "Diese Suchfrage wird an Bing übertragen. Falls keine verwendbaren Treffer vorliegen, wird Wikipedia versucht. "
+                else "Diese eine HTTPS-Quelle wird gelesen; sichere öffentliche Weiterleitungen sind begrenzt erlaubt. ")+
+                "Gilt nur für diese Anfrage, ohne Gerätefreigabe oder automatische Folgeaufträge.\n\n"+call.question)
+            .setNegativeButton("Ablehnen") { _,_->webToolGate.cancel();completed(null) }
+            .setOnCancelListener { webToolGate.cancel();completed(null) }
+            .setPositiveButton("Einmal erlauben") { _,_->completed(webToolGate.approve(approval,mode)) }
+            .show()
     }
 
-    private fun runResearch(question: String, mode: ResearchMode) {
-        // The research engine runs only after the one-shot owner confirmation.
-        // A typed WebToolRequest mirrors the authorized operation without
-        // executing another independent network request.
-        val requestType: at.heinz.deviceai.cognitive.WebToolRequest =
-            if (Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE).containsMatchIn(question))
-                at.heinz.deviceai.cognitive.WebToolRequest.Read(
-                    Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE)
-                        .find(question)!!.value.trimEnd('.', ',', ';', ')', ']')
-                )
-            else at.heinz.deviceai.cognitive.WebToolRequest.Search(question.take(512))
-        addToolActivity("WEB · " + when (requestType) {
-            is at.heinz.deviceai.cognitive.WebToolRequest.Search -> "web_search"
-            is at.heinz.deviceai.cognitive.WebToolRequest.Read -> "web_read"
-        })
-        // Both UI paths require explicit one-time consent before entering this method.
-        // A persisted OFF switch fails closed even if a permission dialog was opened earlier.
-        if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
-                .getString("mode", "ASK") == "OFF") {
-            addToolActivity("WEB · Internetmodus AUS")
-            return
-        }
-        if (!ResearchOptInPolicy.shouldResearch(question, explicitButtonSelected = true)) return
+    private fun runResearch(session:at.heinz.deviceai.cognitive.ApprovedWebResearchSession,mentorArea:String?=null) {
+        if(busy || localAgentExecutor.isShutdown){session.cancel();return}
+        val question=session.question
+        val mode=session.mode
+        activeWebResearchSession=session
         activeLocalRequest = true
         activeResearchCancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
         setBusy(true)
-        val urls = Regex("""https://[^\s<>"']+""", RegexOption.IGNORE_CASE)
-            .findAll(question).map { it.value.trimEnd('.', ',', ';', ')', ']') }.distinct().take(24).toList()
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
@@ -2036,21 +1999,10 @@ class AgentActivity : Activity() {
         val researchStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
         val shouldResume = researchResumeRequested
         researchResumeRequested = false
-        val engine = DeepResearchEngine(
-            discovery = if (urls.isEmpty()) at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider() else
-                at.heinz.deviceai.cognitive.UnconfiguredResearchDiscoveryProvider(),
-            provider = HttpReadOnlyResearchProvider(
-                ResearchProviderPolicy(
-                    totalTimeoutMillis = budget.totalDeadlineMillis.toInt(),
-                    maxBytes = budget.maxBytesPerSource,
-                    maxRedirects = budget.maxRedirects
-                )
-            ),
-            synthesizer = localSynthesis,
-            checkpointStore = researchStore,
-            dossierRepository = researchStore,
-            onSynthesisTimeout = { localRuntime.cancel() }
-        )
+        val discovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
+        val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
+            totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
+        ),accessCheck={ session.checkActive();check(activeResearchCancellation?.isCancelled()!=true) { "Recherche abgebrochen" } })
         val cancellation = activeResearchCancellation!!
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
@@ -2071,28 +2023,46 @@ class AgentActivity : Activity() {
         }
         localAgentExecutor.execute {
             val result = runCatching {
-                val savedQuestion = runCatching { researchStore.loadLatest()?.plan?.question }.getOrNull()
-                val canResume = shouldResume && savedQuestion == question
-                if (shouldResume && !canResume) {
-                    error("Fortsetzen nicht möglich: Frage stimmt nicht exakt mit dem gespeicherten Checkpoint überein.")
+                val savedPlan=runCatching { researchStore.loadLatest()?.plan }.getOrNull()
+                val canResume=shouldResume && savedPlan?.question==question && savedPlan?.mode==mode
+                check(!shouldResume || canResume) { "Fortsetzen abgelehnt: Frage oder Modus stimmen nicht mit der Freigabe überein" }
+                val runner=ApprovedWebResearchToolRunner(session,discovery,provider,
+                    engineFactory={d,p->DeepResearchEngine(discovery=d,provider=p,synthesizer=localSynthesis,
+                        checkpointStore=researchStore,dossierRepository=researchStore,onSynthesisTimeout={localRuntime.cancel()},
+                        validateTarget={HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(it)})},
+                    cancellation=cancellation,progress=reportPhase,resume=canResume)
+                val gate=ToolGate(ToolPolicy(timeoutMillis=budget.totalDeadlineMillis+3000),runner,receiptStore=receiptStore)
+                val execution=gate.execute(session.call.proposal().invocation("web-"+UUID.randomUUID()),userConfirmed=true)
+                check(execution.record.status==ToolExecutionStatus.SUCCEEDED) { execution.record.decisionReason }
+                val dossier=checkNotNull(runner.dossier)
+                if(mentorArea!=null&&!cancellation.isCancelled()) {
+                    val notebook=MentorSourceNotebook(this)
+                    val found=at.heinz.deviceai.learning.MentorResearchCycle().sources(mentorArea,dossier)
+                    val count=notebook.add(found)
+                    val training=if(found.isEmpty())null else runCatching {
+                        at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).learnFromSources(found,cancellation::isCancelled)
+                    }.getOrNull()
+                    notebook.record(mentorArea,count,"Einmal bestätigte Recherche: $count Quellenbeobachtungen; "+
+                        if(training?.accepted==true)"lokaler Lernkandidat angenommen" else "kein neuer Modellstand übernommen")
                 }
-                val resumed = if (canResume) engine.resume(cancellation, reportPhase) else null
-                resumed ?: engine.research(question, mode, urls, cancellation, reportPhase)
+                dossier
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 if (activeResearchCancellation !== cancellation) return@runOnUiThread
                 activeResearchCancellation = null
+                activeWebResearchSession = null
                 activeLocalRequest = false
                 input.hint = "Was soll ich auf deinem Gerät tun?"
                 result.onSuccess { dossier ->
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
                         .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
                     val body = buildString {
-                        append(dossier.synthesis?.text ?: "Keine Synthese verfügbar.")
+                        append((dossier.synthesis?.text ?: "Keine Synthese verfügbar.").take(4600))
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
-                            append("\n\nDirekte HTTPS-Quellen wurden verwendet.")
+                            append(if(session.call is at.heinz.deviceai.cognitive.WebToolRequest.Read)"\n\nDirekte genehmigte HTTPS-Quelle."
+                                else "\n\nAllgemeine Websuche lieferte keine verwendbaren Treffer; Wikipedia-Fallback wurde versucht.")
                         } else {
                             append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
                         }
@@ -2104,6 +2074,7 @@ class AgentActivity : Activity() {
                         }
                         dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
                     }
+                    discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
                     val queue = WebLearningInbox.candidates(dossier)
                     if (queue.isNotEmpty()) {
@@ -2257,9 +2228,18 @@ class AgentActivity : Activity() {
     }
 
     private fun createToolGate() = ToolGate(
-        ToolPolicy(readOnlyEnabled = true, destructiveEnabled = true),
-        DeviceToolExecutorRunner(executor),
-        receiptStore = receiptStore
+        ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
+        ToolRunner { request ->
+            if(request.name in setOf("web_search","web_read")) {
+                val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
+                val budget=ResearchBudgetPolicy.forMode(session.mode)
+                val runner=ApprovedWebResearchToolRunner(session,
+                    at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
+                    HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
+                        totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
+                runner.execute(request)
+            } else DeviceToolExecutorRunner(executor).execute(request)
+        },receiptStore=receiptStore
     )
 
     private fun showPendingReceiptReview() {
@@ -2304,6 +2284,15 @@ class AgentActivity : Activity() {
         destructive: Boolean,
         callback: (Boolean) -> Unit
     ) {
+        if(proposal.toolName in setOf("web_search","web_read")) {
+            val call=runCatching { at.heinz.deviceai.cognitive.WebToolRequest.fromTool(proposal.toolName,proposal.arguments) }.getOrNull()
+            if(call==null){callback(false);return}
+            confirmWebRequest(call,ResearchMode.QUICK) { session ->
+                approvedModelWebSession.getAndSet(session)?.cancel()
+                callback(session!=null)
+            }
+            return
+        }
         val spec = ToolRegistry.get(proposal.toolName)
         val message = "${spec?.label ?: proposal.toolName}\nRisk: ${spec?.risk?.name ?: "UNKNOWN"}\n\n" +
             "Reason: ${spec?.description ?: "Tool is not registered."}\n\n" +
@@ -3523,6 +3512,7 @@ class AgentActivity : Activity() {
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
 }
+
 
 
 

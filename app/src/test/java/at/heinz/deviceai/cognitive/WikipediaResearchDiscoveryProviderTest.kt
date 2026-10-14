@@ -24,7 +24,7 @@ class WikipediaResearchDiscoveryProviderTest {
         val items = WikipediaResearchDiscoveryProvider.parseSearchResponse(xml)
         assertEquals(2, items.size)
         assertEquals("Künstliche Intelligenz", items[0].title)
-        assertEquals("https://de.wikipedia.org/wiki/Künstliche_Intelligenz", items[0].url)
+        assertEquals("https://de.wikipedia.org/wiki/K%C3%BCnstliche_Intelligenz", items[0].url)
         assertEquals("https://de.wikipedia.org/wiki/Solarzelle", items[1].url)
     }
     @Test fun rejectsDoctypeAndDoesNotExpandExternalEntities() {
@@ -46,7 +46,8 @@ class WikipediaResearchDiscoveryProviderTest {
     }
     @Test fun fakeApiYieldsNetworkFreeDiscoveryTests() {
         val provider = WikipediaResearchDiscoveryProvider { _ -> xml }
-        assertTrue(provider.isGeneralSearchAvailable)
+        assertFalse(provider.isGeneralSearchAvailable)
         assertEquals(2, provider.discover(ResearchQuery("Solarzelle", "q0")).size)
     }
 }
+
