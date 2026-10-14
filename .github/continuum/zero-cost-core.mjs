@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import {
   createBabyState, migrateBabyState, analyzeInstruction, observeInteraction, addOwnerRule,
-  buildDeepResearchPlan, ingestEvidence, addGoal, refreshSkillCurriculum, retrieveMemory,
+  buildDeepResearchPlan, ingestEvidence, addGoal, refreshSkillCurriculum, retrieveMemory, evaluateMemoryRetrieval,
   selectGoal, recordOutcome, babyStatus
 } from "./baby-core.mjs";
 import {
@@ -888,8 +888,9 @@ try {
       const bodyText=memory.length
         ? memory.map(m=>"- **"+m.kind+"** · score "+m.score.toFixed(2)+"\n  "+m.text).join("\n")
         : "Dazu wurde noch keine relevante eigene Erinnerung gefunden.";
+      const memoryReward=evaluateMemoryRetrieval(memory);
       state.baby=recordOutcome(state.baby,{
-        skills:["memory-retrieval"],success:true,reward:memory.length?Math.min(9,5+memory.length*.5):3,
+        skills:["memory-retrieval"],success:memoryReward>=5,reward:memoryReward,
         reflection:"Expliziter Memory-Retrieval für: "+clean(query,240)+" · Treffer "+memory.length
       });
       await reply("## Continuum · Memory Retrieval\n\n"+bodyText);

@@ -28,7 +28,7 @@ const SKILLS = [
 
 export function createBabyState(now = Date.now()) {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     createdAt: now,
     updatedAt: now,
     beliefs: [],
@@ -42,7 +42,8 @@ export function createBabyState(now = Date.now()) {
       total:0, meanLength:0, meanUrgency:0,
       speechActs:{}, affects:{}, constraints:{}
     },
-    ownerRules: []
+    ownerRules: [],
+    memoryRewardVersion:2
   };
 }
 
@@ -61,8 +62,25 @@ export function migrateBabyState(value, now = Date.now()) {
     state.interactionProfile={total:0,meanLength:0,meanUrgency:0,speechActs:{},affects:{},constraints:{}};
     state.ownerRules=[];
   }
-  if(state.schemaVersion!==2)return createBabyState(now);
-  state.beliefs = Array.isArray(state.beliefs) ? state.beliefs.slice(-256) : [];
+  if(state.schemaVersion===2){
+    state.schemaVersion=3;
+    state.memoryRewardVersion=2;
+    if(state.skills?.["memory-retrieval"]){
+      state.skills["memory-retrieval"]={
+        id:"memory-retrieval",trials:0,rewardSum:0,successCount:0,lastReward:null,lastAt:null
+      };
+    }
+  }
+  if(state.schemaVersion!==3)return createBabyState(now);
+  if(state.memoryRewardVersion!==2){
+    state.memoryRewardVersion=2;
+    if(state.skills?.["memory-retrieval"]){
+      state.skills["memory-retrieval"]={
+        id:"memory-retrieval",trials:0,rewardSum:0,successCount:0,lastReward:null,lastAt:null
+      };
+    }
+  }
+  state.beliefs = consolidateBeliefs(Array.isArray(state.beliefs) ? state.beliefs : []).slice(-256);
   state.goals = Array.isArray(state.goals) ? state.goals.slice(-128) : [];
   state.episodes = Array.isArray(state.episodes) ? state.episodes.slice(-128) : [];
   state.skills = state.skills && typeof state.skills === "object" ? state.skills : {};
@@ -327,6 +345,16 @@ export function refreshSkillCurriculum(babyInput,now=Date.now()){
   return baby;
 }
 
+export function evaluateMemoryRetrieval(rows){
+  if(!Array.isArray(rows)||!rows.length)return 2;
+  const top=rows.slice(0,5);
+  const meanScore=top.reduce((n,x)=>n+Math.min(3,Number(x.score??0)),0)/top.length;
+  const kinds=new Set(top.map(x=>x.kind)).size;
+  const grounded=top.filter(x=>x.kind==="BELIEF"&&x.status==="GROUNDED_OBSERVATION").length;
+  const provisional=top.filter(x=>x.kind==="BELIEF"&&x.status==="PROVISIONAL").length;
+  return clamp(3+meanScore*.9+kinds*.45+grounded*.3-provisional*.12,2,9);
+}
+
 export function retrieveMemory(babyInput,query,limit=6){
   const baby=migrateBabyState(babyInput);
   const q=tokens(query);
@@ -434,6 +462,49 @@ export function babyStatus(babyInput) {
     ownerRules:baby.ownerRules.filter(x=>x.active).length,
     curriculumOpen:baby.goals.filter(x=>x.status==="OPEN"&&String(x.origin).startsWith("SKILL_CURRICULUM:")).length
   };
+}
+
+function consolidateBeliefs(values){
+  const byKey=new Map();
+  for(const raw of values){
+    const text=sanitizeBeliefText(raw?.text);
+    if(!text)continue;
+    const key=text.toLocaleLowerCase("de-DE").replace(/[^\p{L}\p{N}]+/gu," ").trim();
+    if(!key)continue;
+    const candidate={...raw,text};
+    const existing=byKey.get(key);
+    if(!existing){
+      byKey.set(key,candidate);
+      continue;
+    }
+    const existingConfidence=Number(existing.confidence??0);
+    const candidateConfidence=Number(candidate.confidence??0);
+    const strongest=candidateConfidence>existingConfidence?candidate:existing;
+    const weaker=strongest===candidate?existing:candidate;
+    strongest.citationUrls=[...new Set([...(strongest.citationUrls??[]),...(weaker.citationUrls??[])])].slice(0,8);
+    strongest.supportCount=Math.max(Number(strongest.supportCount??0),Number(weaker.supportCount??0));
+    strongest.sourceDiversity=Math.max(Number(strongest.sourceDiversity??0),Number(weaker.sourceDiversity??0));
+    strongest.contradictionIds=[...new Set([...(strongest.contradictionIds??[]),...(weaker.contradictionIds??[])])].slice(0,8);
+    if(existing.status==="GROUNDED_OBSERVATION"||candidate.status==="GROUNDED_OBSERVATION")
+      strongest.status="GROUNDED_OBSERVATION";
+    strongest.createdAt=Math.min(Number(existing.createdAt??Infinity),Number(candidate.createdAt??Infinity));
+    strongest.lastValidatedAt=Math.max(Number(existing.lastValidatedAt??0),Number(candidate.lastValidatedAt??0));
+    byKey.set(key,strongest);
+  }
+  return [...byKey.values()].sort((a,b)=>(a.createdAt??0)-(b.createdAt??0));
+}
+
+function sanitizeBeliefText(value){
+  const text=String(value??"")
+    .replace(/^\s*\[\d{1,2}\]\s*/,"")
+    .replace(/^\s*#+\s*(mechanism|evidence|failure|implementation|interaction|metacognition)\s*/i,"")
+    .replace(/\s+/g," ").trim();
+  if(!text)return null;
+  if(/skip to main|main navigation|site footer|open menu|current archives|privacy statement|register login|home\s*\/\s*archives/i.test(text))return null;
+  const words=text.split(/\s+/).filter(Boolean);
+  const predicate=/\b(is|are|can|may|improves?|reduces?|shows?|finds?|allows?|requires?|learns?|prevents?|causes?|ist|sind|kann|können|zeigt|verbessert|reduziert|ermöglicht|verhindert|verursacht|lernt)\b/i.test(text);
+  if(words.length<12&&!predicate)return null;
+  return text.slice(0,650);
 }
 
 function splitClaims(text) {
