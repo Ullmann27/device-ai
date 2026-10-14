@@ -8,6 +8,10 @@ import {
 import {
   fetchPublicPage, crawlPublicWeb, searchGitHubRepositories
 } from "./public-web.mjs";
+import {
+  createWorldModel,migrateWorldModel,proposeHypothesis,selectHypothesisTest,
+  evaluateHypothesisEvidence,worldModelStatus
+} from "./world-model.mjs";
 
 const STATE_FILE = ".continuum/state.json";
 const EVENT = process.env.CONTINUUM_EVENT ?? "workflow_dispatch";
@@ -35,7 +39,7 @@ const DEFAULT_TOPICS = [
 function freshState() {
   const now = Date.now();
   const state = {
-    schemaVersion: 4,
+    schemaVersion: 5,
     generation: 1,
     createdAt: now,
     updatedAt: now,
@@ -52,6 +56,7 @@ function freshState() {
     interactions: [],
     strategyStats: defaultStrategyStats(),
     baby: createBabyState(now),
+    worldModel:createWorldModel(now),
     integrityHash: ""
   };
   state.integrityHash = hashState(state);
@@ -86,8 +91,16 @@ function loadState() {
     migrated.integrityHash = hashState(migrated);
     return migrated;
   }
-  if (state.schemaVersion !== 4) throw new Error("Unsupported state schema");
+  if(state.schemaVersion===4){
+    const migrated=structuredClone(state);
+    migrated.schemaVersion=5;
+    migrated.worldModel=createWorldModel();
+    migrated.integrityHash=hashState(migrated);
+    return migrated;
+  }
+  if (state.schemaVersion !== 5) throw new Error("Unsupported state schema");
   state.baby = migrateBabyState(state.baby);
+  state.worldModel=migrateWorldModel(state.worldModel);
   return state;
 }
 
@@ -102,6 +115,7 @@ function saveState(state) {
   state.concepts = trimObject(state.concepts, 800);
   state.edges = trimObject(state.edges, 2400);
   state.baby = migrateBabyState(state.baby);
+  state.worldModel=migrateWorldModel(state.worldModel);
   state.integrityHash = hashState(state);
   fs.mkdirSync(".continuum", { recursive: true });
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
@@ -190,6 +204,9 @@ function recordStrategyReward(state, id, sources) {
 
 function nextTarget(state) {
   state.baby = migrateBabyState(state.baby);
+  state.worldModel=migrateWorldModel(state.worldModel);
+  const hypothesis=(state.generation%2===0)?selectHypothesisTest(state.worldModel):null;
+  if(hypothesis)return {type:"world-test",text:hypothesis.testQuestions[hypothesis.attempts%hypothesis.testQuestions.length],hypothesisId:hypothesis.id};
   const babyGoal = selectGoal(state.baby);
   if (babyGoal) return { type:"baby-goal", text:babyGoal.text, babyGoalId:babyGoal.id };
   if (state.queue.length) return { type: "queue", text: state.queue.shift() };
@@ -545,7 +562,7 @@ function makeObservation(query, sources, answer) {
   };
 }
 
-async function researchTurn(state, query, interact = false, goalId = null) {
+async function researchTurn(state, query, interact = false, goalId = null, hypothesisId = null) {
   const strategyId = chooseResearchStrategy(state);
   const retrieval = await research(query, interact, strategyId);
   const sources = retrieval.sources;
@@ -583,6 +600,11 @@ async function researchTurn(state, query, interact = false, goalId = null) {
     reward:observation.retrievalReward,
     reflection:"Rechercheweg "+strategyId+" lieferte "+sources.length+" relevante Quellen; Synthese="+observation.synthesisModel
   });
+  syncWorldModelFromBaby(state);
+  if(hypothesisId){
+    const tested=evaluateHypothesisEvidence(state.worldModel,hypothesisId,{text:answer,citations:observation.citations});
+    state.worldModel=tested.model;
+  }
   const nextBabyGoal=selectGoal(state.baby);
   if(nextBabyGoal)state.queue.push(nextBabyGoal.text);
   state.queue.push(
@@ -590,6 +612,18 @@ async function researchTurn(state, query, interact = false, goalId = null) {
     "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: " + query
   );
   return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null };
+}
+
+function syncWorldModelFromBaby(state){
+  state.worldModel=migrateWorldModel(state.worldModel);
+  for(const belief of state.baby.beliefs.slice(-24)){
+    if(!belief.citationUrls?.length)continue;
+    const p=proposeHypothesis(state.worldModel,{
+      claim:belief.text,beliefId:belief.id,citationUrls:belief.citationUrls,
+      confidence:belief.confidence
+    });
+    state.worldModel=p.model;
+  }
 }
 
 async function deepResearchTurn(state,query){
@@ -643,6 +677,7 @@ async function deepResearchTurn(state,query){
     success:true,reward:finalReward,
     reflection:"Deep Research verband "+parts.length+" Teilpläne, "+unique.length+" Quellen und "+new Set(unique.map(x=>x.source)).size+" Quellentypen."
   });
+  syncWorldModelFromBaby(state);
   return {observation,answer,sources:unique,copilot:Boolean(copilot),synthesisModel:copilot?.model??null,deep:true};
 }
 
@@ -660,6 +695,7 @@ async function directUrlTurn(state,value){
   });
   state.baby=recordOutcome(epi.baby,{skills:["research","source-critique","communication"],success:true,reward:6.5,
     reflection:"Direkte öffentliche URL gelesen und als einzelne Quelle markiert."});
+  syncWorldModelFromBaby(state);
   return {observation,answer,sources:[page],copilot:Boolean(copilot),synthesisModel:copilot?.model??null};
 }
 
@@ -667,6 +703,7 @@ function statusText(state) {
   const top = Object.entries(state.concepts).sort((a,b) => b[1]-a[1]).slice(0,10).map(x=>x[0]).join(", ");
   const successes = state.cycles.filter(x=>x.success).length;
   const bs=babyStatus(state.baby);
+  const ws=worldModelStatus(state.worldModel);
   return [
     "## Continuum · Zero-Cost Status",
     "",
@@ -683,6 +720,7 @@ function statusText(state) {
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
+    "**World-Model:** "+ws.total+" Hypothesen · "+ws.supported+" unterstützt · "+ws.disputed+" umstritten · "+ws.provisional+" vorläufig · "+ws.evidenceTests+" Falsifikationstests",
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
     "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
@@ -800,7 +838,7 @@ try {
   } else {
     const target = nextTarget(state);
     try {
-      const turn = await researchTurn(state,target.text,false,target.babyGoalId??null);
+      const turn = await researchTurn(state,target.text,false,target.babyGoalId??null,target.hypothesisId??null);
       state.cycles.push({ at:Date.now(), query:target.text, success:true, sourceCount:turn.sources.length, interactive:false });
       if (target.topicId) {
         const topic=state.topics.find(x=>x.id===target.topicId);
