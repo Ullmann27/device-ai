@@ -28,17 +28,26 @@ class ContinuumMemoryDialogue(private val directory:File) {
         val followUp=Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
         val previousTopic=history.lastOrNull()?.topic.orEmpty()
         val resolved=if(followUp&&previousTopic.isNotBlank())(previousTopic+" "+text).take(512) else text
-        val topic=if(followUp)previousTopic else if(tokens(text).isNotEmpty())text.take(320) else previousTopic
         val hits=rank(bytes,resolved,experiences)
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
+        // A greeting must not accidentally cite memories containing the word "Hallo".
+        // An unanswered new question invalidates the old topic; only retrieved evidence
+        // can establish a topic for future follow-ups.
+        val selected=if(greeting)emptyList<ContinuumMemoryHit>() else hits
+        val topic=when {
+            greeting -> previousTopic
+            selected.isEmpty() -> ""
+            followUp -> previousTopic
+            else -> text.take(320)
+        }
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
-            hits.isEmpty() -> "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
-            else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+hits.joinToString("") {
+            selected.isEmpty() -> "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
+            else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
                 "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
         }.take(1000)
-        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),hits.map { it.id },hits.isNotEmpty())
+        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty())
         save((history+turn).takeLast(8))
         return turn
     }
@@ -97,7 +106,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
             return experiences.asSequence().filter { e ->
                 e.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.OBSERVED,LearningStatus.REPLAY_PENDING) &&
                 ((e.type==LearningExperienceType.USER_FACT && e.trust==LearningTrustClass.OWNER_CONFIRMED && e.provenance==LearningProvenance.USER_CONFIRMED && e.status!=LearningStatus.OBSERVED) ||
-                 (e.type==LearningExperienceType.SOURCE_TEXT && e.trust==LearningTrustClass.SOURCE_OBSERVATION && e.sourceRef?.startsWith("https://")==true))
+                 (e.type==LearningExperienceType.SOURCE_TEXT && e.trust==LearningTrustClass.SOURCE_OBSERVATION &&
+                  e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
+                  e.sourceRef?.startsWith("https://")==true))
             }.mapNotNull { e ->
                 val words=tokens(e.content)
                 val overlap=q.count { it in words }
