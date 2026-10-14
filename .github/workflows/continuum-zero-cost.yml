@@ -1,0 +1,84 @@
+name: Continuum Zero-Cost Core
+
+on:
+  schedule:
+    - cron: "37 */4 * * *"
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  copilot-requests: write
+
+concurrency:
+  group: continuum-zero-cost
+  cancel-in-progress: false
+
+jobs:
+  live-core:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.number == 20 && github.event.comment.user.type != 'Bot')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout live branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Load persistent continuum state
+        shell: bash
+        run: |
+          mkdir -p .continuum
+          git fetch origin continuum-state:refs/remotes/origin/continuum-state 2>/dev/null || true
+          git show origin/continuum-state:.continuum/state.json > .continuum/state.json 2>/dev/null || true
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Try GitHub Copilot CLI for interactive turns
+        if: github.event_name == 'issue_comment'
+        continue-on-error: true
+        run: npm install -g @github/copilot@latest
+
+      - name: Run Continuum
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CONTINUUM_EVENT: ${{ github.event_name }}
+          CONTINUUM_REPOSITORY: ${{ github.repository }}
+          CONTINUUM_ISSUE: "20"
+          CONTINUUM_COMMENT: ${{ github.event.comment.body || '' }}
+          CONTINUUM_COMMENT_USER: ${{ github.event.comment.user.login || '' }}
+        run: |
+          if command -v copilot >/dev/null 2>&1; then
+            echo "CONTINUUM_COPILOT=1" >> "$GITHUB_ENV"
+          fi
+          node .github/continuum/zero-cost-core.mjs
+
+      - name: Persist learned state on dedicated branch
+        shell: bash
+        run: |
+          cp .continuum/state.json /tmp/continuum-state.json
+          if git show-ref --verify --quiet refs/remotes/origin/continuum-state; then
+            git switch -C continuum-state origin/continuum-state
+          else
+            git switch --orphan continuum-state
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          mkdir -p .continuum
+          cp /tmp/continuum-state.json .continuum/state.json
+          git config user.name "device-ai-continuum[bot]"
+          git config user.email "device-ai-continuum[bot]@users.noreply.github.com"
+          git add .continuum/state.json
+          if git diff --cached --quiet; then
+            echo "No state change"
+          else
+            git commit -m "chore(continuum): persist autonomous learning state"
+            git push origin HEAD:continuum-state
+          fi
