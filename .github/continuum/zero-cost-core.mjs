@@ -57,7 +57,7 @@ function freshState() {
     interactions: [],
     strategyStats: defaultStrategyStats(),
     strategyRewardVersion:2,
-    baby: createBabyState(now),
+    baby: refreshSkillCurriculum(createBabyState(now),now),
     worldModel:createWorldModel(now),
     integrityHash: ""
   };
@@ -105,7 +105,7 @@ function loadState() {
     return migrated;
   }
   if (state.schemaVersion !== 5) throw new Error("Unsupported state schema");
-  state.baby = migrateBabyState(state.baby);
+  state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   if(state.strategyRewardVersion!==2){
     state.strategyStats=defaultStrategyStats();
@@ -125,7 +125,7 @@ function saveState(state) {
   state.queue = dedupe(state.queue).slice(0, 64);
   state.concepts = trimObject(state.concepts, 800);
   state.edges = trimObject(state.edges, 2400);
-  state.baby = migrateBabyState(state.baby);
+  state.baby = refreshSkillCurriculum(migrateBabyState(state.baby));
   state.worldModel=migrateWorldModel(state.worldModel);
   state.strategyRewardVersion=2;
   state.integrityHash = hashState(state);
