@@ -1573,6 +1573,18 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
+            .setNegativeButton("PAKET-IMPORT") { _, _ ->
+                AlertDialog.Builder(this)
+                    .setTitle("Öffentliches GitHub-Modellpaket")
+                    .setMessage("Wähle zunächst die Modellgewichte (neural-public.bin), danach das zugehörige Manifest (neural-public.json). Hash und Herkunft werden vor dem lokalen Modelltest geprüft. Eine Publisher-Signatur ist noch nicht implementiert; importiere nur bewusst ausgewählte Dateien.")
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("Modell wählen") { _, _ ->
+                        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type="*/*"
+                        },CONTINUUM_PACKAGE_MODEL_REQUEST)
+                    }.show()
+            }
             .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ ->
                 AlertDialog.Builder(this)
                     .setTitle("GitHub-Lernstand übernehmen")
