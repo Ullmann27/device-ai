@@ -31,7 +31,7 @@ class ApprovedWebToolGateTest {
     @Test fun disabledModeCancelsPendingCall() {
         val consent = InternetConsentPolicy()
         val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(consent, discovery) {}
+        val gate = ApprovedWebToolGate(consent, discovery) { null }
         val search = WebToolRequest.Search("weather")
         assertTrue(gate.request(search))
         consent.setMode(InternetAccessMode.OFF)
@@ -59,7 +59,7 @@ class ApprovedWebToolGateTest {
 
     @Test fun cancellationNeverCallsProvider() {
         val discovery = FakeDiscovery()
-        val gate = ApprovedWebToolGate(InternetConsentPolicy(), discovery) {}
+        val gate = ApprovedWebToolGate(InternetConsentPolicy(), discovery) { null }
         val search = WebToolRequest.Search("topic")
         assertTrue(gate.request(search))
         gate.cancel()
