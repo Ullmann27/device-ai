@@ -10,12 +10,12 @@ sealed class WebToolRequest {
     data class Read(val url: String) : WebToolRequest()
 }
 
-data class WebToolResult(val operation: String, val sources: List<ResearchSourceCandidate>)
+data class WebToolResult(\n    val operation: String,\n    val sources: List<ResearchSourceCandidate>,\n    val documents: List<ResearchDocument> = emptyList()\n)
 
 class ApprovedWebToolGate(
     private val consent: InternetConsentPolicy,
     private val discovery: ResearchDiscoveryProvider,
-    private val reader: (String) -> Unit
+    private val reader: (String) -> ResearchDocument
 ) {
     private var pending: WebToolRequest? = null
 
@@ -50,8 +50,8 @@ class ApprovedWebToolGate(
                 "web_search", discovery.discover(ResearchQuery(call.query, "web-tool")).take(8)
             )
             is WebToolRequest.Read -> {
-                reader(call.url)
-                WebToolResult("web_read", listOf(ResearchSourceCandidate(call.url)))
+                val document = reader(call.url)
+                WebToolResult("web_read", listOf(ResearchSourceCandidate(document.url, document.title)), listOf(document))
             }
         }
     }
