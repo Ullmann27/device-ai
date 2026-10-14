@@ -1,6 +1,9 @@
 name: Continuum Zero-Cost Core
 
 on:
+  push:
+    branches: ["copilot/pr-12-working-first-vertical-slice"]
+    paths: [".github/workflows/continuum-zero-cost.yml"]
   schedule:
     - cron: "37 */4 * * *"
   issue_comment:
@@ -10,8 +13,8 @@ on:
 permissions:
   contents: write
   issues: write
-  copilot-requests: write
 
+# Shared with every version of this workflow, including the default branch.
 concurrency:
   group: continuum-zero-cost
   cancel-in-progress: false
@@ -20,50 +23,36 @@ jobs:
   live-core:
     if: >-
       github.event_name != 'issue_comment' ||
-      (github.event.issue.number == 20 && github.event.comment.user.type != 'Bot')
+      (github.event.issue.number == 20 &&
+       github.event.comment.user.login == github.repository_owner)
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-
+    timeout-minutes: 4
+    env:
+      CONTINUUM_COPILOT: "0"
     steps:
-      - name: Checkout live branch
+      - name: Checkout verified learning implementation
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: a3bca34f4f2843875bd907954991ee9a5d9638ed
+          fetch-depth: 1
 
-      - name: Load persistent continuum state
+      - name: Load existing persistent state (fail closed)
         shell: bash
         run: |
+          git fetch origin continuum-state:refs/remotes/origin/continuum-state
           mkdir -p .continuum
-          git fetch origin continuum-state:refs/remotes/origin/continuum-state 2>/dev/null || true
-          if git show origin/continuum-state:.continuum/state.json > .continuum/state.json 2>/dev/null; then
-            test -s .continuum/state.json || rm -f .continuum/state.json
-          else
-            rm -f .continuum/state.json
-          fi
+          git show origin/continuum-state:.continuum/state.json > .continuum/state.json
+          test -s .continuum/state.json
+          echo "CONTINUUM_CODE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Set up Node 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
-      - name: Try GitHub Copilot CLI for interactive turns
-        if: github.event_name == 'issue_comment'
-        continue-on-error: true
-        run: npm install -g @github/copilot@latest
-
-      - name: Detect Copilot CLI
-        shell: bash
-        run: |
-          if command -v copilot >/dev/null 2>&1; then
-            echo "CONTINUUM_COPILOT=1" >> "$GITHUB_ENV"
-          else
-            echo "CONTINUUM_COPILOT=0" >> "$GITHUB_ENV"
-          fi
-
-      - name: Test Baby Core, World Model and public-web guard
+      - name: Test replay, benchmarks, console and model interchange
         run: node --test .github/continuum/*.test.mjs
 
-      - name: Run Continuum
+      - name: Run bounded research and neural learning
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CONTINUUM_EVENT: ${{ github.event_name }}
@@ -73,25 +62,27 @@ jobs:
           CONTINUUM_COMMENT_USER: ${{ github.event.comment.user.login || '' }}
         run: node .github/continuum/zero-cost-core.mjs
 
-      - name: Persist learned state on dedicated branch
+      - name: Persist state, public weights and measurements together
         shell: bash
         run: |
-          cp .continuum/state.json /tmp/continuum-state.json
-          rm -f .continuum/state.json
-          if git show-ref --verify --quiet refs/remotes/origin/continuum-state; then
-            git switch -C continuum-state origin/continuum-state
-          else
-            git switch --orphan continuum-state
-            git rm -rf . >/dev/null 2>&1 || true
+          state_checkout="$RUNNER_TEMP/continuum-state-publish"
+          git worktree add --detach "$state_checkout" refs/remotes/origin/continuum-state
+          mkdir -p "$state_checkout/.continuum"
+          cp .continuum/state.json .continuum/neural-public.bin .continuum/neural-public.json "$state_checkout/.continuum/"
+          git -C "$state_checkout" config user.name "device-ai-continuum[bot]"
+          git -C "$state_checkout" config user.email "device-ai-continuum[bot]@users.noreply.github.com"
+          git -C "$state_checkout" add .continuum/state.json .continuum/neural-public.bin .continuum/neural-public.json
+          if ! git -C "$state_checkout" diff --cached --quiet; then
+            git -C "$state_checkout" commit -m "chore(continuum): persist evaluated neural learning and memory"
+            git -C "$state_checkout" push origin HEAD:continuum-state
           fi
-          mkdir -p .continuum
-          cp /tmp/continuum-state.json .continuum/state.json
-          git config user.name "device-ai-continuum[bot]"
-          git config user.email "device-ai-continuum[bot]@users.noreply.github.com"
-          git add .continuum/state.json
-          if git diff --cached --quiet; then
-            echo "No state change"
-          else
-            git commit -m "chore(continuum): persist autonomous learning state"
-            git push origin HEAD:continuum-state
-          fi
+
+      - name: Export Android-compatible public model (no private memory)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-neural-public-${{ github.run_id }}
+          path: |
+            .continuum/neural-public.bin
+            .continuum/neural-public.json
+          retention-days: 7
+          if-no-files-found: error
