@@ -75,4 +75,26 @@ class ApprovedWebToolGateTest {
         )) assertFalse(url, gate.request(WebToolRequest.Read(url)))
     }
 
+    @Test fun invalidReplacementRevokesOldConsent() {
+        val consent = InternetConsentPolicy()
+        val discovery = FakeDiscovery()
+        val gate = ApprovedWebToolGate(consent, discovery)
+        val request = WebToolRequest.Search("climate")
+        assertTrue(gate.request(request))
+        assertFalse(gate.request(WebToolRequest.Search("")))
+        assertNull(gate.execute(request))
+        assertFalse(consent.approve("search:climate"))
+        assertEquals(0, discovery.calls)
+    }
+
+    @Test fun mismatchedExecuteRevokesPendingConsent() {
+        val consent = InternetConsentPolicy()
+        val discovery = FakeDiscovery()
+        val gate = ApprovedWebToolGate(consent, discovery)
+        assertTrue(gate.request(WebToolRequest.Search("climate")))
+        assertNull(gate.execute(WebToolRequest.Search("other")))
+        assertFalse(consent.approve("search:climate"))
+        assertEquals(0, discovery.calls)
+    }
+
 }
