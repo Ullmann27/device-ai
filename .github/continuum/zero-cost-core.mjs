@@ -133,7 +133,10 @@ const STOP = new Set([
   "dass","dieser","diese","dieses","einer","einem","einen","eine","eines","werden","wurde","wurden",
   "sind","auch","nicht","durch","über","unter","zwischen","gegen","ohne","nach","beim","oder","sowie",
   "aber","mehr","kann","können","wird","sich","eine","einer","with","from","that","this","have","been",
-  "into","using","used","their","which","were","such","also","than","when","where","what","your"
+  "into","using","used","their","which","were","such","also","than","when","where","what","your",
+  "welche","welcher","welches","konkreten","implementierungsbausteine","ableiten","funktionieren",
+  "nachweislich","starken","empirischen","ergebnisse","benchmarks","grenzen","fehlschläge",
+  "gegenbeispiele","offenen","probleme","bekannt","methoden","daraus","sollte"
 ]);
 
 function learnGraph(state, texts) {
@@ -215,7 +218,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
     if (!key || seen.has(key)) continue;
     seen.add(key);
     item.relevance = relevance(item, searchQueries);
-    if (item.relevance >= 1.25) deduped.push(item);
+    if (item.relevance >= 1.25 && domainGate(item,searchQueries)) deduped.push(item);
   }
   const github = [];
   for (const searchQuery of searchQueries.slice(0, 2)) {
@@ -224,7 +227,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
   for (const item of github) {
     item.relevance = relevance(item,searchQueries) + 0.8;
     const key=(item.url||item.title).toLocaleLowerCase("de-DE");
-    if(!seen.has(key) && item.relevance>=1.25){seen.add(key);deduped.push(item);}
+    if(!seen.has(key) && item.relevance>=1.25 && domainGate(item,searchQueries)){seen.add(key);deduped.push(item);}
   }
 
   deduped.sort((a,b) => b.relevance - a.relevance ||
@@ -239,7 +242,7 @@ async function research(query, interactive = false, strategyId = "technical-broa
   for(const page of crawled){
     page.relevance=relevance(page,searchQueries)+Number(page.relevance||0);
     const key=(page.url||page.title).toLocaleLowerCase("de-DE");
-    if(!seen.has(key) && page.relevance>=0.7){seen.add(key);deduped.push(page);}
+    if(!seen.has(key) && page.relevance>=0.7 && domainGate(page,searchQueries)){seen.add(key);deduped.push(page);}
   }
   deduped.sort((a,b)=>b.relevance-a.relevance||sourceWeight(b.source)-sourceWeight(a.source));
   return { sources: deduped.slice(0, 14), searchQueries };
@@ -309,6 +312,14 @@ function relevance(item, queries) {
   }
   if (/agent|learning|reason|uncertainty|model|artificial|intelligence|neural|benchmark|evaluation/i.test(item.title)) score += 1.0;
   return score;
+}
+
+function domainGate(item,queries){
+  const query=queries.join(" ").toLocaleLowerCase("en-US");
+  const aiQuestion=/(\bai\b|\bki\b|artificial intelligence|machine learning|neural|agent|llm|language model|continual|active learning|reasoning|dialog|emotion|natural language|cognitive|memory|world model|reinforcement)/i.test(query);
+  if(!aiQuestion)return true;
+  const text=(String(item.title??"")+" "+String(item.text??"")).toLocaleLowerCase("en-US");
+  return /(artificial intelligence|machine learning|neural|agent|llm|language model|continual learning|active learning|reinforcement learning|reasoning|memory|cognitive|dialog|emotion|natural language|autonomous|catastrophic forgetting|world model|transformer)/i.test(text);
 }
 
 function sourceWeight(source) {
@@ -519,7 +530,10 @@ function makeObservation(query, sources, answer) {
     id: "obs-" + hash.slice(0,24),
     query: clean(query, 300),
     answer: clean(answer, 7000),
-    citations: sources.map(x => ({ title:x.title, url:x.url, source:x.source })).slice(0,9),
+    citations: sources.map(x => ({
+      title:x.title, url:x.url, source:x.source,
+      relevance:Number.isFinite(Number(x.relevance))?Number(x.relevance):null
+    })).slice(0,12),
     createdAt: now,
     trust: "PUBLIC_SOURCE_OBSERVATION",
     authority: "NONE"
