@@ -30,6 +30,7 @@ class ApprovedWebToolGate(
 
     @Synchronized fun request(call: WebToolRequest): Boolean {
         pending = null
+        consent.cancel()
         if (consent.mode != InternetAccessMode.ASK) return false
         when (call) {
             is WebToolRequest.Search -> {
@@ -61,7 +62,11 @@ class ApprovedWebToolGate(
     @Synchronized fun execute(call: WebToolRequest): WebToolResult? {
         val matched = pending == call
         pending = null
-        if (!matched || !InternetResearchGate(consent).authorize(key(call))) return null
+        if (!matched) {
+            consent.cancel()
+            return null
+        }
+        if (!InternetResearchGate(consent).authorize(key(call))) return null
         return when (call) {
             is WebToolRequest.Search -> WebToolResult(
                 "web_search", discovery.discover(ResearchQuery(call.query, "web-tool")).take(8)
