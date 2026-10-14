@@ -91,6 +91,8 @@ test("factory promotes only objectively better grounded safe challenger", async 
     assert.equal(status.generation, 2);
     assert.equal(status.candidates, 4);
     assert.ok(status.reflections >= 2);
+    const active = factory.championStrategy();
+    assert.ok(active.includes("explicit hypotheses"));
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

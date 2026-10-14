@@ -354,17 +354,6 @@ setInterval(() => {
 function startContinuumServices() {
   if (!CONTINUUM_DAEMON_ENABLED) return;
 
-  continuumDaemon = new ContinuumResearchDaemon({
-    statePath: CONTINUUM_STATE_PATH,
-    minIntervalMs: CONTINUUM_RESEARCH_INTERVAL_MS,
-    dailyCycleLimit: CONTINUUM_DAILY_CYCLE_LIMIT,
-    research: createOpenAiResearchFunction({
-      apiKey: OPENAI_API_KEY,
-      model: CONTINUUM_RESEARCH_MODEL,
-      baseUrl: OPENAI_BASE_URL
-    })
-  });
-
   if (BRAIN_FACTORY_ENABLED) {
     const adapters = createOpenAiBrainFactoryAdapters({
       apiKey: OPENAI_API_KEY,
@@ -380,6 +369,18 @@ function startContinuumServices() {
       datasetLimit: Number(process.env.CONTINUUM_BRAIN_DATASET_LIMIT ?? 10)
     });
   }
+
+  continuumDaemon = new ContinuumResearchDaemon({
+    statePath: CONTINUUM_STATE_PATH,
+    minIntervalMs: CONTINUUM_RESEARCH_INTERVAL_MS,
+    dailyCycleLimit: CONTINUUM_DAILY_CYCLE_LIMIT,
+    research: createOpenAiResearchFunction({
+      apiKey: OPENAI_API_KEY,
+      model: CONTINUUM_RESEARCH_MODEL,
+      baseUrl: OPENAI_BASE_URL,
+      strategyProvider: () => brainFactory?.championStrategy()
+    })
+  });
 
   continuumDaemon.start(async (result, researchState) => {
     if (!brainFactory || !result?.success) return;

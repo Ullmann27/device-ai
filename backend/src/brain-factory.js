@@ -176,6 +176,13 @@ export class BrainFactory {
     return summarize(state);
   }
 
+  championStrategy() {
+    const state = this.store.load(this.now());
+    const champion = state.candidates.find((x) => x.id === state.championId);
+    if (!champion) throw new Error("Brain champion missing.");
+    return champion.strategy;
+  }
+
   async evolve(continuumState) {
     const dataset = buildBrainDataset(continuumState, this.datasetLimit);
     if (dataset.length < 2) return { skipped: true, reason: "Benchmark-Dataset noch zu klein.", status: this.status() };
