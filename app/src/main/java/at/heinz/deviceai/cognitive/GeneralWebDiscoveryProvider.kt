@@ -31,8 +31,8 @@ class GeneralWebDiscoveryProvider(
             require(html.length <= 150_000)
             // Only links from the result markup are candidates, never arbitrary text,
             // analytics, scripts or embedded tracking URLs.
-            val anchors = Regex("""(?is)<a\\b([^>]{0,2400})>""").findAll(html)
-            val href = Regex("""(?i)\\bhref\\s*=\\s*["'](https://[^"'<>\\s]{1,1800})["']""")
+            val anchors = Regex("""(?is)<a\b([^>]{0,2400})>""").findAll(html)
+            val href = Regex("""(?i)\bhref\s*=\s*["'](https://[^"'<>\s]{1,1800})["']""")
             return anchors.mapNotNull { anchor ->
                 val raw = href.find(anchor.groupValues[1])?.groupValues?.get(1) ?: return@mapNotNull null
                 val url = raw.replace("&amp;", "&")
