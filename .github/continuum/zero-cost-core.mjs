@@ -13,6 +13,7 @@ import {
   createWorldModel,migrateWorldModel,proposeHypothesis,selectHypothesisTest,
   evaluateHypothesisEvidence,worldModelStatus
 } from "./world-model.mjs";
+import {isOwnerComment} from "./console-policy.mjs";
 
 const STATE_FILE = ".continuum/state.json";
 const EVENT = process.env.CONTINUUM_EVENT ?? "workflow_dispatch";
@@ -813,13 +814,14 @@ function statusText(state) {
       s.id + "=" + (s.attempts ? (s.rewardSum/s.attempts).toFixed(2) : "neu")
     ).join(" · "),
     "**Baby-Core:** "+bs.beliefs+" Überzeugungen ("+bs.grounded+" grounded, "+bs.provisional+" vorläufig) · "+bs.openGoals+" offene epistemische Ziele · "+bs.contradictions+" erkannte Widersprüche",
+    "**Evidenz-Audit:** "+bs.explicitlyCited+" Aussagen mit expliziter Quellenreferenz · "+bs.unattributedOrLegacy+" nicht explizit belegte Aussagen · "+bs.quarantinedBeliefs+" quarantänisierte Aussagen",
     "**Skills:** "+bs.skills.map(s=>s.id+"="+(s.meanReward==null?"neu":s.meanReward.toFixed(2))).join(" · "),
     "**Interaktion gelernt:** "+bs.interactionProfile.total+" Nachrichten · Ø Dringlichkeit "+bs.interactionProfile.meanUrgency.toFixed(2)+" · Nutzerregeln "+bs.ownerRules,
     "**Selbst-Curriculum:** "+bs.curriculumOpen+" aktuell offene Skill-Lernziele",
     "**World-Model:** "+ws.total+" Hypothesen · "+ws.supported+" unterstützt · "+ws.disputed+" umstritten · "+ws.provisional+" vorläufig · "+ws.evidenceTests+" Falsifikationstests",
     top ? "**Stärkste Begriffe:** " + top : "**Stärkste Begriffe:** noch keine",
     "",
-    "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK."
+    "Der Zustand lebt auf dem Branch `continuum-state` und ist unabhängig von einer installierten APK. Skillwerte sind interne Proxy-Bewertungen, keine extern gemessene Modellqualität."
   ].join("\n");
 }
 
@@ -871,6 +873,12 @@ function trimObject(object,max) {
   return Object.fromEntries(Object.entries(object).sort((a,b)=>b[1]-a[1]).slice(0,max));
 }
 
+// Console commands can turn into durable user lessons and owner rules.
+// A GitHub comment is not owner-authorized merely because it appears on Issue #20.
+if (EVENT === "issue_comment" && !isOwnerComment(REPOSITORY,COMMENT_USER)) {
+  console.log("Continuum: ignoring non-owner issue comment without state mutation.");
+  process.exit(0);
+}
 const state = loadState();
 try {
   if (EVENT === "issue_comment") {
@@ -882,6 +890,18 @@ try {
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if(lower==="/audit"){
+      const audit=babyStatus(state.baby);
+      const quarantine=(state.baby.quarantinedBeliefs??[]).slice(-8);
+      const detail=quarantine.length
+        ? quarantine.map(x=>"- `"+x.id+"` · "+x.reason+" · Frage: "+clean(x.query,180)).join("\n")
+        : "Keine zurückgestellten Aussagen.";
+      await reply("## Continuum · Evidence Audit\n\nAktive Überzeugungen: **"+audit.beliefs+
+        "** · explizite Quellenreferenz: **"+audit.explicitlyCited+
+        "** · vorläufig: **"+audit.provisional+
+        "** · Quarantäne: **"+audit.quarantinedBeliefs+"**\n\n"+
+        detail+"\n\nQuarantäne bedeutet: nicht als Wissen verwendet, Herkunft bleibt dokumentiert. "+
+        "Eine explizite Referenz ist noch kein unabhängiger Nachweis der sachlichen Richtigkeit.");
     } else if(lower.startsWith("/memory ")){
       const query=body.slice(8).trim();
       const memory=retrieveMemory(state.baby,query,10);
@@ -959,7 +979,7 @@ try {
         : lower.startsWith("/ask ") ? body.slice(5).trim()
         : body;
       if (!query) {
-        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
+        await reply("Schreibe eine Frage, `/deep <Frage>`, `/research <Thema>`, `/memory <Thema>`, `/audit`, `/url <öffentliche URL>`, `/learn <Text>` oder `/status`.");
       } else {
         const turn = await researchTurn(state, query, true);
         state.cycles.push({ at:Date.now(), query, success:true, sourceCount:turn.sources.length, interactive:true });

@@ -482,6 +482,8 @@ export function babyStatus(babyInput) {
   return {
     beliefs:baby.beliefs.length,
     quarantinedBeliefs:baby.quarantinedBeliefs.length,
+    explicitlyCited:baby.beliefs.filter(x=>x.evidenceMode==="EXPLICIT_CITATION").length,
+    unattributedOrLegacy:baby.beliefs.filter(x=>x.evidenceMode!=="EXPLICIT_CITATION").length,
     grounded:baby.beliefs.filter(x=>x.status==="GROUNDED_OBSERVATION").length,
     provisional:baby.beliefs.filter(x=>x.status==="PROVISIONAL").length,
     contradictions:baby.counters.contradictions,
