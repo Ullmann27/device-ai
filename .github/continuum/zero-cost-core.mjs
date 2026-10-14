@@ -195,7 +195,11 @@ function recordStrategyReward(state, id, sources) {
   const diversity = new Set(sources.map(x=>x.source)).size;
   const meanRelevance = sources.length ?
     sources.reduce((n,x)=>n+Number(x.relevance ?? 0),0)/sources.length : 0;
-  const reward = Math.min(10, meanRelevance + diversity * 0.65 + Math.min(2, sources.length * 0.12));
+  const relevanceScore=Math.min(5,Math.log1p(Math.max(0,meanRelevance))*1.65);
+  const diversityScore=Math.min(2,diversity*0.5);
+  const volumeScore=Math.min(1.5,sources.length*0.11);
+  const qualityFraction=sources.length? sources.filter(x=>sourceWeight(x.source)>=3).length/sources.length : 0;
+  const reward=Math.min(10,relevanceScore+diversityScore+volumeScore+qualityFraction*1.5);
   stat.attempts += 1;
   stat.rewardSum += reward;
   stat.lastReward = reward;
@@ -285,6 +289,19 @@ async function planSearchQueries(query, interactive, strategyId) {
   if (/android|on-device|handy|apk/.test(lower)) {
     queries.push("on-device AI Android continual learning edge inference local language model");
   }
+  if (/sprache|dialog|emotion|benutzer|kommunik|pragmatik|language|conversation|affect/.test(lower)) {
+    queries.push(
+      "dialogue systems pragmatics user modeling affective computing emotion recognition natural language processing",
+      "adaptive conversational agents user feedback personalization dialogue state tracking preference learning",
+      "human AI interaction conversational agent correction learning affective computing benchmark"
+    );
+  }
+  if (/plan|denken|zerleg|reason|metakogn|selbstüberwach|ziel|entscheidung/.test(lower)) {
+    queries.push(
+      "LLM agent task decomposition hierarchical planning metacognitive monitoring uncertainty benchmark",
+      "autonomous agents self reflection planning verifier uncertainty goal selection"
+    );
+  }
   if (strategyId === "academic-replay") {
     queries.push(
       q + " experience replay catastrophic forgetting benchmark",
@@ -333,10 +350,11 @@ function relevance(item, queries) {
 
 function domainGate(item,queries){
   const query=queries.join(" ").toLocaleLowerCase("en-US");
-  const aiQuestion=/(\bai\b|\bki\b|artificial intelligence|machine learning|neural|agent|llm|language model|continual|active learning|reasoning|dialog|emotion|natural language|cognitive|memory|world model|reinforcement)/i.test(query);
+  const aiQuestion=/(\bai\b|\bki\b|artificial intelligence|machine learning|neural|agent|llm|language model|continual|active learning|reasoning|dialog|emotion|natural language|world model|reinforcement|metacogn|planning)/i.test(query);
   if(!aiQuestion)return true;
   const text=(String(item.title??"")+" "+String(item.text??"")).toLocaleLowerCase("en-US");
-  return /(artificial intelligence|machine learning|neural|agent|llm|language model|continual learning|active learning|reinforcement learning|reasoning|memory|cognitive|dialog|emotion|natural language|autonomous|catastrophic forgetting|world model|transformer)/i.test(text);
+  const strongAi=/(artificial intelligence|machine learning|deep learning|neural|\bai\b|\bagent(s|ic)?\b|llm|large language model|language model|continual learning|active learning|reinforcement learning|transformer|natural language processing|dialogue system|conversational agent|affective computing|autonomous agent|catastrophic forgetting|world model|metacognitive|task decomposition|hierarchical planning)/i.test(text);
+  return strongAi;
 }
 
 function sourceWeight(source) {

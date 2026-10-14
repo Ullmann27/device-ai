@@ -72,7 +72,7 @@ export function evaluateHypothesisEvidence(modelInput,hypothesisId,{text,citatio
   h.attempts+=1;h.lastTestedAt=now;
   const supportDomains=new Set(h.supportEvidence.flatMap(x=>x.domains)).size;
   const contradictDomains=new Set(h.contradictEvidence.flatMap(x=>x.domains)).size;
-  h.confidence=clamp(h.baseConfidence+supportDomains*.075-contradictDomains*.16-
+  h.confidence=clamp(h.baseConfidence+supportDomains*.12-contradictDomains*.18-
     Math.min(.12,h.inconclusiveEvidence.length*.015),.05,.95);
   h.status=contradictDomains>=1?"DISPUTED":
     supportDomains>=2&&h.confidence>=.68?"SUPPORTED":
