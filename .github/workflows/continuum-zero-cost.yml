@@ -69,6 +69,14 @@ jobs:
           git worktree add --detach "$state_checkout" refs/remotes/origin/continuum-state
           mkdir -p "$state_checkout/.continuum"
           cp .continuum/state.json .continuum/neural-public.bin .continuum/neural-public.json "$state_checkout/.continuum/"
+          # GitHub state history is shared between scheduled and manual runs; reject stale writes.
+          git fetch origin continuum-state:refs/remotes/origin/continuum-state
+          state_base=$(git -C "$state_checkout" rev-parse HEAD)
+          current_state=$(git rev-parse refs/remotes/origin/continuum-state)
+          if [ "$state_base" != "$current_state" ]; then
+            echo "::error::Continuum state moved during research; refusing stale state publication."
+            exit 1
+          fi
           git -C "$state_checkout" config user.name "device-ai-continuum[bot]"
           git -C "$state_checkout" config user.email "device-ai-continuum[bot]@users.noreply.github.com"
           git -C "$state_checkout" add .continuum/state.json .continuum/neural-public.bin .continuum/neural-public.json
