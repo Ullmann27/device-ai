@@ -131,7 +131,8 @@ class FileLearningExperienceStore(private val directory:File) {
             require(limit in 1..128)
             loadValidated().asReversed().asSequence()
                 .filter { it.type==type && it.status in setOf(
-                    LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING
+                    LearningStatus.OBSERVED,LearningStatus.CONFIRMED,
+                    LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING
                 ) }
                 .take(limit).toList().asReversed()
         }
