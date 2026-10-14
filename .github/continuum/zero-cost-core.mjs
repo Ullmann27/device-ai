@@ -139,7 +139,7 @@ function saveState(state) {
   fs.mkdirSync(".continuum", { recursive: true });
   // State is canonical; exports contain weights and measurements only, no owner text.
   const weights=exportWeights(state.neural);
-  const manifest={format:"SWB1",...neuralStatus(state.neural),privacy:"PUBLIC_AND_CURATED_TRAINING_ONLY",codeSha:process.env.CONTINUUM_CODE_SHA??null};
+  const manifest={schemaVersion:1,format:"SWB1",...neuralStatus(state.neural),privacy:"PUBLIC_AND_CURATED_TRAINING_ONLY",codeSha:process.env.CONTINUUM_CODE_SHA??null,modelSha256:crypto.createHash("sha256").update(weights).digest("hex"),modelBytes:weights.length};
   for(const [file,bytes] of [[STATE_FILE,JSON.stringify(state,null,2)],[".continuum/neural-public.bin",weights],[".continuum/neural-public.json",JSON.stringify(manifest,null,2)]]){
     const temporary=file+".tmp";
     const fd=fs.openSync(temporary,"w");try{fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
