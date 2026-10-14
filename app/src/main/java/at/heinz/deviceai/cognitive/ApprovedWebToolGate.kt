@@ -10,7 +10,11 @@ sealed class WebToolRequest {
     data class Read(val url: String) : WebToolRequest()
 }
 
-data class WebToolResult(\n    val operation: String,\n    val sources: List<ResearchSourceCandidate>,\n    val documents: List<ResearchDocument> = emptyList()\n)
+data class WebToolResult(
+    val operation: String,
+    val sources: List<ResearchSourceCandidate>,
+    val documents: List<ResearchDocument> = emptyList()
+)
 
 class ApprovedWebToolGate(
     private val consent: InternetConsentPolicy,
