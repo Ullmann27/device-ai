@@ -130,8 +130,16 @@ class MentorStudyScheduler(context:Context) {
             val found=MentorResearchCycle().read(topic)
             if(cancelled() || !book.enabled)return "Studium abgebrochen."
             val count=book.add(found)
-            val msg=if(count>0) "Neue unbestätigte Quellenbeobachtungen: "+count
-                else "Keine neuen Quellen; kein Wissen erfunden."
+            val coreReport=if(found.isEmpty())null else runCatching {
+                ContinuumLearningCore(app.filesDir).learnFromSources(found,cancelled)
+            }.getOrNull()
+            val msg=(if(count>0) "Neue unbestätigte Quellenbeobachtungen: "+count
+                else "Keine neuen Quellen; kein Wissen erfunden.") +
+                when {
+                    coreReport==null -> ""
+                    coreReport.accepted -> " · Continuum-Repräsentation verbessert"
+                    else -> " · Continuum-Kandidat verworfen: "+coreReport.reason
+                }
             book.record(topic.area,count,msg)
             return topic.area+": "+msg
         } catch(e:Exception) {

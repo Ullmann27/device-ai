@@ -16,6 +16,7 @@ import at.heinz.deviceai.learning.MentorSource
 import at.heinz.deviceai.learning.MentorRecall
 import at.heinz.deviceai.learning.MentorAssociativeRecall
 import at.heinz.deviceai.learning.MentorSemanticRecall
+import at.heinz.deviceai.learning.ContinuumLearningCore
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -706,6 +707,10 @@ class AgentActivity : Activity() {
         card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
             setOnClickListener { showBootstrapTraining() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("CONTINUUM · LERNKERN V2").apply {
+            contentDescription = "Gemeinsamen persistenten Experience-, Replay- und Subword-Lernkern prüfen"
+            setOnClickListener { showContinuumLearningDashboard() }
+        }, matchWidth(top = 7))
         card.addView(actionButton("NEURON · JETZT TRAINIEREN", accent = true).apply {
             setOnClickListener {
                 val existing = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
@@ -1248,16 +1253,28 @@ class AgentActivity : Activity() {
                             command.text, command.label, true, cancellation::get, progressCallback
                         )
                         save = audit.accepted
+                        val coreAudit = runCatching {
+                            ContinuumLearningCore(filesDir).teachIntent(
+                                command.text, command.label, cancellation::get
+                            )
+                        }.getOrNull()
                         val expected = if (command.label == 1) audit.newExampleScoreAfter
                                        else 1.0 - audit.newExampleScoreAfter
                         measurement = "NEURON · LEHRPROBE: " +
-                            (if (audit.accepted) "Lernschritt übernommen. " else "Lernschritt verworfen. ") +
+                            (if (audit.accepted) "Tiny-Kern übernommen. " else "Tiny-Kern verworfen. ") +
                             "Gewichtsaktualisierungen: ${audit.training.steps}/800. " +
                             "Neuer Satz: %.1f%% Klassifikationswert. ".format(Locale.ROOT, expected * 100.0) +
                             "Ältere bestätigte Beispiele: ${audit.retainedBefore}/${audit.retainedTotal} → " +
                             "${audit.retainedAfter}/${audit.retainedTotal}. " +
                             audit.reason +
-                            " · Kontrollgruppe: bisher bestätigte Beispiele, kein unabhängiger Sprachtest."
+                            " · Kontrollgruppe: bisher bestätigte Beispiele, kein unabhängiger Sprachtest." +
+                            if(coreAudit==null) "\nCONTINUUM V2 · Lernkern nicht verfügbar; Tiny-Stand unverändert behandelt."
+                            else "\nCONTINUUM V2 · " +
+                                (if(coreAudit.accepted) "Subword-Kandidat übernommen" else "Subword-Kandidat verworfen") +
+                                " · Replay ${coreAudit.replayExamples} · Holdout " +
+                                "${coreAudit.holdoutBefore.correct}/${coreAudit.holdoutBefore.total} → " +
+                                "${coreAudit.holdoutAfter.correct}/${coreAudit.holdoutAfter.total} · " +
+                                coreAudit.reason
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {
@@ -1390,6 +1407,13 @@ class AgentActivity : Activity() {
             append("Mentor aus Quellen befragen: Mentor Wissen: Fotosynthese Pflanzen\n")
             append("Assoziationen prüfen: Mentor Verbindungen: Fotosynthese\n")
             append("Verteilungsmuster prüfen: Mentor Ähnlich: Pflanze\n")
+            runCatching { ContinuumLearningCore(filesDir).status() }.getOrNull()?.let { core ->
+                append("CONTINUUM V2: ").append(core.experiences.total).append(" Experiences · ")
+                    .append(core.modelUpdates).append(" Encoder-Updates · Intent-Holdout ")
+                    .append(core.intentHoldout.correct).append("/").append(core.intentHoldout.total)
+                    .append(" · Semantik-Holdout ").append(core.semanticHoldout.correct)
+                    .append("/").append(core.semanticHoldout.total).append("\n")
+            }
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
@@ -1408,6 +1432,42 @@ class AgentActivity : Activity() {
                         addAssistantMessage("Gelernte Befehlssätze gelöscht.")
                     }.show()
             }.show()
+    }
+
+    private fun showContinuumLearningDashboard() {
+        val status=runCatching { ContinuumLearningCore(filesDir).status() }
+        val message=status.fold(
+            onSuccess={ core ->
+                buildString {
+                    append("Persistenter gemeinsamer Lernkern v2\n\n")
+                    append("Experiences: ").append(core.experiences.total).append("/256\n")
+                    append("Bestätigte Intent-Lektionen: ").append(core.experiences.intentLabels).append("\n")
+                    append("Unbestätigte Mentor-Quellen: ").append(core.experiences.sourceObservations).append("\n")
+                    append("Trainings-Audits: ").append(core.experiences.audits).append("\n")
+                    append("Replay ausstehend: ").append(core.experiences.replayPending).append("\n")
+                    append("Als gelernt markiert: ").append(core.experiences.learned).append("\n\n")
+                    append("Trainierbarer Subword-Encoder: ").append(core.parameters).append(" Parameter\n")
+                    append("Gewichtsupdates: ").append(core.modelUpdates).append("\n")
+                    append("Intent-Holdout: ").append(core.intentHoldout.correct).append("/")
+                        .append(core.intentHoldout.total).append(" · Verlust ")
+                        .append("%.4f".format(Locale.ROOT,core.intentHoldout.loss)).append("\n")
+                    append("Semantik-Holdout: ").append(core.semanticHoldout.correct).append("/")
+                        .append(core.semanticHoldout.total).append(" · Verlust ")
+                        .append("%.4f".format(Locale.ROOT,core.semanticHoldout.loss)).append("\n\n")
+                    append("Vor jeder Lernrunde: Snapshot → begrenztes Replay → Training → Holdout-Vergleich. ")
+                    append("Bei Regression werden Kandidatengewichte verworfen. Mentor-Webtexte bleiben ")
+                    append("SOURCE_OBSERVATION und erhalten keine Fakten- oder Geräteautorität.")
+                    core.lastAudit?.let { append("\n\nLetzter Audit:\n").append(it.take(800)) }
+                }
+            },
+            onFailure={ error -> "Lernkernstatus nicht lesbar; vorhandene Lernstände wurden nicht verändert.\n"+
+                (error.message ?: error.javaClass.simpleName).take(240) }
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Continuum Learning Core v2")
+            .setMessage(message)
+            .setPositiveButton("Schließen",null)
+            .show()
     }
 
     private fun showConfirmForget() {
