@@ -280,6 +280,23 @@ class AgentActivity : Activity() {
         executor = DeviceToolExecutor(this, bridge)
 
         setContentView(buildUi())
+        // Public, bundled examples only. No internet access or owner-labelled data.
+        Thread({
+            runCatching {
+                ContinuumLearningCore(filesDir).bootstrapOfflineCurriculum()
+            }.onSuccess { report ->
+                if (report != null) runOnUiThread {
+                    addToolActivity("CONTINUUM · Offline-Basistraining: " +
+                        if (report.accepted) "angenommen (" + report.steps + " Updates)"
+                        else "Kandidat verworfen (Holdout-Schutz)")
+                }
+            }.onFailure { error ->
+                runOnUiThread {
+                    addToolActivity("CONTINUUM · Offline-Basistraining fehlgeschlagen: " +
+                        error.javaClass.simpleName)
+                }
+            }
+        }, "continuum-offline-bootstrap").apply { isDaemon = true; start() }
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
