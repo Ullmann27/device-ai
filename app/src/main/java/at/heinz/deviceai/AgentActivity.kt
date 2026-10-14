@@ -704,6 +704,8 @@ class AgentActivity : Activity() {
         }, LinearLayout.LayoutParams(0, dp(43), 1f))
         buttons.addView(actionButton("WEB RECHERCHE").apply {
             setOnClickListener { showResearchModeDialog() }
+            setOnLongClickListener { showInternetSettings(); true }
+            contentDescription = "Webrecherche starten. Lange drücken für Internetzugang-Einstellungen."
         }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
         card.addView(buttons, matchWidth(top = 10))
         card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
@@ -1852,7 +1854,33 @@ class AgentActivity : Activity() {
             }.show()
     }
 
+    private fun showInternetSettings() {
+        val preferences = getSharedPreferences("continuum-internet", MODE_PRIVATE)
+        val options = arrayOf("Auf Nachfrage (Standard)", "Aus (kein Webzugriff)")
+        val current = if (preferences.getString("mode", "ASK") == "OFF") 1 else 0
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · Internetzugang")
+            .setSingleChoiceItems(options, current) { dialog, selection ->
+                val mode = if (selection == 1)
+                    at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+                else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
+                internetConsent.setMode(mode)
+                preferences.edit().putString("mode", mode.name).apply()
+                researchArmed = false
+                addToolActivity("WEB · Internetmodus " + mode.name)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
+    }
+
     private fun showResearchModeDialog() {
+        internetConsent.setMode(
+            if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
+                    .getString("mode", "ASK") == "OFF")
+                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
+        )
         if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
             AlertDialog.Builder(this)
                 .setTitle("Internet ist ausgeschaltet")
