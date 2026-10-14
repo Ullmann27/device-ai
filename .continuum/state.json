@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 15,
+  "generation": 16,
   "createdAt": 1791957546095,
-  "updatedAt": 1791959223172,
+  "updatedAt": 1791959536532,
   "topics": [
     {
       "id": "topic-01",
@@ -3779,9 +3779,22 @@
         ],
         "complexity": 0.11454545454545455
       }
+    },
+    {
+      "at": 1791959535719,
+      "user": "Ullmann27",
+      "text": "/status",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [],
+        "complexity": 0.0031818181818181815
+      }
     }
   ],
-  "integrityHash": "bd64308cb2cd1c9691477a369379fc0a50fc75271c595cd056feb2b5237d4ac4",
+  "integrityHash": "98f0797acf86f73fb4ee180378f0f5175dd782f91a23a1a7d8eb96120827289f",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3811,7 +3824,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791959222552,
+    "updatedAt": 1791959535718,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4777,15 +4790,15 @@
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 7,
-      "meanLength": 54.142857142857146,
+      "total": 8,
+      "meanLength": 48.25,
       "meanUrgency": 0.35000000000000003,
       "speechActs": {
-        "STATEMENT": 6,
+        "STATEMENT": 7,
         "QUESTION": 1
       },
       "affects": {
-        "NEUTRAL": 7
+        "NEUTRAL": 8
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
@@ -4794,37 +4807,10 @@
     "ownerRules": []
   },
   "worldModel": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "createdAt": 1791958865069,
-    "updatedAt": 1791959222553,
+    "updatedAt": 1791959535718,
     "hypotheses": [
-      {
-        "id": "hyp-5f994714174f1e626f80",
-        "claim": "Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-        "beliefIds": [
-          "belief-e6611a503b501f7f27d2"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463",
-          "https://ojs.aaai.org/index.php/AAAI-SS/article/view/42908"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791959222553,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
-        ]
-      },
       {
         "id": "hyp-804e497294cae0847046",
         "claim": "Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
@@ -4840,8 +4826,8 @@
           "https://ojs.aaai.org/index.php/AAAI-SS/article/view/42908"
         ],
         "baseConfidence": 0.7320909090909091,
-        "confidence": 0.95,
-        "status": "SUPPORTED",
+        "confidence": 0.84,
+        "status": "PROVISIONAL",
         "attempts": 1,
         "supportEvidence": [
           {
@@ -4863,7 +4849,38 @@
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
           "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
-        ]
+        ],
+        "independentSupportEvents": 1,
+        "independentContradictEvents": 0
+      },
+      {
+        "id": "hyp-5f994714174f1e626f80",
+        "claim": "Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
+        "beliefIds": [
+          "belief-e6611a503b501f7f27d2"
+        ],
+        "citationUrls": [
+          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
+          "https://doi.org/10.1016/j.patcog.2026.114745",
+          "https://arxiv.org/abs/2608.29772",
+          "https://doi.org/10.24963/ijcai.2019/463",
+          "https://ojs.aaai.org/index.php/AAAI-SS/article/view/42908"
+        ],
+        "baseConfidence": 0.7320909090909091,
+        "confidence": 0.7320909090909091,
+        "status": "PROVISIONAL",
+        "attempts": 0,
+        "supportEvidence": [],
+        "contradictEvidence": [],
+        "inconclusiveEvidence": [],
+        "createdAt": 1791959535718,
+        "lastTestedAt": null,
+        "testQuestions": [
+          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
+          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
+        ],
+        "independentSupportEvents": 0,
+        "independentContradictEvents": 0
       },
       {
         "id": "hyp-2e61b12daa32562e697b",
@@ -4881,12 +4898,14 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791959222553,
+        "createdAt": 1791959535718,
         "lastTestedAt": null,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
           "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space."
-        ]
+        ],
+        "independentSupportEvents": 0,
+        "independentContradictEvents": 0
       }
     ],
     "history": [
