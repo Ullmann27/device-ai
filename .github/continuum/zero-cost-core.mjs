@@ -55,6 +55,7 @@ function freshState() {
     cycles: [],
     interactions: [],
     strategyStats: defaultStrategyStats(),
+    strategyRewardVersion:2,
     baby: createBabyState(now),
     worldModel:createWorldModel(now),
     integrityHash: ""
@@ -95,12 +96,21 @@ function loadState() {
     const migrated=structuredClone(state);
     migrated.schemaVersion=5;
     migrated.worldModel=createWorldModel();
+    migrated.strategyStats=defaultStrategyStats();
+    migrated.strategyRewardVersion=2;
+    migrated.baby=migrateBabyState(migrated.baby);
+    syncWorldModelFromBaby(migrated);
     migrated.integrityHash=hashState(migrated);
     return migrated;
   }
   if (state.schemaVersion !== 5) throw new Error("Unsupported state schema");
   state.baby = migrateBabyState(state.baby);
   state.worldModel=migrateWorldModel(state.worldModel);
+  if(state.strategyRewardVersion!==2){
+    state.strategyStats=defaultStrategyStats();
+    state.strategyRewardVersion=2;
+  }
+  if(!state.worldModel.hypotheses.length && state.baby.beliefs.length)syncWorldModelFromBaby(state);
   return state;
 }
 
@@ -116,6 +126,7 @@ function saveState(state) {
   state.edges = trimObject(state.edges, 2400);
   state.baby = migrateBabyState(state.baby);
   state.worldModel=migrateWorldModel(state.worldModel);
+  state.strategyRewardVersion=2;
   state.integrityHash = hashState(state);
   fs.mkdirSync(".continuum", { recursive: true });
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
@@ -663,9 +674,12 @@ async function deepResearchTurn(state,query){
       uncertainty:Math.max(0.08,1-Math.min(.9,reward/11)),
       nextQuestions:["Welche Evidenz würde diesen Teilplan am stärksten falsifizieren?"]
     });
+    const stepSkills=[step.skill,"research","self-check"];
+    if(step.id==="interaction")stepSkills.push("affect-understanding","communication");
+    if(step.id==="metacognition")stepSkills.push("planning","memory-retrieval");
     state.baby=recordOutcome(epi.baby,{
       goalId:rootGoal?.id,
-      skills:[step.skill,"research","self-check"],
+      skills:[...new Set(stepSkills)],
       success:true,reward,
       reflection:"Deep-Research-Teil "+step.id+" mit Strategie "+strategyId+" und "+retrieval.sources.length+" Quellen."
     });
