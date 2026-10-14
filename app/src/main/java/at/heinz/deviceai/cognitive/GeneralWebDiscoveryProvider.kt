@@ -36,6 +36,9 @@ class GeneralWebDiscoveryProvider(
                 val uri = runCatching { java.net.URI(url) }.getOrNull() ?: return@mapNotNull null
                 if (uri.scheme != "https" || uri.host.isNullOrBlank() || uri.userInfo != null) return@mapNotNull null
                 if (uri.host.endsWith("google.com") || uri.host.endsWith("google.at")) return@mapNotNull null
+                if (uri.host.endsWith(".local") || uri.host.endsWith(".internal") ||
+                    uri.host.endsWith(".test") || uri.host.endsWith(".invalid") ||
+                    uri.host == "localhost" || uri.port !in listOf(-1, 443)) return@mapNotNull null
                 ResearchSourceCandidate(url, uri.host, "general-web-search")
             }.distinctBy { it.url }.take(8).toList()
         }
