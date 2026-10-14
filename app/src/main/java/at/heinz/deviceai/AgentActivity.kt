@@ -969,7 +969,7 @@ class AgentActivity : Activity() {
                         addToolActivity("WEB · Zugriff abgelehnt")
                     }
                     .setPositiveButton("Einmal erlauben") { _, _ ->
-                        if (internetConsent.approve(request)) {
+                        if (at.heinz.deviceai.cognitive.InternetResearchGate(internetConsent).authorize(request)) {
                             input.text.clear()
                             addUserMessage(request)
                             runResearch(request, researchMode)
@@ -1977,7 +1977,7 @@ class AgentActivity : Activity() {
             .setMessage("Diese Frage wird zur Recherche an öffentliche Dienste übertragen. Gilt nur für diese Anfrage.\\n\\n" + question.take(512))
             .setNegativeButton("Ablehnen") { _, _ -> internetConsent.cancel() }
             .setPositiveButton("Einmal erlauben") { _, _ ->
-                if (internetConsent.approve(question) && !busy) {
+                if (!busy && at.heinz.deviceai.cognitive.InternetResearchGate(internetConsent).authorize(question)) {
                     addUserMessage(question)
                     runResearch(question, selectedMode)
                 }
@@ -1985,6 +1985,13 @@ class AgentActivity : Activity() {
     }
 
     private fun runResearch(question: String, mode: ResearchMode) {
+        // Both UI paths require explicit one-time consent before entering this method.
+        // A persisted OFF switch fails closed even if a permission dialog was opened earlier.
+        if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
+                .getString("mode", "ASK") == "OFF") {
+            addToolActivity("WEB · Internetmodus AUS")
+            return
+        }
         if (!ResearchOptInPolicy.shouldResearch(question, explicitButtonSelected = true)) return
         activeLocalRequest = true
         activeResearchCancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
