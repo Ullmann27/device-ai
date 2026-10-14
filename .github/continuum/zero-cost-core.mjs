@@ -110,7 +110,7 @@ function loadState() {
     state.strategyStats=defaultStrategyStats();
     state.strategyRewardVersion=2;
   }
-  if(!state.worldModel.hypotheses.length && state.baby.beliefs.length)syncWorldModelFromBaby(state);
+  syncWorldModelFromBaby(state);
   return state;
 }
 
@@ -630,9 +630,16 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
     reflection:"Rechercheweg "+strategyId+" lieferte "+sources.length+" relevante Quellen; Synthese="+observation.synthesisModel
   });
   syncWorldModelFromBaby(state);
+  let hypothesisEvaluation=null;
   if(hypothesisId){
     const tested=evaluateHypothesisEvidence(state.worldModel,hypothesisId,{text:answer,citations:observation.citations});
     state.worldModel=tested.model;
+    hypothesisEvaluation=tested.hypothesis?{
+      id:tested.hypothesis.id,
+      classification:tested.classification,
+      status:tested.hypothesis.status,
+      confidence:tested.hypothesis.confidence
+    }:null;
   }
   const nextBabyGoal=selectGoal(state.baby);
   if(nextBabyGoal)state.queue.push(nextBabyGoal.text);
@@ -640,13 +647,23 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
     "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: " + query,
     "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: " + query
   );
-  return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null };
+  return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null, hypothesisEvaluation };
 }
 
 function syncWorldModelFromBaby(state){
   state.worldModel=migrateWorldModel(state.worldModel);
-  for(const belief of state.baby.beliefs.slice(-24)){
-    if(!belief.citationUrls?.length)continue;
+  const eligible=state.baby.beliefs.filter(b=>
+    b.status==="GROUNDED_OBSERVATION" &&
+    Number(b.confidence??0)>=.68 &&
+    Number(b.supportCount??0)>=1 &&
+    Number(b.sourceDiversity??0)>=1 &&
+    String(b.text??"").split(/\s+/).length>=8
+  );
+  const eligibleIds=new Set(eligible.map(x=>x.id));
+  state.worldModel.hypotheses=state.worldModel.hypotheses.filter(h=>
+    h.status!=="PROVISIONAL" || h.beliefIds.some(id=>eligibleIds.has(id))
+  );
+  for(const belief of eligible.slice(-32)){
     const p=proposeHypothesis(state.worldModel,{
       claim:belief.text,beliefId:belief.id,citationUrls:belief.citationUrls,
       confidence:belief.confidence
@@ -771,6 +788,9 @@ function formatResearch(query, turn, state) {
     turn.answer,
     "",
     related.length ? "**Assoziativ gelernte Begriffe:** " + related.join(", ") : "",
+    turn.hypothesisEvaluation ? "**Hypothesenprüfung:** "+turn.hypothesisEvaluation.classification+
+      " · "+turn.hypothesisEvaluation.status+
+      " · Vertrauen "+(turn.hypothesisEvaluation.confidence*100).toFixed(1)+"%" : "",
     "",
     "### Quellen",
     refs,
@@ -815,6 +835,26 @@ try {
     state.interactions.push({ at:Date.now(), user:COMMENT_USER, text:clean(body,1000), analysis:interactionAnalysis });
     if (lower === "/status" || lower === "status") {
       await reply(statusText(state));
+    } else if(lower==="/hypotheses"){
+      syncWorldModelFromBaby(state);
+      const items=state.worldModel.hypotheses
+        .slice().sort((a,b)=>b.confidence-a.confidence)
+        .slice(0,12);
+      const bodyText=items.length
+        ? items.map(h=>"- `"+h.id+"` · "+h.status+" · "+(h.confidence*100).toFixed(1)+"%\n  "+h.claim).join("\n")
+        : "Noch keine hinreichend gestützte Hypothese im Rulebook.";
+      await reply("## Continuum · World-Model Hypothesen\n\n"+bodyText+"\n\nMit `/verify <hyp-id>` kann eine Hypothese gezielt gegen neue öffentliche Evidenz geprüft werden.");
+    } else if(lower.startsWith("/verify ")){
+      syncWorldModelFromBaby(state);
+      const id=body.slice(8).trim();
+      const h=state.worldModel.hypotheses.find(x=>x.id===id);
+      if(!h)await reply("Hypothese nicht gefunden. Verwende zuerst `/hypotheses`.");
+      else{
+        const question=h.testQuestions[h.attempts%h.testQuestions.length];
+        const turn=await researchTurn(state,question,true,null,h.id);
+        state.cycles.push({at:Date.now(),query:question,success:true,sourceCount:turn.sources.length,interactive:true,verifyHypothesis:h.id});
+        await reply(formatResearch(question,turn,state));
+      }
     } else if (lower.startsWith("/rule ")) {
       const added=addOwnerRule(state.baby,body.slice(6));
       state.baby=added.baby;
