@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 13,
+  "generation": 14,
   "createdAt": 1791957546095,
-  "updatedAt": 1791959064650,
+  "updatedAt": 1791959158087,
   "topics": [
     {
       "id": "topic-01",
@@ -3697,9 +3697,24 @@
         ],
         "complexity": 0.10500000000000001
       }
+    },
+    {
+      "at": 1791959157405,
+      "user": "Ullmann27",
+      "text": "/hypotheses",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [
+          "/hypotheses"
+        ],
+        "complexity": 0.10500000000000001
+      }
     }
   ],
-  "integrityHash": "c1402a172060a9df286e14df0092bc904e4dd3fa4766696b788bdda02786769c",
+  "integrityHash": "0a36dd6ba33e87b0880d7e740bab0e5c2e27d507bb186b26eb4a954e4d5fd20e",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3729,7 +3744,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791959063686,
+    "updatedAt": 1791959157404,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4583,15 +4598,15 @@
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 5,
-      "meanLength": 67.2,
-      "meanUrgency": 0.35,
+      "total": 6,
+      "meanLength": 57.833333333333336,
+      "meanUrgency": 0.35000000000000003,
       "speechActs": {
-        "STATEMENT": 4,
+        "STATEMENT": 5,
         "QUESTION": 1
       },
       "affects": {
-        "NEUTRAL": 5
+        "NEUTRAL": 6
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
@@ -4602,11 +4617,11 @@
   "worldModel": {
     "schemaVersion": 1,
     "createdAt": 1791958865069,
-    "updatedAt": 1791959063687,
+    "updatedAt": 1791959157405,
     "hypotheses": [
       {
-        "id": "hyp-e6611a503b501f7f27d2",
-        "claim": "[1] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
+        "id": "hyp-5f994714174f1e626f80",
+        "claim": "Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
         "beliefIds": [
           "belief-e6611a503b501f7f27d2"
         ],
@@ -4624,18 +4639,19 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
+        "createdAt": 1791959157405,
         "lastTestedAt": null,
         "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [1] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [1] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
+          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
+          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
         ]
       },
       {
-        "id": "hyp-b8b11e810240232834cc",
-        "claim": "[4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "id": "hyp-804e497294cae0847046",
+        "claim": "Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
         "beliefIds": [
-          "belief-b8b11e810240232834cc"
+          "belief-b8b11e810240232834cc",
+          "belief-16685bd02c759e7c50c8"
         ],
         "citationUrls": [
           "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
@@ -4651,63 +4667,16 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
+        "createdAt": 1791959157405,
         "lastTestedAt": null,
         "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
+          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
         ]
       },
       {
-        "id": "hyp-69b6969f16a1328f2463",
-        "claim": "[2] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-        "beliefIds": [
-          "belief-69b6969f16a1328f2463"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://doi.org/10.1609/aaaiss.v9i1.42908"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [2] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [2] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay."
-        ]
-      },
-      {
-        "id": "hyp-16685bd02c759e7c50c8",
-        "claim": "[3] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
-        "beliefIds": [
-          "belief-16685bd02c759e7c50c8"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
-        ]
-      },
-      {
-        "id": "hyp-1d650bb9852015ba792c",
-        "claim": "[3] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
+        "id": "hyp-2e61b12daa32562e697b",
+        "claim": "Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
         "beliefIds": [
           "belief-1d650bb9852015ba792c"
         ],
@@ -4721,103 +4690,11 @@
         "supportEvidence": [],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
+        "createdAt": 1791959157405,
         "lastTestedAt": null,
         "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space."
-        ]
-      },
-      {
-        "id": "hyp-600daa2288867b7c730f",
-        "claim": "[3] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol.",
-        "beliefIds": [
-          "belief-600daa2288867b7c730f"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol."
-        ]
-      },
-      {
-        "id": "hyp-d445018bc13b37b11ebd",
-        "claim": "[3] ### evidence Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-d445018bc13b37b11ebd"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] ### evidence Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] ### evidence Continual learning and catastrophic forgetting."
-        ]
-      },
-      {
-        "id": "hyp-31a07ff19d83af64e4d2",
-        "claim": "[3] ### failure Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-31a07ff19d83af64e4d2"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962927,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] ### failure Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] ### failure Continual learning and catastrophic forgetting."
-        ]
-      },
-      {
-        "id": "hyp-3603994cbf026d855ec9",
-        "claim": "[4] ### implementation Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-3603994cbf026d855ec9"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/j.patcog.2026.114745"
-        ],
-        "baseConfidence": 0.7320909090909091,
-        "confidence": 0.7320909090909091,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962927,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] ### implementation Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] ### implementation Continual learning and catastrophic forgetting."
+          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
+          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space."
         ]
       }
     ],
