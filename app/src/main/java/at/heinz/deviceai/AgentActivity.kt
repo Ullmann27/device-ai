@@ -1552,8 +1552,8 @@ class AgentActivity : Activity() {
             "\nVerteilungswörter: " + runCatching { notebook.semanticModel().vocabularySize }.getOrDefault(0) +
             "\nAktive Repräsentationsdimensionen: " + runCatching { notebook.semanticModel().activeDimensions }.getOrDefault(0) +
             "\nLetzter Stand: " + notebook.status +
-            "\n\nLehrplan: 30 Fachgebiete, rotierend. Android plant bei Ladebetrieb und " +
-            "Internetverbindung ungefähr alle 6 Stunden neue Recherchen. " +
+            "\n\nLehrplan: 30 Start-Fachgebiete plus quellengestützte Vertiefungen. Android plant bei Ladebetrieb und " +
+            "Internetverbindung ungefähr stündlich neue Recherchen. " +
             "Quellen bleiben unbestätigt. Zusätzlich zum direkten Begriffsnetz lernt ein kleines " +
             "lokales Verteilungsmodell ähnliche Kontexte über mehrere Quellen. " +
             "Im Chat: Mentor Verbindungen: Fotosynthese oder Mentor Ähnlich: Pflanze. " +

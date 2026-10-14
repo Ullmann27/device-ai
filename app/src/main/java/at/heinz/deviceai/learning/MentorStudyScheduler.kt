@@ -124,8 +124,9 @@ class MentorStudyScheduler(context:Context) {
         val book=notebook
         if(!book.enabled || cancelled())return "Wissensforscher ausgeschaltet."
         if(!BUSY.compareAndSet(false,true))return "Ein Studienzyklus läuft bereits."
-        val topic=MentorCurriculum.select(book.attempts)
+        var topic=MentorCurriculum.select(book.attempts)
         try {
+            topic=MentorCuriosityPlanner.select(book.attempts,book.entries())
             val found=MentorResearchCycle().read(topic)
             if(cancelled() || !book.enabled)return "Studium abgebrochen."
             val count=book.add(found)
@@ -143,11 +144,12 @@ class MentorStudyScheduler(context:Context) {
     private fun schedule():Boolean {
         val job=JobInfo.Builder(JOB_ID,ComponentName(app,MentorStudyJobService::class.java))
             .setRequiresCharging(true).setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-            .setPeriodic(6*60*60*1000L).setPersisted(true).build()
+            .setPeriodic(PERIOD_MS).setPersisted(true).build()
         return jobs.schedule(job)==JobScheduler.RESULT_SUCCESS
     }
     companion object {
         const val JOB_ID=620133
+        const val PERIOD_MS=60*60*1000L
         private val BUSY=AtomicBoolean(false)
     }
 }
