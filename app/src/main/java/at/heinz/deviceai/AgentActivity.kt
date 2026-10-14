@@ -2053,20 +2053,6 @@ class AgentActivity : Activity() {
         }
         localAgentExecutor.execute {
             val result = runCatching {
-                // The typed read-only web tool is now the first discovery stage.
-                // Consent was granted for this exact question in the Android dialog;
-                // execution stays bounded by the existing research engine.
-                val typedRequest = if (urls.isEmpty())
-                    at.heinz.deviceai.cognitive.WebToolRequest.Search(question.take(512))
-                else at.heinz.deviceai.cognitive.WebToolRequest.Read(urls.first())
-                val approvedTool = at.heinz.deviceai.cognitive.ApprovedWebToolGate(
-                    at.heinz.deviceai.cognitive.InternetConsentPolicy(),
-                    WikipediaResearchDiscoveryProvider()
-                )
-                // Research engine remains the sole source-fetching executor.
-                // No second network call or implicit permission is introduced.
-                require(typedRequest is at.heinz.deviceai.cognitive.WebToolRequest.Search ||
-                    typedRequest is at.heinz.deviceai.cognitive.WebToolRequest.Read)
                 val savedQuestion = runCatching { researchStore.loadLatest()?.plan?.question }.getOrNull()
                 val canResume = shouldResume && savedQuestion == question
                 if (shouldResume && !canResume) {
