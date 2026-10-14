@@ -41,6 +41,9 @@ class TrainableSubwordEncoder private constructor(
 
     val parameterCount:Int get()=embeddings.size+intentHead.size
 
+    /** Immutable shared representation for experimental decoder conditioning. */
+    @Synchronized fun representation(text:String):DoubleArray = encode(text)
+
     @Synchronized fun intentScore(text:String):Double {
         val z=encode(text)
         var logit=intentHead[DIMENSIONS]
@@ -248,3 +251,4 @@ class TrainableSubwordEncoder private constructor(
         }
     }
 }
+
