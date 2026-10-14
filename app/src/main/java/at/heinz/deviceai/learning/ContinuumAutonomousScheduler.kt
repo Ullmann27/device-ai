@@ -39,7 +39,17 @@ class ContinuumAutonomousJobService:JobService() {
                     val core=ContinuumLearningCore(filesDir)
                     core.bootstrapOfflineCurriculum(stopped::get)
                     if(!stopped.get())core.bootstrapSemanticCurriculum(stopped::get)
+                    // Learn only from sources already recorded by the consent-gated
+                    // research flow. The job itself never initiates internet access.
+                    if(!stopped.get()) {
+                        val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)
+                            .entries().takeLast(12)
+                        if(approved.isNotEmpty())core.learnFromSources(approved,stopped::get)
+                    }
                 }
+            } catch (_: Exception) {
+                // The next scheduled run may retry; a rejected candidate never
+                // replaces the last durable model snapshot.
             } finally {
                 if(!stopped.get())jobFinished(params,false)
             }
