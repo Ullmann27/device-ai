@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 12,
+  "generation": 13,
   "createdAt": 1791957546095,
-  "updatedAt": 1791958963554,
+  "updatedAt": 1791959064650,
   "topics": [
     {
       "id": "topic-01",
@@ -3682,9 +3682,24 @@
         "clauses": [],
         "complexity": 0.0031818181818181815
       }
+    },
+    {
+      "at": 1791959063687,
+      "user": "Ullmann27",
+      "text": "/hypotheses",
+      "analysis": {
+        "speechAct": "STATEMENT",
+        "affect": "NEUTRAL",
+        "urgency": 0.35,
+        "constraints": [],
+        "clauses": [
+          "/hypotheses"
+        ],
+        "complexity": 0.10500000000000001
+      }
     }
   ],
-  "integrityHash": "958b656d3138357ea684efefadce1e4d87023866fa64d8fdb13b5592b9e049a8",
+  "integrityHash": "c1402a172060a9df286e14df0092bc904e4dd3fa4766696b788bdda02786769c",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -3714,7 +3729,7 @@
   "baby": {
     "schemaVersion": 2,
     "createdAt": 1791958271293,
-    "updatedAt": 1791958962927,
+    "updatedAt": 1791959063686,
     "beliefs": [
       {
         "id": "belief-5f994714174f1e626f80",
@@ -4568,15 +4583,15 @@
       "contradictions": 0
     },
     "interactionProfile": {
-      "total": 4,
-      "meanLength": 81.25,
+      "total": 5,
+      "meanLength": 67.2,
       "meanUrgency": 0.35,
       "speechActs": {
-        "STATEMENT": 3,
+        "STATEMENT": 4,
         "QUESTION": 1
       },
       "affects": {
-        "NEUTRAL": 4
+        "NEUTRAL": 5
       },
       "constraints": {
         "ohne irrelevante quellen oder bloße stichwortüberschneidungen als wissen zu über": 1
@@ -4587,61 +4602,8 @@
   "worldModel": {
     "schemaVersion": 1,
     "createdAt": 1791958865069,
-    "updatedAt": 1791958962927,
+    "updatedAt": 1791959063687,
     "hypotheses": [
-      {
-        "id": "hyp-9abe0d3cc43d190b314e",
-        "claim": "[4] SAGE learns a predictive world model that generates two online intrinsic signals: fear, which estimates short-horizon predictive risk and model uncertainty, and curiosity, which measures novelty through prediction error.",
-        "beliefIds": [
-          "belief-9abe0d3cc43d190b314e"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.48550/arxiv.2608.29772"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] SAGE learns a predictive world model that generates two online intrinsic signals: fear, which estimates short-horizon predictive risk and model uncertainty, and curiosity, which measures novelty through prediction error.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] SAGE learns a predictive world model that generates two online intrinsic signals: fear, which estimates short-horizon predictive risk and model uncertainty, and curiosity, which measures novelty through prediction error."
-        ]
-      },
-      {
-        "id": "hyp-9219917fb4f803e98773",
-        "claim": "Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-9219917fb4f803e98773"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Continual learning and catastrophic forgetting."
-        ]
-      },
       {
         "id": "hyp-e6611a503b501f7f27d2",
         "claim": "[1] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
@@ -4670,84 +4632,6 @@
         ]
       },
       {
-        "id": "hyp-5454e8263b7c063a42ab",
-        "claim": "[2] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
-        "beliefIds": [
-          "belief-5454e8263b7c063a42ab"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [2] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [2] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure."
-        ]
-      },
-      {
-        "id": "hyp-8060e3bf77dfd726fa58",
-        "claim": "[3] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-        "beliefIds": [
-          "belief-8060e3bf77dfd726fa58"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.657,
-        "confidence": 0.657,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay."
-        ]
-      },
-      {
-        "id": "hyp-d56ae79fc3fd3529df7f",
-        "claim": "[4] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
-        "beliefIds": [
-          "belief-d56ae79fc3fd3529df7f"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962923,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] Inspired from complementary learning systems theory, we address this challenge by learning a generative model that couples the current task to the past learned tasks through a discriminative embedding space."
-        ]
-      },
-      {
         "id": "hyp-b8b11e810240232834cc",
         "claim": "[4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
         "beliefIds": [
@@ -4772,196 +4656,6 @@
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
           "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
-        ]
-      },
-      {
-        "id": "hyp-7b2773e770a91d4243af",
-        "claim": "Ueber die bewegende Kraft der Wärme und die Gesetze, welche sich daraus für die Wärmelehre selbst ableiten lassen.",
-        "beliefIds": [
-          "belief-7b2773e770a91d4243af"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962924,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Ueber die bewegende Kraft der Wärme und die Gesetze, welche sich daraus für die Wärmelehre selbst ableiten lassen.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Ueber die bewegende Kraft der Wärme und die Gesetze, welche sich daraus für die Wärmelehre selbst ableiten lassen."
-        ]
-      },
-      {
-        "id": "hyp-3ccc44608dac8d1d3514",
-        "claim": "[1] Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-3ccc44608dac8d1d3514"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962924,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [1] Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [1] Continual learning and catastrophic forgetting."
-        ]
-      },
-      {
-        "id": "hyp-a2bab8333155917fdd55",
-        "claim": "[2] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-        "beliefIds": [
-          "belief-a2bab8333155917fdd55"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463",
-          "https://doi.org/10.1007/978-3-658-41914-1_4"
-        ],
-        "baseConfidence": 0.657,
-        "confidence": 0.657,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962924,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [2] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [2] Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
-        ]
-      },
-      {
-        "id": "hyp-400e518777ee41e6f245",
-        "claim": "[3] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
-        "beliefIds": [
-          "belief-400e518777ee41e6f245"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962925,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Lee , Dimitrios Kanoulas View a PDF of the paper titled Self-Aware Active Learning Enables Continual Improvement in Autonomous Driving, by Dong Hu and 2 other authors View PDF HTML (experimental) Abstract: Learning-based autonomous driving (AD) systems can perform reliably in familiar conditions, yet rare distribution shifts and long-tail events remain a major source of abrupt failure."
-        ]
-      },
-      {
-        "id": "hyp-d9f73c7c01f0eb71e3ed",
-        "claim": "[4] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-        "beliefIds": [
-          "belief-d9f73c7c01f0eb71e3ed"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0",
-          "https://doi.org/10.1016/j.patcog.2026.114745",
-          "https://arxiv.org/abs/2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962925,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] Complementary Learning for Overcoming Catastrophic Forgetting Using Experience Replay."
-        ]
-      },
-      {
-        "id": "hyp-d632f88c8bc2a9b571c1",
-        "claim": "### mechanism Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-        "beliefIds": [
-          "belief-d632f88c8bc2a9b571c1"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.48550/arxiv.2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463",
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1002/andp.18501550306",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962925,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: ### mechanism Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: ### mechanism Learning to Replay: A meta-reinforcement learning approach to experience replay in continual learning."
-        ]
-      },
-      {
-        "id": "hyp-294b620e47e7a62b9ac6",
-        "claim": "[5] ### evidence Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-294b620e47e7a62b9ac6"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.48550/arxiv.2608.29772",
-          "https://doi.org/10.24963/ijcai.2019/463",
-          "https://doi.org/10.1002/andp.18501550403",
-          "https://doi.org/10.1002/andp.18501550306",
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0"
-        ],
-        "baseConfidence": 0.55,
-        "confidence": 0.55,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962925,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [5] ### evidence Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [5] ### evidence Continual learning and catastrophic forgetting."
         ]
       },
       {
@@ -5055,77 +4749,6 @@
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [3] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol.",
           "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [3] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol."
-        ]
-      },
-      {
-        "id": "hyp-f2e903231a97edc70516",
-        "claim": "[1] Welche Erkenntnis vermag quantitative Forschung zu Wissen um und Erinnerung von Geschichtsereignissen im Rahmen der Gedächtnissoziologie zu vermitteln?.",
-        "beliefIds": [
-          "belief-f2e903231a97edc70516"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.1016/b978-0-443-15754-7.00073-0"
-        ],
-        "baseConfidence": 0.657,
-        "confidence": 0.657,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [1] Welche Erkenntnis vermag quantitative Forschung zu Wissen um und Erinnerung von Geschichtsereignissen im Rahmen der Gedächtnissoziologie zu vermitteln?.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [1] Welche Erkenntnis vermag quantitative Forschung zu Wissen um und Erinnerung von Geschichtsereignissen im Rahmen der Gedächtnissoziologie zu vermitteln?."
-        ]
-      },
-      {
-        "id": "hyp-1c34999a6b44082906e9",
-        "claim": "[4] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol.",
-        "beliefIds": [
-          "belief-1c34999a6b44082906e9"
-        ],
-        "citationUrls": [
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.657,
-        "confidence": 0.657,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: [4] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: [4] Mitigating Catastrophic Forgetting in Robotic Waste Sorting: A Continual Learning Framework with Dynamic Experience Replay | Proceedings of the AAAI Symposium Series Skip to main content Skip to main navigation menu Skip to site footer Open Menu Current Archives About About the Journal Submissions Privacy Statement Contact Search Register Login Home / Archives / Vol."
-        ]
-      },
-      {
-        "id": "hyp-8c0c6c962dfa1cc844ce",
-        "claim": "mechanism Continual learning and catastrophic forgetting.",
-        "beliefIds": [
-          "belief-604b00b35d66a42e3f4d"
-        ],
-        "citationUrls": [
-          "https://ojs.aaai.org/index.php/AAAI-SS/article/view/42908",
-          "https://doi.org/10.1609/aaaiss.v9i1.42908",
-          "https://doi.org/10.24963/ijcai.2019/463"
-        ],
-        "baseConfidence": 0.6490909090909092,
-        "confidence": 0.6490909090909092,
-        "status": "PROVISIONAL",
-        "attempts": 0,
-        "supportEvidence": [],
-        "contradictEvidence": [],
-        "inconclusiveEvidence": [],
-        "createdAt": 1791958962926,
-        "lastTestedAt": null,
-        "testQuestions": [
-          "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: mechanism Continual learning and catastrophic forgetting.",
-          "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: mechanism Continual learning and catastrophic forgetting."
         ]
       },
       {
