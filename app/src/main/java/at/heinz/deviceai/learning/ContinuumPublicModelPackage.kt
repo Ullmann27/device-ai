@@ -13,6 +13,7 @@ object ContinuumPublicModelPackage {
 
     fun verify(model:ByteArray,manifestText:String):Verified {
         require(model.size==32960) { "Ungültige Modellgröße" }
+        require(model.copyOfRange(0,4).contentEquals(byteArrayOf(83,87,66,49))) { "Ungültiger SWB1-Header" }
         require(manifestText.length in 30..16384) { "Ungültige Manifestgröße" }
         val json=JSONObject(manifestText)
         require(json.optInt("schemaVersion")==1) { "Unbekannte Paketversion" }
