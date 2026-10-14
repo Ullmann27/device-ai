@@ -650,22 +650,37 @@ async function researchTurn(state, query, interact = false, goalId = null, hypot
   return { observation, answer, sources, copilot: Boolean(copilot), synthesisModel: copilot?.model ?? null, hypothesisEvaluation };
 }
 
+function hypothesisCandidateText(value){
+  const text=String(value??"")
+    .replace(/^\s*\[\d{1,2}\]\s*/,"")
+    .replace(/^\s*#+\s*(mechanism|evidence|failure|implementation|interaction|metacognition)\s*/i,"")
+    .replace(/\s+/g," ").trim();
+  const words=text.split(/\s+/).filter(Boolean);
+  if(words.length<12)return null;
+  if(/skip to main|main navigation|site footer|open menu|current archives|privacy statement|register login|view pdf html|home\s*\/\s*archives/i.test(text))return null;
+  return text.slice(0,650);
+}
+
 function syncWorldModelFromBaby(state){
   state.worldModel=migrateWorldModel(state.worldModel);
-  const eligible=state.baby.beliefs.filter(b=>
-    b.status==="GROUNDED_OBSERVATION" &&
-    Number(b.confidence??0)>=.68 &&
-    Number(b.supportCount??0)>=1 &&
-    Number(b.sourceDiversity??0)>=1 &&
-    String(b.text??"").split(/\s+/).length>=8
-  );
-  const eligibleIds=new Set(eligible.map(x=>x.id));
+  const eligible=state.baby.beliefs.map(b=>({belief:b,claim:hypothesisCandidateText(b.text)}))
+    .filter(x=>
+      x.claim &&
+      x.belief.status==="GROUNDED_OBSERVATION" &&
+      Number(x.belief.confidence??0)>=.68 &&
+      Number(x.belief.supportCount??0)>=1 &&
+      Number(x.belief.sourceDiversity??0)>=1
+    );
+
+  // Untested provisional hypotheses are rebuilt from normalized grounded beliefs.
+  // Anything already tested, supported or disputed keeps its history.
   state.worldModel.hypotheses=state.worldModel.hypotheses.filter(h=>
-    h.status!=="PROVISIONAL" || h.beliefIds.some(id=>eligibleIds.has(id))
+    h.status!=="PROVISIONAL" || Number(h.attempts??0)>0
   );
-  for(const belief of eligible.slice(-32)){
+
+  for(const {belief,claim} of eligible.slice(-32)){
     const p=proposeHypothesis(state.worldModel,{
-      claim:belief.text,beliefId:belief.id,citationUrls:belief.citationUrls,
+      claim,beliefId:belief.id,citationUrls:belief.citationUrls,
       confidence:belief.confidence
     });
     state.worldModel=p.model;
