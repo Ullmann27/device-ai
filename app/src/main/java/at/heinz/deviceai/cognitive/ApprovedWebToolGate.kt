@@ -31,7 +31,7 @@ class ApprovedWebToolGate(
                 val uri = runCatching { URI(call.url) }.getOrNull() ?: return false
                 if (uri.scheme != "https" || uri.host.isNullOrBlank() ||
                     uri.userInfo != null || (uri.port != -1 && uri.port != 443)) return false
-                // Exact same validator as the hardened HTTPS retrieval provider.
+                // Early syntactic defense; the hardened provider validates DNS and redirects.
                 // Do not resolve DNS here; that belongs in the I/O stage.
                 val host = uri.host.lowercase(java.util.Locale.ROOT).trimEnd('.')
                 if (!host.contains('.') || host == "localhost" ||
