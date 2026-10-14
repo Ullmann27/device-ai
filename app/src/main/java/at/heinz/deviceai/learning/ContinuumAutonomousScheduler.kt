@@ -44,7 +44,15 @@ class ContinuumAutonomousJobService:JobService() {
                     if(!stopped.get()) {
                         val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)
                             .entries().takeLast(12)
-                        if(approved.isNotEmpty())core.learnFromSources(approved,stopped::get)
+                        val fresh=ContinuumSourceNovelty.pending(
+                            approved, ContinuumSourceNovelty.completedHashes(filesDir)
+                        )
+                        if(fresh.isNotEmpty() && !stopped.get()) {
+                            val report=core.learnFromSources(fresh,stopped::get)
+                            if(report!=null && !stopped.get()) {
+                                ContinuumSourceNovelty.markCompleted(filesDir,fresh)
+                            }
+                        }
                     }
                 }
             } catch (_: Exception) {
