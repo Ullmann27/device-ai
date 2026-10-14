@@ -1,9 +1,11 @@
 package at.heinz.deviceai.cognitive
 
 import org.xml.sax.Attributes
+import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.StringReader
 import java.net.HttpURLConnection
 import java.net.URLEncoder
 import java.net.URL
@@ -31,17 +33,31 @@ class WikipediaResearchDiscoveryProvider(
                 URLEncoder.encode(topic, "UTF-8")
         }
 
-        /** Hardened bounded XML parsing; parser does not resolve DTDs/entities. */
+        /**
+         * Hardened bounded XML parsing.
+         *
+         * Android devices ship different SAX implementations. Some reject Xerces-specific
+         * feature names. Security therefore does not depend on one optional feature flag:
+         * reject DTD/entity declarations before parsing, disable supported external-entity
+         * features best-effort, and install an EntityResolver that never resolves resources.
+         */
         fun parseSearchResponse(xml: String): List<ResearchSourceCandidate> {
             require(xml.length <= 80_000)
+            require(!Regex("""(?is)<!\s*(doctype|entity)\b""").containsMatchIn(xml)) {
+                "Wikipedia-Suchantwort enthält unzulässige DTD/Entity-Deklaration"
+            }
             val results = mutableListOf<ResearchSourceCandidate>()
             var inSearch = false
             val factory = SAXParserFactory.newInstance().apply {
                 isNamespaceAware = false
-                setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
-                setFeature("http://xml.org/sax/features/external-general-entities", false)
-                setFeature("http://xml.org/sax/features/external-parameter-entities", false)
-                setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+                isValidating = false
+                fun optionalFeature(name:String,value:Boolean) {
+                    runCatching { setFeature(name,value) }
+                }
+                optionalFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
+                optionalFeature("http://xml.org/sax/features/external-general-entities", false)
+                optionalFeature("http://xml.org/sax/features/external-parameter-entities", false)
+                optionalFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
             }
             val handler = object : DefaultHandler() {
                 override fun startElement(uri: String?, localName: String?, qName: String, attrs: Attributes) {
@@ -58,7 +74,11 @@ class WikipediaResearchDiscoveryProvider(
                     if (qName == "search") inSearch = false
                 }
             }
-            factory.newSAXParser().parse(ByteArrayInputStream(xml.toByteArray(Charsets.UTF_8)), handler)
+            val parser=factory.newSAXParser()
+            parser.xmlReader.entityResolver = org.xml.sax.EntityResolver { _, _ ->
+                InputSource(StringReader(""))
+            }
+            parser.parse(ByteArrayInputStream(xml.toByteArray(Charsets.UTF_8)), handler)
             return results.distinctBy { it.url }
         }
 

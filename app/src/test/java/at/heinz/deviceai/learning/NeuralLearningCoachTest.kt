@@ -21,6 +21,24 @@ class NeuralLearningCoachTest {
         assertFalse(coach.isActive())
     }
 
+    @Test fun quotedBatchIsSplitAndClassifiedSequentially() {
+        val c=NeuralLearningCoach()
+        c.begin()
+        val first=c.accept("„Grüß dich, lange nicht gesehen“, „Schönen Abend euch allen“, „Kannst du mir morgen helfen?“")!!
+        assertTrue(first.message.contains("3 getrennte Beispiele"))
+        assertTrue(first.message.contains("1/3"))
+        val one=c.accept("Gruß")!!
+        assertEquals("Grüß dich, lange nicht gesehen",one.approvedLesson!!.text)
+        assertTrue(one.message.contains("2/3"))
+        val two=c.accept("Gruß")!!
+        assertEquals("Schönen Abend euch allen",two.approvedLesson!!.text)
+        assertTrue(two.message.contains("3/3"))
+        val three=c.accept("Frage")!!
+        assertEquals("Kannst du mir morgen helfen?",three.approvedLesson!!.text)
+        assertTrue(c.isActive())
+        assertFalse(three.closed)
+    }
+
     @Test fun credentialsNeverBecomeGuidedLessons() {
         val c = NeuralLearningCoach()
         c.begin()

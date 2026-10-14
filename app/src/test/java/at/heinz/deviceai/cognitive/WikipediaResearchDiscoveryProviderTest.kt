@@ -33,6 +33,16 @@ class WikipediaResearchDiscoveryProviderTest {
                 """<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><api><search><p ns="0" title="&xxe;"/></search></api>"""
             )
         }
+        assertThrows(Exception::class.java) {
+            WikipediaResearchDiscoveryProvider.parseSearchResponse(
+                """<!ENTITY xxe SYSTEM "file:///etc/passwd"><api><query><search/></query></api>"""
+            )
+        }
+    }
+
+    @Test fun ordinaryResponseParsesWithoutRequiringXercesSpecificFeatureSupport() {
+        val items=WikipediaResearchDiscoveryProvider.parseSearchResponse(xml)
+        assertEquals(listOf("Künstliche Intelligenz","Solarzelle"),items.map { it.title })
     }
     @Test fun fakeApiYieldsNetworkFreeDiscoveryTests() {
         val provider = WikipediaResearchDiscoveryProvider { _ -> xml }
