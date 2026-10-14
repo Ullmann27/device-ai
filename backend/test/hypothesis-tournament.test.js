@@ -46,6 +46,40 @@ test("hypotheses are explicitly non-authoritative", () => {
   assert.equal(h.authority, "NONE");
 });
 
+test("invented evidence references cannot enter a tournament", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "hyp-grounding-"));
+  try {
+    const tournament = new HypothesisTournament({
+      statePath: path.join(dir, "hyp.json"),
+      generate: async () => [
+        {
+          question: "Kann erfundene Evidenz gewinnen?",
+          hypothesis: "Diese ausreichend lange Hypothese behauptet eine Quelle, die nicht im Research-State vorhanden ist.",
+          evidenceRefs: ["https://invented.invalid/not-in-state"],
+          uncertainty: .2,
+          testQuestions: ["Prüfe die behauptete Quelle."]
+        },
+        {
+          question: "Gibt es noch eine zweite?",
+          hypothesis: "Auch diese ausreichend lange Hypothese verweist ausschließlich auf einen erfundenen Evidenzbeleg.",
+          evidenceRefs: ["obs-does-not-exist"],
+          uncertainty: .2,
+          testQuestions: ["Prüfe den unbekannten Beleg."]
+        }
+      ],
+      reflect: async () => ({ validityRisks: "", missingEvidence: "", falsificationTest: "test", score: .9 }),
+      compare: async () => ({ winner: "A", reason: "irrelevant" }),
+      evolve: async () => ({ question: "unused evolved?", hypothesis: "This evolved hypothesis is sufficiently long but should never be reached in this test.", evidenceRefs: ["fake"], uncertainty: .4, testQuestions: ["unused test question"] })
+    });
+    const result = await tournament.run(researchFixture());
+    assert.equal(result.skipped, true);
+    assert.match(result.reason, /Zu wenige belegte Hypothesen/);
+    assert.equal(tournament.status().hypotheses, 0);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("tournament store is integrity checked with LKG recovery", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "hyp-store-"));
   try {
