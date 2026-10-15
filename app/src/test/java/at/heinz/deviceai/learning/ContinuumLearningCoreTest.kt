@@ -40,6 +40,31 @@ class ContinuumLearningCoreTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun damagedActiveWeightsAreRestoredFromLastKnownGoodOnceAndAudited() {
+        val dir=Files.createTempDirectory("continuum-model-recovery").toFile()
+        try {
+            var now=500L
+            val core=ContinuumLearningCore(dir) { now++ }
+            assertTrue(core.bootstrapOfflineCurriculum()!!.accepted)
+            val previous=core.modelHash()
+            val semantic=core.bootstrapSemanticCurriculum()!!
+            org.junit.Assume.assumeTrue("needs two saved states",semantic.accepted)
+            val audits=core.status().experiences.audits
+            val model=java.io.File(dir,"learning-core-v2/subword-v1.bin")
+            val damaged=model.readBytes().also { it[40]=(it[40].toInt() xor 0x55).toByte() }
+            model.writeBytes(damaged)
+            // the last-known-good copy is the state before the semantic stage
+            assertEquals(previous,core.modelHash())
+            assertEquals(audits+1,core.status().experiences.audits)
+            assertTrue(core.trainingAudits(1).single().startsWith("model-recovery · accepted"))
+            val kept=java.io.File(dir,"learning-core-v2").listFiles { f -> f.name.startsWith("subword-v1.bin.corrupt-") }!!
+            assertArrayEquals(damaged,kept.single().readBytes())
+            // healed: later reads neither recover nor audit again
+            assertEquals(previous,ContinuumLearningCore(dir).modelHash())
+            assertEquals(audits+1,core.status().experiences.audits)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun semanticBootstrapIsAuditedIdempotentAndProtectsIntent() {
         val dir=Files.createTempDirectory("continuum-semantic-bootstrap").toFile()
         try {

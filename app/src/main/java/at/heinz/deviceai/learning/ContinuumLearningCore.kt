@@ -534,12 +534,27 @@ class ContinuumLearningCore(
         ))
     }
 
+    /**
+     * Active weights. Unreadable bytes (not an I/O error) are replaced by the
+     * last-known-good copy once: the damaged file is kept as
+     * subword-v1.bin.corrupt-<time>, the copy becomes active again and the
+     * recovery is audited, so it is visible instead of silently repeated.
+     */
     private fun loadModel():TrainableSubwordEncoder {
         if(!modelFile.exists())return TrainableSubwordEncoder()
-        return runCatching { TrainableSubwordEncoder.restore(modelFile.readBytes()) }
-            .getOrElse {
-                if(modelBackup.exists())TrainableSubwordEncoder.restore(modelBackup.readBytes()) else throw it
-            }
+        val bytes=modelFile.readBytes()
+        return try { TrainableSubwordEncoder.restore(bytes) } catch (damaged:IllegalArgumentException) {
+            if(!modelBackup.exists())throw damaged
+            val backupBytes=modelBackup.readBytes()
+            val good=TrainableSubwordEncoder.restore(backupBytes)
+            Files.move(modelFile.toPath(),File(directory,"${modelFile.name}.corrupt-${nowMillis()}").toPath())
+            writeAtomically(modelFile,backupBytes)
+            val intent=good.evaluateIntent(INTENT_HOLDOUT)
+            val semantic=good.evaluateSemantic(SEMANTIC_HOLDOUT)
+            appendAudit("model-recovery",true,0,intent,intent,semantic,semantic,emptyList(),
+                "Aktive Gewichte unlesbar; letzter geprüfter Stand wiederhergestellt, beschädigte Datei gesichert")
+            good
+        }
     }
 
     /** Archives the active state first; if that fails the model is not changed. */
