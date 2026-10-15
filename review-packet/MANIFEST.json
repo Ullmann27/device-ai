@@ -1,0 +1,1882 @@
+{
+  "repository": "Ullmann27/device-ai",
+  "branch": "copilot/continuum-argon-source-review-20261015",
+  "commit": "f75a7df7aba47c58847342ee7fc2d7e0f182de3c",
+  "files": [
+    {
+      "path": ".github/continuum/android-integration-wiring.test.mjs",
+      "bytes": 19402,
+      "sha256": "fc4f202d121a9fc624c173e6423985fcb82c65ae1795ca6f6e9577639dd4b80a"
+    },
+    {
+      "path": ".github/continuum/baby-core.mjs",
+      "bytes": 27985,
+      "sha256": "46545022162a73f03b7b03d4cd7edf240b310e3f22a791e9400cfe52a2e10fd2"
+    },
+    {
+      "path": ".github/continuum/baby-core.test.mjs",
+      "bytes": 11859,
+      "sha256": "c09c16ab2fc0620acefd1428c72586f7190053cc70cd26ecc9d15e9e37bcf53d"
+    },
+    {
+      "path": ".github/continuum/backlog-cli.mjs",
+      "bytes": 7560,
+      "sha256": "3d5580c69994bf7a8d198761cd883897b6837400fdbffd0787a5d29e7de80b2d"
+    },
+    {
+      "path": ".github/continuum/backlog-cli.test.mjs",
+      "bytes": 6610,
+      "sha256": "4c3b5b143c231c3d13933583675a6310305fb994b2e03635429a41af00d271a0"
+    },
+    {
+      "path": ".github/continuum/backlog-fixtures.mjs",
+      "bytes": 22172,
+      "sha256": "910eb3cfc6ff039efbd9c1b168053fe8ce9f0f269d685c20ea9d7e85cf5eda91"
+    },
+    {
+      "path": ".github/continuum/code-analyzer.mjs",
+      "bytes": 17137,
+      "sha256": "59006e82a4d97a2ac06cb0c87861ef51a4ce8a106183ee8006e2535fbd2d7413"
+    },
+    {
+      "path": ".github/continuum/code-analyzer.test.mjs",
+      "bytes": 4266,
+      "sha256": "347a7ee0f4850028c41ba1dec469e72e7c8c4f4171b1496b9bc2d071b041ff62"
+    },
+    {
+      "path": ".github/continuum/console-policy.mjs",
+      "bytes": 496,
+      "sha256": "bed2b9af33f17d23c852c752dfc864779a77484069369cf40ab0656699c2800c"
+    },
+    {
+      "path": ".github/continuum/console-policy.test.mjs",
+      "bytes": 1806,
+      "sha256": "210104021d237ad2ad356dd7adabca0418dfc614fc9833a7c872af321ad1a18c"
+    },
+    {
+      "path": ".github/continuum/contrastive-gate.mjs",
+      "bytes": 3803,
+      "sha256": "6061afbc70e2c3fbf3c9a173037339a12f0417723ba6dbc2294e09b3d881c07f"
+    },
+    {
+      "path": ".github/continuum/contrastive-gate.test.mjs",
+      "bytes": 2165,
+      "sha256": "1c406ec76e0238dfeb1850b5ab0a09ac55e94fe91c397ab4314ee8ab21b65f7c"
+    },
+    {
+      "path": ".github/continuum/contrastive-generalization.mjs",
+      "bytes": 3813,
+      "sha256": "181b3f110cd426c3a39cf285bcc8b7419fccce7693b7822908ac1b2171ecd91c"
+    },
+    {
+      "path": ".github/continuum/contrastive-generalization.test.mjs",
+      "bytes": 1069,
+      "sha256": "595d625ba4a35c63d12dc32c6dbd7d13ada566ba47fdb53a2196bde319caa76b"
+    },
+    {
+      "path": ".github/continuum/contrastive-parity.mjs",
+      "bytes": 3227,
+      "sha256": "2ff637850f710a8685ccd3a162ed076aac1468384e4bcf04a7e81ecb7963543c"
+    },
+    {
+      "path": ".github/continuum/contrastive-retention.mjs",
+      "bytes": 3332,
+      "sha256": "0954dd8b2b056d559bbf5b8cb8a317aad89691db58d9c627e4a5a7e9415a1c4b"
+    },
+    {
+      "path": ".github/continuum/contrastive-retention.test.mjs",
+      "bytes": 959,
+      "sha256": "ab32941b1b84eb15e98e745032e81f7ae5ebfdef85a1cdd0c9c963fdb4dc6be8"
+    },
+    {
+      "path": ".github/continuum/contrastive-views.mjs",
+      "bytes": 4396,
+      "sha256": "bf4f505685500be5ee6774df959a384cbbb77f83c3640727e87b4288fa3a8424"
+    },
+    {
+      "path": ".github/continuum/contrastive-views.test.mjs",
+      "bytes": 2517,
+      "sha256": "45b0ba5cf82386eba4165232f409c6c28a629b6d2b6f354cd0b7c438913d839a"
+    },
+    {
+      "path": ".github/continuum/developer-agent.mjs",
+      "bytes": 16511,
+      "sha256": "c98a82dda468768263a377f4311131326047096abacfecf1a091b91e70f02b63"
+    },
+    {
+      "path": ".github/continuum/developer-agent.test.mjs",
+      "bytes": 3551,
+      "sha256": "5cf3393f9d02e178fc3a5c81bed2efafdbe08c6265d94d5aa83c99a72610843d"
+    },
+    {
+      "path": ".github/continuum/development-backlog.mjs",
+      "bytes": 40369,
+      "sha256": "dc61df91adba763bdbf83e0e14411bf26253e97255cc092a7ab553c5b4e8d14e"
+    },
+    {
+      "path": ".github/continuum/development-backlog.test.mjs",
+      "bytes": 12833,
+      "sha256": "655e8839d580440bf8675f4215f6d5d875d82ab48ca07d5cb2b65d66d056ecf1"
+    },
+    {
+      "path": ".github/continuum/development-planner.mjs",
+      "bytes": 7548,
+      "sha256": "0028d03ee7f33d0b63a02c6c5108c40cf346275c3f1ab0268dcb87465820eea9"
+    },
+    {
+      "path": ".github/continuum/development-planner.test.mjs",
+      "bytes": 5838,
+      "sha256": "9cd4e8c4877b7c68b8298f7477bedf93761d6ac2ac1d37a0d227db8f474572d3"
+    },
+    {
+      "path": ".github/continuum/dialogue-retrieval.mjs",
+      "bytes": 3808,
+      "sha256": "09df64e4d768987df0b74f2391c187f7c73531954783af0f1fc43047f1a2aef8"
+    },
+    {
+      "path": ".github/continuum/export-argon-source.py",
+      "bytes": 6722,
+      "sha256": "e0f818fc3bc4b78792a04e128f905815a7d77b0af6250b85c6b8cd1305b4e8af"
+    },
+    {
+      "path": ".github/continuum/export-review-packet.py",
+      "bytes": 5421,
+      "sha256": "f6ca548eb2f643e24d3184c77a1b0ad8f5a83d1d03c4c914765dc39b3a1124b8"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-load-v20.20.0.xml",
+      "bytes": 615,
+      "sha256": "99061fd8b2ae086663bb11a02bd658326d723f3d2335eac8a903b25fce38d768"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-load-v22.16.0.xml",
+      "bytes": 608,
+      "sha256": "201c4bf902489d5e237130df9217e28e7da4f7ce22c2da26532a8908364f232d"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-load-v22.22.0.xml",
+      "bytes": 609,
+      "sha256": "e5e9cc8b35f87d56277d8691ff058bb17415b37ca7339785a9b88c2a6ea7e1bd"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-v20.20.0.xml",
+      "bytes": 1218,
+      "sha256": "0d114fb29378cdf03862425ca1b1f6140a967c31662de31501932f336ab3c3ae"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-v22.16.0.xml",
+      "bytes": 980,
+      "sha256": "8950d237218e5e9ab6f3ea613fcf416fb01930d0dee534a032c274287f6e9791"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/junit-v22.22.0.xml",
+      "bytes": 973,
+      "sha256": "d8f26a1d211d8ea9b5e4d2dd789cc742c762d22186b3b4f9efd40845b7704ec8"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/tap-load-v20.20.0.txt",
+      "bytes": 856,
+      "sha256": "08a20ad43dcb1e85d0a09e69e025bc19c7eac92e477c17bb9a83d6b7bff632d9"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/tap-load-v22.16.0.txt",
+      "bytes": 869,
+      "sha256": "236c7860d9a45f283e9b5d737d3fc1d9fa79332c31e76e56614e72506c897cf0"
+    },
+    {
+      "path": ".github/continuum/fixtures/node-reporter/tap-load-v22.22.0.txt",
+      "bytes": 869,
+      "sha256": "53815c30f1b796e8adda03b3fac5211a42af2069ba992874a0322f6338aed57d"
+    },
+    {
+      "path": ".github/continuum/kotlin-tokenizer.mjs",
+      "bytes": 4606,
+      "sha256": "9c92cfe7d63ed9312a4c27b41085d8fe4fd79d11ca4c3a9049128c3032c5cf8e"
+    },
+    {
+      "path": ".github/continuum/neural-benchmark.mjs",
+      "bytes": 1763,
+      "sha256": "19f9242cf83c06481c8a043a7093787fc842c1dc4b83e4cc53519f512a9d31f3"
+    },
+    {
+      "path": ".github/continuum/neural-console.test.mjs",
+      "bytes": 2146,
+      "sha256": "007dc2fe61706c3f7262d1cc0784b4e6617ab64e7b476bc4f6fe635066d155a3"
+    },
+    {
+      "path": ".github/continuum/neural-core.mjs",
+      "bytes": 8836,
+      "sha256": "fa976e2b1afd17eead6cbc2ab3b862574b8050a6e03cb8bd0e145e4fa06a68c8"
+    },
+    {
+      "path": ".github/continuum/neural-core.test.mjs",
+      "bytes": 6869,
+      "sha256": "a9409f050ffdc75170297c45ccc81112423b72b8e9f4daa5337da7e8fe1ff530"
+    },
+    {
+      "path": ".github/continuum/neural-curriculum.mjs",
+      "bytes": 6587,
+      "sha256": "d9266a48c6d914ccf1b229ce6cebb1397929b9d70cd698d0c7c699080414f7e2"
+    },
+    {
+      "path": ".github/continuum/neural-dialogue-audit.test.mjs",
+      "bytes": 2038,
+      "sha256": "e3b46b509828d6ccfa1396667f838d5c977acf930cc0587290924342b786e0a7"
+    },
+    {
+      "path": ".github/continuum/neural-dialogue.mjs",
+      "bytes": 2476,
+      "sha256": "b0dc449108eb3e761b783301f0c0e77e8142edebb2f832f9f3a19407151d17ad"
+    },
+    {
+      "path": ".github/continuum/portable-subword.mjs",
+      "bytes": 5380,
+      "sha256": "c47d0619ae19a2f29178e7c514e04ab880a6888bff7e5960aa95b6d5c78f9dc4"
+    },
+    {
+      "path": ".github/continuum/progress-watcher.mjs",
+      "bytes": 7851,
+      "sha256": "1be1f055877a116c94f2b1ad1eca2b34b0335a8b877b44d0ab81c64f921ca2d1"
+    },
+    {
+      "path": ".github/continuum/progress-watcher.test.mjs",
+      "bytes": 4046,
+      "sha256": "a0cf34152970ab9e8bc0d58231156cf453613676308690b599892bb781c72364"
+    },
+    {
+      "path": ".github/continuum/public-web.mjs",
+      "bytes": 7492,
+      "sha256": "7ac2057f9e4cd272543d9c36e8439f3d259b0b2baf677b34d8d2d12534c6ebd3"
+    },
+    {
+      "path": ".github/continuum/repair-benchmark.mjs",
+      "bytes": 5910,
+      "sha256": "46b40ffc57a97a5ef3de2651ca9becacf0b767012e0cd1470f710acf8042d4c6"
+    },
+    {
+      "path": ".github/continuum/repair-critic.mjs",
+      "bytes": 3612,
+      "sha256": "e535fe2e755626074a77eb57722075512d7210cb59f4a8f338a49fd3f9fc1a93"
+    },
+    {
+      "path": ".github/continuum/repair-diagnostics.mjs",
+      "bytes": 10070,
+      "sha256": "25bc503a78e8f589707fb3e4159675577119f8ed8d06777dfa41eedf0464820b"
+    },
+    {
+      "path": ".github/continuum/repair-diagnostics.test.mjs",
+      "bytes": 5550,
+      "sha256": "969740b02e8459f42b9e9b384f32f8aba7516bd3e93631c30c0ed9abb3e7ee9e"
+    },
+    {
+      "path": ".github/continuum/repair-engine.mjs",
+      "bytes": 645,
+      "sha256": "61bd02696fab51ddf1f1e03f591538044ada420c736ed93ad0f2adc942d4bb32"
+    },
+    {
+      "path": ".github/continuum/repair-engine.test.mjs",
+      "bytes": 632,
+      "sha256": "f5edd9925e3ec9b6676450009a7853b83cbf6170dcbaaf0f54f63af546ad4fcb"
+    },
+    {
+      "path": ".github/continuum/repair-experience.mjs",
+      "bytes": 2715,
+      "sha256": "0386f11b084950405f6a1e320cacd60f866ce5573c48e7fdd0f042258b250aa6"
+    },
+    {
+      "path": ".github/continuum/repair-experience.test.mjs",
+      "bytes": 561,
+      "sha256": "5831ff87b3cd98a990dbf108f81330e34a562ee6838d7aa32c8cc536e9dabbec"
+    },
+    {
+      "path": ".github/continuum/repair-ledger.mjs",
+      "bytes": 4128,
+      "sha256": "db5bffd5e479db0cae160293ba4b618932b2d39393977bb8dd357029be48d1a3"
+    },
+    {
+      "path": ".github/continuum/repair-loop.mjs",
+      "bytes": 14776,
+      "sha256": "47fc793b1927b1a50ee403068f0e0b68ca01fd80d3453acda825cf3b6c5de6e2"
+    },
+    {
+      "path": ".github/continuum/repair-loop.test.mjs",
+      "bytes": 18119,
+      "sha256": "7f352eb2b55a780e1699b49f9a83786f0f5229fb77eaa51b298e02a9b6961f96"
+    },
+    {
+      "path": ".github/continuum/repair-publish.mjs",
+      "bytes": 15478,
+      "sha256": "c08f439d2029e1f104e38f34118e2c2e053fafa6674df21504b53c60af5d8693"
+    },
+    {
+      "path": ".github/continuum/repair-strategies.mjs",
+      "bytes": 14866,
+      "sha256": "ac0a5809377d7df262bde4a9bcf8c248a80f4f4381fec5740382044576f6b269"
+    },
+    {
+      "path": ".github/continuum/retrieval-alignment.mjs",
+      "bytes": 4623,
+      "sha256": "28a312339eacf43ac0593dfe13aeebc667fc62b4979acb5eb138644247bae921"
+    },
+    {
+      "path": ".github/continuum/retrieval-alignment.test.mjs",
+      "bytes": 1058,
+      "sha256": "19a766168fb0ee81cd38dd339ce0546463ca1ab14fb8a1c2f4e1941d18c804ad"
+    },
+    {
+      "path": ".github/continuum/retrieval-benchmark.mjs",
+      "bytes": 7611,
+      "sha256": "7756244d19a63cb8c21f6367812afae89eeb3369a019e30475dc714497bb5bee"
+    },
+    {
+      "path": ".github/continuum/retrieval-benchmark.test.mjs",
+      "bytes": 1742,
+      "sha256": "44d885eaffedefd76a2a91b2ced44837b63f3dabdebf7b58dcd2ab6a8a7d59d7"
+    },
+    {
+      "path": ".github/continuum/retrieval-paraphrase.mjs",
+      "bytes": 4164,
+      "sha256": "c6c6a594cf541cae79c477af6a3b02a8b123b8a85e4aa704cc5c60c290daa421"
+    },
+    {
+      "path": ".github/continuum/retrieval-paraphrase.test.mjs",
+      "bytes": 990,
+      "sha256": "5094e2d087f1dd08578aed84632024fad5f468f83f04e9de2b7bd44e8884227b"
+    },
+    {
+      "path": ".github/continuum/semantic-gradient.test.mjs",
+      "bytes": 2379,
+      "sha256": "b96e549879d6a2be4b23e89e25aabe369f5eef8609e88a4563166a758bc06bf8"
+    },
+    {
+      "path": ".github/continuum/world-model.mjs",
+      "bytes": 7520,
+      "sha256": "62668635b0741a1e89f96eb564dee720ca5a5b2c577e97764057b6f5efa544eb"
+    },
+    {
+      "path": ".github/continuum/world-model.test.mjs",
+      "bytes": 4205,
+      "sha256": "7a5c29893a58e9006c685cb66add2d1883f641f674766555ea7a0dbd4065ce56"
+    },
+    {
+      "path": ".github/continuum/zero-cost-core.mjs",
+      "bytes": 50645,
+      "sha256": "0f46bc1ab3549ad6fee0ca5cdfcc840eb455d67ecb9855839edf3726d2da3d48"
+    },
+    {
+      "path": ".github/workflows/android.yml",
+      "bytes": 9952,
+      "sha256": "0671358b66f1864307f1a234222f1df43ef7a55ef2cb98203622283d43f4ffd6"
+    },
+    {
+      "path": ".github/workflows/continuum-argon-export.yml",
+      "bytes": 1806,
+      "sha256": "4fdd2fac24e4fd6a5798526a4299c614b7640d562650a06f7699df07e0043d0f"
+    },
+    {
+      "path": ".github/workflows/continuum-branch-tests.yml",
+      "bytes": 561,
+      "sha256": "181ffb96957a82c93930695368afffcc7b5cd1b78022ad2f6457fdca3ab5e9f8"
+    },
+    {
+      "path": ".github/workflows/continuum-developer-agent.yml",
+      "bytes": 9915,
+      "sha256": "96a6d0b2283180910dc173f1c8351dd251ffabdeed826d18506469e7abac7f22"
+    },
+    {
+      "path": ".github/workflows/continuum-review-packet.yml",
+      "bytes": 1063,
+      "sha256": "03942922bfa36271321e28f7396e47bc176e4ba7011bd5d15a0647081ce4f3de"
+    },
+    {
+      "path": ".github/workflows/continuum-zero-cost.yml",
+      "bytes": 3856,
+      "sha256": "4766da4ec4dc6efd0a0a420c89f709a9ed3198e57c46641170a4b5ce309efe09"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 548,
+      "sha256": "5c0f86e96c42bba576186c84f5e69198746edb2292c16a80bd4784330bc4bb8d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4676,
+      "sha256": "6f62bde92f1eea71bc44c6e1a7177ff552fbfea7a346a7884398014d61724dd1"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 1148,
+      "sha256": "7361a071e68ba2bcad5cfb39e6e036c4a34c9084961d63df13d8ca090e760123"
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "bytes": 1700,
+      "sha256": "de45e70abcc78ad81b6923d09534c7f11b3341c6579f8762fd585074d99d873a"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "bytes": 2099,
+      "sha256": "e4dec69e5de20f8f73f1dd92d69d9c0302d79b2c306571279632409f2a41db2d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "bytes": 239269,
+      "sha256": "229d98d18324e6acee38f41b4011db609a1728903b88071d119281c1af2dd4d9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt",
+      "bytes": 10729,
+      "sha256": "ce0f7919d8bb55957ad322326a4176ee7ed11ea38caa5a1bc4f09e859be72898"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentProtocol.kt",
+      "bytes": 471,
+      "sha256": "f317cc7cffa060ef3ed6f4979e4efe3e6898a2a254a30339f84840e50a2b9f20"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentToolLayer.kt",
+      "bytes": 19681,
+      "sha256": "e45cee63f7b72f3ed58f2d7412006a56b7a6e7ac46896bc259834c28a60d17dd"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ApprovedWebResearchToolRunner.kt",
+      "bytes": 2387,
+      "sha256": "66987196409380fbc4f38d652b3b65f594c195991dfb14eaea45b9ef62df814e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AssistantSkill.kt",
+      "bytes": 1023,
+      "sha256": "85bf5e8d6ef73837c75ae999ec4c0706b617865dbe4e970377e26627a6a1a05c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "bytes": 10661,
+      "sha256": "e6f137c7677399209ab481673e22b94df56cfbb7a4cc16d7a29014c20e125de8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapMemoryStore.kt",
+      "bytes": 5038,
+      "sha256": "f88171476adf3be09fd54ebb8145a0c571b9c2620760bef997e4d7733e725597"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapTraining.kt",
+      "bytes": 6558,
+      "sha256": "f0ed7a4853132c5ca1ab6bf5763a28d89aedee6d000148b2c55e236122ef990c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BoundedIo.kt",
+      "bytes": 843,
+      "sha256": "1a0a29e7ee3abea80cd64f22d11b8af78d0f086870b670e6bae97127b3fa5774"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "bytes": 17424,
+      "sha256": "74c48a28e1db7cfa3f39fe547a15295c566d00c7784f65b1c69651f19731e851"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ComposerUiPolicy.kt",
+      "bytes": 1256,
+      "sha256": "825a22a2117e39fe6101679fc86802dbaa7b7c554ae7be181ced11ce994fe124"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
+      "bytes": 12219,
+      "sha256": "c53d62ca607f292f8ee06a2e4328d37304fa3069ed2dfca8fc1aeb07a5e69a51"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+      "bytes": 1917,
+      "sha256": "c02fa0c7f77fb2a7b6b89f3257445ae4c12c1f8935bef36e54c2551806a434f9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/MainActivity.kt",
+      "bytes": 22683,
+      "sha256": "ea31216c9023922f47a2211caa9f567d642db8af978138ce542cf125a19e090f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt",
+      "bytes": 2823,
+      "sha256": "d25a758d892fb37dbe7f1ded9723447b4242495703ec8b8334d754f96176cf98"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShellUserService.kt",
+      "bytes": 2040,
+      "sha256": "bab4f363c8ff164928c3213a71d9f3149ba8a89a7978d4de07a433f4f3baeb6b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt",
+      "bytes": 5216,
+      "sha256": "0be742e1f9ffb158f8d35290fa664a514a439ab3812d7c924ee0c2dbf40fd547"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "bytes": 13490,
+      "sha256": "472b7bc6b9e9b5d7ed3c8a46be606d67c3a73b01cf63ccbcea07b1852ba0c340"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "bytes": 4707,
+      "sha256": "6d7db2b5287b9fa03ecda70d2ba13d28ae15a2af15b4e55d808cf58dbf646b40"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AdaptiveIdentity.kt",
+      "bytes": 2686,
+      "sha256": "828158ee17f0bf92e0ce4a6cb0e3ce8e6749ecef3d359bb37b1faaed95bfc454"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AgentCheckpointStore.kt",
+      "bytes": 4483,
+      "sha256": "e143d33449af04380172f7ff91f17c2f68143688fd2c8f35a97f5fd229d953c4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AiContextCompiler.kt",
+      "bytes": 9922,
+      "sha256": "7fc354f5b77c057dff0e95881468d140c088ffd62b2bdb825fbd307d3bf93bd7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/AndroidKeystoreIdentitySigner.kt",
+      "bytes": 2363,
+      "sha256": "daad146f453083683c603cdd36e59e029df7b02526110fa2876646edbf920fb5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ApprovedWebToolGate.kt",
+      "bytes": 5578,
+      "sha256": "dfe3b5f17c3999f2582db281cb03f6d545c49d3c5c2780339dc1af5613fa1e33"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorProfile.kt",
+      "bytes": 1470,
+      "sha256": "c932d9ca53b7b0268c64c2b173153302a9fdd24f7fce5bd275a55eadf148e823"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BehaviorUpdate.kt",
+      "bytes": 4348,
+      "sha256": "fb21b884d5ddbb86775df18947f5388db301806b365328679b894e035d6a53b5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+      "bytes": 17396,
+      "sha256": "5fcb0e672e995d5f519f2c50377113fcaad32bcdd3ab0a5892616fc84d4296ce"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/BoundedResearchTextSanitizer.kt",
+      "bytes": 3101,
+      "sha256": "5891e03ee5d388890941b9a4cf4cb9bada07aee85f57dd1fb1e4ef49758088d4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt",
+      "bytes": 4441,
+      "sha256": "fc3644d368823ed798ffdf2117bec1e4a9a1f1ad739626bdb5735406475006c3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveCore.kt",
+      "bytes": 2910,
+      "sha256": "7794948f987870937687bca3483cc7a7bcbd15631e74f165b045499a7c240a66"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveGenome.kt",
+      "bytes": 3840,
+      "sha256": "aaaa99327cf947513968c574bdebe2aa350d251862f17a45f2ccf4c730a6ad21"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitivePersistence.kt",
+      "bytes": 21307,
+      "sha256": "dc91846408638d40864e9d773e2413fa7e3c2da85cc8ce5fe3c612d0e2362219"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/CognitiveRaid.kt",
+      "bytes": 3160,
+      "sha256": "1378641dda8ec32587556ac151542ebdba2fcc502eb4e8216a23fdc82a7e3894"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ComputeFabric.kt",
+      "bytes": 7733,
+      "sha256": "d7f332fff35edb37de3a4a366293ee04db92a3ce6014fa11bde4c0fea08fe47d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumBenchmark.kt",
+      "bytes": 5771,
+      "sha256": "dcb0c3570ffd7069b979d6e6ebbbdf7194c7886546ed002b8634b19c875811e7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumIntelligence.kt",
+      "bytes": 12694,
+      "sha256": "37fd455568dcedc7ea7d5e384f91175448bf4a5bb105225a078127642dd5c32f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumRuntimeStore.kt",
+      "bytes": 10030,
+      "sha256": "15123e381ce78cce3f74e7d22119c55bf36b80990736bc7d52938970ee94070e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeed.kt",
+      "bytes": 9438,
+      "sha256": "567eca9ee9748ec70aee2064d0a3057af006ecc196065585be1718287708c110"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumSeedStore.kt",
+      "bytes": 3314,
+      "sha256": "1222259d3256b53db302ec107b7e5a571cf1c1322cfb035f0f54b86b27347327"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ContinuumState.kt",
+      "bytes": 7895,
+      "sha256": "6e3694bb3a27c307d10f84d6e21ec469a0575517feab05dee4d1a86d061f1713"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Deliberation.kt",
+      "bytes": 8657,
+      "sha256": "d499bf6992116571d886487b9f1d8de9f104a9a5b7b25e036dd3a553721b3d95"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklog.kt",
+      "bytes": 46464,
+      "sha256": "cd330032f4cd819c8a9ab527c40822a493cf34e74a198df970883f1e1c720936"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentBacklogStore.kt",
+      "bytes": 10558,
+      "sha256": "7b781b8dfd98870a6bd00d608ff224e55977e32bd854b83a1757f595f816ccf5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentCoordinator.kt",
+      "bytes": 9665,
+      "sha256": "47ee00b3efb11980a9d05ed8c8728c919477c6e647acaf500a57a30270e74811"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentProtocol.kt",
+      "bytes": 11853,
+      "sha256": "6b8f080d8ea0f3b62d6c07b64c787bf8341a3a0081a63353388d253faad39410"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentTypes.kt",
+      "bytes": 8439,
+      "sha256": "bcc8e37ceccdb43d29145995388f55dcea0618e80c6c0134d0d3940f58deaaf9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DevelopmentUiController.kt",
+      "bytes": 5556,
+      "sha256": "9d0ceab4745b946ad04dcfa9d404ceceb058f76b9f68d35f3893d1494f0d300a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklog.kt",
+      "bytes": 9185,
+      "sha256": "1c5ec92e9ce0c6e054811a5fd5fcc19d5d24dc90bcbc5a4e627559a9413dd425"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ExperienceCompiler.kt",
+      "bytes": 4665,
+      "sha256": "30edf08e39a597de19e04541f16a5d41c7a26ba8f1473af05675d33de488e441"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/GeneralWebDiscoveryProvider.kt",
+      "bytes": 6468,
+      "sha256": "70cbcb2424d1c4db216a219b66039a876ef32fbf802b4e8a7d47f0fc74a905d1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/GroundedWebRecall.kt",
+      "bytes": 3524,
+      "sha256": "d11bbab8b29f3a747757e8292eed98d2fed2aaaf2a625f790c7a1e56f7cde559"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/HybridMemoryRetriever.kt",
+      "bytes": 8922,
+      "sha256": "5bc480324b3dd95be450eebda30191922be79e142e93000a1b137a2f68ae1cfb"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityDrift.kt",
+      "bytes": 1384,
+      "sha256": "4287c290808b018acadb42a8dbcb55071151f20191581836a72049fda110a325"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityState.kt",
+      "bytes": 4685,
+      "sha256": "46a5c3c0380bed0087986e7e91d0d4622b9ebb61f5e9681908315ea43b3ed90a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/IdentityUpdateValidator.kt",
+      "bytes": 2823,
+      "sha256": "953fcbb585819745c731baa52f1d7052a7ebbe0e9a686c4b47175c7ea507afb3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/InternetConsentPolicy.kt",
+      "bytes": 2208,
+      "sha256": "2983b384bff48c519f882abbc1610ec4e779823d9eab790bcea87394429a3c0f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapter.kt",
+      "bytes": 6271,
+      "sha256": "7c4be879ba0630442fa52ebffb65ddfed52063bd7153918695dfacb41d1b8393"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryEcology.kt",
+      "bytes": 21796,
+      "sha256": "0226d435ebab3fa4b1f8e135520bfbe283fb532dd89076cad7700e5bcb6426c2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnection.kt",
+      "bytes": 3378,
+      "sha256": "05da98f3003916f1313d601412b64851f307ba1becd58b57a2de5ea731ea26f5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ProofCarryingMemory.kt",
+      "bytes": 6113,
+      "sha256": "f5157358d4771dd91918efbae8801f15db1a801d972e64c94e929920beaf67d2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt",
+      "bytes": 21205,
+      "sha256": "a9f740864e507b362b42f4eba62b1ab33ba5079905d62406cb34c2ab19029b28"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchDossierStore.kt",
+      "bytes": 14313,
+      "sha256": "57db323241d02090a51cbe48475d93bf5f8dca9bb5a602b3901c9d75189a8547"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/ResearchEngine.kt",
+      "bytes": 49086,
+      "sha256": "0fd2b6a462ff14436a2e53bd6644670a8aa64423bcf0612920799fedc97519ed"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/SelfModel.kt",
+      "bytes": 4402,
+      "sha256": "adaadaf521a798ce52443e5f56e45d35b57555b2171f16e415eab376e2a416c9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WebLearningInbox.kt",
+      "bytes": 3023,
+      "sha256": "88b260aa815187c807db88c8347bd1e600155ebe0feb8da8f96ca70776d37ed4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WebLearningJournal.kt",
+      "bytes": 2313,
+      "sha256": "1346b7a2814094afa1ff651254555046a10eebe6f69439f78ffcdee43a8c41d9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/cognitive/WikipediaResearchDiscoveryProvider.kt",
+      "bytes": 4862,
+      "sha256": "a35ab7180055e1cbcf6509bec508cc979f3a6a149282a725258401935af09c45"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContextDecoderResearchMain.kt",
+      "bytes": 2070,
+      "sha256": "9e14e935e0ddc280f519f319e87ca0a80c13eb2f242653b8efbc1592ad52f338"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAnswerCorrection.kt",
+      "bytes": 1234,
+      "sha256": "8686e5d62ef61047ce9fe9cfea0dbcc8fdf8554453b74322ec4f21ced6e67d86"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "bytes": 6106,
+      "sha256": "b15be6d122ff0695bf698ce7e31f8a3320c639f50abbe2970325ffd9c50a5734"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumContrastiveGate.kt",
+      "bytes": 3353,
+      "sha256": "36e7a4e4dc2dea0abbbc6415dae2c874831789b66dcf82b48222b98607194ba5"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumContrastiveViews.kt",
+      "bytes": 5134,
+      "sha256": "2daf98dc78554ae25cd4e9d38596cdc5acd989b989e6a732e5feba6a8d6f29df"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumDecoderBridge.kt",
+      "bytes": 3615,
+      "sha256": "8cf0b5046e8c9cdeb17b40373f14c6f7540aa31c4f992ea983b01fe1e4d82f33"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "bytes": 37014,
+      "sha256": "4cffbd5d81e82b047b1bf2ec2e3dcfffc6dabd4865a8c169a4c2c83ecea6add8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningExperience.kt",
+      "bytes": 18188,
+      "sha256": "0dc1042d02531735cd9f3cf7616ce4e3faf232edb985ecdcf87144a47809bb7f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbe.kt",
+      "bytes": 3122,
+      "sha256": "e15e768fe53f9f2c27080187ccd242c9be2235ecb5276045efcc489c5dae7402"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "bytes": 12327,
+      "sha256": "424c2722d1147b3d055ac127913e35892291262d0d390dbd20858010cb307ded"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineJobStatus.kt",
+      "bytes": 3347,
+      "sha256": "7b7fe423a36140144dd299791a8756fceb0156a719b04218c7cbc0385f116782"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicModelPackage.kt",
+      "bytes": 2281,
+      "sha256": "74866be56fc3749aa05b01c2e6f54b24670f934f9f78e7e1a05febf4f0eea44d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt",
+      "bytes": 1806,
+      "sha256": "dfa8f833a95ab54effa69cacd3801723dceefd8d7b592fb0866b4b0be7688997"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt",
+      "bytes": 1331,
+      "sha256": "602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorConceptNetwork.kt",
+      "bytes": 5874,
+      "sha256": "9bb604b500f3ce26638aef44ac8848b2268e23b96df6defc706dba12967bc46e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorCuriosityPlanner.kt",
+      "bytes": 2911,
+      "sha256": "c91ade34e95b9cebea7956c9b665311824c8b2ab5e5b17d3a4118d58ebe41df6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorCurriculum.kt",
+      "bytes": 1569,
+      "sha256": "20686d70f586b2c6583b6af1dee35941b82ff46c427c9d1b5eb50c3e059b769e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorRecall.kt",
+      "bytes": 2291,
+      "sha256": "0874548d91b07fa19a6739865eb6cbf252b6a81edb70afc267d4ac004dd5f59e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorSemanticModel.kt",
+      "bytes": 8729,
+      "sha256": "5e8c204cafbc65f13faf2ed42b3cb847483178567adb47734fc17e177c9cbbf8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorSource.kt",
+      "bytes": 572,
+      "sha256": "0f169c31373457e2512729289486edce769c2216938178bfb6812882d74fbfb9"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/MentorStudyScheduler.kt",
+      "bytes": 5702,
+      "sha256": "299d58ebe41db5a3eedcf363792d72c62ad8bd574092a222f207b86a1405d698"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+      "bytes": 4926,
+      "sha256": "b470865c0fbbae3411e9dd6ffd62e2f7395187fdf445155aaa5d023afc9f29a6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralCuriosityRadar.kt",
+      "bytes": 1521,
+      "sha256": "b437f621fd9cd5b6692f5d82873faa538ca28d1f5132d39853507bbe9761c6aa"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralDialogue.kt",
+      "bytes": 15936,
+      "sha256": "ea9a19118c98e2259eeed7ab5e3b4b97bc3c8ebe52ca1c54fb91349cd015b021"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralGeneralizationComparison.kt",
+      "bytes": 6966,
+      "sha256": "8baef640ae2ed3b125a41ac2b66f98c98e054523e24583c006481233e85b4702"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralLearningCoach.kt",
+      "bytes": 4480,
+      "sha256": "1ce3872fa5dae967f287d553538517d8d6693fa7dd8154f9000866d79cff47e3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt",
+      "bytes": 7795,
+      "sha256": "9fabad99c5d89b1ebe5245f8d71809b9a0a497a64aadfd79de519937d1f673fb"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/NeuralTransferExperiment.kt",
+      "bytes": 3620,
+      "sha256": "15d366c461d87de09b26d772c433e248cf5fbea2e36bc721361cc7ec814ce02b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/OnlineNaiveBayes.kt",
+      "bytes": 4477,
+      "sha256": "e19e9ee4dcd85946c1faa0e333c0dbc3bcfaac111ee1fa291c247f346f918162"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt",
+      "bytes": 8535,
+      "sha256": "f1d620a4401371c740e352a28959b5929f692f572eb8c6bebbd33a5530db9930"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/StructuredKnowledge.kt",
+      "bytes": 7028,
+      "sha256": "675d545b09aaa91c8642d8090f59cb63cfe22d4fd228685625a1ca5da3854a9a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+      "bytes": 10447,
+      "sha256": "4a3d40a623f1aee35cae27157b891de2cf1ee647bcaf0bedd3e3de305a777ac3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TinyNeuralNetwork.kt",
+      "bytes": 6264,
+      "sha256": "1d82f6642cbc2800e7ddda6eb00a5b56090b517c68b3b373e877add18ba452d8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/TrainableSubwordEncoder.kt",
+      "bytes": 10281,
+      "sha256": "557a97d43655e06fd7f8f498a7a8007b255364b9eaa2a89be2697a291ab9f1ff"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "bytes": 19294,
+      "sha256": "c5f1b6778cc815ba1813e364424cc96037c7e18360eb14a5c748cd3731f18943"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+      "bytes": 12215,
+      "sha256": "f8c79f47698054a839ef7be48107d76307666f3dc51efa272dd4e9b4cdf36b32"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt",
+      "bytes": 963,
+      "sha256": "3b1629e3fbd41f214a2b363919e24c81629486114f25ea5e7c58f64fbdd38cf9"
+    },
+    {
+      "path": "app/src/main/res/drawable/device_ai_model_stack.xml",
+      "bytes": 1969,
+      "sha256": "ed91ae3143e94754aff7c211c011dbbf1e1dc7669ca90ec76822e8bef6faf433"
+    },
+    {
+      "path": "app/src/main/res/drawable/device_ai_robot.xml",
+      "bytes": 3101,
+      "sha256": "87a4c3bd838a8d0aed73f35ea09ba59ce1d8f0dbef62213f7beb55471bda78e9"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_device_ai.xml",
+      "bytes": 1317,
+      "sha256": "8e3a44181b947f0ad4d965dc36d9763b5aaa670b1dce40606ee1611a92eef5bc"
+    },
+    {
+      "path": "app/src/main/res/values-v27/styles.xml",
+      "bytes": 696,
+      "sha256": "fc88637a0f1d07160f1f272bf1e2baec0023b8d9feeffd270c6a8159fbcc8bea"
+    },
+    {
+      "path": "app/src/main/res/values/styles.xml",
+      "bytes": 629,
+      "sha256": "ed17777d5d65d184e970b48e5ee036803bb2e756d0d7dde51771511a1c96f552"
+    },
+    {
+      "path": "app/src/main/resources/continuum/benchmark-v1.json",
+      "bytes": 12533,
+      "sha256": "d34afafdf98ab5cf58753d6533db9cbc6ff7027883a4bc2a60a9107576751fee"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/AgentToolLayerTest.kt",
+      "bytes": 7252,
+      "sha256": "5233c15dfb9271b055c0efcd755c4c8c346efaeef91792b968dae3278fc6ce32"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+      "bytes": 7347,
+      "sha256": "56718fb118697acfc9f352f43860a3ad1f821b9f95ea099437a54f845b521c6b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/BoundedIoTest.kt",
+      "bytes": 1380,
+      "sha256": "ba4ae5c1d68623004da9b832e8134e2a073efd64108e2fb355fb58c947f98289"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ComposerUiPolicyTest.kt",
+      "bytes": 1633,
+      "sha256": "8ce41810ecc8cd29549b3c4e5c4ac216131e01f8117abd2c6fdef552865ed250"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/LocalFirstPolicyTest.kt",
+      "bytes": 2595,
+      "sha256": "9dbfa87df90a5b4f12364df122a73719e49f2529b5a2e8de7d8b026a157c20f3"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/NeuralSnapshotCasTest.kt",
+      "bytes": 880,
+      "sha256": "34501a8fba6f8d0b97cbf12265d3c8a67e120bf3bd44b34ea65f8c724f4ae24a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolExecutionReceiptStoreTest.kt",
+      "bytes": 8389,
+      "sha256": "d6cfd461ce1f398bdf613d382b7bd078c5f3a2427d8ea510f622114f8e1cd40e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolRegistryTest.kt",
+      "bytes": 1144,
+      "sha256": "803de084c712010a659ad0e48598062f10cbd577b7fdfdc7a841a5bd87a0bab4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolReplayGuardTest.kt",
+      "bytes": 1618,
+      "sha256": "cfd710419f06e94900a231500e8e6704ebeb3226193c0d5617cb11f883c1d6fa"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AdaptiveIdentityTest.kt",
+      "bytes": 10537,
+      "sha256": "80fd36da79cc54b6dbcf3af5feec54aa6eb91b26c3e007eabab0fc65e58fb024"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AgentCancellationRegressionTest.kt",
+      "bytes": 2324,
+      "sha256": "3841f01fa55bab71b78d79258fd7fc51e58be9a935cb867eff93db32b78c400c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AgentCheckpointStoreTest.kt",
+      "bytes": 3847,
+      "sha256": "14239f370d65fd12b9431cb17b95a76e5b2f125a2381c219645ec08939c37170"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/AiContextCompilerTest.kt",
+      "bytes": 5630,
+      "sha256": "ba79fa0e13629fd640225c9a1593563812ca88910042728d47d865edeeadb5df"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ApprovedWebToolGateTest.kt",
+      "bytes": 3555,
+      "sha256": "c574f7fec585587c4ba1106c9029b9a62c894b8b45e45e6c5f615f0915a33e25"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/BoundedAgentTest.kt",
+      "bytes": 10246,
+      "sha256": "f7c9294b2a4ddafda35948a3407c1faab9b7d5c6c1912a1f82ff6dd52c29060f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ChatReasoningRouterTest.kt",
+      "bytes": 4610,
+      "sha256": "5cf1b3b0ce2f0ba436ebbbea5a6a42480031e911cbd8ac1ffac2215002b4d24b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/CognitivePersistenceTest.kt",
+      "bytes": 6229,
+      "sha256": "02104f6100c6c2a57be16520df0fe0eba18fda8c9211082074742cd312ea8ee2"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/CognitiveRaidTest.kt",
+      "bytes": 1578,
+      "sha256": "008ed1ca6fc72846a35933d6ec337e3363659cd96ecc266bb841d42fd8af2c6a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ComputeFabricTest.kt",
+      "bytes": 4267,
+      "sha256": "d49aa929e2ac8536e93f88111450b6cff3430841207c38941a97fde01872a0b5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumBenchmarkTest.kt",
+      "bytes": 2258,
+      "sha256": "551291a13d7ff20464d9a34b47b3fb41e11bbe05f480f4b0f24fc8da57da7d1c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumIntelligencePhase2Test.kt",
+      "bytes": 6829,
+      "sha256": "aa7a2bd217f78f3d9197c8380a23d54564b3a44835eb87d3c974294261d3670a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumPersistenceFailureTest.kt",
+      "bytes": 11447,
+      "sha256": "6a41d49c83e36582e522cf827ca382a0ad3b9a536d65a5fba6f033266515b8cb"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumRuntimeStoreTest.kt",
+      "bytes": 3943,
+      "sha256": "ed19230610a454c4ab67532117524617065a8875fb819a4b9f0e5d31369bb73e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumSeedStoreTest.kt",
+      "bytes": 2396,
+      "sha256": "bb3144b44ebaf4399b43519fdfbe857ee80325ce7860c5b133ac17452d40e69c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumSeedTest.kt",
+      "bytes": 2578,
+      "sha256": "aaf0e9ba0c94d4c5dc6934cdb9a81124a69d498d007f94721c32fc726ddc0835"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumStateTest.kt",
+      "bytes": 2290,
+      "sha256": "dee929d1c53bd2a6ceeae5d4dfaaef03981373e2f0e27cc8637e80e519d447d9"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ContinuumTaskClassifierWordBoundaryTest.kt",
+      "bytes": 1393,
+      "sha256": "51a037ab596f7db1be63f28750f30f6f0d24aed5aed20f22e81fa0f48fba1838"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DeliberationTest.kt",
+      "bytes": 3376,
+      "sha256": "4e31df93a62f0292a90bb83e147f7173e29c62ea748dda3d0d8d586935223c64"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogRoundtripTest.kt",
+      "bytes": 3056,
+      "sha256": "ffd4e8aa2208d0d9d3d7f3361abac682f474571ff5bcceb9fca034672b946321"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentBacklogTest.kt",
+      "bytes": 15371,
+      "sha256": "59dbd7296bb7357b9d1938f129280281e338275b4dd9b5752d1266ba97c0e3e1"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentCoordinatorTest.kt",
+      "bytes": 18012,
+      "sha256": "0723fd82b86792d05304efbc8ec477e5a1694e35e056a721a0cbacddad3bc601"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentFakeModelDemonstrationTest.kt",
+      "bytes": 1562,
+      "sha256": "03de2dd6a95e5ffcd8ce10fb6c8c56fcb524422fe6fd75855252a6248704af1e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentReviewRegressionTest.kt",
+      "bytes": 6214,
+      "sha256": "596557c8a1c85a69dcd5203db4ceac47f551d3bde9e3371919824f044c36f923"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentSharedHashTest.kt",
+      "bytes": 1184,
+      "sha256": "fbb9165b30e3e67470c57357175eafe232134daa2eb2086a9ec4fc8f843f9e20"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DevelopmentUiControllerTest.kt",
+      "bytes": 5402,
+      "sha256": "751c27adacb9630e505024614cf9b06080585342bde4458438eecae19e8740e5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt",
+      "bytes": 8058,
+      "sha256": "3d8536c8ba2e76c96b5e7b08af2dc63c254fb999ef814fd6c7e90d2a67537c8a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ExperienceEvidenceRegressionTest.kt",
+      "bytes": 3412,
+      "sha256": "c141c993ee4440a7f517b40b2ac008da1cff9429acafaaaa3becfa1c59b9a712"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/GeneralWebDiscoveryProviderTest.kt",
+      "bytes": 3783,
+      "sha256": "5cb1a642ab3689a454b176f358266e5ffabcd586f0b69b2e7836480516bda15e"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/GroundedWebRecallTest.kt",
+      "bytes": 2583,
+      "sha256": "8099c8d46d16b140c68b75ed77eb1af82c17da5738f53741ea434dd0f1eef213"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/HybridMemoryRetrieverTest.kt",
+      "bytes": 3741,
+      "sha256": "f53fe8fd20e08e4c8bf7d5098df56f4d44f0afcd207538eb7b0c631d8b52b5e5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/IdentityStateTest.kt",
+      "bytes": 1610,
+      "sha256": "9508735b74bfb44f903216415914ff71d0528ff53794f9b32495cd0635aa8559"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/InternetConsentPolicyTest.kt",
+      "bytes": 2047,
+      "sha256": "a6280ebaa22da647ce4978f36c582b7f6be3bf7780378aa49f5e503db702cf38"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalModelReasoningAdapterTest.kt",
+      "bytes": 3896,
+      "sha256": "6817a34068c1dd36cfa14fafbffc4fba951526c479ab8a270def3bde17bd512a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/LocalReasoningBoundaryRegressionTest.kt",
+      "bytes": 5553,
+      "sha256": "ea7276772beda224d3412bbfdc7a254fbca44a27ccfac8c4e86309ff9e211c2a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/MemoryEcologyTest.kt",
+      "bytes": 10629,
+      "sha256": "3d05e47f9fcc342f1ead4c6054ace0fa36e3140a28ee6a8ff1d44eb4dab70c2b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/PinnedResearchHttpsConnectionTest.kt",
+      "bytes": 1379,
+      "sha256": "3965d60b97815968ddc44993c3733416a5d8d421377971b0aa8d759b5981612d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt",
+      "bytes": 17194,
+      "sha256": "26127e206e3da868f892b9543892e712fa8aabf083f5614398386c6faa5b66e6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchHttpTransportTest.kt",
+      "bytes": 5564,
+      "sha256": "055d94a492ff38cbf292bb79afd1b7067624c770c77ffee248e537d7b1c4f3ef"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchSanitizerBudgetTest.kt",
+      "bytes": 2711,
+      "sha256": "ba9cb961c19431548aa849f0db6a483dbe8da972cff61de99d51e9a3bc143f14"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/ResearchTest.kt",
+      "bytes": 8061,
+      "sha256": "dffb41cc80ba9c6317144fcd3810c9336f9e99a3dec247de26e19b40b3014ba9"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/UntrustedResearchEvidenceTest.kt",
+      "bytes": 12063,
+      "sha256": "9640b7021b2c420102ea50b1848895aa9d653f5a7a195cdd4debbfd0047b8f64"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/WebLearningInboxTest.kt",
+      "bytes": 3243,
+      "sha256": "2197bdfc71da773a216bcab76c7c84e9e19cbd59fb4a9b2ed5a451cd09d58362"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/WebResearchIntegrationTest.kt",
+      "bytes": 6465,
+      "sha256": "30bb71b27c7443d541f931243388733718ede5e00bdecf069f89f2bcf93cbfe8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/cognitive/WikipediaResearchDiscoveryProviderTest.kt",
+      "bytes": 2453,
+      "sha256": "739fffb43bc7307aefa06d672b664242957d0e1d1755cd93d0712a1472693b62"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+      "bytes": 12939,
+      "sha256": "b44cfc7eb8f8bee8b1ccf057cf1bc83f7c004f2060ba4cf85301618c40dcc668"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutonomousSchedulerTest.kt",
+      "bytes": 3190,
+      "sha256": "361a3abaef5800455a9f4e31d7cd8ffada70c544f17d90b85b7a9d48ad136bd6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveGateTest.kt",
+      "bytes": 2099,
+      "sha256": "f524c118a6c688387a3183b252b840f946e7431f3f99b828eed84780cdf70436"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveParityTest.kt",
+      "bytes": 4129,
+      "sha256": "3a9175de9e81cee778c57cbd56fe1c42669d8f1fd7feffe87acbb5a9f9255c3d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumContrastiveViewsTest.kt",
+      "bytes": 2731,
+      "sha256": "533254effbab6288662b31d166e0006065710cc516f4503e34fd45bbc91309df"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumDecoderBridgeTest.kt",
+      "bytes": 1928,
+      "sha256": "0e4d8d82c951832ef5799d4584dcb7ed259be5d6b09e19b56a59fb6133dde5c0"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumDecoderCoreIntegrationTest.kt",
+      "bytes": 1045,
+      "sha256": "a4a1040e04cfb8e6037f26cf8b92093c4e4a26598116ec369ce3138df2ce6007"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumDialogueAuditTest.kt",
+      "bytes": 4562,
+      "sha256": "62b2c53df21964deb274b0cdefdfcdc70178db5cdbd53cbedb423fe99fddcd09"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumExplicitFeedbackTest.kt",
+      "bytes": 6172,
+      "sha256": "fa3950a4291b108765abcb9ae5e6e9614b02bc64bf9b32b361c9c0f129d5f942"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumLearningCoreTest.kt",
+      "bytes": 10766,
+      "sha256": "d458391660e826d5cf00815baa5bfc922669fecc57a4c44dc356e241dbc3b57a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumLocalContrastiveProbeTest.kt",
+      "bytes": 1613,
+      "sha256": "84e7fd1fb0d49f608692e4143e44f42ab42b37c994999ff4952296178c16baac"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumMemoryDialogueTest.kt",
+      "bytes": 6989,
+      "sha256": "50fb0875eade51b7488b938564fd5ccc3a425474e96548186cc404404fce2609"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumOwnerFactTest.kt",
+      "bytes": 3446,
+      "sha256": "f3a88fa6a43d98755c45d49abafd86a6e4f14d80e90b7659947c24c0dc6388d1"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumPublicModelPackageTest.kt",
+      "bytes": 3108,
+      "sha256": "bcd3027647d81ffea4668a73d7d8494c7e67489f26daf4358573a098f9b02a53"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ContinuumSourceNoveltyTest.kt",
+      "bytes": 1908,
+      "sha256": "f12e1790e096be42ae6a3667e2a5d2557a1ab7dd67e3ff78e01bae14724d3424"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/KnowledgeDialogueTest.kt",
+      "bytes": 3456,
+      "sha256": "4a960a7fb1c6815cce386b6d6ca70298c2a1044280e3c19ac97358567d0e0b46"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/LearningExperienceStoreTest.kt",
+      "bytes": 3180,
+      "sha256": "5fe026928610823df39f9818c4edd4ccc86cf52f98d003350a3bc8fd52c3d7ef"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/LearningIntegrationTest.kt",
+      "bytes": 1567,
+      "sha256": "7755d0918164e1a4f54b3d24cb01c578c70a3bc83f2c079d54f3610af6e2b99b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MentorConceptNetworkTest.kt",
+      "bytes": 3079,
+      "sha256": "97471ba540a39f27fe50de51054400da0d3110bcb61f92c6701db22e0b3a5f2d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MentorCuriosityPlannerTest.kt",
+      "bytes": 2038,
+      "sha256": "52a0d5c8d6541eacc2197d8f190f3262fcd04df3867d713c3c1b2ed6641b1a48"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MentorCurriculumTest.kt",
+      "bytes": 831,
+      "sha256": "d9ad05b41dbabc1c581423dc2751052cbd7b17f12745761d9a4467259b7d64f7"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MentorRecallTest.kt",
+      "bytes": 1169,
+      "sha256": "14bc3394dbe139d617c1e69aec4c3391d85719856aeefbcb645ce0642ca83b90"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/MentorSemanticModelTest.kt",
+      "bytes": 3061,
+      "sha256": "d46f822c73080aa3e6441b63f797176220fc4ed33735dc2a03b0547933b7d07c"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/ModelCheckpointStoreTest.kt",
+      "bytes": 5271,
+      "sha256": "cc64fac249b5b3c9e526bf3035a78635ebf6dc4c88fd69d321168e1d4b37f8a6"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralCuriosityRadarTest.kt",
+      "bytes": 1414,
+      "sha256": "8c2b77cb391acb0e25e9a47186a54aeac755962bd69c222ff264e4ebe986ac43"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralDialogueTest.kt",
+      "bytes": 3388,
+      "sha256": "7ebe107e967d341515a70a9c6ef77f9c4b9df8040300ecb09ce7d24eb20fe335"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralGeneralizationComparisonTest.kt",
+      "bytes": 3262,
+      "sha256": "e99cfbaeb1db5d3fd0087aa3e01ce0dc29616df3be5f10df305db4b07a1b651f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralGradientTest.kt",
+      "bytes": 1689,
+      "sha256": "082b809a7683189129886c760de8ed239ec0e59e0dab589a4cc7f65ae6b58625"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt",
+      "bytes": 3418,
+      "sha256": "be6860c008ce9ce4d4114ad8c5be63d51eae631770cff6dc9d22d4ae5caba80b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralPracticeTest.kt",
+      "bytes": 3127,
+      "sha256": "e9d98dbf9760dfb03b4067e5363d18f94e60ed40e7cfa51239daa290ef24f48a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralSnapshotImportTest.kt",
+      "bytes": 3333,
+      "sha256": "99fa09e712cffbb8fa1db6e1bda6ad6c970d77f7bee9e38077925a1a2df4a8f0"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralTeachingAuditTest.kt",
+      "bytes": 2791,
+      "sha256": "2c376cd6b1c9aafac8004bdc93c9f57c31b39ff26fc38850c3e5c3b2d0ae8f3a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/NeuralTransferExperimentTest.kt",
+      "bytes": 2311,
+      "sha256": "9166599345acef692d6892ae526ca5200546eb9a4424cb681794e82b3c87f902"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/OnlineNaiveBayesTest.kt",
+      "bytes": 1760,
+      "sha256": "95ba731a29f544688062c403cc9841c1a93a5f537d86f81c1268b1eedf3b1196"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/RetrievalBenchmarkTest.kt",
+      "bytes": 3239,
+      "sha256": "cd43c3ee9fda364ae04bd69ec0c0c61ab067d91381223b3440d0dc0642f48ddd"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/StrictJsonTest.kt",
+      "bytes": 2996,
+      "sha256": "a6932b3299d37433f151329049c44dbc194f079d54d4e2cb0d45f2cf306bd50a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
+      "bytes": 3991,
+      "sha256": "0fcd88b8dd61b8156a66daaa4dad5af62616028dbd00b9a0dc60cebf81aa47fb"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyNeuralNetworkTest.kt",
+      "bytes": 2809,
+      "sha256": "5ee5011850959f4213d66f8273bc373b98feadc3b2f0a1e2d2683285181f273b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TrainableSubwordEncoderTest.kt",
+      "bytes": 2950,
+      "sha256": "b850e0819af0c5e43e4637adabbf821705260582f1d265b9fd10eb4a07ccb77b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt",
+      "bytes": 3915,
+      "sha256": "6aab920bcb7ab31ffdab8ed285533eacfe825eacc01ba7cfdc48b9f8a67c570b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelLifecycleFakeRuntimeTest.kt",
+      "bytes": 3811,
+      "sha256": "3c7d2a7dcdc689f5bd944c7c22ade0161d67ac50e9f46773371cd246f015f3e5"
+    },
+    {
+      "path": "app/src/test/resources/continuum-dialogue.properties",
+      "bytes": 161,
+      "sha256": "420f2255a640fabb3a57541ba6254ec9277c746a44d441fc51063333dece9a39"
+    },
+    {
+      "path": "app/src/test/resources/continuum-neural-swb1.properties",
+      "bytes": 354,
+      "sha256": "14b38c0826a43ea16fb2f4b1dec83c17c250d5f1107a08b146ae89ae616c3de9"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/conformance.json",
+      "bytes": 93781,
+      "sha256": "c6bc13cc14180ad384aa65eb21ca7a9d5c1a8aaad10a31db91ff8473bc0c6856"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-bom.json",
+      "bytes": 4365,
+      "sha256": "e3350bcd48bf5ed76302a9722f0d6f017edf2d8053477afc206bbc9baa40ee3d"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-claim-outside-progress.json",
+      "bytes": 4436,
+      "sha256": "4842aa080217230b096b5709245aba66a9a70243dcc73147d5258fdf99519f8b"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-cycle.json",
+      "bytes": 4373,
+      "sha256": "153673be33544295ad54e64c236b0673d1fc4d81e00fdc6bada25f43dcdc188f"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-done-without-evidence.json",
+      "bytes": 4521,
+      "sha256": "da893e93cc3dd1773e5d445c7066b526fc6a5c1b23271a1a11452a8dc3febbdd"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-duplicate-key.json",
+      "bytes": 4375,
+      "sha256": "e0d99fb1d1c49429b9d1c860e250ab2f5ac8c72c8a0dc460ba565aa090e10dae"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-float.json",
+      "bytes": 4364,
+      "sha256": "4419e4123894957f458a8c12268e94ad1f2780a05c4d92382e7ba3e77e1cdd8d"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-forged-evidence.json",
+      "bytes": 4361,
+      "sha256": "c8d718010b403a4b86c163ad816d0ad5c0b972c7e99abf691740ebc52c85d6ad"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-future-version.json",
+      "bytes": 4362,
+      "sha256": "9d12efeedac22f8fcd3fece03a3962b48b476456ca6a797a078a726881de6d25"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-integrity.json",
+      "bytes": 4362,
+      "sha256": "b084d962591923b3dfd59b7786de2f31abbaa6eafe85a60835d09c15ab77897c"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-lone-surrogate.json",
+      "bytes": 4367,
+      "sha256": "1399407401124119af73f25bcdc67abae5020ead2c71d20683eb61018300efbc"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-not-backlog.json",
+      "bytes": 46,
+      "sha256": "b5d809eea98c518c05d36b7ab4fcfa7d28b40e4769c3a1e00ac0a4b2776ebe22"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-state.json",
+      "bytes": 4364,
+      "sha256": "b4a30a100c07a97c0661ae86dad0351afe24902e6038f76b9466e9f080477cd1"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-trailing.json",
+      "bytes": 4363,
+      "sha256": "35d004d0d12e0c7d396c43e2fcfe8d04e7721470b6d2b6ae78d4a6424c7ce2f5"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid-unsorted.json",
+      "bytes": 4362,
+      "sha256": "53bcac7f9c556038b8db630e43728c646e32d7fb039a6c51b1f4d2df7c40889e"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/invalid.json",
+      "bytes": 993,
+      "sha256": "ee43cfe449a2bec270c3d2ebb3192e58cb0b7dbb16b9fdfc79ac0dfd4b7f6108"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/roundtrip-node-state.json",
+      "bytes": 94,
+      "sha256": "0b4c6830ee4dccb5d848a9239c439916b8fa87fbd2a8c948c2b42260f8136556"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/roundtrip-node.json",
+      "bytes": 2358,
+      "sha256": "0d9555412ca1d266e370c7f0d937fceaded228c3b95deaa42248434239c48fc5"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/roundtrip.json",
+      "bytes": 1750,
+      "sha256": "d9e460b335b90721f0c8bfd924c53748392a52ddb60c0e4b09e4faf670fa00fb"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/unknown-fields.json",
+      "bytes": 4450,
+      "sha256": "c5171511369e1a87ce366abd1cb03821015bb0f38904db4f11f150381af33f04"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/v1-migrated.json",
+      "bytes": 8796,
+      "sha256": "d9da618825619a701e33b98b30caacb860ba7aa636a79872dadad81e060a7273"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/v1-planner.json",
+      "bytes": 2998,
+      "sha256": "26ea42e979b636cf8e1f44153d0dc19a83b0b313555d7a7b9c5eea9581afdb9d"
+    },
+    {
+      "path": "app/src/test/resources/continuum/backlog/valid-v2.json",
+      "bytes": 4362,
+      "sha256": "764ce909a309e8cdd162c04220450363ebfd284e5b4aff486ab80e548658457e"
+    },
+    {
+      "path": "backend/README.md",
+      "bytes": 5238,
+      "sha256": "c54417590b4052ce113e91f10ace3b2502ffc5d9b6de908dd3dd828d61c2de10"
+    },
+    {
+      "path": "backend/package.json",
+      "bytes": 667,
+      "sha256": "1894b9d6d01ff77935203ff81208e13ceff7ae832f123e5fde63c808b6971680"
+    },
+    {
+      "path": "backend/src/android-web-tools.js",
+      "bytes": 890,
+      "sha256": "e29d36ff9ed3015725a9e8603fd598aa3878d0a4148832b26d5c89e5dc678cdf"
+    },
+    {
+      "path": "backend/src/brain-factory.js",
+      "bytes": 20968,
+      "sha256": "adbc0c50f7ecb80e244fab9cadeaa54d4dc361874e21edb4da7757dee6531c06"
+    },
+    {
+      "path": "backend/src/continuum-daemon.js",
+      "bytes": 10824,
+      "sha256": "0c2db919442dd47df560a2081fb7c24bb43540c2327ece6f194b0d6c11f95c8d"
+    },
+    {
+      "path": "backend/src/continuum-state.js",
+      "bytes": 10225,
+      "sha256": "730580de121506ad10b8dbdaafa91730e810bd0a96bca4f9492b965974869290"
+    },
+    {
+      "path": "backend/src/continuum-worker.js",
+      "bytes": 1344,
+      "sha256": "20f6b068e68f8f4c71545867123825b59bd0f8e7af8d6527ad2690853ec3ad0c"
+    },
+    {
+      "path": "backend/src/hypothesis-tournament.js",
+      "bytes": 19626,
+      "sha256": "bdd6f0a75350ce6f7f3d4354fa6a28a4815675d8e833450bab6412617d235931"
+    },
+    {
+      "path": "backend/src/prompt-library.js",
+      "bytes": 3562,
+      "sha256": "043b2d118a6034b8acc8b113b276b134881d2dcc501ce8aaf1e0975d16118e8f"
+    },
+    {
+      "path": "backend/src/server.js",
+      "bytes": 19209,
+      "sha256": "311c5c23dbb5b66ec5d02dd260d3b3f996caa50421ad485071a51d142c52b350"
+    },
+    {
+      "path": "backend/test/android-web-tools.test.js",
+      "bytes": 1538,
+      "sha256": "bea5e7e0bd2677c5d10df420585ab4abfcdc69d5e9f659e01cc7096261e6bf10"
+    },
+    {
+      "path": "backend/test/brain-factory.test.js",
+      "bytes": 6019,
+      "sha256": "411a1788c6b3e00524de0c8d3aa2c205f8bd5eb7b4388f3c3f637f2be6965872"
+    },
+    {
+      "path": "backend/test/continuum-daemon.test.js",
+      "bytes": 5319,
+      "sha256": "21ab1ad885b609acd181e11efdc15c4ac020ddf3ec9640ea7c2b440aba054a08"
+    },
+    {
+      "path": "backend/test/hypothesis-tournament.test.js",
+      "bytes": 9464,
+      "sha256": "d45130d08974de4a54529c704a3be3c5dfa9625b2f53c5cfa533ac2e59a19420"
+    },
+    {
+      "path": "build.gradle.kts",
+      "bytes": 142,
+      "sha256": "30b87bf76d9ec1604dfe579fdf5d71e1d722fe05b8a7043b9deed7ae6916e499"
+    },
+    {
+      "path": "docs/AGENT_TOOLS_AND_RESEARCH.md",
+      "bytes": 7183,
+      "sha256": "78f7c7bb42e55d776abf30c67998e312e81f96ec4cb3cdbe89e12e77f37aff06"
+    },
+    {
+      "path": "docs/AI_MASTER_PROMPT.md",
+      "bytes": 9438,
+      "sha256": "f890a5019cb266f1eeb63fcec9c50433ed25d9bd3e6032ff3150d763456d5f76"
+    },
+    {
+      "path": "docs/CHAT_REASONING.md",
+      "bytes": 1041,
+      "sha256": "7ff123cf8c50fdb3f8e9c5a54edcb736cc908c13cedc0a6703e611d9a84e8c77"
+    },
+    {
+      "path": "docs/COGNITIVE_ARCHITECTURE.md",
+      "bytes": 1962,
+      "sha256": "63575301dfa69e256807b13dc7875f876ba79fc6a0cbf27973f5dd6b5acfb74e"
+    },
+    {
+      "path": "docs/CONTINUUM_ARCHITECTURE.md",
+      "bytes": 15544,
+      "sha256": "b67d8a84d8e1a53eeec669932851e4e1195fe6fe69c0efb4b9304e1df8754feb"
+    },
+    {
+      "path": "docs/CONTINUUM_LEARNING.md",
+      "bytes": 11684,
+      "sha256": "c7e0ad54cdbfe4cfad5946992671fa202c1bdadfcad9e6dde920a3e2c58f5937"
+    },
+    {
+      "path": "docs/CONTINUUM_PHASE1.md",
+      "bytes": 4471,
+      "sha256": "abc15849af8e7a9ae48f5bd4afe0d036a4ff2476257240bfa31dd8be7f09724f"
+    },
+    {
+      "path": "docs/CONTINUUM_PHASE2.md",
+      "bytes": 1559,
+      "sha256": "abc6b88ad8b8f19231529769f11b8c5627d670f32d40f525a1986919eb92cbee"
+    },
+    {
+      "path": "docs/CONTRASTIVE_EXPERIMENT.md",
+      "bytes": 1437,
+      "sha256": "b727f9fccb6be130ac263026515dde914bec28c3042568c2b0f0123ba456b900"
+    },
+    {
+      "path": "docs/DEEP_RESEARCH_ENGINE.md",
+      "bytes": 6271,
+      "sha256": "abeaf9c6d04a7f0412b1f8e20030b98b1b8528c0ef727a98a4fd7c2ac2bef668"
+    },
+    {
+      "path": "docs/DEVELOPER_AGENT.md",
+      "bytes": 9115,
+      "sha256": "49b47bb4713ac393ccfb6c522682226cec2e100b838219fb2946ea8a2b4a5bcc"
+    },
+    {
+      "path": "docs/DEVELOPMENT_BACKLOG.md",
+      "bytes": 9314,
+      "sha256": "84f944618ed377358bab1d7b6351bf439e42ecf43371cd53cdb0fe3ec57467d5"
+    },
+    {
+      "path": "docs/DEVELOPMENT_BOTS.md",
+      "bytes": 4409,
+      "sha256": "d62f587209c73e96dfbf495e241ba2a2c255c0d40eac221b2e1c9f48e0eea91b"
+    },
+    {
+      "path": "docs/IDENTITY_AND_SELF_MODEL.md",
+      "bytes": 2908,
+      "sha256": "7530e5679d63772fe66e24bc60280f106a31fe191d3d508296c1f7e31969d94b"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PROGRESS.md",
+      "bytes": 14705,
+      "sha256": "cd9ecb25f78bf62aac8cad036bbf0bec5e38b4024db50568342cbd4a94988b00"
+    },
+    {
+      "path": "docs/INSTALLATION.md",
+      "bytes": 1587,
+      "sha256": "66a34345502319dc7ee27ff68a3cc4aa5c15e7b37dba5060b6cd4dee4f2a147e"
+    },
+    {
+      "path": "docs/LOCAL_FIRST_PROTOTYPE.md",
+      "bytes": 4746,
+      "sha256": "5b405899ba35894006d298f5c133014f1cfe5f9e2b4df8bb061e7077323ab13d"
+    },
+    {
+      "path": "docs/LOCAL_REASONING_AND_SKILL_EVIDENCE.md",
+      "bytes": 3501,
+      "sha256": "2a9104f937485060274c95adeedd269f6ebda463a77c446fd2ddd7251d89438f"
+    },
+    {
+      "path": "docs/MEMORY_AND_MODEL_ECOLOGY.md",
+      "bytes": 4116,
+      "sha256": "9961a3d5640e52d6aefa1526b9f2dc9bf27cd4bce8b0a59b3e85f21ed61f2519"
+    },
+    {
+      "path": "docs/NEURAL_CONTINUITY.md",
+      "bytes": 4979,
+      "sha256": "d158093ee54f4ab6802014148acd2bb84f654aa114e3073f6c2b4ea0087e9320"
+    },
+    {
+      "path": "docs/context-decoder-benchmark.json",
+      "bytes": 326,
+      "sha256": "faedc37ca21d6cae81f749de9f8b2945b10025ff38e1371513d666596897909d"
+    },
+    {
+      "path": "docs/neural-benchmark-example.json",
+      "bytes": 9519,
+      "sha256": "bc2ca63cb96e435cf32c136f8bae0d438547b777b88b4b53a9927e208240b797"
+    },
+    {
+      "path": "docs/open_source_reference_pack/ADOPTION_BACKLOG.md",
+      "bytes": 984,
+      "sha256": "ab22913abc8b0ab9d27c54fba2f1a51ad9d0f1f19b115cf40afa8d50ec9e0d23"
+    },
+    {
+      "path": "docs/open_source_reference_pack/AGENT_ORCHESTRATION.md",
+      "bytes": 1079,
+      "sha256": "9259491eaf1b4a356e5eee7406922bac6c5022e94b63231470e9fedc5ae8aaf0"
+    },
+    {
+      "path": "docs/open_source_reference_pack/ANDROID_APP_PATTERNS.md",
+      "bytes": 1136,
+      "sha256": "7d5bc3c6c56371241c035da88b841e65b554e1cc6317908a46343091b3a04054"
+    },
+    {
+      "path": "docs/open_source_reference_pack/LICENSING_AND_COPY_RULES.md",
+      "bytes": 849,
+      "sha256": "42847d3a4c60d71aa537ca7a5d2eb43252c28f7bd9b1088d76c672bfe541bf2b"
+    },
+    {
+      "path": "docs/open_source_reference_pack/LOCAL_INFERENCE.md",
+      "bytes": 1272,
+      "sha256": "b11b105a185af35b9438b032b9a6052c9cef4aac3095023940c700cd1bf78fef"
+    },
+    {
+      "path": "docs/open_source_reference_pack/MEMORY_IDENTITY.md",
+      "bytes": 1238,
+      "sha256": "b536d2e84d0a03267d61b1029697109b8d910513bce619dd61e6b01f0af44716"
+    },
+    {
+      "path": "docs/open_source_reference_pack/README.md",
+      "bytes": 1003,
+      "sha256": "5dcd9aed9a2b0258474433e17713a56caa9364cfc612c9456da49400adf8d8b8"
+    },
+    {
+      "path": "docs/open_source_reference_pack/SOURCE_INDEX.md",
+      "bytes": 2795,
+      "sha256": "33599fef86aa5fb4948a85087c0e6e8b8f6d0ec1d0481f02a9f68c8efd9e0972"
+    },
+    {
+      "path": "docs/open_source_reference_pack/THIRD_PARTY_NOTICE.md",
+      "bytes": 963,
+      "sha256": "6f4c2d2548c0f71446a99c13cf36cafae69a7139cde8e2f1c4677a403dcb7591"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/ggml-org__llama.cpp.LICENSE.txt",
+      "bytes": 1078,
+      "sha256": "94f29bbed6a22c35b992c5c6ebf0e7c92f13b836b90f36f461c9cf2f0f1d010d"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/google-ai-edge__LiteRT-LM.LICENSE.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/google-ai-edge__gallery.LICENSE.txt",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/langchain-ai__langgraph.LICENSE.txt",
+      "bytes": 1072,
+      "sha256": "d9bb52f2e3540d60ff50d8f0f5b6ba649b7fd346948c4c3d086c8afb120763c7"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/letta-ai__letta-code.LICENSE.txt",
+      "bytes": 11092,
+      "sha256": "036e78b9d7dd33ae5b378fdda973b4aad7901c8d8371a0ae40fae1f6659a89d0"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/mem0ai__mem0.LICENSE.txt",
+      "bytes": 11349,
+      "sha256": "0bbcbe931c353293a2fafce08326181dfeea0e568c566afd4ce8337a70f5e219"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/microsoft__agent-framework.LICENSE.txt",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/noahshinn__reflexion.LICENSE.txt",
+      "bytes": 1067,
+      "sha256": "6e9db9e62fe5597c3f04a620136eadb7eb8e8f77ebb0e820f7098546fb8a08e6"
+    },
+    {
+      "path": "docs/open_source_reference_pack/licenses/pytorch__executorch.LICENSE.txt",
+      "bytes": 1774,
+      "sha256": "c58707ea5d5c0ee17af7e16f1377e4d31ad1533492ab0bf9b87ebd9f718f9e7b"
+    },
+    {
+      "path": "docs/retrieval-benchmark.json",
+      "bytes": 2599,
+      "sha256": "b51b4357bb8139a46dbb2c3fef3c86ceec71fa0d23a3fa3a5c5a18ea7e6340f9"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-14-neural-continuity.md",
+      "bytes": 1336,
+      "sha256": "72ef71de23ef11768a693f18bf510f51facf6c453d8f25dbba07fbd9d75a7761"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-14-neural-continuity.md",
+      "bytes": 1807,
+      "sha256": "879f2db1fbc523ddceb9423ef57bbebbca25a1fcb96c7b9e595867416ca5d0ac"
+    },
+    {
+      "path": "gradle.properties",
+      "bytes": 102,
+      "sha256": "949550ad13b20c9dbd693a5c4dd59896c55bc5c441f473b1e83ed1e5ccca6923"
+    },
+    {
+      "path": "render.yaml",
+      "bytes": 1690,
+      "sha256": "5e5b8ef6e5096b5116d6af8ee92ca039dcd668dbd6777410872465c60cfc8a87"
+    },
+    {
+      "path": "settings.gradle.kts",
+      "bytes": 328,
+      "sha256": "eae2b268ce19144a26aeb6487bf1e43d0ff09b52e4d417e4451a9f4b12fe81be"
+    }
+  ]
+}
