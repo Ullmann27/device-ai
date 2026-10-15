@@ -1,0 +1,40 @@
+name: Continuum Developer Agent
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: continuum-developer-agent
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: copilot/pr-12-working-first-vertical-slice
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify developer agent
+        run: node --test .github/continuum/developer-agent.test.mjs
+      - name: Inspect recent CI failures without changing code
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs
+      - name: Publish diagnosis
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-developer-triage
+          path: developer-agent-report/
+          retention-days: 14
+          if-no-files-found: error
