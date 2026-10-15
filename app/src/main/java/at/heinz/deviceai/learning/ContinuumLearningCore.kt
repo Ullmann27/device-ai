@@ -445,8 +445,12 @@ class ContinuumLearningCore(
     }
 
     fun revokeAnswerCorrections():Int=synchronized(CORE_LOCK) {
-        store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,
+        val revoked=store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,
             status=LearningStatus.REVOKED,now=nowMillis())
+        // A past corrected answer may remain in the last eight dialogue turns.
+        // Remove stale derived context only after the ledger revocation commits.
+        if(revoked>0)dialogue.clear()
+        revoked
     }
 
     fun status():ContinuumLearningStatus=synchronized(CORE_LOCK) {
