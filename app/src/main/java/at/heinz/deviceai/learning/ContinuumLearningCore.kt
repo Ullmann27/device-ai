@@ -31,6 +31,7 @@ enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
  * never be replayed as semantic/intent training examples.
  */
 data class ContinuumFeedbackSummary(val positive:Int,val negative:Int,val revoked:Int)
+data class ContinuumCorrectionSummary(val active:Int,val revoked:Int)
 
 
 data class ContinuumLearningStatus(
@@ -410,6 +411,41 @@ class ContinuumLearningCore(
     /** Safe and repeatable removal of every explicit feedback record. */
     fun revokeExplicitFeedback():Int=synchronized(CORE_LOCK) {
         store.updateMatching(LearningExperienceType.USER_FEEDBACK,
+            status=LearningStatus.REVOKED,now=nowMillis())
+    }
+
+    /** Explicitly confirmed correction to the latest local dialogue turn only.
+     * No implicit model-weight change and no generalization to other questions.
+     */
+    fun confirmAnswerCorrection(question:String,answer:String):Boolean=synchronized(CORE_LOCK) {
+        val turn=dialogue.history().lastOrNull()
+        require(turn!=null && turn.resolvedQuery==question) {
+            "Conversation changed since correction was proposed"
+        }
+        val clean=answer.trim()
+        require(clean.length in 3..500 && clean.none { it=='\\u0000' })
+        val item=LearningExperienceFactory.create(
+            type=LearningExperienceType.ANSWER_CORRECTION,
+            provenance=LearningProvenance.USER_CONFIRMED,
+            trust=LearningTrustClass.OWNER_CONFIRMED,
+            status=LearningStatus.CONFIRMED,
+            content=clean,
+            annotation=ContinuumAnswerCorrection.queryKey(question),
+            now=nowMillis()
+        )
+        store.putAnswerCorrection(item,nowMillis())
+    }
+
+    fun correctionSummary():ContinuumCorrectionSummary=synchronized(CORE_LOCK) {
+        val all=store.all().filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
+        ContinuumCorrectionSummary(
+            active=all.count { it.status==LearningStatus.CONFIRMED },
+            revoked=all.count { it.status==LearningStatus.REVOKED }
+        )
+    }
+
+    fun revokeAnswerCorrections():Int=synchronized(CORE_LOCK) {
+        store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,
             status=LearningStatus.REVOKED,now=nowMillis())
     }
 
