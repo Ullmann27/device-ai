@@ -40,6 +40,9 @@ jobs:
       - name: Test autonomous continuum backend
         run: npm --prefix backend test
 
+      - name: Test portable contrastive training
+        run: node --test .github/continuum/contrastive-views.test.mjs
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 
