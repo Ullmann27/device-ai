@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import crypto from 'node:crypto';
-/** Deterministic bounded repair experience store, independent of paid APIs. */
+/** Strategy outcome aggregation (Laplace-ranked). Persisted through repair-ledger.mjs,
+ * which keys experiences as "<diagnostic kind>|<strategy>". */
 export function mergeExperiences(previous=[],observations=[]) {
  const entries=new Map();
  for(const item of [...previous,...observations]){
@@ -48,21 +48,4 @@ export function saveExperienceFile(file,entries){
  const tmp=file+'.tmp-'+process.pid;
  fs.writeFileSync(tmp,payload,{flag:'wx'});
  fs.renameSync(tmp,file);
-}
-
-/** Merge this run's verified compiler outcomes with the restored bounded history. */
-export function ingestLabReport(report,previous=[]){
- if(!report||report.schemaVersion!==1||report.mode!=='test'||report.appliedToRepository!==false
-    ||!Array.isArray(report.candidates)||report.candidates.length>10)throw Error('Invalid repair lab report');
- const observations=report.candidates.filter(item=>
-   item&&((item.status==='COMPILES'&&item.exitCode===0)||item.status==='REJECTED'));
- return mergeExperiences(previous,observations);
-}
-if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href){
- const reportFile='developer-agent-report/repair-lab.json';
- const historyFile='developer-agent-report/repair-history.json';
- const report=JSON.parse(fs.readFileSync(reportFile,'utf8'));
- const next=ingestLabReport(report,loadExperienceFile(historyFile));
- saveExperienceFile(historyFile,next);
- console.log('Persisted repair experience kinds:',next.length);
 }
