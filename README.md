@@ -1,3 +1,3 @@
 # Continuum developer-agent state
 
-Append-only repair ledger written by CI. Contains code hunks and test outcomes only, no device or personal data.
+Written by CI only. repair-ledger.json: append-only repair ledger (code hunks and test outcomes). development-backlog.json: development backlog (docs/DEVELOPMENT_BACKLOG.md). No device or personal data.
