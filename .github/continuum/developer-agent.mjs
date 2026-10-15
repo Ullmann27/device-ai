@@ -1,8 +1,11 @@
 import fs from 'node:fs';
-import crypto from 'node:crypto';
+import path from 'node:path';
 
-/** Deterministic, no-LLM developer agent. Reads CI metadata, emits bounded triage.
- * It NEVER executes arbitrary log text, writes source files, or pushes commits.
+/** Deterministic, no-LLM developer agent.
+ * `triage` reads CI metadata only. The repair commands reproduce failures with
+ * fixed check profiles, never execute log text, change sources only inside an
+ * isolated git worktree and publish only to continuum-agent/* branches as
+ * draft pull requests. They never push to development or default branches.
  */
 export function triageRun(run, jobs=[]) {
   const id=Number(run.id);
@@ -51,4 +54,132 @@ async function main() {
   fs.writeFileSync('developer-agent-report/summary.md',lines.join('\n')+'\n');
   console.log(lines.join('\n'));
 }
-if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href)main().catch(e=>{console.error(e.message);process.exitCode=1;});
+
+
+// ---------------------------------------------------------------------------
+// Repair commands. `triage` (above) only reads CI metadata; the commands below
+// drive the verified repair loop. Build execution and publishing are separate
+// commands so CI can run them in jobs with different token permissions.
+//   repair     --chain android|node|jvm --base <sha> --out <dir> [--trigger t]
+//   benchmark  --chains node=node,kotlin=android --out <dir> [--faults a,b]
+//   publish    --out <dir> --target-branch <branch>            (write token)
+//   publish-demo --out <dir> --fault <id> --run <id>           (write token)
+//   ledger-save --out <dir> [--branch continuum-agent-state]   (write token)
+// ---------------------------------------------------------------------------
+function options(argv){
+  const o={_:[]};
+  for(let i=0;i<argv.length;i++){
+    if(argv[i].startsWith('--')){const k=argv[i].slice(2);const v=argv[i+1]&&!argv[i+1].startsWith('--')?argv[++i]:'true';o[k]=v;}
+    else o._.push(argv[i]);
+  }
+  return o;
+}
+const SAFE_OUT=/^[\w./-]{1,200}$/;
+// Relative to the invoking checkout, but returned absolute: check commands run
+// with the isolated worktree as cwd and must not resolve report paths there.
+function outDir(o){if(!SAFE_OUT.test(o.out??'')||o.out.includes('..'))throw Error('--out must be a relative directory');
+  const dir=path.resolve(o.out);fs.mkdirSync(dir,{recursive:true});return dir;}
+
+export async function command(argv,{root=process.cwd(),env=process.env,log=console.log}={}){
+  const o=options(argv);const cmd=o._[0]??'triage';
+  const loop=await import('./repair-loop.mjs');
+  const ledgerMod=await import('./repair-ledger.mjs');
+  const publish=await import('./repair-publish.mjs');
+  const ledgerFile=o.ledger;
+  const ledger=ledgerFile?ledgerMod.loadLedger(ledgerFile):(o['ledger-branch']?publish.loadLedgerFromBranch(root,o['ledger-branch']).ledger:ledgerMod.emptyLedger());
+  if(cmd==='triage')return main();
+  if(cmd==='repair'){
+    const out=outDir(o);
+    if(!/^[0-9a-f]{40}$/.test(o.base??''))throw Error('--base must be a full commit hash');
+    if(!loop.CHAINS[o.chain])throw Error('Unknown --chain');
+    const wt=loop.createWorktree(root,o.base);
+    let report;
+    try{report=loop.repairSession({wt,base:o.base,chain:o.chain,out,ledger,log:m=>log('[repair] '+m),
+      deadline:Date.now()+Number(o['minutes']??30)*60000});}
+    finally{loop.removeWorktree(root,wt);}
+    report.trigger=o.trigger??null;
+    fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,1)+'\n');
+    if(ledgerFile)ledgerMod.saveLedger(ledgerFile,ledgerMod.recordSession(ledger,report,{trigger:o.trigger}));
+    log(`[repair] outcome ${report.outcome}${report.verified?' via '+report.verified.strategy:''}`);
+    return report;
+  }
+  if(cmd==='benchmark'){
+    const out=outDir(o);
+    const {runBenchmark,FAULTS}=await import('./repair-benchmark.mjs');
+    const chains=Object.fromEntries(String(o.chains??'node=node').split(',').map(x=>x.split('=')));
+    for(const [family,chain] of Object.entries(chains))if(!['node','kotlin'].includes(family)||!loop.CHAINS[chain])throw Error('Invalid --chains entry '+family+'='+chain);
+    const wanted=o.faults?new Set(o.faults.split(',')):null;
+    const head=loop.git(root,['rev-parse','HEAD']).stdout.trim();
+    let current=ledger;
+    const result=runBenchmark({root,head,chains,out,ledger:current,faults:FAULTS.filter(f=>!wanted||wanted.has(f.id)),
+      onSession:report=>{current=ledgerMod.recordSession(current,report,{trigger:'benchmark'});return current;},log:m=>log('[benchmark] '+m)});
+    const {ledger:_,...summary}=result;
+    fs.writeFileSync(path.join(out,'benchmark.json'),JSON.stringify(summary,null,1)+'\n');
+    if(ledgerFile)ledgerMod.saveLedger(ledgerFile,current);
+    const lines=['# Continuum repair benchmark','',`Head \`${head}\` · repaired **${summary.repaired}/${summary.attempted}** injected faults`,'',
+      '| Fault | Outcome | Strategy | Expected | Attempts | Exact restore | Seconds |','|---|---|---|---|---|---|---|',
+      ...summary.results.map(r=>`| ${r.fault} | ${r.outcome} | ${r.strategy??'—'} | ${r.expectedStrategy??'any'} | ${r.attempts??0} | ${r.restoredExactly?'yes':'no'} | ${Math.round((r.ms??0)/1000)} |`)];
+    fs.writeFileSync(path.join(out,'benchmark.md'),lines.join('\n')+'\n');
+    log(lines.join('\n'));
+    return summary;
+  }
+  const token=env.GITHUB_TOKEN,repository=env.GITHUB_REPOSITORY;
+  if(cmd==='publish'){
+    const out=outDir(o);
+    if(!fs.existsSync(path.join(out,'report.json'))){log('[publish] no report');return null;}
+    const report=JSON.parse(fs.readFileSync(path.join(out,'report.json'),'utf8'));
+    if(report.outcome!=='VERIFIED'){log('[publish] nothing to publish: '+report.outcome);return null;}
+    const result=await publish.publishRepair({root,outDir:out,targetBranch:o['target-branch'],repository,token,push:o['dry-run']!=='true'});
+    fs.writeFileSync(path.join(out,'publish.json'),JSON.stringify(result,null,1)+'\n');
+    log('[publish] '+JSON.stringify(result));
+    return result;
+  }
+  if(cmd==='publish-demo'){
+    const out=outDir(o);
+    const dir=path.join(out,String(o.fault??'').replace(/[^\w.-]/g,''));
+    // the fault patch applies to the exact commit the benchmark ran on
+    const head=JSON.parse(fs.readFileSync(path.join(out,'benchmark.json'),'utf8')).head;
+    if(!/^[0-9a-f]{40}$/.test(head??''))throw Error('benchmark.json has no head commit');
+    loop.git(root,['cat-file','-e',head+'^{commit}'],{allowFailure:true}).status===0||loop.git(root,['fetch','--quiet','--depth=1','origin',head]);
+    const result=await publish.publishBenchmarkDemo({root,head,faultDir:dir,runId:o.run??'local',repository,token,push:o['dry-run']!=='true'});
+    fs.writeFileSync(path.join(out,'publish-demo.json'),JSON.stringify(result,null,1)+'\n');
+    log('[publish-demo] '+JSON.stringify(result));
+    return result;
+  }
+  if(cmd==='ledger-save'){
+    const out=outDir(o);
+    const reports=[];
+    for(const dirent of fs.readdirSync(out,{withFileTypes:true})){
+      const file=dirent.isDirectory()?path.join(out,dirent.name,'report.json'):dirent.name==='report.json'?path.join(out,'report.json'):null;
+      if(file&&fs.existsSync(file)){const report=JSON.parse(fs.readFileSync(file,'utf8'));
+        const pub=path.join(path.dirname(file),'publish.json');
+        reports.push({report,meta:{trigger:report.trigger??(dirent.isDirectory()?'benchmark':null),
+          ...(fs.existsSync(pub)?(({branch,commit,pullRequest})=>({branch,proposalCommit:commit,pullRequest:pullRequest?.url??pullRequest?.compare??null}))(JSON.parse(fs.readFileSync(pub,'utf8'))):{})}});}
+    }
+    const result=publish.saveLedgerToBranch(root,o.branch??'continuum-agent-state',reports);
+    log('[ledger] '+JSON.stringify(result));
+    return result;
+  }
+  if(cmd==='watch'){
+    // Cheap scheduled check: API calls only. Requests a repair job only when the
+    // development head has a failed Android build and no recorded repair session.
+    const branch=o.branch??'copilot/pr-12-working-first-vertical-slice';
+    if(!/^[\w./-]{1,120}$/.test(branch))throw Error('Invalid --branch');
+    const api=async p=>{const r=await fetch('https://api.github.com/repos/'+repository+p,{signal:AbortSignal.timeout(12000),
+      headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+      if(!r.ok)throw Error('GitHub API HTTP '+r.status);return r.json();};
+    const head=(await api('/branches/'+encodeURIComponent(branch))).commit.sha;
+    const runs=(await api('/actions/runs?head_sha='+head+'&per_page=30')).workflow_runs??[];
+    const build=runs.find(r=>r.path==='.github/workflows/android.yml');
+    const known=ledger.sessions.some(x=>x.base===head);
+    const decision={branch,head,buildConclusion:build?.conclusion??build?.status??'NOT_RUN',alreadyAttempted:known,
+      needsRepair:build?.conclusion==='failure'&&!known};
+    log('[watch] '+JSON.stringify(decision));
+    if(env.GITHUB_OUTPUT)fs.appendFileSync(env.GITHUB_OUTPUT,`needs_repair=${decision.needsRepair}\nbase=${head}\nbranch=${branch}\n`);
+    return decision;
+  }
+  throw Error('Unknown command '+cmd);
+}
+
+if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href)
+  command(process.argv.slice(2)).catch(e=>{console.error(e.message);process.exitCode=1;});

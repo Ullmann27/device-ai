@@ -97,3 +97,75 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
+
+  # Continuum developer agent: reproduce a failed build of a development branch,
+  # search a verified repair in an isolated worktree and export it as a patch.
+  # Read-only token: this job executes repository build code.
+  repair:
+    needs: build
+    if: failure() && github.event_name == 'push' && startsWith(github.ref_name, 'copilot/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Android 36 SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Reproduce, diagnose and verify a repair
+        run: node .github/continuum/developer-agent.mjs repair --chain android --base "$GITHUB_SHA" --out agent-repair --trigger android-build-failure --minutes 40
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-agent-repair
+          path: agent-repair/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Publishes only what the read-only job verified. No build code runs here.
+  publish-repair:
+    needs: repair
+    if: always() && needs.repair.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: continuum-agent-repair
+          path: agent-repair
+      - name: Draft pull request with the verified repair
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs publish --out agent-repair --target-branch "$GITHUB_REF_NAME"
+      - name: Persist repair experience
+        run: node .github/continuum/developer-agent.mjs ledger-save --out agent-repair --branch continuum-agent-state
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-agent-publication
+          path: agent-repair/publish.json
+          if-no-files-found: ignore

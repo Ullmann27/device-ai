@@ -144,6 +144,7 @@ export function rankCandidates(candidates,stats=[],failedIds=new Set()){
  */
 export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{}}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
+  if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
   const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),baseline:null,attempts:[],verified:null,outcome:null};
