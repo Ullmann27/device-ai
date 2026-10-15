@@ -71,8 +71,11 @@ import at.heinz.deviceai.cognitive.MemoryWriteContext
 import at.heinz.deviceai.cognitive.MemoryWritePolicy
 import at.heinz.deviceai.cognitive.ProvenanceType
 import at.heinz.deviceai.cognitive.DeepResearchEngine
+import at.heinz.deviceai.cognitive.BacklogException
+import at.heinz.deviceai.cognitive.DevelopmentBacklog
 import at.heinz.deviceai.cognitive.DevelopmentCoordinator
 import at.heinz.deviceai.cognitive.DevelopmentUiController
+import at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog
 import at.heinz.deviceai.cognitive.DevelopmentUiPhase
 import at.heinz.deviceai.cognitive.DeterministicResearchSynthesizer
 import at.heinz.deviceai.cognitive.FileResearchDossierStore
@@ -118,6 +121,10 @@ class AgentActivity : Activity() {
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
+        private const val DEV_BACKLOG_EXPORT_REQUEST = 2211
+        private const val DEV_OPLOG_EXPORT_REQUEST = 2212
+        private const val DEV_BACKLOG_IMPORT_REQUEST = 2213
+        private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000
         private const val NEURAL_IMPORT_REQUEST = 2211
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
@@ -240,6 +247,14 @@ class AgentActivity : Activity() {
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
     private val devController = DevelopmentUiController { "dev-" + UUID.randomUUID() }
     @Volatile private var activeDevCoordinator: DevelopmentCoordinator? = null
+    // Shared development backlog (same rules as the Node agent and CLI); file
+    // access only on backlogExecutor or the local-agent executor, never on the UI thread.
+    private val backlogExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "device-ai-backlog").apply { isDaemon = true }
+    }
+    private val devBacklog by lazy { DeviceDevelopmentBacklog(java.io.File(filesDir, "development")) }
+    private var backlogDialog: AlertDialog? = null
+    private var backlogList: LinearLayout? = null
     private var devDialog: AlertDialog? = null
     private var devStatusView: TextView? = null
     private var devSourcesView: TextView? = null
@@ -308,6 +323,7 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
+        recoverDevelopmentBacklog()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
             "NEURON · Bereits gelernt · Tippe TRAINING oder HÄRTETEST"
@@ -372,6 +388,9 @@ class AgentActivity : Activity() {
         }
         activeNeuralCancellation?.set(true)
         localAgentExecutor.shutdownNow()
+        // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
+        backlogExecutor.shutdown()
+        backlogDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -943,6 +962,12 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request)
             showModelVersions()
+            return
+        }
+        if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            showDevelopmentBacklog()
             return
         }
         if (request.equals("Lernstand zurücksetzen", true)) {
@@ -2773,6 +2798,7 @@ class AgentActivity : Activity() {
             row.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
         }
         box.addView(row, matchWidth(top = 8))
+        box.addView(actionButton("AUFGABEN · BACKLOG").apply { setOnClickListener { showDevelopmentBacklog() } }, matchWidth(top = 6))
         devStatusView = textView("", 12f, AMBER, true)
         box.addView(devStatusView, matchWidth(top = 8))
         devPreviewView = textView("", 11f, TEXT).apply { setTextIsSelectable(true) }
@@ -2813,7 +2839,7 @@ class AgentActivity : Activity() {
                 runCatching {
                     val name = contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)
                         ?.use { c -> if (c.moveToFirst()) c.getString(0) else null } ?: error("Dateiname unbekannt.")
-                    val bytes = contentResolver.openInputStream(uri)?.use { it.readNBytes(DEV_MAX_SOURCE_READ_BYTES + 1) }
+                    val bytes = contentResolver.openInputStream(uri)?.use { it.readAtMost(DEV_MAX_SOURCE_READ_BYTES) }
                         ?: error("Dokument kann nicht geöffnet werden.")
                     require(bytes.size <= DEV_MAX_SOURCE_READ_BYTES) { "$name ist größer als $DEV_MAX_SOURCE_READ_BYTES Bytes; kleinere Auswahl treffen." }
                     val text = Charsets.UTF_8.newDecoder()
@@ -2857,6 +2883,10 @@ class AgentActivity : Activity() {
         setBusy(true)
         refreshDevelopmentUi()
         localAgentExecutor.execute {
+            // Recorded in the backlog before the first model call: if the app dies
+            // mid-job the task is visibly IN_PROGRESS and returns to READY when its
+            // lease ends, instead of being lost.
+            val backlogToken = runCatching { devBacklog.startJob(task) }
             val outcome = coordinator.run(task) { state ->
                 runOnUiThread {
                     if (!isFinishing && !isDestroyed) {
@@ -2865,6 +2895,7 @@ class AgentActivity : Activity() {
                     }
                 }
             }
+            val recorded = backlogToken.mapCatching { devBacklog.finishJob(task.taskId, it, outcome) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 devController.onOutcome(outcome)
@@ -2872,6 +2903,10 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 setBusy(false)
                 refreshDevelopmentUi()
+                (backlogToken.exceptionOrNull() ?: recorded.exceptionOrNull())?.let {
+                    Toast.makeText(this, "Backlog nicht aktualisiert: " + backlogError(it), Toast.LENGTH_LONG).show()
+                }
+                if (backlogList != null) refreshDevelopmentBacklog()
             }
         }
     }
@@ -3590,6 +3625,208 @@ class AgentActivity : Activity() {
                 val uri = data?.data
                 if (resultCode == RESULT_OK && uri != null) exportDevelopmentProposal(uri)
             }
+            DEV_BACKLOG_EXPORT_REQUEST, DEV_OPLOG_EXPORT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) exportBacklogDocument(uri, requestCode == DEV_OPLOG_EXPORT_REQUEST)
+            }
+            DEV_BACKLOG_IMPORT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) importBacklogDocument(uri)
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Development backlog (cognitive/DevelopmentBacklog.kt, docs/DEVELOPMENT_BACKLOG.md)
+    // ------------------------------------------------------------------
+    private fun <T> onBacklog(work: () -> T, done: (Result<T>) -> Unit) {
+        try {
+            backlogExecutor.execute {
+                val result = runCatching(work)
+                runOnUiThread { if (!isFinishing && !isDestroyed) done(result) }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            // activity is closing
+        }
+    }
+
+    private fun backlogError(e: Throwable): String = when (e) {
+        is BacklogException -> "${e.code}: ${e.detail.take(160)}"
+        else -> e.javaClass.simpleName + (e.message?.let { ": " + it.take(160) } ?: "")
+    }
+
+    private fun recoverDevelopmentBacklog() {
+        onBacklog({ devBacklog.recover() }) { result ->
+            result.onSuccess { expired ->
+                if (expired.isNotEmpty()) {
+                    addToolActivity("BACKLOG · ${expired.size} unterbrochene Entwicklungsaufgabe(n) nach abgelaufener Lease wieder freigegeben")
+                }
+            }.onFailure { addToolActivity("BACKLOG · nicht lesbar: " + backlogError(it).take(140)) }
+        }
+    }
+
+    private fun showDevelopmentBacklog() {
+        backlogDialog?.dismiss()
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        box.addView(textView(
+            "Gemeinsamer Entwicklungs-Backlog mit denselben Regeln wie Entwickler-Agent und CLI. Erledigt (DONE) wird eine " +
+                "Aufgabe nur mit ausgeführtem Testnachweis aus CI oder vom Agenten; auf dem Gerät entstehen nur geprüfte " +
+                "Vorschläge (VERIFYING). Exporte enthalten die eingegebenen Aufgabentitel und gehen nur an das gewählte Ziel.",
+            12f, MUTED))
+        val list = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        backlogList = list
+        box.addView(list, matchWidth(top = 8))
+        val io = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        fun create(code: Int, name: String) = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, name)
+        }.let { startActivityForResult(it, code) }
+        listOf(
+            actionButton("OP-LOG EXPORT", compact = true).apply {
+                setOnClickListener { create(DEV_OPLOG_EXPORT_REQUEST, "device-ai-backlog-ops.json") }
+            },
+            actionButton("BACKLOG EXPORT", compact = true).apply {
+                setOnClickListener { create(DEV_BACKLOG_EXPORT_REQUEST, "device-ai-backlog.json") }
+            },
+            actionButton("IMPORT", compact = true).apply {
+                setOnClickListener {
+                    startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "*/*"
+                    }, DEV_BACKLOG_IMPORT_REQUEST)
+                }
+            }
+        ).forEach { io.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) }) }
+        box.addView(io, matchWidth(top = 10))
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Entwicklungsaufgaben")
+            .setView(ScrollView(this).apply { addView(box) })
+            .setPositiveButton("Schließen", null)
+            .create()
+        // dismiss callbacks arrive asynchronously: only the current dialog clears the references
+        dialog.setOnDismissListener {
+            if (backlogDialog === dialog) {
+                backlogDialog = null
+                backlogList = null
+            }
+        }
+        backlogDialog = dialog
+        dialog.show()
+        refreshDevelopmentBacklog()
+    }
+
+    private fun refreshDevelopmentBacklog(note: String? = null) {
+        val list = backlogList ?: return
+        list.removeAllViews()
+        list.addView(textView(note ?: "Lade Backlog…", 12f, AMBER))
+        onBacklog({ devBacklog.read() }) { result ->
+            val target = backlogList ?: return@onBacklog
+            target.removeAllViews()
+            note?.let { target.addView(textView(it, 12f, AMBER)) }
+            result.onFailure {
+                target.addView(textView("Backlog nicht lesbar: " + backlogError(it), 12f, RED))
+            }.onSuccess { loaded ->
+                loaded.recovered?.let {
+                    target.addView(textView("Datei beschädigt (${it.reason.take(120)}); der letzte gültige Stand wird beim nächsten " +
+                        "Schreiben übernommen, die beschädigte Datei bleibt erhalten.", 12f, AMBER))
+                }
+                val views = DevelopmentBacklog.views(loaded.doc)
+                    .sortedWith(compareBy<DevelopmentBacklog.TaskView> { it.terminal }.thenByDescending { it.priority }.thenBy { it.id })
+                target.addView(textView("Revision ${loaded.doc["revision"]} · ${views.size} Aufgabe(n)", 12f, MUTED))
+                if (views.isEmpty()) target.addView(textView("Noch keine Aufgaben. Entwicklungsaufträge und importierte Agent-Aufgaben erscheinen hier.", 12f, MUTED))
+                views.forEach { target.addView(backlogTaskView(it), matchWidth(top = 8)) }
+            }
+        }
+    }
+
+    private fun backlogTaskView(task: DevelopmentBacklog.TaskView): View {
+        val card = verticalCard().apply { setPadding(dp(12), dp(10), dp(12), dp(10)) }
+        val color = when (task.state) {
+            "DONE" -> GREEN
+            "FAILED", "REJECTED", "ABORTED", "BLOCKED" -> RED
+            "IN_PROGRESS", "VERIFYING" -> CYAN
+            else -> AMBER
+        }
+        card.addView(textView(task.title, 13f, TEXT, true))
+        card.addView(textView("${task.state} · Priorität ${task.priority} · Versuch ${task.attempts}/${task.maxAttempts} · " +
+            "${task.kind} · ${task.source}", 11.5f, color))
+        val detail = when (task.state) {
+            "VERIFYING" -> "Wartet auf Testnachweis (Agent/CI: backlog verify)."
+            "DONE" -> "Erledigt mit ${task.evidenceCount} Testnachweis(en)."
+            "IN_PROGRESS" -> "In Arbeit (${task.claimOwner ?: "?"})."
+            else -> null
+        }
+        listOfNotNull(detail, task.errorCode?.let { "Letzter Fehler $it: ${task.errorMessage.orEmpty()}" },
+            task.lastReason?.takeIf { it.isNotBlank() }?.let { "Zuletzt: $it" })
+            .forEach { card.addView(textView(it, 11.5f, MUTED)) }
+        val actions = buildList {
+            if (task.state == "PROPOSED") add(Triple("ANNEHMEN", "accept", false))
+            if (task.state == "FAILED") add(Triple("ERNEUT", "retry", true))
+            if (task.state in setOf("PROPOSED", "READY", "BLOCKED", "FAILED")) add(Triple("ABLEHNEN", "reject", true))
+            if (!task.terminal) add(Triple("ABBRECHEN", "abort", true))
+        }
+        if (actions.isNotEmpty()) {
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            actions.forEach { (label, action, needsReason) ->
+                row.addView(actionButton(label, compact = true).apply {
+                    setOnClickListener { decideBacklogTask(task.id, label, action, needsReason) }
+                }, LinearLayout.LayoutParams(0, dp(36), 1f).apply { marginEnd = dp(4) })
+            }
+            card.addView(row, matchWidth(top = 6))
+        }
+        return card
+    }
+
+    private fun decideBacklogTask(id: String, label: String, action: String, needsReason: Boolean) {
+        val run = { reason: String? ->
+            onBacklog({ devBacklog.decide(id, action, reason) }) { result ->
+                refreshDevelopmentBacklog(result.fold(
+                    { if (it.ok) "$label: übernommen." else "$label abgelehnt: ${it.code} ${it.message.orEmpty().take(140)}" },
+                    { "$label fehlgeschlagen: " + backlogError(it) }))
+            }
+        }
+        if (!needsReason) {
+            run(null)
+            return
+        }
+        val field = EditText(this).apply { hint = "Begründung (Pflicht)" }
+        AlertDialog.Builder(this)
+            .setTitle(label)
+            .setView(field)
+            .setPositiveButton("OK") { _, _ -> run(field.text.toString()) }
+            .setNegativeButton("Abbrechen", null)
+            .show()
+    }
+
+    private fun exportBacklogDocument(uri: Uri, operationLog: Boolean) {
+        onBacklog({
+            val bytes = if (operationLog) devBacklog.exportOperationLog() else devBacklog.exportBacklog()
+            contentResolver.openOutputStream(uri, "wt")?.use { it.write(bytes) } ?: error("Ziel kann nicht geöffnet werden.")
+            bytes.size
+        }) { result ->
+            Toast.makeText(this, result.fold(
+                { (if (operationLog) "Operationslog" else "Backlog") + " exportiert ($it Bytes)." },
+                { "Export fehlgeschlagen: " + backlogError(it) }), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun importBacklogDocument(uri: Uri) {
+        onBacklog({
+            val bytes = contentResolver.openInputStream(uri)?.use { it.readAtMost(DEV_BACKLOG_MAX_IMPORT_BYTES) }
+                ?: error("Dokument kann nicht geöffnet werden.")
+            require(bytes.size <= DEV_BACKLOG_MAX_IMPORT_BYTES) { "Datei größer als $DEV_BACKLOG_MAX_IMPORT_BYTES Bytes." }
+            devBacklog.importBacklog(bytes)
+        }) { result ->
+            val text = result.fold({ r ->
+                "Import: Revision ${r.revision} · ${r.tasks} Aufgaben · ${r.replayed} lokale Operation(en) neu angewendet · " +
+                    "${r.alreadyIncluded} bereits enthalten" +
+                    (if (r.rejected.isEmpty()) "" else " · ${r.rejected.size} abgelehnt: " + r.rejected.take(3).joinToString("; "))
+            }, { "Import abgelehnt, lokaler Stand unverändert: " + backlogError(it) })
+            if (backlogList != null) refreshDevelopmentBacklog(text) else Toast.makeText(this, text, Toast.LENGTH_LONG).show()
         }
     }
 

@@ -35,6 +35,14 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    lint {
+        // CI gate (android.yml): an API newer than minSdk 26 without a version check
+        // crashes on older devices (e.g. InputStream.readNBytes needs API 33).
+        checkOnly += setOf("NewApi")
+        abortOnError = true
+        checkReleaseBuilds = false
+    }
+
 }
 
 kotlin {

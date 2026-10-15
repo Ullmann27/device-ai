@@ -94,7 +94,7 @@ class DevelopmentCoordinatorTest {
         val text = p.render()
         assertTrue(text.contains("NOT EXECUTED"))
         assertTrue(text.contains("Generated tests executed"))
-        assertTrue(text.contains("Restart recovery unavailable"))
+        assertTrue(text.contains("Job recorded in the development backlog"))
         assertFalse(text.contains("tests passed", ignoreCase = true))
         assertEquals(0, h.runtimeCancels)
     }

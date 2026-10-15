@@ -139,7 +139,9 @@ object NotExecuted {
         "APK built or installed",
         "Changes pushed to GitHub"
     )
-    const val RECOVERY = "Restart recovery unavailable: job state is not persisted."
+    /** The job is recorded in the development backlog (DeviceDevelopmentBacklog), not the proposal itself. */
+    const val RECOVERY = "Job recorded in the development backlog: an app restart mid-job returns it to READY when its lease ends; " +
+        "the proposal waits there (VERIFYING) for executed test evidence."
 }
 
 data class DevelopmentProposal(

@@ -766,7 +766,8 @@ object DevelopmentBacklog {
     }
 
     data class OpReport(val index: Int, val ok: Boolean, val code: String? = null, val message: String? = null,
-                        val id: String? = null, val expired: List<String> = emptyList(), val duplicate: Boolean = false)
+                        val id: String? = null, val expired: List<String> = emptyList(), val duplicate: Boolean = false,
+                        val changed: Boolean = false)
 
     /** Apply several operations; every rejection is reported, never dropped silently. */
     fun applyOps(doc: Map<String, Any?>, ops: List<Map<String, Any?>>, stopOnError: Boolean = true): Pair<Map<String, Any?>, List<OpReport>> {
@@ -776,7 +777,7 @@ object DevelopmentBacklog {
             try {
                 val r = applyOp(current, op)
                 current = r.doc
-                reports += OpReport(index, true, id = r.id, expired = r.expired, duplicate = r.duplicate)
+                reports += OpReport(index, true, id = r.id, expired = r.expired, duplicate = r.duplicate, changed = r.changed)
             } catch (e: BacklogException) {
                 reports += OpReport(index, false, e.code, e.detail)
                 if (stopOnError) fail(e.code, "operation $index (${op["op"]}): ${e.detail}")

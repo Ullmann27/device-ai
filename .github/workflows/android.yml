@@ -87,6 +87,9 @@ jobs:
           path: app/build/test-results/testDebugUnitTest/TEST-*.xml
           if-no-files-found: warn
 
+      - name: API level check (lint NewApi, minSdk 26)
+        run: gradle :app:lintDebug --stacktrace
+
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
 
