@@ -59,10 +59,17 @@ jobs:
       - name: Backlog round trip, Node writes
         run: node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$RUNNER_TEMP/backlog-roundtrip"
 
+      - name: Prepare Node contrastive parity reference
+        run: node .github/continuum/contrastive-parity.mjs prepare "$RUNNER_TEMP/contrastive-parity"
+
       - name: Run unit tests
         env:
           CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/backlog-roundtrip
+          CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/contrastive-parity
         run: gradle :app:testDebugUnitTest --stacktrace
+
+      - name: Verify Kotlin-trained encoder against Node
+        run: node .github/continuum/contrastive-parity.mjs verify "$RUNNER_TEMP/contrastive-parity"
 
       - name: Backlog round trip, Node verifies the Kotlin changes
         run: node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$RUNNER_TEMP/backlog-roundtrip"
