@@ -36,7 +36,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node .github/continuum/developer-agent.mjs
-      - name: Analyze Kotlin source wiring\n        run: node .github/continuum/code-analyzer.mjs app/src\n      - name: Publish diagnosis
+      - name: Analyze Kotlin source wiring
+        run: node .github/continuum/code-analyzer.mjs app/src
+      - name: Publish diagnosis
         uses: actions/upload-artifact@v4
         with:
           name: continuum-developer-triage
