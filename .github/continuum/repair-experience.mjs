@@ -4,13 +4,22 @@ import crypto from 'node:crypto';
 export function mergeExperiences(previous=[],observations=[]) {
  const entries=new Map();
  for(const item of [...previous,...observations]){
-  if(!item||!['COMPILES','REJECTED'].includes(item.status)||typeof item.kind!=='string')continue;
-  const key=item.kind.slice(0,80);
-  const current=entries.get(key)??{kind:key,successes:0,failures:0};
-  current[item.status==='COMPILES'?'successes':'failures']++;
-  entries.set(key,current);
+  if(!item||typeof item.kind!=='string'||!item.kind.trim()||item.kind.length>80)continue;
+  const aggregated=Number.isSafeInteger(item.successes)&&Number.isSafeInteger(item.failures)
+    &&item.successes>=0&&item.failures>=0;
+  const observed=item.status==='COMPILES'||item.status==='REJECTED';
+  if(!aggregated&&!observed)continue;
+  const current=entries.get(item.kind)??{kind:item.kind,successes:0,failures:0};
+  const successes=current.successes+(aggregated?item.successes:Number(item.status==='COMPILES'));
+  const failures=current.failures+(aggregated?item.failures:Number(item.status==='REJECTED'));
+  if(!Number.isSafeInteger(successes)||!Number.isSafeInteger(failures))throw Error('Experience counter overflow');
+  entries.set(item.kind,{kind:item.kind,successes,failures});
  }
- return [...entries.values()].sort((a,b)=>(b.successes/(b.successes+b.failures))-(a.successes/(a.successes+a.failures))).slice(0,100);
+ return [...entries.values()].sort((a,b)=>{
+  const scoreA=(a.successes+1)/(a.successes+a.failures+2);
+  const scoreB=(b.successes+1)/(b.successes+b.failures+2);
+  return scoreB-scoreA||a.kind.localeCompare(b.kind);
+ }).slice(0,100);
 }
 export function summarizeExperiences(observations=[]) {
  const grouped=new Map();
@@ -39,4 +48,21 @@ export function saveExperienceFile(file,entries){
  const tmp=file+'.tmp-'+process.pid;
  fs.writeFileSync(tmp,payload,{flag:'wx'});
  fs.renameSync(tmp,file);
+}
+
+/** Merge this run's verified compiler outcomes with the restored bounded history. */
+export function ingestLabReport(report,previous=[]){
+ if(!report||report.schemaVersion!==1||report.mode!=='test'||report.appliedToRepository!==false
+    ||!Array.isArray(report.candidates)||report.candidates.length>10)throw Error('Invalid repair lab report');
+ const observations=report.candidates.filter(item=>
+   item&&((item.status==='COMPILES'&&item.exitCode===0)||item.status==='REJECTED'));
+ return mergeExperiences(previous,observations);
+}
+if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href){
+ const reportFile='developer-agent-report/repair-lab.json';
+ const historyFile='developer-agent-report/repair-history.json';
+ const report=JSON.parse(fs.readFileSync(reportFile,'utf8'));
+ const next=ingestLabReport(report,loadExperienceFile(historyFile));
+ saveExperienceFile(historyFile,next);
+ console.log('Persisted repair experience kinds:',next.length);
 }
