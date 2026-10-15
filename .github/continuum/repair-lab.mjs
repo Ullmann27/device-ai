@@ -30,15 +30,17 @@ export function runLab(root,{testCommand=['./gradlew',':app:compileDebugUnitTest
  if(!candidates.length)return report;
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-repair-'));
  try{
-  const copy=spawnSync('cp',['-a',root+'/.',tmp+'/'],{timeout:60000,encoding:'utf8',shell:false});
-  if(copy.status!==0)throw Error('Isolated source copy failed');
+  const copy=spawnSync('tar',['-C',root,'--exclude=.git','--exclude=.gradle','--exclude=build','--exclude=app/build','-cf','-', '.'],{timeout:60000,encoding:'buffer',maxBuffer:100000000,shell:false});
+  if(copy.status!==0)throw Error('Isolated source archive failed');
+  const unpack=spawnSync('tar',['-C',tmp,'-xf','-'],{input:copy.stdout,timeout:60000,maxBuffer:1000000,shell:false});
+  if(unpack.status!==0)throw Error('Isolated source extraction failed');
   for(const candidate of candidates){
    const target=path.resolve(tmp,'app/src',candidate.file);
    if(!target.startsWith(path.resolve(tmp,'app/src')+path.sep))throw Error('Unsafe candidate path');
    const original=fs.readFileSync(target,'utf8');
    fs.writeFileSync(target,applyCandidate(original,candidate));
    const run=spawnSync(testCommand[0],testCommand.slice(1),{cwd:tmp,timeout:180000,encoding:'utf8',maxBuffer:1000000,shell:false,
-     env:{...process.env,GRADLE_USER_HOME:path.join(tmp,'.gradle-agent')}});
+     env:{...process.env,GRADLE_USER_HOME:process.env.GRADLE_USER_HOME??path.join(os.homedir(),'.gradle')}});
    report.candidates.push({...candidate,status:run.status===0?'COMPILES':'REJECTED',
      exitCode:run.status,diagnostic:(run.stderr??'').slice(-1000)});
    fs.writeFileSync(target,original);
