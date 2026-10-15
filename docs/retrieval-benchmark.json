@@ -1,0 +1,149 @@
+{
+ "benchmark": "continuum-benchmark@1",
+ "passages": 32,
+ "devQueries": 32,
+ "testQueries": 32,
+ "neuralInfluenceOnCurrentTop3": 0.438,
+ "methods": {
+  "current": {
+   "dev": {
+    "top1": 0.188,
+    "mrr": 0.245,
+    "recallAt3": 0.313,
+    "answered": 0.813
+   },
+   "test": {
+    "top1": 0.438,
+    "mrr": 0.479,
+    "recallAt3": 0.531,
+    "answered": 0.906
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.234,
+    "falseHitWhenUnknown": 0.766
+   }
+  },
+  "adopted": {
+   "dev": {
+    "top1": 0.625,
+    "mrr": 0.656,
+    "recallAt3": 0.688,
+    "answered": 0.844
+   },
+   "test": {
+    "top1": 0.594,
+    "mrr": 0.651,
+    "recallAt3": 0.719,
+    "answered": 0.813
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.516,
+    "falseHitWhenUnknown": 0.484
+   }
+  },
+  "current-without-neural": {
+   "dev": {
+    "top1": 0.281,
+    "mrr": 0.313,
+    "recallAt3": 0.344,
+    "answered": 0.813
+   },
+   "test": {
+    "top1": 0.375,
+    "mrr": 0.422,
+    "recallAt3": 0.469,
+    "answered": 0.906
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.234,
+    "falseHitWhenUnknown": 0.766
+   }
+  },
+  "bm25-words": {
+   "dev": {
+    "top1": 0.313,
+    "mrr": 0.359,
+    "recallAt3": 0.406,
+    "answered": 0.594
+   },
+   "test": {
+    "top1": 0.469,
+    "mrr": 0.484,
+    "recallAt3": 0.5,
+    "answered": 0.688
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.625,
+    "falseHitWhenUnknown": 0.375
+   }
+  },
+  "tfidf-wordgrams": {
+   "dev": {
+    "top1": 0.688,
+    "mrr": 0.774,
+    "recallAt3": 0.844,
+    "answered": 1
+   },
+   "test": {
+    "top1": 0.594,
+    "mrr": 0.703,
+    "recallAt3": 0.781,
+    "answered": 1
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0,
+    "falseHitWhenUnknown": 1
+   }
+  },
+  "gated-tfidf-wordgrams": {
+   "dev": {
+    "top1": 0.625,
+    "mrr": 0.656,
+    "recallAt3": 0.688,
+    "answered": 0.844
+   },
+   "test": {
+    "top1": 0.594,
+    "mrr": 0.651,
+    "recallAt3": 0.719,
+    "answered": 0.813
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.516,
+    "falseHitWhenUnknown": 0.484
+   }
+  },
+  "gated-tfidf+dense": {
+   "dev": {
+    "top1": 0.625,
+    "mrr": 0.656,
+    "recallAt3": 0.688,
+    "answered": 0.844
+   },
+   "test": {
+    "top1": 0.594,
+    "mrr": 0.651,
+    "recallAt3": 0.719,
+    "answered": 0.813
+   },
+   "unknown": {
+    "abstainWhenUnknown": 0.516,
+    "falseHitWhenUnknown": 0.484
+   }
+  },
+  "current (untrained encoder)": {
+   "dev": {
+    "top1": 0.219,
+    "mrr": 0.271,
+    "recallAt3": 0.344,
+    "answered": 0.813
+   },
+   "test": {
+    "top1": 0.438,
+    "mrr": 0.479,
+    "recallAt3": 0.531,
+    "answered": 0.906
+   }
+  }
+ }
+}

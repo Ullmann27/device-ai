@@ -1,7 +1,6 @@
 import {SubwordEncoder,sha256} from './portable-subword.mjs';
 import {exportWeights} from './neural-core.mjs';
-const terms=s=>new Set(String(s).toLowerCase().match(/[\p{L}\p{N}]{3,}/gu)?.filter(x=>!STOP.has(x))??[]);
-const STOP=new Set(['was','wie','weißt','über','und','noch','dazu','darüber','das','die','der','ist','ich','mir','mein','meine','du','bitte','kannst','erzähl','erkläre','welche','dieses','thema']);
+import {rankMemories} from './dialogue-retrieval.mjs';
 export function dialogueTurn(state,input,now=Date.now()){
   const text=String(input).trim().slice(0,1200);
   state.dialogue??={turns:[],topic:''};
@@ -28,10 +27,6 @@ export function dialogueTurn(state,input,now=Date.now()){
 }
 
 export function rankDialogueMemories(weights,query,memories){
- const q=terms(query),model=SubwordEncoder.restore(weights);
- return memories.map(m=>{
-   const t=terms(m.text),overlap=[...q].filter(x=>t.has(x)).length;
-   let semantic=.5;try{semantic=model.similarity(query.slice(0,1000),String(m.text).slice(0,1000));}catch{}
-   return {...m,overlap,semantic,score:overlap/Math.max(1,q.size)+.35*(semantic-.5)};
- }).filter(x=>x.overlap>0).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id)).slice(0,3);
+ const model=SubwordEncoder.restore(weights);
+ return rankMemories(query,memories,{semantic:(a,b)=>model.similarity(a,b)});
 }

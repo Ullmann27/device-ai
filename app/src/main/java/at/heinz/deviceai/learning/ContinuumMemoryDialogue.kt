@@ -95,29 +95,90 @@ class ContinuumMemoryDialogue(private val directory:File) {
     }
 
     companion object {
-        private val stop=setOf("was","wie","weißt","über","und","noch","dazu","darüber","das","die","der","ist","ich","mir","mein","meine","du","bitte","kannst","erzähl","erkläre","welche","dieses","thema")
-        private fun tokens(text:String):Set<String> = Regex("[\\p{L}\\p{N}]{3,}").findAll(text.lowercase(Locale.ROOT)).map { it.value }.filter { it !in stop }.toSet()
         fun hash(bytes:ByteArray):String=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
-        /** Same lexical gate and 0.35 neural coefficient as GitHub rankDialogueMemories. */
+        /** Mirrors .github/continuum/dialogue-retrieval.mjs exactly (cross-runtime fixture).
+         * Selected on the frozen retrieval benchmark (docs/retrieval-benchmark.json):
+         * word-evidence gate + TF-IDF over character 3-5 grams inside content words,
+         * IDF from the current memory corpus. Neural similarity is reported, not weighted:
+         * it changed the top-3 for 44% of benchmark queries without a consistent gain.
+         */
+        private val STOP=setOf("was","wie","weißt","über","und","noch","dazu","darüber","das","die","der","ist","ich","mir","mein","meine","du","bitte","kannst","erzähl","erkläre","welche","dieses","thema",
+            "den","dem","des","ein","eine","einer","eines","einem","einen","mit","von","vom","zum","zur","für","auf","aus","bei","sich","sie","er","es","wir","ihr","sind","wird","werden","wurde","wurden","hat","haben","im","in","an","am","zu","oder","als","auch","nicht","nur","man","wo","wer","warum","wieso","weshalb","wann","woher","wohin","womit","woraus","worauf","gibt","kann","macht","dass","dabei","dadurch","deshalb","heute","meist","oft","etwa","viele","vielen","ganz","später","früher","etwas","mehr","erzähle","sag","sage","weiß","kennst","bekannt")
+        const val EVIDENCE_THRESHOLD=0.6
+        private val WORD=Regex("[\\p{L}\\p{N}]+")
+
+        internal fun contentWords(text:String):List<String> =
+            WORD.findAll(text.lowercase(Locale.ROOT)).map { it.value }.filter { it.length>=3 && it !in STOP }.toList()
+
+        internal fun wordGrams(text:String):LinkedHashMap<String,Int> {
+            val grams=LinkedHashMap<String,Int>()
+            for(word in contentWords(text)) {
+                val padded="^$word$"
+                for(k in 3..5) for(i in 0..padded.length-k) {
+                    val g=padded.substring(i,i+k);grams[g]=(grams[g] ?: 0)+1
+                }
+            }
+            return grams
+        }
+
+        private fun trigrams(word:String):Set<String> {
+            val padded="^$word$";val out=LinkedHashSet<String>()
+            for(i in 0..padded.length-3)out+=padded.substring(i,i+3)
+            return out
+        }
+
+        /** 1 = exact content word, 0.8 = shared 5-letter prefix, else best trigram Dice. */
+        internal fun wordEvidence(query:String,text:String):Double {
+            val q=contentWords(query);val t=contentWords(text).distinct()
+            var best=0.0
+            for(a in q)for(b in t) {
+                if(a==b)return 1.0
+                if(a.length>=5 && b.length>=5 && a.substring(0,5)==b.substring(0,5))best=maxOf(best,0.8)
+                val ta=trigrams(a);val tb=trigrams(b)
+                val shared=ta.count { it in tb }
+                best=maxOf(best,2.0*shared/(ta.size+tb.size))
+            }
+            return best
+        }
+
+        private fun weigh(counts:Map<String,Int>,idf:(String)->Double):LinkedHashMap<String,Double> {
+            val v=LinkedHashMap<String,Double>()
+            for((g,c) in counts)v[g]=(1+StrictMath.log(c.toDouble()))*idf(g)
+            return v
+        }
+
+        private fun cosine(a:Map<String,Double>,b:Map<String,Double>):Double {
+            var dot=0.0;var na=0.0;var nb=0.0
+            for((g,x) in a){na+=x*x;val y=b[g];if(y!=null && y!=0.0)dot+=x*y}
+            for(y in b.values)nb+=y*y
+            return if(na>0 && nb>0)dot/StrictMath.sqrt(na*nb) else 0.0
+        }
+
+        private fun eligible(e:LearningExperience):Boolean =
+            e.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.OBSERVED,LearningStatus.REPLAY_PENDING) &&
+            ((e.type==LearningExperienceType.USER_FACT && e.trust==LearningTrustClass.OWNER_CONFIRMED && e.provenance==LearningProvenance.USER_CONFIRMED && e.status!=LearningStatus.OBSERVED) ||
+             (e.type==LearningExperienceType.SOURCE_TEXT && e.trust==LearningTrustClass.SOURCE_OBSERVATION &&
+              e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
+              e.sourceRef?.startsWith("https://")==true))
+
         fun rank(bytes:ByteArray,query:String,experiences:List<LearningExperience>):List<ContinuumMemoryHit> {
             val model=TrainableSubwordEncoder.restore(bytes)
-            val q=tokens(query)
-            return experiences.asSequence().filter { e ->
-                e.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.OBSERVED,LearningStatus.REPLAY_PENDING) &&
-                ((e.type==LearningExperienceType.USER_FACT && e.trust==LearningTrustClass.OWNER_CONFIRMED && e.provenance==LearningProvenance.USER_CONFIRMED && e.status!=LearningStatus.OBSERVED) ||
-                 (e.type==LearningExperienceType.SOURCE_TEXT && e.trust==LearningTrustClass.SOURCE_OBSERVATION &&
-                  e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
-                  e.sourceRef?.startsWith("https://")==true))
-            }.mapNotNull { e ->
-                val words=tokens(e.content)
-                val overlap=q.count { it in words }
-                if(overlap==0)null else {
-                    val semantic=model.similarity(query.take(1000),e.content.take(1000))
-                    ContinuumMemoryHit(e.id,e.content,if(e.type==LearningExperienceType.USER_FACT)"Bestätigte Nutzererinnerung" else "Unbestätigte Quellenbeobachtung",e.sourceRef,
-                        overlap.toDouble()/maxOf(1,q.size)+.35*(semantic-.5),semantic)
-                }
-            }.sortedWith(compareByDescending<ContinuumMemoryHit>{it.score}.thenBy{it.id}).distinctBy { it.id }.take(3).toList()
+            val q=query.take(1000)
+            val pool=experiences.filter(::eligible).distinctBy { it.id }
+            val df=HashMap<String,Int>()
+            for(e in pool)for(g in wordGrams(e.content.take(1000)).keys)df[g]=(df[g] ?: 0)+1
+            val n=pool.size
+            val idf={ g:String -> df[g]?.let { StrictMath.log((n+1.0)/(it+0.5)) } ?: StrictMath.log(n+1.0) }
+            val qv=weigh(wordGrams(q),idf)
+            return pool.mapNotNull { e ->
+                val text=e.content.take(1000)
+                if(wordEvidence(q,text)<EVIDENCE_THRESHOLD)return@mapNotNull null
+                val score=cosine(qv,weigh(wordGrams(text),idf))
+                if(!(score>0.0))return@mapNotNull null
+                ContinuumMemoryHit(e.id,e.content,if(e.type==LearningExperienceType.USER_FACT)"Bestätigte Nutzererinnerung" else "Unbestätigte Quellenbeobachtung",e.sourceRef,
+                    score,model.similarity(q,text))
+            }.sortedWith(compareByDescending<ContinuumMemoryHit>{it.score}.thenBy{it.id}).take(3)
         }
     }
 }

@@ -1,0 +1,487 @@
+{
+ "name": "continuum-benchmark",
+ "version": 1,
+ "description": "Frozen, authored, small German benchmark. AUDIT and retrieval TEST are report-only: never used for training, checkpoint selection or acceptance. Retrieval DEV may tune methods. Not an external certification.",
+ "audit": {
+  "intent": [
+   {
+    "text": "hallo und einen guten morgen",
+    "label": 0
+   },
+   {
+    "text": "liebe grüße an dich",
+    "label": 0
+   },
+   {
+    "text": "servus ihr alle",
+    "label": 0
+   },
+   {
+    "text": "schönen guten abend",
+    "label": 0
+   },
+   {
+    "text": "willkommen bei uns",
+    "label": 0
+   },
+   {
+    "text": "guten tag zusammen",
+    "label": 0
+   },
+   {
+    "text": "hey hallo miteinander",
+    "label": 0
+   },
+   {
+    "text": "grüß dich mein freund",
+    "label": 0
+   },
+   {
+    "text": "mahlzeit ihr lieben",
+    "label": 0
+   },
+   {
+    "text": "moin und willkommen",
+    "label": 0
+   },
+   {
+    "text": "wie kann ich dir etwas beibringen",
+    "label": 1
+   },
+   {
+    "text": "wo bleiben die erinnerungen",
+    "label": 1
+   },
+   {
+    "text": "warum braucht eine pflanze wasser",
+    "label": 1
+   },
+   {
+    "text": "was ist ein sprachmuster",
+    "label": 1
+   },
+   {
+    "text": "wann startet dein training",
+    "label": 1
+   },
+   {
+    "text": "welches thema untersuchst du",
+    "label": 1
+   },
+   {
+    "text": "kannst du meinen text verstehen",
+    "label": 1
+   },
+   {
+    "text": "woher kennst du die antwort",
+    "label": 1
+   },
+   {
+    "text": "wie zuverlässig ist die quelle",
+    "label": 1
+   },
+   {
+    "text": "was passiert beim lernen",
+    "label": 1
+   }
+  ],
+  "semantic": [
+   {
+    "left": "pflanzen wandeln licht um",
+    "right": "sonnenenergie für grüne pflanzen",
+    "similar": true
+   },
+   {
+    "left": "fahrzeuge mit motoren",
+    "right": "ein motor treibt ein auto an",
+    "similar": true
+   },
+   {
+    "left": "grammatik der wörter",
+    "right": "sprache mit grammatischen regeln",
+    "similar": true
+   },
+   {
+    "left": "melodien auf instrumenten",
+    "right": "harmonische klänge und musik",
+    "similar": true
+   },
+   {
+    "left": "ferne planeten und sterne",
+    "right": "das universum voller sterne",
+    "similar": true
+   },
+   {
+    "left": "erlernte erinnerungen",
+    "right": "im gedächtnis behaltenes wissen",
+    "similar": true
+   },
+   {
+    "left": "fließendes wasser",
+    "right": "wasser in einem flussbett",
+    "similar": true
+   },
+   {
+    "left": "blätter der waldbäume",
+    "right": "bäume bilden einen wald",
+    "similar": true
+   },
+   {
+    "left": "gespeicherte computerdaten",
+    "right": "informationen im rechnerspeicher",
+    "similar": true
+   },
+   {
+    "left": "wiederholung früherer beispiele",
+    "right": "replay von alten trainingsdaten",
+    "similar": true
+   },
+   {
+    "left": "pflanzen wandeln licht um",
+    "right": "gespeicherte computerdaten",
+    "similar": false
+   },
+   {
+    "left": "fahrzeuge mit motoren",
+    "right": "melodien auf instrumenten",
+    "similar": false
+   },
+   {
+    "left": "grammatik der wörter",
+    "right": "ferne planeten und sterne",
+    "similar": false
+   },
+   {
+    "left": "erlernte erinnerungen",
+    "right": "fließendes wasser",
+    "similar": false
+   },
+   {
+    "left": "blätter der waldbäume",
+    "right": "fahrzeuge mit motoren",
+    "similar": false
+   },
+   {
+    "left": "gebackener brotteig",
+    "right": "ferne planeten und sterne",
+    "similar": false
+   },
+   {
+    "left": "miauende haustiere",
+    "right": "grammatik der wörter",
+    "similar": false
+   },
+   {
+    "left": "flügel eines vogels",
+    "right": "gespeicherte computerdaten",
+    "similar": false
+   },
+   {
+    "left": "mauern eines gebäudes",
+    "right": "wiederholung früherer beispiele",
+    "similar": false
+   },
+   {
+    "left": "melodien auf instrumenten",
+    "right": "blätter der waldbäume",
+    "similar": false
+   }
+  ]
+ },
+ "retrieval": {
+  "passages": [
+   "Pflanzen wandeln mit Chlorophyll Sonnenlicht, Wasser und Kohlendioxid in Zucker und Sauerstoff um.",
+   "Der Rhein entspringt in den Schweizer Alpen und mündet in den Niederlanden in die Nordsee.",
+   "Ein Elektromotor wandelt elektrische Energie über Magnetfelder in Drehbewegung um.",
+   "Bienen sammeln Nektar, bestäuben dabei Blüten und stellen daraus Honig her.",
+   "Der Mond umkreist die Erde in etwa siebenundzwanzig Tagen und verursacht Ebbe und Flut.",
+   "Impfungen trainieren das Immunsystem, Krankheitserreger schneller zu erkennen und abzuwehren.",
+   "Vulkane entstehen dort, wo geschmolzenes Gestein aus dem Erdinneren an die Oberfläche dringt.",
+   "Beim Backen von Brot lässt Hefe den Teig aufgehen, indem sie Gas bildet.",
+   "Ein Regenbogen entsteht, wenn Sonnenlicht in Regentropfen gebrochen und in Farben zerlegt wird.",
+   "Wolfgang Amadeus Mozart komponierte in Salzburg und Wien zahlreiche Opern und Sinfonien.",
+   "Computer speichern Daten als Folgen von Nullen und Einsen im Arbeitsspeicher oder auf Festplatten.",
+   "Zugvögel fliegen im Herbst in wärmere Regionen und kehren im Frühling zurück.",
+   "Das Herz pumpt Blut durch Arterien und Venen und versorgt den Körper mit Sauerstoff.",
+   "Gletscher bestehen aus verdichtetem Schnee und schmelzen bei steigenden Temperaturen.",
+   "Die Photovoltaik erzeugt mit Solarzellen aus Silizium elektrischen Strom aus Licht.",
+   "Kinder lernen eine Sprache, indem sie zuhören, nachahmen und Wörter wiederholen.",
+   "Wale sind Säugetiere, die im Meer leben und zum Atmen an die Wasseroberfläche kommen.",
+   "Die Druckerpresse von Johannes Gutenberg machte Bücher im fünfzehnten Jahrhundert günstiger.",
+   "Erdbeben entstehen, wenn sich tektonische Platten ruckartig gegeneinander verschieben.",
+   "Kaffee enthält Koffein, das müde Menschen wacher und aufmerksamer macht.",
+   "Ein Thermometer misst die Temperatur, früher oft mit Quecksilber, heute meist elektronisch.",
+   "Wälder speichern Kohlenstoff im Holz und verbessern dadurch das Klima.",
+   "Das Internet verbindet Computer weltweit über Leitungen, Funk und standardisierte Protokolle.",
+   "Schach ist ein Strategiespiel für zwei Personen mit Königen, Damen, Türmen und Bauern.",
+   "Salz löst sich in Wasser auf und senkt den Gefrierpunkt, deshalb wird im Winter gestreut.",
+   "Die Römer bauten Straßen, Aquädukte und Städte in ganz Europa.",
+   "Schlaf hilft dem Gehirn, Erlebnisse zu ordnen und Erinnerungen zu festigen.",
+   "Ein Akku speichert elektrische Energie chemisch und gibt sie später wieder ab.",
+   "Tomaten stammen ursprünglich aus Südamerika und wurden später in Europa angebaut.",
+   "Der Schall breitet sich in der Luft als Druckwelle aus und ist langsamer als Licht.",
+   "Ameisen leben in großen Staaten mit einer Königin und vielen Arbeiterinnen.",
+   "Der Nordpol liegt im Arktischen Ozean auf treibendem Meereis, nicht auf festem Land."
+  ],
+  "dev": [
+   {
+    "query": "Wie stellen grüne Pflanzen aus Licht Nahrung her?",
+    "passage": 0
+   },
+   {
+    "query": "Woher kommt der Sauerstoff, den Blätter abgeben?",
+    "passage": 0
+   },
+   {
+    "query": "Wo beginnt der Rhein und wohin fließt er?",
+    "passage": 1
+   },
+   {
+    "query": "Welcher Fluss verbindet die Alpen mit der Nordsee?",
+    "passage": 1
+   },
+   {
+    "query": "Wie erzeugt ein Motor mit Strom eine Drehung?",
+    "passage": 2
+   },
+   {
+    "query": "Welche Rolle spielen Magnete im Elektroantrieb?",
+    "passage": 2
+   },
+   {
+    "query": "Wie entsteht Honig?",
+    "passage": 3
+   },
+   {
+    "query": "Warum sind Bienen für Blumen wichtig?",
+    "passage": 3
+   },
+   {
+    "query": "Was bewirkt der Erdtrabant bei den Gezeiten?",
+    "passage": 4
+   },
+   {
+    "query": "Wie lange braucht der Mond für eine Umrundung?",
+    "passage": 4
+   },
+   {
+    "query": "Wie schützt eine Impfung vor Infektionen?",
+    "passage": 5
+   },
+   {
+    "query": "Was lernt die körpereigene Abwehr durch einen Impfstoff?",
+    "passage": 5
+   },
+   {
+    "query": "Woher kommt die Lava eines Vulkans?",
+    "passage": 6
+   },
+   {
+    "query": "Warum bricht Magma durch die Erdkruste?",
+    "passage": 6
+   },
+   {
+    "query": "Warum wird Brotteig größer?",
+    "passage": 7
+   },
+   {
+    "query": "Was macht die Hefe im Teig?",
+    "passage": 7
+   },
+   {
+    "query": "Wie bilden sich die bunten Farben nach einem Regenschauer?",
+    "passage": 8
+   },
+   {
+    "query": "Was passiert mit Licht in Wassertropfen?",
+    "passage": 8
+   },
+   {
+    "query": "Welche Musik schrieb der Salzburger Komponist?",
+    "passage": 9
+   },
+   {
+    "query": "Wer schuf berühmte Opern in Wien?",
+    "passage": 9
+   },
+   {
+    "query": "Wie legt ein Rechner Informationen ab?",
+    "passage": 10
+   },
+   {
+    "query": "Was bedeuten binäre Zahlen für Speicher?",
+    "passage": 10
+   },
+   {
+    "query": "Warum verlassen manche Vögel im Herbst ihr Land?",
+    "passage": 11
+   },
+   {
+    "query": "Wohin ziehen Störche im Winter?",
+    "passage": 11
+   },
+   {
+    "query": "Wie gelangt Sauerstoff in alle Organe?",
+    "passage": 12
+   },
+   {
+    "query": "Welche Aufgabe hat der Herzmuskel im Kreislauf?",
+    "passage": 12
+   },
+   {
+    "query": "Warum werden Eismassen in den Bergen kleiner?",
+    "passage": 13
+   },
+   {
+    "query": "Woraus bildet sich ein Gletscher?",
+    "passage": 13
+   },
+   {
+    "query": "Wie gewinnt eine Solaranlage Elektrizität?",
+    "passage": 14
+   },
+   {
+    "query": "Welches Material steckt in Solarmodulen?",
+    "passage": 14
+   },
+   {
+    "query": "Wie erwerben Kleinkinder ihre Muttersprache?",
+    "passage": 15
+   },
+   {
+    "query": "Warum hilft Wiederholung beim Sprechenlernen?",
+    "passage": 15
+   }
+  ],
+  "test": [
+   {
+    "query": "Warum tauchen Wale zum Luftholen auf?",
+    "passage": 16
+   },
+   {
+    "query": "Sind Wale Fische oder Säugetiere?",
+    "passage": 16
+   },
+   {
+    "query": "Wer erfand den Buchdruck mit beweglichen Lettern?",
+    "passage": 17
+   },
+   {
+    "query": "Wie wurden Bücher im Mittelalter billiger?",
+    "passage": 17
+   },
+   {
+    "query": "Was löst ein Beben der Erde aus?",
+    "passage": 18
+   },
+   {
+    "query": "Wie bewegen sich die Platten der Erdkruste?",
+    "passage": 18
+   },
+   {
+    "query": "Warum macht Kaffee munter?",
+    "passage": 19
+   },
+   {
+    "query": "Welcher Stoff im Kaffee wirkt anregend?",
+    "passage": 19
+   },
+   {
+    "query": "Womit bestimmt man, wie warm es ist?",
+    "passage": 20
+   },
+   {
+    "query": "Welches Metall nutzte man in alten Fiebermessern?",
+    "passage": 20
+   },
+   {
+    "query": "Wie helfen Bäume gegen den Klimawandel?",
+    "passage": 21
+   },
+   {
+    "query": "Wo bleibt das Kohlendioxid, das ein Wald aufnimmt?",
+    "passage": 21
+   },
+   {
+    "query": "Wie tauschen Rechner auf der ganzen Welt Daten aus?",
+    "passage": 22
+   },
+   {
+    "query": "Was ist ein globales Netzwerk?",
+    "passage": 22
+   },
+   {
+    "query": "Welche Figuren gibt es beim Brettspiel mit dem König?",
+    "passage": 23
+   },
+   {
+    "query": "Wie viele Spieler braucht eine Partie Schach?",
+    "passage": 23
+   },
+   {
+    "query": "Warum streut man Salz auf vereiste Straßen?",
+    "passage": 24
+   },
+   {
+    "query": "Was passiert, wenn man Kochsalz in Wasser gibt?",
+    "passage": 24
+   },
+   {
+    "query": "Welche Bauwerke hinterließ das antike Rom?",
+    "passage": 25
+   },
+   {
+    "query": "Wie brachten die alten Römer Wasser in ihre Städte?",
+    "passage": 25
+   },
+   {
+    "query": "Warum ist Schlafen gut für das Gedächtnis?",
+    "passage": 26
+   },
+   {
+    "query": "Was macht das Gehirn in der Nacht?",
+    "passage": 26
+   },
+   {
+    "query": "Wie bewahrt eine Batterie Strom auf?",
+    "passage": 27
+   },
+   {
+    "query": "Warum kann man ein Handy wieder aufladen?",
+    "passage": 27
+   },
+   {
+    "query": "Woher kommt das rote Gemüse ursprünglich?",
+    "passage": 28
+   },
+   {
+    "query": "Seit wann wachsen Paradeiser in Europa?",
+    "passage": 28
+   },
+   {
+    "query": "Warum hört man den Donner nach dem Blitz?",
+    "passage": 29
+   },
+   {
+    "query": "Wie bewegen sich Geräusche durch die Luft?",
+    "passage": 29
+   },
+   {
+    "query": "Wie ist ein Ameisenvolk organisiert?",
+    "passage": 30
+   },
+   {
+    "query": "Wer legt in einer Ameisenkolonie die Eier?",
+    "passage": 30
+   },
+   {
+    "query": "Gibt es am nördlichsten Punkt der Erde Festland?",
+    "passage": 31
+   },
+   {
+    "query": "Worauf befindet sich der Nordpol?",
+    "passage": 31
+   }
+  ]
+ }
+}
