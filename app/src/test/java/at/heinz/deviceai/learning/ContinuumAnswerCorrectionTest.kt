@@ -46,6 +46,8 @@ class ContinuumAnswerCorrectionTest {
             assertTrue(fresh.answer.contains("Zweite ausdrücklich korrigierte Erklärung"))
             assertFalse(fresh.answer.contains("Erste vom Eigentümer"))
             assertEquals(1,core.revokeAnswerCorrections())
+            assertTrue("revocation purges prior corrected text from the dialogue file",
+                core.dialogueHistory().isEmpty())
             assertEquals(0,core.revokeAnswerCorrections())
             val later=ContinuumLearningCore(dir).replyFromMemory(question)
             assertFalse(later.grounded)
