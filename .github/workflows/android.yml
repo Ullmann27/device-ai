@@ -57,6 +57,18 @@ jobs:
       - name: Verify SWB1 compatibility, SWB2 neural gradients and grounded token decoder
         run: node --test .github/continuum/swb2-verification.test.mjs .github/continuum/cir-security-regressions.test.mjs
 
+      - name: Measure frozen SWB2 paraphrase holdout with real trained weights
+        run: |
+          node --test .github/continuum/neural-generalization-audit.test.mjs
+          node .github/continuum/neural-generalization-audit.mjs "$RUNNER_TEMP/swb2-heldout-audit.json"
+
+      - name: Upload SWB2 heldout research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-SWB2-heldout-evidence
+          path: ${{ runner.temp }}/swb2-heldout-audit.json
+          if-no-files-found: error
+
       - name: Multi-seed masked retrieval generalization audit
         run: |
           node --test .github/continuum/contrastive-generalization.test.mjs
