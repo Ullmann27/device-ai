@@ -1,0 +1,45 @@
+name: Export Argon Full Source PDFs (no ZIP)
+on:
+  push:
+    branches:
+      - copilot/continuum-argon-source-review-20261015
+    paths:
+      - .github/continuum/export-argon-source.py
+      - .github/workflows/continuum-argon-export.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: continuum-argon-source-pdf
+  cancel-in-progress: false
+jobs:
+  argon-source-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF exporter
+        run: python -m pip install 'reportlab==4.4.4'
+      - name: Export immutable full source as searchable PDF and readable TXT
+        run: |
+          python .github/continuum/export-argon-source.py
+          test -s review-packet/Continuum_Complete_Source_Review.pdf
+          test -s review-packet/Continuum_Complete_Source_Review.txt
+          test -s review-packet/MANIFEST.json
+          test ! -e review-packet/Continuum_Source_Review.zip
+      - name: Publish PDFs and TXT directly on this isolated review branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add review-packet/Continuum_Complete_Source_Review.pdf \
+                  review-packet/Continuum_Complete_Source_Review.txt \
+                  review-packet/MANIFEST.json review-packet/GEMINI_TASK.txt
+          git diff --cached --quiet && exit 0
+          git commit -m "Publish full Continuum source PDF and TXT for Argon audit [skip ci]"
+          git push origin HEAD:copilot/continuum-argon-source-review-20261015
