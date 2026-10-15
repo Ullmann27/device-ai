@@ -22,11 +22,54 @@ const DANGEROUS=[
   [/catch\s*\([^)]*\)\s*\{\s*\}/,'swallows exceptions']
 ];
 
-function changedLines(oldText,newText){
-  const a=oldText.split('\n'),b=newText.split('\n');
-  let p=0;while(p<a.length&&p<b.length&&a[p]===b[p])p++;
-  let s=0;while(s<a.length-p&&s<b.length-p&&a[a.length-1-s]===b[b.length-1-s])s++;
-  return {removed:a.slice(p,a.length-s),added:b.slice(p,b.length-s)};
+// Patience-diff anchors distinguish distant small edits without treating the
+// unchanged middle as changed. No speculative matching of repeated lines:
+// unmatched regions are conservatively counted as changed.
+function changedLines(oldText, newText) {
+  const a = oldText.split("\n"), b = newText.split("\n");
+  const counts = rows => {
+    const m = new Map();
+    rows.forEach((v, i) => {
+      const entry = m.get(v);
+      if (entry) entry.count++;
+      else m.set(v, { count: 1, index: i });
+    });
+    return m;
+  };
+  const ac = counts(a), bc = counts(b);
+  const unique = [];
+  for (const [value, x] of ac) {
+    const y = bc.get(value);
+    if (x.count === 1 && y?.count === 1) unique.push([x.index, y.index]);
+  }
+  unique.sort((x, y) => x[0] - y[0]);
+  // Longest increasing subsequence in new-line positions.
+  const ends = [], predecessor = Array(unique.length).fill(-1);
+  for (let i = 0; i < unique.length; i++) {
+    let lo = 0, hi = ends.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (unique[ends[mid]][1] < unique[i][1]) lo = mid + 1; else hi = mid;
+    }
+    predecessor[i] = lo ? ends[lo - 1] : -1;
+    ends[lo] = i;
+  }
+  const matches = [];
+  let cursor = ends.length ? ends[ends.length - 1] : -1;
+  while (cursor >= 0) {
+    matches.push(unique[cursor]);
+    cursor = predecessor[cursor];
+  }
+  matches.reverse();
+  matches.push([a.length, b.length]);
+  const removed = [], added = [];
+  let ai = 0, bi = 0;
+  for (const [an, bn] of matches) {
+    removed.push(...a.slice(ai, an));
+    added.push(...b.slice(bi, bn));
+    ai = an + 1; bi = bn + 1;
+  }
+  return { removed, added };
 }
 
 export function critique(candidate){
@@ -43,7 +86,12 @@ export function critique(candidate){
     const {removed,added}=changedLines(e.oldText??'',e.newText??'');
     changed+=Math.max(removed.length,added.length);
     const addedText=added.join('\n'),removedText=removed.join('\n');
-    for(const [pattern,why] of DANGEROUS)if(pattern.test(addedText)&&!pattern.test(removedText))reasons.push(why);
+    for(const [pattern,why] of DANGEROUS){
+      const global=new RegExp(pattern.source,pattern.flags.includes('g')?pattern.flags:pattern.flags+'g');
+      const newCount=(addedText.match(global)??[]).length;
+      const oldCount=(removedText.match(global)??[]).length;
+      if(newCount>oldCount)reasons.push(why);
+    }
     addedAsserts+=(addedText.match(/\bassert\w*\s*\(/g)??[]).length;
     removedAsserts+=(removedText.match(/\bassert\w*\s*\(/g)??[]).length;
     bangDelta+=(addedText.match(/!!/g)??[]).length-(removedText.match(/!!/g)??[]).length;
