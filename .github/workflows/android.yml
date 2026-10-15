@@ -49,6 +49,11 @@ jobs:
       - name: Check neural optimizer analytical gradients
         run: node --test .github/continuum/semantic-gradient.test.mjs
 
+      - name: Validate portable SWB2 and experimental decoder syntax
+        run: |
+          node --check .github/continuum/portable-subword.mjs
+          node --check .github/continuum/trainable-context-decoder.mjs
+
       - name: Verify SWB1 compatibility, SWB2 neural gradients and grounded token decoder
         run: node --test .github/continuum/swb2-verification.test.mjs .github/continuum/cir-security-regressions.test.mjs
 
