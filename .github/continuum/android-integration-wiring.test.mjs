@@ -165,7 +165,7 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
 });
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
- ensure('model center from the core card',/actionButton\("MODELLE · VERWALTEN"\)[\s\S]{0,200}showModelCenter\(\)/.test(activity));
+ ensure('model center from the core card',activity.includes('Triple("MODELLE", false) { showModelCenter() }'));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -181,4 +181,30 @@ test('local language model path is reachable: model center, loading, chat escala
  ensure('language model sees the confirmed owner facts',local.includes('ownerFactMemories()'));
  ensure('model list read off the UI thread',bodyOf(activity,'private fun reloadInstalledModels(').includes('onLearningIo('));
  ensure('no catalog read in the UI refresh',!bodyOf(activity,'private fun refreshLocalModelUi(').includes('modelCatalog.all()'));
+});
+test('every area has a center reachable from the core card; no demo buttons; experiments marked',()=>{
+ const card=bodyOf(activity,'private fun buildBootstrapCoreCard(');
+ for(const [label,fn] of [['LERNEN','showLearningCenter'],['GEDÄCHTNIS','showMemoryCenter'],['ENTWICKLUNG','showDevelopmentCenter'],
+  ['MODELLE','showModelCenter'],['SYSTEM','showSystemCenter']]){
+  ensure(label+' center on the core card',card.includes('Triple("'+label+'"')&&card.includes(fn+'()'));
+  assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
+ }
+ const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);
+ ensure('no demo button',labels.every(l=>!/DEMO|JETZT TRAINIEREN/i.test(l)));
+ // expression-bodied: everything up to the next member declaration
+ const declOf=(source,signature)=>{
+  const start=source.indexOf(signature);
+  if(start<0)return null;
+  const next=source.slice(start+signature.length).search(/\n    (private |override |internal |public )?(fun|val|var|class) /);
+  return next<0?source.slice(start):source.slice(start,start+signature.length+next);
+ };
+ const learning=declOf(activity,'private fun showLearningCenter(');
+ const experimental=learning.slice(learning.indexOf('experimental = listOf('));
+ ensure('contrastive experiment only in the marked experimental section',experimental.includes('showContinuumContrastiveExperiment()')&&
+  !learning.slice(0,learning.indexOf('experimental = listOf(')).includes('showContinuumContrastiveExperiment()'));
+ ensure('experimental section is labelled',bodyOf(activity,'private fun showCenter(').includes('EXPERIMENTELL'));
+ for(const fn of ['learningCenterStatus','memoryCenterStatus','systemCenterStatus']){
+  ensure(fn+' runs on the learning I/O thread',activity.includes('learningIoStatus { '+fn+'() }'));
+ }
+ ensure('development status reads the backlog on its executor',activity.includes('onBacklog({ developmentCenterStatus() })'));
 });

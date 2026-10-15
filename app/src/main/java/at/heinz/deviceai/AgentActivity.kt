@@ -348,8 +348,8 @@ class AgentActivity : Activity() {
         recoverDevelopmentBacklog()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
-            "NEURON · Bereits gelernt · Tippe TRAINING oder HÄRTETEST"
-        else "NEURON · Bereit · Tippe JETZT TRAINIEREN"
+            "NEURON · Bereits gelernt · LERNEN öffnet Lern-Gespräch und Auto-Üben"
+        else "NEURON · Bereit · LERNEN öffnet das erste Lern-Gespräch"
         BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands()).let {
             bootstrapMemory.recordAssessment(it.passed, it.total)
         }
@@ -419,6 +419,7 @@ class AgentActivity : Activity() {
         backlogDialog?.dismiss()
         devDialog?.dismiss()
         modelCenterDialog?.dismiss()
+        centerDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -777,84 +778,214 @@ class AgentActivity : Activity() {
             "Eigene Regeln, nachprüfbare Lernschritte und lokale Erinnerung. Kein vortrainiertes Sprachmodell. " +
                 "Freies KI-Sprachdenken wird erst erforscht – keine simulierte Intelligenz.", 12.2f, MUTED
         ), matchWidth(top = 4))
-        val buttons = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        buttons.addView(actionButton("LERNSPEICHER", accent = true).apply {
-            setOnClickListener { showBootstrapMemory() }
-        }, LinearLayout.LayoutParams(0, dp(43), 1f))
-        buttons.addView(actionButton("WEB RECHERCHE").apply {
-            setOnClickListener { showResearchModeDialog() }
-            setOnLongClickListener { showInternetSettings(); true }
-            contentDescription = "Webrecherche starten. Lange drücken für Internetzugang-Einstellungen."
-        }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
-        card.addView(buttons, matchWidth(top = 10))
-        card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
-            setOnClickListener { showBootstrapTraining() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("MODELLE · VERWALTEN").apply {
-            contentDescription = "Eigenen Lernkern und ein importiertes lokales Sprachmodell verwalten"
-            setOnClickListener { showModelCenter() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("CONTINUUM · LERNKERN V2").apply {
-            contentDescription = "Gemeinsamen persistenten Experience-, Replay- und Subword-Lernkern prüfen"
-            setOnClickListener { showContinuumLearningDashboard() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("KONTRASTIV · EXPERIMENT PRÜFEN").apply {
-            contentDescription = "Öffentliches neuronales Training als isoliertes Experiment ausführen, ohne Modellgewichte zu übernehmen"
-            setOnClickListener { showContinuumContrastiveExperiment() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("NEURON · JETZT TRAINIEREN", accent = true).apply {
-            setOnClickListener {
-                val existing = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
-                if (existing == null) handleNeuralRequest("Neuron Demo") else {
-                    AlertDialog.Builder(this@AgentActivity)
-                        .setTitle("Neuron ist bereits trainiert")
-                        .setMessage("Für zusätzliche eigene Beispiele nutze LERN-GESPRÄCH. " +
-                            "Ein neuer Demo-Durchgang würde bestehende Gewichte ersetzen. " +
-                            "Du kannst außerdem die unbekannten Testsätze prüfen.")
-                        .setNegativeButton("Schließen", null)
-                        .setNeutralButton("Härtetest") { _, _ -> handleNeuralRequest("Neuron Härtetest") }
-                        .setPositiveButton("JETZT WEITERÜBEN") { _, _ -> handleNeuralRequest("Neuron üben") }
-                        .show()
-                }
+        // One entry per area; the centers hold the individual functions and mark
+        // experimental ones. The learning radar stays here because it asks the user.
+        val centers = listOf(
+            Triple("LERNEN", true) { showLearningCenter() },
+            Triple("GEDÄCHTNIS", false) { showMemoryCenter() },
+            Triple("ENTWICKLUNG", false) { showDevelopmentCenter() },
+            Triple("MODELLE", false) { showModelCenter() },
+            Triple("SYSTEM", false) { showSystemCenter() }
+        )
+        centers.chunked(2).forEachIndexed { index, pair ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            pair.forEachIndexed { j, (label, accent, open) ->
+                row.addView(actionButton(label, accent = accent).apply {
+                    contentDescription = "$label öffnen"
+                    setOnClickListener { open() }
+                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { if (j > 0) marginStart = dp(7) })
             }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("NEURON · LERN-GESPRÄCH", accent = true).apply {
-            setOnClickListener { beginNeuralCoach() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("LERNEN STARTEN · ANLEITUNG").apply {
-            contentDescription = "Zeigt die Schritte zum ersten bestätigten Lernbeispiel und zum anschließenden Auto-Üben"
-            setOnClickListener {
-                AlertDialog.Builder(this@AgentActivity)
-                    .setTitle("Continuum · Erstes Lernen")
-                    .setMessage("Der lokale Lernkern startet ohne persönliche Beispiele. Deshalb stehen Experiences und Gewichtsupdates zunächst auf 0.\n\n" +
-                        "1. Tippe NEURON · LERN-GESPRÄCH.\n" +
-                        "2. Schreibe einen einfachen Gruß oder eine Frage in den Chat.\n" +
-                        "3. Bestätige die Einordnung und anschließend ausdrücklich das Training.\n" +
-                        "4. Wiederhole dies mit mehreren unterschiedlichen Beispielen.\n" +
-                        "5. Öffne AUTO-ÜBEN erneut, um das Wiederholungslernen zu erlauben.\n\n" +
-                        "JETZT TRAINIEREN startet dagegen nur eine getrennte Demo. Webquellen werden niemals ungeprüft zu persönlichen Trainingsfakten.")
-                    .setNegativeButton("Schließen", null)
-                    .setPositiveButton("LERN-GESPRÄCH STARTEN") { _, _ -> beginNeuralCoach() }
-                    .show()
+            if (pair.size == 1) {
+                row.addView(actionButton("WEB RECHERCHE").apply {
+                    setOnClickListener { showResearchModeDialog() }
+                    setOnLongClickListener { showInternetSettings(); true }
+                    contentDescription = "Webrecherche starten. Lange drücken für Internetzugang-Einstellungen."
+                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
             }
-        }, matchWidth(top = 7))
-        neuralAutoButton = actionButton("AUTO-ÜBEN · AUS").apply {
-            contentDescription = "Kontrolliertes wiederkehrendes neuronales Training aktivieren oder deaktivieren"
-            setOnClickListener { showNeuralPracticeDialog() }
+            card.addView(row, matchWidth(top = if (index == 0) 10 else 7))
         }
-        card.addView(neuralAutoButton, matchWidth(top = 7))
         neuralCuriosityButton = actionButton("LERN-RADAR · Noch keine Frage").apply {
             isEnabled = false
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
         card.addView(neuralCuriosityButton, matchWidth(top = 7))
-        card.addView(actionButton("MENTOR · FACHWISSEN FORSCHEN", accent = true).apply {
-            setOnClickListener { showMentorStudyDialog() }
-        }, matchWidth(top = 7))
-        card.addView(actionButton("INTERNET · LERNSTOFF PRÜFEN").apply {
-            setOnClickListener { showWebLearningInbox() }
-        }, matchWidth(top = 7))
         return card
+    }
+
+    // ------------------------------------------------------------------
+    // Centers: one place per area. Every action is an existing function;
+    // experimental ones are listed separately and marked.
+    // ------------------------------------------------------------------
+    private class CenterAction(val label: String, val accent: Boolean = false, val run: () -> Unit)
+
+    private var centerDialog: AlertDialog? = null
+
+    private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
+        onLearningIo(read) { result ->
+            done(result.getOrElse { "Status nicht lesbar (${failureName(it)}); es wurde nichts verändert." })
+        }
+    }
+
+    private fun showCenter(
+        title: String,
+        intro: String,
+        status: ((String) -> Unit) -> Unit,
+        actions: List<CenterAction>,
+        experimental: List<CenterAction> = emptyList()
+    ) {
+        centerDialog?.dismiss()
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        box.addView(textView(intro, 12f, MUTED))
+        val statusView = textView("Status wird gelesen …", 12f, TEXT)
+        box.addView(statusView, matchWidth(top = 10))
+        lateinit var dialog: AlertDialog
+        fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
+            setOnClickListener { dialog.dismiss(); action.run() }
+        }
+        actions.forEach { box.addView(button(it), matchWidth(top = 8)) }
+        if (experimental.isNotEmpty()) {
+            box.addView(textView("EXPERIMENTELL · nur Messungen; nichts davon wird in den aktiven Lernstand übernommen",
+                11f, AMBER, true), matchWidth(top = 16))
+            experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
+        }
+        dialog = AlertDialog.Builder(this)
+            .setTitle(title)
+            .setView(ScrollView(this).apply { addView(box) })
+            .setPositiveButton("Schließen", null)
+            .create()
+        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+        centerDialog = dialog
+        dialog.show()
+        status { text -> if (dialog.isShowing) statusView.text = text }
+    }
+
+    private fun showLearningCenter() = showCenter(
+        "Lernzentrum",
+        "Kontrolliertes Lernen: nur bestätigte Beispiele, Holdout-Schutz vor Verschlechterung und " +
+            "wiederherstellbare Stände (MODELLE · VERSIONEN).",
+        learningIoStatus { learningCenterStatus() },
+        listOf(
+            CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
+            CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
+            CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
+            CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
+            CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
+            CenterAction("INTERNET · LERNSTOFF PRÜFEN") { showWebLearningInbox() },
+            CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
+        ),
+        experimental = listOf(
+            CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
+            CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
+        )
+    )
+
+    private fun learningCenterStatus(): String = buildString {
+        val core = ContinuumLearningCore(filesDir).status()
+        append("Lernkern: ").append(core.experiences.total).append(" Experiences · ")
+            .append(core.modelUpdates).append(" Gewichtsupdates\n")
+        append("Holdouts: Intent ").append(core.intentHoldout.correct).append("/").append(core.intentHoldout.total)
+            .append(" · Semantik ").append(core.semanticHoldout.correct).append("/").append(core.semanticHoldout.total).append("\n")
+        val practice = NeuralPracticeScheduler(this@AgentActivity)
+        append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
+            .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
+        append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
+        core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
+    }
+
+    private fun showDevelopmentCenter() = showCenter(
+        "Entwicklungszentrum",
+        "Entwicklungsaufgaben mit denselben Regeln wie Entwickler-Agent und CLI: erledigt wird eine Aufgabe nur " +
+            "mit ausgeführtem Testnachweis aus CI, nie allein auf dem Gerät.",
+        { done -> onBacklog({ developmentCenterStatus() }) { result ->
+            done(result.getOrElse { "Backlog nicht lesbar: ${backlogError(it)}" })
+        } },
+        listOf(
+            CenterAction("ENTWICKLUNGSAUFGABE · STARTEN", accent = true) { showDevelopmentDialog() },
+            CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
+            CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
+        )
+    )
+
+    private fun developmentCenterStatus(): String {
+        val views = devBacklog.views()
+        val byState = views.groupingBy { it.state }.eachCount().toSortedMap()
+        return buildString {
+            append("Backlog: ").append(views.size).append(" Aufgaben")
+            if (byState.isNotEmpty()) append(" · ").append(byState.entries.joinToString(" · ") { "${it.key} ${it.value}" })
+            append("\nEntwicklungsassistent: ").append(
+                if (localRuntime.state == LocalModelState.READY) "lokales Sprachmodell bereit"
+                else "kein lokales Sprachmodell geladen (MODELLE)")
+        }
+    }
+
+    private fun showMemoryCenter() = showCenter(
+        "Gedächtniszentrum",
+        "Gespeichert wird nur ausdrücklich Gemerktes (Merke dir: …) und freigegebene Quellen. Alles bleibt lokal; " +
+            "Ändern, Widerrufen und Löschen jederzeit.",
+        learningIoStatus { memoryCenterStatus() },
+        listOf(
+            CenterAction("GEMERKTE FAKTEN", accent = true) { showBootstrapMemory() },
+            CenterAction("QUELLEN-NOTIZEN") { showSavedWebNotes() },
+            CenterAction("FAKTEN LÖSCHEN") { showConfirmForget() }
+        )
+    )
+
+    private fun memoryCenterStatus(): String {
+        val core = ContinuumLearningCore(filesDir)
+        val stats = core.status().experiences
+        val notes = runCatching { WebLearningJournal(this).notes().size.toString() }.getOrElse { "unlesbar" }
+        val turns = runCatching { core.dialogueHistory().size.toString() }.getOrElse { "unlesbar" }
+        return "Gemerkte Fakten (App): ${bootstrapMemory.facts().size}/${BootstrapMemoryStore.MAX_FACTS}\n" +
+            "Bestätigte Erinnerungen im Lernkern: ${core.activeOwnerFacts().size} aktiv\n" +
+            "Widerrufene Einträge (alle Arten): ${stats.revoked}\n" +
+            "Unbestätigte Quellenbeobachtungen: ${stats.sourceObservations}\n" +
+            "Gespeicherte Quellen-Notizen: $notes\n" +
+            "Gesprächskontext: $turns/8 Züge\n" +
+            "Privater App-Speicher; nichts davon wird automatisch hochgeladen."
+    }
+
+    private fun showSystemCenter() = showCenter(
+        "Systemstatus",
+        "Dienste, Hintergrundjobs und Freigaben. Internet und Cloud nur nach ausdrücklicher Freigabe.",
+        learningIoStatus { systemCenterStatus() },
+        listOf(
+            CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
+            CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
+            CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
+            CenterAction("MODELLVERWALTUNG") { showModelCenter() }
+        )
+    )
+
+    private fun systemCenterStatus(): String = buildString {
+        append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
+        append("Shizuku: ").append(if (bridge.isReady()) "verbunden" else "nicht verbunden").append("\n")
+        append("Internetzugang: ").append(internetConsent.mode.name).append(" · Zugriff nur nach Freigabe\n")
+        append("Cloud-Backend: ").append(if (runCatching { backend.isConfigured() }.getOrDefault(false)) "eingerichtet" else "nicht eingerichtet").append("\n")
+        append("Sprachmodell: ").append(localRuntime.loadedModel?.let { "${it.id} ${it.version} · ${localRuntime.state}" } ?: "keines geladen").append("\n")
+        append("Continuum-Identität: ").append(continuumStartupNote ?: "wird geöffnet").append("\n")
+        append("Werkzeugquittungen: ").append(runCatching { receiptStore.all().size }
+            .fold({ "$it gespeichert" }, { "ungültig, Geräteaktionen gesperrt" })).append("\n\n")
+        append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
+        val practice = NeuralPracticeScheduler(this@AgentActivity)
+        append("\n\nAUTO-ÜBEN: ").append(if (practice.enabled) "AN · " + practice.lastStatus.take(120) else "AUS")
+    }
+
+    private fun showLearningGuide() {
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · Erstes Lernen")
+            .setMessage("Der lokale Lernkern startet ohne persönliche Beispiele. Deshalb stehen Experiences und Gewichtsupdates zunächst auf 0.\n\n" +
+                "1. Öffne LERNEN und tippe LERN-GESPRÄCH.\n" +
+                "2. Schreibe einen einfachen Gruß oder eine Frage in den Chat.\n" +
+                "3. Bestätige die Einordnung und anschließend ausdrücklich das Training.\n" +
+                "4. Wiederhole dies mit mehreren unterschiedlichen Beispielen.\n" +
+                "5. Erlaube danach unter LERNEN · AUTO-ÜBEN das Wiederholungslernen.\n\n" +
+                "Webquellen werden niemals ungeprüft zu persönlichen Trainingsfakten.")
+            .setNegativeButton("Schließen", null)
+            .setPositiveButton("LERN-GESPRÄCH STARTEN") { _, _ -> beginNeuralCoach() }
+            .show()
     }
 
     private fun buildQuickActions(): View {
@@ -998,6 +1129,19 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request)
             showModelVersions()
+            return
+        }
+        val center: (() -> Unit)? = when (request.lowercase(Locale.GERMAN)) {
+            "lernzentrum" -> ::showLearningCenter
+            "entwicklungszentrum" -> ::showDevelopmentCenter
+            "gedächtnis", "gedächtniszentrum" -> ::showMemoryCenter
+            "systemstatus" -> ::showSystemCenter
+            else -> null
+        }
+        if (center != null) {
+            input.text.clear()
+            addUserMessage(request)
+            center()
             return
         }
         if (request.equals("Modelle", true) || request.equals("Modellverwaltung", true)) {
@@ -1273,8 +1417,7 @@ class AgentActivity : Activity() {
                 "bei erfüllten Bedingungen aus. Über AUTO-ÜBEN kannst du es jederzeit stoppen."
         else "AUTO-ÜBEN ist noch nicht bereit. Es fehlen bestätigte Sprachbeispiele " +
                 "oder Android hat die Hintergrundplanung abgelehnt. " +
-                "Wichtig: JETZT TRAINIEREN erzeugt nur ein getrenntes Demo-Modell und " +
-                "schaltet AUTO-ÜBEN nicht frei. Öffne NEURON · LERN-GESPRÄCH, " +
+                "Öffne LERNEN · LERN-GESPRÄCH, " +
                 "gib einen Gruß oder eine Frage ein und bestätige das Beispiel " +
                 "sowie die Trainingsfreigabe. Versuche AUTO-ÜBEN danach erneut.")
     }
