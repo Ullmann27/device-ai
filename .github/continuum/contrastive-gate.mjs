@@ -66,7 +66,7 @@ export function assessContrastiveCandidate(generalization,retention){
  };
 }
 if(process.argv[1]?.endsWith('contrastive-gate.mjs')){
- if(process.argv.length!==6)throw Error('Usage: gate GENERALIZATION_JSON RETENTION_JSON OUT_JSON');
+ if(process.argv.length!==5)throw Error('Usage: gate GENERALIZATION_JSON RETENTION_JSON OUT_JSON');
  const general=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
  const retained=JSON.parse(fs.readFileSync(process.argv[3],'utf8'));
  const decision=assessContrastiveCandidate(general,retained);
