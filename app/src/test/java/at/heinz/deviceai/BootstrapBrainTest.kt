@@ -19,8 +19,10 @@ class BootstrapBrainTest {
             BootstrapBrain.decide("Mein Passwort ist pass123", emptyList()).kind)
         assertEquals(BootstrapKind.REPLY,
             BootstrapBrain.decide("Merke dir: Passwort pass123", emptyList()).kind)
-        val recall = BootstrapBrain.decide("Was weißt du?", listOf("Ich mag Blau"))
+        val recall = BootstrapBrain.decide("Was weißt du?", listOf("Ich mag Blau", "Ich mag Tee"))
         assertTrue(recall.message.contains("Ich mag Blau"))
+        assertEquals("one fact per line, no literal backslash-n",
+            "Meine ausdrücklich gespeicherten Fakten:\n• Ich mag Blau\n• Ich mag Tee", recall.message)
         assertEquals(BootstrapKind.FORGET, BootstrapBrain.decide("Vergiss alles", emptyList()).kind)
     }
     @Test fun deviceCallsAreReadOnlyAndUseRegisteredTools() {

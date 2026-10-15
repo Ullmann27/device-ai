@@ -89,7 +89,7 @@ object BootstrapBrain {
         if (low.contains("was weißt du") || low.contains("was hast du dir gemerkt") ||
             low == "erinnerungen") return BootstrapDecision(BootstrapKind.REPLY,
                 if (facts.isEmpty()) "Ich habe noch keine ausdrücklich bestätigten Fakten gespeichert." else
-                    "Meine ausdrücklich gespeicherten Fakten:\\n" + facts.take(32).joinToString("\\n") { "• $it" })
+                    "Meine ausdrücklich gespeicherten Fakten:\n" + facts.take(32).joinToString("\n") { "• $it" })
         if (low == "hallo" || low == "hi" || low == "hey" || low == "guten morgen" ||
             low == "guten tag" || low == "servus") return BootstrapDecision(BootstrapKind.REPLY,
                 "Hallo! Ich bin Device AI. Mein eigener lokaler Startkern ist aktiv. Was möchtest du mit mir ausprobieren?")

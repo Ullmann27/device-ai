@@ -87,3 +87,11 @@ test('scheduled offline job names the JobService declared in the manifest',()=>{
  ensure('service class is a JobService',new RegExp('class '+cls+'\\s*:\\s*JobService\\(').test(scheduler));
  ensure('service declared in manifest',manifest.includes('android:name="'+name.replace('at.heinz.deviceai','')+'"'));
 });
+test('user-visible texts contain line breaks, not a literal backslash-n',()=>{
+ // "\\n" inside a Kotlin string literal is shown as the two characters \ and n.
+ for(const file of ['AgentActivity.kt','BootstrapBrain.kt','MainActivity.kt']){
+  const source=fs.readFileSync(dir+file,'utf8');
+  const hits=source.split('\n').map((line,i)=>[i+1,line]).filter(([,line])=>/"[^"]*\\\\n[^"]*"/.test(line));
+  assert.deepEqual(hits.map(([n])=>file+':'+n),[],'literal \\\\n in '+file);
+ }
+});

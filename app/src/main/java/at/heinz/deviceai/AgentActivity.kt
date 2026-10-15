@@ -804,12 +804,12 @@ class AgentActivity : Activity() {
             setOnClickListener {
                 AlertDialog.Builder(this@AgentActivity)
                     .setTitle("Continuum · Erstes Lernen")
-                    .setMessage("Der lokale Lernkern startet ohne persönliche Beispiele. Deshalb stehen Experiences und Gewichtsupdates zunächst auf 0.\\n\\n" +
-                        "1. Tippe NEURON · LERN-GESPRÄCH.\\n" +
-                        "2. Schreibe einen einfachen Gruß oder eine Frage in den Chat.\\n" +
-                        "3. Bestätige die Einordnung und anschließend ausdrücklich das Training.\\n" +
-                        "4. Wiederhole dies mit mehreren unterschiedlichen Beispielen.\\n" +
-                        "5. Öffne AUTO-ÜBEN erneut, um das Wiederholungslernen zu erlauben.\\n\\n" +
+                    .setMessage("Der lokale Lernkern startet ohne persönliche Beispiele. Deshalb stehen Experiences und Gewichtsupdates zunächst auf 0.\n\n" +
+                        "1. Tippe NEURON · LERN-GESPRÄCH.\n" +
+                        "2. Schreibe einen einfachen Gruß oder eine Frage in den Chat.\n" +
+                        "3. Bestätige die Einordnung und anschließend ausdrücklich das Training.\n" +
+                        "4. Wiederhole dies mit mehreren unterschiedlichen Beispielen.\n" +
+                        "5. Öffne AUTO-ÜBEN erneut, um das Wiederholungslernen zu erlauben.\n\n" +
                         "JETZT TRAINIEREN startet dagegen nur eine getrennte Demo. Webquellen werden niemals ungeprüft zu persönlichen Trainingsfakten.")
                     .setNegativeButton("Schließen", null)
                     .setPositiveButton("LERN-GESPRÄCH STARTEN") { _, _ -> beginNeuralCoach() }
@@ -1484,7 +1484,7 @@ class AgentActivity : Activity() {
                 val value = result.fold(
                     onSuccess = { item ->
                         if (item.record.status == ToolExecutionStatus.SUCCEEDED)
-                            "${ToolRegistry.label(name)}:\\n" + (item.output ?: "Kein Ergebnis.")
+                            "${ToolRegistry.label(name)}:\n" + (item.output ?: "Kein Ergebnis.")
                         else "Geräteaktion nicht abgeschlossen: ${item.record.decisionReason}"
                     },
                     onFailure = { "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
@@ -1902,18 +1902,18 @@ class AgentActivity : Activity() {
     private fun showBootstrapMemory() {
         val facts = bootstrapMemory.facts()
         val text = buildString {
-            append("Eigener Startkern ohne Modellimport.\\n\\n")
-            append("Gemerkte Fakten: ${facts.size}/32\\n")
-            append("Gelernte Befehle: ${bootstrapMemory.learnedCommands().size}/24\\n")
-            append("Letzter Prüfstand: ${bootstrapMemory.curriculumPassed}/${bootstrapMemory.curriculumTotal}\\n")
-            append("Feedback hilfreich: ${bootstrapMemory.positiveCount}\\n")
-            append("Feedback nicht hilfreich: ${bootstrapMemory.negativeCount}\\n\\n")
-            append("Nur auf ausdrückliches „Merke dir: ...“ wird gespeichert.\\n")
-            append("Weder Chatverläufe noch Internetseiten werden automatisch als Wahrheit gespeichert.\\n")
-            append("Sprachausgabe verwendet Android-TTS; Spracheingabe den verfügbaren Android-Dienst.\\n")
-            append("Privater App-Speicher, derzeit noch ohne zusätzliche Inhaltsverschlüsselung.\\n\\n")
+            append("Eigener Startkern ohne Modellimport.\n\n")
+            append("Gemerkte Fakten: ${facts.size}/32\n")
+            append("Gelernte Befehle: ${bootstrapMemory.learnedCommands().size}/24\n")
+            append("Letzter Prüfstand: ${bootstrapMemory.curriculumPassed}/${bootstrapMemory.curriculumTotal}\n")
+            append("Feedback hilfreich: ${bootstrapMemory.positiveCount}\n")
+            append("Feedback nicht hilfreich: ${bootstrapMemory.negativeCount}\n\n")
+            append("Nur auf ausdrückliches „Merke dir: ...“ wird gespeichert.\n")
+            append("Weder Chatverläufe noch Internetseiten werden automatisch als Wahrheit gespeichert.\n")
+            append("Sprachausgabe verwendet Android-TTS; Spracheingabe den verfügbaren Android-Dienst.\n")
+            append("Privater App-Speicher, derzeit noch ohne zusätzliche Inhaltsverschlüsselung.\n\n")
             append(if (facts.isEmpty()) "Noch keine eigenen Fakten." else
-                facts.mapIndexed { i, fact -> "${i + 1}. $fact" }.joinToString("\\n"))
+                facts.mapIndexed { i, fact -> "${i + 1}. $fact" }.joinToString("\n"))
         }
         AlertDialog.Builder(this)
             .setTitle("Continuum · Lernstatus")
