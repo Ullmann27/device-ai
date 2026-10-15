@@ -82,11 +82,16 @@ function outDir(o){if(!SAFE_OUT.test(o.out??'')||o.out.includes('..'))throw Erro
 
 export async function command(argv,{root=process.cwd(),env=process.env,log=console.log}={}){
   const o=options(argv);const cmd=o._[0]??'triage';
+  if(o.help==='true'||cmd==='help'){const {BACKLOG_HELP}=await import('./development-backlog-cli.mjs');return BACKLOG_HELP;}
   const loop=await import('./repair-loop.mjs');
   const ledgerMod=await import('./repair-ledger.mjs');
   const publish=await import('./repair-publish.mjs');
   const ledgerFile=o.ledger;
   const ledger=ledgerFile?ledgerMod.loadLedger(ledgerFile):(o['ledger-branch']?publish.loadLedgerFromBranch(root,o['ledger-branch']).ledger:ledgerMod.emptyLedger());
+  if(cmd.startsWith('backlog')){
+    const {backlogCommand}=await import('./development-backlog-cli.mjs');
+    return backlogCommand(cmd,o,{root,out:outDir(o),ledger,log});
+  }
   if(cmd==='triage')return main();
   if(cmd==='repair'){
     const out=outDir(o);
@@ -182,4 +187,4 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
 }
 
 if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href)
-  command(process.argv.slice(2)).catch(e=>{console.error(e.message);process.exitCode=1;});
+  command(process.argv.slice(2),{log:console.error}).then(result=>{if(result!==undefined)console.log(typeof result==='string'?result:JSON.stringify(result));}).catch(e=>{console.error(e.message);process.exitCode=1;});

@@ -1,5 +1,7 @@
 package at.heinz.deviceai.cognitive
 
+enum class DevelopmentExecutionMode { LOCAL_REVIEW, NODE_EXPORT }
+
 enum class DevelopmentUiPhase { IDLE, RUNNING, DONE, FAILED, CANCELLED }
 
 data class DevelopmentUiState(
@@ -9,7 +11,10 @@ data class DevelopmentUiState(
     val status: String = "Idle. Select source text and describe one development task.",
     val preview: String? = null,
     val error: String? = null,
-    val sourceImportPending: Boolean = false
+    val sourceImportPending: Boolean = false,
+    val backlogTaskId: String? = null,
+    val backlogRevision: Int? = null,
+    val executionMode: DevelopmentExecutionMode = DevelopmentExecutionMode.LOCAL_REVIEW
 ) {
     val canEdit: Boolean get() = phase != DevelopmentUiPhase.RUNNING
     val canStart: Boolean get() = canEdit && !sourceImportPending
@@ -26,9 +31,18 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         status = "Input changed. Start a new review; previous proposal is invalidated.")
 
     fun setGoal(goal: String) {
-        if (state.canEdit && goal != state.goal) state = edited().copy(goal = goal)
+        if (state.canEdit && goal != state.goal) state = edited().copy(goal = goal, backlogTaskId = null, backlogRevision = null)
     }
 
+
+    fun selectBacklog(item: DevelopmentBacklogItem, mode: DevelopmentExecutionMode) {
+        if (!state.canEdit) return
+        state = edited().copy(goal = item.title, backlogTaskId = item.id,
+            backlogRevision = item.revision, executionMode = mode,
+            status = if (mode == DevelopmentExecutionMode.NODE_EXPORT)
+                "Node-Auftrag exportieren. Ausführung und Freigabe erfolgen separat in Node."
+            else "Lokaler Review der ausgewählten Aufgabe; kein Build oder Commit.")
+    }
 
     /** Revoke an old proposal immediately while SAF reads are still queued off the UI thread. */
     fun beginSourceImport(): Boolean {
@@ -68,6 +82,10 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
 
     fun start(modelReady: Boolean): DevelopmentTask? {
         if (!state.canStart) return null
+        if (state.executionMode == DevelopmentExecutionMode.NODE_EXPORT) {
+            state = state.copy(status = "Node-Auftrag: über SAF exportieren; keine lokale Ausführung.")
+            return null
+        }
         if (!modelReady) {
             state = state.copy(phase = DevelopmentUiPhase.FAILED, preview = null,
                 error = "No local model loaded. Load a local model first; there is no cloud fallback.",
@@ -83,6 +101,10 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         }
         state = state.copy(phase = DevelopmentUiPhase.RUNNING, preview = null, error = null, status = "Pending…")
         return task
+    }
+
+    fun failStart(message: String) {
+        state = state.copy(phase = DevelopmentUiPhase.FAILED, error = message, status = "Start failed", preview = null)
     }
 
     fun onJobState(job: DevelopmentJobState) {

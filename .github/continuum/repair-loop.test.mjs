@@ -131,3 +131,11 @@ test('end-to-end: injected fault is reproduced, repaired in isolation, verified 
   });
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });
+
+test('Node 22.16 JUnit ReferenceError wrapper retains actionable typo diagnosis',()=>{
+ const xml='<testcase name="quad"><failure message="sqare is not defined">cause: ReferenceError [Error]: sqare is not defined\n at quad (file:///repo/.github/continuum/math.mjs:2:25)</failure></testcase>';
+ const result=parseJUnit(xml,'/repo');
+ assert.equal(result.diagnostics[0].kind,'REFERENCE_ERROR');
+ assert.equal(result.diagnostics[0].symbol,'sqare');
+ assert.equal(result.diagnostics[0].file,'.github/continuum/math.mjs');
+});

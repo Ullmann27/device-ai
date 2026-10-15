@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.16.0"
       - name: Export reproducible Git checkout
         run: git bundle create continuum-source.bundle HEAD
       - uses: actions/upload-artifact@v4
@@ -26,3 +26,29 @@ jobs:
           retention-days: 7
       - name: Test continuum and repair pipeline
         run: node --test .github/continuum/*.test.mjs
+      - name: Backend regression tests
+        run: npm --prefix backend run check && npm --prefix backend test
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install Android SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Real Android JVM and cross-runtime tests
+        run: gradle :app:testDebugUnitTest --stacktrace --console=plain
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-integration-junit
+          path: app/build/test-results/testDebugUnitTest/TEST-*.xml
+      - name: Build isolated preview APK
+        run: gradle :app:assembleDebug -PdeviceAiPreview=true --stacktrace --console=plain
+      - uses: actions/upload-artifact@v4
+        with:
+          name: continuum-backlog-preview-apk
+          path: app/build/outputs/apk/debug/app-debug.apk

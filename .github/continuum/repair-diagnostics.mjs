@@ -76,7 +76,7 @@ export function parseJUnit(xml,root){
     const kt=!file&&detail.match(/at ([\w.$]+)\.[\w$<>]+\(([\w]+\.kt):(\d+)\)/);
     if(kt){file=kt[2];line=Number(kt[3]);}
     let kind='TEST_FAILURE',symbol;
-    const ref=(message+'\n'+detail).match(/ReferenceError: ([A-Za-z_$][\w$]*) is not defined/);
+    const ref=(message+'\n'+detail).match(/ReferenceError(?: \[Error\])?: ([A-Za-z_$][\w$]*) is not defined/);
     if(ref){kind='REFERENCE_ERROR';symbol=ref[1];}
     else if(/SyntaxError/.test(message+detail))kind='JS_SYNTAX_ERROR';
     const d={tool:'junit',severity:'error',test:(classname?classname+'.':'')+name,file,line,col,message,kind,symbol};
@@ -91,7 +91,7 @@ export function parseJUnit(xml,root){
 export function parseJsErrorText(text,root){
   const out=[];
   const clean=String(text).slice(-MAX_TEXT).split('\n').map(l=>l.replace(/^#\s?/,'')).join('\n');
-  const runtime=/(ReferenceError|TypeError|SyntaxError): ([^\n]+)\n\s*at [^\n]*?file:\/\/(\/[^\s:)]+\.m?js):(\d+):(\d+)/g;
+  const runtime=/(ReferenceError|TypeError|SyntaxError)(?: \[Error\])?: ([^\n]+)\n\s*at [^\n]*?file:\/\/(\/[^\s:)]+\.m?js):(\d+):(\d+)/g;
   const parse=/file:\/\/(\/[^\s:)]+\.m?js):(\d+)\n[^\n]*\n[^\n]*\n\s*(SyntaxError): ([^\n]+)/g;
   for(const m of clean.matchAll(runtime)){
     const file=relativeInside(root,m[3]);if(!file)continue;
