@@ -38,7 +38,7 @@ async function main() {
     if(!response.ok)throw Error('GitHub API HTTP '+response.status);
     return response.json();
   }
-  const branch=env.CONTINUUM_BRANCH||'copilot/pr-12-working-first-vertical-slice';
+  const branch=process.env.CONTINUUM_BRANCH||'copilot/pr-12-working-first-vertical-slice';
   const data=await api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=12');
   const runs=(data.workflow_runs??[]).filter(x=>x.name!=='Continuum Developer Agent').slice(0,12);
   const jobs={};
