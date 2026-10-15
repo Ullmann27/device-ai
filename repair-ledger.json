@@ -93,6 +93,43 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T07:07:53.136Z",
+   "baseCommit": "22582016d3b8d0a215793d3c5a11a69812c100c0",
+   "chain": "android",
+   "diagnostic": "e2cd043b8fe4a9f4",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "8e3c58754aaa652f",
+   "strategy": "KOTLIN_TYPO_REFERENCE",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "            val candidate=TrainableSubwordEncodr.restore(baseline.save())",
+     "newText": "            val candidate=TrainableSubwordEncoder.restore(baseline.save())",
+     "line": 67
+    }
+   ],
+   "confidence": 0.56,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "41530618ace6179b93a3cb1dc9889920731ac8ea6cd43875537e1ffde4976979",
+   "proposalCommit": "3db71056a3c586ac587ec965ab2ecaecf3c36b21",
+   "proposalBranch": "continuum-agent/repair-22582016d3-e2cd043b",
+   "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fcontinuum-agent-repair-demo...continuum-agent%2Frepair-22582016d3-e2cd043b?expand=1"
   }
  ],
  "experiences": [
@@ -108,6 +145,11 @@
   },
   {
    "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
+   "successes": 1,
+   "failures": 0
+  },
+  {
+   "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
    "successes": 1,
    "failures": 0
   }
@@ -145,6 +187,17 @@
    "verifiedStrategy": "JS_TYPO_REFERENCE",
    "patchSha256": "47423c932d6fa63f448c462a020f74f33f01af1fbd89004d2ec9cd4936531f7f",
    "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T07:07:53.136Z",
+   "base": "22582016d3b8d0a215793d3c5a11a69812c100c0",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 1,
+   "verifiedStrategy": "KOTLIN_TYPO_REFERENCE",
+   "patchSha256": "41530618ace6179b93a3cb1dc9889920731ac8ea6cd43875537e1ffde4976979",
+   "trigger": "android-build-failure"
   }
  ]
 }
