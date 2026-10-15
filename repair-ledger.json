@@ -1435,6 +1435,30 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:20:03.151Z",
+   "baseCommit": "6f903c086bcf2747ad8e2822da02b9474f4aaed6",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "63e1251518ebc51f",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "    @Test fun explicitReconfirmationAfterRevocationIsRequiredToRestoreOldAnswer() {\n        val dir=temp(\"continuum-answer-reconfirm\")\n        try {\n            val core=ContinuumLearningCore(dir) { 1000L }\n            val question=\"Wie wird ein älterer Korrekturstand wieder bestätigt?\"\n            core.replyFromMemory(question)\n            assertTrue(core.confirmAnswerCorrection(question,\"Meine ursprüngliche erklärte Antwort.\"))\n            assertEquals(1,core.revokeAnswerCorrections())\n            assertNull(ContinuumAnswerCorrection.find(question,\n                FileLearningExperienceStore(File(dir,\"learning-core-v2\")).all()))\n            core.replyFromMemory(question)\n            assertTrue(core.confirmAnswerCorrection(question,\"Meine ursprüngliche erklärte Antwort.\"))\n            assertTrue(core.replyFromMemory(question).grounded)\n            assertEquals(ContinuumCorrectionSummary(1,0),core.correctionSummary())\n        } finally { dir.deleteRecursively() }\n    }\n",
+     "newText": "",
+     "line": 126
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -1987,6 +2011,17 @@
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
    "attempts": 3,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:20:03.151Z",
+   "base": "6f903c086bcf2747ad8e2822da02b9474f4aaed6",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 1,
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "android-build-failure"
