@@ -237,7 +237,11 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
     const repairs=(backlog?.tasks??[]).filter(t=>t.kind==='REPAIR');
     const known=repairs.find(t=>t.subject?.base===head)??null;
     const running=repairs.find(t=>t.state==='IN_PROGRESS'&&t.claim.leaseUntil>Date.now())??null;
-    const explicitlyRetried=Boolean(known&&known.state==='READY'&&known.attempts===0&&known.history?.at(-1)?.op==='retry');
+    const latestRetry=known?.history?.filter(h=>h.op==='retry').at(-1)?.at??null;
+        const retriedSessionRecorded=latestRetry!==null&&state.sessions.some(x=>
+          x.base===head&&Number.isFinite(Date.parse(x.at))&&Date.parse(x.at)>=latestRetry);
+        const explicitlyRetried=Boolean(known&&known.state==='READY'&&known.attempts===0&&
+          known.history?.at(-1)?.op==='retry'&&!retriedSessionRecorded);
     const attempted=!explicitlyRetried&&(state.sessions.some(x=>x.base===head)||Boolean(known));
     const decision={branch,head,buildConclusion:build?.conclusion??build?.status??'NOT_RUN',alreadyAttempted:attempted,
       backlogTask:known?.id??null,backlogTaskState:known?.state??null,runningRepair:running?.id??null,
