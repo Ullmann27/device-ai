@@ -15,4 +15,14 @@ test('SWB2 holdout audit uses real training and separates exact training texts f
  assert.notEqual(r.initialHash,r.trainedHash);
  assert.ok(r.falsePositives>=0&&r.falsePositives<=r.negativeQueries);
  assert.equal(typeof r.promotionEligible,'boolean');
+ assert.equal(r.adaptive.steps,1800);
+ assert.equal(r.adaptive.heldout.total,HOLDOUTS.length);
+ assert.ok(r.adaptive.supervisedAfter.loss<r.adaptive.supervisedBefore.loss);
+ assert.equal(typeof r.adaptive.promotionEligible,'boolean');
+ assert.ok(r.adaptive.falsePositives>=0&&r.adaptive.falsePositives<=r.negativeQueries);
+ console.log('SWB2 optimizer comparison:',JSON.stringify({
+   sgdHits:r.after.neuralCorrect,adamHits:r.adaptive.heldout.neuralCorrect,
+   adamFalsePositives:r.adaptive.falsePositives,adamEligible:r.adaptive.promotionEligible,
+   adamRaw:r.adaptive.raw
+ }));
 });
