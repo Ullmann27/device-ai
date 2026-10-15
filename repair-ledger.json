@@ -1566,6 +1566,30 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:23:53.027Z",
+   "baseCommit": "5dff0c0a3da565e5a8acb35f5d893a10b99933e4",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "223e87da579902db",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "            assertTrue(\"revocation purges prior corrected text from the dialogue file\",\n                core.dialogueHistory().isEmpty())",
+     "newText": "",
+     "line": 49
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -2145,6 +2169,17 @@
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
    "attempts": 3,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:23:53.027Z",
+   "base": "5dff0c0a3da565e5a8acb35f5d893a10b99933e4",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 1,
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "android-build-failure"
