@@ -51,8 +51,18 @@ jobs:
         with:
           gradle-version: "8.11.1"
 
+      # Shared development backlog: Node writes, Kotlin (DevelopmentBacklogRoundtripTest)
+      # verifies and changes it through its store, Node verifies the result.
+      - name: Backlog round trip, Node writes
+        run: node .github/continuum/backlog-fixtures.mjs roundtrip-prepare "$RUNNER_TEMP/backlog-roundtrip"
+
       - name: Run unit tests
+        env:
+          CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/backlog-roundtrip
         run: gradle :app:testDebugUnitTest --stacktrace
+
+      - name: Backlog round trip, Node verifies the Kotlin changes
+        run: node .github/continuum/backlog-fixtures.mjs roundtrip-verify "$RUNNER_TEMP/backlog-roundtrip"
 
       - name: Summarize JVM test results
         run: |

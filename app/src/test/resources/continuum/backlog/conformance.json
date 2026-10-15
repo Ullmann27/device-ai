@@ -1,0 +1,1948 @@
+{
+ "name": "continuum-development-backlog conformance",
+ "schemaVersion": 2,
+ "cases": [
+  {
+   "name": "lifecycle with evidence, leases and rejection",
+   "start": {
+    "at": 1000,
+    "actor": "fixture"
+   },
+   "steps": [
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 1100,
+      "task": {
+       "id": "task-alpha",
+       "title": "Reparatur: Größe prüfen – 🚀 schnell",
+       "kind": "REPAIR",
+       "source": "cli",
+       "priority": 900
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "android-app",
+      "at": 1110,
+      "task": {
+       "id": "task-beta",
+       "title": "Integrationstest für Alpha (zweite Zeile)",
+       "kind": "TEST",
+       "source": "android",
+       "dependsOn": [
+        "task-alpha"
+       ]
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "code-analyzer",
+      "at": 1120,
+      "task": {
+       "id": "task-gamma",
+       "title": "Investigate CognitiveRaidPlanner",
+       "kind": "INVESTIGATE",
+       "source": "code-analyzer",
+       "priority": 230,
+       "subject": {
+        "file": "app/src/main/java/x/Y.kt",
+        "line": 12,
+        "confirmed": false
+       }
+      },
+      "reason": "finding TEST_ONLY"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "heinz",
+      "at": 1130,
+      "id": "task-alpha"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "heinz",
+      "at": 1140,
+      "id": "task-beta",
+      "reason": "passt"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "heinz",
+      "at": 1150,
+      "id": "task-gamma"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "worker-1",
+      "at": 1200,
+      "id": "task-beta",
+      "owner": "worker-1",
+      "token": "00000000000000000000000000000002",
+      "leaseMs": 60000
+     },
+     "expect": "DEPENDENCY_NOT_DONE"
+    },
+    {
+     "op": {
+      "op": "claimNext",
+      "actor": "worker-1",
+      "at": 1300,
+      "owner": "worker-1",
+      "token": "00000000000000000000000000000001",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "renew",
+      "actor": "worker-1",
+      "at": 1350,
+      "id": "task-alpha",
+      "token": "00000000000000000000000000000009",
+      "leaseMs": 60000
+     },
+     "expect": "TOKEN_MISMATCH"
+    },
+    {
+     "op": {
+      "op": "renew",
+      "actor": "worker-1",
+      "at": 1400,
+      "id": "task-alpha",
+      "token": "00000000000000000000000000000001",
+      "leaseMs": 120000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "submit",
+      "actor": "worker-1",
+      "at": 1500,
+      "id": "task-alpha",
+      "token": "00000000000000000000000000000001",
+      "artifact": {
+       "type": "PATCH",
+       "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1600,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": true,
+         "executed": 0,
+         "failed": 0,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1600,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "EVIDENCE_REJECTED"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1600,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": true,
+         "executed": 12,
+         "failed": 0,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1600,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "EVIDENCE_REJECTED"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1600,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": true,
+         "executed": 12,
+         "failed": 0,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1400,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "EVIDENCE_REJECTED"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1600,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 12,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1600,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "EVIDENCE_REJECTED"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1600,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       "chain": "node",
+       "commit": "nope",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": true,
+         "executed": 12,
+         "failed": 0,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1600,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "complete",
+      "actor": "ci",
+      "at": 1700,
+      "id": "task-alpha",
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-alpha",
+       "submissionToken": "00000000000000000000000000000001",
+       "artifactSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": true,
+         "executed": 95,
+         "failed": 0,
+         "skipped": 0
+        }
+       ],
+       "repair": {
+        "diagnostic": "0123456789abcdef",
+        "candidate": "fedcba9876543210",
+        "strategy": "JS_TYPO_REFERENCE",
+        "patchSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+       },
+       "at": 1700,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "worker-2",
+      "at": 1800,
+      "id": "task-beta",
+      "owner": "worker-2",
+      "token": "00000000000000000000000000000002",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "worker-2",
+      "at": 1900,
+      "id": "task-beta",
+      "token": "00000000000000000000000000000002",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "2 Tests rot"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "worker-2",
+      "at": 2000,
+      "id": "task-beta",
+      "owner": "worker-2",
+      "token": "00000000000000000000000000000003",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "expire",
+      "actor": "android-app",
+      "at": 62001
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "expire",
+      "actor": "android-app",
+      "at": 62002
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "renew",
+      "actor": "worker-2",
+      "at": 62050,
+      "id": "task-beta",
+      "token": "00000000000000000000000000000003",
+      "leaseMs": 60000
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "heinz",
+      "at": 62100,
+      "id": "task-gamma",
+      "priority": 50
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "heinz",
+      "at": 62200,
+      "id": "task-gamma",
+      "priority": 50
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "reject",
+      "actor": "heinz",
+      "at": 62300,
+      "id": "task-gamma",
+      "reason": "kein Handlungsbedarf"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "reject",
+      "actor": "heinz",
+      "at": 62310,
+      "id": "task-gamma"
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "abort",
+      "actor": "heinz",
+      "at": 62320,
+      "id": "task-alpha",
+      "reason": "zu spät"
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "retry",
+      "actor": "heinz",
+      "at": 62330,
+      "id": "task-beta",
+      "reason": "noch einmal"
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "worker-2",
+      "at": 62400,
+      "id": "task-beta",
+      "owner": "worker-2",
+      "token": "00000000000000000000000000000004",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "submit",
+      "actor": "worker-2",
+      "at": 62500,
+      "id": "task-beta",
+      "token": "00000000000000000000000000000004",
+      "artifact": {
+       "type": "PROPOSAL",
+       "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "reviewer",
+      "at": 62600,
+      "id": "task-beta",
+      "token": "00000000000000000000000000000004",
+      "error": {
+       "code": "REVIEW_REJECTED",
+       "message": "Vorschlag abgelehnt"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-beta",
+       "submissionToken": "00000000000000000000000000000004",
+       "artifactSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "android-unit",
+         "passed": false,
+         "executed": 40,
+         "failed": 2,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 62600,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "retry",
+      "actor": "heinz",
+      "at": 62700,
+      "id": "task-beta",
+      "reason": "neuer Anlauf nach Analyse"
+     },
+     "expect": "ok"
+    }
+   ],
+   "final": {
+    "revision": 20,
+    "integrity": "b09769c2ac17b44465c2c8044cd049f8841d75a76dd055c597f1f88111eff656",
+    "states": {
+     "task-alpha": "DONE",
+     "task-beta": "READY",
+     "task-gamma": "REJECTED"
+    }
+   }
+  },
+  {
+   "name": "budget, blocking, expiry and invalid input",
+   "start": {
+    "at": 5,
+    "actor": "fixture"
+   },
+   "steps": [
+    {
+     "op": {
+      "op": "propose",
+      "actor": "repair-loop",
+      "at": 10,
+      "task": {
+       "id": "task-delta",
+       "title": "Build reparieren",
+       "kind": "REPAIR",
+       "source": "repair-loop",
+       "maxAttempts": 1,
+       "priority": 800
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 20,
+      "task": {
+       "id": "task-epsilon",
+       "title": "Folgeaufgabe",
+       "kind": "IMPLEMENT",
+       "source": "cli",
+       "dependsOn": [
+        "task-delta",
+        "task-delta"
+       ]
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "heinz",
+      "at": 30,
+      "id": "task-delta"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "heinz",
+      "at": 40,
+      "id": "task-epsilon"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "agent",
+      "at": 50,
+      "id": "task-delta",
+      "owner": "agent",
+      "token": "00000000000000000000000000000005",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "agent",
+      "at": 55,
+      "id": "task-delta",
+      "token": "00000000000000000000000000000006",
+      "error": {
+       "code": "X_FAILED",
+       "message": ""
+      }
+     },
+     "expect": "TOKEN_MISMATCH"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "agent",
+      "at": 60,
+      "id": "task-delta",
+      "token": "00000000000000000000000000000005",
+      "error": {
+       "code": "NO_VERIFIED_REPAIR",
+       "message": ""
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "agent",
+      "at": 70,
+      "id": "task-epsilon",
+      "owner": "agent",
+      "token": "00000000000000000000000000000007",
+      "leaseMs": 60000
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "claimNext",
+      "actor": "agent",
+      "at": 80,
+      "owner": "agent",
+      "token": "00000000000000000000000000000007",
+      "leaseMs": 60000
+     },
+     "expect": "NO_ELIGIBLE_TASK"
+    },
+    {
+     "op": {
+      "op": "retry",
+      "actor": "heinz",
+      "at": 90,
+      "id": "task-delta",
+      "reason": "Budget erneuert"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claimNext",
+      "actor": "agent",
+      "at": 100,
+      "owner": "agent",
+      "token": "00000000000000000000000000000007",
+      "leaseMs": 60000,
+      "kinds": [
+       "TEST"
+      ]
+     },
+     "expect": "NO_ELIGIBLE_TASK"
+    },
+    {
+     "op": {
+      "op": "claimNext",
+      "actor": "agent",
+      "at": 105,
+      "owner": "agent",
+      "token": "00000000000000000000000000000007",
+      "leaseMs": 1000,
+      "kinds": [
+       "REPAIR"
+      ]
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "claimNext",
+      "actor": "agent",
+      "at": 110,
+      "owner": "agent",
+      "token": "00000000000000000000000000000007",
+      "leaseMs": 60000,
+      "kinds": [
+       "REPAIR"
+      ]
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "submit",
+      "actor": "agent",
+      "at": 200000,
+      "id": "task-delta",
+      "token": "00000000000000000000000000000007",
+      "artifact": {
+       "type": "PATCH",
+       "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      }
+     },
+     "expect": "LEASE_EXPIRED"
+    },
+    {
+     "op": {
+      "op": "expire",
+      "actor": "agent",
+      "at": 200000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "abort",
+      "actor": "heinz",
+      "at": 200100,
+      "id": "task-epsilon",
+      "reason": "abgebrochen"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200150,
+      "task": {
+       "id": "task-delta",
+       "title": "Doppelt",
+       "kind": "REPAIR",
+       "source": "cli"
+      }
+     },
+     "expect": "DUPLICATE_ID"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200160,
+      "ifAbsent": true,
+      "task": {
+       "id": "task-delta",
+       "title": "Doppelt",
+       "kind": "REPAIR",
+       "source": "cli"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200170,
+      "task": {
+       "id": "task-zeta",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli",
+       "dependsOn": [
+        "task-missing"
+       ]
+      }
+     },
+     "expect": "UNKNOWN_DEPENDENCY"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200180,
+      "task": {
+       "id": "X",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli"
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200190,
+      "task": {
+       "id": "task-zeta",
+       "title": "zwei\nZeilen",
+       "kind": "REPAIR",
+       "source": "cli"
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200200,
+      "task": {
+       "id": "task-zeta",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli",
+       "priority": 1.5
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200210,
+      "task": {
+       "id": "task-zeta",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli",
+       "priority": 1001
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200220,
+      "task": {
+       "id": "task-zeta",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli",
+       "subject": {
+        "deep": {
+         "x": 1
+        }
+       }
+      }
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "explode",
+      "actor": "cli",
+      "at": 200230
+     },
+     "expect": "INVALID_OP"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "cli",
+      "at": 200240,
+      "id": "task-unknown"
+     },
+     "expect": "NOT_FOUND"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "not valid!",
+      "at": 200250,
+      "id": "task-delta"
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "cli",
+      "at": -1,
+      "id": "task-delta"
+     },
+     "expect": "INVALID_FIELD"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "agent",
+      "at": 200260,
+      "id": "task-delta",
+      "owner": "agent",
+      "token": "00000000000000000000000000000008",
+      "leaseMs": 60000
+     },
+     "expect": "INVALID_TRANSITION"
+    },
+    {
+     "op": {
+      "op": "reject",
+      "actor": "heinz",
+      "at": 200270,
+      "id": "task-delta",
+      "reason": "Budget aufgebraucht"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 200280,
+      "task": {
+       "id": "task-zeta",
+       "title": "Z",
+       "kind": "REPAIR",
+       "source": "cli",
+       "maxAttempts": 2
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "heinz",
+      "at": 200290,
+      "id": "task-zeta",
+      "priority": 999
+     },
+     "expect": "ok"
+    }
+   ],
+   "final": {
+    "revision": 13,
+    "integrity": "daede30b35f5a1c7949253f425aaaa4850cabf64bea9d8efe8259295b010d3eb",
+    "states": {
+     "task-delta": "REJECTED",
+     "task-epsilon": "ABORTED",
+     "task-zeta": "PROPOSED"
+    }
+   }
+  },
+  {
+   "name": "history is bounded and drops are counted",
+   "start": {
+    "at": 0,
+    "actor": "fixture"
+   },
+   "steps": [
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 1,
+      "task": {
+       "id": "task-history",
+       "title": "Viele Änderungen",
+       "kind": "TEST",
+       "source": "cli"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "cli",
+      "at": 2,
+      "id": "task-history"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 3,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 4,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 5,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 6,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 7,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 8,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 9,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 10,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 11,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 12,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 13,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 14,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 15,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 16,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 17,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 18,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 19,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 20,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 21,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 22,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 23,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 24,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 25,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 26,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 27,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 28,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 29,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 30,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 31,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 32,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 33,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 34,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 35,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 36,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 37,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 38,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 39,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 40,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 41,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 42,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 43,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 44,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 45,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 46,
+      "id": "task-history",
+      "priority": 100
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "setPriority",
+      "actor": "cli",
+      "at": 47,
+      "id": "task-history",
+      "priority": 200
+     },
+     "expect": "ok"
+    }
+   ],
+   "final": {
+    "revision": 47,
+    "integrity": "44424e7dd00264b4c7ffc8e5ab5e5788e9b7f853496bdab4aa451752137ae84b",
+    "states": {
+     "task-history": "READY"
+    }
+   }
+  },
+  {
+   "name": "evidence is bounded and drops are counted",
+   "start": {
+    "at": 0,
+    "actor": "fixture"
+   },
+   "steps": [
+    {
+     "op": {
+      "op": "propose",
+      "actor": "cli",
+      "at": 1,
+      "task": {
+       "id": "task-evidence",
+       "title": "Viele Läufe",
+       "kind": "TEST",
+       "source": "cli",
+       "maxAttempts": 20
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "accept",
+      "actor": "cli",
+      "at": 2,
+      "id": "task-evidence"
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 100,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "00000000000000000000000000000065",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 150,
+      "id": "task-evidence",
+      "token": "00000000000000000000000000000065",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 1"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "00000000000000000000000000000065",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 1,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 150,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 200,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "00000000000000000000000000000066",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 250,
+      "id": "task-evidence",
+      "token": "00000000000000000000000000000066",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 2"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "00000000000000000000000000000066",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 2,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 250,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 300,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "00000000000000000000000000000067",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 350,
+      "id": "task-evidence",
+      "token": "00000000000000000000000000000067",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 3"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "00000000000000000000000000000067",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 3,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 350,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 400,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "00000000000000000000000000000068",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 450,
+      "id": "task-evidence",
+      "token": "00000000000000000000000000000068",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 4"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "00000000000000000000000000000068",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 4,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 450,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 500,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "00000000000000000000000000000069",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 550,
+      "id": "task-evidence",
+      "token": "00000000000000000000000000000069",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 5"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "00000000000000000000000000000069",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 5,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 550,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 600,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "0000000000000000000000000000006a",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 650,
+      "id": "task-evidence",
+      "token": "0000000000000000000000000000006a",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 6"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "0000000000000000000000000000006a",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 6,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 650,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 700,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "0000000000000000000000000000006b",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 750,
+      "id": "task-evidence",
+      "token": "0000000000000000000000000000006b",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 7"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "0000000000000000000000000000006b",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 7,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 750,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 800,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "0000000000000000000000000000006c",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 850,
+      "id": "task-evidence",
+      "token": "0000000000000000000000000000006c",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 8"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "0000000000000000000000000000006c",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 8,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 850,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 900,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "0000000000000000000000000000006d",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 950,
+      "id": "task-evidence",
+      "token": "0000000000000000000000000000006d",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 9"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "0000000000000000000000000000006d",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 9,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 950,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "claim",
+      "actor": "w",
+      "at": 1000,
+      "id": "task-evidence",
+      "owner": "w",
+      "token": "0000000000000000000000000000006e",
+      "leaseMs": 60000
+     },
+     "expect": "ok"
+    },
+    {
+     "op": {
+      "op": "fail",
+      "actor": "w",
+      "at": 1050,
+      "id": "task-evidence",
+      "token": "0000000000000000000000000000006e",
+      "error": {
+       "code": "TEST_FAILURE",
+       "message": "Lauf 10"
+      },
+      "evidence": {
+       "type": "TEST_RUN",
+       "taskId": "task-evidence",
+       "submissionToken": "0000000000000000000000000000006e",
+       "artifactSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+       "chain": "node",
+       "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "profiles": [
+        {
+         "profile": "node-continuum",
+         "passed": false,
+         "executed": 10,
+         "failed": 1,
+         "skipped": 0
+        }
+       ],
+       "repair": null,
+       "at": 1050,
+       "by": "ci-runner"
+      }
+     },
+     "expect": "ok"
+    }
+   ],
+   "final": {
+    "revision": 22,
+    "integrity": "84069bd0cdc2b9331fed19c4e5b13ec3a438abe2347562de28e15a32e58c7ed1",
+    "states": {
+     "task-evidence": "READY"
+    }
+   }
+  }
+ ]
+}

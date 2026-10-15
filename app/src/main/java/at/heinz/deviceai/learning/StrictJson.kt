@@ -17,8 +17,8 @@ object StrictJson {
     const val MAX_DEPTH=16
     const val MAX_CONTAINER_ITEMS=4096
 
-    fun parse(text:String):Any? {
-        require(text.length<=MAX_INPUT_CHARS) { "JSON zu groß" }
+    fun parse(text:String,maxChars:Int=MAX_INPUT_CHARS):Any? {
+        require(text.length<=maxChars) { "JSON zu groß" }
         val reader=Reader(text)
         reader.skipWhitespace()
         val value=reader.value(0)
@@ -153,7 +153,13 @@ object StrictJson {
             require(i+4<=s.length) { "Unvollständige Unicode-Escape-Sequenz" }
             var code=0
             repeat(4) {
-                val digit=Character.digit(s[i++],16)
+                // ASCII hex only: Character.digit would also accept non-ASCII digits
+                val digit=when(val ch=s[i++]) {
+                    in '0'..'9' -> ch-'0'
+                    in 'a'..'f' -> ch-'a'+10
+                    in 'A'..'F' -> ch-'A'+10
+                    else -> -1
+                }
                 require(digit>=0) { "Ungültige Unicode-Escape-Sequenz" }
                 code=code*16+digit
             }
