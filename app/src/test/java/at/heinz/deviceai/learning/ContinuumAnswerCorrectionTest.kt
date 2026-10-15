@@ -89,6 +89,11 @@ class ContinuumAnswerCorrectionTest {
             assertEquals(16,entries.count { it.type==LearningExperienceType.ANSWER_CORRECTION })
             assertEquals(17,entries.size)
             assertEquals(16,core.correctionSummary().active)
+            val newest=entries.singleOrNull { it.content=="Bestätigtes Ergebnis für Fall 24" }
+            assertNotNull("latest correction was lost before read",newest)
+            assertEquals(ContinuumAnswerCorrection.queryKey(
+                "Wie lautet die sichere Korrektur für Fall 24?"),newest!!.annotation)
+            assertEquals(LearningStatus.CONFIRMED,newest.status)
             assertNotNull(ContinuumAnswerCorrection.find(
                 "Wie lautet die sichere Korrektur für Fall 24?",entries))
             assertNull(ContinuumAnswerCorrection.find(
