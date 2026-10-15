@@ -55,6 +55,26 @@ test('watch: a head the backlog already tracks or a running repair is not repair
   assert.deepEqual([running.needsRepair,running.runningRepair],[false,'rep-0000000000000002']);
 });
 
+test('watch: a manually retried FAILED repair is eligible again exactly while READY',async()=>{
+  let doc=B.emptyDocument(0,'t');
+  const id='rep-0000000000000099',token='9'.repeat(32);
+  doc=B.applyOps(doc,[
+    {op:'propose',actor:'t',at:1,task:{id,title:'Retry',kind:'REPAIR',source:'repair-loop',
+      maxAttempts:1,subject:{base:'b'.repeat(40)}}},
+    {op:'accept',actor:'t',at:2,id},
+    {op:'claim',actor:'t',at:3,id,owner:'t',token,leaseMs:1800000},
+    {op:'fail',actor:'t',at:4,id,token,error:{code:'TEST_FAILED',message:'Previously failed'}},
+    {op:'retry',actor:'t',at:5,id,reason:'New evidence warrants retry'}
+  ]).doc;
+  const d=await watchWith({'development-backlog.json':B.encodeDocument(doc)});
+  assert.equal(d.backlogTask,id);
+  assert.equal(d.alreadyAttempted,false);
+  assert.equal(d.needsRepair,true);
+  doc=B.applyOp(doc,{op:'claim',actor:'t',at:6,id,owner:'t',token:'8'.repeat(32),leaseMs:1800000}).doc;
+  const claimed=await watchWith({'development-backlog.json':B.encodeDocument(doc)});
+  assert.equal(claimed.needsRepair,false);
+});
+
 test('watch: unreadable or corrupt state fails instead of looking empty',async()=>{
   await assert.rejects(watchWith({},{status:{'development-backlog.json':500}}),/HTTP 500/);
   await assert.rejects(watchWith({'development-backlog.json':'{"schema":"continuum-development-backlog"}'}),/CORRUPT/);
