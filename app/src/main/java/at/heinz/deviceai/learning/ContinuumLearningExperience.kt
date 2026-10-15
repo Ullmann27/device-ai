@@ -118,6 +118,31 @@ class FileLearningExperienceStore(private val directory:File) {
         true
     }
 
+    /**
+     * Local ratings have a strict separate retention budget. A thumbs-up/down
+     * must NEVER evict an older owner fact, source observation or training audit
+     * when the shared Experience ledger approaches MAX_RECORDS.
+     *
+     * Only the oldest feedback entries may be compacted; if there is no free
+     * room after that, feedback fails closed without modifying the ledger.
+     */
+    fun appendFeedback(experience:LearningExperience):Boolean=synchronized(FILE_LOCK) {
+        require(experience.type==LearningExperienceType.USER_FEEDBACK)
+        val current=loadValidated()
+        if(current.any { it.id==experience.id })return@synchronized false
+        val existingRatings=current.filter { it.type==LearningExperienceType.USER_FEEDBACK }
+            .sortedWith(compareBy<LearningExperience> { it.createdAt }.thenBy { it.id })
+        val oldIds=existingRatings.take((existingRatings.size-23).coerceAtLeast(0))
+            .map { it.id }.toSet()
+        val retained=current.filterNot { it.id in oldIds }
+        check(retained.size<MAX_RECORDS) {
+            "Experience ledger is full; user facts cannot be displaced by feedback"
+        }
+        save((retained+experience).sortedWith(
+            compareBy<LearningExperience> { it.createdAt }.thenBy { it.id }))
+        true
+    }
+
     /** One read and at most one write for a batch; ids already present (any status) are skipped. */
     fun appendMissing(items:List<LearningExperience>):Int = synchronized(FILE_LOCK) {
         val current=loadValidated()
