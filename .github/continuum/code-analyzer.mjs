@@ -293,7 +293,9 @@ export function analyzeRepository(root){
 if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href){
   const args=process.argv.slice(2);
   const chainAt=args.indexOf('--chain');
-  const root=path.resolve(args.find(a=>!a.startsWith('--')&&args.indexOf(a)!==chainAt+1&&args.indexOf(a)!==chainAt+2)??'.');
+  // the two symbols after --chain are not the repository path (without --chain every positional argument may be)
+  const chainArgs=chainAt>=0?[chainAt+1,chainAt+2]:[];
+  const root=path.resolve(args.find((a,i)=>!a.startsWith('--')&&!chainArgs.includes(i))??'.');
   const result=analyzeRepository(fs.existsSync(path.join(root,'app/src'))?root:path.resolve(root,'..','..'));
   if(chainAt>=0){
     const chain=callChain(result.index,args[chainAt+1],args[chainAt+2]);
