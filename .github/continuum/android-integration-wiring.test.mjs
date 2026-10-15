@@ -234,7 +234,8 @@ test('owner answer corrections are UI-reachable, exact-query-only, revocable, an
  const confirm=bodyOf(activity,'private fun showLastAnswerCorrectionDialog(');
  const revoke=bodyOf(activity,'private fun confirmRevokeAnswerCorrections(');
  ensure('correction button in memory center',activity.includes('LETZTE ANTWORT · KORRIGIEREN'));
- ensure('revocation button in memory center',activity.includes('ANTWORTKORREKTUREN · WIDERRUFEN'));
+ ensure('full revocation button in memory center',activity.includes('ALLE KORREKTUREN · WIDERRUFEN'));
+ ensure('single revocation button in memory center',activity.includes('EINE KORREKTUR · WIDERRUFEN'));
  ensure('explicit UI confirmation',confirm?.includes('.setPositiveButton("Korrektur bestätigen")'));
  ensure('latest actual dialogue used',confirm?.includes('dialogueHistory().lastOrNull()'));
  ensure('confirmation on I/O worker',confirm?.includes('onLearningIo('));
