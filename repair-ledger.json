@@ -1124,22 +1124,121 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T17:04:06.892Z",
+   "baseCommit": "55852d5fc52c704ae60b059b4def038e72ef186d",
+   "chain": "node",
+   "diagnostic": "69372888e114cee6",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "4953e054bc365d70",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/neural-core.mjs",
+     "oldText": "import {SubwordEncoder,sha256} from './portable-subword.mjs';",
+     "newText": "import {SubwordEncoder,sha256,buckets} from './portable-subword.mjs';",
+     "line": 1
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 143,
+     "failed": 0,
+     "executed": 137,
+     "skipped": 6
+    }
+   ],
+   "patchSha256": "2280e7eb079c25c75231fac8788d06573745adb2e4a1d0d7812907f7ae0e8c08",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T17:03:48.049Z",
+   "baseCommit": "4b6be764a43d7c8913b0af5468b6351fe5026c37",
+   "chain": "node",
+   "diagnostic": "70d633df4b567fab",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "c6e1662539cd99e8",
+   "strategy": "JS_MISSING_IMPORT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/neural-core.mjs",
+     "oldText": "import {SubwordEncoder,buckets} from './portable-subword.mjs';",
+     "newText": "import {SubwordEncoder,buckets,sha256} from './portable-subword.mjs';",
+     "line": 1
+    }
+   ],
+   "confidence": 0.6,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 143,
+     "failed": 0,
+     "executed": 137,
+     "skipped": 6
+    }
+   ],
+   "patchSha256": "6d895930e5a2e856ed9b4ce20646d8baa28fb02c9a898751e9c8f7860378737e",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T17:03:33.265Z",
+   "baseCommit": "9b9f553d7747f2c2a1e82303338d7314e5b1ce41",
+   "chain": "node",
+   "diagnostic": "35e898ae2b278d01",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "e4f5d7b72256ee10",
+   "strategy": "JS_TYPO_REFERENCE",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/portable-subword.mjs",
+     "oldText": "  intentScore(text){const z=this.encode(text);return sigmiod(z.reduce((s,x,i)=>s+x*this.head[i],this.head[D]));}",
+     "newText": "  intentScore(text){const z=this.encode(text);return sigmoid(z.reduce((s,x,i)=>s+x*this.head[i],this.head[D]));}",
+     "line": 39
+    }
+   ],
+   "confidence": 0.56,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 143,
+     "failed": 0,
+     "executed": 137,
+     "skipped": 6
+    }
+   ],
+   "patchSha256": "47423c932d6fa63f448c462a020f74f33f01af1fbd89004d2ec9cd4936531f7f",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
   {
    "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
-   "successes": 10,
+   "successes": 11,
    "failures": 0
   },
   {
    "kind": "REFERENCE_ERROR|JS_MISSING_IMPORT",
-   "successes": 9,
+   "successes": 10,
    "failures": 0
   },
   {
    "kind": "REFERENCE_ERROR|JS_TYPO_REFERENCE",
-   "successes": 9,
+   "successes": 10,
    "failures": 0
   },
   {
@@ -1568,6 +1667,39 @@
   {
    "at": "2026-10-15T16:39:18.638Z",
    "base": "04ea713cbb974ccdc03878a79e360312cbb4f68f",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 8,
+   "attempts": 1,
+   "verifiedStrategy": "JS_TYPO_REFERENCE",
+   "patchSha256": "47423c932d6fa63f448c462a020f74f33f01af1fbd89004d2ec9cd4936531f7f",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T17:04:06.892Z",
+   "base": "55852d5fc52c704ae60b059b4def038e72ef186d",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 3,
+   "attempts": 1,
+   "verifiedStrategy": "REVERT_FILE_TO_PARENT",
+   "patchSha256": "2280e7eb079c25c75231fac8788d06573745adb2e4a1d0d7812907f7ae0e8c08",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T17:03:48.049Z",
+   "base": "4b6be764a43d7c8913b0af5468b6351fe5026c37",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 7,
+   "attempts": 1,
+   "verifiedStrategy": "JS_MISSING_IMPORT",
+   "patchSha256": "6d895930e5a2e856ed9b4ce20646d8baa28fb02c9a898751e9c8f7860378737e",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T17:03:33.265Z",
+   "base": "9b9f553d7747f2c2a1e82303338d7314e5b1ce41",
    "chain": "node",
    "outcome": "VERIFIED",
    "diagnostics": 8,
