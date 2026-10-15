@@ -18,7 +18,9 @@ data class ContinualLearningReport(
     val holdoutBefore:SubwordEvaluation,
     val holdoutAfter:SubwordEvaluation,
     val experienceIds:List<String>,
-    val reason:String
+    val reason:String,
+    /** False for cancellation/time-budget interruption; never mark source hashes completed. */
+    val completedEvaluation:Boolean=true
 )
 
 data class ContinuumLearningStatus(
@@ -246,7 +248,8 @@ class ContinuumLearningCore(
         appendAudit("semantic",accepted,train.steps,before,after,holdoutBefore,holdoutAfter,ids,reason)
         ContinualLearningReport(
             "semantic",accepted,train.steps,replay.size,before,after,
-            holdoutBefore,holdoutAfter,ids,reason
+            holdoutBefore,holdoutAfter,ids,reason,
+            completedEvaluation=!cancelled() && !train.stoppedEarly
         )
     }
 
