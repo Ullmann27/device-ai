@@ -55,6 +55,18 @@ jobs:
           path: ${{ runner.temp }}/continuum-generalization.json
           if-no-files-found: error
 
+      - name: Continual learning retention and forgetting audit
+        run: |
+          node --test .github/continuum/contrastive-retention.test.mjs
+          node .github/continuum/contrastive-retention.mjs "$RUNNER_TEMP/continuum-retention.json"
+
+      - name: Upload forgetting evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-contrastive-retention
+          path: ${{ runner.temp }}/continuum-retention.json
+          if-no-files-found: error
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 
