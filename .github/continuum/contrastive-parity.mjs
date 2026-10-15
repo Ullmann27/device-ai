@@ -19,6 +19,17 @@ const holdout=[
   'katze hund tiere auf dem bauernhof'
 ];
 const EPS=1e-8;
+function runSwb2(){
+  const model=SubwordEncoder.createExperimentalSwb2(73);
+  for(let i=0;i<16;i++){
+    model.updateIntent({text:i%2===0?'hallo freund':'wie funktioniert strom',label:i%2},0.08);
+    model.updateSemantic({left:'solarmodule liefern energie',
+      right:i%2===0?'photovoltaik erzeugt strom':'getriebe motor rad',
+      similar:i%2===0},0.07);
+  }
+  return model;
+}
+
 const run=()=>trainContrastiveCandidate(
   new SubwordEncoder(91),train,holdout,{steps:350,seed:43,drop:0.65,rate:0.10}
 );
@@ -38,11 +49,20 @@ export function main(command,dir){
   if(command==='prepare'){
     fs.mkdirSync(dir,{recursive:true});
     fs.writeFileSync(file(dir,'node-candidate.swb1'),r.candidate.save());
+    fs.writeFileSync(file(dir,'node-swb2.swb2'),runSwb2().save());
     fs.writeFileSync(file(dir,'node-metrics.tsv'),
       Object.entries(metrics).map(([k,v])=>k+'='+v).join('\n')+'\n');
     console.log('Train MRR:',r.trainingBefore.reciprocalRank,'->',r.trainingAfter.reciprocalRank,
       'Holdout MRR:',r.validationBefore.reciprocalRank,'->',r.validationAfter.reciprocalRank);
     return;
+  }
+  const expectedSwb2=runSwb2(), observedSwb2=SubwordEncoder.restore(fs.readFileSync(file(dir,'kotlin-swb2.swb2')));
+  if(observedSwb2.version!==2||observedSwb2.updates!==expectedSwb2.updates)throw Error('SWB2 header/update mismatch');
+  for(const key of ['embeddings','head']){
+    for(let i=0;i<expectedSwb2[key].length;i++){
+      if(!(Math.abs(expectedSwb2[key][i]-observedSwb2[key][i])<=EPS))
+        throw Error('SWB2 Node/Kotlin parity mismatch: '+key+'['+i+']');
+    }
   }
   const check=parse(file(dir,'kotlin-metrics.tsv'));
   if(Object.keys(check).length!==Object.keys(metrics).length)throw Error('Metric count mismatch');
