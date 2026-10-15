@@ -1,5 +1,5 @@
 name: Continuum Hourly Watch
-# Main-branch scheduler for the development agent; never runs unreviewed code with a write token.
+# Schedule must live on main; developer-agent code stays on its working branch.
 on:
   schedule:
     - cron: '23 * * * *'
@@ -7,10 +7,16 @@ on:
 permissions:
   contents: read
   actions: read
+concurrency:
+  group: continuum-hourly-watch
+  cancel-in-progress: false
 jobs:
   watch:
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    outputs:
+      needs_repair: ${{ steps.decision.outputs.needs_repair }}
+      base: ${{ steps.decision.outputs.base }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,7 +25,70 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check development head and CI
+      - id: decision
+        name: Check development head and CI
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node .github/continuum/developer-agent.mjs watch --branch copilot/pr-12-working-first-vertical-slice --ledger-branch continuum-agent-state
+  repair:
+    needs: watch
+    if: needs.watch.outputs.needs_repair == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.watch.outputs.base }}
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Android SDK
+        run: |
+          yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
+          /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+      - name: Reproduce and repair Android failure in isolated worktree
+        run: node .github/continuum/developer-agent.mjs repair --chain android --base "${{ needs.watch.outputs.base }}" --out agent-repair --trigger hourly --minutes 40
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: continuum-hourly-repair
+          path: agent-repair/
+          retention-days: 14
+          if-no-files-found: ignore
+  publish:
+    needs: [watch,repair]
+    if: needs.repair.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.watch.outputs.base }}
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: continuum-hourly-repair
+          path: agent-repair
+      - name: Publish reviewed candidate branch and draft PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs publish --out agent-repair --target-branch copilot/pr-12-working-first-vertical-slice
+      - name: Save repair experience ledger
+        run: node .github/continuum/developer-agent.mjs ledger-save --out agent-repair --branch continuum-agent-state
