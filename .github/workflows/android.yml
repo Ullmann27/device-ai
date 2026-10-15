@@ -43,6 +43,9 @@ jobs:
       - name: Test portable contrastive training
         run: node --test .github/continuum/contrastive-views.test.mjs
 
+      - name: Check neural optimizer analytical gradients
+        run: node --test .github/continuum/semantic-gradient.test.mjs
+
       - name: Multi-seed masked retrieval generalization audit
         run: |
           node --test .github/continuum/contrastive-generalization.test.mjs
