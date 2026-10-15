@@ -38,6 +38,47 @@ class ContinuumExplicitFeedbackTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun feedbackCannotDisplaceConfirmedFactsOrSourceHistoryAtSharedCapacity() {
+        val dir=Files.createTempDirectory("continuum-feedback-cap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val original="Mein bestätigter Fakt bleibt unverändert."
+            assertTrue(core.recordOwnerFact(original))
+            repeat(60) { assertTrue(core.recordExplicitFeedback(it%2==0)) }
+            val persisted=ContinuumLearningCore(dir)
+            val feedback=persisted.feedbackSummary()
+            assertEquals(24,feedback.positive+feedback.negative+feedback.revoked)
+            assertTrue(persisted.activeOwnerFacts().any { it.content==original })
+            val ledger=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2")).all()
+            assertEquals(1,ledger.count { it.type==LearningExperienceType.USER_FACT })
+            assertEquals(24,ledger.count { it.type==LearningExperienceType.USER_FEEDBACK })
+            assertEquals(25,ledger.size)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun fullLedgerRejectsNewRatingWithoutDiscardingExistingHistory() {
+        val dir=Files.createTempDirectory("continuum-feedback-no-evict").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val ledger=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2"))
+            repeat(FileLearningExperienceStore.MAX_RECORDS) { i ->
+                val item=LearningExperienceFactory.create(
+                    LearningExperienceType.COMMAND_MAPPING,
+                    LearningProvenance.USER_CONFIRMED,
+                    LearningTrustClass.OWNER_CONFIRMED,
+                    LearningStatus.CONFIRMED,
+                    "Testkommando Nummer $i",annotation="get_battery_info",
+                    now=i.toLong()
+                )
+                assertTrue(ledger.append(item))
+            }
+            val knownIds=ledger.all().map { it.id }.toSet()
+            assertThrows(IllegalStateException::class.java) { core.recordExplicitFeedback(true) }
+            assertEquals(knownIds,ledger.all().map { it.id }.toSet())
+            assertEquals(0,core.feedbackSummary().positive)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun ratingsDoNotPreventOrSubstituteForTheOwnerIndependentOfflineCurriculum() {
         val dir=Files.createTempDirectory("continuum-feedback-isolation").toFile()
         try {
