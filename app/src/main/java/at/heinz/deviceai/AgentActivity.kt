@@ -132,6 +132,7 @@ class AgentActivity : Activity() {
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
+        private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private val BG = Color.rgb(7, 10, 16)
         private val PANEL = Color.rgb(15, 21, 31)
@@ -256,11 +257,12 @@ class AgentActivity : Activity() {
         Thread(runnable, "device-ai-backlog").apply { isDaemon = true }
     }
     private val devBacklog by lazy { DeviceDevelopmentBacklog(java.io.File(filesDir, "development")) }
-    // Owner memory writes ("Merke dir", change, delete): never on the UI thread
-    // (a training round can hold the learning-core lock), in order, and allowed
-    // to finish when the activity closes.
-    private val memoryExecutor = Executors.newSingleThreadExecutor { runnable ->
-        Thread(runnable, "device-ai-memory").apply { isDaemon = true }
+    // Learning-core and owner-memory I/O (memory commands, status dialogs, the
+    // learning radar, file imports): never on the UI thread (a training round can
+    // hold the learning-core lock for seconds), in order, and allowed to finish
+    // when the activity closes.
+    private val learningIoExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "device-ai-learning-io").apply { isDaemon = true }
     }
     private var backlogDialog: AlertDialog? = null
     private var backlogList: LinearLayout? = null
@@ -399,7 +401,7 @@ class AgentActivity : Activity() {
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
-        memoryExecutor.shutdown()
+        learningIoExecutor.shutdown()
         backlogDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
@@ -1226,18 +1228,21 @@ class AgentActivity : Activity() {
                 "und kein generatives Sprachmodell.\n\nLetztes Ergebnis: " + practice.lastStatus)
             .setNegativeButton("Abbrechen", null)
             .setPositiveButton("AUTO-ÜBEN ERLAUBEN") { _, _ ->
-                val started = runCatching { practice.enable() }.getOrDefault(false)
-                refreshNeuralPracticeUi()
-                addAssistantMessage(if (started)
-                    "Automatisches Wiederholungslernen eingerichtet. Android führt die begrenzten Übungszyklen " +
-                        "bei erfüllten Bedingungen aus. Über AUTO-ÜBEN kannst du es jederzeit stoppen."
-                else "AUTO-ÜBEN ist noch nicht bereit. Es fehlen bestätigte Sprachbeispiele " +
-                        "oder Android hat die Hintergrundplanung abgelehnt. " +
-                        "Wichtig: JETZT TRAINIEREN erzeugt nur ein getrenntes Demo-Modell und " +
-                        "schaltet AUTO-ÜBEN nicht frei. Öffne NEURON · LERN-GESPRÄCH, " +
-                        "gib einen Gruß oder eine Frage ein und bestätige das Beispiel " +
-                        "sowie die Trainingsfreigabe. Versuche AUTO-ÜBEN danach erneut.")
+                onLearningIo({ practice.enable() }) { result -> reportNeuralPracticeEnabled(result.getOrDefault(false)) }
             }.show()
+    }
+
+    private fun reportNeuralPracticeEnabled(started: Boolean) {
+        refreshNeuralPracticeUi()
+        addAssistantMessage(if (started)
+            "Automatisches Wiederholungslernen eingerichtet. Android führt die begrenzten Übungszyklen " +
+                "bei erfüllten Bedingungen aus. Über AUTO-ÜBEN kannst du es jederzeit stoppen."
+        else "AUTO-ÜBEN ist noch nicht bereit. Es fehlen bestätigte Sprachbeispiele " +
+                "oder Android hat die Hintergrundplanung abgelehnt. " +
+                "Wichtig: JETZT TRAINIEREN erzeugt nur ein getrenntes Demo-Modell und " +
+                "schaltet AUTO-ÜBEN nicht frei. Öffne NEURON · LERN-GESPRÄCH, " +
+                "gib einen Gruß oder eine Frage ein und bestätige das Beispiel " +
+                "sowie die Trainingsfreigabe. Versuche AUTO-ÜBEN danach erneut.")
     }
 
     private fun refreshNeuralPracticeUi() {
@@ -1508,20 +1513,30 @@ class AgentActivity : Activity() {
                 addAssistantMessage("Diesen Befehl habe ich nicht übernommen.")
             }
             .setPositiveButton("Beibringen") { _, _ ->
-                val success = bootstrapMemory.teach(phrase, name)
-                if(success)runCatching { ContinuumLearningCore(filesDir).recordCommandMapping(phrase,name) }
-                val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
-                bootstrapMemory.recordAssessment(report.passed, report.total)
-                addAssistantMessage(if (success) "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. " +
-                    "Trainingscheck: ${report.passed}/${report.total}."
-                    else "Lernbeispiel nicht übernommen (Duplikat oder Speicherlimit).")
+                onLearningIo(work@{
+                    if (!bootstrapMemory.teach(phrase, name))
+                        return@work "Lernbeispiel nicht übernommen (Duplikat oder Speicherlimit)."
+                    val core = runCatching { ContinuumLearningCore(filesDir).recordCommandMapping(phrase, name) }
+                    val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
+                    bootstrapMemory.recordAssessment(report.passed, report.total)
+                    "Gelernt: „$phrase“ → ${ToolRegistry.label(name)}. Trainingscheck: ${report.passed}/${report.total}." +
+                        core.fold({ "" }, { " Der Continuum-Lernkern hat die Zuordnung nicht übernommen (${failureName(it)})." })
+                }) { result -> addAssistantMessage(result.getOrElse { "Lernbeispiel nicht übernommen: ${failureName(it)}." }) }
             }.show()
     }
 
     private fun showBootstrapTraining() {
+        onLearningIo({ bootstrapTrainingDetail() }) { result ->
+            showBootstrapTrainingDialog(result.getOrElse {
+                "Lernlabor nicht lesbar (${failureName(it)}); vorhandene Lernstände wurden nicht verändert."
+            })
+        }
+    }
+
+    private fun bootstrapTrainingDetail(): String {
         val report = BootstrapCurriculum.evaluate(bootstrapMemory.learnedCommands())
         bootstrapMemory.recordAssessment(report.passed, report.total)
-        val detail = buildString {
+        return buildString {
             append("Regressionsprüfung: ${report.passed}/${report.total} Aufgaben bestanden.\n")
             append("Gelernte Befehlssätze: ${bootstrapMemory.learnedCommands().size}/24.\n")
             append("Feedback: ${bootstrapMemory.positiveCount} positiv, ${bootstrapMemory.negativeCount} negativ.\n\n")
@@ -1557,6 +1572,9 @@ class AgentActivity : Activity() {
             append("Die Lernprüfung erkennt Regressionen, erzeugt aber noch kein freies Denken.")
             if (report.failures.isNotEmpty()) append("\nFehler: ").append(report.failures.joinToString())
         }
+    }
+
+    private fun showBootstrapTrainingDialog(detail: String) {
         AlertDialog.Builder(this)
             .setTitle("Device AI · Lernlabor")
             .setMessage(detail)
@@ -1568,16 +1586,30 @@ class AgentActivity : Activity() {
                     .setMessage("Entfernt nur die erlernten Befehlssätze.")
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Löschen") { _, _ ->
-                        bootstrapMemory.clearTraining()
-                        runCatching { ContinuumLearningCore(filesDir).revokeAllCommandMappings() }
-                        addAssistantMessage("Gelernte Befehlssätze gelöscht; zugehörige Continuum-Experiences widerrufen.")
+                        // core first, so repeating the deletion still reaches it
+                        onLearningIo({
+                            val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllCommandMappings() }
+                            val cleared = bootstrapMemory.clearTraining()
+                            (if (cleared) "Gelernte Befehlssätze gelöscht. " else "Gelernte Befehlssätze konnten nicht gelöscht werden; bitte wiederholen. ") +
+                                revoked.fold({ "Im Continuum-Lernkern wurden $it Zuordnungen widerrufen." },
+                                    { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte wiederholen." })
+                        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
                     }.show()
             }.show()
     }
 
     private fun showContinuumLearningDashboard() {
-        val status=runCatching { ContinuumLearningCore(filesDir).status() }
-        val message=status.fold(
+        onLearningIo({ continuumDashboardText() }) { result ->
+            showContinuumLearningDashboardDialog(result.getOrElse {
+                "Lernkernstatus nicht lesbar (${failureName(it)}); vorhandene Lernstände wurden nicht verändert."
+            })
+        }
+    }
+
+    private fun continuumDashboardText(): String {
+        val learning=ContinuumLearningCore(filesDir)
+        val status=runCatching { learning.status() }
+        return status.fold(
             onSuccess={ core ->
                 buildString {
                     append("Persistenter gemeinsamer Lernkern v2\n\n")
@@ -1592,8 +1624,9 @@ class AgentActivity : Activity() {
                     append("Als gelernt markiert: ").append(core.experiences.learned).append("\n\n")
                     append("Trainierbarer Subword-Encoder: ").append(core.parameters).append(" Parameter\n")
                     append("Gewichtsupdates: ").append(core.modelUpdates).append("\n")
-                    append("Aktives SWB1-Modell: ").append(ContinuumLearningCore(filesDir).modelHash().take(16)).append("\n")
-                    append("Persistente Dialogzüge: ").append(ContinuumLearningCore(filesDir).dialogueHistory().size).append("/8\n")
+                    append("Aktives SWB1-Modell: ").append(learning.modelHash().take(16)).append("\n")
+                    append("Persistente Dialogzüge: ").append(runCatching { learning.dialogueHistory().size.toString() }
+                        .getOrElse { "unlesbar (wird beim nächsten Gespräch gesichert und neu begonnen)" }).append("/8\n")
                     append("Intent-Holdout: ").append(core.intentHoldout.correct).append("/")
                         .append(core.intentHoldout.total).append(" · Verlust ")
                         .append("%.4f".format(Locale.ROOT,core.intentHoldout.loss)).append("\n")
@@ -1613,6 +1646,9 @@ class AgentActivity : Activity() {
             onFailure={ error -> "Lernkernstatus nicht lesbar; vorhandene Lernstände wurden nicht verändert.\n"+
                 (error.message ?: error.javaClass.simpleName).take(240) }
         )
+    }
+
+    private fun showContinuumLearningDashboardDialog(message: String) {
         AlertDialog.Builder(this)
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
@@ -1689,7 +1725,13 @@ class AgentActivity : Activity() {
      * weights; the restore itself is archived, so it can be undone the same way.
      */
     private fun showModelVersions() {
-        val text=runCatching {
+        onLearningIo({ modelVersionsText() }) { result ->
+            showModelVersionsDialog(result.getOrElse { "Modellverlauf nicht lesbar: ${failureName(it)}" })
+        }
+    }
+
+    private fun modelVersionsText(): String {
+        return runCatching {
             val core=ContinuumLearningCore(filesDir)
             val active=core.modelHash()
             val history=core.checkpoints().asReversed()
@@ -1714,6 +1756,9 @@ class AgentActivity : Activity() {
                 }
             }
         }.getOrElse { "Modellverlauf nicht lesbar: "+(it.message ?: it.javaClass.simpleName).take(200)+"\nBestehende Lernstände bleiben unverändert." }
+    }
+
+    private fun showModelVersionsDialog(text: String) {
         AlertDialog.Builder(this)
             .setTitle("Modellversionen")
             .setMessage(text)
@@ -1825,9 +1870,10 @@ class AgentActivity : Activity() {
             .show()
     }
 
-    private fun <T> onMemory(work: () -> T, done: (Result<T>) -> Unit) {
+    /** [work] on the learning I/O thread, [done] on the UI thread while the activity is alive. */
+    private fun <T> onLearningIo(work: () -> T, done: (Result<T>) -> Unit) {
         try {
-            memoryExecutor.execute {
+            learningIoExecutor.execute {
                 val result = runCatching(work)
                 runOnUiThread { if (!isFinishing && !isDestroyed) done(result) }
             }
@@ -1840,7 +1886,7 @@ class AgentActivity : Activity() {
 
     /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
     private fun rememberOwnerFact(fact: String) {
-        onMemory(work@{
+        onLearningIo(work@{
             val known = fact in bootstrapMemory.facts()
             if (!known && !bootstrapMemory.addFact(fact)) {
                 return@work if (bootstrapMemory.facts().size >= BootstrapMemoryStore.MAX_FACTS)
@@ -1868,7 +1914,7 @@ class AgentActivity : Activity() {
      * changed; if the app memory then refuses the change, the revocation is undone.
      */
     private fun reviseOwnerFact(previous: String, replacement: String?) {
-        onMemory(work@{
+        onLearningIo(work@{
             val core = ContinuumLearningCore(filesDir)
             val revoked = try { core.revokeOwnerFact(previous) } catch (e: Exception) {
                 return@work "Nicht geändert: Der Continuum-Lernkern konnte die bisherige Information nicht " +
@@ -1890,7 +1936,7 @@ class AgentActivity : Activity() {
 
     /** Revokes in the learning core first, so a repeated deletion still reaches it. */
     private fun forgetOwnerFacts() {
-        onMemory(work@{
+        onLearningIo(work@{
             val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
             val cleared = bootstrapMemory.clearFacts()
             val core = revoked.fold({ "Im Continuum-Lernkern wurden $it Erinnerungen widerrufen; sie werden nicht mehr verwendet." },
@@ -1931,11 +1977,19 @@ class AgentActivity : Activity() {
     }
 
     private fun showWebLearningInbox() {
-        val dossier = runCatching {
-            FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest()
-        }.getOrNull()
-        val journal = WebLearningJournal(this)
-        val learned = runCatching { journal.notes() }
+        onLearningIo({
+            runCatching { FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest() }.getOrNull() to
+                runCatching { WebLearningJournal(this).notes() }
+        }) { result ->
+            val (dossier, learned) = result.getOrElse { null to Result.failure(it) }
+            showWebLearningInboxDialog(dossier, learned)
+        }
+    }
+
+    private fun showWebLearningInboxDialog(
+        dossier: at.heinz.deviceai.cognitive.ResearchDossier?,
+        learned: Result<List<WebLearningCandidate>>
+    ) {
         if (learned.isFailure) {
             addAssistantMessage("Quellen-Lernspeicher beschädigt. Kein Inhalt übernommen; alte Daten nicht überschrieben.")
             return
@@ -2162,30 +2216,35 @@ class AgentActivity : Activity() {
             .setTitle("WEB RECHERCHE · Suchmodus auswählen")
             .setItems(choices) { _, index ->
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
-                val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
-                val pending = runCatching { checkpointStore.load() }.getOrNull()
-                val saved = runCatching { checkpointStore.loadDossier() }.getOrNull()
-                val arm = { resume: Boolean ->
-                    researchResumeRequested = resume
-                    researchArmed = true
-                    activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Thema oder HTTPS-URL"
-                    input.hint = "Thema recherchieren oder direkte HTTPS-URL…"
-                    showResearchTopicDialog()
-                }
-                if (pending != null && saved != null && pending.phase !in setOf(ResearchPhase.COMPLETE)) {
-                    AlertDialog.Builder(this)
-                        .setTitle("Unvollständige Recherche")
-                        .setMessage("Gespeicherte Frage: ${saved.plan.question.take(512)}\n\nFortsetzen lädt bereits gespeicherte Quellen nicht erneut.")
-                        .setNeutralButton("Fortsetzen") { _, _ -> arm(true) }
-                        .setPositiveButton("Neu starten") { _, _ -> arm(false) }
-                        .setNegativeButton("Abbrechen", null)
-                        .show()
-                } else {
-                    arm(false)
-                }
+                onLearningIo({
+                    val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+                    runCatching { checkpointStore.load() }.getOrNull() to runCatching { checkpointStore.loadDossier() }.getOrNull()
+                }) { result -> offerResearchResume(result.getOrDefault(null to null)) }
             }
             .setNegativeButton("Abbrechen", null)
             .show()
+    }
+
+    private fun offerResearchResume(state: Pair<at.heinz.deviceai.cognitive.ResearchRunCheckpoint?, at.heinz.deviceai.cognitive.ResearchDossier?>) {
+        val (pending, saved) = state
+        val arm = { resume: Boolean ->
+            researchResumeRequested = resume
+            researchArmed = true
+            activityText.text = "RESEARCH OPT-IN · ${researchMode.name} · Thema oder HTTPS-URL"
+            input.hint = "Thema recherchieren oder direkte HTTPS-URL…"
+            showResearchTopicDialog()
+        }
+        if (pending != null && saved != null && pending.phase !in setOf(ResearchPhase.COMPLETE)) {
+            AlertDialog.Builder(this)
+                .setTitle("Unvollständige Recherche")
+                .setMessage("Gespeicherte Frage: ${saved.plan.question.take(512)}\n\nFortsetzen lädt bereits gespeicherte Quellen nicht erneut.")
+                .setNeutralButton("Fortsetzen") { _, _ -> arm(true) }
+                .setPositiveButton("Neu starten") { _, _ -> arm(false) }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        } else {
+            arm(false)
+        }
     }
 
     private fun showResearchTopicDialog() {
@@ -3501,18 +3560,24 @@ class AgentActivity : Activity() {
         addBubble(value, user = true)
         val radarEnabled = NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
         if (radarEnabled && neuralCuriosityRadar.peek() == null) {
-            val known = runCatching {
-                bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore)
-                    ?.hasLesson(value) ?: false
-            }.getOrDefault(false)
-            val coreUncertain = runCatching {
-                val score=ContinuumLearningCore(filesDir).intentScore(value)
-                score in 0.35..0.65
-            }.getOrDefault(true)
-            if (coreUncertain &&
-                neuralCuriosityRadar.offer(value, active = true, alreadyTaught = known)) {
-                neuralCuriosityButton?.isEnabled = true
-                neuralCuriosityButton?.text = "LERN-RADAR · UNSICHERES BEISPIEL"
+            // model restore and scoring read files: off the UI thread
+            onLearningIo({
+                val known = runCatching {
+                    bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore)
+                        ?.hasLesson(value) ?: false
+                }.getOrDefault(false)
+                val coreUncertain = runCatching {
+                    val score=ContinuumLearningCore(filesDir).intentScore(value)
+                    score in 0.35..0.65
+                }.getOrDefault(true)
+                known to coreUncertain
+            }) { result ->
+                val (known, coreUncertain) = result.getOrDefault(false to false)
+                if (coreUncertain && !neuralCoach.isActive() && neuralCuriosityRadar.peek() == null &&
+                    neuralCuriosityRadar.offer(value, active = true, alreadyTaught = known)) {
+                    neuralCuriosityButton?.isEnabled = true
+                    neuralCuriosityButton?.text = "LERN-RADAR · UNSICHERES BEISPIEL"
+                }
             }
         }
     }
@@ -3636,32 +3701,29 @@ class AgentActivity : Activity() {
                 }
             }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
-                if(resultCode==RESULT_OK && data?.data!=null) {
-                    val modelUri=data.data!!
-                    val bytes=runCatching {
-                        contentResolver.openInputStream(modelUri)?.use { stream ->
-                            val out=java.io.ByteArrayOutputStream()
-                            val buffer=ByteArray(4096)
-                            while(out.size()<=32960) {
-                                val read=stream.read(buffer,0,minOf(buffer.size,32961-out.size()))
-                                if(read<0)break
-                                require(read>0) { "Modelldatei nicht lesbar" }
-                                out.write(buffer,0,read)
-                            }
-                            out.toByteArray()
-                        } ?: error("Modell nicht lesbar")
-                    }.getOrNull()
-                    if(bytes?.size==32960) {
-                        pendingContinuumPackageModel=bytes
-                        startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type="*/*"
-                        },CONTINUUM_PACKAGE_MANIFEST_REQUEST)
-                    } else {
-                        pendingContinuumPackageModel=null
-                        addAssistantMessage("Öffentliches Modellpaket: ungültige SWB1-Dateigröße")
+                pendingContinuumPackageModel=null
+                val modelUri=data?.data
+                if(resultCode==RESULT_OK && modelUri!=null) {
+                    // a document provider may be slow or remote: read off the UI thread
+                    onLearningIo({
+                        contentResolver.openInputStream(modelUri)?.use { it.readAtMost(SWB1_BYTES) }
+                            ?: throw java.io.IOException("Dateianbieter liefert keine Daten")
+                    }) { result ->
+                        result.fold({ bytes ->
+                            if(bytes.size==SWB1_BYTES) {
+                                pendingContinuumPackageModel=bytes
+                                startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                                    addCategory(Intent.CATEGORY_OPENABLE)
+                                    type="*/*"
+                                },CONTINUUM_PACKAGE_MANIFEST_REQUEST)
+                            } else addAssistantMessage("Öffentliches Modellpaket: ungültige SWB1-Dateigröße (" +
+                                (if(bytes.size>SWB1_BYTES)"mehr als $SWB1_BYTES" else bytes.size.toString()) +
+                                " Bytes, erwartet $SWB1_BYTES)")
+                        }, { e ->
+                            addAssistantMessage("Öffentliches Modellpaket: Modelldatei nicht lesbar (${failureName(e)}).")
+                        })
                     }
-                } else pendingContinuumPackageModel=null
+                }
             }
             CONTINUUM_PACKAGE_MANIFEST_REQUEST -> {
                 val model=pendingContinuumPackageModel

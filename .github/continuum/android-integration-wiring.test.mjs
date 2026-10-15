@@ -95,3 +95,46 @@ test('user-visible texts contain line breaks, not a literal backslash-n',()=>{
   assert.deepEqual(hits.map(([n])=>file+':'+n),[],'literal \\\\n in '+file);
  }
 });
+test('learning-core and research store I/O stays off the UI thread in dialogs and chat input',()=>{
+ // A training round holds the learning-core lock for seconds; these functions run on the UI thread.
+ const heavy=/ContinuumLearningCore\(|\.neuralSnapshot\(\)|FileResearchDossierStore\(|openInputStream\(/;
+ const uiOnly=['showBootstrapTrainingDialog','showContinuumLearningDashboardDialog','showModelVersionsDialog',
+  'showWebLearningInboxDialog','offerResearchResume','reportNeuralPracticeEnabled'];
+ // drops the argument list of every onLearningIo( ... ) call (string literals skipped while matching)
+ const withoutIo=body=>{
+  let out='',i=0;
+  while(i<body.length){
+   const at=body.indexOf('onLearningIo(',i);
+   if(at<0){out+=body.slice(i);break;}
+   out+=body.slice(i,at);
+   let depth=0,j=at+'onLearningIo'.length,inString=false;
+   for(;j<body.length;j++){
+    const c=body[j];
+    if(inString){if(c==='\\')j++;else if(c==='"')inString=false;continue;}
+    if(c==='"')inString=true;
+    else if(c==='(')depth++;
+    else if(c===')'&&--depth===0)break;
+   }
+   i=j+1;
+  }
+  return out;
+ };
+ for(const name of uiOnly){
+  const body=bodyOf(activity,'private fun '+name+'(');
+  assert.ok(body,name+' not found');
+  ensure(name+' has no file or learning-core I/O',!heavy.test(withoutIo(body)));
+ }
+ for(const name of ['showBootstrapTraining','showContinuumLearningDashboard','showModelVersions','showWebLearningInbox',
+  'rememberOwnerFact','reviseOwnerFact','forgetOwnerFacts','confirmBootstrapTraining']){
+  const body=bodyOf(activity,'private fun '+name+'(');
+  assert.ok(body,name+' not found');
+  const io=body.indexOf('onLearningIo(');
+  const first=body.search(heavy);
+  ensure(name+' does its I/O inside onLearningIo',first<0||(io>=0&&io<first));
+ }
+ const input=bodyOf(activity,'private fun addUserMessage(');
+ ensure('learning radar scores off the UI thread',input.indexOf('onLearningIo(')>=0&&input.indexOf('onLearningIo(')<input.search(heavy));
+ const result=bodyOf(activity,'override fun onActivityResult(');
+ const pkg=result.slice(result.indexOf('CONTINUUM_PACKAGE_MODEL_REQUEST ->'),result.indexOf('CONTINUUM_PACKAGE_MANIFEST_REQUEST ->'));
+ ensure('package model read off the UI thread',pkg.indexOf('onLearningIo(')>=0&&pkg.indexOf('onLearningIo(')<pkg.indexOf('openInputStream('));
+});
