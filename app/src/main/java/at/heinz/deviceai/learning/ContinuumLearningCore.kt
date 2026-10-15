@@ -46,6 +46,7 @@ class ContinuumLearningCore(
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
+    private val checkpoints=ModelCheckpointStore(File(directory,"checkpoints"))
 
     /** Offline public curriculum: no owner interaction, no network and no private data.
      * Runs once per persisted model. Holdout gates reject regressions.
@@ -74,7 +75,7 @@ class ContinuumLearningCore(
             val accepted=!cancelled() && !train.stoppedEarly &&
                 after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
                 retains(otherBefore,otherAfter)
-            if(accepted) saveModel(candidate.save())
+            if(accepted) saveModel(candidate.save(),"offline-bootstrap")
             val reason=if(accepted) "Öffentliches Offline-Curriculum verbessert; Holdouts geschützt"
                 else "Offline-Kandidat verworfen; bisherige Gewichte erhalten"
             appendAudit("offline-bootstrap",accepted,train.steps,before,after,
@@ -108,7 +109,7 @@ class ContinuumLearningCore(
             val accepted=!cancelled() && !train.stoppedEarly &&
                 after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
                 retains(intentBefore,intentAfter)
-            if(accepted)saveModel(candidate.save())
+            if(accepted)saveModel(candidate.save(),"offline-semantic-bootstrap")
             val reason=if(accepted) "Öffentliches Semantiktraining verbessert; Holdouts geschützt"
                 else "Semantikkandidat verworfen; bisherige Gewichte erhalten"
             appendAudit("offline-semantic-bootstrap",accepted,train.steps,before,after,
@@ -160,7 +161,7 @@ class ContinuumLearningCore(
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.035
         if(accepted) {
-            saveModel(candidate.save())
+            saveModel(candidate.save(),"intent")
             store.updateStatus(experience.id,LearningStatus.LEARNED,nowMillis())
         } else {
             store.updateStatus(experience.id,LearningStatus.REPLAY_PENDING,nowMillis())
@@ -228,7 +229,7 @@ class ContinuumLearningCore(
             after.loss+1e-7<before.loss &&
             holdoutAfter.correct>=holdoutBefore.correct &&
             holdoutAfter.loss<=holdoutBefore.loss+0.045
-        if(accepted)saveModel(candidate.save())
+        if(accepted)saveModel(candidate.save(),"semantic")
         ids.forEach { id ->
             store.updateStatus(id,
                 if(accepted)LearningStatus.LEARNED else LearningStatus.REPLAY_PENDING,
@@ -404,10 +405,40 @@ class ContinuumLearningCore(
             !gained -> "Import unverändert: kein zusätzlicher gemessener Lerngewinn"
             else -> "Import übernommen: beide lokalen Aufgaben und persönliche Lektionen geprüft"
         }
-        if(accepted)saveModel(candidate.save())
+        if(accepted)saveModel(candidate.save(),"snapshot-import")
         appendAudit("snapshot-import",accepted,0,intentBefore,intentAfter,semanticBefore,semanticAfter,emptyList(),reason)
         ContinualLearningReport("snapshot-import",accepted,0,replay.size,intentBefore,intentAfter,
             semanticBefore,semanticAfter,emptyList(),reason)
+    }
+
+    /** Archived pre-change states, oldest first. The active model is [modelHash]. */
+    fun checkpoints():List<ModelCheckpoint> = synchronized(CORE_LOCK) { checkpoints.list() }
+
+    /** Owner-initiated restore of an archived state. Not a learning claim: the
+     * restore itself is archived (so it can be undone) and audited with the
+     * frozen holdout measurements of both states. No experience is deleted.
+     */
+    fun rollbackTo(sha256:String):ContinualLearningReport = synchronized(CORE_LOCK) {
+        val target=TrainableSubwordEncoder.restore(checkpoints.read(sha256))
+        val current=loadModel()
+        val intentBefore=current.evaluateIntent(INTENT_HOLDOUT)
+        val intentAfter=target.evaluateIntent(INTENT_HOLDOUT)
+        val semanticBefore=current.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val semanticAfter=target.evaluateSemantic(SEMANTIC_HOLDOUT)
+        val changed=!current.save().contentEquals(target.save())
+        if(changed)saveModel(target.save(),"rollback")
+        val reason=if(changed) "Wiederhergestellt: Checkpoint "+sha256.take(12)+" (vorheriger Stand archiviert)"
+            else "Checkpoint "+sha256.take(12)+" ist bereits aktiv"
+        appendAudit("rollback",changed,0,intentBefore,intentAfter,semanticBefore,semanticAfter,emptyList(),reason)
+        ContinualLearningReport("rollback",changed,0,0,intentBefore,intentAfter,
+            semanticBefore,semanticAfter,emptyList(),reason)
+    }
+
+    /** Restore the newest archived state that differs from the active weights. */
+    fun rollbackToPrevious():ContinualLearningReport? = synchronized(CORE_LOCK) {
+        val active=ContinuumMemoryDialogue.hash(loadModel().save())
+        val previous=checkpoints.list().lastOrNull { it.sha256!=active } ?: return@synchronized null
+        rollbackTo(previous.sha256)
     }
 
     private fun ownerIntentReplay():List<SubwordIntentExample> =
@@ -459,9 +490,11 @@ class ContinuumLearningCore(
             }
     }
 
-    private fun saveModel(bytes:ByteArray) {
+    /** Archives the active state first; if that fails the model is not changed. */
+    private fun saveModel(bytes:ByteArray,reason:String) {
         TrainableSubwordEncoder.restore(bytes)
         if(!directory.exists() && !directory.mkdirs())error("Cannot create learning-core directory")
+        checkpoints.archive(loadModel().save(),"vor "+reason,nowMillis())
         if(modelFile.exists()) {
             runCatching { TrainableSubwordEncoder.restore(modelFile.readBytes()) }
                 .onSuccess { writeAtomically(modelBackup,modelFile.readBytes()) }
