@@ -130,9 +130,204 @@
    "proposalCommit": "3db71056a3c586ac587ec965ab2ecaecf3c36b21",
    "proposalBranch": "continuum-agent/repair-22582016d3-e2cd043b",
    "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fcontinuum-agent-repair-demo...continuum-agent%2Frepair-22582016d3-e2cd043b?expand=1"
+  },
+  {
+   "at": "2026-10-15T07:08:37.106Z",
+   "baseCommit": "c530c1205c2543b16adbe00cbc945d08d07acc2d",
+   "chain": "android",
+   "diagnostic": "7c72f310369e0abe",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "98e1b469c3f42a4f",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt",
+     "oldText": "                // duplicate keys tolerated",
+     "newText": "                require(key !in result) { \"Doppelter JSON-Schlüssel: \"+key.take(40) }",
+     "line": 75
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "87e3672d6bbc6178f47cc13f9174b8abc63c01a171490f5860aa1f26651149cb",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T07:05:30.841Z",
+   "baseCommit": "059a442d516cef0dcf4615045f2268025f69d9f8",
+   "chain": "android",
+   "diagnostic": "3a49f34bdcb5bb83",
+   "diagnosticKind": "SYNTAX_ERROR",
+   "candidate": "63f123e795a7ebae",
+   "strategy": "KOTLIN_ESCAPED_NEWLINE",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumPublicModelPackageTest.kt",
+     "oldText": "    private val model=ByteArray(32960) { (it % 251).toByte() }.also {\\n        it[0]=83; it[1]=87; it[2]=66; it[3]=49\\n    }",
+     "newText": "    private val model=ByteArray(32960) { (it % 251).toByte() }.also {\n        it[0]=83; it[1]=87; it[2]=66; it[3]=49\n    }",
+     "line": 8
+    }
+   ],
+   "confidence": 0.62,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "d7370601d1c4c67897f913f4dbbbb8947e90ca582c1e26133b77e8ec66e79482",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T07:06:21.798Z",
+   "baseCommit": "111df586757e59d48320a45b537f77e9fa943da4",
+   "chain": "android",
+   "diagnostic": "65ab7515ce39b436",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "f62fc809ee891f44",
+   "strategy": "KOTLIN_KNOWN_FIX:SET_TAKELAST",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumSourceNovelty.kt",
+     "oldText": "            .toSet().takeLast(120)",
+     "newText": "            .toSet().toList().takeLast(120)",
+     "line": 28
+    }
+   ],
+   "confidence": 0.6,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "e363c57d933021f96c8367144c2e50303a9db3d1c97603a76c8f8562f60e8ca7",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T07:07:42.795Z",
+   "baseCommit": "9745c8302caa433ce824438b7e5fa0dc2c0b00d8",
+   "chain": "android",
+   "diagnostic": "0cfc016d6d5ea757",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "7729325115a071e2",
+   "strategy": "KOTLIN_MISSING_IMPORT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ModelCheckpointStore.kt",
+     "oldText": "import java.nio.file.AtomicMoveNotSupportedException\nimport java.nio.file.StandardCopyOption",
+     "newText": "import java.nio.file.AtomicMoveNotSupportedException\nimport java.nio.file.Files\nimport java.nio.file.StandardCopyOption",
+     "line": 5
+    }
+   ],
+   "confidence": 0.58,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "a6c22d18756647dd869c9543085ed10a4c209415cb4f089e00a320be0be76213",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T07:07:04.826Z",
+   "baseCommit": "0e10a3ca82a2561acad0d9024f0fb495ae02e68d",
+   "chain": "android",
+   "diagnostic": "e2cd043b8fe4a9f4",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "8e3c58754aaa652f",
+   "strategy": "KOTLIN_TYPO_REFERENCE",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "            val candidate=TrainableSubwordEncodr.restore(baseline.save())",
+     "newText": "            val candidate=TrainableSubwordEncoder.restore(baseline.save())",
+     "line": 67
+    }
+   ],
+   "confidence": 0.56,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 392,
+     "failed": 0
+    }
+   ],
+   "patchSha256": "41530618ace6179b93a3cb1dc9889920731ac8ea6cd43875537e1ffde4976979",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
+  {
+   "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
+   "successes": 2,
+   "failures": 0
+  },
+  {
+   "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
+   "successes": 2,
+   "failures": 0
+  },
   {
    "kind": "REFERENCE_ERROR|JS_MISSING_IMPORT",
    "successes": 1,
@@ -144,12 +339,17 @@
    "failures": 0
   },
   {
-   "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
+   "kind": "SYNTAX_ERROR|KOTLIN_ESCAPED_NEWLINE",
    "successes": 1,
    "failures": 0
   },
   {
-   "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
+   "kind": "UNRESOLVED_REFERENCE|KOTLIN_KNOWN_FIX:SET_TAKELAST",
+   "successes": 1,
+   "failures": 0
+  },
+  {
+   "kind": "UNRESOLVED_REFERENCE|KOTLIN_MISSING_IMPORT",
    "successes": 1,
    "failures": 0
   }
@@ -198,6 +398,61 @@
    "verifiedStrategy": "KOTLIN_TYPO_REFERENCE",
    "patchSha256": "41530618ace6179b93a3cb1dc9889920731ac8ea6cd43875537e1ffde4976979",
    "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T07:08:37.106Z",
+   "base": "c530c1205c2543b16adbe00cbc945d08d07acc2d",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 1,
+   "verifiedStrategy": "REVERT_FILE_TO_PARENT",
+   "patchSha256": "87e3672d6bbc6178f47cc13f9174b8abc63c01a171490f5860aa1f26651149cb",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T07:05:30.841Z",
+   "base": "059a442d516cef0dcf4615045f2268025f69d9f8",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 6,
+   "attempts": 1,
+   "verifiedStrategy": "KOTLIN_ESCAPED_NEWLINE",
+   "patchSha256": "d7370601d1c4c67897f913f4dbbbb8947e90ca582c1e26133b77e8ec66e79482",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T07:06:21.798Z",
+   "base": "111df586757e59d48320a45b537f77e9fa943da4",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 1,
+   "attempts": 1,
+   "verifiedStrategy": "KOTLIN_KNOWN_FIX:SET_TAKELAST",
+   "patchSha256": "e363c57d933021f96c8367144c2e50303a9db3d1c97603a76c8f8562f60e8ca7",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T07:07:42.795Z",
+   "base": "9745c8302caa433ce824438b7e5fa0dc2c0b00d8",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 1,
+   "verifiedStrategy": "KOTLIN_MISSING_IMPORT",
+   "patchSha256": "a6c22d18756647dd869c9543085ed10a4c209415cb4f089e00a320be0be76213",
+   "trigger": "benchmark"
+  },
+  {
+   "at": "2026-10-15T07:07:04.826Z",
+   "base": "0e10a3ca82a2561acad0d9024f0fb495ae02e68d",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 1,
+   "verifiedStrategy": "KOTLIN_TYPO_REFERENCE",
+   "patchSha256": "41530618ace6179b93a3cb1dc9889920731ac8ea6cd43875537e1ffde4976979",
+   "trigger": "benchmark"
   }
  ]
 }
