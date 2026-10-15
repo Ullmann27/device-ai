@@ -98,6 +98,23 @@ class ContinuumAnswerCorrectionTest {
                 "Wie lautet die sichere Korrektur für Fall 24?",entries))
             assertNull(ContinuumAnswerCorrection.find(
                 "Wie lautet die sichere Korrektur für Fall 0?",entries))
+            val lastQuestion="Wie lautet die sichere Korrektur für Fall 24?"
+            core.replyFromMemory(lastQuestion)
+            assertTrue(core.confirmAnswerCorrection(lastQuestion,
+                "Neu bestätigte Revision von Fall 24"))
+            val revised=store.all()
+            assertEquals(16,revised.count {
+                it.type==LearningExperienceType.ANSWER_CORRECTION &&
+                it.status==LearningStatus.CONFIRMED
+            })
+            assertEquals(0,revised.count {
+                it.type==LearningExperienceType.ANSWER_CORRECTION &&
+                it.status==LearningStatus.REVOKED
+            })
+            assertNotNull(ContinuumAnswerCorrection.find(
+                "Wie lautet die sichere Korrektur für Fall 9?",revised))
+            assertEquals("Neu bestätigte Revision von Fall 24",
+                ContinuumAnswerCorrection.find(lastQuestion,revised)!!.content)
             assertArrayEquals(initial,core.modelSnapshot())
             assertEquals(1,core.activeOwnerFacts().size)
         } finally { dir.deleteRecursively() }
