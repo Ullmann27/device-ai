@@ -1,6 +1,11 @@
 name: Continuum Developer Agent
 
 on:
+  push:
+    branches: ["copilot/pr-12-working-first-vertical-slice"]
+    paths:
+      - ".github/continuum/developer-agent*"
+      - ".github/workflows/continuum-developer-agent.yml"
   schedule:
     - cron: "23 */6 * * *"
   workflow_dispatch:
