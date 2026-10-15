@@ -984,6 +984,47 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T15:32:15.943Z",
+   "baseCommit": "0bf848a1be80630e1b23fcbbac5ad508f0194fc7",
+   "chain": "android",
+   "diagnostic": "ad28fd1df23b7d78",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "5b79650f6118ca08",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+     "oldText": "                            // A stopped or timed-out training round is NOT a completed\n                            // source evaluation: the same source needs another chance.\n                            if(report?.completedEvaluation==true && !stopped.get()) {",
+     "newText": "                            if(report!=null && !stopped.get()) {",
+     "line": 58
+    }
+   ],
+   "confidence": 0.48,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 434,
+     "failed": 0,
+     "executed": 433,
+     "skipped": 1
+    }
+   ],
+   "patchSha256": "0f3b74e206fc5acd6f9b0b5c728f0a5b49d5111d4f79879cbbab63cb1fc12348",
+   "proposalCommit": "d3ec70aadb1294df991fda5f5ec131b16ddd825e",
+   "proposalBranch": "continuum-agent/repair-0bf848a1be-ad28fd1d",
+   "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fcontinuum-android-integration-20261015...continuum-agent%2Frepair-0bf848a1be-ad28fd1d?expand=1"
   }
  ],
  "experiences": [
@@ -1019,6 +1060,11 @@
   },
   {
    "kind": "UNRESOLVED_REFERENCE|KOTLIN_MISSING_IMPORT",
+   "successes": 1,
+   "failures": 0
+  },
+  {
+   "kind": "UNRESOLVED_REFERENCE|REVERT_HUNK_TO_PARENT",
    "successes": 1,
    "failures": 0
   }
@@ -1385,6 +1431,17 @@
    "attempts": 0,
    "verifiedStrategy": null,
    "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T15:32:15.943Z",
+   "base": "0bf848a1be80630e1b23fcbbac5ad508f0194fc7",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 1,
+   "attempts": 1,
+   "verifiedStrategy": "REVERT_HUNK_TO_PARENT",
+   "patchSha256": "0f3b74e206fc5acd6f9b0b5c728f0a5b49d5111d4f79879cbbab63cb1fc12348",
    "trigger": "android-build-failure"
   }
  ]
