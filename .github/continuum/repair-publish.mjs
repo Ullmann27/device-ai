@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {git,BRANCH_PREFIX,CHAINS,TEST_PROFILES} from './repair-loop.mjs';
+import {decodeDocument,encodeDocument,emptyDocument} from './development-backlog.mjs';
 import {critique} from './repair-critic.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
@@ -145,17 +147,40 @@ export async function publishBenchmarkDemo({root,head,faultDir,runId,repository,
   });
 }
 
-/** Ledger persistence on a dedicated state branch with stale-write protection. */
-export function loadLedgerFromBranch(root,branch){
+/** Ledger and backlog persistence on a dedicated state branch with stale-write protection. */
+export const STATE_BRANCH='continuum-agent-state';
+export const BACKLOG_FILE='development-backlog.json';
+const STATE_README='# Continuum developer-agent state\n\nWritten by CI only. repair-ledger.json: append-only repair ledger (code hunks and test outcomes). '+
+  'development-backlog.json: development backlog (docs/DEVELOPMENT_BACKLOG.md). No device or personal data.\n';
+
+function fetchStateBranch(root,branch){
   const fetched=git(root,['fetch','--quiet','--depth=1','origin',`+refs/heads/${branch}:refs/remotes/origin/${branch}`],{allowFailure:true});
-  if(fetched.status!==0)return {ledger:emptyLedger(),remoteHead:null};
-  const head=git(root,['rev-parse',`refs/remotes/origin/${branch}`]).stdout.trim();
+  if(fetched.status===0)return git(root,['rev-parse',`refs/remotes/origin/${branch}`]).stdout.trim();
+  // only a branch that does not exist yet is "empty state"; any other failure is an error
+  const listed=git(root,['ls-remote','--heads','origin',branch],{allowFailure:true});
+  if(listed.status===0&&!listed.stdout.trim())return null;
+  throw Error('Cannot read state branch '+branch+': '+(fetched.stderr||listed.stderr||'').slice(-300));
+}
+
+function withStateWorktree(root,remoteHead,fn){
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-state-'));
+  try{
+    if(remoteHead)git(root,['worktree','add','--detach','--force',dir,remoteHead]);
+    else{git(root,['worktree','add','--detach','--force',dir,'HEAD']);git(dir,['checkout','-q','--orphan','continuum-state-'+process.pid+'-'+Date.now()]);git(dir,['rm','-rq','--cached','.'],{allowFailure:true});
+      for(const e of fs.readdirSync(dir))if(e!=='.git')fs.rmSync(path.join(dir,e),{recursive:true,force:true});}
+    return fn(dir);
+  }finally{git(root,['worktree','remove','--force',dir],{allowFailure:true});fs.rmSync(dir,{recursive:true,force:true});}
+}
+
+export function loadLedgerFromBranch(root,branch){
+  const head=fetchStateBranch(root,branch);
+  if(!head)return {ledger:emptyLedger(),remoteHead:null};
   const shown=git(root,['show',`${head}:repair-ledger.json`],{allowFailure:true});
   return {ledger:shown.status===0?verifyLedger(JSON.parse(shown.stdout)):emptyLedger(),remoteHead:head};
 }
 
 export function saveLedgerToBranch(root,branch,reports,meta={}){
-  if(!/^continuum-agent-state$/.test(branch))throw Error('Ledger branch must be continuum-agent-state');
+  if(branch!==STATE_BRANCH)throw Error('Ledger branch must be '+STATE_BRANCH);
   for(let attempt=0;attempt<2;attempt++){
     const {ledger,remoteHead}=loadLedgerFromBranch(root,branch);
     let next=ledger;
@@ -163,19 +188,58 @@ export function saveLedgerToBranch(root,branch,reports,meta={}){
       if(next.sessions.some(s=>s.base===report.base&&s.at===(report.finishedAt??null)&&s.chain===report.chain))continue;
       next=recordSession(next,report,{...meta,...m});
     }
-    const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-ledger-'));
-    try{
-      if(remoteHead)git(root,['worktree','add','--detach','--force',dir,remoteHead]);
-      else{git(root,['worktree','add','--detach','--force',dir,'HEAD']);git(dir,['checkout','-q','--orphan','continuum-ledger-'+process.pid+'-'+Date.now()]);git(dir,['rm','-rq','--cached','.'],{allowFailure:true});
-        for(const e of fs.readdirSync(dir))if(e!=='.git')fs.rmSync(path.join(dir,e),{recursive:true,force:true});}
+    const result=withStateWorktree(root,remoteHead,dir=>{
       fs.writeFileSync(path.join(dir,'repair-ledger.json'),JSON.stringify(next,null,1)+'\n');
-      fs.writeFileSync(path.join(dir,'README.md'),'# Continuum developer-agent state\n\nAppend-only repair ledger written by CI. Contains code hunks and test outcomes only, no device or personal data.\n');
+      fs.writeFileSync(path.join(dir,'README.md'),STATE_README);
       git(dir,['add','repair-ledger.json','README.md']);
       if(git(dir,['diff','--cached','--quiet'],{allowFailure:true}).status===0)return {status:'UNCHANGED',sessions:next.sessions.length};
       git(dir,[...AUTHOR,'commit','-q','-m',`chore(agent): record ${reports.length} repair session(s)`]);
       const pushed=git(dir,['push','--quiet','origin',`HEAD:refs/heads/${branch}`],{allowFailure:true,timeoutMs:120000});
-      if(pushed.status===0)return {status:'SAVED',sessions:next.sessions.length,attempts:next.attempts.length};
-    }finally{git(root,['worktree','remove','--force',dir],{allowFailure:true});fs.rmSync(dir,{recursive:true,force:true});}
+      return pushed.status===0?{status:'SAVED',sessions:next.sessions.length,attempts:next.attempts.length}:null;
+    });
+    if(result)return result;
   }
   throw Error('Ledger branch moved twice during save; refusing a stale write');
+}
+
+/**
+ * The backlog on the state branch: {doc|null, remoteHead}. Unreadable state is
+ * an error, never "empty" (an empty answer would let the agent repeat work).
+ */
+export function loadBacklogFromBranch(root,branch=STATE_BRANCH){
+  const remoteHead=fetchStateBranch(root,branch);
+  if(!remoteHead)return {doc:null,remoteHead:null};
+  const shown=spawnSync('git',['show',`${remoteHead}:${BACKLOG_FILE}`],{cwd:root,maxBuffer:16*1024*1024});
+  if(shown.status!==0){
+    const exists=git(root,['cat-file','-e',`${remoteHead}:${BACKLOG_FILE}`],{allowFailure:true});
+    if(exists.status!==0)return {doc:null,remoteHead};
+    throw Error('Cannot read '+BACKLOG_FILE+' from '+branch);
+  }
+  return {doc:decodeDocument(shown.stdout,{migrate:{at:Date.now(),actor:'continuum-agent'}}).doc,remoteHead};
+}
+
+/**
+ * Read-modify-write of the backlog on the state branch. `mutate(doc)` returns
+ * {doc, ...report}; the push is a compare-and-swap on the branch head (one
+ * retry from a fresh read when it moved).
+ */
+export function saveBacklogToBranch(root,branch,mutate,{message='chore(agent): update development backlog'}={}){
+  if(branch!==STATE_BRANCH)throw Error('Backlog branch must be '+STATE_BRANCH);
+  for(let attempt=0;attempt<2;attempt++){
+    const {doc,remoteHead}=loadBacklogFromBranch(root,branch);
+    const outcome=mutate(doc??emptyDocument(Date.now(),'continuum-agent'));
+    const bytes=encodeDocument(outcome.doc);
+    const result=withStateWorktree(root,remoteHead,dir=>{
+      const file=path.join(dir,BACKLOG_FILE);
+      if(fs.existsSync(file)&&fs.readFileSync(file).equals(bytes))return {status:'UNCHANGED',revision:outcome.doc.revision};
+      fs.writeFileSync(file,bytes);
+      fs.writeFileSync(path.join(dir,'README.md'),STATE_README);
+      git(dir,['add',BACKLOG_FILE,'README.md']);
+      git(dir,[...AUTHOR,'commit','-q','-m',message]);
+      const pushed=git(dir,['push','--quiet','origin',`HEAD:refs/heads/${branch}`],{allowFailure:true,timeoutMs:120000});
+      return pushed.status===0?{status:'SAVED',revision:outcome.doc.revision}:null;
+    });
+    if(result)return {...outcome,...result,doc:undefined};
+  }
+  throw Error('State branch moved twice during save; refusing a stale write');
 }

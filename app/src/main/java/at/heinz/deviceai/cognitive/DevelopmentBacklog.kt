@@ -50,6 +50,7 @@ object DevelopmentBacklog {
     const val LEASE_MAX = 86_400_000L
     const val MAX_COUNT = 10_000_000L
     const val MAX_SAFE = 9_007_199_254_740_991L
+    const val MAX_RECENT_OPS = 256
 
     private val TERMINAL = setOf("DONE", "ABORTED", "REJECTED")
     private val DEPENDENCY_FAILED = setOf("FAILED", "ABORTED", "REJECTED")
@@ -67,6 +68,7 @@ object DevelopmentBacklog {
     private val SHA_RE = Regex("[0-9a-f]{64}")
     private val HEX16_RE = Regex("[0-9a-f]{16}")
     private val COMMIT_RE = Regex("[0-9a-f]{40}")
+    private val OP_ID_RE = Regex("[A-Za-z0-9][A-Za-z0-9._:-]{7,79}")
 
     private fun fail(code: String, message: String): Nothing = throw BacklogException(code, message)
     private fun check(ok: Boolean, code: String, message: String) { if (!ok) fail(code, message) }
@@ -318,6 +320,10 @@ object DevelopmentBacklog {
         check(isInt(doc["updatedAt"], 0, MAX_SAFE), c, "updatedAt invalid")
         check(matches(doc["updatedBy"], ACTOR_RE), c, "updatedBy invalid")
         check(!doc.containsKey("integrity") || matches(doc["integrity"], SHA_RE), c, "integrity invalid")
+        if (doc.containsKey("recentOpIds")) {
+            val r = doc["recentOpIds"] as? List<*>
+            check(r != null && r.size <= MAX_RECENT_OPS && r.all { matches(it, OP_ID_RE) } && r.toSet().size == r.size, c, "recentOpIds invalid")
+        }
         val tasks = doc["tasks"] as? List<*>
         check(tasks != null && tasks.size <= MAX_TASKS, c, "tasks invalid")
         tasks!!.forEachIndexed { k, raw ->
@@ -468,7 +474,7 @@ object DevelopmentBacklog {
     // Operations (same rules as development-backlog.mjs)
     // ------------------------------------------------------------------
     data class OpResult(val doc: Map<String, Any?>, val changed: Boolean, val id: String? = null,
-                        val expired: List<String> = emptyList(), val existed: Boolean = false)
+                        val expired: List<String> = emptyList(), val existed: Boolean = false, val duplicate: Boolean = false)
 
     private class Outcome(val changed: Boolean, val id: String? = null, val expired: List<String> = emptyList(), val existed: Boolean = false)
 
@@ -612,7 +618,7 @@ object DevelopmentBacklog {
                 val t = tasksOf(doc).filter { eligible(doc, it) && (kinds == null || it["kind"] in (kinds as List<*>)) }
                     .sortedWith(priorityOrder).firstOrNull()
                     ?: fail("NO_ELIGIBLE_TASK", "no READY task with finished dependencies and remaining budget")
-                claimTask(doc, t as MutableMap<String, Any?>, op, actor, at, name)
+                claimTask(doc, t, op, actor, at, name)
                 return Outcome(true, t["id"] as String)
             }
             "renew" -> {
@@ -725,13 +731,19 @@ object DevelopmentBacklog {
 
     /**
      * Apply one operation; the input document is never mutated. Throws
-     * [BacklogException] with a stable code; then nothing changed.
+     * [BacklogException] with a stable code; then nothing changed. An operation
+     * with an `opId` that was already applied is a reported no-op (exactly-once op logs).
      */
     @Suppress("UNCHECKED_CAST")
     fun applyOp(doc: Map<String, Any?>, op: Map<String, Any?>): OpResult {
         check(op["op"] in OPS, "INVALID_OP", "unknown operation ${op["op"].toString().take(40)}")
         check(matches(op["actor"], ACTOR_RE), "INVALID_FIELD", "actor invalid")
         check(isInt(deepCopy(op["at"]), 0, MAX_SAFE), "INVALID_FIELD", "at must be a non-negative integer (epoch ms)")
+        val opId = op["opId"]
+        if (opId != null) {
+            check(matches(opId, OP_ID_RE), "INVALID_FIELD", "opId must match $OP_ID_RE")
+            if ((doc["recentOpIds"] as? List<*>).orEmpty().contains(opId)) return OpResult(doc, false, duplicate = true)
+        }
         val normalized = deepCopy(op) as Map<String, Any?>
         val actor = normalized["actor"] as String
         val at = normalized["at"] as Long
@@ -739,6 +751,12 @@ object DevelopmentBacklog {
         val outcome = handle(next, normalized, actor, at)
         if (!outcome.changed) return OpResult(doc, false, outcome.id, outcome.expired, outcome.existed)
         reconcile(next, actor, at)
+        if (opId != null) {
+            val recent = ArrayList<Any?>((doc["recentOpIds"] as? List<*>).orEmpty())
+            recent += opId
+            while (recent.size > MAX_RECENT_OPS) recent.removeAt(0)
+            next["recentOpIds"] = recent
+        }
         next["revision"] = (doc["revision"] as Long) + 1
         next["updatedAt"] = at
         next["updatedBy"] = actor
@@ -748,7 +766,7 @@ object DevelopmentBacklog {
     }
 
     data class OpReport(val index: Int, val ok: Boolean, val code: String? = null, val message: String? = null,
-                        val id: String? = null, val expired: List<String> = emptyList())
+                        val id: String? = null, val expired: List<String> = emptyList(), val duplicate: Boolean = false)
 
     /** Apply several operations; every rejection is reported, never dropped silently. */
     fun applyOps(doc: Map<String, Any?>, ops: List<Map<String, Any?>>, stopOnError: Boolean = true): Pair<Map<String, Any?>, List<OpReport>> {
@@ -758,7 +776,7 @@ object DevelopmentBacklog {
             try {
                 val r = applyOp(current, op)
                 current = r.doc
-                reports += OpReport(index, true, id = r.id, expired = r.expired)
+                reports += OpReport(index, true, id = r.id, expired = r.expired, duplicate = r.duplicate)
             } catch (e: BacklogException) {
                 reports += OpReport(index, false, e.code, e.detail)
                 if (stopOnError) fail(e.code, "operation $index (${op["op"]}): ${e.detail}")

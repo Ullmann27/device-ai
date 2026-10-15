@@ -49,6 +49,7 @@ PROPOSED ─accept─▶ READY ─claim/claimNext─▶ IN_PROGRESS ─submit─
 | `expire` | every `IN_PROGRESS` task whose lease ended returns to `READY`/`FAILED` with `LEASE_EXPIRED` (crash recovery, resumable work) |
 | `retry` | `FAILED` → `READY`, budget reset (a human decision) |
 | `reject` / `abort` / `setPriority` | explicit reasons; terminal tasks cannot change |
+| any operation with `opId` | applied at most once: the last 256 applied ids are kept in `recentOpIds`; a repeated id is a reported no-op (`duplicate`). This makes operation logs (CI re-runs, re-imported exports from the phone) exactly-once within that window |
 
 The DONE rule is enforced **twice**: by the `complete` operation and on every
 load (a file whose DONE task lacks matching evidence is `CORRUPT`). History is
@@ -75,6 +76,16 @@ returns a stable error code (`INVALID_TRANSITION`, `TOKEN_MISMATCH`,
   backup loading fails closed.
 * Batches are all-or-nothing by default; the lenient mode reports every rejected
   operation with its code.
+
+## Who writes what
+
+| Writer | How |
+|---|---|
+| Analyzer findings | `syncBacklogOps` (`development-planner.mjs`): new `DEAD_CLUSTER`/`TEST_ONLY`/`UNREFERENCED` findings become `PROPOSED` `INVESTIGATE` tasks (at most 12 new per run, highest priority first); vanished findings withdraw only untouched proposals; accepted, rejected or aborted tasks are never changed by the planner |
+| Repair loop | `repairSessionOps`: one `REPAIR` task per failure identity (`rep-` + hash of chain and diagnostic fingerprints); a session is recorded as propose → accept → claim → submit (patch hash) → complete with the evidence of the very tests that verified the patch, or → fail. Every step has an `opId`, so recording a session twice changes nothing. A task that is DONE, FAILED (budget), REJECTED or ABORTED is not touched, and `publish` opens no further draft PR for it |
+| CI | `backlog-save` (publish jobs, write token) on branch `continuum-agent-state`: `expire`, repair sessions, planner sync; compare-and-swap on the branch head. `watch` reads ledger and backlog through the API and fails instead of assuming empty state when they are unreadable |
+| Humans / other agents | `node .github/continuum/developer-agent.mjs backlog show|plan|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply --file <backlog.json>`; `verify` is the only producer of test evidence: it checks that the patch is the submitted artifact (SHA-256), applies it to `--base` in an isolated worktree and runs a fixed check chain |
+| Android app | `DevelopmentBacklogStore` in app storage; see `AgentActivity` (development backlog) |
 
 ## Verification
 

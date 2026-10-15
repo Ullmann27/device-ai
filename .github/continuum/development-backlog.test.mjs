@@ -14,7 +14,7 @@ const propose=(id,at=1)=>({op:'propose',actor:'test',at,task:{id,title:'Aufgabe 
 
 test('conformance vectors: every step and final state as recorded (shared with Kotlin)',()=>{
   const recorded=JSON.parse(fixture('conformance.json'));
-  assert.equal(recorded.cases.length,4);
+  assert.equal(recorded.cases.length,5);
   for(const c of recorded.cases){
     const {outcomes,doc}=runCase(c);
     assert.deepEqual(outcomes,c.steps.map(s=>s.expect),c.name);

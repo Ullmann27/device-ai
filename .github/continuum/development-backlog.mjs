@@ -26,7 +26,7 @@ export const ARTIFACT_TYPES=Object.freeze(['PATCH','PROPOSAL','REPORT']);
 export const TEST_PROFILES=Object.freeze(['node-continuum','android-unit','jvm-harness']);
 export const LIMITS=Object.freeze({tasks:500,history:40,evidence:8,dependsOn:16,profiles:8,title:200,text:400,
   subjectKeys:12,subjectValue:300,fileBytes:4_000_000,maxAttempts:20,attempts:1000,priority:1000,
-  leaseMin:60_000,leaseMax:86_400_000,depth:16,count:10_000_000});
+  leaseMin:60_000,leaseMax:86_400_000,depth:16,count:10_000_000,recentOps:256});
 const TERMINAL=new Set(['DONE','ABORTED','REJECTED']);
 const DEPENDENCY_FAILED=new Set(['FAILED','ABORTED','REJECTED']);
 const HISTORY_OPS=new Set([...OPS,'reconcile','migrate']);
@@ -44,6 +44,7 @@ const TOKEN_RE=/^[0-9a-f]{32}$/;
 const SHA_RE=/^[0-9a-f]{64}$/;
 const HEX16_RE=/^[0-9a-f]{16}$/;
 const COMMIT_RE=/^[0-9a-f]{40}$/;
+const OP_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:-]{7,79}$/;
 const CONTROL_RE=/[\u0000-\u001f\u007f]/;
 const CONTROL_ALL=/[\u0000-\u001f\u007f]/g;
 const LONE_SURROGATE=/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
@@ -282,6 +283,10 @@ export function validateDocument(doc){
   check(int(doc.updatedAt,0,MAX_SAFE),c,'updatedAt invalid');
   check(typeof doc.updatedBy==='string'&&ACTOR_RE.test(doc.updatedBy),c,'updatedBy invalid');
   check(!('integrity' in doc)||(typeof doc.integrity==='string'&&SHA_RE.test(doc.integrity)),c,'integrity invalid');
+  if('recentOpIds' in doc){
+    const r=doc.recentOpIds;
+    check(Array.isArray(r)&&r.length<=LIMITS.recentOps&&r.every(x=>typeof x==='string'&&OP_ID_RE.test(x))&&new Set(r).size===r.length,c,'recentOpIds invalid');
+  }
   check(Array.isArray(doc.tasks)&&doc.tasks.length<=LIMITS.tasks,c,'tasks invalid');
   doc.tasks.forEach((t,k)=>{validateTask(t);check(k===0||doc.tasks[k-1].id<t.id,c,'tasks must be sorted by id and unique');});
   const byId=new Map(doc.tasks.map(t=>[t.id,t]));
@@ -568,16 +573,25 @@ function reconcile(doc,op){
 /**
  * Apply one operation. Returns {doc, result}; `doc` is a new object (the input
  * is never mutated) or the same object when nothing changed. Throws
- * BacklogError with a stable code; then nothing changed.
+ * BacklogError with a stable code; then nothing changed. An operation with an
+ * `opId` that was already applied is a reported no-op (exactly-once op logs).
  */
 export function applyOp(doc,op){
   check(isObject(op)&&OPS.includes(op.op),'INVALID_OP','unknown operation '+String(op?.op).slice(0,40));
   check(typeof op.actor==='string'&&ACTOR_RE.test(op.actor),'INVALID_FIELD','actor invalid');
   check(int(op.at,0,MAX_SAFE),'INVALID_FIELD','at must be a non-negative integer (epoch ms)');
+  if(op.opId!=null){
+    check(typeof op.opId==='string'&&OP_ID_RE.test(op.opId),'INVALID_FIELD','opId must match '+OP_ID_RE);
+    if((doc.recentOpIds??[]).includes(op.opId))return {doc,result:{changed:false,duplicate:true}};
+  }
   const next=structuredClone(doc);
   const result=HANDLERS[op.op](next,op);
   if(!result.changed)return {doc,result};
   reconcile(next,op);
+  if(op.opId!=null){
+    next.recentOpIds=[...(doc.recentOpIds??[]),op.opId];
+    while(next.recentOpIds.length>LIMITS.recentOps)next.recentOpIds.shift();
+  }
   next.revision=doc.revision+1;next.updatedAt=op.at;next.updatedBy=op.actor;
   delete next.integrity;
   validateDocument(next);

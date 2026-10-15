@@ -43,7 +43,7 @@ class DevelopmentBacklogTest {
 
     @Test fun conformanceVectorsMatchTheNodeImplementation() {
         val cases = json("conformance.json").map()["cases"].list()
-        assertEquals(4, cases.size)
+        assertEquals(5, cases.size)
         for (raw in cases) {
             val case = raw.map()
             val start = case["start"].map()

@@ -173,6 +173,8 @@ jobs:
         run: node .github/continuum/developer-agent.mjs publish --out agent-repair --target-branch "$GITHUB_REF_NAME"
       - name: Persist repair experience
         run: node .github/continuum/developer-agent.mjs ledger-save --out agent-repair --branch continuum-agent-state
+      - name: Record the repair session in the development backlog
+        run: node .github/continuum/developer-agent.mjs backlog-save --branch continuum-agent-state --repairs agent-repair
       - uses: actions/upload-artifact@v4
         if: always()
         with:

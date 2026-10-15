@@ -65,6 +65,9 @@ async function main() {
 //   publish    --out <dir> --target-branch <branch>            (write token)
 //   publish-demo --out <dir> --fault <id> --run <id>           (write token)
 //   ledger-save --out <dir> [--branch continuum-agent-state]   (write token)
+//   backlog <command> --file <backlog.json> ...  (see backlog-cli.mjs)
+//   backlog-save [--plan] [--repairs <dir,...>] [--branch continuum-agent-state] (write token)
+//   watch --branch <dev branch> [--state-branch continuum-agent-state]
 // ---------------------------------------------------------------------------
 function options(argv){
   const o={_:[]};
@@ -88,6 +91,42 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
   const ledgerFile=o.ledger;
   const ledger=ledgerFile?ledgerMod.loadLedger(ledgerFile):(o['ledger-branch']?publish.loadLedgerFromBranch(root,o['ledger-branch']).ledger:ledgerMod.emptyLedger());
   if(cmd==='triage')return main();
+  if(cmd==='backlog'){
+    const {backlogCommand}=await import('./backlog-cli.mjs');
+    return backlogCommand(o._[1],o,{root,log});
+  }
+  if(cmd==='backlog-save'){
+    // Persist the shared development backlog on the state branch: recover expired
+    // claims, record repair sessions, sync analyzer findings. Every rejected
+    // operation is reported; the push is a compare-and-swap on the branch head.
+    const B=await import('./development-backlog.mjs');
+    const planner=await import('./development-planner.mjs');
+    const reports=[];
+    for(const dir of String(o.repairs??'').split(',').filter(Boolean)){
+      if(!SAFE_OUT.test(dir)||dir.includes('..'))throw Error('--repairs entries must be relative directories');
+      const file=path.join(path.resolve(dir),'report.json');
+      if(fs.existsSync(file))reports.push(JSON.parse(fs.readFileSync(file,'utf8')));
+    }
+    let analysis=null;
+    if(o.plan==='true'){const {analyzeRepository}=await import('./code-analyzer.mjs');const {index,...report}=analyzeRepository(root);analysis=report;}
+    const result=publish.saveBacklogToBranch(root,o.branch??publish.STATE_BRANCH,doc=>{
+      const at=Date.now(),results=[],skipped=[];
+      let current=doc;
+      const run=(ops,source)=>{const out=B.applyOps(current,ops,{stopOnError:false});current=out.doc;results.push(...out.results.map(r=>({...r,source})));};
+      run([{op:'expire',actor:'continuum-agent',at}],'expire');
+      for(const report of reports){
+        const {id,ops,skipped:why}=planner.repairSessionOps(current,report);
+        if(why)skipped.push(`${id??report.base.slice(0,12)}: ${why}`);
+        run(ops,'repair '+id);
+      }
+      if(analysis)run(planner.syncBacklogOps(current,analysis,{at,limit:Number(o.limit??12)}),'plan');
+      return {doc:current,results,skipped};
+    });
+    const rejected=result.results.filter(r=>!r.ok).map(r=>`${r.source} op ${r.index}: ${r.code}`);
+    log('[backlog-save] '+JSON.stringify({status:result.status,revision:result.revision,applied:result.results.filter(r=>r.ok&&!r.duplicate).length,
+      duplicates:result.results.filter(r=>r.duplicate).length,rejected,skipped:result.skipped}));
+    return result;
+  }
   if(cmd==='repair'){
     const out=outDir(o);
     if(!/^[0-9a-f]{40}$/.test(o.base??''))throw Error('--base must be a full commit hash');
@@ -129,6 +168,15 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
     if(!fs.existsSync(path.join(out,'report.json'))){log('[publish] no report');return null;}
     const report=JSON.parse(fs.readFileSync(path.join(out,'report.json'),'utf8'));
     if(report.outcome!=='VERIFIED'){log('[publish] nothing to publish: '+report.outcome);return null;}
+    // No duplicate proposals: the backlog knows whether this failure was already
+    // handled (DONE), dismissed (REJECTED/ABORTED) or ran out of budget (FAILED).
+    const {repairTaskId}=await import('./development-planner.mjs');
+    const task=publish.loadBacklogFromBranch(root).doc?.tasks.find(t=>t.id===repairTaskId(report));
+    if(task&&['DONE','REJECTED','ABORTED','FAILED'].includes(task.state)){
+      log(`[publish] skipped: backlog task ${task.id} is ${task.state}`+(task.state==='FAILED'?' (attempt budget exhausted; `backlog retry` allows new attempts)':''));
+      fs.writeFileSync(path.join(out,'publish.json'),JSON.stringify({skipped:true,task:task.id,state:task.state},null,1)+'\n');
+      return null;
+    }
     const result=await publish.publishRepair({root,outDir:out,targetBranch:o['target-branch'],repository,token,push:o['dry-run']!=='true'});
     fs.writeFileSync(path.join(out,'publish.json'),JSON.stringify(result,null,1)+'\n');
     log('[publish] '+JSON.stringify(result));
@@ -162,18 +210,37 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
   }
   if(cmd==='watch'){
     // Cheap scheduled check: API calls only. Requests a repair job only when the
-    // development head has a failed Android build and no recorded repair session.
+    // development head has a failed Android build that neither the ledger nor
+    // the backlog on the state branch knows. State is read through the API
+    // (this job has no git credentials); unreadable state fails the job instead
+    // of looking empty, which would repeat repairs every hour.
     const branch=o.branch??'copilot/pr-12-working-first-vertical-slice';
-    if(!/^[\w./-]{1,120}$/.test(branch))throw Error('Invalid --branch');
+    const stateBranch=o['state-branch']??publish.STATE_BRANCH;
+    if(!/^[\w./-]{1,120}$/.test(branch)||!/^[\w.-]{1,80}$/.test(stateBranch))throw Error('Invalid --branch or --state-branch');
+    const headers={Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'};
     const api=async p=>{const r=await fetch('https://api.github.com/repos/'+repository+p,{signal:AbortSignal.timeout(12000),
-      headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+      headers:{...headers,Accept:'application/vnd.github+json'}});
       if(!r.ok)throw Error('GitHub API HTTP '+r.status);return r.json();};
+    const stateFile=async name=>{const r=await fetch(`https://api.github.com/repos/${repository}/contents/${name}?ref=${encodeURIComponent(stateBranch)}`,
+      {signal:AbortSignal.timeout(12000),headers:{...headers,Accept:'application/vnd.github.raw+json'}});
+      if(r.status===404)return null;
+      if(!r.ok)throw Error('GitHub API HTTP '+r.status+' reading '+name);
+      return Buffer.from(await r.arrayBuffer());};
+    const ledgerBytes=await stateFile('repair-ledger.json');
+    const state=ledgerBytes?ledgerMod.verifyLedger(JSON.parse(ledgerBytes.toString('utf8'))):ledgerMod.emptyLedger();
+    const backlogBytes=await stateFile(publish.BACKLOG_FILE);
+    const B=await import('./development-backlog.mjs');
+    const backlog=backlogBytes?B.decodeDocument(backlogBytes,{migrate:{at:Date.now(),actor:'continuum-agent'}}).doc:null;
     const head=(await api('/branches/'+encodeURIComponent(branch))).commit.sha;
     const runs=(await api('/actions/runs?head_sha='+head+'&per_page=30')).workflow_runs??[];
     const build=runs.find(r=>r.path==='.github/workflows/android.yml');
-    const known=ledger.sessions.some(x=>x.base===head);
-    const decision={branch,head,buildConclusion:build?.conclusion??build?.status??'NOT_RUN',alreadyAttempted:known,
-      needsRepair:build?.conclusion==='failure'&&!known};
+    const repairs=(backlog?.tasks??[]).filter(t=>t.kind==='REPAIR');
+    const known=repairs.find(t=>t.subject?.base===head)??null;
+    const running=repairs.find(t=>t.state==='IN_PROGRESS'&&t.claim.leaseUntil>Date.now())??null;
+    const attempted=state.sessions.some(x=>x.base===head)||Boolean(known);
+    const decision={branch,head,buildConclusion:build?.conclusion??build?.status??'NOT_RUN',alreadyAttempted:attempted,
+      backlogTask:known?.id??null,backlogTaskState:known?.state??null,runningRepair:running?.id??null,
+      needsRepair:build?.conclusion==='failure'&&!attempted&&!running};
     log('[watch] '+JSON.stringify(decision));
     if(env.GITHUB_OUTPUT)fs.appendFileSync(env.GITHUB_OUTPUT,`needs_repair=${decision.needsRepair}\nbase=${head}\nbranch=${branch}\n`);
     return decision;

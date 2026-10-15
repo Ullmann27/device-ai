@@ -125,6 +125,23 @@ function boundedEvidence(){
   return {name:'evidence is bounded and drops are counted',start:{at:0,actor:'fixture'},steps};
 }
 
+function idempotentOps(){
+  const id='task-once';
+  const ops=[
+    step({op:'propose',actor:'android-app',at:10,opId:'android:0001-propose',task:{id,title:'Einmal',kind:'IMPLEMENT',source:'android'}}),
+    step({op:'propose',actor:'android-app',at:10,opId:'android:0001-propose',task:{id,title:'Einmal',kind:'IMPLEMENT',source:'android'}}),
+    step({op:'accept',actor:'heinz',at:20,opId:'android:0002-accept',id}),
+    step({op:'accept',actor:'heinz',at:20,opId:'android:0002-accept',id}),
+    step({op:'claim',actor:'w',at:30,opId:'bad id!',id,owner:'w',token:T(1),leaseMs:60000},'INVALID_FIELD'),
+    step({op:'claim',actor:'w',at:30,opId:'short',id,owner:'w',token:T(1),leaseMs:60000},'INVALID_FIELD'),
+    step({op:'setPriority',actor:'heinz',at:40,opId:'android:0003-prio',id,priority:500}),
+    step({op:'setPriority',actor:'heinz',at:50,opId:'android:0004-prio',id,priority:700})
+  ];
+  for(let k=0;k<260;k++)ops.push(step({op:'setPriority',actor:'heinz',at:100+k,opId:'bulk:'+String(k).padStart(8,'0'),id,priority:k%2?10:20}));
+  ops.push(step({op:'setPriority',actor:'heinz',at:400,opId:'android:0004-prio',id,priority:700}));
+  return {name:'operation ids make op logs exactly-once (bounded memory)',start:{at:0,actor:'fixture'},steps:ops};
+}
+
 /** Run a case with this implementation; returns per-step outcomes and the final document. */
 export function runCase(c){
   let doc=B.emptyDocument(c.start.at,c.start.actor);
@@ -136,7 +153,7 @@ export function runCase(c){
 }
 
 export function conformance(){
-  const cases=[lifecycle(),budgetAndInput(),boundedHistory(),boundedEvidence()].map(c=>{
+  const cases=[lifecycle(),budgetAndInput(),boundedHistory(),boundedEvidence(),idempotentOps()].map(c=>{
     const {outcomes,doc}=runCase(c);
     outcomes.forEach((o,k)=>{if(o!==c.steps[k].expect)throw Error(`${c.name} step ${k}: expected ${c.steps[k].expect}, got ${o}`);});
     return {...c,final:{revision:doc.revision,integrity:B.integrityOf(doc),

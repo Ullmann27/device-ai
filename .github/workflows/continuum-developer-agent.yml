@@ -55,8 +55,10 @@ jobs:
         run: node --test .github/continuum/*.test.mjs
       - name: Structural Kotlin analysis (reachability, test-only and dead code)
         run: node .github/continuum/code-analyzer.mjs .
-      - name: Rank integration work candidates
-        run: node --input-type=module -e "import fs from 'node:fs'; import {planBacklog} from './.github/continuum/development-planner.mjs'; fs.mkdirSync('developer-agent-report',{recursive:true}); fs.writeFileSync('developer-agent-report/development-backlog.json', JSON.stringify(planBacklog(process.cwd()),null,2)+'\\n');"
+      - name: Development backlog preview (analyzer findings as backlog proposals)
+        run: |
+          node .github/continuum/developer-agent.mjs backlog plan --file developer-agent-report/development-backlog.json --limit 12
+          { echo '```'; node .github/continuum/developer-agent.mjs backlog show --file developer-agent-report/development-backlog.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - name: CI triage
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -140,7 +142,7 @@ jobs:
       - id: watch
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: node .github/continuum/developer-agent.mjs watch --branch "$DEV_BRANCH" --ledger-branch continuum-agent-state
+        run: node .github/continuum/developer-agent.mjs watch --branch "$DEV_BRANCH" --state-branch continuum-agent-state
 
   repair-head:
     needs: watch
@@ -227,3 +229,10 @@ jobs:
           for dir in artifacts/continuum-agent-repair artifacts/continuum-kotlin-benchmark artifacts/continuum-developer-agent/benchmark-node; do
             if [ -d "$dir" ]; then node .github/continuum/developer-agent.mjs ledger-save --out "$dir" --branch continuum-agent-state; fi
           done
+      # Real repair sessions (never benchmark faults) and analyzer findings go into
+      # the shared development backlog (docs/DEVELOPMENT_BACKLOG.md).
+      - name: Persist development backlog (branch continuum-agent-state)
+        run: |
+          repairs=""
+          if [ -f artifacts/continuum-agent-repair/report.json ]; then repairs="--repairs artifacts/continuum-agent-repair"; fi
+          node .github/continuum/developer-agent.mjs backlog-save --branch continuum-agent-state --plan $repairs
