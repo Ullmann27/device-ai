@@ -79,7 +79,7 @@ export function trainContrastiveCandidate(
         validationBefore,validationAfter:evaluateViews(candidate,validation,{seed:29,drop})
       };
       // Kotlin trainSemantic selects (updates+step)%2.
-      const pair = pairs[(candidate.updates+k)%2];
+      const pair = pairs[candidate.updates%2];
       candidate.updateSemantic(pair,rate);
     }
   }
