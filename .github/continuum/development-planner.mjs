@@ -1,4 +1,4 @@
-import {analyzeSources} from './code-analyzer.mjs';
+import {analyzeRepository} from './code-analyzer.mjs';
 
 /**
  * Offline backlog planner: turns structural findings into small, reviewable
@@ -18,7 +18,7 @@ export function prioritizeFindings(report,limit=12) {
     .slice(0,Math.max(0,Math.min(30,limit)));
 }
 export function planBacklog(root,limit=12){
-  const result=analyzeSources(root);
+  const {index,...result}=analyzeRepository(root);
   return {schemaVersion:1,mode:'review-required',analyzedAt:new Date().toISOString(),
     tasks:prioritizeFindings(result,limit)};
 }
