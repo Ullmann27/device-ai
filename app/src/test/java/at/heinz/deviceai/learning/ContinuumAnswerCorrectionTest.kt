@@ -123,6 +123,23 @@ class ContinuumAnswerCorrectionTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun explicitReconfirmationAfterRevocationIsRequiredToRestoreOldAnswer() {
+        val dir=temp("continuum-answer-reconfirm")
+        try {
+            val core=ContinuumLearningCore(dir) { 1000L }
+            val question="Wie wird ein älterer Korrekturstand wieder bestätigt?"
+            core.replyFromMemory(question)
+            assertTrue(core.confirmAnswerCorrection(question,"Meine ursprüngliche erklärte Antwort."))
+            assertEquals(1,core.revokeAnswerCorrections())
+            assertNull(ContinuumAnswerCorrection.find(question,
+                FileLearningExperienceStore(File(dir,"learning-core-v2")).all()))
+            core.replyFromMemory(question)
+            assertTrue(core.confirmAnswerCorrection(question,"Meine ursprüngliche erklärte Antwort."))
+            assertTrue(core.replyFromMemory(question).grounded)
+            assertEquals(ContinuumCorrectionSummary(1,0),core.correctionSummary())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun untrustedCorrectionLikeEvidenceIsNeverGivenOwnerAuthority() {
         val item=LearningExperienceFactory.create(
             type=LearningExperienceType.ANSWER_CORRECTION,
