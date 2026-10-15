@@ -31,12 +31,12 @@ jobs:
         with:
           node-version: "22"
       - name: Verify developer agent
-        run: node --test .github/continuum/developer-agent.test.mjs
+        run: node --test .github/continuum/developer-agent.test.mjs .github/continuum/code-analyzer.test.mjs
       - name: Inspect recent CI failures without changing code
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node .github/continuum/developer-agent.mjs
-      - name: Publish diagnosis
+      - name: Analyze Kotlin source wiring\n        run: node .github/continuum/code-analyzer.mjs app/src\n      - name: Publish diagnosis
         uses: actions/upload-artifact@v4
         with:
           name: continuum-developer-triage
