@@ -871,6 +871,7 @@ class AgentActivity : Activity() {
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
+            CenterAction("RÜCKMELDUNGEN · WIDERRUFEN") { confirmRevokeFeedback() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("INTERNET · LERNSTOFF PRÜFEN") { showWebLearningInbox() },
@@ -892,6 +893,11 @@ class AgentActivity : Activity() {
         append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
             .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
+        val feedback=ContinuumLearningCore(filesDir).feedbackSummary()
+        append("\nLernkern-Feedback: ").append(feedback.positive).append(" hilfreich, ")
+            .append(feedback.negative).append(" nicht hilfreich")
+            .append(" · ").append(feedback.revoked).append(" widerrufen")
+        append("\nFeedback wird nicht als Wahrheitslabel oder automatisches Training verwendet.")
         core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
     }
 
@@ -1265,21 +1271,52 @@ class AgentActivity : Activity() {
                     }.show()
             }
             BootstrapKind.FORGET -> showConfirmForget()
-            BootstrapKind.FEEDBACK_POSITIVE -> {
-                bootstrapMemory.recordFeedback(true)
-                addAssistantMessage("Danke. Die positive Rückmeldung wurde als lokales Feedback erfasst.")
-            }
-            BootstrapKind.FEEDBACK_NEGATIVE -> {
-                bootstrapMemory.recordFeedback(false)
-                addAssistantMessage("Danke. Ich habe die negative Rückmeldung erfasst. Sie verbessert mich nicht automatisch, " +
-                    "hilft aber beim gezielten Auswerten meiner Antworten.")
-            }
+            BootstrapKind.FEEDBACK_POSITIVE -> recordContinuumFeedback(true)
+            BootstrapKind.FEEDBACK_NEGATIVE -> recordContinuumFeedback(false)
             BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(decision)
             BootstrapKind.TRAIN -> confirmBootstrapTraining(decision)
             BootstrapKind.REPLY -> if(decision.allowNeuralRecall)runContinuumDialogue(request)
                 else addAssistantMessage(decision.message)
         }
         addToolActivity("STARTKERN · lokales Gespräch")
+    }
+
+    /** Rating is an owner observation, never an intent label or truth claim. */
+    private fun recordContinuumFeedback(positive:Boolean) {
+        onLearningIo({
+            check(ContinuumLearningCore(filesDir).recordExplicitFeedback(positive))
+            bootstrapMemory.recordFeedback(positive)
+            "Rückmeldung lokal im Continuum-Experience-Speicher erfasst. " +
+                "Sie wird nicht als Trainingswahrheit behandelt. " +
+                "Für tatsächliches Lernen bestätige ein konkretes Beispiel im Lernzentrum."
+        }) { result ->
+            addAssistantMessage(result.getOrElse {
+                "Rückmeldung konnte nicht vollständig gespeichert werden ("+
+                    failureName(it)+"). Bitte erneut versuchen."
+            })
+        }
+    }
+
+    /** Remove both local feedback copies after explicit owner confirmation. */
+    private fun confirmRevokeFeedback() {
+        AlertDialog.Builder(this)
+            .setTitle("Rückmeldungen widerrufen?")
+            .setMessage("Widerruft die Einträge im Continuum-Lernkern und löscht die älteren " +
+                "Feedback-Zähler. Erinnerungen und Modellgewichte bleiben erhalten.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("Widerrufen") { _, _ ->
+                onLearningIo({
+                    val revoked=ContinuumLearningCore(filesDir).revokeExplicitFeedback()
+                    val cleared=bootstrapMemory.clearFeedback()
+                    if(cleared) "$revoked Feedback-Einträge widerrufen; ältere Zähler gelöscht."
+                    else "$revoked Feedback-Einträge widerrufen. Die älteren Zähler "+
+                        "konnten nicht gelöscht werden; bitte wiederholen."
+                }) { result ->
+                    addAssistantMessage(result.getOrElse {
+                        "Widerruf fehlgeschlagen ("+failureName(it)+"). Bitte wiederholen."
+                    })
+                }
+            }.show()
     }
 
     /** Explicit memory questions and otherwise-unhandled conversation only.

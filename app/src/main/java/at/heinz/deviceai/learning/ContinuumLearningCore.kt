@@ -25,6 +25,14 @@ data class ContinualLearningReport(
 
 enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
 
+/**
+ * Explicit owner ratings are feedback metadata, not supervised labels.
+ * A positive rating does not prove factual correctness, and ratings must
+ * never be replayed as semantic/intent training examples.
+ */
+data class ContinuumFeedbackSummary(val positive:Int,val negative:Int,val revoked:Int)
+
+
 data class ContinuumLearningStatus(
     val experiences:LearningExperienceStats,
     val modelUpdates:Int,
@@ -371,6 +379,38 @@ class ContinuumLearningCore(
             LearningExperienceType.COMMAND_MAPPING,null,
             LearningStatus.REVOKED,nowMillis()
         )
+    }
+
+    /** Capture explicit feedback without text, credentials or generated answers. */
+    fun recordExplicitFeedback(positive:Boolean):Boolean=synchronized(CORE_LOCK) {
+        val item=LearningExperienceFactory.create(
+            type=LearningExperienceType.USER_FEEDBACK,
+            provenance=LearningProvenance.USER_CONFIRMED,
+            trust=LearningTrustClass.OWNER_CONFIRMED,
+            status=LearningStatus.CONFIRMED,
+            content=if(positive)"helpful" else "not-helpful",
+            annotation="rating-only-no-training",
+            sourceRef="local-feedback/"+java.util.UUID.randomUUID().toString(),
+            now=nowMillis()
+        )
+        store.append(item)
+    }
+
+    /** Rating counts reflect the current, non-revoked local evidence ledger. */
+    fun feedbackSummary():ContinuumFeedbackSummary=synchronized(CORE_LOCK) {
+        val entries=store.all().filter { it.type==LearningExperienceType.USER_FEEDBACK }
+        val active=entries.filter { it.status!=LearningStatus.REVOKED }
+        ContinuumFeedbackSummary(
+            positive=active.count { it.content=="helpful" },
+            negative=active.count { it.content=="not-helpful" },
+            revoked=entries.count { it.status==LearningStatus.REVOKED }
+        )
+    }
+
+    /** Safe and repeatable removal of every explicit feedback record. */
+    fun revokeExplicitFeedback():Int=synchronized(CORE_LOCK) {
+        store.updateMatching(LearningExperienceType.USER_FEEDBACK,
+            status=LearningStatus.REVOKED,now=nowMillis())
     }
 
     fun status():ContinuumLearningStatus=synchronized(CORE_LOCK) {

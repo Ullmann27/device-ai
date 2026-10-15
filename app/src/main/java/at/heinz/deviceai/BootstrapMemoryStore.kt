@@ -97,6 +97,10 @@ class BootstrapMemoryStore(context: Context) {
     val positiveCount: Int get() = prefs.getInt("positive", 0)
     val negativeCount: Int get() = prefs.getInt("negative", 0)
 
+    /** Only clears feedback counters; preserved facts and model bytes are untouched. */
+    fun clearFeedback(): Boolean =
+        prefs.edit().remove("positive").remove("negative").commit()
+
     fun recordFeedback(positive: Boolean) {
         val key = if (positive) "positive" else "negative"
         prefs.edit().putInt(key, (prefs.getInt(key, 0) + 1).coerceAtMost(100_000)).apply()
