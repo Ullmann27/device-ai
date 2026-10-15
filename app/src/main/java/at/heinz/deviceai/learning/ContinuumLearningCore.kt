@@ -423,7 +423,7 @@ class ContinuumLearningCore(
             "Conversation changed since correction was proposed"
         }
         val clean=answer.trim()
-        require(clean.length in 3..500 && clean.none { it=='\\u0000' })
+        require(clean.length in 3..500 && clean.none { it.code==0 })
         val item=LearningExperienceFactory.create(
             type=LearningExperienceType.ANSWER_CORRECTION,
             provenance=LearningProvenance.USER_CONFIRMED,
