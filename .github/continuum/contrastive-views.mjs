@@ -58,7 +58,8 @@ export function trainContrastiveCandidate(
       !Number.isFinite(drop) || drop < 0 || drop > 0.95 ||
       !Number.isFinite(rate) || rate < 0.0001 || rate > 0.12 ||
       typeof cancelled !== 'function') throw Error('Invalid training limits');
-  if (memories.some(m => validation.includes(m))) throw Error('Train/validation overlap');
+  const trainKeys = new Set(memories.map(m => words(m).join(' ')));
+  if (validation.some(m => trainKeys.has(words(m).join(' ')))) throw Error('Train/validation overlap');
   const candidate = SubwordEncoder.restore(baseline.save());
   const trainingBefore = evaluateViews(candidate,memories,{seed:17,drop});
   const validationBefore = evaluateViews(candidate,validation,{seed:29,drop});

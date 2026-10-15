@@ -90,7 +90,9 @@ object ContinuumContrastiveViews {
         validate(memories)
         validate(validation)
         require(steps in 1..500 && drop in 0.0..0.95 && rate in 0.0001..0.12)
-        require(memories.toSet().intersect(validation.toSet()).isEmpty()) {
+        val trainKeys = memories.map(::words).map { it.joinToString(" ") }.toSet()
+        val validationKeys = validation.map(::words).map { it.joinToString(" ") }.toSet()
+        require(trainKeys.intersect(validationKeys).isEmpty()) {
             "Training and validation must not share exact memories"
         }
         val candidate = TrainableSubwordEncoder.restore(baseline.save())

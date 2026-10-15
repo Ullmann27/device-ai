@@ -52,5 +52,7 @@ test('cancellation and invalid training settings fail safely', () => {
   assert.ok(result.steps<100);
   assert.deepEqual(baseline.save(),saved);
   assert.throws(()=>trainContrastiveCandidate(baseline,train,train));
+  assert.throws(()=>trainContrastiveCandidate(baseline,train,
+    [train[0].toUpperCase(),holdout[0]]));
   assert.throws(()=>trainContrastiveCandidate(baseline,train,holdout,{steps:2000}));
 });

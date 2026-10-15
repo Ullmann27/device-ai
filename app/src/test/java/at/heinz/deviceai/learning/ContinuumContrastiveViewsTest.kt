@@ -59,5 +59,9 @@ class ContinuumContrastiveViewsTest {
         assertThrows(IllegalArgumentException::class.java) {
             ContinuumContrastiveViews.trainCandidate(model,train,train)
         }
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumContrastiveViews.trainCandidate(model,train,
+                listOf(train.first().uppercase(),holdout.first()))
+        }
     }
 }
