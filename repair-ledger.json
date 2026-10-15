@@ -1322,6 +1322,47 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:13:09.035Z",
+   "baseCommit": "9e1412ed3f7dc5d3d82efaa6619c6c3e3f3c2c43",
+   "chain": "android",
+   "diagnostic": "2f1322485b76a36b",
+   "diagnosticKind": "COMPILER_ERROR",
+   "candidate": "c3a79c042fc7686d",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "    /** Explicitly confirmed correction to the latest local dialogue turn only.\n     * No implicit model-weight change and no generalization to other questions.\n     */\n    fun confirmAnswerCorrection(question:String,answer:String):Boolean=synchronized(CORE_LOCK) {\n        val turn=dialogue.history().lastOrNull()\n        require(turn!=null && turn.resolvedQuery==question) {\n            \"Conversation changed since correction was proposed\"\n        }\n        val clean=answer.trim()\n        require(clean.length in 3..500 && clean.none { it=='\\\\u0000' })\n        val item=LearningExperienceFactory.create(\n            type=LearningExperienceType.ANSWER_CORRECTION,\n            provenance=LearningProvenance.USER_CONFIRMED,\n            trust=LearningTrustClass.OWNER_CONFIRMED,\n            status=LearningStatus.CONFIRMED,\n            content=clean,\n            annotation=ContinuumAnswerCorrection.queryKey(question),\n            now=nowMillis()\n        )\n        store.putAnswerCorrection(item,nowMillis())\n    }\n\n    fun correctionSummary():ContinuumCorrectionSummary=synchronized(CORE_LOCK) {\n        val all=store.all().filter { it.type==LearningExperienceType.ANSWER_CORRECTION }\n        ContinuumCorrectionSummary(\n            active=all.count { it.status==LearningStatus.CONFIRMED },\n            revoked=all.count { it.status==LearningStatus.REVOKED }\n        )\n    }\n\n    fun revokeAnswerCorrections():Int=synchronized(CORE_LOCK) {\n        store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,\n            status=LearningStatus.REVOKED,now=nowMillis())\n    }\n",
+     "newText": "",
+     "line": 417
+    }
+   ],
+   "confidence": 0.48,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": true,
+     "total": 464,
+     "failed": 0,
+     "executed": 463,
+     "skipped": 1
+    }
+   ],
+   "patchSha256": "b3139874ed05306c3c396a2f21c642c87f1251e94b0a65b03e89d33bfe009116",
+   "proposalCommit": "5c746823d7a5a90a77fb56fe49e904b8d7744416",
+   "proposalBranch": "continuum-agent/repair-9e1412ed3f-2f132248",
+   "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fcontinuum-owner-answer-corrections-20261015...continuum-agent%2Frepair-9e1412ed3f-2f132248?expand=1"
   }
  ],
  "experiences": [
@@ -1343,6 +1384,11 @@
   {
    "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
    "successes": 2,
+   "failures": 0
+  },
+  {
+   "kind": "COMPILER_ERROR|REVERT_HUNK_TO_PARENT",
+   "successes": 1,
    "failures": 0
   },
   {
@@ -1849,6 +1895,17 @@
    "attempts": 0,
    "verifiedStrategy": null,
    "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:13:09.035Z",
+   "base": "9e1412ed3f7dc5d3d82efaa6619c6c3e3f3c2c43",
+   "chain": "android",
+   "outcome": "VERIFIED",
+   "diagnostics": 1,
+   "attempts": 1,
+   "verifiedStrategy": "REVERT_HUNK_TO_PARENT",
+   "patchSha256": "b3139874ed05306c3c396a2f21c642c87f1251e94b0a65b03e89d33bfe009116",
    "trigger": "android-build-failure"
   }
  ]
