@@ -48,6 +48,18 @@ jobs:
           node --test .github/continuum/contrastive-generalization.test.mjs
           node .github/continuum/contrastive-generalization.mjs "$RUNNER_TEMP/continuum-generalization.json"
 
+      - name: Evaluate neural versus production lexical retrieval
+        run: |
+          node --test .github/continuum/retrieval-alignment.test.mjs
+          node .github/continuum/retrieval-alignment.mjs "$RUNNER_TEMP/continuum-retrieval-alignment.json"
+
+      - name: Upload retrieval alignment audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-retrieval-alignment
+          path: ${{ runner.temp }}/continuum-retrieval-alignment.json
+          if-no-files-found: error
+
       - name: Upload experimental generalization evidence
         uses: actions/upload-artifact@v4
         with:
