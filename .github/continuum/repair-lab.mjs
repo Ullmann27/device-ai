@@ -23,12 +23,14 @@ export function applyCandidate(source,candidate){
  return source.replace(candidate.from,candidate.to);
 }
 export function runLab(root,{testCommand=['./gradlew',':app:compileDebugUnitTestKotlin','--offline','--no-daemon'],execute=true}={}){
+ // Validate before any early return: an unsafe command must fail closed even
+ // when the current tree happens to contain no repair candidates.
+ if(execute&&(!Array.isArray(testCommand)||testCommand[0]!=='./gradlew'||testCommand.some(arg=>typeof arg!=='string'||/[\r\n]/.test(arg))))throw Error('Only fixed Gradle commands allowed');
  const files=collectKotlin(path.join(root,'app/src'));
  const candidates=chooseCandidates(files);
  const report={schemaVersion:1,mode:execute?'test':'dry-run',candidates:[],appliedToRepository:false};
  if(!execute)return {...report,candidates:candidates.map(x=>({...x,status:'PROPOSED'}))};
  if(!candidates.length)return report;
- if(!Array.isArray(testCommand)||testCommand[0]!=='./gradlew'||testCommand.some(arg=>typeof arg!=='string'||/[\r\n]/.test(arg)))throw Error('Only fixed Gradle commands allowed');
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-repair-'));
  try{
   const copy=spawnSync('tar',['-C',root,'--exclude=.git','--exclude=.gradle','--exclude=build','--exclude=app/build','-cf','-', '.'],{timeout:60000,encoding:'buffer',maxBuffer:100000000,shell:false});
