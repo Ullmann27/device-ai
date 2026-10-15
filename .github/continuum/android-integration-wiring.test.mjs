@@ -145,3 +145,11 @@ test('neural weights are saved by compare-and-swap and foreground practice can b
  ensure('save happens on the worker, not in the result callback',run.indexOf('compareAndSaveNeuralSnapshot')<run.lastIndexOf('runOnUiThread'));
  ensure('foreground practice is cancellable',/practiceOnce\(cancelled = \{/.test(activity));
 });
+test('startup bootstrap training stops with the activity and is retried later',()=>{
+ const create=bodyOf(activity,'override fun onCreate(');
+ ensure('startup stages get a cancel callback',create.includes('bootstrapOfflineCurriculum(stopBootstrap::get)')&&create.includes('bootstrapSemanticCurriculum(stopBootstrap::get)'));
+ const destroy=bodyOf(activity,'override fun onDestroy(');
+ ensure('onDestroy stops the startup training',destroy.includes('bootstrapCancelled.set(true)'));
+ ensure('onDestroy cancels a running read-only tool gate',destroy.includes('activeBootstrapGate?.cancel()'));
+ ensure('interrupted stage writes no run-once audit',core.includes('if(interrupted(cancelled))return@synchronized interruptedReport("offline-bootstrap"')&&core.includes('interruptedReport("offline-semantic-bootstrap"'));
+});

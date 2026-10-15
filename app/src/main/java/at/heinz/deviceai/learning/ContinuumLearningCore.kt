@@ -76,6 +76,10 @@ class ContinuumLearningCore(
             val after=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            // The audit is this stage's run-once marker: an interrupted run (job
+            // stopped, app closed) writes none, so the stage runs again later.
+            if(interrupted(cancelled))return@synchronized interruptedReport("offline-bootstrap",train.steps,
+                before,after,holdoutBefore,holdoutAfter)
             val accepted=!cancelled() && !train.stoppedEarly &&
                 after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
                 retains(otherBefore,otherAfter)
@@ -110,6 +114,8 @@ class ContinuumLearningCore(
             val after=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
             val intentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+            if(interrupted(cancelled))return@synchronized interruptedReport("offline-semantic-bootstrap",train.steps,
+                before,after,holdoutBefore,holdoutAfter)
             val accepted=!cancelled() && !train.stoppedEarly &&
                 after.loss+1e-7<before.loss && retains(holdoutBefore,holdoutAfter) &&
                 retains(intentBefore,intentAfter)
@@ -484,6 +490,14 @@ class ContinuumLearningCore(
             val label=item.annotation?.toIntOrNull()
             if(label in 0..1)SubwordIntentExample(item.content,label!!) else null
         }
+
+    private fun interrupted(cancelled:()->Boolean)=cancelled() || Thread.currentThread().isInterrupted
+
+    /** Nothing saved and no audit written: the stage is attempted again later. */
+    private fun interruptedReport(task:String,steps:Int,before:SubwordEvaluation,after:SubwordEvaluation,
+        holdoutBefore:SubwordEvaluation,holdoutAfter:SubwordEvaluation)=
+        ContinualLearningReport(task,false,steps,0,before,after,holdoutBefore,holdoutAfter,emptyList(),
+            "Unterbrochen; nichts gespeichert, wird später erneut versucht",completedEvaluation=false)
 
     private fun retains(before:SubwordEvaluation,after:SubwordEvaluation):Boolean =
         after.correct>=before.correct && after.loss<=before.loss+0.015

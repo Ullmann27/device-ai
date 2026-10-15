@@ -19,6 +19,27 @@ class ContinuumLearningCoreTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun interruptedOfflineStagesAreRetriedInsteadOfCountedAsDone() {
+        val dir=Files.createTempDirectory("continuum-interrupted-bootstrap").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val before=core.modelSnapshot()
+            // e.g. Android stopped the job or the app closed during training
+            val stopped=core.bootstrapOfflineCurriculum { true }!!
+            assertFalse(stopped.accepted)
+            assertFalse(stopped.completedEvaluation)
+            val semanticStopped=core.bootstrapSemanticCurriculum { true }!!
+            assertFalse(semanticStopped.completedEvaluation)
+            assertArrayEquals(before,core.modelSnapshot())
+            assertEquals("no run-once marker for an interrupted run",0,core.status().experiences.audits)
+            val later=ContinuumLearningCore(dir).bootstrapOfflineCurriculum()!!
+            assertTrue(later.completedEvaluation)
+            assertNotNull(ContinuumLearningCore(dir).bootstrapSemanticCurriculum())
+            assertEquals(2,core.status().experiences.audits)
+            assertNull(ContinuumLearningCore(dir).bootstrapOfflineCurriculum())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun semanticBootstrapIsAuditedIdempotentAndProtectsIntent() {
         val dir=Files.createTempDirectory("continuum-semantic-bootstrap").toFile()
         try {

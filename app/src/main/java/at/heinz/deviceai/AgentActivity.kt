@@ -190,6 +190,7 @@ class AgentActivity : Activity() {
     private val neuralCuriosityRadar = NeuralCuriosityRadar()
     private val neuralCoach = NeuralLearningCoach()
     @Volatile private var foregroundLearningActive = false
+    private val bootstrapCancelled = java.util.concurrent.atomic.AtomicBoolean(false)
     private val foregroundLearningCheck = object : Runnable {
         override fun run() {
             if (!foregroundLearningActive || isFinishing || isDestroyed) return
@@ -313,14 +314,17 @@ class AgentActivity : Activity() {
 
         setContentView(buildUi())
         // Public, bundled examples only. No internet access or owner-labelled data.
+        // Stopped in onDestroy; an interrupted stage writes no audit and runs again later.
+        val stopBootstrap = bootstrapCancelled
         Thread({
             runCatching {
                 val core = ContinuumLearningCore(filesDir)
-                val intent = core.bootstrapOfflineCurriculum()
-                val semantic = core.bootstrapSemanticCurriculum()
-                listOfNotNull(intent, semantic)
+                val intent = core.bootstrapOfflineCurriculum(stopBootstrap::get)
+                val semantic = if (stopBootstrap.get()) null else core.bootstrapSemanticCurriculum(stopBootstrap::get)
+                listOfNotNull(intent, semantic).filter { it.completedEvaluation }
             }.onSuccess { reports ->
                 if (reports.isNotEmpty()) runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
                     reports.forEach { report ->
                         addToolActivity("CONTINUUM · " + report.task + ": " +
                             if (report.accepted) "angenommen (" + report.steps + " Schritte)"
@@ -329,6 +333,7 @@ class AgentActivity : Activity() {
                 }
             }.onFailure { error ->
                 runOnUiThread {
+                    if (isFinishing || isDestroyed) return@runOnUiThread
                     addToolActivity("CONTINUUM · Offline-Basistraining fehlgeschlagen: " +
                         error.javaClass.simpleName)
                 }
@@ -401,11 +406,14 @@ class AgentActivity : Activity() {
             }
         }
         activeNeuralCancellation?.set(true)
+        bootstrapCancelled.set(true)
+        activeBootstrapGate?.cancel()
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
         learningIoExecutor.shutdown()
         backlogDialog?.dismiss()
+        devDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
