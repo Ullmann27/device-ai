@@ -939,6 +939,18 @@ class AgentActivity : Activity() {
             beginNeuralCoach()
             return
         }
+        if (request.equals("Lernverlauf", true) || request.equals("Modellversionen", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            showModelVersions()
+            return
+        }
+        if (request.equals("Lernstand zurücksetzen", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            confirmModelRollback()
+            return
+        }
         if (neuralCoach.isActive() && !NeuralDialogue.accepts(request)) {
             input.text.clear()
             addUserMessage(request)
@@ -1600,8 +1612,73 @@ class AgentActivity : Activity() {
                         },NEURAL_IMPORT_REQUEST)
                     }.show()
             }
-            .setPositiveButton("Schließen",null)
+            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
             .show()
+    }
+
+    /** Model history from the checkpoint store and the audited training decisions.
+     * Rollback restores the newest archived state that differs from the active
+     * weights; the restore itself is archived, so it can be undone the same way.
+     */
+    private fun showModelVersions() {
+        val text=runCatching {
+            val core=ContinuumLearningCore(filesDir)
+            val active=core.modelHash()
+            val history=core.checkpoints().asReversed()
+            val stamp=java.text.SimpleDateFormat("dd.MM.yyyy HH:mm",Locale.GERMANY)
+            buildString {
+                append("Aktives Modell: ").append(active.take(16)).append(" · ")
+                    .append(core.status().modelUpdates).append(" Gewichtsupdates\n\n")
+                if(history.isEmpty()) append("Noch keine archivierten Stände. Vor jeder Modelländerung wird der aktive Stand automatisch gesichert.\n")
+                else {
+                    append("Wiederherstellbare Stände (neueste zuerst):\n")
+                    history.take(8).forEachIndexed { i,c ->
+                        append(i+1).append(". ").append(c.sha256.take(12)).append(" · ").append(c.reason)
+                            .append(" · ").append(stamp.format(java.util.Date(c.createdAt)))
+                            .append(" · ").append(c.updates).append(" Updates")
+                            .append(if(c.sha256==active)" · AKTIV" else "").append("\n")
+                    }
+                }
+                val audits=core.trainingAudits(6)
+                if(audits.isNotEmpty()) {
+                    append("\nLetzte Lernentscheidungen:\n")
+                    audits.forEach { append("• ").append(it.take(220)).append("\n") }
+                }
+            }
+        }.getOrElse { "Modellverlauf nicht lesbar: "+(it.message ?: it.javaClass.simpleName).take(200)+"\nBestehende Lernstände bleiben unverändert." }
+        AlertDialog.Builder(this)
+            .setTitle("Modellversionen")
+            .setMessage(text)
+            .setNegativeButton("Schließen",null)
+            .setPositiveButton("VORHERIGEN STAND WIEDERHERSTELLEN") { _, _ -> confirmModelRollback() }
+            .show()
+    }
+
+    private fun confirmModelRollback() {
+        AlertDialog.Builder(this)
+            .setTitle("Lernstand zurücksetzen?")
+            .setMessage("Die Gewichte werden auf den letzten archivierten Stand zurückgesetzt. Erinnerungen, Quellen und Lektionen bleiben erhalten; der aktuelle Stand wird vorher gesichert und kann ebenso wiederhergestellt werden.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("Zurücksetzen") { _, _ ->
+                if(localAgentExecutor.isShutdown)return@setPositiveButton
+                localAgentExecutor.execute {
+                    val result=runCatching { ContinuumLearningCore(filesDir).rollbackToPrevious() }
+                    runOnUiThread {
+                        if(isFinishing || isDestroyed)return@runOnUiThread
+                        addAssistantMessage(result.fold(
+                            onSuccess={ report ->
+                                if(report==null) "Es gibt noch keinen archivierten früheren Lernstand; nichts wurde geändert."
+                                else report.reason+"\nIntent-Holdout "+report.trainingBefore.correct+"/"+report.trainingBefore.total+
+                                    " → "+report.trainingAfter.correct+"/"+report.trainingAfter.total+
+                                    " · Semantik-Holdout "+report.holdoutBefore.correct+"/"+report.holdoutBefore.total+
+                                    " → "+report.holdoutAfter.correct+"/"+report.holdoutAfter.total
+                            },
+                            onFailure={ "Rücksetzen fehlgeschlagen: "+(it.message ?: "Prüfung fehlgeschlagen")+". Der aktive Lernstand ist unverändert." }
+                        ))
+                        addToolActivity("CONTINUUM · Modell-Rollback")
+                    }
+                }
+            }.show()
     }
 
     private fun showRemoteContinuumStatus() {

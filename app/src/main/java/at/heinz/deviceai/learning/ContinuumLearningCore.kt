@@ -411,6 +411,13 @@ class ContinuumLearningCore(
             semanticBefore,semanticAfter,emptyList(),reason)
     }
 
+    /** Most recent training/import/rollback decisions (newest first) with their measurements. */
+    fun trainingAudits(limit:Int=8):List<String> = synchronized(CORE_LOCK) {
+        require(limit in 1..64)
+        store.all().filter { it.type==LearningExperienceType.TRAINING_AUDIT }
+            .sortedByDescending { it.createdAt }.take(limit).map { it.content }
+    }
+
     /** Archived pre-change states, oldest first. The active model is [modelHash]. */
     fun checkpoints():List<ModelCheckpoint> = synchronized(CORE_LOCK) { checkpoints.list() }
 

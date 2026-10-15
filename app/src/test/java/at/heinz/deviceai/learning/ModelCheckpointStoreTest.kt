@@ -60,7 +60,8 @@ class ModelCheckpointStoreTest {
     }
 
     @Test fun everyAcceptedModelChangeIsReversible() = withDir { dir ->
-        val core=ContinuumLearningCore(dir)
+        var clock=1_000L
+        val core=ContinuumLearningCore(dir) { clock++ }
         val initial=core.modelSnapshot()
         val report=core.bootstrapOfflineCurriculum()!!
         assertTrue("bundled curriculum should be accepted on a fresh model",report.accepted)
@@ -78,6 +79,9 @@ class ModelCheckpointStoreTest {
         assertTrue(undo.accepted)
         assertArrayEquals(trained,ContinuumLearningCore(dir).modelSnapshot())
         assertEquals(3,core.status().experiences.audits)
+        val audits=core.trainingAudits()
+        assertEquals(3,audits.size)
+        assertTrue(audits.first().startsWith("rollback") && audits.last().startsWith("offline-bootstrap"))
     }
 
     @Test fun rollbackWithoutHistoryOrToActiveStateChangesNothing() = withDir { dir ->
