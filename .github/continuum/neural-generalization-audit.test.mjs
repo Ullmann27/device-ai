@@ -7,6 +7,7 @@ test('SWB2 holdout audit uses real training and separates exact training texts f
  for(const c of HOLDOUTS)assert.ok(!trained.has(c.query));
  for(const m of MEMORIES)assert.ok(!trained.has(m.text));
  const r=audit();
+ console.log('SWB2 diagnostic distributions:',JSON.stringify({before:r.rawBefore,after:r.rawAfter}));
  assert.equal(r.schema,1);assert.equal(r.model,'SWB2_EXPERIMENTAL');
  assert.equal(r.before.total,HOLDOUTS.length);
  assert.equal(r.after.total,HOLDOUTS.length);
