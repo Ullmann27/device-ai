@@ -51,6 +51,15 @@ export function hunk(file,before,after){
   return {file,oldText:before,newText:after,line:1};
 }
 
+/** Undo one --unified=0 hunk of the parent->current change; null if it does not fit. */
+export function revertHunk(current,parent,h){
+  const cur=current.split('\n'),par=parent.split('\n');
+  const cs=h.newCount===0?h.newStart:h.newStart-1;
+  const ps=h.oldCount===0?h.oldStart:h.oldStart-1;
+  if(cs<0||ps<0||cs+h.newCount>cur.length||ps+h.oldCount>par.length)return null;
+  return [...cur.slice(0,cs),...par.slice(ps,ps+h.oldCount),...cur.slice(cs+h.newCount)].join('\n');
+}
+
 export function applyEdits(readFile,edits){
   const out=new Map();
   for(const e of edits){
@@ -237,8 +246,28 @@ export function proposeCandidates(diagnostics,ctx){
       typoReference(d,text,null,'js').map(c=>imports.length?{...c,prior:c.prior*0.5}:c).forEach(add);
     }
   }
-  // Regression culprit search: undo one file of the failing commit at a time.
+  // Regression culprit search, smallest unit first: undo ONE hunk of the failing
+  // commit (closest to a diagnostic first), so unrelated changes in the same
+  // file survive. Whole-file revert remains the fallback.
   if(diagnostics.length){
+    let hunkCandidates=0;
+    for(const change of (ctx.changedInBase??[]).slice(0,4)){
+      if(change.parent==null||!(change.hunks?.length>1))continue;
+      const current=ctx.readFile(change.file);if(current==null||current===change.parent)continue;
+      const lines=diagnostics.filter(d=>d.file===change.file&&d.line).map(d=>d.line);
+      const distance=h=>lines.length?Math.min(...lines.map(l=>l>=h.newStart&&l<h.newStart+Math.max(1,h.newCount)?0:
+        Math.min(Math.abs(l-h.newStart),Math.abs(l-(h.newStart+Math.max(0,h.newCount-1)))))):Infinity;
+      const ordered=change.hunks.map((h,i)=>({h,i,d:distance(h)})).sort((a,b)=>a.d-b.d||a.i-b.i);
+      for(const {h} of ordered.slice(0,3)){
+        if(hunkCandidates>=4)break;
+        const reverted=revertHunk(current,change.parent,h);
+        if(reverted==null||reverted===current)continue;
+        const near=diagnostics.find(d=>d.file===change.file)??diagnostics[0];
+        add(candidate('REVERT_HUNK_TO_PARENT',near,`Restore lines ${h.newStart}-${h.newStart+Math.max(0,h.newCount-1)} of ${change.file} to the parent commit (smallest culprit)`,
+          lines.length&&distance(h)===0?0.45:0.35,change.file,current,reverted));
+        hunkCandidates++;
+      }
+    }
     for(const change of (ctx.changedInBase??[]).slice(0,4)){
       if(change.parent==null)continue;
       const current=ctx.readFile(change.file);if(current==null||current===change.parent)continue;

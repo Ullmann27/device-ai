@@ -53,52 +53,115 @@ export function parseKotlinDiagnostics(text,root){
 
 const xmlDecode=s=>s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&#(\d+);/g,(_,n)=>String.fromCharCode(Number(n))).replace(/&amp;/g,'&');
 
+/**
+ * V8 error headers as printed by util.inspect in Node's test reporters. The
+ * bracketed tag differs between releases for the same error, e.g. a cause that
+ * crossed the test-runner boundary prints as
+ *   "ReferenceError [Error]: sqare is not defined"   (Node 20.20, 22.16)
+ *   "ReferenceError: sqare is not defined"           (Node 22.22)
+ * Only these specific types are recognized; generic "Error" and
+ * "AssertionError" headers never become code diagnostics, so assertion text
+ * that merely mentions "is not defined" or "SyntaxError" stays a TEST_FAILURE.
+ */
+const JS_ERROR_HEADER=/(?:^|[\s:\[{(])(?:Uncaught )?(ReferenceError|TypeError|SyntaxError|RangeError)(?: \[[A-Za-z_][\w ]{0,40}\])?: ([^\n]+)/g;
+const FILE_FRAME=/file:\/\/(\/[^\s:)'"]+\.m?js):(\d+):(\d+)/g;
+
+export function firstRepoFrame(text,root,from=0,to=text.length){
+  FILE_FRAME.lastIndex=from;
+  for(let m;(m=FILE_FRAME.exec(text))&&m.index<to;){
+    const file=relativeInside(root,m[1]);
+    if(file&&!file.includes('node_modules/'))return {file,line:Number(m[2]),col:Number(m[3])};
+  }
+  return null;
+}
+
+/** All specific JS error headers with the text span of their own stack. */
+function errorHeaders(text){
+  const headers=[];
+  JS_ERROR_HEADER.lastIndex=0;
+  for(let m;(m=JS_ERROR_HEADER.exec(text));)headers.push({type:m[1],message:m[2].trim().slice(0,400),start:m.index,end:m.index+m[0].length});
+  // a header's frames end where the next header starts (bounded to ~60 lines)
+  headers.forEach((h,i)=>{h.stackEnd=Math.min(headers[i+1]?.start??text.length,h.end+6000);});
+  return headers;
+}
+const notDefined=(type,message)=>type==='ReferenceError'?(message.match(/^([A-Za-z_$][\w$]*) is not defined\b/)??[])[1]:undefined;
+
+/** First specific JS error in a report text plus the first repository frame that follows it. */
+export function parseJsError(text,root){
+  const source=String(text).slice(0,MAX_TEXT);
+  for(const h of errorHeaders(source)){
+    const frame=firstRepoFrame(source,root,h.end,h.stackEnd);
+    if(!frame)continue;
+    return {type:h.type,message:h.type+': '+h.message,symbol:notDefined(h.type,h.message),...frame};
+  }
+  return null;
+}
+
 /** JUnit XML (Gradle and `node --test --test-reporter=junit`). */
 export function parseJUnit(xml,root){
-  const out=[];let total=0,failed=0;
+  const out=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
   const text=String(xml).slice(0,MAX_TEXT);
   for(const m of text.matchAll(/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g)){
     total++;
     const attrs=m[1],body=m[3]??'';
+    // `node --test` reports a test FILE as one testcase when it defines no tests
+    // (passing) or crashes while loading (failing): it is not executed evidence.
+    // Node 20 names it by absolute path, Node 22 relative to the working directory.
+    const placeholder=/\bname="[^"]*\.test\.m?js"/.test(attrs);
+    if(placeholder)placeholders++;
+    if(/<skipped\b/.test(body)){skipped++;continue;}
     // attribute values may contain '>' (e.g. assertion source), so match quoted values
     const failure=body.match(/<(failure|error)\b((?:[^>"]|"[^"]*")*)>([\s\S]*?)<\/\1>|<(failure|error)\b((?:[^>"]|"[^"]*")*)\/>/);
     if(!failure)continue;
-    failed++;
+    failed++;if(placeholder)crashed++;
     const attr=(src,name)=>xmlDecode((src.match(new RegExp('\\b'+name+'="([^"]*)"'))??[])[1]??'');
     const name=attr(attrs,'name'),classname=attr(attrs,'classname');
     const fattrs=failure[2]??failure[5]??'';
     const detail=xmlDecode(failure[3]??'');
     const message=(attr(fattrs,'message')||detail.split('\n')[0]).slice(0,400);
-    // first stack frame inside the tree: Kotlin `(File.kt:12)` or JS `file:///x.mjs:12:5`
-    let file=null,line=null,col=null;
-    const js=detail.match(/file:\/\/(\/[^\s:)]+\.m?js):(\d+):(\d+)/);
-    if(js){file=relativeInside(root,js[1]);line=Number(js[2]);col=Number(js[3]);}
-    const kt=!file&&detail.match(/at ([\w.$]+)\.[\w$<>]+\(([\w]+\.kt):(\d+)\)/);
-    if(kt){file=kt[2];line=Number(kt[3]);}
-    let kind='TEST_FAILURE',symbol;
-    const ref=(message+'\n'+detail).match(/ReferenceError: ([A-Za-z_$][\w$]*) is not defined/);
-    if(ref){kind='REFERENCE_ERROR';symbol=ref[1];}
-    else if(/SyntaxError/.test(message+detail))kind='JS_SYNTAX_ERROR';
+    const js=parseJsError(detail,root);
+    let file=null,line=null,col=null,kind='TEST_FAILURE',symbol;
+    if(js){
+      ({file,line,col}=js);symbol=js.symbol;
+      kind=js.type==='ReferenceError'&&js.symbol?'REFERENCE_ERROR':js.type==='SyntaxError'?'JS_SYNTAX_ERROR':'JS_RUNTIME_ERROR';
+    }else{
+      // assertion failures and other errors: first stack frame inside the tree
+      const frame=firstRepoFrame(detail,root,0);
+      if(frame)({file,line,col}=frame);
+      else{const kt=detail.match(/at ([\w.$]+)\.[\w$<>]+\(([\w]+\.kt):(\d+)\)/);if(kt){file=kt[2];line=Number(kt[3]);}}
+    }
     const d={tool:'junit',severity:'error',test:(classname?classname+'.':'')+name,file,line,col,message,kind,symbol};
+    if(placeholder){const testFile=relativeInside(root,name);if(testFile)d.testFile=testFile;}
     d.fingerprint=fingerprint(d);
     out.push(d);
     if(out.length>=MAX_DIAGNOSTICS)break;
   }
-  return {total,failed,diagnostics:out};
+  // executed = real test cases that ran (not skipped, not file placeholders);
+  // passed = executed test cases without failure (a crashed file is not a test)
+  const executed=total-skipped-placeholders;
+  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out};
 }
 
 /** Node error text (stderr or TAP comments) for modules that fail while loading. */
 export function parseJsErrorText(text,root){
   const out=[];
   const clean=String(text).slice(-MAX_TEXT).split('\n').map(l=>l.replace(/^#\s?/,'')).join('\n');
-  const runtime=/(ReferenceError|TypeError|SyntaxError): ([^\n]+)\n\s*at [^\n]*?file:\/\/(\/[^\s:)]+\.m?js):(\d+):(\d+)/g;
   const parse=/file:\/\/(\/[^\s:)]+\.m?js):(\d+)\n[^\n]*\n[^\n]*\n\s*(SyntaxError): ([^\n]+)/g;
-  for(const m of clean.matchAll(runtime)){
-    const file=relativeInside(root,m[3]);if(!file)continue;
-    const symbol=(m[2].match(/^([A-Za-z_$][\w$]*) is not defined/)??[])[1];
-    const kind=m[1]==='ReferenceError'&&symbol?'REFERENCE_ERROR':m[1]==='SyntaxError'?'JS_SYNTAX_ERROR':'JS_RUNTIME_ERROR';
-    const d={tool:'node',severity:'error',file,line:Number(m[4]),col:Number(m[5]),message:(m[1]+': '+m[2]).slice(0,400),kind,symbol};
+  const add=(js,tool)=>{
+    const kind=js.type==='ReferenceError'&&js.symbol?'REFERENCE_ERROR':js.type==='SyntaxError'?'JS_SYNTAX_ERROR':'JS_RUNTIME_ERROR';
+    const d={tool,severity:'error',file:js.file,line:js.line,col:js.col,message:js.message,kind,symbol:js.symbol};
     d.fingerprint=fingerprint(d);if(!out.some(x=>x.fingerprint===d.fingerprint&&x.line===d.line))out.push(d);
+  };
+  // stderr / TAP comment blocks: "<Type>[ [tag]]: msg" followed by its frames
+  for(const h of errorHeaders(clean)){
+    const frame=firstRepoFrame(clean,root,h.end,h.stackEnd);
+    if(frame)add({type:h.type,message:h.type+': '+h.message,symbol:notDefined(h.type,h.message),...frame},'node');
+  }
+  // TAP YAML diagnostics of a failed test: error/name/stack keys
+  for(const m of clean.matchAll(/\n\s*error: '((?:[^'\n]|'')*)'\n(?:\s+\w+: [^\n]*\n)*?\s+name: '(ReferenceError|TypeError|SyntaxError|RangeError)'\n\s+stack: \|-\n((?:\s{4,}[^\n]*\n?)+)/g)){
+    const frame=firstRepoFrame(m[3],root,0);if(!frame)continue;
+    const message=m[1].replace(/''/g,"'").slice(0,400);
+    add({type:m[2],message:m[2]+': '+message,symbol:notDefined(m[2],message),...frame},'node');
   }
   for(const m of clean.matchAll(parse)){
     const file=relativeInside(root,m[1]);if(!file)continue;
@@ -109,13 +172,13 @@ export function parseJsErrorText(text,root){
 }
 
 export function readJUnitDirectory(dir,root){
-  const result={total:0,failed:0,diagnostics:[]};
+  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[]};
   if(!fs.existsSync(dir))return result;
   for(const name of fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort().slice(0,2000)){
     const file=path.join(dir,name);
     if(fs.statSync(file).size>5_000_000)continue;
     const part=parseJUnit(fs.readFileSync(file,'utf8'),root);
-    result.total+=part.total;result.failed+=part.failed;
+    for(const k of ['total','failed','skipped','placeholders','executed','passed'])result[k]+=part[k];
     result.diagnostics.push(...part.diagnostics.slice(0,MAX_DIAGNOSTICS-result.diagnostics.length));
   }
   return result;

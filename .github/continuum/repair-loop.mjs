@@ -54,6 +54,8 @@ export const PROFILES=Object.freeze({
   }
 });
 export const CHAINS=Object.freeze({node:['node-continuum'],android:['android-compile','android-unit'],jvm:['jvm-harness']});
+/** Profiles whose evidence is executed tests (independent of flags in a report). */
+export const TEST_PROFILES=Object.freeze(['node-continuum','android-unit','jvm-harness']);
 
 export function runProfile(name,wt,out){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
@@ -63,22 +65,49 @@ export function runProfile(name,wt,out){
   const r=run(p.cmd,p.args,{cwd:p.cwd,timeoutMs:p.timeoutMs,env:p.env});
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
-  let tests={total:0,failed:0};
-  for(const dir of p.junitDirs??[]){const j=readJUnitDirectory(dir,wt);tests.total+=j.total;tests.failed+=j.failed;diagnostics.push(...j.diagnostics);}
-  for(const file of p.junitFiles??[])if(fs.existsSync(file)){const j=parseJUnit(fs.readFileSync(file,'utf8'),wt);tests.total+=j.total;tests.failed+=j.failed;diagnostics.push(...j.diagnostics);}
+  const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
+  const addTests=j=>{for(const k of Object.keys(tests))tests[k]+=j[k]??0;diagnostics.push(...j.diagnostics);};
+  for(const dir of p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
+  for(const file of p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(fs.readFileSync(file,'utf8'),wt));
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
+  // Only files that were arguments of the fixed command itself are re-run.
   if(p.junitFiles){
-    const crashed=diagnostics.filter(d=>!d.file&&/\.test\.mjs$/.test(d.test??'')).map(d=>d.test.replace(/^test\./,''))
-      .filter(f=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(f)).slice(0,3);
+    const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
+    const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
       const again=run(p.cmd,['--test','--test-reporter=tap',file],{cwd:p.cwd,timeoutMs:120000});
       diagnostics.unshift(...parseJsErrorText(again.stdout+'\n'+again.stderr,wt));
     }
   }
-  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal;
-  return {profile:name,passed,exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+  // A test profile passes only with executed evidence: exit 0 with no real test
+  // run (missing report, only file placeholders or skips) is not a pass.
+  const testProfile=Boolean(p.junitFiles||p.junitDirs);
+  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0);
+  return {profile:name,passed,testProfile,exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
     outputTail:text.slice(-3000)};
+}
+
+/**
+ * A candidate's checks may not provide less evidence than the failing baseline
+ * did: per test profile, executed tests must not drop below the baseline's
+ * passing tests and skipped tests must not increase. Profiles the baseline never
+ * reached (e.g. unit tests after a compile error) only require executed > 0.
+ */
+export function evidenceSufficient(baselineResults,candidateResults){
+  const reasons=[];
+  for(const r of candidateResults){
+    if(!r.passed){reasons.push(r.profile+' did not pass');continue;}
+    if(!r.testProfile)continue;
+    const before=baselineResults.find(b=>b.profile===r.profile);
+    if(r.tests.executed<=0)reasons.push(r.profile+' executed no tests');
+    if(before?.tests){
+      const passingBefore=Math.max(0,before.tests.passed??before.tests.executed-before.tests.failed);
+      if(r.tests.executed<passingBefore)reasons.push(`${r.profile} executed ${r.tests.executed} tests, baseline had ${passingBefore} passing`);
+      if(r.tests.skipped>before.tests.skipped)reasons.push(`${r.profile} skips ${r.tests.skipped-before.tests.skipped} more tests than the baseline`);
+    }
+  }
+  return {sufficient:reasons.length===0,reasons};
 }
 
 export function runChain(chain,wt,out){
@@ -105,6 +134,16 @@ export function removeWorktree(root,wt){
   git(root,['worktree','prune'],{allowFailure:true});
 }
 
+/** `@@ -a,b +c,d @@` headers of a --unified=0 diff (counts default to 1). */
+export function parseUnifiedZeroHunks(diff){
+  const hunks=[];
+  for(const m of String(diff).matchAll(/^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/gm)){
+    hunks.push({oldStart:Number(m[1]),oldCount:m[2]==null?1:Number(m[2]),newStart:Number(m[3]),newCount:m[4]==null?1:Number(m[4])});
+    if(hunks.length>=50)break;
+  }
+  return hunks;
+}
+
 function context(wt,base,experience){
   const readFile=rel=>{
     if(typeof rel!=='string'||rel.includes('..')||path.isAbsolute(rel))return null;
@@ -122,7 +161,8 @@ function context(wt,base,experience){
     const names=git(wt,['diff','--name-only',base+'^',base]).stdout.split('\n').filter(Boolean).slice(0,20);
     for(const file of names){
       const shown=git(wt,['show',base+'^:'+file],{allowFailure:true});
-      changedInBase.push({file,parent:shown.status===0?shown.stdout:null});
+      const diff=git(wt,['diff','--unified=0','--no-color','--no-ext-diff',base+'^',base,'--',file],{allowFailure:true});
+      changedInBase.push({file,parent:shown.status===0?shown.stdout:null,hunks:parseUnifiedZeroHunks(diff.stdout)});
     }
   }
   return {readFile,index,jsSiblings,changedInBase,experience};
@@ -175,12 +215,14 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       for(const [file,content] of applyEdits(ctx.readFile,c.edits))fs.writeFileSync(path.join(wt,file),content);
     }catch(e){attempt.outcome='NOT_APPLICABLE';attempt.error=e.message;report.attempts.push(attempt);continue;}
     const check=runChain(chain,wt,out);
-    attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
+    attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
-    attempt.outcome=check.passed?'VERIFIED':'FAILED_TESTS';
+    const evidence=evidenceSufficient(baseline.results,check.results);
+    attempt.evidence=evidence;
+    attempt.outcome=!check.passed?'FAILED_TESTS':evidence.sufficient?'VERIFIED':'INSUFFICIENT_EVIDENCE';
     report.attempts.push(attempt);
     log(`${c.strategy} -> ${attempt.outcome}`);
-    if(check.passed){
+    if(attempt.outcome==='VERIFIED'){
       const patch=git(wt,['diff','--binary',base]).stdout;
       report.verified={candidate:c.id,strategy:c.strategy,description:c.description,patch,patchSha256:sha256(patch),
         files:[...new Set(c.edits.map(e=>e.file))],tests:attempt.tests,reviewRequired:verdict.reviewRequired,

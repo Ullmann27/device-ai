@@ -58,6 +58,7 @@ test('critic blocks protected paths, test edits, weakening and dangerous code',(
  assert.equal(critique(edit('app/build.gradle.kts','a','b')).approved,false);
  assert.equal(critique(edit('app/src/main/cognitive/InternetConsentPolicy.kt','a','b')).approved,false);
  assert.equal(critique(edit('app/src/test/A.kt','a','b')).approved,false,'tests are the specification');
+ assert.equal(critique(edit('.github/continuum/fixtures/node-reporter/junit-v22.22.0.xml','a','b')).approved,false,'recorded fixtures are the specification');
  assert.equal(critique({strategy:'KOTLIN_ESCAPED_NEWLINE',edits:[{file:'app/src/test/A.kt',oldText:'a\\nb',newText:'a\nb'}]}).approved,true);
  assert.equal(critique(edit('app/src/main/A.kt','assertTrue(x)\nf()','f()')).approved,false);
  assert.equal(critique(edit('app/src/main/A.kt','f()','Runtime.getRuntime().exec("x")')).approved,false);
@@ -126,8 +127,117 @@ test('end-to-end: injected fault is reproduced, repaired in isolation, verified 
   const attempt=validateVerifiedReport(report,fs.readFileSync(path.join(out,'repair.patch'),'utf8'));
   assert.equal(attempt.strategy,'JS_TYPO_REFERENCE');
   assert.throws(()=>validateVerifiedReport(report,fs.readFileSync(path.join(out,'repair.patch'),'utf8')+'\n'),/hash/);
+  // a report whose success does not rest on executed tests is never published,
+  // even when its own flags claim otherwise
+  const patchText=fs.readFileSync(path.join(out,'repair.patch'),'utf8');
+  const tampered=change=>{const t=structuredClone(report);change(t.attempts.find(a=>a.outcome==='VERIFIED'));return t;};
+  assert.throws(()=>validateVerifiedReport(tampered(a=>{a.tests[0].testProfile=false;a.tests[0].tests.executed=0;}),patchText),/executed test evidence/);
+  assert.throws(()=>validateVerifiedReport(tampered(a=>{a.evidence.sufficient=false;}),patchText),/executed test evidence/);
+  assert.throws(()=>validateVerifiedReport(tampered(a=>{delete a.evidence;}),patchText),/executed test evidence/);
+  assert.throws(()=>validateVerifiedReport(tampered(a=>{a.tests=[];}),patchText),/every check/);
   return publishRepair({root:dir,outDir:out,targetBranch:'dev',push:false}).then(r=>{
    assert.equal(r.branch.startsWith('continuum-agent/repair-'),true);assert.match(r.commit,/^[0-9a-f]{40}$/);
   });
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
+});
+
+import {evidenceSufficient,runProfile,parseUnifiedZeroHunks} from './repair-loop.mjs';
+import {revertHunk} from './repair-strategies.mjs';
+
+test('hunk revert handles modification, insertion and deletion hunks exactly',()=>{
+ const parent='a\nb\nc\nd\n';
+ assert.equal(revertHunk('a\nB\nc\nd\n',parent,{oldStart:2,oldCount:1,newStart:2,newCount:1}),parent);
+ assert.equal(revertHunk('a\nb\nX\nY\nc\nd\n',parent,{oldStart:2,oldCount:0,newStart:3,newCount:2}),parent);
+ assert.equal(revertHunk('a\nd\n',parent,{oldStart:2,oldCount:2,newStart:1,newCount:0}),parent);
+ assert.equal(revertHunk('a\n',parent,{oldStart:9,oldCount:1,newStart:9,newCount:1}),null,'out-of-range hunks are rejected');
+ assert.deepEqual(parseUnifiedZeroHunks('@@ -2 +2 @@\n-b\n+B\n@@ -4,0 +5,2 @@\n+x\n+y\n'),
+  [{oldStart:2,oldCount:1,newStart:2,newCount:1},{oldStart:4,oldCount:0,newStart:5,newCount:2}]);
+});
+
+test('baseline passing count excludes crashed test files and failures',()=>{
+ const base={profile:'node-continuum',passed:false,testProfile:true,tests:{total:94,placeholders:3,executed:91,failed:5,passed:89,skipped:0}};
+ const after=e=>({profile:'node-continuum',passed:true,testProfile:true,tests:{total:e,placeholders:0,executed:e,failed:0,passed:e,skipped:0}});
+ assert.equal(evidenceSufficient([base],[after(88)]).sufficient,false,'one previously passing test no longer runs');
+ assert.equal(evidenceSufficient([base],[after(89)]).sufficient,true);
+});
+
+test('success requires executed tests that do not shrink against the baseline',()=>{
+ const res=(executed,skipped=0,failed=0,passed=true)=>({profile:'node-continuum',passed,testProfile:true,tests:{executed,skipped,failed,total:executed+skipped}});
+ assert.equal(evidenceSufficient([res(10,0,1,false)],[res(10)]).sufficient,true);
+ assert.equal(evidenceSufficient([res(10,0,1,false)],[res(0)]).sufficient,false,'no executed tests');
+ assert.equal(evidenceSufficient([res(10,0,1,false)],[res(8)]).sufficient,false,'fewer tests than passed before');
+ assert.equal(evidenceSufficient([res(10,1,1,false)],[res(9,2)]).sufficient,false,'more skipped tests');
+ // a profile the baseline never reached (compile failed first) needs executed > 0
+ const unit=e=>({profile:'android-unit',passed:true,testProfile:true,tests:{executed:e,skipped:0,failed:0}});
+ const compile={profile:'android-compile',passed:true,testProfile:false,tests:{executed:0,skipped:0,failed:0}};
+ assert.equal(evidenceSufficient([{...compile,passed:false}],[compile,unit(40)]).sufficient,true);
+ assert.equal(evidenceSufficient([{...compile,passed:false}],[compile,unit(0)]).sufficient,false);
+});
+
+function gitRepo(files){
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-evidence-'));
+ const g=(...a)=>{const r=spawnSync('git',a,{cwd:dir,encoding:'utf8'});if(r.status!==0)throw Error(r.stderr);return r.stdout.trim();};
+ const write=fs_=>{for(const [f,c] of Object.entries(fs_)){fs.mkdirSync(path.dirname(path.join(dir,f)),{recursive:true});fs.writeFileSync(path.join(dir,f),c);}};
+ write(files);g('init','-q');g('-c','user.name=t','-c','user.email=t@t','add','.');g('-c','user.name=t','-c','user.email=t@t','commit','-qm','base');
+ return {dir,g,write,commit:(msg,next)=>{write(next);g('-c','user.name=t','-c','user.email=t@t','commit','-qam',msg);return g('rev-parse','HEAD');}};
+}
+
+test('a test profile without executed tests is not a pass',{skip:nested},()=>{
+ const {dir}=gitRepo({'.github/continuum/empty.test.mjs':"import fs from 'node:fs';\n"});
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-evidence-out-'));
+ try{
+  const r=runProfile('node-continuum',dir,out);
+  assert.equal(r.exitCode,0,'node itself exits successfully');
+  assert.equal(r.tests.placeholders,1);assert.equal(r.tests.executed,0);
+  assert.equal(r.passed,false,'exit 0 without executed tests must not count as verified');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
+});
+
+test('regression search reverts only the culprit hunk and keeps unrelated changes',{skip:nested},()=>{
+ const math="export function square(x){return x*x;}\n\nexport function quad(x){return square(square(x));}\n\n// end\n";
+ const repo=gitRepo({'.github/continuum/math.mjs':math,
+  '.github/continuum/math.test.mjs':"import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport {quad} from './math.mjs';\ntest('quad',()=>assert.equal(quad(2),16));\n"});
+ // one commit with an unrelated addition AND a behavior regression in the same file
+ const broken="export function square(x){return x+x;}\n\nexport function quad(x){return square(square(x));}\n\n// end\nexport function cube(x){return x*x*x;}\n";
+ const head=repo.commit('mixed change',{'.github/continuum/math.mjs':broken});
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-hunk-out-'));
+ try{
+  const wt=createWorktree(repo.dir,head);
+  try{
+   const report=repairSession({wt,base:head,chain:'node',out,ledger:emptyLedger()});
+   assert.equal(report.outcome,'VERIFIED');
+   assert.equal(report.verified.strategy,'REVERT_HUNK_TO_PARENT');
+   const repaired=fs.readFileSync(path.join(wt,'.github/continuum/math.mjs'),'utf8');
+   assert.match(repaired,/return x\*x;/,'culprit hunk restored');
+   assert.match(repaired,/export function cube/,'unrelated change kept');
+   const patch=fs.readFileSync(path.join(out,'repair.patch'),'utf8');
+   assert.ok(!/cube/.test(patch),'patch does not touch the unrelated hunk');
+   const verifiedAttempt=report.attempts.find(a=>a.outcome==='VERIFIED');
+   assert.ok(verifiedAttempt.tests.every(t=>!t.testProfile||t.tests.executed>0));
+   assert.equal(verifiedAttempt.evidence.sufficient,true);
+  }finally{removeWorktree(repo.dir,wt);}
+  assert.equal(repo.g('status','--porcelain'),'','caller checkout untouched');
+  assert.equal(repo.g('worktree','list','--porcelain').split('\n').filter(l=>l.startsWith('worktree ')).length,1,'no leftover worktree');
+ }finally{fs.rmSync(repo.dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
+});
+
+test('a module that crashes while loading is located and gets its missing import back',{skip:nested},()=>{
+ const lib="import {other,hash} from './util.mjs';\nexport const value=hash('abc')+other();\n";
+ const repo=gitRepo({'.github/continuum/util.mjs':"export function hash(s){return s.length;}\nexport function other(){return 1;}\n",
+  '.github/continuum/lib.mjs':lib,
+  '.github/continuum/lib.test.mjs':"import test from 'node:test';\nimport assert from 'node:assert/strict';\nimport {value} from './lib.mjs';\ntest('value',()=>assert.equal(value,4));\n"});
+ const head=repo.commit('drop import',{'.github/continuum/lib.mjs':lib.replace('{other,hash}','{other}')});
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-load-out-'));
+ try{
+  const wt=createWorktree(repo.dir,head);
+  try{
+   const report=repairSession({wt,base:head,chain:'node',out,ledger:emptyLedger()});
+   // the crash is located in lib.mjs (not only "test failed" for the test file)
+   const located=report.baseline.diagnostics.find(d=>d.kind==='REFERENCE_ERROR');
+   assert.deepEqual([located?.symbol,located?.file,located?.line],['hash','.github/continuum/lib.mjs',2]);
+   assert.equal(report.outcome,'VERIFIED');
+   assert.equal(report.verified.strategy,'JS_MISSING_IMPORT');
+   assert.equal(fs.readFileSync(path.join(wt,'.github/continuum/lib.mjs'),'utf8'),lib);
+  }finally{removeWorktree(repo.dir,wt);}
+ }finally{fs.rmSync(repo.dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });

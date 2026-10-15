@@ -11,7 +11,8 @@ const FORBIDDEN_PATHS=[
   /AndroidManifest\.xml$/,/\.(jks|keystore|p12|pem|key)$/i,/^\.continuum\//,/(^|\/)\.git(\/|$)/,
   /(ToolGate|InternetConsent|SecureToken|Signer|Identity|Governance|Credential|Secret|Permission|ConsentPolicy)/i
 ];
-const TEST_PATH=/(^|\/)test\/|\.test\.m?js$/;
+// test sources and their recorded fixtures are the specification
+const TEST_PATH=/(^|\/)(test|fixtures)\/|\.test\.m?js$/;
 const SYNTAX_ONLY=new Set(['KOTLIN_ESCAPED_NEWLINE']);
 const DANGEROUS=[
   [/Runtime\.getRuntime\(\)\.exec|ProcessBuilder\s*\(|child_process|spawnSync|execSync|\beval\s*\(|new\s+Function\s*\(/,'process or code execution'],
@@ -50,7 +51,8 @@ export function critique(candidate){
   if(changed>LIMITS.maxChangedLines)reasons.push(`changes ${changed} lines (max ${LIMITS.maxChangedLines})`);
   if(removedAsserts>addedAsserts)reasons.push('removes assertions');
   if(bangDelta>0)reasons.push('adds non-null assertions (!!)');
-  const risk=Math.min(1,changed/LIMITS.maxChangedLines*0.5+(candidate.strategy==='REVERT_FILE_TO_PARENT'?0.4:0)+(1-(candidate.prior??0.5))*0.3);
+  const revert=String(candidate.strategy).startsWith('REVERT_');
+  const risk=Math.min(1,changed/LIMITS.maxChangedLines*0.5+(candidate.strategy==='REVERT_FILE_TO_PARENT'?0.4:revert?0.25:0)+(1-(candidate.prior??0.5))*0.3);
   return {approved:reasons.length===0,risk:Number(risk.toFixed(3)),reasons,changedLines:changed,
-    reviewRequired:candidate.strategy==='REVERT_FILE_TO_PARENT'||changed>10};
+    reviewRequired:revert||changed>10};
 }

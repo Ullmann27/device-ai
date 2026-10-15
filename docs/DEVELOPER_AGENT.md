@@ -11,17 +11,20 @@ failure detected ─▶ reproduce (own check run) ─▶ diagnose ─▶ propose
    ─▶ critic ─▶ apply in isolated git worktree ─▶ run fixed check chain
    ─▶ VERIFIED? ── yes ─▶ patch + report ─▶ (publish job) branch continuum-agent/* + draft PR
         └─ no ─▶ reset worktree, next candidate (budget: 4 tests, 2 per strategy, deadline)
+   VERIFIED = every check of the chain passed AND tests were really executed
+   (not skipped, not file placeholders) AND no fewer tests ran than passed in the
+   failing baseline; a green exit code without that evidence is INSUFFICIENT_EVIDENCE
    ─▶ every attempt is written to the repair ledger (experience)
 ```
 
 | Role | Module | What it really does |
 |---|---|---|
-| Diagnostician | `.github/continuum/repair-diagnostics.mjs` | Parses the agent's **own** reproduction run: Kotlin K1/K2 `e:` diagnostics, JUnit XML (Gradle and `node --test`), Node module-load errors from TAP. Paths outside the tree are dropped. Problem identity = fingerprint without line numbers. |
-| Solution developer + code generator | `repair-strategies.mjs` | Deterministic strategies producing minimal unique hunks: `KOTLIN_ESCAPED_NEWLINE`, `KOTLIN_KNOWN_FIX:*` (rules in `repair-engine.mjs`), `KOTLIN_MISSING_IMPORT` (symbol index + JDK/Android table), `KOTLIN_TYPO_REFERENCE` (Damerau–Levenshtein over lexer identifiers), `KOTLIN_NULLABLE_STRING_DEFAULT`, `JS_MISSING_IMPORT`, `JS_TYPO_REFERENCE`, `REVERT_FILE_TO_PARENT` (regression culprit search, review required), `EXPERIENCE_REPLAY` (re-apply a hunk verified for the same fingerprint). |
+| Diagnostician | `.github/continuum/repair-diagnostics.mjs` | Parses the agent's **own** reproduction run: Kotlin K1/K2 `e:` diagnostics, JUnit XML (Gradle and `node --test`), Node module-load errors from TAP. JS error headers are recognized structurally across Node releases (`ReferenceError: …`, `ReferenceError [Error]: …` of Node 20.20/22.16, `Uncaught …`, nested `[cause]:`, TAP YAML `name:`/`stack:`), each error only with frames of its **own** stack; generic `Error`/`AssertionError` text never becomes a code diagnostic. Real reporter output of Node 20.20.0, 22.16.0 and 22.22.0 is kept as fixtures in `fixtures/node-reporter/`. Counts total/failed/skipped/file placeholders/executed/passed tests. Paths outside the tree are dropped. Problem identity = fingerprint without line numbers. |
+| Solution developer + code generator | `repair-strategies.mjs` | Deterministic strategies producing minimal unique hunks: `KOTLIN_ESCAPED_NEWLINE`, `KOTLIN_KNOWN_FIX:*` (rules in `repair-engine.mjs`), `KOTLIN_MISSING_IMPORT` (symbol index + JDK/Android table), `KOTLIN_TYPO_REFERENCE` (Damerau–Levenshtein over lexer identifiers), `KOTLIN_NULLABLE_STRING_DEFAULT`, `JS_MISSING_IMPORT`, `JS_TYPO_REFERENCE`, `REVERT_HUNK_TO_PARENT` (regression culprit search: undo one hunk of the failing commit, closest to a diagnostic first, so unrelated changes in the same file survive; review required), `REVERT_FILE_TO_PARENT` (fallback, review required), `EXPERIENCE_REPLAY` (re-apply a hunk verified for the same fingerprint). |
 | Critic | `repair-critic.mjs` | Rejects before any test: workflows, Gradle files, manifest, signing material, consent/ToolGate/identity/credential files, the agent's own code, test sources (tests are the specification; only the syntax-only newline repair may touch them), >3 files, >40 changed lines, removed assertions, new `!!`, process execution, `eval`, `@Ignore`/`skip`, URLs, swallowed exceptions. |
 | Test verifier | `repair-loop.mjs` | `git worktree add --detach` at the failing commit; fixed check chains only (`node`: `node --test` on `.github/continuum/*.test.mjs`; `android`: `gradle :app:compileDebugUnitTestKotlin` then `:app:testDebugUnitTest`; `jvm`: local JVM harness). Kotlin incremental compilation is disabled because its caches produced phantom errors after failed builds. Nested repair sessions are refused. |
 | Experience learning | `repair-ledger.mjs` (+ `repair-experience.mjs`) | Every attempt with diagnosis, strategy, hunks, test outcome, base commit, patch SHA-256, confidence, branch/PR. Strategy statistics per `"<diagnostic kind>\|<strategy>"` rank future candidates (Laplace); candidates proven to fail for a fingerprint are never retried; verified hunks are replayed. Persisted on branch `continuum-agent-state` with stale-write protection. |
-| Publisher | `repair-publish.mjs` | Runs in a job **without build execution** and with the write token. Re-validates patch hash and critic verdict, `git apply`s onto the exact base, pushes only `continuum-agent/*`, opens a **draft** PR. If Actions may not create PRs, records the HTTP status and a compare link instead. |
+| Publisher | `repair-publish.mjs` | Runs in a job **without build execution** and with the write token. Re-validates patch hash, critic verdict, that every check of the chain passed and that the evidence rests on executed tests (flags in the report alone are not trusted), `git apply`s onto the exact base, pushes only `continuum-agent/*`, opens a **draft** PR. If Actions may not create PRs, records the HTTP status and a compare link instead. |
 | Orchestrator / CLI | `developer-agent.mjs` | `triage`, `repair`, `benchmark`, `watch`, `publish`, `publish-demo`, `ledger-save`. |
 | Structural analysis | `code-analyzer.mjs`, `kotlin-tokenizer.mjs` | Lexer-based symbol index, import/package resolution, reachability from AndroidManifest components, `UNREFERENCED`/`TEST_ONLY`/`DEAD_CLUSTER` findings with confidence, `--chain A B` call chains. Name-based member resolution is an over-approximation: findings are evidence, not proof. |
 
@@ -74,10 +77,10 @@ agent is not told the fault. Catalog (`repair-benchmark.mjs`):
 
 * No code model is used. The agent repairs **diagnosable, local** defects
   (syntax, references, imports, known rules) and finds regressions by reverting
-  the failing commit's files one at a time. It does not understand intent and
+  single hunks, then whole files, of the failing commit. It does not understand intent and
   cannot implement features or fix logic errors that are not regressions.
 * A green check proves only what the tests check. Every proposal stays a draft
-  and needs human review; `REVERT_FILE_TO_PARENT` is always marked review-required.
+  and needs human review; every `REVERT_*` repair is marked review-required.
 * Research direction (not implemented): a small local code model ranking or
   generating candidates, trained on the ledger's verified hunks. The ledger format
   already stores the needed (diagnostic, before, after, outcome) tuples.

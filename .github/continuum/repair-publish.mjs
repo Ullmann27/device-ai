@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {git,BRANCH_PREFIX} from './repair-loop.mjs';
+import {git,BRANCH_PREFIX,CHAINS,TEST_PROFILES} from './repair-loop.mjs';
 import {critique} from './repair-critic.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
@@ -34,6 +34,11 @@ export function validateVerifiedReport(report,patch){
   const declared=new Set(report.verified.files);
   if(!touched.length||touched.some(f=>!declared.has(f)))throw Error('Patch touches files outside the verified edit set');
   if((report.attempts??[]).some(a=>a.outcome==='VERIFIED'&&!a.tests?.every(t=>t.passed)))throw Error('Verified attempt has failing checks');
+  // every profile of the chain ran and passed; success rests on tests that actually ran
+  const profiles=CHAINS[report.chain];
+  if(!profiles||profiles.some(p=>!attempt.tests?.some(t=>t.profile===p&&t.passed===true)))throw Error('Verified attempt did not pass every check of its chain');
+  if(attempt.evidence?.sufficient!==true||attempt.tests.some(t=>(t.testProfile||TEST_PROFILES.includes(t.profile))&&!(t.tests?.executed>0)))
+    throw Error('Verified attempt lacks executed test evidence');
   return attempt;
 }
 
