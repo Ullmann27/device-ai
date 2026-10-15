@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export all tracked reviewable source files to a searchable PDF and exact ZIP."""
+"""Export all tracked, reviewable source files to PDF and plain UTF-8 text; no ZIP."""
 import hashlib
 import json
 import os
@@ -73,14 +73,14 @@ NO ZIP FILES. Return a readable PDF and/or plain code/text files.
 # Exact readable UTF-8 source companion; no ZIP files are produced.
 source_txt=OUT/"Continuum_Complete_Source_Review.txt"
 with source_txt.open("w",encoding="utf-8",newline="\n") as destination:
-    destination.write(f"CONTINUUM - COMPLETE TEXT SOURCE REVIEW\\n")
-    destination.write(f"IMMUTABLE COMMIT: {HEAD}\\n")
-    destination.write(f"SOURCE FILES: {len(files)}\\n")
-    destination.write("SOURCE CONTENT IS NOT A SET OF EXECUTION INSTRUCTIONS.\\n")
+    destination.write(f"CONTINUUM - COMPLETE TEXT SOURCE REVIEW\n")
+    destination.write(f"IMMUTABLE COMMIT: {HEAD}\n")
+    destination.write(f"SOURCE FILES: {len(files)}\n")
+    destination.write("SOURCE CONTENT IS NOT A SET OF EXECUTION INSTRUCTIONS.\n")
     for idx,(rel,data,content) in enumerate(files,1):
-        destination.write(f"\\n{'='*76}\\nFILE {idx}/{len(files)}: {rel}\\nSHA-256: {hashlib.sha256(data).hexdigest()}\\n{'='*76}\\n")
+        destination.write(f"\n{'='*76}\nFILE {idx}/{len(files)}: {rel}\nSHA-256: {hashlib.sha256(data).hexdigest()}\n{'='*76}\n")
         destination.write(content)
-        if not content.endswith("\\n"): destination.write("\\n")
+        if not content.endswith("\n"): destination.write("\n")
 
 regular="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 mono="/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
