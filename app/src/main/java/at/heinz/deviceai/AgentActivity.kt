@@ -766,6 +766,10 @@ class AgentActivity : Activity() {
             contentDescription = "Gemeinsamen persistenten Experience-, Replay- und Subword-Lernkern prüfen"
             setOnClickListener { showContinuumLearningDashboard() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("KONTRASTIV · EXPERIMENT PRÜFEN").apply {
+            contentDescription = "Öffentliches neuronales Training als isoliertes Experiment ausführen, ohne Modellgewichte zu übernehmen"
+            setOnClickListener { showContinuumContrastiveExperiment() }
+        }, matchWidth(top = 7))
         card.addView(actionButton("NEURON · JETZT TRAINIEREN", accent = true).apply {
             setOnClickListener {
                 val existing = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
@@ -1601,6 +1605,10 @@ class AgentActivity : Activity() {
                     append("Semantik-Holdout: ").append(core.semanticHoldout.correct).append("/")
                         .append(core.semanticHoldout.total).append(" · Verlust ")
                         .append("%.4f".format(Locale.ROOT,core.semanticHoldout.loss)).append("\n\n")
+                    append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
+                    append("\n\n")
+                    append("Kontrastives Training ist als lokaler Experimentlauf verfügbar; ")
+                    append("seine Kandidatengewichte werden nicht aktiviert.\n\n")
                     append("Vor jeder Lernrunde: Snapshot → begrenztes Replay → Training → Holdout-Vergleich. ")
                     append("Bei Regression werden Kandidatengewichte verworfen. Mentor-Webtexte bleiben ")
                     append("SOURCE_OBSERVATION und erhalten keine Fakten- oder Geräteautorität.")
@@ -1639,6 +1647,46 @@ class AgentActivity : Activity() {
             }
             .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
             .show()
+    }
+
+    /**
+     * Exposes the previously disconnected Android contrastive experiment.
+     * It works on an SWB1 snapshot and synthetic examples only. The result is
+     * diagnostic UI text; no app memory, private data or model weights are saved.
+     */
+    private fun showContinuumContrastiveExperiment() {
+        if(busy || localAgentExecutor.isShutdown) {
+            addAssistantMessage("Ein anderer Lern- oder Assistentenlauf ist noch aktiv.")
+            return
+        }
+        setBusy(true)
+        addToolActivity("CONTINUUM · Kontrastives Experiment gestartet (nur Diagnostik)")
+        localAgentExecutor.execute {
+            val result=runCatching {
+                val snapshot=ContinuumLearningCore(filesDir).modelSnapshot()
+                val report=at.heinz.deviceai.learning.ContinuumLocalContrastiveProbe.run(
+                    snapshot,cancelled={ Thread.currentThread().isInterrupted }
+                )
+                val unchanged=ContinuumLearningCore(filesDir).modelHash()
+                report to unchanged
+            }
+            runOnUiThread {
+                if(isFinishing || isDestroyed)return@runOnUiThread
+                setBusy(false)
+                result.onSuccess { (report,activeHash) ->
+                    addAssistantMessage(report.display()+
+                        if(activeHash==report.baselineHash)
+                            "\nAktives Modell weiterhin unverändert."
+                        else
+                            "\nAktiver Modellstand wurde parallel anderweitig verändert; dieser Experimentlauf hat ihn nicht gespeichert.")
+                    addToolActivity("CONTINUUM · Kontrastiv-Diagnose "+if(report.completed)"abgeschlossen" else "unterbrochen")
+                }.onFailure { e ->
+                    addAssistantMessage("Kontrastiver Experimentlauf fehlgeschlagen: "+
+                        e.javaClass.simpleName+". Bestehende Gewichte bleiben unverändert.")
+                    addToolActivity("CONTINUUM · Kontrastiver Experimentfehler")
+                }
+            }
+        }
     }
 
     /** Model history from the checkpoint store and the audited training decisions.
