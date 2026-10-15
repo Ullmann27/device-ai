@@ -20,7 +20,9 @@ class ContinuumAutonomousScheduler(context: Context) {
             .setPersisted(true)
             .setPeriodic(PERIOD_MS)
             .build()
-        return jobs.schedule(info)==JobScheduler.RESULT_SUCCESS
+        val accepted=jobs.schedule(info)==JobScheduler.RESULT_SUCCESS
+        ContinuumOfflineJobStatus.scheduled(app,accepted)
+        return accepted
     }
     companion object {
         const val JOB_ID=620134
@@ -35,6 +37,7 @@ class ContinuumAutonomousJobService:JobService() {
     companion object { private const val TAG="ContinuumOfflineLearning" }
     override fun onStartJob(params:JobParameters):Boolean {
         stopped.set(false)
+        ContinuumOfflineJobStatus.started(this)
         worker=Thread({
             var retryAfterFailure=false
             try {
@@ -52,16 +55,20 @@ class ContinuumAutonomousJobService:JobService() {
                         )
                         if(fresh.isNotEmpty() && !stopped.get()) {
                             val report=core.learnFromSources(fresh,stopped::get)
-                            if(report!=null && !stopped.get()) {
+                            // A stopped or timed-out training round is NOT a completed
+                            // source evaluation: the same source needs another chance.
+                            if(report?.completedEvaluation==true && !stopped.get()) {
                                 ContinuumSourceNovelty.markCompleted(filesDir,fresh)
                             }
                         }
                     }
                 }
+                if(!stopped.get())ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
             } catch (e: Exception) {
                 // Never silently report success when the offline learning job fails.
                 // Preserve the durable model; JobScheduler may retry this job.
                 retryAfterFailure=!stopped.get()
+                ContinuumOfflineJobStatus.failed(this@ContinuumAutonomousJobService,e)
                 Log.e(TAG,"Offline learning consolidation failed",e)
             } finally {
                 if(!stopped.get())jobFinished(params,retryAfterFailure)
@@ -71,6 +78,7 @@ class ContinuumAutonomousJobService:JobService() {
     }
     override fun onStopJob(params:JobParameters):Boolean {
         stopped.set(true)
+        ContinuumOfflineJobStatus.stopped(this)
         worker?.interrupt()
         return true // Request a reschedule when Android interrupts the job.
     }
