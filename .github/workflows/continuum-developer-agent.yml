@@ -76,7 +76,11 @@ jobs:
 
   # Android Kotlin fault benchmark with the real Gradle/AGP check chain.
   kotlin-benchmark:
-    if: github.event_name == 'workflow_dispatch' && inputs.kotlin_benchmark
+    # Dispatch input, or a push whose head commit message carries the marker
+    # (fallback where the caller's integration may not dispatch workflows).
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.kotlin_benchmark) ||
+      (github.event_name == 'push' && contains(github.event.head_commit.message, '[agent-kotlin-benchmark]'))
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -202,7 +206,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node .github/continuum/developer-agent.mjs publish --out artifacts/continuum-agent-repair --target-branch "$DEV_BRANCH"
       - name: Publish a verified benchmark repair as demo branches and draft PR
-        if: github.event_name == 'workflow_dispatch' && inputs.publish_demo
+        if: >-
+          (github.event_name == 'workflow_dispatch' && inputs.publish_demo) ||
+          (github.event_name == 'push' && contains(github.event.head_commit.message, '[agent-publish-demo]'))
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |

@@ -29,7 +29,7 @@ failure detected ─▶ reproduce (own check run) ─▶ diagnose ─▶ propose
 
 * **Failed Android build on `copilot/**`** → `android.yml` jobs `repair` (read-only) and `publish-repair` (write). Works on the development branch today.
 * **Push of agent code** → `continuum-developer-agent.yml` job `agent`: all agent tests, structural analysis, CI triage and the JavaScript fault-injection benchmark through the real loop.
-* **Manual** (`workflow_dispatch`): `kotlin_benchmark` runs the Kotlin faults through the real Android Gradle chain; `publish_demo` pushes one verified benchmark repair as `continuum-agent/demo/<run>/fault-*` + `.../repair-*` and opens a draft PR repair → fault (never into a real branch).
+* **Manual** (`workflow_dispatch`, or a push to the development branch whose head commit message contains `[agent-kotlin-benchmark]` / `[agent-publish-demo]`): `kotlin_benchmark` runs the Kotlin faults through the real Android Gradle chain; `publish_demo` pushes one verified benchmark repair as `continuum-agent/demo/<run>/fault-*` + `.../repair-*` and opens a draft PR repair → fault (never into a real branch).
 * **Hourly** (`cron: 23 * * * *`, job `watch`): API-only check of the development head; the heavy Android repair job starts only if the head's Android build failed and no session for that commit exists in the ledger.
 
 ### Activating the hourly schedule
