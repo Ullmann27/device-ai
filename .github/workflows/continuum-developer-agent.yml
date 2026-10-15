@@ -7,7 +7,7 @@ on:
       - ".github/continuum/**"
       - ".github/workflows/continuum-developer-agent.yml"
   schedule:
-    - cron: "23 */6 * * *"
+    - cron: "23 * * * *"
   workflow_dispatch:
 
 permissions:
