@@ -180,7 +180,9 @@ class FileLearningExperienceStore(private val directory:File) {
         }
         val combined=if(same==null) revised+item.copy(createdAt=effectiveNow,updatedAt=effectiveNow) else revised
         val corrections=combined.filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
-            .sortedWith(compareBy<LearningExperience>{it.updatedAt}.thenBy{it.id})
+            // Retire revoked revisions before evicting still-active answers.
+            .sortedWith(compareBy<LearningExperience>{it.status!=LearningStatus.REVOKED}
+                .thenBy{it.updatedAt}.thenBy{it.id})
         // Always retain the just confirmed correction even when multiple
         // writes share the same millisecond; tie-breaking may not evict it.
         val discarded=corrections.filter { it.id!=item.id }
