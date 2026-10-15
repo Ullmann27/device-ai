@@ -1459,14 +1459,116 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:23:25.805Z",
+   "baseCommit": "44a4b9d6ceaa966eb0afef3b40210994981d796a",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "060eaa6b12976f20",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "        val revoked=store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,",
+     "newText": "        store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,",
+     "line": 448
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": false,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:23:25.805Z",
+   "baseCommit": "44a4b9d6ceaa966eb0afef3b40210994981d796a",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "2584dff23676e313",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "        // A past corrected answer may remain in the last eight dialogue turns.\n        // Remove stale derived context only after the ledger revocation commits.\n        if(revoked>0)dialogue.clear()\n        revoked",
+     "newText": "",
+     "line": 450
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": false,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:23:25.805Z",
+   "baseCommit": "44a4b9d6ceaa966eb0afef3b40210994981d796a",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "de7a85c40f0998b4",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+     "oldText": "        val revoked=store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,\n            status=LearningStatus.REVOKED,now=nowMillis())\n        // A past corrected answer may remain in the last eight dialogue turns.\n        // Remove stale derived context only after the ledger revocation commits.\n        if(revoked>0)dialogue.clear()\n        revoked",
+     "newText": "        store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,\n            status=LearningStatus.REVOKED,now=nowMillis())",
+     "line": 448
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": false,
+     "total": 471,
+     "failed": 1,
+     "executed": 470,
+     "skipped": 1
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
-  {
-   "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
-   "successes": 12,
-   "failures": 0
-  },
   {
    "kind": "REFERENCE_ERROR|JS_MISSING_IMPORT",
    "successes": 11,
@@ -1476,6 +1578,11 @@
    "kind": "REFERENCE_ERROR|JS_TYPO_REFERENCE",
    "successes": 11,
    "failures": 0
+  },
+  {
+   "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
+   "successes": 12,
+   "failures": 1
   },
   {
    "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
@@ -1506,6 +1613,11 @@
    "kind": "UNRESOLVED_REFERENCE|REVERT_HUNK_TO_PARENT",
    "successes": 1,
    "failures": 0
+  },
+  {
+   "kind": "TEST_FAILURE|REVERT_HUNK_TO_PARENT",
+   "successes": 0,
+   "failures": 2
   }
  ],
  "sessions": [
@@ -2022,6 +2134,17 @@
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
    "attempts": 1,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:23:25.805Z",
+   "base": "44a4b9d6ceaa966eb0afef3b40210994981d796a",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 3,
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "android-build-failure"
