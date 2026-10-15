@@ -63,6 +63,18 @@ jobs:
           path: ${{ runner.temp }}/continuum-retrieval-alignment.json
           if-no-files-found: error
 
+      - name: Audit manually reworded retrieval questions
+        run: |
+          node --test .github/continuum/retrieval-paraphrase.test.mjs
+          node .github/continuum/retrieval-paraphrase.mjs "$RUNNER_TEMP/continuum-paraphrases.json"
+
+      - name: Upload paraphrase retrieval evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-paraphrase-retrieval
+          path: ${{ runner.temp }}/continuum-paraphrases.json
+          if-no-files-found: error
+
       - name: Upload experimental generalization evidence
         uses: actions/upload-artifact@v4
         with:
