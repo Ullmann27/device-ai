@@ -28,6 +28,7 @@ export function runLab(root,{testCommand=['./gradlew',':app:compileDebugUnitTest
  const report={schemaVersion:1,mode:execute?'test':'dry-run',candidates:[],appliedToRepository:false};
  if(!execute)return {...report,candidates:candidates.map(x=>({...x,status:'PROPOSED'}))};
  if(!candidates.length)return report;
+ if(!Array.isArray(testCommand)||testCommand[0]!=='./gradlew'||testCommand.some(arg=>typeof arg!=='string'||/[\r\n]/.test(arg)))throw Error('Only fixed Gradle commands allowed');
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-repair-'));
  try{
   const copy=spawnSync('tar',['-C',root,'--exclude=.git','--exclude=.gradle','--exclude=build','--exclude=app/build','-cf','-', '.'],{timeout:60000,encoding:'buffer',maxBuffer:100000000,shell:false});
@@ -42,7 +43,7 @@ export function runLab(root,{testCommand=['./gradlew',':app:compileDebugUnitTest
    const run=spawnSync(testCommand[0],testCommand.slice(1),{cwd:tmp,timeout:180000,encoding:'utf8',maxBuffer:1000000,shell:false,
      env:{...process.env,GRADLE_USER_HOME:process.env.GRADLE_USER_HOME??path.join(os.homedir(),'.gradle')}});
    report.candidates.push({...candidate,status:run.status===0?'COMPILES':'REJECTED',
-     exitCode:run.status,diagnostic:(run.stderr??'').slice(-1000)});
+     exitCode:run.status,diagnostic:((run.stderr??'')+'\n'+(run.stdout??'')).slice(-1000)});
    fs.writeFileSync(target,original);
   }
  }finally{fs.rmSync(tmp,{recursive:true,force:true,maxRetries:2})}
