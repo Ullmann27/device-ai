@@ -65,6 +65,7 @@ async function main() {
 //   publish    --out <dir> --target-branch <branch>            (write token)
 //   publish-demo --out <dir> --fault <id> --run <id>           (write token)
 //   ledger-save --out <dir> [--branch continuum-agent-state]   (write token)
+//   investigate --file <backlog.json> --base <sha> --out <report.json> (READY INVESTIGATE only)
 //   backlog <command> --file <backlog.json> ...  (see backlog-cli.mjs)
 //   backlog-save [--plan] [--repairs <dir,...>] [--branch continuum-agent-state] (write token)
 //   watch --branch <dev branch> [--state-branch continuum-agent-state]
@@ -91,6 +92,15 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
   const ledgerFile=o.ledger;
   const ledger=ledgerFile?ledgerMod.loadLedger(ledgerFile):(o['ledger-branch']?publish.loadLedgerFromBranch(root,o['ledger-branch']).ledger:ledgerMod.emptyLedger());
   if(cmd==='triage')return main();
+  if(cmd==='investigate'){
+    const {executeInvestigation}=await import('./backlog-investigator.mjs');
+    if(!o.file||!o.out||!/^[0-9a-f]{40}$/.test(o.base??''))
+      throw Error('investigate requires --file, --out and immutable --base SHA');
+    const result=executeInvestigation({root,file:o.file,out:o.out,base:o.base,
+      actor:env.CONTINUUM_ACTOR??'continuum-agent'});
+    log('[investigate] '+JSON.stringify(result));
+    return result;
+  }
   if(cmd==='backlog'){
     const {backlogCommand}=await import('./backlog-cli.mjs');
     return backlogCommand(o._[1],o,{root,log});
