@@ -189,7 +189,7 @@ class AgentActivity : Activity() {
     private var neuralCuriosityButton: Button? = null
     private val neuralCuriosityRadar = NeuralCuriosityRadar()
     private val neuralCoach = NeuralLearningCoach()
-    private var foregroundLearningActive = false
+    @Volatile private var foregroundLearningActive = false
     private val foregroundLearningCheck = object : Runnable {
         override fun run() {
             if (!foregroundLearningActive || isFinishing || isDestroyed) return
@@ -202,7 +202,10 @@ class AgentActivity : Activity() {
                     as android.os.PowerManager
                 if (charge >= 30 && !power.isPowerSaveMode) {
                     localAgentExecutor.execute {
-                        val status = scheduler.practiceOnce()
+                        // stops (and saves nothing) when the app leaves the foreground or closes
+                        val status = scheduler.practiceOnce(cancelled = {
+                            !foregroundLearningActive || isDestroyed || Thread.currentThread().isInterrupted
+                        })
                         runOnUiThread {
                             if (foregroundLearningActive && !busy && !isFinishing && !isDestroyed) {
                                 neuralMonitor.text = "NEURON · " + status.take(140)
@@ -1313,8 +1316,10 @@ class AgentActivity : Activity() {
                             updateNeuralTrainingProgress(p)
                     }
                 }
+                // the stored state this run starts from; saving later is a compare-and-swap against it
+                val original = bootstrapMemory.neuralSnapshot()
                 val lab = if (command.kind == NeuralCommandKind.RESET) NeuralDialogue() else
-                    bootstrapMemory.neuralSnapshot()?.let(NeuralDialogue::restore) ?: NeuralDialogue()
+                    original?.let(NeuralDialogue::restore) ?: NeuralDialogue()
                 var save = false
                 var measurement: String? = null
                 val message = when (command.kind) {
@@ -1434,7 +1439,15 @@ class AgentActivity : Activity() {
                         measurement!!
                     }
                 }
-                Triple(message, if (save) lab.save() else null, measurement)
+                val bytes = if (save) lab.save() else null
+                val saved = when {
+                    bytes == null -> NeuralSave.NOT_NEEDED
+                    cancellation.get() -> NeuralSave.CANCELLED
+                    bootstrapMemory.compareAndSaveNeuralSnapshot(original, bytes, measurement) -> NeuralSave.SAVED
+                    !neuralSnapshotUnchanged(bootstrapMemory.neuralSnapshot(), original) -> NeuralSave.CHANGED_MEANWHILE
+                    else -> NeuralSave.FAILED
+                }
+                message to saved
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed || activeNeuralCancellation !== cancellation) return@runOnUiThread
@@ -1447,14 +1460,21 @@ class AgentActivity : Activity() {
                     addAssistantMessage("Neuronales Experiment abgebrochen; nichts gespeichert.")
                     return@runOnUiThread
                 }
-                result.fold(onSuccess = { (message, bytes, measurement) ->
-                    val saved = bytes == null || runCatching { bootstrapMemory.saveNeuralSnapshot(bytes, measurement) }.getOrDefault(false)
-                    neuralMonitor.text = when {
-                        !saved -> "NEURON · Sicherung fehlgeschlagen, bisheriger Stand erhalten"
-                        bytes == null -> "NEURON · Auswertung, Gewichte unverändert"
-                        else -> "NEURON · Ergebnis lokal gesichert"
+                result.fold(onSuccess = { (message, saved) ->
+                    neuralMonitor.text = when (saved) {
+                        NeuralSave.NOT_NEEDED -> "NEURON · Auswertung, Gewichte unverändert"
+                        NeuralSave.SAVED -> "NEURON · Ergebnis lokal gesichert"
+                        NeuralSave.CHANGED_MEANWHILE -> "NEURON · Nicht gespeichert: Lernstand wurde inzwischen geändert"
+                        else -> "NEURON · Sicherung fehlgeschlagen, bisheriger Stand erhalten"
                     }
-                    addAssistantMessage(if (saved) message else "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich.")
+                    addAssistantMessage(when (saved) {
+                        NeuralSave.NOT_NEEDED, NeuralSave.SAVED -> message
+                        NeuralSave.CHANGED_MEANWHILE -> "Experiment berechnet, aber nicht gespeichert: Während des Laufs hat ein " +
+                            "anderer Lernlauf (z. B. AUTO-ÜBEN) den gespeicherten Stand geändert. Er bleibt maßgeblich; " +
+                            "starte das Experiment erneut, um auf ihm aufzubauen."
+                        NeuralSave.CANCELLED -> "Neuronales Experiment abgebrochen; nichts gespeichert."
+                        NeuralSave.FAILED -> "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich."
+                    })
                 }, onFailure = {
                     neuralMonitor.text = "NEURON · Training fehlgeschlagen, vorheriger Stand erhalten"
                     addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.")
@@ -1462,6 +1482,8 @@ class AgentActivity : Activity() {
             }
         }
     }
+
+    private enum class NeuralSave { NOT_NEEDED, SAVED, CANCELLED, CHANGED_MEANWHILE, FAILED }
 
     private fun executeBootstrapReadOnly(decision: BootstrapDecision) {
         val name = checkNotNull(decision.tool)

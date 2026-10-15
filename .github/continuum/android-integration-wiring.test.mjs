@@ -138,3 +138,10 @@ test('learning-core and research store I/O stays off the UI thread in dialogs an
  const pkg=result.slice(result.indexOf('CONTINUUM_PACKAGE_MODEL_REQUEST ->'),result.indexOf('CONTINUUM_PACKAGE_MANIFEST_REQUEST ->'));
  ensure('package model read off the UI thread',pkg.indexOf('onLearningIo(')>=0&&pkg.indexOf('onLearningIo(')<pkg.indexOf('openInputStream('));
 });
+test('neural weights are saved by compare-and-swap and foreground practice can be stopped',()=>{
+ const run=bodyOf(activity,'private fun runNeuralCommand(');
+ ensure('experiment saves with compare-and-swap',run.includes('compareAndSaveNeuralSnapshot(original, bytes, measurement)'));
+ ensure('experiment never overwrites unconditionally',!run.includes('saveNeuralSnapshot(bytes'));
+ ensure('save happens on the worker, not in the result callback',run.indexOf('compareAndSaveNeuralSnapshot')<run.lastIndexOf('runOnUiThread'));
+ ensure('foreground practice is cancellable',/practiceOnce\(cancelled = \{/.test(activity));
+});

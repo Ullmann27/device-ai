@@ -3,6 +3,10 @@ package at.heinz.deviceai
 import android.content.Context
 import org.json.JSONObject
 
+/** Compare-and-swap rule for neural snapshots: the stored state must still be [expected] (null = none stored). */
+internal fun neuralSnapshotUnchanged(current: ByteArray?, expected: ByteArray?): Boolean =
+    if (current == null) expected == null else expected != null && current.contentEquals(expected)
+
 /** Explicit, bounded app-private feedback and facts, never an autonomous memory promotion. */
 class BootstrapMemoryStore(context: Context) {
     private val prefs = context.getSharedPreferences("device_ai_bootstrap_v1", Context.MODE_PRIVATE)
@@ -36,11 +40,14 @@ class BootstrapMemoryStore(context: Context) {
         edit.commit()
     }
 
-    /** Compare-and-swap prevents background practice overwriting newer, manually taught weights. */
-    fun compareAndSaveNeuralSnapshot(expected: ByteArray, next: ByteArray, report: String): Boolean =
+    /**
+     * Compare-and-swap: saves only while the stored snapshot is still [expected]
+     * (null = nothing stored yet), so background practice and a foreground
+     * experiment never overwrite each other's newer weights.
+     */
+    fun compareAndSaveNeuralSnapshot(expected: ByteArray?, next: ByteArray, report: String?): Boolean =
         synchronized(NEURAL_LOCK) {
-            val current = neuralSnapshot() ?: return@synchronized false
-            if (!current.contentEquals(expected)) return@synchronized false
+            if (!neuralSnapshotUnchanged(neuralSnapshot(), expected)) return@synchronized false
             saveNeuralSnapshot(next, report)
         }
 
