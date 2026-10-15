@@ -13,12 +13,31 @@ function specificityBucket(value){
  let h=0x811c9dc5;for(const byte of Buffer.from(value,'utf8'))h=Math.imul(h^byte,0x01000193)>>>0;return h%B;
 }
 export function weightedBuckets(text){
- if(typeof text!=='string'||text.length<1||text.length>2048)throw Error('Invalid encoder text');
- const normalized=text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim().slice(0,512);
- if(!normalized)throw Error('Empty encoder text');
- const weights=new Map();
- for(const token of normalized.split(' ').filter(Boolean)){
-  const factor=token.length<3||SWB2_STOP_WORDS.has(token)?0.2:1,padded='^'+token+'
+  if(typeof text!=='string'||text.length<1||text.length>2048)throw Error('Invalid encoder text');
+  const normalized=text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim().slice(0,512);
+  if(!normalized)throw Error('Empty encoder text');
+  const weights=new Map();
+  const dollar=String.fromCharCode(36);
+  const suffixes=['en','er','es','em','te','st','un','ch'];
+  for(const token of normalized.split(' ').filter(Boolean)){
+    const factor=token.length<3||SWB2_STOP_WORDS.has(token)?0.2:1;
+    const padded='^'+token+dollar;
+    for(const n of [4,3,2]){
+      for(let i=0;i<=padded.length-n;i++){
+        const gram=padded.slice(i,i+n);
+        const order=n===4?1.8:n===3?1.15:0.35;
+        const pos=gram.startsWith('^')?1.25:suffixes.some(x=>gram.endsWith(x+dollar))?0.45:1;
+        const id=specificityBucket(gram),weight=factor*order*pos;
+        if(weights.has(id)){if(weight>weights.get(id))weights.set(id,weight);}
+        else if(weights.size<128)weights.set(id,weight);
+      }
+    }
+  }
+  const sum=[...weights.values()].reduce((a,b)=>a+b,0);
+  if(!sum)throw Error('No weighted buckets');
+  const inv=1/sum;
+  return [...weights].map(([id,weight])=>({id,weight:weight*inv}));
+}
 const sigmoid=x=>x>=0?1/(1+Math.exp(-x)):Math.exp(x)/(1+Math.exp(x));
 const clip=x=>Math.max(-CLIP,Math.min(CLIP,x));
 function javaRandom(seed){
