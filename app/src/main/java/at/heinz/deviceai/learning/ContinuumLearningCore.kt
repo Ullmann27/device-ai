@@ -393,7 +393,7 @@ class ContinuumLearningCore(
             sourceRef="local-feedback/"+java.util.UUID.randomUUID().toString(),
             now=nowMillis()
         )
-        store.append(item)
+        store.appendFeedback(item)
     }
 
     /** Rating counts reflect the current, non-revoked local evidence ledger. */
