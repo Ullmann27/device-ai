@@ -70,6 +70,11 @@ test('watch: a manually retried FAILED repair is eligible again exactly while RE
   assert.equal(d.backlogTask,id);
   assert.equal(d.alreadyAttempted,false);
   assert.equal(d.needsRepair,true);
+  const ledger={schemaVersion:2,attempts:[],experiences:[],
+    sessions:[{at:new Date(7).toISOString(),base:'b'.repeat(40),outcome:'NO_VERIFIED_REPAIR'}]};
+  const repeated=await watchWith({'development-backlog.json':B.encodeDocument(doc),
+    'repair-ledger.json':JSON.stringify(ledger)});
+  assert.equal(repeated.needsRepair,false,'recorded retry session must suppress duplicate repair');
   doc=B.applyOp(doc,{op:'claim',actor:'t',at:6,id,owner:'t',token:'8'.repeat(32),leaseMs:1800000}).doc;
   const claimed=await watchWith({'development-backlog.json':B.encodeDocument(doc)});
   assert.equal(claimed.needsRepair,false);
