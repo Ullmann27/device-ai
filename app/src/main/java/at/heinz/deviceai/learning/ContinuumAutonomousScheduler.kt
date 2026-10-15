@@ -7,6 +7,7 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import java.util.concurrent.atomic.AtomicBoolean
+import android.util.Log
 
 /** Offline-only, bounded learning jobs. No web permission or owner data is used. */
 class ContinuumAutonomousScheduler(context: Context) {
@@ -31,9 +32,11 @@ class ContinuumAutonomousScheduler(context: Context) {
 class ContinuumAutonomousJobService:JobService() {
     private val stopped=AtomicBoolean(false)
     private var worker:Thread?=null
+    companion object { private const val TAG="ContinuumOfflineLearning" }
     override fun onStartJob(params:JobParameters):Boolean {
         stopped.set(false)
         worker=Thread({
+            var retryAfterFailure=false
             try {
                 if(!stopped.get()) {
                     val core=ContinuumLearningCore(filesDir)
@@ -55,11 +58,13 @@ class ContinuumAutonomousJobService:JobService() {
                         }
                     }
                 }
-            } catch (_: Exception) {
-                // The next scheduled run may retry; a rejected candidate never
-                // replaces the last durable model snapshot.
+            } catch (e: Exception) {
+                // Never silently report success when the offline learning job fails.
+                // Preserve the durable model; JobScheduler may retry this job.
+                retryAfterFailure=!stopped.get()
+                Log.e(TAG,"Offline learning consolidation failed",e)
             } finally {
-                if(!stopped.get())jobFinished(params,false)
+                if(!stopped.get())jobFinished(params,retryAfterFailure)
             }
         },"continuum-autonomous-offline").apply { isDaemon=true;start() }
         return true
@@ -67,6 +72,6 @@ class ContinuumAutonomousJobService:JobService() {
     override fun onStopJob(params:JobParameters):Boolean {
         stopped.set(true)
         worker?.interrupt()
-        return false
+        return true // Request a reschedule when Android interrupts the job.
     }
 }
