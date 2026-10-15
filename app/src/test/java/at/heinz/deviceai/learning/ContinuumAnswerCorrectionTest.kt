@@ -189,6 +189,28 @@ class ContinuumAnswerCorrectionTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun identicalAnswerTextDoesNotCauseOtherQuestionsToBeRevoked() {
+        val dir=temp("continuum-selective-revoke-same-answer")
+        try {
+            val core=ContinuumLearningCore(dir)
+            val original="Welcher Stoff kommt in beiden Tests vor?"
+            val other="Welche Substanz ist auch im zweiten Beispiel?"
+            val text="Wasser ist eine mögliche Antwort."
+            core.replyFromMemory(original)
+            assertTrue(core.confirmAnswerCorrection(original,text))
+            core.replyFromMemory(other)
+            assertTrue(core.confirmAnswerCorrection(other,text))
+            assertEquals(2,core.correctionSummary().active)
+            assertEquals(1,ContinuumLearningCore(dir).revokeAnswerCorrection(original))
+            assertEquals(ContinuumCorrectionSummary(1,1),
+                ContinuumLearningCore(dir).correctionSummary())
+            assertFalse(ContinuumLearningCore(dir).replyFromMemory(original).grounded)
+            val retained=ContinuumLearningCore(dir).replyFromMemory(other)
+            assertTrue(retained.grounded)
+            assertTrue(retained.answer.contains(text))
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun selectiveRevocationFailsClosedForInvalidInputsWithoutTouchingLedger() {
         val dir=temp("continuum-revoke-invalid")
         try {
