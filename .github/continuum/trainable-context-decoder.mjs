@@ -190,10 +190,22 @@ export class TrainableContextDecoder {
    * Autoregressively decodes a token sequence conditioned on query & memory,
    * while strictly masking out any forbidden terms from ownerRules (logit = -1e9).
    */
-  generate(query, memoryText, { maxTokens = 16, forbiddenTerms = [] } = {}) {
+  generate(query, memoryText, { maxTokens = 16, forbiddenTerms = [], ownerRules = [], groundedOnly = true } = {}) {
     if(!Number.isInteger(maxTokens)||maxTokens<1||maxTokens>64)throw Error('Decoder output limit exceeded');
     this.registerTokens(tokenizeForDecoder(memoryText));
-    const forbiddenSet = new Set(forbiddenTerms.map(t => String(t).toLowerCase()));
+    // Explicit machine-readable owner rules are enforceable; prose-only rules
+    // must be compiled upstream. Never report compliance for unparsed mandates.
+    if(!Array.isArray(ownerRules)||!Array.isArray(forbiddenTerms))throw Error('Invalid decoder constraints');
+    const active=ownerRules.filter(rule=>rule?.active);
+    if(active.some(rule=>!Array.isArray(rule.forbiddenTerms)))
+      throw Error('Uncompiled owner rule: typed forbiddenTerms required');
+    const forbiddenSet = new Set([...forbiddenTerms,...active.flatMap(rule=>rule.forbiddenTerms)]
+      .map(t=>String(t).toLowerCase()));
+    const allowed=new Set(tokenizeForDecoder(memoryText));
+    if(groundedOnly)for(const tok of this.vocab){
+      if(tok!==EOS&&!allowed.has(tok))forbiddenSet.add(tok);
+    }
+    // BOS is always unselectable in the probability computation.
     const qVec = this.encoder.encode(query);
     const mVec = this.encoder.encode(memoryText);
     const eosIdx = this.tokenIndex.get(EOS);
@@ -224,7 +236,9 @@ export class TrainableContextDecoder {
     return {
       tokens: outTokens,
       text: outTokens.join(' '),
-      tokenProbabilities
+      tokenProbabilities,
+      groundedOnly,
+      verifiedNoForbiddenTokens: outTokens.every(tok=>!forbiddenSet.has(tok))
     };
   }
   /** Explicit experiment checkpoint. Embeddings are derived from the exact
