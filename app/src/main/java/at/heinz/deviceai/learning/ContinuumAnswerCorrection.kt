@@ -15,7 +15,8 @@ object ContinuumAnswerCorrection {
     }
 
     fun find(query:String,items:List<LearningExperience>):LearningExperience? {
-        val tag=queryKey(query)
+        // A one-character greeting or symbol can still reach the dialogue path.
+        val tag=runCatching { queryKey(query) }.getOrNull() ?: return null
         return items.asSequence().filter {
             it.type==LearningExperienceType.ANSWER_CORRECTION &&
             it.provenance==LearningProvenance.USER_CONFIRMED &&
