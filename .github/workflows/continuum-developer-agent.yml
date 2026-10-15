@@ -4,7 +4,7 @@ on:
   push:
     branches: ["copilot/pr-12-working-first-vertical-slice"]
     paths:
-      - ".github/continuum/developer-agent*"
+      - ".github/continuum/**"
       - ".github/workflows/continuum-developer-agent.yml"
   schedule:
     - cron: "23 */6 * * *"
@@ -31,13 +31,15 @@ jobs:
         with:
           node-version: "22"
       - name: Verify developer agent
-        run: node --test .github/continuum/developer-agent.test.mjs .github/continuum/code-analyzer.test.mjs
+        run: node --test .github/continuum/developer-agent.test.mjs .github/continuum/code-analyzer.test.mjs .github/continuum/repair-engine.test.mjs
       - name: Inspect recent CI failures without changing code
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node .github/continuum/developer-agent.mjs
       - name: Analyze Kotlin source wiring
         run: node .github/continuum/code-analyzer.mjs app/src
+      - name: Propose bounded repair candidates
+        run: node .github/continuum/repair-probe.mjs
       - name: Publish diagnosis
         uses: actions/upload-artifact@v4
         with:
