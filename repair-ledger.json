@@ -1363,6 +1363,78 @@
    "proposalCommit": "5c746823d7a5a90a77fb56fe49e904b8d7744416",
    "proposalBranch": "continuum-agent/repair-9e1412ed3f-2f132248",
    "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fcontinuum-owner-answer-corrections-20261015...continuum-agent%2Frepair-9e1412ed3f-2f132248?expand=1"
+  },
+  {
+   "at": "2026-10-15T18:17:31.274Z",
+   "baseCommit": "5a4e1dc83b5d8cb9e2922ab04de1af371c0362b6",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "0b230adb2eb28021",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "            assertNotNull(ContinuumAnswerCorrection.find(\n                \"Wie lautet die sichere Korrektur für Fall 24?\",entries))\n            assertNull(ContinuumAnswerCorrection.find(\n                \"Wie lautet die sichere Korrektur für Fall 0?\",entries))",
+     "newText": "",
+     "line": 90
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:17:31.274Z",
+   "baseCommit": "5a4e1dc83b5d8cb9e2922ab04de1af371c0362b6",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "9cbe0adc220ce8f7",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "            // Force all revisions to share a clock tick; newest must still stay.\n            val core=ContinuumLearningCore(dir) { 1000L }",
+     "newText": "            val core=ContinuumLearningCore(dir)",
+     "line": 75
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:17:31.274Z",
+   "baseCommit": "5a4e1dc83b5d8cb9e2922ab04de1af371c0362b6",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "273c99fa79513b44",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "            // Force all revisions to share a clock tick; newest must still stay.\n            val core=ContinuumLearningCore(dir) { 1000L }\n            assertTrue(core.recordOwnerFact(\"Fakt: Indigo | ist | Farbton\"))\n            val initial=core.modelSnapshot()\n            repeat(25) { i ->\n                val question=\"Wie lautet die sichere Korrektur für Fall $i?\"\n                core.replyFromMemory(question)\n                assertTrue(core.confirmAnswerCorrection(question,\"Bestätigtes Ergebnis für Fall $i\"))\n            }\n            val store=FileLearningExperienceStore(File(dir,\"learning-core-v2\"))\n            val entries=store.all()\n            assertEquals(1,entries.count { it.type==LearningExperienceType.USER_FACT })\n            assertEquals(16,entries.count { it.type==LearningExperienceType.ANSWER_CORRECTION })\n            assertEquals(17,entries.size)\n            assertEquals(16,core.correctionSummary().active)\n            assertNotNull(ContinuumAnswerCorrection.find(\n                \"Wie lautet die sichere Korrektur für Fall 24?\",entries))\n            assertNull(ContinuumAnswerCorrection.find(\n                \"Wie lautet die sichere Korrektur für Fall 0?\",entries))",
+     "newText": "            val core=ContinuumLearningCore(dir)\n            assertTrue(core.recordOwnerFact(\"Fakt: Indigo | ist | Farbton\"))\n            val initial=core.modelSnapshot()\n            repeat(25) { i ->\n                val question=\"Wie lautet die sichere Korrektur für Fall $i?\"\n                core.replyFromMemory(question)\n                assertTrue(core.confirmAnswerCorrection(question,\"Bestätigtes Ergebnis für Fall $i\"))\n            }\n            val store=FileLearningExperienceStore(File(dir,\"learning-core-v2\"))\n            val entries=store.all()\n            assertEquals(1,entries.count { it.type==LearningExperienceType.USER_FACT })\n            assertEquals(16,entries.count { it.type==LearningExperienceType.ANSWER_CORRECTION })\n            assertEquals(17,entries.size)\n            assertEquals(16,core.correctionSummary().active)",
+     "line": 75
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -1906,6 +1978,17 @@
    "attempts": 1,
    "verifiedStrategy": "REVERT_HUNK_TO_PARENT",
    "patchSha256": "b3139874ed05306c3c396a2f21c642c87f1251e94b0a65b03e89d33bfe009116",
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:17:31.274Z",
+   "base": "5a4e1dc83b5d8cb9e2922ab04de1af371c0362b6",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 3,
+   "verifiedStrategy": null,
+   "patchSha256": null,
    "trigger": "android-build-failure"
   }
  ]
