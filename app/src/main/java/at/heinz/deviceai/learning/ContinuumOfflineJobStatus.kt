@@ -14,11 +14,13 @@ data class ContinuumOfflineJobSnapshot(
     val phase: String,
     val lastStartedAt: Long,
     val lastFinishedAt: Long,
-    val lastError: String
+    val lastError: String,
+    val scheduleError: String = ""
 ) {
     fun display(): String = buildString {
         append("Täglicher Offline-Lernjob: ")
         append(when(scheduled) { true -> "eingeplant"; false -> "Einplanung fehlgeschlagen"; null -> "nicht geprüft" })
+        if(scheduled==false && scheduleError.isNotBlank())append(" (").append(scheduleError.take(60)).append(")")
         append("\nLetzter Zustand: ").append(phase)
         fun date(timestamp: Long): String =
             SimpleDateFormat("dd.MM.yyyy HH:mm",Locale.GERMANY).format(Date(timestamp))
@@ -32,8 +34,11 @@ object ContinuumOfflineJobStatus {
     private const val PREFS="continuum-offline-job-state"
     private fun prefs(context:Context)=context.applicationContext.getSharedPreferences(PREFS,Context.MODE_PRIVATE)
 
-    fun scheduled(context:Context,success:Boolean) {
-        prefs(context).edit().putBoolean("scheduled",success).apply()
+    fun scheduled(context:Context,success:Boolean,error:String?=null) {
+        val edit=prefs(context).edit().putBoolean("scheduled",success)
+        // Exception class name only, like failed(): no messages in preferences.
+        if(error==null)edit.remove("schedule_error") else edit.putString("schedule_error",error.take(60))
+        edit.apply()
     }
     fun started(context:Context,now:Long=System.currentTimeMillis()) {
         prefs(context).edit().putString("phase","RUNNING")
@@ -59,7 +64,8 @@ object ContinuumOfflineJobStatus {
             if(p.contains("scheduled"))p.getBoolean("scheduled",false) else null,
             p.getString("phase","NOT_RUN") ?: "NOT_RUN",
             p.getLong("started",0L),p.getLong("finished",0L),
-            p.getString("error","").orEmpty()
+            p.getString("error","").orEmpty(),
+            p.getString("schedule_error","").orEmpty()
         )
     }
 }

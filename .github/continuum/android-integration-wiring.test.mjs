@@ -78,3 +78,11 @@ test('activity request codes are unique and every one has a result handler',()=>
   }
  }
 });
+test('scheduled offline job names the JobService declared in the manifest',()=>{
+ const m=scheduler.match(/const val SERVICE_CLASS="([\w.]+)"/);
+ assert.ok(m,'SERVICE_CLASS constant not found');
+ const name=m[1],cls=name.slice(name.lastIndexOf('.')+1);
+ ensure('service class lives in the scheduler package',name==='at.heinz.deviceai.learning.'+cls&&scheduler.includes('package at.heinz.deviceai.learning'));
+ ensure('service class is a JobService',new RegExp('class '+cls+'\\s*:\\s*JobService\\(').test(scheduler));
+ ensure('service declared in manifest',manifest.includes('android:name="'+name.replace('at.heinz.deviceai','')+'"'));
+});
