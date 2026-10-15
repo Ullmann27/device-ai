@@ -5,7 +5,9 @@ import org.junit.Test
 import java.security.MessageDigest
 
 class ContinuumPublicModelPackageTest {
-    private val model=ByteArray(32960) { (it % 251).toByte() }.also {\n        it[0]=83; it[1]=87; it[2]=66; it[3]=49\n    }
+    private val model=ByteArray(32960) { (it % 251).toByte() }.also {
+        it[0]=83; it[1]=87; it[2]=66; it[3]=49
+    }
     private val hash=MessageDigest.getInstance("SHA-256").digest(model)
         .joinToString("") { "%02x".format(it.toInt() and 255) }
     private fun manifest(sha:String=hash)=
