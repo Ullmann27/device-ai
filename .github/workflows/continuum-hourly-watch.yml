@@ -1,0 +1,25 @@
+name: Continuum Hourly Watch
+# Main-branch scheduler for the development agent; never runs unreviewed code with a write token.
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: copilot/pr-12-working-first-vertical-slice
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check development head and CI
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/continuum/developer-agent.mjs watch --branch copilot/pr-12-working-first-vertical-slice --ledger-branch continuum-agent-state
