@@ -1590,6 +1590,30 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-15T18:27:47.037Z",
+   "baseCommit": "f0ca54a138b7f6921578dcfbcdfa9b7d97fc6358",
+   "chain": "android",
+   "diagnostic": "a6e58da28e64f9b3",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "315f8dc4be577df7",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAnswerCorrectionTest.kt",
+     "oldText": "            val newest=entries.singleOrNull { it.content==\"Bestätigtes Ergebnis für Fall 24\" }\n            assertNotNull(\"latest correction was lost before read\",newest)\n            assertEquals(ContinuumAnswerCorrection.queryKey(\n                \"Wie lautet die sichere Korrektur für Fall 24?\"),newest!!.annotation)\n            assertEquals(LearningStatus.CONFIRMED,newest.status)",
+     "newText": "",
+     "line": 92
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -2176,6 +2200,17 @@
   {
    "at": "2026-10-15T18:23:53.027Z",
    "base": "5dff0c0a3da565e5a8acb35f5d893a10b99933e4",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 1,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-15T18:27:47.037Z",
+   "base": "f0ca54a138b7f6921578dcfbcdfa9b7d97fc6358",
    "chain": "android",
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
