@@ -935,6 +935,8 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("GEMERKTE FAKTEN", accent = true) { showBootstrapMemory() },
             CenterAction("QUELLEN-NOTIZEN") { showSavedWebNotes() },
+            CenterAction("LETZTE ANTWORT · KORRIGIEREN") { showLastAnswerCorrectionDialog() },
+            CenterAction("ANTWORTKORREKTUREN · WIDERRUFEN") { confirmRevokeAnswerCorrections() },
             CenterAction("FAKTEN LÖSCHEN") { showConfirmForget() }
         )
     )
@@ -944,12 +946,14 @@ class AgentActivity : Activity() {
         val stats = core.status().experiences
         val notes = runCatching { WebLearningJournal(this).notes().size.toString() }.getOrElse { "unlesbar" }
         val turns = runCatching { core.dialogueHistory().size.toString() }.getOrElse { "unlesbar" }
+        val corrections=core.correctionSummary()
         return "Gemerkte Fakten (App): ${bootstrapMemory.facts().size}/${BootstrapMemoryStore.MAX_FACTS}\n" +
             "Bestätigte Erinnerungen im Lernkern: ${core.activeOwnerFacts().size} aktiv\n" +
             "Widerrufene Einträge (alle Arten): ${stats.revoked}\n" +
             "Unbestätigte Quellenbeobachtungen: ${stats.sourceObservations}\n" +
             "Gespeicherte Quellen-Notizen: $notes\n" +
             "Gesprächskontext: $turns/8 Züge\n" +
+            "Antwortkorrekturen (exakte Frage): ${corrections.active} aktiv · ${corrections.revoked} widerrufen\n" +
             "Privater App-Speicher; nichts davon wird automatisch hochgeladen."
     }
 
@@ -2160,6 +2164,63 @@ class AgentActivity : Activity() {
                 }
             )
         }
+    }
+
+    /** Select only the most recent actual Continuum turn and ask the owner to confirm. */
+    private fun showLastAnswerCorrectionDialog() {
+        onLearningIo({ ContinuumLearningCore(filesDir).dialogueHistory().lastOrNull() }) { result ->
+            val turn=result.getOrNull()
+            if(turn==null) {
+                addAssistantMessage("Keine letzte Continuum-Antwort vorhanden. Stelle zuerst eine Frage im Chat.")
+                return@onLearningIo
+            }
+            val edit=EditText(this).apply {
+                hint="Deine korrekte Antwort (3 bis 500 Zeichen)"
+                inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                setSingleLine(false)
+                minLines=3
+                maxLines=8
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Letzte Continuum-Antwort korrigieren")
+                .setMessage("Frage: ${turn.resolvedQuery.take(250)}\n\n" +
+                    "Bisherige Antwort: ${turn.answer.take(350)}\n\n" +
+                    "Diese Korrektur gilt nur für genau dieselbe Frage. Kein automatisches neuronales Training.")
+                .setView(edit)
+                .setNegativeButton("Abbrechen",null)
+                .setPositiveButton("Korrektur bestätigen") { _, _ ->
+                    val confirmed=edit.text.toString().trim()
+                    if(confirmed.length !in 3..500) {
+                        addAssistantMessage("Nicht gespeichert: Die Korrektur muss 3 bis 500 Zeichen enthalten.")
+                    } else onLearningIo({
+                        ContinuumLearningCore(filesDir)
+                            .confirmAnswerCorrection(turn.resolvedQuery,confirmed)
+                    }) { saved ->
+                        addAssistantMessage(saved.fold(
+                            { if(it) "Korrektur zur exakten Frage gespeichert; die vorherige Fassung wurde widerrufen."
+                              else "Genau diese Korrektur ist bereits bestätigt." },
+                            { "Korrektur nicht übernommen ("+failureName(it)+
+                                "). Der Chat kann sich geändert haben oder der Experience-Speicher ist voll." }
+                        ))
+                    }
+                }.show()
+        }
+    }
+
+    private fun confirmRevokeAnswerCorrections() {
+        AlertDialog.Builder(this)
+            .setTitle("Alle Antwortkorrekturen widerrufen?")
+            .setMessage("Widerruft nur die gespeicherten Antwortkorrekturen. Andere Erinnerungen, " +
+                "Trainingsnachweise und Modellgewichte bleiben unverändert.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("Widerrufen") { _, _ ->
+                onLearningIo({ ContinuumLearningCore(filesDir).revokeAnswerCorrections() }) { result ->
+                    addAssistantMessage(result.fold(
+                        { "$it Antwortkorrekturen widerrufen; andere Erinnerungen bleiben erhalten." },
+                        { "Widerruf fehlgeschlagen ("+failureName(it)+"). Bitte erneut versuchen." }
+                    ))
+                }
+            }.show()
     }
 
     private fun showConfirmForget() {
