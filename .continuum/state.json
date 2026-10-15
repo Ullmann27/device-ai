@@ -1,8 +1,8 @@
 {
   "schemaVersion": 5,
-  "generation": 26,
+  "generation": 27,
   "createdAt": 1791957546095,
-  "updatedAt": 1792010738056,
+  "updatedAt": 1792026442454,
   "topics": [
     {
       "id": "topic-01",
@@ -92,7 +92,8 @@
     "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: Welche unabhängigen Experimente prüfen oder widerlegen die Aussagen zu CHARLES: Continuous Homeostatic Adversarial Resilience through Learning and Epistemic Sifting?",
     "Finde unabhängige Gegen- oder Bestätigungsquellen für: Welche unabhängigen Experimente prüfen oder widerlegen die Aussagen zu CHARLES: Continuous Homeostatic Adversarial Resilience through Learning and Epistemic Sifting?",
     "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: Welche empirisch robusten Verfahren erkennen emotionale und soziale Signale in Textdialogen ohne sie zu überinterpretieren?",
-    "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: Welche empirisch robusten Verfahren erkennen emotionale und soziale Signale in Textdialogen ohne sie zu überinterpretieren?"
+    "Welche messbaren Benchmarks oder Experimente prüfen den Fortschritt bei: Welche empirisch robusten Verfahren erkennen emotionale und soziale Signale in Textdialogen ohne sie zu überinterpretieren?",
+    "Welche Verfahren erzeugen aus mehreren Quellen präzise, widerspruchsbewusste und zitierbare Synthesen?"
   ],
   "observations": [
     {
@@ -621,6 +622,48 @@
       "synthesisModel": "zero-cost-retrieval",
       "retrievalStrategy": "adversarial-evidence",
       "retrievalReward": 7.37930281927394
+    },
+    {
+      "id": "obs-d34725c801174cdb867a82fa",
+      "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+      "answer": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget. [1] Our results reveal that Evolution Strategies can find effective linear policies for many reinforcement learning benchmark tasks, unlike deep reinforcement learning methods that can only find successful policies using much larger networks, suggesting that current benchmarks are easier to solve than previously assumed. [2] Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward. [3] Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks. [2] Coupling Deep Imputation with Multitask Learning for Downstream Tasks on Omics Data. [4]",
+      "citations": [
+        {
+          "title": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget",
+          "url": "https://doi.org/10.1109/cvpr42600.2020.00930",
+          "source": "Crossref",
+          "relevance": null
+        },
+        {
+          "title": "Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks",
+          "url": "https://doi.org/10.1145/3831362",
+          "source": "Crossref",
+          "relevance": null
+        },
+        {
+          "title": "Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward",
+          "url": "https://doi.org/10.1109/sami63904.2025.10883317",
+          "source": "Crossref",
+          "relevance": null
+        },
+        {
+          "title": "Coupling Deep Imputation with Multitask Learning for Downstream Tasks on Omics Data",
+          "url": "https://doi.org/10.1109/ijcnn55064.2022.9892749",
+          "source": "Crossref",
+          "relevance": null
+        }
+      ],
+      "createdAt": 1792026442262,
+      "trust": "PUBLIC_SOURCE_OBSERVATION",
+      "authority": "NONE",
+      "searchQueries": [
+        "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks. limitations failure modes negative results evaluation",
+        "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks. critique benchmark reproducibility independent evidence"
+      ],
+      "synthesisModel": "zero-cost-retrieval",
+      "retrievalStrategy": "adversarial-evidence",
+      "retrievalReward": 5.351755066145211
     }
   ],
   "lessons": [],
@@ -632,10 +675,10 @@
     "2017": 6,
     "2018": 7,
     "2019": 41,
-    "2022": 24,
-    "2023": 16,
+    "2022": 25,
+    "2023": 17,
     "2024": 22,
-    "2025": 25,
+    "2025": 26,
     "2026": 75,
     "2608": 6,
     "2994": 5,
@@ -647,8 +690,8 @@
     "29772": 6,
     "42908": 13,
     "57735": 5,
-    "learning": 197,
-    "publikationsjahr": 145,
+    "learning": 201,
+    "publikationsjahr": 149,
     "systems": 117,
     "catastrophic": 107,
     "forgetting": 107,
@@ -656,29 +699,29 @@
     "continual": 104,
     "experience": 103,
     "proceedings": 84,
+    "deep": 81,
     "artificial": 79,
-    "intelligence": 78,
-    "deep": 77,
+    "intelligence": 79,
+    "conference": 74,
     "framework": 73,
-    "conference": 72,
-    "international": 72,
-    "current": 71,
+    "international": 73,
+    "current": 72,
     "model": 68,
     "research": 67,
-    "based": 64,
-    "learn": 63,
-    "tasks": 61,
+    "based": 65,
+    "learn": 65,
+    "tasks": 65,
     "paper": 59,
     "agents": 59,
     "abstract": 58,
+    "networks": 57,
     "they": 56,
     "information": 56,
     "learned": 53,
-    "networks": 53,
-    "data": 52,
+    "data": 53,
+    "sequential": 52,
     "approach": 51,
     "knowledge": 51,
-    "sequential": 50,
     "main": 48,
     "human": 48,
     "journal": 47,
@@ -692,23 +735,23 @@
     "after": 42,
     "settings": 41,
     "generative": 41,
+    "search": 41,
     "overcoming": 40,
     "challenge": 40,
     "rare": 40,
     "critical": 40,
     "success": 40,
     "demonstrate": 40,
-    "search": 40,
     "theory": 38,
     "computing": 38,
+    "multitask": 38,
+    "recognition": 38,
+    "world": 38,
     "home": 37,
-    "multitask": 37,
     "self": 37,
     "complementary": 37,
-    "recognition": 37,
-    "world": 37,
+    "joint": 37,
     "contact": 36,
-    "joint": 36,
     "address": 36,
     "navigation": 35,
     "inspired": 35,
@@ -719,11 +762,11 @@
     "components": 35,
     "other": 35,
     "future": 35,
+    "forget": 35,
     "despite": 34,
     "huge": 34,
     "unable": 34,
     "effectively": 34,
-    "forget": 34,
     "prediction": 34,
     "toward": 34,
     "applications": 34,
@@ -732,15 +775,15 @@
     "generation": 33,
     "authors": 33,
     "language": 33,
+    "visual": 33,
+    "pattern": 33,
     "aaai": 32,
-    "visual": 32,
     "distribution": 32,
-    "pattern": 32,
     "while": 32,
-    "symposium": 31,
+    "symposium": 32,
     "nuclear": 31,
     "resource": 31,
-    "reinforcement": 30,
+    "reinforcement": 31,
     "exploration": 30,
     "content": 30,
     "work": 30,
@@ -748,12 +791,12 @@
     "recent": 30,
     "technology": 30,
     "conversational": 29,
+    "computer": 29,
     "dynamic": 28,
     "learns": 28,
     "lack": 28,
     "environmental": 28,
     "without": 28,
-    "computer": 28,
     "system": 28,
     "efficient": 27,
     "mitigating": 27,
@@ -789,15 +832,15 @@
     "science": 24,
     "interaction": 24,
     "natural": 24,
+    "training": 24,
     "skip": 23,
     "result": 23,
     "papers": 23,
-    "training": 23,
     "full": 23,
+    "policy": 23,
+    "state": 23,
     "security": 22,
-    "policy": 22,
     "control": 22,
-    "state": 22,
     "provides": 21,
     "most": 21,
     "hypotheses": 21,
@@ -819,6 +862,7 @@
     "enabling": 20,
     "engineering": 20,
     "assistance": 20,
+    "long": 20,
     "menu": 19,
     "site": 19,
     "footer": 19,
@@ -838,9 +882,9 @@
     "post": 19,
     "techniques": 19,
     "same": 19,
-    "long": 19,
     "limited": 19,
     "review": 19,
+    "study": 19,
     "series": 18,
     "summer": 18,
     "couples": 18,
@@ -866,7 +910,7 @@
     "multi": 18,
     "epistemic": 18,
     "uncertainty": 18,
-    "study": 18,
+    "previously": 18,
     "memory": 17,
     "elsevier": 17,
     "ebooks": 17,
@@ -874,7 +918,6 @@
     "eighth": 17,
     "track": 17,
     "12th": 17,
-    "previously": 17,
     "intelligent": 17,
     "tail": 17,
     "source": 17,
@@ -883,6 +926,8 @@
     "present": 17,
     "during": 17,
     "feedback": 17,
+    "methods": 17,
+    "neural": 17,
     "ijcai": 16,
     "awards": 16,
     "trustees": 16,
@@ -910,24 +955,25 @@
     "dataset": 16,
     "estimate": 16,
     "presents": 16,
-    "methods": 16,
-    "only": 15,
+    "only": 16,
+    "compared": 16,
+    "including": 16,
     "robotics": 15,
-    "neural": 15,
     "improving": 15,
     "resilience": 15,
     "adapt": 15,
     "categories": 15,
     "encountered": 15,
-    "compared": 15,
     "industrial": 15,
     "scenarios": 15,
     "continuous": 15,
-    "including": 15,
     "health": 15,
     "affect": 15,
     "between": 15,
     "dialogue": 15,
+    "perform": 15,
+    "these": 15,
+    "vision": 15,
     "addressing": 14,
     "mitigate": 14,
     "lifelong": 14,
@@ -935,7 +981,6 @@
     "minimal": 14,
     "enhancing": 14,
     "error": 14,
-    "perform": 14,
     "reliably": 14,
     "shifts": 14,
     "events": 14,
@@ -950,12 +995,11 @@
     "guided": 14,
     "sage": 14,
     "problem": 14,
-    "these": 14,
     "education": 14,
-    "vision": 14,
     "structure": 14,
     "publications": 14,
     "however": 14,
+    "vulnerability": 14,
     "vlad": 13,
     "licaret": 13,
     "norwegian": 13,
@@ -992,7 +1036,6 @@
     "pathway": 13,
     "sustainable": 13,
     "software": 13,
-    "vulnerability": 13,
     "hybrid": 13,
     "selective": 13,
     "temporal": 13,
@@ -1011,6 +1054,7 @@
     "interfaces": 13,
     "understand": 13,
     "time": 13,
+    "ieee": 13,
     "already": 12,
     "following": 12,
     "computational": 12,
@@ -1020,6 +1064,7 @@
     "energy": 12,
     "humans": 12,
     "different": 12,
+    "reward": 12,
     "isbn": 11,
     "press": 11,
     "patterns": 11,
@@ -1028,11 +1073,9 @@
     "measure": 11,
     "truly": 11,
     "persistent": 11,
-    "reward": 11,
     "signal": 11,
     "objectives": 11,
     "context": 11,
-    "ieee": 11,
     "possible": 11,
     "advances": 11,
     "datasets": 11,
@@ -1044,6 +1087,7 @@
     "emotions": 11,
     "various": 11,
     "processing": 11,
+    "complex": 11,
     "form": 10,
     "means": 10,
     "allowing": 10,
@@ -1057,7 +1101,6 @@
     "skills": 10,
     "predictive": 10,
     "generalization": 10,
-    "complex": 10,
     "capabilities": 10,
     "domain": 10,
     "preference": 10,
@@ -1070,6 +1113,7 @@
     "healthcare": 10,
     "application": 10,
     "emotional": 10,
+    "many": 10,
     "online": 9,
     "dependent": 9,
     "uses": 9,
@@ -1079,7 +1123,6 @@
     "life": 9,
     "selection": 9,
     "three": 9,
-    "many": 9,
     "business": 9,
     "highlights": 9,
     "making": 9,
@@ -1091,6 +1134,7 @@
     "recommendations": 9,
     "gives": 9,
     "example": 9,
+    "evolution": 9,
     "generates": 8,
     "fear": 8,
     "estimates": 8,
@@ -1120,7 +1164,6 @@
     "general": 8,
     "introduce": 8,
     "increasing": 8,
-    "evolution": 8,
     "implications": 8,
     "increases": 8,
     "process": 8,
@@ -1137,6 +1180,8 @@
     "related": 8,
     "outlined": 8,
     "tools": 8,
+    "results": 8,
+    "investigates": 8,
     "publication": 7,
     "ethics": 7,
     "issue": 7,
@@ -1188,7 +1233,6 @@
     "subjects": 7,
     "implemented": 7,
     "features": 7,
-    "results": 7,
     "found": 7,
     "text": 7,
     "screening": 7,
@@ -1211,7 +1255,6 @@
     "disrupt": 7,
     "conventional": 7,
     "operations": 7,
-    "investigates": 7,
     "collaboration": 7,
     "evaluates": 7,
     "benefits": 7,
@@ -1238,6 +1281,11 @@
     "improved": 7,
     "programs": 7,
     "code": 7,
+    "informatics": 7,
+    "network": 7,
+    "although": 7,
+    "optimisation": 7,
+    "sparse": 7,
     "copyright": 6,
     "issn": 6,
     "scitepress": 6,
@@ -1276,7 +1324,6 @@
     "supported": 6,
     "economy": 6,
     "enterprise": 6,
-    "informatics": 6,
     "operational": 6,
     "photonics": 6,
     "optics": 6,
@@ -1284,7 +1331,6 @@
     "concept": 6,
     "grounded": 6,
     "solutions": 6,
-    "network": 6,
     "small": 6,
     "coverage": 6,
     "pair": 6,
@@ -1293,7 +1339,6 @@
     "growing": 6,
     "pursues": 6,
     "position": 6,
-    "although": 6,
     "function": 6,
     "deploying": 6,
     "influenced": 6,
@@ -1306,7 +1351,6 @@
     "procedural": 6,
     "laboratory": 6,
     "practice": 6,
-    "optimisation": 6,
     "compresses": 6,
     "output": 6,
     "diversity": 6,
@@ -1334,7 +1378,6 @@
     "rewards": 6,
     "extrinsic": 6,
     "extremely": 6,
-    "sparse": 6,
     "absent": 6,
     "altogether": 6,
     "serve": 6,
@@ -1440,7 +1483,7 @@
     "continual~forgetting": 56,
     "continual~replay": 56,
     "continual~experience": 43,
-    "learning~publikationsjahr": 42,
+    "learning~publikationsjahr": 43,
     "catastrophic~experience": 36,
     "experience~forgetting": 36,
     "catastrophic~overcoming": 35,
@@ -1456,13 +1499,13 @@
     "learning~overcoming": 34,
     "overcoming~replay": 34,
     "2026~publikationsjahr": 32,
-    "conference~international": 30,
-    "learning~reinforcement": 29,
+    "conference~international": 31,
+    "learning~reinforcement": 30,
+    "conference~publikationsjahr": 29,
+    "international~publikationsjahr": 28,
     "catastrophic~robotic": 27,
     "forgetting~robotic": 27,
     "learning~robotic": 27,
-    "international~publikationsjahr": 27,
-    "conference~publikationsjahr": 27,
     "catastrophic~mitigating": 26,
     "forgetting~mitigating": 26,
     "mitigating~robotic": 26,
@@ -1509,15 +1552,18 @@
     "content~skip": 23,
     "content~main": 23,
     "publikationsjahr~reinforcement": 23,
+    "networks~sequential": 23,
     "2024~publikationsjahr": 22,
+    "deep~multitask": 22,
     "networks~replay": 21,
-    "networks~sequential": 21,
-    "deep~multitask": 21,
     "about~journal": 21,
     "discovery~scientific": 21,
     "learning~proceedings": 21,
+    "multitask~tasks": 21,
     "learning~meta": 20,
-    "multitask~tasks": 20,
+    "publikationsjahr~recognition": 20,
+    "deep~networks": 20,
+    "learn~networks": 20,
     "navigation~skip": 19,
     "menu~skip": 19,
     "main~navigation": 19,
@@ -1557,13 +1603,13 @@
     "archives~journal": 19,
     "deep~forgetting": 19,
     "experience~networks": 19,
-    "publikationsjahr~recognition": 19,
     "2026~recognition": 19,
-    "deep~networks": 19,
     "multitask~networks": 19,
     "active~learning": 19,
     "learning~self": 19,
     "based~learning": 19,
+    "forget~learn": 19,
+    "forget~tasks": 19,
     "aaai~proceedings": 18,
     "proceedings~symposium": 18,
     "proceedings~series": 18,
@@ -1631,7 +1677,6 @@
     "deep~effectively": 18,
     "deep~sequential": 18,
     "networks~unable": 18,
-    "learn~networks": 18,
     "effectively~networks": 18,
     "networks~settings": 18,
     "learn~unable": 18,
@@ -1645,7 +1690,6 @@
     "learn~multitask": 18,
     "learn~settings": 18,
     "learn~they": 18,
-    "forget~learn": 18,
     "effectively~sequential": 18,
     "effectively~multitask": 18,
     "effectively~settings": 18,
@@ -1677,7 +1721,6 @@
     "inspired~they": 18,
     "forget~past": 18,
     "forget~learned": 18,
-    "forget~tasks": 18,
     "after~forget": 18,
     "forget~inspired": 18,
     "forget~systems": 18,
@@ -1713,6 +1756,8 @@
     "2025~publikationsjahr": 18,
     "autonomous~driving": 18,
     "publikationsjahr~trends": 18,
+    "pattern~recognition": 18,
+    "pattern~publikationsjahr": 18,
     "continual~elsevier": 17,
     "continual~ebooks": 17,
     "elsevier~learning": 17,
@@ -1758,8 +1803,6 @@
     "continual~pattern": 17,
     "continual~recognition": 17,
     "2026~continual": 17,
-    "pattern~recognition": 17,
-    "pattern~publikationsjahr": 17,
     "2026~pattern": 17,
     "12th~proceedings": 17,
     "12th~international": 17,
@@ -1934,6 +1977,7 @@
     "autonomous~improvement": 14,
     "driving~improvement": 14,
     "autonomous~based": 14,
+    "learning~vulnerability": 14,
     "continual~proceedings": 13,
     "aaai~learning": 13,
     "framework~proceedings": 13,
@@ -2060,7 +2104,6 @@
     "continual~prediction": 13,
     "addressing~continual": 13,
     "learning~software": 13,
-    "learning~vulnerability": 13,
     "learning~prediction": 13,
     "addressing~learning": 13,
     "software~vulnerability": 13,
@@ -2229,10 +2272,11 @@
     "2025~communication": 13,
     "agents~international": 13,
     "agents~publikationsjahr": 13,
-    "networks~neural": 12,
+    "networks~neural": 13,
     "research~technology": 12,
     "language~natural": 12,
     "agents~artificial": 12,
+    "deep~learning": 12,
     "login~search": 11,
     "agentic~autonomous": 11,
     "agentic~scientific": 11,
@@ -2260,16 +2304,16 @@
     "between~humans": 10,
     "artificial~interaction": 10,
     "intelligence~interaction": 10,
+    "international~learning": 10,
     "autonomous~driven": 9,
     "international~research": 9,
     "applications~publikationsjahr": 9,
     "2022~applications": 9,
     "2022~publikationsjahr": 9,
-    "international~learning": 9,
     "agents~intelligence": 9,
+    "learning~networks": 9,
     "interaction~proceedings": 8,
     "agent~conversational": 8,
-    "deep~learning": 8,
     "based~enables": 8,
     "enables~systems": 8,
     "based~continual": 8,
@@ -2392,7 +2436,6 @@
     "affective~computing": 8,
     "research~self": 7,
     "learning~multi": 7,
-    "learning~networks": 7,
     "agents~epistemic": 7,
     "autonomous~through": 7,
     "learning~through": 7,
@@ -2680,6 +2723,10 @@
     "chatbots~like": 7,
     "disrupt~like": 7,
     "chatbots~disrupt": 7,
+    "deep~publikationsjahr": 7,
+    "sparse~world": 7,
+    "reward~sparse": 7,
+    "learning~policy": 7,
     "publication~scitepress": 6,
     "details~scitepress": 6,
     "home~scitepress": 6,
@@ -2826,7 +2873,6 @@
     "foreword~proceeding": 6,
     "isbn~proceeding": 6,
     "foreword~isbn": 6,
-    "deep~publikationsjahr": 6,
     "agents~reinforcement": 6,
     "international~self": 6,
     "agentic~scientists": 6,
@@ -3021,7 +3067,6 @@
     "extrinsic~world": 6,
     "agent~world": 6,
     "extremely~world": 6,
-    "sparse~world": 6,
     "rewards~scenarios": 6,
     "extrinsic~scenarios": 6,
     "agent~scenarios": 6,
@@ -3057,7 +3102,6 @@
     "cases~sparse": 6,
     "serve~sparse": 6,
     "intrinsic~sparse": 6,
-    "reward~sparse": 6,
     "absent~altogether": 6,
     "absent~cases": 6,
     "absent~serve": 6,
@@ -3181,7 +3225,6 @@
     "language~large": 6,
     "large~models": 6,
     "language~models": 6,
-    "learning~policy": 6,
     "active~neural": 6,
     "active~networks": 6,
     "learning~neural": 6,
@@ -3329,6 +3372,9 @@
     "assistance~natural": 6,
     "assistance~communication": 6,
     "communication~natural": 6,
+    "2023~publikationsjahr": 6,
+    "2022~conference": 6,
+    "2022~learning": 6,
     "current~series": 5,
     "current~skip": 5,
     "issue~skip": 5,
@@ -3408,9 +3454,6 @@
     "edited~summer": 5,
     "christopher~summer": 5,
     "christopher~edited": 5,
-    "2023~publikationsjahr": 5,
-    "2022~conference": 5,
-    "2022~learning": 5,
     "scientific~toward": 5,
     "recursive~scientific": 5,
     "agents~scientific": 5,
@@ -3909,6 +3952,13 @@
       "success": true,
       "sourceCount": 9,
       "interactive": false
+    },
+    {
+      "at": 1792026442275,
+      "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+      "success": true,
+      "sourceCount": 5,
+      "interactive": false
     }
   ],
   "interactions": [
@@ -4152,7 +4202,7 @@
       }
     }
   ],
-  "integrityHash": "4e05490bef113a21d0efe6479aa60a1022a28fbf30cbaf015d53f44327f357b8",
+  "integrityHash": "f500d4ef2fb139975f106b4b0b3f8afc2c333b7aeb73751c3770d689af27fac3",
   "strategyStats": [
     {
       "id": "technical-broad",
@@ -4174,15 +4224,15 @@
     },
     {
       "id": "adversarial-evidence",
-      "attempts": 4,
-      "rewardSum": 31.82013751289255,
-      "lastReward": 7.37930281927394
+      "attempts": 5,
+      "rewardSum": 37.17189257903776,
+      "lastReward": 5.351755066145211
     }
   ],
   "baby": {
     "schemaVersion": 3,
     "createdAt": 1791958271293,
-    "updatedAt": 1792010738065,
+    "updatedAt": 1792026442463,
     "beliefs": [
       {
         "id": "belief-e6611a503b501f7f27d2",
@@ -4510,6 +4560,93 @@
         "contradictionIds": [],
         "createdAt": 1791996445273,
         "lastValidatedAt": 1791996445273
+      },
+      {
+        "id": "belief-eb6c007d0d30486635f3",
+        "text": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget.",
+        "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "confidence": 0.46641788386267014,
+        "uncertainty": 0.5335821161373299,
+        "status": "PROVISIONAL",
+        "evidenceMode": "ATTRIBUTED_UNVERIFIED",
+        "citationUrls": [
+          "https://doi.org/10.1109/cvpr42600.2020.00930",
+          "https://doi.org/10.1145/3831362",
+          "https://doi.org/10.1109/sami63904.2025.10883317"
+        ],
+        "supportCount": 3,
+        "sourceDiversity": 1,
+        "contradictionIds": [],
+        "createdAt": 1792026442262,
+        "lastValidatedAt": 1792026442262
+      },
+      {
+        "id": "belief-c58eefbd2478a64af26c",
+        "text": "Our results reveal that Evolution Strategies can find effective linear policies for many reinforcement learning benchmark tasks, unlike deep reinforcement learning methods that can only find successful policies using much larger networks, suggesting that current benchmarks are easier to solve than previously assumed.",
+        "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "confidence": 0.5164178838626702,
+        "uncertainty": 0.4835821161373298,
+        "status": "PROVISIONAL",
+        "evidenceMode": "EXPLICIT_CITATION",
+        "citationUrls": [
+          "https://doi.org/10.1109/cvpr42600.2020.00930"
+        ],
+        "supportCount": 1,
+        "sourceDiversity": 1,
+        "contradictionIds": [],
+        "createdAt": 1792026442262,
+        "lastValidatedAt": 1792026442262
+      },
+      {
+        "id": "belief-8e7cc1fb43b2c5b5d035",
+        "text": "Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward.",
+        "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "confidence": 0.5164178838626702,
+        "uncertainty": 0.4835821161373298,
+        "status": "PROVISIONAL",
+        "evidenceMode": "EXPLICIT_CITATION",
+        "citationUrls": [
+          "https://doi.org/10.1145/3831362"
+        ],
+        "supportCount": 1,
+        "sourceDiversity": 1,
+        "contradictionIds": [],
+        "createdAt": 1792026442262,
+        "lastValidatedAt": 1792026442262
+      },
+      {
+        "id": "belief-075fe967ce6dffbc13d2",
+        "text": "Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks.",
+        "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "confidence": 0.5164178838626702,
+        "uncertainty": 0.4835821161373298,
+        "status": "PROVISIONAL",
+        "evidenceMode": "EXPLICIT_CITATION",
+        "citationUrls": [
+          "https://doi.org/10.1109/sami63904.2025.10883317"
+        ],
+        "supportCount": 1,
+        "sourceDiversity": 1,
+        "contradictionIds": [],
+        "createdAt": 1792026442262,
+        "lastValidatedAt": 1792026442262
+      },
+      {
+        "id": "belief-80fe0ed6f6ddfca6b97b",
+        "text": "Coupling Deep Imputation with Multitask Learning for Downstream Tasks on Omics Data.",
+        "query": "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
+        "confidence": 0.5164178838626702,
+        "uncertainty": 0.4835821161373298,
+        "status": "PROVISIONAL",
+        "evidenceMode": "EXPLICIT_CITATION",
+        "citationUrls": [
+          "https://doi.org/10.1145/3831362"
+        ],
+        "supportCount": 1,
+        "sourceDiversity": 1,
+        "contradictionIds": [],
+        "createdAt": 1792026442262,
+        "lastValidatedAt": 1792026442262
       }
     ],
     "goals": [
@@ -4660,7 +4797,7 @@
         "id": "goal-1467cd74033128d5cfaf",
         "text": "Welche unabhängigen Quellen widersprechen oder begrenzen die bisherigen Aussagen zu: Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
         "origin": "EVIDENCE_GAP",
-        "priority": 0.7201935704491318,
+        "priority": 0.8134768121686171,
         "attempts": 0,
         "rewardSum": 0,
         "status": "OPEN",
@@ -4830,6 +4967,17 @@
         "rewardSum": 0,
         "status": "OPEN",
         "createdAt": 1792010737818,
+        "lastTriedAt": null
+      },
+      {
+        "id": "goal-ef744c12c40700e09980",
+        "text": "Welche Verfahren erzeugen aus mehreren Quellen präzise, widerspruchsbewusste und zitierbare Synthesen?",
+        "origin": "SKILL_CURRICULUM:synthesis",
+        "priority": 0.95,
+        "attempts": 0,
+        "rewardSum": 0,
+        "status": "OPEN",
+        "createdAt": 1792026442272,
         "lastTriedAt": null
       }
     ],
@@ -5041,6 +5189,14 @@
         "reward": 7.37930281927394,
         "reflection": "Rechercheweg adversarial-evidence lieferte 9 relevante Quellen; Synthese=zero-cost-retrieval",
         "createdAt": 1792010737820
+      },
+      {
+        "id": "episode-60e37b6d2fa957195dd9",
+        "goalId": null,
+        "success": true,
+        "reward": 5.351755066145211,
+        "reflection": "Rechercheweg adversarial-evidence lieferte 5 relevante Quellen; Synthese=zero-cost-retrieval",
+        "createdAt": 1792026442269
       }
     ],
     "skills": {
@@ -5054,27 +5210,27 @@
       },
       "research": {
         "id": "research",
-        "trials": 27,
-        "rewardSum": 239.19972058371408,
-        "successCount": 27,
-        "lastReward": 7.37930281927394,
-        "lastAt": 1792010737820
+        "trials": 28,
+        "rewardSum": 244.5514756498593,
+        "successCount": 28,
+        "lastReward": 5.351755066145211,
+        "lastAt": 1792026442269
       },
       "source-critique": {
         "id": "source-critique",
-        "trials": 15,
-        "rewardSum": 126.14818380084782,
-        "successCount": 15,
-        "lastReward": 7.37930281927394,
-        "lastAt": 1792010737820
+        "trials": 16,
+        "rewardSum": 131.49993886699303,
+        "successCount": 16,
+        "lastReward": 5.351755066145211,
+        "lastAt": 1792026442269
       },
       "synthesis": {
         "id": "synthesis",
-        "trials": 9,
-        "rewardSum": 69.59380495118165,
-        "successCount": 9,
-        "lastReward": 7.37930281927394,
-        "lastAt": 1792010737820
+        "trials": 10,
+        "rewardSum": 74.94556001732687,
+        "successCount": 10,
+        "lastReward": 5.351755066145211,
+        "lastAt": 1792026442269
       },
       "communication": {
         "id": "communication",
@@ -5086,11 +5242,11 @@
       },
       "self-check": {
         "id": "self-check",
-        "trials": 25,
-        "rewardSum": 219.19972058371408,
-        "successCount": 25,
-        "lastReward": 7.37930281927394,
-        "lastAt": 1792010737820
+        "trials": 26,
+        "rewardSum": 224.5514756498593,
+        "successCount": 26,
+        "lastReward": 5.351755066145211,
+        "lastAt": 1792026442269
       },
       "dialogue-pragmatics": {
         "id": "dialogue-pragmatics",
@@ -5126,8 +5282,8 @@
       }
     },
     "counters": {
-      "observations": 25,
-      "plans": 26,
+      "observations": 26,
+      "plans": 27,
       "contradictions": 0
     },
     "interactionProfile": {
@@ -5249,7 +5405,7 @@
   "worldModel": {
     "schemaVersion": 2,
     "createdAt": 1791958865069,
-    "updatedAt": 1791982361419,
+    "updatedAt": 1792026442271,
     "hypotheses": [
       {
         "id": "hyp-804e497294cae0847046",
@@ -5268,7 +5424,7 @@
         "baseConfidence": 0.7320909090909091,
         "confidence": 0.84,
         "status": "PROVISIONAL",
-        "attempts": 2,
+        "attempts": 3,
         "supportEvidence": [
           {
             "id": "ev-c0c18831a34bfd925c0c",
@@ -5294,12 +5450,28 @@
             ],
             "text": "Multitask Learning Deep Neural Networks Enable Embedded Design of Active Metamaterials [1] Coupling Deep Imputation with Multitask Learning for Downstream Tasks on Omics Data. [2] 2022 International Joint Conference on Neural Networks (IJCNN). [2]",
             "createdAt": 1791982361419
+          },
+          {
+            "id": "ev-edc9f0673d33896d4094",
+            "classification": "SUPPORT",
+            "overlap": 0.4444444444444444,
+            "domains": [
+              "doi.org"
+            ],
+            "sourceKeys": [
+              "title:sequential mastery of multiple visual tasks networks naturally learn to learn and forget to forget",
+              "title:solving deep reinforcement learning tasks with evolution strategies and linear policy networks",
+              "title:explaining internal representations in deep networks adversarial vulnerability of image classifiers and learning sequential tasks with sparse reward",
+              "title:coupling deep imputation with multitask learning for downstream tasks on omics data"
+            ],
+            "text": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget. [1] Our results reveal that Evolution Strategies can find effective linear policies for many reinforcement learning benchmark tasks, unlike deep reinforcement learning methods that can only find successful policies using much larger networks, suggesting that current benchmarks are easier to solve than previously assumed. [2] Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward. [3] Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks. [2] Coupling Deep Imputation with Multitask Learning for Downstream Tasks on Omics Data. [4]",
+            "createdAt": 1792026442271
           }
         ],
         "contradictEvidence": [],
         "inconclusiveEvidence": [],
         "createdAt": 1791959222553,
-        "lastTestedAt": 1791982361419,
+        "lastTestedAt": 1792026442271,
         "testQuestions": [
           "Finde unabhängige Evidenz, die diese Hypothese widerlegen oder stark begrenzen könnte: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks.",
           "Unter welchen Randbedingungen oder Gegenbeispielen gilt diese Hypothese nicht: Despite huge success, deep networks are unable to learn effectively in sequential multitask learning settings as they forget the past learned tasks after learning new tasks."
@@ -5322,13 +5494,20 @@
         "classification": "SUPPORT",
         "confidence": 0.84,
         "status": "PROVISIONAL"
+      },
+      {
+        "at": 1792026442271,
+        "hypothesisId": "hyp-804e497294cae0847046",
+        "classification": "SUPPORT",
+        "confidence": 0.84,
+        "status": "PROVISIONAL"
       }
     ]
   },
   "strategyRewardVersion": 2,
   "neural": {
     "version": 1,
-    "rounds": 5,
+    "rounds": 6,
     "accepted": 2,
     "paused": false,
     "model": "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",
@@ -5430,6 +5609,18 @@
         "trust": "PUBLIC_OBSERVATION",
         "status": "REPLAYED_IN_ACCEPTED_MODEL",
         "replays": 58
+      },
+      {
+        "id": "public-34548337c47224dec6e9",
+        "hash": "34548337c47224dec6e92cb8c4721946f882b9b1177d9ccd917c816ee8728f5c",
+        "left": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget",
+        "right": "Sequential Mastery of Multiple Visual Tasks: Networks Naturally Learn to Learn and Forget to Forget. 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). Publikationsjahr 2020",
+        "url": "https://doi.org/10.1109/cvpr42600.2020.00930",
+        "source": "Crossref",
+        "at": 1792026442225,
+        "trust": "PUBLIC_OBSERVATION",
+        "status": "REPLAY_PENDING",
+        "replays": 0
       },
       {
         "id": "public-35a89a5b5e899ed1583b",
@@ -5571,6 +5762,30 @@
         "url": "https://doi.org/10.3390/s21248448",
         "source": "OpenAlex",
         "at": 1792010737788,
+        "trust": "PUBLIC_OBSERVATION",
+        "status": "REPLAY_PENDING",
+        "replays": 0
+      },
+      {
+        "id": "public-b59fe7caa71ba9faf92b",
+        "hash": "b59fe7caa71ba9faf92b3c47593cd1423c8d3542bc410bc60b2001191b9edc55",
+        "left": "Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward",
+        "right": "Explaining Internal Representations in Deep Networks: Adversarial Vulnerability of Image Classifiers and Learning Sequential Tasks with Sparse Reward. 2025 IEEE 23rd World Symposium on Applied Machine Intelligence and Informatics (SAMI). Publikationsjahr 2025",
+        "url": "https://doi.org/10.1109/sami63904.2025.10883317",
+        "source": "Crossref",
+        "at": 1792026442225,
+        "trust": "PUBLIC_OBSERVATION",
+        "status": "REPLAY_PENDING",
+        "replays": 0
+      },
+      {
+        "id": "public-b5a25796e0ce37aa7184",
+        "hash": "b5a25796e0ce37aa718484db6e957845dc58d98f2929772573d94f273ff1f4b5",
+        "left": "Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks",
+        "right": "Solving Deep Reinforcement Learning Tasks with Evolution Strategies and Linear Policy Networks. Although deep reinforcement learning methods can learn effective policies for challenging problems, the underlying algorithms are complex, and training times are often long. This study investigates how several state-of-the-art versions of Evolution Strategies perform compared to gradient-based deep reinforcement learning methods. We use Evolution Strategies to optimise the weights of a neural network via neuroevolution, performing direct policy search. We benchmark deep and linear policy networks for gradient-based methods, including Proximal Policy optimisation, Soft Actor-Critic, and Deep Q-Learning. These are evaluated against linear Evolution Strategies and Augmented Random Search, and additionally against scalable ES for deeper policies, such as LM-MA-ES. Our results reveal that Evolution Strategies can find effective linear policies for many reinforcement learning benchmark tasks, unli",
+        "url": "https://doi.org/10.1145/3831362",
+        "source": "Crossref",
+        "at": 1792026442225,
         "trust": "PUBLIC_OBSERVATION",
         "status": "REPLAY_PENDING",
         "replays": 0
@@ -6257,6 +6472,118 @@
         "auditUsedForSelection": false,
         "benchmarkKind": "AUTHORED_SMALL_HOLDOUT_NOT_EXTERNAL_CERTIFICATION",
         "replayExamples": 30
+      },
+      {
+        "version": 1,
+        "round": 6,
+        "at": 1792026442275,
+        "steps": 12000,
+        "selectedSteps": 0,
+        "sourceUpdates": 750,
+        "accepted": false,
+        "reason": "VALIDATION_REGRESSION",
+        "baselineHash": "5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1",
+        "candidateHash": "3ded924fb626e61d805d23f1e8cfcaee3cac6c496f2cfd44cbf384eb9a4cf443",
+        "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+        "validationBefore": {
+          "intent": {
+            "loss": 0.14535574038800006,
+            "correct": 19,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6942719897359286,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        "validationAfter": {
+          "intent": {
+            "loss": 0.1021123160048912,
+            "correct": 20,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.696534071015588,
+            "correct": 11,
+            "total": 20
+          }
+        },
+        "retentionBefore": {
+          "intent": {
+            "loss": 0.011850280485930124,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.687333049643259,
+            "correct": 21,
+            "total": 32
+          }
+        },
+        "retentionAfter": {
+          "intent": {
+            "loss": 0.0035995343556953206,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6552489395945116,
+            "correct": 25,
+            "total": 32
+          }
+        },
+        "androidBefore": {
+          "intent": {
+            "loss": 0.2977136541443479,
+            "correct": 7,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6970323183530261,
+            "correct": 3,
+            "total": 6
+          }
+        },
+        "androidAfter": {
+          "intent": {
+            "loss": 0.22452599947830412,
+            "correct": 8,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.7071422081236033,
+            "correct": 3,
+            "total": 6
+          }
+        },
+        "auditBefore": {
+          "intent": {
+            "loss": 0.08650731388419043,
+            "correct": 20,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6907500762226857,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        "auditAfter": {
+          "intent": {
+            "loss": 0.07443012514713027,
+            "correct": 20,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6829922770164663,
+            "correct": 12,
+            "total": 20
+          }
+        },
+        "auditUsedForSelection": false,
+        "benchmarkKind": "AUTHORED_SMALL_HOLDOUT_NOT_EXTERNAL_CERTIFICATION",
+        "replayExamples": 33
       }
     ]
   },
@@ -6445,6 +6772,46 @@
         "accepted": 2,
         "paused": false,
         "replay": 30,
+        "audit": {
+          "intent": {
+            "loss": 0.08650731388419043,
+            "correct": 20,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6907500762226857,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        "suiteHash": "de12a5dd229818d7e0691a837d748082ebafced89317f174650abc649fb061de",
+        "lastDecision": "VALIDATION_REGRESSION"
+      }
+    },
+    {
+      "version": 1,
+      "at": 1792026442454,
+      "generation": 27,
+      "research": {
+        "cycles": 12,
+        "successful": 12,
+        "failed": 0
+      },
+      "memory": {
+        "active": 23,
+        "grounded": 0,
+        "explicitlyCited": 9,
+        "quarantined": 12,
+        "citationCoverage": 0.391304347826087
+      },
+      "benchmark": {
+        "version": 1,
+        "modelHash": "5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1",
+        "updates": 13000,
+        "rounds": 6,
+        "accepted": 2,
+        "paused": false,
+        "replay": 33,
         "audit": {
           "intent": {
             "loss": 0.08650731388419043,
