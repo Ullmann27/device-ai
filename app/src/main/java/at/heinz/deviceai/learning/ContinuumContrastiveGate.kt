@@ -15,7 +15,7 @@ data class ContrastiveGateDecision(
 object ContinuumContrastiveGate {
     fun evaluate(
         retrieval: List<ContrastiveRetrievalEvidence>,
-        protected: List<ContrastiveSkillEvidence>
+        protectedSkills: List<ContrastiveSkillEvidence>
     ): ContrastiveGateDecision {
         val reasons=linkedSetOf<String>()
         val seeds=retrieval.map { it.modelSeed }.toSet()
@@ -42,12 +42,12 @@ object ContinuumContrastiveGate {
             if(items.map { it.afterMrr-it.beforeMrr }.average()<0.01)
                 reasons+="DOMAIN_GAIN_INSUFFICIENT:$domain"
         }
-        if(protected.map { it.modelSeed to it.task }.toSet().size!=protected.size ||
-            protected.size!=seeds.size*2 ||
-            protected.map { it.modelSeed }.toSet()!=seeds ||
-            seeds.any { seed -> protected.count { it.modelSeed==seed && it.task in setOf("intent","semantic") }!=2 })
+        if(protectedSkills.map { it.modelSeed to it.task }.toSet().size!=protectedSkills.size ||
+            protectedSkills.size!=seeds.size*2 ||
+            protectedSkills.map { it.modelSeed }.toSet()!=seeds ||
+            seeds.any { seed -> protectedSkills.count { it.modelSeed==seed && it.task in setOf("intent","semantic") }!=2 })
             reasons+="INCOMPLETE_RETENTION_EVIDENCE"
-        protected.forEach {
+        protectedSkills.forEach {
             if(it.task !in setOf("intent","semantic") || it.total<=0 ||
                 it.beforeCorrect !in 0..it.total || it.afterCorrect !in 0..it.total ||
                 !it.beforeLoss.isFinite() || !it.afterLoss.isFinite() ||
