@@ -40,8 +40,8 @@ jobs:
         run: node .github/continuum/code-analyzer.mjs app/src
       - name: Propose bounded repair candidates
         run: node .github/continuum/repair-probe.mjs
-      - name: Run isolated repair lab dry-run
-        run: node .github/continuum/repair-lab.mjs
+      - name: Run isolated repair laboratory
+        run: node .github/continuum/repair-lab.mjs --execute
       - name: Publish diagnosis
         uses: actions/upload-artifact@v4
         with:
