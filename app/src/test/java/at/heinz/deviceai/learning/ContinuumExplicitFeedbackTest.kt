@@ -38,6 +38,21 @@ class ContinuumExplicitFeedbackTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun ratingsDoNotPreventOrSubstituteForTheOwnerIndependentOfflineCurriculum() {
+        val dir=Files.createTempDirectory("continuum-feedback-isolation").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.recordExplicitFeedback(true)
+            core.recordExplicitFeedback(false)
+            // Unlike owner-confirmed intent labels, a thumbs-up/down supplies no
+            // ground-truth class for the model and must not count as a lesson.
+            assertEquals(0,core.status().experiences.intentLabels)
+            assertNotNull(core.bootstrapOfflineCurriculum())
+            assertEquals(1,core.status().experiences.audits)
+            assertEquals(ContinuumFeedbackSummary(1,1,0),core.feedbackSummary())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun revocationIsIdempotentAndLeavesConfirmedMemoriesAndWeightsUntouched() {
         val dir=Files.createTempDirectory("continuum-feedback-revocation").toFile()
         try {
