@@ -16,3 +16,7 @@ test('dry run leaves repository unchanged',()=>{
  assert.equal(result.appliedToRepository,false);
  assert.equal(result.mode,'dry-run');
 });
+
+test('rejects arbitrary repair validation commands',()=>{
+ assert.throws(()=>runLab(process.cwd(),{execute:true,testCommand:['sh','-c','false']}),/Only fixed Gradle commands allowed/);
+});
