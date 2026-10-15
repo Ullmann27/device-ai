@@ -85,6 +85,12 @@ test('experimental neural token decoder has real loss updates, checkpoint and fo
  assert.equal(copy.sequenceLoss(q,memory,target),after);
  const constrained=copy.generate(q,memory,{maxTokens:12,forbiddenTerms:['cloud','sicher']});
  assert.ok(constrained.tokens.every(t=>t!=='cloud'&&t!=='sicher'));
+ const rulesResult=copy.generate(q,memory,{maxTokens:12,ownerRules:[{active:true,forbiddenTerms:['sicher']}]});
+ assert.ok(rulesResult.verifiedNoForbiddenTokens);
+ assert.ok(!rulesResult.tokens.includes('sicher'));
+ const allowed=new Set(memory.toLowerCase().match(/[\p{L}\p{N}]+/gu));
+ assert.ok(rulesResult.tokens.every(t=>allowed.has(t)), 'all grounded tokens must originate in cited memory');
+ assert.throws(()=>copy.generate(q,memory,{ownerRules:[{active:true,text:'ohne cloud'}]}),/Uncompiled owner rule/);
  const modified=SubwordEncoder.createExperimentalSwb2(75);
  assert.throws(()=>TrainableContextDecoder.restore(modified,checkpoint),/snapshot/);
 });
