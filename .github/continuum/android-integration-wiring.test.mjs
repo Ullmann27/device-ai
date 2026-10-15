@@ -17,7 +17,8 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('neural experiment invokes real module',activity.includes('ContinuumLocalContrastiveProbe.run('));
  ensure('existing local model source',activity.includes('ContinuumLearningCore(filesDir).modelSnapshot()'));
  ensure('existing local conversation routing',activity.includes('core.replyFromMemory('));
- ensure('owner memory synchronization',activity.includes('bootstrapMemory.facts().forEach(core::recordOwnerFact)'));
+ ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
+ ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));
  ensure('scheduled job status visible',activity.includes('ContinuumOfflineJobStatus.read(this@AgentActivity).display()'));
  ensure('developer backlog UI',activity.includes('showDevelopmentBacklog()'));

@@ -23,6 +23,8 @@ data class ContinualLearningReport(
     val completedEvaluation:Boolean=true
 )
 
+enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
+
 data class ContinuumLearningStatus(
     val experiences:LearningExperienceStats,
     val modelUpdates:Int,
@@ -282,16 +284,42 @@ class ContinuumLearningCore(
         live.forEach { store.append(it);store.updateStatus(it.id,LearningStatus.OBSERVED,nowMillis()) }
     }
 
+    private fun ownerFact(content:String)=LearningExperienceFactory.create(
+        LearningExperienceType.USER_FACT,
+        LearningProvenance.USER_CONFIRMED,
+        LearningTrustClass.OWNER_CONFIRMED,
+        LearningStatus.CONFIRMED,
+        content.trim(),
+        now=nowMillis()
+    )
+
+    /** Adds a missing owner fact; a fact the owner revoked stays revoked (see [confirmOwnerFact]). */
     fun recordOwnerFact(content:String):Boolean=synchronized(CORE_LOCK) {
-        val item=LearningExperienceFactory.create(
-            LearningExperienceType.USER_FACT,
-            LearningProvenance.USER_CONFIRMED,
-            LearningTrustClass.OWNER_CONFIRMED,
-            LearningStatus.CONFIRMED,
-            content.trim(),
-            now=nowMillis()
-        )
-        store.append(item)
+        store.append(ownerFact(content))
+    }
+
+    /**
+     * Mirrors the Android owner memory into the ledger with one read and at most
+     * one write. Like [recordOwnerFact] it never re-activates a revoked fact, so a
+     * revocation is not undone by facts that are still listed elsewhere.
+     */
+    fun syncOwnerFacts(facts:List<String>):Int=synchronized(CORE_LOCK) {
+        store.appendMissing(facts.map(::ownerFact))
+    }
+
+    /**
+     * An explicit owner statement ("Merke dir: ..."): adds the fact, or confirms
+     * again a fact the owner revoked earlier (the id is the content hash, so the
+     * revoked record would otherwise stay revoked forever).
+     */
+    fun confirmOwnerFact(content:String):OwnerFactChange=synchronized(CORE_LOCK) {
+        val item=ownerFact(content)
+        if(store.append(item))return@synchronized OwnerFactChange.ADDED
+        val existing=store.all().first { it.id==item.id }
+        if(existing.status!=LearningStatus.REVOKED && existing.status!=LearningStatus.REJECTED)
+            return@synchronized OwnerFactChange.ALREADY_ACTIVE
+        check(store.updateStatus(item.id,LearningStatus.CONFIRMED,nowMillis())) { "Owner fact vanished" }
+        OwnerFactChange.REACTIVATED
     }
 
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {

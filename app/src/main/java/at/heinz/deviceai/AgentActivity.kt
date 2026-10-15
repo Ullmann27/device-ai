@@ -17,6 +17,7 @@ import at.heinz.deviceai.learning.MentorRecall
 import at.heinz.deviceai.learning.MentorAssociativeRecall
 import at.heinz.deviceai.learning.MentorSemanticRecall
 import at.heinz.deviceai.learning.ContinuumLearningCore
+import at.heinz.deviceai.learning.OwnerFactChange
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -255,6 +256,12 @@ class AgentActivity : Activity() {
         Thread(runnable, "device-ai-backlog").apply { isDaemon = true }
     }
     private val devBacklog by lazy { DeviceDevelopmentBacklog(java.io.File(filesDir, "development")) }
+    // Owner memory writes ("Merke dir", change, delete): never on the UI thread
+    // (a training round can hold the learning-core lock), in order, and allowed
+    // to finish when the activity closes.
+    private val memoryExecutor = Executors.newSingleThreadExecutor { runnable ->
+        Thread(runnable, "device-ai-memory").apply { isDaemon = true }
+    }
     private var backlogDialog: AlertDialog? = null
     private var backlogList: LinearLayout? = null
     private var devDialog: AlertDialog? = null
@@ -392,6 +399,7 @@ class AgentActivity : Activity() {
         localAgentExecutor.shutdownNow()
         // let a running backlog write finish (atomic rename); queued UI refreshes are dropped
         backlogExecutor.shutdown()
+        memoryExecutor.shutdown()
         backlogDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
@@ -1074,30 +1082,14 @@ class AgentActivity : Activity() {
         input.text.clear()
         addUserMessage(request)
         when (decision.kind) {
-            BootstrapKind.REMEMBER -> {
-                val fact=checkNotNull(decision.fact)
-                val stored = bootstrapMemory.addFact(fact)
-                if(stored)runCatching { ContinuumLearningCore(filesDir).recordOwnerFact(fact) }
-                addAssistantMessage(if (stored) "Gemerkt. Diese Information liegt im lokalen Lernspeicher und als " +
-                    "Owner-Confirmed-Experience im Continuum-Lernkern. Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
-                    else "Ich konnte das nicht speichern (bereits bekannt oder Speichergrenze erreicht).")
-            }
+            BootstrapKind.REMEMBER -> rememberOwnerFact(checkNotNull(decision.fact))
             BootstrapKind.REVISE -> {
                 AlertDialog.Builder(this)
                     .setTitle("Gespeicherte Information ändern?")
                     .setMessage("Bisher: ${decision.fact}\nNeu: ${decision.replacementFact ?: "Widerrufen"}\nAbgeleitete Antworten werden neu berechnet.")
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Bestätigen") { _, _ ->
-                        val previous=checkNotNull(decision.fact)
-                        val saved = bootstrapMemory.reviseFact(previous, decision.replacementFact)
-                        if(saved)runCatching {
-                            val core=ContinuumLearningCore(filesDir)
-                            core.revokeOwnerFact(previous)
-                            decision.replacementFact?.let(core::recordOwnerFact)
-                        }
-                        addAssistantMessage(if (saved) "Information geändert; bisherige Ableitungen und die alte " +
-                            "Continuum-Experience sind widerrufen."
-                            else "Nicht geändert: Information fehlt, ist unverändert oder konnte nicht gespeichert werden.")
+                        reviseOwnerFact(checkNotNull(decision.fact), decision.replacementFact)
                     }.show()
             }
             BootstrapKind.FORGET -> showConfirmForget()
@@ -1129,7 +1121,7 @@ class AgentActivity : Activity() {
                 val core=ContinuumLearningCore(filesDir)
                 // Existing confirmed Android memories remain authoritative. This
                 // also reconnects installations whose facts predate Learning Core v2.
-                bootstrapMemory.facts().forEach(core::recordOwnerFact)
+                core.syncOwnerFacts(bootstrapMemory.facts())
                 val reviewedNotes=WebLearningJournal(this).notes()
                 core.synchronizeReviewedWebObservations(reviewedNotes.filter {
                     !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
@@ -1828,11 +1820,83 @@ class AgentActivity : Activity() {
             .setMessage("Alle ausdrücklich gemerkten Fakten werden dauerhaft aus dem Bootstrap-Lernspeicher entfernt. " +
                 "Der separate Continuum-Identitätsspeicher bleibt unverändert.")
             .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Fakten löschen") { _, _ ->
-                bootstrapMemory.clearFacts()
-                runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
-                addAssistantMessage("Der lokale Fakten-Lernspeicher wurde geleert; zugehörige Continuum-Experiences wurden widerrufen.")
-            }.show()
+            .setPositiveButton("Fakten löschen") { _, _ -> forgetOwnerFacts() }
+            .show()
+    }
+
+    private fun <T> onMemory(work: () -> T, done: (Result<T>) -> Unit) {
+        try {
+            memoryExecutor.execute {
+                val result = runCatching(work)
+                runOnUiThread { if (!isFinishing && !isDestroyed) done(result) }
+            }
+        } catch (_: java.util.concurrent.RejectedExecutionException) {
+            // activity is closing; nothing was written
+        }
+    }
+
+    private fun failureName(e: Throwable) = e.javaClass.simpleName.ifEmpty { "Fehler" }
+
+    /** "Merke dir": app memory first, then the learning core; the reply says what actually happened. */
+    private fun rememberOwnerFact(fact: String) {
+        onMemory(work@{
+            val known = fact in bootstrapMemory.facts()
+            if (!known && !bootstrapMemory.addFact(fact)) {
+                return@work if (bootstrapMemory.facts().size >= BootstrapMemoryStore.MAX_FACTS)
+                    "Nicht gespeichert: Es sind bereits ${BootstrapMemoryStore.MAX_FACTS} Fakten gemerkt. " +
+                        "Lösche zuerst Fakten („Was weißt du?“)."
+                else "Nicht gespeichert: Der lokale Speicher hat das Schreiben abgelehnt."
+            }
+            runCatching { ContinuumLearningCore(filesDir).confirmOwnerFact(fact) }.fold({ change ->
+                when {
+                    known && change == OwnerFactChange.ALREADY_ACTIVE -> "Das ist bereits gemerkt."
+                    change == OwnerFactChange.REACTIVATED -> "Gemerkt. Diese früher widerrufene Information gilt " +
+                        "wieder, im lokalen Lernspeicher und im Continuum-Lernkern."
+                    else -> "Gemerkt. Diese Information liegt im lokalen Lernspeicher und als " +
+                        "Owner-Confirmed-Experience im Continuum-Lernkern. Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
+                }
+            }, { e ->
+                "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
+                    "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
+            })
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gespeichert: ${failureName(it)}." }) }
+    }
+
+    /**
+     * Learning core first: if the old fact cannot be revoked there, nothing is
+     * changed; if the app memory then refuses the change, the revocation is undone.
+     */
+    private fun reviseOwnerFact(previous: String, replacement: String?) {
+        onMemory(work@{
+            val core = ContinuumLearningCore(filesDir)
+            val revoked = try { core.revokeOwnerFact(previous) } catch (e: Exception) {
+                return@work "Nicht geändert: Der Continuum-Lernkern konnte die bisherige Information nicht " +
+                    "widerrufen (${failureName(e)}). Es wurde nichts verändert."
+            }
+            if (!bootstrapMemory.reviseFact(previous, replacement)) {
+                val restored = revoked == 0 || runCatching { core.confirmOwnerFact(previous) }.isSuccess
+                return@work "Nicht geändert: Information fehlt, ist unverändert oder konnte nicht gespeichert werden." +
+                    if (restored) "" else " Achtung: Die bisherige Information ist im Continuum-Lernkern widerrufen."
+            }
+            if (replacement == null) return@work "Information widerrufen; die alte Continuum-Experience " +
+                "wird nicht mehr verwendet."
+            runCatching { core.confirmOwnerFact(replacement) }.fold(
+                { "Information geändert; bisherige Ableitungen und die alte Continuum-Experience sind widerrufen." },
+                { e -> "Im lokalen Lernspeicher geändert und die alte Information widerrufen, aber der Continuum-Lernkern " +
+                    "hat die neue noch nicht übernommen (${failureName(e)}); das nächste Continuum-Gespräch holt das nach." })
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht geändert: ${failureName(it)}." }) }
+    }
+
+    /** Revokes in the learning core first, so a repeated deletion still reaches it. */
+    private fun forgetOwnerFacts() {
+        onMemory(work@{
+            val revoked = runCatching { ContinuumLearningCore(filesDir).revokeAllOwnerFacts() }
+            val cleared = bootstrapMemory.clearFacts()
+            val core = revoked.fold({ "Im Continuum-Lernkern wurden $it Erinnerungen widerrufen; sie werden nicht mehr verwendet." },
+                { "Der Widerruf im Continuum-Lernkern ist fehlgeschlagen (${failureName(it)}); bitte „Fakten löschen“ wiederholen." })
+            (if (cleared) "Alle gemerkten Fakten wurden aus dem lokalen Lernspeicher gelöscht. "
+                else "Der lokale Lernspeicher konnte nicht geleert werden; bitte wiederholen. ") + core
+        }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
     }
 
     private fun showBootstrapMemory() {

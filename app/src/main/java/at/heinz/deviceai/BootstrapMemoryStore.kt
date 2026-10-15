@@ -47,9 +47,7 @@ class BootstrapMemoryStore(context: Context) {
     fun neuralReport(): String = prefs.getString("neural_report", null)
         ?: "Noch kein neuronaler Messlauf."
 
-    fun clearFacts() {
-        prefs.edit().remove("facts").commit()
-    }
+    fun clearFacts(): Boolean = prefs.edit().remove("facts").commit()
 
     fun learnedCommands(): Map<String, String> {
         val raw = prefs.getString("trained_commands", "{}") ?: "{}"

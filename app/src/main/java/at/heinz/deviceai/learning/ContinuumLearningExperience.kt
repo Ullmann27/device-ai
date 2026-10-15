@@ -118,6 +118,26 @@ class FileLearningExperienceStore(private val directory:File) {
         true
     }
 
+    /** One read and at most one write for a batch; ids already present (any status) are skipped. */
+    fun appendMissing(items:List<LearningExperience>):Int = synchronized(FILE_LOCK) {
+        val current=loadValidated()
+        val known=current.associateBy { it.id }
+        val added=LinkedHashMap<String,LearningExperience>()
+        for(item in items) {
+            val existing=known[item.id] ?: added[item.id]
+            if(existing!=null) {
+                require(existing.contentHash==item.contentHash) { "Conflicting learning experience identity" }
+                continue
+            }
+            added[item.id]=item
+        }
+        if(added.isEmpty())return@synchronized 0
+        save((current+added.values)
+            .sortedWith(compareBy<LearningExperience>{it.createdAt}.thenBy{it.id})
+            .takeLast(MAX_RECORDS))
+        added.size
+    }
+
     fun updateStatus(id:String,status:LearningStatus,now:Long=System.currentTimeMillis()):Boolean =
         synchronized(FILE_LOCK) {
             require(now>=0)
