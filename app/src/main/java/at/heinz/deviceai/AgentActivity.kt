@@ -2341,7 +2341,9 @@ class AgentActivity : Activity() {
         val mode=session.mode
         activeWebResearchSession=session
         activeLocalRequest = true
-        activeResearchCancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+        // worker code uses this captured token, never the UI-thread field
+        val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
+        activeResearchCancellation = cancellation
         setBusy(true)
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
@@ -2366,8 +2368,7 @@ class AgentActivity : Activity() {
         val discovery=at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive)
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
-        ),accessCheck={ session.checkActive();check(activeResearchCancellation?.isCancelled()!=true) { "Recherche abgebrochen" } })
-        val cancellation = activeResearchCancellation!!
+        ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
                 if (!isFinishing && !isDestroyed) {
@@ -2405,9 +2406,15 @@ class AgentActivity : Activity() {
                     val count=notebook.add(found)
                     val training=if(found.isEmpty())null else runCatching {
                         at.heinz.deviceai.learning.ContinuumLearningCore(filesDir).learnFromSources(found,cancellation::isCancelled)
-                    }.getOrNull()
-                    notebook.record(mentorArea,count,"Einmal bestätigte Recherche: $count Quellenbeobachtungen; "+
-                        if(training?.accepted==true)"lokaler Lernkandidat angenommen" else "kein neuer Modellstand übernommen")
+                    }
+                    val report=training?.getOrNull()
+                    // a failure is not a rejected candidate: name it
+                    notebook.record(mentorArea,count,"Einmal bestätigte Recherche: $count Quellenbeobachtungen; "+when {
+                        training?.isFailure==true -> "Lernlauf fehlgeschlagen ("+training.exceptionOrNull()!!.javaClass.simpleName+"); kein neuer Modellstand"
+                        report?.accepted==true -> "lokaler Lernkandidat angenommen"
+                        report!=null && !report.completedEvaluation -> "Lernlauf unterbrochen; kein neuer Modellstand"
+                        else -> "kein neuer Modellstand übernommen"
+                    })
                 }
                 dossier
             }
