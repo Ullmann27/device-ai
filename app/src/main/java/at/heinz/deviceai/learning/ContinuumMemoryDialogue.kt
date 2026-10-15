@@ -38,26 +38,30 @@ class ContinuumMemoryDialogue(private val directory:File) {
         val followUp=Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
         val previousTopic=history.lastOrNull()?.topic.orEmpty()
         val resolved=if(followUp&&previousTopic.isNotBlank())(previousTopic+" "+text).take(512) else text
-        val hits=rank(bytes,resolved,experiences)
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
+        val correction=if(greeting)null else ContinuumAnswerCorrection.find(resolved,experiences)
+        val hits=if(correction==null)rank(bytes,resolved,experiences) else emptyList()
         // A greeting must not accidentally cite memories containing the word "Hallo".
         // An unanswered new question invalidates the old topic; only retrieved evidence
         // can establish a topic for future follow-ups.
         val selected=if(greeting)emptyList<ContinuumMemoryHit>() else hits
         val topic=when {
             greeting -> previousTopic
+            correction!=null -> text.take(320)
             selected.isEmpty() -> ""
             followUp -> previousTopic
             else -> text.take(320)
         }
         val answer=when {
             greeting -> "Hallo Heinz. Worüber möchtest du sprechen? Ich kann an unsere gespeicherten Themen anknüpfen."
+            correction!=null -> "Deine ausdrücklich bestätigte Korrektur für genau diese Frage:\n\n"+correction.content
             selected.isEmpty() -> "Dazu habe ich noch keine passende bestätigte Erinnerung oder Quellenbeobachtung. Du kannst mir mit „Merke dir: …“ etwas beibringen oder eine Recherche ausdrücklich starten."
             else -> (if(followUp)"Ich knüpfe an unser Thema an." else "Dazu finde ich in meinem Gedächtnis:")+selected.joinToString("") {
                 "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
         }.take(1000)
-        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty(),contextReset)
+        val ids=if(correction!=null)listOf(correction.id) else selected.map { it.id }
+        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),ids,ids.isNotEmpty(),contextReset)
         save((history+turn).takeLast(8))
         return turn
     }

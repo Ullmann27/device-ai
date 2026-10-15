@@ -13,7 +13,7 @@ import java.security.MessageDigest
 
 enum class LearningExperienceType {
     INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT,
-    USER_FACT, COMMAND_MAPPING, USER_FEEDBACK
+    USER_FACT, COMMAND_MAPPING, USER_FEEDBACK, ANSWER_CORRECTION
 }
 enum class LearningProvenance { USER_CONFIRMED, MENTOR_WIKIPEDIA, SYNTHETIC_FIXTURE, LOCAL_TRAINING, REVIEWED_WEB_SOURCE }
 enum class LearningTrustClass { OWNER_CONFIRMED, SOURCE_OBSERVATION, SYNTHETIC, SYSTEM_MEASUREMENT }
@@ -140,6 +140,59 @@ class FileLearningExperienceStore(private val directory:File) {
         }
         save((retained+experience).sortedWith(
             compareBy<LearningExperience> { it.createdAt }.thenBy { it.id }))
+        true
+    }
+
+    /**
+     * Atomically replace a confirmed answer for its exact question. Corrections
+     * have a 16-entry retention budget and cannot evict any other experience.
+     */
+    fun putAnswerCorrection(item:LearningExperience,now:Long):Boolean=synchronized(FILE_LOCK) {
+        require(item.type==LearningExperienceType.ANSWER_CORRECTION &&
+            item.trust==LearningTrustClass.OWNER_CONFIRMED &&
+            item.provenance==LearningProvenance.USER_CONFIRMED &&
+            item.status==LearningStatus.CONFIRMED &&
+            item.annotation?.matches(Regex("query-sha256:[a-f0-9]{64}"))==true)
+        require(now>=0)
+        val current=loadValidated()
+        // Different writes can share the same wall-clock millisecond. Make
+        // correction timestamps strictly monotonic so retention means oldest
+        // actual confirmation, not lexicographically smallest content hash.
+        val latest=current.asSequence()
+            .filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
+            .maxOfOrNull { it.updatedAt } ?: -1L
+        check(latest<Long.MAX_VALUE) { "Correction timestamp exhausted" }
+        val effectiveNow=maxOf(now,latest+1)
+        val same=current.firstOrNull { it.id==item.id }
+        if(same?.status==LearningStatus.CONFIRMED &&
+            current.none { it.id!=item.id && it.type==LearningExperienceType.ANSWER_CORRECTION &&
+                it.annotation==item.annotation && it.status==LearningStatus.CONFIRMED })
+            return@synchronized false
+        val revised=current.map { e ->
+            when {
+                e.type!=LearningExperienceType.ANSWER_CORRECTION ||
+                    e.annotation!=item.annotation -> e
+                e.id==item.id -> e.copy(status=LearningStatus.CONFIRMED,updatedAt=maxOf(effectiveNow,e.updatedAt))
+                e.status==LearningStatus.CONFIRMED ->
+                    e.copy(status=LearningStatus.REVOKED,updatedAt=maxOf(effectiveNow,e.updatedAt))
+                else -> e
+            }
+        }
+        val combined=if(same==null) revised+item.copy(createdAt=effectiveNow,updatedAt=effectiveNow) else revised
+        val corrections=combined.filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
+            // Retire revoked revisions before evicting still-active answers.
+            .sortedWith(compareBy<LearningExperience>{it.status!=LearningStatus.REVOKED}
+                .thenBy{it.updatedAt}.thenBy{it.id})
+        // Always retain the just confirmed correction even when multiple
+        // writes share the same millisecond; tie-breaking may not evict it.
+        val discarded=corrections.filter { it.id!=item.id }
+            .take((corrections.size-16).coerceAtLeast(0))
+            .map { it.id }.toSet()
+        val retained=combined.filterNot { it.id in discarded }
+        check(retained.size<=MAX_RECORDS) {
+            "Experience ledger full; an answer correction must not evict owner facts"
+        }
+        save(retained.sortedWith(compareBy<LearningExperience>{it.createdAt}.thenBy{it.id}))
         true
     }
 
