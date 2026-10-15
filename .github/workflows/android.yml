@@ -43,6 +43,9 @@ jobs:
       - name: Test portable contrastive training
         run: node --test .github/continuum/contrastive-views.test.mjs
 
+      - name: Check Android integration wiring
+        run: node --test .github/continuum/android-integration-wiring.test.mjs
+
       - name: Check neural optimizer analytical gradients
         run: node --test .github/continuum/semantic-gradient.test.mjs
 

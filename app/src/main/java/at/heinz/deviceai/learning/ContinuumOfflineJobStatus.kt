@@ -1,0 +1,65 @@
+package at.heinz.deviceai.learning
+
+import android.content.Context
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+/**
+ * Local, bounded metadata about the actual JobScheduler path. No source contents,
+ * owner facts, embeddings or model weights are written to preferences.
+ */
+data class ContinuumOfflineJobSnapshot(
+    val scheduled: Boolean?,
+    val phase: String,
+    val lastStartedAt: Long,
+    val lastFinishedAt: Long,
+    val lastError: String
+) {
+    fun display(): String = buildString {
+        append("Täglicher Offline-Lernjob: ")
+        append(when(scheduled) { true -> "eingeplant"; false -> "Einplanung fehlgeschlagen"; null -> "nicht geprüft" })
+        append("\nLetzter Zustand: ").append(phase)
+        fun date(timestamp: Long): String =
+            SimpleDateFormat("dd.MM.yyyy HH:mm",Locale.GERMANY).format(Date(timestamp))
+        if(lastStartedAt>0L)append("\nBeginn: ").append(date(lastStartedAt))
+        if(lastFinishedAt>0L)append("\nLetzter Abschluss: ").append(date(lastFinishedAt))
+        if(lastError.isNotBlank())append("\nLetzter Fehler: ").append(lastError.take(120))
+        append("\nAusführung erfordert Laden des Geräts; Android kann den Job verschieben.")
+    }
+}
+object ContinuumOfflineJobStatus {
+    private const val PREFS="continuum-offline-job-state"
+    private fun prefs(context:Context)=context.applicationContext.getSharedPreferences(PREFS,Context.MODE_PRIVATE)
+
+    fun scheduled(context:Context,success:Boolean) {
+        prefs(context).edit().putBoolean("scheduled",success).apply()
+    }
+    fun started(context:Context,now:Long=System.currentTimeMillis()) {
+        prefs(context).edit().putString("phase","RUNNING")
+            .putLong("started",now).remove("error").apply()
+    }
+    fun finished(context:Context,now:Long=System.currentTimeMillis()) {
+        prefs(context).edit().putString("phase","FINISHED")
+            .putLong("finished",now).remove("error").apply()
+    }
+    fun stopped(context:Context,now:Long=System.currentTimeMillis()) {
+        prefs(context).edit().putString("phase","INTERRUPTED")
+            .putLong("finished",now).apply()
+    }
+    fun failed(context:Context,error:Throwable,now:Long=System.currentTimeMillis()) {
+        // Never store exception messages: they may include source URLs or owner data.
+        prefs(context).edit().putString("phase","FAILED")
+            .putLong("finished",now)
+            .putString("error",error.javaClass.simpleName.take(60)).apply()
+    }
+    fun read(context:Context):ContinuumOfflineJobSnapshot {
+        val p=prefs(context)
+        return ContinuumOfflineJobSnapshot(
+            if(p.contains("scheduled"))p.getBoolean("scheduled",false) else null,
+            p.getString("phase","NOT_RUN") ?: "NOT_RUN",
+            p.getLong("started",0L),p.getLong("finished",0L),
+            p.getString("error","").orEmpty()
+        )
+    }
+}

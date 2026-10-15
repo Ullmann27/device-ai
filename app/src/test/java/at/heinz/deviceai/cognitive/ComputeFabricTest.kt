@@ -42,6 +42,16 @@ class ComputeFabricTest {
     }
 
     @Test
+    fun unicodeInlineContextCannotBypassByteBudget() {
+        val oversized="€".repeat(6_000) // 6,000 characters but 18,000 UTF-8 bytes
+        assertThrows(IllegalArgumentException::class.java) {
+            task(inlineContext=oversized)
+        }
+        // The same policy still allows a valid bounded Unicode description.
+        assertEquals(300,task(inlineContext="€".repeat(100)).inlineContext.toByteArray(Charsets.UTF_8).size)
+    }
+
+    @Test
     fun overBudgetTaskIsNotScheduled() {
         val registry = registry()
         registry.register(SignedNodeCapabilityManifest(manifest("node-d"), byteArrayOf(1)))

@@ -106,7 +106,9 @@ data class ComputeTask(
     init {
         require(taskId.matches(Regex("[A-Za-z0-9._:-]{1,128}")))
         require(inputObjectIds.size <= 64 && inputObjectIds.distinct().size == inputObjectIds.size)
-        require(inlineContext.length <= 16_000)
+        // Limit the actual UTF-8 payload; Unicode can require multiple bytes
+        // per character and must not bypass the compute-task resource budget.
+        require(inlineContext.toByteArray(Charsets.UTF_8).size <= 16_000)
         require(!containsCredentialLikeMaterial(inlineContext)) {
             "Credential-like material is not permitted in compute tasks."
         }
