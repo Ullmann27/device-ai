@@ -153,3 +153,14 @@ test('startup bootstrap training stops with the activity and is retried later',(
  ensure('onDestroy cancels a running read-only tool gate',destroy.includes('activeBootstrapGate?.cancel()'));
  ensure('interrupted stage writes no run-once audit',core.includes('if(interrupted(cancelled))return@synchronized interruptedReport("offline-bootstrap"')&&core.includes('interruptedReport("offline-semantic-bootstrap"'));
 });
+test('startup I/O off the UI thread and shell commands stop with their activity',()=>{
+ const create=bodyOf(activity,'override fun onCreate(');
+ ensure('continuum store opens on the agent executor',bodyOf(activity,'private fun initializeContinuum(').includes('localAgentExecutor.execute'));
+ ensure('no Keystore decrypt for the cloud badge',!bodyOf(activity,'private fun updateCloudBadge(').includes('isConfigured()'));
+ ensure('receipt review decodes on a worker',bodyOf(activity,'private fun showPendingReceiptReview()').includes('onLearningIo('));
+ ensure('onCreate itself opens no store',!/AndroidKeystoreIdentitySigner\(|receiptStore\.all\(\)/.test(create));
+ const main=fs.readFileSync(dir+'MainActivity.kt','utf8');
+ ensure('plan step chain stops when the activity is gone',/fun runStep\(index: Int\) \{\s*\/\/[^\n]*\n\s*if \(isFinishing \|\| isDestroyed\) return/.test(main));
+ const bridge=fs.readFileSync(dir+'ShizukuBridge.kt','utf8');
+ ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
+});

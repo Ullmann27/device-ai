@@ -18,7 +18,8 @@ class ShizukuBridge(
     }
 
     private val mainHandler = Handler(Looper.getMainLooper())
-    private var shell: IDeviceShell? = null
+    // written on the main thread, read on tool worker threads
+    @Volatile private var shell: IDeviceShell? = null
     private var listenersRegistered = false
 
     private val binderReceived = Shizuku.OnBinderReceivedListener {
@@ -93,6 +94,8 @@ class ShizukuBridge(
             listenersRegistered = false
         }
         runCatching { Shizuku.unbindUserService(userServiceArgs, connection, false) }
+        // a stopped bridge runs no further commands (a command already started may finish)
+        shell = null
     }
 
     fun requestAccess() {

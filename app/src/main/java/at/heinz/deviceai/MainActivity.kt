@@ -438,6 +438,8 @@ class MainActivity : Activity() {
         val results = mutableListOf<String>()
 
         fun runStep(index: Int) {
+            // A recreated or closed activity must not keep running confirmed steps unseen.
+            if (isFinishing || isDestroyed) return
             if (index >= plan.steps.size) {
                 runButton.isEnabled = true
                 resultTitle.text = "Fertig"

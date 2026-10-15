@@ -157,9 +157,10 @@ class AgentActivity : Activity() {
     private lateinit var modelCatalog: LocalModelCatalog
     private lateinit var localRuntime: LocalModelRuntime
     private lateinit var receiptStore: FileToolExecutionReceiptStore
-    private lateinit var continuumStore: ContinuumRuntimeStore
+    // opened on localAgentExecutor (Keystore and file I/O), see initializeContinuum
+    @Volatile private var continuumStore: ContinuumRuntimeStore? = null
     @Volatile private var continuumState: ContinuumRuntimeState? = null
-    private var continuumStartupNote: String? = null
+    @Volatile private var continuumStartupNote: String? = null
     private val contextCompiler = AiContextCompiler(
         AiContextPolicy(maxBytes = 10_500, memoryLimit = 8, researchSourceLimit = 4)
     )
@@ -358,7 +359,6 @@ class AgentActivity : Activity() {
         updateCloudBadge()
         refreshLocalModelUi()
         showPendingReceiptReview()
-        continuumStartupNote?.let(::addToolActivity)
         addAssistantMessage(
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
                 "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
@@ -2607,7 +2607,12 @@ class AgentActivity : Activity() {
     )
 
     private fun showPendingReceiptReview() {
-        val receipts = runCatching { receiptStore.all() }
+        onLearningIo({ receiptStore.all() }) { result -> showPendingReceiptReview(result) }
+    }
+
+    /** Display only: tool execution checks the receipt store itself and fails closed. */
+    private fun showPendingReceiptReview(result: Result<List<ToolExecutionReceipt>>) {
+        val receipts = result
             .getOrElse {
                 addToolActivity("ERROR · durable receipt store invalid; tool execution fails closed")
                 AlertDialog.Builder(this)
@@ -2890,13 +2895,27 @@ class AgentActivity : Activity() {
         }
     }
 
+    /**
+     * Keystore access (key generation on first run) and the verified archive read
+     * run on localAgentExecutor, which also runs every later checkpoint, so they
+     * always see an opened store. The result appears in the activity log.
+     */
     private fun initializeContinuum() {
+        if (localAgentExecutor.isShutdown) return
+        localAgentExecutor.execute {
+            openContinuum()
+            val note = continuumStartupNote
+            runOnUiThread { if (!isFinishing && !isDestroyed) note?.let(::addToolActivity) }
+        }
+    }
+
+    private fun openContinuum() {
         runCatching {
-            continuumStore = ContinuumRuntimeStore(
+            val store = ContinuumRuntimeStore(
                 baseDirectory = java.io.File(filesDir, "continuum"),
                 signer = AndroidKeystoreIdentitySigner()
             )
-            continuumStore.openOrCreate()
+            store.openOrCreate().also { continuumStore = store }
         }.onSuccess { state ->
             continuumState = state
             state.archive.memories.forEach(memoryStore::put)
@@ -2918,13 +2937,14 @@ class AgentActivity : Activity() {
     }
 
     private fun checkpointContinuumAsync() {
-        if (!::continuumStore.isInitialized || localAgentExecutor.isShutdown) return
+        if (localAgentExecutor.isShutdown) return
         localAgentExecutor.execute {
+            val store = continuumStore ?: return@execute
             val state = continuumState ?: return@execute
             val memories = memoryStore.all()
             val experiences = experienceStore.all()
             runCatching {
-                continuumStore.checkpoint(
+                store.checkpoint(
                     current = state,
                     memories = memories,
                     experiences = experiences
@@ -3498,7 +3518,6 @@ class AgentActivity : Activity() {
     }
 
     private fun updateCloudBadge() {
-        val configured = backend.isConfigured()
         cloudBadge.text = "● WEB AUF ANFRAGE"
         cloudBadge.setTextColor(CYAN)
         cloudBadge.background = rounded(PANEL, 14, BORDER)
