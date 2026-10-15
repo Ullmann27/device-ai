@@ -11,7 +11,9 @@ import java.util.Locale
 data class ContinuumMemoryHit(val id:String,val text:String,val kind:String,val sourceRef:String?,val score:Double,val semantic:Double)
 data class ContinuumDialogueTurn(
     val at:Long,val input:String,val resolvedQuery:String,val answer:String,
-    val topic:String,val modelHash:String,val memoryIds:List<String>,val grounded:Boolean
+    val topic:String,val modelHash:String,val memoryIds:List<String>,val grounded:Boolean,
+    /** The stored conversation context was unreadable; it was moved aside and this turn started fresh. */
+    val contextReset:Boolean=false
 )
 
 /** Bounded contextual retrieval from current ledger entries using the active SWB1.
@@ -23,7 +25,15 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     fun reply(bytes:ByteArray,experiences:List<LearningExperience>,input:String,at:Long):ContinuumDialogueTurn {
         require(input.trim().length in 1..512 && at>=0)
-        val history=history()
+        // The history is only conversation context (memories live in the ledger),
+        // so an unreadable file must not block every later turn: it is kept as
+        // dialogue-v1.bin.corrupt-<time> and the conversation starts fresh.
+        var contextReset=false
+        val history=try { history() } catch (e:IllegalArgumentException) {
+            quarantine(at)
+            contextReset=true
+            emptyList()
+        }
         val text=input.trim()
         val followUp=Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
         val previousTopic=history.lastOrNull()?.topic.orEmpty()
@@ -47,7 +57,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 "\n\n"+it.text.take(250)+"\n("+it.kind+(it.sourceRef?.let { ref -> "; "+ref.take(180) } ?: "")+")"
             }
         }.take(1000)
-        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty())
+        val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty(),contextReset)
         save((history+turn).takeLast(8))
         return turn
     }
@@ -76,6 +86,16 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     fun clear() { check(!file.exists()||file.delete()) { "Dialog konnte nicht gelöscht werden" } }
 
+    /** Keeps the unreadable bytes for inspection (newest [MAX_QUARANTINED] files). */
+    private fun quarantine(at:Long) {
+        var target=File(directory,"${file.name}.corrupt-$at")
+        var n=1
+        while(target.exists())target=File(directory,"${file.name}.corrupt-$at-${n++}")
+        Files.move(file.toPath(),target.toPath())
+        directory.listFiles { f -> f.name.startsWith(file.name+".corrupt-") }.orEmpty()
+            .sortedByDescending { it.lastModified() }.drop(MAX_QUARANTINED).forEach { it.delete() }
+    }
+
     private fun save(turns:List<ContinuumDialogueTurn>) {
         val bytes=LearningSnapshot.encode { out ->
             out.writeInt(0x43444c31);out.writeInt(turns.size)
@@ -95,6 +115,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
     }
 
     companion object {
+        const val MAX_QUARANTINED=3
         fun hash(bytes:ByteArray):String=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
         /** Mirrors .github/continuum/dialogue-retrieval.mjs exactly (cross-runtime fixture).

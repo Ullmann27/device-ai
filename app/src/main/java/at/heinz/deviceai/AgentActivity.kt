@@ -1129,8 +1129,9 @@ class AgentActivity : Activity() {
                 val turn=core.replyFromMemory(request.take(512))
                 val legacyFallback=sourceFallback && !turn.grounded
                 val answer=if(legacyFallback)GroundedWebRecall.answer(request,reviewedNotes) ?: turn.answer else turn.answer
-                val evidence=if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
-                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen"
+                val evidence=(if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
+                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen") +
+                    (if(turn.contextReset)" · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert" else "")
                 answer to evidence
             }
             runOnUiThread {

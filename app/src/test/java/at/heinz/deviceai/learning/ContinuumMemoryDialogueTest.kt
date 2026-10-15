@@ -69,10 +69,34 @@ class ContinuumMemoryDialogueTest {
             val file=File(dir,"learning-core-v2/dialogue-v1.bin")
             val bad=file.readBytes().also { it[6]=(it[6].toInt() xor 1).toByte() }
             file.writeBytes(bad)
-            assertThrows(IllegalArgumentException::class.java) { core.replyFromMemory("Hallo") }
-            assertArrayEquals(bad,file.readBytes())
+            assertThrows(IllegalArgumentException::class.java) { core.dialogueHistory() }
+            core.recordOwnerFact("Sternenreise ist mein Forschungsprojekt")
+            // only the conversation context is lost: memories still answer, the bytes are kept
+            val turn=core.replyFromMemory("Erzähl mir von Sternenreise")
+            assertTrue(turn.contextReset)
+            assertTrue(turn.grounded)
+            val kept=File(dir,"learning-core-v2").listFiles { f -> f.name.startsWith("dialogue-v1.bin.corrupt-") }!!
+            assertEquals(1,kept.size)
+            assertArrayEquals(bad,kept.single().readBytes())
+            assertEquals(1,core.dialogueHistory().size)
+            assertFalse(core.replyFromMemory("Und was weißt du noch darüber?").contextReset)
             core.revokeAllOwnerFacts()
             assertTrue(core.dialogueHistory().isEmpty())
+        } finally { dir.deleteRecursively() }
+    }
+    @Test fun repeatedCorruptionKeepsOnlyTheNewestQuarantinedFiles() {
+        val dir=Files.createTempDirectory("continuum-dialogue-quarantine").toFile()
+        try {
+            var now=10L
+            val core=ContinuumLearningCore(dir) { now++ }
+            val file=File(dir,"learning-core-v2/dialogue-v1.bin")
+            repeat(5) { round ->
+                core.replyFromMemory("Hallo")
+                file.writeBytes(ByteArray(40) { (it+round).toByte() })
+                assertTrue(core.replyFromMemory("Hallo").contextReset)
+            }
+            val kept=File(dir,"learning-core-v2").listFiles { f -> f.name.startsWith("dialogue-v1.bin.corrupt-") }!!
+            assertEquals(ContinuumMemoryDialogue.MAX_QUARANTINED,kept.size)
         } finally { dir.deleteRecursively() }
     }
     @Test fun reviewedWebNotesJoinTheSameDialogueLedgerAsObservationsWithoutTrainingWeights() {
