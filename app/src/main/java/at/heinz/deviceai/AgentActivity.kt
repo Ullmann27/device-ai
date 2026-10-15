@@ -121,9 +121,11 @@ class AgentActivity : Activity() {
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
-        private const val DEV_BACKLOG_EXPORT_REQUEST = 2211
-        private const val DEV_OPLOG_EXPORT_REQUEST = 2212
-        private const val DEV_BACKLOG_IMPORT_REQUEST = 2213
+        // Every *_REQUEST code must be unique: onActivityResult dispatches on the
+        // first matching branch (checked by android-integration-wiring.test.mjs).
+        private const val DEV_BACKLOG_EXPORT_REQUEST = 2214
+        private const val DEV_OPLOG_EXPORT_REQUEST = 2215
+        private const val DEV_BACKLOG_IMPORT_REQUEST = 2216
         private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000
         private const val NEURAL_IMPORT_REQUEST = 2211
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212

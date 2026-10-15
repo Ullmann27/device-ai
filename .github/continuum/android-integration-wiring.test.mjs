@@ -45,3 +45,36 @@ test('experimental module is inspectable and not on any automatic model promotio
  ensure('no save or importing weights',!/\b(saveModel|importSnapshot|importPublicPackage|ModelCheckpointStore)\s*\(/.test(probe));
  ensure('candidate training is actually invoked',probe.includes('ContinuumContrastiveViews.trainCandidate('));
 });
+// onActivityResult dispatches on the first matching `when` branch, so two equal
+// request codes silently route one picker's result into another handler (the
+// backlog export once landed in the model-weight import this way).
+const bodyOf=(source,signature)=>{
+ const start=source.indexOf(signature);
+ if(start<0)return null;
+ const open=source.indexOf('{',start);
+ let depth=0;
+ for(let i=open;i<source.length;i++){
+  if(source[i]==='{')depth++;
+  else if(source[i]==='}'&&--depth===0)return source.slice(open,i+1);
+ }
+ return null;
+};
+test('activity request codes are unique and every one has a result handler',()=>{
+ for(const file of ['AgentActivity.kt','MainActivity.kt']){
+  const source=fs.readFileSync(dir+file,'utf8');
+  const codes=[...source.matchAll(/const val (\w+_REQUEST)\s*=\s*(\d+)/g)].map(m=>({name:m[1],value:Number(m[2])}));
+  assert.ok(codes.length>0,file+': no request codes found (pattern out of date?)');
+  const byValue=new Map();
+  for(const c of codes){
+   assert.ok(!byValue.has(c.value),`${file}: ${c.name} and ${byValue.get(c.value)} share request code ${c.value}`);
+   byValue.set(c.value,c.name);
+  }
+  const handler=bodyOf(source,'override fun onActivityResult(');
+  assert.ok(handler,file+': onActivityResult not found');
+  for(const c of codes){
+   ensure(`${file}: ${c.name} handled in onActivityResult`,new RegExp(`\\b${c.name}\\b\\s*(->|,)|==\\s*${c.name}\\b`).test(handler));
+   const uses=source.split(new RegExp(`\\b${c.name}\\b`)).length-1;
+   ensure(`${file}: ${c.name} is requested somewhere`,uses>=3);
+  }
+ }
+});
