@@ -14,6 +14,14 @@ class LocalFirstPolicyTest {
     }
 
     @Test
+    fun onlyTurnsWithoutConfirmedMemoryReachALoadedLanguageModel() {
+        assertEquals(AssistantRoute.LOCAL_CORE, LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true))
+        assertEquals(AssistantRoute.LOCAL_MODEL, LocalFirstPolicy.afterMemory(grounded = false, localModelReady = true))
+        assertEquals(AssistantRoute.LOCAL_CORE, LocalFirstPolicy.afterMemory(grounded = false, localModelReady = false))
+        assertEquals(AssistantRoute.LOCAL_CORE, LocalFirstPolicy.afterMemory(grounded = true, localModelReady = false))
+    }
+
+    @Test
     fun modelUiExposesNoModelAndRuntimeLifecycleStates() {
         assertEquals(
             LocalModelUiState.NO_MODEL,

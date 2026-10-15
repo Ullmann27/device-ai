@@ -328,6 +328,14 @@ class ContinuumLearningCore(
         OwnerFactChange.REACTIVATED
     }
 
+    /** Confirmed, not revoked owner facts (the memory the chat may cite), oldest first. */
+    fun activeOwnerFacts():List<LearningExperience> = synchronized(CORE_LOCK) {
+        store.all().filter {
+            it.type==LearningExperienceType.USER_FACT && it.trust==LearningTrustClass.OWNER_CONFIRMED &&
+                it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING)
+        }
+    }
+
     fun revokeOwnerFact(content:String):Int=synchronized(CORE_LOCK) {
         dialogue.clear()
         store.updateMatching(

@@ -95,14 +95,12 @@ import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.cognitive.WebLearningCandidate
 import at.heinz.deviceai.cognitive.GroundedWebRecall
 import at.heinz.deviceai.localmodel.ImportedLocalModel
-import at.heinz.deviceai.localmodel.LiteRtLmLocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
 import at.heinz.deviceai.localmodel.LocalModelBackend
 import at.heinz.deviceai.localmodel.LocalModelCatalog
 import at.heinz.deviceai.localmodel.LocalModelRuntime
 import at.heinz.deviceai.localmodel.LocalModelState
 import at.heinz.deviceai.localmodel.LocalToolResponse
-import at.heinz.deviceai.localmodel.NativeLiteRtModelInspector
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -168,8 +166,12 @@ class AgentActivity : Activity() {
     private lateinit var shizukuBadge: TextView
     private lateinit var cloudBadge: TextView
     private lateinit var localBadge: TextView
-    private lateinit var modelCardText: TextView
-    private lateinit var localActionButton: Button
+    // views of the open model center (null while it is closed)
+    private var modelCardText: TextView? = null
+    private var localActionButton: Button? = null
+    private var modelCenterDialog: AlertDialog? = null
+    // catalog listing, refreshed off the UI thread (reloadInstalledModels)
+    private var installedModels: List<ImportedLocalModel> = emptyList()
     private lateinit var activityText: TextView
     private lateinit var planCard: LinearLayout
     private lateinit var planText: TextView
@@ -243,7 +245,7 @@ class AgentActivity : Activity() {
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
     private var modelUnloading = false
-    private var localRuntimeError: String? = null
+    @Volatile private var localRuntimeError: String? = null
     private var lifecycleTimeout: Runnable? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private val localAgentExecutor = Executors.newSingleThreadExecutor { runnable ->
@@ -299,11 +301,11 @@ class AgentActivity : Activity() {
             }
         }
         backend = AgentBackendClient(this)
-        modelCatalog = LocalModelCatalog(
-            java.io.File(filesDir, "local-models"),
-            NativeLiteRtModelInspector()
-        )
-        localRuntime = LiteRtLmLocalModelRuntime(modelCatalog, java.io.File(cacheDir, "litertlm"))
+        // process-wide: a recreated activity keeps a loaded model (LocalModelHost)
+        at.heinz.deviceai.localmodel.LocalModelHost.get(this).let { host ->
+            modelCatalog = host.catalog
+            localRuntime = host.runtime
+        }
         receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
         initializeContinuum()
         bridge = ShizukuBridge(this) { message ->
@@ -357,7 +359,7 @@ class AgentActivity : Activity() {
         }
         bridge.start()
         updateCloudBadge()
-        refreshLocalModelUi()
+        reloadInstalledModels()
         showPendingReceiptReview()
         addAssistantMessage(
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
@@ -370,7 +372,7 @@ class AgentActivity : Activity() {
         super.onResume()
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
-        if (::modelCatalog.isInitialized) refreshLocalModelUi()
+        if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
         mainHandler.removeCallbacks(foregroundLearningCheck)
@@ -401,7 +403,9 @@ class AgentActivity : Activity() {
             activeDevCoordinator?.cancel()
             activeResearchCancellation?.cancel()
             localRuntime.cancel()
-            if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
+            // the runtime is process-wide: only a finishing activity unloads the model
+            if (!isChangingConfigurations &&
+                localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
                 runCatching { localRuntime.unload() }
             }
         }
@@ -414,6 +418,7 @@ class AgentActivity : Activity() {
         learningIoExecutor.shutdown()
         backlogDialog?.dismiss()
         devDialog?.dismiss()
+        modelCenterDialog?.dismiss()
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -785,6 +790,10 @@ class AgentActivity : Activity() {
         card.addView(actionButton("TRAININGSSTAND · PRÜFEN").apply {
             setOnClickListener { showBootstrapTraining() }
         }, matchWidth(top = 7))
+        card.addView(actionButton("MODELLE · VERWALTEN").apply {
+            contentDescription = "Eigenen Lernkern und ein importiertes lokales Sprachmodell verwalten"
+            setOnClickListener { showModelCenter() }
+        }, matchWidth(top = 7))
         card.addView(actionButton("CONTINUUM · LERNKERN V2").apply {
             contentDescription = "Gemeinsamen persistenten Experience-, Replay- und Subword-Lernkern prüfen"
             setOnClickListener { showContinuumLearningDashboard() }
@@ -991,6 +1000,12 @@ class AgentActivity : Activity() {
             showModelVersions()
             return
         }
+        if (request.equals("Modelle", true) || request.equals("Modellverwaltung", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            showModelCenter()
+            return
+        }
         if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
             input.text.clear()
             addUserMessage(request)
@@ -1145,12 +1160,20 @@ class AgentActivity : Activity() {
                 val evidence=(if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
                     else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen") +
                     (if(turn.contextReset)" · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert" else "")
-                answer to evidence
+                Triple(answer,evidence,turn.grounded || legacyFallback && answer!=turn.answer)
             }
             runOnUiThread {
                 if(isFinishing || isDestroyed)return@runOnUiThread
                 setBusy(false)
-                result.onSuccess { (answer,evidence) ->
+                result.onSuccess { (answer,evidence,grounded) ->
+                    // confirmed memory answers stay deterministic; only an unanswered
+                    // turn reaches a loaded local language model (reasoning chain)
+                    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
+                            localRuntime.loadedModel!=null)==AssistantRoute.LOCAL_MODEL) {
+                        addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
+                        runLocal(request)
+                        return@onSuccess
+                    }
                     addAssistantMessage(answer)
                     addToolActivity(evidence)
                 }.onFailure {
@@ -1682,7 +1705,13 @@ class AgentActivity : Activity() {
         AlertDialog.Builder(this)
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
-            .setNegativeButton("PAKET-IMPORT") { _, _ ->
+            .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
+            .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ -> confirmWeightsImport() }
+            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
+            .show()
+    }
+
+    private fun confirmPackageImport() {
                 AlertDialog.Builder(this)
                     .setTitle("Öffentliches GitHub-Modellpaket")
                     .setMessage("Wähle zunächst die Modellgewichte (neural-public.bin), danach das zugehörige Manifest (neural-public.json). Hash und Herkunft werden vor dem lokalen Modelltest geprüft. Eine Publisher-Signatur ist noch nicht implementiert; importiere nur bewusst ausgewählte Dateien.")
@@ -1693,8 +1722,9 @@ class AgentActivity : Activity() {
                             type="*/*"
                         },CONTINUUM_PACKAGE_MODEL_REQUEST)
                     }.show()
-            }
-            .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ ->
+    }
+
+    private fun confirmWeightsImport() {
                 AlertDialog.Builder(this)
                     .setTitle("GitHub-Lernstand übernehmen")
                     .setMessage("Wähle neural-public.bin aus deinem Continuum-Lernlauf. Die App prüft Dateiintegrität, beide lokalen Testaufgaben und deine persönlichen Intent-Lektionen. Bei Rückschritten bleibt der bisherige Stand erhalten. Deine Erinnerungen werden weder ersetzt noch hochgeladen.")
@@ -1705,9 +1735,71 @@ class AgentActivity : Activity() {
                             type="*/*"
                         },NEURAL_IMPORT_REQUEST)
                     }.show()
+    }
+
+    /**
+     * Model management: the Continuum encoder (the app's own learning core) and an
+     * optional imported LiteRT-LM language model. A loaded language model answers
+     * chat questions that no confirmed memory covers (see runContinuumDialogue).
+     */
+    private fun showModelCenter() {
+        modelCenterDialog?.dismiss()
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+        box.addView(sectionLabel("CONTINUUM-ENCODER · EIGENER LERNKERN", top = 4))
+        val encoder = textView("Wird gelesen …", 12f, MUTED)
+        box.addView(encoder, matchWidth(top = 6))
+        val encoderActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        listOf(
+            actionButton("VERSIONEN", compact = true).apply { setOnClickListener { showModelVersions() } },
+            actionButton("PAKET", compact = true).apply { setOnClickListener { confirmPackageImport() } },
+            actionButton("GEWICHTE", compact = true).apply { setOnClickListener { confirmWeightsImport() } }
+        ).forEach { encoderActions.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) }) }
+        box.addView(encoderActions, matchWidth(top = 8))
+        box.addView(sectionLabel("LOKALES SPRACHMODELL · LITERT-LM", top = 18))
+        val card = textView("", 12f, TEXT)
+        box.addView(card, matchWidth(top = 6))
+        val modelActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val action = actionButton("MODELL LADEN", compact = true).apply {
+            setOnClickListener { if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel() }
+        }
+        modelActions.addView(actionButton("IMPORTIEREN", compact = true).apply {
+            setOnClickListener { showModelImportDialog() }
+        }, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
+        modelActions.addView(action, LinearLayout.LayoutParams(0, dp(40), 1f))
+        box.addView(modelActions, matchWidth(top = 8))
+        box.addView(textView(
+            "Ohne Sprachmodell antwortet Device AI aus Regeln und bestätigten Erinnerungen. Ein geladenes Modell " +
+                "beantwortet nur Fragen, zu denen keine bestätigte Erinnerung passt; Werkzeuge nutzt es nur nach " +
+                "Freigabe, und seine Antworten sind nicht geprüft. Es wird nichts heruntergeladen.", 11.5f, MUTED),
+            matchWidth(top = 10))
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Modellverwaltung")
+            .setView(ScrollView(this).apply { addView(box) })
+            .setPositiveButton("Schließen", null)
+            .create()
+        dialog.setOnDismissListener {
+            if (modelCenterDialog === dialog) {
+                modelCenterDialog = null
+                modelCardText = null
+                localActionButton = null
             }
-            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
-            .show()
+        }
+        modelCenterDialog = dialog
+        modelCardText = card
+        localActionButton = action
+        dialog.show()
+        reloadInstalledModels()
+        onLearningIo({
+            val core = ContinuumLearningCore(filesDir)
+            Triple(core.modelHash(), core.status().modelUpdates, core.checkpoints().size)
+        }) { result ->
+            encoder.text = result.fold({ (hash, updates, archived) ->
+                "Aktiv: ${hash.take(16)} · $updates Gewichtsupdates · $archived archivierte Stände (wiederherstellbar)"
+            }, { "Lernkern nicht lesbar (${failureName(it)}); vorhandene Stände bleiben unverändert." })
+        }
     }
 
     /**
@@ -2808,7 +2900,8 @@ class AgentActivity : Activity() {
                     generation.proposal
                 )
             },
-            memories = { memoryStore.all() },
+            // the same confirmed owner facts the chat answers from, plus the agent's own memories
+            memories = { memoryStore.all() + ownerFactMemories() },
             toolGate = createToolGate(),
             evaluator = AgentEvaluator { response, _ ->
                 Evaluation(response.isNotBlank(), if (response.isNotBlank()) 0.8 else 0.2, "On-device response evaluated.")
@@ -2867,6 +2960,23 @@ class AgentActivity : Activity() {
             }
         }
     }
+
+    /** Learning-core owner facts as agent memories (read on the agent executor). */
+    private fun ownerFactMemories(): List<MemoryRecord> = runCatching {
+        ContinuumLearningCore(filesDir).activeOwnerFacts().map { fact ->
+            MemoryRecord(
+                id = fact.id,
+                type = MemoryType.SEMANTIC,
+                content = fact.content,
+                provenance = ProvenanceType.USER_PROVIDED,
+                confidence = 0.9,
+                createdAt = fact.createdAt,
+                updatedAt = fact.updatedAt,
+                tags = listOf("owner-confirmed"),
+                privacyClass = at.heinz.deviceai.cognitive.PrivacyClass.DEVICE_LOCAL_ONLY
+            )
+        }
+    }.getOrDefault(emptyList())
 
     private fun persistRequestedMemory(request: String, evaluation: Evaluation?) {
         val explicit = Regex("\\b(remember|memorize|merke dir|merk dir)\\b", RegexOption.IGNORE_CASE)
@@ -3317,7 +3427,13 @@ class AgentActivity : Activity() {
     }
 
     private fun chooseInstalledModel() {
-        val models = modelCatalog.all()
+        onLearningIo({ modelCatalog.all() }) { result ->
+            installedModels = result.getOrDefault(emptyList())
+            chooseInstalledModel(installedModels)
+        }
+    }
+
+    private fun chooseInstalledModel(models: List<ImportedLocalModel>) {
         if (models.isEmpty()) {
             refreshLocalModelUi()
             Toast.makeText(this, "NO MODEL · importiere zuerst eine .litertlm-Datei.", Toast.LENGTH_LONG).show()
@@ -3402,7 +3518,7 @@ class AgentActivity : Activity() {
                 result.onSuccess { model ->
                     localRuntimeError = null
                     addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
-                    refreshLocalModelUi()
+                    reloadInstalledModels()
                     loadModel(model)
                 }.onFailure { error ->
                     localRuntimeError = error.message ?: "Model import failed."
@@ -3413,14 +3529,16 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun reloadInstalledModels() {
+        onLearningIo({ modelCatalog.all() }) { result ->
+            installedModels = result.getOrDefault(emptyList())
+            refreshLocalModelUi()
+        }
+    }
+
     private fun refreshLocalModelUi() {
         if (!::localBadge.isInitialized) return
-        if (!::modelCardText.isInitialized) {
-            localBadge.text = "● KERN AKTIV"
-            localBadge.setTextColor(GREEN)
-            return
-        }
-        val models = runCatching { modelCatalog.all() }.getOrDefault(emptyList())
+        val models = installedModels
         val loaded = localRuntime.loadedModel
         val state = when {
             localRuntimeError != null -> LocalModelUiState.ERROR
@@ -3444,11 +3562,14 @@ class AgentActivity : Activity() {
             LocalModelUiState.ERROR -> RED
             LocalModelUiState.OFFLINE, LocalModelUiState.NO_MODEL, LocalModelUiState.INSTALLED -> MUTED
         }
-        localBadge.text = "● $label"
-        localBadge.setTextColor(color)
+        // the own learning core is always active; a language model is shown once it exists
+        localBadge.text = if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) "● KERN AKTIV"
+            else "● MODELL $label"
+        localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
+        val card = modelCardText ?: return
         val shown = loaded ?: models.firstOrNull()
-        modelCardText.text = when {
+        card.text = when {
             localRuntimeError != null -> "ERROR · ${localRuntimeError!!.take(256)}"
             modelImportActive -> "LOADING · Datei wird geprüft und sicher importiert."
             modelUnloading -> "LOADING · Modell wird entladen."
@@ -3468,9 +3589,9 @@ class AgentActivity : Activity() {
             }
             else -> "Kompatibilität des Modells ist unbekannt."
         }
-        if (::localActionButton.isInitialized) {
-            localActionButton.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
-            localActionButton.isEnabled = !busy && !modelUnloading && (loaded != null || models.isNotEmpty())
+        localActionButton?.let { button ->
+            button.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
+            button.isEnabled = !busy && !modelUnloading && (loaded != null || models.isNotEmpty())
         }
     }
 

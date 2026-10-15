@@ -164,3 +164,21 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  const bridge=fs.readFileSync(dir+'ShizukuBridge.kt','utf8');
  ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
 });
+test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
+ ensure('model center from the core card',/actionButton\("MODELLE · VERWALTEN"\)[\s\S]{0,200}showModelCenter\(\)/.test(activity));
+ ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
+ const center=bodyOf(activity,'private fun showModelCenter(');
+ ensure('center imports a model',center.includes('showModelImportDialog()'));
+ ensure('center loads or unloads',center.includes('chooseInstalledModel()')&&center.includes('unloadModel()'));
+ ensure('center binds the model card and action button',center.includes('modelCardText = card')&&center.includes('localActionButton = action'));
+ ensure('center offers encoder versions and imports',center.includes('showModelVersions()')&&center.includes('confirmPackageImport()')&&center.includes('confirmWeightsImport()'));
+ ensure('one runtime per process',bodyOf(activity,'override fun onCreate(').includes('LocalModelHost.get(this)'));
+ ensure('rotation keeps the loaded model',bodyOf(activity,'override fun onDestroy(').includes('!isChangingConfigurations'));
+ const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
+ ensure('unanswered memory turn escalates to the language model',dialogue.includes('LocalFirstPolicy.afterMemory(')&&dialogue.includes('runLocal(request)'));
+ const local=bodyOf(activity,'private fun runLocal(');
+ ensure('reasoning chain in the local path',local.includes('ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime)'));
+ ensure('language model sees the confirmed owner facts',local.includes('ownerFactMemories()'));
+ ensure('model list read off the UI thread',bodyOf(activity,'private fun reloadInstalledModels(').includes('onLearningIo('));
+ ensure('no catalog read in the UI refresh',!bodyOf(activity,'private fun refreshLocalModelUi(').includes('modelCatalog.all()'));
+});

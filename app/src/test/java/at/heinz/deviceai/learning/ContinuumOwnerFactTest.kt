@@ -51,6 +51,15 @@ class ContinuumOwnerFactTest {
         assertFalse(core.replyFromMemory("Wie heißt mein Hund Bello?").answer.contains("Bello."))
     }
 
+    @Test fun activeOwnerFactsExcludeRevokedOnes() = withCore { core, _ ->
+        core.confirmOwnerFact("Mein Projekt heißt Astrolux.")
+        core.confirmOwnerFact("Mein Hund heißt Bello.")
+        core.revokeOwnerFact("Mein Hund heißt Bello.")
+        assertEquals(listOf("Mein Projekt heißt Astrolux."), core.activeOwnerFacts().map { it.content })
+        core.confirmOwnerFact("Mein Hund heißt Bello.")
+        assertEquals(2, core.activeOwnerFacts().size)
+    }
+
     @Test fun syncOfAnEmptyOwnerMemoryChangesNothing() = withCore { core, dir ->
         core.confirmOwnerFact("Mein Projekt heißt Astrolux.")
         val before = ledger(dir).readBytes()
