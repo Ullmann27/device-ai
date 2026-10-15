@@ -55,9 +55,7 @@ class ContinuumAutonomousJobService:JobService() {
                         )
                         if(fresh.isNotEmpty() && !stopped.get()) {
                             val report=core.learnFromSources(fresh,stopped::get)
-                            // A stopped or timed-out training round is NOT a completed
-                            // source evaluation: the same source needs another chance.
-                            if(report?.completedEvaluation==true && !stopped.get()) {
+                            if(report!=null && !stopped.get()) {
                                 ContinuumSourceNovelty.markCompleted(filesDir,fresh)
                             }
                         }
