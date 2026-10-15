@@ -72,7 +72,8 @@ class ContinuumAnswerCorrectionTest {
     @Test fun correctionBudgetCompactsOnlyCorrectionsAndNeverOwnerFacts() {
         val dir=temp("continuum-correction-budget")
         try {
-            val core=ContinuumLearningCore(dir)
+            // Force all revisions to share a clock tick; newest must still stay.
+            val core=ContinuumLearningCore(dir) { 1000L }
             assertTrue(core.recordOwnerFact("Fakt: Indigo | ist | Farbton"))
             val initial=core.modelSnapshot()
             repeat(25) { i ->
@@ -86,6 +87,10 @@ class ContinuumAnswerCorrectionTest {
             assertEquals(16,entries.count { it.type==LearningExperienceType.ANSWER_CORRECTION })
             assertEquals(17,entries.size)
             assertEquals(16,core.correctionSummary().active)
+            assertNotNull(ContinuumAnswerCorrection.find(
+                "Wie lautet die sichere Korrektur für Fall 24?",entries))
+            assertNull(ContinuumAnswerCorrection.find(
+                "Wie lautet die sichere Korrektur für Fall 0?",entries))
             assertArrayEquals(initial,core.modelSnapshot())
             assertEquals(1,core.activeOwnerFacts().size)
         } finally { dir.deleteRecursively() }
