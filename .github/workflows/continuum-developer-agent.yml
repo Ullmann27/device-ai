@@ -55,6 +55,8 @@ jobs:
         run: node --test .github/continuum/*.test.mjs
       - name: Structural Kotlin analysis (reachability, test-only and dead code)
         run: node .github/continuum/code-analyzer.mjs .
+      - name: Rank integration work candidates
+        run: node --input-type=module -e "import fs from 'node:fs'; import {planBacklog} from './.github/continuum/development-planner.mjs'; fs.mkdirSync('developer-agent-report',{recursive:true}); fs.writeFileSync('developer-agent-report/development-backlog.json', JSON.stringify(planBacklog(process.cwd()),null,2)+'\\n');"
       - name: CI triage
         env:
           GITHUB_TOKEN: ${{ github.token }}
