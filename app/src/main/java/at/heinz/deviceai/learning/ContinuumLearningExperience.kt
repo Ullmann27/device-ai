@@ -173,7 +173,10 @@ class FileLearningExperienceStore(private val directory:File) {
         val combined=if(same==null) revised+item else revised
         val corrections=combined.filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
             .sortedWith(compareBy<LearningExperience>{it.updatedAt}.thenBy{it.id})
-        val discarded=corrections.take((corrections.size-16).coerceAtLeast(0))
+        // Always retain the just confirmed correction even when multiple
+        // writes share the same millisecond; tie-breaking may not evict it.
+        val discarded=corrections.filter { it.id!=item.id }
+            .take((corrections.size-16).coerceAtLeast(0))
             .map { it.id }.toSet()
         val retained=combined.filterNot { it.id in discarded }
         check(retained.size<=MAX_RECORDS) {
