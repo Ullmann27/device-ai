@@ -38,7 +38,7 @@ async function main() {
     if(!response.ok)throw Error('GitHub API HTTP '+response.status);
     return response.json();
   }
-  const branch='copilot/pr-12-working-first-vertical-slice';
+  const branch=env.CONTINUUM_BRANCH||'copilot/pr-12-working-first-vertical-slice';
   const data=await api('/actions/runs?branch='+encodeURIComponent(branch)+'&per_page=12');
   const runs=(data.workflow_runs??[]).filter(x=>x.name!=='Continuum Developer Agent').slice(0,12);
   const jobs={};
@@ -214,7 +214,7 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
     // the backlog on the state branch knows. State is read through the API
     // (this job has no git credentials); unreadable state fails the job instead
     // of looking empty, which would repeat repairs every hour.
-    const branch=o.branch??'copilot/pr-12-working-first-vertical-slice';
+    const branch=o.branch??env.CONTINUUM_BRANCH??'copilot/pr-12-working-first-vertical-slice';
     const stateBranch=o['state-branch']??publish.STATE_BRANCH;
     if(!/^[\w./-]{1,120}$/.test(branch)||!/^[\w.-]{1,80}$/.test(stateBranch))throw Error('Invalid --branch or --state-branch');
     const headers={Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'};
@@ -237,7 +237,8 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
     const repairs=(backlog?.tasks??[]).filter(t=>t.kind==='REPAIR');
     const known=repairs.find(t=>t.subject?.base===head)??null;
     const running=repairs.find(t=>t.state==='IN_PROGRESS'&&t.claim.leaseUntil>Date.now())??null;
-    const attempted=state.sessions.some(x=>x.base===head)||Boolean(known);
+    const explicitlyRetried=Boolean(known&&known.state==='READY'&&known.attempts===0&&known.history?.at(-1)?.op==='retry');
+    const attempted=!explicitlyRetried&&(state.sessions.some(x=>x.base===head)||Boolean(known));
     const decision={branch,head,buildConclusion:build?.conclusion??build?.status??'NOT_RUN',alreadyAttempted:attempted,
       backlogTask:known?.id??null,backlogTaskState:known?.state??null,runningRepair:running?.id??null,
       needsRepair:build?.conclusion==='failure'&&!attempted&&!running};
