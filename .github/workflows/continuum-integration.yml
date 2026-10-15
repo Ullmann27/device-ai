@@ -1,0 +1,28 @@
+name: Continuum integration verification
+on:
+  push:
+    branches: ["development/continuum-backlog-20261015"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Export reproducible Git checkout
+        run: git bundle create continuum-source.bundle HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: continuum-git-checkout
+          path: continuum-source.bundle
+          retention-days: 7
+      - name: Test continuum and repair pipeline
+        run: node --test .github/continuum/*.test.mjs
