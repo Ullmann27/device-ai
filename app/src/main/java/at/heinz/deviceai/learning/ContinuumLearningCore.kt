@@ -444,6 +444,16 @@ class ContinuumLearningCore(
         )
     }
 
+    /** Owner-directed selective correction removal, without touching other questions. */
+    fun revokeAnswerCorrection(question:String):Int=synchronized(CORE_LOCK) {
+        val key=ContinuumAnswerCorrection.queryKey(question)
+        val count=store.revokeCorrectionByQuestionKey(key,nowMillis())
+        // A previously corrected response may remain in a recent chat turn.
+        // Clear derived conversation context only after the ledger write succeeds.
+        if(count>0)dialogue.clear()
+        count
+    }
+
     fun revokeAnswerCorrections():Int=synchronized(CORE_LOCK) {
         val revoked=store.updateMatching(LearningExperienceType.ANSWER_CORRECTION,
             status=LearningStatus.REVOKED,now=nowMillis())

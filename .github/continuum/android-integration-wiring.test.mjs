@@ -245,6 +245,11 @@ test('owner answer corrections are UI-reachable, exact-query-only, revocable, an
  ensure('retrieval matches only OWNER_CONFIRMED',helper.includes('LearningTrustClass.OWNER_CONFIRMED'));
  ensure('owner revocation confirmed',revoke?.includes('.setPositiveButton("Widerrufen")'));
  ensure('owner revocation excludes corrections from future hits',core.includes('revokeAnswerCorrections()')&&helper.includes('LearningStatus.CONFIRMED'));
+ ensure('selective revocation UI',activity.includes('EINE KORREKTUR · WIDERRUFEN') &&
+   activity.includes('confirmRevokeOneAnswerCorrection()'));
+ ensure('selective hashed revocation method',core.includes('revokeAnswerCorrection(question:String)') &&
+   store.includes('fun revokeCorrectionByQuestionKey('));
+ ensure('selective confirmation',activity.includes('.setPositiveButton("Diese Korrektur widerrufen")'));
  ensure('bounded correction storage',store.includes('fun putAnswerCorrection(')&&store.includes('corrections.size-16'));
  ensure('new answer never evicts a noncorrection',store.includes('Experience ledger full; an answer correction must not evict owner facts'));
 });

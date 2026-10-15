@@ -164,6 +164,44 @@ class ContinuumAnswerCorrectionTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun selectiveRevocationPreservesIndependentConfirmedQuestionsAndWeights() {
+        val dir=temp("continuum-single-correction-revoke")
+        try {
+            val core=ContinuumLearningCore(dir)
+            val before=core.modelSnapshot()
+            val a="Welches Tier ist ein Fisch?"
+            val b="Wo befindet sich ein Museum?"
+            core.replyFromMemory(a)
+            assertTrue(core.confirmAnswerCorrection(a,"Der Hering ist ein Fisch."))
+            core.replyFromMemory(b)
+            assertTrue(core.confirmAnswerCorrection(b,"Museen findet man an vielen Orten."))
+            assertEquals(ContinuumCorrectionSummary(2,0),core.correctionSummary())
+            assertEquals(1,core.revokeAnswerCorrection("  WELCHES  TIER IST EIN FISCH? "))
+            assertTrue(core.dialogueHistory().isEmpty())
+            assertEquals(0,core.revokeAnswerCorrection(a))
+            assertEquals(0,core.revokeAnswerCorrection("Eine völlig andere Frage?"))
+            assertEquals(ContinuumCorrectionSummary(1,1),core.correctionSummary())
+            assertFalse(ContinuumLearningCore(dir).replyFromMemory(a).grounded)
+            val still=ContinuumLearningCore(dir).replyFromMemory(b)
+            assertTrue(still.grounded)
+            assertTrue(still.answer.contains("Museen findet"))
+            assertArrayEquals(before,core.modelSnapshot())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun selectiveRevocationFailsClosedForInvalidInputsWithoutTouchingLedger() {
+        val dir=temp("continuum-revoke-invalid")
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.replyFromMemory("Was ist ein Dreieck?")
+            assertTrue(core.confirmAnswerCorrection("Was ist ein Dreieck?","Ein Dreieck hat drei Seiten."))
+            val snapshot=FileLearningExperienceStore(File(dir,"learning-core-v2")).all()
+            assertThrows(IllegalArgumentException::class.java) { core.revokeAnswerCorrection("x") }
+            assertEquals(snapshot,FileLearningExperienceStore(File(dir,"learning-core-v2")).all())
+            assertEquals(1,core.correctionSummary().active)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun untrustedCorrectionLikeEvidenceIsNeverGivenOwnerAuthority() {
         val item=LearningExperienceFactory.create(
             type=LearningExperienceType.ANSWER_CORRECTION,
