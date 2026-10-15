@@ -208,3 +208,21 @@ test('every area has a center reachable from the core card; no demo buttons; exp
  }
  ensure('development status reads the backlog on its executor',activity.includes('onBacklog({ developmentCenterStatus() })'));
 });
+
+
+test('explicit chat feedback reaches revocable ledger without becoming unverified neural training',()=>{
+ const legacy=fs.readFileSync(dir+'BootstrapMemoryStore.kt','utf8');
+ const feedback=bodyOf(activity,'private fun recordContinuumFeedback(');
+ const revoke=bodyOf(activity,'private fun confirmRevokeFeedback(');
+ ensure('positive rating invokes ledger path',activity.includes('BootstrapKind.FEEDBACK_POSITIVE -> recordContinuumFeedback(true)'));
+ ensure('negative rating invokes ledger path',activity.includes('BootstrapKind.FEEDBACK_NEGATIVE -> recordContinuumFeedback(false)'));
+ ensure('feedback uses learning IO executor',feedback?.includes('onLearningIo('));
+ ensure('feedback persists as typed local experience',core.includes('type=LearningExperienceType.USER_FEEDBACK'));
+ ensure('feedback never stores generated chat answers',core.includes('annotation="rating-only-no-training"'));
+ ensure('feedback never directly trains model',!feedback?.includes('trainIntent(')&&!feedback?.includes('trainSemantic('));
+ ensure('Learning Center surfaces counts',activity.includes('Lernkern-Feedback: '));
+ ensure('Learning Center offers revocation',activity.includes('RÜCKMELDUNGEN · WIDERRUFEN'));
+ ensure('revocation is confirmed by owner',revoke?.includes('.setPositiveButton("Widerrufen")'));
+ ensure('revocation clears core entries',revoke?.includes('revokeExplicitFeedback()'));
+ ensure('revocation also clears old counters',revoke?.includes('bootstrapMemory.clearFeedback()')&&legacy.includes('fun clearFeedback()'));
+});
