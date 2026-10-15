@@ -31,13 +31,16 @@ export function audit() {
  if(heldTexts.some(text=>trainTexts.has(text)))throw Error('Training/holdout overlap');
  const model=SubwordEncoder.createExperimentalSwb2(73);
  const intentBefore=model.evaluate(VALIDATION.intent);
+ const scoresFor=m=>HOLDOUTS.map(c=>({id:c.id,scores:MEMORIES.map(x=>({id:x.id,semantic:Number(m.similarity(c.query,x.text).toFixed(6))}))}));
  const before=auditHybridHoldouts(model,HOLDOUTS,MEMORIES);
+ const rawBefore=scoresFor(model);
  const initialHash=sha256(model.save());
  for(let epoch=0;epoch<120;epoch++){
   for(const e of TRAINING)model.updateSemantic(e,0.075);
   model.updateIntent(TRAIN.intent[epoch%TRAIN.intent.length],0.03);
  }
  const after=auditHybridHoldouts(model,HOLDOUTS,MEMORIES);
+ const rawAfter=scoresFor(model);
  const intentAfter=model.evaluate(VALIDATION.intent);
  const negative=HOLDOUTS.filter(x=>x.targetId===null);
  const falsePositives=negative.filter(x=>rankExperimentalHybrid(model,x.query,MEMORIES,{limit:1}).length>0).length;
@@ -45,7 +48,7 @@ export function audit() {
   schema:1,model:'SWB2_EXPERIMENTAL',seed:73,trainExamples:TRAINING.length,holdoutCount:HOLDOUTS.length,
   trainFingerprint:sha256(JSON.stringify(TRAINING)),holdoutFingerprint:sha256(JSON.stringify({MEMORIES,HOLDOUTS})),
   initialHash,trainedHash:sha256(model.save()),
-  before,after,falsePositives,negativeQueries:negative.length,
+  before,after,rawBefore,rawAfter,falsePositives,negativeQueries:negative.length,
   intentBefore,intentAfter,
   promotionEligible:after.neuralCorrect>before.neuralCorrect &&
     falsePositives===0 && intentAfter.correct>=intentBefore.correct
