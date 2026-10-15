@@ -249,6 +249,29 @@ class FileLearningExperienceStore(private val directory:File) {
         changed
     }
 
+    /**
+     * Revokes exactly one normalized question's owner-confirmed corrections.
+     * The query hash is an opaque locator and no question text is persisted.
+     * Other corrections, memories and training experiences are not touched.
+     */
+    fun revokeCorrectionByQuestionKey(questionKey:String,now:Long):Int=synchronized(FILE_LOCK) {
+        require(now>=0 && questionKey.matches(Regex("query-sha256:[a-f0-9]{64}")))
+        val current=loadValidated()
+        var count=0
+        val next=current.map { entry ->
+            if(entry.type==LearningExperienceType.ANSWER_CORRECTION &&
+                entry.annotation==questionKey &&
+                entry.provenance==LearningProvenance.USER_CONFIRMED &&
+                entry.trust==LearningTrustClass.OWNER_CONFIRMED &&
+                entry.status==LearningStatus.CONFIRMED) {
+                count++
+                entry.copy(status=LearningStatus.REVOKED,updatedAt=maxOf(now,entry.updatedAt))
+            } else entry
+        }
+        if(count>0)save(next)
+        count
+    }
+
     fun replay(type:LearningExperienceType,limit:Int=64):List<LearningExperience> =
         synchronized(FILE_LOCK) {
             require(limit in 1..128)

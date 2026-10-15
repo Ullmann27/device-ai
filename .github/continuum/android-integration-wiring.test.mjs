@@ -234,7 +234,8 @@ test('owner answer corrections are UI-reachable, exact-query-only, revocable, an
  const confirm=bodyOf(activity,'private fun showLastAnswerCorrectionDialog(');
  const revoke=bodyOf(activity,'private fun confirmRevokeAnswerCorrections(');
  ensure('correction button in memory center',activity.includes('LETZTE ANTWORT · KORRIGIEREN'));
- ensure('revocation button in memory center',activity.includes('ANTWORTKORREKTUREN · WIDERRUFEN'));
+ ensure('full revocation button in memory center',activity.includes('ALLE KORREKTUREN · WIDERRUFEN'));
+ ensure('single revocation button in memory center',activity.includes('EINE KORREKTUR · WIDERRUFEN'));
  ensure('explicit UI confirmation',confirm?.includes('.setPositiveButton("Korrektur bestätigen")'));
  ensure('latest actual dialogue used',confirm?.includes('dialogueHistory().lastOrNull()'));
  ensure('confirmation on I/O worker',confirm?.includes('onLearningIo('));
@@ -245,6 +246,11 @@ test('owner answer corrections are UI-reachable, exact-query-only, revocable, an
  ensure('retrieval matches only OWNER_CONFIRMED',helper.includes('LearningTrustClass.OWNER_CONFIRMED'));
  ensure('owner revocation confirmed',revoke?.includes('.setPositiveButton("Widerrufen")'));
  ensure('owner revocation excludes corrections from future hits',core.includes('revokeAnswerCorrections()')&&helper.includes('LearningStatus.CONFIRMED'));
+ ensure('selective revocation UI',activity.includes('EINE KORREKTUR · WIDERRUFEN') &&
+   activity.includes('confirmRevokeOneAnswerCorrection()'));
+ ensure('selective hashed revocation method',core.includes('revokeAnswerCorrection(question:String)') &&
+   store.includes('fun revokeCorrectionByQuestionKey('));
+ ensure('selective confirmation',activity.includes('.setPositiveButton("Diese Korrektur widerrufen")'));
  ensure('bounded correction storage',store.includes('fun putAnswerCorrection(')&&store.includes('corrections.size-16'));
  ensure('new answer never evicts a noncorrection',store.includes('Experience ledger full; an answer correction must not evict owner facts'));
 });

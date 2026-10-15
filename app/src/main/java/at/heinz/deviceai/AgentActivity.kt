@@ -936,7 +936,8 @@ class AgentActivity : Activity() {
             CenterAction("GEMERKTE FAKTEN", accent = true) { showBootstrapMemory() },
             CenterAction("QUELLEN-NOTIZEN") { showSavedWebNotes() },
             CenterAction("LETZTE ANTWORT · KORRIGIEREN") { showLastAnswerCorrectionDialog() },
-            CenterAction("ANTWORTKORREKTUREN · WIDERRUFEN") { confirmRevokeAnswerCorrections() },
+            CenterAction("EINE KORREKTUR · WIDERRUFEN") { confirmRevokeOneAnswerCorrection() },
+            CenterAction("ALLE KORREKTUREN · WIDERRUFEN") { confirmRevokeAnswerCorrections() },
             CenterAction("FAKTEN LÖSCHEN") { showConfirmForget() }
         )
     )
@@ -2205,6 +2206,35 @@ class AgentActivity : Activity() {
                     }
                 }.show()
         }
+    }
+
+    /** The user enters the original question; its text is never added to the ledger. */
+    private fun confirmRevokeOneAnswerCorrection() {
+        val question=EditText(this).apply {
+            hint="Exakte Frage der Antwortkorrektur"
+            inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            setSingleLine(false)
+            maxLines=4
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Einzelne Antwortkorrektur widerrufen")
+            .setMessage("Gib die ursprüngliche Frage ein. Großschreibung und mehrfacher Abstand " +
+                "spielen keine Rolle. Nur die Korrektur dieser Frage wird widerrufen; " +
+                "andere bestätigte Antworten und Erinnerungen bleiben unverändert.")
+            .setView(question)
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("Diese Korrektur widerrufen") { _, _ ->
+                val q=question.text.toString().trim()
+                if(q.length !in 3..512) {
+                    addAssistantMessage("Widerruf nicht gestartet: Bitte die ursprüngliche Frage mit 3 bis 512 Zeichen eingeben.")
+                } else onLearningIo({ ContinuumLearningCore(filesDir).revokeAnswerCorrection(q) }) { result ->
+                    addAssistantMessage(result.fold(
+                        { n -> if(n>0) "$n Korrektur zur eingegebenen Frage widerrufen. Andere Fragen bleiben unverändert."
+                               else "Für diese Frage war keine aktive, bestätigte Korrektur gespeichert." },
+                        { "Einzelwiderruf nicht abgeschlossen ("+failureName(it)+"). Bitte erneut versuchen." }
+                    ))
+                }
+            }.show()
     }
 
     private fun confirmRevokeAnswerCorrections() {
