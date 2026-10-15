@@ -226,3 +226,25 @@ test('explicit chat feedback reaches revocable ledger without becoming unverifie
  ensure('revocation clears core entries',revoke?.includes('revokeExplicitFeedback()'));
  ensure('revocation also clears old counters',revoke?.includes('bootstrapMemory.clearFeedback()')&&legacy.includes('fun clearFeedback()'));
 });
+
+test('owner answer corrections are UI-reachable, exact-query-only, revocable, and isolated from training',()=>{
+ const store=fs.readFileSync(dir+'learning/ContinuumLearningExperience.kt','utf8');
+ const dialogue=fs.readFileSync(dir+'learning/ContinuumMemoryDialogue.kt','utf8');
+ const helper=fs.readFileSync(dir+'learning/ContinuumAnswerCorrection.kt','utf8');
+ const confirm=bodyOf(activity,'private fun showLastAnswerCorrectionDialog(');
+ const revoke=bodyOf(activity,'private fun confirmRevokeAnswerCorrections(');
+ ensure('correction button in memory center',activity.includes('LETZTE ANTWORT · KORRIGIEREN'));
+ ensure('revocation button in memory center',activity.includes('ANTWORTKORREKTUREN · WIDERRUFEN'));
+ ensure('explicit UI confirmation',confirm?.includes('.setPositiveButton("Korrektur bestätigen")'));
+ ensure('latest actual dialogue used',confirm?.includes('dialogueHistory().lastOrNull()'));
+ ensure('confirmation on I/O worker',confirm?.includes('onLearningIo('));
+ ensure('typed correction evidence',core.includes('type=LearningExperienceType.ANSWER_CORRECTION'));
+ ensure('strict latest dialogue guard',core.includes('turn.resolvedQuery==question'));
+ ensure('no text generalized by neural weight training',!confirm?.includes('trainIntent(')&&!confirm?.includes('trainSemantic('));
+ ensure('exact question hash lookup',helper.includes('query-sha256:')&&dialogue.includes('ContinuumAnswerCorrection.find('));
+ ensure('retrieval matches only OWNER_CONFIRMED',helper.includes('LearningTrustClass.OWNER_CONFIRMED'));
+ ensure('owner revocation confirmed',revoke?.includes('.setPositiveButton("Widerrufen")'));
+ ensure('owner revocation excludes corrections from future hits',core.includes('revokeAnswerCorrections()')&&helper.includes('LearningStatus.CONFIRMED'));
+ ensure('bounded correction storage',store.includes('fun putAnswerCorrection(')&&store.includes('corrections.size-16'));
+ ensure('new answer never evicts a noncorrection',store.includes('Experience ledger full; an answer correction must not evict owner facts'));
+});
