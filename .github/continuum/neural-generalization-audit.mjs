@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import {SubwordEncoder,sha256} from './portable-subword.mjs';
 import {auditHybridHoldouts,rankExperimentalHybrid} from './experimental-hybrid-retrieval.mjs';
 import {TRAIN,VALIDATION} from './neural-curriculum.mjs';
+import {trainSwb2Adaptive} from './swb2-adaptive-research.mjs';
 export const MEMORIES=Object.freeze([
  {id:'solar',text:'Photovoltaikzellen verwandeln Strahlungsenergie in elektrischen Gleichstrom.'},
  {id:'motor',text:'Ein Getriebe überträgt die Rotationskraft auf die Antriebswelle.'},
@@ -40,6 +41,13 @@ export function audit() {
   model.updateIntent(TRAIN.intent[epoch%TRAIN.intent.length],0.03);
  }
  const after=auditHybridHoldouts(model,HOLDOUTS,MEMORIES);
+ const adaptiveResult=trainSwb2Adaptive(SubwordEncoder.createExperimentalSwb2(73),TRAINING,
+   {steps:1800,rate:0.017});
+ const adaptiveModel=adaptiveResult.candidate;
+ const adaptiveAfter=auditHybridHoldouts(adaptiveModel,HOLDOUTS,MEMORIES);
+ const adaptiveIntent=adaptiveModel.evaluate(VALIDATION.intent);
+ const adaptiveFalsePositives=HOLDOUTS.filter(x=>x.targetId===null &&
+   rankExperimentalHybrid(adaptiveModel,x.query,MEMORIES,{limit:1}).length>0).length;
  const rawAfter=scoresFor(model);
  const intentAfter=model.evaluate(VALIDATION.intent);
  const negative=HOLDOUTS.filter(x=>x.targetId===null);
@@ -49,6 +57,12 @@ export function audit() {
   trainFingerprint:sha256(JSON.stringify(TRAINING)),holdoutFingerprint:sha256(JSON.stringify({MEMORIES,HOLDOUTS})),
   initialHash,trainedHash:sha256(model.save()),
   before,after,rawBefore,rawAfter,falsePositives,negativeQueries:negative.length,
+  adaptive:{optimizer:'SPARSE_ADAM_EXPERIMENT',steps:adaptiveResult.steps,
+    supervisedBefore:adaptiveResult.before,supervisedAfter:adaptiveResult.after,
+    heldout:adaptiveAfter,raw:scoresFor(adaptiveModel),
+    intent:adaptiveIntent,falsePositives:adaptiveFalsePositives,
+    promotionEligible:adaptiveAfter.neuralCorrect>before.neuralCorrect &&
+      adaptiveFalsePositives===0 && adaptiveIntent.correct>=intentBefore.correct},
   intentBefore,intentAfter,
   promotionEligible:after.neuralCorrect>before.neuralCorrect &&
     falsePositives===0 && intentAfter.correct>=intentBefore.correct
@@ -59,5 +73,8 @@ if(process.argv[1]?.endsWith('neural-generalization-audit.mjs')){
  if(process.argv[2])fs.writeFileSync(process.argv[2],json);
  console.log('SWB2 heldout top1:',result.before.neuralCorrect,'->',result.after.neuralCorrect,
   'negative false positives:',result.falsePositives,'intent:',result.intentBefore.correct,'->',result.intentAfter.correct,
-  'promotionEligible:',result.promotionEligible);
+  'promotionEligible:',result.promotionEligible,
+  'adaptive heldout:',result.adaptive.heldout.neuralCorrect,
+  'adaptive false positives:',result.adaptive.falsePositives,
+  'adaptive eligible:',result.adaptive.promotionEligible);
 }
