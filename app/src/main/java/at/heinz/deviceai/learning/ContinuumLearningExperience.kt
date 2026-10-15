@@ -155,6 +155,14 @@ class FileLearningExperienceStore(private val directory:File) {
             item.annotation?.matches(Regex("query-sha256:[a-f0-9]{64}"))==true)
         require(now>=0)
         val current=loadValidated()
+        // Different writes can share the same wall-clock millisecond. Make
+        // correction timestamps strictly monotonic so retention means oldest
+        // actual confirmation, not lexicographically smallest content hash.
+        val latest=current.asSequence()
+            .filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
+            .maxOfOrNull { it.updatedAt } ?: -1L
+        check(latest<Long.MAX_VALUE) { "Correction timestamp exhausted" }
+        val effectiveNow=maxOf(now,latest+1)
         val same=current.firstOrNull { it.id==item.id }
         if(same?.status==LearningStatus.CONFIRMED &&
             current.none { it.id!=item.id && it.type==LearningExperienceType.ANSWER_CORRECTION &&
@@ -164,13 +172,13 @@ class FileLearningExperienceStore(private val directory:File) {
             when {
                 e.type!=LearningExperienceType.ANSWER_CORRECTION ||
                     e.annotation!=item.annotation -> e
-                e.id==item.id -> e.copy(status=LearningStatus.CONFIRMED,updatedAt=maxOf(now,e.updatedAt))
+                e.id==item.id -> e.copy(status=LearningStatus.CONFIRMED,updatedAt=maxOf(effectiveNow,e.updatedAt))
                 e.status==LearningStatus.CONFIRMED ->
-                    e.copy(status=LearningStatus.REVOKED,updatedAt=maxOf(now,e.updatedAt))
+                    e.copy(status=LearningStatus.REVOKED,updatedAt=maxOf(effectiveNow,e.updatedAt))
                 else -> e
             }
         }
-        val combined=if(same==null) revised+item else revised
+        val combined=if(same==null) revised+item.copy(createdAt=effectiveNow,updatedAt=effectiveNow) else revised
         val corrections=combined.filter { it.type==LearningExperienceType.ANSWER_CORRECTION }
             .sortedWith(compareBy<LearningExperience>{it.updatedAt}.thenBy{it.id})
         // Always retain the just confirmed correction even when multiple
