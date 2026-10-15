@@ -67,6 +67,18 @@ jobs:
           path: ${{ runner.temp }}/continuum-retention.json
           if-no-files-found: error
 
+      - name: Reject unverified neural model promotion
+        run: |
+          node --test .github/continuum/contrastive-gate.test.mjs
+          node .github/continuum/contrastive-gate.mjs "$RUNNER_TEMP/continuum-generalization.json" "$RUNNER_TEMP/continuum-retention.json" "$RUNNER_TEMP/continuum-gate.json"
+
+      - name: Upload experimental promotion decision
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-contrastive-promotion-decision
+          path: ${{ runner.temp }}/continuum-gate.json
+          if-no-files-found: error
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 
