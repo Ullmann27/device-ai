@@ -64,7 +64,7 @@ class ContinuumLearningCore(
                     it.type==LearningExperienceType.USER_FACT
                 }) return@synchronized null
             val baseline=loadModel()
-            val candidate=TrainableSubwordEncodr.restore(baseline.save())
+            val candidate=TrainableSubwordEncoder.restore(baseline.save())
             val before=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
