@@ -57,8 +57,9 @@ test('owner-accepted repair runs before baseline and only records an independent
  assert.equal(r.artifact,'/external/verified-report.json');
  assert.equal(driver.calls.repairs,0,'owner task must not cause an unrequested baseline repair');
  assert.equal(decodeLeaderState(fs.readFileSync(r.statePath)).events.at(-1).kind,'OWNER_REPAIR');
- assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'NO_FAILURE',
-  'baseline still runs once after accepted owner work finishes');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE',
+  'do not repeat the exact same baseline after owner repair already checked it');
+ assert.equal(driver.calls.repairs,0);
 }));
 
 test('owner repair evidence cannot be faked by a driver claiming DONE',
