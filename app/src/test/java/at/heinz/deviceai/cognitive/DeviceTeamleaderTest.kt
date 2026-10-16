@@ -134,6 +134,25 @@ class DeviceTeamleaderTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun corruptedPreviousStatusCannotBeSilentlyOverwrittenByPeriodicCycle() {
+        val dir = Files.createTempDirectory("teamleader-journal-evidence").toFile()
+        try {
+            val teamleader = DeviceTeamleader(dir)
+            teamleader.defer("BATTERY_LOW")
+            val file = dir.resolve("development/device-teamleader-v1.txt")
+            val original = file.readText().replace("BATTERY_LOW", "THERMAL_LIMIT")
+            file.writeText(original)
+            assertThrows(IllegalArgumentException::class.java) {
+                DeviceTeamleader(dir).runOnce()
+            }
+            assertEquals(original, file.readText())
+            assertThrows(IllegalArgumentException::class.java) {
+                DeviceTeamleader(dir).defer("STORAGE_LOW")
+            }
+            assertEquals(original, file.readText())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun aCorruptedSharedBacklogIsReportedAsFailedNotReset() {
         val dir = Files.createTempDirectory("teamleader-bad-backlog").toFile()
         try {
