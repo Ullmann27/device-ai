@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {summarizeRepairHandoffs,verifyRepairHandoffs,REPAIR_ROLES}
   from './teamleader-handoffs.mjs';
 import fs from 'node:fs';
+import crypto from 'node:crypto';
 
 const HEAD='a'.repeat(40);
 const testResult={profile:'node-continuum',passed:true,
@@ -19,8 +20,9 @@ function verified(){
   evidence:{sufficient:true}};
  good.attempts=[attempt];
  good.outcome='VERIFIED';
- good.verified={patchSha256:'b'.repeat(64),tests:[structuredClone(testResult)],
-   reviewRequired:true};
+ const patch='diff --git a/test/fixture.mjs b/test/fixture.mjs\n--- a/test/fixture.mjs\n+++ b/test/fixture.mjs\n@@ -1 +1 @@\n-old\n+new\n';
+ good.verified={patch,patchSha256:crypto.createHash('sha256').update(patch).digest('hex'),
+   tests:[structuredClone(testResult)],reviewRequired:true};
  return good;
 }
 test('clean baseline ends after analyst with truthful stop, not fake repair',()=>{
@@ -59,6 +61,15 @@ test('fabricated tests, missing evidence, rejected critic cannot approve patch',
  assert.throws(()=>summarizeRepairHandoffs(r),/Critic bypass/);
  r=verified();
  r.verified=null;
+ assert.throws(()=>summarizeRepairHandoffs(r),/full review evidence/);
+ r=verified();
+ r.verified.patch='';
+ assert.throws(()=>summarizeRepairHandoffs(r),/full review evidence/);
+ r=verified();
+ r.verified.patch='a forged patch with an unrelated hash';
+ assert.throws(()=>summarizeRepairHandoffs(r),/full review evidence/);
+ r=verified();
+ r.verified.reviewRequired='false';
  assert.throws(()=>summarizeRepairHandoffs(r),/full review evidence/);
 });
 test('reviewer rejection does not lead to edits or test execution',()=>{
