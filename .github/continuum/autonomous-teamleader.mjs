@@ -11,9 +11,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import os from 'node:os';
 import crypto from 'node:crypto';
-import {fileURLToPath} from 'node:url';
+import {executeInvestigation} from './backlog-investigator.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -28,7 +27,7 @@ const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
 const dateOf=n=>new Date(n).toISOString();
 
 export function initialLeaderState(){
- return {schema:'continuum-teamleader',version:1,events:[],integrity:null};
+ return {schema:'continuum-teamleader',version:1,events:[],attemptedHeads:[],integrity:null};
 }
 function seal(s){
  const {integrity:_ignored,...data}=s;
@@ -40,6 +39,8 @@ export function decodeLeaderState(bytes){
  const s=JSON.parse(bytes.toString('utf8'));
  if(s?.schema!=='continuum-teamleader'||s.version!==1||
     !Array.isArray(s.events)||s.events.length>MAX_EVENTS||
+    !Array.isArray(s.attemptedHeads)||s.attemptedHeads.length>64||
+    s.attemptedHeads.some(h=>!HEAD.test(h))||
     s.integrity!==hash(JSON.stringify((({integrity,...data})=>data)(s))))
    throw Error('Invalid or corrupted Teamleader state');
  for(const e of s.events)if(!HEAD.test(e.head)||!KINDS.has(e.kind)||
@@ -53,7 +54,7 @@ export function decodeLeaderState(bytes){
 export function selectTeamleaderAction(state,head,readyTask=null){
  if(!HEAD.test(head))throw Error('Full immutable commit SHA required');
  // Finish incomplete work explicitly; do not re-run it against the same base.
- if(state.events.some(e=>e.head===head&&e.kind==='BASELINE_REPAIR'))
+ if(state.attemptedHeads.includes(head)||state.events.some(e=>e.head===head&&e.kind==='BASELINE_REPAIR'))
    return readyTask?{kind:'INVESTIGATE',taskId:readyTask.id}:{kind:'IDLE'};
  return {kind:'BASELINE_REPAIR'};
 }
@@ -92,7 +93,8 @@ export function runTeamleaderCycle({
   const head=driver.head(root);
   if(!HEAD.test(head))throw Error('Repository HEAD is not a full SHA');
   // Keep STARTED outcome on disk before work. A crash is not evidence of success.
-  const incomplete=state.events.filter(e=>e.outcome==='RUNNING').at(-1);
+  const finishedIds=new Set(state.events.filter(e=>e.outcome!=='RUNNING').map(e=>e.id));
+  const incomplete=state.events.filter(e=>e.outcome==='RUNNING'&&!finishedIds.has(e.id)).at(-1);
   if(incomplete){
    state=append(state,{...incomplete,outcome:'INTERRUPTED',elapsedMs:0,
      detail:'Previous cycle ended without verified completion'});
@@ -116,9 +118,10 @@ export function runTeamleaderCycle({
   const run={id,at:started,head,kind:chosen.kind,outcome:'RUNNING',
     elapsedMs:0,detail:(chosen.taskId??'Starting safe bounded cycle').slice(0,160)};
   if(chosen.kind==='IDLE'){
-   state=append(state,{...run,outcome:'IDLE',detail:'No new HEAD or eligible safe task'});
-   writeAtomic(statePath,JSON.stringify(state)+'\n');
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
+  }
+  if(chosen.kind==='BASELINE_REPAIR'){
+   state=seal({...state,attemptedHeads:[...state.attemptedHeads.filter(h=>h!==head),head].slice(-64)});
   }
   state=append(state,run);
   writeAtomic(statePath,JSON.stringify(state)+'\n');
@@ -193,11 +196,6 @@ export async function localTeamleaderDriver(){
    return backlog.read().doc.tasks.find(t=>t.id===task.id);
   },
   investigate(root,stateDir,head,taskId){
-   const {executeInvestigation}=globalThis.__continuumInternalInvestigate??
-    // Dynamic import cannot be used in a sync method, so this is supplied by
-    // createTeamleaderDriver() below. Never accept a tool chosen by user text.
-    {};
-   if(!executeInvestigation)throw Error('Investigation driver not initialized');
    const out=path.join(stateDir,'reports','investigate-'+taskId+'.json');
    return executeInvestigation({root,file:path.join(stateDir,'development-backlog.json'),
     out,base:head,actor:'continuum-teamleader'});
