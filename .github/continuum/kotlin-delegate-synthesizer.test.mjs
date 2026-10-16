@@ -65,7 +65,8 @@ test('existing methods, overloaded delegates, unsupported headers and test paths
 });
 
 test('new method compiles and computes a nontrivial result with real kotlinc',
- {skip:spawnSync('kotlinc',['-version'],{encoding:'utf8',timeout:15000}).status!==0,
+ {skip:Boolean(process.env.CONTINUUM_REPAIR_DEPTH)||
+  spawnSync('kotlinc',['-version'],{encoding:'utf8',timeout:15000}).status!==0,
   timeout:180000},()=>{
  const generated=propose();
  assert.ok(generated.candidate);
