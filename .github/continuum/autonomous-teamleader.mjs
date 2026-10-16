@@ -56,6 +56,33 @@ export function decodeLeaderState(bytes){
   throw Error('Invalid Teamleader history event');
  return {...s,discoveryHeads:s.discoveryHeads??[]};
 }
+/** Only count events that a real worker persisted; never infer completed
+ * code changes from successful analysis or the number of role messages.
+ * Totals cover the bounded local event history, not all historical runs.
+ */
+export function summarizeTeamleaderProgress(state){
+ const events=state.events??[];
+ const ended=new Set(events.filter(e=>e.outcome!=='RUNNING').map(e=>e.id));
+ const count=outcome=>events.filter(e=>e.outcome===outcome).length;
+ return {
+  schema:'continuum-teamleader-progress',
+  version:1,
+  windowEvents:events.length,
+  checkedHeads:state.attemptedHeads.length,
+  analyzedHeads:(state.discoveryHeads??[]).length,
+  baselineClean:count('NO_FAILURE'),
+  testFailuresDetected:count('NO_CODE_DIAGNOSTIC')+
+   count('NO_VERIFIED_REPAIR')+count('VERIFIED_PATCH_PENDING_REVIEW'),
+  independentlyVerifiedPatchProposals:count('VERIFIED_PATCH_PENDING_REVIEW'),
+  completedInvestigations:count('DONE_INVESTIGATION'),
+  investigationTestFailures:count('CHECKS_FAILED'),
+  workerErrors:count('ERROR'),
+  interrupted:count('INTERRUPTED'),
+  currentlyUnfinished:events.filter(e=>e.outcome==='RUNNING'&&!ended.has(e.id)).length,
+  lastOutcome:events.filter(e=>e.outcome!=='RUNNING').at(-1)?.outcome??null
+ };
+}
+
 export function selectTeamleaderAction(state,head,readyTask=null){
  if(!HEAD.test(head))throw Error('Full immutable commit SHA required');
  // Finish incomplete work explicitly; do not re-run it against the same base.
