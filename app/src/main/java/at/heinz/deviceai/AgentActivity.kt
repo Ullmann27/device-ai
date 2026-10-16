@@ -1303,24 +1303,30 @@ class AgentActivity : Activity() {
                 core.synchronizeReviewedWebObservations(reviewedNotes.filter {
                     !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
                 }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
-                val turn=core.replyFromMemory(request.take(512))
+                val cognitive=at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core)
+                    .reply(request.take(512))
+                val turn=cognitive.dialogue
                 val legacyFallback=sourceFallback && !turn.grounded
                 val answer=if(legacyFallback)GroundedWebRecall.answer(request,reviewedNotes) ?: turn.answer else turn.answer
                 val evidence=(if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
                     else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen") +
                     (if(turn.contextReset)" · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert" else "")
-                Triple(answer,evidence,turn.grounded || legacyFallback && answer!=turn.answer)
+                Pair(Triple(answer,evidence+" · "+cognitive.trace,
+                    turn.grounded || legacyFallback && answer!=turn.answer),
+                    cognitive.localModelPrompt)
             }
             runOnUiThread {
                 if(isFinishing || isDestroyed)return@runOnUiThread
                 setBusy(false)
-                result.onSuccess { (answer,evidence,grounded) ->
+                result.onSuccess { (dialogueResult,localPrompt) ->
+                    val (answer,evidence,grounded)=dialogueResult
                     // confirmed memory answers stay deterministic; only an unanswered
                     // turn reaches a loaded local language model (reasoning chain)
                     if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
                             localRuntime.loadedModel!=null)==AssistantRoute.LOCAL_MODEL) {
                         addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
-                        runLocal(request)
+                        if(localPrompt==request)runLocal(request)
+                        else runLocal(localPrompt)
                         return@onSuccess
                     }
                     addAssistantMessage(answer)
