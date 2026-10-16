@@ -1,6 +1,9 @@
 package at.heinz.deviceai.cognitive
 
 import java.nio.file.Files
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -63,6 +66,38 @@ class DeviceTeamleaderTest {
             assertEquals(result, DeviceTeamleader(dir).status())
             assertFalse(dir.resolve("development/development-backlog.json").exists())
         } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun backgroundAndManualTeamleaderCannotOverlapOrOverwriteStatus() {
+        val dir = Files.createTempDirectory("teamleader-overlap").toFile()
+        val entered = CountDownLatch(1)
+        val release = CountDownLatch(1)
+        val finished = AtomicReference<DeviceTeamleaderSnapshot?>()
+        val first = Thread {
+            finished.set(DeviceTeamleader(dir, now = {
+                entered.countDown()
+                check(release.await(8, TimeUnit.SECONDS))
+                1750000000000L
+            }).runOnce())
+        }
+        try {
+            first.start()
+            assertTrue("first cycle acquired lock", entered.await(5, TimeUnit.SECONDS))
+            val second = DeviceTeamleader(dir, now = { 1750000001000L })
+            assertEquals("WORKER_BUSY", second.runOnce().reason)
+            assertEquals("WORKER_BUSY", second.defer("BATTERY_LOW").reason)
+            assertFalse("busy caller must not overwrite durable status",
+                dir.resolve("development/device-teamleader-v1.txt").exists())
+            release.countDown()
+            first.join(10000)
+            assertFalse("background worker completed", first.isAlive)
+            assertEquals("READY", finished.get()?.state)
+            assertEquals("READY", second.status()?.state)
+        } finally {
+            release.countDown()
+            first.join(10000)
+            dir.deleteRecursively()
+        }
     }
 
     @Test fun aCorruptedReportFailsClosedWithoutSilentlyResettingIt() {
