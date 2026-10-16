@@ -38,9 +38,12 @@ function accepted(store,f,base=f.head){
 
 
 test('expired execution budget fails closed before launching fixed subprocesses',()=>{
- assert.throws(()=>runChain('node',process.cwd(),os.tmpdir(),{
-   deadline:Date.now()-1
- }),/deadline exhausted/);
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-deadline-'));
+ try{
+  assert.throws(()=>runChain('node',process.cwd(),out,{
+    deadline:Date.now()-1
+  }),/deadline exhausted/);
+ }finally{fs.rmSync(out,{recursive:true,force:true});}
 });
 
 test('an unrelated automatic REPAIR task cannot starve an accepted owner task',()=>{
