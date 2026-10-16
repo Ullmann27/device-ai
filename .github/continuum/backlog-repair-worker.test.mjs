@@ -6,7 +6,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {executeOwnerRepairTask,validateOwnerRepairTask} from './backlog-repair-worker.mjs';
-import {BacklogStore} from './development-backlog.mjs';
+import {BacklogStore,emptyDocument,applyOps,nextEligible} from './development-backlog.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
 function fixture(broken){
@@ -34,6 +34,23 @@ function accepted(store,f,base=f.head){
    source:'owner',priority:900,subject:{base,chain:'node'}}},
   {op:'accept',actor:'owner',at:2,id:'repair-owner-one',reason:'explicit local authorization'}]);
 }
+
+
+test('an unrelated automatic REPAIR task cannot starve an accepted owner task',()=>{
+ const tasks=[
+  {id:'repair-auto-one',title:'Automatic incident',kind:'REPAIR',
+   source:'repair-loop',priority:999},
+  {id:'repair-owner-one',title:'Owner command',kind:'REPAIR',
+   source:'owner',priority:600}
+ ];
+ const ops=tasks.flatMap(task=>[
+  {op:'propose',actor:'owner',at:1,task},
+  {op:'accept',actor:'owner',at:2,id:task.id}
+ ]);
+ const doc=applyOps(emptyDocument(0,'owner'),ops).doc;
+ assert.equal(nextEligible(doc,['REPAIR']).id,'repair-auto-one');
+ assert.equal(nextEligible(doc,['REPAIR'],['owner']).id,'repair-owner-one');
+});
 
 test('owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE',
  {skip:nested,timeout:180000},()=>{
