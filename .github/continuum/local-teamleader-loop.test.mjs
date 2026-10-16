@@ -16,11 +16,13 @@ test('three local cycles pace on a fixed one-hour schedule and persist honest he
  assert.equal(summary.cycles,3);
  assert.equal(summary.failures,0);
  assert.equal(summary.lastOutcome,'IDLE');
- assert.equal(beats.length,3);
- assert.equal(beats[0].state,'WAITING');
- assert.ok(beats[0].nextAttemptAt>=beats[0].lastFinishedAt+3600000);
- assert.equal(beats[2].state,'LIMIT_REACHED');
- assert.equal(beats[2].nextAttemptAt,null);
+ assert.equal(beats.length,6,'each cycle has RUNNING then an outcome');
+ assert.equal(beats.filter(b=>b.state==='RUNNING').length,3);
+ const completed=beats.filter(b=>b.state!=='RUNNING');
+ assert.equal(completed[0].state,'WAITING');
+ assert.ok(completed[0].nextAttemptAt>=completed[0].lastFinishedAt+3600000);
+ assert.equal(completed[2].state,'LIMIT_REACHED');
+ assert.equal(completed[2].nextAttemptAt,null);
 });
 
 test('failures stay failed, sleep with increasing backoff and eventually recover',async()=>{
@@ -42,11 +44,13 @@ test('failures stay failed, sleep with increasing backoff and eventually recover
  assert.equal(summary.cycles,3);
  assert.equal(summary.failures,2);
  assert.equal(summary.lastOutcome,'NO_FAILURE');
- assert.equal(beats[0].lastOutcome,'ERROR');
- assert.equal(beats[1].lastOutcome,'CHECKS_FAILED');
- assert.equal(beats[1].failureStreak,2);
- assert.equal(beats[2].failureStreak,0);
- assert.equal(beats[2].state,'LIMIT_REACHED');
+ assert.equal(beats.length,6);
+ const done=beats.filter(b=>b.state!=='RUNNING');
+ assert.equal(done[0].lastOutcome,'ERROR');
+ assert.equal(done[1].lastOutcome,'CHECKS_FAILED');
+ assert.equal(done[1].failureStreak,2);
+ assert.equal(done[2].failureStreak,0);
+ assert.equal(done[2].state,'LIMIT_REACHED');
  assert.equal(errors.length,2);
 });
 
