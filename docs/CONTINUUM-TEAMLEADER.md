@@ -179,3 +179,58 @@ ausgeführt**. GitHub Actions startet weiterhin keine normalen Test-Runner.
 Eine bestehende Termux- oder PC-Node-Installation kann diese Tests ohne
 zusätzlichen bezahlten Service ausführen. Eine Android-APK-Freigabe lässt sich
 daraus noch nicht ableiten.
+
+
+## M4: Von einem expliziten Owner-Auftrag zur unabhängig geprüften Reparatur
+
+Die lokale CLI bietet nun einen begrenzten **Owner-REPAIR**-Durchlauf mit dem
+kanonischen v2-Entwicklungs-Backlog. Das ist **kein allgemeiner Codegenerator**.
+Der Worker verwendet ausschließlich die bestehenden, geprüften Reparaturstrategien
+und die festen Testketten aus repair-loop.mjs. Die optionale Quelle
+source: owner und der separierte Status READY sind die lokale
+Arbeitsvereinbarung; der Backlog-Hash ist keine Signatur und ersetzt keine
+Betriebssystem-Dateiberechtigungen.
+
+Alle Zustandsdateien und Prüfberichte müssen **außerhalb** des Git-Checkouts
+liegen. Beispiel auf einem Rechner mit Node.js und Git:
+
+    STATE="$HOME/.local/state/device-ai-continuum/owner-repairs"
+    mkdir -p "$STATE"
+    node .github/continuum/developer-agent.mjs backlog propose-repair \
+      --file "$STATE/development-backlog.json" \
+      --id repair-owner-one --chain node --title "Node-Regression beheben"
+    node .github/continuum/developer-agent.mjs backlog show \
+      --file "$STATE/development-backlog.json"
+    node .github/continuum/developer-agent.mjs backlog accept \
+      --file "$STATE/development-backlog.json" --id repair-owner-one
+    node .github/continuum/developer-agent.mjs owner-repair \
+      --file "$STATE/development-backlog.json" \
+      --out "$STATE/reports" --id repair-owner-one --minutes 20
+
+Die CLI pinnt bei der Auftragserfassung den vollständigen aktuellen Git-HEAD.
+Vor der Ausführung müssen Checkout und SHA noch genau dazu passen; ein
+verschmutzter Checkout wird nicht bearbeitet. Ein erfolgreicher Durchlauf
+setzt voraus, dass die Basis-Tests den Defekt tatsächlich reproduzieren,
+die vorhandene Repair-Pipeline einen überprüften Patch erzeugt und ein
+**zweiter unabhängiger Git-Worktree** denselben Patch anwenden und die feste
+Testkette erfolgreich mit realen Testfallzahlen ausführen kann. Die Patch-Bytes
+werden gegen den SHA-256 im Repair-Bericht geprüft. Erst danach wird der
+Auftrag über die vorhandenen submit- und complete-Operationen als DONE
+erfasst. Ein grüner Ausgangszustand führt **nicht** zu einem fiktiven Patch.
+Automatisch erzeugte Reparaturvorhaben überlagern keine source: owner-Aufträge.
+
+Fehlgeschlagene Versuche bleiben als FAILED und in eigenständigen
+Verzeichnissen dokumentiert; bestehende Backlog-Leases und der
+Reparatur-Ledger werden wiederverwendet. Es gibt keine ungeprüfte Änderung
+am Original-Checkout und keinen automatischen Merge.
+
+Verifikation:
+
+    node --test .github/continuum/backlog-repair-worker.test.mjs
+    node --test .github/continuum/teamleader-end-to-end.test.mjs
+    node --test .github/continuum/*.test.mjs
+
+Bei der ersten Einführung ist der Code auf dem Entwicklungsbranch
+implementiert; ein vollständiger lokaler Node-/Android-Baseline-Lauf auf dem
+jeweils neuesten Commit muss **separat** nachgewiesen werden. Automatisch rot
+markierte GitHub-Runs ohne ausgeführte Job-Schritte sind hierfür kein Ersatz.
