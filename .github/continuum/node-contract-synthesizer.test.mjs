@@ -48,6 +48,26 @@ test('canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and 
    .digest('hex').slice(0,16));
 });
 
+test('unsupported higher-priority TEST operations cannot starve supported owner contracts',()=>{
+ const head=BASE;
+ const specs=[
+  {id:'owner-manual-test',title:'Manual-only review',kind:'TEST',
+   source:'owner',priority:999,
+   subject:{base:head,chain:'node',operation:'MANUAL_REVIEW'}},
+  {id:'owner-node-contract',title:'Node contract',kind:'TEST',
+   source:'owner',priority:400,subject:task().subject}
+ ];
+ const ops=specs.flatMap(item=>[
+  {op:'propose',actor:'owner',at:1,task:item},
+  {op:'accept',actor:'owner',at:2,id:item.id}
+ ]);
+ const doc=applyOps(emptyDocument(0,'owner'),ops).doc;
+ assert.equal(nextEligible(doc,['TEST'],['owner'],head).id,'owner-manual-test');
+ const eligible=nextEligible(doc,['TEST'],['owner'],head,null,'ASSERT_NODE_EXPORT');
+ assert.equal(eligible.id,'owner-node-contract');
+ assert.ok(propose(eligible).candidate);
+});
+
 test('fresh generated contract runs real Node tests and incorrect expected output fails',
  {skip:Boolean(process.env.CONTINUUM_REPAIR_DEPTH),timeout:30000},()=>{
  const r=propose();
