@@ -40,7 +40,7 @@ test('invalid cases, non-primitive values and arbitrary module paths cannot be r
   '[]','{}','null','not json',
   JSON.stringify([{args:[{object:'code'}],expected:3}]),
   JSON.stringify([{args:[2],expected:{result:6}}]),
-  JSON.stringify([{args:[1],expected:Infinity}]).replace('null','"bad"'),
+  JSON.stringify([{args:[1],expected:'x'.repeat(121)}]),
   JSON.stringify(Array(5).fill({args:[1],expected:3}))
  ];
  for(const bad of invalid)
