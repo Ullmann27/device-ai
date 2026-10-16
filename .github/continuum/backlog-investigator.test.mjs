@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildIndex,integrationFindings} from './code-analyzer.mjs';
-import {investigateFinding,verifyInvestigation} from './backlog-investigator.mjs';
+import {investigateFinding,verifyInvestigation,investigationChecksPassed} from './backlog-investigator.mjs';
 
 const files=[
  {path:'main/java/p/App.kt',content:'package p\nclass App { fun live() { Connected().go() } }\nclass Connected { fun go()=1 }'},
@@ -32,4 +32,13 @@ test('INVESTIGATE declines changes for findings no longer present',()=>{
 });
 test('only accepted structural INVESTIGATE tasks are eligible',()=>{
  assert.throws(()=>investigateFinding(analysis,{id:'x',kind:'TEST',subject:{}}),/structural/);
+});
+
+test('empty or failed test chain cannot complete backlog investigation',()=>{
+ assert.equal(investigationChecksPassed({passed:true,tests:{executed:3,failed:0}}),true);
+ assert.equal(investigationChecksPassed({passed:true,tests:{executed:0,failed:0}}),false);
+ assert.equal(investigationChecksPassed({passed:false,tests:{executed:3,failed:1}}),false);
+ assert.equal(investigationChecksPassed({passed:true,tests:{executed:3,failed:1}}),false);
+ assert.equal(investigationChecksPassed({passed:true,tests:{}}),false);
+ assert.equal(investigationChecksPassed(null),false);
 });
