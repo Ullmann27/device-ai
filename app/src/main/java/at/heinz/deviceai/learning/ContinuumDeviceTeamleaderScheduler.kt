@@ -111,28 +111,28 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
         val cancellation = AtomicBoolean(false)
         activeCancellation = cancellation
         val next = Thread({
-            var reschedule = false
             try {
                 val teamleader = DeviceTeamleader(filesDir)
                 val reason = ContinuumOfflineLearningBudget.deferralReason(currentResources())
                 if (reason != null) {
                     if (!cancellation.get()) teamleader.defer(reason)
                 } else if (!cancellation.get()) {
-                    val result = teamleader.runOnce {
+                    teamleader.runOnce {
                         cancellation.get() || Thread.currentThread().isInterrupted
                     }
-                    reschedule = result.state == "ERROR" && !cancellation.get()
+                    // A corrupted model or backlog is a persistent failure,
+                    // not a reason to spin an immediate JobScheduler retry.
+                    // This periodic job already has a future scheduled run.
                 }
             } catch (e: InterruptedException) {
                 Thread.currentThread().interrupt()
             } catch (e: Exception) {
-                reschedule = !cancellation.get()
                 Log.e(TAG, "Android Teamleader cycle failed", e)
             } finally {
                 try {
                     // Finish the previous JobScheduler generation before it
                     // becomes possible for another generation to be started.
-                    if (!cancellation.get()) jobFinished(params, reschedule)
+                    if (!cancellation.get()) jobFinished(params, false)
                 } finally {
                     synchronized(this@ContinuumDeviceTeamleaderJobService) {
                         if (activeCancellation === cancellation) {
