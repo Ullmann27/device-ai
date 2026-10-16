@@ -71,6 +71,13 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   if(git(source,['status','--porcelain']).stdout.trim())
     throw Error('Source checkout must be clean before any autonomous task');
   const store=new BacklogStore(backlogPath,{actor});
+  // Recover stale claims left by a crashed worker. The shared backlog FSM
+  // marks them retryable only while the configured attempt budget remains.
+  const snapshot=store.read().doc;
+  if(snapshot.tasks.some(t=>t.state==='IN_PROGRESS'&&
+       t.claim?.leaseUntil<Date.now())){
+    store.apply([{op:'expire',actor,at:Date.now()}]);
+  }
   const eligible=nextEligible(store.read().doc,['REPAIR'],['owner']);
   if(!eligible)return {status:'NO_READY_TASK',head};
   if(id!==null&&id!==eligible.id)
