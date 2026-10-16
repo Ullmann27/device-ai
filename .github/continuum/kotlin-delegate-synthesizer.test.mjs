@@ -72,7 +72,7 @@ test('new method compiles and computes a nontrivial result with real kotlinc',
  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-kotlin-'));
  try{
   const code=path.join(tmp,'MathApi.kt'),main=path.join(tmp,'Main.kt'),jar=path.join(tmp,'check.jar');
-  fs.writeFileSync(code,generated.candidate.edits[0].newText);
+  fs.writeFileSync(code,generated.candidate.edits[0].oldText);
   fs.writeFileSync(main,[
    'import p.MathApi',
    'fun main() {',
@@ -81,6 +81,13 @@ test('new method compiles and computes a nontrivial result with real kotlinc',
    '    println("CONTINUUM_DELEGATE_OK")',
    '}',''
   ].join('\n'));
+  // A real RED compilation is the acceptance baseline: owner-requested
+  // functionality must not be falsely reported as already implemented.
+  const red=spawnSync('kotlinc',[code,main,'-include-runtime','-d',jar],
+   {encoding:'utf8',timeout:120000});
+  assert.notEqual(red.status,0,'baseline must fail without the requested method');
+  assert.match(red.stderr??'',/squareTwice/);
+  fs.writeFileSync(code,generated.candidate.edits[0].newText);
   const compile=spawnSync('kotlinc',[code,main,'-include-runtime','-d',jar],
    {encoding:'utf8',timeout:120000});
   assert.equal(compile.status,0,(compile.stderr??'').slice(-3000));
