@@ -3543,6 +3543,104 @@
    "proposalCommit": "d0bfe7bc637df88d38aade44173b0123eb35001d",
    "proposalBranch": "continuum-agent/repair-ec14c4b94e-a82e4caf",
    "pullRequest": "https://github.com/Ullmann27/device-ai/compare/copilot%2Fpr-12-working-first-vertical-slice...continuum-agent%2Frepair-ec14c4b94e-a82e4caf?expand=1"
+  },
+  {
+   "at": "2026-10-16T02:45:02.761Z",
+   "baseCommit": "6cdbe32b6f4dc71a54dbe32776c9b0cc5038a723",
+   "chain": "android",
+   "diagnostic": "2d77d436987112b9",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "8ae2aa63b1541ea9",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+     "oldText": "                if(!stopped.get()) {\n                    // Learning is only FINISHED when no budget or safety limit was hit.\n                    if(cancelled())ContinuumOfflineJobStatus.deferred(\n                        this@ContinuumAutonomousJobService,deferredReason?:\"TIME_BUDGET\")\n                    else ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)\n                }",
+     "newText": "                if(!stopped.get())ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)",
+     "line": 153
+    }
+   ],
+   "confidence": 0.48,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": false,
+     "total": 485,
+     "failed": 1,
+     "executed": 482,
+     "skipped": 3
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:45:02.761Z",
+   "baseCommit": "6cdbe32b6f4dc71a54dbe32776c9b0cc5038a723",
+   "chain": "android",
+   "diagnostic": "2d77d436987112b9",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "7f9238c64fafce1c",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+     "oldText": "                        if(fresh.isNotEmpty() && !cancelled()) {\n                            val report=core.learnFromSources(fresh,cancelled)",
+     "newText": "                        if(fresh.isNotEmpty() && !stopped.get()) {\n                            val report=core.learnFromSources(fresh,stopped::get)",
+     "line": 143
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": false,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:45:02.761Z",
+   "baseCommit": "6cdbe32b6f4dc71a54dbe32776c9b0cc5038a723",
+   "chain": "android",
+   "diagnostic": "2d77d436987112b9",
+   "diagnosticKind": "UNRESOLVED_REFERENCE",
+   "candidate": "43652729ac401b68",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+     "oldText": "import android.content.Intent\nimport android.content.IntentFilter\nimport android.os.BatteryManager\nimport android.os.Build\nimport android.os.PowerManager\nimport android.os.StatFs\nimport android.os.SystemClock\nimport java.util.concurrent.atomic.AtomicBoolean\nimport android.util.Log\n\n/** What [ContinuumAutonomousScheduler.restore] plans; compared field by field with the pending job. */\ndata class ContinuumJobSpec(\n    val serviceClass:String,\n    val periodMs:Long,\n    val requiresCharging:Boolean,\n    val networkType:Int,\n    val persisted:Boolean,\n    val requiresBatteryNotLow:Boolean=true,\n    val requiresStorageNotLow:Boolean=true\n)\n\n/** The part of JobScheduler the restore decision needs (replaced by a fake in JVM tests). */\ninterface ContinuumJobPort {\n    fun pending():ContinuumJobSpec?\n    fun schedule(spec:ContinuumJobSpec):Boolean\n}\n\nprivate class AndroidContinuumJobPort(private val app:Context, private val id:Int):ContinuumJobPort {\n    private val jobs get()=app.getSystemService(JobScheduler::class.java)\n    override fun pending():ContinuumJobSpec?=jobs.getPendingJob(id)?.let { info ->\n        @Suppress(\"DEPRECATION\")\n        ContinuumJobSpec(info.service.className,info.intervalMillis,info.isRequireCharging,info.networkType,info.isPersisted,\n            info.isRequireBatteryNotLow,info.isRequireStorageNotLow)\n    }\n    override fun schedule(spec:ContinuumJobSpec):Boolean {\n        val info=JobInfo.Builder(id,ComponentName(app.packageName,spec.serviceClass))\n            .setRequiresCharging(spec.requiresCharging)\n            .setRequiresBatteryNotLow(spec.requiresBatteryNotLow)\n            .setRequiresStorageNotLow(spec.requiresStorageNotLow)\n            .setRequiredNetworkType(spec.networkType)\n            .setPersisted(spec.persisted)\n            .setPeriodic(spec.periodMs)\n            .build()\n        return jobs.schedule(info)==JobScheduler.RESULT_SUCCESS\n    }\n}\n\n/** Offline-only, bounded learning jobs. No web permission or owner data is used. */\nclass ContinuumAutonomousScheduler internal constructor(\n    private val jobs:ContinuumJobPort,\n    private val record:(accepted:Boolean,error:String?)->Unit\n) {\n    constructor(context:Context):this(AndroidContinuumJobPort(context.applicationContext,JOB_ID),\n        { accepted,error -> ContinuumOfflineJobStatus.scheduled(context.applicationContext,accepted,error) })\n\n    /**\n     * Called on every app start. JobScheduler.schedule() replaces a pending job and\n     * STOPS it when it is running, and a replaced periodic job starts its period\n     * again, so an identical pending job is left alone. Scheduling errors (quota,\n     * missing permission) are recorded as \"not scheduled\" instead of crashing the\n     * activity.\n     */\n    fun restore():Boolean {\n        var error:String?=null\n        val accepted=try {\n            jobs.pending()==WANTED || jobs.schedule(WANTED)\n        } catch (e:RuntimeException) {\n            error=e.javaClass.simpleName\n            false\n        }\n        record(accepted,error)\n        return accepted\n    }\n    companion object {\n        const val JOB_ID=620134\n        const val PERIOD_MS=24*60*60*1000L\n        /** By name: JVM tests must not load the JobService class (android-wiring test checks it). */\n        const val SERVICE_CLASS=\"at.heinz.deviceai.learning.ContinuumAutonomousJobService\"\n        val WANTED=ContinuumJobSpec(SERVICE_CLASS,PERIOD_MS,\n            requiresCharging=true,networkType=JobInfo.NETWORK_TYPE_NONE,persisted=true)\n    }\n}\n\n/** Android may delay this work; each stage is idempotent and only commits evaluated weights. */\nclass ContinuumAutonomousJobService:JobService() {\n    private val stopped=AtomicBoolean(false)\n    private var worker:Thread?=null\n    companion object { private const val TAG=\"ContinuumOfflineLearning\" }\n    private fun currentResources():ContinuumLearningResources {\n        val battery=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))\n        val level=battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1)?:-1\n        val scale=battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1)?:-1\n        val percent=if(level>=0 && scale>0) (level*100/scale).coerceIn(0,100) else null\n        val thermal=if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q) {\n            getSystemService(PowerManager::class.java)?.currentThermalStatus\n        } else null\n        val free=StatFs(filesDir.absolutePath).availableBytes\n        return ContinuumLearningResources(percent,false,thermal,free)\n    }\n\n    override fun onStartJob(params:JobParameters):Boolean {\n        stopped.set(false)\n        ContinuumOfflineJobStatus.started(this)\n        worker=Thread({\n            var retryAfterFailure=false\n            val startedAt=SystemClock.elapsedRealtime()\n            var nextResourceCheck=startedAt\n            var deferredReason:String?=null\n            val cancelled:()->Boolean={\n                val elapsed=SystemClock.elapsedRealtime()\n                if(stopped.get())true\n                else if(ContinuumOfflineLearningBudget.deadlineReached(startedAt,elapsed)) {\n                    deferredReason=\"TIME_BUDGET\";true\n                } else {\n                    if(elapsed>=nextResourceCheck) {\n                        nextResourceCheck=elapsed+1_500L\n                        deferredReason=ContinuumOfflineLearningBudget.deferralReason(currentResources())\n                    }\n                    deferredReason!=null\n                }\n            }\n            try {\n                if(!cancelled()) {\n                    val core=ContinuumLearningCore(filesDir)\n                    core.bootstrapOfflineCurriculum(cancelled)\n                    if(!cancelled())core.bootstrapSemanticCurriculum(cancelled)\n                    // Learn only from sources already recorded by the consent-gated\n                    // research flow. The job itself never initiates internet access.\n                    if(!cancelled()) {\n                        val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)\n                            .entries().takeLast(12)\n                        val fresh=ContinuumSourceNovelty.pending(\n                            approved, ContinuumSourceNovelty.completedHashes(filesDir)\n                        )\n                        if(fresh.isNotEmpty() && !cancelled()) {\n                            val report=core.learnFromSources(fresh,cancelled)\n                            // A stopped or timed-out training round is NOT a completed\n                            // source evaluation: the same source needs another chance.\n                            if(report?.completedEvaluation==true && !cancelled()) {\n                                ContinuumSourceNovelty.markCompleted(filesDir,fresh)\n                            }\n                        }\n                    }\n                }\n                if(!stopped.get()) {\n                    // Learning is only FINISHED when no budget or safety limit was hit.\n                    if(cancelled())ContinuumOfflineJobStatus.deferred(\n                        this@ContinuumAutonomousJobService,deferredReason?:\"TIME_BUDGET\")\n                    else ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)\n                }",
+     "newText": "import java.util.concurrent.atomic.AtomicBoolean\nimport android.util.Log\n\n/** What [ContinuumAutonomousScheduler.restore] plans; compared field by field with the pending job. */\ndata class ContinuumJobSpec(\n    val serviceClass:String,\n    val periodMs:Long,\n    val requiresCharging:Boolean,\n    val networkType:Int,\n    val persisted:Boolean\n)\n\n/** The part of JobScheduler the restore decision needs (replaced by a fake in JVM tests). */\ninterface ContinuumJobPort {\n    fun pending():ContinuumJobSpec?\n    fun schedule(spec:ContinuumJobSpec):Boolean\n}\n\nprivate class AndroidContinuumJobPort(private val app:Context, private val id:Int):ContinuumJobPort {\n    private val jobs get()=app.getSystemService(JobScheduler::class.java)\n    override fun pending():ContinuumJobSpec?=jobs.getPendingJob(id)?.let { info ->\n        @Suppress(\"DEPRECATION\")\n        ContinuumJobSpec(info.service.className,info.intervalMillis,info.isRequireCharging,info.networkType,info.isPersisted)\n    }\n    override fun schedule(spec:ContinuumJobSpec):Boolean {\n        val info=JobInfo.Builder(id,ComponentName(app.packageName,spec.serviceClass))\n            .setRequiresCharging(spec.requiresCharging)\n            .setRequiredNetworkType(spec.networkType)\n            .setPersisted(spec.persisted)\n            .setPeriodic(spec.periodMs)\n            .build()\n        return jobs.schedule(info)==JobScheduler.RESULT_SUCCESS\n    }\n}\n\n/** Offline-only, bounded learning jobs. No web permission or owner data is used. */\nclass ContinuumAutonomousScheduler internal constructor(\n    private val jobs:ContinuumJobPort,\n    private val record:(accepted:Boolean,error:String?)->Unit\n) {\n    constructor(context:Context):this(AndroidContinuumJobPort(context.applicationContext,JOB_ID),\n        { accepted,error -> ContinuumOfflineJobStatus.scheduled(context.applicationContext,accepted,error) })\n\n    /**\n     * Called on every app start. JobScheduler.schedule() replaces a pending job and\n     * STOPS it when it is running, and a replaced periodic job starts its period\n     * again, so an identical pending job is left alone. Scheduling errors (quota,\n     * missing permission) are recorded as \"not scheduled\" instead of crashing the\n     * activity.\n     */\n    fun restore():Boolean {\n        var error:String?=null\n        val accepted=try {\n            jobs.pending()==WANTED || jobs.schedule(WANTED)\n        } catch (e:RuntimeException) {\n            error=e.javaClass.simpleName\n            false\n        }\n        record(accepted,error)\n        return accepted\n    }\n    companion object {\n        const val JOB_ID=620134\n        const val PERIOD_MS=24*60*60*1000L\n        /** By name: JVM tests must not load the JobService class (android-wiring test checks it). */\n        const val SERVICE_CLASS=\"at.heinz.deviceai.learning.ContinuumAutonomousJobService\"\n        val WANTED=ContinuumJobSpec(SERVICE_CLASS,PERIOD_MS,\n            requiresCharging=true,networkType=JobInfo.NETWORK_TYPE_NONE,persisted=true)\n    }\n}\n\n/** Android may delay this work; each stage is idempotent and only commits evaluated weights. */\nclass ContinuumAutonomousJobService:JobService() {\n    private val stopped=AtomicBoolean(false)\n    private var worker:Thread?=null\n    companion object { private const val TAG=\"ContinuumOfflineLearning\" }\n    override fun onStartJob(params:JobParameters):Boolean {\n        stopped.set(false)\n        ContinuumOfflineJobStatus.started(this)\n        worker=Thread({\n            var retryAfterFailure=false\n            try {\n                if(!stopped.get()) {\n                    val core=ContinuumLearningCore(filesDir)\n                    core.bootstrapOfflineCurriculum(stopped::get)\n                    if(!stopped.get())core.bootstrapSemanticCurriculum(stopped::get)\n                    // Learn only from sources already recorded by the consent-gated\n                    // research flow. The job itself never initiates internet access.\n                    if(!stopped.get()) {\n                        val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)\n                            .entries().takeLast(12)\n                        val fresh=ContinuumSourceNovelty.pending(\n                            approved, ContinuumSourceNovelty.completedHashes(filesDir)\n                        )\n                        if(fresh.isNotEmpty() && !stopped.get()) {\n                            val report=core.learnFromSources(fresh,stopped::get)\n                            // A stopped or timed-out training round is NOT a completed\n                            // source evaluation: the same source needs another chance.\n                            if(report?.completedEvaluation==true && !stopped.get()) {\n                                ContinuumSourceNovelty.markCompleted(filesDir,fresh)\n                            }\n                        }\n                    }\n                }\n                if(!stopped.get())ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)",
+     "line": 9
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -3589,7 +3687,7 @@
   {
    "kind": "UNRESOLVED_REFERENCE|REVERT_HUNK_TO_PARENT",
    "successes": 1,
-   "failures": 0
+   "failures": 2
   },
   {
    "kind": "TEST_FAILURE|REVERT_HUNK_TO_PARENT",
@@ -4826,6 +4924,17 @@
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
    "attempts": 0,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-16T02:45:02.761Z",
+   "base": "6cdbe32b6f4dc71a54dbe32776c9b0cc5038a723",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 3,
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "android-build-failure"
