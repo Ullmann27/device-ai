@@ -54,6 +54,16 @@ export function investigationChecksPassed(check) {
     Number.isSafeInteger(check.tests?.failed) && check.tests.failed===0;
 }
 
+/** The next investigation must be dependency-eligible, and a Teamleader
+ * request cannot silently switch to another READY task.
+ * Pure selection: useful for independent scheduler/worker parity tests. */
+export function chooseReadyInvestigation(doc,taskId=null) {
+  const eligible=B.nextEligible(doc,['INVESTIGATE']);
+  if(taskId!==null && (typeof taskId!=='string'||eligible?.id!==taskId))
+    throw Error('Requested investigation task does not match the next eligible task');
+  return eligible??null;
+}
+
 export function executeInvestigation({root=process.cwd(),file,out,base,actor='continuum-agent',taskId=null}){
   if(!/^[0-9a-f]{40}$/.test(base??''))throw Error('Full immutable --base SHA required');
   if(typeof file!=='string'||!file||typeof out!=='string'||!out)throw Error('File/output paths required');
@@ -62,9 +72,7 @@ export function executeInvestigation({root=process.cwd(),file,out,base,actor='co
   const store=new B.BacklogStore(docPath,{actor});
   // Resolve tasks through the canonical dependency-aware planner, not the
   // first READY entry. The Teamleader may request an exact immutable task ID.
-  const eligible=B.nextEligible(store.read().doc,['INVESTIGATE']);
-  if(taskId!==null && (typeof taskId!=='string'||eligible?.id!==taskId))
-    throw Error('Requested investigation task does not match the next eligible task');
+  const eligible=chooseReadyInvestigation(store.read().doc,taskId);
   if(!eligible)return {status:'NO_READY_INVESTIGATION'};
   const task=eligible,token=B.newToken(),at=Date.now();
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,token,leaseMs:1800000}]);
