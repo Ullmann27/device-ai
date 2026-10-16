@@ -268,7 +268,7 @@ test('repeat checking a proven head requires explicit manual retry',()=>sandbox(
 
 test('CLI budget, command and retry flags are validated before execution',()=>{
  assert.deepEqual(parseTeamleaderArgs(['--once','--budget-minutes','5']),
-  {once:true,status:false,retry:false,budgetMinutes:'5'});
+  {once:true,loop:false,status:false,retry:false,budgetMinutes:'5'});
  assert.throws(()=>parseTeamleaderArgs(['--once','--status']),/exactly one/);
  assert.throws(()=>parseTeamleaderArgs(['--status','--retry']),/requires --once/);
  assert.throws(()=>parseTeamleaderArgs(['--once','--budget-minutes','35']),/Budget/);
