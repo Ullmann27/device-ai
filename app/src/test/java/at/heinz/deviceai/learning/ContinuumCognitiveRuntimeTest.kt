@@ -44,6 +44,43 @@ class ContinuumCognitiveRuntimeTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun newConfirmedFactResolvesPreviouslyUnansweredQuestion() {
+        val dir=Files.createTempDirectory("continuum-resolve").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val runtime=ContinuumCognitiveRuntime(dir,core)
+            assertFalse(runtime.reply("Wo wohnt Leo?").grounded)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val updated=runtime.reply("Wo wohnt Leo?")
+            assertTrue(updated.grounded)
+            assertEquals(2,core.dialogueHistory().size)
+            assertTrue(updated.answer.contains("Graz"))
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun realCre1ResearchSnapshotParticipatesOnlyInShadow() {
+        val dir=Files.createTempDirectory("continuum-cre1-trained").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val cre=Cre1InferenceEncoder.createResearch(73)
+            val loss=cre.trainSgdStep("Wo wohnt Leo?",
+                listOf("Leo wohnt in Graz.","Leo arbeitet als Koch."))
+            assertTrue(loss.isFinite())
+            val file=dir.resolve("learning-core-v2/cre1-research/cre1-research-v1.cre1")
+            file.parentFile!!.mkdirs()
+            file.writeBytes(cre.save())
+            val modelHash=core.modelHash()
+            val turn=ContinuumCognitiveRuntime(dir,core).reply("Wo wohnt Leo?")
+            assertEquals(ContinuumCre1State.TRAINED_SHADOW,turn.cre1State)
+            assertNotNull(turn.cre1ModelHash)
+            assertTrue(turn.observations.isNotEmpty())
+            assertTrue(turn.trace.contains("CRE1=TRAINED_SHADOW"))
+            assertEquals(modelHash,core.modelHash())
+            assertTrue(turn.grounded)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun brokenCre1CheckpointIsNeverSilentlyTrustedOrDeleted() {
         val dir=Files.createTempDirectory("continuum-corrupt-cre1").toFile()
         try {
