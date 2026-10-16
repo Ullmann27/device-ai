@@ -165,6 +165,22 @@ test('owner REPAIR retains priority over TEST and both finish on the same HEAD',
  assert.equal(driver.calls.repairs,0);
 }));
 
+test('retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST',
+ ()=>sandbox(({root,stateDir})=>{
+  const d=fake();
+  d.readyOwnerRepair=()=>({id:'owner-rerun-repair',kind:'REPAIR',
+   source:'owner',state:'READY',subject:{base:A,chain:'node'}});
+  d.ownerRepair=(_r,_s,_h,id)=>({
+   status:'DONE',taskId:id,patchSha256:'c'.repeat(64),
+   approvedForMerge:false,
+   profiles:[{profile:'node-continuum',passed:true,failed:0,executed:2}]
+  });
+  const result=runTeamleaderCycle({root,stateDir,driver:d,retry:true});
+  assert.equal(result.kind,'OWNER_REPAIR');
+  assert.equal(result.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
+  assert.equal(d.calls.repairs,0,'retry does not override an accepted task');
+ }));
+
 test('owner repair evidence cannot be faked by a driver claiming DONE',
  ()=>sandbox(({root,stateDir})=>{
  const driver=fake();
