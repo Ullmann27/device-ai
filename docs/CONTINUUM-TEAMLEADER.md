@@ -134,3 +134,8 @@ Freigabe weiterhin erforderlich.
 prüfen (automatischer Start, Abbruch, Neustart, Speicherpersistenz). Danach
 kanonischen Backlog-Export Android zu einem lokalen PC/Termux-Worker tatsächlich
 testen und den ersten realen Patch zur menschlichen Kontrolle übergeben.
+
+Isolierte Kotlin/JVM-Statusspeicherprüfung (Kotlin 1.9, kopierter
+Statusspeicher-Quellcode mit echten Dateizugriffen): **bestanden**.
+Geprüft wurden atomarer Schreib-/Leserundlauf, Zweizeilenformat sowie
+Manipulationserkennung nach einem Bitflip. Kein vollständiger Android-Build.
