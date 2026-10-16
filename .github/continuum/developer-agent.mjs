@@ -137,6 +137,18 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
       duplicates:result.results.filter(r=>r.duplicate).length,rejected,skipped:result.skipped}));
     return result;
   }
+  if(cmd==='owner-repair'){
+    // No GitHub token or cloud service: only explicitly accepted REPAIR tasks
+    // in the canonical local backlog may drive this bounded worker.
+    if(!o.file||!o.out)throw Error('owner-repair requires --file and --out');
+    const {executeOwnerRepairTask}=await import('./backlog-repair-worker.mjs');
+    const result=executeOwnerRepairTask({root,file:o.file,out:o.out,id:o.id??null,
+      budgetMinutes:Number(o.minutes??20),
+      actor:env.CONTINUUM_ACTOR??'continuum-task-worker'});
+    log('[owner-repair] '+JSON.stringify(result));
+    if(result.status==='FAILED')throw Error('Owner repair task failed: '+result.reason);
+    return result;
+  }
   if(cmd==='repair'){
     const out=outDir(o);
     if(!/^[0-9a-f]{40}$/.test(o.base??''))throw Error('--base must be a full commit hash');
