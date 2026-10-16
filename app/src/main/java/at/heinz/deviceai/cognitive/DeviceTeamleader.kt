@@ -126,6 +126,14 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
         fun check() { if (cancelled() || Thread.currentThread().isInterrupted)
             throw InterruptedException("Device teamleader stopped") }
         try {
+            // A damaged signed status is forensic evidence. Preserve it instead
+            // of hiding corruption by publishing a freshly minted clean report.
+            try {
+                storage.read()
+            } catch (_: Exception) {
+                return DeviceTeamleaderSnapshot(now(), "ERROR",
+                    0, 0, 0, 0, 0, null, "CHECK_FAILED")
+            }
             check()
             val backlog = DeviceDevelopmentBacklog(File(filesDir, "development"), now)
             val recovered = backlog.recover()
@@ -160,9 +168,17 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
     }
 
     fun defer(reason: String): DeviceTeamleaderSnapshot {
+        require(reason in setOf("CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
+            "STORAGE_LOW", "TIME_BUDGET"))
         if (!CYCLE_LOCK.tryLock()) return DeviceTeamleaderSnapshot(now(), "DEFERRED",
             0, 0, 0, 0, 0, null, "WORKER_BUSY")
         try {
+            try {
+                storage.read()
+            } catch (_: Exception) {
+                return DeviceTeamleaderSnapshot(now(), "ERROR",
+                    0, 0, 0, 0, 0, null, "CHECK_FAILED")
+            }
             val snapshot = DeviceTeamleaderSnapshot(now(), "DEFERRED", 0, 0, 0, 0, 0, null, reason)
             storage.save(snapshot)
             return snapshot
