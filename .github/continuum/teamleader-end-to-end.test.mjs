@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -59,6 +60,14 @@ test('actual offline Teamleader repairs a broken Git fixture and retains only a 
   const patch=fs.readFileSync(path.join(path.dirname(result.artifact),'repair.patch'),'utf8');
   assert.match(patch,/-export function quad\(n\)\{return sqare/);
   assert.match(patch,/\+export function quad\(n\)\{return square/);
+  const patchHash=createHash('sha256').update(patch,'utf8').digest('hex');
+  assert.equal(patchHash,saved.verified.patchSha256,
+    'Patch bytes must match the SHA-256 in the verified repair report');
+  const applicability=spawnSync('git',['apply','--check','--binary','-'],{
+    cwd:f.home,encoding:'utf8',input:patch,timeout:10000
+  });
+  assert.equal(applicability.status,0,
+    'Verified patch must apply to the untouched base: '+applicability.stderr);
   assert.match(fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs'),'utf8'),
     /return sqare/,'source checkout must not be modified by autonomous repair');
   assert.equal(f.git('status','--porcelain'),'');
