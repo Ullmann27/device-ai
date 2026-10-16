@@ -29,7 +29,7 @@ const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
 const dateOf=n=>new Date(n).toISOString();
 
 export function initialLeaderState(){
- return {schema:'continuum-teamleader',version:1,events:[],attemptedHeads:[],integrity:null};
+ return {schema:'continuum-teamleader',version:1,events:[],attemptedHeads:[],discoveryHeads:[],integrity:null};
 }
 function seal(s){
  const {integrity:_ignored,...data}=s;
@@ -43,6 +43,9 @@ export function decodeLeaderState(bytes){
     !Array.isArray(s.events)||s.events.length>MAX_EVENTS||
     !Array.isArray(s.attemptedHeads)||s.attemptedHeads.length>64||
     s.attemptedHeads.some(h=>!HEAD.test(h))||
+    (s.discoveryHeads!==undefined &&
+     (!Array.isArray(s.discoveryHeads)||s.discoveryHeads.length>64||
+      s.discoveryHeads.some(h=>!HEAD.test(h))))||
     s.integrity!==hash(JSON.stringify((({integrity,...data})=>data)(s))))
    throw Error('Invalid or corrupted Teamleader state');
  for(const e of s.events)if(!HEAD.test(e.head)||!KINDS.has(e.kind)||
@@ -51,7 +54,7 @@ export function decodeLeaderState(bytes){
    typeof e.detail!=='string'||e.detail.length>160||
    typeof e.id!=='string'||!/^tl-[0-9a-f]{20}$/.test(e.id))
   throw Error('Invalid Teamleader history event');
- return s;
+ return {...s,discoveryHeads:s.discoveryHeads??[]};
 }
 export function selectTeamleaderAction(state,head,readyTask=null){
  if(!HEAD.test(head))throw Error('Full immutable commit SHA required');
@@ -139,13 +142,29 @@ export function runTeamleaderCycle({
    throw Error('Untrusted investigation task');
   let chosen=selectTeamleaderAction(state,head,ready);
   if(retry)chosen={kind:'BASELINE_REPAIR'};
-  if(chosen.kind==='IDLE'){
-   // Structural findings are only safe to auto-accept for read-only review.
-   ready=driver.prepareSafeInvestigation?.(root,stateDir,head)??null;
-   if(ready){
-    if(ready.kind!=='INVESTIGATE'||ready.state!=='READY'||!/^inv-[0-9a-f]{16}$/.test(ready.id))
-     throw Error('Unsafe auto-accepted task');
-    chosen={kind:'INVESTIGATE',taskId:ready.id};
+  if(chosen.kind==='IDLE' && !state.discoveryHeads.includes(head) &&
+     typeof driver.prepareSafeInvestigation==='function'){
+   // Source discovery is expensive. Evaluate each immutable HEAD only once,
+   // including when the source contains no structural findings.
+   // Persist intent BEFORE scanning: process death must not cause a hot loop.
+   state=seal({...state,discoveryHeads:[
+     ...state.discoveryHeads.filter(h=>h!==head),head].slice(-64)});
+   writeAtomic(statePath,JSON.stringify(state)+'\n');
+   try{
+    // Only structural, read-only investigations may be auto-accepted.
+    ready=driver.prepareSafeInvestigation(root,stateDir,head)??null;
+    if(ready){
+     if(ready.kind!=='INVESTIGATE'||ready.state!=='READY'||!/^inv-[0-9a-f]{16}$/.test(ready.id))
+      throw Error('Unsafe auto-accepted task');
+     chosen={kind:'INVESTIGATE',taskId:ready.id};
+    }
+   }catch(e){
+    const detail=('Discovery failed: '+String(e?.message??e)).slice(0,160);
+    const id='tl-'+hash(head+'\0DISCOVERY\0'+started).slice(0,20);
+    state=append(state,{id,at:started,head,kind:'IDLE',outcome:'ERROR',
+      elapsedMs:Math.max(0,now()-started),detail});
+    writeAtomic(statePath,JSON.stringify(state)+'\n');
+    return {head,kind:'IDLE',outcome:'ERROR',detail,statePath};
    }
   }
   const id='tl-'+hash(head+'\0'+chosen.kind+'\0'+started).slice(0,20);
