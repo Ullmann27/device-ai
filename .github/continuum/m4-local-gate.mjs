@@ -21,7 +21,9 @@ export function gateSummary(node,android,apk,runAndroid){
    x.results.some(r=>r.testProfile&&r.tests?.executed>0);
  const nodeOK=valid(node);
  const androidOK=runAndroid&&valid(android);
- const apkOK=runAndroid&&apk?.exitCode===0&&apk?.timedOut===false;
+ const apkOK=runAndroid&&apk?.exitCode===0&&apk?.timedOut===false&&
+   /^[0-9a-f]{64}$/.test(apk?.artifactSha256??'')&&
+   Number.isSafeInteger(apk?.bytes)&&apk.bytes>0;
  return {
   passed:nodeOK&&(!runAndroid||(androidOK&&apkOK)),
   nodePassed:nodeOK,
@@ -101,6 +103,17 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
     report.apk={exitCode:gradle.status,timedOut:gradle.error?.code==='ETIMEDOUT'||
       Boolean(gradle.signal),error:gradle.error?.message?.slice(0,300)??null,
       outputTail:(gradle.stdout??'').slice(-1000)+'\n'+(gradle.stderr??'').slice(-1000)};
+    if(gradle.status===0&&!report.apk.timedOut){
+     const built=path.join(wt,'app','build','outputs','apk','debug','app-debug.apk');
+     if(fs.existsSync(built)&&fs.statSync(built).isFile()&&fs.statSync(built).size>0){
+      const destination=path.join(outDir,'app-debug.apk');
+      fs.copyFileSync(built,destination,fs.constants.COPYFILE_EXCL);
+      const bytes=fs.readFileSync(destination);
+      report.apk.artifactSha256=hash(bytes);
+      report.apk.bytes=bytes.length;
+      report.apk.artifact=destination;
+     }else report.errors.push('APK: Gradle reported success without an app-debug.apk artifact');
+    }
    }else report.errors.push('APK: gate budget exhausted');
   }
  }catch(e){
