@@ -343,6 +343,7 @@ class AgentActivity : Activity() {
             }
         }, "continuum-offline-bootstrap").apply { isDaemon = true; start() }
         at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
+        at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
         recoverDevelopmentBacklog()
@@ -910,14 +911,56 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("ENTWICKLUNGSAUFGABE · STARTEN", accent = true) { showDevelopmentDialog() },
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
+            CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
+            CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
         )
     )
+
+    /** Device and desktop share one development backlog and agent identity.
+     * This Android stage performs local diagnostics and lease recovery only.
+     */
+    private fun showDeviceTeamleaderStatus() {
+        onBacklog({
+            at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
+                ?: "Continuum Teamleiter: Noch kein Lauf gespeichert. " +
+                    "Der lokale Job wird stündlich bei geeigneten Ressourcen eingeplant."
+        }) { result ->
+            if(isFinishing || isDestroyed)return@onBacklog
+            AlertDialog.Builder(this)
+                .setTitle("Continuum Teamleiter · Android")
+                .setMessage(result.getOrElse {
+                    "Teamleiter-Status nicht lesbar ("+backlogError(it)+")."
+                })
+                .setPositiveButton("Schließen", null)
+                .show()
+        }
+    }
+
+    private fun runDeviceTeamleaderCheck() {
+        addToolActivity("CONTINUUM · Teamleiter prüft lokalen Backlog und beide Lernkerne")
+        onBacklog({
+            at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).runOnce {
+                Thread.currentThread().isInterrupted
+            }.display()
+        }) { result ->
+            if(isFinishing || isDestroyed)return@onBacklog
+            addAssistantMessage(result.getOrElse {
+                "Teamleiterprüfung fehlgeschlagen ("+backlogError(it)+")."
+            })
+            addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")
+        }
+    }
 
     private fun developmentCenterStatus(): String {
         val views = devBacklog.views()
         val byState = views.groupingBy { it.state }.eachCount().toSortedMap()
         return buildString {
+            val teamleader=runCatching {
+                at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()
+            }.getOrNull()
+            append("Teamleiter: ").append(teamleader?.state ?: "wartet auf erste Prüfung")
+            append("\n")
             append("Backlog: ").append(views.size).append(" Aufgaben")
             if (byState.isNotEmpty()) append(" · ").append(byState.entries.joinToString(" · ") { "${it.key} ${it.value}" })
             append("\nEntwicklungsassistent: ").append(
