@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {hybridDecision,fitAndSelect,researchAudit} from './cre-hybrid-research.mjs';
+import {hybridDecision,fitAndSelect,researchAudit,prepareQueryViews,selectHybridView} from './cre-hybrid-research.mjs';
 import {RelationalEncoder} from './cre-encoder.mjs';
 
 test('DEV-only selector produces bounded conservative policies and deterministic results',()=>{
@@ -31,4 +31,23 @@ test('historical TEST comparison reports measurements but never releases experim
  assert.equal(report.lexical.negatives,report.perSeed[0].base.negatives);
  assert.equal(report.selection.options,32);
  assert.equal(typeof report.meetsHistoricalGate,'boolean');
+});
+
+test('cached query views preserve uncached CRE1 retrieval decisions exactly',()=>{
+ const m=new RelationalEncoder(17);
+ const split={memories:[
+  {id:'a',text:'Anna wohnt in Linz.'},
+  {id:'b',text:'Sophie wohnt in Graz.'},
+  {id:'c',text:'Die Katze liegt im Garten.'}
+ ],questions:[{text:'Wo wohnt Sophie?',target:'b',form:'seen-form'}],
+ unanswerable:[{text:'Was kostet eine Uhr?',target:null}]};
+ const trained=new Set(['wohnt','anna','sophie','linz','graz']);
+ const policy={lexFloor:0.25,lexGap:0.05,evidenceFloor:0.8};
+ const views=prepareQueryViews(m,split,trained);
+ for(const {text:q} of [...split.questions,...split.unanswerable]){
+  const cache=selectHybridView(views.get(q),policy);
+  const direct=hybridDecision(m,q,split.memories,trained,policy);
+  assert.equal(cache.answer?.id??null,direct.answer?.id??null);
+  assert.equal(cache.route,direct.route);
+ }
 });
