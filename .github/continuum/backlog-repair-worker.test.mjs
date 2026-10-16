@@ -88,7 +88,21 @@ test('passing fixture is not reported as successful code development',
   const store=new BacklogStore(file,{actor:'owner'});accepted(store,f);
   const result=executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:2});
   assert.equal(result.status,'FAILED');assert.equal(result.reason,'NO_FAILURE');
-  assert.equal(store.read().doc.tasks[0].state,'FAILED');
+  // maxAttempts defaults to 3: a single failure is retryable (READY), not terminal.
+  assert.equal(store.read().doc.tasks[0].state,'READY');
+  assert.equal(store.read().doc.tasks[0].attempts,1);
+  const second=executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:2});
+  assert.equal(second.status,'FAILED');assert.equal(second.reason,'NO_FAILURE');
+  assert.equal(store.read().doc.tasks[0].state,'READY');
+  assert.equal(store.read().doc.tasks[0].attempts,2);
+  const third=executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:2});
+  assert.equal(third.status,'FAILED');assert.equal(third.reason,'NO_FAILURE');
+  const finalTask=store.read().doc.tasks[0];
+  assert.equal(finalTask.state,'FAILED');
+  assert.equal(finalTask.attempts,3);
+  assert.equal(nextEligible(store.read().doc,['REPAIR'],['owner']),null);
+  // Every attempt keeps immutable, independent evidence rather than clobbering an earlier report.
+  assert.equal(fs.readdirSync(path.join(f.state,'reports')).length,3);
   assert.equal(f.git('status','--porcelain'),'');
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
