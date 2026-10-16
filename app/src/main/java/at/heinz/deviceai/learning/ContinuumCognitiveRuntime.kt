@@ -56,15 +56,18 @@ class ContinuumCognitiveRuntime(
             }.getOrNull()
         } else null
         val state=when {
-            snapshot!=null -> ContinuumCre1State.TRAINED_SHADOW
+            snapshot!=null && snapshot.first.steps>0 ->
+                ContinuumCre1State.TRAINED_SHADOW
+            snapshot!=null -> ContinuumCre1State.UNTRAINED_SHADOW
             cre1Checkpoint.exists() -> ContinuumCre1State.INVALID_SNAPSHOT
             else -> ContinuumCre1State.UNTRAINED_SHADOW
         }
         // Run both existing encoders on the SAME grounded candidates; no CRE1
         // ranking ever creates new candidates or promotes a rejected response.
-        val observer=when(state) {
+        val observer=if(ranked.isEmpty())null else when(state) {
             ContinuumCre1State.TRAINED_SHADOW -> snapshot!!.first
-            ContinuumCre1State.UNTRAINED_SHADOW -> Cre1InferenceEncoder.createResearch(73)
+            ContinuumCre1State.UNTRAINED_SHADOW ->
+                snapshot?.first ?: Cre1InferenceEncoder.createResearch(73)
             ContinuumCre1State.INVALID_SNAPSHOT -> null
         }
         val scores=ranked.mapNotNull { hit ->
