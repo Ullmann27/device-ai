@@ -22,6 +22,19 @@ class Cre1InferenceEncoderTest {
         val dirName = System.getenv("CONTINUUM_CRE1_PARITY_DIR")
         assumeTrue("CRE1 fixture supplied by CI", !dirName.isNullOrBlank())
         val dir = File(dirName!!)
+        // Zero-weight-transfer guarantee: Kotlin's own freshly initialized
+        // model must be bit-identical to Node's deterministic new CRE1 model.
+        val native = Cre1InferenceEncoder.createResearch(73)
+        assertEquals(0, native.steps)
+        assertArrayEquals(File(dir, "node-seed73.cre1").readBytes(), native.save())
+        assertArrayEquals(native.save(), Cre1InferenceEncoder.createResearch(73).save())
+        val nativeLoss = native.trainSgdStep(
+            "Wo lebt Lukas?",
+            listOf("Lukas wohnt in Graz.", "Lukas hat am 3. Mai Geburtstag.")
+        )
+        assertTrue(nativeLoss.isFinite())
+        assertEquals(1, native.steps)
+        assertNotEquals(0, Cre1InferenceEncoder.restore(native.save()).steps)
         val original = File(dir, "node-cre1.cre1").readBytes()
         assertEquals(Cre1InferenceEncoder.SNAPSHOT_LENGTH, original.size)
         val model = Cre1InferenceEncoder.restore(original)
