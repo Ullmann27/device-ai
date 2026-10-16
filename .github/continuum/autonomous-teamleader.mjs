@@ -283,7 +283,11 @@ export function runTeamleaderCycle({
     outcome=allowed[result.status];
     detail=String(result.staticResult??result.status).slice(0,160);
    }
-   artifact=result.artifact??result.report??result.receipt??null;
+   // The owner reviews the proposed *patch*. The independent receipt
+   // remains available separately in the task's external evidence folder.
+   artifact=chosen.kind==='OWNER_TEST'
+     ?result.patch??result.receipt??null
+     :result.artifact??result.report??null;
    log('[teamleader] '+chosen.kind+' -> '+outcome);
   }catch(e){
    detail=(e?.name??'Error')+': '+String(e?.message??'unknown').slice(0,120);
