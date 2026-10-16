@@ -100,10 +100,14 @@ export function summarizeRepairHandoffs(report){
  }
  if(report.outcome==='VERIFIED'){
    const v=report.verified;
+   // The patch SHA must refer to actual nonempty patch bytes. Otherwise a
+   // green test run could be misreported as a verified code modification.
    if(verified!==1||!v||!PATCH_SHA.test(v.patchSha256??'')||
+      typeof v.patch!=='string'||v.patch.length===0||
+      crypto.createHash('sha256').update(v.patch).digest('hex')!==v.patchSha256||
       !Array.isArray(v.tests)||!v.tests.length||v.tests.some(t=>t.passed!==true)||
       !v.tests.some(t=>t.tests?.executed>0)||
-      v.reviewRequired===undefined)
+      typeof v.reviewRequired!=='boolean')
      throw Error('Verified patch without full review evidence');
    messages.push(message('TEAMLEADER','PATCH_PENDING_REVIEW',{
      patchSha256:v.patchSha256,approvedForMerge:false
