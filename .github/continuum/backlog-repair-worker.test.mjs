@@ -118,6 +118,14 @@ test('unapproved task, incorrect HEAD, foreign source and unknown chain fail clo
   assert.equal(executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports')}).status,'NO_READY_TASK');
   store.apply([{op:'accept',actor:'owner',at:2,id:'repair-owner-one'}]);
   assert.throws(()=>executeOwnerRepairTask({root:f.root,file,out:path.join(f.root,'reports')}),/outside/);
+  const shortcut=path.join(f.state,'symlink-into-checkout');
+  fs.symlinkSync(f.root,shortcut,'dir');
+  assert.throws(()=>executeOwnerRepairTask({
+    root:f.root,file,out:path.join(shortcut,'reports')
+  }),/outside/,'symlinked artifact directory must not bypass checkout isolation');
+  assert.throws(()=>executeOwnerRepairTask({
+    root:f.root,file:path.join(shortcut,'backlog.json'),out:path.join(f.state,'reports')
+  }),/outside/,'symlinked backlog directory must not bypass checkout isolation');
   assert.throws(()=>validateOwnerRepairTask({...store.read().doc.tasks[0],source:'cli'},f.head),/owner-accepted/);
   assert.throws(()=>validateOwnerRepairTask({...store.read().doc.tasks[0],subject:{base:f.head,chain:'evil'}},f.head),/owner-accepted/);
   assert.throws(()=>validateOwnerRepairTask(store.read().doc.tasks[0],'f'.repeat(40)),/owner-accepted/);
