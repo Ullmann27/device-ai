@@ -98,6 +98,73 @@ test('two distinct accepted owner repairs run in consecutive local cycles on one
   assert.equal(d.calls.repairs,0,'do not waste a second baseline run');
  }));
 
+test('accepted owner TEST is dispatched before baseline and a verified new contract is review-only',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ let testTask={id:'owner-node-contract',kind:'TEST',source:'owner',state:'READY',
+  subject:{base:A,chain:'node',operation:'ASSERT_NODE_EXPORT'}};
+ driver.readyOwnerContractTask=()=>testTask;
+ driver.ownerContractTask=(_root,_state,_head,id)=>{
+  assert.equal(id,testTask.id);
+  testTask=null;
+  return {status:'DONE',taskId:id,approvedForMerge:false,
+   patchSha256:'d'.repeat(64),receipt:'/external/verification.json',
+   proof:{passed:true,baselineExecuted:1,candidateExecuted:3,independentExecuted:3}};
+ };
+ const first=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(first.kind,'OWNER_TEST');
+ assert.equal(first.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
+ assert.equal(first.artifact,'/external/verification.json');
+ assert.equal(driver.calls.repairs,0);
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.equal(driver.calls.repairs,0);
+}));
+
+test('owner TEST cannot falsely claim DONE without increasing or independently checking tests',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.readyOwnerContractTask=()=>({
+  id:'owner-node-contract',kind:'TEST',source:'owner',state:'READY',
+  subject:{base:A,chain:'node',operation:'ASSERT_NODE_EXPORT'}
+ });
+ driver.ownerContractTask=()=>({
+  status:'DONE',taskId:'owner-node-contract',approvedForMerge:false,
+  patchSha256:'d'.repeat(64),receipt:'/receipt.json',
+  proof:{passed:true,baselineExecuted:2,candidateExecuted:2,independentExecuted:2}
+ });
+ const r=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(r.kind,'OWNER_TEST');
+ assert.equal(r.outcome,'ERROR');
+ assert.match(r.detail,/without independent contract evidence/);
+ assert.equal(driver.calls.repairs,0);
+}));
+
+test('owner REPAIR retains priority over TEST and both finish on the same HEAD',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake(),work=[];
+ let ownerRepair=true,ownerTest=true;
+ driver.readyOwnerRepair=()=>ownerRepair?{id:'repair-owner-one',kind:'REPAIR',
+  source:'owner',state:'READY',subject:{base:A,chain:'node'}}:null;
+ driver.readyOwnerContractTask=()=>ownerTest?{id:'owner-node-contract',kind:'TEST',
+  source:'owner',state:'READY',
+  subject:{base:A,chain:'node',operation:'ASSERT_NODE_EXPORT'}}:null;
+ driver.ownerRepair=(_r,_s,_h,id)=>{
+  ownerRepair=false;work.push(id);return {status:'DONE',taskId:id,
+    approvedForMerge:false,patchSha256:'a'.repeat(64),
+    profiles:[{profile:'node-continuum',passed:true,executed:2,failed:0}]};
+ };
+ driver.ownerContractTask=(_r,_s,_h,id)=>{
+  ownerTest=false;work.push(id);return {status:'DONE',taskId:id,
+   approvedForMerge:false,patchSha256:'b'.repeat(64),receipt:'/report',
+   proof:{passed:true,baselineExecuted:2,candidateExecuted:4,independentExecuted:4}};
+ };
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).kind,'OWNER_REPAIR');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).kind,'OWNER_TEST');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.deepEqual(work,['repair-owner-one','owner-node-contract']);
+ assert.equal(driver.calls.repairs,0);
+}));
+
 test('owner repair evidence cannot be faked by a driver claiming DONE',
  ()=>sandbox(({root,stateDir})=>{
  const driver=fake();
