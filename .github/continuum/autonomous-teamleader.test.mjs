@@ -22,7 +22,7 @@ function fake(head=A){
   readyInvestigation:()=>pending,
   prepareSafeInvestigation:()=>{calls.prepared++;return null},
   repair:()=>{calls.repairs++;return {outcome:'NO_FAILURE'}},
-  investigate:(_r,_s,_h,id)=>{calls.investigations++;pending=null;return{status:'DONE',staticResult:'REPRODUCED_STATIC_FINDING',taskId:id}}
+  investigate:(_r,_s,_h,id)=>{calls.investigations++;pending=null;return{status:'DONE',staticResult:'REPRODUCED_STATIC_FINDING',taskId:id,executed:3,failed:0}}
  };
 }
 test('zero-paid-service worker repairs/checks each immutable head once and then idles',()=>sandbox(({root,stateDir})=>{
@@ -49,6 +49,17 @@ test('READY read-only INVESTIGATE is handled once; no write or deployment',()=>s
  assert.equal(driver.calls.repairs,1);
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
 }));
+test('Teamleader refuses fabricated DONE when no tests actually executed',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ runTeamleaderCycle({root,stateDir,driver});
+ driver.setPending({id:'inv-0123456789abcdef',kind:'INVESTIGATE',state:'READY'});
+ driver.investigate=(_r,_s,_h,id)=>({status:'DONE',
+  taskId:id,staticResult:'REPRODUCED_STATIC_FINDING',executed:0,failed:0});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'ERROR');
+ assert.match(result.detail,/without matching executed checks/);
+}));
+
 test('verified repair is a PROPOSAL only; never described as applied',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'KOTLIN_MISSING_IMPORT'},
