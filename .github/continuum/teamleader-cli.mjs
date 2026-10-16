@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
-import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState} from './autonomous-teamleader.mjs';
+import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes','--once','--status','--retry']);
@@ -41,8 +41,9 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
   const statePath=path.join(stateDir,'teamleader-state.json');
   const state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
   const lastCompleted=state.events.filter(x=>x.outcome!=='RUNNING').at(-1)??null;
+  const progress=summarizeTeamleaderProgress(state);
   const output={mode:'OFFLINE_TEAMLEADER',stateDir,processedHeads:state.attemptedHeads.length,
-   lastCompleted,recent:state.events.slice(-12)};
+   progress,lastCompleted,recent:state.events.slice(-12)};
   process.stdout.write(JSON.stringify(output,null,2)+'\n');
   return output;
  }
