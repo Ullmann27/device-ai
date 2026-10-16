@@ -5,6 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
+import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes','--once','--status','--retry']);
@@ -34,7 +35,7 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
  const opt=parseTeamleaderArgs(argv);
  const root=fs.realpathSync(path.resolve(opt.root??process.cwd()));
  const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
- const stateDir=path.resolve(opt.state??path.join(os.homedir(),'.local','state','device-ai-continuum',suffix));
+ const stateDir=resolveOutputDestination(opt.state??path.join(os.homedir(),'.local','state','device-ai-continuum',suffix));
  if(stateDir===root||stateDir.startsWith(root+path.sep))
   throw Error('State must remain outside the source checkout');
  if(opt.status){
