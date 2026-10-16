@@ -76,8 +76,14 @@ class Cre1ResearchLabTest {
             val report=lab.train(trainSamples(),auditSamples(),steps=5)
             assertEquals(5,report.steps)
             assertFalse(report.stoppedEarly)
+            assertTrue(report.trainingBeforeLoss.isFinite())
+            assertTrue(report.trainingAfterLoss.isFinite())
             assertTrue(report.beforeLoss.isFinite())
             assertTrue(report.afterLoss.isFinite())
+            if(report.accepted) {
+                assertTrue(report.trainingAfterLoss < report.trainingBeforeLoss)
+                assertTrue(report.afterLoss < report.beforeLoss)
+            }
             val after=lab.status()
             assertEquals(report.accepted,after.available)
             assertFalse(before.available)
