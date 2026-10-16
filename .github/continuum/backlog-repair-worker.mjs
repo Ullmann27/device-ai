@@ -121,9 +121,18 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       const profiles=verified.results.map(r=>({profile:r.profile,passed:r.passed,
         executed:r.tests.executed,failed:r.tests.failed,skipped:r.tests.skipped}));
       const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
-      if(!verified.passed||actualTests<1||profiles.some(p=>!p.passed||p.failed>0)){
+      const independentlyPassed=verified.passed&&actualTests>0&&
+        profiles.every(p=>p.passed&&p.failed===0);
+      const independentReceipt=path.join(independentOut,'verification.json');
+      const receipt={
+        schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,
+        checkedAt:new Date().toISOString(),passed:independentlyPassed,
+        executedTests:actualTests,profiles
+      };
+      fs.writeFileSync(independentReceipt,JSON.stringify(receipt,null,2)+'\n');
+      if(!independentlyPassed){
         outcome={status:'FAILED',head,taskId:task.id,reason:'INDEPENDENT_CHECK_FAILED',
-          profiles,report:path.join(reportDir,'report.json')};
+          profiles,independentReceipt,report:path.join(reportDir,'report.json')};
       }else{
         const submittedAt=Date.now();
         const evidence={type:'TEST_RUN',taskId:task.id,submissionToken:token,
@@ -137,8 +146,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           {op:'complete',actor,at:submittedAt,id:task.id,evidence}
         ]);
         outcome={status:'DONE',head,taskId:task.id,patchSha256:patchHash,
-          patch:patchFile,profiles,report:path.join(reportDir,'report.json'),
-          approvedForMerge:false};
+          patch:patchFile,profiles,independentReceipt,
+          report:path.join(reportDir,'report.json'),approvedForMerge:false};
       }
     }
     // Do not discard independent verification failures: record them as
