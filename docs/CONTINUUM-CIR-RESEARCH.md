@@ -73,3 +73,37 @@ compilation, and production activation of the grounded decoder are **open**.
 6. Only then approve explicit product migration and reversible rollout.
 
 Never report an untrained or overfit decoder as conversation-ready.
+
+## CRE1 relational retrieval encoder (2026-10-16, experimental, not promoted)
+
+Root causes of the SWB1/SWB2 failure found in the code: all character 2-4-grams
+of a sentence hash into 256 buckets (up to 128 active), so unrelated sentences
+share many buckets (input-level collapse); `sigmoid(2.5*dot)` of small tanh
+vectors starts at 0.5 with tiny gradients (SGD stalls) while Adam saturates the
+unnormalised vectors; one random negative per positive.
+
+`cre-encoder.mjs` (CRE1): words and per-word 3-5-grams hashed separately into
+16384 buckets, mean pooling, separate query/memory projection heads,
+L2-normalised cosine, InfoNCE (tau 0.1) with same-subject hard negatives,
+lazy Adam (bias corrections as products for a later Kotlin port).
+Data: `relational-memory-data.mjs` (train/dev/sealed test, disjoint people and
+values; test asks each fact once with a seen and once with a held-out question
+form). Configuration chosen on DEV only; `relational-retrieval-audit.mjs`
+measures TEST with 5 seeds, using the production word-evidence gate, neural
+ranking, relative abstention and a literal match rule for untrained words.
+
+Measured on sealed TEST (38 facts x 2 questions, 14 unanswerable):
+
+| Method | seen-form correct | held-out-form correct | false answers |
+|---|---|---|---|
+| production lexical | 21/38 | 17/38 | 10/14 |
+| CRE1 (seeds 1-5) | 24-31/38 | 12-15/38 | 2/14 every seed |
+| SWB1 / SWB2 same pipeline | 11-18/38 | 8-16/38 | 7-9/14 |
+
+Retention: after learning DEV pairs, TRAIN-domain retrieval stays 202-204/204.
+Gate result: false answers fall from 10/14 to 2/14 on every seed, seen forms
+improve, but held-out question forms are worse than lexical and seed 2 ties the
+production total (38/76) -> **promotionEligible=false**. Not integrated into
+the app. Next steps: improve held-out forms (e.g. combine lexical score into the
+ranking, more varied training forms), Kotlin port with parity, then re-audit on
+a new sealed suite.
