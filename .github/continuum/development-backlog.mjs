@@ -612,9 +612,14 @@ export function applyOps(doc,ops,{stopOnError=true}={}){
   return {doc:current,results};
 }
 
-export function nextEligible(doc,kinds=null,sources=null){
+/** Canonical READY-task selection; optional immutable HEAD and task-id scoping
+ * avoid starvation by unrelated owner tasks pinned to older revisions.
+ * No mutation: eligibility and deterministic priority ordering are unchanged. */
+export function nextEligible(doc,kinds=null,sources=null,base=null,taskId=null){
   return doc.tasks.filter(x=>eligible(doc,x)&&(!kinds||kinds.includes(x.kind))&&
-    (!sources||sources.includes(x.source)))
+    (!sources||sources.includes(x.source))&&
+    (base===null||x.subject?.base===base)&&
+    (taskId===null||x.id===taskId))
     .sort((a,b)=>b.priority-a.priority||a.createdAt-b.createdAt||(a.id<b.id?-1:1))[0]??null;
 }
 
