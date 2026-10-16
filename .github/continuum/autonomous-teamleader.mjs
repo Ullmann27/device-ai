@@ -14,6 +14,7 @@ import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import {executeInvestigation} from './backlog-investigator.mjs';
+import {summarizeRepairHandoffs} from './teamleader-handoffs.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -243,6 +244,9 @@ export async function localTeamleaderDriver(){
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
       maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000});
+    // Role handoffs are receipts of REAL work done by the existing repair
+    // pipeline. Never represent a proposed patch as completed or merged.
+    result.handoffs=summarizeRepairHandoffs(result);
    } finally {removeWorktree(root,wt);}
    fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(result,null,2)+'\n');
    saveLedger(ledgerPath,recordSession(ledger,result,{trigger:'local-teamleader'}));
