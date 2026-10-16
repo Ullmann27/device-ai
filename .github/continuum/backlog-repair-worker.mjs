@@ -141,10 +141,11 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           approvedForMerge:false};
       }
     }
-    // An internal green candidate must not enter the success experience ledger
-    // when the independent verification rejects it.
-    if(outcome.status==='DONE'||report.outcome!=='VERIFIED')
-      saveLedger(ledgerFile,recordSession(ledger,report,{trigger:'accepted-owner-task'}));
+    // Do not discard independent verification failures: record them as
+    // negative strategy experience, never as successful repair examples.
+    saveLedger(ledgerFile,recordSession(ledger,report,{
+      trigger:'accepted-owner-task',independentPass:outcome.status==='DONE'
+    }));
     if(outcome.status==='FAILED'){
       store.apply([{op:'fail',actor,at:Date.now(),id:task.id,token,
         error:{code:outcome.reason==='INDEPENDENT_CHECK_FAILED'?'CHECKS_FAILED':'NO_VERIFIED_REPAIR',
