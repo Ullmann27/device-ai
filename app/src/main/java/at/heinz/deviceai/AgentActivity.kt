@@ -1394,7 +1394,7 @@ class AgentActivity : Activity() {
                             localRuntime.loadedModel!=null)==AssistantRoute.LOCAL_MODEL) {
                         addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
                         if(localPrompt==request)runLocal(request)
-                        else runLocal(localPrompt)
+                        else runLocal(request,localPrompt)
                         return@onSuccess
                     }
                     addAssistantMessage(answer)
@@ -3117,7 +3117,7 @@ class AgentActivity : Activity() {
             "• ${key.take(64)}: $summary"
         }
 
-    private fun runLocal(text: String) {
+    private fun runLocal(text: String, resolvedQuestion: String = text) {
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
             setBusy(false)
@@ -3133,7 +3133,9 @@ class AgentActivity : Activity() {
         addToolActivity("Lokales Modell plant …")
         planCard.visibility = View.GONE
         val turnId = UUID.randomUUID().toString().replace("-", "").take(16)
-        val agentTask = text.take(7_900)
+        // Context may resolve pronouns, but owner-write authorization always
+        // uses the untouched original user message ('text').
+        val agentTask = resolvedQuestion.take(7_900)
         var submittedToolObservationCount = 0
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, observations ->
