@@ -183,7 +183,9 @@ export function runTeamleaderCycle({
   let chosen=owner?{kind:'OWNER_REPAIR',taskId:owner.id}:
     ownerTest?{kind:'OWNER_TEST',taskId:ownerTest.id}:
     selectTeamleaderAction(state,head,ready);
-  if(retry)chosen={kind:'BASELINE_REPAIR'};
+  // Manual/transient baseline retry must not override newer authorized
+  // owner work. A failed infrastructure run never grants more authority.
+  if(retry&&!owner&&!ownerTest)chosen={kind:'BASELINE_REPAIR'};
   if(chosen.kind==='IDLE' && !state.discoveryHeads.includes(head) &&
      typeof driver.prepareSafeInvestigation==='function'){
    // Source discovery is expensive. Evaluate each immutable HEAD only once,
