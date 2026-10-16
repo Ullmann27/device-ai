@@ -142,13 +142,13 @@ class DeviceTeamleaderTest {
             val file = dir.resolve("development/device-teamleader-v1.txt")
             val original = file.readText().replace("BATTERY_LOW", "THERMAL_LIMIT")
             file.writeText(original)
-            assertThrows(IllegalArgumentException::class.java) {
-                DeviceTeamleader(dir).runOnce()
-            }
+            val result = DeviceTeamleader(dir).runOnce()
+            assertEquals("ERROR", result.state)
+            assertEquals("CHECK_FAILED", result.reason)
             assertEquals(original, file.readText())
-            assertThrows(IllegalArgumentException::class.java) {
-                DeviceTeamleader(dir).defer("STORAGE_LOW")
-            }
+            val deferred = DeviceTeamleader(dir).defer("STORAGE_LOW")
+            assertEquals("ERROR", deferred.state)
+            assertEquals("CHECK_FAILED", deferred.reason)
             assertEquals(original, file.readText())
         } finally { dir.deleteRecursively() }
     }
