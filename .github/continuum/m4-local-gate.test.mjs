@@ -37,7 +37,11 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
  assert.equal(gateSummary(valid,null,null,false).passed,true);
  assert.equal(gateSummary(valid,null,null,true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
- assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,true);
+ assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,false,
+  'green Gradle exit without a retained APK is not a passing build');
+ assert.equal(gateSummary(valid,valid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,true);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:true},true).passed,false);
 });
 
