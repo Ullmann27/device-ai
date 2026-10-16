@@ -129,6 +129,18 @@ jobs:
           path: ${{ runner.temp }}/continuum-gate.json
           if-no-files-found: error
 
+      - name: Evaluate DEV-calibrated CRE1 lexical fallback (research only)
+        run: |
+          node --test .github/continuum/cre-hybrid-research.test.mjs
+          node .github/continuum/cre-hybrid-research.mjs "$RUNNER_TEMP/cre1-hybrid-report.json"
+
+      - name: Upload non-promotable CRE1 hybrid research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-CRE1-DEV-hybrid-research
+          path: ${{ runner.temp }}/cre1-hybrid-report.json
+          if-no-files-found: error
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 
