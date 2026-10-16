@@ -21,10 +21,13 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    activity.includes('ContinuumCognitiveRuntime(filesDir,core)') &&
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
- ensure('SWB1 memory dialogue remains in runtime',runtime.includes('core.replyFromMemory(input)'));
- ensure('CRE1 sees ONLY SWB1 confirmed retrieved candidates',
-   runtime.includes('core.retrievedEvidence(turn.resolvedQuery)') &&
-   runtime.includes('.filter { it.id in turn.memoryIds }'));
+ ensure('SWB1 dialogue and CRE1 evidence share one atomic snapshot',
+   runtime.includes('core.replyWithEvidence(input)') &&
+   core.includes('fun replyWithEvidence(input:String)') &&
+   core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)'));
+ ensure('CRE1 sees only already-grounded SWB1 candidates',
+   core.includes('.filter { it.id in turn.memoryIds }') &&
+   runtime.includes('val (turn,ranked)=core.replyWithEvidence(input)'));
  ensure('CRE1 is shadow-only and never becomes a fact writer',
    runtime.includes('Modus=CRE1_SHADOW') &&
    !runtime.includes('confirmOwnerFact(') &&
