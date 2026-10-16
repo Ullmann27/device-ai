@@ -3802,6 +3802,113 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:48:01.544Z",
+   "baseCommit": "285bf559326c19abf109a56164110da1e5b571a5",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "5289a3e9227d4e63",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineJobStatus.kt",
+     "oldText": "    /** Rolling, bounded phase audit. Never stores messages, learning examples or URLs. */\n    @Synchronized private fun logPhase(context:Context,phase:String,now:Long) {\n        val prefs=prefs(context)\n        val old=prefs.getString(\"events\",\"\").orEmpty().split('|').filter(String::isNotBlank)\n        val next=(old + (now.toString()+\":\"+phase)).takeLast(8).joinToString(\"|\")\n        prefs.edit().putString(\"events\",next).apply()\n    }",
+     "newText": "",
+     "line": 38
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": false,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:48:01.544Z",
+   "baseCommit": "285bf559326c19abf109a56164110da1e5b571a5",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "6c055577cb3be408",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineJobStatus.kt",
+     "oldText": "        if(recentEvents.isNotBlank())append(\"\\nLetzte Lernläufe: \").append(recentEvents.take(512))",
+     "newText": "",
+     "line": 31
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": true,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    },
+    {
+     "profile": "android-unit",
+     "passed": false,
+     "total": 485,
+     "failed": 1,
+     "executed": 482,
+     "skipped": 3
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:48:01.544Z",
+   "baseCommit": "285bf559326c19abf109a56164110da1e5b571a5",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "49f837b419e9686f",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": "app/src/main/java/at/heinz/deviceai/learning/ContinuumOfflineJobStatus.kt",
+     "oldText": "    val scheduleError: String = \"\",\n    val recentEvents: String = \"\"\n) {\n    fun display(): String = buildString {\n        append(\"Täglicher Offline-Lernjob: \")\n        append(when(scheduled) { true -> \"eingeplant\"; false -> \"Einplanung fehlgeschlagen\"; null -> \"nicht geprüft\" })\n        if(scheduled==false && scheduleError.isNotBlank())append(\" (\").append(scheduleError.take(60)).append(\")\")\n        append(\"\\nLetzter Zustand: \").append(phase)\n        fun date(timestamp: Long): String =\n            SimpleDateFormat(\"dd.MM.yyyy HH:mm\",Locale.GERMANY).format(Date(timestamp))\n        if(lastStartedAt>0L)append(\"\\nBeginn: \").append(date(lastStartedAt))\n        if(lastFinishedAt>0L)append(\"\\nLetzter Abschluss: \").append(date(lastFinishedAt))\n        if(lastError.isNotBlank())append(\"\\nLetzter Fehler: \").append(lastError.take(120))\n        if(recentEvents.isNotBlank())append(\"\\nLetzte Lernläufe: \").append(recentEvents.take(512))\n        append(\"\\nAusführung erfordert Laden des Geräts; Android kann den Job verschieben.\")\n    }\n}\nobject ContinuumOfflineJobStatus {\n    private const val PREFS=\"continuum-offline-job-state\"\n    private fun prefs(context:Context)=context.applicationContext.getSharedPreferences(PREFS,Context.MODE_PRIVATE)\n    /** Rolling, bounded phase audit. Never stores messages, learning examples or URLs. */\n    @Synchronized private fun logPhase(context:Context,phase:String,now:Long) {\n        val prefs=prefs(context)\n        val old=prefs.getString(\"events\",\"\").orEmpty().split('|').filter(String::isNotBlank)\n        val next=(old + (now.toString()+\":\"+phase)).takeLast(8).joinToString(\"|\")\n        prefs.edit().putString(\"events\",next).apply()\n    }\n\n    fun scheduled(context:Context,success:Boolean,error:String?=null) {\n        val edit=prefs(context).edit().putBoolean(\"scheduled\",success)\n        // Exception class name only, like failed(): no messages in preferences.\n        if(error==null)edit.remove(\"schedule_error\") else edit.putString(\"schedule_error\",error.take(60))\n        edit.apply()\n    }\n    fun started(context:Context,now:Long=System.currentTimeMillis()) {\n        logPhase(context,\"RUNNING\",now)\n        prefs(context).edit().putString(\"phase\",\"RUNNING\")\n            .putLong(\"started\",now).remove(\"error\").apply()\n    }\n    fun finished(context:Context,now:Long=System.currentTimeMillis()) {\n        logPhase(context,\"FINISHED\",now)\n        prefs(context).edit().putString(\"phase\",\"FINISHED\")\n            .putLong(\"finished\",now).remove(\"error\").apply()\n    }\n    fun stopped(context:Context,now:Long=System.currentTimeMillis()) {\n        logPhase(context,\"INTERRUPTED\",now)\n        prefs(context).edit().putString(\"phase\",\"INTERRUPTED\")\n            .putLong(\"finished\",now).apply()\n    }\n    fun failed(context:Context,error:Throwable,now:Long=System.currentTimeMillis()) {\n        logPhase(context,\"FAILED\",now)\n        // Never store exception messages: they may include source URLs or owner data.\n        prefs(context).edit().putString(\"phase\",\"FAILED\")\n            .putLong(\"finished\",now)\n            .putString(\"error\",error.javaClass.simpleName.take(60)).apply()\n    }\n    fun deferred(context:Context,reason:String,now:Long=System.currentTimeMillis()) {\n        require(reason in setOf(\"BATTERY_LOW\",\"THERMAL_LIMIT\",\"STORAGE_LOW\",\"TIME_BUDGET\"))\n        val phase=\"DEFERRED_\"+reason\n        logPhase(context,phase,now)\n        prefs(context).edit().putString(\"phase\",phase)\n            .putLong(\"finished\",now).remove(\"error\").apply()\n    }\n    fun read(context:Context):ContinuumOfflineJobSnapshot {\n        val p=prefs(context)\n        return ContinuumOfflineJobSnapshot(\n            if(p.contains(\"scheduled\"))p.getBoolean(\"scheduled\",false) else null,\n            p.getString(\"phase\",\"NOT_RUN\") ?: \"NOT_RUN\",\n            p.getLong(\"started\",0L),p.getLong(\"finished\",0L),\n            p.getString(\"error\",\"\").orEmpty(),\n            p.getString(\"schedule_error\",\"\").orEmpty(),\n            p.getString(\"events\",\"\").orEmpty()",
+     "newText": "    val scheduleError: String = \"\"\n) {\n    fun display(): String = buildString {\n        append(\"Täglicher Offline-Lernjob: \")\n        append(when(scheduled) { true -> \"eingeplant\"; false -> \"Einplanung fehlgeschlagen\"; null -> \"nicht geprüft\" })\n        if(scheduled==false && scheduleError.isNotBlank())append(\" (\").append(scheduleError.take(60)).append(\")\")\n        append(\"\\nLetzter Zustand: \").append(phase)\n        fun date(timestamp: Long): String =\n            SimpleDateFormat(\"dd.MM.yyyy HH:mm\",Locale.GERMANY).format(Date(timestamp))\n        if(lastStartedAt>0L)append(\"\\nBeginn: \").append(date(lastStartedAt))\n        if(lastFinishedAt>0L)append(\"\\nLetzter Abschluss: \").append(date(lastFinishedAt))\n        if(lastError.isNotBlank())append(\"\\nLetzter Fehler: \").append(lastError.take(120))\n        append(\"\\nAusführung erfordert Laden des Geräts; Android kann den Job verschieben.\")\n    }\n}\nobject ContinuumOfflineJobStatus {\n    private const val PREFS=\"continuum-offline-job-state\"\n    private fun prefs(context:Context)=context.applicationContext.getSharedPreferences(PREFS,Context.MODE_PRIVATE)\n\n    fun scheduled(context:Context,success:Boolean,error:String?=null) {\n        val edit=prefs(context).edit().putBoolean(\"scheduled\",success)\n        // Exception class name only, like failed(): no messages in preferences.\n        if(error==null)edit.remove(\"schedule_error\") else edit.putString(\"schedule_error\",error.take(60))\n        edit.apply()\n    }\n    fun started(context:Context,now:Long=System.currentTimeMillis()) {\n        prefs(context).edit().putString(\"phase\",\"RUNNING\")\n            .putLong(\"started\",now).remove(\"error\").apply()\n    }\n    fun finished(context:Context,now:Long=System.currentTimeMillis()) {\n        prefs(context).edit().putString(\"phase\",\"FINISHED\")\n            .putLong(\"finished\",now).remove(\"error\").apply()\n    }\n    fun stopped(context:Context,now:Long=System.currentTimeMillis()) {\n        prefs(context).edit().putString(\"phase\",\"INTERRUPTED\")\n            .putLong(\"finished\",now).apply()\n    }\n    fun failed(context:Context,error:Throwable,now:Long=System.currentTimeMillis()) {\n        // Never store exception messages: they may include source URLs or owner data.\n        prefs(context).edit().putString(\"phase\",\"FAILED\")\n            .putLong(\"finished\",now)\n            .putString(\"error\",error.javaClass.simpleName.take(60)).apply()\n    }\n    fun read(context:Context):ContinuumOfflineJobSnapshot {\n        val p=prefs(context)\n        return ContinuumOfflineJobSnapshot(\n            if(p.contains(\"scheduled\"))p.getBoolean(\"scheduled\",false) else null,\n            p.getString(\"phase\",\"NOT_RUN\") ?: \"NOT_RUN\",\n            p.getLong(\"started\",0L),p.getLong(\"finished\",0L),\n            p.getString(\"error\",\"\").orEmpty(),\n            p.getString(\"schedule_error\",\"\").orEmpty()",
+     "line": 18
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [
+    {
+     "profile": "android-compile",
+     "passed": false,
+     "total": 0,
+     "failed": 0,
+     "executed": 0,
+     "skipped": 0
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -3818,7 +3925,7 @@
   {
    "kind": "TEST_FAILURE|REVERT_FILE_TO_PARENT",
    "successes": 31,
-   "failures": 1
+   "failures": 2
   },
   {
    "kind": "UNRESOLVED_REFERENCE|KOTLIN_TYPO_REFERENCE",
@@ -3853,7 +3960,7 @@
   {
    "kind": "TEST_FAILURE|REVERT_HUNK_TO_PARENT",
    "successes": 0,
-   "failures": 5
+   "failures": 7
   }
  ],
  "sessions": [
@@ -5129,6 +5236,17 @@
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
    "attempts": 0,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-16T02:48:01.544Z",
+   "base": "285bf559326c19abf109a56164110da1e5b571a5",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 3,
    "verifiedStrategy": null,
    "patchSha256": null,
    "trigger": "android-build-failure"
