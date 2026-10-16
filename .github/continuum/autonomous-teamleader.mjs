@@ -292,8 +292,7 @@ export async function localTeamleaderDriver(){
    if(snapshot.tasks.some(t=>t.source==='owner'&&t.kind==='REPAIR'&&
         t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
      store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
-   const next=nextEligible(store.read().doc,['REPAIR'],['owner']);
-   return next?.subject?.base===head?next:null;
+   return nextEligible(store.read().doc,['REPAIR'],['owner'],head);
   },
   ownerRepair(root,stateDir,head,taskId,{budgetMinutes}){
    return executeOwnerRepairTask({
