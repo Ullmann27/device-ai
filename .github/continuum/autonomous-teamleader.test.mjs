@@ -38,6 +38,43 @@ test('zero-paid-service worker repairs/checks each immutable head once and then 
  assert.equal(next.outcome,'NO_FAILURE');assert.equal(driver.calls.repairs,2);
  assert.equal(decodeLeaderState(fs.readFileSync(first.statePath)).attemptedHeads.length,2);
 }));
+test('owner-accepted repair runs before baseline and only records an independently verified patch',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ let owner={id:'repair-owner-one',source:'owner',kind:'REPAIR',state:'READY',
+   subject:{base:A,chain:'node'}};
+ driver.readyOwnerRepair=()=>owner;
+ driver.ownerRepair=(_root,_state,_head,id)=>{
+   assert.equal(id,owner.id);
+   owner=null;
+   return {status:'DONE',taskId:id,patchSha256:'c'.repeat(64),approvedForMerge:false,
+     report:'/external/verified-report.json',
+     profiles:[{profile:'node-continuum',passed:true,failed:0,executed:4}]};
+ };
+ const r=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(r.kind,'OWNER_REPAIR');
+ assert.equal(r.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
+ assert.equal(r.artifact,'/external/verified-report.json');
+ assert.equal(driver.calls.repairs,0,'owner task must not cause an unrequested baseline repair');
+ assert.equal(decodeLeaderState(fs.readFileSync(r.statePath)).events.at(-1).kind,'OWNER_REPAIR');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'NO_FAILURE',
+  'baseline still runs once after accepted owner work finishes');
+}));
+
+test('owner repair evidence cannot be faked by a driver claiming DONE',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.readyOwnerRepair=()=>({id:'repair-owner-one',source:'owner',kind:'REPAIR',
+   state:'READY',subject:{base:A,chain:'node'}});
+ driver.ownerRepair=()=>({status:'DONE',taskId:'repair-owner-one',
+   patchSha256:'c'.repeat(64),approvedForMerge:false,profiles:[]});
+ const r=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(r.kind,'OWNER_REPAIR');
+ assert.equal(r.outcome,'ERROR');
+ assert.match(r.detail,/without independent test evidence/);
+ assert.equal(driver.calls.repairs,0);
+}));
+
 test('READY read-only INVESTIGATE is handled once; no write or deployment',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  runTeamleaderCycle({root,stateDir,driver});
