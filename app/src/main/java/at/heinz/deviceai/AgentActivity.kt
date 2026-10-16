@@ -1309,7 +1309,10 @@ class AgentActivity : Activity() {
         )
 
     private fun showContinuumSelfCheck() {
-        if(busy)return
+        if(busy) {
+            addAssistantMessage("Continuum arbeitet noch an einem anderen Auftrag. Bitte wiederhole die Diagnose anschließend.")
+            return
+        }
         setBusy(true)
         onLearningIo({
             val core=ContinuumLearningCore(filesDir)
@@ -3264,9 +3267,10 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
+                    val successful=run.blocker==null && run.response.isNotBlank()
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
-                            .recordLocalOutcome(true)
+                            .recordLocalOutcome(successful)
                     }) { audit ->
                         if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
                     }
