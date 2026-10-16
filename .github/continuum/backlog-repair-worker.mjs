@@ -5,6 +5,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {
   BacklogStore, nextEligible, newToken, sha256Hex, singleLine
 } from './development-backlog.mjs';
@@ -46,7 +47,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   if(git(source,['status','--porcelain']).stdout.trim())
     throw Error('Source checkout must be clean before any autonomous task');
   const store=new BacklogStore(backlogPath,{actor});
-  const eligible=nextEligible(store.read().doc,['REPAIR']);
+  const eligible=nextEligible(store.read().doc,['REPAIR'],['owner']);
   if(!eligible)return {status:'NO_READY_TASK',head};
   if(id!==null&&id!==eligible.id)
     throw Error('Requested task is not the next eligible repair task');
@@ -55,11 +56,12 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,
     token,leaseMs:2*60*60*1000}]);
   if(claimed.results[0]?.ok!==true)throw Error('Claim did not succeed');
-  const reportDir=path.join(outRoot,task.id+'-'+head.slice(0,12));
-  fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
+  const reportDir=path.join(outRoot,task.id+'-'+head.slice(0,12)+'-'+
+    Date.now()+'-'+crypto.randomBytes(4).toString('hex'));
   let wt=null,independent=null;
   let outcome=null;
   try{
+    fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
