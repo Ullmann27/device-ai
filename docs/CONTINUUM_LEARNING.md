@@ -88,3 +88,38 @@ Primary URLs: https://github.com/aimacode/aima-java ; https://github.com/online-
 3. Add a larger frozen out-of-distribution language benchmark before expanding vocabulary or advertising conversational quality. This tiny split is a development fixture, not an independent benchmark.
 4. Measure Android latency, peak heap, battery cost and comparable APK size. No transformer or EJML addition until the small experiment passes those checks.
 5. Future archive unification must preserve the explicit-confirmation boundary, revocation semantics and provenance; no automatic promotion of model/web outputs. Do not merge main as part of this task.
+
+
+## CRE1 order-sensitive shadow features (research only)
+
+CRE1 v1 normalizes the count of hashed word/ngram features, making two
+sentences with identical word multisets indistinguishable even when their
+argument order is reversed. This is a representational limitation, not a
+problem that projection-head training can solve by itself.
+
+The independent .github/continuum/cre-order-shadow.mjs research module
+retains the original CRE1 features but adds:
+- Directed adjacent content-word bigrams (20% total weight).
+- First/last content-word markers (5% each).
+- Existing word/ngram features (70%).
+
+It reuses V=16384 and D=32, but changes the INPUT FEATURE SEMANTICS.
+Consequently, even if the .cre1 checkpoint binary size and format remain
+unchanged, **old CRE1 weights are not semantically compatible by default**.
+Do not silently activate the shadow features in cre-encoder.mjs,
+Cre1InferenceEncoder.kt, dialogue-retrieval.mjs or the Android chat.
+
+Run locally:
+
+    node --test .github/continuum/cre-order-shadow.test.mjs
+
+The test checks that reversed actor/object sentences collide under legacy
+CRE1 and become distinguishable with the shadow feature map. It also
+asserts that no weights are changed. No answer accuracy, safety, retention
+or Kotlin/Android parity is claimed by this feature-space test.
+
+Promotion requirements: new explicit feature ABI; Kotlin/Node feature and
+inference parity; retraining with frozen train/dev/test splits and no
+test leakage; evaluation of reversed-role heldouts alongside the CRE
+challenge; no increase in false answers, and preservation of the
+legacy inference path for existing checkpoints.
