@@ -68,7 +68,7 @@ export class RelationalEncoder {
   }
   pool(f) { const h = new Float64Array(D); for (const { id, w } of f) { const o = id * D; for (let i = 0; i < D; i++) h[i] += w * this.E[o + i]; } return h; }
   project(P, h) { const z = new Float64Array(D); for (let r = 0; r < D; r++) { let s = 0; for (let c = 0; c < D; c++) s += P[r * D + c] * h[c]; z[r] = s; } return z; }
-  static normalise(z) { let n = 0; for (const x of z) n += x * x; n = Math.sqrt(n); const e = new Float64Array(D); for (let i = 0; i < D; i++) e[i] = z[i] / n; return { e, n }; }
+  static normalise(z) { let n = 0; for (const x of z) n += x * x; n = Math.sqrt(n); if (!(n > 0) || !Number.isFinite(n)) throw Error('Degenerate CRE1 embedding'); const e = new Float64Array(D); for (let i = 0; i < D; i++) e[i] = z[i] / n; return { e, n }; }
   forward(text, side) { const f = features(text), h = this.pool(f), z = this.project(side === 'q' ? this.Pq : this.Pm, h); const { e, n } = RelationalEncoder.normalise(z); return { f, h, z, e, n }; }
   embed(text, side = 'm') { return this.forward(text, side).e; }
   score(query, memory) { const a = this.embed(query, 'q'), b = this.embed(memory, 'm'); let s = 0; for (let i = 0; i < D; i++) s += a[i] * b[i]; return s; }
@@ -128,9 +128,9 @@ export class RelationalEncoder {
     if (data.length !== 16 + (V * D + 2 * D * D) * 8 + 32) throw Error('Invalid CRE1 size');
     if (!crypto.timingSafeEqual(crypto.createHash('sha256').update(body).digest(), data.subarray(-32))) throw Error('CRE1 checksum mismatch');
     let o = 0; if (body.readInt32BE(o) !== MAGIC) throw Error('Not a CRE1 model'); o += 4;
-    const m = new RelationalEncoder(0); m.seed = body.readUInt32BE(o); o += 4; m.steps = body.readInt32BE(o); o += 4;
+    const m = new RelationalEncoder(0); m.seed = body.readUInt32BE(o); o += 4; m.steps = body.readInt32BE(o); if(m.steps<0||m.steps>1000000)throw Error('Invalid CRE1 training steps'); o += 4;
     if (body.readInt32BE(o) !== D) throw Error('Invalid CRE1 dimension'); o += 4;
-    for (const arr of [m.E, m.Pq, m.Pm]) for (let i = 0; i < arr.length; i++) { arr[i] = body.readDoubleBE(o); o += 8; }
+    for (const arr of [m.E, m.Pq, m.Pm]) for (let i = 0; i < arr.length; i++) { const value = body.readDoubleBE(o); if(!Number.isFinite(value))throw Error('Non-finite CRE1 checkpoint parameter'); arr[i]=value; o += 8; }
     return m;
   }
 }
