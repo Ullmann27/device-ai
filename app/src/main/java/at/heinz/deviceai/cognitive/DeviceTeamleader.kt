@@ -48,6 +48,10 @@ data class DeviceTeamleaderSnapshot(
 class DeviceTeamleaderStatusStore(private val base: File) {
     private val path = File(base, "development/device-teamleader-v1.txt")
     fun save(s: DeviceTeamleaderSnapshot) {
+        // Never overwrite a damaged previous status: it may contain the only
+        // evidence of an interrupted run. Require an explicit recovery step.
+        // The supervisor's process-wide CYCLE_LOCK serializes normal callers.
+        if (path.exists()) read()
         require(s.state in setOf("READY", "DEFERRED", "ERROR"))
         require(s.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
             "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
