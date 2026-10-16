@@ -89,8 +89,48 @@ Android-App; freie Codegenerierung; ein vollwertiges Team aus selbstständig
 trainierbaren spezialisierten Agenten; verifizierter Android-End-to-End-Build.
 
 Nächste priorisierte Ausbaustufen:
-- Teamleiterstatus sicher im Android-Chat anzeigen.
+- Teamleiterstatus ist im Android-Chat implementiert; APK-Build und Gerätetest bleiben offen.
 - Eigene freigegebene Entwickler-Aufgaben zwischen Android und lokaler Maschine
   synchronisieren, ohne ungeschützte Ports oder externe Kosten.
 - Optional CRE1/Decoder für Planungsideen verwenden, aber keine Modellbehauptung
   als geprüfte Codeänderung behandeln.
+
+
+## Android-first-Meilenstein und ehrlicher Prüfstand (16. Oktober 2026)
+
+**Auf PR #19 im Quellcode integriert:**
+
+- Android DeviceTeamleader liest gemeinsamen Entwicklungs-Backlog sowie echte
+  SWB1-/CRE1-Zustände, führt Lease-Recovery aus und speichert einen überprüfbaren
+  Status. Er behauptet keine Codekompilierung auf einem Gerät ohne Git/Gradle.
+- Android JobScheduler registriert eine stündliche, persistente Prüfung ohne
+  Netzwerk- oder Ladekabelpflicht. Android kann den tatsächlichen Zeitpunkt
+  verschieben und laufende Jobs abbrechen.
+- Prozessweiter Lock und pro Jobgeneration separater Abbruchzustand verhindern
+  gleichzeitige Arbeit und verhindern Eingriffe alter Stoppanforderungen.
+- Die Android-Chatbefehle "Teamleiter status" und "Teamleiter prüfen" sowie
+  Entwicklung/Teamleiter-Buttons rufen die wirkliche Status- und Prüfroutine.
+- Manipulierte Statusberichte werden beim nächsten Lauf nicht heimlich
+  überschrieben; der Fehler ist sichtbar und die Daten bleiben zur Diagnose.
+- Ein nicht reparierbarer Zustand löst keine sofortige JobScheduler-Retry-
+  Dauerschleife aus. Der nächste reguläre periodische Termin bleibt möglich.
+- Ein späterer lokaler PC kann denselben Teamleiter und den kanonischen
+  Backlog-Export/import nutzen; Termux ist als freiwilliger Android-Node-
+  Ausführungsweg beschrieben, aber nicht Teil der APK-Voraussetzungen.
+
+**Prüfungen:** 11/11 Teamleiter-Steuerungsszenarien bestanden in einer isolierten
+V8-Ausführung mit nachgebildetem Dateisystem/Treiber. Die Android-/Node-
+Verkabelung wurde anhand aktueller GitHub-Quellen gesondert geprüft.
+Ein lokaler Kotlin-Test bestätigte das Zeilenende-Verhalten, das zuvor einen
+Unit-Testfehler verursacht hatte.
+
+**Nicht bestätigt:** Keine vollständige Kotlin-/Gradle-Kompilierung, keine
+Android-APK des neuen Heads, kein echter Worktree-Lauf auf dem Entwickler-PC
+und kein Smartphone-Langzeittest. GitHub Actions startet derzeit nicht mit
+normalen Runner-Testschritten. Diese Prüfungen sind für die produktive
+Freigabe weiterhin erforderlich.
+
+**Nächster Meilenstein:** APK bauen und auf dem echten Android-Smartphone
+prüfen (automatischer Start, Abbruch, Neustart, Speicherpersistenz). Danach
+kanonischen Backlog-Export Android zu einem lokalen PC/Termux-Worker tatsächlich
+testen und den ersten realen Patch zur menschlichen Kontrolle übergeben.
