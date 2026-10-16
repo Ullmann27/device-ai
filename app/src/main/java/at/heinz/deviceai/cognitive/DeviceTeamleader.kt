@@ -126,7 +126,6 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
         fun check() { if (cancelled() || Thread.currentThread().isInterrupted)
             throw InterruptedException("Device teamleader stopped") }
         try {
-            try {
             check()
             val backlog = DeviceDevelopmentBacklog(File(filesDir, "development"), now)
             val recovered = backlog.recover()
@@ -157,14 +156,17 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
                 0, 0, 0, 0, 0, null, "CHECK_FAILED")
             storage.save(snapshot)
             return snapshot
-        }
         } finally { CYCLE_LOCK.unlock() }
     }
 
     fun defer(reason: String): DeviceTeamleaderSnapshot {
-        val snapshot = DeviceTeamleaderSnapshot(now(), "DEFERRED", 0, 0, 0, 0, 0, null, reason)
-        storage.save(snapshot)
-        return snapshot
+        if (!CYCLE_LOCK.tryLock()) return DeviceTeamleaderSnapshot(now(), "DEFERRED",
+            0, 0, 0, 0, 0, null, "WORKER_BUSY")
+        try {
+            val snapshot = DeviceTeamleaderSnapshot(now(), "DEFERRED", 0, 0, 0, 0, 0, null, reason)
+            storage.save(snapshot)
+            return snapshot
+        } finally { CYCLE_LOCK.unlock() }
     }
 
     companion object {
