@@ -4,7 +4,7 @@
 // see docs/CONTINUUM-CIR-RESEARCH.md); TEST is measured with it unchanged.
 import fs from 'node:fs';
 import { buildData, fingerprint, files } from './relational-memory-data.mjs';
-import { RelationalEncoder, train, tokens, bucket, FUNCTION_WORDS } from './cre-encoder.mjs';
+import { RelationalEncoder, train, tokens, FUNCTION_WORDS } from './cre-encoder.mjs';
 import { rankMemories, wordEvidence, EVIDENCE_THRESHOLD } from './dialogue-retrieval.mjs';
 import { SubwordEncoder } from './portable-subword.mjs';
 import { Lcg } from './relational-memory-data.mjs';
@@ -14,10 +14,13 @@ export const SEEDS = Object.freeze([1, 2, 3, 4, 5]);
 
 const contentTokens = t => tokens(t).filter(w => w.length >= 3 && !FUNCTION_WORDS.has(w));
 
-/** Words the model was trained on; anything else (names, new values) must match literally. */
+/** Actual words (not hashed bucket IDs) present in training.
+ * A hash collision must never designate an unseen person's name as known.
+ * This conservatively protects the existing abstention rule.
+ */
 export function trainedVocabulary(pairs, memories) {
   const set = new Set();
-  for (const t of [...pairs.flatMap(p => tokens(p.query)), ...memories.flatMap(m => tokens(m.text))]) set.add(bucket('w:' + t));
+  for (const t of [...pairs.flatMap(p => tokens(p.query)), ...memories.flatMap(m => tokens(m.text))]) set.add(t);
   return set;
 }
 
@@ -37,7 +40,7 @@ export function decide(score, query, memories, { delta = FROZEN.delta, trained =
   if (trained) {
     const chosen = new Set(tokens(memories[gated[0].i].text));
     const store = new Set(memories.flatMap(m => tokens(m.text)));
-    const missing = contentTokens(query).filter(t => !trained.has(bucket('w:' + t)) && store.has(t) && !chosen.has(t));
+    const missing = contentTokens(query).filter(t => !trained.has(t) && store.has(t) && !chosen.has(t));
     if (missing.length) return { answer: null, reason: 'unmatched-name:' + missing.join(',') };
   }
   return { answer: memories[gated[0].i], score: gated[0].n };
