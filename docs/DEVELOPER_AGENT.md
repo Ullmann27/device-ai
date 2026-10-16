@@ -85,3 +85,23 @@ agent is not told the fault. Catalog (`repair-benchmark.mjs`):
 * Research direction (not implemented): a small local code model ranking or
   generating candidates, trained on the ledger's verified hunks. The ledger format
   already stores the needed (diagnostic, before, after, outcome) tuples.
+
+
+## Continuum Teamleader v1 (lokaler Arbeitszyklus)
+
+Der autonome Offline-Teamleiter nutzt die bereits vorhandene Repair-Pipeline:
+autonomous-teamleader.mjs und teamleader-cli.mjs steuern die Arbeit; Details
+stehen in docs/CONTINUUM-TEAMLEADER.md.
+
+Auf jedem neuen Git-Commit wird die feste Node-Testkette in einem isolierten
+Worktree einmal durchlaufen. Bei reproduzierbaren Fehlern folgen Diagnose,
+Kritiker, maximal drei Reparaturkandidaten und echte Verifikation. Ein durch
+Tests bestätigter Patch bleibt ein Vorschlag und wird niemals automatisch
+in den produktiven Branch übernommen.
+
+Danach sind höchstens eine read-only INVESTIGATE-Aufgabe je Runde und
+priorisierte Untersuchungen aus dem lokalen persistenten Backlog möglich.
+
+Ein optionaler lokaler stündlicher systemd-Timer braucht weder GitHub Actions
+noch ein kostenpflichtiges LLM, setzt aber einen laufenden eigenen Rechner
+voraus. Android-Rückkanal und freie neuronale Codegenerierung bleiben offen.
