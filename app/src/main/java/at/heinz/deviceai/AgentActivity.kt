@@ -877,6 +877,7 @@ class AgentActivity : Activity() {
             CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
         ),
         experimental = listOf(
+            CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
@@ -891,6 +892,9 @@ class AgentActivity : Activity() {
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
             .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
+        val cre=core.cre1ResearchStatus()
+        append("\nCRE1-Forschung: ").append(if(cre.available)"eigener trainierter Forschungsstand" else "noch kein freigegebener Forschungsstand")
+            .append(" · ").append(cre.steps).append(" Trainingsschritte\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
         core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
     }
@@ -1950,6 +1954,85 @@ class AgentActivity : Activity() {
      * It works on an SWB1 snapshot and synthetic examples only. The result is
      * diagnostic UI text; no app memory, private data or model weights are saved.
      */
+    /**
+     * Explicitly triggered CRE1 experiment on public synthetic cases. No user
+     * facts, internet texts or production SWB1 weights are used or modified.
+     */
+    private fun showCre1ResearchLab() {
+        onLearningIo({ ContinuumLearningCore(filesDir).cre1ResearchStatus() }) { result ->
+            val details=result.fold(
+                onSuccess={ state ->
+                    "CRE1 · Eigener experimenteller Lernkern\n" +
+                    "Trainierter Forschungsstand: " +
+                        (if(state.available)"vorhanden" else "keiner") + "\n" +
+                    "Trainingsschritte: " + state.steps + "\n" +
+                    "Modell-Fingerprint: " + (state.modelSha256?.take(16) ?: "noch keiner") + "\n\n" +
+                    "Ein lokal ausgeführter Versuch trainiert ausschließlich mit öffentlich " +
+                    "festgelegten, synthetischen Beispielsätzen. Getrennte Audit-Fragen " +
+                    "prüfen vor einer Forschungs-Speicherung den Verlustwert. " +
+                    "Abbruch oder Verschlechterung lässt den Forschungsstand unverändert. " +
+                    "CRE1 beantwortet noch keine produktiven Chatfragen."
+                },
+                onFailure={ "CRE1-Forschungsstand nicht lesbar ("+failureName(it)+")." }
+            )
+            AlertDialog.Builder(this)
+                .setTitle("CRE1 · Eigenes neuronales Training")
+                .setMessage(details)
+                .setNegativeButton("Schließen",null)
+                .setPositiveButton("FORSCHUNGSTRAINING STARTEN") { _, _ -> runCre1ResearchLab() }
+                .show()
+        }
+    }
+
+    private fun runCre1ResearchLab() {
+        if(busy) {
+            addAssistantMessage("Ein anderer Assistenten- oder Trainingslauf ist noch aktiv.")
+            return
+        }
+        setBusy(true)
+        addToolActivity("CONTINUUM · CRE1-Forschungsrunde gestartet")
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            val productionHash=core.modelHash()
+            fun sample(q:String,positive:String,negative:String) =
+                at.heinz.deviceai.learning.Cre1ResearchExample(q,listOf(positive,negative))
+            val training=listOf(
+                sample("Wo wohnt Lara?","Lara lebt in Graz.","Lara hat am 5. Mai Geburtstag."),
+                sample("Wann hat Leo Geburtstag?","Leo wurde am 3. Juni geboren.","Leo arbeitet als Koch."),
+                sample("Welchen Beruf hat Nele?","Nele ist Floristin.","Nele fährt einen Kleinwagen.")
+            )
+            val audit=listOf(
+                sample("Welche Sprache spricht Amir?","Amir beherrscht Türkisch.","Amir besitzt ein Fahrrad."),
+                sample("Was isst Nina gern?","Nina mag Kartoffelgratin.","Nina fährt einen Honda Civic.")
+            )
+            val report=core.trainExperimentalCre1(training,audit,steps=9,
+                cancelled={Thread.currentThread().isInterrupted})
+            require(core.modelHash()==productionHash) {
+                "Produktiver SWB1-Lernstand wurde parallel verändert"
+            }
+            buildString {
+                append("CRE1-Forschungsrunde: ")
+                append(if(report.accepted)"auditierte Forschungsgewichte gespeichert"
+                    else if(report.stoppedEarly)"abgebrochen; keine neuen Gewichte gespeichert"
+                    else "Kandidat verworfen; Audit wurde nicht verbessert")
+                append("\nTrainingsschritte: ").append(report.steps)
+                append("\nAudit-Verlust: ")
+                append("%.6f".format(Locale.ROOT,report.beforeLoss))
+                append(" → ").append("%.6f".format(Locale.ROOT,report.afterLoss))
+                append("\nAktiver SWB1-Lernkern und persönliche Erinnerungen blieben unverändert.")
+                append("\nForschungsmodell: ").append(report.modelSha256?.take(16)?:"kein Checkpoint")
+                append("\nDas ist kein Nachweis freier Sprachgeneralisierung.")
+            }
+        }) { result ->
+            setBusy(false)
+            addAssistantMessage(result.getOrElse{
+                "CRE1-Forschungsrunde fehlgeschlagen ("+failureName(it)+"). "+
+                    "Der produktive Lernkern wurde nicht als Forschungskandidat überschrieben."
+            })
+            addToolActivity("CONTINUUM · CRE1-Forschungsrunde beendet")
+        }
+    }
+
     private fun showContinuumContrastiveExperiment() {
         if(busy || localAgentExecutor.isShutdown) {
             addAssistantMessage("Ein anderer Lern- oder Assistentenlauf ist noch aktiv.")
