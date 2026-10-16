@@ -141,3 +141,46 @@ The strict result verifier is opt-in and does not enable outside compute nodes.
 Actual CRE1 holdout improvements, Kotlin training parity, real-device tests,
 automated code patch synthesis and authenticated GitHub-backlog linkage are
 still open. No generative or autonomous system is declared production-ready.
+
+
+## CRE1 native on-device training and non-production gate — 2026-10-16
+
+CRE1 remains EXPERIMENTAL; no production retrieval/owner-memory weights are
+changed by this work.
+
+- Kotlin Cre1InferenceEncoder can initialize its own 526,336 weights with the
+  same uint32 LCG as Node, without importing or using pretrained parameters.
+  The initial binary checkpoint is checked byte for byte on the Node/Kotlin
+  CI fixture.
+- Native Kotlin InfoNCE backpropagation with a separate bounded plain-SGD
+  optimizer was added; JavaScript cre-sgd-parity.mjs computes the same
+  gradients. Tests independently compare loss values and every parameter
+  after three fixed training rounds (526,336 floats, tolerance 1e-7).
+- CRE1 research saves SHA-256-checked CRE1 checkpoints in a distinct directory,
+  with a two-phase tmp-file/atomic-rename operation, a limited event ledger,
+  candidate rollback, disjoint train/audit examples, cancellation and at most
+  2.5 seconds per training request. Tampered checkpoints fail closed.
+- ContinuumLearningCore exposes opt-in research status and training methods.
+  The Android Learning Center has an explicit CRE1 training action that uses
+  only public synthetic examples, on its existing background I/O executor.
+  It checks the production SWB1 model hash before and after. It never enables
+  neural text generation or device actions.
+- The research data from the original CRE1 TEST suite and separately authored
+  CRE challenge v2 are **already exposed** in development. They cannot
+  serve as a sealed future promotion benchmark.
+- On the manually frozen challenge v2, a single-seed old CRE1 run retrieved
+  16/32 answers, had four false answers across twelve unanswerable questions.
+  A less-conservative lexical rescue got 20/32 but six false answers and is
+  explicitly isolated as UNSAFE_RESCUE_ABLATION. The strict hybrid preserves
+  CRE1 abstention; its accuracy was 16/32 and false answers 4/12.
+- A proper new, external sealed evaluation suite across multiple seeds must
+  demonstrate both materially better held-out paraphrase answers and no
+  disallowed false-answer regression before release.
+
+CI note: the last fully validated Android build at 0044940 had 489 passing
+JVM tests and successful APK builds. GitHub Actions later failed to assign
+runners (jobs ended in seconds with no steps/logs). Subsequent new Kotlin
+training, UI and research commits are **not yet Android-CI verified**.
+The Node SGD analytical gradient was independently compared with finite
+differences locally (absolute discrepancy approx. 1.62e-10), but this does
+not substitute for cross-runtime/Android compilation results.
