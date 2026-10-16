@@ -79,13 +79,56 @@ class ContinuumContrastiveParityTest {
         })
     }
 
-    private fun compareWeights(nodeBytes:ByteArray,kotlinBytes:ByteArray) {
+    /**
+     * Independent SWB2 Node -> Kotlin -> Node validation.
+     * This is a research-only path; the production SWB1 decoder is untouched.
+     * The Node prepare step writes node-swb2.swb2; the Node verify step
+     * subsequently checks the actual Kotlin-trained checkpoint.
+     */
+    @Test fun actualNodeKotlinNodeSwb2TrainingParityAfter350Rounds() {
+        val folder=System.getenv("CONTINUUM_CONTRASTIVE_PARITY_DIR")
+        assumeTrue("Node training vectors are supplied in CI",!folder.isNullOrBlank())
+        val dir=File(folder!!)
+        val nodeBytes=File(dir,"node-swb2.swb2").readBytes()
+        val node=Swb2ExperimentalEncoder.restore(nodeBytes)
+        val trained=Swb2ExperimentalEncoder(73L)
+        repeat(350) { i ->
+            trained.updateIntent(
+                SubwordIntentExample(
+                    if(i%2==0) "hallo freund" else "wie funktioniert strom",
+                    i%2
+                ), 0.08
+            )
+            trained.updateSemantic(
+                SubwordSemanticExample(
+                    "solarmodule liefern energie",
+                    if(i%2==0) "photovoltaik erzeugt strom" else "getriebe motor rad",
+                    i%2==0
+                ), 0.07
+            )
+        }
+        assertEquals(700,trained.updates)
+        assertEquals(node.updates,trained.updates)
+        val kotlinBytes=trained.save()
+        assertEquals(32960,kotlinBytes.size)
+        compareWeights(
+            nodeBytes,kotlinBytes,
+            expectedMagic=0x53574232,expectedSeed=73L,expectedUpdates=700
+        )
+        // An independent Node process verifies the full resulting checkpoint.
+        File(dir,"kotlin-swb2.swb2").writeBytes(kotlinBytes)
+    }
+
+    private fun compareWeights(
+        nodeBytes:ByteArray,kotlinBytes:ByteArray,
+        expectedMagic:Int=0x53574231,expectedSeed:Long=91L,expectedUpdates:Int=700
+    ) {
         val node=DataInputStream(ByteArrayInputStream(nodeBytes))
         val kotlin=DataInputStream(ByteArrayInputStream(kotlinBytes))
         for(input in listOf(node,kotlin)) {
-            assertEquals(0x53574231,input.readInt())
-            assertEquals(91L,input.readLong())
-            assertEquals(700,input.readInt())
+            assertEquals(expectedMagic,input.readInt())
+            assertEquals(expectedSeed,input.readLong())
+            assertEquals(expectedUpdates,input.readInt())
         }
         for(n in listOf(4096,17)) {
             assertEquals(n,node.readInt())
