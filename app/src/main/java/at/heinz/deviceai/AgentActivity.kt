@@ -884,7 +884,8 @@ class AgentActivity : Activity() {
     )
 
     private fun learningCenterStatus(): String = buildString {
-        val core = ContinuumLearningCore(filesDir).status()
+        val learning = ContinuumLearningCore(filesDir)
+        val core = learning.status()
         append("Lernkern: ").append(core.experiences.total).append(" Experiences · ")
             .append(core.modelUpdates).append(" Gewichtsupdates\n")
         append("Holdouts: Intent ").append(core.intentHoldout.correct).append("/").append(core.intentHoldout.total)
@@ -892,7 +893,7 @@ class AgentActivity : Activity() {
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("AUTO-ÜBEN: ").append(if (practice.enabled) "AN" else "AUS").append(" · ")
             .append(practice.attempts).append(" Zyklen, ").append(practice.improvements).append(" Verbesserungen\n")
-        val cre=core.cre1ResearchStatus()
+        val cre=learning.cre1ResearchStatus()
         append("\nCRE1-Forschung: ").append(if(cre.available)"eigener trainierter Forschungsstand" else "noch kein freigegebener Forschungsstand")
             .append(" · ").append(cre.steps).append(" Trainingsschritte\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
