@@ -22,7 +22,7 @@ const OUTCOMES=new Set([
  'NO_VERIFIED_REPAIR','DONE_INVESTIGATION','CHECKS_FAILED','NO_READY_INVESTIGATION',
  'IDLE','INTERRUPTED','ERROR'
 ]);
-const KINDS=new Set(['BASELINE_REPAIR','INVESTIGATE','IDLE']);
+const KINDS=new Set(['BASELINE_REPAIR','OWNER_REPAIR','INVESTIGATE','IDLE']);
 const MAX_EVENTS=96;
 const MAX_BYTES=65000;
 const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
@@ -164,10 +164,16 @@ export function runTeamleaderCycle({
      detail:'Previous cycle ended without verified completion'});
    writeAtomic(statePath,JSON.stringify(state)+'\n');
   }
-  let ready=driver.readyInvestigation?.(root,stateDir,head)??null;
+  const owner=driver.readyOwnerRepair?.(root,stateDir,head)??null;
+  if(owner && (owner.kind!=='REPAIR'||owner.source!=='owner'||owner.state!=='READY'||
+     !/^[a-z][a-z0-9-]{2,63}$/.test(owner.id)||owner.subject?.base!==head||
+     !['node','android','jvm'].includes(owner.subject?.chain)))
+    throw Error('Untrusted owner repair task');
+  let ready=owner?null:(driver.readyInvestigation?.(root,stateDir,head)??null);
   if(ready && (ready.kind!=='INVESTIGATE'||ready.state!=='READY'||!/^inv-[0-9a-f]{16}$/.test(ready.id)))
    throw Error('Untrusted investigation task');
-  let chosen=selectTeamleaderAction(state,head,ready);
+  let chosen=owner?{kind:'OWNER_REPAIR',taskId:owner.id}:
+    selectTeamleaderAction(state,head,ready);
   if(retry)chosen={kind:'BASELINE_REPAIR'};
   if(chosen.kind==='IDLE' && !state.discoveryHeads.includes(head) &&
      typeof driver.prepareSafeInvestigation==='function'){
@@ -209,7 +215,9 @@ export function runTeamleaderCycle({
   try{
    const result=chosen.kind==='BASELINE_REPAIR'
     ?driver.repair(root,stateDir,head,{budgetMinutes})
-    :driver.investigate(root,stateDir,head,chosen.taskId);
+    :chosen.kind==='OWNER_REPAIR'
+      ?driver.ownerRepair(root,stateDir,head,chosen.taskId,{budgetMinutes})
+      :driver.investigate(root,stateDir,head,chosen.taskId);
    if(chosen.kind==='BASELINE_REPAIR'){
     const map={NO_FAILURE:'NO_FAILURE',
      NO_CODE_DIAGNOSTIC:'NO_CODE_DIAGNOSTIC',
@@ -218,6 +226,20 @@ export function runTeamleaderCycle({
     if(!Object.hasOwn(map,result?.outcome))throw Error('Unknown repair outcome');
     outcome=map[result.outcome];
     detail=String(result.verified?.strategy??result.outcome).slice(0,160);
+   } else if(chosen.kind==='OWNER_REPAIR'){
+    if(result?.status==='DONE'){
+      if(!/^[0-9a-f]{64}$/.test(result.patchSha256??'')||
+         result.taskId!==chosen.taskId||result.approvedForMerge!==false||
+         !Array.isArray(result.profiles)||!result.profiles.length||
+         result.profiles.some(p=>!p.passed||p.failed!==0)||
+         !result.profiles.some(p=>p.executed>0))
+        throw Error('Owner repair claimed DONE without independent test evidence');
+      outcome='VERIFIED_PATCH_PENDING_REVIEW';
+      detail=('owner '+chosen.taskId+' patch '+result.patchSha256.slice(0,12)).slice(0,160);
+    }else if(result?.status==='FAILED'){
+      outcome='NO_VERIFIED_REPAIR';
+      detail=String(result.reason??'Owner repair failed').slice(0,160);
+    }else throw Error('Unknown owner repair outcome');
    } else {
     const allowed={DONE:'DONE_INVESTIGATION',
      CHECKS_FAILED:'CHECKS_FAILED',
@@ -229,7 +251,7 @@ export function runTeamleaderCycle({
     outcome=allowed[result.status];
     detail=String(result.staticResult??result.status).slice(0,160);
    }
-   artifact=result.artifact??null;
+   artifact=result.artifact??result.report??null;
    log('[teamleader] '+chosen.kind+' -> '+outcome);
   }catch(e){
    detail=(e?.name??'Error')+': '+String(e?.message??'unknown').slice(0,120);
@@ -250,14 +272,32 @@ export async function localTeamleaderDriver(){
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
   {analyzeRepository},
-  {syncBacklogOps}]=await Promise.all([
+  {syncBacklogOps},
+  {executeOwnerRepairTask}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
-  import('./development-planner.mjs')
+  import('./development-planner.mjs'),import('./backlog-repair-worker.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
   head(root){return git(root,['rev-parse','HEAD']).stdout.trim();},
+  readyOwnerRepair(root,stateDir,head){
+   const store=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+   const snapshot=store.read().doc;
+   if(snapshot.tasks.some(t=>t.source==='owner'&&t.kind==='REPAIR'&&
+        t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
+     store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
+   const next=nextEligible(store.read().doc,['REPAIR'],['owner']);
+   return next?.subject?.base===head?next:null;
+  },
+  ownerRepair(root,stateDir,head,taskId,{budgetMinutes}){
+   return executeOwnerRepairTask({
+    root,file:path.join(stateDir,'development-backlog.json'),
+    out:path.join(stateDir,'reports','owner-repair'),
+    id:taskId,budgetMinutes,actor:'continuum-task-worker'
+   });
+  },
   readyInvestigation(root,stateDir){
    return nextEligible(new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
