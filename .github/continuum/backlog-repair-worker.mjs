@@ -120,12 +120,16 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           profiles,report:path.join(reportDir,'report.json')};
       }else{
         const submittedAt=Date.now();
-        store.apply([{op:'submit',actor,at:submittedAt,id:task.id,token,
-          artifact:{type:'PATCH',sha256:patchHash}}]);
         const evidence={type:'TEST_RUN',taskId:task.id,submissionToken:token,
           artifactSha256:patchHash,chain:task.subject.chain,commit:head,
-          profiles,repair:null,at:Date.now(),by:actor};
-        store.apply([{op:'complete',actor,at:evidence.at,id:task.id,evidence}]);
+          profiles,repair:null,at:submittedAt,by:actor};
+        // Submit and complete must be one transactional backlog update.
+        // A process crash cannot strand a verified job in VERIFYING.
+        store.apply([
+          {op:'submit',actor,at:submittedAt,id:task.id,token,
+            artifact:{type:'PATCH',sha256:patchHash}},
+          {op:'complete',actor,at:submittedAt,id:task.id,evidence}
+        ]);
         outcome={status:'DONE',head,taskId:task.id,patchSha256:patchHash,
           patch:patchFile,profiles,report:path.join(reportDir,'report.json'),
           approvedForMerge:false};
