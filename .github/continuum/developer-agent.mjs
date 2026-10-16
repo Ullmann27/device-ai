@@ -137,6 +137,18 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
       duplicates:result.results.filter(r=>r.duplicate).length,rejected,skipped:result.skipped}));
     return result;
   }
+  if(cmd==='owner-test'){
+    if(!o.file||!o.out)throw Error('owner-test requires --file and --out');
+    const {executeOwnerContractTestTask}=await import('./owner-contract-worker.mjs');
+    const result=executeOwnerContractTestTask({
+      root,file:o.file,out:o.out,id:o.id??null,
+      budgetMinutes:Number(o.minutes??20),
+      actor:env.CONTINUUM_ACTOR??'continuum-contract-worker'
+    });
+    log('[owner-test] '+JSON.stringify(result));
+    if(result.status==='FAILED')throw Error('Owner TEST task failed: '+result.reason);
+    return result;
+  }
   if(cmd==='owner-repair'){
     // No GitHub token or cloud service: only explicitly accepted REPAIR tasks
     // in the canonical local backlog may drive this bounded worker.
