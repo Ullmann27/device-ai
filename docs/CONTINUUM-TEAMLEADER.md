@@ -139,3 +139,43 @@ Isolierte Kotlin/JVM-Statusspeicherprüfung (Kotlin 1.9, kopierter
 Statusspeicher-Quellcode mit echten Dateizugriffen): **bestanden**.
 Geprüft wurden atomarer Schreib-/Leserundlauf, Zweizeilenformat sowie
 Manipulationserkennung nach einem Bitflip. Kein vollständiger Android-Build.
+
+
+## Realer Entwicklungsaufgaben-Test und Worktree-Sicherheit
+
+Ein zusätzlicher Test auf dem Entwicklungsbranch ist
+`.github/continuum/teamleader-end-to-end.test.mjs`. Er erzeugt lokal ein
+temporäres Git-Repository mit einem absichtlich kaputten JavaScript-Test und
+prüft den kompletten Weg:
+
+- Reproduzierter Testfehler und eigenständige Diagnose.
+- Reparatur im isolierten Git-Worktree durch vorhandene Strategien.
+- Unabhängig ausgeführte Tests, belegter Patch-Hash und validierte
+  Analyst/Kritiker/Patcher/Tester-Übergaben.
+- Persistenter Teamleiterstatus und Reparatur-Experience-Ledger.
+- Kein Schreibzugriff auf die Quelldateien des ursprünglichen Checkouts.
+- Ein grüner Baseline-Lauf darf keinen künstlichen Reparaturpatch erzeugen.
+- Ein realer Backlog-INVESTIGATE-Auftrag wird mit überprüfbarer TEST_RUN-Evidenz
+  abgeschlossen und erst anschließend als DONE geführt.
+
+**Sicherheitsverbesserung:** Der Reparatur-Worker prüft jetzt vor jedem
+Schreiben sämtliche Zielpfade, lehnt Symlinks, Symlink-Verzeichnisse,
+Path-Traversal, Nullbytes und doppelte Trennzeichen ab. Erst wenn alle
+Editziele gültig sind, beginnt das Schreiben. Ein unabhängiger lokaler
+Node-Dateisystem-Smoke-Test mit sieben gefährlichen Eingaben war erfolgreich.
+Die passende Repository-Regression liegt in repair-loop.test.mjs.
+
+Für einen echten Integrationslauf mit Git und Node 20+:
+
+```sh
+node --test .github/continuum/teamleader-end-to-end.test.mjs
+node --test .github/continuum/repair-loop.test.mjs
+node --test .github/continuum/autonomous-teamleader.test.mjs
+```
+
+**Wichtig:** Die neuen Git-End-to-End-Tests sind implementiert und wurden auf
+Syntax geprüft, aber auf dem GitHub-Head bislang **nicht vollständig
+ausgeführt**. GitHub Actions startet weiterhin keine normalen Test-Runner.
+Eine bestehende Termux- oder PC-Node-Installation kann diese Tests ohne
+zusätzlichen bezahlten Service ausführen. Eine Android-APK-Freigabe lässt sich
+daraus noch nicht ableiten.
