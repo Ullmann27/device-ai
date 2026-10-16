@@ -17,6 +17,22 @@ class Cre1ResearchLabTest {
         Cre1ResearchExample("Was isst Nina gern?",listOf(
             "Nina mag Kartoffelgratin.", "Nina fährt einen Honda Civic."))
     )
+    @Test fun interruptedRoundPreservesExistingCheckpointByteForByte() {
+        val dir=Files.createTempDirectory("cre1-interrupt-existing").toFile()
+        try {
+            val original=Cre1InferenceEncoder.createResearch(73).save()
+            val checkpoint=dir.resolve("cre1-research-v1.cre1")
+            checkpoint.writeBytes(original)
+            val lab=Cre1ResearchLab(dir)
+            val report=lab.train(trainSamples(),auditSamples(),steps=20,
+                cancelled={true})
+            assertTrue(report.stoppedEarly)
+            assertFalse(report.accepted)
+            assertArrayEquals(original,checkpoint.readBytes())
+            assertEquals(0,lab.status().steps)
+        }finally{dir.deleteRecursively()}
+    }
+
     @Test fun corruptedCre1ResearchCheckpointNeverSilentlyResetsToFreshWeights() {
         val dir=Files.createTempDirectory("cre1-tamper").toFile()
         try {
