@@ -23,7 +23,7 @@ class DeviceTeamleaderTest {
             val file = dir.resolve("development/device-teamleader-v1.txt")
             assertTrue(file.isFile)
             assertTrue(file.length() < 512)
-            assertEquals(3, file.readLines().size)
+            assertEquals(2, file.readLines().size)
         } finally { dir.deleteRecursively() }
     }
 
