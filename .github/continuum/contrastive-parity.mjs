@@ -21,12 +21,13 @@ const holdout=[
 const EPS=1e-8;
 function runSwb2(){
   const model=SubwordEncoder.createExperimentalSwb2(73);
-  for(let i=0;i<16;i++){
+  for(let i=0;i<350;i++){
     model.updateIntent({text:i%2===0?'hallo freund':'wie funktioniert strom',label:i%2},0.08);
     model.updateSemantic({left:'solarmodule liefern energie',
       right:i%2===0?'photovoltaik erzeugt strom':'getriebe motor rad',
       similar:i%2===0},0.07);
   }
+  if(model.updates!==700)throw Error('Expected exactly 700 SWB2 parameter updates');
   return model;
 }
 
@@ -56,14 +57,19 @@ export function main(command,dir){
       'Holdout MRR:',r.validationBefore.reciprocalRank,'->',r.validationAfter.reciprocalRank);
     return;
   }
-  const expectedSwb2=runSwb2(), observedSwb2=SubwordEncoder.restore(fs.readFileSync(file(dir,'kotlin-swb2.swb2')));
-  if(observedSwb2.version!==2||observedSwb2.updates!==expectedSwb2.updates)throw Error('SWB2 header/update mismatch');
+  const expectedSwb2=runSwb2();
+  const preparedSwb2=fs.readFileSync(file(dir,'node-swb2.swb2'));
+  if(!preparedSwb2.equals(expectedSwb2.save()))throw Error('Prepared SWB2 checkpoint is stale or corrupted');
+  const observedSwb2=SubwordEncoder.restore(fs.readFileSync(file(dir,'kotlin-swb2.swb2')));
+  if(observedSwb2.version!==2||observedSwb2.seed!==expectedSwb2.seed||
+     observedSwb2.updates!==expectedSwb2.updates)throw Error('SWB2 version/seed/update mismatch');
   for(const key of ['embeddings','head']){
     for(let i=0;i<expectedSwb2[key].length;i++){
       if(!(Math.abs(expectedSwb2[key][i]-observedSwb2[key][i])<=EPS))
         throw Error('SWB2 Node/Kotlin parity mismatch: '+key+'['+i+']');
     }
   }
+  console.log('SWB2 cross-runtime parity verified: 350 rounds, 700 updates, 4113 weights within',EPS);
   const check=parse(file(dir,'kotlin-metrics.tsv'));
   if(Object.keys(check).length!==Object.keys(metrics).length)throw Error('Metric count mismatch');
   for(const [k,v] of Object.entries(metrics)){
