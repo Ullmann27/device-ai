@@ -35,7 +35,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('unanswered turn alone reaches local model',
    bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
  ensure('local model receives prior conversation when resolving referential questions',
-   activity.includes('runLocal(localPrompt)') &&
+   activity.includes('runLocal(request,localPrompt)') &&
    runtime.includes('Vorherige Gesprächsfrage: '));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
@@ -58,7 +58,7 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));
  ensure('local failure and success both recorded without model text',
-   activity.includes('.recordLocalOutcome(true)') && activity.includes('.recordLocalOutcome(false)'));
+   activity.includes('.recordLocalOutcome(successful)') && activity.includes('.recordLocalOutcome(false)'));
  ensure('local on-device status available from chat',activity.includes('showContinuumSelfCheck()'));
  const journal=fs.readFileSync(dir+'learning/ContinuumRuntimeEventJournal.kt','utf8');
  ensure('journal contains only fixed execution codes',journal.includes('LOCAL_MODEL_OK') &&
@@ -247,4 +247,36 @@ test('every area has a center reachable from the core card; no demo buttons; exp
   ensure(fn+' runs on the learning I/O thread',activity.includes('learningIoStatus { '+fn+'() }'));
  }
  ensure('development status reads the backlog on its executor',activity.includes('onBacklog({ developmentCenterStatus() })'));
+});
+
+test('Android-first Teamleader is scheduled, observable and serialized across background and chat',()=>{
+ const native=fs.readFileSync(dir+'cognitive/DeviceTeamleader.kt','utf8');
+ const job=fs.readFileSync(dir+'learning/ContinuumDeviceTeamleaderScheduler.kt','utf8');
+ const kotlinTests=fs.readFileSync('app/src/test/java/at/heinz/deviceai/cognitive/DeviceTeamleaderTest.kt','utf8');
+ ensure('Teamleader scheduling at app start',
+   activity.includes('ContinuumDeviceTeamleaderScheduler(this).restore()'));
+ ensure('native JobService protected in manifest',
+   manifest.includes('.learning.ContinuumDeviceTeamleaderJobService') &&
+   manifest.includes('android.permission.BIND_JOB_SERVICE'));
+ ensure('chat can request actual Teamleader status and a local check',
+   activity.includes('showDeviceTeamleaderChatStatus()') &&
+   activity.includes('runDeviceTeamleaderCheck()') &&
+   activity.includes('"teamleiter prüfen"'));
+ ensure('no paid services or network required in scheduler',
+   job.includes('networkType = JobInfo.NETWORK_TYPE_NONE') &&
+   job.includes('charging = false') && job.includes('persisted = true'));
+ ensure('worker generation has own cancellation flag and rejects overlap',
+   job.includes('if (activeWorker?.isAlive == true) return false') &&
+   job.includes('val cancellation = AtomicBoolean(false)'));
+ ensure('background and manual checks use same process-wide lock',
+   native.includes('private val CYCLE_LOCK = ReentrantLock()') &&
+   native.includes('CYCLE_LOCK.tryLock()') &&
+   native.includes('CYCLE_LOCK.unlock()'));
+ ensure('Android never claims to edit code or silently completes tasks',
+   native.includes('DevelopmentBacklog.nextEligible(doc)') &&
+   !native.includes('startJob(') && !native.includes('finishJob('));
+ ensure('busy worker does not overwrite progress',
+   kotlinTests.includes('backgroundAndManualTeamleaderCannotOverlapOrOverwriteStatus'));
+ ensure('status checkpoint supports atomic move fallback',
+   native.includes('AtomicMoveNotSupportedException'));
 });
