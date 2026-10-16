@@ -109,7 +109,28 @@ class DeviceTeamleaderTest {
             val before = file.readText()
             file.writeText(before.replace("BATTERY_LOW", "THERMAL_LIMIT"))
             assertThrows(IllegalArgumentException::class.java) { worker.status() }
+            val damaged = file.readBytes()
+            assertEquals("ERROR", worker.runOnce().state)
+            assertEquals("CHECK_FAILED", worker.defer("BATTERY_LOW").reason)
+            assertArrayEquals("corrupted evidence must survive further runs",
+                damaged, file.readBytes())
+            assertThrows(IllegalArgumentException::class.java) { worker.status() }
             assertTrue(file.readText().contains("THERMAL_LIMIT"))
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun invalidDeferredReasonCannotModifyExistingTeamleaderStatus() {
+        val dir = Files.createTempDirectory("teamleader-invalid-deferral").toFile()
+        try {
+            val worker = DeviceTeamleader(dir)
+            val saved = worker.defer("BATTERY_LOW")
+            val file = dir.resolve("development/device-teamleader-v1.txt")
+            val bytes = file.readBytes()
+            assertThrows(IllegalArgumentException::class.java) {
+                worker.defer("SUCCESS_WITHOUT_TESTS")
+            }
+            assertArrayEquals(bytes, file.readBytes())
+            assertEquals(saved, worker.status())
         } finally { dir.deleteRecursively() }
     }
 
