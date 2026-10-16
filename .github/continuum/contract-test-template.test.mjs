@@ -58,7 +58,11 @@ test('automatic repair candidates cannot rewrite contract-template, backlog or t
   '.github/continuum/node-contract-synthesizer.mjs',
   '.github/continuum/owner-contract-worker.mjs',
   '.github/continuum/autonomous-teamleader.mjs',
-  '.github/continuum/backlog-cli.mjs'
+  '.github/continuum/backlog-cli.mjs',
+  '.github/continuum/kotlin-delegate-synthesizer.mjs',
+  '.github/continuum/kotlin-delegate-acceptance.mjs',
+  '.github/continuum/owner-kotlin-preview.mjs',
+  '.github/continuum/local-teamleader-loop.mjs'
  ]){
   const result=critique({strategy:'JS_FIX_IDENTIFIER_TYPO',
    edits:[{file:path,oldText:'const flag = false;',newText:'const flag = true;'}]});
