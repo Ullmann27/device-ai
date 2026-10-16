@@ -103,3 +103,40 @@ es dafür derzeit keinen grünen CI-Nachweis gibt.
 **Keine Verwechslung:** Der Teamleiter ist heute ein begrenzter,
 regelbasierter Entwicklungsworker. Selbstständige allgemeine Codegenerierung
 wie Claude Opus oder ChatGPT ist damit nicht nachgewiesen.
+
+## Teamleiter-Integrität und Aufgabenübergabe – Kontrollstand 16.10.2026
+
+Die Android-Journalprüfung wurde auf **fail-closed** vereinheitlicht:
+bei beschädigtem bisherigem Teamleiterstatus liefern `runOnce()` und
+`defer()` den Fehlerstatus `ERROR/CHECK_FAILED`, überschreiben aber keine
+Beweisdaten. Tests für beide Einstiegspfade verwenden dieselbe Semantik.
+Ein belegloser Erfolg oder ein Endlos-Sofort-Retry wird verweigert.
+
+Der Node-Teamleiter verwendet weiterhin den existierenden isolierten
+Git-Reparaturmechanismus. Zusätzlich verlangt der Rollen-/Übergabekanal
+einen **tatsächlich nichtleeren Patch und dessen passenden SHA-256**,
+echte ausgeführte Tests sowie eine ausdrückliche Überprüfung, bevor er
+`PATCH_PENDING_REVIEW` meldet. In einer isolierten V8-Testausführung
+bestanden die sechs Übergabeprüfungen; elf Teamleiter-Regressionsfälle
+mit emuliertem Dateisystem bestanden ebenfalls.
+
+Die INVESTIGATE-Übergabe ist jetzt end-to-end an die zuvor ausgewählte
+`taskId` gebunden. `chooseReadyInvestigation` wählt nur Aufgaben,
+deren Abhängigkeiten den kanonischen Backlog-Regeln zufolge erfüllt sind.
+Eine fremde, gesperrte oder nachrangige Aufgabe wird nicht still ausgeführt.
+Der konkrete Mehr-Aufgaben-Fall wurde mit dem existierenden
+JavaScript-Backlog-Regelwerk erfolgreich geprüft.
+
+Die lokale Kotlin-1.9-Skriptprüfung bestätigt, dass `split('\n')`
+den abschließenden Leerstring erhält, während `File.readLines()`
+die beiden tatsächlich geschriebenen Zeilen liefert.
+Dadurch ist die Korrektur des früher fehlschlagenden Zeilenzähler-Tests
+nachvollziehbar.
+
+**Abnahmegrenze:** Die Prüfungen ersetzen weder den vollständigen Node-Git-
+Worktree-End-to-End-Test noch `./gradlew :app:testDebugUnitTest` oder
+eine auf dem Smartphone gestartete APK. GitHub-Actions-Läufe beenden
+weiterhin ihre Jobs ohne reguläre Runner-Schritte. Solange die neue APK
+nicht gebaut wurde, ist dieser Meilenstein **implementiert, aber nicht
+als Android-Release abgenommen**.
+
