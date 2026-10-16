@@ -6,6 +6,7 @@ import fs from 'node:fs';
 const dir='app/src/main/java/at/heinz/deviceai/';
 const activity=fs.readFileSync(dir+'AgentActivity.kt','utf8');
 const core=fs.readFileSync(dir+'learning/ContinuumLearningCore.kt','utf8');
+const runtime=fs.readFileSync(dir+'learning/ContinuumCognitiveRuntime.kt','utf8');
 const scheduler=fs.readFileSync(dir+'learning/ContinuumAutonomousScheduler.kt','utf8');
 const status=fs.readFileSync(dir+'learning/ContinuumOfflineJobStatus.kt','utf8');
 const probe=fs.readFileSync(dir+'learning/ContinuumLocalContrastiveProbe.kt','utf8');
@@ -16,7 +17,23 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('neural research action button',activity.includes('KONTRASTIV · EXPERIMENT PRÜFEN'));
  ensure('neural experiment invokes real module',activity.includes('ContinuumLocalContrastiveProbe.run('));
  ensure('existing local model source',activity.includes('ContinuumLearningCore(filesDir).modelSnapshot()'));
- ensure('existing local conversation routing',activity.includes('core.replyFromMemory('));
+ ensure('single conversation entrance uses cognitive runtime',
+   activity.includes('ContinuumCognitiveRuntime(filesDir,core)') &&
+   activity.includes('val turn=cognitive.dialogue') &&
+   !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
+ ensure('SWB1 memory dialogue remains in runtime',runtime.includes('core.replyFromMemory(input)'));
+ ensure('CRE1 sees ONLY SWB1 confirmed retrieved candidates',
+   runtime.includes('core.retrievedEvidence(turn.resolvedQuery)') &&
+   runtime.includes('.filter { it.id in turn.memoryIds }'));
+ ensure('CRE1 is shadow-only and never becomes a fact writer',
+   runtime.includes('Modus=CRE1_SHADOW') &&
+   !runtime.includes('confirmOwnerFact(') &&
+   !runtime.includes('trainExperimentalCre1('));
+ ensure('unanswered turn alone reaches local model',
+   bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
+ ensure('local model receives prior conversation when resolving referential questions',
+   activity.includes('runLocal(localPrompt)') &&
+   runtime.includes('Vorherige Gesprächsfrage: '));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));
