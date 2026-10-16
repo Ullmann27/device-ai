@@ -107,6 +107,29 @@ test('passing fixture is not reported as successful code development',
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
 
+test('stale owner claim is recovered after worker crash without faking success',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(false);
+ try{
+  const file=path.join(f.state,'development-backlog.json');
+  const store=new BacklogStore(file,{actor:'owner'});accepted(store,f);
+  const expiredToken='a'.repeat(32);
+  store.apply([{op:'claim',actor:'worker',at:3,id:'repair-owner-one',
+    owner:'worker',token:expiredToken,leaseMs:60000}]);
+  assert.equal(store.read().doc.tasks[0].state,'IN_PROGRESS');
+  const result=executeOwnerRepairTask({
+    root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:2
+  });
+  assert.equal(result.status,'FAILED');
+  assert.equal(result.reason,'NO_FAILURE');
+  const task=store.read().doc.tasks[0];
+  assert.equal(task.attempts,2,'expired attempt and resumed attempt are both counted');
+  assert.equal(task.state,'READY','failed retry remains available while budget remains');
+  assert.equal(task.claim,null);
+  assert.equal(f.git('status','--porcelain'),'');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
 test('unapproved task, incorrect HEAD, foreign source and unknown chain fail closed',
  {skip:nested,timeout:60000},()=>{
  const f=fixture(true);
