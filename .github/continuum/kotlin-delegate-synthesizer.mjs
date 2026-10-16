@@ -8,6 +8,7 @@ import crypto from 'node:crypto';
 import {indexFile} from './code-analyzer.mjs';
 import {tokenize,isKeyword} from './kotlin-tokenizer.mjs';
 import {critique} from './repair-critic.mjs';
+import {assessKotlinDelegate} from './kotlin-delegate-acceptance.mjs';
 
 const IDENT=/^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
 const TYPES=new Set(['Int','Long','Boolean','String']);
@@ -119,4 +120,29 @@ export function proposeKotlinDelegate({files,task}={}){
  const review=critique(proposal);
  if(!review.approved)return refusal('CRITIC_REJECTED: '+review.reasons.join('; '));
  return {candidate:{...proposal,critic:review},reason:null};
+}
+
+
+/**
+ * Pre-worktree acceptance gate for the existing deterministic operator.
+ * A pass means only RED/GREEN isolated Kotlin + owner-specified outputs,
+ * never Android integration, independent Git verification or backlog DONE.
+ */
+export function proposeKotlinDelegateWithOracle({files,task}={}){
+ const candidate=proposeKotlinDelegate({files,task});
+ if(!candidate.candidate)return {...candidate,acceptance:null};
+ if(task.subject?.type!=='Int'||typeof task.subject.casesJson!=='string')
+  return {candidate:null,reason:'OWNER_INT_ORACLE_REQUIRED',acceptance:null};
+ const edit=candidate.candidate.edits[0];
+ const acceptance=assessKotlinDelegate({
+  original:edit.oldText,generated:edit.newText,
+  className:task.subject.className,
+  methodName:task.subject.methodName,
+  casesJson:task.subject.casesJson
+ });
+ if(!acceptance.passed)
+  return {candidate:null,reason:'OWNER_KOTLIN_ORACLE_FAILED: '+acceptance.reason,
+   acceptance};
+ return {candidate:candidate.candidate,reason:null,acceptance,
+  approvedForMerge:false,androidBuildVerified:false};
 }
