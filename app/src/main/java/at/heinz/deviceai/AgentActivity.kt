@@ -2320,14 +2320,27 @@ class AgentActivity : Activity() {
                         "Lösche zuerst Fakten („Was weißt du?“)."
                 else "Nicht gespeichert: Der lokale Speicher hat das Schreiben abgelehnt."
             }
-            runCatching { ContinuumLearningCore(filesDir).confirmOwnerFact(fact) }.fold({ change ->
-                when {
+            val core=ContinuumLearningCore(filesDir)
+            runCatching { core.confirmOwnerFact(fact) }.fold({ change ->
+                val storedMessage=when {
                     known && change == OwnerFactChange.ALREADY_ACTIVE -> "Das ist bereits gemerkt."
                     change == OwnerFactChange.REACTIVATED -> "Gemerkt. Diese früher widerrufene Information gilt " +
                         "wieder, im lokalen Lernspeicher und im Continuum-Lernkern."
                     else -> "Gemerkt. Diese Information liegt im lokalen Lernspeicher und als " +
                         "Owner-Confirmed-Experience im Continuum-Lernkern. Du kannst sie mit „Was weißt du?“ einsehen oder löschen."
                 }
+                // Answer a previously unanswered question only if the newly
+                // confirmed evidence now passes the normal SWB1 retrieval gate.
+                val last=runCatching { core.dialogueHistory().lastOrNull() }.getOrNull()
+                val resolved=if(last!=null && !last.grounded)
+                    runCatching {
+                        at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core)
+                            .reply(last.input)
+                    }.getOrNull()
+                    else null
+                storedMessage + (if(resolved?.grounded==true)
+                    "\n\nZur vorherigen offenen Frage finde ich jetzt bestätigte Informationen:\n"+
+                    resolved.answer else "")
             }, { e ->
                 "Im lokalen Lernspeicher gemerkt, aber der Continuum-Lernkern hat die Information nicht übernommen " +
                     "(${failureName(e)}). Wiederhole „Merke dir“, um es erneut zu versuchen."
