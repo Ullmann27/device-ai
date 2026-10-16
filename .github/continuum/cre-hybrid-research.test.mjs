@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {hybridDecision,fitAndSelect,researchAudit,prepareQueryViews,selectHybridView} from './cre-hybrid-research.mjs';
+import {hybridDecision,fitAndSelect,researchAudit,prepareQueryViews,selectHybridView,unsafeAbstentionRescueAblation} from './cre-hybrid-research.mjs';
 import {RelationalEncoder} from './cre-encoder.mjs';
 
 test('DEV-only selector produces bounded conservative policies and deterministic results',()=>{
@@ -32,6 +32,7 @@ test('historical TEST comparison reports measurements but never releases experim
  assert.equal(report.selection.options,32);
  assert.equal(typeof report.meetsHistoricalGate,'boolean');
  assert.equal(report.untouchedChallenge.rows.length,3);
+ assert.ok(report.untouchedChallenge.rows.every(x=>x.unsafeRescueAblation.falseAnswers>=x.hybrid.falseAnswers));
  assert.equal(report.untouchedChallenge.fingerprint.length,64);
  assert.equal(report.untouchedChallenge.lexical.positives,32);
  assert.equal(report.untouchedChallenge.lexical.negatives,12);
@@ -75,4 +76,15 @@ test('hybrid can only re-rank answered queries, not add answers',()=>{
    assert.equal(Boolean(value),Boolean(neural),'answerability must match CRE1');
   }
  }
+});
+
+test('only explicitly named UNSAFE_RESCUE_ABLATION can revive an unanswered query',()=>{
+ const policy={lexFloor:0.2,lexGap:0.05,evidenceFloor:0.8};
+ const view={neural:null,neuralReason:'better-match-outside-evidence',
+   lexical:{id:'candidate',text:'synthetic evidence',score:0.95},
+   lexScore:0.95,gap:0.4,evidence:1};
+ assert.equal(selectHybridView(view,policy).answer,null);
+ const diagnostic=unsafeAbstentionRescueAblation(view,policy);
+ assert.equal(diagnostic.route,'UNSAFE_RESCUE_ABLATION');
+ assert.equal(diagnostic.answer.id,'candidate');
 });
