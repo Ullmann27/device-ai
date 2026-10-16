@@ -13,6 +13,7 @@ import {git,createWorktree,removeWorktree,runChain,CHAINS} from './repair-loop.m
  * `verify`, which runs a fixed check chain on the submitted patch itself.
  *
  *   show [--json]                       plan [--limit 12]
+ *   propose-repair --file <path> [--id <id>] [--title <text>] [--chain node|android|jvm]
  *   accept|reject|abort|retry --id <id> [--reason <text>]
  *   priority --id <id> --priority <0..1000>
  *   claim [--id <id>] [--kinds A,B] [--owner <name>] [--lease-minutes 60]
@@ -65,6 +66,19 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       });
       report(log,{...r,results});
       return {...r,results};
+    }
+    case 'propose-repair':{
+      // The local operator explicitly registers a specific reproducible failure;
+      // proposing a task does not authorize execution. 'accept' is separate.
+      const base=git(root,['rev-parse','HEAD']).stdout.trim();
+      if(!/^[0-9a-f]{40}$/.test(base))throw Error('Full local git HEAD required');
+      if(o.base&&o.base!==base)throw Error('--base must equal local immutable HEAD');
+      const chain=o.chain??'node';
+      if(!Object.hasOwn(CHAINS,chain))throw Error('Unsupported fixed test chain');
+      const id=o.id??'own-'+B.sha256Hex(base+'\\0'+chain).slice(0,16);
+      const title=B.singleLine(o.title??('Repair '+chain+' tests at '+base.slice(0,12)),200);
+      return apply([{op:'propose',actor,at,task:{id,title,kind:'REPAIR',
+        source:'owner',priority:900,maxAttempts:3,subject:{base,chain}}}]);
     }
     case 'accept':case 'reject':case 'abort':case 'retry':
       return apply([{op:sub,actor,at,id:o.id,...(o.reason?{reason:o.reason}:{})}]);
@@ -124,6 +138,6 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       return apply([op],{stopOnError:false});
     }
     default:
-      throw Error('Unknown backlog command '+sub+' (show|plan|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
+      throw Error('Unknown backlog command '+sub+' (show|plan|propose-repair|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
   }
 }
