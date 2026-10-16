@@ -79,6 +79,43 @@ test('actual offline Teamleader repairs a broken Git fixture and retains only a 
   assert.ok(fs.existsSync(path.join(f.stateDir,'teamleader-state.json')));
  } finally {fs.rmSync(f.root,{recursive:true,force:true});}
 });
+test('scheduled owner task completes full real Git repair and independent verification',
+ {skip:nested,timeout:180000},async()=>{
+ const f=fixture({broken:true});
+ try{
+  const file=path.join(f.stateDir,'development-backlog.json');
+  const backlog=new BacklogStore(file,{actor:'owner'});
+  backlog.apply([
+   {op:'propose',actor:'owner',at:1,task:{
+     id:'owner-scheduled-one',title:'Repair real math regression',kind:'REPAIR',
+     source:'owner',priority:900,maxAttempts:3,subject:{base:f.head,chain:'node'}
+   }},
+   {op:'accept',actor:'owner',at:2,id:'owner-scheduled-one',
+     reason:'owner explicitly accepted this immutable repair task'}
+  ]);
+  const original=fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs'));
+  const driver=await localTeamleaderDriver();
+  const result=runTeamleaderCycle({root:f.home,stateDir:f.stateDir,
+   driver,budgetMinutes:2});
+  assert.equal(result.kind,'OWNER_REPAIR');
+  assert.equal(result.outcome,'VERIFIED_PATCH_PENDING_REVIEW',result.detail);
+  assert.ok(result.artifact);
+  const report=JSON.parse(fs.readFileSync(result.artifact,'utf8'));
+  assert.equal(report.baseline.passed,false,'original fixture must reproduce its failure');
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(verifyRepairHandoffs(report.handoffs),true);
+  assert.equal(report.handoffs.messages.at(-1).approvedForMerge,false);
+  const task=backlog.read().doc.tasks.find(t=>t.id==='owner-scheduled-one');
+  assert.equal(task.state,'DONE');
+  assert.ok(task.evidence.some(e=>e.profiles.some(p=>p.executed>0&&p.passed)));
+  const patch=fs.readFileSync(path.join(path.dirname(result.artifact),'repair.patch'));
+  assert.equal(createHash('sha256').update(patch).digest('hex'),report.verified.patchSha256);
+  assert.deepEqual(fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs')),original);
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver}).outcome,'IDLE');
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
 test('actual passing Git fixture generates no fake repair, patch, or changed source',
  {skip:nested,timeout:180000},async()=>{
  const f=fixture({broken:false});
