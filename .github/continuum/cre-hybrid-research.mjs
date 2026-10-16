@@ -6,6 +6,7 @@ import {RelationalEncoder,train} from './cre-encoder.mjs';
 import {buildData,files,fingerprint} from './relational-memory-data.mjs';
 import {rankMemories} from './dialogue-retrieval.mjs';
 import {decide,trainedVocabulary,FROZEN} from './relational-retrieval-audit.mjs';
+import {CHALLENGE,FINGERPRINT as CHALLENGE_FINGERPRINT} from './cre-challenge-v2.mjs';
 
 /** Reusable, read-only query evidence. All expensive neural comparisons are
  * computed once per seed and corpus, not repeated per calibration threshold. */
@@ -124,9 +125,13 @@ export function researchAudit() {
    const hybrid=trained.policy?outcomes(q=>
      selectHybridView(views.get(q),trained.policy).answer,data.test):null;
    const base=outcomes(q=>views.get(q).neural,data.test);
-   return {seed,base,hybrid};
+   const fresh=prepareQueryViews(model,CHALLENGE,trained.known);
+   const freshBase=outcomes(q=>fresh.get(q).neural,CHALLENGE);
+   const freshHybrid=trained.policy?outcomes(q=>selectHybridView(fresh.get(q),trained.policy).answer,CHALLENGE):null;
+   return {seed,base,hybrid,freshBase,freshHybrid};
  });
  const lexical=outcomes(q=>rankMemories(q,data.test.memories,{limit:1})[0],data.test);
+ const freshLexical=outcomes(q=>rankMemories(q,CHALLENGE.memories,{limit:1})[0],CHALLENGE);
  // This TEST set has already been publicly examined. Not promotion quality!
  const meetsHistoricalGate=Boolean(trained.policy)&&perSeed.every(row=>
   row.hybrid.seen+row.hybrid.heldout>lexical.seen+lexical.heldout&&
@@ -135,6 +140,9 @@ export function researchAudit() {
  return {schema:1,model:'CRE1_DEV_SELECTED_HYBRID_RESEARCH',
   selection:trained.selection,policy:trained.policy,
   testFingerprint:fingerprint(data.test),perSeed,lexical,
+  untouchedChallenge:{fingerprint:CHALLENGE_FINGERPRINT,lexical:freshLexical,
+    rows:perSeed.map(x=>({seed:x.seed,CRE1:x.freshBase,hybrid:x.freshHybrid})),
+    meanHybridCorrect:perSeed.reduce((sum,x)=>sum+(x.freshHybrid?.heldout??0),0)/perSeed.length},
   meetsHistoricalGate,promotionEligible:false,
   warning:'TEST forms have previously been inspected. Requires a NEW untouched evaluation domain.'};
 }
@@ -143,6 +151,7 @@ if(process.argv[1]?.endsWith('cre-hybrid-research.mjs')){
  console.log('DEV selected policy',JSON.stringify(audit.policy),'feasible',audit.selection.feasible);
  console.log('Historical TEST lexical',JSON.stringify(audit.lexical));
  for(const row of audit.perSeed)console.log('seed',row.seed,'CRE1',JSON.stringify(row.base),'hybrid',JSON.stringify(row.hybrid));
+ console.log('NEW CHALLENGE v2',JSON.stringify(audit.untouchedChallenge));
  console.log('historicalPass',audit.meetsHistoricalGate,'promotionEligible',audit.promotionEligible);
  if(process.argv[2])fs.writeFileSync(process.argv[2],JSON.stringify(audit,null,2)+'\n');
 }
