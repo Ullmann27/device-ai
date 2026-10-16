@@ -26,6 +26,7 @@ export function prepare(dir){
  train(m,curriculum.pairs.slice(0,24),curriculum.memories,
   {epochs:2,batch:6,lr:0.005,tau:0.1,size:6,hard:2,seed:43});
  fs.writeFileSync(file(dir,'node-cre1.cre1'),m.save());
+ fs.writeFileSync(file(dir,'node-seed73.cre1'),new RelationalEncoder(73).save());
  const sgd=RelationalEncoder.restore(m.save());
  const losses=trainParityRounds(sgd);
  fs.writeFileSync(file(dir,'node-sgd-losses.tsv'),losses.map(num).join('\n')+'\n');
