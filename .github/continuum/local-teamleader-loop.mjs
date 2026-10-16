@@ -35,8 +35,11 @@ export async function runTeamleaderLoop({
    if(!result||typeof result.outcome!=='string')throw Error('Worker returned no outcome');
    outcome=result.outcome;
    detail=String(result.detail??'').slice(0,160);
-   if(['ERROR','CHECKS_FAILED'].includes(outcome))throw Error(detail||outcome);
-   streak=0;
+   if(['ERROR','CHECKS_FAILED'].includes(outcome)){
+    failures++;
+    streak++;
+    log('[local-loop] cycle failed: '+(detail||outcome));
+   }else streak=0;
   }catch(error){
    outcome='ERROR';
    detail=String(error?.message??error).slice(0,160);
