@@ -57,3 +57,22 @@ test('cached query views preserve uncached CRE1 retrieval decisions exactly',()=
   assert.equal(cache.route,direct.route);
  }
 });
+
+test('neural abstention is never overridden even by perfect lexical evidence',()=>{
+ const {answer,route}=selectHybridView({
+  neural:null,lexical:{id:'wrong',text:'unverified',score:1},
+  lexScore:1,gap:1,evidence:1
+ },{lexFloor:0.2,lexGap:0,evidenceFloor:0.8});
+ assert.equal(answer,null);
+ assert.equal(route,'ABSTAIN');
+});
+test('hybrid can only re-rank answered queries, not add answers',()=>{
+ const fake={lexFloor:0.2,lexGap:0,evidenceFloor:0.8};
+ for(const neural of [null,{id:'a',text:'evidence'}]){
+  for(const evidence of [0,0.5,0.8,1]){
+   const view={neural,lexical:{id:'b',score:0.9},lexScore:0.9,gap:0.5,evidence};
+   const value=selectHybridView(view,fake).answer;
+   assert.equal(Boolean(value),Boolean(neural),'answerability must match CRE1');
+  }
+ }
+});
