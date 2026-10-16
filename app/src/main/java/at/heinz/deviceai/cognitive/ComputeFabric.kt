@@ -101,7 +101,8 @@ data class ComputeTask(
     val maxOutputBytes: Int,
     val permission: ComputePermission,
     val deadlineMillis: Long,
-    val parentStateRoot: ContinuumObjectId?
+    val parentStateRoot: ContinuumObjectId?,
+    val assignedNodeId: ComputeNodeId? = null
 ) {
     init {
         require(taskId.matches(Regex("[A-Za-z0-9._:-]{1,128}")))
@@ -193,6 +194,52 @@ object ComputeResultValidator {
     }
 }
 
+/**
+ * Strict one-shot verifier for results of explicitly assigned compute tasks.
+ * A result may be accepted only once; cancellations are terminal. This is an
+ * opt-in replacement for the legacy stateless validation helper, not a device
+ * execution path or an automatic external compute enrollment facility.
+ */
+class ComputeResultVerifier(
+    private val registry: ComputeNodeRegistry,
+    private val signatureVerifier: ComputeResultSignatureVerifier,
+    private val nowMillis: () -> Long = System::currentTimeMillis
+) {
+    private val lock = Any()
+    private val accepted = HashSet<String>()
+    private val cancelled = HashSet<String>()
+
+    fun cancel(taskId: String): Boolean = synchronized(lock) {
+        if (!taskId.matches(Regex("[A-Za-z0-9._:-]{1,128}"))) return@synchronized false
+        if (taskId in accepted || taskId in cancelled) return@synchronized false
+        if (accepted.size + cancelled.size >= MAX_TRACKED_RESULTS) return@synchronized false
+        cancelled.add(taskId)
+    }
+
+    fun validate(task: ComputeTask, envelope: SignedComputeResult): Boolean = synchronized(lock) {
+        val result = envelope.result
+        if (task.taskId in cancelled || task.taskId in accepted) return@synchronized false
+        if (accepted.size + cancelled.size >= MAX_TRACKED_RESULTS) return@synchronized false
+        if (nowMillis() >= task.deadlineMillis) return@synchronized false
+        if (task.taskId != result.taskId) return@synchronized false
+        if (task.assignedNodeId == null || task.assignedNodeId != result.nodeId) return@synchronized false
+        val node = registry.get(result.nodeId) ?: return@synchronized false
+        if (task.type !in node.taskTypes) return@synchronized false
+        if (task.requiredBackend != null && task.requiredBackend !in node.backends) return@synchronized false
+        if (task.requiredRamMb > node.maxRamMb ||
+            task.maxRuntimeMillis > node.maxRuntimeMillis ||
+            task.maxOutputBytes > node.maxOutputBytes) return@synchronized false
+        if (!result.verifyHash()) return@synchronized false
+        if (result.output.toByteArray(Charsets.UTF_8).size > task.maxOutputBytes) return@synchronized false
+        if (result.completedAtMillis > task.deadlineMillis ||
+            result.completedAtMillis > nowMillis()) return@synchronized false
+        if (!runCatching { signatureVerifier.verify(envelope) }.getOrDefault(false)) return@synchronized false
+        accepted.add(task.taskId)
+    }
+}
+
+private const val MAX_TRACKED_RESULTS = 10_000
+
 fun interface LocalComputeWorker {
     fun execute(task: ComputeTask): ComputeResult
 }
@@ -203,5 +250,9 @@ private fun containsCredentialLikeMaterial(text: String): Boolean {
         "(?i)\\b(password|passwd|token|secret|credential|authorization|api[_-]?key)\\b\\s*[:=]\\s*\\S+"
     )
     val bearer = Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}")
-    return credentialAssignment.containsMatchIn(text) || bearer.containsMatchIn(text)
+    val privateKey = Regex("(?i)-----BEGIN [A-Z0-9 ]*PRIVATE KEY-----")
+    val privateAssignment = Regex("(?i)\\bprivate[_-]?key\\b\\s*[:=]\\s*\\S+")
+    return credentialAssignment.containsMatchIn(text) ||
+        bearer.containsMatchIn(text) || privateKey.containsMatchIn(text) ||
+        privateAssignment.containsMatchIn(text)
 }
