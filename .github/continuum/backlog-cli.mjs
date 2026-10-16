@@ -6,6 +6,7 @@ import {analyzeRepository} from './code-analyzer.mjs';
 import {syncBacklogOps} from './development-planner.mjs';
 import {git,createWorktree,removeWorktree,runChain,CHAINS} from './repair-loop.mjs';
 import {renderOwnerNodeContract} from './contract-test-template.mjs';
+import {parseKotlinIntCases} from './kotlin-delegate-acceptance.mjs';
 
 /**
  * `developer-agent.mjs backlog <command> --file <backlog.json> ...`: the CLI for
@@ -68,6 +69,34 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       });
       report(log,{...r,results});
       return {...r,results};
+    }
+    case 'propose-implement':{
+      // A narrowly bounded pure Kotlin delegation operator. This registers
+      // only an owner proposal: acceptance and execution are separate acts.
+      const filePath=o.path;
+      const word=/^[A-Za-z_][A-Za-z0-9_]{0,63}$/;
+      if(typeof filePath!=='string'||
+         !/^app\/src\/main\/(?:java|kotlin)\/[A-Za-z0-9_./-]+\.kt$/.test(filePath)||
+         filePath.split('/').includes('..')||
+         ![o['class-name'],o['method-name'],o['delegate-name'],
+           o['parameter-name']].every(v=>word.test(v??''))||
+         o.type!=='Int'||!['1','2'].includes(o.depth)||
+         !parseKotlinIntCases(o['cases-json']))
+        throw Error('Unsupported bounded Kotlin IMPLEMENT spec; require Int, depth 1/2 and owner input/output cases');
+      const head=git(root,['rev-parse','HEAD']).stdout.trim();
+      if(!/^[0-9a-f]{40}$/.test(head)||git(root,['status','--porcelain']).stdout.trim())
+        throw Error('Clean immutable Git HEAD required for IMPLEMENT proposal');
+      const subject={
+       base:head,chain:'android',operation:'EXPOSE_DELEGATE',file:filePath,
+       className:o['class-name'],methodName:o['method-name'],
+       delegateName:o['delegate-name'],parameterName:o['parameter-name'],
+       type:'Int',depth:Number(o.depth),casesJson:o['cases-json']
+      };
+      const id=o.id??'impl-'+B.sha256Hex(B.canonical(subject)).slice(0,16);
+      return apply([{op:'propose',actor,at,task:{
+       id,title:B.singleLine(o.title??('Expose Kotlin method '+subject.methodName),200),
+       kind:'IMPLEMENT',source:'owner',priority:850,maxAttempts:3,subject
+      }}]);
     }
     case 'propose-test':{
       // Owner-supplied test cases are passed as compact JSON text because
@@ -164,6 +193,6 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       return apply([op],{stopOnError:false});
     }
     default:
-      throw Error('Unknown backlog command '+sub+' (show|plan|propose-test|propose-repair|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
+      throw Error('Unknown backlog command '+sub+' (show|plan|propose-implement|propose-test|propose-repair|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
   }
 }
