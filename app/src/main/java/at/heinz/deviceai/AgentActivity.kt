@@ -343,7 +343,9 @@ class AgentActivity : Activity() {
             }
         }, "continuum-offline-bootstrap").apply { isDaemon = true; start() }
         at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
-        at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()
+        if (!at.heinz.deviceai.learning.ContinuumDeviceTeamleaderScheduler(this).restore()) {
+            addToolActivity("CONTINUUM · Teamleiter-Job konnte nicht geplant werden; lokale manuelle Prüfung bleibt verfügbar")
+        }
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
         recoverDevelopmentBacklog()
@@ -924,7 +926,8 @@ class AgentActivity : Activity() {
         onBacklog({
             at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
                 ?: "Continuum Teamleiter: Noch kein Lauf gespeichert. " +
-                    "Der lokale Job wird stündlich bei geeigneten Ressourcen eingeplant."
+                    "Die Hintergrundplanung wird beim Appstart versucht; " +
+                    "Android garantiert keinen Zeitpunkt. Nutze Teamleiter prüfen."
         }) { result ->
             if(isFinishing || isDestroyed)return@onBacklog
             AlertDialog.Builder(this)
