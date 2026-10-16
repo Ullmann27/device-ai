@@ -108,13 +108,13 @@ test('accepted owner TEST is dispatched before baseline and a verified new contr
   assert.equal(id,testTask.id);
   testTask=null;
   return {status:'DONE',taskId:id,approvedForMerge:false,
-   patchSha256:'d'.repeat(64),receipt:'/external/verification.json',
+   patchSha256:'d'.repeat(64),patch:'/external/review.patch',receipt:'/external/verification.json',
    proof:{passed:true,baselineExecuted:1,candidateExecuted:3,independentExecuted:3}};
  };
  const first=runTeamleaderCycle({root,stateDir,driver});
  assert.equal(first.kind,'OWNER_TEST');
  assert.equal(first.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
- assert.equal(first.artifact,'/external/verification.json');
+ assert.equal(first.artifact,'/external/review.patch');
  assert.equal(driver.calls.repairs,0);
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
  assert.equal(driver.calls.repairs,0);
