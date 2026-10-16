@@ -17,6 +17,22 @@ class Cre1ResearchLabTest {
         Cre1ResearchExample("Was isst Nina gern?",listOf(
             "Nina mag Kartoffelgratin.", "Nina fährt einen Honda Civic."))
     )
+    @Test fun corruptedCre1ResearchCheckpointNeverSilentlyResetsToFreshWeights() {
+        val dir=Files.createTempDirectory("cre1-tamper").toFile()
+        try {
+            val checkpoint=dir.resolve("cre1-research-v1.cre1")
+            val corrupted=Cre1InferenceEncoder.createResearch(73).save()
+            corrupted[256]=(corrupted[256].toInt() xor 1).toByte()
+            checkpoint.writeBytes(corrupted)
+            val lab=Cre1ResearchLab(dir)
+            assertThrows(IllegalArgumentException::class.java) { lab.status() }
+            assertThrows(IllegalArgumentException::class.java) {
+                lab.train(trainSamples(),auditSamples(),steps=2)
+            }
+            assertArrayEquals(corrupted,checkpoint.readBytes())
+        }finally{dir.deleteRecursively()}
+    }
+
     @Test fun interruptionNeverPublishesWeightsAndRejectsOverlappingAudit() {
         val dir=Files.createTempDirectory("cre1-research").toFile()
         try{
