@@ -2017,6 +2017,9 @@ class AgentActivity : Activity() {
                     else if(report.stoppedEarly)"abgebrochen; keine neuen Gewichte gespeichert"
                     else "Kandidat verworfen; Audit wurde nicht verbessert")
                 append("\nTrainingsschritte: ").append(report.steps)
+                append("\nTrainingsverlust: ")
+                append("%.6f".format(Locale.ROOT,report.trainingBeforeLoss))
+                append(" → ").append("%.6f".format(Locale.ROOT,report.trainingAfterLoss))
                 append("\nAudit-Verlust: ")
                 append("%.6f".format(Locale.ROOT,report.beforeLoss))
                 append(" → ").append("%.6f".format(Locale.ROOT,report.afterLoss))
