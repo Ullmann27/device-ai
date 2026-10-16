@@ -5,6 +5,7 @@ import * as B from './development-backlog.mjs';
 import {analyzeRepository} from './code-analyzer.mjs';
 import {syncBacklogOps} from './development-planner.mjs';
 import {git,createWorktree,removeWorktree,runChain,CHAINS} from './repair-loop.mjs';
+import {renderOwnerNodeContract} from './contract-test-template.mjs';
 
 /**
  * `developer-agent.mjs backlog <command> --file <backlog.json> ...`: the CLI for
@@ -76,12 +77,11 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
          !/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(exportName??'')||
          typeof casesJson!=='string'||casesJson.length>300)
         throw Error('Invalid module, export or compact --cases-json (max 300 chars)');
-      let cases;
-      try{cases=JSON.parse(casesJson);}catch{throw Error('--cases-json is invalid JSON');}
-      if(!Array.isArray(cases)||cases.length<1||cases.length>4||
-         cases.some(c=>!c||!Array.isArray(c.args)||c.args.length>3||
-           !Object.hasOwn(c,'expected')))
-        throw Error('--cases-json must be 1..4 explicit argument/result cases');
+      // Validate against the SAME pure grammar as the executor and critic.
+      // Reject unsupported values before they enter persistent owner state.
+      const contractFile=modulePath.replace(/\.mjs$/,'.contract.test.mjs');
+      if(renderOwnerNodeContract(contractFile,exportName,casesJson)===null)
+        throw Error('--cases-json contains an unsupported or unsafe contract value');
       const base=git(root,['rev-parse','HEAD']).stdout.trim();
       if(!/^[0-9a-f]{40}$/.test(base)||git(root,['status','--porcelain']).stdout.trim())
         throw Error('A clean immutable Git HEAD is required to propose a contract test');
