@@ -3730,6 +3730,78 @@
    "proposalCommit": null,
    "proposalBranch": null,
    "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:46:50.728Z",
+   "baseCommit": "fac12265dc279268a7dc9649cae362cce3e9caf1",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "1a40b36020a32a10",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutonomousSchedulerTest.kt",
+     "oldText": "        assertTrue(wanted.requiresBatteryNotLow)\n        assertTrue(wanted.requiresStorageNotLow)",
+     "newText": "",
+     "line": 58
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:46:50.728Z",
+   "baseCommit": "fac12265dc279268a7dc9649cae362cce3e9caf1",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "f9cde94a9288aa5f",
+   "strategy": "REVERT_HUNK_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutonomousSchedulerTest.kt",
+     "oldText": "    @Test fun resourceDeferralsAndHistoryAreVisibleWithoutSourceData() {\n        val status = ContinuumOfflineJobSnapshot(\n            true,\"DEFERRED_THERMAL_LIMIT\",100L,200L,\"\",\"\",\n            \"100:RUNNING|200:DEFERRED_THERMAL_LIMIT\"\n        ).display()\n        assertTrue(status.contains(\"DEFERRED_THERMAL_LIMIT\"))\n        assertTrue(status.contains(\"100:RUNNING|200:DEFERRED_THERMAL_LIMIT\"))\n        assertFalse(status.contains(\"Letzter Fehler:\"))\n    }\n\n",
+     "newText": "",
+     "line": 69
+    }
+   ],
+   "confidence": 0.44,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-16T02:46:50.728Z",
+   "baseCommit": "fac12265dc279268a7dc9649cae362cce3e9caf1",
+   "chain": "android",
+   "diagnostic": "a82e4cafaba45e33",
+   "diagnosticKind": "TEST_FAILURE",
+   "candidate": "6db585edc707fa36",
+   "strategy": "REVERT_FILE_TO_PARENT",
+   "outcome": "REJECTED_BY_CRITIC",
+   "edits": [
+    {
+     "file": "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutonomousSchedulerTest.kt",
+     "oldText": "        assertTrue(wanted.requiresBatteryNotLow)\n        assertTrue(wanted.requiresStorageNotLow)\n        assertEquals(android.app.job.JobInfo.NETWORK_TYPE_NONE, wanted.networkType)\n    }\n\n    @Test fun scheduleErrorIsShownWithTheFailedSchedule() {\n        val text = ContinuumOfflineJobSnapshot(false, \"NOT_RUN\", 0, 0, \"\", \"IllegalArgumentException\").display()\n        assertTrue(text.contains(\"Einplanung fehlgeschlagen (IllegalArgumentException)\"))\n        val ok = ContinuumOfflineJobSnapshot(true, \"NOT_RUN\", 0, 0, \"\", \"IllegalArgumentException\").display()\n        assertFalse(\"a stale error is not shown next to a successful schedule\", ok.contains(\"IllegalArgumentException\"))\n    }\n    @Test fun resourceDeferralsAndHistoryAreVisibleWithoutSourceData() {\n        val status = ContinuumOfflineJobSnapshot(\n            true,\"DEFERRED_THERMAL_LIMIT\",100L,200L,\"\",\"\",\n            \"100:RUNNING|200:DEFERRED_THERMAL_LIMIT\"\n        ).display()\n        assertTrue(status.contains(\"DEFERRED_THERMAL_LIMIT\"))\n        assertTrue(status.contains(\"100:RUNNING|200:DEFERRED_THERMAL_LIMIT\"))\n        assertFalse(status.contains(\"Letzter Fehler:\"))\n    }\n\n",
+     "newText": "        assertEquals(android.app.job.JobInfo.NETWORK_TYPE_NONE, wanted.networkType)\n    }\n\n    @Test fun scheduleErrorIsShownWithTheFailedSchedule() {\n        val text = ContinuumOfflineJobSnapshot(false, \"NOT_RUN\", 0, 0, \"\", \"IllegalArgumentException\").display()\n        assertTrue(text.contains(\"Einplanung fehlgeschlagen (IllegalArgumentException)\"))\n        val ok = ContinuumOfflineJobSnapshot(true, \"NOT_RUN\", 0, 0, \"\", \"IllegalArgumentException\").display()\n        assertFalse(\"a stale error is not shown next to a successful schedule\", ok.contains(\"IllegalArgumentException\"))\n    }",
+     "line": 58
+    }
+   ],
+   "confidence": 0.4,
+   "tests": [],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
   }
  ],
  "experiences": [
@@ -5031,6 +5103,17 @@
   {
    "at": "2026-10-16T02:46:49.256Z",
    "base": "c397a08af19d30e2c9ddbe0e6d65b64e1ccc80c5",
+   "chain": "android",
+   "outcome": "NO_VERIFIED_REPAIR",
+   "diagnostics": 1,
+   "attempts": 3,
+   "verifiedStrategy": null,
+   "patchSha256": null,
+   "trigger": "android-build-failure"
+  },
+  {
+   "at": "2026-10-16T02:46:50.728Z",
+   "base": "fac12265dc279268a7dc9649cae362cce3e9caf1",
    "chain": "android",
    "outcome": "NO_VERIFIED_REPAIR",
    "diagnostics": 1,
