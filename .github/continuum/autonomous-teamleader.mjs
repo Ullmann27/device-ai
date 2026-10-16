@@ -11,6 +11,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import crypto from 'node:crypto';
 import {executeInvestigation} from './backlog-investigator.mjs';
 
@@ -71,12 +72,42 @@ function append(state,event){
 }
 function getLock(file,now){
  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
- // No stale-lock stealing: simultaneous runs and uncertain interrupted runs
- // need explicit operator inspection rather than risking duplicate execution.
  const lock=file+'.lock';
- try{fs.writeFileSync(lock,JSON.stringify({pid:process.pid,at:now}),{flag:'wx',mode:0o600});}
- catch(e){if(e.code==='EEXIST')throw Error('Teamleader already running or lock requires recovery');throw e;}
- return ()=>fs.rmSync(lock,{force:true});
+ const payload=JSON.stringify({pid:process.pid,host:os.hostname(),at:now});
+ const create=()=>fs.writeFileSync(lock,payload,{flag:'wx',mode:0o600});
+ try{create();}
+ catch(e){
+  if(e.code!=='EEXIST')throw e;
+  // Automatic crash recovery is safe only for a dead PID on THIS host.
+  // If the process is alive or host/owner is unknown, fail closed.
+  let previous;
+  try{previous=JSON.parse(fs.readFileSync(lock,'utf8'));}
+  catch{throw Error('Teamleader lock malformed; inspect manually');}
+  if(previous.host!==os.hostname()||
+     !Number.isSafeInteger(previous.pid)||previous.pid<=0||
+     !Number.isSafeInteger(previous.at)||now-previous.at<5*60_000)
+    throw Error('Teamleader already running or lock requires recovery');
+  try{process.kill(previous.pid,0);throw Error('Teamleader still running');}
+  catch(err){
+   if(err.code!=='ESRCH')throw err;
+  }
+  // Rename the exact stale lock out of the way. Another runner may win the
+  // race to create a fresh lock; the exclusive create then fails safely.
+  const stale=lock+'.stale-'+crypto.randomBytes(6).toString('hex');
+  try{
+   // Re-check before takeover to avoid deleting a different owner's lock.
+   if(fs.readFileSync(lock,'utf8')!==JSON.stringify(previous))
+    throw Error('Teamleader lock changed while recovering');
+   fs.renameSync(lock,stale);
+  }catch(e){throw Error('Teamleader lock recovery conflict: '+e.message);}
+  finally{fs.rmSync(stale,{force:true});}
+  create();
+ }
+ return ()=>{
+  // An older process must not remove a lock belonging to its successor.
+  try{if(fs.readFileSync(lock,'utf8')===payload)fs.rmSync(lock,{force:true});}
+  catch(e){if(e.code!=='ENOENT')throw e;}
+ };
 }
 
 export function runTeamleaderCycle({
@@ -86,7 +117,9 @@ export function runTeamleaderCycle({
  if(!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
   throw Error('Teamleader budget must be 1..30 minutes');
  const statePath=path.join(path.resolve(stateDir),'teamleader-state.json');
- if(path.resolve(root)===path.resolve(stateDir))throw Error('Store Teamleader state outside the repository');
+ const sourceRoot=path.resolve(root),storeRoot=path.resolve(stateDir);
+ if(storeRoot===sourceRoot||storeRoot.startsWith(sourceRoot+path.sep))
+  throw Error('Store Teamleader state outside the repository');
  const started=now(),unlock=getLock(statePath,started);
  try{
   let state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
@@ -104,7 +137,7 @@ export function runTeamleaderCycle({
   if(ready && (ready.kind!=='INVESTIGATE'||ready.state!=='READY'||!/^inv-[0-9a-f]{16}$/.test(ready.id)))
    throw Error('Untrusted investigation task');
   let chosen=selectTeamleaderAction(state,head,ready);
-  if(retry && chosen.kind==='IDLE')chosen={kind:'BASELINE_REPAIR'};
+  if(retry)chosen={kind:'BASELINE_REPAIR'};
   if(chosen.kind==='IDLE'){
    // Structural findings are only safe to auto-accept for read-only review.
    ready=driver.prepareSafeInvestigation?.(root,stateDir,head)??null;
