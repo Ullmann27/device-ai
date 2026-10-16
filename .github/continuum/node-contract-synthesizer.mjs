@@ -24,9 +24,18 @@ export function proposeNodeContractTest({files,task}={}){
     !TASK.test(task.id??''))return {candidate:null,reason:'OWNER_ACCEPTANCE_REQUIRED'};
  const s=task.subject;
  const match=MODULE.exec(s?.modulePath??'');
+ // Backlog v2 accepts only scalar subject fields (maximum 300 characters).
+ // Nested case arrays are not valid Kotlin/Node-parity backlog data.
  if(s?.operation!=='ASSERT_NODE_EXPORT'||!match||!IDENT.test(s.exportName??'')||
-    !Array.isArray(s.cases)||s.cases.length<1||s.cases.length>4)
+    typeof s.casesJson!=='string'||s.casesJson.length>300||
+    !/^[0-9a-f]{40}$/.test(s.base??'')||s.chain!=='node')
   return {candidate:null,reason:'INVALID_CONTRACT_SPEC'};
+ let caseSpecs;
+ try{
+  caseSpecs=JSON.parse(s.casesJson);
+  if(!Array.isArray(caseSpecs)||caseSpecs.length<1||caseSpecs.length>4)
+   throw Error('Invalid case count');
+ }catch{return {candidate:null,reason:'INVALID_CASES_JSON'};}
  const modulePath=s.modulePath,testPath='.github/continuum/'+match[1]+'.contract.test.mjs';
  if(!Array.isArray(files)||files.length<1||files.length>3000)
   return {candidate:null,reason:'INVALID_SOURCE_SET'};
@@ -38,7 +47,7 @@ export function proposeNodeContractTest({files,task}={}){
  if(!exported.test(modules[0].content))return {candidate:null,reason:'EXPORT_NOT_LOCATED'};
  const cases=[];
  try{
-  for(const c of s.cases){
+  for(const c of caseSpecs){
    if(!c||!Array.isArray(c.args)||c.args.length>3||
       !Object.hasOwn(c,'expected'))throw Error('Missing expected value');
    cases.push({args:c.args.map(safeJson),expected:safeJson(c.expected)});
