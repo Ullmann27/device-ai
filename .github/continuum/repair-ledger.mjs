@@ -46,13 +46,23 @@ export function saveLedger(file,ledger){
 /** Fold one session report into the ledger (returns a new object). */
 export function recordSession(ledger,report,meta={}){
   const next=structuredClone(ledger);
-  const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>({
+  // An internal VERIFIED result is only provisional until an independent
+  // worktree checks the patch. On independent rejection the original report
+  // is kept for diagnostics, but the training signal MUST be negative.
+  const independentRejected=meta.independentPass===false&&report.outcome==='VERIFIED';
+  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':report.outcome;
+  const acceptedPatch=independentRejected?null:report.verified;
+  const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
+    if(independentRejected&&a.outcome==='VERIFIED')
+      a={...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    return a;
+  }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
     outcome:a.outcome,edits:a.edits,confidence:a.score??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
       executed:t.tests?.executed??0,skipped:t.tests?.skipped??0})),
-    patchSha256:a.outcome==='VERIFIED'?report.verified?.patchSha256??null:null,
+    patchSha256:a.outcome==='VERIFIED'?acceptedPatch?.patchSha256??null:null,
     proposalCommit:a.outcome==='VERIFIED'?meta.proposalCommit??null:null,
     proposalBranch:a.outcome==='VERIFIED'?meta.branch??null:null,pullRequest:a.outcome==='VERIFIED'?meta.pullRequest??null:null}));
   next.attempts=[...next.attempts,...attempts].slice(-MAX_ATTEMPTS);
@@ -61,8 +71,8 @@ export function recordSession(ledger,report,meta={}){
   next.experiences=mergeExperiences(next.experiences,attempts.filter(a=>['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome))
     .map(a=>({kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'})));
   next.sessions=[...next.sessions,{at:report.finishedAt??new Date().toISOString(),base:report.base,chain:report.chain,
-    outcome:report.outcome,diagnostics:(report.baseline?.diagnostics??[]).length,attempts:attempts.length,
-    verifiedStrategy:report.verified?.strategy??null,patchSha256:report.verified?.patchSha256??null,
+    outcome:finalOutcome,diagnostics:(report.baseline?.diagnostics??[]).length,attempts:attempts.length,
+    verifiedStrategy:acceptedPatch?.strategy??null,patchSha256:acceptedPatch?.patchSha256??null,
     trigger:meta.trigger??null}].slice(-200);
   return verifyLedger(next);
 }
