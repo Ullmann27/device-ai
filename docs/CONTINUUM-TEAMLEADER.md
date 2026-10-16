@@ -289,3 +289,56 @@ Zusätzliche Regressionstests für das Prüfwerkzeug:
 
 Ungeprüfte Agentenänderungen werden von diesem Werkzeug weder in den
 Source-Checkout zurückgespielt noch in den produktiven Branch gemergt.
+
+
+## M4.2 Forschung: begrenzte symbolische Kotlin-Code-Synthese
+
+Die erste neue, nicht nur reparierende Code-Operation ist
+kotlin-delegate-synthesizer.mjs mit proposeKotlinDelegate.
+Sie erzeugt **nur Kandidaten** und verändert weder Checkout noch Backlog.
+Sie wird noch **nicht automatisch** vom regulären Teamleader ausgeführt.
+
+Ein expliziter, zuvor als READY angenommener IMPLEMENT-Auftrag mit
+source: owner muss folgende flache subject-Daten enthalten:
+
+    {
+      "operation": "EXPOSE_DELEGATE",
+      "file": "app/src/main/java/p/MathApi.kt",
+      "className": "MathApi",
+      "methodName": "squareTwice",
+      "delegateName": "square",
+      "parameterName": "value",
+      "type": "Int",
+      "depth": 2
+    }
+
+Der Operator akzeptiert ausschließlich vorhandene einfache Klassen mit einer
+eindeutigen, nicht überladenen Methode fun existing(arg: Type): Type,
+wobei Type aus einer begrenzten Menge (Int, Long, Boolean, String)
+stammt und depth genau 1 oder 2 beträgt. Er verwendet das
+vorhandene Kotlin-Lexing und den Symbolindex für Token-Spans und lässt
+den bestehenden repair-critic.mjs entscheiden. Er behauptet **keine**
+vollständige Kotlin-Compiler-AST- oder Typanalyse.
+
+Die abgelehnten Fälle umfassen unangenommene oder fremde Aufträge,
+mehrdeutige/überladene Methoden, ungültige Namen, nicht unterstützte
+Kotlin-Klassenköpfe, Test- und Governance-Dateien und unzulässige Typen.
+Das neue Verhalten ist ein bewusst eng begrenztes, deterministisches
+M4.2-Experiment, kein frei generativer lokaler Entwickler.
+
+    node --test .github/continuum/kotlin-delegate-synthesizer.test.mjs
+
+Der Test verlangt sowohl eine *rote* Kotlin-Kompilation ohne die neue
+Methode als auch eine *grüne* Kotlin-Kompilation und funktionale
+Laufzeitprüfungen nach dem generierten Patch. Dafür müssen kotlinc
+und Java im Pfad vorhanden sein; andernfalls ist der entsprechende
+Compiler-Test im Node-Test übersprungen und kein Compiler-Nachweis erfolgt.
+
+**Vor Freigabe als autonomer Skill zwingend:** kanonische Owner-Task-
+Ausführung, isolierte Worktrees, reproduzierbarer Baseline-/Patch-Test,
+unabhängiger zweiter Testlauf, JUnit-Evidenz, SHA-256 des Patches,
+Governance-Verbot, Wiederaufnahmesicherheit, fehlertoleranter Backlog,
+keine ungeprüfte Main-Änderung. CRE1 darf Operatoren zunächst
+nur im Shadow-Modus bewerten; neuronale Gewichtsänderungen benötigen
+separat eingefrorene Holdouts, unabhängige Erfolgsevidenz und
+reproduzierbare Vergleichsmessungen.
