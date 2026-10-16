@@ -28,16 +28,17 @@ export function prepareQueryViews(model,split,trained) {
  return views;
 }
 function prepareView(query,memories,trained,scoreFn) {
- const neural=decide(scoreFn,query,memories,{trained}).answer;
+ const neuralDecision=decide(scoreFn,query,memories,{trained});
+ const neural=neuralDecision.answer;
  const lexical=rankMemories(query,memories,{limit:2});
  const [best,next]=lexical;
- if(!best)return {neural,lexical:null,lexScore:0,gap:0,evidence:0};
+ if(!best)return {neural,neuralReason:neuralDecision.reason??null,lexical:null,lexScore:0,gap:0,evidence:0};
  const indexed=new Map(lexical.map(m=>[m.id,m.score]));
  const safeFallback=decide((_q,text)=>{
   const match=memories.find(m=>m.text===text);
   return match?indexed.get(match.id)??-1:-1;
  },query,memories,{trained,delta:0}).answer;
- return {neural,lexical:safeFallback?.id===best.id?best:null,
+ return {neural,neuralReason:neuralDecision.reason??null,lexical:safeFallback?.id===best.id?best:null,
    lexScore:best.score,gap:best.score-(next?.score??0),evidence:best.evidence};
 }
 export function selectHybridView(view,policy) {
@@ -48,12 +49,32 @@ export function selectHybridView(view,policy) {
  // resurrect a question rejected by the CRE1 relation/name abstention gate.
  // Consequently hybrid false-answer count on unanswerable inputs cannot
  // exceed the CRE1 baseline's count for the same inputs.
- if(!neural)return {answer:null,route:'ABSTAIN'};
+ if(!neural)return {answer:null,route:'ABSTAIN',reason:view.neuralReason??'neural-rejected'};
  if(lexical && lexScore>=policy.lexFloor && gap>=policy.lexGap &&
     evidence>=policy.evidenceFloor)
   return {answer:lexical,route:neural?.id===lexical.id?'AGREEMENT':'LEXICAL_RESCUE'};
  return {answer:neural,route:neural?'CRE1':'ABSTAIN'};
 }
+/** Unsuitable for product use. Quantifies additional factual errors caused
+ * by overriding neural abstentions. This is a diagnostic negative control. */
+export function unsafeAbstentionRescueAblation(view,policy) {
+ if(!view||!policy)throw Error('Invalid ablation');
+ const lexicalOnly=selectHybridView({...view,neural:{id:'__unsafe_probe__'}},policy);
+ if(view.neural)return selectHybridView(view,policy);
+ if(lexicalOnly.route!=='LEXICAL_RESCUE')
+  return {answer:null,route:'ABSTAIN'};
+ return {answer:lexicalOnly.answer,route:'UNSAFE_RESCUE_ABLATION'};
+}
+export function abstentionReasons(views,split) {
+ const result={};
+ for(const {text} of [...split.questions,...split.unanswerable]){
+  const view=views.get(text);
+  if(!view.neural){const reason=view.neuralReason??'unknown';
+    result[reason]=(result[reason]??0)+1;}
+ }
+ return result;
+}
+
 export function hybridDecision(model,query,memories,trained,policy) {
  if(!(model instanceof RelationalEncoder)||!Array.isArray(memories)||memories.length>300)
   throw Error('Invalid CRE1 research query');
@@ -133,7 +154,11 @@ export function researchAudit() {
    const fresh=prepareQueryViews(model,CHALLENGE,trained.known);
    const freshBase=outcomes(q=>fresh.get(q).neural,CHALLENGE);
    const freshHybrid=trained.policy?outcomes(q=>selectHybridView(fresh.get(q),trained.policy).answer,CHALLENGE):null;
-   return {seed,base,hybrid,freshBase,freshHybrid};
+   const historicalAbstentions=abstentionReasons(views,data.test);
+   const freshAbstentions=abstentionReasons(fresh,CHALLENGE);
+   const freshUnsafe=outcomes(q=>unsafeAbstentionRescueAblation(fresh.get(q),trained.policy).answer,CHALLENGE);
+   return {seed,base,hybrid,freshBase,freshHybrid,freshUnsafe,
+      historicalAbstentions,freshAbstentions};
  });
  const lexical=outcomes(q=>rankMemories(q,data.test.memories,{limit:1})[0],data.test);
  const freshLexical=outcomes(q=>rankMemories(q,CHALLENGE.memories,{limit:1})[0],CHALLENGE);
@@ -146,7 +171,8 @@ export function researchAudit() {
   selection:trained.selection,policy:trained.policy,
   testFingerprint:fingerprint(data.test),perSeed,lexical,
   untouchedChallenge:{fingerprint:CHALLENGE_FINGERPRINT,lexical:freshLexical,
-    rows:perSeed.map(x=>({seed:x.seed,CRE1:x.freshBase,hybrid:x.freshHybrid})),
+    rows:perSeed.map(x=>({seed:x.seed,CRE1:x.freshBase,hybrid:x.freshHybrid,
+      unsafeRescueAblation:x.freshUnsafe,abstentionReasons:x.freshAbstentions})),
     meanHybridCorrect:perSeed.reduce((sum,x)=>sum+(x.freshHybrid?.heldout??0),0)/perSeed.length},
   meetsHistoricalGate,promotionEligible:false,
   warning:'TEST forms have previously been inspected. Requires a NEW untouched evaluation domain.'};
