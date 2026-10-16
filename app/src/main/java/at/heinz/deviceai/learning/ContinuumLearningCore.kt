@@ -437,6 +437,22 @@ class ContinuumLearningCore(
     fun replyFromMemory(input:String):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
         dialogue.reply(loadModel().save(),store.all(),input,nowMillis())
     }
+    /** One immutable model/experience view for answer AND CRE1 candidates.
+     * Keeps provenance stable throughout the turn even when an owner fact is
+     * modified by another background job after this lock is released.
+     */
+    fun replyWithEvidence(input:String):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>>=
+        synchronized(CORE_LOCK) {
+            val snapshot=loadModel().save()
+            val experiences=store.all()
+            val turn=dialogue.reply(snapshot,experiences,input,nowMillis())
+            val hits=if(turn.grounded)
+                ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
+                    .filter { it.id in turn.memoryIds }
+                else emptyList()
+            turn to hits
+        }
+
     fun dialogueHistory():List<ContinuumDialogueTurn> = synchronized(CORE_LOCK) { dialogue.history() }
 
     /** The same confirmed, nonrevoked evidence ranked by the production SWB1
