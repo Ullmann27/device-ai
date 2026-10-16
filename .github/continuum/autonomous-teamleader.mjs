@@ -23,7 +23,7 @@ const OUTCOMES=new Set([
  'NO_VERIFIED_REPAIR','DONE_INVESTIGATION','CHECKS_FAILED','NO_READY_INVESTIGATION',
  'IDLE','INTERRUPTED','ERROR'
 ]);
-const KINDS=new Set(['BASELINE_REPAIR','OWNER_REPAIR','INVESTIGATE','IDLE']);
+const KINDS=new Set(['BASELINE_REPAIR','OWNER_REPAIR','OWNER_TEST','INVESTIGATE','IDLE']);
 const MAX_EVENTS=96;
 const MAX_BYTES=65000;
 const hash=text=>crypto.createHash('sha256').update(text).digest('hex');
@@ -171,10 +171,17 @@ export function runTeamleaderCycle({
      !/^[a-z][a-z0-9-]{2,63}$/.test(owner.id)||owner.subject?.base!==head||
      !['node','android','jvm'].includes(owner.subject?.chain)))
     throw Error('Untrusted owner repair task');
-  let ready=owner?null:(driver.readyInvestigation?.(root,stateDir,head)??null);
+  const ownerTest=owner?null:(driver.readyOwnerContractTask?.(root,stateDir,head)??null);
+  if(ownerTest && (ownerTest.kind!=='TEST'||ownerTest.source!=='owner'||
+     ownerTest.state!=='READY'||!/^[a-z][a-z0-9-]{2,63}$/.test(ownerTest.id)||
+     ownerTest.subject?.base!==head||ownerTest.subject?.chain!=='node'||
+     ownerTest.subject?.operation!=='ASSERT_NODE_EXPORT'))
+   throw Error('Untrusted owner TEST task');
+  let ready=owner||ownerTest?null:(driver.readyInvestigation?.(root,stateDir,head)??null);
   if(ready && (ready.kind!=='INVESTIGATE'||ready.state!=='READY'||!/^inv-[0-9a-f]{16}$/.test(ready.id)))
    throw Error('Untrusted investigation task');
   let chosen=owner?{kind:'OWNER_REPAIR',taskId:owner.id}:
+    ownerTest?{kind:'OWNER_TEST',taskId:ownerTest.id}:
     selectTeamleaderAction(state,head,ready);
   if(retry)chosen={kind:'BASELINE_REPAIR'};
   if(chosen.kind==='IDLE' && !state.discoveryHeads.includes(head) &&
@@ -208,7 +215,7 @@ export function runTeamleaderCycle({
   if(chosen.kind==='IDLE'){
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
   }
-  if(chosen.kind==='BASELINE_REPAIR'||chosen.kind==='OWNER_REPAIR'){
+  if(['BASELINE_REPAIR','OWNER_REPAIR','OWNER_TEST'].includes(chosen.kind)){
    // An accepted owner repair already runs the fixed baseline: do not repeat
    // the same expensive chain as BASELINE_REPAIR on the next scheduled cycle.
    state=seal({...state,attemptedHeads:[...state.attemptedHeads.filter(h=>h!==head),head].slice(-64)});
@@ -221,7 +228,9 @@ export function runTeamleaderCycle({
     ?driver.repair(root,stateDir,head,{budgetMinutes})
     :chosen.kind==='OWNER_REPAIR'
       ?driver.ownerRepair(root,stateDir,head,chosen.taskId,{budgetMinutes})
-      :driver.investigate(root,stateDir,head,chosen.taskId);
+      :chosen.kind==='OWNER_TEST'
+        ?driver.ownerContractTask(root,stateDir,head,chosen.taskId,{budgetMinutes})
+        :driver.investigate(root,stateDir,head,chosen.taskId);
    if(chosen.kind==='BASELINE_REPAIR'){
     const map={NO_FAILURE:'NO_FAILURE',
      NO_CODE_DIAGNOSTIC:'NO_CODE_DIAGNOSTIC',
@@ -230,6 +239,25 @@ export function runTeamleaderCycle({
     if(!Object.hasOwn(map,result?.outcome))throw Error('Unknown repair outcome');
     outcome=map[result.outcome];
     detail=String(result.verified?.strategy??result.outcome).slice(0,160);
+   } else if(chosen.kind==='OWNER_TEST'){
+    if(result?.status==='DONE'){
+      if(result.taskId!==chosen.taskId||result.approvedForMerge!==false||
+         !/^[0-9a-f]{64}$/.test(result.patchSha256??'')||
+         result.proof?.passed!==true||
+         !(result.proof.baselineExecuted>0)||
+         !(result.proof.candidateExecuted>result.proof.baselineExecuted)||
+         !(result.proof.independentExecuted>=result.proof.candidateExecuted)||
+         typeof result.receipt!=='string')
+        throw Error('Owner TEST claimed DONE without independent contract evidence');
+      outcome='VERIFIED_PATCH_PENDING_REVIEW';
+      detail=('test '+chosen.taskId+' patch '+result.patchSha256.slice(0,12)).slice(0,160);
+    }else if(result?.status==='FAILED'){
+      outcome='CHECKS_FAILED';
+      detail=String(result.reason??'Owner TEST checks failed').slice(0,160);
+    }else if(result?.status==='NO_READY_TASK'){
+      outcome='IDLE';
+      detail='Owner TEST was claimed by another worker';
+    }else throw Error('Unknown owner TEST task outcome');
    } else if(chosen.kind==='OWNER_REPAIR'){
     if(result?.status==='DONE'){
       if(!/^[0-9a-f]{64}$/.test(result.patchSha256??'')||
@@ -255,7 +283,7 @@ export function runTeamleaderCycle({
     outcome=allowed[result.status];
     detail=String(result.staticResult??result.status).slice(0,160);
    }
-   artifact=result.artifact??result.report??null;
+   artifact=result.artifact??result.report??result.receipt??null;
    log('[teamleader] '+chosen.kind+' -> '+outcome);
   }catch(e){
    detail=(e?.name??'Error')+': '+String(e?.message??'unknown').slice(0,120);
@@ -277,10 +305,12 @@ export async function localTeamleaderDriver(){
   {BacklogStore,nextEligible},
   {analyzeRepository},
   {syncBacklogOps},
-  {executeOwnerRepairTask}]=await Promise.all([
+  {executeOwnerRepairTask},
+  {executeOwnerContractTestTask}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
-  import('./development-planner.mjs'),import('./backlog-repair-worker.mjs')
+  import('./development-planner.mjs'),import('./backlog-repair-worker.mjs'),
+  import('./owner-contract-worker.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
@@ -293,6 +323,21 @@ export async function localTeamleaderDriver(){
         t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
      store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
    return nextEligible(store.read().doc,['REPAIR'],['owner'],head);
+  },
+  readyOwnerContractTask(root,stateDir,head){
+   const store=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+     {actor:'continuum-teamleader'});
+   const snapshot=store.read().doc;
+   if(snapshot.tasks.some(t=>t.source==='owner'&&t.kind==='TEST'&&
+        t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
+     store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
+   return nextEligible(store.read().doc,['TEST'],['owner'],head);
+  },
+  ownerContractTask(root,stateDir,head,taskId,{budgetMinutes}){
+   return executeOwnerContractTestTask({
+    root,file:path.join(stateDir,'development-backlog.json'),
+    out:path.join(stateDir,'reports','owner-test'),id:taskId,budgetMinutes
+   });
   },
   ownerRepair(root,stateDir,head,taskId,{budgetMinutes}){
    return executeOwnerRepairTask({
