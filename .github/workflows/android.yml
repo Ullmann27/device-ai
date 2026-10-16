@@ -148,11 +148,18 @@ jobs:
       - name: Prepare Node contrastive parity reference
         run: node .github/continuum/contrastive-parity.mjs prepare "$RUNNER_TEMP/contrastive-parity"
 
+      - name: Prepare trained CRE1 Node checkpoint for Kotlin parity
+        run: node .github/continuum/cre-parity.mjs prepare "$RUNNER_TEMP/cre1-parity"
+
       - name: Run unit tests
         env:
           CONTINUUM_BACKLOG_ROUNDTRIP_DIR: ${{ runner.temp }}/backlog-roundtrip
           CONTINUUM_CONTRASTIVE_PARITY_DIR: ${{ runner.temp }}/contrastive-parity
+          CONTINUUM_CRE1_PARITY_DIR: ${{ runner.temp }}/cre1-parity
         run: gradle :app:testDebugUnitTest --stacktrace
+
+      - name: Verify Kotlin CRE1 inference against trained Node checkpoint
+        run: node .github/continuum/cre-parity.mjs verify "$RUNNER_TEMP/cre1-parity"
 
       - name: Verify Kotlin-trained encoder against Node
         run: node .github/continuum/contrastive-parity.mjs verify "$RUNNER_TEMP/contrastive-parity"
