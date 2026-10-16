@@ -44,6 +44,11 @@ export function selectHybridView(view,policy) {
  if(!view||!policy||![policy.lexFloor,policy.lexGap,policy.evidenceFloor].every(Number.isFinite))
   throw Error('Invalid hybrid research policy');
  const {neural,lexical,lexScore,gap,evidence}=view;
+ // Fail closed: lexical evidence may correct a neural misranking but MUST NOT
+ // resurrect a question rejected by the CRE1 relation/name abstention gate.
+ // Consequently hybrid false-answer count on unanswerable inputs cannot
+ // exceed the CRE1 baseline's count for the same inputs.
+ if(!neural)return {answer:null,route:'ABSTAIN'};
  if(lexical && lexScore>=policy.lexFloor && gap>=policy.lexGap &&
     evidence>=policy.evidenceFloor)
   return {answer:lexical,route:neural?.id===lexical.id?'AGREEMENT':'LEXICAL_RESCUE'};
