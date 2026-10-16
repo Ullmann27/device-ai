@@ -5,6 +5,8 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
+import java.util.concurrent.locks.ReentrantLock
+import java.nio.file.AtomicMoveNotSupportedException
 
 /**
  * Android-first supervisor for the SAME shared development backlog that the
@@ -48,7 +50,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
     fun save(s: DeviceTeamleaderSnapshot) {
         require(s.state in setOf("READY", "DEFERRED", "ERROR"))
         require(s.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
-            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET"))
+            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
         require(s.checkedAt >= 0 && s.recoveredClaims >= 0 && s.readyTasks >= 0 &&
             s.failedTasks >= 0 && s.swb1Updates >= 0 && s.cre1Steps >= 0)
         require(s.nextTaskId == null || Regex("[a-z][a-z0-9-]{2,63}").matches(s.nextTaskId))
@@ -65,8 +67,12 @@ class DeviceTeamleaderStatusStore(private val base: File) {
             // Never publish a corrupt status, even on an interrupted write.
             val checked = parse(pending.readBytes())
             require(checked == s)
-            Files.move(pending.toPath(), path.toPath(),
-                StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            try {
+                Files.move(pending.toPath(), path.toPath(),
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+            } catch (_: AtomicMoveNotSupportedException) {
+                Files.move(pending.toPath(), path.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            }
         } finally { pending.delete() }
     }
 
@@ -92,7 +98,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
             cells[7].toInt(), cells[8].takeUnless { it == "-" }, cells[9])
         require(snapshot.state in setOf("READY", "DEFERRED", "ERROR"))
         require(snapshot.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
-            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET"))
+            "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
         require(snapshot.checkedAt >= 0 && snapshot.recoveredClaims >= 0 &&
             snapshot.readyTasks >= 0 && snapshot.failedTasks >= 0 &&
             snapshot.swb1Updates >= 0 && snapshot.cre1Steps >= 0)
@@ -112,10 +118,15 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
     /** The device acts autonomously on safe housekeeping; it never marks
      * development tasks DONE or executes unverified code.
      */
-    @Synchronized fun runOnce(cancelled: () -> Boolean = { false }): DeviceTeamleaderSnapshot {
+    fun runOnce(cancelled: () -> Boolean = { false }): DeviceTeamleaderSnapshot {
+        // Coordinate both JobService and chat calls within this process.
+        // BUSY must never overwrite the active worker's durable state.
+        if (!CYCLE_LOCK.tryLock()) return DeviceTeamleaderSnapshot(now(), "DEFERRED",
+            0, 0, 0, 0, 0, null, "WORKER_BUSY")
         fun check() { if (cancelled() || Thread.currentThread().isInterrupted)
             throw InterruptedException("Device teamleader stopped") }
         try {
+            try {
             check()
             val backlog = DeviceDevelopmentBacklog(File(filesDir, "development"), now)
             val recovered = backlog.recover()
@@ -147,11 +158,16 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
             storage.save(snapshot)
             return snapshot
         }
+        } finally { CYCLE_LOCK.unlock() }
     }
 
     fun defer(reason: String): DeviceTeamleaderSnapshot {
         val snapshot = DeviceTeamleaderSnapshot(now(), "DEFERRED", 0, 0, 0, 0, 0, null, reason)
         storage.save(snapshot)
         return snapshot
+    }
+
+    companion object {
+        private val CYCLE_LOCK = ReentrantLock()
     }
 }
