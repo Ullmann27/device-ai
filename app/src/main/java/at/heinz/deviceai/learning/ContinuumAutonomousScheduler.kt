@@ -6,6 +6,13 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
+import android.os.Build
+import android.os.PowerManager
+import android.os.StatFs
+import android.os.SystemClock
 import java.util.concurrent.atomic.AtomicBoolean
 import android.util.Log
 
@@ -15,7 +22,9 @@ data class ContinuumJobSpec(
     val periodMs:Long,
     val requiresCharging:Boolean,
     val networkType:Int,
-    val persisted:Boolean
+    val persisted:Boolean,
+    val requiresBatteryNotLow:Boolean=true,
+    val requiresStorageNotLow:Boolean=true
 )
 
 /** The part of JobScheduler the restore decision needs (replaced by a fake in JVM tests). */
@@ -28,11 +37,14 @@ private class AndroidContinuumJobPort(private val app:Context, private val id:In
     private val jobs get()=app.getSystemService(JobScheduler::class.java)
     override fun pending():ContinuumJobSpec?=jobs.getPendingJob(id)?.let { info ->
         @Suppress("DEPRECATION")
-        ContinuumJobSpec(info.service.className,info.intervalMillis,info.isRequireCharging,info.networkType,info.isPersisted)
+        ContinuumJobSpec(info.service.className,info.intervalMillis,info.isRequireCharging,info.networkType,info.isPersisted,
+            info.isRequireBatteryNotLow,info.isRequireStorageNotLow)
     }
     override fun schedule(spec:ContinuumJobSpec):Boolean {
         val info=JobInfo.Builder(id,ComponentName(app.packageName,spec.serviceClass))
             .setRequiresCharging(spec.requiresCharging)
+            .setRequiresBatteryNotLow(spec.requiresBatteryNotLow)
+            .setRequiresStorageNotLow(spec.requiresStorageNotLow)
             .setRequiredNetworkType(spec.networkType)
             .setPersisted(spec.persisted)
             .setPeriodic(spec.periodMs)
@@ -82,35 +94,68 @@ class ContinuumAutonomousJobService:JobService() {
     private val stopped=AtomicBoolean(false)
     private var worker:Thread?=null
     companion object { private const val TAG="ContinuumOfflineLearning" }
+    private fun currentResources():ContinuumLearningResources {
+        val battery=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level=battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1)?:-1
+        val scale=battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1)?:-1
+        val percent=if(level>=0 && scale>0) (level*100/scale).coerceIn(0,100) else null
+        val thermal=if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q) {
+            getSystemService(PowerManager::class.java)?.currentThermalStatus
+        } else null
+        val free=StatFs(filesDir.absolutePath).availableBytes
+        return ContinuumLearningResources(percent,false,thermal,free)
+    }
+
     override fun onStartJob(params:JobParameters):Boolean {
         stopped.set(false)
         ContinuumOfflineJobStatus.started(this)
         worker=Thread({
             var retryAfterFailure=false
+            val startedAt=SystemClock.elapsedRealtime()
+            var nextResourceCheck=startedAt
+            var deferredReason:String?=null
+            val cancelled:()->Boolean={
+                val elapsed=SystemClock.elapsedRealtime()
+                if(stopped.get())true
+                else if(ContinuumOfflineLearningBudget.deadlineReached(startedAt,elapsed)) {
+                    deferredReason="TIME_BUDGET";true
+                } else {
+                    if(elapsed>=nextResourceCheck) {
+                        nextResourceCheck=elapsed+1_500L
+                        deferredReason=ContinuumOfflineLearningBudget.deferralReason(currentResources())
+                    }
+                    deferredReason!=null
+                }
+            }
             try {
-                if(!stopped.get()) {
+                if(!cancelled()) {
                     val core=ContinuumLearningCore(filesDir)
-                    core.bootstrapOfflineCurriculum(stopped::get)
-                    if(!stopped.get())core.bootstrapSemanticCurriculum(stopped::get)
+                    core.bootstrapOfflineCurriculum(cancelled)
+                    if(!cancelled())core.bootstrapSemanticCurriculum(cancelled)
                     // Learn only from sources already recorded by the consent-gated
                     // research flow. The job itself never initiates internet access.
-                    if(!stopped.get()) {
+                    if(!cancelled()) {
                         val approved=MentorSourceNotebook(this@ContinuumAutonomousJobService)
                             .entries().takeLast(12)
                         val fresh=ContinuumSourceNovelty.pending(
                             approved, ContinuumSourceNovelty.completedHashes(filesDir)
                         )
-                        if(fresh.isNotEmpty() && !stopped.get()) {
-                            val report=core.learnFromSources(fresh,stopped::get)
+                        if(fresh.isNotEmpty() && !cancelled()) {
+                            val report=core.learnFromSources(fresh,cancelled)
                             // A stopped or timed-out training round is NOT a completed
                             // source evaluation: the same source needs another chance.
-                            if(report?.completedEvaluation==true && !stopped.get()) {
+                            if(report?.completedEvaluation==true && !cancelled()) {
                                 ContinuumSourceNovelty.markCompleted(filesDir,fresh)
                             }
                         }
                     }
                 }
-                if(!stopped.get())ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
+                if(!stopped.get()) {
+                    // Learning is only FINISHED when no budget or safety limit was hit.
+                    if(cancelled())ContinuumOfflineJobStatus.deferred(
+                        this@ContinuumAutonomousJobService,deferredReason?:"TIME_BUDGET")
+                    else ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
+                }
             } catch (e: Exception) {
                 // Never silently report success when the offline learning job fails.
                 // Preserve the durable model; JobScheduler may retry this job.
