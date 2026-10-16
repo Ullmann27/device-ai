@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildIndex,integrationFindings} from './code-analyzer.mjs';
-import {investigateFinding,verifyInvestigation,investigationChecksPassed} from './backlog-investigator.mjs';
+import {investigateFinding,verifyInvestigation,investigationChecksPassed,chooseReadyInvestigation} from './backlog-investigator.mjs';
+import * as B from './development-backlog.mjs';
 
 const files=[
  {path:'main/java/p/App.kt',content:'package p\nclass App { fun live() { Connected().go() } }\nclass Connected { fun go()=1 }'},
@@ -41,4 +42,26 @@ test('empty or failed test chain cannot complete backlog investigation',()=>{
  assert.equal(investigationChecksPassed({passed:true,tests:{executed:3,failed:1}}),false);
  assert.equal(investigationChecksPassed({passed:true,tests:{}}),false);
  assert.equal(investigationChecksPassed(null),false);
+});
+
+test('worker honours Teamleader-selected task and never skips backlog dependencies',()=>{
+ let doc=B.emptyDocument(0,'investigator');
+ const apply=op=>{doc=B.applyOp(doc,{actor:'investigator',...op}).doc};
+ apply({op:'propose',at:1,task:{id:'task-parent',title:'Parent',
+   kind:'TEST',source:'cli',priority:900}});
+ apply({op:'propose',at:2,task:{id:'inv-high',title:'High',
+   kind:'INVESTIGATE',source:'cli',priority:500}});
+ apply({op:'propose',at:3,task:{id:'inv-low',title:'Low',
+   kind:'INVESTIGATE',source:'cli',priority:100}});
+ apply({op:'propose',at:4,task:{id:'inv-blocked',title:'Blocked',
+   kind:'INVESTIGATE',source:'cli',priority:1000,
+   dependsOn:['task-parent']}});
+ for(const id of ['task-parent','inv-high','inv-low','inv-blocked'])
+   apply({op:'accept',at:5,id});
+ assert.equal(chooseReadyInvestigation(doc).id,'inv-high');
+ assert.equal(chooseReadyInvestigation(doc,'inv-high').id,'inv-high');
+ assert.throws(()=>chooseReadyInvestigation(doc,'inv-low'),/next eligible task/);
+ assert.throws(()=>chooseReadyInvestigation(doc,'inv-blocked'),/next eligible task/);
+ assert.throws(()=>chooseReadyInvestigation(doc,'inv-unknown'),/next eligible task/);
+ assert.throws(()=>chooseReadyInvestigation(doc,''),/next eligible task/);
 });
