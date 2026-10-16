@@ -26,13 +26,23 @@ class BenchmarkRunner(
         require(systems.size <= MAX_SYSTEMS) { "too many benchmark systems" }
         for (task in tasks) {
             if (cancellation.isCancelled()) { cancelled = true; break }
-            for (system in systems) {
-                if (cancellation.isCancelled()) { cancelled = true; break }
+            var taskComplete = true
+            for ((index, system) in systems.withIndex()) {
+                if (cancellation.isCancelled()) {
+                    cancelled = true
+                    taskComplete = false
+                    break
+                }
                 out += measure(system, task)
-                if (cancellation.isCancelled()) { cancelled = true; break }
+                if (cancellation.isCancelled()) {
+                    cancelled = true
+                    // A fully executed last system still completes this task.
+                    taskComplete = index == systems.lastIndex
+                    break
+                }
             }
+            if (taskComplete) done++
             if (cancelled) break
-            done++
         }
         return BenchmarkRun(out.toList(), cancelled, tasks.size - done)
     }
