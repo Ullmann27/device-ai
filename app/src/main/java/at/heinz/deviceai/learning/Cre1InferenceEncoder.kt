@@ -241,6 +241,30 @@ class Cre1InferenceEncoder private constructor(
             return acc.entries.sortedBy { it.key }.map { Feature(it.key, it.value / total) }
         }
 
+        /**
+         * Creates a brand-new CRE1 research model on Android without importing
+         * pretrained weights. Mirrors RelationalEncoder(seed)'s 32-bit LCG and
+         * initialization order exactly; does not touch productive SWB1 files.
+         */
+        fun createResearch(seed: Long = 73L): Cre1InferenceEncoder {
+            require(seed in 0..0xffffffffL) { "CRE1 seed must be uint32" }
+            var state = seed.toInt()
+            fun next(): Double {
+                state = state * 1_664_525 + 1_013_904_223
+                return (state.toLong() and 0xffffffffL) / 4_294_967_296.0
+            }
+            val e = DoubleArray(V * D) { (next() * 2.0 - 1.0) * 0.1 }
+            val q = DoubleArray(D * D) { i ->
+                (if (i / D == i % D) 1.0 else 0.0) +
+                    (next() * 2.0 - 1.0) * 0.01
+            }
+            val m = DoubleArray(D * D) { i ->
+                (if (i / D == i % D) 1.0 else 0.0) +
+                    (next() * 2.0 - 1.0) * 0.01
+            }
+            return Cre1InferenceEncoder(seed, 0, e, q, m)
+        }
+
         fun restore(snapshot: ByteArray): Cre1InferenceEncoder {
             require(snapshot.size == SNAPSHOT_LENGTH) { "Invalid CRE1 snapshot size" }
             val payloadSize = SNAPSHOT_LENGTH - 32
