@@ -3181,12 +3181,24 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 planCard.visibility = View.GONE
                 result.onSuccess { run ->
+                    onLearningIo({
+                        at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                            .recordLocalOutcome(true)
+                    }) { audit ->
+                        if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
+                    }
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     addAssistantMessage(run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." })
                     persistRequestedMemory(text, run.experience?.evaluation)
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
+                    onLearningIo({
+                        at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                            .recordLocalOutcome(false)
+                    }) { audit ->
+                        if(audit.isFailure)addToolActivity("CONTINUUM · Laufprotokoll nicht gespeichert")
+                    }
                     localRuntimeError = error.message ?: "Local inference failed."
                     addAssistantMessage("Lokaler Modellfehler: ${error.message ?: error.javaClass.simpleName}")
                     addToolActivity("ERROR · lokale Inferenz")
