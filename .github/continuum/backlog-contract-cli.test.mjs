@@ -59,7 +59,13 @@ test('CLI refuses noncanonical array objects and uncontrolled shell-shaped opera
    {module:'../shell.mjs',export:'triple','cases-json':'[{"args":[5],"expected":15}]'},
    {module:'.github/continuum/math-utils.mjs',export:'triple','cases-json':'{"bad":true}'},
    {module:'.github/continuum/math-utils.mjs',export:'triple','cases-json':'[]'},
-   {module:'.github/continuum/math-utils.mjs',export:'triple','cases-json':'x'.repeat(301)}
+   {module:'.github/continuum/math-utils.mjs',export:'triple','cases-json':'x'.repeat(301)},
+   {module:'.github/continuum/math-utils.mjs',export:'triple',
+    'cases-json':'[{"args":[{"inject":"value"}],"expected":15}]'},
+   {module:'.github/continuum/math-utils.mjs',export:'triple',
+    'cases-json':'[{"args":[1],"expected":{"unsafe":"object"}}]'},
+   {module:'.github/continuum/math-utils.mjs',export:'triple',
+    'cases-json':JSON.stringify([{args:[1],expected:'x'.repeat(121)}])}
   ]){
    await assert.rejects(backlogCommand('propose-test',{file,...opts},common));
   }
