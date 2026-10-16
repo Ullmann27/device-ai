@@ -1246,6 +1246,12 @@ class AgentActivity : Activity() {
             }
             return
         }
+        if (isContinuumSelfCheck(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            showContinuumSelfCheck()
+            return
+        }
         val decision = BootstrapBrain.decide(
             request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
         )
@@ -1290,6 +1296,68 @@ class AgentActivity : Activity() {
     /** Explicit memory questions and otherwise-unhandled conversation only.
      * The neural result is display text and can never enter the device ToolGate.
      */
+    /** Explicit local self-diagnostic command. No model inference, network,
+     * repository mutation or automatic code execution is involved.
+     */
+    private fun isContinuumSelfCheck(request:String):Boolean =
+        request.trim().lowercase(Locale.ROOT).trimEnd('?', '.', '!') in setOf(
+            "continuum, überprüfe deinen lernkern",
+            "continuum überprüfe deinen lernkern",
+            "continuum, prüfe deine lernkerne",
+            "continuum status",
+            "continuum, status"
+        )
+
+    private fun showContinuumSelfCheck() {
+        if(busy)return
+        setBusy(true)
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            val swb1=runCatching { core.status() }
+            val cre1=runCatching { core.cre1ResearchStatus() }
+            val events=runCatching {
+                at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir).read()
+            }
+            buildString {
+                append("CONTINUUM · Lokaler Selbsttest\n\n")
+                swb1.fold(onSuccess={ status ->
+                    append("SWB1: verfügbar · trainierte Schritte: ")
+                        .append(status.modelUpdates)
+                    append(" · Parameter: ").append(status.parameters).append("\n")
+                },onFailure={
+                    append("SWB1: Prüfung fehlgeschlagen (")
+                        .append(failureName(it)).append(")\n")
+                })
+                cre1.fold(onSuccess={ status ->
+                    append("CRE1: ")
+                    append(if(status.available)"trainierter Forschungsstand"
+                        else "noch ohne akzeptierten Forschungs-Checkpoint")
+                    append(" · Schritte: ").append(status.steps).append("\n")
+                },onFailure={
+                    append("CRE1: Snapshot nicht lesbar (")
+                        .append(failureName(it)).append(")\n")
+                })
+                append("Gesprächsweg: SWB1-Gedächtnis + CRE1-Shadow-Bewertung.\n")
+                events.fold(onSuccess={ status ->
+                    append("Lokales Sprachmodell: letzte ")
+                        .append(status.recent.size).append(" protokollierte Läufe, ")
+                        .append(status.successes).append(" erfolgreich, ")
+                        .append(status.failures).append(" fehlgeschlagen.\n")
+                },onFailure={
+                    append("Laufprotokoll beschädigt oder nicht lesbar.\n")
+                })
+                append("\nNur geprüfte Owner-Erinnerungen begründen Antworten. ")
+                append("CRE1 ist noch experimentell; diese Diagnose verändert keine Gewichte.")
+            }
+        }) { result ->
+            setBusy(false)
+            addAssistantMessage(result.getOrElse {
+                "Continuum-Selbstdiagnose fehlgeschlagen ("+failureName(it)+")."
+            })
+            addToolActivity("CONTINUUM · lokaler Lernkern-Selbsttest abgeschlossen")
+        }
+    }
+
     private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {
         if(busy || localAgentExecutor.isShutdown)return
         setBusy(true)
