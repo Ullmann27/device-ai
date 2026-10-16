@@ -94,6 +94,25 @@ export function proposeKotlinDelegate({files,task}={}){
   insertion='\n    '+newMethod+'\n';
  }
  const updated=source.slice(0,at)+insertion+source.slice(at);
+ // Post-generation verification: the token index must still recognize every
+ // original declaration and exactly one added member. A tokenizer/indexer
+ // discrepancy is a refusal, never a reason to weaken the critic.
+ let nextIndex;
+ try{nextIndex=indexFile({path:s.file,content:updated});}
+ catch{return refusal('GENERATED_INDEX_FAILED');}
+ const identities=decls=>decls.map(d=>d.kind+'\\0'+d.qualified).sort();
+ const original=identities(index.declarations);
+ const observed=identities(nextIndex.declarations);
+ const added=s.className+'.'+s.methodName;
+ const expectedAdded=nextIndex.declarations.filter(d=>d.kind==='fun'&&
+   d.name===s.methodName&&d.container===q);
+ if(expectedAdded.length!==1||
+    observed.length!==original.length+1||
+    original.some(key=>!observed.includes(key))||
+    !nextIndex.declarations.some(d=>d.kind==='class'&&d.qualified===q)||
+    updated.slice(0,at)!==source.slice(0,at)||
+    !updated.endsWith(source.slice(at)))
+  return refusal('GENERATED_DECLARATION_INVARIANT_FAILED');
  const proposal={id:hash(task.id+'\0'+s.file+'\0'+newMethod).slice(0,16),
   strategy:'AST_EXPOSE_DELEGATE',description:'Expose bounded owner-requested Kotlin delegation',
   diagnostic:'owner:'+task.id,prior:0.5,reviewRequired:true,
