@@ -4,6 +4,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { RelationalEncoder, train, features, tokens } from './cre-encoder.mjs';
 import { files } from './relational-memory-data.mjs';
+import {trainParityRounds} from './cre-sgd-parity.mjs';
 const CASES=[
  ['Wann hat Anna Geburtstag?','Anna ist am 3. Mai geboren.'],
  ['Wo lebt Lukas?','Lukas wohnt seit Jahren in Graz.'],
@@ -25,6 +26,10 @@ export function prepare(dir){
  train(m,curriculum.pairs.slice(0,24),curriculum.memories,
   {epochs:2,batch:6,lr:0.005,tau:0.1,size:6,hard:2,seed:43});
  fs.writeFileSync(file(dir,'node-cre1.cre1'),m.save());
+ const sgd=RelationalEncoder.restore(m.save());
+ const losses=trainParityRounds(sgd);
+ fs.writeFileSync(file(dir,'node-sgd-losses.tsv'),losses.map(num).join('\n')+'\n');
+ fs.writeFileSync(file(dir,'node-sgd.cre1'),sgd.save());
  fs.writeFileSync(file(dir,'node-scores.tsv'),scores(m).join('\n')+'\n');
  fs.writeFileSync(file(dir,'node-features.tsv'),CASES.map(([q])=>
   [q,tokens(q).join(','),features(q).map(f=>f.id+':'+num(f.w)).join(',')].join('\t')
@@ -43,6 +48,22 @@ export function verify(dir){
     'CRE1 score or embedding mismatch row '+i+' field '+j+': '+a[j]+' vs '+b[j]);
  });
  console.log('CRE1 Kotlin/Node inference parity verified on '+got.length+' cases');
+ const node=RelationalEncoder.restore(fs.readFileSync(file(dir,'node-sgd.cre1')));
+ const kotlin=RelationalEncoder.restore(fs.readFileSync(file(dir,'kotlin-sgd.cre1')));
+ assert.equal(kotlin.seed,node.seed,'CRE1 training seed');
+ assert.equal(kotlin.steps,node.steps,'CRE1 training step count');
+ let maxDifference=0,count=0;
+ for(const key of ['E','Pq','Pm']) {
+   assert.equal(kotlin[key].length,node[key].length);
+   for(let i=0;i<node[key].length;i++){
+     const difference=Math.abs(kotlin[key][i]-node[key][i]);
+     assert.ok(Number.isFinite(difference) && difference<1e-7,
+       'CRE1 Kotlin SGD mismatch '+key+'['+i+'] = '+difference);
+     maxDifference=Math.max(maxDifference,difference);
+     count++;
+   }
+ }
+ console.log('CRE1 Kotlin/Node SGD parity verified over '+count+' weights (max error '+maxDifference+')');
 }
 if(process.argv[1]?.endsWith('cre-parity.mjs')){
  const [mode,dir]=process.argv.slice(2);
