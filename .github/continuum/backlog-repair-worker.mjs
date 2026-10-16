@@ -78,10 +78,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
        t.claim?.leaseUntil<Date.now())){
     store.apply([{op:'expire',actor,at:Date.now()}]);
   }
-  const eligible=nextEligible(store.read().doc,['REPAIR'],['owner']);
+  const eligible=nextEligible(store.read().doc,['REPAIR'],['owner'],head,id);
   if(!eligible)return {status:'NO_READY_TASK',head};
-  if(id!==null&&id!==eligible.id)
-    throw Error('Requested task is not the next eligible repair task');
   const task=validateOwnerRepairTask(eligible,head);
   const token=newToken(),at=Date.now();
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,
