@@ -6,14 +6,16 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
+import {runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs';
 
 export function parseTeamleaderArgs(args){
- const allowed=new Set(['--root','--state','--budget-minutes','--once','--status','--retry']);
- const opts={once:false,status:false,retry:false};
+ const allowed=new Set(['--root','--state','--budget-minutes',
+  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles']);
+ const opts={once:false,loop:false,status:false,retry:false};
  for(let i=0;i<args.length;i++){
   const key=args[i];
   if(!allowed.has(key))throw Error('Unknown Teamleader option '+key);
-  if(['--once','--status','--retry'].includes(key)){
+  if(['--once','--loop','--status','--retry'].includes(key)){
    if(opts[key.slice(2)])throw Error('Duplicate option '+key);
    opts[key.slice(2)]=true;
   }else{
@@ -24,11 +26,24 @@ export function parseTeamleaderArgs(args){
    opts[key.slice(2).replace(/-([a-z])/g,(_,ch)=>ch.toUpperCase())]=val;
   }
  }
- if(opts.once===opts.status)throw Error('Choose exactly one of --once or --status');
+ if([opts.once,opts.loop,opts.status].filter(Boolean).length!==1)
+  throw Error('Choose exactly one of --once, --loop or --status');
  if(opts.retry&&!opts.once)throw Error('--retry requires --once');
  if(opts.budgetMinutes!==undefined&&
    (!/^\d+$/.test(opts.budgetMinutes)||Number(opts.budgetMinutes)<1||
     Number(opts.budgetMinutes)>30))throw Error('Budget 1..30 minutes required');
+ if((opts.intervalMinutes!==undefined||opts.maxCycles!==undefined)&&!opts.loop)
+  throw Error('Interval and cycle limit require --loop');
+ if(opts.loop){
+  if(opts.intervalMinutes!==undefined&&!/^\d+$/.test(opts.intervalMinutes))
+   throw Error('Invalid --interval-minutes');
+  if(opts.maxCycles!==undefined&&!/^\d+$/.test(opts.maxCycles))
+   throw Error('Invalid --max-cycles');
+  validateLoopOptions({
+   intervalMinutes:Number(opts.intervalMinutes??60),
+   maxCycles:opts.maxCycles===undefined?null:Number(opts.maxCycles)
+  });
+ }
  return opts;
 }
 export async function teamleaderMain(argv=process.argv.slice(2)){
@@ -43,12 +58,56 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
   const state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
   const lastCompleted=state.events.filter(x=>x.outcome!=='RUNNING').at(-1)??null;
   const progress=summarizeTeamleaderProgress(state);
+  let workerHeartbeat=null;
+  try{
+   const hbPath=path.join(stateDir,'worker-heartbeat.json');
+   if(fs.existsSync(hbPath)){
+    const hb=JSON.parse(fs.readFileSync(hbPath,'utf8'));
+    if(hb.schema==='continuum-local-worker-heartbeat'&&hb.version===1)
+     workerHeartbeat=hb;
+   }
+  }catch{
+   // A corrupt/partial heartbeat cannot corrupt or forge Teamleader evidence.
+   workerHeartbeat={state:'UNREADABLE'};
+  }
   const output={mode:'OFFLINE_TEAMLEADER',stateDir,processedHeads:state.attemptedHeads.length,
-   progress,lastCompleted,recent:state.events.slice(-12)};
+   progress,lastCompleted,workerHeartbeat,recent:state.events.slice(-12)};
   process.stdout.write(JSON.stringify(output,null,2)+'\n');
   return output;
  }
  const driver=await localTeamleaderDriver();
+ if(opt.loop){
+  const controller=new AbortController();
+  const stop=()=>controller.abort();
+  process.once('SIGINT',stop);
+  process.once('SIGTERM',stop);
+  const heartbeatFile=path.join(stateDir,'worker-heartbeat.json');
+  try{
+   const result=await runTeamleaderLoop({
+    work:()=>{
+     const cycle=runTeamleaderCycle({root,stateDir,driver,
+      budgetMinutes:Number(opt.budgetMinutes??20),log:console.log});
+     process.stdout.write(JSON.stringify(cycle)+'\\n');
+     return cycle;
+    },
+    intervalMinutes:Number(opt.intervalMinutes??60),
+    maxCycles:opt.maxCycles===undefined?null:Number(opt.maxCycles),
+    signal:controller.signal,log:console.log,
+    onHeartbeat:heartbeat=>{
+     fs.mkdirSync(stateDir,{recursive:true,mode:0o700});
+     const tmp=heartbeatFile+'.tmp-'+process.pid;
+     fs.writeFileSync(tmp,JSON.stringify(heartbeat)+'\\n',{mode:0o600});
+     fs.renameSync(tmp,heartbeatFile);
+    }
+   });
+   process.stdout.write(JSON.stringify({mode:'OFFLINE_LOOP',...result})+'\\n');
+   if(result.failures>0&&!result.stoppedBySignal)process.exitCode=1;
+   return result;
+  }finally{
+   process.off('SIGINT',stop);
+   process.off('SIGTERM',stop);
+  }
+ }
  const result=runTeamleaderCycle({root,stateDir,driver,
   budgetMinutes:Number(opt.budgetMinutes??20),retry:opt.retry,log:console.log});
  process.stdout.write(JSON.stringify(result,null,2)+'\n');
