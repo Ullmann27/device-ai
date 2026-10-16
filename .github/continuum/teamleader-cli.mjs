@@ -82,11 +82,21 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
   process.once('SIGINT',stop);
   process.once('SIGTERM',stop);
   const heartbeatFile=path.join(stateDir,'worker-heartbeat.json');
+  // Retry a transient baseline ERROR at most twice on the SAME Git HEAD.
+  // Deterministic unrepairable failures wait for a real code change.
+  let retryHead=null,retryAttempts=0;
   try{
    const result=await runTeamleaderLoop({
     work:()=>{
+     const liveHead=driver.head(root);
+     if(retryHead!==liveHead){retryHead=liveHead;retryAttempts=0;}
      const cycle=runTeamleaderCycle({root,stateDir,driver,
-      budgetMinutes:Number(opt.budgetMinutes??20),log:console.log});
+      budgetMinutes:Number(opt.budgetMinutes??20),
+      retry:retryAttempts>0,log:console.log});
+     if(cycle.kind==='BASELINE_REPAIR'){
+      if(cycle.outcome==='ERROR'&&retryAttempts<2)retryAttempts++;
+      else retryAttempts=0;
+     }
      process.stdout.write(JSON.stringify(cycle)+'\n');
      return cycle;
     },
