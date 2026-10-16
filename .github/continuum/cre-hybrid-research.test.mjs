@@ -4,8 +4,9 @@ import {hybridDecision,fitAndSelect,researchAudit,prepareQueryViews,selectHybrid
 import {RelationalEncoder} from './cre-encoder.mjs';
 
 test('DEV-only selector produces bounded conservative policies and deterministic results',()=>{
- const a=fitAndSelect({seeds:[1]});
- const b=fitAndSelect({seeds:[1]});
+ const quick={seeds:[1],trainConfig:{epochs:1,batch:8,lr:0.005,tau:0.1,size:12,hard:4,sameRelation:0,delta:0.1}};
+ const a=fitAndSelect(quick);
+ const b=fitAndSelect(quick);
  assert.deepEqual(a.selection,b.selection);
  assert.equal(a.selection.options,32);
  assert.ok(a.selection.feasible>=0&&a.selection.feasible<=32);
