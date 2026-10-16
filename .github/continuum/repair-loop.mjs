@@ -144,10 +144,30 @@ export function parseUnifiedZeroHunks(diff){
   return hunks;
 }
 
+/** Resolve edit targets only to ordinary, existing worktree files.
+ * Neither an absolute path nor a symlinked parent may escape the sandbox.
+ * The Git checkout can contain symlinks, so path.join alone is not enough.
+ */
+export function boundedWorktreeFile(wt,relative){
+  if(typeof relative!=='string'||!relative||
+    relative.includes('\\u0000')||path.isAbsolute(relative)||
+    relative.split(/[\\/]+/).some(x=>x==='..'||x==='.'||x===''))
+    throw Error('Invalid worktree edit path');
+  const root=fs.realpathSync(wt);
+  const target=path.resolve(root,relative);
+  if(!target.startsWith(root+path.sep))throw Error('Edit escaped worktree');
+  const info=fs.lstatSync(target);
+  if(!info.isFile()||info.isSymbolicLink())throw Error('Edit requires an ordinary file');
+  if(fs.realpathSync(target)!==target)throw Error('Symlinked directory in worktree edit');
+  return target;
+}
+
 function context(wt,base,experience){
   const readFile=rel=>{
-    if(typeof rel!=='string'||rel.includes('..')||path.isAbsolute(rel))return null;
-    const f=path.join(wt,rel);return fs.existsSync(f)&&fs.statSync(f).isFile()&&fs.statSync(f).size<1_000_000?fs.readFileSync(f,'utf8'):null;
+    try {
+      const f=boundedWorktreeFile(wt,rel);
+      return fs.statSync(f).size<1_000_000?fs.readFileSync(f,'utf8'):null;
+    }catch { return null; }
   };
   let index=null;
   try{if(fs.existsSync(path.join(wt,'app/src')))index=buildIndex(collectKotlin(path.join(wt,'app/src')));}catch{}
@@ -212,7 +232,11 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     if(!verdict.approved){attempt.outcome='REJECTED_BY_CRITIC';report.attempts.push(attempt);log('critic rejected '+c.strategy+': '+verdict.reasons.join('; '));continue;}
     resetWorktree(wt,base);
     try{
-      for(const [file,content] of applyEdits(ctx.readFile,c.edits))fs.writeFileSync(path.join(wt,file),content);
+      const prepared=[...applyEdits(ctx.readFile,c.edits)].map(([file,content])=>
+        [boundedWorktreeFile(wt,file),content]);
+      // Verify every destination BEFORE the first write; no partial patches
+      // can be left because a subsequent file resolved outside the worktree.
+      for(const [file,content] of prepared)fs.writeFileSync(file,content);
     }catch(e){attempt.outcome='NOT_APPLICABLE';attempt.error=e.message;report.attempts.push(attempt);continue;}
     const check=runChain(chain,wt,out);
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
