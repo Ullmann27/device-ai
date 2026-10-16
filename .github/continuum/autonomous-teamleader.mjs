@@ -206,7 +206,9 @@ export function runTeamleaderCycle({
   if(chosen.kind==='IDLE'){
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
   }
-  if(chosen.kind==='BASELINE_REPAIR'){
+  if(chosen.kind==='BASELINE_REPAIR'||chosen.kind==='OWNER_REPAIR'){
+   // An accepted owner repair already runs the fixed baseline: do not repeat
+   // the same expensive chain as BASELINE_REPAIR on the next scheduled cycle.
    state=seal({...state,attemptedHeads:[...state.attemptedHeads.filter(h=>h!==head),head].slice(-64)});
   }
   state=append(state,run);
