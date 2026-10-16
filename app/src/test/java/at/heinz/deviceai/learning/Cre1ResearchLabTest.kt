@@ -35,6 +35,23 @@ class Cre1ResearchLabTest {
         }finally{dir.deleteRecursively()}
     }
 
+    @Test fun continuumLearningCoreConnectsCre1WithoutModifyingProductiveSwb1() {
+        val folder=Files.createTempDirectory("cre1-core").toFile()
+        try {
+            val core=ContinuumLearningCore(folder)
+            val baseline=core.modelHash()
+            assertFalse(core.cre1ResearchStatus().available)
+            val result=core.trainExperimentalCre1(
+                trainSamples(),auditSamples(),steps=3,cancelled={false})
+            assertEquals(3,result.steps)
+            assertEquals(result.accepted,core.cre1ResearchStatus().available)
+            assertEquals(baseline,core.modelHash())
+            assertEquals(1,folder.resolve(
+                "learning-core-v2/cre1-research/cre1-research-audit.tsv"
+            ).readLines().size)
+        }finally{folder.deleteRecursively()}
+    }
+
     @Test fun evaluatedCandidateIsEitherAtomicAndValidOrRolledBack() {
         val dir=Files.createTempDirectory("cre1-research").toFile()
         try{
