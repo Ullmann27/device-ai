@@ -388,6 +388,26 @@ class ContinuumLearningCore(
     /** Experimental decoder: uses the exact active encoder snapshot, never private
      * experiences as decoder training data and never replaces production chat.
      */
+    /**
+     * CRE1 stays a dedicated research namespace, never used for productive
+     * owner facts, command mappings or answer selection. Invoke training from
+     * a bounded background worker, not directly from an Android UI callback.
+     */
+    fun cre1ResearchStatus():Cre1ResearchStatus=synchronized(CORE_LOCK) {
+        Cre1ResearchLab(File(directory,"cre1-research")).status()
+    }
+
+    fun trainExperimentalCre1(
+        training:List<Cre1ResearchExample>,
+        audit:List<Cre1ResearchExample>,
+        steps:Int=32,
+        cancelled:()->Boolean={false}
+    ):Cre1ResearchTrainingReport=synchronized(CORE_LOCK) {
+        Cre1ResearchLab(File(directory,"cre1-research")).train(
+            training,audit,steps=steps,cancelled=cancelled
+        )
+    }
+
     fun decoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).status()
     }
