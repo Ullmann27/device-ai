@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import path from 'node:path';
-import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle}
+import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress}
  from './autonomous-teamleader.mjs';
 import {parseTeamleaderArgs} from './teamleader-cli.mjs';
 
@@ -173,6 +173,44 @@ test('Teamleader can read older version-1 states that lack discoveryHeads',
  fs.writeFileSync(first.statePath,JSON.stringify(state)+'\n');
  assert.deepEqual(decodeLeaderState(fs.readFileSync(first.statePath)).discoveryHeads,[]);
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+}));
+
+test('measured progress distinguishes real completed tasks, proposed patch and failed checks',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ const first=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(first.outcome,'NO_FAILURE');
+ const base=decodeLeaderState(fs.readFileSync(first.statePath));
+ let progress=summarizeTeamleaderProgress(base);
+ assert.equal(progress.checkedHeads,1);
+ assert.equal(progress.baselineClean,1);
+ assert.equal(progress.completedInvestigations,0);
+ assert.equal(progress.independentlyVerifiedPatchProposals,0);
+ assert.equal(progress.testFailuresDetected,0);
+ assert.equal(progress.currentlyUnfinished,0);
+ driver.setPending({id:'inv-0123456789abcdef',kind:'INVESTIGATE',state:'READY'});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'DONE_INVESTIGATION');
+ progress=summarizeTeamleaderProgress(
+  decodeLeaderState(fs.readFileSync(first.statePath)));
+ assert.equal(progress.completedInvestigations,1);
+ assert.equal(progress.independentlyVerifiedPatchProposals,0);
+ assert.equal(progress.lastOutcome,'DONE_INVESTIGATION');
+ const pending=initialLeaderState();
+ pending.events.push({id:'tl-'+'0'.repeat(20),head:A,kind:'BASELINE_REPAIR',
+   outcome:'RUNNING',detail:'queued',elapsedMs:0,at:12345});
+ assert.equal(summarizeTeamleaderProgress(pending).currentlyUnfinished,1);
+}));
+test('discovery heads counter counts analysis only, not hourly idle loops',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ const first=runTeamleaderCycle({root,stateDir,driver});
+ for(let i=0;i<8;i++)runTeamleaderCycle({root,stateDir,driver});
+ const stats=summarizeTeamleaderProgress(
+  decodeLeaderState(fs.readFileSync(first.statePath)));
+ assert.equal(stats.analyzedHeads,1);
+ assert.equal(stats.windowEvents,2);
+ assert.equal(stats.baselineClean,1);
 }));
 
 test('state policy rejects malformed heads and never schedules unauthorised actions',()=>{
