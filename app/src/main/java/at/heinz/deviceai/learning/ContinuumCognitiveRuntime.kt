@@ -43,9 +43,9 @@ class ContinuumCognitiveRuntime(
         // The history is context only, never proof or training evidence.
         // Corrupt old history is recovered by the SWB1 dialogue itself.
         val previous=runCatching { core.dialogueHistory() }.getOrDefault(emptyList())
-        val turn=core.replyFromMemory(input)
-        val ranked=if(turn.grounded)core.retrievedEvidence(turn.resolvedQuery)
-            .filter { it.id in turn.memoryIds } else emptyList()
+        // One lock-protected SWB1 model and experience snapshot supplies both
+        // the visible answer and the CRE1-only shadow observation set.
+        val (turn,ranked)=core.replyWithEvidence(input)
         val snapshot=if(cre1Checkpoint.exists()) {
             runCatching {
                 require(cre1Checkpoint.length()==Cre1InferenceEncoder.SNAPSHOT_LENGTH.toLong()) {
