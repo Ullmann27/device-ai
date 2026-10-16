@@ -43,6 +43,26 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('previous model recovery',activity.includes('rollbackToPrevious()'));
  ensure('model import',activity.includes('importSnapshot(bytes)'));
 });
+test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
+ const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
+ ensure('single shared runtime is called from the chat',dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core)'));
+ ensure('local model context is separate from user-authorized memory input',
+   dialogue?.includes('runLocal(request,localPrompt)') &&
+   activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text)') &&
+   activity.includes('val agentTask = resolvedQuestion.take(7_900)') &&
+   activity.includes('persistRequestedMemory(text, run.experience?.evaluation)'));
+ ensure('only explicit confirmed fact can retry unanswered turn',
+   bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
+   bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));
+ ensure('local failure and success both recorded without model text',
+   activity.includes('.recordLocalOutcome(true)') && activity.includes('.recordLocalOutcome(false)'));
+ ensure('local on-device status available from chat',activity.includes('showContinuumSelfCheck()'));
+ const journal=fs.readFileSync(dir+'learning/ContinuumRuntimeEventJournal.kt','utf8');
+ ensure('journal contains only fixed execution codes',journal.includes('LOCAL_MODEL_OK') &&
+   journal.includes('LOCAL_MODEL_FAILED') && !journal.includes('responseText'));
+ ensure('CRE1 never authorizes tool execution',!runtime.includes('ToolGate(') &&
+   !runtime.includes('approveTool('));
+});
 test('background consolidation records failure without losing interrupted source trials',()=>{
  ensure('onStartJob',scheduler.includes('override fun onStartJob('));
  ensure('onStopJob',scheduler.includes('override fun onStopJob('));
