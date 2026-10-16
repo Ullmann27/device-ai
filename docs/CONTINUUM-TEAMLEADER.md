@@ -342,3 +342,87 @@ keine ungeprüfte Main-Änderung. CRE1 darf Operatoren zunächst
 nur im Shadow-Modus bewerten; neuronale Gewichtsänderungen benötigen
 separat eingefrorene Holdouts, unabhängige Erfolgsevidenz und
 reproduzierbare Vergleichsmessungen.
+
+
+## M4.2: Autonome, reviewpflichtige Node-Contract-Tests
+
+Neben REPAIR bearbeitet der lokale Teamleiter jetzt auch ausdruecklich
+angenommene Owner-Auftraege der Art TEST. Dieser erste begrenzte
+Code-Synthese-Skill kann **neue** Tests mit konkreten Sollwerten
+programmieren. Er ist kein allgemeiner Kotlin- oder JavaScript-Generator.
+
+Ein TEST-Auftrag hat ein kanonisches subject mit ausschliesslich
+Skalarwerten (wichtig fuer Kotlin/Node-Paritaet):
+
+    {
+      "base": "FULL_40_CHARACTER_COMMIT_SHA",
+      "chain": "node",
+      "operation": "ASSERT_NODE_EXPORT",
+      "modulePath": ".github/continuum/math-utils.mjs",
+      "exportName": "triple",
+      "casesJson": "[{\"args\":[5],\"expected\":15}]"
+    }
+
+casesJson muss ein String mit maximal 300 Zeichen sein, der 1-4
+Input/Output-Beispiele als kompaktes JSON kodiert. Argumente und Sollwerte
+sind auf primitive JSON-Werte begrenzt. Ohne echte, vom Owner angegebene
+Sollwerte entstehen keine zulaessigen Contract-Tests.
+
+Bedienung auf einem **sauberen lokalen Git-Checkout**:
+
+    STATE="$HOME/.local/state/device-ai-continuum/owner-repairs"
+    mkdir -p "$STATE"
+    node .github/continuum/developer-agent.mjs backlog propose-test \
+      --file "$STATE/development-backlog.json" \
+      --id owner-triple-contract --module .github/continuum/math-utils.mjs \
+      --export triple --cases-json '[{"args":[5],"expected":15}]'
+    node .github/continuum/developer-agent.mjs backlog show \
+      --file "$STATE/development-backlog.json"
+    node .github/continuum/developer-agent.mjs backlog accept \
+      --file "$STATE/development-backlog.json" --id owner-triple-contract
+    node .github/continuum/teamleader-cli.mjs --once \
+      --root . --state "$STATE" --budget-minutes 20
+
+Der Beispielexport muss im eigenen Checkout tatsaechlich existieren; der
+Befehl demonstriert nur die Syntax und garantiert keinen fertigen Patch.
+
+Alternativ ist eine direkte, jedoch weiterhin explizit autorisierte
+Ausfuehrung moeglich:
+
+    node .github/continuum/developer-agent.mjs owner-test \
+      --file "$STATE/development-backlog.json" \
+      --out "$STATE/reports/owner-test" \
+      --id owner-triple-contract --minutes 20
+
+Sicherheits-/Qualitaetskette:
+
+1. Unveraenderlicher Git-HEAD, sauberes Original, Owner-Task in READY.
+2. Vorher gruene reale Node-Baseline mit mindestens einem ausgefuehrten Test.
+3. Neue Contract-Testdatei ausschliesslich im ersten Worktree, Quelle byte-
+   genau aus einer festen, von Repair-Critic ebenfalls validierten Vorlage.
+4. Syntaxpruefung, reale Node-Tests, **streng mehr ausgefuehrte Tests**
+   als in der Baseline, keine zusaetzlichen Skips.
+5. Patch aus neuer Datei mit git add -N + git diff --binary exportieren,
+   SHA-256 speichern und auf einem zweiten unabhaengigen Worktree mit
+   git apply --check und demselben festen Node-Testprofil pruefen.
+6. Nur beim zweiten erfolgreichen Beleg: Backlog submit und complete
+   atomar zu DONE; Ergebnis VERIFIED_PATCH_PENDING_REVIEW, niemals Auto-Merge.
+7. Bei Fehlern: FAILED-Versuch, eigener Diagnosebericht, kein DONE;
+   Retry nur innerhalb der Backlog-Versuchsgrenze und Lease-Recovery.
+
+Die Worktrees sind Git-Isolation, **keine Betriebssystem-Sandbox**.
+Vor dem produktiven PC-Dauerbetrieb muss die Runner-Hardware gegen
+boesartige Testprozesse zusaetzlich isoliert werden.
+
+Regressionstests im Repository:
+
+    node --test .github/continuum/contract-test-template.test.mjs
+    node --test .github/continuum/node-contract-synthesizer.test.mjs
+    node --test .github/continuum/owner-contract-worker.test.mjs
+    node --test .github/continuum/autonomous-teamleader.test.mjs
+
+Der Git-Fixture-E2E-Test prueft sowohl einen echten erfolgreichen
+TEST-Auftrag als auch falsch vorgegebene Sollwerte, bereits rote
+Baselines, nicht angenommene Auftraege und Symlink-Ausweichversuche.
+Erst ein tatsaechlich ausgefuehrter Testbericht ist ein Meilenstein-
+Abnahmebeleg. Dateien allein sind keine bestandenen Tests.
