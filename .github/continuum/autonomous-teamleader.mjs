@@ -235,7 +235,7 @@ export async function localTeamleaderDriver(){
   investigate(root,stateDir,head,taskId){
    const out=path.join(stateDir,'reports','investigate-'+taskId+'.json');
    return executeInvestigation({root,file:path.join(stateDir,'development-backlog.json'),
-    out,base:head,actor:'continuum-teamleader'});
+    out,base:head,actor:'continuum-teamleader',taskId});
   },
   repair(root,stateDir,head,{budgetMinutes}){
    const ledgerPath=path.join(stateDir,'repair-ledger.json');
