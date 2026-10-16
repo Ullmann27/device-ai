@@ -46,6 +46,27 @@ class BenchmarkRunnerTest {
         assertEquals(1, run.skippedTasks)
     }
 
+    @Test fun cancellationStopsOtherSystemsDuringSameTask() {
+        val flag = CancellationFlag()
+        var shouldNotRun = 0
+        val first = Fake("first") { flag.cancel(); TaskOutcome(true) }
+        val second = Fake("second") { shouldNotRun++; TaskOutcome(true) }
+        val run = BenchmarkRunner(tick(0, 1)).run(tasks, listOf(first, second), flag)
+        assertTrue(run.cancelled)
+        assertEquals(1, run.measurements.size)
+        assertEquals(0, shouldNotRun)
+        assertEquals(2, run.skippedTasks)
+    }
+
+    @Test fun benchmarkSystemCountIsBounded() {
+        val many = (0..BenchmarkRunner.MAX_SYSTEMS).map { i ->
+            Fake("system-" + i) { TaskOutcome(true) }
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            BenchmarkRunner().run(tasks, many)
+        }
+    }
+
     @Test fun preCancelledRunsNothing() {
         val flag = CancellationFlag().also { it.cancel() }
         val run = BenchmarkRunner().run(tasks, listOf(ok), flag)
