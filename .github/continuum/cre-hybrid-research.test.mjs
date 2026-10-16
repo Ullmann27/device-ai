@@ -31,6 +31,12 @@ test('historical TEST comparison reports measurements but never releases experim
  assert.equal(report.lexical.negatives,report.perSeed[0].base.negatives);
  assert.equal(report.selection.options,32);
  assert.equal(typeof report.meetsHistoricalGate,'boolean');
+ assert.equal(report.untouchedChallenge.rows.length,3);
+ assert.equal(report.untouchedChallenge.fingerprint.length,64);
+ assert.equal(report.untouchedChallenge.lexical.positives,32);
+ assert.equal(report.untouchedChallenge.lexical.negatives,12);
+ assert.ok(report.untouchedChallenge.rows.every(x=>
+   x.hybrid===null||(x.hybrid.positives===32&&x.hybrid.negatives===12)));
 });
 
 test('cached query views preserve uncached CRE1 retrieval decisions exactly',()=>{
