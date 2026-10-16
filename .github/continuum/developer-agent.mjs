@@ -137,6 +137,17 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
       duplicates:result.results.filter(r=>r.duplicate).length,rejected,skipped:result.skipped}));
     return result;
   }
+  if(cmd==='owner-implement-preview'){
+    if(!o.file||!o.out)
+      throw Error('owner-implement-preview requires --file and --out');
+    const {previewOwnerKotlinImplement}=await import('./owner-kotlin-preview.mjs');
+    const result=previewOwnerKotlinImplement({
+      root,file:o.file,out:o.out,id:o.id??null
+    });
+    log('[owner-implement-preview] '+JSON.stringify(result));
+    if(result.status==='REJECTED')throw Error('Kotlin oracle did not pass: '+result.reason);
+    return result;
+  }
   if(cmd==='owner-test'){
     if(!o.file||!o.out)throw Error('owner-test requires --file and --out');
     const {executeOwnerContractTestTask}=await import('./owner-contract-worker.mjs');
