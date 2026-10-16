@@ -10,7 +10,7 @@ const FORBIDDEN_PATHS=[
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // The synthesis/template/gate pipeline must not modify its own rules or
   // verifier via an automatically proposed patch.
-  /^\.github\/continuum\/(development-backlog|autonomous-teamleader|backlog-repair-worker|owner-contract-worker|node-contract-synthesizer|contract-test-template|teamleader-cli|backlog-cli)\.mjs$/,
+  /^\.github\/continuum\/(development-backlog|autonomous-teamleader|backlog-repair-worker|owner-contract-worker|node-contract-synthesizer|contract-test-template|teamleader-cli|backlog-cli|kotlin-delegate-synthesizer|kotlin-delegate-acceptance|owner-kotlin-preview|local-teamleader-loop)\.mjs$/,
   /(^|\/)(build\.gradle(\.kts)?|settings\.gradle(\.kts)?|gradle\.properties|local\.properties)$/,/^gradle\//,
   /AndroidManifest\.xml$/,/\.(jks|keystore|p12|pem|key)$/i,/^\.continuum\//,/(^|\/)\.git(\/|$)/,
   /(ToolGate|InternetConsent|SecureToken|Signer|Identity|Governance|Credential|Secret|Permission|ConsentPolicy)/i
