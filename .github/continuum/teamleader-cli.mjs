@@ -87,7 +87,7 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
     work:()=>{
      const cycle=runTeamleaderCycle({root,stateDir,driver,
       budgetMinutes:Number(opt.budgetMinutes??20),log:console.log});
-     process.stdout.write(JSON.stringify(cycle)+'\\n');
+     process.stdout.write(JSON.stringify(cycle)+'\n');
      return cycle;
     },
     intervalMinutes:Number(opt.intervalMinutes??60),
@@ -96,11 +96,11 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
     onHeartbeat:heartbeat=>{
      fs.mkdirSync(stateDir,{recursive:true,mode:0o700});
      const tmp=heartbeatFile+'.tmp-'+process.pid;
-     fs.writeFileSync(tmp,JSON.stringify(heartbeat)+'\\n',{mode:0o600});
+     fs.writeFileSync(tmp,JSON.stringify(heartbeat)+'\n',{mode:0o600});
      fs.renameSync(tmp,heartbeatFile);
     }
    });
-   process.stdout.write(JSON.stringify({mode:'OFFLINE_LOOP',...result})+'\\n');
+   process.stdout.write(JSON.stringify({mode:'OFFLINE_LOOP',...result})+'\n');
    if(result.failures>0&&!result.stoppedBySignal)process.exitCode=1;
    return result;
   }finally{
