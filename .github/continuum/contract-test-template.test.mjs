@@ -49,3 +49,20 @@ test('invalid cases, non-primitive values and arbitrary module paths cannot be r
  assert.equal(renderOwnerNodeContract(file,'evil();',cases),null);
  assert.equal(renderOwnerNodeContract(file,'triple','a'.repeat(301)),null);
 });
+
+
+test('automatic repair candidates cannot rewrite contract-template, backlog or teamleader authority',()=>{
+ for(const path of [
+  '.github/continuum/contract-test-template.mjs',
+  '.github/continuum/development-backlog.mjs',
+  '.github/continuum/node-contract-synthesizer.mjs',
+  '.github/continuum/owner-contract-worker.mjs',
+  '.github/continuum/autonomous-teamleader.mjs',
+  '.github/continuum/backlog-cli.mjs'
+ ]){
+  const result=critique({strategy:'JS_FIX_IDENTIFIER_TYPO',
+   edits:[{file:path,oldText:'const flag = false;',newText:'const flag = true;'}]});
+  assert.equal(result.approved,false,path);
+  assert.match(result.reasons.join(', '),/protected path/);
+ }
+});
