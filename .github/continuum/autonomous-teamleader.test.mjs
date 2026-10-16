@@ -38,6 +38,19 @@ test('zero-paid-service worker repairs/checks each immutable head once and then 
  assert.equal(next.outcome,'NO_FAILURE');assert.equal(driver.calls.repairs,2);
  assert.equal(decodeLeaderState(fs.readFileSync(first.statePath)).attemptedHeads.length,2);
 }));
+test('teamleader refuses symlinked state directory pointing back into source checkout',()=>{
+ const home=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-leader-path-'));
+ try{
+  const source=path.join(home,'source'),alias=path.join(home,'alias');
+  fs.mkdirSync(source);
+  fs.symlinkSync(source,alias,'dir');
+  assert.throws(()=>runTeamleaderCycle({
+   root:source,stateDir:path.join(alias,'private-state'),driver:fake()
+  }),/outside the repository/);
+  assert.deepEqual(fs.readdirSync(source),[]);
+ }finally{fs.rmSync(home,{recursive:true,force:true});}
+});
+
 test('owner-accepted repair runs before baseline and only records an independently verified patch',
  ()=>sandbox(({root,stateDir})=>{
  const driver=fake();
