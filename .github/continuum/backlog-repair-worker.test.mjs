@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {executeOwnerRepairTask,validateOwnerRepairTask} from './backlog-repair-worker.mjs';
 import {BacklogStore,emptyDocument,applyOps,nextEligible} from './development-backlog.mjs';
+import {runChain} from './repair-loop.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
 function fixture(broken){
@@ -35,6 +36,12 @@ function accepted(store,f,base=f.head){
   {op:'accept',actor:'owner',at:2,id:'repair-owner-one',reason:'explicit local authorization'}]);
 }
 
+
+test('expired execution budget fails closed before launching fixed subprocesses',()=>{
+ assert.throws(()=>runChain('node',process.cwd(),os.tmpdir(),{
+   deadline:Date.now()-1
+ }),/deadline exhausted/);
+});
 
 test('an unrelated automatic REPAIR task cannot starve an accepted owner task',()=>{
  const tasks=[
