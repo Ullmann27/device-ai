@@ -250,3 +250,38 @@ Bei der ersten Einführung ist der Code auf dem Entwicklungsbranch
 implementiert; ein vollständiger lokaler Node-/Android-Baseline-Lauf auf dem
 jeweils neuesten Commit muss **separat** nachgewiesen werden. Automatisch rot
 markierte GitHub-Runs ohne ausgeführte Job-Schritte sind hierfür kein Ersatz.
+
+
+## Reproduzierbarer Offline-Nachweis bei blockierten GitHub-Runnern
+
+Die freiwillige lokale Prüfroutine nutzt den **exakten aktuellen Commit**
+und führt die vorhandenen festen Node-Prüfprofile in einem abgetrennten
+Git-Worktree aus. Sie schreibt einen Bericht mit Testfallzahlen,
+Exitcodes, Git-SHA und SHA-256 des Berichts in ein Verzeichnis **außerhalb**
+des Source-Checkouts. Jeder Durchlauf bekommt ein eigenes Verzeichnis.
+
+    STATE="$HOME/.local/state/device-ai-continuum/proofs"
+    node .github/continuum/m4-local-gate.mjs --root . --out "$STATE"
+
+Die reine Node-Abnahme hat im Bericht stets scope = NODE_ONLY;
+sie ist **kein** Nachweis für einen erfolgreichen Android-Build.
+
+Ein vollständigerer Baseline-Durchlauf einschließlich Kotlin/Android-Tests
+und Android-Debug-APK kann mit installiertem Android-SDK, Gradle und JDK
+wie folgt gestartet werden:
+
+    node .github/continuum/m4-local-gate.mjs --root . \
+      --out "$STATE" --android --budget-minutes 90
+
+Die Android-Tests und der Debug-APK-Build werden getrennt aufgezeichnet.
+Wenn ein Kommando fehlt oder abbricht, erhält die entsprechende Stufe
+keinen erfundenen Erfolg. Fehlgeschlagene Tests ergeben
+complete = false. Ein bestandener NODE_ONLY-Test bedeutet lediglich,
+dass die Node-Baseline auf demselben Git-Commit grün war.
+
+Zusätzliche Regressionstests für das Prüfwerkzeug:
+
+    node --test .github/continuum/m4-local-gate.test.mjs
+
+Ungeprüfte Agentenänderungen werden von diesem Werkzeug weder in den
+Source-Checkout zurückgespielt noch in den produktiven Branch gemergt.
