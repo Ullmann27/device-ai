@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {parseKotlinIntCases,assessKotlinDelegate} from './kotlin-delegate-acceptance.mjs';
-import {proposeKotlinDelegate} from './kotlin-delegate-synthesizer.mjs';
+import {proposeKotlinDelegate,proposeKotlinDelegateWithOracle} from './kotlin-delegate-synthesizer.mjs';
 
 const target='app/src/main/java/p/MathApi.kt';
 const original=[
@@ -39,11 +39,13 @@ test('generated Kotlin code must compile RED before and GREEN after, then comput
  {skip:executable,timeout:180000},()=>{
  const patch=generated();
  assert.ok(patch?.critic.approved);
- const r=assessKotlinDelegate({
-  original,generated:patch.edits[0].newText,
-  className:'MathApi',methodName:'squareTwice',
-  casesJson:'[{"input":2,"expected":16},{"input":3,"expected":81}]'
- });
+ const response=proposeKotlinDelegateWithOracle({files:[{path:target,content:original}],
+  task:{...task,subject:{...task.subject,
+   casesJson:'[{"input":2,"expected":16},{"input":3,"expected":81}]'}}});
+ assert.ok(response.candidate,'the accepted owner proposal must survive both gates');
+ assert.equal(response.approvedForMerge,false);
+ assert.equal(response.androidBuildVerified,false);
+ const r=response.acceptance;
  assert.equal(r.passed,true,JSON.stringify(r));
  assert.equal(r.executed,2);
  assert.equal(r.before.exitCode,1);
@@ -56,11 +58,12 @@ test('wrong independent expected output rejects a compiling patch',
  {skip:executable,timeout:180000},()=>{
  const patch=generated();
  assert.ok(patch);
- const r=assessKotlinDelegate({
-  original,generated:patch.edits[0].newText,
-  className:'MathApi',methodName:'squareTwice',
-  casesJson:'[{"input":2,"expected":999}]'
+ const response=proposeKotlinDelegateWithOracle({
+  files:[{path:target,content:original}],
+  task:{...task,subject:{...task.subject,casesJson:'[{"input":2,"expected":999}]'}}
  });
+ assert.equal(response.candidate,null);
+ const r=response.acceptance;
  assert.equal(r.passed,false);
  assert.equal(r.reason,'CANDIDATE_BEHAVIOR_FAILED');
  assert.equal(r.before.exitCode,1);
