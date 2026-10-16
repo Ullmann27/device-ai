@@ -55,6 +55,8 @@ class ContinuumAutonomousSchedulerTest {
         assertEquals(24 * 60 * 60 * 1000L, wanted.periodMs)
         assertTrue(wanted.requiresCharging)
         assertTrue(wanted.persisted)
+        assertTrue(wanted.requiresBatteryNotLow)
+        assertTrue(wanted.requiresStorageNotLow)
         assertEquals(android.app.job.JobInfo.NETWORK_TYPE_NONE, wanted.networkType)
     }
 
@@ -64,4 +66,15 @@ class ContinuumAutonomousSchedulerTest {
         val ok = ContinuumOfflineJobSnapshot(true, "NOT_RUN", 0, 0, "", "IllegalArgumentException").display()
         assertFalse("a stale error is not shown next to a successful schedule", ok.contains("IllegalArgumentException"))
     }
+    @Test fun resourceDeferralsAndHistoryAreVisibleWithoutSourceData() {
+        val status = ContinuumOfflineJobSnapshot(
+            true,"DEFERRED_THERMAL_LIMIT",100L,200L,"","",
+            "100:RUNNING|200:DEFERRED_THERMAL_LIMIT"
+        ).display()
+        assertTrue(status.contains("DEFERRED_THERMAL_LIMIT"))
+        assertTrue(status.contains("100:RUNNING|200:DEFERRED_THERMAL_LIMIT"))
+        assertFalse(status.contains("Letzter Fehler:"))
+    }
+
+
 }
