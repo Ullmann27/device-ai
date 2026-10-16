@@ -612,8 +612,9 @@ export function applyOps(doc,ops,{stopOnError=true}={}){
   return {doc:current,results};
 }
 
-export function nextEligible(doc,kinds=null){
-  return doc.tasks.filter(x=>eligible(doc,x)&&(!kinds||kinds.includes(x.kind)))
+export function nextEligible(doc,kinds=null,sources=null){
+  return doc.tasks.filter(x=>eligible(doc,x)&&(!kinds||kinds.includes(x.kind))&&
+    (!sources||sources.includes(x.source)))
     .sort((a,b)=>b.priority-a.priority||a.createdAt-b.createdAt||(a.id<b.id?-1:1))[0]??null;
 }
 
