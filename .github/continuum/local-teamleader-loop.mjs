@@ -29,6 +29,14 @@ export async function runTeamleaderLoop({
  let cycles=0,failures=0,streak=0,lastOutcome=null;
  while(!signal?.aborted&&(maxCycles===null||cycles<maxCycles)){
   const startedAt=Date.now();
+  // Persist RUNNING before entering a potentially expensive Gradle/Node
+  // test chain. A stale RUNNING heartbeat does not imply success.
+  onHeartbeat({
+   schema:'continuum-local-worker-heartbeat',version:1,
+   cycles,failures,failureStreak:streak,lastOutcome,
+   detail:'Cycle started; verification pending',startedAt,
+   lastFinishedAt:null,state:'RUNNING',nextAttemptAt:null
+  });
   let outcome='ERROR',detail='';
   try{
    const result=await work();
