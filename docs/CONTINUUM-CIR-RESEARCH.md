@@ -107,3 +107,37 @@ production total (38/76) -> **promotionEligible=false**. Not integrated into
 the app. Next steps: improve held-out forms (e.g. combine lexical score into the
 ranking, more varied training forms), Kotlin port with parity, then re-audit on
 a new sealed suite.
+
+
+## Development handoff integration audit — 2026-10-16
+
+The following branch audit was performed against live PR #19, not merely PR descriptions:
+
+| Source | Git state | Current integration |
+|---|---|---|
+| PR #14 | Draft/open on older base | ContinuumPersistenceFailureTest.kt byte-identical to the PR source; already incorporated |
+| PR #16 | Draft/open on older base | Restored BenchmarkModel, BenchmarkRunner, BenchmarkReport and BenchmarkRunnerTest; added per-system cancellation and resource budget |
+| PR #17 | Draft/open on older base | BoundedResearchTextSanitizer and AiContextCompiler identical to PR source; imported the missing adversarial edge-case tests |
+| PR #18 | Draft/open on older base | Existing ComputeFabric omitted replay, node-binding and expiry checks; added an opt-in stateful verifier and regression tests |
+| PR #21 | Draft/open repair demo | Not merged: fault-injection demonstration, not a verified production fix |
+| PR #22 | Draft/open against main | Hourly schedule activation not merged to main; activation remains a separate owner decision |
+| PR #23 | Merged | Contrastive-recovery code present |
+| PR #24 | Open on older base | PR #24 head is an ancestor of the active PR #19 head; code already present |
+
+Research-only CRE1 Kotlin inference can consume checksum-verified Node CRE1
+checkpoints. Android CI generates a fixed trained Node reference, then verifies
+Kotlin features, embeddings and retrieval scores, and checks Kotlin's scores
+back against Node. This is **inference parity only**, not training parity.
+CRE1 remains unpromoted. An unknown-name safety gate now compares whole
+normalized vocabulary items, avoiding false known names from 14-bit collisions.
+
+Offline learning is configured to run while charging, on a battery-not-low
+and storage-not-low device. Runtime checks defer at low battery, elevated
+thermal status, low free storage, or a 15-second cycle deadline. Its bounded
+eight-entry phase log contains timestamps and status labels, not user data.
+
+The benchmark harness is not yet connected to a production baseline adapter.
+The strict result verifier is opt-in and does not enable outside compute nodes.
+Actual CRE1 holdout improvements, Kotlin training parity, real-device tests,
+automated code patch synthesis and authenticated GitHub-backlog linkage are
+still open. No generative or autonomous system is declared production-ready.
