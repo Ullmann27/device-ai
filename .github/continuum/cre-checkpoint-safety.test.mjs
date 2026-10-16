@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { bucket, RelationalEncoder, features } from './cre-encoder.mjs';
+import crypto from 'node:crypto';
 import { trainedVocabulary } from './relational-retrieval-audit.mjs';
 import { prepare } from './cre-parity.mjs';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
@@ -36,4 +37,19 @@ test('CRE1 trained checkpoint remains isolated from SWB1/SWB2 and invalid checks
  assert.ok(Math.abs(restored.score(text,'Anna spricht Französisch.')-m.score(text,'Anna spricht Französisch.'))<1e-12);
  const broken=Buffer.from(raw);broken[Math.floor(broken.length/2)]^=1;
  assert.throws(()=>RelationalEncoder.restore(broken),/checksum/i);
+});
+
+test('CRE1 rejects correctly hashed snapshots containing NaN, infinity or invalid step count',()=>{
+ const m=new RelationalEncoder(73);
+ const original=m.save();
+ const mutate=(field,write)=>{
+  const altered=Buffer.from(original);
+  write(altered,field);
+  crypto.createHash('sha256').update(altered.subarray(0,-32)).digest().copy(altered,altered.length-32);
+  return altered;
+ };
+ assert.throws(()=>RelationalEncoder.restore(mutate(16,b=>b.writeDoubleBE(NaN,16))),/Non-finite/);
+ assert.throws(()=>RelationalEncoder.restore(mutate(16,b=>b.writeDoubleBE(Infinity,16))),/Non-finite/);
+ assert.throws(()=>RelationalEncoder.restore(mutate(8,b=>b.writeInt32BE(-1,8))),/training steps/);
+ assert.throws(()=>RelationalEncoder.normalise(new Float64Array(32)),/Degenerate/);
 });
