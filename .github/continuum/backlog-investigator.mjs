@@ -54,16 +54,19 @@ export function investigationChecksPassed(check) {
     Number.isSafeInteger(check.tests?.failed) && check.tests.failed===0;
 }
 
-export function executeInvestigation({root=process.cwd(),file,out,base,actor='continuum-agent'}){
+export function executeInvestigation({root=process.cwd(),file,out,base,actor='continuum-agent',taskId=null}){
   if(!/^[0-9a-f]{40}$/.test(base??''))throw Error('Full immutable --base SHA required');
   if(typeof file!=='string'||!file||typeof out!=='string'||!out)throw Error('File/output paths required');
   const docPath=path.resolve(file),outputPath=path.resolve(out);
   if(outputPath===docPath||outputPath.startsWith(docPath+path.sep))throw Error('Output overlaps backlog');
   const store=new B.BacklogStore(docPath,{actor});
-  const ready=store.read().doc.tasks.filter(t=>t.kind==='INVESTIGATE'&&t.state==='READY')
-    .sort((a,b)=>b.priority-a.priority||a.id.localeCompare(b.id));
-  if(!ready.length)return {status:'NO_READY_INVESTIGATION'};
-  const task=ready[0],token=B.newToken(),at=Date.now();
+  // Resolve tasks through the canonical dependency-aware planner, not the
+  // first READY entry. The Teamleader may request an exact immutable task ID.
+  const eligible=B.nextEligible(store.read().doc,['INVESTIGATE']);
+  if(taskId!==null && (typeof taskId!=='string'||eligible?.id!==taskId))
+    throw Error('Requested investigation task does not match the next eligible task');
+  if(!eligible)return {status:'NO_READY_INVESTIGATION'};
+  const task=eligible,token=B.newToken(),at=Date.now();
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,token,leaseMs:1800000}]);
   if(!claimed.results[0]?.ok)throw Error('Investigation claim rejected');
   let wt=null;
