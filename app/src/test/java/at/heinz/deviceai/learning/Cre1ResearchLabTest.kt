@@ -47,7 +47,8 @@ class Cre1ResearchLabTest {
             assertTrue(report.afterLoss.isFinite())
             val after=lab.status()
             assertEquals(report.accepted,after.available)
-            assertNotEquals(before.available,report.accepted && !before.available)
+            assertFalse(before.available)
+            assertEquals(report.accepted,after.available)
             if(report.accepted){
                 assertNotNull(after.modelSha256)
                 val raw=dir.resolve("cre1-research-v1.cre1").readBytes()
