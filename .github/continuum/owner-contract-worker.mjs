@@ -73,7 +73,7 @@ export function executeOwnerContractTestTask({
  if(store.read().doc.tasks.some(t=>t.kind==='TEST'&&t.source==='owner'&&
    t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
   store.apply([{op:'expire',actor,at:Date.now()}]);
- const task=nextEligible(store.read().doc,['TEST'],['owner'],head,id);
+ const task=nextEligible(store.read().doc,['TEST'],['owner'],head,id,'ASSERT_NODE_EXPORT');
  if(!task)return {status:'NO_READY_TASK',head};
  if(task.kind!=='TEST'||task.source!=='owner'||task.state!=='READY'||
     !MODULE.test(task.subject?.modulePath??'')||
