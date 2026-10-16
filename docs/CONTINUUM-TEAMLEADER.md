@@ -490,3 +490,51 @@ im systemeigenen temporaeren Ordner erzeugt, nicht im Git-Repo.
 Vor einer produktiven Freigabe muessen obige Tests, die
 vollstaendige Node-Regression, die Android-Unit-Tests und
 assembleDebug auf demselben unveraenderlichen HEAD real gruen sein.
+
+
+## Lokaler PC-Dauerbetrieb: Stundenplanung ohne GitHub Actions
+
+Das Node-Kommando teamleader-cli.mjs unterstuetzt neben --once und
+--status jetzt --loop. Der Prozess bleibt auf einem eingeschalteten PC
+aktiv und fuehrt jeweils einen begrenzten Teamleiter-Zyklus aus. Im
+Normalfall wartet er danach 60 Minuten. Nach fehlgeschlagenen
+Zyklen gilt ein gedeckeltes, exponentielles Retry-Backoff von
+maximal einer Stunde. Fehler werden im Heartbeat NICHT als Erfolg
+gezaehlt. SIGINT/SIGTERM stoppen nach der gerade ausgefuehrten
+Arbeit beziehungsweise waehrend des Wartens.
+
+    STATE="$HOME/.local/state/device-ai-continuum/hourly-worker"
+    node .github/continuum/teamleader-cli.mjs --loop \
+      --root . --state "$STATE" \
+      --interval-minutes 60 --budget-minutes 20
+
+In einem zweiten Terminal:
+
+    node .github/continuum/teamleader-cli.mjs --status \
+      --root . --state "$STATE"
+
+Der Zustand wird aussenhalb des Checkouts gespeichert. Zusaetzlich
+enthaelt worker-heartbeat.json einen Zyklenzaehler, Fehlversuche,
+den tatsaechlichen letzten Outcome und den naechsten geplanten Versuch.
+Die Datei ist ein lokaler Lebenszeichenstatus, **kein** Compiler-
+oder Testevidenzbeleg. Bei einem Absturz koennen Heartbeats veralten;
+das Alter muss vor der Anzeige als "laeuft" geprueft werden.
+
+Fuer einen endlichen Testlauf ohne laengeres Warten:
+
+    node .github/continuum/teamleader-cli.mjs --loop \
+      --root . --state "$STATE" \
+      --interval-minutes 60 --budget-minutes 20 --max-cycles 1
+
+    node --test .github/continuum/local-teamleader-loop.test.mjs
+
+Die maximale Zyklusfrequenz ist konfigurierbar (1 bis 1440 Minuten);
+dennoch muessen das PC-Betriebssystem, dessen Benutzerrechte,
+der Arbeitsspeicher und ein ggf. vorhandenes Android-SDK tatsaechlich
+fuer Compiler und Testketten bereitstehen. Ein abgestellter oder
+schlafender PC fuehrt keine Zyklen aus. Ein abgeschlossener Chat
+startet diesen lokalen Betrieb ebenfalls nicht von selbst.
+
+Der Loop setzt ausschliesslich die vorhandenen M4-Auftragstypen um.
+Kotlin IMPLEMENT bleibt noch eine separat ausloesbare Preview,
+bis vollstaendige Android-/Gradle-/Unit-Evidenz den Patch deckt.
