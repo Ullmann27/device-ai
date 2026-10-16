@@ -7,28 +7,52 @@ import {buildData,files,fingerprint} from './relational-memory-data.mjs';
 import {rankMemories} from './dialogue-retrieval.mjs';
 import {decide,trainedVocabulary,FROZEN} from './relational-retrieval-audit.mjs';
 
-export function hybridDecision(model,query,memories,trained,policy) {
- if(!(model instanceof RelationalEncoder) || !Array.isArray(memories) || memories.length>300 ||
-    !policy || !Number.isFinite(policy.lexFloor) || !Number.isFinite(policy.lexGap) ||
-    !Number.isFinite(policy.evidenceFloor)) throw Error('Invalid CRE1 research query');
- const neural=decide((q,text)=>model.score(q,text),query,memories,{trained}).answer;
+/** Reusable, read-only query evidence. All expensive neural comparisons are
+ * computed once per seed and corpus, not repeated per calibration threshold. */
+export function prepareQueryViews(model,split,trained) {
+ if(!(model instanceof RelationalEncoder))throw Error('CRE1 model required');
+ const memories=split.memories, queries=[...split.questions,...split.unanswerable];
+ const mEmb=memories.map(m=>model.embed(m.text,'m'));
+ const views=new Map();
+ for(const {text:q} of queries) {
+  if(views.has(q))continue;
+  const qEmb=model.embed(q,'q');
+  const scores=new Map();
+  memories.forEach((m,i)=>{
+   let dot=0;for(let j=0;j<qEmb.length;j++)dot+=qEmb[j]*mEmb[i][j];
+   scores.set(m.text,dot);
+  });
+  views.set(q,prepareView(q,memories,trained,(_q,t)=>scores.get(t)??-2));
+ }
+ return views;
+}
+function prepareView(query,memories,trained,scoreFn) {
+ const neural=decide(scoreFn,query,memories,{trained}).answer;
  const lexical=rankMemories(query,memories,{limit:2});
- if(!lexical.length) return {answer:neural,route:neural?'CRE1':'ABSTAIN'};
  const [best,next]=lexical;
- const gap=best.score-(next?.score??0);
- if(best.score < policy.lexFloor || gap < policy.lexGap ||
-    best.evidence < policy.evidenceFloor) return {answer:neural,route:neural?'CRE1':'ABSTAIN'};
- // Do not bypass the unseen-name integrity gate even if TF-IDF is high.
- // Reusing decide() on the (deterministic) lexical ranking enforces the same
- // evidence/known-name policy as CRE1, instead of trusting a naked cosine.
+ if(!best)return {neural,lexical:null,lexScore:0,gap:0,evidence:0};
  const indexed=new Map(lexical.map(m=>[m.id,m.score]));
- const fallback=decide((_q,text)=>{
-   const mem=memories.find(m=>m.text===text);
-   return mem?indexed.get(mem.id)??-1:-1;
+ const safeFallback=decide((_q,text)=>{
+  const match=memories.find(m=>m.text===text);
+  return match?indexed.get(match.id)??-1:-1;
  },query,memories,{trained,delta:0}).answer;
- if(!fallback || fallback.id!==best.id)
-   return {answer:neural,route:neural?'CRE1':'ABSTAIN'};
- return {answer:best,route:neural?.id===best.id?'AGREEMENT':'LEXICAL_RESCUE'};
+ return {neural,lexical:safeFallback?.id===best.id?best:null,
+   lexScore:best.score,gap:best.score-(next?.score??0),evidence:best.evidence};
+}
+export function selectHybridView(view,policy) {
+ if(!view||!policy||![policy.lexFloor,policy.lexGap,policy.evidenceFloor].every(Number.isFinite))
+  throw Error('Invalid hybrid research policy');
+ const {neural,lexical,lexScore,gap,evidence}=view;
+ if(lexical && lexScore>=policy.lexFloor && gap>=policy.lexGap &&
+    evidence>=policy.evidenceFloor)
+  return {answer:lexical,route:neural?.id===lexical.id?'AGREEMENT':'LEXICAL_RESCUE'};
+ return {answer:neural,route:neural?'CRE1':'ABSTAIN'};
+}
+export function hybridDecision(model,query,memories,trained,policy) {
+ if(!(model instanceof RelationalEncoder)||!Array.isArray(memories)||memories.length>300)
+  throw Error('Invalid CRE1 research query');
+ return selectHybridView(prepareView(query,memories,trained,
+   (q,text)=>model.score(q,text)),policy);
 }
 
 const grid=Object.freeze(
@@ -62,12 +86,12 @@ export function fitAndSelect({
    return {seed,model};
  });
  const lexical=outcomes(q=>rankMemories(q,data.dev.memories,{limit:1})[0],data.dev);
- const baseline=models.map(({model})=>outcomes(q=>
-   decide((a,b)=>model.score(a,b),q,data.dev.memories,{trained:known}).answer,data.dev));
+ const devViews=models.map(({model})=>prepareQueryViews(model,data.dev,known));
+ const baseline=devViews.map(views=>outcomes(q=>views.get(q).neural,data.dev));
  const bestPermittedFalse=Math.max(...baseline.map(x=>x.falseAnswers));
  const options=grid.map((policy,index)=>{
-   const results=models.map(({model})=>outcomes(q=>
-     hybridDecision(model,q,data.dev.memories,known,policy).answer,data.dev));
+   const results=devViews.map(views=>outcomes(q=>
+     selectHybridView(views.get(q),policy).answer,data.dev));
    const minCorrect=Math.min(...results.map(x=>x.seen));
    const maxFalse=Math.max(...results.map(x=>x.falseAnswers));
    const meanCorrect=results.reduce((a,x)=>a+x.seen,0)/results.length;
@@ -96,9 +120,10 @@ export function researchAudit() {
  const data=buildData(),trained=fitAndSelect();
  const perSeed=trained.models.map(({seed,model})=>{
    const mem=data.test.memories;
-   const hybrid=trained.policy?outcomes(q=>hybridDecision(model,q,mem,trained.known,trained.policy).answer,data.test):null;
-   const base=outcomes(q=>decide((a,b)=>model.score(a,b),q,mem,
-     {trained:trained.known}).answer,data.test);
+   const views=prepareQueryViews(model,data.test,trained.known);
+   const hybrid=trained.policy?outcomes(q=>
+     selectHybridView(views.get(q),trained.policy).answer,data.test):null;
+   const base=outcomes(q=>views.get(q).neural,data.test);
    return {seed,base,hybrid};
  });
  const lexical=outcomes(q=>rankMemories(q,data.test.memories,{limit:1})[0],data.test);
