@@ -70,7 +70,6 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     fs.writeFileSync(path.join(reportDir,'report.json'),JSON.stringify(report,null,2)+'\n');
-    saveLedger(ledgerFile,recordSession(ledger,report,{trigger:'accepted-owner-task'}));
     if(report.outcome!=='VERIFIED'||!report.verified){
       outcome={status:'FAILED',head,taskId:task.id,reason:report.outcome,
         report:path.join(reportDir,'report.json')};
@@ -108,9 +107,14 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           approvedForMerge:false};
       }
     }
+    // An internal green candidate must not enter the success experience ledger
+    // when the independent verification rejects it.
+    if(outcome.status==='DONE'||report.outcome!=='VERIFIED')
+      saveLedger(ledgerFile,recordSession(ledger,report,{trigger:'accepted-owner-task'}));
     if(outcome.status==='FAILED'){
       store.apply([{op:'fail',actor,at:Date.now(),id:task.id,token,
-        error:{code:'NO_VERIFIED_REPAIR',message:singleLine(outcome.reason,400)}}]);
+        error:{code:outcome.reason==='INDEPENDENT_CHECK_FAILED'?'CHECKS_FAILED':'NO_VERIFIED_REPAIR',
+          message:singleLine(outcome.reason,400)}}]);
     }
     fs.writeFileSync(path.join(reportDir,'task-result.json'),JSON.stringify(outcome,null,2)+'\n');
     return outcome;
