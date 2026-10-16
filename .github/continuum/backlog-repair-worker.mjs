@@ -18,6 +18,29 @@ import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handof
 const COMMIT=/^[0-9a-f]{40}$/;
 const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
 
+/**
+ * Resolve an existing ancestor before creating output paths. path.resolve()
+ * alone is insufficient: an existing symlinked directory can otherwise
+ * redirect backlog writes and artifacts into the source checkout.
+ */
+export function resolveOutputDestination(input){
+  let cursor=path.resolve(input);
+  const missing=[];
+  while(!fs.existsSync(cursor)){
+    try{
+      if(fs.lstatSync(cursor).isSymbolicLink())
+        throw Error('Dangling symlink in output destination');
+    }catch(e){
+      if(e.code!=='ENOENT')throw e;
+    }
+    const parent=path.dirname(cursor);
+    if(parent===cursor)throw Error('Cannot resolve output destination');
+    missing.unshift(path.basename(cursor));
+    cursor=parent;
+  }
+  return path.join(fs.realpathSync(cursor),...missing);
+}
+
 export function validateOwnerRepairTask(task,head){
   if(!task||task.kind!=='REPAIR'||task.state!=='READY'||
      !TASK_ID.test(task.id??'')||task.source!=='owner'||
@@ -36,7 +59,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
     throw Error('Valid root, backlog file, out and budgetMinutes=1..30 required');
   if(id!==null&&!TASK_ID.test(id))throw Error('Invalid task ID');
-  const source=fs.realpathSync(root),backlogPath=path.resolve(file),outRoot=path.resolve(out);
+  const source=fs.realpathSync(root);
+  const backlogPath=resolveOutputDestination(file),outRoot=resolveOutputDestination(out);
   if([backlogPath,outRoot].some(p=>p===source||p.startsWith(source+path.sep)))
     throw Error('Backlog and artifacts must stay outside the source checkout');
   if(outRoot===path.dirname(backlogPath)||outRoot===backlogPath||
