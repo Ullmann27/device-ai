@@ -60,6 +60,43 @@ class Cre1InferenceEncoderTest {
                 assertEquals("Feature " + actual[i].id, expected[i].second, actual[i].weight, 1e-10)
             }
         }
+        // The same independently trained Node model now receives identical
+        // InfoNCE SGD steps in Kotlin, with the positive always first.
+        val sgd = Cre1InferenceEncoder.restore(original)
+        val rounds = listOf(
+            "Wann hat Anna Geburtstag?" to listOf(
+                "Anna ist am 3. Mai geboren.",
+                "Anna wohnt seit Jahren in Graz.",
+                "Der Geburtstag von Sophie ist am 4. April."
+            ),
+            "Wo lebt Lukas?" to listOf(
+                "Lukas wohnt seit Jahren in Graz.",
+                "Lukas hat am 3. Mai Geburtstag.",
+                "Anna wohnt seit Jahren in Graz."
+            ),
+            "Welches Tier hat Jonas?" to listOf(
+                "Jonas hat einen Hund namens Bello.",
+                "Jonas fährt einen VW Golf.",
+                "Sophie hat einen Hund namens Balu."
+            )
+        )
+        val expectedLosses = File(dir, "node-sgd-losses.tsv")
+            .readLines().filter(String::isNotBlank).map(String::toDouble)
+        assertEquals(rounds.size, expectedLosses.size)
+        for ((index, round) in rounds.withIndex()) {
+            val actualLoss = sgd.trainSgdStep(round.first, round.second)
+            assertEquals("InfoNCE loss at step $index", expectedLosses[index], actualLoss, 1e-8)
+        }
+        assertEquals(model.steps + rounds.size, sgd.steps)
+        val kotlinSnapshot = sgd.save()
+        assertEquals(Cre1InferenceEncoder.SNAPSHOT_LENGTH, kotlinSnapshot.size)
+        File(dir, "kotlin-sgd.cre1").writeBytes(kotlinSnapshot)
+        val restoredSgd = Cre1InferenceEncoder.restore(kotlinSnapshot)
+        for ((question, answers) in rounds) {
+            assertEquals(sgd.score(question, answers[0]),
+                restoredSgd.score(question, answers[0]), 1e-12)
+        }
+
         val damaged = original.copyOf()
         damaged[damaged.size / 2] = (damaged[damaged.size / 2].toInt() xor 1).toByte()
         assertThrows(IllegalArgumentException::class.java) { Cre1InferenceEncoder.restore(damaged) }
