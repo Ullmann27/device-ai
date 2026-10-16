@@ -150,7 +150,7 @@ export function parseUnifiedZeroHunks(diff){
  */
 export function boundedWorktreeFile(wt,relative){
   if(typeof relative!=='string'||!relative||
-    relative.includes('\\u0000')||path.isAbsolute(relative)||
+    relative.includes('\0')||path.isAbsolute(relative)||
     relative.split(/[\\/]+/).some(x=>x==='..'||x==='.'||x===''))
     throw Error('Invalid worktree edit path');
   const root=fs.realpathSync(wt);
