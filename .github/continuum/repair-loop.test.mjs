@@ -8,7 +8,7 @@ import {parseKotlinDiagnostics,parseJUnit,parseJsErrorText,fingerprint} from './
 import {proposeCandidates,applyEdits,hunk,unescapeCodeNewlines,nearestNames,insertImport,editDistance} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
-import {createWorktree,removeWorktree,repairSession,rankCandidates,PROFILES,CHAINS,commitProposal} from './repair-loop.mjs';
+import {createWorktree,removeWorktree,repairSession,rankCandidates,PROFILES,CHAINS,commitProposal,boundedWorktreeFile} from './repair-loop.mjs';
 import {validateVerifiedReport,assertProposalBranch,publishRepair} from './repair-publish.mjs';
 
 const nested=process.env.CONTINUUM_REPAIR_DEPTH?'skipped inside a repair session (no nested loops)':false;
@@ -90,6 +90,29 @@ test('check profiles are fixed and unknown chains fail closed',()=>{
  assert.throws(()=>assertProposalBranch('main'));
  assert.throws(()=>assertProposalBranch('continuum-agent/../main'));
  assert.equal(assertProposalBranch('continuum-agent/repair-abc'),'continuum-agent/repair-abc');
+});
+
+test('repair worktree guard excludes symlinks, parent escapes and null path components',()=>{
+ const sandbox=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-patch-sandbox-'));
+ const wt=path.join(sandbox,'checkout');
+ const outside=path.join(sandbox,'outside');
+ try {
+  fs.mkdirSync(path.join(wt,'src'),{recursive:true});
+  fs.mkdirSync(outside);
+  fs.writeFileSync(path.join(wt,'src','safe.mjs'),'export const safe=true;\n');
+  fs.writeFileSync(path.join(outside,'private.mjs'),'PRIVATE\n');
+  assert.equal(boundedWorktreeFile(wt,'src/safe.mjs'),
+   path.join(wt,'src','safe.mjs'));
+  fs.symlinkSync(path.join(outside,'private.mjs'),path.join(wt,'bad-file.mjs'));
+  fs.symlinkSync(outside,path.join(wt,'linked-folder'));
+  for(const filename of ['../outside/private.mjs','/etc/passwd','bad-file.mjs',
+   'linked-folder/private.mjs','src/../bad-file.mjs',
+   'src/safe.mjs\0ignore','src//safe.mjs']){
+   assert.throws(()=>boundedWorktreeFile(wt,filename),undefined,
+    'Worktree edit unexpectedly accepted '+JSON.stringify(filename));
+  }
+  assert.equal(fs.readFileSync(path.join(outside,'private.mjs'),'utf8'),'PRIVATE\n');
+ }finally{fs.rmSync(sandbox,{recursive:true,force:true});}
 });
 
 function tempRepo(){
