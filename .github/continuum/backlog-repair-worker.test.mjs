@@ -62,6 +62,27 @@ test('an unrelated automatic REPAIR task cannot starve an accepted owner task',(
  assert.equal(nextEligible(doc,['REPAIR'],['owner']).id,'repair-owner-one');
 });
 
+test('eligible owner selection cannot be starved by stale HEAD or higher priority',()=>{
+ const current='a'.repeat(40),old='b'.repeat(40);
+ const tasks=[
+  {id:'owner-old-one',title:'Old-head blocker',kind:'REPAIR',
+   source:'owner',priority:999,subject:{base:old,chain:'node'}},
+  {id:'owner-current-one',title:'Current-head task',kind:'REPAIR',
+   source:'owner',priority:200,subject:{base:current,chain:'node'}},
+  {id:'owner-current-two',title:'Explicit task ID',kind:'REPAIR',
+   source:'owner',priority:100,subject:{base:current,chain:'node'}}
+ ];
+ const ops=tasks.flatMap(task=>[
+  {op:'propose',actor:'owner',at:1,task},
+  {op:'accept',actor:'owner',at:2,id:task.id}
+ ]);
+ const doc=applyOps(emptyDocument(0,'owner'),ops).doc;
+ assert.equal(nextEligible(doc,['REPAIR'],['owner']).id,'owner-old-one');
+ assert.equal(nextEligible(doc,['REPAIR'],['owner'],current).id,'owner-current-one');
+ assert.equal(nextEligible(doc,['REPAIR'],['owner'],current,'owner-current-two').id,'owner-current-two');
+ assert.equal(nextEligible(doc,['REPAIR'],['owner'],current,'owner-old-one'),null);
+});
+
 test('owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE',
  {skip:nested,timeout:180000},()=>{
  const f=fixture(true);
