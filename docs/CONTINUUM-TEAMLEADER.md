@@ -207,6 +207,22 @@ liegen. Beispiel auf einem Rechner mit Node.js und Git:
       --file "$STATE/development-backlog.json" \
       --out "$STATE/reports" --id repair-owner-one --minutes 20
 
+Der normale lokale Teamleader-Scheduler verarbeitet akzeptierte Owner-Aufträge
+jetzt ebenfalls automatisch. Nach der oben gezeigten `backlog accept`-Operation
+kann anstelle des manuellen `owner-repair`-Befehls der reguläre Worker gestartet
+werden:
+
+    node .github/continuum/teamleader-cli.mjs --once \
+      --root . --state "$STATE" --budget-minutes 20
+
+Der reguläre Worker priorisiert eine angenommene Owner-Reparatur vor der
+gewöhnlichen einmaligen HEAD-Baseline und verhindert danach doppelte
+Baseline-Durchläufe auf demselben SHA. Ein abgestürzter Worker kann nach
+Ablauf seiner Backlog-Lease beim nächsten Zyklus erneut bearbeitet werden.
+Owner-Aufträge bleiben auf den ursprünglich akzeptierten unveränderlichen
+Git-Head beschränkt. Ein erfolgreicher Agentendurchlauf führt niemals
+automatisch einen Merge in main aus.
+
 Die CLI pinnt bei der Auftragserfassung den vollständigen aktuellen Git-HEAD.
 Vor der Ausführung müssen Checkout und SHA noch genau dazu passen; ein
 verschmutzter Checkout wird nicht bearbeitet. Ein erfolgreicher Durchlauf
