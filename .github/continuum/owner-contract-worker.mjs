@@ -160,7 +160,13 @@ export function executeOwnerContractTestTask({
   ]);
   result={status:'DONE',head,taskId:task.id,patch:patchPath,patchSha256,
    receipt:receiptPath,proof,approvedForMerge:false};
-  fs.writeFileSync(path.join(runDir,'task-result.json'),JSON.stringify(result,null,2)+'\n');
+  // Backlog DONE is the authoritative, atomic decision. The human-readable
+  // summary is best-effort and may not roll a verified task back to FAILED.
+  try{
+   fs.writeFileSync(path.join(runDir,'task-result.json'),JSON.stringify(result,null,2)+'\n');
+  }catch(writeError){
+   result.reportWarning=singleLine(writeError.message,200);
+  }
   return result;
  }catch(e){
   const state=store.read().doc.tasks.find(t=>t.id===task.id);
