@@ -57,12 +57,15 @@ export const CHAINS=Object.freeze({node:['node-continuum'],android:['android-com
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','android-unit','jvm-harness']);
 
-export function runProfile(name,wt,out){
+export function runProfile(name,wt,out,{deadline=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
   const p=factory(wt,out);
   for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
   for(const f of p.junitFiles??[])fs.rmSync(f,{force:true});
-  const r=run(p.cmd,p.args,{cwd:p.cwd,timeoutMs:p.timeoutMs,env:p.env});
+  if(deadline!==null&&(!Number.isSafeInteger(deadline)||deadline<=Date.now()))
+    throw Error('Repair test deadline exhausted before '+name);
+  const remaining=()=>deadline===null?p.timeoutMs:Math.min(p.timeoutMs,Math.max(1,deadline-Date.now()));
+  const r=run(p.cmd,p.args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
@@ -76,7 +79,10 @@ export function runProfile(name,wt,out){
     const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
     const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
-      const again=run(p.cmd,['--test','--test-reporter=tap',file],{cwd:p.cwd,timeoutMs:120000});
+      if(deadline!==null&&Date.now()>=deadline)break;
+      const again=run(p.cmd,['--test','--test-reporter=tap',file],{
+        cwd:p.cwd,timeoutMs:Math.min(120000,remaining())
+      });
       diagnostics.unshift(...parseJsErrorText(again.stdout+'\n'+again.stderr,wt));
     }
   }
@@ -110,10 +116,10 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out){
+export function runChain(chain,wt,out,{deadline=null}={}){
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
-    const r=runProfile(name,wt,out);results.push(r);
+    const r=runProfile(name,wt,out,{deadline});results.push(r);
     if(!r.passed)break;
   }
   return {passed:results.every(r=>r.passed),results,diagnostics:results.flatMap(r=>r.diagnostics)};
@@ -208,7 +214,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
   const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),baseline:null,attempts:[],verified:null,outcome:null};
-  const baseline=runChain(chain,wt,out);
+  const baseline=runChain(chain,wt,out,{deadline});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
@@ -238,7 +244,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       // can be left because a subsequent file resolved outside the worktree.
       for(const [file,content] of prepared)fs.writeFileSync(file,content);
     }catch(e){attempt.outcome='NOT_APPLICABLE';attempt.error=e.message;report.attempts.push(attempt);continue;}
-    const check=runChain(chain,wt,out);
+    const check=runChain(chain,wt,out,{deadline});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
     const evidence=evidenceSufficient(baseline.results,check.results);
