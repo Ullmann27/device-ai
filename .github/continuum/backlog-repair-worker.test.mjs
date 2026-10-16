@@ -97,6 +97,13 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
   assert.ok(fs.existsSync(result.patch));
   const patch=fs.readFileSync(result.patch);
   assert.equal(crypto.createHash('sha256').update(patch).digest('hex'),result.patchSha256);
+  const receipt=JSON.parse(fs.readFileSync(result.independentReceipt,'utf8'));
+  assert.equal(receipt.head,f.head);
+  assert.equal(receipt.taskId,'repair-owner-one');
+  assert.equal(receipt.patchSha256,result.patchSha256);
+  assert.equal(receipt.passed,true);
+  assert.ok(receipt.executedTests>0);
+  assert.ok(receipt.profiles.every(p=>p.passed&&p.failed===0));
   assert.deepEqual(fs.readFileSync(path.join(f.root,'.github/continuum/math.mjs')),original);
   assert.equal(f.git('status','--porcelain'),'');
   const p=spawnSync('git',['apply','--check',result.patch],{cwd:f.root,encoding:'utf8'});
