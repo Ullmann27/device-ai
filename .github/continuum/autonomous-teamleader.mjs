@@ -15,6 +15,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {executeInvestigation} from './backlog-investigator.mjs';
 import {summarizeRepairHandoffs} from './teamleader-handoffs.mjs';
+import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -147,8 +148,9 @@ export function runTeamleaderCycle({
  if(!root||!stateDir||!driver)throw Error('root, stateDir and driver required');
  if(!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
   throw Error('Teamleader budget must be 1..30 minutes');
- const statePath=path.join(path.resolve(stateDir),'teamleader-state.json');
- const sourceRoot=path.resolve(root),storeRoot=path.resolve(stateDir);
+ const sourceRoot=fs.existsSync(root)?fs.realpathSync(root):path.resolve(root);
+ const storeRoot=resolveOutputDestination(stateDir);
+ const statePath=path.join(storeRoot,'teamleader-state.json');
  if(storeRoot===sourceRoot||storeRoot.startsWith(sourceRoot+path.sep))
   throw Error('Store Teamleader state outside the repository');
  const started=now(),unlock=getLock(statePath,started);
