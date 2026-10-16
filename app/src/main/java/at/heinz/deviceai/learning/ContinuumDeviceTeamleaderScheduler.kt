@@ -90,8 +90,8 @@ class ContinuumDeviceTeamleaderScheduler internal constructor(
  * stop it. No shell, network, repository clone, build or unreviewed code write.
  */
 class ContinuumDeviceTeamleaderJobService : JobService() {
-    private val stopped = AtomicBoolean(false)
     @Volatile private var activeWorker: Thread? = null
+    @Volatile private var activeCancellation: AtomicBoolean? = null
 
     private fun currentResources(): ContinuumLearningResources {
         val battery = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
@@ -104,33 +104,50 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
         return ContinuumLearningResources(percent, false, thermal, space)
     }
 
-    override fun onStartJob(params: JobParameters): Boolean {
-        stopped.set(false)
-        activeWorker = Thread({
+    @Synchronized override fun onStartJob(params: JobParameters): Boolean {
+        // Android may stop one job while its thread is still cleaning up.
+        // Never re-enable cancellation on that earlier thread.
+        if (activeWorker?.isAlive == true) return false
+        val cancellation = AtomicBoolean(false)
+        activeCancellation = cancellation
+        val next = Thread({
             var reschedule = false
             try {
                 val teamleader = DeviceTeamleader(filesDir)
                 val reason = ContinuumOfflineLearningBudget.deferralReason(currentResources())
                 if (reason != null) {
-                    teamleader.defer(reason)
-                } else if (!stopped.get()) {
-                    val result = teamleader.runOnce { stopped.get() }
-                    reschedule = result.state == "ERROR" && !stopped.get()
+                    if (!cancellation.get()) teamleader.defer(reason)
+                } else if (!cancellation.get()) {
+                    val result = teamleader.runOnce {
+                        cancellation.get() || Thread.currentThread().isInterrupted
+                    }
+                    reschedule = result.state == "ERROR" && !cancellation.get()
                 }
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
             } catch (e: Exception) {
-                reschedule = !stopped.get()
+                reschedule = !cancellation.get()
                 Log.e(TAG, "Android Teamleader cycle failed", e)
             } finally {
-                if (!stopped.get()) jobFinished(params, reschedule)
+                // Only the owner of this generation can release its state.
+                synchronized(this@ContinuumDeviceTeamleaderJobService) {
+                    if (activeCancellation === cancellation) {
+                        activeCancellation = null
+                        activeWorker = null
+                    }
+                }
+                if (!cancellation.get()) jobFinished(params, reschedule)
             }
-        }, "continuum-device-teamleader").apply { isDaemon = true; start() }
+        }, "continuum-device-teamleader").apply { isDaemon = true }
+        activeWorker = next
+        next.start()
         return true
     }
 
-    override fun onStopJob(params: JobParameters): Boolean {
-        stopped.set(true)
+    @Synchronized override fun onStopJob(params: JobParameters): Boolean {
+        activeCancellation?.set(true)
         activeWorker?.interrupt()
-        return true
+        return true // Android may reschedule this bounded local diagnostic.
     }
 
     companion object {
