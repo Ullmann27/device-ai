@@ -439,6 +439,17 @@ class ContinuumLearningCore(
     }
     fun dialogueHistory():List<ContinuumDialogueTurn> = synchronized(CORE_LOCK) { dialogue.history() }
 
+    /** The same confirmed, nonrevoked evidence ranked by the production SWB1
+     * retriever. CRE1 can observe only these candidates, never expand the
+     * set of factual answers or grant memory authority.
+     */
+    fun retrievedEvidence(query:String):List<ContinuumMemoryHit> = synchronized(CORE_LOCK) {
+        require(query.trim().length in 1..512)
+        ContinuumMemoryDialogue.rank(loadModel().save(),query,store.all())
+    }
+
+
+
     /** Explicit local public-package import. Verification precedes all writes and
      * model acceptance still depends on frozen local benchmarks and owner replay.
      */
