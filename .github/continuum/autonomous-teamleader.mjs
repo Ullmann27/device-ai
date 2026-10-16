@@ -177,6 +177,9 @@ export function runTeamleaderCycle({
      CHECKS_FAILED:'CHECKS_FAILED',
      NO_READY_INVESTIGATION:'NO_READY_INVESTIGATION'};
     if(!Object.hasOwn(allowed,result?.status))throw Error('Unknown investigation outcome');
+    if(result.status==='DONE' && (!Number.isSafeInteger(result.executed) ||
+       result.executed<1 || result.failed!==0 || result.taskId!==chosen.taskId))
+      throw Error('Investigation reported DONE without matching executed checks');
     outcome=allowed[result.status];
     detail=String(result.staticResult??result.status).slice(0,160);
    }
