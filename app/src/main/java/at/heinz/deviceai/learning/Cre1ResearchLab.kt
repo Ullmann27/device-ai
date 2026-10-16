@@ -20,6 +20,8 @@ data class Cre1ResearchExample(val query:String, val candidates:List<String>) {
 data class Cre1ResearchTrainingReport(
     val accepted:Boolean,
     val steps:Int,
+    val trainingBeforeLoss:Double,
+    val trainingAfterLoss:Double,
     val beforeLoss:Double,
     val afterLoss:Double,
     val stoppedEarly:Boolean,
@@ -66,6 +68,7 @@ class Cre1ResearchLab(private val directory:File) {
             Cre1InferenceEncoder.restore(checkpoint.readBytes())
         else Cre1InferenceEncoder.createResearch(73)
         val before=evaluate(baseline,audit)
+        val trainBefore=evaluate(baseline,training)
         val candidate=Cre1InferenceEncoder.restore(baseline.save())
         val started=System.nanoTime()
         var completed=0
@@ -78,10 +81,12 @@ class Cre1ResearchLab(private val directory:File) {
         }
         val stopped=completed!=steps || interrupted()
         val after=evaluate(candidate,audit)
-        val accept=!stopped && after+1e-9 < before
+        val trainAfter=evaluate(candidate,training)
+        val accept=!stopped && trainAfter+1e-9 < trainBefore &&
+            after+1e-9 < before
         if(accept)commit(candidate.save())
-        val report=Cre1ResearchTrainingReport(accept,completed,before,after,
-            stopped,if(accept)hash(candidate.save())else
+        val report=Cre1ResearchTrainingReport(accept,completed,
+            trainBefore,trainAfter,before,after,stopped,if(accept)hash(candidate.save())else
                 if(checkpoint.exists())hash(checkpoint.readBytes())else null)
         appendAudit(report)
         return report
@@ -118,7 +123,8 @@ class Cre1ResearchLab(private val directory:File) {
         val log=File(directory,"cre1-research-audit.tsv")
         val fields=listOf(System.currentTimeMillis().toString(),
             if(report.accepted)"ACCEPTED" else if(report.stoppedEarly)"INTERRUPTED" else "REJECTED",
-            report.steps.toString(),report.beforeLoss.toString(),
+            report.steps.toString(),report.trainingBeforeLoss.toString(),
+            report.trainingAfterLoss.toString(),report.beforeLoss.toString(),
             report.afterLoss.toString(),report.modelSha256?:"none").joinToString("\t")
         val recent=if(log.exists())log.readLines().takeLast(31)else emptyList()
         val data=(recent+fields).joinToString("\n",postfix="\n")
