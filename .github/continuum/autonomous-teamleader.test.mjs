@@ -75,6 +75,29 @@ test('owner-accepted repair runs before baseline and only records an independent
  assert.equal(driver.calls.repairs,0);
 }));
 
+test('two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD',
+ ()=>sandbox(({root,stateDir})=>{
+  const d=fake(),head=A;
+  const queue=['owner-first-task','owner-second-task'];
+  let count=0;
+  d.readyOwnerRepair=()=>queue.length?{
+    id:queue[0],kind:'REPAIR',source:'owner',state:'READY',
+    subject:{base:head,chain:'node'}
+  }:null;
+  d.ownerRepair=(_root,_state,_head,id)=>{
+    assert.equal(id,queue.shift());
+    count++;
+    return {status:'DONE',taskId:id,patchSha256:'e'.repeat(64),
+      approvedForMerge:false,report:'/out/'+id+'.json',
+      profiles:[{profile:'node-continuum',passed:true,executed:5,failed:0}]};
+  };
+  assert.equal(runTeamleaderCycle({root,stateDir,driver:d}).kind,'OWNER_REPAIR');
+  assert.equal(runTeamleaderCycle({root,stateDir,driver:d}).kind,'OWNER_REPAIR');
+  assert.equal(runTeamleaderCycle({root,stateDir,driver:d}).outcome,'IDLE');
+  assert.equal(count,2);
+  assert.equal(d.calls.repairs,0,'do not waste a second baseline run');
+ }));
+
 test('owner repair evidence cannot be faked by a driver claiming DONE',
  ()=>sandbox(({root,stateDir})=>{
  const driver=fake();
