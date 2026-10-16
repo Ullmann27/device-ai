@@ -103,7 +103,6 @@ export function proposeKotlinDelegate({files,task}={}){
  const identities=decls=>decls.map(d=>d.kind+'\\0'+d.qualified).sort();
  const original=identities(index.declarations);
  const observed=identities(nextIndex.declarations);
- const added=s.className+'.'+s.methodName;
  const expectedAdded=nextIndex.declarations.filter(d=>d.kind==='fun'&&
    d.name===s.methodName&&d.container===q);
  if(expectedAdded.length!==1||
