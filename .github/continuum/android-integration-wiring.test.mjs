@@ -279,4 +279,11 @@ test('Android-first Teamleader is scheduled, observable and serialized across ba
    kotlinTests.includes('backgroundAndManualTeamleaderCannotOverlapOrOverwriteStatus'));
  ensure('status checkpoint supports atomic move fallback',
    native.includes('AtomicMoveNotSupportedException'));
+ ensure('corrupt status remains intact rather than being overwritten by later jobs',
+   native.includes('storage.read()') &&
+   kotlinTests.includes('aCorruptedReportFailsClosedWithoutSilentlyResettingIt') &&
+   kotlinTests.includes('damaged, file.readBytes()'));
+ ensure('periodic background worker does not retry permanent failures in a tight loop',
+   job.includes('jobFinished(params, false)') &&
+   !job.includes('reschedule = result.state == "ERROR"'));
 });
