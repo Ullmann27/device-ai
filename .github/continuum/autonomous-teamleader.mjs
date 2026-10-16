@@ -331,7 +331,7 @@ export async function localTeamleaderDriver(){
    if(snapshot.tasks.some(t=>t.source==='owner'&&t.kind==='TEST'&&
         t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
      store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
-   return nextEligible(store.read().doc,['TEST'],['owner'],head);
+   return nextEligible(store.read().doc,['TEST'],['owner'],head,null,'ASSERT_NODE_EXPORT');
   },
   ownerContractTask(root,stateDir,head,taskId,{budgetMinutes}){
    return executeOwnerContractTestTask({
