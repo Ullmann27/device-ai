@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle}
  from './autonomous-teamleader.mjs';
@@ -83,6 +84,36 @@ test('tampered state, invalid accepted task, and an existing lock fail closed',(
  fs.writeFileSync(p+'.lock','{"pid":100,"at":1}');
  assert.throws(()=>runTeamleaderCycle({root,stateDir,driver}),/already running/);
 }));
+test('unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs',()=>sandbox(({root,stateDir})=>{
+ const driver=fake(),first=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(driver.calls.repairs,1);
+ const state=JSON.parse(fs.readFileSync(first.statePath,'utf8'));
+ state.events.pop(); // simulate process death after RUNNING journal commit
+ const {integrity:_old,...data}=state;
+ state.integrity=crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
+ fs.writeFileSync(first.statePath,JSON.stringify(state)+'\n');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ const verified=decodeLeaderState(fs.readFileSync(first.statePath));
+ assert.equal(verified.events.at(-1).outcome,'INTERRUPTED');
+ assert.equal(driver.calls.repairs,1);
+}));
+
+test('old lock of a definitively dead same-host process recovers automatically',()=>sandbox(({root,stateDir})=>{
+ const driver=fake(),first=runTeamleaderCycle({root,stateDir,driver});
+ const lock=first.statePath+'.lock';
+ fs.writeFileSync(lock,JSON.stringify({pid:99999999,host:os.hostname(),at:1}));
+ assert.equal(runTeamleaderCycle({root,stateDir,driver,now:()=>600000}).outcome,'IDLE');
+ assert.equal(fs.existsSync(lock),false);
+}));
+
+test('repeat checking a proven head requires explicit manual retry',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.equal(runTeamleaderCycle({root,stateDir,driver,retry:true}).outcome,'NO_FAILURE');
+ assert.equal(driver.calls.repairs,2);
+}));
+
 test('CLI budget, command and retry flags are validated before execution',()=>{
  assert.deepEqual(parseTeamleaderArgs(['--once','--budget-minutes','5']),
   {once:true,status:false,retry:false,budgetMinutes:'5'});
