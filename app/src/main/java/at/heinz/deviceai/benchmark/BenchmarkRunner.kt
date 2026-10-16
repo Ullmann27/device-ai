@@ -23,11 +23,15 @@ class BenchmarkRunner(
         val out = ArrayList<TaskMeasurement>(tasks.size * systems.size)
         var done = 0
         var cancelled = false
+        require(systems.size <= MAX_SYSTEMS) { "too many benchmark systems" }
         for (task in tasks) {
             if (cancellation.isCancelled()) { cancelled = true; break }
             for (system in systems) {
+                if (cancellation.isCancelled()) { cancelled = true; break }
                 out += measure(system, task)
+                if (cancellation.isCancelled()) { cancelled = true; break }
             }
+            if (cancelled) break
             done++
         }
         return BenchmarkRun(out.toList(), cancelled, tasks.size - done)
@@ -55,5 +59,6 @@ class BenchmarkRunner(
 
     companion object {
         const val DEFAULT_MAX_TASKS = 10_000
+        const val MAX_SYSTEMS = 16
     }
 }
