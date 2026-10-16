@@ -7,6 +7,9 @@ import {spawnSync} from 'node:child_process';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState}
   from './autonomous-teamleader.mjs';
 import {verifyRepairHandoffs} from './teamleader-handoffs.mjs';
+import {BacklogStore} from './development-backlog.mjs';
+import {analyzeRepository} from './code-analyzer.mjs';
+import {syncBacklogOps} from './development-planner.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
 function fixture({broken}) {
@@ -81,4 +84,53 @@ test('actual passing Git fixture generates no fake repair, patch, or changed sou
   assert.equal(saved.handoffs.messages.at(-1).event,'NO_AUTOMATIC_MERGE');
   assert.equal(f.git('status','--porcelain'),'');
  } finally {fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('actual offline Teamleader completes a priority investigation with real Git checks and evidence',
+ {skip:nested,timeout:180000},async()=>{
+ const f=fixture({broken:false});
+ try {
+  const src=path.join(f.home,'app','src','main','java','p');
+  fs.mkdirSync(src,{recursive:true});
+  fs.writeFileSync(path.join(src,'App.kt'),
+   "package p\nclass App { fun live() { Connected().go() } }\nclass Connected { fun go()=1 }\n");
+  fs.writeFileSync(path.join(src,'Lab.kt'),"package p\nclass Orphan\nclass Isolated\n");
+  f.git('-c','user.name=continuum-test','-c','user.email=continuum-test@example.invalid',
+    'add','.');
+  f.git('-c','user.name=continuum-test','-c','user.email=continuum-test@example.invalid',
+    'commit','-qm','add isolated investigation subject');
+  const head=f.git('rev-parse','HEAD');
+  const findings=analyzeRepository(f.home);
+  assert.ok(findings.findings.length>0,'fixture must really contain static findings');
+  const backlog=new BacklogStore(path.join(f.stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+  const {index:_index,...report}=findings;
+  const ops=syncBacklogOps(backlog.read().doc,report,{
+    at:Date.now(),actor:'code-analyzer',limit:1});
+  assert.ok(ops.some(op=>op.op==='propose'));
+  backlog.apply(ops);
+  const task=backlog.read().doc.tasks.find(t=>t.kind==='INVESTIGATE'&&t.state==='PROPOSED');
+  assert.ok(task);
+  backlog.apply([{op:'accept',actor:'continuum-teamleader',
+    at:Date.now(),id:task.id,reason:'Independent real Git test'}]);
+  const driver=await localTeamleaderDriver();
+  const first=runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver,budgetMinutes:2});
+  assert.equal(first.head,head);
+  assert.equal(first.outcome,'NO_FAILURE','baseline must be green before investigations');
+  const second=runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver,budgetMinutes:2});
+  assert.equal(second.kind,'INVESTIGATE');
+  assert.equal(second.taskId,task.id);
+  assert.equal(second.outcome,'DONE_INVESTIGATION',second.detail);
+  const saved=backlog.read().doc.tasks.find(t=>t.id===task.id);
+  assert.equal(saved.state,'DONE');
+  assert.ok(saved.evidence.some(e=>e.type==='TEST_RUN' &&
+    e.profiles.some(p=>p.profile==='node-continuum'&&p.passed&&p.executed>0)));
+  const reportPath=path.join(f.stateDir,'reports','investigate-'+task.id+'.json');
+  assert.ok(fs.existsSync(reportPath));
+  const artifact=JSON.parse(fs.readFileSync(reportPath,'utf8'));
+  assert.equal(artifact.taskId,task.id);
+  assert.equal(artifact.base,head);
+  assert.equal(f.git('status','--porcelain'),'',
+    'investigation must not modify the source checkout');
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
