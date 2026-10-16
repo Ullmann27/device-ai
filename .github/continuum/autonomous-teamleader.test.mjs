@@ -133,6 +133,48 @@ test('CLI budget, command and retry flags are validated before execution',()=>{
  assert.throws(()=>parseTeamleaderArgs(['--once','--budget-minutes','35']),/Budget/);
  assert.throws(()=>parseTeamleaderArgs(['--once','--exec','curl']),/Unknown/);
 });
+test('idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ runTeamleaderCycle({root,stateDir,driver});
+ for(let i=0;i<24;i++)assert.equal(
+  runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.equal(driver.calls.prepared,1,'one analysis instead of 24 hourly scans');
+ const stored=decodeLeaderState(fs.readFileSync(path.join(stateDir,'teamleader-state.json')));
+ assert.deepEqual(stored.discoveryHeads,[A]);
+ driver.setHead(B);
+ runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.equal(driver.calls.prepared,2);
+}));
+test('crashed discovery records a failure and never hot-loops on the same HEAD',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ runTeamleaderCycle({root,stateDir,driver});
+ let scans=0;
+ driver.prepareSafeInvestigation=()=>{scans++;throw Error('unavailable analyzer')};
+ const failed=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(failed.outcome,'ERROR');
+ assert.match(failed.detail,/unavailable analyzer/);
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+ assert.equal(scans,1);
+ const history=decodeLeaderState(fs.readFileSync(failed.statePath));
+ assert.equal(history.events.at(-1).outcome,'ERROR');
+ assert.deepEqual(history.discoveryHeads,[A]);
+}));
+test('Teamleader can read older version-1 states that lack discoveryHeads',
+ ()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ const first=runTeamleaderCycle({root,stateDir,driver});
+ const state=JSON.parse(fs.readFileSync(first.statePath,'utf8'));
+ delete state.discoveryHeads;
+ const {integrity:_old,...data}=state;
+ state.integrity=crypto.createHash('sha256').update(JSON.stringify(data)).digest('hex');
+ fs.writeFileSync(first.statePath,JSON.stringify(state)+'\n');
+ assert.deepEqual(decodeLeaderState(fs.readFileSync(first.statePath)).discoveryHeads,[]);
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
+}));
+
 test('state policy rejects malformed heads and never schedules unauthorised actions',()=>{
  const blank=initialLeaderState();
  assert.equal(selectTeamleaderAction(blank,A).kind,'BASELINE_REPAIR');
