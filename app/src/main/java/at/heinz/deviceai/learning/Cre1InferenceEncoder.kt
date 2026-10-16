@@ -2,6 +2,10 @@ package at.heinz.deviceai.learning
 
 import java.io.ByteArrayInputStream
 import java.io.DataInputStream
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
+import kotlin.math.exp
+import kotlin.math.ln
 import java.security.MessageDigest
 import java.util.Locale
 import kotlin.math.sqrt
@@ -13,7 +17,7 @@ import kotlin.math.sqrt
  */
 class Cre1InferenceEncoder private constructor(
     val seed: Long,
-    val steps: Int,
+    var steps: Int,
     private val embeddings: DoubleArray,
     private val queryProjection: DoubleArray,
     private val memoryProjection: DoubleArray
@@ -48,6 +52,134 @@ class Cre1InferenceEncoder private constructor(
         var dot = 0.0
         for (i in 0 until D) dot += q[i] * m[i]
         return dot
+    }
+
+
+    /** Research-only single InfoNCE SGD step, with one verified positive in
+     * candidates[0] and independent negatives after it. No state change until
+     * all analytical gradients have been computed and validated.
+     * This algorithm is intentionally distinct from Node's main Adam trainer;
+     * cre-sgd-parity.mjs is its exact Node twin. */
+    @Synchronized fun trainSgdStep(
+        question: String,
+        candidates: List<String>,
+        learningRate: Double = 0.0001,
+        temperature: Double = 0.2
+    ): Double {
+        require(candidates.size in 2..12 && candidates.distinct().size == candidates.size)
+        require(learningRate.isFinite() && learningRate > 0 && learningRate <= 0.001)
+        require(temperature.isFinite() && temperature in 0.05..1.0)
+        require(steps < 1_000_000)
+
+        data class Forward(
+            val f: List<Feature>, val h: DoubleArray, val e: DoubleArray, val norm: Double
+        )
+        fun forward(text: String, projection: DoubleArray): Forward {
+            val f = features(text)
+            val h = DoubleArray(D)
+            for (feature in f) {
+                val start = feature.id * D
+                for (i in 0 until D) h[i] += feature.weight * embeddings[start + i]
+            }
+            val z = DoubleArray(D)
+            for (i in 0 until D) for (j in 0 until D) z[i] += projection[i * D + j] * h[j]
+            var sum = 0.0
+            for (v in z) sum += v * v
+            val norm = sqrt(sum)
+            require(norm > 0 && norm.isFinite()) { "Degenerate CRE1 representation" }
+            val e = DoubleArray(D) { z[it] / norm }
+            return Forward(f, h, e, norm)
+        }
+        val query = forward(question, queryProjection)
+        val answers = candidates.map { forward(it, memoryProjection) }
+        val logits = answers.map { answer ->
+            var dot = 0.0
+            for (i in 0 until D) dot += query.e[i] * answer.e[i]
+            dot / temperature
+        }
+        val maximum = logits.maxOrNull()!!
+        val exponentials = logits.map { exp(it - maximum) }
+        val total = exponentials.sum()
+        val loss = ln(total) + maximum - logits[0]
+        require(loss.isFinite())
+        val dQ = DoubleArray(D)
+        val dpq = DoubleArray(D * D)
+        val dpm = DoubleArray(D * D)
+        val de = HashMap<Int, DoubleArray>()
+        fun backward(
+            forward: Forward,
+            dE: DoubleArray,
+            projection: DoubleArray,
+            dP: DoubleArray
+        ) {
+            var dot = 0.0
+            for (i in 0 until D) dot += dE[i] * forward.e[i]
+            val dz = DoubleArray(D) { i -> (dE[i] - dot * forward.e[i]) / forward.norm }
+            val dh = DoubleArray(D)
+            for (i in 0 until D) {
+                val g = dz[i]
+                if (g == 0.0) continue
+                for (j in 0 until D) {
+                    dP[i * D + j] += g * forward.h[j]
+                    dh[j] += projection[i * D + j] * g
+                }
+            }
+            for (feature in forward.f) {
+                val row = de.getOrPut(feature.id) { DoubleArray(D) }
+                for (i in 0 until D) row[i] += feature.weight * dh[i]
+            }
+        }
+        for (j in answers.indices) {
+            val g = exponentials[j] / total - if (j == 0) 1.0 else 0.0
+            if (g == 0.0) continue
+            val dm = DoubleArray(D)
+            for (i in 0 until D) {
+                dQ[i] += g * answers[j].e[i] / temperature
+                dm[i] = g * query.e[i] / temperature
+            }
+            backward(answers[j], dm, memoryProjection, dpm)
+        }
+        backward(query, dQ, queryProjection, dpq)
+        require(dpq.all(Double::isFinite) && dpm.all(Double::isFinite) &&
+            de.values.all { row -> row.all(Double::isFinite) }) { "Unstable CRE1 training step" }
+        for (id in de.keys.sorted()) {
+            val row = de.getValue(id)
+            for (i in 0 until D) {
+                val offset = id * D + i
+                val next = embeddings[offset] - learningRate * row[i]
+                require(next.isFinite())
+                embeddings[offset] = next
+            }
+        }
+        for (i in dpq.indices) {
+            queryProjection[i] -= learningRate * dpq[i]
+            memoryProjection[i] -= learningRate * dpm[i]
+        }
+        steps++
+        return loss
+    }
+
+    /** CRC-independent SHA-256 checkpoint, binary-compatible with Node CRE1.
+     * Used only for opt-in training parity and explicitly exported experiments. */
+    @Synchronized fun save(): ByteArray {
+        require(steps in 0..1_000_000)
+        val body = ByteArrayOutputStream(SNAPSHOT_LENGTH - 32)
+        DataOutputStream(body).use { out ->
+            out.writeInt(MAGIC)
+            out.writeInt(seed.toInt())
+            out.writeInt(steps)
+            out.writeInt(D)
+            for (array in arrayOf(embeddings, queryProjection, memoryProjection)) {
+                for (v in array) {
+                    require(v.isFinite()) { "Nonfinite CRE1 weights" }
+                    out.writeDouble(v)
+                }
+            }
+        }
+        val payload = body.toByteArray()
+        require(payload.size == SNAPSHOT_LENGTH - 32)
+        val digest = MessageDigest.getInstance("SHA-256").digest(payload)
+        return payload + digest
     }
 
     companion object {
