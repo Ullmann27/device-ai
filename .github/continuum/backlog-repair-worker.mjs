@@ -91,13 +91,14 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     Date.now()+'-'+crypto.randomBytes(4).toString('hex'));
   let wt=null,independent=null;
   let outcome=null;
+  const deadline=Date.now()+budgetMinutes*60_000;
   try{
     fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline:Date.now()+budgetMinutes*60000});
+      out:reportDir,ledger,maxCandidates:3,deadline});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     fs.writeFileSync(path.join(reportDir,'report.json'),JSON.stringify(report,null,2)+'\n');
@@ -118,7 +119,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       git(independent,['apply','--binary',patchFile]);
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
-      const verified=runChain(task.subject.chain,independent,independentOut);
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline});
       const profiles=verified.results.map(r=>({profile:r.profile,passed:r.passed,
         executed:r.tests.executed,failed:r.tests.failed,skipped:r.tests.skipped}));
       const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
