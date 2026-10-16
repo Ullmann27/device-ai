@@ -14,6 +14,7 @@ import {git,createWorktree,removeWorktree,runChain,CHAINS} from './repair-loop.m
  *
  *   show [--json]                       plan [--limit 12]
  *   propose-repair --file <path> [--id <id>] [--title <text>] [--chain node|android|jvm]
+ *   propose-test --file <path> --module <.github/continuum/NAME.mjs> --export <symbol> --cases-json <array> [--id <id>]
  *   accept|reject|abort|retry --id <id> [--reason <text>]
  *   priority --id <id> --priority <0..1000>
  *   claim [--id <id>] [--kinds A,B] [--owner <name>] [--lease-minutes 60]
@@ -66,6 +67,31 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       });
       report(log,{...r,results});
       return {...r,results};
+    }
+    case 'propose-test':{
+      // Owner-supplied test cases are passed as compact JSON text because
+      // Kotlin/Node backlog v2 subjects allow scalar fields ONLY.
+      const modulePath=o.module,exportName=o.export,casesJson=o['cases-json'];
+      if(!/^\.github\/continuum\/[A-Za-z][A-Za-z0-9_-]{0,63}\.mjs$/.test(modulePath??'')||
+         !/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(exportName??'')||
+         typeof casesJson!=='string'||casesJson.length>300)
+        throw Error('Invalid module, export or compact --cases-json (max 300 chars)');
+      let cases;
+      try{cases=JSON.parse(casesJson);}catch{throw Error('--cases-json is invalid JSON');}
+      if(!Array.isArray(cases)||cases.length<1||cases.length>4||
+         cases.some(c=>!c||!Array.isArray(c.args)||c.args.length>3||
+           !Object.hasOwn(c,'expected')))
+        throw Error('--cases-json must be 1..4 explicit argument/result cases');
+      const base=git(root,['rev-parse','HEAD']).stdout.trim();
+      if(!/^[0-9a-f]{40}$/.test(base)||git(root,['status','--porcelain']).stdout.trim())
+        throw Error('A clean immutable Git HEAD is required to propose a contract test');
+      const id=o.id??'own-'+B.sha256Hex('TEST\0'+base+'\0'+modulePath+'\0'+casesJson).slice(0,16);
+      return apply([{op:'propose',actor,at,task:{
+       id,title:B.singleLine(o.title??('Contract test for '+exportName),200),
+       kind:'TEST',source:'owner',priority:900,maxAttempts:3,
+       subject:{base,chain:'node',operation:'ASSERT_NODE_EXPORT',
+        modulePath,exportName,casesJson}
+      }}]);
     }
     case 'propose-repair':{
       // The local operator explicitly registers a specific reproducible failure;
@@ -138,6 +164,6 @@ export async function backlogCommand(sub,o,{root=process.cwd(),log=console.log,n
       return apply([op],{stopOnError:false});
     }
     default:
-      throw Error('Unknown backlog command '+sub+' (show|plan|propose-repair|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
+      throw Error('Unknown backlog command '+sub+' (show|plan|propose-test|propose-repair|accept|reject|abort|retry|priority|claim|renew|submit|verify|fail|expire|apply)');
   }
 }
