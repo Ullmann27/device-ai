@@ -129,14 +129,18 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
                 reschedule = !cancellation.get()
                 Log.e(TAG, "Android Teamleader cycle failed", e)
             } finally {
-                // Only the owner of this generation can release its state.
-                synchronized(this@ContinuumDeviceTeamleaderJobService) {
-                    if (activeCancellation === cancellation) {
-                        activeCancellation = null
-                        activeWorker = null
+                try {
+                    // Finish the previous JobScheduler generation before it
+                    // becomes possible for another generation to be started.
+                    if (!cancellation.get()) jobFinished(params, reschedule)
+                } finally {
+                    synchronized(this@ContinuumDeviceTeamleaderJobService) {
+                        if (activeCancellation === cancellation) {
+                            activeCancellation = null
+                            activeWorker = null
+                        }
                     }
                 }
-                if (!cancellation.get()) jobFinished(params, reschedule)
             }
         }, "continuum-device-teamleader").apply { isDaemon = true }
         activeWorker = next
