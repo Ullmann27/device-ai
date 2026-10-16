@@ -937,6 +937,18 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun showDeviceTeamleaderChatStatus() {
+        onBacklog({
+            at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
+                ?: "Continuum Teamleiter: Noch kein Prüflauf gespeichert. " +
+                    "Schreibe 'Teamleiter prüfen', um die erste lokale Prüfung zu starten."
+        }) { result ->
+            addAssistantMessage(result.getOrElse {
+                "Teamleiter-Status unlesbar (" + backlogError(it) + ")."
+            })
+        }
+    }
+
     private fun runDeviceTeamleaderCheck() {
         addToolActivity("CONTINUUM · Teamleiter prüft lokalen Backlog und beide Lernkerne")
         onBacklog({
@@ -1197,6 +1209,28 @@ class AgentActivity : Activity() {
             addUserMessage(request)
             showModelCenter()
             return
+        }
+        // Direct, explicit local worker commands. These never submit code,
+        // make network calls or claim that Android executed Git/Gradle tests.
+        val workerCommand = request.lowercase(Locale.GERMAN)
+            .trimEnd(' ', '.', '?', '!')
+            .replace(Regex("\\s+"), " ")
+        when (workerCommand) {
+            "continuum teamleiter status", "teamleiter status",
+            "continuum entwicklungsstatus" -> {
+                input.text.clear()
+                addUserMessage(request)
+                showDeviceTeamleaderChatStatus()
+                return
+            }
+            "continuum teamleiter prüfen", "teamleiter prüfen",
+            "continuum teamleiter jetzt prüfen",
+            "continuum überprüfe deinen entwicklungsagenten" -> {
+                input.text.clear()
+                addUserMessage(request)
+                runDeviceTeamleaderCheck()
+                return
+            }
         }
         if (request.equals("Entwicklungsaufgaben", true) || request.equals("Backlog", true)) {
             input.text.clear()
