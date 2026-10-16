@@ -426,3 +426,67 @@ TEST-Auftrag als auch falsch vorgegebene Sollwerte, bereits rote
 Baselines, nicht angenommene Auftraege und Symlink-Ausweichversuche.
 Erst ein tatsaechlich ausgefuehrter Testbericht ist ein Meilenstein-
 Abnahmebeleg. Dateien allein sind keine bestandenen Tests.
+
+
+## M4.3: Kotlin IMPLEMENT – isolierter Owner-Patch mit RED/GREEN-Oracle
+
+Der vorhandene kotlin-delegate-synthesizer.mjs kann eine eng begrenzte
+Methode als Delegation auf eine vorhandene Methode erzeugen. Die neue
+kotlin-delegate-acceptance.mjs kompiliert den Zustand VORHER und
+NACHHER mit lokalem kotlinc und prueft ausdruecklich vorgegebene
+Owner-Sollwerte durch einen echten JVM-Prozess. Ein beliebig roter
+Ausgangscode gilt nicht als Beweis: der Compilerfehler muss auf die
+beabsichtigte fehlende Methode verweisen. Ein fachlich falscher
+Sollwert erzeugt einen roten Lauf, auch wenn Kotlin erfolgreich baut.
+
+owner-kotlin-preview.mjs akzeptiert nur im persistierten v2-Backlog
+angenommene IMPLEMENT-Auftraege (source: owner, state: READY,
+Operation EXPOSE_DELEGATE, exakt gepinnter Git-HEAD) und fuehrt
+folgende Schritte aus: Codegenerierung und RED/GREEN-Oracle im ersten
+isolierten Worktree, Ausgabe eines SHA-256-gehashten Git-Patches und
+zweite Anwendung des Patches in einem separaten Worktree mit
+unabhaengigem RED/GREEN-Oracle. Die Originaldateien bleiben unberuehrt.
+
+Beispiel: Einfache, eigenstaendig kompilierbare Kotlin-Klasse
+app/src/main/java/p/MathApi.kt, die
+fun square(n: Int): Int = n * n bereits deklariert:
+
+    STATE="$HOME/.local/state/device-ai-continuum/kotlin-implement"
+    mkdir -p "$STATE"
+    node .github/continuum/developer-agent.mjs backlog propose-implement \
+      --file "$STATE/development-backlog.json" \
+      --id owner-square-twice --path app/src/main/java/p/MathApi.kt \
+      --class-name MathApi --method-name squareTwice \
+      --delegate-name square --parameter-name value \
+      --type Int --depth 2 \
+      --cases-json '[{"input":2,"expected":16},{"input":3,"expected":81}]'
+    node .github/continuum/developer-agent.mjs backlog accept \
+      --file "$STATE/development-backlog.json" --id owner-square-twice
+    node .github/continuum/developer-agent.mjs owner-implement-preview \
+      --file "$STATE/development-backlog.json" \
+      --out "$STATE/reports" --id owner-square-twice
+
+casesJson ist ein einzelner Backlog-Skalar (maximal 300 Zeichen)
+mit 1 bis 4 (input, expected)-Integerfaellen. Nur type=Int und
+depth=1/2 werden fuer den Akzeptanzpfad angeboten; die reine
+Kotlin-Synthese unterstuetzt intern weitere Typen, die hier aber
+nicht automatisch zur Preview zugelassen sind. Datei und Klasse
+muessen sich ohne zusaetzliche Android-Abhaengigkeiten isoliert
+kompilieren lassen; ansonsten gibt es keinen positiven Nachweis.
+
+**Vertrauensgrenze:** Der Preview-Status ist
+VERIFIED_KOTLIN_PREVIEW, androidBuildVerified=false,
+approvedForMerge=false, backlogDone=false. Ein erfolgreicher
+Stand-alone-Kotlin-JVM-Test beweist noch **keine** vollstaendige
+APK-/Android-Integration. Es erfolgt KEINE automatische Ausfuehrung
+im zyklischen Teamleiter und keine selbststaendige Backlog-Promotion
+zu DONE; dafuer fehlen noch volle Android-Compiler-/Unit-Test-Nachweise
+und sichere Sandboxing-Grenzen. Die Stand-alone-Testdatei wird nur
+im systemeigenen temporaeren Ordner erzeugt, nicht im Git-Repo.
+
+    node --test .github/continuum/kotlin-delegate-acceptance.test.mjs
+    node --test .github/continuum/owner-kotlin-preview.test.mjs
+
+Vor einer produktiven Freigabe muessen obige Tests, die
+vollstaendige Node-Regression, die Android-Unit-Tests und
+assembleDebug auf demselben unveraenderlichen HEAD real gruen sein.
