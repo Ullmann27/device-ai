@@ -46,6 +46,14 @@ export function verifyInvestigation(report,analysis,task){
 /** Execute a READY task on the specified immutable Git commit. Reports are
  * submitted as REPORT artifacts. Only real JUnit-backed fixed Node test checks
  * can complete the task. A failed check records failure instead of DONE. */
+/** A green process exit without executed and passing tests is not a completed
+ * investigation. Both the backlog mutation and returned status use this gate. */
+export function investigationChecksPassed(check) {
+  return check?.passed===true &&
+    Number.isSafeInteger(check.tests?.executed) && check.tests.executed>0 &&
+    Number.isSafeInteger(check.tests?.failed) && check.tests.failed===0;
+}
+
 export function executeInvestigation({root=process.cwd(),file,out,base,actor='continuum-agent'}){
   if(!/^[0-9a-f]{40}$/.test(base??''))throw Error('Full immutable --base SHA required');
   if(typeof file!=='string'||!file||typeof out!=='string'||!out)throw Error('File/output paths required');
@@ -79,13 +87,14 @@ export function executeInvestigation({root=process.cwd(),file,out,base,actor='co
       profiles:[{profile:'node-continuum',passed:checked.passed,
         executed:checked.tests.executed,failed:checked.tests.failed,skipped:checked.tests.skipped}]
     };
-    const op=checked.passed&&checked.tests.executed>0
+    const verified=investigationChecksPassed(checked);
+    const op=verified
       ?{op:'complete',actor,at:evidence.at,id:task.id,evidence}
       :{op:'fail',actor,at:evidence.at,id:task.id,token,evidence,
-        error:{code:'CHECKS_FAILED',message:'Independent Node regression checks failed'}};
+        error:{code:'CHECKS_FAILED',message:'Independent Node regression checks failed or no tests executed'}};
     const saved=store.apply([op],{stopOnError:false});
     if(!saved.results[0]?.ok)throw Error('Investigation evidence rejected');
-    return {status:checked.passed?'DONE':'CHECKS_FAILED',taskId:task.id,
+    return {status:verified?'DONE':'CHECKS_FAILED',taskId:task.id,
       base,reportSha256:sha,staticResult:report.kind,
       executed:checked.tests.executed,failed:checked.tests.failed};
   }catch(error){
