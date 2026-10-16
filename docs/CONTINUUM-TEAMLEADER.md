@@ -274,6 +274,10 @@ wie folgt gestartet werden:
       --out "$STATE" --android --budget-minutes 90
 
 Die Android-Tests und der Debug-APK-Build werden getrennt aufgezeichnet.
+Bei erfolgreichem APK-Build wird die echte app-debug.apk **vor dem
+Entfernen des temporären Worktrees** in das externe Beweisverzeichnis kopiert.
+SHA-256, Dateigröße und gespeicherter Pfad gehören zum Build-Nachweis.
+Ein grüner Gradle-Exit ohne erhaltene APK erfüllt die Build-Abnahme nicht.
 Wenn ein Kommando fehlt oder abbricht, erhält die entsprechende Stufe
 keinen erfundenen Erfolg. Fehlgeschlagene Tests ergeben
 complete = false. Ein bestandener NODE_ONLY-Test bedeutet lediglich,
