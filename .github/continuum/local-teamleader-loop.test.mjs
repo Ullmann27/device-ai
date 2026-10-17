@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs';
-import {parseTeamleaderArgs} from './teamleader-cli.mjs';
+import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome} from './local-teamleader-loop.mjs';
+import {parseTeamleaderArgs,teamleaderExitCode} from './teamleader-cli.mjs';
 
 test('three local cycles pace on a fixed one-hour schedule and persist honest heartbeat',async()=>{
  const waits=[],beats=[];
@@ -121,4 +121,21 @@ test('signal while waiting persists terminal STOPPED heartbeat',async()=>{
  assert.equal(summary.cycles,1);
  assert.equal(beats.at(-1).state,'STOPPED');
  assert.equal(beats.at(-1).nextAttemptAt,null);
+});
+
+test('one-shot CLI exits nonzero for failed, unverified or unknown outcomes',()=>{
+ const failing=['NO_VERIFIED_REPAIR','INTERRUPTED','CHECKS_FAILED','ERROR',
+  'RUNNING','UNKNOWN',null,undefined];
+ for(const outcome of failing){
+  assert.equal(isFailedCycleOutcome(outcome),true);
+  assert.equal(teamleaderExitCode({outcome}),1,
+   'scheduled CLI must not report '+String(outcome)+' as success');
+ }
+ assert.equal(teamleaderExitCode(null),1);
+ for(const outcome of ['NO_FAILURE','NO_CODE_DIAGNOSTIC',
+  'VERIFIED_PATCH_PENDING_REVIEW','DONE_INVESTIGATION',
+  'NO_READY_INVESTIGATION','IDLE']){
+  assert.equal(isFailedCycleOutcome(outcome),false);
+  assert.equal(teamleaderExitCode({outcome}),0);
+ }
 });
