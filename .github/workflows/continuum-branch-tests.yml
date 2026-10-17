@@ -7,6 +7,7 @@ on:
       - "continuum/argon-safety-review-20261017"
     paths:
       - ".github/continuum/**"
+      - "scripts/local-m4-android.sh"
       - ".github/workflows/continuum-branch-tests.yml"
   workflow_dispatch:
 
