@@ -41,6 +41,23 @@ class Cre1PromotionGateTest {
             mapOf("a" to Double.NaN,"b" to 1.0),manifest(),sha,40))
     }
 
+    @Test fun preservesNumberOrderMultiplicityAndRepeatedNegations() {
+        // Equal sets of numbers or negation tokens can still represent
+        // materially different claims. Do not let a semantic score swap them.
+        assertFalse(Cre1PromotionGate.preservesHardAnchors(
+            "Wann bezahlt Leo?", "Leo bezahlt 2026 und 2027.",
+            "Leo bezahlt 2027 und 2026."))
+        assertFalse(Cre1PromotionGate.preservesHardAnchors(
+            "Wann bezahlt Leo?", "Leo bezahlt 2026 zweimal: 2026.",
+            "Leo bezahlt 2026 nur einmal."))
+        assertFalse(Cre1PromotionGate.preservesHardAnchors(
+            "Was behauptet Leo?", "Leo hat nie nicht bezahlt.",
+            "Leo hat nie bezahlt."))
+        assertTrue(Cre1PromotionGate.preservesHardAnchors(
+            "Wo arbeitet Leo?", "Leo arbeitet heute in Wien.",
+            "In Wien arbeitet Leo heute."))
+    }
+
     @Test fun permitsOnlyBenchmarkedReorderingWithinAnIdenticalSafeEvidenceSet() {
         val swb1=listOf(hit("a","Leo arbeitet heute in Wien.",.60),
             hit("b","In Wien arbeitet Leo heute.",.59))
