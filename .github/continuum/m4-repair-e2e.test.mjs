@@ -12,7 +12,9 @@ function mockCheckout(){
  fs.mkdirSync(tests,{recursive:true});
  const cases=MANDATORY_REPAIR_CASES.map(name=>'test('+JSON.stringify(name)+',()=>{});');
  fs.writeFileSync(path.join(tests,'repair-loop.test.mjs'),
-  ["import test from 'node:test';",...cases].join('\n')+'\n');
+  ["import test from 'node:test';","import assert from 'node:assert/strict';",
+   "test('repair subprocess depth is absent',()=>assert.equal(process.env.CONTINUUM_REPAIR_DEPTH,undefined));",
+   ...cases].join('\n')+'\n');
  fs.writeFileSync(path.join(tests,'repair-cycle-safety.integration.test.mjs'),
   "import test from 'node:test';\ntest('cycle finalized',()=>{});\n");
  return {root,evidence,clean(){
