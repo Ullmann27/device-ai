@@ -74,11 +74,14 @@ export function verifyGateReport(record,{expectedHead=null}={}){
  */
 export function verifyReleaseProofFile(reportFile,{expectedHead=null}={}){
  const reject=reason=>({valid:false,releaseReady:false,reason});
- const absolute=path.resolve(reportFile);
- const stat=fs.lstatSync(absolute);
- if(!stat.isFile()||stat.isSymbolicLink()||stat.size<20||stat.size>8*1024*1024)
-  return reject('INVALID_REPORT_FILE');
- const record=JSON.parse(fs.readFileSync(absolute,'utf8'));
+ let absolute,record;
+ try{
+  absolute=path.resolve(reportFile);
+  const stat=fs.lstatSync(absolute);
+  if(!stat.isFile()||stat.isSymbolicLink()||stat.size<20||stat.size>8*1024*1024)
+   return reject('INVALID_REPORT_FILE');
+  record=JSON.parse(fs.readFileSync(absolute,'utf8'));
+ }catch{return reject('INVALID_REPORT_FILE')}
  const verified=verifyGateReport(record,{expectedHead});
  if(!verified.releaseReady)return verified;
  const artifact=record.apk?.artifact;
@@ -111,7 +114,7 @@ export function parseGateArgs(args){
  const seen=new Set();
  for(let i=0;i<args.length;i++){
   const flag=args[i];
-  if(!['--root','--out','--budget-minutes','--android'].includes(flag)||seen.has(flag))
+  if(!['--root','--out','--budget-minutes','--android','--verify'].includes(flag)||seen.has(flag))
    throw Error('Unknown or duplicate gate option '+flag);
   seen.add(flag);
   if(flag==='--android'){opts.android=true;continue;}
@@ -119,7 +122,12 @@ export function parseGateArgs(args){
   if(!value||value.startsWith('--'))throw Error('Missing value for '+flag);
   if(flag==='--root')opts.root=value;
   else if(flag==='--out')opts.out=value;
+  else if(flag==='--verify')opts.verify=value;
   else opts.budgetMinutes=Number(value);
+ }
+ if(opts.verify!==undefined){
+  if(seen.size!==1)throw Error('--verify cannot be combined with build options');
+  return {verify:opts.verify};
  }
  if(!Number.isSafeInteger(opts.budgetMinutes)||opts.budgetMinutes<1||opts.budgetMinutes>120)
   throw Error('Gate budget must be between 1 and 120 minutes');
@@ -210,10 +218,19 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
 
 if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href){
  try{
-  const result=runM4Gate(parseGateArgs(process.argv.slice(2)));
-  process.stdout.write(JSON.stringify({head:result.head,report:result.path,
-   summary:result.summary,errors:result.errors,complete:result.complete},null,2)+'\n');
-  if(!result.complete)process.exitCode=1;
+  const options=parseGateArgs(process.argv.slice(2));
+  if(options.verify!==undefined){
+   const head=git(process.cwd(),['rev-parse','HEAD']).stdout.trim();
+   if(!SHA.test(head))throw Error('Cannot verify proof without a Git HEAD');
+   const result=verifyReleaseProofFile(options.verify,{expectedHead:head});
+   process.stdout.write(JSON.stringify({head,proof:options.verify,...result},null,2)+'\n');
+   if(!result.releaseReady)process.exitCode=1;
+  }else{
+   const result=runM4Gate(options);
+   process.stdout.write(JSON.stringify({head:result.head,report:result.path,
+    summary:result.summary,errors:result.errors,complete:result.complete},null,2)+'\n');
+   if(!result.complete)process.exitCode=1;
+  }
  }catch(e){
   console.error('M4 local gate:',e.message);
   process.exitCode=1;
