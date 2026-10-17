@@ -70,7 +70,9 @@ export function runRepairE2e(worktree,outDirectory,deadline){
  const reportFile=path.join(out,XML_NAME);
  const available=deadline-Date.now();
  if(available<=0)throw Error('Repair E2E deadline expired');
- const env={...process.env,GIT_TERMINAL_PROMPT:'0',CONTINUUM_REPAIR_DEPTH:'0'};
+ const env={...process.env,GIT_TERMINAL_PROMPT:'0'};
+ // The real repair tests use truthiness, so even the string '0' would skip them.
+ delete env.CONTINUUM_REPAIR_DEPTH;
  delete env.NODE_TEST_CONTEXT;
  const child=spawnSync(process.execPath,[
   '--test','--test-concurrency=1','--test-reporter=junit',
