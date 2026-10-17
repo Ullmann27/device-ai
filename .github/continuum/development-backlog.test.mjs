@@ -164,6 +164,28 @@ test('a fresh foreign lock times out, a stale one is broken; interrupted writes 
   assert.equal(fs.existsSync(leftover),false);
 }));
 
+test('stale backlog lock is not stolen while same-host PID is still alive',()=>withDir(dir=>{
+  const file=path.join(dir,'backlog.json'),lock=file+'.lock';
+  const old=new Date(Date.now()-120000);
+  fs.writeFileSync(lock,JSON.stringify({
+    owner:'test',pid:process.pid,host:os.hostname().replace(/[^\w.-]/g,'').slice(0,64)||'host',
+    token:'a'.repeat(32),at:Date.now()-120000
+  })+'\n');
+  fs.utimesSync(lock,old,old);
+  const store=new B.BacklogStore(file,{actor:'test',waitMs:120,staleLockMs:1000});
+  assert.equal(codeOf(()=>store.apply([propose('must-not-steal')])),'LOCK_TIMEOUT');
+  assert.ok(fs.existsSync(lock));
+  assert.equal(fs.existsSync(file),false);
+  fs.rmSync(lock);
+  fs.writeFileSync(lock,JSON.stringify({
+    owner:'test',pid:2147483647,host:os.hostname().replace(/[^\w.-]/g,'').slice(0,64)||'host',
+    token:'b'.repeat(32),at:Date.now()-120000
+  })+'\n');
+  fs.utimesSync(lock,old,old);
+  assert.equal(store.apply([propose('safe-recovery')]).written,true);
+  assert.equal(fs.existsSync(lock),false);
+}));
+
 test('concurrent writer processes lose no update',async()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'backlog-procs-'));
   try{
