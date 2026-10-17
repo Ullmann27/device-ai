@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {gateSummary,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
+import {gateSummary,nextGateStage,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
 
 function fixture(broken=false){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
@@ -30,6 +30,34 @@ function fixture(broken=false){
  return {base,root,out,git,head:git('rev-parse','HEAD')};
 }
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
+
+test('stabilization gate refuses downstream execution after incomplete or failed upstream tests',()=>{
+ const nodeNames=['node-continuum','node-backend'];
+ const androidNames=['android-compile','android-unit'];
+ const ok=(profile,executed,testProfile=true)=>({profile,passed:true,
+   exitCode:0,testProfile,tests:{executed,failed:0}});
+ const node={passed:true,results:[ok('node-continuum',12),ok('node-backend',4)]};
+ const android={passed:true,results:[
+   ok('android-compile',0,false),ok('android-unit',38)
+ ]};
+ assert.equal(nextGateStage(node,nodeNames),true);
+ assert.equal(nextGateStage(android,androidNames),true);
+ assert.equal(nextGateStage({...node,passed:false},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[node.results[0]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[...node.results,node.results[1]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[node.results[1],node.results[0]]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   node.results[0],{...node.results[1],exitCode:1}
+ ]},nodeNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   node.results[0],{...node.results[1],tests:{executed:0,failed:0}}
+ ]},nodeNames),false);
+ assert.equal(nextGateStage({...android,results:[
+   android.results[0],{...android.results[1],passed:false}
+ ]},androidNames),false);
+ assert.equal(nextGateStage(null,nodeNames),false);
+ assert.equal(nextGateStage(node,[]),false);
+});
 
 test('gate cannot certify zero tests or failed APK as successful',()=>{
  const empty={passed:true,results:[{passed:true,testProfile:true,tests:{executed:0,failed:0}}]};
