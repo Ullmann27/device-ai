@@ -25,10 +25,16 @@ data class Cre1AuditOutcome(
     init {
         val valid=Regex("[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,79}")
         require(valid.matches(caseId))
-        require(eligibleIds.size in 1..3 && eligibleIds.all(valid::matches))
-        require(expectedId==null || expectedId in eligibleIds)
-        require(swb1SelectedId==null || swb1SelectedId in eligibleIds)
-        require(cre1SelectedId==null || cre1SelectedId in eligibleIds)
+        require(eligibleIds.size in 0..3 && eligibleIds.all(valid::matches))
+        require(expectedId==null || valid.matches(expectedId))
+        // Production CRE1 may PERMUTE SWB1 candidates, never abstain on its
+        // behalf or introduce a previously excluded candidate.
+        if(eligibleIds.isEmpty()) {
+            require(swb1SelectedId==null && cre1SelectedId==null)
+        } else {
+            require(swb1SelectedId!=null && swb1SelectedId in eligibleIds)
+            require(cre1SelectedId!=null && cre1SelectedId in eligibleIds)
+        }
     }
 }
 
