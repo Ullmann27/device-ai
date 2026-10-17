@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {gateSummary,parseGateArgs,runM4Gate} from './m4-local-gate.mjs';
+import {gateSummary,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
 
 function fixture(broken=false){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
@@ -43,6 +44,63 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
   exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
  },true).passed,true);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:true},true).passed,false);
+});
+
+test('reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY',()=>{
+ const successful={passed:true,results:[{passed:true,testProfile:true,
+   tests:{executed:4,failed:0}}]};
+ const head='a'.repeat(40);
+ const document={
+  schema:'continuum-m4-local-gate',version:1,head,
+  startedAt:'2026-10-17T00:00:00Z',node:successful,android:null,apk:null,
+  errors:[],complete:true,summary:gateSummary(successful,null,null,false),
+  finishedAt:'2026-10-17T00:00:01Z'
+ };
+ const digest=o=>crypto.createHash('sha256').update(JSON.stringify(o)).digest('hex');
+ document.reportSha256=digest(document);
+ assert.deepEqual(verifyGateReport(document,{expectedHead:head}),
+  {valid:true,releaseReady:false,reason:'ANDROID_NOT_TESTED'});
+ assert.equal(verifyGateReport(document,{expectedHead:'b'.repeat(40)}).valid,false);
+ assert.equal(verifyGateReport({...document,complete:false}).valid,false);
+ const modified={...document,summary:{...document.summary,passed:false}};
+ assert.equal(verifyGateReport(modified).reason,'REPORT_HASH_MISMATCH');
+ const withRecomputedChecksum={...modified};
+ const {reportSha256,...payload}=withRecomputedChecksum;
+ withRecomputedChecksum.reportSha256=digest(payload);
+ assert.equal(verifyGateReport(withRecomputedChecksum).reason,'INCONSISTENT_PROOF');
+});
+
+test('release proof verifies retained APK bytes, path and corruption without executing it',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-verify-proof-'));
+ try{
+  const head='a'.repeat(40),apkFile=path.join(dir,'app-debug.apk');
+  const artifact=Buffer.from([0x50,0x4b,0x03,0x04,0x01,0x02,0x03,0x04]);
+  fs.writeFileSync(apkFile,artifact);
+  const good={passed:true,results:[{passed:true,testProfile:true,
+    tests:{executed:5,failed:0}}]};
+  const apk={exitCode:0,timedOut:false,artifactSha256:
+    crypto.createHash('sha256').update(artifact).digest('hex'),
+    bytes:artifact.length,artifact:apkFile};
+  const document={schema:'continuum-m4-local-gate',version:1,head,
+    startedAt:'2026-10-17T00:00:00Z',node:good,android:good,apk,
+    errors:[],complete:true,summary:gateSummary(good,good,apk,true),
+    finishedAt:'2026-10-17T00:00:01Z'};
+  document.reportSha256=crypto.createHash('sha256')
+    .update(JSON.stringify(document)).digest('hex');
+  const report=path.join(dir,'gate-report.json');
+  fs.writeFileSync(report,JSON.stringify(document,null,2)+'\n');
+  assert.deepEqual(verifyReleaseProofFile(report,{expectedHead:head}),
+    {valid:true,releaseReady:true,reason:null});
+  fs.appendFileSync(apkFile,Buffer.from([0x05]));
+  assert.equal(verifyReleaseProofFile(report).reason,'APK_MISSING_OR_CHANGED');
+  fs.writeFileSync(apkFile,artifact);
+  const unsafe={...document,apk:{...apk,artifact:path.join(dir,'other.apk')}};
+  delete unsafe.reportSha256;
+  unsafe.reportSha256=crypto.createHash('sha256')
+    .update(JSON.stringify(unsafe)).digest('hex');
+  fs.writeFileSync(report,JSON.stringify(unsafe));
+  assert.equal(verifyReleaseProofFile(report).reason,'UNSAFE_APK_PATH');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
 test('gate CLI rejects unknown arguments, duplicates, and invalid time budgets',()=>{
