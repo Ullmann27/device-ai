@@ -17,6 +17,11 @@ const COMPLETE_OUTCOMES=new Set([
 ]);
 const FAILED_OUTCOMES=new Set(['NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR']);
 
+/** Treat unknown, interrupted, and unverified results as failed work. */
+export function isFailedCycleOutcome(outcome){
+ return !COMPLETE_OUTCOMES.has(outcome)||FAILED_OUTCOMES.has(outcome);
+}
+
 export function validateLoopOptions({intervalMinutes=60,maxCycles=null}={}){
  if(!Number.isSafeInteger(intervalMinutes)||intervalMinutes<1||intervalMinutes>1440)
   throw Error('Local worker interval must be 1..1440 whole minutes');
@@ -51,7 +56,7 @@ export async function runTeamleaderLoop({
     throw Error('Worker returned unknown or unfinished outcome');
    outcome=result.outcome;
    detail=String(result.detail??'').slice(0,160);
-   if(FAILED_OUTCOMES.has(outcome)){
+   if(isFailedCycleOutcome(outcome)){
     failures++;
     streak++;
     log('[local-loop] cycle failed: '+(detail||outcome));
