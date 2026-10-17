@@ -222,6 +222,23 @@ test('broken Git fixture stays red and still preserves a failure proof',
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
 
+test('broken actual Node fixture skips Android and APK before Gradle is invoked',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(true);
+ try{
+  const report=runM4Gate({root:f.root,out:f.out,android:true,budgetMinutes:2});
+  assert.equal(report.complete,false);
+  assert.equal(report.summary.scope,'NODE_KOTLIN_APK');
+  assert.equal(report.node.passed,false);
+  assert.equal(report.android,null,'no Kotlin phase after broken Node tests');
+  assert.equal(report.apk,null,'no APK build after broken Node tests');
+  assert.ok(report.errors.some(e=>e.includes('ANDROID: skipped')));
+  assert.ok(report.errors.some(e=>e.includes('APK: skipped')));
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.ok(fs.existsSync(report.path),'failed gate still retains its evidence');
+ } finally {fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
 test('gate refuses dirty source and repository-contained proof output',
  {skip:nested,timeout:60000},()=>{
  const f=fixture(false);
