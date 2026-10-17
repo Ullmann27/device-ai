@@ -86,3 +86,39 @@ test('invalid intervals, cycle limits and CLI mode combinations are rejected',()
  assert.equal(parsed.intervalMinutes,'60');
  assert.equal(parsed.maxCycles,'3');
 });
+
+
+test('unverified repair and interruption increment failure counters, not successes',async()=>{
+ const beats=[];
+ const outcomes=['NO_VERIFIED_REPAIR','INTERRUPTED','IDLE'];
+ let index=0;
+ const summary=await runTeamleaderLoop({
+  work:()=>({outcome:outcomes[index++]}),intervalMinutes:1,maxCycles:3,
+  wait:async()=>{},onHeartbeat:hb=>beats.push(hb)
+ });
+ assert.equal(summary.failures,2);
+ assert.equal(summary.lastOutcome,'IDLE');
+ assert.equal(beats.filter(b=>b.state!=='RUNNING')[1].failureStreak,2);
+});
+
+test('unknown or unfinished worker result must fail closed',async()=>{
+ for(const outcome of ['RUNNING','MADE_UP_STATUS']){
+  const summary=await runTeamleaderLoop({
+   work:()=>({outcome}),maxCycles:1
+  });
+  assert.equal(summary.failures,1);
+  assert.equal(summary.lastOutcome,'ERROR');
+ }
+});
+
+test('signal while waiting persists terminal STOPPED heartbeat',async()=>{
+ const beats=[],controller=new AbortController();
+ const summary=await runTeamleaderLoop({
+  work:()=>({outcome:'IDLE'}),signal:controller.signal,
+  wait:async()=>controller.abort(),onHeartbeat:hb=>beats.push(hb)
+ });
+ assert.equal(summary.stoppedBySignal,true);
+ assert.equal(summary.cycles,1);
+ assert.equal(beats.at(-1).state,'STOPPED');
+ assert.equal(beats.at(-1).nextAttemptAt,null);
+});
