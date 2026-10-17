@@ -158,9 +158,14 @@ export function nextGateStage(previous,expectedProfiles){
  if(previous.results.length!==expectedProfiles.length)return false;
  return expectedProfiles.every((profile,i)=>{
   const r=previous.results[i];
-  return r?.profile===profile&&r.passed===true&&r.exitCode===0&&
-    r.tests?.failed===0 &&
-    (r.testProfile!==true || r.tests?.executed>0);
+  const isCompiler=profile==='android-compile';
+  const recognized=['node-continuum','node-backend',
+    'android-compile','android-unit'].includes(profile);
+  return recognized&&r?.profile===profile&&r.passed===true&&
+    r.exitCode===0&&r.tests?.failed===0 &&
+    (isCompiler
+      ? r.testProfile===false
+      : r.testProfile===true&&r.tests?.executed>0);
  });
 }
 
