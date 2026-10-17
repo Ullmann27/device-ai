@@ -357,6 +357,9 @@ export async function localTeamleaderDriver(){
     {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
+   // JS-only and partial repositories have no Android source tree to inspect.
+   // This is an idle discovery, not a failed repair or a reason to retry.
+   if(!fsApi.existsSync(path.join(root,'app','src')))return null;
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});
    const {index:_index,...report}=analyzeRepository(root);
