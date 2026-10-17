@@ -69,10 +69,10 @@ test('stabilization gate refuses downstream execution after incomplete or failed
 test('gate cannot certify zero tests or failed APK as successful',()=>{
  const empty={passed:true,results:[{passed:true,testProfile:true,tests:{executed:0,failed:0}}]};
  assert.equal(gateSummary(empty,null,null,false).passed,false);
- const valid={passed:true,results:[{passed:true,testProfile:true,tests:{executed:4,failed:0}}]};
+ const valid={passed:true,results:[{profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:4,failed:0}}]};
  const fullNode={passed:true,results:[
-  {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:4,failed:0}},
-  {profile:'node-backend',passed:true,testProfile:true,tests:{executed:3,failed:0}}
+  {profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:4,failed:0}},
+  {profile:'node-backend',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
  ]};
  const fullAndroid={passed:true,results:[
   {profile:'android-compile',passed:true,exitCode:0,testProfile:false,tests:{executed:0,failed:0}},
@@ -111,7 +111,7 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
 });
 
 test('reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY',()=>{
- const successful={passed:true,results:[{passed:true,testProfile:true,
+ const successful={passed:true,results:[{profile:'node-continuum',passed:true,exitCode:0,testProfile:true,
    tests:{executed:4,failed:0}}]};
  const head='a'.repeat(40);
  const document={
@@ -161,8 +161,8 @@ test('release proof verifies retained APK bytes, path and corruption without exe
   const artifact=Buffer.from([0x50,0x4b,0x03,0x04,0x01,0x02,0x03,0x04]);
   fs.writeFileSync(apkFile,artifact);
   const good={passed:true,results:[
-    {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:5,failed:0}},
-    {profile:'node-backend',passed:true,testProfile:true,tests:{executed:2,failed:0}}
+    {profile:'node-continuum',passed:true,exitCode:0,testProfile:true,tests:{executed:5,failed:0}},
+    {profile:'node-backend',passed:true,exitCode:0,testProfile:true,tests:{executed:2,failed:0}}
   ]};
   const android={passed:true,results:[
     {profile:'android-compile',passed:true,exitCode:0,testProfile:false,
@@ -269,4 +269,26 @@ test('gate refuses dirty source and repository-contained proof output',
   fs.writeFileSync(path.join(f.root,'untracked.txt'),'dirty');
   assert.throws(()=>runM4Gate({root:f.root,out:f.out}),/dirty/);
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('persisted release summary rejects forged green flags when commands failed',()=>{
+ const mk=(profile,executed,testProfile=true)=>({profile,passed:true,
+  exitCode:0,timedOut:false,testProfile,tests:{executed,failed:0}});
+ const node={passed:true,results:[mk('node-continuum',4),mk('node-backend',2)]};
+ const android={passed:true,results:[mk('android-compile',0,false),
+  mk('android-unit',6)]};
+ const apk={exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096};
+ assert.equal(gateSummary(node,android,apk,true).passed,true);
+ assert.equal(gateSummary({...node,results:[
+  node.results[0],{...node.results[1],exitCode:1}
+ ]},android,apk,true).passed,false,'status 1 cannot be masked by passed=true');
+ assert.equal(gateSummary(node,{...android,results:[
+  android.results[0],{...android.results[1],timedOut:true}
+ ]},apk,true).passed,false,'timed-out JVM tests cannot be marked green');
+ assert.equal(gateSummary({passed:true,results:[
+  {...node.results[0],profile:'untrusted-custom'}
+ ]},null,null,false).passed,false,'even NODE_ONLY uses the fixed profile');
+ assert.equal(nextGateStage({...node,results:[
+  node.results[0],{...node.results[1],tests:{executed:'2',failed:0}}
+ ]},['node-continuum','node-backend']),false,'test counts must be integers');
 });
