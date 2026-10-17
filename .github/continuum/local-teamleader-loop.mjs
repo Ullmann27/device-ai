@@ -15,7 +15,9 @@ const COMPLETE_OUTCOMES=new Set([
  'NO_VERIFIED_REPAIR','DONE_INVESTIGATION','CHECKS_FAILED',
  'NO_READY_INVESTIGATION','IDLE','INTERRUPTED','ERROR'
 ]);
-const FAILED_OUTCOMES=new Set(['NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR']);
+const FAILED_OUTCOMES=new Set([
+ 'NO_CODE_DIAGNOSTIC','NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR'
+]);
 
 /** Treat unknown, interrupted, and unverified results as failed work. */
 export function isFailedCycleOutcome(outcome){
