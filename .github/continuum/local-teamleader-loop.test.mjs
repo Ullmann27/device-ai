@@ -196,6 +196,11 @@ test('saved status validates legitimate heartbeats and rejects spoofed or corrup
  for(const beat of beats)assert.equal(validateWorkerHeartbeat(beat),true);
  const waiting=beats.find(b=>b.state==='WAITING');
  assert.ok(waiting);
+ assert.equal(validateWorkerHeartbeat({...waiting,cycles:0,failures:0,
+  failureStreak:0,lastOutcome:'VERIFIED_PATCH_PENDING_REVIEW'}),false,
+  'zero completed cycles cannot claim a verified patch');
+ assert.equal(validateWorkerHeartbeat({...waiting,cycles:1,lastOutcome:null}),false,
+  'a completed cycle must have a declared outcome');
  for(const bad of [
   {schema:'bad-schema'},{version:9},{state:'VERIFIED'},
   {cycles:-1},{failures:10000},{failureStreak:-1},
