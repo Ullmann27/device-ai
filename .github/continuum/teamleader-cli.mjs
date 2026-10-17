@@ -6,7 +6,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
-import {runTeamleaderLoop,validateLoopOptions} from './local-teamleader-loop.mjs';
+import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome} from './local-teamleader-loop.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
@@ -45,6 +45,10 @@ export function parseTeamleaderArgs(args){
   });
  }
  return opts;
+}
+/** Exit status for a single scheduled run; only known non-failure results are green. */
+export function teamleaderExitCode(result){
+ return isFailedCycleOutcome(result?.outcome)?1:0;
 }
 export async function teamleaderMain(argv=process.argv.slice(2)){
  const opt=parseTeamleaderArgs(argv);
@@ -129,8 +133,7 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
  const result=runTeamleaderCycle({root,stateDir,driver,
   budgetMinutes:Number(opt.budgetMinutes??20),retry:opt.retry,log:console.log});
  process.stdout.write(JSON.stringify(result,null,2)+'\n');
- if(result.outcome==='ERROR'||result.outcome==='CHECKS_FAILED')
-  process.exitCode=1;
+ if(teamleaderExitCode(result))process.exitCode=1;
  return result;
 }
 if(process.argv[1]&&import.meta.url===new URL('file://'+process.argv[1]).href)
