@@ -151,3 +151,36 @@ bleiben ausdrücklich **kein** Abnahmebeleg.
 `m4-local-gate.mjs --android`-Lauf auf einem vollständig ausgestatteten
 Entwicklungsrechner und die Installation samt Neustart am echten Android-Gerät
 belegt sind. Keine Änderungen an `main` durch diesen Nachtrag.
+
+## Stabilisierungsnachtrag – CLI-Exitcodes, Worker-Taktung und atomare Timer-Installation (17.10.2026)
+
+- `teamleader-cli.mjs --once` setzt den Prozess-Exitcode jetzt auch bei
+  `NO_VERIFIED_REPAIR`, `INTERRUPTED` und unbekannten/unvollständigen Ergebnissen
+  auf ungleich null. Die Einordnung verwendet dieselbe zentrale Funktion
+  `isFailedCycleOutcome` wie der zyklische Worker. Ein nicht verifizierter
+  Reparaturversuch darf dem Dienstmanager nicht als erfolgreich gelten.
+- Bei explizit längeren Intervallen (z. B. zwei Stunden) darf exponentielles
+  Backoff einen Fehler nicht zu häufigeren Aufrufen führen. Die Wartezeit
+  unterschreitet deshalb auch bei Fehlern nie das konfigurierte Grundintervall.
+- Der optionale systemd-Installer legt temporäre Unit-Dateien mit restriktiven
+  Dateirechten an, veröffentlicht diese ohne Überschreiben vorhandener Units,
+  weist auch defekte symbolische Links zurück und entfernt bei fehlgeschlagener
+  Aktivierung nur seine neu erzeugten Units. Eine neue Installation ist nach
+  einem solchen Fehlschlag wieder möglich.
+
+**Gezielte lokale Prüfungen:** In einer isolierten Linux-/Node-22-Testkopie
+bestanden fünf Worker-/Zeitplanprüfungen und drei Timer-Installationsprüfungen
+(inklusive simuliertem systemd-Fehler, Wiederholung und Symlink-Schutz).
+Zusätzlich bestanden neun direkte Assertions gegen die nach dem Commit
+erneut aus GitHub geladenen aktuellen Worker-/CLI-Funktionen.
+Die korrespondierenden Regressionen liegen im Branch. Es wurden dabei
+keine echten Benutzer-Systemdienste installiert. Dies sind begrenzte
+Komponentennachweise, **kein ausgeführter vollständiger GitHub-Repository-Test**.
+
+**Freigabe weiterhin gesperrt:** Für den aktuellen Branch fehlen weiterhin
+ein kompletter Continuum-/Backend-/Repair-Testlauf in einem echten Checkout,
+Kotlin-/Gradle-Build, aufbewahrte und verifizierte APK und Smartphone-Test.
+Der lokale Prüfrechner hat Node.js und Git, aber kein installiertes `gradle`;
+auf das private GitHub-Repository kann er ohne Netzwerk/Authentifizierung
+nicht als Gesamtcheckout zugreifen. Für den aktuellen Head wurden bei der
+letzten Statusabfrage keine zugeordneten GitHub-Actions-Läufe geliefert.
