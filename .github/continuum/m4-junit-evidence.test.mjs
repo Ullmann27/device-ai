@@ -54,3 +54,36 @@ test('M4 verifies a real Node 22 JUnit reporter output',()=>{
   assert.equal(verifyJUnitReport(xml).executed,1);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+
+test('M4 accepts genuine Node 22 nested test suites and excludes skipped cases',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-nested-junit-'));
+ try{
+  const sample=path.join(dir,'nested.test.mjs');
+  const xml=path.join(dir,'result.xml');
+  fs.writeFileSync(sample,`import test from 'node:test';
+import assert from 'node:assert/strict';
+test('parent', async t => {
+ await t.test('child A',()=>assert.equal(2,2));
+ await t.test('child B',()=>assert.equal(3,3));
+});
+test('ordinary',()=>assert.ok(true));
+test.skip('skipped',()=>{});
+test('outer',async t=>{await t.test('inner',async t=>{await t.test('leaf',()=>assert.ok(true));});});
+`);
+  const env={...process.env};
+  delete env.NODE_TEST_CONTEXT;
+  const run=spawnSync(process.execPath,['--test','--test-reporter=junit',
+   '--test-reporter-destination='+xml,sample],{encoding:'utf8',timeout:10000,env});
+  assert.equal(run.status,0,run.stderr);
+  const result=verifyJUnitReport(xml);
+  assert.equal(result.total,8,'Node reporter counts suite parent tests');
+  assert.equal(result.executed,7);
+  assert.equal(result.skipped,1);
+  assert.equal(result.failed,0);
+  const tampered=fs.readFileSync(xml,'utf8').replace('<!-- tests 8 -->','<!-- tests 9 -->')
+    .replace('<!-- pass 7 -->','<!-- pass 8 -->');
+  fs.writeFileSync(xml,tampered);
+  assert.throws(()=>verifyJUnitReport(xml),/incomplete|inconsistent/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
