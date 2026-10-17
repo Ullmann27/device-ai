@@ -152,17 +152,40 @@ export function runChain(chain,wt,out,{deadline=null}={}){
 
 export function createWorktree(root,base){
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-repair-wt-'));
-  git(root,['worktree','add','--detach','--force',dir,base]);
-  return dir;
+  try{
+    git(root,['worktree','add','--detach','--force',dir,base]);
+    return dir;
+  }catch(error){
+    // Even a failed Git add can leave an allocated directory or registration.
+    git(root,['worktree','remove','--force',dir],{allowFailure:true});
+    try{fs.rmSync(dir,{recursive:true,force:true});}
+    catch(cleanupError){throw new AggregateError([error,cleanupError],
+      'Worktree creation and cleanup failed');}
+    const pruned=git(root,['worktree','prune'],{allowFailure:true});
+    if(pruned.status!==0)throw new AggregateError([error,Error(pruned.stderr)],
+      'Worktree creation and pruning failed');
+    throw error;
+  }
 }
 export function resetWorktree(wt,base){
   git(wt,['reset','--hard','-q',base]);
   git(wt,['clean','-fdq','-e','build','-e','.gradle','-e','app/build']);
 }
 export function removeWorktree(root,wt){
-  git(root,['worktree','remove','--force',wt],{allowFailure:true});
-  fs.rmSync(wt,{recursive:true,force:true});
-  git(root,['worktree','prune'],{allowFailure:true});
+  const absolute=path.resolve(wt);
+  if(path.dirname(absolute)!==path.resolve(os.tmpdir())||
+    !path.basename(absolute).startsWith('continuum-repair-wt-'))
+    throw Error('Refusing to remove an unmanaged worktree path');
+  const removed=git(root,['worktree','remove','--force',absolute],{allowFailure:true});
+  let fileError=null;
+  try{fs.rmSync(absolute,{recursive:true,force:true});}
+  catch(error){fileError=error;}
+  const pruned=git(root,['worktree','prune'],{allowFailure:true});
+  const failures=[];
+  if(removed.status!==0)failures.push('git worktree remove: '+(removed.stderr||removed.stdout).slice(-180));
+  if(fileError)failures.push('worktree directory removal: '+fileError.message.slice(0,180));
+  if(pruned.status!==0)failures.push('git worktree prune: '+(pruned.stderr||pruned.stdout).slice(-180));
+  if(failures.length)throw Error('Worktree cleanup incomplete: '+failures.join('; '));
 }
 
 /** `@@ -a,b +c,d @@` headers of a --unified=0 diff (counts default to 1). */
