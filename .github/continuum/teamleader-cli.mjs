@@ -6,7 +6,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
-import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome} from './local-teamleader-loop.mjs';
+import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
@@ -67,7 +67,7 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
    const hbPath=path.join(stateDir,'worker-heartbeat.json');
    if(fs.existsSync(hbPath)){
     const hb=JSON.parse(fs.readFileSync(hbPath,'utf8'));
-    if(hb.schema==='continuum-local-worker-heartbeat'&&hb.version===1){
+    if(validateWorkerHeartbeat(hb)){
      const now=Date.now();
      const stale=hb.state==='RUNNING'
        ?(!Number.isSafeInteger(hb.startedAt)||now>hb.startedAt+2*60*60*1000)
@@ -76,7 +76,7 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
          :false;
      workerHeartbeat={...hb,stale,
       liveness:stale?'STALE_OR_SUSPENDED':'LAST_REPORTED_ONLY'};
-    }
+    }else workerHeartbeat={state:'UNREADABLE'};
    }
   }catch{
    // A corrupt/partial heartbeat cannot corrupt or forge Teamleader evidence.
