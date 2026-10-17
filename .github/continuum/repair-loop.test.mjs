@@ -8,7 +8,7 @@ import {parseKotlinDiagnostics,parseJUnit,parseJsErrorText,fingerprint} from './
 import {proposeCandidates,applyEdits,hunk,unescapeCodeNewlines,nearestNames,insertImport,editDistance} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
-import {createWorktree,removeWorktree,repairSession,rankCandidates,PROFILES,CHAINS,commitProposal,boundedWorktreeFile,checkCandidateJsSyntax} from './repair-loop.mjs';
+import {createWorktree,removeWorktree,repairSession,rankCandidates,runProfile,PROFILES,CHAINS,commitProposal,boundedWorktreeFile,checkCandidateJsSyntax} from './repair-loop.mjs';
 import {validateVerifiedReport,assertProposalBranch,publishRepair} from './repair-publish.mjs';
 
 const nested=process.env.CONTINUUM_REPAIR_DEPTH?'skipped inside a repair session (no nested loops)':false;
@@ -130,6 +130,29 @@ test('check profiles are fixed and unknown chains fail closed',()=>{
  assert.throws(()=>assertProposalBranch('main'));
  assert.throws(()=>assertProposalBranch('continuum-agent/../main'));
  assert.equal(assertProposalBranch('continuum-agent/repair-abc'),'continuum-agent/repair-abc');
+});
+
+test('release-only backend test profile executes real Node assertions or fails closed',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-backend-smoke-'));
+ try {
+  const out=path.join(root,'evidence');
+  fs.mkdirSync(out,{recursive:true});
+  assert.throws(()=>PROFILES['node-backend'](root,out),/suite missing/);
+  const testDir=path.join(root,'backend','test');
+  fs.mkdirSync(testDir,{recursive:true});
+  fs.writeFileSync(path.join(root,'backend','package.json'),'{"type":"module"}\n');
+  fs.writeFileSync(path.join(testDir,'verified.test.js'),
+   "import test from 'node:test';\nimport assert from 'node:assert/strict';\n"+
+   "test('backend fixture',()=>assert.equal(4+4,8));\n");
+  const proof=runProfile('node-backend',root,out);
+  assert.equal(proof.passed,true,JSON.stringify(proof.outputTail));
+  assert.ok(proof.tests.executed>=1);
+  assert.equal(proof.tests.failed,0);
+  assert.ok(fs.existsSync(path.join(out,'backend-junit.xml')));
+  // The normal fast repair chain is unchanged; only release/stability adds it.
+  assert.deepEqual(CHAINS.node,['node-continuum']);
+  assert.deepEqual(CHAINS.stability,['node-continuum','node-backend']);
+ } finally {fs.rmSync(root,{recursive:true,force:true});}
 });
 
 test('repair worktree guard excludes symlinks, parent escapes and null path components',()=>{
