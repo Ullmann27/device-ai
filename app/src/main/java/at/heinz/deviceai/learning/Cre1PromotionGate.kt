@@ -52,7 +52,7 @@ object Cre1PromotionGate {
 
     /** Loading never changes model or user memory. Fail closed for all errors. */
     fun readQualified(file:File,sha256:String,steps:Int):Cre1PromotionManifest? {
-        if(!file.isFile || file.length() !in 40..2048)return null
+        if(!file.isFile || file.length() !in 40L..2048L)return null
         return runCatching {
             val props=Properties()
             file.inputStream().buffered().use { props.load(it) }
