@@ -5,6 +5,8 @@ import os from 'node:os';
 import path from 'node:path';
 import {runRepairE2e,verifyRepairE2eRecord,MANDATORY_REPAIR_CASES} from './m4-repair-e2e.mjs';
 
+const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
+
 function mockCheckout(){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-e2e-fixture-'));
  const evidence=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-e2e-evidence-'));
@@ -23,7 +25,7 @@ function mockCheckout(){
  }};
 }
 
-test('mandatory E2E cases execute in a separate Node process and produce a tamper-evident proof',()=>{
+test('mandatory E2E cases execute in a separate Node process and produce a tamper-evident proof',{skip:nested},()=>{
  const f=mockCheckout();
  try{
   const report=runRepairE2e(f.root,f.evidence,Date.now()+15000);
@@ -36,7 +38,7 @@ test('mandatory E2E cases execute in a separate Node process and produce a tampe
  }finally{f.clean();}
 });
 
-test('missing, skipped or renamed mandatory E2E cases fail closed',()=>{
+test('missing, skipped or renamed mandatory E2E cases fail closed',{skip:nested},()=>{
  for(const mutation of ['removed','skipped','renamed']){
   const f=mockCheckout();
   try{
@@ -67,7 +69,7 @@ test('nested repair test processes cannot reset recursion depth',()=>{
  }
 });
 
-test('symlinked proof and forged result counters are rejected',()=>{
+test('symlinked proof and forged result counters are rejected',{skip:nested},()=>{
  const f=mockCheckout();
  try{
   const report=runRepairE2e(f.root,f.evidence,Date.now()+15000);
