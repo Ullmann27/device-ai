@@ -232,6 +232,7 @@ class LiteRtLmLocalModelRuntime(
                 message,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
+                        if (finished.get() || outputLimitReached.get()) return
                         if (message.toolCalls.isNotEmpty()) {
                             if (message.toolCalls.size > 1) {
                                 if (message.toolCalls.size > MAX_TOOL_RESPONSES) {
@@ -336,18 +337,18 @@ class LiteRtLmLocalModelRuntime(
 
     override fun unload(callback: (Result<Unit>) -> Unit) {
         val activeConversation: Conversation?
+        val deferredToInferenceCompletion: Boolean
         synchronized(lock) {
             check(state != LocalModelState.LOADING && state != LocalModelState.UNLOADING) {
                 "Local model lifecycle operation is already in progress."
             }
             activeConversation = inferenceConversation ?: conversation
-            if (inferenceActive) {
-                state = LocalModelState.UNLOADING
-                pendingUnload = callback
-            }
+            deferredToInferenceCompletion = inferenceActive
+            state = LocalModelState.UNLOADING
+            if (deferredToInferenceCompletion) pendingUnload = callback
         }
-        if (activeConversation != null && synchronized(lock) { inferenceActive }) {
-            runCatching { activeConversation.cancelProcess() }
+        if (deferredToInferenceCompletion) {
+            runCatching { activeConversation?.cancelProcess() }
             return
         }
         background.execute { closeResources(callback) }

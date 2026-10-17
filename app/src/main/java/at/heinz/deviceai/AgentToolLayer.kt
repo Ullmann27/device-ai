@@ -49,6 +49,27 @@ data class ToolProposal(val toolName: String, val arguments: Map<String, Any?>) 
     }
 }
 
+/**
+ * A model turn must contain exactly one tool proposal before any action can be
+ * considered. Streaming duplicates are ambiguous, never additional authority.
+ */
+internal class ToolProposalTurnGuard {
+    private var first: ToolProposal? = null
+    private var seen = 0
+
+    @Synchronized
+    fun observe(proposal: ToolProposal) {
+        seen++
+        first = if (seen == 1) proposal else null
+    }
+
+    @Synchronized
+    fun acceptedProposal(): ToolProposal? = if (seen == 1) first else null
+
+    @Synchronized
+    fun isAmbiguous(): Boolean = seen > 1
+}
+
 data class ToolInvocation(val id: String, val request: ToolCallRequest) {
     init {
         require(id.isNotBlank() && id.length <= 128 && request.callId == id)

@@ -3823,26 +3823,43 @@ class AgentActivity : Activity() {
         val completed = CountDownLatch(1)
         val response = StringBuilder()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
-        var proposal: ToolProposal? = null
+        val proposalGuard = ToolProposalTurnGuard()
+        val eventLock = Any()
+        var terminalEventReceived = false
         var failure: String? = null
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
-            when (event) {
-                is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
-                    response.append(event.text.take(8_000 - response.length))
+            synchronized(eventLock) {
+                if (!terminalEventReceived) {
+                    when (event) {
+                        is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                            response.append(event.text.take(8_000 - response.length))
+                        }
+                        is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
+                        is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
+                            event.name,
+                            org.json.JSONObject()
+                                .put("status", "REJECTED")
+                                .put("reason", event.reason.take(512))
+                                .toString()
+                        )
+                        is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
+                        is LocalInferenceEvent.Failed -> {
+                            failure = event.message
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                        LocalInferenceEvent.Cancelled -> {
+                            failure = "Local generation cancelled."
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                        is LocalInferenceEvent.Completed -> {
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                    }
                 }
-                is LocalInferenceEvent.ToolProposal -> if (proposal == null) proposal = event.proposal
-                is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
-                    event.name,
-                    org.json.JSONObject()
-                        .put("status", "REJECTED")
-                        .put("reason", event.reason.take(512))
-                        .toString()
-                )
-                is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
-                is LocalInferenceEvent.Failed -> { failure = event.message; completed.countDown() }
-                LocalInferenceEvent.Cancelled -> { failure = "Local generation cancelled."; completed.countDown() }
-                is LocalInferenceEvent.Completed -> completed.countDown()
             }
         }
         val started = runCatching { cancellation?.throwIfCancelled(); start(callback) }
@@ -3868,7 +3885,13 @@ class AgentActivity : Activity() {
             runOnUiThread { refreshLocalModelUi() }
             return LocalGeneration("", null, emptyList(), "Local runtime did not finish generation.")
         }
-        return LocalGeneration(response.toString(), proposal, rejectedResponses.toList(), failure)
+        val accepted = proposalGuard.acceptedProposal()
+        if (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty())) {
+            return LocalGeneration(
+                "", null, emptyList(), "Local model emitted multiple or conflicting tool proposals; none were submitted."
+            )
+        }
+        return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
