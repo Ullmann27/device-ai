@@ -214,3 +214,39 @@ nicht abgenommen.
 
 **Release-Status:** DRAFT, bis die vollständige Node-/Backend-/Kotlin-/APK-
 Testkette auf aktuellem Git-HEAD einschließlich Gerätetest bestanden wurde.
+
+## Stabilisierungsnachtrag – Abbruchfeste Timer-Aktivierung (17.10.2026)
+
+Ein reproduzierter Fehler des opt-in installierten systemd-Stundenworkers
+ließ nach `SIGTERM` während `systemctl --user enable --now` sowohl
+`continuum-teamleader.service` als auch `continuum-teamleader.timer` im
+Benutzerverzeichnis zurück. Ein neuer Installerlauf verweigerte anschließend
+die Installation wegen bereits vorhandener Unit-Dateien.
+
+**Korrektur:** Der Installer aktiviert den Timer als überwachten
+Unterprozess und verarbeitet `SIGINT`/`SIGTERM` über einen Exit-Rollback.
+Vor der Entfernung wird die Eigentümerschaft jeder Unit durch Geräte-/Inode-
+Identität mit ihrer ausschließlich für diesen Lauf angelegten temporären
+Datei geprüft. Andere Unit-Dateien, einschließlich einer während des Abbruchs
+ersetzten Datei, werden nicht gelöscht. Fehlgeschlagene Aktivierung führt
+zu einer Deaktivierung des gerade veröffentlichten Timers und Entfernung
+der eigenen temporären und veröffentlichten Dateien. Erfolgreiche
+Installationen bleiben bestehen.
+
+**Tatsächlich ausgeführte lokale Nachweise (Node.js 22, Bash, Linux):**
+Die simulierten Szenarien normale Aktivierung, Exitcode-Fehler und
+`SIGTERM` wurden erfolgreich geprüft (3/3). Zwei weitere
+Node-`node:test`-Regressionen bestanden (2/2): Abbruch während
+der Aktivierung und Erhaltung einer fremden, zwischenzeitlich ersetzten
+Service-Datei. Sämtliche Läufe verwendeten private temporäre HOME-Verzeichnisse
+und ein nachgebildetes `systemctl`; es wurden **keine** echten
+Systemdienste installiert oder deaktiviert.
+
+**Restrisiko:** `SIGKILL`, Stromausfall oder Betriebssystemabsturz
+können durch Shell-Traps nicht abgefangen werden. Die neu ergänzte
+Abbruchbereinigung ersetzt keinen vollständigen Crash-Recovery-Test und
+keinen Dauerbetrieb auf echter Hardware.
+
+**Release-Status unverändert:** Weder vollständiger Branch-Testlauf noch
+`m4-local-gate.mjs --android`, Kotlin-/Gradle-Build, echte APK oder
+Geräteinstallation sind dadurch nachgewiesen; PR #19 bleibt Draft.
