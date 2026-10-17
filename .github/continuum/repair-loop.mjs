@@ -31,6 +31,12 @@ export function git(cwd,args,opts={}){
   return r;
 }
 
+function backendTests(wt){
+  const dir=path.join(wt,'backend/test');
+  return fs.existsSync(dir)?fs.readdirSync(dir)
+    .filter(f=>f.endsWith('.test.js')).sort().map(f=>'backend/test/'+f):[];
+}
+
 function nodeTests(wt){
   const dir=path.join(wt,'.github/continuum');
   return fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>f.endsWith('.test.mjs')).sort().map(f=>'.github/continuum/'+f):[];
@@ -40,6 +46,13 @@ function nodeTests(wt){
 export const PROFILES=Object.freeze({
   'node-continuum':(wt,out)=>({cmd:process.execPath,args:['--test','--test-reporter=junit','--test-reporter-destination='+path.join(out,'node-junit.xml'),...nodeTests(wt)],
     cwd:wt,junitFiles:[path.join(out,'node-junit.xml')],timeoutMs:300000}),
+  'node-backend':(wt,out)=>{
+    const tests=backendTests(wt);
+    if(!tests.length)throw Error('Required backend Node test suite missing');
+    return {cmd:process.execPath,args:['--test','--test-reporter=junit',
+      '--test-reporter-destination='+path.join(out,'backend-junit.xml'),...tests],
+      cwd:wt,junitFiles:[path.join(out,'backend-junit.xml')],timeoutMs:300000};
+  },
   // Kotlin incremental compilation is disabled: after a failed build its caches
   // produced phantom "Conflicting overloads" errors in untouched files.
   'android-compile':wt=>({cmd:'gradle',args:[':app:compileDebugUnitTestKotlin','--console=plain','-Pkotlin.incremental=false'],cwd:wt,kotlin:true,timeoutMs:1200000}),
@@ -53,9 +66,14 @@ export const PROFILES=Object.freeze({
       junitDirs:[path.join(harness,'build/test-results/test')],cleanDirs:[path.join(harness,'build/test-results/test')],timeoutMs:1500000};
   }
 });
-export const CHAINS=Object.freeze({node:['node-continuum'],android:['android-compile','android-unit'],jvm:['jvm-harness']});
+export const CHAINS=Object.freeze({
+  node:['node-continuum'],
+  stability:['node-continuum','node-backend'],
+  android:['android-compile','android-unit'],
+  jvm:['jvm-harness']
+});
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
-export const TEST_PROFILES=Object.freeze(['node-continuum','android-unit','jvm-harness']);
+export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
 export function runProfile(name,wt,out,{deadline=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
