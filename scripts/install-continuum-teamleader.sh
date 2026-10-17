@@ -27,7 +27,8 @@ fi
 cat > "$SERVICE" <<EOF
 [Unit]
 Description=Continuum offline autonomous software Teamleader
-ConditionPathIsDirectory=$ROOT/.git
+# A linked Git worktree uses a .git file, not a directory.
+ConditionPathExists=$ROOT/.git
 
 [Service]
 Type=oneshot
