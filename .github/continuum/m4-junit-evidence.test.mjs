@@ -55,7 +55,6 @@ test('M4 verifies a real Node 22 JUnit reporter output',()=>{
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
-
 test('M4 accepts genuine Node 22 nested test suites and excludes skipped cases',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-nested-junit-'));
  try{
