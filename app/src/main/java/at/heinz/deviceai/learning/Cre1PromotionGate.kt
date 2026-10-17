@@ -92,13 +92,26 @@ object Cre1PromotionGate {
         modelSha256:String,
         modelSteps:Int
     ):List<ContinuumMemoryHit> {
-        if(!manifest.qualified(modelSha256,modelSteps) ||
+        if(!manifest.qualified(modelSha256,modelSteps))return swb1
+        return proposeOrder(query,swb1,semanticById,manifest.fusionWeight)
+    }
+
+    /** Benchmark-only counterpart to the production decision: same score
+     * fusion and guards, but no promotion manifest. Never call for chat without
+     * the verified manifest wrapper above.
+     */
+    internal fun proposeOrder(
+        query:String,
+        swb1:List<ContinuumMemoryHit>,
+        semanticById:Map<String,Double>,
+        alpha:Double
+    ):List<ContinuumMemoryHit> {
+        if(!alpha.isFinite() || alpha !in 0.05..0.5 ||
             swb1.size !in 2..3 || swb1.map { it.id }.distinct().size!=swb1.size ||
             semanticById.keys!=swb1.map { it.id }.toSet() ||
             semanticById.values.any { !it.isFinite() || it !in -1.0..1.0 } ||
             swb1.any { !it.score.isFinite() || it.score !in 0.0..1.0 })
             return swb1
-        val alpha=manifest.fusionWeight
         val mixed=swb1.map { hit ->
             hit to ((1.0-alpha)*hit.score+alpha*((semanticById.getValue(hit.id)+1.0)/2.0))
         }.sortedWith(compareByDescending<Pair<ContinuumMemoryHit,Double>>{it.second}
