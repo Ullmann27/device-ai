@@ -20,7 +20,7 @@ function fixtureRepairRecord(base=null){
   sha256:crypto.createHash('sha256').update(xml).digest('hex')};
 }
 
-function fixture(broken=false){
+function fixture(broken=false,omitRepair=false){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
  const root=path.join(base,'repo'),out=path.join(base,'private-proof');
  fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});
@@ -31,11 +31,16 @@ function fixture(broken=false){
   "test('real local gate fixture',()=>assert.equal(2*3,"+(broken?'7':'6')+"));",
   ""
  ].join('\n'));
- const cases=MANDATORY_REPAIR_CASES.map(name=>'test('+JSON.stringify(name)+',()=>{});');
- fs.writeFileSync(path.join(root,'.github/continuum/repair-loop.test.mjs'),
-  ["import test from 'node:test';",...cases,""].join('\n'));
- fs.writeFileSync(path.join(root,'.github/continuum/repair-cycle-safety.integration.test.mjs'),
-  "import test from 'node:test';\ntest('receipt has an end timestamp',()=>{});\n");
+ if(!omitRepair){
+  const cases=MANDATORY_REPAIR_CASES.map(name=>'test('+JSON.stringify(name)+',()=>{});');
+  fs.writeFileSync(path.join(root,'.github/continuum/repair-loop.test.mjs'),
+   ["import test from 'node:test';",...cases,""].join('\n'));
+  fs.writeFileSync(path.join(root,'.github/continuum/repair-cycle-safety.integration.test.mjs'),
+   "import test from 'node:test';\ntest('receipt has an end timestamp',()=>{});\n");
+ }
+ fs.mkdirSync(path.join(root,'backend','test'),{recursive:true});
+ fs.writeFileSync(path.join(root,'backend','test','actual-backend.test.js'),
+  "const test=require('node:test');\ntest('backend is executed',()=>{});\n");
  const git=(...args)=>{
   const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:15000});
   assert.equal(r.status,0,r.stderr);
@@ -286,6 +291,21 @@ test('broken actual Node fixture skips Android and APK before Gradle is invoked'
   assert.equal(f.git('status','--porcelain'),'');
   assert.ok(fs.existsSync(report.path),'failed gate still retains its evidence');
  } finally {fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('green Node/backend suites without repair files cannot authorize Android',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(false,true);
+ try{
+  const report=runM4Gate({root:f.root,out:f.out,android:true,budgetMinutes:2});
+  assert.equal(report.summary.nodePassed,true);
+  assert.equal(report.summary.repairE2ePassed,false);
+  assert.equal(report.complete,false);
+  assert.equal(report.android,null,'Android must not run without mandatory repairs');
+  assert.equal(report.apk,null,'APK must not build without mandatory repairs');
+  assert.ok(report.errors.some(e=>e.startsWith('REPAIR_E2E:')));
+  assert.equal(f.git('status','--porcelain'),'');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
 
 test('gate refuses dirty source and repository-contained proof output',
