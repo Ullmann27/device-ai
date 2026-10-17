@@ -69,6 +69,18 @@ test('nested repair test processes cannot reset recursion depth',()=>{
  }
 });
 
+test('symlinked parent evidence directory cannot validate a release proof',
+ {skip:nested},()=>{
+ const f=mockCheckout();
+ try{
+  const report=runRepairE2e(f.root,f.evidence,Date.now()+15000);
+  const redirected=path.join(f.root,'external-evidence-link');
+  fs.symlinkSync(f.evidence,redirected,'dir');
+  assert.equal(verifyRepairE2eRecord(redirected,report),false,
+   'parent symlinks must not redirect the verifier outside the proof directory');
+ }finally{f.clean();}
+});
+
 test('symlinked proof and forged result counters are rejected',{skip:nested},()=>{
  const f=mockCheckout();
  try{
