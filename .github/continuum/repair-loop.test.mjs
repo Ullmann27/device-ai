@@ -123,7 +123,8 @@ test('syntax gate parses changed JavaScript only, rejecting malformed code witho
 });
 
 test('check profiles are fixed and unknown chains fail closed',()=>{
- assert.deepEqual(Object.keys(CHAINS).sort(),['android','jvm','node']);
+ assert.deepEqual(Object.keys(CHAINS).sort(),['android','jvm','node','stability']);
+ assert.deepEqual(CHAINS.stability,['node-continuum','node-backend']);
  assert.throws(()=>PROFILES['jvm-harness']('/tmp'),/not configured/);
  assert.equal(PROFILES['android-compile']('/w').cmd,'gradle');
  assert.throws(()=>assertProposalBranch('main'));
