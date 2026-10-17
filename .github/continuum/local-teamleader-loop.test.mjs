@@ -139,3 +139,15 @@ test('one-shot CLI exits nonzero for failed, unverified or unknown outcomes',()=
   assert.equal(teamleaderExitCode({outcome}),0);
  }
 });
+
+test('failure backoff never retries before a user configured interval',async()=>{
+ const waits=[];let cycles=0;
+ const result=await runTeamleaderLoop({
+  intervalMinutes:120,maxCycles:2,
+  work:()=>({outcome:++cycles===1?'CHECKS_FAILED':'IDLE'}),
+  wait:async ms=>waits.push(ms)
+ });
+ assert.equal(result.failures,1);
+ assert.deepEqual(waits,[120*60_000],
+  'failure must not turn a two-hour schedule into an hourly schedule');
+});
