@@ -81,6 +81,37 @@ export function verifyGateReport(record,{expectedHead=null}={}){
 }
 
 /**
+ * Incrementally hash an APK without allocating its entire contents. The
+ * source is required to be a regular, non-symlink file and limited to 250 MiB.
+ * An open file descriptor plus fstat prevents a path swap after lstat from
+ * silently redirecting the read to an unrelated file.
+ */
+export function sha256ApkFile(file){
+ const limit=250*1024*1024;
+ const before=fs.lstatSync(file);
+ if(!before.isFile()||before.isSymbolicLink()||before.size<1||before.size>limit)
+  throw Error('Invalid APK artifact');
+ let fd;
+ try{
+  fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  const current=fs.fstatSync(fd);
+  if(!current.isFile()||current.size!==before.size||
+    current.ino!==before.ino||current.dev!==before.dev)
+   throw Error('APK changed during opening');
+  const digest=crypto.createHash('sha256');
+  const buf=Buffer.allocUnsafe(64*1024);
+  let total=0,read;
+  while((read=fs.readSync(fd,buf,0,buf.length,null))>0){
+   total+=read;
+   if(total>limit)throw Error('APK exceeds size limit');
+   digest.update(buf.subarray(0,read));
+  }
+  if(total!==current.size)throw Error('APK changed during hashing');
+  return {bytes:total,artifactSha256:digest.digest('hex')};
+ }finally{if(fd!==undefined)fs.closeSync(fd)}
+}
+
+/**
  * Independently checks that a claimed release APK actually exists in the
  * proof directory with the same bytes and SHA-256. No subprocess, network or
  * code from the proof is executed. Symlinks and external paths are rejected.
@@ -101,25 +132,17 @@ export function verifyReleaseProofFile(reportFile,{expectedHead=null}={}){
  if(typeof artifact!=='string'||path.resolve(artifact)!==
    path.join(path.dirname(absolute),'app-debug.apk'))
   return reject('UNSAFE_APK_PATH');
- let fd;
  try{
   const info=fs.lstatSync(artifact);
   if(!info.isFile()||info.isSymbolicLink()||
     info.size!==record.apk.bytes||info.size>250*1024*1024)
    return reject('APK_MISSING_OR_CHANGED');
-  const digest=crypto.createHash('sha256');
-  const buffer=Buffer.allocUnsafe(64*1024);
-  fd=fs.openSync(artifact,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
-  let count=0,n;
-  while((n=fs.readSync(fd,buffer,0,buffer.length,null))>0){
-   digest.update(buffer.subarray(0,n));count+=n;
-   if(count>250*1024*1024)return reject('APK_TOO_LARGE');
-  }
-  if(count!==info.size||digest.digest('hex')!==record.apk.artifactSha256)
+  const actual=sha256ApkFile(artifact);
+  if(actual.bytes!==record.apk.bytes||
+     actual.artifactSha256!==record.apk.artifactSha256)
    return reject('APK_HASH_MISMATCH');
   return verified;
  }catch{return reject('APK_UNREADABLE')}
- finally{if(fd!==undefined)fs.closeSync(fd);}
 }
 
 export function parseGateArgs(args){
@@ -226,12 +249,14 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
       outputTail:(gradle.stdout??'').slice(-1000)+'\n'+(gradle.stderr??'').slice(-1000)};
     if(gradle.status===0&&!report.apk.timedOut){
      const built=path.join(wt,'app','build','outputs','apk','debug','app-debug.apk');
-     if(fs.existsSync(built)&&fs.statSync(built).isFile()&&fs.statSync(built).size>0){
+     if(fs.existsSync(built)&&fs.lstatSync(built).isFile()&&
+        !fs.lstatSync(built).isSymbolicLink()&&
+        fs.lstatSync(built).size>0&&fs.lstatSync(built).size<=250*1024*1024){
       const destination=path.join(outDir,'app-debug.apk');
       fs.copyFileSync(built,destination,fs.constants.COPYFILE_EXCL);
-      const bytes=fs.readFileSync(destination);
-      report.apk.artifactSha256=hash(bytes);
-      report.apk.bytes=bytes.length;
+      const integrity=sha256ApkFile(destination);
+      report.apk.artifactSha256=integrity.artifactSha256;
+      report.apk.bytes=integrity.bytes;
       report.apk.artifact=destination;
      }else report.errors.push('APK: Gradle reported success without an app-debug.apk artifact');
     }
