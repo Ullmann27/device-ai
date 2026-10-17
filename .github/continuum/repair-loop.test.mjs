@@ -158,9 +158,15 @@ test('release-only backend test profile executes real Node assertions or fails c
  try {
   const out=path.join(root,'evidence');
   fs.mkdirSync(out,{recursive:true});
-  assert.throws(()=>PROFILES['node-backend'](root,out),/suite missing/);
+  assert.throws(()=>PROFILES['node-backend'](root,out),/directory missing/);
   const testDir=path.join(root,'backend','test');
   fs.mkdirSync(testDir,{recursive:true});
+  assert.throws(()=>PROFILES['node-backend'](root,out),/suite missing/);
+  const outside=path.join(root,'external-suite.js');
+  fs.writeFileSync(outside,'throw Error("Untrusted external code executed");\n');
+  fs.symlinkSync(outside,path.join(testDir,'linked.test.js'));
+  assert.throws(()=>PROFILES['node-backend'](root,out),/suite missing/,
+   'symlinked tests must not expand the trusted regression suite');
   fs.writeFileSync(path.join(root,'backend','package.json'),'{"type":"module"}\n');
   fs.writeFileSync(path.join(testDir,'verified.test.js'),
    "import test from 'node:test';\nimport assert from 'node:assert/strict';\n"+
