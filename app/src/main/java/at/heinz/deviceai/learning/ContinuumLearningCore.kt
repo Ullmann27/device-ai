@@ -430,6 +430,32 @@ class ContinuumLearningCore(
             )
         }
 
+    /** A separate, evidence-paired decoder LAB. Its weights cannot silently
+     * replace the SWB1/CRE1 memory gate or the productive chat model.
+     */
+    fun pairedDecoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).pairedStatus()
+    }
+
+    fun trainExperimentalPairedDecoder(
+        training:DecoderEvidenceCorpus,
+        audit:DecoderEvidenceCorpus,
+        steps:Int=600,
+        cancelled:()->Boolean={false}
+    ):DecoderExperimentResult=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).trainPairedExperiment(
+            training,audit,loadModel().save(),steps,cancelled
+        )
+    }
+
+    fun experimentalPairedDecoderContinuation(
+        evidence:String,question:String,maxBytes:Int=48
+    ):DecoderGeneration?=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).experimentalPairedContinuation(
+            evidence,question,loadModel().save(),maxBytes
+        )
+    }
+
     fun intentScore(text:String):Double=synchronized(CORE_LOCK) { loadModel().intentScore(text) }
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
