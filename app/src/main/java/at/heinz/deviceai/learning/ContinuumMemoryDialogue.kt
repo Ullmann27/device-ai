@@ -23,7 +23,9 @@ data class ContinuumDialogueTurn(
 class ContinuumMemoryDialogue(private val directory:File) {
     private val file=File(directory,"dialogue-v1.bin")
 
-    fun reply(bytes:ByteArray,experiences:List<LearningExperience>,input:String,at:Long):ContinuumDialogueTurn {
+    fun reply(bytes:ByteArray,experiences:List<LearningExperience>,input:String,at:Long,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):ContinuumDialogueTurn {
         require(input.trim().length in 1..512 && at>=0)
         // The history is only conversation context (memories live in the ledger),
         // so an unreadable file must not block every later turn: it is kept as
@@ -43,7 +45,17 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // A greeting must not accidentally cite memories containing the word "Hallo".
         // An unanswered new question invalidates the old topic; only retrieved evidence
         // can establish a topic for future follow-ups.
-        val selected=if(greeting)emptyList<ContinuumMemoryHit>() else hits
+        // The optional CRE1 callback executes only on SWB1-authorized hits.
+        // Validate byte-for-byte candidate identity, not just IDs: a callback
+        // can change ranking, but may not forge provenance, scores or content.
+        val selected=if(greeting)emptyList<ContinuumMemoryHit>()
+            else if(rerank==null || hits.size<2)hits else runCatching {
+                val reordered=rerank(resolved,hits)
+                require(reordered.size==hits.size &&
+                    reordered.map { it.id }.distinct().size==hits.size &&
+                    reordered.toSet()==hits.toSet()) { "CRE1 changed the eligible candidate set" }
+                reordered
+            }.getOrDefault(hits)
         val topic=when {
             greeting -> previousTopic
             selected.isEmpty() -> ""
