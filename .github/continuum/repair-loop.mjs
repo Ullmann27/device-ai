@@ -6,6 +6,7 @@ import {parseKotlinDiagnostics,readJUnitDirectory,parseJUnit,parseJsErrorText,sh
 import {proposeCandidates,applyEdits} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
+import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -16,7 +17,7 @@ import {buildIndex,collectKotlin} from './code-analyzer.mjs';
  */
 export const BRANCH_PREFIX='continuum-agent/';
 
-const DEPTH=Number(process.env.CONTINUUM_REPAIR_DEPTH??0);
+const DEPTH=strictRepairDepth(process.env.CONTINUUM_REPAIR_DEPTH);
 function run(cmd,args,{cwd,timeoutMs=120000,env}={}){
   const started=Date.now();
   // Child checks see the depth, so a test suite cannot start a nested repair loop.
@@ -303,9 +304,12 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
-  if(baseline.passed){report.outcome='NO_FAILURE';return report;}
+  if(baseline.passed)return finishRepairReport(report,'NO_FAILURE');
   const actionable=baseline.diagnostics.filter(d=>d.file);
-  if(!actionable.length){report.outcome='NO_CODE_DIAGNOSTIC';report.baselineTail=baseline.results.at(-1)?.outputTail;return report;}
+  if(!actionable.length){
+    report.baselineTail=baseline.results.at(-1)?.outputTail;
+    return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
+  }
   const ctx=context(wt,base,ledger.attempts);
   const failedIds=new Set(ledger.attempts.filter(a=>a.outcome!=='VERIFIED').map(a=>a.diagnostic+':'+a.candidate));
   const ranked=rankCandidates(proposeCandidates(actionable,ctx),ledger.experiences,failedIds);
@@ -368,9 +372,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     }
   }
   if(!report.verified)resetWorktree(wt,base);
-  report.outcome=report.verified?'VERIFIED':'NO_VERIFIED_REPAIR';
-  report.finishedAt=new Date().toISOString();
-  return report;
+  return finishRepairReport(report,report.verified?'VERIFIED':'NO_VERIFIED_REPAIR');
 }
 
 /** Commit the verified worktree state on a namespaced proposal branch (local only). */
