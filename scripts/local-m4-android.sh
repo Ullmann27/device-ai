@@ -13,7 +13,7 @@ expected_sha="$1"
 fail() { printf 'BLOCKED: %s\n' "$*" >&2; exit 69; }
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 root="$(cd -- "$script_dir/.." && pwd -P)"
-for tool in git node java gradle; do
+for tool in git node java gradle realpath; do
   command -v "$tool" >/dev/null 2>&1 || fail "Missing executable: $tool"
 done
 [[ "$(git -C "$root" rev-parse --show-toplevel 2>/dev/null)" == "$root" ]] || fail 'Script must be inside a Git checkout root/scripts directory'
@@ -38,6 +38,9 @@ node_major="$(node -p 'Number(process.versions.node.split(".")[0])')" || fail 'C
 sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -n "$sdk" && -f "$sdk/platforms/android-36/android.jar" && -x "$sdk/build-tools/35.0.0/zipalign" ]] || fail 'Android SDK 36 or Build-Tools 35.0.0 missing'
 state_root="${XDG_STATE_HOME:-$HOME/.local/state}/device-ai-continuum/proofs"
+# Refuse even symlink/../ variants before creating any directory in the source tree.
+state_candidate="$(realpath -m -- "$state_root")"
+[[ "$state_candidate" != "$root" && "$state_candidate" != "$root"/* ]] || fail 'Evidence directory must be outside the checkout'
 mkdir -p -- "$state_root"
 chmod 700 -- "$state_root"
 state_root="$(cd -- "$state_root" && pwd -P)"

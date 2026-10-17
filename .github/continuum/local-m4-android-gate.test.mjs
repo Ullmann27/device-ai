@@ -58,6 +58,7 @@ for (const [name,mutate,expectedCode,expectedMessage] of [
   ['rejects wrong Git HEAD',f=>({args:['0'.repeat(40)]}),69,'HEAD mismatch'],
   ['rejects dirty Git checkout',f=>{fs.writeFileSync(path.join(f.root,'new-file'),'dirty');return {};},69,'Checkout is not clean'],
   ['rejects absent Android SDK',f=>({env:{ANDROID_HOME:path.join(f.home,'missing')}}),69,'Android SDK 36'],
+  ['rejects evidence location within checkout before creating files',f=>({env:{XDG_STATE_HOME:path.join(f.root,'build','..')}}),69,'Evidence directory must be outside'],
   ['rejects incompatible JDK',f=>{f.tool('java','echo \'openjdk version "21.0.2" 2024-01-16\' >&2');return {};},69,'JDK 17'],
   ['rejects incompatible Gradle',f=>{f.tool('gradle','printf "Gradle 9.0\\n"');return {};},69,'Gradle 8.11.1'],
   ['runs M4 and proof verification after validated preflight',f=>({}),0,'M4 proof passed']
