@@ -9,6 +9,13 @@ import {setTimeout as sleep} from 'node:timers/promises';
 
 export const DEFAULT_INTERVAL_MINUTES=60;
 export const MAX_FAILURE_BACKOFF_MS=60*60*1000;
+// Reject unknown or unfinished outcomes rather than reporting unverified work as success.
+const COMPLETE_OUTCOMES=new Set([
+ 'NO_FAILURE','NO_CODE_DIAGNOSTIC','VERIFIED_PATCH_PENDING_REVIEW',
+ 'NO_VERIFIED_REPAIR','DONE_INVESTIGATION','CHECKS_FAILED',
+ 'NO_READY_INVESTIGATION','IDLE','INTERRUPTED','ERROR'
+]);
+const FAILED_OUTCOMES=new Set(['NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR']);
 
 export function validateLoopOptions({intervalMinutes=60,maxCycles=null}={}){
  if(!Number.isSafeInteger(intervalMinutes)||intervalMinutes<1||intervalMinutes>1440)
@@ -40,10 +47,11 @@ export async function runTeamleaderLoop({
   let outcome='ERROR',detail='';
   try{
    const result=await work();
-   if(!result||typeof result.outcome!=='string')throw Error('Worker returned no outcome');
+   if(!result||!COMPLETE_OUTCOMES.has(result.outcome))
+    throw Error('Worker returned unknown or unfinished outcome');
    outcome=result.outcome;
    detail=String(result.detail??'').slice(0,160);
-   if(['ERROR','CHECKS_FAILED'].includes(outcome)){
+   if(FAILED_OUTCOMES.has(outcome)){
     failures++;
     streak++;
     log('[local-loop] cycle failed: '+(detail||outcome));
@@ -78,8 +86,11 @@ export async function runTeamleaderLoop({
   }catch(error){
    // Abort is graceful; all other scheduler errors must surface rather
    // than being mislabeled as successful work.
-   if(signal?.aborted)break;
-   throw error;
+   if(!signal?.aborted)throw error;
+  }
+  if(signal?.aborted){
+   onHeartbeat({...heartbeat,state:'STOPPED',nextAttemptAt:null});
+   break;
   }
  }
  return {cycles,failures,lastOutcome,stoppedBySignal:Boolean(signal?.aborted)};
