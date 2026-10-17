@@ -55,6 +55,13 @@ test('stabilization gate refuses downstream execution after incomplete or failed
  assert.equal(nextGateStage({...android,results:[
    android.results[0],{...android.results[1],passed:false}
  ]},androidNames),false);
+ assert.equal(nextGateStage({...node,results:[
+   {...node.results[0],testProfile:false,tests:{executed:0,failed:0}},node.results[1]
+ ]},nodeNames),false,'fake success without a real test profile cannot unlock Gradle');
+ assert.equal(nextGateStage({...android,results:[
+   {...android.results[0],testProfile:true,tests:{executed:1,failed:0}},
+   android.results[1]
+ ]},androidNames),false,'Kotlin compiler must be the expected compile profile');
  assert.equal(nextGateStage(null,nodeNames),false);
  assert.equal(nextGateStage(node,[]),false);
 });
