@@ -132,6 +132,27 @@ test('check profiles are fixed and unknown chains fail closed',()=>{
  assert.equal(assertProposalBranch('continuum-agent/repair-abc'),'continuum-agent/repair-abc');
 });
 
+test('Continuum profile cannot auto-discover unrelated tests if required suite is absent',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-missing-suite-'));
+ try{
+  const out=path.join(root,'evidence');
+  fs.mkdirSync(out,{recursive:true});
+  fs.mkdirSync(path.join(root,'backend','test'),{recursive:true});
+  fs.writeFileSync(path.join(root,'backend','test','decoy.test.js'),
+   'import test from "node:test"; test("decoy",()=>{});\n');
+  assert.throws(()=>PROFILES['node-continuum'](root,out),
+   /Required Continuum Node test directory missing/);
+  const continuum=path.join(root,'.github','continuum');
+  fs.mkdirSync(continuum,{recursive:true});
+  assert.throws(()=>PROFILES['node-continuum'](root,out),
+   /Required Continuum Node test suite missing/);
+  fs.writeFileSync(path.join(continuum,'regression.test.mjs'),
+   "import test from 'node:test'; test('grounded regression',()=>{});\n");
+  const profile=PROFILES['node-continuum'](root,out);
+  assert.deepEqual(profile.args.slice(-1),['.github/continuum/regression.test.mjs']);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
 test('release-only backend test profile executes real Node assertions or fails closed',()=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-backend-smoke-'));
  try {
