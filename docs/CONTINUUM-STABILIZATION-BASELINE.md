@@ -117,3 +117,37 @@ Die zuletzt eingesehenen Runs zu PR #19 melden `failure`, aber die abgefragten J
 Die Stabilisierung ist **erst abgeschlossen**, wenn der vollständige lokale Qualitätsreport mit **aktueller Commit-SHA** grün und erneut verifizierbar ist, das APK auf einem Testgerät installiert und nach Neustart getestet wurde, Rückfälle aus Erinnerung/Widerruf/Backlog/Worker reproduzierbar ausgeschlossen wurden und die verbleibenden Risiken als dokumentierte offene Punkte vorliegen.
 
 **Bis dahin:** PR #19 bleibt ein Review-/Entwicklungsbranch, kein Produktionsrelease.
+
+
+## Stabilisierungsnachtrag – Worker-Ergebnisdisziplin und Release-Profilparität (17.10.2026)
+
+Die lokale Teamleiter-Schleife akzeptiert nur explizit bekannte, abgeschlossene
+Ergebniscodes. `RUNNING`, fehlende und unbekannte Ergebnisse werden als
+`ERROR` gezählt und nicht als erfolgreiche Entwicklungsarbeit ausgegeben.
+`NO_VERIFIED_REPAIR` und `INTERRUPTED` erhöhen wie `CHECKS_FAILED` und
+`ERROR` den Fehlerzähler. Ein während der Wartephase empfangenes
+Stoppsignal speichert einen abschließenden `STOPPED`-Heartbeat mit
+`nextAttemptAt=null`, statt einen weiter laufenden Timer vorzutäuschen.
+
+Das M4-Gate nutzt in `gateSummary` und `nextGateStage` dieselben
+verbindlichen, geordneten Profilprüfungen. Auch ein reiner Node-Bericht muss
+aus dem echten `node-continuum`-Profil stammen. Die Android-Releaseabnahme
+verlangt `node-continuum`, `node-backend`, `android-compile` und
+`android-unit`, erfolgreiche Exitcodes, ganzzahlige Testanzahlen und
+keine Timeouts. Ein gespeicherter Bericht kann einen fehlgeschlagenen
+Prozess deshalb nicht allein mit `passed=true` zu einem Erfolg umdeuten.
+
+**Prüfumfang dieser Korrektur:** Drei gezielte lokale Node-Regressionstests
+zum Worker bestanden; acht weitere funktionale Assertions wurden mit dem
+aktuell auf GitHub gespeicherten Worker-Quelltext ausgeführt. Sieben direkte
+Assertions gegen die M4-Gate-Funktionen bestanden; die beiden veränderten
+Repository-Testdateien wurden zusätzlich syntaktisch geprüft. Diese
+isolierten Prüfungen ersetzen weder die gesamten Continuum-/Backend-Suiten
+noch einen vollständigen Git-Checkout-End-to-End-Test oder einen
+Kotlin-/Android-Build. GitHub-Actions-Jobs mit null ausgeführten Schritten
+bleiben ausdrücklich **kein** Abnahmebeleg.
+
+**Der Release-Status bleibt GESPERRT**, bis der vollständige
+`m4-local-gate.mjs --android`-Lauf auf einem vollständig ausgestatteten
+Entwicklungsrechner und die Installation samt Neustart am echten Android-Gerät
+belegt sind. Keine Änderungen an `main` durch diesen Nachtrag.
