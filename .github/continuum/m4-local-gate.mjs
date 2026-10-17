@@ -11,11 +11,12 @@ import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {git,createWorktree,removeWorktree,runChain} from './repair-loop.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
+import {runRepairE2e,verifyRepairE2eRecord,validRepairE2eRecordShape} from './m4-repair-e2e.mjs';
 
 const SHA=/^[0-9a-f]{40}$/;
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 
-export function gateSummary(node,android,apk,runAndroid){
+export function gateSummary(node,android,apk,runAndroid,repairE2e=null){
  const valid=x=>x?.passed===true&&Array.isArray(x.results)&&x.results.length>0&&
    x.results.every(r=>r?.passed===true&&r.exitCode===0&&
      r.timedOut!==true&&r.tests?.failed===0&&
@@ -24,14 +25,17 @@ export function gateSummary(node,android,apk,runAndroid){
  // and persisted verification as in the live transition between stages.
  const nodeOK=valid(node)&&nextGateStage(node,runAndroid
    ?['node-continuum','node-backend']:['node-continuum']);
+ const repairOK=validRepairE2eRecordShape(repairE2e);
  const androidOK=runAndroid&&valid(android)&&
    nextGateStage(android,['android-compile','android-unit']);
  const apkOK=runAndroid&&apk?.exitCode===0&&apk?.timedOut===false&&
    /^[0-9a-f]{64}$/.test(apk?.artifactSha256??'')&&
    Number.isSafeInteger(apk?.bytes)&&apk.bytes>0;
  return {
-  passed:nodeOK&&(!runAndroid||(androidOK&&apkOK)),
+  passed:nodeOK&&repairOK&&(!runAndroid||(androidOK&&apkOK)),
   nodePassed:nodeOK,
+  repairE2ePassed:repairOK,
+  executedRepairE2eTests:repairOK?repairE2e.executed:0,
   androidPassed:runAndroid?androidOK:null,
   apkPassed:runAndroid?apkOK:null,
   scope:runAndroid?'NODE_KOTLIN_APK':'NODE_ONLY',
@@ -52,7 +56,7 @@ export function verifyGateReport(record,{expectedHead=null}={}){
  const reject=reason=>({valid:false,releaseReady:false,reason});
  if(!record||typeof record!=='object'||Array.isArray(record))
   return reject('INVALID_REPORT');
- if(record.schema!=='continuum-m4-local-gate'||record.version!==1||
+ if(record.schema!=='continuum-m4-local-gate'||record.version!==2||
    typeof record.head!=='string'||!SHA.test(record.head)||
    (expectedHead!==null&&record.head!==expectedHead)||
    !Array.isArray(record.errors)||!record.errors.every(x=>typeof x==='string')||
@@ -62,7 +66,7 @@ export function verifyGateReport(record,{expectedHead=null}={}){
  const {reportSha256,path:ignoredRuntimePath,...signed}=record;
  if(hash(JSON.stringify(signed))!==reportSha256)return reject('REPORT_HASH_MISMATCH');
  const summary=gateSummary(record.node,record.android,record.apk,
-   record.summary.scope==='NODE_KOTLIN_APK');
+   record.summary.scope==='NODE_KOTLIN_APK',record.repairE2e);
  if(JSON.stringify(summary)!==JSON.stringify(record.summary)||
    record.complete!==(summary.passed&&record.errors.length===0))
   return reject('INCONSISTENT_PROOF');
@@ -120,6 +124,8 @@ export function verifyReleaseProofFile(reportFile,{expectedHead=null}={}){
  }catch{return reject('INVALID_REPORT_FILE')}
  const verified=verifyGateReport(record,{expectedHead});
  if(!verified.releaseReady)return verified;
+ if(!verifyRepairE2eRecord(path.join(path.dirname(absolute),'repair-e2e'),record.repairE2e))
+  return reject('REPAIR_E2E_PROOF_MISSING_OR_CHANGED');
  const artifact=record.apk?.artifact;
  if(typeof artifact!=='string'||path.resolve(artifact)!==
    path.join(path.dirname(absolute),'app-debug.apk'))
@@ -205,8 +211,8 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
  fs.mkdirSync(destination,{recursive:true,mode:0o700});
  const outDir=fs.mkdtempSync(path.join(destination,'m4-'+head.slice(0,12)+'-'));
  const deadline=Date.now()+budgetMinutes*60_000;
- const report={schema:'continuum-m4-local-gate',version:1,head,
-  startedAt:new Date().toISOString(),node:null,android:null,apk:null,
+ const report={schema:'continuum-m4-local-gate',version:2,head,
+  startedAt:new Date().toISOString(),node:null,repairE2e:null,android:null,apk:null,
   errors:[],complete:false,summary:null};
  let wt=null;
  try{
@@ -216,17 +222,28 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
   const nodeResult=safeStage(()=>runChain(android?'stability':'node',wt,nodeDir,{deadline}));
   report.node=nodeResult.result;
   if(nodeResult.error)report.errors.push('NODE: '+nodeResult.error);
+  const nodeReady=nextGateStage(report.node,android?['node-continuum','node-backend']:['node-continuum']);
+  if(nodeReady){
+   const e2eDir=path.join(outDir,'repair-e2e');
+   fs.mkdirSync(e2eDir,{recursive:true,mode:0o700});
+   const e2e=safeStage(()=>runRepairE2e(wt,e2eDir,deadline));
+   report.repairE2e=e2e.result;
+   if(e2e.error)report.errors.push('REPAIR_E2E: '+e2e.error);
+   else if(!verifyRepairE2eRecord(e2eDir,report.repairE2e))
+    report.errors.push('REPAIR_E2E: missing or invalid mandatory test evidence');
+  }else report.errors.push('REPAIR_E2E: skipped because Node checks did not pass');
   if(android){
-   const nodeReady=nextGateStage(report.node,['node-continuum','node-backend']);
-   if(!nodeReady)report.errors.push('ANDROID: skipped because upstream Node or backend regression failed');
-   if(nodeReady){
+   const nodeAndRepairReady=nodeReady&&validRepairE2eRecordShape(report.repairE2e)&&
+    verifyRepairE2eRecord(path.join(outDir,'repair-e2e'),report.repairE2e);
+   if(!nodeAndRepairReady)report.errors.push('ANDROID: skipped because Node or mandatory repair E2E checks failed');
+   if(nodeAndRepairReady){
     const androidDir=path.join(outDir,'android');
     fs.mkdirSync(androidDir,{recursive:true,mode:0o700});
     const ar=safeStage(()=>runChain('android',wt,androidDir,{deadline}));
     report.android=ar.result;
     if(ar.error)report.errors.push('ANDROID: '+ar.error);
    }
-   const androidReady=nodeReady&&nextGateStage(report.android,['android-compile','android-unit']);
+   const androidReady=nodeAndRepairReady&&nextGateStage(report.android,['android-compile','android-unit']);
    if(!androidReady)report.errors.push('APK: skipped because mandatory Node or Kotlin checks failed');
    if(androidReady){
     const remaining=deadline-Date.now();
@@ -266,7 +283,7 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
   const status=git(source,['status','--porcelain'],{allowFailure:true});
   if(status.status!==0||status.stdout.trim())
    report.errors.push('SOURCE: checkout not clean after gate');
-  report.summary=gateSummary(report.node,report.android,report.apk,android);
+  report.summary=gateSummary(report.node,report.android,report.apk,android,report.repairE2e);
   report.complete=report.summary.passed&&report.errors.length===0;
   report.finishedAt=new Date().toISOString();
   report.reportSha256=hash(JSON.stringify(report));
