@@ -2,7 +2,7 @@ name: Build Device AI APK
 
 on:
   push:
-    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**" ]
+    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**", "continuum/argon-safety-review-20261017" ]
     paths-ignore:
       - ".github/continuum/**"
       - ".github/workflows/continuum-zero-cost.yml"
