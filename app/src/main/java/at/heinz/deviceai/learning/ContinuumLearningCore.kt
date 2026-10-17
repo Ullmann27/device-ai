@@ -467,15 +467,19 @@ class ContinuumLearningCore(
      * Keeps provenance stable throughout the turn even when an owner fact is
      * modified by another background job after this lock is released.
      */
-    fun replyWithEvidence(input:String):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>>=
+    fun replyWithEvidence(
+        input:String,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>>=
         synchronized(CORE_LOCK) {
             val snapshot=loadModel().save()
             val experiences=store.all()
-            val turn=dialogue.reply(snapshot,experiences,input,nowMillis())
-            val hits=if(turn.grounded)
-                ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
-                    .filter { it.id in turn.memoryIds }
-                else emptyList()
+            val turn=dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)
+            val hits=if(turn.grounded) {
+                val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
+                    .associateBy { it.id }
+                turn.memoryIds.mapNotNull(byId::get)
+            } else emptyList()
             turn to hits
         }
 
