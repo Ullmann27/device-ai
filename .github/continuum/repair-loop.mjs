@@ -33,8 +33,11 @@ export function git(cwd,args,opts={}){
 
 function backendTests(wt){
   const dir=path.join(wt,'backend/test');
-  return fs.existsSync(dir)?fs.readdirSync(dir)
-    .filter(f=>f.endsWith('.test.js')).sort().map(f=>'backend/test/'+f):[];
+  if(!fs.existsSync(dir))throw Error('Required backend Node test directory missing');
+  const tests=fs.readdirSync(dir).filter(f=>f.endsWith('.test.js')).sort()
+    .filter(f=>fs.lstatSync(path.join(dir,f)).isFile());
+  if(!tests.length)throw Error('Required backend Node test suite missing');
+  return tests.map(f=>'backend/test/'+f);
 }
 
 function nodeTests(wt){
