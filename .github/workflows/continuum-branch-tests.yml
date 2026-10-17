@@ -25,19 +25,20 @@ jobs:
         with:
           node-version: "22"
       - name: M4 end-to-end repair acceptance
-        run: node --test .github/continuum/repair-cycle-safety.integration.test.mjs
+        run: node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/continuum-m4-repair-junit.xml" .github/continuum/repair-loop.test.mjs .github/continuum/repair-cycle-safety.integration.test.mjs
       - name: Full Continuum Node regressions
         run: node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/continuum-node-junit.xml" --test-concurrency=2 .github/continuum/*.test.mjs
       - name: Backend Node regressions
         run: node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/backend-node-junit.xml" --test-concurrency=2 backend/test/*.test.js
       - name: Validate executed M4 regression evidence
-        run: node .github/continuum/m4-junit-evidence.mjs "$RUNNER_TEMP/continuum-node-junit.xml" "$RUNNER_TEMP/backend-node-junit.xml"
+        run: node .github/continuum/m4-junit-evidence.mjs "$RUNNER_TEMP/continuum-m4-repair-junit.xml" "$RUNNER_TEMP/continuum-node-junit.xml" "$RUNNER_TEMP/backend-node-junit.xml"
       - name: Publish M4 test evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Continuum-M4-Node-Backend-evidence
           path: |
+            ${{ runner.temp }}/continuum-m4-repair-junit.xml
             ${{ runner.temp }}/continuum-node-junit.xml
             ${{ runner.temp }}/backend-node-junit.xml
           if-no-files-found: error
