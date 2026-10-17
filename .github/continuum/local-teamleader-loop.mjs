@@ -74,8 +74,9 @@ export async function runTeamleaderLoop({
   // Retry failures with exponential backoff, but do not spin on repeated
   // broken checkouts or unavailable SDKs. Normal cycles run hourly by default.
   const pauseMs=streak===0?settings.intervalMs:
-   Math.min(MAX_FAILURE_BACKOFF_MS,
-    settings.intervalMs*Math.pow(2,Math.min(streak-1,6)));
+   Math.max(settings.intervalMs,
+    Math.min(MAX_FAILURE_BACKOFF_MS,
+     settings.intervalMs*Math.pow(2,Math.min(streak-1,6))));
   const last=maxCycles!==null&&cycles>=maxCycles;
   const heartbeat={
    schema:'continuum-local-worker-heartbeat',version:1,
