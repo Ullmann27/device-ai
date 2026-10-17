@@ -147,6 +147,23 @@ export function parseGateArgs(args){
  return opts;
 }
 
+/**
+ * Expensive downstream phases may start only after real upstream evidence.
+ * A compiler failure is not permission to build or publish an APK.
+ */
+export function nextGateStage(previous,expectedProfiles){
+ if(!Array.isArray(expectedProfiles)||!expectedProfiles.length ||
+    !Array.isArray(previous?.results) || previous.passed!==true)
+  return false;
+ if(previous.results.length!==expectedProfiles.length)return false;
+ return expectedProfiles.every((profile,i)=>{
+  const r=previous.results[i];
+  return r?.profile===profile&&r.passed===true&&r.exitCode===0&&
+    r.tests?.failed===0 &&
+    (r.testProfile!==true || r.tests?.executed>0);
+ });
+}
+
 function safeStage(fn){
  try{return {result:fn(),error:null};}
  catch(e){return {result:null,error:String(e?.message??e).slice(0,500)};}
@@ -179,13 +196,20 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
   report.node=nodeResult.result;
   if(nodeResult.error)report.errors.push('NODE: '+nodeResult.error);
   if(android){
-   const androidDir=path.join(outDir,'android');
-   fs.mkdirSync(androidDir,{recursive:true,mode:0o700});
-   const ar=safeStage(()=>runChain('android',wt,androidDir,{deadline}));
-   report.android=ar.result;
-   if(ar.error)report.errors.push('ANDROID: '+ar.error);
-   const remaining=deadline-Date.now();
-   if(remaining>0){
+   const nodeReady=nextGateStage(report.node,['node-continuum','node-backend']);
+   if(!nodeReady)report.errors.push('ANDROID: skipped because upstream Node or backend regression failed');
+   if(nodeReady){
+    const androidDir=path.join(outDir,'android');
+    fs.mkdirSync(androidDir,{recursive:true,mode:0o700});
+    const ar=safeStage(()=>runChain('android',wt,androidDir,{deadline}));
+    report.android=ar.result;
+    if(ar.error)report.errors.push('ANDROID: '+ar.error);
+   }
+   const androidReady=nodeReady&&nextGateStage(report.android,['android-compile','android-unit']);
+   if(!androidReady)report.errors.push('APK: skipped because mandatory Node or Kotlin checks failed');
+   if(androidReady){
+    const remaining=deadline-Date.now();
+    if(remaining>0){
     const gradle=spawnSync('gradle',[':app:assembleDebug','--console=plain',
       '-Pkotlin.incremental=false'],{
       cwd:wt,timeout:Math.min(remaining,30*60_000),encoding:'utf8',
@@ -206,7 +230,8 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
       report.apk.artifact=destination;
      }else report.errors.push('APK: Gradle reported success without an app-debug.apk artifact');
     }
-   }else report.errors.push('APK: gate budget exhausted');
+    }else report.errors.push('APK: gate budget exhausted');
+   }
   }
  }catch(e){
   report.errors.push('GATE: '+String(e?.message??e).slice(0,500));
