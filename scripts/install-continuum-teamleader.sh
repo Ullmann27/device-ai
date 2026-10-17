@@ -27,11 +27,39 @@ fi
 umask 077
 TMP_SERVICE=''
 TMP_TIMER=''
+ACTIVATION_PID=''
+INSTALLED=false
+# Determine ownership by inode even if interrupted between hard-link creation
+# and the next shell instruction. Never remove a different owner's unit.
+our_unit(){
+  local temporary="$1" destination="$2"
+  [[ -n "$temporary" && -f "$temporary" && -f "$destination" &&
+     ! -L "$destination" && "$temporary" -ef "$destination" ]]
+}
 cleanup(){
+  local status=$?
+  trap - EXIT INT TERM
+  if [[ -n "$ACTIVATION_PID" ]]; then
+    kill "$ACTIVATION_PID" 2>/dev/null || true
+    wait "$ACTIVATION_PID" 2>/dev/null || true
+  fi
+  if [[ "$INSTALLED" != true ]]; then
+    if our_unit "$TMP_TIMER" "$TIMER"; then
+      systemctl --user disable --now continuum-teamleader.timer >/dev/null 2>&1 || true
+      rm -f -- "$TIMER"
+    fi
+    if our_unit "$TMP_SERVICE" "$SERVICE"; then
+      rm -f -- "$SERVICE"
+    fi
+    systemctl --user daemon-reload >/dev/null 2>&1 || true
+  fi
   [[ -z "$TMP_SERVICE" ]] || rm -f -- "$TMP_SERVICE"
   [[ -z "$TMP_TIMER" ]] || rm -f -- "$TMP_TIMER"
+  return "$status"
 }
 trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 TMP_SERVICE="$(mktemp "$UNIT_DIR/.continuum-teamleader-service.XXXXXX")"
 TMP_TIMER="$(mktemp "$UNIT_DIR/.continuum-teamleader-timer.XXXXXX")"
 cat > "$TMP_SERVICE" <<EOF
@@ -67,18 +95,24 @@ if ! ln -- "$TMP_SERVICE" "$SERVICE"; then
   exit 1
 fi
 if ! ln -- "$TMP_TIMER" "$TIMER"; then
-  rm -f -- "$SERVICE"
   echo "Timer appeared during installation; rolling back service" >&2
   exit 1
 fi
-if ! systemctl --user daemon-reload ||
-   ! systemctl --user enable --now continuum-teamleader.timer; then
-  systemctl --user disable --now continuum-teamleader.timer >/dev/null 2>&1 || true
-  rm -f -- "$SERVICE" "$TIMER"
-  systemctl --user daemon-reload >/dev/null 2>&1 || true
+if ! systemctl --user daemon-reload; then
+  echo "Timer installation failed during daemon reload" >&2
+  exit 1
+fi
+# An asynchronous activation lets Bash handle SIGTERM while waiting.
+# The EXIT trap terminates activation and rolls back only our own units.
+systemctl --user enable --now continuum-teamleader.timer &
+ACTIVATION_PID=$!
+if ! wait "$ACTIVATION_PID"; then
+  ACTIVATION_PID=''
   echo "Timer activation failed; newly created units rolled back" >&2
   exit 1
 fi
+ACTIVATION_PID=''
+INSTALLED=true
 echo "Installed user timer: $TIMER"
 echo "Status: systemctl --user list-timers continuum-teamleader.timer"
 echo "Review: journalctl --user -u continuum-teamleader.service"
