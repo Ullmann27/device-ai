@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {gateSummary,nextGateStage,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
+import {gateSummary,nextGateStage,sha256ApkFile,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
 
 function fixture(broken=false){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
@@ -132,6 +132,26 @@ test('reloaded local gate proof rejects forged completion and never upgrades NOD
  const {reportSha256,...payload}=withRecomputedChecksum;
  withRecomputedChecksum.reportSha256=digest(payload);
  assert.equal(verifyGateReport(withRecomputedChecksum).reason,'INCONSISTENT_PROOF');
+});
+
+test('APK hashing uses a bounded stream and rejects links or invalid source files',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-apk-stream-'));
+ try{
+  const file=path.join(dir,'source.apk');
+  const payload=Buffer.alloc(192*1024+41,0x5a);
+  fs.writeFileSync(file,payload);
+  const digest=crypto.createHash('sha256').update(payload).digest('hex');
+  assert.deepEqual(sha256ApkFile(file),{
+   bytes:payload.length,artifactSha256:digest
+  });
+  const link=path.join(dir,'linked.apk');
+  fs.symlinkSync(file,link);
+  assert.throws(()=>sha256ApkFile(link),/Invalid APK artifact/);
+  const empty=path.join(dir,'empty.apk');
+  fs.writeFileSync(empty,Buffer.alloc(0));
+  assert.throws(()=>sha256ApkFile(empty),/Invalid APK artifact/);
+  assert.throws(()=>sha256ApkFile(path.join(dir,'missing.apk')));
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
 test('release proof verifies retained APK bytes, path and corruption without executing it',()=>{
