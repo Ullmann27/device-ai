@@ -124,6 +124,15 @@ object Cre1PromotionGate {
         fun neg(text:String)=words.findAll(text).map { it.value }
             .filter { it in negations }.toSet()
         if(neg(lowerTop)!=neg(lowerCandidate))return false
+        // Conservatively freeze named entities AND German capitalized nouns.
+        // A question about Leo's address must not silently switch Wien to
+        // Graz just because both candidates mention the same owner name.
+        fun titled(text:String)=words.findAll(text).map { it.value }
+            .filter { it.length>=3 && it.first().isUpperCase() &&
+                it.lowercase(Locale.ROOT) !in questionWords }.map {
+                it.lowercase(Locale.ROOT)
+            }.toSet()
+        if(titled(top)!=titled(candidate))return false
         val topWords=words.findAll(lowerTop).map { it.value }.toSet()
         val candidateWords=words.findAll(lowerCandidate).map { it.value }.toSet()
         // Candidate must preserve specific query terms that SWB1 grounded.
