@@ -106,7 +106,7 @@ test('syntax gate parses changed JavaScript only, rejecting malformed code witho
     fs.mkdirSync(path.dirname(absolute),{recursive:true});
     // --check parses but never runs the top-level side effect.
     fs.writeFileSync(absolute,
-      'import fs from "node:fs"; fs.writeFileSync('+JSON.stringify(sentinel)+',"UNSAFE");\n");
+      'import fs from "node:fs"; fs.writeFileSync('+JSON.stringify(sentinel)+',"UNSAFE");\n');
     const valid=checkCandidateJsSyntax(dir,[relative,relative]);
     assert.equal(valid.passed,true);
     assert.deepEqual(valid.checked,[relative]);
