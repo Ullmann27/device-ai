@@ -184,3 +184,33 @@ Der lokale Prüfrechner hat Node.js und Git, aber kein installiertes `gradle`;
 auf das private GitHub-Repository kann er ohne Netzwerk/Authentifizierung
 nicht als Gesamtcheckout zugreifen. Für den aktuellen Head wurden bei der
 letzten Statusabfrage keine zugeordneten GitHub-Actions-Läufe geliefert.
+
+## Stabilisierungsnachtrag – Git-Worktree-Lebenszyklus (17.10.2026)
+
+Die bestehende Reparaturpipeline hat zwei auf dem früheren Stand vorhandene
+Fehlerbehandlungen erhalten:
+
+- `createWorktree` entfernt bei gescheitertem `git worktree add` das zuvor
+  zugewiesene temporäre Verzeichnis und bereinigt nach Möglichkeit die
+  zugehörigen Git-Registrierungen. Kann auch die Bereinigung nicht vollständig
+  ausgeführt werden, bleibt der Fehlschlag ausdrücklich sichtbar.
+- `removeWorktree` akzeptiert nur temporäre Worktree-Pfade im verwalteten
+  Namensraum, bewahrt andere Verzeichnisse vor Löschung und meldet
+  fehlgeschlagenes `git worktree remove`, Dateisystem-Aufräumen oder
+  `git worktree prune`, statt den Fehler zu verschlucken. Der vorhandene
+  M4-Gate-Aufrufer nimmt diese Ausnahme als `WORKTREE_CLEANUP`-Fehler in
+  den Abnahmebericht auf; ein solcher Bericht kann nicht als vollständig
+  bestanden gelten.
+
+**Reproduzierbare lokale Teilprüfung:** In einer separaten Node.js-22-/Git-
+Testkopie wurden vier tatsächliche Git-Fixtures ausgeführt: erfolgreicher
+Worktree-Rundlauf, ungültiger Git-Commit mit Bereinigung, Schutz eines fremden
+Verzeichnisses und sichtbarer Fehler beim zweiten/unregistrierten Entfernen.
+Ergebnis: **4/4 bestanden**. Weitere drei Regressionstests wurden in die
+bestehende `repair-loop.test.mjs` aufgenommen. Die isolierte Git-Testkopie
+war **kein vollständiger Checkout des privaten Continuum-Repositories**;
+alle Continuum-/Backend-Tests und der Android-Build sind damit weiterhin
+nicht abgenommen.
+
+**Release-Status:** DRAFT, bis die vollständige Node-/Backend-/Kotlin-/APK-
+Testkette auf aktuellem Git-HEAD einschließlich Gerätetest bestanden wurde.
