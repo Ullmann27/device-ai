@@ -17,6 +17,38 @@ data class DecoderCorpus(val texts:List<String>,val split:DecoderSplit) {
 data class DecoderTrainingReport(val steps:Int,val interrupted:Boolean,val lossBefore:Double,val lossAfter:Double)
 data class DecoderGeneration(val text:String,val bytesGenerated:Int,val ended:Boolean)
 
+/** Canonical, byte-stable prefix used by both teacher forcing and generation.
+ * The evidence and the question are input context, NEVER language-model targets.
+ */
+fun decoderEvidencePrefix(evidence:String,question:String):String {
+    fun valid(text:String):Boolean =
+        text.isNotBlank() && text.toByteArray(Charsets.UTF_8).size<=160 &&
+        text.none { it.code<32 || it.code==127 }
+    require(valid(evidence) && valid(question)) { "Evidence/question must be bounded single lines" }
+    return "Beleg: $evidence\nFrage: $question\nAntwort: ".also {
+        require(it.toByteArray(Charsets.UTF_8).size<=512)
+    }
+}
+
+/** Each pair must be explicitly authored for research; it is not an owner memory. */
+data class DecoderEvidencePair(val evidence:String,val question:String,val answer:String) {
+    init {
+        val prefix=decoderEvidencePrefix(evidence,question)
+        require(answer.isNotBlank() && answer.toByteArray(Charsets.UTF_8).size<=160 &&
+            answer.none { it.code<32 || it.code==127 })
+        require(prefix.toByteArray(Charsets.UTF_8).size+answer.toByteArray(Charsets.UTF_8).size<=640)
+    }
+    fun prefix():String=decoderEvidencePrefix(evidence,question)
+    fun conditionerText():String=evidence+"\n"+question
+}
+data class DecoderEvidenceCorpus(val pairs:List<DecoderEvidencePair>,val split:DecoderSplit) {
+    init {
+        require(pairs.size in 1..64)
+        require(pairs.sumOf { it.prefix().toByteArray(Charsets.UTF_8).size+
+            it.answer.toByteArray(Charsets.UTF_8).size }<=16384)
+    }
+}
+
 /** Experimental causal byte-language model: learned positional embeddings,
  * tanh context MLP, 258-way softmax, exact SGD backpropagation. No model files,
  * APIs or pretrained weights. Optional 16-vector conditioning consumes the
@@ -35,6 +67,7 @@ class TinyContextDecoder private constructor(
     val parameterCount:Int get()=embedding.size+hiddenWeights.size+hiddenBias.size+outputWeights.size+outputBias.size
     private data class Forward(val x:DoubleArray,val h:DoubleArray,val p:DoubleArray)
     private data class Sample(val context:IntArray,val target:Int)
+    private data class PairedSample(val sample:Sample,val conditioner:DoubleArray)
 
     private fun condition(values:DoubleArray):DoubleArray {
         require(values.size==CONDITION && values.all { it.isFinite() && it in -1.0..1.0 })
@@ -75,6 +108,28 @@ class TinyContextDecoder private constructor(
             Sample(tokens,if(n==bytes.size)EOS else bytes[n].toInt() and 255)
         }
     }
+    /** Train ONLY the answer bytes, plus EOS. The prefix is already present in
+     * the causal context at the first answer byte; every example has its OWN
+     * condition derived from evidence+question, not a frozen batch-wide vector.
+     */
+    private fun pairedSamples(
+        corpus:DecoderEvidenceCorpus,
+        conditionerFor:(DecoderEvidencePair)->DoubleArray
+    ):List<PairedSample> = corpus.pairs.flatMap { pair ->
+        val prefix=pair.prefix().toByteArray(Charsets.UTF_8)
+        val full=prefix+pair.answer.toByteArray(Charsets.UTF_8)
+        val c=condition(conditionerFor(pair))
+        (prefix.size..full.size).map { n ->
+            val contextTokens=IntArray(CONTEXT) { position ->
+                val i=n-CONTEXT+position
+                if(i<0)BOS else full[i].toInt() and 255
+            }
+            PairedSample(Sample(contextTokens,if(n==full.size)EOS else full[n].toInt() and 255),c)
+        }
+    }
+    private fun pairedLoss(samples:List<PairedSample>):Double =
+        samples.sumOf { -ln(forward(it.sample.context,it.conditioner).p[it.sample.target].coerceAtLeast(1e-12)) }/samples.size
+
     private fun loss(samples:List<Sample>,c:DoubleArray):Double =
         samples.sumOf { -ln(forward(it.context,c).p[it.target].coerceAtLeast(1e-12)) }/samples.size
 
@@ -102,6 +157,36 @@ class TinyContextDecoder private constructor(
         }
         return DecoderTrainingReport(completed,completed<steps,before,loss(examples,c))
     }
+    /** Separate from legacy unpaired training to preserve checkpoint semantics.
+     * Different evidence/question pairs must be supplied by the caller; no
+     * private experiences, model responses or audit items are ingested here.
+     */
+    @Synchronized fun evaluateEvidencePairs(
+        corpus:DecoderEvidenceCorpus,
+        conditionerFor:(DecoderEvidencePair)->DoubleArray
+    ):Double=pairedLoss(pairedSamples(corpus,conditionerFor))
+
+    @Synchronized fun trainEvidencePairs(
+        corpus:DecoderEvidenceCorpus,steps:Int=600,learningRate:Double=.035,
+        conditionerFor:(DecoderEvidencePair)->DoubleArray,maxMillis:Long=3000,
+        cancelled:()->Boolean={false},nowNanos:()->Long=System::nanoTime
+    ):DecoderTrainingReport {
+        require(corpus.split==DecoderSplit.TRAIN)
+        require(steps in 1..20000 && learningRate in .0001.. .08 && maxMillis in 1..5000)
+        require(updates<=MAX_UPDATES-steps)
+        val examples=pairedSamples(corpus,conditionerFor)
+        val before=pairedLoss(examples)
+        val started=nowNanos()
+        var completed=0
+        while(completed<steps && !cancelled() && !Thread.currentThread().isInterrupted &&
+            nowNanos()-started<maxMillis*1_000_000L) {
+            val sample=examples[updates%examples.size]
+            update(sample.sample,sample.conditioner,learningRate)
+            updates++;completed++
+        }
+        return DecoderTrainingReport(completed,completed<steps,before,pairedLoss(examples))
+    }
+
     private fun update(sample:Sample,c:DoubleArray,rate:Double) {
         val f=forward(sample.context,c)
         val error=f.p.copyOf();error[sample.target]-=1
