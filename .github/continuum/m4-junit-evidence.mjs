@@ -43,11 +43,34 @@ export function verifyJUnitReport(file){
  return {file:path.resolve(file),total,executed,failed,skipped,placeholders};
 }
 
+/** Critical M4 acceptance must prove an actual broken-code -> verified-patch cycle. */
+const MANDATORY_REPAIRS=Object.freeze([
+ 'end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
+ 'regression search reverts only the culprit hunk and keeps unrelated changes',
+ 'a module that crashes while loading is located and gets its missing import back'
+]);
+
+export function verifyM4AcceptanceEvidence(repairFile,nodeFile,backendFile){
+ const reports=[repairFile,nodeFile,backendFile].map(verifyJUnitReport);
+ const xml=fs.readFileSync(repairFile,'utf8');
+ const executed=new Set();
+ const cases=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
+ for(const item of xml.matchAll(cases)){
+  const name=item[1].match(/\bname="([^"]*)"/)?.[1];
+  if(name&&!/<skipped\b/.test(item[3]??''))executed.add(name);
+ }
+ for(const name of MANDATORY_REPAIRS){
+  if(!executed.has(name))throw Error('Missing or skipped mandatory M4 repair: '+name);
+ }
+ return {schema:'continuum-m4-test-evidence',version:2,
+  reports,mandatoryRepairs:[...MANDATORY_REPAIRS]};
+}
+
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  try{
-  if(process.argv.length!==4)throw Error('Usage: m4-junit-evidence.mjs <continuum.xml> <backend.xml>');
-  const reports=process.argv.slice(2).map(verifyJUnitReport);
-  process.stdout.write(JSON.stringify({schema:'continuum-m4-test-evidence',version:1,reports})+'\n');
+  if(process.argv.length!==5)throw Error('Usage: m4-junit-evidence.mjs <repair.xml> <continuum.xml> <backend.xml>');
+  const evidence=verifyM4AcceptanceEvidence(...process.argv.slice(2));
+  process.stdout.write(JSON.stringify(evidence)+'\n');
  }catch(error){
   console.error('M4 regression evidence rejected:',error.message);
   process.exitCode=1;
