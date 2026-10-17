@@ -28,6 +28,7 @@ export function validateWorkerHeartbeat(hb){
     !Number.isSafeInteger(hb.failures)||hb.failures<0||hb.failures>hb.cycles||
     !Number.isSafeInteger(hb.failureStreak)||hb.failureStreak<0||hb.failureStreak>hb.failures||
     (hb.lastOutcome!==null&&!COMPLETE_OUTCOMES.has(hb.lastOutcome))||
+    (hb.cycles===0)!==(hb.lastOutcome===null)||
     typeof hb.detail!=='string'||hb.detail.length>160||
     !Number.isSafeInteger(hb.startedAt)||hb.startedAt<0)
   return false;
