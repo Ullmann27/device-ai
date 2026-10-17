@@ -354,3 +354,49 @@ test('a module that crashes while loading is located and gets its missing import
   }finally{removeWorktree(repo.dir,wt);}
  }finally{fs.rmSync(repo.dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });
+
+test('invalid Git revision cleans allocated repair worktree and registration',
+ {skip:nested},t=>{
+  const {dir,g}=tempRepo();
+  const paths=[],original=fs.mkdtempSync;
+  t.mock.method(fs,'mkdtempSync',(...args)=>{
+   const created=original(...args);
+   if(String(args[0]).includes('continuum-repair-wt-'))paths.push(created);
+   return created;
+  });
+  try{
+   assert.throws(()=>createWorktree(dir,'not-a-valid-git-commit'),/git worktree failed/);
+   assert.equal(paths.length,1,'worktree allocation must be observable');
+   assert.equal(fs.existsSync(paths[0]),false,'failure must not leak a directory');
+   assert.equal(g('worktree','list','--porcelain').split('\n')
+    .filter(x=>x.startsWith('worktree ')).length,1,
+    'failure must not leave a registered worktree');
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('repair cleanup refuses unmanaged paths and does not delete user files',
+ {skip:nested},()=>{
+  const {dir}=tempRepo();
+  const victim=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-preserve-data-'));
+  fs.writeFileSync(path.join(victim,'important.txt'),'keep\n');
+  try{
+   assert.throws(()=>removeWorktree(dir,victim),/unmanaged worktree/);
+   assert.equal(fs.readFileSync(path.join(victim,'important.txt'),'utf8'),'keep\n');
+  }finally{
+   fs.rmSync(victim,{recursive:true,force:true});
+   fs.rmSync(dir,{recursive:true,force:true});
+  }
+});
+
+test('repair cleanup cannot silently ignore a failed Git worktree removal',
+ {skip:nested},()=>{
+  const {dir,head,g}=tempRepo();
+  try{
+   const wt=createWorktree(dir,head);
+   g('worktree','remove','--force',wt);
+   assert.throws(()=>removeWorktree(dir,wt),/cleanup incomplete/);
+   assert.equal(fs.existsSync(wt),false);
+   assert.equal(g('worktree','list','--porcelain').split('\n')
+    .filter(x=>x.startsWith('worktree ')).length,1);
+  }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
