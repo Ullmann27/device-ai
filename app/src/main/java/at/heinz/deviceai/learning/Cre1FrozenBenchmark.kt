@@ -1,6 +1,8 @@
 package at.heinz.deviceai.learning
 
 import java.security.MessageDigest
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 /**
  * Read-only experiment against the ACTUAL SWB1 candidate gate and CRE1
@@ -28,6 +30,26 @@ data class Cre1FrozenQuestion(
 
 /** This does NOT write the approval file or enable CRE1 in chat. */
 object Cre1FrozenBenchmark {
+    private fun caseFingerprint(swbSha:String,item:Cre1FrozenQuestion):String {
+        val md=MessageDigest.getInstance("SHA-256")
+        fun put(value:String) {
+            val bytes=value.toByteArray(StandardCharsets.UTF_8)
+            md.update(ByteBuffer.allocate(4).putInt(bytes.size).array())
+            md.update(bytes)
+        }
+        put("CRE1_FROZEN_CASE_V1")
+        put(swbSha)
+        put(item.caseId)
+        put(item.query)
+        put(item.expectedMemoryId?:"")
+        for(e in item.memoryPool.sortedBy { it.id }) {
+            put(e.id);put(e.contentHash);put(e.status.name)
+            put(e.type.name);put(e.provenance.name);put(e.trust.name)
+            put(e.sourceRef?:"")
+        }
+        return md.digest().joinToString("") { "%02x".format(it) }
+    }
+
     fun run(
         swb1Snapshot:ByteArray,
         cre1Snapshot:ByteArray,
@@ -41,6 +63,8 @@ object Cre1FrozenBenchmark {
         // Validate both models once before touching the benchmark corpus.
         TrainableSubwordEncoder.restore(swb1Snapshot)
         val cre1=Cre1InferenceEncoder.restore(cre1Snapshot)
+        val swbSha=MessageDigest.getInstance("SHA-256").digest(swb1Snapshot)
+            .joinToString("") { "%02x".format(it) }
         val sha=MessageDigest.getInstance("SHA-256").digest(cre1Snapshot)
             .joinToString("") { "%02x".format(it) }
         val outcomes=ArrayList<Cre1AuditOutcome>(sealedCases.size)
@@ -60,7 +84,8 @@ object Cre1FrozenBenchmark {
             }
             outcomes+=Cre1AuditOutcome(
                 item.caseId,item.expectedMemoryId,ranked.map { it.id }.toSet(),
-                ranked.firstOrNull()?.id,proposed.firstOrNull()?.id
+                ranked.firstOrNull()?.id,proposed.firstOrNull()?.id,
+                caseFingerprint(swbSha,item)
             )
         }
         check(!cancelled() && !Thread.currentThread().isInterrupted) {
