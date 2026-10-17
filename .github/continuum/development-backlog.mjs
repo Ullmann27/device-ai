@@ -687,13 +687,37 @@ export class BacklogStore{
       try{writeSynced(this.lockFile,body);return token;}catch(e){if(e.code!=='EEXIST')throw e;}
       let st;try{st=fs.statSync(this.lockFile);}catch(e){if(e.code==='ENOENT')continue;throw e;}
       if(Date.now()-st.mtimeMs>this.staleLockMs){
-        // Move the stale lock aside under a unique name; if what we moved is
-        // in fact fresh (taken over in between), put it back.
-        const aside=this.lockFile+'.stale-'+token;
-        try{fs.renameSync(this.lockFile,aside);}catch(e){if(e.code==='ENOENT')continue;throw e;}
-        if(Date.now()-fs.statSync(aside).mtimeMs<=this.staleLockMs){try{fs.linkSync(aside,this.lockFile);}catch{/* a new holder exists */}}
-        fs.rmSync(aside,{force:true});
-        continue;
+        // Age alone is NOT proof of a dead process. In particular, a Gradle
+        // task can outlive the default lease. Never steal its live local lock.
+        // A foreign host is unverifiable, so fail closed rather than inventing
+        // cross-machine liveness from an unrelated local PID.
+        let owner=null;
+        try{owner=JSON.parse(fs.readFileSync(this.lockFile,'utf8'));}catch{/* legacy/corrupt lock */}
+        const host=os.hostname().replace(/[^\w.-]/g,'').slice(0,64)||'host';
+        let live=false,foreign=false;
+        if(owner&&typeof owner==='object'&&typeof owner.host==='string'){
+          foreign=owner.host!==host;
+          if(!foreign&&Number.isSafeInteger(owner.pid)&&owner.pid>0){
+            try{process.kill(owner.pid,0);live=true;}
+            catch(e){if(e.code==='EPERM')live=true;else if(e.code!=='ESRCH')live=true;}
+          }
+        }
+        if(!live&&!foreign){
+          // Check that the inode which looked stale is the inode we moved.
+          // An intervening writer might have released/recreated the lock.
+          const aside=this.lockFile+'.stale-'+token;
+          try{fs.renameSync(this.lockFile,aside);}catch(e){if(e.code==='ENOENT')continue;throw e;}
+          const moved=fs.statSync(aside);
+          if(moved.dev!==st.dev||moved.ino!==st.ino||
+              Date.now()-moved.mtimeMs<=this.staleLockMs){
+            try{fs.linkSync(aside,this.lockFile);}catch{/* successor holds lock */}
+            fs.rmSync(aside,{force:true});
+            // Do not blindly retry: ambiguous ownership must fail closed.
+            fail('LOCK_TIMEOUT','backlog lock ownership changed while reclaiming');
+          }
+          fs.rmSync(aside,{force:true});
+          continue;
+        }
       }
       if(Date.now()>deadline)fail('LOCK_TIMEOUT','backlog is locked by another process: '+this.lockFile);
       sleepMs(Math.min(200,20+round*10));
