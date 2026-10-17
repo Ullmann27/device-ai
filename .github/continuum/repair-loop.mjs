@@ -194,14 +194,26 @@ function context(wt,base,experience){
   return {readFile,index,jsSiblings,changedInBase,experience};
 }
 
-/** Order by experience (Laplace-smoothed per diagnostic kind and strategy) blended with the prior. */
+/** Historical success must not make a potentially destructive whole-file revert
+ * outrank a localized repair. A hunk revert is less risky but still follows
+ * direct diagnostic fixes. These classes are safety constraints, not learned
+ * preferences; confidence continues to sort WITHIN a safety class.
+ */
+export function repairCandidateRiskTier(strategy){
+  if(strategy==='REVERT_FILE_TO_PARENT')return 2;
+  if(strategy==='REVERT_HUNK_TO_PARENT')return 1;
+  return 0;
+}
+
+/** Order by non-destructive risk tier, then Laplace-smoothed experience/prior. */
 export function rankCandidates(candidates,stats=[],failedIds=new Set()){
   const byKey=new Map(stats.map(s=>[s.kind,s]));
   return candidates.filter(c=>!failedIds.has(c.diagnostic+':'+c.id)).map(c=>{
     const s=byKey.get((c.diagnosticKind+'|'+c.strategy).slice(0,80));
     const learned=s?(s.successes+1)/(s.successes+s.failures+2):0.5;
     return {...c,score:Number((0.6*learned+0.4*(c.prior??0.5)).toFixed(4))};
-  }).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+  }).sort((a,b)=>repairCandidateRiskTier(a.strategy)-repairCandidateRiskTier(b.strategy)||
+    b.score-a.score||a.id.localeCompare(b.id));
 }
 
 /**
