@@ -132,10 +132,10 @@ object Cre1PromotionGate {
         val lowerCandidate=candidate.lowercase(Locale.ROOT)
         // Even without a literal number in the question, changing a number
         // compared with SWB1 Top-1 may change the meaning of the answer.
-        if(numbers.findAll(lowerTop).map { it.value }.toSet()!=
-            numbers.findAll(lowerCandidate).map { it.value }.toSet())return false
+        if(numbers.findAll(lowerTop).map { it.value }.toList()!=
+            numbers.findAll(lowerCandidate).map { it.value }.toList())return false
         fun neg(text:String)=words.findAll(text).map { it.value }
-            .filter { it in negations }.toSet()
+            .filter { it in negations }.toList()
         if(neg(lowerTop)!=neg(lowerCandidate))return false
         // Conservatively freeze named entities AND German capitalized nouns.
         // A question about Leo's address must not silently switch Wien to
