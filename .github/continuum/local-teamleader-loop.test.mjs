@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome} from './local-teamleader-loop.mjs';
+import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 import {parseTeamleaderArgs,teamleaderExitCode} from './teamleader-cli.mjs';
 
 test('three local cycles pace on a fixed one-hour schedule and persist honest heartbeat',async()=>{
@@ -172,4 +172,35 @@ test('a failing baseline without a code diagnostic remains a failed worker cycle
  assert.equal(done[0].failureStreak,1);
  assert.equal(done[1].failureStreak,2);
  assert.equal(done[2].failureStreak,0);
+});
+
+
+test('scheduler wait failure persists terminal ERROR rather than false WAITING',async()=>{
+ const observed=[];
+ await assert.rejects(runTeamleaderLoop({
+  work:()=>({outcome:'NO_FAILURE'}),intervalMinutes:1,
+  onHeartbeat:heartbeat=>observed.push(heartbeat),
+  wait:async()=>{throw Error('scheduler storage unavailable');}
+ }),/scheduler storage unavailable/);
+ assert.deepEqual(observed.map(b=>b.state),['RUNNING','WAITING','ERROR']);
+ assert.equal(observed.at(-1).nextAttemptAt,null);
+ assert.match(observed.at(-1).detail,/scheduler storage unavailable/);
+});
+
+test('saved status validates legitimate heartbeats and rejects spoofed or corrupt states',async()=>{
+ const beats=[];
+ await runTeamleaderLoop({
+  work:()=>({outcome:'NO_FAILURE'}),maxCycles:2,intervalMinutes:1,
+  wait:async()=>{},onHeartbeat:heartbeat=>beats.push(heartbeat)
+ });
+ for(const beat of beats)assert.equal(validateWorkerHeartbeat(beat),true);
+ const waiting=beats.find(b=>b.state==='WAITING');
+ assert.ok(waiting);
+ for(const bad of [
+  {schema:'bad-schema'},{version:9},{state:'VERIFIED'},
+  {cycles:-1},{failures:10000},{failureStreak:-1},
+  {lastOutcome:'FAKE_VERIFIED'},{startedAt:'invalid'},
+  {nextAttemptAt:null},{nextAttemptAt:waiting.lastFinishedAt-1},
+  {lastFinishedAt:null},{detail:{message:'fake success'}}
+ ])assert.equal(validateWorkerHeartbeat({...waiting,...bad}),false,JSON.stringify(bad));
 });
