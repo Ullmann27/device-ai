@@ -49,6 +49,31 @@ Die **Verifikation** setzt den Prüfbericht in Beziehung zum **aktuellen Git-HEA
 
 **Grenze:** Ein selbst erzeugter SHA-256-Hash ist keine digitale Signatur oder unabhängige Bestätigung der Testdurchführung. Das Gate belegt die von ihm protokollierten lokalen Schritte; der praktische Test **Installation, Berechtigungen, Start/Neustart und Verhalten am Android-Gerät** muss zusätzlich erfolgen.
 
+## Stabilisierungsnachtrag – explizite Release-Profilverträge
+
+Die lokale Abnahme akzeptiert im vollständigen Android-Modus nur genau die
+vorgeschriebenen Profile in dieser Reihenfolge:
+
+- `node-continuum`: tatsächlich ausgeführte Continuum-Regressionstests;
+- `node-backend`: tatsächlich ausgeführte Backend-Regressionstests;
+- `android-compile`: erfolgreiche Android-Kotlin-Kompilierung mit Exitcode 0;
+- `android-unit`: tatsächlich ausgeführte und erfolgreiche Android-JVM-Tests;
+- `app-debug.apk`: erfolgreicher Gradle-Debug-Build mit gespeichertem Artefakt,
+  gemessener Byte-Größe und geprüftem SHA-256.
+
+Fehlende, doppelte oder ersetzte Prüfprofile verhindern die Freigabe. Node
+darf fehlende Testverzeichnisse nicht durch automatische Suche in anderen
+Projektteilen kompensieren. Symlink-Testdateien sind von der festen lokalen
+Testauswahl ausgeschlossen. Ein reiner `NODE_ONLY`-Report bleibt
+`releaseReady=false`, selbst wenn alle enthaltenen Tests grün sind.
+
+Am 17.10.2026 wurden die tatsächliche JavaScript-Entscheidungsfunktion des
+Release-Gates in **8** isolierten Funktionsprüfungen und die tatsächlichen
+Continuum-/Backend-Testdatei-Selektoren in **6** isolierten Funktionsprüfungen
+erfolgreich geprüft. Außerdem bestanden Parserprüfungen der vier geänderten
+Node-Dateien. Diese Teilprüfungen ersetzen ausdrücklich **keinen**
+vollständigen Git-Checkout-Testlauf oder Android-Build.
+
 ## Warum GitHub Actions aktuell keine Quelle für Build-Aussagen ist
 
 Die zuletzt eingesehenen Runs zu PR #19 melden `failure`, aber die abgefragten Jobs haben **0 ausgeführte Schritte**. Somit existieren daraus weder ein ausführbarer Compilerfehler noch ein bestätigter Testdurchlauf. Die konkrete externe Ursache der Runner-Blockade ist **nicht gesichert**. Ein funktionierender lokaler Testlauf ist der vorrangige, cloudunabhängige Weg.
