@@ -10,6 +10,7 @@ import java.security.MessageDigest
  */
 class ContinuumDecoderBridge(private val directory: File) {
     private val checkpoint = File(directory, "context-decoder.cdx")
+    private val pairedCheckpoint = File(directory, "context-decoder-paired.cdx")
 
     data class Status(
         val available: Boolean,
@@ -49,6 +50,73 @@ class ContinuumDecoderBridge(private val directory: File) {
         val active = if (accepted) candidate else baseline
         return DecoderExperimentResult(accepted, report.steps, report.lossBefore,
             report.lossAfter, auditBefore, auditAfter, hash(active.save()))
+    }
+
+    /** Dedicated evidence-paired model, never mixed with historical decoder
+     * checkpoints. Train/audit partitions must not reuse the same question+
+     * evidence input, even when the answer text differs.
+     */
+    @Synchronized fun pairedStatus(): Status {
+        val model=loadPairedOrNull()
+        return if(model==null) Status(false,0,7746,null)
+        else Status(true,model.updates,model.parameterCount,hash(model.save()))
+    }
+
+    @Synchronized fun trainPairedExperiment(
+        train:DecoderEvidenceCorpus,
+        audit:DecoderEvidenceCorpus,
+        encoderSnapshot:ByteArray,
+        steps:Int=600,
+        cancelled:()->Boolean={false}
+    ):DecoderExperimentResult {
+        require(train.split==DecoderSplit.TRAIN && audit.split==DecoderSplit.AUDIT)
+        val trainingInputs=train.pairs.map { it.conditionerText() }.toSet()
+        require(trainingInputs.size==train.pairs.size) { "Duplicate train input" }
+        require(audit.pairs.map { it.conditionerText() }.toSet().size==audit.pairs.size) {
+            "Duplicate audit input"
+        }
+        require(audit.pairs.none { it.conditionerText() in trainingInputs }) {
+            "Train/audit evidence-question overlap"
+        }
+        val encoder=TrainableSubwordEncoder.restore(encoderSnapshot)
+        val conditionFor:(DecoderEvidencePair)->DoubleArray = {
+            encoder.representation(it.conditionerText())
+        }
+        val baseline=loadPairedOrNull() ?: TinyContextDecoder()
+        val candidate=TinyContextDecoder.restore(baseline.save())
+        val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
+        val result=candidate.trainEvidencePairs(train,steps=steps,
+            conditionerFor=conditionFor,cancelled=cancelled,maxMillis=5000)
+        val auditAfter=candidate.evaluateEvidencePairs(audit,conditionFor)
+        val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
+            result.lossAfter<result.lossBefore && auditAfter<=auditBefore
+        if(accepted)candidate.saveTo(pairedCheckpoint)
+        val active=if(accepted)candidate else baseline
+        return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
+            result.lossAfter,auditBefore,auditAfter,hash(active.save()))
+    }
+
+    /** Research-only evidence-conditional output; never auto-published as a
+     * factual answer. Visible text needs an independent evidence verifier.
+     */
+    @Synchronized fun experimentalPairedContinuation(
+        evidence:String,question:String,encoderSnapshot:ByteArray,maxBytes:Int=48
+    ):DecoderGeneration? {
+        val prefix=decoderEvidencePrefix(evidence,question)
+        val model=loadPairedOrNull() ?: return null
+        val condition=TrainableSubwordEncoder.restore(encoderSnapshot)
+            .representation(evidence+"\n"+question)
+        return model.generate(prefix,maxBytes,condition)
+    }
+
+    private fun loadPairedOrNull():TinyContextDecoder? {
+        if(!pairedCheckpoint.exists())return null
+        return runCatching { TinyContextDecoder.restoreFrom(pairedCheckpoint) }
+            .getOrElse {
+                val backup=File(pairedCheckpoint.absolutePath+".lkg")
+                if(backup.exists())runCatching { TinyContextDecoder.restoreFrom(backup) }
+                    .getOrNull() else null
+            }
     }
 
     /** No tool calls, memory access or app actions; output is untrusted experiment text. */
