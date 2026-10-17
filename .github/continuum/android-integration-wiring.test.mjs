@@ -7,6 +7,8 @@ const dir='app/src/main/java/at/heinz/deviceai/';
 const activity=fs.readFileSync(dir+'AgentActivity.kt','utf8');
 const core=fs.readFileSync(dir+'learning/ContinuumLearningCore.kt','utf8');
 const runtime=fs.readFileSync(dir+'learning/ContinuumCognitiveRuntime.kt','utf8');
+const memory=fs.readFileSync(dir+'learning/ContinuumMemoryDialogue.kt','utf8');
+const cre1Gate=fs.readFileSync(dir+'learning/Cre1PromotionGate.kt','utf8');
 const scheduler=fs.readFileSync(dir+'learning/ContinuumAutonomousScheduler.kt','utf8');
 const status=fs.readFileSync(dir+'learning/ContinuumOfflineJobStatus.kt','utf8');
 const probe=fs.readFileSync(dir+'learning/ContinuumLocalContrastiveProbe.kt','utf8');
@@ -21,15 +23,22 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    activity.includes('ContinuumCognitiveRuntime(filesDir,core)') &&
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
- ensure('SWB1 dialogue and CRE1 evidence share one atomic snapshot',
+ ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
    runtime.includes('core.replyWithEvidence(input)') &&
-   core.includes('fun replyWithEvidence(input:String)') &&
-   core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)'));
- ensure('CRE1 sees only already-grounded SWB1 candidates',
-   core.includes('.filter { it.id in turn.memoryIds }') &&
-   runtime.includes('val (turn,ranked)=core.replyWithEvidence(input)'));
- ensure('CRE1 is shadow-only and never becomes a fact writer',
-   runtime.includes('Modus=CRE1_SHADOW') &&
+   core.includes('fun replyWithEvidence(') &&
+   core.includes('dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)') &&
+   core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)') &&
+   core.includes('turn.memoryIds.mapNotNull(byId::get)'));
+ ensure('CRE1 cannot expand the SWB1 evidence pool or alter hit provenance',
+   runtime.includes('val (turn,ranked)=core.replyWithEvidence(input)') &&
+   memory.includes('reordered.toSet()==hits.toSet()') &&
+   memory.includes('reordered.map { it.id }.distinct().size==hits.size') &&
+   cre1Gate.includes('semanticById.keys!=swb1.map { it.id }.toSet()'));
+ ensure('CRE1 promotion needs a model-bound benchmark, otherwise stays shadow',
+   runtime.includes('Cre1PromotionGate.readQualified(') &&
+   runtime.includes('else "CRE1_SHADOW"') &&
+   cre1Gate.includes('sampleCount>=200 && negativeCount>=50') &&
+   cre1Gate.includes('hybridFalseAttributions==0 && negativeFalseAnswers==0') &&
    !runtime.includes('confirmOwnerFact(') &&
    !runtime.includes('trainExperimentalCre1('));
  ensure('unanswered turn alone reaches local model',
