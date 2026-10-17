@@ -49,6 +49,8 @@ export function validRepairE2eRecordShape(record){
 export function verifyRepairE2eRecord(evidenceDirectory,record){
  try{
   if(!validRepairE2eRecordShape(record))return false;
+  const proofDir=fs.lstatSync(evidenceDirectory);
+  if(!proofDir.isDirectory()||proofDir.isSymbolicLink())return false;
   const file=path.join(evidenceDirectory,XML_NAME);
   const raw=readRegularXml(file);
   if(crypto.createHash('sha256').update(raw).digest('hex')!==record.sha256)return false;
