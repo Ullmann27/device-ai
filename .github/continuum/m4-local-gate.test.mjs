@@ -39,6 +39,10 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
   {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:4,failed:0}},
   {profile:'node-backend',passed:true,testProfile:true,tests:{executed:3,failed:0}}
  ]};
+ const fullAndroid={passed:true,results:[
+  {profile:'android-compile',passed:true,exitCode:0,testProfile:false,tests:{executed:0,failed:0}},
+  {profile:'android-unit',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
+ ]};
  assert.equal(gateSummary(valid,null,null,false).passed,true);
  assert.equal(gateSummary(valid,null,null,true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
@@ -49,7 +53,25 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
  },true).passed,false,'backend verification is mandatory');
  assert.equal(gateSummary(fullNode,valid,{
   exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'Android compile and unit reports are mandatory');
+ assert.equal(gateSummary(fullNode,fullAndroid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
  },true).passed,true);
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[1]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'cannot silently omit compilation');
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[0]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'cannot omit executed JVM tests');
+ assert.equal(gateSummary(fullNode,{
+  passed:true,results:[fullAndroid.results[0],fullAndroid.results[1],fullAndroid.results[1]]
+ },{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'duplicate profiles are not full evidence');
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:true},true).passed,false);
 });
 
@@ -87,12 +109,18 @@ test('release proof verifies retained APK bytes, path and corruption without exe
     {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:5,failed:0}},
     {profile:'node-backend',passed:true,testProfile:true,tests:{executed:2,failed:0}}
   ]};
+  const android={passed:true,results:[
+    {profile:'android-compile',passed:true,exitCode:0,testProfile:false,
+     tests:{executed:0,failed:0}},
+    {profile:'android-unit',passed:true,exitCode:0,testProfile:true,
+     tests:{executed:5,failed:0}}
+  ]};
   const apk={exitCode:0,timedOut:false,artifactSha256:
     crypto.createHash('sha256').update(artifact).digest('hex'),
     bytes:artifact.length,artifact:apkFile};
   const document={schema:'continuum-m4-local-gate',version:1,head,
-    startedAt:'2026-10-17T00:00:00Z',node:good,android:good,apk,
-    errors:[],complete:true,summary:gateSummary(good,good,apk,true),
+    startedAt:'2026-10-17T00:00:00Z',node:good,android,apk,
+    errors:[],complete:true,summary:gateSummary(good,android,apk,true),
     finishedAt:'2026-10-17T00:00:01Z'};
   document.reportSha256=crypto.createHash('sha256')
     .update(JSON.stringify(document)).digest('hex');
