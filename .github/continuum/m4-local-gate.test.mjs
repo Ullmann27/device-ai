@@ -6,6 +6,19 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {gateSummary,nextGateStage,sha256ApkFile,parseGateArgs,runM4Gate,verifyGateReport,verifyReleaseProofFile} from './m4-local-gate.mjs';
+import {MANDATORY_REPAIR_CASES} from './m4-repair-e2e.mjs';
+
+function fixtureRepairRecord(base=null){
+ const testcases=MANDATORY_REPAIR_CASES.map(name=>'<testcase name="'+name+'" classname="test"/>').join('\n');
+ const xml='<?xml version="1.0"?>\n<testsuites>\n'+testcases+'\n<!-- tests 3 -->\n<!-- pass 3 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->\n<!-- todo 0 -->\n</testsuites>';
+ if(base!==null){
+  const dir=path.join(base,'repair-e2e');
+  fs.mkdirSync(dir,{recursive:true});
+  fs.writeFileSync(path.join(dir,'repair-e2e-junit.xml'),xml);
+ }
+ return {passed:true,executed:3,mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
+  sha256:crypto.createHash('sha256').update(xml).digest('hex')};
+}
 
 function fixture(broken=false){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-gate-fixture-'));
@@ -18,6 +31,11 @@ function fixture(broken=false){
   "test('real local gate fixture',()=>assert.equal(2*3,"+(broken?'7':'6')+"));",
   ""
  ].join('\n'));
+ const cases=MANDATORY_REPAIR_CASES.map(name=>'test('+JSON.stringify(name)+',()=>{});');
+ fs.writeFileSync(path.join(root,'.github/continuum/repair-loop.test.mjs'),
+  ["import test from 'node:test';",...cases,""].join('\n'));
+ fs.writeFileSync(path.join(root,'.github/continuum/repair-cycle-safety.integration.test.mjs'),
+  "import test from 'node:test';\ntest('receipt has an end timestamp',()=>{});\n");
  const git=(...args)=>{
   const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:15000});
   assert.equal(r.status,0,r.stderr);
@@ -78,7 +96,7 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
   {profile:'android-compile',passed:true,exitCode:0,testProfile:false,tests:{executed:0,failed:0}},
   {profile:'android-unit',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
  ]};
- assert.equal(gateSummary(valid,null,null,false).passed,true);
+ assert.equal(gateSummary(valid,null,null,false,fixtureRepairRecord()).passed,true);
  assert.equal(gateSummary(valid,null,null,true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,false,
@@ -91,7 +109,7 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
  },true).passed,false,'Android compile and unit reports are mandatory');
  assert.equal(gateSummary(fullNode,fullAndroid,{
   exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
- },true).passed,true);
+ },true,fixtureRepairRecord()).passed,true);
  assert.equal(gateSummary(fullNode,{
   passed:true,results:[fullAndroid.results[1]]
  },{
@@ -115,9 +133,9 @@ test('reloaded local gate proof rejects forged completion and never upgrades NOD
    tests:{executed:4,failed:0}}]};
  const head='a'.repeat(40);
  const document={
-  schema:'continuum-m4-local-gate',version:1,head,
-  startedAt:'2026-10-17T00:00:00Z',node:successful,android:null,apk:null,
-  errors:[],complete:true,summary:gateSummary(successful,null,null,false),
+  schema:'continuum-m4-local-gate',version:2,head,
+  startedAt:'2026-10-17T00:00:00Z',node:successful,repairE2e:fixtureRepairRecord(),android:null,apk:null,
+  errors:[],complete:true,summary:gateSummary(successful,null,null,false,fixtureRepairRecord()),
   finishedAt:'2026-10-17T00:00:01Z'
  };
  const digest=o=>crypto.createHash('sha256').update(JSON.stringify(o)).digest('hex');
@@ -173,9 +191,10 @@ test('release proof verifies retained APK bytes, path and corruption without exe
   const apk={exitCode:0,timedOut:false,artifactSha256:
     crypto.createHash('sha256').update(artifact).digest('hex'),
     bytes:artifact.length,artifact:apkFile};
-  const document={schema:'continuum-m4-local-gate',version:1,head,
-    startedAt:'2026-10-17T00:00:00Z',node:good,android,apk,
-    errors:[],complete:true,summary:gateSummary(good,android,apk,true),
+  const repairE2e=fixtureRepairRecord(dir);
+  const document={schema:'continuum-m4-local-gate',version:2,head,
+    startedAt:'2026-10-17T00:00:00Z',node:good,repairE2e,android,apk,
+    errors:[],complete:true,summary:gateSummary(good,android,apk,true,repairE2e),
     finishedAt:'2026-10-17T00:00:01Z'};
   document.reportSha256=crypto.createHash('sha256')
     .update(JSON.stringify(document)).digest('hex');
@@ -278,7 +297,7 @@ test('persisted release summary rejects forged green flags when commands failed'
  const android={passed:true,results:[mk('android-compile',0,false),
   mk('android-unit',6)]};
  const apk={exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096};
- assert.equal(gateSummary(node,android,apk,true).passed,true);
+ assert.equal(gateSummary(node,android,apk,true,fixtureRepairRecord()).passed,true);
  assert.equal(gateSummary({...node,results:[
   node.results[0],{...node.results[1],exitCode:1}
  ]},android,apk,true).passed,false,'status 1 cannot be masked by passed=true');
