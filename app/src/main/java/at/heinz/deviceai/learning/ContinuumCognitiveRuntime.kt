@@ -72,7 +72,7 @@ class ContinuumCognitiveRuntime(
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.
             val observer=snapshot?.first ?: if(state!=ContinuumCre1State.INVALID_SNAPSHOT)
-                Cre1InferenceEncoder.createResearch(73) else null
+                UNTRAINED_SHADOW_ENCODER else null
             shadow=candidates.mapNotNull { hit ->
                 if(observer==null)return@mapNotNull null
                 val semantic=runCatching { observer.score(resolved,hit.text.take(512)) }
@@ -128,6 +128,14 @@ class ContinuumCognitiveRuntime(
     }
 
     companion object {
+        // Android creates a new cognitive runtime for each message. Do not
+        // repeatedly allocate and initialize CRE1's ~4.2-MB untrained weights
+        // inside the SWB1 conversation lock. This read-only instance remains
+        // shadow-only, never trained or shared for mutation.
+        private val UNTRAINED_SHADOW_ENCODER:Cre1InferenceEncoder by lazy(
+            LazyThreadSafetyMode.SYNCHRONIZED
+        ) { Cre1InferenceEncoder.createResearch(73) }
+
         private val REFERENTIAL=Regex(
             "(?iu)\\b(ihm|ihn|er|sie|ihr|ihre|seine|dessen|deren|darüber|dazu)\\b")
         private fun sha256(bytes:ByteArray):String=
