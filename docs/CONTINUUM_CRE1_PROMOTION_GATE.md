@@ -9,6 +9,8 @@ Without a verified local manifest, every dialogue remains SWB1-owned;
 CRE1 remains a shadow scorer. Training \`steps > 0\` cannot promote a model.
 
 Key paths:
+- `app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionAudit.kt`
+- `app/src/main/java/at/heinz/deviceai/learning/Cre1FrozenBenchmark.kt`
 - \`app/src/main/java/at/heinz/deviceai/learning/Cre1PromotionGate.kt\`
 - \`app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt\`
 - \`app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt\`
@@ -66,6 +68,38 @@ Matching hashes verify identity, not that a real evaluation occurred. It must
 be generated only after an independently reproduced sealed evaluation.
 Do not manually invent metrics or enable the gate from a sample manifest.
 No default manifest or automatic promotion writer is included.
+
+## Offline audit calculation and paired significance
+
+`Cre1FrozenBenchmark.run(swb1Snapshot, cre1Snapshot, sealedCases,
+frozenFusionWeight)` evaluates the EXISTING SWB1 ranking and CRE1 inference
+over the same candidates for each frozen question. The identical fused-score
+formula and conservative semantic guards are shared with runtime through
+`Cre1PromotionGate.proposeOrder`. It writes neither user memory nor
+approval files.
+
+`Cre1PromotionAudit.evaluate` calculates correct predictions and false
+attributions from per-case outcomes, paired discordances, and the
+two-sided **exact McNemar/binomial p-value**, without invented metrics.
+It fingerprints each question, expected ID, memory corpus content/status,
+SWB1 model hash, and the complete record of both models' selections.
+The CRE1 model hash is required separately by the promotion gate.
+
+The audit exactly models the production limitation: CRE1 may only permute
+already eligible SWB1 hits. If SWB1 abstains, CRE1 must also abstain;
+if SWB1 returned hits, CRE1 must select one of those SAME hits. No new
+candidates or fictitious neural abstentions are permitted.
+
+A benchmark reviewer must establish that the labels and domain were
+sealed independently, the chosen weight was frozen before held-out
+evaluation, there is no training/holdout leakage, and the test cases
+genuinely exercise unseen generalization. These functions produce a
+report in memory ONLY, never a production promotion manifest. Hashes
+detect changes; they are not a signature or proof of provenance.
+
+Additional regression tests:
+- `Cre1PromotionAuditTest.kt`: exact p-value, candidate rules and false-positive vetoes
+- `Cre1FrozenBenchmarkTest.kt`: real encoders, revoked facts, cancellation, corruption
 
 ## Required evidence before declaring CRE1 active
 
