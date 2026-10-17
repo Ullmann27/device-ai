@@ -8,7 +8,7 @@ import {parseKotlinDiagnostics,parseJUnit,parseJsErrorText,fingerprint} from './
 import {proposeCandidates,applyEdits,hunk,unescapeCodeNewlines,nearestNames,insertImport,editDistance} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
-import {createWorktree,removeWorktree,repairSession,rankCandidates,PROFILES,CHAINS,commitProposal,boundedWorktreeFile} from './repair-loop.mjs';
+import {createWorktree,removeWorktree,repairSession,rankCandidates,PROFILES,CHAINS,commitProposal,boundedWorktreeFile,checkCandidateJsSyntax} from './repair-loop.mjs';
 import {validateVerifiedReport,assertProposalBranch,publishRepair} from './repair-publish.mjs';
 
 const nested=process.env.CONTINUUM_REPAIR_DEPTH?'skipped inside a repair session (no nested loops)':false;
@@ -95,6 +95,31 @@ test('a whole-file revert never outranks minimal patches even with a misleading 
  ];
  assert.deepEqual(rankCandidates(candidates,stats).map(c=>c.strategy),
   ['JS_TYPO_REFERENCE','REVERT_HUNK_TO_PARENT','REVERT_FILE_TO_PARENT']);
+});
+
+test('syntax gate parses changed JavaScript only, rejecting malformed code without executing it',()=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-syntax-gate-'));
+  const relative='.github/continuum/syntax.mjs';
+  const absolute=path.join(dir,relative);
+  const sentinel=path.join(dir,'must-not-write');
+  try {
+    fs.mkdirSync(path.dirname(absolute),{recursive:true});
+    // --check parses but never runs the top-level side effect.
+    fs.writeFileSync(absolute,
+      'import fs from "node:fs"; fs.writeFileSync('+JSON.stringify(sentinel)+',"UNSAFE");\n");
+    const valid=checkCandidateJsSyntax(dir,[relative,relative]);
+    assert.equal(valid.passed,true);
+    assert.deepEqual(valid.checked,[relative]);
+    assert.equal(fs.existsSync(sentinel),false);
+    fs.writeFileSync(absolute,'export function broken( {\n');
+    const bad=checkCandidateJsSyntax(dir,[relative]);
+    assert.deepEqual([bad.passed,bad.failedFile,bad.reason],
+      [false,relative,'INVALID_JS_SYNTAX']);
+    assert.equal(fs.existsSync(sentinel),false);
+    assert.equal(checkCandidateJsSyntax(dir,['app/src/main/Foo.kt']).passed,true);
+    assert.throws(()=>checkCandidateJsSyntax(dir,['../escape.mjs']),/Invalid worktree edit path/);
+    assert.throws(()=>checkCandidateJsSyntax(dir,[relative],{timeoutMs:0}),/Invalid syntax-check request/);
+  } finally { fs.rmSync(dir,{recursive:true,force:true}); }
 });
 
 test('check profiles are fixed and unknown chains fail closed',()=>{
