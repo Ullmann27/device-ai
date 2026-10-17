@@ -39,6 +39,8 @@ function setup() {
     'if [ "$2" = "--verify" ]; then',
     '  case "$CONTINUUM_TEST_RESULT" in',
     '   red) printf \'{"head":"%s","proof":"%s","valid":false,"releaseReady":false}\\n\' "$CONTINUUM_TEST_HEAD" "$3" ;;',
+    '   invalid-but-ready) printf \'{"head":"%s","proof":"%s","valid":false,"releaseReady":true}\\n\' "$CONTINUUM_TEST_HEAD" "$3" ;;',
+    '   wrong-proof) printf \'{"head":"%s","proof":"%s","valid":true,"releaseReady":true}\\n\' "$CONTINUUM_TEST_HEAD" "/tmp/wrong-m4-proof.json" ;;',
     '   wrong-head) printf \'{"head":"%s","proof":"%s","valid":true,"releaseReady":true}\\n\' "ffffffffffffffffffffffffffffffffffffffff" "$3" ;;',
     '   malformed) printf \'not JSON\\n\' ;;',
     '   *) printf \'{"head":"%s","proof":"%s","valid":true,"releaseReady":true}\\n\' "$CONTINUUM_TEST_HEAD" "$3" ;;',
@@ -73,6 +75,8 @@ for(const [mode,shouldPass] of [
   ['green',true],
   ['red',false],
   ['wrong-head',false],
+  ['invalid-but-ready',false],
+  ['wrong-proof',false],
   ['malformed',false]
 ]){
   test('M4 wrapper verifier contract '+mode,()=>{
