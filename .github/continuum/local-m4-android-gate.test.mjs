@@ -33,7 +33,8 @@ function fixture() {
   tool('gradle','printf "Gradle 8.11.1\\n"');
   // This verifies only CLI orchestration; a real APK/proof is not produced.
   tool('node','if [ "$1" = "-p" ]; then echo 22; exit 0; fi\n'+
-    'if [ "$2" = "--verify" ]; then echo \'{"valid":true,"releaseReady":true}\'; exit 0; fi\n'+
+    'if [ "$1" = "-e" ]; then exec "$CONTINUUM_TEST_NODE" "$@"; fi\n'+
+    'if [ "$2" = "--verify" ]; then printf \'{"head":"%s","proof":"%s","valid":true,"releaseReady":true}\\n\' "$CONTINUUM_TEST_HEAD" "$3"; exit 0; fi\n'+
     'printf \'{"complete":true,"report":"/tmp/fake-m4-proof.json"}\\n\'');
   const sdk=path.join(home,'sdk');
   fs.mkdirSync(path.join(sdk,'platforms','android-36'),{recursive:true});
@@ -45,7 +46,7 @@ function fixture() {
   assert.equal(command('git',['-C',root,'-c','user.name=Test','-c','user.email=test@invalid.local','commit','-qm','fixture']).status,0);
   const head=command('git',['-C',root,'rev-parse','HEAD']).stdout.trim();
   const env={...process.env,PATH:tools+path.delimiter+process.env.PATH,ANDROID_HOME:sdk,
-    XDG_STATE_HOME:path.join(home,'state')};
+    XDG_STATE_HOME:path.join(home,'state'),CONTINUUM_TEST_NODE:process.execPath,CONTINUUM_TEST_HEAD:head};
   delete env.JAVA_HOME;
   const run=(args=[head],changes={})=>command('bash',[path.join(root,'scripts','local-m4-android.sh'),...args],{
     cwd:root,env:{...env,...changes}
