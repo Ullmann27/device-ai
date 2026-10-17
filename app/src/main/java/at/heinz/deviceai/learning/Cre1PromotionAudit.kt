@@ -20,11 +20,13 @@ data class Cre1AuditOutcome(
     val expectedId:String?,
     val eligibleIds:Set<String>,
     val swb1SelectedId:String?,
-    val cre1SelectedId:String?
+    val cre1SelectedId:String?,
+    val caseSha256:String
 ) {
     init {
         val valid=Regex("[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,79}")
         require(valid.matches(caseId))
+        require(caseSha256.matches(Regex("[a-f0-9]{64}")) && caseSha256!="0".repeat(64))
         require(eligibleIds.size in 0..3 && eligibleIds.all(valid::matches))
         require(expectedId==null || valid.matches(expectedId))
         // Production CRE1 may PERMUTE SWB1 candidates, never abstain on its
@@ -132,6 +134,7 @@ object Cre1PromotionAudit {
         put("CRE1_PROMOTION_AUDIT_V1")
         for(row in outcomes.sortedBy { it.caseId }) {
             put(row.caseId)
+            put(row.caseSha256)
             put(row.expectedId?:"")
             put(row.swb1SelectedId?:"")
             put(row.cre1SelectedId?:"")
