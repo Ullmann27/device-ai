@@ -19,7 +19,11 @@ export function gateSummary(node,android,apk,runAndroid){
  const valid=x=>x?.passed===true&&Array.isArray(x.results)&&x.results.length>0&&
    x.results.every(r=>r.passed===true&&r.tests?.failed===0)&&
    x.results.some(r=>r.testProfile&&r.tests?.executed>0);
- const nodeOK=valid(node);
+ const requiredNodeProfiles=['node-continuum','node-backend'];
+ const backendCovered=requiredNodeProfiles.every(name=>
+   node?.results?.some(r=>r.profile===name&&r.passed===true&&
+     r.testProfile===true&&r.tests?.executed>0));
+ const nodeOK=valid(node)&&(!runAndroid||backendCovered);
  const androidOK=runAndroid&&valid(android);
  const apkOK=runAndroid&&apk?.exitCode===0&&apk?.timedOut===false&&
    /^[0-9a-f]{64}$/.test(apk?.artifactSha256??'')&&
@@ -162,7 +166,7 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
   wt=createWorktree(source,head);
   const nodeDir=path.join(outDir,'node');
   fs.mkdirSync(nodeDir,{recursive:true,mode:0o700});
-  const nodeResult=safeStage(()=>runChain('node',wt,nodeDir,{deadline}));
+  const nodeResult=safeStage(()=>runChain(android?'stability':'node',wt,nodeDir,{deadline}));
   report.node=nodeResult.result;
   if(nodeResult.error)report.errors.push('NODE: '+nodeResult.error);
   if(android){
