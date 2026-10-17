@@ -49,7 +49,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // Validate byte-for-byte candidate identity, not just IDs: a callback
         // can change ranking, but may not forge provenance, scores or content.
         val selected=if(greeting)emptyList<ContinuumMemoryHit>()
-            else if(rerank==null || hits.size<2)hits else runCatching {
+            else if(rerank==null || hits.isEmpty())hits else runCatching {
                 val reordered=rerank(resolved,hits)
                 require(reordered.size==hits.size &&
                     reordered.map { it.id }.distinct().size==hits.size &&
