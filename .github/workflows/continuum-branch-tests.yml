@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "copilot/**"
+      - "continuum/argon-safety-review-20261017"
     paths:
       - ".github/continuum/**"
       - ".github/workflows/continuum-branch-tests.yml"
