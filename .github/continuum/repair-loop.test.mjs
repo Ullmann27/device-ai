@@ -83,6 +83,20 @@ test('ledger learns per diagnostic kind and strategy and skips proven failures',
  assert.throws(()=>verifyLedger({...ledger,attempts:[{...ledger.attempts[0],edits:[{file:'../x',oldText:'',newText:''}]}]}));
 });
 
+test('a whole-file revert never outranks minimal patches even with a misleading success history',()=>{
+ const candidates=[
+  {id:'a',diagnostic:'d',diagnosticKind:'REFERENCE_ERROR',strategy:'REVERT_FILE_TO_PARENT',prior:1},
+  {id:'b',diagnostic:'d',diagnosticKind:'REFERENCE_ERROR',strategy:'REVERT_HUNK_TO_PARENT',prior:0.9},
+  {id:'c',diagnostic:'d',diagnosticKind:'REFERENCE_ERROR',strategy:'JS_TYPO_REFERENCE',prior:0.1}
+ ];
+ const stats=[
+  {kind:'REFERENCE_ERROR|REVERT_FILE_TO_PARENT',successes:100,failures:0},
+  {kind:'REFERENCE_ERROR|JS_TYPO_REFERENCE',successes:0,failures:100}
+ ];
+ assert.deepEqual(rankCandidates(candidates,stats).map(c=>c.strategy),
+  ['JS_TYPO_REFERENCE','REVERT_HUNK_TO_PARENT','REVERT_FILE_TO_PARENT']);
+});
+
 test('check profiles are fixed and unknown chains fail closed',()=>{
  assert.deepEqual(Object.keys(CHAINS).sort(),['android','jvm','node']);
  assert.throws(()=>PROFILES['jvm-harness']('/tmp'),/not configured/);
