@@ -38,11 +38,17 @@ function verifyMandatoryCases(xml){
  return MANDATORY_REPAIR_CASES.length;
 }
 
+export function validRepairE2eRecordShape(record){
+ return record!==null&&typeof record==='object'&&!Array.isArray(record)&&
+  record.passed===true&&Number.isSafeInteger(record.executed)&&
+  record.executed>=MANDATORY_REPAIR_CASES.length&&
+  typeof record.sha256==='string'&&SHA.test(record.sha256)&&
+  JSON.stringify(record.mandatoryRepairs)===JSON.stringify(MANDATORY_REPAIR_CASES);
+}
+
 export function verifyRepairE2eRecord(evidenceDirectory,record){
  try{
-  if(!record||record.passed!==true||!Number.isSafeInteger(record.executed)||record.executed<3||
-     !SHA.test(record.sha256??'')||JSON.stringify(record.mandatoryRepairs)!==JSON.stringify(MANDATORY_REPAIR_CASES))
-   return false;
+  if(!validRepairE2eRecordShape(record))return false;
   const file=path.join(evidenceDirectory,XML_NAME);
   const raw=readRegularXml(file);
   if(crypto.createHash('sha256').update(raw).digest('hex')!==record.sha256)return false;
