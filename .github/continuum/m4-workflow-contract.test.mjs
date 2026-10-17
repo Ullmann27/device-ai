@@ -25,4 +25,7 @@ test('M4 workflow keeps backend changes covered and uploads executable evidence'
  assert.match(source,/actions\/upload-artifact@v4/);
  assert.match(source,/continuum-node-junit\.xml/);
  assert.match(source,/backend-node-junit\.xml/);
+ assert.match(source,/name: Validate executed M4 regression evidence/);
+ assert.match(source,/m4-junit-evidence\.mjs/);
+ assert.match(source,/if-no-files-found: error/);
 });
