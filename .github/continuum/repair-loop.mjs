@@ -39,7 +39,11 @@ function backendTests(wt){
 
 function nodeTests(wt){
   const dir=path.join(wt,'.github/continuum');
-  return fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>f.endsWith('.test.mjs')).sort().map(f=>'.github/continuum/'+f):[];
+  if(!fs.existsSync(dir))throw Error('Required Continuum Node test directory missing');
+  const tests=fs.readdirSync(dir).filter(f=>f.endsWith('.test.mjs')).sort()
+    .filter(f=>fs.lstatSync(path.join(dir,f)).isFile());
+  if(!tests.length)throw Error('Required Continuum Node test suite missing');
+  return tests.map(f=>'.github/continuum/'+f);
 }
 
 /** Fixed, reviewed check commands. Nothing here is derived from logs or inputs. */
