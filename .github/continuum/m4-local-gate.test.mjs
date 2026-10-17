@@ -100,6 +100,8 @@ test('release proof verifies retained APK bytes, path and corruption without exe
     .update(JSON.stringify(unsafe)).digest('hex');
   fs.writeFileSync(report,JSON.stringify(unsafe));
   assert.equal(verifyReleaseProofFile(report).reason,'UNSAFE_APK_PATH');
+  fs.writeFileSync(report,'not json');
+  assert.equal(verifyReleaseProofFile(report).reason,'INVALID_REPORT_FILE');
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
 
@@ -110,6 +112,10 @@ test('gate CLI rejects unknown arguments, duplicates, and invalid time budgets',
  assert.throws(()=>parseGateArgs(['--budget-minutes','hello']),/budget/i);
  assert.throws(()=>parseGateArgs(['--android','--android']),/duplicate/);
  assert.throws(()=>parseGateArgs(['--exec','rm']),/unknown/i);
+ assert.deepEqual(parseGateArgs(['--verify','/tmp/check.json']),{verify:'/tmp/check.json'});
+ assert.throws(()=>parseGateArgs(['--verify','/tmp/check.json','--android']),/cannot be combined/);
+ assert.throws(()=>parseGateArgs(['--verify']),/Missing value/);
+ assert.equal(verifyReleaseProofFile('/missing-continuum-qa-report.json').releaseReady,false);
 });
 
 test('real standalone Git fixture produces an immutable Node test proof',
