@@ -881,6 +881,7 @@ class AgentActivity : Activity() {
         ),
         experimental = listOf(
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
+            CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
@@ -899,6 +900,11 @@ class AgentActivity : Activity() {
         val cre=learning.cre1ResearchStatus()
         append("\nCRE1-Forschung: ").append(if(cre.available)"eigener trainierter Forschungsstand" else "noch kein freigegebener Forschungsstand")
             .append(" · ").append(cre.steps).append(" Trainingsschritte\n")
+        val paired=learning.pairedDecoderStatus()
+        append("CDX1-Paarlabor: ").append(if(paired.available)"Forschungsgewichte vorhanden"
+            else "noch ohne Forschungsgewichte")
+            .append(" · ").append(paired.updates)
+            .append(" Updates · Chatfreigabe: NEIN\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
         core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
     }
@@ -2116,6 +2122,91 @@ class AgentActivity : Activity() {
      * Explicitly triggered CRE1 experiment on public synthetic cases. No user
      * facts, internet texts or production SWB1 weights are used or modified.
      */
+    /**
+     * Explicit synthetic evidence-to-answer training. The active owner ledger,
+     * SWB1 retrieval and approved ToolGate cannot be changed by this lab.
+     */
+    private fun showPairedDecoderLab() {
+        onLearningIo({ ContinuumLearningCore(filesDir).pairedDecoderStatus() }) { result ->
+            val message=result.fold(onSuccess={ status ->
+                "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
+                    "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
+                    "Gewichtsupdates: "+status.updates+"\n"+
+                    "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n\n"+
+                    "Ein Beleg und eine Frage werden gemeinsam als Eingabe benutzt. "+
+                    "Der Decoder lernt ausschließlich die Antwortzeichen. "+
+                    "Trainings- und Prüfbeispiele sind getrennt; eine Verschlechterung "+
+                    "des Audit-Verlustwerts verhindert die Speicherung. "+
+                    "Generierter Text bleibt ungeprüfte Forschungsausgabe. "+
+                    "CRE1 und SWB1 bestimmen dadurch noch keine neuen Fakten; "+
+                    "der produktive Chat wird nicht geändert."
+            },onFailure={
+                "CDX1-Paarlabor nicht lesbar ("+failureName(it)+")."
+            })
+            AlertDialog.Builder(this)
+                .setTitle("CDX1 · Eigene Beleg-zu-Antwort-Generierung")
+                .setMessage(message)
+                .setNegativeButton("Schließen",null)
+                .setPositiveButton("EXPERIMENT STARTEN") { _, _ -> runPairedDecoderLab() }
+                .show()
+        }
+    }
+
+    private fun runPairedDecoderLab() {
+        if(busy || localAgentExecutor.isShutdown) {
+            addAssistantMessage("Ein anderer Lern- oder Assistentenlauf ist noch aktiv.")
+            return
+        }
+        setBusy(true)
+        addToolActivity("CONTINUUM · CDX1-Paartraining gestartet")
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            val swb1Before=core.modelHash()
+            fun pair(evidence:String,question:String,answer:String)=
+                at.heinz.deviceai.learning.DecoderEvidencePair(evidence,question,answer)
+            val train=at.heinz.deviceai.learning.DecoderEvidenceCorpus(listOf(
+                pair("Mira wohnt in Graz.","Wo wohnt Mira?","Mira wohnt in Graz."),
+                pair("Lea wohnt in Linz.","Wo wohnt Lea?","Lea wohnt in Linz."),
+                pair("Nora arbeitet als Ärztin.","Was arbeitet Nora?","Nora ist Ärztin."),
+                pair("Paul trägt einen Helm.","Was trägt Paul?","Paul trägt einen Helm.")
+            ),at.heinz.deviceai.learning.DecoderSplit.TRAIN)
+            val audit=at.heinz.deviceai.learning.DecoderEvidenceCorpus(listOf(
+                pair("Tim wohnt in Wien.","Wo wohnt Tim?","Tim wohnt in Wien."),
+                pair("Eva ist Köchin.","Was arbeitet Eva?","Eva ist Köchin.")
+            ),at.heinz.deviceai.learning.DecoderSplit.AUDIT)
+            val report=core.trainExperimentalPairedDecoder(train,audit,steps=120,
+                cancelled={Thread.currentThread().isInterrupted})
+            check(core.modelHash()==swb1Before) { "SWB1-Produktivmodell unerwartet verändert" }
+            buildString {
+                append("CDX1 · Paartraining mit eigenen Modellgewichten\n")
+                append(if(report.accepted)"Prüfverlust nicht verschlechtert; Labor-Checkpoint gespeichert."
+                    else "Kandidat nicht freigegeben: Audit, Zeitbudget oder Abbruchbedingung.")
+                append("\nDurchgeführte Updates: ").append(report.completedSteps)
+                append("\nTraining: ").append("%.5f".format(Locale.ROOT,report.trainingBefore))
+                append(" → ").append("%.5f".format(Locale.ROOT,report.trainingAfter))
+                append("\nAudit: ").append("%.5f".format(Locale.ROOT,report.auditBefore))
+                append(" → ").append("%.5f".format(Locale.ROOT,report.auditAfter))
+                append("\nSWB1 produktiv unverändert. Chatfreigabe: NEIN.")
+                if(report.accepted) {
+                    val trial=core.experimentalPairedDecoderContinuation(
+                        "Tim wohnt in Wien.","Wo wohnt Tim?",maxBytes=48)
+                    if(trial!=null) {
+                        append("\nExperimentelle generierte Fortsetzung: ")
+                        append(trial.text.take(100))
+                        append("\nAchtung: Text nicht faktisch verifiziert.")
+                    }
+                }
+            }
+        }) { result ->
+            setBusy(false)
+            addAssistantMessage(result.getOrElse {
+                "CDX1-Forschungsrunde fehlgeschlagen ("+failureName(it)+"). "+
+                    "Produktive Antworten und Erinnerungen bleiben geschützt."
+            })
+            addToolActivity("CONTINUUM · CDX1-Paartraining beendet")
+        }
+    }
+
     private fun showCre1ResearchLab() {
         onLearningIo({ ContinuumLearningCore(filesDir).cre1ResearchStatus() }) { result ->
             val details=result.fold(
