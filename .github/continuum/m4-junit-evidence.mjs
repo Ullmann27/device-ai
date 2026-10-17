@@ -20,9 +20,9 @@ export function verifyJUnitReport(file){
  if(!/^\s*<\?xml\b/.test(xml)||!/<testsuites(?:\s[^>]*)?>[\s\S]*<\/testsuites>\s*$/.test(xml))
   throw Error('Malformed Node JUnit document');
  const testcase=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
- let total=0,skipped=0,failed=0,placeholders=0;
+ let caseCount=0,skipped=0,failed=0,placeholders=0;
  for(const match of xml.matchAll(testcase)){
-  total++;
+  caseCount++;
   const attrs=match[1],body=match[3]??'';
   if(/\bname="[^"]*\.test\.m?js"/.test(attrs))placeholders++;
   if(/<skipped\b/.test(body))skipped++;
@@ -33,14 +33,19 @@ export function verifyJUnitReport(file){
   fail:declaredCount(xml,'fail'),cancelled:declaredCount(xml,'cancelled'),
   skipped:declaredCount(xml,'skipped')
  };
+ // Node's JUnit reporter emits a <testsuite> for each nested parent test.
+ // Those parents count in its declared 'tests' and 'pass' totals, even though
+ // only their children are represented by <testcase> entries.
+ const groupCount=[...xml.matchAll(/<testsuite\b(?=[\s>])/g)].length;
+ const total=caseCount+groupCount;
  const executed=total-skipped-placeholders;
- if(total!==declared.tests||total===0||executed<=0||
+ if(total!==declared.tests||caseCount===0||executed<=0||
     failed!==declared.fail||skipped!==declared.skipped||
     failed!==0||declared.cancelled!==0||
     declared.pass!==executed||
-    (xml.match(/<testcase\b/g)??[]).length!==total)
+    (xml.match(/<testcase\b/g)??[]).length!==caseCount)
   throw Error('Node JUnit has incomplete, failing or inconsistent executed-test evidence');
- return {file:path.resolve(file),total,executed,failed,skipped,placeholders};
+ return {file:path.resolve(file),total,executed,failed,skipped,placeholders,groupCount};
 }
 
 /** Critical M4 acceptance must prove an actual broken-code -> verified-patch cycle. */
