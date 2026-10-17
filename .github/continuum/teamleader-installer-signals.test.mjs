@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {spawn} from 'node:child_process';
+import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
 const installer=fileURLToPath(new URL('../../scripts/install-continuum-teamleader.sh',import.meta.url));
@@ -58,4 +58,34 @@ test('SIGTERM during hourly timer activation removes only installer-owned units'
    if(child?.exitCode===null)child.kill('SIGKILL');
    fs.rmSync(root,{recursive:true,force:true});
   }
+ });
+
+test('activation rollback never deletes a foreign replacement service',
+ {skip:process.platform!=='linux'||!fs.existsSync('/bin/bash'),timeout:10000},
+ ()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-unit-owner-test-'));
+  try{
+   const repo=path.join(root,'checkout'),home=path.join(root,'home');
+   const bin=path.join(root,'bin');
+   fs.mkdirSync(path.join(repo,'scripts'),{recursive:true});
+   fs.mkdirSync(home);fs.mkdirSync(bin);
+   fs.writeFileSync(path.join(repo,'.git'),'gitdir: /offline/worktree\n');
+   const script=path.join(repo,'scripts/install-continuum-teamleader.sh');
+   fs.copyFileSync(installer,script);
+   const fake=path.join(bin,'systemctl');
+   fs.writeFileSync(fake,
+    '#!/bin/sh\n'+
+    'case "$*" in *"enable --now"*)\n'+
+    '  rm -f -- "$HOME/.config/systemd/user/continuum-teamleader.service"\n'+
+    '  printf "foreign service\\n" > "$HOME/.config/systemd/user/continuum-teamleader.service"\n'+
+    '  exit 23;; esac\n'+
+    'exit 0\n',{mode:0o700});
+   const env={...process.env,HOME:home,PATH:bin+path.delimiter+(process.env.PATH??'')};
+   const run=spawnSync('bash',[script],{env,encoding:'utf8',timeout:5000});
+   assert.notEqual(run.status,0);
+   const units=path.join(home,'.config/systemd/user');
+   assert.equal(fs.readFileSync(path.join(units,'continuum-teamleader.service'),'utf8'),
+    'foreign service\n');
+   assert.equal(fs.existsSync(path.join(units,'continuum-teamleader.timer')),false);
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
  });
