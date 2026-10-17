@@ -168,6 +168,31 @@ export function boundedWorktreeFile(wt,relative){
   return target;
 }
 
+/** Fail fast on invalid JavaScript after a candidate is applied, but before
+ * starting the full test chain. The trusted Node executable parses the file
+ * without executing its top-level statements. This is NOT a security sandbox.
+ */
+export function checkCandidateJsSyntax(wt,relativeFiles,{timeoutMs=10000}={}){
+  if(!Array.isArray(relativeFiles)||relativeFiles.length>3||
+     relativeFiles.some(f=>typeof f!=='string')||
+     !Number.isSafeInteger(timeoutMs)||timeoutMs<1||timeoutMs>20000)
+    throw Error('Invalid syntax-check request');
+  const checked=[];
+  for(const relative of [...new Set(relativeFiles)]){
+    if(!/\.(?:mjs|cjs|js)$/.test(relative))continue;
+    const absolute=boundedWorktreeFile(wt,relative);
+    const result=run(process.execPath,['--check',absolute],{
+      cwd:wt,timeoutMs,env:{NODE_OPTIONS:'',NODE_V8_COVERAGE:''}
+    });
+    if(result.status!==0||result.error||result.signal){
+      return {passed:false,checked,failedFile:relative,
+        reason:result.error||result.signal?'SYNTAX_CHECK_INTERRUPTED':'INVALID_JS_SYNTAX'};
+    }
+    checked.push(relative);
+  }
+  return {passed:true,checked,failedFile:null,reason:null};
+}
+
 function context(wt,base,experience){
   const readFile=rel=>{
     try {
@@ -256,6 +281,27 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       // can be left because a subsequent file resolved outside the worktree.
       for(const [file,content] of prepared)fs.writeFileSync(file,content);
     }catch(e){attempt.outcome='NOT_APPLICABLE';attempt.error=e.message;report.attempts.push(attempt);continue;}
+    // Fast, nonexecuting grammar gate: an invalid .mjs/.js/.cjs candidate
+    // must not consume a full regression/Gradle cycle. Compiler and executed
+    // tests remain mandatory even if the syntax gate passes.
+    let syntax;
+    try {
+      syntax=checkCandidateJsSyntax(wt,c.edits.map(e=>e.file),{
+        timeoutMs:Math.min(10000,Math.max(1,deadline-Date.now()))
+      });
+    } catch(error) {
+      attempt.outcome='SYNTAX_CHECK_ERROR';
+      attempt.syntaxReason=error?.code??'INVALID_CHECK_REQUEST';
+      report.attempts.push(attempt);
+      continue;
+    }
+    attempt.syntax=syntax;
+    if(!syntax.passed) {
+      attempt.outcome='FAILED_SYNTAX';
+      report.attempts.push(attempt);
+      log(c.strategy+' -> FAILED_SYNTAX');
+      continue;
+    }
     const check=runChain(chain,wt,out,{deadline});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
