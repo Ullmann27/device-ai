@@ -2,6 +2,12 @@
 
 Eigenständiger, persönlicher Android-Assistent. **Forschungsziel:** einen lernfähigen Assistenten mit langlebiger Identität, überprüfbarer Erinnerung, kontrollierter Webrecherche und sicherer Geräteinteraktion schrittweise selbst aufbauen – ohne vorausgesetzten Cloud-Server oder extern importierte KI-Gewichte.
 
+## Stabilisierungsphase (Oktober 2026)
+
+Der aktuelle Entwicklungszweig befindet sich in einer **Qualitäts- und Aufräumrunde ohne neue Kernfeatures**. Die verbindliche [Stabilisierungs-Baseline mit lokalen Test- und APK-Abnahmekriterien](docs/CONTINUUM-STABILIZATION-BASELINE.md) beschreibt, wann ein sauberer Neustart zulässig ist.
+
+**Wichtig:** Ein fehlgeschlagener GitHub-Actions-Job ohne ausgeführte Schritte ist weder ein bestandener Test noch ein nachgewiesener Codefehler. Bis ein vollständiger lokaler Qualitätstest und ein Android-Gerätetest vorliegen, ist PR #19 ausdrücklich keine freigegebene Release-Version.
+
 ## Aktuelle Implementierung
 
 Der Android-Startkern funktioniert ohne Modellimport. Es handelt sich derzeit um einen **regelbasierten, transparenten Dialog- und Lernkern**, nicht um ein bereits trainiertes großes Sprachmodell.
