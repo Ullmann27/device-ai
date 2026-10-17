@@ -6,7 +6,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {verifyJUnitReport} from './m4-junit-evidence.mjs';
 
-const report=(body,totals='<!-- tests 1 -->\n<!-- pass 1 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->')=>
+const report=(body,totals='<!-- tests 1 -->\n<!-- pass 1 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->\n<!-- todo 0 -->')=>
  '<?xml version="1.0"?><testsuites>'+body+'\n'+totals+'</testsuites>';
 
 function withReport(xml,fn){
@@ -28,9 +28,9 @@ test('M4 refuses absent, malformed, empty, skipped, failing, or symlinked report
   '', '<testsuites/>',
   report(''),
   report('<testcase name="unexecuted.test.mjs"/>'),
-  report('<testcase name="skipped"><skipped/></testcase>','<!-- tests 1 -->\n<!-- pass 0 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 1 -->'),
-  report('<testcase name="failing"><failure message="x"/></testcase>','<!-- tests 1 -->\n<!-- pass 0 -->\n<!-- fail 1 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->'),
-  report('<testcase name="ok"/>','<!-- tests 2 -->\n<!-- pass 2 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->'),
+  report('<testcase name="skipped"><skipped/></testcase>','<!-- tests 1 -->\n<!-- pass 0 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 1 -->\n<!-- todo 0 -->'),
+  report('<testcase name="failing"><failure message="x"/></testcase>','<!-- tests 1 -->\n<!-- pass 0 -->\n<!-- fail 1 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->\n<!-- todo 0 -->'),
+  report('<testcase name="ok"/>','<!-- tests 2 -->\n<!-- pass 2 -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped 0 -->\n<!-- todo 0 -->'),
  ];
  for(const xml of examples)withReport(xml,file=>assert.throws(()=>verifyJUnitReport(file),undefined,xml.slice(0,80)));
  withReport(report('<testcase name="ok"/>'),(file,dir)=>{
@@ -84,5 +84,33 @@ test('outer',async t=>{await t.test('inner',async t=>{await t.test('leaf',()=>as
     .replace('<!-- pass 7 -->','<!-- pass 8 -->');
   fs.writeFileSync(xml,tampered);
   assert.throws(()=>verifyJUnitReport(xml),/incomplete|inconsistent/);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
+
+test('M4 classifies genuine Node 22 TODO tests independently of skipped tests',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-todo-junit-'));
+ try{
+  const sample=path.join(dir,'todo.test.mjs');
+  const xml=path.join(dir,'result.xml');
+  fs.writeFileSync(sample,`import test from 'node:test';
+test.todo('future');
+test('normal',()=>{});
+test('group',async t=>{
+ await t.test('executed child',()=>{});
+ await t.test('todo child',{todo:'next'},()=>{});
+});
+`);
+  const env={...process.env};
+  delete env.NODE_TEST_CONTEXT;
+  const processResult=spawnSync(process.execPath,['--test','--test-reporter=junit',
+   '--test-reporter-destination='+xml,sample],{encoding:'utf8',timeout:10000,env});
+  assert.equal(processResult.status,0,processResult.stderr);
+  const result=verifyJUnitReport(xml);
+  assert.equal(result.total,5);
+  assert.equal(result.executed,3);
+  assert.equal(result.skipped,0);
+  assert.equal(result.todo,2);
+  fs.writeFileSync(xml,fs.readFileSync(xml,'utf8').replace('<!-- todo 2 -->','<!-- todo 0 -->'));
+  assert.throws(()=>verifyJUnitReport(xml),/incomplete|inconsistent|todo/i);
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
