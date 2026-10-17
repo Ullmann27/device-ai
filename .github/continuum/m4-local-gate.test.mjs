@@ -35,12 +35,19 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
  const empty={passed:true,results:[{passed:true,testProfile:true,tests:{executed:0,failed:0}}]};
  assert.equal(gateSummary(empty,null,null,false).passed,false);
  const valid={passed:true,results:[{passed:true,testProfile:true,tests:{executed:4,failed:0}}]};
+ const fullNode={passed:true,results:[
+  {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:4,failed:0}},
+  {profile:'node-backend',passed:true,testProfile:true,tests:{executed:3,failed:0}}
+ ]};
  assert.equal(gateSummary(valid,null,null,false).passed,true);
  assert.equal(gateSummary(valid,null,null,true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,false,
   'green Gradle exit without a retained APK is not a passing build');
  assert.equal(gateSummary(valid,valid,{
+  exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
+ },true).passed,false,'backend verification is mandatory');
+ assert.equal(gateSummary(fullNode,valid,{
   exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
  },true).passed,true);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:true},true).passed,false);
@@ -76,8 +83,10 @@ test('release proof verifies retained APK bytes, path and corruption without exe
   const head='a'.repeat(40),apkFile=path.join(dir,'app-debug.apk');
   const artifact=Buffer.from([0x50,0x4b,0x03,0x04,0x01,0x02,0x03,0x04]);
   fs.writeFileSync(apkFile,artifact);
-  const good={passed:true,results:[{passed:true,testProfile:true,
-    tests:{executed:5,failed:0}}]};
+  const good={passed:true,results:[
+    {profile:'node-continuum',passed:true,testProfile:true,tests:{executed:5,failed:0}},
+    {profile:'node-backend',passed:true,testProfile:true,tests:{executed:2,failed:0}}
+  ]};
   const apk={exitCode:0,timedOut:false,artifactSha256:
     crypto.createHash('sha256').update(artifact).digest('hex'),
     bytes:artifact.length,artifact:apkFile};
