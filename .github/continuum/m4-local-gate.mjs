@@ -35,6 +35,77 @@ export function gateSummary(node,android,apk,runAndroid){
  };
 }
 
+/**
+ * Verify a persisted local quality report without rerunning code from it.
+ * A clean NODE_ONLY proof is useful during development but is NEVER a
+ * release-quality baseline: releaseReady always requires JVM tests and APK.
+ *
+ * SHA-256 is an accidental-corruption check, NOT a signature or independent
+ * guarantee that the producer really executed the reported tests.
+ */
+export function verifyGateReport(record,{expectedHead=null}={}){
+ const reject=reason=>({valid:false,releaseReady:false,reason});
+ if(!record||typeof record!=='object'||Array.isArray(record))
+  return reject('INVALID_REPORT');
+ if(record.schema!=='continuum-m4-local-gate'||record.version!==1||
+   typeof record.head!=='string'||!SHA.test(record.head)||
+   (expectedHead!==null&&record.head!==expectedHead)||
+   !Array.isArray(record.errors)||!record.errors.every(x=>typeof x==='string')||
+   typeof record.complete!=='boolean'||!record.summary||
+   !/^[a-f0-9]{64}$/.test(record.reportSha256??''))
+  return reject('INVALID_REPORT');
+ const {reportSha256,path:ignoredRuntimePath,...signed}=record;
+ if(hash(JSON.stringify(signed))!==reportSha256)return reject('REPORT_HASH_MISMATCH');
+ const summary=gateSummary(record.node,record.android,record.apk,
+   record.summary.scope==='NODE_KOTLIN_APK');
+ if(JSON.stringify(summary)!==JSON.stringify(record.summary)||
+   record.complete!==(summary.passed&&record.errors.length===0))
+  return reject('INCONSISTENT_PROOF');
+ if(!summary.passed||!record.complete)return {valid:true,releaseReady:false,reason:'CHECKS_NOT_GREEN'};
+ if(summary.scope!=='NODE_KOTLIN_APK')
+  return {valid:true,releaseReady:false,reason:'ANDROID_NOT_TESTED'};
+ return {valid:true,releaseReady:true,reason:null};
+}
+
+/**
+ * Independently checks that a claimed release APK actually exists in the
+ * proof directory with the same bytes and SHA-256. No subprocess, network or
+ * code from the proof is executed. Symlinks and external paths are rejected.
+ */
+export function verifyReleaseProofFile(reportFile,{expectedHead=null}={}){
+ const reject=reason=>({valid:false,releaseReady:false,reason});
+ const absolute=path.resolve(reportFile);
+ const stat=fs.lstatSync(absolute);
+ if(!stat.isFile()||stat.isSymbolicLink()||stat.size<20||stat.size>8*1024*1024)
+  return reject('INVALID_REPORT_FILE');
+ const record=JSON.parse(fs.readFileSync(absolute,'utf8'));
+ const verified=verifyGateReport(record,{expectedHead});
+ if(!verified.releaseReady)return verified;
+ const artifact=record.apk?.artifact;
+ if(typeof artifact!=='string'||path.resolve(artifact)!==
+   path.join(path.dirname(absolute),'app-debug.apk'))
+  return reject('UNSAFE_APK_PATH');
+ let fd;
+ try{
+  const info=fs.lstatSync(artifact);
+  if(!info.isFile()||info.isSymbolicLink()||
+    info.size!==record.apk.bytes||info.size>250*1024*1024)
+   return reject('APK_MISSING_OR_CHANGED');
+  const digest=crypto.createHash('sha256');
+  const buffer=Buffer.allocUnsafe(64*1024);
+  fd=fs.openSync(artifact,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  let count=0,n;
+  while((n=fs.readSync(fd,buffer,0,buffer.length,null))>0){
+   digest.update(buffer.subarray(0,n));count+=n;
+   if(count>250*1024*1024)return reject('APK_TOO_LARGE');
+  }
+  if(count!==info.size||digest.digest('hex')!==record.apk.artifactSha256)
+   return reject('APK_HASH_MISMATCH');
+  return verified;
+ }catch{return reject('APK_UNREADABLE')}
+ finally{if(fd!==undefined)fs.closeSync(fd);}
+}
+
 export function parseGateArgs(args){
  const opts={android:false,budgetMinutes:60};
  const seen=new Set();
