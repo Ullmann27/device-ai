@@ -13,7 +13,7 @@ const required=[
 const item=(name,body='')=>`<testcase classname="test" name="${name}">${body}</testcase>`;
 function junit(items,{skip=0}={}){
  const pass=items.length-skip;
- return `<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n${items.join('\n')}\n<!-- tests ${items.length} -->\n<!-- pass ${pass} -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped ${skip} -->\n</testsuites>`;
+ return `<?xml version="1.0" encoding="utf-8"?>\n<testsuites>\n${items.join('\n')}\n<!-- tests ${items.length} -->\n<!-- pass ${pass} -->\n<!-- fail 0 -->\n<!-- cancelled 0 -->\n<!-- skipped ${skip} -->\n<!-- todo 0 -->\n</testsuites>`;
 }
 function withReports(repairXml,fn){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-verified-e2e-'));
