@@ -202,6 +202,14 @@ test('release proof verifies retained APK bytes, path and corruption without exe
   fs.writeFileSync(report,JSON.stringify(document,null,2)+'\n');
   assert.deepEqual(verifyReleaseProofFile(report,{expectedHead:head}),
     {valid:true,releaseReady:true,reason:null});
+  const e2eProof=path.join(dir,'repair-e2e','repair-e2e-junit.xml');
+  fs.appendFileSync(e2eProof,'\n');
+  assert.equal(verifyReleaseProofFile(report).reason,'REPAIR_E2E_PROOF_MISSING_OR_CHANGED');
+  fixtureRepairRecord(dir);
+  assert.equal(verifyReleaseProofFile(report).releaseReady,true);
+  fs.unlinkSync(e2eProof);
+  assert.equal(verifyReleaseProofFile(report).reason,'REPAIR_E2E_PROOF_MISSING_OR_CHANGED');
+  fixtureRepairRecord(dir);
   fs.appendFileSync(apkFile,Buffer.from([0x05]));
   assert.equal(verifyReleaseProofFile(report).reason,'APK_MISSING_OR_CHANGED');
   fs.writeFileSync(apkFile,artifact);
@@ -237,6 +245,8 @@ test('real standalone Git fixture produces an immutable Node test proof',
   assert.equal(result.head,f.head);
   assert.equal(result.summary.scope,'NODE_ONLY');
   assert.equal(result.summary.nodePassed,true);
+  assert.equal(result.summary.repairE2ePassed,true);
+  assert.ok(result.repairE2e.executed>=MANDATORY_REPAIR_CASES.length);
   assert.ok(result.summary.executedNodeTests>=1);
   assert.equal(result.complete,true,JSON.stringify(result.errors));
   assert.ok(fs.existsSync(result.path));
