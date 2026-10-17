@@ -19,12 +19,21 @@ export function gateSummary(node,android,apk,runAndroid){
  const valid=x=>x?.passed===true&&Array.isArray(x.results)&&x.results.length>0&&
    x.results.every(r=>r.passed===true&&r.tests?.failed===0)&&
    x.results.some(r=>r.testProfile&&r.tests?.executed>0);
- const requiredNodeProfiles=['node-continuum','node-backend'];
- const backendCovered=requiredNodeProfiles.every(name=>
-   node?.results?.some(r=>r.profile===name&&r.passed===true&&
-     r.testProfile===true&&r.tests?.executed>0));
- const nodeOK=valid(node)&&(!runAndroid||backendCovered);
- const androidOK=runAndroid&&valid(android);
+ // A partial, duplicated or substituted report must never satisfy a
+ // release gate. The actual release flow is a fixed, reviewed chain, not
+ // a caller-defined set of arbitrary tests claiming passed=true.
+ const exactly=(report,names)=>Array.isArray(report?.results)&&
+   report.results.length===names.length &&
+   names.every((name,index)=>report.results[index]?.profile===name);
+ const fullNode=exactly(node,['node-continuum','node-backend'])&&
+   node.results.every(r=>r.testProfile===true&&r.tests?.executed>0);
+ const fullAndroid=exactly(android,['android-compile','android-unit'])&&
+   android.results[0].testProfile===false&&
+   android.results[0].exitCode===0 &&
+   android.results[1].testProfile===true&&
+   android.results[1].tests?.executed>0;
+ const nodeOK=valid(node)&&(!runAndroid||fullNode);
+ const androidOK=runAndroid&&valid(android)&&fullAndroid;
  const apkOK=runAndroid&&apk?.exitCode===0&&apk?.timedOut===false&&
    /^[0-9a-f]{64}$/.test(apk?.artifactSha256??'')&&
    Number.isSafeInteger(apk?.bytes)&&apk.bytes>0;
