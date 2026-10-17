@@ -52,5 +52,7 @@ trap 'rm -f -- "$output"' EXIT
 printf 'Running isolated local M4 gate for %s\n' "$actual_sha"
 node .github/continuum/m4-local-gate.mjs --root "$root" --out "$state_root" --android --budget-minutes 90 | tee "$output"
 proof="$(node -e 'const fs=require("node:fs");const data=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));if(!data.complete||typeof data.report!=="string")process.exit(1);process.stdout.write(data.report)' "$output")" || fail 'M4 gate did not provide a complete proof'
-node .github/continuum/m4-local-gate.mjs --verify "$proof"
+verified="$(node .github/continuum/m4-local-gate.mjs --verify "$proof")" || fail 'M4 proof verifier failed'
+node -e 'const result=JSON.parse(process.argv[1]);if(result.valid!==true||result.releaseReady!==true||result.proof!==process.argv[2]||result.head!==process.argv[3])process.exit(1)' \
+  "$verified" "$proof" "$actual_sha" || fail 'M4 proof verifier did not confirm release readiness for this commit'
 printf 'M4 proof passed. This does not replace Android lint, cross-runtime parity, or a real-device test.\n'
