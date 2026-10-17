@@ -37,6 +37,22 @@ Für eine externe Übergabe sollte die erwartete SHA **vorab aus dem freizugeben
 
 Der M4-Lauf nutzt einen separaten Git-Worktree und schreibt Nachweise standardmäßig unter `${XDG_STATE_HOME:-$HOME/.local/state}/device-ai-continuum/proofs`. `gate-report.json` und die APK werden durch die bestehende Gate-Implementierung verknüpft. Das SHA-256-Feld des Gate-Berichts ist ein Integritätscheck, keine digitale Signatur.
 
+## Neuer verpflichtender Reparatur-End-to-End-Nachweis (M4 v2)
+
+Nach erfolgreicher Node-Prüfung startet das lokale Gate innerhalb eines isolierten Worktrees den separaten, zeitlich begrenzten `runRepairE2e()`-Prüflauf. Dazu führt es die realen Dateien `repair-loop.test.mjs` und `repair-cycle-safety.integration.test.mjs` in einem eigenen Node-Prozess aus. Die drei festgelegten Reparaturfälle müssen nachweislich ausgeführt und bestanden sein. Ergebnisse mit fehlenden, übersprungenen oder manipulierten Pflichtfällen werden abgewiesen.
+
+Das Gate speichert `repair-e2e/repair-e2e-junit.xml` außerhalb des Checkouts, referenziert den SHA-256-Wert sowie die tatsächliche Anzahl ausgeführter Tests und prüft den Bericht **vor Beginn der Android-/Gradle-Phase** erneut. Im abschließenden `--verify`-Schritt werden Datei und Prüfsumme erneut unabhängig eingelesen. Ein fehlender oder nachträglich veränderter JUnit-Nachweis verhindert `releaseReady: true`, selbst wenn die Android- und APK-Felder grün aussehen.
+
+`gate-report.json` verwendet deshalb jetzt `version: 2` mit `repairE2e`, `summary.repairE2ePassed` und `summary.executedRepairE2eTests`. Ältere `version: 1`-Berichte sind **kein gültiger Release-Freigabenachweis**. Dies ist eine absichtliche Fail-Closed-Migration; historische Berichte bleiben archiviert und werden nicht umetikettiert.
+
+Gezielte Vertrags- und Integrationstests:
+
+```bash
+node --test .github/continuum/m4-mandatory-e2e-gate.test.mjs .github/continuum/m4-repair-e2e.test.mjs .github/continuum/m4-local-gate.test.mjs
+```
+
+Diese Prüfungen sind nicht gleichbedeutend mit einer erfolgreichen kompletten Gradle-/Android-Abnahme; der Android-SDK-/JDK-17-Build muss weiterhin real durchlaufen.
+
 ## Welche Abnahme dadurch **nicht** ersetzt wird
 
 Das aktuelle M4-Gate führt seine vorgesehenen Node-/Backend-/Kotlin-Profile und einen Debug-APK-Build aus. **Eine erfolgreiche M4-Prüfung allein beweist noch nicht:** Android-Lint `gradle :app:lintDebug`, vollständige Kotlin/Node-Paritätsrunden mit ihren Pflicht-Umgebungsvariablen, einen signierten Release-Build, die korrekte Integration des LiteRT-LM-Modells oder die Ausführung auf einem realen Samsung-Gerät.
