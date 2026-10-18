@@ -52,6 +52,26 @@ export function validateOwnerRepairTask(task,head){
 }
 
 /**
+ * Independent owner repair verification. A passing green test signal is NOT
+ * sufficient when a candidate silently executes fewer or skips more tests
+ * than the baseline. Keep this pure for exact negative regression tests.
+ */
+export function assessIndependentOwnerEvidence(baselineResults,verified){
+  if(!Array.isArray(baselineResults)||!Array.isArray(verified?.results))
+    throw Error('Owner repair evidence must include baseline and verification profiles');
+  const sufficient=evidenceSufficient(baselineResults,verified.results);
+  const profiles=verified.results.map(r=>({
+    profile:r.profile,passed:r.passed===true,executed:r.tests?.executed??0,
+    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+  }));
+  const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
+  const passed=verified.passed===true&&sufficient.sufficient&&actualTests>0&&
+    profiles.every(p=>p.passed&&p.failed===0);
+  return {passed,profiles,actualTests,evidenceSufficient:sufficient.sufficient,
+    reasons:sufficient.reasons};
+}
+
+/**
  * Claims exactly one owner-accepted task. A claim token belongs to this attempt
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
@@ -128,21 +148,18 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
       const verified=runChain(task.subject.chain,independent,independentOut,{deadline});
-      const sufficient=evidenceSufficient(report.baseline.results,verified.results);
-      const profiles=verified.results.map(r=>({profile:r.profile,passed:r.passed,
-        executed:r.tests.executed,failed:r.tests.failed,skipped:r.tests.skipped}));
-      const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
-      const independentlyPassed=verified.passed&&sufficient.sufficient&&actualTests>0&&
-        profiles.every(p=>p.passed&&p.failed===0);
+      const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
+      const {profiles,actualTests}=assessment;
+      const independentlyPassed=assessment.passed;
       report.independent={passed:independentlyPassed,profiles,
-        evidenceSufficient:sufficient.sufficient,reasons:sufficient.reasons};
+        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons};
       // Persist the independent verdict before the backlog can become DONE.
       writeReport();
       const independentReceipt=path.join(independentOut,'verification.json');
       const receipt={
         schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,
         checkedAt:new Date().toISOString(),passed:independentlyPassed,
-        evidenceSufficient:sufficient.sufficient,reasons:sufficient.reasons,
+        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
         executedTests:actualTests,profiles
       };
       fs.writeFileSync(independentReceipt,JSON.stringify(receipt,null,2)+'\n');
