@@ -5,6 +5,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
@@ -55,6 +56,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
                 check(actualOrb.isShown && actualOrb.width > 0 && actualOrb.height > 0) {
                     "The real dashboard hologram is not visible or measured"
                 }
+                assertOrbIsVisible(actualOrb)
                 val parent = actualOrb.parent as? ViewGroup
                 label = parent?.getChildAt(parent.indexOfChild(actualOrb) + 1) as? TextView
                 originalLabel = label?.text
@@ -117,6 +119,9 @@ class ContinuumVisualInstrumentation : Instrumentation() {
     }
 
     private fun capture(directory: File, name: String, activity: Activity): String {
+        onMain {
+            assertOrbIsVisible(checkNotNull(findOrb(activity.window.decorView)))
+        }
         val bitmap = if (captureMode == "view") {
             var rendered: Bitmap? = null
             onMain {
@@ -148,6 +153,15 @@ class ContinuumVisualInstrumentation : Instrumentation() {
         }
         check(file.length() > 0L) { "Capture $name is empty" }
         return file.absolutePath
+    }
+
+    private fun assertOrbIsVisible(orb: ContinuumHologramView) {
+        val visibleBounds = Rect()
+        val visible = orb.getGlobalVisibleRect(visibleBounds)
+        check(orb.height > 0 && visible && visibleBounds.height() * 100 >= orb.height * 95) {
+            "Native hologram is clipped: visible height=${visibleBounds.height()}px, " +
+                "measured height=${orb.height}px; at least 95% must be visible"
+        }
     }
 
     private fun findOrb(view: View): ContinuumHologramView? {
