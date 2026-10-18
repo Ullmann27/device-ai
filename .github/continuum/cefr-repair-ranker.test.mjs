@@ -40,7 +40,7 @@ function fixture(){
  validateVerifiedReport(report,patchText);
  const trusted=()=>({passed:true,base:report.base,chain:report.chain,
   patchSha256:sha256(patchText),profiles:[{profile:'node-continuum',
-   passed:true,failed:0,executed:5}]});
+   passed:true,failed:0,executed:5}],verifiedNegatives:[failed.candidate]});
  return {report,patchText,trusted};
 }
 
@@ -141,4 +141,16 @@ test('holdout metric requires explicit independently labeled correctIndex',()=>{
  assert.ok(Number.isFinite(metric.mrr)&&metric.mrr>0&&metric.mrr<=1);
  assert.throws(()=>validateCefrHoldout(HOLDOUT.map(({correctIndex,...rest})=>rest)),
   /INVALID_HOLDOUT_CORPUS/);
+});
+
+test('a failed strategy named only in the source report is not a training label',()=>{
+ const baselineBytes=new RelationalEncoder(33).save();
+ const {report,patchText,trusted}=fixture();
+ const result=trainCefrCandidateFromVerifiedReport({
+  baselineBytes,report,patchText,holdoutCases:HOLDOUT,
+  verifyIndependent:()=>({...trusted(),verifiedNegatives:[]})
+ });
+ assert.equal(result.accepted,false);
+ assert.equal(result.reason,'NO_INDEPENDENT_HARD_NEGATIVES');
+ assert.ok(result.activeBytes.equals(baselineBytes));
 });
