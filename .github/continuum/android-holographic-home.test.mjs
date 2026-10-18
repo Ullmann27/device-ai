@@ -63,6 +63,34 @@ test('responsive dashboard retains chat composer, updates and keyboard visibilit
  assert.doesNotMatch(pane,/buildQuickActions\(\)/);
 });
 
+test('reference-style composer keeps real model/web/file actions and truthful idle state',()=>{
+ const composer=section('private fun buildComposer(): View',
+   'private fun sendCurrentInput()');
+ const busy=section('private fun setBusy(value: Boolean)',
+   'private fun scrollToBottom()');
+ assert.match(composer,/hint = "Schreibe eine Nachricht …"/);
+ assert.match(composer,/smallButton\("✧ Denken"/);
+ assert.match(composer,/smallButton\("◎ Web"/);
+ assert.match(composer,/smallButton\("⌁ Datei"/);
+ assert.match(composer,/showResearchModeDialog\(\)/);
+ assert.match(composer,/showDevelopmentDialog\(\)/);
+ assert.match(composer,/localRuntime\.state == LocalModelState\.READY/);
+ assert.match(composer,/else showModelCenter\(\)/);
+ assert.match(composer,/startVoiceInput\(\)/);
+ assert.match(composer,/sendCurrentInput\(\)/);
+ assert.match(busy,/sendButton\.contentDescription/);
+ assert.match(busy,/else "➤"/);
+});
+
+test('large text can expand neon tiles instead of being cropped by fixed row heights',()=>{
+ const dashboard=section('private fun buildBootstrapCoreCard(): View',
+   'private fun focusChatComposer()');
+ const tile=section('private fun cockpitTile(', 'private fun violetTint(): Int');
+ assert.match(dashboard,/LinearLayout\.LayoutParams\.WRAP_CONTENT, 1f/);
+ assert.match(tile,/minimumHeight = dp\(94\)/);
+ assert.match(tile,/maxLines = 2/);
+});
+
 test('branded device dashboard never manufactures ready model or internet state',()=>{
  const header=section('private fun buildHeader(wide: Boolean): View',
    'private fun buildStatusRow(): View');
