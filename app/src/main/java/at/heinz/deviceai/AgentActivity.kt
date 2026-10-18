@@ -3980,8 +3980,13 @@ class AgentActivity : Activity() {
         stopDevelopmentJob()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
+        // Hold the single-assistant lane only while a real asynchronous owner
+        // still exists. A cancellation after completion must never lock the UI.
+        val pendingWorker = activeChatCancellation != null ||
+            activeResearchCancellation != null || activeOrchestrator != null ||
+            activeDevCoordinator != null
         activeLocalRequest = false
-        setBusy(true)
+        setBusy(pendingWorker)
         addToolActivity("Lokale Anfrage abgebrochen · ein bereits gestarteter Shizuku-Befehl kann extern weiterlaufen")
         refreshLocalModelUi()
     }
