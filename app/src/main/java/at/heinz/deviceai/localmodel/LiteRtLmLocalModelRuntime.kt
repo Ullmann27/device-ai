@@ -207,6 +207,9 @@ class LiteRtLmLocalModelRuntime(
             state = LocalModelState.GENERATING
             inputTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
         }
+        // Serializes streamed chunks, terminal events and visible callback delivery.
+        val callbackLock = Any()
+        val terminalOverrideRequested = AtomicBoolean(false)
         val responseCharacters = intArrayOf(0)
         val chunks = intArrayOf(0)
         var firstTokenNanos: Long? = null
@@ -224,20 +227,23 @@ class LiteRtLmLocalModelRuntime(
                         if (activeConversation.isAlive) activeConversation.close()
                     }
                     synchronized(lock) {
-                        if (inferenceConversation === activeConversation) inferenceConversation = null
+                        if (closed.isSuccess && inferenceConversation === activeConversation)
+                            inferenceConversation = null
+                        if (closed.isFailure && pendingUnload == null)
+                            state = LocalModelState.FAILED
                     }
                     finishInference()
                     if (closed.isFailure) {
                         deliver(callback, LocalInferenceEvent.Failed(
                             "Isolated conversation could not be released safely."))
-                    } else if (event != null && !outputLimitReached.get()) deliver(callback, event)
+                    } else if (event != null) deliver(callback, event)
                 }
             } else {
                 synchronized(lock) {
                     if (inferenceConversation === activeConversation) inferenceConversation = null
                 }
                 finishInference()
-                if (event != null && !outputLimitReached.get()) deliver(callback, event)
+                if (event != null) deliver(callback, event)
             }
         }
 
@@ -246,85 +252,93 @@ class LiteRtLmLocalModelRuntime(
                 message,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
-                        if (finished.get() || outputLimitReached.get()) return
-                        if (message.toolCalls.isNotEmpty()) {
-                            if (!toolTurnGate.accept(message.toolCalls.size)) {
-                                finish(LocalInferenceEvent.Failed(
-                                    "More than one tool proposal occurred in a single model turn; none are authorized."))
-                                runCatching { activeConversation.cancelProcess() }
-                                return
-                            }
-                            val toolCall = message.toolCalls.single()
-                            val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
-                            val event = if (validation == null) {
-                                LocalInferenceEvent.ToolProposal(
-                                    at.heinz.deviceai.ToolProposal(toolCall.name, toolCall.arguments)
-                                )
-                            } else {
-                                LocalInferenceEvent.ToolProposalRejected(
-                                    toolCall.name, validation, toolCall.arguments
-                                )
-                            }
-                            deliver(callback, event)
-                        }
-                        message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
-                            if (text.text.isBlank()) return@forEach
-                            if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
-                                if (outputLimitReached.compareAndSet(false, true)) {
-                                    deliver(callback, LocalInferenceEvent.Failed("Local model response exceeded the output limit."))
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            if (message.toolCalls.isNotEmpty()) {
+                                if (!toolTurnGate.accept(message.toolCalls.size)) {
+                                    // Signal the terminal failure before cancelling: some native
+                                    // engines deliver onError reentrantly from cancelProcess().
+                                    terminalOverrideRequested.set(true)
                                     runCatching { activeConversation.cancelProcess() }
+                                    finish(LocalInferenceEvent.Failed(
+                                        "More than one tool proposal occurred in a single model turn; none are authorized."))
+                                    return
                                 }
-                                return
+                                val toolCall = message.toolCalls.single()
+                                val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
+                                val event = if (validation == null) {
+                                    LocalInferenceEvent.ToolProposal(
+                                        at.heinz.deviceai.ToolProposal(toolCall.name, toolCall.arguments)
+                                    )
+                                } else {
+                                    LocalInferenceEvent.ToolProposalRejected(
+                                        toolCall.name, validation, toolCall.arguments
+                                    )
+                                }
+                                deliver(callback, event)
                             }
-                            responseCharacters[0] += text.text.length
-                            chunks[0]++
-                            if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
-                            deliver(callback, LocalInferenceEvent.TextDelta(text.text))
+                            message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
+                                if (text.text.isBlank() || finished.get() || terminalOverrideRequested.get())
+                                    return@forEach
+                                if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
+                                    if (outputLimitReached.compareAndSet(false, true)) {
+                                        terminalOverrideRequested.set(true)
+                                        runCatching { activeConversation.cancelProcess() }
+                                        finish(LocalInferenceEvent.Failed(
+                                            "Local model response exceeded the output limit."))
+                                    }
+                                    return
+                                }
+                                responseCharacters[0] += text.text.length
+                                chunks[0]++
+                                if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
+                                deliver(callback, LocalInferenceEvent.TextDelta(text.text))
+                            }
                         }
                     }
 
                     override fun onDone() {
-                        if (outputLimitReached.get()) {
-                            finish(null)
-                            return
-                        }
-                        val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
-                        val outputTokens = runCatching {
-                            activeConversation.getTokenCount() -
-                                (inputTokens ?: activeConversation.getTokenCount())
-                        }.getOrNull()?.coerceAtLeast(0)
-                        finish(
-                            LocalInferenceEvent.Completed(
-                                LocalInferenceMetrics(
-                                    promptCharacters = promptCharacters,
-                                    responseCharacters = responseCharacters[0],
-                                    streamedChunks = chunks[0],
-                                    inputTokens = inputTokens,
-                                    outputTokens = outputTokens,
-                                    firstTokenLatencyMillis = firstTokenNanos?.let {
-                                        (it - startNanos).coerceAtLeast(0) / 1_000_000
-                                    },
-                                    totalLatencyMillis = elapsed
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
+                            val outputTokens = runCatching {
+                                activeConversation.getTokenCount() -
+                                    (inputTokens ?: activeConversation.getTokenCount())
+                            }.getOrNull()?.coerceAtLeast(0)
+                            finish(
+                                LocalInferenceEvent.Completed(
+                                    LocalInferenceMetrics(
+                                        promptCharacters = promptCharacters,
+                                        responseCharacters = responseCharacters[0],
+                                        streamedChunks = chunks[0],
+                                        inputTokens = inputTokens,
+                                        outputTokens = outputTokens,
+                                        firstTokenLatencyMillis = firstTokenNanos?.let {
+                                            (it - startNanos).coerceAtLeast(0) / 1_000_000
+                                        },
+                                        totalLatencyMillis = elapsed
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
 
                     override fun onError(throwable: Throwable) {
-                        if (outputLimitReached.get()) {
-                            finish(null)
-                            return
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            finish(
+                                if (throwable is CancellationException) LocalInferenceEvent.Cancelled
+                                else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
+                            )
                         }
-                        finish(
-                            if (throwable is CancellationException) LocalInferenceEvent.Cancelled
-                            else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
-                        )
                     }
                 }
             )
         } catch (failure: Throwable) {
-            if (outputLimitReached.get()) finish(null)
-            else finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
+            synchronized(callbackLock) {
+                if (!finished.get() && !terminalOverrideRequested.get())
+                    finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
+            }
         }
     }
 
