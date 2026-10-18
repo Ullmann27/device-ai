@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {verifyJUnitXml,verifyJUnitReport} from './m4-junit-evidence.mjs';
+import {verifyJUnitXml,verifyJUnitReport,verifyM4AcceptanceEvidence,structuralJUnitMarkup} from './m4-junit-evidence.mjs';
 
 function fixture(code,fn){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-xml-memory-'));
@@ -53,4 +53,53 @@ test('malformed totals and Buffer input are rejected consistently',()=>{
  assert.throws(()=>verifyJUnitXml(xml.replace('<!-- pass 1 -->','<!-- pass 0 -->')));
  assert.throws(()=>verifyJUnitXml(Buffer.from(xml)));
  assert.throws(()=>verifyJUnitXml('<testsuites/>'));
+});
+
+test('comments cannot fabricate executed JUnit cases or parent suites',()=>{
+ const totals=['tests 3','pass 3','fail 0','cancelled 0','skipped 0','todo 0']
+  .map(item=>'<!-- '+item+' -->').join('\n');
+ const fake='<?xml version="1.0"?><testsuites>\n<!--\n'+
+  '<testcase name="fake A"/>\n<testcase name="fake B"/>\n'+
+  '<testcase name="fake C"/>\n-->\n'+totals+'</testsuites>';
+ assert.throws(()=>verifyJUnitXml(fake),/incomplete|inconsistent/);
+ const real='<?xml version="1.0"?><testsuites><testcase name="actual"/>\n'+
+  ['tests 1','pass 1','fail 0','cancelled 0','skipped 0','todo 0']
+   .map(x=>'<!-- '+x+' -->').join('\n')+'</testsuites>';
+ assert.equal(verifyJUnitXml(real).executed,1);
+ assert.doesNotMatch(structuralJUnitMarkup(fake),/<testcase\b/);
+});
+
+test('CDATA and malformed comment delimiters cannot spoof executed cases',()=>{
+ const totals=['tests 1','pass 1','fail 0','cancelled 0','skipped 0','todo 0']
+  .map(item=>'<!-- '+item+' -->').join('\n');
+ for(const body of ['<![CDATA[<testcase name="fake"/>]]>',
+  '<!-- <testcase name="fake"/>', '<!DOCTYPE testsuites [<!ENTITY x "fake">]>']){
+  const report='<?xml version="1.0"?><testsuites>'+body+totals+'</testsuites>';
+  assert.throws(()=>verifyJUnitXml(report),/unsafe|malformed|incomplete|inconsistent/i);
+ }
+});
+
+test('three-profile M4 acceptance reads its mandatory receipt only once',()=>{
+ const source=['end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
+  'regression search reverts only the culprit hunk and keeps unrelated changes',
+  'a module that crashes while loading is located and gets its missing import back']
+  .map(s=>'test('+JSON.stringify(s)+',()=>{});').join('\n')+'\n';
+ fixture(source,(xml,repair)=>{
+  const root=path.dirname(repair);
+  const node=path.join(root,'node.xml');
+  const backend=path.join(root,'backend.xml');
+  fs.writeFileSync(node,xml);
+  fs.writeFileSync(backend,xml);
+  const old=fs.readFileSync;
+  let repairReads=0;
+  fs.readFileSync=function(...args){
+   if(args[0]===repair)repairReads++;
+   return old.apply(this,args);
+  };
+  try{
+   const result=verifyM4AcceptanceEvidence(repair,node,backend);
+   assert.equal(result.mandatoryRepairs.length,3);
+  }finally{fs.readFileSync=old;}
+  assert.equal(repairReads,1,'M4 acceptance must not re-read a swapped receipt');
+ });
 });
