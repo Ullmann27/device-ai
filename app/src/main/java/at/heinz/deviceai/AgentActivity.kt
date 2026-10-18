@@ -293,6 +293,7 @@ class AgentActivity : Activity() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         bootstrapMemory = BootstrapMemoryStore(this)
+        syncInternetMode()
         voiceEnabled = bootstrapMemory.voiceEnabled
         voiceEngine = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -1158,7 +1159,13 @@ class AgentActivity : Activity() {
     private fun systemCenterStatus(): String = buildString {
         append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
         append("Shizuku: ").append(if (bridge.isReady()) "verbunden" else "nicht verbunden").append("\n")
-        append("Internetzugang: ").append(internetConsent.mode.name).append(" · Zugriff nur nach Freigabe\n")
+        append("Internetzugang: ").append(internetConsent.mode.name).append(
+            if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+                " · öffentliche Webrecherche dauerhaft freigegeben\n"
+            else if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+                " · Zustimmung pro Anfrage\n"
+            else " · ausgeschaltet\n"
+        )
         append("Cloud-Backend: ").append(if (runCatching { backend.isConfigured() }.getOrDefault(false)) "eingerichtet" else "nicht eingerichtet").append("\n")
         append("Sprachmodell: ").append(localRuntime.loadedModel?.let { "${it.id} ${it.version} · ${localRuntime.state}" } ?: "keines geladen").append("\n")
         append("Continuum-Identität: ").append(continuumStartupNote ?: "wird geöffnet").append("\n")
@@ -2988,43 +2995,73 @@ class AgentActivity : Activity() {
             }.show()
     }
 
+    private fun storedInternetMode():at.heinz.deviceai.cognitive.InternetAccessMode =
+        when(getSharedPreferences("continuum-internet", MODE_PRIVATE).getString("mode", "ASK")) {
+            "OFF" -> at.heinz.deviceai.cognitive.InternetAccessMode.OFF
+            "ALWAYS_ON" -> at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON
+            else -> at.heinz.deviceai.cognitive.InternetAccessMode.ASK
+        }
+
+    private fun syncInternetMode() {
+        val stored=storedInternetMode()
+        if(internetConsent.mode != stored) {
+            webToolGate.cancel()
+            approvedModelWebSession.getAndSet(null)?.cancel()
+            activeWebResearchSession?.cancel()
+            internetConsent.setMode(stored)
+        }
+    }
+
+    private fun setInternetMode(mode:at.heinz.deviceai.cognitive.InternetAccessMode) {
+        val prefs=getSharedPreferences("continuum-internet", MODE_PRIVATE)
+        if(!prefs.edit().putString("mode", mode.name).commit()) {
+            addAssistantMessage("Internetmodus konnte nicht dauerhaft gespeichert werden.")
+            return
+        }
+        syncInternetMode()
+        researchArmed=false
+        addToolActivity("WEB · Internetmodus " + mode.name)
+    }
+
     private fun showInternetSettings() {
-        val preferences = getSharedPreferences("continuum-internet", MODE_PRIVATE)
-        val options = arrayOf("Auf Nachfrage (Standard)", "Aus (kein Webzugriff)")
-        val current = if (preferences.getString("mode", "ASK") == "OFF") 1 else 0
+        val options=arrayOf("Auf Nachfrage (Standard)", "Aus (kein Webzugriff)",
+            "Immer verfügbar (öffentliche Webrecherche)")
+        val current=when(storedInternetMode()) {
+            at.heinz.deviceai.cognitive.InternetAccessMode.ASK -> 0
+            at.heinz.deviceai.cognitive.InternetAccessMode.OFF -> 1
+            at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON -> 2
+        }
         AlertDialog.Builder(this)
             .setTitle("Continuum · Internetzugang")
             .setSingleChoiceItems(options, current) { dialog, selection ->
-                val mode = if (selection == 1)
-                    at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-                else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
-                internetConsent.setMode(mode)
-                preferences.edit().putString("mode", mode.name).apply()
-                researchArmed = false
-                addToolActivity("WEB · Internetmodus " + mode.name)
                 dialog.dismiss()
+                when(selection) {
+                    0 -> setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+                    1 -> setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.OFF)
+                    2 -> AlertDialog.Builder(this)
+                        .setTitle("Öffentliche Webrecherche dauerhaft erlauben?")
+                        .setMessage("Device AI darf bei Bedarf eigenständig öffentliche Suchanfragen an externe Suchdienste senden und HTTPS-Webseiten lesen. Suchbegriffe verlassen das Gerät. Die Freigabe gilt nur für Lesen und Suchen, nie für Dateien, Installationen oder andere Geräteaktionen. Jederzeit hier abschaltbar.")
+                        .setNegativeButton("Abbrechen", null)
+                        .setPositiveButton("Immer erlauben") { _, _ ->
+                            setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON)
+                        }.show()
+                }
             }
             .setNegativeButton("Schließen", null)
             .show()
     }
 
     private fun showResearchModeDialog() {
-        internetConsent.setMode(
-            if (getSharedPreferences("continuum-internet", MODE_PRIVATE)
-                    .getString("mode", "ASK") == "OFF")
-                at.heinz.deviceai.cognitive.InternetAccessMode.OFF
-            else at.heinz.deviceai.cognitive.InternetAccessMode.ASK
-        )
+        syncInternetMode()
         if (internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.OFF) {
             AlertDialog.Builder(this)
                 .setTitle("Internet ist ausgeschaltet")
                 .setMessage("Der Webzugang ist deaktiviert. Möchtest du auf 'Auf Nachfrage' umschalten?")
                 .setNegativeButton("Abbrechen", null)
                 .setPositiveButton("Auf Nachfrage") { _, _ ->
-                    internetConsent.setMode(at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
-                    getSharedPreferences("continuum-internet", MODE_PRIVATE).edit()
-                        .putString("mode", "ASK").apply()
-                    showResearchModeDialog()
+                    setInternetMode(at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+                    if(internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+                        showResearchModeDialog()
                 }.show()
             return
         }
@@ -3110,8 +3147,14 @@ class AgentActivity : Activity() {
      * consumed, so a stale callback cannot approve a replacement request. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
-        internetConsent.setMode(if(getSharedPreferences("continuum-internet",MODE_PRIVATE).getString("mode","ASK")=="OFF")
-            at.heinz.deviceai.cognitive.InternetAccessMode.OFF else at.heinz.deviceai.cognitive.InternetAccessMode.ASK)
+        syncInternetMode()
+        if(internetConsent.mode == at.heinz.deviceai.cognitive.InternetAccessMode.ALWAYS_ON) {
+            val session=webToolGate.authorizeAlwaysOn(call,mode)
+            if(session == null) addAssistantMessage("Diese Webanfrage wurde vom sicheren Research-Gate abgelehnt.")
+            else addToolActivity("WEB · dauerhafte Freigabe · " + call.operation)
+            completed(session)
+            return
+        }
         val approval=webToolGate.prepare(call)
         if(approval==null){
             addAssistantMessage("Kein Internetzugriff: Modus AUS oder ungültige Webanfrage. Öffentliche HTTPS-Quellen sind erforderlich.")
@@ -3399,7 +3442,7 @@ class AgentActivity : Activity() {
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
         ToolRunner { request ->
             if(request.name in setOf("web_search","web_read")) {
-                val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
+                val session=approvedModelWebSession.getAndSet(null)?:error("Keine gültige Internetfreigabe")
                 val budget=ResearchBudgetPolicy.forMode(session.mode)
                 val runner=ApprovedWebResearchToolRunner(session,
                     at.heinz.deviceai.cognitive.GeneralWebDiscoveryProvider(checkAccess=session::checkActive),
