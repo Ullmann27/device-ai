@@ -349,7 +349,12 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
   const ctx=context(wt,base,ledger.attempts);
-  const failedIds=new Set(ledger.attempts.filter(a=>a.outcome!=='VERIFIED').map(a=>a.diagnostic+':'+a.candidate));
+  // Parser infrastructure failures retain audit history, but do not prove
+  // that a candidate is invalid. Only an actual syntax rejection suppresses it.
+  const failedIds=new Set(ledger.attempts.filter(a=>a.outcome!=='VERIFIED'&&
+    a.outcome!=='SYNTAX_CHECK_ERROR'&&
+    !(a.outcome==='FAILED_SYNTAX'&&a.syntaxReason!=='INVALID_JS_SYNTAX'))
+    .map(a=>a.diagnostic+':'+a.candidate));
   const proposals=proposeCandidates(actionable,ctx);
   const ranked=rankCandidates(proposals,ledger.experiences,failedIds);
   const shadow=runRepairShadowObserver(shadowObserver,proposals,ranked,

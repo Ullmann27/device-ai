@@ -9,7 +9,8 @@ import {mergeExperiences} from './repair-experience.mjs';
  * kind of problem and never re-runs a candidate already proven to fail.
  */
 export const MAX_ATTEMPTS=400;
-const OUTCOMES=new Set(['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE','REJECTED_BY_CRITIC','NOT_APPLICABLE']);
+const OUTCOMES=new Set(['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE','REJECTED_BY_CRITIC','NOT_APPLICABLE',
+  'FAILED_SYNTAX','SYNTAX_CHECK_ERROR']);
 const HEX=/^[0-9a-f]{1,64}$/;
 
 export function emptyLedger(){return {schemaVersion:2,attempts:[],experiences:[],sessions:[]};}
@@ -23,6 +24,9 @@ export function verifyLedger(data){
       throw Error('Invalid ledger attempt');
     if(!Array.isArray(a.edits)||a.edits.length>3||a.edits.some(e=>typeof e.file!=='string'||e.file.includes('..')||typeof e.oldText!=='string'||typeof e.newText!=='string'||e.oldText.length+e.newText.length>20000))
       throw Error('Invalid ledger edits');
+    if(a.syntaxReason!==undefined&&a.syntaxReason!==null&&
+       (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
+      throw Error('Invalid ledger syntax reason');
   }
   for(const x of data.experiences)if(!x||typeof x.kind!=='string'||x.kind.length>80||!Number.isSafeInteger(x.successes)||!Number.isSafeInteger(x.failures)||x.successes<0||x.failures<0)
     throw Error('Invalid ledger experience');
@@ -70,19 +74,22 @@ export function recordSession(ledger,report,meta={}){
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
     outcome:a.outcome,edits:a.edits,confidence:a.score??null,
+    syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
       executed:t.tests?.executed??0,skipped:t.tests?.skipped??0})),
     patchSha256:a.outcome==='VERIFIED'?acceptedPatch?.patchSha256??null:null,
     proposalCommit:a.outcome==='VERIFIED'?meta.proposalCommit??null:null,
     proposalBranch:a.outcome==='VERIFIED'?meta.branch??null:null,pullRequest:a.outcome==='VERIFIED'?meta.pullRequest??null:null}));
   next.attempts=[...next.attempts,...attempts].slice(-MAX_ATTEMPTS);
-  // Critic rejections say nothing about whether a strategy repairs code.
+  // Critic rejections and checker errors say nothing about code correctness.
+  // A parser rejection is negative evidence only if syntax was actually invalid.
   // Insufficient evidence counts against a strategy: it "passed" without proof.
   // A provisional successful session has NO independent classification yet.
   // Keep its diagnostic attempts for investigation, but do not train from
   // either an asserted win or its possibly stale failed-test labels.
   const learned=independentPending?[]:attempts.filter(a=>
-    ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome));
+    ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome)||
+    (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX'));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
     kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
     status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'
