@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import { ContinuumResearchDaemon, createOpenAiResearchFunction } from "./continuum-daemon.js";
+import { createPublicResearchFunction } from "./public-research.js";
 import { BrainFactory, createOpenAiBrainFactoryAdapters } from "./brain-factory.js";
 import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothesis-tournament.js";
 import { mergeResearchQuestions } from "./continuum-state.js";
@@ -27,6 +28,7 @@ const OPENAI_BASE_URL = (process.env.OPENAI_BASE_URL ?? "https://api.openai.com/
 const WEB_SEARCH_ENABLED = (process.env.WEB_SEARCH_ENABLED ?? "true").toLowerCase() !== "false";
 const PORT = Number(process.env.PORT ?? 8080);
 const CONTINUUM_DAEMON_ENABLED = (process.env.CONTINUUM_DAEMON_ENABLED ?? "false").toLowerCase() === "true";
+const CONTINUUM_RESEARCH_PROVIDER = (process.env.CONTINUUM_RESEARCH_PROVIDER ?? "public").toLowerCase();
 const BRAIN_FACTORY_ENABLED = (process.env.CONTINUUM_BRAIN_FACTORY_ENABLED ?? "false").toLowerCase() === "true";
 const CONTINUUM_STATE_PATH = process.env.CONTINUUM_STATE_PATH ??
   path.join(process.cwd(), "data", "continuum-research-state.json");
@@ -410,16 +412,21 @@ function startContinuumServices() {
     });
   }
 
+  if (!["public", "openai"].includes(CONTINUUM_RESEARCH_PROVIDER)) {
+    throw new Error("Unbekannter CONTINUUM_RESEARCH_PROVIDER");
+  }
   continuumDaemon = new ContinuumResearchDaemon({
     statePath: CONTINUUM_STATE_PATH,
     minIntervalMs: CONTINUUM_RESEARCH_INTERVAL_MS,
     dailyCycleLimit: CONTINUUM_DAILY_CYCLE_LIMIT,
-    research: createOpenAiResearchFunction({
-      apiKey: OPENAI_API_KEY,
-      model: CONTINUUM_RESEARCH_MODEL,
-      baseUrl: OPENAI_BASE_URL,
-      strategyProvider: () => brainFactory?.championStrategy()
-    })
+    research: CONTINUUM_RESEARCH_PROVIDER === "public"
+      ? createPublicResearchFunction()
+      : createOpenAiResearchFunction({
+        apiKey: OPENAI_API_KEY,
+        model: CONTINUUM_RESEARCH_MODEL,
+        baseUrl: OPENAI_BASE_URL,
+        strategyProvider: () => brainFactory?.championStrategy()
+      })
   });
 
   continuumDaemon.start(async (result, researchState) => {
@@ -477,7 +484,7 @@ function startContinuumServices() {
     }
   });
 
-  console.log("Device AI Continuum research daemon enabled.");
+  console.log("Device AI Continuum research daemon enabled with provider:", CONTINUUM_RESEARCH_PROVIDER);
   if (brainFactory) console.log("Device AI Brain Factory enabled.");
   if (hypothesisTournament) console.log("Device AI Hypothesis Tournament enabled.");
 }
