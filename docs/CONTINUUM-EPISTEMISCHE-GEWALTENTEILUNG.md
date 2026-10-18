@@ -49,6 +49,27 @@ Neue gezielte Regressionen sind `repair-ledger-independent.test.mjs` und `cefr-s
 - Erfasst werden **Mean Reciprocal Rank** und Verbesserungs-/Verschlechterungsfälle. Das ist **keine** Messung der tatsächlichen Erfolgsquote: Die alternativen Shadow-Kandidaten wurden nicht ausgeführt und der Gewinner wurde unter der ursprünglichen Kandidatenauswahl gefunden. Selection Bias bleibt möglich. Daher liefert das Benchmark stets `successRateMeasured:false` und `productionPromotionAuthorized:false`.
 - Kein Code wird automatisch auf `main` geschrieben, kein CRE1-Checkpoint aufgrund von Shadow-Metriken befördert, und kein Trainingsbeispiel aufgrund der hypothetischen Rangposition als sicher klassifiziert.
 
+### Auswertung direkt auf dem Offline-Entwicklungsrechner
+
+Der Teamleader schreibt nach unabhängig bestätigter Reparatur den maschinenlesbaren `cefrShadowAudit` in seinen bereits vorhandenen `stateDir/reports/repair-<head>/report.json`. Für die wiederholbare Kohortenauswertung gibt es:
+
+```bash
+node .github/continuum/cefr-shadow-report.mjs \
+  --state-dir /absoluter/pfad/zum/lokalen/continuum-worker-state
+```
+
+Der Pfad muss auf den **existierenden, externen** Worker-Zustandsordner verweisen. Das Skript schreibt keine Dateien, verwendet keine Netzwerkschnittstelle und durchsucht ausschließlich bis zu 500 vorhersagbare `repair-<sha12>`-Ordner. Es liest höchstens 2 MiB je Bericht, lehnt Symlinks ab und verwirft die **gesamte** Auswertung, wenn ein gespeicherter Audit nicht mehr mit dem aktuellen Bericht übereinstimmt.
+
+Es gruppiert Daten nach dem exakten `modelSha256`, damit unterschiedliche Gewichtsstände nicht vermischt werden. Bis mindestens 20 verschiedene unabhängig abgenommene Reparaturen je Modell vorliegen, lautet das Ergebnis `INSUFFICIENT_INDEPENDENT_CASES`. Auch danach sind die Ergebnisse **rein beratende Ranking-Proxys**, keine signierten Belege oder Produktionsfreigaben. Wer das lokale Verzeichnis manipulieren kann, kann auch JSON-Nachweise fälschen; das Betriebssystem muss den State-Zugriff deshalb absichern.
+
+Tests:
+
+```bash
+node --test .github/continuum/cefr-shadow-benchmark.test.mjs \
+  .github/continuum/cefr-shadow-report.test.mjs
+```
+
+
 Gezielte Akzeptanztests, die auf einem Node-22-Checkout laufen müssen:
 
 ```bash
