@@ -303,7 +303,8 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
    if(androidReady){
     const remaining=deadline-Date.now();
     if(remaining>0){
-    const gradle=spawnSync('gradle',[':app:assembleDebug','-PdeviceAiPreview=true',
+    const gradle=spawnSync('gradle',[':app:lintDebug',':app:assembleDebug',
+      '-PdeviceAiPreview=true',
       '--console=plain','-Pkotlin.incremental=false'],{
       cwd:wt,timeout:Math.min(remaining,30*60_000),encoding:'utf8',
       shell:false,maxBuffer:4*1024*1024,
