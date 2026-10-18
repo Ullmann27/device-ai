@@ -116,8 +116,12 @@ test('accepted owner TEST is dispatched before baseline and a verified new contr
  assert.equal(first.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
  assert.equal(first.artifact,'/external/review.patch');
  assert.equal(driver.calls.repairs,0);
+ const second=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(second.kind,'BASELINE_REPAIR','owner TEST must not silently consume the baseline');
+ assert.equal(second.outcome,'NO_FAILURE');
+ assert.equal(driver.calls.repairs,1);
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
- assert.equal(driver.calls.repairs,0);
+ assert.equal(driver.calls.repairs,1);
 }));
 
 test('owner TEST cannot falsely claim DONE without increasing or independently checking tests',
@@ -137,6 +141,25 @@ test('owner TEST cannot falsely claim DONE without increasing or independently c
  assert.equal(r.outcome,'ERROR');
  assert.match(r.detail,/without independent contract evidence/);
  assert.equal(driver.calls.repairs,0);
+}));
+
+test('failed owner TEST also leaves the immutable HEAD eligible for one real baseline',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ let ownerTest=true;
+ driver.readyOwnerContractTask=()=>ownerTest?{
+  id:'owner-failing-test',kind:'TEST',source:'owner',state:'READY',
+  subject:{base:A,chain:'node',operation:'ASSERT_NODE_EXPORT'}
+ }:null;
+ driver.ownerContractTask=()=>{ownerTest=false;return {status:'FAILED',reason:'incomplete contract'}};
+ const failed=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(failed.kind,'OWNER_TEST');
+ assert.equal(failed.outcome,'CHECKS_FAILED');
+ assert.equal(decodeLeaderState(fs.readFileSync(failed.statePath)).attemptedHeads.length,0);
+ const baseline=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(baseline.kind,'BASELINE_REPAIR');
+ assert.equal(baseline.outcome,'NO_FAILURE');
+ assert.equal(driver.calls.repairs,1);
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
 }));
 
 test('owner REPAIR retains priority over TEST and both finish on the same HEAD',
