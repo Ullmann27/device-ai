@@ -69,6 +69,57 @@ CONTINUUM_DAEMON_ENABLED=true npm run worker
 Für echten Dauerbetrieb muss der Prozess auf einem ständig laufenden Server oder Background Worker betrieben werden und sein
 `CONTINUUM_STATE_PATH` auf persistentem Speicher liegen. Ein nicht installierter Android-Client kann selbst keinen Code ausführen.
 
+## Kostenfreie, autonome Quellenrecherche (neu)
+
+Der lokale Research-Worker benötigt **keinen** OpenAI-Schlüssel und keine kostenpflichtige KI-API mehr.
+Standard ist `CONTINUUM_RESEARCH_PROVIDER=public`. Er nutzt drei fest definierte
+öffentliche HTTPS-Metadatenquellen: Wikipedia (Seitensuche), OpenAlex und Crossref.
+OpenAlex gestattet einfache Anfragen ohne Schlüssel; Beschränkungen und Anbieterregeln
+gelten weiterhin.
+
+```bash
+cd backend
+npm run worker:once
+npm run worker
+```
+
+`worker:once` führt einen echten, budgetierten Forschungsversuch aus und beendet
+sich danach. `worker` bleibt auf dem **eingeschalteten** lokalen Rechner aktiv,
+sucht standardmäßig etwa alle 20 Minuten und begrenzt die Zyklen auf 48 pro 24 Stunden.
+Der eigentliche Code läuft auch ohne offene Android-App; eine reine GitHub-Datei führt
+jedoch keine Hintergrundaufgaben aus. Für dauerhaftes Weiterarbeiten muss ein lokaler
+PC/NAS oder Server eingeschaltet sein und den Worker über einen Prozessmanager betreiben.
+
+Den persistenten Pfad muss der Betreiber auf einen **nicht flüchtigen, gesicherten**
+Datenträger konfigurieren, zum Beispiel:
+
+```bash
+CONTINUUM_RESEARCH_PROVIDER=public CONTINUUM_STATE_PATH="$HOME/continuum-research-state.json" npm run worker
+```
+
+Windows-Nutzer setzen diese Umgebungsvariablen über ihre gewohnte Shell oder den
+Dienstmanager. Mehrere Worker dürfen **nicht gleichzeitig dieselbe Zustandsdatei**
+beschreiben. Die Android-App greift nicht automatisch auf diese getrennte lokale
+Forschungsdatei zu; dafür ist eine authentifizierte, überprüfte Synchronisations-
+oder Retrieval-Verbindung zum lokalen Modell noch notwendig.
+
+Pro Durchlauf werden höchstens drei Suchantworten je Anbieter abgerufen und
+höchstens acht Quellenreferenzen übernommen. HTTP-Weiterleitungen und freie URLs
+werden nicht verfolgt, Metadaten-Antworten bleiben auf 350 KB pro Anbieter begrenzt,
+Fehler führen zu protokollierten Fehlversuchen statt erdachten Quellen.
+
+**Wichtig:** Das ist überprüfbares *Sammeln und Indexieren von Recherchehinweisen*,
+nicht automatisches Retraining eines großen Sprachmodells. Der persistierte
+Eintrag behält `WEB_OBSERVATION / authority=NONE`. Die bibliografischen Titel
+alleine belegen keine wissenschaftlichen Aussagen. Bestätigtes Gedächtnis und
+Modellgewichte werden dadurch nicht ungeprüft verändert.
+
+Der bisherige OpenAI-basierte Forschungsadapter bleibt ausschließlich als
+bewusst konfigurierbare Alternative erhalten:
+`CONTINUUM_RESEARCH_PROVIDER=openai`. Brain Factory und Hypothesis Tournament
+haben weiterhin gesonderte Adapter und können externe Modellschnittstellen benötigen;
+sie werden durch den kostenfreien Worker **nicht** automatisch trainiert.
+
 ## Brain Factory
 
 Die Brain Factory ist ein eval-gesteuerter Prompt-/Strategie-Evolutionspfad über dem Research Daemon:
