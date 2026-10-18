@@ -76,6 +76,21 @@ test('a verified repair session completes its REPAIR task with the evidence that
   assert.equal(repairSessionOps(doc,repairReport({startedAt:'2026-10-15T11:00:00.000Z',finishedAt:'2026-10-15T11:10:00.000Z'})).skipped,`task ${id} is DONE`);
 });
 
+test('independent worktree check is recorded rather than first-pass evidence',()=>{
+ const report=repairReport();
+ report.independent={passed:true,profiles:[
+  {profile:'android-compile',passed:true,executed:0,failed:0,skipped:0},
+  {profile:'android-unit',passed:true,executed:518,failed:0,skipped:0}
+ ]};
+ const initial=B.emptyDocument(0,'t');
+ const record=apply(initial,repairSessionOps(initial,report).ops);
+ assert.ok(record.results.every(x=>x.ok),JSON.stringify(record.results));
+ assert.equal(record.doc.tasks[0].state,'DONE');
+ assert.equal(record.doc.tasks[0].evidence[0].profiles.find(x=>
+  x.profile==='android-unit').executed,518,
+  'independent result must replace earlier 413-test candidate report');
+});
+
 test('failed repair sessions spend the attempt budget and then stop',()=>{
   let doc=B.emptyDocument(0,'t');
   for(let k=0;k<3;k++){
