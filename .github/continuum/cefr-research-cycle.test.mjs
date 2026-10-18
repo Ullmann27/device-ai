@@ -51,8 +51,10 @@ function fixture(){
   evidence:{sufficient:true,reasons:[]},
   tests:[{profile:'node-continuum',passed:true,testProfile:true,
    tests:{executed:1,failed:0,skipped:0}}]};
- const failed={candidate:'a000d222',outcome:'FAILED_TESTS',strategy:'JS_MISSING_IMPORT',
-  diagnostic:fingerprint,diagnosticKind:'REFERENCE_ERROR',description:'import nonexistent function',
+ const failed={candidate:'a000d222',outcome:'FAILED_TESTS',strategy:'JS_TYPO_REFERENCE',
+  diagnostic:fingerprint,diagnosticKind:'REFERENCE_ERROR',description:'wrong zero-value repair',
+  edits:[{file:'backend/src/calc.mjs',oldText:'export const value=()=>1;',
+   newText:'export const value=()=>0;'}],
   tests:[{profile:'node-continuum',passed:false,testProfile:true,
    tests:{executed:1,failed:1}}]};
  const report={schemaVersion:1,base:commit,chain:'node',outcome:'VERIFIED',
@@ -74,6 +76,7 @@ test('research cycle verifies actual failing and repaired checkouts but defaults
   const result=runCefrResearchCycle({...f,holdoutCases:holdout,
    deadline:Date.now()+35000});
   assert.equal(result.independent.passed,true);
+  assert.deepEqual(result.independent.verifiedNegatives,['a000d222']);
   assert.equal(result.promoted,false);
   assert.equal(result.modelFile,'cre1-dev-repair-v1.cre1');
   assert.equal(git(f.repoRoot,['status','--porcelain']),'');
