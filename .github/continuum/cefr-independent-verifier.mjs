@@ -57,7 +57,7 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
    a.diagnostic===positives?.diagnostic&&a.outcome==='FAILED_TESTS'&&
    Array.isArray(a.edits)&&a.edits.length>=1&&a.edits.length<=3).slice(0,3);
   const verifiedNegatives=[];
-  for(const a of negatives){
+  for(const [i,a] of negatives.entries()){
    if(Date.now()>=deadline)throw Error('CEFR_NEGATIVE_REPLAY_DEADLINE_EXHAUSTED');
    if(!critique(a).approved)continue;
    resetWorktree(worktree,report.base);
@@ -67,7 +67,7 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
     const resolved=files.map(([relative,content])=>
      [boundedWorktreeFile(worktree,relative),content]);
     for(const [file,content] of resolved)fs.writeFileSync(file,content);
-    const negOut=path.join(temp,'negative-'+verifiedNegatives.length);
+    const negOut=path.join(temp,'negative-'+i);
     fs.mkdirSync(negOut,{mode:0o700});
     const checkedNegative=runChain(report.chain,worktree,negOut,{deadline});
     const realFailed=checkedNegative.results.some(r=>r.testProfile&&
