@@ -106,10 +106,18 @@ export function repairSessionOps(doc,report,{actor='continuum-agent'}={}){
   const attempt=report.verified&&(report.attempts??[]).find(a=>a.outcome==='VERIFIED'&&a.candidate===report.verified.candidate);
   if(attempt){
     const patch=report.verified.patchSha256;
+    // When a genuinely independent second worktree ran, its observed results
+    // are stronger evidence than the first candidate pass. Never upgrade a
+    // failed or missing independent verdict to a successful test receipt.
+    const independentlyChecked=report.independent?.passed===true&&
+      Array.isArray(report.independent.profiles);
+    const evidenceProfiles=independentlyChecked?report.independent.profiles:
+      (attempt.tests??[]).map(t=>({profile:t.profile,passed:t.passed===true,
+        executed:t.tests?.executed??0,failed:t.tests?.failed??0,skipped:t.tests?.skipped??0}));
     ops.push({op:'submit',actor,at:finished,opId:opId('submit'),id,token,artifact:{type:'PATCH',sha256:patch}});
     ops.push({op:'complete',actor,at:finished,opId:opId('complete'),id,evidence:{type:'TEST_RUN',taskId:id,submissionToken:token,artifactSha256:patch,
       chain:String(report.chain),commit:report.base,at:finished,by:actor,
-      profiles:(attempt.tests??[]).map(t=>({profile:t.profile,passed:t.passed===true,executed:t.tests?.executed??0,failed:t.tests?.failed??0,skipped:t.tests?.skipped??0})),
+      profiles:evidenceProfiles.map(t=>({profile:t.profile,passed:t.passed===true,executed:t.executed??0,failed:t.failed??0,skipped:t.skipped??0})),
       repair:{diagnostic:attempt.diagnostic,candidate:attempt.candidate,strategy:attempt.strategy,patchSha256:patch}}});
   }else{
     const tried=(report.attempts??[]).map(a=>a.strategy+'='+a.outcome).join(', ');
