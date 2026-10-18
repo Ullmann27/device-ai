@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import {runRepairE2e,verifyRepairE2eRecord,MANDATORY_REPAIR_CASES} from './m4-repair-e2e.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
@@ -112,5 +113,19 @@ test('symlinked proof and forged result counters are rejected',{skip:nested},()=
   fs.renameSync(proof+'.original',proof);
   assert.equal(verifyRepairE2eRecord(f.evidence,{...report,sha256:'0'.repeat(64)}),false);
   assert.equal(verifyRepairE2eRecord(f.evidence,{...report,executed:999999}),false);
+ }finally{f.clean();}
+});
+
+test('a comment-only JUnit forgery never counts as three actual mandatory repairs',()=>{
+ const f=mockCheckout();
+ try{
+  const xml='<?xml version="1.0"?><testsuites>\n<!--\n'+
+   MANDATORY_REPAIR_CASES.map(name=>'<testcase name="'+name+'" classname="test"/>').join('\n')+
+   '\n-->\n'+['tests 3','pass 3','fail 0','cancelled 0','skipped 0','todo 0']
+    .map(item=>'<!-- '+item+' -->').join('\n')+'</testsuites>';
+  fs.writeFileSync(path.join(f.evidence,'repair-e2e-junit.xml'),xml);
+  const receipt={passed:true,executed:3,mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
+   sha256:crypto.createHash('sha256').update(xml).digest('hex')};
+  assert.equal(verifyRepairE2eRecord(f.evidence,receipt),false);
  }finally{f.clean();}
 });
