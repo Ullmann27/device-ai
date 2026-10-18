@@ -326,13 +326,14 @@ export async function localTeamleaderDriver(){
   {executeOwnerContractTestTask},
   {observeCefrCandidates,DEV_CRE1_FILENAME},
   {loadCefrCheckpoint},
-  {validateVerifiedReport}]=await Promise.all([
+  {validateVerifiedReport},
+  {auditCefrShadowWinner}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
   import('./development-planner.mjs'),import('./backlog-repair-worker.mjs'),
   import('./owner-contract-worker.mjs'),
   import('./cefr-repair-ranker.mjs'),import('./cefr-dev-checkpoint.mjs'),
-  import('./repair-publish.mjs')
+  import('./repair-publish.mjs'),import('./cefr-shadow-benchmark.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
@@ -451,6 +452,12 @@ export async function localTeamleaderDriver(){
     }
 
    } finally {removeWorktree(root,wt);}
+   // This is a prospective RANKING proxy only. It does not execute the
+   // hypothetical shadow order or authorize any model promotion.
+   if(result.outcome==='VERIFIED'&&result.independent?.passed===true){
+    const audit=auditCefrShadowWinner({report:result,independent:result.independent});
+    if(audit.status==='RANKING_PROXY_ONLY')result.cefrShadowAudit=audit;
+   }
    const publicReport=publicTeamleaderRepairReport(result);
    publicReport.handoffs=summarizeRepairHandoffs(publicReport);
    fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
