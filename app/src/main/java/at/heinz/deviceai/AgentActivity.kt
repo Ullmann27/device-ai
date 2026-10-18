@@ -4892,7 +4892,7 @@ class AgentActivity : Activity() {
             setPadding(dp(8), dp(4), dp(8), dp(4))
             background = roundedGradient(Color.rgb(28, 43, 68),
                 Color.rgb(18, 29, 49), 14, Color.rgb(60, 89, 129))
-            minHeight = dp(43)
+            minimumHeight = dp(43)
             isFocusable = true
         }
 
