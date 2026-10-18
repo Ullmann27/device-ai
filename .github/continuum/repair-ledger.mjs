@@ -78,8 +78,15 @@ export function recordSession(ledger,report,meta={}){
   next.attempts=[...next.attempts,...attempts].slice(-MAX_ATTEMPTS);
   // Critic rejections say nothing about whether a strategy repairs code.
   // Insufficient evidence counts against a strategy: it "passed" without proof.
-  next.experiences=mergeExperiences(next.experiences,attempts.filter(a=>['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome))
-    .map(a=>({kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'})));
+  // A provisional successful session has NO independent classification yet.
+  // Keep its diagnostic attempts for investigation, but do not train from
+  // either an asserted win or its possibly stale failed-test labels.
+  const learned=independentPending?[]:attempts.filter(a=>
+    ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome));
+  next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
+    kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
+    status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'
+  })));
   next.sessions=[...next.sessions,{at:report.finishedAt??new Date().toISOString(),base:report.base,chain:report.chain,
     outcome:finalOutcome,diagnostics:(report.baseline?.diagnostics??[]).length,attempts:attempts.length,
     verifiedStrategy:acceptedPatch?.strategy??null,patchSha256:acceptedPatch?.patchSha256??null,
