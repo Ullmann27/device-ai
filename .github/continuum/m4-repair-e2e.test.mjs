@@ -129,3 +129,17 @@ test('a comment-only JUnit forgery never counts as three actual mandatory repair
   assert.equal(verifyRepairE2eRecord(f.evidence,receipt),false);
  }finally{f.clean();}
 });
+
+test('JUnit cases nested in a logging element cannot impersonate mandatory repairs',()=>{
+ const f=mockCheckout();
+ try{
+  const xml='<?xml version="1.0"?><testsuites><system-out>'+
+   MANDATORY_REPAIR_CASES.map(name=>'<testcase name="'+name+'"/>').join('')+
+   '</system-out>'+['tests 3','pass 3','fail 0','cancelled 0','skipped 0','todo 0']
+    .map(item=>'<!-- '+item+' -->').join('')+'</testsuites>';
+  fs.writeFileSync(path.join(f.evidence,'repair-e2e-junit.xml'),xml);
+  const record={passed:true,executed:3,mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
+   sha256:crypto.createHash('sha256').update(xml).digest('hex')};
+  assert.equal(verifyRepairE2eRecord(f.evidence,record),false);
+ }finally{f.clean();}
+});
