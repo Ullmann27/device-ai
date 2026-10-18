@@ -4187,7 +4187,7 @@ class AgentActivity : Activity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onFailure {
                     localRuntimeError = it.message ?: "Model compatibility could not be verified."
-                    Toast.makeText(this, "Modellfehler: ${it.message ?: "Kompatibilität unbekannt"}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, ContinuumUiCopy.modelFailure(it.message), Toast.LENGTH_LONG).show()
                 }
                 if (result.isSuccess) localRuntimeError = null
                 refreshLocalModelUi()
@@ -4247,7 +4247,8 @@ class AgentActivity : Activity() {
                     loadModel(model)
                 }.onFailure { error ->
                     localRuntimeError = error.message ?: "Model import failed."
-                    addAssistantMessage("Modellimport fehlgeschlagen: ${error.message ?: "Kompatibilität unbekannt"}")
+                    addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
+                        ContinuumUiCopy.modelFailure(error.message))
                     refreshLocalModelUi()
                 }
             }
@@ -4273,13 +4274,13 @@ class AgentActivity : Activity() {
             )
         }
         val label = when (state) {
-            LocalModelUiState.NO_MODEL -> "NO MODEL"
-            LocalModelUiState.INSTALLED -> "INSTALLED"
-            LocalModelUiState.READY -> "READY"
-            LocalModelUiState.LOADING -> "LOADING"
-            LocalModelUiState.GENERATING -> "GENERATING"
-            LocalModelUiState.ERROR -> "ERROR"
-            LocalModelUiState.OFFLINE -> "OFFLINE"
+            LocalModelUiState.NO_MODEL -> "KEIN MODELL"
+            LocalModelUiState.INSTALLED -> "INSTALLIERT"
+            LocalModelUiState.READY -> "BEREIT"
+            LocalModelUiState.LOADING -> "LÄDT"
+            LocalModelUiState.GENERATING -> "ARBEITET"
+            LocalModelUiState.ERROR -> "FEHLER"
+            LocalModelUiState.OFFLINE -> "LOKAL"
         }
         val color = when (state) {
             LocalModelUiState.READY -> GREEN
@@ -4288,31 +4289,31 @@ class AgentActivity : Activity() {
             LocalModelUiState.OFFLINE, LocalModelUiState.NO_MODEL, LocalModelUiState.INSTALLED -> MUTED
         }
         // the own learning core is always active; a language model is shown once it exists
-        localBadge.text = if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) "● KERN AKTIV"
+        localBadge.text = if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) "● BASIS BEREIT"
             else "● MODELL $label"
         localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
         val card = modelCardText ?: return
         val shown = loaded ?: models.firstOrNull()
         card.text = when {
-            localRuntimeError != null -> "ERROR · ${localRuntimeError!!.take(256)}"
-            modelImportActive -> "LOADING · Datei wird geprüft und sicher importiert."
-            modelUnloading -> "LOADING · Modell wird entladen."
+            localRuntimeError != null ->
+                "Das Sprachmodell kann derzeit nicht verwendet werden.\n" +
+                    ContinuumUiCopy.modelFailure(localRuntimeError) +
+                    "\nTechnischer Hinweis: " + localRuntimeError!!.take(160)
+            modelImportActive -> "Die Modelldatei wird geprüft und sicher importiert. Bitte warten …"
+            modelUnloading -> "Das Modell wird beendet. Bitte einen Moment warten …"
             loaded == null && models.isEmpty() ->
-                "NO MODEL · Importiere eine kompatible .litertlm-Datei. Kein Download oder Modellgewicht ist enthalten."
+                "Es ist noch kein Sprachmodell vorhanden.\n" +
+                    "Tippe oben auf „Modelldatei importieren“. " +
+                    "Der lokale Startkern funktioniert auch ohne Modell."
             loaded == null && shown != null ->
-                "${shown.id} · ${shown.version} installiert, noch nicht geladen. Tippe MODELL LADEN.\n" +
-                    "CPU: ${shown.capabilities.supportedBackends.contains(LocalModelBackend.CPU)} · " +
-                    "Funktionen: ${shown.capabilities.functionCalling}"
-            shown != null -> {
-                val caps = shown.capabilities
-                "${shown.id} · ${shown.version} · LiteRT-LM\n" +
-                    "CPU baseline · ${caps.supportedBackends.sortedBy { it.name }.joinToString()} · " +
-                    "Text ${caps.text} · Vision ${caps.vision} · Audio ${caps.audio} · " +
-                    "Function calling ${caps.functionCalling} · Context ${caps.maxContextTokens} tokens\n" +
-                    if (state == LocalModelUiState.OFFLINE) "LOCAL-only · Cloud wird nicht verwendet." else "Ready for on-device inference."
-            }
-            else -> "Kompatibilität des Modells ist unbekannt."
+                "Das Modell „" + shown.id + "“ (Version " + shown.version + ") ist vorhanden, " +
+                    "aber noch nicht aktiv. Tippe auf „Modell laden“."
+            shown != null ->
+                "Sprachmodell „" + shown.id + "“ ist geladen.\n" +
+                    "Du kannst jetzt lokale Modellanfragen ausprobieren. " +
+                    "Antworten werden nicht automatisch als Fakten bestätigt."
+            else -> "Modellstatus konnte nicht bestimmt werden. Prüfe die Modellverwaltung."
         }
         localActionButton?.let { button ->
             button.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
