@@ -85,6 +85,13 @@ test('stabilization gate refuses downstream execution after incomplete or failed
    {...android.results[0],testProfile:true,tests:{executed:1,failed:0}},
    android.results[1]
  ]},androidNames),false,'Kotlin compiler must be the expected compile profile');
+ assert.equal(nextGateStage({...node,results:[
+  {...node.results[0],tests:{executed:12,failed:0,skipped:1}},
+  node.results[1]
+ ]},nodeNames),false,'mandatory Node profile with skips must not authorize Android');
+ assert.equal(nextGateStage({...android,results:[
+  android.results[0],{...android.results[1],tests:{executed:38,failed:0,skipped:3}}
+ ]},androidNames),false,'skipped Kotlin parity tests must not authorize a release');
  assert.equal(nextGateStage(null,nodeNames),false);
  assert.equal(nextGateStage(node,[]),false);
 });
@@ -115,6 +122,12 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
  assert.equal(gateSummary(fullNode,fullAndroid,{
   exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096
  },true,fixtureRepairRecord()).passed,true);
+ assert.equal(gateSummary(fullNode,{...fullAndroid,results:[
+  fullAndroid.results[0],
+  {...fullAndroid.results[1],tests:{executed:3,failed:0,skipped:1}}
+ ]},{exitCode:0,timedOut:false,artifactSha256:'a'.repeat(64),bytes:4096},
+ true,fixtureRepairRecord()).passed,false,
+ 'Green APK cannot override a skipped mandatory Android test');
  assert.equal(gateSummary(fullNode,{
   passed:true,results:[fullAndroid.results[1]]
  },{
