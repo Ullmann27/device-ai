@@ -115,7 +115,11 @@ class DeviceTeamleaderStatusStore(private val base: File) {
         .digest(s.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
 }
 
-class DeviceTeamleader(private val filesDir: File, private val now: () -> Long = System::currentTimeMillis) {
+class DeviceTeamleader(
+    private val filesDir: File,
+    private val now: () -> Long = System::currentTimeMillis,
+    private val dnaAudit: (() -> DnaIntegrityAssessment)? = null
+) {
     private val storage = DeviceTeamleaderStatusStore(filesDir)
     fun status(): DeviceTeamleaderSnapshot? = storage.read()
 
@@ -137,6 +141,16 @@ class DeviceTeamleader(private val filesDir: File, private val now: () -> Long =
             } catch (_: Exception) {
                 return DeviceTeamleaderSnapshot(now(), "ERROR",
                     0, 0, 0, 0, 0, null, "CHECK_FAILED")
+            }
+            check()
+            // The Android JobService supplies the signed-DNA auditor. If stored
+            // identity data fail verification, never process or recover backlog
+            // tasks in this cycle. Leave the damaged files untouched.
+            if (dnaAudit?.invoke()?.state == DnaIntegrityState.INVALID) {
+                val failed = DeviceTeamleaderSnapshot(now(), "ERROR",
+                    0, 0, 0, 0, 0, null, "CHECK_FAILED")
+                storage.save(failed)
+                return failed
             }
             check()
             val backlog = DeviceDevelopmentBacklog(File(filesDir, "development"), now)
