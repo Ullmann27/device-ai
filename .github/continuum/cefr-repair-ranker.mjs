@@ -137,8 +137,13 @@ export function trainCefrCandidateFromVerifiedReport({
   return rejection('NO_TASK_SCORE_GAIN',bytes);
  if(holdoutAfter.correct<holdoutBefore.correct||
     holdoutAfter.mrr+1e-12<holdoutBefore.mrr||
-    holdoutAfter.meanMargin+0.005<holdoutBefore.meanMargin)
+    holdoutAfter.meanMargin+1e-12<holdoutBefore.meanMargin)
   return rejection('HOLDOUT_REGRESSION',bytes);
+ // A gain on the training example alone is memorization, not demonstrable
+ // generalization. Require a measurable improvement on locked-out cases.
+ if(holdoutAfter.mrr<=holdoutBefore.mrr+1e-8&&
+    holdoutAfter.meanMargin<=holdoutBefore.meanMargin+1e-6)
+  return rejection('NO_HOLDOUT_GENERALIZATION',bytes);
  const promoted=after.save();
  RelationalEncoder.restore(promoted);
  return {accepted:true,reason:'EXPERIMENTAL_PROMOTION',steps:after.steps,loss,
