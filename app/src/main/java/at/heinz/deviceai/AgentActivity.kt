@@ -1237,75 +1237,109 @@ class AgentActivity : Activity() {
     private fun buildComposer(): View {
         val shell = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(12, 28, 60), Color.rgb(10, 20, 39), 21, Color.rgb(32, 112, 231))
-            setPadding(dp(7), dp(7), dp(7), dp(7))
+            background = roundedGradient(
+                Color.rgb(14, 31, 68), Color.rgb(10, 18, 46),
+                23, Color.rgb(76, 119, 232)
+            )
+            setPadding(dp(7), dp(8), dp(7), dp(8))
+            elevation = dp(7).toFloat()
         }
-
+        val inputRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val newChat = actionButton("＋", compact = true).apply {
+            contentDescription = "Neue Chat-Sitzung"
+            textSize = 23f
+            setOnClickListener { newSession() }
+        }
+        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(42), dp(47)))
         input = EditText(this).apply {
-            hint = "Stell eine Frage oder beschreibe eine Aufgabe …"
-            setHintTextColor(Color.rgb(103, 119, 143))
+            hint = "Schreibe eine Nachricht …"
+            setHintTextColor(Color.rgb(147, 164, 201))
             setTextColor(TEXT)
-            textSize = 15f
+            textSize = 14f
             minLines = 1
             maxLines = 4
-            background = rounded(Color.rgb(9, 19, 37), 14, Color.rgb(40, 112, 226))
+            background = roundedGradient(Color.rgb(21, 35, 70),
+                Color.rgb(14, 24, 55), 18, Color.rgb(54, 86, 151))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            setPadding(dp(10), dp(7), dp(10), dp(7))
+            setPadding(dp(12), dp(9), dp(10), dp(9))
         }
-        shell.addView(input, matchWidth())
+        inputRow.addView(input, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+            marginStart = dp(7)
+        })
+        val mic = actionButton("🎙", compact = true).apply {
+            contentDescription = "Spracheingabe starten"
+            setOnClickListener { startVoiceInput() }
+        }
+        inputRow.addView(mic, LinearLayout.LayoutParams(dp(43), dp(47)).apply {
+            marginStart = dp(6)
+        })
+        shell.addView(inputRow, matchWidth())
 
         val actions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-
-        val mic = actionButton("🎙", compact = true).apply {
-            contentDescription = "Spracheingabe"
-            setOnClickListener { startVoiceInput() }
-        }
-
-        val newChat = actionButton("NEU", compact = true).apply {
-            setOnClickListener { newSession() }
-        }
-
-        voiceButton = actionButton(if (voiceEnabled) "TON AN" else "TON AUS", compact = true).apply {
-            contentDescription = "Sprachausgabe ein- oder ausschalten"
-            setOnClickListener {
-                voiceEnabled = !voiceEnabled
-                bootstrapMemory.voiceEnabled = voiceEnabled
-                voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
-                if (voiceEnabled) {
-                    if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
-                    else Toast.makeText(this@AgentActivity,
-                        "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
-                } else voiceEngine?.stop()
+        fun smallButton(label: String, description: String, run: () -> Unit): Button =
+            actionButton(label, compact = true).apply {
+                textSize = 10.6f
+                contentDescription = description
+                background = roundedGradient(Color.rgb(25, 35, 81),
+                    Color.rgb(15, 22, 56), 16, Color.rgb(93, 107, 190))
+                setOnClickListener { run() }
             }
+        actions.addView(
+            smallButton("✧ Denken", "Lokalen Denkmodus öffnen, falls eingerichtet") {
+                if (localRuntime.state == LocalModelState.READY) setMode(AssistantMode.LOCAL)
+                else showModelCenter()
+            },
+            LinearLayout.LayoutParams(0, dp(42), 1.35f)
+        )
+        actions.addView(
+            smallButton("◎ Web", "Recherche nur nach Freigabe") {
+                showResearchModeDialog()
+            },
+            LinearLayout.LayoutParams(0, dp(42), .90f).apply { marginStart = dp(4) }
+        )
+        actions.addView(
+            smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
+                showDevelopmentDialog()
+            },
+            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+        )
+        voiceButton = smallButton(
+            if (voiceEnabled) "TON AN" else "TON AUS",
+            "Sprachausgabe ein- oder ausschalten"
+        ) {
+            voiceEnabled = !voiceEnabled
+            bootstrapMemory.voiceEnabled = voiceEnabled
+            voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
+            if (voiceEnabled) {
+                if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
+                else Toast.makeText(this@AgentActivity,
+                    "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
+            } else voiceEngine?.stop()
         }
-
-        sendButton = actionButton("SENDEN", accent = true).apply {
+        actions.addView(voiceButton,
+            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+        )
+        sendButton = actionButton("➤", accent = true, compact = true).apply {
+            textSize = 21f
+            contentDescription = "Nachricht senden"
             setOnClickListener {
                 if (busy && activeLocalRequest) cancelLocalRequest() else sendCurrentInput()
             }
         }
-
-        actions.addView(mic, LinearLayout.LayoutParams(dp(49), dp(43)))
-        actions.addView(
-            newChat,
-            LinearLayout.LayoutParams(dp(49), dp(43)).apply { marginStart = dp(5) }
+        actions.addView(sendButton,
+            LinearLayout.LayoutParams(0, dp(42), .85f).apply { marginStart = dp(4) }
         )
-        actions.addView(
-            voiceButton,
-            LinearLayout.LayoutParams(dp(62), dp(43)).apply { marginStart = dp(5) }
-        )
-        actions.addView(
-            sendButton,
-            LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(6) }
-        )
-
-        shell.addView(actions, matchWidth(top = 3))
+        shell.addView(actions, matchWidth(top = 8))
         return shell
     }
 
@@ -4664,7 +4698,9 @@ class AgentActivity : Activity() {
         busy = value
         if (::sendButton.isInitialized) {
             sendButton.isEnabled = true
-            sendButton.text = if (value && activeLocalRequest) "STOPPEN" else if (value) "ARBEITET …" else "SENDEN"
+            sendButton.text = if (value && activeLocalRequest) "STOP" else if (value) "…" else "➤"
+            sendButton.contentDescription = if (value && activeLocalRequest) "Lokale Anfrage abbrechen"
+                else if (value) "Device AI arbeitet" else "Nachricht senden"
             sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
         }
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
