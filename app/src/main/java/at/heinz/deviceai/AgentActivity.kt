@@ -240,6 +240,10 @@ class AgentActivity : Activity() {
         }
     }
     private var dashboardSection: View? = null
+    private var homeHeader: View? = null
+    private var modeSection: View? = null
+    private val dashboardFeatures = ArrayList<View>()
+    private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
 
@@ -382,7 +386,7 @@ class AgentActivity : Activity() {
         updateCloudBadge()
         reloadInstalledModels()
         showPendingReceiptReview()
-        addAssistantMessage(
+        addHomeGreeting(
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
                 "Sprich oder schreibe mit mir. Mit „Merke dir: ...“ kannst du mein lokales Wissen ausdrücklich erweitern. " +
                 "Mit „Was kannst du?“ erfährst du meine aktuellen Fähigkeiten."
@@ -452,7 +456,7 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
-        val wide = resources.configuration.screenWidthDp >= 700
+        val wide = resources.configuration.screenWidthDp >= 700 && resources.configuration.screenHeightDp >= 500
         val root = LinearLayout(this).apply {
             orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
             setBackgroundColor(BG)
@@ -493,8 +497,7 @@ class AgentActivity : Activity() {
                 }
                 if (keyboardCompact != viewport.compactDashboard) {
                     keyboardCompact = viewport.compactDashboard
-                    dashboardSection?.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
-                    keyboardTitle?.visibility = if (keyboardCompact) View.VISIBLE else View.GONE
+                    refreshConversationLayout()
                 }
                 insets
             }
@@ -572,9 +575,9 @@ class AgentActivity : Activity() {
         // Reference-led mobile flow: brand -> transparent holographic hero ->
         // live status -> actual feature tiles -> mode selection. The dashboard
         // remains scrollable and the real composer/chat stay anchored below.
-        dashboard.addView(buildHeader(wide))
+        dashboard.addView(buildHeader(wide).also { homeHeader = it })
         dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
-        dashboard.addView(buildModeRow(), matchWidth(top = 10))
+        dashboard.addView(buildModeRow().also { modeSection = it }, matchWidth(top = 10))
 
         planCard = verticalCard().apply {
             visibility = View.GONE
@@ -603,12 +606,18 @@ class AgentActivity : Activity() {
         pane.addView(
             dashboardScroll,
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,
-                if (wide) 2.3f else 2.1f)
+                1f)
         )
 
-        keyboardTitle = textView("Device AI · Nachricht", 15f, ACCENT, true).apply {
+        keyboardTitle = textView("‹ START   ·   Device AI", 14f, CYAN, true).apply {
             visibility = View.GONE
+            minimumHeight = dp(44)
+            gravity = Gravity.CENTER_VERTICAL
+            contentDescription = "Zur Startseite mit allen KI-Bereichen"
+            isClickable = true
+            isFocusable = true
             setPadding(dp(4), dp(3), 0, dp(6))
+            setOnClickListener { showHomeDashboard() }
         }
         pane.addView(keyboardTitle, matchWidth())
 
@@ -641,11 +650,12 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
-                if (wide) 2.7f else 2.9f
+                1f
             )
         )
 
         pane.addView(buildComposer(), matchWidth())
+        refreshConversationLayout()
         return pane
     }
 
@@ -843,11 +853,56 @@ class AgentActivity : Activity() {
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
         container.addView(neuralCuriosityButton, matchWidth(top = 9))
+        dashboardFeatures.clear()
+        for (index in 1 until container.childCount) dashboardFeatures.add(container.getChildAt(index))
         return container
+    }
+
+    private fun refreshConversationLayout() {
+        val chat = conversationActive || keyboardCompact
+        homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
+        modeSection?.visibility = if (chat) View.GONE else View.VISIBLE
+        dashboardFeatures.forEach { it.visibility = if (chat) View.GONE else View.VISIBLE }
+        keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
+        dashboardSection?.let { dashboard ->
+            dashboard.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
+            val params = dashboard.layoutParams as? LinearLayout.LayoutParams
+            if (params != null) {
+                val wantedHeight = if (chat) LinearLayout.LayoutParams.WRAP_CONTENT else 0
+                val wantedWeight = if (chat) 0f else 1f
+                if (params.height != wantedHeight || params.weight != wantedWeight) {
+                    params.height = wantedHeight
+                    params.weight = wantedWeight
+                    dashboard.layoutParams = params
+                }
+            }
+        }
+        hologramView?.let { orb ->
+            val params = orb.layoutParams
+            val wanted = dp(if (chat || resources.configuration.screenHeightDp < 500) 92
+                else if (resources.configuration.screenWidthDp >= 700) 244 else 201)
+            if (params != null && params.height != wanted) { params.height = wanted; orb.layoutParams = params }
+        }
+        if (::chatScroll.isInitialized) chatScroll.visibility = if (chat) View.VISIBLE else View.GONE
+        val training = learningVisualActive || activeNeuralCancellation != null
+        if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
+        if (::neuralProgress.isInitialized) neuralProgress.visibility = if (training) View.VISIBLE else View.GONE
+    }
+
+    private fun showHomeDashboard() {
+        conversationActive = false
+        input.clearFocus()
+        (getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager)
+            ?.hideSoftInputFromWindow(input.windowToken, 0)
+        refreshConversationLayout()
+        (dashboardSection as? ScrollView)?.post { (dashboardSection as? ScrollView)?.scrollTo(0, 0) }
     }
 
     private fun focusChatComposer() {
         if (!::input.isInitialized) return
+        conversationActive = true
+        refreshConversationLayout()
+        (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         input.requestFocus()
         input.post {
             if (!isFinishing && !isDestroyed) {
@@ -1274,6 +1329,14 @@ class AgentActivity : Activity() {
         inputRow.addView(newChat, LinearLayout.LayoutParams(dp(42), dp(47)))
         input = EditText(this).apply {
             hint = "Schreibe eine Nachricht …"
+            setOnTouchListener { _, event ->
+                if (event.action == android.view.MotionEvent.ACTION_DOWN && !conversationActive) {
+                    conversationActive = true
+                    refreshConversationLayout()
+                    (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+                }
+                false
+            }
             setHintTextColor(Color.rgb(147, 164, 201))
             setTextColor(TEXT)
             textSize = 14f
@@ -4749,11 +4812,15 @@ class AgentActivity : Activity() {
         agentLoops = 0
         planCard.visibility = View.GONE
         chatContainer.removeAllViews()
-        addAssistantMessage("Neue Sitzung gestartet. Was soll ich tun?")
+        showHomeDashboard()
+        addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
         addToolActivity("Neue Sitzung")
     }
 
     private fun addUserMessage(value: String) {
+        conversationActive = true
+        refreshConversationLayout()
+        (dashboardSection as? ScrollView)?.scrollTo(0, 0)
         addBubble(value, user = true)
         val radarEnabled = NeuralPracticeScheduler(this).enabled && !neuralCoach.isActive()
         if (radarEnabled && neuralCuriosityRadar.peek() == null) {
@@ -4780,6 +4847,15 @@ class AgentActivity : Activity() {
     }
 
     private fun addAssistantMessage(value: String) {
+        conversationActive = true
+        refreshConversationLayout()
+        (dashboardSection as? ScrollView)?.scrollTo(0, 0)
+        addHomeGreeting(value)
+    }
+
+    /** Startup/session greetings remain available in chat without taking space
+     * from the home dashboard. Every actual action result opens the conversation. */
+    private fun addHomeGreeting(value: String) {
         addBubble(value, user = false)
         speakBootstrap(value)
     }
@@ -4855,6 +4931,7 @@ class AgentActivity : Activity() {
     private fun setBusy(value: Boolean) {
         busy = value
         if(!value) learningVisualActive = false
+        refreshConversationLayout()
         refreshHologramState()
         if (::sendButton.isInitialized) {
             sendButton.isEnabled = true
