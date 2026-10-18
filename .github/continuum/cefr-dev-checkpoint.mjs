@@ -27,6 +27,11 @@ export function resolveCefrCheckpoint(stateDir,repoRoot){
  return path.join(directory,DEV_CRE1_FILENAME);
 }
 
+function pathEntryExists(file){
+ try{fs.lstatSync(file);return true;}
+ catch(error){if(error?.code==='ENOENT')return false;throw error;}
+}
+
 function readVerified(file){
  const stat=fs.lstatSync(file);
  if(!stat.isFile()||stat.isSymbolicLink())throw Error('Unsafe developer CRE1 checkpoint');
@@ -43,7 +48,7 @@ function readVerified(file){
 
 export function loadCefrCheckpoint({stateDir,repoRoot}){
  const file=resolveCefrCheckpoint(stateDir,repoRoot);
- if(!fs.existsSync(file))return {file,bytes:null,sha256:null};
+ if(!pathEntryExists(file))return {file,bytes:null,sha256:null};
  const bytes=readVerified(file);
  return {file,bytes,sha256:sha256(bytes)};
 }
@@ -63,7 +68,7 @@ export function promoteCefrCheckpoint({stateDir,repoRoot,promotion,expectedSha25
  let lockFd,temporary=null;
  try{
   lockFd=fs.openSync(lock,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
-  const old=fs.existsSync(file)?readVerified(file):null;
+  const old=pathEntryExists(file)?readVerified(file):null;
   const current=old==null?null:sha256(old);
   if(current!==expectedSha256)throw Error('Developer CRE1 checkpoint changed concurrently');
   temporary=file+'.tmp-'+crypto.randomBytes(8).toString('hex');
