@@ -466,6 +466,13 @@ export async function localTeamleaderDriver(){
     throw Error('Refusing to record an unverified repair as completed');
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});
+   const snapshot=backlog.read().doc;
+   if(snapshot.tasks.some(t=>t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now())){
+    const expired=backlog.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}],{stopOnError:true});
+    if(expired.results.some(x=>x.ok!==true))throw Error('Failed to recover expired repair lease');
+   }
+   // Journal the independently checked result before a backlog DONE is possible.
+   writeAtomic(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
    const session=repairSessionOps(backlog.read().doc,publicReport,
     {actor:'continuum-teamleader'});
    let backlogSync={id:session.id,applied:0,status:session.skipped?'SKIPPED':'NO_OPERATIONS'};
@@ -490,8 +497,8 @@ export async function localTeamleaderDriver(){
     'Automatic merge: NEVER',
     ''
    ];
-   fsApi.writeFileSync(path.join(out,'review-summary.md'),review.join('\n'));
-   fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
+   writeAtomic(path.join(out,'review-summary.md'),review.join('\n'));
+   writeAtomic(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
    saveLedger(ledgerPath,recordSession(ledger,result,{
     trigger:'local-teamleader',
     independentPass:result.outcome==='VERIFIED'?result.independent?.passed===true:undefined
