@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import path from 'node:path';
-import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress}
+import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress,publicTeamleaderRepairReport}
  from './autonomous-teamleader.mjs';
 import {parseTeamleaderArgs} from './teamleader-cli.mjs';
 
@@ -395,4 +395,32 @@ test('state policy rejects malformed heads and never schedules unauthorised acti
  assert.equal(selectTeamleaderAction(blank,A).kind,'BASELINE_REPAIR');
  assert.throws(()=>selectTeamleaderAction(blank,'main'),/immutable commit/);
  assert.equal(selectTeamleaderAction({...blank,attemptedHeads:[A]},A).kind,'IDLE');
+});
+
+test('unverified repair is redacted consistently without modifying the audit original',()=>{
+ const original={outcome:'VERIFIED',verified:{candidate:'winner',patchSha256:'f'.repeat(64)},
+  independent:{passed:false},attempts:[{outcome:'VERIFIED',candidate:'winner'},
+   {outcome:'FAILED_TESTS',candidate:'loser'}]};
+ const publicReport=publicTeamleaderRepairReport(original);
+ assert.equal(publicReport.outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(publicReport.verified,null);
+ assert.deepEqual(publicReport.attempts.map(a=>a.outcome),
+  ['INSUFFICIENT_EVIDENCE','FAILED_TESTS']);
+ assert.equal(original.outcome,'VERIFIED');
+ assert.equal(original.attempts[0].outcome,'VERIFIED');
+});
+
+test('successful independent second-worktree result keeps verified proposal intact',()=>{
+ const report={outcome:'VERIFIED',verified:{patchSha256:'e'.repeat(64)},
+  independent:{passed:true},attempts:[{outcome:'VERIFIED'}]};
+ assert.equal(publicTeamleaderRepairReport(report),report);
+});
+
+test('legacy internal VERIFIED without independent observation cannot leak success',()=>{
+ const report={outcome:'VERIFIED',verified:{patchSha256:'d'.repeat(64)},
+  attempts:[{outcome:'VERIFIED'}]};
+ const publicReport=publicTeamleaderRepairReport(report);
+ assert.equal(publicReport.outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(publicReport.verified,null);
+ assert.equal(publicReport.attempts[0].outcome,'INSUFFICIENT_EVIDENCE');
 });
