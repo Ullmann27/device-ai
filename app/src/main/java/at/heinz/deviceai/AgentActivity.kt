@@ -2132,37 +2132,76 @@ class AgentActivity : Activity() {
         modelCenterDialog?.dismiss()
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
+                22, Color.rgb(56, 117, 193))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        box.addView(sectionLabel("CONTINUUM-ENCODER · EIGENER LERNKERN", top = 4))
-        val encoder = textView("Wird gelesen …", 12f, MUTED)
-        box.addView(encoder, matchWidth(top = 6))
-        val encoderActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
+        box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
+        box.addView(textView(
+            "Für natürliche Gespräche und den Entwicklungsassistenten brauchst du eine " +
+                "kompatible lokale LiteRT-LM-Modell-Datei. Device AI lädt kein Modell " +
+                "heimlich herunter und nutzt keinen kostenpflichtigen Cloud-Ersatz.",
+            13f, MUTED), matchWidth(top = 10))
+        val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+            setTextIsSelectable(true)
+        }
+        box.addView(card, matchWidth(top = 14))
+        box.addView(textView("SCHRITT 1 · Modelldatei auswählen", 11.5f, CYAN, true),
+            matchWidth(top = 16))
+        box.addView(actionButton("MODELLDATEI IMPORTIEREN", accent = true).apply {
+            setOnClickListener { showModelImportDialog() }
+        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply {
+            topMargin = dp(7)
+        })
+        box.addView(textView("SCHRITT 2 · Modell auf dem Gerät starten", 11.5f, CYAN, true),
+            matchWidth(top = 14))
+        val action = actionButton("MODELL LADEN").apply {
+            setOnClickListener {
+                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+            }
+        }
+        box.addView(action, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply { topMargin = dp(7) })
+        box.addView(textView(
+            "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
+                "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
+            12.5f, MUTED), matchWidth(top = 11))
+
+        val advanced = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            visibility = View.GONE
+            background = rounded(Color.rgb(12, 29, 53), 14, BORDER)
+            setPadding(dp(12), dp(10), dp(12), dp(12))
+        }
+        advanced.addView(sectionLabel("EIGENER CONTINUUM-LERNKERN", top = 0))
+        val encoder = textView("Lernkernstatus wird gelesen …", 12f, MUTED)
+        advanced.addView(encoder, matchWidth(top = 8))
+        val encoderActions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
         listOf(
             actionButton("VERSIONEN", compact = true).apply { setOnClickListener { showModelVersions() } },
             actionButton("PAKET", compact = true).apply { setOnClickListener { confirmPackageImport() } },
             actionButton("GEWICHTE", compact = true).apply { setOnClickListener { confirmWeightsImport() } }
-        ).forEach { encoderActions.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) }) }
-        box.addView(encoderActions, matchWidth(top = 8))
-        box.addView(sectionLabel("LOKALES SPRACHMODELL · LITERT-LM", top = 18))
-        val card = textView("", 12f, TEXT)
-        box.addView(card, matchWidth(top = 6))
-        val modelActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        val action = actionButton("MODELL LADEN", compact = true).apply {
-            setOnClickListener { if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel() }
+        ).forEach { button ->
+            encoderActions.addView(button, LinearLayout.LayoutParams(0, dp(45), 1f).apply {
+                marginEnd = dp(4)
+            })
         }
-        modelActions.addView(actionButton("IMPORTIEREN", compact = true).apply {
-            setOnClickListener { showModelImportDialog() }
-        }, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
-        modelActions.addView(action, LinearLayout.LayoutParams(0, dp(40), 1f))
-        box.addView(modelActions, matchWidth(top = 8))
-        box.addView(textView(
-            "Ohne Sprachmodell antwortet Device AI aus Regeln und bestätigten Erinnerungen. Ein geladenes Modell " +
-                "beantwortet nur Fragen, zu denen keine bestätigte Erinnerung passt; Werkzeuge nutzt es nur nach " +
-                "Freigabe, und seine Antworten sind nicht geprüft. Es wird nichts heruntergeladen.", 11.5f, MUTED),
-            matchWidth(top = 10))
+        advanced.addView(encoderActions, matchWidth(top = 10))
+        box.addView(actionButton("ERWEITERT · LERNKERN UND VERSIONEN").apply {
+            setOnClickListener {
+                advanced.visibility = if (advanced.visibility == View.GONE) View.VISIBLE else View.GONE
+                text = if (advanced.visibility == View.VISIBLE)
+                    "ERWEITERT · DETAILS SCHLIESSEN" else "ERWEITERT · LERNKERN UND VERSIONEN"
+            }
+        }, matchWidth(top = 16))
+        box.addView(advanced, matchWidth(top = 8))
+
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Modellverwaltung")
             .setView(ScrollView(this).apply { addView(box) })
             .setPositiveButton("Schließen", null)
             .create()
@@ -2177,14 +2216,18 @@ class AgentActivity : Activity() {
         modelCardText = card
         localActionButton = action
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         reloadInstalledModels()
         onLearningIo({
             val core = ContinuumLearningCore(filesDir)
             Triple(core.modelHash(), core.status().modelUpdates, core.checkpoints().size)
         }) { result ->
             encoder.text = result.fold({ (hash, updates, archived) ->
-                "Aktiv: ${hash.take(16)} · $updates Gewichtsupdates · $archived archivierte Stände (wiederherstellbar)"
-            }, { "Lernkern nicht lesbar (${failureName(it)}); vorhandene Stände bleiben unverändert." })
+                "Aktiv: " + hash.take(16) + " · " + updates + " Gewichtsupdates · " +
+                    archived + " archivierte Lernstände (wiederherstellbar)"
+            }, {
+                "Lernkern nicht lesbar (" + failureName(it) + "); vorhandene Stände bleiben unverändert."
+            })
         }
     }
 
