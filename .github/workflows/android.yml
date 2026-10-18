@@ -34,6 +34,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install backend HTTP test dependencies
+        run: npm install --prefix backend --ignore-scripts --no-audit --no-fund
+
       - name: Validate backend syntax
         run: npm --prefix backend run check
 
