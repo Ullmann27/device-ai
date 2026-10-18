@@ -1161,27 +1161,19 @@ class AgentActivity : Activity() {
                     }
                 }
             }
-        if (resources.configuration.screenWidthDp >= 700) {
-            val scroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            actions.forEach { (label, command) ->
-                row.addView(createAction(label, command),
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(46)).apply {
-                        marginEnd = dp(7)
-                    })
-            }
-            scroll.addView(row)
-            return scroll
-        }
-        // On a phone, no action is clipped off-screen or hidden behind horizontal scrolling.
+        // A responsive grid keeps every action visible. Horizontal-scrolling chips
+        // used to hide the last actions behind the right edge on large phones/tablets.
+        val columns = if (resources.configuration.screenWidthDp >= 700) 4 else 3
         val grid = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        actions.chunked(3).forEachIndexed { index, group ->
+        actions.chunked(columns).forEachIndexed { index, group ->
             val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
             group.forEachIndexed { j, (label, command) ->
                 row.addView(createAction(label, command),
                     LinearLayout.LayoutParams(0, dp(45), 1f).apply { if (j > 0) marginStart = dp(6) })
             }
-            repeat(3 - group.size) { row.addView(View(this), LinearLayout.LayoutParams(0, dp(45), 1f)) }
+            repeat(columns - group.size) {
+                row.addView(View(this), LinearLayout.LayoutParams(0, dp(45), 1f))
+            }
             grid.addView(row, matchWidth(top = if (index > 0) 6 else 0))
         }
         return grid
