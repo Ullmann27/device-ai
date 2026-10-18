@@ -17,7 +17,7 @@ test('transparent native 3D hero has no network, model execution or fake status'
  assert.match(orb,/RadialGradient\(/);
  assert.match(orb,/drawOrbit\(canvas/);
  assert.match(orb,/Color\.TRANSPARENT/);
- const drawableCode=orb.replace(/\/\/[^\n]*/g,'');
+ const drawableCode=orb.replace(/\/\*[\s\S]*?\*\//g,'').replace(/\/\/[^\n]*/g,'');
  assert.doesNotMatch(drawableCode,/(?:http:|https:|WebView|model\.generate|networkRequest|canvas\.drawColor\()/);
  assert.match(brand,/<vector\b/);
  assert.match(brand,/android:pathData=/);
