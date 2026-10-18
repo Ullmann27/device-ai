@@ -276,6 +276,27 @@ test('Teamleader Android UI reports status without false success',()=>{
    !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
 });
 
+test('Wikipedia article research uses bounded authentic extracts and original citations',()=>{
+ const provider=fs.readFileSync(dir+'cognitive/WikipediaExtractResearchProvider.kt','utf8');
+ ensure('Android research wraps its existing HTTPS provider in a bounded Wikipedia extractor',
+   activity.includes('val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)') &&
+   activity.includes('ApprovedWebResearchToolRunner(session,discovery,researchProvider,'));
+ ensure('only German Wikipedia articles qualify',
+   provider.includes('uri.host != "de.wikipedia.org"') &&
+   provider.includes('uri.scheme != "https"') &&
+   provider.includes('articleTitle(request.url) ?: return downstream.retrieve(request)'));
+ ensure('wiki excerpt request is byte bounded and redirects forbidden',
+   provider.includes('minOf(request.maxBytes, 24_000)') &&
+   provider.includes('request.timeoutMillis, 0') &&
+   provider.includes('exchars=1200'));
+ ensure('retrieval retains source provenance and never fabricates a citation',
+   provider.includes('source.url == endpoint && source.source.domain == "de.wikipedia.org"') &&
+   provider.includes('ResearchDocument(request.url, title.replace('));
+ ensure('XML external entities and unrelated article titles are not accepted',
+   provider.includes('doctype|entity') &&
+   provider.includes('expectedTitle.replace('));
+});
+
 test('Android-first Teamleader is scheduled, observable and serialized across background and chat',()=>{
  const native=fs.readFileSync(dir+'cognitive/DeviceTeamleader.kt','utf8');
  const job=fs.readFileSync(dir+'learning/ContinuumDeviceTeamleaderScheduler.kt','utf8');
