@@ -275,6 +275,7 @@ class AgentActivity : Activity() {
     private var backlogList: LinearLayout? = null
     private var devDialog: AlertDialog? = null
     private var devStatusView: TextView? = null
+    private var devRequirementsView: TextView? = null
     private var devSourcesView: TextView? = null
     private var devPreviewView: TextView? = null
     private var devStartButton: Button? = null
@@ -3618,6 +3619,15 @@ class AgentActivity : Activity() {
             "Ein Entwicklungsauftrag: Developer, Critic, TestDesigner und Judge laufen nacheinander auf dem geladenen " +
                 "lokalen Modell und liefern EINEN prüfbaren Vorschlag. Nichts wird angewendet, kompiliert, getestet oder gepusht. " +
                 "Quelltext wird als nicht vertrauenswürdige Daten behandelt.", 12f, MUTED))
+        devRequirementsView = textView("", 12f, AMBER)
+        box.addView(devRequirementsView, matchWidth(top = 8))
+        box.addView(actionButton("SPRACHMODELL EINRICHTEN").apply {
+            setOnClickListener {
+                // Preserve the current goal through the dialog's dismiss handler.
+                devDialog?.dismiss()
+                showModelCenter()
+            }
+        }, matchWidth(top = 6))
         devGoalInput = EditText(this).apply {
             hint = "Entwicklungsziel für diese App…"
             setText(devController.state.goal)
@@ -3683,6 +3693,16 @@ class AgentActivity : Activity() {
     private fun refreshDevelopmentUi() {
         if (devDialog == null) return
         val st = devController.state
+        val modelReady = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
+        devRequirementsView?.text = listOf(
+            if (modelReady) "Sprachmodell: geladen und bereit."
+            else "Sprachmodell fehlt: Über SPRACHMODELL EINRICHTEN eine kompatible LiteRT-LM-Datei importieren und laden.",
+            if (devGoalInput?.text.isNullOrBlank()) "Entwicklungsziel: noch nicht eingegeben."
+            else "Entwicklungsziel: eingegeben.",
+            if (st.sources.isEmpty()) "Quelltext: keine Dateien gewählt (SAF)."
+            else "Quelltext: ${st.sources.size} Datei(en) gewählt.",
+            "Shizuku ist für diesen Entwicklungsentwurf nicht erforderlich. Kein Cloud-Ersatz; kein automatischer Build oder Patch."
+        ).joinToString("\n")
         devSourcesView?.text = if (st.sources.isEmpty()) "Keine Quellen gewählt."
         else st.sources.joinToString("\n") { "• ${it.path} (${it.content.toByteArray(Charsets.UTF_8).size} B · sha256 ${it.sha256.take(12)}…)" }
         devStatusView?.text = st.status + (st.error?.let { "\n$it" } ?: "")
