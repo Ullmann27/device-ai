@@ -12,11 +12,9 @@ function declaredCount(xml,name){
  return n;
 }
 
-export function verifyJUnitReport(file){
- const info=fs.lstatSync(file);
- if(!info.isFile()||info.isSymbolicLink()||info.size<32||info.size>20*1024*1024)
-  throw Error('Missing or unsafe Node JUnit report');
- const xml=fs.readFileSync(file,'utf8');
+export function verifyJUnitXml(xml){
+ if(typeof xml!=='string'||xml.length<32||Buffer.byteLength(xml,'utf8')>20*1024*1024)
+  throw Error('Missing or unsafe Node JUnit document');
  if(!/^\s*<\?xml\b/.test(xml)||!/<testsuites(?:\s[^>]*)?>[\s\S]*<\/testsuites>\s*$/.test(xml))
   throw Error('Malformed Node JUnit document');
  const testcase=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
@@ -49,7 +47,17 @@ export function verifyJUnitReport(file){
     declared.pass!==executed||
     (xml.match(/<testcase\b/g)??[]).length!==caseCount)
   throw Error('Node JUnit has incomplete, failing or inconsistent executed-test evidence');
- return {file:path.resolve(file),total,executed,failed,skipped,todo,placeholders,groupCount};
+ return {total,executed,failed,skipped,todo,placeholders,groupCount};
+}
+
+/** Parse a local JUnit report. Byte-consistent consumers can call verifyJUnitXml
+ * with an already-opened document instead of reopening it after hashing. */
+export function verifyJUnitReport(file){
+ const info=fs.lstatSync(file);
+ if(!info.isFile()||info.isSymbolicLink()||info.size<32||info.size>20*1024*1024)
+  throw Error('Missing or unsafe Node JUnit report');
+ const xml=fs.readFileSync(file,'utf8');
+ return {file:path.resolve(file),...verifyJUnitXml(xml)};
 }
 
 /** Critical M4 acceptance must prove an actual broken-code -> verified-patch cycle. */
