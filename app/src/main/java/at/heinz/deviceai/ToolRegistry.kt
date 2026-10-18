@@ -11,8 +11,8 @@ data class ToolSpec(
 
 object ToolRegistry {
     private val allSpecs = listOf(
-        ToolSpec("web_search", "Websuche", "Sucht öffentliche Quellen nach einmaliger Internetfreigabe.", Risk.CONFIRM, required=setOf("query")),
-        ToolSpec("web_read", "Webseite lesen", "Liest eine öffentliche HTTPS-Quelle nach einmaliger Internetfreigabe.", Risk.CONFIRM, required=setOf("url")),
+        ToolSpec("web_search", "Websuche", "Sucht öffentliche Quellen nur nach Android-Eigentümerfreigabe (ASK oder ALWAYS_ON).", Risk.CONFIRM, required=setOf("query")),
+        ToolSpec("web_read", "Webseite lesen", "Liest öffentliche HTTPS-Quellen nur nach Android-Eigentümerfreigabe (ASK oder ALWAYS_ON).", Risk.CONFIRM, required=setOf("url")),
         ToolSpec("get_device_info", "Geräteinformationen", "Liest Modell, Android-Version und Build-Daten.", Risk.READ_ONLY),
         ToolSpec("get_battery_info", "Akku prüfen", "Liest den aktuellen Batteriestatus.", Risk.READ_ONLY),
         ToolSpec("get_storage_info", "Speicher prüfen", "Liest freien und belegten Speicher.", Risk.READ_ONLY),

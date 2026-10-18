@@ -4,6 +4,58 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ApprovedWebToolGateTest {
+    @Test fun alwaysOnAllowsOnlyOneBoundedWebSearchAtATime() {
+        val consent=InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val gate=ApprovedWebToolGate(consent)
+        val search=WebToolRequest.Search("verified Kotlin documentation")
+        assertNull(gate.prepare(search))
+        val session=gate.authorizeAlwaysOn(search,ResearchMode.QUICK)!!
+        var actions=0
+        session.execute(search) { actions++ }
+        assertEquals(1,actions)
+        assertThrows(IllegalStateException::class.java) {
+            session.execute(search) { actions++ }
+        }
+        assertEquals(1,actions)
+        assertNull(gate.authorizeAlwaysOn(WebToolRequest.Read("http://localhost/"),ResearchMode.QUICK))
+        assertNull(gate.authorizeAlwaysOn(WebToolRequest.Search(" "),ResearchMode.QUICK))
+    }
+
+    @Test fun alwaysOnRevocationInvalidatesExistingWebSession() {
+        val consent=InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val gate=ApprovedWebToolGate(consent)
+        val search=WebToolRequest.Search("public sources")
+        val session=gate.authorizeAlwaysOn(search,ResearchMode.QUICK)!!
+        consent.setMode(InternetAccessMode.OFF)
+        var executed=false
+        assertThrows(IllegalStateException::class.java) { session.execute(search) { executed=true } }
+        assertFalse(executed)
+        assertNull(gate.authorizeAlwaysOn(search,ResearchMode.QUICK))
+        consent.setMode(InternetAccessMode.ASK)
+        assertNull(gate.authorizeAlwaysOn(search,ResearchMode.QUICK))
+        assertNotNull(gate.prepare(search))
+    }
+
+    @Test fun alwaysOnStillEnforcesExactReadUrl() {
+        val gate=ApprovedWebToolGate(InternetConsentPolicy(InternetAccessMode.ALWAYS_ON))
+        val call=WebToolRequest.Read("https://www.wikipedia.org/wiki/Science")
+        val session=gate.authorizeAlwaysOn(call,ResearchMode.QUICK)!!
+        var reads=0
+        val provider=session.provider(object:ResearchProvider {
+            override fun retrieve(request:ResearchRequest):ResearchResult {
+                reads++
+                return ResearchResult(emptyList(),emptyList())
+            }
+        })
+        session.execute(call) {
+            assertThrows(IllegalArgumentException::class.java) {
+                provider.retrieve(ResearchRequest("q","https://www.nasa.gov"))
+            }
+            provider.retrieve(ResearchRequest("q",call.url))
+        }
+        assertEquals(1,reads)
+    }
+
     @Test fun searchRequiresExactOneShotAuthorization() {
         val gate=ApprovedWebToolGate(InternetConsentPolicy())
         val search=WebToolRequest.Search("solar energy")

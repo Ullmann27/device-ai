@@ -5,9 +5,9 @@ export function androidWebTools(enabled = true) {
   if (!enabled) return [];
   return [
     { name: "web_search", key: "query", maxLength: 512,
-      description: "Schlägt eine öffentliche Webrecherche vor. Einmalige Android-Internetfreigabe ist erforderlich." },
+      description: "Schlägt eine öffentliche Webrecherche vor. Nur Android entscheidet anhand der Eigentümer-Einstellung OFF, ASK oder ALWAYS_ON über die Ausführung." },
     { name: "web_read", key: "url", maxLength: 2048,
-      description: "Schlägt das Lesen einer öffentlichen HTTPS-Quelle vor. Einmalige Android-Internetfreigabe ist erforderlich." }
+      description: "Schlägt das Lesen einer öffentlichen HTTPS-Quelle vor. Nur Android entscheidet anhand der Eigentümer-Einstellung OFF, ASK oder ALWAYS_ON über die Ausführung." }
   ].map(({ name, key, maxLength, description }) => ({
     type: "function", name, description, strict: true,
     parameters: { type: "object", additionalProperties: false, required: [key],

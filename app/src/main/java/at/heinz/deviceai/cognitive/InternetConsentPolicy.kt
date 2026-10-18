@@ -2,7 +2,7 @@ package at.heinz.deviceai.cognitive
 
 import java.util.UUID
 
-enum class InternetAccessMode { OFF, ASK }
+enum class InternetAccessMode { OFF, ASK, ALWAYS_ON }
 class InternetApprovalTicket internal constructor(internal val nonce:String,internal val epoch:Long,
     val question:String,internal val expiresAt:Long)
 
@@ -28,7 +28,17 @@ class InternetConsentPolicy(initialMode:InternetAccessMode=InternetAccessMode.AS
         if(!matches)epoch++
         return matches
     }
-    @Synchronized internal fun isCurrent(ticket:InternetApprovalTicket)=mode==InternetAccessMode.ASK&&epoch==ticket.epoch
+    /**
+     * One per-request, bounded capability under the owner's persisted consent.
+     * No grant survives a policy change, cancellation or subsequent new grant.
+     */
+    @Synchronized internal fun automaticTicket(question:String):InternetApprovalTicket? {
+        if(mode!=InternetAccessMode.ALWAYS_ON||question.isBlank()||question.length>2048)return null
+        cancel()
+        return InternetApprovalTicket(UUID.randomUUID().toString(),epoch,question,nowMillis()+60000)
+    }
+    @Synchronized internal fun isCurrent(ticket:InternetApprovalTicket)=
+        mode in setOf(InternetAccessMode.ASK,InternetAccessMode.ALWAYS_ON)&&epoch==ticket.epoch
     internal fun monotonicNow()=nowMillis()
     @Synchronized fun cancel() { pending=null;epoch++ }
     // Legacy question-only methods remain for callers without a network execution path.

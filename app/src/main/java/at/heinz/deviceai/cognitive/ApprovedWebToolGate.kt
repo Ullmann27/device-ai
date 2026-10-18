@@ -29,22 +29,34 @@ sealed class WebToolRequest {
 }
 class WebToolApproval internal constructor(val call:WebToolRequest,internal val ticket:InternetApprovalTicket)
 
-/** Only a positive owner UI action calls approve. The resulting capability must
- * additionally pass the common ToolGate's explicit-confirmation and replay checks.
+/** ASK sessions require an explicit one-time confirmation. ALWAYS_ON sessions
+ * require the owner's separately persisted consent. Both remain scoped to one
+ * exact request and must pass the common ToolGate's budget and replay checks.
  */
 class ApprovedWebToolGate(private val consent:InternetConsentPolicy) {
     private var pending:WebToolApproval?=null
+    private fun validCall(call:WebToolRequest):Boolean=when(call){
+        is WebToolRequest.Search->call.query.isNotBlank()&&call.query.length<=512
+        is WebToolRequest.Read->call.url.length in 10..2048&&runCatching {
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(URI(call.url))
+        }.isSuccess
+    }
     @Synchronized fun prepare(call:WebToolRequest):WebToolApproval? {
         pending=null;consent.cancel()
-        if(consent.mode!=InternetAccessMode.ASK)return null
-        when(call){
-            is WebToolRequest.Search->if(call.query.isBlank()||call.query.length>512)return null
-            is WebToolRequest.Read->if(call.url.length !in 10..2048||runCatching {
-                HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(URI(call.url))
-            }.isFailure)return null
-        }
+        if(consent.mode!=InternetAccessMode.ASK||!validCall(call))return null
         val ticket=consent.requestTicket(call.question)?:return null
         return WebToolApproval(call,ticket).also { pending=it }
+    }
+    /**
+     * Explicitly owner-enabled ALWAYS_ON removes repeated UI dialogs for
+     * web_search and web_read only. Every call still has its own revocable
+     * ticket and goes through ToolGate's normal budget and receipt checks.
+     */
+    @Synchronized fun authorizeAlwaysOn(call:WebToolRequest,mode:ResearchMode):ApprovedWebResearchSession? {
+        if(consent.mode!=InternetAccessMode.ALWAYS_ON||!validCall(call))return null
+        pending=null
+        val ticket=consent.automaticTicket(call.question)?:return null
+        return ApprovedWebResearchSession(call,mode,consent,ticket)
     }
     @Synchronized fun approve(approval:WebToolApproval,mode:ResearchMode):ApprovedWebResearchSession? {
         val matches=pending?.ticket?.nonce==approval.ticket.nonce&&pending?.call==approval.call

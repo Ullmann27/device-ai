@@ -41,6 +41,27 @@ class InternetConsentPolicyTest {
         assertFalse(gate.authorize("question"))
     }
 
+    @Test fun alwaysOnDoesNotTurnOldAskTicketsIntoPermanentGrants() {
+        val policy=InternetConsentPolicy()
+        val ticket=policy.requestTicket("public sources")!!
+        policy.setMode(InternetAccessMode.ALWAYS_ON)
+        assertFalse(policy.consume(ticket))
+        assertFalse(policy.isCurrent(ticket))
+        assertFalse(policy.request("another source"))
+    }
+
+    @Test fun alwaysOnIssuesSeparateRevocableCapabilities() {
+        val policy=InternetConsentPolicy(InternetAccessMode.ALWAYS_ON)
+        val first=policy.automaticTicket("public article")!!
+        assertTrue(policy.isCurrent(first))
+        val second=policy.automaticTicket("another article")!!
+        assertFalse(policy.isCurrent(first))
+        assertTrue(policy.isCurrent(second))
+        policy.setMode(InternetAccessMode.OFF)
+        assertFalse(policy.isCurrent(second))
+        assertNull(policy.automaticTicket("new article"))
+    }
+
     @Test fun switchingOffRevokesPendingResearch() {
         val consent = InternetConsentPolicy()
         val gate = InternetResearchGate(consent)
