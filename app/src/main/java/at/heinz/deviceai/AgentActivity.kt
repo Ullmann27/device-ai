@@ -504,12 +504,12 @@ class AgentActivity : Activity() {
             matchWidth()
         )
 
-        side.addView(sectionLabel("SKILLS", top = 24))
+        side.addView(sectionLabel("DEIN ASSISTENT", top = 24))
         side.addView(
             infoCard(
-                "Lumo",
-                LumoSkill.description,
-                "AKTIV"
+                "Device AI",
+                "Fragen, recherchieren, Wissen lernen und Entwicklungsvorschläge sicher prüfen.",
+                "LOKAL"
             ),
             matchWidth(top = 8)
         )
@@ -550,7 +550,7 @@ class AgentActivity : Activity() {
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         dashboardSection = dashboard
         dashboard.addView(buildHeader(wide))
-        dashboard.addView(buildStatusRow(), matchWidth(top = 12))
+        dashboard.addView(buildStatusRow(), matchWidth(top = 14))
         dashboard.addView(buildModeRow(), matchWidth(top = 10))
         dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
         dashboard.addView(buildQuickActions(), matchWidth(top = 10))
@@ -581,7 +581,8 @@ class AgentActivity : Activity() {
         dashboardSection = dashboardScroll
         pane.addView(
             dashboardScroll,
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,
+                if (wide) 2.3f else 2.1f)
         )
 
         keyboardTitle = textView("Device AI · Nachricht", 15f, ACCENT, true).apply {
@@ -619,7 +620,7 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
-                2f
+                if (wide) 2.7f else 2.9f
             )
         )
 
@@ -696,9 +697,18 @@ class AgentActivity : Activity() {
             gravity = Gravity.CENTER_VERTICAL
         }
 
-        shizukuBadge = statusBadge("● SHIZUKU …", AMBER)
-        cloudBadge = statusBadge("● WEB FREIGABE", CYAN)
-        localBadge = statusBadge("● KERN AKTIV", GREEN)
+        shizukuBadge = statusBadge("● GERÄT AUS", AMBER).apply {
+            contentDescription = "Gerätezugriff: Status und Erklärung öffnen"
+            setOnClickListener { showConnectivityHelp("device") }
+        }
+        cloudBadge = statusBadge("● WEB FREIGABE", CYAN).apply {
+            contentDescription = "Internetrecherche: Freigabe erklären"
+            setOnClickListener { showConnectivityHelp("web") }
+        }
+        localBadge = statusBadge("● BASIS BEREIT", GREEN).apply {
+            contentDescription = "Lokaler Startkern: Status und Sprachmodell erklären"
+            setOnClickListener { showConnectivityHelp("core") }
+        }
 
         row.addView(
             shizukuBadge,
@@ -757,63 +767,91 @@ class AgentActivity : Activity() {
         return card
     }
 
-    // Core is immediately usable, even on an offline phone with no imported model.
+    // The cockpit is intentionally shallow: primary actions are visible without knowing
+    // how the learning, tool permission or model subsystems work.
     private fun buildBootstrapCoreCard(): View {
         val card = verticalCard().apply {
-            background = roundedGradient(Color.rgb(10, 29, 61), Color.rgb(14, 24, 49),
-                18, Color.rgb(24, 127, 243))
-            setPadding(dp(12), dp(11), dp(12), dp(11))
+            background = roundedGradient(
+                Color.rgb(14, 39, 77), Color.rgb(12, 23, 47), 24, Color.rgb(48, 129, 230))
+            setPadding(dp(16), dp(16), dp(16), dp(16))
         }
-        val top = LinearLayout(this).apply {
+        val introduction = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val text = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        text.addView(textView("DEVICE AI · EIGENER STARTKERN", 12f, CYAN, true))
-        text.addView(textView("BEREIT · OHNE MODELLIMPORT", 13.5f, TEXT, true),
-            matchWidth(top = 5))
-        top.addView(text, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_model_stack)
-            contentDescription = "Continuum-Kern, lokal verbunden"
-        }, LinearLayout.LayoutParams(dp(106), dp(75)))
-        card.addView(top)
-        card.addView(textView(
-            "Eigene Regeln, nachprüfbare Lernschritte und lokale Erinnerung. Kein vortrainiertes Sprachmodell. " +
-                "Freies KI-Sprachdenken wird erst erforscht – keine simulierte Intelligenz.", 12.2f, MUTED
-        ), matchWidth(top = 4))
-        // One entry per area; the centers hold the individual functions and mark
-        // experimental ones. The learning radar stays here because it asks the user.
-        val centers = listOf(
-            Triple("LERNEN", true) { showLearningCenter() },
-            Triple("GEDÄCHTNIS", false) { showMemoryCenter() },
-            Triple("ENTWICKLUNG", false) { showDevelopmentCenter() },
-            Triple("MODELLE", false) { showModelCenter() },
-            Triple("SYSTEM", false) { showSystemCenter() }
+        val headline = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        headline.addView(textView("DEIN KI-COCKPIT", 11f, CYAN, true).apply {
+            letterSpacing = 0.12f
+        })
+        headline.addView(textView("Was möchtest du machen?", 22f, TEXT, true),
+            matchWidth(top = 6))
+        headline.addView(textView(
+            "Frag etwas, entdecke Wissen oder bring deiner KI etwas bei. " +
+                "Du entscheidest, was sie darf.", 13f, MUTED
+        ), matchWidth(top = 8))
+        introduction.addView(headline, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        introduction.addView(ContinuumCoreArtView(this),
+            LinearLayout.LayoutParams(dp(112), dp(118)).apply { marginStart = dp(4) })
+        card.addView(introduction, matchWidth())
+
+        card.addView(textView("DEINE MÖGLICHKEITEN", 11f, Color.rgb(169, 203, 250), true)
+            .apply { letterSpacing = 0.08f }, matchWidth(top = 18))
+
+        val options = listOf(
+            Triple("✦" to "Chatten", "Fragen stellen und Hilfe bekommen") { input.requestFocus() },
+            Triple("⌕" to "Recherchieren", "Webseiten nur nach deiner Freigabe") { showResearchModeDialog() },
+            Triple("◈" to "Lernen", "Bestätigtes Wissen sicher merken") { showLearningCenter() },
+            Triple("⬡" to "KI-Modell", "Freies Sprachmodell einrichten") { showModelCenter() },
+            Triple("⌘" to "Entwickeln", "Codevorschläge erstellen") { showDevelopmentCenter() },
+            Triple("◎" to "Gedächtnis", "Gespeichertes Wissen verwalten") { showMemoryCenter() }
         )
-        centers.chunked(2).forEachIndexed { index, pair ->
+        options.chunked(2).forEachIndexed { index, pair ->
             val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            pair.forEachIndexed { j, (label, accent, open) ->
-                row.addView(actionButton(label, accent = accent).apply {
-                    contentDescription = "$label öffnen"
-                    setOnClickListener { open() }
-                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { if (j > 0) marginStart = dp(7) })
+            pair.forEachIndexed { number, option ->
+                row.addView(cockpitTile(option.first.first, option.first.second,
+                    option.second, index == 0 && number == 0, option.third),
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                        .apply { if (number > 0) marginStart = dp(10) })
             }
-            if (pair.size == 1) {
-                row.addView(actionButton("WEB RECHERCHE").apply {
-                    setOnClickListener { showResearchModeDialog() }
-                    setOnLongClickListener { showInternetSettings(); true }
-                    contentDescription = "Webrecherche starten. Lange drücken für Internetzugang-Einstellungen."
-                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
-            }
-            card.addView(row, matchWidth(top = if (index == 0) 10 else 7))
+            card.addView(row, matchWidth(top = if (index == 0) 12 else 10))
         }
-        neuralCuriosityButton = actionButton("LERN-RADAR · Noch keine Frage").apply {
+        card.addView(actionButton("SYSTEM & BERECHTIGUNGEN").apply {
+            contentDescription = "Systemstatus und Geräteberechtigungen erklären"
+            setOnClickListener { showSystemCenter() }
+        }, matchWidth(top = 12))
+        neuralCuriosityButton = actionButton("LERNTIPP · Noch keine Frage").apply {
             isEnabled = false
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
-        card.addView(neuralCuriosityButton, matchWidth(top = 7))
+        card.addView(neuralCuriosityButton, matchWidth(top = 8))
         return card
+    }
+
+    private fun cockpitTile(
+        symbol: String, title: String, explanation: String,
+        primary: Boolean, open: () -> Unit
+    ): View {
+        val item = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = roundedGradient(
+                if (primary) Color.rgb(31, 94, 204) else Color.rgb(27, 51, 88),
+                if (primary) Color.rgb(46, 67, 195) else Color.rgb(19, 37, 68),
+                18, if (primary) Color.rgb(126, 208, 255) else Color.rgb(62, 104, 158))
+            setPadding(dp(13), dp(12), dp(11), dp(12))
+            minimumHeight = dp(104)
+            elevation = dp(3).toFloat()
+            isClickable = true
+            isFocusable = true
+            contentDescription = title + ". " + explanation
+            setOnClickListener { open() }
+        }
+        val symbolView = textView(symbol, 25f, if (primary) Color.WHITE else CYAN, true)
+        item.addView(symbolView)
+        item.addView(textView(title, 14.5f, TEXT, true), matchWidth(top = 2))
+        item.addView(textView(explanation, 11.7f, Color.rgb(193, 208, 230)),
+            matchWidth(top = 4))
+        return item
     }
 
     // ------------------------------------------------------------------
@@ -4199,9 +4237,47 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun showConnectivityHelp(part: String) {
+        val title: String
+        val description: String
+        val next: String
+        val action: () -> Unit
+        when (part) {
+            "device" -> {
+                title = "Gerätezugriff"
+                description = if (bridge.isReady())
+                    "Shizuku ist verbunden. Du kannst freigegebene Gerätefunktionen verwenden."
+                else ContinuumUiCopy.deviceBridgeMissing()
+                next = "SYSTEM ANSEHEN"
+                action = { showSystemCenter() }
+            }
+            "web" -> {
+                title = "Internet und Datenschutz"
+                description = "Device AI recherchiert nicht ungefragt. Erst nach deiner Zustimmung " +
+                    "wird die Suchanfrage an einen Suchdienst übertragen. Quellen werden getrennt vom bestätigten Wissen behandelt."
+                next = "RECHERCHE STARTEN"
+                action = { showResearchModeDialog() }
+            }
+            else -> {
+                title = "Was funktioniert schon?"
+                description = "Die lokale Basis ist bereit. Sie kann bestätigte Fakten speichern und einfache " +
+                    "Aufgaben erkennen. Freier KI-Dialog und der Entwicklungsassistent brauchen ein zusätzliches " +
+                    "kompatibles LiteRT-LM-Sprachmodell."
+                next = "MODELLE ANSEHEN"
+                action = { showModelCenter() }
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(description)
+            .setNegativeButton("Schließen", null)
+            .setPositiveButton(next) { _, _ -> action() }
+            .show()
+    }
+
     private fun updateShizukuBadge(message: String) {
         val ready = message.startsWith("Bereit")
-        shizukuBadge.text = if (ready) "● SHIZUKU BEREIT" else "● SHIZUKU AUS"
+        shizukuBadge.text = if (ready) "● GERÄT BEREIT" else "● GERÄT AUS"
         shizukuBadge.setTextColor(if (ready) GREEN else AMBER)
         shizukuBadge.background = rounded(
             if (ready) Color.rgb(17, 49, 35) else Color.rgb(51, 39, 18),
@@ -4212,7 +4288,7 @@ class AgentActivity : Activity() {
     }
 
     private fun updateCloudBadge() {
-        cloudBadge.text = "● WEB AUF ANFRAGE"
+        cloudBadge.text = "● WEB FREIGABE"
         cloudBadge.setTextColor(CYAN)
         cloudBadge.background = rounded(PANEL, 14, BORDER)
     }
