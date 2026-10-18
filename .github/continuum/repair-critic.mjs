@@ -10,7 +10,7 @@ const FORBIDDEN_PATHS=[
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // M4 release gates, proof validators, Sol handoff and local launchers are
   // control-plane code. Repair candidates may not rewrite their own judges.
-  /^\.github\/continuum\/(?:m4-|cegis-|local-m4-)/,/^scripts\//,
+  /^\.github\/continuum\/(?:m4-|cegis-|cefr-|local-m4-)/,/^scripts\//,
   // The synthesis/template/gate pipeline must not modify its own rules or
   // verifier via an automatically proposed patch.
   /^\.github\/continuum\/(development-backlog|autonomous-teamleader|backlog-repair-worker|owner-contract-worker|node-contract-synthesizer|contract-test-template|teamleader-cli|backlog-cli|kotlin-delegate-synthesizer|kotlin-delegate-acceptance|owner-kotlin-preview|local-teamleader-loop)\.mjs$/,
