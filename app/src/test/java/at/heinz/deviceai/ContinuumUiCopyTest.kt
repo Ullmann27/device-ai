@@ -33,6 +33,15 @@ class ContinuumUiCopyTest {
         assertTrue(ContinuumUiCopy.emptyResearch(null).contains("keine verlässlichen Quellen"))
     }
 
+    @Test fun commonModelErrorsArePlainGermanAndSuggestNextAction() {
+        assertTrue(ContinuumUiCopy.modelFailure("SHA-256 mismatch").contains("Prüfwert"))
+        assertTrue(ContinuumUiCopy.modelFailure("unsupported backend").contains("Modellformat"))
+        assertTrue(ContinuumUiCopy.modelFailure("out of memory").contains("Arbeitsspeicher"))
+        assertTrue(ContinuumUiCopy.modelFailure("initialization exceeded deadline").contains("zu lange"))
+        assertTrue(ContinuumUiCopy.modelFailure("busy").contains("Warte"))
+        assertTrue(ContinuumUiCopy.modelFailure(null).contains("Dateiformat"))
+    }
+
     @Test fun interruptionsAndPermissionsExplainNextAction() {
         assertTrue(ContinuumUiCopy.researchFailure("cancelled").contains("beendet"))
         assertTrue(ContinuumUiCopy.researchFailure(null).contains("erneut"))
