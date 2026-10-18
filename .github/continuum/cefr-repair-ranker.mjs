@@ -8,7 +8,7 @@
  */
 import crypto from 'node:crypto';
 import {RelationalEncoder} from './cre-encoder.mjs';
-import {rankCandidates,repairCandidateRiskTier} from './repair-loop.mjs';
+import {rankCandidates,repairCandidateRiskTier,CHAINS,TEST_PROFILES} from './repair-loop.mjs';
 import {validateVerifiedReport} from './repair-publish.mjs';
 
 export const DEV_CRE1_FILENAME='cre1-dev-repair-v1.cre1';
@@ -70,12 +70,17 @@ function validatedIndependentProof(verify,report,patchText){
  // serialized report, its own verification flag or user input cannot replace it.
  if(typeof verify!=='function')throw Error('INDEPENDENT_VERIFIER_REQUIRED');
  const proof=verify(report,patchText);
+ const profiles=CHAINS[report.chain];
  if(proof==null||typeof proof!=='object'||proof.passed!==true||
+    !Array.isArray(profiles)||!profiles.length||
     proof.base!==report.base||proof.chain!==report.chain||
     proof.patchSha256!==sha256(patchText)||!SHA.test(proof.patchSha256)||
-    !Array.isArray(proof.profiles)||proof.profiles.length===0||
-    proof.profiles.some(p=>p?.passed!==true||p?.failed!==0)||
-    !proof.profiles.some(p=>Number.isSafeInteger(p.executed)&&p.executed>0))
+    !Array.isArray(proof.profiles)||proof.profiles.length!==profiles.length||
+    profiles.some(name=>!proof.profiles.some(p=>p?.profile===name&&
+     p.passed===true&&p.failed===0&&(!TEST_PROFILES.includes(name)||
+      (Number.isSafeInteger(p.executed)&&p.executed>0))))||
+    proof.profiles.some(p=>!profiles.includes(p?.profile)))
+
   throw Error('INDEPENDENT_VERIFICATION_FAILED');
  return proof;
 }
