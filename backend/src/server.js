@@ -138,10 +138,20 @@ function stringProp(description) {
 }
 
 function objectSchema(properties, required = []) {
+  // Strict Responses tools require every defined property to be in "required".
+  // Keep optional Android arguments optional in meaning by permitting JSON null.
+  const mandatory = new Set(required);
+  const strictProperties = Object.fromEntries(
+    Object.entries(properties).map(([name, schema]) => {
+      if (mandatory.has(name)) return [name, schema];
+      const types = Array.isArray(schema.type) ? schema.type : [schema.type];
+      return [name, { ...schema, type: [...new Set([...types, "null"])] }];
+    })
+  );
   return {
     type: "object",
-    properties,
-    required,
+    properties: strictProperties,
+    required: Object.keys(strictProperties),
     additionalProperties: false
   };
 }
