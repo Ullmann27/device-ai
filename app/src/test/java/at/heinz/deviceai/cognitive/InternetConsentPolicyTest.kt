@@ -4,6 +4,11 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class InternetConsentPolicyTest {
+    @Test fun supportsExplicitAlwaysOnMode() {
+        assertTrue("Owner can enable persistent Internet consent",
+            InternetAccessMode.entries.any { it.name == "ALWAYS_ON" })
+    }
+
     @Test fun approvalIsOneShotAndBoundToExactQuestion() {
         val policy = InternetConsentPolicy()
         assertTrue(policy.request("Welche Quellen gibt es?"))
