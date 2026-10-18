@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install backend HTTP test dependencies
+        run: npm install --prefix backend --ignore-scripts --no-audit --no-fund
       - name: M4 end-to-end repair acceptance
         run: node --test --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/continuum-m4-repair-junit.xml" .github/continuum/repair-loop.test.mjs .github/continuum/repair-cycle-safety.integration.test.mjs
       - name: Full Continuum Node regressions
