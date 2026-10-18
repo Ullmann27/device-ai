@@ -53,6 +53,20 @@ node --test .github/continuum/m4-mandatory-e2e-gate.test.mjs .github/continuum/m
 
 Diese Prüfungen sind nicht gleichbedeutend mit einer erfolgreichen kompletten Gradle-/Android-Abnahme; der Android-SDK-/JDK-17-Build muss weiterhin real durchlaufen.
 
+## M4-Nachweiskonsistenz: ein einziger geprüfter JUnit-Dateistand
+
+Der eigenständige Reparatur-Nachweisprüfer hashte die XML-Datei früher und ließ sie anschließend vom separaten JUnit-Dateiparser **erneut öffnen**. Durch ein konkurrierendes Austauschen hätte sich die Hashprüfung somit auf andere Bytes beziehen können als die Auswertung. Der M4-Reparaturprüfer verwendet deshalb jetzt einen einmalig geöffneten regulären Dateideskriptor, verweigert Symlinks (`O_NOFOLLOW`), prüft Geräte-/Inode-/Größenübereinstimmung sowie vollständiges Lesen und verarbeitet anschließend **dieselbe Bytefolge** in `verifyJUnitXml()` und `verifyMandatoryCases()`. Die SHA-256-Prüfung bezieht sich auf exakt diese Bytefolge.
+
+Die bisherige `verifyJUnitReport(file)`-Schnittstelle bleibt für bestehende Node-/Backend-Berichte erhalten. Neu ist `verifyJUnitXml(xml)` für bereits gelesene, unveränderte XML-Dokumente. Der E2E-Report wird für diese Prüfung nicht erneut von der Festplatte gelesen. Diese Absicherung ist ein Schutz gegen Dateiaustausch und zufällige Inkonsistenzen, **keine digitale Signatur oder ein Ersatz für eine Betriebssystem-Sandbox**.
+
+Gezielte Regression:
+
+```bash
+node --test .github/continuum/m4-junit-memory.test.mjs .github/continuum/m4-repair-e2e.test.mjs
+```
+
+Beide Module wurden lokal mit Node 22 geprüft: **9/9 Tests bestanden**, ohne Fehler oder Skips. Darunter sind echte Node-JUnit-Reporter-Ergebnisse, verschachtelte Tests, fehlende Pflichtfälle, manipulierte Hashes, Symlink-Negativtests und die Prüfung auf genau einen Datei-Lesevorgang.
+
 ## Welche Abnahme dadurch **nicht** ersetzt wird
 
 Das aktuelle M4-Gate führt seine vorgesehenen Node-/Backend-/Kotlin-Profile und einen Debug-APK-Build aus. **Eine erfolgreiche M4-Prüfung allein beweist noch nicht:** Android-Lint `gradle :app:lintDebug`, vollständige Kotlin/Node-Paritätsrunden mit ihren Pflicht-Umgebungsvariablen, einen signierten Release-Build, die korrekte Integration des LiteRT-LM-Modells oder die Ausführung auf einem realen Samsung-Gerät.
