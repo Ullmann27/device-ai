@@ -20,6 +20,7 @@ export function gateSummary(node,android,apk,runAndroid,repairE2e=null){
  const valid=x=>x?.passed===true&&Array.isArray(x.results)&&x.results.length>0&&
    x.results.every(r=>r?.passed===true&&r.exitCode===0&&
      r.timedOut!==true&&r.tests?.failed===0&&
+     (r.tests?.skipped??0)===0&&
      Number.isSafeInteger(r.tests?.executed)&&r.tests.executed>=0);
  // Use exactly the same mandatory profile/exit-code checks in summaries
  // and persisted verification as in the live transition between stages.
@@ -184,6 +185,7 @@ export function nextGateStage(previous,expectedProfiles){
     'android-compile','android-unit'].includes(profile);
   return recognized&&r?.profile===profile&&r.passed===true&&
     r.exitCode===0&&r.timedOut!==true&&r.tests?.failed===0 &&
+    (r.tests?.skipped??0)===0&&
     Number.isSafeInteger(r.tests?.executed)&&r.tests.executed>=0&&
     (isCompiler
       ? r.testProfile===false&&r.tests.executed===0
