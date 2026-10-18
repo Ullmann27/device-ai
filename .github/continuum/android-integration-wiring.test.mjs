@@ -214,7 +214,9 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
 });
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
- ensure('model center from the core card',activity.includes('Triple("MODELLE", false) { showModelCenter() }'));
+ const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
+ ensure('model center from the core card',
+   cockpit?.includes('"KI-Modell"') && cockpit.includes('showModelCenter()'));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -233,9 +235,10 @@ test('local language model path is reachable: model center, loading, chat escala
 });
 test('every area has a center reachable from the core card; no demo buttons; experiments marked',()=>{
  const card=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- for(const [label,fn] of [['LERNEN','showLearningCenter'],['GEDÄCHTNIS','showMemoryCenter'],['ENTWICKLUNG','showDevelopmentCenter'],
-  ['MODELLE','showModelCenter'],['SYSTEM','showSystemCenter']]){
-  ensure(label+' center on the core card',card.includes('Triple("'+label+'"')&&card.includes(fn+'()'));
+ for(const [label,fn] of [['Lernen','showLearningCenter'],['Gedächtnis','showMemoryCenter'],
+  ['Entwickeln','showDevelopmentCenter'],['KI-Modell','showModelCenter'],
+  ['SYSTEM & BERECHTIGUNGEN','showSystemCenter']]){
+  ensure(label+' center on the cockpit',card.includes('"'+label+'"')&&card.includes(fn+'()'));
   assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
  }
  const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);
@@ -274,6 +277,37 @@ test('Teamleader Android UI reports status without false success',()=>{
    check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung fehlgeschlagen")'));
  ensure('previous unconditional success removed',
    !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
+});
+
+test('new visual cockpit is local, accessible and honest about capabilities',()=>{
+ const art=fs.readFileSync(dir+'ContinuumCoreArtView.kt','utf8');
+ const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
+ const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
+ const tile=bodyOf(activity,'private fun cockpitTile(');
+ const status=bodyOf(activity,'private fun buildStatusRow(');
+ ensure('drawing is locally generated, GPU light, never animated or network-connected',
+   art.includes('class ContinuumCoreArtView') &&
+   art.includes('override fun onDraw(') &&
+   !/Animator|postDelayed|URL\(|https?:\/\//.test(art));
+ ensure('cockpit uses real native drawing and named feature tiles',
+   cockpit.includes('ContinuumCoreArtView(this)') &&
+   cockpit.includes('cockpitTile('));
+ ensure('feature tiles are keyboard and accessibility reachable',
+   tile.includes('isClickable = true') && tile.includes('isFocusable = true') &&
+   tile.includes('contentDescription = title + ". " + explanation'));
+ ensure('interactive status explicitly opens a help dialog',
+   status.includes('showConnectivityHelp("device")') &&
+   status.includes('showConnectivityHelp("web")') &&
+   status.includes('showConnectivityHelp("core")'));
+ ensure('no automatic cloud fallback and no fake model readiness',
+   copy.includes('Es gibt keinen automatischen Cloud-Ersatz.') &&
+   copy.includes('Freies Sprachmodell noch nicht geladen'));
+ ensure('novice dialog explains model/source/goal without Shizuku dependency',
+   activity.includes('ContinuumUiCopy.developmentRequirements(') &&
+   activity.includes('Shizuku') &&
+   activity.includes('SPRACHMODELL EINRICHTEN'));
+ ensure('missing web sources are not presented as verified knowledge',
+   activity.includes('ContinuumUiCopy.emptyResearch(dossier.partialReason)'));
 });
 
 test('neural training failures expose bounded diagnostics without claiming saved weights',()=>{
