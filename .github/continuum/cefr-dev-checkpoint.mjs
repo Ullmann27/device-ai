@@ -71,6 +71,21 @@ export function promoteCefrCheckpoint({stateDir,repoRoot,promotion,expectedSha25
   const old=pathEntryExists(file)?readVerified(file):null;
   const current=old==null?null:sha256(old);
   if(current!==expectedSha256)throw Error('Developer CRE1 checkpoint changed concurrently');
+  // Persist a verified last-known-good snapshot BEFORE changing the active model.
+  // The prior active generation can then be restored after a bad promotion.
+  if(old!==null){
+   const lkg=file+'.lkg';
+   if(pathEntryExists(lkg))readVerified(lkg);
+   const backupTmp=lkg+'.tmp-'+crypto.randomBytes(8).toString('hex');
+   let backupFd;
+   try{
+    backupFd=fs.openSync(backupTmp,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
+    fs.writeFileSync(backupFd,old);
+    fs.fsyncSync(backupFd);
+   }finally{if(backupFd!==undefined)fs.closeSync(backupFd);}
+   try{fs.renameSync(backupTmp,lkg);}
+   catch(error){fs.rmSync(backupTmp,{force:true});throw error;}
+  }
   temporary=file+'.tmp-'+crypto.randomBytes(8).toString('hex');
   const fd=fs.openSync(temporary,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
   try{fs.writeFileSync(fd,promotion.activeBytes);fs.fsyncSync(fd);}
@@ -81,5 +96,35 @@ export function promoteCefrCheckpoint({stateDir,repoRoot,promotion,expectedSha25
  }finally{
   if(temporary)fs.rmSync(temporary,{force:true});
   if(lockFd!==undefined){fs.closeSync(lockFd);fs.rmSync(lock,{force:true});}
+ }
+}
+
+
+/** Explicit operator rollback: restore only a validated LKG snapshot under the
+ * same exclusive lock and a byte-exact expected active model hash.
+ * Never silently recover a different or concurrently updated generation.
+ */
+export function restoreCefrLastKnownGood({stateDir,repoRoot,expectedSha256}){
+ if(!HASH.test(expectedSha256??''))throw Error('INVALID_CEFR_ROLLBACK_HASH');
+ const file=resolveCefrCheckpoint(stateDir,repoRoot);
+ const lock=file+'.lock';
+ let fd,tmp=null;
+ try{
+  fd=fs.openSync(lock,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
+  const previous=readVerified(file+'.lkg');
+  if(!pathEntryExists(file))throw Error('Cannot roll back a missing active checkpoint');
+  const current=readVerified(file);
+  if(sha256(current)!==expectedSha256)
+   throw Error('CEFR_ROLLBACK_EXPECTED_SHA_MISMATCH');
+  tmp=file+'.restore-'+crypto.randomBytes(8).toString('hex');
+  const out=fs.openSync(tmp,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
+  try{fs.writeFileSync(out,previous);fs.fsyncSync(out);}
+  finally{fs.closeSync(out);}
+  fs.renameSync(tmp,file);
+  tmp=null;
+  return {file,sha256:sha256(previous),restored:true};
+ }finally{
+  if(tmp)fs.rmSync(tmp,{force:true});
+  if(fd!==undefined){fs.closeSync(fd);fs.rmSync(lock,{force:true});}
  }
 }
