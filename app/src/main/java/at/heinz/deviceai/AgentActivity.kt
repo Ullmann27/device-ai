@@ -878,11 +878,19 @@ class AgentActivity : Activity() {
         centerDialog?.dismiss()
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(20, 42, 78), Color.rgb(13, 24, 45),
+                22, Color.rgb(58, 107, 180))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        box.addView(textView(intro, 12f, MUTED))
-        val statusView = textView("Status wird gelesen …", 12f, TEXT)
-        box.addView(statusView, matchWidth(top = 10))
+        box.addView(textView("DEVICE AI · DEIN BEREICH", 11f, CYAN, true))
+        box.addView(textView(title, 21f, TEXT, true), matchWidth(top = 6))
+        box.addView(textView(intro, 13.3f, Color.rgb(203, 219, 239)), matchWidth(top = 9))
+        val statusView = textView("Status wird gelesen …", 12.5f, TEXT).apply {
+            background = rounded(Color.rgb(12, 26, 48), 14, Color.rgb(59, 96, 148))
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            setTextIsSelectable(true)
+        }
+        box.addView(statusView, matchWidth(top = 12))
         lateinit var dialog: AlertDialog
         fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
             setOnClickListener { dialog.dismiss(); action.run() }
@@ -894,13 +902,13 @@ class AgentActivity : Activity() {
             experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
         }
         dialog = AlertDialog.Builder(this)
-            .setTitle(title)
             .setView(ScrollView(this).apply { addView(box) })
             .setPositiveButton("Schließen", null)
             .create()
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
         centerDialog = dialog
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         status { text -> if (dialog.isShowing) statusView.text = text }
     }
 
@@ -4879,10 +4887,13 @@ class AgentActivity : Activity() {
         }
 
     private fun statusBadge(value: String, color: Int): TextView =
-        textView(value, 11f, color, true).apply {
+        textView(value, 11.5f, color, true).apply {
             gravity = Gravity.CENTER
-            setPadding(dp(9), 0, dp(9), 0)
-            background = rounded(Color.rgb(31, 37, 47), 14, BORDER)
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            background = roundedGradient(Color.rgb(28, 43, 68),
+                Color.rgb(18, 29, 49), 14, Color.rgb(60, 89, 129))
+            minHeight = dp(43)
+            isFocusable = true
         }
 
     private fun chip(label: String): Button =
@@ -4905,16 +4916,19 @@ class AgentActivity : Activity() {
     ): Button =
         Button(this).apply {
             text = label
-            textSize = if (compact) 11.5f else 12.5f
+            textSize = if (compact) 12f else 13.2f
             isAllCaps = false
             setTypeface(typeface, Typeface.BOLD)
             setTextColor(TEXT)
             background = if (accent) {
-                roundedGradient(Color.rgb(27, 133, 246), Color.rgb(53, 78, 236), 13, Color.rgb(81, 187, 255))
+                roundedGradient(Color.rgb(30, 160, 244), Color.rgb(59, 78, 229),
+                    15, Color.rgb(142, 227, 255))
             } else {
-                roundedGradient(Color.rgb(29, 42, 65), SURFACE, 13, BORDER)
+                roundedGradient(Color.rgb(36, 57, 91), Color.rgb(24, 40, 69),
+                    15, Color.rgb(66, 97, 145))
             }
-            setPadding(if (compact) dp(7) else dp(12), 0, if (compact) dp(7) else dp(12), 0)
+            setPadding(if (compact) dp(8) else dp(12), 0, if (compact) dp(8) else dp(12), 0)
+            elevation = dp(2).toFloat()
             minWidth = 0
             minHeight = 0
         }
@@ -4922,7 +4936,9 @@ class AgentActivity : Activity() {
     private fun verticalCard(): LinearLayout =
         LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(19, 35, 59), Color.rgb(19, 28, 46), 18, BORDER)
+            background = roundedGradient(Color.rgb(19, 40, 71),
+                Color.rgb(15, 26, 47), 21, Color.rgb(51, 90, 142))
+            elevation = dp(2).toFloat()
         }
 
     private fun textView(
@@ -4936,6 +4952,7 @@ class AgentActivity : Activity() {
             textSize = size
             setTextColor(color)
             if (bold) setTypeface(typeface, Typeface.BOLD)
+            setLineSpacing(dp(1).toFloat(), 1.03f)
         }
 
     private fun rounded(
