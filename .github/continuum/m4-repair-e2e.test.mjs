@@ -90,7 +90,7 @@ test('repair receipt verifier parses exactly the same JUnit bytes it hashes',
   const readFile=fs.readFileSync;
   let reads=0;
   fs.readFileSync=function(...args){
-   if(args[0]===proof)reads++;
+   if(args[0]===proof||typeof args[0]==='number')reads++;
    return readFile.apply(this,args);
   };
   try{
