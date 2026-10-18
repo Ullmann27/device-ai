@@ -279,6 +279,34 @@ test('Teamleader Android UI reports status without false success',()=>{
    !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
 });
 
+test('model setup stays usable for beginners while preserving SHA-256 integrity',()=>{
+ const model=bodyOf(activity,'private fun showModelCenter()');
+ const importer=bodyOf(activity,'private fun showModelImportDialog()');
+ const developer=bodyOf(activity,'private fun showDevelopmentDialog()');
+ ensure('model onboarding begins with import and load, while expert functions are collapsed',
+   model?.includes('MODELLDATEI IMPORTIEREN') &&
+   model.includes('MODELL LADEN') &&
+   model.includes('ERWEITERT · LERNKERN UND VERSIONEN') &&
+   model.includes('visibility = View.GONE'));
+ ensure('advanced model functions remain reachable, not deleted',
+   model.includes('showModelVersions()') &&
+   model.includes('confirmPackageImport()') &&
+   model.includes('confirmWeightsImport()'));
+ ensure('integrity check remains mandatory, dialog stays open for corrections',
+   importer?.includes('sha256.matches(Regex("[a-f0-9]{64}"))') &&
+   importer.includes('setPositiveButton("DATEI AUSWÄHLEN", null)') &&
+   importer.includes('dialog.getButton(AlertDialog.BUTTON_POSITIVE)') &&
+   importer.includes('return@setOnClickListener') &&
+   importer.includes('pendingModelImport = Triple(modelId, modelVersion, sha256)'));
+ ensure('invalid import and file chooser failure are visible without losing form',
+   importer.includes('warning.text = "Bitte fülle alle drei Felder') &&
+   importer.includes('pendingModelImport = null'));
+ ensure('developer wizard has clear model-setup route and a full-width start button',
+   developer?.includes('SPRACHMODELL EINRICHTEN') &&
+   developer.includes('devStartButton!!, LinearLayout.LayoutParams(') &&
+   developer.includes('dp(52)'));
+});
+
 test('new visual cockpit is local, accessible and honest about capabilities',()=>{
  const art=fs.readFileSync(dir+'ContinuumCoreArtView.kt','utf8');
  const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
