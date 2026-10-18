@@ -799,7 +799,7 @@ class AgentActivity : Activity() {
             .apply { letterSpacing = 0.08f }, matchWidth(top = 18))
 
         val options = listOf(
-            Triple("✦" to "Chatten", "Fragen stellen und Hilfe bekommen") { input.requestFocus() },
+            Triple("✦" to "Chatten", "Fragen stellen und Hilfe bekommen") { focusChatComposer() },
             Triple("⌕" to "Recherchieren", "Webseiten nur nach deiner Freigabe") { showResearchModeDialog() },
             Triple("◈" to "Lernen", "Bestätigtes Wissen sicher merken") { showLearningCenter() },
             Triple("⬡" to "KI-Modell", "Freies Sprachmodell einrichten") { showModelCenter() },
@@ -826,6 +826,19 @@ class AgentActivity : Activity() {
         }
         card.addView(neuralCuriosityButton, matchWidth(top = 8))
         return card
+    }
+
+    private fun focusChatComposer() {
+        if (!::input.isInitialized) return
+        input.requestFocus()
+        input.post {
+            if (!isFinishing && !isDestroyed) {
+                val manager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                    as? android.view.inputmethod.InputMethodManager
+                manager?.showSoftInput(input,
+                    android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
     }
 
     private fun cockpitTile(
@@ -3737,9 +3750,12 @@ class AgentActivity : Activity() {
                 startActivityForResult(create, DEV_EXPORT_REQUEST)
             }
         }
-        listOf(devStartButton!!, devStopButton!!, devExportButton!!).forEach {
-            row.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
-        }
+        box.addView(devStartButton!!, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dp(52)).apply { topMargin = dp(12) })
+        row.addView(devStopButton!!, LinearLayout.LayoutParams(0, dp(48), 1f))
+        row.addView(devExportButton!!, LinearLayout.LayoutParams(0, dp(48), 1f).apply {
+            marginStart = dp(8)
+        })
         box.addView(row, matchWidth(top = 8))
         box.addView(actionButton("AUFGABEN · BACKLOG").apply { setOnClickListener { showDevelopmentBacklog() } }, matchWidth(top = 6))
         devStatusView = textView("", 12f, AMBER, true)
