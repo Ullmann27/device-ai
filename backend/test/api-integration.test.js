@@ -205,6 +205,7 @@ test("agent turn maps mock Responses API to Android reply contract", async () =>
   assert.equal(sent.body.input[0].content, "Geräteinfo");
   assert.equal(sent.body.parallel_tool_calls, false);
   assert.ok(sent.body.instructions.includes("Shizuku=false"));
+  assert.ok(!sent.body.instructions.includes("Für Lumo:"));
   assert.ok(sent.body.tools.some(tool => tool.name === "get_device_info"));
   assert.ok(!sent.body.tools.some(tool => tool.name === "web_search" || tool.name === "web_read"));
   for (const tool of sent.body.tools) {
