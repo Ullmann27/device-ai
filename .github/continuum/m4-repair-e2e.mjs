@@ -8,7 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {strictRepairDepth} from './repair-cycle-safety.mjs';
-import {verifyJUnitReport} from './m4-junit-evidence.mjs';
+import {verifyJUnitXml} from './m4-junit-evidence.mjs';
 
 export const MANDATORY_REPAIR_CASES=Object.freeze([
  'end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
@@ -20,10 +20,20 @@ const SHA=/^[0-9a-f]{64}$/;
 const XML_NAME_REGEX=/<testcase\b((?:[^"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
 
 function readRegularXml(file){
- const s=fs.lstatSync(file);
- if(!s.isFile()||s.isSymbolicLink()||s.size<32||s.size>20*1024*1024)
+ const before=fs.lstatSync(file);
+ if(!before.isFile()||before.isSymbolicLink()||before.size<32||before.size>20*1024*1024)
   throw Error('Invalid repair JUnit proof file');
- return fs.readFileSync(file);
+ let fd;
+ try{
+  fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  const opened=fs.fstatSync(fd);
+  if(!opened.isFile()||opened.size!==before.size||
+     opened.ino!==before.ino||opened.dev!==before.dev)
+   throw Error('Repair JUnit evidence changed during open');
+  const raw=fs.readFileSync(fd);
+  if(raw.length!==opened.size)throw Error('Repair JUnit evidence changed during read');
+  return raw;
+ }finally{if(fd!==undefined)fs.closeSync(fd);}
 }
 
 function verifyMandatoryCases(xml){
@@ -54,7 +64,7 @@ export function verifyRepairE2eRecord(evidenceDirectory,record){
   const file=path.join(evidenceDirectory,XML_NAME);
   const raw=readRegularXml(file);
   if(crypto.createHash('sha256').update(raw).digest('hex')!==record.sha256)return false;
-  const summary=verifyJUnitReport(file);
+  const summary=verifyJUnitXml(raw.toString('utf8'));
   if(summary.executed!==record.executed||summary.failed!==0)return false;
   return verifyMandatoryCases(raw.toString('utf8'))===MANDATORY_REPAIR_CASES.length;
  }catch{return false;}
@@ -92,7 +102,7 @@ export function runRepairE2e(worktree,outDirectory,deadline){
   throw Error('Real M4 repair E2E failed: '+String(child.error?.code??child.signal??child.status)+
    ' '+(child.stderr??'').slice(-500));
  const bytes=readRegularXml(reportFile);
- const summary=verifyJUnitReport(reportFile);
+ const summary=verifyJUnitXml(bytes.toString('utf8'));
  verifyMandatoryCases(bytes.toString('utf8'));
  const record={passed:true,executed:summary.executed,
   mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
