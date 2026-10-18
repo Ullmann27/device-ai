@@ -22,7 +22,9 @@ data class ContinuumCognitiveTurn(
     val cre1ModelHash:String?,
     val observations:List<ContinuumShadowScore>,
     val localModelPrompt:String,
-    val trace:String
+    val trace:String,
+    /** Authorized raw evidence selected in this exact dialogue turn. */
+    val evidenceHits:List<ContinuumMemoryHit> = emptyList()
 ) {
     val grounded:Boolean get()=dialogue.grounded
     val answer:String get()=dialogue.answer
@@ -107,7 +109,7 @@ class ContinuumCognitiveRuntime(
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
-            scores,contextPrompt,trace)
+            scores,contextPrompt,trace,ranked)
     }
 
     /** The local generator receives conversation context but not an invented
