@@ -19,8 +19,8 @@ class ContinuumCoreArtView(context: Context) : View(context) {
     private val brush = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
-        setLayerType(LAYER_TYPE_HARDWARE, null)
+        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+        setLayerType(View.LAYER_TYPE_HARDWARE, null)
     }
 
     private fun stroke(canvas: Canvas, x1: Float, y1: Float, x2: Float, y2: Float, color: Int, size: Float) {
