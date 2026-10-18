@@ -58,7 +58,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         brush.isAntiAlias = true
         brush.shader = RadialGradient(
             171f, 113f, 171f,
-            intArrayOf(0x50296CFAL, 0x2023429FL, 0x0000081CL).map(Long::toInt).toIntArray(),
+            intArrayOf(0x50296CFA.toInt(), 0x2023429F, 0x0000081C),
             floatArrayOf(0f, .43f, 1f), Shader.TileMode.CLAMP
         )
         canvas.drawOval(5f, 3f, 336f, 219f, brush)
