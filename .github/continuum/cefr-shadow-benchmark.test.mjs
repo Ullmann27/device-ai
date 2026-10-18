@@ -9,7 +9,7 @@ function make(){
   cefrShadow:{mode:'CEFR_DEV_SHADOW',modelSha256:model,candidateCount:3,
    productionOrder:['bad','good','revert'],
    shadowOrder:['good','bad','revert']}};
- const independent={passed:true,profiles:[
+ const independent={passed:true,evidenceSufficient:true,profiles:[
   {profile:'node-continuum',passed:true,failed:0,executed:17}
  ]};
  return {report,independent};
@@ -30,10 +30,12 @@ test('no positive audit for self-reported patch, failed independent checks or ze
  const original=make();
  for(const independent of [
   null,{passed:false,profiles:original.independent.profiles},
-  {passed:true,profiles:[]},
-  {passed:true,profiles:[{passed:true,failed:0,executed:0}]},
-  {passed:true,profiles:[{passed:true,failed:1,executed:100}]},
-  {passed:true,profiles:[{passed:false,failed:0,executed:100}]}
+  {passed:true,evidenceSufficient:true,profiles:[]},
+  {passed:true,evidenceSufficient:true,profiles:[{profile:'node-continuum',passed:true,failed:0,executed:0}]},
+  {passed:true,evidenceSufficient:true,profiles:[{profile:'node-continuum',passed:true,failed:1,executed:100}]},
+  {passed:true,evidenceSufficient:true,profiles:[{profile:'node-continuum',passed:false,failed:0,executed:100}]},
+  {passed:true,profiles:original.independent.profiles},
+  {passed:true,evidenceSufficient:false,profiles:original.independent.profiles}
  ]){
   assert.equal(auditCefrShadowWinner({report:original.report,independent}).status,
    'NOT_INDEPENDENTLY_VERIFIED');
