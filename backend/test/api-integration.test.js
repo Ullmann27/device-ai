@@ -54,7 +54,17 @@ before(async () => {
       for await (const chunk of req) raw += chunk;
       const body = JSON.parse(raw || "{}");
       requests.push({ path: req.url, authorization: req.headers.authorization, body });
-      if (req.url === "/conversations") {
+      const invalidStrictTool = req.url === "/responses"
+        ? body.tools?.find(tool => tool.strict === true && (
+          tool.parameters?.additionalProperties !== false ||
+          Object.keys(tool.parameters?.properties ?? {}).some(
+            name => !tool.parameters.required?.includes(name)
+          )
+        ))
+        : null;
+      if (invalidStrictTool) {
+        respond(res, 400, { error: { message: "Invalid strict tool: " + invalidStrictTool.name } });
+      } else if (req.url === "/conversations") {
         respond(res, 200, { id: "mock-conversation" });
       } else if (req.url !== "/responses") {
         respond(res, 404, { error: { message: "Unknown mock route" } });
@@ -197,6 +207,17 @@ test("agent turn maps mock Responses API to Android reply contract", async () =>
   assert.ok(sent.body.instructions.includes("Shizuku=false"));
   assert.ok(sent.body.tools.some(tool => tool.name === "get_device_info"));
   assert.ok(!sent.body.tools.some(tool => tool.name === "web_search" || tool.name === "web_read"));
+  for (const tool of sent.body.tools) {
+    assert.equal(tool.strict, true);
+    assert.equal(tool.parameters.additionalProperties, false);
+    assert.deepEqual(
+      [...tool.parameters.required].sort(),
+      Object.keys(tool.parameters.properties).sort(),
+      "Strict tool schema is incomplete: " + tool.name
+    );
+  }
+  const apps = sent.body.tools.find(tool => tool.name === "list_installed_apps");
+  assert.deepEqual(apps.parameters.properties.userOnly.type, ["boolean", "null"]);
 });
 
 test("tool-result continuation reuses session and limits the forwarded result count", async () => {
