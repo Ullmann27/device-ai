@@ -26,6 +26,18 @@ cefr-dev-checkpoint.mjs schreibt in einen geschützten Ordner außerhalb des Git
 
 CRE1.save() beinhaltet Modellgewichte und Steps, aber nicht die gesamte persistierte Adam-Historie. Wiederhergestellte Instanzen erhalten daher einen neuen Optimiererzustand. Ein vollständiger Beweis fortgesetzter Adam-Momente wird ausdrücklich nicht behauptet.
 
+## 5. Durchsetzung am realen Entwicklungs-Worker (Ledger und Shadow)
+
+Die Trennung aus Vorschlag, Prüfung und Lernen gilt jetzt explizit auch für den periodischen Teamleader:
+
+- `recordSession()` in `repair-ledger.mjs` unterscheidet **drei Zustände**. `independentPass:true` erlaubt eine positive Lernerfahrung; `independentPass:false` verbucht einen unabhängigen Fehlschlag negativ; bei fehlendem oder ungültigem Nachweis lautet das Sitzungsergebnis `PENDING_INDEPENDENT_VERIFICATION`. Solche vorläufigen Sitzungen erhalten **weder positive noch negative Modell-Trainingssignale**. Die ursprünglichen Diagnoseversuche bleiben zur Fehlersuche erhalten.
+- `repairSession()` akzeptiert den optionalen `shadowObserver`. Der Beobachter erhält Kopien der Kandidaten, Erfahrungen und Diagnosen, nie die aktiven Objekte. Seine Rangliste darf destruktive Risiko-Stufen nicht vor nichtdestruktive Reparaturen ziehen. Bei Ausnahme oder ungültiger Rangfolge wird die Schattenbeobachtung verworfen; **die tatsächlich ausgeführte Kandidatenreihenfolge ist identisch zur bisherigen Implementierung**.
+- `localTeamleaderDriver().repair()` lädt bei vorhandenem externen Entwickler-Checkpoint den CEFR-Observer. Sein Modell darf das produktive Ranking nicht verändern und keinen Patch autorisieren. Ein fehlender Checkpoint deaktiviert nur die Beobachtung.
+- Ein intern erfolgreicher Reparaturkandidat wird nun in einem **zweiten frischen Git-Worktree** per `git apply --check`, `git apply` und einer erneuten `runChain('node')`-Ausführung überprüft. `validateVerifiedReport`, `evidenceSufficient` sowie tatsächlich ausgeführte Tests sind erforderlich. Beide Prüfläufe teilen sich dasselbe lokale Zeitbudget.
+- Schlägt diese unabhängige Abnahme fehl, schreibt der Teamleader **keinen öffentlichen `VERIFIED`-Ergebnisbericht**, liefert `NO_VERIFIED_REPAIR` zurück und speichert über den Ledger ausschließlich die abgelehnte Lernentscheidung. `main` wird niemals automatisch verändert.
+
+Neue gezielte Regressionen sind `repair-ledger-independent.test.mjs` und `cefr-shadow-integration.test.mjs` sowie zwei Zusatzfälle in `autonomous-teamleader.test.mjs`. In der laufenden Entwicklung wurden **6 Ledger- und 5 Shadow-Prüfungen gegen die Originalquellen im V8-Isolat erfolgreich ausgeführt**; die übrigen Teamleader- und Repository-Tests erfordern noch einen vollständigen lokalen Node-/Git-Checkout.
+
 ## Abnahmekette auf dem lokalen Entwicklungsrechner
 
 ~~~bash
