@@ -258,6 +258,24 @@ test('every area has a center reachable from the core card; no demo buttons; exp
  ensure('development status reads the backlog on its executor',activity.includes('onBacklog({ developmentCenterStatus() })'));
 });
 
+test('Teamleader Android UI reports status without false success',()=>{
+ const check=bodyOf(activity,'private fun runDeviceTeamleaderCheck()');
+ assert.ok(check,'Teamleader check handler must be present');
+ ensure('Teamleader outcome inspected as a typed snapshot',
+   check.includes('result.fold(') && check.includes('snapshot.state'));
+ ensure('completed only for READY',
+   check.includes('"READY" -> "CONTINUUM · Teamleiterprüfung erfolgreich abgeschlossen"'));
+ ensure('deferred reported without success',
+   check.includes('"DEFERRED" -> "CONTINUUM · Teamleiterprüfung verschoben:'));
+ ensure('ERROR reported without success',
+   check.includes('else -> "CONTINUUM · Teamleiterprüfung fehlgeschlagen:'));
+ ensure('exception reported without success',
+   check.includes('onFailure = { error ->') &&
+   check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung fehlgeschlagen")'));
+ ensure('previous unconditional success removed',
+   !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
+});
+
 test('Android-first Teamleader is scheduled, observable and serialized across background and chat',()=>{
  const native=fs.readFileSync(dir+'cognitive/DeviceTeamleader.kt','utf8');
  const job=fs.readFileSync(dir+'learning/ContinuumDeviceTeamleaderScheduler.kt','utf8');
