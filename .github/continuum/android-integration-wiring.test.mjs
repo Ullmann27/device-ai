@@ -276,6 +276,17 @@ test('Teamleader Android UI reports status without false success',()=>{
    !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
 });
 
+test('neural training failures expose bounded diagnostics without claiming saved weights',()=>{
+ const neural=bodyOf(activity,'private fun runNeuralCommand(command: NeuralCommand)');
+ ensure('neural error preserves the existing neural snapshot and discloses failure category',
+   neural?.includes('neuralMonitor.text = "NEURON · Training fehlgeschlagen ($category), vorheriger Stand erhalten"') &&
+   neural.includes('error.javaClass.simpleName.take(64)') &&
+   neural.includes('Neuronales Experiment ${command.kind.name} fehlgeschlagen ($category)'));
+ ensure('diagnostic text is bounded and visible instead of a silent failure',
+   neural.includes('.take(240)') &&
+   neural.includes('addToolActivity("NEURON · FEHLER · $category")'));
+});
+
 test('Wikipedia article research uses bounded authentic extracts and original citations',()=>{
  const provider=fs.readFileSync(dir+'cognitive/WikipediaExtractResearchProvider.kt','utf8');
  ensure('Android research wraps its existing HTTPS provider in a bounded Wikipedia extractor',
