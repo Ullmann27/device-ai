@@ -8,6 +8,8 @@ const protectedFiles=[
  '.github/continuum/m4-junit-evidence.mjs',
  '.github/continuum/m4-workflow-contract.test.mjs',
  '.github/continuum/cegis-intake.mjs',
+ '.github/continuum/cefr-repair-ranker.mjs',
+ '.github/continuum/cefr-repair-ranker.test.mjs',
  '.github/continuum/cegis-proposal-adapter.mjs',
  '.github/continuum/local-m4-android-gate.test.mjs',
  'scripts/local-m4-android.sh',
