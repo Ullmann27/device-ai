@@ -316,10 +316,10 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
    candidateCount:active.length,reordered:order.some((id,i)=>id!==active[i]),
    modelSha256:/^[a-f0-9]{64}$/.test(proposal.modelSha256??'')?
     proposal.modelSha256:null,
-   shadowOrder:order};
+   productionOrder:active,shadowOrder:order};
  }catch{
   return {mode:'CEFR_SHADOW_REJECTED',candidateCount:active.length,
-   reordered:false,modelSha256:null,shadowOrder:active};
+   reordered:false,modelSha256:null,productionOrder:active,shadowOrder:active};
  }
 }
 
