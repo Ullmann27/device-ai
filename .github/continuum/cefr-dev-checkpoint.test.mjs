@@ -95,3 +95,20 @@ test('rollback requires the exact active checkpoint SHA, and refuses tampered LK
   expectedSha256:second.activeSha256}));
  assert.equal(loadCefrCheckpoint(o).sha256,second.activeSha256);
 }));
+
+test('an explicitly SHA-matched corrupted active generation restores valid LKG',
+ ()=>fixture(o=>{
+ const first=promotion(23),second=promotion(24);
+ promoteCefrCheckpoint({...o,promotion:first});
+ promoteCefrCheckpoint({...o,promotion:second,expectedSha256:first.activeSha256});
+ const file=resolveCefrCheckpoint(o.stateDir,o.repoRoot);
+ const damaged=Buffer.from('corrupt active neural weights');
+ fs.writeFileSync(file,damaged);
+ assert.throws(()=>loadCefrCheckpoint(o));
+ assert.throws(()=>restoreCefrLastKnownGood({...o,
+  expectedSha256:second.activeSha256}),/SHA_MISMATCH/);
+ const restored=restoreCefrLastKnownGood({...o,
+  expectedSha256:sha256(damaged)});
+ assert.equal(restored.sha256,first.activeSha256);
+ assert.ok(loadCefrCheckpoint(o).bytes.equals(first.activeBytes));
+}));
