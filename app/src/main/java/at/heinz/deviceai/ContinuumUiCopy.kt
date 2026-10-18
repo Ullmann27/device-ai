@@ -56,6 +56,29 @@ object ContinuumUiCopy {
             "Öffne den Systembereich, richte Shizuku ein und versuche deinen Auftrag erneut. " +
             "Deine Eingabe bleibt stehen."
 
+    fun modelFailure(problem: String?): String = when {
+        problem?.contains("sha", ignoreCase = true) == true ||
+            problem?.contains("checksum", ignoreCase = true) == true ||
+            problem?.contains("digest", ignoreCase = true) == true ->
+            "Die Datei konnte nicht anhand des erwarteten SHA-256-Prüfwerts bestätigt werden. " +
+                "Vergleiche die Datei und den Prüfwert mit den Angaben des Anbieters."
+        problem?.contains("unsupported", ignoreCase = true) == true ||
+            problem?.contains("incompatible", ignoreCase = true) == true ||
+            problem?.contains("compatib", ignoreCase = true) == true ->
+            "Dieses Modell ist möglicherweise nicht mit der eingebauten LiteRT-LM-Laufzeit kompatibel. " +
+                "Prüfe Modellformat und Geräteunterstützung."
+        problem?.contains("memory", ignoreCase = true) == true ->
+            "Für dieses Modell steht möglicherweise nicht genügend Arbeitsspeicher zur Verfügung. " +
+                "Schließe andere Apps oder verwende ein kleineres kompatibles Modell."
+        problem?.contains("timeout", ignoreCase = true) == true ||
+            problem?.contains("exceeded", ignoreCase = true) == true ->
+            "Der Vorgang hat zu lange gedauert. Prüfe den verfügbaren Speicher und starte die Modellverwaltung erneut."
+        problem?.contains("busy", ignoreCase = true) == true ||
+            problem?.contains("in progress", ignoreCase = true) == true ->
+            "Die Modellverwaltung arbeitet noch. Warte kurz und versuche es anschließend erneut."
+        else -> "Das Modell konnte nicht verarbeitet werden. Prüfe Dateiformat, Modellversion und Gerätespeicher."
+    }
+
     fun modelStatus(ready: Boolean): String =
         if (ready) "Sprachmodell bereit" else "Freies Sprachmodell noch nicht geladen"
 }
