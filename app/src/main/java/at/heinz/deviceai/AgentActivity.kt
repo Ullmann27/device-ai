@@ -132,16 +132,16 @@ class AgentActivity : Activity() {
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
-        private val BG = Color.rgb(7, 10, 16)
-        private val PANEL = Color.rgb(15, 21, 31)
-        private val PANEL_2 = Color.rgb(21, 29, 42)
-        private val SURFACE = Color.rgb(27, 37, 53)
-        private val BORDER = Color.rgb(48, 64, 87)
+        private val BG = Color.rgb(5, 8, 23)
+        private val PANEL = Color.rgb(12, 17, 40)
+        private val PANEL_2 = Color.rgb(18, 23, 57)
+        private val SURFACE = Color.rgb(23, 34, 77)
+        private val BORDER = Color.rgb(73, 91, 171)
         private val TEXT = Color.rgb(245, 248, 253)
         private val MUTED = Color.rgb(155, 169, 191)
-        private val ACCENT = Color.rgb(71, 143, 255)
+        private val ACCENT = Color.rgb(64, 159, 255)
         private val ACCENT_DARK = Color.rgb(37, 87, 224)
-        private val CYAN = Color.rgb(44, 208, 255)
+        private val CYAN = Color.rgb(58, 220, 255)
         private val GREEN = Color.rgb(78, 214, 145)
         private val AMBER = Color.rgb(255, 192, 82)
         private val RED = Color.rgb(255, 102, 112)
@@ -549,11 +549,12 @@ class AgentActivity : Activity() {
 
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         dashboardSection = dashboard
+        // Reference-led mobile flow: brand -> transparent holographic hero ->
+        // live status -> actual feature tiles -> mode selection. The dashboard
+        // remains scrollable and the real composer/chat stay anchored below.
         dashboard.addView(buildHeader(wide))
-        dashboard.addView(buildStatusRow(), matchWidth(top = 14))
-        dashboard.addView(buildModeRow(), matchWidth(top = 10))
         dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
-        dashboard.addView(buildQuickActions(), matchWidth(top = 10))
+        dashboard.addView(buildModeRow(), matchWidth(top = 10))
 
         planCard = verticalCard().apply {
             visibility = View.GONE
@@ -629,66 +630,49 @@ class AgentActivity : Activity() {
     }
 
     private fun buildHeader(wide: Boolean): View {
-        val hero = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val header = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(3), dp(4), dp(3), dp(2))
+        }
         val top = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val heading = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        heading.addView(
-            textView("FRAG. PLANE. FÜHRE SICHER AUS.", 9.5f, Color.rgb(151, 190, 255), true)
-                .apply { letterSpacing = 0.13f }
-        )
-        heading.addView(
-            textView("Device AI", if (wide) 32f else 27f, TEXT, true).apply {
-                val styled = SpannableString("Device AI")
-                styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                text = styled
-                setShadowLayer(dp(7).toFloat(), 0f, 0f, Color.rgb(24, 86, 178))
-            },
-            matchWidth(top = 3)
-        )
-        heading.addView(
-            textView("Dein privater KI-Assistent direkt auf Android.",
-                if (wide) 12.5f else 11.5f, MUTED),
-            matchWidth(top = 3)
-        )
-        top.addView(heading, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
         top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_robot)
-            contentDescription = "Device AI Roboter-Maskottchen"
+            setImageResource(R.drawable.device_ai_holo_logo)
+            contentDescription = "Device AI · holografisches Logo"
             scaleType = ImageView.ScaleType.FIT_CENTER
-        }, LinearLayout.LayoutParams(dp(if (wide) 126 else 82), dp(if (wide) 112 else 87)).apply {
-            marginStart = dp(3)
-        })
-        top.addView(
-            actionButton("⚙", compact = true).apply {
-                contentDescription = "Cloud-Einstellungen"
-                setOnClickListener { showCloudSettings() }
-            },
-            LinearLayout.LayoutParams(dp(42), dp(42)).apply { marginStart = dp(4) }
-        )
-        hero.addView(top, matchWidth())
-        if (!wide) {
-            val secondary = LinearLayout(this).apply {
-                gravity = Gravity.CENTER_VERTICAL
-                orientation = LinearLayout.HORIZONTAL
-            }
-            secondary.addView(
-                textView("LOKAL · SICHER · DEIN ASSISTENT", 10f, Color.rgb(114, 191, 255)),
-                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            )
-            secondary.addView(
-                actionButton("EXPERT", compact = true).apply {
-                    setOnClickListener {
-                        startActivity(Intent(this@AgentActivity, MainActivity::class.java))
-                    }
-                },
-                LinearLayout.LayoutParams(dp(76), dp(33))
-            )
-            hero.addView(secondary, matchWidth(top = 2))
+        }, LinearLayout.LayoutParams(dp(54), dp(54)))
+        val titleBox = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_VERTICAL
         }
-        return hero
+        titleBox.addView(textView("Device AI", if (wide) 33f else 27f, TEXT, true).apply {
+            val styled = SpannableString("Device AI")
+            styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text = styled
+            setShadowLayer(dp(9).toFloat(), 0f, 0f, Color.rgb(24, 83, 171))
+            letterSpacing = 0.005f
+        })
+        titleBox.addView(textView("Dein persönlicher Android KI-Assistent",
+            if (wide) 12f else 10.6f, MUTED), matchWidth(top = 1))
+        top.addView(titleBox, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+            marginStart = dp(8)
+        })
+        top.addView(actionButton("⚙", compact = true).apply {
+            contentDescription = "Einstellungen und Berechtigungen"
+            setOnClickListener { showSystemCenter() }
+        }, LinearLayout.LayoutParams(dp(43), dp(43)))
+        header.addView(top, matchWidth())
+        header.addView(textView(
+            "PRIVAT   •   LOKAL   •   LEISTUNGSSTARK", 9.4f,
+            Color.rgb(146, 171, 228), true
+        ).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.13f
+        }, matchWidth(top = 8))
+        return header
     }
 
     private fun buildStatusRow(): View {
@@ -711,16 +695,16 @@ class AgentActivity : Activity() {
         }
 
         row.addView(
-            shizukuBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginEnd = dp(4) }
+            localBadge,
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginEnd = dp(4) }
         )
         row.addView(
-            localBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4); marginEnd = dp(4) }
+            shizukuBadge,
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginStart = dp(4); marginEnd = dp(4) }
         )
         row.addView(
             cloudBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginStart = dp(4) }
         )
         return row
     }
@@ -770,62 +754,79 @@ class AgentActivity : Activity() {
     // The cockpit is intentionally shallow: primary actions are visible without knowing
     // how the learning, tool permission or model subsystems work.
     private fun buildBootstrapCoreCard(): View {
-        val card = verticalCard().apply {
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+        val hero = verticalCard().apply {
             background = roundedGradient(
-                Color.rgb(14, 39, 77), Color.rgb(12, 23, 47), 24, Color.rgb(48, 129, 230))
-            setPadding(dp(16), dp(16), dp(16), dp(16))
+                Color.rgb(10, 25, 64), Color.rgb(15, 12, 46),
+                23, Color.rgb(64, 116, 237)
+            )
+            setPadding(dp(10), dp(9), dp(10), dp(10))
+            elevation = dp(6).toFloat()
         }
-        val introduction = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        val headline = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        headline.addView(textView("DEIN KI-COCKPIT", 11f, CYAN, true).apply {
-            letterSpacing = 0.12f
-        })
-        headline.addView(textView("Was möchtest du machen?", 22f, TEXT, true),
-            matchWidth(top = 6))
-        headline.addView(textView(
-            "Frag etwas, entdecke Wissen oder bring deiner KI etwas bei. " +
-                "Du entscheidest, was sie darf.", 13f, MUTED
-        ), matchWidth(top = 8))
-        introduction.addView(headline, LinearLayout.LayoutParams(0,
-            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        introduction.addView(ContinuumCoreArtView(this),
-            LinearLayout.LayoutParams(dp(112), dp(118)).apply { marginStart = dp(4) })
-        card.addView(introduction, matchWidth())
-
-        card.addView(textView("DEINE MÖGLICHKEITEN", 11f, Color.rgb(169, 203, 250), true)
-            .apply { letterSpacing = 0.08f }, matchWidth(top = 18))
+        hero.addView(textView("✦   DEVICE AI   ·   INTELLIGENZKERN", 10.5f,
+            Color.rgb(137, 215, 255), true).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.08f
+        }, matchWidth())
+        hero.addView(ContinuumHologramView(this).apply {
+            // View owns a fully transparent Canvas. No cloud image download,
+            // no inference simulation and no battery-consuming animation.
+            contentDescription = "Holografischer Device AI Kern, rein dekorativ"
+        }, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 201)
+        ))
+        hero.addView(textView(
+            "Mehr als nur Chat. Eine KI für dein Gerät.", 12f,
+            Color.rgb(198, 214, 244)
+        ).apply { gravity = Gravity.CENTER }, matchWidth())
+        container.addView(hero, matchWidth())
+        container.addView(buildStatusRow(), matchWidth(top = 11))
+        container.addView(textView("DEINE KI-BEREICHE", 10f,
+            Color.rgb(153, 189, 252), true).apply {
+            letterSpacing = 0.14f
+        }, matchWidth(top = 15))
 
         val options = listOf(
-            Triple("✦" to "Chatten", "Fragen stellen und Hilfe bekommen") { focusChatComposer() },
-            Triple("⌕" to "Recherchieren", "Webseiten nur nach deiner Freigabe") { showResearchModeDialog() },
-            Triple("◈" to "Lernen", "Bestätigtes Wissen sicher merken") { showLearningCenter() },
-            Triple("⬡" to "KI-Modell", "Freies Sprachmodell einrichten") { showModelCenter() },
-            Triple("⌘" to "Entwickeln", "Codevorschläge erstellen") { showDevelopmentCenter() },
-            Triple("◎" to "Gedächtnis", "Gespeichertes Wissen verwalten") { showMemoryCenter() }
+            Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
+            Triple("⌕" to "Forschung", "Recherchieren und Quellen prüfen") { showResearchModeDialog() },
+            Triple("▤" to "Lernen", "Wissen aufbauen und verstehen") { showLearningCenter() },
+            Triple("⬡" to "Modelle", "Lokale KI-Modelle verwalten") { showModelCenter() },
+            Triple("⌘" to "Entwicklung", "Code und Aufgaben kontrollieren") { showDevelopmentCenter() },
+            Triple("▱" to "Speicher", "Erinnerungen und persönlichen Kontext") { showMemoryCenter() }
         )
-        options.chunked(2).forEachIndexed { index, pair ->
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            pair.forEachIndexed { number, option ->
-                row.addView(cockpitTile(option.first.first, option.first.second,
-                    option.second, index == 0 && number == 0, option.third),
-                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                        .apply { if (number > 0) marginStart = dp(10) })
+        options.chunked(2).forEachIndexed { rowIndex, pair ->
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
             }
-            card.addView(row, matchWidth(top = if (index == 0) 12 else 10))
+            pair.forEachIndexed { index, option ->
+                row.addView(cockpitTile(option.first.first, option.first.second,
+                    option.second, rowIndex == 0 && index == 0, option.third),
+                    LinearLayout.LayoutParams(0, dp(94), 1f).apply {
+                        if (index > 0) marginStart = dp(9)
+                    })
+            }
+            container.addView(row, matchWidth(top = if (rowIndex == 0) 9 else 9))
         }
-        card.addView(actionButton("SYSTEM & BERECHTIGUNGEN").apply {
-            contentDescription = "Systemstatus und Geräteberechtigungen erklären"
+        container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
+            contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
+            background = roundedGradient(
+                Color.rgb(28, 45, 100), Color.rgb(18, 27, 62),
+                18, Color.rgb(97, 119, 216)
+            )
+            minHeight = dp(57)
             setOnClickListener { showSystemCenter() }
-        }, matchWidth(top = 12))
-        neuralCuriosityButton = actionButton("LERNTIPP · Noch keine Frage").apply {
+        }, matchWidth(top = 10))
+        neuralCuriosityButton = actionButton("✧   Lernimpuls · Noch keine Frage").apply {
             isEnabled = false
+            background = roundedGradient(Color.rgb(18, 34, 65),
+                Color.rgb(14, 22, 50), 15, Color.rgb(53, 83, 161))
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
-        card.addView(neuralCuriosityButton, matchWidth(top = 8))
-        return card
+        container.addView(neuralCuriosityButton, matchWidth(top = 9))
+        return container
     }
 
     private fun focusChatComposer() {
@@ -846,26 +847,52 @@ class AgentActivity : Activity() {
         primary: Boolean, open: () -> Unit
     ): View {
         val item = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
             background = roundedGradient(
-                if (primary) Color.rgb(31, 94, 204) else Color.rgb(27, 51, 88),
-                if (primary) Color.rgb(46, 67, 195) else Color.rgb(19, 37, 68),
-                18, if (primary) Color.rgb(126, 208, 255) else Color.rgb(62, 104, 158))
-            setPadding(dp(13), dp(12), dp(11), dp(12))
-            minimumHeight = dp(104)
-            elevation = dp(3).toFloat()
+                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
+                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
+                18,
+                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234)
+            )
+            setPadding(dp(10), dp(9), dp(9), dp(9))
+            elevation = dp(5).toFloat()
             isClickable = true
             isFocusable = true
             contentDescription = title + ". " + explanation
             setOnClickListener { open() }
         }
-        val symbolView = textView(symbol, 25f, if (primary) Color.WHITE else CYAN, true)
-        item.addView(symbolView)
-        item.addView(textView(title, 14.5f, TEXT, true), matchWidth(top = 2))
-        item.addView(textView(explanation, 11.7f, Color.rgb(193, 208, 230)),
-            matchWidth(top = 4))
+        val icon = textView(symbol, 21f, Color.WHITE, true).apply {
+            gravity = Gravity.CENTER
+            background = roundedGradient(
+                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
+                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152),
+                11,
+                if (primary) Color.rgb(79, 193, 255) else Color.rgb(128, 105, 249)
+            )
+            setShadowLayer(dp(3).toFloat(), 0f, 0f,
+                if (primary) CYAN else violetTint())
+        }
+        item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
+        val caption = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(9), 0, 0, 0)
+        }
+        caption.addView(textView(title, 13.5f, TEXT, true))
+        caption.addView(textView(explanation, 10.6f,
+            Color.rgb(172, 189, 222)).apply {
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        }, matchWidth(top = 3))
+        item.addView(caption, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        item.addView(textView("›", 22f, Color.rgb(155, 182, 255)).apply {
+            gravity = Gravity.CENTER
+        }, LinearLayout.LayoutParams(dp(13), dp(44)))
         return item
     }
+
+    private fun violetTint(): Int = Color.rgb(139, 96, 255)
 
     // ------------------------------------------------------------------
     // Centers: one place per area. Every action is an existing function;
