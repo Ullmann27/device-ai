@@ -31,7 +31,7 @@ object DevelopmentBacklog {
     val OPS = listOf("propose", "accept", "reject", "claim", "claimNext", "renew", "submit", "complete", "fail",
         "expire", "abort", "retry", "setPriority")
     val ARTIFACT_TYPES = listOf("PATCH", "PROPOSAL", "REPORT")
-    val TEST_PROFILES = listOf("node-continuum", "android-unit", "jvm-harness")
+    val TEST_PROFILES = listOf("node-continuum", "node-backend", "android-unit", "jvm-harness")
 
     const val MAX_TASKS = 500
     const val MAX_HISTORY = 40
