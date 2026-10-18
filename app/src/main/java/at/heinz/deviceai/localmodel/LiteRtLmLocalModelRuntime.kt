@@ -255,37 +255,18 @@ class LiteRtLmLocalModelRuntime(
                                 runCatching { activeConversation.cancelProcess() }
                                 return
                             }
-                            if (message.toolCalls.size > 1) {
-                                if (message.toolCalls.size > MAX_TOOL_RESPONSES) {
-                                    deliver(callback, LocalInferenceEvent.Failed("Local model proposed too many tools; none were run."))
-                                    runCatching { activeConversation.cancelProcess() }
-                                    return
-                                }
-                                deliver(
-                                    callback,
-                                    LocalInferenceEvent.ToolBatchRejected(
-                                        message.toolCalls.map {
-                                            LocalToolResponse(
-                                                it.name,
-                                                """{"status":"REJECTED","reason":"Only one registered tool proposal is permitted per step."}"""
-                                            )
-                                        }
-                                    )
+                            val toolCall = message.toolCalls.single()
+                            val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
+                            val event = if (validation == null) {
+                                LocalInferenceEvent.ToolProposal(
+                                    at.heinz.deviceai.ToolProposal(toolCall.name, toolCall.arguments)
                                 )
                             } else {
-                                val toolCall = message.toolCalls.single()
-                                val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
-                                val event = if (validation == null) {
-                                    LocalInferenceEvent.ToolProposal(
-                                        at.heinz.deviceai.ToolProposal(toolCall.name, toolCall.arguments)
-                                    )
-                                } else {
-                                    LocalInferenceEvent.ToolProposalRejected(
-                                        toolCall.name, validation, toolCall.arguments
-                                    )
-                                }
-                                deliver(callback, event)
+                                LocalInferenceEvent.ToolProposalRejected(
+                                    toolCall.name, validation, toolCall.arguments
+                                )
                             }
+                            deliver(callback, event)
                         }
                         message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
                             if (text.text.isBlank()) return@forEach
