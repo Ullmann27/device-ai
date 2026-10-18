@@ -6,7 +6,7 @@ data class DevelopmentUiState(
     val phase: DevelopmentUiPhase = DevelopmentUiPhase.IDLE,
     val goal: String = "",
     val sources: List<SourceSnapshot> = emptyList(),
-    val status: String = "Idle. Select source text and describe one development task.",
+    val status: String = "Bereit. Beschreibe deine Idee und wähle die passenden Dateien aus.",
     val preview: String? = null,
     val error: String? = null,
     val sourceImportPending: Boolean = false
@@ -23,7 +23,7 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         private set
 
     private fun edited() = state.copy(phase = DevelopmentUiPhase.IDLE, preview = null, error = null,
-        status = "Input changed. Start a new review; previous proposal is invalidated.")
+        status = "Eingaben geändert. Der alte Vorschlag ist nicht mehr gültig. Starte die Prüfung erneut.")
 
     fun setGoal(goal: String) {
         if (state.canEdit && goal != state.goal) state = edited().copy(goal = goal)
@@ -33,14 +33,14 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
     /** Revoke an old proposal immediately while SAF reads are still queued off the UI thread. */
     fun beginSourceImport(): Boolean {
         if (!state.canStart) return false
-        state = edited().copy(sourceImportPending = true, status = "Reading selected source files…")
+        state = edited().copy(sourceImportPending = true, status = "Dateien werden sicher eingelesen …")
         return true
     }
 
     fun finishSourceImport() {
         if (!state.sourceImportPending) return
         state = state.copy(sourceImportPending = false,
-            status = "Source selection finished. Review the files before starting.")
+            status = "Dateien ausgewählt. Bitte prüfe die Auswahl vor dem Start.")
     }
 
     fun addSource(path: String, content: String): Boolean {
@@ -70,35 +70,35 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         if (!state.canStart) return null
         if (!modelReady) {
             state = state.copy(phase = DevelopmentUiPhase.FAILED, preview = null,
-                error = "No local model loaded. Load a local model first; there is no cloud fallback.",
-                status = "Failed: no local model.")
+                error = "Kein KI-Sprachmodell geladen. Öffne „Sprachmodell einrichten“, importiere eine kompatible LiteRT-LM-Datei und lade sie. Es gibt keinen Cloud-Ersatz.",
+                status = "Noch nicht bereit: Sprachmodell fehlt.")
             return null
         }
         val task = try {
             DevelopmentTask(newTaskId(), state.goal.trim(), state.sources.toList())
         } catch (e: IllegalArgumentException) {
             state = state.copy(phase = DevelopmentUiPhase.FAILED, preview = null, error = e.message ?: "Invalid task.",
-                status = "Failed: invalid task.")
+                status = "Start nicht möglich: Bitte Entwicklungsziel und Quelldateien prüfen.")
             return null
         }
-        state = state.copy(phase = DevelopmentUiPhase.RUNNING, preview = null, error = null, status = "Pending…")
+        state = state.copy(phase = DevelopmentUiPhase.RUNNING, preview = null, error = null, status = "Auftrag vorbereitet …")
         return task
     }
 
     fun onJobState(job: DevelopmentJobState) {
         if (state.phase != DevelopmentUiPhase.RUNNING) return
         state = state.copy(status = when (job) {
-            DevelopmentJobState.PENDING -> "Pending…"
-            DevelopmentJobState.RUNNING_DEVELOPER -> "1/4 Developer drafting proposal…"
-            DevelopmentJobState.RUNNING_CRITIC -> "2/4 Critic reviewing…"
-            DevelopmentJobState.RUNNING_TEST_DESIGNER -> "3/4 Test designer suggesting tests…"
-            DevelopmentJobState.RUNNING_JUDGE -> "4/4 Judge deciding…"
+            DevelopmentJobState.PENDING -> "Auftrag vorbereitet …"
+            DevelopmentJobState.RUNNING_DEVELOPER -> "1/4 · Änderungsvorschlag wird erstellt …"
+            DevelopmentJobState.RUNNING_CRITIC -> "2/4 · Vorschlag wird auf Fehler geprüft …"
+            DevelopmentJobState.RUNNING_TEST_DESIGNER -> "3/4 · Passende Tests werden vorgeschlagen …"
+            DevelopmentJobState.RUNNING_JUDGE -> "4/4 · Ergebnis wird abschließend geprüft …"
             else -> state.status
         })
     }
 
     fun stop() {
-        if (state.canStop) state = state.copy(status = "Stopping…")
+        if (state.canStop) state = state.copy(status = "Wird beendet …")
     }
 
     fun onOutcome(outcome: DevelopmentOutcome) {
@@ -106,12 +106,12 @@ class DevelopmentUiController(private val newTaskId: () -> String) {
         state = when (outcome.state) {
             DevelopmentJobState.COMPLETED -> state.copy(phase = DevelopmentUiPhase.DONE,
                 preview = outcome.proposal!!.render(), error = null,
-                status = "Proposal ready for review. Nothing was applied, compiled or tested.")
+                status = "Vorschlag fertig. Es wurde nichts geändert, kompiliert oder getestet.")
             DevelopmentJobState.CANCELLED -> state.copy(phase = DevelopmentUiPhase.CANCELLED,
-                preview = null, error = null, status = "Stopped by user.")
+                preview = null, error = null, status = "Von dir beendet.")
             else -> state.copy(phase = DevelopmentUiPhase.FAILED, preview = null,
                 error = outcome.failure?.let { "${it.kind}: ${it.message}" } ?: outcome.state.name,
-                status = if (outcome.state == DevelopmentJobState.TIMED_OUT) "Timed out." else "Failed.")
+                status = if (outcome.state == DevelopmentJobState.TIMED_OUT) "Zeitlimit erreicht." else "Fehlgeschlagen.")
         }
     }
 
