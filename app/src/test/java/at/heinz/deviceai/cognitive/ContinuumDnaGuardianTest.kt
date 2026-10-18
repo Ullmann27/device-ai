@@ -93,6 +93,23 @@ class ContinuumDnaGuardianTest {
     }
 
     @Test
+    fun missingStateRootIsRejectedWithoutAttemptingRepair() {
+        val dir = Files.createTempDirectory("dna-guardian-missing-root").toFile()
+        try {
+            val signer = LocalSigner()
+            val initial = ContinuumRuntimeStore(dir, signer).openOrCreate()
+            val rootFile = File(dir, "objects/" + initial.seed.currentStateRoot.value + ".obj")
+            assertTrue(rootFile.isFile)
+            assertTrue(rootFile.delete())
+            val assessment = ContinuumDnaGuardian(dir) { signer }.inspect()
+            assertEquals(DnaIntegrityState.INVALID, assessment.state)
+            assertFalse(rootFile.exists())
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test
     fun wrongSignerCannotSilentlyAuthorizeExistingDna() {
         val dir = Files.createTempDirectory("dna-guardian-wrong-key").toFile()
         try {
