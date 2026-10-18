@@ -1828,9 +1828,14 @@ class AgentActivity : Activity() {
                         NeuralSave.CANCELLED -> "Neuronales Experiment abgebrochen; nichts gespeichert."
                         NeuralSave.FAILED -> "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich."
                     })
-                }, onFailure = {
-                    neuralMonitor.text = "NEURON · Training fehlgeschlagen, vorheriger Stand erhalten"
-                    addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.")
+                }, onFailure = { error ->
+                    val category = error.javaClass.simpleName.take(64).ifBlank { "UnbekannterFehler" }
+                    val detail = (error.message ?: "Keine zusätzliche Fehlerbeschreibung")
+                        .replace(Regex("[\\r\\n\\t]"), " ").take(240)
+                    neuralMonitor.text = "NEURON · Training fehlgeschlagen ($category), vorheriger Stand erhalten"
+                    addAssistantMessage("Neuronales Experiment ${command.kind.name} fehlgeschlagen ($category): " +
+                        "$detail. Vorhandene Daten nicht ersetzt.")
+                    addToolActivity("NEURON · FEHLER · $category")
                 })
             }
         }
