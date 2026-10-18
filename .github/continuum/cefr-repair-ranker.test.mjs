@@ -100,12 +100,15 @@ test('candidate-only training never changes baseline bytes or original optimizer
  assert.ok(before.equals(model.save()));
  assert.equal(model.adam,null);
  assert.equal(outcome.activeSha256,sha256(outcome.activeBytes));
- assert.ok(outcome.accepted||/REGRESSION|NO_TASK_SCORE_GAIN/.test(outcome.reason),
+ assert.ok(outcome.accepted||/REGRESSION|NO_TASK_SCORE_GAIN|NO_HOLDOUT_GENERALIZATION/.test(outcome.reason),
   outcome.reason);
  if(outcome.accepted){
   assert.ok(outcome.scoreAfter>outcome.scoreBefore);
   assert.ok(!outcome.activeBytes.equals(before));
   assert.ok(outcome.holdoutAfter.correct>=outcome.holdoutBefore.correct);
+  assert.ok(outcome.holdoutAfter.meanMargin>outcome.holdoutBefore.meanMargin+1e-6||
+   outcome.holdoutAfter.mrr>outcome.holdoutBefore.mrr+1e-8,
+   'promotion must improve independent holdout performance');
  }
 });
 
