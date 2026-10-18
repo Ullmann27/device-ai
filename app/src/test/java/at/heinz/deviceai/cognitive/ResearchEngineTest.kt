@@ -123,7 +123,8 @@ class ResearchEngineTest {
             .research("latest device news", ResearchMode.QUICK)
         assertFalse(dossier.generalSearchAvailable)
         assertEquals(ResearchPhase.PARTIAL, dossier.phase)
-        assertTrue(dossier.synthesis!!.text.contains("General web search is not configured"))
+        assertTrue(dossier.synthesis!!.text.contains("No verified source documents were retrieved"))
+        assertTrue(dossier.partialReason!!.contains("discovery is not configured"))
         assertNull(dossier.sources.firstOrNull())
     }
 
