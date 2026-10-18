@@ -216,7 +216,7 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
  const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
  ensure('model center from the core card',
-   cockpit?.includes('"KI-Modell"') && cockpit.includes('showModelCenter()'));
+   cockpit?.includes('"Modelle"') && cockpit.includes('showModelCenter()'));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -235,10 +235,10 @@ test('local language model path is reachable: model center, loading, chat escala
 });
 test('every area has a center reachable from the core card; no demo buttons; experiments marked',()=>{
  const card=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- for(const [label,fn] of [['Lernen','showLearningCenter'],['Gedächtnis','showMemoryCenter'],
-  ['Entwickeln','showDevelopmentCenter'],['KI-Modell','showModelCenter'],
-  ['SYSTEM & BERECHTIGUNGEN','showSystemCenter']]){
-  ensure(label+' center on the cockpit',card.includes('"'+label+'"')&&card.includes(fn+'()'));
+ for(const [label,fn] of [['Lernen','showLearningCenter'],['Speicher','showMemoryCenter'],
+  ['Entwicklung','showDevelopmentCenter'],['Modelle','showModelCenter'],
+  ['System   ·','showSystemCenter']]){
+  ensure(label+' center on the cockpit',card.includes(label)&&card.includes(fn+'()'));
   assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
  }
  const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);
@@ -324,17 +324,18 @@ test('model setup stays usable for beginners while preserving SHA-256 integrity'
 });
 
 test('new visual cockpit is local, accessible and honest about capabilities',()=>{
- const art=fs.readFileSync(dir+'ContinuumCoreArtView.kt','utf8');
+ const art=fs.readFileSync(dir+'ContinuumHologramView.kt','utf8');
  const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
  const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
  const tile=bodyOf(activity,'private fun cockpitTile(');
  const status=bodyOf(activity,'private fun buildStatusRow(');
- ensure('drawing is locally generated, GPU light, never animated or network-connected',
-   art.includes('class ContinuumCoreArtView') &&
+ ensure('drawing is local and motion follows visibility and power policy',
+   art.includes('class ContinuumHologramView') &&
    art.includes('override fun onDraw(') &&
-   !/Animator|postDelayed|URL\(|https?:\/\//.test(art));
+   art.includes('canAnimate()') && art.includes('isPowerSaveMode') &&
+   !/URL\(|https?:\/\//.test(art));
  ensure('cockpit uses real native drawing and named feature tiles',
-   cockpit.includes('ContinuumCoreArtView(this)') &&
+   cockpit.includes('ContinuumHologramView(this)') &&
    cockpit.includes('cockpitTile('));
  ensure('feature tiles are keyboard and accessibility reachable',
    tile.includes('isClickable = true') && tile.includes('isFocusable = true') &&
