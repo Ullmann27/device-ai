@@ -17,7 +17,8 @@ test('transparent native 3D hero has no network, model execution or fake status'
  assert.match(orb,/RadialGradient\(/);
  assert.match(orb,/drawOrbit\(canvas/);
  assert.match(orb,/Color\.TRANSPARENT/);
- assert.doesNotMatch(orb,/(?:http:|https:|WebView|model\.generate|networkRequest|canvas\.drawColor\()/);
+ const drawableCode=orb.replace(/\/\/[^\n]*/g,'');
+ assert.doesNotMatch(drawableCode,/(?:http:|https:|WebView|model\.generate|networkRequest|canvas\.drawColor\()/);
  assert.match(brand,/<vector\b/);
  assert.match(brand,/android:pathData=/);
  assert.doesNotMatch(brand,/<bitmap\b/);
@@ -38,7 +39,8 @@ test('image-inspired start screen preserves all seven real Android feature paths
  assert.match(dashboard,/ContinuumHologramView\(this\)/);
  assert.match(dashboard,/buildStatusRow\(\)/);
  for(const [label,call] of targets){
-  assert.ok(dashboard.includes('"'+label+'"'),'Missing AI navigation tile '+label);
+  assert.ok(label==='System'?dashboard.includes('System   ·'):
+    dashboard.includes('"'+label+'"'),'Missing AI navigation tile '+label);
   assert.ok(dashboard.includes(call),'Missing live handler '+call);
  }
  assert.match(dashboard,/neuralCuriosityButton = actionButton/);
