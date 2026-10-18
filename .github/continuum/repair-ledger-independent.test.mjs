@@ -83,3 +83,21 @@ test('non-verified sessions retain their original failure diagnoses',()=>{
  assert.equal(result.attempts[0].outcome,'FAILED_TESTS');
  assert.equal(result.experiences[0].failures,1);
 });
+
+test('unverified session cannot poison history through claimed failed alternatives',()=>{
+ const pending=report();
+ pending.attempts.unshift({
+  candidate:'3'.repeat(16),diagnostic:'2'.repeat(16),
+  diagnosticKind:'JS_UNRESOLVED',strategy:'JS_MISSING_IMPORT',
+  outcome:'FAILED_TESTS',edits:[],
+  tests:[{profile:'node-continuum',passed:false,tests:{
+   total:5,executed:5,failed:1,skipped:0
+  }}]
+ });
+ const current=recordSession(emptyLedger(),pending,{trigger:'local-teamleader'});
+ assert.equal(current.sessions[0].outcome,'PENDING_INDEPENDENT_VERIFICATION');
+ assert.equal(current.attempts.length,2,'audit still records failed trial and proposal');
+ assert.equal(current.experiences.length,0,'neither label allowed before independent verification');
+ const confirmed=recordSession(emptyLedger(),pending,{independentPass:true});
+ assert.equal(confirmed.experiences.length,2);
+});
