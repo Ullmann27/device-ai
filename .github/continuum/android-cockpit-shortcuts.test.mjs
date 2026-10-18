@@ -36,7 +36,8 @@ test('Every cockpit shortcut is connected to a usable UI or command',()=>{
 test('Cockpit shortcuts remain accessible on narrow phones and folding displays',()=>{
   const shortcuts=activity.slice(start,end);
   assert.match(shortcuts,/resources\.configuration\.screenWidthDp >= 700/);
-  assert.match(shortcuts,/actions\.chunked\(3\)/);
+  assert.match(shortcuts,/val columns = if \(resources\.configuration\.screenWidthDp >= 700\) 4 else 3/);
+  assert.match(shortcuts,/actions\.chunked\(columns\)/);
   assert.match(shortcuts,/LinearLayout\.LayoutParams\(0, dp\(45\), 1f\)/);
-  assert.match(shortcuts,/isHorizontalScrollBarEnabled = false/);
+  assert.doesNotMatch(shortcuts,/HorizontalScrollView\(/);
 });
