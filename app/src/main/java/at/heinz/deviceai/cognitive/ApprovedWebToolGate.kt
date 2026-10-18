@@ -29,8 +29,9 @@ sealed class WebToolRequest {
 }
 class WebToolApproval internal constructor(val call:WebToolRequest,internal val ticket:InternetApprovalTicket)
 
-/** Only a positive owner UI action calls approve. The resulting capability must
- * additionally pass the common ToolGate's explicit-confirmation and replay checks.
+/** ASK sessions require an explicit one-time confirmation. ALWAYS_ON sessions
+ * require the owner's separately persisted consent. Both remain scoped to one
+ * exact request and must pass the common ToolGate's budget and replay checks.
  */
 class ApprovedWebToolGate(private val consent:InternetConsentPolicy) {
     private var pending:WebToolApproval?=null
