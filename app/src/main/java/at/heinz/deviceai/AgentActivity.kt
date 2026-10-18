@@ -2963,6 +2963,7 @@ class AgentActivity : Activity() {
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
         ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
+        val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
                 if (!isFinishing && !isDestroyed) {
@@ -2985,7 +2986,7 @@ class AgentActivity : Activity() {
                 val savedPlan=runCatching { researchStore.loadLatest()?.plan }.getOrNull()
                 val canResume=shouldResume && savedPlan?.question==question && savedPlan?.mode==mode
                 check(!shouldResume || canResume) { "Fortsetzen abgelehnt: Frage oder Modus stimmen nicht mit der Freigabe überein" }
-                val runner=ApprovedWebResearchToolRunner(session,discovery,provider,
+                val runner=ApprovedWebResearchToolRunner(session,discovery,researchProvider,
                     engineFactory={d,p->DeepResearchEngine(discovery=d,provider=p,synthesizer=localSynthesis,
                         checkpointStore=researchStore,dossierRepository=researchStore,onSynthesisTimeout={localRuntime.cancel()},
                         validateTarget={HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(it)})},
