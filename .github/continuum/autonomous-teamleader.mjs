@@ -312,11 +312,14 @@ export async function localTeamleaderDriver(){
   {analyzeRepository},
   {syncBacklogOps},
   {executeOwnerRepairTask},
-  {executeOwnerContractTestTask}]=await Promise.all([
+  {executeOwnerContractTestTask},
+  {observeCefrCandidates,DEV_CRE1_FILENAME},
+  {loadCefrCheckpoint}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
   import('./development-planner.mjs'),import('./backlog-repair-worker.mjs'),
-  import('./owner-contract-worker.mjs')
+  import('./owner-contract-worker.mjs'),
+  import('./cefr-repair-ranker.mjs'),import('./cefr-dev-checkpoint.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
@@ -386,10 +389,23 @@ export async function localTeamleaderDriver(){
    const out=path.join(stateDir,'reports','repair-'+head.slice(0,12));
    fsApi.mkdirSync(out,{recursive:true});
    const wt=createWorktree(root,head);
+   // Developer CRE1 lives outside the checkout and outside Android memory.
+   // Corrupt checkpoints are reported as rejected shadow observations only.
+   const checkpointFile=path.join(stateDir,'dev-cre1',DEV_CRE1_FILENAME);
+   let shadowObserver=null;
+   if(fsApi.existsSync(checkpointFile)){
+    try{
+     const {bytes}=loadCefrCheckpoint({stateDir,repoRoot:root});
+     shadowObserver=input=>observeCefrCandidates({...input,checkpointBytes:bytes});
+    }catch{
+     shadowObserver=()=>{throw Error('INVALID_CEFR_DEV_CHECKPOINT');};
+    }
+   }
    let result;
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
-      maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000});
+      maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000,
+      shadowObserver});
     // Role handoffs are receipts of REAL work done by the existing repair
     // pipeline. Never represent a proposed patch as completed or merged.
     result.handoffs=summarizeRepairHandoffs(result);
