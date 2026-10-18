@@ -67,6 +67,22 @@ node --test .github/continuum/m4-junit-memory.test.mjs .github/continuum/m4-repa
 
 Beide Module wurden lokal mit Node 22 geprüft: **9/9 Tests bestanden**, ohne Fehler oder Skips. Darunter sind echte Node-JUnit-Reporter-Ergebnisse, verschachtelte Tests, fehlende Pflichtfälle, manipulierte Hashes, Symlink-Negativtests und die Prüfung auf genau einen Datei-Lesevorgang.
 
+## M4-Schutz gegen fingierte XML-Testfälle
+
+Ein adversarialer Regressionstest hat einen **falsch positiven** Reparaturnachweis reproduziert: Ein JUnit-Bericht enthielt drei Pflicht-Testnamen ausschließlich als Text innerhalb eines XML-Kommentars und manipulierte dazu passend die Summenkommentare. Der alte Prüfer erkannte fälschlich \`passed: true\` und drei ausgeführte Fälle. Eine zweite Variante versteckte angebliche Testfälle innerhalb eines \`<system-out>\`-Elements. Beide Varianten ließen sich zuvor mit formal passendem SHA-256-Beleg akzeptieren; der Hash beweist nur die Inhaltsübereinstimmung, **nicht die Authentizität einer Testausführung**.
+
+Die zentrale \`verifyJUnitXml(xml)\`-Implementierung verwendet nun \`structuralJUnitMarkup(xml)\`, damit XML-Kommentare keine Testfälle bzw. Testsuites vortäuschen können. CDATA, DTD und unsichere XML-Deklarationen werden ausgeschlossen. Eine begrenzte, deterministische Strukturprüfung zählt \`<testcase>\` und \`<testsuite>\` nur unter den zulässigen JUnit-Elternelementen. \`verifyMandatoryCases()\` arbeitet ebenfalls mit dem kommentargefilterten Dokument. Der alternative \`verifyM4AcceptanceEvidence()\`-Pfad verwendet für Pflichtfallnamen und Zusammenfassung denselben Datei-Lesevorgang.
+
+Die Prüfung ist bewusst ein streng begrenzter Validator für die von Node erzeugte JUnit-Struktur und kein universeller XML-Parser. Sie liefert **keine kryptographische Bestätigung, wer die Testdatei erstellt hat**. Die bereits bestehenden Isolations-, Worktree-, Testausführungs- und Freigabegrenzen bleiben deshalb verpflichtend.
+
+Gezielter Regressionstest:
+
+\`\`\`bash
+node --test .github/continuum/m4-junit-memory.test.mjs .github/continuum/m4-repair-e2e.test.mjs
+\`\`\`
+
+Auf Node.js 22: **16 von 16 Tests bestanden, null Skips, null Fehler**. Enthalten sind echte JUnit-Reporter-Ausgaben, geschachtelte Tests, fehlerhafte XML-Strukturen, manipulierte Kommentare, unzulässige Testcase-Elternelemente sowie vorhandene Pfad-/Hash-/Symlink-Negativtests. Die vier im GitHub-Branch geänderten Modul- und Testdateien wurden durch Vergleich der Git-Blob-SHAs mit der lokal ausgeführten Fassung bestätigt. Die vollständige Repository-, Kotlin- und APK-Abnahme muss separat real ausgeführt werden.
+
 ## Welche Abnahme dadurch **nicht** ersetzt wird
 
 Das aktuelle M4-Gate führt seine vorgesehenen Node-/Backend-/Kotlin-Profile und einen Debug-APK-Build aus. **Eine erfolgreiche M4-Prüfung allein beweist noch nicht:** Android-Lint `gradle :app:lintDebug`, vollständige Kotlin/Node-Paritätsrunden mit ihren Pflicht-Umgebungsvariablen, einen signierten Release-Build, die korrekte Integration des LiteRT-LM-Modells oder die Ausführung auf einem realen Samsung-Gerät.
