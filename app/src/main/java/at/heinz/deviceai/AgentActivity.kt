@@ -804,7 +804,8 @@ class AgentActivity : Activity() {
             pair.forEachIndexed { index, option ->
                 row.addView(cockpitTile(option.first.first, option.first.second,
                     option.second, rowIndex == 0 && index == 0, option.third),
-                    LinearLayout.LayoutParams(0, dp(94), 1f).apply {
+                    LinearLayout.LayoutParams(0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                         if (index > 0) marginStart = dp(9)
                     })
             }
@@ -857,6 +858,7 @@ class AgentActivity : Activity() {
             )
             setPadding(dp(10), dp(9), dp(9), dp(9))
             elevation = dp(5).toFloat()
+            minimumHeight = dp(94)
             isClickable = true
             isFocusable = true
             contentDescription = title + ". " + explanation
