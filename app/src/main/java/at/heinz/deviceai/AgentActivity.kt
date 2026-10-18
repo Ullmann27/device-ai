@@ -3807,16 +3807,18 @@ class AgentActivity : Activity() {
         box.addView(devStatusView, matchWidth(top = 8))
         devPreviewView = textView("", 11f, TEXT).apply { setTextIsSelectable(true) }
         box.addView(devPreviewView, matchWidth(top = 6))
+        box.addView(actionButton("SCHLIESSEN").apply {
+            setOnClickListener { devDialog?.dismiss() }
+        }, matchWidth(top = 14))
         val scroll = ScrollView(this).apply { addView(box) }
         devDialog = AlertDialog.Builder(this)
-            .setTitle("Entwicklungsassistent")
             .setView(scroll)
-            .setPositiveButton("Schließen", null)
             .setOnDismissListener {
                 devController.setGoal(devGoalInput?.text?.toString().orEmpty())
                 devDialog = null
             }
             .show()
+        devDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         refreshDevelopmentUi()
     }
 
