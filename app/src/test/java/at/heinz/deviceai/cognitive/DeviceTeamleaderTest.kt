@@ -8,6 +8,42 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class DeviceTeamleaderTest {
+    @Test fun corruptedDnaStopsTheCycleBeforeBacklogRecovery() {
+        val dir = Files.createTempDirectory("teamleader-dna-corrupt").toFile()
+        try {
+            val backlog = dir.resolve("development/development-backlog.json")
+            backlog.parentFile!!.mkdirs()
+            backlog.writeText("original backlog evidence")
+            val supervisor = DeviceTeamleader(
+                dir,
+                now = { 1750000000000L },
+                dnaAudit = { DnaIntegrityAssessment(DnaIntegrityState.INVALID) }
+            )
+            val result = supervisor.runOnce()
+            assertEquals("ERROR", result.state)
+            assertEquals("CHECK_FAILED", result.reason)
+            assertEquals("original backlog evidence", backlog.readText())
+            assertEquals(result, supervisor.status())
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test fun uninitializedDnaDoesNotPreventExistingSafeHousekeeping() {
+        val dir = Files.createTempDirectory("teamleader-dna-new").toFile()
+        try {
+            val result = DeviceTeamleader(
+                dir,
+                dnaAudit = { DnaIntegrityAssessment(DnaIntegrityState.NOT_INITIALIZED) }
+            ).runOnce()
+            assertEquals("READY", result.state)
+            assertEquals("OK", result.reason)
+            assertFalse(dir.resolve("continuum/seed/continuum-seed.bin").exists())
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
     @Test fun firstAndroidCycleUsesExistingBacklogAndPersistsNoPersonalText() {
         val dir = Files.createTempDirectory("teamleader-android").toFile()
         try {
