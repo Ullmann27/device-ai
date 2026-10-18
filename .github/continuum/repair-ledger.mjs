@@ -46,15 +46,25 @@ export function saveLedger(file,ledger){
 /** Fold one session report into the ledger (returns a new object). */
 export function recordSession(ledger,report,meta={}){
   const next=structuredClone(ledger);
-  // An internal VERIFIED result is only provisional until an independent
-  // worktree checks the patch. On independent rejection the original report
-  // is kept for diagnostics, but the training signal MUST be negative.
-  const independentRejected=meta.independentPass===false&&report.outcome==='VERIFIED';
-  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':report.outcome;
-  const acceptedPatch=independentRejected?null:report.verified;
+  // Internal success is a PROPOSAL, never authorization to write a
+  // positive experience. Only the trusted worker's independent second
+  // worktree test can set independentPass===true.
+  //
+  // false: independently rejected -> negative evidence.
+  // absent: no independent observation -> neither positive NOR negative
+  //         training label (do not poison learning with an unknown outcome).
+  const provisional=report.outcome==='VERIFIED';
+  const independentRejected=provisional&&meta.independentPass===false;
+  const independentPending=provisional&&meta.independentPass!==true&&
+    meta.independentPass!==false;
+  const acceptedPatch=provisional&&meta.independentPass===true?report.verified:null;
+  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':
+    independentPending?'PENDING_INDEPENDENT_VERIFICATION':report.outcome;
   const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
-    if(independentRejected&&a.outcome==='VERIFIED')
-      a={...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    if(a.outcome==='VERIFIED'&&independentRejected)
+      return {...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    if(a.outcome==='VERIFIED'&&independentPending)
+      return {...a,outcome:'NOT_APPLICABLE'};
     return a;
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
