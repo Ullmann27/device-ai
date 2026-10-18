@@ -38,6 +38,28 @@ Die Trennung aus Vorschlag, Prüfung und Lernen gilt jetzt explizit auch für de
 
 Neue gezielte Regressionen sind `repair-ledger-independent.test.mjs` und `cefr-shadow-integration.test.mjs` sowie fünf Zusatzfälle in `autonomous-teamleader.test.mjs`. In der laufenden Entwicklung wurden **6 Ledger-, 5 Shadow- und 3 Public-Report-Prüfungen gegen die Originalquellen im V8-Isolat erfolgreich ausgeführt (14/14)**; die übrigen Teamleader- und Repository-Tests erfordern noch einen vollständigen lokalen Node-/Git-Checkout.
 
+## 6. Prospektiver CEFR-Schattenvergleich (nicht mit autonomem Erfolg verwechseln)
+
+`.github/continuum/cefr-shadow-benchmark.mjs` misst jetzt **nur** eine zusätzliche, falsifizierbare Hypothese: Wenn der reale lokale Worker einen Patch in einem zweiten Worktree unabhängig überprüft hat, an welcher Position stand **genau dieser Gewinner** in der bisherigen deterministischen Reparaturrangliste und an welcher Position hätte der CRE1-Entwicklerranker ihn eingeordnet?
+
+- `runRepairShadowObserver()` protokolliert die originale `productionOrder` und die hypothetische `shadowOrder` aus denselben Kandidaten, ohne deren tatsächliche Ausführungsreihenfolge zu ändern. Manipulierte oder risikoüberschreitende Schattenvorschläge werden abgefangen.
+- `localTeamleaderDriver().repair()` ruft erst **nach** erfolgreichem unabhängigem Worktree-Test `auditCefrShadowWinner()` auf. Akzeptiert werden nur echte In-Process-Ergebnisse mit `independent.passed`, `independent.evidenceSufficient` und mindestens einem nachweislich ausgeführten Test. Ansonsten wird kein `cefrShadowAudit` mit Ranking-Rang erzeugt.
+- Der Audit speichert `base`, `patchSha256`, `modelSha256`, Kandidatenzahl sowie `productionRank` und `shadowRank`, niemals eine automatische Merge- oder Promotion-Erlaubnis.
+- `summarizeCefrShadowAudits()` benötigt mindestens **20 unabhängige, eindeutig identifizierte Reparaturfälle für eine vollzählige Kohorte** und **eine identische CRE1-Modell-SHA**. Doppelte Reparaturen, gemischte Modellversionen, beschädigte Rangdaten oder widersprüchliche Gewinner-Indikatoren werden abgewiesen.
+- Erfasst werden **Mean Reciprocal Rank** und Verbesserungs-/Verschlechterungsfälle. Das ist **keine** Messung der tatsächlichen Erfolgsquote: Die alternativen Shadow-Kandidaten wurden nicht ausgeführt und der Gewinner wurde unter der ursprünglichen Kandidatenauswahl gefunden. Selection Bias bleibt möglich. Daher liefert das Benchmark stets `successRateMeasured:false` und `productionPromotionAuthorized:false`.
+- Kein Code wird automatisch auf `main` geschrieben, kein CRE1-Checkpoint aufgrund von Shadow-Metriken befördert, und kein Trainingsbeispiel aufgrund der hypothetischen Rangposition als sicher klassifiziert.
+
+Gezielte Akzeptanztests, die auf einem Node-22-Checkout laufen müssen:
+
+```bash
+node --test .github/continuum/cefr-shadow-integration.test.mjs \
+  .github/continuum/cefr-shadow-benchmark.test.mjs \
+  .github/continuum/autonomous-teamleader.test.mjs \
+  .github/continuum/repair-ledger-independent.test.mjs
+```
+
+Die jeweils ersten beiden Testdateien wurden in dieser GitHub-Entwicklungsrunde separat in einem V8-Isolat anhand der echten Quellfunktionen geprüft (**5/5 + 8/8**). Das ist kein Ersatz für die direkte Node-22-Ausführung mit geladenen realen Modulen oder vollständige Gradle-/APK-Tests.
+
 ## Abnahmekette auf dem lokalen Entwicklungsrechner
 
 ~~~bash
