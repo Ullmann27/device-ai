@@ -1130,23 +1130,33 @@ class AgentActivity : Activity() {
 
     private fun buildQuickActions(): View {
         val actions = listOf(
-            "Lumo prüfen" to "Prüfe die installierte Lumo-Version und ob eine neuere Lumo APK in Downloads liegt.",
-            "Fehler Lumo" to "Prüfe Lumo auf aktuelle Fehler und analysiere Logcat.",
+            "KI-Modell" to "",
+            "Teamleiter" to "",
+            "System" to "",
             "Downloads" to "Zeig meine Downloads.",
             "Speicher" to "Welche Dateien brauchen am meisten Speicher?",
             "Akku" to "Prüfe Akku und Ladezustand.",
-            "Entwicklung" to "",
-            "Web" to "Recherchiere die neuesten Android-16- und Shizuku-Änderungen und nenne Quellen."
+            "Web" to ""
         )
         fun createAction(label: String, command: String): Button =
             chip(label).apply {
+                contentDescription = when (label) {
+                    "KI-Modell" -> "Lokales Sprachmodell einrichten oder verwalten"
+                    "Teamleiter" -> "Lokalen Continuum Teamleiter jetzt prüfen"
+                    "System" -> "Systemstatus und Berechtigungen öffnen"
+                    "Web" -> "Recherche nur nach Freigabe starten"
+                    else -> label + ": " + command
+                }
                 setOnClickListener {
                     when (label) {
+                        "KI-Modell" -> showModelCenter()
+                        "Teamleiter" -> runDeviceTeamleaderCheck()
+                        "System" -> showSystemCenter()
                         "Web" -> showResearchModeDialog()
-                        "Entwicklung" -> showDevelopmentDialog()
                         else -> {
                             input.setText(command)
                             input.setSelection(command.length)
+                            focusChatComposer()
                         }
                     }
                 }
