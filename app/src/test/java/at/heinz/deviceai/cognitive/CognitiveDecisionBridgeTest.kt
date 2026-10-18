@@ -93,4 +93,42 @@ class CognitiveDecisionBridgeTest {
             assertEquals(1, core.dialogueHistory().size)
         } finally { dir.deleteRecursively() }
     }
+    @Test fun ungroundedQuestionNeverInvokesModelOrAcceptsInventedPersonalFact() {
+        val dir = Files.createTempDirectory("continuum-bridge-ungrounded").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            var requests = 0
+            val model = ContinuumReasoningAdapter {
+                requests++
+                ReasoningPassResult("local-fixture", "Leo wohnt seit 2024 in Wien.", 2L)
+            }
+            val result = CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir, core), model)
+                .respond("Wo wohnt Leo?")
+            assertEquals(0, requests)
+            assertFalse(result.turn.grounded)
+            assertFalse(result.usedLocalModel)
+            assertTrue(result.evidenceHits.isEmpty())
+            assertTrue(result.finalAnswer.contains("keine passende bestätigte Erinnerung"))
+            assertEquals(1, core.dialogueHistory().size)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun additionalUnsupportedCityDoesNotPassLexicalAnchorGate() {
+        val dir = Files.createTempDirectory("continuum-bridge-extra-city").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt seit 2024 in Graz.")
+            val model = ContinuumReasoningAdapter {
+                ReasoningPassResult("local-fixture", "Leo wohnt seit 2024 in Graz und Wien.", 2L)
+            }
+            val result = CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir, core), model)
+                .respond("Wo wohnt Leo?")
+            assertFalse(result.usedLocalModel)
+            assertTrue(result.anchorRejectedModelOutput)
+            assertTrue(result.finalAnswer.contains("Graz"))
+            assertEquals(1, core.dialogueHistory().size)
+        } finally { dir.deleteRecursively() }
+    }
+
+
 }
