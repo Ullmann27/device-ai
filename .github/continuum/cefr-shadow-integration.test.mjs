@@ -22,6 +22,8 @@ test('neural CEFR shadow may rerank within tiers without changing real productio
   shadowOrder:['second','first','revert']}));
  assert.deepEqual(state.ranked.map(x=>x.id),['first','second','revert']);
  assert.deepEqual(state.result.shadowOrder,['second','first','revert']);
+ assert.deepEqual(state.result.productionOrder,['first','second','revert'],
+  'immutable production ranking remains available for prospectively audited outcomes');
  assert.equal(state.result.reordered,true);
  assert.equal(state.result.modelSha256,'f'.repeat(64));
  assert.deepEqual(state.candidates,candidateSet);
@@ -31,6 +33,7 @@ test('a corrupted shadow rank cannot elevate destructive full-file revert',()=>{
  const state=run(()=>({mode:'CEFR_DEV_SHADOW',shadowOrder:['revert','first','second']}));
  assert.equal(state.result.mode,'CEFR_SHADOW_REJECTED');
  assert.deepEqual(state.result.shadowOrder,state.ranked.map(x=>x.id));
+ assert.deepEqual(state.result.productionOrder,state.ranked.map(x=>x.id));
 });
 
 test('observer exceptions, duplicates and invented candidates fail closed',()=>{
