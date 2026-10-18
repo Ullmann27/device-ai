@@ -227,7 +227,7 @@ export function runTeamleaderCycle({
   if(chosen.kind==='IDLE'){
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
   }
-  if(['BASELINE_REPAIR','OWNER_REPAIR','OWNER_TEST'].includes(chosen.kind)){
+  if(['BASELINE_REPAIR','OWNER_REPAIR'].includes(chosen.kind)){
    // An accepted owner repair already runs the fixed baseline: do not repeat
    // the same expensive chain as BASELINE_REPAIR on the next scheduled cycle.
    state=seal({...state,attemptedHeads:[...state.attemptedHeads.filter(h=>h!==head),head].slice(-64)});
@@ -321,7 +321,7 @@ export async function localTeamleaderDriver(){
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
   {analyzeRepository},
-  {syncBacklogOps},
+  {syncBacklogOps,repairSessionOps},
   {executeOwnerRepairTask},
   {executeOwnerContractTestTask},
   {observeCefrCandidates,DEV_CRE1_FILENAME},
@@ -460,6 +460,37 @@ export async function localTeamleaderDriver(){
    }
    const publicReport=publicTeamleaderRepairReport(result);
    publicReport.handoffs=summarizeRepairHandoffs(publicReport);
+   // A first-worktree patch must never become a DONE backlog task without
+   // the independently verified second worktree. publicReport redacts it.
+   if(publicReport.outcome==='VERIFIED'&&publicReport.independent?.passed!==true)
+    throw Error('Refusing to record an unverified repair as completed');
+   const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+   const session=repairSessionOps(backlog.read().doc,publicReport,
+    {actor:'continuum-teamleader'});
+   let backlogSync={id:session.id,applied:0,status:session.skipped?'SKIPPED':'NO_OPERATIONS'};
+   if(session.ops.length){
+    const applied=backlog.apply(session.ops,{stopOnError:true});
+    if(applied.results.length!==session.ops.length||
+       applied.results.some(entry=>entry.ok!==true))
+      throw Error('Repair backlog synchronization was rejected');
+    backlogSync={id:session.id,applied:applied.results.length,status:'RECORDED'};
+   }
+   publicReport.backlogSync=backlogSync;
+   const review=[
+    '# Continuum repair review',
+    '',
+    'Base commit: '+head,
+    'Outcome: '+publicReport.outcome,
+    'Inference: '+(publicReport.inference?.mode??'DETERMINISTIC_ONLY'),
+    'Model invocations: '+(publicReport.inference?.modelInvocations??0),
+    'Patch SHA-256: '+(publicReport.verified?.patchSha256??'none'),
+    'Independent check: '+(publicReport.independent?.passed===true?'PASSED':'NOT VERIFIED'),
+    'Backlog: '+backlogSync.status,
+    'Automatic merge: NEVER',
+    ''
+   ];
+   fsApi.writeFileSync(path.join(out,'review-summary.md'),review.join('\n'));
    fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
    saveLedger(ledgerPath,recordSession(ledger,result,{
     trigger:'local-teamleader',
