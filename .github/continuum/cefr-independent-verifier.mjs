@@ -26,7 +26,7 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
  if(current!==report.base)throw Error('CEFR_BASE_HEAD_MISMATCH');
  if(git(repository,['status','--porcelain','--untracked-files=all']).stdout.trim())
   throw Error('CEFR_DIRTY_WORKTREE');
- const original=validateVerifiedReport(report,patchText);
+ validateVerifiedReport(report,patchText);
  const profiles=CHAINS[report.chain];
  if(!profiles?.length)throw Error('UNSUPPORTED_CEFR_TEST_CHAIN');
  if(!Array.isArray(report.baseline?.results)||
@@ -39,8 +39,14 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
  let worktree=null;
  const temp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-cefr-proof-'));
  try{
-  // This is a new worktree, never the worktree used to generate the patch.
+  // Reproduce the failure in the new independent worktree before testing a fix.
+  // Never compare against fabricated or stale counters in a self-reported baseline.
   worktree=createWorktree(repository,report.base);
+  const baselineOut=path.join(temp,'baseline');
+  fs.mkdirSync(baselineOut,{mode:0o700});
+  const reproduced=runChain(report.chain,worktree,baselineOut,{deadline});
+  if(reproduced.passed||report.baseline.passed!==false)
+   throw Error('CEFR_BASELINE_FAILURE_NOT_REPRODUCED');
   const patchFile=path.join(temp,'candidate.patch');
   fs.writeFileSync(patchFile,patchText,{flag:'wx',mode:0o600});
   if(git(worktree,['apply','--check','--binary',patchFile],{allowFailure:true}).status!==0)
@@ -55,7 +61,7 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
   const out=path.join(temp,'tests');
   fs.mkdirSync(out,{mode:0o700});
   const checked=runChain(report.chain,worktree,out,{deadline});
-  const evidence=evidenceSufficient(report.baseline.results,checked.results);
+  const evidence=evidenceSufficient(reproduced.results,checked.results);
   const resultProfiles=checked.results.map(r=>({
    profile:r.profile,passed:r.passed,failed:r.tests.failed,
    skipped:r.tests.skipped,executed:r.tests.executed
