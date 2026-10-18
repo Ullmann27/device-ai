@@ -220,12 +220,32 @@ test('Teamleader refuses fabricated DONE when no tests actually executed',()=>sa
 test('verified repair is a PROPOSAL only; never described as applied',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'KOTLIN_MISSING_IMPORT'},
+  independent:{passed:true,profiles:[{profile:'node-continuum',passed:true,failed:0,executed:3}]},
   artifact:path.join(stateDir,'reports','review.patch')});
  const r=runTeamleaderCycle({root,stateDir,driver});
  assert.equal(r.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
  assert.equal(r.artifact,path.join(stateDir,'reports','review.patch'));
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
 }));
+test('an internally passing repair without an independent proof is NOT verified',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'JS_TYPO_REFERENCE'},
+  artifact:path.join(stateDir,'reports','provisional.patch')});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'NO_VERIFIED_REPAIR');
+ const progress=summarizeTeamleaderProgress(
+  decodeLeaderState(fs.readFileSync(result.statePath)));
+ assert.equal(progress.independentlyVerifiedPatchProposals,0);
+}));
+
+test('a failed second-worktree check vetoes an otherwise passing repair',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'JS_TYPO_REFERENCE'},
+  independent:{passed:false,reason:'Second worktree tests failed'}});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'NO_VERIFIED_REPAIR');
+}));
+
 test('failed or interrupted work is preserved, never marked successful',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  driver.repair=()=>{throw Error('offline compiler unavailable')};
