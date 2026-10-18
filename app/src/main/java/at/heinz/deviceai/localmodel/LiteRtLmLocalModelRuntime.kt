@@ -20,6 +20,7 @@ import java.io.File
 import java.util.concurrent.CancellationException
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 enum class LocalModelState { EMPTY, LOADING, READY, GENERATING, UNLOADING, FAILED }
 
@@ -212,19 +213,33 @@ class LiteRtLmLocalModelRuntime(
         var firstTokenNanos: Long? = null
         val finished = AtomicBoolean()
         val outputLimitReached = AtomicBoolean()
+        val proposedToolCalls = AtomicInteger(0)
 
         fun finish(event: LocalInferenceEvent?) {
             if (!finished.compareAndSet(false, true)) return
             if (isolatedThinking) {
+                // Keep the isolated conversation owned until its close completes.
+                // Unload waits for finishInference before closing the parent engine.
                 background.execute {
-                    runCatching { if (activeConversation.isAlive) activeConversation.close() }
+                    val closed = runCatching {
+                        if (activeConversation.isAlive) activeConversation.close()
+                    }
+                    synchronized(lock) {
+                        if (inferenceConversation === activeConversation) inferenceConversation = null
+                    }
+                    finishInference()
+                    if (closed.isFailure) {
+                        deliver(callback, LocalInferenceEvent.Failed(
+                            "Isolated conversation could not be released safely."))
+                    } else if (event != null && !outputLimitReached.get()) deliver(callback, event)
                 }
+            } else {
+                synchronized(lock) {
+                    if (inferenceConversation === activeConversation) inferenceConversation = null
+                }
+                finishInference()
+                if (event != null && !outputLimitReached.get()) deliver(callback, event)
             }
-            synchronized(lock) {
-                if (inferenceConversation === activeConversation) inferenceConversation = null
-            }
-            finishInference()
-            if (event != null && !outputLimitReached.get()) deliver(callback, event)
         }
 
         try {
@@ -234,6 +249,12 @@ class LiteRtLmLocalModelRuntime(
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
                         if (finished.get() || outputLimitReached.get()) return
                         if (message.toolCalls.isNotEmpty()) {
+                            if (proposedToolCalls.addAndGet(message.toolCalls.size) > 1) {
+                                finish(LocalInferenceEvent.Failed(
+                                    "More than one tool proposal occurred in a single model turn; none are authorized."))
+                                runCatching { activeConversation.cancelProcess() }
+                                return
+                            }
                             if (message.toolCalls.size > 1) {
                                 if (message.toolCalls.size > MAX_TOOL_RESPONSES) {
                                     deliver(callback, LocalInferenceEvent.Failed("Local model proposed too many tools; none were run."))
@@ -374,16 +395,21 @@ class LiteRtLmLocalModelRuntime(
     private fun closeResources(callback: (Result<Unit>) -> Unit) {
         val resources = synchronized(lock) {
             val oldConversation = conversation
+            val oldInference = inferenceConversation
             val oldEngine = engine
             conversation = null
             inferenceConversation = null
             engine = null
             loadedModel = null
-            oldConversation to oldEngine
+            Triple(oldConversation, oldInference, oldEngine)
         }
         val result = runCatching {
-            resources.first?.let { if (it.isAlive) it.close() }
-            resources.second?.let { if (it.isInitialized()) it.close() }
+            val (oldConversation, oldInference, oldEngine) = resources
+            if (oldInference != null && oldInference !== oldConversation && oldInference.isAlive) {
+                oldInference.close()
+            }
+            if (oldConversation?.isAlive == true) oldConversation.close()
+            if (oldEngine?.isInitialized() == true) oldEngine.close()
             Unit
         }
         synchronized(lock) {
