@@ -963,13 +963,24 @@ class AgentActivity : Activity() {
         onBacklog({
             at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).runOnce {
                 Thread.currentThread().isInterrupted
-            }.display()
+            }
         }) { result ->
-            if(isFinishing || isDestroyed)return@onBacklog
-            addAssistantMessage(result.getOrElse {
-                "Teamleiterprüfung fehlgeschlagen ("+backlogError(it)+")."
-            })
-            addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")
+            if (isFinishing || isDestroyed) return@onBacklog
+            result.fold(
+                onSuccess = { snapshot ->
+                    addAssistantMessage(snapshot.display())
+                    val status = when (snapshot.state) {
+                        "READY" -> "CONTINUUM · Teamleiterprüfung erfolgreich abgeschlossen"
+                        "DEFERRED" -> "CONTINUUM · Teamleiterprüfung verschoben: ${snapshot.reason}"
+                        else -> "CONTINUUM · Teamleiterprüfung fehlgeschlagen: ${snapshot.reason}"
+                    }
+                    addToolActivity(status)
+                },
+                onFailure = { error ->
+                    addAssistantMessage("Teamleiterprüfung fehlgeschlagen (" + backlogError(error) + ").")
+                    addToolActivity("CONTINUUM · Teamleiterprüfung fehlgeschlagen")
+                }
+            )
         }
     }
 
