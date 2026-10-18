@@ -33,7 +33,10 @@ class CognitiveDecisionBridge(
         fun fallback(rejected: Boolean = false, modelId: String? = null) =
             VerifiedCognitiveResponse(turn, hits, turn.answer, false, rejected, modelId)
 
-        if (turn.grounded && (hits.isEmpty() || hits.size != ids.size)) return fallback(true)
+        // No grounded memory means the model has no authority to invent a personal fact.
+        // A greeting or unknown query must retain the deterministic reply.
+        if (!turn.grounded) return fallback()
+        if (hits.isEmpty() || hits.size != ids.size) return fallback(true)
         val adapter = reasoningAdapter ?: return fallback()
         val prompt = buildString {
             append(turn.localModelPrompt)
@@ -79,6 +82,8 @@ class CognitiveDecisionBridge(
             "keinem", "keiner", "keines", "nie", "niemals", "ohne")
         private val starters = setOf("der", "die", "das", "mein", "meine",
             "dein", "deine", "ein", "eine", "ja", "nein", "laut", "gemäß", "beleg")
+        private val neutralFraming = setOf("ich", "es", "das", "jahr", "stadt",
+            "ort", "antwort", "information", "gedächtnis", "beleg", "quelle")
 
         /** A conservative lexical anchor check, NOT a semantic proof of truth.
          * Checks the highest ranked authorized raw hit, not a formatted answer.
@@ -99,7 +104,14 @@ class CognitiveDecisionBridge(
                     it.lowercase(Locale.ROOT) !in starters }
                 .map { it.lowercase(Locale.ROOT) }.toSet()
             val visible = words.findAll(proposed).map { it.value }.toSet()
-            return anchored.all { it in visible }
+            if (!anchored.all { it in visible }) return false
+            // No fresh capitalized factual entity may appear in the generated text.
+            // This still is not a semantic entailment proof.
+            val proposedEntities = words.findAll(candidate).map { it.value }
+                .filter { it.length >= 3 && it.first().isUpperCase() }
+                .map { it.lowercase(Locale.ROOT) }
+                .filter { it !in starters && it !in neutralFraming }.toSet()
+            return proposedEntities.all { it in anchored }
         }
     }
 }
