@@ -901,6 +901,7 @@ class AgentActivity : Activity() {
     private class CenterAction(val label: String, val accent: Boolean = false, val run: () -> Unit)
 
     private var centerDialog: AlertDialog? = null
+    private var quickActionsDialog: AlertDialog? = null
 
     private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
         onLearningIo(read) { result ->
@@ -1122,9 +1123,35 @@ class AgentActivity : Activity() {
             CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
-            CenterAction("MODELLVERWALTUNG") { showModelCenter() }
+            CenterAction("MODELLVERWALTUNG") { showModelCenter() },
+            CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() }
         )
     )
+
+    private fun showQuickActionsDialog() {
+        quickActionsDialog?.dismiss()
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), dp(18), dp(14), dp(18))
+            background = roundedGradient(
+                Color.rgb(18, 32, 75), Color.rgb(9, 17, 41),
+                20, Color.rgb(73, 111, 206)
+            )
+            addView(textView("DEVICE AI · GERÄTE-WERKZEUGE",
+                11f, CYAN, true), matchWidth())
+            addView(buildQuickActions(), matchWidth(top = 11))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Schnellzugriffe")
+            .setView(content)
+            .setPositiveButton("Schließen", null)
+            .create()
+        quickActionsDialog = dialog
+        dialog.setOnDismissListener {
+            if (quickActionsDialog === dialog) quickActionsDialog = null
+        }
+        dialog.show()
+    }
 
     private fun systemCenterStatus(): String = buildString {
         append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
@@ -1175,6 +1202,7 @@ class AgentActivity : Activity() {
                     else -> label + ": " + command
                 }
                 setOnClickListener {
+                    quickActionsDialog?.dismiss()
                     when (label) {
                         "KI-Modell" -> showModelCenter()
                         "Teamleiter" -> runDeviceTeamleaderCheck()
