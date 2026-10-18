@@ -32,18 +32,29 @@ function pathEntryExists(file){
  catch(error){if(error?.code==='ENOENT')return false;throw error;}
 }
 
-function readVerified(file){
+/** Read only an ordinary, bounded file under a no-follow descriptor.
+ * Recovery may read corrupted model bytes to verify their exact SHA, but
+ * regular model loading still requires a valid CRE1 snapshot.
+ */
+function readRawCheckpoint(file){
  const stat=fs.lstatSync(file);
- if(!stat.isFile()||stat.isSymbolicLink())throw Error('Unsafe developer CRE1 checkpoint');
+ if(!stat.isFile()||stat.isSymbolicLink()||stat.size<1||stat.size>16*1024*1024)
+  throw Error('Unsafe developer CRE1 checkpoint');
  const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
  try{
   const opened=fs.fstatSync(fd);
-  if(opened.dev!==stat.dev||opened.ino!==stat.ino||!opened.isFile())
+  if(opened.dev!==stat.dev||opened.ino!==stat.ino||
+     !opened.isFile()||opened.size!==stat.size)
    throw Error('Developer checkpoint changed during open');
   const bytes=fs.readFileSync(fd);
-  RelationalEncoder.restore(bytes);
+  if(bytes.length!==opened.size)throw Error('Developer checkpoint changed during read');
   return bytes;
  }finally{fs.closeSync(fd);}
+}
+function readVerified(file){
+ const bytes=readRawCheckpoint(file);
+ RelationalEncoder.restore(bytes);
+ return bytes;
 }
 
 export function loadCefrCheckpoint({stateDir,repoRoot}){
@@ -113,7 +124,7 @@ export function restoreCefrLastKnownGood({stateDir,repoRoot,expectedSha256}){
   fd=fs.openSync(lock,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL,0o600);
   const previous=readVerified(file+'.lkg');
   if(!pathEntryExists(file))throw Error('Cannot roll back a missing active checkpoint');
-  const current=readVerified(file);
+  const current=readRawCheckpoint(file);
   if(sha256(current)!==expectedSha256)
    throw Error('CEFR_ROLLBACK_EXPECTED_SHA_MISMATCH');
   tmp=file+'.restore-'+crypto.randomBytes(8).toString('hex');
