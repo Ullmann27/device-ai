@@ -2,6 +2,23 @@
 
 Dieser Dienst hält den OpenAI-API-Schlüssel vollständig außerhalb der Android-APK und vermittelt zwischen Device AI und der OpenAI Responses API.
 
+## API-Integrationstests ohne externe Modellaufrufe
+
+Die HTTP-End-to-End-Prüfung in `test/api-integration.test.js` startet den echten
+Express-Dienst als lokalen Kindprozess. Eine zweite, lokale HTTP-Instanz simuliert
+`/conversations` und `/responses`. Es werden weder echte OpenAI-Schlüssel
+noch öffentliche Netzwerkzugriffe für Modellantworten benötigt.
+
+```bash
+npm install --ignore-scripts --no-audit --no-fund
+npm test
+```
+
+Die Tests prüfen Bearer-Authentifizierung, Sitzungsfortsetzung,
+Android-kompatible JSON-Antworten, Quellen, Funktionsaufrufe, strikte
+Funktionsschemas, deaktivierte Web-Tools, Eingabegrößen und Upstream-Fehler.
+Eine grüne Mock-Prüfung ersetzt keine reale Android-APK- oder Geräteabnahme.
+
 ## Sicherheitsmodell
 
 - `OPENAI_API_KEY` nur als Server-Environment-Secret.

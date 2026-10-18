@@ -10,10 +10,11 @@ import {
   BacklogStore, nextEligible, newToken, sha256Hex, singleLine
 } from './development-backlog.mjs';
 import {
-  git, createWorktree, removeWorktree, repairSession, runChain, CHAINS
+  git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS
 } from './repair-loop.mjs';
 import {emptyLedger, loadLedger, saveLedger, recordSession} from './repair-ledger.mjs';
 import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handoffs.mjs';
+import {validateVerifiedReport} from './repair-publish.mjs';
 
 const COMMIT=/^[0-9a-f]{40}$/;
 const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -48,6 +49,26 @@ export function validateOwnerRepairTask(task,head){
      !Object.hasOwn(CHAINS,task.subject?.chain))
     throw Error('Expected owner-accepted READY REPAIR task pinned to local HEAD and a fixed test chain');
   return task;
+}
+
+/**
+ * Independent owner repair verification. A passing green test signal is NOT
+ * sufficient when a candidate silently executes fewer or skips more tests
+ * than the baseline. Keep this pure for exact negative regression tests.
+ */
+export function assessIndependentOwnerEvidence(baselineResults,verified){
+  if(!Array.isArray(baselineResults)||!Array.isArray(verified?.results))
+    throw Error('Owner repair evidence must include baseline and verification profiles');
+  const sufficient=evidenceSufficient(baselineResults,verified.results);
+  const profiles=verified.results.map(r=>({
+    profile:r.profile,passed:r.passed===true,executed:r.tests?.executed??0,
+    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+  }));
+  const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
+  const passed=verified.passed===true&&sufficient.sufficient&&actualTests>0&&
+    profiles.every(p=>p.passed&&p.failed===0);
+  return {passed,profiles,actualTests,evidenceSufficient:sufficient.sufficient,
+    reasons:sufficient.reasons};
 }
 
 /**
@@ -99,7 +120,15 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       out:reportDir,ledger,maxCandidates:3,deadline});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
-    fs.writeFileSync(path.join(reportDir,'report.json'),JSON.stringify(report,null,2)+'\n');
+    const writeReport=()=>{
+      const target=path.join(reportDir,'report.json');
+      const pending=target+'.tmp-'+process.pid+'-'+crypto.randomBytes(6).toString('hex');
+      try{
+        fs.writeFileSync(pending,JSON.stringify(report,null,2)+'\n',{flag:'wx',mode:0o600});
+        fs.renameSync(pending,target);
+      }finally{fs.rmSync(pending,{force:true});}
+    };
+    writeReport();
     if(report.outcome!=='VERIFIED'||!report.verified){
       outcome={status:'FAILED',head,taskId:task.id,reason:report.outcome,
         report:path.join(reportDir,'report.json')};
@@ -110,6 +139,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       if(!patch.length||patchHash!==report.verified.patchSha256||
          patch.toString('utf8')!==report.verified.patch)
         throw Error('Repair patch and verified report disagree');
+      validateVerifiedReport(report,patch.toString('utf8'));
       // A second checkout prevents accidental reuse of candidate test state.
       independent=createWorktree(source,head);
       const check=git(independent,['apply','--check','--binary',patchFile],{allowFailure:true});
@@ -118,15 +148,18 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
       const verified=runChain(task.subject.chain,independent,independentOut,{deadline});
-      const profiles=verified.results.map(r=>({profile:r.profile,passed:r.passed,
-        executed:r.tests.executed,failed:r.tests.failed,skipped:r.tests.skipped}));
-      const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
-      const independentlyPassed=verified.passed&&actualTests>0&&
-        profiles.every(p=>p.passed&&p.failed===0);
+      const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
+      const {profiles,actualTests}=assessment;
+      const independentlyPassed=assessment.passed;
+      report.independent={passed:independentlyPassed,profiles,
+        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons};
+      // Persist the independent verdict before the backlog can become DONE.
+      writeReport();
       const independentReceipt=path.join(independentOut,'verification.json');
       const receipt={
         schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,
         checkedAt:new Date().toISOString(),passed:independentlyPassed,
+        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
         executedTests:actualTests,profiles
       };
       fs.writeFileSync(independentReceipt,JSON.stringify(receipt,null,2)+'\n');
@@ -140,11 +173,13 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           profiles,repair:null,at:submittedAt,by:actor};
         // Submit and complete must be one transactional backlog update.
         // A process crash cannot strand a verified job in VERIFYING.
-        store.apply([
+        const completion=store.apply([
           {op:'submit',actor,at:submittedAt,id:task.id,token,
             artifact:{type:'PATCH',sha256:patchHash}},
           {op:'complete',actor,at:submittedAt,id:task.id,evidence}
-        ]);
+        ],{stopOnError:true});
+        if(completion.results.length!==2||completion.results.some(x=>x.ok!==true))
+          throw Error('Verified backlog completion was not committed');
         outcome={status:'DONE',head,taskId:task.id,patchSha256:patchHash,
           patch:patchFile,profiles,independentReceipt,
           report:path.join(reportDir,'report.json'),approvedForMerge:false};

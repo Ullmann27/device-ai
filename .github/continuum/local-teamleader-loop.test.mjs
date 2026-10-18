@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome} from './local-teamleader-loop.mjs';
+import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 import {parseTeamleaderArgs,teamleaderExitCode} from './teamleader-cli.mjs';
 
 test('three local cycles pace on a fixed one-hour schedule and persist honest heartbeat',async()=>{
@@ -124,7 +124,7 @@ test('signal while waiting persists terminal STOPPED heartbeat',async()=>{
 });
 
 test('one-shot CLI exits nonzero for failed, unverified or unknown outcomes',()=>{
- const failing=['NO_VERIFIED_REPAIR','INTERRUPTED','CHECKS_FAILED','ERROR',
+ const failing=['NO_CODE_DIAGNOSTIC','NO_VERIFIED_REPAIR','INTERRUPTED','CHECKS_FAILED','ERROR',
   'RUNNING','UNKNOWN',null,undefined];
  for(const outcome of failing){
   assert.equal(isFailedCycleOutcome(outcome),true);
@@ -132,7 +132,7 @@ test('one-shot CLI exits nonzero for failed, unverified or unknown outcomes',()=
    'scheduled CLI must not report '+String(outcome)+' as success');
  }
  assert.equal(teamleaderExitCode(null),1);
- for(const outcome of ['NO_FAILURE','NO_CODE_DIAGNOSTIC',
+ for(const outcome of ['NO_FAILURE',
   'VERIFIED_PATCH_PENDING_REVIEW','DONE_INVESTIGATION',
   'NO_READY_INVESTIGATION','IDLE']){
   assert.equal(isFailedCycleOutcome(outcome),false);
@@ -150,4 +150,62 @@ test('failure backoff never retries before a user configured interval',async()=>
  assert.equal(result.failures,1);
  assert.deepEqual(waits,[120*60_000],
   'failure must not turn a two-hour schedule into an hourly schedule');
+});
+
+
+test('a failing baseline without a code diagnostic remains a failed worker cycle',async()=>{
+ assert.equal(isFailedCycleOutcome('NO_CODE_DIAGNOSTIC'),true);
+ assert.equal(teamleaderExitCode({outcome:'NO_CODE_DIAGNOSTIC'}),1);
+ const beats=[],waits=[];
+ let calls=0;
+ const summary=await runTeamleaderLoop({
+  work:()=>({outcome:++calls<3?'NO_CODE_DIAGNOSTIC':'NO_FAILURE'}),
+  intervalMinutes:1,maxCycles:3,
+  wait:async ms=>waits.push(ms),
+  onHeartbeat:hb=>beats.push(hb)
+ });
+ assert.equal(summary.failures,2);
+ assert.equal(summary.lastOutcome,'NO_FAILURE');
+ assert.deepEqual(waits,[60_000,120_000]);
+ const done=beats.filter(b=>b.state!=='RUNNING');
+ assert.equal(done[0].lastOutcome,'NO_CODE_DIAGNOSTIC');
+ assert.equal(done[0].failureStreak,1);
+ assert.equal(done[1].failureStreak,2);
+ assert.equal(done[2].failureStreak,0);
+});
+
+
+test('scheduler wait failure persists terminal ERROR rather than false WAITING',async()=>{
+ const observed=[];
+ await assert.rejects(runTeamleaderLoop({
+  work:()=>({outcome:'NO_FAILURE'}),intervalMinutes:1,
+  onHeartbeat:heartbeat=>observed.push(heartbeat),
+  wait:async()=>{throw Error('scheduler storage unavailable');}
+ }),/scheduler storage unavailable/);
+ assert.deepEqual(observed.map(b=>b.state),['RUNNING','WAITING','ERROR']);
+ assert.equal(observed.at(-1).nextAttemptAt,null);
+ assert.match(observed.at(-1).detail,/scheduler storage unavailable/);
+});
+
+test('saved status validates legitimate heartbeats and rejects spoofed or corrupt states',async()=>{
+ const beats=[];
+ await runTeamleaderLoop({
+  work:()=>({outcome:'NO_FAILURE'}),maxCycles:2,intervalMinutes:1,
+  wait:async()=>{},onHeartbeat:heartbeat=>beats.push(heartbeat)
+ });
+ for(const beat of beats)assert.equal(validateWorkerHeartbeat(beat),true);
+ const waiting=beats.find(b=>b.state==='WAITING');
+ assert.ok(waiting);
+ assert.equal(validateWorkerHeartbeat({...waiting,cycles:0,failures:0,
+  failureStreak:0,lastOutcome:'VERIFIED_PATCH_PENDING_REVIEW'}),false,
+  'zero completed cycles cannot claim a verified patch');
+ assert.equal(validateWorkerHeartbeat({...waiting,cycles:1,lastOutcome:null}),false,
+  'a completed cycle must have a declared outcome');
+ for(const bad of [
+  {schema:'bad-schema'},{version:9},{state:'VERIFIED'},
+  {cycles:-1},{failures:10000},{failureStreak:-1},
+  {lastOutcome:'FAKE_VERIFIED'},{startedAt:'invalid'},
+  {nextAttemptAt:null},{nextAttemptAt:waiting.lastFinishedAt-1},
+  {lastFinishedAt:null},{detail:{message:'fake success'}}
+ ])assert.equal(validateWorkerHeartbeat({...waiting,...bad}),false,JSON.stringify(bad));
 });

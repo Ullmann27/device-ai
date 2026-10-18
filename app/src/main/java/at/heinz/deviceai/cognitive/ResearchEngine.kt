@@ -294,7 +294,7 @@ class DeterministicResearchSynthesizer : ResearchSynthesizer {
             "\n\nConflicting evidence remains unresolved; the sources disagree."
         } else ""
         val missing = if (input.evidence.isEmpty()) {
-            "No source documents were retrieved. General web search is not configured; provide direct HTTPS seed URLs."
+            "No verified source documents were retrieved. Check connectivity, source-size limits or provide an approved HTTPS URL."
         } else "Evidence-based summary for: ${input.question.take(512)}\n$claims$caveat"
         return ResearchSynthesisOutput(missing.take(8_000))
     }
@@ -517,8 +517,10 @@ class DeepResearchEngine(
             if (index + 1 >= budget.maxDiscoveryQueries) break
         }
         if (discovered.isEmpty() && !discovery.isGeneralSearchAvailable && seedUrls.isEmpty()) {
-            partialReason = partialReason
-                ?: "General web discovery is not configured; direct HTTPS seed URLs are supported."
+            partialReason = partialReason ?: if (discovery is UnconfiguredResearchDiscoveryProvider)
+                "General web discovery is not configured; direct HTTPS seed URLs are supported."
+            else
+                "Search and Wikipedia fallback returned no usable sources; retry or provide approved HTTPS URLs."
         }
         setPhase(ResearchPhase.FETCH, id)
         val domainCounts = mutableMapOf<String, Int>()

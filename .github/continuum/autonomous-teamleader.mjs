@@ -84,6 +84,16 @@ export function summarizeTeamleaderProgress(state){
  };
 }
 
+/** Public proof must agree across overall outcome, candidate attempts and
+ * role handoffs. Internal reports are retained solely for learning/audit.
+ */
+export function publicTeamleaderRepairReport(report){
+ if(report?.outcome!=='VERIFIED'||report.independent?.passed===true)return report;
+ return {...report,outcome:'NO_VERIFIED_REPAIR',verified:null,
+  attempts:(report.attempts??[]).map(a=>a.outcome==='VERIFIED'?
+   {...a,outcome:'INSUFFICIENT_EVIDENCE'}:a)};
+}
+
 export function selectTeamleaderAction(state,head,readyTask=null){
  if(!HEAD.test(head))throw Error('Full immutable commit SHA required');
  // Finish incomplete work explicitly; do not re-run it against the same base.
@@ -217,7 +227,7 @@ export function runTeamleaderCycle({
   if(chosen.kind==='IDLE'){
    return {head,kind:chosen.kind,outcome:'IDLE',statePath};
   }
-  if(['BASELINE_REPAIR','OWNER_REPAIR','OWNER_TEST'].includes(chosen.kind)){
+  if(['BASELINE_REPAIR','OWNER_REPAIR'].includes(chosen.kind)){
    // An accepted owner repair already runs the fixed baseline: do not repeat
    // the same expensive chain as BASELINE_REPAIR on the next scheduled cycle.
    state=seal({...state,attemptedHeads:[...state.attemptedHeads.filter(h=>h!==head),head].slice(-64)});
@@ -239,7 +249,8 @@ export function runTeamleaderCycle({
      VERIFIED:'VERIFIED_PATCH_PENDING_REVIEW',
      NO_VERIFIED_REPAIR:'NO_VERIFIED_REPAIR'};
     if(!Object.hasOwn(map,result?.outcome))throw Error('Unknown repair outcome');
-    outcome=map[result.outcome];
+    outcome=result.outcome==='VERIFIED'&&result.independent?.passed!==true
+     ?'NO_VERIFIED_REPAIR':map[result.outcome];
     detail=String(result.verified?.strategy??result.outcome).slice(0,160);
    } else if(chosen.kind==='OWNER_TEST'){
     if(result?.status==='DONE'){
@@ -306,17 +317,23 @@ export function runTeamleaderCycle({
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
 export async function localTeamleaderDriver(){
- const [{git,createWorktree,removeWorktree,repairSession},
+ const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
   {analyzeRepository},
-  {syncBacklogOps},
+  {syncBacklogOps,repairSessionOps},
   {executeOwnerRepairTask},
-  {executeOwnerContractTestTask}]=await Promise.all([
+  {executeOwnerContractTestTask},
+  {observeCefrCandidates,DEV_CRE1_FILENAME},
+  {loadCefrCheckpoint},
+  {validateVerifiedReport},
+  {auditCefrShadowWinner}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
   import('./development-planner.mjs'),import('./backlog-repair-worker.mjs'),
-  import('./owner-contract-worker.mjs')
+  import('./owner-contract-worker.mjs'),
+  import('./cefr-repair-ranker.mjs'),import('./cefr-dev-checkpoint.mjs'),
+  import('./repair-publish.mjs'),import('./cefr-shadow-benchmark.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
@@ -357,6 +374,9 @@ export async function localTeamleaderDriver(){
     {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
+   // JS-only and partial repositories have no Android source tree to inspect.
+   // This is an idle discovery, not a failed repair or a reason to retry.
+   if(!fsApi.existsSync(path.join(root,'app','src')))return null;
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});
    const {index:_index,...report}=analyzeRepository(root);
@@ -383,17 +403,107 @@ export async function localTeamleaderDriver(){
    const out=path.join(stateDir,'reports','repair-'+head.slice(0,12));
    fsApi.mkdirSync(out,{recursive:true});
    const wt=createWorktree(root,head);
+   // Developer CRE1 lives outside the checkout and outside Android memory.
+   // Corrupt checkpoints are reported as rejected shadow observations only.
+   const checkpointFile=path.join(stateDir,'dev-cre1',DEV_CRE1_FILENAME);
+   let shadowObserver=null;
+   if(fsApi.existsSync(checkpointFile)){
+    try{
+     const {bytes}=loadCefrCheckpoint({stateDir,repoRoot:root});
+     shadowObserver=input=>observeCefrCandidates({...input,checkpointBytes:bytes});
+    }catch{
+     shadowObserver=()=>{throw Error('INVALID_CEFR_DEV_CHECKPOINT');};
+    }
+   }
    let result;
+   const deadline=Date.now()+budgetMinutes*60_000;
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
-      maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000});
-    // Role handoffs are receipts of REAL work done by the existing repair
-    // pipeline. Never represent a proposed patch as completed or merged.
-    result.handoffs=summarizeRepairHandoffs(result);
+      maxCandidates:3,deadline,shadowObserver});
+    // The first successful worktree is not an independent verdict.
+    // Reapply the patch to a fresh second worktree and rerun the fixed checks.
+    if(result.outcome==='VERIFIED'){
+     let independent=null;
+     try{
+      const patchFile=path.join(out,'repair.patch');
+      const patch=fsApi.readFileSync(patchFile,'utf8');
+      validateVerifiedReport(result,patch);
+      independent=createWorktree(root,head);
+      git(independent,['apply','--check','--binary',patchFile]);
+      git(independent,['apply','--binary',patchFile]);
+      const secondOut=path.join(out,'independent-check');
+      fsApi.mkdirSync(secondOut,{recursive:true,mode:0o700});
+      const verified=runChain('node',independent,secondOut,{deadline});
+      const suff=evidenceSufficient(result.baseline.results,verified.results);
+      const profiles=verified.results.map(r=>({
+       profile:r.profile,passed:r.passed,executed:r.tests?.executed??0,
+       failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+      }));
+      result.independent={passed:verified.passed&&suff.sufficient&&
+       profiles.length>0&&profiles.every(r=>r.passed&&r.failed===0)&&
+       profiles.some(r=>r.executed>0),
+       profiles,evidenceSufficient:suff.sufficient};
+     }catch(error){
+      result.independent={passed:false,
+       reason:String(error?.message??error).slice(0,160)};
+     }finally{
+      if(independent)removeWorktree(root,independent);
+     }
+    }
+
    } finally {removeWorktree(root,wt);}
-   fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(result,null,2)+'\n');
-   saveLedger(ledgerPath,recordSession(ledger,result,{trigger:'local-teamleader'}));
-   return {...result,artifact:path.join(out,'report.json')};
+   // This is a prospective RANKING proxy only. It does not execute the
+   // hypothetical shadow order or authorize any model promotion.
+   if(result.outcome==='VERIFIED'&&result.independent?.passed===true){
+    const audit=auditCefrShadowWinner({report:result,independent:result.independent});
+    if(audit.status==='RANKING_PROXY_ONLY')result.cefrShadowAudit=audit;
+   }
+   const publicReport=publicTeamleaderRepairReport(result);
+   publicReport.handoffs=summarizeRepairHandoffs(publicReport);
+   // A first-worktree patch must never become a DONE backlog task without
+   // the independently verified second worktree. publicReport redacts it.
+   if(publicReport.outcome==='VERIFIED'&&publicReport.independent?.passed!==true)
+    throw Error('Refusing to record an unverified repair as completed');
+   const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+   const snapshot=backlog.read().doc;
+   if(snapshot.tasks.some(t=>t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now())){
+    const expired=backlog.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}],{stopOnError:true});
+    if(expired.results.some(x=>x.ok!==true))throw Error('Failed to recover expired repair lease');
+   }
+   // Journal the independently checked result before a backlog DONE is possible.
+   writeAtomic(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
+   const session=repairSessionOps(backlog.read().doc,publicReport,
+    {actor:'continuum-teamleader'});
+   let backlogSync={id:session.id,applied:0,status:session.skipped?'SKIPPED':'NO_OPERATIONS'};
+   if(session.ops.length){
+    const applied=backlog.apply(session.ops,{stopOnError:true});
+    if(applied.results.length!==session.ops.length||
+       applied.results.some(entry=>entry.ok!==true))
+      throw Error('Repair backlog synchronization was rejected');
+    backlogSync={id:session.id,applied:applied.results.length,status:'RECORDED'};
+   }
+   publicReport.backlogSync=backlogSync;
+   const review=[
+    '# Continuum repair review',
+    '',
+    'Base commit: '+head,
+    'Outcome: '+publicReport.outcome,
+    'Inference: '+(publicReport.inference?.mode??'DETERMINISTIC_ONLY'),
+    'Model invocations: '+(publicReport.inference?.modelInvocations??0),
+    'Patch SHA-256: '+(publicReport.verified?.patchSha256??'none'),
+    'Independent check: '+(publicReport.independent?.passed===true?'PASSED':'NOT VERIFIED'),
+    'Backlog: '+backlogSync.status,
+    'Automatic merge: NEVER',
+    ''
+   ];
+   writeAtomic(path.join(out,'review-summary.md'),review.join('\n'));
+   writeAtomic(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
+   saveLedger(ledgerPath,recordSession(ledger,result,{
+    trigger:'local-teamleader',
+    independentPass:result.outcome==='VERIFIED'?result.independent?.passed===true:undefined
+   }));
+   return {...publicReport,artifact:path.join(out,'report.json')};
   }
  };
 }

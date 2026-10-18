@@ -207,24 +207,44 @@ class LiteRtLmLocalModelRuntime(
             state = LocalModelState.GENERATING
             inputTokens = runCatching { activeConversation.getTokenCount() }.getOrNull()
         }
+        // Serializes streamed chunks, terminal events and visible callback delivery.
+        val callbackLock = Any()
+        val terminalOverrideRequested = AtomicBoolean(false)
         val responseCharacters = intArrayOf(0)
         val chunks = intArrayOf(0)
         var firstTokenNanos: Long? = null
         val finished = AtomicBoolean()
         val outputLimitReached = AtomicBoolean()
+        val toolTurnGate = LocalToolTurnGate()
 
         fun finish(event: LocalInferenceEvent?) {
             if (!finished.compareAndSet(false, true)) return
             if (isolatedThinking) {
+                // Keep the isolated conversation owned until its close completes.
+                // Unload waits for finishInference before closing the parent engine.
                 background.execute {
-                    runCatching { if (activeConversation.isAlive) activeConversation.close() }
+                    val closed = runCatching {
+                        if (activeConversation.isAlive) activeConversation.close()
+                    }
+                    synchronized(lock) {
+                        if (closed.isSuccess && inferenceConversation === activeConversation)
+                            inferenceConversation = null
+                        if (closed.isFailure && pendingUnload == null)
+                            state = LocalModelState.FAILED
+                    }
+                    finishInference()
+                    if (closed.isFailure) {
+                        deliver(callback, LocalInferenceEvent.Failed(
+                            "Isolated conversation could not be released safely."))
+                    } else if (event != null) deliver(callback, event)
                 }
+            } else {
+                synchronized(lock) {
+                    if (inferenceConversation === activeConversation) inferenceConversation = null
+                }
+                finishInference()
+                if (event != null) deliver(callback, event)
             }
-            synchronized(lock) {
-                if (inferenceConversation === activeConversation) inferenceConversation = null
-            }
-            finishInference()
-            if (event != null && !outputLimitReached.get()) deliver(callback, event)
         }
 
         try {
@@ -232,25 +252,18 @@ class LiteRtLmLocalModelRuntime(
                 message,
                 object : MessageCallback {
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
-                        if (message.toolCalls.isNotEmpty()) {
-                            if (message.toolCalls.size > 1) {
-                                if (message.toolCalls.size > MAX_TOOL_RESPONSES) {
-                                    deliver(callback, LocalInferenceEvent.Failed("Local model proposed too many tools; none were run."))
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            if (message.toolCalls.isNotEmpty()) {
+                                if (!toolTurnGate.accept(message.toolCalls.size)) {
+                                    // Signal the terminal failure before cancelling: some native
+                                    // engines deliver onError reentrantly from cancelProcess().
+                                    terminalOverrideRequested.set(true)
                                     runCatching { activeConversation.cancelProcess() }
+                                    finish(LocalInferenceEvent.Failed(
+                                        "More than one tool proposal occurred in a single model turn; none are authorized."))
                                     return
                                 }
-                                deliver(
-                                    callback,
-                                    LocalInferenceEvent.ToolBatchRejected(
-                                        message.toolCalls.map {
-                                            LocalToolResponse(
-                                                it.name,
-                                                """{"status":"REJECTED","reason":"Only one registered tool proposal is permitted per step."}"""
-                                            )
-                                        }
-                                    )
-                                )
-                            } else {
                                 val toolCall = message.toolCalls.single()
                                 val validation = ToolProposal(toolCall.name, toolCall.arguments).validate()
                                 val event = if (validation == null) {
@@ -264,65 +277,68 @@ class LiteRtLmLocalModelRuntime(
                                 }
                                 deliver(callback, event)
                             }
-                        }
-                        message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
-                            if (text.text.isBlank()) return@forEach
-                            if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
-                                if (outputLimitReached.compareAndSet(false, true)) {
-                                    deliver(callback, LocalInferenceEvent.Failed("Local model response exceeded the output limit."))
-                                    runCatching { activeConversation.cancelProcess() }
+                            message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
+                                if (text.text.isBlank() || finished.get() || terminalOverrideRequested.get())
+                                    return@forEach
+                                if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
+                                    if (outputLimitReached.compareAndSet(false, true)) {
+                                        terminalOverrideRequested.set(true)
+                                        runCatching { activeConversation.cancelProcess() }
+                                        finish(LocalInferenceEvent.Failed(
+                                            "Local model response exceeded the output limit."))
+                                    }
+                                    return
                                 }
-                                return
+                                responseCharacters[0] += text.text.length
+                                chunks[0]++
+                                if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
+                                deliver(callback, LocalInferenceEvent.TextDelta(text.text))
                             }
-                            responseCharacters[0] += text.text.length
-                            chunks[0]++
-                            if (firstTokenNanos == null) firstTokenNanos = System.nanoTime()
-                            deliver(callback, LocalInferenceEvent.TextDelta(text.text))
                         }
                     }
 
                     override fun onDone() {
-                        if (outputLimitReached.get()) {
-                            finish(null)
-                            return
-                        }
-                        val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
-                        val outputTokens = runCatching {
-                            activeConversation.getTokenCount() -
-                                (inputTokens ?: activeConversation.getTokenCount())
-                        }.getOrNull()?.coerceAtLeast(0)
-                        finish(
-                            LocalInferenceEvent.Completed(
-                                LocalInferenceMetrics(
-                                    promptCharacters = promptCharacters,
-                                    responseCharacters = responseCharacters[0],
-                                    streamedChunks = chunks[0],
-                                    inputTokens = inputTokens,
-                                    outputTokens = outputTokens,
-                                    firstTokenLatencyMillis = firstTokenNanos?.let {
-                                        (it - startNanos).coerceAtLeast(0) / 1_000_000
-                                    },
-                                    totalLatencyMillis = elapsed
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            val elapsed = (System.nanoTime() - startNanos).coerceAtLeast(0) / 1_000_000
+                            val outputTokens = runCatching {
+                                activeConversation.getTokenCount() -
+                                    (inputTokens ?: activeConversation.getTokenCount())
+                            }.getOrNull()?.coerceAtLeast(0)
+                            finish(
+                                LocalInferenceEvent.Completed(
+                                    LocalInferenceMetrics(
+                                        promptCharacters = promptCharacters,
+                                        responseCharacters = responseCharacters[0],
+                                        streamedChunks = chunks[0],
+                                        inputTokens = inputTokens,
+                                        outputTokens = outputTokens,
+                                        firstTokenLatencyMillis = firstTokenNanos?.let {
+                                            (it - startNanos).coerceAtLeast(0) / 1_000_000
+                                        },
+                                        totalLatencyMillis = elapsed
+                                    )
                                 )
                             )
-                        )
+                        }
                     }
 
                     override fun onError(throwable: Throwable) {
-                        if (outputLimitReached.get()) {
-                            finish(null)
-                            return
+                        synchronized(callbackLock) {
+                            if (finished.get() || terminalOverrideRequested.get()) return
+                            finish(
+                                if (throwable is CancellationException) LocalInferenceEvent.Cancelled
+                                else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
+                            )
                         }
-                        finish(
-                            if (throwable is CancellationException) LocalInferenceEvent.Cancelled
-                            else LocalInferenceEvent.Failed(throwable.message.orEmpty().take(512))
-                        )
                     }
                 }
             )
         } catch (failure: Throwable) {
-            if (outputLimitReached.get()) finish(null)
-            else finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
+            synchronized(callbackLock) {
+                if (!finished.get() && !terminalOverrideRequested.get())
+                    finish(LocalInferenceEvent.Failed(failure.message.orEmpty().take(512)))
+            }
         }
     }
 
@@ -336,18 +352,18 @@ class LiteRtLmLocalModelRuntime(
 
     override fun unload(callback: (Result<Unit>) -> Unit) {
         val activeConversation: Conversation?
+        val deferredToInferenceCompletion: Boolean
         synchronized(lock) {
             check(state != LocalModelState.LOADING && state != LocalModelState.UNLOADING) {
                 "Local model lifecycle operation is already in progress."
             }
             activeConversation = inferenceConversation ?: conversation
-            if (inferenceActive) {
-                state = LocalModelState.UNLOADING
-                pendingUnload = callback
-            }
+            deferredToInferenceCompletion = inferenceActive
+            state = LocalModelState.UNLOADING
+            if (deferredToInferenceCompletion) pendingUnload = callback
         }
-        if (activeConversation != null && synchronized(lock) { inferenceActive }) {
-            runCatching { activeConversation.cancelProcess() }
+        if (deferredToInferenceCompletion) {
+            runCatching { activeConversation?.cancelProcess() }
             return
         }
         background.execute { closeResources(callback) }
@@ -373,16 +389,21 @@ class LiteRtLmLocalModelRuntime(
     private fun closeResources(callback: (Result<Unit>) -> Unit) {
         val resources = synchronized(lock) {
             val oldConversation = conversation
+            val oldInference = inferenceConversation
             val oldEngine = engine
             conversation = null
             inferenceConversation = null
             engine = null
             loadedModel = null
-            oldConversation to oldEngine
+            Triple(oldConversation, oldInference, oldEngine)
         }
         val result = runCatching {
-            resources.first?.let { if (it.isAlive) it.close() }
-            resources.second?.let { if (it.isInitialized()) it.close() }
+            val (oldConversation, oldInference, oldEngine) = resources
+            if (oldInference != null && oldInference !== oldConversation && oldInference.isAlive) {
+                oldInference.close()
+            }
+            if (oldConversation?.isAlive == true) oldConversation.close()
+            if (oldEngine?.isInitialized() == true) oldEngine.close()
             Unit
         }
         synchronized(lock) {

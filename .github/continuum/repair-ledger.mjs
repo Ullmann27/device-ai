@@ -46,15 +46,25 @@ export function saveLedger(file,ledger){
 /** Fold one session report into the ledger (returns a new object). */
 export function recordSession(ledger,report,meta={}){
   const next=structuredClone(ledger);
-  // An internal VERIFIED result is only provisional until an independent
-  // worktree checks the patch. On independent rejection the original report
-  // is kept for diagnostics, but the training signal MUST be negative.
-  const independentRejected=meta.independentPass===false&&report.outcome==='VERIFIED';
-  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':report.outcome;
-  const acceptedPatch=independentRejected?null:report.verified;
+  // Internal success is a PROPOSAL, never authorization to write a
+  // positive experience. Only the trusted worker's independent second
+  // worktree test can set independentPass===true.
+  //
+  // false: independently rejected -> negative evidence.
+  // absent: no independent observation -> neither positive NOR negative
+  //         training label (do not poison learning with an unknown outcome).
+  const provisional=report.outcome==='VERIFIED';
+  const independentRejected=provisional&&meta.independentPass===false;
+  const independentPending=provisional&&meta.independentPass!==true&&
+    meta.independentPass!==false;
+  const acceptedPatch=provisional&&meta.independentPass===true?report.verified:null;
+  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':
+    independentPending?'PENDING_INDEPENDENT_VERIFICATION':report.outcome;
   const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
-    if(independentRejected&&a.outcome==='VERIFIED')
-      a={...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    if(a.outcome==='VERIFIED'&&independentRejected)
+      return {...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    if(a.outcome==='VERIFIED'&&independentPending)
+      return {...a,outcome:'NOT_APPLICABLE'};
     return a;
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
@@ -68,8 +78,15 @@ export function recordSession(ledger,report,meta={}){
   next.attempts=[...next.attempts,...attempts].slice(-MAX_ATTEMPTS);
   // Critic rejections say nothing about whether a strategy repairs code.
   // Insufficient evidence counts against a strategy: it "passed" without proof.
-  next.experiences=mergeExperiences(next.experiences,attempts.filter(a=>['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome))
-    .map(a=>({kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'})));
+  // A provisional successful session has NO independent classification yet.
+  // Keep its diagnostic attempts for investigation, but do not train from
+  // either an asserted win or its possibly stale failed-test labels.
+  const learned=independentPending?[]:attempts.filter(a=>
+    ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome));
+  next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
+    kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
+    status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'
+  })));
   next.sessions=[...next.sessions,{at:report.finishedAt??new Date().toISOString(),base:report.base,chain:report.chain,
     outcome:finalOutcome,diagnostics:(report.baseline?.diagnostics??[]).length,attempts:attempts.length,
     verifiedStrategy:acceptedPatch?.strategy??null,patchSha256:acceptedPatch?.patchSha256??null,

@@ -49,8 +49,55 @@ test('independently verified patch keeps legitimate positive experience',()=>{
  }]);
 });
 
-test('other legacy repair ledger calls preserve existing semantics',()=>{
- const result=recordSession(emptyLedger(),report(),{trigger:'local-teamleader'});
- assert.equal(result.sessions[0].outcome,'VERIFIED');
- assert.equal(result.experiences[0].successes,1);
+test('unverified teamleader calls never create positive or negative learning labels',()=>{
+ const source=report();
+ for(const meta of [{trigger:'local-teamleader'},{independentPass:null},
+                    {independentPass:'true'}]){
+  const result=recordSession(emptyLedger(),source,meta);
+  assert.equal(result.sessions[0].outcome,'PENDING_INDEPENDENT_VERIFICATION');
+  assert.equal(result.sessions[0].verifiedStrategy,null);
+  assert.equal(result.sessions[0].patchSha256,null);
+  assert.equal(result.attempts[0].outcome,'NOT_APPLICABLE');
+  assert.equal(result.attempts[0].patchSha256,null);
+  assert.equal(result.experiences.length,0,'unknown must not become training data');
+ }
+ assert.equal(source.attempts[0].outcome,'VERIFIED','original report preserved');
+});
+
+test('explicit independent rejection is negative, not an unknown outcome',()=>{
+ const result=recordSession(emptyLedger(),report(),{independentPass:false});
+ assert.equal(result.sessions[0].outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(result.attempts[0].outcome,'INSUFFICIENT_EVIDENCE');
+ assert.deepEqual(result.experiences,[{
+  kind:'JS_UNRESOLVED|JS_TYPO_REFERENCE',successes:0,failures:1
+ }]);
+});
+
+test('non-verified sessions retain their original failure diagnoses',()=>{
+ const source=report();
+ source.outcome='NO_VERIFIED_REPAIR';
+ source.verified=null;
+ source.attempts[0].outcome='FAILED_TESTS';
+ const result=recordSession(emptyLedger(),source,{});
+ assert.equal(result.sessions[0].outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(result.attempts[0].outcome,'FAILED_TESTS');
+ assert.equal(result.experiences[0].failures,1);
+});
+
+test('unverified session cannot poison history through claimed failed alternatives',()=>{
+ const pending=report();
+ pending.attempts.unshift({
+  candidate:'3'.repeat(16),diagnostic:'2'.repeat(16),
+  diagnosticKind:'JS_UNRESOLVED',strategy:'JS_MISSING_IMPORT',
+  outcome:'FAILED_TESTS',edits:[],
+  tests:[{profile:'node-continuum',passed:false,tests:{
+   total:5,executed:5,failed:1,skipped:0
+  }}]
+ });
+ const current=recordSession(emptyLedger(),pending,{trigger:'local-teamleader'});
+ assert.equal(current.sessions[0].outcome,'PENDING_INDEPENDENT_VERIFICATION');
+ assert.equal(current.attempts.length,2,'audit still records failed trial and proposal');
+ assert.equal(current.experiences.length,0,'neither label allowed before independent verification');
+ const confirmed=recordSession(emptyLedger(),pending,{independentPass:true});
+ assert.equal(confirmed.experiences.length,2);
 });

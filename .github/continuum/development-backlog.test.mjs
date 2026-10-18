@@ -30,6 +30,27 @@ test('committed fixtures are exactly what the current rules produce',()=>{
   assert.deepEqual(conformance(),JSON.parse(fixture('conformance.json')));
 });
 
+test('stability backlog completion rejects a backend profile with zero executed tests',()=>{
+  let doc=B.emptyDocument(0,'t');
+  const run=op=>{doc=B.applyOp(doc,{actor:'t',...op}).doc;};
+  const task='task-backend-zero',token='a'.repeat(32),digest='b'.repeat(64);
+  run({op:'propose',at:1,task:{id:task,title:'Backend evidence',kind:'REPAIR',source:'cli'}});
+  run({op:'accept',at:2,id:task});
+  run({op:'claim',at:3,id:task,owner:'t',token,leaseMs:60000});
+  run({op:'submit',at:4,id:task,token,artifact:{type:'PATCH',sha256:digest}});
+  const good={type:'TEST_RUN',taskId:task,submissionToken:token,artifactSha256:digest,
+    chain:'stability',commit:'c'.repeat(40),at:5,by:'t',repair:null,
+    profiles:[
+      {profile:'node-continuum',passed:true,executed:10,failed:0,skipped:0},
+      {profile:'node-backend',passed:true,executed:5,failed:0,skipped:0}
+    ]};
+  const complete=evidence=>B.applyOp(doc,{op:'complete',actor:'t',at:5,id:task,evidence});
+  assert.equal(codeOf(()=>complete({...good,profiles:[
+    good.profiles[0],{...good.profiles[1],executed:0}
+  ]})),'EVIDENCE_REJECTED');
+  assert.equal(complete(good).doc.tasks.find(t=>t.id===task).state,'DONE');
+});
+
 test('documents round-trip byte-identically and unknown fields survive operations',()=>{
   for(const name of ['valid-v2.json','unknown-fields.json','v1-migrated.json','roundtrip-node.json']){
     const bytes=fixture(name);

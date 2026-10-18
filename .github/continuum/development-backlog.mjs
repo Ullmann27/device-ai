@@ -23,7 +23,7 @@ export const SCHEMA_VERSION=2;
 export const STATES=Object.freeze(['PROPOSED','READY','IN_PROGRESS','VERIFYING','BLOCKED','DONE','FAILED','ABORTED','REJECTED']);
 export const OPS=Object.freeze(['propose','accept','reject','claim','claimNext','renew','submit','complete','fail','expire','abort','retry','setPriority']);
 export const ARTIFACT_TYPES=Object.freeze(['PATCH','PROPOSAL','REPORT']);
-export const TEST_PROFILES=Object.freeze(['node-continuum','android-unit','jvm-harness']);
+export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 export const LIMITS=Object.freeze({tasks:500,history:40,evidence:8,dependsOn:16,profiles:8,title:200,text:400,
   subjectKeys:12,subjectValue:300,fileBytes:4_000_000,maxAttempts:20,attempts:1000,priority:1000,
   leaseMin:60_000,leaseMax:86_400_000,depth:16,count:10_000_000,recentOps:256});

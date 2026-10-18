@@ -2,7 +2,7 @@ name: Build Device AI APK
 
 on:
   push:
-    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**" ]
+    branches: [ "main", "v0.2-redesign", "v0.3-agent", "copilot/**", "continuum/argon-safety-review-20261017" ]
     paths-ignore:
       - ".github/continuum/**"
       - ".github/workflows/continuum-zero-cost.yml"
@@ -34,6 +34,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install backend HTTP test dependencies
+        run: npm install --prefix backend --ignore-scripts --no-audit --no-fund
+
       - name: Validate backend syntax
         run: npm --prefix backend run check
 
@@ -44,7 +47,7 @@ jobs:
         run: node --test .github/continuum/contrastive-views.test.mjs
 
       - name: Check Android integration wiring
-        run: node --test .github/continuum/android-integration-wiring.test.mjs
+        run: node --test .github/continuum/android-integration-wiring.test.mjs .github/continuum/android-cockpit-shortcuts.test.mjs
 
       - name: Check neural optimizer analytical gradients
         run: node --test .github/continuum/semantic-gradient.test.mjs

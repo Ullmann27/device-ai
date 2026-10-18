@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {executeOwnerRepairTask,validateOwnerRepairTask} from './backlog-repair-worker.mjs';
+import {executeOwnerRepairTask,validateOwnerRepairTask,assessIndependentOwnerEvidence} from './backlog-repair-worker.mjs';
 import {BacklogStore,emptyDocument,applyOps,nextEligible} from './development-backlog.mjs';
 import {runChain} from './repair-loop.mjs';
 
@@ -36,6 +36,31 @@ function accepted(store,f,base=f.head){
   {op:'accept',actor:'owner',at:2,id:'repair-owner-one',reason:'explicit local authorization'}]);
 }
 
+
+test('owner independent evidence rejects silent test-count and skipped-test regressions',()=>{
+ const profile=(executed,skipped=0)=>({
+  profile:'node-continuum',passed:true,testProfile:true,
+  tests:{executed,failed:0,skipped,passed:executed-skipped}
+ });
+ const baseline=[profile(12,0)];
+ const check=(executed,skipped=0,passed=true)=>({
+  passed,results:[profile(executed,skipped)]
+ });
+ const green=assessIndependentOwnerEvidence(baseline,check(12));
+ assert.equal(green.passed,true);
+ assert.equal(green.evidenceSufficient,true);
+ assert.equal(green.actualTests,12);
+ const fewer=assessIndependentOwnerEvidence(baseline,check(10));
+ assert.equal(fewer.passed,false);
+ assert.equal(fewer.evidenceSufficient,false);
+ assert.ok(fewer.reasons.some(x=>x.includes('baseline had 12 passing')));
+ const skipped=assessIndependentOwnerEvidence(baseline,check(12,1));
+ assert.equal(skipped.passed,false);
+ assert.ok(skipped.reasons.some(x=>x.includes('skips')));
+ assert.equal(assessIndependentOwnerEvidence(baseline,check(12,0,false)).passed,false);
+ assert.equal(assessIndependentOwnerEvidence(baseline,check(0)).passed,false);
+ assert.throws(()=>assessIndependentOwnerEvidence(null,check(12)),/baseline/);
+});
 
 test('expired execution budget fails closed before launching fixed subprocesses',()=>{
  const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-deadline-'));
@@ -102,6 +127,8 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
   assert.equal(receipt.taskId,'repair-owner-one');
   assert.equal(receipt.patchSha256,result.patchSha256);
   assert.equal(receipt.passed,true);
+  assert.equal(receipt.evidenceSufficient,true);
+  assert.deepEqual(receipt.reasons,[]);
   assert.ok(receipt.executedTests>0);
   assert.ok(receipt.profiles.every(p=>p.passed&&p.failed===0));
   assert.deepEqual(fs.readFileSync(path.join(f.root,'.github/continuum/math.mjs')),original);
@@ -114,6 +141,9 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
   const baseline=JSON.parse(fs.readFileSync(result.report,'utf8'));
   assert.equal(baseline.baseline.passed,false);
   assert.equal(baseline.outcome,'VERIFIED');
+  assert.equal(baseline.independent.passed,true);
+  assert.equal(baseline.independent.evidenceSufficient,true);
+  assert.deepEqual(baseline.independent.profiles,receipt.profiles);
   assert.equal(executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports')}).status,'NO_READY_TASK');
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });

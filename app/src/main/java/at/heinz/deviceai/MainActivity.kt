@@ -227,7 +227,7 @@ class MainActivity : Activity() {
         }
 
         input = EditText(this).apply {
-            hint = "z. B. „Installiere die neueste Lumo APK und starte Lumo“"
+            hint = "z. B. „Zeige die Dateien in Downloads“"
             setHintTextColor(Color.rgb(112, 126, 148))
             setTextColor(TEXT)
             textSize = 16f

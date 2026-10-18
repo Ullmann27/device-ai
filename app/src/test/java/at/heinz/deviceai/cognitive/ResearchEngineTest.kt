@@ -123,8 +123,21 @@ class ResearchEngineTest {
             .research("latest device news", ResearchMode.QUICK)
         assertFalse(dossier.generalSearchAvailable)
         assertEquals(ResearchPhase.PARTIAL, dossier.phase)
-        assertTrue(dossier.synthesis!!.text.contains("General web search is not configured"))
+        assertTrue(dossier.synthesis!!.text.contains("No verified source documents were retrieved"))
+        assertTrue(dossier.partialReason!!.contains("discovery is not configured"))
         assertNull(dossier.sources.firstOrNull())
+        val temporarilyUnavailable = object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = false
+            override fun discover(query: ResearchQuery) = emptyList<ResearchSourceCandidate>()
+        }
+        val unavailable = DeepResearchEngine(
+            discovery = temporarilyUnavailable,
+            provider = SimulatedResearchProvider(emptyMap()),
+            validateTarget = {}
+        ).research("Solarzellen", ResearchMode.QUICK)
+        assertTrue(unavailable.partialReason!!.contains("no usable sources"))
+        assertFalse(unavailable.partialReason!!.contains("not configured"))
+        assertTrue(unavailable.synthesis!!.text.contains("No verified source documents were retrieved"))
     }
 
     @Test

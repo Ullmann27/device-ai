@@ -23,6 +23,30 @@ class AgentToolLayerTest {
         assertEquals(null, ToolProposal("get_device_info", emptyMap()).validate())
     }
 
+    @Test
+    fun toolTurnGuardRejectsProposalsAcrossSeparateEvents() {
+        val first = ToolProposal("get_device_info", emptyMap())
+        val second = ToolProposal("get_battery_info", emptyMap())
+        val guard = ToolProposalTurnGuard()
+        assertEquals(null, guard.acceptedProposal())
+        assertFalse(guard.isAmbiguous())
+        guard.observe(first)
+        assertEquals(first, guard.acceptedProposal())
+        assertFalse(guard.isAmbiguous())
+        guard.observe(second)
+        assertTrue(guard.isAmbiguous())
+        assertEquals(null, guard.acceptedProposal())
+        guard.observe(first)
+        assertTrue(guard.isAmbiguous())
+        assertEquals(null, guard.acceptedProposal())
+
+        val repeatedFragment = ToolProposalTurnGuard()
+        repeatedFragment.observe(first)
+        repeatedFragment.observe(first)
+        assertTrue("Repeated streaming fragments are not authority", repeatedFragment.isAmbiguous())
+        assertEquals(null, repeatedFragment.acceptedProposal())
+    }
+
     private fun <T : Throwable> assertThrows(exceptionClass: Class<T>, block: () -> Unit): T =
         org.junit.Assert.assertThrows(exceptionClass) { block() }
 

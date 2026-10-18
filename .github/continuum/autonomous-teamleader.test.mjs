@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import crypto from 'node:crypto';
 import path from 'node:path';
-import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress}
+import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress,publicTeamleaderRepairReport}
  from './autonomous-teamleader.mjs';
 import {parseTeamleaderArgs} from './teamleader-cli.mjs';
 
@@ -116,8 +116,12 @@ test('accepted owner TEST is dispatched before baseline and a verified new contr
  assert.equal(first.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
  assert.equal(first.artifact,'/external/review.patch');
  assert.equal(driver.calls.repairs,0);
+ const second=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(second.kind,'BASELINE_REPAIR','owner TEST must not silently consume the baseline');
+ assert.equal(second.outcome,'NO_FAILURE');
+ assert.equal(driver.calls.repairs,1);
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
- assert.equal(driver.calls.repairs,0);
+ assert.equal(driver.calls.repairs,1);
 }));
 
 test('owner TEST cannot falsely claim DONE without increasing or independently checking tests',
@@ -137,6 +141,25 @@ test('owner TEST cannot falsely claim DONE without increasing or independently c
  assert.equal(r.outcome,'ERROR');
  assert.match(r.detail,/without independent contract evidence/);
  assert.equal(driver.calls.repairs,0);
+}));
+
+test('failed owner TEST also leaves the immutable HEAD eligible for one real baseline',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ let ownerTest=true;
+ driver.readyOwnerContractTask=()=>ownerTest?{
+  id:'owner-failing-test',kind:'TEST',source:'owner',state:'READY',
+  subject:{base:A,chain:'node',operation:'ASSERT_NODE_EXPORT'}
+ }:null;
+ driver.ownerContractTask=()=>{ownerTest=false;return {status:'FAILED',reason:'incomplete contract'}};
+ const failed=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(failed.kind,'OWNER_TEST');
+ assert.equal(failed.outcome,'CHECKS_FAILED');
+ assert.equal(decodeLeaderState(fs.readFileSync(failed.statePath)).attemptedHeads.length,0);
+ const baseline=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(baseline.kind,'BASELINE_REPAIR');
+ assert.equal(baseline.outcome,'NO_FAILURE');
+ assert.equal(driver.calls.repairs,1);
+ assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
 }));
 
 test('owner REPAIR retains priority over TEST and both finish on the same HEAD',
@@ -220,12 +243,32 @@ test('Teamleader refuses fabricated DONE when no tests actually executed',()=>sa
 test('verified repair is a PROPOSAL only; never described as applied',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'KOTLIN_MISSING_IMPORT'},
+  independent:{passed:true,profiles:[{profile:'node-continuum',passed:true,failed:0,executed:3}]},
   artifact:path.join(stateDir,'reports','review.patch')});
  const r=runTeamleaderCycle({root,stateDir,driver});
  assert.equal(r.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
  assert.equal(r.artifact,path.join(stateDir,'reports','review.patch'));
  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'IDLE');
 }));
+test('an internally passing repair without an independent proof is NOT verified',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'JS_TYPO_REFERENCE'},
+  artifact:path.join(stateDir,'reports','provisional.patch')});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'NO_VERIFIED_REPAIR');
+ const progress=summarizeTeamleaderProgress(
+  decodeLeaderState(fs.readFileSync(result.statePath)));
+ assert.equal(progress.independentlyVerifiedPatchProposals,0);
+}));
+
+test('a failed second-worktree check vetoes an otherwise passing repair',()=>sandbox(({root,stateDir})=>{
+ const driver=fake();
+ driver.repair=()=>({outcome:'VERIFIED',verified:{strategy:'JS_TYPO_REFERENCE'},
+  independent:{passed:false,reason:'Second worktree tests failed'}});
+ const result=runTeamleaderCycle({root,stateDir,driver});
+ assert.equal(result.outcome,'NO_VERIFIED_REPAIR');
+}));
+
 test('failed or interrupted work is preserved, never marked successful',()=>sandbox(({root,stateDir})=>{
  const driver=fake();
  driver.repair=()=>{throw Error('offline compiler unavailable')};
@@ -375,4 +418,32 @@ test('state policy rejects malformed heads and never schedules unauthorised acti
  assert.equal(selectTeamleaderAction(blank,A).kind,'BASELINE_REPAIR');
  assert.throws(()=>selectTeamleaderAction(blank,'main'),/immutable commit/);
  assert.equal(selectTeamleaderAction({...blank,attemptedHeads:[A]},A).kind,'IDLE');
+});
+
+test('unverified repair is redacted consistently without modifying the audit original',()=>{
+ const original={outcome:'VERIFIED',verified:{candidate:'winner',patchSha256:'f'.repeat(64)},
+  independent:{passed:false},attempts:[{outcome:'VERIFIED',candidate:'winner'},
+   {outcome:'FAILED_TESTS',candidate:'loser'}]};
+ const publicReport=publicTeamleaderRepairReport(original);
+ assert.equal(publicReport.outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(publicReport.verified,null);
+ assert.deepEqual(publicReport.attempts.map(a=>a.outcome),
+  ['INSUFFICIENT_EVIDENCE','FAILED_TESTS']);
+ assert.equal(original.outcome,'VERIFIED');
+ assert.equal(original.attempts[0].outcome,'VERIFIED');
+});
+
+test('successful independent second-worktree result keeps verified proposal intact',()=>{
+ const report={outcome:'VERIFIED',verified:{patchSha256:'e'.repeat(64)},
+  independent:{passed:true},attempts:[{outcome:'VERIFIED'}]};
+ assert.equal(publicTeamleaderRepairReport(report),report);
+});
+
+test('legacy internal VERIFIED without independent observation cannot leak success',()=>{
+ const report={outcome:'VERIFIED',verified:{patchSha256:'d'.repeat(64)},
+  attempts:[{outcome:'VERIFIED'}]};
+ const publicReport=publicTeamleaderRepairReport(report);
+ assert.equal(publicReport.outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(publicReport.verified,null);
+ assert.equal(publicReport.attempts[0].outcome,'INSUFFICIENT_EVIDENCE');
 });

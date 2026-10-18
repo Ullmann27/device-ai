@@ -15,7 +15,30 @@ const COMPLETE_OUTCOMES=new Set([
  'NO_VERIFIED_REPAIR','DONE_INVESTIGATION','CHECKS_FAILED',
  'NO_READY_INVESTIGATION','IDLE','INTERRUPTED','ERROR'
 ]);
-const FAILED_OUTCOMES=new Set(['NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR']);
+const FAILED_OUTCOMES=new Set([
+ 'NO_CODE_DIAGNOSTIC','NO_VERIFIED_REPAIR','CHECKS_FAILED','INTERRUPTED','ERROR'
+]);
+
+/** Validate persisted worker status before presenting it as a genuine heartbeat. */
+export function validateWorkerHeartbeat(hb){
+ if(!hb||typeof hb!=='object'||Array.isArray(hb)||
+    hb.schema!=='continuum-local-worker-heartbeat'||hb.version!==1||
+    !['RUNNING','WAITING','STOPPED','LIMIT_REACHED','ERROR'].includes(hb.state)||
+    !Number.isSafeInteger(hb.cycles)||hb.cycles<0||
+    !Number.isSafeInteger(hb.failures)||hb.failures<0||hb.failures>hb.cycles||
+    !Number.isSafeInteger(hb.failureStreak)||hb.failureStreak<0||hb.failureStreak>hb.failures||
+    (hb.lastOutcome!==null&&!COMPLETE_OUTCOMES.has(hb.lastOutcome))||
+    (hb.cycles===0)!==(hb.lastOutcome===null)||
+    typeof hb.detail!=='string'||hb.detail.length>160||
+    !Number.isSafeInteger(hb.startedAt)||hb.startedAt<0)
+  return false;
+ if(hb.state==='RUNNING')return hb.lastFinishedAt===null&&hb.nextAttemptAt===null;
+ if(!Number.isSafeInteger(hb.lastFinishedAt)||hb.lastFinishedAt<hb.startedAt)
+  return false;
+ if(hb.state==='WAITING')return Number.isSafeInteger(hb.nextAttemptAt)&&
+   hb.nextAttemptAt>hb.lastFinishedAt;
+ return hb.nextAttemptAt===null;
+}
 
 /** Treat unknown, interrupted, and unverified results as failed work. */
 export function isFailedCycleOutcome(outcome){
@@ -90,9 +113,14 @@ export async function runTeamleaderLoop({
   try{
    await pause(pauseMs,signal);
   }catch(error){
-   // Abort is graceful; all other scheduler errors must surface rather
-   // than being mislabeled as successful work.
-   if(!signal?.aborted)throw error;
+   // A failed scheduler wait terminates the loop; do not leave a WAITING
+   // heartbeat that advertises a retry which will never happen.
+   if(!signal?.aborted){
+    onHeartbeat({...heartbeat,state:'ERROR',
+     detail:('Scheduler wait failed: '+String(error?.message??error)).slice(0,160),
+     nextAttemptAt:null});
+    throw error;
+   }
   }
   if(signal?.aborted){
    onHeartbeat({...heartbeat,state:'STOPPED',nextAttemptAt:null});

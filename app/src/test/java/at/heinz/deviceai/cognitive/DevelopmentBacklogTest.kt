@@ -66,6 +66,29 @@ class DevelopmentBacklogTest {
         }
     }
 
+    @Test fun stabilityBackendEvidenceRequiresExecutedTestsLikeNode() {
+        val token = "a".repeat(32)
+        val sha = "b".repeat(64)
+        val task: Map<String, Any?> = mapOf(
+            "id" to "task-backend-zero",
+            "submission" to mapOf("token" to token,
+                "artifact" to mapOf("sha256" to sha), "at" to 4L)
+        )
+        fun receipt(backendExecuted: Long): Map<String, Any?> = mapOf(
+            "taskId" to "task-backend-zero",
+            "submissionToken" to token,
+            "artifactSha256" to sha,
+            "at" to 5L,
+            "profiles" to listOf(
+                mapOf("profile" to "node-continuum", "passed" to true, "executed" to 10L, "failed" to 0L),
+                mapOf("profile" to "node-backend", "passed" to true, "executed" to backendExecuted, "failed" to 0L)
+            )
+        )
+        assertTrue(DevelopmentBacklog.evidenceProblems(task, receipt(0L))
+            .contains("test profile without executed tests"))
+        assertTrue(DevelopmentBacklog.evidenceProblems(task, receipt(5L)).isEmpty())
+    }
+
     @Test fun fixtureDocumentsRoundTripByteIdentically() {
         for (name in listOf("valid-v2.json", "unknown-fields.json", "v1-migrated.json", "roundtrip-node.json")) {
             val bytes = resource(name)

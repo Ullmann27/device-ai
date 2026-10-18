@@ -214,7 +214,9 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
 });
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
- ensure('model center from the core card',activity.includes('Triple("MODELLE", false) { showModelCenter() }'));
+ const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
+ ensure('model center from the core card',
+   cockpit?.includes('"KI-Modell"') && cockpit.includes('showModelCenter()'));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -233,9 +235,10 @@ test('local language model path is reachable: model center, loading, chat escala
 });
 test('every area has a center reachable from the core card; no demo buttons; experiments marked',()=>{
  const card=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- for(const [label,fn] of [['LERNEN','showLearningCenter'],['GEDÄCHTNIS','showMemoryCenter'],['ENTWICKLUNG','showDevelopmentCenter'],
-  ['MODELLE','showModelCenter'],['SYSTEM','showSystemCenter']]){
-  ensure(label+' center on the core card',card.includes('Triple("'+label+'"')&&card.includes(fn+'()'));
+ for(const [label,fn] of [['Lernen','showLearningCenter'],['Gedächtnis','showMemoryCenter'],
+  ['Entwickeln','showDevelopmentCenter'],['KI-Modell','showModelCenter'],
+  ['SYSTEM & BERECHTIGUNGEN','showSystemCenter']]){
+  ensure(label+' center on the cockpit',card.includes('"'+label+'"')&&card.includes(fn+'()'));
   assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
  }
  const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);
@@ -256,6 +259,131 @@ test('every area has a center reachable from the core card; no demo buttons; exp
   ensure(fn+' runs on the learning I/O thread',activity.includes('learningIoStatus { '+fn+'() }'));
  }
  ensure('development status reads the backlog on its executor',activity.includes('onBacklog({ developmentCenterStatus() })'));
+});
+
+test('Teamleader Android UI reports status without false success',()=>{
+ const check=bodyOf(activity,'private fun runDeviceTeamleaderCheck()');
+ assert.ok(check,'Teamleader check handler must be present');
+ ensure('Teamleader outcome inspected as a typed snapshot',
+   check.includes('result.fold(') && check.includes('snapshot.state'));
+ ensure('completed only for READY',
+   check.includes('"READY" -> "CONTINUUM · Teamleiterprüfung erfolgreich abgeschlossen"'));
+ ensure('deferred reported without success',
+   check.includes('"DEFERRED" -> "CONTINUUM · Teamleiterprüfung verschoben:'));
+ ensure('ERROR reported without success',
+   check.includes('else -> "CONTINUUM · Teamleiterprüfung fehlgeschlagen:'));
+ ensure('exception reported without success',
+   check.includes('onFailure = { error ->') &&
+   check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung fehlgeschlagen")'));
+ ensure('previous unconditional success removed',
+   !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
+});
+
+test('live model status does not revert the beginner cockpit to English',()=>{
+ const status=bodyOf(activity,'private fun refreshLocalModelUi()');
+ const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
+ ensure('local basis is not misrepresented as imported language model',
+   status?.includes('"● BASIS BEREIT"') && status.includes('localRuntime.loadedModel'));
+ ensure('all dynamic model stages are understandable in German',
+   ['"KEIN MODELL"','"INSTALLIERT"','"BEREIT"','"LÄDT"',
+    '"ARBEITET"','"FEHLER"'].every(x=>status.includes(x)));
+ ensure('model-error status offers novice guidance and bounded debug evidence',
+   status.includes('ContinuumUiCopy.modelFailure(localRuntimeError)') &&
+   status.includes('localRuntimeError!!.take(160)'));
+ ensure('common model failures are categorized, not silently declared successful',
+   copy.includes('fun modelFailure(') && copy.includes('Prüfwert') &&
+   copy.includes('Modellformat') && copy.includes('Arbeitsspeicher'));
+});
+
+test('model setup stays usable for beginners while preserving SHA-256 integrity',()=>{
+ const model=bodyOf(activity,'private fun showModelCenter()');
+ const importer=bodyOf(activity,'private fun showModelImportDialog()');
+ const developer=bodyOf(activity,'private fun showDevelopmentDialog()');
+ ensure('model onboarding begins with import and load, while expert functions are collapsed',
+   model?.includes('MODELLDATEI IMPORTIEREN') &&
+   model.includes('MODELL LADEN') &&
+   model.includes('ERWEITERT · LERNKERN UND VERSIONEN') &&
+   model.includes('visibility = View.GONE'));
+ ensure('advanced model functions remain reachable, not deleted',
+   model.includes('showModelVersions()') &&
+   model.includes('confirmPackageImport()') &&
+   model.includes('confirmWeightsImport()'));
+ ensure('integrity check remains mandatory, dialog stays open for corrections',
+   importer?.includes('sha256.matches(Regex("[a-f0-9]{64}"))') &&
+   importer.includes('setPositiveButton("DATEI AUSWÄHLEN", null)') &&
+   importer.includes('dialog.getButton(AlertDialog.BUTTON_POSITIVE)') &&
+   importer.includes('return@setOnClickListener') &&
+   importer.includes('pendingModelImport = Triple(modelId, modelVersion, sha256)'));
+ ensure('invalid import and file chooser failure are visible without losing form',
+   importer.includes('warning.text = "Bitte fülle alle drei Felder') &&
+   importer.includes('pendingModelImport = null'));
+ ensure('developer wizard has clear model-setup route and a full-width start button',
+   developer?.includes('SPRACHMODELL EINRICHTEN') &&
+   developer.includes('devStartButton!!, LinearLayout.LayoutParams(') &&
+   developer.includes('dp(52)'));
+});
+
+test('new visual cockpit is local, accessible and honest about capabilities',()=>{
+ const art=fs.readFileSync(dir+'ContinuumCoreArtView.kt','utf8');
+ const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
+ const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
+ const tile=bodyOf(activity,'private fun cockpitTile(');
+ const status=bodyOf(activity,'private fun buildStatusRow(');
+ ensure('drawing is locally generated, GPU light, never animated or network-connected',
+   art.includes('class ContinuumCoreArtView') &&
+   art.includes('override fun onDraw(') &&
+   !/Animator|postDelayed|URL\(|https?:\/\//.test(art));
+ ensure('cockpit uses real native drawing and named feature tiles',
+   cockpit.includes('ContinuumCoreArtView(this)') &&
+   cockpit.includes('cockpitTile('));
+ ensure('feature tiles are keyboard and accessibility reachable',
+   tile.includes('isClickable = true') && tile.includes('isFocusable = true') &&
+   tile.includes('contentDescription = title + ". " + explanation'));
+ ensure('interactive status explicitly opens a help dialog',
+   status.includes('showConnectivityHelp("device")') &&
+   status.includes('showConnectivityHelp("web")') &&
+   status.includes('showConnectivityHelp("core")'));
+ ensure('no automatic cloud fallback and no fake model readiness',
+   copy.includes('Es gibt keinen automatischen Cloud-Ersatz.') &&
+   copy.includes('Freies Sprachmodell noch nicht geladen'));
+ ensure('novice dialog explains model/source/goal without Shizuku dependency',
+   activity.includes('ContinuumUiCopy.developmentRequirements(') &&
+   activity.includes('Shizuku') &&
+   activity.includes('SPRACHMODELL EINRICHTEN'));
+ ensure('missing web sources are not presented as verified knowledge',
+   activity.includes('ContinuumUiCopy.emptyResearch(dossier.partialReason)'));
+});
+
+test('neural training failures expose bounded diagnostics without claiming saved weights',()=>{
+ const neural=bodyOf(activity,'private fun runNeuralCommand(command: NeuralCommand)');
+ ensure('neural error preserves the existing neural snapshot and discloses failure category',
+   neural?.includes('neuralMonitor.text = "NEURON · Training fehlgeschlagen ($category), vorheriger Stand erhalten"') &&
+   neural.includes('error.javaClass.simpleName.take(64)') &&
+   neural.includes('Neuronales Experiment ${command.kind.name} fehlgeschlagen ($category)'));
+ ensure('diagnostic text is bounded and visible instead of a silent failure',
+   neural.includes('.take(240)') &&
+   neural.includes('addToolActivity("NEURON · FEHLER · $category")'));
+});
+
+test('Wikipedia article research uses bounded authentic extracts and original citations',()=>{
+ const provider=fs.readFileSync(dir+'cognitive/WikipediaExtractResearchProvider.kt','utf8');
+ ensure('Android research wraps its existing HTTPS provider in a bounded Wikipedia extractor',
+   activity.includes('val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)') &&
+   activity.includes('ApprovedWebResearchToolRunner(session,discovery,researchProvider,'));
+ ensure('only German Wikipedia articles qualify',
+   provider.includes('uri.host != "de.wikipedia.org"') &&
+   provider.includes('uri.scheme != "https"') &&
+   provider.includes('articleTitle(request.url) ?: return downstream.retrieve(request)'));
+ ensure('wiki excerpt request is byte bounded and redirects forbidden',
+   provider.includes('minOf(request.maxBytes, 24_000)') &&
+   provider.includes('request.timeoutMillis, 0') &&
+   provider.includes('exchars=1200'));
+ ensure('retrieval retains source provenance and never fabricates a citation',
+   provider.includes('source.url == endpoint && source.source.domain == "de.wikipedia.org"') &&
+   provider.includes('ResearchDocument(request.url, title.replace('));
+ ensure('XML external entities and unrelated article titles are not accepted',
+   provider.includes('doctype|entity') &&
+   provider.includes('expectedTitle.replace('));
 });
 
 test('Android-first Teamleader is scheduled, observable and serialized across background and chat',()=>{

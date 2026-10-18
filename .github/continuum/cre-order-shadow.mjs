@@ -18,6 +18,9 @@ const WEIGHTS=Object.freeze({base:0.70,bigrams:0.20,first:0.05,last:0.05});
 export function orderShadowFeatures(text){
  const base=features(text);
  const terms=tokens(text).filter(t=>!FUNCTION_WORDS.has(t));
+ // With one content word there is no order signal: preserve the original
+ // CRE1 feature weights exactly, rather than renormalizing rounded floats.
+ if(terms.length===1)return base;
  const acc=new Map();
  const add=(id,weight)=>acc.set(id,(acc.get(id)??0)+weight);
  for(const {id,w} of base)add(id,w*WEIGHTS.base);

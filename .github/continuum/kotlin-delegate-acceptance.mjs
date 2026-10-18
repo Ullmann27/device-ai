@@ -77,9 +77,15 @@ export function assessKotlinDelegate({
   const before=compile(dir,original,acceptance);
   if(before.error==='ENOENT')
    return {passed:false,reason:'KOTLINC_NOT_AVAILABLE'};
-  if(before.exitCode===0||before.error||before.signal||
-     !before.stderr.includes(methodName)||
-     !/unresolved reference|Unresolved reference/i.test(before.stderr))
+  // A missing method is evidence only if it is the sole compiler error.
+  // Do not credit an unrelated red baseline as a successful RED/GREEN cycle.
+  const diagnostics=before.stderr.split(/\r?\n/)
+   .filter(line=>/\berror\s*:|^e:\s/i.test(line));
+  const missingMethod=new RegExp('\\b'+methodName+'\\b');
+  const specificallyMissing=diagnostics.length>0&&diagnostics.every(line=>
+   line.includes('Acceptance.kt')&&
+   /unresolved reference/i.test(line)&&missingMethod.test(line));
+  if(before.exitCode===0||before.error||before.signal||!specificallyMissing)
    return {passed:false,reason:'BASELINE_NOT_SPECIFICALLY_RED',before};
   const after=compile(dir,generated,acceptance);
   if(!succeeded(after))

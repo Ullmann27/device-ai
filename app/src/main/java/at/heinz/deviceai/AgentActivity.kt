@@ -132,16 +132,16 @@ class AgentActivity : Activity() {
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
-        private val BG = Color.rgb(7, 10, 16)
-        private val PANEL = Color.rgb(15, 21, 31)
-        private val PANEL_2 = Color.rgb(21, 29, 42)
-        private val SURFACE = Color.rgb(27, 37, 53)
-        private val BORDER = Color.rgb(48, 64, 87)
+        private val BG = Color.rgb(5, 8, 23)
+        private val PANEL = Color.rgb(12, 17, 40)
+        private val PANEL_2 = Color.rgb(18, 23, 57)
+        private val SURFACE = Color.rgb(23, 34, 77)
+        private val BORDER = Color.rgb(73, 91, 171)
         private val TEXT = Color.rgb(245, 248, 253)
         private val MUTED = Color.rgb(155, 169, 191)
-        private val ACCENT = Color.rgb(71, 143, 255)
+        private val ACCENT = Color.rgb(64, 159, 255)
         private val ACCENT_DARK = Color.rgb(37, 87, 224)
-        private val CYAN = Color.rgb(44, 208, 255)
+        private val CYAN = Color.rgb(58, 220, 255)
         private val GREEN = Color.rgb(78, 214, 145)
         private val AMBER = Color.rgb(255, 192, 82)
         private val RED = Color.rgb(255, 102, 112)
@@ -275,6 +275,7 @@ class AgentActivity : Activity() {
     private var backlogList: LinearLayout? = null
     private var devDialog: AlertDialog? = null
     private var devStatusView: TextView? = null
+    private var devRequirementsView: TextView? = null
     private var devSourcesView: TextView? = null
     private var devPreviewView: TextView? = null
     private var devStartButton: Button? = null
@@ -503,12 +504,12 @@ class AgentActivity : Activity() {
             matchWidth()
         )
 
-        side.addView(sectionLabel("SKILLS", top = 24))
+        side.addView(sectionLabel("DEIN ASSISTENT", top = 24))
         side.addView(
             infoCard(
-                "Lumo",
-                LumoSkill.description,
-                "AKTIV"
+                "Device AI",
+                "Fragen, recherchieren, Wissen lernen und Entwicklungsvorschläge sicher prüfen.",
+                "LOKAL"
             ),
             matchWidth(top = 8)
         )
@@ -548,11 +549,12 @@ class AgentActivity : Activity() {
 
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         dashboardSection = dashboard
+        // Reference-led mobile flow: brand -> transparent holographic hero ->
+        // live status -> actual feature tiles -> mode selection. The dashboard
+        // remains scrollable and the real composer/chat stay anchored below.
         dashboard.addView(buildHeader(wide))
-        dashboard.addView(buildStatusRow(), matchWidth(top = 12))
-        dashboard.addView(buildModeRow(), matchWidth(top = 10))
         dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
-        dashboard.addView(buildQuickActions(), matchWidth(top = 10))
+        dashboard.addView(buildModeRow(), matchWidth(top = 10))
 
         planCard = verticalCard().apply {
             visibility = View.GONE
@@ -580,7 +582,8 @@ class AgentActivity : Activity() {
         dashboardSection = dashboardScroll
         pane.addView(
             dashboardScroll,
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 3f)
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,
+                if (wide) 2.3f else 2.1f)
         )
 
         keyboardTitle = textView("Device AI · Nachricht", 15f, ACCENT, true).apply {
@@ -618,7 +621,7 @@ class AgentActivity : Activity() {
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
-                2f
+                if (wide) 2.7f else 2.9f
             )
         )
 
@@ -627,66 +630,49 @@ class AgentActivity : Activity() {
     }
 
     private fun buildHeader(wide: Boolean): View {
-        val hero = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val header = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(3), dp(4), dp(3), dp(2))
+        }
         val top = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-        val heading = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        heading.addView(
-            textView("FRAG. PLANE. FÜHRE SICHER AUS.", 9.5f, Color.rgb(151, 190, 255), true)
-                .apply { letterSpacing = 0.13f }
-        )
-        heading.addView(
-            textView("Device AI", if (wide) 32f else 27f, TEXT, true).apply {
-                val styled = SpannableString("Device AI")
-                styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                text = styled
-                setShadowLayer(dp(7).toFloat(), 0f, 0f, Color.rgb(24, 86, 178))
-            },
-            matchWidth(top = 3)
-        )
-        heading.addView(
-            textView("Dein privater KI-Assistent direkt auf Android.",
-                if (wide) 12.5f else 11.5f, MUTED),
-            matchWidth(top = 3)
-        )
-        top.addView(heading, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
         top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_robot)
-            contentDescription = "Device AI Roboter-Maskottchen"
+            setImageResource(R.drawable.device_ai_holo_logo)
+            contentDescription = "Device AI · holografisches Logo"
             scaleType = ImageView.ScaleType.FIT_CENTER
-        }, LinearLayout.LayoutParams(dp(if (wide) 126 else 82), dp(if (wide) 112 else 87)).apply {
-            marginStart = dp(3)
-        })
-        top.addView(
-            actionButton("⚙", compact = true).apply {
-                contentDescription = "Cloud-Einstellungen"
-                setOnClickListener { showCloudSettings() }
-            },
-            LinearLayout.LayoutParams(dp(42), dp(42)).apply { marginStart = dp(4) }
-        )
-        hero.addView(top, matchWidth())
-        if (!wide) {
-            val secondary = LinearLayout(this).apply {
-                gravity = Gravity.CENTER_VERTICAL
-                orientation = LinearLayout.HORIZONTAL
-            }
-            secondary.addView(
-                textView("LOKAL · SICHER · DEIN ASSISTENT", 10f, Color.rgb(114, 191, 255)),
-                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            )
-            secondary.addView(
-                actionButton("EXPERT", compact = true).apply {
-                    setOnClickListener {
-                        startActivity(Intent(this@AgentActivity, MainActivity::class.java))
-                    }
-                },
-                LinearLayout.LayoutParams(dp(76), dp(33))
-            )
-            hero.addView(secondary, matchWidth(top = 2))
+        }, LinearLayout.LayoutParams(dp(54), dp(54)))
+        val titleBox = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_VERTICAL
         }
-        return hero
+        titleBox.addView(textView("Device AI", if (wide) 33f else 27f, TEXT, true).apply {
+            val styled = SpannableString("Device AI")
+            styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text = styled
+            setShadowLayer(dp(9).toFloat(), 0f, 0f, Color.rgb(24, 83, 171))
+            letterSpacing = 0.005f
+        })
+        titleBox.addView(textView("Dein persönlicher Android KI-Assistent",
+            if (wide) 12f else 10.6f, MUTED), matchWidth(top = 1))
+        top.addView(titleBox, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+            marginStart = dp(8)
+        })
+        top.addView(actionButton("⚙", compact = true).apply {
+            contentDescription = "Einstellungen und Berechtigungen"
+            setOnClickListener { showSystemCenter() }
+        }, LinearLayout.LayoutParams(dp(43), dp(43)))
+        header.addView(top, matchWidth())
+        header.addView(textView(
+            "PRIVAT   •   LOKAL   •   LEISTUNGSSTARK", 9.4f,
+            Color.rgb(146, 171, 228), true
+        ).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.13f
+        }, matchWidth(top = 8))
+        return header
     }
 
     private fun buildStatusRow(): View {
@@ -695,21 +681,30 @@ class AgentActivity : Activity() {
             gravity = Gravity.CENTER_VERTICAL
         }
 
-        shizukuBadge = statusBadge("● SHIZUKU …", AMBER)
-        cloudBadge = statusBadge("● WEB FREIGABE", CYAN)
-        localBadge = statusBadge("● KERN AKTIV", GREEN)
+        shizukuBadge = statusBadge("● GERÄT AUS", AMBER).apply {
+            contentDescription = "Gerätezugriff: Status und Erklärung öffnen"
+            setOnClickListener { showConnectivityHelp("device") }
+        }
+        cloudBadge = statusBadge("● WEB FREIGABE", CYAN).apply {
+            contentDescription = "Internetrecherche: Freigabe erklären"
+            setOnClickListener { showConnectivityHelp("web") }
+        }
+        localBadge = statusBadge("● BASIS BEREIT", GREEN).apply {
+            contentDescription = "Lokaler Startkern: Status und Sprachmodell erklären"
+            setOnClickListener { showConnectivityHelp("core") }
+        }
 
         row.addView(
-            shizukuBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginEnd = dp(4) }
+            localBadge,
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginEnd = dp(4) }
         )
         row.addView(
-            localBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4); marginEnd = dp(4) }
+            shizukuBadge,
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginStart = dp(4); marginEnd = dp(4) }
         )
         row.addView(
             cloudBadge,
-            LinearLayout.LayoutParams(0, dp(39), 1f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(44), 1f).apply { marginStart = dp(4) }
         )
         return row
     }
@@ -756,64 +751,150 @@ class AgentActivity : Activity() {
         return card
     }
 
-    // Core is immediately usable, even on an offline phone with no imported model.
+    // The cockpit is intentionally shallow: primary actions are visible without knowing
+    // how the learning, tool permission or model subsystems work.
     private fun buildBootstrapCoreCard(): View {
-        val card = verticalCard().apply {
-            background = roundedGradient(Color.rgb(10, 29, 61), Color.rgb(14, 24, 49),
-                18, Color.rgb(24, 127, 243))
-            setPadding(dp(12), dp(11), dp(12), dp(11))
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
         }
-        val top = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
+        val hero = verticalCard().apply {
+            background = roundedGradient(
+                Color.rgb(10, 25, 64), Color.rgb(15, 12, 46),
+                23, Color.rgb(64, 116, 237)
+            )
+            setPadding(dp(10), dp(9), dp(10), dp(10))
+            elevation = dp(6).toFloat()
         }
-        val text = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        text.addView(textView("DEVICE AI · EIGENER STARTKERN", 12f, CYAN, true))
-        text.addView(textView("BEREIT · OHNE MODELLIMPORT", 13.5f, TEXT, true),
-            matchWidth(top = 5))
-        top.addView(text, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_model_stack)
-            contentDescription = "Continuum-Kern, lokal verbunden"
-        }, LinearLayout.LayoutParams(dp(106), dp(75)))
-        card.addView(top)
-        card.addView(textView(
-            "Eigene Regeln, nachprüfbare Lernschritte und lokale Erinnerung. Kein vortrainiertes Sprachmodell. " +
-                "Freies KI-Sprachdenken wird erst erforscht – keine simulierte Intelligenz.", 12.2f, MUTED
-        ), matchWidth(top = 4))
-        // One entry per area; the centers hold the individual functions and mark
-        // experimental ones. The learning radar stays here because it asks the user.
-        val centers = listOf(
-            Triple("LERNEN", true) { showLearningCenter() },
-            Triple("GEDÄCHTNIS", false) { showMemoryCenter() },
-            Triple("ENTWICKLUNG", false) { showDevelopmentCenter() },
-            Triple("MODELLE", false) { showModelCenter() },
-            Triple("SYSTEM", false) { showSystemCenter() }
+        hero.addView(textView("✦   DEVICE AI   ·   INTELLIGENZKERN", 10.5f,
+            Color.rgb(137, 215, 255), true).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.08f
+        }, matchWidth())
+        hero.addView(ContinuumHologramView(this).apply {
+            // View owns a fully transparent Canvas. No cloud image download,
+            // no inference simulation and no battery-consuming animation.
+            contentDescription = "Holografischer Device AI Kern, rein dekorativ"
+        }, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 201)
+        ))
+        hero.addView(textView(
+            "Mehr als nur Chat. Eine KI für dein Gerät.", 12f,
+            Color.rgb(198, 214, 244)
+        ).apply { gravity = Gravity.CENTER }, matchWidth())
+        container.addView(hero, matchWidth())
+        container.addView(buildStatusRow(), matchWidth(top = 11))
+        container.addView(textView("DEINE KI-BEREICHE", 10f,
+            Color.rgb(153, 189, 252), true).apply {
+            letterSpacing = 0.14f
+        }, matchWidth(top = 15))
+
+        val options = listOf(
+            Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
+            Triple("⌕" to "Forschung", "Recherchieren und Quellen prüfen") { showResearchModeDialog() },
+            Triple("▤" to "Lernen", "Wissen aufbauen und verstehen") { showLearningCenter() },
+            Triple("⬡" to "Modelle", "Lokale KI-Modelle verwalten") { showModelCenter() },
+            Triple("⌘" to "Entwicklung", "Code und Aufgaben kontrollieren") { showDevelopmentCenter() },
+            Triple("▱" to "Speicher", "Erinnerungen und persönlichen Kontext") { showMemoryCenter() }
         )
-        centers.chunked(2).forEachIndexed { index, pair ->
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            pair.forEachIndexed { j, (label, accent, open) ->
-                row.addView(actionButton(label, accent = accent).apply {
-                    contentDescription = "$label öffnen"
-                    setOnClickListener { open() }
-                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { if (j > 0) marginStart = dp(7) })
+        options.chunked(2).forEachIndexed { rowIndex, pair ->
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
             }
-            if (pair.size == 1) {
-                row.addView(actionButton("WEB RECHERCHE").apply {
-                    setOnClickListener { showResearchModeDialog() }
-                    setOnLongClickListener { showInternetSettings(); true }
-                    contentDescription = "Webrecherche starten. Lange drücken für Internetzugang-Einstellungen."
-                }, LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(7) })
+            pair.forEachIndexed { index, option ->
+                row.addView(cockpitTile(option.first.first, option.first.second,
+                    option.second, rowIndex == 0 && index == 0, option.third),
+                    LinearLayout.LayoutParams(0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        if (index > 0) marginStart = dp(9)
+                    })
             }
-            card.addView(row, matchWidth(top = if (index == 0) 10 else 7))
+            container.addView(row, matchWidth(top = if (rowIndex == 0) 9 else 9))
         }
-        neuralCuriosityButton = actionButton("LERN-RADAR · Noch keine Frage").apply {
+        container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
+            contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
+            background = roundedGradient(
+                Color.rgb(28, 45, 100), Color.rgb(18, 27, 62),
+                18, Color.rgb(97, 119, 216)
+            )
+            minHeight = dp(57)
+            setOnClickListener { showSystemCenter() }
+        }, matchWidth(top = 10))
+        neuralCuriosityButton = actionButton("✧   Lernimpuls · Noch keine Frage").apply {
             isEnabled = false
+            background = roundedGradient(Color.rgb(18, 34, 65),
+                Color.rgb(14, 22, 50), 15, Color.rgb(53, 83, 161))
             setOnClickListener { showNeuralCuriosityQuestion() }
         }
-        card.addView(neuralCuriosityButton, matchWidth(top = 7))
-        return card
+        container.addView(neuralCuriosityButton, matchWidth(top = 9))
+        return container
     }
+
+    private fun focusChatComposer() {
+        if (!::input.isInitialized) return
+        input.requestFocus()
+        input.post {
+            if (!isFinishing && !isDestroyed) {
+                val manager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                    as? android.view.inputmethod.InputMethodManager
+                manager?.showSoftInput(input,
+                    android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+    }
+
+    private fun cockpitTile(
+        symbol: String, title: String, explanation: String,
+        primary: Boolean, open: () -> Unit
+    ): View {
+        val item = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            background = roundedGradient(
+                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
+                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
+                18,
+                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234)
+            )
+            setPadding(dp(10), dp(9), dp(9), dp(9))
+            elevation = dp(5).toFloat()
+            minimumHeight = dp(94)
+            isClickable = true
+            isFocusable = true
+            contentDescription = title + ". " + explanation
+            setOnClickListener { open() }
+        }
+        val icon = textView(symbol, 21f, Color.WHITE, true).apply {
+            gravity = Gravity.CENTER
+            background = roundedGradient(
+                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
+                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152),
+                11,
+                if (primary) Color.rgb(79, 193, 255) else Color.rgb(128, 105, 249)
+            )
+            setShadowLayer(dp(3).toFloat(), 0f, 0f,
+                if (primary) CYAN else violetTint())
+        }
+        item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
+        val caption = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(9), 0, 0, 0)
+        }
+        caption.addView(textView(title, 13.5f, TEXT, true))
+        caption.addView(textView(explanation, 10.6f,
+            Color.rgb(172, 189, 222)).apply {
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        }, matchWidth(top = 3))
+        item.addView(caption, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        item.addView(textView("›", 22f, Color.rgb(155, 182, 255)).apply {
+            gravity = Gravity.CENTER
+        }, LinearLayout.LayoutParams(dp(13), dp(44)))
+        return item
+    }
+
+    private fun violetTint(): Int = Color.rgb(139, 96, 255)
 
     // ------------------------------------------------------------------
     // Centers: one place per area. Every action is an existing function;
@@ -822,6 +903,7 @@ class AgentActivity : Activity() {
     private class CenterAction(val label: String, val accent: Boolean = false, val run: () -> Unit)
 
     private var centerDialog: AlertDialog? = null
+    private var quickActionsDialog: AlertDialog? = null
 
     private fun learningIoStatus(read: () -> String): ((String) -> Unit) -> Unit = { done ->
         onLearningIo(read) { result ->
@@ -839,11 +921,19 @@ class AgentActivity : Activity() {
         centerDialog?.dismiss()
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(20, 42, 78), Color.rgb(13, 24, 45),
+                22, Color.rgb(58, 107, 180))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        box.addView(textView(intro, 12f, MUTED))
-        val statusView = textView("Status wird gelesen …", 12f, TEXT)
-        box.addView(statusView, matchWidth(top = 10))
+        box.addView(textView("DEVICE AI · DEIN BEREICH", 11f, CYAN, true))
+        box.addView(textView(title, 21f, TEXT, true), matchWidth(top = 6))
+        box.addView(textView(intro, 13.3f, Color.rgb(203, 219, 239)), matchWidth(top = 9))
+        val statusView = textView("Status wird gelesen …", 12.5f, TEXT).apply {
+            background = rounded(Color.rgb(12, 26, 48), 14, Color.rgb(59, 96, 148))
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            setTextIsSelectable(true)
+        }
+        box.addView(statusView, matchWidth(top = 12))
         lateinit var dialog: AlertDialog
         fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
             setOnClickListener { dialog.dismiss(); action.run() }
@@ -855,13 +945,13 @@ class AgentActivity : Activity() {
             experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
         }
         dialog = AlertDialog.Builder(this)
-            .setTitle(title)
             .setView(ScrollView(this).apply { addView(box) })
             .setPositiveButton("Schließen", null)
             .create()
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
         centerDialog = dialog
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         status { text -> if (dialog.isShowing) statusView.text = text }
     }
 
@@ -963,13 +1053,24 @@ class AgentActivity : Activity() {
         onBacklog({
             at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).runOnce {
                 Thread.currentThread().isInterrupted
-            }.display()
+            }
         }) { result ->
-            if(isFinishing || isDestroyed)return@onBacklog
-            addAssistantMessage(result.getOrElse {
-                "Teamleiterprüfung fehlgeschlagen ("+backlogError(it)+")."
-            })
-            addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")
+            if (isFinishing || isDestroyed) return@onBacklog
+            result.fold(
+                onSuccess = { snapshot ->
+                    addAssistantMessage(snapshot.display())
+                    val status = when (snapshot.state) {
+                        "READY" -> "CONTINUUM · Teamleiterprüfung erfolgreich abgeschlossen"
+                        "DEFERRED" -> "CONTINUUM · Teamleiterprüfung verschoben: ${snapshot.reason}"
+                        else -> "CONTINUUM · Teamleiterprüfung fehlgeschlagen: ${snapshot.reason}"
+                    }
+                    addToolActivity(status)
+                },
+                onFailure = { error ->
+                    addAssistantMessage("Teamleiterprüfung fehlgeschlagen (" + backlogError(error) + ").")
+                    addToolActivity("CONTINUUM · Teamleiterprüfung fehlgeschlagen")
+                }
+            )
         }
     }
 
@@ -1024,9 +1125,35 @@ class AgentActivity : Activity() {
             CenterAction("SHIZUKU · VERBINDEN") { bridge.requestAccess() },
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
-            CenterAction("MODELLVERWALTUNG") { showModelCenter() }
+            CenterAction("MODELLVERWALTUNG") { showModelCenter() },
+            CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() }
         )
     )
+
+    private fun showQuickActionsDialog() {
+        quickActionsDialog?.dismiss()
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), dp(18), dp(14), dp(18))
+            background = roundedGradient(
+                Color.rgb(18, 32, 75), Color.rgb(9, 17, 41),
+                20, Color.rgb(73, 111, 206)
+            )
+            addView(textView("DEVICE AI · GERÄTE-WERKZEUGE",
+                11f, CYAN, true), matchWidth())
+            addView(buildQuickActions(), matchWidth(top = 11))
+        }
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Schnellzugriffe")
+            .setView(content)
+            .setPositiveButton("Schließen", null)
+            .create()
+        quickActionsDialog = dialog
+        dialog.setOnDismissListener {
+            if (quickActionsDialog === dialog) quickActionsDialog = null
+        }
+        dialog.show()
+    }
 
     private fun systemCenterStatus(): String = buildString {
         append("Device AI ").append(BuildConfig.VERSION_NAME).append(" (").append(BuildConfig.VERSION_CODE).append(")\n")
@@ -1059,48 +1186,51 @@ class AgentActivity : Activity() {
 
     private fun buildQuickActions(): View {
         val actions = listOf(
-            "Lumo prüfen" to "Prüfe die installierte Lumo-Version und ob eine neuere Lumo APK in Downloads liegt.",
-            "Fehler Lumo" to "Prüfe Lumo auf aktuelle Fehler und analysiere Logcat.",
+            "KI-Modell" to "",
+            "Teamleiter" to "",
+            "System" to "",
             "Downloads" to "Zeig meine Downloads.",
             "Speicher" to "Welche Dateien brauchen am meisten Speicher?",
             "Akku" to "Prüfe Akku und Ladezustand.",
-            "Entwicklung" to "",
-            "Web" to "Recherchiere die neuesten Android-16- und Shizuku-Änderungen und nenne Quellen."
+            "Web" to ""
         )
         fun createAction(label: String, command: String): Button =
             chip(label).apply {
+                contentDescription = when (label) {
+                    "KI-Modell" -> "Lokales Sprachmodell einrichten oder verwalten"
+                    "Teamleiter" -> "Lokalen Continuum Teamleiter jetzt prüfen"
+                    "System" -> "Systemstatus und Berechtigungen öffnen"
+                    "Web" -> "Recherche nur nach Freigabe starten"
+                    else -> label + ": " + command
+                }
                 setOnClickListener {
+                    quickActionsDialog?.dismiss()
                     when (label) {
+                        "KI-Modell" -> showModelCenter()
+                        "Teamleiter" -> runDeviceTeamleaderCheck()
+                        "System" -> showSystemCenter()
                         "Web" -> showResearchModeDialog()
-                        "Entwicklung" -> showDevelopmentDialog()
                         else -> {
                             input.setText(command)
                             input.setSelection(command.length)
+                            focusChatComposer()
                         }
                     }
                 }
             }
-        if (resources.configuration.screenWidthDp >= 700) {
-            val scroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            actions.forEach { (label, command) ->
-                row.addView(createAction(label, command),
-                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(46)).apply {
-                        marginEnd = dp(7)
-                    })
-            }
-            scroll.addView(row)
-            return scroll
-        }
-        // On a phone, no action is clipped off-screen or hidden behind horizontal scrolling.
+        // A responsive grid keeps every action visible. Horizontal-scrolling chips
+        // used to hide the last actions behind the right edge on large phones/tablets.
+        val columns = if (resources.configuration.screenWidthDp >= 700) 4 else 3
         val grid = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        actions.chunked(3).forEachIndexed { index, group ->
+        actions.chunked(columns).forEachIndexed { index, group ->
             val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
             group.forEachIndexed { j, (label, command) ->
                 row.addView(createAction(label, command),
                     LinearLayout.LayoutParams(0, dp(45), 1f).apply { if (j > 0) marginStart = dp(6) })
             }
-            repeat(3 - group.size) { row.addView(View(this), LinearLayout.LayoutParams(0, dp(45), 1f)) }
+            repeat(columns - group.size) {
+                row.addView(View(this), LinearLayout.LayoutParams(0, dp(45), 1f))
+            }
             grid.addView(row, matchWidth(top = if (index > 0) 6 else 0))
         }
         return grid
@@ -1109,75 +1239,109 @@ class AgentActivity : Activity() {
     private fun buildComposer(): View {
         val shell = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(12, 28, 60), Color.rgb(10, 20, 39), 21, Color.rgb(32, 112, 231))
-            setPadding(dp(7), dp(7), dp(7), dp(7))
+            background = roundedGradient(
+                Color.rgb(14, 31, 68), Color.rgb(10, 18, 46),
+                23, Color.rgb(76, 119, 232)
+            )
+            setPadding(dp(7), dp(8), dp(7), dp(8))
+            elevation = dp(7).toFloat()
         }
-
+        val inputRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val newChat = actionButton("＋", compact = true).apply {
+            contentDescription = "Neue Chat-Sitzung"
+            textSize = 23f
+            setOnClickListener { newSession() }
+        }
+        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(42), dp(47)))
         input = EditText(this).apply {
-            hint = "Was soll ich auf deinem Gerät tun?"
-            setHintTextColor(Color.rgb(103, 119, 143))
+            hint = "Schreibe eine Nachricht …"
+            setHintTextColor(Color.rgb(147, 164, 201))
             setTextColor(TEXT)
-            textSize = 15f
+            textSize = 14f
             minLines = 1
             maxLines = 4
-            background = rounded(Color.rgb(9, 19, 37), 14, Color.rgb(40, 112, 226))
+            background = roundedGradient(Color.rgb(21, 35, 70),
+                Color.rgb(14, 24, 55), 18, Color.rgb(54, 86, 151))
             imeOptions = android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
             inputType = InputType.TYPE_CLASS_TEXT or
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            setPadding(dp(10), dp(7), dp(10), dp(7))
+            setPadding(dp(12), dp(9), dp(10), dp(9))
         }
-        shell.addView(input, matchWidth())
+        inputRow.addView(input, LinearLayout.LayoutParams(0,
+            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+            marginStart = dp(7)
+        })
+        val mic = actionButton("🎙", compact = true).apply {
+            contentDescription = "Spracheingabe starten"
+            setOnClickListener { startVoiceInput() }
+        }
+        inputRow.addView(mic, LinearLayout.LayoutParams(dp(43), dp(47)).apply {
+            marginStart = dp(6)
+        })
+        shell.addView(inputRow, matchWidth())
 
         val actions = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
         }
-
-        val mic = actionButton("🎙", compact = true).apply {
-            contentDescription = "Spracheingabe"
-            setOnClickListener { startVoiceInput() }
-        }
-
-        val newChat = actionButton("NEU", compact = true).apply {
-            setOnClickListener { newSession() }
-        }
-
-        voiceButton = actionButton(if (voiceEnabled) "TON AN" else "TON AUS", compact = true).apply {
-            contentDescription = "Sprachausgabe ein- oder ausschalten"
-            setOnClickListener {
-                voiceEnabled = !voiceEnabled
-                bootstrapMemory.voiceEnabled = voiceEnabled
-                voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
-                if (voiceEnabled) {
-                    if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
-                    else Toast.makeText(this@AgentActivity,
-                        "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
-                } else voiceEngine?.stop()
+        fun smallButton(label: String, description: String, run: () -> Unit): Button =
+            actionButton(label, compact = true).apply {
+                textSize = 10.6f
+                contentDescription = description
+                background = roundedGradient(Color.rgb(25, 35, 81),
+                    Color.rgb(15, 22, 56), 16, Color.rgb(93, 107, 190))
+                setOnClickListener { run() }
             }
+        actions.addView(
+            smallButton("✧ Denken", "Lokalen Denkmodus öffnen, falls eingerichtet") {
+                if (localRuntime.state == LocalModelState.READY) setMode(AssistantMode.LOCAL)
+                else showModelCenter()
+            },
+            LinearLayout.LayoutParams(0, dp(42), 1.35f)
+        )
+        actions.addView(
+            smallButton("◎ Web", "Recherche nur nach Freigabe") {
+                showResearchModeDialog()
+            },
+            LinearLayout.LayoutParams(0, dp(42), .90f).apply { marginStart = dp(4) }
+        )
+        actions.addView(
+            smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
+                showDevelopmentDialog()
+            },
+            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+        )
+        voiceButton = smallButton(
+            if (voiceEnabled) "TON AN" else "TON AUS",
+            "Sprachausgabe ein- oder ausschalten"
+        ) {
+            voiceEnabled = !voiceEnabled
+            bootstrapMemory.voiceEnabled = voiceEnabled
+            voiceButton?.text = if (voiceEnabled) "TON AN" else "TON AUS"
+            if (voiceEnabled) {
+                if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
+                else Toast.makeText(this@AgentActivity,
+                    "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
+            } else voiceEngine?.stop()
         }
-
-        sendButton = actionButton("SENDEN", accent = true).apply {
+        actions.addView(voiceButton,
+            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+        )
+        sendButton = actionButton("➤", accent = true, compact = true).apply {
+            textSize = 21f
+            contentDescription = "Nachricht senden"
             setOnClickListener {
                 if (busy && activeLocalRequest) cancelLocalRequest() else sendCurrentInput()
             }
         }
-
-        actions.addView(mic, LinearLayout.LayoutParams(dp(49), dp(43)))
-        actions.addView(
-            newChat,
-            LinearLayout.LayoutParams(dp(49), dp(43)).apply { marginStart = dp(5) }
+        actions.addView(sendButton,
+            LinearLayout.LayoutParams(0, dp(42), .85f).apply { marginStart = dp(4) }
         )
-        actions.addView(
-            voiceButton,
-            LinearLayout.LayoutParams(dp(62), dp(43)).apply { marginStart = dp(5) }
-        )
-        actions.addView(
-            sendButton,
-            LinearLayout.LayoutParams(0, dp(43), 1f).apply { marginStart = dp(6) }
-        )
-
-        shell.addView(actions, matchWidth(top = 3))
+        shell.addView(actions, matchWidth(top = 8))
         return shell
     }
 
@@ -1342,9 +1506,8 @@ class AgentActivity : Activity() {
             request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
         )
         if (decision.kind == BootstrapKind.DEVICE_TOOL && !bridge.isReady()) {
-            addToolActivity("SHIZUKU NICHT BEREIT · Auftrag nicht ausgeführt")
-            addAssistantMessage("Für diesen nur lesenden Geräteauftrag benötige ich Shizuku. " +
-                "Bitte verbinde es zuerst. Dein Text bleibt im Eingabefeld.")
+            addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
+            addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
             return
         }
         // Explicit memory writes or deletions are never performed by unseen model output.
@@ -1817,9 +1980,14 @@ class AgentActivity : Activity() {
                         NeuralSave.CANCELLED -> "Neuronales Experiment abgebrochen; nichts gespeichert."
                         NeuralSave.FAILED -> "Experiment berechnet, aber Speichern fehlgeschlagen; bisheriger Stand bleibt maßgeblich."
                     })
-                }, onFailure = {
-                    neuralMonitor.text = "NEURON · Training fehlgeschlagen, vorheriger Stand erhalten"
-                    addAssistantMessage("Neuronales Experiment nicht ausgeführt: ${it.message}. Vorhandene Daten nicht ersetzt.")
+                }, onFailure = { error ->
+                    val category = error.javaClass.simpleName.take(64).ifBlank { "UnbekannterFehler" }
+                    val detail = (error.message ?: "Keine zusätzliche Fehlerbeschreibung")
+                        .replace(Regex("[\\r\\n\\t]"), " ").take(240)
+                    neuralMonitor.text = "NEURON · Training fehlgeschlagen ($category), vorheriger Stand erhalten"
+                    addAssistantMessage("Neuronales Experiment ${command.kind.name} fehlgeschlagen ($category): " +
+                        "$detail. Vorhandene Daten nicht ersetzt.")
+                    addToolActivity("NEURON · FEHLER · $category")
                 })
             }
         }
@@ -2057,37 +2225,76 @@ class AgentActivity : Activity() {
         modelCenterDialog?.dismiss()
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
+                22, Color.rgb(56, 117, 193))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        box.addView(sectionLabel("CONTINUUM-ENCODER · EIGENER LERNKERN", top = 4))
-        val encoder = textView("Wird gelesen …", 12f, MUTED)
-        box.addView(encoder, matchWidth(top = 6))
-        val encoderActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
+        box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
+        box.addView(textView(
+            "Für natürliche Gespräche und den Entwicklungsassistenten brauchst du eine " +
+                "kompatible lokale LiteRT-LM-Modell-Datei. Device AI lädt kein Modell " +
+                "heimlich herunter und nutzt keinen kostenpflichtigen Cloud-Ersatz.",
+            13f, MUTED), matchWidth(top = 10))
+        val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+            setTextIsSelectable(true)
+        }
+        box.addView(card, matchWidth(top = 14))
+        box.addView(textView("SCHRITT 1 · Modelldatei auswählen", 11.5f, CYAN, true),
+            matchWidth(top = 16))
+        box.addView(actionButton("MODELLDATEI IMPORTIEREN", accent = true).apply {
+            setOnClickListener { showModelImportDialog() }
+        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply {
+            topMargin = dp(7)
+        })
+        box.addView(textView("SCHRITT 2 · Modell auf dem Gerät starten", 11.5f, CYAN, true),
+            matchWidth(top = 14))
+        val action = actionButton("MODELL LADEN").apply {
+            setOnClickListener {
+                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+            }
+        }
+        box.addView(action, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply { topMargin = dp(7) })
+        box.addView(textView(
+            "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
+                "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
+            12.5f, MUTED), matchWidth(top = 11))
+
+        val advanced = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            visibility = View.GONE
+            background = rounded(Color.rgb(12, 29, 53), 14, BORDER)
+            setPadding(dp(12), dp(10), dp(12), dp(12))
+        }
+        advanced.addView(sectionLabel("EIGENER CONTINUUM-LERNKERN", top = 0))
+        val encoder = textView("Lernkernstatus wird gelesen …", 12f, MUTED)
+        advanced.addView(encoder, matchWidth(top = 8))
+        val encoderActions = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
         listOf(
             actionButton("VERSIONEN", compact = true).apply { setOnClickListener { showModelVersions() } },
             actionButton("PAKET", compact = true).apply { setOnClickListener { confirmPackageImport() } },
             actionButton("GEWICHTE", compact = true).apply { setOnClickListener { confirmWeightsImport() } }
-        ).forEach { encoderActions.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) }) }
-        box.addView(encoderActions, matchWidth(top = 8))
-        box.addView(sectionLabel("LOKALES SPRACHMODELL · LITERT-LM", top = 18))
-        val card = textView("", 12f, TEXT)
-        box.addView(card, matchWidth(top = 6))
-        val modelActions = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        val action = actionButton("MODELL LADEN", compact = true).apply {
-            setOnClickListener { if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel() }
+        ).forEach { button ->
+            encoderActions.addView(button, LinearLayout.LayoutParams(0, dp(45), 1f).apply {
+                marginEnd = dp(4)
+            })
         }
-        modelActions.addView(actionButton("IMPORTIEREN", compact = true).apply {
-            setOnClickListener { showModelImportDialog() }
-        }, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
-        modelActions.addView(action, LinearLayout.LayoutParams(0, dp(40), 1f))
-        box.addView(modelActions, matchWidth(top = 8))
-        box.addView(textView(
-            "Ohne Sprachmodell antwortet Device AI aus Regeln und bestätigten Erinnerungen. Ein geladenes Modell " +
-                "beantwortet nur Fragen, zu denen keine bestätigte Erinnerung passt; Werkzeuge nutzt es nur nach " +
-                "Freigabe, und seine Antworten sind nicht geprüft. Es wird nichts heruntergeladen.", 11.5f, MUTED),
-            matchWidth(top = 10))
+        advanced.addView(encoderActions, matchWidth(top = 10))
+        box.addView(actionButton("ERWEITERT · LERNKERN UND VERSIONEN").apply {
+            setOnClickListener {
+                advanced.visibility = if (advanced.visibility == View.GONE) View.VISIBLE else View.GONE
+                text = if (advanced.visibility == View.VISIBLE)
+                    "ERWEITERT · DETAILS SCHLIESSEN" else "ERWEITERT · LERNKERN UND VERSIONEN"
+            }
+        }, matchWidth(top = 16))
+        box.addView(advanced, matchWidth(top = 8))
+
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Modellverwaltung")
             .setView(ScrollView(this).apply { addView(box) })
             .setPositiveButton("Schließen", null)
             .create()
@@ -2102,14 +2309,18 @@ class AgentActivity : Activity() {
         modelCardText = card
         localActionButton = action
         dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         reloadInstalledModels()
         onLearningIo({
             val core = ContinuumLearningCore(filesDir)
             Triple(core.modelHash(), core.status().modelUpdates, core.checkpoints().size)
         }) { result ->
             encoder.text = result.fold({ (hash, updates, archived) ->
-                "Aktiv: ${hash.take(16)} · $updates Gewichtsupdates · $archived archivierte Stände (wiederherstellbar)"
-            }, { "Lernkern nicht lesbar (${failureName(it)}); vorhandene Stände bleiben unverändert." })
+                "Aktiv: " + hash.take(16) + " · " + updates + " Gewichtsupdates · " +
+                    archived + " archivierte Lernstände (wiederherstellbar)"
+            }, {
+                "Lernkern nicht lesbar (" + failureName(it) + "); vorhandene Stände bleiben unverändert."
+            })
         }
     }
 
@@ -2952,6 +3163,7 @@ class AgentActivity : Activity() {
         val provider=HttpReadOnlyResearchProvider(ResearchProviderPolicy(
             totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxBytes=budget.maxBytesPerSource,maxRedirects=budget.maxRedirects
         ),accessCheck={ session.checkActive();check(!cancellation.isCancelled()) { "Recherche abgebrochen" } })
+        val researchProvider=at.heinz.deviceai.cognitive.WikipediaExtractResearchProvider(provider)
         val reportPhase: (ResearchPhase) -> Unit = { phase ->
             runOnUiThread {
                 if (!isFinishing && !isDestroyed) {
@@ -2974,7 +3186,7 @@ class AgentActivity : Activity() {
                 val savedPlan=runCatching { researchStore.loadLatest()?.plan }.getOrNull()
                 val canResume=shouldResume && savedPlan?.question==question && savedPlan?.mode==mode
                 check(!shouldResume || canResume) { "Fortsetzen abgelehnt: Frage oder Modus stimmen nicht mit der Freigabe überein" }
-                val runner=ApprovedWebResearchToolRunner(session,discovery,provider,
+                val runner=ApprovedWebResearchToolRunner(session,discovery,researchProvider,
                     engineFactory={d,p->DeepResearchEngine(discovery=d,provider=p,synthesizer=localSynthesis,
                         checkpointStore=researchStore,dossierRepository=researchStore,onSynthesisTimeout={localRuntime.cancel()},
                         validateTarget={HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(it)})},
@@ -3012,7 +3224,8 @@ class AgentActivity : Activity() {
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
                         .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
                     val body = buildString {
-                        append((dossier.synthesis?.text ?: "Keine Synthese verfügbar.").take(4600))
+                        append(if (dossier.sources.isEmpty()) ContinuumUiCopy.emptyResearch(dossier.partialReason)
+                            else (dossier.synthesis?.text ?: "Es wurde keine Zusammenfassung erstellt.").take(4600))
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
                             append(if(session.call is at.heinz.deviceai.cognitive.WebToolRequest.Read)"\n\nDirekte genehmigte HTTPS-Quelle."
@@ -3021,12 +3234,13 @@ class AgentActivity : Activity() {
                             append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
                         }
                         if (dossier.sources.isEmpty()) {
-                            append("\n\nKeine abrufbaren Quellen. Prüfe Internetverbindung und Suchbegriff.")
+                            append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
                         }
                         if (localRuntime.state != LocalModelState.READY) {
                             append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
                         }
-                        dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
+                        if (dossier.sources.isNotEmpty())
+                            dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
                     }
                     discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
@@ -3037,7 +3251,7 @@ class AgentActivity : Activity() {
                     }
                     addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
                 }.onFailure { error ->
-                    addAssistantMessage("Recherche abgebrochen oder fehlgeschlagen: ${error.message?.take(256) ?: "unbekannter Fehler"}")
+                    addAssistantMessage(ContinuumUiCopy.researchFailure(error.message))
                     addToolActivity("RESEARCH · PARTIAL")
                 }
                 setBusy(false)
@@ -3595,19 +3809,50 @@ class AgentActivity : Activity() {
     private fun showDevelopmentDialog() {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(18, 39, 72), Color.rgb(13, 23, 43),
+                22, Color.rgb(51, 112, 191))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
+        box.addView(textView("DEIN ENTWICKLUNGSASSISTENT", 11f, CYAN, true))
+        box.addView(textView("In drei Schritten zum Entwurf", 20f, TEXT, true),
+            matchWidth(top = 8))
         box.addView(textView(
-            "Ein Entwicklungsauftrag: Developer, Critic, TestDesigner und Judge laufen nacheinander auf dem geladenen " +
-                "lokalen Modell und liefern EINEN prüfbaren Vorschlag. Nichts wird angewendet, kompiliert, getestet oder gepusht. " +
-                "Quelltext wird als nicht vertrauenswürdige Daten behandelt.", 12f, MUTED))
+            "1. Sprachmodell laden. 2. Ziel und Quelltext auswählen. 3. Entwurf prüfen. " +
+                "Du behältst jederzeit die Kontrolle: Es wird nichts automatisch installiert oder verändert.",
+            13f, MUTED), matchWidth(top = 8))
+        devRequirementsView = textView("", 13f, Color.rgb(225, 233, 245)).apply {
+            setPadding(dp(14), dp(12), dp(14), dp(12))
+            background = rounded(Color.rgb(19, 34, 61), 14, Color.rgb(57, 93, 151))
+        }
+        box.addView(devRequirementsView, matchWidth(top = 14))
+        box.addView(actionButton("SPRACHMODELL EINRICHTEN").apply {
+            setOnClickListener {
+                // Preserve the current goal through the dialog's dismiss handler.
+                devDialog?.dismiss()
+                showModelCenter()
+            }
+        }, matchWidth(top = 6))
         devGoalInput = EditText(this).apply {
-            hint = "Entwicklungsziel für diese App…"
+            hint = "Zum Beispiel: Eine Fehlermeldung verständlicher machen"
+            setHintTextColor(Color.rgb(156, 179, 214))
+            setTextColor(TEXT)
+            textSize = 15f
+            background = rounded(Color.rgb(10, 24, 46), 14, BORDER)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
             setText(devController.state.goal)
             minLines = 2
+            maxLines = 4
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    devController.setGoal(s?.toString().orEmpty())
+                    refreshDevelopmentUi()
+                }
+            })
         }
         box.addView(devGoalInput, matchWidth(top = 8))
-        devPickButton = actionButton("QUELLTEXT WÄHLEN (SAF)").apply {
+        devPickButton = actionButton("DATEIEN AUSWÄHLEN").apply {
             setOnClickListener {
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -3618,7 +3863,7 @@ class AgentActivity : Activity() {
             }
         }
         box.addView(devPickButton, matchWidth(top = 8))
-        devClearButton = actionButton("QUELLENAUSWAHL LEEREN").apply {
+        devClearButton = actionButton("DATEIAUSWAHL ZURÜCKSETZEN").apply {
             setOnClickListener {
                 devController.clearSources()
                 refreshDevelopmentUi()
@@ -3628,9 +3873,9 @@ class AgentActivity : Activity() {
         devSourcesView = textView("", 12f, TEXT)
         box.addView(devSourcesView, matchWidth(top = 6))
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        devStartButton = actionButton("START", accent = true).apply { setOnClickListener { startDevelopmentJob() } }
-        devStopButton = actionButton("STOP").apply { setOnClickListener { cancelLocalRequest() } }
-        devExportButton = actionButton("EXPORT").apply {
+        devStartButton = actionButton("ENTWURF STARTEN", accent = true).apply { setOnClickListener { startDevelopmentJob() } }
+        devStopButton = actionButton("STOPP").apply { setOnClickListener { cancelLocalRequest() } }
+        devExportButton = actionButton("SICHERN").apply {
             setOnClickListener {
                 if (devController.exportText() == null) return@setOnClickListener
                 val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -3641,31 +3886,39 @@ class AgentActivity : Activity() {
                 startActivityForResult(create, DEV_EXPORT_REQUEST)
             }
         }
-        listOf(devStartButton!!, devStopButton!!, devExportButton!!).forEach {
-            row.addView(it, LinearLayout.LayoutParams(0, dp(40), 1f).apply { marginEnd = dp(4) })
-        }
+        box.addView(devStartButton!!, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, dp(52)).apply { topMargin = dp(12) })
+        row.addView(devStopButton!!, LinearLayout.LayoutParams(0, dp(48), 1f))
+        row.addView(devExportButton!!, LinearLayout.LayoutParams(0, dp(48), 1f).apply {
+            marginStart = dp(8)
+        })
         box.addView(row, matchWidth(top = 8))
         box.addView(actionButton("AUFGABEN · BACKLOG").apply { setOnClickListener { showDevelopmentBacklog() } }, matchWidth(top = 6))
         devStatusView = textView("", 12f, AMBER, true)
         box.addView(devStatusView, matchWidth(top = 8))
         devPreviewView = textView("", 11f, TEXT).apply { setTextIsSelectable(true) }
         box.addView(devPreviewView, matchWidth(top = 6))
+        box.addView(actionButton("SCHLIESSEN").apply {
+            setOnClickListener { devDialog?.dismiss() }
+        }, matchWidth(top = 14))
         val scroll = ScrollView(this).apply { addView(box) }
         devDialog = AlertDialog.Builder(this)
-            .setTitle("Entwicklungsassistent")
             .setView(scroll)
-            .setPositiveButton("Schließen", null)
             .setOnDismissListener {
                 devController.setGoal(devGoalInput?.text?.toString().orEmpty())
                 devDialog = null
             }
             .show()
+        devDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         refreshDevelopmentUi()
     }
 
     private fun refreshDevelopmentUi() {
         if (devDialog == null) return
         val st = devController.state
+        val modelReady = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
+        devRequirementsView?.text = ContinuumUiCopy.developmentRequirements(
+            modelReady, st.goal.isNotBlank(), st.sources.size)
         devSourcesView?.text = if (st.sources.isEmpty()) "Keine Quellen gewählt."
         else st.sources.joinToString("\n") { "• ${it.path} (${it.content.toByteArray(Charsets.UTF_8).size} B · sha256 ${it.sha256.take(12)}…)" }
         devStatusView?.text = st.status + (st.error?.let { "\n$it" } ?: "")
@@ -3719,9 +3972,22 @@ class AgentActivity : Activity() {
             return
         }
         devController.setGoal(devGoalInput?.text?.toString().orEmpty())
-        val task = devController.start(localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null)
+        val modelReady = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
+        val task = devController.start(modelReady)
         if (task == null) {
             refreshDevelopmentUi()
+            AlertDialog.Builder(this)
+                .setTitle("Vor dem Start noch ein Schritt")
+                .setMessage(ContinuumUiCopy.developmentRequirements(
+                    modelReady, devController.state.goal.isNotBlank(), devController.state.sources.size))
+                .setNegativeButton("Schließen", null)
+                .setPositiveButton(if (!modelReady) "MODELL EINRICHTEN" else "DATEIEN AUSWÄHLEN") { _, _ ->
+                    if (!modelReady) {
+                        devDialog?.dismiss()
+                        showModelCenter()
+                    } else devPickButton?.performClick()
+                }
+                .show()
             return
         }
         val coordinator = DevelopmentCoordinator(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })
@@ -3809,8 +4075,13 @@ class AgentActivity : Activity() {
         stopDevelopmentJob()
         localRuntime.cancel()
         localRuntimeError = "Local request cancelled; a started Shizuku side effect may continue."
+        // Hold the single-assistant lane only while a real asynchronous owner
+        // still exists. A cancellation after completion must never lock the UI.
+        val pendingWorker = activeChatCancellation != null ||
+            activeResearchCancellation != null || activeOrchestrator != null ||
+            activeDevCoordinator != null
         activeLocalRequest = false
-        setBusy(true)
+        setBusy(pendingWorker)
         addToolActivity("Lokale Anfrage abgebrochen · ein bereits gestarteter Shizuku-Befehl kann extern weiterlaufen")
         refreshLocalModelUi()
     }
@@ -3823,26 +4094,43 @@ class AgentActivity : Activity() {
         val completed = CountDownLatch(1)
         val response = StringBuilder()
         val rejectedResponses = mutableListOf<LocalToolResponse>()
-        var proposal: ToolProposal? = null
+        val proposalGuard = ToolProposalTurnGuard()
+        val eventLock = Any()
+        var terminalEventReceived = false
         var failure: String? = null
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
-            when (event) {
-                is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
-                    response.append(event.text.take(8_000 - response.length))
+            synchronized(eventLock) {
+                if (!terminalEventReceived) {
+                    when (event) {
+                        is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                            response.append(event.text.take(8_000 - response.length))
+                        }
+                        is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
+                        is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
+                            event.name,
+                            org.json.JSONObject()
+                                .put("status", "REJECTED")
+                                .put("reason", event.reason.take(512))
+                                .toString()
+                        )
+                        is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
+                        is LocalInferenceEvent.Failed -> {
+                            failure = event.message
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                        LocalInferenceEvent.Cancelled -> {
+                            failure = "Local generation cancelled."
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                        is LocalInferenceEvent.Completed -> {
+                            terminalEventReceived = true
+                            completed.countDown()
+                        }
+                    }
                 }
-                is LocalInferenceEvent.ToolProposal -> if (proposal == null) proposal = event.proposal
-                is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
-                    event.name,
-                    org.json.JSONObject()
-                        .put("status", "REJECTED")
-                        .put("reason", event.reason.take(512))
-                        .toString()
-                )
-                is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
-                is LocalInferenceEvent.Failed -> { failure = event.message; completed.countDown() }
-                LocalInferenceEvent.Cancelled -> { failure = "Local generation cancelled."; completed.countDown() }
-                is LocalInferenceEvent.Completed -> completed.countDown()
             }
         }
         val started = runCatching { cancellation?.throwIfCancelled(); start(callback) }
@@ -3868,7 +4156,13 @@ class AgentActivity : Activity() {
             runOnUiThread { refreshLocalModelUi() }
             return LocalGeneration("", null, emptyList(), "Local runtime did not finish generation.")
         }
-        return LocalGeneration(response.toString(), proposal, rejectedResponses.toList(), failure)
+        val accepted = proposalGuard.acceptedProposal()
+        if (proposalGuard.isAmbiguous() || (accepted != null && rejectedResponses.isNotEmpty())) {
+            return LocalGeneration(
+                "", null, emptyList(), "Local model emitted multiple or conflicting tool proposals; none were submitted."
+            )
+        }
+        return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
@@ -3887,49 +4181,74 @@ class AgentActivity : Activity() {
     private fun showModelImportDialog() {
         val fields = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(4), dp(18), 0)
+            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
+                22, Color.rgb(56, 117, 193))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        val id = EditText(this).apply {
-            hint = "model-id (z. B. functiongemma)"
+        fields.addView(textView("MODELLIMPORT · SCHRITT 1", 11f, CYAN, true))
+        fields.addView(textView("Modell sicher auswählen", 20f, TEXT, true), matchWidth(top = 8))
+        fields.addView(textView(
+            "Dafür benötigst du eine LiteRT-LM-kompatible Modelldatei sowie die " +
+                "Modell-ID, Version und den veröffentlichten SHA-256-Prüfwert des Anbieters. " +
+                "Der Prüfwert schützt davor, versehentlich eine veränderte Datei zu verwenden. " +
+                "Ohne diese Angaben wird nichts importiert.", 13f, MUTED), matchWidth(top = 10))
+        fun field(hintText: String): EditText = EditText(this).apply {
+            hint = hintText
             inputType = InputType.TYPE_CLASS_TEXT
             setSingleLine(true)
+            textSize = 15f
+            setTextColor(TEXT)
+            setHintTextColor(Color.rgb(156, 179, 214))
+            background = rounded(Color.rgb(11, 26, 49), 13, BORDER)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
         }
-        val version = EditText(this).apply {
-            hint = "version (z. B. 1.0.0)"
-            inputType = InputType.TYPE_CLASS_TEXT
-            setSingleLine(true)
-        }
-        val digest = EditText(this).apply {
-            hint = "SHA-256 der Modelldatei"
-            inputType = InputType.TYPE_CLASS_TEXT
-            setSingleLine(true)
-        }
-        fields.addView(textView("Es werden keine Modelldaten heruntergeladen. CPU-Textmodelle mit LiteRT-LM-Unterstützung sind erforderlich.", 12f, MUTED))
-        fields.addView(id, matchWidth(top = 8))
-        fields.addView(version, matchWidth(top = 4))
-        fields.addView(digest, matchWidth(top = 4))
-        AlertDialog.Builder(this)
-            .setTitle("Lokales Modell importieren")
-            .setView(fields)
+        val id = field("Zum Beispiel: mein-lokales-modell")
+        val version = field("Zum Beispiel: 1.0.0")
+        val digest = field("64-stelliger SHA-256-Prüfwert")
+        fields.addView(textView("Modellbezeichnung", 12f, CYAN, true), matchWidth(top = 16))
+        fields.addView(id, matchWidth(top = 6))
+        fields.addView(textView("Modellversion", 12f, CYAN, true), matchWidth(top = 12))
+        fields.addView(version, matchWidth(top = 6))
+        fields.addView(textView("Veröffentlichter SHA-256-Prüfwert", 12f, CYAN, true),
+            matchWidth(top = 12))
+        fields.addView(digest, matchWidth(top = 6))
+        val warning = textView("", 12.5f, AMBER)
+        fields.addView(warning, matchWidth(top = 10))
+        val dialog = AlertDialog.Builder(this)
+            .setView(ScrollView(this).apply { addView(fields) })
             .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Datei auswählen") { _, _ ->
+            .setPositiveButton("DATEI AUSWÄHLEN", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
                 val modelId = id.text.toString().trim()
                 val modelVersion = version.text.toString().trim()
-                val sha256 = digest.text.toString().trim().lowercase()
+                val sha256 = digest.text.toString().trim().lowercase(Locale.ROOT)
                 if (!modelId.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
                     !modelVersion.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
                     !sha256.matches(Regex("[a-f0-9]{64}"))) {
-                    Toast.makeText(this, "Bitte Model-ID, Version und gültigen SHA-256 angeben.", Toast.LENGTH_LONG).show()
-                    return@setPositiveButton
+                    warning.text = "Bitte fülle alle drei Felder korrekt aus. " +
+                        "Der SHA-256-Prüfwert besteht aus genau 64 Zeichen (0–9 und a–f). " +
+                        "Das Fenster bleibt geöffnet; du kannst die Angaben verbessern."
+                    return@setOnClickListener
                 }
-                pendingModelImport = Triple(modelId, modelVersion, sha256)
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "application/octet-stream"
                 }
-                startActivityForResult(picker, MODEL_IMPORT_REQUEST)
+                pendingModelImport = Triple(modelId, modelVersion, sha256)
+                val opened = runCatching { startActivityForResult(picker, MODEL_IMPORT_REQUEST) }
+                if (opened.isSuccess) {
+                    dialog.dismiss()
+                } else {
+                    pendingModelImport = null
+                    warning.text = "Die Dateiauswahl konnte nicht geöffnet werden. " +
+                        "Prüfe den Dateimanager und versuche es erneut."
+                }
             }
-            .show()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun chooseInstalledModel() {
@@ -3942,7 +4261,7 @@ class AgentActivity : Activity() {
     private fun chooseInstalledModel(models: List<ImportedLocalModel>) {
         if (models.isEmpty()) {
             refreshLocalModelUi()
-            Toast.makeText(this, "NO MODEL · importiere zuerst eine .litertlm-Datei.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Noch kein Sprachmodell vorhanden. Wähle zuerst „Modelldatei importieren“.", Toast.LENGTH_LONG).show()
             return
         }
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) {
@@ -3968,7 +4287,7 @@ class AgentActivity : Activity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onFailure {
                     localRuntimeError = it.message ?: "Model compatibility could not be verified."
-                    Toast.makeText(this, "Modellfehler: ${it.message ?: "Kompatibilität unbekannt"}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, ContinuumUiCopy.modelFailure(it.message), Toast.LENGTH_LONG).show()
                 }
                 if (result.isSuccess) localRuntimeError = null
                 refreshLocalModelUi()
@@ -4028,7 +4347,8 @@ class AgentActivity : Activity() {
                     loadModel(model)
                 }.onFailure { error ->
                     localRuntimeError = error.message ?: "Model import failed."
-                    addAssistantMessage("Modellimport fehlgeschlagen: ${error.message ?: "Kompatibilität unbekannt"}")
+                    addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
+                        ContinuumUiCopy.modelFailure(error.message))
                     refreshLocalModelUi()
                 }
             }
@@ -4054,13 +4374,13 @@ class AgentActivity : Activity() {
             )
         }
         val label = when (state) {
-            LocalModelUiState.NO_MODEL -> "NO MODEL"
-            LocalModelUiState.INSTALLED -> "INSTALLED"
-            LocalModelUiState.READY -> "READY"
-            LocalModelUiState.LOADING -> "LOADING"
-            LocalModelUiState.GENERATING -> "GENERATING"
-            LocalModelUiState.ERROR -> "ERROR"
-            LocalModelUiState.OFFLINE -> "OFFLINE"
+            LocalModelUiState.NO_MODEL -> "KEIN MODELL"
+            LocalModelUiState.INSTALLED -> "INSTALLIERT"
+            LocalModelUiState.READY -> "BEREIT"
+            LocalModelUiState.LOADING -> "LÄDT"
+            LocalModelUiState.GENERATING -> "ARBEITET"
+            LocalModelUiState.ERROR -> "FEHLER"
+            LocalModelUiState.OFFLINE -> "LOKAL"
         }
         val color = when (state) {
             LocalModelUiState.READY -> GREEN
@@ -4069,31 +4389,31 @@ class AgentActivity : Activity() {
             LocalModelUiState.OFFLINE, LocalModelUiState.NO_MODEL, LocalModelUiState.INSTALLED -> MUTED
         }
         // the own learning core is always active; a language model is shown once it exists
-        localBadge.text = if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) "● KERN AKTIV"
+        localBadge.text = if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) "● BASIS BEREIT"
             else "● MODELL $label"
         localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
         val card = modelCardText ?: return
         val shown = loaded ?: models.firstOrNull()
         card.text = when {
-            localRuntimeError != null -> "ERROR · ${localRuntimeError!!.take(256)}"
-            modelImportActive -> "LOADING · Datei wird geprüft und sicher importiert."
-            modelUnloading -> "LOADING · Modell wird entladen."
+            localRuntimeError != null ->
+                "Das Sprachmodell kann derzeit nicht verwendet werden.\n" +
+                    ContinuumUiCopy.modelFailure(localRuntimeError) +
+                    "\nTechnischer Hinweis: " + localRuntimeError!!.take(160)
+            modelImportActive -> "Die Modelldatei wird geprüft und sicher importiert. Bitte warten …"
+            modelUnloading -> "Das Modell wird beendet. Bitte einen Moment warten …"
             loaded == null && models.isEmpty() ->
-                "NO MODEL · Importiere eine kompatible .litertlm-Datei. Kein Download oder Modellgewicht ist enthalten."
+                "Es ist noch kein Sprachmodell vorhanden.\n" +
+                    "Tippe oben auf „Modelldatei importieren“. " +
+                    "Der lokale Startkern funktioniert auch ohne Modell."
             loaded == null && shown != null ->
-                "${shown.id} · ${shown.version} installiert, noch nicht geladen. Tippe MODELL LADEN.\n" +
-                    "CPU: ${shown.capabilities.supportedBackends.contains(LocalModelBackend.CPU)} · " +
-                    "Funktionen: ${shown.capabilities.functionCalling}"
-            shown != null -> {
-                val caps = shown.capabilities
-                "${shown.id} · ${shown.version} · LiteRT-LM\n" +
-                    "CPU baseline · ${caps.supportedBackends.sortedBy { it.name }.joinToString()} · " +
-                    "Text ${caps.text} · Vision ${caps.vision} · Audio ${caps.audio} · " +
-                    "Function calling ${caps.functionCalling} · Context ${caps.maxContextTokens} tokens\n" +
-                    if (state == LocalModelUiState.OFFLINE) "LOCAL-only · Cloud wird nicht verwendet." else "Ready for on-device inference."
-            }
-            else -> "Kompatibilität des Modells ist unbekannt."
+                "Das Modell „" + shown.id + "“ (Version " + shown.version + ") ist vorhanden, " +
+                    "aber noch nicht aktiv. Tippe auf „Modell laden“."
+            shown != null ->
+                "Sprachmodell „" + shown.id + "“ ist geladen.\n" +
+                    "Du kannst jetzt lokale Modellanfragen ausprobieren. " +
+                    "Antworten werden nicht automatisch als Fakten bestätigt."
+            else -> "Modellstatus konnte nicht bestimmt werden. Prüfe die Modellverwaltung."
         }
         localActionButton?.let { button ->
             button.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
@@ -4139,9 +4459,47 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun showConnectivityHelp(part: String) {
+        val title: String
+        val description: String
+        val next: String
+        val action: () -> Unit
+        when (part) {
+            "device" -> {
+                title = "Gerätezugriff"
+                description = if (bridge.isReady())
+                    "Shizuku ist verbunden. Du kannst freigegebene Gerätefunktionen verwenden."
+                else ContinuumUiCopy.deviceBridgeMissing()
+                next = "SYSTEM ANSEHEN"
+                action = { showSystemCenter() }
+            }
+            "web" -> {
+                title = "Internet und Datenschutz"
+                description = "Device AI recherchiert nicht ungefragt. Erst nach deiner Zustimmung " +
+                    "wird die Suchanfrage an einen Suchdienst übertragen. Quellen werden getrennt vom bestätigten Wissen behandelt."
+                next = "RECHERCHE STARTEN"
+                action = { showResearchModeDialog() }
+            }
+            else -> {
+                title = "Was funktioniert schon?"
+                description = "Die lokale Basis ist bereit. Sie kann bestätigte Fakten speichern und einfache " +
+                    "Aufgaben erkennen. Freier KI-Dialog und der Entwicklungsassistent brauchen ein zusätzliches " +
+                    "kompatibles LiteRT-LM-Sprachmodell."
+                next = "MODELLE ANSEHEN"
+                action = { showModelCenter() }
+            }
+        }
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(description)
+            .setNegativeButton("Schließen", null)
+            .setPositiveButton(next) { _, _ -> action() }
+            .show()
+    }
+
     private fun updateShizukuBadge(message: String) {
         val ready = message.startsWith("Bereit")
-        shizukuBadge.text = if (ready) "● SHIZUKU BEREIT" else "● SHIZUKU AUS"
+        shizukuBadge.text = if (ready) "● GERÄT BEREIT" else "● GERÄT AUS"
         shizukuBadge.setTextColor(if (ready) GREEN else AMBER)
         shizukuBadge.background = rounded(
             if (ready) Color.rgb(17, 49, 35) else Color.rgb(51, 39, 18),
@@ -4152,7 +4510,7 @@ class AgentActivity : Activity() {
     }
 
     private fun updateCloudBadge() {
-        cloudBadge.text = "● WEB AUF ANFRAGE"
+        cloudBadge.text = "● WEB FREIGABE"
         cloudBadge.setTextColor(CYAN)
         cloudBadge.background = rounded(PANEL, 14, BORDER)
     }
@@ -4342,7 +4700,9 @@ class AgentActivity : Activity() {
         busy = value
         if (::sendButton.isInitialized) {
             sendButton.isEnabled = true
-            sendButton.text = if (value && activeLocalRequest) "STOPPEN" else if (value) "ARBEITET …" else "SENDEN"
+            sendButton.text = if (value && activeLocalRequest) "STOP" else if (value) "…" else "➤"
+            sendButton.contentDescription = if (value && activeLocalRequest) "Lokale Anfrage abbrechen"
+                else if (value) "Device AI arbeitet" else "Nachricht senden"
             sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
         }
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
@@ -4714,10 +5074,13 @@ class AgentActivity : Activity() {
         }
 
     private fun statusBadge(value: String, color: Int): TextView =
-        textView(value, 11f, color, true).apply {
+        textView(value, 11.5f, color, true).apply {
             gravity = Gravity.CENTER
-            setPadding(dp(9), 0, dp(9), 0)
-            background = rounded(Color.rgb(31, 37, 47), 14, BORDER)
+            setPadding(dp(8), dp(4), dp(8), dp(4))
+            background = roundedGradient(Color.rgb(28, 43, 68),
+                Color.rgb(18, 29, 49), 14, Color.rgb(60, 89, 129))
+            minimumHeight = dp(43)
+            isFocusable = true
         }
 
     private fun chip(label: String): Button =
@@ -4740,16 +5103,19 @@ class AgentActivity : Activity() {
     ): Button =
         Button(this).apply {
             text = label
-            textSize = if (compact) 11.5f else 12.5f
+            textSize = if (compact) 12f else 13.2f
             isAllCaps = false
             setTypeface(typeface, Typeface.BOLD)
             setTextColor(TEXT)
             background = if (accent) {
-                roundedGradient(Color.rgb(27, 133, 246), Color.rgb(53, 78, 236), 13, Color.rgb(81, 187, 255))
+                roundedGradient(Color.rgb(30, 160, 244), Color.rgb(59, 78, 229),
+                    15, Color.rgb(142, 227, 255))
             } else {
-                roundedGradient(Color.rgb(29, 42, 65), SURFACE, 13, BORDER)
+                roundedGradient(Color.rgb(36, 57, 91), Color.rgb(24, 40, 69),
+                    15, Color.rgb(66, 97, 145))
             }
-            setPadding(if (compact) dp(7) else dp(12), 0, if (compact) dp(7) else dp(12), 0)
+            setPadding(if (compact) dp(8) else dp(12), 0, if (compact) dp(8) else dp(12), 0)
+            elevation = dp(2).toFloat()
             minWidth = 0
             minHeight = 0
         }
@@ -4757,7 +5123,9 @@ class AgentActivity : Activity() {
     private fun verticalCard(): LinearLayout =
         LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(19, 35, 59), Color.rgb(19, 28, 46), 18, BORDER)
+            background = roundedGradient(Color.rgb(19, 40, 71),
+                Color.rgb(15, 26, 47), 21, Color.rgb(51, 90, 142))
+            elevation = dp(2).toFloat()
         }
 
     private fun textView(
@@ -4771,6 +5139,7 @@ class AgentActivity : Activity() {
             textSize = size
             setTextColor(color)
             if (bold) setTypeface(typeface, Typeface.BOLD)
+            setLineSpacing(dp(1).toFloat(), 1.03f)
         }
 
     private fun rounded(

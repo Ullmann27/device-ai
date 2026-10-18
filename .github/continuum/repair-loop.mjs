@@ -6,6 +6,7 @@ import {parseKotlinDiagnostics,readJUnitDirectory,parseJUnit,parseJsErrorText,sh
 import {proposeCandidates,applyEdits} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
+import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -16,7 +17,7 @@ import {buildIndex,collectKotlin} from './code-analyzer.mjs';
  */
 export const BRANCH_PREFIX='continuum-agent/';
 
-const DEPTH=Number(process.env.CONTINUUM_REPAIR_DEPTH??0);
+const DEPTH=strictRepairDepth(process.env.CONTINUUM_REPAIR_DEPTH);
 function run(cmd,args,{cwd,timeoutMs=120000,env}={}){
   const started=Date.now();
   // Child checks see the depth, so a test suite cannot start a nested repair loop.
@@ -289,26 +290,71 @@ export function rankCandidates(candidates,stats=[],failedIds=new Set()){
     b.score-a.score||a.id.localeCompare(b.id));
 }
 
+/** Observe a neural ranking without granting any authority over execution.
+ * All inputs are independent copies. Even a malicious, throwing, or corrupted
+ * observer cannot change the candidates or report a validated repair.
+ */
+export function runRepairShadowObserver(observer,candidates,ranked,stats,failedIds,diagnostics){
+ if(observer===null||observer===undefined)return null;
+ const active=ranked.map(c=>c.id);
+ try{
+  if(typeof observer!=='function')throw Error('UNTRUSTED_SHADOW_OBSERVER');
+  const proposal=observer({candidates:structuredClone(candidates),
+   stats:structuredClone(stats),failedIds:new Set(failedIds),
+   diagnostics:structuredClone(diagnostics)});
+  const order=proposal?.shadowOrder;
+  if(!Array.isArray(order)||order.length!==active.length||
+     order.some(id=>typeof id!=='string')||
+     new Set(order).size!==order.length||
+     order.some(id=>!active.includes(id)))
+    throw Error('INVALID_CEFR_SHADOW_ORDER');
+  const byId=new Map(ranked.map(c=>[c.id,repairCandidateRiskTier(c.strategy)]));
+  for(let i=1;i<order.length;i++)
+   if(byId.get(order[i-1])>byId.get(order[i]))
+    throw Error('CEFR_SHADOW_TIER_VIOLATION');
+  return {mode:proposal.mode==='CEFR_DEV_SHADOW'?'CEFR_DEV_SHADOW':'SHADOW_NO_MODEL',
+   candidateCount:active.length,reordered:order.some((id,i)=>id!==active[i]),
+   modelSha256:/^[a-f0-9]{64}$/.test(proposal.modelSha256??'')?
+    proposal.modelSha256:null,
+   productionOrder:active,shadowOrder:order};
+ }catch{
+  return {mode:'CEFR_SHADOW_REJECTED',candidateCount:active.length,
+   reordered:false,modelSha256:null,productionOrder:active,shadowOrder:active};
+ }
+}
+
 /**
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{}}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
-  const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),baseline:null,attempts:[],verified:null,outcome:null};
+  // This worker ranks deterministic repair strategies. An installed model
+  // elsewhere does not prove that this session invoked generative inference.
+  const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),
+    inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
+      reason:'No generative model is invoked by this repair pipeline'},
+    baseline:null,attempts:[],verified:null,outcome:null};
   const baseline=runChain(chain,wt,out,{deadline});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
-  if(baseline.passed){report.outcome='NO_FAILURE';return report;}
+  if(baseline.passed)return finishRepairReport(report,'NO_FAILURE');
   const actionable=baseline.diagnostics.filter(d=>d.file);
-  if(!actionable.length){report.outcome='NO_CODE_DIAGNOSTIC';report.baselineTail=baseline.results.at(-1)?.outputTail;return report;}
+  if(!actionable.length){
+    report.baselineTail=baseline.results.at(-1)?.outputTail;
+    return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
+  }
   const ctx=context(wt,base,ledger.attempts);
   const failedIds=new Set(ledger.attempts.filter(a=>a.outcome!=='VERIFIED').map(a=>a.diagnostic+':'+a.candidate));
-  const ranked=rankCandidates(proposeCandidates(actionable,ctx),ledger.experiences,failedIds);
+  const proposals=proposeCandidates(actionable,ctx);
+  const ranked=rankCandidates(proposals,ledger.experiences,failedIds);
+  const shadow=runRepairShadowObserver(shadowObserver,proposals,ranked,
+    ledger.experiences,failedIds,actionable);
+  if(shadow!==null)report.cefrShadow=shadow;
   log(`${ranked.length} candidates: `+ranked.map(c=>c.strategy+'@'+c.score).join(', '));
   const perStrategy=new Map();
   for(const c of ranked){
@@ -368,9 +414,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     }
   }
   if(!report.verified)resetWorktree(wt,base);
-  report.outcome=report.verified?'VERIFIED':'NO_VERIFIED_REPAIR';
-  report.finishedAt=new Date().toISOString();
-  return report;
+  return finishRepairReport(report,report.verified?'VERIFIED':'NO_VERIFIED_REPAIR');
 }
 
 /** Commit the verified worktree state on a namespaced proposal branch (local only). */

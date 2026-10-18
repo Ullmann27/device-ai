@@ -71,7 +71,7 @@ test('ledger learns per diagnostic kind and strategy and skips proven failures',
  const report={base:'a'.repeat(40),chain:'node',outcome:'VERIFIED',finishedAt:'2026-01-01T00:00:00Z',verified:{patchSha256:'b'.repeat(64),strategy:'S'},
   attempts:[{candidate:'c1c1c1c1',diagnostic:'d1d1',diagnosticKind:'REFERENCE_ERROR',strategy:'JS_TYPO_REFERENCE',outcome:'FAILED_TESTS',edits:[],score:0.5},
    {candidate:'c2c2c2c2',diagnostic:'d1d1',diagnosticKind:'REFERENCE_ERROR',strategy:'JS_MISSING_IMPORT',outcome:'VERIFIED',edits:[],score:0.6}]};
- const ledger=recordSession(emptyLedger(),report,{trigger:'test'});
+ const ledger=recordSession(emptyLedger(),report,{trigger:'test',independentPass:true});
  const stats=Object.fromEntries(ledger.experiences.map(e=>[e.kind,[e.successes,e.failures]]));
  assert.deepEqual(stats,{'REFERENCE_ERROR|JS_MISSING_IMPORT':[1,0],'REFERENCE_ERROR|JS_TYPO_REFERENCE':[0,1]});
  const ranked=rankCandidates([
@@ -254,7 +254,7 @@ test('end-to-end: injected fault is reproduced, repaired in isolation, verified 
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });
 
-import {evidenceSufficient,runProfile,parseUnifiedZeroHunks} from './repair-loop.mjs';
+import {evidenceSufficient,parseUnifiedZeroHunks} from './repair-loop.mjs';
 import {revertHunk} from './repair-strategies.mjs';
 
 test('hunk revert handles modification, insertion and deletion hunks exactly',()=>{

@@ -27,7 +27,7 @@ class DevelopmentUiControllerTest {
         val c = controller()
         assertNull(c.start(modelReady = false))
         assertEquals(DevelopmentUiPhase.FAILED, c.state.phase)
-        assertTrue(c.state.error!!.contains("no cloud fallback"))
+        assertTrue(c.state.error!!.contains("keinen Cloud-Ersatz"))
         assertFalse(c.state.canExport)
     }
 
@@ -62,7 +62,7 @@ class DevelopmentUiControllerTest {
         val c = controller()
         c.start(true)
         c.stop()
-        assertEquals("Stopping…", c.state.status)
+        assertEquals("Wird beendet …", c.state.status)
         c.onOutcome(DevelopmentOutcome(DevelopmentJobState.CANCELLED, null, DevelopmentFailure(DevelopmentFailureKind.MODEL_FAILURE, "c")))
         assertEquals(DevelopmentUiPhase.CANCELLED, c.state.phase)
         assertNull(c.exportText())
@@ -77,7 +77,7 @@ class DevelopmentUiControllerTest {
         assertEquals("Fix greeting", c.state.goal)
         c.onOutcome(DevelopmentOutcome(DevelopmentJobState.TIMED_OUT, null, DevelopmentFailure(DevelopmentFailureKind.MODEL_FAILURE, "late")))
         assertEquals(DevelopmentUiPhase.FAILED, c.state.phase)
-        assertEquals("Timed out.", c.state.status)
+        assertEquals("Zeitlimit erreicht.", c.state.status)
         assertTrue(c.state.canEdit)
     }
 
