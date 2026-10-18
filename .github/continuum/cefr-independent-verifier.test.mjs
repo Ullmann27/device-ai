@@ -42,12 +42,19 @@ function fixture(healthy=false){
   evidence:{sufficient:true,reasons:[]},
   tests:[{profile:'node-continuum',passed:true,testProfile:true,
    tests:{executed:1,failed:0,skipped:0}}]};
+ const negative={candidate:'fa11ed000001',strategy:'JS_TYPO_REFERENCE',
+  diagnostic,diagnosticKind:'REFERENCE_ERROR',description:'wrong numeric value',
+  edits:[{file:'backend/src/calc.mjs',oldText:'export const calculate = () => 1;',
+   newText:'export const calculate = () => 0;'}],
+  outcome:'FAILED_TESTS',
+  tests:[{profile:'node-continuum',passed:false,testProfile:true,
+   tests:{executed:1,failed:1,skipped:0}}]};
  const report={schemaVersion:1,base,chain:'node',outcome:'VERIFIED',
   baseline:{passed:false,diagnostics:[{fingerprint:diagnostic,kind:'REFERENCE_ERROR',
    message:'incorrect calculation',file:'backend/src/calc.mjs'}],
    results:[{profile:'node-continuum',passed:false,testProfile:true,
     tests:{executed:1,failed:1,skipped:0,passed:0}}]},
-  attempts:[success],verified:{candidate:success.candidate,strategy:success.strategy,
+  attempts:[negative,success],verified:{candidate:success.candidate,strategy:success.strategy,
    files:['backend/src/calc.mjs'],patch:patchText,patchSha256:sha256(patchText),
    description:success.description,tests:success.tests}};
  validateVerifiedReport(report,patchText);
@@ -66,6 +73,7 @@ test('independent CEFR execution reproduces failure, applies patch, runs actual 
   assert.equal(evidence.profiles.length,1);
   assert.equal(evidence.profiles[0].profile,'node-continuum');
   assert.ok(evidence.profiles[0].executed>=1);
+  assert.deepEqual(evidence.verifiedNegatives,['fa11ed000001']);
   assert.equal(git(f.root,['rev-parse','HEAD']).trim(),f.base);
   assert.equal(git(f.root,['status','--porcelain']),'');
  }finally{f.clean();}
