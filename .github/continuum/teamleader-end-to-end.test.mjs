@@ -77,6 +77,24 @@ test('actual offline Teamleader repairs a broken Git fixture and retains only a 
   assert.ok(ledger.attempts.some(a=>a.outcome==='VERIFIED'));
   assert.equal(ledger.sessions.at(-1).outcome,'VERIFIED');
   assert.ok(fs.existsSync(path.join(f.stateDir,'teamleader-state.json')));
+  assert.deepEqual(saved.inference,{
+   mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
+   reason:'No generative model is invoked by this repair pipeline'
+  },'a deterministic repair must not masquerade as local language-model inference');
+  assert.equal(saved.independent.passed,true);
+  assert.equal(saved.backlogSync.status,'RECORDED');
+  const backlog=new BacklogStore(path.join(f.stateDir,'development-backlog.json'),{
+   actor:'continuum-teamleader'});
+  const matching=backlog.read().doc.tasks.filter(t=>
+   t.source==='repair-loop'&&t.kind==='REPAIR');
+  assert.equal(matching.length,1,'a real baseline repair should create exactly one backlog task');
+  assert.equal(matching[0].state,'DONE');
+  assert.ok(matching[0].evidence.some(e=>e.type==='TEST_RUN'&&
+   e.profiles.some(p=>p.passed&&p.executed>0)));
+  const review=fs.readFileSync(path.join(path.dirname(result.artifact),'review-summary.md'),'utf8');
+  assert.match(review,/DETERMINISTIC_ONLY/);
+  assert.match(review,/Independent check: PASSED/);
+  assert.match(review,/Automatic merge: NEVER/);
  } finally {fs.rmSync(f.root,{recursive:true,force:true});}
 });
 test('scheduled owner task completes full real Git repair and independent verification',
@@ -128,6 +146,10 @@ test('actual passing Git fixture generates no fake repair, patch, or changed sou
   assert.equal(saved.verified,null);
   assert.ok(!fs.existsSync(path.join(path.dirname(result.artifact),'repair.patch')));
   assert.equal(saved.handoffs.messages.at(-1).event,'NO_AUTOMATIC_MERGE');
+  assert.equal(saved.backlogSync.applied,0);
+  assert.equal(saved.backlogSync.status,'SKIPPED');
+  assert.ok(!fs.existsSync(path.join(f.stateDir,'development-backlog.json')),
+   'clean baseline must not invent a repair task');
   assert.equal(f.git('status','--porcelain'),'');
  } finally {fs.rmSync(f.root,{recursive:true,force:true});}
 });
