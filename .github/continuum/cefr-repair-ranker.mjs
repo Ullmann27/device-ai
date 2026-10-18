@@ -79,7 +79,11 @@ function validatedIndependentProof(verify,report,patchText){
     profiles.some(name=>!proof.profiles.some(p=>p?.profile===name&&
      p.passed===true&&p.failed===0&&(!TEST_PROFILES.includes(name)||
       (Number.isSafeInteger(p.executed)&&p.executed>0))))||
-    proof.profiles.some(p=>!profiles.includes(p?.profile)))
+    proof.profiles.some(p=>!profiles.includes(p?.profile))||
+    !Array.isArray(proof.verifiedNegatives)||proof.verifiedNegatives.length>3||
+    new Set(proof.verifiedNegatives).size!==proof.verifiedNegatives.length||
+    proof.verifiedNegatives.some(id=>typeof id!=='string'||
+     !report.attempts?.some(a=>a.candidate===id&&a.outcome==='FAILED_TESTS')))
 
   throw Error('INDEPENDENT_VERIFICATION_FAILED');
  return proof;
@@ -97,10 +101,10 @@ export function trainCefrCandidateFromVerifiedReport({
  if(typeof verifyIndependent!=='function')
   return rejection('INDEPENDENT_VERIFIER_REQUIRED',bytes);
 
- let winningAttempt;
+ let winningAttempt,independentProof;
  try{
   winningAttempt=validateVerifiedReport(report,patchText);
-  validatedIndependentProof(verifyIndependent,report,patchText);
+  independentProof=validatedIndependentProof(verifyIndependent,report,patchText);
  }catch(e){
   return rejection('UNVERIFIED_REPAIR: '+String(e.message).slice(0,120),bytes);
  }
@@ -111,10 +115,11 @@ export function trainCefrCandidateFromVerifiedReport({
  try{validateCefrHoldout(holdoutCases,query);}
  catch(e){return rejection(String(e.message),bytes);}
  const failed=(report.attempts??[]).filter(a=>
+  independentProof.verifiedNegatives.includes(a.candidate)&&
   a.diagnostic===winnerId&&a.outcome==='FAILED_TESTS'&&
   Array.isArray(a.tests)&&a.tests.some(t=>t.passed===false||
    (t.testProfile&&t.tests?.failed>0)));
- if(failed.length===0)return rejection('NO_EXECUTED_HARD_NEGATIVES',bytes);
+ if(failed.length===0)return rejection('NO_INDEPENDENT_HARD_NEGATIVES',bytes);
  const positive=formatCandidateTarget(winningAttempt);
  const negatives=[...new Set(failed.map(formatCandidateTarget))]
   .filter(s=>s!==positive).slice(0,6);
