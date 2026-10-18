@@ -332,7 +332,12 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
-  const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),baseline:null,attempts:[],verified:null,outcome:null};
+  // This worker ranks deterministic repair strategies. An installed model
+  // elsewhere does not prove that this session invoked generative inference.
+  const report={schemaVersion:1,base,chain,startedAt:new Date().toISOString(),
+    inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
+      reason:'No generative model is invoked by this repair pipeline'},
+    baseline:null,attempts:[],verified:null,outcome:null};
   const baseline=runChain(chain,wt,out,{deadline});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
