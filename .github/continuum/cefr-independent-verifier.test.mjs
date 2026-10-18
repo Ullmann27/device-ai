@@ -13,7 +13,7 @@ const sha256=x=>crypto.createHash('sha256').update(x).digest('hex');
 function git(cwd,args){
  const r=spawnSync('git',args,{cwd,encoding:'utf8',timeout:12000});
  assert.equal(r.status,0,r.stderr);
- return r.stdout.trim();
+ return r.stdout;
 }
 
 function fixture(healthy=false){
@@ -29,7 +29,7 @@ function fixture(healthy=false){
  git(root,['init','-q']);git(root,['add','.']);
  git(root,['-c','user.name=CEFR Fixture','-c','user.email=cefr@example.invalid',
   'commit','-qm','baseline']);
- const base=git(root,['rev-parse','HEAD']);
+ const base=git(root,['rev-parse','HEAD']).trim();
  fs.writeFileSync(source,'export const calculate = () => '+(healthy?'3':'2')+';\n');
  const patchText=git(root,['diff','--binary',base]);
  git(root,['checkout','--','backend/src/calc.mjs']);
@@ -66,7 +66,7 @@ test('independent CEFR execution reproduces failure, applies patch, runs actual 
   assert.equal(evidence.profiles.length,1);
   assert.equal(evidence.profiles[0].profile,'node-continuum');
   assert.ok(evidence.profiles[0].executed>=1);
-  assert.equal(git(f.root,['rev-parse','HEAD']),f.base);
+  assert.equal(git(f.root,['rev-parse','HEAD']).trim(),f.base);
   assert.equal(git(f.root,['status','--porcelain']),'');
  }finally{f.clean();}
 });
