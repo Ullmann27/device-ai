@@ -55,7 +55,7 @@ proof="$(node -e 'const fs=require("node:fs");const data=JSON.parse(fs.readFileS
 verified="$(node .github/continuum/m4-local-gate.mjs --verify "$proof")" || fail 'M4 proof verifier failed'
 node -e 'const result=JSON.parse(process.argv[1]);if(result.valid!==true||result.releaseReady!==true||result.proof!==process.argv[2]||result.head!==process.argv[3])process.exit(1)' \
   "$verified" "$proof" "$actual_sha" || fail 'M4 proof verifier did not confirm release readiness for this commit'
-printf 'M4 proof passed. This does not replace Android lint, cross-runtime parity, or a real-device test.\n'
+printf 'M4 proof passed: Preview APK, Android lint, parity and mandatory repair evidence verified. A real-device test is still required.\n'
 # Machine-readable path is emitted only after verification of the immutable
 # commit, independent repair evidence and SHA-256 of the built preview APK.
 printf 'CONTINUUM_VERIFIED_M4_REPORT=%s\n' "$proof"
