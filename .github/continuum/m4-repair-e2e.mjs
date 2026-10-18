@@ -8,7 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {strictRepairDepth} from './repair-cycle-safety.mjs';
-import {verifyJUnitXml} from './m4-junit-evidence.mjs';
+import {verifyJUnitXml,structuralJUnitMarkup} from './m4-junit-evidence.mjs';
 
 export const MANDATORY_REPAIR_CASES=Object.freeze([
  'end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
@@ -66,7 +66,7 @@ export function verifyRepairE2eRecord(evidenceDirectory,record){
   if(crypto.createHash('sha256').update(raw).digest('hex')!==record.sha256)return false;
   const summary=verifyJUnitXml(raw.toString('utf8'));
   if(summary.executed!==record.executed||summary.failed!==0)return false;
-  return verifyMandatoryCases(raw.toString('utf8'))===MANDATORY_REPAIR_CASES.length;
+  return verifyMandatoryCases(structuralJUnitMarkup(raw.toString('utf8')))===MANDATORY_REPAIR_CASES.length;
  }catch{return false;}
 }
 
@@ -103,7 +103,7 @@ export function runRepairE2e(worktree,outDirectory,deadline){
    ' '+(child.stderr??'').slice(-500));
  const bytes=readRegularXml(reportFile);
  const summary=verifyJUnitXml(bytes.toString('utf8'));
- verifyMandatoryCases(bytes.toString('utf8'));
+ verifyMandatoryCases(structuralJUnitMarkup(bytes.toString('utf8')));
  const record={passed:true,executed:summary.executed,
   mandatoryRepairs:[...MANDATORY_REPAIR_CASES],
   sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
