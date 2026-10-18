@@ -81,6 +81,25 @@ test('symlinked parent evidence directory cannot validate a release proof',
  }finally{f.clean();}
 });
 
+test('repair receipt verifier parses exactly the same JUnit bytes it hashes',
+ {skip:nested},()=>{
+ const f=mockCheckout();
+ try{
+  const report=runRepairE2e(f.root,f.evidence,Date.now()+15000);
+  const proof=path.join(f.evidence,'repair-e2e-junit.xml');
+  const readFile=fs.readFileSync;
+  let reads=0;
+  fs.readFileSync=function(...args){
+   if(args[0]===proof)reads++;
+   return readFile.apply(this,args);
+  };
+  try{
+   assert.equal(verifyRepairE2eRecord(f.evidence,report),true);
+  }finally{fs.readFileSync=readFile;}
+  assert.equal(reads,1,'the evidence must be read once, not swapped between hash and parser');
+ }finally{f.clean();}
+});
+
 test('symlinked proof and forged result counters are rejected',{skip:nested},()=>{
  const f=mockCheckout();
  try{
