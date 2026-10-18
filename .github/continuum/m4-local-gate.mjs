@@ -198,6 +198,53 @@ export function nextGateStage(previous,expectedProfiles){
  });
 }
 
+/**
+ * Runs the fixed cross-runtime parity contract inside the same Android gate.
+ * No model, network, arbitrary script or shell text is accepted from a task.
+ * Node prepares inputs, Kotlin consumes and writes the roundtrip, then Node
+ * verifies that the Android execution produced the expected artifacts.
+ */
+export function runAndroidParityStage({wt,out,deadline,runAndroid,executor=spawnSync}){
+ if(typeof wt!=='string'||typeof out!=='string'||typeof runAndroid!=='function'||
+    !Number.isSafeInteger(deadline))throw Error('Invalid Android parity stage arguments');
+ const parityDir=path.join(out,'parity');
+ fs.mkdirSync(parityDir,{recursive:true,mode:0o700});
+ const contracts=[
+  {script:'.github/continuum/backlog-fixtures.mjs',dir:'backlog',prepare:'roundtrip-prepare',verify:'roundtrip-verify',env:'CONTINUUM_BACKLOG_ROUNDTRIP_DIR'},
+  {script:'.github/continuum/contrastive-parity.mjs',dir:'contrastive',prepare:'prepare',verify:'verify',env:'CONTINUUM_CONTRASTIVE_PARITY_DIR'},
+  {script:'.github/continuum/cre-parity.mjs',dir:'cre1',prepare:'prepare',verify:'verify',env:'CONTINUUM_CRE1_PARITY_DIR'}
+ ];
+ const call=(contract,stage)=>{
+  const remaining=deadline-Date.now();
+  if(remaining<=0)throw Error('Parity '+stage+' deadline exhausted');
+  const result=executor(process.execPath,
+   [path.join(wt,contract.script),contract[stage],path.join(parityDir,contract.dir)],
+   {cwd:wt,encoding:'utf8',timeout:Math.min(remaining,120_000),shell:false,
+    maxBuffer:4*1024*1024,env:{...process.env,GIT_TERMINAL_PROMPT:'0'}});
+  if(result.error||result.signal||result.status!==0)
+   throw Error('PARITY_'+stage.toUpperCase()+': '+contract.script+' failed: '+
+    String(result.error?.message??result.stderr??result.stdout??'unknown').slice(-300));
+ };
+ for(const contract of contracts){
+  fs.mkdirSync(path.join(parityDir,contract.dir),{recursive:true,mode:0o700});
+  call(contract,'prepare');
+ }
+ const prior=new Map(contracts.map(c=>[c.env,process.env[c.env]]));
+ let android;
+ try{
+  for(const c of contracts)process.env[c.env]=path.join(parityDir,c.dir);
+  android=runAndroid();
+ }finally{
+  for(const [key,value] of prior){
+   if(value===undefined)delete process.env[key];else process.env[key]=value;
+  }
+ }
+ if(android?.passed===true){
+  for(const contract of contracts)call(contract,'verify');
+ }
+ return android;
+}
+
 function safeStage(fn){
  try{return {result:fn(),error:null};}
  catch(e){return {result:null,error:String(e?.message??e).slice(0,500)};}
@@ -246,7 +293,8 @@ export function runM4Gate({root=process.cwd(),out=path.join(os.homedir(),'.local
    if(nodeAndRepairReady){
     const androidDir=path.join(outDir,'android');
     fs.mkdirSync(androidDir,{recursive:true,mode:0o700});
-    const ar=safeStage(()=>runChain('android',wt,androidDir,{deadline}));
+    const ar=safeStage(()=>runAndroidParityStage({wt,out:androidDir,deadline,
+     runAndroid:()=>runChain('android',wt,androidDir,{deadline})}));
     report.android=ar.result;
     if(ar.error)report.errors.push('ANDROID: '+ar.error);
    }
