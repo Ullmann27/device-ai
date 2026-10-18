@@ -405,10 +405,10 @@ export async function localTeamleaderDriver(){
     }
    }
    let result;
+   const deadline=Date.now()+budgetMinutes*60_000;
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
-      maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000,
-      shadowObserver});
+      maxCandidates:3,deadline,shadowObserver});
     // The first successful worktree is not an independent verdict.
     // Reapply the patch to a fresh second worktree and rerun the fixed checks.
     if(result.outcome==='VERIFIED'){
@@ -422,9 +422,7 @@ export async function localTeamleaderDriver(){
       git(independent,['apply','--binary',patchFile]);
       const secondOut=path.join(out,'independent-check');
       fsApi.mkdirSync(secondOut,{recursive:true,mode:0o700});
-      const verified=runChain('node',independent,secondOut,{
-       deadline:Date.now()+budgetMinutes*60_000
-      });
+      const verified=runChain('node',independent,secondOut,{deadline});
       const suff=evidenceSufficient(result.baseline.results,verified.results);
       const profiles=verified.results.map(r=>({
        profile:r.profile,passed:r.passed,executed:r.tests?.executed??0,
@@ -444,15 +442,15 @@ export async function localTeamleaderDriver(){
     // Handoffs describe bounded work performed, never an automatic merge.
     result.handoffs=summarizeRepairHandoffs(result);
    } finally {removeWorktree(root,wt);}
-   fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(result,null,2)+'\n');
+   const publishable=result.outcome!=='VERIFIED'||result.independent?.passed===true;
+   const publicReport={...result,
+    ...(publishable?{}:{outcome:'NO_VERIFIED_REPAIR',verified:null})};
+   fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
    saveLedger(ledgerPath,recordSession(ledger,result,{
     trigger:'local-teamleader',
     independentPass:result.outcome==='VERIFIED'?result.independent?.passed===true:undefined
    }));
-   const publishable=result.outcome!=='VERIFIED'||result.independent?.passed===true;
-   return {...result,
-    ...(publishable?{}:{outcome:'NO_VERIFIED_REPAIR',verified:null}),
-    artifact:path.join(out,'report.json')};
+   return {...publicReport,artifact:path.join(out,'report.json')};
   }
  };
 }
