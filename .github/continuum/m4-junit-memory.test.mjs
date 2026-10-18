@@ -103,3 +103,23 @@ test('three-profile M4 acceptance reads its mandatory receipt only once',()=>{
   assert.equal(repairReads,1,'M4 acceptance must not re-read a swapped receipt');
  });
 });
+
+test('valid-looking JUnit testcase tags nested inside system-out are not real tests',()=>{
+ const names=['end-to-end: injected fault is reproduced, repaired in isolation, verified and committed',
+  'regression search reverts only the culprit hunk and keeps unrelated changes',
+  'a module that crashes while loading is located and gets its missing import back'];
+ const fake='<?xml version="1.0"?><testsuites><system-out>'+
+  names.map(n=>'<testcase name="'+n+'"/>').join('')+'</system-out>'+
+  ['tests 3','pass 3','fail 0','cancelled 0','skipped 0','todo 0']
+   .map(n=>'<!-- '+n+' -->').join('')+'</testsuites>';
+ assert.throws(()=>verifyJUnitXml(fake),/outside test containers/);
+});
+
+test('structural XML verifier rejects duplicate roots and mismatched closing tags',()=>{
+ const summary=['tests 1','pass 1','fail 0','cancelled 0','skipped 0','todo 0']
+  .map(n=>'<!-- '+n+' -->').join('');
+ for(const bad of ['<testsuites><testcase name="t"/></testsuites><testsuites/>',
+  '<testsuites><testcase name="t"/></testsuite>']){
+  assert.throws(()=>verifyJUnitXml('<?xml version="1.0"?>'+bad+summary),/JUnit|Malformed/);
+ }
+});
