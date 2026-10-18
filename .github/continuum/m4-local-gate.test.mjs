@@ -88,7 +88,7 @@ test('stabilization gate refuses downstream execution after incomplete or failed
  assert.equal(nextGateStage({...node,results:[
   {...node.results[0],tests:{executed:12,failed:0,skipped:1}},
   node.results[1]
- ]},nodeNames),false,'mandatory Node profile with skips must not authorize Android');
+ ]},nodeNames),true,'nested Node repair tests may skip guarded recursion; repair E2E proof is mandatory separately');
  assert.equal(nextGateStage({...android,results:[
   android.results[0],{...android.results[1],tests:{executed:38,failed:0,skipped:3}}
  ]},androidNames),false,'skipped Kotlin parity tests must not authorize a release');
@@ -109,6 +109,15 @@ test('gate cannot certify zero tests or failed APK as successful',()=>{
   {profile:'android-unit',passed:true,exitCode:0,testProfile:true,tests:{executed:3,failed:0}}
  ]};
  assert.equal(gateSummary(valid,null,null,false,fixtureRepairRecord()).passed,true);
+ assert.equal(gateSummary({...valid,results:[
+  {...valid.results[0],tests:{executed:4,failed:0,skipped:2}}
+ ]},null,null,false,fixtureRepairRecord()).passed,true,
+ 'Nested Node suite skips alone do not falsify a separately executed repair E2E proof');
+ assert.equal(gateSummary({...valid,results:[
+  {...valid.results[0],tests:{executed:4,failed:0,skipped:2}}
+ ]},null,null,false,null).passed,false,
+ 'Mandatory independent repair E2E evidence must still be present');
+
  assert.equal(gateSummary(valid,null,null,true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:1,timedOut:false},true).passed,false);
  assert.equal(gateSummary(valid,valid,{exitCode:0,timedOut:false},true).passed,false,
