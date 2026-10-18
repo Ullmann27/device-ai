@@ -3117,7 +3117,7 @@ class AgentActivity : Activity() {
         }
         AlertDialog.Builder(this)
             .setTitle("Device AI · Internet auf Nachfrage")
-            .setMessage("Gib ein Thema oder eine HTTPS-URL ein. Erst nach einmaliger Freigabe wird ein Thema an die öffentliche Bing-Websuche gesendet; bei fehlenden Ergebnissen wird Wikipedia versucht. " +
+            .setMessage("Gib ein Thema oder eine HTTPS-URL ein. Im Modus ASK benötigt jede Suche eine eigene Freigabe; ALWAYS_ON erlaubt öffentliche Recherche ohne erneuten Dialog. Bing-Websuche mit Wikipedia-Fallback. " +
                 "Es werden maximal wenige Webseiten mit festem Zeit- und Datenbudget geprüft. " +
                 "Die Ergebnisse werden nicht automatisch als Wahrheit gespeichert.")
             .setView(topic)
@@ -3143,8 +3143,8 @@ class AgentActivity : Activity() {
         }
     }
 
-    /** Only this positive UI action mints a session. A dialog's exact ticket is
-     * consumed, so a stale callback cannot approve a replacement request. */
+    /** ASK needs a single explicit dialog approval. ALWAYS_ON uses only the
+     * owner's persisted opt-in and mints a revocable exact-request session. */
     private fun confirmWebRequest(call:at.heinz.deviceai.cognitive.WebToolRequest,mode:ResearchMode,
         completed:(at.heinz.deviceai.cognitive.ApprovedWebResearchSession?)->Unit) {
         syncInternetMode()
