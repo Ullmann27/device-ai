@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
 import android.widget.TextView
 import java.io.File
 import java.io.FileOutputStream
@@ -37,6 +38,8 @@ class ContinuumVisualInstrumentation : Instrumentation() {
         var orb: ContinuumHologramView? = null
         var label: TextView? = null
         var originalLabel: CharSequence? = null
+        var homeOrbHeight = 0
+        var homeRoundTripPassed = false
         var failure: Throwable? = null
         try {
             val outputDirectory = File(checkNotNull(targetContext.getExternalFilesDir(null)),
@@ -57,6 +60,7 @@ class ContinuumVisualInstrumentation : Instrumentation() {
                     "The real dashboard hologram is not visible or measured"
                 }
                 assertOrbIsVisible(actualOrb)
+                homeOrbHeight = actualOrb.height
                 val parent = actualOrb.parent as? ViewGroup
                 label = parent?.getChildAt(parent.indexOfChild(actualOrb) + 1) as? TextView
                 originalLabel = label?.text
@@ -81,6 +85,54 @@ class ContinuumVisualInstrumentation : Instrumentation() {
                     SystemClock.sleep(420)
                 }
                 paths += capture(outputDirectory, "state-${state.name.lowercase(Locale.ROOT)}", activity)
+            }
+
+            val testResult = "Darstellungstest: Diese Beispielantwort prüft nur die sichtbare " +
+                "Unterhaltung. Es wurde keine KI-Antwort erzeugt."
+            onMain {
+                checkNotNull(orb).setState(ContinuumHologramView.State.READY)
+                label?.text = "VISUELLER TEST · Beispielantwort"
+                AgentActivity::class.java.getDeclaredMethod("addAssistantMessage", String::class.java)
+                    .apply { isAccessible = true }.invoke(activity, testResult)
+            }
+            SystemClock.sleep(420)
+            var conversationScroll: ScrollView? = null
+            onMain {
+                val message = checkNotNull(findView(activity.window.decorView) {
+                    it is TextView && it.text.toString() == testResult
+                }) { "The assistant test result is missing from the real view tree" }
+                conversationScroll = checkNotNull(scrollParent(message)) {
+                    "The assistant test result has no chat ScrollView"
+                }
+                val chatContainer = checkNotNull(conversationScroll).getChildAt(0)
+                assertVisible(chatContainer, "Chat container")
+                assertVisible(message, "Assistant test result", 95)
+                assertOrbIsVisible(checkNotNull(orb))
+                check(checkNotNull(orb).height <= homeOrbHeight) { "Conversation orb grew beyond the home orb" }
+            }
+            paths += capture(outputDirectory, "conversation-test", activity)
+            onMain {
+                val start = checkNotNull(findView(activity.window.decorView) {
+                    it is TextView && it.contentDescription?.toString() ==
+                        "Zur Startseite mit allen KI-Bereichen"
+                }) { "The conversation has no START control" }
+                assertVisible(start, "START control")
+                check(start.isClickable && start.performClick()) { "START could not be clicked" }
+            }
+            SystemClock.sleep(420)
+            onMain {
+                val actualOrb = checkNotNull(orb)
+                assertOrbIsVisible(actualOrb)
+                check(actualOrb.height == homeOrbHeight) { "START did not restore the full home orb" }
+                val tile = checkNotNull(findView(activity.window.decorView) {
+                    it.isClickable && it.contentDescription?.toString()?.startsWith("Chat. ") == true
+                }) { "START did not restore the home Chat tile" }
+                assertVisible(tile, "Home Chat tile")
+                val homeScroll = checkNotNull(scrollParent(tile)) { "Home Chat tile has no home ScrollView" }
+                check(homeScroll !== conversationScroll && scrollParent(actualOrb) === homeScroll) {
+                    "The restored Chat tile is not in the home dashboard scroll tree"
+                }
+                homeRoundTripPassed = true
             }
         } catch (error: Throwable) {
             failure = error
@@ -108,9 +160,11 @@ class ContinuumVisualInstrumentation : Instrumentation() {
             else "UiAutomation display screenshot")
             putFloat("font_scale", targetContext.resources.configuration.fontScale)
             putString("speaking_input", "Synthetic normalized PCM RMS 0.56; no real TTS claim")
+            putString("conversation_input", "Synthetic Darstellungstest message via existing UI method; no generation")
+            putString("home_roundtrip", if (homeRoundTripPassed) "passed" else "not completed")
             putString("status", if (failure == null) "ok" else "failed")
             putString("stream", if (failure == null)
-                "Captured dashboard and six states using capture_mode=$captureMode " +
+                "Captured dashboard, six states and visible conversation; START restored the home dashboard. capture_mode=$captureMode " +
                     "(${if (captureMode == "view") "native view rendering, not display screenshots" else "display screenshots"}): " +
                     "${paths.joinToString()}\n"
             else "Visual capture failed: ${failure.stackTraceToString()}\n")
@@ -172,6 +226,33 @@ class ContinuumVisualInstrumentation : Instrumentation() {
             }
         }
         return null
+    }
+
+    private fun findView(view: View, predicate: (View) -> Boolean): View? {
+        if (predicate(view)) return view
+        if (view is ViewGroup) {
+            for (index in 0 until view.childCount) {
+                findView(view.getChildAt(index), predicate)?.let { return it }
+            }
+        }
+        return null
+    }
+
+    private fun scrollParent(view: View): ScrollView? {
+        var parent = view.parent
+        while (parent != null) {
+            if (parent is ScrollView) return parent
+            parent = parent.parent
+        }
+        return null
+    }
+
+    private fun assertVisible(view: View, description: String, percent: Int = 1) {
+        val bounds = Rect()
+        check(view.isShown && view.height > 0 && view.getGlobalVisibleRect(bounds) &&
+            bounds.height() * 100 >= view.height * percent) {
+            "$description is hidden or clipped: visible=${bounds.height()}px, measured=${view.height}px"
+        }
     }
 
     /** Carry UI failures back to the worker so finish reports failure instead of hanging. */
