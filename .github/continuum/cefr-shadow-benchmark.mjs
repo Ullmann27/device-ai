@@ -14,8 +14,11 @@ const validOrder=(ids,size)=>Array.isArray(ids)&&ids.length===size&&
 /** Audit a winner independently confirmed by the local worker. */
 export function auditCefrShadowWinner({report,independent}={}){
  if(report?.outcome!=='VERIFIED'||independent?.passed!==true||
+    independent.evidenceSufficient!==true||
     !Array.isArray(independent.profiles)||independent.profiles.length===0||
-    !independent.profiles.every(p=>p?.passed===true&&p.failed===0))
+    !independent.profiles.every(p=>p?.passed===true&&p.failed===0&&
+      typeof p.profile==='string'&&p.profile.length>0&&
+      Number.isSafeInteger(p.executed)&&p.executed>=0))
   return {status:'NOT_INDEPENDENTLY_VERIFIED'};
  // Only trusted in-process worker output may be used for this call. An
  // untrusted JSON flag "passed" is not independent proof.
