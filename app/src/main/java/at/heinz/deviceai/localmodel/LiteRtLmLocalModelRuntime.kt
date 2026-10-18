@@ -20,7 +20,6 @@ import java.io.File
 import java.util.concurrent.CancellationException
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 enum class LocalModelState { EMPTY, LOADING, READY, GENERATING, UNLOADING, FAILED }
 
@@ -213,7 +212,7 @@ class LiteRtLmLocalModelRuntime(
         var firstTokenNanos: Long? = null
         val finished = AtomicBoolean()
         val outputLimitReached = AtomicBoolean()
-        val proposedToolCalls = AtomicInteger(0)
+        val toolTurnGate = LocalToolTurnGate()
 
         fun finish(event: LocalInferenceEvent?) {
             if (!finished.compareAndSet(false, true)) return
@@ -249,7 +248,7 @@ class LiteRtLmLocalModelRuntime(
                     override fun onMessage(message: com.google.ai.edge.litertlm.Message) {
                         if (finished.get() || outputLimitReached.get()) return
                         if (message.toolCalls.isNotEmpty()) {
-                            if (proposedToolCalls.addAndGet(message.toolCalls.size) > 1) {
+                            if (!toolTurnGate.accept(message.toolCalls.size)) {
                                 finish(LocalInferenceEvent.Failed(
                                     "More than one tool proposal occurred in a single model turn; none are authorized."))
                                 runCatching { activeConversation.cancelProcess() }
