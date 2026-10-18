@@ -10,6 +10,7 @@ import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
+import java.util.Locale
 
 enum class LearningExperienceType {
     INTENT_LABEL, SOURCE_TEXT, SEMANTIC_PAIR, TRAINING_AUDIT,
@@ -111,9 +112,8 @@ class FileLearningExperienceStore(private val directory:File) {
             require(existing.contentHash==experience.contentHash) { "Conflicting learning experience identity" }
             return@synchronized false
         }
-        val next=(current+experience)
-            .sortedWith(compareBy<LearningExperience>{it.createdAt}.thenBy{it.id})
-            .takeLast(MAX_RECORDS)
+        val next=bounded(current+experience)
+        if(next.none { it.id==experience.id })return@synchronized false
         save(next)
         true
     }
@@ -132,10 +132,36 @@ class FileLearningExperienceStore(private val directory:File) {
             added[item.id]=item
         }
         if(added.isEmpty())return@synchronized 0
-        save((current+added.values)
-            .sortedWith(compareBy<LearningExperience>{it.createdAt}.thenBy{it.id})
-            .takeLast(MAX_RECORDS))
-        added.size
+        val next=bounded(current+added.values)
+        val admitted=next.count { it.id in added }
+        if(admitted>0)save(next)
+        admitted
+    }
+
+    /** One durable owner correction: retain superseded labels for audit, but
+     * never replay contradictory versions of the same encoder input together.
+     * Reconfirmation also refreshes an old content-addressed lesson's recency.
+     */
+    internal fun confirmIntentLabel(experience:LearningExperience) = synchronized(FILE_LOCK) {
+        require(experience.type==LearningExperienceType.INTENT_LABEL &&
+            experience.provenance==LearningProvenance.USER_CONFIRMED &&
+            experience.trust==LearningTrustClass.OWNER_CONFIRMED &&
+            experience.status==LearningStatus.CONFIRMED && experience.annotation in setOf("0","1"))
+        val key=intentKey(experience.content).also { require(it.isNotEmpty()) }
+        val current=loadValidated()
+        val next=current.map { old ->
+            when {
+                old.id==experience.id -> old.copy(status=LearningStatus.CONFIRMED,
+                    updatedAt=maxOf(old.updatedAt,experience.updatedAt))
+                old.type==LearningExperienceType.INTENT_LABEL &&
+                    old.provenance==LearningProvenance.USER_CONFIRMED &&
+                    old.trust==LearningTrustClass.OWNER_CONFIRMED && intentKey(old.content)==key ->
+                    old.copy(status=LearningStatus.REVOKED,
+                        updatedAt=maxOf(old.updatedAt,experience.updatedAt))
+                else -> old
+            }
+        }.let { items -> if(items.any { it.id==experience.id })items else items+experience }
+        save(bounded(next))
     }
 
     fun updateStatus(id:String,status:LearningStatus,now:Long=System.currentTimeMillis()):Boolean =
@@ -174,7 +200,8 @@ class FileLearningExperienceStore(private val directory:File) {
     fun replay(type:LearningExperienceType,limit:Int=64):List<LearningExperience> =
         synchronized(FILE_LOCK) {
             require(limit in 1..128)
-            loadValidated().asReversed().asSequence()
+            loadValidated().sortedWith(compareBy<LearningExperience> { it.updatedAt }
+                .thenBy { it.createdAt }.thenBy { it.id }).asReversed().asSequence()
                 .filter { it.type==type && it.status in setOf(
                     LearningStatus.OBSERVED,LearningStatus.CONFIRMED,
                     LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING
@@ -199,12 +226,30 @@ class FileLearningExperienceStore(private val directory:File) {
     }
 
     private fun loadValidated():List<LearningExperience> {
-        if(!primary.exists())return emptyList()
-        return runCatching { LearningExperienceCodec.decode(primary.readBytes()) }
-            .getOrElse {
-                if(backup.exists())LearningExperienceCodec.decode(backup.readBytes()) else throw it
-            }
+        if(!primary.exists()) {
+            check(!backup.exists()) { "Learning ledger primary missing; older backup requires explicit verification" }
+            return emptyList()
+        }
+        // The previous generation can predate an owner revocation/correction.
+        // Preserve it for diagnosis, but never restore stale consent silently.
+        return LearningExperienceCodec.decode(primary.readBytes())
     }
+
+    /** Observations and audits cannot evict owner instructions or revocations.
+     * Refuse protected overflow before writing rather than forget consent.
+     */
+    private fun bounded(items:List<LearningExperience>):List<LearningExperience> {
+        fun protected(item:LearningExperience)=
+            item.trust==LearningTrustClass.OWNER_CONFIRMED || item.status==LearningStatus.REVOKED
+        val order=compareBy<LearningExperience> { it.createdAt }.thenBy { it.id }
+        val preserved=items.filter(::protected)
+        check(preserved.size<=MAX_RECORDS) { "Learning ledger capacity reached; owner records cannot be evicted" }
+        return (preserved+items.filterNot(::protected).sortedWith(order)
+            .takeLast(MAX_RECORDS-preserved.size)).sortedWith(order)
+    }
+
+    private fun intentKey(text:String)=text.lowercase(Locale.ROOT)
+        .replace(Regex("[^\\p{L}\\p{N}]+")," ").trim()
 
     private fun save(items:List<LearningExperience>) {
         require(items.size<=MAX_RECORDS && items.map { it.id }.distinct().size==items.size)

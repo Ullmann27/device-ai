@@ -134,6 +134,8 @@ class ContinuumLearningCore(
         cancelled:()->Boolean={false}
     ):ContinualLearningReport = synchronized(CORE_LOCK) {
         require(label in 0..1 && text.trim().length in 3..320)
+        // Reject empty encoder input before it can poison every later replay.
+        TrainableSubwordEncoder.subwordBuckets(text.trim())
         val experience=LearningExperienceFactory.create(
             type=LearningExperienceType.INTENT_LABEL,
             provenance=LearningProvenance.USER_CONFIRMED,
@@ -143,7 +145,7 @@ class ContinuumLearningCore(
             annotation=label.toString(),
             now=nowMillis()
         )
-        store.append(experience)
+        store.confirmIntentLabel(experience)
 
         val baseline=loadModel()
         val candidate=TrainableSubwordEncoder.restore(baseline.save())
@@ -189,7 +191,8 @@ class ContinuumLearningCore(
             listOf(experience.id),reason)
         ContinualLearningReport(
             "intent",accepted,train.steps,replay.size,before,after,
-            holdoutBefore,holdoutAfter,listOf(experience.id),reason
+            holdoutBefore,holdoutAfter,listOf(experience.id),reason,
+            completedEvaluation=!cancelled() && !train.stoppedEarly
         )
     }
 
@@ -214,6 +217,13 @@ class ContinuumLearningCore(
             store.append(experience)
             ids+=experience.id
         }
+        // Capacity refusal or revocation must not turn into a claimed source
+        // training round backed only by the unrelated public curriculum.
+        val activeIds=store.all().filter {
+            it.status!=LearningStatus.REVOKED && it.status!=LearningStatus.REJECTED
+        }.map { it.id }.toSet()
+        // Callers mark the whole source batch completed after this report.
+        if(ids.any { it !in activeIds })return@synchronized null
 
         val replay=store.replay(LearningExperienceType.SOURCE_TEXT,48)
         val positives=replay.mapNotNull { item ->
@@ -470,7 +480,7 @@ class ContinuumLearningCore(
     fun replyWithEvidence(
         input:String,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
-    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>>=
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> =
         synchronized(CORE_LOCK) {
             val snapshot=loadModel().save()
             val experiences=store.all()

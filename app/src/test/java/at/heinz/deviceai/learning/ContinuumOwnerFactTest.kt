@@ -3,6 +3,7 @@ package at.heinz.deviceai.learning
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
@@ -66,5 +67,53 @@ class ContinuumOwnerFactTest {
         assertEquals(0, core.syncOwnerFacts(emptyList()))
         assertArrayEquals(before, ledger(dir).readBytes())
         assertEquals(0, core.status().experiences.revoked)
+    }
+
+    @Test fun sourceAndAuditChurnPreservesOwnerFactsAndRevocationsAcrossRestart() = withCore { core, dir ->
+        val kept="Mein Projekt heißt Astrolux."
+        val revoked="Mein Hund heißt Bello."
+        core.confirmOwnerFact(kept)
+        core.confirmOwnerFact(revoked)
+        core.revokeOwnerFact(revoked)
+        val store=FileLearningExperienceStore(File(dir,"learning-core-v2"))
+        store.appendMissing((0..300).map { i ->
+            LearningExperienceFactory.create(
+                if(i%2==0) LearningExperienceType.TRAINING_AUDIT else LearningExperienceType.SOURCE_TEXT,
+                LearningProvenance.LOCAL_TRAINING,LearningTrustClass.SYSTEM_MEASUREMENT,
+                LearningStatus.OBSERVED,"Bounded observation $i",now=10_000L+i)
+        })
+        val reopened=ContinuumLearningCore(dir)
+        assertEquals("sync must still see the revocation tombstone",0,
+            reopened.syncOwnerFacts(listOf(kept,revoked)))
+        assertEquals(listOf(kept),reopened.activeOwnerFacts().map { it.content })
+        assertEquals(1,reopened.status().experiences.revoked)
+        assertEquals(FileLearningExperienceStore.MAX_RECORDS,reopened.status().experiences.total)
+    }
+
+    @Test fun corruptPrimaryCannotResurrectARevokedFactFromAnOlderBackup() = withCore { core, dir ->
+        val fact="Mein Hund heißt Bello."
+        core.confirmOwnerFact(fact)
+        core.revokeOwnerFact(fact)
+        val backup=File(dir,"learning-core-v2/experiences-v2.lkg")
+        val beforeBackup=backup.readBytes()
+        val damaged=ledger(dir).readBytes().also { it[40]=(it[40].toInt() xor 1).toByte() }
+        ledger(dir).writeBytes(damaged)
+        val reopened=ContinuumLearningCore(dir)
+        assertThrows(IllegalArgumentException::class.java) { reopened.activeOwnerFacts() }
+        assertThrows(IllegalArgumentException::class.java) { reopened.replyFromMemory("Wie heißt mein Hund?") }
+        assertArrayEquals("retain corrupt evidence for explicit repair",damaged,ledger(dir).readBytes())
+        assertArrayEquals("an older backup is diagnostic, not current consent",beforeBackup,backup.readBytes())
+    }
+
+    @Test fun missingPrimaryWithAnOlderBackupCannotStartAnEmptyLedger() = withCore { core, dir ->
+        val fact="Mein Hund heißt Bello."
+        core.confirmOwnerFact(fact)
+        core.revokeOwnerFact(fact)
+        assertTrue(File(dir,"learning-core-v2/experiences-v2.lkg").isFile)
+        assertTrue(ledger(dir).delete())
+        val reopened=ContinuumLearningCore(dir)
+        assertThrows(IllegalStateException::class.java) { reopened.syncOwnerFacts(listOf(fact)) }
+        assertThrows(IllegalStateException::class.java) { reopened.activeOwnerFacts() }
+        assertFalse(ledger(dir).exists())
     }
 }

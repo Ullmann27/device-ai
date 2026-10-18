@@ -24,6 +24,20 @@ class ModelCheckpointStoreTest {
         assertArrayEquals(bytes,ModelCheckpointStore(dir).read(first.sha256))
     }
 
+    @Test fun rearchivingActiveWeightsRepairsMissingOrDamagedRecoveryPoint() = withDir { dir ->
+        val store=ModelCheckpointStore(dir)
+        val bytes=model(1)
+        val entry=store.archive(bytes,"vor training",10)
+        val file=File(dir,entry.sha256+".swb1")
+        assertTrue(file.delete())
+        assertEquals(entry,store.archive(bytes,"vor nächstem training",20))
+        assertArrayEquals("an index entry alone is not a recovery point",bytes,store.read(entry.sha256))
+        file.writeBytes(bytes.copyOf().also { it[100]=(it[100].toInt() xor 1).toByte() })
+        assertEquals(entry,store.archive(bytes,"vor weiterem training",30))
+        assertArrayEquals(bytes,store.read(entry.sha256))
+        assertEquals(listOf(entry),store.list())
+    }
+
     @Test fun historyIsBoundedAndPrunedFilesAreRemoved() = withDir { dir ->
         val store=ModelCheckpointStore(dir)
         val all=(1L..(ModelCheckpointStore.MAX_CHECKPOINTS+3)).map { seed -> store.archive(model(seed),"s$seed",seed) }
