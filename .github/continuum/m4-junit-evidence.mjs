@@ -26,8 +26,63 @@ export function structuralJUnitMarkup(xml){
  return body;
 }
 
+/** Count only structurally valid JUnit testcases and suites, excluding XML
+ * elements hidden in unrelated log/container nodes. This is deliberately a
+ * bounded structural validator for Node's JUnit subset, not a general XML API.
+ */
+function verifyJUnitNesting(xml){
+ const stack=[];
+ let rootSeen=false,xmlDeclaration=false,cases=0,suites=0;
+ let offset=0;
+ while(true){
+  const begin=xml.indexOf('<',offset);
+  if(begin<0)break;
+  let quote=null,end=-1;
+  for(let i=begin+1;i<xml.length;i++){
+   const c=xml[i];
+   if(quote){
+    if(c===quote)quote=null;
+    else if(c==='<')throw Error('Invalid angle bracket in JUnit attribute');
+   }else if(c==='"'||c==="'")quote=c;
+   else if(c==='<')throw Error('Malformed nested JUnit markup');
+   else if(c==='>'){end=i;break;}
+  }
+  if(end<0)throw Error('Unterminated JUnit tag');
+  const tag=xml.slice(begin+1,end).trim();
+  offset=end+1;
+  if(tag.startsWith('?')){
+   if(xmlDeclaration||rootSeen||!/^\?xml\s[^<>]*\?$/.test(tag))
+    throw Error('Invalid JUnit XML declaration');
+   xmlDeclaration=true;
+   continue;
+  }
+  if(tag.startsWith('!'))throw Error('Unsupported JUnit markup');
+  const closing=tag.startsWith('/');
+  const name=tag.match(/^\/?([A-Za-z_:][A-Za-z0-9_.:-]*)/)?.[1];
+  if(!name)throw Error('Malformed JUnit element');
+  if(closing){
+   if(tag!==('/'+name)||stack.pop()!==name)throw Error('Mismatched JUnit closing element');
+   continue;
+  }
+  const parent=stack.at(-1);
+  if(name==='testsuites'){
+   if(rootSeen||parent)throw Error('Duplicate or nested JUnit root');
+   rootSeen=true;
+  }else if(name==='testsuite'||name==='testcase'){
+   if(parent!=='testsuites'&&parent!=='testsuite')
+    throw Error('JUnit testcase or suite outside test containers');
+   if(name==='testcase')cases++;else suites++;
+  }else if(!parent)throw Error('JUnit markup outside testsuites root');
+  if(!/\/\s*$/.test(tag))stack.push(name);
+ }
+ if(!xmlDeclaration||!rootSeen||stack.length!==0)
+  throw Error('Incomplete JUnit document structure');
+ return {cases,suites};
+}
+
 export function verifyJUnitXml(xml){
  const structural=structuralJUnitMarkup(xml);
+ const nesting=verifyJUnitNesting(structural);
  if(!/^\s*<\?xml\b/.test(structural)||!/<testsuites(?:\s[^>]*)?>[\s\S]*<\/testsuites>\s*$/.test(structural))
   throw Error('Malformed Node JUnit document');
  const testcase=/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g;
@@ -54,7 +109,8 @@ export function verifyJUnitXml(xml){
  const groupCount=[...structural.matchAll(/<testsuite\b(?=[\s>])/g)].length;
  const total=caseCount+groupCount;
  const executed=total-skipped-todo-placeholders;
- if(total!==declared.tests||caseCount===0||executed<=0||
+ if(caseCount!==nesting.cases||groupCount!==nesting.suites||
+    total!==declared.tests||caseCount===0||executed<=0||
     failed!==declared.fail||skipped!==declared.skipped||todo!==declared.todo||
     failed!==0||declared.cancelled!==0||
     declared.pass!==executed||
