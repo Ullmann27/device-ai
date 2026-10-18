@@ -279,6 +279,22 @@ test('Teamleader Android UI reports status without false success',()=>{
    !check.includes('addToolActivity("CONTINUUM · Teamleiterprüfung abgeschlossen")'));
 });
 
+test('live model status does not revert the beginner cockpit to English',()=>{
+ const status=bodyOf(activity,'private fun refreshLocalModelUi()');
+ const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
+ ensure('local basis is not misrepresented as imported language model',
+   status?.includes('"● BASIS BEREIT"') && status.includes('localRuntime.loadedModel'));
+ ensure('all dynamic model stages are understandable in German',
+   ['"KEIN MODELL"','"INSTALLIERT"','"BEREIT"','"LÄDT"',
+    '"ARBEITET"','"FEHLER"'].every(x=>status.includes(x)));
+ ensure('model-error status offers novice guidance and bounded debug evidence',
+   status.includes('ContinuumUiCopy.modelFailure(localRuntimeError)') &&
+   status.includes('localRuntimeError!!.take(160)'));
+ ensure('common model failures are categorized, not silently declared successful',
+   copy.includes('fun modelFailure(') && copy.includes('Prüfwert') &&
+   copy.includes('Modellformat') && copy.includes('Arbeitsspeicher'));
+});
+
 test('model setup stays usable for beginners while preserving SHA-256 integrity',()=>{
  const model=bodyOf(activity,'private fun showModelCenter()');
  const importer=bodyOf(activity,'private fun showModelImportDialog()');
