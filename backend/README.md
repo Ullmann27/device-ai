@@ -108,6 +108,14 @@ höchstens acht Quellenreferenzen übernommen. HTTP-Weiterleitungen und freie UR
 werden nicht verfolgt, Metadaten-Antworten bleiben auf 350 KB pro Anbieter begrenzt,
 Fehler führen zu protokollierten Fehlversuchen statt erdachten Quellen.
 
+Über `GET /v1/continuum/knowledge?q=Kotlin` (mit dem bestehenden
+`Authorization: Bearer <DEVICE_AI_TOKEN>`) kann ein späterer Android-Client
+bis zu sechs passende zitierte Quellenbeobachtungen abrufen. Der Endpunkt
+liest dieselbe persistente State-Datei auch dann, wenn API und Research-Worker
+getrennte Prozesse sind. Er antwortet ausdrücklich mit `WEB_OBSERVATION`
+und `authority=NONE`; eine automatisch generierte Antwort oder die
+Verbindung zum bereits lokalen Android-Modell wird dadurch noch nicht hergestellt.
+
 **Wichtig:** Das ist überprüfbares *Sammeln und Indexieren von Recherchehinweisen*,
 nicht automatisches Retraining eines großen Sprachmodells. Der persistierte
 Eintrag behält `WEB_OBSERVATION / authority=NONE`. Die bibliografischen Titel
