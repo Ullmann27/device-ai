@@ -104,7 +104,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       const target=path.join(reportDir,'report.json');
       const pending=target+'.tmp-'+process.pid+'-'+crypto.randomBytes(6).toString('hex');
       try{
-        fs.writeFileSync(pending,JSON.stringify(report,null,2)+'\\n',{flag:'wx',mode:0o600});
+        fs.writeFileSync(pending,JSON.stringify(report,null,2)+'\n',{flag:'wx',mode:0o600});
         fs.renameSync(pending,target);
       }finally{fs.rmSync(pending,{force:true});}
     };
