@@ -239,7 +239,8 @@ export function runTeamleaderCycle({
      VERIFIED:'VERIFIED_PATCH_PENDING_REVIEW',
      NO_VERIFIED_REPAIR:'NO_VERIFIED_REPAIR'};
     if(!Object.hasOwn(map,result?.outcome))throw Error('Unknown repair outcome');
-    outcome=map[result.outcome];
+    outcome=result.outcome==='VERIFIED'&&result.independent?.passed!==true
+     ?'NO_VERIFIED_REPAIR':map[result.outcome];
     detail=String(result.verified?.strategy??result.outcome).slice(0,160);
    } else if(chosen.kind==='OWNER_TEST'){
     if(result?.status==='DONE'){
@@ -306,7 +307,7 @@ export function runTeamleaderCycle({
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
 export async function localTeamleaderDriver(){
- const [{git,createWorktree,removeWorktree,repairSession},
+ const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
   {analyzeRepository},
@@ -314,12 +315,14 @@ export async function localTeamleaderDriver(){
   {executeOwnerRepairTask},
   {executeOwnerContractTestTask},
   {observeCefrCandidates,DEV_CRE1_FILENAME},
-  {loadCefrCheckpoint}]=await Promise.all([
+  {loadCefrCheckpoint},
+  {validateVerifiedReport}]=await Promise.all([
   import('./repair-loop.mjs'),import('./repair-ledger.mjs'),
   import('./development-backlog.mjs'),import('./code-analyzer.mjs'),
   import('./development-planner.mjs'),import('./backlog-repair-worker.mjs'),
   import('./owner-contract-worker.mjs'),
-  import('./cefr-repair-ranker.mjs'),import('./cefr-dev-checkpoint.mjs')
+  import('./cefr-repair-ranker.mjs'),import('./cefr-dev-checkpoint.mjs'),
+  import('./repair-publish.mjs')
  ]);
  const fsApi=await import('node:fs');
  return {
@@ -406,13 +409,50 @@ export async function localTeamleaderDriver(){
     result=repairSession({wt,base:head,chain:'node',out,ledger,
       maxCandidates:3,deadline:Date.now()+budgetMinutes*60_000,
       shadowObserver});
-    // Role handoffs are receipts of REAL work done by the existing repair
-    // pipeline. Never represent a proposed patch as completed or merged.
+    // The first successful worktree is not an independent verdict.
+    // Reapply the patch to a fresh second worktree and rerun the fixed checks.
+    if(result.outcome==='VERIFIED'){
+     let independent=null;
+     try{
+      const patchFile=path.join(out,'repair.patch');
+      const patch=fsApi.readFileSync(patchFile,'utf8');
+      validateVerifiedReport(result,patch);
+      independent=createWorktree(root,head);
+      git(independent,['apply','--check','--binary',patchFile]);
+      git(independent,['apply','--binary',patchFile]);
+      const secondOut=path.join(out,'independent-check');
+      fsApi.mkdirSync(secondOut,{recursive:true,mode:0o700});
+      const verified=runChain('node',independent,secondOut,{
+       deadline:Date.now()+budgetMinutes*60_000
+      });
+      const suff=evidenceSufficient(result.baseline.results,verified.results);
+      const profiles=verified.results.map(r=>({
+       profile:r.profile,passed:r.passed,executed:r.tests?.executed??0,
+       failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+      }));
+      result.independent={passed:verified.passed&&suff.sufficient&&
+       profiles.length>0&&profiles.every(r=>r.passed&&r.failed===0)&&
+       profiles.some(r=>r.executed>0),
+       profiles,evidenceSufficient:suff.sufficient};
+     }catch(error){
+      result.independent={passed:false,
+       reason:String(error?.message??error).slice(0,160)};
+     }finally{
+      if(independent)removeWorktree(root,independent);
+     }
+    }
+    // Handoffs describe bounded work performed, never an automatic merge.
     result.handoffs=summarizeRepairHandoffs(result);
    } finally {removeWorktree(root,wt);}
    fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(result,null,2)+'\n');
-   saveLedger(ledgerPath,recordSession(ledger,result,{trigger:'local-teamleader'}));
-   return {...result,artifact:path.join(out,'report.json')};
+   saveLedger(ledgerPath,recordSession(ledger,result,{
+    trigger:'local-teamleader',
+    independentPass:result.outcome==='VERIFIED'?result.independent?.passed===true:undefined
+   }));
+   const publishable=result.outcome!=='VERIFIED'||result.independent?.passed===true;
+   return {...result,
+    ...(publishable?{}:{outcome:'NO_VERIFIED_REPAIR',verified:null}),
+    artifact:path.join(out,'report.json')};
   }
  };
 }
