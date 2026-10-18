@@ -13,6 +13,8 @@ import android.os.Build
 import android.os.PowerManager
 import android.os.StatFs
 import android.util.Log
+import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
+import at.heinz.deviceai.cognitive.ContinuumDnaGuardian
 import at.heinz.deviceai.cognitive.DeviceTeamleader
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -112,7 +114,14 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
         activeCancellation = cancellation
         val next = Thread({
             try {
-                val teamleader = DeviceTeamleader(filesDir)
+                val teamleader = DeviceTeamleader(
+                    filesDir,
+                    dnaAudit = {
+                        ContinuumDnaGuardian(java.io.File(filesDir, "continuum")) {
+                            AndroidKeystoreIdentitySigner()
+                        }.inspect()
+                    }
+                )
                 val reason = ContinuumOfflineLearningBudget.deferralReason(currentResources())
                 if (reason != null) {
                     if (!cancellation.get()) teamleader.defer(reason)
