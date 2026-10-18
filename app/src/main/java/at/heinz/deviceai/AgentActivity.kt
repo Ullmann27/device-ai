@@ -4081,49 +4081,74 @@ class AgentActivity : Activity() {
     private fun showModelImportDialog() {
         val fields = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(4), dp(18), 0)
+            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
+                22, Color.rgb(56, 117, 193))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
-        val id = EditText(this).apply {
-            hint = "model-id (z. B. functiongemma)"
+        fields.addView(textView("MODELLIMPORT · SCHRITT 1", 11f, CYAN, true))
+        fields.addView(textView("Modell sicher auswählen", 20f, TEXT, true), matchWidth(top = 8))
+        fields.addView(textView(
+            "Dafür benötigst du eine LiteRT-LM-kompatible Modelldatei sowie die " +
+                "Modell-ID, Version und den veröffentlichten SHA-256-Prüfwert des Anbieters. " +
+                "Der Prüfwert schützt davor, versehentlich eine veränderte Datei zu verwenden. " +
+                "Ohne diese Angaben wird nichts importiert.", 13f, MUTED), matchWidth(top = 10))
+        fun field(hintText: String): EditText = EditText(this).apply {
+            hint = hintText
             inputType = InputType.TYPE_CLASS_TEXT
             setSingleLine(true)
+            textSize = 15f
+            setTextColor(TEXT)
+            setHintTextColor(Color.rgb(156, 179, 214))
+            background = rounded(Color.rgb(11, 26, 49), 13, BORDER)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
         }
-        val version = EditText(this).apply {
-            hint = "version (z. B. 1.0.0)"
-            inputType = InputType.TYPE_CLASS_TEXT
-            setSingleLine(true)
-        }
-        val digest = EditText(this).apply {
-            hint = "SHA-256 der Modelldatei"
-            inputType = InputType.TYPE_CLASS_TEXT
-            setSingleLine(true)
-        }
-        fields.addView(textView("Es werden keine Modelldaten heruntergeladen. CPU-Textmodelle mit LiteRT-LM-Unterstützung sind erforderlich.", 12f, MUTED))
-        fields.addView(id, matchWidth(top = 8))
-        fields.addView(version, matchWidth(top = 4))
-        fields.addView(digest, matchWidth(top = 4))
-        AlertDialog.Builder(this)
-            .setTitle("Lokales Modell importieren")
-            .setView(fields)
+        val id = field("Zum Beispiel: mein-lokales-modell")
+        val version = field("Zum Beispiel: 1.0.0")
+        val digest = field("64-stelliger SHA-256-Prüfwert")
+        fields.addView(textView("Modellbezeichnung", 12f, CYAN, true), matchWidth(top = 16))
+        fields.addView(id, matchWidth(top = 6))
+        fields.addView(textView("Modellversion", 12f, CYAN, true), matchWidth(top = 12))
+        fields.addView(version, matchWidth(top = 6))
+        fields.addView(textView("Veröffentlichter SHA-256-Prüfwert", 12f, CYAN, true),
+            matchWidth(top = 12))
+        fields.addView(digest, matchWidth(top = 6))
+        val warning = textView("", 12.5f, AMBER)
+        fields.addView(warning, matchWidth(top = 10))
+        val dialog = AlertDialog.Builder(this)
+            .setView(ScrollView(this).apply { addView(fields) })
             .setNegativeButton("Abbrechen", null)
-            .setPositiveButton("Datei auswählen") { _, _ ->
+            .setPositiveButton("DATEI AUSWÄHLEN", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener {
                 val modelId = id.text.toString().trim()
                 val modelVersion = version.text.toString().trim()
-                val sha256 = digest.text.toString().trim().lowercase()
+                val sha256 = digest.text.toString().trim().lowercase(Locale.ROOT)
                 if (!modelId.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
                     !modelVersion.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) ||
                     !sha256.matches(Regex("[a-f0-9]{64}"))) {
-                    Toast.makeText(this, "Bitte Model-ID, Version und gültigen SHA-256 angeben.", Toast.LENGTH_LONG).show()
-                    return@setPositiveButton
+                    warning.text = "Bitte fülle alle drei Felder korrekt aus. " +
+                        "Der SHA-256-Prüfwert besteht aus genau 64 Zeichen (0–9 und a–f). " +
+                        "Das Fenster bleibt geöffnet; du kannst die Angaben verbessern."
+                    return@setOnClickListener
                 }
-                pendingModelImport = Triple(modelId, modelVersion, sha256)
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "application/octet-stream"
                 }
-                startActivityForResult(picker, MODEL_IMPORT_REQUEST)
+                pendingModelImport = Triple(modelId, modelVersion, sha256)
+                val opened = runCatching { startActivityForResult(picker, MODEL_IMPORT_REQUEST) }
+                if (opened.isSuccess) {
+                    dialog.dismiss()
+                } else {
+                    pendingModelImport = null
+                    warning.text = "Die Dateiauswahl konnte nicht geöffnet werden. " +
+                        "Prüfe den Dateimanager und versuche es erneut."
+                }
             }
-            .show()
+        }
+        dialog.show()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun chooseInstalledModel() {
@@ -4136,7 +4161,7 @@ class AgentActivity : Activity() {
     private fun chooseInstalledModel(models: List<ImportedLocalModel>) {
         if (models.isEmpty()) {
             refreshLocalModelUi()
-            Toast.makeText(this, "NO MODEL · importiere zuerst eine .litertlm-Datei.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Noch kein Sprachmodell vorhanden. Wähle zuerst „Modelldatei importieren“.", Toast.LENGTH_LONG).show()
             return
         }
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) {
