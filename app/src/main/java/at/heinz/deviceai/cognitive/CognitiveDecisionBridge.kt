@@ -3,7 +3,6 @@ package at.heinz.deviceai.cognitive
 import at.heinz.deviceai.learning.ContinuumCognitiveRuntime
 import at.heinz.deviceai.learning.ContinuumCognitiveTurn
 import at.heinz.deviceai.learning.ContinuumMemoryHit
-import java.util.Locale
 
 /** Proposed text, never a newly confirmed fact. Tool use and memory writes are
  * forbidden in this isolated reasoning pass.
@@ -76,42 +75,14 @@ class CognitiveDecisionBridge(
     }
 
     companion object {
-        private val numbers = Regex("""\d+(?:[.,]\d+)*""")
-        private val words = Regex("""[\p{L}\p{N}]+""")
-        private val negations = setOf("nicht", "kein", "keine", "keinen",
-            "keinem", "keiner", "keines", "nie", "niemals", "ohne")
-        private val starters = setOf("der", "die", "das", "mein", "meine",
-            "dein", "deine", "ein", "eine", "ja", "nein", "laut", "gemäß", "beleg")
-        private val neutralFraming = setOf("ich", "es", "das", "jahr", "stadt",
-            "ort", "antwort", "information", "gedächtnis", "beleg", "quelle")
-
-        /** A conservative lexical anchor check, NOT a semantic proof of truth.
-         * Checks the highest ranked authorized raw hit, not a formatted answer.
+        /** Entity/number overlap cannot establish semantic entailment (for example,
+         * "in Graz" versus "outside Graz"). Only an exact evidence restatement,
+         * allowing whitespace changes, may replace the deterministic fact answer.
          */
-        internal fun preservesEvidenceAnchors(hits: List<ContinuumMemoryHit>,
-                                              candidate: String): Boolean {
+        internal fun preservesEvidenceAnchors(hits: List<ContinuumMemoryHit>, candidate: String): Boolean {
             if (hits.isEmpty()) return false
-            val original = hits.first().text
-            val lower = original.lowercase(Locale.ROOT)
-            val proposed = candidate.lowercase(Locale.ROOT)
-            if (numbers.findAll(lower).map { it.value }.toList() !=
-                numbers.findAll(proposed).map { it.value }.toList()) return false
-            fun hasNegation(value: String): Boolean =
-                words.findAll(value).any { it.value in negations }
-            if (hasNegation(lower) != hasNegation(proposed)) return false
-            val anchored = words.findAll(original).map { it.value }
-                .filter { it.length >= 3 && it.first().isUpperCase() &&
-                    it.lowercase(Locale.ROOT) !in starters }
-                .map { it.lowercase(Locale.ROOT) }.toSet()
-            val visible = words.findAll(proposed).map { it.value }.toSet()
-            if (!anchored.all { it in visible }) return false
-            // No fresh capitalized factual entity may appear in the generated text.
-            // This still is not a semantic entailment proof.
-            val proposedEntities = words.findAll(candidate).map { it.value }
-                .filter { it.length >= 3 && it.first().isUpperCase() }
-                .map { it.lowercase(Locale.ROOT) }
-                .filter { it !in starters && it !in neutralFraming }.toSet()
-            return proposedEntities.all { it in anchored }
+            fun normalized(value: String) = value.trim().replace(Regex("\\s+"), " ")
+            return normalized(candidate) == normalized(hits.first().text)
         }
     }
 }
