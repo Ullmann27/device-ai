@@ -84,6 +84,16 @@ export function summarizeTeamleaderProgress(state){
  };
 }
 
+/** Public proof must agree across overall outcome, candidate attempts and
+ * role handoffs. Internal reports are retained solely for learning/audit.
+ */
+export function publicTeamleaderRepairReport(report){
+ if(report?.outcome!=='VERIFIED'||report.independent?.passed===true)return report;
+ return {...report,outcome:'NO_VERIFIED_REPAIR',verified:null,
+  attempts:(report.attempts??[]).map(a=>a.outcome==='VERIFIED'?
+   {...a,outcome:'INSUFFICIENT_EVIDENCE'}:a)};
+}
+
 export function selectTeamleaderAction(state,head,readyTask=null){
  if(!HEAD.test(head))throw Error('Full immutable commit SHA required');
  // Finish incomplete work explicitly; do not re-run it against the same base.
@@ -439,12 +449,10 @@ export async function localTeamleaderDriver(){
       if(independent)removeWorktree(root,independent);
      }
     }
-    // Handoffs describe bounded work performed, never an automatic merge.
-    result.handoffs=summarizeRepairHandoffs(result);
+
    } finally {removeWorktree(root,wt);}
-   const publishable=result.outcome!=='VERIFIED'||result.independent?.passed===true;
-   const publicReport={...result,
-    ...(publishable?{}:{outcome:'NO_VERIFIED_REPAIR',verified:null})};
+   const publicReport=publicTeamleaderRepairReport(result);
+   publicReport.handoffs=summarizeRepairHandoffs(publicReport);
    fsApi.writeFileSync(path.join(out,'report.json'),JSON.stringify(publicReport,null,2)+'\n');
    saveLedger(ledgerPath,recordSession(ledger,result,{
     trigger:'local-teamleader',
