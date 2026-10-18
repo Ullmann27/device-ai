@@ -8,8 +8,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {createWorktree,removeWorktree,git,runChain,evidenceSufficient,
+import {createWorktree,removeWorktree,resetWorktree,boundedWorktreeFile,git,runChain,evidenceSufficient,
  CHAINS,TEST_PROFILES} from './repair-loop.mjs';
+import {critique} from './repair-critic.mjs';
+import {applyEdits} from './repair-strategies.mjs';
 import {validateVerifiedReport} from './repair-publish.mjs';
 
 const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
@@ -47,6 +49,38 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
   const reproduced=runChain(report.chain,worktree,baselineOut,{deadline});
   if(reproduced.passed||report.baseline.passed!==false)
    throw Error('CEFR_BASELINE_FAILURE_NOT_REPRODUCED');
+  // Failed candidates can teach CRE1 only if they fail real tests here too.
+  // Critic-rejected, syntax-only and self-reported failures carry no label.
+  const positives=(report.attempts??[]).find(a=>
+   a.candidate===report.verified.candidate&&a.outcome==='VERIFIED');
+  const negatives=(report.attempts??[]).filter(a=>
+   a.diagnostic===positives?.diagnostic&&a.outcome==='FAILED_TESTS'&&
+   Array.isArray(a.edits)&&a.edits.length>=1&&a.edits.length<=3).slice(0,3);
+  const verifiedNegatives=[];
+  for(const a of negatives){
+   if(Date.now()>=deadline)throw Error('CEFR_NEGATIVE_REPLAY_DEADLINE_EXHAUSTED');
+   if(!critique(a).approved)continue;
+   resetWorktree(worktree,report.base);
+   try{
+    const files=[...applyEdits(relative=>fs.readFileSync(
+     boundedWorktreeFile(worktree,relative),'utf8'),a.edits)];
+    const resolved=files.map(([relative,content])=>
+     [boundedWorktreeFile(worktree,relative),content]);
+    for(const [file,content] of resolved)fs.writeFileSync(file,content);
+    const negOut=path.join(temp,'negative-'+verifiedNegatives.length);
+    fs.mkdirSync(negOut,{mode:0o700});
+    const checkedNegative=runChain(report.chain,worktree,negOut,{deadline});
+    const realFailed=checkedNegative.results.some(r=>r.testProfile&&
+     Number.isSafeInteger(r.tests.executed)&&r.tests.executed>0&&r.tests.failed>0);
+    if(!checkedNegative.passed&&realFailed&&
+       typeof a.candidate==='string'&&!verifiedNegatives.includes(a.candidate))
+     verifiedNegatives.push(a.candidate);
+   }catch(error){
+    if(Date.now()>=deadline)throw error;
+    // Inapplicable candidates are not verified negative training labels.
+   }
+  }
+  resetWorktree(worktree,report.base);
   const patchFile=path.join(temp,'candidate.patch');
   fs.writeFileSync(patchFile,patchText,{flag:'wx',mode:0o600});
   if(git(worktree,['apply','--check','--binary',patchFile],{allowFailure:true}).status!==0)
@@ -74,6 +108,7 @@ export function verifyIndependentCefrPatch({root,report,patchText,deadline}={}){
   const proof={schemaVersion:1,passed,base:report.base,chain:report.chain,
    patchSha256:sha256(patchText),profiles:resultProfiles,
    evidenceSufficient:evidence.sufficient,
+   verifiedNegatives,
    reason:passed?null:'INDEPENDENT_CHECK_OR_EVIDENCE_FAILED'};
   // Return fresh primitive evidence from actual runChain results, NOT fields
   // copied from the self-reported successful repair attempt.
