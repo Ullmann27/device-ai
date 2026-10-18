@@ -7,7 +7,8 @@ import { ContinuumResearchDaemon, createOpenAiResearchFunction } from "./continu
 import { createPublicResearchFunction } from "./public-research.js";
 import { BrainFactory, createOpenAiBrainFactoryAdapters } from "./brain-factory.js";
 import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothesis-tournament.js";
-import { mergeResearchQuestions } from "./continuum-state.js";
+import { ContinuumStateStore, mergeResearchQuestions } from "./continuum-state.js";
+import { selectResearchKnowledge } from "./continuum-knowledge.js";
 import { androidWebTools } from "./android-web-tools.js";
 
 const app = express();
@@ -302,6 +303,27 @@ app.get("/v1/continuum/status", auth, (_req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: (error instanceof Error ? error.message : String(error)).slice(0, 500) });
+  }
+});
+
+/** Cited research memory is retrieved independently of any optional paid-model service. */
+app.get("/v1/continuum/knowledge", auth, (req, res) => {
+  const query = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (typeof req.query.q !== "undefined" && typeof req.query.q !== "string" ||
+      query.length > 200) {
+    return res.status(400).json({ error: "Ungültige Wissensabfrage." });
+  }
+  try {
+    const state = new ContinuumStateStore(CONTINUUM_STATE_PATH).load();
+    const knowledge = selectResearchKnowledge(state, { query, limit: 6 });
+    return res.json({
+      knowledge,
+      count: knowledge.length,
+      trust: "WEB_OBSERVATION",
+      authority: "NONE"
+    });
+  } catch (error) {
+    return res.status(503).json({ error: "Wissensarchiv nicht verifizierbar oder nicht erreichbar." });
   }
 });
 
