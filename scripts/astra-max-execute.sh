@@ -67,11 +67,36 @@ case "$mode" in
       --interval-minutes 60 --budget-minutes 20
     ;;
   android-release)
-    bash scripts/local-m4-android.sh "$head"
-    gradle :app:lintDebug --console=plain -Pkotlin.incremental=false
-    gradle :app:assembleDebug -PdeviceAiPreview=true --console=plain -Pkotlin.incremental=false
-    artifact='app/build/outputs/apk/debug/app-debug.apk'
-    [[ -f "$artifact" ]] || fail "APK nicht erzeugt: $artifact"
-    sha256sum "$artifact"
+    # The isolated M4 gate builds the PREVIEW variant and keeps the exact
+    # verified APK outside the checkout. NEVER rebuild a different artifact
+    # after certification; a new build would have a different proof boundary.
+    proof_log="$(mktemp)" || fail 'Temporäres Prüfprotokoll nicht anlegbar.'
+    trap 'rm -f -- "$proof_log"' EXIT
+    bash scripts/local-m4-android.sh "$head" | tee "$proof_log"
+    proof="$(sed -n 's/^CONTINUUM_VERIFIED_M4_REPORT=//p' "$proof_log" | tail -n 1)"
+    [[ -n "$proof" ]] || fail 'M4-Gate meldet keinen verifizierten APK-Nachweis.'
+    node --input-type=module - "$head" "$proof" <<'NODE'
+import fs from 'node:fs';
+import {verifyReleaseProofFile,sha256ApkFile} from './.github/continuum/m4-local-gate.mjs';
+
+const [, ,expectedHead,proofFile]=process.argv;
+const check=verifyReleaseProofFile(proofFile,{expectedHead});
+if(check.valid!==true||check.releaseReady!==true){
+  console.error('BLOCKED: Preview-APK proof rejected:',check.reason??'unknown');
+  process.exit(69);
+}
+const report=JSON.parse(fs.readFileSync(proofFile,'utf8'));
+const artifact=report.apk.artifact;
+const actual=sha256ApkFile(artifact);
+if(actual.artifactSha256!==report.apk.artifactSha256||
+   actual.bytes!==report.apk.bytes){
+  console.error('BLOCKED: Preview-APK differs from certified artifact');
+  process.exit(69);
+}
+console.log('VERIFIED_PREVIEW_APK='+artifact);
+console.log('VERIFIED_PREVIEW_HEAD='+expectedHead);
+console.log('VERIFIED_PREVIEW_SHA256='+actual.artifactSha256);
+console.log('INSTALL_ON_DEVICE=NOT_YET_VERIFIED');
+NODE
     ;;
 esac
