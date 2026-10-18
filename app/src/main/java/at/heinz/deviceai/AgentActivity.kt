@@ -1164,7 +1164,7 @@ class AgentActivity : Activity() {
         }
 
         input = EditText(this).apply {
-            hint = "Was soll ich auf deinem Gerät tun?"
+            hint = "Stell eine Frage oder beschreibe eine Aufgabe …"
             setHintTextColor(Color.rgb(103, 119, 143))
             setTextColor(TEXT)
             textSize = 15f
@@ -1392,9 +1392,8 @@ class AgentActivity : Activity() {
             request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
         )
         if (decision.kind == BootstrapKind.DEVICE_TOOL && !bridge.isReady()) {
-            addToolActivity("SHIZUKU NICHT BEREIT · Auftrag nicht ausgeführt")
-            addAssistantMessage("Für diesen nur lesenden Geräteauftrag benötige ich Shizuku. " +
-                "Bitte verbinde es zuerst. Dein Text bleibt im Eingabefeld.")
+            addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
+            addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
             return
         }
         // Explicit memory writes or deletions are never performed by unseen model output.
@@ -3068,7 +3067,8 @@ class AgentActivity : Activity() {
                     val citations = dossier.sources.filter { it.duplicateOf == null }.take(16)
                         .joinToString("\n") { "• ${it.title ?: it.domain}\n  ${it.canonicalUrl}" }
                     val body = buildString {
-                        append((dossier.synthesis?.text ?: "Keine Synthese verfügbar.").take(4600))
+                        append(if (dossier.sources.isEmpty()) ContinuumUiCopy.emptyResearch(dossier.partialReason)
+                            else (dossier.synthesis?.text ?: "Es wurde keine Zusammenfassung erstellt.").take(4600))
                         if (citations.isNotBlank()) append("\n\nQuellen:\n").append(citations)
                         if (!dossier.generalSearchAvailable) {
                             append(if(session.call is at.heinz.deviceai.cognitive.WebToolRequest.Read)"\n\nDirekte genehmigte HTTPS-Quelle."
@@ -3077,12 +3077,13 @@ class AgentActivity : Activity() {
                             append("\n\nWebsuche mit Wikipedia-Fallback; Suchanbieter können Ergebnisse begrenzen.")
                         }
                         if (dossier.sources.isEmpty()) {
-                            append("\n\nKeine abrufbaren Quellen. Prüfe Internetverbindung und Suchbegriff.")
+                            append("\n\nTipp: Ein konkreter Suchbegriff oder ein direkter HTTPS-Link kann helfen.")
                         }
                         if (localRuntime.state != LocalModelState.READY) {
                             append("\n\nHinweis: Lokales Modell war nicht bereit; deterministische Zusammenfassung verwendet.")
                         }
-                        dossier.partialReason?.let { append("\n\nTeilrecherche: ").append(it.take(256)) }
+                        if (dossier.sources.isNotEmpty())
+                            dossier.partialReason?.let { append("\n\nEin Teil der Recherche war nicht verfügbar.").append(" (").append(it.take(120)).append(")") }
                     }
                     discovery.lastIssue?.let { addToolActivity("WEB · "+it) }
                     addAssistantMessage(body.take(8_000))
@@ -3093,7 +3094,7 @@ class AgentActivity : Activity() {
                     }
                     addToolActivity("RESEARCH · ${dossier.phase.name} · ${dossier.sources.size} Quellen")
                 }.onFailure { error ->
-                    addAssistantMessage("Recherche abgebrochen oder fehlgeschlagen: ${error.message?.take(256) ?: "unbekannter Fehler"}")
+                    addAssistantMessage(ContinuumUiCopy.researchFailure(error.message))
                     addToolActivity("RESEARCH · PARTIAL")
                 }
                 setBusy(false)
@@ -3651,14 +3652,22 @@ class AgentActivity : Activity() {
     private fun showDevelopmentDialog() {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(8), dp(16), dp(8))
+            background = roundedGradient(Color.rgb(18, 39, 72), Color.rgb(13, 23, 43),
+                22, Color.rgb(51, 112, 191))
+            setPadding(dp(20), dp(18), dp(20), dp(20))
         }
+        box.addView(textView("DEIN ENTWICKLUNGSASSISTENT", 11f, CYAN, true))
+        box.addView(textView("In drei Schritten zum Entwurf", 20f, TEXT, true),
+            matchWidth(top = 8))
         box.addView(textView(
-            "Ein Entwicklungsauftrag: Developer, Critic, TestDesigner und Judge laufen nacheinander auf dem geladenen " +
-                "lokalen Modell und liefern EINEN prüfbaren Vorschlag. Nichts wird angewendet, kompiliert, getestet oder gepusht. " +
-                "Quelltext wird als nicht vertrauenswürdige Daten behandelt.", 12f, MUTED))
-        devRequirementsView = textView("", 12f, AMBER)
-        box.addView(devRequirementsView, matchWidth(top = 8))
+            "1. Sprachmodell laden. 2. Ziel und Quelltext auswählen. 3. Entwurf prüfen. " +
+                "Du behältst jederzeit die Kontrolle: Es wird nichts automatisch installiert oder verändert.",
+            13f, MUTED), matchWidth(top = 8))
+        devRequirementsView = textView("", 13f, Color.rgb(225, 233, 245)).apply {
+            setPadding(dp(14), dp(12), dp(14), dp(12))
+            background = rounded(Color.rgb(19, 34, 61), 14, Color.rgb(57, 93, 151))
+        }
+        box.addView(devRequirementsView, matchWidth(top = 14))
         box.addView(actionButton("SPRACHMODELL EINRICHTEN").apply {
             setOnClickListener {
                 // Preserve the current goal through the dialog's dismiss handler.
@@ -3667,12 +3676,26 @@ class AgentActivity : Activity() {
             }
         }, matchWidth(top = 6))
         devGoalInput = EditText(this).apply {
-            hint = "Entwicklungsziel für diese App…"
+            hint = "Zum Beispiel: Eine Fehlermeldung verständlicher machen"
+            setHintTextColor(Color.rgb(156, 179, 214))
+            setTextColor(TEXT)
+            textSize = 15f
+            background = rounded(Color.rgb(10, 24, 46), 14, BORDER)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
             setText(devController.state.goal)
             minLines = 2
+            maxLines = 4
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    devController.setGoal(s?.toString().orEmpty())
+                    refreshDevelopmentUi()
+                }
+            })
         }
         box.addView(devGoalInput, matchWidth(top = 8))
-        devPickButton = actionButton("QUELLTEXT WÄHLEN (SAF)").apply {
+        devPickButton = actionButton("DATEIEN AUSWÄHLEN").apply {
             setOnClickListener {
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
@@ -3683,7 +3706,7 @@ class AgentActivity : Activity() {
             }
         }
         box.addView(devPickButton, matchWidth(top = 8))
-        devClearButton = actionButton("QUELLENAUSWAHL LEEREN").apply {
+        devClearButton = actionButton("DATEIAUSWAHL ZURÜCKSETZEN").apply {
             setOnClickListener {
                 devController.clearSources()
                 refreshDevelopmentUi()
@@ -3693,9 +3716,9 @@ class AgentActivity : Activity() {
         devSourcesView = textView("", 12f, TEXT)
         box.addView(devSourcesView, matchWidth(top = 6))
         val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-        devStartButton = actionButton("START", accent = true).apply { setOnClickListener { startDevelopmentJob() } }
-        devStopButton = actionButton("STOP").apply { setOnClickListener { cancelLocalRequest() } }
-        devExportButton = actionButton("EXPORT").apply {
+        devStartButton = actionButton("ENTWURF STARTEN", accent = true).apply { setOnClickListener { startDevelopmentJob() } }
+        devStopButton = actionButton("STOPP").apply { setOnClickListener { cancelLocalRequest() } }
+        devExportButton = actionButton("SICHERN").apply {
             setOnClickListener {
                 if (devController.exportText() == null) return@setOnClickListener
                 val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -3732,15 +3755,8 @@ class AgentActivity : Activity() {
         if (devDialog == null) return
         val st = devController.state
         val modelReady = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
-        devRequirementsView?.text = listOf(
-            if (modelReady) "Sprachmodell: geladen und bereit."
-            else "Sprachmodell fehlt: Über SPRACHMODELL EINRICHTEN eine kompatible LiteRT-LM-Datei importieren und laden.",
-            if (devGoalInput?.text.isNullOrBlank()) "Entwicklungsziel: noch nicht eingegeben."
-            else "Entwicklungsziel: eingegeben.",
-            if (st.sources.isEmpty()) "Quelltext: keine Dateien gewählt (SAF)."
-            else "Quelltext: ${st.sources.size} Datei(en) gewählt.",
-            "Shizuku ist für diesen Entwicklungsentwurf nicht erforderlich. Kein Cloud-Ersatz; kein automatischer Build oder Patch."
-        ).joinToString("\n")
+        devRequirementsView?.text = ContinuumUiCopy.developmentRequirements(
+            modelReady, st.goal.isNotBlank(), st.sources.size)
         devSourcesView?.text = if (st.sources.isEmpty()) "Keine Quellen gewählt."
         else st.sources.joinToString("\n") { "• ${it.path} (${it.content.toByteArray(Charsets.UTF_8).size} B · sha256 ${it.sha256.take(12)}…)" }
         devStatusView?.text = st.status + (st.error?.let { "\n$it" } ?: "")
@@ -3794,9 +3810,22 @@ class AgentActivity : Activity() {
             return
         }
         devController.setGoal(devGoalInput?.text?.toString().orEmpty())
-        val task = devController.start(localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null)
+        val modelReady = localRuntime.state == LocalModelState.READY && localRuntime.loadedModel != null
+        val task = devController.start(modelReady)
         if (task == null) {
             refreshDevelopmentUi()
+            AlertDialog.Builder(this)
+                .setTitle("Vor dem Start noch ein Schritt")
+                .setMessage(ContinuumUiCopy.developmentRequirements(
+                    modelReady, devController.state.goal.isNotBlank(), devController.state.sources.size))
+                .setNegativeButton("Schließen", null)
+                .setPositiveButton(if (!modelReady) "MODELL EINRICHTEN" else "DATEIEN AUSWÄHLEN") { _, _ ->
+                    if (!modelReady) {
+                        devDialog?.dismiss()
+                        showModelCenter()
+                    } else devPickButton?.performClick()
+                }
+                .show()
             return
         }
         val coordinator = DevelopmentCoordinator(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })
