@@ -23,8 +23,8 @@ export function gateSummary(node,android,apk,runAndroid,repairE2e=null){
      // Nested Node repair tests intentionally skip recursion; the separate
      // mandatory Repair-E2E proof checks those paths outside the nested run.
      // Android parity tests must never be silently skipped in a release.
-     Number.isSafeInteger(r.tests?.skipped??0)&&r.tests.skipped>=0&&
-     (r.profile!=='android-unit'||r.tests.skipped===0)&&
+     Number.isSafeInteger(r.tests?.skipped??0)&&(r.tests?.skipped??0)>=0&&
+     (r.profile!=='android-unit'||(r.tests?.skipped??0)===0)&&
      Number.isSafeInteger(r.tests?.executed)&&r.tests.executed>=0);
  // Use exactly the same mandatory profile/exit-code checks in summaries
  // and persisted verification as in the live transition between stages.
@@ -189,8 +189,8 @@ export function nextGateStage(previous,expectedProfiles){
     'android-compile','android-unit'].includes(profile);
   return recognized&&r?.profile===profile&&r.passed===true&&
     r.exitCode===0&&r.timedOut!==true&&r.tests?.failed===0 &&
-    Number.isSafeInteger(r.tests?.skipped??0)&&r.tests.skipped>=0&&
-    (r.profile!=='android-unit'||r.tests.skipped===0)&&
+    Number.isSafeInteger(r.tests?.skipped??0)&&(r.tests?.skipped??0)>=0&&
+    (r.profile!=='android-unit'||(r.tests?.skipped??0)===0)&&
     Number.isSafeInteger(r.tests?.executed)&&r.tests.executed>=0&&
     (isCompiler
       ? r.testProfile===false&&r.tests.executed===0
