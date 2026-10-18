@@ -102,6 +102,8 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
   assert.equal(receipt.taskId,'repair-owner-one');
   assert.equal(receipt.patchSha256,result.patchSha256);
   assert.equal(receipt.passed,true);
+  assert.equal(receipt.evidenceSufficient,true);
+  assert.deepEqual(receipt.reasons,[]);
   assert.ok(receipt.executedTests>0);
   assert.ok(receipt.profiles.every(p=>p.passed&&p.failed===0));
   assert.deepEqual(fs.readFileSync(path.join(f.root,'.github/continuum/math.mjs')),original);
@@ -114,6 +116,9 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
   const baseline=JSON.parse(fs.readFileSync(result.report,'utf8'));
   assert.equal(baseline.baseline.passed,false);
   assert.equal(baseline.outcome,'VERIFIED');
+  assert.equal(baseline.independent.passed,true);
+  assert.equal(baseline.independent.evidenceSufficient,true);
+  assert.deepEqual(baseline.independent.profiles,receipt.profiles);
   assert.equal(executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports')}).status,'NO_READY_TASK');
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
