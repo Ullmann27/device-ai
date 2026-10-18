@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {RelationalEncoder} from './cre-encoder.mjs';
-import {resolveCefrCheckpoint,loadCefrCheckpoint,promoteCefrCheckpoint} from './cefr-dev-checkpoint.mjs';
+import {resolveCefrCheckpoint,loadCefrCheckpoint,promoteCefrCheckpoint,restoreCefrLastKnownGood} from './cefr-dev-checkpoint.mjs';
 const sha256=x=>crypto.createHash('sha256').update(x).digest('hex');
 function fixture(fn){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-cefr-store-'));
@@ -64,4 +64,34 @@ test('concurrent lock rejects writes and does not overwrite trusted weights',()=
  assert.throws(()=>promoteCefrCheckpoint({...o,promotion:promotion(72),
   expectedSha256:first.activeSha256}),/EEXIST/);
  assert.equal(loadCefrCheckpoint(o).sha256,first.activeSha256);
+}));
+
+test('promoting a new developer model keeps the previous verified bytes as last-known-good',
+ ()=>fixture(o=>{
+ const first=promotion(17),second=promotion(18);
+ promoteCefrCheckpoint({...o,promotion:first});
+ const file=resolveCefrCheckpoint(o.stateDir,o.repoRoot);
+ assert.equal(fs.existsSync(file+'.lkg'),false);
+ promoteCefrCheckpoint({...o,promotion:second,expectedSha256:first.activeSha256});
+ assert.ok(fs.readFileSync(file+'.lkg').equals(first.activeBytes));
+ assert.ok(fs.readFileSync(file).equals(second.activeBytes));
+ assert.equal(fs.statSync(file+'.lkg').mode&0o077,0);
+ const reverted=restoreCefrLastKnownGood({...o,expectedSha256:second.activeSha256});
+ assert.equal(reverted.sha256,first.activeSha256);
+ assert.ok(loadCefrCheckpoint(o).bytes.equals(first.activeBytes));
+}));
+
+test('rollback requires the exact active checkpoint SHA, and refuses tampered LKG',
+ ()=>fixture(o=>{
+ const first=promotion(19),second=promotion(20);
+ promoteCefrCheckpoint({...o,promotion:first});
+ promoteCefrCheckpoint({...o,promotion:second,expectedSha256:first.activeSha256});
+ assert.throws(()=>restoreCefrLastKnownGood({...o,
+  expectedSha256:first.activeSha256}),/ROLLBACK_EXPECTED_SHA_MISMATCH/);
+ assert.equal(loadCefrCheckpoint(o).sha256,second.activeSha256);
+ const file=resolveCefrCheckpoint(o.stateDir,o.repoRoot);
+ fs.writeFileSync(file+'.lkg','corrupt');
+ assert.throws(()=>restoreCefrLastKnownGood({...o,
+  expectedSha256:second.activeSha256}));
+ assert.equal(loadCefrCheckpoint(o).sha256,second.activeSha256);
 }));
