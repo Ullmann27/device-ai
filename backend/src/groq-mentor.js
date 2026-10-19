@@ -3,6 +3,8 @@
  * Does not receive device context, owner memory, web results or tool schemas.
  * This is NOT part of the autonomous research daemon or model training.
  */
+import { formatMentorAnswer } from "./mentor-answer-format.js";
+
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const DEFAULT_MODEL = "openai/gpt-oss-20b";
 const MAX_INPUT_CHARS = 1800;
@@ -98,17 +100,27 @@ export class GroqMentor {
                 "Device AI Continuum ist ein persönlicher Android-Assistent mit lokalem Startkern, " +
                 "bestätigten Erinnerungen, Forschungsansicht, Gerätewerkzeugen mit Benutzerfreigaben " +
                 "und einem Entwicklungsassistenten für überprüfbare Codevorschläge. " +
-                "Sein lokaler Lernkern verwendet SWB1 und einen experimentellen CRE1-Kern; " +
+                "SWB1 ist ein kompakter lokaler Subwort- und Intent-Lernkern; " +
+                "CRE1 ist ein experimenteller relationaler Encoder zum Vergleich und Reranking, " +
+                "dessen Verifikation und Aktivierung vom Trainings- und Auditstatus abhängen. " +
+                "Erfinde niemals ausgeschriebene Namen für die Abkürzungen SWB1 und CRE1. " +
+                "Keiner dieser Kerne ist ein vollwertiges generatives Sprachmodell. " +
                 "ein optionales LiteRT-LM-Sprachmodell muss separat installiert werden. " +
                 "Der Teamleiter prüft den Backlog, entwickelt aber noch keine Apps eigenständig. " +
                 "Der Groq-Mentor wird nur nach ausdrücklicher Einmalfreigabe für einzelne Fragen aufgerufen; " +
                 "er darf keine Geräteaktionen, Git-Patches oder Lernübernahmen ausführen. " +
                 "Für APK-Builds existiert eine getrennte Entwicklungsumgebung, kein Android-eigener Compiler. " +
                 "Wenn nach 'dieser App' oder 'unserer App' gefragt wird, erkläre diese Funktionen verständlich. " +
+                "Du siehst weder den aktuellen Gerätezustand noch das Repository; " +
+                "unterscheide strikt nachgewiesene Architektur, Planungen und Unsicherheit. " +
                 "Behaupte keine laufenden Tests, aktuellen Gerätestände oder unbekannte Funktionen. " +
                 "Antworte auf Deutsch. Kennzeichne Unsicherheit, erfinde keine Quellen. " +
                 "Du hast keine Geräteberechtigungen, keine Internettools und kein Langzeitgedächtnis. " +
-                "Führe keine Befehle aus. Formuliere maximal 1800 Zeichen." },
+                "Führe keine Befehle aus. Schreibe Klartext in kurzen Absätzen, " +
+                "keine Markdown-Tabellen, Pipe-Zeichen oder Sterne zur Formatierung. " +
+                "Bei mehrteiligen Fragen nummeriere die Antworten kurz und präzise. " +
+                "Halte die Gesamtausgabe möglichst unter 3500 Zeichen; " +
+                "schließe jeden Satz vollständig ab." },
               { role: "user", content: question.trim() }
             ]
           })
@@ -153,11 +165,13 @@ export class GroqMentor {
           offset += part.length;
         }
         const payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(joined));
-        const answer = payload?.choices?.[0]?.message?.content;
-        if (typeof answer === "string" && answer.trim()) {
+        const answer = formatMentorAnswer(payload?.choices?.[0]?.message?.content, {
+          incomplete: payload?.choices?.[0]?.finish_reason === "length"
+        });
+        if (answer) {
           return {
             ok: true,
-            message: answer.trim().slice(0, 1800),
+            message: answer,
             model: this.model,
             provider: "GROQ",
             trust: "UNVERIFIED_EXTERNAL",
