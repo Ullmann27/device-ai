@@ -57,3 +57,18 @@ Modelle, webbasierte Recherchen, GitHub-README-Texte und alte Prototypen sind **
 
 ## Statuswörter (verpflichtend)
 `IDEA`, `SOURCE_INTEGRATED`, `MOCK_TESTED`, `DEVICE_TOOLCHAIN_VERIFIED`, `REAL_APK_BUILT`, `DEVICE_INSTALLED`, `END_TO_END_VERIFIED`, `RESEARCH_SHADOW`, `BLOCKED`; streng am jeweiligen Commit und konkreten Gerät belegen.
+
+## Bestandsintegration zuerst (Besitzerkorrektur 19.10.2026)
+
+Der Besitzer hat ausdrücklich bestätigt, dass **Termux auf seinem Android-Gerät bereits mit Device AI verbunden ist**. Dies ist als Nutzerangabe zu berücksichtigen; der Laufzeitstatus auf seinem konkreten Samsung kann durch reines GitHub-Lesen nicht belegt werden. **Keine separate obligatorische Termux-Neueinrichtung planen**, bevor die vorhandene Integration und installierten Toolchains geprüft sind.
+
+Im Repository ist bereits Folgendes nachgewiesen:
+- `ShizukuBridge.kt` + `ShellUserService.kt`: bestehende Geräte-/Shell-Anbindung.
+- `DeviceToolExecutor.kt` + `ToolRegistry.kt` + `ToolGate`: bestehende gebundene Geräteaktionen, einschließlich `install_apk` aus freigegebenem gemeinsamem Speicher unter bestätigungspflichtiger `Risk.CONFIRM`. Das ist **nicht** identisch mit Termux-App-UID und ersetzt keinen nativen ARM64-AAPT2-Compiler.
+- `scripts/continuum-teamleader-termux.sh`: vorhandener Termux-Einstieg für denselben Teamleiter; keine zweite Backlogverwaltung.
+- In der Preview öffnet `AgentActivity.kt` aus **dem vorhandenen Chat** mit `Worker Builder` oder aus dem **vorhandenen Entwicklungszentrum** über `HANDY-BUILDER · TERMUX` die `ContinuumMobileBuilderActivity.kt`. Damit bleibt die vertraute Continuum-Oberfläche der Einstiegspunkt; ein separater Launcher dient nur als optionaler Preview-Testpfad.
+- Der Builder verwendet die offizielle `RUN_COMMAND`-Schnittstelle der installierten Termux-Umgebung, wobei Nutzerberechtigung und einmaliger Ergebnisrückkanal getrennt geprüft werden. Es erfolgt keine parallele Neuentwicklung einer Shell-Toolgate-Schicht oder Installation ohne Freigabe.
+
+**Späterer Installationsschritt:** vor Neuerfindung einer APK-Installation erst vorhandenes `install_apk`-Tool prüfen und auf geprüfte Paket-ID, APK-SHA, Signing-Key-Identität, Benutzerbestätigung, Kopieren in autorisierten gemeinsamen Speicher und unabhängige Installationsbestätigung erweitern. Ein `pm install -r`-Rückgabestring ist noch kein hardwaregeprüfter Erfolg.
+
+**Offen:** bestehender Termux-Verbindungsstatus und tatsächliche SDK-/JDK-/AAPT2-Werkzeuge **auf dem Samsung**; Build und Result-PendingIntent am Gerät; echte Kotlin-/Android-Gesamtsuite; Installationsabschluss. Nie vom Shell-Werkzeugzugriff allein auf erfolgreiches APK-Bauen schließen.
