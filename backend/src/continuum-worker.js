@@ -1,6 +1,7 @@
 import path from "node:path";
 import { ContinuumResearchDaemon, createOpenAiResearchFunction } from "./continuum-daemon.js";
 import { createPublicResearchFunction } from "./public-research.js";
+import { runPostResearchShadowCycle } from "../../.github/continuum/research-shadow-worker.mjs";
 
 const enabled = (process.env.CONTINUUM_DAEMON_ENABLED ?? "true").toLowerCase() !== "false";
 if (!enabled) {
@@ -37,4 +38,21 @@ process.on("SIGINT", () => shutdown("SIGINT"));
 
 console.log("Device AI Continuum research daemon starting with provider:", provider);
 console.log(JSON.stringify(daemon.status()));
-daemon.start();
+const shadowEnabled = (process.env.CONTINUUM_SHADOW_LEARNING_ENABLED ?? "false").toLowerCase() === "true";
+const shadowDirectory = path.join(path.dirname(statePath), "cre1-research");
+daemon.start(shadowEnabled ? async result => {
+  if (result?.success !== true) return;
+  try {
+    const status = runPostResearchShadowCycle({
+      researchResult: result,
+      stateDir: shadowDirectory,
+      budgetMs: 30_000
+    });
+    console.log("[CRE1 shadow]", JSON.stringify({
+      status: status.status, sourceSha256: status.sourceSha256 ?? null,
+      checkpointWritten: Boolean(status.checkpointWritten)
+    }));
+  } catch (error) {
+    console.error("[CRE1 shadow] fail closed:", error instanceof Error ? error.message : String(error));
+  }
+} : null);
