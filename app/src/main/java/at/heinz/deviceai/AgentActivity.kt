@@ -810,6 +810,11 @@ class AgentActivity : Activity() {
         ).apply { gravity = Gravity.CENTER; hologramStatus = this }, matchWidth())
         container.addView(hero, matchWidth())
         container.addView(buildStatusRow(), matchWidth(top = 11))
+        container.addView(actionButton("★   ERSTE SCHRITTE · Deine KI einfach erklärt  ›", accent = true).apply {
+            contentDescription = "Schritt-für-Schritt-Anleitung für Internet, Lernen, Modelle und Coding-Agent"
+            minHeight = dp(56)
+            setOnClickListener { showFirstStepsGuide() }
+        }, matchWidth(top = 10))
         container.addView(textView("DEINE KI-BEREICHE", 10f,
             Color.rgb(153, 189, 252), true).apply {
             letterSpacing = 0.14f
@@ -1026,6 +1031,38 @@ class AgentActivity : Activity() {
         status { text -> if (dialog.isShowing) statusView.text = text }
     }
 
+    /**
+     * Small one-page-at-a-time introduction for first-time users.
+     * Actions navigate to existing screens only; no permission is granted here.
+     */
+    private fun showFirstStepsGuide(page: Int = 0) {
+        val steps = ContinuumFirstSteps.steps
+        val index = page.coerceIn(steps.indices)
+        val step = steps[index]
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Deine KI einrichten · Schritt ${index + 1} von ${steps.size}")
+            .setMessage(step.title + "\\n\\n" + step.description +
+                "\\n\\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
+            .setNeutralButton(step.actionTitle) { _, _ ->
+                when (step.action) {
+                    ContinuumGuideAction.CHAT -> focusChatComposer()
+                    ContinuumGuideAction.INTERNET -> showResearchModeDialog()
+                    ContinuumGuideAction.LEARNING -> showLearningCenter()
+                    ContinuumGuideAction.MODELS -> showModelCenter()
+                    ContinuumGuideAction.DEVELOPMENT -> showDevelopmentCenter()
+                    ContinuumGuideAction.STATUS -> showSystemCenter()
+                }
+            }
+            .setNegativeButton(if (index == 0) "Schließen" else "Zurück") { _, _ ->
+                if (index > 0) showFirstStepsGuide(index - 1)
+            }
+            .setPositiveButton(if (index == steps.lastIndex) "Fertig" else "Weiter") { _, _ ->
+                if (index < steps.lastIndex) showFirstStepsGuide(index + 1)
+            }
+            .create()
+        dialog.show()
+    }
+
     private fun showLearningCenter() = showCenter(
         "Lernzentrum",
         "Kontrolliertes Lernen: nur bestätigte Beispiele, Holdout-Schutz vor Verschlechterung und " +
@@ -1081,6 +1118,7 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("ENTWICKLUNGSAUFGABE · STARTEN", accent = true) { showDevelopmentDialog() },
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
+            CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
