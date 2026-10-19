@@ -84,6 +84,14 @@ node --check backend/src/mentor-pairing.js
 node --check backend/src/server.js
 node --test backend/test/groq-mentor.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
 
+echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
+: "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
+: "${CONTINUUM_MENTOR_SIGNING_PASSWORD:?Signing password is missing}"
+printf '%s' "$CONTINUUM_MENTOR_SIGNING_P12_BASE64" | base64 --decode > "$workspace/mentor-preview-signing.p12"
+chmod 600 "$workspace/mentor-preview-signing.p12"
+export CONTINUUM_MENTOR_SIGNING_FILE="$workspace/mentor-preview-signing.p12"
+keytool -list -keystore "$CONTINUUM_MENTOR_SIGNING_FILE" -storepass "$CONTINUUM_MENTOR_SIGNING_PASSWORD" -storetype PKCS12 >/dev/null
+
 echo "[Continuum] Android JVM tests, API lint and Mentor Preview APK"
 gradle --no-daemon --max-workers=2 \
   -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
@@ -93,6 +101,12 @@ gradle --no-daemon --max-workers=2 \
 apk="app/build/outputs/apk/debug/app-debug.apk"
 test -s "$apk"
 "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+cert_details="$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$apk")"
+expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"
+if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
+  echo "Refusing APK signed by an unexpected or temporary debug key." >&2
+  exit 69
+fi
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
   | grep -F "package: name='at.heinz.deviceai.mentorpaired'"
 
@@ -103,7 +117,7 @@ cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=android_debug\n' \
+printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
   "$commit" "$expected_branch" > "$output/BUILD-INFO.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
