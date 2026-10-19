@@ -19,20 +19,26 @@ internal object ContinuumMobileResultPolicy {
         operation: ContinuumMobileBuildPlan.Operation,
         exitCode: Int?,
         termuxError: Int?,
-        reportedStatus: String?
+        reportedStatus: String?,
+        apkSha256: String? = null,
+        signerSha256: String? = null
     ): Outcome {
         if (exitCode == null || termuxError != -1) return Outcome.INVALID_RESULT
         if (exitCode != 0) {
             return if (operation == ContinuumMobileBuildPlan.Operation.DOCTOR &&
                 reportedStatus == "UNAVAILABLE"
-            ) Outcome.TOOLCHAIN_UNAVAILABLE else Outcome.EXECUTION_FAILED
+            ) Outcome.TOOLCHAIN_UNAVAILABLE else if (operation == ContinuumMobileBuildPlan.Operation.BUILD) Outcome.BUILD_FAILED
+            else Outcome.EXECUTION_FAILED
         }
         return when (operation) {
             ContinuumMobileBuildPlan.Operation.DOCTOR ->
                 if (reportedStatus == "READY_FOR_EXPERIMENTAL_BUILD") Outcome.TOOLCHAIN_READY
                 else Outcome.INVALID_RESULT
             ContinuumMobileBuildPlan.Operation.BUILD ->
-                if (reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED") {
+                if (reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED" &&
+                    apkSha256 != null && Regex("[0-9a-f]{64}").matches(apkSha256) &&
+                    signerSha256 != null && Regex("[0-9a-f]{64}").matches(signerSha256)
+                ) {
                     Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE
                 } else Outcome.INVALID_RESULT
             ContinuumMobileBuildPlan.Operation.STATUS ->
