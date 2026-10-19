@@ -297,6 +297,52 @@ class ResearchEngineTest {
     }
 
     @Test
+    fun oversizedFollowUpPageDoesNotDiscardCompletedResearch() {
+        val first = document(
+            "https://first.example.org/dictionary", "first.example.org",
+            "Grammar notes about unrelated dictionary examples and miscellaneous words.", 1
+        )
+        val good = document(
+            "https://science.example.org/solar", "science.example.org",
+            "Solar cells convert sunlight directly into electrical energy using the photovoltaic effect.", 2
+        )
+        val oversized = "https://verylarge.example.org/document"
+        var discoveryCalls = 0
+        val discovery = object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = true
+            override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
+                discoveryCalls++
+                return if (discoveryCalls == 1) {
+                    listOf(ResearchSourceCandidate(first.url))
+                } else {
+                    listOf(ResearchSourceCandidate(oversized), ResearchSourceCandidate(good.url))
+                }
+            }
+        }
+        val provider = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult {
+                if (request.url == oversized) {
+                    throw IllegalArgumentException("Research response is too large.")
+                }
+                val doc = if (request.url == first.url) first else good
+                return ResearchResult(listOf(doc), listOf(doc.citation()))
+            }
+        }
+        val dossier = DeepResearchEngine(
+            discovery = discovery,
+            provider = provider,
+            now = { 1_000L },
+            validateTarget = {}
+        ).research("Wie funktionieren Solarzellen?", ResearchMode.STANDARD)
+        assertTrue(discoveryCalls > 1)
+        assertEquals(ResearchPhase.PARTIAL, dossier.phase)
+        assertTrue(dossier.partialReason.orEmpty().contains("Nachrecherche-Quelle"))
+        assertTrue(dossier.sources.any { it.canonicalUrl == first.url })
+        assertTrue(dossier.sources.any { it.canonicalUrl == good.url })
+        assertNotNull(dossier.synthesis)
+    }
+
+    @Test
     fun onlyExplicitlyRequestedVerifiedIndependentClaimsCanEnterLongTermMemory() {
         val store = InMemoryMemoryStore()
         val claim = Claim(
