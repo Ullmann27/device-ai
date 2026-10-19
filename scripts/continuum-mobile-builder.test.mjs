@@ -89,6 +89,7 @@ test('synthetic signed output saves a distinct hash-tied copy; not proof of an o
   assert.equal(result.apk!==f.artifact,true);
   const gradle=commands.find(x=>x.file==='/fake/gradle');
   assert.ok(gradle.args.includes('-Pandroid.aapt2FromMavenOverride=/fake/aapt2'));
+  assert.ok(gradle.args.includes('-PdeviceAiMobileAidlFallback=true'));
   assert.ok(gradle.args.includes('--offline'));
   assert.ok(gradle.args.includes(':app:testDebugUnitTest'));
   assert.ok(gradle.args.includes(':app:lintDebug'));
