@@ -80,7 +80,9 @@ gradle --version
 
 echo "[Continuum] Groq-specific contract tests"
 node --check backend/src/groq-mentor.js
-node --test backend/test/groq-mentor.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
+node --check backend/src/mentor-pairing.js
+node --check backend/src/server.js
+node --test backend/test/groq-mentor.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
 
 echo "[Continuum] Android JVM tests, API lint and Mentor Preview APK"
 gradle --no-daemon --max-workers=2 \
