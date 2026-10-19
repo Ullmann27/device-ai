@@ -144,6 +144,9 @@ jobs:
           path: ${{ runner.temp }}/cre1-hybrid-report.json
           if-no-files-found: error
 
+      - name: Verify Groq mentor UI consent and isolation
+        run: node --test .github/continuum/groq-mentor-ui-wiring.test.mjs
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 
