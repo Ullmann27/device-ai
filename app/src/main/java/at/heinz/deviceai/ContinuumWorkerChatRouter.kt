@@ -6,6 +6,7 @@ sealed class ContinuumWorkerChatCommand {
     data object Help : ContinuumWorkerChatCommand()
     data object Backlog : ContinuumWorkerChatCommand()
     data object DevelopmentCenter : ContinuumWorkerChatCommand()
+    data object MobileBuilder : ContinuumWorkerChatCommand()
     data class Draft(val goal: String) : ContinuumWorkerChatCommand()
 }
 
@@ -25,6 +26,9 @@ object ContinuumWorkerChatRouter {
                 ContinuumWorkerChatCommand.Backlog
             "worker entwickeln", "baumeister entwickeln", "worker werkstatt" ->
                 ContinuumWorkerChatCommand.DevelopmentCenter
+            "worker builder", "baumeister builder", "worker termux", "baumeister termux",
+            "worker handy builder", "baumeister handy builder" ->
+                ContinuumWorkerChatCommand.MobileBuilder
             else -> {
                 val match = draftPattern.matchEntire(text) ?: return null
                 val goal = match.groupValues[1].trim()
