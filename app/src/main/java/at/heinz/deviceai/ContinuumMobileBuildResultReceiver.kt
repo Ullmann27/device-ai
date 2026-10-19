@@ -61,7 +61,11 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             apkSha256 = artifactHash,
             signerSha256 = signerHash
         )
-        val text = ContinuumMobileResultPolicy.explanation(outcome)
+        val text = if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
+            ContinuumMobileResultPolicy.statusExplanation(reportedStatus)
+        } else {
+            ContinuumMobileResultPolicy.explanation(outcome)
+        }
         val editor = prefs.edit()
             .remove(JOB_ID)
             .remove(JOB_OPERATION)
