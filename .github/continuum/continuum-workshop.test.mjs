@@ -96,11 +96,13 @@ test('real Teamleader FSM runs with an injected bounded safe driver, no merge',a
    head:()=>head,repair:()=>{repairs++;return {outcome:'NO_FAILURE'};}
   });
   const opts={...parseWorkshopArgs(['--mode','once']),root:w.root,state:w.state};
-  const first=await executeWorkshop(opts,{driverFactory});
+  const first=await executeWorkshop(opts,{driverFactory,
+   research:async()=>({status:'OFFLINE_FIXTURE'})});
   assert.equal(first.outcome,'NO_FAILURE');
   assert.equal(first.automaticMerge,false);
   assert.equal(repairs,1);
-  const second=await executeWorkshop(opts,{driverFactory});
+  const second=await executeWorkshop(opts,{driverFactory,
+   research:async()=>({status:'OFFLINE_FIXTURE'})});
   assert.equal(second.outcome,'IDLE');
   assert.equal(repairs,1);
   assert.equal(fs.readFileSync(path.join(w.root,'README.md'),'utf8'),
@@ -121,7 +123,7 @@ test('one-cycle cadence persists bounded heartbeat and never claims automatic me
    root:w.root,state:w.state
   },{driverFactory:async()=>({
    head:()=>head,repair:()=>{executed++;return {outcome:'NO_FAILURE'};}
-  })});
+  }),research:async()=>({status:'OFFLINE_FIXTURE'})});
   assert.equal(executed,1);
   assert.equal(res.mode,'loop');assert.equal(res.cycles,1);
   assert.equal(res.automaticMerge,false);
@@ -129,5 +131,26 @@ test('one-cycle cadence persists bounded heartbeat and never claims automatic me
   assert.equal(status.heartbeatState,'LIMIT_REACHED');
   assert.equal(status.heartbeat.lastOutcome,'NO_FAILURE');
   assert.equal(status.progress.baselineClean,1);
+ }finally{w.cleanup();}
+});
+
+
+test('explicit virtual Atlas research mode cannot start arbitrary commands or merge code',async()=>{
+ const w=checkout();
+ try{
+  let cycles=0;
+  const result=await executeWorkshop({
+   ...parseWorkshopArgs(['--mode','research']),root:w.root,state:w.state
+  },{research:async({root,state})=>{
+   assert.equal(root,w.root);
+   assert.equal(state,w.state);
+   cycles++;
+   return {status:'RECORDED_LEADS',added:3,trainingApproved:false};
+  }});
+  assert.equal(cycles,1);
+  assert.equal(result.status,'RECORDED_LEADS');
+  assert.equal(result.trainingApproved,false);
+  assert.equal(result.automaticMerge,false);
+  assert.equal(readWorkshopStatus(workshopPaths(w.root,w.state)).atlas.references,0);
  }finally{w.cleanup();}
 });
