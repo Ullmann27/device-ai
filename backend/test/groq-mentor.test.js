@@ -93,7 +93,7 @@ test("upstream errors do not expose API response contents or key", async () => {
       new Response('{"error":{"message":"private secret from provider"}}', { status: 401 })
   });
   assert.deepEqual(await mentor.answer("Testfrage an Groq"), {
-    ok: false, code: "UPSTREAM_UNAVAILABLE"
+    ok: false, code: "GROQ_KEY_REJECTED"
   });
 });
 
@@ -129,4 +129,25 @@ test("mentor ignores whitespace around environment key and never follows a redir
     }
   });
   assert.equal((await mentor.answer("Warum scheint die Sonne?")).ok, true);
+});
+
+test("provider rejects unknown models and invalid requests without exposing response bodies", async () => {
+  for (const [status, expected] of [
+    [404, "GROQ_MODEL_UNAVAILABLE"],
+    [400, "GROQ_REQUEST_REJECTED"],
+    [422, "GROQ_REQUEST_REJECTED"],
+    [503, "UPSTREAM_UNAVAILABLE"]
+  ]) {
+    const mentor = new GroqMentor({
+      enabled: true,
+      apiKey: KEY,
+      fetcher: async () => new Response(
+        '{"error":{"message":"internal credential do not print"}}',
+        { status }
+      )
+    });
+    assert.deepEqual(await mentor.answer("Bitte erklären"), {
+      ok: false, code: expected
+    });
+  }
 });
