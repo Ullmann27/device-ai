@@ -10,6 +10,7 @@ import { HypothesisTournament, createOpenAiHypothesisAdapters } from "./hypothes
 import { ContinuumStateStore, mergeResearchQuestions } from "./continuum-state.js";
 import { selectResearchKnowledge } from "./continuum-knowledge.js";
 import { androidWebTools } from "./android-web-tools.js";
+import { GroqMentor } from "./groq-mentor.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -28,6 +29,12 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-6-luna";
 const OPENAI_BASE_URL = (process.env.OPENAI_BASE_URL ?? "https://api.openai.com/v1").replace(/\/+$/, "");
 const WEB_SEARCH_ENABLED = (process.env.WEB_SEARCH_ENABLED ?? "true").toLowerCase() !== "false";
 const PORT = Number(process.env.PORT ?? 8080);
+const groqMentor = new GroqMentor({
+  enabled: (process.env.GROQ_MENTOR_ENABLED ?? "false").toLowerCase() === "true",
+  apiKey: process.env.GROQ_API_KEY ?? "",
+  model: process.env.GROQ_MENTOR_MODEL ?? "openai/gpt-oss-20b",
+  dailyLimit: Number(process.env.GROQ_MENTOR_DAILY_LIMIT ?? 20)
+});
 const CONTINUUM_DAEMON_ENABLED = (process.env.CONTINUUM_DAEMON_ENABLED ?? "false").toLowerCase() === "true";
 const CONTINUUM_RESEARCH_PROVIDER = (process.env.CONTINUUM_RESEARCH_PROVIDER ?? "public").toLowerCase();
 const BRAIN_FACTORY_ENABLED = (process.env.CONTINUUM_BRAIN_FACTORY_ENABLED ?? "false").toLowerCase() === "true";
@@ -289,6 +296,32 @@ app.get("/health", (_req, res) => {
     continuum_daemon: Boolean(continuumDaemon),
     brain_factory: Boolean(brainFactory)
   });
+});
+
+/** Private status: never returns API keys or user prompts. */
+app.get("/v1/mentor/status", auth, (_req, res) => {
+  res.json(groqMentor.status());
+});
+
+/** Explicit text-only mentor. No tools, no context, no persistent learning. */
+app.post("/v1/mentor/answer", auth, async (req, res) => {
+  if (req.body?.provider !== "GROQ" || req.body?.consent !== true) {
+    return res.status(400).json({ error: "OWNER_CONSENT_REQUIRED" });
+  }
+  if (typeof req.body?.question !== "string" ||
+      req.body.question.trim().length < 3 ||
+      req.body.question.length > 1800 ||
+      Object.keys(req.body).sort().join("|") !== "consent|provider|question") {
+    return res.status(400).json({ error: "INVALID_QUESTION" });
+  }
+  const result = await groqMentor.answer(req.body.question);
+  if (!result.ok) {
+    const status = result.code === "DISABLED" ? 503 :
+      result.code === "INVALID_QUESTION" ? 400 :
+      result.code === "DAILY_LIMIT" || result.code === "BUSY" || result.code === "UPSTREAM_LIMIT" ? 429 : 502;
+    return res.status(status).json({ error: result.code });
+  }
+  return res.json(result);
 });
 
 app.get("/v1/continuum/status", auth, (_req, res) => {
