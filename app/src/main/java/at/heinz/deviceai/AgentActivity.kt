@@ -34,6 +34,7 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
+import android.speech.tts.UtteranceProgressListener
 import java.util.Locale
 import android.text.InputType
 import android.view.Gravity
@@ -304,6 +305,37 @@ class AgentActivity : Activity() {
             if (status == TextToSpeech.SUCCESS) {
                 val language = voiceEngine?.setLanguage(Locale.GERMAN)
                 voiceReady = language != null && language >= TextToSpeech.LANG_AVAILABLE
+                if (voiceReady) voiceEngine?.setOnUtteranceProgressListener(
+                    object : UtteranceProgressListener() {
+                        override fun onStart(utteranceId: String?) {
+                            runOnUiThread {
+                                if (utteranceId == activeSpeechUtterance && !isDestroyed)
+                                    showHologramState(ContinuumVisualState.SPEAKING)
+                            }
+                        }
+
+                        override fun onAudioAvailable(utteranceId: String?, audio: ByteArray?) {
+                            if (audio == null || utteranceId != activeSpeechUtterance) return
+                            val amplitude = ContinuumPcmLevel.rms16Le(audio)
+                            runOnUiThread {
+                                if (utteranceId == activeSpeechUtterance && !isDestroyed)
+                                    hologramView?.updatePcmLevel(amplitude)
+                            }
+                        }
+
+                        override fun onDone(utteranceId: String?) {
+                            finishSpokenUtterance(utteranceId)
+                        }
+
+                        override fun onError(utteranceId: String?) {
+                            finishSpokenUtterance(utteranceId)
+                        }
+
+                        override fun onStop(utteranceId: String?, interrupted: Boolean) {
+                            finishSpokenUtterance(utteranceId)
+                        }
+                    }
+                )
                 if (voiceReady && voiceEnabled) speakBootstrap("Hallo. Device AI ist bereit.")
             }
         }
@@ -430,6 +462,7 @@ class AgentActivity : Activity() {
         devDialog?.dismiss()
         modelCenterDialog?.dismiss()
         centerDialog?.dismiss()
+        activeSpeechUtterance = null
         voiceEngine?.stop()
         voiceEngine?.shutdown()
         voiceEngine = null
@@ -1344,7 +1377,11 @@ class AgentActivity : Activity() {
                 if (voiceReady) speakBootstrap("Hallo! Meine Stimme ist eingeschaltet.")
                 else Toast.makeText(this@AgentActivity,
                     "Android-Sprachausgabe ist noch nicht bereit.", Toast.LENGTH_LONG).show()
-            } else voiceEngine?.stop()
+            } else {
+                activeSpeechUtterance = null
+                voiceEngine?.stop()
+                showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
+            }
         }
         actions.addView(voiceButton,
             LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
@@ -2830,10 +2867,25 @@ class AgentActivity : Activity() {
         }
     }
 
+    private fun finishSpokenUtterance(utteranceId: String?) {
+        runOnUiThread {
+            if (utteranceId != activeSpeechUtterance || isDestroyed) return@runOnUiThread
+            activeSpeechUtterance = null
+            showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
+        }
+    }
+
     private fun speakBootstrap(message: String) {
         if (!voiceEnabled || !voiceReady) return
         val plain = message.take(380)
-        voiceEngine?.speak(plain, TextToSpeech.QUEUE_FLUSH, null, "device-ai-voice")
+        nextSpeechSerial++
+        val utteranceId = "device-ai-voice-" + nextSpeechSerial
+        activeSpeechUtterance = utteranceId
+        val result = voiceEngine?.speak(plain, TextToSpeech.QUEUE_FLUSH, null, utteranceId)
+        if (result != TextToSpeech.SUCCESS) {
+            activeSpeechUtterance = null
+            showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
+        }
     }
 
     private fun showWebLearningInbox() {
