@@ -4824,7 +4824,9 @@ class AgentActivity : Activity() {
 
         val url = EditText(this).apply {
             hint = "https://dein-device-ai-backend.example"
-            setText(backend.backendUrl())
+            setText(backend.backendUrl().ifBlank {
+                "https://device-ai-continuum-mentor.onrender.com"
+            })
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
             setSingleLine(true)
         }
@@ -4879,6 +4881,25 @@ class AgentActivity : Activity() {
         backend.health { result ->
             result.onSuccess {
                 addToolActivity("✓ Backend erreichbar")
+                backend.mentorStatus { status ->
+                    status.onSuccess { (configured, remaining) ->
+                        if (configured) {
+                            addToolActivity(
+                                "✓ Groq-Mentor konfiguriert · maximal $remaining Versuche heute übrig. " +
+                                    "Externer Modellaufruf noch nicht getestet."
+                            )
+                        } else {
+                            addToolActivity(
+                                "Groq-Mentor noch nicht aktiviert oder Groq-API-Schlüssel fehlt am Server."
+                            )
+                        }
+                    }.onFailure {
+                        addToolActivity(
+                            "Groq-Mentor-Status nicht abrufbar: " +
+                                (it.message ?: "Verbindung oder Device-Token prüfen").take(120)
+                        )
+                    }
+                }
             }.onFailure {
                 addToolActivity("Backend nicht erreichbar: ${it.message ?: "Fehler"}")
             }
