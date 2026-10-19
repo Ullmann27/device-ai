@@ -50,17 +50,14 @@
             android:enabled="${mobileBuilderEnabled}"
             android:exported="false" />
 
-        <!-- Separate owner-operated mobile builder launcher; disabled outside preview variants. -->
+        <!-- EXP-00/08: Builder is a tool screen, not a second home-screen app.
+             Exported only for explicit allowlisted navigation from an installed
+             Device AI main package; disabled in non-preview builds. -->
         <activity
             android:name=".ContinuumMobileBuilderActivity"
             android:exported="true"
             android:enabled="${mobileBuilderEnabled}"
-            android:label="Continuum Builder">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:label="Continuum Builder" />
 
         <activity
             android:name=".MainActivity"
