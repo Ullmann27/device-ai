@@ -55,6 +55,13 @@ test('primary AI dashboard remains the only Android launcher, preview builder st
   assert.match(route, /externalPackage = !internal/);
 });
 
+test('builder is a subpage with explicit return to the original AI dashboard', () => {
+  const builder = read(src + 'ContinuumMobileBuilderActivity.kt');
+  assert.match(builder, /text = "← Zurück zu Device AI"/);
+  assert.match(builder, /setOnClickListener \{ finish\(\) \}/);
+  assert.match(agent, /startActivity\(intent\)/);
+});
+
 test('the old inaccurate PC-only guidance has been removed', () => {
   assert.doesNotMatch(agent, /Nur ein separater[\s\S]{0,60}eingeschalteter Entwicklerrechner/);
   assert.doesNotMatch(agent, /Es ist noch keine Build-Aufgabe auf einem Host gestartet/);
