@@ -1,8 +1,12 @@
 package at.heinz.deviceai
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.animation.ValueAnimator
+import android.os.Build
+import android.os.SystemClock
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
@@ -12,6 +16,12 @@ import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.View
 import kotlin.math.min
+import kotlin.math.sin
+import kotlin.math.max
+
+enum class ContinuumVisualState {
+    READY, LISTENING, THINKING, SPEAKING, RESEARCHING, LEARNING
+}
 
 /**
  * Transparent, locally rendered 3D-style AI core based on the Device AI
@@ -29,11 +39,64 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val cyan = Color.rgb(39, 222, 255)
     private val blue = Color.rgb(56, 115, 255)
     private val violet = Color.rgb(184, 94, 255)
+    private val animatedBrush = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
+    private val bitmapBrush = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
+    private var staticArtwork: Bitmap? = null
+    private var speechLevel = 0f
+    private var hasPcmAudio = false
+    private var tickQueued = false
+    private val tick = Runnable {
+        tickQueued = false
+        if (isShown && animationPermitted()) {
+            invalidate()
+        }
+    }
+
+    var visualState: ContinuumVisualState = ContinuumVisualState.READY
+        private set
 
     init {
-        setLayerType(LAYER_TYPE_SOFTWARE, null)
-        contentDescription = "Dekorative holografische Darstellung des Device AI Kerns"
+        // Shadows and radial gradients are rasterized exactly once into the
+        // transparent bitmap. Per-frame overlays remain hardware-friendly.
+        setLayerType(LAYER_TYPE_HARDWARE, null)
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+    }
+
+    fun showState(next: ContinuumVisualState) {
+        if (visualState == next) return
+        visualState = next
+        speechLevel = 0f
+        hasPcmAudio = false
+        invalidate()
+    }
+
+    /**
+     * A normalized signal from actual Android TTS PCM callbacks.
+     * Engines that provide no PCM still animate the SPEAKING state,
+     * but no amplitude is invented.
+     */
+    fun updatePcmLevel(level: Float) {
+        if (visualState != ContinuumVisualState.SPEAKING || !level.isFinite()) return
+        hasPcmAudio = true
+        speechLevel = level.coerceIn(0f, 1f)
+        invalidate()
+    }
+
+    private fun animationPermitted(): Boolean =
+        Build.VERSION.SDK_INT < 26 || ValueAnimator.areAnimatorsEnabled()
+
+    private fun queueFrame() {
+        if (tickQueued || !isShown || !animationPermitted()) return
+        tickQueued = true
+        postDelayed(tick, if (visualState == ContinuumVisualState.READY) 90L else 45L)
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(tick)
+        tickQueued = false
+        staticArtwork?.recycle()
+        staticArtwork = null
+        super.onDetachedFromWindow()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -45,14 +108,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         )
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        val scale = min(width / 340f, height / 234f)
-        if (scale <= 0f) return
-        val save = canvas.save()
-        canvas.translate((width - 340f * scale) / 2f, (height - 234f * scale) / 2f)
-        canvas.scale(scale, scale)
-
+    private fun drawStaticArt(canvas: Canvas) {
         // Distant nebula and mountains remain behind a fully transparent view.
         brush.reset()
         brush.isAntiAlias = true
@@ -158,8 +214,109 @@ class ContinuumHologramView @JvmOverloads constructor(
             floatArrayOf(0f, .58f, 1f), Shader.TileMode.CLAMP)
         canvas.drawOval(111f, 43f, 172f, 93f, brush)
         brush.shader = null
+    }
 
-        canvas.restoreToCount(save)
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        if (width <= 0 || height <= 0) return
+        val scale = min(width / 340f, height / 234f)
+        if (scale <= 0f) return
+        var art = staticArtwork
+        if (art == null || art.isRecycled) {
+            art = Bitmap.createBitmap(340, 234, Bitmap.Config.ARGB_8888)
+            drawStaticArt(Canvas(art))
+            staticArtwork = art
+        }
+        val saved = canvas.save()
+        canvas.translate((width - 340f * scale) / 2f, (height - 234f * scale) / 2f)
+        canvas.scale(scale, scale)
+        bitmapBrush.alpha = 255
+        canvas.drawBitmap(art, 0f, 0f, bitmapBrush)
+        if (animationPermitted()) {
+            drawDynamicLight(canvas)
+            queueFrame()
+        } else {
+            drawStatusDot(canvas, 0f)
+        }
+        canvas.restoreToCount(saved)
+    }
+
+    private fun stateColor(): Int = when (visualState) {
+        ContinuumVisualState.READY -> cyan
+        ContinuumVisualState.LISTENING -> Color.rgb(80, 245, 197)
+        ContinuumVisualState.THINKING -> violet
+        ContinuumVisualState.SPEAKING -> Color.rgb(77, 226, 255)
+        ContinuumVisualState.RESEARCHING -> Color.rgb(77, 170, 255)
+        ContinuumVisualState.LEARNING -> Color.rgb(255, 185, 100)
+    }
+
+    private fun drawStatusDot(canvas: Canvas, pulse: Float) {
+        animatedBrush.reset()
+        animatedBrush.isAntiAlias = true
+        animatedBrush.style = Paint.Style.FILL
+        animatedBrush.color = stateColor()
+        animatedBrush.alpha = (190f + pulse * 50f).toInt().coerceIn(0, 255)
+        canvas.drawCircle(286f, 27f, 4.2f + pulse * 1.3f, animatedBrush)
+        animatedBrush.color = Color.argb(105, 177, 232, 255)
+        canvas.drawCircle(286f, 27f, 8f + pulse * 2f, animatedBrush)
+    }
+
+    private fun drawDynamicLight(canvas: Canvas) {
+        val time = SystemClock.uptimeMillis() / 1000.0
+        val pulse = ((sin(time * when (visualState) {
+            ContinuumVisualState.READY -> 1.2
+            ContinuumVisualState.LISTENING -> 3.2
+            ContinuumVisualState.THINKING -> 2.3
+            ContinuumVisualState.SPEAKING -> 3.0
+            ContinuumVisualState.RESEARCHING -> 2.0
+            ContinuumVisualState.LEARNING -> 1.6
+        }) + 1.0) * 0.5).toFloat()
+        val accent = stateColor()
+        animatedBrush.reset()
+        animatedBrush.isAntiAlias = true
+        animatedBrush.style = Paint.Style.STROKE
+        animatedBrush.strokeWidth = 1.2f + pulse
+        animatedBrush.color = accent
+        animatedBrush.alpha = (85f + pulse * 110f).toInt()
+        val outer = 84f + 5f * pulse
+        frame.set(171f - outer, 111f - outer, 171f + outer, 111f + outer)
+        canvas.drawArc(frame, (time * 17.0 % 360.0).toFloat(), 84f, false, animatedBrush)
+        canvas.drawArc(frame, (180.0 - time * 13.0 % 360.0).toFloat(), 76f, false, animatedBrush)
+        drawStatusDot(canvas, pulse)
+        if (visualState == ContinuumVisualState.SPEAKING) {
+            drawAudioBars(canvas)
+        } else if (visualState == ContinuumVisualState.LISTENING) {
+            // No microphone level is available from the external recognizer UI.
+            // This represents a listening state, NOT detected microphone energy.
+            drawSimpleSignal(canvas, 6f + pulse * 3f, accent)
+        } else if (visualState == ContinuumVisualState.THINKING ||
+            visualState == ContinuumVisualState.RESEARCHING ||
+            visualState == ContinuumVisualState.LEARNING
+        ) {
+            drawSimpleSignal(canvas, 3f + pulse * 2f, accent)
+        }
+    }
+
+    private fun drawSimpleSignal(canvas: Canvas, height: Float, tint: Int) {
+        animatedBrush.style = Paint.Style.STROKE
+        animatedBrush.strokeWidth = 2.2f
+        animatedBrush.strokeCap = Paint.Cap.ROUND
+        animatedBrush.alpha = 190
+        animatedBrush.color = tint
+        for (i in -4..4) {
+            val distance = 1f - kotlin.math.abs(i) / 5f
+            val bar = max(2f, height * distance)
+            val x = 171f + i * 9f
+            canvas.drawLine(x, 213f - bar, x, 213f + bar, animatedBrush)
+        }
+    }
+
+    private fun drawAudioBars(canvas: Canvas) {
+        // Without a PCM callback, a flat signal indicates voice activity only.
+        // Never substitute arbitrary sinusoidal bars for real speech amplitude.
+        val barHeight = if (hasPcmAudio) 2f + 27f * speechLevel else 2f
+        drawSimpleSignal(canvas, barHeight, stateColor())
+        if (hasPcmAudio) speechLevel *= 0.86f
     }
 
     private fun drawOrbit(
