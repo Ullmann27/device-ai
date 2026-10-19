@@ -7,6 +7,7 @@ import {proposeCandidates,applyEdits} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
+import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -242,6 +243,35 @@ export function checkCandidateJsSyntax(wt,relativeFiles,{timeoutMs=10000}={}){
   return {passed:true,checked,failedFile:null,reason:null};
 }
 
+/**
+ * Kotlin preflight over ordinary files from the isolated candidate worktree.
+ * Fails safely on lexically broken files but does NOT claim to be a compiler.
+ */
+export function checkCandidateKotlinSyntax(wt,relativeFiles,{base=null}={}){
+  if(!Array.isArray(relativeFiles)||relativeFiles.length>3||
+     relativeFiles.some(f=>typeof f!=='string'))
+    throw Error('Invalid Kotlin syntax-check request');
+  const files=Object.create(null);
+  for(const relative of [...new Set(relativeFiles)]){
+    if(!/\.(?:kt|kts)$/.test(relative))continue;
+    const full=boundedWorktreeFile(wt,relative);
+    const size=fs.statSync(full).size;
+    if(size<1||size>750_000)return {passed:false,checked:[],
+      failedFile:relative,reason:'EMPTY_OR_OVERSIZED_KOTLIN_SOURCE'};
+    files[relative]=fs.readFileSync(full,'utf8');
+    if(base&&relative.endsWith('.kt')){
+      const old=git(wt,['show',base+':'+relative],{allowFailure:true});
+      if(old.status===0){
+        const getPackage=t=>t.match(/^\s*package\s+([\w.]+)/m)?.[1]??'';
+        if(getPackage(old.stdout)!==getPackage(files[relative]))
+          return {passed:false,checked:[],failedFile:relative,
+            reason:'KOTLIN_PACKAGE_CHANGED'};
+      }
+    }
+  }
+  return inspectKotlinSyntax(files);
+}
+
 function context(wt,base,experience){
   const readFile=rel=>{
     try {
@@ -393,6 +423,11 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       attempt.syntaxReason=error?.code??'INVALID_CHECK_REQUEST';
       report.attempts.push(attempt);
       continue;
+    }
+    if(syntax.passed){
+      const kotlin=checkCandidateKotlinSyntax(wt,c.edits.map(e=>e.file),{base});
+      attempt.kotlinSyntax=kotlin;
+      if(!kotlin.passed)syntax=kotlin;
     }
     attempt.syntax=syntax;
     if(!syntax.passed) {
