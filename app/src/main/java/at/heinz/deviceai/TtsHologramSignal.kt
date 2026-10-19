@@ -1,5 +1,7 @@
 package at.heinz.deviceai
 
+import kotlin.math.sqrt
+
 /** Bounded amplitude metadata only. PCM is never retained. Playback callbacks
  * anchor synthesis chunks to audible output rather than synthesis arrival time. */
 internal class TtsHologramSignal {
@@ -31,9 +33,22 @@ internal class TtsHologramSignal {
     @Synchronized fun append(id: String, audio: ByteArray) {
         if (utterance != id) return
         val bytesPerSample = when (encoding) { 2 -> 2; 3 -> 1; 4 -> 4; else -> return }
-        if (sampleRate == 0 || points.size >= 1_024) return
+        if (sampleRate == 0) return
         val frames = audio.size / (bytesPerSample * channels)
         if (frames == 0) return
+        // Keep bounded metadata without dropping the rest of a long utterance.
+        // Coarser older windows retain their duration-weighted RMS and frame positions.
+        if (points.size >= 1_024) {
+            for (index in 0 until 512) {
+                val left = points[index * 2]
+                val right = points[index * 2 + 1]
+                val power = left.level.toDouble() * left.level * (left.end - left.frame) +
+                    right.level.toDouble() * right.level * (right.end - right.frame)
+                points[index] = Point(left.frame, right.end,
+                    sqrt(power / (right.end - left.frame)).toFloat().coerceIn(0f, 1f))
+            }
+            points.subList(512, points.size).clear()
+        }
         points.add(Point(nextFrame, nextFrame + frames, HologramPcmLevel.rms(audio, encoding)))
         nextFrame += frames
     }

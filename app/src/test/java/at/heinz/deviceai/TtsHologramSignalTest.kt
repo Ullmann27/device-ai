@@ -4,6 +4,32 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class TtsHologramSignalTest {
+    @Test fun longSynthesisKeepsLaterAudioAndItsPlaybackPosition() {
+        val signal = TtsHologramSignal()
+        signal.activate("long")
+        signal.begin("long", 8_000, 3, 1)
+        repeat(4_096) { signal.append("long", ByteArray(80) { 128.toByte() }) }
+        signal.append("long", ByteArray(80) { 0 })
+        signal.anchor("long", 0, 0)
+        assertEquals(0f, signal.level(40_959), 0f)
+        assertEquals(1f, signal.level(40_960), 0f)
+        assertEquals(1f, signal.level(40_969), 0f)
+        assertEquals(0f, signal.level(40_970), 0f)
+    }
+
+    @Test fun boundedHistoryPreservesDurationWeightedAudioPower() {
+        val signal = TtsHologramSignal()
+        signal.activate("mixed")
+        signal.begin("mixed", 8_000, 3, 1)
+        signal.append("mixed", ByteArray(80) { 128.toByte() })
+        signal.append("mixed", ByteArray(240) { 0 })
+        repeat(1_023) { signal.append("mixed", ByteArray(80) { 128.toByte() }) }
+        signal.anchor("mixed", 0, 0)
+        assertEquals(.8660254f, signal.level(0), .0001f)
+        assertEquals(.8660254f, signal.level(39), .0001f)
+        assertEquals(0f, signal.level(40), 0f)
+    }
+
     @Test fun synthesisIsSilentUntilAudibleStartAndFollowsPlaybackFrame() {
         val signal = TtsHologramSignal()
         signal.activate("A")
