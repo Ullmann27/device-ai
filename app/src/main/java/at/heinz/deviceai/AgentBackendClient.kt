@@ -9,6 +9,8 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+data class MentorPairingResult(val approved: Boolean, val fingerprint: String)
+
 data class RemoteContinuumStatus(
     val autonomousResearchEnabled: Boolean,
     val brainEvolutionEnabled: Boolean,
@@ -53,6 +55,59 @@ class AgentBackendClient(private val context: Context) {
     }
 
     fun hasToken(): Boolean = !SecureTokenStore.load(context).isNullOrBlank()
+
+    fun hasMentorAccess(): Boolean = !SecureTokenStore.loadMentorToken(context).isNullOrBlank() || hasToken()
+
+    fun ensureMentorBackend() {
+        if (backendUrl().isBlank()) saveBackendUrl("https://device-ai-continuum-mentor.onrender.com")
+    }
+
+    /**
+     * Operator-approved, mentor-only device pairing. Never stores the global Device token,
+     * never sends local conversations, files, memory or Android identifiers.
+     */
+    fun pairMentor(callback: (Result<MentorPairingResult>) -> Unit) {
+        ensureMentorBackend()
+        val base = backendUrl()
+        if (!base.startsWith("https://", ignoreCase = true)) {
+            callback(Result.failure(IllegalStateException("HTTPS-Backend erforderlich.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                val publicKey = MentorDeviceIdentity.publicKeyBase64()
+                val fingerprint = MentorDeviceIdentity.fingerprint()
+                val challenge = JSONObject(
+                    request("GET", "$base/v1/mentor/pairing/challenge", null, authenticated = false)
+                )
+                val issuedAt = challenge.getLong("issuedAt")
+                val nonce = challenge.getString("nonce")
+                val signed = MentorDeviceIdentity.signChallenge(issuedAt, nonce)
+                val payload = JSONObject().apply {
+                    put("publicKey", publicKey)
+                    put("signature", signed)
+                    put("challenge", challenge)
+                }
+                val response = try {
+                    request("POST", "$base/v1/mentor/pairing/redeem",
+                        payload.toString(), authenticated = false)
+                } catch (e: IllegalStateException) {
+                    if (e.message == "PAIRING_PENDING") return@runCatching MentorPairingResult(false, fingerprint)
+                    throw e
+                }
+                val result = JSONObject(response)
+                require(result.getBoolean("ok") &&
+                    result.getString("scope") == "MENTOR_ONLY" &&
+                    result.getString("fingerprint") == fingerprint) {
+                    "Gerätefreigabe konnte nicht verifiziert werden."
+                }
+                val token = result.getString("token")
+                SecureTokenStore.saveMentorToken(context, token)
+                MentorPairingResult(true, fingerprint)
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-mentor-pairing").apply { isDaemon = true; start() }
+    }
 
     fun isConfigured(): Boolean =
         backendUrl().startsWith("https://", ignoreCase = true) && hasToken()
@@ -147,9 +202,9 @@ class AgentBackendClient(private val context: Context) {
 
     fun mentorStatus(callback: (Result<Pair<Boolean, Int>>) -> Unit) {
         val base = backendUrl()
-        val token = SecureTokenStore.load(context)
+        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
         if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
-            callback(Result.failure(IllegalStateException("HTTPS-Backend mit Device-Token fehlt.")))
+            callback(Result.failure(IllegalStateException("Groq-Gerätefreigabe oder Device-Token fehlt.")))
             return
         }
         Thread({
@@ -174,9 +229,9 @@ class AgentBackendClient(private val context: Context) {
      */
     fun groqMentor(question: String, callback: (Result<String>) -> Unit) {
         val base = backendUrl()
-        val token = SecureTokenStore.load(context)
+        val token = SecureTokenStore.loadMentorToken(context) ?: SecureTokenStore.load(context)
         if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
-            callback(Result.failure(IllegalStateException("HTTPS-Backend mit Device-Token fehlt.")))
+            callback(Result.failure(IllegalStateException("Groq-Gerätefreigabe oder Device-Token fehlt.")))
             return
         }
         if (question.trim().length !in 3..1800) {
