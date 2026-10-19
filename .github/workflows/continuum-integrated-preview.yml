@@ -1,0 +1,88 @@
+name: Continuum Integrated Preview APK
+
+on:
+  push:
+    branches:
+      - "astra/continuum-integrated-apk-20261019"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-preview-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  integrated-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Backend dependencies from lockfile
+        run: npm ci --prefix backend --ignore-scripts --no-audit --no-fund
+      - name: Backend syntax and integration tests
+        run: |
+          npm --prefix backend run check
+          npm --prefix backend test
+      - name: Full portable Node regression suite
+        run: node --test .github/continuum/*.test.mjs
+      - name: Preview-specific learning and research gates
+        run: |
+          node --test .github/continuum/research-learning-cycle.test.mjs
+          node --test .github/continuum/cre1-blacklab-optimizer.test.mjs
+          node --test .github/continuum/research-shadow-worker.test.mjs
+      - name: Android SDK license and API 36
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Android JVM regression tests
+        run: gradle :app:testDebugUnitTest --stacktrace
+      - name: Check Android 26+ API safety
+        run: gradle :app:lintDebug --stacktrace
+      - name: Build installable preview APK
+        run: gradle :app:assembleDebug -PdeviceAiPreview=true --stacktrace
+      - name: Verify APK signature, package ID, and build SHA
+        run: |
+          set -euo pipefail
+          apk="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.preview'"
+          mkdir -p build-evidence
+          cp "$apk" build-evidence/DeviceAI-Continuum-Preview.apk
+          git rev-parse HEAD > build-evidence/COMMIT.txt
+          sha256sum build-evidence/DeviceAI-Continuum-Preview.apk > build-evidence/SHA256SUMS.txt
+          cp -r app/build/test-results/testDebugUnitTest build-evidence/android-unit-results
+      - name: Upload exact verified APK and integrity evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceAI-Continuum-Integrated-Preview
+          path: build-evidence/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload partial test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeviceAI-Integrated-Preview-Failures
+          path: |
+            app/build/test-results/testDebugUnitTest
+            app/build/reports/lint-results-debug.html
+          if-no-files-found: ignore
