@@ -35,7 +35,9 @@ node scripts/continuum-mobile-builder.mjs status
 Die Umgebung erwartet `ANDROID_HOME` oder `ANDROID_SDK_ROOT`. Bei Werkzeugen außerhalb des PATH sind `CONTINUUM_AAPT2_PATH` und `CONTINUUM_GRADLE_PATH` erlaubt. Die Scriptvorgabe verlangt **genau** Gradle 8.11.1, Java 17 und Android SDK 36, um unbemerkte Toolchain-Abweichungen zu vermeiden. Es ist kein Installationsskript für die Toolchain enthalten. Erst nach gesonderter Prüfung passende ARM64-Pakete installieren und Downloadquellen/Signaturen kontrollieren.
 
 ## Aktuell bestätigter Prüfstand
-Auf Node 22 in einer separaten lokalen Testumgebung wurden **9/9** spezialisierte Node-Tests ausgeführt: Parserblockade bei beliebigen Shellbefehlen, Geräteerkennung, fehlende Tools, State außerhalb des Checkouts, fehlende SDK-Kette, schmutziger Git-Checkout, kaputter Gradle-Lauf, ungültige Signatur und positive **synthetische** Belegkette. Keine dieser Simulationen ist ein echter ARM64-/Gradle-/Samsung-Build.
+Eine frühere lokale Node-22-Vorimplementierung bestand **9/9 isolierte Tests**. Die jetzt **im GitHub-Branch eingecheckte Version** enthält eigene Regressionen in `scripts/continuum-mobile-builder.test.mjs`; deren reale Ausführung am eingecheckten Git-HEAD **steht noch aus**. Daher wird für diese Branchversion kein grüner Testlauf beansprucht. Die synthetischen Tests wären auch bei Erfolg kein echter ARM64-/Gradle-/Samsung-Build.
+
+Abnahme auf einem vollständigen Checkout: `node --test scripts/continuum-mobile-builder.test.mjs` und danach `node scripts/continuum-mobile-builder.mjs doctor` auf dem Android-Smartphone.
 
 ## Wichtigste nächste Arbeit
 1. Toolchain-Kompatibilität **am realen Samsung**, inklusive nativer ARM64-AAPT2-Binärdatei mit passender API-36-Unterstützung nachweisen.
