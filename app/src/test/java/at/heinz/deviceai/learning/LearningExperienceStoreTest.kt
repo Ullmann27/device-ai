@@ -72,4 +72,27 @@ class LearningExperienceStoreTest {
             assertEquals("audit-279",all.last().content)
         } finally { dir.deleteRecursively() }
     }
+
+    @Test fun fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords() {
+        val dir=Files.createTempDirectory("device-ai-protected-experience-bound").toFile()
+        try {
+            val store=FileLearningExperienceStore(dir)
+            fun fact(index:Int)=LearningExperienceFactory.create(
+                LearningExperienceType.USER_FACT,LearningProvenance.USER_CONFIRMED,
+                LearningTrustClass.OWNER_CONFIRMED,LearningStatus.CONFIRMED,
+                "Bestätigter persönlicher Fakt $index",now=index.toLong())
+            assertEquals(FileLearningExperienceStore.MAX_RECORDS,
+                store.appendMissing((0 until FileLearningExperienceStore.MAX_RECORDS).map(::fact)))
+            val before=File(dir,"experiences-v2.bin").readBytes()
+            val audit=LearningExperienceFactory.create(LearningExperienceType.TRAINING_AUDIT,
+                LearningProvenance.LOCAL_TRAINING,LearningTrustClass.SYSTEM_MEASUREMENT,
+                LearningStatus.LEARNED,"new audit",now=1000L)
+            assertFalse("a declined observation must not claim persistence",store.append(audit))
+            assertEquals(0,store.appendMissing(listOf(audit)))
+            assertThrows(IllegalStateException::class.java) { store.append(fact(500)) }
+            assertArrayEquals("capacity failures must leave the ledger intact",before,
+                File(dir,"experiences-v2.bin").readBytes())
+            assertEquals(FileLearningExperienceStore.MAX_RECORDS,FileLearningExperienceStore(dir).all().size)
+        } finally { dir.deleteRecursively() }
+    }
 }

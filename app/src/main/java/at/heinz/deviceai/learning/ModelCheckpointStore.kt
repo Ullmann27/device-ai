@@ -34,10 +34,10 @@ class ModelCheckpointStore(private val directory:File) {
         val label=reason.trim().replace(Regex("[\\p{Cntrl}]")," ").take(MAX_REASON)
             .ifEmpty { "unbenannt" }
         val current=load()
-        current.lastOrNull()?.takeIf { it.sha256==hash }?.let { return@synchronized it }
         if(!directory.isDirectory && !directory.mkdirs())error("Checkpoint-Verzeichnis nicht anlegbar")
         val file=fileFor(hash)
         if(!file.exists() || !verifies(file,hash))writeAtomically(file,bytes)
+        current.lastOrNull()?.takeIf { it.sha256==hash }?.let { return@synchronized it }
         val entry=ModelCheckpoint(hash,now,label,model.updates)
         val next=(current.filter { it.sha256!=hash }+entry).takeLast(MAX_CHECKPOINTS)
         save(next)

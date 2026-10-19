@@ -16,13 +16,13 @@ class CognitiveDecisionBridgeTest {
                 assertEquals(ReasoningPassRole.CANDIDATE, request.role)
                 assertTrue(request.prompt.contains("Leo wohnt seit 2024 in Graz."))
                 assertFalse(request.prompt.contains("Dazu finde ich in meinem Gedächtnis:"))
-                ReasoningPassResult("local-fixture", "Leo lebt seit 2024 in Graz.", 2L)
+                ReasoningPassResult("local-fixture", "Leo wohnt seit 2024 in Graz.", 2L)
             }
             val result = CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir, core), model)
                 .respond("Wo wohnt Leo?")
             assertTrue(result.usedLocalModel)
             assertFalse(result.anchorRejectedModelOutput)
-            assertEquals("Leo lebt seit 2024 in Graz.", result.finalAnswer)
+            assertEquals("Leo wohnt seit 2024 in Graz.", result.finalAnswer)
             assertEquals(1, result.evidenceHits.size)
             assertEquals(1, core.dialogueHistory().size)
             assertEquals(result.turn.dialogue.memoryIds, result.evidenceHits.map { it.id })
@@ -130,5 +130,21 @@ class CognitiveDecisionBridgeTest {
         } finally { dir.deleteRecursively() }
     }
 
+
+    @Test fun sameEntitiesAndNumbersCannotAuthorizeChangedRelationships() {
+        val dir = Files.createTempDirectory("continuum-bridge-relation").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt seit 2024 in Graz.")
+            val model=ContinuumReasoningAdapter {
+                ReasoningPassResult("local-fixture", "Leo wohnt seit 2024 außerhalb von Graz.", 2L)
+            }
+            val result=CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir,core),model).respond("Wo wohnt Leo?")
+            assertFalse(result.usedLocalModel)
+            assertTrue(result.anchorRejectedModelOutput)
+            assertFalse(result.finalAnswer.contains("außerhalb"))
+            assertEquals(1,core.dialogueHistory().size)
+        } finally { dir.deleteRecursively() }
+    }
 
 }

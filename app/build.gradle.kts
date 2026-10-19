@@ -16,6 +16,7 @@ android {
         targetSdk = 36
         versionCode = 4
         versionName = "0.3.1"
+        testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["appLabel"] = if (deviceAiPreview) "Device AI Preview" else "Device AI"
     }
 

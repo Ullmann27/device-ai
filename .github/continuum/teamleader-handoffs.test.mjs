@@ -4,6 +4,10 @@ import {summarizeRepairHandoffs,verifyRepairHandoffs,REPAIR_ROLES}
   from './teamleader-handoffs.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {localTeamleaderDriver} from './autonomous-teamleader.mjs';
 
 const HEAD='a'.repeat(40);
 const testResult={profile:'node-continuum',passed:true,
@@ -81,6 +85,45 @@ test('reviewer rejection does not lead to edits or test execution',()=>{
  assert.deepEqual(m.messages.map(x=>x.role),['ANALYST','CRITIC','TEAMLEADER']);
  assert.ok(m.messages.every(x=>x.event!=='PATCH_PENDING_REVIEW'));
 });
+function syntaxAttempt(outcome='FAILED_SYNTAX'){
+ return {candidate:'cand-syntax',strategy:'JS_TYPO_REFERENCE',
+  critic:{approved:true},edits:[{file:'.github/continuum/math.mjs'}],
+  outcome,...(outcome==='FAILED_SYNTAX'
+   ?{syntax:{passed:false,checked:[],failedFile:'.github/continuum/math.mjs',
+      reason:'INVALID_JS_SYNTAX'}}
+   :{syntaxReason:'INVALID_CHECK_REQUEST'})};
+}
+test('syntax-rejected candidates retain handoffs without claiming executed tests',()=>{
+ for(const outcome of ['FAILED_SYNTAX','SYNTAX_CHECK_ERROR']){
+  const report=structuredClone(failedBaseline);
+  report.outcome='NO_VERIFIED_REPAIR';
+  report.attempts=[syntaxAttempt(outcome)];
+  const handoff=summarizeRepairHandoffs(report);
+  assert.equal(verifyRepairHandoffs(handoff),true);
+  assert.deepEqual(handoff.messages.map(m=>m.role),
+   ['ANALYST','CRITIC','PATCHER','TESTER','TEAMLEADER']);
+  const gate=handoff.messages.find(m=>m.event==='JS_SYNTAX_GATE');
+  assert.equal(gate.passed,false);
+  assert.equal(gate.executed,false);
+  assert.equal(gate.outcome,outcome);
+  assert.equal(handoff.messages.at(-1).approvedForMerge,false);
+  assert.ok(handoff.messages.every(m=>m.event!=='FIXED_TEST_CHAIN'));
+ }
+});
+test('syntax rejection cannot replace critic approval or claim full test evidence',()=>{
+ const source=structuredClone(failedBaseline);
+ source.outcome='NO_VERIFIED_REPAIR';
+ source.attempts=[syntaxAttempt()];
+ for(const modify of [
+  a=>{a.critic.approved=false;},
+  a=>{a.syntax.passed=true;},
+  a=>{a.syntax=null;},
+  a=>{a.tests=[structuredClone(testResult)];}
+ ]){
+  const report=structuredClone(source);modify(report.attempts[0]);
+  assert.throws(()=>summarizeRepairHandoffs(report));
+ }
+});
 test('unrecognized or oversized role payloads fail without execution',()=>{
  const r=verified();
  r.attempts[0].strategy='x'.repeat(141);
@@ -94,10 +137,58 @@ test('unrecognized or oversized role payloads fail without execution',()=>{
  assert.equal(verifyRepairHandoffs(altered),false);
  assert.deepEqual(REPAIR_ROLES.TEAMLEADER,['REVIEW_PROPOSAL']);
 });
-test('existing Teamleader real repair driver produces these structured handoffs',()=>{
- const source=fs.readFileSync(new URL('./autonomous-teamleader.mjs',import.meta.url),'utf8');
- assert.match(source,/summarizeRepairHandoffs\(result\)/);
- assert.match(source,/createWorktree\(root,head\)/);
- assert.match(source,/removeWorktree\(root,wt\)/);
- assert.doesNotMatch(source,/git\(root,\['push'/);
+test('real offline Teamleader keeps a syntax rejection before an independently verified proposal',
+ {skip:Boolean(process.env.CONTINUUM_REPAIR_DEPTH),timeout:60000},async()=>{
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-handoff-integration-'));
+ const root=path.join(base,'checkout'),state=path.join(base,'state');
+ const dir=path.join(root,'.github','continuum');
+ fs.mkdirSync(dir,{recursive:true});fs.mkdirSync(state);
+ const source="const syntaxHint='await await await';\n"+
+  'export function awaii(n){return n*3}\n'+
+  'export function triple(n){return awai(n)}\n';
+ fs.writeFileSync(path.join(dir,'math.mjs'),source);
+ fs.writeFileSync(path.join(dir,'math.test.mjs'),
+  "import test from 'node:test';\nimport assert from 'node:assert/strict';\n"+
+  "import {triple} from './math.mjs';\ntest('triple',()=>assert.equal(triple(3),9));\n");
+ const git=(...args)=>{
+  const r=spawnSync('git',args,{cwd:root,encoding:'utf8',timeout:20000});
+  assert.equal(r.status,0,r.stderr);return r.stdout.trim();
+ };
+ try{
+  git('init','-q');git('add','.');
+  git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','baseline');
+  const head=git('rev-parse','HEAD');
+  const driver=await localTeamleaderDriver();
+  const report=driver.repair(root,state,head,{budgetMinutes:1});
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(report.independent.passed,true);
+  assert.deepEqual(report.attempts.map(a=>a.outcome),['FAILED_SYNTAX','VERIFIED']);
+  assert.equal(verifyRepairHandoffs(report.handoffs),true);
+  const syntax=report.handoffs.messages.find(m=>m.event==='JS_SYNTAX_GATE');
+  assert.equal(syntax.executed,false);
+  assert.equal(report.handoffs.messages.at(-1).event,'PATCH_PENDING_REVIEW');
+  assert.equal(report.handoffs.messages.at(-1).approvedForMerge,false);
+  assert.equal(fs.readFileSync(path.join(dir,'math.mjs'),'utf8'),source);
+  assert.equal(git('status','--porcelain'),'');
+  assert.equal(git('worktree','list','--porcelain').match(/^worktree /gm).length,1);
+  const persisted=JSON.parse(fs.readFileSync(report.artifact,'utf8'));
+  assert.equal(verifyRepairHandoffs(persisted.handoffs),true);
+  const ledger=JSON.parse(fs.readFileSync(path.join(state,'repair-ledger.json'),'utf8'));
+  assert.deepEqual(ledger.attempts.map(a=>a.outcome),['FAILED_SYNTAX','VERIFIED']);
+  // A crashed parser is auditable but does not prove this candidate is bad.
+  // On the next authorized attempt, the real worker must still try it.
+  for(const [outcome,syntaxReason] of [
+   ['SYNTAX_CHECK_ERROR','INVALID_CHECK_REQUEST'],
+   ['FAILED_SYNTAX','SYNTAX_CHECK_INTERRUPTED']
+  ]){
+   const prior=structuredClone(ledger.attempts.find(a=>a.outcome==='VERIFIED'));
+   Object.assign(prior,{outcome,syntaxReason,tests:[],patchSha256:null});
+   fs.writeFileSync(path.join(state,'repair-ledger.json'),JSON.stringify({
+    ...ledger,attempts:[prior],experiences:[],sessions:[]
+   }));
+   const retried=driver.repair(root,state,head,{budgetMinutes:1});
+   assert.equal(retried.outcome,'VERIFIED',syntaxReason+' must allow candidate retry');
+   assert.equal(retried.independent.passed,true);
+  }
+ }finally{fs.rmSync(base,{recursive:true,force:true});}
 });

@@ -17,18 +17,20 @@ class ApprovedWebResearchToolRunner(
 ):ToolRunner {
     private val guardedDiscovery=session.discovery(discovery)
     private val guardedProvider=session.provider(provider)
-    @Volatile var dossier:ResearchDossier?=null
-        private set
+    @Volatile private var completedDossier:ResearchDossier?=null
+    val dossier:ResearchDossier? get()=completedDossier?.takeIf { session.isAuthorized() }
     override fun execute(request:ToolCallRequest):String {
         val call=WebToolRequest.fromTool(request.name,request.arguments)
-        return session.execute(call) {
+        val result=session.execute(call) {
             val engine=engineFactory(guardedDiscovery,guardedProvider)
             val result=if(resume)engine.resume(cancellation,progress)?:error("Kein fortsetzbarer Recherchelauf")
                 else engine.research(session.question,session.mode,session.seedUrls,cancellation,progress)
             check(result.plan.question==session.question&&result.plan.mode==session.mode) { "Checkpoint stimmt nicht mit der Freigabe überein" }
-            dossier=result
-            format(result)
+            result
         }
+        session.checkAuthorized()
+        completedDossier=result
+        return format(result).also { session.checkAuthorized() }
     }
     companion object {
         fun format(dossier:ResearchDossier):String=buildString {

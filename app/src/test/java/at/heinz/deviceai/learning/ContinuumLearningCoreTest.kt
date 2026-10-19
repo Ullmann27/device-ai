@@ -141,11 +141,101 @@ class ContinuumLearningCoreTest {
             val report=core.teachIntent("Warum ist der Himmel blau?",1) { true }
             val after=core.modelSnapshot()
             assertFalse(report.accepted)
+            assertFalse("cancelled training is not a completed evaluation",report.completedEvaluation)
             assertArrayEquals(before,after)
             val status=core.status()
             assertEquals(1,status.experiences.intentLabels)
             assertEquals(1,status.experiences.replayPending)
         } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun ownerCorrectionSupersedesConflictingIntentAndSurvivesRestart() {
+        val dir=Files.createTempDirectory("continuum-intent-correction").toFile()
+        try {
+            var now=500L
+            val core=ContinuumLearningCore(dir) { now++ }
+            val weights=core.modelSnapshot()
+            val original=core.teachIntent("Warum ist das so?",1) { true }
+            val correction=core.teachIntent("  WARUM ist das so!  ",0) { true }
+            val store=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2"))
+            assertEquals(listOf(correction.experienceIds.single()),
+                store.replay(LearningExperienceType.INTENT_LABEL).map { it.id })
+            assertEquals(LearningStatus.REVOKED,
+                store.all().single { it.id==original.experienceIds.single() }.status)
+            assertEquals("replay is measured after conflicting labels are superseded",1,correction.replayExamples)
+            assertEquals(2,ContinuumLearningCore(dir).status().experiences.intentLabels)
+            assertArrayEquals("cancellation persists the correction but never weights",weights,core.modelSnapshot())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun ownerCanExplicitlyRestoreAnEarlierIntentLabelWithoutReplayingItsReplacement() {
+        val dir=Files.createTempDirectory("continuum-intent-reconfirmation").toFile()
+        try {
+            var now=500L
+            val core=ContinuumLearningCore(dir) { now++ }
+            val first=core.teachIntent("Warum ist das so?",1) { true }
+            val correction=core.teachIntent("Warum ist das so?",0) { true }
+            val restored=core.teachIntent("Warum ist das so?",1) { true }
+            assertEquals(first.experienceIds,restored.experienceIds)
+            val store=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2"))
+            assertEquals(first.experienceIds,
+                store.replay(LearningExperienceType.INTENT_LABEL).map { it.id })
+            assertEquals(LearningStatus.REVOKED,
+                store.all().single { it.id==correction.experienceIds.single() }.status)
+            assertEquals(1,restored.replayExamples)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun reconfirmedOldIntentParticipatesInBoundedReplay() {
+        val dir=Files.createTempDirectory("continuum-intent-replay-refresh").toFile()
+        try {
+            val store=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2"))
+            val lessons=(0..70).map { i ->
+                LearningExperienceFactory.create(LearningExperienceType.INTENT_LABEL,
+                    LearningProvenance.USER_CONFIRMED,LearningTrustClass.OWNER_CONFIRMED,
+                    LearningStatus.CONFIRMED,"Bestätigte Frage Nummer $i","1",now=i.toLong())
+            }
+            store.appendMissing(lessons)
+            ContinuumLearningCore(dir) { 500L }.teachIntent(lessons.first().content,1) { true }
+            val replay=FileLearningExperienceStore(java.io.File(dir,"learning-core-v2"))
+                .replay(LearningExperienceType.INTENT_LABEL,64)
+            assertEquals(64,replay.size)
+            assertEquals("the latest owner instruction must be trained even if its id is old",
+                lessons.first().id,replay.last().id)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun invalidIntentTextCannotPoisonPersistentReplay() {
+        val dir=Files.createTempDirectory("continuum-invalid-intent").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            assertThrows(IllegalArgumentException::class.java) { core.teachIntent("!!!",1) }
+            assertEquals("validation must happen before the lesson is persisted",0,
+                core.status().experiences.intentLabels)
+            assertEquals(1,core.teachIntent("Warum ist das so?",1) { true }.replayExamples)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun sourceTrainingIsSkippedWhenTheOwnerLedgerHasNoObservationCapacity() {
+        for(ownerCount in listOf(FileLearningExperienceStore.MAX_RECORDS-1,FileLearningExperienceStore.MAX_RECORDS)) {
+            val dir=Files.createTempDirectory("continuum-source-capacity").toFile()
+            try {
+                val core=ContinuumLearningCore(dir)
+                core.syncOwnerFacts((0 until ownerCount).map { "Mein bestätigter Fakt $it" })
+                val before=core.modelSnapshot()
+                val sources=listOf(
+                    MentorSource("Biologie","https://de.wikipedia.org/wiki/Fotosynthese",
+                        "a".repeat(64),"Pflanzen nutzen Sonnenlicht und speichern Energie durch Fotosynthese."),
+                    MentorSource("Technik","https://de.wikipedia.org/wiki/Elektromotor",
+                        "b".repeat(64),"Ein Elektromotor wandelt elektrische Energie in mechanische Bewegung um.")
+                )
+                assertNull("never complete a source batch that could not be fully persisted",
+                    core.learnFromSources(sources))
+                assertArrayEquals(before,core.modelSnapshot())
+                assertEquals(FileLearningExperienceStore.MAX_RECORDS-ownerCount,
+                    core.status().experiences.sourceObservations)
+            } finally { dir.deleteRecursively() }
+        }
     }
 
     @Test fun sourceObservationsTrainRepresentationWithoutOwnerTrustOrIntentAuthority() {

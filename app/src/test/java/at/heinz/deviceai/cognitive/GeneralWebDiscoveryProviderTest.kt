@@ -70,5 +70,40 @@ class GeneralWebDiscoveryProviderTest {
         assertEquals(8, GeneralWebDiscoveryProvider.parseSearchResults(html).size)
     }
 
+    @Test fun revocationWhileFallbackIsRunningDiscardsItsSources() {
+        var authorized = true
+        val provider = GeneralWebDiscoveryProvider(object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = false
+            override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
+                authorized = false
+                return listOf(ResearchSourceCandidate("https://de.wikipedia.org/wiki/Test", "Test"))
+            }
+        }, checkAccess = { check(authorized) { "revoked" } }, fetchHtml = { "<rss><channel/></rss>" })
+        assertThrows(IllegalStateException::class.java) { provider.discover(ResearchQuery("topic", "q")) }
+    }
+
+    @Test fun interruptedPrimarySearchDoesNotStartFallbackAndPreservesInterruption() {
+        val fallback = Fallback()
+        val provider = GeneralWebDiscoveryProvider(fallback, fetchHtml = { throw InterruptedException("cancelled") })
+        try {
+            assertThrows(InterruptedException::class.java) { provider.discover(ResearchQuery("topic", "q")) }
+            assertEquals(0, fallback.calls)
+            assertTrue(Thread.currentThread().isInterrupted)
+        } finally {
+            Thread.interrupted()
+        }
+    }
+
+    @Test fun fallbackCancellationPropagatesToItsCaller() {
+        val provider = GeneralWebDiscoveryProvider(object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = false
+            override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> =
+                throw java.util.concurrent.CancellationException("cancelled")
+        }, fetchHtml = { "<rss><channel/></rss>" })
+        assertThrows(java.util.concurrent.CancellationException::class.java) {
+            provider.discover(ResearchQuery("topic", "q"))
+        }
+    }
+
 }
 

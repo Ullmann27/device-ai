@@ -22,7 +22,7 @@ export const REPAIR_ROLES=Object.freeze({
 const OUTCOMES=new Set(['NO_FAILURE','NO_CODE_DIAGNOSTIC','VERIFIED','NO_VERIFIED_REPAIR']);
 const CANDIDATES=new Set([
  'REJECTED_BY_CRITIC','NOT_APPLICABLE','FAILED_TESTS',
- 'INSUFFICIENT_EVIDENCE','VERIFIED'
+ 'INSUFFICIENT_EVIDENCE','VERIFIED','FAILED_SYNTAX','SYNTAX_CHECK_ERROR'
 ]);
 function evidenceId(value){
  return crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -83,6 +83,23 @@ export function summarizeRepairHandoffs(report){
    messages.push(message('PATCHER','ISOLATED_EDIT_ATTEMPTED',{
      candidateHash,editedFiles:a.edits.length
    }));
+   if(a.outcome==='FAILED_SYNTAX'||a.outcome==='SYNTAX_CHECK_ERROR'){
+     // --check parses source without executing a test. Preserve this stop
+     // distinctly so a rejected proposal cannot forge a passing test chain.
+     const failedSyntax=a.outcome==='FAILED_SYNTAX';
+     const reason=failedSyntax?a.syntax?.reason:a.syntaxReason;
+     if(a.tests!==undefined||a.evidence!==undefined||
+        (failedSyntax&&(a.syntax?.passed!==false||
+         !['INVALID_JS_SYNTAX','SYNTAX_CHECK_INTERRUPTED'].includes(reason)||
+         !a.edits.some(e=>e.file===a.syntax.failedFile)))||
+        (!failedSyntax&&(a.syntax!==undefined||typeof reason!=='string'||
+         !/^[A-Z][A-Z0-9_]{0,79}$/.test(reason))))
+       throw Error('Invalid syntax gate evidence');
+     messages.push(message('TESTER','JS_SYNTAX_GATE',{
+       candidateHash,passed:false,executed:false,outcome:a.outcome,reason
+     }));
+     continue;
+   }
    if(!Array.isArray(a.tests)||!a.tests.length||
       a.tests.some(t=>typeof t.passed!=='boolean'||typeof t.profile!=='string'))
      throw Error('Candidate test evidence missing');

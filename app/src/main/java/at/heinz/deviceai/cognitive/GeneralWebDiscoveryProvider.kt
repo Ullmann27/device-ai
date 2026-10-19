@@ -7,6 +7,7 @@ import org.xml.sax.Attributes
 import org.xml.sax.InputSource
 import org.xml.sax.helpers.DefaultHandler
 import java.io.StringReader
+import java.util.concurrent.CancellationException
 import javax.xml.parsers.SAXParserFactory
 
 /** Public Bing RSS search, with Wikipedia only when search produces no safe result.
@@ -29,13 +30,27 @@ class GeneralWebDiscoveryProvider(
         val primary=runCatching {
             checkAccess()
             parseSearchResults(fetchHtml?.invoke(searchUrl(text))?:fetchSearchResponse(searchUrl(text),checkAccess))
-        }.getOrElse { lastIssue="Allgemeine Websuche fehlgeschlagen: "+(it.message?:it.javaClass.simpleName).take(160);emptyList() }
+        }.getOrElse {
+            rethrowCancellation(it)
+            lastIssue="Allgemeine Websuche fehlgeschlagen: "+(it.message?:it.javaClass.simpleName).take(160)
+            emptyList()
+        }
         checkAccess()
         if(primary.isNotEmpty()){generalWorked=true;lastIssue=null;return primary}
         lastIssue=lastIssue?:"Allgemeine Websuche lieferte keine verwendbaren Quellen."
         checkAccess()
-        return runCatching { (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess)).discover(query) }
-            .getOrElse { lastIssue=lastIssue+" Wikipedia-Fallback ebenfalls fehlgeschlagen.";emptyList() }.take(8)
+        val fallback=runCatching { (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess)).discover(query) }
+            .getOrElse {
+                rethrowCancellation(it)
+                lastIssue=lastIssue+" Wikipedia-Fallback ebenfalls fehlgeschlagen."
+                emptyList()
+            }
+        checkAccess()
+        return fallback.take(8)
+    }
+    private fun rethrowCancellation(error:Throwable) {
+        if(error is InterruptedException)Thread.currentThread().interrupt()
+        if(error is InterruptedException||error is CancellationException)throw error
     }
     companion object {
         fun searchUrl(query:String)="https://www.bing.com/search?format=rss&q="+URLEncoder.encode(query,"UTF-8")

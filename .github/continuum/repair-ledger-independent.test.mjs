@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {emptyLedger,recordSession} from './repair-ledger.mjs';
+import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
 
 function report(){
  return {
@@ -100,4 +100,43 @@ test('unverified session cannot poison history through claimed failed alternativ
  assert.equal(current.experiences.length,0,'neither label allowed before independent verification');
  const confirmed=recordSession(emptyLedger(),pending,{independentPass:true});
  assert.equal(confirmed.experiences.length,2);
+});
+
+test('invalid syntax is retained as negative repair experience without fabricated test execution',()=>{
+ const source=report();
+ source.outcome='NO_VERIFIED_REPAIR';source.verified=null;
+ source.attempts[0].outcome='FAILED_SYNTAX';
+ source.attempts[0].syntax={passed:false,checked:[],
+  failedFile:'.github/continuum/math.mjs',reason:'INVALID_JS_SYNTAX'};
+ delete source.attempts[0].tests;
+ const result=recordSession(emptyLedger(),source);
+ assert.equal(result.attempts.length,1);
+ assert.equal(result.attempts[0].outcome,'FAILED_SYNTAX');
+ assert.deepEqual(result.attempts[0].tests,[]);
+ assert.equal(result.attempts[0].syntaxReason,'INVALID_JS_SYNTAX');
+ assert.equal(result.attempts[0].patchSha256,null);
+ assert.deepEqual(result.experiences,[{
+  kind:'JS_UNRESOLVED|JS_TYPO_REFERENCE',successes:0,failures:1
+ }]);
+ assert.deepEqual(verifyLedger(JSON.parse(JSON.stringify(result))),result);
+});
+
+test('syntax checker errors remain audit evidence without becoming failed-strategy labels',()=>{
+ const source=report();
+ source.outcome='NO_VERIFIED_REPAIR';source.verified=null;
+ source.attempts[0].outcome='SYNTAX_CHECK_ERROR';
+ source.attempts[0].syntaxReason='INVALID_CHECK_REQUEST';
+ delete source.attempts[0].tests;
+ const result=recordSession(emptyLedger(),source);
+ assert.equal(result.attempts.length,1);
+ assert.equal(result.attempts[0].outcome,'SYNTAX_CHECK_ERROR');
+ assert.equal(result.attempts[0].syntaxReason,'INVALID_CHECK_REQUEST');
+ assert.deepEqual(result.attempts[0].tests,[]);
+ assert.deepEqual(result.experiences,[],'checker infrastructure errors do not condemn a strategy');
+ source.attempts[0].outcome='FAILED_SYNTAX';
+ source.attempts[0].syntax={passed:false,checked:[],
+  failedFile:'.github/continuum/math.mjs',reason:'SYNTAX_CHECK_INTERRUPTED'};
+ const interrupted=recordSession(emptyLedger(),source);
+ assert.equal(interrupted.attempts[0].syntaxReason,'SYNTAX_CHECK_INTERRUPTED');
+ assert.deepEqual(interrupted.experiences,[],'interrupted parsing says nothing about syntax validity');
 });

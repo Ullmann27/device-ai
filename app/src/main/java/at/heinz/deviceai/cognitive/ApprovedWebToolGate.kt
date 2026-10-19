@@ -29,27 +29,34 @@ sealed class WebToolRequest {
 }
 class WebToolApproval internal constructor(val call:WebToolRequest,internal val ticket:InternetApprovalTicket)
 
-/** Only a positive owner UI action calls approve. The resulting capability must
- * additionally pass the common ToolGate's explicit-confirmation and replay checks.
+/** ASK grants require a positive owner action; ALWAYS_ON grants require the owner's
+ * persistent setting. Both still pass the common ToolGate's confirmation and replay checks.
  */
 class ApprovedWebToolGate(private val consent:InternetConsentPolicy) {
     private var pending:WebToolApproval?=null
     @Synchronized fun prepare(call:WebToolRequest):WebToolApproval? {
-        pending=null;consent.cancel()
+        pending=null;consent.clearPending()
         if(consent.mode!=InternetAccessMode.ASK)return null
-        when(call){
-            is WebToolRequest.Search->if(call.query.isBlank()||call.query.length>512)return null
-            is WebToolRequest.Read->if(call.url.length !in 10..2048||runCatching {
-                HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(URI(call.url))
-            }.isFailure)return null
-        }
+        if(!validCall(call))return null
         val ticket=consent.requestTicket(call.question)?:return null
         return WebToolApproval(call,ticket).also { pending=it }
+    }
+    @Synchronized fun authorizeAlwaysOn(call:WebToolRequest,mode:ResearchMode):ApprovedWebResearchSession? {
+        pending=null;consent.clearPending()
+        if(!validCall(call))return null
+        val ticket=consent.grantAlwaysOn(call.question)?:return null
+        return ApprovedWebResearchSession(call,mode,consent,ticket)
+    }
+    private fun validCall(call:WebToolRequest):Boolean=when(call) {
+        is WebToolRequest.Search->call.query.isNotBlank()&&call.query.length<=512
+        is WebToolRequest.Read->call.url.length in 10..2048&&runCatching {
+            HttpReadOnlyResearchProvider.ResearchUrlValidator.validateSyntax(URI(call.url))
+        }.isSuccess
     }
     @Synchronized fun approve(approval:WebToolApproval,mode:ResearchMode):ApprovedWebResearchSession? {
         val matches=pending?.ticket?.nonce==approval.ticket.nonce&&pending?.call==approval.call
         pending=null
-        if(!matches){consent.cancel();return null}
+        if(!matches){consent.clearPending();return null}
         if(!consent.consume(approval.ticket))return null
         return ApprovedWebResearchSession(approval.call,mode,consent,approval.ticket)
     }
@@ -65,8 +72,11 @@ class ApprovedWebResearchSession internal constructor(val call:WebToolRequest,va
     val question:String get()=call.question
     val seedUrls:List<String> get()=if(call is WebToolRequest.Read)listOf(call.url) else emptyList()
     fun cancel(){cancelled.set(true)}
+    /** Also usable after execution, before publishing evidence or accepting a learning candidate. */
+    fun isAuthorized()=!cancelled.get()&&!Thread.currentThread().isInterrupted&&consent.isCurrent(ticket)
+    fun checkAuthorized(){check(isAuthorized()) { "Internetfreigabe widerrufen" }}
     private fun checkValid(enforceDeadline:Boolean=true) {
-        check(!cancelled.get()&&!Thread.currentThread().isInterrupted&&consent.isCurrent(ticket)&&(!enforceDeadline||consent.monotonicNow()<=deadline)) { "Internetfreigabe widerrufen oder Zeitbudget abgelaufen" }
+        check(isAuthorized()&&(!enforceDeadline||consent.monotonicNow()<=deadline)) { "Internetfreigabe widerrufen oder Zeitbudget abgelaufen" }
     }
     fun checkActive(){check(running.get()){ "Kein aktiver genehmigter Recherchelauf" };checkValid()}
     fun <T> execute(request:WebToolRequest,action:()->T):T {
