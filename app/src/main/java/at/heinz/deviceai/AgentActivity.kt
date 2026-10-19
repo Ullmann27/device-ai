@@ -1440,6 +1440,42 @@ class AgentActivity : Activity() {
             showGroqMentorDialog(groqQuestion)
             return
         }
+        val baumeister = ContinuumWorkerChatRouter.parse(request)
+        if (baumeister != null) {
+            input.text.clear()
+            addUserMessage(request)
+            when (baumeister) {
+                ContinuumWorkerChatCommand.Help -> addAssistantMessage(
+                    "Continuum Baumeister · lokale Werkstatt.\n" +
+                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt' " +
+                        "oder 'Worker: <deine App-Idee>'.\n" +
+                        "Der Android-Teamleiter prüft den Backlog. Nur ein separater " +
+                        "eingeschalteter Entwicklerrechner kann Git, Compiler und Tests ausführen. " +
+                        "Kein Befehl wird ungeprüft ausgeführt."
+                )
+                ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
+                ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
+                ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
+                is ContinuumWorkerChatCommand.Draft -> {
+                    devController.setGoal(baumeister.goal)
+                    if (devController.state.goal == baumeister.goal) {
+                        addAssistantMessage(
+                            "Baumeister: Entwicklungsziel lokal vorbereitet. " +
+                                "Es ist noch keine Build-Aufgabe auf einem Host gestartet. " +
+                                "Für einen Codeentwurf wird ein kompatibles lokales Sprachmodell benötigt; " +
+                                "die Ausführung erfolgt später im isolierten Entwicklungsworker."
+                        )
+                        showDevelopmentDialog()
+                    } else {
+                        addAssistantMessage(
+                            "Baumeister: Eine vorherige Entwicklungsaufgabe ist noch aktiv. " +
+                                "Dein neuer Auftrag wurde nicht automatisch übernommen."
+                        )
+                    }
+                }
+            }
+            return
+        }
         if (request.equals("Neuron Tutor", true) || request.equals("Neuron Gespräch", true)) {
             input.text.clear()
             addUserMessage(request)
