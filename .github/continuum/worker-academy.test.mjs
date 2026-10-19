@@ -112,7 +112,7 @@ test('corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fai
   const file=path.join(w.root,WORKER_LESSONS[0].source);
   fs.unlinkSync(file);
   fs.symlinkSync(path.join(w.root,WORKER_LESSONS[0].test),file);
-  assert.throws(()=>practiceLesson({root:w.root,state:w.state}),/dirty source checkout/);
+  assert.throws(()=>practiceLesson({root:w.root,state:w.state}),/dirty checkout/);
   fs.unlinkSync(file);
   fs.writeFileSync(file,'export const value=1;\n');
   fs.writeFileSync(path.join(w.root,'untracked.txt'),'some change');
