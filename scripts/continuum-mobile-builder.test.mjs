@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
 
 const HEAD='f'.repeat(40);
@@ -308,4 +310,37 @@ test('mobile build forwards resolved environment to doctor and Gradle without a 
   assert.equal(observedDoctor,true);
   assert.equal(observedGradle,true);
   assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+});
+
+test('status CLI returns successful query exit for historical failed or blocked build reports',()=>{
+  const f=fixture();
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const executable=fileURLToPath(new URL('./continuum-mobile-builder.mjs',import.meta.url));
+  for(const status of ['FAILED_BUILD','FAILED_APK_SIGNATURE','BLOCKED_MISSING_TOOLCHAIN',
+      'BLOCKED_SOURCE_CHANGED_DURING_BUILD','EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED']){
+    const report={schemaVersion:1,status,commit:HEAD};
+    const bytes=JSON.stringify(report)+'\n';
+    fs.writeFileSync(path.join(f.stateDir,'latest-build.json'),bytes);
+    const r=spawnSync(process.execPath,[executable,'status','--state-dir',f.stateDir],
+      {encoding:'utf8',timeout:10000});
+    assert.equal(r.status,0,'status CLI must not fail when reading '+status+': '+r.stderr);
+    assert.equal(JSON.parse(r.stdout).status,status);
+    assert.equal(fs.readFileSync(path.join(f.stateDir,'latest-build.json'),'utf8'),bytes,
+      'status query must not modify persisted evidence');
+  }
+});
+
+test('status CLI fails closed for corrupt report schema; missing report is a successful query',()=>{
+  const f=fixture();
+  const executable=fileURLToPath(new URL('./continuum-mobile-builder.mjs',import.meta.url));
+  const query=()=>spawnSync(process.execPath,[executable,'status','--state-dir',f.stateDir],
+    {encoding:'utf8',timeout:10000});
+  const missing=query();
+  assert.equal(missing.status,0);
+  assert.equal(JSON.parse(missing.stdout).status,'NO_BUILD_REPORT');
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  fs.writeFileSync(path.join(f.stateDir,'latest-build.json'),JSON.stringify({schemaVersion:99,status:'FAILED_BUILD'}));
+  const corrupt=query();
+  assert.notEqual(corrupt.status,0);
+  assert.match(corrupt.stderr,/Unsupported report schema/);
 });
