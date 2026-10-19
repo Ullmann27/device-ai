@@ -53,6 +53,33 @@ internal object ContinuumMobileResultPolicy {
         }
     }
 
+    /**
+     * STATUS is a read-only query. It must display persisted historical
+     * failures honestly, not silently reclassify them as a fresh build success.
+     * Never echo arbitrary callback text into the UI.
+     */
+    fun statusExplanation(reportedStatus: String?): String = when (reportedStatus) {
+        "NO_BUILD_REPORT" -> "In Termux liegt noch kein gespeicherter Buildbericht vor."
+        "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED" ->
+            "Gespeicherter Buildbericht: Eine experimentelle APK wurde gemeldet. " +
+                "Dieser Bericht ersetzt weder Installation noch einen Gerätetest."
+        "BLOCKED_MISSING_TOOLCHAIN" ->
+            "Gespeicherter Buildbericht: Der damalige Build wurde wegen fehlender " +
+                "Werkzeuge blockiert. Der aktuelle Werkzeugzustand ist getrennt zu prüfen."
+        "BLOCKED_UNCLEAN_SOURCE" ->
+            "Gespeicherter Buildbericht: Der Build wurde wegen ungesicherter " +
+                "Quellcodeänderungen blockiert. Es erfolgte keine APK-Freigabe."
+        "FAILED_BUILD" ->
+            "Gespeicherter Buildbericht: Gradle oder ein Test ist fehlgeschlagen. " +
+                "Es wurde kein neuer Build-Erfolg bestätigt."
+        "FAILED_NO_APK" ->
+            "Gespeicherter Buildbericht: Keine neue APK nachgewiesen."
+        "FAILED_APK_SIGNATURE" ->
+            "Gespeicherter Buildbericht: Die APK-Signaturprüfung ist fehlgeschlagen. " +
+                "Das Artefakt wurde nicht freigegeben."
+        else -> "Buildbericht unbekannt oder ungültig. Kein Erfolg nachgewiesen."
+    }
+
     fun explanation(outcome: Outcome): String = when (outcome) {
         Outcome.TOOLCHAIN_READY -> "Lokale Termux-Werkzeuge haben den Doctor-Test bestanden. Noch kein APK-Bau nachgewiesen."
         Outcome.TOOLCHAIN_UNAVAILABLE -> "Mindestens ein Werkzeug fehlt oder ist nicht bereit. Termux-Toolchain prüfen."
