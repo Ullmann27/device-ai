@@ -667,7 +667,9 @@ class DeepResearchEngine(
                 totalBytes = fetchFollowUps(
                     extraPaths, budget, deadline, cancellation, fetched, sources, completedHashes,
                     completedUrls, totalBytes, domainCounts, id, plan, prior?.createdAt ?: started, rounds
-                )
+                ) { problem ->
+                    partialReason = partialReason ?: problem
+                }
                 rounds.removeAll { it.number == 2 }
                 rounds += ResearchRound(
                     2, ResearchPhase.FOLLOW_UP, extraPaths.map { it.id }.take(12),
@@ -745,7 +747,8 @@ class DeepResearchEngine(
         cancellation: ResearchCancellation, fetched: MutableMap<String, ResearchDocument>,
         sources: MutableList<ResearchSource>, hashes: MutableSet<String>, urls: MutableSet<String>,
         initialBytes: Int, domainCounts: MutableMap<String, Int>, dossierId: String,
-        plan: ResearchPlan, createdAt: Long, rounds: List<ResearchRound>
+        plan: ResearchPlan, createdAt: Long, rounds: List<ResearchRound>,
+        onSourceFailure: (String) -> Unit
     ): Int {
         var bytes = initialBytes
         for (path in paths.take(budget.maxFollowUpQueries)) {
@@ -762,12 +765,29 @@ class DeepResearchEngine(
                     budget.requestTimeoutMillis,
                     ((deadline - System.nanoTime()) / 1_000_000L).toInt().coerceAtLeast(1)
                 )
-                val doc = provider.retrieve(
-                    ResearchRequest(
-                        path.query.text, canonical, budget.maxBytesPerSource,
-                        requestTimeout, budget.maxRedirects
+                val retrieved = runCatching {
+                    provider.retrieve(
+                        ResearchRequest(
+                            path.query.text, canonical, budget.maxBytesPerSource,
+                            requestTimeout, budget.maxRedirects
+                        )
                     )
-                ).documents.firstOrNull() ?: continue
+                }
+                if (retrieved.isFailure) {
+                    val problem = retrieved.exceptionOrNull() ?: error("Unknown research failure")
+                    val message = problem.message.orEmpty()
+                    val recoverable = problem is java.io.IOException ||
+                        (problem is IllegalArgumentException && (
+                            message.startsWith("Research response is too large.") ||
+                                message.startsWith("Research request failed with HTTP ")
+                            ))
+                    // Do not swallow owner revocation, interruption, unsafe-URL
+                    // validation or other security-relevant exceptions.
+                    if (!recoverable) throw problem
+                    onSourceFailure("Nachrecherche-Quelle übersprungen: " + message.take(180))
+                    continue
+                }
+                val doc = retrieved.getOrThrow().documents.firstOrNull() ?: continue
                 val finalUrl = runCatching { ResearchUrlCanonicalizer.canonicalize(doc.url) }.getOrNull() ?: continue
                 if (runCatching { validateTarget(URI(finalUrl)) }.isFailure) continue
                 val finalDomain = URI(finalUrl).host
