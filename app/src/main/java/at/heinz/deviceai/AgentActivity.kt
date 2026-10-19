@@ -1433,8 +1433,11 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (request.startsWith("mentor:", ignoreCase = true)) {
-            showGroqMentorDialog(request.substringAfter(':').trim())
+        // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
+        // showGroqMentorDialog always requires a second owner confirmation.
+        val groqQuestion = GroqInvocationRouter.extractQuestion(request)
+        if (groqQuestion != null) {
+            showGroqMentorDialog(groqQuestion)
             return
         }
         if (request.equals("Neuron Tutor", true) || request.equals("Neuron Gespräch", true)) {
