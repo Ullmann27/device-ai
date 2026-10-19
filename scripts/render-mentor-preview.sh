@@ -88,7 +88,8 @@ echo "[Continuum] Astra Baumeister independent worker, skill academy and platfor
 node --check .github/continuum/continuum-workshop.mjs
 node --check .github/continuum/worker-academy.mjs
 node --check .github/continuum/worker-atlas.mjs
-node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs
+node --check .github/continuum/worker-atlas-epistemic-graph.mjs
+node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
