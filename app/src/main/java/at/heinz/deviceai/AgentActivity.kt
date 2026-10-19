@@ -2330,9 +2330,11 @@ class AgentActivity : Activity() {
         box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
         box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
         box.addView(textView(
-            "Für natürliche Gespräche und den Entwicklungsassistenten brauchst du eine " +
-                "kompatible lokale LiteRT-LM-Modell-Datei. Device AI lädt kein Modell " +
-                "heimlich herunter und nutzt keinen kostenpflichtigen Cloud-Ersatz.",
+            "Für vollständig lokale natürliche Gespräche und Entwicklungsentwürfe brauchst du " +
+                "eine kompatible LiteRT-LM-Modelldatei. Der eigene Lernkern arbeitet auch ohne " +
+                "Sprachmodell. Der optionale Groq-Mentor kann getrennt davon einzelne Fragen " +
+                "beantworten: nur über dein Backend, mit Gerätefreigabe und ausdrücklicher " +
+                "Bestätigung jeder externen Frage. Er installiert kein lokales Modell.",
             13f, MUTED), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
@@ -2360,6 +2362,12 @@ class AgentActivity : Activity() {
             "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
                 "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
             12.5f, MUTED), matchWidth(top = 11))
+        box.addView(actionButton("GROQ-MENTOR · EXTERNE FRAGE (OPTIONAL)").apply {
+            setOnClickListener {
+                modelCenterDialog?.dismiss()
+                showGroqMentorDialog()
+            }
+        }, matchWidth(top = 12))
 
         val advanced = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -4839,13 +4847,18 @@ class AgentActivity : Activity() {
 
         box.addView(textView("Backend URL (nur HTTPS)", 12f, MUTED, true))
         box.addView(url, matchWidth(top = 4))
-        box.addView(textView("Device-Token", 12f, MUTED, true).apply {
+        box.addView(textView("Geräte-Zugangstoken (NICHT der Groq-Schlüssel)", 12f, MUTED, true).apply {
             setPadding(0, dp(12), 0, 0)
         })
         box.addView(token, matchWidth(top = 4))
         box.addView(
             textView(
-                "API-Schlüssel von OpenAI oder Groq gehören niemals hier hinein. Sie bleiben ausschließlich als Secrets am eigenen Backend. Der externe Mentor überträgt nur die ausdrücklich freigegebene Frage.",
+                "Dein Groq-Schlüssel liegt bereits ausschließlich auf dem Backend: " +
+                    "hier niemals einen Groq- oder OpenAI-Schlüssel eintragen. " +
+                    "Diese separate Preview-App übernimmt aus Sicherheitsgründen keinen " +
+                    "Geräte-Zugangstoken aus einer anderen Installation. " +
+                    "Ohne eigenen Device-Token sind nur Erreichbarkeitstests möglich. " +
+                    "Externe Mentorfragen werden einzeln bestätigt.",
                 11f,
                 MUTED
             ).apply { setPadding(0, dp(10), 0, 0) }
@@ -4871,7 +4884,7 @@ class AgentActivity : Activity() {
                 if (newToken.isNotBlank()) SecureTokenStore.save(this, newToken)
                 updateCloudBadge()
                 addToolActivity("Cloud-Konfiguration gespeichert")
-                if (backend.isConfigured()) testCloudHealth()
+                testCloudHealth()
             }
             .show()
     }
@@ -4880,13 +4893,21 @@ class AgentActivity : Activity() {
         addToolActivity("Prüfe Backend …")
         backend.health { result ->
             result.onSuccess {
-                addToolActivity("✓ Backend erreichbar")
+                addToolActivity("✓ Backend erreichbar (öffentlicher Erreichbarkeitstest, keine KI-Antwort)")
+                if (!backend.hasToken()) {
+                    addToolActivity(
+                        "Gerätezugang fehlt in dieser Preview. Der Groq-Schlüssel auf dem Server " +
+                            "ist unabhängig davon bereits eingerichtet. Bitte niemals einen Groq-Key " +
+                            "als Geräte-Token eintragen."
+                    )
+                    return@health
+                }
                 backend.mentorStatus { status ->
                     status.onSuccess { (configured, remaining) ->
                         if (configured) {
                             addToolActivity(
                                 "✓ Groq-Mentor konfiguriert · maximal $remaining Versuche heute übrig. " +
-                                    "Externer Modellaufruf noch nicht getestet."
+                                    "Die Verbindung von diesem Android-Gerät ist noch nicht per Mentorfrage geprüft."
                             )
                         } else {
                             addToolActivity(
