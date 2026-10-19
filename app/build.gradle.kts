@@ -9,6 +9,8 @@ val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGN
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
+// Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
+val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
 require(!(deviceAiPreview && deviceAiMentorPreview)) {
     "Use only one preview package ID at a time."
 }
@@ -59,8 +61,17 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("main") {
+            if (deviceAiMobileAidlFallback) {
+                java.srcDir("src/termux/java")
+            }
+        }
+    }
+
     buildFeatures {
-        aidl = true
+        // Regular variants retain the canonical AIDL generator and Shizuku ABI.
+        aidl = !deviceAiMobileAidlFallback
         buildConfig = true
     }
 
