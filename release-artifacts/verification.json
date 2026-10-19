@@ -1,0 +1,11 @@
+{
+  "commit": "54b93d2b58b6b5d62b19e503f310825fa272ebde",
+  "android_jvm": {
+    "tests": 592,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "apk_signature_verified": true,
+  "device_acceptance": "open"
+}
