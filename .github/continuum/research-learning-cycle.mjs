@@ -53,16 +53,35 @@ export function splitVerifiedClaimsByHash(spans){
   return {train,audit};
 }
 
-/** Deterministic independent-source negatives; never conflate metadata titles with true answers. */
+/** Rank eligible negatives from other source documents by topical overlap.
+ * A near-duplicate claim risks false-negative supervision, so veto it.
+ * Fall back to unrelated documents only when there are too few topical ones.
+ */
 export function buildExtractiveContrastiveSet(rows){
-  if(rows.length<3)return [];
-  return rows.map((row,i)=>{
-    const used=new Set([row.claim]),negatives=[];
-    for(let j=1;j<rows.length&&negatives.length<3;j++){
-      const next=rows[(i+j)%rows.length];
-      if(next.sourceSha256!==row.sourceSha256&&!used.has(next.claim)){
-        negatives.push(next.claim);used.add(next.claim);
-      }
+  if(!Array.isArray(rows)||rows.length<3)return [];
+  const words=value=>new Set(String(value).toLocaleLowerCase('de-DE')
+    .split(/[^\\p{L}\\p{N}]+/u).filter(x=>x.length>=4));
+  const overlap=(left,right)=>{
+    const a=words(left),b=words(right);
+    if(!a.size||!b.size)return 0;
+    let shared=0;for(const x of a)if(b.has(x))shared++;
+    return shared/Math.max(1,Math.min(a.size,b.size));
+  };
+  return rows.map(row=>{
+    const ranked=rows.filter(other=>
+      other.id!==row.id&&other.sourceSha256!==row.sourceSha256&&
+      other.claim!==row.claim&&overlap(row.claim,other.claim)<0.9
+    ).map(other=>({
+      other,
+      similarity:overlap(row.query,other.query)*2+overlap(row.claim,other.claim)
+    })).sort((a,b)=>b.similarity-a.similarity||
+      a.other.id.localeCompare(b.other.id));
+    const negatives=[],used=new Set([row.claim]);
+    for(const item of ranked){
+      if(used.has(item.other.claim))continue;
+      used.add(item.other.claim);
+      negatives.push(item.other.claim);
+      if(negatives.length>=3)break;
     }
     return negatives.length>=2?{query:row.query,candidates:[row.claim,...negatives]}:null;
   }).filter(Boolean);
@@ -217,5 +236,6 @@ export function runResearchLearningCycle({
     :null;
   return {accepted:trained.accepted,reason:trained.accepted?'SHADOW_EVALUATED':'HOLDOUT_GATE_REJECTED',
     modelSha256:trained.modelSha256,trainCount:trainSet.length,auditCount:auditSet.length,
-    auditReport,signedPackage};
+    auditReport,signedPackage,
+    shadowModelBytes:trained.accepted?Buffer.from(trained.modelBytes):null};
 }
