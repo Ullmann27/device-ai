@@ -34,7 +34,7 @@ test('requires explicit owner confirmation before expensive build', () => {
   assert.match(activity, /startService\(intent\)/);
 });
 test('does not claim successful build or installation just for dispatching', () => {
-  assert.match(activity, /Kein bestätigter Erfolg|eine erfolgreiche Ausführung ist noch nicht bestätigt/);
+  assert.match(activity, /kein Build-Erfolg bestätigt|kein Erfolg bestätigt|Kein bestätigter Erfolg/);
   assert.doesNotMatch(activity, /PackageInstaller|installPackage|adb\s+install/);
   assert.match(plan, /if \(operation == Operation\.BUILD\)/);
   assert.match(plan, /args\.add\("--project"\)/);
