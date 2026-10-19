@@ -82,7 +82,7 @@ echo "[Continuum] Groq-specific contract tests"
 node --check backend/src/groq-mentor.js
 node --check backend/src/mentor-pairing.js
 node --check backend/src/server.js
-node --test backend/test/groq-mentor.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
+node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
