@@ -19,8 +19,9 @@ import {runTeamleaderLoop,validateWorkerHeartbeat} from './local-teamleader-loop
 import {runM4Gate,verifyReleaseProofFile} from './m4-local-gate.mjs';
 import {git} from './repair-loop.mjs';
 import {practiceLesson,academyStatus,WORKER_LESSONS,FUTURE_DISCIPLINES} from './worker-academy.mjs';
+import {researchAtlasOnce,atlasStatus,ATLAS_RESEARCH_TOPICS} from './worker-atlas.mjs';
 
-const MODES=new Set(['doctor','status','once','loop','learn','verify-android']);
+const MODES=new Set(['doctor','status','once','loop','learn','research','verify-android']);
 const SHA=/^[0-9a-f]{40}$/;
 const DEFAULT_STATE=path.join(os.homedir(),'.local','state','device-ai-continuum');
 const flags=new Set(['mode','root','state','interval-minutes','max-cycles','budget-minutes']);
@@ -111,6 +112,7 @@ export function diagnoseWorkshop({root,state,head},tools={
   capabilities:identifyWorkshops(root,tools),
   academyCurriculum:WORKER_LESSONS.map(x=>({id:x.id,topic:x.topic,limit:x.limit})),
   plannedDisciplines:FUTURE_DISCIPLINES,
+  virtualWebAtlasTopics:ATLAS_RESEARCH_TOPICS.map(x=>x.id),
   limits:['Dedicated OS isolation required for untrusted repository build scripts',
    'Existing development backlog is authoritative',
    'No automatic merges, installations or privileged device access',
@@ -150,18 +152,22 @@ export function readWorkshopStatus({root,state,head}){
  }
  return {schema:'continuum-workshop-status',version:1,
   head,heartbeatState,heartbeat,progress,
-  academy:academyStatus({root,state}),automaticMerge:false,
+  academy:academyStatus({root,state}),
+  atlas:atlasStatus({root,state}),automaticMerge:false,
   note:'Only host-side signed/tested evidence proves a completed build. Android READY is local status only.'};
 }
 
 export async function executeWorkshop(args,{driverFactory=localTeamleaderDriver,
- gate=runM4Gate,practice=practiceLesson,onHeartbeat=()=>{}}={}){
+ gate=runM4Gate,practice=practiceLesson,
+ research=researchAtlasOnce,onHeartbeat=()=>{}}={}){
  const target=workshopPaths(args.root,args.state);
  if(args.mode==='doctor')return diagnoseWorkshop(target);
  if(args.mode==='status')return readWorkshopStatus(target);
  if(git(target.root,['status','--porcelain']).stdout.trim())
   throw Error('Worker refuses a dirty source checkout');
  if(args.mode==='learn')return {mode:'learn',...practice({root:target.root,state:target.state}),automaticMerge:false};
+ if(args.mode==='research')return {mode:'research',
+  ...await research({root:target.root,state:target.state}),automaticMerge:false};
  if(args.mode==='verify-android'){
   const outcome=gate({root:target.root,out:path.join(target.state,'proofs'),
    android:true,budgetMinutes:Math.min(120,Math.max(30,args.budgetMinutes*3))});
@@ -181,14 +187,21 @@ export async function executeWorkshop(args,{driverFactory=localTeamleaderDriver,
   try{return practice({root:target.root,state:target.state});}
   catch(e){return {status:'ACADEMY_FAILED',passed:false,errorCode:String(e?.message??e).slice(0,100)};}
  };
- const work=()=>{
+ const work=async()=>{
   const result=runTeamleaderCycle({
    root:target.root,stateDir:target.state,driver,budgetMinutes:args.budgetMinutes
   });
-  return {...result,skillPractice:practiceAfterCycle()};
+  const skillPractice=practiceAfterCycle();
+  let webResearch;
+  try {
+   webResearch=await research({root:target.root,state:target.state});
+  } catch(e) {
+   webResearch={status:'RESEARCH_FAILED',reason:String(e?.message??e).slice(0,100)};
+  }
+  return {...result,skillPractice,webResearch};
  };
  if(args.mode==='once'){
-  const result=work();
+  const result=await work();
   return {mode:'once',...result,automaticMerge:false};
  }
  const heartbeatPath=path.join(target.state,'workshop-heartbeat.json');
