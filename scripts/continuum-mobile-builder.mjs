@@ -123,6 +123,17 @@ export function failedJvmTests(project, startedAt) {
   return failures;
 }
 
+/** apksigner 36 prints "Signer #1"; newer releases can print "V2 Signer:". */
+export function parseSignerSha256(output) {
+  for (const line of String(output).split(/\r?\n/)) {
+    const match=/^(?:Signer #\d+|Signer \([^)]{1,100}\)|V\d+(?:\.\d+)? Signer):?\s+certificate SHA-256 digest:\s*([a-fA-F0-9:]{64,95})\s*$/.exec(line.trim());
+    if (!match) continue;
+    const digest=match[1].replaceAll(':','').toLowerCase();
+    if (/^[a-f0-9]{64}$/.test(digest)) return digest;
+  }
+  return null;
+}
+
 export async function build({project,stateDir,offline=false,env=process.env,arch=process.arch,run=execute,inspect=doctor}={}) {
   const root=fs.realpathSync(project);
   for(const f of ['settings.gradle.kts','app/build.gradle.kts']) if(!fs.existsSync(path.join(root,f)))throw Error('Missing trusted project file '+f);
@@ -152,8 +163,11 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
   fs.chmodSync(staged,0o600);
   try {
     const verified=await run(tool.bin.apksigner,['verify','--verbose','--print-certs',staged],{cwd:root,env});
-    const signer=/Signer #1 certificate SHA-256 digest:\s*([0-9a-f:]{64,95})/i.exec(verified.output||'')?.[1]?.replaceAll(':','').toLowerCase();
-    if(!verified.ok||!signer||!/^[a-f0-9]{64}$/.test(signer)) return persist(state,{schemaVersion:VERSION,status:'FAILED_APK_SIGNATURE',commit});
+    const signer=verified.ok?parseSignerSha256(verified.output):null;
+    if(!verified.ok||!signer)return persist(state,{schemaVersion:VERSION,status:'FAILED_APK_SIGNATURE',commit,
+      signatureFailure:verified.ok?'SIGNER_CERTIFICATE_DIGEST_UNRECOGNIZED':'SIGNATURE_VERIFICATION_FAILED',
+      verifierExitCode:verified.code??null,verifierError:verified.error??null,
+      verifierOutputTail:String(verified.output||'').slice(-1800)});
     const digest=await sha256(staged);
     if(!await unchangedSource())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD',commit});
     const stable=path.join(state,'apk-'+digest+'.apk');
