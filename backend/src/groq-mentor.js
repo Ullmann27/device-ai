@@ -69,94 +69,111 @@ export class GroqMentor {
     const abort = new AbortController();
     const timeout = setTimeout(() => abort.abort(), 16_000);
     try {
-      const response = await this.fetcher(API_URL, {
-        method: "POST",
-        redirect: "error",
-        signal: abort.signal,
-        headers: {
-          Authorization: "Bearer " + this.key,
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({
-          model: this.model,
-          temperature: 0.3,
-          max_completion_tokens: 450,
-          stream: false,
-          tool_choice: "none",
-          n: 1,
-          messages: [
-            { role: "system", content:
-              "Du bist ein externer, unverifizierter Sprachmentor für die Android-App Device AI Continuum. " +
-              "Öffentliche Projektbeschreibung (statisch, keine Gerätedaten): " +
-              "Device AI Continuum ist ein persönlicher Android-Assistent mit lokalem Startkern, " +
-              "bestätigten Erinnerungen, Forschungsansicht, Gerätewerkzeugen mit Benutzerfreigaben " +
-              "und einem Entwicklungsassistenten für überprüfbare Codevorschläge. " +
-              "Sein lokaler Lernkern verwendet SWB1 und einen experimentellen CRE1-Kern; " +
-              "ein optionales LiteRT-LM-Sprachmodell muss separat installiert werden. " +
-              "Der Teamleiter prüft den Backlog, entwickelt aber noch keine Apps eigenständig. " +
-              "Der Groq-Mentor wird nur nach ausdrücklicher Einmalfreigabe für einzelne Fragen aufgerufen; " +
-              "er darf keine Geräteaktionen, Git-Patches oder Lernübernahmen ausführen. " +
-              "Für APK-Builds existiert eine getrennte Entwicklungsumgebung, kein Android-eigener Compiler. " +
-              "Wenn nach 'dieser App' oder 'unserer App' gefragt wird, erkläre diese Funktionen verständlich. " +
-              "Behaupte keine laufenden Tests, aktuellen Gerätestände oder unbekannte Funktionen. " +
-              "Antworte auf Deutsch. Kennzeichne Unsicherheit, erfinde keine Quellen. " +
-              "Du hast keine Geräteberechtigungen, keine Internettools und kein Langzeitgedächtnis. " +
-              "Führe keine Befehle aus. Formuliere maximal 1800 Zeichen." },
-            { role: "user", content: question.trim() }
-          ]
-        })
-      });
-      if (response.status === 429) return { ok: false, code: "UPSTREAM_LIMIT" };
-      if (response.status === 401 || response.status === 403) {
-        return { ok: false, code: "GROQ_KEY_REJECTED" };
-      }
-      if (response.status === 404) return { ok: false, code: "GROQ_MODEL_UNAVAILABLE" };
-      if (response.status === 400 || response.status === 422) {
-        return { ok: false, code: "GROQ_REQUEST_REJECTED" };
-      }
-      if (!response.ok) return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
-      const declared = Number(response.headers?.get?.("content-length") ?? 0);
-      if (Number.isFinite(declared) && declared > MAX_RESPONSE_BYTES) {
-        return { ok: false, code: "RESPONSE_TOO_LARGE" };
-      }
-      const bytes = [];
-      let length = 0;
-      if (!response.body || typeof response.body.getReader !== "function") {
-        return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
-      }
-      const reader = response.body.getReader();
-      try {
-        while (true) {
-          const part = await reader.read();
-          if (part.done) break;
-          length += part.value.byteLength;
-          if (length > MAX_RESPONSE_BYTES) {
-            abort.abort();
-            return { ok: false, code: "RESPONSE_TOO_LARGE" };
-          }
-          bytes.push(part.value);
+      // One owner-approved mentor request may repeat the same bounded question
+      // once when the provider returns no user-visible content. Reasoning-only
+      // fields are deliberately never shown or written to memory.
+      const gptOss = /^openai\/gpt-oss-(?:20b|120b)$/.test(this.model);
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const response = await this.fetcher(API_URL, {
+          method: "POST",
+          redirect: "error",
+          signal: abort.signal,
+          headers: {
+            Authorization: "Bearer " + this.key,
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            model: this.model,
+            temperature: 0.3,
+            max_completion_tokens: attempt === 0 ? 2048 : 3072,
+            ...(gptOss ? { reasoning_effort: "low", include_reasoning: false } : {}),
+            stream: false,
+            tool_choice: "none",
+            n: 1,
+            messages: [
+              { role: "system", content:
+                "Du bist ein externer, unverifizierter Sprachmentor für die Android-App Device AI Continuum. " +
+                "Öffentliche Projektbeschreibung (statisch, keine Gerätedaten): " +
+                "Device AI Continuum ist ein persönlicher Android-Assistent mit lokalem Startkern, " +
+                "bestätigten Erinnerungen, Forschungsansicht, Gerätewerkzeugen mit Benutzerfreigaben " +
+                "und einem Entwicklungsassistenten für überprüfbare Codevorschläge. " +
+                "Sein lokaler Lernkern verwendet SWB1 und einen experimentellen CRE1-Kern; " +
+                "ein optionales LiteRT-LM-Sprachmodell muss separat installiert werden. " +
+                "Der Teamleiter prüft den Backlog, entwickelt aber noch keine Apps eigenständig. " +
+                "Der Groq-Mentor wird nur nach ausdrücklicher Einmalfreigabe für einzelne Fragen aufgerufen; " +
+                "er darf keine Geräteaktionen, Git-Patches oder Lernübernahmen ausführen. " +
+                "Für APK-Builds existiert eine getrennte Entwicklungsumgebung, kein Android-eigener Compiler. " +
+                "Wenn nach 'dieser App' oder 'unserer App' gefragt wird, erkläre diese Funktionen verständlich. " +
+                "Behaupte keine laufenden Tests, aktuellen Gerätestände oder unbekannte Funktionen. " +
+                "Antworte auf Deutsch. Kennzeichne Unsicherheit, erfinde keine Quellen. " +
+                "Du hast keine Geräteberechtigungen, keine Internettools und kein Langzeitgedächtnis. " +
+                "Führe keine Befehle aus. Formuliere maximal 1800 Zeichen." },
+              { role: "user", content: question.trim() }
+            ]
+          })
+        });
+        if (response.status === 429) return { ok: false, code: "UPSTREAM_LIMIT" };
+        if (response.status === 401 || response.status === 403) {
+          return { ok: false, code: "GROQ_KEY_REJECTED" };
         }
-      } finally {
-        reader.releaseLock();
+        if (response.status === 404) return { ok: false, code: "GROQ_MODEL_UNAVAILABLE" };
+        if (response.status === 400 || response.status === 422) {
+          return { ok: false, code: "GROQ_REQUEST_REJECTED" };
+        }
+        if (!response.ok) return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
+        const declared = Number(response.headers?.get?.("content-length") ?? 0);
+        if (Number.isFinite(declared) && declared > MAX_RESPONSE_BYTES) {
+          return { ok: false, code: "RESPONSE_TOO_LARGE" };
+        }
+        const bytes = [];
+        let length = 0;
+        if (!response.body || typeof response.body.getReader !== "function") {
+          return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
+        }
+        const reader = response.body.getReader();
+        try {
+          while (true) {
+            const part = await reader.read();
+            if (part.done) break;
+            length += part.value.byteLength;
+            if (length > MAX_RESPONSE_BYTES) {
+              abort.abort();
+              return { ok: false, code: "RESPONSE_TOO_LARGE" };
+            }
+            bytes.push(part.value);
+          }
+        } finally {
+          reader.releaseLock();
+        }
+        const joined = new Uint8Array(length);
+        let offset = 0;
+        for (const part of bytes) {
+          joined.set(part, offset);
+          offset += part.length;
+        }
+        const payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(joined));
+        const answer = payload?.choices?.[0]?.message?.content;
+        if (typeof answer === "string" && answer.trim()) {
+          return {
+            ok: true,
+            message: answer.trim().slice(0, 1800),
+            model: this.model,
+            provider: "GROQ",
+            trust: "UNVERIFIED_EXTERNAL",
+            tool_calls: [],
+            memory_written: false
+          };
+        }
+        if (attempt === 1) {
+          return {
+            ok: false,
+            code: payload?.choices?.[0]?.finish_reason === "length"
+              ? "RESPONSE_TOKEN_LIMIT" : "EMPTY_RESPONSE"
+          };
+        }
       }
-      const joined = new Uint8Array(length);
-      let offset = 0;
-      for (const part of bytes) { joined.set(part, offset); offset += part.length; }
-      const payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(joined));
-      const answer = payload?.choices?.[0]?.message?.content;
-      if (typeof answer !== "string" || !answer.trim()) {
-        return { ok: false, code: "EMPTY_RESPONSE" };
-      }
-      return {
-        ok: true,
-        message: answer.trim().slice(0, 1800),
-        model: this.model,
-        provider: "GROQ",
-        trust: "UNVERIFIED_EXTERNAL",
-        tool_calls: [],
-        memory_written: false
-      };
+      return { ok: false, code: "EMPTY_RESPONSE" };
     } catch {
       return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
     } finally {
