@@ -94,7 +94,7 @@ apk="app/build/outputs/apk/debug/app-debug.apk"
 test -s "$apk"
 "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
-  | grep -F "package: name='at.heinz.deviceai.mentorpreview'"
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired'"
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
@@ -103,7 +103,7 @@ cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpreview\nandroid_min_sdk=26\nsigning=android_debug\n' \
+printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=android_debug\n' \
   "$commit" "$expected_branch" > "$output/BUILD-INFO.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
