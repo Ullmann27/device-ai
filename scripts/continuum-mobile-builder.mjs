@@ -65,8 +65,10 @@ export function resolveTermuxEnvironment(env=process.env,arch=process.arch,exist
   // Termux may export its Java 21 default even though this builder needs Java 17.
   // Replace only that known ambient default; preserve other explicit owner JDK paths.
   const termuxDefaultJava21=path.join(prefix,'lib/jvm/java-21-openjdk');
+  const ambientJava21=typeof result.JAVA_HOME==='string'&&
+    path.isAbsolute(result.JAVA_HOME)&&path.resolve(result.JAVA_HOME)===termuxDefaultJava21;
   if(exists(path.join(javaHome,'bin/java'))&&
-     (!result.JAVA_HOME||result.JAVA_HOME===termuxDefaultJava21))result.JAVA_HOME=javaHome;
+     (!result.JAVA_HOME||ambientJava21))result.JAVA_HOME=javaHome;
   if(!result.ANDROID_HOME&&!result.ANDROID_SDK_ROOT&&exists(path.join(sdkHome,'platforms/android-36/android.jar'))) {
     result.ANDROID_HOME=sdkHome;
     result.ANDROID_SDK_ROOT=sdkHome;
