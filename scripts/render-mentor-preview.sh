@@ -87,7 +87,8 @@ node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.t
 echo "[Continuum] Astra Baumeister independent worker, skill academy and platform checks"
 node --check .github/continuum/continuum-workshop.mjs
 node --check .github/continuum/worker-academy.mjs
-node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs
+node --check .github/continuum/worker-atlas.mjs
+node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
