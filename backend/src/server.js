@@ -548,6 +548,11 @@ startContinuumServices();
 
 const httpServer = app.listen(PORT, "0.0.0.0", () => {
   console.log("Device AI backend listening on port " + PORT);
+  // Presence flags only; never print the API key, Device token or user content.
+  console.log("Continuum mentor readiness:", JSON.stringify({
+    groqConfigured: groqMentor.status().available,
+    deviceAuthenticationConfigured: DEVICE_AI_TOKEN.length >= 16
+  }));
 });
 
 function shutdown(signal) {
