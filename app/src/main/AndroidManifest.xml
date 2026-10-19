@@ -44,6 +44,12 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <!-- Termux result PendingIntent callback: explicit and never exported. -->
+        <receiver
+            android:name=".ContinuumMobileBuildResultReceiver"
+            android:enabled="${mobileBuilderEnabled}"
+            android:exported="false" />
+
         <!-- Separate owner-operated mobile builder launcher; disabled outside preview variants. -->
         <activity
             android:name=".ContinuumMobileBuilderActivity"
