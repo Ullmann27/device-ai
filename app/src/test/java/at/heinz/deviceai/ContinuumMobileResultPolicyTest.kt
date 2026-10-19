@@ -63,6 +63,19 @@ class ContinuumMobileResultPolicyTest {
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "DEVICE_INSTALLED"))
     }
+    @Test fun modifiedGitSourceDuringBuildIsAValidBlockedReport() {
+        val outcome = ContinuumMobileResultPolicy.evaluate(
+            ContinuumMobileBuildPlan.Operation.STATUS,
+            0, -1, "BLOCKED_SOURCE_CHANGED_DURING_BUILD"
+        )
+        assertEquals(ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED, outcome)
+        assertEquals(true, ContinuumMobileResultPolicy.statusExplanation(
+            "BLOCKED_SOURCE_CHANGED_DURING_BUILD").contains("Sicherheitsgründen"))
+        assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
+            ContinuumMobileResultPolicy.evaluate(
+                ContinuumMobileBuildPlan.Operation.STATUS, 0, -1, "OWNER_APPROVED_INSTALL"))
+    }
+
     @Test fun storedStatusExplainsHistoricalFailureWithoutReclassifyingCurrentTools() {
         val missing = ContinuumMobileResultPolicy.statusExplanation("BLOCKED_MISSING_TOOLCHAIN")
         assertEquals(true, missing.contains("damalige"))
@@ -75,6 +88,7 @@ class ContinuumMobileResultPolicyTest {
         for (value in listOf(
             "NO_BUILD_REPORT",
             "BLOCKED_UNCLEAN_SOURCE",
+            "BLOCKED_SOURCE_CHANGED_DURING_BUILD",
             "FAILED_BUILD",
             "FAILED_NO_APK",
             "FAILED_APK_SIGNATURE",
