@@ -125,6 +125,25 @@ export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
     modelBytes,modelSha256:sha256Hex(modelBytes),steps:accepted?candidate.steps:trainBeforeModel.steps};
 }
 
+const AUDIT_KEYS=['accepted','auditCorrect','auditCount','auditSourceCount',
+  'steps','trainCorrect','trainCount','trainSourceCount'];
+function validatePromotionAudit(audit,modelBytes){
+  if(!audit||typeof audit!=='object'||Array.isArray(audit)||
+     Object.keys(audit).sort().join('|')!==AUDIT_KEYS.join('|')||
+     audit.accepted!==true)throw Error('Incomplete or rejected promotion audit');
+  const model=RelationalEncoder.restore(modelBytes);
+  for(const key of AUDIT_KEYS.filter(x=>x!=='accepted')){
+    if(!Number.isSafeInteger(audit[key])||audit[key]<0)throw Error('Invalid audit integer: '+key);
+  }
+  if(audit.steps!==model.steps||audit.trainCount<3||audit.trainCount>384||
+     audit.auditCount<3||audit.auditCount>128||
+     audit.trainSourceCount<3||audit.trainSourceCount>audit.trainCount||
+     audit.auditSourceCount<3||audit.auditSourceCount>audit.auditCount||
+     audit.trainCorrect>audit.trainCount||audit.auditCorrect>audit.auditCount)
+    throw Error('Promotion audit/model mismatch');
+  return audit;
+}
+
 function checkEcKey(input,kind){
   const key=kind==='private'?crypto.createPrivateKey(input):crypto.createPublicKey(input);
   const curve=key.asymmetricKeyDetails?.namedCurve;
@@ -134,7 +153,7 @@ function checkEcKey(input,kind){
 export function createSignedCre1Package({modelBytes,auditReport,privateKeyPem,createdAt=Date.now()}){
   if(!auditReport?.accepted)throw Error('Rejected model cannot be signed');
   if(!Number.isSafeInteger(createdAt)||createdAt<0)throw Error('Invalid signed time');
-  RelationalEncoder.restore(modelBytes);
+  validatePromotionAudit(auditReport,modelBytes);
   const auditBytes=Buffer.from(canonical(auditReport),'utf8');
   const payload={schema:'continuum-signed-cre1-package',version:1,format:'CRE1',
     modelSha256:sha256Hex(modelBytes),modelBytes:modelBytes.length,
@@ -147,6 +166,7 @@ export function createSignedCre1Package({modelBytes,auditReport,privateKeyPem,cr
 export function verifySignedCre1Package({modelBytes,auditBytes,manifestJson,publicKeyPem}){
   if(typeof manifestJson!=='string'||manifestJson.length>4096)throw Error('Invalid signed manifest size');
   const manifest=JSON.parse(manifestJson);
+  if(manifestJson.trim()!==canonical(manifest))throw Error('Noncanonical signed manifest');
   const {signatureBase64,...payload}=manifest;
   if(Object.keys(payload).sort().join('|')!==KEYS.join('|')||
      payload.schema!=='continuum-signed-cre1-package'||payload.version!==1||
@@ -157,7 +177,9 @@ export function verifySignedCre1Package({modelBytes,auditBytes,manifestJson,publ
      !Number.isSafeInteger(payload.createdAt)||payload.createdAt<0||
      typeof signatureBase64!=='string'||signatureBase64.length>500)
     throw Error('Invalid signed model manifest or model/audit hash');
-  RelationalEncoder.restore(modelBytes);
+  const audit=JSON.parse(Buffer.from(auditBytes).toString('utf8'));
+  if(canonical(audit)!==Buffer.from(auditBytes).toString('utf8'))throw Error('Noncanonical audit');
+  validatePromotionAudit(audit,modelBytes);
   if(!crypto.verify('sha256',Buffer.from(canonical(payload),'utf8'),
       checkEcKey(publicKeyPem,'public'),Buffer.from(signatureBase64,'base64')))
     throw Error('Invalid publisher signature');
