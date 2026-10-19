@@ -168,6 +168,8 @@ class ContinuumMemoryDialogue(private val directory:File) {
             for(a in q)for(b in t) {
                 if(a==b)return 1.0
                 if(a.length>=5 && b.length>=5 && a.substring(0,5)==b.substring(0,5))best=maxOf(best,0.8)
+                if(a.length>=5 && b.length>=a.length+3 && b.endsWith(a))best=maxOf(best,0.82)
+                if(b.length>=5 && a.length>=b.length+3 && a.endsWith(b))best=maxOf(best,0.82)
                 val ta=trigrams(a);val tb=trigrams(b)
                 val shared=ta.count { it in tb }
                 best=maxOf(best,2.0*shared/(ta.size+tb.size))
