@@ -37,6 +37,7 @@ android {
         versionCode = if (deviceAiMentorPreview) 6 else 4
         versionName = if (deviceAiMentorPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
+        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview
         manifestPlaceholders["appLabel"] = when {
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
