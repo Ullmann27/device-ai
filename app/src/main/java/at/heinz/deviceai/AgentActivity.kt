@@ -4757,15 +4757,9 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!backend.isConfigured()) {
-            AlertDialog.Builder(this)
-                .setTitle("Externer KI-Mentor · Einrichtung fehlt")
-                .setMessage("Verbinde zuerst dein eigenes HTTPS-Backend mit dem Device-Token. " +
-                    "Der Groq-API-Schlüssel bleibt ausschließlich auf dem Backend, " +
-                    "niemals in der Android-App. Dein lokaler Assistent funktioniert weiterhin ohne Cloud.")
-                .setNegativeButton("Später", null)
-                .setPositiveButton("BACKEND EINRICHTEN") { _, _ -> showCloudSettings() }
-                .show()
+        backend.ensureMentorBackend()
+        if (!backend.hasMentorAccess()) {
+            showMentorPairingDialog()
             return
         }
         val question = EditText(this).apply {
@@ -4824,6 +4818,61 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    /**
+     * No Groq API key and no global Device token must ever be entered on Android.
+     * The fingerprint is public; only Render-owner approval permits mentor access.
+     */
+    private fun showMentorPairingDialog() {
+        backend.ensureMentorBackend()
+        AlertDialog.Builder(this)
+            .setTitle("Groq-Mentor · Gerät koppeln")
+            .setMessage(
+                "Continuum erzeugt einen eigenen Geräteschlüssel im Android-Keystore. " +
+                    "Nur der öffentliche Schlüssel wird zur einmaligen Freigabe gesendet. " +
+                    "Bitte nach dem ersten Versuch einen Screenshot der angezeigten " +
+                    "Gerätekennung hier im Chat schicken. Ich kann die Kennung dann über " +
+                    "deinen Render-Dienst freigeben. Keine API-Schlüssel eingeben. " +
+                    "Bis zur Freigabe bleibt der Mentor gesperrt."
+            )
+            .setNegativeButton("Später", null)
+            .setPositiveButton("KOPPLUNG PRÜFEN") { _, _ ->
+                addToolActivity("GROQ · Gerätefreigabe wird geprüft …")
+                backend.pairMentor { result ->
+                    if (isFinishing || isDestroyed) return@pairMentor
+                    result.fold(
+                        onSuccess = { pairing ->
+                            if (pairing.approved) {
+                                updateCloudBadge()
+                                addToolActivity("✓ Groq-Mentor freigegeben · nur Textmentor, keine Gerätetools")
+                                AlertDialog.Builder(this)
+                                    .setTitle("Groq-Mentor verbunden")
+                                    .setMessage("Das Gerät ist jetzt einmalig freigegeben. " +
+                                        "Groq-API-Schlüssel oder Device-Token mussten nicht am Handy eingegeben werden.")
+                                    .setPositiveButton("Mentor öffnen") { _, _ -> showGroqMentorDialog() }
+                                    .show()
+                            } else {
+                                AlertDialog.Builder(this)
+                                    .setTitle("Besitzerfreigabe ausstehend")
+                                    .setMessage("Gerätekennung (kein Geheimnis):\n\n" +
+                                        pairing.fingerprint +
+                                        "\n\nBitte einen Screenshot schicken. " +
+                                        "Danach hier erneut KOPPLUNG PRÜFEN auswählen. " +
+                                        "Bis dahin wird kein Zugangstoken ausgestellt.")
+                                    .setPositiveButton("Schließen", null)
+                                    .show()
+                                addToolActivity("GROQ · wartet auf einmalige Besitzerfreigabe")
+                            }
+                        },
+                        onFailure = { error ->
+                            addToolActivity("GROQ · Kopplung fehlgeschlagen: " +
+                                (error.message ?: "Verbindungsfehler").take(130))
+                        }
+                    )
+                }
+            }
+            .show()
+    }
+
     private fun showCloudSettings() {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -4851,6 +4900,9 @@ class AgentActivity : Activity() {
             setPadding(0, dp(12), 0, 0)
         })
         box.addView(token, matchWidth(top = 4))
+        box.addView(actionButton("GROQ-GERÄT OHNE API-SCHLÜSSEL KOPPELN", accent = true).apply {
+            setOnClickListener { showMentorPairingDialog() }
+        }, matchWidth(top = 12))
         box.addView(
             textView(
                 "Dein Groq-Schlüssel liegt bereits ausschließlich auf dem Backend: " +
@@ -4870,8 +4922,9 @@ class AgentActivity : Activity() {
             .setNegativeButton("Abbrechen", null)
             .setNeutralButton("Token löschen") { _, _ ->
                 SecureTokenStore.clear(this)
+                SecureTokenStore.clearMentorToken(this)
                 updateCloudBadge()
-                addToolActivity("Cloud-Token gelöscht")
+                addToolActivity("Lokale Zugangstoken gelöscht; serverseitiger Widerruf benötigt Betreiberfreigabe")
             }
             .setPositiveButton("Speichern") { _, _ ->
                 val endpoint = url.text.toString().trim().trimEnd('/')
@@ -4894,11 +4947,11 @@ class AgentActivity : Activity() {
         backend.health { result ->
             result.onSuccess {
                 addToolActivity("✓ Backend erreichbar (öffentlicher Erreichbarkeitstest, keine KI-Antwort)")
-                if (!backend.hasToken()) {
+                if (!backend.hasMentorAccess()) {
                     addToolActivity(
                         "Gerätezugang fehlt in dieser Preview. Der Groq-Schlüssel auf dem Server " +
-                            "ist unabhängig davon bereits eingerichtet. Bitte niemals einen Groq-Key " +
-                            "als Geräte-Token eintragen."
+                            "ist unabhängig davon bereits eingerichtet. Über 'GROQ-GERÄT ... KOPPELN' " +
+                            "kann eine Besitzerfreigabe angefordert werden."
                     )
                     return@health
                 }
