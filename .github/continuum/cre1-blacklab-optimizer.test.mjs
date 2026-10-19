@@ -149,4 +149,6 @@ test('rejected candidate returns exact baseline bytes',()=>{
   assert.equal(result.modelSha256,sha256Hex(result.modelBytes));
   if(!result.accepted)assert.equal(Buffer.compare(result.modelBytes,baseline),0);
   assert.ok(result.canaries&&Number.isInteger(result.canaries.violations));
+  assert.ok(result.siblings&&Number.isInteger(result.siblings.tested));
+  if(result.accepted)assert.equal(result.siblings.correct,result.siblings.tested);
 });
