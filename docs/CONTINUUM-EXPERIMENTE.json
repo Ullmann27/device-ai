@@ -18,7 +18,7 @@
       "id": "EXP-00",
       "title": "On-device Android APK builder",
       "status": "SOURCE_INTEGRATED",
-      "present": "Mobile Gradle+native ARM64 AAPT2 doctor/build; on-device integration and installation pending",
+      "present": "Local Gradle/native ARM64-aapt2 doctor/build adapter plus preview-only Android launcher for owner-confirmed build; actual Samsung build and installation NOT verified",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
       "gate": "Real Samsung build, verified signature, independent tests and owner-approved install"
@@ -89,9 +89,9 @@
     {
       "id": "EXP-08",
       "title": "Android local job/result bridge",
-      "status": "IDEA",
-      "present": "Android↔same-phone worker; optional external hosts",
-      "entry": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Preview Android→same-phone Termux RunCommand for three pinned operations, user-gated; no machine-readable result channel, signed job/lease protocol, on-device E2E, or install integration",
+      "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
       "gate": "On-device submitted task to returned verified APK"
     },
