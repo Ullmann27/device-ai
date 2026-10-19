@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const read = p => readFileSync(path.join(root, p), 'utf8');
+const src = 'app/src/main/java/at/heinz/deviceai/';
+const router = read(src + 'ContinuumWorkerChatRouter.kt');
+const agent = read(src + 'AgentActivity.kt');
+const bridge = read(src + 'ShizukuBridge.kt');
+const executor = read(src + 'DeviceToolExecutor.kt');
+const routerTest = read('app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt');
+
+test('existing Shizuku and device tools stay available (no replacement with parallel toolgate)', () => {
+  assert.match(bridge, /class ShizukuBridge/);
+  assert.match(executor, /class DeviceToolExecutor/);
+  assert.match(executor, /"install_apk" ->/);
+  assert.match(agent, /private lateinit var bridge: ShizukuBridge/);
+  assert.match(agent, /executor = DeviceToolExecutor\(this, bridge\)/);
+});
+
+test('mobile builder is added to existing worker chat routing', () => {
+  assert.match(router, /data object MobileBuilder : ContinuumWorkerChatCommand\(\)/);
+  assert.match(router, /"worker builder"/);
+  assert.match(router, /"worker termux"/);
+  assert.match(agent, /ContinuumWorkerChatCommand\.MobileBuilder -> openMobileBuilder\(\)/);
+  assert.match(routerTest, /mobileBuilderNavigatesInsideExistingWorkerChat/);
+});
+
+test('preview builder is reached from existing development center', () => {
+  assert.match(agent, /CenterAction\("HANDY-BUILDER · TERMUX"\) \{ openMobileBuilder\(\) \}/);
+  assert.match(agent, /Intent\(this, ContinuumMobileBuilderActivity::class\.java\)/);
+  assert.match(agent, /BuildConfig\.APPLICATION_ID\.endsWith\("\.preview"\)/);
+  assert.match(agent, /BuildConfig\.APPLICATION_ID\.endsWith\("\.mentorpaired"\)/);
+});
+
+test('the old inaccurate PC-only guidance has been removed', () => {
+  assert.doesNotMatch(agent, /Nur ein separater[\s\S]{0,60}eingeschalteter Entwicklerrechner/);
+  assert.doesNotMatch(agent, /Es ist noch keine Build-Aufgabe auf einem Host gestartet/);
+  assert.match(agent, /Ein PC ist optional/);
+});
