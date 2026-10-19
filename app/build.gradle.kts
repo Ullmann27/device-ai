@@ -34,8 +34,8 @@ android {
         applicationId = "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.3.1"
+        versionCode = if (deviceAiMentorPreview) 5 else 4
+        versionName = if (deviceAiMentorPreview) "0.3.2" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["appLabel"] = when {
             deviceAiMentorPreview -> "Device AI Mentor Pair"
