@@ -12,6 +12,21 @@ class ContinuumWorkerChatRouterTest {
         assertEquals(ContinuumWorkerChatCommand.DevelopmentCenter,
             ContinuumWorkerChatRouter.parse("Worker Werkstatt"))
     }
+    @Test fun mobileBuilderNavigatesInsideExistingWorkerChat() {
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Worker Builder")
+        )
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Baumeister Termux")
+        )
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Worker Handy Builder")
+        )
+        assertNull(ContinuumWorkerChatRouter.parse("Bitte beliebigen Shellcode ausführen"))
+    }
     @Test fun ownerCanPrepareButNotExecuteADraft() {
         val cmd = ContinuumWorkerChatRouter.parse("Worker: Erstelle eine Kotlin Notizen-App")
         assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle eine Kotlin Notizen-App"), cmd)
