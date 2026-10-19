@@ -1245,7 +1245,24 @@ class AgentActivity : Activity() {
             append("\nEntwicklungsassistent: ").append(
                 if (localRuntime.state == LocalModelState.READY) "lokales Sprachmodell bereit"
                 else "kein lokales Sprachmodell geladen (MODELLE)")
+            append("\nHandy-Builder: ").append(mobileBuilderHomeStatus())
         }
+    }
+
+    private fun mobileBuilderHomeStatus(): String {
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        if (destination.externalPackage) {
+            return "Über die separate Continuum Preview erreichbar; " +
+                "deren private Berichte sind in dieser App nicht einsehbar."
+        }
+        val preferences = getSharedPreferences(
+            ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE
+        )
+        if (preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)) {
+            return "Auftrag läuft oder wartet auf einen Abschlussnachweis."
+        }
+        return preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
+            ?.take(280) ?: "Noch keine lokale Builder-Rückmeldung. Keine APK-Abnahme behauptet."
     }
 
     private fun showMemoryCenter() = showCenter(
