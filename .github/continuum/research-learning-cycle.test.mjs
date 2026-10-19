@@ -32,6 +32,8 @@ test('metadata/LLM summaries cannot masquerade as extractive source training',()
   assert.throws(()=>validateExtractiveSpans([{...good,claim:'A fabricated claim that is not present in the source text and can never serve as a supported training target.'}]),/exact original/);
   assert.throws(()=>validateExtractiveSpans([{...good,trainingPermitted:false}]),/rights/);
   assert.throws(()=>validateExtractiveSpans([{...good,url:'https://localhost:8443/private'}]),/provenance/);
+  assert.throws(()=>validateExtractiveSpans([{...good,url:'https://127.0.0.1/source'}]),/provenance/);
+  assert.throws(()=>validateExtractiveSpans([{...good,url:'https://router.local/source'}]),/provenance/);
   assert.throws(()=>validateExtractiveSpans([good,good]),/Duplicate/);
 });
 
