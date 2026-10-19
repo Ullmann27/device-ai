@@ -96,6 +96,13 @@ export class GroqMentor {
         })
       });
       if (response.status === 429) return { ok: false, code: "UPSTREAM_LIMIT" };
+      if (response.status === 401 || response.status === 403) {
+        return { ok: false, code: "GROQ_KEY_REJECTED" };
+      }
+      if (response.status === 404) return { ok: false, code: "GROQ_MODEL_UNAVAILABLE" };
+      if (response.status === 400 || response.status === 422) {
+        return { ok: false, code: "GROQ_REQUEST_REJECTED" };
+      }
       if (!response.ok) return { ok: false, code: "UPSTREAM_UNAVAILABLE" };
       const declared = Number(response.headers?.get?.("content-length") ?? 0);
       if (Number.isFinite(declared) && declared > MAX_RESPONSE_BYTES) {
