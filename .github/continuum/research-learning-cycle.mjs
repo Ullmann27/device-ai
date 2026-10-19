@@ -17,7 +17,7 @@ const byteHash=value=>sha256Hex(Buffer.from(value,'utf8'));
 
 export function validateExtractiveSpans(spans){
   if(!Array.isArray(spans)||spans.length>512)throw Error('Expected at most 512 source spans');
-  const seen=new Set();
+  const seen=new Set(),sourceRevisionByUrl=new Map();
   return spans.map((row,index)=>{
     if(!row||typeof row!=='object'||Array.isArray(row))throw Error('Invalid source span: '+index);
     const {query,claim,sourceText,sourceSha256,url,trainingPermitted}=row;
@@ -37,6 +37,10 @@ export function validateExtractiveSpans(spans){
       throw Error('Invalid public HTTPS provenance');
     if(!sourceText.includes(claim)||claim.trim()!==claim||
        claim.split(/\s+/).length<7)throw Error('Claim must be an exact original source span');
+    const priorSourceHash=sourceRevisionByUrl.get(location.href);
+    if(priorSourceHash!==undefined&&priorSourceHash!==sourceSha256)
+      throw Error('Different source revisions cannot share a training/audit corpus');
+    sourceRevisionByUrl.set(location.href,sourceSha256);
     const id=byteHash(sourceSha256+'\0'+query+'\0'+claim);
     if(seen.has(id))throw Error('Duplicate training span');
     seen.add(id);
