@@ -65,7 +65,8 @@ test('training is research-only, leaves frozen E unchanged and rejects holdout f
 test('signed CRE1 research package binds model, audit, publisher and canonical manifest',()=>{
   const baseline=new RelationalEncoder(73).save();
   const {privateKey,publicKey}=crypto.generateKeyPairSync('ec',{namedCurve:'prime256v1'});
-  const report={accepted:true,steps:0,trainCount:10,auditCount:4,trainCorrect:7,auditCorrect:3};
+  const report={accepted:true,steps:0,trainCount:10,auditCount:4,
+    trainSourceCount:10,auditSourceCount:4,trainCorrect:7,auditCorrect:3};
   const pkg=createSignedCre1Package({
     modelBytes:baseline,auditReport:report,privateKeyPem:privateKey,createdAt:1750000000000
   });
