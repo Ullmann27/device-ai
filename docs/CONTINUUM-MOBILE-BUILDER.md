@@ -87,3 +87,19 @@ Die vorherige UI meldete lediglich, dass der Android-Service gestartet worden wa
 **Wichtige Grenze:** Ein Android Result-Callback beweist nur, dass der lokale Dienst bestimmte Daten zurückgegeben hat. Der nächste Schritt muss den echten APK-Artefaktzugriff (z.B. klar begrenzter Storage-Provider), Paketkennung und erwartete Signing-Key-Identität, unabhängige Prüfroutinen und autorisierte Installation ergänzen.
 
 Quellnachweise: https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent ; https://raw.githubusercontent.com/termux/termux-app/master/termux-shared/src/main/java/com/termux/shared/termux/TermuxConstants.java ; https://developer.android.com/reference/android/app/PendingIntent
+
+## Realer Samsung-Build #1: AIDL-Linux-x86-Blocker und isolierter ARM64-Workaround
+
+**Besitzer-Geräteprüfung 19.10.2026, ca. 19:06 Ortszeit:** Original-PR-42-Code in `~/device-ai`, Samsung ARM64 Termux. `doctor` zuvor 7/7 Checks grün und Node-Wiring-Tests 23/23 bestanden. Erster **echter**, nicht gesimulierter `build --project .` mit Gradle 8.11.1, JDK17 und SDK36 ging nach **1m46s** in `FAILED_BUILD`, Exitcode 1 (Builder-CLI Exitcode 2). Reale Gradle-Fehlerstelle: `:app:compileDebugAidl`; Googles SDK `build-tools/35.0.0/aidl` ist kein auf Termux/Android ARM64 lauffähiger Host-Compiler (`Syntax error: '(' unexpected`). Gradle hat 7 Tasks ausgeführt und brach danach ab. **Keine APK erzeugt oder installiert.** Die vorherige Builder-Statusanzeige hielt stdout bis zum Prozessende zurück; dies ist unabhängig vom AIDL-ABI-Problem eine UX-Aufgabe.
+
+**Neuer, nur mobil aktivierter Fix in diesem Draft-PR:**
+- `app/src/main/aidl/at/heinz/deviceai/IDeviceShell.aidl` bleibt **unverändert**. Diese Datei enthält die für die Shizuku-Shell essenziellen Binder-Transaktions-IDs `execute=1` und `destroy=16777114`.
+- `app/src/termux/java/at/heinz/deviceai/IDeviceShell.java` stellt für den Android/Termux-Sonderbau die gleiche Schnittstelle inklusive `Binder.Stub`, `Proxy`, Deskriptor, Interface-Token, Request- und Reply-Parcel sowie Fehlerweitergabe als prüfbaren Java-Quelltext bereit. Sie ist **kein universeller Ersatz** für den AIDL-Generator.
+- `app/build.gradle.kts` steuert die Auswahl ausschließlich über `-PdeviceAiMobileAidlFallback=true`: nur dann `aidl=false` und zusätzliche Java-Quelle `src/termux/java`. Bei allen normalen Builds bleibt `aidl=true`, die ursprüngliche AIDL-Datei der kanonische Vertrag.
+- `scripts/continuum-mobile-builder.mjs` fügt den Schalter für seinen freigegebenen Termux-Buildweg automatisch zu den festen Gradle-Argumenten hinzu, ohne eigene Shellbefehle oder Geräteinstallationen.
+- `scripts/continuum-mobile-aidl-compat.test.mjs` enthält fünf statische Integrations-/Binder-Vertragsprüfungen; der bestehende Builder-Test kontrolliert jetzt auch den aktiven Schalter.
+- Gezielte GitHub-Originaldatei-Quellprüfungen der Änderungen **16/16 erfolgreich**. **Noch keine** bestätigte Java-/Gradle-APK-Kompilierung dieses Fix-Commits auf dem Samsung oder unabhängiger Binder-Laufzeittest; diese fehlende Abnahme niemals verschweigen.
+
+**Echter nächster Geräte-Nachweis:** Besitzer aktualisiert sein unverändertes Checkout nur mit `git pull --ff-only` und explizitem bekannten read-only SSH-Key, kontrolliert den HEAD/sauberen Git-Status, führt `node --test scripts/continuum-mobile-aidl-compat.test.mjs scripts/continuum-mobile-builder.test.mjs` aus. Nur bei grünen Tests kommt der zweite echte APK-Build mit unverändertem JDK17/SDK36/AAPT2/Gradle8.11.1-Environment in Frage. Bei weiteren Linux-x86-Build-Tools (z. B. zipalign) nicht blind Bibliotheken überschreiben; jeden Blocker separat prüfen. `main` und die normale AIDL-Generierung bleiben unverändert.
+
+Offizielle technische Grundlage: https://developer.android.com/develop/background-work/services/aidl ; https://developer.android.com/reference/tools/gradle-api/8.7/com/android/build/api/dsl/BuildFeatures
