@@ -27,9 +27,11 @@ class GeneralWebDiscoveryProvider(
         checkAccess()
         val text=query.text.trim().take(512)
         if(text.isBlank())return emptyList()
+        val focused=ResearchQuestionFocus.searchText(text)
         val primary=runCatching {
             checkAccess()
-            parseSearchResults(fetchHtml?.invoke(searchUrl(text))?:fetchSearchResponse(searchUrl(text),checkAccess))
+            parseSearchResults(fetchHtml?.invoke(searchUrl(focused))?:fetchSearchResponse(searchUrl(focused),checkAccess))
+                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
         }.getOrElse {
             rethrowCancellation(it)
             lastIssue="Allgemeine Websuche fehlgeschlagen: "+(it.message?:it.javaClass.simpleName).take(160)
@@ -37,9 +39,13 @@ class GeneralWebDiscoveryProvider(
         }
         checkAccess()
         if(primary.isNotEmpty()){generalWorked=true;lastIssue=null;return primary}
-        lastIssue=lastIssue?:"Allgemeine Websuche lieferte keine verwendbaren Quellen."
+        lastIssue=lastIssue?:"Allgemeine Websuche lieferte keine thematisch passenden Quellen."
         checkAccess()
-        val fallback=runCatching { (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess)).discover(query) }
+        val fallback=runCatching {
+            (wikipedia?:WikipediaResearchDiscoveryProvider(checkAccess=checkAccess))
+                .discover(query.copy(text=focused))
+                .filter { ResearchQuestionFocus.titleMatches(text,it.title) }
+        }
             .getOrElse {
                 rethrowCancellation(it)
                 lastIssue=lastIssue+" Wikipedia-Fallback ebenfalls fehlgeschlagen."
