@@ -4871,15 +4871,14 @@ class AgentActivity : Activity() {
             SPEECH_REQUEST -> {
                 showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
                 if (resultCode == RESULT_OK) {
-                val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                val spoken = matches?.firstOrNull()
-                if (!spoken.isNullOrBlank()) {
-                    input.setText(spoken)
-                    input.setSelection(spoken.length)
-                    // Only in the explicitly activated learning conversation: a
-                    // recognized phrase goes to the supervised coach, never ToolGate.
-                    if (neuralCoach.isActive() && !busy) sendCurrentInput()
-                }
+                    val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    val spoken = matches?.firstOrNull()
+                    if (!spoken.isNullOrBlank()) {
+                        input.setText(spoken)
+                        input.setSelection(spoken.length)
+                        // Recognition fills the composer. It never bypasses ToolGate.
+                        if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                    }
                 }
             }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
