@@ -608,7 +608,16 @@ const httpServer = app.listen(PORT, "0.0.0.0", () => {
   // No user memories, questions, response text or API secrets are logged.
   // Consume exactly one model attempt per process start while enabled.
   if (process.env.GROQ_MENTOR_SELFTEST_ON_START === "true") {
-    void groqMentor.answer("Erkläre den photovoltaischen Effekt in einem Satz.")
+    const syntheticMentorQuestion = [
+      "Bitte erkläre die folgenden fünf Punkte zu Device AI Continuum.",
+      "1. Was können die lokalen Lernkerne SWB1 und CRE1?",
+      "2. Welche Grenzen hat der Android-Teamleiter aktuell?",
+      "3. Welche Aufgaben kann der optionale Groq-Textmentor ohne Gerätetools übernehmen?",
+      "4. Wie unterscheiden sich Besitzerwissen und unverifizierte Webquellen?",
+      "5. Was fehlt für einen unabhängigen Entwicklungsworker?",
+      "Antworte verständlich auf Deutsch; unterscheide implementierte Funktionen von künftigen Möglichkeiten."
+    ].join(" ");
+    void groqMentor.answer(syntheticMentorQuestion)
       .then(result => {
         console.log("Continuum Groq self-test:", JSON.stringify({
           ok: result.ok,
