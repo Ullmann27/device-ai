@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs, isTermuxArm64, doctor, build, readStatus } from './continuum-mobile-builder.mjs';
+import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests } from './continuum-mobile-builder.mjs';
 
 const HEAD='f'.repeat(40);
 const SIGNER='a'.repeat(64);
@@ -16,13 +16,21 @@ function fixture() {
   return {root,stateDir,artifact:path.join(root,'app/build/outputs/apk/debug/app-debug.apk')};
 }
 const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',checks:{termuxArm64:true},bin:{git:'/fake/git',gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
-function mock(f,{dirty=false,fail=false,sign=true,commands=[]}={}) {
+function mock(f,{dirty=false,fail=false,sign=true,commands=[],changedHead=false,changedSource=false,junitFailure=false}={}) {
+  let gradleFinished=false;
   return async (file,args)=>{
     commands.push({file,args});
-    if(file==='/fake/git'&&args[0]==='rev-parse')return {ok:true,output:HEAD};
-    if(file==='/fake/git'&&args[0]==='status')return {ok:true,output:dirty?' M app/build.gradle.kts':''};
+    if(file==='/fake/git'&&args[0]==='rev-parse')return {ok:true,output:gradleFinished&&changedHead?'e'.repeat(40):HEAD};
+    if(file==='/fake/git'&&args[0]==='status')return {ok:true,output:dirty||gradleFinished&&changedSource?' M app/build.gradle.kts':''};
     if(file==='/fake/gradle') {
+      gradleFinished=true;
       if(!fail)fs.writeFileSync(f.artifact,Buffer.alloc(8192,42));
+      if(fail&&junitFailure){
+        const dir=path.join(f.root,'app/build/test-results/testDebugUnitTest');
+        fs.mkdirSync(dir,{recursive:true});
+        fs.writeFileSync(path.join(dir,'TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml'),
+          '<testsuite><testcase name="kotlinRankingMatchesCurrentFrozenFixture" classname="at.heinz.deviceai.learning.RetrievalBenchmarkTest"><failure message="expected 0.625">failed</failure></testcase><testcase name="passing" classname="Example"/></testsuite>');
+      }
       return {ok:!fail,code:fail?1:0,output:fail?'synthetic Gradle failure':'synthetic success'};
     }
     if(file==='/fake/apksigner')return {ok:sign,output:sign?'Signer #1 certificate SHA-256 digest: '+SIGNER:'invalid'};
@@ -94,4 +102,44 @@ test('synthetic signed output saves a distinct hash-tied copy; not proof of an o
   assert.ok(gradle.args.includes(':app:testDebugUnitTest'));
   assert.ok(gradle.args.includes(':app:lintDebug'));
   assert.ok(gradle.args.includes(':app:assembleDebug'));
+});
+
+test('Gradle failure reports only fresh failing JVM tests, never a false build success',async()=>{
+  const f=fixture();
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{fail:true,junitFailure:true})});
+  assert.equal(result.status,'FAILED_BUILD');
+  assert.equal(result.exitCode,1);
+  assert.deepEqual(result.failedJvmTests,[{
+    className:'at.heinz.deviceai.learning.RetrievalBenchmarkTest',
+    testName:'kotlinRankingMatchesCurrentFrozenFixture'
+  }]);
+  assert.deepEqual(readStatus(f.stateDir).failedJvmTests,result.failedJvmTests);
+});
+
+test('JUnit diagnostics ignore stale files and symlinks',()=>{
+  const f=fixture();
+  const dir=path.join(f.root,'app/build/test-results/testDebugUnitTest');
+  fs.mkdirSync(dir,{recursive:true});
+  const filename='TEST-example.Case.xml',old=path.join(dir,filename);
+  fs.writeFileSync(old,'<testsuite><testcase name="old" classname="Case"><failure>bad</failure></testcase></testsuite>');
+  const start=Date.now();
+  const past=new Date(start-60_000);fs.utimesSync(old,past,past);
+  assert.deepEqual(failedJvmTests(f.root,start),[]);
+  const data=path.join(dir,'outside.xml');fs.renameSync(old,data);
+  fs.symlinkSync(data,old);
+  assert.deepEqual(failedJvmTests(f.root,start),[]);
+});
+
+test('a changed HEAD during Gradle blocks APK publication',async()=>{
+  const f=fixture();
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{changedHead:true})});
+  assert.equal(result.status,'BLOCKED_SOURCE_CHANGED_DURING_BUILD');
+  assert.equal(fs.readdirSync(f.stateDir).some(name=>name.endsWith('.apk')),false);
+});
+
+test('a dirty checkout produced during Gradle blocks APK publication',async()=>{
+  const f=fixture();
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{changedSource:true})});
+  assert.equal(result.status,'BLOCKED_SOURCE_CHANGED_DURING_BUILD');
+  assert.equal(fs.readdirSync(f.stateDir).some(name=>name.endsWith('.apk')),false);
 });
