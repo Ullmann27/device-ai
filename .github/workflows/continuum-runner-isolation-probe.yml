@@ -1,0 +1,30 @@
+name: Continuum Runner Isolation Probe
+
+on:
+  push:
+    branches:
+      - astra/runner-isolation-diagnostic-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runner-probe:
+    name: Hosted Ubuntu runner and Groq contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Confirm GitHub runner started
+        run: |
+          echo "RUNNER_STARTED=true"
+          echo "RUNNER_OS=$RUNNER_OS"
+          node --version
+      - name: Checkout isolated source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check Groq mentor syntax
+        run: node --check backend/src/groq-mentor.js
+      - name: Verify isolated Groq contract with mock provider
+        run: node --test backend/test/groq-mentor.test.js
