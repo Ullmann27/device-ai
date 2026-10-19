@@ -123,7 +123,7 @@ class ResearchEngineTest {
             .research("latest device news", ResearchMode.QUICK)
         assertFalse(dossier.generalSearchAvailable)
         assertEquals(ResearchPhase.PARTIAL, dossier.phase)
-        assertTrue(dossier.synthesis!!.text.contains("No verified source documents were retrieved"))
+        assertTrue(dossier.synthesis!!.text.contains("Keine auswertbaren Quellen gefunden"))
         assertTrue(dossier.partialReason!!.contains("discovery is not configured"))
         assertNull(dossier.sources.firstOrNull())
         val temporarilyUnavailable = object : ResearchDiscoveryProvider {
@@ -137,7 +137,7 @@ class ResearchEngineTest {
         ).research("Solarzellen", ResearchMode.QUICK)
         assertTrue(unavailable.partialReason!!.contains("no usable sources"))
         assertFalse(unavailable.partialReason!!.contains("not configured"))
-        assertTrue(unavailable.synthesis!!.text.contains("No verified source documents were retrieved"))
+        assertTrue(unavailable.synthesis!!.text.contains("Keine auswertbaren Quellen gefunden"))
     }
 
     @Test

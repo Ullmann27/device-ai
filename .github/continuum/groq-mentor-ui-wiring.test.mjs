@@ -16,7 +16,8 @@ test("external mentor has an explicit per-request consent UI", () => {
   assert.match(activity, /setPositiveButton\("EINMALIG SENDEN"\)/);
   assert.match(activity, /setNegativeButton\("LOKAL BLEIBEN"/);
   assert.match(activity, /backend\.groqMentor\(content\)/);
-  assert.match(activity, /request\.startsWith\("mentor:", ignoreCase = true\)/);
+  assert.match(activity, /GroqInvocationRouter\.extractQuestion\(request\)/);
+  assert.match(activity, /showGroqMentorDialog\(groqQuestion\)/);
 });
 
 test("Android only sends bounded question text to the private backend", () => {
@@ -30,10 +31,15 @@ test("Android only sends bounded question text to the private backend", () => {
   assert.doesNotMatch(body, /Build\.MODEL|shizuku_ready|manufacturer|sendDevice|put\("memory"|put\("device"/);
   assert.match(body, /"POST", "\$base\/v1\/mentor\/answer"/);
   assert.match(body, /UNVERIFIED_EXTERNAL/);
+  assert.match(body, /\.take\(4200\)/);
+  assert.doesNotMatch(body, /json\.optString\("message"\)\.trim\(\)\.take\(1800\)/);
 });
 
 test("server never accepts mentor request without owner grant and bearer authentication", () => {
-  assert.match(backend, /app\.post\("\/v1\/mentor\/answer", auth,/);
+  assert.match(backend, /app\.post\("\/v1\/mentor\/answer", mentorAuth,/);
+  assert.match(backend, /function mentorAuth\(req, res, next\)/);
+  assert.match(backend, /mentorPairing\.isMentorAuthorized\(supplied\)/);
+  assert.match(backend, /return auth\(req, res, next\)/);
   assert.match(backend, /req\.body\?\.consent !== true/);
   assert.match(backend, /"consent\|provider\|question"/);
   assert.doesNotMatch(backend, /app\.post\("\/v1\/mentor\/answer",[^\n]*tool_choice/);

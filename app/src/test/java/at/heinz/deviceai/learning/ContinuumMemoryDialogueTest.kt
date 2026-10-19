@@ -116,4 +116,31 @@ class ContinuumMemoryDialogueTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
+        val sentence = "Sternenreise ist mein Forschungsprojekt"
+        val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)
+        assertTrue("Deutsch-Komposita sollen erkannt werden: $evidence", evidence >= 0.82)
+        assertTrue(evidence >= ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+        assertTrue(
+            ContinuumMemoryDialogue.wordEvidence("Wo ist der Schlüssel?",
+                "Der Haustürschlüssel liegt in der Schublade.") >= 0.82
+        )
+        assertTrue(
+            ContinuumMemoryDialogue.wordEvidence("Ist mein Mobilgerät erreichbar?",
+                "Dein Gerät ist bereit.") >= 0.82
+        )
+        assertTrue(ContinuumMemoryDialogue.wordEvidence("Code", "Barcode") < 0.82)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence("Quantenperiskop", sentence) < 0.6)
+        val dir = Files.createTempDirectory("continuum-compound").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            core.confirmOwnerFact(sentence)
+            val reply = core.replyFromMemory("Wie heißt mein Projekt?")
+            assertTrue(reply.grounded)
+            assertTrue(reply.answer.contains("Sternenreise"))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
 }

@@ -810,6 +810,11 @@ class AgentActivity : Activity() {
         ).apply { gravity = Gravity.CENTER; hologramStatus = this }, matchWidth())
         container.addView(hero, matchWidth())
         container.addView(buildStatusRow(), matchWidth(top = 11))
+        container.addView(actionButton("★   ERSTE SCHRITTE · Deine KI einfach erklärt  ›", accent = true).apply {
+            contentDescription = "Schritt-für-Schritt-Anleitung für Internet, Lernen, Modelle und Coding-Agent"
+            minHeight = dp(56)
+            setOnClickListener { showFirstStepsGuide() }
+        }, matchWidth(top = 10))
         container.addView(textView("DEINE KI-BEREICHE", 10f,
             Color.rgb(153, 189, 252), true).apply {
             letterSpacing = 0.14f
@@ -1026,6 +1031,38 @@ class AgentActivity : Activity() {
         status { text -> if (dialog.isShowing) statusView.text = text }
     }
 
+    /**
+     * Small one-page-at-a-time introduction for first-time users.
+     * Actions navigate to existing screens only; no permission is granted here.
+     */
+    private fun showFirstStepsGuide(page: Int = 0) {
+        val steps = ContinuumFirstSteps.steps
+        val index = page.coerceIn(steps.indices)
+        val step = steps[index]
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Deine KI einrichten · Schritt ${index + 1} von ${steps.size}")
+            .setMessage(step.title + "\\n\\n" + step.description +
+                "\\n\\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
+            .setNeutralButton(step.actionTitle) { _, _ ->
+                when (step.action) {
+                    ContinuumGuideAction.CHAT -> focusChatComposer()
+                    ContinuumGuideAction.INTERNET -> showResearchModeDialog()
+                    ContinuumGuideAction.LEARNING -> showLearningCenter()
+                    ContinuumGuideAction.MODELS -> showModelCenter()
+                    ContinuumGuideAction.DEVELOPMENT -> showDevelopmentCenter()
+                    ContinuumGuideAction.STATUS -> showSystemCenter()
+                }
+            }
+            .setNegativeButton(if (index == 0) "Schließen" else "Zurück") { _, _ ->
+                if (index > 0) showFirstStepsGuide(index - 1)
+            }
+            .setPositiveButton(if (index == steps.lastIndex) "Fertig" else "Weiter") { _, _ ->
+                if (index < steps.lastIndex) showFirstStepsGuide(index + 1)
+            }
+            .create()
+        dialog.show()
+    }
+
     private fun showLearningCenter() = showCenter(
         "Lernzentrum",
         "Kontrolliertes Lernen: nur bestätigte Beispiele, Holdout-Schutz vor Verschlechterung und " +
@@ -1081,6 +1118,7 @@ class AgentActivity : Activity() {
         listOf(
             CenterAction("ENTWICKLUNGSAUFGABE · STARTEN", accent = true) { showDevelopmentDialog() },
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
+            CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
@@ -1433,8 +1471,47 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (request.startsWith("mentor:", ignoreCase = true)) {
-            showGroqMentorDialog(request.substringAfter(':').trim())
+        // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
+        // showGroqMentorDialog always requires a second owner confirmation.
+        val groqQuestion = GroqInvocationRouter.extractQuestion(request)
+        if (groqQuestion != null) {
+            showGroqMentorDialog(groqQuestion)
+            return
+        }
+        val baumeister = ContinuumWorkerChatRouter.parse(request)
+        if (baumeister != null) {
+            input.text.clear()
+            addUserMessage(request)
+            when (baumeister) {
+                ContinuumWorkerChatCommand.Help -> addAssistantMessage(
+                    "Continuum Baumeister · lokale Werkstatt.\n" +
+                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt' " +
+                        "oder 'Worker: <deine App-Idee>'.\n" +
+                        "Der Android-Teamleiter prüft den Backlog. Nur ein separater " +
+                        "eingeschalteter Entwicklerrechner kann Git, Compiler und Tests ausführen. " +
+                        "Kein Befehl wird ungeprüft ausgeführt."
+                )
+                ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
+                ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
+                ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
+                is ContinuumWorkerChatCommand.Draft -> {
+                    devController.setGoal(baumeister.goal)
+                    if (devController.state.goal == baumeister.goal) {
+                        addAssistantMessage(
+                            "Baumeister: Entwicklungsziel lokal vorbereitet. " +
+                                "Es ist noch keine Build-Aufgabe auf einem Host gestartet. " +
+                                "Für einen Codeentwurf wird ein kompatibles lokales Sprachmodell benötigt; " +
+                                "die Ausführung erfolgt später im isolierten Entwicklungsworker."
+                        )
+                        showDevelopmentDialog()
+                    } else {
+                        addAssistantMessage(
+                            "Baumeister: Eine vorherige Entwicklungsaufgabe ist noch aktiv. " +
+                                "Dein neuer Auftrag wurde nicht automatisch übernommen."
+                        )
+                    }
+                }
+            }
             return
         }
         if (request.equals("Neuron Tutor", true) || request.equals("Neuron Gespräch", true)) {
@@ -2330,9 +2407,11 @@ class AgentActivity : Activity() {
         box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
         box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
         box.addView(textView(
-            "Für natürliche Gespräche und den Entwicklungsassistenten brauchst du eine " +
-                "kompatible lokale LiteRT-LM-Modell-Datei. Device AI lädt kein Modell " +
-                "heimlich herunter und nutzt keinen kostenpflichtigen Cloud-Ersatz.",
+            "Für vollständig lokale natürliche Gespräche und Entwicklungsentwürfe brauchst du " +
+                "eine kompatible LiteRT-LM-Modelldatei. Der eigene Lernkern arbeitet auch ohne " +
+                "Sprachmodell. Der optionale Groq-Mentor kann getrennt davon einzelne Fragen " +
+                "beantworten: nur über dein Backend, mit Gerätefreigabe und ausdrücklicher " +
+                "Bestätigung jeder externen Frage. Er installiert kein lokales Modell.",
             13f, MUTED), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
@@ -2360,6 +2439,12 @@ class AgentActivity : Activity() {
             "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
                 "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
             12.5f, MUTED), matchWidth(top = 11))
+        box.addView(actionButton("GROQ-MENTOR · EXTERNE FRAGE (OPTIONAL)").apply {
+            setOnClickListener {
+                modelCenterDialog?.dismiss()
+                showGroqMentorDialog()
+            }
+        }, matchWidth(top = 12))
 
         val advanced = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -4749,15 +4834,9 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Bitte zuerst den laufenden Auftrag beenden.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!backend.isConfigured()) {
-            AlertDialog.Builder(this)
-                .setTitle("Externer KI-Mentor · Einrichtung fehlt")
-                .setMessage("Verbinde zuerst dein eigenes HTTPS-Backend mit dem Device-Token. " +
-                    "Der Groq-API-Schlüssel bleibt ausschließlich auf dem Backend, " +
-                    "niemals in der Android-App. Dein lokaler Assistent funktioniert weiterhin ohne Cloud.")
-                .setNegativeButton("Später", null)
-                .setPositiveButton("BACKEND EINRICHTEN") { _, _ -> showCloudSettings() }
-                .show()
+        backend.ensureMentorBackend()
+        if (!backend.hasMentorAccess()) {
+            showMentorPairingDialog()
             return
         }
         val question = EditText(this).apply {
@@ -4816,6 +4895,61 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    /**
+     * No Groq API key and no global Device token must ever be entered on Android.
+     * The fingerprint is public; only Render-owner approval permits mentor access.
+     */
+    private fun showMentorPairingDialog() {
+        backend.ensureMentorBackend()
+        AlertDialog.Builder(this)
+            .setTitle("Groq-Mentor · Gerät koppeln")
+            .setMessage(
+                "Continuum erzeugt einen eigenen Geräteschlüssel im Android-Keystore. " +
+                    "Nur der öffentliche Schlüssel wird zur einmaligen Freigabe gesendet. " +
+                    "Bitte nach dem ersten Versuch einen Screenshot der angezeigten " +
+                    "Gerätekennung hier im Chat schicken. Ich kann die Kennung dann über " +
+                    "deinen Render-Dienst freigeben. Keine API-Schlüssel eingeben. " +
+                    "Bis zur Freigabe bleibt der Mentor gesperrt."
+            )
+            .setNegativeButton("Später", null)
+            .setPositiveButton("KOPPLUNG PRÜFEN") { _, _ ->
+                addToolActivity("GROQ · Gerätefreigabe wird geprüft …")
+                backend.pairMentor { result ->
+                    if (isFinishing || isDestroyed) return@pairMentor
+                    result.fold(
+                        onSuccess = { pairing ->
+                            if (pairing.approved) {
+                                updateCloudBadge()
+                                addToolActivity("✓ Groq-Mentor freigegeben · nur Textmentor, keine Gerätetools")
+                                AlertDialog.Builder(this)
+                                    .setTitle("Groq-Mentor verbunden")
+                                    .setMessage("Das Gerät ist jetzt einmalig freigegeben. " +
+                                        "Groq-API-Schlüssel oder Device-Token mussten nicht am Handy eingegeben werden.")
+                                    .setPositiveButton("Mentor öffnen") { _, _ -> showGroqMentorDialog() }
+                                    .show()
+                            } else {
+                                AlertDialog.Builder(this)
+                                    .setTitle("Besitzerfreigabe ausstehend")
+                                    .setMessage("Gerätekennung (kein Geheimnis):\n\n" +
+                                        pairing.fingerprint +
+                                        "\n\nBitte einen Screenshot schicken. " +
+                                        "Danach hier erneut KOPPLUNG PRÜFEN auswählen. " +
+                                        "Bis dahin wird kein Zugangstoken ausgestellt.")
+                                    .setPositiveButton("Schließen", null)
+                                    .show()
+                                addToolActivity("GROQ · wartet auf einmalige Besitzerfreigabe")
+                            }
+                        },
+                        onFailure = { error ->
+                            addToolActivity("GROQ · Kopplung fehlgeschlagen: " +
+                                (error.message ?: "Verbindungsfehler").take(130))
+                        }
+                    )
+                }
+            }
+            .show()
+    }
+
     private fun showCloudSettings() {
         val box = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -4839,13 +4973,21 @@ class AgentActivity : Activity() {
 
         box.addView(textView("Backend URL (nur HTTPS)", 12f, MUTED, true))
         box.addView(url, matchWidth(top = 4))
-        box.addView(textView("Device-Token", 12f, MUTED, true).apply {
+        box.addView(textView("Geräte-Zugangstoken (NICHT der Groq-Schlüssel)", 12f, MUTED, true).apply {
             setPadding(0, dp(12), 0, 0)
         })
         box.addView(token, matchWidth(top = 4))
+        box.addView(actionButton("GROQ-GERÄT OHNE API-SCHLÜSSEL KOPPELN", accent = true).apply {
+            setOnClickListener { showMentorPairingDialog() }
+        }, matchWidth(top = 12))
         box.addView(
             textView(
-                "API-Schlüssel von OpenAI oder Groq gehören niemals hier hinein. Sie bleiben ausschließlich als Secrets am eigenen Backend. Der externe Mentor überträgt nur die ausdrücklich freigegebene Frage.",
+                "Dein Groq-Schlüssel liegt bereits ausschließlich auf dem Backend: " +
+                    "hier niemals einen Groq- oder OpenAI-Schlüssel eintragen. " +
+                    "Diese separate Preview-App übernimmt aus Sicherheitsgründen keinen " +
+                    "Geräte-Zugangstoken aus einer anderen Installation. " +
+                    "Ohne eigenen Device-Token sind nur Erreichbarkeitstests möglich. " +
+                    "Externe Mentorfragen werden einzeln bestätigt.",
                 11f,
                 MUTED
             ).apply { setPadding(0, dp(10), 0, 0) }
@@ -4857,8 +4999,9 @@ class AgentActivity : Activity() {
             .setNegativeButton("Abbrechen", null)
             .setNeutralButton("Token löschen") { _, _ ->
                 SecureTokenStore.clear(this)
+                SecureTokenStore.clearMentorToken(this)
                 updateCloudBadge()
-                addToolActivity("Cloud-Token gelöscht")
+                addToolActivity("Lokale Zugangstoken gelöscht; serverseitiger Widerruf benötigt Betreiberfreigabe")
             }
             .setPositiveButton("Speichern") { _, _ ->
                 val endpoint = url.text.toString().trim().trimEnd('/')
@@ -4871,7 +5014,7 @@ class AgentActivity : Activity() {
                 if (newToken.isNotBlank()) SecureTokenStore.save(this, newToken)
                 updateCloudBadge()
                 addToolActivity("Cloud-Konfiguration gespeichert")
-                if (backend.isConfigured()) testCloudHealth()
+                testCloudHealth()
             }
             .show()
     }
@@ -4880,13 +5023,21 @@ class AgentActivity : Activity() {
         addToolActivity("Prüfe Backend …")
         backend.health { result ->
             result.onSuccess {
-                addToolActivity("✓ Backend erreichbar")
+                addToolActivity("✓ Backend erreichbar (öffentlicher Erreichbarkeitstest, keine KI-Antwort)")
+                if (!backend.hasMentorAccess()) {
+                    addToolActivity(
+                        "Gerätezugang fehlt in dieser Preview. Der Groq-Schlüssel auf dem Server " +
+                            "ist unabhängig davon bereits eingerichtet. Über 'GROQ-GERÄT ... KOPPELN' " +
+                            "kann eine Besitzerfreigabe angefordert werden."
+                    )
+                    return@health
+                }
                 backend.mentorStatus { status ->
                     status.onSuccess { (configured, remaining) ->
                         if (configured) {
                             addToolActivity(
                                 "✓ Groq-Mentor konfiguriert · maximal $remaining Versuche heute übrig. " +
-                                    "Externer Modellaufruf noch nicht getestet."
+                                    "Die Verbindung von diesem Android-Gerät ist noch nicht per Mentorfrage geprüft."
                             )
                         } else {
                             addToolActivity(

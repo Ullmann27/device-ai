@@ -33,6 +33,8 @@ export function wordEvidence(query,text){
   for(const a of q)for(const b of t){
     if(a===b)return 1;
     if(a.length>=5&&b.length>=5&&a.slice(0,5)===b.slice(0,5))best=Math.max(best,0.8);
+    if(a.length>=5&&b.length>=a.length+3&&b.endsWith(a))best=Math.max(best,0.82);
+    if(b.length>=5&&a.length>=b.length+3&&a.endsWith(b))best=Math.max(best,0.82);
     const A=trigrams(a),B=trigrams(b);let i=0;for(const x of A)if(B.has(x))i++;
     best=Math.max(best,2*i/(A.size+B.size));
   }

@@ -3,6 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val mentorSigningPath = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_FILE").orNull
+val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_PASSWORD").orNull
+
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
@@ -11,6 +14,19 @@ require(!(deviceAiPreview && deviceAiMentorPreview)) {
 }
 
 android {
+    signingConfigs {
+        if (deviceAiMentorPreview && !mentorSigningPath.isNullOrBlank() &&
+            !mentorSigningPassword.isNullOrBlank()
+        ) {
+            create("mentorPreview") {
+                storeFile = file(mentorSigningPath)
+                storePassword = mentorSigningPassword
+                keyAlias = "deviceai-mentor"
+                keyPassword = mentorSigningPassword
+                storeType = "PKCS12"
+            }
+        }
+    }
     namespace = "at.heinz.deviceai"
     compileSdk = 36
 
@@ -18,11 +34,11 @@ android {
         applicationId = "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.3.1"
+        versionCode = if (deviceAiMentorPreview) 6 else 4
+        versionName = if (deviceAiMentorPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["appLabel"] = when {
-            deviceAiMentorPreview -> "Device AI Mentor"
+            deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
             else -> "Device AI"
         }
@@ -32,7 +48,10 @@ android {
         getByName("debug") {
             if (deviceAiMentorPreview) {
                 // Independent signing and app storage: never overwrite the tested Sol preview.
-                applicationIdSuffix = ".mentorpreview"
+                applicationIdSuffix = ".mentorpaired"
+                if ("mentorPreview" in signingConfigs.names) {
+                    signingConfig = signingConfigs.getByName("mentorPreview")
+                }
             } else if (deviceAiPreview) {
                 applicationIdSuffix = ".preview"
             }

@@ -27,8 +27,11 @@ data class DeviceTeamleaderSnapshot(
     val reason: String
 ) {
     fun display(): String = buildString {
-        append("Continuum Teamleiter · ").append(state)
-        append("\nLetzte Prüfung: ").append(checkedAt)
+        append("Continuum Teamleiter · lokaler Prüfstatus ").append(state)
+        append("\nLetzte Prüfung: ").append(
+            java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss", java.util.Locale.GERMANY)
+                .format(java.util.Date(checkedAt))
+        )
         append("\nUnterbrochene Aufgaben wieder freigegeben: ").append(recoveredClaims)
         append("\nBereit im gemeinsamen Backlog: ").append(readyTasks)
         append(" · Fehlgeschlagen: ").append(failedTasks)
@@ -39,8 +42,10 @@ data class DeviceTeamleaderSnapshot(
             append(" · Ausführung erfordert geeignete lokale Werkzeuge")
         }
         if (reason != "OK") append("\nHinweis: ").append(reason)
-        append("\nAndroid prüft und verwaltet den Backlog; Git-Builds und Patches " +
-            "werden nur von einem entsprechend ausgerüsteten Worker ausgeführt.")
+        append("\nREADY bestätigt nur die lokale Backlog-/Lernkernprüfung. " +
+            "Es beweist weder einen laufenden externen Entwicklungsworker " +
+            "noch erfolgreiche Git-Builds oder automatische Codeänderungen. " +
+            "Git-Builds und Patches benötigen einen entsprechend ausgerüsteten Worker.")
     }
 }
 
