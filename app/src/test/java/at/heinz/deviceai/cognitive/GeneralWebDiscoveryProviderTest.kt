@@ -13,6 +13,43 @@ class GeneralWebDiscoveryProviderTest {
         }
     }
 
+    @Test fun solarQuestionFiltersDictionaryNoiseAndSearchesTheRealTopic() {
+        var requested = ""
+        val provider = GeneralWebDiscoveryProvider(fetchHtml = { url ->
+            requested = url
+            """<rss><channel>
+                <item><title>wie – Bedeutung und Grammatik</title><link>https://www.dwds.de/wb/wie</link></item>
+                <item><title>Facebook – Anmeldung</title><link>https://secure.facebook.com/</link></item>
+                <item><title>Solarzelle – photovoltaischer Effekt</title><link>https://de.wikipedia.org/wiki/Solarzelle</link></item>
+            </channel></rss>"""
+        })
+        val result = provider.discover(ResearchQuery("Wie funktionieren Solarzellen?", "q0"))
+        assertEquals(listOf("https://de.wikipedia.org/wiki/Solarzelle"), result.map { it.url })
+        assertTrue(requested.contains("q=solarzellen"))
+        assertTrue(provider.isGeneralSearchAvailable)
+    }
+
+    @Test fun irrelevantSearchHitsCauseTopicFocusedWikipediaFallback() {
+        var topic = ""
+        val fallback = object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = false
+            override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
+                topic = query.text
+                return listOf(
+                    ResearchSourceCandidate("https://de.wikipedia.org/wiki/Solarzelle", "Solarzelle")
+                )
+            }
+        }
+        val provider = GeneralWebDiscoveryProvider(fallback, fetchHtml = {
+            """<rss><channel><item><title>Wie – Rechtschreibung</title>
+            <link>https://www.duden.de/rechtschreibung/wie</link></item></channel></rss>"""
+        })
+        val result = provider.discover(ResearchQuery("Wie funktionieren Solarzellen?", "q0"))
+        assertEquals("solarzellen", topic)
+        assertEquals(1, result.size)
+        assertEquals("Solarzelle", result.single().title)
+    }
+
     @Test fun parsesPublicSearchResultAndDoesNotUseFallback() {
         val fallback = Fallback()
         val provider = GeneralWebDiscoveryProvider(fallback) {

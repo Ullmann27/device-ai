@@ -297,6 +297,85 @@ class ResearchEngineTest {
     }
 
     @Test
+    fun oversizedFollowUpPageDoesNotDiscardCompletedResearch() {
+        val first = document(
+            "https://first.example.org/dictionary", "first.example.org",
+            "Grammar notes about unrelated dictionary examples and miscellaneous words.", 1
+        )
+        val good = document(
+            "https://science.example.org/solar", "science.example.org",
+            "Solar cells convert sunlight directly into electrical energy using the photovoltaic effect.", 2
+        )
+        val oversized = "https://verylarge.example.org/document"
+        var discoveryCalls = 0
+        val discovery = object : ResearchDiscoveryProvider {
+            override val isGeneralSearchAvailable = true
+            override fun discover(query: ResearchQuery): List<ResearchSourceCandidate> {
+                discoveryCalls++
+                return if (discoveryCalls == 1) {
+                    listOf(ResearchSourceCandidate(first.url))
+                } else {
+                    listOf(ResearchSourceCandidate(oversized), ResearchSourceCandidate(good.url))
+                }
+            }
+        }
+        val provider = object : ResearchProvider {
+            override fun retrieve(request: ResearchRequest): ResearchResult {
+                if (request.url == oversized) {
+                    throw IllegalArgumentException("Research response is too large.")
+                }
+                val doc = if (request.url == first.url) first else good
+                return ResearchResult(listOf(doc), listOf(doc.citation()))
+            }
+        }
+        val dossier = DeepResearchEngine(
+            discovery = discovery,
+            provider = provider,
+            now = { 1_000L },
+            validateTarget = {}
+        ).research("Wie funktionieren Solarzellen?", ResearchMode.STANDARD)
+        assertTrue(discoveryCalls > 1)
+        assertEquals(ResearchPhase.PARTIAL, dossier.phase)
+        assertTrue(dossier.partialReason.orEmpty().contains("Nachrecherche-Quelle"))
+        assertTrue(dossier.sources.any { it.canonicalUrl == first.url })
+        assertTrue(dossier.sources.any { it.canonicalUrl == good.url })
+        assertNotNull(dossier.synthesis)
+    }
+
+    @Test
+    fun modelFreeSynthesisRefusesUnrelatedDictionaryEvidence() {
+        val question = "Wie funktionieren Solarzellen?"
+        val plan = DeterministicResearchPlanner().plan(question, ResearchMode.STANDARD)
+        val dictionary = Claim(
+            "c1", "Das Wort wie ist ein Adverb und wird in Wörterbüchern erklärt.",
+            ProvenanceType.EXTERNAL_SOURCE, listOf("https://www.dwds.de/wb/wie"), createdAt = 100L
+        )
+        fun synthesize(claims: List<Claim>): String {
+            val graph = ResearchEvidenceGraph(
+                claims, emptyList(), emptyList(), emptyMap(), emptyMap()
+            )
+            val input = ResearchSynthesisInput(
+                question, plan,
+                listOf(UntrustedResearchSnippet("https://www.dwds.de/wb/wie", "wie", dictionary.text)),
+                graph, emptyList(), emptyList()
+            )
+            return DeterministicResearchSynthesizer().synthesize(input).text
+        }
+        val unrelated = synthesize(listOf(dictionary))
+        assertTrue(unrelated.contains("Keine zur Frage passenden Quellenaussagen"))
+        assertFalse(unrelated.contains("• " + dictionary.text))
+        val related = Claim(
+            "c2", "Solarzellen wandeln Sonnenlicht mithilfe des photovoltaischen Effekts in elektrischen Strom um.",
+            ProvenanceType.EXTERNAL_SOURCE, listOf("https://de.wikipedia.org/wiki/Solarzelle"),
+            createdAt = 101L
+        )
+        val matching = synthesize(listOf(dictionary, related))
+        assertTrue(matching.contains("Solarzellen wandeln Sonnenlicht"))
+        assertFalse(matching.contains("• " + dictionary.text))
+        assertTrue(matching.contains("ungeprüft", ignoreCase = true))
+    }
+
+    @Test
     fun onlyExplicitlyRequestedVerifiedIndependentClaimsCanEnterLongTermMemory() {
         val store = InMemoryMemoryStore()
         val claim = Claim(
