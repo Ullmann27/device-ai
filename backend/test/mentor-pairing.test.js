@@ -36,6 +36,13 @@ test("owner-approved device receives only revocable mentor token", () => {
   assert.equal(result.scope, "MENTOR_ONLY");
   assert.match(result.token, /^[A-Za-z0-9_-]{43}$/);
   assert.equal(p.isMentorAuthorized("Bearer " + result.token), true);
+  assert.throws(() => p.redeem({ publicKey: encoded, signature: sign(challenge), challenge }), /CHALLENGE_REPLAY/);
+  const restarted = new MentorDevicePairing({
+    rootToken: ROOT_TOKEN, approvedFingerprints: hash, clock: fixedClock,
+    randomBytes: n => Buffer.alloc(n, 0x7e)
+  });
+  assert.throws(() => restarted.redeem({ publicKey: encoded, signature: sign(challenge), challenge }));
+  assert.equal(restarted.isMentorAuthorized("Bearer " + result.token), true);
   assert.equal(make("").isMentorAuthorized("Bearer " + result.token), false);
   assert.equal(p.isMentorAuthorized("Bearer invalid"), false);
   assert.equal(result.token === ROOT_TOKEN, false);
