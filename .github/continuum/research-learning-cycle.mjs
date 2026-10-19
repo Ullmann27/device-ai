@@ -100,7 +100,10 @@ export function buildExtractiveContrastiveSet(rows){
       negatives.push(item.other.claim);
       if(negatives.length>=3)break;
     }
-    return negatives.length>=2?{query:row.query,candidates:[row.claim,...negatives]}:null;
+    return negatives.length>=2?{
+      query:row.query,candidates:[row.claim,...negatives],
+      siblingNegative:siblings.length?siblings[0].claim:null
+    }:null;
   }).filter(Boolean);
 }
 
@@ -143,6 +146,14 @@ export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
   const trainAfter=evaluatePrePooledSplit(candidate,train,pool,tau);
   const auditAfter=evaluatePrePooledSplit(candidate,audit,pool,tau);
   const canaries=canaryAudit(candidate,audit,pool);
+  const siblingRows=train.filter(row=>typeof row.siblingNegative==='string');
+  const siblings={
+    tested:siblingRows.length,
+    correct:siblingRows.filter(row=>
+      candidate.score(row.query,row.candidates[0])>
+        candidate.score(row.query,row.siblingNegative)+1e-12
+    ).length
+  };
   const accepted=trainAfter.loss+1e-8<trainBefore.loss&&
     auditAfter.correct>=auditBefore.correct&&
     auditAfter.mrr+1e-12>=auditBefore.mrr&&
@@ -150,10 +161,11 @@ export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
     // ||P^T P-I||_F < 1 forces every Gram eigenvalue to stay positive.
     Number.isFinite(trained.gramPq)&&Number.isFinite(trained.gramPm)&&
     trained.gramPq<1&&trained.gramPm<1&&
-    canaries.violations===0;
+    canaries.violations===0&&
+    siblings.correct===siblings.tested;
   const modelBytes=accepted?candidate.save():Buffer.from(baselineBytes);
   return {accepted,trainBefore,trainAfter,auditBefore,auditAfter,
-    canaries,poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm,
+    canaries,siblings,poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm,
     modelBytes,modelSha256:sha256Hex(modelBytes),
     steps:accepted?candidate.steps:baseline.steps};
 }
@@ -250,5 +262,6 @@ export function runResearchLearningCycle({
       auditBefore:trained.auditBefore,auditAfter:trained.auditAfter,
       poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm
     },
+    siblings:trained.siblings,
     shadowModelBytes:trained.accepted?Buffer.from(trained.modelBytes):null};
 }
