@@ -62,7 +62,7 @@ export function splitVerifiedClaimsByHash(spans){
 export function buildExtractiveContrastiveSet(rows){
   if(!Array.isArray(rows)||rows.length<3)return [];
   const words=value=>new Set(String(value).toLocaleLowerCase('de-DE')
-    .split(/[^\\p{L}\\p{N}]+/u).filter(x=>x.length>=4));
+    .split(/[^\p{L}\p{N}]+/u).filter(x=>x.length>=4));
   const overlap=(left,right)=>{
     const a=words(left),b=words(right);
     if(!a.size||!b.size)return 0;
