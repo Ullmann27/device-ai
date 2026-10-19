@@ -256,7 +256,7 @@ class AgentBackendClient(private val context: Context) {
                     json.optJSONArray("tool_calls")?.length() == 0) {
                     "Ungültige oder nicht isolierte Mentorantwort."
                 }
-                json.optString("message").trim().take(1800)
+                json.optString("message").trim().take(4200)
                     .takeIf { it.isNotBlank() }
                     ?: throw IllegalStateException("Leere Mentorantwort.")
             }
