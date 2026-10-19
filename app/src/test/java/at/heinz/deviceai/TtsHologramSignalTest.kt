@@ -4,6 +4,27 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class TtsHologramSignalTest {
+    @Test fun invalidPlaybackFrameCannotStartTheAudioSignal() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 3, 1)
+        signal.append("A", ByteArray(800) { 0 })
+        signal.anchor("A", -1, 1_000)
+        assertEquals(0f, signal.level(1_050), 0f)
+    }
+
+    @Test fun invalidPlaybackFrameCannotRewindAnActiveSignal() {
+        val signal = TtsHologramSignal()
+        signal.activate("A")
+        signal.begin("A", 8_000, 3, 1)
+        signal.append("A", ByteArray(800) { 128.toByte() })
+        signal.append("A", ByteArray(800) { 0 })
+        signal.anchor("A", 0, 1_000)
+        signal.anchor("A", -1, 1_150)
+        assertEquals(1f, signal.level(1_150), 0f)
+        assertEquals(0f, signal.level(1_200), 0f)
+    }
+
     @Test fun longSynthesisKeepsLaterAudioAndItsPlaybackPosition() {
         val signal = TtsHologramSignal()
         signal.activate("long")

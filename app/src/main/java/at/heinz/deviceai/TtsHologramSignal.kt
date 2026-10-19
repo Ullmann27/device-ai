@@ -54,8 +54,9 @@ internal class TtsHologramSignal {
     }
 
     @Synchronized fun anchor(id: String, frame: Int, nowMillis: Long) {
-        if (utterance != id) return
-        anchorFrame = frame.toLong().coerceAtLeast(0)
+        // An unavailable/invalid playback position must not start or rewind the signal.
+        if (utterance != id || frame < 0) return
+        anchorFrame = frame.toLong()
         anchorMillis = nowMillis
         playing = true
     }
