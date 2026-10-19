@@ -42,6 +42,14 @@ class ContinuumMobileBuilderActivity : Activity() {
             column.addView(this, LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         }
+        val backToAgent = Button(this).apply {
+            text = "← Zurück zu Device AI"
+            isAllCaps = false
+            contentDescription = "Builder schließen und zur vorherigen Device-AI-Oberfläche zurückkehren"
+            setOnClickListener { finish() }
+        }
+        column.addView(backToAgent, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, px(48)))
         paragraph("Continuum · Android Builder", true)
         paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
