@@ -63,4 +63,33 @@ class ContinuumMobileResultPolicyTest {
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "DEVICE_INSTALLED"))
     }
+    @Test fun storedStatusExplainsHistoricalFailureWithoutReclassifyingCurrentTools() {
+        val missing = ContinuumMobileResultPolicy.statusExplanation("BLOCKED_MISSING_TOOLCHAIN")
+        assertEquals(true, missing.contains("damalige"))
+        assertEquals(true, missing.contains("aktuelle Werkzeugzustand"))
+        assertEquals(true, ContinuumMobileResultPolicy.statusExplanation("FAILED_APK_SIGNATURE").contains("nicht freigegeben"))
+        assertEquals(true, ContinuumMobileResultPolicy.statusExplanation("FAILED_BUILD").contains("kein neuer Build-Erfolg"))
+    }
+
+    @Test fun storedStatusNeverTurnsInvalidOrAbsentEvidenceIntoSuccessfulInstall() {
+        for (value in listOf(
+            "NO_BUILD_REPORT",
+            "BLOCKED_UNCLEAN_SOURCE",
+            "FAILED_BUILD",
+            "FAILED_NO_APK",
+            "FAILED_APK_SIGNATURE",
+            "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+            "UNKNOWN",
+            ""
+        )) {
+            val explanation = ContinuumMobileResultPolicy.statusExplanation(value)
+            assertEquals(false, explanation.contains("Installation erfolgreich"))
+            assertEquals(false, explanation.contains("produktionsreif"))
+        }
+        assertEquals(
+            "Buildbericht unbekannt oder ungültig. Kein Erfolg nachgewiesen.",
+            ContinuumMobileResultPolicy.statusExplanation("USER_SUPPLIED_SUCCESS")
+        )
+    }
+
 }
