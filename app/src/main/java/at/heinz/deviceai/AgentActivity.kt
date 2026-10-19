@@ -4783,7 +4783,12 @@ class AgentActivity : Activity() {
                 if (content.length !in 3..1800) {
                     addAssistantMessage("Mentor-Anfrage abgelehnt: Erforderlich sind 3 bis 1800 Zeichen.")
                 } else if (!busy) {
-                    input.text.clear()
+                    val originalDraft = input.text.toString().trim()
+                    if (originalDraft == content ||
+                        (originalDraft.startsWith("mentor:", ignoreCase = true) &&
+                            originalDraft.substringAfter(':').trim() == content)) {
+                        input.text.clear()
+                    }
                     addUserMessage(content)
                     setBusy(true)
                     addToolActivity("GROQ · externe Frage mit Einmalfreigabe versendet")
