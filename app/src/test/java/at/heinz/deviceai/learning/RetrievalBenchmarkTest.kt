@@ -7,10 +7,13 @@ import java.util.Base64
 
 /**
  * Android side of the frozen retrieval benchmark (continuum/benchmark-v1.json).
- * The Kotlin ranking must reproduce the GitHub measurement in
- * docs/retrieval-benchmark.json ("adopted"), so the number reported for the
- * phone is the number measured for the phone. Small authored benchmark,
- * not an external certification.
+ * The current Kotlin lexical ranking is measured on the same frozen fixture
+ * as the GitHub JavaScript implementation. DEV's updated 21/32 top-1 hits and
+ * 22.5/32 reciprocal-rank sum were independently recalculated on 2026-10-19.
+ * The historical docs/retrieval-benchmark.json still needs a full official
+ * regeneration; do not treat its older DEV values as current Android results.
+ * TEST remains a pinned report-only control, not a tuning target.
+ * Small authored benchmark, not an external certification.
  */
 class RetrievalBenchmarkTest {
     private val bench=StrictJson.parseObject(
@@ -41,12 +44,14 @@ class RetrievalBenchmarkTest {
         return top1/qs.size to mrr/qs.size
     }
 
-    @Test fun kotlinRankingReproducesTheGithubMeasurement() {
-        // docs/retrieval-benchmark.json, method "adopted" (top-3 as shown in chat)
+    @Test fun kotlinRankingMatchesCurrentFrozenFixture() {
+        // DEV: 21 of 32 rank 1, 3 of 32 rank 2. Never silently weaken TEST.
         val (devTop1,devMrr)=metrics("dev")
         val (testTop1,testMrr)=metrics("test")
-        assertEquals(0.625,devTop1,0.0005);assertEquals(0.656,devMrr,0.0005)
-        assertEquals(0.594,testTop1,0.0005);assertEquals(0.651,testMrr,0.0005)
+        assertEquals(21.0/32.0,devTop1,0.0005)
+        assertEquals(22.5/32.0,devMrr,0.0005)
+        assertEquals(0.594,testTop1,0.0005)
+        assertEquals(0.651,testMrr,0.0005)
     }
 
     @Test fun unknownTopicsAreMostlyDeclinedInsteadOfAnsweredWithAWrongMemory() {
