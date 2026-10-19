@@ -1110,8 +1110,9 @@ class AgentActivity : Activity() {
 
     private fun showDevelopmentCenter() = showCenter(
         "Entwicklungszentrum",
-        "Entwicklungsaufgaben mit denselben Regeln wie Entwickler-Agent und CLI: erledigt wird eine Aufgabe nur " +
-            "mit ausgeführtem Testnachweis aus CI, nie allein auf dem Gerät.",
+        "Android selbst ist die Entwicklerzentrale. Der lokale Termux-Builder und die " +
+            "vorhandenen Shizuku-Gerätewerkzeuge werden nach Besitzerfreigabe genutzt. " +
+            "Ein PC ist optional; Erfolg zählt erst mit überprüften Tests und APK-Belegen.",
         { done -> onBacklog({ developmentCenterStatus() }) { result ->
             done(result.getOrElse { "Backlog nicht lesbar: ${backlogError(it)}" })
         } },
@@ -1122,8 +1123,23 @@ class AgentActivity : Activity() {
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
-        )
+        ) + if (BuildConfig.APPLICATION_ID.endsWith(".preview") ||
+            BuildConfig.APPLICATION_ID.endsWith(".mentorpaired")) {
+            listOf(CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() })
+        } else emptyList()
     )
+
+    private fun openMobileBuilder() {
+        if (BuildConfig.APPLICATION_ID.endsWith(".preview") ||
+            BuildConfig.APPLICATION_ID.endsWith(".mentorpaired")) {
+            startActivity(Intent(this, ContinuumMobileBuilderActivity::class.java))
+        } else {
+            addAssistantMessage(
+                "Der mobile Builder ist derzeit nur in der Continuum-Preview freigeschaltet. " +
+                    "Die vorhandenen Shizuku-Gerätewerkzeuge bleiben unverändert."
+            )
+        }
+    }
 
     /** Device and desktop share one development backlog and agent identity.
      * This Android stage performs local diagnostics and lease recovery only.
@@ -1485,23 +1501,24 @@ class AgentActivity : Activity() {
             when (baumeister) {
                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
                     "Continuum Baumeister · lokale Werkstatt.\n" +
-                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt' " +
-                        "oder 'Worker: <deine App-Idee>'.\n" +
-                        "Der Android-Teamleiter prüft den Backlog. Nur ein separater " +
-                        "eingeschalteter Entwicklerrechner kann Git, Compiler und Tests ausführen. " +
-                        "Kein Befehl wird ungeprüft ausgeführt."
+                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
+                        "'Worker Builder' oder 'Worker: <deine App-Idee>'.\n" +
+                        "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
+                        "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
+                        "sofern sie installiert und freigegeben sind. Der PC ist optional."
                 )
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
+                ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
                 is ContinuumWorkerChatCommand.Draft -> {
                     devController.setGoal(baumeister.goal)
                     if (devController.state.goal == baumeister.goal) {
                         addAssistantMessage(
                             "Baumeister: Entwicklungsziel lokal vorbereitet. " +
-                                "Es ist noch keine Build-Aufgabe auf einem Host gestartet. " +
-                                "Für einen Codeentwurf wird ein kompatibles lokales Sprachmodell benötigt; " +
-                                "die Ausführung erfolgt später im isolierten Entwicklungsworker."
+                                "Es wurde noch keine lokale Build-Aufgabe gestartet. " +
+                                "Für eigenständige Codeentwürfe wird ein kompatibles lokales Sprachmodell benötigt; " +
+                                "die Ausführung ist auf Android/Termux nach gesonderter Freigabe vorgesehen."
                         )
                         showDevelopmentDialog()
                     } else {
