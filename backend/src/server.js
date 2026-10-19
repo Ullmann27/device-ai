@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import express from "express";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
@@ -285,6 +286,21 @@ function extractCitations(response) {
     }
   }
   return [...found.values()];
+}
+
+// Read-only, same-origin test UI: no secrets or personal questions embedded in HTML.
+// Protected /v1/mentor/* routes still require DEVICE_AI_TOKEN and explicit consent.
+const mentorUiDirectory = fileURLToPath(new URL("../public/", import.meta.url));
+for (const [route, name] of [
+  ["/mentor", "mentor.html"],
+  ["/mentor/ui.css", "mentor.css"],
+  ["/mentor/ui.js", "mentor.js"]
+]) {
+  app.get(route, (_req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.set("Referrer-Policy", "no-referrer");
+    res.sendFile(path.join(mentorUiDirectory, name));
+  });
 }
 
 app.get("/health", (_req, res) => {
