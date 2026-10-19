@@ -145,6 +145,28 @@ class AgentBackendClient(private val context: Context) {
         }.start()
     }
 
+    fun mentorStatus(callback: (Result<Pair<Boolean, Int>>) -> Unit) {
+        val base = backendUrl()
+        val token = SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("HTTPS-Backend mit Device-Token fehlt.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                val body = request(
+                    "GET", "$base/v1/mentor/status",
+                    null, authenticated = true, token = token
+                )
+                val json = JSONObject(body)
+                val available = json.optBoolean("available", false)
+                val remaining = json.optInt("remainingToday", 0).coerceAtLeast(0)
+                available to remaining
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-mentor-status").apply { isDaemon = true; start() }
+    }
+
     /**
      * An owner-confirmed one-shot remote request.
      * Does not transmit device identifiers, previous chat, tool outputs or memory.
