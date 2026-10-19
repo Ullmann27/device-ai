@@ -2,6 +2,7 @@ package at.heinz.deviceai
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
@@ -12,13 +13,17 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import java.util.UUID
 
 /**
- * Experimental, owner-operated Android-on-device build launcher (EXP-00).
- * Uses the user's installed Termux, never interprets chat text or installs an APK.
+ * EXP-00/08: owner's preview-only Android workstation launcher.
+ * Only fixed local Termux build commands are sent; raw chat never becomes a shell command.
  */
 class ContinuumMobileBuilderActivity : Activity() {
     private lateinit var status: TextView
+    private val preferences by lazy {
+        getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +44,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         }
         paragraph("Continuum · Android Builder", true)
         paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
-        status = paragraph("Bereit für den lokalen Toolchain-Test. Auf diesem Gerät ist noch kein APK-Build nachgewiesen.")
+        status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
         for (operation in ContinuumMobileBuildPlan.Operation.entries) {
             val button = Button(this).apply {
                 text = operation.title
@@ -48,53 +53,144 @@ class ContinuumMobileBuilderActivity : Activity() {
                     if (operation == ContinuumMobileBuildPlan.Operation.BUILD) {
                         AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
                             .setTitle("Lokalen Build starten?")
-                            .setMessage("Termux führt Gradle-Tests und einen APK-Build im vorhandenen ~/device-ai-Checkout aus. Das kann länger dauern und Akku/Speicher beanspruchen. Keine Installation erfolgt.")
+                            .setMessage("Termux führt Tests, Lint und einen APK-Build auf diesem Telefon aus. Das kann bis zu 35 Minuten dauern und Akku/Speicher beanspruchen. Keine Installation erfolgt.")
                             .setNegativeButton("Abbrechen", null)
                             .setPositiveButton("Bauen") { _, _ -> dispatch(operation) }
                             .show()
                     } else dispatch(operation)
                 }
             }
-            column.addView(button, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
+            column.addView(button, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
         }
-        paragraph("Vorbereitung: Termux, Node.js 20+, Git, JDK 17, Gradle 8.11.1, ARM64-aapt2, Android SDK 36 und apksigner. In ~/.termux/termux.properties: allow-external-apps=true.")
-        paragraph("Android-Berechtigung: 'Run commands in Termux'. Diese Buttons verwenden ausschließlich feste, vorgegebene Befehle. Jede tatsächliche Ausführung im Termux-Terminal kontrollieren.")
+        val refreshButton = Button(this).apply {
+            text = "Ergebnis in der App aktualisieren"
+            isAllCaps = false
+            setOnClickListener { refreshReceipt() }
+        }
+        column.addView(refreshButton, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
+        paragraph("Voraussetzungen: Termux mit Node.js 20+, Git, JDK 17, Gradle 8.11.1, ARM64-aapt2, SDK 36 und apksigner. In ~/.termux/termux.properties: allow-external-apps=true.")
+        paragraph("Freigabe: 'Run commands in Termux'. Es werden nur drei geprüfte Operationen gestartet; Ergebnis und Exitcode kommen über einen einmaligen Android-Rückkanal zurück.")
         val scroll = ScrollView(this)
         scroll.addView(column)
         setContentView(scroll)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (::status.isInitialized) refreshReceipt()
+    }
+
+    private fun refreshReceipt() {
+        val last = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
+        val sha = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_SHA, null)
+        val pending = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)
+        val started = preferences.getLong(ContinuumMobileBuildResultReceiver.JOB_START, 0L)
+        status.text = when {
+            pending != null ->
+                "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt."
+            last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
+            else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
+        }
+    }
+
     private fun dispatch(operation: ContinuumMobileBuildPlan.Operation) {
         if (checkSelfPermission(ContinuumMobileBuildPlan.TERMUX_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            status.text = "Bitte Termux-Befehle in Android zulassen und anschließend erneut tippen."
+            status.text = "Termux-Berechtigung zunächst erlauben; dann den Auftrag erneut bestätigen."
             requestPermissions(arrayOf(ContinuumMobileBuildPlan.TERMUX_PERMISSION), 410)
             return
         }
         try {
             packageManager.getPackageInfo(ContinuumMobileBuildPlan.TERMUX_PACKAGE, 0)
         } catch (_: PackageManager.NameNotFoundException) {
-            status.text = "Termux fehlt. Ohne einen lokal installierten Worker ist kein Build möglich."
+            status.text = "Termux ist nicht installiert oder nicht sichtbar. Kein lokaler Worker verfügbar."
             return
         }
+        val pendingId = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)
+        if (pendingId != null) {
+            val started = preferences.getLong(ContinuumMobileBuildResultReceiver.JOB_START, 0)
+            if (started > 0 && System.currentTimeMillis() - started > 60 * 60 * 1000L) {
+                AlertDialog.Builder(this)
+                    .setTitle("Vorherigen Auftrag ohne Rückmeldung abschließen?")
+                    .setMessage("Der frühere Vorgang hat seit über einer Stunde nicht geantwortet. Prüfe zuerst Termux: Dort könnte ein Prozess noch laufen. Ein neuer Auftrag kann Ressourcen beanspruchen.")
+                    .setNegativeButton("Abbrechen", null)
+                    .setPositiveButton("Als ungeklärt markieren") { _, _ ->
+                        preferences.edit()
+                            .remove(ContinuumMobileBuildResultReceiver.JOB_ID)
+                            .remove(ContinuumMobileBuildResultReceiver.JOB_OPERATION)
+                            .remove(ContinuumMobileBuildResultReceiver.JOB_START)
+                            .putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
+                                "Voriger Termux-Auftrag hat keinen Abschlussnachweis geliefert.")
+                            .commit()
+                        refreshReceipt()
+                    }.show()
+            } else {
+                status.text = "Zuerst die bestehende Termux-Ausführung abwarten. Es wird kein zweiter paralleler Auftrag gestartet."
+            }
+            return
+        }
+        val requestId = UUID.randomUUID().toString()
         val plan = ContinuumMobileBuildPlan.command(operation)
+        val receiverIntent = Intent(this, ContinuumMobileBuildResultReceiver::class.java).apply {
+            putExtra(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
+            putExtra(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operation.name)
+        }
+        // Termux must fill the "result" Bundle; hence an explicit, mutable ONE_SHOT
+        // PendingIntent to a non-exported receiver, not a mutable implicit intent.
+        val callback = PendingIntent.getBroadcast(
+            this,
+            java.security.SecureRandom().nextInt(Int.MAX_VALUE),
+            receiverIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE
+        )
         val intent = Intent().apply {
             setClassName(ContinuumMobileBuildPlan.TERMUX_PACKAGE, ContinuumMobileBuildPlan.TERMUX_SERVICE)
             action = ContinuumMobileBuildPlan.TERMUX_ACTION
             putExtra("com.termux.RUN_COMMAND_PATH", plan.executable)
             putExtra("com.termux.RUN_COMMAND_ARGUMENTS", plan.args.toTypedArray())
             putExtra("com.termux.RUN_COMMAND_WORKDIR", plan.workDir)
-            putExtra("com.termux.RUN_COMMAND_BACKGROUND", false)
+            putExtra("com.termux.RUN_COMMAND_BACKGROUND", true)
+            putExtra(ContinuumMobileBuildResultReceiver.COMMAND_PENDING_INTENT, callback)
+        }
+        if (!preferences.edit()
+                .putString(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
+                .putString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operation.name)
+                .putLong(ContinuumMobileBuildResultReceiver.JOB_START, System.currentTimeMillis())
+                .commit()
+        ) {
+            callback.cancel()
+            status.text = "Der lokale Auftragsstatus konnte nicht gesichert werden. Nichts gestartet."
+            return
         }
         try {
-            status.text = if (startService(intent) != null) {
-                "An Termux übermittelt: ${operation.title}. Kein bestätigter Erfolg – die Ausgabe in Termux prüfen."
-            } else "Termux hat den Auftrag nicht übernommen."
+            if (startService(intent) == null) {
+                callback.cancel()
+                cancelUnstarted(requestId, "Termux hat die Auftragsauslösung nicht angenommen.")
+            } else {
+                status.text = "Auftrag an Termux übermittelt. Der tatsächliche Exitcode wird abgewartet; kein Build-Erfolg bestätigt."
+            }
         } catch (_: SecurityException) {
-            status.text = "Termux-Zugriff verweigert. RUN_COMMAND und allow-external-apps prüfen."
+            callback.cancel()
+            cancelUnstarted(requestId, "Termux-Zugriff verweigert. RUN_COMMAND und allow-external-apps prüfen.")
         } catch (_: IllegalStateException) {
-            status.text = "Android verhindert gerade den Dienststart. Termux öffnen und erneut versuchen."
+            callback.cancel()
+            cancelUnstarted(requestId, "Android hat den Termux-Dienststart verhindert.")
         } catch (e: RuntimeException) {
-            status.text = "Start fehlgeschlagen: ${e.javaClass.simpleName}."
+            callback.cancel()
+            cancelUnstarted(requestId, "Termux-Start gescheitert: ${e.javaClass.simpleName}.")
         }
+    }
+
+    private fun cancelUnstarted(id: String, message: String) {
+        if (id == preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)) {
+            preferences.edit()
+                .remove(ContinuumMobileBuildResultReceiver.JOB_ID)
+                .remove(ContinuumMobileBuildResultReceiver.JOB_OPERATION)
+                .remove(ContinuumMobileBuildResultReceiver.JOB_START)
+                .putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, message)
+                .commit()
+        }
+        refreshReceipt()
     }
 }
