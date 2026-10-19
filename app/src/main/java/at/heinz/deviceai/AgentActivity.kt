@@ -21,6 +21,7 @@ import at.heinz.deviceai.learning.OwnerFactChange
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.ActivityNotFoundException
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.SpannableString
@@ -551,6 +552,10 @@ class AgentActivity : Activity() {
             actionButton("Entwicklungsaufgabe").apply { setOnClickListener { showDevelopmentDialog() } },
             matchWidth(top = 8)
         )
+        side.addView(
+            actionButton("⚒ Handy-Builder · Termux").apply { setOnClickListener { openMobileBuilder() } },
+            matchWidth(top = 8)
+        )
 
         val spacer = View(this)
         side.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
@@ -842,6 +847,15 @@ class AgentActivity : Activity() {
             }
             container.addView(row, matchWidth(top = if (rowIndex == 0) 9 else 9))
         }
+        container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
+            contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
+            background = roundedGradient(
+                Color.rgb(24, 49, 99), Color.rgb(14, 30, 62),
+                18, Color.rgb(74, 154, 224)
+            )
+            minHeight = dp(57)
+            setOnClickListener { openMobileBuilder() }
+        }, matchWidth(top = 10))
         container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
             contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
             background = roundedGradient(
@@ -1122,22 +1136,39 @@ class AgentActivity : Activity() {
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
+            CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
-        ) + if (BuildConfig.APPLICATION_ID.endsWith(".preview") ||
-            BuildConfig.APPLICATION_ID.endsWith(".mentorpaired")) {
-            listOf(CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() })
-        } else emptyList()
+        )
     )
 
     private fun openMobileBuilder() {
-        if (BuildConfig.APPLICATION_ID.endsWith(".preview") ||
-            BuildConfig.APPLICATION_ID.endsWith(".mentorpaired")) {
-            startActivity(Intent(this, ContinuumMobileBuilderActivity::class.java))
-        } else {
-            addAssistantMessage(
-                "Der mobile Builder ist derzeit nur in der Continuum-Preview freigeschaltet. " +
-                    "Die vorhandenen Shizuku-Gerätewerkzeuge bleiben unverändert."
-            )
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        val intent = Intent().setClassName(destination.packageName, destination.className)
+        try {
+            // Explicit allowlisted Activity launch; never launch a shell or install an APK here.
+            startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            val message = if (destination.externalPackage) {
+                "Die Device AI Preview mit dem Handy-Builder ist nicht installiert " +
+                    "oder ihre Builder-Oberfläche ist nicht verfügbar. " +
+                    "Installiere zuerst die geprüfte Continuum-Preview mit deiner Zustimmung. " +
+                    "Deine Haupt-App und Shizuku bleiben unverändert."
+            } else {
+                "Die Builder-Oberfläche dieser Preview ist nicht verfügbar. " +
+                    "Bitte überprüfe die installierte Preview-Version."
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Handy-Builder nicht erreichbar")
+                .setMessage(message)
+                .setPositiveButton("Schließen", null)
+                .show()
+        } catch (_: SecurityException) {
+            AlertDialog.Builder(this)
+                .setTitle("Handy-Builder nicht freigegeben")
+                .setMessage("Android hat das Öffnen der Builder-Oberfläche blockiert. " +
+                    "Es wurde kein Termux-Befehl gestartet und keine APK installiert.")
+                .setPositiveButton("Schließen", null)
+                .show()
         }
     }
 
