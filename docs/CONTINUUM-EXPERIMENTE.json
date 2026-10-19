@@ -18,7 +18,7 @@
       "id": "EXP-00",
       "title": "On-device Android APK builder",
       "status": "SOURCE_INTEGRATED",
-      "present": "Local Gradle/native ARM64-aapt2 doctor/build adapter plus preview-only Android launcher for owner-confirmed build; actual Samsung build and installation NOT verified",
+      "present": "Preview-only on-device Termux launch plus one-shot asynchronous receipt and fail-closed Android parser; REAL Samsung toolchain, APK build and install still unverified",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
       "gate": "Real Samsung build, verified signature, independent tests and owner-approved install"
@@ -90,10 +90,10 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Preview Android→same-phone Termux RunCommand for three pinned operations, user-gated; no machine-readable result channel, signed job/lease protocol, on-device E2E, or install integration",
-      "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "present": "Version-1 one-at-a-time Android-to-Termux RUN_COMMAND with owner-confirmed build, explicit PendingIntent, private callback receipt, result SHA fields; no signed end-to-end job leases, no independent APK ingest and no Samsung device proof",
+      "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
-      "gate": "On-device submitted task to returned verified APK"
+      "gate": "Actual Samsung Android 16 callback, SHA/signature evidence, authenticated job/lease replay resistance, owner-approved verified APK install"
     },
     {
       "id": "EXP-09",
