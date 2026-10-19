@@ -1306,7 +1306,7 @@ class AgentActivity : Activity() {
             textSize = 23f
             setOnClickListener { newSession() }
         }
-        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(42), dp(47)))
+        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
         input = EditText(this).apply {
             hint = "Schreibe eine Nachricht …"
             setHintTextColor(Color.rgb(147, 164, 201))
@@ -1330,7 +1330,7 @@ class AgentActivity : Activity() {
             contentDescription = "Spracheingabe starten"
             setOnClickListener { startVoiceInput() }
         }
-        inputRow.addView(mic, LinearLayout.LayoutParams(dp(43), dp(47)).apply {
+        inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
             marginStart = dp(6)
         })
         shell.addView(inputRow, matchWidth())
@@ -1341,6 +1341,7 @@ class AgentActivity : Activity() {
         }
         fun smallButton(label: String, description: String, run: () -> Unit): Button =
             actionButton(label, compact = true).apply {
+                minimumHeight = dp(48)
                 textSize = 10.6f
                 contentDescription = description
                 background = roundedGradient(Color.rgb(25, 35, 81),
@@ -1352,19 +1353,19 @@ class AgentActivity : Activity() {
                 if (localRuntime.state == LocalModelState.READY) setMode(AssistantMode.LOCAL)
                 else showModelCenter()
             },
-            LinearLayout.LayoutParams(0, dp(42), 1.35f)
+            LinearLayout.LayoutParams(0, dp(48), 1.35f)
         )
         actions.addView(
             smallButton("◎ Web", "Recherche nur nach Freigabe") {
                 showResearchModeDialog()
             },
-            LinearLayout.LayoutParams(0, dp(42), .90f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(48), .90f).apply { marginStart = dp(4) }
         )
         actions.addView(
             smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
                 showDevelopmentDialog()
             },
-            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(48), .94f).apply { marginStart = dp(4) }
         )
         voiceButton = smallButton(
             if (voiceEnabled) "TON AN" else "TON AUS",
@@ -1384,7 +1385,7 @@ class AgentActivity : Activity() {
             }
         }
         actions.addView(voiceButton,
-            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(48), .94f).apply { marginStart = dp(4) }
         )
         sendButton = actionButton("➤", accent = true, compact = true).apply {
             textSize = 21f
@@ -1394,7 +1395,7 @@ class AgentActivity : Activity() {
             }
         }
         actions.addView(sendButton,
-            LinearLayout.LayoutParams(0, dp(42), .85f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, dp(48), .85f).apply { marginStart = dp(4) }
         )
         shell.addView(actions, matchWidth(top = 8))
         return shell
