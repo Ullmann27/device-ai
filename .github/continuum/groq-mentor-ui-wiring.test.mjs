@@ -33,7 +33,10 @@ test("Android only sends bounded question text to the private backend", () => {
 });
 
 test("server never accepts mentor request without owner grant and bearer authentication", () => {
-  assert.match(backend, /app\.post\("\/v1\/mentor\/answer", auth,/);
+  assert.match(backend, /app\.post\("\/v1\/mentor\/answer", mentorAuth,/);
+  assert.match(backend, /function mentorAuth\(req, res, next\)/);
+  assert.match(backend, /mentorPairing\.isMentorAuthorized\(supplied\)/);
+  assert.match(backend, /return auth\(req, res, next\)/);
   assert.match(backend, /req\.body\?\.consent !== true/);
   assert.match(backend, /"consent\|provider\|question"/);
   assert.doesNotMatch(backend, /app\.post\("\/v1\/mentor\/answer",[^\n]*tool_choice/);
