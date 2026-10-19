@@ -18,8 +18,9 @@ import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,
 import {runTeamleaderLoop,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 import {runM4Gate,verifyReleaseProofFile} from './m4-local-gate.mjs';
 import {git} from './repair-loop.mjs';
+import {practiceLesson,academyStatus,WORKER_LESSONS,FUTURE_DISCIPLINES} from './worker-academy.mjs';
 
-const MODES=new Set(['doctor','status','once','loop','verify-android']);
+const MODES=new Set(['doctor','status','once','loop','learn','verify-android']);
 const SHA=/^[0-9a-f]{40}$/;
 const DEFAULT_STATE=path.join(os.homedir(),'.local','state','device-ai-continuum');
 const flags=new Set(['mode','root','state','interval-minutes','max-cycles','budget-minutes']);
@@ -108,6 +109,8 @@ export function diagnoseWorkshop({root,state,head},tools={
   schema:'continuum-workshop-doctor',version:1,head,
   sourceClean:!dirty,mainWritesAllowed:false,
   capabilities:identifyWorkshops(root,tools),
+  academyCurriculum:WORKER_LESSONS.map(x=>({id:x.id,topic:x.topic,limit:x.limit})),
+  plannedDisciplines:FUTURE_DISCIPLINES,
   limits:['Dedicated OS isolation required for untrusted repository build scripts',
    'Existing development backlog is authoritative',
    'No automatic merges, installations or privileged device access',
@@ -126,7 +129,7 @@ function writePrivateJson(file,data){
  }finally{fs.rmSync(temp,{force:true});}
 }
 
-export function readWorkshopStatus({state,head}){
+export function readWorkshopStatus({root,state,head}){
  const heartbeatFile=path.join(state,'workshop-heartbeat.json');
  const leaderFile=path.join(state,'teamleader-state.json');
  let heartbeat=null,progress=null,heartbeatState='NOT_CONNECTED';
@@ -146,17 +149,19 @@ export function readWorkshopStatus({state,head}){
   }catch { progress={valid:false,reason:'CORRUPT_TEAMLEADER_STATE'}; }
  }
  return {schema:'continuum-workshop-status',version:1,
-  head,heartbeatState,heartbeat,progress,automaticMerge:false,
+  head,heartbeatState,heartbeat,progress,
+  academy:academyStatus({root,state}),automaticMerge:false,
   note:'Only host-side signed/tested evidence proves a completed build. Android READY is local status only.'};
 }
 
 export async function executeWorkshop(args,{driverFactory=localTeamleaderDriver,
- gate=runM4Gate,onHeartbeat=()=>{}}={}){
+ gate=runM4Gate,practice=practiceLesson,onHeartbeat=()=>{}}={}){
  const target=workshopPaths(args.root,args.state);
  if(args.mode==='doctor')return diagnoseWorkshop(target);
  if(args.mode==='status')return readWorkshopStatus(target);
  if(git(target.root,['status','--porcelain']).stdout.trim())
   throw Error('Worker refuses a dirty source checkout');
+ if(args.mode==='learn')return {mode:'learn',...practice({root:target.root,state:target.state}),automaticMerge:false};
  if(args.mode==='verify-android'){
   const outcome=gate({root:target.root,out:path.join(target.state,'proofs'),
    android:true,budgetMinutes:Math.min(120,Math.max(30,args.budgetMinutes*3))});
@@ -168,9 +173,20 @@ export async function executeWorkshop(args,{driverFactory=localTeamleaderDriver,
    artifactSha256:outcome.apk.artifactSha256,automaticMerge:false};
  }
  const driver=await driverFactory();
- const work=()=>runTeamleaderCycle({
-  root:target.root,stateDir:target.state,driver,budgetMinutes:args.budgetMinutes
- });
+ const practiceAfterCycle=()=>{
+  // Old and non-Continuum checkouts have no fixed approved curriculum.
+  // A running Continuum checkout practices exactly one skill per worker cycle.
+  if(!fileExists(target.root,'.github/continuum/worker-academy.mjs'))
+   return {status:'ACADEMY_NOT_INSTALLED',passed:false};
+  try{return practice({root:target.root,state:target.state});}
+  catch(e){return {status:'ACADEMY_FAILED',passed:false,errorCode:String(e?.message??e).slice(0,100)};}
+ };
+ const work=()=>{
+  const result=runTeamleaderCycle({
+   root:target.root,stateDir:target.state,driver,budgetMinutes:args.budgetMinutes
+  });
+  return {...result,skillPractice:practiceAfterCycle()};
+ };
  if(args.mode==='once'){
   const result=work();
   return {mode:'once',...result,automaticMerge:false};
