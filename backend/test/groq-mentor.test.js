@@ -37,6 +37,7 @@ test("one authorized message is bounded and contains no tools, memory or device 
   assert.equal(calls.length, 1);
   assert.equal(calls[0].url, "https://api.groq.com/openai/v1/chat/completions");
   assert.equal(calls[0].options.headers.Authorization, "Bearer " + KEY);
+  assert.equal(calls[0].options.redirect, "error");
   const payload = JSON.parse(calls[0].options.body);
   assert.equal(payload.model, "openai/gpt-oss-20b");
   assert.equal(payload.messages.length, 2);
@@ -115,4 +116,17 @@ test("oversized responses are rejected without parsing or logging private conten
     fetcher: async () => new Response("x".repeat(70 * 1024), { status: 200 })
   });
   assert.equal((await mentor.answer("Übergroßes Ergebnis")).code, "RESPONSE_TOO_LARGE");
+});
+
+test("mentor ignores whitespace around environment key and never follows a redirect", async () => {
+  const mentor = new GroqMentor({
+    enabled: true,
+    apiKey: "  " + KEY + "  ",
+    fetcher: async (_url, options) => {
+      assert.equal(options.headers.Authorization, "Bearer " + KEY);
+      assert.equal(options.redirect, "error");
+      return reply();
+    }
+  });
+  assert.equal((await mentor.answer("Warum scheint die Sonne?")).ok, true);
 });
