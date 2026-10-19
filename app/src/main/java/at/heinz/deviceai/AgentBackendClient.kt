@@ -145,6 +145,48 @@ class AgentBackendClient(private val context: Context) {
         }.start()
     }
 
+    /**
+     * An owner-confirmed one-shot remote request.
+     * Does not transmit device identifiers, previous chat, tool outputs or memory.
+     * The Groq key exists exclusively in the owner's backend environment.
+     */
+    fun groqMentor(question: String, callback: (Result<String>) -> Unit) {
+        val base = backendUrl()
+        val token = SecureTokenStore.load(context)
+        if (!base.startsWith("https://", ignoreCase = true) || token.isNullOrBlank()) {
+            callback(Result.failure(IllegalStateException("HTTPS-Backend mit Device-Token fehlt.")))
+            return
+        }
+        if (question.trim().length !in 3..1800) {
+            callback(Result.failure(IllegalArgumentException("Mentorfrage muss zwischen 3 und 1800 Zeichen lang sein.")))
+            return
+        }
+        Thread({
+            val outcome = runCatching {
+                val payload = JSONObject().apply {
+                    put("consent", true)
+                    put("provider", "GROQ")
+                    put("question", question.trim())
+                }
+                val raw = request(
+                    "POST", "$base/v1/mentor/answer",
+                    payload.toString(), authenticated = true, token = token
+                )
+                val json = JSONObject(raw)
+                require(json.optString("provider") == "GROQ" &&
+                    json.optString("trust") == "UNVERIFIED_EXTERNAL" &&
+                    !json.optBoolean("memory_written", true) &&
+                    json.optJSONArray("tool_calls")?.length() == 0) {
+                    "Ungültige oder nicht isolierte Mentorantwort."
+                }
+                json.optString("message").trim().take(1800)
+                    .takeIf { it.isNotBlank() }
+                    ?: throw IllegalStateException("Leere Mentorantwort.")
+            }
+            mainHandler.post { callback(outcome) }
+        }, "continuum-groq-mentor").apply { isDaemon = true; start() }
+    }
+
     private fun request(
         method: String,
         url: String,
