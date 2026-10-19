@@ -15,6 +15,9 @@ export class MentorDevicePairing {
     this.rootToken = typeof rootToken === "string" ? rootToken : "";
     this.clock = clock;
     this.randomBytes = randomBytes;
+    // Challenges are invalidated across backend restarts and redeemed at most once.
+    this.sessionSeed = randomBytes(32);
+    this.consumed = new Map();
     this.approved = new Set(approvedFingerprints.split(",").map(v => v.trim().toLowerCase())
       .filter(v => /^[a-f0-9]{64}$/.test(v)).slice(0, 8));
   }
@@ -37,7 +40,8 @@ export class MentorDevicePairing {
     const issuedAt = this.clock();
     const nonce = this.randomBytes(24).toString("base64url");
     const value = HEADER + "\n" + issuedAt + "\n" + nonce;
-    const mac = crypto.createHmac("sha256", this.rootToken).update(value).digest("base64url");
+    const mac = crypto.createHmac("sha256", this.rootToken)
+      .update(this.sessionSeed).update(value).digest("base64url");
     return { issuedAt, nonce, mac };
   }
 
@@ -48,7 +52,8 @@ export class MentorDevicePairing {
     const delta = this.clock() - c.issuedAt;
     if (delta < 0 || delta > MAX_AGE_MS) throw Error("EXPIRED_CHALLENGE");
     const payload = HEADER + "\n" + c.issuedAt + "\n" + c.nonce;
-    const expected = crypto.createHmac("sha256", this.rootToken).update(payload).digest("base64url");
+    const expected = crypto.createHmac("sha256", this.rootToken)
+      .update(this.sessionSeed).update(payload).digest("base64url");
     if (!equal(expected, c.mac)) throw Error("INVALID_CHALLENGE");
     return payload;
   }
@@ -65,6 +70,12 @@ export class MentorDevicePairing {
       throw Error("INVALID_SIGNATURE");
     }
     if (!this.approved.has(fingerprint)) return { ok: false, code: "PAIRING_PENDING", fingerprint };
+    for (const [nonce, expires] of this.consumed) {
+      if (expires < this.clock()) this.consumed.delete(nonce);
+    }
+    if (this.consumed.has(challenge.nonce)) throw Error("CHALLENGE_REPLAY");
+    if (this.consumed.size >= 1024) throw Error("PAIRING_BUSY");
+    this.consumed.set(challenge.nonce, challenge.issuedAt + MAX_AGE_MS);
     return { ok: true, token: this.tokenFor(fingerprint), scope: "MENTOR_ONLY", fingerprint };
   }
 
