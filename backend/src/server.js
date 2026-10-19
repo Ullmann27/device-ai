@@ -569,6 +569,24 @@ const httpServer = app.listen(PORT, "0.0.0.0", () => {
     groqConfigured: groqMentor.status().available,
     deviceAuthenticationConfigured: DEVICE_AI_TOKEN.length >= 16
   }));
+  // Explicit operator-only synthetic smoke check; disabled by default.
+  // No user memories, questions, response text or API secrets are logged.
+  // Consume exactly one model attempt per process start while enabled.
+  if (process.env.GROQ_MENTOR_SELFTEST_ON_START === "true") {
+    void groqMentor.answer("Erkläre den photovoltaischen Effekt in einem Satz.")
+      .then(result => {
+        console.log("Continuum Groq self-test:", JSON.stringify({
+          ok: result.ok,
+          code: result.ok ? "OK" : result.code,
+          answerReceived: result.ok && result.message.length > 0
+        }));
+      })
+      .catch(() => {
+        console.log("Continuum Groq self-test:", JSON.stringify({
+          ok: false, code: "UNEXPECTED_TEST_FAILURE", answerReceived: false
+        }));
+      });
+  }
 });
 
 function shutdown(signal) {
