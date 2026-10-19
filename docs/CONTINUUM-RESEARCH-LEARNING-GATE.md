@@ -46,3 +46,67 @@ persistenter Datenhaltung gestartet werden. Vor jeder produktiven
 Modellpromotion fehlen weiterhin ein unabhängig verifizierter Quellenabruf,
 ein gepinnter Geräteschlüssel, vollständige Holdouts und echte
 Modellqualitätsmessungen.
+
+## PR #34: Themennahe Negativbeispiele und echter Shadow-Dauerworker
+
+Die Pre-Pooling-Optimierung verwendet die einmalig berechneten
+`model.pool(features(text))`-Vektoren **tatsächlich im Gradientenpfad**;
+es wird nicht mehr pro Epoche erneut tokenisiert. Ein Gram-Isometrie-Term
+und der bestehende Projektionsanker begrenzen ungewollte Veränderungen
+der beiden 32×32-Linsen. Die Rank-1-Anisotropie-Korrektur ist optional
+(`anisotropyBeta=0` als Standard) und benötigt vor der Freigabe
+einen unabhängigen gemessenen Nutzen. Aussagen wie „100× schneller“
+oder „40 % genauere Antworten“ sind **nicht gemessen**.
+
+Für schwierige Negativkandidaten bevorzugt der Trainer andere Aussagen
+aus dem gleichen Originaldokument, **sofern die Frage den gemeinten Satz
+lexikalisch eindeutig von seinem Geschwister unterscheidet**. Identische,
+unspezifische Dokumentfragen werden sonst zu widersprüchlichen
+Trainingslabels und dürfen nicht als sichere Sibling-Negatives gelten.
+Cross-Document-Negatives bleiben dokumentenweise im jeweiligen Split.
+
+Das zurückgehaltene Audit erhält zusätzlich Zahlen-/Negations-Canaries.
+Canaries werden **nie** für Gradienten verwendet. Ein einziges falsch
+rangiertes Canary verhindert die Übernahme des Kandidaten in den
+isolierten CRE1-Forschungsspeicher. Das ersetzt nicht die unabhängig
+qualifizierte `Cre1PromotionGate`-Prüfung mit mindestens 200 Stichproben,
+50 Negativfällen und nachgewiesenem Hybrid-Vorteil. Eine
+`cre1-promotion.properties` wird nicht automatisch erzeugt.
+
+Der Backend-Worker kann über folgende explizite Einstellung zusätzlich
+nach **erfolgreichen** Quellenzyklen den Shadow-Worker ausführen:
+
+```bash
+CONTINUUM_SHADOW_LEARNING_ENABLED=true npm --prefix backend run worker
+```
+
+Er nimmt keine bibliografischen Titel und keine erfundenen Textbelege als
+Training. Er wartet auf eine lokal kuratierte Datei
+`<Verzeichnis von CONTINUUM_STATE_PATH>/cre1-research/approved-extractive-spans.json`
+mit überprüften `query`, `claim`, `sourceText`, `sourceSha256`, `url`,
+`trainingPermitted`. Die tatsächliche Herausgeber-/Lizenzprüfung erfolgt
+vorgelagert; allein `trainingPermitted:true` bestätigt **keine** Lizenz.
+Ohne verifizierte Originaldokumente lautet der Status
+`AWAITING_VERIFIED_ORIGINAL_DOCUMENTS` und es findet kein Training statt.
+
+Veröffentlichte Forschungskandidaten liegen ausschließlich unter
+`cre1-research/cre1-research-v1.cre1`, mit synchronisierten atomaren
+Writes, `.lkg`-Backup und einem ausführlichen Shadow-Audit. Ein
+konkurrierender Prozess oder ungeklärtes Lock wird nicht automatisch
+übernommen. Android-SWB1, `main`, persönliche Fakten und die produktive
+CRE1-Promotion werden nicht verändert.
+
+### Gezielt zu prüfende Kommandos
+
+```bash
+node --test .github/continuum/cre1-blacklab-optimizer.test.mjs \
+  .github/continuum/research-shadow-worker.test.mjs \
+  .github/continuum/research-learning-cycle.test.mjs
+node --test .github/continuum/*.test.mjs
+npm --prefix backend test
+gradle :app:testDebugUnitTest
+```
+
+Die Implementierung ersetzt **keinen Live-Nachweis** tatsächlicher
+Research-Volltextbeschaffung, trainierter Gewichte, Android-Promotion
+oder eines 24/7 eingeschalteten Rechners.

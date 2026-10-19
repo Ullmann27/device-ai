@@ -144,6 +144,12 @@ jobs:
           path: ${{ runner.temp }}/cre1-hybrid-report.json
           if-no-files-found: error
 
+      - name: Verify CRE1 blacklab training and bounded research shadow worker
+        run: |
+          node --test .github/continuum/research-learning-cycle.test.mjs
+          node --test .github/continuum/cre1-blacklab-optimizer.test.mjs
+          node --test .github/continuum/research-shadow-worker.test.mjs
+
       - name: Accept Android SDK licenses
         run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null || true
 

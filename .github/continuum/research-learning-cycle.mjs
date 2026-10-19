@@ -7,6 +7,8 @@ import crypto from 'node:crypto';
 import net from 'node:net';
 import {RelationalEncoder, D} from './cre-encoder.mjs';
 import {canonical, sha256Hex} from './development-backlog.mjs';
+import {createFrozenPool, evaluatePrePooledSplit, canaryAudit,
+  trainPrePooledProjectionHeads} from './cre1-blacklab-optimizer.mjs';
 
 const HEX=/^[a-f0-9]{64}$/;
 const HTTPS=/^https:\/\//i;
@@ -15,7 +17,7 @@ const byteHash=value=>sha256Hex(Buffer.from(value,'utf8'));
 
 export function validateExtractiveSpans(spans){
   if(!Array.isArray(spans)||spans.length>512)throw Error('Expected at most 512 source spans');
-  const seen=new Set();
+  const seen=new Set(),sourceRevisionByUrl=new Map();
   return spans.map((row,index)=>{
     if(!row||typeof row!=='object'||Array.isArray(row))throw Error('Invalid source span: '+index);
     const {query,claim,sourceText,sourceSha256,url,trainingPermitted}=row;
@@ -35,6 +37,10 @@ export function validateExtractiveSpans(spans){
       throw Error('Invalid public HTTPS provenance');
     if(!sourceText.includes(claim)||claim.trim()!==claim||
        claim.split(/\s+/).length<7)throw Error('Claim must be an exact original source span');
+    const priorSourceHash=sourceRevisionByUrl.get(location.href);
+    if(priorSourceHash!==undefined&&priorSourceHash!==sourceSha256)
+      throw Error('Different source revisions cannot share a training/audit corpus');
+    sourceRevisionByUrl.set(location.href,sourceSha256);
     const id=byteHash(sourceSha256+'\0'+query+'\0'+claim);
     if(seen.has(id))throw Error('Duplicate training span');
     seen.add(id);
@@ -53,18 +59,55 @@ export function splitVerifiedClaimsByHash(spans){
   return {train,audit};
 }
 
-/** Deterministic independent-source negatives; never conflate metadata titles with true answers. */
+/** Rank eligible negatives from other source documents by topical overlap.
+ * A near-duplicate claim risks false-negative supervision, so veto it.
+ * Fall back to unrelated documents only when there are too few topical ones.
+ */
 export function buildExtractiveContrastiveSet(rows){
-  if(rows.length<3)return [];
-  return rows.map((row,i)=>{
-    const used=new Set([row.claim]),negatives=[];
-    for(let j=1;j<rows.length&&negatives.length<3;j++){
-      const next=rows[(i+j)%rows.length];
-      if(next.sourceSha256!==row.sourceSha256&&!used.has(next.claim)){
-        negatives.push(next.claim);used.add(next.claim);
-      }
+  if(!Array.isArray(rows)||rows.length<3)return [];
+  const words=value=>new Set(String(value).toLocaleLowerCase('de-DE')
+    .split(/[^\p{L}\p{N}]+/u).filter(x=>x.length>=4));
+  const overlap=(left,right)=>{
+    const a=words(left),b=words(right);
+    if(!a.size||!b.size)return 0;
+    let shared=0;for(const x of a)if(b.has(x))shared++;
+    return shared/Math.max(1,Math.min(a.size,b.size));
+  };
+  return rows.map(row=>{
+    const ranked=rows.filter(other=>
+      other.id!==row.id&&other.sourceSha256!==row.sourceSha256&&
+      other.claim!==row.claim&&overlap(row.claim,other.claim)<0.9
+    ).map(other=>({
+      other,
+      similarity:overlap(row.query,other.query)*2+overlap(row.claim,other.claim)
+    })).sort((a,b)=>b.similarity-a.similarity||
+      a.other.id.localeCompare(b.other.id));
+    const negatives=[],used=new Set([row.claim]);
+    // Same-document sibling negatives are safe only when the question
+    // distinguishes this exact claim from the sibling. A generic, identical
+    // document question would otherwise assign contradictory training labels.
+    const ownMatch=overlap(row.query,row.claim);
+    const siblings=rows.filter(other=>
+      other.id!==row.id&&other.sourceSha256===row.sourceSha256&&
+      other.query!==row.query&&other.claim!==row.claim&&
+      overlap(row.claim,other.claim)<0.9&&
+      ownMatch>=0.2&&ownMatch-overlap(row.query,other.claim)>=0.06
+    ).sort((a,b)=>overlap(row.query,b.claim)-overlap(row.query,a.claim)||
+      a.id.localeCompare(b.id));
+    if(siblings.length){
+      negatives.push(siblings[0].claim);
+      used.add(siblings[0].claim);
     }
-    return negatives.length>=2?{query:row.query,candidates:[row.claim,...negatives]}:null;
+    for(const item of ranked){
+      if(used.has(item.other.claim))continue;
+      used.add(item.other.claim);
+      negatives.push(item.other.claim);
+      if(negatives.length>=3)break;
+    }
+    return negatives.length>=2?{
+      query:row.query,candidates:[row.claim,...negatives],
+      siblingNegative:siblings.length?siblings[0].claim:null
+    }:null;
   }).filter(Boolean);
 }
 
@@ -90,45 +133,45 @@ export function evaluateContrastiveSplit(model,examples,tau=0.12){
  * A failed holdout keeps the untouched baseline bytes.
  */
 export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
-  epochs=4,learningRate=0.001,tau=0.12,anchorLambda=0.1
+  epochs=4,learningRate=0.001,tau=0.12,anchorLambda=0.1,
+  isoGamma=0.02,anisotropyBeta=0,deadlineAt=null
 }={}){
-  if(!Number.isInteger(epochs)||epochs<1||epochs>20||
-     !Number.isFinite(learningRate)||learningRate<=0||learningRate>0.01||
-     !Number.isFinite(tau)||tau<0.05||tau>1||
-     !Number.isFinite(anchorLambda)||anchorLambda<0||anchorLambda>1)throw Error('Training bounds invalid');
   if(!Array.isArray(train)||!Array.isArray(audit)||train.length<3||audit.length<3||
-     train.length>384||audit.length>128)throw Error('Independent train and audit sets required');
-  const trainBeforeModel=RelationalEncoder.restore(baselineBytes);
-  const candidate=RelationalEncoder.restore(baselineBytes);
-  const originalEmbeddings=Float64Array.from(candidate.E);
-  const anchorQ=Float64Array.from(candidate.Pq);
-  const anchorM=Float64Array.from(candidate.Pm);
-  const trainBefore=evaluateContrastiveSplit(trainBeforeModel,train,tau);
-  const auditBefore=evaluateContrastiveSplit(trainBeforeModel,audit,tau);
-  for(let epoch=0;epoch<epochs;epoch++){
-    for(const example of train){
-      const grads=RelationalEncoder.emptyGrads();
-      candidate.lossAndGrad(example.query,example.candidates,tau,grads);
-      grads.E.clear();
-      for(let k=0;k<D*D;k++){
-        grads.Pq[k]+=anchorLambda*(candidate.Pq[k]-anchorQ[k]);
-        grads.Pm[k]+=anchorLambda*(candidate.Pm[k]-anchorM[k]);
-      }
-      candidate.apply(grads,learningRate);
-    }
-  }
-  if(candidate.E.length!==originalEmbeddings.length||
-     candidate.E.some((value,i)=>value!==originalEmbeddings[i]))
-    throw Error('Base CRE1 embeddings changed');
-  const trainAfter=evaluateContrastiveSplit(candidate,train,tau);
-  const auditAfter=evaluateContrastiveSplit(candidate,audit,tau);
-  const accepted=trainAfter.loss+1e-8<trainBefore.loss &&
-    auditAfter.correct>=auditBefore.correct &&
-    auditAfter.mrr+1e-12>=auditBefore.mrr &&
-    auditAfter.loss<=auditBefore.loss+0.005;
+     train.length>384||audit.length>128)throw Error('Independent train/audit sets required');
+  // Both baseline and candidate use exactly the same frozen pooling vectors.
+  const baseline=RelationalEncoder.restore(baselineBytes);
+  const pool=createFrozenPool(baseline,[...train,...audit]);
+  const trainBefore=evaluatePrePooledSplit(baseline,train,pool,tau);
+  const auditBefore=evaluatePrePooledSplit(baseline,audit,pool,tau);
+  const trained=trainPrePooledProjectionHeads(baselineBytes,train,{
+    epochs,learningRate,tau,anchorLambda,isoGamma,anisotropyBeta,deadlineAt
+  });
+  const candidate=trained.model;
+  const trainAfter=evaluatePrePooledSplit(candidate,train,pool,tau);
+  const auditAfter=evaluatePrePooledSplit(candidate,audit,pool,tau);
+  const canaries=canaryAudit(candidate,audit,pool);
+  const siblingRows=train.filter(row=>typeof row.siblingNegative==='string');
+  const siblings={
+    tested:siblingRows.length,
+    correct:siblingRows.filter(row=>
+      candidate.score(row.query,row.candidates[0])>
+        candidate.score(row.query,row.siblingNegative)+1e-12
+    ).length
+  };
+  const accepted=trainAfter.loss+1e-8<trainBefore.loss&&
+    auditAfter.correct>=auditBefore.correct&&
+    auditAfter.mrr+1e-12>=auditBefore.mrr&&
+    auditAfter.loss<=auditBefore.loss+0.005&&
+    // ||P^T P-I||_F < 1 forces every Gram eigenvalue to stay positive.
+    Number.isFinite(trained.gramPq)&&Number.isFinite(trained.gramPm)&&
+    trained.gramPq<1&&trained.gramPm<1&&
+    canaries.violations===0&&
+    siblings.correct===siblings.tested;
   const modelBytes=accepted?candidate.save():Buffer.from(baselineBytes);
   return {accepted,trainBefore,trainAfter,auditBefore,auditAfter,
-    modelBytes,modelSha256:sha256Hex(modelBytes),steps:accepted?candidate.steps:trainBeforeModel.steps};
+    canaries,siblings,poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm,
+    modelBytes,modelSha256:sha256Hex(modelBytes),
+    steps:accepted?candidate.steps:baseline.steps};
 }
 
 const AUDIT_KEYS=['accepted','auditCorrect','auditCount','auditSourceCount',
@@ -217,5 +260,12 @@ export function runResearchLearningCycle({
     :null;
   return {accepted:trained.accepted,reason:trained.accepted?'SHADOW_EVALUATED':'HOLDOUT_GATE_REJECTED',
     modelSha256:trained.modelSha256,trainCount:trainSet.length,auditCount:auditSet.length,
-    auditReport,signedPackage};
+    auditReport,signedPackage,canaries:trained.canaries,
+    shadowMetrics:{
+      trainBefore:trained.trainBefore,trainAfter:trained.trainAfter,
+      auditBefore:trained.auditBefore,auditAfter:trained.auditAfter,
+      poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm
+    },
+    siblings:trained.siblings,
+    shadowModelBytes:trained.accepted?Buffer.from(trained.modelBytes):null};
 }

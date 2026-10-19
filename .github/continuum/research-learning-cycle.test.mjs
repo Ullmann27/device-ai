@@ -35,6 +35,8 @@ test('metadata/LLM summaries cannot masquerade as extractive source training',()
   assert.throws(()=>validateExtractiveSpans([{...good,url:'https://127.0.0.1/source'}]),/provenance/);
   assert.throws(()=>validateExtractiveSpans([{...good,url:'https://router.local/source'}]),/provenance/);
   assert.throws(()=>validateExtractiveSpans([good,good]),/Duplicate/);
+  const revision={...fixture(2),url:good.url};
+  assert.throws(()=>validateExtractiveSpans([good,revision]),/source revisions/);
 });
 
 test('same original source never leaks into both training and sealed audit',()=>{
