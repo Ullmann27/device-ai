@@ -186,6 +186,11 @@ class AgentActivity : Activity() {
     private var voiceReady = false
     private var voiceEnabled = false
     private var voiceButton: Button? = null
+    private var hologramView: ContinuumHologramView? = null
+    private var hologramStatus: TextView? = null
+    private var hologramState = ContinuumVisualState.READY
+    @Volatile private var activeSpeechUtterance: String? = null
+    private var nextSpeechSerial = 0L
     private lateinit var neuralMonitor: TextView
     private lateinit var neuralProgress: ProgressBar
     private var neuralAutoButton: Button? = null
@@ -771,18 +776,24 @@ class AgentActivity : Activity() {
             gravity = Gravity.CENTER
             letterSpacing = 0.08f
         }, matchWidth())
-        hero.addView(ContinuumHologramView(this).apply {
-            // View owns a fully transparent Canvas. No cloud image download,
-            // no inference simulation and no battery-consuming animation.
-            contentDescription = "Holografischer Device AI Kern, rein dekorativ"
-        }, LinearLayout.LayoutParams(
+        val visual = ContinuumHologramView(this)
+        hologramView = visual
+        visual.showState(hologramState)
+        hero.addView(visual, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 201)
+            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 213)
         ))
+        hologramStatus = textView("●  BEREIT  ·  LOKALER INTELLIGENZKERN", 10.5f,
+            Color.rgb(117, 238, 255), true).apply {
+            gravity = Gravity.CENTER
+            letterSpacing = 0.10f
+            contentDescription = "Device AI: bereit"
+        }
+        hero.addView(hologramStatus, matchWidth())
         hero.addView(textView(
-            "Mehr als nur Chat. Eine KI für dein Gerät.", 12f,
+            "Dein lokaler KI-Assistent · Wissen, Forschung und Entwicklung", 11.4f,
             Color.rgb(198, 214, 244)
-        ).apply { gravity = Gravity.CENTER }, matchWidth())
+        ).apply { gravity = Gravity.CENTER }, matchWidth(top = 6))
         container.addView(hero, matchWidth())
         container.addView(buildStatusRow(), matchWidth(top = 11))
         container.addView(textView("DEINE KI-BEREICHE", 10f,
@@ -1820,6 +1831,7 @@ class AgentActivity : Activity() {
         activeNeuralCancellation = cancellation
         activeLocalRequest = true
         setBusy(true)
+        showHologramState(ContinuumVisualState.LEARNING)
         localAgentExecutor.execute {
             val result = runCatching {
                 val progressCallback: (NeuralLearningProgress) -> Unit = { p ->
@@ -2801,6 +2813,23 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    private fun showHologramState(state: ContinuumVisualState) {
+        hologramState = state
+        hologramView?.showState(state)
+        val label = when (state) {
+            ContinuumVisualState.READY -> "●  BEREIT  ·  LOKALER INTELLIGENZKERN"
+            ContinuumVisualState.LISTENING -> "●  SPRACHEINGABE  ·  ANDROID HÖRT ZU"
+            ContinuumVisualState.THINKING -> "●  DENKT  ·  ANFRAGE WIRD BEARBEITET"
+            ContinuumVisualState.SPEAKING -> "●  SPRICHT  ·  ANDROID-SPRACHAUSGABE"
+            ContinuumVisualState.RESEARCHING -> "●  FORSCHT  ·  QUELLEN WERDEN GEPRÜFT"
+            ContinuumVisualState.LEARNING -> "●  LERNT  ·  LOKALE TRAININGSAUFGABE"
+        }
+        hologramStatus?.apply {
+            text = label
+            contentDescription = label.replace("●", "Device AI")
+        }
+    }
+
     private fun speakBootstrap(message: String) {
         if (!voiceEnabled || !voiceReady) return
         val plain = message.take(380)
@@ -3182,6 +3211,7 @@ class AgentActivity : Activity() {
         val cancellation = at.heinz.deviceai.cognitive.ResearchCancellation()
         activeResearchCancellation = cancellation
         setBusy(true)
+        showHologramState(ContinuumVisualState.RESEARCHING)
         val budget = ResearchBudgetPolicy.forMode(mode)
         activityText.text = "RESEARCH · PLANNING · ${mode.name}"
         addToolActivity("WEB-RESEARCH · ${mode.name} · read-only")
@@ -4748,6 +4778,14 @@ class AgentActivity : Activity() {
                 else if (value) "Device AI arbeitet" else "Nachricht senden"
             sendButton.alpha = if (value && !activeLocalRequest) 0.65f else 1f
         }
+        if (value) {
+            if (hologramState != ContinuumVisualState.SPEAKING &&
+                hologramState != ContinuumVisualState.RESEARCHING &&
+                hologramState != ContinuumVisualState.LEARNING
+            ) showHologramState(ContinuumVisualState.THINKING)
+        } else if (hologramState != ContinuumVisualState.SPEAKING) {
+            showHologramState(ContinuumVisualState.READY)
+        }
         if (::modelCatalog.isInitialized && ::localBadge.isInitialized) refreshLocalModelUi()
     }
 
@@ -4765,8 +4803,10 @@ class AgentActivity : Activity() {
             putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         }
         try {
+            showHologramState(ContinuumVisualState.LISTENING)
             startActivityForResult(intent, SPEECH_REQUEST)
         } catch (_: Exception) {
+            showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
             Toast.makeText(this, "Keine Spracheingabe verfügbar.", Toast.LENGTH_LONG).show()
         }
     }
@@ -4775,7 +4815,9 @@ class AgentActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
+            SPEECH_REQUEST -> {
+                showHologramState(if (busy) ContinuumVisualState.THINKING else ContinuumVisualState.READY)
+                if (resultCode == RESULT_OK) {
                 val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 val spoken = matches?.firstOrNull()
                 if (!spoken.isNullOrBlank()) {
@@ -4784,6 +4826,7 @@ class AgentActivity : Activity() {
                     // Only in the explicitly activated learning conversation: a
                     // recognized phrase goes to the supervised coach, never ToolGate.
                     if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                }
                 }
             }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
