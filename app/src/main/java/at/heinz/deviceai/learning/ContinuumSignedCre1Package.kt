@@ -103,10 +103,8 @@ object ContinuumSignedCre1Package {
         require(signatureString.matches(Regex("[A-Za-z0-9+/]+={0,2}"))) {
             "Ungültige Signatur-Kodierung"
         }
-        val canonicalManifest = String(signedPayload, Charsets.UTF_8)
-            .removeSuffix("}") + ",\"signatureBase64\":\"$signatureString\",\"version\":1}"
-        // StrictJson already rejects duplicate fields; a reconstructable signed
-        // payload is used for signature verification, not untrusted JSON order.
+        // StrictJson rejects duplicate fields. We reconstruct the fixed-field
+        // canonical payload internally rather than trusting caller-supplied bytes.
         val encodedKey = Base64.getDecoder().decode(pinnedPublicKeySpkiBase64)
         val publicKey = KeyFactory.getInstance("EC").generatePublic(
             X509EncodedKeySpec(encodedKey)
