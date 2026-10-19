@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests } from './continuum-mobile-builder.mjs';
+import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256 } from './continuum-mobile-builder.mjs';
 
 const HEAD='f'.repeat(40);
 const SIGNER='a'.repeat(64);
@@ -16,7 +16,7 @@ function fixture() {
   return {root,stateDir,artifact:path.join(root,'app/build/outputs/apk/debug/app-debug.apk')};
 }
 const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',checks:{termuxArm64:true},bin:{git:'/fake/git',gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
-function mock(f,{dirty=false,fail=false,sign=true,commands=[],changedHead=false,changedSource=false,junitFailure=false}={}) {
+function mock(f,{dirty=false,fail=false,sign=true,signFormat='legacy',commands=[],changedHead=false,changedSource=false,junitFailure=false}={}) {
   let gradleFinished=false;
   return async (file,args)=>{
     commands.push({file,args});
@@ -33,7 +33,7 @@ function mock(f,{dirty=false,fail=false,sign=true,commands=[],changedHead=false,
       }
       return {ok:!fail,code:fail?1:0,output:fail?'synthetic Gradle failure':'synthetic success'};
     }
-    if(file==='/fake/apksigner')return {ok:sign,output:sign?'Signer #1 certificate SHA-256 digest: '+SIGNER:'invalid'};
+    if(file==='/fake/apksigner')return {ok:sign,code:sign?0:1,output:sign?(signFormat==='modern'?'V2 Signer: ':'Signer #1 ')+'certificate SHA-256 digest: '+SIGNER:'DOES NOT VERIFY: Invalid APK signature'};
     throw Error('Unexpected tool '+file);
   };
 }
@@ -141,5 +141,31 @@ test('a dirty checkout produced during Gradle blocks APK publication',async()=>{
   const f=fixture();
   const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{changedSource:true})});
   assert.equal(result.status,'BLOCKED_SOURCE_CHANGED_DURING_BUILD');
+  assert.equal(fs.readdirSync(f.stateDir).some(name=>name.endsWith('.apk')),false);
+});
+
+test('signature parser recognizes legacy and modern apksigner certificates only',()=>{
+  assert.equal(parseSignerSha256('Signer #1 certificate SHA-256 digest: '+SIGNER),SIGNER);
+  assert.equal(parseSignerSha256('V2 Signer: certificate SHA-256 digest: '+SIGNER),SIGNER);
+  assert.equal(parseSignerSha256('V3.0 Signer: certificate SHA-256 digest: '+SIGNER),SIGNER);
+  assert.equal(parseSignerSha256('Signer (minSdkVersion=24, maxSdkVersion=32) certificate SHA-256 digest: '+SIGNER),SIGNER);
+  assert.equal(parseSignerSha256('Signer #1 public key SHA-256 digest: '+SIGNER),null);
+  assert.equal(parseSignerSha256('Signer #1 certificate SHA-256 digest: '+'g'.repeat(64)),null);
+});
+
+test('modern apksigner result is accepted only after executable verification succeeds',async()=>{
+  const f=fixture();
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{signFormat:'modern'})});
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+  assert.equal(result.signerSha256,SIGNER);
+});
+
+test('genuine apksigner rejection persists diagnostic without publishing APK',async()=>{
+  const f=fixture();
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{sign:false})});
+  assert.equal(result.status,'FAILED_APK_SIGNATURE');
+  assert.equal(result.signatureFailure,'SIGNATURE_VERIFICATION_FAILED');
+  assert.equal(result.verifierExitCode,1);
+  assert.match(result.verifierOutputTail,/DOES NOT VERIFY/);
   assert.equal(fs.readdirSync(f.stateDir).some(name=>name.endsWith('.apk')),false);
 });
