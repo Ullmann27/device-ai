@@ -46,3 +46,24 @@ Abnahme auf einem vollständigen Checkout: `node --test scripts/continuum-mobile
 4. M4-Zweit-Worktree-Verifikation und Paket-/Signer-Identitätskontrollen integrieren. Erst danach autonomen Zyklus aktivieren.
 
 Ein Git-Worktree ist keine Betriebssystem-Sandbox. Unbekannter aus dem Internet bezogener Code darf nicht ohne getrennte OS-Isolation in Termux gebaut werden.
+
+
+## Android-UI-Bridge EXP-00 (19.10.2026)
+
+Ein zusätzlicher *Preview-only* Launcher **Continuum Builder** wurde in PR #42 angeschlossen:
+
+- `ContinuumMobileBuilderActivity.kt`: native Oberfläche mit Werkzeugprüfung, manuellem APK-Build (mit expliziter Bestätigung) und Statusanzeige. Der Launcher erscheint nur für `deviceAiPreview` bzw. `deviceAiMentorPreview` und wird im normalen Produktions-Build deaktiviert.
+- `ContinuumMobileBuildPlan.kt`: exakt drei fixe Operationen `doctor`, `build --project /data/data/com.termux/files/home/device-ai`, `status`. Fester Node-Pfad `/data/data/com.termux/files/usr/bin/node`. Kein Chattext, keine beliebigen Shellargumente, keine automatische Installation.
+- `AndroidManifest.xml`: optional vom Besitzer zu erteilende `com.termux.permission.RUN_COMMAND`. Explizite Zielkomponente `com.termux.app.RunCommandService`, offizieller Intent `com.termux.RUN_COMMAND`, Termux-Terminal zeigt die tatsächliche Ausgabe.
+- Kotlin-Vertragstest und isoliert ausgeführter Kotlin-Smoke-Test (3 Operationspfade); zusätzliche Node-Quellverkabelungsregressionen (`mobile-builder-android-wiring.test.mjs`). Diese Prüfungen sind **kein** Android-Laufzeitnachweis.
+
+**Verwendung erst nach echtem APK-Build:**
+1. Vertrauenswürdige Termux-Installation, danach den Besitzer-Checkout unter `/data/data/com.termux/files/home/device-ai` bereitstellen; Node 20+, Git, JDK 17, Gradle 8.11.1, natives ARM64-AAPT2, SDK 36 und `apksigner` separat nachvollziehbar installieren.
+2. In Termux `~/.termux/termux.properties` die Zeile `allow-external-apps=true` nach eigener Entscheidung setzen. Benutzerfreigabe `RUN_COMMAND` für Device AI Preview in Androids Berechtigungseinstellungen erlauben. Damit erhält Device AI die Möglichkeit, eigene Termux-Befehle zu starten; die App selbst beschränkt sich auf drei konstante Aufträge.
+3. Neue Preview-APK mit aktualisiertem PR #42-Commit **tatsächlich** bauen und installieren. Auf dem Startbildschirm `Continuum Builder` öffnen und zunächst `Werkzeuge prüfen` ausführen. Termux muss die ausführliche `doctor`-Antwort anzeigen.
+4. Bei `READY_FOR_EXPERIMENTAL_BUILD`: freiwillig `APK auf dem Handy bauen` bestätigen. Nach dem Build `Letzten Buildbericht anzeigen` prüfen und Hash, Signatur und echten Quellcommit protokollieren.
+5. Ohne erfolgreiches Gerätetestprotokoll ist **weder** on-device APK-Erfolg **noch** eine erfolgreich installierte App nachgewiesen. Installation/PackageInstaller wird in der nächsten gesonderten Phase implementiert, nach expliziter Eigentümerfreigabe.
+
+Bekannte offene Punkte: Komplett-APK-Kompilation des neuen GitHub-Heads, Android-16-/Termux-Service-Berechtigungen, Rückkanal für maschinenlesbare Statusmeldungen, Android-Doze-/Neustart-Recovery, echter Samsung-ARM64-AAPT2-Lauf, signierte Installation, Build-Isolierung von fremden Codeständen. Dieser UI-Bridge-Prototyp löst nur die feste, lokale **Auftragsauslösung**, nicht alle späteren EXP-00/EXP-08-Aufgaben.
+
+Offizielle Kommunikationsreferenz: https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent
