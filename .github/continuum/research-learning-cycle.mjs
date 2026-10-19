@@ -26,11 +26,12 @@ export function validateExtractiveSpans(spans){
        typeof sourceSha256!=='string'||!HEX.test(sourceSha256)||
        sourceSha256!==byteHash(sourceText))throw Error('Source payload or SHA-256 invalid');
     const location=(()=>{try{return new URL(url)}catch{return null}})();
-    const host=location?.hostname?.toLowerCase().replace(/^\\[|\\]$/g,'')??'';
+    const host=location?.hostname?.toLowerCase().replaceAll('[','').replaceAll(']','')??'';
+    const excluded=['localhost','local','internal','invalid','test'];
+    const isLocalHost=excluded.some(part=>host===part||host.endsWith('.'+part));
     if(!location||!HTTPS.test(url)||location.protocol!=='https:'||location.username||
        location.password||location.port||String(url).length>1000||
-       net.isIP(host)!==0||!host.includes('.')||
-       /(^|\\.)(localhost|local|internal|invalid|test)$/.test(host))
+       net.isIP(host)!==0||!host.includes('.')||isLocalHost)
       throw Error('Invalid public HTTPS provenance');
     if(!sourceText.includes(claim)||claim.trim()!==claim||
        claim.split(/\s+/).length<7)throw Error('Claim must be an exact original source span');
