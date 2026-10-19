@@ -82,6 +82,7 @@ export class GroqMentor {
           temperature: 0.3,
           max_completion_tokens: 450,
           stream: false,
+          tool_choice: "none",
           n: 1,
           messages: [
             { role: "system", content:
