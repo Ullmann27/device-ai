@@ -29,11 +29,30 @@ test('mobile builder is added to existing worker chat routing', () => {
   assert.match(routerTest, /mobileBuilderNavigatesInsideExistingWorkerChat/);
 });
 
-test('preview builder is reached from existing development center', () => {
+test('builder stays in the existing agent UI and opens only an allowlisted Android activity', () => {
   assert.match(agent, /CenterAction\("HANDY-BUILDER · TERMUX"\) \{ openMobileBuilder\(\) \}/);
-  assert.match(agent, /Intent\(this, ContinuumMobileBuilderActivity::class\.java\)/);
-  assert.match(agent, /BuildConfig\.APPLICATION_ID\.endsWith\("\.preview"\)/);
-  assert.match(agent, /BuildConfig\.APPLICATION_ID\.endsWith\("\.mentorpaired"\)/);
+  assert.match(agent, /BAUMEISTER · HANDY-BUILDER/);
+  assert.match(agent, /actionButton\("⚒ Handy-Builder · Termux"\)/);
+  assert.match(agent, /ContinuumMobileBuilderRoute\.destination\(BuildConfig\.APPLICATION_ID\)/);
+  assert.match(agent, /Intent\(\)\.setClassName\(destination\.packageName, destination\.className\)/);
+  assert.match(agent, /catch \(_:\s*ActivityNotFoundException\)/);
+  assert.match(agent, /catch \(_:\s*SecurityException\)/);
+  assert.doesNotMatch(agent, /startActivity\(Intent\(this, ContinuumMobileBuilderActivity::class\.java\)\)/);
+});
+
+test('primary AI dashboard remains the only Android launcher, preview builder stays owner-operated', () => {
+  const manifest = read('app/src/main/AndroidManifest.xml');
+  const gradle = read('app/build.gradle.kts');
+  const route = read(src + 'ContinuumMobileBuilderRoute.kt');
+  assert.equal((manifest.match(/android\.intent\.category\.LAUNCHER/g) || []).length, 1);
+  assert.match(manifest, /android:name="\.AgentActivity"[\s\S]*android\.intent\.category\.LAUNCHER/);
+  assert.match(manifest, /android:name="\.ContinuumMobileBuilderActivity"[\s\S]*android:enabled="\$\{mobileBuilderEnabled\}"/);
+  assert.match(manifest, /android:name="\.ContinuumMobileBuilderActivity"[\s\S]*android:exported="true"/);
+  assert.match(gradle, /applicationIdSuffix = "\.preview"/);
+  assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
+  assert.match(route, /const val PREVIEW_PACKAGE = "at\.heinz\.deviceai\.preview"/);
+  assert.match(route, /const val MENTOR_PREVIEW_PACKAGE = "at\.heinz\.deviceai\.mentorpaired"/);
+  assert.match(route, /externalPackage = !internal/);
 });
 
 test('the old inaccurate PC-only guidance has been removed', () => {
