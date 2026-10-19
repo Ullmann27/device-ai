@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256 } from './continuum-mobile-builder.mjs';
+import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
 
 const HEAD='f'.repeat(40);
 const SIGNER='a'.repeat(64);
@@ -168,4 +168,83 @@ test('genuine apksigner rejection persists diagnostic without publishing APK',as
   assert.equal(result.verifierExitCode,1);
   assert.match(result.verifierOutputTail,/DOES NOT VERIFY/);
   assert.equal(fs.readdirSync(f.stateDir).some(name=>name.endsWith('.apk')),false);
+});
+
+test('Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const home='/data/data/com.termux/files/home';
+  const javaHome=prefix+'/lib/jvm/java-17-openjdk';
+  const sdk=home+'/android-sdk';
+  const gradle=home+'/continuum-toolchains/gradle-8.11.1/bin/gradle';
+  const aapt2=prefix+'/bin/aapt2';
+  const present=new Set([javaHome+'/bin/java',sdk+'/platforms/android-36/android.jar',gradle,aapt2]);
+  const result=resolveTermuxEnvironment({PREFIX:prefix,HOME:home,PATH:'/usr/bin'},'arm64',file=>present.has(file));
+  assert.equal(result.JAVA_HOME,javaHome);
+  assert.equal(result.ANDROID_HOME,sdk);
+  assert.equal(result.ANDROID_SDK_ROOT,sdk);
+  assert.equal(result.CONTINUUM_GRADLE_PATH,gradle);
+  assert.equal(result.CONTINUUM_AAPT2_PATH,aapt2);
+  assert.equal(result.PATH,javaHome+'/bin:'+prefix+'/bin:/usr/bin');
+});
+
+test('missing Termux tools remain unavailable; never synthesize nonexistent binaries',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const home='/data/data/com.termux/files/home';
+  const original={PREFIX:prefix,HOME:home,PATH:'/usr/bin'};
+  const result=resolveTermuxEnvironment(original,'arm64',()=>false);
+  assert.equal(result.JAVA_HOME,undefined);
+  assert.equal(result.ANDROID_HOME,undefined);
+  assert.equal(result.CONTINUUM_GRADLE_PATH,undefined);
+  assert.equal(result.CONTINUUM_AAPT2_PATH,undefined);
+  assert.equal(original.JAVA_HOME,undefined);
+});
+
+test('explicit owner toolchain settings are preserved, even when defaults exist',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const home='/data/data/com.termux/files/home';
+  const custom={PREFIX:prefix,HOME:home,PATH:'/my/bin',JAVA_HOME:'/my/jdk',
+    ANDROID_HOME:'/my/sdk',CONTINUUM_GRADLE_PATH:'/my/gradle',CONTINUUM_AAPT2_PATH:'/my/aapt2'};
+  const result=resolveTermuxEnvironment(custom,'arm64',()=>true);
+  assert.equal(result.JAVA_HOME,'/my/jdk');
+  assert.equal(result.ANDROID_HOME,'/my/sdk');
+  assert.equal(result.ANDROID_SDK_ROOT,'/my/sdk');
+  assert.equal(result.CONTINUUM_GRADLE_PATH,'/my/gradle');
+  assert.equal(result.CONTINUUM_AAPT2_PATH,'/my/aapt2');
+  assert.ok(result.PATH.includes('/my/bin'));
+});
+
+test('non-Termux and non-ARM64 environments do not receive Android paths',()=>{
+  const base={PREFIX:'/data/data/com.termux/files/usr',HOME:'/data/data/com.termux/files/home',PATH:'/usr/bin'};
+  for(const arch of ['x64','x86'])assert.deepEqual(resolveTermuxEnvironment(base,arch,()=>true),base);
+  assert.deepEqual(resolveTermuxEnvironment({PREFIX:'/usr',HOME:'/tmp',PATH:'/usr/bin'},'arm64',()=>true),
+    {PREFIX:'/usr',HOME:'/tmp',PATH:'/usr/bin'});
+});
+
+test('mobile build forwards resolved environment to doctor and Gradle without a shell',async()=>{
+  const f=fixture();
+  const prefix='/data/data/com.termux/files/usr';
+  const runtime={PREFIX:prefix,HOME:f.root,PATH:'/usr/bin',JAVA_HOME:'/owner/jdk',
+    ANDROID_HOME:'/owner/sdk',CONTINUUM_GRADLE_PATH:'/owner/gradle',CONTINUUM_AAPT2_PATH:'/owner/aapt2'};
+  const actual=mock(f);
+  let observedDoctor=false,observedGradle=false;
+  const result=await build({project:f.root,stateDir:f.stateDir,env:runtime,arch:'arm64',
+    inspect:async({env})=>{
+      observedDoctor=true;
+      assert.equal(env.JAVA_HOME,'/owner/jdk');
+      assert.equal(env.ANDROID_HOME,'/owner/sdk');
+      assert.ok(env.PATH.includes('/owner/jdk/bin'));
+      return ready;
+    },
+    run:async(file,args,options)=>{
+      if(file==='/fake/gradle'){
+        observedGradle=true;
+        assert.equal(options.env.JAVA_HOME,'/owner/jdk');
+        assert.equal(options.env.ANDROID_HOME,'/owner/sdk');
+        assert.equal(options.env.CONTINUUM_AAPT2_PATH,'/owner/aapt2');
+      }
+      return actual(file,args,options);
+    }});
+  assert.equal(observedDoctor,true);
+  assert.equal(observedGradle,true);
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
 });
