@@ -226,6 +226,7 @@ async function main() {
   const o=parseArgs(process.argv.slice(2));
   const r=o.command==='status'?readStatus(o.stateDir):o.command==='doctor'?await doctor():await build(o);
   process.stdout.write(JSON.stringify(r,null,2)+'\n');
-  if(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_'))process.exitCode=2;
+  // STATUS reports past failures as data; only execution/parsing errors fail the query itself.
+  if(o.command!=='status'&&(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_')))process.exitCode=2;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{process.stderr.write('Mobile Builder: '+e.message+'\n');process.exitCode=2;});
