@@ -7,6 +7,8 @@ import crypto from 'node:crypto';
 import net from 'node:net';
 import {RelationalEncoder, D} from './cre-encoder.mjs';
 import {canonical, sha256Hex} from './development-backlog.mjs';
+import {createFrozenPool, evaluatePrePooledSplit, canaryAudit,
+  trainPrePooledProjectionHeads} from './cre1-blacklab-optimizer.mjs';
 
 const HEX=/^[a-f0-9]{64}$/;
 const HTTPS=/^https:\/\//i;
@@ -77,6 +79,21 @@ export function buildExtractiveContrastiveSet(rows){
     })).sort((a,b)=>b.similarity-a.similarity||
       a.other.id.localeCompare(b.other.id));
     const negatives=[],used=new Set([row.claim]);
+    // Same-document sibling negatives are safe only when the question
+    // distinguishes this exact claim from the sibling. A generic, identical
+    // document question would otherwise assign contradictory training labels.
+    const ownMatch=overlap(row.query,row.claim);
+    const siblings=rows.filter(other=>
+      other.id!==row.id&&other.sourceSha256===row.sourceSha256&&
+      other.query!==row.query&&other.claim!==row.claim&&
+      overlap(row.claim,other.claim)<0.9&&
+      ownMatch>=0.2&&ownMatch-overlap(row.query,other.claim)>=0.06
+    ).sort((a,b)=>overlap(row.query,b.claim)-overlap(row.query,a.claim)||
+      a.id.localeCompare(b.id));
+    if(siblings.length){
+      negatives.push(siblings[0].claim);
+      used.add(siblings[0].claim);
+    }
     for(const item of ranked){
       if(used.has(item.other.claim))continue;
       used.add(item.other.claim);
@@ -109,45 +126,33 @@ export function evaluateContrastiveSplit(model,examples,tau=0.12){
  * A failed holdout keeps the untouched baseline bytes.
  */
 export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
-  epochs=4,learningRate=0.001,tau=0.12,anchorLambda=0.1
+  epochs=4,learningRate=0.001,tau=0.12,anchorLambda=0.1,
+  isoGamma=0.02,anisotropyBeta=0,deadlineAt=null
 }={}){
-  if(!Number.isInteger(epochs)||epochs<1||epochs>20||
-     !Number.isFinite(learningRate)||learningRate<=0||learningRate>0.01||
-     !Number.isFinite(tau)||tau<0.05||tau>1||
-     !Number.isFinite(anchorLambda)||anchorLambda<0||anchorLambda>1)throw Error('Training bounds invalid');
   if(!Array.isArray(train)||!Array.isArray(audit)||train.length<3||audit.length<3||
-     train.length>384||audit.length>128)throw Error('Independent train and audit sets required');
-  const trainBeforeModel=RelationalEncoder.restore(baselineBytes);
-  const candidate=RelationalEncoder.restore(baselineBytes);
-  const originalEmbeddings=Float64Array.from(candidate.E);
-  const anchorQ=Float64Array.from(candidate.Pq);
-  const anchorM=Float64Array.from(candidate.Pm);
-  const trainBefore=evaluateContrastiveSplit(trainBeforeModel,train,tau);
-  const auditBefore=evaluateContrastiveSplit(trainBeforeModel,audit,tau);
-  for(let epoch=0;epoch<epochs;epoch++){
-    for(const example of train){
-      const grads=RelationalEncoder.emptyGrads();
-      candidate.lossAndGrad(example.query,example.candidates,tau,grads);
-      grads.E.clear();
-      for(let k=0;k<D*D;k++){
-        grads.Pq[k]+=anchorLambda*(candidate.Pq[k]-anchorQ[k]);
-        grads.Pm[k]+=anchorLambda*(candidate.Pm[k]-anchorM[k]);
-      }
-      candidate.apply(grads,learningRate);
-    }
-  }
-  if(candidate.E.length!==originalEmbeddings.length||
-     candidate.E.some((value,i)=>value!==originalEmbeddings[i]))
-    throw Error('Base CRE1 embeddings changed');
-  const trainAfter=evaluateContrastiveSplit(candidate,train,tau);
-  const auditAfter=evaluateContrastiveSplit(candidate,audit,tau);
-  const accepted=trainAfter.loss+1e-8<trainBefore.loss &&
-    auditAfter.correct>=auditBefore.correct &&
-    auditAfter.mrr+1e-12>=auditBefore.mrr &&
-    auditAfter.loss<=auditBefore.loss+0.005;
+     train.length>384||audit.length>128)throw Error('Independent train/audit sets required');
+  // Both baseline and candidate use exactly the same frozen pooling vectors.
+  const baseline=RelationalEncoder.restore(baselineBytes);
+  const pool=createFrozenPool(baseline,[...train,...audit]);
+  const trainBefore=evaluatePrePooledSplit(baseline,train,pool,tau);
+  const auditBefore=evaluatePrePooledSplit(baseline,audit,pool,tau);
+  const trained=trainPrePooledProjectionHeads(baselineBytes,train,{
+    epochs,learningRate,tau,anchorLambda,isoGamma,anisotropyBeta,deadlineAt
+  });
+  const candidate=trained.model;
+  const trainAfter=evaluatePrePooledSplit(candidate,train,pool,tau);
+  const auditAfter=evaluatePrePooledSplit(candidate,audit,pool,tau);
+  const canaries=canaryAudit(candidate,audit,pool);
+  const accepted=trainAfter.loss+1e-8<trainBefore.loss&&
+    auditAfter.correct>=auditBefore.correct&&
+    auditAfter.mrr+1e-12>=auditBefore.mrr&&
+    auditAfter.loss<=auditBefore.loss+0.005&&
+    canaries.violations===0;
   const modelBytes=accepted?candidate.save():Buffer.from(baselineBytes);
   return {accepted,trainBefore,trainAfter,auditBefore,auditAfter,
-    modelBytes,modelSha256:sha256Hex(modelBytes),steps:accepted?candidate.steps:trainBeforeModel.steps};
+    canaries,poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm,
+    modelBytes,modelSha256:sha256Hex(modelBytes),
+    steps:accepted?candidate.steps:baseline.steps};
 }
 
 const AUDIT_KEYS=['accepted','auditCorrect','auditCount','auditSourceCount',
@@ -236,6 +241,11 @@ export function runResearchLearningCycle({
     :null;
   return {accepted:trained.accepted,reason:trained.accepted?'SHADOW_EVALUATED':'HOLDOUT_GATE_REJECTED',
     modelSha256:trained.modelSha256,trainCount:trainSet.length,auditCount:auditSet.length,
-    auditReport,signedPackage,
+    auditReport,signedPackage,canaries:trained.canaries,
+    shadowMetrics:{
+      trainBefore:trained.trainBefore,trainAfter:trained.trainAfter,
+      auditBefore:trained.auditBefore,auditAfter:trained.auditAfter,
+      poolSize:trained.poolSize,gramPq:trained.gramPq,gramPm:trained.gramPm
+    },
     shadowModelBytes:trained.accepted?Buffer.from(trained.modelBytes):null};
 }
