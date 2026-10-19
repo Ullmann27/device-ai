@@ -92,6 +92,37 @@ async function sha256(file) {
   for await(const part of fs.createReadStream(file)) h.update(part);
   return h.digest('hex');
 }
+/** Diagnostic-only JUnit extraction; old or malformed XML never certifies a build. */
+export function failedJvmTests(project, startedAt) {
+  const dir = path.join(project, 'app/build/test-results/testDebugUnitTest');
+  const failures = [];
+  let files;
+  try { files = fs.readdirSync(dir).filter(name => /^TEST-[A-Za-z0-9_.$-]+\.xml$/.test(name)).sort(); }
+  catch { return failures; }
+  for (const name of files.slice(0, 400)) {
+    if (failures.length >= 20) break;
+    try {
+      const file = path.join(dir, name);
+      const stat = fs.lstatSync(file);
+      // Gradle may leave old XML from a previous invocation; never report it as a new failure.
+      if (!stat.isFile() || stat.isSymbolicLink() ||
+          stat.size > 2 * 1024 * 1024 || stat.mtimeMs < startedAt - 2000) continue;
+      const xml = fs.readFileSync(file, 'utf8');
+      for (const match of xml.matchAll(/<testcase\b([^>]*)>([\s\S]*?)<\/testcase>/g)) {
+        if (!/<(?:failure|error)(?:\s|>)/.test(match[2])) continue;
+        const attribute = key => {
+          const m = new RegExp('(?:^|\\s)' + key + '="([^"]{0,300})"').exec(match[1]);
+          return m ? m[1].replace(/&(?:quot|apos|lt|gt|amp);/g,
+            entity => ({'&quot;':'"','&apos;':"'",'&lt;':'<','&gt;':'>','&amp;':'&'}[entity])).slice(0, 160) : '';
+        };
+        failures.push({className: attribute('classname'), testName: attribute('name')});
+        if (failures.length >= 20) break;
+      }
+    } catch { /* No diagnostic may override the real Gradle exit status. */ }
+  }
+  return failures;
+}
+
 export async function build({project,stateDir,offline=false,env=process.env,arch=process.arch,run=execute,inspect=doctor}={}) {
   const root=fs.realpathSync(project);
   for(const f of ['settings.gradle.kts','app/build.gradle.kts']) if(!fs.existsSync(path.join(root,f)))throw Error('Missing trusted project file '+f);
@@ -102,11 +133,18 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
   const status=await run(tool.bin.git,['status','--porcelain','--untracked-files=normal'],{cwd:root,env});
   if(!head.ok||!/^[0-9a-f]{40}\s*$/.test(head.output)||!status.ok||status.output.trim())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_UNCLEAN_SOURCE'});
   const commit=head.output.trim();
+  const unchangedSource = async () => {
+    const h=await run(tool.bin.git,['rev-parse','HEAD'],{cwd:root,env});
+    const s=await run(tool.bin.git,['status','--porcelain','--untracked-files=normal'],{cwd:root,env});
+    return h.ok && h.output.trim()===commit && s.ok && !s.output.trim();
+  };
   const args=['--no-daemon','--max-workers=2','--console=plain','-Pandroid.aapt2FromMavenOverride='+tool.bin.aapt2,'-Pkotlin.compiler.execution.strategy=in-process','-PdeviceAiMobileAidlFallback=true'];
   if(offline)args.push('--offline');
   args.push(':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug','-PdeviceAiPreview=true');
+  const buildStartedAt=Date.now();
   const result=await run(tool.bin.gradle,args,{cwd:root,env:{...env,GRADLE_OPTS:'-Dorg.gradle.jvmargs=-Xmx1536m'},timeout:BUILD_MS});
-  if(!result.ok)return persist(state,{schemaVersion:VERSION,status:'FAILED_BUILD',commit,exitCode:result.code,reason:result.error||null,outputTail:String(result.output).slice(-2500)});
+  if(!result.ok)return persist(state,{schemaVersion:VERSION,status:'FAILED_BUILD',commit,exitCode:result.code,reason:result.error||null,outputTail:String(result.output).slice(-2500),failedJvmTests:failedJvmTests(root,buildStartedAt)});
+  if(!await unchangedSource())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD',commit});
   const artifact=path.join(root,'app/build/outputs/apk/debug/app-debug.apk');
   if(!fs.existsSync(artifact)||fs.lstatSync(artifact).isSymbolicLink()||!inside(root,fs.realpathSync(artifact))||!fs.statSync(artifact).isFile()||fs.statSync(artifact).size<100) return persist(state,{schemaVersion:VERSION,status:'FAILED_NO_APK',commit});
   const staged=path.join(state,'.apk-'+randomUUID()+'.tmp');
@@ -117,6 +155,7 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
     const signer=/Signer #1 certificate SHA-256 digest:\s*([0-9a-f:]{64,95})/i.exec(verified.output||'')?.[1]?.replaceAll(':','').toLowerCase();
     if(!verified.ok||!signer||!/^[a-f0-9]{64}$/.test(signer)) return persist(state,{schemaVersion:VERSION,status:'FAILED_APK_SIGNATURE',commit});
     const digest=await sha256(staged);
+    if(!await unchangedSource())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD',commit});
     const stable=path.join(state,'apk-'+digest+'.apk');
     fs.renameSync(staged,stable);
     return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
