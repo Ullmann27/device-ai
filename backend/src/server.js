@@ -12,6 +12,7 @@ import { ContinuumStateStore, mergeResearchQuestions } from "./continuum-state.j
 import { selectResearchKnowledge } from "./continuum-knowledge.js";
 import { androidWebTools } from "./android-web-tools.js";
 import { GroqMentor } from "./groq-mentor.js";
+import { MentorDevicePairing } from "./mentor-pairing.js";
 
 const app = express();
 app.disable("x-powered-by");
@@ -35,6 +36,14 @@ const groqMentor = new GroqMentor({
   apiKey: process.env.GROQ_API_KEY ?? "",
   model: process.env.GROQ_MENTOR_MODEL ?? "openai/gpt-oss-20b",
   dailyLimit: Number(process.env.GROQ_MENTOR_DAILY_LIMIT ?? 20)
+});
+const mentorPairing = new MentorDevicePairing({
+  rootToken: DEVICE_AI_TOKEN,
+  approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? ""
+});
+const pairingLimiter = rateLimit({
+  windowMs: 15 * 60_000, limit: 12,
+  standardHeaders: "draft-8", legacyHeaders: false
 });
 const CONTINUUM_DAEMON_ENABLED = (process.env.CONTINUUM_DAEMON_ENABLED ?? "false").toLowerCase() === "true";
 const CONTINUUM_RESEARCH_PROVIDER = (process.env.CONTINUUM_RESEARCH_PROVIDER ?? "public").toLowerCase();
@@ -186,6 +195,12 @@ function auth(req, res, next) {
   next();
 }
 
+function mentorAuth(req, res, next) {
+  const supplied = req.get("authorization") ?? "";
+  if (mentorPairing.isMentorAuthorized(supplied)) return next();
+  return auth(req, res, next);
+}
+
 async function openai(path, options = {}) {
   if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY fehlt.");
   const response = await fetch(OPENAI_BASE_URL + path, {
@@ -314,13 +329,33 @@ app.get("/health", (_req, res) => {
   });
 });
 
+/** Stateless pairing; approval is controlled exclusively by Render operator configuration. */
+app.get("/v1/mentor/pairing/challenge", pairingLimiter, (_req, res) => {
+  if (!mentorPairing.ready) return res.status(503).json({ error: "PAIRING_DISABLED" });
+  res.set("Cache-Control", "no-store");
+  return res.json(mentorPairing.challenge());
+});
+app.post("/v1/mentor/pairing/redeem", pairingLimiter, (req, res) => {
+  res.set("Cache-Control", "no-store");
+  if (Object.keys(req.body ?? {}).sort().join("|") !== "challenge|publicKey|signature") {
+    return res.status(400).json({ error: "INVALID_PAIRING_REQUEST" });
+  }
+  try {
+    const outcome = mentorPairing.redeem(req.body);
+    if (!outcome.ok) return res.status(403).json({ error: outcome.code, fingerprint: outcome.fingerprint });
+    return res.json(outcome);
+  } catch {
+    return res.status(400).json({ error: "PAIRING_REJECTED" });
+  }
+});
+
 /** Private status: never returns API keys or user prompts. */
-app.get("/v1/mentor/status", auth, (_req, res) => {
+app.get("/v1/mentor/status", mentorAuth, (_req, res) => {
   res.json(groqMentor.status());
 });
 
 /** Explicit text-only mentor. No tools, no context, no persistent learning. */
-app.post("/v1/mentor/answer", auth, async (req, res) => {
+app.post("/v1/mentor/answer", mentorAuth, async (req, res) => {
   if (req.body?.provider !== "GROQ" || req.body?.consent !== true) {
     return res.status(400).json({ error: "OWNER_CONSENT_REQUIRED" });
   }
