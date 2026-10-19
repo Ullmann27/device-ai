@@ -289,14 +289,25 @@ fun interface ResearchSynthesizer {
 
 class DeterministicResearchSynthesizer : ResearchSynthesizer {
     override fun synthesize(input: ResearchSynthesisInput): ResearchSynthesisOutput {
-        val claims = input.graph.claims.take(12).joinToString("\n") { "• ${it.text.take(512)}" }
+        val relevant = input.graph.claims
+            .filter { ResearchQuestionFocus.titleMatches(input.question, it.text) }
+            .take(5)
+        val excerpts = relevant.joinToString("\n") { "• ${it.text.take(340)}" }
         val caveat = if (input.contradictions.isNotEmpty()) {
-            "\n\nConflicting evidence remains unresolved; the sources disagree."
+            "\n\nWidersprüche zwischen den Quellen sind noch ungeklärt."
         } else ""
-        val missing = if (input.evidence.isEmpty()) {
-            "No verified source documents were retrieved. Check connectivity, source-size limits or provide an approved HTTPS URL."
-        } else "Evidence-based summary for: ${input.question.take(512)}\n$claims$caveat"
-        return ResearchSynthesisOutput(missing.take(8_000))
+        val message = when {
+            input.evidence.isEmpty() ->
+                "Keine auswertbaren Quellen gefunden. Verbindung und HTTPS-Quellen prüfen."
+            relevant.isEmpty() ->
+                "Keine zur Frage passenden Quellenaussagen gefunden: ${input.question.take(240)}. " +
+                    "Die gefundenen Seiten belegen dazu noch keine Antwort. " +
+                    "Prüfe präzisere Fachbegriffe oder eine konkrete HTTPS-Quelle."
+            else ->
+                "Ungeprüfte Quellentext-Auszüge zu: ${input.question.take(240)}\n" +
+                    "$excerpts$caveat\n\nDies ist keine modellgenerierte Erklärung und kein bestätigtes Wissen."
+        }
+        return ResearchSynthesisOutput(message.take(4_000))
     }
 }
 
