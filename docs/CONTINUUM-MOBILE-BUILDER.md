@@ -67,3 +67,23 @@ Ein zusätzlicher *Preview-only* Launcher **Continuum Builder** wurde in PR #42 
 Bekannte offene Punkte: Komplett-APK-Kompilation des neuen GitHub-Heads, Android-16-/Termux-Service-Berechtigungen, Rückkanal für maschinenlesbare Statusmeldungen, Android-Doze-/Neustart-Recovery, echter Samsung-ARM64-AAPT2-Lauf, signierte Installation, Build-Isolierung von fremden Codeständen. Dieser UI-Bridge-Prototyp löst nur die feste, lokale **Auftragsauslösung**, nicht alle späteren EXP-00/EXP-08-Aufgaben.
 
 Offizielle Kommunikationsreferenz: https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent
+
+## EXP-08: Termux-Rückkanal mit überprüfbarer Antwort (19.10.2026)
+
+Die vorherige UI meldete lediglich, dass der Android-Service gestartet worden war. Nun wurden die offiziellen Termux-Extras aus dem Original-`TermuxConstants.java` geprüft und ein erster scoped Result-Callback implementiert:
+
+- Eine **explizite, nicht exportierte BroadcastReceiver-Komponente** `ContinuumMobileBuildResultReceiver` (nur Preview-Varianten).
+- Pro Besitzeraktion ein UUID-Auftrag mit nur drei festen Operationen, gespeichert in privaten Android-Preferences. Ein gleichzeitig aktiver Auftrag blockiert andere Ausführungen; nach einer Stunde kann der Besitzer fehlende Rückmeldungen ausdrücklich als ungeklärt markieren.
+- `PendingIntent.getBroadcast` mit `FLAG_ONE_SHOT | FLAG_MUTABLE` und expliziter Zielkomponente. Mutabilität ist nötig, damit Termux das `result`-Bundle nachtragen kann; **keine impliziten Mutable-Intents**.
+- `RUN_COMMAND_BACKGROUND=true` für stdout/stderr/Exitcode als separate Ergebnisse. Der Android-Benutzer bestätigt den kostspieligen APK-Build *vor* dieser Ausführung.
+- Offizielle `com.termux.RUN_COMMAND_PENDING_INTENT`-Übergabe; Rückgabeschlüssel `result`, `stdout`, `stdout_original_length`, `exitCode`, `err`.
+- Empfänger verwirft fremde/veraltete Auftrag-IDs, Operationen ohne Übereinstimmung, fehlenden Exitcode, fehlenden Termux-Erfolgsindikator und übergroße/gekürzte oder nicht JSON-dekodierbare Ausgaben.
+- Nur echte kombinierte Indizien `exitCode=0`, `err=-1`, passender Build-Status sowie zwei formal gültige SHA-256-Werte führen zur **Meldung eines nicht unabhängig gerätegeprüften** APK-Kandidaten. Das ist kein Zeichen für erfolgreiche Installation.
+- Der Callback speichert **nur** den kleinen Status und ggf. den APK-SHA, **keine Terminalausgabe**, Zugangsdaten oder gesamten Build-Logs.
+- JVM-Negativtests in `ContinuumMobileResultPolicyTest.kt`, Node-Wiring-Sicherungen in `.github/continuum/mobile-builder-result-wiring.test.mjs`.
+
+**Eigentümertest vor weiterer Freigabe:** die aktuelle APK mit diesen Komponenten wirklich bauen, auf einem Android-16-Gerät installieren, Termux >= 0.109, erlaubte RUN_COMMAND-Berechtigung und `allow-external-apps=true` einrichten, Doctor-/Fehler-/Build-Callbacks kontrollieren, Lifecycle/Reboot/Thermal und lange Build-Dauer erproben. Termux kann zurückmelden, aber wir können ohne ein echtes Smartphone-Protokoll keine End-to-End-Funktion behaupten.
+
+**Wichtige Grenze:** Ein Android Result-Callback beweist nur, dass der lokale Dienst bestimmte Daten zurückgegeben hat. Der nächste Schritt muss den echten APK-Artefaktzugriff (z.B. klar begrenzter Storage-Provider), Paketkennung und erwartete Signing-Key-Identität, unabhängige Prüfroutinen und autorisierte Installation ergänzen.
+
+Quellnachweise: https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent ; https://raw.githubusercontent.com/termux/termux-app/master/termux-shared/src/main/java/com/termux/shared/termux/TermuxConstants.java ; https://developer.android.com/reference/android/app/PendingIntent
