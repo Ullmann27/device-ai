@@ -176,13 +176,20 @@ export function atlasFind({root,state=DEFAULT_STATE,query,limit=5}={}){
  const words=new Set(query.toLocaleLowerCase('de-DE')
    .split(/[^\p{L}\p{N}]+/u).filter(w=>w.length>=3));
  const doc=load(path.join(dest,'continuum-atlas-v1.json'));
- return doc.entries.map(x=>{
-  const fields=(x.title+' '+x.query).toLocaleLowerCase('de-DE');
-  const score=[...words].filter(w=>fields.includes(w)).length;
-  return {score,topic:x.topic,title:x.title,url:x.url,observedAt:x.observedAt,
-   trust:x.trust,verified:false};
- }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||b.observedAt-a.observedAt)
-   .slice(0,limit);
+ const candidates=doc.entries.map(x=>{
+  const title=x.title.toLocaleLowerCase('de-DE');
+  const discipline=x.query.toLocaleLowerCase('de-DE');
+  const titleHits=[...words].filter(w=>title.includes(w)).length;
+  const topicHits=[...words].filter(w=>discipline.includes(w)).length;
+  return {score:titleHits*3+topicHits,titleHits,topic:x.topic,
+   title:x.title,url:x.url,observedAt:x.observedAt,trust:x.trust,verified:false};
+ }).filter(x=>x.score>0);
+ // Prefer specifically matching source titles, falling back to broad topics
+ // only if no title supports this query.
+ const titled=candidates.filter(x=>x.titleHits>0);
+ return (titled.length?titled:candidates)
+   .sort((a,b)=>b.score-a.score||b.observedAt-a.observedAt)
+   .slice(0,limit).map(({titleHits:_hits,...entry})=>entry);
 }
 export function atlasStatus({root,state=DEFAULT_STATE}={}){
  const {dest,head}=targetPaths(root,state);
