@@ -22,7 +22,7 @@ android {
         versionName = "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["appLabel"] = when {
-            deviceAiMentorPreview -> "Device AI Mentor"
+            deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
             else -> "Device AI"
         }
@@ -32,7 +32,7 @@ android {
         getByName("debug") {
             if (deviceAiMentorPreview) {
                 // Independent signing and app storage: never overwrite the tested Sol preview.
-                applicationIdSuffix = ".mentorpreview"
+                applicationIdSuffix = ".mentorpaired"
             } else if (deviceAiPreview) {
                 applicationIdSuffix = ".preview"
             }
