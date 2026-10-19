@@ -4,6 +4,7 @@
  * Each training span must match an original, license-cleared source byte-for-byte.
  */
 import crypto from 'node:crypto';
+import net from 'node:net';
 import {RelationalEncoder, D} from './cre-encoder.mjs';
 import {canonical, sha256Hex} from './development-backlog.mjs';
 
@@ -25,8 +26,12 @@ export function validateExtractiveSpans(spans){
        typeof sourceSha256!=='string'||!HEX.test(sourceSha256)||
        sourceSha256!==byteHash(sourceText))throw Error('Source payload or SHA-256 invalid');
     const location=(()=>{try{return new URL(url)}catch{return null}})();
+    const host=location?.hostname?.toLowerCase().replace(/^\\[|\\]$/g,'')??'';
     if(!location||!HTTPS.test(url)||location.protocol!=='https:'||location.username||
-       location.password||location.port||String(url).length>1000)throw Error('Invalid HTTPS provenance');
+       location.password||location.port||String(url).length>1000||
+       net.isIP(host)!==0||!host.includes('.')||
+       /(^|\\.)(localhost|local|internal|invalid|test)$/.test(host))
+      throw Error('Invalid public HTTPS provenance');
     if(!sourceText.includes(claim)||claim.trim()!==claim||
        claim.split(/\s+/).length<7)throw Error('Claim must be an exact original source span');
     const id=byteHash(sourceSha256+'\0'+query+'\0'+claim);
