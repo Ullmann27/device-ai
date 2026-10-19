@@ -25,7 +25,7 @@ export class GroqMentor {
       throw Error("Ungültige Modellkennung.");
     }
     this.enabled = enabled === true && apiKey.trim().length >= 12;
-    this.key = apiKey;
+    this.key = apiKey.trim();
     this.model = model;
     this.limit = dailyLimit;
     this.fetcher = fetcher;
@@ -71,6 +71,7 @@ export class GroqMentor {
     try {
       const response = await this.fetcher(API_URL, {
         method: "POST",
+        redirect: "error",
         signal: abort.signal,
         headers: {
           Authorization: "Bearer " + this.key,
