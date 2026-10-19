@@ -41,6 +41,13 @@ test("one authorized message is bounded and contains no tools, memory or device 
   const payload = JSON.parse(calls[0].options.body);
   assert.equal(payload.model, "openai/gpt-oss-20b");
   assert.equal(payload.messages.length, 2);
+  assert.match(payload.messages[0].content, /Device AI Continuum/);
+  assert.match(payload.messages[0].content, /SWB1/);
+  assert.match(payload.messages[0].content, /CRE1/);
+  assert.match(payload.messages[0].content, /Backlog/);
+  assert.match(payload.messages[0].content, /keine Geräteaktionen/);
+  assert.match(payload.messages[0].content, /keine laufenden Tests/);
+  assert.doesNotMatch(payload.messages[0].content, /\bDEVICE_AI_TOKEN\b|\bGROQ_API_KEY\b/);
   assert.equal(payload.messages[1].content, "Wie funktionieren Solarzellen?");
   assert.equal(payload.max_completion_tokens, 450);
   assert.equal(payload.stream, false);
