@@ -343,6 +343,39 @@ class ResearchEngineTest {
     }
 
     @Test
+    fun modelFreeSynthesisRefusesUnrelatedDictionaryEvidence() {
+        val question = "Wie funktionieren Solarzellen?"
+        val plan = DeterministicResearchPlanner().plan(question, ResearchMode.STANDARD)
+        val dictionary = Claim(
+            "c1", "Das Wort wie ist ein Adverb und wird in Wörterbüchern erklärt.",
+            ProvenanceType.EXTERNAL_SOURCE, listOf("https://www.dwds.de/wb/wie"), createdAt = 100L
+        )
+        fun synthesize(claims: List<Claim>): String {
+            val graph = ResearchEvidenceGraph(
+                claims, emptyList(), emptyList(), emptyMap(), emptyMap()
+            )
+            val input = ResearchSynthesisInput(
+                question, plan,
+                listOf(UntrustedResearchSnippet("https://www.dwds.de/wb/wie", "wie", dictionary.text)),
+                graph, emptyList(), emptyList()
+            )
+            return DeterministicResearchSynthesizer().synthesize(input).text
+        }
+        val unrelated = synthesize(listOf(dictionary))
+        assertTrue(unrelated.contains("Keine zur Frage passenden Quellenaussagen"))
+        assertFalse(unrelated.contains("• " + dictionary.text))
+        val related = Claim(
+            "c2", "Solarzellen wandeln Sonnenlicht mithilfe des photovoltaischen Effekts in elektrischen Strom um.",
+            ProvenanceType.EXTERNAL_SOURCE, listOf("https://de.wikipedia.org/wiki/Solarzelle"),
+            createdAt = 101L
+        )
+        val matching = synthesize(listOf(dictionary, related))
+        assertTrue(matching.contains("Solarzellen wandeln Sonnenlicht"))
+        assertFalse(matching.contains("• " + dictionary.text))
+        assertTrue(matching.contains("ungeprüft", ignoreCase = true))
+    }
+
+    @Test
     fun onlyExplicitlyRequestedVerifiedIndependentClaimsCanEnterLongTermMemory() {
         val store = InMemoryMemoryStore()
         val claim = Claim(
