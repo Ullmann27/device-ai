@@ -62,7 +62,11 @@ export function resolveTermuxEnvironment(env=process.env,arch=process.arch,exist
   const sdkHome=path.join(home,'android-sdk');
   const gradle=path.join(home,'continuum-toolchains/gradle-8.11.1/bin/gradle');
   const aapt2=path.join(prefix,'bin/aapt2');
-  if(!result.JAVA_HOME&&exists(path.join(javaHome,'bin/java')))result.JAVA_HOME=javaHome;
+  // Termux may export its Java 21 default even though this builder needs Java 17.
+  // Replace only that known ambient default; preserve other explicit owner JDK paths.
+  const termuxDefaultJava21=path.join(prefix,'lib/jvm/java-21-openjdk');
+  if(exists(path.join(javaHome,'bin/java'))&&
+     (!result.JAVA_HOME||result.JAVA_HOME===termuxDefaultJava21))result.JAVA_HOME=javaHome;
   if(!result.ANDROID_HOME&&!result.ANDROID_SDK_ROOT&&exists(path.join(sdkHome,'platforms/android-36/android.jar'))) {
     result.ANDROID_HOME=sdkHome;
     result.ANDROID_SDK_ROOT=sdkHome;
@@ -74,7 +78,8 @@ export function resolveTermuxEnvironment(env=process.env,arch=process.arch,exist
   if(!result.CONTINUUM_AAPT2_PATH&&exists(aapt2))result.CONTINUUM_AAPT2_PATH=aapt2;
   const current=(result.PATH||'').split(path.delimiter).filter(Boolean);
   const required=[result.JAVA_HOME&&path.join(result.JAVA_HOME,'bin'),path.join(prefix,'bin')].filter(Boolean);
-  result.PATH=[...required.filter(dir=>!current.includes(dir)),...current].join(path.delimiter);
+  // Force the selected JDK's bin ahead of an ambient Java 21 PATH entry.
+  result.PATH=[...required,...current.filter(dir=>!required.includes(dir))].join(path.delimiter);
   return result;
 }
 
