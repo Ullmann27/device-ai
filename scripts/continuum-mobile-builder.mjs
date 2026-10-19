@@ -102,7 +102,7 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
   const status=await run(tool.bin.git,['status','--porcelain','--untracked-files=normal'],{cwd:root,env});
   if(!head.ok||!/^[0-9a-f]{40}\s*$/.test(head.output)||!status.ok||status.output.trim())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_UNCLEAN_SOURCE'});
   const commit=head.output.trim();
-  const args=['--no-daemon','--max-workers=2','--console=plain','-Pandroid.aapt2FromMavenOverride='+tool.bin.aapt2,'-Pkotlin.compiler.execution.strategy=in-process'];
+  const args=['--no-daemon','--max-workers=2','--console=plain','-Pandroid.aapt2FromMavenOverride='+tool.bin.aapt2,'-Pkotlin.compiler.execution.strategy=in-process','-PdeviceAiMobileAidlFallback=true'];
   if(offline)args.push('--offline');
   args.push(':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug','-PdeviceAiPreview=true');
   const result=await run(tool.bin.gradle,args,{cwd:root,env:{...env,GRADLE_OPTS:'-Dorg.gradle.jvmargs=-Xmx1536m'},timeout:BUILD_MS});
