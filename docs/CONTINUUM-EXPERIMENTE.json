@@ -17,11 +17,11 @@
     {
       "id": "EXP-00",
       "title": "On-device Android APK builder",
-      "status": "SOURCE_INTEGRATED",
-      "present": "Preview-only on-device Termux launch plus one-shot asynchronous receipt and fail-closed Android parser; REAL Samsung toolchain, APK build and install still unverified",
+      "status": "DEVICE_TOOLCHAIN_VERIFIED",
+      "present": "Samsung Android 16 ARM64: JDK17/Gradle8.11.1/SDK36/AAPT2/apksigner Doctor verified on device 2026-10-19; manual Termux-preview APK built, SHA/signature checked at source commit 1477fa5 and Android Builder opened. App-triggered complete build, newly integrated high-end UI APK and independent M4 evidence NOT yet verified.",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
-      "gate": "Real Samsung build, verified signature, independent tests and owner-approved install"
+      "gate": "Current feature-HEAD Node/Kotlin/lint validation, owner-triggered in-app APK build with hash/certificate evidence, owner-approved install and new one-launcher high-end UI acceptance"
     },
     {
       "id": "EXP-01",
@@ -90,10 +90,10 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Version-1 one-at-a-time Android-to-Termux RUN_COMMAND with owner-confirmed build, explicit PendingIntent, private callback receipt, result SHA fields; no signed end-to-end job leases, no independent APK ingest and no Samsung device proof",
+      "present": "Samsung Android 16 2026-10-19: real Android -> Termux RUN_COMMAND -> Android DOCTOR and STATUS callbacks successfully displayed in installed Preview (Node builder 28/28 passed at e332825). BUILD callback not yet device-tested; no authenticated cross-package lease/replay proof or independent APK ingest.",
       "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
-      "gate": "Actual Samsung Android 16 callback, SHA/signature evidence, authenticated job/lease replay resistance, owner-approved verified APK install"
+      "gate": "Real app-triggered BUILD callback, replay/lease robustness, SHA/certificate/device proof and owner-approved verified APK install"
     },
     {
       "id": "EXP-09",
