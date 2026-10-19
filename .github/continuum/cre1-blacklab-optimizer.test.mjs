@@ -108,8 +108,14 @@ test('sibling negatives require disambiguating questions; no train/audit source 
     sourceRow({index:4,group:'c',query:'battery cells store grid energy',claim:
       'Battery storage systems use chemical reactions for grid energy distribution and controlled charging measurements.'})
   ]);
-  // Explicitly bind two claims to one physical document fingerprint.
-  const grouped=rows.map((x,i)=>i<2?{...x,sourceSha256:rows[0].sourceSha256}:x);
+  // Recreate two genuine excerpts from the SAME original document, and
+  // validate both through the real substring and SHA-256 source gate.
+  const combinedSource=[rows[0].claim,rows[1].claim].join(' ');
+  const shared=sha256Hex(Buffer.from(combinedSource,'utf8'));
+  const sourceRows=rows.map((row,i)=>i<2?{
+    ...row,sourceText:combinedSource,sourceSha256:shared
+  }:sourceRow({index:i+3,group:'independent-'+i,query:row.query,claim:row.claim}));
+  const grouped=validateExtractiveSpans(sourceRows);
   const cases=buildExtractiveContrastiveSet(grouped);
   assert.ok(cases.some(x=>x.query===grouped[0].query&&x.candidates[1]===grouped[1].claim));
   const sameQuery=grouped.map(x=>({...x,query:'generic shared document question'}));
