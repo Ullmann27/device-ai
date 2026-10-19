@@ -16,6 +16,39 @@ object SecureTokenStore {
     private const val PREFS = "device_ai_secure"
     private const val KEY_IV = "backend_token_iv"
     private const val KEY_DATA = "backend_token_data"
+    private const val KEY_MENTOR_IV = "mentor_token_iv"
+    private const val KEY_MENTOR_DATA = "mentor_token_data"
+
+    fun saveMentorToken(context: Context, token: String) {
+        require(token.matches(Regex("[A-Za-z0-9_-]{43}"))) {
+            "Ungültiger Mentor-Gerätetoken."
+        }
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, getOrCreateKey())
+        val encrypted = cipher.doFinal(token.toByteArray(Charsets.UTF_8))
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(KEY_MENTOR_IV, Base64.encodeToString(cipher.iv, Base64.NO_WRAP))
+            .putString(KEY_MENTOR_DATA, Base64.encodeToString(encrypted, Base64.NO_WRAP))
+            .apply()
+    }
+
+    fun loadMentorToken(context: Context): String? {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val iv = prefs.getString(KEY_MENTOR_IV, null) ?: return null
+        val data = prefs.getString(KEY_MENTOR_DATA, null) ?: return null
+        return runCatching {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateKey(),
+                GCMParameterSpec(128, Base64.decode(iv, Base64.NO_WRAP)))
+            String(cipher.doFinal(Base64.decode(data, Base64.NO_WRAP)), Charsets.UTF_8)
+                .takeIf { it.matches(Regex("[A-Za-z0-9_-]{43}")) }
+        }.getOrNull()
+    }
+
+    fun clearMentorToken(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .remove(KEY_MENTOR_IV).remove(KEY_MENTOR_DATA).apply()
+    }
 
     fun save(context: Context, token: String) {
         if (token.isBlank()) {
