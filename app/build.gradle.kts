@@ -3,6 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val mentorSigningPath = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_FILE").orNull
+val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_PASSWORD").orNull
+
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
@@ -11,6 +14,19 @@ require(!(deviceAiPreview && deviceAiMentorPreview)) {
 }
 
 android {
+    signingConfigs {
+        if (deviceAiMentorPreview && !mentorSigningPath.isNullOrBlank() &&
+            !mentorSigningPassword.isNullOrBlank()
+        ) {
+            create("mentorPreview") {
+                storeFile = file(mentorSigningPath)
+                storePassword = mentorSigningPassword
+                keyAlias = "deviceai-mentor"
+                keyPassword = mentorSigningPassword
+                storeType = "PKCS12"
+            }
+        }
+    }
     namespace = "at.heinz.deviceai"
     compileSdk = 36
 
@@ -33,6 +49,9 @@ android {
             if (deviceAiMentorPreview) {
                 // Independent signing and app storage: never overwrite the tested Sol preview.
                 applicationIdSuffix = ".mentorpaired"
+                if ("mentorPreview" in signingConfigs.names) {
+                    signingConfig = signingConfigs.getByName("mentorPreview")
+                }
             } else if (deviceAiPreview) {
                 applicationIdSuffix = ".preview"
             }
