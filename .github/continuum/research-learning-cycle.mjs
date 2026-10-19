@@ -147,6 +147,9 @@ export function trainFrozenProjectionCandidate(baselineBytes,train,audit,{
     auditAfter.correct>=auditBefore.correct&&
     auditAfter.mrr+1e-12>=auditBefore.mrr&&
     auditAfter.loss<=auditBefore.loss+0.005&&
+    // ||P^T P-I||_F < 1 forces every Gram eigenvalue to stay positive.
+    Number.isFinite(trained.gramPq)&&Number.isFinite(trained.gramPm)&&
+    trained.gramPq<1&&trained.gramPm<1&&
     canaries.violations===0;
   const modelBytes=accepted?candidate.save():Buffer.from(baselineBytes);
   return {accepted,trainBefore,trainAfter,auditBefore,auditAfter,
