@@ -118,6 +118,7 @@ export function runPostResearchShadowCycle({
       trainCount:result.trainCount??0,auditCount:result.auditCount??0,
       modelSha256:result.modelSha256??sha(baseline),
       canaries:result.canaries??null,
+      siblings:result.siblings??null,
       metrics:result.shadowMetrics??null,
       authority:'NONE',productionPromotion:false
     };
