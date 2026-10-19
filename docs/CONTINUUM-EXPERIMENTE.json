@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "project": "Ullmann27/device-ai",
+  "updated": "2026-10-19",
+  "ownerPriority": "ANDROID_DEVICE_BUILDER",
+  "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
+  "integrationPolicy": {
+    "canonicalBacklog": true,
+    "canonicalRepairGate": true,
+    "phoneIsPrimaryBuilder": true,
+    "externalWorkersOptional": true,
+    "productionMainReviewRequired": true,
+    "installRequiresOwnerConsent": true,
+    "untrustedResearchCannotBecomeFacts": true
+  },
+  "experiments": [
+    {
+      "id": "EXP-00",
+      "title": "On-device Android APK builder",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Mobile Gradle+native ARM64 AAPT2 doctor/build; on-device integration and installation pending",
+      "entry": "scripts/continuum-mobile-builder.mjs",
+      "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
+      "gate": "Real Samsung build, verified signature, independent tests and owner-approved install"
+    },
+    {
+      "id": "EXP-01",
+      "title": "Bounded night workshop",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Same phone Termux teamleader and recovery",
+      "entry": "scripts/continuum-teamleader-termux.sh",
+      "depends": "Termux Node20/Git, battery/thermal conditions",
+      "gate": "Actual repeated device cycles, resume and cancellation"
+    },
+    {
+      "id": "EXP-02",
+      "title": "CEGIS program synthesis",
+      "status": "RESEARCH_SHADOW",
+      "present": "Existing repair-loop, candidate critics and independent tests",
+      "entry": ".github/continuum/repair-loop.mjs",
+      "depends": "Typed candidate interface, M4 tests",
+      "gate": "Unknown-source holdout repairs vs deterministic baseline"
+    },
+    {
+      "id": "EXP-03",
+      "title": "CEFR neural repair prioritization",
+      "status": "RESEARCH_SHADOW",
+      "present": "Ranker remains advisory",
+      "entry": "docs/CONTINUUM-EPISTEMISCHE-GEWALTENTEILUNG.md",
+      "depends": "Independent dual-worktree proof",
+      "gate": "Fixed-model prospective candidate rank audit"
+    },
+    {
+      "id": "EXP-04",
+      "title": "SWB1/CRE1 shadow learning",
+      "status": "RESEARCH_SHADOW",
+      "present": "Frozen weights, model provenance and holdout gates",
+      "entry": "docs/CONTINUUM-RESEARCH-LEARNING-GATE.md",
+      "depends": "Separate train/audit and signed weights",
+      "gate": "Out-of-distribution negative/number/negation battery"
+    },
+    {
+      "id": "EXP-05",
+      "title": "Own local generation and LiteRT-LM",
+      "status": "RESEARCH_SHADOW",
+      "present": "Experimental CDX1 and Android model-loading interfaces",
+      "entry": "docs/CONTINUUM-ARGON-RESEARCH-IMPLEMENTATION-20261017.md",
+      "depends": "Compatible local model bytes and memory budget",
+      "gate": "Live model-only answers and latency/thermal benchmark"
+    },
+    {
+      "id": "EXP-06",
+      "title": "Atlas provenance graph",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Content-hashed indexed references, not facts",
+      "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
+      "depends": "Provenance, license and content capture",
+      "gate": "Verified citations and contamination audit"
+    },
+    {
+      "id": "EXP-07",
+      "title": "Independent worker academy",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Repeatable repository skill lessons",
+      "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
+      "depends": "Pinned source/tests and novelty holdouts",
+      "gate": "Adversarial hidden tasks and regression retention"
+    },
+    {
+      "id": "EXP-08",
+      "title": "Android local job/result bridge",
+      "status": "IDEA",
+      "present": "Android↔same-phone worker; optional external hosts",
+      "entry": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "depends": "Versioned job IDs, authenticated IPC and user grants",
+      "gate": "On-device submitted task to returned verified APK"
+    },
+    {
+      "id": "EXP-09",
+      "title": "Cross-platform capability recipes",
+      "status": "IDEA",
+      "present": "Android native first; optional Flutter/Godot/iOS/macOS",
+      "entry": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
+      "depends": "Real platform compiler and signing",
+      "gate": "Per-platform reproducible independent build"
+    },
+    {
+      "id": "EXP-10",
+      "title": "Optional remote language mentor",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Opt-in untrusted text output; no privileged tools",
+      "entry": "docs/CONTINUUM-OPTIONAL-GROQ-MENTOR.md",
+      "depends": "Owner consent, server-only keys",
+      "gate": "Live paired phone reply, no private-data leakage"
+    },
+    {
+      "id": "EXP-11",
+      "title": "Specialist orchestrator",
+      "status": "RESEARCH_SHADOW",
+      "present": "Single backlog, typed specialists",
+      "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
+      "depends": "One shared policy/review gate",
+      "gate": "Multiple specialist proposals, independent adjudication"
+    },
+    {
+      "id": "EXP-12",
+      "title": "Identity and checkpoint continuity",
+      "status": "RESEARCH_SHADOW",
+      "present": "Snapshot/rollback and model swap",
+      "entry": "docs/NEURAL_CONTINUITY.md",
+      "depends": "Signed owner memory, immutable evidence",
+      "gate": "Model replacement without owner fact corruption"
+    }
+  ]
+}
