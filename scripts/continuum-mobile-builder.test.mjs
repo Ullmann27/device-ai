@@ -187,6 +187,41 @@ test('Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2
   assert.equal(result.PATH,javaHome+'/bin:'+prefix+'/bin:/usr/bin');
 });
 
+test('ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const home='/data/data/com.termux/files/home';
+  const java17=prefix+'/lib/jvm/java-17-openjdk';
+  const java21=prefix+'/lib/jvm/java-21-openjdk';
+  const original={PREFIX:prefix,HOME:home,JAVA_HOME:java21,
+    PATH:java21+'/bin:'+prefix+'/bin:'+java17+'/bin'};
+  const result=resolveTermuxEnvironment(original,'arm64',file=>file===java17+'/bin/java');
+  assert.equal(result.JAVA_HOME,java17);
+  assert.equal(result.PATH.split(':')[0],java17+'/bin');
+  assert.equal(result.PATH.split(':').filter(dir=>dir===java17+'/bin').length,1);
+  assert.equal(result.PATH.split(':').filter(dir=>dir===java21+'/bin').length,1);
+  assert.equal(original.JAVA_HOME,java21);
+});
+
+test('Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const java21=prefix+'/lib/jvm/java-21-openjdk';
+  const result=resolveTermuxEnvironment({PREFIX:prefix,HOME:'/data/data/com.termux/files/home',
+    JAVA_HOME:java21,PATH:java21+'/bin'},'arm64',()=>false);
+  assert.equal(result.JAVA_HOME,java21);
+  assert.equal(result.PATH.split(':')[0],java21+'/bin');
+});
+
+test('owner Java 17 is always first in PATH even if it appears after Java 21',()=>{
+  const prefix='/data/data/com.termux/files/usr';
+  const java17=prefix+'/lib/jvm/java-17-openjdk';
+  const java21=prefix+'/lib/jvm/java-21-openjdk';
+  const result=resolveTermuxEnvironment({PREFIX:prefix,HOME:'/data/data/com.termux/files/home',
+    JAVA_HOME:java17,PATH:java21+'/bin:'+java17+'/bin:'+prefix+'/bin'},'arm64',()=>true);
+  assert.equal(result.JAVA_HOME,java17);
+  assert.equal(result.PATH.split(':')[0],java17+'/bin');
+  assert.equal(result.PATH.split(':').filter(dir=>dir===java17+'/bin').length,1);
+});
+
 test('missing Termux tools remain unavailable; never synthesize nonexistent binaries',()=>{
   const prefix='/data/data/com.termux/files/usr';
   const home='/data/data/com.termux/files/home';
