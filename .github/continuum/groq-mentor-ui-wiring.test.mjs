@@ -16,7 +16,8 @@ test("external mentor has an explicit per-request consent UI", () => {
   assert.match(activity, /setPositiveButton\("EINMALIG SENDEN"\)/);
   assert.match(activity, /setNegativeButton\("LOKAL BLEIBEN"/);
   assert.match(activity, /backend\.groqMentor\(content\)/);
-  assert.match(activity, /request\.startsWith\("mentor:", ignoreCase = true\)/);
+  assert.match(activity, /GroqInvocationRouter\.extractQuestion\(request\)/);
+  assert.match(activity, /showGroqMentorDialog\(groqQuestion\)/);
 });
 
 test("Android only sends bounded question text to the private backend", () => {
