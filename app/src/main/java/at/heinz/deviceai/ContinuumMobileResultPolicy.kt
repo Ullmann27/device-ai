@@ -46,6 +46,7 @@ internal object ContinuumMobileResultPolicy {
                     reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED" ||
                     reportedStatus == "BLOCKED_MISSING_TOOLCHAIN" ||
                     reportedStatus == "BLOCKED_UNCLEAN_SOURCE" ||
+                    reportedStatus == "BLOCKED_SOURCE_CHANGED_DURING_BUILD" ||
                     reportedStatus == "FAILED_BUILD" ||
                     reportedStatus == "FAILED_NO_APK" ||
                     reportedStatus == "FAILED_APK_SIGNATURE"
@@ -69,6 +70,9 @@ internal object ContinuumMobileResultPolicy {
         "BLOCKED_UNCLEAN_SOURCE" ->
             "Gespeicherter Buildbericht: Der Build wurde wegen ungesicherter " +
                 "Quellcodeänderungen blockiert. Es erfolgte keine APK-Freigabe."
+        "BLOCKED_SOURCE_CHANGED_DURING_BUILD" ->
+            "Gespeicherter Buildbericht: Dateien oder Git-HEAD haben sich während " +
+                "des Builds verändert. Die APK-Freigabe wurde aus Sicherheitsgründen gestoppt."
         "FAILED_BUILD" ->
             "Gespeicherter Buildbericht: Gradle oder ein Test ist fehlgeschlagen. " +
                 "Es wurde kein neuer Build-Erfolg bestätigt."
