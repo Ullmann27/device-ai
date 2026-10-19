@@ -77,6 +77,7 @@ function checkedGraph(value) {
         !Array.isArray(x.sources) || x.sources.length < 1 ||
         x.sources.length > MAX_SOURCES_PER_CLAIM ||
         !Array.isArray(x.potentialConflicts) ||
+        x.ownerConfirmed !== false || x.trainingApproved !== false ||
         !["SINGLE_SOURCE_OBSERVATION","MULTISOURCE_OBSERVATION","REVIEW_REQUIRED"].includes(x.status)) {
       throw Error("INVALID_ATLAS_GRAPH");
     }
