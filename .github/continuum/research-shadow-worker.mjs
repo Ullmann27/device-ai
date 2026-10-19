@@ -64,8 +64,12 @@ export function runPostResearchShadowCycle({
     throw Error('Invalid shadow cycle deadline');
   const directory=path.resolve(stateDir);
   const input=sourcePath?path.resolve(sourcePath):path.join(directory,'approved-extractive-spans.json');
+  if(path.dirname(input)!==directory)throw Error('Source bundle must live in the isolated CRE1 research directory');
   if(!fs.existsSync(input))return {status:'AWAITING_VERIFIED_ORIGINAL_DOCUMENTS'};
   safeDir(directory);
+  const incoming=fs.lstatSync(input);
+  if(!incoming.isFile()||incoming.isSymbolicLink()||incoming.size>MAX_SOURCE_BYTES)
+    throw Error('Unsafe or oversized original document bundle');
   const lockFile=path.join(directory,'research-shadow.lock');
   let lock;
   try{
