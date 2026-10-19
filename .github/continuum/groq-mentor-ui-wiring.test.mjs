@@ -31,6 +31,8 @@ test("Android only sends bounded question text to the private backend", () => {
   assert.doesNotMatch(body, /Build\.MODEL|shizuku_ready|manufacturer|sendDevice|put\("memory"|put\("device"/);
   assert.match(body, /"POST", "\$base\/v1\/mentor\/answer"/);
   assert.match(body, /UNVERIFIED_EXTERNAL/);
+  assert.match(body, /\.take\(4200\)/);
+  assert.doesNotMatch(body, /json\.optString\("message"\)\.trim\(\)\.take\(1800\)/);
 });
 
 test("server never accepts mentor request without owner grant and bearer authentication", () => {
