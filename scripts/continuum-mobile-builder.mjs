@@ -7,6 +7,7 @@ import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { createHash, randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { acquireContinuumBuildLease } from '../.github/continuum/shared-build-lease.mjs';
 
 const VERSION = 1;
 const PROBE_MS = 15000;
@@ -235,6 +236,8 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
   const root=fs.realpathSync(project);
   for(const f of ['settings.gradle.kts','app/build.gradle.kts']) if(!fs.existsSync(path.join(root,f)))throw Error('Missing trusted project file '+f);
   const state=safeState(root,stateDir);
+  const releaseBuildLease=acquireContinuumBuildLease(root);
+  try {
   const tool=await inspect({env:resolvedEnv,arch,run});
   if(tool.status!=='READY_FOR_EXPERIMENTAL_BUILD')return persist(state,{schemaVersion:VERSION,status:'BLOCKED_MISSING_TOOLCHAIN',checks:tool.checks});
   const head=await run(tool.bin.git,['rev-parse','HEAD'],{cwd:root,env:resolvedEnv});
@@ -274,6 +277,7 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
     });
     return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,ownerInstallCopy,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
   } finally { if(fs.existsSync(staged))fs.unlinkSync(staged); }
+  } finally { releaseBuildLease(); }
 }
 export function readStatus(stateDir) {
   const f=path.join(path.resolve(stateDir),'latest-build.json');
