@@ -40,7 +40,20 @@ class ContinuumMemoryDialogue(private val directory:File) {
         val followUp=Regex("(?i)\\b(darüber|dazu|damit|weiter|noch mehr|und warum|und wie)\\b").containsMatchIn(text)
         val previousTopic=history.lastOrNull()?.topic.orEmpty()
         val resolved=if(followUp&&previousTopic.isNotBlank())(previousTopic+" "+text).take(512) else text
-        val hits=rank(bytes,resolved,experiences)
+        // A single high-confidence typo may be retried for retrieval only.
+        // Never alter the displayed user input, stored user facts, or tool text.
+        val firstHits=rank(bytes,resolved,experiences)
+        val proposal=if(firstHits.isEmpty() &&
+            !Regex("(?i)^(merke|lösche|entferne|widerrufe|starte|installiere|öffne|setze|reset)\\b")
+                .containsMatchIn(text))
+            ContinuumOrthographyProbe.suggest(
+                resolved,
+                experiences.filter { eligible(it) }.map { it.content.take(2048) })
+            else null
+        val recoveredHits=proposal?.let { rank(bytes,it.query,experiences) }.orEmpty()
+        val hits=if(recoveredHits.isNotEmpty() &&
+            wordEvidence(proposal!!.query,recoveredHits.first().text)>=0.82)
+            recoveredHits else firstHits
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
         // A greeting must not accidentally cite memories containing the word "Hallo".
         // An unanswered new question invalidates the old topic; only retrieved evidence
