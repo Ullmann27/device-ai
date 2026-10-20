@@ -1184,6 +1184,9 @@ class AgentActivity : Activity() {
         learningIoStatus { learningCenterStatus() },
         listOf(
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
+            CenterAction("TRAININGS-MONITOR · LIVE", accent = true) {
+                startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
+            },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
