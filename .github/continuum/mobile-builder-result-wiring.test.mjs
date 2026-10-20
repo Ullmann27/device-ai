@@ -41,7 +41,7 @@ test('result requires official Termux bundle including real exit and error', () 
 
 test('user receives a receipt only, no installation or private build log persisted', () => {
   assert.match(activity, /"com\.termux\.RUN_COMMAND_BACKGROUND", true/);
-  assert.match(receiver, /putString\(LAST_MESSAGE, text\)/);
+  assert.match(receiver, /putString\(LAST_MESSAGE, text \+ ownerCopyMessage\)/);
   assert.doesNotMatch(receiver, /putString\(LAST_MESSAGE, stdout\)|putString\(LAST_MESSAGE, bundle/);
   assert.doesNotMatch(activity, /installPackage|PackageInstaller|Runtime\.getRuntime\(\)/);
   assert.match(junit, /fun buildNeedsSignatureEvidenceAndCompletedTermuxStatus/);
@@ -51,4 +51,15 @@ test('live Android APK build still requires independent device check', () => {
   assert.match(policy, /BUILD_REPORTED_UNVERIFIED_ON_DEVICE/);
   assert.match(activity, /kein Build-Erfolg bestätigt/);
   assert.match(receiver, /Outcome\.BUILD_REPORTED_UNVERIFIED_ON_DEVICE/);
+});
+
+test('only successful verified builds may report a fixed owner installation folder', () => {
+  assert.match(receiver, /optJSONObject\("ownerInstallCopy"\)\?\.optString\("status"\)/);
+  assert.match(receiver, /ownerCopyStatus\) \{/);
+  assert.match(receiver, /"COPIED" ->/);
+  assert.match(receiver, /"UNAVAILABLE" ->/);
+  assert.match(receiver, /Download\/00-DEVICEAI-INSTALLATION/);
+  assert.match(receiver, /Outcome\.BUILD_REPORTED_UNVERIFIED_ON_DEVICE/);
+  assert.doesNotMatch(receiver, /putString\(LAST_MESSAGE, stdout\)/);
+  assert.doesNotMatch(activity, /installPackage|PackageInstaller/);
 });
