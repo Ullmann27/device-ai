@@ -76,7 +76,7 @@ test('owner-controlled recurrent public research has finite allowed sources and 
 
 test('citation archive and Android UI preserve verification, provenance and explicit consent',()=>{
   assert.match(archive,/SHA-256/);
-  assert.match(archive,/MAX_RECORDS=640/);
+  assert.match(archive,/MAX_RECORDS=4096/);
   assert.match(archive,/Kind\.RIS_LEGISLATION/);
   assert.match(archive,/Kind\.RIS_CASE_LAW/);
   assert.match(archive,/contentHash/);
