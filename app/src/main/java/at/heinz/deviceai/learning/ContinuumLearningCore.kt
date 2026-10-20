@@ -23,6 +23,50 @@ data class ContinualLearningReport(
     val completedEvaluation:Boolean=true
 )
 
+data class PublicCurriculumReport(
+    val accepted:Boolean,
+    val completed:Boolean,
+    val intentSteps:Int,
+    val semanticSteps:Int,
+    val reason:String,
+    val intentTrainingBefore:SubwordEvaluation,
+    val intentTrainingAfter:SubwordEvaluation,
+    val semanticTrainingBefore:SubwordEvaluation,
+    val semanticTrainingAfter:SubwordEvaluation,
+    val intentAuditBefore:SubwordEvaluation,
+    val intentAuditAfter:SubwordEvaluation,
+    val semanticAuditBefore:SubwordEvaluation,
+    val semanticAuditAfter:SubwordEvaluation,
+    val fixedIntentBefore:SubwordEvaluation,
+    val fixedIntentAfter:SubwordEvaluation,
+    val fixedSemanticBefore:SubwordEvaluation,
+    val fixedSemanticAfter:SubwordEvaluation
+) {
+    fun display():String = buildString {
+        fun row(name:String,a:SubwordEvaluation,b:SubwordEvaluation) {
+            append(name).append(": ").append(a.correct).append("/").append(a.total)
+                .append(" → ").append(b.correct).append("/").append(b.total)
+                .append(" · Verlust ")
+                .append("%.4f".format(Locale.ROOT,a.loss)).append(" → ")
+                .append("%.4f".format(Locale.ROOT,b.loss)).append("\n")
+        }
+        append("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET\n")
+        append("Trainingsschritte: ").append(intentSteps).append(" Intent + ")
+            .append(semanticSteps).append(" Semantik\n")
+        append("Status: ").append(if(!completed)"UNTERBROCHEN" else
+            if(accepted)"KANDIDAT ÜBERNOMMEN" else "KANDIDAT VERWORFEN").append("\n\n")
+        row("Intent Training",intentTrainingBefore,intentTrainingAfter)
+        row("Semantik Training",semanticTrainingBefore,semanticTrainingAfter)
+        row("NEUER Intent-Prüfsatz",intentAuditBefore,intentAuditAfter)
+        row("NEUER Semantik-Prüfsatz",semanticAuditBefore,semanticAuditAfter)
+        row("Bestehender Intent-Holdout",fixedIntentBefore,fixedIntentAfter)
+        row("Bestehender Semantik-Holdout",fixedSemanticBefore,fixedSemanticAfter)
+        append("\n").append(reason)
+        append("\nKeine Besitzerfakten oder Geräteberechtigungen erzeugt. ")
+        append("Das ist kein generatives Sprachmodell.")
+    }
+}
+
 enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
 
 data class ContinuumLearningStatus(
@@ -126,6 +170,86 @@ class ContinuumLearningCore(
                 holdoutBefore,holdoutAfter,emptyList(),reason)
             ContinualLearningReport("offline-semantic-bootstrap",accepted,train.steps,0,
                 before,after,holdoutBefore,holdoutAfter,emptyList(),reason)
+        }
+
+    /**
+     * Explicit owner-triggered public synthetic learning lab. No Internet,
+     * no imported/guessed model weights, no owner-label fabrication.
+     * Acceptance requires independent NEW and existing frozen holdouts,
+     * and preserves all actual owner-confirmed intent examples.
+     * Any interrupted run is not audited so that it can be retried.
+     */
+    fun trainPublicCurriculum(cancelled:()->Boolean={false}):PublicCurriculumReport? =
+        synchronized(CORE_LOCK) {
+            val lab=ContinuumPublicCurriculum
+            lab.validate()
+            val marker=lab.ID
+            if(store.all().any { it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation==marker }) return@synchronized null
+            val current=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(current.save())
+            val intentTraining=INTENT_BOOTSTRAP+lab.intentTrain
+            val semanticTraining=SEMANTIC_BOOTSTRAP+lab.semanticTrain
+            val own=ownerIntentReplay()
+            val ownBefore=own.takeIf { it.isNotEmpty() }?.let(current::evaluateIntent)
+            val trainIntentBefore=current.evaluateIntent(intentTraining)
+            val trainSemanticBefore=current.evaluateSemantic(semanticTraining)
+            val intentAuditBefore=current.evaluateIntent(lab.intentAudit)
+            val semanticAuditBefore=current.evaluateSemantic(lab.semanticAudit)
+            val fixedIntentBefore=current.evaluateIntent(INTENT_HOLDOUT)
+            val fixedSemanticBefore=current.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val intentTrain=candidate.trainIntent(intentTraining,steps=1100,maxMillis=3500,
+                cancelled=cancelled)
+            val semanticTrain=if(!interrupted(cancelled) && !intentTrain.stoppedEarly)
+                candidate.trainSemantic(semanticTraining,steps=900,maxMillis=3500,
+                    cancelled=cancelled)
+            else null
+            val trainIntentAfter=candidate.evaluateIntent(intentTraining)
+            val trainSemanticAfter=candidate.evaluateSemantic(semanticTraining)
+            val intentAuditAfter=candidate.evaluateIntent(lab.intentAudit)
+            val semanticAuditAfter=candidate.evaluateSemantic(lab.semanticAudit)
+            val fixedIntentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val fixedSemanticAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val completed=!interrupted(cancelled) && !intentTrain.stoppedEarly &&
+                semanticTrain!=null && !semanticTrain.stoppedEarly
+            val ownerRetained=ownBefore==null || retains(
+                ownBefore,candidate.evaluateIntent(own))
+            val trainingImproved=trainIntentAfter.loss+1e-7<trainIntentBefore.loss &&
+                trainSemanticAfter.loss+1e-7<trainSemanticBefore.loss
+            val auditImproved=intentAuditAfter.loss+semanticAuditAfter.loss+0.001<
+                intentAuditBefore.loss+semanticAuditBefore.loss
+            val accepted=completed && trainingImproved && auditImproved &&
+                retains(intentAuditBefore,intentAuditAfter) &&
+                retains(semanticAuditBefore,semanticAuditAfter) &&
+                retains(fixedIntentBefore,fixedIntentAfter) &&
+                retains(fixedSemanticBefore,fixedSemanticAfter) && ownerRetained
+            val reason=when {
+                !completed -> "Unterbrochen oder Zeitbudget erreicht; keinerlei Änderungen gespeichert."
+                !ownerRetained -> "Private bestätigte Lektionen würden schlechter; Gewichte nicht geändert."
+                !retains(fixedIntentBefore,fixedIntentAfter) ->
+                    "Bisheriger Intent-Holdout würde schlechter; Gewichte nicht geändert."
+                !retains(fixedSemanticBefore,fixedSemanticAfter) ->
+                    "Bisheriger Semantik-Holdout würde schlechter; Gewichte nicht geändert."
+                !retains(intentAuditBefore,intentAuditAfter) ||
+                    !retains(semanticAuditBefore,semanticAuditAfter) ->
+                    "Neue unabhängige Prüfsätze würden schlechter; Gewichte nicht geändert."
+                !trainingImproved -> "Nicht beide Lernaufgaben verbessern sich; Gewichte nicht geändert."
+                !auditImproved -> "Keine messbare Verbesserung neuer Prüfsätze; Gewichte nicht geändert."
+                else -> "Öffentliche Lernaufgaben verbessern sich; alle Prüfbarrieren bestanden. " +
+                    "Vorheriger Gewichtsstand ist als Checkpoint archiviert."
+            }
+            if(accepted) saveModel(candidate.save(),marker)
+            if(completed) appendAudit(marker,accepted,intentTrain.steps+
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                fixedIntentBefore,fixedIntentAfter,emptyList(),
+                reason.take(220)+
+                    " · semantic-holdout="+fixedSemanticBefore.correct+"/"+fixedSemanticBefore.total+
+                    "→"+fixedSemanticAfter.correct+"/"+fixedSemanticAfter.total)
+            PublicCurriculumReport(accepted,completed,intentTrain.steps,
+                semanticTrain?.steps ?: 0,reason,trainIntentBefore,trainIntentAfter,
+                trainSemanticBefore,trainSemanticAfter,intentAuditBefore,intentAuditAfter,
+                semanticAuditBefore,semanticAuditAfter,fixedIntentBefore,fixedIntentAfter,
+                fixedSemanticBefore,fixedSemanticAfter)
         }
 
     fun teachIntent(
