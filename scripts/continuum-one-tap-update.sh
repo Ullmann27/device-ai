@@ -32,7 +32,8 @@ node --test \
   .github/continuum/research-job-permission.test.mjs \
   .github/continuum/cdx-large-curriculum.test.mjs \
   .github/continuum/local-model-smoke.test.mjs \
-  .github/continuum/autogenesis-safe-wiring.test.mjs
+  .github/continuum/autogenesis-safe-wiring.test.mjs \
+  .github/continuum/training-monitor-wiring.test.mjs
 printf '%s\n' "3/5: Android-Werkzeuge prüfen."
 node scripts/continuum-mobile-builder.mjs doctor
 printf '%s\n' "4/5: Kotlin Unit-Tests, Android Lint, APK und Signaturprüfung."
