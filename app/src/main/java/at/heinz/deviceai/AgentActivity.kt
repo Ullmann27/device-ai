@@ -1202,6 +1202,7 @@ class AgentActivity : Activity() {
         experimental = listOf(
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
+            CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
@@ -1225,6 +1226,9 @@ class AgentActivity : Activity() {
             else "noch ohne Forschungsgewichte")
             .append(" · ").append(paired.updates)
             .append(" Updates · Chatfreigabe: NEIN\n")
+        val cdxStages=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
+        append("CDX1 · Großes Paararchiv: ").append(cdxStages.completed)
+            .append("/").append(cdxStages.total).append(" Stufen geprüft\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
         core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
     }
@@ -3141,6 +3145,7 @@ class AgentActivity : Activity() {
                 .setMessage(message)
                 .setNegativeButton("Schließen",null)
                 .setPositiveButton("EXPERIMENT STARTEN") { _, _ -> runPairedDecoderLab() }
+                .setNeutralButton("GROSSES ARCHIV") { _, _ -> showCdxLargeLabDialog() }
                 .show()
         }
     }
@@ -3198,6 +3203,76 @@ class AgentActivity : Activity() {
                     "Produktive Antworten und Erinnerungen bleiben geschützt."
             })
             addToolActivity("CONTINUUM · CDX1-Paartraining beendet")
+        }
+    }
+
+    /**
+     * Separate staged CDX1 research. No internet, owner memory, device tools
+     * or productive chat. Only one user-approved bounded stage per click.
+     */
+    private fun showCdxLargeLabDialog() {
+        if(busy) {
+            addAssistantMessage("Ein Trainingslauf ist bereits aktiv. Bitte Abschluss abwarten.")
+            return
+        }
+        onLearningIo({
+            at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
+        }) { result ->
+            val text=result.fold({ state ->
+                "CDX1 · GROSSES PAARARCHIV\n"+
+                    "576 synthetische Beleg-Frage-Antwort-Paare über 12 getrennte Stufen. "+
+                    "Zusätzlich 48 eingefrorene neue und zwei ältere unabhängige "+
+                    "Prüfbeispiele. Die Sätze sind erfundene Forschungsszenarien, "+
+                    "keine übernommene Wahrheit.\n\n"+
+                    "Abgeschlossene Stufen: "+state.completed+"/"+state.total+
+                    "\nAktiver Labor-Checkpoint: "+(if(state.available)"vorhanden" else "keiner")+
+                    "\nBisherige CDX1-Gewichtsupdates: "+state.decoderUpdates+
+                    "\nModell-Hash: "+(state.decoderHash?.take(16)?:"noch nicht vorhanden")+
+                    "\n\nBei jeder Freigabe nur eine Stufe mit maximal 240 Updates. "+
+                    "Nur Kandidaten mit besserem Trainingsverlust und ohne "+
+                    "Verschlechterung beider festen Audits dürfen gespeichert werden. "+
+                    "Das produktive SWB1 und persönliche Erinnerungen bleiben getrennt. "+
+                    "CDX1 generiert noch keine geprüften Antworten im normalen Chat."
+            }, { error ->
+                "CDX1-Paararchiv kann nicht geöffnet werden: "+failureName(error)+
+                    ". Keine Modellgewichte wurden geändert."
+            })
+            AlertDialog.Builder(this)
+                .setTitle("CDX1 · Großes Beleg-Antwort-Trainingsarchiv")
+                .setMessage(text)
+                .setNegativeButton("Schließen",null)
+                .setPositiveButton("NÄCHSTE STUFE PRÜFEN") { _, _ -> runCdxLargeLab() }
+                .show()
+        }
+    }
+
+    private fun runCdxLargeLab() {
+        if(busy || localAgentExecutor.isShutdown) {
+            addAssistantMessage("Bitte erst den aktiven Trainingslauf abschließen.")
+            return
+        }
+        setBusy(true)
+        addToolActivity("CONTINUUM · CDX1 großes Paararchiv prüft nächste Stufe")
+        onLearningIo({
+            val previous=ContinuumLearningCore(filesDir).modelHash()
+            val lab=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir)
+            val report=lab.next {
+                isDestroyed || Thread.currentThread().isInterrupted
+            }
+            check(ContinuumLearningCore(filesDir).modelHash()==previous) {
+                "Produktives SWB1 wurde unerwartet verändert"
+            }
+            report?.description() ?:
+                "CDX1 · Alle zwölf Forschungsstufen bereits geprüft. "+
+                    "Die geschützten Labor-Checkpoints bleiben gespeichert; "+
+                    "dies belegt keine freie Sprachgeneralisierung."
+        }) { result ->
+            setBusy(false)
+            addAssistantMessage(result.getOrElse {
+                "CDX1 · Großes Paararchiv nicht abgeschlossen: "+failureName(it)+
+                    ". Bestehende SWB1-Gewichte und persönliche Daten bleiben geschützt."
+            })
+            addToolActivity("CONTINUUM · CDX1 Paararchiv-Trainingsrunde beendet")
         }
     }
 
