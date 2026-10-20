@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import {runTeamleaderCycle,localTeamleaderDriver,decodeLeaderState,summarizeTeamleaderProgress} from './autonomous-teamleader.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
+import {readLocalIntegrationStatus} from './local-integration-status.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
@@ -82,8 +83,11 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
    // A corrupt/partial heartbeat cannot corrupt or forge Teamleader evidence.
    workerHeartbeat={state:'UNREADABLE'};
   }
+  // Append read-only evidence from ANSK, the shared lease and the Termux
+  // builder without granting research receipts or stale reports any authority.
+  const localIntegration=readLocalIntegrationStatus({root});
   const output={mode:'OFFLINE_TEAMLEADER',stateDir,processedHeads:state.attemptedHeads.length,
-   progress,lastCompleted,workerHeartbeat,recent:state.events.slice(-12)};
+   progress,lastCompleted,workerHeartbeat,localIntegration,recent:state.events.slice(-12)};
   process.stdout.write(JSON.stringify(output,null,2)+'\n');
   return output;
  }
