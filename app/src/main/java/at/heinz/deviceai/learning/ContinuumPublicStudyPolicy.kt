@@ -39,15 +39,31 @@ object ContinuumPublicStudyPolicy {
         return topics[(index % topics.size).toInt()]
     }
 
+    /**
+     * A discovery topic must be a plain German encyclopedia article title,
+     * never a URL, API instruction, namespace, or arbitrary web request.
+     */
+    fun validArticleTitle(title:String):Boolean =
+        title.length in 3..80 && title==title.trim() &&
+            !title.contains("  ") && !title.contains("..") &&
+            title.matches(Regex("[\\p{L}\\p{N}][\\p{L}\\p{N} .,'()-]{2,79}"))
+
+    fun encyclopediaLinksApiUrl(title:String):String {
+        require(validArticleTitle(title))
+        val escaped=URLEncoder.encode(title,StandardCharsets.UTF_8.name())
+        return "https://de.wikipedia.org/w/api.php?action=query&prop=links" +
+            "&plnamespace=0&pllimit=16&format=json&redirects=1&titles="+escaped
+    }
+
     fun encyclopediaApiUrl(title:String):String {
-        require(title in topics)
+        require(validArticleTitle(title))
         val escaped=URLEncoder.encode(title,StandardCharsets.UTF_8.name())
         return "https://de.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1" +
             "&exintro=1&format=json&redirects=1&titles="+escaped
     }
 
     fun publicArticleUrl(title:String):String {
-        require(title in topics)
+        require(validArticleTitle(title))
         val escaped=URLEncoder.encode(title.replace(' ','_'),StandardCharsets.UTF_8.name())
             .replace("+","%20")
         return "https://de.wikipedia.org/wiki/"+escaped
