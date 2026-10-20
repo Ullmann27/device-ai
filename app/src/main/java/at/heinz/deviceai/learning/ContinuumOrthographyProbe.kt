@@ -69,11 +69,12 @@ internal object ContinuumOrthographyProbe {
                 token.any(Char::isDigit) || token.contains('_') || token.contains('-') ||
                 token.drop(1)!=token.drop(1).lowercase(Locale.GERMAN))return@map token
             var winner:String?=null
-            var best=1.01
+            var best=Double.POSITIVE_INFINITY
             var second=Double.POSITIVE_INFINITY
             for(candidate in dictionary) {
                 if(abs(candidate.length-lower.length)>1)continue
                 val d=distance(lower,candidate)
+                if(d>1.0)continue
                 if(d<best) {
                     second=best
                     best=d
