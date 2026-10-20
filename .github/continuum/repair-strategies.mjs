@@ -310,7 +310,7 @@ export function planInverseKotlinImportMutation({file,source,importFqn}={}){
     token=>token.type==='id'&&token.text===symbol&&token.line!==importIndex+1);
   if(references.length===0)return null;
   const mutatedRows=rows.slice();
-  mutatedRows.splice(importIndex,1);
+  mutatedRows[importIndex]='';
   const mutated=mutatedRows.join('\n');
   const mutation=hunk(file,source,mutated);
   const restoration=hunk(file,mutated,source);
