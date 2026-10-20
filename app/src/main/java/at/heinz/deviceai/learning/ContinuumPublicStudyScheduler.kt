@@ -268,8 +268,9 @@ class ContinuumPublicStudyJobService:JobService() {
                         ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS
             }
             try {
-                selectedTopic=scheduler.nextTopic()
-                val source=ContinuumPublicStudyFetch.fetch(selectedTopic,cancelled)
+                val researchTitle=scheduler.nextTopic()
+                selectedTopic=researchTitle
+                val source=ContinuumPublicStudyFetch.fetch(researchTitle,cancelled)
                 check(!cancelled())
                 // Keep discovery optional: failures here never discard a valid
                 // article or interrupt the existing learning pipeline.
