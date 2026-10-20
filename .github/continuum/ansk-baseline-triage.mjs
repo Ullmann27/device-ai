@@ -15,6 +15,12 @@ function classify(result, checks) {
     const unit = checks.find(check => check.profile === 'android-unit');
     if (!unit || unit.executed === 0)
       return ['ANDROID_UNIT_EVIDENCE_MISSING', 'VERIFY_REAL_JUNIT_RESULTS'];
+    if (unit.skipped > 0) {
+      const unitEvidence = result?.results?.find(row => row?.profile === 'android-unit')?.tests;
+      if (typeof unitEvidence?.skippedCaseDigest !== 'string' ||
+          !/^[0-9a-f]{64}$/.test(unitEvidence.skippedCaseDigest))
+        return ['ANDROID_UNIT_SKIP_IDENTITIES_MISSING', 'INSPECT_SKIPPED_JUNIT_CASES'];
+    }
     return ['BASELINE_CONTRACT_MISMATCH', 'INSPECT_BASELINE_CHECK_CONTRACT'];
   }
   if (failed.timedOut)
@@ -79,7 +85,8 @@ export const ANSK_BASELINE_FAILURE_CATEGORIES = Object.freeze([
   'DEVICE_STORAGE_EXHAUSTED', 'DEVICE_MEMORY_EXHAUSTED',
   'ANDROID_TOOLCHAIN_UNAVAILABLE', 'GRADLE_DEPENDENCY_UNAVAILABLE',
   'BASELINE_TIMEOUT', 'ANDROID_UNIT_TEST_FAILURE',
-  'ANDROID_UNIT_EVIDENCE_MISSING', 'ANDROID_UNIT_RUN_FAILED',
+  'ANDROID_UNIT_EVIDENCE_MISSING', 'ANDROID_UNIT_SKIP_IDENTITIES_MISSING',
+  'ANDROID_UNIT_RUN_FAILED',
   'ANDROID_KOTLIN_COMPILE_FAILURE', 'ANDROID_COMPILE_RUN_FAILED',
   'BASELINE_CONTRACT_MISMATCH', 'BASELINE_INCOMPLETE'
 ]);
