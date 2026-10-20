@@ -22,6 +22,8 @@ import {sha256} from './repair-diagnostics.mjs';
 import {validateTriplePhaseSample} from './repair-cycle-safety.mjs';
 import {assertAnskSource,measureAnskChain,verifyAnskExperiment} from './ansk-lab-contract.mjs';
 import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
+import {summarizeAnskBaselineFailure} from './ansk-baseline-triage.mjs';
+export {summarizeAnskBaselineFailure} from './ansk-baseline-triage.mjs';
 
 const BRANCH='astra/continuum-experiment-charter-20261019';
 const RUNTIME_BUDGET_MS=45*60_000;
@@ -102,28 +104,22 @@ function writeImmutableRecipe(store,recipe){
   return target;
 }
 
-/** Bounded, metadata-only diagnostics. Never print arbitrary Gradle output, 
- * source contents, environment variables or secrets in an ANSK receipt.
- * A failing baseline cannot be promoted into a successful experiment.
+/** Preserve only bounded, classified evidence for the existing Teamleader
+ * status interface. Never store raw Gradle logs, source paths, or model data.
+ * Replacement is atomic; a previous report is preserved if write fails.
  */
-export function summarizeAnskBaselineFailure(result){
-  const measured=measureAnskChain(result);
-  const checks=Array.isArray(result?.results)?result.results.slice(0,2):[];
-  return {
-    reason:measured.reason??'BASELINE_NOT_GREEN',
-    checks:checks.map(entry=>({
-      profile:['android-compile','android-unit'].includes(entry?.profile)?entry.profile:'UNKNOWN',
-      passed:entry?.passed===true,
-      exitCode:Number.isSafeInteger(entry?.exitCode)?entry.exitCode:null,
-      timedOut:entry?.timedOut===true,
-      executed:Number.isSafeInteger(entry?.tests?.executed)?entry.tests.executed:null,
-      failed:Number.isSafeInteger(entry?.tests?.failed)?entry.tests.failed:null,
-      skipped:Number.isSafeInteger(entry?.tests?.skipped)?entry.tests.skipped:null,
-      diagnosticKinds:Array.isArray(entry?.diagnostics)?
-        [...new Set(entry.diagnostics.map(d=>d?.kind).filter(d=>
-          typeof d==='string'&&/^[A-Z][A-Z0-9_]{0,63}$/.test(d)))].slice(0,6):[]
-    }))
-  };
+function retainBaselineDiagnostic(store,head,detail){
+  const report={schema:'continuum-ansk-baseline-failure',version:1,
+    status:'BLOCKED_BASELINE_NOT_GREEN',head,observedAt:Date.now(),detail};
+  const destination=path.join(store,'last-baseline-failure.json');
+  const temporary=path.join(store,'.baseline-'+crypto.randomBytes(12).toString('hex')+'.tmp');
+  const fd=fs.openSync(temporary,'wx',0o600);
+  try{
+    fs.writeFileSync(fd,JSON.stringify(report)+'\\n','utf8');
+    fs.fsyncSync(fd);
+  }finally{fs.closeSync(fd);}
+  try{fs.renameSync(temporary,destination);}
+  finally{fs.rmSync(temporary,{force:true});}
 }
 
 function fail(status,head,detail=null){
@@ -170,9 +166,12 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
     const plan=planInverseKotlinImportMutation({file:sourceFile,source:original,importFqn});
     if(!plan)return fail('NO_SAFE_MUTATION',head);
     const baselineRun=runChain('android',primary,phaseDir(out,'green0'),{deadline,forceRerun:true});
-    if(!measureAnskChain(baselineRun).passed)
-      return fail('BLOCKED_BASELINE_NOT_GREEN',head,
-        summarizeAnskBaselineFailure(baselineRun));
+    const baselineAssessment=measureAnskChain(baselineRun);
+    if(!baselineAssessment.passed){
+      const detail=summarizeAnskBaselineFailure(baselineRun,baselineAssessment.reason);
+      retainBaselineDiagnostic(store,head,detail);
+      return fail('BLOCKED_BASELINE_NOT_GREEN',head,detail);
+    }
 
     const mutHash=editInWorktree(primary,sourceFile,[plan.mutation],plan.baselineSha256);
     if(mutHash!==plan.mutatedSha256)throw Error('ANSK_MUTATION_HASH_MISMATCH');
