@@ -343,10 +343,16 @@ class ContinuumPublicStudyJobService:JobService() {
                     // results; only the latter changes the archive source count.
                     notebook.add(pending)
                     check(!cancelled())
-                    val core=ContinuumLearningCore(filesDir)
+                    val core=ContinuumLearningCore(filesDir).apply {
+                        observeTraining { trainingPhase ->
+                            ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                                ContinuumTrainingMonitor.PUBLIC,trainingPhase,
+                                "Quellenbezogenes SWB1 · Gradienten/Audit")
+                        }
+                    }
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
-                        ContinuumTrainingMonitor.PUBLIC,"TRAIN_WEIGHTS",
-                        "Quellenbezogenes SWB1-Training")
+                        ContinuumTrainingMonitor.PUBLIC,"PREPARING",
+                        "Quellenbezogene Kandidatenrunde vorbereiten")
                     val outcome=core.learnFromSources(pending,cancelled)
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"AUDIT","Qualitätsgate für Kandidatengewichte")
@@ -374,7 +380,13 @@ class ContinuumPublicStudyJobService:JobService() {
                         ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                             ContinuumTrainingMonitor.PUBLIC,"PREPARING",
                             "Großes SWB1-Übungsarchiv: nächste offene Stufe prüfen")
-                        ContinuumLearningCore(filesDir).trainExtendedCurriculum(cancelled)
+                        ContinuumLearningCore(filesDir).apply {
+                            observeTraining { trainingPhase ->
+                                ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                                    ContinuumTrainingMonitor.PUBLIC,trainingPhase,
+                                    "Großes SWB1-Übungsarchiv · Gradienten/Audit")
+                            }
+                        }.trainExtendedCurriculum(cancelled)
                     }.onSuccess { stage ->
                         ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                             ContinuumTrainingMonitor.PUBLIC,"AUDIT",
