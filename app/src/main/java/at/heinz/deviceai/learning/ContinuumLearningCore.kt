@@ -711,10 +711,11 @@ class ContinuumLearningCore(
         training:DecoderEvidenceCorpus,
         audit:DecoderEvidenceCorpus,
         steps:Int=600,
-        cancelled:()->Boolean={false}
+        cancelled:()->Boolean={false},
+        protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
     ):DecoderExperimentResult=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).trainPairedExperiment(
-            training,audit,loadModel().save(),steps,cancelled
+            training,audit,loadModel().save(),steps,cancelled,protectedAudits
         )
     }
 
