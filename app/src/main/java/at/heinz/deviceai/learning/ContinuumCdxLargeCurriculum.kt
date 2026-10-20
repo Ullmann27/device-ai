@@ -11,7 +11,7 @@ object ContinuumCdxLargeCurriculum {
     const val STAGES=12
     const val PAIRS_PER_STAGE=48
     const val TOTAL_TRAIN=STAGES*PAIRS_PER_STAGE
-    const val TRAIN_STEPS=240
+    const val TRAIN_STEPS=600
 
     private val cities=listOf("Graz","Linz","Wien","Salzburg","Innsbruck",
         "Klagenfurt","Villach","St. Pölten","Eisenstadt","Bregenz","Steyr","Leoben")
