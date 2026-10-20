@@ -27,7 +27,10 @@ export function measureAnskChain(result,{baseline=null,allowFailure=false}={}){
     p.testProfile!==(i===1)||!Number.isSafeInteger(p.tests?.executed)||
     !Number.isSafeInteger(p.tests?.failed)||!Number.isSafeInteger(p.tests?.skipped)||
     p.tests.executed<0||p.tests.failed<0||p.tests.skipped<0||
-    p.tests.skipped>0||p.timedOut===true||
+    (p.tests.skipped>0&&(i!==1||
+      typeof p.tests.skippedCaseDigest!=='string'||
+      !SHA64.test(p.tests.skippedCaseDigest)))||
+    p.timedOut===true||
     (p.passed&&(p.tests.failed!==0||p.exitCode!==0))||
     (!p.passed&&p.exitCode===0&&p.tests.failed===0)))
     return {passed:false,reason:'INVALID_PROFILE'};
@@ -43,10 +46,17 @@ export function measureAnskChain(result,{baseline=null,allowFailure=false}={}){
   if(!result.passed||rows.length!==PROFILE_ORDER.length||
      rows.some(p=>!p.passed)||rows[1].tests.executed<=0)
     return {passed:false,reason:'NOT_ALL_PROFILES_GREEN'};
-  if(baseline&&
-    rows.some((p,i)=>p.tests.executed<baseline.results[i].tests.executed||
-      p.tests.skipped>baseline.results[i].tests.skipped))
-    return {passed:false,reason:'EVIDENCE_REGRESSION'};
+  if(baseline){
+    if(!measureAnskChain(baseline).passed)
+      return {passed:false,reason:'INVALID_BASELINE_EVIDENCE'};
+    // A lower test count OR a different set of skipped cases invalidates
+    // the patch, including a count-preserving skip swap across test cases.
+    if(rows.some((p,i)=>p.tests.executed<baseline.results[i].tests.executed||
+      p.tests.skipped!==baseline.results[i].tests.skipped||
+      (p.tests.skipped>0&&
+       p.tests.skippedCaseDigest!==baseline.results[i].tests.skippedCaseDigest)))
+      return {passed:false,reason:'EVIDENCE_REGRESSION'};
+  }
   return {passed:true,reason:null};
 }
 
