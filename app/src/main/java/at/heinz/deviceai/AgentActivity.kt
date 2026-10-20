@@ -820,10 +820,67 @@ class AgentActivity : Activity() {
             minHeight = dp(56)
             setOnClickListener { showFirstStepsGuide() }
         }, matchWidth(top = 10))
-        container.addView(textView("DEINE KI-BEREICHE", 10f,
+        container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
+            Color.rgb(153, 209, 255), true).apply {
+            letterSpacing = 0.12f
+        }, matchWidth(top = 16))
+        val voice = ContinuumNexusHomeSpec.voice
+        container.addView(actionButton("🎙  ${voice.title}", accent = true).apply {
+            minHeight = dp(62)
+            contentDescription = voice.title + ". " + voice.description +
+                ". Öffnet die Spracheingabe des Geräts."
+            setOnClickListener { startVoiceInput() }
+        }, matchWidth(top = 9))
+        container.addView(textView(
+            "Sag oder schreibe, was du brauchst. Vor Geräteaktionen und einer App-Installation fragst du nach.",
+            12.5f, Color.rgb(192, 213, 247)
+        ), matchWidth(top = 7))
+
+        val wideNexus = resources.configuration.screenWidthDp >= 700 &&
+            resources.configuration.screenHeightDp >= 500
+        val usableWidthDp = resources.configuration.screenWidthDp -
+            if (wideNexus) 336 else 28
+        val nexusColumns = ContinuumNexusHomeSpec.columns(
+            usableWidthDp, resources.configuration.fontScale
+        )
+        ContinuumNexusHomeSpec.essentials.chunked(nexusColumns).forEach { group ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            group.forEachIndexed { index, item ->
+                val open: () -> Unit = {
+                    when (item.destination) {
+                        ContinuumNexusDestination.CHAT -> focusChatComposer()
+                        ContinuumNexusDestination.CREATE_APP -> showDevelopmentDialog()
+                        ContinuumNexusDestination.KNOWLEDGE -> showMemoryCenter()
+                        ContinuumNexusDestination.PERSONALIZE -> showNexusPersonalization()
+                        ContinuumNexusDestination.TASKS -> showDevelopmentBacklog()
+                    }
+                }
+                row.addView(cockpitTile(item.symbol, item.title, item.description,
+                    item.destination == ContinuumNexusDestination.CREATE_APP, open),
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        if (index > 0) marginStart = dp(9)
+                    })
+            }
+            container.addView(row, matchWidth(top = 9))
+        }
+        val moreFunctions = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            visibility = View.GONE
+        }
+        val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
+            contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
+            setOnClickListener {
+                val show = moreFunctions.visibility != View.VISIBLE
+                moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
+                text = if (show) "Weitere KI-Funktionen schließen  ▴"
+                    else "Weitere KI-Funktionen anzeigen  ▾"
+            }
+        }
+        container.addView(moreToggle, matchWidth(top = 13))
+        moreFunctions.addView(textView("EXPERTEN UND WEITERE FUNKTIONEN", 10f,
             Color.rgb(153, 189, 252), true).apply {
             letterSpacing = 0.14f
-        }, matchWidth(top = 15))
+        }, matchWidth(top = 8))
 
         val options = listOf(
             Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
@@ -845,8 +902,9 @@ class AgentActivity : Activity() {
                         if (index > 0) marginStart = dp(9)
                     })
             }
-            container.addView(row, matchWidth(top = if (rowIndex == 0) 9 else 9))
+            moreFunctions.addView(row, matchWidth(top = 9))
         }
+        container.addView(moreFunctions, matchWidth())
         container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
             contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
             background = roundedGradient(
@@ -982,6 +1040,28 @@ class AgentActivity : Activity() {
             gravity = Gravity.CENTER
         }, LinearLayout.LayoutParams(dp(13), dp(44)))
         return item
+    }
+
+    private fun showNexusPersonalization() {
+        AlertDialog.Builder(this)
+            .setTitle("Deine KI personalisieren")
+            .setMessage(
+                "Du bestimmst, was deine KI sich merken und wie sie lernen darf. " +
+                    "Eigene Dokumente werden nicht automatisch trainiert oder ins Internet übertragen."
+            )
+            .setItems(arrayOf(
+                "Gemerkte Fakten ansehen oder löschen",
+                "Lernzentrum öffnen",
+                "Lokales KI-Modell verwalten"
+            )) { _, choice ->
+                when (choice) {
+                    0 -> showMemoryCenter()
+                    1 -> showLearningCenter()
+                    2 -> showModelCenter()
+                }
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
     }
 
     private fun violetTint(): Int = Color.rgb(139, 96, 255)
