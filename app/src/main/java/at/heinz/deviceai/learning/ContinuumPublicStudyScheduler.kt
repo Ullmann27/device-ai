@@ -27,8 +27,15 @@ class ContinuumPublicStudyScheduler(context:Context) {
     val enabled get()=prefs.getBoolean("enabled",false)
     fun display():String {
         val phase=prefs.getString("phase","NOT_RUN") ?: "NOT_RUN"
+        val pending=runCatching { jobs.getPendingJob(JOB_ID) }.getOrNull()
+        val jobStatus=if(pending!=null)"REGISTRIERT" else "NICHT REGISTRIERT"
+        val pendingReason=if(pending!=null && android.os.Build.VERSION.SDK_INT>=34)
+            runCatching { jobs.getPendingJobReason(JOB_ID) }.getOrNull()
+        else null
         return "AUTONOME ÖFFENTLICHE FORSCHUNG: "+
-            (if(enabled)"AN" else "AUS")+"\n"+
+            (if(enabled)"FREIGEGEBEN" else "AUS")+"\n"+
+            "Android-Forschungsjob: "+jobStatus+
+            (pendingReason?.let { " · Wartegrund-Code: "+it } ?: "")+"\n"+
             "Letzter Status: "+phase+"\n"+
             "Versuche: "+prefs.getLong("attempts",0)+
             " · neue Quellen: "+prefs.getLong("sources",0)+
@@ -51,16 +58,16 @@ class ContinuumPublicStudyScheduler(context:Context) {
 
     fun restore():Boolean {
         if(!enabled) { jobs.cancel(JOB_ID); return false }
-        val pending=jobs.getPendingJob(JOB_ID)
-        if(pending!=null &&
-            pending.service.className==ContinuumPublicStudyJobService::class.java.name &&
-            pending.isRequireCharging &&
-            pending.networkType==JobInfo.NETWORK_TYPE_ANY &&
-            pending.isPersisted &&
-            pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&
-            pending.isRequireBatteryNotLow &&
-            pending.isRequireStorageNotLow) return true
         return try {
+            val pending=jobs.getPendingJob(JOB_ID)
+            if(pending!=null &&
+                pending.service.className==ContinuumPublicStudyJobService::class.java.name &&
+                pending.isRequireCharging &&
+                pending.networkType==JobInfo.NETWORK_TYPE_ANY &&
+                pending.isPersisted &&
+                pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&
+                pending.isRequireBatteryNotLow &&
+                pending.isRequireStorageNotLow) return true
             val request=JobInfo.Builder(JOB_ID,
                 ComponentName(app,ContinuumPublicStudyJobService::class.java))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
