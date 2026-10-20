@@ -2629,7 +2629,7 @@ class AgentActivity : Activity() {
                 "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
                 "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
                 "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
-                "Android plant ungefähr stündlich, ausschließlich während des Ladens "+
+                "Android plant ungefähr alle 15 Minuten (nicht garantiert), während des Ladens "+
                 "und mit einer Internetverbindung (auch Mobilfunk). "+
                 "Ausschalten stoppt die Planung; die gespeicherten Quellen bleiben erhalten.")
             .setNegativeButton("ABBRECHEN",null)
