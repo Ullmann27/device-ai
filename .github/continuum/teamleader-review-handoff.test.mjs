@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildTeamleaderHandoff} from './teamleader-review-handoff.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 
 const SHA = 'a'.repeat(40);
 
@@ -85,4 +90,26 @@ test('the packet size remains bounded even with huge arbitrary status',()=>{
  });
  assert.ok(JSON.stringify(result).length<1500);
  assert.equal(result.lastRun.processedHeads,Number.MAX_SAFE_INTEGER);
+});
+
+test('canonical Teamleader status CLI embeds advisory packet without running repair',()=>{
+ const tmp = fs.mkdtempSync(path.join(os.tmpdir(),'continuum-handoff-cli-'));
+ const root = path.join(tmp,'repo');
+ const state = path.join(tmp,'state');
+ fs.mkdirSync(root);
+ fs.mkdirSync(state);
+ try {
+   const cli = fileURLToPath(new URL('./teamleader-cli.mjs',import.meta.url));
+   const run = spawnSync(process.execPath,[cli,'--status','--root',root,'--state',state],
+     {encoding:'utf8',timeout:15_000,env:{...process.env,HOME:tmp}});
+   assert.equal(run.status,0,run.stderr.slice(0,800));
+   const parsed = JSON.parse(run.stdout);
+   assert.equal(parsed.mode,'OFFLINE_TEAMLEADER');
+   assert.equal(parsed.reviewHandoff.schema,'continuum-teamleader-review-handoff');
+   assert.equal(parsed.reviewHandoff.authority,'ADVISORY_ONLY');
+   assert.equal(parsed.reviewHandoff.next.approvedToExecute,false);
+   assert.equal(parsed.reviewHandoff.localEvidence.deviceInstallationVerifiedHere,false);
+ } finally {
+   fs.rmSync(tmp,{recursive:true,force:true});
+ }
 });
