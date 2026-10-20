@@ -74,19 +74,25 @@ export function validateTriplePhaseSample({
    return rejected('INVALID_CANDIDATE_IDENTITY');
   seen.add(attempt.strategy);
   const primary=suite(attempt.primaryRun);
-  if(!primary||primary.profiles.length!==baseline.profiles.length||
-     primary.profiles.some((p,i)=>p!==baseline.profiles[i]))
+  if(!primary||primary.profiles.some((p,i)=>p!==baseline.profiles[i]))
    return rejected('INVALID_PRIMARY_EVIDENCE');
-  if(primary.executed>0&&!attempt.primaryRun.passed){
-   // A real executed failed test is a local counterexample to this candidate,
-   // not evidence that its strategy is universally wrong.
-   if(!attempt.primaryRun.results.some(p=>!p.passed&&p.tests.failed>0))
-    return rejected('AMBIGUOUS_NEGATIVE');
+  if(!attempt.primaryRun.passed){
+   // A failing compiler profile may run zero tests; a failing test profile
+   // needs actually executed failing assertions. Neither is a global verdict
+   // on the strategy, only on this exact candidate and source snapshot.
+   const failedTest=attempt.primaryRun.results.some(p=>
+     !p.passed&&p.testProfile&&p.tests.executed>0&&p.tests.failed>0);
+   const failedCompiler=attempt.primaryRun.results.some(p=>
+     !p.passed&&!p.testProfile&&p.exitCode!==0)&&
+     Array.isArray(attempt.primaryRun.diagnostics)&&
+     attempt.primaryRun.diagnostics.some(d=>d?.file===mutationFile&&
+       typeof d.kind==='string'&&d.kind.length>0);
+   if(!failedTest&&!failedCompiler)return rejected('AMBIGUOUS_NEGATIVE');
    negatives.push(attempt.strategy);
    continue;
   }
-  if(!attempt.primaryRun.passed)
-   return rejected('AMBIGUOUS_NEGATIVE');
+  if(primary.profiles.length!==baseline.profiles.length)
+   return rejected('INVALID_PRIMARY_EVIDENCE');
   if(primary.executed<baseline.executed||
      attempt.primaryRun.results.some(p=>p.tests.skipped!==0))
    return rejected('PRIMARY_EVIDENCE_REGRESSION');
