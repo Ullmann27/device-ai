@@ -128,10 +128,26 @@ class ContinuumAutonomousJobService:JobService() {
                 }
             }
             try {
+                ContinuumTrainingMonitor.begin(this@ContinuumAutonomousJobService,
+                    ContinuumTrainingMonitor.OFFLINE,"Offline-Konsolidierung","SWB1")
                 if(!cancelled()) {
-                    val core=ContinuumLearningCore(filesDir)
+                    val core=ContinuumLearningCore(filesDir).apply {
+                        observeTraining { trainingPhase ->
+                            ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,trainingPhase,
+                                "Offline-SWB1 · Gradienten/Audit")
+                        }
+                    }
+                    ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                        ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                        "Intent-Bootstrap: prüfen, ob Trainingsrunde erforderlich")
                     core.bootstrapOfflineCurriculum(cancelled)
-                    if(!cancelled())core.bootstrapSemanticCurriculum(cancelled)
+                    if(!cancelled()) {
+                        ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                            ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                            "Semantik-Bootstrap: Voraussetzungen prüfen")
+                        core.bootstrapSemanticCurriculum(cancelled)
+                    }
                     // Learn only from sources already recorded by the consent-gated
                     // research flow. The job itself never initiates internet access.
                     if(!cancelled()) {
@@ -141,7 +157,13 @@ class ContinuumAutonomousJobService:JobService() {
                             approved, ContinuumSourceNovelty.completedHashes(filesDir)
                         )
                         if(fresh.isNotEmpty() && !cancelled()) {
+                            ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                                "Gespeicherte Quellen: Kandidatenrunde vorbereiten")
                             val report=core.learnFromSources(fresh,cancelled)
+                            ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,"AUDIT",
+                                "Quellenbezogene Holdouts und Checkpointentscheidung")
                             // A stopped or timed-out training round is NOT a completed
                             // source evaluation: the same source needs another chance.
                             if(report?.completedEvaluation==true && !cancelled()) {
@@ -152,15 +174,32 @@ class ContinuumAutonomousJobService:JobService() {
                 }
                 if(!stopped.get()) {
                     // Learning is only FINISHED when no budget or safety limit was hit.
-                    if(cancelled())ContinuumOfflineJobStatus.deferred(
-                        this@ContinuumAutonomousJobService,deferredReason?:"TIME_BUDGET")
-                    else ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
+                    if(cancelled()) {
+                        ContinuumOfflineJobStatus.deferred(
+                            this@ContinuumAutonomousJobService,deferredReason?:"TIME_BUDGET")
+                        runCatching {
+                            ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,"DEFERRED",
+                                deferredReason?:"TIME_BUDGET")
+                        }
+                    } else {
+                        ContinuumOfflineJobStatus.finished(this@ContinuumAutonomousJobService)
+                        runCatching {
+                            ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,"FINISHED",
+                                "Schritte abgeschlossen; Qualität im Lernkern prüfen")
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 // Never silently report success when the offline learning job fails.
                 // Preserve the durable model; JobScheduler may retry this job.
                 retryAfterFailure=!stopped.get()
                 ContinuumOfflineJobStatus.failed(this@ContinuumAutonomousJobService,e)
+                runCatching {
+                    ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                        ContinuumTrainingMonitor.OFFLINE,"FAILED",e.javaClass.simpleName)
+                }
                 Log.e(TAG,"Offline learning consolidation failed",e)
             } finally {
                 if(!stopped.get())jobFinished(params,retryAfterFailure)
@@ -172,6 +211,10 @@ class ContinuumAutonomousJobService:JobService() {
         stopped.set(true)
         ContinuumOfflineJobStatus.stopped(this)
         worker?.interrupt()
+        runCatching {
+            ContinuumTrainingMonitor.end(this,ContinuumTrainingMonitor.OFFLINE,
+                "INTERRUPTED","Android hat den Offline-Lernjob unterbrochen")
+        }
         return true // Request a reschedule when Android interrupts the job.
     }
 }

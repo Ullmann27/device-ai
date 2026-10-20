@@ -1184,6 +1184,9 @@ class AgentActivity : Activity() {
         learningIoStatus { learningCenterStatus() },
         listOf(
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
+            CenterAction("TRAININGS-MONITOR · LIVE", accent = true) {
+                startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
+            },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
@@ -3358,16 +3361,44 @@ class AgentActivity : Activity() {
         onLearningIo({
             val previous=ContinuumLearningCore(filesDir).modelHash()
             val lab=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir)
-            val report=lab.next {
-                isDestroyed || Thread.currentThread().isInterrupted
+            val channel=at.heinz.deviceai.learning.ContinuumTrainingMonitor.CDX
+            val monitor=at.heinz.deviceai.learning.ContinuumTrainingMonitor
+            val state=lab.status()
+            if(state.completed<state.total) {
+                monitor.begin(this@AgentActivity,channel,
+                    "CDX1 · Paararchiv · Stufe "+(state.completed+1)+"/"+state.total,"CDX1")
+                monitor.phase(this@AgentActivity,channel,"PREPARING",
+                    "Beleg-Frage-Paare und Schutzprüfungen vorbereiten")
+                lab.observeTraining { trainingPhase ->
+                    monitor.phase(this@AgentActivity,channel,trainingPhase,
+                        "CDX1 · echte Decoder-Gradienten / Qualitätsgate")
+                }
             }
-            check(ContinuumLearningCore(filesDir).modelHash()==previous) {
-                "Produktives SWB1 wurde unerwartet verändert"
-            }
-            report?.description() ?:
-                "CDX1 · Alle zwölf Forschungsstufen bereits geprüft. "+
+            try {
+                val report=lab.next {
+                    isDestroyed || Thread.currentThread().isInterrupted
+                }
+                check(ContinuumLearningCore(filesDir).modelHash()==previous) {
+                    "Produktives SWB1 wurde unerwartet verändert"
+                }
+                if(report!=null) {
+                    monitor.phase(this@AgentActivity,channel,"AUDIT",
+                        "Neue und historische Prüffälle bewertet")
+                    monitor.end(this@AgentActivity,channel,
+                        if(!report.finalized)"DEFERRED" else if(report.accepted)"ACCEPTED" else "REJECTED",
+                        "Stufe "+report.stage+"/"+report.total+" · "+
+                            report.completed+"/"+report.scheduled+" Updates")
+                }
+                report?.description() ?:
+                    "CDX1 · Alle zwölf Forschungsstufen bereits geprüft. "+
                     "Die geschützten Labor-Checkpoints bleiben gespeichert; "+
                     "dies belegt keine freie Sprachgeneralisierung."
+            } catch(e:Exception) {
+                runCatching {
+                    monitor.end(this@AgentActivity,channel,"FAILED",e.javaClass.simpleName)
+                }
+                throw e
+            }
         }) { result ->
             setBusy(false)
             addAssistantMessage(result.getOrElse {

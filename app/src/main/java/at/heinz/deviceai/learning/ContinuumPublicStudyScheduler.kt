@@ -301,12 +301,18 @@ class ContinuumPublicStudyJobService:JobService() {
             try {
                 val researchTitle=scheduler.nextTopic()
                 selectedTopic=researchTitle
+                ContinuumTrainingMonitor.begin(this@ContinuumPublicStudyJobService,
+                    ContinuumTrainingMonitor.PUBLIC,researchTitle,"SWB1")
+                ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                    ContinuumTrainingMonitor.PUBLIC,"FETCH_SOURCE")
                 val source=ContinuumPublicStudyFetch.fetch(researchTitle,cancelled)
                 check(!cancelled())
                 // Keep discovery optional: failures here never discard a valid
                 // article or interrupt the existing learning pipeline.
                 if(SystemClock.elapsedRealtime()-start <
                     ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS-6_000L) {
+                    ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                        ContinuumTrainingMonitor.PUBLIC,"DISCOVER_TOPICS")
                     val discovered=runCatching {
                         ContinuumPublicStudyFetch.discover(source.subject,cancelled)
                     }.onFailure { error ->
@@ -321,6 +327,8 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
+                    ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                        ContinuumTrainingMonitor.PUBLIC,"ARCHIVE_SOURCE")
                     // Store citation and source hash before any training decision.
                     val archive=ContinuumKnowledgeArchive(filesDir)
                     val archiveCountBefore=archive.stats().values.sum()
@@ -335,8 +343,19 @@ class ContinuumPublicStudyJobService:JobService() {
                     // results; only the latter changes the archive source count.
                     notebook.add(pending)
                     check(!cancelled())
-                    val core=ContinuumLearningCore(filesDir)
+                    val core=ContinuumLearningCore(filesDir).apply {
+                        observeTraining { trainingPhase ->
+                            ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                                ContinuumTrainingMonitor.PUBLIC,trainingPhase,
+                                "Quellenbezogenes SWB1 · Gradienten/Audit")
+                        }
+                    }
+                    ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                        ContinuumTrainingMonitor.PUBLIC,"PREPARING",
+                        "Quellenbezogene Kandidatenrunde vorbereiten")
                     val outcome=core.learnFromSources(pending,cancelled)
+                    ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                        ContinuumTrainingMonitor.PUBLIC,"AUDIT","Qualitätsgate für Kandidatengewichte")
                     if(outcome?.completedEvaluation==true && !cancelled()) {
                         ContinuumSourceNovelty.markCompleted(filesDir,pending)
                         accepted=outcome.accepted
@@ -358,8 +377,20 @@ class ContinuumPublicStudyJobService:JobService() {
                 // The same deadline, battery and owner-enabled job governs both.
                 if(!cancelled() && scheduler.enabled) {
                     runCatching {
-                        ContinuumLearningCore(filesDir).trainExtendedCurriculum(cancelled)
+                        ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                            ContinuumTrainingMonitor.PUBLIC,"PREPARING",
+                            "Großes SWB1-Übungsarchiv: nächste offene Stufe prüfen")
+                        ContinuumLearningCore(filesDir).apply {
+                            observeTraining { trainingPhase ->
+                                ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                                    ContinuumTrainingMonitor.PUBLIC,trainingPhase,
+                                    "Großes SWB1-Übungsarchiv · Gradienten/Audit")
+                            }
+                        }.trainExtendedCurriculum(cancelled)
                     }.onSuccess { stage ->
+                        ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
+                            ContinuumTrainingMonitor.PUBLIC,"AUDIT",
+                            "Unabhängige Holdouts und Replay geprüft")
                         if(stage!=null && stage.completed)
                             phase=(phase+";STAGE_"+stage.stage+
                                 if(stage.accepted)"_ACCEPTED" else "_REJECTED").take(65)
@@ -370,6 +401,18 @@ class ContinuumPublicStudyJobService:JobService() {
                 }
                 if(!stopping.get()) {
                     runCatching { scheduler.recordCycle(phase,selectedTopic,added,accepted) }
+                    val outcome=when {
+                        phase.contains("ACCEPTED") -> "ACCEPTED"
+                        phase.contains("REJECTED") -> "REJECTED"
+                        phase.startsWith("FAILED_") -> "FAILED"
+                        phase=="TRAINING_DEFERRED" || phase=="PROVIDER_RATE_LIMIT" ->
+                            "DEFERRED"
+                        else -> "NO_CHANGE"
+                    }
+                    runCatching {
+                        ContinuumTrainingMonitor.end(this@ContinuumPublicStudyJobService,
+                            ContinuumTrainingMonitor.PUBLIC,outcome,phase)
+                    }
                     jobFinished(params,reschedule)
                 }
             }
@@ -379,6 +422,10 @@ class ContinuumPublicStudyJobService:JobService() {
     override fun onStopJob(params:JobParameters):Boolean {
         stopping.set(true)
         thread?.interrupt()
+        runCatching {
+            ContinuumTrainingMonitor.end(this,ContinuumTrainingMonitor.PUBLIC,
+                "INTERRUPTED","Android hat den Forschungsjob unterbrochen")
+        }
         return ContinuumPublicStudyScheduler(this).enabled
     }
 }

@@ -128,6 +128,13 @@ class ContinuumLearningCore(
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
     private val checkpoints=ModelCheckpointStore(File(directory,"checkpoints"))
+    // Optional observer reports real gradient-entry and post-gradient audit phases.
+    // Observing never changes the model and failures cannot abort its training.
+    private var trainingObserver:((String)->Unit)?=null
+    fun observeTraining(observer:((String)->Unit)?) { trainingObserver=observer }
+    private fun emitTrainingPhase(phase:String) {
+        runCatching { trainingObserver?.invoke(phase) }
+    }
 
     /** Offline public curriculum: no owner interaction, no network and no private data.
      * Runs once per persisted model. Holdout gates reject regressions.
@@ -149,7 +156,9 @@ class ContinuumLearningCore(
             val before=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            emitTrainingPhase("TRAIN_WEIGHTS")
             val train=candidate.trainIntent(INTENT_BOOTSTRAP,steps=650,maxMillis=2500,cancelled=cancelled)
+            emitTrainingPhase("AUDIT")
             val after=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
@@ -186,8 +195,10 @@ class ContinuumLearningCore(
             val before=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
             val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
             val intentBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
+            emitTrainingPhase("TRAIN_WEIGHTS")
             val train=candidate.trainSemantic(SEMANTIC_BOOTSTRAP,steps=550,
                 maxMillis=2500,cancelled=cancelled)
+            emitTrainingPhase("AUDIT")
             val after=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
             val intentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
@@ -317,12 +328,14 @@ class ContinuumLearningCore(
             val extraS0=baseline.evaluateSemantic(ContinuumPublicCurriculum.semanticAudit)
             val owner=ownerIntentReplay()
             val owner0=owner.takeIf { it.isNotEmpty() }?.let(baseline::evaluateIntent)
+            emitTrainingPhase("TRAIN_WEIGHTS")
             val trainI=candidate.trainIntent(intentTraining,
                 steps=750,maxMillis=3000,cancelled=cancelled)
             val trainS=if(!interrupted(cancelled) && !trainI.stoppedEarly)
                 candidate.trainSemantic(semanticTraining,
                     steps=500,maxMillis=3000,cancelled=cancelled)
             else null
+            emitTrainingPhase("AUDIT")
             val trainI1=candidate.evaluateIntent(intentTraining)
             val trainS1=candidate.evaluateSemantic(semanticTraining)
             val auditI1=candidate.evaluateIntent(curriculum.intentAudit)
@@ -498,9 +511,11 @@ class ContinuumLearningCore(
         val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
         val protectedIntent=(INTENT_HOLDOUT+ownerIntentReplay()).take(128)
         val otherBefore=candidate.evaluateIntent(protectedIntent)
+        emitTrainingPhase("TRAIN_WEIGHTS")
         val train=candidate.trainSemantic(
             training,steps=550,maxMillis=2500,cancelled=cancelled
         )
+        emitTrainingPhase("AUDIT")
         val after=candidate.evaluateSemantic(training)
         val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
         val otherAfter=candidate.evaluateIntent(protectedIntent)
@@ -714,9 +729,14 @@ class ContinuumLearningCore(
         cancelled:()->Boolean={false},
         protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
     ):DecoderExperimentResult=synchronized(CORE_LOCK) {
-        ContinuumDecoderBridge(directory).trainPairedExperiment(
-            training,audit,loadModel().save(),steps,cancelled,protectedAudits
-        )
+        emitTrainingPhase("TRAIN_WEIGHTS")
+        try {
+            ContinuumDecoderBridge(directory).trainPairedExperiment(
+                training,audit,loadModel().save(),steps,cancelled,protectedAudits
+            )
+        } finally {
+            emitTrainingPhase("AUDIT")
+        }
     }
 
     fun experimentalPairedDecoderContinuation(

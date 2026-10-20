@@ -14,6 +14,8 @@ import java.util.Locale
  * accidental repetition; incomplete runs may be safely retried.
  */
 class ContinuumCdxLargeLab(private val filesDir:File) {
+    private var phaseObserver:((String)->Unit)?=null
+    fun observeTraining(observer:((String)->Unit)?) { phaseObserver=observer }
     private val stateFile=File(filesDir,"learning-core-v2/cdx-pairs-v1-stage.txt")
 
     data class State(val completed:Int,val total:Int,val decoderUpdates:Int,
@@ -56,7 +58,9 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         val index=readStage()
         if(index==curriculum.STAGES)return@synchronized null
         check(!cancelled()) { "CDX1-Runde vor Beginn abgebrochen" }
-        val core=ContinuumLearningCore(filesDir)
+        val core=ContinuumLearningCore(filesDir).apply {
+            observeTraining(phaseObserver)
+        }
         val protected=DecoderEvidenceCorpus(curriculum.historicAudit,DecoderSplit.AUDIT)
         val swbBefore=core.modelHash()
         val report=core.trainExperimentalPairedDecoder(
