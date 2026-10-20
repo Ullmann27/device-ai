@@ -41,7 +41,19 @@ Der Prototyp ist offlinefähig, nutzt keine Groq-Anfrage und keine GitHub-Action
 
 Die lokale Schattenrezeptdatei ist nicht kryptografisch authentisiert: Der SHA-256-Hash schützt vor unbemerkter Inhaltsveränderung bei unverändertem Hash, nicht vor Angreifern, die den Inhalt und Hash zugleich ersetzen.
 
-Der Runner besitzt einen eigenen exklusiven Lock und startet nicht, wenn der bisherige Teamleiter-Lock bereits vorhanden ist. Eine **atomare gemeinsame Lease** zwischen Android, Termux, Mobile Builder und Teamleiter ist noch nicht implementiert. Deshalb darf das ANSK-Labor noch nicht durch einen unbeaufsichtigten Job-Scheduler gestartet werden.
+**Nachtrag Testbefehl für die lokale Buildsperre:**
+
+~~~bash
+node --test .github/continuum/shared-build-lease.test.mjs \
+  .github/continuum/autonomous-teamleader.test.mjs \
+  .github/continuum/ansk-import-lab.test.mjs \
+  scripts/continuum-mobile-builder.test.mjs
+~~~
+
+Der isolierte Modul-Funktionstest der Buildsperre wurde außerhalb des Repositorys mit Node 22 durchgeführt (5/5 PASS). **Die vier obigen originalen Repository-Testdateien, die vollständige Gradle-Prüfkette und die echte Samsung-IPC wurden für diesen neuen Commit noch nicht ausgeführt.**
+
+
+Der ANSK-Runner besitzt weiterhin einen eigenen exklusiven Forschungs-Lock und prüft zusätzlich den bisherigen Teamleiter-Lock. **Nachtrag 20.10.2026:** Drei lokale Node-Einstiegspunkte – ANSK-Labor, Offline-Teamleiter und Termux-APK-Builder – verwenden nun außerdem dieselbe atomare, checkoutgebundene `shared-build-lease.mjs`. Eine vorhandene Sperre führt zum sofortigen Abbruch vor Gradle; Prozessabstürze führen absichtlich nicht zu einer zeitgesteuerten Sperrenübernahme. Unsicher bereinigte ANSK-Worktrees halten die Sperren zur Prüfung zurück. Das ist eine lokale Kooperationssperre für Prozesse mit derselben Betriebssystemidentität, **noch keine verifizierte Android-App↔Termux-IPC-Lease**, kein OS-Sandbox-Ersatz und keine Freigabe für unbeaufsichtigte Geräteexperimente.
 
 Der Erfolg einer vorhandenen Kotlin-Importregel beweist noch keine neu entdeckte generative Fähigkeit. Dies ist ein absichtlich einfacher Integrationsfall für überprüfbare Erkenntnis-Rezepte.
 
@@ -77,6 +89,6 @@ Diese tatsächliche Projektdatei importiert java.nio.file.Files und ruft Files.m
 - M1 Node: alle Tests nativ unter Node ausführen und 0 FAIL/0 SKIP belegen – **offen**.
 - M1 Samsung: Grün-0 → Rot-Mutation → Grün-Reparatur + zweiter Worktree mit echter Kotlin-/JUnit-Prüfung – **offen**.
 - M1 realer Lerngewinn: ein neues Problem wird durch die Rezeptbibliothek nach unabhängig geprüften Tests messbar besser gelöst – **offen**.
-- M2 Android-Autonomie: ein gemeinsamer sicherer Auftrags-Lease zwischen App/Termux/Teamleiter, ressourcen- und besitzerkontrolliert – **offen**.
+- M2 Android-Autonomie: lokale gemeinsame Build-Sperre für die drei zentralen Node-Worker **quellseitig integriert, fünf neue isolierte Node-Tests lokal erfolgreich**. Die zusätzlich definierten integrationsbezogenen Regressionen sind auf dem vollständigen Repository-HEAD noch nicht ausgeführt. Android↔Termux authentisierte Job-Lease, Gerätekonkurrenz, Recovery sowie Besitzer-/Ressourcengates bleiben **offen**.
 
 Keine unbewiesenen 100-Prozent-Korrektheits-, Null-Watt- oder Submillisekunden-Versprechen.
