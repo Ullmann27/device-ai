@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {runAnskImportLab} from './ansk-import-lab.mjs';
+import {runAnskImportLab,summarizeAnskBaselineFailure} from './ansk-import-lab.mjs';
 import {assertAnskSource} from './ansk-lab-contract.mjs';
 import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
@@ -101,4 +101,36 @@ test('lab cannot start a worktree or Gradle chain while another local worker hol
    assert.equal(runGit(root,'status','--porcelain'),'');
   }finally{release();}
  });
+});
+
+test('failed baseline reports actionable metadata without disclosing Gradle logs or secrets',()=>{
+ const result={passed:false,results:[{
+  profile:'android-compile',passed:false,testProfile:false,exitCode:1,
+  timedOut:false,tests:{executed:0,failed:0,skipped:0},
+  diagnostics:[{kind:'UNRESOLVED_REFERENCE',file:'SecretSource.kt',
+    message:'PRIVATE_DATA_MUST_NOT_LEAK'}],
+  outputTail:'GH_TOKEN=PRIVATE_DATA_MUST_NOT_LEAK'
+ }]};
+ const summary=summarizeAnskBaselineFailure(result);
+ assert.equal(summary.reason,'NOT_ALL_PROFILES_GREEN');
+ assert.deepEqual(summary.checks,[{
+  profile:'android-compile',passed:false,exitCode:1,timedOut:false,
+  executed:0,failed:0,skipped:0,diagnosticKinds:['UNRESOLVED_REFERENCE']
+ }]);
+ assert.equal(JSON.stringify(summary).includes('PRIVATE_DATA_MUST_NOT_LEAK'),false);
+ assert.equal(JSON.stringify(summary).includes('SecretSource.kt'),false);
+});
+
+test('a zero-JUnit baseline remains blocked and exposes which phase lacked evidence',()=>{
+ const result={passed:true,results:[
+  {profile:'android-compile',passed:true,testProfile:false,exitCode:0,
+   timedOut:false,tests:{executed:0,failed:0,skipped:0}},
+  {profile:'android-unit',passed:true,testProfile:true,exitCode:0,
+   timedOut:false,tests:{executed:0,failed:0,skipped:0}}
+ ]};
+ const summary=summarizeAnskBaselineFailure(result);
+ assert.equal(summary.reason,'NOT_ALL_PROFILES_GREEN');
+ assert.equal(summary.checks[1].profile,'android-unit');
+ assert.equal(summary.checks[1].executed,0);
+ assert.equal(summary.checks[1].passed,true);
 });
