@@ -1188,6 +1188,7 @@ class AgentActivity : Activity() {
             CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
             CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
             CenterAction("WISSENSARCHIV · QUELLEN SUCHEN") { showKnowledgeArchiveSearch() },
+            CenterAction("RIS · AMTLICHE QUELLE ABLEGEN") { showRisArchiveImport() },
             CenterAction("GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE") { showExtendedCurriculumDialog() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
@@ -2557,6 +2558,7 @@ class AgentActivity : Activity() {
             "GEWICHTE EXPORTIEREN · BACKUP",
             "AUTONOME INTERNETFORSCHUNG · EIN/AUS",
             "WISSENSARCHIV · QUELLEN SUCHEN",
+            "RIS · AMTLICHE QUELLE ABLEGEN",
             "GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE"
         )
         AlertDialog.Builder(this)
@@ -2570,6 +2572,7 @@ class AgentActivity : Activity() {
                     4 -> showPublicStudyControls()
                     5 -> showKnowledgeArchiveSearch()
                     6 -> showExtendedCurriculumDialog()
+                    7 -> showRisArchiveImport()
                 }
             }
             .setNegativeButton("Schließen",null)
@@ -2662,6 +2665,84 @@ class AgentActivity : Activity() {
                     })
                 }
             }
+            .show()
+    }
+
+    /**
+     * The owner copies a publicly accessible RIS extract and its official URL.
+     * Exact source attribution is retained; this is never a legal validity
+     * determination, full-text corpus import, or automatic statutory update.
+     */
+    private fun showRisArchiveImport() {
+        val types=arrayOf("Gesetz / Verordnung · RIS", "Judikatur · RIS")
+        AlertDialog.Builder(this)
+            .setTitle("Österreichisches Recht · RIS-Quellenarchiv")
+            .setMessage("Nur öffentliche amtliche RIS-Auszüge importieren. "+
+                "Die Quelle wird lokal archiviert, nicht als juristisch geprüft "+
+                "oder aktuell bestätigt. Keine personenbezogenen Akten hochladen.")
+            .setItems(types) { _, selection ->
+                val kind=if(selection==0)
+                    at.heinz.deviceai.learning.ContinuumKnowledgeArchive.Kind.RIS_LEGISLATION
+                else
+                    at.heinz.deviceai.learning.ContinuumKnowledgeArchive.Kind.RIS_CASE_LAW
+                val title=EditText(this).apply {
+                    hint="Titel, Rechtsvorschrift oder Entscheidungsbezeichnung"
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(160))
+                }
+                val url=EditText(this).apply {
+                    hint="https://www.ris.bka.gv.at/..."
+                    inputType=android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_VARIATION_URI
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(700))
+                }
+                val excerpt=EditText(this).apply {
+                    hint="Öffentlichen RIS-Textauszug einfügen (20–6000 Zeichen)"
+                    inputType=android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    minLines=4
+                    maxLines=9
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(6000))
+                }
+                val fields=LinearLayout(this).apply {
+                    orientation=LinearLayout.VERTICAL
+                    setPadding(dp(12),dp(10),dp(12),dp(8))
+                    addView(title,matchWidth(top=3))
+                    addView(url,matchWidth(top=4))
+                    addView(excerpt,matchWidth(top=7))
+                }
+                AlertDialog.Builder(this)
+                    .setTitle("RIS-Auszug mit Fundstelle speichern")
+                    .setMessage("Bitte nur Originalquellen ohne private Falldaten eingeben. "+
+                        "Eine amtliche URL allein reicht nicht: der Auszug "+
+                        "muss separat übernommen und später aktuell geprüft werden.")
+                    .setView(ScrollView(this).apply { addView(fields) })
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("LOKAL ARCHIVIEREN") { _, _ ->
+                        val headline=title.text.toString().trim()
+                        val reference=url.text.toString().trim()
+                        val text=excerpt.text.toString().trim()
+                        onLearningIo({
+                            at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                                .save(kind,headline,reference,
+                                    "RIS · Rechtsinformationssystem des Bundes / BKA",text)
+                        }) { result ->
+                            addAssistantMessage(result.fold({ saved ->
+                                "RIS-Auszug lokal gespeichert: "+saved.title+
+                                    "\nQuelle: "+saved.url+
+                                    "\nSHA-256: "+saved.sha256.take(20)+"…"+
+                                    "\nHinweis: Geltende Fassung am Stichtag im "+
+                                    "authentischen RIS prüfen."
+                            },{ cause ->
+                                "RIS-Auszug abgelehnt: "+failureName(cause)+
+                                    ". URL muss von einer amtlichen RIS-Domain stammen."
+                            }))
+                        }
+                    }
+                    .show()
+            }
+            .setNegativeButton("Schließen",null)
             .show()
     }
 
