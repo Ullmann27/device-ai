@@ -48,12 +48,12 @@ object ContinuumTrainingMonitor {
     @Synchronized
     fun begin(context: Context, channel: String, subject: String, model: String) {
         val now = System.currentTimeMillis()
-        check(prefs(context, channel).edit()
+        prefs(context, channel).edit()
             .putBoolean("active", true).putString("phase", "PREPARING")
             .putString("subject", safe(subject)).putString("model", safe(model, 30))
             .putLong("started", now).putLong("changed", now)
             .putLong("elapsed", SystemClock.elapsedRealtime())
-            .putString("detail", "").commit()) { "Monitor status write failed" }
+            .putString("detail", "").commit()
     }
 
     @Synchronized
@@ -62,11 +62,9 @@ object ContinuumTrainingMonitor {
             "ARCHIVE_SOURCE", "TRAIN_WEIGHTS", "AUDIT", "SAVE_RESULT"))
         val p = prefs(context, channel)
         if (!p.getBoolean("active", false)) return
-        check(p.edit().putString("phase", phase).putString("detail", safe(detail))
+        p.edit().putString("phase", phase).putString("detail", safe(detail))
             .putLong("changed", System.currentTimeMillis())
-            .putLong("elapsed", SystemClock.elapsedRealtime()).commit()) {
-            "Monitor phase write failed"
-        }
+            .putLong("elapsed", SystemClock.elapsedRealtime()).commit()
     }
 
     @Synchronized
@@ -74,11 +72,11 @@ object ContinuumTrainingMonitor {
         require(outcome in setOf("ACCEPTED", "REJECTED", "NO_CHANGE", "DEFERRED",
             "INTERRUPTED", "FAILED", "FINISHED"))
         val p = prefs(context, channel)
-        check(p.edit().putBoolean("active", false).putString("phase", "DONE")
+        p.edit().putBoolean("active", false).putString("phase", "DONE")
             .putString("outcome", outcome).putString("detail", safe(detail))
             .putLong("ended", System.currentTimeMillis())
             .putLong("changed", System.currentTimeMillis())
-            .remove("elapsed").commit()) { "Monitor outcome write failed" }
+            .remove("elapsed").commit()
     }
 
     fun read(context: Context, channel: String): Snapshot {
