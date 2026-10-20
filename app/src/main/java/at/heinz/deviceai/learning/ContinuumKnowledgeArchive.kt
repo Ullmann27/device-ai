@@ -5,6 +5,11 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
@@ -136,10 +141,69 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             .filter { it.kind==kind }.sortedByDescending {it.collectedAt}.take(limit)
     }
 
+    /**
+     * Owner-controlled SAF backup: versioned source record files, no API tokens.
+     * Cloud export requires the user to explicitly select a cloud-backed
+     * Android DocumentsProvider in the system picker.
+     */
+    fun exportZip(destination:OutputStream):Int = synchronized(gate) {
+        val existing=files()
+        ZipOutputStream(destination).use { zip ->
+            for(file in existing) {
+                readFile(file) // fail closed before copying any damaged record
+                zip.putNextEntry(ZipEntry(file.name))
+                zip.write(file.readBytes())
+                zip.closeEntry()
+            }
+            zip.finish()
+        }
+        existing.size
+    }
+
+    /**
+     * Import accepts only validated content-addressed records, never filenames
+     * from a ZIP path as destination paths. A partial import is reported as an
+     * exception; successfully imported prior records remain intact.
+     */
+    fun importZip(input:InputStream):Int = synchronized(gate) {
+        val names=mutableSetOf<String>()
+        var count=0
+        ZipInputStream(input).use { zip ->
+            while(true) {
+                val entry=zip.nextEntry ?: break
+                require(!entry.isDirectory && entry.name.matches(Regex("[0-9a-f]{64}\\.rec"))) {
+                    "Backup entry name not permitted"
+                }
+                require(names.add(entry.name) && names.size<=MAX_RECORDS) {
+                    "Backup contains duplicate or excessive entries"
+                }
+                val buffer=ByteArray(4096)
+                val out=ByteArrayOutputStream()
+                while(true) {
+                    val n=zip.read(buffer)
+                    if(n<0)break
+                    if(n==0)continue
+                    require(out.size()+n<=MAX_RECORD_BYTES) { "Oversize archived source" }
+                    out.write(buffer,0,n)
+                }
+                val record=decodePayload(out.toByteArray(),entry.name)
+                save(record.kind,record.title,record.url,record.attribution,
+                    record.text,record.collectedAt,record.sourceDate)
+                count++
+                zip.closeEntry()
+            }
+        }
+        count
+    }
+
     private fun readFile(file:File):SourceRecord {
         require(file.parentFile?.canonicalPath==root.canonicalPath &&
             !file.isSymbolicLink() && file.length() in 50L..MAX_RECORD_BYTES.toLong())
-        val bytes=file.readBytes()
+        return decodePayload(file.readBytes(),file.name)
+    }
+
+    private fun decodePayload(bytes:ByteArray,expectedName:String):SourceRecord {
+        require(bytes.size in 50..MAX_RECORD_BYTES)
         return DataInputStream(ByteArrayInputStream(bytes)).use { src ->
             require(src.readInt()==MAGIC && src.readInt()==1)
             val id=src.readUTF()
@@ -152,7 +216,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             val sha=src.readUTF()
             val text=src.readUTF()
             require(src.available()==0 && id.matches(Regex("[0-9a-f]{64}")) &&
-                file.name=="$id.rec" && digest(text)==sha &&
+                expectedName=="$id.rec" && digest(text)==sha &&
                 digest(kind.name+"\u0000"+url+"\u0000"+sha)==id)
             SourceRecord(id,kind,title,url,attribution,collectedAt,date,sha,text)
         }
