@@ -131,15 +131,21 @@ class ContinuumAutonomousJobService:JobService() {
                 ContinuumTrainingMonitor.begin(this@ContinuumAutonomousJobService,
                     ContinuumTrainingMonitor.OFFLINE,"Offline-Konsolidierung","SWB1")
                 if(!cancelled()) {
-                    val core=ContinuumLearningCore(filesDir)
+                    val core=ContinuumLearningCore(filesDir).apply {
+                        observeTraining { trainingPhase ->
+                            ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                                ContinuumTrainingMonitor.OFFLINE,trainingPhase,
+                                "Offline-SWB1 · Gradienten/Audit")
+                        }
+                    }
                     ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
-                        ContinuumTrainingMonitor.OFFLINE,"TRAIN_WEIGHTS",
-                        "Intent-Bootstrap mit geschütztem Holdout")
+                        ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                        "Intent-Bootstrap: prüfen, ob Trainingsrunde erforderlich")
                     core.bootstrapOfflineCurriculum(cancelled)
                     if(!cancelled()) {
                         ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
-                            ContinuumTrainingMonitor.OFFLINE,"TRAIN_WEIGHTS",
-                            "Semantik-Bootstrap mit geschütztem Holdout")
+                            ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                            "Semantik-Bootstrap: Voraussetzungen prüfen")
                         core.bootstrapSemanticCurriculum(cancelled)
                     }
                     // Learn only from sources already recorded by the consent-gated
@@ -152,8 +158,8 @@ class ContinuumAutonomousJobService:JobService() {
                         )
                         if(fresh.isNotEmpty() && !cancelled()) {
                             ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
-                                ContinuumTrainingMonitor.OFFLINE,"TRAIN_WEIGHTS",
-                                "Gespeicherte Quellen: Replay und Kandidatentraining")
+                                ContinuumTrainingMonitor.OFFLINE,"PREPARING",
+                                "Gespeicherte Quellen: Kandidatenrunde vorbereiten")
                             val report=core.learnFromSources(fresh,cancelled)
                             ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
                                 ContinuumTrainingMonitor.OFFLINE,"AUDIT",
