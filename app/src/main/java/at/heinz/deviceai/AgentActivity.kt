@@ -1055,8 +1055,8 @@ class AgentActivity : Activity() {
         val step = steps[index]
         val dialog = AlertDialog.Builder(this)
             .setTitle("Deine KI einrichten · Schritt ${index + 1} von ${steps.size}")
-            .setMessage(step.title + "\\n\\n" + step.description +
-                "\\n\\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
+            .setMessage(step.title + "\n\n" + step.description +
+                "\n\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
             .setNeutralButton(step.actionTitle) { _, _ ->
                 when (step.action) {
                     ContinuumGuideAction.CHAT -> focusChatComposer()
