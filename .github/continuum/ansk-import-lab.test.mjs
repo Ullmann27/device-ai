@@ -7,6 +7,7 @@ import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {runAnskImportLab} from './ansk-import-lab.mjs';
 import {assertAnskSource} from './ansk-lab-contract.mjs';
+import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
 const target='app/src/main/java/at/heinz/deviceai/learning/MutationProbe.kt';
 const importFqn='java.nio.file.Files';
@@ -88,4 +89,16 @@ test('research module never installs APK, promotes model or registers generated 
  assert.match(text,/createWorktree\(checkout.root,head\)/);
  assert.match(text,/forceRerun:true/g);
  assert.match(text,/modelTrainingAuthorized:false/);
+});
+
+test('lab cannot start a worktree or Gradle chain while another local worker holds the shared lease',()=>{
+ scratchRepo(root=>{
+  runGit(root,'checkout','-b','astra/continuum-experiment-charter-20261019','-q');
+  const release=acquireContinuumBuildLease(root);
+  try{
+   assert.throws(()=>runAnskImportLab({root,sourceFile:target,importFqn}),
+    /CONTINUUM_BUILD_LEASE_BUSY/);
+   assert.equal(runGit(root,'status','--porcelain'),'');
+  }finally{release();}
+ });
 });
