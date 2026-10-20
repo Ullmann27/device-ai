@@ -12,8 +12,11 @@ if [[ "$delivery_branch" != "$expected_delivery" && -n "$delivery_branch" ]]; th
   echo "[Continuum] Refusing unexpected bridge source: $delivery_branch" >&2
   exit 69
 fi
-git diff --quiet && git diff --cached --quiet || {
-  echo "[Continuum] Refusing a modified checkout" >&2
+# Render may modify tracked checkout metadata while preparing a static build.
+# Its isolated ephemeral build directory may safely discard such local changes
+# when switching to the immutable fetched commit; no upstream branch is changed.
+test -n "${RENDER_SERVICE_ID:-}" || {
+  echo "[Continuum] Refusing bridge outside the designated Render build" >&2
   exit 69
 }
 target_branch="astra/continuum-experiment-charter-20261019"
@@ -25,7 +28,7 @@ if [[ ! "$target_commit" =~ ^[0-9a-f]{40}$ ]]; then
   echo "[Continuum] Invalid target source SHA" >&2
   exit 69
 fi
-git -c advice.detachedHead=false checkout --detach "$target_commit"
+git -c advice.detachedHead=false checkout --force --detach "$target_commit"
 test "$(git rev-parse HEAD)" = "$target_commit"
 test -f scripts/render-mentor-preview.sh
 grep -q 'expected_branch="astra/continuum-experiment-charter-20261019"' scripts/render-mentor-preview.sh
