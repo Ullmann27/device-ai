@@ -201,9 +201,7 @@ class ContinuumPublicStudyJobService:JobService() {
                         ContinuumSourceNovelty.markCompleted(filesDir,pending)
                         accepted=outcome.accepted
                         phase=if(accepted)"TRAINING_ACCEPTED" else "TRAINING_REJECTED"
-                        // One independent public rehearsal stage; no model promotion
-                        // without all existing and independent audit gates.
-                        if(!cancelled())core.trainExtendedCurriculum(cancelled)
+
                     } else {
                         phase="TRAINING_DEFERRED"
                     }
@@ -213,6 +211,21 @@ class ContinuumPublicStudyJobService:JobService() {
                 reschedule=!stopping.get()
                 Log.w("ContinuumPublicStudy","Bounded research cycle deferred: "+e.javaClass.simpleName)
             } finally {
+                // This is a separate bounded step, so already-known sources or
+                // temporarily unavailable Wikipedia do not block local rehearsal.
+                // The same deadline, battery and owner-enabled job governs both.
+                if(!cancelled() && scheduler.enabled) {
+                    runCatching {
+                        ContinuumLearningCore(filesDir).trainExtendedCurriculum(cancelled)
+                    }.onSuccess { stage ->
+                        if(stage!=null && stage.completed)
+                            phase=(phase+";STAGE_"+stage.stage+
+                                if(stage.accepted)"_ACCEPTED" else "_REJECTED").take(65)
+                    }.onFailure { err ->
+                        Log.w("ContinuumPublicStudy",
+                            "Local rehearsal postponed: "+err.javaClass.simpleName)
+                    }
+                }
                 if(!stopping.get()) {
                     runCatching { scheduler.recordCycle(phase,added,accepted) }
                     jobFinished(params,reschedule)
