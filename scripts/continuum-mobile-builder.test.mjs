@@ -7,6 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
+import { acquireContinuumBuildLease } from '../.github/continuum/shared-build-lease.mjs';
 
 const HEAD='f'.repeat(40);
 const SIGNER='a'.repeat(64);
@@ -420,4 +421,16 @@ test('status CLI fails closed for corrupt report schema; missing report is a suc
   const corrupt=query();
   assert.notEqual(corrupt.status,0);
   assert.match(corrupt.stderr,/Unsupported report schema/);
+});
+
+test('a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools',async()=>{
+ const f=fixture();
+ const release=acquireContinuumBuildLease(f.root);
+ let calls=0;
+ try{
+  await assert.rejects(build({project:f.root,stateDir:f.stateDir,
+   inspect:async()=>{calls++;throw Error('toolchain must not start');}}),
+   /CONTINUUM_BUILD_LEASE_BUSY/);
+  assert.equal(calls,0);
+ }finally{release();}
 });
