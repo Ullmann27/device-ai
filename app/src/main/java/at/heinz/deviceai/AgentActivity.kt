@@ -2757,6 +2757,11 @@ class AgentActivity : Activity() {
                     setSingleLine(true)
                     filters=arrayOf(android.text.InputFilter.LengthFilter(700))
                 }
+                val documentDate=EditText(this).apply {
+                    hint="Dokumentdatum JJJJ-MM-TT (optional; nicht Geltungsdatum)"
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(10))
+                }
                 val excerpt=EditText(this).apply {
                     hint="Öffentlichen RIS-Textauszug einfügen (20–6000 Zeichen)"
                     inputType=android.text.InputType.TYPE_CLASS_TEXT or
@@ -2770,6 +2775,7 @@ class AgentActivity : Activity() {
                     setPadding(dp(12),dp(10),dp(12),dp(8))
                     addView(title,matchWidth(top=3))
                     addView(url,matchWidth(top=4))
+                    addView(documentDate,matchWidth(top=4))
                     addView(excerpt,matchWidth(top=7))
                 }
                 AlertDialog.Builder(this)
@@ -2783,10 +2789,12 @@ class AgentActivity : Activity() {
                         val headline=title.text.toString().trim()
                         val reference=url.text.toString().trim()
                         val text=excerpt.text.toString().trim()
+                        val date=documentDate.text.toString().trim().ifEmpty { null }
                         onLearningIo({
                             at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
                                 .save(kind,headline,reference,
-                                    "RIS · Rechtsinformationssystem des Bundes / BKA",text)
+                                    "RIS · Rechtsinformationssystem des Bundes / BKA",text,
+                                    sourceDate=date)
                         }) { result ->
                             addAssistantMessage(result.fold({ saved ->
                                 "RIS-Auszug lokal gespeichert: "+saved.title+
