@@ -3262,7 +3262,7 @@ class AgentActivity : Activity() {
                     val core=ContinuumLearningCore(filesDir)
                     val output=core.experimentalPairedDecoderContinuation(
                         source,query,maxBytes=48)
-                    if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
+                    val cdxText=if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
                         "Forschungscheckpoint. Starte erst das Paarlabor."
                     else buildString {
                         append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
@@ -3279,6 +3279,27 @@ class AgentActivity : Activity() {
                         append("\nDieser Einzelfall ist kein unabhängiger Qualitätsbeweis. ")
                         append("Text ungeprüft; keine Geräteaktion und keine Faktenübernahme.")
                     }
+                    val extraction=at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe
+                        .answer(source,query)
+                    val spanReport=when(extraction) {
+                        is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Found -> {
+                            val span=extraction.span
+                            "CSX1 · BELEGSTELLE (REGELBASIERTER VERGLEICH)\\n"+
+                                "Originalwortlaut: "+span.text+
+                                "\\nPosition: "+span.start+".."+span.endExclusive+
+                                "\\nBelegidentisch: "+
+                                (source.substring(span.start,span.endExclusive)==span.text)+
+                                "\\nReferenzgleich: "+
+                                (if(reference.isNotBlank())(span.text==reference).toString()
+                                 else "nicht angegeben")
+                        }
+                        is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Abstained ->
+                            "CSX1 · KEINE ANTWORT (SICHERES ENTHALTEN)\\n"+
+                                extraction.reason
+                    }
+                    cdxText+"\\n\\n"+spanReport+
+                        "\\nCSX1 ist nur ein regelbasierter Forschungs-Benchmark; "+
+                        "keine trainierte semantische Generalisierung und keine Chatfreigabe."
                 }) { result ->
                     addAssistantMessage(result.getOrElse {
                         "CDX1-Test fehlgeschlagen: "+failureName(it)+
@@ -3307,7 +3328,7 @@ class AgentActivity : Activity() {
                     "\nAktiver Labor-Checkpoint: "+(if(state.available)"vorhanden" else "keiner")+
                     "\nBisherige CDX1-Gewichtsupdates: "+state.decoderUpdates+
                     "\nModell-Hash: "+(state.decoderHash?.take(16)?:"noch nicht vorhanden")+
-                    "\n\nBei jeder Freigabe nur eine Stufe mit maximal 240 Updates. "+
+                    "\n\nBei jeder Freigabe nur eine Stufe mit maximal 600 Updates. "+
                     "Nur Kandidaten mit besserem Trainingsverlust und ohne "+
                     "Verschlechterung beider festen Audits dürfen gespeichert werden. "+
                     "Das produktive SWB1 und persönliche Erinnerungen bleiben getrennt. "+
