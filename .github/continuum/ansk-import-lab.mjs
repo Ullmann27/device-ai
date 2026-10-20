@@ -22,6 +22,7 @@ import {sha256} from './repair-diagnostics.mjs';
 import {validateTriplePhaseSample} from './repair-cycle-safety.mjs';
 import {assertAnskSource,measureAnskChain,verifyAnskExperiment} from './ansk-lab-contract.mjs';
 import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
+import {writeImmutableAnskRecipe} from './ansk-recipe-store.mjs';
 import {summarizeAnskBaselineFailure} from './ansk-baseline-triage.mjs';
 export {summarizeAnskBaselineFailure} from './ansk-baseline-triage.mjs';
 
@@ -83,25 +84,6 @@ function phaseDir(root,phase){
 function diagnosticFor(result,sourceFile,symbol){
   return (result.diagnostics??[]).find(d=>
     d.file===sourceFile&&d.kind==='UNRESOLVED_REFERENCE'&&d.symbol===symbol)??null;
-}
-
-function writeImmutableRecipe(store,recipe){
-  const json=JSON.stringify(recipe,null,2)+'\n';
-  const dir=path.join(store,'shadow-recipes');
-  fs.mkdirSync(dir,{recursive:true,mode:0o700});
-  const target=path.join(dir,recipe.recipeSha256+'.json');
-  const tmp=path.join(dir,'.'+crypto.randomBytes(12).toString('hex')+'.tmp');
-  fs.writeFileSync(tmp,json,{flag:'wx',mode:0o600});
-  try{
-    // Hard-link creation is atomic and never overwrites a prior observation.
-    try{fs.linkSync(tmp,target);}
-    catch(error){
-      if(error.code!=='EEXIST')throw error;
-      if(fs.readFileSync(target,'utf8')!==json)
-        throw Error('ANSK_RECIPE_HASH_COLLISION_OR_TAMPERING');
-    }
-  }finally{fs.rmSync(tmp,{force:true});}
-  return target;
 }
 
 /** Preserve only bounded, classified evidence for the existing Teamleader
@@ -251,7 +233,7 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       const shadow=observations.length>=2?validateTriplePhaseSample({
         baselineRun,mutatedRun,candidateRuns:observations,mutationFile:sourceFile
       }):null;
-      const receiptPath=writeImmutableRecipe(store,verified.recipe);
+      const receiptPath=writeImmutableAnskRecipe(store,verified.recipe);
       return {...fail('TRIPLE_PHASE_VERIFIED_SHADOW_RECIPE',head),
         recipeSha256:verified.recipe.recipeSha256,
         candidateStrategy:candidate.strategy,
