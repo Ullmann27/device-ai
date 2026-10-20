@@ -7,19 +7,14 @@
  *
  * The caller provides the already-read status object. This module does no IO.
  */
+import {ANSK_BASELINE_FAILURE_CATEGORIES} from './ansk-baseline-triage.mjs';
+
 const SHA40 = /^[0-9a-f]{40}$/;
 const OUTCOMES = new Set([
   'NO_FAILURE', 'NO_CODE_DIAGNOSTIC', 'NO_VERIFIED_REPAIR',
   'VERIFIED', 'ERROR', 'INTERRUPTED', 'IDLE'
 ]);
-const ANSK_CATEGORIES = new Set([
-  'DEVICE_STORAGE_EXHAUSTED', 'DEVICE_MEMORY_EXHAUSTED',
-  'ANDROID_TOOLCHAIN_UNAVAILABLE', 'GRADLE_DEPENDENCY_UNAVAILABLE',
-  'BASELINE_TIMEOUT', 'ANDROID_UNIT_TEST_FAILURE',
-  'ANDROID_UNIT_EVIDENCE_MISSING', 'ANDROID_UNIT_RUN_FAILED',
-  'ANDROID_KOTLIN_COMPILE_FAILURE', 'ANDROID_COMPILE_RUN_FAILED',
-  'BASELINE_CONTRACT_MISMATCH', 'BASELINE_INCOMPLETE'
-]);
+const ANSK_CATEGORIES = new Set(ANSK_BASELINE_FAILURE_CATEGORIES);
 
 const verifiedHead = value => typeof value === 'string' && SHA40.test(value) ? value : null;
 const statusValue = (value, allowed, fallback) =>
