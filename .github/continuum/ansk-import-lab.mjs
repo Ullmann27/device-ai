@@ -113,13 +113,14 @@ function retainBaselineDiagnostic(store,head,detail){
     status:'BLOCKED_BASELINE_NOT_GREEN',head,observedAt:Date.now(),detail};
   const destination=path.join(store,'last-baseline-failure.json');
   const temporary=path.join(store,'.baseline-'+crypto.randomBytes(12).toString('hex')+'.tmp');
-  const fd=fs.openSync(temporary,'wx',0o600);
   try{
-    fs.writeFileSync(fd,JSON.stringify(report)+'\\n','utf8');
-    fs.fsyncSync(fd);
-  }finally{fs.closeSync(fd);}
-  try{fs.renameSync(temporary,destination);}
-  finally{fs.rmSync(temporary,{force:true});}
+    const fd=fs.openSync(temporary,'wx',0o600);
+    try{
+      fs.writeFileSync(fd,JSON.stringify(report)+'\n','utf8');
+      fs.fsyncSync(fd);
+    }finally{fs.closeSync(fd);}
+    fs.renameSync(temporary,destination);
+  }finally{fs.rmSync(temporary,{force:true});}
 }
 
 function fail(status,head,detail=null){
