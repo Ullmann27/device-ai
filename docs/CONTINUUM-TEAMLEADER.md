@@ -538,3 +538,37 @@ startet diesen lokalen Betrieb ebenfalls nicht von selbst.
 Der Loop setzt ausschliesslich die vorhandenen M4-Auftragstypen um.
 Kotlin IMPLEMENT bleibt noch eine separat ausloesbare Preview,
 bis vollstaendige Android-/Gradle-/Unit-Evidenz den Patch deckt.
+
+## ANSK + Termux: gemeinsame Nur-Lese-Statusübersicht (20.10.2026)
+
+Die bestehende Teamleiter-CLI bietet mit `--status` zusätzlich das versionierte Feld
+`localIntegration` (`continuum-local-integration-status`, Version 1).
+Die neue Quelle `.github/continuum/local-integration-status.mjs` liest ausschließlich
+lokale Metadaten der bereits vorhandenen Worker; sie führt weder Shell-/Git-
+Befehle noch Tests, Builds, Reparaturen oder Modelltraining aus.
+
+- `buildLease`: Existenz und Struktur des gemeinsamen atomaren Gradle-Locks.
+  `LOCK_PRESENT_UNVERIFIED` beweist **nicht**, dass noch ein Prozess läuft.
+  Eine zurückgebliebene Sperre wird niemals automatisch entfernt.
+- `ansk`: Anzahl der lokal abgelegten quarantänisierten SHA-betitelten
+  Forschungsrezeptdateien. Keine neue Rezeptvalidierung, keine automatisch
+  bestätigten Reparaturen und keine Freigabe für Trainingsgewichte oder Codeänderungen.
+- `mobileBuilder`: der letzte lokale Termux-Builder-Bericht mit Commit und
+  optionaler APK-SHA. Ein Bericht ist weder eine frische Signaturprüfung
+  noch ein verifizierter Geräteinstallations- oder Produktionsnachweis.
+- Fehlende Daten bleiben explizit `NO_LOCAL_STATE`/`NO_BUILD_REPORT`;
+  beschädigte oder riskante Dateien werden als `UNREADABLE` behandelt.
+  Es werden keine privaten Dialogtexte oder Rezeptinhalte ausgegeben.
+
+Lokale Prüfung:
+
+~~~bash
+node --test .github/continuum/local-integration-status.test.mjs
+node .github/continuum/teamleader-cli.mjs --status --root .
+~~~
+
+Die sieben isolierten Modultests wurden am 20.10.2026 mit Node 22
+und 0 Fehlern ausgeführt. Ein vollständiger Node-/Android-Repositorytest
+des neuen Branch-HEAD und die Darstellung dieses kombinierten Status
+in der Android-Hauptoberfläche stehen **noch aus**. Die vorhandene
+Android-App↔Termux-Verbindung bleibt unverändert.
