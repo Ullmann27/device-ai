@@ -131,6 +131,62 @@ async function sha256(file) {
   for await(const part of fs.createReadStream(file)) h.update(part);
   return h.digest('hex');
 }
+/**
+ * Publish an OPTIONAL owner-operated installer copy after the immutable signed APK
+ * has passed signature, source-integrity and SHA-256 verification.
+ * This never launches a package installer and never changes the build success gate.
+ */
+export async function copyVerifiedApkToOwnerDownloads({
+  apk, digest, commit, project, env=process.env, arch=process.arch
+}) {
+  if (!isTermuxArm64(env,arch)) return {status:'NOT_TERMUX'};
+  if (!/^[a-f0-9]{64}$/.test(digest)||!/^[a-f0-9]{40}$/.test(commit)||
+      !env.HOME||!path.isAbsolute(env.HOME)) {
+    return {status:'UNAVAILABLE',reason:'INVALID_OWNER_ENVIRONMENT_OR_EVIDENCE'};
+  }
+  let tmp=null;
+  try {
+    const storageLink=path.join(env.HOME,'storage/downloads');
+    if(!fs.existsSync(storageLink))return {status:'UNAVAILABLE',reason:'TERMUX_STORAGE_NOT_CONFIGURED'};
+    const downloadRoot=fs.realpathSync(storageLink);
+    if(!fs.statSync(downloadRoot).isDirectory()||inside(project,downloadRoot)) {
+      return {status:'UNAVAILABLE',reason:'UNSAFE_DOWNLOAD_DIRECTORY'};
+    }
+    const folder=path.join(downloadRoot,'00-DEVICEAI-INSTALLATION');
+    if(!fs.existsSync(folder))fs.mkdirSync(folder,{recursive:false});
+    const folderStat=fs.lstatSync(folder);
+    if(!folderStat.isDirectory()||folderStat.isSymbolicLink()||
+       fs.realpathSync(folder)!==folder) {
+      return {status:'UNAVAILABLE',reason:'UNSAFE_INSTALL_FOLDER'};
+    }
+    const filename='DeviceAI-Continuum-Preview-'+commit.slice(0,7)+'-'+digest.slice(0,12)+'.apk';
+    const target=path.join(folder,filename);
+    if(fs.existsSync(target)) {
+      const targetStat=fs.lstatSync(target);
+      if(!targetStat.isFile()||targetStat.isSymbolicLink()||
+         await sha256(target)!==digest) {
+        return {status:'UNAVAILABLE',reason:'EXISTING_APK_CONFLICT'};
+      }
+      return {status:'COPIED',apk:target,sha256:digest,alreadyPresent:true};
+    }
+    tmp=path.join(folder,'.'+filename+'.'+randomUUID()+'.tmp');
+    fs.copyFileSync(apk,tmp,fs.constants.COPYFILE_EXCL);
+    if(await sha256(tmp)!==digest)return {status:'UNAVAILABLE',reason:'COPY_HASH_MISMATCH'};
+    if(fs.existsSync(target))return {status:'UNAVAILABLE',reason:'DESTINATION_BECAME_OCCUPIED'};
+    fs.renameSync(tmp,target);
+    tmp=null;
+    if(await sha256(target)!==digest) {
+      fs.unlinkSync(target);
+      return {status:'UNAVAILABLE',reason:'FINAL_COPY_HASH_MISMATCH'};
+    }
+    return {status:'COPIED',apk:target,sha256:digest,alreadyPresent:false};
+  } catch (error) {
+    return {status:'UNAVAILABLE',reason:'COPY_IO_ERROR',errorCode:error?.code||null};
+  } finally {
+    if(tmp&&fs.existsSync(tmp))fs.unlinkSync(tmp);
+  }
+}
+
 /** Diagnostic-only JUnit extraction; old or malformed XML never certifies a build. */
 export function failedJvmTests(project, startedAt) {
   const dir = path.join(project, 'app/build/test-results/testDebugUnitTest');
@@ -212,7 +268,10 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
     if(!await unchangedSource())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD',commit});
     const stable=path.join(state,'apk-'+digest+'.apk');
     fs.renameSync(staged,stable);
-    return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
+    const ownerInstallCopy=await copyVerifiedApkToOwnerDownloads({
+      apk:stable,digest,commit,project:root,env:resolvedEnv,arch
+    });
+    return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,ownerInstallCopy,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
   } finally { if(fs.existsSync(staged))fs.unlinkSync(staged); }
 }
 export function readStatus(stateDir) {
