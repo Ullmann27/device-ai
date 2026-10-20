@@ -128,6 +128,7 @@ class AgentActivity : Activity() {
         private const val DEV_BACKLOG_IMPORT_REQUEST = 2216
         private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000
         private const val NEURAL_IMPORT_REQUEST = 2211
+        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -1182,6 +1183,8 @@ class AgentActivity : Activity() {
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
+            CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
+            CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
@@ -2536,9 +2539,105 @@ class AgentActivity : Activity() {
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
             .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
-            .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ -> confirmWeightsImport() }
+            .setNeutralButton("GEWICHTE / LABOR") { _, _ -> showLearningLabChoices() }
             .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
             .show()
+    }
+
+    /** Gives the existing Learning Core dialog one entrypoint for all file and lab tasks. */
+    private fun showLearningLabChoices() {
+        val choices=arrayOf(
+            "ÖFFENTLICHES OFFLINE-LERNPAKET · TRAINIEREN",
+            "GEWICHTE IMPORTIEREN · SWB1",
+            "PAKET-IMPORT · SWB1 + MANIFEST",
+            "GEWICHTE EXPORTIEREN · BACKUP"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · Gewichte und Lernlabor")
+            .setItems(choices) { _, item ->
+                when(item) {
+                    0 -> showPublicCurriculumDialog()
+                    1 -> confirmWeightsImport()
+                    2 -> confirmPackageImport()
+                    3 -> exportCoreWeights()
+                }
+            }
+            .setNegativeButton("Schließen",null)
+            .show()
+    }
+
+    /** No blind training; the owner sees the exact scope before CPU work starts. */
+    private fun showPublicCurriculumDialog() {
+        if (busy) {
+            addAssistantMessage("Ein anderer Auftrag ist aktiv; bitte zuerst abschließen.")
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("SWB1 · Öffentliches Offline-Lernpaket")
+            .setMessage("Das Paket enthält 72 künstlich erzeugte Gruß-/Frage-Trainingssätze, " +
+                "24 davon unabhängige Prüfbeispiele, 32 semantische Trainingspaare und 12 " +
+                "getrennte Semantik-Prüfpaare. Es verwendet kein Internet und keine privaten " +
+                "Chats. 1.100 Intent- und 900 Semantik-Updates laufen ausschließlich auf " +
+                "einem Kandidaten. Beide bisherigen Holdouts, die neuen Prüfsätze und alle " +
+                "bestätigten Owner-Lektionen müssen geschützt bleiben. Nur ein nachweislich " +
+                "verbesserter Kandidat wird archiviert und aktiviert; sonst bleiben die " +
+                "vorherigen Modellgewichte erhalten. Pro Paketversion nur ein " +
+                "abgeschlossener Versuch. Dies erzeugt KEIN freies Sprachmodell.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("TRAINIEREN UND PRÜFEN") { _, _ ->
+                if (busy) return@setPositiveButton
+                setBusy(true)
+                addToolActivity("SWB1 · öffentliches Offline-Lernpaket wird geprüft")
+                onLearningIo({
+                    ContinuumLearningCore(filesDir).trainPublicCurriculum {
+                        isDestroyed || Thread.currentThread().isInterrupted
+                    }?.display()
+                        ?: "SWB1 · Dieses öffentliche Lernpaket wurde bereits vollständig geprüft. " +
+                            "Die bestehende Entscheidung bleibt erhalten. Siehe Lernkern-Audits."
+                }) { outcome ->
+                    setBusy(false)
+                    addAssistantMessage(outcome.getOrElse {
+                        "SWB1 · Lernpaket nicht ausgeführt: " + failureName(it) +
+                            ". Vorhandene Modellgewichte bleiben geschützt."
+                    })
+                    addToolActivity("SWB1 · Lernpaketprüfung beendet")
+                }
+            }
+            .show()
+    }
+
+    /** Owner-only SAF export of exactly the active 32,960-byte SWB1 snapshot. */
+    private fun exportCoreWeights() {
+        val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/octet-stream"
+            putExtra(Intent.EXTRA_TITLE, "continuum-swb1-backup.bin")
+        }
+        runCatching { startActivityForResult(create, CONTINUUM_CORE_EXPORT_REQUEST) }
+            .onFailure {
+                addAssistantMessage("Android-Dateidialog nicht verfügbar: " + failureName(it))
+            }
+    }
+
+    private fun writeCoreWeights(uri: Uri) {
+        onLearningIo({
+            val bytes=ContinuumLearningCore(filesDir).modelSnapshot()
+            check(bytes.size==SWB1_BYTES) { "SWB1-Gewichtsformat unerwartet" }
+            contentResolver.openOutputStream(uri,"wt")?.use { output ->
+                output.write(bytes)
+                output.flush()
+            } ?: throw java.io.IOException("Android-Dateianbieter verweigert Schreiben")
+            val sha=java.security.MessageDigest.getInstance("SHA-256")
+                .digest(bytes).joinToString("") { "%02x".format(it.toInt() and 255) }
+            "SWB1-Backup exportiert · ${bytes.size} Bytes · SHA-256: " + sha +
+                "\nKeine persönlichen Erinnerungen oder Zugangsdaten enthalten. " +
+                "Diese Gewichte können über GEWICHTE IMPORTIEREN erneut geprüft werden."
+        }) { outcome ->
+            addAssistantMessage(outcome.getOrElse {
+                "SWB1-Export fehlgeschlagen: " + failureName(it) +
+                    ". Bestehende Gewichte bleiben unverändert."
+            })
+        }
     }
 
     private fun confirmPackageImport() {
@@ -2644,6 +2743,16 @@ class AgentActivity : Activity() {
             })
         }
         advanced.addView(encoderActions, matchWidth(top = 10))
+        advanced.addView(actionButton("ÖFFENTLICHES OFFLINE-LERNPAKET").apply {
+            setOnClickListener {
+                modelCenterDialog?.dismiss()
+                showPublicCurriculumDialog()
+            }
+        }, matchWidth(top = 8))
+        advanced.addView(actionButton("SWB1 · GEWICHTE EXPORTIEREN").apply {
+            setOnClickListener { exportCoreWeights() }
+        }, matchWidth(top = 7))
+
         box.addView(actionButton("ERWEITERT · LERNKERN UND VERSIONEN").apply {
             setOnClickListener {
                 advanced.visibility = if (advanced.visibility == View.GONE) View.VISIBLE else View.GONE
@@ -5525,6 +5634,10 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            CONTINUUM_CORE_EXPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) writeCoreWeights(uri)
             }
             NEURAL_IMPORT_REQUEST -> {
                 val uri=data?.data
