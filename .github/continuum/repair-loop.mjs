@@ -8,6 +8,7 @@ import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
+import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -51,6 +52,32 @@ function nodeTests(wt){
   return tests.map(f=>'.github/continuum/'+f);
 }
 
+/**
+ * Reuse the mobile builder's pinned ARM64 toolchain instead of creating a
+ * second Gradle setup. Explicitly installed paths only; no tool downloads.
+ */
+export function continuumGradleProfile(wt,kind,{env=process.env,arch=process.arch}={}){
+  if(kind!=='compile'&&kind!=='unit')throw Error('Unsupported Gradle check profile');
+  const target=kind==='compile'?':app:compileDebugUnitTestKotlin':':app:testDebugUnitTest';
+  const args=[target,'--console=plain','-Pkotlin.incremental=false'];
+  if(!isTermuxArm64(env,arch))
+    return {cmd:'gradle',args,cwd:wt,kotlin:true};
+  const resolved=resolveTermuxEnvironment(env,arch);
+  const executable=p=>typeof p==='string'&&path.isAbsolute(p)&&
+    fs.existsSync(p)&&fs.statSync(p).isFile()&&(fs.statSync(p).mode&0o111)!==0;
+  if(!executable(resolved.CONTINUUM_GRADLE_PATH)||
+     !executable(resolved.CONTINUUM_AAPT2_PATH)||
+     !executable(path.join(resolved.JAVA_HOME??'','bin/java'))||
+     !resolved.ANDROID_HOME||!fs.existsSync(path.join(resolved.ANDROID_HOME,'platforms/android-36/android.jar')))
+    throw Error('ANSK_MISSING_PINNED_TERMUX_ANDROID_TOOLCHAIN');
+  return {cmd:resolved.CONTINUUM_GRADLE_PATH,args:[
+    '--no-daemon','--max-workers=2',...args,
+    '-Pandroid.aapt2FromMavenOverride='+resolved.CONTINUUM_AAPT2_PATH,
+    '-Pkotlin.compiler.execution.strategy=in-process',
+    '-PdeviceAiMobileAidlFallback=true'
+  ],cwd:wt,kotlin:true,env:{...resolved,GRADLE_OPTS:'-Dorg.gradle.jvmargs=-Xmx1536m'}};
+}
+
 /** Fixed, reviewed check commands. Nothing here is derived from logs or inputs. */
 export const PROFILES=Object.freeze({
   'node-continuum':(wt,out)=>({cmd:process.execPath,args:['--test','--test-reporter=junit','--test-reporter-destination='+path.join(out,'node-junit.xml'),...nodeTests(wt)],
@@ -62,11 +89,13 @@ export const PROFILES=Object.freeze({
       '--test-reporter-destination='+path.join(out,'backend-junit.xml'),...tests],
       cwd:wt,junitFiles:[path.join(out,'backend-junit.xml')],timeoutMs:300000};
   },
-  // Kotlin incremental compilation is disabled: after a failed build its caches
-  // produced phantom "Conflicting overloads" errors in untouched files.
-  'android-compile':wt=>({cmd:'gradle',args:[':app:compileDebugUnitTestKotlin','--console=plain','-Pkotlin.incremental=false'],cwd:wt,kotlin:true,timeoutMs:1200000}),
-  'android-unit':wt=>({cmd:'gradle',args:[':app:testDebugUnitTest','--console=plain','-Pkotlin.incremental=false'],cwd:wt,kotlin:true,
-    junitDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],cleanDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],timeoutMs:1500000}),
+  // On ARM64 Termux the existing pinned owner toolchain must also be used
+  // for worktree checks. Never fall back to an unavailable desktop aapt2.
+  // Outside Termux these are the unchanged deterministic Gradle profiles.
+  'android-compile':wt=>({...continuumGradleProfile(wt,'compile'),timeoutMs:1200000}),
+  'android-unit':wt=>({...continuumGradleProfile(wt,'unit'),
+    junitDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],
+    cleanDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],timeoutMs:1500000}),
   'jvm-harness':wt=>{
     // Local development only: JVM harness that compiles app sources without the Android SDK.
     const harness=process.env.CONTINUUM_JVM_HARNESS;
