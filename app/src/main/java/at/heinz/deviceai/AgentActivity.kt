@@ -5234,12 +5234,15 @@ class AgentActivity : Activity() {
         val eventLock = Any()
         var terminalEventReceived = false
         var failure: String? = null
+        val generationStartedNanos = System.nanoTime()
+        var streamedChunks = 0
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                            streamedChunks++
                             response.append(event.text.take(8_000 - response.length))
                         }
                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
@@ -5257,7 +5260,14 @@ class AgentActivity : Activity() {
                             completed.countDown()
                         }
                         LocalInferenceEvent.Cancelled -> {
-                            failure = "Local generation cancelled."
+                            // A native cancellation alone does not prove a timeout,
+                            // a thinking-template problem or an OOM. Do not guess.
+                            val elapsedMillis = (System.nanoTime() -
+                                generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                            failure = "Local generation cancelled. " +
+                                "Diagnose: ${elapsedMillis} ms, " +
+                                "${streamedChunks} Textblöcke, " +
+                                "${response.length} Zeichen. Ursache nicht bestimmt."
                             terminalEventReceived = true
                             completed.countDown()
                         }
