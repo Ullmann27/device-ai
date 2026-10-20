@@ -92,3 +92,60 @@ Diese tatsächliche Projektdatei importiert java.nio.file.Files und ruft Files.m
 - M2 Android-Autonomie: lokale gemeinsame Build-Sperre für die drei zentralen Node-Worker **quellseitig integriert, fünf neue isolierte Node-Tests lokal erfolgreich**. Die zusätzlich definierten integrationsbezogenen Regressionen sind auf dem vollständigen Repository-HEAD noch nicht ausgeführt. Android↔Termux authentisierte Job-Lease, Gerätekonkurrenz, Recovery sowie Besitzer-/Ressourcengates bleiben **offen**.
 
 Keine unbewiesenen 100-Prozent-Korrektheits-, Null-Watt- oder Submillisekunden-Versprechen.
+
+
+## Nachtrag 20.10.2026: M1a – erklärbarer Baseline-Blocker (quellseitig integriert)
+
+Der erste auf dem Samsung ausdrücklich gestartete ANSK-Lauf zu Commit
+`126bd9905eb76559f23c76eeb9f36d27c45afa50` endete tatsächlich
+mit `BLOCKED_BASELINE_NOT_GREEN`. Damit ist **keine** erfolgreiche
+Compiler-Reparatur oder Lernrezept-Promotion belegt. Das Labor stoppte
+vorschriftsmäßig vor der künstlichen Kotlin-Mutation.
+
+Die bisherige Ausgabe enthielt keinen unterscheidbaren Auslöser.
+`.github/continuum/ansk-baseline-triage.mjs` wertet jetzt nur die
+bereits tatsächlich gelaufenen Gradle-/JUnit-Profile aus und liefert
+stabile, begrenzte Kategorien: Kotlin-Kompilation, JUnit-Fehlschlag,
+fehlender JUnit-Nachweis, Toolchain-/Dependency-Problem,
+Ressourcenmangel, Timeout oder unklassifizierter Fehler.
+
+- Aus Gradle-Ausgaben werden ausschließlich **fest definierte Kategorien**
+  erzeugt. Rohe Fehlertexte, Quelldateipfade, Zugangsdaten, Terminal-
+  Umgebungsvariablen und Modelltexte werden weder als Antwort noch
+  im ANSK-Diagnosebeleg gespeichert.
+- Bei blockierter Baseline schreibt das **bereits vorhandene**
+  ANSK-Labor einen kleinen, atomar aktualisierten Diagnosebeleg nach
+  `~/.local/state/device-ai-continuum/ansk-lab/last-baseline-failure.json`.
+  Es werden weder Quellcode noch `main`, eine APK oder Modellgewichte geändert.
+- Die **bestehende** `teamleader-cli.mjs --status` zeigt den Beleg unter
+  `localIntegration.ansk.lastBaselineFailure` mit Zustand
+  `HISTORICAL_BASELINE_FAILURE_REPORTED`, Commit, Kategorie und
+  vorgeschlagener Diagnoseaktion. Der Beleg ist historisch,
+  kein aktuell laufender Vorgang und keine verifizierte Reparatur.
+- Manipulierte Belege, Symlinks und zu große Dateien werden nicht als
+  valide Statusmeldungen übernommen.
+
+**Native lokale Modultests:** 10/10 bestanden mit Node 22.16; die
+verifizierten Git-Blob-Hashes der getesteten Quelldatei und Testdatei
+stimmen bytegenau mit den GitHub-Blobs überein. Diese Modultests
+ersetzen **keinen vollständigen Repository- oder Samsung-Test**.
+
+Nach einem geprüften Fast-forward im bestehenden Experimentbranch:
+
+~~~bash
+node --test .github/continuum/ansk-baseline-triage.test.mjs \
+  .github/continuum/ansk-import-lab.test.mjs \
+  .github/continuum/local-integration-status.test.mjs
+~~~
+
+Den echten neuen Fehlergrund liefert erst ein erneuter, **ausdrücklich
+besitzerautorisierter** ANSK-Einmalversuch unter unveränderter
+`--once --file ... --import ...`-Befehlsgrenze und bei vorhandener
+Termux-Toolchain. Danach kann der lokale Teamleiter-Status die
+historische Kategorie anzeigen, auch wenn das Labor wieder vor der
+Mutation abbrechen musste.
+
+**Nächste Entwicklungsentscheidung:** Anhand des tatsächlich gemeldeten
+Fehlertyps bestehende Reparatur-/Toolchainpfade gezielt verbessern;
+keine künstliche Freigabe einer roten Baseline. Eine automatische
+Baseline-Reparatur ist hier noch nicht behauptet.
