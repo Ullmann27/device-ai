@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
 
@@ -104,6 +105,82 @@ test('synthetic signed output saves a distinct hash-tied copy; not proof of an o
   assert.ok(gradle.args.includes(':app:testDebugUnitTest'));
   assert.ok(gradle.args.includes(':app:lintDebug'));
   assert.ok(gradle.args.includes(':app:assembleDebug'));
+});
+
+test('owner Android build automatically publishes a hash-checked APK in the dedicated Download folder',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  fs.mkdirSync(downloads,{recursive:true});
+  const env={PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'};
+  const commands=[];
+  const result=await build({project:f.root,stateDir:f.stateDir,env,arch:'arm64',
+    inspect:async()=>ready,run:mock(f,{commands})});
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+  assert.equal(result.ownerInstallCopy.status,'COPIED');
+  assert.equal(result.ownerInstallCopy.alreadyPresent,false);
+  assert.equal(result.ownerInstallCopy.sha256,result.apkSha256);
+  assert.equal(path.dirname(result.ownerInstallCopy.apk),path.join(downloads,'00-DEVICEAI-INSTALLATION'));
+  assert.match(path.basename(result.ownerInstallCopy.apk),
+    /^DeviceAI-Continuum-Preview-[0-9a-f]{7}-[0-9a-f]{12}\.apk$/);
+  assert.equal(createHash('sha256').update(fs.readFileSync(result.ownerInstallCopy.apk)).digest('hex'),
+    result.apkSha256);
+  assert.equal(fs.existsSync(result.apk),true,'immutable private copy remains intact');
+  assert.equal(commands.some(x=>/install|am|pm/.test(x.file)),false,'no package installer was called');
+
+  const again=await build({project:f.root,stateDir:f.stateDir,env,arch:'arm64',
+    inspect:async()=>ready,run:mock(f)});
+  assert.equal(again.ownerInstallCopy.status,'COPIED');
+  assert.equal(again.ownerInstallCopy.alreadyPresent,true);
+  assert.equal(again.ownerInstallCopy.apk,result.ownerInstallCopy.apk);
+});
+
+test('missing owner Download storage never fakes a published installer copy',async()=>{
+  const f=fixture(),home=path.dirname(f.root);
+  const result=await build({project:f.root,stateDir:f.stateDir,
+    env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},
+    arch:'arm64',inspect:async()=>ready,run:mock(f)});
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+  assert.deepEqual(result.ownerInstallCopy,{status:'UNAVAILABLE',reason:'TERMUX_STORAGE_NOT_CONFIGURED'});
+  assert.equal(fs.existsSync(result.apk),true);
+});
+
+test('unsafe symlink install folder is rejected without modifying the source project',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  fs.mkdirSync(downloads,{recursive:true});
+  fs.symlinkSync(f.root,path.join(downloads,'00-DEVICEAI-INSTALLATION'));
+  const result=await build({project:f.root,stateDir:f.stateDir,
+    env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},
+    arch:'arm64',inspect:async()=>ready,run:mock(f)});
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+  assert.equal(result.ownerInstallCopy.reason,'UNSAFE_INSTALL_FOLDER');
+  assert.equal(fs.existsSync(result.apk),true);
+  assert.equal(fs.existsSync(path.join(f.root,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'.apk')),false);
+});
+
+test('pre-existing conflicting APK is never overwritten by automatic publication',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  const folder=path.join(downloads,'00-DEVICEAI-INSTALLATION');
+  fs.mkdirSync(folder,{recursive:true});
+  const raw=Buffer.alloc(8192,42);
+  const digest=createHash('sha256').update(raw).digest('hex');
+  const target=path.join(folder,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'-'+digest.slice(0,12)+'.apk');
+  fs.writeFileSync(target,'OWNER_KEPT_FILE');
+  const result=await build({project:f.root,stateDir:f.stateDir,
+    env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},
+    arch:'arm64',inspect:async()=>ready,run:mock(f)});
+  assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
+  assert.equal(result.ownerInstallCopy.reason,'EXISTING_APK_CONFLICT');
+  assert.equal(fs.readFileSync(target,'utf8'),'OWNER_KEPT_FILE');
+  assert.equal(fs.existsSync(result.apk),true);
+});
+
+test('rejected signature never generates an owner Download installation APK',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  fs.mkdirSync(downloads,{recursive:true});
+  const result=await build({project:f.root,stateDir:f.stateDir,
+    env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},
+    arch:'arm64',inspect:async()=>ready,run:mock(f,{sign:false})});
+  assert.equal(result.status,'FAILED_APK_SIGNATURE');
+  assert.equal(fs.existsSync(path.join(downloads,'00-DEVICEAI-INSTALLATION')),false);
 });
 
 test('Gradle failure reports only fresh failing JVM tests, never a false build success',async()=>{
