@@ -1137,6 +1137,14 @@ class AgentActivity : Activity() {
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
+            CenterAction("GROQ · CODING-ZWEITMEINUNG (OPTIONAL)") {
+                showGroqMentorDialog(
+                    "Analysiere mit mir einen Android- oder Kotlin-Buildfehler. " +
+                        "Welche minimalen, überprüfbaren Diagnoseschritte und " +
+                        "Reparaturhypothesen empfiehlst du? " +
+                        "Keine ungeprüften Änderungen oder erfundenen APIs."
+                )
+            },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
         )
     )
