@@ -227,3 +227,68 @@ erfolgreiche Baseline mit Skips gewertet werden.
 `ansk-lab-contract.mjs`, `ansk-baseline-triage.mjs` und den
 zugehörigen Tests isoliert revertieren; keine Datenbankmigration und
 kein schreibender Eingriff in `main`.
+
+
+## M1c – reales Android EACCES bei der Shadow-Rezept-Persistenz
+
+**Samsung-Gerätebeobachtung 20.10.2026, ca. 14:05:** Nach einem längeren
+ANSK-`--once`-Lauf erschien:
+
+`ANSK research lab failed: EACCES: permission denied, link '.<random>.tmp' -> '<recipeSha256>.json'`
+
+Der Fehler entstand nach den festen Compile-/JUnit-/Reparatur-/
+Unabhängigkeitsprüfungen beim Aufruf von `writeImmutableRecipe`;
+der alte Code verwendete `fs.linkSync(tmp,target)`. Die
+`verifyAnskExperiment(...)`-Prüfung musste in diesem Lauf zuvor den
+positiven Zweig erreicht haben, da der Dateipersistenzpfad nur dahinter
+liegt. **Es wurde aber keine dauerhaft gespeicherte, unabhängig
+nachlesbare Rezeptdatei bestätigt.** Deshalb gilt der Vorgang weiter
+als Forschung ohne vollständigen Persistenznachweis.
+
+**Umsetzung:** `.github/continuum/ansk-recipe-store.mjs` (EXP-02,
+EXP-08, EXP-12) verwendet stattdessen einen nur einmalig
+erstellten 0600-Temporärbeleg und Node
+`fs.copyFileSync(source,target,fs.constants.COPYFILE_EXCL)`.
+Im Gegensatz zu `fs.linkSync` benötigt das kein Hardlink-Recht.
+Das exklusive Flag verbietet das Überschreiben bestehender Belege.
+Vor der Erfolgsmeldung wird die gesamte Datei mit `O_NOFOLLOW`
+wieder geöffnet und bytegenau geprüft. Kaputte, fremde, symlinkende
+oder kollidierende Dateien gelten ausdrücklich als Fehler.
+Der Temporärbeleg wird auch auf einem Fehlerpfad entfernt.
+
+`copyFileSync` ist **keine transaktionale atomare Veröffentlichung**:
+Eine während des Schreibens unterbrochene Datei kann unvollständig
+existieren. Solche Daten werden nicht als gültige Belege akzeptiert,
+sondern müssen vor einer Wiederholung geprüft werden. Der bestehende
+ANSK-Worktree-/Build-Lease-Schutz bleibt unverändert.
+
+Die neue Rezeptdatei wird nur nach bestandenem ANSK-Forschungsgate
+geschrieben; Modell-Training, automatisches Register, APK-Installation
+und Schreibrechte auf den Produktionsbranch bleiben unverändert verboten.
+Die bestehende Statusansicht behandelt Rezeptdateien weiterhin nur
+als quarantänisierte Forschungsbelege.
+
+**Quell- und Teststatus:** Acht native Node-Regressionstests im
+Experimentbranch angelegt. Die tatsächlichen Node-Dateisystemprimitiven
+`COPYFILE_EXCL`, der Modus 0600, `EEXIST` und `O_NOFOLLOW`
+wurden auf Node 22.16.0 in einer isolierten lokalen Probe
+(4/4 primitive Checks) geprüft. **Noch offen:** vollständige
+`node --test`-Regression, Samsungs Termux-Speicherverhalten,
+erneuter ANSK-Rot–Grün–Grün-Durchlauf und dauerhaft verifizierter
+`shadow-recipes`-Beleg.
+
+Reproduzierbare kurzfristige Geräteabnahme vor dem nächsten Gradle-Versuch:
+
+~~~bash
+node --test .github/continuum/ansk-recipe-store.test.mjs \
+  .github/continuum/ansk-import-lab.test.mjs \
+  .github/continuum/ansk-recipe-replay.test.mjs \
+  .github/continuum/local-integration-status.test.mjs
+~~~
+
+**Rollback:** Auf dem Review-Branch die neue Datei
+`ansk-recipe-store.mjs` samt Test entfernen und die
+`writeImmutableRecipe`-Aufrufstelle revertieren. Dadurch würden
+auf Android wieder die ursprünglichen Hardlink-Beschränkungen gelten;
+kein bestehender Gerätezustand wird durch diesen Quell-Rollback
+automatisch umgeschrieben.
