@@ -4006,14 +4006,14 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 result.fold(
                     onSuccess = { answer ->
-                        addAssistantMessage("MODELLTEST ERFOLGREICH · ${elapsed} ms\\n\\n" + answer)
+                        addAssistantMessage("MODELLTEST ERFOLGREICH · ${elapsed} ms\n\n" + answer)
                         addToolActivity("MODELLTEST · native Textgenerierung abgeschlossen; kein Tool ausgeführt")
                     },
                     onFailure = { failure ->
                         val description = failure.message?.take(200) ?: failure.javaClass.simpleName
                         localRuntimeError = description
-                        addAssistantMessage("MODELLTEST FEHLGESCHLAGEN · ${elapsed} ms\\nUrsache: " + description +
-                            "\\nDer normale Agentenablauf wurde nicht ausgeführt.")
+                        addAssistantMessage("MODELLTEST FEHLGESCHLAGEN · ${elapsed} ms\nUrsache: " + description +
+                            "\nDer normale Agentenablauf wurde nicht ausgeführt.")
                         addToolActivity("MODELLTEST · isolierte Inferenz fehlgeschlagen")
                     }
                 )

@@ -17,7 +17,7 @@ test('explicit owner command has precedence over all alternate chat routing', ()
 test('diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline', () => {
   assert.match(block, /localRuntime\.streamThinking\(/);
   assert.match(block, /generateLocal\(cancellation\)/);
-  assert.doesNotMatch(block, /runLocal\(|ChatReasoningRouter|showGroqMentorDialog|createToolGate\(|persistRequestedMemory\(|Runtime\.getRuntime|exec\(/);
+  assert.doesNotMatch(block, /runLocal\(|ChatReasoningRouter\s*\(|showGroqMentorDialog\s*\(|createToolGate\(|persistRequestedMemory\(|Runtime\.getRuntime|exec\(/);
 });
 test('the diagnostic requires a loaded model, blocks empty responses and surfaces failures', () => {
   assert.match(block, /localRuntime\.loadedModel == null/);
