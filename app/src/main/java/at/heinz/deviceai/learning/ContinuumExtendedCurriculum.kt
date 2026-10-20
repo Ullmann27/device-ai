@@ -10,7 +10,7 @@ package at.heinz.deviceai.learning
  */
 object ContinuumExtendedCurriculum {
     const val VERSION = "public-replay-expansion-20261020-v1"
-    const val STAGES = 8
+    const val STAGES = 12
 
     private val greetingStarts=listOf(
         "hallo", "servus", "griaß di", "grüß gott", "guten morgen",
@@ -149,18 +149,19 @@ object ContinuumExtendedCurriculum {
 
     fun intentBatch(stage:Int):List<SubwordIntentExample> {
         require(stage in 0 until STAGES)
-        // 72+72? 1152/8=144 exceeds the train/eval bound of 128.
-        // Sample 48 of each label, rotating disjoint slices on each stage.
-        val group=stage*72
-        val questions=intentTrain.filter { it.label==1 }.subList(group,group+72)
-        val greetings=intentTrain.filter { it.label==0 }.subList(group,group+72)
-        return (greetings.take(48)+questions.take(48))
-            .flatMapIndexed { i,e -> listOf(e) }
+        // Each of the 1,152 examples is used in exactly one stage; 96 per stage.
+        val group=stage*48
+        val questions=intentTrain.filter { it.label==1 }.subList(group,group+48)
+        val greetings=intentTrain.filter { it.label==0 }.subList(group,group+48)
+        return (greetings+questions).flatMapIndexed { _, item -> listOf(item) }
     }
     fun semanticBatch(stage:Int):List<SubwordSemanticExample> {
         require(stage in 0 until STAGES)
-        // 480 pairs, 60 per stage.
-        return semanticTrain.subList(stage*60,(stage+1)*60)
+        // 480 pairs, 40 per stage with a fixed 20/20 class balance.
+        val positives=semanticTrain.filter { it.similar }
+        val negatives=semanticTrain.filter { !it.similar }
+        return positives.subList(stage*20,(stage+1)*20) +
+            negatives.subList(stage*20,(stage+1)*20)
     }
 
     fun validate() {
@@ -175,7 +176,7 @@ object ContinuumExtendedCurriculum {
         for(stage in 0 until STAGES) {
             val ib=intentBatch(stage); val sb=semanticBatch(stage)
             require(ib.size==96 && ib.count{it.label==0}==48 && ib.count{it.label==1}==48)
-            require(sb.size==60 && sb.count { it.similar }==30)
+            require(sb.size==40 && sb.count { it.similar }==20)
         }
     }
 }
