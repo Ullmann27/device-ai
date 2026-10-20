@@ -1986,13 +1986,43 @@ class AgentActivity : Activity() {
                 val cognitive=decision.turn
                 val turn=cognitive.dialogue
                 val legacyFallback=sourceFallback && !turn.grounded
-                val answer=if(legacyFallback)GroundedWebRecall.answer(request,reviewedNotes) ?: turn.answer else decision.finalAnswer
-                val evidence=(if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
-                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen") +
-                    (if(turn.contextReset)" · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert" else "")
+                // Retrieval is evidence display, not model-generated truth. Only a
+                // title-level match may supply a plainly labelled public quote.
+                // Confirmed owner memory always wins and source observations never
+                // grant model tools, device authority or Owner-Fact privileges.
+                val archiveHit=if(!turn.grounded && request.length in 6..240 &&
+                    (request.contains("?") || request.startsWith("Was ist ",true) ||
+                        request.startsWith("Erkläre ",true))) {
+                    runCatching {
+                        at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                            .search(request,limit=2).firstOrNull { it.score>=5 }
+                    }.getOrNull()
+                } else null
+                val archiveAnswer=archiveHit?.source?.let { document ->
+                    "LOKALES WISSENSARCHIV · öffentlicher, nicht unabhängig verifizierter "+
+                        "Quellenauszug: "+
+                        document.text.take(350)+"\nQuelle: "+document.url+
+                        "\nHerkunft: "+document.attribution+
+                        "\nSHA-256: "+document.sha256.take(16)+"…"+
+                        "\nFür zeitabhängige oder rechtliche Aussagen Originalquelle "+
+                        "und relevanten Stichtag kontrollieren."
+                }
+                val fallback=if(legacyFallback)
+                    GroundedWebRecall.answer(request,reviewedNotes)
+                else null
+                val answer=archiveAnswer ?: fallback ?: decision.finalAnswer
+                val evidence=(if(archiveAnswer!=null)
+                    "QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"
+                    else if(legacyFallback)
+                    "QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
+                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+
+                        turn.memoryIds.size+" aktuelle Erinnerungen") +
+                    (if(turn.contextReset)
+                        " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"
+                        else "")
                 Pair(Triple(answer,evidence+" · "+cognitive.trace+
                     (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),
-                    turn.grounded || legacyFallback && answer!=turn.answer),
+                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null),
                     cognitive.localModelPrompt)
             }
             runOnUiThread {
