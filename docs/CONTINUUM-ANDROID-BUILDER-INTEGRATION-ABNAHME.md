@@ -77,6 +77,18 @@ ANDROID_SDK_ROOT="$HOME/android-sdk" \
 7. **Negativfälle**: Vorschau fehlt; Termux nicht freigegeben; Hintergrundjob noch offen; Build-Quellcode verändert; fehlende Signatur; unvollständiger Callback. Erwartung immer verständliche Fehlermeldung statt Erfolg.
 8. **Getrennte Pakete**: `at.heinz.deviceai` öffnet den existierenden Preview-Builder über explizite Android-Komponente, kann aber private Preview-Jobberichte nicht selbst lesen.
 
+## Fester Installationsordner nach signatur- und hashgeprüftem Build
+
+**Owner-Workflow, eingeführt 20.10.2026:** Nach erfolgreichem `apksigner verify`, SHA-256-Prüfung und unverändertem Git-HEAD speichert der mobile Node-Builder **zuerst** das private, unveränderliche Artefakt im lokalen State und kopiert **danach** automatisch eine zusätzliche APK nach:
+
+`Interner Speicher/Download/00-DEVICEAI-INSTALLATION/DeviceAI-Continuum-Preview-<HEAD7>-<SHA12>.apk`
+
+Die Kopie wird erst nach einer erneuten SHA-256-Prüfung der temporären Download-Datei sichtbar gemacht. Vorhandene gleiche Kopien werden nur bei identischem Hash wiederverwendet, Konfliktdateien bleiben unangetastet. Wenn Termux keinen freigegebenen Download-Zugriff hat oder der Zielordner unsicher ist, bleibt die original verifizierte private APK erhalten und `ownerInstallCopy.status` lautet `UNAVAILABLE`. Bei Erfolg `COPIED`, bei anderen Plattformen `NOT_TERMUX`. Der bestehende Buildstatus bleibt `EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED`; die App darf aus der Kopie **keine** installierte oder produktionsreife App ableiten.
+
+Die alte Handarbeit mit `cp`/Dateimanager-Suche entfällt **erst für Builds, die mit dieser neuen Builder-Version gestartet wurden**. Die bereits um 04:27 aus der zuvor installierten Preview erzeugte APK hatte diesen Automatismus noch nicht. Kein Download, kein automatischer Android Package Installer, keine ungefragte Aktualisierung. Die Nutzerin/der Nutzer öffnet die APK aus diesem festen Download-Unterordner und bestätigt Androids Installation selbst.
+
+**Gerätenachweis für vorherige Preview, 20.10.2026:** Vollständiger Test- und Lint-Lauf, erfolgreiches Gradle-APK via Android-Builder-Button, SHA-Konsistenz, Preview-Paket-ID und `AgentActivity`-Launcher. Owner-Screenshot **04:49** zeigt die tatsächlich gestartete hochwertige Device-AI-Hauptoberfläche mit Hologramm, Chat und dem sichtbaren `Handy-Builder · Termux`-Button. **Noch offen:** den Button anwählen, Builder und Rücknavigation am Gerät prüfen, neuen Autokopiermechanismus auf Samsung bauen/testen, unabhängiger M4-/Langzeit-Agententest.
+
 ## Rücksetzen, offene Risiken und ehrliche Abnahme
 
 - Änderungen ausschließlich im Draft-Branch. Ein Rollback erfolgt durch Revert der isolierten Commits; **kein** Main-Eingriff.
