@@ -118,6 +118,13 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
   const checkout=ensureCleanSource(root);
   const {head}=checkout;
   const store=stateRoot(checkout.root);
+  // Best-effort collision guard for an already active local teamleader.
+  // The ANSK lock protects lab-vs-lab races. Future Android dispatch must
+  // hold a common atomic lease for all Gradle-capable workers.
+  const leaderSuffix=sha256(checkout.root).slice(0,12);
+  const leaderLock=path.join(os.homedir(),'.local','state',
+    'device-ai-continuum',leaderSuffix,'teamleader-state.json.lock');
+  if(fs.existsSync(leaderLock))throw Error('ANSK_TEAMLEADER_ALREADY_RUNNING');
   const lock=path.join(store,'ansk-once.lock');
   // A stale lock is not automatically stolen: an expired timer cannot prove
   // an old Gradle process has terminated. An operator must investigate first.
