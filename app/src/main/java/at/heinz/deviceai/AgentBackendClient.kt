@@ -44,6 +44,8 @@ class AgentBackendClient(private val context: Context) {
     private val mentorRecoveryLock = Any()
 
     private class MentorAuthenticationRejected : IllegalStateException("MENTOR_AUTH_UNAUTHORIZED")
+    private class BackendHttpFailure(val statusCode: Int, message: String) :
+        IllegalStateException(message)
 
     fun backendUrl(): String =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -52,9 +54,15 @@ class AgentBackendClient(private val context: Context) {
             .trim()
 
     fun saveBackendUrl(value: String) {
+        val normalized = value.trim().trimEnd('/')
+        val previous = backendUrl()
+        if (previous.isNotBlank() && previous != normalized) {
+            // A cached mentor bearer credential must not be sent to another host.
+            SecureTokenStore.clearMentorToken(context)
+        }
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .edit()
-            .putString(KEY_URL, value.trim().trimEnd('/'))
+            .putString(KEY_URL, normalized)
             .apply()
     }
 
@@ -122,8 +130,7 @@ class AgentBackendClient(private val context: Context) {
             request("GET", url, null, authenticated = false)
         } catch (first: Exception) {
             val retryable = first is IOException ||
-                (first is IllegalStateException &&
-                    first.message in setOf("HTTP 502", "HTTP 503", "HTTP 504"))
+                (first is BackendHttpFailure && first.statusCode in 502..504)
             if (!retryable || Thread.currentThread().isInterrupted) throw first
             Thread.sleep(1_000L)
             request("GET", url, null, authenticated = false)
@@ -359,7 +366,7 @@ class AgentBackendClient(private val context: Context) {
                 val message = runCatching { JSONObject(text).optString("error") }.getOrNull()
                     ?.takeIf { it.isNotBlank() }
                     ?: "HTTP $code"
-                throw IllegalStateException(message)
+                throw BackendHttpFailure(code, message)
             }
             return text
         } finally {
