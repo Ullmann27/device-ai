@@ -11,7 +11,7 @@ const equal = (a, b) => {
 };
 
 export class MentorDevicePairing {
-  constructor({ rootToken, approvedFingerprints = "", clock = Date.now, randomBytes = crypto.randomBytes } = {}) {
+  constructor({ rootToken, approvedFingerprints = "", additionalApprovedFingerprint = "", clock = Date.now, randomBytes = crypto.randomBytes } = {}) {
     this.rootToken = typeof rootToken === "string" ? rootToken : "";
     this.clock = clock;
     this.randomBytes = randomBytes;
@@ -20,6 +20,11 @@ export class MentorDevicePairing {
     this.consumed = new Map();
     this.approved = new Set(approvedFingerprints.split(",").map(v => v.trim().toLowerCase())
       .filter(v => /^[a-f0-9]{64}$/.test(v)).slice(0, 8));
+    // An explicit single-device extension never replaces any of the 8 legacy approvals.
+    if (typeof additionalApprovedFingerprint === "string" &&
+        /^[a-f0-9]{64}$/i.test(additionalApprovedFingerprint)) {
+      this.approved.add(additionalApprovedFingerprint.toLowerCase());
+    }
   }
 
   get ready() { return this.rootToken.length >= 16; }

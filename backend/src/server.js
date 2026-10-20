@@ -39,7 +39,8 @@ const groqMentor = new GroqMentor({
 });
 const mentorPairing = new MentorDevicePairing({
   rootToken: DEVICE_AI_TOKEN,
-  approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? ""
+  approvedFingerprints: process.env.DEVICE_AI_MENTOR_APPROVED_DEVICES ?? "",
+  additionalApprovedFingerprint: process.env.DEVICE_AI_MENTOR_ADDITIONAL_APPROVED_DEVICE ?? ""
 });
 const pairingLimiter = rateLimit({
   windowMs: 15 * 60_000, limit: 12,
