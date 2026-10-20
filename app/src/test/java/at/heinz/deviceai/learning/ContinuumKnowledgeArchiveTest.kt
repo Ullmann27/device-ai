@@ -46,6 +46,43 @@ class ContinuumKnowledgeArchiveTest {
             assertTrue(archive.stats().values.all { it==0 })
         } finally { temp.deleteRecursively() }
     }
+    @Test fun zipRoundTripPersistsAndVerifiesOriginalCitationRecords() {
+        val base=Files.createTempDirectory("continuum-archive-export").toFile()
+        val restored=Files.createTempDirectory("continuum-archive-import").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(base)
+            val record=archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Elektrotechnik","https://de.wikipedia.org/wiki/Elektrotechnik",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Die Elektrotechnik beschreibt elektrische Systeme und ihre Anwendungen.")
+            val bytes=java.io.ByteArrayOutputStream()
+            assertEquals(1,archive.exportZip(bytes))
+            assertEquals(1,ContinuumKnowledgeArchive(restored)
+                .importZip(java.io.ByteArrayInputStream(bytes.toByteArray())))
+            val hit=ContinuumKnowledgeArchive(restored).search("Elektrotechnik").single()
+            assertEquals(record.id,hit.source.id)
+            assertEquals(record.sha256,hit.source.sha256)
+        } finally { base.deleteRecursively(); restored.deleteRecursively() }
+    }
+
+    @Test fun unsafeZipNamesAreRejectedWithoutWritingAnyRecords() {
+        val base=Files.createTempDirectory("continuum-archive-zip-slip").toFile()
+        try {
+            val out=java.io.ByteArrayOutputStream()
+            java.util.zip.ZipOutputStream(out).use { zip ->
+                zip.putNextEntry(java.util.zip.ZipEntry("../outside.rec"))
+                zip.write(byteArrayOf(1,2,3))
+                zip.closeEntry()
+            }
+            try {
+                ContinuumKnowledgeArchive(base)
+                    .importZip(java.io.ByteArrayInputStream(out.toByteArray()))
+                fail("Traversal archive should be rejected")
+            } catch (_: IllegalArgumentException) {}
+            assertTrue(ContinuumKnowledgeArchive(base).stats().values.all { it==0 })
+        } finally { base.deleteRecursively() }
+    }
+
     @Test fun legalArchiveIsNotMisreportedAsLegalValidity() {
         val temp=Files.createTempDirectory("continuum-ris-source").toFile()
         try {
