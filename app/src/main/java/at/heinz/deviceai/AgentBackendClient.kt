@@ -350,11 +350,10 @@ class AgentBackendClient(private val context: Context) {
             }
         }
 
-        if (body != null) {
-            connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
-        }
-
         try {
+            if (body != null) {
+                connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            }
             val code = connection.responseCode
             val stream = if (code in 200..299) connection.inputStream else connection.errorStream
             val text = stream?.bufferedReader()?.use { it.readText() }.orEmpty()
