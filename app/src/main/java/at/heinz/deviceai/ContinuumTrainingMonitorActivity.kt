@@ -189,18 +189,26 @@ class ContinuumTrainingMonitorActivity : Activity() {
         val work = listOf(research, offline, cdx).firstOrNull { it.researchingNow }
         val running = training ?: work
         val live = running != null
+        val last = listOf(research, offline, cdx).maxByOrNull { it.endedAt }
+        val justCompleted = !live && last != null && last.endedAt > 0L &&
+            System.currentTimeMillis() - last.endedAt in 0L..60_000L
         headline.text = when {
             training != null -> "TRAINIERT GERADE"
             work != null -> "FORSCHT / PRÜFT GERADE"
+            justCompleted -> "TRAINING ABGESCHLOSSEN"
             else -> "WARTET AUF NÄCHSTEN ZYKLUS"
         }
-        subline.text = if (live) {
-            (running!!.subject.ifBlank { "Continuum-Lernkern" }) + " · " + phaseName(running.phase)
-        } else "Ruhiger Standby · letzter Lernstand bleibt gespeichert"
+        subline.text = when {
+            live -> (running!!.subject.ifBlank { "Continuum-Lernkern" }) +
+                " · " + phaseName(running.phase)
+            justCompleted -> outcomeName(last!!.outcome)
+            else -> "Ruhiger Standby · letzter Lernstand bleibt gespeichert"
+        }
         orb.mode = when {
             training != null -> 2
             work != null -> 1
             listOf(research, offline, cdx).any { it.stale } -> 3
+            justCompleted -> 4
             else -> 0
         }
         val scheduler = ContinuumPublicStudyScheduler(this)
@@ -254,6 +262,7 @@ private class TrainingOrbView(context: Context) : View(context) {
             2 -> Color.rgb(48, 235, 245)
             1 -> Color.rgb(81, 167, 255)
             3 -> Color.rgb(255, 182, 81)
+            4 -> Color.rgb(79, 232, 170)
             else -> Color.rgb(143, 122, 246)
         }
         paint.style = Paint.Style.FILL
