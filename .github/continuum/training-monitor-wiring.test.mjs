@@ -41,9 +41,11 @@ test('training state is persisted by channel and stale starts are not shown as l
 
 test('public research records the real source and audit lifecycle and keeps the 15-minute plan', () => {
   assert.match(research, /ContinuumTrainingMonitor\.begin\(this@ContinuumPublicStudyJobService/);
-  for (const state of ['FETCH_SOURCE','DISCOVER_TOPICS','ARCHIVE_SOURCE','TRAIN_WEIGHTS','AUDIT']) {
+  for (const state of ['FETCH_SOURCE','DISCOVER_TOPICS','ARCHIVE_SOURCE','AUDIT']) {
     assert.match(research, new RegExp('ContinuumTrainingMonitor\\.PUBLIC,"' + state + '"'));
   }
+  assert.match(research, /observeTraining \{ trainingPhase ->/);
+  assert.doesNotMatch(research, /ContinuumTrainingMonitor\.PUBLIC,"TRAIN_WEIGHTS"/);
   assert.match(research, /ContinuumTrainingMonitor\.end\(this@ContinuumPublicStudyJobService/);
   assert.match(research, /\.setPeriodic\(ContinuumPublicStudyPolicy\.PERIOD_MS\)/);
 });
@@ -55,6 +57,8 @@ test('offline job records deferral, failures and interrupts without rewriting mo
   assert.match(offline, /"INTERRUPTED"/);
   assert.match(offline, /core\.bootstrapOfflineCurriculum\(cancelled\)/);
   assert.match(offline, /core\.bootstrapSemanticCurriculum\(cancelled\)/);
+  assert.match(offline, /observeTraining \{ trainingPhase ->/);
+  assert.doesNotMatch(offline, /ContinuumTrainingMonitor\.OFFLINE,"TRAIN_WEIGHTS"/);
 });
 
 test('CDX1 audits are separate and preview version increases without touching main', () => {
