@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {ANSK_BASELINE_FAILURE_CATEGORIES} from './ansk-baseline-triage.mjs';
 
 const SHA40 = /^[0-9a-f]{40}$/;
 const SHA64 = /^[0-9a-f]{64}$/;
@@ -82,6 +83,33 @@ function inspectAnsk(base) {
   }
 }
 
+/** Research receipts are metadata, not live compiler evidence. */
+function inspectAnskBaseline(base) {
+  const dir = path.join(base, 'ansk-lab');
+  const state = directoryState(dir);
+  if (state === 'MISSING') return {status:'NO_BASELINE_FAILURE_RECORDED'};
+  if (state !== 'PRESENT') return {status:'UNREADABLE'};
+  try {
+    const record = readBoundedJson(path.join(dir, 'last-baseline-failure.json'), 8_192);
+    const d = record?.detail;
+    if (record?.schema !== 'continuum-ansk-baseline-failure' || record.version !== 1 ||
+        record.status !== 'BLOCKED_BASELINE_NOT_GREEN' || !SHA40.test(record.head ?? '') ||
+        !Number.isSafeInteger(record.observedAt) || record.observedAt < 0 ||
+        typeof d?.reason !== 'string' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(d.reason) ||
+        !ANSK_BASELINE_FAILURE_CATEGORIES.includes(d.failureCategory) ||
+        typeof d.nextAction !== 'string' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(d.nextAction) ||
+        !Array.isArray(d.checks) || d.checks.length > 2)
+      throw Error('INVALID_ANSK_BASELINE_REPORT');
+    // Historical only: the checkout HEAD may have changed after this run.
+    return {status:'HISTORICAL_BASELINE_FAILURE_REPORTED',
+      head:record.head, observedAt:record.observedAt,
+      failureCategory:d.failureCategory, nextAction:d.nextAction,
+      independentlyVerifiedHere:false};
+  } catch (error) {
+    return {status:error.code === 'ENOENT' ? 'NO_BASELINE_FAILURE_RECORDED' : 'UNREADABLE'};
+  }
+}
+
 function inspectMobileBuilder(base) {
   const directory = path.join(base, 'mobile-builder');
   const state = directoryState(directory);
@@ -131,7 +159,7 @@ export function readLocalIntegrationStatus({ root, stateBase = path.join(os.home
     schema: 'continuum-local-integration-status', version: 1,
     state: 'REPORTS_ONLY',
     buildLease: inspectLease(stateBase, canonicalRoot),
-    ansk: inspectAnsk(stateBase),
+    ansk: {...inspectAnsk(stateBase), lastBaselineFailure: inspectAnskBaseline(stateBase)},
     mobileBuilder: inspectMobileBuilder(stateBase)
   };
 }
