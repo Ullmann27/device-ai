@@ -92,7 +92,7 @@ Die alte Handarbeit mit `cp`/Dateimanager-Suche entfällt **erst für Builds, di
 ## Rücksetzen, offene Risiken und ehrliche Abnahme
 
 - Änderungen ausschließlich im Draft-Branch. Ein Rollback erfolgt durch Revert der isolierten Commits; **kein** Main-Eingriff.
-- Die alte bereits installierte Preview bleibt **unverändert**, bis eine neu gebaute, kryptografisch geprüfte APK vom Besitzer installiert wird. Insbesondere ist der zusätzliche alte Launcher bis zu diesem Update erwartbar.
+- Der Besitzer hat die neue Preview `9f77202` am **20.10.2026 um 04:49** auf dem Samsung sichtbar gestartet; der Screenshot zeigt die moderne Device-AI-`AgentActivity` mit Orb und Baumeister-Kachel. Ein späterer Build mit dem hier neu entwickelten **automatischen Download-Kopierer** muss separat gebaut, getestet und ausdrücklich installiert werden. Bereits installierte APKs ändern sich durch einen GitHub-Commit nicht.
 - Bei einem nicht installierten passenden lokalen LLM wird keine autonome Codegenerierung als getestet ausgegeben.
 - Der zuerst manuell gelungene Samsung-APK-Build belegt **nicht** den vollständigen Build über den Android-Button, keine APK-Gerätelaufzeit-Suite und keine kontinuierlich autonome Softwareentwicklung.
 - Unabhängige M4-Gates, echtes UI-Gerätefeedback, Langzeitbetrieb und Produktionsfreigabe bleiben eigene Abnahmestufen. Testskips sind einzeln zu begründen und dürfen nicht stillschweigend als bestandene Tests gezählt werden.
