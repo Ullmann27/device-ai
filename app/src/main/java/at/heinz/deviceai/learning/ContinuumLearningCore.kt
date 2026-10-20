@@ -363,7 +363,7 @@ class ContinuumLearningCore(
                     after.correct+"/"+after.total+
                     " · Verlust "+"%.4f".format(Locale.ROOT,before.loss)+
                     " → "+"%.4f".format(Locale.ROOT,after.loss)+
-                    " · "+if(retains(before,after))"OK" else "REGRESSION"
+                    " · "+(if(retains(before,after))"OK" else "REGRESSION")
             val diagnostics=listOf(
                 checkLine("Neuer Intent",auditI0,auditI1),
                 checkLine("Neue Semantik",auditS0,auditS1),
