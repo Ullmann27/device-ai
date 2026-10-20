@@ -115,7 +115,7 @@ export function parseJUnit(xml,root){
       const name=attr(attrs,'name'),classname=attr(attrs,'classname');
       // Hash identities, never copy untrusted test names into public receipts.
       // Incomplete/duplicate identifiers will fail the ANSK contract later.
-      skippedCaseHashes.push(name&&classname?sha256(classname+'\\0'+name):null);
+      skippedCaseHashes.push(name&&classname?sha256(classname+'\0'+name):null);
       continue;
     }
     // attribute values may contain '>' (e.g. assertion source), so match quoted values
