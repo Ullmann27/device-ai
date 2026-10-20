@@ -251,7 +251,11 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       try{fs.rmSync(lock,{force:true});}
       catch(error){cleanupFailure??=error;}
     }
-    try{releaseBuildLease();}catch(error){cleanupFailure??=error;}
+    // Preserve the shared lease too if worktree cleanup was uncertain:
+    // another Gradle-capable worker must not treat this checkout as free.
+    if(!cleanupFailure){
+      try{releaseBuildLease();}catch(error){cleanupFailure??=error;}
+    }
     if(cleanupFailure)throw cleanupFailure;
   }
 }
