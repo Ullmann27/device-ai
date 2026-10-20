@@ -67,8 +67,7 @@ internal object ContinuumOrthographyProbe {
             val lower=token.lowercase(Locale.GERMAN)
             if(!token.matches(words) || lower.length<6 || lower in dictionary ||
                 token.any(Char::isDigit) || token.contains('_') || token.contains('-') ||
-                token!=token.lowercase(Locale.GERMAN) && token!=
-                    token.replaceFirstChar { it.lowercase(Locale.GERMAN) })return@map token
+                token.drop(1)!=token.drop(1).lowercase(Locale.GERMAN))return@map token
             var winner:String?=null
             var best=1.01
             var second=Double.POSITIVE_INFINITY
