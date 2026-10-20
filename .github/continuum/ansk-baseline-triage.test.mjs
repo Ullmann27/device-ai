@@ -108,3 +108,15 @@ test('omitted reason preserves missing unit-test evidence in a nominally green c
   assert.equal(result.reason,'NOT_ALL_PROFILES_GREEN');
   assert.equal(result.failureCategory,'ANDROID_UNIT_EVIDENCE_MISSING');
 });
+
+test('three successful but unidentifiable JUnit skips explain ANSK baseline block', () => {
+  const result = summarizeAnskBaselineFailure(report(
+    profile('android-compile',true),
+    profile('android-unit',true,{executed:632,skipped:3})
+  ),'INVALID_PROFILE');
+  assert.equal(result.reason,'INVALID_PROFILE');
+  assert.equal(result.failureCategory,'ANDROID_UNIT_SKIP_IDENTITIES_MISSING');
+  assert.equal(result.nextAction,'INSPECT_SKIPPED_JUNIT_CASES');
+  assert.equal(result.checks[1].executed,632);
+  assert.equal(result.checks[1].skipped,3);
+});
