@@ -67,9 +67,11 @@ class ContinuumDecoderBridge(private val directory: File) {
         audit:DecoderEvidenceCorpus,
         encoderSnapshot:ByteArray,
         steps:Int=600,
-        cancelled:()->Boolean={false}
+        cancelled:()->Boolean={false},
+        protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
     ):DecoderExperimentResult {
         require(train.split==DecoderSplit.TRAIN && audit.split==DecoderSplit.AUDIT)
+        require(protectedAudits.size<=4 && protectedAudits.all { it.split==DecoderSplit.AUDIT })
         val trainingInputs=train.pairs.map { it.conditionerText() }.toSet()
         require(trainingInputs.size==train.pairs.size) { "Duplicate train input" }
         require(audit.pairs.map { it.conditionerText() }.toSet().size==audit.pairs.size) {
@@ -78,6 +80,13 @@ class ContinuumDecoderBridge(private val directory: File) {
         require(audit.pairs.none { it.conditionerText() in trainingInputs }) {
             "Train/audit evidence-question overlap"
         }
+        val heldoutInputs=audit.pairs.map { it.conditionerText() }.toSet()
+        val protectedInputs=protectedAudits.flatMap { it.pairs }
+            .map { it.conditionerText() }
+        require(protectedInputs.size==protectedInputs.toSet().size &&
+            protectedInputs.none { it in trainingInputs || it in heldoutInputs }) {
+            "Protected holdout must not overlap with training or main audit"
+        }
         val encoder=TrainableSubwordEncoder.restore(encoderSnapshot)
         val conditionFor:(DecoderEvidencePair)->DoubleArray = {
             encoder.representation(it.conditionerText())
@@ -85,15 +94,22 @@ class ContinuumDecoderBridge(private val directory: File) {
         val baseline=loadPairedOrNull() ?: TinyContextDecoder()
         val candidate=TinyContextDecoder.restore(baseline.save())
         val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
+        val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
         val result=candidate.trainEvidencePairs(train,steps=steps,
             conditionerFor=conditionFor,cancelled=cancelled,maxMillis=5000)
         val auditAfter=candidate.evaluateEvidencePairs(audit,conditionFor)
+        val protectedAfter=protectedAudits.map { candidate.evaluateEvidencePairs(it,conditionFor) }
+        val protectedSafe=protectedAfter.zip(protectedBefore).all { (now,old) ->
+            now.isFinite() && now<=old
+        }
         val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
-            result.lossAfter<result.lossBefore && auditAfter<=auditBefore
+            result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
+            protectedSafe
         if(accepted)candidate.saveTo(pairedCheckpoint)
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
-            result.lossAfter,auditBefore,auditAfter,hash(active.save()))
+            result.lossAfter,auditBefore,auditAfter,hash(active.save()),
+            protectedBefore,protectedAfter)
     }
 
     /** Research-only evidence-conditional output; never auto-published as a
@@ -150,5 +166,7 @@ data class DecoderExperimentResult(
     val trainingAfter: Double,
     val auditBefore: Double,
     val auditAfter: Double,
-    val activeSha256: String
+    val activeSha256: String,
+    val protectedBefore: List<Double> = emptyList(),
+    val protectedAfter: List<Double> = emptyList()
 )
