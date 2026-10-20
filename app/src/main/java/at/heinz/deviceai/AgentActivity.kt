@@ -129,6 +129,8 @@ class AgentActivity : Activity() {
         private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000
         private const val NEURAL_IMPORT_REQUEST = 2211
         private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218
+        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219
+        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -1189,6 +1191,7 @@ class AgentActivity : Activity() {
             CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
             CenterAction("WISSENSARCHIV · QUELLEN SUCHEN") { showKnowledgeArchiveSearch() },
             CenterAction("RIS · AMTLICHE QUELLE ABLEGEN") { showRisArchiveImport() },
+            CenterAction("WISSENSARCHIV · BACKUP / WIEDERHERSTELLEN") { showArchiveBackupMenu() },
             CenterAction("GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE") { showExtendedCurriculumDialog() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
@@ -2559,6 +2562,7 @@ class AgentActivity : Activity() {
             "AUTONOME INTERNETFORSCHUNG · EIN/AUS",
             "WISSENSARCHIV · QUELLEN SUCHEN",
             "RIS · AMTLICHE QUELLE ABLEGEN",
+            "WISSENSARCHIV · BACKUP / WIEDERHERSTELLEN",
             "GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE"
         )
         AlertDialog.Builder(this)
@@ -2573,6 +2577,7 @@ class AgentActivity : Activity() {
                     5 -> showKnowledgeArchiveSearch()
                     6 -> showExtendedCurriculumDialog()
                     7 -> showRisArchiveImport()
+                    8 -> showArchiveBackupMenu()
                 }
             }
             .setNegativeButton("Schließen",null)
@@ -2673,6 +2678,61 @@ class AgentActivity : Activity() {
      * Exact source attribution is retained; this is never a legal validity
      * determination, full-text corpus import, or automatic statutory update.
      */
+    private fun showArchiveBackupMenu() {
+        AlertDialog.Builder(this)
+            .setTitle("Wissensarchiv · Backup")
+            .setMessage("Alle gespeicherten öffentlichen Quellen mitsamt Herkunft "+
+                "und SHA-256 werden als ZIP gesichert oder wiederhergestellt. "+
+                "Du wählst im Android-Dateidialog den Speicherort selbst. "+
+                "Cloud-Synchronisierung erfolgt nur, wenn du ausdrücklich "+
+                "einen verbundenen Cloud-Dokumentanbieter auswählst. "+
+                "Achtung: Auch eingefügte RIS-Texte werden exportiert; "+
+                "keine privaten Akten oder geheimen Daten speichern.")
+            .setNegativeButton("Abbrechen",null)
+            .setNeutralButton("BACKUP IMPORTIEREN") { _, _ ->
+                val intent=Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type="application/zip"
+                }
+                runCatching { startActivityForResult(intent,CONTINUUM_ARCHIVE_IMPORT_REQUEST) }
+                    .onFailure { addAssistantMessage("Backup-Auswahl gescheitert: "+failureName(it)) }
+            }
+            .setPositiveButton("BACKUP EXPORTIEREN") { _, _ ->
+                val intent=Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type="application/zip"
+                    putExtra(Intent.EXTRA_TITLE,"continuum-wissensarchiv.zip")
+                }
+                runCatching { startActivityForResult(intent,CONTINUUM_ARCHIVE_EXPORT_REQUEST) }
+                    .onFailure { addAssistantMessage("Backup-Speicher nicht verfügbar: "+failureName(it)) }
+            }
+            .show()
+    }
+
+    private fun processArchiveBackup(uri:Uri,import:Boolean) {
+        onLearningIo({
+            val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+            if(import) {
+                val count=contentResolver.openInputStream(uri)?.use { input ->
+                    archive.importZip(input)
+                } ?: error("Backup konnte nicht geöffnet werden")
+                "WISSENSARCHIV · "+count+" geprüfte Quellen aus Backup gelesen. "+
+                    "Keine Besitzerfakten oder Berechtigungen geändert."
+            } else {
+                val count=contentResolver.openOutputStream(uri,"wt")?.use { output ->
+                    archive.exportZip(output)
+                } ?: error("Backup-Ziel konnte nicht geöffnet werden")
+                "WISSENSARCHIV · "+count+" Quellen als ZIP gesichert. "+
+                    "Datei nur in einem vertrauenswürdigen Ordner aufbewahren."
+            }
+        }) { done ->
+            addAssistantMessage(done.getOrElse {
+                "Wissensarchiv-Backup nicht abgeschlossen: "+failureName(it)+
+                    ". Vorhandene Quellen werden nicht gelöscht."
+            })
+        }
+    }
+
     private fun showRisArchiveImport() {
         val types=arrayOf("Gesetz / Verordnung · RIS", "Judikatur · RIS")
         AlertDialog.Builder(this)
@@ -5849,6 +5909,14 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            CONTINUUM_ARCHIVE_EXPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) processArchiveBackup(uri,false)
+            }
+            CONTINUUM_ARCHIVE_IMPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) processArchiveBackup(uri,true)
             }
             CONTINUUM_CORE_EXPORT_REQUEST -> {
                 val uri=data?.data
