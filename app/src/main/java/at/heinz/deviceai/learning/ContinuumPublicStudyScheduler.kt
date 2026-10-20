@@ -32,6 +32,9 @@ class ContinuumPublicStudyScheduler(context:Context) {
         val pendingReason=if(pending!=null && android.os.Build.VERSION.SDK_INT>=34)
             runCatching { jobs.getPendingJobReason(JOB_ID) }.getOrNull()
         else null
+        val pendingTopics=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)
+        val seenTopics=loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED)
+        val nextTopic=ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),pendingTopics)
         return "AUTONOME ÖFFENTLICHE FORSCHUNG: "+
             (if(enabled)"FREIGEGEBEN" else "AUS")+"\n"+
             "Android-Forschungsjob: "+jobStatus+
@@ -40,6 +43,9 @@ class ContinuumPublicStudyScheduler(context:Context) {
             "Versuche: "+prefs.getLong("attempts",0)+
             " · neue Quellen: "+prefs.getLong("sources",0)+
             " · akzeptierte SWB1-Runden: "+prefs.getLong("accepted",0)+
+            "\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+
+            " · untersuchte Thementitel: "+seenTopics.size+
+            "\nNächstes Forschungsthema: "+nextTopic+
             "\nJeweils eine Wikipedia-Quelle, nur beim Laden und mit Netzwerk; "+
             "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."
     }
@@ -86,14 +92,42 @@ class ContinuumPublicStudyScheduler(context:Context) {
         }
     }
 
-    @Synchronized fun nextTopic():String =
-        ContinuumPublicStudyPolicy.topicForCycle(prefs.getLong("attempts",0L))
+    private fun loadTopics(key:String,limit:Int):List<String> =
+        prefs.getString(key,"").orEmpty().split('\n')
+            .filter(ContinuumPublicStudyPolicy::validArticleTitle)
+            .distinct().take(limit)
 
-    @Synchronized fun recordCycle(phase:String, sourceAdded:Boolean=false,
+    @Synchronized fun nextTopic():String =
+        ContinuumTopicFrontier.select(prefs.getLong("attempts",0L),
+            loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING))
+
+    /** Every new topic is a trusted encyclopedia link title, not a web command. */
+    @Synchronized fun addDiscovered(titles:List<String>):Int {
+        if(!enabled || titles.isEmpty())return 0
+        val before=loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING)
+        val next=ContinuumTopicFrontier.enqueue(before,
+            loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),titles)
+        if(next==before)return 0
+        check(prefs.edit().putString("topic_pending",next.joinToString("\n")).commit()) {
+            "Research topic queue not persisted"
+        }
+        return next.size-before.size
+    }
+
+    @Synchronized fun recordCycle(phase:String,topic:String?,sourceAdded:Boolean=false,
                                   weightsAccepted:Boolean=false) {
         val edit=prefs.edit()
             .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))
             .putString("phase",phase.take(65))
+        if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic)) {
+            val (remaining,history)=ContinuumTopicFrontier.afterAttempt(
+                loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING),
+                loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),
+                topic,phase!="CANCELLED" && phase!="INTERRUPTED" &&
+                    !phase.startsWith("FAILED_"))
+            edit.putString("topic_pending",remaining.joinToString("\n"))
+                .putString("topic_visited",history.joinToString("\n"))
+        }
         if(sourceAdded)edit.putLong("sources",prefs.getLong("sources",0L)+1L)
         if(weightsAccepted)edit.putLong("accepted",prefs.getLong("accepted",0L)+1L)
         check(edit.commit()) { "Study audit not persisted" }
@@ -119,7 +153,7 @@ internal object ContinuumPublicStudyFetch {
         conn.instanceFollowRedirects=false
         conn.connectTimeout=6_000
         conn.readTimeout=6_000
-        conn.setRequestProperty("User-Agent","DeviceAI-Continuum/0.4 (public research; one article)")
+        conn.setRequestProperty("User-Agent","DeviceAIContinuumResearchBot/0.5 (https://github.com/Ullmann27; one public article)")
         conn.setRequestProperty("Accept","application/json")
         try {
             check(conn.responseCode==200) { "HTTP_"+conn.responseCode }
@@ -160,6 +194,54 @@ internal object ContinuumPublicStudyFetch {
             return result
         } finally { conn.disconnect() }
     }
+
+    /** One additional, bounded HTTPS request for outbound article links. */
+    fun discover(sourceTitle:String,cancelled:()->Boolean):List<String> {
+        check(!cancelled())
+        val url=URL(ContinuumPublicStudyPolicy.encyclopediaLinksApiUrl(sourceTitle))
+        check(url.protocol=="https" && url.host=="de.wikipedia.org")
+        val conn=url.openConnection() as HttpsURLConnection
+        conn.instanceFollowRedirects=false
+        conn.connectTimeout=4_000
+        conn.readTimeout=4_000
+        conn.setRequestProperty("Accept","application/json")
+        conn.setRequestProperty("User-Agent",
+            "DeviceAIContinuumResearchBot/0.5 (https://github.com/Ullmann27; source links)")
+        try {
+            check(conn.responseCode==200) { "Link API HTTP_"+conn.responseCode }
+            check(conn.contentType?.lowercase()?.contains("json")==true)
+            check(conn.contentLengthLong<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+            val bytes=ByteArrayOutputStream()
+            conn.inputStream.use { input ->
+                val buffer=ByteArray(1024)
+                while(true) {
+                    check(!cancelled())
+                    val n=input.read(buffer)
+                    if(n<0)break
+                    if(n==0)continue
+                    check(bytes.size()+n<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+                    bytes.write(buffer,0,n)
+                }
+            }
+            val result=JSONObject(String(bytes.toByteArray(),StandardCharsets.UTF_8))
+                .optJSONObject("query")?.optJSONObject("pages") ?: return emptyList()
+            val links=ArrayList<String>(16)
+            val pages=result.keys()
+            while(pages.hasNext() && links.size<16) {
+                val page=result.optJSONObject(pages.next()) ?: continue
+                val entries=page.optJSONArray("links") ?: continue
+                for(i in 0 until minOf(entries.length(),16)) {
+                    val item=entries.optJSONObject(i) ?: continue
+                    val title=item.optString("title")
+                    if(item.optInt("ns",-1)==0 &&
+                        ContinuumPublicStudyPolicy.validArticleTitle(title) &&
+                        title!=sourceTitle) links.add(title)
+                }
+            }
+            check(!cancelled())
+            return links.distinct()
+        } finally { conn.disconnect() }
+    }
 }
 
 /**
@@ -178,6 +260,7 @@ class ContinuumPublicStudyJobService:JobService() {
             var phase="CANCELLED"
             var added=false
             var accepted=false
+            var selectedTopic:String?=null
             val start=SystemClock.elapsedRealtime()
             val cancelled:()->Boolean = {
                 stopping.get() || Thread.currentThread().isInterrupted ||
@@ -185,8 +268,18 @@ class ContinuumPublicStudyJobService:JobService() {
                         ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS
             }
             try {
-                val source=ContinuumPublicStudyFetch.fetch(scheduler.nextTopic(),cancelled)
+                selectedTopic=scheduler.nextTopic()
+                val source=ContinuumPublicStudyFetch.fetch(selectedTopic,cancelled)
                 check(!cancelled())
+                // Keep discovery optional: failures here never discard a valid
+                // article or interrupt the existing learning pipeline.
+                if(SystemClock.elapsedRealtime()-start <
+                    ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS-6_000L) {
+                    val discovered=runCatching {
+                        ContinuumPublicStudyFetch.discover(source.subject,cancelled)
+                    }.getOrDefault(emptyList())
+                    if(!cancelled())scheduler.addDiscovered(discovered)
+                }
                 val notebook=MentorSourceNotebook(this)
                 val pending=ContinuumSourceNovelty.pending(listOf(source),
                     ContinuumSourceNovelty.completedHashes(filesDir))
@@ -234,7 +327,7 @@ class ContinuumPublicStudyJobService:JobService() {
                     }
                 }
                 if(!stopping.get()) {
-                    runCatching { scheduler.recordCycle(phase,added,accepted) }
+                    runCatching { scheduler.recordCycle(phase,selectedTopic,added,accepted) }
                     jobFinished(params,reschedule)
                 }
             }
