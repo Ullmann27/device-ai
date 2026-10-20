@@ -112,10 +112,10 @@ class TinyContextDecoder private constructor(
      * the causal context at the first answer byte; every example has its OWN
      * condition derived from evidence+question, not a frozen batch-wide vector.
      */
-    private fun pairedSamples(
+    private fun pairedBuckets(
         corpus:DecoderEvidenceCorpus,
         conditionerFor:(DecoderEvidencePair)->DoubleArray
-    ):List<PairedSample> = corpus.pairs.flatMap { pair ->
+    ):List<List<PairedSample>> = corpus.pairs.map { pair ->
         val prefix=pair.prefix().toByteArray(Charsets.UTF_8)
         val full=prefix+pair.answer.toByteArray(Charsets.UTF_8)
         val c=condition(conditionerFor(pair))
@@ -127,6 +127,10 @@ class TinyContextDecoder private constructor(
             PairedSample(Sample(contextTokens,if(n==full.size)EOS else full[n].toInt() and 255),c)
         }
     }
+    private fun pairedSamples(corpus:DecoderEvidenceCorpus,
+        conditionerFor:(DecoderEvidencePair)->DoubleArray):List<PairedSample> =
+        pairedBuckets(corpus,conditionerFor).flatten()
+
     private fun pairedLoss(samples:List<PairedSample>):Double =
         samples.sumOf { -ln(forward(it.sample.context,it.conditioner).p[it.sample.target].coerceAtLeast(1e-12)) }/samples.size
 
@@ -174,13 +178,16 @@ class TinyContextDecoder private constructor(
         require(corpus.split==DecoderSplit.TRAIN)
         require(steps in 1..20000 && learningRate in .0001.. .08 && maxMillis in 1..5000)
         require(updates<=MAX_UPDATES-steps)
-        val examples=pairedSamples(corpus,conditionerFor)
+        val buckets=pairedBuckets(corpus,conditionerFor)
+        val examples=buckets.flatten()
         val before=pairedLoss(examples)
         val started=nowNanos()
         var completed=0
         while(completed<steps && !cancelled() && !Thread.currentThread().isInterrupted &&
             nowNanos()-started<maxMillis*1_000_000L) {
-            val sample=examples[updates%examples.size]
+            val bucket=updates%buckets.size
+            val character=(updates/buckets.size)%buckets[bucket].size
+            val sample=buckets[bucket][character]
             update(sample.sample,sample.conditioner,learningRate)
             updates++;completed++
         }

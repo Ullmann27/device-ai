@@ -1,4 +1,29 @@
 import fs from 'node:fs';
+
+/** A measured paired trial is a research observation, never a training signal.
+ * Compiler/test times include validation; planning is reported separately.
+ * One success is not an estimated generalization rate or a speedup claim.
+ */
+export function summarizeRepairTransfer(arms) {
+ if(!Array.isArray(arms)||arms.length!==2||
+    new Set(arms.map(a=>a.name)).size!==2||
+    !arms.every(a=>['recipe','control'].includes(a.name)&&
+      typeof a.verified==='boolean'&&Number.isFinite(a.planningMs)&&a.planningMs>=0&&
+      Number.isFinite(a.validationMs)&&a.validationMs>=0))
+  throw Error('Invalid paired repair observations');
+ const rows=arms.map(a=>({
+  arm:a.name,attempts:1,verifiedRepairs:Number(a.verified),
+  failedRepairs:Number(!a.verified),observedFailureRate:Number(!a.verified),
+  planningMs:a.planningMs,validationMs:a.validationMs,
+  totalMs:a.planningMs+a.validationMs
+ }));
+ const recipe=rows.find(a=>a.arm==='recipe'),control=rows.find(a=>a.arm==='control');
+ return {sampleSizePerArm:1,rows,
+  recipeMinusControlMs:recipe.totalMs-control.totalMs,
+  conclusion:recipe.verifiedRepairs&&control.verifiedRepairs
+   ?'BOTH_VERIFIED_NO_GENERALIZATION_CLAIM':'INCOMPLETE_OR_FAILED_COMPARISON',
+  modelTrainingAuthorized:false,productionRankingUpdateAuthorized:false};
+}
 /** Strategy outcome aggregation (Laplace-ranked). Persisted through repair-ledger.mjs,
  * which keys experiences as "<diagnostic kind>|<strategy>". */
 export function mergeExperiences(previous=[],observations=[]) {

@@ -16,6 +16,7 @@ import crypto from 'node:crypto';
 import {executeInvestigation} from './backlog-investigator.mjs';
 import {summarizeRepairHandoffs} from './teamleader-handoffs.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
+import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -164,6 +165,11 @@ export function runTeamleaderCycle({
  if(storeRoot===sourceRoot||storeRoot.startsWith(sourceRoot+path.sep))
   throw Error('Store Teamleader state outside the repository');
  const started=now(),unlock=getLock(statePath,started);
+ // The per-teamleader state lock is insufficient: ANSK and the Android
+ // mobile builder must also acquire this same atomic checkout-local lease.
+ let releaseBuildLease;
+ try{releaseBuildLease=acquireContinuumBuildLease(sourceRoot);}
+ catch(error){unlock();throw error;}
  try{
   let state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
   const head=driver.head(root);
@@ -312,7 +318,9 @@ export function runTeamleaderCycle({
   writeAtomic(statePath,JSON.stringify(state)+'\n');
   return {head,kind:chosen.kind,outcome,detail,elapsedMs:elapsed,
     artifact,statePath,taskId:chosen.taskId??null};
- }finally{unlock();}
+ }finally{
+  try{releaseBuildLease();}finally{unlock();}
+ }
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */

@@ -3,39 +3,7 @@
 set -Eeuo pipefail
 umask 077
 
-# Explicitly approved PR42 source bridge. Keeps Render's existing persistent
-# signing credentials and HTTPS hostname without changing production/Main.
-# The source checkout is detached: no push, merge or branch rewrite.
-expected_delivery="astra/render-mentor-apk-builder-20261019"
-delivery_branch="$(git branch --show-current)"
-if [[ "$delivery_branch" != "$expected_delivery" && -n "$delivery_branch" ]]; then
-  echo "[Continuum] Refusing unexpected bridge source: $delivery_branch" >&2
-  exit 69
-fi
-# Render may modify tracked checkout metadata while preparing a static build.
-# Its isolated ephemeral build directory may safely discard such local changes
-# when switching to the immutable fetched commit; no upstream branch is changed.
-test -n "${RENDER_SERVICE_ID:-}" || {
-  echo "[Continuum] Refusing bridge outside the designated Render build" >&2
-  exit 69
-}
-target_branch="astra/continuum-experiment-charter-20261019"
-target_remote_ref="refs/remotes/origin/$target_branch"
-printf '[Continuum] Fetching pinned repository-owned PR42 branch source\n'
-git fetch --no-tags origin "+refs/heads/$target_branch:$target_remote_ref"
-target_commit="$(git rev-parse --verify "$target_remote_ref^{commit}")"
-if [[ ! "$target_commit" =~ ^[0-9a-f]{40}$ ]]; then
-  echo "[Continuum] Invalid target source SHA" >&2
-  exit 69
-fi
-git -c advice.detachedHead=false checkout --force --detach "$target_commit"
-test "$(git rev-parse HEAD)" = "$target_commit"
-test -f scripts/render-mentor-preview.sh
-grep -q 'expected_branch="astra/continuum-experiment-charter-20261019"' scripts/render-mentor-preview.sh
-grep -q 'CONTINUUM_MENTOR_SIGNING_P12_BASE64' scripts/render-mentor-preview.sh
-printf '[Continuum] Building current PR42 experiment commit %s with retained Render signing\n' "$target_commit"
-exec bash scripts/render-mentor-preview.sh
-
+printf '[Continuum] isolated Android mentor preview build\n'
 command -v bash >/dev/null
 command -v curl >/dev/null
 command -v unzip >/dev/null
@@ -46,9 +14,12 @@ command -v git >/dev/null
 
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
-expected_branch="astra/render-mentor-apk-builder-20261019"
+# The original Mentor service is still pinned to the older branch.
+# This updated script is ready for a separately authorized Render branch switch.
+expected_branch="astra/continuum-experiment-charter-20261019"
+render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "" ]]; then
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
   exit 69
 fi
@@ -125,6 +96,15 @@ node --check .github/continuum/workshop-specialist-orchestrator.mjs
 node --check .github/continuum/continuum-hyper-lab.mjs
 node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
 
+echo "[Continuum] AUTOGENESIS, CDX1 and bounded research regression gates"
+node --test \
+  .github/continuum/autogenesis-safe-wiring.test.mjs \
+  .github/continuum/local-model-smoke.test.mjs \
+  .github/continuum/continuum-growth-and-archive.test.mjs \
+  .github/continuum/autonomous-topic-frontier.test.mjs \
+  .github/continuum/research-job-permission.test.mjs \
+  .github/continuum/cdx-large-curriculum.test.mjs
+
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
 : "${CONTINUUM_MENTOR_SIGNING_PASSWORD:?Signing password is missing}"
@@ -158,8 +138,8 @@ cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
-  "$commit" "$expected_branch" > "$output/BUILD-INFO.txt"
+printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
+  "$commit" "$actual_branch" "$expected_branch" > "$output/BUILD-INFO.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
 cat "$output/SHA256SUMS.txt"

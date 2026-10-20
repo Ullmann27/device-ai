@@ -21,6 +21,7 @@ import at.heinz.deviceai.learning.OwnerFactChange
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.ActivityNotFoundException
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.SpannableString
@@ -127,6 +128,9 @@ class AgentActivity : Activity() {
         private const val DEV_BACKLOG_IMPORT_REQUEST = 2216
         private const val DEV_BACKLOG_MAX_IMPORT_BYTES = 4_000_000
         private const val NEURAL_IMPORT_REQUEST = 2211
+        private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218
+        private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219
+        private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -243,6 +247,8 @@ class AgentActivity : Activity() {
     private var homeHeader: View? = null
     private var modeSection: View? = null
     private val dashboardFeatures = ArrayList<View>()
+    private var nexusExpertPanel: LinearLayout? = null
+    private var nexusExpertExpanded = false
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -370,6 +376,7 @@ class AgentActivity : Activity() {
         }
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
+        at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).restore()
         recoverDevelopmentBacklog()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
@@ -549,6 +556,10 @@ class AgentActivity : Activity() {
 
         side.addView(
             actionButton("Entwicklungsaufgabe").apply { setOnClickListener { showDevelopmentDialog() } },
+            matchWidth(top = 8)
+        )
+        side.addView(
+            actionButton("⚒ Handy-Builder · Termux").apply { setOnClickListener { openMobileBuilder() } },
             matchWidth(top = 8)
         )
 
@@ -815,10 +826,71 @@ class AgentActivity : Activity() {
             minHeight = dp(56)
             setOnClickListener { showFirstStepsGuide() }
         }, matchWidth(top = 10))
-        container.addView(textView("DEINE KI-BEREICHE", 10f,
+        container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
+            Color.rgb(153, 209, 255), true).apply {
+            letterSpacing = 0.12f
+        }, matchWidth(top = 16))
+        val voice = ContinuumNexusHomeSpec.voice
+        container.addView(actionButton("🎙  ${voice.title}", accent = true).apply {
+            minHeight = dp(62)
+            contentDescription = voice.title + ". " + voice.description +
+                ". Öffnet die Spracheingabe des Geräts."
+            setOnClickListener { startVoiceInput() }
+        }, matchWidth(top = 9))
+        container.addView(textView(
+            "Sag oder schreibe, was du brauchst. Vor Geräteaktionen und einer App-Installation fragst du nach.",
+            12.5f, Color.rgb(192, 213, 247)
+        ), matchWidth(top = 7))
+
+        val wideNexus = resources.configuration.screenWidthDp >= 700 &&
+            resources.configuration.screenHeightDp >= 500
+        val usableWidthDp = resources.configuration.screenWidthDp -
+            if (wideNexus) 336 else 28
+        val nexusColumns = ContinuumNexusHomeSpec.columns(
+            usableWidthDp, resources.configuration.fontScale
+        )
+        ContinuumNexusHomeSpec.essentials.chunked(nexusColumns).forEach { group ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            group.forEachIndexed { index, item ->
+                val open: () -> Unit = {
+                    when (item.destination) {
+                        ContinuumNexusDestination.CHAT -> focusChatComposer()
+                        ContinuumNexusDestination.CREATE_APP -> showDevelopmentDialog()
+                        ContinuumNexusDestination.KNOWLEDGE -> showMemoryCenter()
+                        ContinuumNexusDestination.PERSONALIZE -> showNexusPersonalization()
+                        ContinuumNexusDestination.TASKS -> showDevelopmentBacklog()
+                    }
+                }
+                row.addView(cockpitTile(item.symbol, item.title, item.description,
+                    item.destination == ContinuumNexusDestination.CREATE_APP, open,
+                    item.destination.ordinal),
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        if (index > 0) marginStart = dp(9)
+                    })
+            }
+            container.addView(row, matchWidth(top = 9))
+        }
+        val moreFunctions = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            visibility = View.GONE
+        }
+        nexusExpertPanel = moreFunctions
+        nexusExpertExpanded = false
+        val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
+            contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
+            setOnClickListener {
+                val show = !nexusExpertExpanded
+                nexusExpertExpanded = show
+                moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
+                text = if (show) "Weitere KI-Funktionen schließen  ▴"
+                    else "Weitere KI-Funktionen anzeigen  ▾"
+            }
+        }
+        container.addView(moreToggle, matchWidth(top = 13))
+        moreFunctions.addView(textView("EXPERTEN UND WEITERE FUNKTIONEN", 10f,
             Color.rgb(153, 189, 252), true).apply {
             letterSpacing = 0.14f
-        }, matchWidth(top = 15))
+        }, matchWidth(top = 8))
 
         val options = listOf(
             Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
@@ -840,8 +912,18 @@ class AgentActivity : Activity() {
                         if (index > 0) marginStart = dp(9)
                     })
             }
-            container.addView(row, matchWidth(top = if (rowIndex == 0) 9 else 9))
+            moreFunctions.addView(row, matchWidth(top = 9))
         }
+        container.addView(moreFunctions, matchWidth())
+        container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
+            contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
+            background = roundedGradient(
+                Color.rgb(24, 49, 99), Color.rgb(14, 30, 62),
+                18, Color.rgb(74, 154, 224)
+            )
+            minHeight = dp(57)
+            setOnClickListener { openMobileBuilder() }
+        }, matchWidth(top = 10))
         container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
             contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
             background = roundedGradient(
@@ -868,6 +950,7 @@ class AgentActivity : Activity() {
         homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
         modeSection?.visibility = if (chat) View.GONE else View.VISIBLE
         dashboardFeatures.forEach { it.visibility = if (chat) View.GONE else View.VISIBLE }
+        nexusExpertPanel?.visibility = if (!chat && nexusExpertExpanded) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.let { dashboard ->
             dashboard.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
@@ -921,17 +1004,32 @@ class AgentActivity : Activity() {
 
     private fun cockpitTile(
         symbol: String, title: String, explanation: String,
-        primary: Boolean, open: () -> Unit
+        primary: Boolean, open: () -> Unit, nexusTone: Int = 0
     ): View {
+        // The four beginner actions use the same blue/violet/teal/gold semantic
+        // accent palette as the portrait and fold references. Old expert tiles
+        // retain their original appearance through the default tone.
+        val palette = when (nexusTone) {
+            1 -> intArrayOf(0xFF164A85.toInt(), 0xFF09254F.toInt(),
+                0xFF46CFFF.toInt(), 0xFF157CCF.toInt(), 0xFF164C9A.toInt())
+            2 -> intArrayOf(0xFF3F2985.toInt(), 0xFF1C174B.toInt(),
+                0xFFB28BFF.toInt(), 0xFF7646DA.toInt(), 0xFF4332A4.toInt())
+            3 -> intArrayOf(0xFF08685F.toInt(), 0xFF073739.toInt(),
+                0xFF38E8DC.toInt(), 0xFF17B9B0.toInt(), 0xFF06777C.toInt())
+            4 -> intArrayOf(0xFF765127.toInt(), 0xFF392817.toInt(),
+                0xFFFFCC75.toInt(), 0xFFC4954A.toInt(), 0xFF795527.toInt())
+            else -> intArrayOf(
+                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
+                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
+                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234),
+                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
+                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152)
+            )
+        }
         val item = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            background = roundedGradient(
-                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
-                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
-                18,
-                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234)
-            )
+            background = roundedGradient(palette[0], palette[1], 18, palette[2])
             setPadding(dp(10), dp(9), dp(9), dp(9))
             elevation = dp(5).toFloat()
             minimumHeight = dp(94)
@@ -942,14 +1040,8 @@ class AgentActivity : Activity() {
         }
         val icon = textView(symbol, 21f, Color.WHITE, true).apply {
             gravity = Gravity.CENTER
-            background = roundedGradient(
-                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
-                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152),
-                11,
-                if (primary) Color.rgb(79, 193, 255) else Color.rgb(128, 105, 249)
-            )
-            setShadowLayer(dp(3).toFloat(), 0f, 0f,
-                if (primary) CYAN else violetTint())
+            background = roundedGradient(palette[3], palette[4], 11, palette[2])
+            setShadowLayer(dp(3).toFloat(), 0f, 0f, palette[2])
         }
         item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
         val caption = LinearLayout(this).apply {
@@ -968,6 +1060,28 @@ class AgentActivity : Activity() {
             gravity = Gravity.CENTER
         }, LinearLayout.LayoutParams(dp(13), dp(44)))
         return item
+    }
+
+    private fun showNexusPersonalization() {
+        AlertDialog.Builder(this)
+            .setTitle("Deine KI personalisieren")
+            .setMessage(
+                "Du bestimmst, was deine KI sich merken und wie sie lernen darf. " +
+                    "Eigene Dokumente werden nicht automatisch trainiert oder ins Internet übertragen."
+            )
+            .setItems(arrayOf(
+                "Gemerkte Fakten ansehen oder löschen",
+                "Lernzentrum öffnen",
+                "Lokales KI-Modell verwalten"
+            )) { _, choice ->
+                when (choice) {
+                    0 -> showMemoryCenter()
+                    1 -> showLearningCenter()
+                    2 -> showModelCenter()
+                }
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
     }
 
     private fun violetTint(): Int = Color.rgb(139, 96, 255)
@@ -1041,8 +1155,8 @@ class AgentActivity : Activity() {
         val step = steps[index]
         val dialog = AlertDialog.Builder(this)
             .setTitle("Deine KI einrichten · Schritt ${index + 1} von ${steps.size}")
-            .setMessage(step.title + "\\n\\n" + step.description +
-                "\\n\\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
+            .setMessage(step.title + "\n\n" + step.description +
+                "\n\nDu entscheidest, ob du diese Funktion öffnen möchtest.")
             .setNeutralButton(step.actionTitle) { _, _ ->
                 when (step.action) {
                     ContinuumGuideAction.CHAT -> focusChatComposer()
@@ -1072,6 +1186,13 @@ class AgentActivity : Activity() {
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
+            CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
+            CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
+            CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
+            CenterAction("WISSENSARCHIV · QUELLEN SUCHEN") { showKnowledgeArchiveSearch() },
+            CenterAction("RIS · AMTLICHE QUELLE ABLEGEN") { showRisArchiveImport() },
+            CenterAction("WISSENSARCHIV · BACKUP / WIEDERHERSTELLEN") { showArchiveBackupMenu() },
+            CenterAction("GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE") { showExtendedCurriculumDialog() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
@@ -1081,6 +1202,8 @@ class AgentActivity : Activity() {
         experimental = listOf(
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
+            CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
+            CenterAction("CDX1 · EIGENE TESTFRAGE (OHNE TRAINING)") { showCdxPromptTest() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
@@ -1104,14 +1227,18 @@ class AgentActivity : Activity() {
             else "noch ohne Forschungsgewichte")
             .append(" · ").append(paired.updates)
             .append(" Updates · Chatfreigabe: NEIN\n")
+        val cdxStages=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
+        append("CDX1 · Großes Paararchiv: ").append(cdxStages.completed)
+            .append("/").append(cdxStages.total).append(" Stufen geprüft\n")
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
         core.lastAudit?.let { append("\n\nLetzte Lernentscheidung: ").append(it.take(300)) }
     }
 
     private fun showDevelopmentCenter() = showCenter(
         "Entwicklungszentrum",
-        "Entwicklungsaufgaben mit denselben Regeln wie Entwickler-Agent und CLI: erledigt wird eine Aufgabe nur " +
-            "mit ausgeführtem Testnachweis aus CI, nie allein auf dem Gerät.",
+        "Android selbst ist die Entwicklerzentrale. Der lokale Termux-Builder und die " +
+            "vorhandenen Shizuku-Gerätewerkzeuge werden nach Besitzerfreigabe genutzt. " +
+            "Ein PC ist optional; Erfolg zählt erst mit überprüften Tests und APK-Belegen.",
         { done -> onBacklog({ developmentCenterStatus() }) { result ->
             done(result.getOrElse { "Backlog nicht lesbar: ${backlogError(it)}" })
         } },
@@ -1121,9 +1248,49 @@ class AgentActivity : Activity() {
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
+            CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
+            CenterAction("GROQ · CODING-ZWEITMEINUNG (OPTIONAL)") {
+                showGroqMentorDialog(
+                    "Analysiere mit mir einen Android- oder Kotlin-Buildfehler. " +
+                        "Welche minimalen, überprüfbaren Diagnoseschritte und " +
+                        "Reparaturhypothesen empfiehlst du? " +
+                        "Keine ungeprüften Änderungen oder erfundenen APIs."
+                )
+            },
             CenterAction("EXPERTENMODUS · SHELL-PLÄNE") { startActivity(Intent(this, MainActivity::class.java)) }
         )
     )
+
+    private fun openMobileBuilder() {
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        val intent = Intent().setClassName(destination.packageName, destination.className)
+        try {
+            // Explicit allowlisted Activity launch; never launch a shell or install an APK here.
+            startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            val message = if (destination.externalPackage) {
+                "Die Device AI Preview mit dem Handy-Builder ist nicht installiert " +
+                    "oder ihre Builder-Oberfläche ist nicht verfügbar. " +
+                    "Installiere zuerst die geprüfte Continuum-Preview mit deiner Zustimmung. " +
+                    "Deine Haupt-App und Shizuku bleiben unverändert."
+            } else {
+                "Die Builder-Oberfläche dieser Preview ist nicht verfügbar. " +
+                    "Bitte überprüfe die installierte Preview-Version."
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Handy-Builder nicht erreichbar")
+                .setMessage(message)
+                .setPositiveButton("Schließen", null)
+                .show()
+        } catch (_: SecurityException) {
+            AlertDialog.Builder(this)
+                .setTitle("Handy-Builder nicht freigegeben")
+                .setMessage("Android hat das Öffnen der Builder-Oberfläche blockiert. " +
+                    "Es wurde kein Termux-Befehl gestartet und keine APK installiert.")
+                .setPositiveButton("Schließen", null)
+                .show()
+        }
+    }
 
     /** Device and desktop share one development backlog and agent identity.
      * This Android stage performs local diagnostics and lease recovery only.
@@ -1198,7 +1365,24 @@ class AgentActivity : Activity() {
             append("\nEntwicklungsassistent: ").append(
                 if (localRuntime.state == LocalModelState.READY) "lokales Sprachmodell bereit"
                 else "kein lokales Sprachmodell geladen (MODELLE)")
+            append("\nHandy-Builder: ").append(mobileBuilderHomeStatus())
         }
+    }
+
+    private fun mobileBuilderHomeStatus(): String {
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        if (destination.externalPackage) {
+            return "Über die separate Continuum Preview erreichbar; " +
+                "deren private Berichte sind in dieser App nicht einsehbar."
+        }
+        val preferences = getSharedPreferences(
+            ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE
+        )
+        if (preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)) {
+            return "Auftrag läuft oder wartet auf einen Abschlussnachweis."
+        }
+        return preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
+            ?.take(280) ?: "Noch keine lokale Builder-Rückmeldung. Keine APK-Abnahme behauptet."
     }
 
     private fun showMemoryCenter() = showCenter(
@@ -1471,6 +1655,15 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
+        if (request.equals("Continuum Modelltest", true) ||
+            request.equals("Continuum Modelltest Direkt", true)) {
+            val direct=request.equals("Continuum Modelltest Direkt",true)
+            input.text.clear()
+            addUserMessage(request)
+            runLocalSmokeTest(direct)
+            return
+        }
         // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
         // showGroqMentorDialog always requires a second owner confirmation.
         val groqQuestion = GroqInvocationRouter.extractQuestion(request)
@@ -1485,23 +1678,24 @@ class AgentActivity : Activity() {
             when (baumeister) {
                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
                     "Continuum Baumeister · lokale Werkstatt.\n" +
-                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt' " +
-                        "oder 'Worker: <deine App-Idee>'.\n" +
-                        "Der Android-Teamleiter prüft den Backlog. Nur ein separater " +
-                        "eingeschalteter Entwicklerrechner kann Git, Compiler und Tests ausführen. " +
-                        "Kein Befehl wird ungeprüft ausgeführt."
+                        "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
+                        "'Worker Builder' oder 'Worker: <deine App-Idee>'.\n" +
+                        "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
+                        "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
+                        "sofern sie installiert und freigegeben sind. Der PC ist optional."
                 )
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
+                ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
                 is ContinuumWorkerChatCommand.Draft -> {
                     devController.setGoal(baumeister.goal)
                     if (devController.state.goal == baumeister.goal) {
                         addAssistantMessage(
                             "Baumeister: Entwicklungsziel lokal vorbereitet. " +
-                                "Es ist noch keine Build-Aufgabe auf einem Host gestartet. " +
-                                "Für einen Codeentwurf wird ein kompatibles lokales Sprachmodell benötigt; " +
-                                "die Ausführung erfolgt später im isolierten Entwicklungsworker."
+                                "Es wurde noch keine lokale Build-Aufgabe gestartet. " +
+                                "Für eigenständige Codeentwürfe wird ein kompatibles lokales Sprachmodell benötigt; " +
+                                "die Ausführung ist auf Android/Termux nach gesonderter Freigabe vorgesehen."
                         )
                         showDevelopmentDialog()
                     } else {
@@ -1799,13 +1993,43 @@ class AgentActivity : Activity() {
                 val cognitive=decision.turn
                 val turn=cognitive.dialogue
                 val legacyFallback=sourceFallback && !turn.grounded
-                val answer=if(legacyFallback)GroundedWebRecall.answer(request,reviewedNotes) ?: turn.answer else decision.finalAnswer
-                val evidence=(if(legacyFallback)"QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
-                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+turn.memoryIds.size+" aktuelle Erinnerungen") +
-                    (if(turn.contextReset)" · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert" else "")
+                // Retrieval is evidence display, not model-generated truth. Only a
+                // title-level match may supply a plainly labelled public quote.
+                // Confirmed owner memory always wins and source observations never
+                // grant model tools, device authority or Owner-Fact privileges.
+                val archiveHit=if(!turn.grounded && request.length in 6..240 &&
+                    (request.contains("?") || request.startsWith("Was ist ",true) ||
+                        request.startsWith("Erkläre ",true))) {
+                    runCatching {
+                        at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                            .search(request,limit=2).firstOrNull { it.score>=5 }
+                    }.getOrNull()
+                } else null
+                val archiveAnswer=archiveHit?.source?.let { document ->
+                    "LOKALES WISSENSARCHIV · öffentlicher, nicht unabhängig verifizierter "+
+                        "Quellenauszug: "+
+                        document.text.take(350)+"\nQuelle: "+document.url+
+                        "\nHerkunft: "+document.attribution+
+                        "\nSHA-256: "+document.sha256.take(16)+"…"+
+                        "\nFür zeitabhängige oder rechtliche Aussagen Originalquelle "+
+                        "und relevanten Stichtag kontrollieren."
+                }
+                val fallback=if(legacyFallback)
+                    GroundedWebRecall.answer(request,reviewedNotes)
+                else null
+                val answer=archiveAnswer ?: fallback ?: decision.finalAnswer
+                val evidence=(if(archiveAnswer!=null)
+                    "QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"
+                    else if(legacyFallback)
+                    "QUELLENGEDÄCHTNIS · vorhandener lexikalischer Abruf"
+                    else "CONTINUUM · Modell "+turn.modelHash.take(12)+" · "+
+                        turn.memoryIds.size+" aktuelle Erinnerungen") +
+                    (if(turn.contextReset)
+                        " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"
+                        else "")
                 Pair(Triple(answer,evidence+" · "+cognitive.trace+
                     (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),
-                    turn.grounded || legacyFallback && answer!=turn.answer),
+                    turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null),
                     cognitive.localModelPrompt)
             }
             runOnUiThread {
@@ -2360,9 +2584,381 @@ class AgentActivity : Activity() {
             .setTitle("Continuum Learning Core v2")
             .setMessage(message)
             .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
-            .setNeutralButton("GEWICHTE IMPORTIEREN") { _, _ -> confirmWeightsImport() }
+            .setNeutralButton("GEWICHTE / LABOR") { _, _ -> showLearningLabChoices() }
             .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
             .show()
+    }
+
+    /** Gives the existing Learning Core dialog one entrypoint for all file and lab tasks. */
+    private fun showLearningLabChoices() {
+        val choices=arrayOf(
+            "ÖFFENTLICHES OFFLINE-LERNPAKET · TRAINIEREN",
+            "GEWICHTE IMPORTIEREN · SWB1",
+            "PAKET-IMPORT · SWB1 + MANIFEST",
+            "GEWICHTE EXPORTIEREN · BACKUP",
+            "AUTONOME INTERNETFORSCHUNG · EIN/AUS",
+            "WISSENSARCHIV · QUELLEN SUCHEN",
+            "RIS · AMTLICHE QUELLE ABLEGEN",
+            "WISSENSARCHIV · BACKUP / WIEDERHERSTELLEN",
+            "GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · Gewichte und Lernlabor")
+            .setItems(choices) { _, item ->
+                when(item) {
+                    0 -> showPublicCurriculumDialog()
+                    1 -> confirmWeightsImport()
+                    2 -> confirmPackageImport()
+                    3 -> exportCoreWeights()
+                    4 -> showPublicStudyControls()
+                    5 -> showKnowledgeArchiveSearch()
+                    6 -> showRisArchiveImport()
+                    7 -> showArchiveBackupMenu()
+                    8 -> showExtendedCurriculumDialog()
+                }
+            }
+            .setNegativeButton("Schließen",null)
+            .show()
+    }
+
+    /**
+     * Narrow, reversible authorization for one publicly curated research source
+     * per Android-scheduled cycle. Does not grant ALWAYS_ON access to user chat
+     * research or to any generated code/tool execution.
+     */
+    private fun showPublicStudyControls() {
+        val scheduler=at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · autonome öffentliche Forschung")
+            .setMessage(scheduler.display()+"\n\n"+
+                "Forschung nur aus 48 festen Artikeln der deutschsprachigen Wikipedia. "+
+                "Pro Android-Lauf höchstens ein Auszug (96 KiB), maximal 15 Sekunden. "+
+                "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
+                "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
+                "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
+                "Android plant ungefähr alle 15 Minuten (nicht garantiert), während des Ladens "+
+                "und mit einer Internetverbindung (auch Mobilfunk). "+
+                "Ausschalten stoppt die Planung; die gespeicherten Quellen bleiben erhalten.")
+            .setNegativeButton("ABBRECHEN",null)
+            .setNeutralButton("FORSCHUNG AUS") { _, _ ->
+                val stopped=scheduler.disable()
+                addAssistantMessage(if(stopped)
+                    "Öffentliche Hintergrundforschung beendet; Quellen und Gewichte bleiben erhalten."
+                    else "Forschungsplanung gestoppt; Status konnte nicht dauerhaft gespeichert werden.")
+            }
+            .setPositiveButton(if(scheduler.enabled)"PLANUNG PRÜFEN" else "FORSCHUNG FREIGEBEN") { _, _ ->
+                val started=scheduler.enable()
+                addAssistantMessage(if(started)
+                    "Öffentliche Hintergrundforschung aktiviert. Android plant begrenzte "+
+                        "Lernläufe; keine Endlosschleife im Vordergrund. "+
+                        "Die erste Ausführung kann sich bis zum Laden verzögern."
+                    else "Forschung wurde nicht korrekt eingeplant.\n"+scheduler.display()+
+                        "\nBitte diese Meldung für die Diagnose speichern.")
+            }
+            .show()
+    }
+
+    /**
+     * Search public-source extracts only, with citation metadata. Lexical hits
+     * cannot be elevated to owner facts or legally authoritative answers.
+     */
+    private fun showKnowledgeArchiveSearch() {
+        val query=EditText(this).apply {
+            hint="Thema, Stichwort oder Gesetzesbegriff"
+            inputType=android.text.InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+            setPadding(dp(16),dp(12),dp(16),dp(12))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · lokales Wissensarchiv")
+            .setMessage("Suche in gespeicherten, quellengebundenen Auszügen. "+
+                "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
+                "Ungeprüfte Aussagen werden niemals zu Besitzerfakten.")
+            .setView(query)
+            .setNegativeButton("Schließen",null)
+            .setPositiveButton("LOKAL SUCHEN") { _, _ ->
+                val text=query.text.toString().trim()
+                if(text.length !in 2..240) {
+                    addAssistantMessage("Wissensarchiv: 2–240 Zeichen eingeben.")
+                    return@setPositiveButton
+                }
+                onLearningIo({
+                    val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                    val result=archive.search(text,limit=6)
+                    if(result.isEmpty())"WISSENSARCHIV · Keine archivierten Quellen zum Suchbegriff."
+                    else buildString {
+                        append("WISSENSARCHIV · ").append(result.size)
+                            .append(" zitierte Fundstellen (ungeprüfte Quellentexte)\n")
+                        result.forEachIndexed { index,hit ->
+                            val doc=hit.source
+                            append("\n").append(index+1).append(". ")
+                                .append(doc.title).append(" [").append(doc.kind).append("]")
+                            append("\nQuelle: ").append(doc.url)
+                            append("\nHerkunft: ").append(doc.attribution)
+                            doc.sourceDate?.let { append("\nDokumentdatum: ").append(it) }
+                            append("\nSHA-256: ").append(doc.sha256.take(16)).append("…")
+                            append("\n").append(doc.text.take(260)).append("\n")
+                        }
+                        append("\nAuszüge können veraltet sein. Für österreichisches Recht "+
+                            "immer die gültige RIS-Fassung zum relevanten Zeitpunkt prüfen.")
+                    }
+                }) { output ->
+                    addAssistantMessage(output.getOrElse {
+                        "Wissensarchiv nicht lesbar: "+failureName(it)
+                    })
+                }
+            }
+            .show()
+    }
+
+    /**
+     * The owner copies a publicly accessible RIS extract and its official URL.
+     * Exact source attribution is retained; this is never a legal validity
+     * determination, full-text corpus import, or automatic statutory update.
+     */
+    private fun showArchiveBackupMenu() {
+        AlertDialog.Builder(this)
+            .setTitle("Wissensarchiv · Backup")
+            .setMessage("Alle gespeicherten öffentlichen Quellen mitsamt Herkunft "+
+                "und SHA-256 werden als ZIP gesichert oder wiederhergestellt. "+
+                "Du wählst im Android-Dateidialog den Speicherort selbst. "+
+                "Cloud-Synchronisierung erfolgt nur, wenn du ausdrücklich "+
+                "einen verbundenen Cloud-Dokumentanbieter auswählst. "+
+                "Achtung: Auch eingefügte RIS-Texte werden exportiert; "+
+                "keine privaten Akten oder geheimen Daten speichern.")
+            .setNegativeButton("Abbrechen",null)
+            .setNeutralButton("BACKUP IMPORTIEREN") { _, _ ->
+                val intent=Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type="application/zip"
+                }
+                runCatching { startActivityForResult(intent,CONTINUUM_ARCHIVE_IMPORT_REQUEST) }
+                    .onFailure { addAssistantMessage("Backup-Auswahl gescheitert: "+failureName(it)) }
+            }
+            .setPositiveButton("BACKUP EXPORTIEREN") { _, _ ->
+                val intent=Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type="application/zip"
+                    putExtra(Intent.EXTRA_TITLE,"continuum-wissensarchiv.zip")
+                }
+                runCatching { startActivityForResult(intent,CONTINUUM_ARCHIVE_EXPORT_REQUEST) }
+                    .onFailure { addAssistantMessage("Backup-Speicher nicht verfügbar: "+failureName(it)) }
+            }
+            .show()
+    }
+
+    private fun processArchiveBackup(uri:Uri,import:Boolean) {
+        onLearningIo({
+            val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+            if(import) {
+                val count=contentResolver.openInputStream(uri)?.use { input ->
+                    archive.importZip(input)
+                } ?: error("Backup konnte nicht geöffnet werden")
+                "WISSENSARCHIV · "+count+" geprüfte Quellen aus Backup gelesen. "+
+                    "Keine Besitzerfakten oder Berechtigungen geändert."
+            } else {
+                val count=contentResolver.openOutputStream(uri,"wt")?.use { output ->
+                    archive.exportZip(output)
+                } ?: error("Backup-Ziel konnte nicht geöffnet werden")
+                "WISSENSARCHIV · "+count+" Quellen als ZIP gesichert. "+
+                    "Datei nur in einem vertrauenswürdigen Ordner aufbewahren."
+            }
+        }) { done ->
+            addAssistantMessage(done.getOrElse {
+                "Wissensarchiv-Backup nicht abgeschlossen: "+failureName(it)+
+                    ". Vorhandene Quellen werden nicht gelöscht."
+            })
+        }
+    }
+
+    private fun showRisArchiveImport() {
+        val types=arrayOf("Gesetz / Verordnung · RIS", "Judikatur · RIS")
+        AlertDialog.Builder(this)
+            .setTitle("Österreichisches Recht · RIS-Quellenarchiv")
+            .setMessage("Nur öffentliche amtliche RIS-Auszüge importieren. "+
+                "Die Quelle wird lokal archiviert, nicht als juristisch geprüft "+
+                "oder aktuell bestätigt. Keine personenbezogenen Akten hochladen.")
+            .setItems(types) { _, selection ->
+                val kind=if(selection==0)
+                    at.heinz.deviceai.learning.ContinuumKnowledgeArchive.Kind.RIS_LEGISLATION
+                else
+                    at.heinz.deviceai.learning.ContinuumKnowledgeArchive.Kind.RIS_CASE_LAW
+                val title=EditText(this).apply {
+                    hint="Titel, Rechtsvorschrift oder Entscheidungsbezeichnung"
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(160))
+                }
+                val url=EditText(this).apply {
+                    hint="https://www.ris.bka.gv.at/..."
+                    inputType=android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_VARIATION_URI
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(700))
+                }
+                val documentDate=EditText(this).apply {
+                    hint="Dokumentdatum JJJJ-MM-TT (optional; nicht Geltungsdatum)"
+                    setSingleLine(true)
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(10))
+                }
+                val excerpt=EditText(this).apply {
+                    hint="Öffentlichen RIS-Textauszug einfügen (20–6000 Zeichen)"
+                    inputType=android.text.InputType.TYPE_CLASS_TEXT or
+                        android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                    minLines=4
+                    maxLines=9
+                    filters=arrayOf(android.text.InputFilter.LengthFilter(6000))
+                }
+                val fields=LinearLayout(this).apply {
+                    orientation=LinearLayout.VERTICAL
+                    setPadding(dp(12),dp(10),dp(12),dp(8))
+                    addView(title,matchWidth(top=3))
+                    addView(url,matchWidth(top=4))
+                    addView(documentDate,matchWidth(top=4))
+                    addView(excerpt,matchWidth(top=7))
+                }
+                AlertDialog.Builder(this)
+                    .setTitle("RIS-Auszug mit Fundstelle speichern")
+                    .setMessage("Bitte nur Originalquellen ohne private Falldaten eingeben. "+
+                        "Eine amtliche URL allein reicht nicht: der Auszug "+
+                        "muss separat übernommen und später aktuell geprüft werden.")
+                    .setView(ScrollView(this).apply { addView(fields) })
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("LOKAL ARCHIVIEREN") { _, _ ->
+                        val headline=title.text.toString().trim()
+                        val reference=url.text.toString().trim()
+                        val text=excerpt.text.toString().trim()
+                        val date=documentDate.text.toString().trim().ifEmpty { null }
+                        onLearningIo({
+                            at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                                .save(kind,headline,reference,
+                                    "RIS · Rechtsinformationssystem des Bundes / BKA",text,
+                                    sourceDate=date)
+                        }) { result ->
+                            addAssistantMessage(result.fold({ saved ->
+                                "RIS-Auszug lokal gespeichert: "+saved.title+
+                                    "\nQuelle: "+saved.url+
+                                    "\nSHA-256: "+saved.sha256.take(20)+"…"+
+                                    "\nHinweis: Geltende Fassung am Stichtag im "+
+                                    "authentischen RIS prüfen."
+                            },{ cause ->
+                                "RIS-Auszug abgelehnt: "+failureName(cause)+
+                                    ". URL muss von einer amtlichen RIS-Domain stammen."
+                            }))
+                        }
+                    }
+                    .show()
+            }
+            .setNegativeButton("Schließen",null)
+            .show()
+    }
+
+    private fun showExtendedCurriculumDialog() {
+        if(busy) {
+            addAssistantMessage("Ein Auftrag ist aktiv. Bitte zuerst abschließen.")
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("SWB1 · großes Übungsarchiv")
+            .setMessage("Zusätzlich 1.152 Gruß-/Frage-Sätze sowie 480 semantische "+
+                "Trainingspaare, plus 64+8 unabhängige Prüffälle. "+
+                "12 getrennte Trainingsstufen; bei jeder Freigabe nur eine Stufe "+
+                "mit max. 750+500 Updates. Kandidatengewichte werden nur nach "+
+                "unabhängigen und bestehenden Holdout-Prüfungen übernommen. "+
+                "Bereits bestätigte Owner-Daten bleiben geschützt. "+
+                "Automatische Hintergrundstufen erfolgen ausschließlich, "+
+                "wenn du die öffentliche Internetforschung aktivierst.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("NÄCHSTE STUFE PRÜFEN") { _, _ ->
+                if(busy)return@setPositiveButton
+                setBusy(true)
+                onLearningIo({
+                    val core=ContinuumLearningCore(filesDir)
+                    core.trainExtendedCurriculum {
+                        isDestroyed || Thread.currentThread().isInterrupted
+                    }?.display() ?: "Alle 12 Stufen sind bereits evaluiert. "+
+                        "Der SWB1-Kern behält nur auditierte Verbesserungen."
+                }) { answer ->
+                    setBusy(false)
+                    addAssistantMessage(answer.getOrElse {
+                        "Übungsarchiv: "+failureName(it)+"; aktive Gewichte geschützt."
+                    })
+                }
+            }
+            .show()
+    }
+
+    /** No blind training; the owner sees the exact scope before CPU work starts. */
+    private fun showPublicCurriculumDialog() {
+        if (busy) {
+            addAssistantMessage("Ein anderer Auftrag ist aktiv; bitte zuerst abschließen.")
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("SWB1 · Öffentliches Offline-Lernpaket")
+            .setMessage("Das Paket enthält 72 künstlich erzeugte Gruß-/Frage-Trainingssätze, " +
+                "24 davon unabhängige Prüfbeispiele, 32 semantische Trainingspaare und 12 " +
+                "getrennte Semantik-Prüfpaare. Es verwendet kein Internet und keine privaten " +
+                "Chats. 1.100 Intent- und 900 Semantik-Updates laufen ausschließlich auf " +
+                "einem Kandidaten. Beide bisherigen Holdouts, die neuen Prüfsätze und alle " +
+                "bestätigten Owner-Lektionen müssen geschützt bleiben. Nur ein nachweislich " +
+                "verbesserter Kandidat wird archiviert und aktiviert; sonst bleiben die " +
+                "vorherigen Modellgewichte erhalten. Pro Paketversion nur ein " +
+                "abgeschlossener Versuch. Dies erzeugt KEIN freies Sprachmodell.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("TRAINIEREN UND PRÜFEN") { _, _ ->
+                if (busy) return@setPositiveButton
+                setBusy(true)
+                addToolActivity("SWB1 · öffentliches Offline-Lernpaket wird geprüft")
+                onLearningIo({
+                    ContinuumLearningCore(filesDir).trainPublicCurriculum {
+                        isDestroyed || Thread.currentThread().isInterrupted
+                    }?.display()
+                        ?: "SWB1 · Dieses öffentliche Lernpaket wurde bereits vollständig geprüft. " +
+                            "Die bestehende Entscheidung bleibt erhalten. Siehe Lernkern-Audits."
+                }) { outcome ->
+                    setBusy(false)
+                    addAssistantMessage(outcome.getOrElse {
+                        "SWB1 · Lernpaket nicht ausgeführt: " + failureName(it) +
+                            ". Vorhandene Modellgewichte bleiben geschützt."
+                    })
+                    addToolActivity("SWB1 · Lernpaketprüfung beendet")
+                }
+            }
+            .show()
+    }
+
+    /** Owner-only SAF export of exactly the active 32,960-byte SWB1 snapshot. */
+    private fun exportCoreWeights() {
+        val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/octet-stream"
+            putExtra(Intent.EXTRA_TITLE, "continuum-swb1-backup.bin")
+        }
+        runCatching { startActivityForResult(create, CONTINUUM_CORE_EXPORT_REQUEST) }
+            .onFailure {
+                addAssistantMessage("Android-Dateidialog nicht verfügbar: " + failureName(it))
+            }
+    }
+
+    private fun writeCoreWeights(uri: Uri) {
+        onLearningIo({
+            val bytes=ContinuumLearningCore(filesDir).modelSnapshot()
+            check(bytes.size==SWB1_BYTES) { "SWB1-Gewichtsformat unerwartet" }
+            contentResolver.openOutputStream(uri,"wt")?.use { output ->
+                output.write(bytes)
+                output.flush()
+            } ?: throw java.io.IOException("Android-Dateianbieter verweigert Schreiben")
+            val sha=java.security.MessageDigest.getInstance("SHA-256")
+                .digest(bytes).joinToString("") { "%02x".format(it.toInt() and 255) }
+            "SWB1-Backup exportiert · ${bytes.size} Bytes · SHA-256: " + sha +
+                "\nKeine persönlichen Erinnerungen oder Zugangsdaten enthalten. " +
+                "Diese Gewichte können über GEWICHTE IMPORTIEREN erneut geprüft werden."
+        }) { outcome ->
+            addAssistantMessage(outcome.getOrElse {
+                "SWB1-Export fehlgeschlagen: " + failureName(it) +
+                    ". Bestehende Gewichte bleiben unverändert."
+            })
+        }
     }
 
     private fun confirmPackageImport() {
@@ -2468,6 +3064,16 @@ class AgentActivity : Activity() {
             })
         }
         advanced.addView(encoderActions, matchWidth(top = 10))
+        advanced.addView(actionButton("ÖFFENTLICHES OFFLINE-LERNPAKET").apply {
+            setOnClickListener {
+                modelCenterDialog?.dismiss()
+                showPublicCurriculumDialog()
+            }
+        }, matchWidth(top = 8))
+        advanced.addView(actionButton("SWB1 · GEWICHTE EXPORTIEREN").apply {
+            setOnClickListener { exportCoreWeights() }
+        }, matchWidth(top = 7))
+
         box.addView(actionButton("ERWEITERT · LERNKERN UND VERSIONEN").apply {
             setOnClickListener {
                 advanced.visibility = if (advanced.visibility == View.GONE) View.VISIBLE else View.GONE
@@ -2542,6 +3148,7 @@ class AgentActivity : Activity() {
                 .setMessage(message)
                 .setNegativeButton("Schließen",null)
                 .setPositiveButton("EXPERIMENT STARTEN") { _, _ -> runPairedDecoderLab() }
+                .setNeutralButton("GROSSES ARCHIV") { _, _ -> showCdxLargeLabDialog() }
                 .show()
         }
     }
@@ -2599,6 +3206,175 @@ class AgentActivity : Activity() {
                     "Produktive Antworten und Erinnerungen bleiben geschützt."
             })
             addToolActivity("CONTINUUM · CDX1-Paartraining beendet")
+        }
+    }
+
+    /**
+     * Separate staged CDX1 research. No internet, owner memory, device tools
+     * or productive chat. Only one user-approved bounded stage per click.
+     */
+    /** Read-only CDX1 research generation. The output cannot gain authority. */
+    private fun showCdxPromptTest() {
+        val evidence=EditText(this).apply {
+            hint="Beleg, z. B. Roboter Z77 steht in Graz."
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(150))
+        }
+        val question=EditText(this).apply {
+            hint="Frage, z. B. Wo steht Z77?"
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(150))
+        }
+        val expected=EditText(this).apply {
+            hint="Erwartete Kurzantwort (optional), z. B. Graz"
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(100))
+        }
+        val fields=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL
+            setPadding(dp(12),dp(8),dp(12),dp(8))
+            addView(evidence,matchWidth(top=4))
+            addView(question,matchWidth(top=4))
+            addView(expected,matchWidth(top=4))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("CDX1 · Experimentellen Antwortkern prüfen")
+            .setMessage("Nur eine kurze Belegzeile und eine Frage eingeben. "+
+                "Die Ausgabe ist unbestätigte Forschung, keine geprüfte "+
+                "Sachantwort. Es findet KEIN Training statt.")
+            .setView(ScrollView(this).apply { addView(fields) })
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("ANTWORT TESTEN") { _, _ ->
+                if(busy) {
+                    addAssistantMessage("Anderer Trainingslauf aktiv. Bitte zuerst beenden.")
+                    return@setPositiveButton
+                }
+                val source=evidence.text.toString().trim()
+                val query=question.text.toString().trim()
+                val reference=expected.text.toString().trim()
+                if(source.isEmpty() || query.isEmpty() || source.contains("\n") ||
+                    query.contains("\n") ||
+                    source.toByteArray(Charsets.UTF_8).size>160 ||
+                    query.toByteArray(Charsets.UTF_8).size>160) {
+                    addAssistantMessage("CDX1-Test: Beleg und Frage in je einer Zeile "+
+                        "mit maximal 160 UTF-8-Bytes eingeben.")
+                    return@setPositiveButton
+                }
+                onLearningIo({
+                    val core=ContinuumLearningCore(filesDir)
+                    val output=core.experimentalPairedDecoderContinuation(
+                        source,query,maxBytes=48)
+                    val cdxText=if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
+                        "Forschungscheckpoint. Starte erst das Paarlabor."
+                    else buildString {
+                        append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
+                        append("Beleg: ").append(source).append("\nFrage: ").append(query)
+                        append("\nCDX1-Ausgabe: ").append(output.text.take(120))
+                        append("\nZeichen erzeugt (UTF-8-Bytes): ")
+                            .append(output.bytesGenerated)
+                        append("\nEndmarkierung erkannt: ").append(output.ended)
+                        if(reference.isNotBlank()) {
+                            append("\nDeine Referenz: ").append(reference)
+                            append("\nExakte Übereinstimmung: ")
+                                .append(if(output.text.trim()==reference)"JA" else "NEIN")
+                        }
+                        append("\nDieser Einzelfall ist kein unabhängiger Qualitätsbeweis. ")
+                        append("Text ungeprüft; keine Geräteaktion und keine Faktenübernahme.")
+                    }
+                    val extraction=at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe
+                        .answer(source,query)
+                    val spanReport=when(extraction) {
+                        is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Found -> {
+                            val span=extraction.span
+                            "CSX1 · BELEGSTELLE (REGELBASIERTER VERGLEICH)\n"+
+                                "Originalwortlaut: "+span.text+
+                                "\nPosition: "+span.start+".."+span.endExclusive+
+                                "\nBelegidentisch: "+
+                                (source.substring(span.start,span.endExclusive)==span.text)+
+                                "\nReferenzgleich: "+
+                                (if(reference.isNotBlank())(span.text==reference).toString()
+                                 else "nicht angegeben")
+                        }
+                        is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Abstained ->
+                            "CSX1 · KEINE ANTWORT (SICHERES ENTHALTEN)\n"+
+                                extraction.reason
+                    }
+                    cdxText+"\n\n"+spanReport+
+                        "\nCSX1 ist nur ein regelbasierter Forschungs-Benchmark; "+
+                        "keine trainierte semantische Generalisierung und keine Chatfreigabe."
+                }) { result ->
+                    addAssistantMessage(result.getOrElse {
+                        "CDX1-Test fehlgeschlagen: "+failureName(it)+
+                            ". Forschungsgewichte bleiben unverändert."
+                    })
+                }
+            }
+            .show()
+    }
+
+    private fun showCdxLargeLabDialog() {
+        if(busy) {
+            addAssistantMessage("Ein Trainingslauf ist bereits aktiv. Bitte Abschluss abwarten.")
+            return
+        }
+        onLearningIo({
+            at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
+        }) { result ->
+            val text=result.fold({ state ->
+                "CDX1 · GROSSES PAARARCHIV\n"+
+                    "576 synthetische Beleg-Frage-Antwort-Paare über 12 getrennte Stufen. "+
+                    "Zusätzlich 48 eingefrorene neue und zwei ältere unabhängige "+
+                    "Prüfbeispiele. Die Sätze sind erfundene Forschungsszenarien, "+
+                    "keine übernommene Wahrheit.\n\n"+
+                    "Abgeschlossene Stufen: "+state.completed+"/"+state.total+
+                    "\nAktiver Labor-Checkpoint: "+(if(state.available)"vorhanden" else "keiner")+
+                    "\nBisherige CDX1-Gewichtsupdates: "+state.decoderUpdates+
+                    "\nModell-Hash: "+(state.decoderHash?.take(16)?:"noch nicht vorhanden")+
+                    "\n\nBei jeder Freigabe nur eine Stufe mit maximal 600 Updates. "+
+                    "Nur Kandidaten mit besserem Trainingsverlust und ohne "+
+                    "Verschlechterung beider festen Audits dürfen gespeichert werden. "+
+                    "Das produktive SWB1 und persönliche Erinnerungen bleiben getrennt. "+
+                    "CDX1 generiert noch keine geprüften Antworten im normalen Chat."
+            }, { error ->
+                "CDX1-Paararchiv kann nicht geöffnet werden: "+failureName(error)+
+                    ". Keine Modellgewichte wurden geändert."
+            })
+            AlertDialog.Builder(this)
+                .setTitle("CDX1 · Großes Beleg-Antwort-Trainingsarchiv")
+                .setMessage(text)
+                .setNegativeButton("Schließen",null)
+                .setPositiveButton("NÄCHSTE STUFE PRÜFEN") { _, _ -> runCdxLargeLab() }
+                .show()
+        }
+    }
+
+    private fun runCdxLargeLab() {
+        if(busy || localAgentExecutor.isShutdown) {
+            addAssistantMessage("Bitte erst den aktiven Trainingslauf abschließen.")
+            return
+        }
+        setBusy(true)
+        addToolActivity("CONTINUUM · CDX1 großes Paararchiv prüft nächste Stufe")
+        onLearningIo({
+            val previous=ContinuumLearningCore(filesDir).modelHash()
+            val lab=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir)
+            val report=lab.next {
+                isDestroyed || Thread.currentThread().isInterrupted
+            }
+            check(ContinuumLearningCore(filesDir).modelHash()==previous) {
+                "Produktives SWB1 wurde unerwartet verändert"
+            }
+            report?.description() ?:
+                "CDX1 · Alle zwölf Forschungsstufen bereits geprüft. "+
+                    "Die geschützten Labor-Checkpoints bleiben gespeichert; "+
+                    "dies belegt keine freie Sprachgeneralisierung."
+        }) { result ->
+            setBusy(false)
+            addAssistantMessage(result.getOrElse {
+                "CDX1 · Großes Paararchiv nicht abgeschlossen: "+failureName(it)+
+                    ". Bestehende SWB1-Gewichte und persönliche Daten bleiben geschützt."
+            })
+            addToolActivity("CONTINUUM · CDX1 Paararchiv-Trainingsrunde beendet")
         }
     }
 
@@ -3789,6 +4565,69 @@ class AgentActivity : Activity() {
             "• ${key.take(64)}: $summary"
         }
 
+    /**
+     * One owner-invoked, tool-free LiteRT-LM generation. This intentionally
+     * bypasses ChatReasoningRouter, orchestration, memory writes and ToolGate,
+     * separating native model inference from the regular agent pipeline.
+     * No network, speech capture or autonomous training can start here.
+     */
+    private fun runLocalSmokeTest(direct:Boolean=false) {
+        if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
+            addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
+            refreshLocalModelUi()
+            return
+        }
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        activeChatCancellation = cancellation
+        activeLocalRequest = true
+        localRuntimeError = null
+        setBusy(true)
+        addToolActivity(if(direct)
+            "MODELLTEST · direkte lokale Qwen-Inferenz ohne Werkzeugausführung"
+            else "MODELLTEST · isolierte Textgenerierung ohne Gerätewerkzeuge")
+        localAgentExecutor.execute {
+            val started = System.nanoTime()
+            val result = runCatching {
+                val generated = generateLocal(cancellation) { callback ->
+                    val question="Antworte auf Deutsch in genau einem kurzen Satz: Was macht ein Roboter auf dem Mond?"
+                    if(direct)localRuntime.stream(question,callback)
+                    else localRuntime.streamThinking(question,callback)
+                }
+                generated.failure?.let { throw IllegalStateException(it) }
+                check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
+                    "Der isolierte Modelltest darf keine Werkzeugvorschläge erzeugen."
+                }
+                check(generated.response.isNotBlank()) { "Das Modell hat keinen Text erzeugt." }
+                generated.response.take(1_500)
+            }
+            val elapsed = ((System.nanoTime() - started).coerceAtLeast(0L) / 1_000_000L)
+            runOnUiThread {
+                if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return@runOnUiThread
+                activeChatCancellation = null
+                activeLocalRequest = false
+                result.fold(
+                    onSuccess = { answer ->
+                        addAssistantMessage("MODELLTEST "+
+                            (if(direct)"DIREKT" else "THINKING")+
+                            " ERFOLGREICH · ${elapsed} ms\n\n" + answer)
+                        addToolActivity("MODELLTEST · native Textgenerierung abgeschlossen; kein Tool ausgeführt")
+                    },
+                    onFailure = { failure ->
+                        val description = failure.message?.take(200) ?: failure.javaClass.simpleName
+                        localRuntimeError = description
+                        addAssistantMessage("MODELLTEST "+
+                            (if(direct)"DIREKT" else "THINKING")+
+                            " FEHLGESCHLAGEN · ${elapsed} ms\nUrsache: " + description +
+                            "\nDer normale Agentenablauf wurde nicht ausgeführt.")
+                        addToolActivity("MODELLTEST · isolierte Inferenz fehlgeschlagen")
+                    }
+                )
+                setBusy(false)
+                refreshLocalModelUi()
+            }
+        }
+    }
+
     private fun runLocal(text: String, resolvedQuestion: String = text) {
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
@@ -4402,12 +5241,15 @@ class AgentActivity : Activity() {
         val eventLock = Any()
         var terminalEventReceived = false
         var failure: String? = null
+        val generationStartedNanos = System.nanoTime()
+        var streamedChunks = 0
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                            streamedChunks++
                             response.append(event.text.take(8_000 - response.length))
                         }
                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
@@ -4425,7 +5267,14 @@ class AgentActivity : Activity() {
                             completed.countDown()
                         }
                         LocalInferenceEvent.Cancelled -> {
-                            failure = "Local generation cancelled."
+                            // A native cancellation alone does not prove a timeout,
+                            // a thinking-template problem or an OOM. Do not guess.
+                            val elapsedMillis = (System.nanoTime() -
+                                generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                            failure = "Local generation cancelled. " +
+                                "Diagnose: ${elapsedMillis} ms, " +
+                                "${streamedChunks} Textblöcke, " +
+                                "${response.length} Zeichen. Ursache nicht bestimmt."
                             terminalEventReceived = true
                             completed.countDown()
                         }
@@ -5291,6 +6140,18 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            CONTINUUM_ARCHIVE_EXPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) processArchiveBackup(uri,false)
+            }
+            CONTINUUM_ARCHIVE_IMPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) processArchiveBackup(uri,true)
+            }
+            CONTINUUM_CORE_EXPORT_REQUEST -> {
+                val uri=data?.data
+                if(resultCode==RESULT_OK && uri!=null) writeCoreWeights(uri)
             }
             NEURAL_IMPORT_REQUEST -> {
                 val uri=data?.data

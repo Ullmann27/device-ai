@@ -99,8 +99,9 @@ export function parseJsError(text,root){
 
 /** JUnit XML (Gradle and `node --test --test-reporter=junit`). */
 export function parseJUnit(xml,root){
-  const out=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
+  const out=[],skippedCaseHashes=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
   const text=String(xml).slice(0,MAX_TEXT);
+  const attr=(src,name)=>xmlDecode((src.match(new RegExp('\\b'+name+'="([^"]*)"'))??[])[1]??'');
   for(const m of text.matchAll(/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g)){
     total++;
     const attrs=m[1],body=m[3]??'';
@@ -109,12 +110,18 @@ export function parseJUnit(xml,root){
     // Node 20 names it by absolute path, Node 22 relative to the working directory.
     const placeholder=/\bname="[^"]*\.test\.m?js"/.test(attrs);
     if(placeholder)placeholders++;
-    if(/<skipped\b/.test(body)){skipped++;continue;}
+    if(/<skipped\b/.test(body)){
+      skipped++;
+      const name=attr(attrs,'name'),classname=attr(attrs,'classname');
+      // Hash identities, never copy untrusted test names into public receipts.
+      // Incomplete/duplicate identifiers will fail the ANSK contract later.
+      skippedCaseHashes.push(name&&classname?sha256(classname+'\0'+name):null);
+      continue;
+    }
     // attribute values may contain '>' (e.g. assertion source), so match quoted values
     const failure=body.match(/<(failure|error)\b((?:[^>"]|"[^"]*")*)>([\s\S]*?)<\/\1>|<(failure|error)\b((?:[^>"]|"[^"]*")*)\/>/);
     if(!failure)continue;
     failed++;if(placeholder)crashed++;
-    const attr=(src,name)=>xmlDecode((src.match(new RegExp('\\b'+name+'="([^"]*)"'))??[])[1]??'');
     const name=attr(attrs,'name'),classname=attr(attrs,'classname');
     const fattrs=failure[2]??failure[5]??'';
     const detail=xmlDecode(failure[3]??'');
@@ -139,7 +146,7 @@ export function parseJUnit(xml,root){
   // executed = real test cases that ran (not skipped, not file placeholders);
   // passed = executed test cases without failure (a crashed file is not a test)
   const executed=total-skipped-placeholders;
-  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out};
+  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out,skippedCaseHashes};
 }
 
 /** Node error text (stderr or TAP comments) for modules that fail while loading. */
@@ -172,7 +179,7 @@ export function parseJsErrorText(text,root){
 }
 
 export function readJUnitDirectory(dir,root){
-  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[]};
+  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[],skippedCaseHashes:[]};
   if(!fs.existsSync(dir))return result;
   for(const name of fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort().slice(0,2000)){
     const file=path.join(dir,name);
@@ -180,6 +187,7 @@ export function readJUnitDirectory(dir,root){
     const part=parseJUnit(fs.readFileSync(file,'utf8'),root);
     for(const k of ['total','failed','skipped','placeholders','executed','passed'])result[k]+=part[k];
     result.diagnostics.push(...part.diagnostics.slice(0,MAX_DIAGNOSTICS-result.diagnostics.length));
+    result.skippedCaseHashes.push(...part.skippedCaseHashes);
   }
   return result;
 }
