@@ -97,3 +97,36 @@ export function verifyAnskExperiment({
   return {verified:true,reason:null,authority:'SHADOW_ONLY',
     recipe:{...recipe,recipeSha256:sha256(JSON.stringify(recipe))}};
 }
+
+/** SHA-256 is a corruption check, not a signature or evidence of authorship. */
+export function verifyAnskRecipeReceipt(recipe){
+ const fail=reason=>({valid:false,reason,authority:'SHADOW_ONLY'});
+ if(!recipe||typeof recipe!=='object'||Array.isArray(recipe))
+  return fail('INVALID_RECIPE');
+ const {recipeSha256,...body}=recipe;
+ if(!SHA64.test(recipeSha256??'')||
+    sha256(JSON.stringify(body))!==recipeSha256)
+  return fail('RECIPE_HASH_MISMATCH');
+ if(body.schema!==ANSK_SCHEMA||body.version!==ANSK_VERSION||
+    body.authority!=='SHADOW_ONLY'||
+    body.stage!=='QUARANTINED_REVIEW_REQUIRED'||
+    body.modelTrainingAuthorized!==false||
+    body.automaticToolRegistration!==false||
+    body.mainBranchWriteAuthorized!==false||
+    !SHA40.test(body.head??'')||
+    body.diagnosis!=='UNRESOLVED_REFERENCE'||
+    body.strategy!=='KOTLIN_MISSING_IMPORT'||
+    ![body.sourceSha256,body.mutatedSha256,body.repairedSha256,body.editSha256]
+      .every(s=>SHA64.test(s??''))||
+    ![body.baselineExecuted,body.primaryExecuted,body.independentExecuted]
+      .every(n=>Number.isSafeInteger(n)&&n>0)||
+    body.primaryExecuted<body.baselineExecuted||
+    body.independentExecuted<body.baselineExecuted||
+    !Array.isArray(body.attemptedStrategies)||
+    body.attemptedStrategies.length<1||body.attemptedStrategies.length>3||
+    !body.attemptedStrategies.includes(body.strategy))
+  return fail('RECIPE_NOT_ELIGIBLE_FOR_SHADOW_REPLAY');
+ try{assertAnskSource(body.sourceFile,body.importFqn);}
+ catch{return fail('INVALID_RECIPE_TARGET');}
+ return {valid:true,reason:null,authority:'SHADOW_ONLY'};
+}
