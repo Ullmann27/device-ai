@@ -149,3 +149,81 @@ Mutation abbrechen musste.
 Fehlertyps bestehende Reparatur-/Toolchainpfade gezielt verbessern;
 keine künstliche Freigabe einer roten Baseline. Eine automatische
 Baseline-Reparatur ist hier noch nicht behauptet.
+
+
+## M1b – reale Samsung-Baseline mit drei übersprungenen Tests
+
+Am 20.10.2026 wurde ein ANSK-`--once`-Lauf auf Samsung Android 16 ARM64
+mit sauberem Experiment-HEAD `d86c7599771379070840f442fd84524915b8b19c`
+beendet. Die tatsächlich angezeigten Daten:
+
+- `android-compile`: `passed=true`, `exitCode=0`, 0 Compilerfehler;
+- `android-unit`: `passed=true`, `exitCode=0`, **632 ausgeführte
+  Tests**, `failed=0`, **3 übersprungene Tests**;
+- ANSK-Antwort: `BLOCKED_BASELINE_NOT_GREEN`, `reason=INVALID_PROFILE`.
+
+**Quellcode-Ursache:** Die erste Version von `measureAnskChain` lehnte
+ausnahmslos jedes `p.tests.skipped>0` ab, auch wenn echte JUnit-Tests
+erfolgreich waren. Das ist **kein** Nachweis eines Kotlin-Compilerfehlers
+und keine erfolgreich durchgeführte Reparaturmutation.
+
+**Gezielte Anpassung der vorhandenen Repair-Pipeline:**
+
+1. `parseJUnit` und `readJUnitDirectory` erzeugen SHA-256-Fingerabdrücke
+   der im echten Gradle-JUnit-XML als `skipped` markierten Testfallidentitäten
+   (Klassenname plus Methodenname). Die Rohbezeichnungen erscheinen nicht
+   im öffentlichen ANSK-Status.
+2. Der bestehende `runProfile` fasst diese Fingerabdrücke deterministisch
+   sortiert zu `tests.skippedCaseDigest` zusammen. Unvollständige,
+   unidentifizierbare oder doppelte Testfallidentitäten erzeugen **keine**
+   positiv akzeptierte Skip-Evidenz.
+3. `measureAnskChain` akzeptiert bereits vorhandene Skips der
+   Ausgangsbasis nur bei vollständig vorhandenem Digest. Reparatur und
+   unabhängiger zweiter Worktree müssen **dieselbe Zahl und denselben
+   Fingerabdruck** übersprungener Tests nachweisen und mindestens dieselbe
+   Zahl wirklich ausgeführter Tests liefern.
+4. Ein anderer übersprungener Test trotz gleicher Skip-Anzahl,
+   zusätzlich übersprungene Tests, ausbleibende JUnit-Dokumentation,
+   weniger ausgeführte Tests und fehlender/ungültiger Digest blockieren
+   weiterhin mit `INVALID_PROFILE` oder `EVIDENCE_REGRESSION`.
+5. Die bestehende ANSK-Triage erkennt fehlende Skip-Identitäten als
+   `ANDROID_UNIT_SKIP_IDENTITIES_MISSING` und empfiehlt eine Überprüfung
+   der JUnit-Dateien, nicht das Überspringen der Sicherheitsprüfung.
+
+Dies ist eine **Belegnormalisierung**, kein allgemeines `--ignore-tests`
+und keine künstliche grüne Baseline. Der automatische Installations- und
+Produktionszugriff bleibt unverändert ausgeschaltet.
+
+**Validierungsstatus:** Die neuen Kernregeln und XML-Erkennung wurden
+in neun quellgebundenen isolierten JavaScript-Prüfungen nachvollzogen;
+zusätzliche native Node-Tests sind im Experimentbranch definiert.
+**Die vollständigen Node-/Gradle-Tests auf Samsung für diesen neuen
+Commit stehen noch aus.** Eine tatsächlich unabhängig verifizierte
+`TRIPLE_PHASE_VERIFIED_SHADOW_RECIPE` liegt weiterhin nicht vor.
+
+Reproduzierbare, noch offene Geräteabnahme:
+
+~~~bash
+node --test .github/continuum/repair-diagnostics.test.mjs \
+ .github/continuum/ansk-lab-contract.test.mjs \
+ .github/continuum/ansk-baseline-triage.test.mjs \
+ .github/continuum/ansk-import-lab.test.mjs \
+ .github/continuum/local-integration-status.test.mjs
+~~~
+
+Erst bei vollständig grünem Lauf ist ein neuer, ausdrücklich
+autorisierter ANSK-`--once`-Versuch sinnvoll. Das Origin-Git-SHA,
+Testzahlen, Skip-Digest und eventuelle Fehler werden getrennt
+aufbewahrt. Die lokale APK wird weder installiert noch freigegeben.
+
+**Kompatibilität:** Bestehende `testProfile`-, `executed`-,
+`failed`- und `skipped`-Felder bleiben unverändert;
+`skippedCaseDigest` wird nur für tatsächliche Skips ergänzt.
+Alte Belege ohne Digest können nach dieser Regel nicht als
+erfolgreiche Baseline mit Skips gewertet werden.
+
+**Rollback:** Die Änderungen an
+`repair-diagnostics.mjs`, `repair-loop.mjs`,
+`ansk-lab-contract.mjs`, `ansk-baseline-triage.mjs` und den
+zugehörigen Tests isoliert revertieren; keine Datenbankmigration und
+kein schreibender Eingriff in `main`.
