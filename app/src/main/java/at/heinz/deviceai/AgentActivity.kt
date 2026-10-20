@@ -1639,6 +1639,13 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
+        if (request.equals("Continuum Modelltest", true)) {
+            input.text.clear()
+            addUserMessage(request)
+            runLocalSmokeTest()
+            return
+        }
         // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
         // showGroqMentorDialog always requires a second owner confirmation.
         val groqQuestion = GroqInvocationRouter.extractQuestion(request)
@@ -3957,6 +3964,64 @@ class AgentActivity : Activity() {
             }
             "• ${key.take(64)}: $summary"
         }
+
+    /**
+     * One owner-invoked, tool-free LiteRT-LM generation. This intentionally
+     * bypasses ChatReasoningRouter, orchestration, memory writes and ToolGate,
+     * separating native model inference from the regular agent pipeline.
+     * No network, speech capture or autonomous training can start here.
+     */
+    private fun runLocalSmokeTest() {
+        if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
+            addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
+            refreshLocalModelUi()
+            return
+        }
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        activeChatCancellation = cancellation
+        activeLocalRequest = true
+        localRuntimeError = null
+        setBusy(true)
+        addToolActivity("MODELLTEST · isolierte Textgenerierung ohne Gerätewerkzeuge")
+        localAgentExecutor.execute {
+            val started = System.nanoTime()
+            val result = runCatching {
+                val generated = generateLocal(cancellation) { callback ->
+                    localRuntime.streamThinking(
+                        "Antworte auf Deutsch in genau einem kurzen Satz: Was macht ein Roboter auf dem Mond?",
+                        callback
+                    )
+                }
+                generated.failure?.let { throw IllegalStateException(it) }
+                check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
+                    "Der isolierte Modelltest darf keine Werkzeugvorschläge erzeugen."
+                }
+                check(generated.response.isNotBlank()) { "Das Modell hat keinen Text erzeugt." }
+                generated.response.take(1_500)
+            }
+            val elapsed = ((System.nanoTime() - started).coerceAtLeast(0L) / 1_000_000L)
+            runOnUiThread {
+                if (isFinishing || isDestroyed || activeChatCancellation !== cancellation) return@runOnUiThread
+                activeChatCancellation = null
+                activeLocalRequest = false
+                result.fold(
+                    onSuccess = { answer ->
+                        addAssistantMessage("MODELLTEST ERFOLGREICH · ${elapsed} ms\\n\\n" + answer)
+                        addToolActivity("MODELLTEST · native Textgenerierung abgeschlossen; kein Tool ausgeführt")
+                    },
+                    onFailure = { failure ->
+                        val description = failure.message?.take(200) ?: failure.javaClass.simpleName
+                        localRuntimeError = description
+                        addAssistantMessage("MODELLTEST FEHLGESCHLAGEN · ${elapsed} ms\\nUrsache: " + description +
+                            "\\nDer normale Agentenablauf wurde nicht ausgeführt.")
+                        addToolActivity("MODELLTEST · isolierte Inferenz fehlgeschlagen")
+                    }
+                )
+                setBusy(false)
+                refreshLocalModelUi()
+            }
+        }
+    }
 
     private fun runLocal(text: String, resolvedQuestion: String = text) {
         val imported = localRuntime.loadedModel
