@@ -3,7 +3,36 @@
 set -Eeuo pipefail
 umask 077
 
-printf '[Continuum] isolated Android mentor preview build\n'
+# Explicitly approved PR42 source bridge. Keeps Render's existing persistent
+# signing credentials and HTTPS hostname without changing production/Main.
+# The source checkout is detached: no push, merge or branch rewrite.
+expected_delivery="astra/render-mentor-apk-builder-20261019"
+delivery_branch="$(git branch --show-current)"
+if [[ "$delivery_branch" != "$expected_delivery" && -n "$delivery_branch" ]]; then
+  echo "[Continuum] Refusing unexpected bridge source: $delivery_branch" >&2
+  exit 69
+fi
+git diff --quiet && git diff --cached --quiet || {
+  echo "[Continuum] Refusing a modified checkout" >&2
+  exit 69
+}
+target_branch="astra/continuum-experiment-charter-20261019"
+target_remote_ref="refs/remotes/origin/$target_branch"
+printf '[Continuum] Fetching pinned repository-owned PR42 branch source\n'
+git fetch --no-tags origin "+refs/heads/$target_branch:$target_remote_ref"
+target_commit="$(git rev-parse --verify "$target_remote_ref^{commit}")"
+if [[ ! "$target_commit" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "[Continuum] Invalid target source SHA" >&2
+  exit 69
+fi
+git -c advice.detachedHead=false checkout --detach "$target_commit"
+test "$(git rev-parse HEAD)" = "$target_commit"
+test -f scripts/render-mentor-preview.sh
+grep -q 'expected_branch="astra/continuum-experiment-charter-20261019"' scripts/render-mentor-preview.sh
+grep -q 'CONTINUUM_MENTOR_SIGNING_P12_BASE64' scripts/render-mentor-preview.sh
+printf '[Continuum] Building current PR42 experiment commit %s with retained Render signing\n' "$target_commit"
+exec bash scripts/render-mentor-preview.sh
+
 command -v bash >/dev/null
 command -v curl >/dev/null
 command -v unzip >/dev/null
