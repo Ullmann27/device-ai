@@ -103,7 +103,8 @@ node --test \
   .github/continuum/continuum-growth-and-archive.test.mjs \
   .github/continuum/autonomous-topic-frontier.test.mjs \
   .github/continuum/research-job-permission.test.mjs \
-  .github/continuum/cdx-large-curriculum.test.mjs
+  .github/continuum/cdx-large-curriculum.test.mjs \
+  .github/continuum/training-monitor-wiring.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
