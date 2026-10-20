@@ -115,7 +115,7 @@ class TinyContextDecoder private constructor(
     private fun pairedBuckets(
         corpus:DecoderEvidenceCorpus,
         conditionerFor:(DecoderEvidencePair)->DoubleArray
-    ):List<PairedSample> = corpus.pairs.map { pair ->
+    ):List<List<PairedSample>> = corpus.pairs.map { pair ->
         val prefix=pair.prefix().toByteArray(Charsets.UTF_8)
         val full=prefix+pair.answer.toByteArray(Charsets.UTF_8)
         val c=condition(conditionerFor(pair))
