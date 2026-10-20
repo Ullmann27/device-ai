@@ -108,3 +108,12 @@ test('non-absolute state path is rejected and checkout files remain untouched',(
  assert.throws(()=>writeImmutableAnskRecipe('relative/state',recipeFixture()),
    /ANSK_INVALID_RECIPE_STORE/);
 });
+
+test('a denied exclusive copy is an explicit failure and cannot leave a success receipt',()=>scratch(store=>{
+ const original=fs.copyFileSync;
+ fs.copyFileSync=()=>{const error=Error('permission denied');error.code='EACCES';throw error;};
+ try{
+  assert.throws(()=>writeImmutableAnskRecipe(store,recipeFixture()),/permission denied/);
+  assert.deepEqual(fs.readdirSync(path.join(store,'shadow-recipes')),[]);
+ }finally{fs.copyFileSync=original;}
+}));
