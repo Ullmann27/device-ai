@@ -51,14 +51,14 @@ Kein neuer Renderer oder konkurrierendes UI-Framework wurde eingeführt.
 
 ## Prüfungen und Grenzen
 
-Gezielte quellgebundene V8-Prüfungen: 12/12 durchgelaufen auf dem
+Gezielte quellgebundene V8-Prüfungen: 13/13 durchgelaufen auf dem
 aktuellen GitHub-HEAD. Die Quelldateien enthalten außerdem:
 
-- `.github/continuum/nexus-beginner-ui.test.mjs` (6 Node-Regressionen)
+- `.github/continuum/nexus-beginner-ui.test.mjs` (7 Node-Regressionen)
 - `app/src/test/java/at/heinz/deviceai/ContinuumNexusHomeSpecTest.kt`
   (3 Kotlin/JUnit-Tests).
 
-Die 12/12 V8-Prüfungen sind **kein Kotlin-Compiler-,
+Die 13/13 V8-Prüfungen sind **kein Kotlin-Compiler-,
 Android-Instrumentierungs- oder Geräte-Renderingbeweis**.
 Diese Abnahmen bleiben offen.
 
