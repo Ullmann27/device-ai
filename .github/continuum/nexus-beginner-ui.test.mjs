@@ -70,3 +70,10 @@ test('personalisation is a real choice and cannot silently train models or insta
   assert.match(choice, /nicht automatisch trainiert/);
   assert.doesNotMatch(choice, /trainSgdStep|installPackage|launchApkInstall|exec\(/);
 });
+
+test('expert disclosure stays closed after leaving or returning from chat', () => {
+  const refresh=section('private fun refreshConversationLayout()', 'private fun showHomeDashboard()');
+  assert.match(refresh, /nexusExpertPanel\?\.visibility = if \(!chat && nexusExpertExpanded\)/);
+  assert.match(home, /nexusExpertExpanded = false/);
+  assert.match(home, /nexusExpertExpanded = show/);
+});
