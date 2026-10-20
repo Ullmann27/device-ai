@@ -67,6 +67,37 @@ data class PublicCurriculumReport(
     }
 }
 
+data class ExtendedCurriculumReport(
+    val stage:Int,
+    val stagesTotal:Int,
+    val completed:Boolean,
+    val accepted:Boolean,
+    val intentUpdates:Int,
+    val semanticUpdates:Int,
+    val reason:String,
+    val priorIntent:SubwordEvaluation,
+    val nextIntent:SubwordEvaluation,
+    val priorSemantic:SubwordEvaluation,
+    val nextSemantic:SubwordEvaluation
+) {
+    fun display():String = buildString {
+        append("SWB1 · GROSSES OFFLINE-ÜBUNGSARCHIV\\n")
+        append("Lernstufe: ").append(stage).append("/").append(stagesTotal)
+        append(" · ").append(if(!completed)"UNTERBROCHEN" else
+            if(accepted)"GEPRÜFTE GEWICHTE ÜBERNOMMEN" else "GEWICHTE VERWORFEN")
+        append("\\nSchritte: ").append(intentUpdates).append(" Intent + ")
+            .append(semanticUpdates).append(" Semantik\\n")
+        append("Neuer Intent-Test: ").append(priorIntent.correct).append("/")
+            .append(priorIntent.total).append(" → ").append(nextIntent.correct)
+            .append("/").append(nextIntent.total)
+        append("\\nNeuer Semantik-Test: ").append(priorSemantic.correct).append("/")
+            .append(priorSemantic.total).append(" → ").append(nextSemantic.correct)
+            .append("/").append(nextSemantic.total)
+        append("\\n").append(reason)
+        append("\\nKeine automatischen Besitzerfakten. SWB1-Parameterzahl bleibt 4.113.")
+    }
+}
+
 enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
 
 data class ContinuumLearningStatus(
@@ -250,6 +281,76 @@ class ContinuumLearningCore(
                 trainSemanticBefore,trainSemanticAfter,intentAuditBefore,intentAuditAfter,
                 semanticAuditBefore,semanticAuditAfter,fixedIntentBefore,fixedIntentAfter,
                 fixedSemanticBefore,fixedSemanticAfter)
+        }
+
+    /**
+     * At most one 96+40-example research stage per invocation, against immutable
+     * 64+8 extended holdouts, old 8+6 holdouts and confirmed owner examples.
+     * A completed stage is permanently audited (accepted or rejected).
+     */
+    fun trainExtendedCurriculum(cancelled:()->Boolean={false}):ExtendedCurriculumReport? =
+        synchronized(CORE_LOCK) {
+            val curriculum=ContinuumExtendedCurriculum
+            curriculum.validate()
+            val done=store.all().filter {
+                it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation?.startsWith(curriculum.VERSION+"-stage-")==true
+            }.mapNotNull { item ->
+                item.annotation?.removePrefix(curriculum.VERSION+"-stage-")?.toIntOrNull()
+            }.toSet()
+            val stage=(0 until curriculum.STAGES).firstOrNull { (it+1) !in done }
+                ?: return@synchronized null
+            val marker=curriculum.VERSION+"-stage-"+(stage+1)
+            val baseline=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(baseline.save())
+            val intentTraining=(INTENT_BOOTSTRAP+curriculum.intentBatch(stage)).take(128)
+            val semanticTraining=(SEMANTIC_BOOTSTRAP+curriculum.semanticBatch(stage)).take(128)
+            val trainI0=baseline.evaluateIntent(intentTraining)
+            val trainS0=baseline.evaluateSemantic(semanticTraining)
+            val auditI0=baseline.evaluateIntent(curriculum.intentAudit)
+            val auditS0=baseline.evaluateSemantic(curriculum.semanticAudit)
+            val fixedI0=baseline.evaluateIntent(INTENT_HOLDOUT)
+            val fixedS0=baseline.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val extraI0=baseline.evaluateIntent(ContinuumPublicCurriculum.intentAudit)
+            val extraS0=baseline.evaluateSemantic(ContinuumPublicCurriculum.semanticAudit)
+            val owner=ownerIntentReplay()
+            val owner0=owner.takeIf { it.isNotEmpty() }?.let(baseline::evaluateIntent)
+            val trainI=candidate.trainIntent(intentTraining,
+                steps=750,maxMillis=3000,cancelled=cancelled)
+            val trainS=if(!interrupted(cancelled) && !trainI.stoppedEarly)
+                candidate.trainSemantic(semanticTraining,
+                    steps=500,maxMillis=3000,cancelled=cancelled)
+            else null
+            val trainI1=candidate.evaluateIntent(intentTraining)
+            val trainS1=candidate.evaluateSemantic(semanticTraining)
+            val auditI1=candidate.evaluateIntent(curriculum.intentAudit)
+            val auditS1=candidate.evaluateSemantic(curriculum.semanticAudit)
+            val fixedI1=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val fixedS1=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val extraI1=candidate.evaluateIntent(ContinuumPublicCurriculum.intentAudit)
+            val extraS1=candidate.evaluateSemantic(ContinuumPublicCurriculum.semanticAudit)
+            val completed=!interrupted(cancelled) && !trainI.stoppedEarly &&
+                trainS!=null && !trainS.stoppedEarly
+            val ownerSafe=owner0==null || retains(owner0,candidate.evaluateIntent(owner))
+            val allProtected=retains(auditI0,auditI1) && retains(auditS0,auditS1) &&
+                retains(fixedI0,fixedI1) && retains(fixedS0,fixedS1) &&
+                retains(extraI0,extraI1) && retains(extraS0,extraS1) && ownerSafe
+            val better=trainI1.loss+0.000001<trainI0.loss &&
+                trainS1.loss+0.000001<trainS0.loss &&
+                auditI1.loss+auditS1.loss+0.0005<auditI0.loss+auditS0.loss
+            val accepted=completed && allProtected && better
+            val reason=when {
+                !completed -> "Trainingslauf unterbrochen oder Zeitbudget erreicht; wiederholbar."
+                !allProtected -> "Mindestens ein unveränderlicher Prüfsatz oder eine Besitzerlektion würde schlechter."
+                !better -> "Kein unabhängiger Qualitätsgewinn; vorige Gewichte erhalten."
+                else -> "Neue Gewichtswerte akzeptiert; der frühere Stand ist als Checkpoint archiviert."
+            }
+            if(accepted)saveModel(candidate.save(),marker)
+            if(completed)appendAudit(marker,accepted,
+                trainI.steps+(trainS?.steps ?: 0),
+                trainI0,trainI1,auditI0,auditI1,emptyList(),reason)
+            ExtendedCurriculumReport(stage+1,curriculum.STAGES,completed,accepted,
+                trainI.steps,trainS?.steps ?: 0,reason,auditI0,auditI1,auditS0,auditS1)
         }
 
     fun teachIntent(
