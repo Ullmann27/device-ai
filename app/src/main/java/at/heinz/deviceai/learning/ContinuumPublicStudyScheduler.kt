@@ -131,12 +131,13 @@ class ContinuumPublicStudyScheduler(context:Context) {
         val edit=prefs.edit()
             .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))
             .putString("phase",phase.take(65))
-        if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic)) {
+        if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic) &&
+            phase!="CANCELLED" && phase!="INTERRUPTED" &&
+            phase!="PROVIDER_RATE_LIMIT") {
             val (remaining,history)=ContinuumTopicFrontier.afterAttempt(
                 loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING),
                 loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),
-                topic,phase!="CANCELLED" && phase!="INTERRUPTED" &&
-                    !phase.startsWith("FAILED_"))
+                topic,!phase.startsWith("FAILED_"))
             edit.putString("topic_pending",remaining.joinToString("\n"))
                 .putString("topic_visited",history.joinToString("\n"))
         }
