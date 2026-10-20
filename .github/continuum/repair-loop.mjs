@@ -128,9 +128,27 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
-  const addTests=j=>{for(const k of Object.keys(tests))tests[k]+=j[k]??0;diagnostics.push(...j.diagnostics);};
+  const skippedCaseHashes=[];
+  let completeSkipIdentities=true;
+  const addTests=j=>{
+    for(const k of ['total','failed','skipped','placeholders','executed','passed'])tests[k]+=j[k]??0;
+    diagnostics.push(...j.diagnostics);
+    if(j.skipped>0){
+      const ids=j.skippedCaseHashes;
+      if(!Array.isArray(ids)||ids.length!==j.skipped||
+         ids.some(id=>typeof id!=='string'||!/^[0-9a-f]{64}$/.test(id)))
+        completeSkipIdentities=false;
+      else skippedCaseHashes.push(...ids);
+    }
+  };
   for(const dir of p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
   for(const file of p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(fs.readFileSync(file,'utf8'),wt));
+  // Permit pre-existing JUnit skips only with a complete, stable case-identity
+  // digest. ANSK independently compares the same identity across all green runs.
+  if(tests.skipped>0&&completeSkipIdentities&&
+     skippedCaseHashes.length===tests.skipped&&
+     new Set(skippedCaseHashes).size===skippedCaseHashes.length)
+    tests.skippedCaseDigest=sha256(skippedCaseHashes.sort().join('\\0'));
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
