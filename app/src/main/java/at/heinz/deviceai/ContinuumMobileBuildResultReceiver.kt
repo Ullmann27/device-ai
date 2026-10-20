@@ -52,6 +52,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val reportedStatus = payload?.optString("status")
         val artifactHash = payload?.optString("apkSha256")
         val signerHash = payload?.optString("signerSha256")
+        val ownerCopyStatus = payload?.optJSONObject("ownerInstallCopy")?.optString("status")
 
         val outcome = ContinuumMobileResultPolicy.evaluate(
             operation = operation,
@@ -66,11 +67,23 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         } else {
             ContinuumMobileResultPolicy.explanation(outcome)
         }
+        val ownerCopyMessage =
+            if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
+                    (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED &&
+                        reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED"))) {
+                when (ownerCopyStatus) {
+                    "COPIED" -> "\nTermux meldet Installationskopie unter Download/00-DEVICEAI-INSTALLATION. " +
+                        "Installation bleibt deine Entscheidung."
+                    "UNAVAILABLE" -> "\nDie zusätzliche Download-Kopie wurde nicht bestätigt. " +
+                        "Das geprüfte Original bleibt im privaten Termux-Speicher."
+                    else -> ""
+                }
+            } else ""
         val editor = prefs.edit()
             .remove(JOB_ID)
             .remove(JOB_OPERATION)
             .remove(JOB_START)
-            .putString(LAST_MESSAGE, text)
+            .putString(LAST_MESSAGE, text + ownerCopyMessage)
             .remove(LAST_SHA)
         if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE &&
             artifactHash != null
