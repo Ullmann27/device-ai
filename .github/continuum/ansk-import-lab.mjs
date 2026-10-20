@@ -30,7 +30,7 @@ const BRANCH='astra/continuum-experiment-charter-20261019';
 const RUNTIME_BUDGET_MS=45*60_000;
 const MAX_CANDIDATES=3;
 
-function ensureCleanSource(root){
+export function ensureCleanSource(root){
   const actual=fs.realpathSync(root);
   const checkout=git(actual,['rev-parse','--show-toplevel']).stdout.trim();
   if(fs.realpathSync(checkout)!==actual)throw Error('ANSK_ROOT_NOT_GIT_TOPLEVEL');
@@ -42,12 +42,12 @@ function ensureCleanSource(root){
   if(!/^[0-9a-f]{40}$/.test(head))throw Error('ANSK_INVALID_HEAD');
   return {root:actual,head};
 }
-function assertSourceUnchanged(root,head){
+export function assertSourceUnchanged(root,head){
   const actual=ensureCleanSource(root);
   if(actual.head!==head)throw Error('ANSK_HEAD_CHANGED');
 }
 
-function stateRoot(root){
+export function stateRoot(root){
   const dir=path.join(os.homedir(),'.local','state','device-ai-continuum','ansk-lab');
   fs.mkdirSync(dir,{recursive:true,mode:0o700});
   const actual=fs.realpathSync(dir);
@@ -57,12 +57,12 @@ function stateRoot(root){
   return actual;
 }
 
-function readCode(wt,relative){
+export function readCode(wt,relative){
   const absolute=boundedWorktreeFile(wt,relative);
   if(fs.statSync(absolute).size>250_000)throw Error('ANSK_SOURCE_TOO_LARGE');
   return fs.readFileSync(absolute,'utf8');
 }
-function editInWorktree(wt,sourceFile,edits,expectedBeforeSha256){
+export function editInWorktree(wt,sourceFile,edits,expectedBeforeSha256){
   if(!Array.isArray(edits)||edits.length!==1||edits[0].file!==sourceFile)
     throw Error('ANSK_SINGLE_FILE_EDITS_ONLY');
   const source=readCode(wt,sourceFile);
@@ -75,13 +75,13 @@ function editInWorktree(wt,sourceFile,edits,expectedBeforeSha256){
   return sha256(observed);
 }
 
-function phaseDir(root,phase){
+export function phaseDir(root,phase){
   const dir=path.join(root,phase);
   fs.mkdirSync(dir,{recursive:true,mode:0o700});
   return dir;
 }
 
-function diagnosticFor(result,sourceFile,symbol){
+export function diagnosticFor(result,sourceFile,symbol){
   return (result.diagnostics??[]).find(d=>
     d.file===sourceFile&&d.kind==='UNRESOLVED_REFERENCE'&&d.symbol===symbol)??null;
 }

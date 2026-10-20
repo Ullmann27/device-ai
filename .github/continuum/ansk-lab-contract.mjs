@@ -140,3 +140,21 @@ export function verifyAnskRecipeReceipt(recipe){
  catch{return fail('INVALID_RECIPE_TARGET');}
  return {valid:true,reason:null,authority:'SHADOW_ONLY'};
 }
+
+/** Structural gate only. The transfer runner must collect these observations
+ * itself through the fixed check chain, never accept user-supplied run JSON.
+ */
+export function verifyAnskTransferArm({baselineRun,primaryRun,independentRun,
+ baselineSha256,mutatedSha256,primarySha256,independentSha256}={}){
+ const reject=reason=>({verified:false,reason});
+ if(![baselineSha256,mutatedSha256,primarySha256,independentSha256]
+   .every(s=>SHA64.test(s??''))||baselineSha256===mutatedSha256||
+   primarySha256===mutatedSha256||primarySha256!==independentSha256)
+  return reject('TRANSFER_SOURCE_HASH_MISMATCH');
+ if(!measureAnskChain(baselineRun).passed)return reject('BASELINE_NOT_GREEN');
+ if(!measureAnskChain(primaryRun,{baseline:baselineRun}).passed)
+  return reject('PRIMARY_NOT_GREEN');
+ if(!measureAnskChain(independentRun,{baseline:baselineRun}).passed)
+  return reject('INDEPENDENT_NOT_GREEN');
+ return {verified:true,reason:null};
+}

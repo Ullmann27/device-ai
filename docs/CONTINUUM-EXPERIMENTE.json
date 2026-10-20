@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -36,10 +36,10 @@
       "id": "EXP-02",
       "title": "CEGIS program synthesis",
       "status": "RESEARCH_SHADOW",
-      "present": "Existing repair-loop, candidate critics and independent tests",
+      "present": "Existing CEGIS repair-loop plus explicit serial recipe/control transfer laboratory with independent fresh-worktree checks, immutable shadow measurements and regression gates (82 Node tests; mocked Gradle integration). Owner reports original Samsung 632-test triple-phase recipe; second-file device transfer not yet observed here.",
       "entry": ".github/continuum/repair-loop.mjs",
       "depends": "Typed candidate interface, M4 tests",
-      "gate": "Unknown-source holdout repairs vs deterministic baseline"
+      "gate": "Run existing Samsung receipt on a different source with fixed Android compile/unit checks; compare both independently verified arms, then additional novel holdouts. No training/promotion."
     },
     {
       "id": "EXP-03",
