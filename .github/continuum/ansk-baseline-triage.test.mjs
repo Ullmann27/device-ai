@@ -85,3 +85,26 @@ test('empty or malformed evidence remains incomplete and outputs bounded enums',
     assert.ok(JSON.stringify(result).length < 1200);
   }
 });
+
+test('omitted reason uses canonical failed Android baseline instead of generic fallback', () => {
+  const broken = {passed:false,results:[{
+    profile:'android-compile',passed:false,testProfile:false,
+    exitCode:1,timedOut:false,tests:{executed:0,failed:0,skipped:0},
+    diagnostics:[{kind:'UNRESOLVED_REFERENCE'}]
+  }]};
+  const result = summarizeAnskBaselineFailure(broken);
+  assert.equal(result.reason,'NOT_ALL_PROFILES_GREEN');
+  assert.equal(result.failureCategory,'ANDROID_KOTLIN_COMPILE_FAILURE');
+});
+
+test('omitted reason preserves missing unit-test evidence in a nominally green chain', () => {
+  const broken = {passed:true,results:[
+    {profile:'android-compile',passed:true,testProfile:false,
+     exitCode:0,timedOut:false,tests:{executed:0,failed:0,skipped:0}},
+    {profile:'android-unit',passed:true,testProfile:true,
+     exitCode:0,timedOut:false,tests:{executed:0,failed:0,skipped:0}}
+  ]};
+  const result = summarizeAnskBaselineFailure(broken);
+  assert.equal(result.reason,'NOT_ALL_PROFILES_GREEN');
+  assert.equal(result.failureCategory,'ANDROID_UNIT_EVIDENCE_MISSING');
+});
