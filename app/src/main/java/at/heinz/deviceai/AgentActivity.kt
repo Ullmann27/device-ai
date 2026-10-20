@@ -244,6 +244,8 @@ class AgentActivity : Activity() {
     private var homeHeader: View? = null
     private var modeSection: View? = null
     private val dashboardFeatures = ArrayList<View>()
+    private var nexusExpertPanel: LinearLayout? = null
+    private var nexusExpertExpanded = false
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -868,10 +870,13 @@ class AgentActivity : Activity() {
             orientation = LinearLayout.VERTICAL
             visibility = View.GONE
         }
+        nexusExpertPanel = moreFunctions
+        nexusExpertExpanded = false
         val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
             contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
             setOnClickListener {
-                val show = moreFunctions.visibility != View.VISIBLE
+                val show = !nexusExpertExpanded
+                nexusExpertExpanded = show
                 moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
                 text = if (show) "Weitere KI-Funktionen schließen  ▴"
                     else "Weitere KI-Funktionen anzeigen  ▾"
@@ -941,6 +946,7 @@ class AgentActivity : Activity() {
         homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
         modeSection?.visibility = if (chat) View.GONE else View.VISIBLE
         dashboardFeatures.forEach { it.visibility = if (chat) View.GONE else View.VISIBLE }
+        nexusExpertPanel?.visibility = if (!chat && nexusExpertExpanded) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.let { dashboard ->
             dashboard.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
