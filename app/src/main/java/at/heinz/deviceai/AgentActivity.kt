@@ -1656,10 +1656,12 @@ class AgentActivity : Activity() {
             return
         }
         // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
-        if (request.equals("Continuum Modelltest", true)) {
+        if (request.equals("Continuum Modelltest", true) ||
+            request.equals("Continuum Modelltest Direkt", true)) {
+            val direct=request.equals("Continuum Modelltest Direkt",true)
             input.text.clear()
             addUserMessage(request)
-            runLocalSmokeTest()
+            runLocalSmokeTest(direct)
             return
         }
         // Only explicit mentor commands or an addressed "Hallo Groq" enter this path.
@@ -4569,7 +4571,7 @@ class AgentActivity : Activity() {
      * separating native model inference from the regular agent pipeline.
      * No network, speech capture or autonomous training can start here.
      */
-    private fun runLocalSmokeTest() {
+    private fun runLocalSmokeTest(direct:Boolean=false) {
         if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
             refreshLocalModelUi()
@@ -4580,15 +4582,16 @@ class AgentActivity : Activity() {
         activeLocalRequest = true
         localRuntimeError = null
         setBusy(true)
-        addToolActivity("MODELLTEST · isolierte Textgenerierung ohne Gerätewerkzeuge")
+        addToolActivity(if(direct)
+            "MODELLTEST · direkte lokale Qwen-Inferenz ohne Werkzeugausführung"
+            else "MODELLTEST · isolierte Textgenerierung ohne Gerätewerkzeuge")
         localAgentExecutor.execute {
             val started = System.nanoTime()
             val result = runCatching {
                 val generated = generateLocal(cancellation) { callback ->
-                    localRuntime.streamThinking(
-                        "Antworte auf Deutsch in genau einem kurzen Satz: Was macht ein Roboter auf dem Mond?",
-                        callback
-                    )
+                    val question="Antworte auf Deutsch in genau einem kurzen Satz: Was macht ein Roboter auf dem Mond?"
+                    if(direct)localRuntime.stream(question,callback)
+                    else localRuntime.streamThinking(question,callback)
                 }
                 generated.failure?.let { throw IllegalStateException(it) }
                 check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
@@ -4604,13 +4607,17 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 result.fold(
                     onSuccess = { answer ->
-                        addAssistantMessage("MODELLTEST ERFOLGREICH · ${elapsed} ms\n\n" + answer)
+                        addAssistantMessage("MODELLTEST "+
+                            (if(direct)"DIREKT" else "THINKING")+
+                            " ERFOLGREICH · ${elapsed} ms\n\n" + answer)
                         addToolActivity("MODELLTEST · native Textgenerierung abgeschlossen; kein Tool ausgeführt")
                     },
                     onFailure = { failure ->
                         val description = failure.message?.take(200) ?: failure.javaClass.simpleName
                         localRuntimeError = description
-                        addAssistantMessage("MODELLTEST FEHLGESCHLAGEN · ${elapsed} ms\nUrsache: " + description +
+                        addAssistantMessage("MODELLTEST "+
+                            (if(direct)"DIREKT" else "THINKING")+
+                            " FEHLGESCHLAGEN · ${elapsed} ms\nUrsache: " + description +
                             "\nDer normale Agentenablauf wurde nicht ausgeführt.")
                         addToolActivity("MODELLTEST · isolierte Inferenz fehlgeschlagen")
                     }
