@@ -155,3 +155,57 @@ test('structural results cannot grant trust to imported JSON or authorize model 
  assert.equal(measureAnskChain(bogus.baselineRun).passed,false);
  assert.equal(verifyAnskExperiment(bogus).verified,false);
 });
+
+test('real Samsung-style baseline accepts three identified skips with 632 executed tests',()=>{
+  const sample=fixture();
+  const digest='b'.repeat(64);
+  for(const run of [sample.baselineRun,sample.primaryRun,sample.independentRun]){
+    run.results[1].tests.executed=632;
+    run.results[1].tests.skipped=3;
+    run.results[1].tests.skippedCaseDigest=digest;
+  }
+  assert.deepEqual(measureAnskChain(sample.baselineRun),{passed:true,reason:null});
+  const verified=verifyAnskExperiment(sample);
+  assert.equal(verified.verified,true);
+  assert.equal(verified.recipe.baselineExecuted,632);
+  assert.equal(verified.recipe.primaryExecuted,632);
+  assert.equal(verified.recipe.independentExecuted,632);
+  assert.equal(verified.recipe.modelTrainingAuthorized,false);
+});
+
+test('ANSK rejects missing skip identities even if Gradle and 632 executed tests pass',()=>{
+ const sample=fixture();
+ sample.baselineRun.results[1].tests.executed=632;
+ sample.baselineRun.results[1].tests.skipped=3;
+ assert.equal(measureAnskChain(sample.baselineRun).reason,'INVALID_PROFILE');
+ assert.equal(verifyAnskExperiment(sample).verified,false);
+});
+
+test('ANSK rejects swapped skipped tests even when all counts remain unchanged',()=>{
+ const sample=fixture();
+ for(const run of [sample.baselineRun,sample.primaryRun,sample.independentRun]){
+   run.results[1].tests.executed=632;
+   run.results[1].tests.skipped=3;
+   run.results[1].tests.skippedCaseDigest='a'.repeat(64);
+ }
+ sample.primaryRun.results[1].tests.skippedCaseDigest='b'.repeat(64);
+ assert.equal(measureAnskChain(sample.primaryRun,{baseline:sample.baselineRun}).reason,'EVIDENCE_REGRESSION');
+ assert.equal(verifyAnskExperiment(sample).reason,'PRIMARY_NOT_GREEN');
+ sample.primaryRun.results[1].tests.skippedCaseDigest='a'.repeat(64);
+ sample.independentRun.results[1].tests.skippedCaseDigest='b'.repeat(64);
+ assert.equal(verifyAnskExperiment(sample).reason,'INDEPENDENT_NOT_GREEN');
+});
+
+test('ANSK forbids extra skips or fewer executed tests in independent validation',()=>{
+ const sample=fixture();
+ for(const run of [sample.baselineRun,sample.primaryRun,sample.independentRun]){
+   run.results[1].tests.executed=632;
+   run.results[1].tests.skipped=3;
+   run.results[1].tests.skippedCaseDigest='a'.repeat(64);
+ }
+ sample.independentRun.results[1].tests.executed=631;
+ assert.equal(verifyAnskExperiment(sample).reason,'INDEPENDENT_NOT_GREEN');
+ sample.independentRun.results[1].tests.executed=632;
+ sample.independentRun.results[1].tests.skipped=4;
+ assert.equal(verifyAnskExperiment(sample).reason,'INDEPENDENT_NOT_GREEN');
+});
