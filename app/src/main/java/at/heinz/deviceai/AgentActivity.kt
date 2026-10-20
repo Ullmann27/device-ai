@@ -2615,7 +2615,8 @@ class AgentActivity : Activity() {
                     "Öffentliche Hintergrundforschung aktiviert. Android plant begrenzte "+
                         "Lernläufe; keine Endlosschleife im Vordergrund. "+
                         "Die erste Ausführung kann sich bis zum Laden verzögern."
-                    else "Forschung wurde nicht korrekt eingeplant; bitte Android-Jobstatus prüfen.")
+                    else "Forschung wurde nicht korrekt eingeplant.\n"+scheduler.display()+
+                        "\nBitte diese Meldung für die Diagnose speichern.")
             }
             .show()
     }
