@@ -374,6 +374,7 @@ class AgentActivity : Activity() {
         }
         NeuralPracticeScheduler(this).restoreIfEnabled()
         MentorStudyScheduler(this).restore()
+        at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this).restore()
         recoverDevelopmentBacklog()
         val previousTraining = runCatching { bootstrapMemory.neuralSnapshot() }.getOrNull()
         neuralMonitor.text = if (previousTraining != null)
@@ -1185,6 +1186,7 @@ class AgentActivity : Activity() {
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
             CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
+            CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
@@ -2550,7 +2552,8 @@ class AgentActivity : Activity() {
             "ÖFFENTLICHES OFFLINE-LERNPAKET · TRAINIEREN",
             "GEWICHTE IMPORTIEREN · SWB1",
             "PAKET-IMPORT · SWB1 + MANIFEST",
-            "GEWICHTE EXPORTIEREN · BACKUP"
+            "GEWICHTE EXPORTIEREN · BACKUP",
+            "AUTONOME INTERNETFORSCHUNG · EIN/AUS"
         )
         AlertDialog.Builder(this)
             .setTitle("Continuum · Gewichte und Lernlabor")
@@ -2560,9 +2563,46 @@ class AgentActivity : Activity() {
                     1 -> confirmWeightsImport()
                     2 -> confirmPackageImport()
                     3 -> exportCoreWeights()
+                    4 -> showPublicStudyControls()
                 }
             }
             .setNegativeButton("Schließen",null)
+            .show()
+    }
+
+    /**
+     * Narrow, reversible authorization for one publicly curated research source
+     * per Android-scheduled cycle. Does not grant ALWAYS_ON access to user chat
+     * research or to any generated code/tool execution.
+     */
+    private fun showPublicStudyControls() {
+        val scheduler=at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this)
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · autonome öffentliche Forschung")
+            .setMessage(scheduler.display()+"\n\n"+
+                "Forschung nur aus 48 festen Artikeln der deutschsprachigen Wikipedia. "+
+                "Pro Android-Lauf höchstens ein Auszug (96 KiB), maximal 15 Sekunden. "+
+                "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
+                "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
+                "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
+                "Android plant ungefähr stündlich, ausschließlich während des Ladens "+
+                "und mit einer Internetverbindung (auch Mobilfunk). "+
+                "Ausschalten stoppt die Planung; die gespeicherten Quellen bleiben erhalten.")
+            .setNegativeButton("ABBRECHEN",null)
+            .setNeutralButton("FORSCHUNG AUS") { _, _ ->
+                val stopped=scheduler.disable()
+                addAssistantMessage(if(stopped)
+                    "Öffentliche Hintergrundforschung beendet; Quellen und Gewichte bleiben erhalten."
+                    else "Forschungsplanung gestoppt; Status konnte nicht dauerhaft gespeichert werden.")
+            }
+            .setPositiveButton(if(scheduler.enabled)"PLANUNG PRÜFEN" else "FORSCHUNG FREIGEBEN") { _, _ ->
+                val started=scheduler.enable()
+                addAssistantMessage(if(started)
+                    "Öffentliche Hintergrundforschung aktiviert. Android plant begrenzte "+
+                        "Lernläufe; keine Endlosschleife im Vordergrund. "+
+                        "Die erste Ausführung kann sich bis zum Laden verzögern."
+                    else "Forschung wurde nicht korrekt eingeplant; bitte Android-Jobstatus prüfen.")
+            }
             .show()
     }
 
