@@ -102,6 +102,30 @@ function writeImmutableRecipe(store,recipe){
   return target;
 }
 
+/** Bounded, metadata-only diagnostics. Never print arbitrary Gradle output, 
+ * source contents, environment variables or secrets in an ANSK receipt.
+ * A failing baseline cannot be promoted into a successful experiment.
+ */
+export function summarizeAnskBaselineFailure(result){
+  const measured=measureAnskChain(result);
+  const checks=Array.isArray(result?.results)?result.results.slice(0,2):[];
+  return {
+    reason:measured.reason??'BASELINE_NOT_GREEN',
+    checks:checks.map(entry=>({
+      profile:['android-compile','android-unit'].includes(entry?.profile)?entry.profile:'UNKNOWN',
+      passed:entry?.passed===true,
+      exitCode:Number.isSafeInteger(entry?.exitCode)?entry.exitCode:null,
+      timedOut:entry?.timedOut===true,
+      executed:Number.isSafeInteger(entry?.tests?.executed)?entry.tests.executed:null,
+      failed:Number.isSafeInteger(entry?.tests?.failed)?entry.tests.failed:null,
+      skipped:Number.isSafeInteger(entry?.tests?.skipped)?entry.tests.skipped:null,
+      diagnosticKinds:Array.isArray(entry?.diagnostics)?
+        [...new Set(entry.diagnostics.map(d=>d?.kind).filter(d=>
+          typeof d==='string'&&/^[A-Z][A-Z0-9_]{0,63}$/.test(d)))].slice(0,6):[]
+    }))
+  };
+}
+
 function fail(status,head,detail=null){
   return {schema:'continuum-ansk-lab-result',version:1,
     status,head,detail,authority:'SHADOW_ONLY',
@@ -147,7 +171,8 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
     if(!plan)return fail('NO_SAFE_MUTATION',head);
     const baselineRun=runChain('android',primary,phaseDir(out,'green0'),{deadline,forceRerun:true});
     if(!measureAnskChain(baselineRun).passed)
-      return fail('BLOCKED_BASELINE_NOT_GREEN',head);
+      return fail('BLOCKED_BASELINE_NOT_GREEN',head,
+        summarizeAnskBaselineFailure(baselineRun));
 
     const mutHash=editInWorktree(primary,sourceFile,[plan.mutation],plan.baselineSha256);
     if(mutHash!==plan.mutatedSha256)throw Error('ANSK_MUTATION_HASH_MISMATCH');
