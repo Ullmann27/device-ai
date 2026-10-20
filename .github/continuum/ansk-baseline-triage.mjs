@@ -4,6 +4,8 @@
  * never include raw stdout/stderr, stack traces, file paths, or secret values.
  * This module does not run checks, repair code, or authorize model promotion.
  */
+import {measureAnskChain} from './ansk-lab-contract.mjs';
+
 const PROFILE_ORDER = ['android-compile', 'android-unit'];
 const DIAGNOSTIC_KIND = /^[A-Z][A-Z0-9_]{0,63}$/;
 
@@ -42,7 +44,12 @@ function classify(result, checks) {
   return ['BASELINE_INCOMPLETE', 'INSPECT_BASELINE_CHECK_CONTRACT'];
 }
 
-export function summarizeAnskBaselineFailure(result, reason = 'BASELINE_NOT_GREEN') {
+export function summarizeAnskBaselineFailure(result, reason = undefined) {
+  // Match the canonical ANSK contract if the caller omitted the reason.
+  // Invalid/incomplete evidence never receives a fabricated success result.
+  const observedReason = measureAnskChain(result).reason;
+  const defaultReason = observedReason === 'NOT_ALL_PROFILES_GREEN'
+    ? observedReason : 'BASELINE_NOT_GREEN';
   const rows = Array.isArray(result?.results) ? result.results.slice(0, 2) : [];
   const checks = rows.map((entry, index) => ({
     profile: PROFILE_ORDER.includes(entry?.profile) && entry.profile === PROFILE_ORDER[index]
@@ -59,8 +66,9 @@ export function summarizeAnskBaselineFailure(result, reason = 'BASELINE_NOT_GREE
   }));
   const [failureCategory, nextAction] = classify(result, checks);
   return {
-    reason: typeof reason === 'string' && /^(?:[A-Z][A-Z0-9_]{0,63})$/.test(reason)
-      ? reason : 'BASELINE_NOT_GREEN',
+    reason: reason === undefined ? defaultReason :
+      typeof reason === 'string' && /^(?:[A-Z][A-Z0-9_]{0,63})$/.test(reason)
+        ? reason : 'BASELINE_NOT_GREEN',
     failureCategory,
     nextAction,
     checks
