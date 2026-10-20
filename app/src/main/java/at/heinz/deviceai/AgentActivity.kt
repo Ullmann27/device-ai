@@ -1187,6 +1187,8 @@ class AgentActivity : Activity() {
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
             CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
             CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
+            CenterAction("WISSENSARCHIV · QUELLEN SUCHEN") { showKnowledgeArchiveSearch() },
+            CenterAction("GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE") { showExtendedCurriculumDialog() },
             CenterAction("LERNKERN · DETAILS") { showContinuumLearningDashboard() },
             CenterAction("MENTOR · FACHWISSEN FORSCHEN") { showMentorStudyDialog() },
             CenterAction("KI-MENTOR · GROQ (EXTERN, OPTIONAL)") { showGroqMentorDialog() },
@@ -2553,7 +2555,9 @@ class AgentActivity : Activity() {
             "GEWICHTE IMPORTIEREN · SWB1",
             "PAKET-IMPORT · SWB1 + MANIFEST",
             "GEWICHTE EXPORTIEREN · BACKUP",
-            "AUTONOME INTERNETFORSCHUNG · EIN/AUS"
+            "AUTONOME INTERNETFORSCHUNG · EIN/AUS",
+            "WISSENSARCHIV · QUELLEN SUCHEN",
+            "GROSSES ÜBUNGSARCHIV · NÄCHSTE STUFE"
         )
         AlertDialog.Builder(this)
             .setTitle("Continuum · Gewichte und Lernlabor")
@@ -2564,6 +2568,8 @@ class AgentActivity : Activity() {
                     2 -> confirmPackageImport()
                     3 -> exportCoreWeights()
                     4 -> showPublicStudyControls()
+                    5 -> showKnowledgeArchiveSearch()
+                    6 -> showExtendedCurriculumDialog()
                 }
             }
             .setNegativeButton("Schließen",null)
@@ -2602,6 +2608,94 @@ class AgentActivity : Activity() {
                         "Lernläufe; keine Endlosschleife im Vordergrund. "+
                         "Die erste Ausführung kann sich bis zum Laden verzögern."
                     else "Forschung wurde nicht korrekt eingeplant; bitte Android-Jobstatus prüfen.")
+            }
+            .show()
+    }
+
+    /**
+     * Search public-source extracts only, with citation metadata. Lexical hits
+     * cannot be elevated to owner facts or legally authoritative answers.
+     */
+    private fun showKnowledgeArchiveSearch() {
+        val query=EditText(this).apply {
+            hint="Thema, Stichwort oder Gesetzesbegriff"
+            inputType=android.text.InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+            setPadding(dp(16),dp(12),dp(16),dp(12))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · lokales Wissensarchiv")
+            .setMessage("Suche in gespeicherten, quellengebundenen Auszügen. "+
+                "Aktuelle Internetrecherche und amtliche Rechtsprüfung bleiben getrennt. "+
+                "Ungeprüfte Aussagen werden niemals zu Besitzerfakten.")
+            .setView(query)
+            .setNegativeButton("Schließen",null)
+            .setPositiveButton("LOKAL SUCHEN") { _, _ ->
+                val text=query.text.toString().trim()
+                if(text.length !in 2..240) {
+                    addAssistantMessage("Wissensarchiv: 2–240 Zeichen eingeben.")
+                    return@setPositiveButton
+                }
+                onLearningIo({
+                    val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                    val result=archive.search(text,limit=6)
+                    if(result.isEmpty())"WISSENSARCHIV · Keine archivierten Quellen zum Suchbegriff."
+                    else buildString {
+                        append("WISSENSARCHIV · ").append(result.size)
+                            .append(" zitierte Fundstellen (ungeprüfte Quellentexte)\n")
+                        result.forEachIndexed { index,hit ->
+                            val doc=hit.source
+                            append("\n").append(index+1).append(". ")
+                                .append(doc.title).append(" [").append(doc.kind).append("]")
+                            append("\nQuelle: ").append(doc.url)
+                            append("\nHerkunft: ").append(doc.attribution)
+                            doc.sourceDate?.let { append("\nDokumentdatum: ").append(it) }
+                            append("\nSHA-256: ").append(doc.sha256.take(16)).append("…")
+                            append("\n").append(doc.text.take(260)).append("\n")
+                        }
+                        append("\nAuszüge können veraltet sein. Für österreichisches Recht "+
+                            "immer die gültige RIS-Fassung zum relevanten Zeitpunkt prüfen.")
+                    }
+                }) { output ->
+                    addAssistantMessage(output.getOrElse {
+                        "Wissensarchiv nicht lesbar: "+failureName(it)
+                    })
+                }
+            }
+            .show()
+    }
+
+    private fun showExtendedCurriculumDialog() {
+        if(busy) {
+            addAssistantMessage("Ein Auftrag ist aktiv. Bitte zuerst abschließen.")
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("SWB1 · großes Übungsarchiv")
+            .setMessage("Zusätzlich 1.152 Gruß-/Frage-Sätze sowie 480 semantische "+
+                "Trainingspaare, plus 64+8 unabhängige Prüffälle. "+
+                "12 getrennte Trainingsstufen; bei jeder Freigabe nur eine Stufe "+
+                "mit max. 750+500 Updates. Kandidatengewichte werden nur nach "+
+                "unabhängigen und bestehenden Holdout-Prüfungen übernommen. "+
+                "Bereits bestätigte Owner-Daten bleiben geschützt. "+
+                "Automatische Hintergrundstufen erfolgen ausschließlich, "+
+                "wenn du die öffentliche Internetforschung aktivierst.")
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("NÄCHSTE STUFE PRÜFEN") { _, _ ->
+                if(busy)return@setPositiveButton
+                setBusy(true)
+                onLearningIo({
+                    val core=ContinuumLearningCore(filesDir)
+                    core.trainExtendedCurriculum {
+                        isDestroyed || Thread.currentThread().isInterrupted
+                    }?.display() ?: "Alle 12 Stufen sind bereits evaluiert. "+
+                        "Der SWB1-Kern behält nur auditierte Verbesserungen."
+                }) { answer ->
+                    setBusy(false)
+                    addAssistantMessage(answer.getOrElse {
+                        "Übungsarchiv: "+failureName(it)+"; aktive Gewichte geschützt."
+                    })
+                }
             }
             .show()
     }

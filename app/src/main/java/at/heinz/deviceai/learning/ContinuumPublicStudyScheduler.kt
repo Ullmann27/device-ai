@@ -186,13 +186,24 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
+                    // Store citation and source hash before any training decision.
+                    ContinuumKnowledgeArchive(filesDir).save(
+                        ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                        source.subject,source.url,
+                        "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                        source.excerpt
+                    )
                     added=notebook.add(pending)>0
                     check(!cancelled())
-                    val outcome=ContinuumLearningCore(filesDir).learnFromSources(pending,cancelled)
+                    val core=ContinuumLearningCore(filesDir)
+                    val outcome=core.learnFromSources(pending,cancelled)
                     if(outcome?.completedEvaluation==true && !cancelled()) {
                         ContinuumSourceNovelty.markCompleted(filesDir,pending)
                         accepted=outcome.accepted
                         phase=if(accepted)"TRAINING_ACCEPTED" else "TRAINING_REJECTED"
+                        // One independent public rehearsal stage; no model promotion
+                        // without all existing and independent audit gates.
+                        if(!cancelled())core.trainExtendedCurriculum(cancelled)
                     } else {
                         phase="TRAINING_DEFERRED"
                     }
