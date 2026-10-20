@@ -53,6 +53,7 @@ export function validateTriplePhaseSample({
  const mutation=suite(mutatedRun);
  if(!mutation||mutatedRun.passed||
     mutation.profiles.some((p,i)=>baseline.profiles[i]!==p)||
+    mutatedRun.results.some(p=>p.tests.skipped!==0)||
     !mutatedRun.results.some(p=>!p.passed))
   return rejected('MUTATION_NOT_DETECTED_BY_TESTS');
  if(typeof mutationFile!=='string'||
