@@ -91,3 +91,42 @@ test('source and state arguments are absolute paths only', () => scratch(({ root
   assert.throws(() => readLocalIntegrationStatus({ root: 'relative', stateBase }), /INVALID_ROOT/);
   assert.throws(() => readLocalIntegrationStatus({ root, stateBase: 'relative' }), /INVALID_STATE/);
 }));
+
+test('stored ANSK baseline diagnosis is explicitly historical, not an approved repair', () => scratch(({root,stateBase}) => {
+  const dir = ensure(stateBase, 'ansk-lab');
+  const diagnosis = {
+    schema:'continuum-ansk-baseline-failure',version:1,
+    status:'BLOCKED_BASELINE_NOT_GREEN',head:'e'.repeat(40),observedAt:123,
+    detail:{reason:'NOT_ALL_PROFILES_GREEN',
+      failureCategory:'ANDROID_UNIT_TEST_FAILURE',nextAction:'INSPECT_JUNIT_FAILURES',
+      checks:[{profile:'android-compile',passed:true},
+              {profile:'android-unit',passed:false,failed:1}]}
+  };
+  fs.writeFileSync(path.join(dir, 'last-baseline-failure.json'), JSON.stringify(diagnosis));
+  const status = readLocalIntegrationStatus({root,stateBase});
+  assert.deepEqual(status.ansk.lastBaselineFailure, {
+    status:'HISTORICAL_BASELINE_FAILURE_REPORTED',
+    head:'e'.repeat(40),observedAt:123,
+    failureCategory:'ANDROID_UNIT_TEST_FAILURE',nextAction:'INSPECT_JUNIT_FAILURES',
+    independentlyVerifiedHere:false
+  });
+  assert.equal(status.ansk.independentlyVerifiedHere,false);
+}));
+
+test('corrupt, symlinked and forged ANSK baseline reports never become accepted evidence', () => scratch(({root,stateBase,d}) => {
+  const dir = ensure(stateBase,'ansk-lab');
+  const file = path.join(dir, 'last-baseline-failure.json');
+  fs.writeFileSync(file, JSON.stringify({schema:'continuum-ansk-baseline-failure',
+    version:1,status:'BLOCKED_BASELINE_NOT_GREEN',head:'f'.repeat(40),
+    observedAt:345,detail:{reason:'NOT_ALL_PROFILES_GREEN',
+      failureCategory:'FULLY_REPAIRED',nextAction:'RELEASE_MAIN',checks:[]}}));
+  assert.equal(readLocalIntegrationStatus({root,stateBase}).ansk.lastBaselineFailure.status,'UNREADABLE');
+  fs.rmSync(file);
+  fs.writeFileSync(file,'invalid');
+  assert.equal(readLocalIntegrationStatus({root,stateBase}).ansk.lastBaselineFailure.status,'UNREADABLE');
+  fs.rmSync(file);
+  const privatePath = path.join(d, 'private');
+  fs.writeFileSync(privatePath,'{}');
+  fs.symlinkSync(privatePath,file);
+  assert.equal(readLocalIntegrationStatus({root,stateBase}).ansk.lastBaselineFailure.status,'UNREADABLE');
+}));
