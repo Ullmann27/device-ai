@@ -77,6 +77,9 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             require(old.id==id && old.sha256==contentHash) { "Existing revision mismatch" }
             return@synchronized old
         }
+        require(root.usableSpace>=MIN_FREE_BYTES) {
+            "Not enough free storage to archive more public sources"
+        }
         val files=files()
         require(files.size<MAX_RECORDS) { "Archive capacity reached; do not erase older citations" }
         val out=ByteArrayOutputStream()
@@ -240,7 +243,8 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
     private fun Int?.orEmptyLength():Int=this?:0
 
     companion object {
-        const val MAX_RECORDS=640
+        const val MAX_RECORDS=4096
+        const val MIN_FREE_BYTES=128L * 1024L * 1024L
         const val MAX_RECORD_BYTES=40_000
         private const val MAGIC=0x434B4131
     }
