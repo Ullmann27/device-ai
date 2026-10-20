@@ -372,8 +372,8 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(!cancelled() && scheduler.enabled) {
                     runCatching {
                         ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
-                            ContinuumTrainingMonitor.PUBLIC,"TRAIN_WEIGHTS",
-                            "Großes SWB1-Übungsarchiv: nächste offene Stufe")
+                            ContinuumTrainingMonitor.PUBLIC,"PREPARING",
+                            "Großes SWB1-Übungsarchiv: nächste offene Stufe prüfen")
                         ContinuumLearningCore(filesDir).trainExtendedCurriculum(cancelled)
                     }.onSuccess { stage ->
                         ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
