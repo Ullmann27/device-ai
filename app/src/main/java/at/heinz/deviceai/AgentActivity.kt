@@ -1203,6 +1203,7 @@ class AgentActivity : Activity() {
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
             CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
+            CenterAction("CDX1 · EIGENE TESTFRAGE (OHNE TRAINING)") { showCdxPromptTest() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
@@ -3210,6 +3211,84 @@ class AgentActivity : Activity() {
      * Separate staged CDX1 research. No internet, owner memory, device tools
      * or productive chat. Only one user-approved bounded stage per click.
      */
+    /** Read-only CDX1 research generation. The output cannot gain authority. */
+    private fun showCdxPromptTest() {
+        val evidence=EditText(this).apply {
+            hint="Beleg, z. B. Roboter Z77 steht in Graz."
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(150))
+        }
+        val question=EditText(this).apply {
+            hint="Frage, z. B. Wo steht Z77?"
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(150))
+        }
+        val expected=EditText(this).apply {
+            hint="Erwartete Kurzantwort (optional), z. B. Graz"
+            setSingleLine(true)
+            filters=arrayOf(android.text.InputFilter.LengthFilter(100))
+        }
+        val fields=LinearLayout(this).apply {
+            orientation=LinearLayout.VERTICAL
+            setPadding(dp(12),dp(8),dp(12),dp(8))
+            addView(evidence,matchWidth(top=4))
+            addView(question,matchWidth(top=4))
+            addView(expected,matchWidth(top=4))
+        }
+        AlertDialog.Builder(this)
+            .setTitle("CDX1 · Experimentellen Antwortkern prüfen")
+            .setMessage("Nur eine kurze Belegzeile und eine Frage eingeben. "+
+                "Die Ausgabe ist unbestätigte Forschung, keine geprüfte "+
+                "Sachantwort. Es findet KEIN Training statt.")
+            .setView(ScrollView(this).apply { addView(fields) })
+            .setNegativeButton("Abbrechen",null)
+            .setPositiveButton("ANTWORT TESTEN") { _, _ ->
+                if(busy) {
+                    addAssistantMessage("Anderer Trainingslauf aktiv. Bitte zuerst beenden.")
+                    return@setPositiveButton
+                }
+                val source=evidence.text.toString().trim()
+                val query=question.text.toString().trim()
+                val reference=expected.text.toString().trim()
+                if(source.isEmpty() || query.isEmpty() || source.contains("\n") ||
+                    query.contains("\n") ||
+                    source.toByteArray(Charsets.UTF_8).size>160 ||
+                    query.toByteArray(Charsets.UTF_8).size>160) {
+                    addAssistantMessage("CDX1-Test: Beleg und Frage in je einer Zeile "+
+                        "mit maximal 160 UTF-8-Bytes eingeben.")
+                    return@setPositiveButton
+                }
+                onLearningIo({
+                    val core=ContinuumLearningCore(filesDir)
+                    val output=core.experimentalPairedDecoderContinuation(
+                        source,query,maxBytes=48)
+                    if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
+                        "Forschungscheckpoint. Starte erst das Paarlabor."
+                    else buildString {
+                        append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
+                        append("Beleg: ").append(source).append("\nFrage: ").append(query)
+                        append("\nCDX1-Ausgabe: ").append(output.text.take(120))
+                        append("\nZeichen erzeugt (UTF-8-Bytes): ")
+                            .append(output.bytesGenerated)
+                        append("\nEndmarkierung erkannt: ").append(output.ended)
+                        if(reference.isNotBlank()) {
+                            append("\nDeine Referenz: ").append(reference)
+                            append("\nExakte Übereinstimmung: ")
+                                .append(if(output.text.trim()==reference)"JA" else "NEIN")
+                        }
+                        append("\nDieser Einzelfall ist kein unabhängiger Qualitätsbeweis. ")
+                        append("Text ungeprüft; keine Geräteaktion und keine Faktenübernahme.")
+                    }
+                }) { result ->
+                    addAssistantMessage(result.getOrElse {
+                        "CDX1-Test fehlgeschlagen: "+failureName(it)+
+                            ". Forschungsgewichte bleiben unverändert."
+                    })
+                }
+            }
+            .show()
+    }
+
     private fun showCdxLargeLabDialog() {
         if(busy) {
             addAssistantMessage("Ein Trainingslauf ist bereits aktiv. Bitte Abschluss abwarten.")
