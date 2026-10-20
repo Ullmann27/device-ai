@@ -14,7 +14,9 @@ command -v git >/dev/null
 
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
-expected_branch="astra/render-mentor-apk-builder-20261019"
+# The original Mentor service is still pinned to the older branch.
+# This updated script is ready for a separately authorized Render branch switch.
+expected_branch="astra/continuum-experiment-charter-20261019"
 actual_branch="$(git branch --show-current)"
 if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
@@ -92,6 +94,15 @@ node --check .github/continuum/worker-atlas-epistemic-graph.mjs
 node --check .github/continuum/workshop-specialist-orchestrator.mjs
 node --check .github/continuum/continuum-hyper-lab.mjs
 node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
+
+echo "[Continuum] AUTOGENESIS, CDX1 and bounded research regression gates"
+node --test \
+  .github/continuum/autogenesis-safe-wiring.test.mjs \
+  .github/continuum/local-model-smoke.test.mjs \
+  .github/continuum/continuum-growth-and-archive.test.mjs \
+  .github/continuum/autonomous-topic-frontier.test.mjs \
+  .github/continuum/research-job-permission.test.mjs \
+  .github/continuum/cdx-large-curriculum.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
