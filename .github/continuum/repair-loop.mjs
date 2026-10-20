@@ -113,7 +113,7 @@ export const CHAINS=Object.freeze({
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
-export function runProfile(name,wt,out,{deadline=null}={}){
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
   const p=factory(wt,out);
   for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
@@ -121,7 +121,10 @@ export function runProfile(name,wt,out,{deadline=null}={}){
   if(deadline!==null&&(!Number.isSafeInteger(deadline)||deadline<=Date.now()))
     throw Error('Repair test deadline exhausted before '+name);
   const remaining=()=>deadline===null?p.timeoutMs:Math.min(p.timeoutMs,Math.max(1,deadline-Date.now()));
-  const r=run(p.cmd,p.args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
+  if(forceRerun&&name!=='android-compile'&&name!=='android-unit')
+    throw Error('Forced rerun is supported for Android check profiles only');
+  const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
+  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
@@ -172,10 +175,10 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out,{deadline=null}={}){
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false}={}){
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
-    const r=runProfile(name,wt,out,{deadline});results.push(r);
+    const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);
     if(!r.passed)break;
   }
   return {passed:results.every(r=>r.passed),results,diagnostics:results.flatMap(r=>r.diagnostics)};
