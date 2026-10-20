@@ -2575,9 +2575,9 @@ class AgentActivity : Activity() {
                     3 -> exportCoreWeights()
                     4 -> showPublicStudyControls()
                     5 -> showKnowledgeArchiveSearch()
-                    6 -> showExtendedCurriculumDialog()
-                    7 -> showRisArchiveImport()
-                    8 -> showArchiveBackupMenu()
+                    6 -> showRisArchiveImport()
+                    7 -> showArchiveBackupMenu()
+                    8 -> showExtendedCurriculumDialog()
                 }
             }
             .setNegativeButton("Schließen",null)
