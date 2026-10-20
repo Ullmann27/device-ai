@@ -322,13 +322,18 @@ class ContinuumPublicStudyJobService:JobService() {
                     phase="SOURCE_UNCHANGED"
                 } else {
                     // Store citation and source hash before any training decision.
-                    ContinuumKnowledgeArchive(filesDir).save(
+                    val archive=ContinuumKnowledgeArchive(filesDir)
+                    val archiveCountBefore=archive.stats().values.sum()
+                    archive.save(
                         ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
                         source.subject,source.url,
                         "Wikipedia-Mitwirkende · CC BY-SA 4.0",
                         source.excerpt
                     )
-                    added=notebook.add(pending)>0
+                    added=archive.stats().values.sum()>archiveCountBefore
+                    // Mentor indexing and durable source archiving are separate
+                    // results; only the latter changes the archive source count.
+                    notebook.add(pending)
                     check(!cancelled())
                     val core=ContinuumLearningCore(filesDir)
                     val outcome=core.learnFromSources(pending,cancelled)
