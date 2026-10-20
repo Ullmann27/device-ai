@@ -148,7 +148,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   if(tests.skipped>0&&completeSkipIdentities&&
      skippedCaseHashes.length===tests.skipped&&
      new Set(skippedCaseHashes).size===skippedCaseHashes.length)
-    tests.skippedCaseDigest=sha256(skippedCaseHashes.sort().join('\\0'));
+    tests.skippedCaseDigest=sha256(skippedCaseHashes.sort().join('\0'));
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
