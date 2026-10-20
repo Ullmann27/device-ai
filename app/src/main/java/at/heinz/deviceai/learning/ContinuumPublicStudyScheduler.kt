@@ -12,6 +12,8 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.nio.charset.StandardCharsets
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.net.ssl.HttpsURLConnection
 
@@ -25,8 +27,17 @@ class ContinuumPublicStudyScheduler(context:Context) {
     private val prefs get()=app.getSharedPreferences(PREFS,Context.MODE_PRIVATE)
 
     val enabled get()=prefs.getBoolean("enabled",false)
+    fun isRateLimited():Boolean = System.currentTimeMillis()<
+        prefs.getLong("retry_after_at",0L)
+    fun postponeDueToProvider(seconds:Long) {
+        val waitMs=seconds.coerceAtLeast(3600L).coerceAtMost(30L*24L*3600L)*1000L
+        val until=System.currentTimeMillis()+waitMs
+        prefs.edit().putLong("retry_after_at",until)
+            .putString("phase","PROVIDER_RATE_LIMIT").commit()
+    }
     fun display():String {
         val phase=prefs.getString("phase","NOT_RUN") ?: "NOT_RUN"
+        val nextAllowed=prefs.getLong("retry_after_at",0L)
         val pending=runCatching { jobs.getPendingJob(JOB_ID) }.getOrNull()
         val jobStatus=if(pending!=null)"REGISTRIERT" else "NICHT REGISTRIERT"
         val pendingReason=if(pending!=null && android.os.Build.VERSION.SDK_INT>=34)
@@ -39,7 +50,8 @@ class ContinuumPublicStudyScheduler(context:Context) {
             (if(enabled)"FREIGEGEBEN" else "AUS")+"\n"+
             "Android-Forschungsjob: "+jobStatus+
             (pendingReason?.let { " · Wartegrund-Code: "+it } ?: "")+"\n"+
-            "Letzter Status: "+phase+"\n"+
+            "Letzter Status: "+phase+(if(isRateLimited())
+                " · Pause bis "+java.util.Date(nextAllowed) else "")+"\n"+
             "Versuche: "+prefs.getLong("attempts",0)+
             " · neue Quellen: "+prefs.getLong("sources",0)+
             " · akzeptierte SWB1-Runden: "+prefs.getLong("accepted",0)+
@@ -143,8 +155,26 @@ class ContinuumPublicStudyScheduler(context:Context) {
     }
 }
 
+internal class WikimediaRateLimited(val waitSeconds:Long):
+    java.io.IOException("Wikimedia API asked research bot to reduce requests")
+
 /** Source retrieval is isolated from user permission scopes and model ToolGate. */
 internal object ContinuumPublicStudyFetch {
+    private fun requireSuccessfulResponse(conn:HttpsURLConnection):Int {
+        val status=conn.responseCode
+        if(status==429 || status==503) {
+            val retry=conn.getHeaderField("Retry-After")?.trim().orEmpty()
+            val value=retry.toLongOrNull() ?: runCatching {
+                val at=ZonedDateTime.parse(retry,DateTimeFormatter.RFC_1123_DATE_TIME)
+                    .toInstant().toEpochMilli()
+                ((at-System.currentTimeMillis()+999L)/1000L).coerceAtLeast(3600L)
+            }.getOrDefault(6L*3600L)
+            throw WikimediaRateLimited(value)
+        }
+        check(status==200) { "Wikipedia API HTTP_"+status }
+        return status
+    }
+
     fun fetch(title:String,cancelled:()->Boolean):MentorSource {
         check(!cancelled()) { "Cycle cancelled" }
         val url=URL(ContinuumPublicStudyPolicy.encyclopediaApiUrl(title))
@@ -156,7 +186,7 @@ internal object ContinuumPublicStudyFetch {
         conn.setRequestProperty("User-Agent","DeviceAIContinuumResearchBot/0.5 (https://github.com/Ullmann27; one public article)")
         conn.setRequestProperty("Accept","application/json")
         try {
-            check(conn.responseCode==200) { "HTTP_"+conn.responseCode }
+            requireSuccessfulResponse(conn)
             check(conn.contentType?.lowercase()?.contains("json")==true) { "Unexpected response type" }
             if(conn.contentLengthLong>ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
                 error("Source too large")
@@ -208,7 +238,7 @@ internal object ContinuumPublicStudyFetch {
         conn.setRequestProperty("User-Agent",
             "DeviceAIContinuumResearchBot/0.5 (https://github.com/Ullmann27; source links)")
         try {
-            check(conn.responseCode==200) { "Link API HTTP_"+conn.responseCode }
+            requireSuccessfulResponse(conn)
             check(conn.contentType?.lowercase()?.contains("json")==true)
             check(conn.contentLengthLong<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
             val bytes=ByteArrayOutputStream()
@@ -253,7 +283,7 @@ class ContinuumPublicStudyJobService:JobService() {
     private var thread:Thread?=null
     override fun onStartJob(params:JobParameters):Boolean {
         val scheduler=ContinuumPublicStudyScheduler(this)
-        if(!scheduler.enabled)return false
+        if(!scheduler.enabled || scheduler.isRateLimited())return false
         stopping.set(false)
         thread=Thread({
             var reschedule=false
@@ -278,6 +308,9 @@ class ContinuumPublicStudyJobService:JobService() {
                     ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS-6_000L) {
                     val discovered=runCatching {
                         ContinuumPublicStudyFetch.discover(source.subject,cancelled)
+                    }.onFailure { error ->
+                        if(error is WikimediaRateLimited)
+                            scheduler.postponeDueToProvider(error.waitSeconds)
                     }.getOrDefault(emptyList())
                     if(!cancelled())scheduler.addDiscovered(discovered)
                 }
@@ -308,8 +341,10 @@ class ContinuumPublicStudyJobService:JobService() {
                     }
                 }
             } catch(e:Exception) {
-                phase=if(cancelled())"INTERRUPTED" else "FAILED_"+e.javaClass.simpleName.take(30)
-                reschedule=!stopping.get()
+                if(e is WikimediaRateLimited)scheduler.postponeDueToProvider(e.waitSeconds)
+                phase=if(cancelled())"INTERRUPTED" else if(e is WikimediaRateLimited)
+                    "PROVIDER_RATE_LIMIT" else "FAILED_"+e.javaClass.simpleName.take(30)
+                reschedule=!stopping.get() && e !is WikimediaRateLimited
                 Log.w("ContinuumPublicStudy","Bounded research cycle deferred: "+e.javaClass.simpleName)
             } finally {
                 // This is a separate bounded step, so already-known sources or
