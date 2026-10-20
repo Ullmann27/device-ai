@@ -278,3 +278,60 @@ export function proposeCandidates(diagnostics,ctx){
   }
   return out;
 }
+
+
+/**
+ * Research-only inverse mutation planner. This function never writes files,
+ * invokes tools, records training success or modifies a Git checkout.
+ *
+ * A generated mutation is NOT a proven bug: an isolated compiler run must first
+ * establish green -> red, and replay of the restoration must establish red -> green.
+ * Existing repair proof and owner-review gates remain authoritative.
+ */
+export function planInverseKotlinImportMutation({file,source,importFqn}={}){
+  if(typeof file!=='string'||
+     !/^app\/src\/main\/(?:java|kotlin)\/(?:[A-Za-z0-9_-]+\/)+[A-Za-z0-9_-]+\.kt$/.test(file))
+    throw Error('INVERSE_MUTATION_UNSAFE_PATH');
+  if(typeof source!=='string'||source.length===0||source.length>250_000)
+    throw Error('INVERSE_MUTATION_INVALID_SOURCE');
+  if(typeof importFqn!=='string')throw Error('INVERSE_MUTATION_INVALID_IMPORT');
+  const entries=Object.entries(JDK_IMPORTS).filter(([,fqn])=>fqn===importFqn);
+  if(entries.length!==1)return null;
+  const [symbol]=entries[0];
+  const rows=source.split('\n');
+  const matches=[];
+  for(let i=0;i<rows.length;i++)
+    if(rows[i].trim()==='import '+importFqn)matches.push(i);
+  if(matches.length!==1)return null;
+  const importIndex=matches[0];
+  // Lexer excludes comments and plain strings. A reference outside the import
+  // is a necessary condition, not sufficient proof that removal breaks a build.
+  const references=tokenize(source,{maxTokens:100_000}).filter(
+    token=>token.type==='id'&&token.text===symbol&&token.line!==importIndex+1);
+  if(references.length===0)return null;
+  const mutatedRows=rows.slice();
+  mutatedRows.splice(importIndex,1);
+  const mutated=mutatedRows.join('\n');
+  const mutation=hunk(file,source,mutated);
+  const restoration=hunk(file,mutated,source);
+  if(!mutation||!restoration)return null;
+  // Both edits must be exact and reversible. Do not emit full-file fallbacks.
+  if(mutation.oldText===source||restoration.oldText===mutated)return null;
+  const altered=applyEdits(p=>p===file?source:null,[mutation]).get(file);
+  const restored=applyEdits(p=>p===file?altered:null,[restoration]).get(file);
+  if(altered!==mutated||restored!==source)
+    throw Error('INVERSE_MUTATION_NON_REVERSIBLE');
+  return {
+    schemaVersion:1,
+    kind:'INVERSE_KOTLIN_MISSING_IMPORT',
+    file,
+    symbol,
+    importFqn,
+    baselineSha256:sha256(source),
+    mutatedSha256:sha256(mutated),
+    mutation,
+    restoration,
+    expectedDiagnosticKind:'UNRESOLVED_REFERENCE',
+    proofStatus:'UNVERIFIED_REQUIRES_REAL_COMPILER_AND_TESTS'
+  };
+}
