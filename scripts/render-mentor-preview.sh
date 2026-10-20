@@ -17,8 +17,9 @@ cd "$repo_root"
 # The original Mentor service is still pinned to the older branch.
 # This updated script is ready for a separately authorized Render branch switch.
 expected_branch="astra/continuum-experiment-charter-20261019"
+render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "" ]]; then
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
   exit 69
 fi
@@ -137,8 +138,8 @@ cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
-  "$commit" "$expected_branch" > "$output/BUILD-INFO.txt"
+printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
+  "$commit" "$actual_branch" "$expected_branch" > "$output/BUILD-INFO.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
 cat "$output/SHA256SUMS.txt"
