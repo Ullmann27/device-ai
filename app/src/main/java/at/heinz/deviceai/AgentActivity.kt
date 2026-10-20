@@ -3367,8 +3367,12 @@ class AgentActivity : Activity() {
             if(state.completed<state.total) {
                 monitor.begin(this@AgentActivity,channel,
                     "CDX1 · Paararchiv · Stufe "+(state.completed+1)+"/"+state.total,"CDX1")
-                monitor.phase(this@AgentActivity,channel,"TRAIN_WEIGHTS",
-                    "Bis zu 600 Gewichtsupdates auf getrenntem Forschungscheckpoint")
+                monitor.phase(this@AgentActivity,channel,"PREPARING",
+                    "Beleg-Frage-Paare und Schutzprüfungen vorbereiten")
+                lab.observeTraining { trainingPhase ->
+                    monitor.phase(this@AgentActivity,channel,trainingPhase,
+                        "CDX1 · echte Decoder-Gradienten / Qualitätsgate")
+                }
             }
             try {
                 val report=lab.next {
