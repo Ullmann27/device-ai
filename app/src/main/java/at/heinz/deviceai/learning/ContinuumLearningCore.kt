@@ -729,9 +729,14 @@ class ContinuumLearningCore(
         cancelled:()->Boolean={false},
         protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
     ):DecoderExperimentResult=synchronized(CORE_LOCK) {
-        ContinuumDecoderBridge(directory).trainPairedExperiment(
-            training,audit,loadModel().save(),steps,cancelled,protectedAudits
-        )
+        emitTrainingPhase("TRAIN_WEIGHTS")
+        try {
+            ContinuumDecoderBridge(directory).trainPairedExperiment(
+                training,audit,loadModel().save(),steps,cancelled,protectedAudits
+            )
+        } finally {
+            emitTrainingPhase("AUDIT")
+        }
     }
 
     fun experimentalPairedDecoderContinuation(
