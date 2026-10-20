@@ -36,8 +36,10 @@ android {
         applicationId = "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
-        versionCode = if (deviceAiMentorPreview) 6 else 4
-        versionName = if (deviceAiMentorPreview) "0.3.3" else "0.3.1"
+        // Preview variants only: ensure Samsung recognises the new artifact
+        // as an update. Main/production keeps its existing version.
+        versionCode = if (deviceAiMentorPreview) 7 else if (deviceAiPreview) 5 else 4
+        versionName = if (deviceAiMentorPreview) "0.3.4" else if (deviceAiPreview) "0.3.2" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview
         manifestPlaceholders["appLabel"] = when {
