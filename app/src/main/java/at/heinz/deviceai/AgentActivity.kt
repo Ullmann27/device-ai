@@ -856,7 +856,8 @@ class AgentActivity : Activity() {
                     }
                 }
                 row.addView(cockpitTile(item.symbol, item.title, item.description,
-                    item.destination == ContinuumNexusDestination.CREATE_APP, open),
+                    item.destination == ContinuumNexusDestination.CREATE_APP, open,
+                    item.destination.ordinal),
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                         if (index > 0) marginStart = dp(9)
                     })
@@ -993,17 +994,32 @@ class AgentActivity : Activity() {
 
     private fun cockpitTile(
         symbol: String, title: String, explanation: String,
-        primary: Boolean, open: () -> Unit
+        primary: Boolean, open: () -> Unit, nexusTone: Int = 0
     ): View {
+        // The four beginner actions use the same blue/violet/teal/gold semantic
+        // accent palette as the portrait and fold references. Old expert tiles
+        // retain their original appearance through the default tone.
+        val palette = when (nexusTone) {
+            1 -> intArrayOf(0xFF164A85.toInt(), 0xFF09254F.toInt(),
+                0xFF46CFFF.toInt(), 0xFF157CCF.toInt(), 0xFF164C9A.toInt())
+            2 -> intArrayOf(0xFF3F2985.toInt(), 0xFF1C174B.toInt(),
+                0xFFB28BFF.toInt(), 0xFF7646DA.toInt(), 0xFF4332A4.toInt())
+            3 -> intArrayOf(0xFF08685F.toInt(), 0xFF073739.toInt(),
+                0xFF38E8DC.toInt(), 0xFF17B9B0.toInt(), 0xFF06777C.toInt())
+            4 -> intArrayOf(0xFF765127.toInt(), 0xFF392817.toInt(),
+                0xFFFFCC75.toInt(), 0xFFC4954A.toInt(), 0xFF795527.toInt())
+            else -> intArrayOf(
+                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
+                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
+                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234),
+                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
+                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152)
+            )
+        }
         val item = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            background = roundedGradient(
-                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
-                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
-                18,
-                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234)
-            )
+            background = roundedGradient(palette[0], palette[1], 18, palette[2])
             setPadding(dp(10), dp(9), dp(9), dp(9))
             elevation = dp(5).toFloat()
             minimumHeight = dp(94)
@@ -1014,14 +1030,8 @@ class AgentActivity : Activity() {
         }
         val icon = textView(symbol, 21f, Color.WHITE, true).apply {
             gravity = Gravity.CENTER
-            background = roundedGradient(
-                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
-                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152),
-                11,
-                if (primary) Color.rgb(79, 193, 255) else Color.rgb(128, 105, 249)
-            )
-            setShadowLayer(dp(3).toFloat(), 0f, 0f,
-                if (primary) CYAN else violetTint())
+            background = roundedGradient(palette[3], palette[4], 11, palette[2])
+            setShadowLayer(dp(3).toFloat(), 0f, 0f, palette[2])
         }
         item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
         val caption = LinearLayout(this).apply {
