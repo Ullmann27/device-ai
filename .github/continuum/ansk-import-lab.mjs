@@ -125,20 +125,20 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
   const deadline=Date.now()+deadlineMs;
   const runId=crypto.randomBytes(12).toString('hex');
   const out=path.join(store,'runs',runId);
-  fs.mkdirSync(out,{recursive:true,mode:0o700});
   let primary=null,independent=null;
   try{
+    fs.mkdirSync(out,{recursive:true,mode:0o700});
     primary=createWorktree(checkout.root,head);
     const original=readCode(primary,sourceFile);
     const plan=planInverseKotlinImportMutation({file:sourceFile,source:original,importFqn});
     if(!plan)return fail('NO_SAFE_MUTATION',head);
-    const baselineRun=runChain('android',primary,phaseDir(out,'green0'),{deadline});
+    const baselineRun=runChain('android',primary,phaseDir(out,'green0'),{deadline,forceRerun:true});
     if(!measureAnskChain(baselineRun).passed)
       return fail('BLOCKED_BASELINE_NOT_GREEN',head);
 
     const mutHash=editInWorktree(primary,sourceFile,[plan.mutation],plan.baselineSha256);
     if(mutHash!==plan.mutatedSha256)throw Error('ANSK_MUTATION_HASH_MISMATCH');
-    const mutatedRun=runChain('android',primary,phaseDir(out,'red-mutation'),{deadline});
+    const mutatedRun=runChain('android',primary,phaseDir(out,'red-mutation'),{deadline,forceRerun:true});
     const diagnostic=diagnosticFor(mutatedRun,sourceFile,plan.symbol);
     if(!measureAnskChain(mutatedRun,{allowFailure:true}).passed||!diagnostic)
       return fail('DISCARDED_MUTATION_NOT_REPRODUCED',head);
@@ -155,13 +155,15 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       c.diagnostic===diagnostic.fingerprint&&
       c.strategy==='KOTLIN_MISSING_IMPORT'&&
       Array.isArray(c.edits)&&c.edits.length===1&&
-      c.edits[0].file===sourceFile).slice(0,MAX_CANDIDATES);
+      c.edits[0].file===sourceFile&&
+      c.edits[0].newText.includes('import '+importFqn)).slice(0,MAX_CANDIDATES);
     if(!candidates.length)return fail('NO_DETERMINISTIC_IMPORT_CANDIDATE',head);
     const attempted=[],observations=[];
     for(const candidate of candidates){
       if(Date.now()>=deadline)return fail('ANSK_DEADLINE_EXHAUSTED',head);
       const verdict=critique(candidate);
       if(!verdict.approved)continue;
+      if(attempted.includes(candidate.strategy))continue;
       attempted.push(candidate.strategy);
       resetWorktree(primary,head);
       const reMutated=editInWorktree(primary,sourceFile,[plan.mutation],plan.baselineSha256);
@@ -169,7 +171,7 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       const candidateHash=editInWorktree(primary,sourceFile,candidate.edits,mutHash);
       const syntax=checkCandidateKotlinSyntax(primary,[sourceFile],{base:head});
       if(!syntax.passed)continue;
-      const primaryRun=runChain('android',primary,phaseDir(out,'primary-'+candidate.id),{deadline});
+      const primaryRun=runChain('android',primary,phaseDir(out,'primary-'+candidate.id),{deadline,forceRerun:true});
       const primaryEvidence=evidenceSufficient(baselineRun.results,primaryRun.results);
       const failedObs={strategy:candidate.strategy,candidateId:candidate.id,source:'local',primaryRun};
       if(!measureAnskChain(primaryRun,{baseline:baselineRun}).passed||
@@ -189,7 +191,7 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
         throw Error('ANSK_INDEPENDENT_PATCH_MISMATCH');
       const syntax2=checkCandidateKotlinSyntax(independent,[sourceFile],{base:head});
       if(!syntax2.passed)return fail('INDEPENDENT_SYNTAX_FAILED',head);
-      const independentRun=runChain('android',independent,phaseDir(out,'independent-'+candidate.id),{deadline});
+      const independentRun=runChain('android',independent,phaseDir(out,'independent-'+candidate.id),{deadline,forceRerun:true});
       const independentEvidence=evidenceSufficient(baselineRun.results,independentRun.results);
       if(!measureAnskChain(independentRun,{baseline:baselineRun}).passed||
          !independentEvidence.sufficient)
@@ -230,7 +232,10 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       catch(err){cleanupFailure??=err;}
     }
     fs.closeSync(fd);
-    fs.rmSync(lock,{force:true});
+    // Refuse a second overlapping experiment when worktree cleanup itself is
+    // uncertain. The owner may inspect and remove this lock after confirming
+    // no worker is still running.
+    if(!cleanupFailure)fs.rmSync(lock,{force:true});
     if(cleanupFailure)throw cleanupFailure;
   }
 }
