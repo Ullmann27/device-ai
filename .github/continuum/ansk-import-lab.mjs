@@ -21,6 +21,7 @@ import {critique} from './repair-critic.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 import {validateTriplePhaseSample} from './repair-cycle-safety.mjs';
 import {assertAnskSource,measureAnskChain,verifyAnskExperiment} from './ansk-lab-contract.mjs';
+import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
 const BRANCH='astra/continuum-experiment-charter-20261019';
 const RUNTIME_BUDGET_MS=45*60_000;
@@ -129,6 +130,11 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
   // A stale lock is not automatically stolen: an expired timer cannot prove
   // an old Gradle process has terminated. An operator must investigate first.
   const fd=fs.openSync(lock,'wx',0o600);
+  // Atomic lease shared by ANSK, the local Teamleader and Termux builder.
+  // On refusal, release this experiment's own lock without running Gradle.
+  let releaseBuildLease;
+  try{releaseBuildLease=acquireContinuumBuildLease(checkout.root);}
+  catch(error){fs.closeSync(fd);fs.rmSync(lock,{force:true});throw error;}
   const deadline=Date.now()+deadlineMs;
   const runId=crypto.randomBytes(12).toString('hex');
   const out=path.join(store,'runs',runId);
@@ -238,11 +244,14 @@ export function runAnskImportLab({root,sourceFile,importFqn,deadlineMs=RUNTIME_B
       try{removeWorktree(checkout.root,wt);}
       catch(err){cleanupFailure??=err;}
     }
-    fs.closeSync(fd);
-    // Refuse a second overlapping experiment when worktree cleanup itself is
-    // uncertain. The owner may inspect and remove this lock after confirming
-    // no worker is still running.
-    if(!cleanupFailure)fs.rmSync(lock,{force:true});
+    try{fs.closeSync(fd);}catch(error){cleanupFailure??=error;}
+    // Refuse another overlapping experiment when cleanup itself is uncertain.
+    // Locks remain for operator investigation after a failed worktree cleanup.
+    if(!cleanupFailure){
+      try{fs.rmSync(lock,{force:true});}
+      catch(error){cleanupFailure??=error;}
+    }
+    try{releaseBuildLease();}catch(error){cleanupFailure??=error;}
     if(cleanupFailure)throw cleanupFailure;
   }
 }
