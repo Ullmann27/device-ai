@@ -29,7 +29,7 @@ Stand: 20.10.2026. Experimentbranch und Draft PR #42, kein Eingriff in Main.
    auch über Mobilfunk. Android darf Ausführungen verschieben; dies ist
    keine ununterbrochene CPU- oder Netzwerkschleife.
 4. **Wissensarchiv**: lokale, quellengebundene Speicherung bis
-   640 Revisionen, je Auszug maximal 6.000 Zeichen, eigene SHA-256-ID
+   4.096 Revisionen, je Auszug maximal 6.000 Zeichen, eigene SHA-256-ID
    für Quelle+Text, Zeitstempel, Herkunft und optionale Dokumentdaten.
    Lokale lexikalische Suche liefert Fundstellen, nicht generierte
    verifizierte Antworten. Die Begrenzung verhindert unkontrolliertes
