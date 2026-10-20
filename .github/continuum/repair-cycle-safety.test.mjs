@@ -173,3 +173,25 @@ test('prototype does not mutate its input reports or train a model',()=>{
  assert.ok(!Object.prototype.hasOwnProperty.call(result,'independentPass'));
  assert.ok(!Object.prototype.hasOwnProperty.call(result,'promoted'));
 });
+
+test('per-profile regression cannot be hidden by extra executions in another profile',()=>{
+ const sample=fixture();
+ const base=[profile({name:'node-continuum',executed:6}),
+   profile({name:'node-backend',executed:4})];
+ sample.baselineRun=observation(base);
+ sample.mutatedRun=observation([
+   profile({name:'node-continuum',passed:false,executed:6,failed:1})],
+   [{file:MUTATION_FILE,kind:'UNRESOLVED_REFERENCE',message:'Unresolved Files'}]);
+ sample.candidateRuns[0].primaryRun=observation([
+   profile({name:'node-continuum',executed:5}),
+   profile({name:'node-backend',executed:5})]);
+ sample.candidateRuns[0].independentRun=observation(base);
+ sample.candidateRuns[1].primaryRun=observation([
+   profile({name:'node-continuum',passed:false,executed:6,failed:1})]);
+ assert.equal(validateTriplePhaseSample(sample).reason,'PRIMARY_EVIDENCE_REGRESSION');
+ sample.candidateRuns[0].primaryRun=observation(base);
+ sample.candidateRuns[0].independentRun=observation([
+   profile({name:'node-continuum',executed:5}),
+   profile({name:'node-backend',executed:5})]);
+ assert.equal(validateTriplePhaseSample(sample).reason,'INDEPENDENT_EVIDENCE_MISSING_OR_FAILED');
+});
