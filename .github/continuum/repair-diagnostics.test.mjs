@@ -80,3 +80,24 @@ test('an error without its own repository frame cannot borrow the next error\'s 
   assert.deepEqual([ref.file,ref.symbol],['a.mjs','foo']);
   assert.ok(!out.some(d=>d.kind==='JS_SYNTAX_ERROR'&&d.file==='a.mjs'));
 });
+
+test('skipped JUnit cases are fingerprinted without copying their names',()=>{
+ const xml='<testsuite><testcase classname="local.Example" name="public-test"><skipped/></testcase>'+
+   '<testcase classname="local.Example" name="ordinary"/></testsuite>';
+ const result=parseJUnit(xml,ROOT);
+ assert.equal(result.executed,1);
+ assert.equal(result.skipped,1);
+ assert.equal(result.failed,0);
+ assert.equal(result.skippedCaseHashes.length,1);
+ assert.match(result.skippedCaseHashes[0],/^[0-9a-f]{64}$/);
+ assert.doesNotMatch(JSON.stringify(result.skippedCaseHashes),/local\.Example|public-test/);
+ assert.deepEqual(result.skippedCaseHashes,parseJUnit(xml,ROOT).skippedCaseHashes);
+ const swapped=parseJUnit(xml.replace('public-test','another-test'),ROOT);
+ assert.notDeepEqual(swapped.skippedCaseHashes,result.skippedCaseHashes);
+});
+
+test('a skipped JUnit case without stable testcase identity cannot be accepted',()=>{
+ const partial=parseJUnit('<testsuite><testcase name="missing-class"><skipped/></testcase></testsuite>',ROOT);
+ assert.equal(partial.skipped,1);
+ assert.deepEqual(partial.skippedCaseHashes,[null]);
+});
