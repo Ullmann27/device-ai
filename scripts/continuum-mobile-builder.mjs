@@ -183,7 +183,8 @@ export async function copyVerifiedApkToOwnerDownloads({
   } catch (error) {
     return {status:'UNAVAILABLE',reason:'COPY_IO_ERROR',errorCode:error?.code||null};
   } finally {
-    if(tmp&&fs.existsSync(tmp))fs.unlinkSync(tmp);
+    // A failed optional Download cleanup must not invalidate the signed private APK.
+    if(tmp)try { if(fs.existsSync(tmp))fs.unlinkSync(tmp); } catch {}
   }
 }
 
