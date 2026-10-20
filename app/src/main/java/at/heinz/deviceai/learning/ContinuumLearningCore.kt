@@ -78,7 +78,8 @@ data class ExtendedCurriculumReport(
     val priorIntent:SubwordEvaluation,
     val nextIntent:SubwordEvaluation,
     val priorSemantic:SubwordEvaluation,
-    val nextSemantic:SubwordEvaluation
+    val nextSemantic:SubwordEvaluation,
+    val diagnostics:String=""
 ) {
     fun display():String = buildString {
         append("SWB1 · GROSSES OFFLINE-ÜBUNGSARCHIV\n")
@@ -94,6 +95,7 @@ data class ExtendedCurriculumReport(
             .append(priorSemantic.total).append(" → ").append(nextSemantic.correct)
             .append("/").append(nextSemantic.total)
         append("\n").append(reason)
+        if(diagnostics.isNotBlank())append("\n\nDetaillierte Prüfungen:\n").append(diagnostics)
         append("\nKeine automatischen Besitzerfakten. SWB1-Parameterzahl bleibt 4.113.")
     }
 }
@@ -338,19 +340,52 @@ class ContinuumLearningCore(
             val better=trainI1.loss+0.000001<trainI0.loss &&
                 trainS1.loss+0.000001<trainS0.loss &&
                 auditI1.loss+auditS1.loss+0.0005<auditI0.loss+auditS0.loss
+            val checks=listOf(
+                "Neuer Intent-Holdout" to retains(auditI0,auditI1),
+                "Neuer Semantik-Holdout" to retains(auditS0,auditS1),
+                "Ursprünglicher Intent-Holdout" to retains(fixedI0,fixedI1),
+                "Ursprünglicher Semantik-Holdout" to retains(fixedS0,fixedS1),
+                "Öffentliches Paket: Intent" to retains(extraI0,extraI1),
+                "Öffentliches Paket: Semantik" to retains(extraS0,extraS1),
+                "Bestätigte Besitzerbeispiele" to ownerSafe
+            )
+            val blockers=checks.filterNot { it.second }.map { it.first }
             val accepted=completed && allProtected && better
             val reason=when {
                 !completed -> "Trainingslauf unterbrochen oder Zeitbudget erreicht; wiederholbar."
-                !allProtected -> "Mindestens ein unveränderlicher Prüfsatz oder eine Besitzerlektion würde schlechter."
+                !allProtected -> "Schutzprüfung nicht bestanden: "+blockers.joinToString(", ")+
+                    ". Kandidatengewichte verworfen."
                 !better -> "Kein unabhängiger Qualitätsgewinn; vorige Gewichte erhalten."
                 else -> "Neue Gewichtswerte akzeptiert; der frühere Stand ist als Checkpoint archiviert."
             }
+            fun checkLine(name:String,before:SubwordEvaluation,after:SubwordEvaluation):String =
+                name+": "+before.correct+"/"+before.total+" → "+
+                    after.correct+"/"+after.total+
+                    " · Verlust "+"%.4f".format(Locale.ROOT,before.loss)+
+                    " → "+"%.4f".format(Locale.ROOT,after.loss)+
+                    " · "+if(retains(before,after))"OK" else "REGRESSION"
+            val diagnostics=listOf(
+                checkLine("Neuer Intent",auditI0,auditI1),
+                checkLine("Neue Semantik",auditS0,auditS1),
+                checkLine("Alter Intent",fixedI0,fixedI1),
+                checkLine("Alte Semantik",fixedS0,fixedS1),
+                checkLine("Vorheriges Paket Intent",extraI0,extraI1),
+                checkLine("Vorheriges Paket Semantik",extraS0,extraS1),
+                "Besitzer-Lektionen: "+(if(ownerSafe)"GESCHÜTZT" else "RÜCKSCHRITT"),
+                "Trainingsverlust Intent: "+
+                    "%.4f".format(Locale.ROOT,trainI0.loss)+" → "+
+                    "%.4f".format(Locale.ROOT,trainI1.loss),
+                "Trainingsverlust Semantik: "+
+                    "%.4f".format(Locale.ROOT,trainS0.loss)+" → "+
+                    "%.4f".format(Locale.ROOT,trainS1.loss)
+            ).joinToString("\n")
             if(accepted)saveModel(candidate.save(),marker)
             if(completed)appendAudit(marker,accepted,
                 trainI.steps+(trainS?.steps ?: 0),
                 trainI0,trainI1,auditI0,auditI1,emptyList(),reason)
             ExtendedCurriculumReport(stage+1,curriculum.STAGES,completed,accepted,
-                trainI.steps,trainS?.steps ?: 0,reason,auditI0,auditI1,auditS0,auditS1)
+                trainI.steps,trainS?.steps ?: 0,reason,auditI0,auditI1,auditS0,auditS1,
+                diagnostics)
         }
 
     fun teachIntent(
