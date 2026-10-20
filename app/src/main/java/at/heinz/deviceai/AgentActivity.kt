@@ -3284,21 +3284,21 @@ class AgentActivity : Activity() {
                     val spanReport=when(extraction) {
                         is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Found -> {
                             val span=extraction.span
-                            "CSX1 · BELEGSTELLE (REGELBASIERTER VERGLEICH)\\n"+
+                            "CSX1 · BELEGSTELLE (REGELBASIERTER VERGLEICH)\n"+
                                 "Originalwortlaut: "+span.text+
-                                "\\nPosition: "+span.start+".."+span.endExclusive+
-                                "\\nBelegidentisch: "+
+                                "\nPosition: "+span.start+".."+span.endExclusive+
+                                "\nBelegidentisch: "+
                                 (source.substring(span.start,span.endExclusive)==span.text)+
-                                "\\nReferenzgleich: "+
+                                "\nReferenzgleich: "+
                                 (if(reference.isNotBlank())(span.text==reference).toString()
                                  else "nicht angegeben")
                         }
                         is at.heinz.deviceai.learning.ContinuumEvidenceSpanProbe.Result.Abstained ->
-                            "CSX1 · KEINE ANTWORT (SICHERES ENTHALTEN)\\n"+
+                            "CSX1 · KEINE ANTWORT (SICHERES ENTHALTEN)\n"+
                                 extraction.reason
                     }
-                    cdxText+"\\n\\n"+spanReport+
-                        "\\nCSX1 ist nur ein regelbasierter Forschungs-Benchmark; "+
+                    cdxText+"\n\n"+spanReport+
+                        "\nCSX1 ist nur ein regelbasierter Forschungs-Benchmark; "+
                         "keine trainierte semantische Generalisierung und keine Chatfreigabe."
                 }) { result ->
                     addAssistantMessage(result.getOrElse {
