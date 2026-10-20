@@ -81,20 +81,20 @@ data class ExtendedCurriculumReport(
     val nextSemantic:SubwordEvaluation
 ) {
     fun display():String = buildString {
-        append("SWB1 · GROSSES OFFLINE-ÜBUNGSARCHIV\\n")
+        append("SWB1 · GROSSES OFFLINE-ÜBUNGSARCHIV\n")
         append("Lernstufe: ").append(stage).append("/").append(stagesTotal)
         append(" · ").append(if(!completed)"UNTERBROCHEN" else
             if(accepted)"GEPRÜFTE GEWICHTE ÜBERNOMMEN" else "GEWICHTE VERWORFEN")
-        append("\\nSchritte: ").append(intentUpdates).append(" Intent + ")
-            .append(semanticUpdates).append(" Semantik\\n")
+        append("\nSchritte: ").append(intentUpdates).append(" Intent + ")
+            .append(semanticUpdates).append(" Semantik\n")
         append("Neuer Intent-Test: ").append(priorIntent.correct).append("/")
             .append(priorIntent.total).append(" → ").append(nextIntent.correct)
             .append("/").append(nextIntent.total)
-        append("\\nNeuer Semantik-Test: ").append(priorSemantic.correct).append("/")
+        append("\nNeuer Semantik-Test: ").append(priorSemantic.correct).append("/")
             .append(priorSemantic.total).append(" → ").append(nextSemantic.correct)
             .append("/").append(nextSemantic.total)
-        append("\\n").append(reason)
-        append("\\nKeine automatischen Besitzerfakten. SWB1-Parameterzahl bleibt 4.113.")
+        append("\n").append(reason)
+        append("\nKeine automatischen Besitzerfakten. SWB1-Parameterzahl bleibt 4.113.")
     }
 }
 
