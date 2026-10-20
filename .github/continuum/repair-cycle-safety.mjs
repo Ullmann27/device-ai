@@ -94,14 +94,16 @@ export function validateTriplePhaseSample({
   if(primary.profiles.length!==baseline.profiles.length)
    return rejected('INVALID_PRIMARY_EVIDENCE');
   if(primary.executed<baseline.executed||
-     attempt.primaryRun.results.some(p=>p.tests.skipped!==0))
+     attempt.primaryRun.results.some((p,i)=>p.tests.skipped!==0||
+       (p.testProfile&&p.tests.executed<baselineRun.results[i].tests.executed)))
    return rejected('PRIMARY_EVIDENCE_REGRESSION');
   const independent=suite(attempt.independentRun);
   if(!independent||!attempt.independentRun.passed||
      independent.executed<baseline.executed||
      independent.profiles.length!==baseline.profiles.length||
      independent.profiles.some((p,i)=>p!==baseline.profiles[i])||
-     attempt.independentRun.results.some(p=>p.tests.skipped!==0))
+     attempt.independentRun.results.some((p,i)=>p.tests.skipped!==0||
+       (p.testProfile&&p.tests.executed<baselineRun.results[i].tests.executed)))
    return rejected('INDEPENDENT_EVIDENCE_MISSING_OR_FAILED');
   if(!/^[0-9a-f]{64}$/.test(attempt.patchSha256??'')||
      attempt.patchSha256!==attempt.independentPatchSha256)
