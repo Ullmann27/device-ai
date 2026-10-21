@@ -36,6 +36,13 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         } catch (_: IllegalArgumentException) {
             return
         }
+        // Verify immutable routing identity in addition to the fillable
+        // extras: a Termux result cannot silently substitute operation/id.
+        val callbackData = intent.data ?: return
+        if (callbackData.scheme != "continuum" ||
+            callbackData.authority != "termux-callback" ||
+            callbackData.pathSegments != listOf(operationName, id)
+        ) return
 
         val bundle = intent.getBundleExtra(RESULT_BUNDLE)
         val hasResult = bundle != null && bundle.containsKey("exitCode") && bundle.containsKey("err")
@@ -52,6 +59,9 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val reportedStatus = payload?.optString("status")
         val artifactHash = payload?.optString("apkSha256")
         val signerHash = payload?.optString("signerSha256")
+        val sourceCommit = payload?.optString("commit")
+        val packageName = payload?.optString("packageName")
+        val versionCode = payload?.optInt("versionCode", -1)
         val ownerCopyStatus = payload?.optJSONObject("ownerInstallCopy")?.optString("status")
 
         val outcome = ContinuumMobileResultPolicy.evaluate(
@@ -60,13 +70,20 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             termuxError = errorCode,
             reportedStatus = reportedStatus,
             apkSha256 = artifactHash,
-            signerSha256 = signerHash
+            signerSha256 = signerHash,
+            sourceCommit = sourceCommit,
+            packageName = packageName,
+            versionCode = versionCode
         )
         val text = if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
             ContinuumMobileResultPolicy.statusExplanation(reportedStatus)
         } else {
             ContinuumMobileResultPolicy.explanation(outcome)
         }
+        val buildProvenance =
+            if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE)
+                "\nQuell-Commit: $sourceCommit\nPaket: $packageName · VersionCode: $versionCode"
+            else ""
         val ownerCopyMessage =
             if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
                     (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED &&
@@ -83,7 +100,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             .remove(JOB_ID)
             .remove(JOB_OPERATION)
             .remove(JOB_START)
-            .putString(LAST_MESSAGE, text + ownerCopyMessage)
+            .putString(LAST_MESSAGE, text + buildProvenance + ownerCopyMessage)
             .remove(LAST_SHA)
         if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE &&
             artifactHash != null
