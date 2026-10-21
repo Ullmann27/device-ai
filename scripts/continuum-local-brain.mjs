@@ -113,7 +113,13 @@ export async function queryLocalBrain({
       {role: 'user', content: user}
     ]
   };
-  if (patchSchema) body.response_format = {type: 'json_schema', schema: patchSchema};
+  // llama.cpp implements the OpenAI-style nested wrapper; the legacy flat
+  // response_format.schema can silently disable grammar constraints.
+  // Server-constrained decoding is an optimization, NEVER a validation gate.
+  if (patchSchema) body.response_format = {
+    type: 'json_schema',
+    json_schema: {name: 'continuum_bounded_patch_v1', strict: true, schema: patchSchema}
+  };
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
