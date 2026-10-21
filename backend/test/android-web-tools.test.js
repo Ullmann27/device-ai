@@ -12,7 +12,8 @@ test("web tools are exact bounded Android function proposals, never hosted brows
     assert.equal(t.parameters.additionalProperties, false);
     assert.deepEqual(Object.keys(t.parameters.properties), t.parameters.required);
     assert.equal(t.parameters.properties[t.parameters.required[0]].type, "string");
-    assert.match(t.description, /Android-Internetfreigabe/);
+    assert.match(t.description, /Nur Android entscheidet/);
+    assert.match(t.description, /OFF, ASK oder ALWAYS_ON/);
   }
   assert.equal(tools[0].parameters.properties.query.maxLength, 512);
   assert.equal(tools[1].parameters.properties.url.maxLength, 2048);
