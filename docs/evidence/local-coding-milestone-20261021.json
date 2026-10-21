@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "b464b3ea45e4dabe854c5a3937a1033fc3a1920d",
+  "baseCommit": "dfd876c23e2e88faa2ff7ee2f7f75138b416929a",
+  "branch": "astra/continuum-local-coding-milestone-20261021",
+  "pullRequest": 49,
+  "recordedAt": "2026-10-21T13:29:32.096416+00:00",
+  "checks": {
+    "node": {
+      "command": "node --test --test-reporter=tap --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs",
+      "passed": 777,
+      "failed": 0,
+      "skipped": 0
+    },
+    "android": {
+      "command": "gradle :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true",
+      "passed": 706,
+      "failed": 0,
+      "skipped": 0,
+      "lintScope": "Existing NewApi gate",
+      "compileAndAssemble": "PASS"
+    },
+    "backend": {
+      "commands": [
+        "npm test",
+        "npm run check"
+      ],
+      "passed": 60,
+      "failed": 0,
+      "skipped": 0
+    },
+    "parity": {
+      "backlogNodeKotlinNode": "PASS",
+      "swb1Swb2NodeKotlin": "PASS",
+      "cre1InferenceAndSgd": "PASS"
+    },
+    "independentReview": {
+      "blockingFindings": 0,
+      "reviewerFocusedTests": 4,
+      "scope": "Restricted numeric grammar, explicit provider scope, exact-context replay and test/host capability boundary"
+    }
+  },
+  "localApk": {
+    "packageName": "at.heinz.deviceai.mentorpaired",
+    "versionName": "0.3.10",
+    "versionCode": 13,
+    "sha256": "0b00d789381c4efdf0a344114e4edf3df4106b0a1eb4f3002e0394e1bca44497",
+    "signerSha256": "7b3310a6830036c8a055ca579cb7996ac0da326f2031f2e0d690c28ff5554c85",
+    "v2SignatureVerified": true,
+    "signerCount": 1,
+    "purpose": "LOCAL_DEBUG_BUILD_VERIFICATION_ONLY",
+    "upgradeRelease": false,
+    "installed": false
+  },
+  "modelExecutionProven": false,
+  "neuralWeightChanges": false,
+  "deviceAcceptance": false,
+  "nextStep": "Samsung current-source BUILD callback, followed by one owner-accepted bounded numeric repair with an actually installed local GGUF model; independently inspect source, patch and test receipts."
+}

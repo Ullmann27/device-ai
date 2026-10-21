@@ -18,7 +18,7 @@ Der vorhandene authentifizierte llama.cpp-Client läuft über einen festen Node-
 - Echter HTTP→Node-CLI→Patch→Git-Worktree→Node-Test-Durchlauf mit **kontrollierter Protokollantwort**. Kein llama.cpp/GGUF-Lauf und kein Modellleistungsnachweis. Die vier Testfälle eines bekannten Mini-Reparaturproblems sind Sicherheits-/Integrationstests, keine versiegelte Lernstudie und kein Neuartigkeitsbeleg.
 - Android: 706/706 Tests, null Skips, Kotlin-Kompilierung, bestehendes NewApi-Lint-Gate und Debug-APK-Build erfolgreich. Node↔Kotlin-Backlog-Roundtrip, SWB1/SWB2-Parität und CRE1-Inferenz-/SGD-Parität anschließend unabhängig durch die bestehenden Verifikationsskripte bestätigt.
 - Ein erster Android-Lauf scheiterte an wiederverwendeten, vom vorigen Worktree veränderten Paritätsdaten. Frische getrennte Fixtures beseitigten diesen Ausführungsfehler; keine Produktprüfung wurde abgeschaltet.
-- Gesamte Node-Suite läuft nach den Sicherheitsänderungen erneut. Ein zuvor gefundener veralteter Quelltexttest erwartete die Android-Rückmeldung ohne den bereits in PR #48 integrierten Commit-/Paketnachweis. Assertion an die tatsächliche strukturierte Rückmeldung angepasst; keine Sicherheitsbedingung entfernt.
+- Gesamte Node-/Script-Suite nach den Sicherheitskorrekturen: **777/777 grün, null Skips**. Ein zuvor gefundener veralteter Quelltexttest erwartete die Android-Rückmeldung ohne den bereits in PR #48 integrierten Commit-/Paketnachweis. Assertion an die tatsächliche strukturierte Rückmeldung angepasst; keine Sicherheitsbedingung entfernt.
 - Backend: 60/60 und Syntaxprüfung erfolgreich.
 
 ## APK- und Gerätestatus
@@ -46,3 +46,14 @@ node .github/continuum/developer-agent.mjs owner-repair \
 6. Danach aktuellen App→Termux→App BUILD-Rückruf mit Commit, Paket, Signer und APK-SHA auf Samsung abnehmen. Für größere Modellpatches zuerst einen tatsächlich eingeschränkten Ausführer mit belegten Datei-/Netzwerk-/Prozessgrenzen entwickeln; Kritiker allein reicht dafür nicht.
 
 Rollback: lokalen Kandidatenmodus weglassen oder ausschließlich die Commits dieses Entwicklungsbranches zurücknehmen. Persistente Telefonstände bleiben außerhalb dieser Arbeit. Neue Forschung erst mit getrennten Baselines, frischen Holdouts und unabhängiger Gegenprüfung; kein Intelligenzgewinn aus Updatezahlen ableiten.
+
+## Unabhängiges Review und Fortsetzung
+
+Funktions-Quellcommit nach Sicherheitskorrekturen: `b464b3e` (vollständigen aktuellen HEAD immer mit Git prüfen). Das unabhängige Review meldet am finalen Baum keine offenen kritischen/hohen/mittleren Befunde; selbst ausgeführt wurden dort vier Grammatiktests plus Scope-/Kontext-/Frozen-Provider-Proben. Root-Prüfung: 13 eng begrenzte Sicherheits-/Integrationsfälle grün. Die gesamte Node-Suite besteht nach diesen Korrekturen mit 777/777 und null Skips; Ergebnisdatensatz siehe unten. APK-Erfolg und Tests sind ausdrücklich vom fehlenden Modell-/Gerätenachweis getrennt.
+
+Priorität der nächsten Sitzung: aktuelle Samsung-Build-/Rückrufabnahme des bestehenden M1-Pfads, danach ein echter, vorab definierter Zahlenfunktionsauftrag mit lokalem Modell. Erst mit echten unbekannten Aufgaben, Kontrollen und negativen Fällen Aussage über Modellnützlichkeit treffen. CDX1/NEURON/SWB1 bleiben bei ihrem bestehenden Prüf-/Checkpointvertrag; dieses Ergebnis behauptet keine verbesserte Sprachmodell- oder Semantikleistung.
+
+
+## Abschlussbeleg
+
+**Status: CONTAINER_VERIFIED / RESEARCH_SHADOW.** Funktionsquelle `b464b3ea45e4dabe854c5a3937a1033fc3a1920d`; danach ausschließlich Register-/Übergabedokumentation. [Maschinenlesbarer Ergebnisdatensatz](evidence/local-coding-milestone-20261021.json): Node 777/777, Android 706/706, Backend 60/60, überall null Fehler und null Skips; Paritätsprüfungen erfolgreich. APK nur mit lokalem Debug-Signer geprüft, keine Updatefreigabe. Alle funktionalen Änderungen und dieser Wiederaufnahmeauftrag sind im Draft-PR #49 gesichert. `main` und PR48-Basis blieben unverändert. Nächste konkrete Aktion und Rollback stehen oben.
