@@ -10,6 +10,18 @@
 
 3. **Tatsächlich eingeschränkter Linux-Ausführungsnachweis:** `scripts/continuum-isolated-node.sh` führt nur **eine** kleine, ausdrücklich in einem besitzereigenen Modus-700-Verzeichnis bereitgestellte `.mjs`-Datei aus. Der Wrapper friert Quellbytes in einem eigenen Verzeichnis ein und startet Node über Linux-User-/Mount-/Network-/IPC-/PID-Namespaces, chroot, read-only Bind-Mount, `setpriv --no-new-privs` mit leerem Capability-Bounding-Set, `env -i`, `prlimit`, Deadline und kontrolliertem Prozessabbruch. Keine `.git`-Dateien, Projektgewichte, Besitzerverzeichnisse oder Zugangsdaten werden hineingemountet. Fehlende Linux-Namespaces, Tools oder Rechte bedeuten **UNAVAILABLE**, niemals unsicheren Fallback. Nicht auf Android als funktionierend ausgeben.
 
+## Drei Forschungsprototypen (strikt RESEARCH_SHADOW)
+
+`scripts/continuum-capability-research.mjs` vergleicht drei **kleine, synthetische** Verfahren gegen einfache Baselines:
+
+- **Gegenbeispielgeleitete Auswahl** eines festen Pools numerischer Kandidaten: Baseline 0/4, nach unabhängigen Challenge-Proben 4/4 auf vorab getrennten Zahlen-Holdouts.
+- **Provenienzgeprüfte Auswahl** gegen rein zeitliche Sortierung: Baseline 0/3, evidenzbasierter Filter 3/3 auf konstruierten Quellenbeispielen, einschließlich expliziter Abstinenz.
+- **Budgetgebundene Kontextauswahl** gegen FIFO: Baseline 0/2, geprüfte Priorisierung 2/2 vollständig abgedeckte synthetische Anforderungen.
+
+`node --test scripts/continuum-capability-research.test.mjs` wurde in einem getrennten lokalen Node-22-Prototyp mit **4/4 PASS** ausgeführt. Mit den oben genannten drei Sandbox-Tests: **7/7 lokale Prototypentests PASS**.
+
+**Wissenschaftliche Grenze:** Die Testfälle und Referenzwerte sind bewusst einfach und von uns konstruiert; Ergebnisse dürfen **nicht** als Generalisierungs-, Modellqualitäts- oder Intelligenzgewinn interpretiert werden. Keine neuen neuronalen Gewichte, keine unbekannten realen Coding-Aufgaben, keine autonome Promotion. Die Module dienen nur als reproduzierbare Versuchsanordnung für spätere echte, versiegelte Datensätze.
+
 ## Unabhängige lokale Versuche
 
 In einer Linux/Node-22-Umgebung wurde ein praktischer Namespace-/Chroot-Versuch erfolgreich durchgeführt. Ein Kandidat sah weder eine private Hostdatei noch `/etc/passwd` oder das übergebene Test-Secret; Schreibzugriff auf den staging-code wurde mit `EROFS` abgewiesen; die Loopback-Verbindung schlug fehl. Die lokale, separat erstellte Drei-Fälle-Testfolge für den gleichen Sandbox-Adapter bestand **3/3**, einschließlich Pfad-/Symlink-/Verzeichnisrechten und Kandidatenfehlern.
@@ -21,6 +33,7 @@ In einer Linux/Node-22-Umgebung wurde ein praktischer Namespace-/Chroot-Versuch 
 ```sh
 node --test scripts/continuum-local-brain.test.mjs \
   scripts/continuum-isolated-node.test.mjs \
+  scripts/continuum-capability-research.test.mjs \
   .github/continuum/local-teamleader-loop.test.mjs
 node --check scripts/continuum-local-brain.mjs
 node --check .github/continuum/teamleader-cli.mjs
@@ -41,7 +54,7 @@ Das sind Ausführungsanweisungen, keine in dieser Sitzung behauptete GitHub-CI-A
 - Sols nicht gepushte Dateien aus der abgebrochenen Cloud-Sitzung sind über GitHub nicht lesbar. Sie wurden nicht überschrieben; Sols Branch blieb unverändert.
 - Unabhängige, aktuelle GitHub-Gesamtsuiten und unabhängiges Sandbox-Security-Review.
 - Echte GGUF-Modellinferenz mit dem **neuen** Schema auf passender Hardware und messbarem Kontext-/Tokenprofil.
-- Sols drei Forschungsprototypen mit echten Baselines und versiegelten Holdouts; keine Selbstverbesserungsbehauptung vor Nachweis.
+- Weiterentwicklung der drei synthetischen Shadow-Versuche auf echte neue unabhängige Aufgaben und vorab versiegelte Holdouts; keine Selbstverbesserungsbehauptung vor Nachweis.
 - Linux-Ausführer sicher in die vorhandene Reviewpipeline integrieren; Android benötigt eine separate, tatsächlich unterstützte Sandbox-Strategie.
 - Aktuelle Samsung-Android→Termux→Android-BUILD-Rückmeldung und Besitzerabnahme.
 
