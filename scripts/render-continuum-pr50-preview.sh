@@ -128,12 +128,27 @@ grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" "$workspace/
 "$tools/aapt" dump badging "$apk" > "$workspace/badging.txt"
 grep -Fq "package: name='at.heinz.deviceai.preview' versionCode='6' versionName='0.3.3'" "$workspace/badging.txt"
 test "$(git rev-parse HEAD)" = "$commit" || { echo 'Source HEAD changed'; exit 69; }
-if ! git diff --quiet --exit-code || ! git diff --cached --quiet --exit-code; then
-  echo 'Tracked source changed during build; refusing release. Modified paths:' >&2
-  git diff --name-status >&2
+# Repository tests may chmod shell entrypoints from 0644 to 0755.
+# Treat these as harmless ONLY when their contents still match HEAD exactly.
+if ! git diff --cached --quiet --exit-code; then
+  echo 'Staged source changes during build; refusing release' >&2
   git diff --cached --name-status >&2
   exit 69
 fi
+while IFS= read -r -d '' changed; do
+  if [[ "$changed" != scripts/*.sh || ! -f "$changed" || -L "$changed" ]]; then
+    echo "Unexpected tracked change: $changed" >&2
+    exit 69
+  fi
+  head_sha="$(git show "HEAD:$changed" | sha256sum | awk '{print $1}')"
+  work_sha="$(sha256sum -- "$changed" | awk '{print $1}')"
+  if [[ "$head_sha" != "$work_sha" ]]; then
+    echo "Modified source contents: $changed" >&2
+    exit 69
+  fi
+  echo "Allowed chmod-only change with exact Git content: $changed"
+done < <(git diff --name-only -z)
+
 output="$repo_root/continuum-preview-output"
 mkdir -p "$output"
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
