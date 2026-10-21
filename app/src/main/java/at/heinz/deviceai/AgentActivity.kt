@@ -3161,13 +3161,17 @@ class AgentActivity : Activity() {
      * SWB1 retrieval and approved ToolGate cannot be changed by this lab.
      */
     private fun showPairedDecoderLab() {
-        onLearningIo({ ContinuumLearningCore(filesDir).pairedDecoderStatus() }) { result ->
-            val message=result.fold(onSuccess={ status ->
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            core.pairedDecoderStatus() to core.pairedDecoderStorageEvidence()
+        }) { result ->
+            val message=result.fold(onSuccess={ (status,evidence) ->
                 "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
                     "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
                     "Gewichtsupdates: "+status.updates+"\n"+
                     "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n"+
-                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n\n"+
+                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n"+
+                    "Gespeicherte Dateien (nur lesend):\n"+evidence+"\n\n"+
                     "Ein Beleg und eine Frage werden gemeinsam als Eingabe benutzt. "+
                     "Der Decoder lernt ausschließlich die Antwortzeichen. "+
                     "Trainings- und Prüfbeispiele sind getrennt; eine Verschlechterung "+
