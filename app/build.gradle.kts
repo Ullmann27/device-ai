@@ -38,8 +38,8 @@ android {
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
         // as an update. Main/production keeps its existing version.
-        versionCode = if (deviceAiMentorPreview) 12 else if (deviceAiPreview) 6 else 4
-        versionName = if (deviceAiMentorPreview) "0.3.9" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        versionCode = if (deviceAiMentorPreview) 13 else if (deviceAiPreview) 6 else 4
+        versionName = if (deviceAiMentorPreview) "0.3.10" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview
         manifestPlaceholders["appLabel"] = when {
@@ -107,5 +107,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303") // Android JSON API implementation for actual JVM fetch tests.
 }
 

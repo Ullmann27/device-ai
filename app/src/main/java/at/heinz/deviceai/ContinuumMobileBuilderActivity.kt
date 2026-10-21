@@ -141,6 +141,10 @@ class ContinuumMobileBuilderActivity : Activity() {
         val requestId = UUID.randomUUID().toString()
         val plan = ContinuumMobileBuildPlan.command(operation)
         val receiverIntent = Intent(this, ContinuumMobileBuildResultReceiver::class.java).apply {
+            // Keep request identity in the already populated Intent data. A
+            // mutable Termux fill-in may carry the result, not replace our
+            // original operation and request identity.
+            data = android.net.Uri.parse("continuum://termux-callback/${operation.name}/$requestId")
             putExtra(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
             putExtra(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operation.name)
         }

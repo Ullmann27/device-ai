@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
+import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment, copyVerifiedApkToOwnerDownloads } from './continuum-mobile-builder.mjs';
 import { acquireContinuumBuildLease } from '../.github/continuum/shared-build-lease.mjs';
 
 const HEAD='f'.repeat(40);
@@ -37,6 +37,7 @@ function mock(f,{dirty=false,fail=false,sign=true,signFormat='legacy',commands=[
       }
       return {ok:!fail,code:fail?1:0,output:fail?'synthetic Gradle failure':'synthetic success'};
     }
+    if(file==='/fake/aapt2')return {ok:true,code:0,output:"package: name='at.heinz.deviceai.preview' versionCode='9' versionName='0.3.9'"};
     if(file==='/fake/apksigner')return {ok:sign,code:sign?0:1,output:sign?(signFormat==='modern'?'V2 Signer: ':'Signer #1 ')+'certificate SHA-256 digest: '+SIGNER:'DOES NOT VERIFY: Invalid APK signature'};
     throw Error('Unexpected tool '+file);
   };
@@ -92,6 +93,8 @@ test('synthetic signed output saves a distinct hash-tied copy; not proof of an o
   const result=await build({project:f.root,stateDir:f.stateDir,offline:true,inspect:async()=>ready,run:mock(f,{commands})});
   assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
   assert.equal(result.signerSha256,SIGNER);
+  assert.equal(result.packageName,'at.heinz.deviceai.preview');
+  assert.equal(result.versionCode,9);
   assert.match(result.apkSha256,/^[0-9a-f]{64}$/);
   assert.equal(result.deviceInstallationVerified,false);
   assert.equal(result.productionReady,false);
@@ -132,6 +135,76 @@ test('owner Android build automatically publishes a hash-checked APK in the dedi
   assert.equal(again.ownerInstallCopy.status,'COPIED');
   assert.equal(again.ownerInstallCopy.alreadyPresent,true);
   assert.equal(again.ownerInstallCopy.apk,result.ownerInstallCopy.apk);
+});
+
+test('owner file created during a publication race is never overwritten',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  const folder=path.join(downloads,'00-DEVICEAI-INSTALLATION');
+  fs.mkdirSync(folder,{recursive:true});
+  const source=path.join(f.stateDir,'source-signed.apk');
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const bytes=Buffer.alloc(8192,42);
+  fs.writeFileSync(source,bytes);
+  const digest=createHash('sha256').update(bytes).digest('hex');
+  const target=path.join(folder,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'-'+digest.slice(0,12)+'.apk');
+  const original=fs.copyFileSync;
+  let raced=false;
+  try {
+    fs.copyFileSync=function(src,dst,flags) {
+      if(dst===target && flags===fs.constants.COPYFILE_EXCL && !raced) {
+        raced=true;
+        fs.writeFileSync(dst,'OWNER_OR_OTHER_PROCESS_FILE');
+      }
+      return original.call(fs,src,dst,flags);
+    };
+    const report=await copyVerifiedApkToOwnerDownloads({
+      apk:source,digest,commit:HEAD,project:f.root,
+      env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},arch:'arm64'
+    });
+    assert.equal(raced,true,'a competing owner write reached the publication boundary');
+    assert.equal(report.status,'UNAVAILABLE');
+    assert.equal(report.reason,'DESTINATION_BECAME_OCCUPIED');
+    assert.equal(fs.readFileSync(target,'utf8'),'OWNER_OR_OTHER_PROCESS_FILE');
+    assert.deepEqual(fs.readFileSync(source),bytes);
+    assert.deepEqual(fs.readdirSync(folder).filter(name=>name.endsWith('.tmp')),[],
+      'Temporary APK staging files must be removed after copy failures');
+  } finally {
+    fs.copyFileSync=original;
+  }
+});
+
+test('a corrupted final Download copy is reported without deleting owner files',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  const folder=path.join(downloads,'00-DEVICEAI-INSTALLATION');
+  fs.mkdirSync(folder,{recursive:true});
+  const source=path.join(f.stateDir,'source-signed.apk');
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const bytes=Buffer.alloc(8192,42);
+  fs.writeFileSync(source,bytes);
+  const digest=createHash('sha256').update(bytes).digest('hex');
+  const target=path.join(folder,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'-'+digest.slice(0,12)+'.apk');
+  const original=fs.copyFileSync;
+  try {
+    fs.copyFileSync=function(src,dst,flags) {
+      if(dst===target && flags===fs.constants.COPYFILE_EXCL) {
+        fs.writeFileSync(dst,'UNEXPECTED_OWNER_FILE_AFTER_COPY');
+        return;
+      }
+      return original.call(fs,src,dst,flags);
+    };
+    const report=await copyVerifiedApkToOwnerDownloads({
+      apk:source,digest,commit:HEAD,project:f.root,
+      env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},arch:'arm64'
+    });
+    assert.equal(report.status,'UNAVAILABLE');
+    assert.equal(report.reason,'FINAL_COPY_HASH_MISMATCH');
+    assert.equal(fs.readFileSync(target,'utf8'),'UNEXPECTED_OWNER_FILE_AFTER_COPY');
+    assert.deepEqual(fs.readFileSync(source),bytes);
+    assert.deepEqual(fs.readdirSync(folder).filter(name=>name.endsWith('.tmp')),[],
+      'Temporary APK staging files must be removed after copy failures');
+  } finally {
+    fs.copyFileSync=original;
+  }
 });
 
 test('missing owner Download storage never fakes a published installer copy',async()=>{
@@ -238,6 +311,8 @@ test('modern apksigner result is accepted only after executable verification suc
   const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{signFormat:'modern'})});
   assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
   assert.equal(result.signerSha256,SIGNER);
+  assert.equal(result.packageName,'at.heinz.deviceai.preview');
+  assert.equal(result.versionCode,9);
 });
 
 test('genuine apksigner rejection persists diagnostic without publishing APK',async()=>{
@@ -433,4 +508,25 @@ test('a live ANSK or teamleader lease blocks the mobile APK builder before invok
    /CONTINUUM_BUILD_LEASE_BUSY/);
   assert.equal(calls,0);
  }finally{release();}
+});
+
+test('a correctly signed APK for the wrong package cannot be published as a Continuum preview', async () => {
+  const f=fixture();
+  const base=mock(f);
+  const run=async(file,args,opts)=>file==='/fake/aapt2'
+    ? {ok:true,code:0,output:"package: name='at.heinz.deviceai' versionCode='12' versionName='0.3.9'"}
+    : base(file,args,opts);
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run});
+  assert.equal(result.status,'FAILED_APK_IDENTITY');
+  assert.equal(fs.readdirSync(f.stateDir).some(x=>x.endsWith('.apk')),false);
+});
+
+test('malformed or failed package inspection cannot publish an APK', async () => {
+  for (const response of [{ok:false,code:1,output:''},{ok:true,code:0,output:'UNTRUSTED OUTPUT'}]) {
+    const f=fixture();const base=mock(f);
+    const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,
+      run:async(file,args,opts)=>file==='/fake/aapt2'?response:base(file,args,opts)});
+    assert.equal(result.status,'FAILED_APK_IDENTITY');
+    assert.equal(result.apk,undefined);
+  }
 });

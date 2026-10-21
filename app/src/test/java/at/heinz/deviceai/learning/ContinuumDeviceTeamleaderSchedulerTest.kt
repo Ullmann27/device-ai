@@ -28,7 +28,7 @@ class ContinuumDeviceTeamleaderSchedulerTest {
         assertEquals(60L * 60L * 1000L, s.periodMs)
         assertFalse("do not require charger", s.charging)
         assertTrue(s.persisted)
-        assertTrue(s.batteryNotLow)
+        assertFalse("20% is enforced locally, independent of manufacturer battery-low flag", s.batteryNotLow)
         assertTrue(s.storageNotLow)
         assertEquals(android.app.job.JobInfo.NETWORK_TYPE_NONE, s.networkType)
     }
@@ -41,5 +41,13 @@ class ContinuumDeviceTeamleaderSchedulerTest {
         jobs.acceptance = false
         assertFalse(ContinuumDeviceTeamleaderScheduler(jobs).restore())
         assertEquals(2, jobs.called)
+    }
+
+    @Test fun legacyBatteryGateMigratesOnceWithoutRepeatedRescheduling() {
+        val jobs=Jobs(ContinuumDeviceTeamleaderScheduler.WANTED.copy(batteryNotLow=true))
+        val scheduler=ContinuumDeviceTeamleaderScheduler(jobs)
+        repeat(5) { assertTrue(scheduler.restore()) }
+        assertEquals(1,jobs.called)
+        assertFalse(jobs.old!!.batteryNotLow)
     }
 }

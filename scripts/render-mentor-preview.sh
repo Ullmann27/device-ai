@@ -15,11 +15,11 @@ command -v git >/dev/null
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 # The original Mentor service is still pinned to the older branch.
-# This updated script is ready for a separately authorized Render branch switch.
+# Review integration branch is allowed; never upload an APK without exact package/version/certificate verification.
 expected_branch="astra/continuum-experiment-charter-20261019"
 render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "integration/continuum-astra-20261021" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
   exit 69
 fi
@@ -138,21 +138,37 @@ if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
   exit 69
 fi
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
-  | grep -F "package: name='at.heinz.deviceai.mentorpaired'"
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='13' versionName='0.3.10'"
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
+# Content-addressed publication prevents an existing CDN path serving an older
+# APK under a reused version name. Never accept checksum metadata from a prior deploy.
+apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
+if [[ ! "$apk_sha256" =~ ^[0-9a-f]{64}$ ]]; then
+  echo "Invalid APK SHA-256" >&2
+  exit 69
+fi
+immutable_apk="DeviceAI-Continuum-v0.3.10-${apk_sha256}.apk"
+cp "$apk" "$output/$immutable_apk"
+(
+  cd "$output"
+  printf '%s  %s\n' "$apk_sha256" "$immutable_apk" > "SHA256SUMS-${apk_sha256}.txt"
+  sha256sum --check --status "SHA256SUMS-${apk_sha256}.txt"
+)
+# Keep legacy aliases for compatibility, but NEVER use them as release links:
+# a CDN can cache an older APK with the same version under these names.
 cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
-# A version-specific filename avoids stale CDN artifacts from earlier builds.
-cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.9.apk"
+cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.10.apk"
 (
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk \
-    DeviceAI-Continuum-Training-Monitor-v0.3.9.apk > SHA256SUMS.txt
+    DeviceAI-Continuum-Training-Monitor-v0.3.10.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
-  "$commit" "$actual_branch" "$expected_branch" > "$output/BUILD-INFO.txt"
-cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.9.txt"
+printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\nartifact=%s\napk_sha256=%s\n' \
+  "$commit" "$actual_branch" "$expected_branch" "$immutable_apk" "$apk_sha256" > "$output/BUILD-INFO.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.10.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-${apk_sha256}.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
-echo "[Continuum] Verified APK and checksums ready for publication"
-cat "$output/SHA256SUMS.txt"
+echo "[Continuum] Verified immutable APK and checksums ready for publication"
+cat "$output/SHA256SUMS-${apk_sha256}.txt"

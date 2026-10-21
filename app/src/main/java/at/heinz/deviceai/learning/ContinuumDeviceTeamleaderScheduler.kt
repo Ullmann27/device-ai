@@ -6,12 +6,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
-import android.os.Build
-import android.os.PowerManager
-import android.os.StatFs
 import android.util.Log
 import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
 import at.heinz.deviceai.cognitive.ContinuumDnaGuardian
@@ -82,7 +76,7 @@ class ContinuumDeviceTeamleaderScheduler internal constructor(
         val WANTED = DeviceTeamleaderJobSpec(
             SERVICE_CLASS, PERIOD_MS, persisted = true,
             charging = false, networkType = JobInfo.NETWORK_TYPE_NONE,
-            batteryNotLow = true, storageNotLow = true
+            batteryNotLow = false, storageNotLow = true
         )
     }
 }
@@ -95,16 +89,7 @@ class ContinuumDeviceTeamleaderJobService : JobService() {
     @Volatile private var activeWorker: Thread? = null
     @Volatile private var activeCancellation: AtomicBoolean? = null
 
-    private fun currentResources(): ContinuumLearningResources {
-        val battery = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val level = battery?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-        val scale = battery?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-        val percent = if (level >= 0 && scale > 0) (level * 100 / scale).coerceIn(0, 100) else null
-        val thermal = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            getSystemService(PowerManager::class.java)?.currentThermalStatus else null
-        val space = StatFs(filesDir.absolutePath).availableBytes
-        return ContinuumLearningResources(percent, false, thermal, space)
-    }
+    private fun currentResources():ContinuumLearningResources = continuumLearningResources()
 
     @Synchronized override fun onStartJob(params: JobParameters): Boolean {
         // Android may stop one job while its thread is still cleaning up.

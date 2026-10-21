@@ -719,7 +719,12 @@ class ContinuumLearningCore(
      * replace the SWB1/CRE1 memory gate or the productive chat model.
      */
     fun pairedDecoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {
-        ContinuumDecoderBridge(directory).pairedStatus()
+        ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
+    }
+
+    /** Inspect only filenames and metadata; never writes, trains or restores. */
+    fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).storageEvidence()
     }
 
     fun trainExperimentalPairedDecoder(
