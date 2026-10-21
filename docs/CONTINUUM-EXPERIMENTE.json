@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-20",
+  "updated": "2026-10-21",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -18,10 +18,10 @@
       "id": "EXP-00",
       "title": "On-device Android APK builder",
       "status": "DEVICE_TOOLCHAIN_VERIFIED",
-      "present": "Samsung Android 16 ARM64: JDK17/Gradle8.11.1/SDK36/AAPT2/apksigner Doctor verified on device 2026-10-19; manual Termux-preview APK built, SHA/signature checked at source commit 1477fa5 and Android Builder opened. App-triggered complete build, newly integrated high-end UI APK and independent M4 evidence NOT yet verified.",
+      "present": "Samsung Android 16 ARM64: on-device Doctor (Git/JDK17/Gradle8.11.1/SDK36/ARM64-AAPT2/apksigner) passed; real earlier build and signed preview APK at 91291cb201d140bc301bcb341b49a674d8d08165 with owner Download copy, reported by owner 2026-10-21. Current integrated source checkpoint 55338344654d3c5925b067a6dec82c21e745b408 has download-publication race fix and new negative tests in PR #48; these patches have not yet been run on device.",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
-      "gate": "Current feature-HEAD Node/Kotlin/lint validation, owner-triggered in-app APK build with hash/certificate evidence, owner-approved install and new one-launcher high-end UI acceptance"
+      "gate": "Samsung safe-fetch current source at checkpoint 55338344654d3c5925b067a6dec82c21e745b408, execute real Node negative tests, app-triggered build callback with exit 0, Gradle JUnit/lint/APK signer/source-SHA evidence, stable separate at.heinz.deviceai.preview package; docs/CONTINUUM-M1-ANDROID-ABSCHLUSS-20261021.md. No Main merge or unapproved install."
     },
     {
       "id": "EXP-01",
@@ -90,10 +90,10 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Samsung Android 16 2026-10-19: real Android -> Termux RUN_COMMAND -> Android DOCTOR and STATUS callbacks successfully displayed in installed Preview (Node builder 28/28 passed at e332825). BUILD callback not yet device-tested; no authenticated cross-package lease/replay proof or independent APK ingest.",
+      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed.",
       "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
-      "gate": "Real app-triggered BUILD callback, replay/lease robustness, SHA/certificate/device proof and owner-approved verified APK install"
+      "gate": "On the current integrated source, app-button BUILD must actually produce a validated Android→Termux→App completion receipt with exact Git commit/SHA/signing/package verification; inspect replay/lease and failure paths. No automatic installation."
     },
     {
       "id": "EXP-09",
