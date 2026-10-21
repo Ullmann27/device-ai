@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import android.Manifest
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,6 +14,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
+import android.os.SystemClock
 import android.widget.RemoteViews
 import at.heinz.deviceai.learning.ContinuumAutonomousScheduler
 import at.heinz.deviceai.learning.ContinuumPublicStudyScheduler
@@ -168,6 +170,17 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
             val refresh = PendingIntent.getBroadcast(app, 3102,
                 Intent(app, ContinuumTrainingWidget::class.java).apply { action = REFRESH },
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            // A one-shot, non-exact expiry prevents long-running stale live labels
+            // after process death. Android may delay the refresh under Doze.
+            val alarm = app.getSystemService(AlarmManager::class.java)
+            val expiry = PendingIntent.getBroadcast(app, 3103,
+                Intent(app, ContinuumTrainingWidget::class.java).apply { action = REFRESH },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            alarm?.cancel(expiry)
+            if (selected != null) {
+                alarm?.set(AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime() + 50_000L, expiry)
+            }
             val lastUpdate = SimpleDateFormat("HH:mm:ss", Locale.GERMANY)
                 .format(Date(System.currentTimeMillis()))
             for (id in widgetIds) {
