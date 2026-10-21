@@ -195,6 +195,12 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
                     channelLine(offline, "SWB1", hasOffline))
                 view.setTextViewText(R.id.widget_cdx,
                     channelLine(cdx, "CDX1", true))
+                val stats = app.getSharedPreferences("continuum-public-study-v1",
+                    Context.MODE_PRIVATE)
+                view.setTextViewText(R.id.widget_counts,
+                    "QUELLEN " + stats.getLong("sources", 0L) +
+                        "  ·  SWB1-RUNDEN " + stats.getLong("accepted", 0L) +
+                        "  ·  VERSUCHE " + stats.getLong("attempts", 0L))
                 view.setTextViewText(R.id.widget_footer, "Letzter Lauf: " + lastFinished)
                 view.setTextViewText(R.id.widget_updated, lastUpdate)
                 view.setOnClickPendingIntent(R.id.training_widget_root, launch)
