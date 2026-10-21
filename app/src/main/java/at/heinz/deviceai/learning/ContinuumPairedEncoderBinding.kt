@@ -26,6 +26,7 @@ object ContinuumPairedEncoderBinding {
     private const val MAX_ENCODER_BYTES = 49152
 
     fun inspect(file: File, decoderBytes: ByteArray, liveEncoder: ByteArray? = null): Inspection {
+        if (Files.isSymbolicLink(file.toPath())) return Inspection(State.CORRUPT, null)
         if (!file.exists()) return Inspection(State.LEGACY_UNBOUND, null)
         return try {
             require(file.isFile && file.length() in 72L..65536L)
@@ -56,6 +57,7 @@ object ContinuumPairedEncoderBinding {
     }
 
     fun write(file: File, decoderBytes: ByteArray, encoderBytes: ByteArray) {
+        require(!Files.isSymbolicLink(file.toPath())) { "CDX1 binding must be a regular file" }
         require(encoderBytes.size in 36..MAX_ENCODER_BYTES)
         TrainableSubwordEncoder.restore(encoderBytes)
         val bytes = LearningSnapshot.encode { output ->
