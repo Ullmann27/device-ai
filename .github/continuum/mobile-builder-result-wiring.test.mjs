@@ -63,3 +63,20 @@ test('only successful verified builds may report a fixed owner installation fold
   assert.doesNotMatch(receiver, /putString\(LAST_MESSAGE, stdout\)/);
   assert.doesNotMatch(activity, /installPackage|PackageInstaller/);
 });
+
+
+test('Android callback keeps request identity in URI and verifies build provenance', () => {
+  assert.match(activity, /data = android\.net\.Uri\.parse\("continuum:\/\/termux-callback/);
+  assert.match(receiver, /callbackData\.pathSegments != listOf\(operationName, id\)/);
+  assert.match(receiver, /payload\?\.optString\("commit"\)/);
+  assert.match(receiver, /payload\?\.optString\("packageName"\)/);
+  assert.match(receiver, /payload\?\.optInt\("versionCode", -1\)/);
+  assert.match(receiver, /sourceCommit = sourceCommit/);
+  assert.match(receiver, /packageName = packageName/);
+  assert.match(policy, /sourceCommit != null && Regex\("\[0-9a-f\]\{40\}"\)\.matches\(sourceCommit\)/);
+  assert.match(policy, /packageName == "at\.heinz\.deviceai\.preview"/);
+  assert.match(policy, /versionCode != null && versionCode in 1\.\.2_100_000_000/);
+  assert.match(junit, /fun buildMustBindARealCommitPreviewPackageAndVersion/);
+  assert.match(policy, /termuxError != -1/);
+  assert.doesNotMatch(activity, /startActivityForResult|ACTION_INSTALL_PACKAGE/);
+});
