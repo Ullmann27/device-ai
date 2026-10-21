@@ -11,13 +11,15 @@ import java.security.MessageDigest
 class ContinuumDecoderBridge(private val directory: File) {
     private val checkpoint = File(directory, "context-decoder.cdx")
     private val pairedCheckpoint = File(directory, "context-decoder-paired.cdx")
+    private val pairedBinding = File(directory, "context-decoder-paired.swb1-binding")
 
     data class Status(
         val available: Boolean,
         val updates: Int,
         val parameters: Int,
         val sha256: String?,
-        val usableForChat: Boolean = false
+        val usableForChat: Boolean = false,
+        val conditioningState: String = "LEGACY_UNBOUND"
     )
 
     @Synchronized fun status(): Status {
@@ -56,10 +58,16 @@ class ContinuumDecoderBridge(private val directory: File) {
      * checkpoints. Train/audit partitions must not reuse the same question+
      * evidence input, even when the answer text differs.
      */
-    @Synchronized fun pairedStatus(): Status {
+    @Synchronized fun pairedStatus(encoderSnapshot:ByteArray?=null): Status {
         val model=loadPairedOrNull()
-        return if(model==null) Status(false,0,7746,null)
-        else Status(true,model.updates,model.parameterCount,hash(model.save()))
+        return if(model==null) Status(false,0,7746,null,conditioningState="NO_CHECKPOINT")
+        else {
+            val bytes=model.save()
+            val binding=ContinuumPairedEncoderBinding.inspect(
+                pairedBinding,bytes,encoderSnapshot)
+            Status(true,model.updates,model.parameterCount,hash(bytes),
+                conditioningState=binding.state.name)
+        }
     }
 
     @Synchronized fun trainPairedExperiment(
@@ -87,11 +95,19 @@ class ContinuumDecoderBridge(private val directory: File) {
             protectedInputs.none { it in trainingInputs || it in heldoutInputs }) {
             "Protected holdout must not overlap with training or main audit"
         }
-        val encoder=TrainableSubwordEncoder.restore(encoderSnapshot)
+        val baseline=loadPairedOrNull() ?: TinyContextDecoder()
+        val binding=ContinuumPairedEncoderBinding.inspect(
+            pairedBinding,baseline.save(),encoderSnapshot)
+        require(binding.state!=ContinuumPairedEncoderBinding.State.CORRUPT) {
+            "CDX1/SWB1 binding damaged or inconsistent; weights preserved"
+        }
+        // Once coupled, CDX1 always reuses its original encoder. Live SWB1
+        // upgrades cannot silently change existing CDX1 training conditions.
+        val pairedEncoderSnapshot=binding.frozenEncoder ?: encoderSnapshot
+        val encoder=TrainableSubwordEncoder.restore(pairedEncoderSnapshot)
         val conditionFor:(DecoderEvidencePair)->DoubleArray = {
             encoder.representation(it.conditionerText())
         }
-        val baseline=loadPairedOrNull() ?: TinyContextDecoder()
         val candidate=TinyContextDecoder.restore(baseline.save())
         val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
         val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
@@ -105,7 +121,14 @@ class ContinuumDecoderBridge(private val directory: File) {
         val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
             result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
             protectedSafe
-        if(accepted)candidate.saveTo(pairedCheckpoint)
+        if(accepted) {
+            // Checkpoint first, binding second. An interrupted two-file write
+            // becomes CORRUPT and fails closed rather than using wrong weights.
+            val candidateBytes=candidate.save()
+            candidate.saveTo(pairedCheckpoint)
+            ContinuumPairedEncoderBinding.write(
+                pairedBinding,candidateBytes,pairedEncoderSnapshot)
+        }
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
             result.lossAfter,auditBefore,auditAfter,hash(active.save()),
@@ -120,8 +143,12 @@ class ContinuumDecoderBridge(private val directory: File) {
     ):DecoderGeneration? {
         val prefix=decoderEvidencePrefix(evidence,question)
         val model=loadPairedOrNull() ?: return null
-        val condition=TrainableSubwordEncoder.restore(encoderSnapshot)
-            .representation(evidence+"\n"+question)
+        val binding=ContinuumPairedEncoderBinding.inspect(
+            pairedBinding,model.save(),encoderSnapshot)
+        if(binding.state==ContinuumPairedEncoderBinding.State.CORRUPT)return null
+        val condition=TrainableSubwordEncoder.restore(
+            binding.frozenEncoder ?: encoderSnapshot
+        ).representation(evidence+"\n"+question)
         return model.generate(prefix,maxBytes,condition)
     }
 
