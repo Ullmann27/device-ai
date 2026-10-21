@@ -59,3 +59,13 @@ Das sind Ausführungsanweisungen, keine in dieser Sitzung behauptete GitHub-CI-A
 - Aktuelle Samsung-Android→Termux→Android-BUILD-Rückmeldung und Besitzerabnahme.
 
 **Rollback:** Den gesamten separaten ChatGPT-Branch verwerfen. `main`, Sols Entwicklungsbranch, installierte APK, SWB1/CDX1/NEURON-Gewichte und Besitzerdateien wurden nicht angefasst.
+
+## Zusatzmeilenstein: unabhängiger OS-Ausführungsbeleg, weiterhin ohne Autorität
+
+`scripts/continuum-isolation-receipt.mjs` wurde ergänzt. Der vertrauenswürdige Aufrufer gibt einen absoluten, besitzereigenen Staging-Pfad und eine einzelne reguläre `.mjs`-Datei an. Der Adapter ruft den vorhandenen Linux-Ausführer ausschließlich über einen festen `/bin/bash`-Aufruf auf. PATH wird aus dem Node-Laufzeitpfad und festen Systempfaden aufgebaut, keine Shell aus Modelltext. Der Adapter ist nicht in den kanonischen Worker promoted und lädt keine Modelle.
+
+Ein JSON-Receipt dokumentiert Zufalls-Laufkennung, SHA-256 des Kandidaten und Ausführers, Exitcode, Signal, Ausgabemengen/-Hashes, Laufzeit und Quelländerungserkennung. Ausgangswerte: `verified:false`, `reviewRequired:true`, `autoApply:false`, `independentAttestation:false`. Sogar Exitcode 0 bedeutet ausschließlich `EXECUTED_UNTRUSTED`, nie `VERIFIED`. Bei veränderter Quelle, Pfadverstoß, Prozessfehler oder Ausgabegrenze wird abgewiesen. Die Receipt-Prüfsumme ist nur ein Korruptionshinweis, **keine Signatur und kein authentischer Remote-Nachweis**. Es wird kein Kandidatenausgabetext in den Receipt übernommen, um gefälschte Tool- oder Testmeldungen von der evidenzführenden Schicht fernzuhalten.
+
+Tatsächlich auf der vorhandenen Linux/Node-22-Laufzeit lokal neu ausgeführt: `node --test continuum-capability-research.test.mjs continuum-isolated-node.test.mjs continuum-isolation-receipt.test.mjs` **12/12 bestanden, 0 fehlgeschlagen, 0 Skips**. Die zusätzlichen fünf Receipt-Tests prüfen positiven OS-Ablauf ohne Freigabe, fehlgeschlagene Kandidaten, Symlinks/Pfadeskapaden, übergroße stdout-Antwort und absichtlich gefälschte `verified:true`-Modellmeldung. `bash -n` und `node --check` ebenfalls bestanden. Lokale Tests sind keine GitHub-CI-, Samsung- oder GGUF-Abnahme.
+
+Nächster sicherer Schritt: Prüfbeleg mit unveränderlichem Quell-HEAD und unabhängigen **fest definierten Testprofilen** verknüpfen; Modelloutput hat keinen Einfluss auf Testkommando, Prüferentscheidung oder Rechte. Erst nach unabhängiger adversarialer Überprüfung darf eine isolierte Integration in den kanonischen Repair-Worker erwogen werden. Kein Main-Merge und keine automatische Besitzerfreigabe.
