@@ -12,6 +12,34 @@ class ContinuumDecoderBridge(private val directory: File) {
     private val checkpoint = File(directory, "context-decoder.cdx")
     private val pairedCheckpoint = File(directory, "context-decoder-paired.cdx")
     private val pairedBinding = File(directory, "context-decoder-paired.swb1-binding")
+    private val pairedBundles = ContinuumAtomicPairedBundleStore(directory)
+
+    private data class PairedState(
+        val model: TinyContextDecoder,
+        val encoder: ByteArray?,
+        val status: String,
+        val generation: Long,
+        val recovered: Boolean
+    )
+
+    /** A modern atomic bundle takes precedence over unmodified legacy files. */
+    private fun loadPairedState(liveEncoder: ByteArray?): PairedState? {
+        val bundled = pairedBundles.loadVerified()
+        if (bundled != null) {
+            val state = when {
+                bundled.recoveredFromBackup -> "RECOVERED_LKG"
+                liveEncoder == null -> "PINNED_UNKNOWN"
+                bundled.encoder.contentEquals(liveEncoder) -> "PINNED_CURRENT"
+                else -> "PINNED_PREVIOUS"
+            }
+            return PairedState(TinyContextDecoder.restore(bundled.decoder),
+                bundled.encoder,state,bundled.generation,bundled.recoveredFromBackup)
+        }
+        val legacy=loadPairedOrNull() ?: return null
+        val binding=ContinuumPairedEncoderBinding.inspect(
+            pairedBinding,legacy.save(),liveEncoder)
+        return PairedState(legacy,binding.frozenEncoder,binding.state.name,0L,false)
+    }
 
     data class Status(
         val available: Boolean,
@@ -58,17 +86,15 @@ class ContinuumDecoderBridge(private val directory: File) {
      * checkpoints. Train/audit partitions must not reuse the same question+
      * evidence input, even when the answer text differs.
      */
-    @Synchronized fun pairedStatus(encoderSnapshot:ByteArray?=null): Status {
-        val model=loadPairedOrNull()
-        return if(model==null) Status(false,0,7746,null,conditioningState="NO_CHECKPOINT")
-        else {
-            val bytes=model.save()
-            val binding=ContinuumPairedEncoderBinding.inspect(
-                pairedBinding,bytes,encoderSnapshot)
-            Status(true,model.updates,model.parameterCount,hash(bytes),
-                conditioningState=binding.state.name)
+    @Synchronized fun pairedStatus(encoderSnapshot:ByteArray?=null): Status =
+        runCatching {
+            val state=loadPairedState(encoderSnapshot)
+            if(state==null) Status(false,0,7746,null,conditioningState="NO_CHECKPOINT")
+            else Status(true,state.model.updates,state.model.parameterCount,
+                hash(state.model.save()),conditioningState=state.status)
+        }.getOrElse {
+            Status(false,0,7746,null,conditioningState="CORRUPT")
         }
-    }
 
     @Synchronized fun trainPairedExperiment(
         train:DecoderEvidenceCorpus,
@@ -95,15 +121,13 @@ class ContinuumDecoderBridge(private val directory: File) {
             protectedInputs.none { it in trainingInputs || it in heldoutInputs }) {
             "Protected holdout must not overlap with training or main audit"
         }
-        val baseline=loadPairedOrNull() ?: TinyContextDecoder()
-        val binding=ContinuumPairedEncoderBinding.inspect(
-            pairedBinding,baseline.save(),encoderSnapshot)
-        require(binding.state!=ContinuumPairedEncoderBinding.State.CORRUPT) {
-            "CDX1/SWB1 binding damaged or inconsistent; weights preserved"
+        val state=loadPairedState(encoderSnapshot)
+        require(state?.status!="CORRUPT" && state?.recovered!=true) {
+            "CDX1 checkpoint invalid or in read-only LKG recovery; repair required"
         }
-        // Once coupled, CDX1 always reuses its original encoder. Live SWB1
-        // upgrades cannot silently change existing CDX1 training conditions.
-        val pairedEncoderSnapshot=binding.frozenEncoder ?: encoderSnapshot
+        val baseline=state?.model ?: TinyContextDecoder()
+        // Always condition with the snapshot used by the active paired model.
+        val pairedEncoderSnapshot=state?.encoder ?: encoderSnapshot
         val encoder=TrainableSubwordEncoder.restore(pairedEncoderSnapshot)
         val conditionFor:(DecoderEvidencePair)->DoubleArray = {
             encoder.representation(it.conditionerText())
@@ -122,12 +146,10 @@ class ContinuumDecoderBridge(private val directory: File) {
             result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
             protectedSafe
         if(accepted) {
-            // Checkpoint first, binding second. An interrupted two-file write
-            // becomes CORRUPT and fails closed rather than using wrong weights.
-            val candidateBytes=candidate.save()
-            candidate.saveTo(pairedCheckpoint)
-            ContinuumPairedEncoderBinding.write(
-                pairedBinding,candidateBytes,pairedEncoderSnapshot)
+            // A single verified bundle replaces the previous two-file commit.
+            // Legacy decoder and SWB1 binding remain untouched.
+            pairedBundles.commit(candidate.save(),pairedEncoderSnapshot,
+                expectedGeneration=state?.generation ?: 0L)
         }
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
@@ -142,14 +164,12 @@ class ContinuumDecoderBridge(private val directory: File) {
         evidence:String,question:String,encoderSnapshot:ByteArray,maxBytes:Int=48
     ):DecoderGeneration? {
         val prefix=decoderEvidencePrefix(evidence,question)
-        val model=loadPairedOrNull() ?: return null
-        val binding=ContinuumPairedEncoderBinding.inspect(
-            pairedBinding,model.save(),encoderSnapshot)
-        if(binding.state==ContinuumPairedEncoderBinding.State.CORRUPT)return null
+        val state=runCatching { loadPairedState(encoderSnapshot) }.getOrNull() ?: return null
+        if(state.status=="CORRUPT")return null
         val condition=TrainableSubwordEncoder.restore(
-            binding.frozenEncoder ?: encoderSnapshot
+            state.encoder ?: encoderSnapshot
         ).representation(evidence+"\n"+question)
-        return model.generate(prefix,maxBytes,condition)
+        return state.model.generate(prefix,maxBytes,condition)
     }
 
     private fun loadPairedOrNull():TinyContextDecoder? {

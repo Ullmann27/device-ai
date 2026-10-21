@@ -1218,6 +1218,7 @@ class AgentActivity : Activity() {
         "PINNED_CURRENT" -> "fixierter SWB1-Stand stimmt überein"
         "PINNED_PREVIOUS" -> "CDX1 nutzt weiterhin seinen geprüften älteren SWB1-Stand"
         "PINNED_UNKNOWN" -> "SWB1-Stand fixiert, aktueller Stand ungeprüft"
+        "RECOVERED_LKG" -> "Sicherungsstand wiederhergestellt · CDX1 nur lesend, Training gesperrt"
         "CORRUPT" -> "BINDUNG FEHLERHAFT – CDX1-Ausgabe gesperrt"
         "LEGACY_UNBOUND" -> "ältere Forschungsgewichte ohne geprüfte SWB1-Bindung"
         else -> "noch kein CDX1-Checkpoint"
