@@ -20,13 +20,18 @@ internal object ContinuumPublicStudyCycleResult {
         else -> ("FAILED_"+operation+"_"+error.javaClass.simpleName).take(65)
     }
 
+    // Local rehearsal after source processing must not erase the source outcome.
+    fun withDeferral(phase:String,reason:String?):String =
+        if(reason!=null && phase.substringBefore(';') in setOf("INTERRUPTED","CANCELLED","TRAINING_DEFERRED"))
+            "DEFERRED_"+reason else phase
+
     fun outcome(phase: String): String {
         val primary = phase.substringBefore(';')
         return when {
             primary.startsWith("FAILED_") -> "FAILED"
             primary == "TRAINING_ACCEPTED" -> "ACCEPTED"
             primary == "TRAINING_REJECTED" -> "REJECTED"
-            primary == "TRAINING_DEFERRED" || primary == "PROVIDER_RATE_LIMIT" ->
+            primary == "TRAINING_DEFERRED" || primary == "PROVIDER_RATE_LIMIT" || primary.startsWith("DEFERRED_") ->
                 "DEFERRED"
             primary == "INTERRUPTED" || primary == "CANCELLED" -> "INTERRUPTED"
             else -> "NO_CHANGE"

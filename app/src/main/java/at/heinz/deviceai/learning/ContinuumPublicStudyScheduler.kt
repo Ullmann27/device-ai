@@ -6,9 +6,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
 import android.os.SystemClock
 import android.util.Log
 import org.json.JSONObject
@@ -148,8 +145,9 @@ class ContinuumPublicStudyScheduler(context:Context) {
         check(edit.commit()) { "Study audit not persisted" }
     }
 
-    fun recordBatteryDeferral(reason:String) {
-        require(reason=="DEFERRED_BATTERY_LOW" || reason=="DEFERRED_BATTERY_UNKNOWN")
+    fun recordResourceDeferral(reason:String) {
+        require(reason in setOf("DEFERRED_BATTERY_LOW","DEFERRED_BATTERY_UNKNOWN",
+            "DEFERRED_THERMAL_LIMIT","DEFERRED_STORAGE_LOW"))
         prefs.edit().putString("phase",reason).commit()
     }
 
@@ -319,25 +317,19 @@ internal object ContinuumPublicStudyFetch {
 class ContinuumPublicStudyJobService:JobService() {
     private val stopping=AtomicBoolean(false)
     private var thread:Thread?=null
-    override fun onStartJob(params:JobParameters):Boolean {
+    @Synchronized override fun onStartJob(params:JobParameters):Boolean {
+        if(thread?.isAlive==true)return false
         val scheduler=ContinuumPublicStudyScheduler(this)
         if(!scheduler.enabled || scheduler.isRateLimited())return false
         // Do not create a false research attempt or run gradients below 20%.
         // JobScheduler itself must not impose the device-dependent low-battery gate.
-        val battery=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val level=battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1) ?: -1
-        val scale=battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1) ?: -1
-        val percent=if(level>=0 && scale>0) level.toLong()*100L/scale else -1L
-        val deferral=when {
-            percent<0L -> "DEFERRED_BATTERY_UNKNOWN"
-            percent<ContinuumOfflineLearningBudget.MIN_BATTERY_PERCENT -> "DEFERRED_BATTERY_LOW"
-            else -> null
-        }
+        val deferral=ContinuumOfflineLearningBudget.deferralReason(continuumLearningResources())
+            ?.let { "DEFERRED_"+it }
         if(deferral!=null) {
-            scheduler.recordBatteryDeferral(deferral)
+            scheduler.recordResourceDeferral(deferral)
             runCatching {
                 ContinuumTrainingMonitor.begin(this,ContinuumTrainingMonitor.PUBLIC,
-                    "Akkugrenze prüfen","SWB1")
+                    "Ressourcengrenzen prüfen","SWB1")
                 ContinuumTrainingMonitor.end(this,ContinuumTrainingMonitor.PUBLIC,
                     "DEFERRED",deferral)
             }
@@ -352,10 +344,10 @@ class ContinuumPublicStudyJobService:JobService() {
             var selectedTopic:String?=null
             var operation="SELECT_TOPIC"
             val start=SystemClock.elapsedRealtime()
+            val budget=ContinuumLearningRunBudget(start,ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS,
+                { SystemClock.elapsedRealtime() }, { continuumLearningResources() })
             val cancelled:()->Boolean = {
-                stopping.get() || Thread.currentThread().isInterrupted ||
-                    SystemClock.elapsedRealtime()-start >=
-                        ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS
+                stopping.get() || Thread.currentThread().isInterrupted || !scheduler.enabled || budget.cancelled()
             }
             try {
                 val researchTitle=scheduler.nextTopic()
@@ -470,6 +462,7 @@ class ContinuumPublicStudyJobService:JobService() {
                     }
                 }
                 if(!stopping.get()) {
+                    phase=ContinuumPublicStudyCycleResult.withDeferral(phase,budget.deferredReason)
                     val saved=runCatching {
                         scheduler.recordCycle(phase,selectedTopic,added,accepted)
                     }
@@ -491,7 +484,7 @@ class ContinuumPublicStudyJobService:JobService() {
         },"continuum-public-study").apply { isDaemon=true;start() }
         return true
     }
-    override fun onStopJob(params:JobParameters):Boolean {
+    @Synchronized override fun onStopJob(params:JobParameters):Boolean {
         stopping.set(true)
         thread?.interrupt()
         runCatching {

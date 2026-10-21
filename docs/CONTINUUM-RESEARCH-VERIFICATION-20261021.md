@@ -31,3 +31,11 @@ Reproduktion mit echter Fetch-Implementierung und kontrollierter HTTPS-Verbindun
 Nach Korrektur: Fetch-JVM 9/9 grün; Gradle `:app:testDebugUnitTest --tests '*ContinuumPublicStudy*'` erfolgreich; 17 Node-Vertragsprüfungen grün. Zusätzlich hinzugefügter Diagnose-Test wird im nächsten gebündelten Android-Lauf geprüft. JSON-Abhängigkeit ist ausschließlich `testImplementation`; APK verwendet weiter Androids JSON-API. Kein Produktionsgewicht, Archivschema oder Checkpointformat verändert.
 
 Belege extern im Arbeitsverzeichnis `/workspace/evidence/research-20261021/`: `fetch-red.log`, `fetch-green.log`, `fetch-green-gradle.log`, `research-wiring.log`, Baseline-Logs. Persistierte Live-Antwort als Testfixture im Repo. Erstes nächstes Ziel: 20%-Planung des Teamleiters, während laufender Forschung wiederholte Temperatur-/Speicher-/Akkuprüfung; danach vorhandenen Termux-Builder auf falsche Artefaktfreigabe prüfen.
+
+## Meilenstein 2 – Akku, laufende Jobs und Teamleiter
+
+Die Teamleiter-Registrierung verlangte noch Androids herstellerabhängiges `batteryNotLow`. Ein Verhaltenstest wurde gezielt rot und ist nach Umstellung grün: 20% ohne Ladekabel sind zulässig, 19% und unbekannte/ungültige Messwerte bleiben gesperrt. Bestehende abweichende Teamleiterregistrierung wird einmal migriert; identische Registrierung bleibt bestehen. Gemeinsame aktuelle Beobachtung für Forschung, Offlinejob und Teamleiter; Prozentberechnung mit Long statt möglichem Int-Überlauf.
+
+Forschung prüft jetzt zusätzlich Temperatur und freien Speicher vor dem Start sowie alle 1,5 Sekunden innerhalb des bestehenden 15-Sekunden-Budgets. Ein einmal gestoppter Durchlauf bleibt gestoppt. Eine spätere lokale Übungsphase darf den echten Quellenabschluss nicht durch ihren eigenen Ressourcenstatus überschreiben. Forschungs-/Offlinejob verweigern einen neuen Start, solange ihr voriger Thread noch lebt; dessen Abbruchflag wird nicht wieder freigegeben. Keine Endlosschleife, keine neue Hintergrundberechtigung und keine garantierte Ausführungsfrequenz.
+
+Gezielter Gradle-Lauf erfolgreich: öffentliche Quellen/Ergebnisdiagnose, Ressourcenbudget, Teamleiterplanung/-status und Android-Buildrückmeldungen. Vollständige Suite einschließlich vorher fehlender Node↔Kotlin-Referenzdateien folgt. Offener Gerätenachweis: 19/20%-Grenze ohne Kabel, Temperaturdeferral, Stop/Restart unter Android 16.

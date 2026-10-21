@@ -20,13 +20,13 @@ test('public research is internet-enabled via cellular with no charger or system
   assert.match(research, /\.setRequiresBatteryNotLow\(false\)/);
   assert.match(research, /!pending\.isRequireCharging/);
   assert.match(research, /!pending\.isRequireBatteryNotLow/);
-  assert.match(research, /percent<ContinuumOfflineLearningBudget\.MIN_BATTERY_PERCENT/);
+  assert.match(research, /ContinuumOfflineLearningBudget\.deferralReason\(continuumLearningResources\(\)\)/);
 });
 
 test('unplugged research deferral does not falsify attempts or source counts', () => {
-  assert.match(research, /percent<0L -> "DEFERRED_BATTERY_UNKNOWN"/);
+  assert.match(research, /"DEFERRED_BATTERY_UNKNOWN"/);
   assert.match(research, /"DEFERRED_BATTERY_LOW"/);
-  assert.match(research, /scheduler\.recordBatteryDeferral\(deferral\)/);
+  assert.match(research, /scheduler\.recordResourceDeferral\(deferral\)/);
   assert.match(research, /ContinuumTrainingMonitor\.end\(this,ContinuumTrainingMonitor\.PUBLIC,/);
   assert.match(research, /"DEFERRED",deferral/);
   assert.match(research, /if\(deferral!=null\) \{[\s\S]*?return false/);

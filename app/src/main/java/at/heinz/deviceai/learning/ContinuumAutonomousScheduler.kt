@@ -6,12 +6,6 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.BatteryManager
-import android.os.Build
-import android.os.PowerManager
-import android.os.StatFs
 import android.os.SystemClock
 import java.util.concurrent.atomic.AtomicBoolean
 import android.util.Log
@@ -95,19 +89,10 @@ class ContinuumAutonomousJobService:JobService() {
     private val stopped=AtomicBoolean(false)
     private var worker:Thread?=null
     companion object { private const val TAG="ContinuumOfflineLearning" }
-    private fun currentResources():ContinuumLearningResources {
-        val battery=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val level=battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1)?:-1
-        val scale=battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1)?:-1
-        val percent=if(level>=0 && scale>0) (level*100/scale).coerceIn(0,100) else null
-        val thermal=if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q) {
-            getSystemService(PowerManager::class.java)?.currentThermalStatus
-        } else null
-        val free=StatFs(filesDir.absolutePath).availableBytes
-        return ContinuumLearningResources(percent,false,thermal,free)
-    }
+    private fun currentResources():ContinuumLearningResources = continuumLearningResources()
 
-    override fun onStartJob(params:JobParameters):Boolean {
+    @Synchronized override fun onStartJob(params:JobParameters):Boolean {
+        if(worker?.isAlive==true)return false
         stopped.set(false)
         ContinuumOfflineJobStatus.started(this)
         worker=Thread({
@@ -208,7 +193,7 @@ class ContinuumAutonomousJobService:JobService() {
         },"continuum-autonomous-offline").apply { isDaemon=true;start() }
         return true
     }
-    override fun onStopJob(params:JobParameters):Boolean {
+    @Synchronized override fun onStopJob(params:JobParameters):Boolean {
         stopped.set(true)
         ContinuumOfflineJobStatus.stopped(this)
         worker?.interrupt()

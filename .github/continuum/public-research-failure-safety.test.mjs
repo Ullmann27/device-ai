@@ -48,5 +48,6 @@ test('safety budget, source isolation and holdout gate are unchanged', () => {
   assert.match(source, /ContinuumKnowledgeArchive\.Kind\.WIKIPEDIA_EXCERPT/);
   assert.match(source, /core\.learnFromSources\(pending,cancelled\)/);
   assert.match(source, /outcome\?\.completedEvaluation==true && !cancelled\(\)/);
-  assert.match(source, /ContinuumOfflineLearningBudget\.MIN_BATTERY_PERCENT/);
+  assert.match(source, /ContinuumOfflineLearningBudget\.deferralReason\(continuumLearningResources\(\)\)/);
+  assert.match(source, /ContinuumLearningRunBudget/);
 });
