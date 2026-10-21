@@ -54,3 +54,23 @@ https://device-ai-mentor-apk-preview.onrender.com/BUILD-INFO-26753ef4e49f7b57292
 - GitHub-Backup: `backup/render-apk-before-astra-integration-20261021`.
 - `main` und produktive Nutzerzustände unverändert.
 - Lokale CDX1-Verbesserung gegenüber eingefrorenen Holdouts und vollständiger autonomer Android-Coding-Agent **nicht belegt**. Diese APK ist ein signierter Integrationskandidat, keine vollständig geräteabgenommene Produktfreigabe.
+
+
+## Samsung-Forensik 21.10.2026 – CDX1-Lernstand nach v0.3.9 (offen)
+
+**Besitzerbeleg v0.3.9:** SWB1 ist sichtbar mit 104 Experiences, 25.400 Gewichtsupdates, SHA-Präfix `95ee0ef36a56b1fa`, Intent-Holdout 4/8 und Semantik-Holdout 3/6. Öffentliche Forschung mit 43 neuen Quellen und 44 akzeptierten SWB1-Runden, JobScheduler registriert. CDX1-Labor dagegen `NO_CHECKPOINT`, 0 Updates, großes Archiv 0/12. Ein SWB1-Datenverlust ist daraus nicht erkennbar; CDX1-Verlust oder fehlendes Einlesen ist noch nicht bestimmt.
+
+**Kontext aus den vorherigen Gesprächen:** Am 20.10. wurde für Mentor Pair v0.3.4 Code 7 / Quelle `a608490b6eba` ein CDX1-Laborstand von 120 Updates und Checkpoint-Hash-Präfix `17226b3d7a8ef698` beschrieben. Verschiedene ältere Zwischenberichte unterscheiden zwischen vorbereiteten 120 Schritten und bereits gespeicherten Gewichten: den ursprünglichen Screenshot/Status für einen definitiven Vergleich heranziehen; **nicht aus einem bloßen Auftrag einen persistierten Checkpoint folgern**. Keine eindeutige Besitzerbestätigung für Deinstallation oder Datenlöschung zwischen v0.3.4 und v0.3.9.
+
+**Direkter Quellcodevergleich am 21.10.:**
+- Android-Paket damals und jetzt `at.heinz.deviceai.mentorpaired`; daher nicht einfach die bekannte Trennung zur `.preview`-App als Erklärung annehmen.
+- Beide Versionen verwenden `ContinuumLearningCore(File(filesDir,"learning-core-v2"))` und `ContinuumDecoderBridge(directory)` mit Legacy-Dateiname `context-decoder-paired.cdx`; keine geplante Pfadmigration.
+- Die Decoder-Serialisierungsimplementierung `TinyContextDecoder.kt` ist vom damaligen Commit `a608490b6eba` bis zur neuen v0.3.9 byteidentisch (Git-Blob-SHA `d5866c39048b8c194bc96e979f62fb617e2c8e85`). Eine bewusste Modellformat-Inkompatibilität ist damit nicht erkennbar.
+- v0.3.9 bevorzugt ein neues `context-decoder-paired.bundle` mit LKG, fällt bei Nichtvorhandensein aber auf die alte `context-decoder-paired.cdx` zurück. Falls Legacy-Datei vorhanden und intakt ist, sollte sie als `LEGACY_UNBOUND` oder gebundenes Modell erscheinen.
+- Eine **schadhafte** Legacy-Datei wird derzeit in `loadPairedOrNull()` durch `runCatching...`.getOrNull() als fehlender Checkpoint dargestellt. Ein Checkpoint im falschen Dateiverzeichnis oder eine nach APK-Neuinstallation nicht mehr vorhandene Datei würde ebenso `NO_CHECKPOINT` erzeugen. Deshalb **keine automatische Reinitialisierung, kein stilles Training, keine Löschung** bevor der Dateizustand lesend geprüft wurde.
+
+**Besitzerdiagnose (maximal zwei zusätzliche Bilder statt Wiederholung aller Screenshots):**
+1. Lernzentrum → Experimente → `CDX1 · BELEG + FRAGE → ANTWORT (LABOR)`: den vollständigen Statusdialog mit Updates und SWB1-Verbindung fotografieren, KEIN Training starten.
+2. Android Einstellungen → Apps → `Device AI Mentor Pair` → `Speicher`: Screenshot von App-/Datenspeichergröße und installierter Paketvariante/Version (ggf. App-Info-Bild zusätzlich, falls Version nicht auf derselben Seite sichtbar ist). Ein Android-Speicher-Screenshot allein beweist den Checkpointzustand nicht.
+
+**Reparaturpfad:** App-interne, strikt lesende Dateidiagnose (Existenz, Länge, strukturierte Decoder-Validität, SHA-Präfix und Legacy-/Bundle-/LKG-Status) ergänzen, falls bestehende Laboranzeige keine genaue Ursache erkennen lässt. Bei vorhandener gültiger Legacy-Datei vor einer explizit zugestimmten Migration einen separaten gesicherten Snapshot erstellen. Fehler `CORRUPT_LEGACY` statt `NO_CHECKPOINT` darstellen. Keine Dateiveränderung allein durch Statusabfrage, keine automatische Checkpoint-Promotion, keine Produktions-Branchänderung. Eine Korrektur-APK braucht echten Build und erneute Geräteprüfung; die v0.3.9 darf nicht stillschweigend als CDX1-repariert gelten.
