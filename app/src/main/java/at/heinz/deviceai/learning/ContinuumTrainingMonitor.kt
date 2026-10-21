@@ -2,6 +2,7 @@ package at.heinz.deviceai.learning
 
 import android.content.Context
 import android.os.SystemClock
+import at.heinz.deviceai.ContinuumTrainingWidget
 
 /**
  * Auditable UI telemetry only. Never drives scheduling or modifies model weights.
@@ -54,6 +55,7 @@ object ContinuumTrainingMonitor {
             .putLong("started", now).putLong("changed", now)
             .putLong("elapsed", SystemClock.elapsedRealtime())
             .putString("detail", "").commit()
+        runCatching { ContinuumTrainingWidget.requestUpdate(context) }
     }
 
     @Synchronized
@@ -65,6 +67,7 @@ object ContinuumTrainingMonitor {
         p.edit().putString("phase", phase).putString("detail", safe(detail))
             .putLong("changed", System.currentTimeMillis())
             .putLong("elapsed", SystemClock.elapsedRealtime()).commit()
+        runCatching { ContinuumTrainingWidget.requestUpdate(context) }
     }
 
     @Synchronized
@@ -77,6 +80,13 @@ object ContinuumTrainingMonitor {
             .putLong("ended", System.currentTimeMillis())
             .putLong("changed", System.currentTimeMillis())
             .remove("elapsed").commit()
+        runCatching { ContinuumTrainingWidget.requestUpdate(context) }
+        if (outcome == "FAILED") {
+            runCatching {
+                ContinuumTrainingWidget.notifyFailure(context, channel,
+                    p.getLong("started", 0L), safe(detail))
+            }
+        }
     }
 
     fun read(context: Context, channel: String): Snapshot {
