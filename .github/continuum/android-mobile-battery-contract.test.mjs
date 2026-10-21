@@ -60,7 +60,7 @@ test('widget migrates saved charging-only jobs without replacing identical runni
 });
 
 test('all public research permissions remain restricted and no source commands become executable', () => {
-  assert.match(research, /"https:\/\/de\.wikipedia\.org"/);
+  assert.match(research, /url\.protocol=="https" && url\.host=="de\.wikipedia\.org"/);
   assert.match(research, /source\.subject/);
   assert.match(research, /MentorSourceValidation\.checkSource\(result\)/);
   assert.match(research, /MAX_ROUND_WALL_MS/);
