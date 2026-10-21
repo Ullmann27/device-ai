@@ -31,6 +31,17 @@ Ein ausdrücklich freigegebener Android-Text-/Sprachauftrag muss zuerst als kano
 
 Das aktuell fest implementierte Android-Laufzeitprofil benötigt `.litertlm`-Modelle mit CPU-Fähigkeit. Offizielle LiteRT-LM-Modellfamilien sind kein Ersatz für einen eigenen Coding-Agenten. Auswahl nur nach tatsächlichem Modellformat, Speicher-/Thermikbudget, Lizenz, SHA-256 und **blindem Kotlin-/JavaScript-Coding-Benchmark auf genau dem Samsung**. Kein stiller Download oder automatischer Ersatz der eigenen SWB1-/CDX1-Gewichte.
 
+## Recherchebasis für lokale Coding-Modelle, keine Bot-Übernahme
+
+Offizielle LiteRT-LM-Modellübersicht: https://developers.google.cn/edge/litert-lm/overview . Der gegenwärtige Continuum-Runtimecode verwendet `com.google.ai.edge.litertlm:litertlm-android:0.18.0`, ausschließlich `Backend.CPU()`, und akzeptiert nach Inspector-Prüfung nur Textmodelle mit CPU-Unterstützung. Kompatibilität jeder konkret ausgewählten Datei, thermische Last, Ausgabequalität und Speichernutzung auf dem Samsung sind **noch nicht gemessen**.
+
+Konkrete nach außen überprüfbare Kandidaten für **einen austauschbaren Sprachmodell-Adapter, nicht für den Agenten selbst**:
+
+1. `litert-community/Qwen2.5-Coder-3B-Instruct`, Datei `Qwen2.5_Coder_3B_It.litertlm`, rund 3,43 GB. Veröffentlichter Modell-Datei-SHA-256: `78d23da074383f52f852b945b8090870e6c9dded02a842f535ee3ccb9e2874f3`; Quelle: https://huggingface.co/litert-community/Qwen2.5-Coder-3B-Instruct . **Mehr Parameter bedeutet nicht automatisch bessere gemessene Codierleistung auf dem konkreten Gerät**. Die Community-Konvertierung ist keine Google-Laufzeitgarantie.
+2. `litert-community/Qwen2.5-Coder-1.5B-Instruct`, Datei `Qwen2.5-Coder-1.5B-Instruct_int4.litertlm`, etwa 1,12 GB, Apache-2.0. Quelle: https://huggingface.co/litert-community/Qwen2.5-Coder-1.5B-Instruct . Kandidat für geringere Speicher-/Temperaturbelastung; spezifische Samsung-Fold-Abnahme fehlt.
+
+Keiner dieser extern erzeugten Gewichtssätze darf Besitzerrechte, Quellcodeänderungen, Installationen oder verifiziertes Wissen selbst autorisieren. Kein Modelldownload ohne ausdrückliche Besitzerfreigabe, keine automatische Gewichtspromotion und keine vermeintlichen Code-Benchmarks aus einem bloßen Modellstatus ableiten. Bei künftiger Auswahl: erlaubte Lizenz, Repo-/Dateiidentität, SHA-256, CPU-Inspektion auf Android und **tatsächlich ausgeführte** Kotlin/JS-Tests mit zuvor versiegelten Aufgaben; bei mehreren Kandidaten Accuracy, Latenz, Speicher und Akku gegeneinander prüfen.
+
 ## Rollback und Integrität
 
 Diese Änderung erweitert lediglich die Entwickler-UI und fügt den Prüfvertrag hinzu. Bei Fehlern kann der einzelne UI-Commit auf dem isolierten Experimentbranch rückgängig gemacht werden; gespeicherte Aufgaben, Checkpoints, APK-Signer und `main` bleiben unangetastet. Keine neue APK veranlasst, bevor der gebündelte Build mit vollständigen Tests erfolgreich ist.
