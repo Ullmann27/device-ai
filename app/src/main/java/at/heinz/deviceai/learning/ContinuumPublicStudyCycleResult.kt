@@ -24,6 +24,7 @@ internal object ContinuumPublicStudyCycleResult {
     fun markTopicCompleted(phase: String): Boolean {
         val primary = phase.substringBefore(';')
         return primary != "INTERRUPTED" && primary != "CANCELLED" &&
-            primary != "PROVIDER_RATE_LIMIT" && !primary.startsWith("FAILED_")
+            primary != "TRAINING_DEFERRED" && primary != "PROVIDER_RATE_LIMIT" &&
+            !primary.startsWith("FAILED_")
     }
 }
