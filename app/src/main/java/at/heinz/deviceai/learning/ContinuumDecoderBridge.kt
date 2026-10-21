@@ -11,13 +11,43 @@ import java.security.MessageDigest
 class ContinuumDecoderBridge(private val directory: File) {
     private val checkpoint = File(directory, "context-decoder.cdx")
     private val pairedCheckpoint = File(directory, "context-decoder-paired.cdx")
+    private val pairedBinding = File(directory, "context-decoder-paired.swb1-binding")
+    private val pairedBundles = ContinuumAtomicPairedBundleStore(directory)
+
+    private data class PairedState(
+        val model: TinyContextDecoder,
+        val encoder: ByteArray?,
+        val status: String,
+        val generation: Long,
+        val recovered: Boolean
+    )
+
+    /** A modern atomic bundle takes precedence over unmodified legacy files. */
+    private fun loadPairedState(liveEncoder: ByteArray?): PairedState? {
+        val bundled = pairedBundles.loadVerified()
+        if (bundled != null) {
+            val state = when {
+                bundled.recoveredFromBackup -> "RECOVERED_LKG"
+                liveEncoder == null -> "PINNED_UNKNOWN"
+                bundled.encoder.contentEquals(liveEncoder) -> "PINNED_CURRENT"
+                else -> "PINNED_PREVIOUS"
+            }
+            return PairedState(TinyContextDecoder.restore(bundled.decoder),
+                bundled.encoder,state,bundled.generation,bundled.recoveredFromBackup)
+        }
+        val legacy=loadPairedOrNull() ?: return null
+        val binding=ContinuumPairedEncoderBinding.inspect(
+            pairedBinding,legacy.save(),liveEncoder)
+        return PairedState(legacy,binding.frozenEncoder,binding.state.name,0L,false)
+    }
 
     data class Status(
         val available: Boolean,
         val updates: Int,
         val parameters: Int,
         val sha256: String?,
-        val usableForChat: Boolean = false
+        val usableForChat: Boolean = false,
+        val conditioningState: String = "LEGACY_UNBOUND"
     )
 
     @Synchronized fun status(): Status {
@@ -56,11 +86,15 @@ class ContinuumDecoderBridge(private val directory: File) {
      * checkpoints. Train/audit partitions must not reuse the same question+
      * evidence input, even when the answer text differs.
      */
-    @Synchronized fun pairedStatus(): Status {
-        val model=loadPairedOrNull()
-        return if(model==null) Status(false,0,7746,null)
-        else Status(true,model.updates,model.parameterCount,hash(model.save()))
-    }
+    @Synchronized fun pairedStatus(encoderSnapshot:ByteArray?=null): Status =
+        runCatching {
+            val state=loadPairedState(encoderSnapshot)
+            if(state==null) Status(false,0,7746,null,conditioningState="NO_CHECKPOINT")
+            else Status(true,state.model.updates,state.model.parameterCount,
+                hash(state.model.save()),conditioningState=state.status)
+        }.getOrElse {
+            Status(false,0,7746,null,conditioningState="CORRUPT")
+        }
 
     @Synchronized fun trainPairedExperiment(
         train:DecoderEvidenceCorpus,
@@ -87,11 +121,17 @@ class ContinuumDecoderBridge(private val directory: File) {
             protectedInputs.none { it in trainingInputs || it in heldoutInputs }) {
             "Protected holdout must not overlap with training or main audit"
         }
-        val encoder=TrainableSubwordEncoder.restore(encoderSnapshot)
+        val state=loadPairedState(encoderSnapshot)
+        require(state?.status!="CORRUPT" && state?.recovered!=true) {
+            "CDX1 checkpoint invalid or in read-only LKG recovery; repair required"
+        }
+        val baseline=state?.model ?: TinyContextDecoder()
+        // Always condition with the snapshot used by the active paired model.
+        val pairedEncoderSnapshot=state?.encoder ?: encoderSnapshot
+        val encoder=TrainableSubwordEncoder.restore(pairedEncoderSnapshot)
         val conditionFor:(DecoderEvidencePair)->DoubleArray = {
             encoder.representation(it.conditionerText())
         }
-        val baseline=loadPairedOrNull() ?: TinyContextDecoder()
         val candidate=TinyContextDecoder.restore(baseline.save())
         val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
         val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
@@ -105,7 +145,12 @@ class ContinuumDecoderBridge(private val directory: File) {
         val accepted=result.steps>0 && !result.interrupted && !cancelled() &&
             result.lossAfter<result.lossBefore && auditAfter<=auditBefore &&
             protectedSafe
-        if(accepted)candidate.saveTo(pairedCheckpoint)
+        if(accepted) {
+            // A single verified bundle replaces the previous two-file commit.
+            // Legacy decoder and SWB1 binding remain untouched.
+            pairedBundles.commit(candidate.save(),pairedEncoderSnapshot,
+                expectedGeneration=state?.generation ?: 0L)
+        }
         val active=if(accepted)candidate else baseline
         return DecoderExperimentResult(accepted,result.steps,result.lossBefore,
             result.lossAfter,auditBefore,auditAfter,hash(active.save()),
@@ -119,10 +164,12 @@ class ContinuumDecoderBridge(private val directory: File) {
         evidence:String,question:String,encoderSnapshot:ByteArray,maxBytes:Int=48
     ):DecoderGeneration? {
         val prefix=decoderEvidencePrefix(evidence,question)
-        val model=loadPairedOrNull() ?: return null
-        val condition=TrainableSubwordEncoder.restore(encoderSnapshot)
-            .representation(evidence+"\n"+question)
-        return model.generate(prefix,maxBytes,condition)
+        val state=runCatching { loadPairedState(encoderSnapshot) }.getOrNull() ?: return null
+        if(state.status=="CORRUPT")return null
+        val condition=TrainableSubwordEncoder.restore(
+            state.encoder ?: encoderSnapshot
+        ).representation(evidence+"\n"+question)
+        return state.model.generate(prefix,maxBytes,condition)
     }
 
     private fun loadPairedOrNull():TinyContextDecoder? {

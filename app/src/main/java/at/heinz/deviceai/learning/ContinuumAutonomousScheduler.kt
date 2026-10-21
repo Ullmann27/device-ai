@@ -134,6 +134,47 @@ class ContinuumAutonomousJobService:JobService() {
                             "Semantik-Bootstrap: Voraussetzungen prüfen")
                         core.bootstrapSemanticCurriculum(cancelled)
                     }
+                    // One additional owner-approved CDX1 stage in the existing
+                    // offline cycle. This research checkpoint never reaches chat.
+                    if(!cancelled() &&
+                        ContinuumDualCoreAutoStudy.isEnabled(this@ContinuumAutonomousJobService)) {
+                        val remaining=ContinuumOfflineLearningBudget.MAX_WALL_MILLIS -
+                            (SystemClock.elapsedRealtime()-startedAt)
+                        val currentStage=runCatching {
+                            ContinuumCdxLargeLab(filesDir).status().completed
+                        }.getOrDefault(-1)
+                        if(ContinuumDualCoreAutoStudy.shouldStart(true,remaining,currentStage)) {
+                            val channel=ContinuumTrainingMonitor.CDX
+                            ContinuumTrainingMonitor.begin(this@ContinuumAutonomousJobService,
+                                channel,"CDX1 · autonome Forschungsstufe "+(currentStage+1),"CDX1")
+                            try {
+                                val lab=ContinuumCdxLargeLab(filesDir)
+                                lab.observeTraining { phase ->
+                                    ContinuumTrainingMonitor.phase(
+                                        this@ContinuumAutonomousJobService,channel,phase,
+                                        "CDX1 · getrennte Gradienten und Audits")
+                                }
+                                val round=lab.next {
+                                    cancelled() ||
+                                        !ContinuumDualCoreAutoStudy.isEnabled(
+                                            this@ContinuumAutonomousJobService)
+                                }
+                                val outcome=when {
+                                    round==null -> "NO_CHANGE"
+                                    !round.finalized -> "DEFERRED"
+                                    round.accepted -> "ACCEPTED"
+                                    else -> "REJECTED"
+                                }
+                                ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                    channel,outcome,"Stufe "+(round?.stage ?: currentStage)+
+                                        "/"+ContinuumCdxLargeCurriculum.STAGES)
+                            } catch (error:Exception) {
+                                ContinuumTrainingMonitor.end(this@ContinuumAutonomousJobService,
+                                    channel,"FAILED",error.javaClass.simpleName)
+                                Log.e(TAG,"CDX1 research round failed; SWB1 job continues",error)
+                            }
+                        }
+                    }
                     // Learn only from sources already recorded by the consent-gated
                     // research flow. The job itself never initiates internet access.
                     if(!cancelled()) {
