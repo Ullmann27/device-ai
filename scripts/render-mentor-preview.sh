@@ -15,11 +15,11 @@ command -v git >/dev/null
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 # The original Mentor service is still pinned to the older branch.
-# This updated script is ready for a separately authorized Render branch switch.
+# Review integration branch is allowed; never upload an APK without exact package/version/certificate verification.
 expected_branch="astra/continuum-experiment-charter-20261019"
 render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "integration/continuum-astra-20261021" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
   exit 69
 fi
@@ -138,7 +138,7 @@ if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
   exit 69
 fi
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
-  | grep -F "package: name='at.heinz.deviceai.mentorpaired'"
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='12' versionName='0.3.9'"
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
