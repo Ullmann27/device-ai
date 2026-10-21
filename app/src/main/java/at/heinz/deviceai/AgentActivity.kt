@@ -121,6 +121,7 @@ class AgentActivity : Activity() {
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
         private const val DEV_EXPORT_REQUEST = 2210
+        private const val DEV_SPEECH_REQUEST = 2221
         // Every *_REQUEST code must be unique: onActivityResult dispatches on the
         // first matching branch (checked by android-integration-wiring.test.mjs).
         private const val DEV_BACKLOG_EXPORT_REQUEST = 2214
@@ -5026,6 +5027,14 @@ class AgentActivity : Activity() {
             })
         }
         box.addView(devGoalInput, matchWidth(top = 8))
+        box.addView(actionButton("🎙  ENTWICKLUNGSAUFTRAG SPRECHEN", accent = true).apply {
+            contentDescription = "Deutschen Entwicklungsauftrag diktieren; vor Ausführung wird er angezeigt und muss bestätigt werden"
+            setOnClickListener { startVoiceInput(DEV_SPEECH_REQUEST) }
+        }, matchWidth(top = 8))
+        box.addView(textView(
+            "Sprache wird nur als bearbeitbarer Auftrag übernommen. " +
+                "Keine Mikrofonaufnahme und kein Diktat startet automatisch Git, Builds oder Gerätebefehle.",
+            12f, MUTED), matchWidth(top = 6))
         devPickButton = actionButton("DATEIEN AUSWÄHLEN").apply {
             setOnClickListener {
                 val picker = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -6083,17 +6092,19 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun startVoiceInput() {
+    private fun startVoiceInput(requestCode: Int = SPEECH_REQUEST) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, "de-AT")
-            putExtra(RecognizerIntent.EXTRA_PROMPT, "Was soll Device AI tun?")
+            putExtra(RecognizerIntent.EXTRA_PROMPT,
+                if (requestCode == DEV_SPEECH_REQUEST) "Welche App oder welchen Code soll Continuum entwickeln?"
+                else "Was soll Device AI tun?")
             putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         }
         try {
             voiceListening = true
             refreshHologramState()
-            startActivityForResult(intent, SPEECH_REQUEST)
+            startActivityForResult(intent, requestCode)
         } catch (_: Exception) {
             voiceListening = false
             refreshHologramState()
@@ -6104,7 +6115,10 @@ class AgentActivity : Activity() {
     @Deprecated("Deprecated in Android SDK, kept for broad device compatibility")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==SPEECH_REQUEST) { voiceListening=false; refreshHologramState() }
+        if(requestCode==SPEECH_REQUEST || requestCode==DEV_SPEECH_REQUEST) {
+            voiceListening=false
+            refreshHologramState()
+        }
         when (requestCode) {
             SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
                 val matches = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
@@ -6115,6 +6129,19 @@ class AgentActivity : Activity() {
                     // Only in the explicitly activated learning conversation: a
                     // recognized phrase goes to the supervised coach, never ToolGate.
                     if (neuralCoach.isActive() && !busy) sendCurrentInput()
+                }
+            }
+            DEV_SPEECH_REQUEST -> if (resultCode == RESULT_OK) {
+                val spoken = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    ?.firstOrNull()?.trim()
+                if (!spoken.isNullOrBlank() && devDialog?.isShowing == true) {
+                    // Recognition output is untrusted text, never an executable command.
+                    val safe = spoken.replace(Regex("[\\p{Cntrl}&&[^\\n\\t]]"), " ")
+                        .replace(Regex("\\s+"), " ").trim().take(400)
+                    devGoalInput?.setText(safe)
+                    devGoalInput?.setSelection(safe.length)
+                    devController.setGoal(safe)
+                    refreshDevelopmentUi()
                 }
             }
             CONTINUUM_PACKAGE_MODEL_REQUEST -> {
