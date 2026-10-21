@@ -55,7 +55,7 @@ class ContinuumAutonomousSchedulerTest {
         assertEquals(24 * 60 * 60 * 1000L, wanted.periodMs)
         assertFalse(wanted.requiresCharging)
         assertTrue(wanted.persisted)
-        assertTrue(wanted.requiresBatteryNotLow)
+        assertFalse(wanted.requiresBatteryNotLow)
         assertTrue(wanted.requiresStorageNotLow)
         assertEquals(android.app.job.JobInfo.NETWORK_TYPE_NONE, wanted.networkType)
     }
