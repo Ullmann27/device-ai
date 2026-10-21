@@ -86,8 +86,8 @@ test('fresh generated contract runs real Node tests and incorrect expected outpu
   assert.equal(green.status,0,green.stdout+'\n'+green.stderr);
   // Node 22 prints "# pass 2", while newer runners print "ℹ pass 2".
   // Require the exact executed pass count in either official summary format.
-  assert.match(green.stdout,/^(?:#|ℹ)\\s+pass\\s+2\\s*$/m);
-  assert.match(green.stdout,/^(?:#|ℹ)\\s+fail\\s+0\\s*$/m);
+  assert.match(green.stdout,/^(?:#|ℹ)\s+pass\s+2\s*$/m);
+  assert.match(green.stdout,/^(?:#|ℹ)\s+fail\s+0\s*$/m);
   fs.writeFileSync(generated,r.candidate.edits[0].newText.replace('triple(8),24','triple(8),25'));
   const red=run();
   assert.notEqual(red.status,0,'incorrect expected result must fail a real test');
