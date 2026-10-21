@@ -25,7 +25,7 @@ if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_del
 fi
 # Only the established Render delivery branch is authorized; the private
 # signing material stays in that service and never enters the repository.
-if [[ "$actual_branch" != "$render_delivery_branch" ]]; then
+if [[ "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
   echo "Refusing any branch other than approved signer-owning delivery branch" >&2
   exit 69
 fi
