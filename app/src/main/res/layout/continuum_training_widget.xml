@@ -122,6 +122,15 @@
             android:text="CDX1" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/widget_counts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Quellen: – · SWB1-Runden: –"
+        android:textSize="10sp"
+        android:textColor="#8FE4FB" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
