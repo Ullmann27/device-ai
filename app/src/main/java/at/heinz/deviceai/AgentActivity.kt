@@ -1242,8 +1242,7 @@ class AgentActivity : Activity() {
             .append(" · ").append(paired.updates)
             .append(" Updates · Encoder: ").append(cdx1BindingLabel(paired.conditioningState))
             .append(" · Chatfreigabe: NEIN\n")
-        append("CDX1 · Hintergrundlernen: ").append(if(at.heinz.deviceai.learning.
-            ContinuumDualCoreAutoStudy.isEnabled(this@AgentActivity))"EIN" else "AUS")
+        append("CDX1 · Hintergrundlernen: ").append(if(at.heinz.deviceai.learning.ContinuumDualCoreAutoStudy.isEnabled(this@AgentActivity)) "EIN" else "AUS")
             .append("\n")
         val cdxStages=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
         append("CDX1 · Großes Paararchiv: ").append(cdxStages.completed)
