@@ -83,6 +83,7 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
                 snapshot.researchingNow -> "AKTIV"
                 snapshot.stale -> "UNKLAR"
                 snapshot.outcome == "FAILED" -> "FEHLER"
+                name == "CDX1" -> "MANUELL"
                 !registered -> "AUS"
                 else -> "WARTET"
             }
