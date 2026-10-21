@@ -224,9 +224,13 @@ export function proposeCandidates(diagnostics,ctx){
   for(const d of diagnostics.slice(0,12)){
     // experience replay: a verified hunk for the same problem identity
     for(const past of ctx.experience??[]){
-      if(past.outcome!=='VERIFIED'||past.diagnostic!==d.fingerprint)continue;
+      if(past.outcome!=='VERIFIED'||past.diagnostic!==d.fingerprint||
+         (past.strategy==='LOCAL_MODEL_PATCH'&&(ctx.allowLocalModelPatches!==true||
+           !past.edits.every(edit=>ctx.allowedLocalPaths?.includes(edit.file)))))continue;
+      if(past.strategy==='LOCAL_MODEL_PATCH'&&(past.edits.length!==1||
+         ctx.readFile(past.edits[0].file)!==past.edits[0].oldText))continue;
       try{applyEdits(ctx.readFile,past.edits);
-        add({id:sha256('EXPERIENCE\u0000'+JSON.stringify(past.edits)).slice(0,16),strategy:'EXPERIENCE_REPLAY',
+        add({id:sha256('EXPERIENCE\u0000'+JSON.stringify(past.edits)).slice(0,16),strategy:past.strategy==='LOCAL_MODEL_PATCH'?'LOCAL_MODEL_PATCH':'EXPERIENCE_REPLAY',
           diagnostic:d.fingerprint,diagnosticKind:d.kind,description:'Replay patch verified for the same diagnostic in '+(past.baseCommit??'').slice(0,12),
           prior:0.9,edits:past.edits});}catch{}
     }

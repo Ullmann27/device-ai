@@ -1,6 +1,11 @@
 # Continuum – Astra-Wiederaufnahme und Nutzungslimit-Protokoll
 Stand: 21.10.2026 · Projekt: ausschließlich `Ullmann27/device-ai` · Relevanter Draft-PR: #42
 
+## Neuer zusätzlicher Einstiegspunkt: lokaler Coding-Meilenstein
+
+PR #49 auf `astra/continuum-local-coding-milestone-20261021`, ab PR48-HEAD `dfd876c23e2e88faa2ff7ee2f7f75138b416929a`. Funktionsstand `b464b3e` und Abschlussbelege: [CONTINUUM-LOCAL-CODING-MILESTONE-20261021.md](CONTINUUM-LOCAL-CODING-MILESTONE-20261021.md). Tatsächlichen GitHub-HEAD lesen; die nachstehenden älteren APK-/Prioritätsangaben sind historisch. Beschränkter lokaler Zahlenfunktions-Kandidatenpfad, kanonischer Repair-Worker und unabhängige Tests implementiert. Größere Modellpatches, echtes GGUF-/Samsung-Laufzeitverhalten und aktuelle App→Termux→App BUILD-Abnahme bleiben offen. Keine neuronalen Gewichte verändert und kein Main-Merge.
+
+
 ## Ausführungsanweisung für den nächsten Astra-Lauf
 
 Vor jeder Änderung tatsächlichen HEAD des Experimentbranches `astra/continuum-experiment-charter-20261019` und abweichende Branch-/PR-Stände lesen. Zuletzt vor Anlage dieser Übergabe überprüfter PR-HEAD: `8dae174f8779e9aa5b66f3241cd0c28c24861000`; dieser Wert wird durch spätere Commits **historisch**, niemals blind auschecken oder als aktuelle Spitze annehmen. `AGENTS.md`, `docs/CONTINUUM-EXPERIMENTVERTRAG.md`, `docs/CONTINUUM-EXPERIMENTE.json` und Issue #41 erneut prüfen. `main` nicht ändern. Experiment-IDs: EXP-00/01/02/04/05/08/11/12.

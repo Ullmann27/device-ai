@@ -41,7 +41,7 @@ test('result requires official Termux bundle including real exit and error', () 
 
 test('user receives a receipt only, no installation or private build log persisted', () => {
   assert.match(activity, /"com\.termux\.RUN_COMMAND_BACKGROUND", true/);
-  assert.match(receiver, /putString\(LAST_MESSAGE, text \+ ownerCopyMessage\)/);
+  assert.match(receiver, /putString\(LAST_MESSAGE, text \+ buildProvenance \+ ownerCopyMessage\)/);
   assert.doesNotMatch(receiver, /putString\(LAST_MESSAGE, stdout\)|putString\(LAST_MESSAGE, bundle/);
   assert.doesNotMatch(activity, /installPackage|PackageInstaller|Runtime\.getRuntime\(\)/);
   assert.match(junit, /fun buildNeedsSignatureEvidenceAndCompletedTermuxStatus/);
