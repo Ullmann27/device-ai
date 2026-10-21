@@ -10,7 +10,7 @@ Dies ist kein Nachweis, dass der neue Code bereits auf dem Samsung gebaut wurde.
 - Termux-DOCTOR aus Besitzer-Screenshot: Git, Java 17, Gradle 8.11.1, ARM64-AAPT2, SDK 36 und apksigner jeweils true.
 - Älterer realer Buildbericht auf dem Gerät: Quellcommit `91291cb201d140bc301bcb341b49a674d8d08165`, `EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED`, Paket `at.heinz.deviceai.preview`, APK im privaten Termux-State und owner Download-Kopie. Dieser Bericht ist **nicht der aktuelle Integrations-Build**.
 - Aktuelle Samsung-App: `at.heinz.deviceai.mentorpaired`, Version 0.3.10, unabhängig über signierten Render-Build installiert; Lern-/Checkpoints im privaten App-Speicher bleiben geschützt.
-- Für M1 zu testender **geprüfter Code-Checkpoint**: `55338344654d3c5925b067a6dec82c21e745b408`. Der danach ggf. neuere Branch-HEAD durch Dokumentation ist nicht automatisch derselbe Code-Checkpoint.
+- Für M1 zu testender **geprüfter Code-Checkpoint**: `8968233ffe7d5a63801bc825f75d91c92426b321`. Der danach ggf. neuere Branch-HEAD durch Dokumentation ist nicht automatisch derselbe Code-Checkpoint.
 - `scripts/continuum-mobile-builder.mjs`: Git-HEAD/clean-Status vor und nach Gradle, gemeinsame Build-Lease, echte `:app:testDebugUnitTest :app:lintDebug :app:assembleDebug`-Gradle-Gates, native AAPT2-SDK-36, Signatur/Signer-Digest, `aapt2 dump badging` erwartet `at.heinz.deviceai.preview`, SHA-256, privates signiertes Artefakt und optional kontrollierte Download-Kopie. Keine App-Installation und keine Git-Mutation im Builder.
 - Neue Code-Sicherheitsreparatur: Publikation mit `fs.copyFileSync(...,fs.constants.COPYFILE_EXCL)` statt `renameSync` auf bestehenden owner Downloadpfad, damit andere Dateien bei Rennbedingungen niemals ersetzt werden. Bei abweichendem Endhash wird nicht die möglicherweise fremde Datei gelöscht.
 - Regressionen für konkurrierenden Dateinamen und unvollständige Download-Kopie sind eingecheckt. **Nach diesen zwei Commits noch kein Testlauf in dieser Sitzung unabhängig ausgeführt.**
@@ -47,7 +47,7 @@ Abbruch, wenn `git status` unbekannte/uncommittete Dateien meldet; Besitzerzusta
     echo "STOP: zuerst lokale Änderungen sichern und prüfen"; exit 1;
   }
   git fetch --no-tags origin refs/heads/integration/continuum-astra-20261021
-  test "$(git cat-file -t 55338344654d3c5925b067a6dec82c21e745b408)" = commit
+  test "$(git cat-file -t 8968233ffe7d5a63801bc825f75d91c92426b321)" = commit
 )
 ```
 
@@ -60,13 +60,13 @@ Erwartete Ausgabe von `cat-file`: `commit`. Der Fetch verändert keine bestehend
   test -z "$(git status --porcelain --untracked-files=normal)" || {
     echo "STOP: lokale Änderungen schützen"; exit 1;
   }
-  git switch --detach 55338344654d3c5925b067a6dec82c21e745b408
-  test "$(git rev-parse HEAD)" = 55338344654d3c5925b067a6dec82c21e745b408
+  git switch --detach 8968233ffe7d5a63801bc825f75d91c92426b321
+  test "$(git rev-parse HEAD)" = 8968233ffe7d5a63801bc825f75d91c92426b321
   echo "M1-Quellstand stimmt mit dem geprüften Code-Checkpoint überein"
 )
 ```
 
-Erwartetes HEAD exakt `55338344654d3c5925b067a6dec82c21e745b408`. `git switch --detach` verändert nicht `main` und erstellt keinen neuen Branch, arbeitet aber am Termux-Checkout; bei lokalen Veränderungen darf der Wechsel **nicht** erfolgen. Der Buildvorgang selbst bleibt git-lesend.
+Erwartetes HEAD exakt `8968233ffe7d5a63801bc825f75d91c92426b321`. `git switch --detach` verändert nicht `main` und erstellt keinen neuen Branch, arbeitet aber am Termux-Checkout; bei lokalen Veränderungen darf der Wechsel **nicht** erfolgen. Der Buildvorgang selbst bleibt git-lesend.
 
 ### 3. Lokale Tests zuerst (mit echtem Exitcode)
 
@@ -98,7 +98,7 @@ Nach dem Callback darf `BUILD_REPORTED_UNVERIFIED_ON_DEVICE` nur erscheinen, wen
 )
 ```
 
-Der Bericht muss `commit: 55338344654d3c5925b067a6dec82c21e745b408`,
+Der Bericht muss `commit: 8968233ffe7d5a63801bc825f75d91c92426b321`,
 `status: EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED`,
 einen vollständigen `apkSha256`, `signerSha256`,
 `packageName: at.heinz.deviceai.preview`,
@@ -123,3 +123,17 @@ und `ownerInstallCopy.status: COPIED` (oder klar benannten sicheren Fehler) enth
 - Keine fremden Modellbefehle/Shell-Ausdrücke direkt ausführen. Kein generatives Modell muss beim M1-Builder installiert sein.
 - Kein `git reset --hard`, `git clean -fd`, `git stash`, Löschen/Zurücksetzen von SWB1-/CDX1-Daten oder automatisches APK-Installieren.
 - Zurück zum vorherigen Checkout nur nach Dokumentation der ursprünglichen HEAD- und Branch-Angaben (`git switch` oder `git switch --detach OLD_HEAD` bei clean Status). Bereits erstellte APK-Berichte bleiben im Termux-State.
+
+
+## Nachprüfung externer Argon-Empfehlungen: gezielte M1-Härtung (21.10.2026)
+
+Aktueller fester **Code-Checkpoint für den nächsten Samsung-Test**: `8968233ffe7d5a63801bc825f75d91c92426b321`.
+Der frühere Prüfcheckpoint `55338344654d3c5925b067a6dec82c21e745b408` bleibt als historische Review-Basis erhalten, nicht als aktueller Geräte-Zielstand.
+
+Die externen Empfehlungen wurden anhand vollständiger aktueller Originaldateien verifiziert:
+
+- **Bereits vorhanden, keine Duplikatänderung:** Builder vergleicht Git-HEAD und Clean-Status nach Gradle und nach Signatur/Badging; `spawnSync` erhält das reale Gradle-Timeout von 35 Minuten. `copyVerifiedApkToOwnerDownloads` räumt private temporäre Dateien in `finally` auf, schützt Zielverzeichnis vor Symlinks und publiziert mit `COPYFILE_EXCL`. Android Activity sperrt zweite gleichzeitige Aufträge. `ContinuumAtomicPairedBundleStore` serialisiert JVM-weit über statischen `LOCK` und erkennt beschädigte aktive Paarbundles via LKG als read-only, Generationen und Hashes.
+- **Nachgebessert:** BUILD-Rückkanal akzeptiert nicht mehr allein valides SHA-/Signer-Format, sondern verlangt zusätzlich `commit` im 40-stelligen Hexformat, `packageName=at.heinz.deviceai.preview`, gültigen `versionCode`, echtes `exitCode == 0` und den von Termux tatsächlich benutzten `err == -1`. `receiverIntent.data` bindet Auftragstyp und UUID; der Receiver vergleicht URI, Extras und den gespeicherten einzelnen aktiven Job. Der Besitzer sieht Commit und Paket beim erfolgreichen BUILD-Receipt.
+- **Belegtests ergänzt:** Android JVM-Test `buildMustBindARealCommitPreviewPackageAndVersion`; Node-Integrations-Wiring-Test für URI, Commit, Paket, Versionsfeld und `err == -1`; explizite `*.tmp`-Aufräumassertions für beide Copy-Race-Fälle; Kotlin-Regression für JVM-weite CDX1-Serialisierung über zwei Store-Instanzen.
+- **Bewusst NICHT übernommen:** Argons `err == 0`-Annahme widerspricht unserem realen Termux-Rückkanal; ein eigener separater SharedPreferences-Slot für parallel laufende STATUS-Abfragen ist unnötig, solange der bestehende Exklusivitätsvertrag gilt. Automatische CDX1-LKG-Promotion bleibt ausgeschlossen, um Besitzergewichte vor stillen Schreibzugriffen zu schützen. `auditAfter <= auditBefore` ist ein zulässiges Nichtregressions-Gate und nicht automatisch eine Trainingsverbesserungsbehauptung. Ein unvalidierter SWB1-Similarity-Bias 0,25 wäre eine Modell-/Metrikverhaltensänderung ohne experimentelle Rechtfertigung und wird bis zur Kalibrierungsmessung nicht übernommen.
+- **Weiter offen:** Vollständige Ausführung der Android-/Node-Test-Suite unter dem neuen Commit auf dem Samsung, frischer Termux APK BUILD über die App mit dessen Callback und unabhängiger Hash-/Signer-Vergleich. Ein 40-Hex-Commit im Callback allein bestätigt seine *Form*, nicht seine Übereinstimmung mit dem geplanten M1-Commit: der vom Gerät gemeldete Wert muss weiterhin mit dem festgelegten SHA abgeglichen werden. Kein Build und keine neue APK durch diese GitHub-Änderungen ausgelöst. Der auf dem Samsung installierte Code 0.3.10 ist weiterhin unverändert.
