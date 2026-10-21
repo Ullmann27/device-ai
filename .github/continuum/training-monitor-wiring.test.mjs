@@ -64,6 +64,6 @@ test('offline job records deferral, failures and interrupts without rewriting mo
 test('CDX1 audits are separate and preview version increases without touching main', () => {
   assert.match(agent, /ContinuumTrainingMonitor\.CDX/);
   assert.match(agent, /if\(!report\.finalized\)"DEFERRED"/);
-  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 13 else if \(deviceAiPreview\) 6 else 4/);
+  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 14 else if \(deviceAiPreview\) 6 else 4/);
   assert.match(ui, /Android darf Jobs/);
 });
