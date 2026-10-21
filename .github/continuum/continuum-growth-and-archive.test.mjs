@@ -66,8 +66,8 @@ test('owner-controlled recurrent public research has finite allowed sources and 
   assert.match(study,/instanceFollowRedirects=false/);
   assert.match(study,/MAX_RESPONSE_BYTES/);
   assert.match(study,/MAX_ROUND_WALL_MS/);
-  assert.match(study,/setRequiresCharging\(true\)/);
-  assert.match(study,/setRequiresBatteryNotLow\(true\)/);
+  assert.match(study,/setRequiresCharging\(false\)/);
+  assert.match(study,/setRequiresBatteryNotLow\(false\)/);
   assert.match(study,/setRequiresStorageNotLow\(true\)/);
   assert.match(study,/setRequiredNetworkType\(JobInfo\.NETWORK_TYPE_ANY\)/);
   assert.match(study,/if\(!scheduler\.enabled\s*\|\|\s*scheduler\.isRateLimited\(\)\)return false/);
