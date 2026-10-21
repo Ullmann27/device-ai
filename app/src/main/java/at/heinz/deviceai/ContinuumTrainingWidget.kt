@@ -109,13 +109,11 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
                 recovery.edit().putLong("last_check", now).apply()
                 runCatching {
                     val research = ContinuumPublicStudyScheduler(app)
-                    if (research.enabled &&
-                        jobs.getPendingJob(ContinuumPublicStudyScheduler.JOB_ID) == null) {
-                        research.restore()
-                    }
-                    if (jobs.getPendingJob(ContinuumAutonomousScheduler.JOB_ID) == null) {
-                        ContinuumAutonomousScheduler(app).restore()
-                    }
+                    // restore compares the complete spec and leaves an identical
+                    // running/pending job untouched. It also upgrades an older
+                    // charging-only registration without reopening the app.
+                    if (research.enabled) research.restore()
+                    ContinuumAutonomousScheduler(app).restore()
                 }
             }
             val hasPublic = runCatching {
