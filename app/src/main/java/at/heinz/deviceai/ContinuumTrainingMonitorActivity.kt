@@ -108,6 +108,26 @@ class ContinuumTrainingMonitorActivity : Activity() {
         offlineCard = addCard(content)
         cdxCard = addCard(content)
         evidenceCard = addCard(content)
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            val granted = checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
+            content.addView(label(
+                if (granted) "✓  FEHLERBENACHRICHTIGUNGEN AKTIV"
+                else "🔔  ECHTE TRAININGSFEHLER AUFS HANDY MELDEN · ERLAUBEN",
+                12f, Color.rgb(121, 224, 255), true
+            ).apply {
+                setPadding(dp(8), dp(16), dp(8), dp(12))
+                if (!granted) {
+                    isClickable = true
+                    isFocusable = true
+                    contentDescription = "Benachrichtigungen für tatsächliche Trainingsfehler erlauben"
+                    setOnClickListener {
+                        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                            913)
+                    }
+                }
+            })
+        }
         content.addView(label(
             "Eine Statusanimation ist kein Beweis für Modellverbesserung. Entscheidend sind " +
                 "akzeptierte Checkpoints und unabhängige Holdout-Prüfungen. Android darf Jobs " +
