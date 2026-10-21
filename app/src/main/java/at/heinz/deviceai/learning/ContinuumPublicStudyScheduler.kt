@@ -58,7 +58,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
             "\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+
             " · untersuchte Thementitel: "+seenTopics.size+
             "\nNächstes Forschungsthema: "+nextTopic+
-            "\nJeweils eine Wikipedia-Quelle, nur beim Laden und mit Netzwerk; "+
+            "\nJeweils eine Wikipedia-Quelle, auch ohne Ladekabel mit Netzwerk; "+
             "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."
     }
 
@@ -80,7 +80,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
             val pending=jobs.getPendingJob(JOB_ID)
             if(pending!=null &&
                 pending.service.className==ContinuumPublicStudyJobService::class.java.name &&
-                pending.isRequireCharging &&
+                !pending.isRequireCharging &&
                 pending.networkType==JobInfo.NETWORK_TYPE_ANY &&
                 pending.isPersisted &&
                 pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&
@@ -89,7 +89,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
             val request=JobInfo.Builder(JOB_ID,
                 ComponentName(app,ContinuumPublicStudyJobService::class.java))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setRequiresCharging(true)
+                .setRequiresCharging(false)
                 .setRequiresBatteryNotLow(true)
                 .setRequiresStorageNotLow(true)
                 .setPersisted(true)
