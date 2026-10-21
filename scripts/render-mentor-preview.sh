@@ -148,6 +148,19 @@ fi
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
+# Preserve the last known-good signed v0.3.10 immutable download while
+# publishing the signed v0.3.11 update. No mutable CDN aliases are trusted.
+previous_sha="67b1715d0e7eb42945c81aa90ede5b1d6eca526444d0cff8d83f388dd782aa56"
+previous_apk="DeviceAI-Continuum-v0.3.10-${previous_sha}.apk"
+curl --fail --location --retry 2 --max-time 240 \
+  "https://device-ai-mentor-apk-preview.onrender.com/$previous_apk" \
+  -o "$output/$previous_apk"
+printf '%s  %s\n' "$previous_sha" "$output/$previous_apk" | sha256sum --check --status || {
+  echo "Previous known-good APK was not preserved; refusing release" >&2
+  exit 69
+}
+printf '%s  %s\n' "$previous_sha" "$previous_apk" > "$output/SHA256SUMS-${previous_sha}.txt"
+
 # Content-addressed publication prevents an existing CDN path serving an older
 # APK under a reused version name. Never accept checksum metadata from a prior deploy.
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
