@@ -44,7 +44,11 @@ test('patch proposal is schema constrained, validated and never applied', async 
   assert.equal(result.autoApply,false);
   assert.equal(result.trusted,false);
   assert.equal(result.patch.file,patch.file);
-  assert.deepEqual(request.response_format.schema.properties.file.enum,[patch.file]);
+  assert.equal(request.response_format.type,'json_schema');
+  assert.equal(request.response_format.json_schema.name,'continuum_bounded_patch_v1');
+  assert.equal(request.response_format.json_schema.strict,true);
+  assert.deepEqual(request.response_format.json_schema.schema.properties.file.enum,[patch.file]);
+  assert.equal('schema' in request.response_format,false,'flat schema must not silently disable llama grammar');
   await assert.rejects(queryLocalBrain({...base,mode:'patch',allowedTrackedPaths:[patch.file],
     fetchImpl:fakeFetch(JSON.stringify({...patch,file:'app/../secrets'}))}),/LOCAL_PATCH_SCHEMA_REJECTED/);
   await assert.rejects(queryLocalBrain({...base,mode:'patch',allowedTrackedPaths:[patch.file],
@@ -83,4 +87,46 @@ test('actual Node HTTP loopback fixture exercises an end-to-end POST',async()=>{
   const proxy=async(url,opts)=>fetch(url.replace('127.0.0.1:8089','127.0.0.1:'+port),opts);
   try{const answer=await queryLocalBrain({...base,fetchImpl:proxy});assert.equal(answer.text,'Lokaler Test');}
   finally{await new Promise(resolve=>server.close(resolve));}
+});
+
+test('local structured patch request sends nested schema to real loopback HTTP endpoint', async () => {
+  const patch={file:'lib/maths.mjs',oldText:'export function sum(a,b){return a-b;}',
+    newText:'export function sum(a,b){return a+b;}'};
+  let observed=null;
+  const server=createServer(async (req,res)=>{
+    assert.equal(req.url,'/v1/chat/completions');
+    assert.equal(req.headers.authorization,'Bearer '+SECRET);
+    let raw='';for await(const part of req)raw+=part;
+    const request=JSON.parse(raw);
+    observed=request.response_format;
+    if(observed?.type!=='json_schema'||observed?.json_schema?.schema?.properties?.file?.enum?.[0]!==patch.file){
+      res.writeHead(400,{'content-type':'application/json'});
+      res.end(JSON.stringify({error:'invalid schema wrapper'}));return;
+    }
+    res.writeHead(200,{'content-type':'application/json'});
+    res.end(JSON.stringify({choices:[{message:{content:JSON.stringify(patch)}}]}));
+  });
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const port=server.address().port;
+  try{
+    const result=await queryLocalBrain({...base,mode:'patch',allowedTrackedPaths:[patch.file],
+      fetchImpl:(url,opts)=>fetch(url.replace(':8089',':'+port),opts)});
+    assert.equal(result.autoApply,false);
+    assert.equal(result.trusted,false);
+    assert.deepEqual(result.patch,patch);
+    assert.equal(observed.json_schema.strict,true);
+  }finally{await new Promise(resolve=>server.close(resolve));}
+});
+
+test('schema-compatible server response still cannot smuggle authority or unsafe file edits', async()=>{
+  const patch={file:'lib/maths.mjs',oldText:'before',newText:'after'};
+  for(const bad of [
+    {...patch,autoApply:true},
+    {...patch,file:'lib/unapproved.mjs'},
+    {...patch,oldText:'before',newText:'before'}
+  ]){
+    await assert.rejects(queryLocalBrain({...base,mode:'patch',
+      allowedTrackedPaths:['lib/maths.mjs'],fetchImpl:fakeFetch(JSON.stringify(bad))}),
+    /LOCAL_PATCH_SCHEMA_REJECTED/);
+  }
 });
