@@ -2356,16 +2356,25 @@ class AgentActivity : Activity() {
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {
-                        val measured = lab.trainDemo(true, cancellation::get, progressCallback)
-                        save = !measured.training.stoppedEarly
-                        measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
-                            "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
-                            "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
-                            "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
-                            "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
-                            "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
-                            "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
-                        measurement!!
+                        if (lab.lessonCount() > 0) {
+                            // Existing confirmed lessons must never be reset just
+                            // to run the old synthetic demonstration.
+                            "NEURON · DEMO nicht gestartet: Bereits trainierte Beispiele sind vorhanden. " +
+                                "Diese Sicherheitsprüfung schützt deine gespeicherten Gewichte. " +
+                                "Für einen Vergleich ohne Überschreiben nutze „Neuron Sprachlabor“ " +
+                                "oder „Neuron Härtetest“. Kein Experiment wurde zurückgesetzt."
+                        } else {
+                            val measured = lab.trainDemo(true, cancellation::get, progressCallback)
+                            save = !measured.training.stoppedEarly
+                            measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
+                                "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
+                                "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
+                                "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
+                                "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
+                                "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
+                                "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
+                            measurement!!
+                        }
                     }
                 }
                 val bytes = if (save) lab.save() else null
