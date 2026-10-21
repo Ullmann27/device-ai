@@ -5006,6 +5006,22 @@ class AgentActivity : Activity() {
             background = rounded(Color.rgb(19, 34, 61), 14, Color.rgb(57, 93, 151))
         }
         box.addView(devRequirementsView, matchWidth(top = 14))
+        box.addView(textView(
+            "UNSER EIGENER CODING-AGENT · ZWEI WEGE", 11f, CYAN, true
+        ), matchWidth(top = 14))
+        box.addView(textView(
+            "1. Ohne Sprachmodell: Unser eigener Worker kann bekannte Fehler diagnostizieren, " +
+                "Korrekturen isoliert prüfen und nur überprüfte Vorschläge bereitstellen. " +
+                "2. Mit lokalem Sprachmodell: Zusätzlich neue Codeideen und Änderungen entwerfen. " +
+                "Weder ein Vorschlag noch eine Sprachaufnahme darf ungeprüft Änderungen installieren.",
+            12f, MUTED), matchWidth(top = 7))
+        box.addView(actionButton("EIGENEN CODING-WORKER PRÜFEN").apply {
+            contentDescription = "Vorhandenen lokalen Android-Coding-Worker und echte Toolchain-Fähigkeiten überprüfen"
+            setOnClickListener {
+                devDialog?.dismiss()
+                openMobileBuilder()
+            }
+        }, matchWidth(top = 8))
         box.addView(actionButton("SPRACHMODELL EINRICHTEN").apply {
             setOnClickListener {
                 // Preserve the current goal through the dialog's dismiss handler.

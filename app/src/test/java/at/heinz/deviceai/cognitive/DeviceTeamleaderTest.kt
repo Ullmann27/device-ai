@@ -189,6 +189,23 @@ class DeviceTeamleaderTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun unknownBatteryDeferralPersistsSafelyAndCanRecover() {
+        val dir = Files.createTempDirectory("teamleader-unknown-battery").toFile()
+        try {
+            val worker = DeviceTeamleader(dir, now = { 1750000000000L })
+            val pending = worker.defer("BATTERY_UNKNOWN")
+            assertEquals("DEFERRED", pending.state)
+            assertEquals("BATTERY_UNKNOWN", pending.reason)
+            assertEquals(pending, DeviceTeamleader(dir).status())
+            val persisted = dir.resolve("development/device-teamleader-v1.txt")
+            assertTrue(persisted.isFile)
+            val result = DeviceTeamleader(dir).runOnce()
+            assertEquals("READY", result.state)
+            assertEquals("OK", result.reason)
+            assertEquals(result, DeviceTeamleader(dir).status())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun aCorruptedSharedBacklogIsReportedAsFailedNotReset() {
         val dir = Files.createTempDirectory("teamleader-bad-backlog").toFile()
         try {

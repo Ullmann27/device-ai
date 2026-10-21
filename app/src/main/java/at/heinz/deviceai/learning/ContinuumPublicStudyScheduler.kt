@@ -135,12 +135,11 @@ class ContinuumPublicStudyScheduler(context:Context) {
             .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))
             .putString("phase",phase.take(65))
         if(topic!=null && ContinuumPublicStudyPolicy.validArticleTitle(topic) &&
-            phase!="CANCELLED" && phase!="INTERRUPTED" &&
-            phase!="PROVIDER_RATE_LIMIT") {
+            ContinuumPublicStudyCycleResult.markTopicCompleted(phase)) {
             val (remaining,history)=ContinuumTopicFrontier.afterAttempt(
                 loadTopics("topic_pending",ContinuumTopicFrontier.MAX_PENDING),
                 loadTopics("topic_visited",ContinuumTopicFrontier.MAX_VISITED),
-                topic,!phase.startsWith("FAILED_"))
+                topic,true)
             edit.putString("topic_pending",remaining.joinToString("\n"))
                 .putString("topic_visited",history.joinToString("\n"))
         }
@@ -166,6 +165,10 @@ class ContinuumPublicStudyScheduler(context:Context) {
 
 internal class WikimediaRateLimited(val waitSeconds:Long):
     java.io.IOException("Wikimedia API asked research bot to reduce requests")
+
+/** A title without a suitable article is not an app crash or a learned source. */
+internal class WikimediaSourceUnavailable:
+    java.io.IOException("Encyclopedia article is missing or has no usable excerpt")
 
 /** Source retrieval is isolated from user permission scopes and model ToolGate. */
 internal object ContinuumPublicStudyFetch {
@@ -224,8 +227,12 @@ internal object ContinuumPublicStudyFetch {
                 val candidate=next.optString("extract")
                 if(candidate.isNotBlank()){ extract=candidate; break }
             }
-            val excerpt=ContinuumPublicStudyPolicy.normalizeExcerpt(
-                extract ?: error("No encyclopedia extract"))
+            val excerpt=try {
+                ContinuumPublicStudyPolicy.normalizeExcerpt(
+                    extract ?: throw WikimediaSourceUnavailable())
+            } catch (_:IllegalArgumentException) {
+                throw WikimediaSourceUnavailable()
+            }
             val result=MentorSource(title,ContinuumPublicStudyPolicy.publicArticleUrl(title),
                 ContinuumPublicStudyPolicy.digest(excerpt),excerpt)
             MentorSourceValidation.checkSource(result)
@@ -322,6 +329,7 @@ class ContinuumPublicStudyJobService:JobService() {
             var added=false
             var accepted=false
             var selectedTopic:String?=null
+            var operation="SELECT_TOPIC"
             val start=SystemClock.elapsedRealtime()
             val cancelled:()->Boolean = {
                 stopping.get() || Thread.currentThread().isInterrupted ||
@@ -333,6 +341,7 @@ class ContinuumPublicStudyJobService:JobService() {
                 selectedTopic=researchTitle
                 ContinuumTrainingMonitor.begin(this@ContinuumPublicStudyJobService,
                     ContinuumTrainingMonitor.PUBLIC,researchTitle,"SWB1")
+                operation="FETCH_SOURCE"
                 ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                     ContinuumTrainingMonitor.PUBLIC,"FETCH_SOURCE")
                 val source=ContinuumPublicStudyFetch.fetch(researchTitle,cancelled)
@@ -357,6 +366,7 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(pending.isEmpty()) {
                     phase="SOURCE_UNCHANGED"
                 } else {
+                    operation="ARCHIVE_SOURCE"
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"ARCHIVE_SOURCE")
                     // Store citation and source hash before any training decision.
@@ -371,8 +381,10 @@ class ContinuumPublicStudyJobService:JobService() {
                     added=archive.stats().values.sum()>archiveCountBefore
                     // Mentor indexing and durable source archiving are separate
                     // results; only the latter changes the archive source count.
+                    operation="INDEX_SOURCE"
                     notebook.add(pending)
                     check(!cancelled())
+                    operation="PREPARE_TRAINING"
                     val core=ContinuumLearningCore(filesDir).apply {
                         observeTraining { trainingPhase ->
                             ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
@@ -383,10 +395,13 @@ class ContinuumPublicStudyJobService:JobService() {
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"PREPARING",
                         "Quellenbezogene Kandidatenrunde vorbereiten")
+                    operation="TRAIN_SOURCE"
                     val outcome=core.learnFromSources(pending,cancelled)
+                    operation="AUDIT_SOURCE"
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"AUDIT","Qualitätsgate für Kandidatengewichte")
                     if(outcome?.completedEvaluation==true && !cancelled()) {
+                        operation="SAVE_EVIDENCE"
                         ContinuumSourceNovelty.markCompleted(filesDir,pending)
                         accepted=outcome.accepted
                         phase=if(accepted)"TRAINING_ACCEPTED" else "TRAINING_REJECTED"
@@ -397,10 +412,15 @@ class ContinuumPublicStudyJobService:JobService() {
                 }
             } catch(e:Exception) {
                 if(e is WikimediaRateLimited)scheduler.postponeDueToProvider(e.waitSeconds)
-                phase=if(cancelled())"INTERRUPTED" else if(e is WikimediaRateLimited)
-                    "PROVIDER_RATE_LIMIT" else "FAILED_"+e.javaClass.simpleName.take(30)
-                reschedule=!stopping.get() && e !is WikimediaRateLimited
-                Log.w("ContinuumPublicStudy","Bounded research cycle deferred: "+e.javaClass.simpleName)
+                phase=when {
+                    cancelled() -> "INTERRUPTED"
+                    e is WikimediaRateLimited -> "PROVIDER_RATE_LIMIT"
+                    e is WikimediaSourceUnavailable -> "SOURCE_UNAVAILABLE"
+                    else -> ("FAILED_"+operation+"_"+e.javaClass.simpleName).take(65)
+                }
+                reschedule=!stopping.get() && e !is WikimediaRateLimited &&
+                    e !is WikimediaSourceUnavailable && !cancelled()
+                Log.w("ContinuumPublicStudy","Research cycle result: "+phase)
             } finally {
                 // This is a separate bounded step, so already-known sources or
                 // temporarily unavailable Wikipedia do not block local rehearsal.
@@ -430,15 +450,17 @@ class ContinuumPublicStudyJobService:JobService() {
                     }
                 }
                 if(!stopping.get()) {
-                    runCatching { scheduler.recordCycle(phase,selectedTopic,added,accepted) }
-                    val outcome=when {
-                        phase.contains("ACCEPTED") -> "ACCEPTED"
-                        phase.contains("REJECTED") -> "REJECTED"
-                        phase.startsWith("FAILED_") -> "FAILED"
-                        phase=="TRAINING_DEFERRED" || phase=="PROVIDER_RATE_LIMIT" ->
-                            "DEFERRED"
-                        else -> "NO_CHANGE"
+                    val saved=runCatching {
+                        scheduler.recordCycle(phase,selectedTopic,added,accepted)
                     }
+                    if(saved.isFailure) {
+                        // A failed durable audit is not a verified research success.
+                        phase="FAILED_SAVE_CYCLE_"+
+                            (saved.exceptionOrNull()?.javaClass?.simpleName ?: "Unknown")
+                        phase=phase.take(65)
+                        Log.w("ContinuumPublicStudy","Research cycle audit not persisted")
+                    }
+                    val outcome=ContinuumPublicStudyCycleResult.outcome(phase)
                     runCatching {
                         ContinuumTrainingMonitor.end(this@ContinuumPublicStudyJobService,
                             ContinuumTrainingMonitor.PUBLIC,outcome,phase)
