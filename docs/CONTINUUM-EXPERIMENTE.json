@@ -18,10 +18,10 @@
       "id": "EXP-00",
       "title": "On-device Android APK builder",
       "status": "DEVICE_TOOLCHAIN_VERIFIED",
-      "present": "Samsung Android 16 ARM64: on-device Doctor (Git/JDK17/Gradle8.11.1/SDK36/ARM64-AAPT2/apksigner) passed; real earlier build and signed preview APK at 91291cb201d140bc301bcb341b49a674d8d08165 with owner Download copy, reported by owner 2026-10-21. Current integrated source checkpoint 55338344654d3c5925b067a6dec82c21e745b408 has download-publication race fix and new negative tests in PR #48; these patches have not yet been run on device.",
+      "present": "Samsung Android 16 ARM64: on-device Doctor (Git/JDK17/Gradle8.11.1/SDK36/ARM64-AAPT2/apksigner) passed; real earlier build and signed preview APK at 91291cb201d140bc301bcb341b49a674d8d08165 with owner Download copy, reported by owner 2026-10-21. Current integrated source checkpoint 8968233ffe7d5a63801bc825f75d91c92426b321 has download-publication race fix and new negative tests in PR #48; these patches have not yet been run on device.",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
-      "gate": "Samsung safe-fetch current source at checkpoint 55338344654d3c5925b067a6dec82c21e745b408, execute real Node negative tests, app-triggered build callback with exit 0, Gradle JUnit/lint/APK signer/source-SHA evidence, stable separate at.heinz.deviceai.preview package; docs/CONTINUUM-M1-ANDROID-ABSCHLUSS-20261021.md. No Main merge or unapproved install."
+      "gate": "Samsung safe-fetch current source at checkpoint 8968233ffe7d5a63801bc825f75d91c92426b321, execute real Node negative tests, app-triggered build callback with exit 0, Gradle JUnit/lint/APK signer/source-SHA evidence, stable separate at.heinz.deviceai.preview package; docs/CONTINUUM-M1-ANDROID-ABSCHLUSS-20261021.md. No Main merge or unapproved install."
     },
     {
       "id": "EXP-01",
@@ -90,10 +90,10 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed.",
+      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed. Argon review: native single-active-job guard already rejects a second STATUS/DOCTOR/BUILD request during pending BUILD. On integration branch, receipt hardening now binds callback operation/UUID in URI and validates 40-hex commit, preview package, versionCode and existing sha256/signer, with Termux err == -1. These new changes require device runtime verification; owner Samsung 0.3.10 does not yet include them.",
       "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
-      "gate": "On the current integrated source, app-button BUILD must actually produce a validated Android→Termux→App completion receipt with exact Git commit/SHA/signing/package verification; inspect replay/lease and failure paths. No automatic installation."
+      "gate": "On the current integrated source, app-button BUILD must actually produce a validated Android→Termux→App completion receipt with exact Git commit/SHA/signing/package verification; inspect replay/lease and failure paths. No automatic installation. Include operation-id URI identity, payload binding and negative tests for missing/wrong commit/package/version. Never claim current-source M1 closed before an actual Android->Termux->Android BUILD callback and independently checked commit."
     },
     {
       "id": "EXP-09",
