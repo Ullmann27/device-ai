@@ -34,7 +34,7 @@ for runtime_binary in "$node_binary" "$setpriv_binary"; do
   while IFS= read -r dependency; do
     [[ "$dependency" == /* && -f "$dependency" ]] || fail 'unexpected dynamic dependency'
     install -D -m 0444 -- "$dependency" "$root$dependency"
-  done < <(ldd "$runtime_binary" | awk '/=> \\/ {print $3} /^[[:space:]]*\\/ {print $1}')
+  done < <(ldd "$runtime_binary" | awk '/=> \/ {print $3} /^[[:space:]]*\/ {print $1}')
 done
 for loader in /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-aarch64.so.1; do
   if [[ -f "$loader" ]]; then install -D -m 0555 -- "$loader" "$root$loader"; fi
