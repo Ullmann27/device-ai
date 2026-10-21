@@ -25,6 +25,9 @@ class ContinuumPublicStudyCycleResultTest {
             ContinuumPublicStudyCycleResult.outcome("SOURCE_UNCHANGED"))
         assertTrue(ContinuumPublicStudyCycleResult.markTopicCompleted("SOURCE_UNAVAILABLE"))
         assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted("PROVIDER_RATE_LIMIT"))
+        assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted("TRAINING_DEFERRED"))
+        assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted(
+            "FAILED_FETCH_SOURCE_IllegalStateException"))
     }
 
     @Test fun interruptionsCannotBecomeFalseTrainingSuccesses() {
