@@ -4,6 +4,9 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 class ContinuumAtomicPairedBundleStoreTest {
     @Test fun interruptedPublishNeverLosesPreviouslyVerifiedPair() {
@@ -120,5 +123,54 @@ class ContinuumAtomicPairedBundleStoreTest {
                 store.loadVerified()
             }
         } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun twoStoreInstancesSerializeWithinSameJvmAndNeverOverlapFileLock() {
+        val dir=Files.createTempDirectory("cdx-atomic-process-lock").toFile()
+        try {
+            val first=ContinuumAtomicPairedBundleStore(dir)
+            val second=ContinuumAtomicPairedBundleStore(dir)
+            val decoder=TinyContextDecoder(seed=97L).save()
+            val encoder=TrainableSubwordEncoder(seed=73L).save()
+            val insideWrite=CountDownLatch(1)
+            val continueWrite=CountDownLatch(1)
+            val failureA=AtomicReference<Throwable?>()
+            val failureB=AtomicReference<Throwable?>()
+            val threadA=Thread {
+                try {
+                    first.commit(decoder,encoder,0L,faultBeforePublish={
+                        insideWrite.countDown()
+                        check(continueWrite.await(5,TimeUnit.SECONDS))
+                    })
+                } catch(e:Throwable) {
+                    failureA.set(e)
+                }
+            }
+            val threadB=Thread {
+                try {
+                    second.commit(decoder,encoder,0L)
+                } catch(e:Throwable) {
+                    failureB.set(e)
+                }
+            }
+            try {
+                threadA.start()
+                assertTrue("First writer reached the critical section",
+                    insideWrite.await(5,TimeUnit.SECONDS))
+                threadB.start()
+            } finally {
+                continueWrite.countDown()
+                threadA.join(10_000)
+                threadB.join(10_000)
+            }
+            assertFalse("First thread must finish",threadA.isAlive)
+            assertFalse("Second thread must finish",threadB.isAlive)
+            assertNull("First writer did not fail",failureA.get())
+            assertTrue("Second writer is rejected on stale generation",
+                failureB.get() is IllegalStateException)
+            assertEquals(1L,first.loadVerified()!!.generation)
+        } finally {
+            dir.deleteRecursively()
+        }
     }
 }
