@@ -85,7 +85,7 @@ class ContinuumAutonomousScheduler internal constructor(
         /** By name: JVM tests must not load the JobService class (android-wiring test checks it). */
         const val SERVICE_CLASS="at.heinz.deviceai.learning.ContinuumAutonomousJobService"
         val WANTED=ContinuumJobSpec(SERVICE_CLASS,PERIOD_MS,
-            requiresCharging=true,networkType=JobInfo.NETWORK_TYPE_NONE,persisted=true)
+            requiresCharging=false,networkType=JobInfo.NETWORK_TYPE_NONE,persisted=true)
     }
 }
 
