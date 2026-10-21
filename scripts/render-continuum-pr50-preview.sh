@@ -128,7 +128,12 @@ grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" "$workspace/
 "$tools/aapt" dump badging "$apk" > "$workspace/badging.txt"
 grep -Fq "package: name='at.heinz.deviceai.preview' versionCode='6' versionName='0.3.3'" "$workspace/badging.txt"
 test "$(git rev-parse HEAD)" = "$commit" || { echo 'Source HEAD changed'; exit 69; }
-git diff --quiet --exit-code && git diff --cached --quiet --exit-code || { echo 'Tracked source changed during build'; exit 69; }
+if ! git diff --quiet --exit-code || ! git diff --cached --quiet --exit-code; then
+  echo 'Tracked source changed during build; refusing release. Modified paths:' >&2
+  git diff --name-status >&2
+  git diff --cached --name-status >&2
+  exit 69
+fi
 output="$repo_root/continuum-preview-output"
 mkdir -p "$output"
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
