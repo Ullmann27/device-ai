@@ -98,6 +98,25 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
             val cdx = ContinuumTrainingMonitor.read(app, ContinuumTrainingMonitor.CDX)
             val snapshots = listOf(public, offline, cdx)
             val jobs = app.getSystemService(JobScheduler::class.java)
+            // Narrow automatic repair: re-register missing existing jobs only.
+            // Never alter learning weights, bypass owner consent or execute commands.
+            val recovery = app.getSharedPreferences("continuum-widget-recovery-v1",
+                Context.MODE_PRIVATE)
+            val now = System.currentTimeMillis()
+            val lastRepair = recovery.getLong("last_check", 0L)
+            if (lastRepair <= 0L || now < lastRepair || now - lastRepair >= 60L * 60_000L) {
+                recovery.edit().putLong("last_check", now).apply()
+                runCatching {
+                    val research = ContinuumPublicStudyScheduler(app)
+                    if (research.enabled &&
+                        jobs.getPendingJob(ContinuumPublicStudyScheduler.JOB_ID) == null) {
+                        research.restore()
+                    }
+                    if (jobs.getPendingJob(ContinuumAutonomousScheduler.JOB_ID) == null) {
+                        ContinuumAutonomousScheduler(app).restore()
+                    }
+                }
+            }
             val hasPublic = runCatching {
                 ContinuumPublicStudyScheduler(app).enabled &&
                     jobs.getPendingJob(ContinuumPublicStudyScheduler.JOB_ID) != null
