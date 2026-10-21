@@ -22,6 +22,9 @@ object ContinuumOfflineLearningBudget {
     // Android THERMAL_STATUS_MODERATE = 2, first available on API 29.
     const val MAX_PERMITTED_THERMAL_STATUS = 1
 
+    fun batteryPercent(level:Int,scale:Int):Int? =
+        if(scale>0 && level in 0..scale) (level.toLong()*100L/scale).toInt() else null
+
     /** Null means learning may run. Reasons are fixed codes, never source text. */
     fun deferralReason(resources: ContinuumLearningResources): String? = when {
         resources.batteryPercent == null -> "BATTERY_UNKNOWN"
@@ -36,4 +39,30 @@ object ContinuumOfflineLearningBudget {
 
     fun deadlineReached(startMillis: Long, nowMillis: Long): Boolean =
         nowMillis < startMillis || nowMillis - startMillis >= MAX_WALL_MILLIS
+}
+
+/** Shared per-run resource/deadline check. A fresh retry gets fresh observations.
+ * Once stopped, this generation stays stopped even if resources later recover.
+ */
+internal class ContinuumLearningRunBudget(
+    private val startedAt: Long,
+    private val wallMillis: Long,
+    private val now: () -> Long,
+    private val resources: () -> ContinuumLearningResources
+) {
+    private var nextResourceCheck = startedAt
+    var deferredReason: String? = null
+        private set
+
+    fun cancelled(): Boolean {
+        if (deferredReason != null) return true
+        val elapsed = now()
+        if (elapsed < startedAt || elapsed - startedAt >= wallMillis) {
+            deferredReason = "TIME_BUDGET"
+        } else if (elapsed >= nextResourceCheck) {
+            nextResourceCheck = elapsed + 1_500L
+            deferredReason = ContinuumOfflineLearningBudget.deferralReason(resources())
+        }
+        return deferredReason != null
+    }
 }
