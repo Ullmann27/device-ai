@@ -2356,16 +2356,25 @@ class AgentActivity : Activity() {
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {
-                        val measured = lab.trainDemo(true, cancellation::get, progressCallback)
-                        save = !measured.training.stoppedEarly
-                        measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
-                            "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
-                            "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
-                            "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
-                            "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
-                            "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
-                            "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
-                        measurement!!
+                        if (lab.lessonCount() > 0) {
+                            // Existing confirmed lessons must never be reset just
+                            // to run the old synthetic demonstration.
+                            "NEURON · DEMO nicht gestartet: Bereits trainierte Beispiele sind vorhanden. " +
+                                "Diese Sicherheitsprüfung schützt deine gespeicherten Gewichte. " +
+                                "Für einen Vergleich ohne Überschreiben nutze „Neuron Sprachlabor“ " +
+                                "oder „Neuron Härtetest“. Kein Experiment wurde zurückgesetzt."
+                        } else {
+                            val measured = lab.trainDemo(true, cancellation::get, progressCallback)
+                            save = !measured.training.stoppedEarly
+                            measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
+                                "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
+                                "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
+                                "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
+                                "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
+                                "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
+                                "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
+                            measurement!!
+                        }
                     }
                 }
                 val bytes = if (save) lab.save() else null
@@ -3152,13 +3161,21 @@ class AgentActivity : Activity() {
      * SWB1 retrieval and approved ToolGate cannot be changed by this lab.
      */
     private fun showPairedDecoderLab() {
-        onLearningIo({ ContinuumLearningCore(filesDir).pairedDecoderStatus() }) { result ->
-            val message=result.fold(onSuccess={ status ->
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            core.pairedDecoderStatus() to core.pairedDecoderStorageEvidence()
+        }) { result ->
+            val message=result.fold(onSuccess={ (status,evidence) ->
                 "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
-                    "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
+                    "Trainings-Checkpoint: "+when {
+                        status.conditioningState=="CORRUPT" -> "bestehende Daten nicht verifizierbar"
+                        status.available -> "vorhanden"
+                        else -> "kein lesbarer Checkpoint"
+                    }+"\n"+
                     "Gewichtsupdates: "+status.updates+"\n"+
                     "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n"+
-                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n\n"+
+                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n"+
+                    "Gespeicherte Dateien (nur lesend):\n"+evidence+"\n\n"+
                     "Ein Beleg und eine Frage werden gemeinsam als Eingabe benutzt. "+
                     "Der Decoder lernt ausschließlich die Antwortzeichen. "+
                     "Trainings- und Prüfbeispiele sind getrennt; eine Verschlechterung "+

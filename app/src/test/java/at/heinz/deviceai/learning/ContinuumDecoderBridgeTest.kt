@@ -200,4 +200,87 @@ class ContinuumDecoderBridgeTest {
         } finally { dir.deleteRecursively() }
     }
 
+
+    @Test fun unreadableLegacyWeightsAreReportedCorruptAndCannotBeReinitialized() {
+        val dir=Files.createTempDirectory("continuum-legacy-corrupt").toFile()
+        try {
+            val legacy=File(dir,"context-decoder-paired.cdx")
+            val original="damaged saved weights".toByteArray(Charsets.UTF_8)
+            legacy.writeBytes(original)
+            val bridge=ContinuumDecoderBridge(dir)
+            val swb1=TrainableSubwordEncoder().save()
+            val status=bridge.pairedStatus(swb1)
+            assertFalse(status.available)
+            assertEquals("CORRUPT",status.conditioningState)
+            assertNull(bridge.experimentalPairedContinuation(
+                "Robot A steht in Wien.","Wo steht Robot A?",swb1))
+            val train=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Robot A steht in Wien.","Wo steht Robot A?","Wien")
+            ),DecoderSplit.TRAIN)
+            val audit=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Robot B steht in Graz.","Wo steht Robot B?","Graz")
+            ),DecoderSplit.AUDIT)
+            assertThrows(IllegalStateException::class.java) {
+                bridge.trainPairedExperiment(train,audit,swb1,steps=5)
+            }
+            assertArrayEquals(original,legacy.readBytes())
+            assertFalse(File(dir,"context-decoder-paired.bundle").exists())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun oldCheckpointBackupIsReadableOnlyAndNeverSilentlyPromoted() {
+        val dir=Files.createTempDirectory("continuum-legacy-recovery").toFile()
+        try {
+            val legacy=File(dir,"context-decoder-paired.cdx")
+            val backup=File(dir,"context-decoder-paired.cdx.lkg")
+            val old=TinyContextDecoder(seed=93L).save()
+            val damaged=byteArrayOf(1,2,3,4,5)
+            backup.writeBytes(old)
+            legacy.writeBytes(damaged)
+            val bridge=ContinuumDecoderBridge(dir)
+            val swb1=TrainableSubwordEncoder().save()
+            val status=bridge.pairedStatus(swb1)
+            assertTrue(status.available)
+            assertEquals("RECOVERED_LKG",status.conditioningState)
+            assertFalse(status.usableForChat)
+            val train=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Robot A steht in Wien.","Wo steht Robot A?","Wien")
+            ),DecoderSplit.TRAIN)
+            val audit=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Robot B steht in Graz.","Wo steht Robot B?","Graz")
+            ),DecoderSplit.AUDIT)
+            assertThrows(IllegalArgumentException::class.java) {
+                bridge.trainPairedExperiment(train,audit,swb1,steps=5)
+            }
+            assertArrayEquals(damaged,legacy.readBytes())
+            assertArrayEquals(old,backup.readBytes())
+            assertFalse(File(dir,"context-decoder-paired.bundle").exists())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun orphanedLegacyEncoderBindingIsNotMistakenForNeverTrainedModel() {
+        val dir=Files.createTempDirectory("continuum-orphan-binding").toFile()
+        try {
+            File(dir,"context-decoder-paired.swb1-binding").writeText("orphan")
+            val bridge=ContinuumDecoderBridge(dir)
+            assertEquals("CORRUPT",
+                bridge.pairedStatus(TrainableSubwordEncoder().save()).conditioningState)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun readOnlyStorageInventoryDoesNotRewriteOrRestoreAnyCheckpoint() {
+        val dir=Files.createTempDirectory("continuum-cdx-storage-evidence").toFile()
+        try {
+            val saved=File(dir,"context-decoder-paired.cdx")
+            val raw=byteArrayOf(1,4,9,16)
+            saved.writeBytes(raw)
+            val before=dir.list()?.sorted()
+            val report=ContinuumDecoderBridge(dir).storageEvidence()
+            assertTrue(report.contains("Alter CDX1-Checkpoint: vorhanden (4 Byte)"))
+            assertTrue(report.contains("Alte CDX1-Sicherung: fehlt"))
+            assertTrue(report.contains("Neues Paarbundle: fehlt"))
+            assertArrayEquals(raw,saved.readBytes())
+            assertEquals(before,dir.list()?.sorted())
+        } finally { dir.deleteRecursively() }
+    }
 }

@@ -35,10 +35,48 @@ class ContinuumDecoderBridge(private val directory: File) {
             return PairedState(TinyContextDecoder.restore(bundled.decoder),
                 bundled.encoder,state,bundled.generation,bundled.recoveredFromBackup)
         }
-        val legacy=loadPairedOrNull() ?: return null
+        val legacy=loadPairedOrNull() ?: run {
+            // An orphaned binding means a previously written checkpoint is missing.
+            if (pairedBinding.exists() || java.nio.file.Files.isSymbolicLink(pairedBinding.toPath()))
+                throw IllegalStateException("CDX1 legacy binding exists without decoder")
+            return null
+        }
         val binding=ContinuumPairedEncoderBinding.inspect(
-            pairedBinding,legacy.save(),liveEncoder)
-        return PairedState(legacy,binding.frozenEncoder,binding.state.name,0L,false)
+            pairedBinding,legacy.model.save(),liveEncoder)
+        val unsafeBinding=binding.state==ContinuumPairedEncoderBinding.State.CORRUPT
+        return PairedState(legacy.model,
+            if(unsafeBinding)null else binding.frozenEncoder,
+            when {
+                unsafeBinding -> "CORRUPT"
+                legacy.recoveredFromBackup -> "RECOVERED_LKG"
+                else -> binding.state.name
+            },0L,legacy.recoveredFromBackup)
+    }
+
+    /**
+     * Read-only evidence about existing CDX1 checkpoint files. Exposes neither
+     * private app-directory paths nor any model weights. A missing file,
+     * symlink and unreadable existing file must remain distinguishable.
+     */
+    @Synchronized fun storageEvidence():String {
+        fun describe(label:String,file:File):String {
+            val state=when {
+                java.nio.file.Files.isSymbolicLink(file.toPath()) ->
+                    "symbolische Verknüpfung (gesperrt)"
+                !file.exists() -> "fehlt"
+                !file.isFile -> "kein regulärer Dateityp"
+                !file.canRead() -> "vorhanden, nicht lesbar"
+                else -> "vorhanden ("+file.length()+" Byte)"
+            }
+            return label+": "+state
+        }
+        return listOf(
+            describe("Alter CDX1-Checkpoint",pairedCheckpoint),
+            describe("Alte CDX1-Sicherung",File(pairedCheckpoint.absolutePath+".lkg")),
+            describe("Alte SWB1-Bindung",pairedBinding),
+            describe("Neues Paarbundle",File(directory,"context-decoder-paired.bundle")),
+            describe("Paarbundle-Sicherung",File(directory,"context-decoder-paired.bundle.lkg"))
+        ).joinToString("\n")
     }
 
     data class Status(
@@ -172,14 +210,40 @@ class ContinuumDecoderBridge(private val directory: File) {
         return state.model.generate(prefix,maxBytes,condition)
     }
 
-    private fun loadPairedOrNull():TinyContextDecoder? {
-        if(!pairedCheckpoint.exists())return null
-        return runCatching { TinyContextDecoder.restoreFrom(pairedCheckpoint) }
-            .getOrElse {
-                val backup=File(pairedCheckpoint.absolutePath+".lkg")
-                if(backup.exists())runCatching { TinyContextDecoder.restoreFrom(backup) }
-                    .getOrNull() else null
+    private data class LegacyState(
+        val model:TinyContextDecoder,
+        val recoveredFromBackup:Boolean
+    )
+
+    /**
+     * Never confuse unreadable existing weights with an untrained decoder.
+     * A legacy backup can be inspected, but is read-only until explicit
+     * recovery is reviewed. No files are modified in this method.
+     */
+    private fun loadPairedOrNull():LegacyState? {
+        val backup=File(pairedCheckpoint.absolutePath+".lkg")
+        if(java.nio.file.Files.isSymbolicLink(pairedCheckpoint.toPath()) ||
+            java.nio.file.Files.isSymbolicLink(backup.toPath()))
+            throw IllegalStateException("CDX1 legacy checkpoint symlink rejected")
+        if(pairedCheckpoint.exists()) {
+            if(pairedCheckpoint.isFile) {
+                runCatching { TinyContextDecoder.restoreFrom(pairedCheckpoint) }
+                    .getOrNull()?.let { return LegacyState(it,false) }
             }
+            if(backup.isFile) {
+                runCatching { TinyContextDecoder.restoreFrom(backup) }
+                    .getOrNull()?.let { return LegacyState(it,true) }
+            }
+            throw IllegalStateException("Existing CDX1 legacy checkpoint cannot be read")
+        }
+        if(backup.exists()) {
+            if(!backup.isFile)throw IllegalStateException("CDX1 backup is not a regular file")
+            return LegacyState(
+                runCatching { TinyContextDecoder.restoreFrom(backup) }
+                    .getOrElse { throw IllegalStateException("CDX1 backup cannot be read",it) },
+                true)
+        }
+        return null
     }
 
     /** No tool calls, memory access or app actions; output is untrusted experiment text. */

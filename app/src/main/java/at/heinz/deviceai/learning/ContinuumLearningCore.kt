@@ -722,6 +722,11 @@ class ContinuumLearningCore(
         ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
     }
 
+    /** Inspect only filenames and metadata; never writes, trains or restores. */
+    fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
+        ContinuumDecoderBridge(directory).storageEvidence()
+    }
+
     fun trainExperimentalPairedDecoder(
         training:DecoderEvidenceCorpus,
         audit:DecoderEvidenceCorpus,

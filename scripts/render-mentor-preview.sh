@@ -138,7 +138,7 @@ if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
   exit 69
 fi
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
-  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='12' versionName='0.3.9'"
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='13' versionName='0.3.10'"
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
@@ -149,7 +149,7 @@ if [[ ! "$apk_sha256" =~ ^[0-9a-f]{64}$ ]]; then
   echo "Invalid APK SHA-256" >&2
   exit 69
 fi
-immutable_apk="DeviceAI-Continuum-v0.3.9-${apk_sha256}.apk"
+immutable_apk="DeviceAI-Continuum-v0.3.10-${apk_sha256}.apk"
 cp "$apk" "$output/$immutable_apk"
 (
   cd "$output"
@@ -159,15 +159,15 @@ cp "$apk" "$output/$immutable_apk"
 # Keep legacy aliases for compatibility, but NEVER use them as release links:
 # a CDN can cache an older APK with the same version under these names.
 cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
-cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.9.apk"
+cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.10.apk"
 (
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk \
-    DeviceAI-Continuum-Training-Monitor-v0.3.9.apk > SHA256SUMS.txt
+    DeviceAI-Continuum-Training-Monitor-v0.3.10.apk > SHA256SUMS.txt
 )
 printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\nartifact=%s\napk_sha256=%s\n' \
   "$commit" "$actual_branch" "$expected_branch" "$immutable_apk" "$apk_sha256" > "$output/BUILD-INFO.txt"
-cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.9.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.10.txt"
 cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-${apk_sha256}.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified immutable APK and checksums ready for publication"
