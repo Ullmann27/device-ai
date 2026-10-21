@@ -29,7 +29,7 @@ data class ContinuumOfflineJobSnapshot(
         if(lastFinishedAt>0L)append("\nLetzter Abschluss: ").append(date(lastFinishedAt))
         if(lastError.isNotBlank())append("\nLetzter Fehler: ").append(lastError.take(120))
         if(recentEvents.isNotBlank())append("\nLetzte Lernläufe: ").append(recentEvents.take(512))
-        append("\nAusführung erfordert Laden des Geräts; Android kann den Job verschieben.")
+        append("\nKeine Ladepflicht. Android kann den Job bei niedrigem Akku, Hitze, Speichermangel oder aus Systemgründen verschieben. Der angezeigte letzte Zustand ist historisch.")
     }
 }
 object ContinuumOfflineJobStatus {
@@ -72,7 +72,7 @@ object ContinuumOfflineJobStatus {
             .putString("error",error.javaClass.simpleName.take(60)).apply()
     }
     fun deferred(context:Context,reason:String,now:Long=System.currentTimeMillis()) {
-        require(reason in setOf("BATTERY_LOW","THERMAL_LIMIT","STORAGE_LOW","TIME_BUDGET"))
+        require(reason in setOf("BATTERY_LOW","BATTERY_UNKNOWN","THERMAL_LIMIT","STORAGE_LOW","TIME_BUDGET"))
         val phase="DEFERRED_"+reason
         logPhase(context,phase,now)
         prefs(context).edit().putString("phase",phase)

@@ -6,6 +6,9 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.os.SystemClock
 import android.util.Log
 import org.json.JSONObject
@@ -58,7 +61,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
             "\nAutomatisch entdeckte Themen in Warteschlange: "+pendingTopics.size+
             " · untersuchte Thementitel: "+seenTopics.size+
             "\nNächstes Forschungsthema: "+nextTopic+
-            "\nJeweils eine Wikipedia-Quelle, nur beim Laden und mit Netzwerk; "+
+            "\nJeweils eine Wikipedia-Quelle, auch ohne Ladekabel mit Netzwerk; "+
             "Android steuert die tatsächliche Häufigkeit. Jederzeit abschaltbar."
     }
 
@@ -80,17 +83,17 @@ class ContinuumPublicStudyScheduler(context:Context) {
             val pending=jobs.getPendingJob(JOB_ID)
             if(pending!=null &&
                 pending.service.className==ContinuumPublicStudyJobService::class.java.name &&
-                pending.isRequireCharging &&
+                !pending.isRequireCharging &&
                 pending.networkType==JobInfo.NETWORK_TYPE_ANY &&
                 pending.isPersisted &&
                 pending.intervalMillis==ContinuumPublicStudyPolicy.PERIOD_MS &&
-                pending.isRequireBatteryNotLow &&
+                !pending.isRequireBatteryNotLow &&
                 pending.isRequireStorageNotLow) return true
             val request=JobInfo.Builder(JOB_ID,
                 ComponentName(app,ContinuumPublicStudyJobService::class.java))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setRequiresCharging(true)
-                .setRequiresBatteryNotLow(true)
+                .setRequiresCharging(false)
+                .setRequiresBatteryNotLow(false)
                 .setRequiresStorageNotLow(true)
                 .setPersisted(true)
                 .setPeriodic(ContinuumPublicStudyPolicy.PERIOD_MS)
@@ -144,6 +147,11 @@ class ContinuumPublicStudyScheduler(context:Context) {
         if(sourceAdded)edit.putLong("sources",prefs.getLong("sources",0L)+1L)
         if(weightsAccepted)edit.putLong("accepted",prefs.getLong("accepted",0L)+1L)
         check(edit.commit()) { "Study audit not persisted" }
+    }
+
+    fun recordBatteryDeferral(reason:String) {
+        require(reason=="DEFERRED_BATTERY_LOW" || reason=="DEFERRED_BATTERY_UNKNOWN")
+        prefs.edit().putString("phase",reason).commit()
     }
 
     private fun recordPhase(phase:String) {
@@ -277,7 +285,8 @@ internal object ContinuumPublicStudyFetch {
 
 /**
  * JobScheduler invokes one finite cycle per interval, never an endless foreground loop.
- * It can run via cellular or Wi-Fi; the charging and resource constraints remain mandatory.
+ * It can run unplugged over cellular or Wi-Fi. Each cycle checks the locally
+ * measured 20% battery threshold, keeping bounded source/gradient budgets.
  */
 class ContinuumPublicStudyJobService:JobService() {
     private val stopping=AtomicBoolean(false)
@@ -285,6 +294,27 @@ class ContinuumPublicStudyJobService:JobService() {
     override fun onStartJob(params:JobParameters):Boolean {
         val scheduler=ContinuumPublicStudyScheduler(this)
         if(!scheduler.enabled || scheduler.isRateLimited())return false
+        // Do not create a false research attempt or run gradients below 20%.
+        // JobScheduler itself must not impose the device-dependent low-battery gate.
+        val battery=registerReceiver(null,IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level=battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1) ?: -1
+        val scale=battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1) ?: -1
+        val percent=if(level>=0 && scale>0) level.toLong()*100L/scale else -1L
+        val deferral=when {
+            percent<0L -> "DEFERRED_BATTERY_UNKNOWN"
+            percent<ContinuumOfflineLearningBudget.MIN_BATTERY_PERCENT -> "DEFERRED_BATTERY_LOW"
+            else -> null
+        }
+        if(deferral!=null) {
+            scheduler.recordBatteryDeferral(deferral)
+            runCatching {
+                ContinuumTrainingMonitor.begin(this,ContinuumTrainingMonitor.PUBLIC,
+                    "Akkugrenze prüfen","SWB1")
+                ContinuumTrainingMonitor.end(this,ContinuumTrainingMonitor.PUBLIC,
+                    "DEFERRED",deferral)
+            }
+            return false
+        }
         stopping.set(false)
         thread=Thread({
             var reschedule=false

@@ -6,6 +6,9 @@ import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import at.heinz.deviceai.BootstrapMemoryStore
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
@@ -14,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Explicitly opted-in learning conductor for the EXISTING local 273-weight classifier.
  *
  * - While UI is visible: short opportunities without charging (activity checks battery/power saver).
- * - Background: JobScheduler permits small cycles when charging, not a permanent process.
+ * - Background: short opt-in cycles without charging from 20% battery, not a permanent process.
  * - When three cycles do not improve generalization, stop weight updates until new APPROVED lessons.
  * - All prior weights are retained unless frozen holdouts and user-approved training improve.
  * No network, always-listening microphone, device tool call or unreviewed self-labeling.
@@ -42,14 +45,28 @@ class NeuralPracticeScheduler(context: Context) {
             .putBoolean("enabled", true)
             .putInt("stagnant", 0)
             .putString("fingerprint", lab.lessonFingerprint())
-            .putString("status", "Lernbereit: im Vordergrund und beim Laden im Hintergrund.")
+            .putString("status", "Lernbereit: kurze Übungszyklen auch ohne Ladekabel ab 20 % Akku.")
             .commit()
         if (!success) jobs.cancel(JOB_ID)
         return success
     }
 
     fun restoreIfEnabled() {
-        if (enabled && jobs.getPendingJob(JOB_ID) == null) schedule()
+        if (!enabled) return
+        val existing = jobs.getPendingJob(JOB_ID)
+        // Do not replace an identical running job. Migrate legacy charging-only jobs.
+        if (existing == null || existing.isRequireCharging ||
+            existing.isRequireBatteryNotLow || !existing.isPersisted ||
+            existing.intervalMillis != PERIOD_MS ||
+            existing.networkType != JobInfo.NETWORK_TYPE_NONE ||
+            existing.service.className != NeuralPracticeJobService::class.java.name) {
+            schedule()
+        }
+    }
+
+    fun recordBatteryDeferral() {
+        prefs.edit().putString("status",
+            "Akkustand unter 20 % oder nicht messbar: nächster Übungszyklus abwarten.").apply()
     }
 
     fun disable() {
@@ -128,7 +145,8 @@ class NeuralPracticeScheduler(context: Context) {
 
     private fun schedule(): Boolean {
         val info = JobInfo.Builder(JOB_ID, ComponentName(app, NeuralPracticeJobService::class.java))
-            .setRequiresCharging(true)
+            .setRequiresCharging(false)
+            .setRequiresBatteryNotLow(false)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE)
             .setPeriodic(PERIOD_MS)
             .setPersisted(true).build()
@@ -151,6 +169,14 @@ class NeuralPracticeJobService : JobService() {
     override fun onStartJob(params: JobParameters): Boolean {
         val scheduler = NeuralPracticeScheduler(this)
         if (!scheduler.enabled) return false
+        val battery = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = battery?.getIntExtra(BatteryManager.EXTRA_LEVEL,-1) ?: -1
+        val scale = battery?.getIntExtra(BatteryManager.EXTRA_SCALE,-1) ?: -1
+        if (level < 0 || scale <= 0 ||
+            level.toLong()*100L/scale < ContinuumOfflineLearningBudget.MIN_BATTERY_PERCENT) {
+            scheduler.recordBatteryDeferral()
+            return false
+        }
         cancelled.set(false)
         worker = Thread({
             try { scheduler.practiceOnce(cancelled::get) }

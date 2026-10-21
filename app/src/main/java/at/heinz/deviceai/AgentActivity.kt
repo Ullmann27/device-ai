@@ -223,7 +223,7 @@ class AgentActivity : Activity() {
                 val charge = battery.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY)
                 val power = getSystemService(android.content.Context.POWER_SERVICE)
                     as android.os.PowerManager
-                if (charge >= 30 && !power.isPowerSaveMode) {
+                if (charge >= 20 && !power.isPowerSaveMode) {
                     localAgentExecutor.execute {
                         // stops (and saves nothing) when the app leaves the foreground or closes
                         val status = scheduler.practiceOnce(cancelled = {
@@ -237,7 +237,7 @@ class AgentActivity : Activity() {
                         }
                     }
                 } else if (!busy) {
-                    neuralMonitor.text = "NEURON · Lernt wieder, sobald Akku ≥30 % und Energiesparen aus ist"
+                    neuralMonitor.text = "NEURON · Lernt wieder, sobald Akku ≥20 % und Energiesparen aus ist"
                 }
             }
             if (foregroundLearningActive) mainHandler.postDelayed(this, 60_000L)
@@ -2107,8 +2107,8 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this)
                 .setTitle("Automatisches neuronales Üben")
                 .setMessage("Im sichtbaren Chat prüfe ich etwa einmal pro Minute, ob ein kurzer " +
-                    "Lernzyklus sinnvoll ist (Akku mindestens 30 %, kein Energiesparmodus). " +
-                    "Im Hintergrund plant Android beim Laden zusätzliche Zyklen, ungefähr alle 15 Minuten. " +
+                    "Lernzyklus sinnvoll ist (Akku mindestens 20 %, kein Energiesparmodus). " +
+                    "Im Hintergrund plant Android kurze Zyklen auch ohne Ladekabel ab 20 % Akku (nicht minutengenau). " +
                     "Nach drei ergebnislosen Zyklen bleiben die Gewichte erhalten. " +
                     "Sobald du mir weitere bestätigte Beispiele beibringst, übe ich automatisch weiter.\n\n" +
                     "Bisherige Versuche: " + practice.attempts +
@@ -2129,8 +2129,8 @@ class AgentActivity : Activity() {
             .setTitle("Wiederkehrendes neuronales Üben erlauben?")
             .setMessage("Du erlaubst kleine, wiederholte Trainingsdurchgänge des lokalen Sprachklassifikators auf " +
                 "deinen bereits bestätigten Sprachbeispielen. Während die App sichtbar ist, " +
-                "sucht Device AI etwa jede Minute eine Lerngelegenheit (Akku ≥30 %, kein Energiesparen). " +
-                "Android plant beim Laden weitere Hintergrundübungen etwa alle 15 Minuten. " +
+                "sucht Device AI etwa jede Minute eine Lerngelegenheit (Akku ≥20 %, kein Energiesparen). " +
+                "Android plant weitere Hintergrundübungen ohne Ladepflicht ab 20 % Akku (nicht minutengenau). " +
                 "Die genauen Laufzeiten werden vom Betriebssystem bestimmt.\n\n" +
                 "Unbekannte Prüfbeispiele schützen vor Verschlechterung. Nach drei " +
                 "nicht verbesserten Durchgängen wartet die KI auf neue bestätigte Beispiele " +
@@ -2639,7 +2639,7 @@ class AgentActivity : Activity() {
                 "Die Quellen gelten nur als unbestätigte Beobachtungen. "+
                 "Modelländerungen brauchen weiterhin Replay und unabhängige Tests. "+
                 "Kein Webtext darf Gerätebefehle ausführen oder als persönliche Aussage gelten. "+
-                "Android plant ungefähr alle 15 Minuten (nicht garantiert), während des Ladens "+
+                "Android plant ungefähr alle 15 Minuten (nicht garantiert), auch ohne Ladekabel ab 20 % Akku "+
                 "und mit einer Internetverbindung (auch Mobilfunk). "+
                 "Ausschalten stoppt die Planung; die gespeicherten Quellen bleiben erhalten.")
             .setNegativeButton("ABBRECHEN",null)
@@ -2654,7 +2654,7 @@ class AgentActivity : Activity() {
                 addAssistantMessage(if(started)
                     "Öffentliche Hintergrundforschung aktiviert. Android plant begrenzte "+
                         "Lernläufe; keine Endlosschleife im Vordergrund. "+
-                        "Die erste Ausführung kann sich bis zum Laden verzögern."
+                        "Die erste Ausführung kann sich durch Android-Systemgrenzen verzögern."
                     else "Forschung wurde nicht korrekt eingeplant.\n"+scheduler.display()+
                         "\nBitte diese Meldung für die Diagnose speichern.")
             }

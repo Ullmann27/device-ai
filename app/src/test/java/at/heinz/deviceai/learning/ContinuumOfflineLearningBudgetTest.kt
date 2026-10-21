@@ -8,15 +8,17 @@ class ContinuumOfflineLearningBudgetTest {
 
     @Test fun acceptsHealthyDeviceResources() {
         assertNull(ContinuumOfflineLearningBudget.deferralReason(safe))
-        assertNull(ContinuumOfflineLearningBudget.deferralReason(
+        assertEquals("BATTERY_UNKNOWN", ContinuumOfflineLearningBudget.deferralReason(
             ContinuumLearningResources(null, false, null, null)))
     }
 
     @Test fun rejectsLowBatteryHeatAndStorage() {
         val gate = ContinuumOfflineLearningBudget
         assertEquals("BATTERY_LOW", gate.deferralReason(safe.copy(batteryLow = true)))
-        assertEquals("BATTERY_LOW", gate.deferralReason(
+        assertNull(gate.deferralReason(
             safe.copy(batteryPercent = gate.MIN_BATTERY_PERCENT)))
+        assertEquals("BATTERY_LOW", gate.deferralReason(
+            safe.copy(batteryPercent = gate.MIN_BATTERY_PERCENT - 1)))
         assertEquals("THERMAL_LIMIT", gate.deferralReason(
             safe.copy(thermalStatus = 2)))
         assertEquals("STORAGE_LOW", gate.deferralReason(
