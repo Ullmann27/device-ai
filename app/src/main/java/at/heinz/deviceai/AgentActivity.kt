@@ -1212,6 +1212,16 @@ class AgentActivity : Activity() {
         )
     )
 
+    /** The two trainable cores are version-coupled, not continuously re-wired. */
+    private fun cdx1BindingLabel(value: String): String = when(value) {
+        "PINNED_CURRENT" -> "fixierter SWB1-Stand stimmt überein"
+        "PINNED_PREVIOUS" -> "CDX1 nutzt weiterhin seinen geprüften älteren SWB1-Stand"
+        "PINNED_UNKNOWN" -> "SWB1-Stand fixiert, aktueller Stand ungeprüft"
+        "CORRUPT" -> "BINDUNG FEHLERHAFT – CDX1-Ausgabe gesperrt"
+        "LEGACY_UNBOUND" -> "ältere Forschungsgewichte ohne geprüfte SWB1-Bindung"
+        else -> "noch kein CDX1-Checkpoint"
+    }
+
     private fun learningCenterStatus(): String = buildString {
         val learning = ContinuumLearningCore(filesDir)
         val core = learning.status()
@@ -1229,7 +1239,8 @@ class AgentActivity : Activity() {
         append("CDX1-Paarlabor: ").append(if(paired.available)"Forschungsgewichte vorhanden"
             else "noch ohne Forschungsgewichte")
             .append(" · ").append(paired.updates)
-            .append(" Updates · Chatfreigabe: NEIN\n")
+            .append(" Updates · Encoder: ").append(cdx1BindingLabel(paired.conditioningState))
+            .append(" · Chatfreigabe: NEIN\n")
         val cdxStages=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
         append("CDX1 · Großes Paararchiv: ").append(cdxStages.completed)
             .append("/").append(cdxStages.total).append(" Stufen geprüft\n")
@@ -3135,7 +3146,8 @@ class AgentActivity : Activity() {
                 "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
                     "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
                     "Gewichtsupdates: "+status.updates+"\n"+
-                    "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n\n"+
+                    "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n"+
+                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n\n"+
                     "Ein Beleg und eine Frage werden gemeinsam als Eingabe benutzt. "+
                     "Der Decoder lernt ausschließlich die Antwortzeichen. "+
                     "Trainings- und Prüfbeispiele sind getrennt; eine Verschlechterung "+
@@ -3267,9 +3279,12 @@ class AgentActivity : Activity() {
                     val core=ContinuumLearningCore(filesDir)
                     val output=core.experimentalPairedDecoderContinuation(
                         source,query,maxBytes=48)
-                    val cdxText=if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
-                        "Forschungscheckpoint. Starte erst das Paarlabor."
-                    else buildString {
+                    val cdxText=if(output==null) {
+                        val status=core.pairedDecoderStatus()
+                        if(status.available) "CDX1-Test derzeit nicht verfügbar. "+
+                            cdx1BindingLabel(status.conditioningState)+"."
+                        else "CDX1 hat noch keinen eigenen Forschungscheckpoint. Starte erst das Paarlabor."
+                    } else buildString {
                         append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
                         append("Beleg: ").append(source).append("\nFrage: ").append(query)
                         append("\nCDX1-Ausgabe: ").append(output.text.take(120))
