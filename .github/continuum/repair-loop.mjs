@@ -443,7 +443,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   if(candidateProvider!==null){
     // Trusted opt-in adapter only; model data cannot set a strategy, diagnostic,
     // risk, test command or authority. Every proposal still traverses all gates.
-    report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:0,
+    report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
       localRequests:0,verifiedModelExecution:false,reason:'No model execution independently established'};
     try{
       if(typeof candidateProvider!=='function'||!localScope.length||Date.now()>=deadline)throw Error('LOCAL_PROVIDER_UNAVAILABLE');

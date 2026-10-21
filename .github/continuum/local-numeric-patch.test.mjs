@@ -48,6 +48,8 @@ test('model recipes never replay in deterministic mode and retain review after e
   assert.equal(proposeCandidates([d],ctx).length,0);
   assert.equal(proposeCandidates([d],{...ctx,allowLocalModelPatches:true,allowedLocalPaths:['lib/other.mjs']}).length,0);
   const replay=proposeCandidates([d],{...ctx,allowLocalModelPatches:true,allowedLocalPaths:['lib/math.mjs']});
+  assert.equal(proposeCandidates([d],{...ctx,allowLocalModelPatches:true,allowedLocalPaths:['lib/math.mjs'],
+    readFile:()=> 'export const addedContext=1;\n'+oldText}).length,0,'replay must revalidate the actual whole module');
   assert.equal(replay.length,1);assert.equal(replay[0].strategy,'LOCAL_MODEL_PATCH');
   assert.equal(critique(replay[0]).approved,true);assert.equal(critique(replay[0]).reviewRequired,true);
 });
