@@ -12,6 +12,7 @@ const worker=read(learning+'ContinuumAutonomousScheduler.kt');
 const policy=read(learning+'ContinuumDualCoreAutoStudy.kt');
 const bridge=read(learning+'ContinuumDecoderBridge.kt');
 const binding=read(learning+'ContinuumPairedEncoderBinding.kt');
+const bundle=read(learning+'ContinuumAtomicPairedBundleStore.kt');
 const ui=read(app);
 
 test('CDX1 is strictly opt-in and bounded by existing JobScheduler budget',()=>{
@@ -37,8 +38,13 @@ test('Research-only CDX1 events never authorize productive chat',()=>{
   assert.match(worker,/round\.accepted -> "ACCEPTED"/);
   assert.match(worker,/!round\.finalized -> "DEFERRED"/);
   assert.match(bridge,/private val pairedBinding/);
-  assert.match(bridge,/pairedEncoderSnapshot=binding\.frozenEncoder \?: encoderSnapshot/);
-  assert.match(bridge,/if\(binding\.state==ContinuumPairedEncoderBinding\.State\.CORRUPT\)return null/);
+  assert.match(bridge,/val pairedEncoderSnapshot=state\?\.encoder \?: encoderSnapshot/);
+  assert.match(bridge,/pairedBundles\.commit/);
+  assert.match(bridge,/state\.status=="CORRUPT"/);
+  assert.match(bundle,/fau[l]tBeforePublish/);
+  assert.match(bundle,/readBundle\(current\)/);
+  assert.match(bundle,/atomicWrite\(previous/);
+  assert.match(bundle,/Files\.move\(temp\.toPath\(\), file\.toPath\(\)/);
   assert.match(binding,/LearningSnapshot\.decode/);
   assert.match(binding,/ATOMIC_MOVE/);
   assert.match(binding,/Files\.isSymbolicLink/);
