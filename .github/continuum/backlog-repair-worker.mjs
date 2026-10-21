@@ -76,7 +76,7 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
  */
-export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker'}={}){
+export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null}={}){
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
     throw Error('Valid root, backlog file, out and budgetMinutes=1..30 required');
   if(id!==null&&!TASK_ID.test(id))throw Error('Invalid task ID');
@@ -117,7 +117,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     const writeReport=()=>{

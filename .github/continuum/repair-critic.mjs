@@ -7,6 +7,7 @@ import {renderOwnerNodeContract} from './contract-test-template.mjs';
 export const LIMITS=Object.freeze({maxFiles:3,maxChangedLines:40});
 
 const FORBIDDEN_PATHS=[
+  /^\.github\/continuum\/local-brain-repair\.mjs$/,
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // M4 release gates, proof validators, Sol handoff and local launchers are
   // control-plane code. Repair candidates may not rewrite their own judges.
@@ -120,5 +121,5 @@ export function critique(candidate){
   const revert=String(candidate.strategy).startsWith('REVERT_');
   const risk=Math.min(1,changed/LIMITS.maxChangedLines*0.5+(candidate.strategy==='REVERT_FILE_TO_PARENT'?0.4:revert?0.25:0)+(1-(candidate.prior??0.5))*0.3);
   return {approved:reasons.length===0,risk:Number(risk.toFixed(3)),reasons,changedLines:changed,
-    reviewRequired:revert||changed>10};
+    reviewRequired:revert||candidate.strategy==='LOCAL_MODEL_PATCH'||changed>10};
 }

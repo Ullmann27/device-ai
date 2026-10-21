@@ -226,7 +226,7 @@ export function proposeCandidates(diagnostics,ctx){
     for(const past of ctx.experience??[]){
       if(past.outcome!=='VERIFIED'||past.diagnostic!==d.fingerprint)continue;
       try{applyEdits(ctx.readFile,past.edits);
-        add({id:sha256('EXPERIENCE\u0000'+JSON.stringify(past.edits)).slice(0,16),strategy:'EXPERIENCE_REPLAY',
+        add({id:sha256('EXPERIENCE\u0000'+JSON.stringify(past.edits)).slice(0,16),strategy:past.strategy==='LOCAL_MODEL_PATCH'?'LOCAL_MODEL_PATCH':'EXPERIENCE_REPLAY',
           diagnostic:d.fingerprint,diagnosticKind:d.kind,description:'Replay patch verified for the same diagnostic in '+(past.baseCommit??'').slice(0,12),
           prior:0.9,edits:past.edits});}catch{}
     }
