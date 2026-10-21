@@ -267,4 +267,20 @@ class ContinuumDecoderBridgeTest {
                 bridge.pairedStatus(TrainableSubwordEncoder().save()).conditioningState)
         } finally { dir.deleteRecursively() }
     }
+
+    @Test fun readOnlyStorageInventoryDoesNotRewriteOrRestoreAnyCheckpoint() {
+        val dir=Files.createTempDirectory("continuum-cdx-storage-evidence").toFile()
+        try {
+            val saved=File(dir,"context-decoder-paired.cdx")
+            val raw=byteArrayOf(1,4,9,16)
+            saved.writeBytes(raw)
+            val before=dir.list()?.sorted()
+            val report=ContinuumDecoderBridge(dir).storageEvidence()
+            assertTrue(report.contains("Alter CDX1-Checkpoint: vorhanden (4 Byte)"))
+            assertTrue(report.contains("Alte CDX1-Sicherung: fehlt"))
+            assertTrue(report.contains("Neues Paarbundle: fehlt"))
+            assertArrayEquals(raw,saved.readBytes())
+            assertEquals(before,dir.list()?.sorted())
+        } finally { dir.deleteRecursively() }
+    }
 }
