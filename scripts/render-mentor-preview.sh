@@ -144,15 +144,15 @@ output="$repo_root/mentor-build-output"
 mkdir -p "$output"
 cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
 # A version-specific filename avoids stale CDN artifacts from earlier builds.
-cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.7.apk"
+cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.8.apk"
 (
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk \
-    DeviceAI-Continuum-Training-Monitor-v0.3.7.apk > SHA256SUMS.txt
+    DeviceAI-Continuum-Training-Monitor-v0.3.8.apk > SHA256SUMS.txt
 )
 printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
   "$commit" "$actual_branch" "$expected_branch" > "$output/BUILD-INFO.txt"
-cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.7.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.8.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
 cat "$output/SHA256SUMS.txt"
