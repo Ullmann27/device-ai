@@ -47,8 +47,8 @@ test('timeouts and a model changing its allowed file fail closed',()=>{
 
 test('model-derived recipe replay retains its review and risk boundary',()=>{
   const d={file:'lib/math.mjs',kind:'TEST_FAILURE',fingerprint:'aabbcc'};
-  const candidates=proposeCandidates([d],{readFile:()=> 'return a-b;',index:null,jsSiblings:new Map(),changedInBase:[],
-    experience:[{outcome:'VERIFIED',strategy:'LOCAL_MODEL_PATCH',diagnostic:d.fingerprint,edits:[patch]}]});
+  const candidates=proposeCandidates([d],{allowLocalModelPatches:true,allowedLocalPaths:['lib/math.mjs'],readFile:()=> 'export function distance(a,b){return a-b;}\n',index:null,jsSiblings:new Map(),changedInBase:[],
+    experience:[{outcome:'VERIFIED',strategy:'LOCAL_MODEL_PATCH',diagnostic:d.fingerprint,edits:[{...patch,oldText:'export function distance(a,b){return a-b;}\n',newText:'export function distance(a,b){return a>b?a-b:b-a;}\n'}]}]});
   assert.equal(candidates[0].strategy,'LOCAL_MODEL_PATCH');
   assert.equal(critique(candidates[0]).reviewRequired,true);
   assert.equal(critique({strategy:'LOCAL_MODEL_PATCH',edits:[{...patch,file:'.github/continuum/local-brain-repair.mjs'}]}).approved,false);

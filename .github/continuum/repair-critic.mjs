@@ -1,3 +1,4 @@
+import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 import {renderOwnerNodeContract} from './contract-test-template.mjs';
 /**
  * Critic: rejects candidate patches before any test runs. A patch the critic
@@ -7,7 +8,7 @@ import {renderOwnerNodeContract} from './contract-test-template.mjs';
 export const LIMITS=Object.freeze({maxFiles:3,maxChangedLines:40});
 
 const FORBIDDEN_PATHS=[
-  /^\.github\/continuum\/local-brain-repair\.mjs$/,
+  /^\.github\/continuum\/(?:local-brain-repair|local-numeric-patch)\.mjs$/,
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // M4 release gates, proof validators, Sol handoff and local launchers are
   // control-plane code. Repair candidates may not rewrite their own judges.
@@ -95,6 +96,8 @@ export function critique(candidate){
   const reasons=[];
   const edits=candidate?.edits;
   if(!Array.isArray(edits)||!edits.length)return {approved:false,risk:1,reasons:['empty patch']};
+  if(candidate.strategy==='LOCAL_MODEL_PATCH'&&(edits.length!==1||!isLocalNumericPatch(edits[0])))
+    reasons.push('local model patches require one complete pure numeric module');
   const files=new Set(edits.map(e=>e.file));
   if(files.size>LIMITS.maxFiles)reasons.push(`touches ${files.size} files (max ${LIMITS.maxFiles})`);
   let changed=0,addedAsserts=0,removedAsserts=0,bangDelta=0;

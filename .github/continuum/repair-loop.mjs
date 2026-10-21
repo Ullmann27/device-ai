@@ -436,26 +436,29 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     a.outcome!=='SYNTAX_CHECK_ERROR'&&
     !(a.outcome==='FAILED_SYNTAX'&&a.syntaxReason!=='INVALID_JS_SYNTAX'))
     .map(a=>a.diagnostic+':'+a.candidate));
-  const proposals=proposeCandidates(actionable,ctx);
+  const localScope=Array.isArray(candidateProvider?.allowedPaths)&&candidateProvider.allowedPaths.length<=2
+    ? [...candidateProvider.allowedPaths].filter(file=>typeof file==='string') : [];
+  const proposals=proposeCandidates(actionable,{...ctx,allowLocalModelPatches:candidateProvider!==null,
+    allowedLocalPaths:localScope});
   if(candidateProvider!==null){
     // Trusted opt-in adapter only; model data cannot set a strategy, diagnostic,
     // risk, test command or authority. Every proposal still traverses all gates.
     report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:0,
       localRequests:0,verifiedModelExecution:false,reason:'No model execution independently established'};
     try{
-      if(typeof candidateProvider!=='function'||Date.now()>=deadline)throw Error('LOCAL_PROVIDER_UNAVAILABLE');
+      if(typeof candidateProvider!=='function'||!localScope.length||Date.now()>=deadline)throw Error('LOCAL_PROVIDER_UNAVAILABLE');
       const result=candidateProvider({diagnostics:structuredClone(actionable),readFile:ctx.readFile,base,chain,deadline});
       const patch=result?.patch;
       if(result?.mode!=='LOCAL_LOOPBACK_PATCH_SHADOW'||result.trusted!==false||result.autoApply!==false||
         !patch||Object.keys(patch).sort().join(',')!=='file,newText,oldText'||
-        typeof patch.file!=='string'||typeof patch.oldText!=='string'||typeof patch.newText!=='string'||
+        typeof patch.file!=='string'||!localScope.includes(patch.file)||typeof patch.oldText!=='string'||typeof patch.newText!=='string'||
         !patch.oldText||!patch.newText||patch.oldText===patch.newText||
         patch.oldText.length>1600||patch.newText.length>1600||/[\0]/.test(patch.oldText+patch.newText))
         throw Error('LOCAL_PATCH_SCHEMA_REJECTED');
       const before=ctx.readFile(patch.file);
       if(typeof before!=='string'||before.split(patch.oldText).length!==2)
         throw Error('LOCAL_PATCH_NOT_EXACT');
-      const edits=[{file:patch.file,oldText:patch.oldText,newText:patch.newText}];
+      const edits=[{file:patch.file,oldText:before,newText:before.replace(patch.oldText,()=>patch.newText)}];
       proposals.push({id:sha256('LOCAL_MODEL_PATCH\0'+JSON.stringify(edits)).slice(0,16),
         strategy:'LOCAL_MODEL_PATCH',diagnostic:actionable[0].fingerprint,
         diagnosticKind:actionable[0].kind,prior:0.2,

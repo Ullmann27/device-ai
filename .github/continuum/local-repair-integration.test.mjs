@@ -26,6 +26,7 @@ function fixture() {
   git('init','-q');git('add','.');git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','initial faulty implementation');
   return {dir,root,state,git,head:git('rev-parse','HEAD')};
 }
+const providerFor=newText=>Object.assign(()=>proposal(newText),{allowedPaths:['lib/math.mjs']});
 const proposal=newText=>({mode:'LOCAL_LOOPBACK_PATCH_SHADOW',trusted:false,autoApply:false,
   patch:{file:'lib/math.mjs',oldText:'return a-b;',newText}});
 
@@ -34,7 +35,7 @@ test('opt-in local candidate uses the existing critic and real fixed tests',{ski
   try {
     wt=createWorktree(f.root,f.head);
     const out=path.join(f.state,'candidate');
-    const report=repairSession({wt,base:f.head,chain:'node',out,candidateProvider:()=>proposal('return a>b?a-b:b-a;')});
+    const report=repairSession({wt,base:f.head,chain:'node',out,candidateProvider:providerFor('return a>b?a-b:b-a;')});
     assert.equal(report.outcome,'VERIFIED');
     assert.equal(report.verified.strategy,'LOCAL_MODEL_PATCH');
     assert.equal(report.verified.reviewRequired,true);
@@ -49,7 +50,7 @@ test('a plausible but overfitted local patch loses against negative holdouts',{s
   try {
     wt=createWorktree(f.root,f.head);
     const report=repairSession({wt,base:f.head,chain:'node',out:path.join(f.state,'bad'),
-      candidateProvider:()=>proposal('return 5;')});
+      candidateProvider:providerFor('return 5;')});
     assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
     assert.equal(report.attempts.some(a=>a.strategy==='LOCAL_MODEL_PATCH'&&a.outcome==='FAILED_TESTS'),true);
     assert.equal(f.git('status','--porcelain'),'');
@@ -64,7 +65,7 @@ test('canonical owner backlog requires a fresh independent worktree for local ca
     store.apply([{op:'propose',actor:'owner',at:1,task:{id:'repair-local-distance',title:'Repair distance',kind:'REPAIR',source:'owner',priority:800,subject:{base:f.head,chain:'node'}}},
       {op:'accept',actor:'owner',at:2,id:'repair-local-distance'}]);
     const result=executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'artifacts'),
-      candidateProvider:()=>proposal('return a>b?a-b:b-a;')});
+      candidateProvider:providerFor('return a>b?a-b:b-a;')});
     assert.equal(result.status,'DONE');
     const independent=JSON.parse(fs.readFileSync(result.independentReceipt,'utf8'));
     assert.equal(independent.passed,true);assert.equal(independent.executedTests,4);
@@ -72,4 +73,27 @@ test('canonical owner backlog requires a fresh independent worktree for local ca
     assert.equal(f.git('status','--porcelain'),'');
     assert.equal(result.approvedForMerge,false);
   } finally {fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+
+test('outside writes and test monkeypatching are rejected before candidate execution',{skip:nested},()=>{
+  for(const kind of ['outside-write','test-mutation']) {
+    const f=fixture();let wt;
+    const marker=path.join(f.state,'owner-checkpoint');fs.writeFileSync(marker,'PRESERVE');
+    try {
+      wt=createWorktree(f.root,f.head);
+      const oldText=fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8');
+      const prefix=kind==='outside-write'
+        ? "import {writeFileSync} from 'node:fs';writeFileSync("+JSON.stringify(marker)+",'CORRUPT');\n"
+        : "import assert from 'node:assert/strict';assert.equal=()=>{};\n";
+      const candidateProvider=Object.assign(()=>({...proposal('return a>b?a-b:b-a;'),
+        patch:{file:'lib/math.mjs',oldText,newText:prefix+'export function distance(a,b){return a>b?a-b:b-a;}\n'}}),
+        {allowedPaths:['lib/math.mjs']});
+      const report=repairSession({wt,base:f.head,chain:'node',out:path.join(f.state,'blocked'),candidateProvider});
+      const attempt=report.attempts.find(a=>a.strategy==='LOCAL_MODEL_PATCH');
+      assert.equal(attempt.outcome,'REJECTED_BY_CRITIC');
+      assert.equal(attempt.tests,undefined,'no candidate test execution before capability restriction');
+      assert.equal(fs.readFileSync(marker,'utf8'),'PRESERVE');
+      assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
+    }finally{if(wt)removeWorktree(f.root,wt);fs.rmSync(f.dir,{recursive:true,force:true});}
+  }
 });
