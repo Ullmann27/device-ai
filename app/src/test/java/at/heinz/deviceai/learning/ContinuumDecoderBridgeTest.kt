@@ -168,6 +168,24 @@ class ContinuumDecoderBridgeTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun symlinkedBindingIsNeverTrustedOrOverwritten() {
+        val dir=Files.createTempDirectory("continuum-dual-core-symlink").toFile()
+        try {
+            val real=File(dir,"external-state")
+            real.writeText("not a model")
+            val link=File(dir,"context-decoder-paired.swb1-binding")
+            Files.createSymbolicLink(link.toPath(),real.toPath())
+            val swb1=TrainableSubwordEncoder().save()
+            val decoder=TinyContextDecoder().save()
+            val check=ContinuumPairedEncoderBinding.inspect(link,decoder,swb1)
+            assertEquals(ContinuumPairedEncoderBinding.State.CORRUPT,check.state)
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumPairedEncoderBinding.write(link,decoder,swb1)
+            }
+            assertEquals("not a model",real.readText())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun historicalUnboundCheckpointRemainsResearchOnly() {
         val dir=Files.createTempDirectory("continuum-dual-core-legacy").toFile()
         try {
