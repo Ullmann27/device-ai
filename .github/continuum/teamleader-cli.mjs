@@ -13,7 +13,7 @@ import {buildTeamleaderHandoff} from './teamleader-review-handoff.mjs';
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
   '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable']);
- const opts={once:false,loop:false,status:false,retry:false,durable:false};
+ const opts={once:false,loop:false,status:false,retry:false};
  for(let i=0;i<args.length;i++){
   const key=args[i];
   if(!allowed.has(key))throw Error('Unknown Teamleader option '+key);
