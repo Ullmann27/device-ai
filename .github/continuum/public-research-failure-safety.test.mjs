@@ -9,9 +9,9 @@ const kotlinTests = read('app/src/test/java/at/heinz/deviceai/learning/Continuum
 
 test('unavailable encyclopedia extracts are explicitly classified and never learned', () => {
   assert.match(source, /internal class WikimediaSourceUnavailable/);
-  assert.match(source, /extract \?: throw WikimediaSourceUnavailable\(\)/);
+  assert.match(source, /extract \?: throw WikimediaSourceUnavailable\(if\(missing\)"MISSING_PAGE" else "EMPTY_EXCERPT"\)/);
   assert.match(source, /catch \(_:IllegalArgumentException\) \{\s*throw WikimediaSourceUnavailable\(\)/);
-  assert.match(source, /e is WikimediaSourceUnavailable -> "SOURCE_UNAVAILABLE"/);
+  assert.match(states, /error is WikimediaSourceUnavailable -> "SOURCE_UNAVAILABLE_"\+error.reason/);
   assert.match(source, /e !is WikimediaSourceUnavailable/);
   assert.match(source, /ContinuumSourceNovelty\.pending\(listOf\(source\)/);
 });
@@ -22,7 +22,8 @@ test('failure reports identify safe operation and may not become accepted after 
     'AUDIT_SOURCE','SAVE_EVIDENCE']) {
     assert.ok(source.includes('operation="'+phase+'"'), 'missing '+phase);
   }
-  assert.match(source, /"FAILED_"\+operation\+"_"\+e\.javaClass\.simpleName/);
+  assert.match(states, /"FAILED_"\+operation\+"_"\+error\.javaClass\.simpleName/);
+  assert.match(source, /failurePhase\(operation,e,cancelled\(\)\)/);
   assert.match(source, /ContinuumPublicStudyCycleResult\.outcome\(phase\)/);
   assert.match(states, /val primary = phase\.substringBefore\(';'\)/);
   assert.match(states, /primary\.startsWith\("FAILED_"\) -> "FAILED"/);
@@ -32,8 +33,7 @@ test('failure reports identify safe operation and may not become accepted after 
 
 test('research attempts and pending topics remain truthful when a source has failed', () => {
   assert.match(source, /ContinuumPublicStudyCycleResult\.markTopicCompleted\(phase\)/);
-  assert.match(states, /primary != "TRAINING_DEFERRED"/);
-  assert.match(states, /!primary\.startsWith\("FAILED_"\)/);
+  assert.match(states, /return primary in setOf\("TRAINING_ACCEPTED", "TRAINING_REJECTED", "SOURCE_UNCHANGED"/);
   assert.match(source, /phase="FAILED_SAVE_CYCLE_"/);
   assert.match(source, /"Research cycle audit not persisted"/);
   assert.match(source, /if\(sourceAdded\)edit\.putLong\("sources"/);

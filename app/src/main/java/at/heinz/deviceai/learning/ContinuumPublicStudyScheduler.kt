@@ -167,11 +167,26 @@ internal class WikimediaRateLimited(val waitSeconds:Long):
     java.io.IOException("Wikimedia API asked research bot to reduce requests")
 
 /** A title without a suitable article is not an app crash or a learned source. */
-internal class WikimediaSourceUnavailable:
-    java.io.IOException("Encyclopedia article is missing or has no usable excerpt")
+internal class WikimediaSourceUnavailable(val reason:String = "EMPTY_EXCERPT"):
+    java.io.IOException("SOURCE_UNAVAILABLE_"+reason)
+
+/** Fixed codes only: never publish response bodies or exception messages. */
+internal class WikimediaFetchFailure(val code:String): java.io.IOException(code)
+internal class WikimediaFetchCancelled: java.io.IOException("CANCELLED")
 
 /** Source retrieval is isolated from user permission scopes and model ToolGate. */
 internal object ContinuumPublicStudyFetch {
+    private fun decodePages(text:String):JSONObject {
+        val json=try { JSONObject(text) } catch (_:org.json.JSONException) {
+            throw WikimediaFetchFailure("FETCH_INVALID_JSON")
+        }
+        if(json.has("error"))throw WikimediaFetchFailure("FETCH_API_ERROR")
+        val pages=json.optJSONObject("query")?.optJSONObject("pages")
+            ?: throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")
+        if(pages.length() !in 1..4)throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")
+        return pages
+    }
+
     private fun requireSuccessfulResponse(conn:HttpsURLConnection):Int {
         val status=conn.responseCode
         if(status==429 || status==503) {
@@ -183,15 +198,16 @@ internal object ContinuumPublicStudyFetch {
             }.getOrDefault(6L*3600L)
             throw WikimediaRateLimited(value)
         }
-        check(status==200) { "Wikipedia API HTTP_"+status }
+        if(status!=200)throw WikimediaFetchFailure("FETCH_HTTP_"+status)
         return status
     }
 
-    fun fetch(title:String,cancelled:()->Boolean):MentorSource {
-        check(!cancelled()) { "Cycle cancelled" }
+    fun fetch(title:String,cancelled:()->Boolean,
+              openConnection:(URL)->HttpsURLConnection = { it.openConnection() as HttpsURLConnection }):MentorSource {
+        if(cancelled())throw WikimediaFetchCancelled()
         val url=URL(ContinuumPublicStudyPolicy.encyclopediaApiUrl(title))
         check(url.protocol=="https" && url.host=="de.wikipedia.org")
-        val conn=(url.openConnection() as HttpsURLConnection)
+        val conn=openConnection(url)
         conn.instanceFollowRedirects=false
         conn.connectTimeout=6_000
         conn.readTimeout=6_000
@@ -199,54 +215,57 @@ internal object ContinuumPublicStudyFetch {
         conn.setRequestProperty("Accept","application/json")
         try {
             requireSuccessfulResponse(conn)
-            check(conn.contentType?.lowercase()?.contains("json")==true) { "Unexpected response type" }
+            if(conn.contentType?.substringBefore(';')?.trim()?.lowercase(java.util.Locale.ROOT)!="application/json")
+                throw WikimediaFetchFailure("FETCH_UNEXPECTED_CONTENT")
             if(conn.contentLengthLong>ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
-                error("Source too large")
+                throw WikimediaFetchFailure("FETCH_TOO_LARGE")
             val bytes=ByteArrayOutputStream()
             conn.inputStream.use { input ->
                 val buffer=ByteArray(2048)
                 while(true) {
-                    check(!cancelled()) { "Cycle cancelled" }
+                    if(cancelled())throw WikimediaFetchCancelled()
                     val count=input.read(buffer)
                     if(count<0)break
                     if(count==0)continue
-                    check(bytes.size()+count<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES) {
-                        "Source exceeded byte limit"
-                    }
+                    if(bytes.size()+count>ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+                        throw WikimediaFetchFailure("FETCH_TOO_LARGE")
                     bytes.write(buffer,0,count)
                 }
             }
             val text=String(bytes.toByteArray(),StandardCharsets.UTF_8)
-            val pages=JSONObject(text).getJSONObject("query").getJSONObject("pages")
-            check(pages.length()>0 && pages.length()<=4)
+            val pages=decodePages(text)
             val keys=pages.keys()
             var extract:String?=null
+            var missing=false
             while(keys.hasNext()) {
-                val next=pages.getJSONObject(keys.next())
-                if(next.has("missing") || next.has("invalid"))continue
-                val candidate=next.optString("extract")
+                val next=pages.optJSONObject(keys.next()) ?: throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")
+                if(next.has("missing") || next.has("invalid")){ missing=true; continue }
+                val value=next.opt("extract")
+                if(value!=null && value !is String)throw WikimediaFetchFailure("FETCH_INVALID_RESPONSE")
+                val candidate=value as? String ?: ""
                 if(candidate.isNotBlank()){ extract=candidate; break }
             }
             val excerpt=try {
                 ContinuumPublicStudyPolicy.normalizeExcerpt(
-                    extract ?: throw WikimediaSourceUnavailable())
+                    extract ?: throw WikimediaSourceUnavailable(if(missing)"MISSING_PAGE" else "EMPTY_EXCERPT"))
             } catch (_:IllegalArgumentException) {
                 throw WikimediaSourceUnavailable()
             }
             val result=MentorSource(title,ContinuumPublicStudyPolicy.publicArticleUrl(title),
                 ContinuumPublicStudyPolicy.digest(excerpt),excerpt)
             MentorSourceValidation.checkSource(result)
-            check(!cancelled())
+            if(cancelled())throw WikimediaFetchCancelled()
             return result
         } finally { conn.disconnect() }
     }
 
     /** One additional, bounded HTTPS request for outbound article links. */
-    fun discover(sourceTitle:String,cancelled:()->Boolean):List<String> {
-        check(!cancelled())
+    fun discover(sourceTitle:String,cancelled:()->Boolean,
+                 openConnection:(URL)->HttpsURLConnection = { it.openConnection() as HttpsURLConnection }):List<String> {
+        if(cancelled())throw WikimediaFetchCancelled()
         val url=URL(ContinuumPublicStudyPolicy.encyclopediaLinksApiUrl(sourceTitle))
         check(url.protocol=="https" && url.host=="de.wikipedia.org")
-        val conn=url.openConnection() as HttpsURLConnection
+        val conn=openConnection(url)
         conn.instanceFollowRedirects=false
         conn.connectTimeout=4_000
         conn.readTimeout=4_000
@@ -255,22 +274,24 @@ internal object ContinuumPublicStudyFetch {
             "DeviceAIContinuumResearchBot/0.5 (https://github.com/Ullmann27; source links)")
         try {
             requireSuccessfulResponse(conn)
-            check(conn.contentType?.lowercase()?.contains("json")==true)
-            check(conn.contentLengthLong<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+            if(conn.contentType?.substringBefore(';')?.trim()?.lowercase(java.util.Locale.ROOT)!="application/json")
+                throw WikimediaFetchFailure("FETCH_UNEXPECTED_CONTENT")
+            if(conn.contentLengthLong>ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+                throw WikimediaFetchFailure("FETCH_TOO_LARGE")
             val bytes=ByteArrayOutputStream()
             conn.inputStream.use { input ->
                 val buffer=ByteArray(1024)
                 while(true) {
-                    check(!cancelled())
+                    if(cancelled())throw WikimediaFetchCancelled()
                     val n=input.read(buffer)
                     if(n<0)break
                     if(n==0)continue
-                    check(bytes.size()+n<=ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+                    if(bytes.size()+n>ContinuumPublicStudyPolicy.MAX_RESPONSE_BYTES)
+                        throw WikimediaFetchFailure("FETCH_TOO_LARGE")
                     bytes.write(buffer,0,n)
                 }
             }
-            val result=JSONObject(String(bytes.toByteArray(),StandardCharsets.UTF_8))
-                .optJSONObject("query")?.optJSONObject("pages") ?: return emptyList()
+            val result=decodePages(String(bytes.toByteArray(),StandardCharsets.UTF_8))
             val links=ArrayList<String>(16)
             val pages=result.keys()
             while(pages.hasNext() && links.size<16) {
@@ -284,7 +305,7 @@ internal object ContinuumPublicStudyFetch {
                         title!=sourceTitle) links.add(title)
                 }
             }
-            check(!cancelled())
+            if(cancelled())throw WikimediaFetchCancelled()
             return links.distinct()
         } finally { conn.disconnect() }
     }
@@ -352,14 +373,18 @@ class ContinuumPublicStudyJobService:JobService() {
                     ContinuumPublicStudyPolicy.MAX_ROUND_WALL_MS-6_000L) {
                     ContinuumTrainingMonitor.phase(this@ContinuumPublicStudyJobService,
                         ContinuumTrainingMonitor.PUBLIC,"DISCOVER_TOPICS")
+                    operation="DISCOVER_TOPICS"
                     val discovered=runCatching {
                         ContinuumPublicStudyFetch.discover(source.subject,cancelled)
                     }.onFailure { error ->
                         if(error is WikimediaRateLimited)
                             scheduler.postponeDueToProvider(error.waitSeconds)
+                        Log.w("ContinuumPublicStudy",
+                            ContinuumPublicStudyCycleResult.failurePhase("DISCOVER_TOPICS",error,cancelled()))
                     }.getOrDefault(emptyList())
                     if(!cancelled())scheduler.addDiscovered(discovered)
                 }
+                operation="READ_SOURCE_EVIDENCE"
                 val notebook=MentorSourceNotebook(this)
                 val pending=ContinuumSourceNovelty.pending(listOf(source),
                     ContinuumSourceNovelty.completedHashes(filesDir))
@@ -412,14 +437,9 @@ class ContinuumPublicStudyJobService:JobService() {
                 }
             } catch(e:Exception) {
                 if(e is WikimediaRateLimited)scheduler.postponeDueToProvider(e.waitSeconds)
-                phase=when {
-                    cancelled() -> "INTERRUPTED"
-                    e is WikimediaRateLimited -> "PROVIDER_RATE_LIMIT"
-                    e is WikimediaSourceUnavailable -> "SOURCE_UNAVAILABLE"
-                    else -> ("FAILED_"+operation+"_"+e.javaClass.simpleName).take(65)
-                }
+                phase=ContinuumPublicStudyCycleResult.failurePhase(operation,e,cancelled())
                 reschedule=!stopping.get() && e !is WikimediaRateLimited &&
-                    e !is WikimediaSourceUnavailable && !cancelled()
+                    e !is WikimediaSourceUnavailable && e !is WikimediaFetchCancelled && !cancelled()
                 Log.w("ContinuumPublicStudy","Research cycle result: "+phase)
             } finally {
                 // This is a separate bounded step, so already-known sources or

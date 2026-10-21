@@ -38,4 +38,22 @@ class ContinuumPublicStudyCycleResultTest {
         assertEquals("DEFERRED",
             ContinuumPublicStudyCycleResult.outcome("TRAINING_DEFERRED"))
     }
+
+    @Test fun failureDiagnosisNeverCopiesRemoteDetailsAndKeepsArchiveAndTrainingSeparate() {
+        val detail = "secret URL and untrusted response body"
+        assertEquals("FAILED_FETCH_TIMEOUT", ContinuumPublicStudyCycleResult.failurePhase(
+            "FETCH_SOURCE", java.net.SocketTimeoutException(detail), false))
+        assertEquals("FAILED_FETCH_NETWORK", ContinuumPublicStudyCycleResult.failurePhase(
+            "FETCH_SOURCE", java.io.IOException(detail), false))
+        assertEquals("FAILED_ARCHIVE_SOURCE_IOException", ContinuumPublicStudyCycleResult.failurePhase(
+            "ARCHIVE_SOURCE", java.io.IOException(detail), false))
+        assertEquals("FAILED_TRAIN_SOURCE_IllegalStateException", ContinuumPublicStudyCycleResult.failurePhase(
+            "TRAIN_SOURCE", IllegalStateException(detail), false))
+        assertEquals("INTERRUPTED", ContinuumPublicStudyCycleResult.failurePhase(
+            "FETCH_SOURCE", java.io.IOException(detail), true))
+        assertEquals("SOURCE_UNAVAILABLE_MISSING_PAGE", ContinuumPublicStudyCycleResult.failurePhase(
+            "FETCH_SOURCE", WikimediaSourceUnavailable("MISSING_PAGE"), false))
+        assertFalse(ContinuumPublicStudyCycleResult.markTopicCompleted("UNKNOWN_FUTURE_STATUS"))
+        assertTrue(ContinuumPublicStudyCycleResult.markTopicCompleted("SOURCE_UNAVAILABLE_MISSING_PAGE"))
+    }
 }
