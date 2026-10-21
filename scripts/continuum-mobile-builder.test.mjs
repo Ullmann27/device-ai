@@ -166,6 +166,8 @@ test('owner file created during a publication race is never overwritten',async()
     assert.equal(report.reason,'DESTINATION_BECAME_OCCUPIED');
     assert.equal(fs.readFileSync(target,'utf8'),'OWNER_OR_OTHER_PROCESS_FILE');
     assert.deepEqual(fs.readFileSync(source),bytes);
+    assert.deepEqual(fs.readdirSync(folder).filter(name=>name.endsWith('.tmp')),[],
+      'Temporary APK staging files must be removed after copy failures');
   } finally {
     fs.copyFileSync=original;
   }
@@ -198,6 +200,8 @@ test('a corrupted final Download copy is reported without deleting owner files',
     assert.equal(report.reason,'FINAL_COPY_HASH_MISMATCH');
     assert.equal(fs.readFileSync(target,'utf8'),'UNEXPECTED_OWNER_FILE_AFTER_COPY');
     assert.deepEqual(fs.readFileSync(source),bytes);
+    assert.deepEqual(fs.readdirSync(folder).filter(name=>name.endsWith('.tmp')),[],
+      'Temporary APK staging files must be removed after copy failures');
   } finally {
     fs.copyFileSync=original;
   }
