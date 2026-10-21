@@ -27,7 +27,9 @@ test('a CDX1 candidate must pass novel AND historic audits before checkpoint pro
   assert.match(bridge,/protectedInputs\.none \{ it in trainingInputs \|\| it in heldoutInputs \}/);
   assert.match(bridge,/val protectedSafe=protectedAfter\.zip\(protectedBefore\)\.all/);
   assert.match(bridge,/auditAfter<=auditBefore &&/);
-  assert.match(bridge,/if\(accepted\)candidate\.saveTo\(pairedCheckpoint\)/);
+  // Accepted research weights are published with their exact SWB1 snapshot atomically.
+  assert.match(bridge,/pairedBundles\.commit\(candidate\.save\(\),pairedEncoderSnapshot,/);
+  assert.doesNotMatch(bridge,/if\(accepted\)candidate\.saveTo\(pairedCheckpoint\)/);
   assert.match(core,/protectedAudits:List<DecoderEvidenceCorpus>/);
   assert.match(rounds,/protectedAudits=listOf\(protected\)/);
 });
