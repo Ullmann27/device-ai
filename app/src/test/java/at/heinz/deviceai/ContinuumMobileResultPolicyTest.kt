@@ -92,6 +92,7 @@ class ContinuumMobileResultPolicyTest {
             "FAILED_BUILD",
             "FAILED_NO_APK",
             "FAILED_APK_SIGNATURE",
+            "FAILED_APK_IDENTITY",
             "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
             "UNKNOWN",
             ""
@@ -106,4 +107,15 @@ class ContinuumMobileResultPolicyTest {
         )
     }
 
+
+    @Test fun rejectedPackageIsHistoricalFailureAndNeverABuildSuccess() {
+        assertEquals(ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED,
+            ContinuumMobileResultPolicy.evaluate(ContinuumMobileBuildPlan.Operation.STATUS,
+                0,-1,"FAILED_APK_IDENTITY"))
+        assertEquals(ContinuumMobileResultPolicy.Outcome.BUILD_FAILED,
+            ContinuumMobileResultPolicy.evaluate(ContinuumMobileBuildPlan.Operation.BUILD,
+                2,-1,"FAILED_APK_IDENTITY"))
+        assertEquals(true,ContinuumMobileResultPolicy.statusExplanation("FAILED_APK_IDENTITY")
+            .contains("nicht freigegeben"))
+    }
 }

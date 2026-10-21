@@ -268,6 +268,16 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
       signatureFailure:verified.ok?'SIGNER_CERTIFICATE_DIGEST_UNRECOGNIZED':'SIGNATURE_VERIFICATION_FAILED',
       verifierExitCode:verified.code??null,verifierError:verified.error??null,
       verifierOutputTail:String(verified.output||'').slice(-1800)});
+    // A valid signature alone does not identify our preview. Inspect the same
+    // private staged bytes before publishing either the report or owner copy.
+    const identity=await run(tool.bin.aapt2,['dump','badging',staged],{cwd:root,env:resolvedEnv});
+    const packageLine=String(identity.output||'').split(/\r?\n/).find(line=>line.startsWith('package: '));
+    const packageName=packageLine?.match(/\bname='([^']+)'/)?.[1];
+    const versionText=packageLine?.match(/\bversionCode='([0-9]+)'/)?.[1];
+    const versionCode=Number(versionText);
+    if(!identity.ok||packageName!=='at.heinz.deviceai.preview'||
+       !Number.isSafeInteger(versionCode)||versionCode<1||versionCode>2100000000)
+      return persist(state,{schemaVersion:VERSION,status:'FAILED_APK_IDENTITY',commit});
     const digest=await sha256(staged);
     if(!await unchangedSource())return persist(state,{schemaVersion:VERSION,status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD',commit});
     const stable=path.join(state,'apk-'+digest+'.apk');
@@ -275,7 +285,7 @@ export async function build({project,stateDir,offline=false,env=process.env,arch
     const ownerInstallCopy=await copyVerifiedApkToOwnerDownloads({
       apk:stable,digest,commit,project:root,env:resolvedEnv,arch
     });
-    return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,ownerInstallCopy,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
+    return persist(state,{schemaVersion:VERSION,status:'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED',commit,apk:stable,apkSha256:digest,apkBytes:fs.statSync(stable).size,signerSha256:signer,packageName,versionCode,ownerInstallCopy,productionReady:false,deviceInstallationVerified:false,fullIndependentM4GatePassed:false,installPolicy:'OWNER_APPROVED_ANDROID_PACKAGE_INSTALLER_ONLY'});
   } finally { if(fs.existsSync(staged))fs.unlinkSync(staged); }
   } finally { releaseBuildLease(); }
 }
