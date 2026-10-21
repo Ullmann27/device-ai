@@ -6,7 +6,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment } from './continuum-mobile-builder.mjs';
+import { parseArgs, isTermuxArm64, doctor, build, readStatus, failedJvmTests, parseSignerSha256, resolveTermuxEnvironment, copyVerifiedApkToOwnerDownloads } from './continuum-mobile-builder.mjs';
 import { acquireContinuumBuildLease } from '../.github/continuum/shared-build-lease.mjs';
 
 const HEAD='f'.repeat(40);
@@ -135,6 +135,72 @@ test('owner Android build automatically publishes a hash-checked APK in the dedi
   assert.equal(again.ownerInstallCopy.status,'COPIED');
   assert.equal(again.ownerInstallCopy.alreadyPresent,true);
   assert.equal(again.ownerInstallCopy.apk,result.ownerInstallCopy.apk);
+});
+
+test('owner file created during a publication race is never overwritten',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  const folder=path.join(downloads,'00-DEVICEAI-INSTALLATION');
+  fs.mkdirSync(folder,{recursive:true});
+  const source=path.join(f.stateDir,'source-signed.apk');
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const bytes=Buffer.alloc(8192,42);
+  fs.writeFileSync(source,bytes);
+  const digest=createHash('sha256').update(bytes).digest('hex');
+  const target=path.join(folder,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'-'+digest.slice(0,12)+'.apk');
+  const original=fs.copyFileSync;
+  let raced=false;
+  try {
+    fs.copyFileSync=function(src,dst,flags) {
+      if(dst===target && flags===fs.constants.COPYFILE_EXCL && !raced) {
+        raced=true;
+        fs.writeFileSync(dst,'OWNER_OR_OTHER_PROCESS_FILE');
+      }
+      return original.call(fs,src,dst,flags);
+    };
+    const report=await copyVerifiedApkToOwnerDownloads({
+      apk:source,digest,commit:HEAD,project:f.root,
+      env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},arch:'arm64'
+    });
+    assert.equal(raced,true,'a competing owner write reached the publication boundary');
+    assert.equal(report.status,'UNAVAILABLE');
+    assert.equal(report.reason,'DESTINATION_BECAME_OCCUPIED');
+    assert.equal(fs.readFileSync(target,'utf8'),'OWNER_OR_OTHER_PROCESS_FILE');
+    assert.deepEqual(fs.readFileSync(source),bytes);
+  } finally {
+    fs.copyFileSync=original;
+  }
+});
+
+test('a corrupted final Download copy is reported without deleting owner files',async()=>{
+  const f=fixture(),home=path.dirname(f.root),downloads=path.join(home,'storage/downloads');
+  const folder=path.join(downloads,'00-DEVICEAI-INSTALLATION');
+  fs.mkdirSync(folder,{recursive:true});
+  const source=path.join(f.stateDir,'source-signed.apk');
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const bytes=Buffer.alloc(8192,42);
+  fs.writeFileSync(source,bytes);
+  const digest=createHash('sha256').update(bytes).digest('hex');
+  const target=path.join(folder,'DeviceAI-Continuum-Preview-'+HEAD.slice(0,7)+'-'+digest.slice(0,12)+'.apk');
+  const original=fs.copyFileSync;
+  try {
+    fs.copyFileSync=function(src,dst,flags) {
+      if(dst===target && flags===fs.constants.COPYFILE_EXCL) {
+        fs.writeFileSync(dst,'UNEXPECTED_OWNER_FILE_AFTER_COPY');
+        return;
+      }
+      return original.call(fs,src,dst,flags);
+    };
+    const report=await copyVerifiedApkToOwnerDownloads({
+      apk:source,digest,commit:HEAD,project:f.root,
+      env:{PREFIX:'/data/data/com.termux/files/usr',HOME:home,PATH:'/usr/bin'},arch:'arm64'
+    });
+    assert.equal(report.status,'UNAVAILABLE');
+    assert.equal(report.reason,'FINAL_COPY_HASH_MISMATCH');
+    assert.equal(fs.readFileSync(target,'utf8'),'UNEXPECTED_OWNER_FILE_AFTER_COPY');
+    assert.deepEqual(fs.readFileSync(source),bytes);
+  } finally {
+    fs.copyFileSync=original;
+  }
 });
 
 test('missing owner Download storage never fakes a published installer copy',async()=>{
