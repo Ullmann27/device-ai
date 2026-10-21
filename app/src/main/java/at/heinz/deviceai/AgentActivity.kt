@@ -6142,8 +6142,8 @@ class AgentActivity : Activity() {
                     ?.firstOrNull()?.trim()
                 if (!spoken.isNullOrBlank() && devDialog?.isShowing == true) {
                     // Recognition output is untrusted text, never an executable command.
-                    val safe = spoken.replace(Regex("[\\p{Cntrl}&&[^\\n\\t]]"), " ")
-                        .replace(Regex("\\s+"), " ").trim().take(400)
+                    val safe = spoken.map { if (Character.isISOControl(it)) ' ' else it }
+                        .joinToString("").replace(Regex("\\s+"), " ").trim().take(400)
                     devGoalInput?.setText(safe)
                     devGoalInput?.setSelection(safe.length)
                     devController.setGoal(safe)
