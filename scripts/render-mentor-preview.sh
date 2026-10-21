@@ -84,6 +84,8 @@ gradle --version
 echo "[Continuum] Sol quality handover: complete Node 22+ deterministic regression gate"
 node --version
 node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+echo "[Continuum] Reproducible backend dependencies from committed lockfile"
+npm --prefix backend ci --ignore-scripts --no-audit --no-fund
 echo "[Continuum] Full backend regression gate"
 node --test --test-concurrency=2 backend/test/*.test.js
 
