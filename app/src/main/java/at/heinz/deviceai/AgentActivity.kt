@@ -3167,7 +3167,11 @@ class AgentActivity : Activity() {
         }) { result ->
             val message=result.fold(onSuccess={ (status,evidence) ->
                 "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
-                    "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
+                    "Trainings-Checkpoint: "+when {
+                        status.conditioningState=="CORRUPT" -> "bestehende Daten nicht verifizierbar"
+                        status.available -> "vorhanden"
+                        else -> "kein lesbarer Checkpoint"
+                    }+"\n"+
                     "Gewichtsupdates: "+status.updates+"\n"+
                     "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n"+
                     "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n"+
