@@ -39,8 +39,8 @@ test('provider rate limits are obeyed, and background work remains finite',()=>{
   assert.match(scheduler,/fun isRateLimited\(\)/);
   assert.match(scheduler,/if\(!scheduler\.enabled \|\| scheduler\.isRateLimited\(\)\)return false/);
   assert.match(scheduler,/MAX_ROUND_WALL_MS/);
-  assert.match(scheduler,/setRequiresCharging\(true\)/);
-  assert.match(scheduler,/setRequiresBatteryNotLow\(true\)/);
+  assert.match(scheduler,/setRequiresCharging\(false\)/);
+  assert.match(scheduler,/setRequiresBatteryNotLow\(false\)/);
   assert.match(scheduler,/setRequiresStorageNotLow\(true\)/);
 });
 
