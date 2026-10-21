@@ -82,13 +82,20 @@ test('invalid intervals, cycle limits and CLI mode combinations are rejected',()
   ['--loop','--retry'],
   ['--loop','--interval-minutes','0'],
   ['--loop','--max-cycles','1001'],
-  ['--loop','--max-cycles','1.5']
+  ['--loop','--max-cycles','1.5'],
+  ['--durable','--once'],
+  ['--durable','--status'],
+  ['--durable','--loop'],
+  ['--durable','--loop','--max-cycles','0']
  ])assert.throws(()=>parseTeamleaderArgs(args));
  const parsed=parseTeamleaderArgs(['--loop','--interval-minutes','60',
    '--max-cycles','3','--budget-minutes','20']);
  assert.equal(parsed.loop,true);
  assert.equal(parsed.intervalMinutes,'60');
  assert.equal(parsed.maxCycles,'3');
+ const durable=parseTeamleaderArgs(['--loop','--durable','--max-cycles','3']);
+ assert.equal(durable.durable,true);
+ assert.equal(durable.maxCycles,'3');
 });
 
 
