@@ -3,8 +3,9 @@ package at.heinz.deviceai.learning
 /**
  * A fail-safe resource gate for the daily offline learning job.
  * Values are observations, not prompts and never contain user content.
- * Unknown values are tolerated because JobScheduler separately requires
- * charging and a battery-not-low state on API 26+.
+ * Unknown values are tolerated only while Android JobScheduler reports a
+ * battery-not-low state; charging is not required. The concrete 25% battery,
+ * thermal and storage gates remain enforced when measurements are available.
  */
 data class ContinuumLearningResources(
     val batteryPercent: Int?,
