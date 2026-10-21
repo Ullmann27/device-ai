@@ -25,9 +25,9 @@
   },
   "adopted": {
    "dev": {
-    "top1": 0.625,
-    "mrr": 0.656,
-    "recallAt3": 0.688,
+    "top1": 0.656,
+    "mrr": 0.703,
+    "recallAt3": 0.75,
     "answered": 0.844
    },
    "test": {
@@ -37,8 +37,8 @@
     "answered": 0.813
    },
    "unknown": {
-    "abstainWhenUnknown": 0.516,
-    "falseHitWhenUnknown": 0.484
+    "abstainWhenUnknown": 0.5,
+    "falseHitWhenUnknown": 0.5
    }
   },
   "current-without-neural": {
@@ -97,9 +97,9 @@
   },
   "gated-tfidf-wordgrams": {
    "dev": {
-    "top1": 0.625,
-    "mrr": 0.656,
-    "recallAt3": 0.688,
+    "top1": 0.656,
+    "mrr": 0.703,
+    "recallAt3": 0.75,
     "answered": 0.844
    },
    "test": {
@@ -109,15 +109,15 @@
     "answered": 0.813
    },
    "unknown": {
-    "abstainWhenUnknown": 0.516,
-    "falseHitWhenUnknown": 0.484
+    "abstainWhenUnknown": 0.5,
+    "falseHitWhenUnknown": 0.5
    }
   },
   "gated-tfidf+dense": {
    "dev": {
-    "top1": 0.625,
-    "mrr": 0.656,
-    "recallAt3": 0.688,
+    "top1": 0.656,
+    "mrr": 0.703,
+    "recallAt3": 0.75,
     "answered": 0.844
    },
    "test": {
@@ -127,8 +127,8 @@
     "answered": 0.813
    },
    "unknown": {
-    "abstainWhenUnknown": 0.516,
-    "falseHitWhenUnknown": 0.484
+    "abstainWhenUnknown": 0.5,
+    "falseHitWhenUnknown": 0.5
    }
   },
   "current (untrained encoder)": {

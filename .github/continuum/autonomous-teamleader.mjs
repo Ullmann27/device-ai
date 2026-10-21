@@ -378,8 +378,12 @@ export async function localTeamleaderDriver(){
    });
   },
   readyInvestigation(root,stateDir){
-   return nextEligible(new BacklogStore(path.join(stateDir,'development-backlog.json'),
-    {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
+   const store=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+   if(store.read().doc.tasks.some(t=>t.kind==='INVESTIGATE'&&
+      t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
+    store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
+   return nextEligible(store.read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
    // JS-only and partial repositories have no Android source tree to inspect.
