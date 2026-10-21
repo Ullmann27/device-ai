@@ -29,7 +29,7 @@ data class ContinuumOfflineJobSnapshot(
         if(lastFinishedAt>0L)append("\nLetzter Abschluss: ").append(date(lastFinishedAt))
         if(lastError.isNotBlank())append("\nLetzter Fehler: ").append(lastError.take(120))
         if(recentEvents.isNotBlank())append("\nLetzte Lernläufe: ").append(recentEvents.take(512))
-        append("\nAusführung erfordert Laden des Geräts; Android kann den Job verschieben.")
+        append("\nKeine Ladepflicht. Android kann den Job bei niedrigem Akku, Hitze, Speichermangel oder aus Systemgründen verschieben. Der angezeigte letzte Zustand ist historisch.")
     }
 }
 object ContinuumOfflineJobStatus {
