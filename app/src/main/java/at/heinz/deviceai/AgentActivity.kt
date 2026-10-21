@@ -1206,11 +1206,22 @@ class AgentActivity : Activity() {
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
             CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
+            CenterAction("CDX1 · HINTERGRUND-ÜBEN · EIN/AUS") { showDualCoreAutoStudyDialog() },
             CenterAction("CDX1 · EIGENE TESTFRAGE (OHNE TRAINING)") { showCdxPromptTest() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
     )
+
+    /** The two trainable cores are version-coupled, not continuously re-wired. */
+    private fun cdx1BindingLabel(value: String): String = when(value) {
+        "PINNED_CURRENT" -> "fixierter SWB1-Stand stimmt überein"
+        "PINNED_PREVIOUS" -> "CDX1 nutzt weiterhin seinen geprüften älteren SWB1-Stand"
+        "PINNED_UNKNOWN" -> "SWB1-Stand fixiert, aktueller Stand ungeprüft"
+        "CORRUPT" -> "BINDUNG FEHLERHAFT – CDX1-Ausgabe gesperrt"
+        "LEGACY_UNBOUND" -> "ältere Forschungsgewichte ohne geprüfte SWB1-Bindung"
+        else -> "noch kein CDX1-Checkpoint"
+    }
 
     private fun learningCenterStatus(): String = buildString {
         val learning = ContinuumLearningCore(filesDir)
@@ -1229,7 +1240,10 @@ class AgentActivity : Activity() {
         append("CDX1-Paarlabor: ").append(if(paired.available)"Forschungsgewichte vorhanden"
             else "noch ohne Forschungsgewichte")
             .append(" · ").append(paired.updates)
-            .append(" Updates · Chatfreigabe: NEIN\n")
+            .append(" Updates · Encoder: ").append(cdx1BindingLabel(paired.conditioningState))
+            .append(" · Chatfreigabe: NEIN\n")
+        append("CDX1 · Hintergrundlernen: ").append(if(at.heinz.deviceai.learning.ContinuumDualCoreAutoStudy.isEnabled(this@AgentActivity)) "EIN" else "AUS")
+            .append("\n")
         val cdxStages=at.heinz.deviceai.learning.ContinuumCdxLargeLab(filesDir).status()
         append("CDX1 · Großes Paararchiv: ").append(cdxStages.completed)
             .append("/").append(cdxStages.total).append(" Stufen geprüft\n")
@@ -3135,7 +3149,8 @@ class AgentActivity : Activity() {
                 "CDX1 · Eigenes konditioniertes Sprachlabor\n"+
                     "Trainings-Checkpoint: "+(if(status.available)"vorhanden" else "noch keiner")+"\n"+
                     "Gewichtsupdates: "+status.updates+"\n"+
-                    "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n\n"+
+                    "Modell-Hash: "+(status.sha256?.take(16)?:"nicht vorhanden")+"\n"+
+                    "SWB1-Verbindung: "+cdx1BindingLabel(status.conditioningState)+"\n\n"+
                     "Ein Beleg und eine Frage werden gemeinsam als Eingabe benutzt. "+
                     "Der Decoder lernt ausschließlich die Antwortzeichen. "+
                     "Trainings- und Prüfbeispiele sind getrennt; eine Verschlechterung "+
@@ -3267,9 +3282,12 @@ class AgentActivity : Activity() {
                     val core=ContinuumLearningCore(filesDir)
                     val output=core.experimentalPairedDecoderContinuation(
                         source,query,maxBytes=48)
-                    val cdxText=if(output==null)"CDX1 hat noch keinen eigenen aktiven "+
-                        "Forschungscheckpoint. Starte erst das Paarlabor."
-                    else buildString {
+                    val cdxText=if(output==null) {
+                        val status=core.pairedDecoderStatus()
+                        if(status.available) "CDX1-Test derzeit nicht verfügbar. "+
+                            cdx1BindingLabel(status.conditioningState)+"."
+                        else "CDX1 hat noch keinen eigenen Forschungscheckpoint. Starte erst das Paarlabor."
+                    } else buildString {
                         append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
                         append("Beleg: ").append(source).append("\nFrage: ").append(query)
                         append("\nCDX1-Ausgabe: ").append(output.text.take(120))
@@ -3313,6 +3331,46 @@ class AgentActivity : Activity() {
                 }
             }
             .show()
+    }
+
+    private fun showDualCoreAutoStudyDialog() {
+        val policy=at.heinz.deviceai.learning.ContinuumDualCoreAutoStudy
+        val enabled=policy.isEnabled(this)
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · zwei lokale Lernkerne")
+            .setMessage("SWB1 lernt eigenständig mit seinen Qualitätsprüfungen. " +
+                "Optional darf CDX1 im bestehenden täglichen Android-Offlinejob " +
+                "höchstens eine Forschungsstufe bearbeiten. Das Gerät muss laden; " +
+                "der Akku, die Temperatur und der verfügbare Speicher werden geprüft. " +
+                "Android darf den Lauf verschieben. Die CDX1-Stufe nutzt ausschließlich " +
+                "das synthetische Paararchiv und den dazu fixierten SWB1-Encoderstand. " +
+                "Vor jeder Speicherung bleiben Trainings-/Audit- und Schutzprüfungen " +
+                "verpflichtend. Es werden keine Besitzerfakten, Webseiten oder " +
+                "Chatnachrichten automatisch zu CDX1-Trainingsdaten. " +
+                "Der kleine CDX1-Forschungsdecoder wird nicht als produktiver Chat freigegeben." +
+                "\n\nCDX1-Hintergrundlernen: "+(if(enabled)"EIN" else "AUS") +
+                "\nAbschalten verändert keine bestehenden Gewichte oder Checkpoints.")
+            .setNegativeButton("Schließen",null)
+            .setNeutralButton("CDX1 AUTO AUS") { _, _ ->
+                addAssistantMessage(if(policy.setEnabled(this,false))
+                    "Autonomes CDX1-Forschungstraining deaktiviert. " +
+                        "Vorhandene Gewichte und Checkpoints bleiben erhalten."
+                    else "CDX1-Einstellung konnte nicht gespeichert werden.")
+            }
+            .setPositiveButton("CDX1 AUTO FREIGEBEN") { _, _ ->
+                val saved=policy.setEnabled(this,true)
+                val scheduled=if(saved)runCatching {
+                    at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
+                }.getOrDefault(false) else false
+                addAssistantMessage(when {
+                    !saved -> "CDX1-Einstellung konnte nicht gespeichert werden."
+                    scheduled -> "CDX1-Forschungsstufen ausdrücklich erlaubt. " +
+                        "Android prüft im bestehenden täglichen Offlinejob eine Stufe " +
+                        "bei ausreichendem Zeitbudget. SWB1 bleibt unabhängig trainierbar."
+                    else -> "CDX1-Zustimmung gespeichert, aber Android konnte " +
+                        "den Offlinejob noch nicht einplanen. Gerätebedingungen prüfen."
+                })
+            }.show()
     }
 
     private fun showCdxLargeLabDialog() {

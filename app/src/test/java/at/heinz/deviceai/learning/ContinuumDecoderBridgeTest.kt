@@ -3,6 +3,7 @@ package at.heinz.deviceai.learning
 import org.junit.Assert.*
 import org.junit.Test
 import java.nio.file.Files
+import java.io.File
 
 class ContinuumDecoderBridgeTest {
     @Test fun emptyBridgeDoesNotExposeChatOrClaimTraining() {
@@ -91,6 +92,111 @@ class ContinuumDecoderBridgeTest {
                 cancelled={true})
             assertFalse(stopped.accepted)
             assertFalse(bridge.pairedStatus().available)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun cdx1EncoderPinSurvivesIndependentSwb1Training() {
+        val dir=Files.createTempDirectory("continuum-dual-core-binding").toFile()
+        try {
+            val bridge=ContinuumDecoderBridge(dir)
+            val modelFile=File(dir,"context-decoder-paired.cdx")
+            TinyContextDecoder(seed=91L).saveTo(modelFile)
+            val originalEncoder=TrainableSubwordEncoder(seed=73L).save()
+            val updatedEncoder=TrainableSubwordEncoder(seed=101L).save()
+            val bindingFile=File(dir,"context-decoder-paired.swb1-binding")
+            val originalDecoder=modelFile.readBytes()
+            ContinuumPairedEncoderBinding.write(bindingFile,originalDecoder,originalEncoder)
+
+            assertEquals("PINNED_CURRENT",
+                bridge.pairedStatus(originalEncoder).conditioningState)
+            assertEquals("PINNED_PREVIOUS",
+                bridge.pairedStatus(updatedEncoder).conditioningState)
+            val evidence="Roboter Z77 steht in Graz."
+            val question="Wo steht Z77?"
+            val expected=bridge.experimentalPairedContinuation(
+                evidence,question,originalEncoder,20)
+            val afterSwb1Update=bridge.experimentalPairedContinuation(
+                evidence,question,updatedEncoder,20)
+            assertNotNull(expected)
+            assertEquals(expected,afterSwb1Update)
+            // A cancelled update must remain possible with the frozen encoder,
+            // even after SWB1's live weights have changed.
+            val train=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair(evidence,question,"Graz")
+            ),DecoderSplit.TRAIN)
+            val audit=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Roboter Y24 steht in Linz.",
+                    "Wo steht Y24?","Linz")
+            ),DecoderSplit.AUDIT)
+            val report=bridge.trainPairedExperiment(train,audit,updatedEncoder,
+                steps=10,cancelled={true})
+            assertFalse(report.accepted)
+            assertEquals(0,report.completedSteps)
+            assertArrayEquals(originalDecoder,modelFile.readBytes())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun damagedOrMismatchedPinBlocksCdx1WithoutChangingWeights() {
+        val dir=Files.createTempDirectory("continuum-dual-core-corruption").toFile()
+        try {
+            val bridge=ContinuumDecoderBridge(dir)
+            val modelFile=File(dir,"context-decoder-paired.cdx")
+            TinyContextDecoder().saveTo(modelFile)
+            val modelBytes=modelFile.readBytes()
+            val swb1=TrainableSubwordEncoder().save()
+            val bindingFile=File(dir,"context-decoder-paired.swb1-binding")
+            ContinuumPairedEncoderBinding.write(bindingFile,modelBytes,swb1)
+            assertEquals("PINNED_CURRENT",bridge.pairedStatus(swb1).conditioningState)
+            val bad=TinyContextDecoder(seed=13L).save()
+            ContinuumPairedEncoderBinding.write(bindingFile,bad,swb1)
+            assertEquals("CORRUPT",bridge.pairedStatus(swb1).conditioningState)
+            assertNull(bridge.experimentalPairedContinuation(
+                "Roboter A steht in Wien.","Wo steht A?",swb1))
+            val damaged=bindingFile.readBytes()
+            damaged[8]=(damaged[8].toInt() xor 1).toByte()
+            bindingFile.writeBytes(damaged)
+            assertEquals("CORRUPT",bridge.pairedStatus(swb1).conditioningState)
+            assertThrows(IllegalArgumentException::class.java) {
+                bridge.trainPairedExperiment(
+                    DecoderEvidenceCorpus(listOf(DecoderEvidencePair(
+                        "Roboter A steht in Wien.","Wo steht A?","Wien")),DecoderSplit.TRAIN),
+                    DecoderEvidenceCorpus(listOf(DecoderEvidencePair(
+                        "Roboter B steht in Linz.","Wo steht B?","Linz")),DecoderSplit.AUDIT),
+                    swb1,steps=10)
+            }
+            assertArrayEquals(modelBytes,modelFile.readBytes())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun symlinkedBindingIsNeverTrustedOrOverwritten() {
+        val dir=Files.createTempDirectory("continuum-dual-core-symlink").toFile()
+        try {
+            val real=File(dir,"external-state")
+            real.writeText("not a model")
+            val link=File(dir,"context-decoder-paired.swb1-binding")
+            Files.createSymbolicLink(link.toPath(),real.toPath())
+            val swb1=TrainableSubwordEncoder().save()
+            val decoder=TinyContextDecoder().save()
+            val check=ContinuumPairedEncoderBinding.inspect(link,decoder,swb1)
+            assertEquals(ContinuumPairedEncoderBinding.State.CORRUPT,check.state)
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumPairedEncoderBinding.write(link,decoder,swb1)
+            }
+            assertEquals("not a model",real.readText())
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun historicalUnboundCheckpointRemainsResearchOnly() {
+        val dir=Files.createTempDirectory("continuum-dual-core-legacy").toFile()
+        try {
+            val modelFile=File(dir,"context-decoder-paired.cdx")
+            TinyContextDecoder().saveTo(modelFile)
+            val bridge=ContinuumDecoderBridge(dir)
+            val swb1=TrainableSubwordEncoder().save()
+            val status=bridge.pairedStatus(swb1)
+            assertTrue(status.available)
+            assertEquals("LEGACY_UNBOUND",status.conditioningState)
+            assertFalse(status.usableForChat)
         } finally { dir.deleteRecursively() }
     }
 
