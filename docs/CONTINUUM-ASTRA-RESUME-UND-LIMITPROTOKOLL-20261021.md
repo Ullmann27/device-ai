@@ -1,3 +1,5 @@
+> Neuester gesicherter Stand: [PR #53 / Isolation-, Worker- und reale GGUF-Belege](CONTINUUM-ISOLATED-MILESTONE-20261021.md). Ältere offene Punkte unten sind historisch; zuerst diesen aktuellen Einstieg und den tatsächlichen Remote-HEAD abgleichen.
+
 # Continuum – Astra-Wiederaufnahme und Nutzungslimit-Protokoll
 Stand: 21.10.2026 · Projekt: ausschließlich `Ullmann27/device-ai` · Relevanter Draft-PR: #42
 
