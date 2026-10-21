@@ -18,10 +18,10 @@ test('persisted source research job is registered but never exported',()=>{
   assert.match(manifest,/<service\s+android:name="\.learning\.ContinuumPublicStudyJobService"\s+android:exported="false"\s+android:permission="android\.permission\.BIND_JOB_SERVICE"\s*\/>/);
 });
 
-test('owner consent and charging/network safety gates remain required',()=>{
+test('owner consent, cellular network and measured 20pct resource gates remain required',()=>{
   assert.match(study,/if\(!enabled\)/);
-  assert.match(study,/setRequiresCharging\(true\)/);
-  assert.match(study,/setRequiresBatteryNotLow\(true\)/);
+  assert.match(study,/setRequiresCharging\(false\)/);
+  assert.match(study,/setRequiresBatteryNotLow\(false\)/);
   assert.match(study,/setRequiresStorageNotLow\(true\)/);
   assert.match(study,/fun disable\(\):Boolean/);
   assert.match(ui,/FORSCHUNG FREIGEBEN/);
