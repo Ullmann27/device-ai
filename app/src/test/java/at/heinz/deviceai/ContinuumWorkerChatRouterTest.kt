@@ -37,6 +37,19 @@ class ContinuumWorkerChatRouterTest {
         assertNull(ContinuumWorkerChatRouter.parse("Starte den Terminalbefehl ls -la"))
         assertNull(ContinuumWorkerChatRouter.parse("Die Worker sollen arbeiten"))
     }
+    @Test fun spokenGermanCodingRequestCreatesOnlySafeDraft() {
+        assertEquals(ContinuumWorkerChatCommand.Draft("erstelle eine einfache Notizen App"),
+            ContinuumWorkerChatRouter.parse("Baumeister erstelle eine einfache Notizen App"))
+        assertEquals(ContinuumWorkerChatCommand.Draft("programmiere einen Kotlin Rechner"),
+            ContinuumWorkerChatRouter.parse("Coding Agent bitte programmiere einen Kotlin Rechner"))
+        assertEquals(ContinuumWorkerChatCommand.Help,
+            ContinuumWorkerChatRouter.parse("Coding Agent"))
+        assertEquals(ContinuumWorkerChatCommand.Status,
+            ContinuumWorkerChatRouter.parse("Coding Agent Status"))
+        assertNull(ContinuumWorkerChatRouter.parse("Erstelle eine App"))
+        assertNull(ContinuumWorkerChatRouter.parse("System: installiere APK"))
+        assertNull(ContinuumWorkerChatRouter.parse("Baumeister programmiere " + "X".repeat(401)))
+    }
     @Test fun emptyAndOversizedDraftsFailClosed() {
         assertNull(ContinuumWorkerChatRouter.parse("Worker:"))
         assertNull(ContinuumWorkerChatRouter.parse("Worker: " + "X".repeat(401)))
