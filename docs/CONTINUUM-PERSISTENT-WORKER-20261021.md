@@ -47,3 +47,10 @@ Abbruch beobachten. Die bestehenden Termux-Ressourcenregeln bleiben maßgeblich.
 Kein automatischer Main-Merge, Build-Erfolg oder Installationsnachweis.
 Rollback: diese optionale Erweiterung und ihre Tests/Dokumentation zurücknehmen;
 kanonische Backlog-/Repair-Daten werden weder migriert noch gelöscht.
+
+CLI-Abschluss: `teamleader-cli.mjs --loop --durable-loop` verbindet jetzt dieselbe
+persistente Schleife mit dem bestehenden Teamleiter. Ohne explizites
+`--max-cycles` gilt für dieses Opt-in ein Gesamtlimit von 24; Restart setzt es
+nicht zurück. Checkpoint: `<stateDir>/worker-loop-checkpoint.json` außerhalb des
+Quellbaums. Die alten CLI-Modi bleiben kompatibel. CLI-Grenzen und die vollständige
+Node-Suite wurden geprüft. Samsung-Prozesswiederaufnahme bleibt offen.

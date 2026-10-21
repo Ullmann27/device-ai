@@ -1,0 +1,50 @@
+{
+  "schema": "continuum-isolated-repair-proof-v1",
+  "actualModelUsed": false,
+  "status": "DONE",
+  "strategy": "LOCAL_ISOLATED_PATCH",
+  "baseline": [
+    {
+      "total": 3,
+      "failed": 2,
+      "skipped": 0,
+      "placeholders": 0,
+      "executed": 3,
+      "passed": 1
+    }
+  ],
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8e14a201de9e6d7deda388fc33ed496462162bc42638730a38c15f1898df0b17",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 4096,
+          "pids": 128,
+          "cpus": 2,
+          "timeoutMs": 240000,
+          "sourceSha256": "0008602f5ac9331612ed4905b3f722d48084d222d662f6f44bb012d1e51c2264",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        }
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  },
+  "learningEligible": false,
+  "approvedForMerge": false,
+  "ownerSourceUnchanged": true,
+  "patchSha256": "006ba60f3153f00a82a68a27ae10f04991e37666fdb4ca8d6c94d5cd63903a9d"
+}

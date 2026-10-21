@@ -89,6 +89,9 @@ test('invalid intervals, cycle limits and CLI mode combinations are rejected',()
  assert.equal(parsed.loop,true);
  assert.equal(parsed.intervalMinutes,'60');
  assert.equal(parsed.maxCycles,'3');
+ assert.throws(()=>parseTeamleaderArgs(['--once','--durable-loop']),/requires --loop/);
+ assert.equal(parseTeamleaderArgs(['--loop','--durable-loop']).maxCycles,'24');
+ assert.equal(parseTeamleaderArgs(['--loop','--durable-loop','--max-cycles','7']).maxCycles,'7');
 });
 
 

@@ -7,6 +7,7 @@ import {decodeDocument,encodeDocument,emptyDocument} from './development-backlog
 import {critique} from './repair-critic.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 import {emptyLedger,recordSession,verifyLedger} from './repair-ledger.mjs';
+import {validIsolationEvidence} from './isolated-executor.mjs';
 
 /**
  * Publisher (runs in a job WITHOUT build execution, holding the write token).
@@ -41,6 +42,12 @@ export function validateVerifiedReport(report,patch){
   if(!profiles||profiles.some(p=>!attempt.tests?.some(t=>t.profile===p&&t.passed===true)))throw Error('Verified attempt did not pass every check of its chain');
   if(attempt.evidence?.sufficient!==true||attempt.tests.some(t=>(t.testProfile||TEST_PROFILES.includes(t.profile))&&!(t.tests?.executed>0)))
     throw Error('Verified attempt lacks executed test evidence');
+  if(attempt.strategy==='LOCAL_ISOLATED_PATCH'){
+    if(report.verified.reviewRequired!==true||report.learningEligible!==false||
+       !attempt.tests.every(t=>validIsolationEvidence(t.isolation,t.profile))||
+       !report.baseline?.results?.length||!report.baseline.results.every(t=>validIsolationEvidence(t.isolation,t.profile)))
+      throw Error('Broad local patch lacks confinement evidence or mandatory review');
+  }
   return attempt;
 }
 
