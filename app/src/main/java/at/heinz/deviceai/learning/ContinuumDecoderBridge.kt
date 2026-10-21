@@ -53,6 +53,32 @@ class ContinuumDecoderBridge(private val directory: File) {
             },0L,legacy.recoveredFromBackup)
     }
 
+    /**
+     * Read-only evidence about existing CDX1 checkpoint files. Exposes neither
+     * private app-directory paths nor any model weights. A missing file,
+     * symlink and unreadable existing file must remain distinguishable.
+     */
+    @Synchronized fun storageEvidence():String {
+        fun describe(label:String,file:File):String {
+            val state=when {
+                java.nio.file.Files.isSymbolicLink(file.toPath()) ->
+                    "symbolische Verknüpfung (gesperrt)"
+                !file.exists() -> "fehlt"
+                !file.isFile -> "kein regulärer Dateityp"
+                !file.canRead() -> "vorhanden, nicht lesbar"
+                else -> "vorhanden ("+file.length()+" Byte)"
+            }
+            return label+": "+state
+        }
+        return listOf(
+            describe("Alter CDX1-Checkpoint",pairedCheckpoint),
+            describe("Alte CDX1-Sicherung",File(pairedCheckpoint.absolutePath+".lkg")),
+            describe("Alte SWB1-Bindung",pairedBinding),
+            describe("Neues Paarbundle",File(directory,"context-decoder-paired.bundle")),
+            describe("Paarbundle-Sicherung",File(directory,"context-decoder-paired.bundle.lkg"))
+        ).joinToString("\n")
+    }
+
     data class Status(
         val available: Boolean,
         val updates: Int,
