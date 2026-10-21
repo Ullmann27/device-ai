@@ -116,7 +116,9 @@ class ContinuumAtomicPairedBundleStoreTest {
             assertThrows(IllegalStateException::class.java) {
                 store.commit(weights,encoder,expectedGeneration=1L)
             }
-            assertArrayEquals(weights,store.loadVerified()!!.decoder)
+            assertThrows(IllegalStateException::class.java) {
+                store.loadVerified()
+            }
         } finally { dir.deleteRecursively() }
     }
 }
