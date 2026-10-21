@@ -22,10 +22,13 @@ Dies ist kein Nachweis, dass der neue Code bereits auf dem Samsung gebaut wurde.
 ### 1. Nur lesende Quellenprüfung (vor Fetch oder Checkoutwechsel)
 
 ```sh
-cd "$HOME/device-ai" || return 1
-git status --short --untracked-files=normal
-git remote get-url origin
-git rev-parse HEAD
+(
+  set -e
+  cd "$HOME/device-ai"
+  git status --short --untracked-files=normal
+  git remote get-url origin
+  git rev-parse HEAD
+)
 ```
 
 Abbruch, wenn `git status` unbekannte/uncommittete Dateien meldet; Besitzerzustand weder resetten noch staschen. `origin` muss das bekannte private Repository `Ullmann27/device-ai` auf GitHub sein.
@@ -33,17 +36,34 @@ Abbruch, wenn `git status` unbekannte/uncommittete Dateien meldet; Besitzerzusta
 ### 2. Exakt bekannte Quelle holen, ohne alten Commit oder Besitzerarbeit zu verwerfen
 
 ```sh
-cd "$HOME/device-ai" || return 1
-git fetch --no-tags origin refs/heads/integration/continuum-astra-20261021
-git cat-file -t 55338344654d3c5925b067a6dec82c21e745b408
+(
+  set -e
+  cd "$HOME/device-ai"
+  case "$(git remote get-url origin)" in
+    https://github.com/Ullmann27/device-ai|https://github.com/Ullmann27/device-ai.git|git@github.com:Ullmann27/device-ai.git|ssh://git@github.com/Ullmann27/device-ai.git) ;;
+    *) echo "STOP: unerwartetes origin-Repository"; exit 1 ;;
+  esac
+  test -z "$(git status --porcelain --untracked-files=normal)" || {
+    echo "STOP: zuerst lokale Änderungen sichern und prüfen"; exit 1;
+  }
+  git fetch --no-tags origin refs/heads/integration/continuum-astra-20261021
+  test "$(git cat-file -t 55338344654d3c5925b067a6dec82c21e745b408)" = commit
+)
 ```
 
 Erwartete Ausgabe von `cat-file`: `commit`. Der Fetch verändert keine bestehenden App-Gewichte. **Bevor** `git switch` ausgeführt wird: sauberen Arbeitsstand und erwartete Remote-URL prüfen.
 
 ```sh
-test -z "$(git status --porcelain --untracked-files=normal)" || { echo "STOP: lokale Änderungen schützen"; false; }
-git switch --detach 55338344654d3c5925b067a6dec82c21e745b408
-git rev-parse HEAD
+(
+  set -e
+  cd "$HOME/device-ai"
+  test -z "$(git status --porcelain --untracked-files=normal)" || {
+    echo "STOP: lokale Änderungen schützen"; exit 1;
+  }
+  git switch --detach 55338344654d3c5925b067a6dec82c21e745b408
+  test "$(git rev-parse HEAD)" = 55338344654d3c5925b067a6dec82c21e745b408
+  echo "M1-Quellstand stimmt mit dem geprüften Code-Checkpoint überein"
+)
 ```
 
 Erwartetes HEAD exakt `55338344654d3c5925b067a6dec82c21e745b408`. `git switch --detach` verändert nicht `main` und erstellt keinen neuen Branch, arbeitet aber am Termux-Checkout; bei lokalen Veränderungen darf der Wechsel **nicht** erfolgen. Der Buildvorgang selbst bleibt git-lesend.
@@ -51,8 +71,12 @@ Erwartetes HEAD exakt `55338344654d3c5925b067a6dec82c21e745b408`. `git switch --
 ### 3. Lokale Tests zuerst (mit echtem Exitcode)
 
 ```sh
-node --test scripts/continuum-mobile-builder.test.mjs
-node scripts/continuum-mobile-builder.mjs doctor
+(
+  set -e
+  cd "$HOME/device-ai"
+  node --test scripts/continuum-mobile-builder.test.mjs
+  node scripts/continuum-mobile-builder.mjs doctor
+)
 ```
 
 Die neuen Rennbedingungs-/Integritätstests müssen ohne Fehlschlag durchlaufen. Doctor muss `READY_FOR_EXPERIMENTAL_BUILD` liefern. Bei Problemen **nicht** APK-BUILD drücken, sondern Ausgabe sichern.
@@ -66,9 +90,12 @@ Nach dem Callback darf `BUILD_REPORTED_UNVERIFIED_ON_DEVICE` nur erscheinen, wen
 ### 5. Unabhängige lesende Kontrolle im Termux-Checkout
 
 ```sh
-cd "$HOME/device-ai" || return 1
-git rev-parse HEAD
-node scripts/continuum-mobile-builder.mjs status
+(
+  set -e
+  cd "$HOME/device-ai"
+  git rev-parse HEAD
+  node scripts/continuum-mobile-builder.mjs status
+)
 ```
 
 Der Bericht muss `commit: 55338344654d3c5925b067a6dec82c21e745b408`,
