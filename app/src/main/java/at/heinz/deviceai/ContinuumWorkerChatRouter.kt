@@ -19,7 +19,7 @@ object ContinuumWorkerChatRouter {
     // explicitly addressed, development-specific imperative.
     private val spokenDraftPattern = Regex(
         """^(?:worker|baumeister|coding[ -]?agent|programmierer)[, ]+""" +
-            """(?:bitte\s+)?(?:erstelle|baue|entwickle|programmiere)\s+(.{1,400})$""",
+            """(?:bitte\s+)?((?:erstelle|baue|entwickle|programmiere)\s+.{1,390})$""",
         RegexOption.IGNORE_CASE
     )
     fun parse(raw: String): ContinuumWorkerChatCommand? {
