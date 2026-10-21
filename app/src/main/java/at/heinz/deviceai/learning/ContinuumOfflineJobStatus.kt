@@ -72,7 +72,7 @@ object ContinuumOfflineJobStatus {
             .putString("error",error.javaClass.simpleName.take(60)).apply()
     }
     fun deferred(context:Context,reason:String,now:Long=System.currentTimeMillis()) {
-        require(reason in setOf("BATTERY_LOW","THERMAL_LIMIT","STORAGE_LOW","TIME_BUDGET"))
+        require(reason in setOf("BATTERY_LOW","BATTERY_UNKNOWN","THERMAL_LIMIT","STORAGE_LOW","TIME_BUDGET"))
         val phase="DEFERRED_"+reason
         logPhase(context,phase,now)
         prefs(context).edit().putString("phase",phase)
