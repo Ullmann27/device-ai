@@ -105,8 +105,11 @@ class ContinuumTrainingWidget : AppWidgetProvider() {
                 Context.MODE_PRIVATE)
             val now = System.currentTimeMillis()
             val lastRepair = recovery.getLong("last_check", 0L)
-            if (lastRepair <= 0L || now < lastRepair || now - lastRepair >= 60L * 60_000L) {
-                recovery.edit().putLong("last_check", now).apply()
+            val needsMigration = recovery.getInt("schedule_policy_revision", 0) != 2
+            if (needsMigration || lastRepair <= 0L || now < lastRepair ||
+                now - lastRepair >= 60L * 60_000L) {
+                recovery.edit().putLong("last_check", now)
+                    .putInt("schedule_policy_revision", 2).apply()
                 runCatching {
                     val research = ContinuumPublicStudyScheduler(app)
                     // restore compares the complete spec and leaves an identical
