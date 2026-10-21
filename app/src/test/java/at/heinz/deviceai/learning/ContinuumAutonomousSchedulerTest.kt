@@ -32,7 +32,7 @@ class ContinuumAutonomousSchedulerTest {
     }
 
     @Test fun aPendingJobWithOtherConstraintsIsReplacedOnce() {
-        val old = ContinuumAutonomousScheduler.WANTED.copy(requiresCharging = false, persisted = false)
+        val old = ContinuumAutonomousScheduler.WANTED.copy(requiresCharging = true, persisted = false)
         val jobs = FakeJobs(old)
         val scheduler = scheduler(jobs)
         assertTrue(scheduler.restore())
@@ -49,11 +49,11 @@ class ContinuumAutonomousSchedulerTest {
         assertEquals(listOf(false to null, false to "IllegalStateException"), records)
     }
 
-    @Test fun plannedJobIsOfflinePersistedDailyAndOnlyWhileCharging() {
+    @Test fun plannedJobIsOfflinePersistedDailyAndWorksWithoutCharging() {
         val wanted = ContinuumAutonomousScheduler.WANTED
         assertEquals(ContinuumAutonomousScheduler.SERVICE_CLASS, wanted.serviceClass)
         assertEquals(24 * 60 * 60 * 1000L, wanted.periodMs)
-        assertTrue(wanted.requiresCharging)
+        assertFalse(wanted.requiresCharging)
         assertTrue(wanted.persisted)
         assertTrue(wanted.requiresBatteryNotLow)
         assertTrue(wanted.requiresStorageNotLow)
