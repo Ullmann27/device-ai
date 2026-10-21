@@ -37,6 +37,7 @@ function mock(f,{dirty=false,fail=false,sign=true,signFormat='legacy',commands=[
       }
       return {ok:!fail,code:fail?1:0,output:fail?'synthetic Gradle failure':'synthetic success'};
     }
+    if(file==='/fake/aapt2')return {ok:true,code:0,output:"package: name='at.heinz.deviceai.preview' versionCode='9' versionName='0.3.9'"};
     if(file==='/fake/apksigner')return {ok:sign,code:sign?0:1,output:sign?(signFormat==='modern'?'V2 Signer: ':'Signer #1 ')+'certificate SHA-256 digest: '+SIGNER:'DOES NOT VERIFY: Invalid APK signature'};
     throw Error('Unexpected tool '+file);
   };
@@ -92,6 +93,8 @@ test('synthetic signed output saves a distinct hash-tied copy; not proof of an o
   const result=await build({project:f.root,stateDir:f.stateDir,offline:true,inspect:async()=>ready,run:mock(f,{commands})});
   assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
   assert.equal(result.signerSha256,SIGNER);
+  assert.equal(result.packageName,'at.heinz.deviceai.preview');
+  assert.equal(result.versionCode,9);
   assert.match(result.apkSha256,/^[0-9a-f]{64}$/);
   assert.equal(result.deviceInstallationVerified,false);
   assert.equal(result.productionReady,false);
@@ -238,6 +241,8 @@ test('modern apksigner result is accepted only after executable verification suc
   const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run:mock(f,{signFormat:'modern'})});
   assert.equal(result.status,'EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED');
   assert.equal(result.signerSha256,SIGNER);
+  assert.equal(result.packageName,'at.heinz.deviceai.preview');
+  assert.equal(result.versionCode,9);
 });
 
 test('genuine apksigner rejection persists diagnostic without publishing APK',async()=>{
@@ -433,4 +438,25 @@ test('a live ANSK or teamleader lease blocks the mobile APK builder before invok
    /CONTINUUM_BUILD_LEASE_BUSY/);
   assert.equal(calls,0);
  }finally{release();}
+});
+
+test('a correctly signed APK for the wrong package cannot be published as a Continuum preview', async () => {
+  const f=fixture();
+  const base=mock(f);
+  const run=async(file,args,opts)=>file==='/fake/aapt2'
+    ? {ok:true,code:0,output:"package: name='at.heinz.deviceai' versionCode='12' versionName='0.3.9'"}
+    : base(file,args,opts);
+  const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,run});
+  assert.equal(result.status,'FAILED_APK_IDENTITY');
+  assert.equal(fs.readdirSync(f.stateDir).some(x=>x.endsWith('.apk')),false);
+});
+
+test('malformed or failed package inspection cannot publish an APK', async () => {
+  for (const response of [{ok:false,code:1,output:''},{ok:true,code:0,output:'UNTRUSTED OUTPUT'}]) {
+    const f=fixture();const base=mock(f);
+    const result=await build({project:f.root,stateDir:f.stateDir,inspect:async()=>ready,
+      run:async(file,args,opts)=>file==='/fake/aapt2'?response:base(file,args,opts)});
+    assert.equal(result.status,'FAILED_APK_IDENTITY');
+    assert.equal(result.apk,undefined);
+  }
 });

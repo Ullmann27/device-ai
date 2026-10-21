@@ -49,7 +49,8 @@ internal object ContinuumMobileResultPolicy {
                     reportedStatus == "BLOCKED_SOURCE_CHANGED_DURING_BUILD" ||
                     reportedStatus == "FAILED_BUILD" ||
                     reportedStatus == "FAILED_NO_APK" ||
-                    reportedStatus == "FAILED_APK_SIGNATURE"
+                    reportedStatus == "FAILED_APK_SIGNATURE" ||
+                    reportedStatus == "FAILED_APK_IDENTITY"
                 ) Outcome.STATUS_REPORTED else Outcome.INVALID_RESULT
         }
     }
@@ -78,6 +79,9 @@ internal object ContinuumMobileResultPolicy {
                 "Es wurde kein neuer Build-Erfolg bestätigt."
         "FAILED_NO_APK" ->
             "Gespeicherter Buildbericht: Keine neue APK nachgewiesen."
+        "FAILED_APK_IDENTITY" ->
+            "Gespeicherter Buildbericht: Paketkennung oder APK-Version nicht bestätigt. " +
+                "Das Artefakt wurde nicht freigegeben."
         "FAILED_APK_SIGNATURE" ->
             "Gespeicherter Buildbericht: Die APK-Signaturprüfung ist fehlgeschlagen. " +
                 "Das Artefakt wurde nicht freigegeben."
