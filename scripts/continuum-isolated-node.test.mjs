@@ -13,13 +13,25 @@ const fixture=t=>{
  t.after(()=>fs.rmSync(temp,{recursive:true,force:true}));
  return {temp,stage,candidate:path.join(stage,'candidate.mjs')};
 };
+function hasNamespaceCapabilities(t){
+ if(process.platform!=='linux'){t.skip('Linux-only sandbox');return false;}
+ const probe=spawnSync('unshare',['--user','--map-root-user','--mount','--net',
+   '--ipc','--pid','--fork','--kill-child','/bin/true'],
+   {encoding:'utf8',timeout:5000});
+ if(probe.status!==0){
+  t.skip('Kernel namespace permissions unavailable; no isolation proven here');
+  return false;
+ }
+ return true;
+}
+
 const run=(dir,file,env={})=>spawnSync('bash',[script,file],{
  encoding:'utf8',timeout:30000,maxBuffer:65536,
  env:{...process.env,...env,CONTINUUM_ISOLATION_STAGE:dir}
 });
 
 test('real Linux namespaces deny host files, environment, file writes and networking',t=>{
- if(process.platform!=='linux'){t.skip('Linux-only');return;}
+ if(!hasNamespaceCapabilities(t))return;
  const f=fixture(t);
  const secret=path.join(f.temp,'host-secret');fs.writeFileSync(secret,'owner-private');
  fs.writeFileSync(f.candidate,[
@@ -56,6 +68,7 @@ test('unsafe stage location and symlink candidates are refused before running',t
 });
 
 test('sandbox returns candidate failures, without treating them as successful repairs',t=>{
+ if(!hasNamespaceCapabilities(t))return;
  const f=fixture(t);fs.writeFileSync(f.candidate,'throw new Error("EXPECTED_CANDIDATE_FAILURE")');
  const r=run(f.stage,f.candidate);
  assert.notEqual(r.status,0);
