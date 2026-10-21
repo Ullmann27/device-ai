@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import * as B from './development-backlog.mjs';
 import {analyzeRepository} from './code-analyzer.mjs';
 import {git,createWorktree,removeWorktree,runProfile} from './repair-loop.mjs';
+import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 
 const normalizedPath=s=>String(s??'').replace(/^app\/src\//,'');
 const matches=(finding,subject)=>finding.symbol===subject.symbol &&
@@ -67,9 +68,17 @@ export function chooseReadyInvestigation(doc,taskId=null) {
 export function executeInvestigation({root=process.cwd(),file,out,base,actor='continuum-agent',taskId=null}){
   if(!/^[0-9a-f]{40}$/.test(base??''))throw Error('Full immutable --base SHA required');
   if(typeof file!=='string'||!file||typeof out!=='string'||!out)throw Error('File/output paths required');
-  const docPath=path.resolve(file),outputPath=path.resolve(out);
+  const source=fs.realpathSync(root);
+  const docPath=resolveOutputDestination(file),outputPath=resolveOutputDestination(out);
+  if([docPath,outputPath].some(p=>p===source||p.startsWith(source+path.sep)))
+    throw Error('Investigation backlog and reports must stay outside the source checkout');
   if(outputPath===docPath||outputPath.startsWith(docPath+path.sep))throw Error('Output overlaps backlog');
   const store=new B.BacklogStore(docPath,{actor});
+  // A process can die before submitting. Recover its expired claim through
+  // the canonical attempt budget before selecting the requested task again.
+  if(store.read().doc.tasks.some(t=>t.kind==='INVESTIGATE'&&
+    t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
+    store.apply([{op:'expire',actor,at:Date.now()}]);
   // Resolve tasks through the canonical dependency-aware planner, not the
   // first READY entry. The Teamleader may request an exact immutable task ID.
   const eligible=chooseReadyInvestigation(store.read().doc,taskId);
@@ -89,12 +98,9 @@ export function executeInvestigation({root=process.cwd(),file,out,base,actor='co
     const sha=checksum(bytes);
     const checked=runProfile('node-continuum',wt,path.dirname(outputPath));
     const submitAt=Date.now();
-    const submission=store.apply([{op:'submit',actor,at:submitAt,id:task.id,token,
-      artifact:{type:'REPORT',sha256:sha}}]);
-    if(!submission.results[0]?.ok)throw Error('Investigation report submission rejected');
     const evidence={
       type:'TEST_RUN',taskId:task.id,submissionToken:token,artifactSha256:sha,
-      chain:'node',commit:base,at:Date.now(),by:actor,repair:null,
+      chain:'node',commit:base,at:submitAt,by:actor,repair:null,
       profiles:[{profile:'node-continuum',passed:checked.passed,
         executed:checked.tests.executed,failed:checked.tests.failed,skipped:checked.tests.skipped}]
     };
@@ -103,8 +109,15 @@ export function executeInvestigation({root=process.cwd(),file,out,base,actor='co
       ?{op:'complete',actor,at:evidence.at,id:task.id,evidence}
       :{op:'fail',actor,at:evidence.at,id:task.id,token,evidence,
         error:{code:'CHECKS_FAILED',message:'Independent Node regression checks failed or no tests executed'}};
-    const saved=store.apply([op],{stopOnError:false});
-    if(!saved.results[0]?.ok)throw Error('Investigation evidence rejected');
+    // Persist submission and its actual check verdict together. A crash
+    // between separate writes would leave VERIFYING without an expiring lease.
+    const saved=store.apply([
+      {op:'submit',actor,at:submitAt,id:task.id,token,
+        artifact:{type:'REPORT',sha256:sha}},
+      op
+    ],{stopOnError:true});
+    if(saved.results.length!==2||saved.results.some(r=>!r.ok))
+      throw Error('Investigation verdict was not committed');
     return {status:verified?'DONE':'CHECKS_FAILED',taskId:task.id,
       base,reportSha256:sha,staticResult:report.kind,
       executed:checked.tests.executed,failed:checked.tests.failed};

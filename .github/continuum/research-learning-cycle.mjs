@@ -194,7 +194,8 @@ function validatePromotionAudit(audit,modelBytes){
 }
 
 function checkEcKey(input,kind){
-  const key=kind==='private'?crypto.createPrivateKey(input):crypto.createPublicKey(input);
+  const key=input instanceof crypto.KeyObject&&input.type===kind?input:
+    kind==='private'?crypto.createPrivateKey(input):crypto.createPublicKey(input);
   const curve=key.asymmetricKeyDetails?.namedCurve;
   if(key.asymmetricKeyType!=='ec'||!['prime256v1','P-256'].includes(curve))throw Error('P-256 key required');
   return key;

@@ -98,7 +98,7 @@ function sourceRow({index,query,claim,group}){
     trainingPermitted:true,url:'https://example.org/reference/'+index};
 }
 test('sibling negatives require disambiguating questions; no train/audit source leakage',()=>{
-  const rows=validateExtractiveSpans([
+  const rows=[
     sourceRow({index:1,group:'a',query:'solar temperature reduces electrical efficiency',claim:
       'The solar temperature reduces electrical efficiency by a measured 12 percent during controlled photovoltaic experiments.'}),
     sourceRow({index:2,group:'a',query:'battery charging cycles and electrochemical lifetime',claim:
@@ -107,7 +107,7 @@ test('sibling negatives require disambiguating questions; no train/audit source 
       'A solar photovoltaic panel experiences temperature changes that affect measured electricity production during daylight hours.'}),
     sourceRow({index:4,group:'c',query:'battery cells store grid energy',claim:
       'Battery storage systems use chemical reactions for grid energy distribution and controlled charging measurements.'})
-  ]);
+  ];
   // Recreate two genuine excerpts from the SAME original document, and
   // validate both through the real substring and SHA-256 source gate.
   const combinedSource=[rows[0].claim,rows[1].claim].join(' ');
@@ -116,11 +116,22 @@ test('sibling negatives require disambiguating questions; no train/audit source 
     ...row,sourceText:combinedSource,sourceSha256:shared
   }:sourceRow({index:i+3,group:'independent-'+i,query:row.query,claim:row.claim}));
   const grouped=validateExtractiveSpans(sourceRows);
+  assert.throws(()=>validateExtractiveSpans([
+    {...sourceRows[0],trainingPermitted:undefined}
+  ]),/rights/);
   const cases=buildExtractiveContrastiveSet(grouped);
   assert.ok(cases.some(x=>x.query===grouped[0].query&&x.candidates[1]===grouped[1].claim));
   const sameQuery=grouped.map(x=>({...x,query:'generic shared document question'}));
   const generic=buildExtractiveContrastiveSet(sameQuery);
+  assert.ok(generic.length>0);
   assert.ok(generic.every(x=>x.candidates.length>=2));
+  assert.ok(generic.every(x=>x.siblingNegative===null));
+  for(const example of generic){
+    const positive=sameQuery.find(row=>row.claim===example.candidates[0]);
+    const siblings=sameQuery.filter(row=>row.sourceSha256===positive.sourceSha256);
+    assert.ok(example.candidates.slice(1).every(negative=>
+      siblings.every(row=>row.claim!==negative)));
+  }
   const partition=splitVerifiedClaimsByHash(grouped);
   assert.ok(partition.train.every(x=>partition.audit.every(y=>x.sourceSha256!==y.sourceSha256)));
   assert.ok(partition.train.every(x=>x.sourceSha256!==partition.audit[0]?.sourceSha256));
@@ -144,11 +155,13 @@ test('rejected candidate returns exact baseline bytes',()=>{
   const opposite=examples.map(x=>({query:x.query,
     candidates:[x.candidates[2],x.candidates[0],x.candidates[1]]}));
   const result=trainFrozenProjectionCandidate(baseline,examples,opposite,{
-    epochs:1,learningRate:0.000001
+    epochs:1,learningRate:0.001
   });
+  assert.ok(result.trainAfter.loss<result.trainBefore.loss);
+  assert.ok(result.auditAfter.correct<result.auditBefore.correct);
+  assert.equal(result.accepted,false);
   assert.equal(result.modelSha256,sha256Hex(result.modelBytes));
-  if(!result.accepted)assert.equal(Buffer.compare(result.modelBytes,baseline),0);
+  assert.equal(Buffer.compare(result.modelBytes,baseline),0);
   assert.ok(result.canaries&&Number.isInteger(result.canaries.violations));
   assert.ok(result.siblings&&Number.isInteger(result.siblings.tested));
-  if(result.accepted)assert.equal(result.siblings.correct,result.siblings.tested);
 });

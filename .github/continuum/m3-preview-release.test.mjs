@@ -16,7 +16,9 @@ test('M4 quality gate certifies the preview variant and lint in one Gradle execu
   assert.match(gate,/spawnSync\('gradle',\[':app:lintDebug',':app:assembleDebug',\s*'-PdeviceAiPreview=true'/);
   assert.match(gate,/sha256ApkFile\(destination\)/);
   assert.match(gate,/report\.apk\.artifactSha256=integrity\.artifactSha256/);
-  assert.match(gradle,/if \(deviceAiPreview\) applicationIdSuffix = "\.preview"/);
+  assert.match(gradle,/else if \(deviceAiPreview\)\s*\{\s*applicationIdSuffix = "\.preview"/);
+  assert.match(gradle,/if \(deviceAiMentorPreview\)\s*\{[\s\S]*?applicationIdSuffix = "\.mentorpaired"/);
+  assert.match(gradle,/require\(!\(deviceAiPreview && deviceAiMentorPreview\)\)/);
 });
 
 test('M4 wrapper emits a proof location only after independent release verification',()=>{

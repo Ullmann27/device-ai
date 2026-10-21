@@ -81,6 +81,14 @@ export GRADLE_USER_HOME="$workspace/gradle-cache"
 mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 
+echo "[Continuum] Sol quality handover: complete Node 22+ deterministic regression gate"
+node --version
+node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+echo "[Continuum] Reproducible backend dependencies from committed lockfile"
+npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+echo "[Continuum] Full backend regression gate"
+node --test --test-concurrency=2 backend/test/*.test.js
+
 echo "[Continuum] Groq-specific contract tests"
 node --check backend/src/groq-mentor.js
 node --check backend/src/mentor-pairing.js
