@@ -916,6 +916,11 @@ class AgentActivity : Activity() {
             moreFunctions.addView(row, matchWidth(top = 9))
         }
         container.addView(moreFunctions, matchWidth())
+        container.addView(actionButton("⌘   CODING-AGENT · SPRACHE & APP-IDEEN   ›", accent = true).apply {
+            contentDescription = "Coding Agent und Spracheingabe für neue Apps und Programmieraufträge öffnen"
+            minHeight = dp(57)
+            setOnClickListener { showDevelopmentDialog() }
+        }, matchWidth(top = 10))
         container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
             contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
             background = roundedGradient(
@@ -1683,7 +1688,8 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
                     "Continuum Baumeister · lokale Werkstatt.\n" +
                         "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
-                        "'Worker Builder' oder 'Worker: <deine App-Idee>'.\n" +
+                        "'Worker Builder', 'Worker: <deine App-Idee>' oder " +
+                        "'Baumeister programmiere ...' per Sprache.\n" +
                         "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
                         "sofern sie installiert und freigegeben sind. Der PC ist optional."
