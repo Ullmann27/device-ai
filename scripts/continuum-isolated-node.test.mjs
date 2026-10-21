@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {createServer} from 'node:net';
 import {fileURLToPath} from 'node:url';
 
 const script=fileURLToPath(new URL('./continuum-isolated-node.sh',import.meta.url));
@@ -30,8 +31,12 @@ const run=(dir,file,env={})=>spawnSync('bash',[script,file],{
  env:{...process.env,...env,CONTINUUM_ISOLATION_STAGE:dir}
 });
 
-test('real Linux namespaces deny host files, environment, file writes and networking',t=>{
+test('real Linux namespaces deny host files, environment, file writes and networking',async t=>{
  if(!hasNamespaceCapabilities(t))return;
+ const server=createServer(socket=>socket.end());
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+ const listeningPort=server.address().port;
+ t.after(()=>server.close());
  const f=fixture(t);
  const secret=path.join(f.temp,'host-secret');fs.writeFileSync(secret,'owner-private');
  fs.writeFileSync(f.candidate,[
@@ -39,7 +44,7 @@ test('real Linux namespaces deny host files, environment, file writes and networ
   "import net from 'node:net';",
   "const state={hostFile:fs.existsSync("+JSON.stringify(secret)+"),envSecret:process.env.CONTINUUM_ISOLATION_TEST_SECRET??null,outsideRoot:fs.existsSync('/etc/passwd'),pid:process.pid};",
   "try{fs.writeFileSync('/work/candidate.mjs','corrupt');state.writable=true;}catch(e){state.writeCode=e.code;}",
-  "await new Promise(resolve=>{const s=net.createConnection({host:'127.0.0.1',port:39011});s.setTimeout(1000,()=>{state.network='timeout';s.destroy();resolve();});s.on('error',e=>{state.network=e.code;resolve();});});",
+  "await new Promise(resolve=>{const s=net.createConnection({host:'127.0.0.1',port:"+listeningPort+"});s.setTimeout(1000,()=>{state.network='timeout';s.destroy();resolve();});s.on('connect',()=>{state.network='CONNECTED';s.destroy();resolve();});s.on('error',e=>{state.network=e.code;resolve();});});",
   "console.log(JSON.stringify(state));"
  ].join('\n'));
  const r=run(f.stage,f.candidate,{CONTINUUM_ISOLATION_TEST_SECRET:'should-never-appear'});
@@ -51,6 +56,7 @@ test('real Linux namespaces deny host files, environment, file writes and networ
  assert.equal(x.writeCode,'EROFS');
  assert.equal(x.pid,1);
  assert.notEqual(x.network,undefined);
+ assert.notEqual(x.network,'CONNECTED','host listener must be unreachable inside the net namespace');
  assert.equal(fs.readFileSync(secret,'utf8'),'owner-private');
 });
 
