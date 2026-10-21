@@ -165,7 +165,14 @@ export async function command(argv,{root=process.cwd(),env=process.env,log=conso
     // in the canonical local backlog may drive this bounded worker.
     if(!o.file||!o.out)throw Error('owner-repair requires --file and --out');
     const {executeOwnerRepairTask}=await import('./backlog-repair-worker.mjs');
-    const result=executeOwnerRepairTask({root,file:o.file,out:o.out,id:o.id??null,
+    let candidateProvider=null;
+    if(o['local-brain']!==undefined){
+      if(o['local-brain']!=='true'||typeof o['local-paths']!=='string')
+        throw Error('Local candidate inference requires --local-brain and explicit --local-paths');
+      const {createLocalBrainCandidateProvider}=await import('./local-brain-repair.mjs');
+      candidateProvider=createLocalBrainCandidateProvider({allowedPaths:o['local-paths'].split(','),env});
+    }else if(o['local-paths']!==undefined)throw Error('--local-paths requires --local-brain');
+    const result=executeOwnerRepairTask({root,file:o.file,out:o.out,id:o.id??null,candidateProvider,
       budgetMinutes:Number(o.minutes??20),
       actor:env.CONTINUUM_ACTOR??'continuum-task-worker'});
     log('[owner-repair] '+JSON.stringify(result));

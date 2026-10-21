@@ -21,7 +21,10 @@ internal object ContinuumMobileResultPolicy {
         termuxError: Int?,
         reportedStatus: String?,
         apkSha256: String? = null,
-        signerSha256: String? = null
+        signerSha256: String? = null,
+        sourceCommit: String? = null,
+        packageName: String? = null,
+        versionCode: Int? = null
     ): Outcome {
         if (exitCode == null || termuxError != -1) return Outcome.INVALID_RESULT
         if (exitCode != 0) {
@@ -37,7 +40,10 @@ internal object ContinuumMobileResultPolicy {
             ContinuumMobileBuildPlan.Operation.BUILD ->
                 if (reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED" &&
                     apkSha256 != null && Regex("[0-9a-f]{64}").matches(apkSha256) &&
-                    signerSha256 != null && Regex("[0-9a-f]{64}").matches(signerSha256)
+                    signerSha256 != null && Regex("[0-9a-f]{64}").matches(signerSha256) &&
+                    sourceCommit != null && Regex("[0-9a-f]{40}").matches(sourceCommit) &&
+                    packageName == "at.heinz.deviceai.preview" &&
+                    versionCode != null && versionCode in 1..2_100_000_000
                 ) {
                     Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE
                 } else Outcome.INVALID_RESULT

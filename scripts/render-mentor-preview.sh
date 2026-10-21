@@ -3,7 +3,7 @@
 set -Eeuo pipefail
 umask 077
 
-printf '[Continuum] isolated Android mentor preview build\n'
+printf '[Continuum] same-package signed Mentor Pair update v0.3.11, code 14\n'
 command -v bash >/dev/null
 command -v curl >/dev/null
 command -v unzip >/dev/null
@@ -21,6 +21,12 @@ render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
 if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "integration/continuum-astra-20261021" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
+  exit 69
+fi
+# Only the established Render delivery branch is authorized; the private
+# signing material stays in that service and never enters the repository.
+if [[ "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
+  echo "Refusing any branch other than approved signer-owning delivery branch" >&2
   exit 69
 fi
 commit="$(git rev-parse HEAD)"
@@ -138,10 +144,23 @@ if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
   exit 69
 fi
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
-  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='13' versionName='0.3.10'"
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='14' versionName='0.3.11'"
 
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
+# Preserve the last known-good signed v0.3.10 immutable download while
+# publishing the signed v0.3.11 update. No mutable CDN aliases are trusted.
+previous_sha="67b1715d0e7eb42945c81aa90ede5b1d6eca526444d0cff8d83f388dd782aa56"
+previous_apk="DeviceAI-Continuum-v0.3.10-${previous_sha}.apk"
+curl --fail --location --retry 2 --max-time 240 \
+  "https://device-ai-mentor-apk-preview.onrender.com/$previous_apk" \
+  -o "$output/$previous_apk"
+printf '%s  %s\n' "$previous_sha" "$output/$previous_apk" | sha256sum --check --status || {
+  echo "Previous known-good APK was not preserved; refusing release" >&2
+  exit 69
+}
+printf '%s  %s\n' "$previous_sha" "$previous_apk" > "$output/SHA256SUMS-${previous_sha}.txt"
+
 # Content-addressed publication prevents an existing CDN path serving an older
 # APK under a reused version name. Never accept checksum metadata from a prior deploy.
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
@@ -149,7 +168,7 @@ if [[ ! "$apk_sha256" =~ ^[0-9a-f]{64}$ ]]; then
   echo "Invalid APK SHA-256" >&2
   exit 69
 fi
-immutable_apk="DeviceAI-Continuum-v0.3.10-${apk_sha256}.apk"
+immutable_apk="DeviceAI-Continuum-v0.3.11-${apk_sha256}.apk"
 cp "$apk" "$output/$immutable_apk"
 (
   cd "$output"
@@ -159,15 +178,15 @@ cp "$apk" "$output/$immutable_apk"
 # Keep legacy aliases for compatibility, but NEVER use them as release links:
 # a CDN can cache an older APK with the same version under these names.
 cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
-cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.10.apk"
+cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.11.apk"
 (
   cd "$output"
   sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk \
-    DeviceAI-Continuum-Training-Monitor-v0.3.10.apk > SHA256SUMS.txt
+    DeviceAI-Continuum-Training-Monitor-v0.3.11.apk > SHA256SUMS.txt
 )
 printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\nartifact=%s\napk_sha256=%s\n' \
   "$commit" "$actual_branch" "$expected_branch" "$immutable_apk" "$apk_sha256" > "$output/BUILD-INFO.txt"
-cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.10.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.11.txt"
 cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-${apk_sha256}.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified immutable APK and checksums ready for publication"

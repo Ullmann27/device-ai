@@ -355,6 +355,7 @@ function context(wt,base,experience){
  */
 export function repairCandidateRiskTier(strategy){
   if(strategy==='REVERT_FILE_TO_PARENT')return 2;
+  if(strategy==='LOCAL_MODEL_PATCH')return 1;
   if(strategy==='REVERT_HUNK_TO_PARENT')return 1;
   return 0;
 }
@@ -407,7 +408,7 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
@@ -435,7 +436,40 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     a.outcome!=='SYNTAX_CHECK_ERROR'&&
     !(a.outcome==='FAILED_SYNTAX'&&a.syntaxReason!=='INVALID_JS_SYNTAX'))
     .map(a=>a.diagnostic+':'+a.candidate));
-  const proposals=proposeCandidates(actionable,ctx);
+  const localScope=Array.isArray(candidateProvider?.allowedPaths)&&candidateProvider.allowedPaths.length<=2
+    ? [...candidateProvider.allowedPaths].filter(file=>typeof file==='string') : [];
+  const proposals=proposeCandidates(actionable,{...ctx,allowLocalModelPatches:candidateProvider!==null,
+    allowedLocalPaths:localScope});
+  if(candidateProvider!==null){
+    // Trusted opt-in adapter only; model data cannot set a strategy, diagnostic,
+    // risk, test command or authority. Every proposal still traverses all gates.
+    report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
+      localRequests:0,verifiedModelExecution:false,reason:'No model execution independently established'};
+    try{
+      if(typeof candidateProvider!=='function'||!localScope.length||Date.now()>=deadline)throw Error('LOCAL_PROVIDER_UNAVAILABLE');
+      const result=candidateProvider({diagnostics:structuredClone(actionable),readFile:ctx.readFile,base,chain,deadline});
+      const patch=result?.patch;
+      if(result?.mode!=='LOCAL_LOOPBACK_PATCH_SHADOW'||result.trusted!==false||result.autoApply!==false||
+        !patch||Object.keys(patch).sort().join(',')!=='file,newText,oldText'||
+        typeof patch.file!=='string'||!localScope.includes(patch.file)||typeof patch.oldText!=='string'||typeof patch.newText!=='string'||
+        !patch.oldText||!patch.newText||patch.oldText===patch.newText||
+        patch.oldText.length>1600||patch.newText.length>1600||/[\0]/.test(patch.oldText+patch.newText))
+        throw Error('LOCAL_PATCH_SCHEMA_REJECTED');
+      const before=ctx.readFile(patch.file);
+      if(typeof before!=='string'||before.split(patch.oldText).length!==2)
+        throw Error('LOCAL_PATCH_NOT_EXACT');
+      const edits=[{file:patch.file,oldText:before,newText:before.replace(patch.oldText,()=>patch.newText)}];
+      proposals.push({id:sha256('LOCAL_MODEL_PATCH\0'+JSON.stringify(edits)).slice(0,16),
+        strategy:'LOCAL_MODEL_PATCH',diagnostic:actionable[0].fingerprint,
+        diagnosticKind:actionable[0].kind,prior:0.2,
+        description:'Opt-in local candidate; requires independent tests and owner review',edits});
+      report.inference.localRequests=Number.isSafeInteger(result.localRequests)?Math.min(1,Math.max(0,result.localRequests)):0;
+      report.inference.candidateStatus='PROPOSED';
+    }catch{
+      // No prompts, secrets, model text or transport errors in durable reports.
+      report.inference.candidateStatus='UNAVAILABLE_OR_REJECTED';
+    }
+  }
   const ranked=rankCandidates(proposals,ledger.experiences,failedIds);
   const shadow=runRepairShadowObserver(shadowObserver,proposals,ranked,
     ledger.experiences,failedIds,actionable);

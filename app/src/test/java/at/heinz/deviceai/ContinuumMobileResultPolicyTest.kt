@@ -6,6 +6,9 @@ import org.junit.Test
 class ContinuumMobileResultPolicyTest {
     private val sha = "a".repeat(64)
     private val signer = "b".repeat(64)
+    private val commit = "c".repeat(40)
+    private val previewPackage = "at.heinz.deviceai.preview"
+    private val previewVersion = 9
 
     @Test fun doctorNeedsTrueExitAndRecognizedReport() {
         val op = ContinuumMobileBuildPlan.Operation.DOCTOR
@@ -29,16 +32,40 @@ class ContinuumMobileResultPolicyTest {
         val op = ContinuumMobileBuildPlan.Operation.BUILD
         val expected = ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE
         assertEquals(expected, ContinuumMobileResultPolicy.evaluate(
-            op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED", sha, signer))
+            op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+            sha, signer, commit, previewPackage, previewVersion))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(
-                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED", sha, null))
+                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+                sha, null, commit, previewPackage, previewVersion))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(
-                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED", "bad-hash", signer))
+                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+                "bad-hash", signer, commit, previewPackage, previewVersion))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(
-                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED", sha, "x".repeat(64)))
+                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+                sha, "x".repeat(64), commit, previewPackage, previewVersion))
+    }
+
+    @Test fun buildMustBindARealCommitPreviewPackageAndVersion() {
+        val op = ContinuumMobileBuildPlan.Operation.BUILD
+        fun verified(source: String?, pkg: String?, version: Int?): ContinuumMobileResultPolicy.Outcome =
+            ContinuumMobileResultPolicy.evaluate(
+                op, 0, -1, "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED",
+                sha, signer, source, pkg, version)
+
+        val rejected = ContinuumMobileResultPolicy.Outcome.INVALID_RESULT
+        assertEquals(rejected, verified(null, previewPackage, previewVersion))
+        assertEquals(rejected, verified("old-build", previewPackage, previewVersion))
+        assertEquals(rejected, verified("C".repeat(40), previewPackage, previewVersion))
+        assertEquals(rejected, verified(commit, "at.heinz.deviceai.mentorpaired", previewVersion))
+        assertEquals(rejected, verified(commit, null, previewVersion))
+        assertEquals(rejected, verified(commit, previewPackage, null))
+        assertEquals(rejected, verified(commit, previewPackage, 0))
+        assertEquals(rejected, verified(commit, previewPackage, Int.MAX_VALUE))
+        assertEquals(ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE,
+            verified(commit, previewPackage, previewVersion))
     }
 
     @Test fun exitCodesAndTermuxErrorsCannotBePromotedToSuccess() {

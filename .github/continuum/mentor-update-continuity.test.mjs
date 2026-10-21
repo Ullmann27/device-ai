@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const read=relative=>fs.readFileSync(new URL('../../'+relative,import.meta.url),'utf8');
+
+test('v0.3.11 updates the installed Mentor Pair package rather than creating a new app',()=>{
+  const gradle=read('app/build.gradle.kts');
+  assert.match(gradle,/versionCode = if \(deviceAiMentorPreview\) 14 else if \(deviceAiPreview\) 6/);
+  assert.match(gradle,/versionName = if \(deviceAiMentorPreview\) "0\.3\.11"/);
+  assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
+  assert.match(gradle,/signingConfig = signingConfigs\.getByName\("mentorPreview"\)/);
+});
+
+test('existing-owner signing identity is mandatory before publishing update',()=>{
+ const script=read('scripts/render-mentor-preview.sh');
+ assert.match(script,/CONTINUUM_MENTOR_SIGNING_P12_BASE64:\?Persistent signing keystore is missing/);
+ assert.match(script,/CONTINUUM_MENTOR_SIGNING_PASSWORD:\?Signing password is missing/);
+ assert.match(script,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
+ assert.match(script,/name='at\.heinz\.deviceai\.mentorpaired' versionCode='14' versionName='0\.3\.11'/);
+ assert.match(script,/DeviceAI-Continuum-v0\.3\.11-\$\{apk_sha256\}\.apk/);
+ assert.match(script,/sha256sum --check --status/);
+ assert.doesNotMatch(script,/deviceAiPreview=true/);
+ assert.match(script,/actual_branch" != "\$render_delivery_branch"/);
+});
+
+test('update retains package-local data and never runs installer commands',()=>{
+ const gradle=read('app/build.gradle.kts');
+ const manifest=read('app/src/main/AndroidManifest.xml');
+ const script=read('scripts/render-mentor-preview.sh');
+ assert.match(manifest,/android:allowBackup="false"/);
+ assert.doesNotMatch(script,/adb install|pm install|cmd package install|git reset --hard|rm -rf .*learning/);
+ assert.match(gradle,/deviceAiMentorPreview\) \{/);
+});
