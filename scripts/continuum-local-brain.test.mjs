@@ -44,7 +44,13 @@ test('patch proposal is schema constrained, validated and never applied', async 
   assert.equal(result.autoApply,false);
   assert.equal(result.trusted,false);
   assert.equal(result.patch.file,patch.file);
-  assert.deepEqual(request.response_format.schema.properties.file.enum,[patch.file]);
+  assert.equal(request.response_format.type,'json_schema');
+  assert.equal(request.response_format.schema,undefined);
+  assert.equal(request.response_format.json_schema.name,'continuum_patch');
+  assert.equal(request.response_format.json_schema.strict,true);
+  assert.deepEqual(request.response_format.json_schema.schema.properties.file.enum,[patch.file]);
+  assert.equal(request.response_format.json_schema.schema.additionalProperties,false);
+  assert.deepEqual(request.response_format.json_schema.schema.required,['file','oldText','newText']);
   await assert.rejects(queryLocalBrain({...base,mode:'patch',allowedTrackedPaths:[patch.file],
     fetchImpl:fakeFetch(JSON.stringify({...patch,file:'app/../secrets'}))}),/LOCAL_PATCH_SCHEMA_REJECTED/);
   await assert.rejects(queryLocalBrain({...base,mode:'patch',allowedTrackedPaths:[patch.file],

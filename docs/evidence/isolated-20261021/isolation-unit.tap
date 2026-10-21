@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: untrusted executor objects cannot grant execution rights
+ok 1 - untrusted executor objects cannot grant execution rights
+  ---
+  duration_ms: 2.310475
+  type: 'test'
+  ...
+# Subtest: mutable images and unbounded resource policies are rejected before daemon access
+ok 2 - mutable images and unbounded resource policies are rejected before daemon access
+  ---
+  duration_ms: 0.341778
+  type: 'test'
+  ...
+# Subtest: receipts with network, privilege, missing limits or missing snapshot are invalid
+ok 3 - receipts with network, privilege, missing limits or missing snapshot are invalid
+  ---
+  duration_ms: 0.341518
+  type: 'test'
+  ...
+# Subtest: configuration cannot supply shell commands or symlinked owner data
+ok 4 - configuration cannot supply shell commands or symlinked owner data
+  ---
+  duration_ms: 1.246523
+  type: 'test'
+  ...
+# Subtest: broad model reports never become learned success even with a true independent flag
+ok 5 - broad model reports never become learned success even with a true independent flag
+  ---
+  duration_ms: 1.159404
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66.81025

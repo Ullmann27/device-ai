@@ -62,7 +62,7 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
   const sufficient=evidenceSufficient(baselineResults,verified.results);
   const profiles=verified.results.map(r=>({
     profile:r.profile,passed:r.passed===true,executed:r.tests?.executed??0,
-    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0,...(r.isolation?{isolation:r.isolation}:{})
   }));
   const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
   const passed=verified.passed===true&&sufficient.sufficient&&actualTests>0&&
@@ -76,7 +76,7 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
  */
-export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null}={}){
+export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,executor=null}={}){
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
     throw Error('Valid root, backlog file, out and budgetMinutes=1..30 required');
   if(id!==null&&!TASK_ID.test(id))throw Error('Invalid task ID');
@@ -117,7 +117,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,executor});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     const writeReport=()=>{
@@ -147,7 +147,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       git(independent,['apply','--binary',patchFile]);
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
-      const verified=runChain(task.subject.chain,independent,independentOut,{deadline});
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,executor});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
       const independentlyPassed=assessment.passed;
@@ -182,13 +182,14 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
           throw Error('Verified backlog completion was not committed');
         outcome={status:'DONE',head,taskId:task.id,patchSha256:patchHash,
           patch:patchFile,profiles,independentReceipt,
-          report:path.join(reportDir,'report.json'),approvedForMerge:false};
+          report:path.join(reportDir,'report.json'),approvedForMerge:false,
+          ...(report.verified.strategy==='LOCAL_ISOLATED_PATCH'?{learningEligible:false,reviewRequired:true}: {})};
       }
     }
     // Do not discard independent verification failures: record them as
     // negative strategy experience, never as successful repair examples.
     saveLedger(ledgerFile,recordSession(ledger,report,{
-      trigger:'accepted-owner-task',independentPass:outcome.status==='DONE'
+      trigger:'accepted-owner-task',independentPass:report.verified?.strategy==='LOCAL_ISOLATED_PATCH'?undefined:outcome.status==='DONE'
     }));
     if(outcome.status==='FAILED'){
       store.apply([{op:'fail',actor,at:Date.now(),id:task.id,token,

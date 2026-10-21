@@ -1,0 +1,6915 @@
+{
+  "schema": "continuum-capability-research-report",
+  "version": 1,
+  "status": "RESEARCH_SHADOW",
+  "sourceBaseline": "377bc05b8a8d96494f4cee7be8665fde3317f1e7",
+  "protocol": {
+    "version": 1,
+    "trainingSeeds": [
+      11,
+      29,
+      47
+    ],
+    "holdoutSeeds": [
+      101,
+      211,
+      307
+    ],
+    "maxGrammarNodes": 5,
+    "maxAcquisitions": 8,
+    "queryRadius": 4,
+    "scoreRadius": 9,
+    "maxRepairAttempts": 32,
+    "contextBudget": 120,
+    "lexicalMargin": 0.08,
+    "swb1Margin": 0.04,
+    "diversityPenalty": 0.45,
+    "changedAfterOutcomeInspection": false,
+    "promotionEligible": false
+  },
+  "protocolHash": "d6b410b0d60b80ac02353f3e48cfd708a3c2e9e89b98e50521ca72b0320506b5",
+  "dataFingerprint": "399349f2cc085684daaef08e08c091b91064250af387915d04fbafb3bb3c34ec",
+  "hashScheme": "SHA-256 canonical JSON; module and model snapshot hashes use raw bytes",
+  "moduleHashes": {
+    "capability-research.mjs": "8b5299a5d7a74d5b7a8af536d7559a8068eeb915cccdd309a9bb6db0f57f3790",
+    "capability-research-fixtures.mjs": "9c41394cc7898f930979ac08365fa556fe40792d0dc87012b4fa7713235fd482",
+    "capability-research-experiments.mjs": "4eebd61488431d46d392191a103e0fc217ce84b3b5ac9fd7fc7b9f2500db90e2"
+  },
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "architecture": "x64",
+    "androidExecuted": false
+  },
+  "splitManifest": {
+    "training": [
+      {
+        "id": "capability-train-elementary-sum-11",
+        "family": "elementary-sum",
+        "seed": 11
+      },
+      {
+        "id": "capability-train-signed-difference-11",
+        "family": "signed-difference",
+        "seed": 11
+      },
+      {
+        "id": "capability-train-lower-envelope-11",
+        "family": "lower-envelope",
+        "seed": 11
+      },
+      {
+        "id": "capability-train-upper-envelope-11",
+        "family": "upper-envelope",
+        "seed": 11
+      },
+      {
+        "id": "capability-train-elementary-sum-29",
+        "family": "elementary-sum",
+        "seed": 29
+      },
+      {
+        "id": "capability-train-signed-difference-29",
+        "family": "signed-difference",
+        "seed": 29
+      },
+      {
+        "id": "capability-train-lower-envelope-29",
+        "family": "lower-envelope",
+        "seed": 29
+      },
+      {
+        "id": "capability-train-upper-envelope-29",
+        "family": "upper-envelope",
+        "seed": 29
+      },
+      {
+        "id": "capability-train-elementary-sum-47",
+        "family": "elementary-sum",
+        "seed": 47
+      },
+      {
+        "id": "capability-train-signed-difference-47",
+        "family": "signed-difference",
+        "seed": 47
+      },
+      {
+        "id": "capability-train-lower-envelope-47",
+        "family": "lower-envelope",
+        "seed": 47
+      },
+      {
+        "id": "capability-train-upper-envelope-47",
+        "family": "upper-envelope",
+        "seed": 47
+      }
+    ],
+    "holdout": [
+      {
+        "id": "capability-holdout-absolute-distance-101",
+        "family": "absolute-distance",
+        "seed": 101
+      },
+      {
+        "id": "capability-holdout-positive-gap-101",
+        "family": "positive-gap",
+        "seed": 101
+      },
+      {
+        "id": "capability-holdout-interval-saturation-101",
+        "family": "interval-saturation",
+        "seed": 101
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-101",
+        "family": "two-sided-gap",
+        "seed": 101
+      },
+      {
+        "id": "capability-holdout-absolute-distance-211",
+        "family": "absolute-distance",
+        "seed": 211
+      },
+      {
+        "id": "capability-holdout-positive-gap-211",
+        "family": "positive-gap",
+        "seed": 211
+      },
+      {
+        "id": "capability-holdout-interval-saturation-211",
+        "family": "interval-saturation",
+        "seed": 211
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-211",
+        "family": "two-sided-gap",
+        "seed": 211
+      },
+      {
+        "id": "capability-holdout-absolute-distance-307",
+        "family": "absolute-distance",
+        "seed": 307
+      },
+      {
+        "id": "capability-holdout-positive-gap-307",
+        "family": "positive-gap",
+        "seed": 307
+      },
+      {
+        "id": "capability-holdout-interval-saturation-307",
+        "family": "interval-saturation",
+        "seed": 307
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-307",
+        "family": "two-sided-gap",
+        "seed": 307
+      }
+    ],
+    "adversarial": [
+      {
+        "id": "capability-adversarial-outside-grammar-product-401",
+        "family": "outside-grammar-product",
+        "seed": 401
+      },
+      {
+        "id": "capability-adversarial-negative-transfer-operator-409",
+        "family": "negative-transfer-operator",
+        "seed": 409
+      },
+      {
+        "id": "capability-adversarial-operator-reversal-419",
+        "family": "operator-reversal",
+        "seed": 419
+      }
+    ],
+    "overlapChecked": true,
+    "holdoutDistinctSourceAndOraclePairs": 5,
+    "holdoutDistinctOracleFunctionsOnScoreDomain": 4,
+    "semanticDependence": "Absolute-distance and two-sided-gap families have identical oracle outputs; repeated seeds are not independent competencies.",
+    "holdoutUsedForFitting": false,
+    "holdoutPublicAndConsumed": true
+  },
+  "synthesis": {
+    "experiment": "EXP-02",
+    "grammar": {
+      "fingerprint": "5d91e9be5a2a74d141bfb30a38a398003bc37a59b778002950d3a220197a01b8",
+      "programs": 688,
+      "generated": 3203,
+      "sharedInterpreterEvaluations": 259443
+    },
+    "holdout": {
+      "baseline": {
+        "tasks": 12,
+        "exact": 12,
+        "candidates": 12,
+        "oracleCalls": 72,
+        "candidateLookups": 13050,
+        "disagreementLookups": 0,
+        "attempts": 0,
+        "verifierExecutions": 0
+      },
+      "prototype": {
+        "tasks": 12,
+        "exact": 12,
+        "candidates": 12,
+        "oracleCalls": 59,
+        "candidateLookups": 12875,
+        "disagreementLookups": 99272,
+        "attempts": 0,
+        "verifierExecutions": 0
+      }
+    },
+    "rows": [
+      {
+        "id": "capability-holdout-absolute-distance-101",
+        "family": "absolute-distance",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1066,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                2,
+                -2
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 15,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                4
+              ],
+              "expected": 8,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-101",
+        "family": "positive-gap",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1064,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                2,
+                -2
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 15,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1062,
+          "disagreementLookups": 7411,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 81,
+              "after": 11
+            },
+            {
+              "input": [
+                4,
+                3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 11,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-101",
+        "family": "interval-saturation",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -1,
+            [
+              "min",
+              "x",
+              1
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1103,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                2,
+                -2
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 121,
+              "after": 14
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": -1,
+              "counterexample": true,
+              "before": 14,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -1,
+            [
+              "min",
+              "x",
+              1
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1099,
+          "disagreementLookups": 10339,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": -1,
+              "counterexample": true,
+              "before": 121,
+              "after": 10
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 10,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-101",
+        "family": "two-sided-gap",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1066,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                2,
+                -2
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 15,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                4
+              ],
+              "expected": 8,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-211",
+        "family": "absolute-distance",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 9,
+          "acquisitions": 7,
+          "candidateLookups": 1085,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -2,
+                -4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                4,
+                4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 15,
+              "after": 11
+            },
+            {
+              "input": [
+                0,
+                3
+              ],
+              "expected": 3,
+              "counterexample": true,
+              "before": 11,
+              "after": 3
+            },
+            {
+              "input": [
+                0,
+                2
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 3,
+              "after": 3
+            },
+            {
+              "input": [
+                -1,
+                -4
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 3,
+              "after": 2
+            },
+            {
+              "input": [
+                1,
+                3
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                -3,
+                -1
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-211",
+        "family": "positive-gap",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 7,
+          "acquisitions": 5,
+          "candidateLookups": 1081,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -2,
+                -4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                4,
+                4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 15,
+              "after": 11
+            },
+            {
+              "input": [
+                0,
+                3
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 11,
+              "after": 3
+            },
+            {
+              "input": [
+                0,
+                2
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 3,
+              "after": 3
+            },
+            {
+              "input": [
+                -1,
+                -4
+              ],
+              "expected": 3,
+              "counterexample": true,
+              "before": 3,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1062,
+          "disagreementLookups": 7411,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 81,
+              "after": 11
+            },
+            {
+              "input": [
+                4,
+                3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 11,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-211",
+        "family": "interval-saturation",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -2,
+            [
+              "min",
+              "x",
+              2
+            ]
+          ],
+          "oracleCalls": 9,
+          "acquisitions": 7,
+          "candidateLookups": 1140,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -2,
+                -4
+              ],
+              "expected": -2,
+              "counterexample": false,
+              "before": 121,
+              "after": 39
+            },
+            {
+              "input": [
+                4,
+                4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 39,
+              "after": 4
+            },
+            {
+              "input": [
+                0,
+                3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 4,
+              "after": 2
+            },
+            {
+              "input": [
+                0,
+                2
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                -1,
+                -4
+              ],
+              "expected": -1,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                1,
+                3
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                -3,
+                -1
+              ],
+              "expected": -2,
+              "counterexample": true,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -2,
+            [
+              "min",
+              "x",
+              2
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1100,
+          "disagreementLookups": 10415,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": -2,
+              "counterexample": true,
+              "before": 121,
+              "after": 9
+            },
+            {
+              "input": [
+                3,
+                4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 9,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": -2,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-211",
+        "family": "two-sided-gap",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 9,
+          "acquisitions": 7,
+          "candidateLookups": 1085,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -2,
+                -4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 81,
+              "after": 15
+            },
+            {
+              "input": [
+                4,
+                4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 15,
+              "after": 11
+            },
+            {
+              "input": [
+                0,
+                3
+              ],
+              "expected": 3,
+              "counterexample": true,
+              "before": 11,
+              "after": 3
+            },
+            {
+              "input": [
+                0,
+                2
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 3,
+              "after": 3
+            },
+            {
+              "input": [
+                -1,
+                -4
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 3,
+              "after": 2
+            },
+            {
+              "input": [
+                1,
+                3
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                -3,
+                -1
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-307",
+        "family": "absolute-distance",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1067,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                0,
+                -4
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 18
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": 3,
+              "counterexample": true,
+              "before": 18,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-307",
+        "family": "positive-gap",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1069,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                0,
+                -4
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 18
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 18,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "sub",
+            "x",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1062,
+          "disagreementLookups": 7411,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 81,
+              "after": 11
+            },
+            {
+              "input": [
+                4,
+                3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 11,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                3
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-307",
+        "family": "interval-saturation",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -2,
+            [
+              "min",
+              "x",
+              2
+            ]
+          ],
+          "oracleCalls": 7,
+          "acquisitions": 5,
+          "candidateLookups": 1157,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                0,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 121,
+              "after": 57
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": -2,
+              "counterexample": true,
+              "before": 57,
+              "after": 5
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": -2,
+              "counterexample": false,
+              "before": 5,
+              "after": 3
+            },
+            {
+              "input": [
+                -2,
+                -3
+              ],
+              "expected": -2,
+              "counterexample": false,
+              "before": 3,
+              "after": 3
+            },
+            {
+              "input": [
+                4,
+                -2
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 3,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "max",
+            -2,
+            [
+              "min",
+              "x",
+              2
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1100,
+          "disagreementLookups": 10415,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": -2,
+              "counterexample": true,
+              "before": 121,
+              "after": 9
+            },
+            {
+              "input": [
+                3,
+                4
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 9,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": -2,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-307",
+        "family": "two-sided-gap",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1067,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                0,
+                -4
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 81,
+              "after": 18
+            },
+            {
+              "input": [
+                -4,
+                -1
+              ],
+              "expected": 3,
+              "counterexample": true,
+              "before": 18,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1065,
+          "disagreementLookups": 7645,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 280,
+              "after": 81
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 1,
+              "counterexample": true,
+              "before": 81,
+              "after": 14
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 14,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                -4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-adversarial-outside-grammar-product-401",
+        "family": "outside-grammar-product",
+        "seed": 401,
+        "split": "adversarial",
+        "baseline": {
+          "status": "ABSTAIN",
+          "ast": null,
+          "oracleCalls": 3,
+          "acquisitions": 1,
+          "candidateLookups": 1089,
+          "disagreementLookups": 0,
+          "survivors": 0,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -1,
+                3
+              ],
+              "expected": -3,
+              "counterexample": true,
+              "before": 121,
+              "after": 0
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": false,
+          "independentErrors": null
+        },
+        "prototype": {
+          "status": "ABSTAIN",
+          "ast": null,
+          "oracleCalls": 3,
+          "acquisitions": 1,
+          "candidateLookups": 1089,
+          "disagreementLookups": 9559,
+          "survivors": 0,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 12,
+              "counterexample": true,
+              "before": 121,
+              "after": 0
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": false,
+          "independentErrors": null
+        }
+      },
+      {
+        "id": "capability-adversarial-negative-transfer-operator-409",
+        "family": "negative-transfer-operator",
+        "seed": 409,
+        "split": "adversarial",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 7,
+          "acquisitions": 5,
+          "candidateLookups": 1114,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                0
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 121,
+              "after": 11
+            },
+            {
+              "input": [
+                -2,
+                4
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 11,
+              "after": 5
+            },
+            {
+              "input": [
+                -3,
+                -3
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 5,
+              "after": 5
+            },
+            {
+              "input": [
+                2,
+                4
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 5,
+              "after": 4
+            },
+            {
+              "input": [
+                0,
+                -2
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 4,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 5,
+          "acquisitions": 3,
+          "candidateLookups": 1099,
+          "disagreementLookups": 10337,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 1,
+              "counterexample": false,
+              "before": 280,
+              "after": 121
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 121,
+              "after": 8
+            },
+            {
+              "input": [
+                3,
+                -4
+              ],
+              "expected": 4,
+              "counterexample": true,
+              "before": 8,
+              "after": 2
+            },
+            {
+              "input": [
+                -3,
+                4
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      },
+      {
+        "id": "capability-adversarial-operator-reversal-419",
+        "family": "operator-reversal",
+        "seed": 419,
+        "split": "adversarial",
+        "baseline": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "add",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 8,
+          "acquisitions": 6,
+          "candidateLookups": 1043,
+          "disagreementLookups": 0,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 280,
+              "after": 49
+            },
+            {
+              "input": [
+                -2,
+                2
+              ],
+              "expected": 0,
+              "counterexample": true,
+              "before": 49,
+              "after": 18
+            },
+            {
+              "input": [
+                -4,
+                2
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 18,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                4
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                0,
+                -4
+              ],
+              "expected": 4,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                2,
+                1
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 2,
+              "after": 2
+            },
+            {
+              "input": [
+                2,
+                -4
+              ],
+              "expected": 2,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "CANDIDATE_ONLY",
+          "ast": [
+            "abs",
+            [
+              "add",
+              "x",
+              "y"
+            ]
+          ],
+          "oracleCalls": 4,
+          "acquisitions": 2,
+          "candidateLookups": 1019,
+          "disagreementLookups": 4027,
+          "survivors": 1,
+          "trace": [
+            {
+              "input": [
+                0,
+                0
+              ],
+              "expected": 0,
+              "counterexample": false,
+              "before": 688,
+              "after": 280
+            },
+            {
+              "input": [
+                1,
+                1
+              ],
+              "expected": 2,
+              "counterexample": true,
+              "before": 280,
+              "after": 49
+            },
+            {
+              "input": [
+                -4,
+                -3
+              ],
+              "expected": 7,
+              "counterexample": true,
+              "before": 49,
+              "after": 2
+            },
+            {
+              "input": [
+                -4,
+                1
+              ],
+              "expected": 3,
+              "counterexample": false,
+              "before": 2,
+              "after": 1
+            }
+          ],
+          "verifiedBeyondQueryDomain": false,
+          "autoApplyAuthorized": false,
+          "exact": true,
+          "independentErrors": 0
+        }
+      }
+    ]
+  },
+  "memory": {
+    "experiment": "EXP-06/07/12",
+    "trainingProofCost": {
+      "stored": 12,
+      "revoked": 0,
+      "proofExecutions": 12996,
+      "authority": "SHADOW_ONLY",
+      "writesPerformed": false
+    },
+    "holdout": {
+      "baseline": {
+        "tasks": 12,
+        "exact": 12,
+        "candidates": 12,
+        "oracleCalls": 0,
+        "candidateLookups": 0,
+        "disagreementLookups": 0,
+        "attempts": 24,
+        "verifierExecutions": 4350
+      },
+      "prototype": {
+        "tasks": 12,
+        "exact": 12,
+        "candidates": 12,
+        "oracleCalls": 0,
+        "candidateLookups": 0,
+        "disagreementLookups": 0,
+        "attempts": 12,
+        "verifierExecutions": 4332
+      }
+    },
+    "unsafeNegativeControlFalseClaims": 2,
+    "integrity": {
+      "attacks": [
+        {
+          "name": "corrupt-bytes",
+          "valid": false,
+          "reason": "CONTENT_HASH_MISMATCH"
+        },
+        {
+          "name": "rehash-forged-proof",
+          "valid": false,
+          "reason": "PROOF_OR_PROVENANCE_MISMATCH"
+        },
+        {
+          "name": "holdout-contamination",
+          "valid": false,
+          "reason": "UNREGISTERED_TRAINING_PROVENANCE"
+        },
+        {
+          "name": "family-alias",
+          "valid": false,
+          "reason": "PROOF_OR_PROVENANCE_MISMATCH"
+        },
+        {
+          "name": "source-drift",
+          "valid": false,
+          "reason": "PROOF_OR_PROVENANCE_MISMATCH"
+        },
+        {
+          "name": "training-permission-forgery",
+          "valid": false,
+          "reason": "PROOF_OR_PROVENANCE_MISMATCH"
+        }
+      ],
+      "acceptedAttacks": 0,
+      "splitAliasRejected": true,
+      "revokedReceiptReimport": {
+        "valid": false,
+        "reason": "REVOKED"
+      },
+      "activeAfterRevocation": 0,
+      "staleContextUsedRevokedHint": false,
+      "revokedFallbackStatus": "VERIFIED_FINITE_DOMAIN",
+      "statistics": {
+        "stored": 1,
+        "revoked": 1,
+        "proofExecutions": 6498,
+        "authority": "SHADOW_ONLY",
+        "writesPerformed": false
+      }
+    },
+    "rows": [
+      {
+        "id": "capability-holdout-absolute-distance-101",
+        "family": "absolute-distance",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-101",
+        "family": "positive-gap",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 3,
+          "executed": 365,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-101",
+        "family": "interval-saturation",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            1,
+            [
+              "max",
+              -1,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 3,
+          "executed": 363,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            1,
+            [
+              "max",
+              -1,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-101",
+        "family": "two-sided-gap",
+        "seed": 101,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-211",
+        "family": "absolute-distance",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-211",
+        "family": "positive-gap",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 3,
+          "executed": 365,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-211",
+        "family": "interval-saturation",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            2,
+            [
+              "max",
+              -2,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 3,
+          "executed": 363,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            2,
+            [
+              "max",
+              -2,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-211",
+        "family": "two-sided-gap",
+        "seed": 211,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-307",
+        "family": "absolute-distance",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-307",
+        "family": "positive-gap",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 3,
+          "executed": 365,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 2,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "max",
+            0,
+            [
+              "sub",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "min",
+            "to": "max"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "min",
+                "to": "max"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-307",
+        "family": "interval-saturation",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            2,
+            [
+              "max",
+              -2,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 3,
+          "executed": 363,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "add"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "min",
+            2,
+            [
+              "max",
+              -2,
+              "x"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "max",
+            "to": "min"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "max",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-307",
+        "family": "two-sided-gap",
+        "seed": 307,
+        "split": "holdout",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "sub",
+            [
+              "max",
+              "x",
+              "y"
+            ],
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [],
+            "from": "add",
+            "to": "sub"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      },
+      {
+        "id": "capability-adversarial-outside-grammar-product-401",
+        "family": "outside-grammar-product",
+        "seed": 401,
+        "split": "adversarial",
+        "baseline": {
+          "status": "ABSTAIN",
+          "ast": null,
+          "patch": null,
+          "attempts": 3,
+          "executed": 3,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "min"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "max"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": false,
+          "independentErrors": null
+        },
+        "prototype": {
+          "status": "ABSTAIN",
+          "ast": null,
+          "patch": null,
+          "attempts": 3,
+          "executed": 3,
+          "trace": [
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "min"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [],
+                "from": "add",
+                "to": "max"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": false,
+          "independentErrors": null
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": false
+        }
+      },
+      {
+        "id": "capability-adversarial-negative-transfer-operator-409",
+        "family": "negative-transfer-operator",
+        "seed": 409,
+        "split": "adversarial",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "min"
+          },
+          "attempts": 2,
+          "executed": 362,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": null
+            },
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "min",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "add",
+            "to": "min"
+          },
+          "attempts": 2,
+          "executed": 362,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "sub"
+              },
+              "passed": false,
+              "executed": 1,
+              "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+            },
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "add",
+                "to": "min"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": false
+        }
+      },
+      {
+        "id": "capability-adversarial-operator-reversal-419",
+        "family": "operator-reversal",
+        "seed": 419,
+        "split": "adversarial",
+        "baseline": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "add",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "sub",
+            "to": "add"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "sub",
+                "to": "add"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": null
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "prototype": {
+          "status": "VERIFIED_FINITE_DOMAIN",
+          "ast": [
+            "abs",
+            [
+              "add",
+              "x",
+              "y"
+            ]
+          ],
+          "patch": {
+            "path": [
+              1
+            ],
+            "from": "sub",
+            "to": "add"
+          },
+          "attempts": 1,
+          "executed": 361,
+          "trace": [
+            {
+              "patch": {
+                "path": [
+                  1
+                ],
+                "from": "sub",
+                "to": "add"
+              },
+              "passed": true,
+              "executed": 361,
+              "memoryHash": "8e67ac99f4c9618278580a12f90ec3decc626eb89cd8e99060cb7165a0672287"
+            }
+          ],
+          "autoApplyAuthorized": false,
+          "independentWorktreeStillRequired": true,
+          "exact": true,
+          "independentErrors": 0
+        },
+        "unsafeUnverifiedReplayNegativeControl": {
+          "claimedSuccess": true,
+          "actuallyExact": true
+        }
+      }
+    ]
+  },
+  "context": {
+    "experiment": "EXP-03/04",
+    "model": {
+      "origin": "NEURON createNeuralState/exportWeights, untrained SWB1",
+      "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+      "updates": 0,
+      "weightsChanged": false
+    },
+    "costUnit": "ceil(UTF-8 bytes / 4), proxy not tokenizer tokens",
+    "holdout": {
+      "lexical": {
+        "tasks": 12,
+        "relevantCoverage": 12,
+        "relevantHints": 36,
+        "irrelevantHints": 3,
+        "contextCost": 1224,
+        "compactRoutes": 0,
+        "repairs": {
+          "tasks": 12,
+          "exact": 12,
+          "candidates": 12,
+          "oracleCalls": 0,
+          "candidateLookups": 0,
+          "disagreementLookups": 0,
+          "attempts": 12,
+          "verifierExecutions": 4332
+        }
+      },
+      "swb1": {
+        "tasks": 12,
+        "relevantCoverage": 9,
+        "relevantHints": 21,
+        "irrelevantHints": 18,
+        "contextCost": 1251,
+        "compactRoutes": 0,
+        "repairs": {
+          "tasks": 12,
+          "exact": 12,
+          "candidates": 12,
+          "oracleCalls": 0,
+          "candidateLookups": 0,
+          "disagreementLookups": 0,
+          "attempts": 18,
+          "verifierExecutions": 4344
+        }
+      },
+      "prototype": {
+        "tasks": 12,
+        "relevantCoverage": 12,
+        "relevantHints": 12,
+        "irrelevantHints": 24,
+        "contextCost": 1116,
+        "compactRoutes": 0,
+        "repairs": {
+          "tasks": 12,
+          "exact": 12,
+          "candidates": 12,
+          "oracleCalls": 0,
+          "candidateLookups": 0,
+          "disagreementLookups": 0,
+          "attempts": 12,
+          "verifierExecutions": 4332
+        }
+      }
+    },
+    "rows": [
+      {
+        "id": "capability-holdout-absolute-distance-101",
+        "family": "absolute-distance",
+        "seed": 101,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013433191120447052,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013433191120447052,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013433191120447052,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-101",
+        "family": "positive-gap",
+        "seed": 101,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+          ],
+          "cost": 90,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0032523801270328834,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0032523801270328834,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 3,
+            "executed": 365,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "add"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b"
+          ],
+          "cost": 94,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0032523801270328834,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-101",
+        "family": "interval-saturation",
+        "seed": 101,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186",
+            "b6bf8aba2b97b867b3d092f4e07f748ac78e9a047aadc44f9297d1efdda50bf6",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.008726055977394842,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 1,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              1,
+              [
+                "max",
+                -1,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.008726055977394842,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 3,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              1,
+              [
+                "max",
+                -1,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.008726055977394842,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              1,
+              [
+                "max",
+                -1,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-101",
+        "family": "two-sided-gap",
+        "seed": 101,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.002555938687809678,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.002555938687809678,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.002555938687809678,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-211",
+        "family": "absolute-distance",
+        "seed": 211,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.001290115586693008,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.001290115586693008,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.001290115586693008,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-211",
+        "family": "positive-gap",
+        "seed": 211,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+          ],
+          "cost": 90,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013621448935994818,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013621448935994818,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 3,
+            "executed": 365,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "add"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b"
+          ],
+          "cost": 94,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.013621448935994818,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-211",
+        "family": "interval-saturation",
+        "seed": 211,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186",
+            "b6bf8aba2b97b867b3d092f4e07f748ac78e9a047aadc44f9297d1efdda50bf6",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.004331951330780237,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 1,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.004331951330780237,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 3,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186",
+            "8e67ac99f4c9618278580a12f90ec3decc626eb89cd8e99060cb7165a0672287",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 91,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.004331951330780237,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-211",
+        "family": "two-sided-gap",
+        "seed": 211,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.01033343373340434,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.01033343373340434,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.01033343373340434,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-absolute-distance-307",
+        "family": "absolute-distance",
+        "seed": 307,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0010106552513015066,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0010106552513015066,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "b6bf8aba2b97b867b3d092f4e07f748ac78e9a047aadc44f9297d1efdda50bf6"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0010106552513015066,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-positive-gap-307",
+        "family": "positive-gap",
+        "seed": 307,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+          ],
+          "cost": 90,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0033460041641035776,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0033460041641035776,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 3,
+            "executed": 365,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "add"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 2,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "b6bf8aba2b97b867b3d092f4e07f748ac78e9a047aadc44f9297d1efdda50bf6"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.0033460041641035776,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "max",
+              0,
+              [
+                "sub",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "min",
+              "to": "max"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "min",
+                  "to": "max"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-interval-saturation-307",
+        "family": "interval-saturation",
+        "seed": 307,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186",
+            "b6bf8aba2b97b867b3d092f4e07f748ac78e9a047aadc44f9297d1efdda50bf6",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.011658519755252561,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 1,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0"
+          ],
+          "cost": 120,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.011658519755252561,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 3,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "1547b6ce865ae3d1d51c7b352d7021ff029dfc15b1829a58c459565336d93f9d"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.011658519755252561,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "min",
+              2,
+              [
+                "max",
+                -2,
+                "x"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "max",
+              "to": "min"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "max",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "c9dc76d04e6ff722ac9773299df8ba1866e84582aa6ec9c9979f30a1879000d0"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-holdout-two-sided-gap-307",
+        "family": "two-sided-gap",
+        "seed": 307,
+        "split": "holdout",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.00023191609538231184,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.00023191609538231184,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 3,
+          "irrelevantHints": 0,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "8a155eeb33121bdf0b0da4d4725b797bd3d868e30e739431744124e0964e3aea",
+            "2a3db82b2b9d05c08778c735cb624113ce8254d1fb10e2e8abdbdeab58699186"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.00023191609538231184,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "sub",
+              [
+                "max",
+                "x",
+                "y"
+              ],
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [],
+              "from": "add",
+              "to": "sub"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-adversarial-outside-grammar-product-401",
+        "family": "outside-grammar-product",
+        "seed": 401,
+        "split": "adversarial",
+        "lexical": {
+          "ids": [
+            "8e67ac99f4c9618278580a12f90ec3decc626eb89cd8e99060cb7165a0672287",
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b",
+            "fa158ab5726d17bed2cc6678cff25e8125d68cfb6c43f43d6afc06e6a2ab7982"
+          ],
+          "cost": 93,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.006300568574309051,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "ABSTAIN",
+            "ast": null,
+            "patch": null,
+            "attempts": 3,
+            "executed": 3,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "max"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": false,
+            "independentErrors": null
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.006300568574309051,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "ABSTAIN",
+            "ast": null,
+            "patch": null,
+            "attempts": 3,
+            "executed": 3,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "max"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": false,
+            "independentErrors": null
+          }
+        },
+        "committee": {
+          "ids": [
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 94,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.006300568574309051,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "ABSTAIN",
+            "ast": null,
+            "patch": null,
+            "attempts": 3,
+            "executed": 3,
+            "trace": [
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              },
+              {
+                "patch": {
+                  "path": [],
+                  "from": "add",
+                  "to": "max"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": false,
+            "independentErrors": null
+          }
+        }
+      },
+      {
+        "id": "capability-adversarial-negative-transfer-operator-409",
+        "family": "negative-transfer-operator",
+        "seed": 409,
+        "split": "adversarial",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.009947286788589582,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "min"
+            },
+            "attempts": 2,
+            "executed": 362,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+              },
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.009947286788589582,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "min"
+            },
+            "attempts": 2,
+            "executed": 362,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              },
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b"
+          ],
+          "cost": 94,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.009947286788589582,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "min",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "add",
+              "to": "min"
+            },
+            "attempts": 2,
+            "executed": 362,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "sub"
+                },
+                "passed": false,
+                "executed": 1,
+                "memoryHash": "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+              },
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "add",
+                  "to": "min"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      },
+      {
+        "id": "capability-adversarial-operator-reversal-419",
+        "family": "operator-reversal",
+        "seed": 419,
+        "split": "adversarial",
+        "lexical": {
+          "ids": [
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.005887503039965214,
+          "route": "LEXICAL",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "add",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "sub",
+              "to": "add"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "sub",
+                  "to": "add"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "swb1": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "68a7681c3e41bc60ec18abcecf915c7055064eefbc0280fc79d78f45dbc12b4d",
+            "0b7f9c87fc340a221435ac5139dd5204b875823b19ca457b78c3801c1e8ed3e6"
+          ],
+          "cost": 99,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.005887503039965214,
+          "route": "SWB1",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 0,
+          "irrelevantHints": 3,
+          "relevantCoverage": false,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "add",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "sub",
+              "to": "add"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "sub",
+                  "to": "add"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": null
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        },
+        "committee": {
+          "ids": [
+            "7887e36ed42f7ca8610c874da1e3160e772469c454e6a89e94afd40c79954ec4",
+            "254f30596294040e1ecb4aeefce2241d71d00816b782b224fb66542ae86cfeab",
+            "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b"
+          ],
+          "cost": 94,
+          "budget": 120,
+          "agreement": false,
+          "confident": false,
+          "lexicalGap": 0,
+          "neuralGap": 0.005887503039965214,
+          "route": "DIVERSE_UNCERTAINTY",
+          "snapshotHash": "107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593",
+          "modelTrainingAuthorized": false,
+          "relevantHints": 1,
+          "irrelevantHints": 2,
+          "relevantCoverage": true,
+          "repair": {
+            "status": "VERIFIED_FINITE_DOMAIN",
+            "ast": [
+              "abs",
+              [
+                "add",
+                "x",
+                "y"
+              ]
+            ],
+            "patch": {
+              "path": [
+                1
+              ],
+              "from": "sub",
+              "to": "add"
+            },
+            "attempts": 1,
+            "executed": 361,
+            "trace": [
+              {
+                "patch": {
+                  "path": [
+                    1
+                  ],
+                  "from": "sub",
+                  "to": "add"
+                },
+                "passed": true,
+                "executed": 361,
+                "memoryHash": "be3dcf504557f62d05f1098e30f49071016130f721af951a41a6c77d5c4e825b"
+              }
+            ],
+            "autoApplyAuthorized": false,
+            "independentWorktreeStillRequired": true,
+            "exact": true,
+            "independentErrors": 0
+          }
+        }
+      }
+    ]
+  },
+  "integration": {
+    "numericAdapterAccepted": true,
+    "canonicalRepairGateExecuted": false,
+    "androidCompilationExecuted": false,
+    "productionComponentsChanged": false,
+    "automaticallyAcceptedWrongRepairs": 0
+  },
+  "regressions": {
+    "synthesisExact": [],
+    "synthesisAcquisitionWork": [
+      "capability-holdout-absolute-distance-101",
+      "capability-holdout-positive-gap-101",
+      "capability-holdout-interval-saturation-101",
+      "capability-holdout-two-sided-gap-101",
+      "capability-holdout-absolute-distance-211",
+      "capability-holdout-positive-gap-211",
+      "capability-holdout-interval-saturation-211",
+      "capability-holdout-two-sided-gap-211",
+      "capability-holdout-absolute-distance-307",
+      "capability-holdout-positive-gap-307",
+      "capability-holdout-interval-saturation-307",
+      "capability-holdout-two-sided-gap-307"
+    ],
+    "memoryAttempts": [],
+    "contextCoverage": [],
+    "contextRepairAttempts": []
+  },
+  "promotionEligible": false,
+  "modelTrainingAuthorized": false,
+  "limitations": [
+    "Authored small bounded tasks, public holdouts consumed by this audit.",
+    "Twelve heldout rows contain five distinct source/oracle pairs and four distinct bounded-domain oracle functions.",
+    "Synthesis oracle-query savings do not imply lower CPU work; cached disagreement comparisons are reported.",
+    "Memory training proof cost is reported separately and must be amortized; no persistent authenticated store is claimed.",
+    "No language generation, learned-model improvement, external benchmark, Android runtime or novel method was measured."
+  ],
+  "reportHash": "6c8b42321156d691704afa9d1c2255bade38fdd47ca0693dbbc2a785c111f3d9"
+}

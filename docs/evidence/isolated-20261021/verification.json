@@ -1,0 +1,42 @@
+{
+  "schema": "continuum-verification-v1",
+  "codeCheckpoint": "3f09c5427b59d8a944b7ceaacc3cb5d0d77837a9",
+  "pr": 53,
+  "base": "377bc05b8a8d96494f4cee7be8665fde3317f1e7",
+  "mainUnchanged": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+  "node": "22.23.3",
+  "checks": [
+    {
+      "command": "node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs",
+      "passed": 828,
+      "failed": 0,
+      "skipped": 0,
+      "scope": "full suite before final teardown guard; targeted negative/kernel/repair tests repeated after guard"
+    },
+    {
+      "command": "node --test backend/test/*.test.js",
+      "passed": 60,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "node --test scripts/continuum-gguf.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-local-brain.test.mjs .github/continuum/local-brain-repair.test.mjs",
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "androidBuildExecuted": false,
+  "samsungTestExecuted": false,
+  "installationPerformed": false,
+  "activeWeightsChanged": false,
+  "evidenceSha256": {
+    "all-node.tap": "69fcaf73fac80496b2fb130a04e5e1c9fc80d26b6ce5320683c2e62cfa032793",
+    "backend.tap": "40f7611f383b921b7b856d2c4ea2b1d3ea2ec704b6b2441d8aa1675c76ad1589",
+    "capability-research.json": "be3f5c6d39f33f1a6d9df12fd32a58368b42256b494a269f7d6371374e49f742",
+    "gguf-real.json": "900d3a197e7ab937833dcdff78ffe8e2be73ed158330ba1357af05ceec6d98ab",
+    "isolation-unit.tap": "b741b29eb80044ff61b01c8a4819d39fa10532a817fbafab861854f5047f99b3",
+    "kernel-proof.json": "8da272451260f8d509c81daa9d605dba5fe843773b4071efc190050bd2509c89",
+    "repair-proof.json": "61e302421072d16b8463af02670488ec93b5b0af03b23c2d79872af15bcccc6b"
+  }
+}

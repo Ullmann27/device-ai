@@ -27,7 +27,7 @@
       "id": "EXP-01",
       "title": "Bounded night workshop",
       "status": "SOURCE_INTEGRATED",
-      "present": "Same phone Termux teamleader and recovery",
+      "present": "Same phone Termux teamleader and recovery 2026-10-21: optional bounded persistent checkpoint/lock/backoff in the same Teamleader loop, CLI --durable-loop (24-cycle default). Crash/dirty-HEAD/concurrency tests passed; Samsung resume unobserved.",
       "entry": "scripts/continuum-teamleader-termux.sh",
       "depends": "Termux Node20/Git, battery/thermal conditions",
       "gate": "Actual repeated device cycles, resume and cancellation"
@@ -36,7 +36,7 @@
       "id": "EXP-02",
       "title": "CEGIS program synthesis",
       "status": "RESEARCH_SHADOW",
-      "present": "Existing CEGIS repair-loop plus explicit serial recipe/control transfer laboratory with independent fresh-worktree checks, immutable shadow measurements and regression gates (82 Node tests; mocked Gradle integration). Owner reports original Samsung 632-test triple-phase recipe; second-file device transfer not yet observed here. PR #49: opt-in local candidates can enter the canonical owner REPAIR worker only as complete bounded numeric JS modules; critic, executed tests and fresh independent worktree remain mandatory. Explicit path scope and exact-source replay preserve the opt-in boundary. Container integration proof, not Samsung or model-quality proof.",
+      "present": "Existing CEGIS repair-loop plus explicit serial recipe/control transfer laboratory with independent fresh-worktree checks, immutable shadow measurements and regression gates (82 Node tests; mocked Gradle integration). Owner reports original Samsung 632-test triple-phase recipe; second-file device transfer not yet observed here. PR #49: opt-in local candidates can enter the canonical owner REPAIR worker only as complete bounded numeric JS modules; critic, executed tests and fresh independent worktree remain mandatory. Explicit path scope and exact-source replay preserve the opt-in boundary. Container integration proof, not Samsung or model-quality proof. Next isolated milestone: explicit local Docker OS executor protects owner state for canonical repair checks and fresh-worktree verification; real JS list-processing red/green proof and Kotlin compiler isolation proof. Broad model patches remain owner-review-only, excluded from learning/replay. Full Android-in-isolation build still untested. docs/CONTINUUM-OS-ISOLATION-20261021.md.",
       "entry": ".github/continuum/repair-loop.mjs",
       "depends": "Typed candidate interface, M4 tests",
       "gate": "Run existing Samsung receipt on a different source with fixed Android compile/unit checks; compare both independently verified arms, then additional novel holdouts. No training/promotion."
@@ -63,7 +63,7 @@
       "id": "EXP-05",
       "title": "Own local generation and LiteRT-LM",
       "status": "RESEARCH_SHADOW",
-      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion.",
+      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); PR #49 had no GGUF execution evidence, no neural weight changes or automatic model promotion. 2026-10-21: real pinned Qwen2.5-Coder-1.5B Q4_K_M inference under netless Linux x86_64, valid shadow patch after fixing llama.cpp json_schema nesting; bounded GGUF admission/context modules and 22 new tests. No ARM64/Samsung measurement, no active model promotion. docs/CONTINUUM-GGUF-INFERENCE-20261021.md.",
       "entry": "docs/CONTINUUM-ARGON-RESEARCH-IMPLEMENTATION-20261017.md",
       "depends": "Compatible local model bytes and memory budget",
       "gate": "Live model-only answers and latency/thermal benchmark"
@@ -81,7 +81,7 @@
       "id": "EXP-07",
       "title": "Independent worker academy",
       "status": "SOURCE_INTEGRATED",
-      "present": "Repeatable repository skill lessons",
+      "present": "Repeatable repository skill lessons Three reporting-only prototypes measured: active CEGIS label acquisition, revocable content-addressed repair hints, frozen SWB1/lexical context committee. Fixed 12-row authored holdout; query/attempt savings but CPU/admission costs and irrelevant-context regressions; no production promotion. docs/CONTINUUM-CAPABILITY-RESEARCH-20261021.md.",
       "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
       "depends": "Pinned source/tests and novelty holdouts",
       "gate": "Adversarial hidden tasks and regression retention"

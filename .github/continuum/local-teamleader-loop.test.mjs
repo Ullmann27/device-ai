@@ -1,5 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawn,spawnSync} from 'node:child_process';
 import {runTeamleaderLoop,validateLoopOptions,isFailedCycleOutcome,validateWorkerHeartbeat} from './local-teamleader-loop.mjs';
 import {parseTeamleaderArgs,teamleaderExitCode} from './teamleader-cli.mjs';
 
@@ -85,6 +89,9 @@ test('invalid intervals, cycle limits and CLI mode combinations are rejected',()
  assert.equal(parsed.loop,true);
  assert.equal(parsed.intervalMinutes,'60');
  assert.equal(parsed.maxCycles,'3');
+ assert.throws(()=>parseTeamleaderArgs(['--once','--durable-loop']),/requires --loop/);
+ assert.equal(parseTeamleaderArgs(['--loop','--durable-loop']).maxCycles,'24');
+ assert.equal(parseTeamleaderArgs(['--loop','--durable-loop','--max-cycles','7']).maxCycles,'7');
 });
 
 
@@ -208,4 +215,164 @@ test('saved status validates legitimate heartbeats and rejects spoofed or corrup
   {nextAttemptAt:null},{nextAttemptAt:waiting.lastFinishedAt-1},
   {lastFinishedAt:null},{detail:{message:'fake success'}}
  ])assert.equal(validateWorkerHeartbeat({...waiting,...bad}),false,JSON.stringify(bad));
+});
+
+function persistentFixture(t){
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-loop-'));
+ t.after(()=>fs.rmSync(base,{recursive:true,force:true}));
+ const sourceRoot=path.join(base,'source');fs.mkdirSync(sourceRoot);
+ const git=(...args)=>{
+  const result=spawnSync('git',['-C',sourceRoot,...args],{encoding:'utf8'});
+  assert.equal(result.status,0,result.stderr);return result.stdout.trim();
+ };
+ git('init','-q');git('config','user.name','Loop Test');
+ git('config','user.email','loop@example.invalid');
+ fs.writeFileSync(path.join(sourceRoot,'source.txt'),'source\n');
+ git('add','.');git('commit','-qm','fixture');
+ let clock=1_000_000;
+ return {sourceRoot,stateFile:path.join(base,'state','loop.json'),
+  maxCycles:3,intervalMinutes:1,now:()=>clock,
+  wait:async ms=>{clock+=ms;},git};
+}
+
+test('durable restart retains total cycle budget and pending backoff',async t=>{
+ const fixture=persistentFixture(t),ids=[],waits=[];
+ let workCalls=0;
+ await assert.rejects(runTeamleaderLoop({...fixture,
+  work:context=>{workCalls++;ids.push(context.cycleId);return {outcome:'CHECKS_FAILED'};},
+  onHeartbeat:heartbeat=>{if(heartbeat.state==='WAITING')throw Error('host stopped');}
+ }),/host stopped/);
+ const summary=await runTeamleaderLoop({...fixture,
+  work:context=>{workCalls++;ids.push(context.cycleId);return {outcome:'IDLE'};},
+  wait:async ms=>{waits.push(ms);await fixture.wait(ms);}
+ });
+ assert.equal(workCalls,3,'restart must not grant three additional cycles');
+ assert.equal(summary.cycles,3);assert.equal(summary.failures,1);
+ assert.equal(summary.resumed,true);assert.equal(summary.state,'LIMIT_REACHED');
+ assert.deepEqual(waits,[60_000,60_000]);
+ assert.equal(new Set(ids).size,3,'each consumed decision has a stable unique identity');
+ const checkpoint=JSON.parse(fs.readFileSync(fixture.stateFile,'utf8'));
+ assert.equal(checkpoint.heartbeat.state,'LIMIT_REACHED');
+ const again=await runTeamleaderLoop({...fixture,work:()=>{throw Error('terminal run repeated');}});
+ assert.equal(again.cycles,3);assert.equal(again.lastOutcome,'IDLE');
+});
+
+test('durable cancellation during work records interruption and a stopped session',async t=>{
+ const fixture=persistentFixture(t),controller=new AbortController(),beats=[];
+ const summary=await runTeamleaderLoop({...fixture,signal:controller.signal,
+  onHeartbeat:heartbeat=>beats.push(heartbeat),
+  work:context=>{assert.equal(context.signal,controller.signal);controller.abort();
+   return {outcome:'VERIFIED_PATCH_PENDING_REVIEW'};}
+ });
+ assert.equal(summary.cycles,1);assert.equal(summary.failures,1);
+ assert.equal(summary.lastOutcome,'INTERRUPTED');assert.equal(summary.state,'STOPPED');
+ assert.equal(beats.at(-1).lastOutcome,'INTERRUPTED');
+ const again=await runTeamleaderLoop({...fixture,work:()=>{throw Error('stopped session repeated');}});
+ assert.equal(again.cycles,1);assert.equal(again.state,'STOPPED');
+});
+
+test('pre-aborted durable run writes STOPPED without executing work',async t=>{
+ const fixture=persistentFixture(t),controller=new AbortController();controller.abort();
+ const summary=await runTeamleaderLoop({...fixture,signal:controller.signal,
+  work:()=>{throw Error('pre-aborted work executed');}});
+ assert.equal(summary.cycles,0);assert.equal(summary.state,'STOPPED');
+ const saved=JSON.parse(fs.readFileSync(fixture.stateFile,'utf8'));
+ assert.equal(saved.heartbeat.lastOutcome,null);
+ assert.equal(validateWorkerHeartbeat(saved.heartbeat),true);
+});
+
+test('durable state fails closed on corruption, changed budgets and changed source',async t=>{
+ const fixture=persistentFixture(t);
+ await runTeamleaderLoop({...fixture,maxCycles:1,work:()=>({outcome:'IDLE'})});
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:2,
+  work:()=>{throw Error('changed budget executed');}}),/settings|budget/i);
+ const original=fs.readFileSync(fixture.stateFile,'utf8');
+ fs.writeFileSync(fixture.stateFile,'{broken');
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:1,
+  work:()=>{throw Error('corrupt state executed');}}),/checkpoint|corrupt/i);
+ fs.writeFileSync(fixture.stateFile,original);
+ fs.writeFileSync(path.join(fixture.sourceRoot,'untracked.txt'),'dirty');
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:1,
+  work:()=>{throw Error('dirty source executed');}}),/dirty/i);
+ fixture.git('add','.');fixture.git('commit','-qm','new source');
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:1,
+  work:()=>{throw Error('different HEAD executed');}}),/source|HEAD/i);
+});
+
+test('durable scheduling requires a finite budget and state outside source',async t=>{
+ const fixture=persistentFixture(t),work=()=>{throw Error('invalid durable work executed');};
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:null,work}),/finite cycle budget/);
+ await assert.rejects(runTeamleaderLoop({...fixture,
+  stateFile:path.join(fixture.sourceRoot,'loop.json'),work}),/outside source/);
+});
+
+test('durable integrity validation rejects plausible counter edits',async t=>{
+ const fixture=persistentFixture(t);
+ await runTeamleaderLoop({...fixture,maxCycles:1,work:()=>({outcome:'IDLE'})});
+ const saved=JSON.parse(fs.readFileSync(fixture.stateFile,'utf8'));
+ saved.heartbeat.detail='fabricated verification';
+ fs.writeFileSync(fixture.stateFile,JSON.stringify(saved));
+ await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:1,
+  work:()=>{throw Error('tampered state executed');}}),/corrupt.*checkpoint/i);
+});
+
+test('source drift while waiting terminates the saved cadence before another cycle',async t=>{
+ const fixture=persistentFixture(t);let calls=0;
+ await assert.rejects(runTeamleaderLoop({...fixture,
+  work:()=>{calls++;return {outcome:'IDLE'};},
+  wait:async ms=>{await fixture.wait(ms);
+   fs.writeFileSync(path.join(fixture.sourceRoot,'source.txt'),'changed\n');}
+ }),/dirty/i);
+ assert.equal(calls,1);
+ const saved=JSON.parse(fs.readFileSync(fixture.stateFile,'utf8'));
+ assert.equal(saved.heartbeat.state,'ERROR');assert.equal(saved.heartbeat.nextAttemptAt,null);
+});
+
+test('source drift during a cycle cannot retain its reported verification success',async t=>{
+ const fixture=persistentFixture(t);
+ const summary=await runTeamleaderLoop({...fixture,work:()=>{
+  fs.writeFileSync(path.join(fixture.sourceRoot,'source.txt'),'changed\n');
+  return {outcome:'VERIFIED_PATCH_PENDING_REVIEW'};
+ }});
+ assert.equal(summary.state,'ERROR');assert.equal(summary.lastOutcome,'ERROR');
+ assert.equal(summary.failures,1);assert.equal(summary.cycles,1);
+});
+
+test('durable loop rejects a competing scheduler before its work executes',async t=>{
+ const fixture=persistentFixture(t);
+ let enter,release;
+ const entered=new Promise(resolve=>{enter=resolve;});
+ const blocked=new Promise(resolve=>{release=resolve;});
+ const first=runTeamleaderLoop({...fixture,maxCycles:1,
+  work:async()=>{enter();await blocked;return {outcome:'IDLE'};}});
+ await entered;
+ try{
+  await assert.rejects(runTeamleaderLoop({...fixture,maxCycles:1,
+   work:()=>{throw Error('competing work executed');}}),/already running|busy/i);
+ }finally{release();await first;}
+});
+
+test('SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay',{timeout:10_000},async t=>{
+ const fixture=persistentFixture(t);
+ const moduleUrl=new URL('./local-teamleader-loop.mjs',import.meta.url).href;
+ const child=spawn(process.execPath,['--input-type=module','-e',
+  `import {runTeamleaderLoop} from ${JSON.stringify(moduleUrl)};
+   await runTeamleaderLoop({sourceRoot:process.argv[1],stateFile:process.argv[2],
+    maxCycles:1,intervalMinutes:1,work:async()=>{
+     process.stdout.write('RUNNING\\n');setInterval(()=>{},1000);await new Promise(()=>{});
+    }});`,fixture.sourceRoot,fixture.stateFile],{stdio:['ignore','pipe','pipe']});
+ let stderr='';child.stderr.on('data',data=>{stderr+=data;});
+ t.after(()=>{if(child.exitCode===null)child.kill('SIGKILL');});
+ await new Promise((resolve,reject)=>{
+  child.once('error',reject);
+  child.stdout.once('data',resolve);
+  child.once('exit',()=>reject(Error('child exited before RUNNING: '+stderr)));
+ });
+ const exited=new Promise(resolve=>child.once('exit',resolve));
+ child.kill('SIGKILL');await exited;
+ assert.equal(JSON.parse(fs.readFileSync(fixture.stateFile,'utf8')).heartbeat.state,'RUNNING');
+ const summary=await runTeamleaderLoop({...fixture,now:Date.now,maxCycles:1,
+  work:()=>{throw Error('crashed attempt repeated');}});
+ assert.equal(summary.cycles,1);assert.equal(summary.failures,1);
+ assert.equal(summary.lastOutcome,'INTERRUPTED');assert.equal(summary.state,'LIMIT_REACHED');
 });

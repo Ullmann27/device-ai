@@ -1,0 +1,4980 @@
+TAP version 13
+# Subtest: persistent ALWAYS_ON is explicit, revocable and uses the existing web gate
+ok 1 - persistent ALWAYS_ON is explicit, revocable and uses the existing web gate
+  ---
+  duration_ms: 2.496013
+  type: 'test'
+  ...
+# Subtest: local model receives web policy and keeps bounded tool requests
+ok 2 - local model receives web policy and keeps bounded tool requests
+  ---
+  duration_ms: 0.613002
+  type: 'test'
+  ...
+# Subtest: orb states follow real work and Android TTS callbacks
+ok 3 - orb states follow real work and Android TTS callbacks
+  ---
+  duration_ms: 1.169329
+  type: 'test'
+  ...
+# Subtest: Device AI quick actions are exclusive to Continuum and not to unrelated apps
+ok 4 - Device AI quick actions are exclusive to Continuum and not to unrelated apps
+  ---
+  duration_ms: 0.921591
+  type: 'test'
+  ...
+# Subtest: Every cockpit shortcut is connected to a usable UI or command
+ok 5 - Every cockpit shortcut is connected to a usable UI or command
+  ---
+  duration_ms: 0.204123
+  type: 'test'
+  ...
+# Subtest: Cockpit shortcuts remain accessible on narrow phones and folding displays
+ok 6 - Cockpit shortcuts remain accessible on narrow phones and folding displays
+  ---
+  duration_ms: 0.180489
+  type: 'test'
+  ...
+# Subtest: transparent native 3D hero has no network, model execution or fake status
+ok 7 - transparent native 3D hero has no network, model execution or fake status
+  ---
+  duration_ms: 5.254546
+  type: 'test'
+  ...
+# Subtest: image-inspired start screen preserves all seven real Android feature paths
+ok 8 - image-inspired start screen preserves all seven real Android feature paths
+  ---
+  duration_ms: 0.403921
+  type: 'test'
+  ...
+# Subtest: responsive dashboard retains chat composer, updates and keyboard visibility
+ok 9 - responsive dashboard retains chat composer, updates and keyboard visibility
+  ---
+  duration_ms: 0.291914
+  type: 'test'
+  ...
+# Subtest: reference-style composer keeps real model/web/file actions and truthful idle state
+ok 10 - reference-style composer keeps real model/web/file actions and truthful idle state
+  ---
+  duration_ms: 0.253407
+  type: 'test'
+  ...
+# Subtest: large text can expand neon tiles instead of being cropped by fixed row heights
+ok 11 - large text can expand neon tiles instead of being cropped by fixed row heights
+  ---
+  duration_ms: 0.164245
+  type: 'test'
+  ...
+# Subtest: branded device dashboard never manufactures ready model or internet state
+ok 12 - branded device dashboard never manufactures ready model or internet state
+  ---
+  duration_ms: 0.187338
+  type: 'test'
+  ...
+# Subtest: widget is a genuine native Android launcher widget, not an Activity demo
+ok 13 - widget is a genuine native Android launcher widget, not an Activity demo
+  ---
+  duration_ms: 0.882333
+  type: 'test'
+  ...
+# Subtest: only real telemetry events and registered Android jobs drive widget statuses
+ok 14 - only real telemetry events and registered Android jobs drive widget statuses
+  ---
+  duration_ms: 0.171214
+  type: 'test'
+  ...
+# Subtest: notification requires user permission and follows real FAILED result only
+ok 15 - notification requires user permission and follows real FAILED result only
+  ---
+  duration_ms: 0.166678
+  type: 'test'
+  ...
+# Subtest: safe signing and increased signed preview version are unchanged except monotonic revision
+ok 16 - safe signing and increased signed preview version are unchanged except monotonic revision
+  ---
+  duration_ms: 1.1562
+  type: 'test'
+  ...
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 17 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 1.988708
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 18 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 4.135912
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 19 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.183773
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 20 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.215781
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 21 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 5.829602
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 22 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.207869
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 23 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 6.139612
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 24 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 1.648923
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 25 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 0.392865
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 26 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 0.442909
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 27 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 2.942737
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 28 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 0.650798
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the core card; no demo buttons; experiments marked
+ok 29 - every area has a center reachable from the core card; no demo buttons; experiments marked
+  ---
+  duration_ms: 1.141208
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 30 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 0.2012
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 31 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 0.32261
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 32 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 0.368058
+  type: 'test'
+  ...
+# Subtest: new visual cockpit is local, accessible and honest about capabilities
+ok 33 - new visual cockpit is local, accessible and honest about capabilities
+  ---
+  duration_ms: 0.432032
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 34 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 0.15456
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 35 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.222581
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 36 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.382289
+  type: 'test'
+  ...
+# Subtest: public research is internet-enabled via cellular with no charger or system-low-battery constraint
+ok 37 - public research is internet-enabled via cellular with no charger or system-low-battery constraint
+  ---
+  duration_ms: 0.753952
+  type: 'test'
+  ...
+# Subtest: unplugged research deferral does not falsify attempts or source counts
+ok 38 - unplugged research deferral does not falsify attempts or source counts
+  ---
+  duration_ms: 0.512613
+  type: 'test'
+  ...
+# Subtest: SWB1 offline training uses exact 20% locally enforced threshold
+ok 39 - SWB1 offline training uses exact 20% locally enforced threshold
+  ---
+  duration_ms: 0.119848
+  type: 'test'
+  ...
+# Subtest: explicitly opted-in neural practice migrates away from the legacy charging gate
+ok 40 - explicitly opted-in neural practice migrates away from the legacy charging gate
+  ---
+  duration_ms: 0.170223
+  type: 'test'
+  ...
+# Subtest: widget migrates saved charging-only jobs without replacing identical running jobs repeatedly
+ok 41 - widget migrates saved charging-only jobs without replacing identical running jobs repeatedly
+  ---
+  duration_ms: 0.178375
+  type: 'test'
+  ...
+# Subtest: all public research permissions remain restricted and no source commands become executable
+ok 42 - all public research permissions remain restricted and no source commands become executable
+  ---
+  duration_ms: 0.129512
+  type: 'test'
+  ...
+# Subtest: classifies failing Kotlin source but never copies raw details or secrets
+ok 43 - classifies failing Kotlin source but never copies raw details or secrets
+  ---
+  duration_ms: 2.170889
+  type: 'test'
+  ...
+# Subtest: recognizes exhausted local storage before generic compiler failure
+ok 44 - recognizes exhausted local storage before generic compiler failure
+  ---
+  duration_ms: 0.269591
+  type: 'test'
+  ...
+# Subtest: recognizes exhausted memory without claiming a Kotlin repair
+ok 45 - recognizes exhausted memory without claiming a Kotlin repair
+  ---
+  duration_ms: 0.199918
+  type: 'test'
+  ...
+# Subtest: distinguishes missing SDK/toolchain from source compiler errors
+ok 46 - distinguishes missing SDK/toolchain from source compiler errors
+  ---
+  duration_ms: 0.179988
+  type: 'test'
+  ...
+# Subtest: distinguishes missing Gradle dependency from source compiler errors
+ok 47 - distinguishes missing Gradle dependency from source compiler errors
+  ---
+  duration_ms: 0.197133
+  type: 'test'
+  ...
+# Subtest: classifies JUnit failure by real failed test count
+ok 48 - classifies JUnit failure by real failed test count
+  ---
+  duration_ms: 0.182621
+  type: 'test'
+  ...
+# Subtest: missing JUnit execution evidence is not a successful baseline
+ok 49 - missing JUnit execution evidence is not a successful baseline
+  ---
+  duration_ms: 0.199497
+  type: 'test'
+  ...
+# Subtest: a timed out operation is not silently retried or promoted
+ok 50 - a timed out operation is not silently retried or promoted
+  ---
+  duration_ms: 0.118406
+  type: 'test'
+  ...
+# Subtest: untrusted diagnostic labels are ignored and no arbitrary log line escapes
+ok 51 - untrusted diagnostic labels are ignored and no arbitrary log line escapes
+  ---
+  duration_ms: 0.355829
+  type: 'test'
+  ...
+# Subtest: empty or malformed evidence remains incomplete and outputs bounded enums
+ok 52 - empty or malformed evidence remains incomplete and outputs bounded enums
+  ---
+  duration_ms: 1.570316
+  type: 'test'
+  ...
+# Subtest: omitted reason uses canonical failed Android baseline instead of generic fallback
+ok 53 - omitted reason uses canonical failed Android baseline instead of generic fallback
+  ---
+  duration_ms: 0.197543
+  type: 'test'
+  ...
+# Subtest: omitted reason preserves missing unit-test evidence in a nominally green chain
+ok 54 - omitted reason preserves missing unit-test evidence in a nominally green chain
+  ---
+  duration_ms: 0.144424
+  type: 'test'
+  ...
+# Subtest: three successful but unidentifiable JUnit skips explain ANSK baseline block
+ok 55 - three successful but unidentifiable JUnit skips explain ANSK baseline block
+  ---
+  duration_ms: 0.125477
+  type: 'test'
+  ...
+# Subtest: lab rejects traversal and foreign file types before reading a Git checkout
+ok 56 - lab rejects traversal and foreign file types before reading a Git checkout
+  ---
+  duration_ms: 1.797684
+  type: 'test'
+  ...
+# Subtest: lab refuses to operate on production main even when git tree is clean
+ok 57 - lab refuses to operate on production main even when git tree is clean
+  ---
+  duration_ms: 43.723778
+  type: 'test'
+  ...
+# Subtest: lab refuses dirty checkout in an experimental branch and does not alter it
+ok 58 - lab refuses dirty checkout in an experimental branch and does not alter it
+  ---
+  duration_ms: 32.527704
+  type: 'test'
+  ...
+# Subtest: lab has a finite non-configurable research budget and no automatic background loop
+ok 59 - lab has a finite non-configurable research budget and no automatic background loop
+  ---
+  duration_ms: 0.440065
+  type: 'test'
+  ...
+# Subtest: command-line execution rejects unknown operations before touching the checkout
+ok 60 - command-line execution rejects unknown operations before touching the checkout
+  ---
+  duration_ms: 105.204599
+  type: 'test'
+  ...
+# Subtest: research module never installs APK, promotes model or registers generated tools
+ok 61 - research module never installs APK, promotes model or registers generated tools
+  ---
+  duration_ms: 0.374938
+  type: 'test'
+  ...
+# Subtest: lab cannot start a worktree or Gradle chain while another local worker holds the shared lease
+ok 62 - lab cannot start a worktree or Gradle chain while another local worker holds the shared lease
+  ---
+  duration_ms: 44.282003
+  type: 'test'
+  ...
+# Subtest: failed baseline reports actionable metadata without disclosing Gradle logs or secrets
+ok 63 - failed baseline reports actionable metadata without disclosing Gradle logs or secrets
+  ---
+  duration_ms: 1.431068
+  type: 'test'
+  ...
+# Subtest: a zero-JUnit baseline remains blocked and exposes which phase lacked evidence
+ok 64 - a zero-JUnit baseline remains blocked and exposes which phase lacked evidence
+  ---
+  duration_ms: 0.395478
+  type: 'test'
+  ...
+# Subtest: positive triple-phase lab observation yields only a quarantined shadow recipe
+ok 65 - positive triple-phase lab observation yields only a quarantined shadow recipe
+  ---
+  duration_ms: 2.255816
+  type: 'test'
+  ...
+# Subtest: source path and import name must be fixed Kotlin production files
+ok 66 - source path and import name must be fixed Kotlin production files
+  ---
+  duration_ms: 0.460885
+  type: 'test'
+  ...
+# Subtest: baseline with zero tests, skips or failing checks never qualifies
+ok 67 - baseline with zero tests, skips or failing checks never qualifies
+  ---
+  duration_ms: 0.411913
+  type: 'test'
+  ...
+# Subtest: mutation must genuinely fail at compile with exactly the expected diagnostic
+ok 68 - mutation must genuinely fail at compile with exactly the expected diagnostic
+  ---
+  duration_ms: 0.266316
+  type: 'test'
+  ...
+# Subtest: primary and independent phases require all profiles and unreduced test coverage
+ok 69 - primary and independent phases require all profiles and unreduced test coverage
+  ---
+  duration_ms: 0.23558
+  type: 'test'
+  ...
+# Subtest: no source, mutated, patch or independent hash ambiguity passes
+ok 70 - no source, mutated, patch or independent hash ambiguity passes
+  ---
+  duration_ms: 0.294538
+  type: 'test'
+  ...
+# Subtest: only approved, observed deterministic import strategy is eligible
+ok 71 - only approved, observed deterministic import strategy is eligible
+  ---
+  duration_ms: 0.298424
+  type: 'test'
+  ...
+# Subtest: no caller-owned observation is mutated and schema hash is deterministic
+ok 72 - no caller-owned observation is mutated and schema hash is deterministic
+  ---
+  duration_ms: 0.285245
+  type: 'test'
+  ...
+# Subtest: Gradle profiles remain unchanged on non-Termux hardware
+ok 73 - Gradle profiles remain unchanged on non-Termux hardware
+  ---
+  duration_ms: 1.192294
+  type: 'test'
+  ...
+# Subtest: fake or missing pinned Termux toolchain fails closed rather than switching to desktop
+ok 74 - fake or missing pinned Termux toolchain fails closed rather than switching to desktop
+  ---
+  duration_ms: 0.70553
+  type: 'test'
+  ...
+# Subtest: structural results cannot grant trust to imported JSON or authorize model training
+ok 75 - structural results cannot grant trust to imported JSON or authorize model training
+  ---
+  duration_ms: 0.247769
+  type: 'test'
+  ...
+# Subtest: real Samsung-style baseline accepts three identified skips with 632 executed tests
+ok 76 - real Samsung-style baseline accepts three identified skips with 632 executed tests
+  ---
+  duration_ms: 0.253117
+  type: 'test'
+  ...
+# Subtest: ANSK rejects missing skip identities even if Gradle and 632 executed tests pass
+ok 77 - ANSK rejects missing skip identities even if Gradle and 632 executed tests pass
+  ---
+  duration_ms: 0.091426
+  type: 'test'
+  ...
+# Subtest: ANSK rejects swapped skipped tests even when all counts remain unchanged
+ok 78 - ANSK rejects swapped skipped tests even when all counts remain unchanged
+  ---
+  duration_ms: 0.125046
+  type: 'test'
+  ...
+# Subtest: ANSK forbids extra skips or fewer executed tests in independent validation
+ok 79 - ANSK forbids extra skips or fewer executed tests in independent validation
+  ---
+  duration_ms: 0.106879
+  type: 'test'
+  ...
+# Subtest: integrity-checked research receipt is only a quarantined shadow hint
+ok 80 - integrity-checked research receipt is only a quarantined shadow hint
+  ---
+  duration_ms: 2.692125
+  type: 'test'
+  ...
+# Subtest: a recipe can propose a minimal import on an unseen file without writing it
+ok 81 - a recipe can propose a minimal import on an unseen file without writing it
+  ---
+  duration_ms: 5.826607
+  type: 'test'
+  ...
+# Subtest: receipt tampering is rejected, including attempted privilege escalation
+ok 82 - receipt tampering is rejected, including attempted privilege escalation
+  ---
+  duration_ms: 1.061819
+  type: 'test'
+  ...
+# Subtest: replay never admits unsafe files or reuses a receipt against its own source
+ok 83 - replay never admits unsafe files or reuses a receipt against its own source
+  ---
+  duration_ms: 0.442858
+  type: 'test'
+  ...
+# Subtest: replay requires a matching diagnostic and a real symbol in Kotlin code
+ok 84 - replay requires a matching diagnostic and a real symbol in Kotlin code
+  ---
+  duration_ms: 0.787822
+  type: 'test'
+  ...
+# Subtest: already imported symbol and ineligible receipt never generate modifications
+ok 85 - already imported symbol and ineligible receipt never generate modifications
+  ---
+  duration_ms: 0.318113
+  type: 'test'
+  ...
+# Subtest: repeat replay produces deterministic id and the same hunk without learning
+ok 86 - repeat replay produces deterministic id and the same hunk without learning
+  ---
+  duration_ms: 1.96274
+  type: 'test'
+  ...
+# Subtest: Android-compatible exclusive copy saves verified receipt without hardlink()
+ok 87 - Android-compatible exclusive copy saves verified receipt without hardlink()
+  ---
+  duration_ms: 3.671541
+  type: 'test'
+  ...
+# Subtest: writing a second identical receipt is idempotent, preserves inode and content
+ok 88 - writing a second identical receipt is idempotent, preserves inode and content
+  ---
+  duration_ms: 1.157962
+  type: 'test'
+  ...
+# Subtest: a poisoned receipt at the hash path is not silently overwritten
+ok 89 - a poisoned receipt at the hash path is not silently overwritten
+  ---
+  duration_ms: 1.968178
+  type: 'test'
+  ...
+# Subtest: a symlinked recipe destination cannot be followed or overwrite its target
+ok 90 - a symlinked recipe destination cannot be followed or overwrite its target
+  ---
+  duration_ms: 1.212223
+  type: 'test'
+  ...
+# Subtest: a symlinked shadow-recipes directory is rejected before storing any bytes
+ok 91 - a symlinked shadow-recipes directory is rejected before storing any bytes
+  ---
+  duration_ms: 0.660142
+  type: 'test'
+  ...
+# Subtest: invalid or modified shadow receipts cannot be stored
+ok 92 - invalid or modified shadow receipts cannot be stored
+  ---
+  duration_ms: 0.45693
+  type: 'test'
+  ...
+# Subtest: non-absolute state path is rejected and checkout files remain untouched
+ok 93 - non-absolute state path is rejected and checkout files remain untouched
+  ---
+  duration_ms: 0.244985
+  type: 'test'
+  ...
+# Subtest: a denied exclusive copy is an explicit failure and cannot leave a success receipt
+ok 94 - a denied exclusive copy is an explicit failure and cannot leave a success receipt
+  ---
+  duration_ms: 0.686461
+  type: 'test'
+  ...
+# Subtest: paired orchestration uses fresh serial worktrees, fixed reruns and write-once shadow reports (mock toolchain)
+ok 95 - paired orchestration uses fresh serial worktrees, fixed reruns and write-once shadow reports (mock toolchain)
+  ---
+  duration_ms: 483.897959
+  type: 'test'
+  ...
+# Subtest: independent coverage loss prevents verified transfer while still measuring control (mock toolchain)
+ok 96 - independent coverage loss prevents verified transfer while still measuring control (mock toolchain)
+  ---
+  duration_ms: 621.152612
+  type: 'test'
+  ...
+# Subtest: control-first records execution order without consuming the recipe in control (mock toolchain)
+ok 97 - control-first records execution order without consuming the recipe in control (mock toolchain)
+  ---
+  duration_ms: 716.4341
+  type: 'test'
+  ...
+# Subtest: missing/corrupt receipts and dirty source fail before any compiler invocation
+ok 98 - missing/corrupt receipts and dirty source fail before any compiler invocation
+  ---
+  duration_ms: 272.630654
+  type: 'test'
+  ...
+# Subtest: reader rejects symlinked, world-readable, oversized and misaddressed receipts
+ok 99 - reader rejects symlinked, world-readable, oversized and misaddressed receipts
+  ---
+  duration_ms: 59.338514
+  type: 'test'
+  ...
+# Subtest: CLI requires explicit one-shot parameters, never an arbitrary command
+ok 100 - CLI requires explicit one-shot parameters, never an arbitrary command
+  ---
+  duration_ms: 1.022756
+  type: 'test'
+  ...
+# Subtest: transfer gate rejects missing independent runs and unchanged mutation hashes
+ok 101 - transfer gate rejects missing independent runs and unchanged mutation hashes
+  ---
+  duration_ms: 0.253626
+  type: 'test'
+  ...
+# Subtest: retrieval-only orthography never becomes a command or a memory write
+ok 102 - retrieval-only orthography never becomes a command or a memory write
+  ---
+  duration_ms: 0.807161
+  type: 'test'
+  ...
+# Subtest: local Qwen direct smoke is distinct from tool-free thinking smoke
+ok 103 - local Qwen direct smoke is distinct from tool-free thinking smoke
+  ---
+  duration_ms: 0.266176
+  type: 'test'
+  ...
+# Subtest: research counter reflects durable archive not just mentor insertion
+ok 104 - research counter reflects durable archive not just mentor insertion
+  ---
+  duration_ms: 1.16302
+  type: 'test'
+  ...
+# Subtest: baseline repair writes independently reviewed evidence to the persistent backlog
+ok 105 - baseline repair writes independently reviewed evidence to the persistent backlog
+  ---
+  duration_ms: 1.056752
+  type: 'test'
+  ...
+# Subtest: repair metadata cannot advertise local generative inference that did not run
+ok 106 - repair metadata cannot advertise local generative inference that did not run
+  ---
+  duration_ms: 0.172827
+  type: 'test'
+  ...
+# Subtest: local model keeps isolated thinking resource until close and rejects cross-chunk tools
+ok 107 - local model keeps isolated thinking resource until close and rejects cross-chunk tools
+  ---
+  duration_ms: 0.234198
+  type: 'test'
+  ...
+# Subtest: mandatory Android parity and separate repair E2E gate remain enforced
+ok 108 - mandatory Android parity and separate repair E2E gate remain enforced
+  ---
+  duration_ms: 0.183803
+  type: 'test'
+  ...
+# Subtest: zero-paid-service worker repairs/checks each immutable head once and then idles
+ok 109 - zero-paid-service worker repairs/checks each immutable head once and then idles
+  ---
+  duration_ms: 47.027302
+  type: 'test'
+  ...
+# Subtest: teamleader refuses symlinked state directory pointing back into source checkout
+ok 110 - teamleader refuses symlinked state directory pointing back into source checkout
+  ---
+  duration_ms: 1.37142
+  type: 'test'
+  ...
+# Subtest: owner-accepted repair runs before baseline and only records an independently verified patch
+ok 111 - owner-accepted repair runs before baseline and only records an independently verified patch
+  ---
+  duration_ms: 3.379517
+  type: 'test'
+  ...
+# Subtest: two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD
+ok 112 - two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD
+  ---
+  duration_ms: 4.460575
+  type: 'test'
+  ...
+# Subtest: accepted owner TEST is dispatched before baseline and a verified new contract is review-only
+ok 113 - accepted owner TEST is dispatched before baseline and a verified new contract is review-only
+  ---
+  duration_ms: 5.227095
+  type: 'test'
+  ...
+# Subtest: owner TEST cannot falsely claim DONE without increasing or independently checking tests
+ok 114 - owner TEST cannot falsely claim DONE without increasing or independently checking tests
+  ---
+  duration_ms: 1.725837
+  type: 'test'
+  ...
+# Subtest: failed owner TEST also leaves the immutable HEAD eligible for one real baseline
+ok 115 - failed owner TEST also leaves the immutable HEAD eligible for one real baseline
+  ---
+  duration_ms: 3.996444
+  type: 'test'
+  ...
+# Subtest: owner REPAIR retains priority over TEST and both finish on the same HEAD
+ok 116 - owner REPAIR retains priority over TEST and both finish on the same HEAD
+  ---
+  duration_ms: 4.156212
+  type: 'test'
+  ...
+# Subtest: retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST
+ok 117 - retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST
+  ---
+  duration_ms: 1.780899
+  type: 'test'
+  ...
+# Subtest: owner repair evidence cannot be faked by a driver claiming DONE
+ok 118 - owner repair evidence cannot be faked by a driver claiming DONE
+  ---
+  duration_ms: 2.033905
+  type: 'test'
+  ...
+# Subtest: READY read-only INVESTIGATE is handled once; no write or deployment
+ok 119 - READY read-only INVESTIGATE is handled once; no write or deployment
+  ---
+  duration_ms: 3.983065
+  type: 'test'
+  ...
+# Subtest: Teamleader refuses fabricated DONE when no tests actually executed
+ok 120 - Teamleader refuses fabricated DONE when no tests actually executed
+  ---
+  duration_ms: 2.67601
+  type: 'test'
+  ...
+# Subtest: verified repair is a PROPOSAL only; never described as applied
+ok 121 - verified repair is a PROPOSAL only; never described as applied
+  ---
+  duration_ms: 2.516523
+  type: 'test'
+  ...
+# Subtest: an internally passing repair without an independent proof is NOT verified
+ok 122 - an internally passing repair without an independent proof is NOT verified
+  ---
+  duration_ms: 1.727069
+  type: 'test'
+  ...
+# Subtest: a failed second-worktree check vetoes an otherwise passing repair
+ok 123 - a failed second-worktree check vetoes an otherwise passing repair
+  ---
+  duration_ms: 1.440322
+  type: 'test'
+  ...
+# Subtest: failed or interrupted work is preserved, never marked successful
+ok 124 - failed or interrupted work is preserved, never marked successful
+  ---
+  duration_ms: 3.225738
+  type: 'test'
+  ...
+# Subtest: tampered state, invalid accepted task, and an existing lock fail closed
+ok 125 - tampered state, invalid accepted task, and an existing lock fail closed
+  ---
+  duration_ms: 4.574765
+  type: 'test'
+  ...
+# Subtest: unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs
+ok 126 - unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs
+  ---
+  duration_ms: 2.785964
+  type: 'test'
+  ...
+# Subtest: old lock of a definitively dead same-host process recovers automatically
+ok 127 - old lock of a definitively dead same-host process recovers automatically
+  ---
+  duration_ms: 3.302743
+  type: 'test'
+  ...
+# Subtest: repeat checking a proven head requires explicit manual retry
+ok 128 - repeat checking a proven head requires explicit manual retry
+  ---
+  duration_ms: 4.63238
+  type: 'test'
+  ...
+# Subtest: CLI budget, command and retry flags are validated before execution
+ok 129 - CLI budget, command and retry flags are validated before execution
+  ---
+  duration_ms: 0.665981
+  type: 'test'
+  ...
+# Subtest: idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan
+ok 130 - idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan
+  ---
+  duration_ms: 27.015815
+  type: 'test'
+  ...
+# Subtest: crashed discovery records a failure and never hot-loops on the same HEAD
+ok 131 - crashed discovery records a failure and never hot-loops on the same HEAD
+  ---
+  duration_ms: 6.889809
+  type: 'test'
+  ...
+# Subtest: Teamleader can read older version-1 states that lack discoveryHeads
+ok 132 - Teamleader can read older version-1 states that lack discoveryHeads
+  ---
+  duration_ms: 2.217659
+  type: 'test'
+  ...
+# Subtest: measured progress distinguishes real completed tasks, proposed patch and failed checks
+ok 133 - measured progress distinguishes real completed tasks, proposed patch and failed checks
+  ---
+  duration_ms: 2.504094
+  type: 'test'
+  ...
+# Subtest: discovery heads counter counts analysis only, not hourly idle loops
+ok 134 - discovery heads counter counts analysis only, not hourly idle loops
+  ---
+  duration_ms: 8.391252
+  type: 'test'
+  ...
+# Subtest: state policy rejects malformed heads and never schedules unauthorised actions
+ok 135 - state policy rejects malformed heads and never schedules unauthorised actions
+  ---
+  duration_ms: 0.299155
+  type: 'test'
+  ...
+# Subtest: unverified repair is redacted consistently without modifying the audit original
+ok 136 - unverified repair is redacted consistently without modifying the audit original
+  ---
+  duration_ms: 0.230784
+  type: 'test'
+  ...
+# Subtest: successful independent second-worktree result keeps verified proposal intact
+ok 137 - successful independent second-worktree result keeps verified proposal intact
+  ---
+  duration_ms: 0.083434
+  type: 'test'
+  ...
+# Subtest: legacy internal VERIFIED without independent observation cannot leak success
+ok 138 - legacy internal VERIFIED without independent observation cannot leak success
+  ---
+  duration_ms: 0.083244
+  type: 'test'
+  ...
+# Subtest: a running Android build blocks teamleader before any repair and releases local state lock
+ok 139 - a running Android build blocks teamleader before any repair and releases local state lock
+  ---
+  duration_ms: 2.305359
+  type: 'test'
+  ...
+# Subtest: auto-discovered titles can reach only the official MediaWiki API
+ok 140 - auto-discovered titles can reach only the official MediaWiki API
+  ---
+  duration_ms: 1.278031
+  type: 'test'
+  ...
+# Subtest: bounded topic frontier persists discoveries and avoids duplicate processing
+ok 141 - bounded topic frontier persists discoveries and avoids duplicate processing
+  ---
+  duration_ms: 0.217243
+  type: 'test'
+  ...
+# Subtest: provider rate limits are obeyed, and background work remains finite
+ok 142 - provider rate limits are obeyed, and background work remains finite
+  ---
+  duration_ms: 0.126548
+  type: 'test'
+  ...
+# Subtest: archive capacity grows without deleting sources or exhausting phone storage
+ok 143 - archive capacity grows without deleting sources or exhausting phone storage
+  ---
+  duration_ms: 0.162061
+  type: 'test'
+  ...
+# Subtest: training rejection identifies each failing holdout and does not promote unsafe candidates
+ok 144 - training rejection identifies each failing holdout and does not promote unsafe candidates
+  ---
+  duration_ms: 0.2415
+  type: 'test'
+  ...
+# Subtest: owner facts win, and retrieval is clearly labelled a non-verified excerpt
+ok 145 - owner facts win, and retrieval is clearly labelled a non-verified excerpt
+  ---
+  duration_ms: 0.216432
+  type: 'test'
+  ...
+# Subtest: research and legal backup menu indices match their action labels
+ok 146 - research and legal backup menu indices match their action labels
+  ---
+  duration_ms: 0.348769
+  type: 'test'
+  ...
+# Subtest: baby extracts interaction structure and constraints
+ok 147 - baby extracts interaction structure and constraints
+  ---
+  duration_ms: 2.041046
+  type: 'test'
+  ...
+# Subtest: baby turns evidence into bounded beliefs and epistemic goals
+ok 148 - baby turns evidence into bounded beliefs and epistemic goals
+  ---
+  duration_ms: 7.460037
+  type: 'test'
+  ...
+# Subtest: goal policy balances priority reward and exploration
+ok 149 - goal policy balances priority reward and exploration
+  ---
+  duration_ms: 0.863233
+  type: 'test'
+  ...
+# Subtest: public web guard blocks local and reserved addresses
+ok 150 - public web guard blocks local and reserved addresses
+  ---
+  duration_ms: 4.970666
+  type: 'test'
+  ...
+# Subtest: html extraction strips active content and preserves public links
+ok 151 - html extraction strips active content and preserves public links
+  ---
+  duration_ms: 2.203855
+  type: 'test'
+  ...
+# Subtest: legacy overconfident beliefs are downgraded until revalidated
+ok 152 - legacy overconfident beliefs are downgraded until revalidated
+  ---
+  duration_ms: 0.473001
+  type: 'test'
+  ...
+# Subtest: interaction profile and explicit owner rules learn without becoming web beliefs
+ok 153 - interaction profile and explicit owner rules learn without becoming web beliefs
+  ---
+  duration_ms: 0.935786
+  type: 'test'
+  ...
+# Subtest: weak skills autonomously create curriculum goals and competent skills close them
+ok 154 - weak skills autonomously create curriculum goals and competent skills close them
+  ---
+  duration_ms: 0.795278
+  type: 'test'
+  ...
+# Subtest: memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts
+ok 155 - memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts
+  ---
+  duration_ms: 1.190585
+  type: 'test'
+  ...
+# Subtest: deep research plan uses distinct focused search queries for interaction and metacognition
+ok 156 - deep research plan uses distinct focused search queries for interaction and metacognition
+  ---
+  duration_ms: 0.446672
+  type: 'test'
+  ...
+# Subtest: html extraction removes navigation chrome before learning
+ok 157 - html extraction removes navigation chrome before learning
+  ---
+  duration_ms: 0.608382
+  type: 'test'
+  ...
+# Subtest: baby memory migration removes navigation noise and merges citation-marker duplicates
+ok 158 - baby memory migration removes navigation noise and merges citation-marker duplicates
+  ---
+  duration_ms: 0.258723
+  type: 'test'
+  ...
+# Subtest: memory retrieval reward depends on relevance quality rather than raw hit count
+ok 159 - memory retrieval reward depends on relevance quality rather than raw hit count
+  ---
+  duration_ms: 0.255418
+  type: 'test'
+  ...
+# Subtest: retrospective audit quarantines unrelated historical research without destroying provenance
+ok 160 - retrospective audit quarantines unrelated historical research without destroying provenance
+  ---
+  duration_ms: 0.348346
+  type: 'test'
+  ...
+# Subtest: new off-topic content stays quarantined even with several citation markers
+ok 161 - new off-topic content stays quarantined even with several citation markers
+  ---
+  duration_ms: 0.280786
+  type: 'test'
+  ...
+# Subtest: uncited attribution and invalid evidence URLs cannot promote a claim
+ok 162 - uncited attribution and invalid evidence URLs cannot promote a claim
+  ---
+  duration_ms: 0.340855
+  type: 'test'
+  ...
+# Subtest: backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch
+ok 163 - backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch
+  ---
+  duration_ms: 173.319329
+  type: 'test'
+  ...
+# Subtest: backlog CLI: a patch that fails the checks records failing evidence and returns the task
+ok 164 - backlog CLI: a patch that fails the checks records failing evidence and returns the task
+  ---
+  duration_ms: 197.928722
+  type: 'test'
+  ...
+# Subtest: backlog CLI rejects path traversal and unknown commands
+ok 165 - backlog CLI rejects path traversal and unknown commands
+  ---
+  duration_ms: 0.641201
+  type: 'test'
+  ...
+# Subtest: state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed
+ok 166 - state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed
+  ---
+  duration_ms: 251.322291
+  type: 'test'
+  ...
+# Subtest: public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema
+ok 167 - public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema
+  ---
+  duration_ms: 46.053517
+  type: 'test'
+  ...
+# Subtest: CLI refuses noncanonical array objects and uncontrolled shell-shaped operations
+ok 168 - CLI refuses noncanonical array objects and uncontrolled shell-shaped operations
+  ---
+  duration_ms: 55.19917
+  type: 'test'
+  ...
+# Subtest: Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance
+ok 169 - Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance
+  ---
+  duration_ms: 37.744324
+  type: 'test'
+  ...
+# Subtest: Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs
+ok 170 - Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs
+  ---
+  duration_ms: 52.087398
+  type: 'test'
+  ...
+# Subtest: process death after persisting investigation verdict cannot strand green checks in VERIFYING
+ok 171 - process death after persisting investigation verdict cannot strand green checks in VERIFYING
+  ---
+  duration_ms: 327.383042
+  type: 'test'
+  ...
+# Subtest: process death after persisting investigation verdict cannot strand red checks in VERIFYING
+ok 172 - process death after persisting investigation verdict cannot strand red checks in VERIFYING
+  ---
+  duration_ms: 408.062802
+  type: 'test'
+  ...
+# Subtest: scheduler recovers an expired investigation claim and honours the remaining attempt budget
+ok 173 - scheduler recovers an expired investigation claim and honours the remaining attempt budget
+  ---
+  duration_ms: 84.980408
+  type: 'test'
+  ...
+# Subtest: scheduler keeps a live investigation claim and its token intact
+ok 174 - scheduler keeps a live investigation claim and its token intact
+  ---
+  duration_ms: 65.670608
+  type: 'test'
+  ...
+# Subtest: direct investigation worker recovers an expired claim before selecting its exact task
+ok 175 - direct investigation worker recovers an expired claim before selecting its exact task
+  ---
+  duration_ms: 166.112778
+  type: 'test'
+  ...
+# Subtest: investigation rejects source report before changing source or claim state
+ok 176 - investigation rejects source report before changing source or claim state
+  ---
+  duration_ms: 36.430702
+  type: 'test'
+  ...
+# Subtest: investigation rejects symlink report before changing source or claim state
+ok 177 - investigation rejects symlink report before changing source or claim state
+  ---
+  duration_ms: 29.950715
+  type: 'test'
+  ...
+# Subtest: investigation rejects source backlog before changing source or claim state
+ok 178 - investigation rejects source backlog before changing source or claim state
+  ---
+  duration_ms: 18.971634
+  type: 'test'
+  ...
+# Subtest: investigation rejects symlink backlog before changing source or claim state
+ok 179 - investigation rejects symlink backlog before changing source or claim state
+  ---
+  duration_ms: 18.913773
+  type: 'test'
+  ...
+# Subtest: INVESTIGATE worker reproduces findings but never invents wiring patches
+ok 180 - INVESTIGATE worker reproduces findings but never invents wiring patches
+  ---
+  duration_ms: 1.011248
+  type: 'test'
+  ...
+# Subtest: INVESTIGATE declines changes for findings no longer present
+ok 181 - INVESTIGATE declines changes for findings no longer present
+  ---
+  duration_ms: 0.125907
+  type: 'test'
+  ...
+# Subtest: only accepted structural INVESTIGATE tasks are eligible
+ok 182 - only accepted structural INVESTIGATE tasks are eligible
+  ---
+  duration_ms: 37.170463
+  type: 'test'
+  ...
+# Subtest: empty or failed test chain cannot complete backlog investigation
+ok 183 - empty or failed test chain cannot complete backlog investigation
+  ---
+  duration_ms: 0.200637
+  type: 'test'
+  ...
+# Subtest: worker honours Teamleader-selected task and never skips backlog dependencies
+ok 184 - worker honours Teamleader-selected task and never skips backlog dependencies
+  ---
+  duration_ms: 6.122403
+  type: 'test'
+  ...
+# Subtest: owner independent evidence rejects silent test-count and skipped-test regressions
+ok 185 - owner independent evidence rejects silent test-count and skipped-test regressions
+  ---
+  duration_ms: 1.396279
+  type: 'test'
+  ...
+# Subtest: expired execution budget fails closed before launching fixed subprocesses
+ok 186 - expired execution budget fails closed before launching fixed subprocesses
+  ---
+  duration_ms: 3.261313
+  type: 'test'
+  ...
+# Subtest: an unrelated automatic REPAIR task cannot starve an accepted owner task
+ok 187 - an unrelated automatic REPAIR task cannot starve an accepted owner task
+  ---
+  duration_ms: 1.895519
+  type: 'test'
+  ...
+# Subtest: eligible owner selection cannot be starved by stale HEAD or higher priority
+ok 188 - eligible owner selection cannot be starved by stale HEAD or higher priority
+  ---
+  duration_ms: 1.006312
+  type: 'test'
+  ...
+# Subtest: owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE
+ok 189 - owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE
+  ---
+  duration_ms: 583.543789
+  type: 'test'
+  ...
+# Subtest: passing fixture is not reported as successful code development
+ok 190 - passing fixture is not reported as successful code development
+  ---
+  duration_ms: 590.733263
+  type: 'test'
+  ...
+# Subtest: stale owner claim is recovered after worker crash without faking success
+ok 191 - stale owner claim is recovered after worker crash without faking success
+  ---
+  duration_ms: 165.098841
+  type: 'test'
+  ...
+# Subtest: unapproved task, incorrect HEAD, foreign source and unknown chain fail closed
+ok 192 - unapproved task, incorrect HEAD, foreign source and unknown chain fail closed
+  ---
+  duration_ms: 37.088446
+  type: 'test'
+  ...
+# Subtest: corrupted backlog never executes repair, and original Git checkout remains intact
+ok 193 - corrupted backlog never executes repair, and original Git checkout remains intact
+  ---
+  duration_ms: 22.972413
+  type: 'test'
+  ...
+# Subtest: finite interpreter executes nested arithmetic and rejects executable text, excessive ASTs and overflow
+ok 194 - finite interpreter executes nested arithmetic and rejects executable text, excessive ASTs and overflow
+  ---
+  duration_ms: 1.539952
+  type: 'test'
+  ...
+# Subtest: grammar construction is deterministic, bounded, target-free and contains composed functions
+ok 195 - grammar construction is deterministic, bounded, target-free and contains composed functions
+  ---
+  duration_ms: 48.267999
+  type: 'test'
+  ...
+# Subtest: counterexample acquisition eliminates actual candidates and respects oracle budget
+ok 196 - counterexample acquisition eliminates actual candidates and respects oracle budget
+  ---
+  duration_ms: 3.711691
+  type: 'test'
+  ...
+# Subtest: passive baseline executes its own queries and outside-grammar tasks cannot acquire a false proof
+ok 197 - passive baseline executes its own queries and outside-grammar tasks cannot acquire a false proof
+  ---
+  duration_ms: 2.120131
+  type: 'test'
+  ...
+# Subtest: split gate rejects family, seed, ID overlap and renamed identical source/evidence
+ok 198 - split gate rejects family, seed, ID overlap and renamed identical source/evidence
+  ---
+  duration_ms: 56.180194
+  type: 'test'
+  ...
+# Subtest: memory executes evidence, keeps caller inputs unchanged, and stores only shadow hints
+ok 199 - memory executes evidence, keeps caller inputs unchanged, and stores only shadow hints
+  ---
+  duration_ms: 2.617619
+  type: 'test'
+  ...
+# Subtest: corruption, self-rehashed proof and holdout provenance cannot enter verified memory
+ok 200 - corruption, self-rehashed proof and holdout provenance cannot enter verified memory
+  ---
+  duration_ms: 2.005402
+  type: 'test'
+  ...
+# Subtest: fresh replay verifies transfer and rejects wrong remembered hints before fallback
+ok 201 - fresh replay verifies transfer and rejects wrong remembered hints before fallback
+  ---
+  duration_ms: 2.866007
+  type: 'test'
+  ...
+# Subtest: revocation blocks saved receipt, reimport, stale context IDs and mutation of exposed copies
+ok 202 - revocation blocks saved receipt, reimport, stale context IDs and mutation of exposed copies
+  ---
+  duration_ms: 4.717551
+  type: 'test'
+  ...
+# Subtest: repair verifier abstains on unavailable operation rather than accepting nearest remembered hint
+ok 203 - repair verifier abstains on unavailable operation rather than accepting nearest remembered hint
+  ---
+  duration_ms: 2.400317
+  type: 'test'
+  ...
+# Subtest: SWB1 committee uses a restored NEURON snapshot without changing bytes or state
+ok 204 - SWB1 committee uses a restored NEURON snapshot without changing bytes or state
+  ---
+  duration_ms: 68.041611
+  type: 'test'
+  ...
+# Subtest: context baselines execute rankings and all selectors respect byte-cost budget without duplicate IDs
+ok 205 - context baselines execute rankings and all selectors respect byte-cost budget without duplicate IDs
+  ---
+  duration_ms: 21.394245
+  type: 'test'
+  ...
+# Subtest: restricted numeric proposal passes the existing actual validator and grants no authority
+ok 206 - restricted numeric proposal passes the existing actual validator and grants no authority
+  ---
+  duration_ms: 1.234219
+  type: 'test'
+  ...
+# Subtest: report executes all three prototypes with deterministic raw outcomes and no promotion
+ok 207 - report executes all three prototypes with deterministic raw outcomes and no promotion
+  ---
+  duration_ms: 776.93672
+  type: 'test'
+  ...
+# Subtest: large CDX1 curriculum supplies 576 fictional pairs with 50 untouched audit cases
+ok 208 - large CDX1 curriculum supplies 576 fictional pairs with 50 untouched audit cases
+  ---
+  duration_ms: 1.014013
+  type: 'test'
+  ...
+# Subtest: a CDX1 candidate must pass novel AND historic audits before checkpoint promotion
+ok 209 - a CDX1 candidate must pass novel AND historic audits before checkpoint promotion
+  ---
+  duration_ms: 0.266735
+  type: 'test'
+  ...
+# Subtest: CDX1 large rounds are owner-approved and persisted only on completed evaluation
+ok 210 - CDX1 large rounds are owner-approved and persisted only on completed evaluation
+  ---
+  duration_ms: 0.313715
+  type: 'test'
+  ...
+# Subtest: Android UI offers a clearly separated CDX1 large-lab action and reporting
+ok 211 - Android UI offers a clearly separated CDX1 large-lab action and reporting
+  ---
+  duration_ms: 0.352312
+  type: 'test'
+  ...
+# Subtest: developer checkpoint is outside repo, initially absent and created by CAS only
+ok 212 - developer checkpoint is outside repo, initially absent and created by CAS only
+  ---
+  duration_ms: 97.967414
+  type: 'test'
+  ...
+# Subtest: CAS refuses overwrites with obsolete SHA and preserves original checkpoint
+ok 213 - CAS refuses overwrites with obsolete SHA and preserves original checkpoint
+  ---
+  duration_ms: 256.915471
+  type: 'test'
+  ...
+# Subtest: refuses unapproved promotions, mismatched bytes and corrupt checkpoint
+ok 214 - refuses unapproved promotions, mismatched bytes and corrupt checkpoint
+  ---
+  duration_ms: 46.320602
+  type: 'test'
+  ...
+# Subtest: rejects checkpoint path inside the working Git repository and symlinked target
+ok 215 - rejects checkpoint path inside the working Git repository and symlinked target
+  ---
+  duration_ms: 0.542384
+  type: 'test'
+  ...
+# Subtest: concurrent lock rejects writes and does not overwrite trusted weights
+ok 216 - concurrent lock rejects writes and does not overwrite trusted weights
+  ---
+  duration_ms: 127.100881
+  type: 'test'
+  ...
+# Subtest: promoting a new developer model keeps the previous verified bytes as last-known-good
+ok 217 - promoting a new developer model keeps the previous verified bytes as last-known-good
+  ---
+  duration_ms: 123.567606
+  type: 'test'
+  ...
+# Subtest: rollback requires the exact active checkpoint SHA, and refuses tampered LKG
+ok 218 - rollback requires the exact active checkpoint SHA, and refuses tampered LKG
+  ---
+  duration_ms: 121.814158
+  type: 'test'
+  ...
+# Subtest: an explicitly SHA-matched corrupted active generation restores valid LKG
+ok 219 - an explicitly SHA-matched corrupted active generation restores valid LKG
+  ---
+  duration_ms: 145.170669
+  type: 'test'
+  ...
+# Subtest: independent CEFR execution reproduces failure, applies patch, runs actual tests
+ok 220 - independent CEFR execution reproduces failure, applies patch, runs actual tests
+  ---
+  duration_ms: 420.709709
+  type: 'test'
+  ...
+# Subtest: a clean passing base cannot be called an independently reproduced repair
+ok 221 - a clean passing base cannot be called an independently reproduced repair
+  ---
+  duration_ms: 180.788823
+  type: 'test'
+  ...
+# Subtest: modified patch bytes cannot authorize even the first test process
+ok 222 - modified patch bytes cannot authorize even the first test process
+  ---
+  duration_ms: 31.353413
+  type: 'test'
+  ...
+# Subtest: a dirty source checkout or mismatched HEAD is rejected before execution
+ok 223 - a dirty source checkout or mismatched HEAD is rejected before execution
+  ---
+  duration_ms: 37.114085
+  type: 'test'
+  ...
+# Subtest: deadline and untrusted checkout paths are never accepted
+ok 224 - deadline and untrusted checkout paths are never accepted
+  ---
+  duration_ms: 21.994393
+  type: 'test'
+  ...
+# Subtest: a report claiming VERIFIED cannot train without an independent worktree verifier
+ok 225 - a report claiming VERIFIED cannot train without an independent worktree verifier
+  ---
+  duration_ms: 98.275065
+  type: 'test'
+  ...
+# Subtest: a publisher-valid self-report is rejected if trusted independent verification fails
+ok 226 - a publisher-valid self-report is rejected if trusted independent verification fails
+  ---
+  duration_ms: 93.58904
+  type: 'test'
+  ...
+# Subtest: tampered patch is rejected before independent checks
+ok 227 - tampered patch is rejected before independent checks
+  ---
+  duration_ms: 49.767391
+  type: 'test'
+  ...
+# Subtest: empty and contaminated holdout corpora never allow training
+ok 228 - empty and contaminated holdout corpora never allow training
+  ---
+  duration_ms: 75.203094
+  type: 'test'
+  ...
+# Subtest: candidate-only training never changes baseline bytes or original optimizer state
+ok 229 - candidate-only training never changes baseline bytes or original optimizer state
+  ---
+  duration_ms: 170.036283
+  type: 'test'
+  ...
+# Subtest: CEFR only observes: production ranking and irreversible safety tiers stay unchanged
+ok 230 - CEFR only observes: production ranking and irreversible safety tiers stay unchanged
+  ---
+  duration_ms: 28.224266
+  type: 'test'
+  ...
+# Subtest: holdout metric requires explicit independently labeled correctIndex
+ok 231 - holdout metric requires explicit independently labeled correctIndex
+  ---
+  duration_ms: 1.925764
+  type: 'test'
+  ...
+# Subtest: a failed strategy named only in the source report is not a training label
+ok 232 - a failed strategy named only in the source report is not a training label
+  ---
+  duration_ms: 29.207563
+  type: 'test'
+  ...
+# Subtest: research cycle verifies actual failing and repaired checkouts but defaults to no promotion
+ok 233 - research cycle verifies actual failing and repaired checkouts but defaults to no promotion
+  ---
+  duration_ms: 578.79084
+  type: 'test'
+  ...
+# Subtest: a missing holdout does not even open an independent repair worktree
+ok 234 - a missing holdout does not even open an independent repair worktree
+  ---
+  duration_ms: 23.986551
+  type: 'test'
+  ...
+# Subtest: a forged patch hash cannot trigger neural promotion
+ok 235 - a forged patch hash cannot trigger neural promotion
+  ---
+  duration_ms: 59.735658
+  type: 'test'
+  ...
+# Subtest: only after independent worktree proof: evaluate actual winner in both candidate orders
+ok 236 - only after independent worktree proof: evaluate actual winner in both candidate orders
+  ---
+  duration_ms: 1.452453
+  type: 'test'
+  ...
+# Subtest: no positive audit for self-reported patch, failed independent checks or zero tests
+ok 237 - no positive audit for self-reported patch, failed independent checks or zero tests
+  ---
+  duration_ms: 0.249339
+  type: 'test'
+  ...
+# Subtest: invalid shadow, duplicated candidate or winner not observed is never an audit
+ok 238 - invalid shadow, duplicated candidate or winner not observed is never an audit
+  ---
+  duration_ms: 1.082704
+  type: 'test'
+  ...
+# Subtest: cohort MRR is a ranking proxy and never grants an executable promotion
+ok 239 - cohort MRR is a ranking proxy and never grants an executable promotion
+  ---
+  duration_ms: 0.393894
+  type: 'test'
+  ...
+# Subtest: small cohort cannot be mistaken for a validated gain
+ok 240 - small cohort cannot be mistaken for a validated gain
+  ---
+  duration_ms: 0.205685
+  type: 'test'
+  ...
+# Subtest: duplicate data and mixed model versions fail closed
+ok 241 - duplicate data and mixed model versions fail closed
+  ---
+  duration_ms: 0.439432
+  type: 'test'
+  ...
+# Subtest: malformed or tampered rank result cannot be counted as a proxy
+ok 242 - malformed or tampered rank result cannot be counted as a proxy
+  ---
+  duration_ms: 0.240046
+  type: 'test'
+  ...
+# Subtest: invalid cohort size rejects before calculating metrics
+ok 243 - invalid cohort size rejects before calculating metrics
+  ---
+  duration_ms: 0.178855
+  type: 'test'
+  ...
+# Subtest: neural CEFR shadow may rerank within tiers without changing real production order
+ok 244 - neural CEFR shadow may rerank within tiers without changing real production order
+  ---
+  duration_ms: 1.470339
+  type: 'test'
+  ...
+# Subtest: a corrupted shadow rank cannot elevate destructive full-file revert
+ok 245 - a corrupted shadow rank cannot elevate destructive full-file revert
+  ---
+  duration_ms: 0.312824
+  type: 'test'
+  ...
+# Subtest: observer exceptions, duplicates and invented candidates fail closed
+ok 246 - observer exceptions, duplicates and invented candidates fail closed
+  ---
+  duration_ms: 0.429367
+  type: 'test'
+  ...
+# Subtest: shadow receives cloned inputs and cannot poison real proposal edits or ledger stats
+ok 247 - shadow receives cloned inputs and cannot poison real proposal edits or ledger stats
+  ---
+  duration_ms: 0.234758
+  type: 'test'
+  ...
+# Subtest: absent observer changes no report contract
+ok 248 - absent observer changes no report contract
+  ---
+  duration_ms: 0.210753
+  type: 'test'
+  ...
+# Subtest: a checked worker report creates an advisory-only offline cohort
+ok 249 - a checked worker report creates an advisory-only offline cohort
+  ---
+  duration_ms: 4.086837
+  type: 'test'
+  ...
+# Subtest: a tampered winner or independent check cannot be silently counted
+ok 250 - a tampered winner or independent check cannot be silently counted
+  ---
+  duration_ms: 2.411774
+  type: 'test'
+  ...
+# Subtest: a symlinked report cannot redirect the offline evaluator to other files
+ok 251 - a symlinked report cannot redirect the offline evaluator to other files
+  ---
+  duration_ms: 1.944762
+  type: 'test'
+  ...
+# Subtest: symlinked report directory is refused rather than followed
+ok 252 - symlinked report directory is refused rather than followed
+  ---
+  duration_ms: 3.410444
+  type: 'test'
+  ...
+# Subtest: oversized report rejected before parsing
+ok 253 - oversized report rejected before parsing
+  ---
+  duration_ms: 3.068888
+  type: 'test'
+  ...
+# Subtest: CLI requires a fixed option and absolute state directory
+ok 254 - CLI requires a fixed option and absolute state directory
+  ---
+  duration_ms: 0.878011
+  type: 'test'
+  ...
+# Subtest: an autonomous CEGIS proposal cannot edit gate, receipt, intake or launcher sources
+ok 255 - an autonomous CEGIS proposal cannot edit gate, receipt, intake or launcher sources
+  ---
+  duration_ms: 3.0167
+  type: 'test'
+  ...
+# Subtest: ordinary JavaScript production fixes remain eligible for independent verification
+ok 256 - ordinary JavaScript production fixes remain eligible for independent verification
+  ---
+  duration_ms: 0.653198
+  type: 'test'
+  ...
+# Subtest: a generated coding candidate must not alter previously existing tests
+ok 257 - a generated coding candidate must not alter previously existing tests
+  ---
+  duration_ms: 0.3036
+  type: 'test'
+  ...
+# Subtest: accepts Sol handoff shape but never executes source or updates Git HEAD
+ok 258 - accepts Sol handoff shape but never executes source or updates Git HEAD
+  ---
+  duration_ms: 686.805298
+  type: 'test'
+  ...
+# Subtest: rejects existing repair-core changes
+ok 259 - rejects existing repair-core changes
+  ---
+  duration_ms: 55.12102
+  type: 'test'
+  ...
+# Subtest: rejects symlink, executable modules and syntax errors
+ok 260 - rejects symlink, executable modules and syntax errors
+  ---
+  duration_ms: 186.523957
+  type: 'test'
+  ...
+# Subtest: rejects unexpected file and unclean baseline
+ok 261 - rejects unexpected file and unclean baseline
+  ---
+  duration_ms: 79.716667
+  type: 'test'
+  ...
+# Subtest: SSRF: rejects mapped, local, reserved and transition IPv6 targets
+ok 262 - SSRF: rejects mapped, local, reserved and transition IPv6 targets
+  ---
+  duration_ms: 5.037605
+  type: 'test'
+  ...
+# Subtest: critic counts only two distant edits
+ok 263 - critic counts only two distant edits
+  ---
+  duration_ms: 1.455818
+  type: 'test'
+  ...
+# Subtest: critic catches new danger even with unchanged existing URL
+ok 264 - critic catches new danger even with unchanged existing URL
+  ---
+  duration_ms: 0.545889
+  type: 'test'
+  ...
+# Subtest: Kotlin lexer does not consume following code after a raw string
+ok 265 - Kotlin lexer does not consume following code after a raw string
+  ---
+  duration_ms: 1.934036
+  type: 'test'
+  ...
+# Subtest: explicit Kotlin return types retain method call-graph scope
+ok 266 - explicit Kotlin return types retain method call-graph scope
+  ---
+  duration_ms: 1.286827
+  type: 'test'
+  ...
+# Subtest: finds candidate orphan but not referenced class
+ok 267 - finds candidate orphan but not referenced class
+  ---
+  duration_ms: 3.628908
+  type: 'test'
+  ...
+# Subtest: ignores non-Kotlin sources
+ok 268 - ignores non-Kotlin sources
+  ---
+  duration_ms: 0.203101
+  type: 'test'
+  ...
+# Subtest: enforces source limit
+ok 269 - enforces source limit
+  ---
+  duration_ms: 0.691414
+  type: 'test'
+  ...
+# Subtest: lexer ignores comments and string text but sees template references
+ok 270 - lexer ignores comments and string text but sees template references
+  ---
+  duration_ms: 0.756441
+  type: 'test'
+  ...
+# Subtest: imports resolve the right declaration when simple names collide
+ok 271 - imports resolve the right declaration when simple names collide
+  ---
+  duration_ms: 0.960053
+  type: 'test'
+  ...
+# Subtest: constructor properties and header lambdas stay inside their class
+ok 272 - constructor properties and header lambdas stay inside their class
+  ---
+  duration_ms: 0.310721
+  type: 'test'
+  ...
+# Subtest: reachability separates production, test-only and unreferenced code
+ok 273 - reachability separates production, test-only and unreferenced code
+  ---
+  duration_ms: 7.808682
+  type: 'test'
+  ...
+# Subtest: call chains follow real references from an entry point
+ok 274 - call chains follow real references from an entry point
+  ---
+  duration_ms: 0.649623
+  type: 'test'
+  ...
+# Subtest: manifest entry points resolve relative component names
+ok 275 - manifest entry points resolve relative component names
+  ---
+  duration_ms: 0.484658
+  type: 'test'
+  ...
+# Subtest: repository analysis reaches the learning core from the chat activity
+ok 276 - repository analysis reaches the learning core from the chat activity
+  ---
+  duration_ms: 613.277652
+  type: 'test'
+  ...
+# Subtest: coding agent has one integrated entry from Android home, no second app
+ok 277 - coding agent has one integrated entry from Android home, no second app
+  ---
+  duration_ms: 0.812965
+  type: 'test'
+  ...
+# Subtest: developer speech uses actual German Android recognizer and a unique callback
+ok 278 - developer speech uses actual German Android recognizer and a unique callback
+  ---
+  duration_ms: 0.749741
+  type: 'test'
+  ...
+# Subtest: voice text is always previewed; neither recognition nor chat command executes code
+ok 279 - voice text is always previewed; neither recognition nor chat command executes code
+  ---
+  duration_ms: 2.049017
+  type: 'test'
+  ...
+# Subtest: existing mobile builder remains opt-in, not falsely labelled an app generator
+ok 280 - existing mobile builder remains opt-in, not falsely labelled an app generator
+  ---
+  duration_ms: 0.152206
+  type: 'test'
+  ...
+# Subtest: only repository owner comments may trigger learning and memory mutations
+ok 281 - only repository owner comments may trigger learning and memory mutations
+  ---
+  duration_ms: 0.984729
+  type: 'test'
+  ...
+# Subtest: evidence quality counters distinguish raw source attribution from explicit citations
+ok 282 - evidence quality counters distinguish raw source attribution from explicit citations
+  ---
+  duration_ms: 5.88432
+  type: 'test'
+  ...
+# Subtest: 1,632 diverse training examples are partitioned into twelve nonoverlapping balanced stages
+ok 283 - 1,632 diverse training examples are partitioned into twelve nonoverlapping balanced stages
+  ---
+  duration_ms: 3.305187
+  type: 'test'
+  ...
+# Subtest: stage acceptance protects new, old, owner and previously introduced independent audits
+ok 284 - stage acceptance protects new, old, owner and previously introduced independent audits
+  ---
+  duration_ms: 0.25597
+  type: 'test'
+  ...
+# Subtest: owner-controlled recurrent public research has finite allowed sources and limits
+ok 285 - owner-controlled recurrent public research has finite allowed sources and limits
+  ---
+  duration_ms: 0.464549
+  type: 'test'
+  ...
+# Subtest: citation archive and Android UI preserve verification, provenance and explicit consent
+ok 286 - citation archive and Android UI preserve verification, provenance and explicit consent
+  ---
+  duration_ms: 0.76283
+  type: 'test'
+  ...
+# Subtest: Cayley inversion rejects singular inputs without guessing a solver
+ok 287 - Cayley inversion rejects singular inputs without guessing a solver
+  ---
+  duration_ms: 1.642544
+  type: 'test'
+  ...
+# Subtest: Cayley proof preserves E and rejects holdout leakage, without asserting 2ms or success
+ok 288 - Cayley proof preserves E and rejects holdout leakage, without asserting 2ms or success
+  ---
+  duration_ms: 146.650493
+  type: 'test'
+  ...
+# Subtest: lexical micro-mutations are proposals, never unreviewed writes or test green claims
+ok 289 - lexical micro-mutations are proposals, never unreviewed writes or test green claims
+  ---
+  duration_ms: 7.879316
+  type: 'test'
+  ...
+# Subtest: proof consolidation never merges paraphrases or differing source hashes
+ok 290 - proof consolidation never merges paraphrases or differing source hashes
+  ---
+  duration_ms: 0.541793
+  type: 'test'
+  ...
+# Subtest: bimodal synapse is 16-dimensional, finite and depends on CRE1 evidence
+ok 291 - bimodal synapse is 16-dimensional, finite and depends on CRE1 evidence
+  ---
+  duration_ms: 14.187775
+  type: 'test'
+  ...
+# Subtest: workshop accepts only explicit bounded modes and options
+ok 292 - workshop accepts only explicit bounded modes and options
+  ---
+  duration_ms: 0.961916
+  type: 'test'
+  ...
+# Subtest: capability discovery never authorizes unreviewed Flutter or Godot exports
+ok 293 - capability discovery never authorizes unreviewed Flutter or Godot exports
+  ---
+  duration_ms: 40.006466
+  type: 'test'
+  ...
+# Subtest: private worker state stays outside checkout and refuses a dirty source before a cycle
+ok 294 - private worker state stays outside checkout and refuses a dirty source before a cycle
+  ---
+  duration_ms: 45.782856
+  type: 'test'
+  ...
+# Subtest: worker status does not hallucinate a running PC worker
+ok 295 - worker status does not hallucinate a running PC worker
+  ---
+  duration_ms: 50.618011
+  type: 'test'
+  ...
+# Subtest: real Teamleader FSM runs with an injected bounded safe driver, no merge
+ok 296 - real Teamleader FSM runs with an injected bounded safe driver, no merge
+  ---
+  duration_ms: 45.109499
+  type: 'test'
+  ...
+# Subtest: one-cycle cadence persists bounded heartbeat and never claims automatic merge
+ok 297 - one-cycle cadence persists bounded heartbeat and never claims automatic merge
+  ---
+  duration_ms: 51.553908
+  type: 'test'
+  ...
+# Subtest: explicit virtual Atlas research mode cannot start arbitrary commands or merge code
+ok 298 - explicit virtual Atlas research mode cannot start arbitrary commands or merge code
+  ---
+  duration_ms: 33.779577
+  type: 'test'
+  ...
+# Subtest: only exact deterministic source rendered from bounded owner cases passes the critic
+ok 299 - only exact deterministic source rendered from bounded owner cases passes the critic
+  ---
+  duration_ms: 5.137804
+  type: 'test'
+  ...
+# Subtest: cannot overwrite an existing contract or any pre-existing test
+ok 300 - cannot overwrite an existing contract or any pre-existing test
+  ---
+  duration_ms: 0.38478
+  type: 'test'
+  ...
+# Subtest: invalid cases, non-primitive values and arbitrary module paths cannot be rendered
+ok 301 - invalid cases, non-primitive values and arbitrary module paths cannot be rendered
+  ---
+  duration_ms: 0.308286
+  type: 'test'
+  ...
+# Subtest: automatic repair candidates cannot rewrite contract-template, backlog or teamleader authority
+ok 302 - automatic repair candidates cannot rewrite contract-template, backlog or teamleader authority
+  ---
+  duration_ms: 0.6612
+  type: 'test'
+  ...
+# Subtest: actual noisy-view experiments are not mistakenly promoted
+ok 303 - actual noisy-view experiments are not mistakenly promoted
+  ---
+  duration_ms: 334.596527
+  type: 'test'
+  ...
+# Subtest: strong synthetic evidence yields review only, never automatic promotion
+ok 304 - strong synthetic evidence yields review only, never automatic promotion
+  ---
+  duration_ms: 1.249682
+  type: 'test'
+  ...
+# Subtest: failing protected tasks reject even if holdout scores rise
+ok 305 - failing protected tasks reject even if holdout scores rise
+  ---
+  duration_ms: 0.184113
+  type: 'test'
+  ...
+# Subtest: malformed, duplicate and incomplete evidence fails closed
+ok 306 - malformed, duplicate and incomplete evidence fails closed
+  ---
+  duration_ms: 0.196722
+  type: 'test'
+  ...
+# Subtest: multi-seed audit is reproducible, finite and separates its lexical corpora
+ok 307 - multi-seed audit is reproducible, finite and separates its lexical corpora
+  ---
+  duration_ms: 332.361109
+  type: 'test'
+  ...
+# Subtest: pretrained intent and semantic knowledge is measured across independent contrastive adaptation
+ok 308 - pretrained intent and semantic knowledge is measured across independent contrastive adaptation
+  ---
+  duration_ms: 383.801474
+  type: 'test'
+  ...
+# Subtest: contrastive view scores are deterministic, bounded and do not need network
+ok 309 - contrastive view scores are deterministic, bounded and do not need network
+  ---
+  duration_ms: 19.686509
+  type: 'test'
+  ...
+# Subtest: train uses the existing encoder and does not mutate baseline
+ok 310 - train uses the existing encoder and does not mutate baseline
+  ---
+  duration_ms: 111.928203
+  type: 'test'
+  ...
+# Subtest: cancellation and invalid training settings fail safely
+ok 311 - cancellation and invalid training settings fail safely
+  ---
+  duration_ms: 4.981743
+  type: 'test'
+  ...
+# Subtest: v2 challenge is disjoint from all prior synthetic splits and internally consistent
+ok 312 - v2 challenge is disjoint from all prior synthetic splits and internally consistent
+  ---
+  duration_ms: 3.669328
+  type: 'test'
+  ...
+# Subtest: CRE1 unseen-name gate uses exact normalized words, never 16k hash buckets
+ok 313 - CRE1 unseen-name gate uses exact normalized words, never 16k hash buckets
+  ---
+  duration_ms: 19.055148
+  type: 'test'
+  ...
+# Subtest: CRE1 trained checkpoint remains isolated from SWB1/SWB2 and invalid checksums
+ok 314 - CRE1 trained checkpoint remains isolated from SWB1/SWB2 and invalid checksums
+  ---
+  duration_ms: 76.453326
+  type: 'test'
+  ...
+# Subtest: CRE1 rejects correctly hashed snapshots containing NaN, infinity or invalid step count
+ok 315 - CRE1 rejects correctly hashed snapshots containing NaN, infinity or invalid step count
+  ---
+  duration_ms: 105.305578
+  type: 'test'
+  ...
+# Subtest: DEV-only selector produces bounded conservative policies and deterministic results
+ok 316 - DEV-only selector produces bounded conservative policies and deterministic results
+  ---
+  duration_ms: 1154.250437
+  type: 'test'
+  ...
+# Subtest: hybrid does not add an unknown-name answer or bypass evidence
+ok 317 - hybrid does not add an unknown-name answer or bypass evidence
+  ---
+  duration_ms: 6.299092
+  type: 'test'
+  ...
+# Subtest: historical TEST comparison reports measurements but never releases experimental model
+ok 318 - historical TEST comparison reports measurements but never releases experimental model
+  ---
+  duration_ms: 14109.208058
+  type: 'test'
+  ...
+# Subtest: cached query views preserve uncached CRE1 retrieval decisions exactly
+ok 319 - cached query views preserve uncached CRE1 retrieval decisions exactly
+  ---
+  duration_ms: 2.721482
+  type: 'test'
+  ...
+# Subtest: neural abstention is never overridden even by perfect lexical evidence
+ok 320 - neural abstention is never overridden even by perfect lexical evidence
+  ---
+  duration_ms: 0.272065
+  type: 'test'
+  ...
+# Subtest: hybrid can only re-rank answered queries, not add answers
+ok 321 - hybrid can only re-rank answered queries, not add answers
+  ---
+  duration_ms: 0.169622
+  type: 'test'
+  ...
+# Subtest: only explicitly named UNSAFE_RESCUE_ABLATION can revive an unanswered query
+ok 322 - only explicitly named UNSAFE_RESCUE_ABLATION can revive an unanswered query
+  ---
+  duration_ms: 0.182141
+  type: 'test'
+  ...
+# Subtest: baseline CRE1 is invariant to reordered identical words
+ok 323 - baseline CRE1 is invariant to reordered identical words
+  ---
+  duration_ms: 35.823768
+  type: 'test'
+  ...
+# Subtest: directional shadow preserves normalized bounded features and same-text equality
+ok 324 - directional shadow preserves normalized bounded features and same-text equality
+  ---
+  duration_ms: 9.00893
+  type: 'test'
+  ...
+# Subtest: one-content-word input preserves the CRE1 lexical representation
+ok 325 - one-content-word input preserves the CRE1 lexical representation
+  ---
+  duration_ms: 0.231053
+  type: 'test'
+  ...
+# Subtest: shadow cannot mutate or promote original CRE1 weights
+ok 326 - shadow cannot mutate or promote original CRE1 weights
+  ---
+  duration_ms: 61.237298
+  type: 'test'
+  ...
+# Subtest: bounded CRE1 SGD changes model weights and restores versioned checkpoint
+ok 327 - bounded CRE1 SGD changes model weights and restores versioned checkpoint
+  ---
+  duration_ms: 188.657633
+  type: 'test'
+  ...
+# Subtest: analytic CRE1 SGD gradients agree with finite-difference InfoNCE
+ok 328 - analytic CRE1 SGD gradients agree with finite-difference InfoNCE
+  ---
+  duration_ms: 8.071571
+  type: 'test'
+  ...
+# Subtest: invalid CRE1 SGD steps reject before mutating weights
+ok 329 - invalid CRE1 SGD steps reject before mutating weights
+  ---
+  duration_ms: 161.547879
+  type: 'test'
+  ...
+# Subtest: cached forward loss and projection gradients agree with unmodified CRE1
+ok 330 - cached forward loss and projection gradients agree with unmodified CRE1
+  ---
+  duration_ms: 42.462875
+  type: 'test'
+  ...
+# Subtest: Gram penalty matches a central finite-difference derivative
+ok 331 - Gram penalty matches a central finite-difference derivative
+  ---
+  duration_ms: 12.615461
+  type: 'test'
+  ...
+# Subtest: frozen E stays byte-exact after cached optimization; dimensions remain healthy
+ok 332 - frozen E stays byte-exact after cached optimization; dimensions remain healthy
+  ---
+  duration_ms: 116.403032
+  type: 'test'
+  ...
+# Subtest: anisotropy correction is opt-in, changes only existing P matrices
+ok 333 - anisotropy correction is opt-in, changes only existing P matrices
+  ---
+  duration_ms: 18.791146
+  type: 'test'
+  ...
+# Subtest: sibling negatives require disambiguating questions; no train/audit source leakage
+ok 334 - sibling negatives require disambiguating questions; no train/audit source leakage
+  ---
+  duration_ms: 6.724123
+  type: 'test'
+  ...
+# Subtest: numeric and negation canaries stay outside training and veto unsafe ranking
+ok 335 - numeric and negation canaries stay outside training and veto unsafe ranking
+  ---
+  duration_ms: 32.604824
+  type: 'test'
+  ...
+# Subtest: rejected candidate returns exact baseline bytes
+ok 336 - rejected candidate returns exact baseline bytes
+  ---
+  duration_ms: 126.420373
+  type: 'test'
+  ...
+# Subtest: detects failed unit tests without reading or executing logs
+ok 337 - detects failed unit tests without reading or executing logs
+  ---
+  duration_ms: 1.054611
+  type: 'test'
+  ...
+# Subtest: successful and pending runs remain separate
+ok 338 - successful and pending runs remain separate
+  ---
+  duration_ms: 0.461176
+  type: 'test'
+  ...
+# Subtest: invalid run IDs fail closed
+ok 339 - invalid run IDs fail closed
+  ---
+  duration_ms: 0.204328
+  type: 'test'
+  ...
+# Subtest: watch: a failed head unknown to ledger and backlog requests one repair
+ok 340 - watch: a failed head unknown to ledger and backlog requests one repair
+  ---
+  duration_ms: 13.422347
+  type: 'test'
+  ...
+# Subtest: watch: a head the backlog already tracks or a running repair is not repaired again
+ok 341 - watch: a head the backlog already tracks or a running repair is not repaired again
+  ---
+  duration_ms: 6.621068
+  type: 'test'
+  ...
+# Subtest: watch: a manually retried FAILED repair is eligible again exactly while READY
+ok 342 - watch: a manually retried FAILED repair is eligible again exactly while READY
+  ---
+  duration_ms: 4.612107
+  type: 'test'
+  ...
+# Subtest: watch: unreadable or corrupt state fails instead of looking empty
+ok 343 - watch: unreadable or corrupt state fails instead of looking empty
+  ---
+  duration_ms: 0.950264
+  type: 'test'
+  ...
+# Subtest: conformance vectors: every step and final state as recorded (shared with Kotlin)
+ok 344 - conformance vectors: every step and final state as recorded (shared with Kotlin)
+  ---
+  duration_ms: 126.728075
+  type: 'test'
+  ...
+# Subtest: committed fixtures are exactly what the current rules produce
+ok 345 - committed fixtures are exactly what the current rules produce
+  ---
+  duration_ms: 162.382912
+  type: 'test'
+  ...
+# Subtest: stability backlog completion rejects a backend profile with zero executed tests
+ok 346 - stability backlog completion rejects a backend profile with zero executed tests
+  ---
+  duration_ms: 0.898976
+  type: 'test'
+  ...
+# Subtest: documents round-trip byte-identically and unknown fields survive operations
+ok 347 - documents round-trip byte-identically and unknown fields survive operations
+  ---
+  duration_ms: 5.672537
+  type: 'test'
+  ...
+# Subtest: invalid documents fail with the shared error codes
+ok 348 - invalid documents fail with the shared error codes
+  ---
+  duration_ms: 6.440354
+  type: 'test'
+  ...
+# Subtest: development-planner output (schema 1) migrates without losing data
+ok 349 - development-planner output (schema 1) migrates without losing data
+  ---
+  duration_ms: 16.114306
+  type: 'test'
+  ...
+# Subtest: a task is never DONE without matching executed-test evidence, also when forged in a file
+ok 350 - a task is never DONE without matching executed-test evidence, also when forged in a file
+  ---
+  duration_ms: 1.605481
+  type: 'test'
+  ...
+# Subtest: canonical JSON escaping and ordering equal JSON.stringify for valid strings
+ok 351 - canonical JSON escaping and ordering equal JSON.stringify for valid strings
+  ---
+  duration_ms: 0.462978
+  type: 'test'
+  ...
+# Subtest: store writes atomically, keeps a backup and does not rewrite unchanged content
+ok 352 - store writes atomically, keeps a backup and does not rewrite unchanged content
+  ---
+  duration_ms: 3.597416
+  type: 'test'
+  ...
+# Subtest: a corrupt backlog is recovered from the backup and quarantined, never deleted
+ok 353 - a corrupt backlog is recovered from the backup and quarantined, never deleted
+  ---
+  duration_ms: 3.319087
+  type: 'test'
+  ...
+# Subtest: without a valid backup a corrupt backlog fails closed and nothing is touched
+ok 354 - without a valid backup a corrupt backlog fails closed and nothing is touched
+  ---
+  duration_ms: 1.587254
+  type: 'test'
+  ...
+# Subtest: revision conflicts and rejected batches write nothing; lenient batches report every rejection
+ok 355 - revision conflicts and rejected batches write nothing; lenient batches report every rejection
+  ---
+  duration_ms: 1.250686
+  type: 'test'
+  ...
+# Subtest: a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned
+ok 356 - a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned
+  ---
+  duration_ms: 205.827223
+  type: 'test'
+  ...
+# Subtest: stale backlog lock is not stolen while same-host PID is still alive
+ok 357 - stale backlog lock is not stolen while same-host PID is still alive
+  ---
+  duration_ms: 143.21484
+  type: 'test'
+  ...
+# Subtest: concurrent writer processes lose no update
+ok 358 - concurrent writer processes lose no update
+  ---
+  duration_ms: 284.13521
+  type: 'test'
+  ...
+# Subtest: a planner v1 file is migrated on the first write and the original is kept
+ok 359 - a planner v1 file is migrated on the first write and the original is kept
+  ---
+  duration_ms: 7.682788
+  type: 'test'
+  ...
+# Subtest: round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one
+ok 360 - round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one
+  ---
+  duration_ms: 14.746363
+  type: 'test'
+  ...
+# Subtest: prioritizes high-impact integration findings deterministically
+ok 361 - prioritizes high-impact integration findings deterministically
+  ---
+  duration_ms: 1.777702
+  type: 'test'
+  ...
+# Subtest: rejects malformed findings input
+ok 362 - rejects malformed findings input
+  ---
+  duration_ms: 0.198459
+  type: 'test'
+  ...
+# Subtest: creates project backlog without altering sources
+ok 363 - creates project backlog without altering sources
+  ---
+  duration_ms: 680.920006
+  type: 'test'
+  ...
+# Subtest: analyzer findings become proposals once; vanished proposals are withdrawn, human decisions kept
+ok 364 - analyzer findings become proposals once; vanished proposals are withdrawn, human decisions kept
+  ---
+  duration_ms: 4.165643
+  type: 'test'
+  ...
+# Subtest: a verified repair session completes its REPAIR task with the evidence that verified it, exactly once
+ok 365 - a verified repair session completes its REPAIR task with the evidence that verified it, exactly once
+  ---
+  duration_ms: 2.287771
+  type: 'test'
+  ...
+# Subtest: independent worktree check is recorded rather than first-pass evidence
+ok 366 - independent worktree check is recorded rather than first-pass evidence
+  ---
+  duration_ms: 0.614817
+  type: 'test'
+  ...
+# Subtest: failed repair sessions spend the attempt budget and then stop
+ok 367 - failed repair sessions spend the attempt budget and then stop
+  ---
+  duration_ms: 1.546362
+  type: 'test'
+  ...
+# Subtest: CDX1 is strictly opt-in and bounded by existing JobScheduler budget
+ok 368 - CDX1 is strictly opt-in and bounded by existing JobScheduler budget
+  ---
+  duration_ms: 0.983654
+  type: 'test'
+  ...
+# Subtest: The UI presents explicit enable and disable actions
+ok 369 - The UI presents explicit enable and disable actions
+  ---
+  duration_ms: 11.038941
+  type: 'test'
+  ...
+# Subtest: Research-only CDX1 events never authorize productive chat
+ok 370 - Research-only CDX1 events never authorize productive chat
+  ---
+  duration_ms: 0.238189
+  type: 'test'
+  ...
+# Subtest: The CDX1 auto-study policy does not introduce tools, network or separate schedules
+ok 371 - The CDX1 auto-study policy does not introduce tools, network or separate schedules
+  ---
+  duration_ms: 0.297949
+  type: 'test'
+  ...
+# Subtest: SWB2 hybrid is opt-in, rejects SWB1, returns no fabricated claim of generalization
+ok 372 - SWB2 hybrid is opt-in, rejects SWB1, returns no fabricated claim of generalization
+  ---
+  duration_ms: 17.600748
+  type: 'test'
+  ...
+# Subtest: calibration gates operate on actual trained embeddings, never supplied mock scores
+ok 373 - calibration gates operate on actual trained embeddings, never supplied mock scores
+  ---
+  duration_ms: 76.812852
+  type: 'test'
+  ...
+# Subtest: mentor access remains encrypted on-device between app restarts
+ok 374 - mentor access remains encrypted on-device between app restarts
+  ---
+  duration_ms: 0.767187
+  type: 'test'
+  ...
+# Subtest: one 401 may renew a previously owner-approved pairing, never auto-enrol a new device
+ok 375 - one 401 may renew a previously owner-approved pairing, never auto-enrol a new device
+  ---
+  duration_ms: 1.230857
+  type: 'test'
+  ...
+# Subtest: retry of pairing probe is bounded and never silently duplicates Groq questions
+ok 376 - retry of pairing probe is bounded and never silently duplicates Groq questions
+  ---
+  duration_ms: 0.27813
+  type: 'test'
+  ...
+# Subtest: a new backend URL cannot inherit the previous backend bearer credential
+ok 377 - a new backend URL cannot inherit the previous backend bearer credential
+  ---
+  duration_ms: 0.161374
+  type: 'test'
+  ...
+# Subtest: development center gives an optional coding mentor with explicit question confirmation
+ok 378 - development center gives an optional coding mentor with explicit question confirmation
+  ---
+  duration_ms: 0.525513
+  type: 'test'
+  ...
+# Subtest: responses and HTTP connections close without retrying failed work and secrets
+ok 379 - responses and HTTP connections close without retrying failed work and secrets
+  ---
+  duration_ms: 0.176135
+  type: 'test'
+  ...
+# Subtest: external mentor has an explicit per-request consent UI
+ok 380 - external mentor has an explicit per-request consent UI
+  ---
+  duration_ms: 1.175623
+  type: 'test'
+  ...
+# Subtest: Android only sends bounded question text to the private backend
+ok 381 - Android only sends bounded question text to the private backend
+  ---
+  duration_ms: 0.280814
+  type: 'test'
+  ...
+# Subtest: server never accepts mentor request without owner grant and bearer authentication
+ok 382 - server never accepts mentor request without owner grant and bearer authentication
+  ---
+  duration_ms: 1.237476
+  type: 'test'
+  ...
+# Subtest: external reply is labelled unverified and cannot write memory or perform tools
+ok 383 - external reply is labelled unverified and cannot write memory or perform tools
+  ---
+  duration_ms: 0.381365
+  type: 'test'
+  ...
+# Subtest: read-only inverse import planner produces unique, reversible hunks and content hashes
+ok 384 - read-only inverse import planner produces unique, reversible hunks and content hashes
+  ---
+  duration_ms: 3.459168
+  type: 'test'
+  ...
+# Subtest: plain strings and comments are not mistaken for real Kotlin symbol usage
+ok 385 - plain strings and comments are not mistaken for real Kotlin symbol usage
+  ---
+  duration_ms: 0.341616
+  type: 'test'
+  ...
+# Subtest: unsafe destinations and invalid source are rejected without writes
+ok 386 - unsafe destinations and invalid source are rejected without writes
+  ---
+  duration_ms: 2.197655
+  type: 'test'
+  ...
+# Subtest: ambiguous imports, aliases, missing imports and unknown mappings yield no mutation
+ok 387 - ambiguous imports, aliases, missing imports and unknown mappings yield no mutation
+  ---
+  duration_ms: 0.384781
+  type: 'test'
+  ...
+# Subtest: planner handles CRLF while preserving exact bytes and remaining read only
+ok 388 - planner handles CRLF while preserving exact bytes and remaining read only
+  ---
+  duration_ms: 1.296886
+  type: 'test'
+  ...
+# Subtest: untrusted executor objects cannot grant execution rights
+ok 389 - untrusted executor objects cannot grant execution rights
+  ---
+  duration_ms: 2.451257
+  type: 'test'
+  ...
+# Subtest: mutable images and unbounded resource policies are rejected before daemon access
+ok 390 - mutable images and unbounded resource policies are rejected before daemon access
+  ---
+  duration_ms: 0.468196
+  type: 'test'
+  ...
+# Subtest: receipts with network, privilege, missing limits or missing snapshot are invalid
+ok 391 - receipts with network, privilege, missing limits or missing snapshot are invalid
+  ---
+  duration_ms: 0.683
+  type: 'test'
+  ...
+# Subtest: configuration cannot supply shell commands or symlinked owner data
+ok 392 - configuration cannot supply shell commands or symlinked owner data
+  ---
+  duration_ms: 1.080971
+  type: 'test'
+  ...
+# Subtest: broad model reports never become learned success even with a true independent flag
+ok 393 - broad model reports never become learned success even with a true independent flag
+  ---
+  duration_ms: 1.366121
+  type: 'test'
+  ...
+# Subtest: strict Kotlin integer acceptance cases reject untrusted code-shaped JSON
+ok 394 - strict Kotlin integer acceptance cases reject untrusted code-shaped JSON
+  ---
+  duration_ms: 1.46053
+  type: 'test'
+  ...
+# Subtest: generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs
+ok 395 - generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs
+  ---
+  duration_ms: 9376.165917
+  type: 'test'
+  ...
+# Subtest: wrong independent expected output rejects a compiling patch
+ok 396 - wrong independent expected output rejects a compiling patch
+  ---
+  duration_ms: 12902.177469
+  type: 'test'
+  ...
+# Subtest: an arbitrary red baseline is never accepted as proof of the requested missing method
+ok 397 - an arbitrary red baseline is never accepted as proof of the requested missing method
+  ---
+  duration_ms: 4331.560038
+  type: 'test'
+  ...
+# Subtest: owner specification yields a critic-approved production-only Kotlin patch
+ok 398 - owner specification yields a critic-approved production-only Kotlin patch
+  ---
+  duration_ms: 12.347183
+  type: 'test'
+  ...
+# Subtest: unaccepted, foreign, forged and unsupported tasks do not generate patches
+ok 399 - unaccepted, foreign, forged and unsupported tasks do not generate patches
+  ---
+  duration_ms: 0.853134
+  type: 'test'
+  ...
+# Subtest: existing methods, overloaded delegates, unsupported headers and test paths fail closed
+ok 400 - existing methods, overloaded delegates, unsupported headers and test paths fail closed
+  ---
+  duration_ms: 0.42927
+  type: 'test'
+  ...
+# Subtest: new method compiles and computes a nontrivial result with real kotlinc
+ok 401 - new method compiles and computes a nontrivial result with real kotlinc
+  ---
+  duration_ms: 11316.318444
+  type: 'test'
+  ...
+# Subtest: local provider rejects unsafe scope and authentication before any subprocess
+ok 402 - local provider rejects unsafe scope and authentication before any subprocess
+  ---
+  duration_ms: 3.476513
+  type: 'test'
+  ...
+# Subtest: provider sends bounded source data only through a fixed non-shell child
+ok 403 - provider sends bounded source data only through a fixed non-shell child
+  ---
+  duration_ms: 1.722072
+  type: 'test'
+  ...
+# Subtest: timeouts and a model changing its allowed file fail closed
+ok 404 - timeouts and a model changing its allowed file fail closed
+  ---
+  duration_ms: 0.803556
+  type: 'test'
+  ...
+# Subtest: model-derived recipe replay retains its review and risk boundary
+ok 405 - model-derived recipe replay retains its review and risk boundary
+  ---
+  duration_ms: 2.095419
+  type: 'test'
+  ...
+# Subtest: actual authenticated HTTP candidate is tested in an isolated Git worktree
+ok 406 - actual authenticated HTTP candidate is tested in an isolated Git worktree
+  ---
+  duration_ms: 706.781894
+  type: 'test'
+  ...
+# Subtest: no state cannot be confused with successful build or repair
+ok 407 - no state cannot be confused with successful build or repair
+  ---
+  duration_ms: 2.284489
+  type: 'test'
+  ...
+# Subtest: historical builder claims cannot advertise a verified installation
+ok 408 - historical builder claims cannot advertise a verified installation
+  ---
+  duration_ms: 6.125646
+  type: 'test'
+  ...
+# Subtest: malformed or symlinked builder report fails closed
+ok 409 - malformed or symlinked builder report fails closed
+  ---
+  duration_ms: 4.623179
+  type: 'test'
+  ...
+# Subtest: build lease is reported but process liveness is never fabricated
+ok 410 - build lease is reported but process liveness is never fabricated
+  ---
+  duration_ms: 6.432912
+  type: 'test'
+  ...
+# Subtest: ANSK files remain research-only and are not counted as verified repairs
+ok 411 - ANSK files remain research-only and are not counted as verified repairs
+  ---
+  duration_ms: 0.815293
+  type: 'test'
+  ...
+# Subtest: unsafe ANSK file names and symlinked directories are rejected
+ok 412 - unsafe ANSK file names and symlinked directories are rejected
+  ---
+  duration_ms: 1.950121
+  type: 'test'
+  ...
+# Subtest: source and state arguments are absolute paths only
+ok 413 - source and state arguments are absolute paths only
+  ---
+  duration_ms: 0.748334
+  type: 'test'
+  ...
+# Subtest: stored ANSK baseline diagnosis is explicitly historical, not an approved repair
+ok 414 - stored ANSK baseline diagnosis is explicitly historical, not an approved repair
+  ---
+  duration_ms: 0.804357
+  type: 'test'
+  ...
+# Subtest: corrupt, symlinked and forged ANSK baseline reports never become accepted evidence
+ok 415 - corrupt, symlinked and forged ANSK baseline reports never become accepted evidence
+  ---
+  duration_ms: 0.897966
+  type: 'test'
+  ...
+# Subtest: rejects malformed expected SHA
+ok 416 - rejects malformed expected SHA
+  ---
+  duration_ms: 22.221427
+  type: 'test'
+  ...
+# Subtest: rejects wrong Git HEAD
+ok 417 - rejects wrong Git HEAD
+  ---
+  duration_ms: 40.858649
+  type: 'test'
+  ...
+# Subtest: rejects dirty Git checkout
+ok 418 - rejects dirty Git checkout
+  ---
+  duration_ms: 27.209309
+  type: 'test'
+  ...
+# Subtest: rejects absent Android SDK
+ok 419 - rejects absent Android SDK
+  ---
+  duration_ms: 36.847411
+  type: 'test'
+  ...
+# Subtest: rejects evidence location within checkout before creating files
+ok 420 - rejects evidence location within checkout before creating files
+  ---
+  duration_ms: 46.992035
+  type: 'test'
+  ...
+# Subtest: rejects incompatible JDK
+ok 421 - rejects incompatible JDK
+  ---
+  duration_ms: 29.476221
+  type: 'test'
+  ...
+# Subtest: rejects incompatible Gradle
+ok 422 - rejects incompatible Gradle
+  ---
+  duration_ms: 76.416621
+  type: 'test'
+  ...
+# Subtest: runs M4 and proof verification after validated preflight
+ok 423 - runs M4 and proof verification after validated preflight
+  ---
+  duration_ms: 199.631669
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract green
+ok 424 - M4 wrapper verifier contract green
+  ---
+  duration_ms: 229.076009
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract red
+ok 425 - M4 wrapper verifier contract red
+  ---
+  duration_ms: 243.855019
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract wrong-head
+ok 426 - M4 wrapper verifier contract wrong-head
+  ---
+  duration_ms: 171.233729
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract invalid-but-ready
+ok 427 - M4 wrapper verifier contract invalid-but-ready
+  ---
+  duration_ms: 134.267166
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract wrong-proof
+ok 428 - M4 wrapper verifier contract wrong-proof
+  ---
+  duration_ms: 104.675541
+  type: 'test'
+  ...
+# Subtest: M4 wrapper verifier contract malformed
+ok 429 - M4 wrapper verifier contract malformed
+  ---
+  duration_ms: 109.281364
+  type: 'test'
+  ...
+# Subtest: explicit owner command has precedence over all alternate chat routing
+ok 430 - explicit owner command has precedence over all alternate chat routing
+  ---
+  duration_ms: 0.932319
+  type: 'test'
+  ...
+# Subtest: diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline
+ok 431 - diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline
+  ---
+  duration_ms: 0.206398
+  type: 'test'
+  ...
+# Subtest: the diagnostic requires a loaded model, blocks empty responses and surfaces failures
+ok 432 - the diagnostic requires a loaded model, blocks empty responses and surfaces failures
+  ---
+  duration_ms: 0.168792
+  type: 'test'
+  ...
+# Subtest: restricted numeric language accepts arithmetic, comparisons, conditions and bounded parameters
+ok 433 - restricted numeric language accepts arithmetic, comparisons, conditions and bounded parameters
+  ---
+  duration_ms: 3.091065
+  type: 'test'
+  ...
+# Subtest: model code cannot acquire file, network, environment or test-mutation capabilities
+ok 434 - model code cannot acquire file, network, environment or test-mutation capabilities
+  ---
+  duration_ms: 2.705721
+  type: 'test'
+  ...
+# Subtest: model recipes never replay in deterministic mode and retain review after explicit opt-in
+ok 435 - model recipes never replay in deterministic mode and retain review after explicit opt-in
+  ---
+  duration_ms: 1.445003
+  type: 'test'
+  ...
+# Subtest: small expression limits and malformed grammar fail closed
+ok 436 - small expression limits and malformed grammar fail closed
+  ---
+  duration_ms: 0.730678
+  type: 'test'
+  ...
+# Subtest: opt-in local candidate uses the existing critic and real fixed tests
+ok 437 - opt-in local candidate uses the existing critic and real fixed tests
+  ---
+  duration_ms: 285.695194
+  type: 'test'
+  ...
+# Subtest: a plausible but overfitted local patch loses against negative holdouts
+ok 438 - a plausible but overfitted local patch loses against negative holdouts
+  ---
+  duration_ms: 288.692771
+  type: 'test'
+  ...
+# Subtest: canonical owner backlog requires a fresh independent worktree for local candidates
+ok 439 - canonical owner backlog requires a fresh independent worktree for local candidates
+  ---
+  duration_ms: 428.588666
+  type: 'test'
+  ...
+# Subtest: outside writes and test monkeypatching are rejected before candidate execution
+ok 440 - outside writes and test monkeypatching are rejected before candidate execution
+  ---
+  duration_ms: 314.64778
+  type: 'test'
+  ...
+# Subtest: three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+ok 441 - three local cycles pace on a fixed one-hour schedule and persist honest heartbeat
+  ---
+  duration_ms: 2.251342
+  type: 'test'
+  ...
+# Subtest: failures stay failed, sleep with increasing backoff and eventually recover
+ok 442 - failures stay failed, sleep with increasing backoff and eventually recover
+  ---
+  duration_ms: 0.314667
+  type: 'test'
+  ...
+# Subtest: signal stopping terminates without another cycle or artificial success
+ok 443 - signal stopping terminates without another cycle or artificial success
+  ---
+  duration_ms: 0.210183
+  type: 'test'
+  ...
+# Subtest: invalid intervals, cycle limits and CLI mode combinations are rejected
+ok 444 - invalid intervals, cycle limits and CLI mode combinations are rejected
+  ---
+  duration_ms: 0.876481
+  type: 'test'
+  ...
+# Subtest: unverified repair and interruption increment failure counters, not successes
+ok 445 - unverified repair and interruption increment failure counters, not successes
+  ---
+  duration_ms: 0.260206
+  type: 'test'
+  ...
+# Subtest: unknown or unfinished worker result must fail closed
+ok 446 - unknown or unfinished worker result must fail closed
+  ---
+  duration_ms: 0.448365
+  type: 'test'
+  ...
+# Subtest: signal while waiting persists terminal STOPPED heartbeat
+ok 447 - signal while waiting persists terminal STOPPED heartbeat
+  ---
+  duration_ms: 0.30983
+  type: 'test'
+  ...
+# Subtest: one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+ok 448 - one-shot CLI exits nonzero for failed, unverified or unknown outcomes
+  ---
+  duration_ms: 0.230523
+  type: 'test'
+  ...
+# Subtest: failure backoff never retries before a user configured interval
+ok 449 - failure backoff never retries before a user configured interval
+  ---
+  duration_ms: 0.516657
+  type: 'test'
+  ...
+# Subtest: a failing baseline without a code diagnostic remains a failed worker cycle
+ok 450 - a failing baseline without a code diagnostic remains a failed worker cycle
+  ---
+  duration_ms: 0.516797
+  type: 'test'
+  ...
+# Subtest: scheduler wait failure persists terminal ERROR rather than false WAITING
+ok 451 - scheduler wait failure persists terminal ERROR rather than false WAITING
+  ---
+  duration_ms: 0.45173
+  type: 'test'
+  ...
+# Subtest: saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+ok 452 - saved status validates legitimate heartbeats and rejects spoofed or corrupt states
+  ---
+  duration_ms: 0.465801
+  type: 'test'
+  ...
+# Subtest: durable restart retains total cycle budget and pending backoff
+ok 453 - durable restart retains total cycle budget and pending backoff
+  ---
+  duration_ms: 63.532251
+  type: 'test'
+  ...
+# Subtest: durable cancellation during work records interruption and a stopped session
+ok 454 - durable cancellation during work records interruption and a stopped session
+  ---
+  duration_ms: 33.804116
+  type: 'test'
+  ...
+# Subtest: pre-aborted durable run writes STOPPED without executing work
+ok 455 - pre-aborted durable run writes STOPPED without executing work
+  ---
+  duration_ms: 24.218926
+  type: 'test'
+  ...
+# Subtest: durable state fails closed on corruption, changed budgets and changed source
+ok 456 - durable state fails closed on corruption, changed budgets and changed source
+  ---
+  duration_ms: 55.028817
+  type: 'test'
+  ...
+# Subtest: durable scheduling requires a finite budget and state outside source
+ok 457 - durable scheduling requires a finite budget and state outside source
+  ---
+  duration_ms: 17.260936
+  type: 'test'
+  ...
+# Subtest: durable integrity validation rejects plausible counter edits
+ok 458 - durable integrity validation rejects plausible counter edits
+  ---
+  duration_ms: 41.217763
+  type: 'test'
+  ...
+# Subtest: source drift while waiting terminates the saved cadence before another cycle
+ok 459 - source drift while waiting terminates the saved cadence before another cycle
+  ---
+  duration_ms: 35.86044
+  type: 'test'
+  ...
+# Subtest: source drift during a cycle cannot retain its reported verification success
+ok 460 - source drift during a cycle cannot retain its reported verification success
+  ---
+  duration_ms: 26.829111
+  type: 'test'
+  ...
+# Subtest: durable loop rejects a competing scheduler before its work executes
+ok 461 - durable loop rejects a competing scheduler before its work executes
+  ---
+  duration_ms: 33.306823
+  type: 'test'
+  ...
+# Subtest: SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+ok 462 - SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay
+  ---
+  duration_ms: 82.137624
+  type: 'test'
+  ...
+# Subtest: M4 quality gate certifies the preview variant and lint in one Gradle execution
+ok 463 - M4 quality gate certifies the preview variant and lint in one Gradle execution
+  ---
+  duration_ms: 0.915259
+  type: 'test'
+  ...
+# Subtest: M4 wrapper emits a proof location only after independent release verification
+ok 464 - M4 wrapper emits a proof location only after independent release verification
+  ---
+  duration_ms: 1.403844
+  type: 'test'
+  ...
+# Subtest: Android release uses precisely the certified APK, never silently rebuilds another
+ok 465 - Android release uses precisely the certified APK, never silently rebuilds another
+  ---
+  duration_ms: 0.262669
+  type: 'test'
+  ...
+# Subtest: Both production launchers pass shell syntax checks
+ok 466 - Both production launchers pass shell syntax checks
+  ---
+  duration_ms: 7.818532
+  type: 'test'
+  ...
+# Subtest: M4 release gate requires the three actual repairs to have executed
+ok 467 - M4 release gate requires the three actual repairs to have executed
+  ---
+  duration_ms: 5.169104
+  type: 'test'
+  ...
+# Subtest: M4 release gate refuses a missing repair regression despite otherwise green JUnit
+ok 468 - M4 release gate refuses a missing repair regression despite otherwise green JUnit
+  ---
+  duration_ms: 0.974937
+  type: 'test'
+  ...
+# Subtest: M4 release gate refuses a skipped repair or a fake file-only pass
+ok 469 - M4 release gate refuses a skipped repair or a fake file-only pass
+  ---
+  duration_ms: 1.952088
+  type: 'test'
+  ...
+# Subtest: M4 accepts only actually executed, successful Node testcases
+ok 470 - M4 accepts only actually executed, successful Node testcases
+  ---
+  duration_ms: 3.861593
+  type: 'test'
+  ...
+# Subtest: M4 refuses absent, malformed, empty, skipped, failing, or symlinked reports
+ok 471 - M4 refuses absent, malformed, empty, skipped, failing, or symlinked reports
+  ---
+  duration_ms: 2.073669
+  type: 'test'
+  ...
+# Subtest: M4 verifies a real Node 22 JUnit reporter output
+ok 472 - M4 verifies a real Node 22 JUnit reporter output
+  ---
+  duration_ms: 111.553405
+  type: 'test'
+  ...
+# Subtest: M4 accepts genuine Node 22 nested test suites and excludes skipped cases
+ok 473 - M4 accepts genuine Node 22 nested test suites and excludes skipped cases
+  ---
+  duration_ms: 120.743804
+  type: 'test'
+  ...
+# Subtest: M4 classifies genuine Node 22 TODO tests independently of skipped tests
+ok 474 - M4 classifies genuine Node 22 TODO tests independently of skipped tests
+  ---
+  duration_ms: 102.724788
+  type: 'test'
+  ...
+# Subtest: in-memory and file JUnit parsers agree on a real Node 22 report
+ok 475 - in-memory and file JUnit parsers agree on a real Node 22 report
+  ---
+  duration_ms: 105.282471
+  type: 'test'
+  ...
+# Subtest: in-memory JUnit parsing handles nested and skipped Node reporter cases
+ok 476 - in-memory JUnit parsing handles nested and skipped Node reporter cases
+  ---
+  duration_ms: 95.000991
+  type: 'test'
+  ...
+# Subtest: malformed totals and Buffer input are rejected consistently
+ok 477 - malformed totals and Buffer input are rejected consistently
+  ---
+  duration_ms: 0.388617
+  type: 'test'
+  ...
+# Subtest: comments cannot fabricate executed JUnit cases or parent suites
+ok 478 - comments cannot fabricate executed JUnit cases or parent suites
+  ---
+  duration_ms: 0.761831
+  type: 'test'
+  ...
+# Subtest: CDATA and malformed comment delimiters cannot spoof executed cases
+ok 479 - CDATA and malformed comment delimiters cannot spoof executed cases
+  ---
+  duration_ms: 0.362819
+  type: 'test'
+  ...
+# Subtest: three-profile M4 acceptance reads its mandatory receipt only once
+ok 480 - three-profile M4 acceptance reads its mandatory receipt only once
+  ---
+  duration_ms: 104.242246
+  type: 'test'
+  ...
+# Subtest: valid-looking JUnit testcase tags nested inside system-out are not real tests
+ok 481 - valid-looking JUnit testcase tags nested inside system-out are not real tests
+  ---
+  duration_ms: 0.979965
+  type: 'test'
+  ...
+# Subtest: structural XML verifier rejects duplicate roots and mismatched closing tags
+ok 482 - structural XML verifier rejects duplicate roots and mismatched closing tags
+  ---
+  duration_ms: 0.315228
+  type: 'test'
+  ...
+# Subtest: stabilization gate refuses downstream execution after incomplete or failed upstream tests
+ok 483 - stabilization gate refuses downstream execution after incomplete or failed upstream tests
+  ---
+  duration_ms: 1.342454
+  type: 'test'
+  ...
+# Subtest: gate cannot certify zero tests or failed APK as successful
+ok 484 - gate cannot certify zero tests or failed APK as successful
+  ---
+  duration_ms: 1.070389
+  type: 'test'
+  ...
+# Subtest: reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY
+ok 485 - reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY
+  ---
+  duration_ms: 1.618543
+  type: 'test'
+  ...
+# Subtest: APK hashing uses a bounded stream and rejects links or invalid source files
+ok 486 - APK hashing uses a bounded stream and rejects links or invalid source files
+  ---
+  duration_ms: 2.244247
+  type: 'test'
+  ...
+# Subtest: release proof verifies retained APK bytes, path and corruption without executing it
+ok 487 - release proof verifies retained APK bytes, path and corruption without executing it
+  ---
+  duration_ms: 3.831928
+  type: 'test'
+  ...
+# Subtest: gate CLI rejects unknown arguments, duplicates, and invalid time budgets
+ok 488 - gate CLI rejects unknown arguments, duplicates, and invalid time budgets
+  ---
+  duration_ms: 0.66676
+  type: 'test'
+  ...
+# Subtest: real standalone Git fixture produces an immutable Node test proof
+ok 489 - real standalone Git fixture produces an immutable Node test proof
+  ---
+  duration_ms: 396.70497
+  type: 'test'
+  ...
+# Subtest: broken Git fixture stays red and still preserves a failure proof
+ok 490 - broken Git fixture stays red and still preserves a failure proof
+  ---
+  duration_ms: 250.980262
+  type: 'test'
+  ...
+# Subtest: broken actual Node fixture skips Android and APK before Gradle is invoked
+ok 491 - broken actual Node fixture skips Android and APK before Gradle is invoked
+  ---
+  duration_ms: 233.788274
+  type: 'test'
+  ...
+# Subtest: green Node/backend suites without repair files cannot authorize Android
+ok 492 - green Node/backend suites without repair files cannot authorize Android
+  ---
+  duration_ms: 212.732123
+  type: 'test'
+  ...
+# Subtest: gate refuses dirty source and repository-contained proof output
+ok 493 - gate refuses dirty source and repository-contained proof output
+  ---
+  duration_ms: 18.121263
+  type: 'test'
+  ...
+# Subtest: persisted release summary rejects forged green flags when commands failed
+ok 494 - persisted release summary rejects forged green flags when commands failed
+  ---
+  duration_ms: 0.331913
+  type: 'test'
+  ...
+# Subtest: M4 always rejects a green Node run without an actual repair E2E receipt
+ok 495 - M4 always rejects a green Node run without an actual repair E2E receipt
+  ---
+  duration_ms: 1.063339
+  type: 'test'
+  ...
+# Subtest: M4 accepts only exactly shaped mandatory repair receipts
+ok 496 - M4 accepts only exactly shaped mandatory repair receipts
+  ---
+  duration_ms: 0.339224
+  type: 'test'
+  ...
+# Subtest: old version-1 M4 release documents cannot silently bypass mandatory repair proof
+ok 497 - old version-1 M4 release documents cannot silently bypass mandatory repair proof
+  ---
+  duration_ms: 0.658498
+  type: 'test'
+  ...
+# Subtest: Android M4 stage prepares three parity contracts, supplies env and verifies outputs
+ok 498 - Android M4 stage prepares three parity contracts, supplies env and verifies outputs
+  ---
+  duration_ms: 4.278252
+  type: 'test'
+  ...
+# Subtest: parity verification failure vetoes Android certification and restores prior env
+ok 499 - parity verification failure vetoes Android certification and restores prior env
+  ---
+  duration_ms: 1.420979
+  type: 'test'
+  ...
+# Subtest: a failed Android profile never advertises successful parity verification
+ok 500 - a failed Android profile never advertises successful parity verification
+  ---
+  duration_ms: 0.742782
+  type: 'test'
+  ...
+# Subtest: missing parity preparation blocks the Kotlin runner entirely
+ok 501 - missing parity preparation blocks the Kotlin runner entirely
+  ---
+  duration_ms: 0.416268
+  type: 'test'
+  ...
+# Subtest: mandatory E2E cases execute in a separate Node process and produce a tamper-evident proof
+ok 502 - mandatory E2E cases execute in a separate Node process and produce a tamper-evident proof
+  ---
+  duration_ms: 168.058641
+  type: 'test'
+  ...
+# Subtest: missing, skipped or renamed mandatory E2E cases fail closed
+ok 503 - missing, skipped or renamed mandatory E2E cases fail closed
+  ---
+  duration_ms: 424.521781
+  type: 'test'
+  ...
+# Subtest: nested repair test processes cannot reset recursion depth
+ok 504 - nested repair test processes cannot reset recursion depth
+  ---
+  duration_ms: 0.600491
+  type: 'test'
+  ...
+# Subtest: symlinked parent evidence directory cannot validate a release proof
+ok 505 - symlinked parent evidence directory cannot validate a release proof
+  ---
+  duration_ms: 159.831339
+  type: 'test'
+  ...
+# Subtest: repair receipt verifier parses exactly the same JUnit bytes it hashes
+ok 506 - repair receipt verifier parses exactly the same JUnit bytes it hashes
+  ---
+  duration_ms: 145.194039
+  type: 'test'
+  ...
+# Subtest: symlinked proof and forged result counters are rejected
+ok 507 - symlinked proof and forged result counters are rejected
+  ---
+  duration_ms: 148.830122
+  type: 'test'
+  ...
+# Subtest: a comment-only JUnit forgery never counts as three actual mandatory repairs
+ok 508 - a comment-only JUnit forgery never counts as three actual mandatory repairs
+  ---
+  duration_ms: 0.779728
+  type: 'test'
+  ...
+# Subtest: JUnit cases nested in a logging element cannot impersonate mandatory repairs
+ok 509 - JUnit cases nested in a logging element cannot impersonate mandatory repairs
+  ---
+  duration_ms: 0.459202
+  type: 'test'
+  ...
+# Subtest: M4 workflow runs the isolated real repair acceptance before broad regressions
+ok 510 - M4 workflow runs the isolated real repair acceptance before broad regressions
+  ---
+  duration_ms: 1.104049
+  type: 'test'
+  ...
+# Subtest: M4 workflow keeps backend changes covered and uploads executable evidence
+ok 511 - M4 workflow keeps backend changes covered and uploads executable evidence
+  ---
+  duration_ms: 0.268098
+  type: 'test'
+  ...
+# Subtest: requires owner grant for Termux command permission
+ok 512 - requires owner grant for Termux command permission
+  ---
+  duration_ms: 0.68015
+  type: 'test'
+  ...
+# Subtest: local build launcher is preview-gated, production disabled
+ok 513 - local build launcher is preview-gated, production disabled
+  ---
+  duration_ms: 0.946275
+  type: 'test'
+  ...
+# Subtest: fixed Termux command entrypoint with no raw chat or shell
+ok 514 - fixed Termux command entrypoint with no raw chat or shell
+  ---
+  duration_ms: 0.273156
+  type: 'test'
+  ...
+# Subtest: requires explicit owner confirmation before expensive build
+ok 515 - requires explicit owner confirmation before expensive build
+  ---
+  duration_ms: 0.279184
+  type: 'test'
+  ...
+# Subtest: does not claim successful build or installation just for dispatching
+ok 516 - does not claim successful build or installation just for dispatching
+  ---
+  duration_ms: 0.308238
+  type: 'test'
+  ...
+# Subtest: existing Shizuku and device tools stay available (no replacement with parallel toolgate)
+ok 517 - existing Shizuku and device tools stay available (no replacement with parallel toolgate)
+  ---
+  duration_ms: 1.625252
+  type: 'test'
+  ...
+# Subtest: mobile builder is added to existing worker chat routing
+ok 518 - mobile builder is added to existing worker chat routing
+  ---
+  duration_ms: 0.178755
+  type: 'test'
+  ...
+# Subtest: builder stays in the existing agent UI and opens only an allowlisted Android activity
+ok 519 - builder stays in the existing agent UI and opens only an allowlisted Android activity
+  ---
+  duration_ms: 0.340435
+  type: 'test'
+  ...
+# Subtest: primary AI dashboard remains the only Android launcher, preview builder stays owner-operated
+ok 520 - primary AI dashboard remains the only Android launcher, preview builder stays owner-operated
+  ---
+  duration_ms: 0.534103
+  type: 'test'
+  ...
+# Subtest: builder is a subpage with explicit return to the original AI dashboard
+ok 521 - builder is a subpage with explicit return to the original AI dashboard
+  ---
+  duration_ms: 0.385772
+  type: 'test'
+  ...
+# Subtest: the old inaccurate PC-only guidance has been removed
+ok 522 - the old inaccurate PC-only guidance has been removed
+  ---
+  duration_ms: 0.715072
+  type: 'test'
+  ...
+# Subtest: callback target is explicit, preview-only and not exported
+ok 523 - callback target is explicit, preview-only and not exported
+  ---
+  duration_ms: 1.600857
+  type: 'test'
+  ...
+# Subtest: only one local job can be outstanding; callback binds id and operation
+ok 524 - only one local job can be outstanding; callback binds id and operation
+  ---
+  duration_ms: 0.169221
+  type: 'test'
+  ...
+# Subtest: result requires official Termux bundle including real exit and error
+ok 525 - result requires official Termux bundle including real exit and error
+  ---
+  duration_ms: 0.139046
+  type: 'test'
+  ...
+# Subtest: user receives a receipt only, no installation or private build log persisted
+ok 526 - user receives a receipt only, no installation or private build log persisted
+  ---
+  duration_ms: 0.233737
+  type: 'test'
+  ...
+# Subtest: live Android APK build still requires independent device check
+ok 527 - live Android APK build still requires independent device check
+  ---
+  duration_ms: 0.106518
+  type: 'test'
+  ...
+# Subtest: only successful verified builds may report a fixed owner installation folder
+ok 528 - only successful verified builds may report a fixed owner installation folder
+  ---
+  duration_ms: 0.190873
+  type: 'test'
+  ...
+# Subtest: Android callback keeps request identity in URI and verifies build provenance
+ok 529 - Android callback keeps request identity in URI and verifies build provenance
+  ---
+  duration_ms: 0.207759
+  type: 'test'
+  ...
+# Subtest: real console persists training, pause and compatible export across processes
+ok 530 - real console persists training, pause and compatible export across processes
+  ---
+  duration_ms: 1168.107681
+  type: 'test'
+  ...
+# Subtest: gradient updates change shared weights and survive checksummed restore
+ok 531 - gradient updates change shared weights and survive checksummed restore
+  ---
+  duration_ms: 120.087076
+  type: 'test'
+  ...
+# Subtest: curriculum, selection validation and audit have disjoint normalized texts
+ok 532 - curriculum, selection validation and audit have disjoint normalized texts
+  ---
+  duration_ms: 1.175645
+  type: 'test'
+  ...
+# Subtest: bounded training is persistent, multitask gated and rollback is byte exact
+ok 533 - bounded training is persistent, multitask gated and rollback is byte exact
+  ---
+  duration_ms: 264.054857
+  type: 'test'
+  ...
+# Subtest: public replay rejects generated/private content, bounds and deduplicates sources
+ok 534 - public replay rejects generated/private content, bounds and deduplicates sources
+  ---
+  duration_ms: 21.190586
+  type: 'test'
+  ...
+# Subtest: dialogue resolves follow-up context and never trains or exports owner secrets
+ok 535 - dialogue resolves follow-up context and never trains or exports owner secrets
+  ---
+  duration_ms: 36.887163
+  type: 'test'
+  ...
+# Subtest: later rounds can select an earlier safe checkpoint without dropping semantic retention
+ok 536 - later rounds can select an earlier safe checkpoint without dropping semantic retention
+  ---
+  duration_ms: 510.039645
+  type: 'test'
+  ...
+# Subtest: source replay is consumed by gradients and corrupt persistence fails closed
+ok 537 - source replay is consumed by gradients and corrupt persistence fails closed
+  ---
+  duration_ms: 169.951821
+  type: 'test'
+  ...
+# Subtest: current JavaScript inference still matches committed Kotlin interchange fixture
+ok 538 - current JavaScript inference still matches committed Kotlin interchange fixture
+  ---
+  duration_ms: 2.678607
+  type: 'test'
+  ...
+# Subtest: neural curiosity proposes a source-bound question without inventing beliefs
+ok 539 - neural curiosity proposes a source-bound question without inventing beliefs
+  ---
+  duration_ms: 9.289902
+  type: 'test'
+  ...
+# Subtest: every persisted dialogue turn identifies the exact immutable model used
+ok 540 - every persisted dialogue turn identifies the exact immutable model used
+  ---
+  duration_ms: 4.982418
+  type: 'test'
+  ...
+# Subtest: greetings do not cite incidental memory and preserve an established topic
+ok 541 - greetings do not cite incidental memory and preserve an established topic
+  ---
+  duration_ms: 36.785933
+  type: 'test'
+  ...
+# Subtest: unanswered new topic removes stale conversational reference
+ok 542 - unanswered new topic removes stale conversational reference
+  ---
+  duration_ms: 20.727703
+  type: 'test'
+  ...
+# Subtest: only explicitly cited observations and owner lessons are eligible for retrieval
+ok 543 - only explicitly cited observations and owner lessons are eligible for retrieval
+  ---
+  duration_ms: 8.572747
+  type: 'test'
+  ...
+# SWB2 diagnostic distributions: {"before":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.500019},{"id":"motor","semantic":0.500065},{"id":"garden","semantic":0.500016},{"id":"bread","semantic":0.500072}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.500075},{"id":"motor","semantic":0.500048},{"id":"garden","semantic":0.500032},{"id":"bread","semantic":0.500071}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.500142},{"id":"motor","semantic":0.50017},{"id":"garden","semantic":0.500057},{"id":"bread","semantic":0.500031}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.50007},{"id":"motor","semantic":0.500244},{"id":"garden","semantic":0.500005},{"id":"bread","semantic":0.500121}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.500152},{"id":"motor","semantic":0.499966},{"id":"garden","semantic":0.50007},{"id":"bread","semantic":0.500004}]}],"after":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.500174},{"id":"motor","semantic":0.500194},{"id":"garden","semantic":0.500127},{"id":"bread","semantic":0.500098}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.500201},{"id":"motor","semantic":0.500192},{"id":"garden","semantic":0.500142},{"id":"bread","semantic":0.500129}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.500286},{"id":"motor","semantic":0.500305},{"id":"garden","semantic":0.500194},{"id":"bread","semantic":0.500074}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.500194},{"id":"motor","semantic":0.500344},{"id":"garden","semantic":0.500112},{"id":"bread","semantic":0.50015}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.500246},{"id":"motor","semantic":0.500047},{"id":"garden","semantic":0.500145},{"id":"bread","semantic":0.500036}]}]}
+# SWB2 optimizer comparison: {"sgdHits":1,"adamHits":1,"adamFalsePositives":0,"adamEligible":false,"adamRaw":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.999665},{"id":"motor","semantic":0.999338},{"id":"garden","semantic":0.999891},{"id":"bread","semantic":0.955132}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.999423},{"id":"motor","semantic":0.999019},{"id":"garden","semantic":0.99979},{"id":"bread","semantic":0.947269}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.997649},{"id":"motor","semantic":0.995226},{"id":"garden","semantic":0.999063},{"id":"bread","semantic":0.904081}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.997141},{"id":"motor","semantic":0.994592},{"id":"garden","semantic":0.998805},{"id":"bread","semantic":0.899146}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.996764},{"id":"motor","semantic":0.994156},{"id":"garden","semantic":0.998606},{"id":"bread","semantic":0.896061}]}]}
+# Subtest: SWB2 holdout audit uses real training and separates exact training texts from evaluation
+ok 544 - SWB2 holdout audit uses real training and separates exact training texts from evaluation
+  ---
+  duration_ms: 1043.958352
+  type: 'test'
+  ...
+# Subtest: Nexus front page advertises five distinct beginner destinations instead of developer jargon
+ok 545 - Nexus front page advertises five distinct beginner destinations instead of developer jargon
+  ---
+  duration_ms: 1.037891
+  type: 'test'
+  ...
+# Subtest: beginner destinations use real existing Android screens, not placeholder success actions
+ok 546 - beginner destinations use real existing Android screens, not placeholder success actions
+  ---
+  duration_ms: 0.351783
+  type: 'test'
+  ...
+# Subtest: advanced routes remain available but collapsed until the user requests them
+ok 547 - advanced routes remain available but collapsed until the user requests them
+  ---
+  duration_ms: 1.634787
+  type: 'test'
+  ...
+# Subtest: Nexus keeps real hologram and voice entry tied to Android speech and system state
+ok 548 - Nexus keeps real hologram and voice entry tied to Android speech and system state
+  ---
+  duration_ms: 0.448996
+  type: 'test'
+  ...
+# Subtest: fold, small display and enlarged-font behaviour are expressed by a pure policy
+ok 549 - fold, small display and enlarged-font behaviour are expressed by a pure policy
+  ---
+  duration_ms: 0.178726
+  type: 'test'
+  ...
+# Subtest: personalisation is a real choice and cannot silently train models or install apps
+ok 550 - personalisation is a real choice and cannot silently train models or install apps
+  ---
+  duration_ms: 0.249931
+  type: 'test'
+  ...
+# Subtest: expert disclosure stays closed after leaving or returning from chat
+ok 551 - expert disclosure stays closed after leaving or returning from chat
+  ---
+  duration_ms: 0.2289
+  type: 'test'
+  ...
+# Subtest: canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and synthesizes exact tests
+ok 552 - canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and synthesizes exact tests
+  ---
+  duration_ms: 5.339207
+  type: 'test'
+  ...
+# Subtest: unsupported higher-priority TEST operations cannot starve supported owner contracts
+ok 553 - unsupported higher-priority TEST operations cannot starve supported owner contracts
+  ---
+  duration_ms: 1.509421
+  type: 'test'
+  ...
+# Subtest: fresh generated contract runs real Node tests and incorrect expected output fails
+ok 554 - fresh generated contract runs real Node tests and incorrect expected output fails
+  ---
+  duration_ms: 189.693114
+  type: 'test'
+  ...
+# Subtest: forged foreign, unaccepted and unsupported tasks are refused
+ok 555 - forged foreign, unaccepted and unsupported tasks are refused
+  ---
+  duration_ms: 0.974277
+  type: 'test'
+  ...
+# Subtest: existing contract tests cannot be overwritten and critic preserves older tests
+ok 556 - existing contract tests cannot be overwritten and critic preserves older tests
+  ---
+  duration_ms: 1.103589
+  type: 'test'
+  ...
+# Subtest: Continuum developer dialog exposes its own model-free worker separately from optional generative model
+ok 557 - Continuum developer dialog exposes its own model-free worker separately from optional generative model
+  ---
+  duration_ms: 2.811254
+  type: 'test'
+  ...
+# Subtest: worker diagnostic route uses existing allowlisted build Activity, not executable model output
+ok 558 - worker diagnostic route uses existing allowlisted build Activity, not executable model output
+  ---
+  duration_ms: 2.589995
+  type: 'test'
+  ...
+# Subtest: generative coding remains constrained and model-agnostic with review-only outputs
+ok 559 - generative coding remains constrained and model-agnostic with review-only outputs
+  ---
+  duration_ms: 0.292384
+  type: 'test'
+  ...
+# Subtest: a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE
+ok 560 - a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE
+  ---
+  duration_ms: 507.098851
+  type: 'test'
+  ...
+# Subtest: a false owner-supplied expected value stays FAILED and never produces DONE
+ok 561 - a false owner-supplied expected value stays FAILED and never produces DONE
+  ---
+  duration_ms: 343.25042
+  type: 'test'
+  ...
+# Subtest: red baseline is not laundered into a DONE synthetic test job
+ok 562 - red baseline is not laundered into a DONE synthetic test job
+  ---
+  duration_ms: 159.691018
+  type: 'test'
+  ...
+# Subtest: synthetic fake test totals and non-increasing test counts cannot pass evidence gate
+ok 563 - synthetic fake test totals and non-increasing test counts cannot pass evidence gate
+  ---
+  duration_ms: 0.440616
+  type: 'test'
+  ...
+# Subtest: no unaccepted task is executed and paths cannot point back into source
+ok 564 - no unaccepted task is executed and paths cannot point back into source
+  ---
+  duration_ms: 25.989039
+  type: 'test'
+  ...
+# Subtest: owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles
+ok 565 - owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles
+  ---
+  duration_ms: 21246.115713
+  type: 'test'
+  ...
+# Subtest: false owner output cannot create a verified Kotlin preview
+ok 566 - false owner output cannot create a verified Kotlin preview
+  ---
+  duration_ms: 8505.753919
+  type: 'test'
+  ...
+# Subtest: output symlink back into checkout is rejected before Kotlin compilation
+ok 567 - output symlink back into checkout is rejected before Kotlin compilation
+  ---
+  duration_ms: 15.546695
+  type: 'test'
+  ...
+# Subtest: activity alone never becomes a model improvement claim
+ok 568 - activity alone never becomes a model improvement claim
+  ---
+  duration_ms: 1.691609
+  type: 'test'
+  ...
+# Subtest: watcher samples are bounded and repeated status generations are deduplicated
+ok 569 - watcher samples are bounded and repeated status generations are deduplicated
+  ---
+  duration_ms: 18.519687
+  type: 'test'
+  ...
+# Subtest: a coverage gain is named only as data quality and requires enough evidence
+ok 570 - a coverage gain is named only as data quality and requires enough evidence
+  ---
+  duration_ms: 0.49038
+  type: 'test'
+  ...
+# Subtest: historical baseline is not mistaken for progress
+ok 571 - historical baseline is not mistaken for progress
+  ---
+  duration_ms: 0.254509
+  type: 'test'
+  ...
+# Subtest: snapshot gate rejects missing holdout provenance, leaks and mismatched fixtures
+ok 572 - snapshot gate rejects missing holdout provenance, leaks and mismatched fixtures
+  ---
+  duration_ms: 0.592803
+  type: 'test'
+  ...
+# Subtest: forgetting regression blocks promotion even if intent dramatically improves
+ok 573 - forgetting regression blocks promotion even if intent dramatically improves
+  ---
+  duration_ms: 0.244404
+  type: 'test'
+  ...
+# Subtest: valid accuracy improvement only becomes eligible for review, never auto-promoted
+ok 574 - valid accuracy improvement only becomes eligible for review, never auto-promoted
+  ---
+  duration_ms: 0.205226
+  type: 'test'
+  ...
+# Subtest: synthetic intent corpus balances 72 training and 24 unseen examples
+ok 575 - synthetic intent corpus balances 72 training and 24 unseen examples
+  ---
+  duration_ms: 1.546713
+  type: 'test'
+  ...
+# Subtest: semantic corpus has balanced nonoverlapping 32 training plus 12 audit pairs
+ok 576 - semantic corpus has balanced nonoverlapping 32 training plus 12 audit pairs
+  ---
+  duration_ms: 0.68502
+  type: 'test'
+  ...
+# Subtest: owner, old holdouts, new audits, snapshots and cancellation gate promotions
+ok 577 - owner, old holdouts, new audits, snapshots and cancellation gate promotions
+  ---
+  duration_ms: 0.354088
+  type: 'test'
+  ...
+# Subtest: Android entrypoints are unique and export uses owner-controlled system picker
+ok 578 - Android entrypoints are unique and export uses owner-controlled system picker
+  ---
+  duration_ms: 0.777087
+  type: 'test'
+  ...
+# Subtest: unavailable encyclopedia extracts are explicitly classified and never learned
+ok 579 - unavailable encyclopedia extracts are explicitly classified and never learned
+  ---
+  duration_ms: 0.791819
+  type: 'test'
+  ...
+# Subtest: failure reports identify safe operation and may not become accepted after separate stage
+ok 580 - failure reports identify safe operation and may not become accepted after separate stage
+  ---
+  duration_ms: 0.481056
+  type: 'test'
+  ...
+# Subtest: research attempts and pending topics remain truthful when a source has failed
+ok 581 - research attempts and pending topics remain truthful when a source has failed
+  ---
+  duration_ms: 0.138366
+  type: 'test'
+  ...
+# Subtest: safety budget, source isolation and holdout gate are unchanged
+ok 582 - safety budget, source isolation and holdout gate are unchanged
+  ---
+  duration_ms: 0.178806
+  type: 'test'
+  ...
+# Subtest: actual repairSession finalizes both clean and non-actionable baselines
+ok 583 - actual repairSession finalizes both clean and non-actionable baselines
+  ---
+  duration_ms: 329.195978
+  type: 'test'
+  ...
+# Subtest: repair module rejects poisoned nested-depth environment before session starts
+ok 584 - repair module rejects poisoned nested-depth environment before session starts
+  ---
+  duration_ms: 202.428916
+  type: 'test'
+  ...
+# Subtest: repair depth is zero only when unset or precisely zero
+ok 585 - repair depth is zero only when unset or precisely zero
+  ---
+  duration_ms: 2.748192
+  type: 'test'
+  ...
+# Subtest: repair depth denies malformed values that bypassed the positive-depth guard
+ok 586 - repair depth denies malformed values that bypassed the positive-depth guard
+  ---
+  duration_ms: 0.767083
+  type: 'test'
+  ...
+# Subtest: all bounded repair outcomes include a completion timestamp
+ok 587 - all bounded repair outcomes include a completion timestamp
+  ---
+  duration_ms: 0.356771
+  type: 'test'
+  ...
+# Subtest: triple-phase validator accepts structurally consistent green-red-green and a failed competing candidate
+ok 588 - triple-phase validator accepts structurally consistent green-red-green and a failed competing candidate
+  ---
+  duration_ms: 1.880309
+  type: 'test'
+  ...
+# Subtest: no baseline green or zero executed tests means no training tuple
+ok 589 - no baseline green or zero executed tests means no training tuple
+  ---
+  duration_ms: 0.579834
+  type: 'test'
+  ...
+# Subtest: undetected mutation and mismatched diagnostic file are discarded
+ok 590 - undetected mutation and mismatched diagnostic file are discarded
+  ---
+  duration_ms: 0.332515
+  type: 'test'
+  ...
+# Subtest: unsafe or non-Kotlin mutation targets cannot enter research data
+ok 591 - unsafe or non-Kotlin mutation targets cannot enter research data
+  ---
+  duration_ms: 0.292446
+  type: 'test'
+  ...
+# Subtest: successful repair requires a separate matching second-run observation
+ok 592 - successful repair requires a separate matching second-run observation
+  ---
+  duration_ms: 0.367267
+  type: 'test'
+  ...
+# Subtest: fewer executed tests or new skipped tests in repaired candidate are rejected
+ok 593 - fewer executed tests or new skipped tests in repaired candidate are rejected
+  ---
+  duration_ms: 0.565712
+  type: 'test'
+  ...
+# Subtest: a critic rejection without executed checks is NOT a refuted strategy
+ok 594 - a critic rejection without executed checks is NOT a refuted strategy
+  ---
+  duration_ms: 0.55706
+  type: 'test'
+  ...
+# Subtest: compiler failures are acceptable as provisional negatives only with a localized diagnostic
+ok 595 - compiler failures are acceptable as provisional negatives only with a localized diagnostic
+  ---
+  duration_ms: 0.448808
+  type: 'test'
+  ...
+# Subtest: the selected winner must be unique, paired with a real negative
+ok 596 - the selected winner must be unique, paired with a real negative
+  ---
+  duration_ms: 0.255741
+  type: 'test'
+  ...
+# Subtest: duplicate strategies, invalid candidate IDs or fabricated profile statuses are rejected
+ok 597 - duplicate strategies, invalid candidate IDs or fabricated profile statuses are rejected
+  ---
+  duration_ms: 0.196663
+  type: 'test'
+  ...
+# Subtest: mismatched check chains and failing independently executed tests never pass
+ok 598 - mismatched check chains and failing independently executed tests never pass
+  ---
+  duration_ms: 0.185757
+  type: 'test'
+  ...
+# Subtest: prototype does not mutate its input reports or train a model
+ok 599 - prototype does not mutate its input reports or train a model
+  ---
+  duration_ms: 1.369039
+  type: 'test'
+  ...
+# Subtest: per-profile regression cannot be hidden by extra executions in another profile
+ok 600 - per-profile regression cannot be hidden by extra executions in another profile
+  ---
+  duration_ms: 0.273327
+  type: 'test'
+  ...
+# Subtest: JUnit ReferenceError from Node v20.20.0 is a code diagnostic at the faulty line
+ok 601 - JUnit ReferenceError from Node v20.20.0 is a code diagnostic at the faulty line
+  ---
+  duration_ms: 3.581343
+  type: 'test'
+  ...
+# Subtest: TAP module-load ReferenceError from Node v20.20.0 is located in the loaded module
+ok 602 - TAP module-load ReferenceError from Node v20.20.0 is located in the loaded module
+  ---
+  duration_ms: 1.0207
+  type: 'test'
+  ...
+# Subtest: a test file that crashes while loading under Node v20.20.0 is named by its repository path
+ok 603 - a test file that crashes while loading under Node v20.20.0 is named by its repository path
+  ---
+  duration_ms: 0.589728
+  type: 'test'
+  ...
+# Subtest: JUnit ReferenceError from Node v22.16.0 is a code diagnostic at the faulty line
+ok 604 - JUnit ReferenceError from Node v22.16.0 is a code diagnostic at the faulty line
+  ---
+  duration_ms: 0.431643
+  type: 'test'
+  ...
+# Subtest: TAP module-load ReferenceError from Node v22.16.0 is located in the loaded module
+ok 605 - TAP module-load ReferenceError from Node v22.16.0 is located in the loaded module
+  ---
+  duration_ms: 0.441738
+  type: 'test'
+  ...
+# Subtest: a test file that crashes while loading under Node v22.16.0 is named by its repository path
+ok 606 - a test file that crashes while loading under Node v22.16.0 is named by its repository path
+  ---
+  duration_ms: 1.498722
+  type: 'test'
+  ...
+# Subtest: JUnit ReferenceError from Node v22.22.0 is a code diagnostic at the faulty line
+ok 607 - JUnit ReferenceError from Node v22.22.0 is a code diagnostic at the faulty line
+  ---
+  duration_ms: 0.370232
+  type: 'test'
+  ...
+# Subtest: TAP module-load ReferenceError from Node v22.22.0 is located in the loaded module
+ok 608 - TAP module-load ReferenceError from Node v22.22.0 is located in the loaded module
+  ---
+  duration_ms: 0.302149
+  type: 'test'
+  ...
+# Subtest: a test file that crashes while loading under Node v22.22.0 is named by its repository path
+ok 609 - a test file that crashes while loading under Node v22.22.0 is named by its repository path
+  ---
+  duration_ms: 0.428148
+  type: 'test'
+  ...
+# Subtest: a crashed test file outside the repository gets no re-runnable path
+ok 610 - a crashed test file outside the repository gets no re-runnable path
+  ---
+  duration_ms: 0.520085
+  type: 'test'
+  ...
+# Subtest: the same fault yields one fingerprint regardless of the Node release
+ok 611 - the same fault yields one fingerprint regardless of the Node release
+  ---
+  duration_ms: 0.355759
+  type: 'test'
+  ...
+# Subtest: header variants and nested causes are recognized
+ok 612 - header variants and nested causes are recognized
+  ---
+  duration_ms: 0.312475
+  type: 'test'
+  ...
+# Subtest: classification is not over-generous
+ok 613 - classification is not over-generous
+  ---
+  duration_ms: 0.231174
+  type: 'test'
+  ...
+# Subtest: an error without its own repository frame cannot borrow the next error's frame
+ok 614 - an error without its own repository frame cannot borrow the next error's frame
+  ---
+  duration_ms: 0.209863
+  type: 'test'
+  ...
+# Subtest: skipped JUnit cases are fingerprinted without copying their names
+ok 615 - skipped JUnit cases are fingerprinted without copying their names
+  ---
+  duration_ms: 0.303882
+  type: 'test'
+  ...
+# Subtest: a skipped JUnit case without stable testcase identity cannot be accepted
+ok 616 - a skipped JUnit case without stable testcase identity cannot be accepted
+  ---
+  duration_ms: 0.120259
+  type: 'test'
+  ...
+# Subtest: JUnit directory combines stable hashes from multiple Gradle XML suites
+ok 617 - JUnit directory combines stable hashes from multiple Gradle XML suites
+  ---
+  duration_ms: 1.288158
+  type: 'test'
+  ...
+# Subtest: identifies known Kotlin set/list error without modifying source
+ok 618 - identifies known Kotlin set/list error without modifying source
+  ---
+  duration_ms: 0.860701
+  type: 'test'
+  ...
+# Subtest: does not suggest changes to unrelated source
+ok 619 - does not suggest changes to unrelated source
+  ---
+  duration_ms: 1.556598
+  type: 'test'
+  ...
+# Subtest: rule table is immutable
+ok 620 - rule table is immutable
+  ---
+  duration_ms: 0.11419
+  type: 'test'
+  ...
+# Subtest: learns outcomes of repeated repair attempts
+ok 621 - learns outcomes of repeated repair attempts
+  ---
+  duration_ms: 1.306646
+  type: 'test'
+  ...
+# Subtest: rejects malformed history
+ok 622 - rejects malformed history
+  ---
+  duration_ms: 0.338744
+  type: 'test'
+  ...
+# Subtest: failed independent patch check records a negative learning signal without fake success
+ok 623 - failed independent patch check records a negative learning signal without fake success
+  ---
+  duration_ms: 3.923953
+  type: 'test'
+  ...
+# Subtest: independently verified patch keeps legitimate positive experience
+ok 624 - independently verified patch keeps legitimate positive experience
+  ---
+  duration_ms: 0.435178
+  type: 'test'
+  ...
+# Subtest: unverified teamleader calls never create positive or negative learning labels
+ok 625 - unverified teamleader calls never create positive or negative learning labels
+  ---
+  duration_ms: 0.249571
+  type: 'test'
+  ...
+# Subtest: explicit independent rejection is negative, not an unknown outcome
+ok 626 - explicit independent rejection is negative, not an unknown outcome
+  ---
+  duration_ms: 0.27537
+  type: 'test'
+  ...
+# Subtest: non-verified sessions retain their original failure diagnoses
+ok 627 - non-verified sessions retain their original failure diagnoses
+  ---
+  duration_ms: 0.264684
+  type: 'test'
+  ...
+# Subtest: unverified session cannot poison history through claimed failed alternatives
+ok 628 - unverified session cannot poison history through claimed failed alternatives
+  ---
+  duration_ms: 0.346877
+  type: 'test'
+  ...
+# Subtest: invalid syntax is retained as negative repair experience without fabricated test execution
+ok 629 - invalid syntax is retained as negative repair experience without fabricated test execution
+  ---
+  duration_ms: 0.36257
+  type: 'test'
+  ...
+# Subtest: syntax checker errors remain audit evidence without becoming failed-strategy labels
+ok 630 - syntax checker errors remain audit evidence without becoming failed-strategy labels
+  ---
+  duration_ms: 2.079707
+  type: 'test'
+  ...
+# Subtest: kotlin compiler output becomes structured, repository-relative diagnostics
+ok 631 - kotlin compiler output becomes structured, repository-relative diagnostics
+  ---
+  duration_ms: 2.65242
+  type: 'test'
+  ...
+# Subtest: JUnit with ">" in attributes and Node load errors are parsed
+ok 632 - JUnit with ">" in attributes and Node load errors are parsed
+  ---
+  duration_ms: 1.831087
+  type: 'test'
+  ...
+# Subtest: strategies generate exact, unique, replayable hunks
+ok 633 - strategies generate exact, unique, replayable hunks
+  ---
+  duration_ms: 3.081869
+  type: 'test'
+  ...
+# Subtest: critic blocks protected paths, test edits, weakening and dangerous code
+ok 634 - critic blocks protected paths, test edits, weakening and dangerous code
+  ---
+  duration_ms: 2.90098
+  type: 'test'
+  ...
+# Subtest: ledger learns per diagnostic kind and strategy and skips proven failures
+ok 635 - ledger learns per diagnostic kind and strategy and skips proven failures
+  ---
+  duration_ms: 1.194519
+  type: 'test'
+  ...
+# Subtest: a whole-file revert never outranks minimal patches even with a misleading success history
+ok 636 - a whole-file revert never outranks minimal patches even with a misleading success history
+  ---
+  duration_ms: 0.22177
+  type: 'test'
+  ...
+# Subtest: syntax gate parses changed JavaScript only, rejecting malformed code without executing it
+ok 637 - syntax gate parses changed JavaScript only, rejecting malformed code without executing it
+  ---
+  duration_ms: 66.043684
+  type: 'test'
+  ...
+# Subtest: check profiles are fixed and unknown chains fail closed
+ok 638 - check profiles are fixed and unknown chains fail closed
+  ---
+  duration_ms: 0.49032
+  type: 'test'
+  ...
+# Subtest: Continuum profile cannot auto-discover unrelated tests if required suite is absent
+ok 639 - Continuum profile cannot auto-discover unrelated tests if required suite is absent
+  ---
+  duration_ms: 1.283141
+  type: 'test'
+  ...
+# Subtest: release-only backend test profile executes real Node assertions or fails closed
+ok 640 - release-only backend test profile executes real Node assertions or fails closed
+  ---
+  duration_ms: 97.651681
+  type: 'test'
+  ...
+# Subtest: repair worktree guard excludes symlinks, parent escapes and null path components
+ok 641 - repair worktree guard excludes symlinks, parent escapes and null path components
+  ---
+  duration_ms: 0.996204
+  type: 'test'
+  ...
+# Subtest: end-to-end: injected fault is reproduced, repaired in isolation, verified and committed
+ok 642 - end-to-end: injected fault is reproduced, repaired in isolation, verified and committed
+  ---
+  duration_ms: 419.637542
+  type: 'test'
+  ...
+# Subtest: hunk revert handles modification, insertion and deletion hunks exactly
+ok 643 - hunk revert handles modification, insertion and deletion hunks exactly
+  ---
+  duration_ms: 0.376581
+  type: 'test'
+  ...
+# Subtest: baseline passing count excludes crashed test files and failures
+ok 644 - baseline passing count excludes crashed test files and failures
+  ---
+  duration_ms: 0.193958
+  type: 'test'
+  ...
+# Subtest: success requires executed tests that do not shrink against the baseline
+ok 645 - success requires executed tests that do not shrink against the baseline
+  ---
+  duration_ms: 0.375109
+  type: 'test'
+  ...
+# Subtest: a test profile without executed tests is not a pass
+ok 646 - a test profile without executed tests is not a pass
+  ---
+  duration_ms: 105.425035
+  type: 'test'
+  ...
+# Subtest: regression search reverts only the culprit hunk and keeps unrelated changes
+ok 647 - regression search reverts only the culprit hunk and keeps unrelated changes
+  ---
+  duration_ms: 334.52537
+  type: 'test'
+  ...
+# Subtest: a module that crashes while loading is located and gets its missing import back
+ok 648 - a module that crashes while loading is located and gets its missing import back
+  ---
+  duration_ms: 473.31784
+  type: 'test'
+  ...
+# Subtest: invalid Git revision cleans allocated repair worktree and registration
+ok 649 - invalid Git revision cleans allocated repair worktree and registration
+  ---
+  duration_ms: 57.843588
+  type: 'test'
+  ...
+# Subtest: repair cleanup refuses unmanaged paths and does not delete user files
+ok 650 - repair cleanup refuses unmanaged paths and does not delete user files
+  ---
+  duration_ms: 41.500511
+  type: 'test'
+  ...
+# Subtest: repair cleanup cannot silently ignore a failed Git worktree removal
+ok 651 - repair cleanup cannot silently ignore a failed Git worktree removal
+  ---
+  duration_ms: 47.484381
+  type: 'test'
+  ...
+# Subtest: Android 14+ background network jobs declare ACCESS_NETWORK_STATE
+ok 652 - Android 14+ background network jobs declare ACCESS_NETWORK_STATE
+  ---
+  duration_ms: 0.749911
+  type: 'test'
+  ...
+# Subtest: persisted source research job is registered but never exported
+ok 653 - persisted source research job is registered but never exported
+  ---
+  duration_ms: 0.174338
+  type: 'test'
+  ...
+# Subtest: owner consent, cellular network and measured 20pct resource gates remain required
+ok 654 - owner consent, cellular network and measured 20pct resource gates remain required
+  ---
+  duration_ms: 0.250441
+  type: 'test'
+  ...
+# Subtest: metadata/LLM summaries cannot masquerade as extractive source training
+ok 655 - metadata/LLM summaries cannot masquerade as extractive source training
+  ---
+  duration_ms: 6.856351
+  type: 'test'
+  ...
+# Subtest: same original source never leaks into both training and sealed audit
+ok 656 - same original source never leaks into both training and sealed audit
+  ---
+  duration_ms: 42.35711
+  type: 'test'
+  ...
+# Subtest: numbered near-duplicate claims cannot supply contrastive negatives
+ok 657 - numbered near-duplicate claims cannot supply contrastive negatives
+  ---
+  duration_ms: 4.507904
+  type: 'test'
+  ...
+# Subtest: training is research-only, leaves frozen E unchanged and rejects holdout failures
+ok 658 - training is research-only, leaves frozen E unchanged and rejects holdout failures
+  ---
+  duration_ms: 299.945089
+  type: 'test'
+  ...
+# Subtest: signed CRE1 research package binds model, audit, publisher and canonical manifest
+ok 659 - signed CRE1 research package binds model, audit, publisher and canonical manifest
+  ---
+  duration_ms: 141.494417
+  type: 'test'
+  ...
+# Subtest: PEM keys remain compatible and unsupported signing algorithms are rejected
+ok 660 - PEM keys remain compatible and unsupported signing algorithms are rejected
+  ---
+  duration_ms: 192.751169
+  type: 'test'
+  ...
+# Subtest: no training or signing occurs without enough independent original spans
+ok 661 - no training or signing occurs without enough independent original spans
+  ---
+  duration_ms: 12.899047
+  type: 'test'
+  ...
+# Subtest: public metadata may trigger a check but cannot alone train an autonomous model
+ok 662 - public metadata may trigger a check but cannot alone train an autonomous model
+  ---
+  duration_ms: 2.206957
+  type: 'test'
+  ...
+# Subtest: worker requires a successful research event and a local approved bundle
+ok 663 - worker requires a successful research event and a local approved bundle
+  ---
+  duration_ms: 1.004898
+  type: 'test'
+  ...
+# Subtest: insufficient original documents are persisted as rejected, never promoted
+ok 664 - insufficient original documents are persisted as rejected, never promoted
+  ---
+  duration_ms: 75.874011
+  type: 'test'
+  ...
+# Subtest: bad source hashes do not replace existing CRE1 and leave no stale owned lock
+ok 665 - bad source hashes do not replace existing CRE1 and leave no stale owned lock
+  ---
+  duration_ms: 91.663477
+  type: 'test'
+  ...
+# Subtest: concurrent or stale unknown locks fail closed; no forced takeover
+ok 666 - concurrent or stale unknown locks fail closed; no forced takeover
+  ---
+  duration_ms: 0.612257
+  type: 'test'
+  ...
+# Subtest: audits the actual lexical production retriever versus two neural scores
+ok 667 - audits the actual lexical production retriever versus two neural scores
+  ---
+  duration_ms: 841.177782
+  type: 'test'
+  ...
+# Subtest: published retrieval benchmark is reproducible from code and frozen data
+ok 668 - published retrieval benchmark is reproducible from code and frozen data
+  ---
+  duration_ms: 970.090505
+  type: 'test'
+  ...
+# Subtest: adopted ranking beats the previous production ranking on DEV and on report-only TEST
+ok 669 - adopted ranking beats the previous production ranking on DEV and on report-only TEST
+  ---
+  duration_ms: 802.893606
+  type: 'test'
+  ...
+# Subtest: benchmark queries never appear among candidate passages
+ok 670 - benchmark queries never appear among candidate passages
+  ---
+  duration_ms: 0.435107
+  type: 'test'
+  ...
+# Subtest: retrieval requires word evidence and never invents a memory
+ok 671 - retrieval requires word evidence and never invents a memory
+  ---
+  duration_ms: 0.346946
+  type: 'test'
+  ...
+# Subtest: German compound noun retrieval recognizes heads in personal memories
+ok 672 - German compound noun retrieval recognizes heads in personal memories
+  ---
+  duration_ms: 3.081306
+  type: 'test'
+  ...
+# Subtest: German compound suffixes work symmetrically for common family questions
+ok 673 - German compound suffixes work symmetrically for common family questions
+  ---
+  duration_ms: 0.194789
+  type: 'test'
+  ...
+# Subtest: substring fragments below five characters cannot become compound evidence
+ok 674 - substring fragments below five characters cannot become compound evidence
+  ---
+  duration_ms: 0.1484
+  type: 'test'
+  ...
+# Subtest: unrelated queries do not force an invented matching memory
+ok 675 - unrelated queries do not force an invented matching memory
+  ---
+  duration_ms: 0.259576
+  type: 'test'
+  ...
+# Subtest: handwritten rewordings are separate and independently checked
+ok 676 - handwritten rewordings are separate and independently checked
+  ---
+  duration_ms: 600.014749
+  type: 'test'
+  ...
+# Subtest: semantic optimizer agrees with finite-difference gradients on shared/overlapping buckets
+ok 677 - semantic optimizer agrees with finite-difference gradients on shared/overlapping buckets
+  ---
+  duration_ms: 15.411297
+  type: 'test'
+  ...
+# Subtest: semantic SGD moves candidate without touching old SWB1 snapshot
+ok 678 - semantic SGD moves candidate without touching old SWB1 snapshot
+  ---
+  duration_ms: 9.257357
+  type: 'test'
+  ...
+# Subtest: one atomic lease excludes simultaneous workers and can be reacquired
+ok 679 - one atomic lease excludes simultaneous workers and can be reacquired
+  ---
+  duration_ms: 61.825694
+  type: 'test'
+  ...
+# Subtest: an unclean process exit retains the lock and cannot be stolen by a timer
+ok 680 - an unclean process exit retains the lock and cannot be stolen by a timer
+  ---
+  duration_ms: 58.244819
+  type: 'test'
+  ...
+# Subtest: rejects symlinked state root and checkout-local state
+ok 681 - rejects symlinked state root and checkout-local state
+  ---
+  duration_ms: 0.801593
+  type: 'test'
+  ...
+# Subtest: release never deletes a tampered lock
+ok 682 - release never deletes a tampered lock
+  ---
+  duration_ms: 0.65893
+  type: 'test'
+  ...
+# Subtest: independent source roots have independent leases
+ok 683 - independent source roots have independent leases
+  ---
+  duration_ms: 9.463885
+  type: 'test'
+  ...
+# Subtest: SWB2 adaptive gradients reduce supervised loss and preserve source snapshot
+ok 684 - SWB2 adaptive gradients reduce supervised loss and preserve source snapshot
+  ---
+  duration_ms: 431.457344
+  type: 'test'
+  ...
+# Subtest: legacy SWB1 magic, features and snapshot roundtrip remain unchanged
+ok 685 - legacy SWB1 magic, features and snapshot roundtrip remain unchanged
+  ---
+  duration_ms: 69.249562
+  type: 'test'
+  ...
+# Subtest: SWB2 snapshot explicitly versioned, normalized and not silently upgraded
+ok 686 - SWB2 snapshot explicitly versioned, normalized and not silently upgraded
+  ---
+  duration_ms: 6.852298
+  type: 'test'
+  ...
+# Subtest: SWB2 intent and semantic gradients agree with central finite differences
+ok 687 - SWB2 intent and semantic gradients agree with central finite differences
+  ---
+  duration_ms: 19.15685
+  type: 'test'
+  ...
+# Subtest: experimental neural token decoder has real loss updates, checkpoint and forbidden-token mask
+ok 688 - experimental neural token decoder has real loss updates, checkpoint and forbidden-token mask
+  ---
+  duration_ms: 66.41261
+  type: 'test'
+  ...
+# Subtest: separate positive and unrelated semantic examples provide measurable, explicitly experimental learning
+ok 689 - separate positive and unrelated semantic examples provide measurable, explicitly experimental learning
+  ---
+  duration_ms: 115.646745
+  type: 'test'
+  ...
+# Subtest: actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch
+ok 690 - actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch
+  ---
+  duration_ms: 908.641487
+  type: 'test'
+  ...
+# Subtest: scheduled owner task completes full real Git repair and independent verification
+ok 691 - scheduled owner task completes full real Git repair and independent verification
+  ---
+  duration_ms: 578.866946
+  type: 'test'
+  ...
+# Subtest: actual passing Git fixture generates no fake repair, patch, or changed source
+ok 692 - actual passing Git fixture generates no fake repair, patch, or changed source
+  ---
+  duration_ms: 128.97522
+  type: 'test'
+  ...
+# Subtest: actual offline Teamleader completes a priority investigation with real Git checks and evidence
+ok 693 - actual offline Teamleader completes a priority investigation with real Git checks and evidence
+  ---
+  duration_ms: 305.269559
+  type: 'test'
+  ...
+# Subtest: clean baseline ends after analyst with truthful stop, not fake repair
+ok 694 - clean baseline ends after analyst with truthful stop, not fake repair
+  ---
+  duration_ms: 2.048838
+  type: 'test'
+  ...
+# Subtest: verified repair needs real critic + isolated patch + executed tests
+ok 695 - verified repair needs real critic + isolated patch + executed tests
+  ---
+  duration_ms: 0.521646
+  type: 'test'
+  ...
+# Subtest: fabricated tests, missing evidence, rejected critic cannot approve patch
+ok 696 - fabricated tests, missing evidence, rejected critic cannot approve patch
+  ---
+  duration_ms: 1.657225
+  type: 'test'
+  ...
+# Subtest: reviewer rejection does not lead to edits or test execution
+ok 697 - reviewer rejection does not lead to edits or test execution
+  ---
+  duration_ms: 0.252876
+  type: 'test'
+  ...
+# Subtest: syntax-rejected candidates retain handoffs without claiming executed tests
+ok 698 - syntax-rejected candidates retain handoffs without claiming executed tests
+  ---
+  duration_ms: 0.838448
+  type: 'test'
+  ...
+# Subtest: syntax rejection cannot replace critic approval or claim full test evidence
+ok 699 - syntax rejection cannot replace critic approval or claim full test evidence
+  ---
+  duration_ms: 0.532182
+  type: 'test'
+  ...
+# Subtest: unrecognized or oversized role payloads fail without execution
+ok 700 - unrecognized or oversized role payloads fail without execution
+  ---
+  duration_ms: 0.418302
+  type: 'test'
+  ...
+# Subtest: real offline Teamleader keeps a syntax rejection before an independently verified proposal
+ok 701 - real offline Teamleader keeps a syntax rejection before an independently verified proposal
+  ---
+  duration_ms: 1719.38221
+  type: 'test'
+  ...
+# Subtest: activation failure rolls back units and a following attempt can succeed
+ok 702 - activation failure rolls back units and a following attempt can succeed
+  ---
+  duration_ms: 145.238903
+  type: 'test'
+  ...
+# Subtest: dangling systemd unit symlink is preserved and rejected
+ok 703 - dangling systemd unit symlink is preserved and rejected
+  ---
+  duration_ms: 66.289997
+  type: 'test'
+  ...
+# Subtest: SIGTERM during hourly timer activation removes only installer-owned units
+ok 704 - SIGTERM during hourly timer activation removes only installer-owned units
+  ---
+  duration_ms: 53.101849
+  type: 'test'
+  ...
+# Subtest: activation rollback never deletes a foreign replacement service
+ok 705 - activation rollback never deletes a foreign replacement service
+  ---
+  duration_ms: 47.548917
+  type: 'test'
+  ...
+# Subtest: user-owned hourly timer supports a linked Git worktree and refuses overwrites
+ok 706 - user-owned hourly timer supports a linked Git worktree and refuses overwrites
+  ---
+  duration_ms: 93.937839
+  type: 'test'
+  ...
+# Subtest: empty status offers review only and does not authorize execution
+ok 707 - empty status offers review only and does not authorize execution
+  ---
+  duration_ms: 1.198193
+  type: 'test'
+  ...
+# Subtest: real historical ANSK baseline takes priority over an unverified old repair
+ok 708 - real historical ANSK baseline takes priority over an unverified old repair
+  ---
+  duration_ms: 29.775802
+  type: 'test'
+  ...
+# Subtest: build lease blocks automatic recommendation to run more Gradle work
+ok 709 - build lease blocks automatic recommendation to run more Gradle work
+  ---
+  duration_ms: 0.293597
+  type: 'test'
+  ...
+# Subtest: VERIFIED result is never treated as authorization to merge or publish
+ok 710 - VERIFIED result is never treated as authorization to merge or publish
+  ---
+  duration_ms: 0.222011
+  type: 'test'
+  ...
+# Subtest: old APK report is not a claim of a currently verified installed package
+ok 711 - old APK report is not a claim of a currently verified installed package
+  ---
+  duration_ms: 0.206768
+  type: 'test'
+  ...
+# Subtest: invalid and attacker-controlled text does not escape to the handoff packet
+ok 712 - invalid and attacker-controlled text does not escape to the handoff packet
+  ---
+  duration_ms: 0.351343
+  type: 'test'
+  ...
+# Subtest: the packet size remains bounded even with huge arbitrary status
+ok 713 - the packet size remains bounded even with huge arbitrary status
+  ---
+  duration_ms: 2.853255
+  type: 'test'
+  ...
+# Subtest: canonical Teamleader status CLI embeds advisory packet without running repair
+ok 714 - canonical Teamleader status CLI embeds advisory packet without running repair
+  ---
+  duration_ms: 108.849033
+  type: 'test'
+  ...
+# Subtest: Android Termux development-worker wrapper is valid Bash
+ok 715 - Android Termux development-worker wrapper is valid Bash
+  ---
+  duration_ms: 7.321974
+  type: 'test'
+  ...
+# Subtest: Termux uses same Node Teamleader, never a competing agent implementation
+ok 716 - Termux uses same Node Teamleader, never a competing agent implementation
+  ---
+  duration_ms: 0.487656
+  type: 'test'
+  ...
+# Subtest: unattended Termux loop has real battery and heat gates and no implicit wake-lock
+ok 717 - unattended Termux loop has real battery and heat gates and no implicit wake-lock
+  ---
+  duration_ms: 1.343789
+  type: 'test'
+  ...
+# Subtest: owner can open the native live monitor without exported Android access
+ok 718 - owner can open the native live monitor without exported Android access
+  ---
+  duration_ms: 2.56736
+  type: 'test'
+  ...
+# Subtest: visualisation differentiates actual weight training, research and recent completion
+ok 719 - visualisation differentiates actual weight training, research and recent completion
+  ---
+  duration_ms: 0.263972
+  type: 'test'
+  ...
+# Subtest: training state is persisted by channel and stale starts are not shown as live
+ok 720 - training state is persisted by channel and stale starts are not shown as live
+  ---
+  duration_ms: 0.18196
+  type: 'test'
+  ...
+# Subtest: public research records the real source and audit lifecycle and keeps the 15-minute plan
+ok 721 - public research records the real source and audit lifecycle and keeps the 15-minute plan
+  ---
+  duration_ms: 0.388288
+  type: 'test'
+  ...
+# Subtest: offline job records deferral, failures and interrupts without rewriting model weights
+ok 722 - offline job records deferral, failures and interrupts without rewriting model weights
+  ---
+  duration_ms: 2.712896
+  type: 'test'
+  ...
+# Subtest: CDX1 audits are separate and preview version increases without touching main
+ok 723 - CDX1 audits are separate and preview version increases without touching main
+  ---
+  duration_ms: 0.30228
+  type: 'test'
+  ...
+# Subtest: academy distinguishes testable coding practice from unavailable iOS and regulated domains
+ok 724 - academy distinguishes testable coding practice from unavailable iOS and regulated domains
+  ---
+  duration_ms: 0.714463
+  type: 'test'
+  ...
+# Subtest: only bounded, fixed tests are executed, with source and test digests
+ok 725 - only bounded, fixed tests are executed, with source and test digests
+  ---
+  duration_ms: 102.080489
+  type: 'test'
+  ...
+# Subtest: repeated autonomous runs rotate to the next subject and do not rewrite source
+ok 726 - repeated autonomous runs rotate to the next subject and do not rewrite source
+  ---
+  duration_ms: 45.143068
+  type: 'test'
+  ...
+# Subtest: zero executed tests, failure and timeout never become acquired skills
+ok 727 - zero executed tests, failure and timeout never become acquired skills
+  ---
+  duration_ms: 62.678508
+  type: 'test'
+  ...
+# Subtest: corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fail closed
+ok 728 - corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fail closed
+  ---
+  duration_ms: 77.741901
+  type: 'test'
+  ...
+# Subtest: academy CLI cannot accept commands, scripts or arbitrary tests
+ok 729 - academy CLI cannot accept commands, scripts or arbitrary tests
+  ---
+  duration_ms: 0.840771
+  type: 'test'
+  ...
+# Subtest: trusted naming describes publisher origin only, never fact truth
+ok 730 - trusted naming describes publisher origin only, never fact truth
+  ---
+  duration_ms: 1.22321
+  type: 'test'
+  ...
+# Subtest: exact source substring and cryptographic document match are mandatory
+ok 731 - exact source substring and cryptographic document match are mandatory
+  ---
+  duration_ms: 1.048229
+  type: 'test'
+  ...
+# Subtest: two different source domains are corroboration, never verified truth
+ok 732 - two different source domains are corroboration, never verified truth
+  ---
+  duration_ms: 1.917483
+  type: 'test'
+  ...
+# Subtest: potential version or negation conflicts get review flags, not silent supersession
+ok 733 - potential version or negation conflicts get review flags, not silent supersession
+  ---
+  duration_ms: 6.839036
+  type: 'test'
+  ...
+# Subtest: active-counterexample search plans are bounded descriptions, not executable requests
+ok 734 - active-counterexample search plans are bounded descriptions, not executable requests
+  ---
+  duration_ms: 0.843134
+  type: 'test'
+  ...
+# Subtest: invalid input and malformed graph fail closed
+ok 735 - invalid input and malformed graph fail closed
+  ---
+  duration_ms: 0.523729
+  type: 'test'
+  ...
+# Subtest: Atlas only stores verified-structure public HTTPS references, no copied documents
+ok 736 - Atlas only stores verified-structure public HTTPS references, no copied documents
+  ---
+  duration_ms: 70.028294
+  type: 'test'
+  ...
+# Subtest: Atlas enforces cooldown, one fixed topic per cycle and no arbitrary remote searches
+ok 737 - Atlas enforces cooldown, one fixed topic per cycle and no arbitrary remote searches
+  ---
+  duration_ms: 122.798919
+  type: 'test'
+  ...
+# Subtest: Atlas rejects malformed sources and never imports private, non-HTTPS or local references
+ok 738 - Atlas rejects malformed sources and never imports private, non-HTTPS or local references
+  ---
+  duration_ms: 37.282952
+  type: 'test'
+  ...
+# Subtest: failed public research is persisted for cooldown, not converted to verified knowledge
+ok 739 - failed public research is persisted for cooldown, not converted to verified knowledge
+  ---
+  duration_ms: 78.808653
+  type: 'test'
+  ...
+# Subtest: tampered index, dirty source, repository-located state and invalid queries fail closed
+ok 740 - tampered index, dirty source, repository-located state and invalid queries fail closed
+  ---
+  duration_ms: 115.564645
+  type: 'test'
+  ...
+# Subtest: platform selection chooses a primary expert plus mandatory judges
+ok 741 - platform selection chooses a primary expert plus mandatory judges
+  ---
+  duration_ms: 2.055809
+  type: 'test'
+  ...
+# Subtest: approved draft never pretends to be compiled, tested or merged
+ok 742 - approved draft never pretends to be compiled, tested or merged
+  ---
+  duration_ms: 2.780046
+  type: 'test'
+  ...
+# Subtest: banking restrictions trigger exactly one review iteration
+ok 743 - banking restrictions trigger exactly one review iteration
+  ---
+  duration_ms: 1.022201
+  type: 'test'
+  ...
+# Subtest: cleartext and forbidden manifests never enter verified build state
+ok 744 - cleartext and forbidden manifests never enter verified build state
+  ---
+  duration_ms: 1.058555
+  type: 'test'
+  ...
+# Subtest: test absence and path traversal fail closed
+ok 745 - test absence and path traversal fail closed
+  ---
+  duration_ms: 0.613413
+  type: 'test'
+  ...
+# Subtest: world model keeps hypotheses provisional until independent support arrives
+ok 746 - world model keeps hypotheses provisional until independent support arrives
+  ---
+  duration_ms: 3.603581
+  type: 'test'
+  ...
+# Subtest: independent contradictory evidence makes a hypothesis disputed
+ok 747 - independent contradictory evidence makes a hypothesis disputed
+  ---
+  duration_ms: 0.493234
+  type: 'test'
+  ...
+# Subtest: repeating the same source domains in a second cycle does not promote a hypothesis
+ok 748 - repeating the same source domains in a second cycle does not promote a hypothesis
+  ---
+  duration_ms: 0.734493
+  type: 'test'
+  ...
+# Subtest: migration recalibrates a legacy one-cycle supported hypothesis back to provisional
+ok 749 - migration recalibrates a legacy one-cycle supported hypothesis back to provisional
+  ---
+  duration_ms: 0.267437
+  type: 'test'
+  ...
+# Subtest: parses real GGUF v2/v3 structure and bounded tensor bytes
+ok 750 - parses real GGUF v2/v3 structure and bounded tensor bytes
+  ---
+  duration_ms: 4.695846
+  type: 'test'
+  ...
+# Subtest: rejects magic, endian and unsupported versions
+ok 751 - rejects magic, endian and unsupported versions
+  ---
+  duration_ms: 0.979046
+  type: 'test'
+  ...
+# Subtest: rejects truncation and oversized counts before iteration or allocation
+ok 752 - rejects truncation and oversized counts before iteration or allocation
+  ---
+  duration_ms: 0.664429
+  type: 'test'
+  ...
+# Subtest: rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+ok 753 - rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values
+  ---
+  duration_ms: 1.672438
+  type: 'test'
+  ...
+# Subtest: skips tokenizer arrays without retaining tokens or evaluating templates
+ok 754 - skips tokenizer arrays without retaining tokens or evaluating templates
+  ---
+  duration_ms: 0.527695
+  type: 'test'
+  ...
+# Subtest: rejects nested arrays, enormous array/string lengths and invalid alignment
+ok 755 - rejects nested arrays, enormous array/string lengths and invalid alignment
+  ---
+  duration_ms: 0.986778
+  type: 'test'
+  ...
+# Subtest: rejects wrong metadata scalar types, non-finite floats and booleans
+ok 756 - rejects wrong metadata scalar types, non-finite floats and booleans
+  ---
+  duration_ms: 0.822554
+  type: 'test'
+  ...
+# Subtest: rejects tensor overflow, out-of-file ranges, overlap and misalignment
+ok 757 - rejects tensor overflow, out-of-file ranges, overlap and misalignment
+  ---
+  duration_ms: 0.729986
+  type: 'test'
+  ...
+# Subtest: rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+ok 758 - rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions
+  ---
+  duration_ms: 0.634243
+  type: 'test'
+  ...
+# Subtest: computes quantized row storage from audited block sizes
+ok 759 - computes quantized row storage from audited block sizes
+  ---
+  duration_ms: 0.573233
+  type: 'test'
+  ...
+# Subtest: rejects bounded header exhaustion and missing/unsafe architecture metadata
+ok 760 - rejects bounded header exhaustion and missing/unsafe architecture metadata
+  ---
+  duration_ms: 4.149444
+  type: 'test'
+  ...
+# Subtest: file admission hashes actual bytes and records identity without model trust
+ok 761 - file admission hashes actual bytes and records identity without model trust
+  ---
+  duration_ms: 37.974732
+  type: 'test'
+  ...
+# Subtest: admission rejects links, writable files, directories and malformed provenance
+ok 762 - admission rejects links, writable files, directories and malformed provenance
+  ---
+  duration_ms: 2.727989
+  type: 'test'
+  ...
+# Subtest: file admission enforces caller resource and cancellation bounds
+ok 763 - file admission enforces caller resource and cancellation bounds
+  ---
+  duration_ms: 1.562245
+  type: 'test'
+  ...
+# Subtest: chat only contacts fixed localhost and returns text as untrusted data
+ok 764 - chat only contacts fixed localhost and returns text as untrusted data
+  ---
+  duration_ms: 8.13276
+  type: 'test'
+  ...
+# Subtest: rejects missing authentication, unverified facts and external configuration
+ok 765 - rejects missing authentication, unverified facts and external configuration
+  ---
+  duration_ms: 1.20312
+  type: 'test'
+  ...
+# Subtest: patch proposal is schema constrained, validated and never applied
+ok 766 - patch proposal is schema constrained, validated and never applied
+  ---
+  duration_ms: 2.056169
+  type: 'test'
+  ...
+# Subtest: server errors and overly long outputs fail closed
+ok 767 - server errors and overly long outputs fail closed
+  ---
+  duration_ms: 1.047839
+  type: 'test'
+  ...
+# Subtest: health never transmits authorization and discriminates loading/unavailable
+ok 768 - health never transmits authorization and discriminates loading/unavailable
+  ---
+  duration_ms: 29.186396
+  type: 'test'
+  ...
+# Subtest: actual Node HTTP loopback fixture exercises an end-to-end POST
+ok 769 - actual Node HTTP loopback fixture exercises an end-to-end POST
+  ---
+  duration_ms: 40.029378
+  type: 'test'
+  ...
+# Subtest: context plan uses a bounded byte estimate and reserves actual client output
+ok 770 - context plan uses a bounded byte estimate and reserves actual client output
+  ---
+  duration_ms: 2.347503
+  type: 'test'
+  ...
+# Subtest: context truncates Unicode and JSON escape-heavy input within the real serialized budget
+ok 771 - context truncates Unicode and JSON escape-heavy input within the real serialized budget
+  ---
+  duration_ms: 4.945589
+  type: 'test'
+  ...
+# Subtest: diagnostics precede source under pressure and omitted context is reported
+ok 772 - diagnostics precede source under pressure and omitted context is reported
+  ---
+  duration_ms: 2.788649
+  type: 'test'
+  ...
+# Subtest: rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths
+ok 773 - rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths
+  ---
+  duration_ms: 0.654914
+  type: 'test'
+  ...
+# Subtest: preserves the complete goal or refuses instead of silently truncating its meaning
+ok 774 - preserves the complete goal or refuses instead of silently truncating its meaning
+  ---
+  duration_ms: 0.166418
+  type: 'test'
+  ...
+# Subtest: diagnosis requires a matching admission identity and never labels input as verified facts
+ok 775 - diagnosis requires a matching admission identity and never labels input as verified facts
+  ---
+  duration_ms: 0.720161
+  type: 'test'
+  ...
+# Subtest: local diagnosis uses the existing fixed-loopback client with no tool or promotion rights
+ok 776 - local diagnosis uses the existing fixed-loopback client with no tool or promotion rights
+  ---
+  duration_ms: 49.320362
+  type: 'test'
+  ...
+# Subtest: injected source remains quoted data and model instructions cannot select shell tools
+ok 777 - injected source remains quoted data and model instructions cannot select shell tools
+  ---
+  duration_ms: 3.841626
+  type: 'test'
+  ...
+# Subtest: Termux Binder interface matches the exact existing AIDL descriptor and stable wire IDs
+ok 778 - Termux Binder interface matches the exact existing AIDL descriptor and stable wire IDs
+  ---
+  duration_ms: 1.245353
+  type: 'test'
+  ...
+# Subtest: both binder methods preserve argument, return and exception marshalling
+ok 779 - both binder methods preserve argument, return and exception marshalling
+  ---
+  duration_ms: 0.467866
+  type: 'test'
+  ...
+# Subtest: desktop and production configurations retain canonical AIDL generation
+ok 780 - desktop and production configurations retain canonical AIDL generation
+  ---
+  duration_ms: 0.179967
+  type: 'test'
+  ...
+# Subtest: only the bounded mobile builder activates the alternative, never changes source or tools
+ok 781 - only the bounded mobile builder activates the alternative, never changes source or tools
+  ---
+  duration_ms: 0.227999
+  type: 'test'
+  ...
+# Subtest: Shizuku user service, endpoint and shell gate keep their original IPC types
+ok 782 - Shizuku user service, endpoint and shell gate keep their original IPC types
+  ---
+  duration_ms: 0.253427
+  type: 'test'
+  ...
+# Subtest: CLI supports only explicitly approved commands and flags
+ok 783 - CLI supports only explicitly approved commands and flags
+  ---
+  duration_ms: 3.829048
+  type: 'test'
+  ...
+# Subtest: Android runner requires Termux ARM64
+ok 784 - Android runner requires Termux ARM64
+  ---
+  duration_ms: 0.196422
+  type: 'test'
+  ...
+# Subtest: doctor without native toolchain reports unavailable
+ok 785 - doctor without native toolchain reports unavailable
+  ---
+  duration_ms: 2.478908
+  type: 'test'
+  ...
+# Subtest: state directory may not be inside source
+ok 786 - state directory may not be inside source
+  ---
+  duration_ms: 1.253656
+  type: 'test'
+  ...
+# Subtest: unavailable tools prevent Gradle invocation
+ok 787 - unavailable tools prevent Gradle invocation
+  ---
+  duration_ms: 3.883569
+  type: 'test'
+  ...
+# Subtest: uncommitted source blocks build before running Gradle
+ok 788 - uncommitted source blocks build before running Gradle
+  ---
+  duration_ms: 3.892271
+  type: 'test'
+  ...
+# Subtest: synthetic Gradle failure is not a successful build
+ok 789 - synthetic Gradle failure is not a successful build
+  ---
+  duration_ms: 3.545896
+  type: 'test'
+  ...
+# Subtest: unverified artifact is rejected and not published
+ok 790 - unverified artifact is rejected and not published
+  ---
+  duration_ms: 2.05653
+  type: 'test'
+  ...
+# Subtest: synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+ok 791 - synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build
+  ---
+  duration_ms: 16.412459
+  type: 'test'
+  ...
+# Subtest: owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+ok 792 - owner Android build automatically publishes a hash-checked APK in the dedicated Download folder
+  ---
+  duration_ms: 17.227472
+  type: 'test'
+  ...
+# Subtest: owner file created during a publication race is never overwritten
+ok 793 - owner file created during a publication race is never overwritten
+  ---
+  duration_ms: 40.750972
+  type: 'test'
+  ...
+# Subtest: a corrupted final Download copy is reported without deleting owner files
+ok 794 - a corrupted final Download copy is reported without deleting owner files
+  ---
+  duration_ms: 12.018743
+  type: 'test'
+  ...
+# Subtest: missing owner Download storage never fakes a published installer copy
+ok 795 - missing owner Download storage never fakes a published installer copy
+  ---
+  duration_ms: 7.074586
+  type: 'test'
+  ...
+# Subtest: unsafe symlink install folder is rejected without modifying the source project
+ok 796 - unsafe symlink install folder is rejected without modifying the source project
+  ---
+  duration_ms: 5.163502
+  type: 'test'
+  ...
+# Subtest: pre-existing conflicting APK is never overwritten by automatic publication
+ok 797 - pre-existing conflicting APK is never overwritten by automatic publication
+  ---
+  duration_ms: 8.368291
+  type: 'test'
+  ...
+# Subtest: rejected signature never generates an owner Download installation APK
+ok 798 - rejected signature never generates an owner Download installation APK
+  ---
+  duration_ms: 1.582545
+  type: 'test'
+  ...
+# Subtest: Gradle failure reports only fresh failing JVM tests, never a false build success
+ok 799 - Gradle failure reports only fresh failing JVM tests, never a false build success
+  ---
+  duration_ms: 3.543863
+  type: 'test'
+  ...
+# Subtest: JUnit diagnostics ignore stale files and symlinks
+ok 800 - JUnit diagnostics ignore stale files and symlinks
+  ---
+  duration_ms: 0.547534
+  type: 'test'
+  ...
+# Subtest: a changed HEAD during Gradle blocks APK publication
+ok 801 - a changed HEAD during Gradle blocks APK publication
+  ---
+  duration_ms: 6.347123
+  type: 'test'
+  ...
+# Subtest: a dirty checkout produced during Gradle blocks APK publication
+ok 802 - a dirty checkout produced during Gradle blocks APK publication
+  ---
+  duration_ms: 1.92221
+  type: 'test'
+  ...
+# Subtest: signature parser recognizes legacy and modern apksigner certificates only
+ok 803 - signature parser recognizes legacy and modern apksigner certificates only
+  ---
+  duration_ms: 0.219487
+  type: 'test'
+  ...
+# Subtest: modern apksigner result is accepted only after executable verification succeeds
+ok 804 - modern apksigner result is accepted only after executable verification succeeds
+  ---
+  duration_ms: 55.210116
+  type: 'test'
+  ...
+# Subtest: genuine apksigner rejection persists diagnostic without publishing APK
+ok 805 - genuine apksigner rejection persists diagnostic without publishing APK
+  ---
+  duration_ms: 2.790182
+  type: 'test'
+  ...
+# Subtest: Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+ok 806 - Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths
+  ---
+  duration_ms: 0.46384
+  type: 'test'
+  ...
+# Subtest: ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+ok 807 - ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND
+  ---
+  duration_ms: 0.186006
+  type: 'test'
+  ...
+# Subtest: real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+ok 808 - real Samsung JAVA_HOME with trailing slash selects pinned Java 17
+  ---
+  duration_ms: 0.160979
+  type: 'test'
+  ...
+# Subtest: extra trailing separators do not prevent known Termux Java 21 normalization
+ok 809 - extra trailing separators do not prevent known Termux Java 21 normalization
+  ---
+  duration_ms: 0.11442
+  type: 'test'
+  ...
+# Subtest: Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+ok 810 - Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent
+  ---
+  duration_ms: 0.090425
+  type: 'test'
+  ...
+# Subtest: owner Java 17 is always first in PATH even if it appears after Java 21
+ok 811 - owner Java 17 is always first in PATH even if it appears after Java 21
+  ---
+  duration_ms: 0.11432
+  type: 'test'
+  ...
+# Subtest: missing Termux tools remain unavailable; never synthesize nonexistent binaries
+ok 812 - missing Termux tools remain unavailable; never synthesize nonexistent binaries
+  ---
+  duration_ms: 0.10118
+  type: 'test'
+  ...
+# Subtest: explicit owner toolchain settings are preserved, even when defaults exist
+ok 813 - explicit owner toolchain settings are preserved, even when defaults exist
+  ---
+  duration_ms: 0.123273
+  type: 'test'
+  ...
+# Subtest: non-Termux and non-ARM64 environments do not receive Android paths
+ok 814 - non-Termux and non-ARM64 environments do not receive Android paths
+  ---
+  duration_ms: 0.143814
+  type: 'test'
+  ...
+# Subtest: mobile build forwards resolved environment to doctor and Gradle without a shell
+ok 815 - mobile build forwards resolved environment to doctor and Gradle without a shell
+  ---
+  duration_ms: 25.565608
+  type: 'test'
+  ...
+# Subtest: status CLI returns successful query exit for historical failed or blocked build reports
+ok 816 - status CLI returns successful query exit for historical failed or blocked build reports
+  ---
+  duration_ms: 610.915052
+  type: 'test'
+  ...
+# Subtest: status CLI fails closed for corrupt report schema; missing report is a successful query
+ok 817 - status CLI fails closed for corrupt report schema; missing report is a successful query
+  ---
+  duration_ms: 189.218939
+  type: 'test'
+  ...
+# Subtest: a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+ok 818 - a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools
+  ---
+  duration_ms: 2.562783
+  type: 'test'
+  ...
+# Subtest: a correctly signed APK for the wrong package cannot be published as a Continuum preview
+ok 819 - a correctly signed APK for the wrong package cannot be published as a Continuum preview
+  ---
+  duration_ms: 2.118552
+  type: 'test'
+  ...
+# Subtest: malformed or failed package inspection cannot publish an APK
+ok 820 - malformed or failed package inspection cannot publish an APK
+  ---
+  duration_ms: 9.35817
+  type: 'test'
+  ...
+# Subtest: verified state produces a local APK with exact digest
+ok 821 - verified state produces a local APK with exact digest
+  ---
+  duration_ms: 44.794599
+  type: 'test'
+  ...
+# Subtest: all failed or unverified status reports fail closed
+ok 822 - all failed or unverified status reports fail closed
+  ---
+  duration_ms: 1.855711
+  type: 'test'
+  ...
+# Subtest: unrelated path and replaced APK bytes cannot be served
+ok 823 - unrelated path and replaced APK bytes cannot be served
+  ---
+  duration_ms: 5.830976
+  type: 'test'
+  ...
+# Subtest: symlinks and wrong signer format are refused
+ok 824 - symlinks and wrong signer format are refused
+  ---
+  duration_ms: 1.4512
+  type: 'test'
+  ...
+# Subtest: loopback Chrome downloads actual APK with content-disposition and no cache
+ok 825 - loopback Chrome downloads actual APK with content-disposition and no cache
+  ---
+  duration_ms: 34.140838
+  type: 'test'
+  ...
+# Subtest: server rejects non-loopback Host, unrelated routes and POST
+ok 826 - server rejects non-loopback Host, unrelated routes and POST
+  ---
+  duration_ms: 13.101874
+  type: 'test'
+  ...
+# Subtest: tampering after startup blocks subsequent download
+ok 827 - tampering after startup blocks subsequent download
+  ---
+  duration_ms: 38.427515
+  type: 'test'
+  ...
+# Subtest: full multi-megabyte APK survives request lifecycle without truncation
+ok 828 - full multi-megabyte APK survives request lifecycle without truncation
+  ---
+  duration_ms: 209.790643
+  type: 'test'
+  ...
+1..828
+# tests 828
+# suites 0
+# pass 828
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77972.335388

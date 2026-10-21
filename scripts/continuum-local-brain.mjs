@@ -113,7 +113,8 @@ export async function queryLocalBrain({
       {role: 'user', content: user}
     ]
   };
-  if (patchSchema) body.response_format = {type: 'json_schema', schema: patchSchema};
+  if (patchSchema) body.response_format = {type: 'json_schema',
+    json_schema: {name:'continuum_patch', strict:true, schema:patchSchema}};
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {

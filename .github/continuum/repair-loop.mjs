@@ -8,6 +8,7 @@ import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
+import {isIsolatedExecutor} from './isolated-executor.mjs';
 import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
 
 /**
@@ -113,19 +114,23 @@ export const CHAINS=Object.freeze({
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
-export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
   const p=factory(wt,out);
-  for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
-  for(const f of p.junitFiles??[])fs.rmSync(f,{force:true});
+  if(executor!==null&&!isIsolatedExecutor(executor))throw Error('UNTRUSTED_ISOLATION_EXECUTOR');
+  for(const d of executor?[]:p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
+  for(const f of executor?[]:p.junitFiles??[])fs.rmSync(f,{force:true});
   if(deadline!==null&&(!Number.isSafeInteger(deadline)||deadline<=Date.now()))
     throw Error('Repair test deadline exhausted before '+name);
   const remaining=()=>deadline===null?p.timeoutMs:Math.min(p.timeoutMs,Math.max(1,deadline-Date.now()));
   if(forceRerun&&name!=='android-compile'&&name!=='android-unit')
     throw Error('Forced rerun is supported for Android check profiles only');
   const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
-  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
-  const text=r.stdout+'\n'+r.stderr;
+  const r=executor?executor.execute(name,wt,out,{deadline}):run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
+  // Diagnostics originate in the read-only container snapshot, but edits are
+  // resolved against the caller's worktree. No container path grants a file.
+  const localize=text=>executor?text.replaceAll('/work/',wt+'/'):text;
+  const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
   const skippedCaseHashes=[];
@@ -141,8 +146,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
       else skippedCaseHashes.push(...ids);
     }
   };
-  for(const dir of p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
-  for(const file of p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(fs.readFileSync(file,'utf8'),wt));
+  for(const dir of executor?[]:p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
+  for(const file of executor?r.junitFiles:p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(localize(fs.readFileSync(file,'utf8')),wt));
   // Permit pre-existing JUnit skips only with a complete, stable case-identity
   // digest. ANSK independently compares the same identity across all green runs.
   if(tests.skipped>0&&completeSkipIdentities&&
@@ -152,7 +157,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
-  if(p.junitFiles){
+  if(p.junitFiles&&!executor){
     const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
     const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
@@ -167,7 +172,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   // run (missing report, only file placeholders or skips) is not a pass.
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
   const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0);
-  return {profile:name,passed,testProfile,exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+  return {profile:name,passed,testProfile,...(r.isolation?{isolation:r.isolation}:{}),exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
     outputTail:text.slice(-3000)};
 }
 
@@ -193,10 +198,10 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out,{deadline=null,forceRerun=false}={}){
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
-    const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);
+    const r=runProfile(name,wt,out,{deadline,forceRerun,executor});results.push(r);
     if(!r.passed)break;
   }
   return {passed:results.every(r=>r.passed),results,diagnostics:results.flatMap(r=>r.diagnostics)};
@@ -355,7 +360,7 @@ function context(wt,base,experience){
  */
 export function repairCandidateRiskTier(strategy){
   if(strategy==='REVERT_FILE_TO_PARENT')return 2;
-  if(strategy==='LOCAL_MODEL_PATCH')return 1;
+  if(strategy==='LOCAL_MODEL_PATCH'||strategy==='LOCAL_ISOLATED_PATCH')return 1;
   if(strategy==='REVERT_HUNK_TO_PARENT')return 1;
   return 0;
 }
@@ -408,8 +413,9 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,executor=null}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
+  if(executor!==null&&!isIsolatedExecutor(executor))throw Error('UNTRUSTED_ISOLATION_EXECUTOR');
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
@@ -419,7 +425,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
       reason:'No generative model is invoked by this repair pipeline'},
     baseline:null,attempts:[],verified:null,outcome:null};
-  const baseline=runChain(chain,wt,out,{deadline});
+  const baseline=runChain(chain,wt,out,{deadline,executor});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
@@ -458,9 +464,11 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       const before=ctx.readFile(patch.file);
       if(typeof before!=='string'||before.split(patch.oldText).length!==2)
         throw Error('LOCAL_PATCH_NOT_EXACT');
-      const edits=[{file:patch.file,oldText:before,newText:before.replace(patch.oldText,()=>patch.newText)}];
-      proposals.push({id:sha256('LOCAL_MODEL_PATCH\0'+JSON.stringify(edits)).slice(0,16),
-        strategy:'LOCAL_MODEL_PATCH',diagnostic:actionable[0].fingerprint,
+      const strategy=executor?'LOCAL_ISOLATED_PATCH':'LOCAL_MODEL_PATCH';
+      if(executor)report.learningEligible=false;
+      const edits=[executor?{...patch}:{file:patch.file,oldText:before,newText:before.replace(patch.oldText,()=>patch.newText)}];
+      proposals.push({id:sha256(strategy+'\0'+JSON.stringify(edits)).slice(0,16),
+        strategy,diagnostic:actionable[0].fingerprint,
         diagnosticKind:actionable[0].kind,prior:0.2,
         description:'Opt-in local candidate; requires independent tests and owner review',edits});
       report.inference.localRequests=Number.isSafeInteger(result.localRequests)?Math.min(1,Math.max(0,result.localRequests)):0;
@@ -520,8 +528,8 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       log(c.strategy+' -> FAILED_SYNTAX');
       continue;
     }
-    const check=runChain(chain,wt,out,{deadline});
-    attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
+    const check=runChain(chain,wt,out,{deadline,executor});
+    attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests,...(r.isolation?{isolation:r.isolation}:{})}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
     const evidence=evidenceSufficient(baseline.results,check.results);
     attempt.evidence=evidence;
