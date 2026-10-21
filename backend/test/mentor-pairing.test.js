@@ -68,3 +68,42 @@ test("wrong elliptic curve and missing owner token fail closed", () => {
   assert.equal(new MentorDevicePairing({ rootToken: "", approvedFingerprints: "0".repeat(64) }).ready, false);
   assert.throws(() => new MentorDevicePairing({ rootToken: "" }).challenge());
 });
+
+test("rotated backend token is recovered only by fresh signed owner-approved pairing", () => {
+  const fp = make("").publicKey(encoded).fingerprint;
+  const original = make(fp);
+  const initial = original.challenge();
+  const oldToken = original.redeem({
+    publicKey: encoded, signature: sign(initial), challenge: initial
+  }).token;
+
+  const rotated = new MentorDevicePairing({
+    rootToken: "rotated-backend-root-owner-secret-with-32-bytes",
+    approvedFingerprints: fp,
+    clock: fixedClock,
+    randomBytes: n => Buffer.alloc(n, 0x7f)
+  });
+  assert.equal(rotated.isMentorAuthorized("Bearer " + oldToken), false);
+  const renewedChallenge = rotated.challenge();
+  const refreshed = rotated.redeem({
+    publicKey: encoded,
+    signature: sign(renewedChallenge),
+    challenge: renewedChallenge
+  });
+  assert.equal(refreshed.ok, true);
+  assert.notEqual(refreshed.token, oldToken);
+  assert.equal(rotated.isMentorAuthorized("Bearer " + refreshed.token), true);
+  const revoked = new MentorDevicePairing({
+    rootToken: "rotated-backend-root-owner-secret-with-32-bytes",
+    approvedFingerprints: "",
+    clock: fixedClock
+  });
+  assert.equal(revoked.isMentorAuthorized("Bearer " + refreshed.token), false);
+  const blockedChallenge = revoked.challenge();
+  const blocked = revoked.redeem({
+    publicKey: encoded, signature: sign(blockedChallenge),
+    challenge: blockedChallenge
+  });
+  assert.equal(blocked.code, "PAIRING_PENDING");
+  assert.equal(Object.hasOwn(blocked, "token"), false);
+});

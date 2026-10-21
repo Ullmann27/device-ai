@@ -160,7 +160,12 @@ class LiteRtLmLocalModelRuntime(
 
     override fun stream(prompt: String, callback: LocalInferenceCallback) {
         require(prompt.isNotBlank() && prompt.length <= MAX_PROMPT_CHARACTERS)
-        streamMessage(Message.user(Contents.of(prompt)), prompt.length, callback, false)
+        // Qwen3 soft switch is for direct owner messages only, not reasoning
+        // workers or tool responses. Loaded model ID is already verified by catalog.
+        val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(
+            loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS
+        )
+        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, false)
     }
 
     override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {

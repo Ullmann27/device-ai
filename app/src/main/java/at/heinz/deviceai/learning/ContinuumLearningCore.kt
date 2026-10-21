@@ -23,6 +23,83 @@ data class ContinualLearningReport(
     val completedEvaluation:Boolean=true
 )
 
+data class PublicCurriculumReport(
+    val accepted:Boolean,
+    val completed:Boolean,
+    val intentSteps:Int,
+    val semanticSteps:Int,
+    val reason:String,
+    val intentTrainingBefore:SubwordEvaluation,
+    val intentTrainingAfter:SubwordEvaluation,
+    val semanticTrainingBefore:SubwordEvaluation,
+    val semanticTrainingAfter:SubwordEvaluation,
+    val intentAuditBefore:SubwordEvaluation,
+    val intentAuditAfter:SubwordEvaluation,
+    val semanticAuditBefore:SubwordEvaluation,
+    val semanticAuditAfter:SubwordEvaluation,
+    val fixedIntentBefore:SubwordEvaluation,
+    val fixedIntentAfter:SubwordEvaluation,
+    val fixedSemanticBefore:SubwordEvaluation,
+    val fixedSemanticAfter:SubwordEvaluation
+) {
+    fun display():String = buildString {
+        fun row(name:String,a:SubwordEvaluation,b:SubwordEvaluation) {
+            append(name).append(": ").append(a.correct).append("/").append(a.total)
+                .append(" → ").append(b.correct).append("/").append(b.total)
+                .append(" · Verlust ")
+                .append("%.4f".format(Locale.ROOT,a.loss)).append(" → ")
+                .append("%.4f".format(Locale.ROOT,b.loss)).append("\n")
+        }
+        append("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET\n")
+        append("Trainingsschritte: ").append(intentSteps).append(" Intent + ")
+            .append(semanticSteps).append(" Semantik\n")
+        append("Status: ").append(if(!completed)"UNTERBROCHEN" else
+            if(accepted)"KANDIDAT ÜBERNOMMEN" else "KANDIDAT VERWORFEN").append("\n\n")
+        row("Intent Training",intentTrainingBefore,intentTrainingAfter)
+        row("Semantik Training",semanticTrainingBefore,semanticTrainingAfter)
+        row("NEUER Intent-Prüfsatz",intentAuditBefore,intentAuditAfter)
+        row("NEUER Semantik-Prüfsatz",semanticAuditBefore,semanticAuditAfter)
+        row("Bestehender Intent-Holdout",fixedIntentBefore,fixedIntentAfter)
+        row("Bestehender Semantik-Holdout",fixedSemanticBefore,fixedSemanticAfter)
+        append("\n").append(reason)
+        append("\nKeine Besitzerfakten oder Geräteberechtigungen erzeugt. ")
+        append("Das ist kein generatives Sprachmodell.")
+    }
+}
+
+data class ExtendedCurriculumReport(
+    val stage:Int,
+    val stagesTotal:Int,
+    val completed:Boolean,
+    val accepted:Boolean,
+    val intentUpdates:Int,
+    val semanticUpdates:Int,
+    val reason:String,
+    val priorIntent:SubwordEvaluation,
+    val nextIntent:SubwordEvaluation,
+    val priorSemantic:SubwordEvaluation,
+    val nextSemantic:SubwordEvaluation,
+    val diagnostics:String=""
+) {
+    fun display():String = buildString {
+        append("SWB1 · GROSSES OFFLINE-ÜBUNGSARCHIV\n")
+        append("Lernstufe: ").append(stage).append("/").append(stagesTotal)
+        append(" · ").append(if(!completed)"UNTERBROCHEN" else
+            if(accepted)"GEPRÜFTE GEWICHTE ÜBERNOMMEN" else "GEWICHTE VERWORFEN")
+        append("\nSchritte: ").append(intentUpdates).append(" Intent + ")
+            .append(semanticUpdates).append(" Semantik\n")
+        append("Neuer Intent-Test: ").append(priorIntent.correct).append("/")
+            .append(priorIntent.total).append(" → ").append(nextIntent.correct)
+            .append("/").append(nextIntent.total)
+        append("\nNeuer Semantik-Test: ").append(priorSemantic.correct).append("/")
+            .append(priorSemantic.total).append(" → ").append(nextSemantic.correct)
+            .append("/").append(nextSemantic.total)
+        append("\n").append(reason)
+        if(diagnostics.isNotBlank())append("\n\nDetaillierte Prüfungen:\n").append(diagnostics)
+        append("\nKeine automatischen Besitzerfakten. SWB1-Parameterzahl bleibt 4.113.")
+    }
+}
+
 enum class OwnerFactChange { ADDED, REACTIVATED, ALREADY_ACTIVE }
 
 data class ContinuumLearningStatus(
@@ -51,6 +128,13 @@ class ContinuumLearningCore(
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
     private val checkpoints=ModelCheckpointStore(File(directory,"checkpoints"))
+    // Optional observer reports real gradient-entry and post-gradient audit phases.
+    // Observing never changes the model and failures cannot abort its training.
+    private var trainingObserver:((String)->Unit)?=null
+    fun observeTraining(observer:((String)->Unit)?) { trainingObserver=observer }
+    private fun emitTrainingPhase(phase:String) {
+        runCatching { trainingObserver?.invoke(phase) }
+    }
 
     /** Offline public curriculum: no owner interaction, no network and no private data.
      * Runs once per persisted model. Holdout gates reject regressions.
@@ -72,7 +156,9 @@ class ContinuumLearningCore(
             val before=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            emitTrainingPhase("TRAIN_WEIGHTS")
             val train=candidate.trainIntent(INTENT_BOOTSTRAP,steps=650,maxMillis=2500,cancelled=cancelled)
+            emitTrainingPhase("AUDIT")
             val after=candidate.evaluateIntent(INTENT_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
             val otherAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
@@ -109,8 +195,10 @@ class ContinuumLearningCore(
             val before=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
             val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
             val intentBefore=candidate.evaluateIntent(INTENT_HOLDOUT)
+            emitTrainingPhase("TRAIN_WEIGHTS")
             val train=candidate.trainSemantic(SEMANTIC_BOOTSTRAP,steps=550,
                 maxMillis=2500,cancelled=cancelled)
+            emitTrainingPhase("AUDIT")
             val after=candidate.evaluateSemantic(SEMANTIC_BOOTSTRAP)
             val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
             val intentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
@@ -126,6 +214,191 @@ class ContinuumLearningCore(
                 holdoutBefore,holdoutAfter,emptyList(),reason)
             ContinualLearningReport("offline-semantic-bootstrap",accepted,train.steps,0,
                 before,after,holdoutBefore,holdoutAfter,emptyList(),reason)
+        }
+
+    /**
+     * Explicit owner-triggered public synthetic learning lab. No Internet,
+     * no imported/guessed model weights, no owner-label fabrication.
+     * Acceptance requires independent NEW and existing frozen holdouts,
+     * and preserves all actual owner-confirmed intent examples.
+     * Any interrupted run is not audited so that it can be retried.
+     */
+    fun trainPublicCurriculum(cancelled:()->Boolean={false}):PublicCurriculumReport? =
+        synchronized(CORE_LOCK) {
+            val lab=ContinuumPublicCurriculum
+            lab.validate()
+            val marker=lab.ID
+            if(store.all().any { it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation==marker }) return@synchronized null
+            val current=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(current.save())
+            val intentTraining=INTENT_BOOTSTRAP+lab.intentTrain
+            val semanticTraining=SEMANTIC_BOOTSTRAP+lab.semanticTrain
+            val own=ownerIntentReplay()
+            val ownBefore=own.takeIf { it.isNotEmpty() }?.let(current::evaluateIntent)
+            val trainIntentBefore=current.evaluateIntent(intentTraining)
+            val trainSemanticBefore=current.evaluateSemantic(semanticTraining)
+            val intentAuditBefore=current.evaluateIntent(lab.intentAudit)
+            val semanticAuditBefore=current.evaluateSemantic(lab.semanticAudit)
+            val fixedIntentBefore=current.evaluateIntent(INTENT_HOLDOUT)
+            val fixedSemanticBefore=current.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val intentTrain=candidate.trainIntent(intentTraining,steps=1100,maxMillis=3500,
+                cancelled=cancelled)
+            val semanticTrain=if(!interrupted(cancelled) && !intentTrain.stoppedEarly)
+                candidate.trainSemantic(semanticTraining,steps=900,maxMillis=3500,
+                    cancelled=cancelled)
+            else null
+            val trainIntentAfter=candidate.evaluateIntent(intentTraining)
+            val trainSemanticAfter=candidate.evaluateSemantic(semanticTraining)
+            val intentAuditAfter=candidate.evaluateIntent(lab.intentAudit)
+            val semanticAuditAfter=candidate.evaluateSemantic(lab.semanticAudit)
+            val fixedIntentAfter=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val fixedSemanticAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val completed=!interrupted(cancelled) && !intentTrain.stoppedEarly &&
+                semanticTrain!=null && !semanticTrain.stoppedEarly
+            val ownerRetained=ownBefore==null || retains(
+                ownBefore,candidate.evaluateIntent(own))
+            val trainingImproved=trainIntentAfter.loss+1e-7<trainIntentBefore.loss &&
+                trainSemanticAfter.loss+1e-7<trainSemanticBefore.loss
+            val auditImproved=intentAuditAfter.loss+semanticAuditAfter.loss+0.001<
+                intentAuditBefore.loss+semanticAuditBefore.loss
+            val accepted=completed && trainingImproved && auditImproved &&
+                retains(intentAuditBefore,intentAuditAfter) &&
+                retains(semanticAuditBefore,semanticAuditAfter) &&
+                retains(fixedIntentBefore,fixedIntentAfter) &&
+                retains(fixedSemanticBefore,fixedSemanticAfter) && ownerRetained
+            val reason=when {
+                !completed -> "Unterbrochen oder Zeitbudget erreicht; keinerlei Änderungen gespeichert."
+                !ownerRetained -> "Private bestätigte Lektionen würden schlechter; Gewichte nicht geändert."
+                !retains(fixedIntentBefore,fixedIntentAfter) ->
+                    "Bisheriger Intent-Holdout würde schlechter; Gewichte nicht geändert."
+                !retains(fixedSemanticBefore,fixedSemanticAfter) ->
+                    "Bisheriger Semantik-Holdout würde schlechter; Gewichte nicht geändert."
+                !retains(intentAuditBefore,intentAuditAfter) ||
+                    !retains(semanticAuditBefore,semanticAuditAfter) ->
+                    "Neue unabhängige Prüfsätze würden schlechter; Gewichte nicht geändert."
+                !trainingImproved -> "Nicht beide Lernaufgaben verbessern sich; Gewichte nicht geändert."
+                !auditImproved -> "Keine messbare Verbesserung neuer Prüfsätze; Gewichte nicht geändert."
+                else -> "Öffentliche Lernaufgaben verbessern sich; alle Prüfbarrieren bestanden. " +
+                    "Vorheriger Gewichtsstand ist als Checkpoint archiviert."
+            }
+            if(accepted) saveModel(candidate.save(),marker)
+            if(completed) appendAudit(marker,accepted,intentTrain.steps+
+                (semanticTrain?.steps ?: 0),trainIntentBefore,trainIntentAfter,
+                fixedIntentBefore,fixedIntentAfter,emptyList(),
+                reason.take(220)+
+                    " · semantic-holdout="+fixedSemanticBefore.correct+"/"+fixedSemanticBefore.total+
+                    "→"+fixedSemanticAfter.correct+"/"+fixedSemanticAfter.total)
+            PublicCurriculumReport(accepted,completed,intentTrain.steps,
+                semanticTrain?.steps ?: 0,reason,trainIntentBefore,trainIntentAfter,
+                trainSemanticBefore,trainSemanticAfter,intentAuditBefore,intentAuditAfter,
+                semanticAuditBefore,semanticAuditAfter,fixedIntentBefore,fixedIntentAfter,
+                fixedSemanticBefore,fixedSemanticAfter)
+        }
+
+    /**
+     * At most one 96+40-example research stage per invocation, against immutable
+     * 64+8 extended holdouts, old 8+6 holdouts and confirmed owner examples.
+     * A completed stage is permanently audited (accepted or rejected).
+     */
+    fun trainExtendedCurriculum(cancelled:()->Boolean={false}):ExtendedCurriculumReport? =
+        synchronized(CORE_LOCK) {
+            val curriculum=ContinuumExtendedCurriculum
+            curriculum.validate()
+            val done=store.all().filter {
+                it.type==LearningExperienceType.TRAINING_AUDIT &&
+                    it.annotation?.startsWith(curriculum.VERSION+"-stage-")==true
+            }.mapNotNull { item ->
+                item.annotation?.removePrefix(curriculum.VERSION+"-stage-")?.toIntOrNull()
+            }.toSet()
+            val stage=(0 until curriculum.STAGES).firstOrNull { (it+1) !in done }
+                ?: return@synchronized null
+            val marker=curriculum.VERSION+"-stage-"+(stage+1)
+            val baseline=loadModel()
+            val candidate=TrainableSubwordEncoder.restore(baseline.save())
+            val intentTraining=(INTENT_BOOTSTRAP+curriculum.intentBatch(stage)).take(128)
+            val semanticTraining=(SEMANTIC_BOOTSTRAP+curriculum.semanticBatch(stage)).take(128)
+            val trainI0=baseline.evaluateIntent(intentTraining)
+            val trainS0=baseline.evaluateSemantic(semanticTraining)
+            val auditI0=baseline.evaluateIntent(curriculum.intentAudit)
+            val auditS0=baseline.evaluateSemantic(curriculum.semanticAudit)
+            val fixedI0=baseline.evaluateIntent(INTENT_HOLDOUT)
+            val fixedS0=baseline.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val extraI0=baseline.evaluateIntent(ContinuumPublicCurriculum.intentAudit)
+            val extraS0=baseline.evaluateSemantic(ContinuumPublicCurriculum.semanticAudit)
+            val owner=ownerIntentReplay()
+            val owner0=owner.takeIf { it.isNotEmpty() }?.let(baseline::evaluateIntent)
+            emitTrainingPhase("TRAIN_WEIGHTS")
+            val trainI=candidate.trainIntent(intentTraining,
+                steps=750,maxMillis=3000,cancelled=cancelled)
+            val trainS=if(!interrupted(cancelled) && !trainI.stoppedEarly)
+                candidate.trainSemantic(semanticTraining,
+                    steps=500,maxMillis=3000,cancelled=cancelled)
+            else null
+            emitTrainingPhase("AUDIT")
+            val trainI1=candidate.evaluateIntent(intentTraining)
+            val trainS1=candidate.evaluateSemantic(semanticTraining)
+            val auditI1=candidate.evaluateIntent(curriculum.intentAudit)
+            val auditS1=candidate.evaluateSemantic(curriculum.semanticAudit)
+            val fixedI1=candidate.evaluateIntent(INTENT_HOLDOUT)
+            val fixedS1=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
+            val extraI1=candidate.evaluateIntent(ContinuumPublicCurriculum.intentAudit)
+            val extraS1=candidate.evaluateSemantic(ContinuumPublicCurriculum.semanticAudit)
+            val completed=!interrupted(cancelled) && !trainI.stoppedEarly &&
+                trainS!=null && !trainS.stoppedEarly
+            val ownerSafe=owner0==null || retains(owner0,candidate.evaluateIntent(owner))
+            val allProtected=retains(auditI0,auditI1) && retains(auditS0,auditS1) &&
+                retains(fixedI0,fixedI1) && retains(fixedS0,fixedS1) &&
+                retains(extraI0,extraI1) && retains(extraS0,extraS1) && ownerSafe
+            val better=trainI1.loss+0.000001<trainI0.loss &&
+                trainS1.loss+0.000001<trainS0.loss &&
+                auditI1.loss+auditS1.loss+0.0005<auditI0.loss+auditS0.loss
+            val checks=listOf(
+                "Neuer Intent-Holdout" to retains(auditI0,auditI1),
+                "Neuer Semantik-Holdout" to retains(auditS0,auditS1),
+                "Ursprünglicher Intent-Holdout" to retains(fixedI0,fixedI1),
+                "Ursprünglicher Semantik-Holdout" to retains(fixedS0,fixedS1),
+                "Öffentliches Paket: Intent" to retains(extraI0,extraI1),
+                "Öffentliches Paket: Semantik" to retains(extraS0,extraS1),
+                "Bestätigte Besitzerbeispiele" to ownerSafe
+            )
+            val blockers=checks.filterNot { it.second }.map { it.first }
+            val accepted=completed && allProtected && better
+            val reason=when {
+                !completed -> "Trainingslauf unterbrochen oder Zeitbudget erreicht; wiederholbar."
+                !allProtected -> "Schutzprüfung nicht bestanden: "+blockers.joinToString(", ")+
+                    ". Kandidatengewichte verworfen."
+                !better -> "Kein unabhängiger Qualitätsgewinn; vorige Gewichte erhalten."
+                else -> "Neue Gewichtswerte akzeptiert; der frühere Stand ist als Checkpoint archiviert."
+            }
+            fun checkLine(name:String,before:SubwordEvaluation,after:SubwordEvaluation):String =
+                name+": "+before.correct+"/"+before.total+" → "+
+                    after.correct+"/"+after.total+
+                    " · Verlust "+"%.4f".format(Locale.ROOT,before.loss)+
+                    " → "+"%.4f".format(Locale.ROOT,after.loss)+
+                    " · "+(if(retains(before,after))"OK" else "REGRESSION")
+            val diagnostics=listOf(
+                checkLine("Neuer Intent",auditI0,auditI1),
+                checkLine("Neue Semantik",auditS0,auditS1),
+                checkLine("Alter Intent",fixedI0,fixedI1),
+                checkLine("Alte Semantik",fixedS0,fixedS1),
+                checkLine("Vorheriges Paket Intent",extraI0,extraI1),
+                checkLine("Vorheriges Paket Semantik",extraS0,extraS1),
+                "Besitzer-Lektionen: "+(if(ownerSafe)"GESCHÜTZT" else "RÜCKSCHRITT"),
+                "Trainingsverlust Intent: "+
+                    "%.4f".format(Locale.ROOT,trainI0.loss)+" → "+
+                    "%.4f".format(Locale.ROOT,trainI1.loss),
+                "Trainingsverlust Semantik: "+
+                    "%.4f".format(Locale.ROOT,trainS0.loss)+" → "+
+                    "%.4f".format(Locale.ROOT,trainS1.loss)
+            ).joinToString("\n")
+            if(accepted)saveModel(candidate.save(),marker)
+            if(completed)appendAudit(marker,accepted,
+                trainI.steps+(trainS?.steps ?: 0),
+                trainI0,trainI1,auditI0,auditI1,emptyList(),reason)
+            ExtendedCurriculumReport(stage+1,curriculum.STAGES,completed,accepted,
+                trainI.steps,trainS?.steps ?: 0,reason,auditI0,auditI1,auditS0,auditS1,
+                diagnostics)
         }
 
     fun teachIntent(
@@ -238,9 +511,11 @@ class ContinuumLearningCore(
         val holdoutBefore=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
         val protectedIntent=(INTENT_HOLDOUT+ownerIntentReplay()).take(128)
         val otherBefore=candidate.evaluateIntent(protectedIntent)
+        emitTrainingPhase("TRAIN_WEIGHTS")
         val train=candidate.trainSemantic(
             training,steps=550,maxMillis=2500,cancelled=cancelled
         )
+        emitTrainingPhase("AUDIT")
         val after=candidate.evaluateSemantic(training)
         val holdoutAfter=candidate.evaluateSemantic(SEMANTIC_HOLDOUT)
         val otherAfter=candidate.evaluateIntent(protectedIntent)
@@ -451,11 +726,17 @@ class ContinuumLearningCore(
         training:DecoderEvidenceCorpus,
         audit:DecoderEvidenceCorpus,
         steps:Int=600,
-        cancelled:()->Boolean={false}
+        cancelled:()->Boolean={false},
+        protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
     ):DecoderExperimentResult=synchronized(CORE_LOCK) {
-        ContinuumDecoderBridge(directory).trainPairedExperiment(
-            training,audit,loadModel().save(),steps,cancelled
-        )
+        emitTrainingPhase("TRAIN_WEIGHTS")
+        try {
+            ContinuumDecoderBridge(directory).trainPairedExperiment(
+                training,audit,loadModel().save(),steps,cancelled,protectedAudits
+            )
+        } finally {
+            emitTrainingPhase("AUDIT")
+        }
     }
 
     fun experimentalPairedDecoderContinuation(

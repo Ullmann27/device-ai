@@ -58,7 +58,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
         // The supervisor's process-wide CYCLE_LOCK serializes normal callers.
         if (path.exists()) read()
         require(s.state in setOf("READY", "DEFERRED", "ERROR"))
-        require(s.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
+        require(s.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
             "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
         require(s.checkedAt >= 0 && s.recoveredClaims >= 0 && s.readyTasks >= 0 &&
             s.failedTasks >= 0 && s.swb1Updates >= 0 && s.cre1Steps >= 0)
@@ -106,7 +106,7 @@ class DeviceTeamleaderStatusStore(private val base: File) {
             cells[4].toInt(), cells[5].toInt(), cells[6].toInt(),
             cells[7].toInt(), cells[8].takeUnless { it == "-" }, cells[9])
         require(snapshot.state in setOf("READY", "DEFERRED", "ERROR"))
-        require(snapshot.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
+        require(snapshot.reason in setOf("OK", "CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
             "STORAGE_LOW", "CHECK_FAILED", "TIME_BUDGET", "WORKER_BUSY"))
         require(snapshot.checkedAt >= 0 && snapshot.recoveredClaims >= 0 &&
             snapshot.readyTasks >= 0 && snapshot.failedTasks >= 0 &&
@@ -191,7 +191,7 @@ class DeviceTeamleader(
     }
 
     fun defer(reason: String): DeviceTeamleaderSnapshot {
-        require(reason in setOf("CANCELLED", "BATTERY_LOW", "THERMAL_LIMIT",
+        require(reason in setOf("CANCELLED", "BATTERY_LOW", "BATTERY_UNKNOWN", "THERMAL_LIMIT",
             "STORAGE_LOW", "TIME_BUDGET"))
         if (!CYCLE_LOCK.tryLock()) return DeviceTeamleaderSnapshot(now(), "DEFERRED",
             0, 0, 0, 0, 0, null, "WORKER_BUSY")

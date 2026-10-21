@@ -14,9 +14,12 @@ command -v git >/dev/null
 
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
-expected_branch="astra/render-mentor-apk-builder-20261019"
+# The original Mentor service is still pinned to the older branch.
+# This updated script is ready for a separately authorized Render branch switch.
+expected_branch="astra/continuum-experiment-charter-20261019"
+render_delivery_branch="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "" ]]; then
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
   echo "Refusing wrong source branch: $actual_branch" >&2
   exit 69
 fi
@@ -78,6 +81,14 @@ export GRADLE_USER_HOME="$workspace/gradle-cache"
 mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 
+echo "[Continuum] Sol quality handover: complete Node 22+ deterministic regression gate"
+node --version
+node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+echo "[Continuum] Reproducible backend dependencies from committed lockfile"
+npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+echo "[Continuum] Full backend regression gate"
+node --test --test-concurrency=2 backend/test/*.test.js
+
 echo "[Continuum] Groq-specific contract tests"
 node --check backend/src/groq-mentor.js
 node --check backend/src/mentor-pairing.js
@@ -92,6 +103,16 @@ node --check .github/continuum/worker-atlas-epistemic-graph.mjs
 node --check .github/continuum/workshop-specialist-orchestrator.mjs
 node --check .github/continuum/continuum-hyper-lab.mjs
 node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
+
+echo "[Continuum] AUTOGENESIS, CDX1 and bounded research regression gates"
+node --test \
+  .github/continuum/autogenesis-safe-wiring.test.mjs \
+  .github/continuum/local-model-smoke.test.mjs \
+  .github/continuum/continuum-growth-and-archive.test.mjs \
+  .github/continuum/autonomous-topic-frontier.test.mjs \
+  .github/continuum/research-job-permission.test.mjs \
+  .github/continuum/cdx-large-curriculum.test.mjs \
+  .github/continuum/training-monitor-wiring.test.mjs
 
 echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
 : "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
@@ -122,12 +143,16 @@ fi
 output="$repo_root/mentor-build-output"
 mkdir -p "$output"
 cp "$apk" "$output/DeviceAI-Continuum-Groq-Mentor-Preview.apk"
+# A version-specific filename avoids stale CDN artifacts from earlier builds.
+cp "$apk" "$output/DeviceAI-Continuum-Training-Monitor-v0.3.9.apk"
 (
   cd "$output"
-  sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk > SHA256SUMS.txt
+  sha256sum DeviceAI-Continuum-Groq-Mentor-Preview.apk \
+    DeviceAI-Continuum-Training-Monitor-v0.3.9.apk > SHA256SUMS.txt
 )
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
-  "$commit" "$expected_branch" > "$output/BUILD-INFO.txt"
+printf 'commit=%s\nbranch=%s\nreview_branch=%s\npackage=at.heinz.deviceai.mentorpaired\nandroid_min_sdk=26\nsigning=persistent_private_preview_keystore\n' \
+  "$commit" "$actual_branch" "$expected_branch" > "$output/BUILD-INFO.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-Training-Monitor-v0.3.9.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo "[Continuum] Verified APK and checksums ready for publication"
 cat "$output/SHA256SUMS.txt"

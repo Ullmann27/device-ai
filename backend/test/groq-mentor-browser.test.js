@@ -30,6 +30,9 @@ test("render only serves local UI assets; mentor POST keeps auth and owner conse
   assert.match(server, /\["\/mentor", "mentor\.html"\]/);
   assert.match(server, /\["\/mentor\/ui\.js", "mentor\.js"\]/);
   assert.match(server, /res\.set\("Cache-Control", "no-store"\)/);
-  assert.match(server, /app\.post\("\/v1\/mentor\/answer", auth,/);
+  assert.match(server, /app\.post\("\/v1\/mentor\/answer", mentorAuth,/);
+  assert.match(server, /function mentorAuth\(req, res, next\)/);
+  assert.match(server, /mentorPairing\.isMentorAuthorized\(supplied\)/);
+  assert.match(server, /return auth\(req, res, next\)/);
   assert.match(server, /req\.body\?\.consent !== true/);
 });

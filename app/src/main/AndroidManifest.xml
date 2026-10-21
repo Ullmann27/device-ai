@@ -2,9 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required on Android 14+ to schedule JobScheduler network-constrained tasks. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
 
     <application
         android:allowBackup="false"
@@ -28,6 +33,11 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
+            android:name=".learning.ContinuumPublicStudyJobService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
             android:name=".learning.ContinuumAutonomousJobService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
@@ -42,8 +52,39 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <!-- Android launcher widget uses only persisted real training evidence. -->
+        <receiver
+            android:name=".ContinuumTrainingWidget"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/continuum_training_widget_info" />
+        </receiver>
+
+        <!-- Termux result PendingIntent callback: explicit and never exported. -->
+        <receiver
+            android:name=".ContinuumMobileBuildResultReceiver"
+            android:enabled="${mobileBuilderEnabled}"
+            android:exported="false" />
+
+        <!-- EXP-00/08: Builder is a tool screen, not a second home-screen app.
+             Exported only for explicit allowlisted navigation from an installed
+             Device AI main package; disabled in non-preview builds. -->
+        <activity
+            android:name=".ContinuumMobileBuilderActivity"
+            android:exported="true"
+            android:enabled="${mobileBuilderEnabled}"
+            android:label="Continuum Builder" />
+
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ContinuumTrainingMonitorActivity"
             android:exported="false" />
 
         <activity

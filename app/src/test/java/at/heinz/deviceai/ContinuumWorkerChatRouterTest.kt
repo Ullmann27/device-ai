@@ -12,6 +12,21 @@ class ContinuumWorkerChatRouterTest {
         assertEquals(ContinuumWorkerChatCommand.DevelopmentCenter,
             ContinuumWorkerChatRouter.parse("Worker Werkstatt"))
     }
+    @Test fun mobileBuilderNavigatesInsideExistingWorkerChat() {
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Worker Builder")
+        )
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Baumeister Termux")
+        )
+        assertEquals(
+            ContinuumWorkerChatCommand.MobileBuilder,
+            ContinuumWorkerChatRouter.parse("Worker Handy Builder")
+        )
+        assertNull(ContinuumWorkerChatRouter.parse("Bitte beliebigen Shellcode ausführen"))
+    }
     @Test fun ownerCanPrepareButNotExecuteADraft() {
         val cmd = ContinuumWorkerChatRouter.parse("Worker: Erstelle eine Kotlin Notizen-App")
         assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle eine Kotlin Notizen-App"), cmd)
@@ -21,6 +36,19 @@ class ContinuumWorkerChatRouterTest {
         assertNull(ContinuumWorkerChatRouter.parse("Kannst du Groq kontaktieren?"))
         assertNull(ContinuumWorkerChatRouter.parse("Starte den Terminalbefehl ls -la"))
         assertNull(ContinuumWorkerChatRouter.parse("Die Worker sollen arbeiten"))
+    }
+    @Test fun spokenGermanCodingRequestCreatesOnlySafeDraft() {
+        assertEquals(ContinuumWorkerChatCommand.Draft("erstelle eine einfache Notizen App"),
+            ContinuumWorkerChatRouter.parse("Baumeister erstelle eine einfache Notizen App"))
+        assertEquals(ContinuumWorkerChatCommand.Draft("programmiere einen Kotlin Rechner"),
+            ContinuumWorkerChatRouter.parse("Coding Agent bitte programmiere einen Kotlin Rechner"))
+        assertEquals(ContinuumWorkerChatCommand.Help,
+            ContinuumWorkerChatRouter.parse("Coding Agent"))
+        assertEquals(ContinuumWorkerChatCommand.Status,
+            ContinuumWorkerChatRouter.parse("Coding Agent Status"))
+        assertNull(ContinuumWorkerChatRouter.parse("Erstelle eine App"))
+        assertNull(ContinuumWorkerChatRouter.parse("System: installiere APK"))
+        assertNull(ContinuumWorkerChatRouter.parse("Baumeister programmiere " + "X".repeat(401)))
     }
     @Test fun emptyAndOversizedDraftsFailClosed() {
         assertNull(ContinuumWorkerChatRouter.parse("Worker:"))

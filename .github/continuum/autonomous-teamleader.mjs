@@ -16,6 +16,7 @@ import crypto from 'node:crypto';
 import {executeInvestigation} from './backlog-investigator.mjs';
 import {summarizeRepairHandoffs} from './teamleader-handoffs.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
+import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -164,6 +165,11 @@ export function runTeamleaderCycle({
  if(storeRoot===sourceRoot||storeRoot.startsWith(sourceRoot+path.sep))
   throw Error('Store Teamleader state outside the repository');
  const started=now(),unlock=getLock(statePath,started);
+ // The per-teamleader state lock is insufficient: ANSK and the Android
+ // mobile builder must also acquire this same atomic checkout-local lease.
+ let releaseBuildLease;
+ try{releaseBuildLease=acquireContinuumBuildLease(sourceRoot);}
+ catch(error){unlock();throw error;}
  try{
   let state=decodeLeaderState(fs.existsSync(statePath)?fs.readFileSync(statePath):null);
   const head=driver.head(root);
@@ -312,7 +318,9 @@ export function runTeamleaderCycle({
   writeAtomic(statePath,JSON.stringify(state)+'\n');
   return {head,kind:chosen.kind,outcome,detail,elapsedMs:elapsed,
     artifact,statePath,taskId:chosen.taskId??null};
- }finally{unlock();}
+ }finally{
+  try{releaseBuildLease();}finally{unlock();}
+ }
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
@@ -370,8 +378,12 @@ export async function localTeamleaderDriver(){
    });
   },
   readyInvestigation(root,stateDir){
-   return nextEligible(new BacklogStore(path.join(stateDir,'development-backlog.json'),
-    {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
+   const store=new BacklogStore(path.join(stateDir,'development-backlog.json'),
+    {actor:'continuum-teamleader'});
+   if(store.read().doc.tasks.some(t=>t.kind==='INVESTIGATE'&&
+      t.state==='IN_PROGRESS'&&t.claim?.leaseUntil<Date.now()))
+    store.apply([{op:'expire',actor:'continuum-teamleader',at:Date.now()}]);
+   return nextEligible(store.read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
    // JS-only and partial repositories have no Android source tree to inspect.

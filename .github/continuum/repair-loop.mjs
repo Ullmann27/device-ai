@@ -8,6 +8,7 @@ import {critique} from './repair-critic.mjs';
 import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
+import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -51,6 +52,32 @@ function nodeTests(wt){
   return tests.map(f=>'.github/continuum/'+f);
 }
 
+/**
+ * Reuse the mobile builder's pinned ARM64 toolchain instead of creating a
+ * second Gradle setup. Explicitly installed paths only; no tool downloads.
+ */
+export function continuumGradleProfile(wt,kind,{env=process.env,arch=process.arch}={}){
+  if(kind!=='compile'&&kind!=='unit')throw Error('Unsupported Gradle check profile');
+  const target=kind==='compile'?':app:compileDebugUnitTestKotlin':':app:testDebugUnitTest';
+  const args=[target,'--console=plain','-Pkotlin.incremental=false'];
+  if(!isTermuxArm64(env,arch))
+    return {cmd:'gradle',args,cwd:wt,kotlin:true};
+  const resolved=resolveTermuxEnvironment(env,arch);
+  const executable=p=>typeof p==='string'&&path.isAbsolute(p)&&
+    fs.existsSync(p)&&fs.statSync(p).isFile()&&(fs.statSync(p).mode&0o111)!==0;
+  if(!executable(resolved.CONTINUUM_GRADLE_PATH)||
+     !executable(resolved.CONTINUUM_AAPT2_PATH)||
+     !executable(path.join(resolved.JAVA_HOME??'','bin/java'))||
+     !resolved.ANDROID_HOME||!fs.existsSync(path.join(resolved.ANDROID_HOME,'platforms/android-36/android.jar')))
+    throw Error('ANSK_MISSING_PINNED_TERMUX_ANDROID_TOOLCHAIN');
+  return {cmd:resolved.CONTINUUM_GRADLE_PATH,args:[
+    '--no-daemon','--max-workers=2',...args,
+    '-Pandroid.aapt2FromMavenOverride='+resolved.CONTINUUM_AAPT2_PATH,
+    '-Pkotlin.compiler.execution.strategy=in-process',
+    '-PdeviceAiMobileAidlFallback=true'
+  ],cwd:wt,kotlin:true,env:{...resolved,GRADLE_OPTS:'-Dorg.gradle.jvmargs=-Xmx1536m'}};
+}
+
 /** Fixed, reviewed check commands. Nothing here is derived from logs or inputs. */
 export const PROFILES=Object.freeze({
   'node-continuum':(wt,out)=>({cmd:process.execPath,args:['--test','--test-reporter=junit','--test-reporter-destination='+path.join(out,'node-junit.xml'),...nodeTests(wt)],
@@ -62,11 +89,13 @@ export const PROFILES=Object.freeze({
       '--test-reporter-destination='+path.join(out,'backend-junit.xml'),...tests],
       cwd:wt,junitFiles:[path.join(out,'backend-junit.xml')],timeoutMs:300000};
   },
-  // Kotlin incremental compilation is disabled: after a failed build its caches
-  // produced phantom "Conflicting overloads" errors in untouched files.
-  'android-compile':wt=>({cmd:'gradle',args:[':app:compileDebugUnitTestKotlin','--console=plain','-Pkotlin.incremental=false'],cwd:wt,kotlin:true,timeoutMs:1200000}),
-  'android-unit':wt=>({cmd:'gradle',args:[':app:testDebugUnitTest','--console=plain','-Pkotlin.incremental=false'],cwd:wt,kotlin:true,
-    junitDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],cleanDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],timeoutMs:1500000}),
+  // On ARM64 Termux the existing pinned owner toolchain must also be used
+  // for worktree checks. Never fall back to an unavailable desktop aapt2.
+  // Outside Termux these are the unchanged deterministic Gradle profiles.
+  'android-compile':wt=>({...continuumGradleProfile(wt,'compile'),timeoutMs:1200000}),
+  'android-unit':wt=>({...continuumGradleProfile(wt,'unit'),
+    junitDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],
+    cleanDirs:[path.join(wt,'app/build/test-results/testDebugUnitTest')],timeoutMs:1500000}),
   'jvm-harness':wt=>{
     // Local development only: JVM harness that compiles app sources without the Android SDK.
     const harness=process.env.CONTINUUM_JVM_HARNESS;
@@ -84,7 +113,7 @@ export const CHAINS=Object.freeze({
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
-export function runProfile(name,wt,out,{deadline=null}={}){
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
   const p=factory(wt,out);
   for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
@@ -92,13 +121,34 @@ export function runProfile(name,wt,out,{deadline=null}={}){
   if(deadline!==null&&(!Number.isSafeInteger(deadline)||deadline<=Date.now()))
     throw Error('Repair test deadline exhausted before '+name);
   const remaining=()=>deadline===null?p.timeoutMs:Math.min(p.timeoutMs,Math.max(1,deadline-Date.now()));
-  const r=run(p.cmd,p.args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
+  if(forceRerun&&name!=='android-compile'&&name!=='android-unit')
+    throw Error('Forced rerun is supported for Android check profiles only');
+  const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
+  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
-  const addTests=j=>{for(const k of Object.keys(tests))tests[k]+=j[k]??0;diagnostics.push(...j.diagnostics);};
+  const skippedCaseHashes=[];
+  let completeSkipIdentities=true;
+  const addTests=j=>{
+    for(const k of ['total','failed','skipped','placeholders','executed','passed'])tests[k]+=j[k]??0;
+    diagnostics.push(...j.diagnostics);
+    if(j.skipped>0){
+      const ids=j.skippedCaseHashes;
+      if(!Array.isArray(ids)||ids.length!==j.skipped||
+         ids.some(id=>typeof id!=='string'||!/^[0-9a-f]{64}$/.test(id)))
+        completeSkipIdentities=false;
+      else skippedCaseHashes.push(...ids);
+    }
+  };
   for(const dir of p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
   for(const file of p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(fs.readFileSync(file,'utf8'),wt));
+  // Permit pre-existing JUnit skips only with a complete, stable case-identity
+  // digest. ANSK independently compares the same identity across all green runs.
+  if(tests.skipped>0&&completeSkipIdentities&&
+     skippedCaseHashes.length===tests.skipped&&
+     new Set(skippedCaseHashes).size===skippedCaseHashes.length)
+    tests.skippedCaseDigest=sha256(skippedCaseHashes.sort().join('\0'));
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
@@ -143,10 +193,10 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out,{deadline=null}={}){
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false}={}){
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
-    const r=runProfile(name,wt,out,{deadline});results.push(r);
+    const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);
     if(!r.passed)break;
   }
   return {passed:results.every(r=>r.passed),results,diagnostics:results.flatMap(r=>r.diagnostics)};

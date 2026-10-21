@@ -7,6 +7,7 @@ import path from 'node:path';
 import {initialLeaderState,decodeLeaderState,selectTeamleaderAction,runTeamleaderCycle,summarizeTeamleaderProgress,publicTeamleaderRepairReport}
  from './autonomous-teamleader.mjs';
 import {parseTeamleaderArgs} from './teamleader-cli.mjs';
+import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
 
 const A='a'.repeat(40),B='b'.repeat(40);
 function sandbox(fn){
@@ -447,3 +448,15 @@ test('legacy internal VERIFIED without independent observation cannot leak succe
  assert.equal(publicReport.verified,null);
  assert.equal(publicReport.attempts[0].outcome,'INSUFFICIENT_EVIDENCE');
 });
+
+test('a running Android build blocks teamleader before any repair and releases local state lock',()=>
+ sandbox(({root,stateDir})=>{
+  const driver=fake();
+  const release=acquireContinuumBuildLease(root);
+  try{
+   assert.throws(()=>runTeamleaderCycle({root,stateDir,driver}),/CONTINUUM_BUILD_LEASE_BUSY/);
+   assert.equal(driver.calls.repairs,0);
+  }finally{release();}
+  assert.equal(runTeamleaderCycle({root,stateDir,driver}).outcome,'NO_FAILURE');
+  assert.equal(driver.calls.repairs,1);
+ }));

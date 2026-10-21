@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {parseJUnit,parseJsErrorText,parseJsError} from './repair-diagnostics.mjs';
+import os from 'node:os';
+import path from 'node:path';
+import {parseJUnit,parseJsErrorText,parseJsError,readJUnitDirectory} from './repair-diagnostics.mjs';
 
 // Real reporter output captured from Node v20.20.0, v22.16.0 and v22.22.0 for the
 // same fault (math.mjs calls `sqare`); only the absolute path was replaced by /repo.
@@ -79,4 +81,46 @@ test('an error without its own repository frame cannot borrow the next error\'s 
   const ref=out.find(d=>d.kind==='REFERENCE_ERROR');
   assert.deepEqual([ref.file,ref.symbol],['a.mjs','foo']);
   assert.ok(!out.some(d=>d.kind==='JS_SYNTAX_ERROR'&&d.file==='a.mjs'));
+});
+
+test('skipped JUnit cases are fingerprinted without copying their names',()=>{
+ const xml='<testsuite><testcase classname="local.Example" name="public-test"><skipped/></testcase>'+
+   '<testcase classname="local.Example" name="ordinary"/></testsuite>';
+ const result=parseJUnit(xml,ROOT);
+ assert.equal(result.executed,1);
+ assert.equal(result.skipped,1);
+ assert.equal(result.failed,0);
+ assert.equal(result.skippedCaseHashes.length,1);
+ assert.match(result.skippedCaseHashes[0],/^[0-9a-f]{64}$/);
+ assert.doesNotMatch(JSON.stringify(result.skippedCaseHashes),/local\.Example|public-test/);
+ assert.deepEqual(result.skippedCaseHashes,parseJUnit(xml,ROOT).skippedCaseHashes);
+ const swapped=parseJUnit(xml.replace('public-test','another-test'),ROOT);
+ assert.notDeepEqual(swapped.skippedCaseHashes,result.skippedCaseHashes);
+});
+
+test('a skipped JUnit case without stable testcase identity cannot be accepted',()=>{
+ const partial=parseJUnit('<testsuite><testcase name="missing-class"><skipped/></testcase></testsuite>',ROOT);
+ assert.equal(partial.skipped,1);
+ assert.deepEqual(partial.skippedCaseHashes,[null]);
+});
+
+test('JUnit directory combines stable hashes from multiple Gradle XML suites',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-skip-evidence-'));
+ try{
+  const one='<testsuite><testcase name="alpha" classname="pkg.A"><skipped/></testcase>'+
+    '<testcase name="good" classname="pkg.A"/></testsuite>';
+  const two='<testsuite><testcase classname="pkg.B" name="beta"><skipped message="disabled"/></testcase></testsuite>';
+  fs.writeFileSync(path.join(dir,'TEST-pkg.A.xml'),one);
+  fs.writeFileSync(path.join(dir,'TEST-pkg.B.xml'),two);
+  const actual=readJUnitDirectory(dir,ROOT);
+  assert.equal(actual.executed,1);
+  assert.equal(actual.skipped,2);
+  assert.equal(actual.skippedCaseHashes.length,2);
+  assert.ok(actual.skippedCaseHashes.every(x=>/^[0-9a-f]{64}$/.test(x)));
+  fs.writeFileSync(path.join(dir,'TEST-pkg.B.xml'),two.replace('beta','gamma'));
+  const changed=readJUnitDirectory(dir,ROOT);
+  assert.notDeepEqual(changed.skippedCaseHashes,actual.skippedCaseHashes);
+ }finally{
+  fs.rmSync(dir,{recursive:true,force:true});
+ }
 });
