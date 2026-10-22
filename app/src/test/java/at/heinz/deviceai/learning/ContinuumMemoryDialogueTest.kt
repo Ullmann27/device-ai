@@ -116,6 +116,59 @@ class ContinuumMemoryDialogueTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun inventedAlphanumericTermMustNotRetrieveUnrelatedWikipediaSources() {
+        val records=listOf(
+            "Die Physik untersucht Quantenmechanik und andere Phänomene.",
+            "Statistik ist die Lehre von quantitativen Informationen.",
+            "Bernard Widrow erforschte technische Lernverfahren."
+        ).mapIndexed { i, excerpt ->
+            LearningExperienceFactory.create(
+                LearningExperienceType.SOURCE_TEXT,
+                LearningProvenance.MENTOR_WIKIPEDIA,
+                LearningTrustClass.SOURCE_OBSERVATION,
+                LearningStatus.OBSERVED,
+                excerpt,
+                sourceRef="https://de.wikipedia.org/wiki/Quelle${i+1}",
+                now=1L
+            )
+        }
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Quantenkarussell987",records).isEmpty())
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Was weißt du über Quantenkarussell987?",records).isEmpty())
+        assertTrue(ContinuumMemoryDialogue.wordEvidence(
+            "Quantenkarussell987", "Quantitative Statistik und Quantenmechanik") <
+            ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+    }
+
+    @Test fun exactGermanTechnicalTermKeepsItsSourceWithoutOtherErrorTexts() {
+        val title="Backpropagation heißt auch Fehlerrückführung."
+        val unrelated="Softwaretest dient dazu, Fehler in Programmen zu erkennen."
+        val records=listOf(title,unrelated,
+            "Aufrichtigkeit bedeutet die ehrliche Darstellung des eigenen Wissens.")
+            .mapIndexed { i, excerpt ->
+                LearningExperienceFactory.create(
+                    LearningExperienceType.SOURCE_TEXT,
+                    LearningProvenance.MENTOR_WIKIPEDIA,
+                    LearningTrustClass.SOURCE_OBSERVATION,
+                    LearningStatus.OBSERVED,
+                    excerpt,
+                    sourceRef="https://de.wikipedia.org/wiki/Beleg${i+1}",
+                    now=1L
+                )
+            }
+        val hits=ContinuumMemoryDialogue.rank(fixture(),"Fehlerrückführung",records)
+        assertEquals(1,hits.size)
+        assertEquals(title,hits.single().text)
+        assertEquals(1.0,ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",title),0.0)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",unrelated) <
+            ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence(
+            "Pflanzen", "Die Pflanze wächst.") >=0.8)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence(
+            "Schlüssel", "Der Haustürschlüssel ist sicher.") >=0.82)
+    }
+
     @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
         val sentence = "Sternenreise ist mein Forschungsprojekt"
         val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)
