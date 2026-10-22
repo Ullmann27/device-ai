@@ -206,6 +206,20 @@ class ContinuumMemoryDialogueTest {
             "Vergleiche SWB1 und CDX1","SWB1 und CDX1 sind getrennte Lernkerne."))
     }
 
+    @Test fun longQuestionVerbsCannotBlockValidSourceEvidence() {
+        val citation="Backpropagation heißt auch Fehlerrückführung."
+        for (query in listOf(
+            "Wie funktioniert Fehlerrückführung?",
+            "Beschreibe und analysiere Fehlerrückführung",
+            "Kannst du Fehlerrückführung charakterisieren?",
+            "Was unterscheidet Fehlerrückführung und Backpropagation?"
+        )) assertTrue(query,ContinuumMemoryDialogue.sourceTermEvidence(query,citation))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wie funktioniert Quantenkarussell987?",citation))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche Fehlerrückführung und Softwaretest",citation))
+    }
+
     @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
         val sentence = "Sternenreise ist mein Forschungsprojekt"
         val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)
