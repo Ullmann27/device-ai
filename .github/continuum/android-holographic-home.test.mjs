@@ -61,11 +61,14 @@ test('responsive dashboard retains chat composer, updates and keyboard visibilit
  assert.match(pane,/chatScroll/);
  assert.match(home,/ComposerUiPolicy\.viewport/);
  assert.match(home,/keyboardCompact/);
- // every start-screen element is a focusable, clickable view that speaks its real values
- assert.match(homeView,/isClickable = true/);
- assert.match(homeView,/isFocusable = true/);
- assert.match(homeView,/contentDescription = element\.describe\(state\)/);
- assert.match(homeView,/setOnClickListener \{ onSlot\(slot, downX \/ density, downY \/ density\) \}/);
+ // every start-screen element (inner ElementView, not the standalone navigation view) is a focusable, clickable
+ // view that speaks its real values
+ const elementView=homeView.slice(homeView.indexOf('inner class ElementView'),homeView.indexOf('/** Standalone drawn element'));
+ assert.ok(elementView.length>200,'ElementView class not found');
+ assert.match(elementView,/isClickable = true/);
+ assert.match(elementView,/isFocusable = true/);
+ assert.match(elementView,/contentDescription = element\.describe\(state\)/);
+ assert.match(elementView,/setOnClickListener \{ onSlot\(slot, downX \/ density, downY \/ density\) \}/);
  assert.doesNotMatch(pane,/buildQuickActions\(\)/);
 });
 

@@ -335,9 +335,10 @@ test('new visual start screen is local, accessible and honest about capabilities
    !/URL\(|https?:\/\//.test(art+renderer));
  ensure('start screen uses real native drawing and named slots',
    pane.includes('ContinuumHologramView(this)') && pane.includes('ContinuumHomeView('));
+ const elementView=homeView.slice(homeView.indexOf('inner class ElementView'),homeView.indexOf('/** Standalone drawn element'));
  ensure('start-screen elements are keyboard and accessibility reachable',
-   homeView.includes('isClickable = true') && homeView.includes('isFocusable = true') &&
-   homeView.includes('contentDescription = element.describe(state)'));
+   elementView.includes('isClickable = true') && elementView.includes('isFocusable = true') &&
+   elementView.includes('contentDescription = element.describe(state)'));
  ensure('status labels and cards open the real settings and status screens',
    /Slot\.LABEL_CONNECTED -> showInternetSettings\(\)/.test(slots) &&
    /Slot\.SYSTEM_STATUS -> showSystemCenter\(\)/.test(slots) &&
