@@ -220,6 +220,32 @@ class ContinuumMemoryDialogueTest {
             "Vergleiche Fehlerrückführung und Softwaretest",citation))
     }
 
+    @Test fun sourceOnlyArgonAnchorRegressionAndDirectionalCompounds() {
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist Osmose?", "Osmose bezeichnet einen Stofftransport."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist Osmose?", "Ein anderer Prozess mit anderem Namen."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wie funktioniert Osmose in Graz?", "Osmose wird erklärt."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was bedeutet Osmose?", "Osmose bezeichnet einen Stofftransport."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist der Schlüssel?", "Der Haustürschlüssel ist sicher."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung", "Die Rückführung ist eindeutig."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Speicherplan", "Speicherplatz wird beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Pflanzen", "Die Pflanze wächst."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CSX1","SWB1 und CSX2 sind beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CSX1","SWB1 und CSX1 sind beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung", java.text.Normalizer.normalize(
+                "Fehlerrückführung",java.text.Normalizer.Form.NFD)))
+    }
+
     @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
         val sentence = "Sternenreise ist mein Forschungsprojekt"
         val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)
