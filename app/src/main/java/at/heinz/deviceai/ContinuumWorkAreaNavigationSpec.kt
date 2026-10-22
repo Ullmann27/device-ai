@@ -25,6 +25,14 @@ object ContinuumWorkAreaNavigationSpec {
         ContinuumWorkArea.MEHR
     )
 
+    /** Readable quick actions on compact displays and at large system font scales. */
+    fun quickActionColumns(usableWidthDp: Int, fontScale: Float): Int =
+        if (usableWidthDp >= 320 && fontScale.isFinite() && fontScale in 0.5f..1.25f) 2 else 1
+
+    /** "More" is a transient dialog, never a lasting screen selection. */
+    fun selectionAfterTap(current: ContinuumWorkArea, tapped: ContinuumWorkArea): ContinuumWorkArea =
+        if (tapped == ContinuumWorkArea.MEHR) current else tapped
+
     fun showBottomBar(wide: Boolean, keyboardVisible: Boolean): Boolean =
         !wide && !keyboardVisible
 
