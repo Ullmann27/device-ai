@@ -45,5 +45,5 @@ test("German near-inflection and complete compound suffix remain retrievable",()
   assert.ok(wordEvidence("Schlüssel","Der Haustürschlüssel liegt hier.")>=0.82);
   assert.ok(wordEvidence("Projekt","Sternenreise ist mein Forschungsprojekt.")>=0.82);
   assert.equal(wordEvidence("SeriennummerXZ902","Die SeriennummerXZ902 stimmt."),1);
-  assert.ok(wordEvidence("SeriennummerXZ903","Die SeriennummerXZ902 stimmt.")<EVIDENCE_THRESHOLD);
+  assert.equal(sourceTermEvidence("SeriennummerXZ903","Die SeriennummerXZ902 stimmt."),false);
 });
