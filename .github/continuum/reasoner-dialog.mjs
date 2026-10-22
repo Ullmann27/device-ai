@@ -13,6 +13,8 @@ import path from 'node:path';
 import {createHash,createHmac,randomBytes,randomUUID,timingSafeEqual} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {runMobileCodingJob,cancelMobileCodingJob,RECEIPT_SCHEMA,MODULE_RE,EXPORT_RE,MAX_CASES_JSON} from '../../scripts/continuum-mobile-coding.mjs';
+import {critique} from './repair-critic.mjs';
+import {renderOwnerNodeContract} from './contract-test-template.mjs';
 
 export const DIALOG_SCHEMA='continuum-reasoner-dialog';
 export const DIALOG_VERSION=1;
@@ -89,6 +91,20 @@ export function validateBody(type,body){
  default:p.push('unknown message type '+type);
  }
  return p;
+}
+
+/**
+ * The worker's published capability: would the coding agent's own critic accept the contract test for this
+ * module, export and cases? It refuses, for example, tests on its own control-plane code (protected paths).
+ * Asking the same critic with the same rendered contract keeps a single source of truth.
+ */
+export function capabilityCheck(module,exportName,casesJson){
+ if(!MODULE_RE.test(module??'')||!EXPORT_RE.test(exportName??''))return {allowed:false,reasons:['invalid module or export']};
+ const file=module.replace(/\.mjs$/,'.contract.test.mjs');
+ const text=renderOwnerNodeContract(file,exportName,casesJson);
+ if(text===null)return {allowed:false,reasons:['cases outside the contract grammar']};
+ const verdict=critique({strategy:'SYNTHESIZE_NODE_CONTRACT_TEST',edits:[{file,oldText:'',newText:text}],contractSpec:{file,exportName,casesJson}});
+ return {allowed:verdict.approved,reasons:verdict.reasons};
 }
 
 /** Canonical JSON (sorted keys) so that hashes do not depend on property order. */
@@ -273,6 +289,8 @@ export function checkReasonerMessage(m,s,{maxRounds,budgetMinutes}){
   if(h.body.module!==m.body.module||h.body.export!==m.body.export)return 'TEST_REQUEST must test exactly its hypothesis';
   if(s.requests.some(q=>q.body.hypothesis===h.seq))return 'this hypothesis was already tested; REVISE it instead';
   if(m.body.budgetMinutes>budgetMinutes)return 'budget above the owner limit of '+budgetMinutes+' minutes';
+  const capability=capabilityCheck(m.body.module,m.body.export,JSON.stringify(m.body.cases));
+  if(!capability.allowed)return 'outside the worker capability: '+capability.reasons.join('; ').slice(0,300);
   return null;}
  case 'CRITIQUE':{
   const r=bySeq(m.body.receipt);

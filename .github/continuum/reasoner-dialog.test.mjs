@@ -6,7 +6,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {runMobileCodingJob} from '../../scripts/continuum-mobile-coding.mjs';
-import {DialogJournal,dialogKey,validateBody,checkReasonerMessage,dialogState,verifyReceipt,runDialog,CAPABILITY} from './reasoner-dialog.mjs';
+import {DialogJournal,dialogKey,validateBody,checkReasonerMessage,dialogState,verifyReceipt,runDialog,capabilityCheck,CAPABILITY} from './reasoner-dialog.mjs';
 import {HypothesisReasoner,indexExports,parseExamples} from './hypothesis-reasoner.mjs';
 
 // The coding job runs the fixture's own test suite; never recurse from inside a repair worktree.
@@ -48,6 +48,11 @@ test('message bodies are typed, bounded and role-bound',()=>{
  assert.match(checkReasonerMessage({type:'TEST_REQUEST',body:{hypothesis:1,module:MODULE,export:'triple',cases:[{args:[1],expected:3}],budgetMinutes:9}},s2,limits),
   /owner limit/);
  assert.equal(checkReasonerMessage({type:'TEST_REQUEST',body:{hypothesis:1,module:MODULE,export:'triple',cases:[{args:[1],expected:3}],budgetMinutes:3}},s2,limits),null);
+ // the worker's own critic protects its control-plane code; such a request is refused before any job runs
+ const guarded={seq:1,role:'reasoner',type:'HYPOTHESIS',body:{claim:'c',module:'.github/continuum/kotlin-tokenizer.mjs',export:'isKeyword',basis:'b'}};
+ assert.match(checkReasonerMessage({type:'TEST_REQUEST',body:{hypothesis:1,module:'.github/continuum/kotlin-tokenizer.mjs',export:'isKeyword',
+  cases:[{args:['fun'],expected:true}],budgetMinutes:3}},dialogState([...s.entries,guarded]),limits),/outside the worker capability: protected path/);
+ assert.equal(capabilityCheck(MODULE,'triple',JSON.stringify([{args:[1],expected:3}])).allowed,true);
 });
 
 test('the journal detects edits, broken chains, wrong roles and forged receipts',()=>{

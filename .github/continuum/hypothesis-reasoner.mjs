@@ -5,7 +5,7 @@
 // learned scorer (LM1) can be compared against this lexical one without changing the protocol.
 import fs from 'node:fs';
 import path from 'node:path';
-import {CAPABILITY,validCase} from './reasoner-dialog.mjs';
+import {CAPABILITY,validCase,capabilityCheck} from './reasoner-dialog.mjs';
 
 const STOP=new Set(('der die das den dem des ein eine einen einem einer und oder aus auf für fuer mit von zu zum zur im in ist '+
  'sind wird werden soll sollen muss kann eine einer als wie wenn dann bei nach vor über ueber unter nicht nur auch es sie er '+
@@ -134,14 +134,15 @@ export class HypothesisReasoner{
 
  /** HYPOTHESIS, PLAN and TEST_REQUEST for the best untried candidate; the runner appends them in this order. */
  propose(view,ranked,examples){
-  const tried=new Set(view.entries.filter(e=>e.type==='HYPOTHESIS').map(e=>e.body.module+'#'+e.body.export));
-  const next=ranked.find(r=>!tried.has(r.c.module+'#'+r.c.export));
   const out=[];
-  if(!next)return [{type:'ABSTAIN',body:{reason:'Kein weiterer Export passt zu Ziel und Beispielen; ohne geprüfte Quittung wird nichts behauptet.'}}];
   let cases=examples.filter(validCase).slice(0,4);
   if(!cases.length)return [{type:'ABSTAIN',body:{reason:'Die Beispiele sind keine einfachen Werte (Text, Zahl, Wahrheitswert); dafür gibt es keinen Vertragstest.'}}];
   while(cases.length>1&&JSON.stringify(cases).length>300)cases=cases.slice(0,-1);
   if(JSON.stringify(cases).length>300)return [{type:'ABSTAIN',body:{reason:'Die Beispiele sind für einen Testauftrag zu lang (über 300 Zeichen).'}}];
+  const tried=new Set(view.entries.filter(e=>e.type==='HYPOTHESIS').map(e=>e.body.module+'#'+e.body.export));
+  // only hypotheses the worker may test at all (its critic protects, e.g., its own control-plane code)
+  const next=ranked.find(r=>!tried.has(r.c.module+'#'+r.c.export)&&capabilityCheck(r.c.module,r.c.export,JSON.stringify(cases)).allowed);
+  if(!next)return [{type:'ABSTAIN',body:{reason:'Kein weiterer prüfbarer Export passt zu Ziel und Beispielen; ohne geprüfte Quittung wird nichts behauptet.'}}];
   const seq=view.entries.length;   // sequence number the HYPOTHESIS will receive
   const rank=ranked.indexOf(next)+1;
   out.push({type:'HYPOTHESIS',body:{claim:`${next.c.export} aus ${next.c.module} erfüllt die ${cases.length} Beispiel(e) des Ziels.`,
