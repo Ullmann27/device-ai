@@ -146,7 +146,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         status.text = when {
             pending != null ->
                 "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt." +
-                    if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else ""
+                    (if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else "")
             last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
             else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
         }
