@@ -64,7 +64,8 @@ test('owner, old holdouts, new audits, snapshots and cancellation gate promotion
 test('Android entrypoints are unique and export uses owner-controlled system picker',()=>{
   const ids=[...ui.matchAll(/private const val \w+_REQUEST\s*=\s*(\d+)/g)].map(m=>m[1]);
   assert.equal(new Set(ids).size,ids.length);
-  assert.match(ui,/setNeutralButton\("GEWICHTE \/ LABOR"\)/);
+  // The action must remain owner-gated after migrating from AlertDialog to a glass-bento tile.
+  assert.match(ui,/cockpit\.action\(this, "GEWICHTE \/ LABOR"\) \{ dialog\.dismiss\(\); showLearningLabChoices\(\) \}/);
   assert.match(ui,/SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET/);
   assert.match(ui,/Intent\(Intent\.ACTION_CREATE_DOCUMENT\)/);
   assert.match(ui,/CONTINUUM_CORE_EXPORT_REQUEST ->/);
