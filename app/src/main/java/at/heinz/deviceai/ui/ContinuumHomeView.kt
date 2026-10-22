@@ -24,6 +24,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private var offset = 0f
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
+    private val sciFiEffects = ContinuumSciFiEffects(density)
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) {
             field = value
@@ -96,6 +97,14 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         canvas.translate(-offset, 0f)
         ContinuumHomeScreen.drawBackground(backgroundPainter, width / density + offset, height / density, spec)
         canvas.restoreToCount(saved)
+        // Ambient radiance sits behind child cards and their real measurements.
+        sciFiEffects.drawAmbient(canvas, width.toFloat(), height.toFloat())
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        super.dispatchDraw(canvas)
+        // No intercepting overlay and no full-screen blur over foreground text.
+        sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())
     }
 
     /** Selected navigation index (phone bar / rail); redraws the navigation element. */
