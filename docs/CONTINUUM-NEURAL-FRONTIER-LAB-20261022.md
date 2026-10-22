@@ -181,6 +181,27 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
 5. **Kosten:** n-Gramm-Tabelle; 256 Wahrscheinlichkeiten je Byte-Position.
 6. **Abbruch:** wenn NF-3/NF-6b-Infrastruktur in dieser Sitzung nicht fertig wird, bleibt es offen und sichtbar.
 
+## 8a. Vorregistrierung des NF-5/NF-6a-Laufs (eingetragen vor dem Lauf)
+
+- **Sprachkern:** `.github/continuum/assoc-language-core.mjs` (Tests 2/2). Assoziationen deutsches Wort ↔
+  Bezeichner-Teil aus Absätzen der Projektdokumentation mit Bezeichnern in Backticks (PMI, Paar mindestens zweimal):
+  509 Absätze, 21.670 Paare. Rangwert = lexikalischer Wert + λ · Assoziationswert, **λ = 0,5** (nicht abgestimmt).
+  Quittungslernen: CONFIRMED +1, REFUTED −0,5, INCONCLUSIVE 0; jede Änderung mit Vorwert im Journal, Rücknahme bitgenau.
+- **Aufgaben:** die 8 regulären und 3 adversarialen Ziele aus Pilot 2 sowie **6 neue Ziele** zu echten Funktionen,
+  die noch kein Ranker gesehen hat: `contextCost`, `digest` (capability-research), `bucket`, `relationOf`,
+  `subjectOf` (cre-encoder), `wordEvidence` (dialogue-retrieval). Erwartete Werte aus den Funktionen selbst.
+  Für die Prüfsummen-Aufgabe zählen die bytegleichen SHA-256-Implementierungen in `portable-subword` und
+  `cre-encoder` als richtig. `isKeyword` liegt im geschützten Modul und ist nicht prüfbar (wie im Pilot gewertet).
+- **Bedingungen:** `random` (Hash-Rangfolge), `lexical`, `docs` (nur Dokumentation), `gated` (Dokumentation +
+  verifizierte Quittungen aller **anderen** Aufgaben aus dem `docs`-Lauf, Leave-one-out), `ungated` (Dokumentation +
+  erster Vorschlag aller anderen Aufgaben, als wäre er wahr – keine Prüfung). Je Aufgabe höchstens 3 Runden, echter
+  Coding-Job über die CCC1-Laufzeit.
+- **Messgrößen:** richtig im 1. Versuch, richtig in ≤ 3 Runden, ungewollte Bestätigungen, korrekte Enthaltungen bei
+  adversarialen Zielen, Zahl der Jobs; getrennt ausgewiesen für die 6 neuen Aufgaben.
+- **Entscheidung:** „docs besser als lexical“, wenn im 1. Versuch mindestens 2 reguläre Aufgaben mehr richtig sind und
+  es 0 ungewollte Bestätigungen gibt. NF-6a gilt als gestützt, wenn `gated` im 1. Versuch mindestens so gut ist wie
+  `ungated` und weniger ungewollte Bestätigungen hat oder mehr richtig löst. Keine Signifikanzaussage (n = 14).
+
 ## 8b. Research-Radar (Ergebnis C) – `.github/continuum/research-radar.mjs`
 
 - **Quelle:** arXiv-API (kostenlos, ohne Schlüssel), höchstens 25 Treffer je Thema, 3 s Pause zwischen Anfragen,
