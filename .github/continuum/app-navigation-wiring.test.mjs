@@ -67,7 +67,7 @@ test('foldable sidebar scrolls to reach all actions at short heights', () => {
   assert.match(activity, /private fun buildSidebar\(\): View/);
   assert.match(activity, /\/\/ On compact foldable windows this sidebar has more actions than viewport height\./);
   assert.match(activity, /return ScrollView\(this\)\.apply \{/);
-  assert.match(activity, /addView\(\s*side,\s*(?:android\\.widget\\.)?FrameLayout\\.LayoutParams/);
+  assert.match(activity, /addView\(\s*side,\s*android\.widget\.FrameLayout\.LayoutParams/);
 });
 
 test('quick actions adapt to large fonts and rotated compact screens', () => {
