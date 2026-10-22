@@ -161,7 +161,7 @@ class WideLearningCardElement(textScale: Float = 1f) : ContinuumElement(textScal
         p.drawText("heute", lx, 66.6f, t(400, 9.03f), Fill.Solid(Argb.rgb(200, 210, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
-            val color = if (up) ContinuumTheme.RED else ContinuumTheme.GREEN
+            val color = if (change > 0) ContinuumTheme.GREEN else if (change < 0) ContinuumTheme.RED else ContinuumTheme.TEXT_MUTED
             val label = (if (up) "+" else "") + change + "%"
             p.fillRoundRect(210f, 42f, 256f, 58.4f, 6f, Fill.Solid(Argb.withAlpha(color, .16f)))
             ContinuumIcons.draw(p, if (up) Icon.ARROW_UP else Icon.CHEVRON_DOWN, 219f, 50.2f, 8.5f, Fill.Solid(color), 1.3f)
