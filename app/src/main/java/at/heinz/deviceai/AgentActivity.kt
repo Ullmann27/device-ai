@@ -1129,6 +1129,17 @@ class AgentActivity : Activity() {
         val statusGrid = cockpit.statusPane(this)
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
+        if (title == "Systemstatus") {
+            box.addView(cockpit.section(this, "HARDWARE · LETZTER DASHBOARD-MESSSTAND"),
+                matchWidth(top = 10))
+            val systemSnapshot = homeView?.state?.system
+                ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
+            box.addView(at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot),
+                matchWidth(top = 3))
+            box.addView(textView(
+                "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
+                10f, MUTED), matchWidth(top = 1))
+        }
         lateinit var dialog: AlertDialog
         fun makeAction(action: CenterAction): View =
             cockpit.action(this, action.label, primary = action.accent,
