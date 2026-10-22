@@ -112,10 +112,12 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         val divider = w * .5f
         p.drawLine(divider, 16f, divider, 76f, .8f, solid(ContinuumTheme.CARD_DIVIDER))
         val x0 = divider + 16f
-        p.drawText("Leistung", x0, 24f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))
+        // Holdout check questions of the learning core: a narrow test score, deliberately not labelled as performance.
+        p.drawText(QUALITY_LABEL, x0, 24f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))
         // 24-hour change of the measured quality (owner request); declines are shown just as clearly as gains.
         val delta = m.qualityDelta24h
-        p.drawText(ContinuumDashboardState.delta24h(delta), x0 + 38f, 24f, t(500, 7.4f), solid(when {
+        val deltaX = x0 + p.measureText(QUALITY_LABEL, t(400, 8.27f)) + 5f
+        p.drawText(ContinuumDashboardState.delta24h(delta), deltaX, 24f, t(500, 7.4f), solid(when {
             delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))
         drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), x0 + 113f, 43.9f, t(500, 12.36f), solid(ContinuumTheme.CYAN_SOFT))
@@ -129,12 +131,15 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
     }
 
     override fun describe(s: ContinuumDashboardState) = with(s.model) {
-        "Modellstatus: $name, $stateLabel. Leistung ${ContinuumDashboardState.percent(qualityPercent)}, " +
+        "Modellstatus: $name, $stateLabel. Prüffragen des Lernkerns (Intent und Semantik, kein allgemeiner Intelligenzwert) " +
+            "${ContinuumDashboardState.percent(qualityPercent)}, " +
             "${ContinuumDashboardState.delta24h(qualityDelta24h)}, " +
             "Reaktionszeit ${ContinuumDashboardState.millis(latencyMs)}, Kontextfenster ${context ?: "unbekannt"}."
     }
 
     companion object {
+        const val QUALITY_LABEL = "Prüffragen"
+
         /** Segmented level bar; without a measurement all segments stay dark (no invented level). */
         fun drawSegmentBar(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, percent: Int?, segments: Int = 20) {
             val gap = (r - l) * .012f * 2.2f
@@ -167,7 +172,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
         val figureStyle = t(500, 18.98f)
         p.drawText(figure, 13.9f, 68f, figureStyle, ContinuumSurfaces.figureFill(52f, 68f))
         val labelX = 13.9f + p.measureText(figure, figureStyle) + 6.5f
-        p.drawText("neue Erkenntnisse", labelX, 57.8f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
+        p.drawText("Lernereignisse", labelX, 57.8f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
         p.drawText("heute", labelX, 68.4f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
@@ -199,7 +204,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
     }
 
     override fun describe(s: ContinuumDashboardState) = with(s.learning) {
-        "Lernen und Forschung: ${ContinuumDashboardState.count(today)} neue Erkenntnisse heute" +
+        "Lernen und Forschung: ${ContinuumDashboardState.count(today)} Lernereignisse heute" +
             (changePercent?.let { ", $it Prozent gegenüber gestern" } ?: "") +
             recent.take(3).joinToString("") { ". ${it.title}, ${it.ago}" }
     }
@@ -224,7 +229,7 @@ class StorageCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
         }
         p.drawLine(14f, 143f, w - 14f, 143f, .8f, solid(ContinuumTheme.CARD_DIVIDER))
         ContinuumSurfaces.iconDisc(p, Icon.GLOBE, 21.4f, 161.8f, 22f, 13f, glow = false)
-        val sources = st.activeSources?.let { "$it aktive Quellen" } ?: "Quellen: $UNKNOWN"
+        val sources = st.activeSources?.let { "$it gespeicherte Quellen" } ?: "Quellen: $UNKNOWN"
         p.drawText(ContinuumSurfaces.fit(p, sources, t(500, 8.11f), w - 62f), 39.9f, 159.5f, t(500, 8.11f), solid(ContinuumTheme.TEXT))
         p.drawText(ContinuumSurfaces.fit(p, st.syncLabel, t(400, 6.91f), w - 62f), 39.9f, 170.5f, t(400, 6.91f), solid(ContinuumTheme.TEXT_MUTED))
         ContinuumSurfaces.chevron(p, w - 16.2f, 162f, 12.5f)
@@ -233,7 +238,7 @@ class StorageCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
     override fun describe(s: ContinuumDashboardState) = with(s.storage) {
         "Speicher und Quellen: ${ContinuumDashboardState.percent(usedPercent)} belegt. " +
             segments.joinToString(". ") { it.label + " " + ContinuumDashboardState.bytes(it.bytes) } +
-            ". ${activeSources ?: "unbekannt viele"} aktive Quellen, $syncLabel."
+            ". ${activeSources ?: "unbekannt viele"} gespeicherte Quellen, $syncLabel."
     }
 }
 
@@ -246,8 +251,8 @@ class DevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         p.drawText("Entwicklung & Code", 47.4f, 27.7f, t(500, 11.5f), solid(ContinuumTheme.TEXT))
         val pillColor = when (dv.healthy) { true -> ContinuumTheme.GREEN; false -> ContinuumTheme.RED; null -> ContinuumTheme.AMBER }
         ContinuumSurfaces.pill(p, w - 11.5f, 14.5f, 16.1f, dv.statusLabel, t(500, 7.22f), pillColor, alignRight = true)
-        val metrics = listOf(ContinuumDashboardState.count(dv.activeProjects) to "aktive Projekte",
-            ContinuumDashboardState.count(dv.runningTasks) to "laufende Tasks", ContinuumDashboardState.count(dv.errors) to "Fehler")
+        val metrics = listOf(ContinuumDashboardState.count(dv.activeProjects) to "offene Aufgaben",
+            ContinuumDashboardState.count(dv.runningTasks) to "laufend", ContinuumDashboardState.count(dv.errors) to "fehlgeschlagen")
         val xs = floatArrayOf(24f, 94.8f, 166.5f)
         for ((i, m) in metrics.withIndex()) {
             p.drawText(m.first, xs[i], 69f, t(500, 18.5f), solid(ContinuumTheme.CYAN_SOFT))
@@ -260,8 +265,8 @@ class DevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textScale
     }
 
     override fun describe(s: ContinuumDashboardState) = with(s.development) {
-        "Entwicklung und Code: $statusLabel. ${ContinuumDashboardState.count(activeProjects)} aktive Projekte, " +
-            "${ContinuumDashboardState.count(runningTasks)} laufende Tasks, ${ContinuumDashboardState.count(errors)} Fehler."
+        "Entwicklung und Code: $statusLabel. ${ContinuumDashboardState.count(activeProjects)} offene Aufgaben im Backlog, " +
+            "${ContinuumDashboardState.count(runningTasks)} laufend, ${ContinuumDashboardState.count(errors)} fehlgeschlagen."
     }
 }
 

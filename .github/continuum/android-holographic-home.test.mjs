@@ -106,6 +106,19 @@ test('start screen never manufactures ready model or internet state',()=>{
  assert.match(activity,/val modelReady = ::localRuntime\.isInitialized && localRuntime\.state == LocalModelState\.READY/);
  for(const token of ['shizukuBadge','cloudBadge','localBadge']) assert.ok(badges.includes(token));
  assert.doesNotMatch(dashboardState+homeScreen+drawn+badges,/Llama 3\.2|Gemini 1\.5|Modell geladen/);
+ // "Aktiv/online" only for a READY local language model, never because the SWB1 status is readable
+ const collector=fs.readFileSync('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt','utf8');
+ assert.match(collector,/online = live\.modelReady,/);
+ assert.doesNotMatch(collector,/online = [^\n]*status != null/);
+ assert.match(collector,/status != null -> "Nur Startkern"/);
+ // an empty or unreadable error list is never presented as "optimal"; a holdout score is not called "Leistung"
+ assert.match(dashboardState,/null -> "Fehlerliste unlesbar"/);
+ assert.match(collector,/diagnostics\.open\(\)\.size \}\.getOrNull\(\)/);
+ assert.doesNotMatch(dashboardState+homeScreen+drawn+collector,/"Optimal"|nominal|"Echtzeit"|"Leistung"|neue Erkenntnisse|aktive Projekte|aktive Quellen/);
+ // connectivity is yes/no: no invented 100 % level for the network
+ assert.doesNotMatch(drawn,/networkOnline\?\.let \{ if \(it\) 100/);
+ // the start core answers with the topic of the last turn only
+ assert.match(collector,/"1 Zug \(Thema\)"/);
  // the example numbers of the reference images exist only in the JVM preview sources
  assert.ok(!fs.existsSync(ui+'ReferencePreviewData.kt'));
  assert.ok(fs.existsSync('app/src/test/java/at/heinz/deviceai/ui/ReferencePreviewData.kt'));

@@ -64,18 +64,17 @@ class ModelPillElement(textScale: Float = 1f) : ContinuumElement(textScale) {
     override fun describe(s: ContinuumDashboardState) = "${s.model.name}, ${s.model.stateLabel}"
 }
 
-/** "Systemstatus" panel: real app CPU, network, sources, context and response time. */
+/** "Systemstatus" panel: app CPU share (bar), network state (no invented level), saved sources, context, response time. */
 class SystemStatusElement(textScale: Float = 1f) : ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
         ContinuumSurfaces.glassCard(p, 0f, 0f, w, h, 14f)
         p.drawText("Systemstatus", 11.7f, 26f, t(500, 11.6f), Fill.Solid(ContinuumTheme.TEXT))
-        val overallColor = if (s.system.overall == "Optimal") ContinuumTheme.GREEN else ContinuumTheme.AMBER
+        val overallColor = when (s.system.openIssues) { 0 -> ContinuumTheme.GREEN; null -> ContinuumTheme.AMBER; else -> ContinuumTheme.RED }
         ContinuumSurfaces.pill(p, w - 10f, 11.7f, 18.2f, s.system.overall, t(500, 8f), overallColor, alignRight = true)
-        val net = s.system.networkOnline
         val rows = listOf(
-            Triple(Icon.CPU, "Rechenleistung", ContinuumDashboardState.percent(s.system.appCpuPercent)),
+            Triple(Icon.CPU, "App-CPU", ContinuumDashboardState.percent(s.system.appCpuPercent)),
             Triple(Icon.WIFI, "Netzwerk", s.system.networkLabel),
-            Triple(Icon.DATABASE, "Wissensquellen", s.storage.activeSources?.let { a -> s.storage.totalSources?.let { "$a / $it" } ?: "$a" } ?: UNKNOWN),
+            Triple(Icon.DATABASE, "Quellen", s.storage.activeSources?.let { "$it gespeichert" } ?: UNKNOWN),
             Triple(Icon.DOCUMENT, "Kontextfenster", s.model.context ?: UNKNOWN),
             Triple(Icon.BOLT, "Reaktionszeit", ContinuumDashboardState.millis(s.model.latencyMs))
         )
@@ -86,8 +85,9 @@ class SystemStatusElement(textScale: Float = 1f) : ContinuumElement(textScale) {
             p.drawText(row.second, 35.7f, y, t(400, 8.4f), Fill.Solid(Argb.rgb(200, 210, 228)))
             val valueColor = if (i < 2) ContinuumTheme.CYAN_SOFT else Argb.rgb(150, 215, 255)
             p.drawText(row.third, w - 11.5f, y, t(500, 9.2f), Fill.Solid(valueColor), TextAlign.RIGHT)
-            if (i == 0 || i == 1) {
-                val level = if (i == 0) s.system.appCpuPercent else net?.let { if (it) 100 else 0 }
+            if (i == 0) {
+                // Only the app CPU share is a measured level; connectivity is yes/no and gets no bar.
+                val level = s.system.appCpuPercent
                 val l = 97.4f; val r = 133f
                 p.fillRoundRect(l, y - 7.2f, r, y - 2.4f, 2.4f, Fill.Solid(Argb.rgb(26, 40, 72)))
                 if (level != null) {
@@ -99,7 +99,7 @@ class SystemStatusElement(textScale: Float = 1f) : ContinuumElement(textScale) {
             if (i < rows.size - 1) p.drawLine(11f, y + 9f, w - 11f, y + 9f, .6f, Fill.Solid(ContinuumTheme.CARD_DIVIDER), .6f)
         }
     }
-    override fun describe(s: ContinuumDashboardState) = "Systemstatus ${s.system.overall}. Rechenleistung der App " +
+    override fun describe(s: ContinuumDashboardState) = "Systemstatus ${s.system.overall}. CPU-Anteil der App " +
         "${ContinuumDashboardState.percent(s.system.appCpuPercent)}, Netzwerk ${s.system.networkLabel}, Reaktionszeit " +
         ContinuumDashboardState.millis(s.model.latencyMs)
 }
@@ -114,7 +114,7 @@ class WideModelCardElement(textScale: Float = 1f) : ContinuumElement(textScale) 
         p.drawText(ContinuumSurfaces.fit(p, m.name, t(400, 10.83f), w - 90f), 62.3f, 41.2f, t(400, 10.83f), Fill.Solid(ContinuumTheme.TEXT_SECONDARY))
         ContinuumSurfaces.pill(p, 61f, 50.3f, 19.5f, m.stateLabel, t(500, 8.88f), if (m.online) ContinuumTheme.GREEN else ContinuumTheme.AMBER, minWidth = 56f)
         ContinuumSurfaces.chevron(p, w - 19f, 20f, 14f)
-        p.drawText("Leistung", 12.3f, 90.3f, t(400, 9.09f), Fill.Solid(Argb.rgb(205, 214, 232)))
+        p.drawText(ModelStatusCardElement.QUALITY_LABEL, 12.3f, 90.3f, t(400, 9.09f), Fill.Solid(Argb.rgb(205, 214, 232)))
         ModelStatusCardElement.drawSegmentBar(p, 65f, 83.8f, 189.6f, 91.6f, m.qualityPercent)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), w - 16.2f, 86f, t(500, 17.71f), Fill.Solid(ContinuumTheme.CYAN_SOFT), TextAlign.RIGHT)
         val delta = m.qualityDelta24h
@@ -157,7 +157,7 @@ class WideLearningCardElement(textScale: Float = 1f) : ContinuumElement(textScal
         val style = t(500, 22.13f)
         p.drawText(figure, 13.6f, 65f, style, ContinuumSurfaces.figureFill(48f, 65f))
         val lx = 13.6f + p.measureText(figure, style) + 7.5f
-        p.drawText("neue Erkenntnisse", lx, 53.6f, t(400, 9.03f), Fill.Solid(Argb.rgb(200, 210, 228)))
+        p.drawText("Lernereignisse", lx, 53.6f, t(400, 9.03f), Fill.Solid(Argb.rgb(200, 210, 228)))
         p.drawText("heute", lx, 66.6f, t(400, 9.03f), Fill.Solid(Argb.rgb(200, 210, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
@@ -201,7 +201,7 @@ class WideStorageCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         }
         p.drawLine(12f, 147.4f, w - 12f, 147.4f, .7f, Fill.Solid(ContinuumTheme.CARD_DIVIDER))
         ContinuumSurfaces.iconDisc(p, Icon.GLOBE, 24.7f, 165.6f, 24f, 14f, glow = false)
-        val sources = st.activeSources?.let { "$it aktive Quellen" } ?: "Quellen: $UNKNOWN"
+        val sources = st.activeSources?.let { "$it gespeicherte Quellen" } ?: "Quellen: $UNKNOWN"
         p.drawText(sources, 46.8f, 162.3f, t(500, 9.3f), Fill.Solid(ContinuumTheme.TEXT))
         p.drawText(ContinuumSurfaces.fit(p, st.syncLabel, t(400, 7.9f), w - 70f), 46.8f, 174f, t(400, 7.9f), Fill.Solid(ContinuumTheme.TEXT_MUTED))
         ContinuumSurfaces.chevron(p, w - 19.5f, 166f, 13f)
@@ -218,8 +218,8 @@ class WideDevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textS
         p.drawText("Entwicklung & Code", 50f, 23.4f, t(500, 11.3f), Fill.Solid(ContinuumTheme.TEXT))
         val pillColor = when (dv.healthy) { true -> ContinuumTheme.GREEN; false -> ContinuumTheme.RED; null -> ContinuumTheme.AMBER }
         ContinuumSurfaces.pill(p, w - 14f, 7.8f, 18.2f, dv.statusLabel, t(500, 8.2f), pillColor, alignRight = true)
-        val metrics = listOf(ContinuumDashboardState.count(dv.activeProjects) to "aktive Projekte",
-            ContinuumDashboardState.count(dv.runningTasks) to "laufende Tasks", ContinuumDashboardState.count(dv.errors) to "Fehler")
+        val metrics = listOf(ContinuumDashboardState.count(dv.activeProjects) to "offene Aufgaben",
+            ContinuumDashboardState.count(dv.runningTasks) to "laufend", ContinuumDashboardState.count(dv.errors) to "fehlgeschlagen")
         val xs = floatArrayOf(43.5f, 117f, 183f)
         for ((i, m) in metrics.withIndex()) {
             p.drawText(m.first, xs[i], 54.5f, t(500, 19.6f), Fill.Solid(ContinuumTheme.CYAN_SOFT), TextAlign.CENTER)
@@ -257,20 +257,23 @@ class WideDevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textS
         s.development.projects.take(4).joinToString("") { ". ${it.name}: ${it.status}, ${it.ago}" }
 }
 
-/** "Systemaktivität": real activity series and four ring gauges (GPU is not measurable on Android: shown as —). */
+/**
+ * "Systemaktivität": app CPU samples (every 5 s while visible) and four ring gauges: app CPU, GPU (not measurable on
+ * Android without root: —), RAM and storage use. Connectivity has no measured level and therefore no gauge.
+ */
 class SystemActivityElement(textScale: Float = 1f) : ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
         val sy = s.system
         ContinuumSurfaces.glassCard(p, 0f, 0f, w, h)
         ContinuumSurfaces.iconDisc(p, Icon.PULSE, 26f, 19.5f, 36f, 20f)
         p.drawText("Systemaktivität", 50f, 23.4f, t(500, 11.3f), Fill.Solid(ContinuumTheme.TEXT))
-        ContinuumSurfaces.pill(p, w - 10f, 11f, 18f, "Echtzeit", t(500, 8.2f), ContinuumTheme.CYAN, alignRight = true)
+        ContinuumSurfaces.pill(p, w - 10f, 11f, 18f, "alle 5 s", t(500, 8.2f), ContinuumTheme.CYAN, alignRight = true)
         WaveChart.draw(p, 9.7f, 34f, w - 10f, 73f, sy.activity)
         val gauges = listOf(
             Triple("CPU", sy.appCpuPercent, intArrayOf(Argb.rgb(40, 200, 255), Argb.rgb(60, 140, 255))),
             Triple("GPU", null as Int?, intArrayOf(Argb.rgb(150, 110, 255), Argb.rgb(190, 120, 255))),
-            Triple("Netzwerk", sy.networkOnline?.let { if (it) 100 else 0 }, intArrayOf(Argb.rgb(255, 90, 150), Argb.rgb(170, 90, 255))),
-            Triple("Speicher", sy.memoryPercent, intArrayOf(Argb.rgb(40, 170, 255), Argb.rgb(60, 220, 255)))
+            Triple("RAM", sy.memoryPercent, intArrayOf(Argb.rgb(255, 90, 150), Argb.rgb(170, 90, 255))),
+            Triple("Speicher", sy.storagePercent, intArrayOf(Argb.rgb(40, 170, 255), Argb.rgb(60, 220, 255)))
         )
         val xs = floatArrayOf(42.2f, 120.1f, 198f, 278.6f).map { it * w / 324.7f }
         for ((i, g) in gauges.withIndex()) {
@@ -285,6 +288,7 @@ class SystemActivityElement(textScale: Float = 1f) : ContinuumElement(textScale)
             p.drawText(g.first, cx, 145.4f, t(400, 8.4f), Fill.Solid(Argb.rgb(200, 210, 228)), TextAlign.CENTER)
         }
     }
-    override fun describe(s: ContinuumDashboardState) = "Systemaktivität: App-CPU ${ContinuumDashboardState.percent(s.system.appCpuPercent)}, " +
-        "GPU nicht messbar, Netzwerk ${s.system.networkLabel}, Arbeitsspeicher ${ContinuumDashboardState.percent(s.system.memoryPercent)}"
+    override fun describe(s: ContinuumDashboardState) = "Systemaktivität, Messung alle 5 Sekunden: App-CPU ${ContinuumDashboardState.percent(s.system.appCpuPercent)}, " +
+        "GPU nicht messbar, Arbeitsspeicher ${ContinuumDashboardState.percent(s.system.memoryPercent)}, " +
+        "Gerätespeicher ${ContinuumDashboardState.percent(s.system.storagePercent)}"
 }

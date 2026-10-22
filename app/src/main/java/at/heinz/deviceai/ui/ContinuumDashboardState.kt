@@ -21,9 +21,13 @@ data class ContinuumDashboardState(
     data class ModelStatus(
         /** Name of the core that currently answers in chat, e.g. the loaded local model or the start core. */
         val name: String = "Continuum-Kern",
+        /** True only while a loaded local language model is READY; a merely readable SWB1 learning status is not "online". */
         val online: Boolean = false,
         val stateLabel: String = "Offline",
-        /** Measured quality in percent (holdout accuracy of the learning core); null = not measured. */
+        /**
+         * Share of correctly answered held-out check questions of the learning core (intent + semantic cases), in percent;
+         * null = not measured. A narrow test score, not a measure of general language intelligence.
+         */
         val qualityPercent: Int? = null,
         /** Change of [qualityPercent] against the measurement 24 h ago, in percentage points; null = no 24-h history yet. */
         val qualityDelta24h: Int? = null,
@@ -72,8 +76,8 @@ data class ContinuumDashboardState(
     ) {
         val healthy: Boolean? get() = errors?.let { it == 0 }
         val statusLabel: String get() = when (healthy) {
-            true -> "Alle Systeme nominal"
-            false -> "${errors} Fehler offen"
+            true -> "Keine Fehlschläge"
+            false -> "${errors} fehlgeschlagen"
             null -> "Status unbekannt"
         }
     }
@@ -90,8 +94,16 @@ data class ContinuumDashboardState(
         val networkLabel: String = "—",
         /** Real recent activity values (e.g. app CPU samples), oldest first. */
         val activity: List<Float> = emptyList(),
-        val overall: String = "—"
-    )
+        /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */
+        val openIssues: Int? = null
+    ) {
+        /** Only what the diagnostics list says; an empty list is not called "optimal". */
+        val overall: String get() = when (openIssues) {
+            null -> "Fehlerliste unlesbar"
+            0 -> "Keine offenen Fehler"
+            else -> "$openIssues offen"
+        }
+    }
 
     /** Status lines under the six labels around the core; each is a real state, never a slogan. */
     data class CoreStatus(

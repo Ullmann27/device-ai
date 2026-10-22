@@ -24,7 +24,7 @@ object ContinuumTheme {
     val VIOLET = Argb.rgb(146, 92, 255)
     val MAGENTA = Argb.rgb(228, 76, 214)
     val PINK = Argb.rgb(255, 92, 150)
-    val GREEN = Argb.rgb(30, 226, 190)              // "Online", "Alle Systeme nominal"
+    val GREEN = Argb.rgb(30, 226, 190)              // "Aktiv", "Keine Fehlschläge", "Keine offenen Fehler"
     val GREEN_FILL = Argb.of(70, 12, 120, 110)
     val RED = Argb.rgb(255, 77, 109)
     val RED_FILL = Argb.of(70, 150, 20, 60)

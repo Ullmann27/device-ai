@@ -52,6 +52,32 @@ class ContinuumDiagnosticsTest {
         assertTrue(export.contains("https://api.example.com/v1/run?[parameter entfernt]"))
     }
 
+    @Test fun adversarialSecretsLeakNeitherIntoTheFileNorIntoTheExport() {
+        val dir = Files.createTempDirectory("diag").toFile()
+        val file = File(dir, "issues.tsv")
+        val d = ContinuumDiagnostics(file, "0.3.13")
+        val secrets = listOf(
+            "Authorization: Basic dXNlcjpwYXNzd29yZA==",
+            "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U",
+            "AKIAIOSFODNN7EXAMPLE",
+            "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASC\n-----END PRIVATE KEY-----",
+            "hf_AbCdEfGhIjKlMnOpQrStUvWx", "glpat-AbCdEfGhIjKlMnOpQrSt", "sk-proj-AbCdEfGhIjKlMnOpQrStUv",
+            "/home/heinz/geheim/plan.txt", "/Users/heinz/Desktop", "192.168.178.20",
+            "Hallo Heinz", "Ullmann27", "heinz.ullmann@gmail.com", "passwort: Sommer2026!", "api_key=abc123def456ghi"
+        )
+        val text = secrets.joinToString(" | ")
+        d.report("Mentor $text".take(60), "LEAK_PROBE", Severity.ERROR, "Titel $text", "Detail\n$text", "Empfehlung $text")
+        val raw = file.readText()
+        val export = d.export()
+        val probes = listOf("dXNlcjpwYXNz", "eyJzdWIiOiIx", "dozjgNryP4J3", "AKIAIOSFODNN7", "MIIEvQIBADAN", "hf_AbCdEfGh", "glpat-AbCdEf",
+            "sk-proj-AbCd", "/home/heinz", "/Users/heinz", "192.168.178.20", "Heinz", "Ullmann", "gmail.com", "Sommer2026", "abc123def456")
+        for (probe in probes) {
+            assertFalse("file leaks $probe", raw.contains(probe, ignoreCase = true))
+            assertFalse("export leaks $probe", export.contains(probe, ignoreCase = true))
+        }
+        assertTrue("the package name stays readable for developers", Redaction.apply("at.heinz.deviceai.AgentActivity").contains("at.heinz.deviceai"))
+    }
+
     @Test fun openIssuesAreOrderedBySeverityThenRecency() {
         val d = store()
         d.report("A", "INFO_ONE", Severity.INFO, "i", "", "r", 5)

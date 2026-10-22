@@ -27,7 +27,7 @@ object ReferencePreviewData {
                 Project("Knowledge Graph", "Wird optimiert", ProjectState.WORKING, "vor 28 Min."),
                 Project("UI Framework", "Deployment bereit", ProjectState.READY, "vor 1 Std."))),
         system = ContinuumDashboardState.SystemStatus(appCpuPercent = 98, memoryPercent = 51, storagePercent = 78, networkOnline = true,
-            networkLabel = "100%", overall = "Optimal",
+            networkLabel = "Verbunden", openIssues = 0,
             activity = listOf(1f, 2f, 1.4f, 2.8f, 2f, 3.4f, 2.4f, 4.2f, 3f, 3.8f, 2.6f, 3.2f, 2.2f)),
         core = ContinuumDashboardState.CoreStatus(connected = "Globale Ressourcen", thinking = "Mehrdimensional", learning = "Echtzeit",
             analysing = "In Echtzeit", developing = "Aktiv", evolving = "Kontinuierlich"),

@@ -160,16 +160,25 @@ class ContinuumDiagnostics(private val file: File, private val appVersion: Strin
 /** Removes secrets and personal data from diagnostic text. */
 object Redaction {
     private val rules = listOf(
+        Regex("(?s)-----BEGIN [A-Z ]*PRIVATE KEY-----.*?(-----END [A-Z ]*PRIVATE KEY-----|$)") to "[privater schlüssel entfernt]",
+        Regex("(?i)\\bauthorization\\s*[:=][^\\n|]*") to "authorization=[entfernt]",
+        Regex("\\beyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+") to "[token entfernt]",
+        Regex("\\b(AKIA|ASIA)[0-9A-Z]{16}\\b") to "[zugangsdaten entfernt]",
         Regex("(?i)\\bbearer\\s+[A-Za-z0-9._~+/=-]{8,}") to "Bearer [entfernt]",
         Regex("(?i)\\b(api[_-]?key|token|secret|password|passwort|kennwort|authorization)\\b\\s*[:=]\\s*\\S+") to "$1=[entfernt]",
-        Regex("\\b(gsk|sk|ghp|gho|github_pat|xox[bpas]|AIza)[_-][A-Za-z0-9_-]{12,}\\b") to "[zugangsdaten entfernt]",
+        Regex("\\b(gsk|sk|ghp|gho|github_pat|xox[bpas]|AIza|hf|glpat)[_-][A-Za-z0-9_-]{12,}\\b") to "[zugangsdaten entfernt]",
         Regex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b") to "[e-mail entfernt]",
         Regex("(https?://[^\\s?#]+)[?#][^\\s]*") to "$1?[parameter entfernt]",
         Regex("/data/(user|data)/\\d+/[A-Za-z0-9._]+") to "<app-daten>",
         Regex("/storage/emulated/\\d+") to "<speicher>",
+        Regex("/(home|Users)/[^/\\s|]+") to "<home>",
+        Regex("\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b") to "[ip entfernt]",
         Regex("\\+?\\d[\\d /-]{7,}\\d") to "[nummer entfernt]",
         Regex("\\b[A-Fa-f0-9]{40,}\\b") to "[hash gekürzt]",
-        Regex("\\b[A-Za-z0-9+/]{48,}={0,2}") to "[daten entfernt]"
+        Regex("\\b[A-Za-z0-9+/]{48,}={0,2}") to "[daten entfernt]",
+        // the owner's names (e.g. from a greeting inside an error text); the package name at.heinz.deviceai stays readable
+        Regex("(?i)ullmann\\w*") to "[konto entfernt]",
+        Regex("(?i)(?<!at\\.)\\bheinz\\b") to "[name entfernt]"
     )
 
     fun apply(text: String): String = rules.fold(text) { acc, (pattern, replacement) -> pattern.replace(acc, replacement) }

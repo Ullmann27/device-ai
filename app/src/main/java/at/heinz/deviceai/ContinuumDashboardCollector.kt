@@ -103,24 +103,28 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         val publicStudy = runCatching { ContinuumPublicStudyScheduler(context).enabled }.getOrDefault(false)
 
         val (cpu, memory, online) = systemSamples()
-        val openIssues = runCatching { diagnostics.open().size }.getOrDefault(0)
+        val openIssues = runCatching { diagnostics.open().size }.getOrNull()
 
+        // "Aktiv" only for a loaded, READY local language model. A readable SWB1 status means the start core can answer
+        // from confirmed memories, nothing more.
         val modelState = when {
             live.modelLoading -> "Lädt"
-            live.modelReady -> "Online"
-            status != null -> "Online"
+            live.modelReady -> "Aktiv"
+            status != null -> "Nur Startkern"
             else -> "Nicht verfügbar"
         }
         return ContinuumDashboardState(
             model = ContinuumDashboardState.ModelStatus(
-                name = live.modelName ?: "Continuum-Kern (SWB1)",
-                online = live.modelReady || status != null,
+                name = live.modelName ?: "Continuum-Startkern (SWB1)",
+                online = live.modelReady,
                 stateLabel = modelState,
                 qualityPercent = quality,
                 qualityDelta24h = delta,
                 latencyMs = ContinuumDashboardMath.median(live.responseTimesMs)?.toInt(),
-                context = if (live.modelName != null) null else "8 Gesprächszüge",
-                mode = if (live.modelName != null) "Lokales Sprachmodell" else "Lokaler Lernkern",
+                // The start core keeps 8 turns on disk but answers with the topic of the last turn only
+                // (ContinuumMemoryDialogue: history.lastOrNull()?.topic); a loaded model's window is not reported.
+                context = if (live.modelName != null) null else "1 Zug (Thema)",
+                mode = if (live.modelName != null) "Lokales Sprachmodell" else "Startkern ohne Sprachmodell",
                 lastUpdate = timeline.maxByOrNull { it.third }?.let { ContinuumDashboardState.ago(now - it.third) }
             ),
             learning = ContinuumDashboardState.LearningStatus(
@@ -144,7 +148,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
             system = ContinuumDashboardState.SystemStatus(
                 appCpuPercent = cpu, memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
-                activity = cpuSeries.toList(), overall = if (openIssues == 0) "Optimal" else "$openIssues offen"
+                activity = cpuSeries.toList(), openIssues = openIssues
             ),
             core = ContinuumDashboardState.CoreStatus(
                 connected = when {
@@ -159,7 +163,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 developing = if (live.builderJobRunning || running > 0) "Aktiv" else "Bereit",
                 evolving = if (live.autoStudyEnabled || publicStudy) "Automatisch an" else "Aus"
             ),
-            pendingNotifications = openIssues + (if (live.curiosityPending) 1 else 0)
+            pendingNotifications = (openIssues ?: 0) + (if (live.curiosityPending) 1 else 0)
         )
     }
 
