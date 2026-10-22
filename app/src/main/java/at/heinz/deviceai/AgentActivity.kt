@@ -137,6 +137,7 @@ class AgentActivity : Activity() {
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
         private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
+        private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"
         private val BG = Color.rgb(5, 8, 23)
         private val PANEL = Color.rgb(12, 17, 40)
         private val PANEL_2 = Color.rgb(18, 23, 57)
@@ -348,7 +349,13 @@ class AgentActivity : Activity() {
         }
         executor = DeviceToolExecutor(this, bridge)
 
+        conversationActive = savedInstanceState?.getString(WORK_AREA_STATE_KEY) ==
+            ContinuumWorkArea.CHAT.name
+        activeWorkArea = if (conversationActive) ContinuumWorkArea.CHAT
+            else ContinuumWorkArea.START
         setContentView(buildUi())
+        refreshConversationLayout()
+        refreshWorkAreaSelection()
         // Public, bundled examples only. No internet access or owner-labelled data.
         // Stopped in onDestroy; an interrupted stage writes no audit and runs again later.
         val stopBootstrap = bootstrapCancelled
@@ -430,6 +437,10 @@ class AgentActivity : Activity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         if (::input.isInitialized) outState.putString(COMPOSER_DRAFT_KEY, input.text.toString())
+        outState.putString(
+            WORK_AREA_STATE_KEY,
+            if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
+        )
         super.onSaveInstanceState(outState)
     }
 
@@ -590,7 +601,20 @@ class AgentActivity : Activity() {
         side.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
 
         side.addView(textView("v${BuildConfig.VERSION_NAME} · kein Root", 11f, MUTED))
-        return side
+        // On compact foldable windows this sidebar has more actions than viewport height.
+        // A scrolling container keeps the bottom tools and version label reachable.
+        return ScrollView(this).apply {
+            isFillViewport = true
+            setFillViewport(true)
+            clipToPadding = false
+            addView(
+                side,
+                ScrollView.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }
     }
 
     private fun buildConversationPane(wide: Boolean): View {
@@ -853,10 +877,16 @@ class AgentActivity : Activity() {
             Color.rgb(153, 209, 255), true).apply {
             letterSpacing = 0.10f
         }, matchWidth(top = 15))
-        // Two readable columns preserve accessible labels on narrow Samsung displays.
+        // Respect small fold windows and the owner's system font scaling.
+        val quickWide = resources.configuration.screenWidthDp >= 700 &&
+            resources.configuration.screenHeightDp >= 500
+        val quickWidthDp = resources.configuration.screenWidthDp - if (quickWide) 336 else 28
+        val quickColumns = ContinuumWorkAreaNavigationSpec.quickActionColumns(
+            quickWidthDp, resources.configuration.fontScale
+        )
         ContinuumWorkAreaNavigationSpec.destinations
             .filter { it != ContinuumWorkArea.START }
-            .chunked(2)
+            .chunked(quickColumns)
             .forEachIndexed { rowIndex, destinations ->
                 val workAreaQuickRow = LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL
@@ -1055,7 +1085,7 @@ class AgentActivity : Activity() {
     }
 
     private fun navigateWorkArea(destination: ContinuumWorkArea) {
-        activeWorkArea = destination
+        activeWorkArea = ContinuumWorkAreaNavigationSpec.selectionAfterTap(activeWorkArea, destination)
         refreshWorkAreaSelection()
         when (destination) {
             ContinuumWorkArea.START -> showHomeDashboard()
