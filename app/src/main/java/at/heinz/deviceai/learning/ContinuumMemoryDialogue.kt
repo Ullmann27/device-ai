@@ -216,24 +216,36 @@ class ContinuumMemoryDialogue(private val directory:File) {
          * within the SAME excerpt; partial prefix/suffix overlap does not suffice.
          * This is a lexical guard, not a factual guarantee. Owner memories unchanged.
          */
-        private val SOURCE_QUERY_OPERATORS=setOf("funktioniert","funktionieren","funktionierte","funktionierten","funktionierend","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","unterscheide","unterscheiden","unterscheidet","vergleiche","vergleichen","analysiere","analysieren","untersuche","untersuchen","zusammenfassen","zusammenfasst","zusammengefasst","erläutere","erläutern","erläuterst","erklärst","erklären","erkläre")
-        internal fun sourceTermEvidence(query:String,text:String):Boolean {
-            val terms=contentWords(query).distinct().filter { it !in SOURCE_QUERY_OPERATORS }
-            val anchors=terms.filter { term ->
-                term.length>=12 || (term.length>=4 &&
-                    term.any(Char::isLetter) && term.any(Char::isDigit))
+        /** Source observation citations: conservative, directional lexical anchor check.
+         * Does not change OWNER_CONFIRMED wordEvidence or train any weights. */
+        private val SOURCE_QUERY_OPERATORS=setOf("analysiere","analysieren","bedeuten","bedeutet","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","darstelle","darstellen","definiere","definieren","definiert","erkläre","erklären","erklärst","erläutere","erläutern","erläuterst","erzaehle","funktionieren","funktionierend","funktioniert","funktionierte","funktionierten","nenne","nennen","unterscheide","unterscheiden","unterscheidet","untersuche","untersuchen","vergleiche","vergleichen","zeige","zeigen","zusammenfassen","zusammenfasst","zusammengefasst")
+        private val SOURCE_INFLECTION_TAILS=listOf("","e","n","s","en","er","es","em")
+
+        internal fun sourceWordMatch(needle:String,word:String):Boolean {
+            if(needle==word)return true
+            if(needle.any(Char::isDigit)||word.any(Char::isDigit))return false
+            for(na in SOURCE_INFLECTION_TAILS)for(wb in SOURCE_INFLECTION_TAILS) {
+                if(na.isEmpty()&&wb.isEmpty())continue
+                if(!needle.endsWith(na)||!word.endsWith(wb))continue
+                val a=needle.dropLast(na.length)
+                val b=word.dropLast(wb.length)
+                if(a.length>=6&&a==b)return true
             }
-            if(anchors.isEmpty())return true
-            val source=contentWords(text).distinct()
-            return anchors.all { needle -> source.any { word ->
-                if(word==needle)true
-                else if(needle.any(Char::isDigit) || word.any(Char::isDigit))false
-                else {
-                    val shorter=minOf(needle.length,word.length)
-                    shorter>=6 && kotlin.math.abs(needle.length-word.length)<=3 &&
-                        needle.zip(word).takeWhile { (a,b) -> a==b }.size>=shorter-2
-                }
-            } }
+            return needle.length>=8&&word.length>=needle.length+3&&word.endsWith(needle)
+        }
+
+        internal fun sourceTermEvidence(query:String,text:String):Boolean {
+            if(query.length>4096||text.isEmpty())return false
+            val terms=contentWords(java.text.Normalizer.normalize(query,java.text.Normalizer.Form.NFC))
+                .distinct().filter { it !in SOURCE_QUERY_OPERATORS }
+            val source=contentWords(java.text.Normalizer.normalize(text,java.text.Normalizer.Form.NFC)).distinct()
+            if(terms.isEmpty()||source.isEmpty())return false
+            val hard=terms.filter { term ->
+                term.length>=12||(term.length>=4&&term.any(Char::isLetter)&&term.any(Char::isDigit))
+            }
+            val anchors=if(hard.isNotEmpty())hard else terms.filter { it.length>=4 }
+            if(anchors.isEmpty())return false
+            return anchors.all { needle -> source.any { word -> sourceWordMatch(needle,word) } }
         }
 
         fun rank(bytes:ByteArray,query:String,experiences:List<LearningExperience>):List<ContinuumMemoryHit> {
