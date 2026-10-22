@@ -62,6 +62,14 @@ object ContinuumIntelligenceAudit {
                 append("\nModell: ").append(checkpointSha256?.take(16) ?: "unbekannt")
                 append(" · Updates: ").append(updates)
                 append("\nTestkorpus SHA-256: ").append(fixtureSha256.take(16))
+                append("\nBeispielausgaben (echte Modellantworten):")
+                rows.take(3).forEach { row ->
+                    val visible = row.generated.replace(Regex("[\\p{Cntrl}]"), " ")
+                        .take(48).ifBlank { "(keine Ausgabe)" }
+                    append("\n").append(row.id).append(": erwartet ")
+                        .append(row.expected ?: "(unbekannt)")
+                        .append(" · Modell: ").append(visible)
+                }
                 append("\nNur Forschungsprüfung. Keine Gewichte oder Freigaben verändert.")
             }
             else -> "INTELLIGENZ-LAB · " + status +
