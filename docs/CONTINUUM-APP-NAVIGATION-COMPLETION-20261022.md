@@ -35,3 +35,41 @@ node --test .github/continuum/android-integration-wiring.test.mjs
 Der **Navigations-Quellcode ist implementiert und auf einem neuen Draft-PR gesichert**. Für die Bezeichnung „fertiges installierbares App-Design“ fehlen eine vollständige Android-Kompilierung und die visuelle Kontrolle auf dem Samsung, einschließlich großer Schrift, faltbarem Display, IME-/Tastaturverhalten und TalkBack. Keine Modellgewichte, Benutzererinnerungen, Signierer, Releaseversionen oder `main` wurden verändert. Nach Review nur in bestehende unterschriftsgleiche, datenbewahrende APK-Updatepipeline einspielen; nie ungeprüft installieren oder die Intelligenzbranches automatisch zusammenführen.
 
 Die getrennten Forschungsresultate aus **PR #62 / I1** sind auf dem Gerät weiterhin **nicht** produktiv integriert; das neue Navigationsdesign behauptet keine trainierte Intelligenz.
+
+## Fortsetzung: Fall-/Schriftgrößen- und Wiederaufnahmetests (22.10.2026)
+
+Nach der ersten PR64-Übergabe wurde der gleiche **isolierte** Navigationsbranch in einer weiteren ChatGPT-Sitzung weiterbearbeitet. Die drei konkreten Korrekturen sind:
+
+1. **Fold- und kleine Desktop-Fenster:** `buildSidebar()` liefert jetzt einen `ScrollView` als Außencontainer. Die vollständige vorhandene vertikale Seitenleiste bleibt damit bei geringer Höhe erreichbar, statt die letzten Tools/Versionen unter den Rand zu drängen. Es wurden keine Buttons gelöscht.
+2. **Dynamische Schriftgröße:** Das Work-Area-Schnellzugriffsraster verwendet jetzt `ContinuumWorkAreaNavigationSpec.quickActionColumns(width,fontScale)` statt fest `chunked(2)`. Bei genügend Platz und Schriftmaßstab bis 1,25 ergibt das zwei Spalten; bei größeren Fonts oder kleinen Fenstern eine lesbare Spalte. Das bestehende Nexus-Raster bleibt davon unabhängig unverändert.
+3. **Wiederherstellung & Auswahl:** Chat/Start erhalten den UI-Navigationszustand durch `onSaveInstanceState` nach der Aktivitäts-Rekreation, zusätzlich zum schon vorher erhaltenen Chatentwurf. Der temporäre „Mehr“-Dialog markiert nicht dauerhaft die falsche Registerkarte. Es wurden weder Chatnachrichten noch Trainingszustände zusätzlich gespeichert/verändert.
+
+**Neue Reproduktionstools:**
+- `scripts/continuum-navigation-contract-checks.kt`: 71 deterministische Verhaltens-/Kontraktprüfungen (fünf Arbeitsbereiche, Größen-/Fontskalen, alle Tabwechsel, Tastatur, Accessibility).
+- `scripts/continuum-navigation-jvm-check.sh`: SDK-freier Shell-Einstieg mit `kotlinc` und Java, ausschließlich eigener `mktemp`-Ordner, kein Netz, keine Modell-/Systemdateien.
+- In `ContinuumWorkAreaNavigationSpecTest.kt` sind zusätzliche JUnit4-Fälle für große Schrift, schmale Geräte und temporäre „Mehr“-Auswahl hinterlegt.
+- Die Source-Wiring-Suite `.github/continuum/app-navigation-wiring.test.mjs` enthält jetzt **neun** Testgruppen einschließlich Fold-Scrollbar, große Schrift, Konfigurationswechsel.
+
+**Jetzt wirklich ausgeführte Tests** (JDK 21, kotlinc-jvm 1.9.0, lokaler isolierter Dateisatz):
+```text
+Git SHA  ContinuumWorkAreaNavigationSpec.kt         c154f06a567c964797beccf00c7659196b624f3e
+Git SHA  continuum-navigation-contract-checks.kt    0cae151de767ceb06aaba5928a66947be1a3abcb
+Git SHA  continuum-navigation-jvm-check.sh          133cd46f8c181fea93c6fc35d2f3096691c927bc
+NAVIGATION_CONTRACT_PASS: 71 checks
+Exitcode: 0
+```
+Alle drei lokalen Git-Blob-SHAs wurden gegen die aus GitHub rückgelesenen Quelldatei-SHAs **byteidentisch** verglichen. Der aktuelle `AgentActivity.kt`-/Manifest-/Spec-/JUnit-/Node-Quellverbund wurde zusätzlich direkt aus dem Branch gelesen: **18/18 zielgerichtete, echte JS-RegExp-/Integrationsprüfungen bestanden**. Das ist jedoch **keine vollständige Node-Testausführung** im Git-Checkout und **keine Android-Gradle-Kompilierung**. Die Kotlin-Aktivitätsänderungen selbst sind noch nicht kompiliert; dazu fehlen Android-SDK und gesamter Repository-Checkout in der lokalen Umgebung.
+
+**Buildverfügbarkeit geprüft:** Im existierenden Render-Workspace gibt es einen statischen Mentor-APK-Vorschaudienst auf `astra/render-mentor-apk-builder-20261019` und einen PR50-Vorschaudienst auf `chatgpt/continuum-apk-preview-20261021`. Beide haben `autoDeploy=no`; keiner verfolgt PR64. Es wurde daher **kein** Remote-Deploy ausgelöst, kein Branch umgestellt, keine kostenpflichtige Infrastruktur erstellt und keine neue APK behauptet. Eine vertrauenswürdige signierte Samsung-Version erfordert weiterhin eine echte passende Build- und Signaturprüfung und ausdrückliche Installationsfreigabe.
+
+**Fortsetzungsbefehl im vollständigen lokalen Checkout:**
+```sh
+bash scripts/continuum-navigation-jvm-check.sh
+node --test .github/continuum/app-navigation-wiring.test.mjs
+node --test .github/continuum/nexus-beginner-ui.test.mjs
+node --test .github/continuum/android-integration-wiring.test.mjs
+./gradlew :app:testDebugUnitTest --tests at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest
+./gradlew :app:lintDebug :app:assembleDebug
+```
+
+**Unverändert:** Produktionsbranch `main`, Opus PR63, Opus Intelligenz-PR62, SWB1-/CDX1-Gewichte, CSX1 V8/I1, Checkpoints und Ownerspeicher. Alle Änderungen bleiben normal lesbarer Kotlin/Node-Code, auf einem Draft-PR zur Review und ohne APK-Installationswirkung.
