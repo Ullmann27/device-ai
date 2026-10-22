@@ -144,7 +144,8 @@ class ContinuumMemoryDialogueTest {
     @Test fun exactGermanTechnicalTermKeepsItsSourceWithoutOtherErrorTexts() {
         val title="Backpropagation heißt auch Fehlerrückführung."
         val unrelated="Softwaretest dient dazu, Fehler in Programmen zu erkennen."
-        val records=listOf(title,unrelated,
+        val vagueCompound="Pädagogik ist die Lehre von Erziehung und der Führung eines Knaben."
+        val records=listOf(title,unrelated,vagueCompound,
             "Aufrichtigkeit bedeutet die ehrliche Darstellung des eigenen Wissens.")
             .mapIndexed { i, excerpt ->
                 LearningExperienceFactory.create(
@@ -163,6 +164,11 @@ class ContinuumMemoryDialogueTest {
         assertEquals(1.0,ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",title),0.0)
         assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",unrelated) <
             ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",vagueCompound)>=0.82)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",vagueCompound))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",title))
         assertTrue(ContinuumMemoryDialogue.wordEvidence(
             "Pflanzen", "Die Pflanze wächst.") >=0.8)
         assertTrue(ContinuumMemoryDialogue.wordEvidence(
