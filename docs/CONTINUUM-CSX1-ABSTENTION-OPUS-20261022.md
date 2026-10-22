@@ -121,17 +121,17 @@ Negationsgewicht mit V8 wieder −2,28.
 
 | Variante | richtig /124 | unbelegt /140 | falsche Spanne | Fallen /202 | Teilsatzbindung | Verneinung unbelegt /28 | ungesehene Formen |
 |---|---|---|---|---|---|---|---|
-| V1 PR61-Kern + Originalrezept | 96 | 61 | 24 | 48 | – | 28* | 9/35 |
+| V1 PR61-Kern + Originalrezept | 96 | 61 | 24 | 48 | 2/6 | 24 | 9/35 |
 | V2 PR61-Kern + hartes Curriculum | 94 | 9 | 16 | 11 | 3/6 | 5 | 9/35 |
 | V6 + gelernte Entitätsnähe | 97 | 10–12 | 8–9 | 3–5 | 6/6 | 7–8 | 12/35 |
 | **V8 + Nähe + Signalwörter keine Kandidaten** | **99** | **6** | **8–10** | **3** | **6/6** | **3** | **12/35** |
 | R2 Lexikonregel (Regel-Baseline) | 74 | 0 | 34 | 21 | 4/6 | 0 | 7/35 |
 
-(*V1-Wert aus Zyklus-1-Lauf mit 10 Epochen; im 30-Epochen-Lauf siehe Log.) Herkunft der Verbesserung:
+(Alle Werte aus den 30-Epochen-Logs, Seed 1; Seeds 2/3 siehe Logs.) Herkunft der Verbesserung:
 **Curriculum** (gelernte Gewichte, gleiche Architektur) erklärt den Großteil (unbelegt 61 → 9);
 **gelernte Entitätsnähe** (neue Eingaben, gelernte Gewichte) die Bindung; **Kandidatenraum-Einschränkung** (feste
-Grammatik) die Negationsfehler; **Schwelle**: keine (argmax). Eine VALIDATION-Schwelle senkt unbelegte Antworten
-weiter (V8: 6 → 6), kostet aber richtige Antworten (98/91/98) und wird nicht empfohlen.
+Grammatik) die Negationsfehler; **Schwelle**: keine (argmax). Eine auf VALIDATION gewählte Schwelle senkt bei V8 die
+unbelegten Antworten nicht (6 → 6), kostet aber richtige Antworten (98/91/98 statt 99) und wird daher nicht empfohlen.
 
 Öffentliche PR61-DEV-Fälle (nur Regression, kein Blindtest): PR61 3/5 mit 2 erfundenen Antworten → **V8 4/5, beide
 Enthaltungen korrekt, 0 erfundene Antworten** (`Salzburg` jetzt fälschliche Enthaltung).
