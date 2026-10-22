@@ -853,25 +853,29 @@ class AgentActivity : Activity() {
             Color.rgb(153, 209, 255), true).apply {
             letterSpacing = 0.10f
         }, matchWidth(top = 15))
-        val workAreaQuickRow = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-        }
+        // Two readable columns preserve accessible labels on narrow Samsung displays.
         ContinuumWorkAreaNavigationSpec.destinations
             .filter { it != ContinuumWorkArea.START }
-            .forEachIndexed { index, destination ->
-                workAreaQuickRow.addView(
-                    actionButton(destination.symbol + "  " + destination.title).apply {
-                        minHeight = dp(52)
-                        textSize = 11.5f
-                        contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
-                        setOnClickListener { navigateWorkArea(destination) }
-                    },
-                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(5)
-                    }
-                )
+            .chunked(2)
+            .forEachIndexed { rowIndex, destinations ->
+                val workAreaQuickRow = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                }
+                destinations.forEachIndexed { index, destination ->
+                    workAreaQuickRow.addView(
+                        actionButton(destination.symbol + "  " + destination.title).apply {
+                            minHeight = dp(52)
+                            textSize = 13f
+                            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                            setOnClickListener { navigateWorkArea(destination) }
+                        },
+                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                            if (index > 0) marginStart = dp(8)
+                        }
+                    )
+                }
+                container.addView(workAreaQuickRow, matchWidth(top = if (rowIndex == 0) 8 else 7))
             }
-        container.addView(workAreaQuickRow, matchWidth(top = 8))
         container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
             Color.rgb(153, 209, 255), true).apply {
             letterSpacing = 0.12f
