@@ -38,6 +38,14 @@ export function verifyContractTestEvidence(baseline,candidate,independent,expect
    expectedNewTests};
 }
 
+/** Real per-run facts (fixed profile, exit code, timeout, counts) for receipts. */
+export function runEvidence(phase,chain){
+ return chain.results.map(r=>({
+  phase,profile:r.profile,exitCode:Number.isSafeInteger(r.exitCode)?r.exitCode:null,
+  timedOut:r.timedOut===true,ms:Number.isSafeInteger(r.ms)?r.ms:null,passed:r.passed===true,
+  executed:r.tests.executed,failed:r.tests.failed,skipped:r.tests.skipped
+ }));
+}
 function profileEvidence(chain){
  return chain.results.map(r=>({
   profile:r.profile,passed:r.passed,
@@ -145,7 +153,9 @@ export function executeOwnerContractTestTask({
   const receipt={schema:'continuum-owner-test-evidence',version:1,
    head,taskId:task.id,strategy:proposed.candidate.strategy,patchSha256,
    checkedAt:new Date().toISOString(),...proof,
-   profiles:profileEvidence(independentRun)};
+   profiles:profileEvidence(independentRun),
+   runs:[...runEvidence('baseline',baseRun),...runEvidence('candidate',candidateRun),
+    ...runEvidence('independent',independentRun)]};
   const receiptPath=path.join(independentOut,'verification.json');
   fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n');
   if(!proof.passed)throw Error('INDEPENDENT_EVIDENCE_INSUFFICIENT');

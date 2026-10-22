@@ -16,8 +16,10 @@ const MAX_LOG = 512 * 1024;
 
 export function parseArgs(args) {
   const [command, ...rest] = args;
-  if (!['doctor', 'build', 'status'].includes(command)) throw Error('Usage: doctor|build|status [--project PATH] [--state-dir PATH] [--offline]');
+  if (!['doctor', 'build', 'status', 'code-test', 'code-cancel'].includes(command)) throw Error('Usage: doctor|build|status|code-test|code-cancel [--project PATH] [--state-dir PATH] [--offline] [--job UUID --module M --export E --cases-json J --budget-minutes N]');
   const o = { command, project: process.cwd(), stateDir: path.join(os.homedir(), '.local/state/device-ai-continuum/mobile-builder'), offline: false };
+  // Coding-job values are validated data (never shell text); only the two coding operations accept them.
+  const CODING={'--job':'job','--module':'module','--export':'exportName','--cases-json':'casesJson','--budget-minutes':'budgetMinutes'};
   const seen = new Set();
   for (let i=0;i<rest.length;i++) {
     const flag=rest[i];
@@ -28,8 +30,17 @@ export function parseArgs(args) {
       const v=rest[++i]; if(!v||v.startsWith('--')) throw Error('Missing value for '+flag);
       o[flag==='--project'?'project':'stateDir']=v; continue;
     }
+    if(Object.hasOwn(CODING,flag)&&command.startsWith('code-')) {
+      const v=rest[++i]; if(v===undefined||v.startsWith('--')) throw Error('Missing value for '+flag);
+      o[CODING[flag]]=v; continue;
+    }
     throw Error('Unsupported argument: '+flag);
   }
+  if(o.budgetMinutes!==undefined){
+    if(!/^\d{1,2}$/.test(o.budgetMinutes)) throw Error('--budget-minutes must be 1..30');
+    o.budgetMinutes=Number(o.budgetMinutes);
+  }
+  if(command==='code-cancel'&&['module','exportName','casesJson','budgetMinutes'].some(k=>o[k]!==undefined)) throw Error('code-cancel accepts only --job');
   return o;
 }
 
@@ -304,11 +315,19 @@ export function readStatus(stateDir) {
   if(r.schemaVersion!==VERSION)throw Error('Unsupported report schema');
   return r;
 }
+async function coding(o) {
+  const {runMobileCodingJob,cancelMobileCodingJob}=await import('./continuum-mobile-coding.mjs');
+  const project=fs.realpathSync(path.resolve(o.project));
+  if(o.command==='code-cancel')return cancelMobileCodingJob({project,job:o.job});
+  return runMobileCodingJob({project,builderState:safeState(project,o.stateDir),job:o.job,module:o.module,
+    exportName:o.exportName,casesJson:o.casesJson,...(o.budgetMinutes===undefined?{}:{budgetMinutes:o.budgetMinutes})});
+}
 async function main() {
   const o=parseArgs(process.argv.slice(2));
-  const r=o.command==='status'?readStatus(o.stateDir):o.command==='doctor'?await doctor():await build(o);
+  const r=o.command.startsWith('code-')?await coding(o):o.command==='status'?readStatus(o.stateDir):o.command==='doctor'?await doctor():await build(o);
   process.stdout.write(JSON.stringify(r,null,2)+'\n');
   // STATUS reports past failures as data; only execution/parsing errors fail the query itself.
-  if(o.command!=='status'&&(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_')))process.exitCode=2;
+  if(o.command!=='status'&&(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_')||
+    (o.command==='code-test'&&r.status==='CANCELLED')))process.exitCode=2;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{process.stderr.write('Mobile Builder: '+e.message+'\n');process.exitCode=2;});
