@@ -61,3 +61,27 @@ test('existing chat, learning monitoring and owner permission boundaries remain'
   assert.match(manifest, /android:name="\.AgentActivity"/);
   assert.doesNotMatch(spec, /Runtime\.getRuntime|ProcessBuilder|FileOutputStream|train\(|startActivity|deleteRecursively/);
 });
+
+
+test('foldable sidebar scrolls to reach all actions at short heights', () => {
+  assert.match(activity, /private fun buildSidebar\(\): View/);
+  assert.match(activity, /\/\/ On compact foldable windows this sidebar has more actions than viewport height\./);
+  assert.match(activity, /return ScrollView\(this\)\.apply \{/);
+  assert.match(activity, /addView\(\s*side,\s*ScrollView\.LayoutParams/);
+});
+
+test('quick actions adapt to large fonts and rotated compact screens', () => {
+  assert.match(spec, /fun quickActionColumns\(usableWidthDp: Int, fontScale: Float\): Int/);
+  assert.match(spec, /fontScale in 0\.5f\.\.1\.25f/);
+  assert.match(activity, /val quickColumns = ContinuumWorkAreaNavigationSpec\.quickActionColumns\(/);
+  assert.match(activity, /\.chunked\(quickColumns\)/);
+});
+
+test('recreated activity preserves chat selection and draft without persistent More selection', () => {
+  assert.match(activity, /WORK_AREA_STATE_KEY = "continuum_work_area_state"/);
+  assert.match(activity, /outState\.putString\(\s*WORK_AREA_STATE_KEY/);
+  assert.match(activity, /conversationActive = savedInstanceState\?\.getString\(WORK_AREA_STATE_KEY\)/);
+  assert.match(activity, /refreshConversationLayout\(\)\s*refreshWorkAreaSelection\(\)/);
+  assert.match(spec, /fun selectionAfterTap\(current: ContinuumWorkArea, tapped: ContinuumWorkArea\)/);
+  assert.match(activity, /activeWorkArea = ContinuumWorkAreaNavigationSpec\.selectionAfterTap/);
+});
