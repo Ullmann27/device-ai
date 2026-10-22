@@ -27,6 +27,29 @@ class ContinuumWorkAreaNavigationSpecTest {
         }
     }
 
+    @Test fun quickActionsRemainReadableOnSmallWindowsAndLargeFonts() {
+        assertEquals(2, ContinuumWorkAreaNavigationSpec.quickActionColumns(320, 1.0f))
+        assertEquals(2, ContinuumWorkAreaNavigationSpec.quickActionColumns(400, 1.25f))
+        assertEquals(1, ContinuumWorkAreaNavigationSpec.quickActionColumns(319, 1.0f))
+        assertEquals(1, ContinuumWorkAreaNavigationSpec.quickActionColumns(400, 1.5f))
+        assertEquals(1, ContinuumWorkAreaNavigationSpec.quickActionColumns(400, Float.NaN))
+        assertEquals(1, ContinuumWorkAreaNavigationSpec.quickActionColumns(400, Float.POSITIVE_INFINITY))
+    }
+
+    @Test fun moreIsTransientAndDoesNotEraseActiveTabSelection() {
+        for (current in ContinuumWorkAreaNavigationSpec.destinations) {
+            assertEquals(current, ContinuumWorkAreaNavigationSpec.selectionAfterTap(
+                current, ContinuumWorkArea.MEHR
+            ))
+        }
+        assertEquals(ContinuumWorkArea.CHAT, ContinuumWorkAreaNavigationSpec.selectionAfterTap(
+            ContinuumWorkArea.START, ContinuumWorkArea.CHAT
+        ))
+        assertEquals(ContinuumWorkArea.START, ContinuumWorkAreaNavigationSpec.selectionAfterTap(
+            ContinuumWorkArea.CHAT, ContinuumWorkArea.START
+        ))
+    }
+
     @Test fun bottomBarIsMobileOnlyAndHiddenWhileKeyboardIsVisible() {
         assertTrue(ContinuumWorkAreaNavigationSpec.showBottomBar(false, false))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(false, true))
