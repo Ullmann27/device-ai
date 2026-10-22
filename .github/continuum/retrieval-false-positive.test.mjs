@@ -47,3 +47,29 @@ test("German near-inflection and complete compound suffix remain retrievable",()
   assert.equal(wordEvidence("SeriennummerXZ902","Die SeriennummerXZ902 stimmt."),1);
   assert.equal(sourceTermEvidence("SeriennummerXZ903","Die SeriennummerXZ902 stimmt."),false);
 });
+
+test("compound technical questions require every distinctive source anchor",()=>{
+  const src=[
+    {id:"quantum",kind:"SOURCE_TEXT",text:"Quantenmechanik ist ein Teilgebiet der Physik."},
+    {id:"known",kind:"SOURCE_TEXT",text:"Backpropagation ist auch als Fehlerrückführung bekannt."}
+  ];
+  assert.equal(sourceTermEvidence("Quantenkarussell987 und Quantenmechanik",src[0].text),false);
+  assert.deepEqual(rankMemories("Erkläre Quantenkarussell987 und Quantenmechanik",src),[]);
+  assert.equal(sourceTermEvidence("Fehlerrückführung und Backpropagation",src[1].text),true);
+  assert.deepEqual(rankMemories("Fehlerrückführung und Backpropagation",src).map(x=>x.id),["known"]);
+  assert.equal(sourceTermEvidence("Fehlerrückführung und Softwaretest",src[1].text),false);
+});
+
+test("technical IDs reject near-identical but different digits in source excerpts",()=>{
+  for(const [query,source] of [
+    ["SWB1","SWB2 verarbeitet die Daten."],
+    ["CSX1","CSX2 ist ein Forschungsmodell."],
+    ["SHA256","SHA257 wurde gespeichert."],
+    ["Vergleiche SWB1 und CDX1","SWB1 hat trainierbare Gewichte."]
+  ])assert.equal(sourceTermEvidence(query,source),false,query);
+  assert.equal(sourceTermEvidence("SWB1 und CDX1","SWB1 und CDX1 sind getrennte Lernkerne."),true);
+  assert.deepEqual(rankMemories("SWB1",[
+    {id:"wrong",kind:"SOURCE_TEXT",text:"SWB2 ist trainierbar."},
+    {id:"right",kind:"SOURCE_TEXT",text:"SWB1 ist trainierbar."}
+  ]).map(x=>x.id),["right"]);
+});
