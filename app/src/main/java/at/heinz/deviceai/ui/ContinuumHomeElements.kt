@@ -176,7 +176,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
         p.drawText("heute", labelX, 68.4f, t(400, 8.32f), solid(Argb.rgb(196, 208, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
-            val color = if (up) ContinuumTheme.RED else ContinuumTheme.GREEN
+            val color = if (change > 0) ContinuumTheme.GREEN else if (change < 0) ContinuumTheme.RED else ContinuumTheme.TEXT_MUTED
             val label = (if (up) "+" else "") + change + "%"
             val style = t(500, 8.34f)
             val chipW = 19f + p.measureText(label, style)
