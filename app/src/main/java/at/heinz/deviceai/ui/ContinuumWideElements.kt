@@ -196,7 +196,7 @@ class WideStorageCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         val ys = floatArrayOf(54.5f, 80.5f, 106.5f, 131.2f)
         for ((i, seg) in st.segments.take(4).withIndex()) {
             p.fillCircle(120f, ys[i] - 3.6f, 3.6f, Fill.Solid(seg.color))
-            p.drawText(ContinuumSurfaces.fit(p, seg.label, t(400, 8.6f), w - 136f), 129.9f, ys[i], t(400, 8.6f), Fill.Solid(Argb.rgb(205, 214, 232)))
+            p.drawText(ContinuumSurfaces.fit(p, ContinuumDashboardState.compactStorageLabel(seg.label), t(400, 8.6f), w - 136f), 129.9f, ys[i], t(400, 8.6f), Fill.Solid(Argb.rgb(205, 214, 232)))
             p.drawText(ContinuumDashboardState.bytes(seg.bytes), 129.9f, ys[i] + 10.6f, t(400, 8.2f), Fill.Solid(Argb.rgb(150, 160, 190)))
         }
         p.drawLine(12f, 147.4f, w - 12f, 147.4f, .7f, Fill.Solid(ContinuumTheme.CARD_DIVIDER))
