@@ -56,6 +56,17 @@ class ContinuumIntelligenceAuditTest {
         assertFalse(audit.targetMet)
     }
 
+    @Test fun immediateEndOfSequenceCannotFakeAnExplicitUnknownAnswer() {
+        val responses = probes.map { it.expected ?: "" }
+        val audit = ContinuumIntelligenceAudit.score(responses, checkpoint, 600)
+        assertEquals(20, audit.correctAnswers)
+        assertEquals(0, audit.unsupportedClaims)
+        assertEquals(0, audit.validAbstentions)
+        assertEquals(5, audit.noResponses)
+        assertFalse(audit.targetMet)
+        assertTrue(audit.summary().contains("Leere Antworten statt Enthaltung: 5"))
+    }
+
     @Test fun missingGenerationMustNeverMasqueradeAsAbstention() {
         val replies = probes.map { it.expected ?: "" }.toMutableList<String?>()
         replies[0] = null
