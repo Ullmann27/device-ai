@@ -61,9 +61,11 @@ test('offline job records deferral, failures and interrupts without rewriting mo
   assert.doesNotMatch(offline, /ContinuumTrainingMonitor\.OFFLINE,"TRAIN_WEIGHTS"/);
 });
 
-test('CDX1 audits are separate and preview version increases without touching main', () => {
+test('CDX1 audits are separate and the signed mentor update advances to code 15 without changing main', () => {
   assert.match(agent, /ContinuumTrainingMonitor\.CDX/);
   assert.match(agent, /if\(!report\.finalized\)"DEFERRED"/);
-  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 14 else if \(deviceAiPreview\) 6 else 4/);
+  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 15 else if \(deviceAiPreview\) 6 else 4/);
+  assert.match(gradle, /versionName = if \(deviceAiMentorPreview\) "0\.3\.12" else if \(deviceAiPreview\) "0\.3\.3" else "0\.3\.1"/);
+  assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
   assert.match(ui, /Android darf Jobs/);
 });
