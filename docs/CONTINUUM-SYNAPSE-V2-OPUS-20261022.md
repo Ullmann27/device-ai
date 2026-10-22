@@ -158,3 +158,73 @@ Die Leistung stammt damit vollständig aus den trainierten Gewichten.
   - Sinkhorn verdreifacht die falschen Antworten;
   - gebundene Einbettungen und 25 Epochen verschlechtern;
   - R2 bringt mehr richtige, aber auch mehr Fehler.
+
+## 7. Einmaliger TEST-Lauf (vorab festgelegt) – Ergebnis
+
+**Durchführung**
+- Quelle: Commit `61d6009e` (Vorab-Festlegung), sauberer Arbeitsbaum.
+- Kompiliert mit kotlinc 2.0.20; JUnit 4.13.2: 18/18 Tests OK.
+- Befehl: `SynapseV2Experiment final epochs=8`, Rezept R0, Seeds 1–3, alle Varianten und Baselines.
+- Der Runner prüft vor der Auswertung den TEST-Hash `18640df7…`.
+- Lauf am 22.10.2026, 15:20:05–15:21:33 UTC, Exitcode 0.
+- Vollständiges Protokoll: `docs/evidence/synapse-v2-20261022/final-test-e8-once.txt`.
+- Der TEST wurde genau einmal ausgewertet. Danach gab es keine Änderung an Varianten, Regeln oder Code.
+
+**Vorab festgelegter Kandidat A4bn** (Bag + 2-Hop, ohne Kandidatenmerkmal, Regel aus VALIDATION)
+
+| Seed | richtig /304 | falsch | unbelegte Antwort /288 | Fehler /592 | Score (richtig − 2·Fehler) |
+|---|---:|---:|---:|---:|---:|
+| 1 | 152 | 7 | 47 | 54 | 44 |
+| 2 | 148 | 6 | 38 | 44 | 60 |
+| 3 | 111 | 5 | 35 | 40 | 31 |
+| **Mittel** | **137,0 (45 %)** | **6,0** | **40,0 (13,9 %)** | **46,0** | **45,0** |
+
+Auf VALIDATION hatte derselbe Kandidat einen Score von 124,0 bei 8,7 Fehlern auf 322 Fällen. **Die Auswahl hat sich nicht auf TEST übertragen.**
+
+**Fehleranalyse** (Seed 1, Regel aus VALIDATION)
+- Bekannte Satzformen (`SEEN`): 75/75 richtig, 3/57 unbelegte Antworten.
+- Neue Formen:
+  - nur Beleg neu (`NEW_EVIDENCE`): 29/80;
+  - nur Frage neu (`NEW_QUESTION`): 33/75;
+  - beides neu (`NEW_BOTH`): 15/74.
+- Herkunft der 47 unbelegten Antworten:
+  - 28 aus **Verneinung mit unbekanntem Verneinungswort** (`NEGATED_UNSEEN_CUE`, 28/48);
+  - 8 aus widersprüchlichen 2-Hop-Ketten (8/12);
+  - 8 aus fremder Relation (8/96);
+  - 2 aus unbekannter Relation;
+  - 1 aus gebrochener Brücke.
+
+**Vergleich aller Varianten auf TEST** (Mittel aus 3 Seeds, Regel aus VALIDATION). *Nur Beobachtung, keine Auswahl.*
+
+| Variante | richtig /304 | falsch | unbelegt /288 | Score |
+|---|---:|---:|---:|---:|
+| A4n HRR + 2-Hop, ohne Kandidatenmerkmal | 140,7 | 9,7 | 25,0 | **71,3** |
+| A4 HRR + 2-Hop | 115,3 | 6,7 | 18,0 | 66,0 |
+| A4t HRR + 2-Hop, nur Trigramme | 118,3 | 8,3 | 19,3 | 63,0 |
+| S nur Skalare | 91,7 | 4,0 | 14,0 | 55,7 |
+| A5h gebundene Einbettungen (HRR) | 124,0 | 7,7 | 30,7 | 47,3 |
+| A2 HRR, 1-Hop | 95,3 | 9,3 | 15,7 | 45,3 |
+| **A4bn (Kandidat)** | **137,0** | **6,0** | **40,0** | **45,0** |
+| A4bt Bag, nur Trigramme | 134,7 | 9,7 | 40,3 | 34,7 |
+| A4b Bag + 2-Hop | 123,3 | 14,0 | 34,0 | 27,3 |
+| A1 Bag, 1-Hop | 104,3 | 13,0 | 27,0 | 24,3 |
+| A5 gebundene Einbettungen (Bag) | 142,3 | 16,0 | 44,3 | 21,7 |
+| A3 A2 + Sinkhorn | 66,7 | 12,3 | 11,7 | 18,7 |
+| A0 v1-Regeln | 2 | 0 | 0 | 2 |
+| U untrainiert (argmax) | 29,0 | 214,0 | 173,3 | −745,7 |
+| A0b Oberflächenheuristik | 151 | 153 | 252 | −659 |
+
+Bei unbekannten Verneinungswörtern (Seed 1) gab A4n 13/48 unbelegte Antworten, A4bn 28/48. Bei fremder Relation waren es 1/96 gegenüber 8/96.
+
+**Bewertung**
+1. **Ergebnis des vorab festgelegten Kandidaten:** Score 45,0. Er gibt in 13,9 % der unbeantwortbaren TEST-Fälle eine unbelegte Antwort und ist **nicht** für eine Übernahme geeignet. Es wird nichts befördert; App und Gewichte bleiben unverändert.
+2. **Ursache der Übertragungslücke:** VALIDATION enthielt die TEST-eigenen Verschiebungen nicht, also keine unbekannten Verneinungswörter und keine unbekannte Relation. Die Auswahl belohnte damit Abdeckung in der VALIDATION-Verteilung statt Robustheit.
+3. **Beobachtung nach dem Lauf (nicht bestätigt):** HRR-Rollenbindung erzeugt unter Verschiebung weniger unbelegte Antworten als Bag (A4n 71,3 gegenüber A4bn 45,0). Das widerspricht dem VALIDATION-Befund aus Abschnitt 6. Weil der TEST jetzt verbraucht ist, bleibt das eine **Hypothese**. Sie braucht einen neuen eingefrorenen TEST.
+4. **Kernschwäche:** Ungesehene Satzformen bleiben die größte Schwäche, wenn Frage und Beleg zugleich neu sind (A4bn 15/74, A4n 6/74). Das passt zur bekannten CSX1-Grenze von 12/35.
+
+**Folgen für weitere Experimente**
+- Der TEST `18640df7…` ist **verbraucht**. Er darf nie wieder zur Auswahl oder Abstimmung dienen, höchstens als historischer Vergleich.
+- Ein nächster Zyklus braucht:
+  - eine Verschiebungs-VALIDATION mit zurückgehaltenen Verneinungs- und Zeitwörtern und eigenen Relationen;
+  - einen neuen eingefrorenen TEST mit anderen Wörtern;
+  - die Vorab-Festlegung, ob HRR oder Bag gewählt wird.
