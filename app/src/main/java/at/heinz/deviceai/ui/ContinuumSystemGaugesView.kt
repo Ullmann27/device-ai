@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.SweepGradient
 import android.view.View
+import android.util.TypedValue
 import kotlin.math.min
 
 /**
@@ -54,8 +55,8 @@ class ContinuumSystemGaugesView(
         val stroke = 5.2f * density
         val radius = min(cell * 0.35f, height * 0.26f)
         val cy = (height * .44f).coerceAtLeast(radius + stroke)
-        val labelSize = 10f * resources.displayMetrics.scaledDensity
-        val valueSize = 14f * resources.displayMetrics.scaledDensity
+        val labelSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10f, resources.displayMetrics)
+        val valueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
 
         values.forEachIndexed { i, entry ->
             val (name, nullablePercent, accent) = entry
