@@ -31,10 +31,18 @@ class ContinuumSystemGaugesView(
         Triple("Speicher", telemetry.storagePercent, 0xFF3B82F6.toInt())
     )
 
+    init {
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+        isFocusable = true
+        contentDescription = values.joinToString(". ") { (name, measured, _) ->
+            "$name: " + (measured?.let { "${it.coerceIn(0, 100)} Prozent" } ?: "nicht messbar")
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
         val needed = (130f * density).toInt()
-        val height = resolveSize(needed, heightMeasureSpec)
+        val height = View.resolveSize(needed, heightMeasureSpec)
         setMeasuredDimension(width, height)
     }
 
