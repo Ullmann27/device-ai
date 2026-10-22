@@ -10,6 +10,10 @@ const activity = kotlin('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const cockpit = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumBentoCockpit.kt');
 const effects = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumSciFiEffects.kt');
 const home = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
+const system = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt');
+const collector = kotlin('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
+const phone = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt');
+const wide = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumWideElements.kt');
 
 test('no new Flutter dependency and existing native layout remains authoritative', () => {
   assert.match(home, /class ContinuumHomeView/);
@@ -41,4 +45,27 @@ test('all existing cockpit destinations remain connected to owner callbacks', ()
   assert.match(activity, /private fun showResearchModeDialog/);
   assert.match(activity, /private fun showContinuumLearningDashboardDialog/);
   assert.match(cockpit, /fun formattedStatus\(raw: String\): String/);
+});
+
+test('system gauges show only measured values and explain unknown GPU', () => {
+  assert.match(system, /telemetry\.appCpuPercent/);
+  assert.match(system, /telemetry\.memoryPercent/);
+  assert.match(system, /telemetry\.storagePercent/);
+  assert.match(system, /Triple\("GPU", null/);
+  assert.match(system, /contentDescription = values\.joinToString/);
+  assert.match(activity, /ContinuumSystemGaugesView\(this, systemSnapshot\)/);
+  assert.match(activity, /App-CPU statt Gesamt-CPU/);
+});
+test('device storage legend does not present unidentified data as measured system bytes', () => {
+  assert.match(collector, /Übrige Gerätebelegung/);
+  assert.match(collector, /App: eigene Dateien/);
+  assert.match(collector, /App: Wissensquellen/);
+  assert.match(collector, /App: Projektdateien/);
+  assert.doesNotMatch(collector, /ContinuumDashboardState\.Segment\("System", other/);
+});
+test('positive measured event deltas use green in both form factors', () => {
+  for (const cards of [phone, wide]) {
+    assert.match(cards, /if \(change > 0\) ContinuumTheme\.GREEN/);
+    assert.match(cards, /if \(change < 0\) ContinuumTheme\.RED/);
+  }
 });
