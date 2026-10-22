@@ -3040,53 +3040,30 @@ class AgentActivity : Activity() {
      */
     private fun showModelCenter() {
         modelCenterDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
-                22, Color.rgb(56, 117, 193))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
-        box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
-        box.addView(textView(
-            "Für vollständig lokale natürliche Gespräche und Entwicklungsentwürfe brauchst du " +
-                "eine kompatible LiteRT-LM-Modelldatei. Der eigene Lernkern arbeitet auch ohne " +
-                "Sprachmodell. Der optionale Groq-Mentor kann getrennt davon einzelne Fragen " +
-                "beantworten: nur über dein Backend, mit Gerätefreigabe und ausdrücklicher " +
-                "Bestätigung jeder externen Frage. Er installiert kein lokales Modell.",
-            13f, MUTED), matchWidth(top = 10))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · MODELLE", "KI-Sprachmodell",
+            "Lokale Sprachmodelle sind optional. SWB1 und bestätigte Erinnerungen funktionieren ohne importiertes Modell. " +
+                "Externe Groq-Anfragen benötigen weiterhin jede separate Gerätefreigabe.")
+        box.addView(cockpit.section(this, "LOKALER SPRACHKERN · TATSÄCHLICHER LADESTATUS"), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
             setPadding(dp(13), dp(12), dp(13), dp(12))
             setTextIsSelectable(true)
         }
         box.addView(card, matchWidth(top = 14))
-        box.addView(textView("SCHRITT 1 · Modelldatei auswählen", 11.5f, CYAN, true),
-            matchWidth(top = 16))
-        box.addView(actionButton("MODELLDATEI IMPORTIEREN", accent = true).apply {
-            setOnClickListener { showModelImportDialog() }
-        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply {
-            topMargin = dp(7)
-        })
-        box.addView(textView("SCHRITT 2 · Modell auf dem Gerät starten", 11.5f, CYAN, true),
-            matchWidth(top = 14))
-        val action = actionButton("MODELL LADEN").apply {
-            setOnClickListener {
-                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
-            }
+        box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
+            showModelImportDialog()
         }
-        box.addView(action, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply { topMargin = dp(7) })
-        box.addView(textView(
-            "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
-                "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
-            12.5f, MUTED), matchWidth(top = 11))
-        box.addView(actionButton("GROQ-MENTOR · EXTERNE FRAGE (OPTIONAL)").apply {
-            setOnClickListener {
-                modelCenterDialog?.dismiss()
-                showGroqMentorDialog()
-            }
-        }, matchWidth(top = 12))
+        val action = cockpit.action(this, "2 · MODELL LADEN") {
+            if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+        }
+        cockpit.grid(this, box, listOf(importButton, action), 2)
+        box.addView(cockpit.section(this, "OPTIONAL · NUR NACH AUSDRÜCKLICHER FREIGABE"), matchWidth(top = 10))
+        box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
+            modelCenterDialog?.dismiss()
+            showGroqMentorDialog()
+        }, matchWidth(top = 5))
 
         val advanced = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -3129,10 +3106,8 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 16))
         box.addView(advanced, matchWidth(top = 8))
 
-        val dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { modelCenterDialog?.dismiss() }, matchWidth(top = 12))
+        val dialog = cockpit.show(this, box)
         dialog.setOnDismissListener {
             if (modelCenterDialog === dialog) {
                 modelCenterDialog = null
@@ -3143,8 +3118,6 @@ class AgentActivity : Activity() {
         modelCenterDialog = dialog
         modelCardText = card
         localActionButton = action
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         reloadInstalledModels()
         onLearningIo({
             val core = ContinuumLearningCore(filesDir)
