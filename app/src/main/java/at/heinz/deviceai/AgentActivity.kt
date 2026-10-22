@@ -253,6 +253,10 @@ class AgentActivity : Activity() {
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
+    // Navigation is presentation-only; no learning-state or tool permission mutation.
+    private var activeWorkArea = ContinuumWorkArea.START
+    private var bottomWorkAreaBar: View? = null
+    private val workAreaButtons = linkedMapOf<ContinuumWorkArea, TextView>()
 
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
@@ -483,8 +487,14 @@ class AgentActivity : Activity() {
             root.addView(
                 buildConversationPane(wide = false),
                 LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
+                )
+            )
+            root.addView(
+                buildBottomWorkAreaBar(),
+                LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
+                    LinearLayout.LayoutParams.WRAP_CONTENT
                 )
             )
         }
@@ -503,6 +513,11 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
+                bottomWorkAreaBar?.visibility = if (
+                    ContinuumWorkAreaNavigationSpec.showBottomBar(
+                        wide, viewport.compactDashboard
+                    )
+                ) View.VISIBLE else View.GONE
                 if (keyboardCompact != viewport.compactDashboard) {
                     keyboardCompact = viewport.compactDashboard
                     refreshConversationLayout()
@@ -534,6 +549,13 @@ class AgentActivity : Activity() {
             },
             matchWidth()
         )
+
+        side.addView(sectionLabel("ARBEITSBEREICHE", top = 20))
+        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
+            side.addView(buildWorkAreaButton(destination, compact = false),
+                matchWidth(top = 7))
+        }
+        refreshWorkAreaSelection()
 
         side.addView(sectionLabel("DEIN ASSISTENT", top = 24))
         side.addView(
@@ -827,6 +849,29 @@ class AgentActivity : Activity() {
             minHeight = dp(56)
             setOnClickListener { showFirstStepsGuide() }
         }, matchWidth(top = 10))
+        container.addView(textView("DEINE ARBEITSBEREICHE · DIREKT ÖFFNEN", 10f,
+            Color.rgb(153, 209, 255), true).apply {
+            letterSpacing = 0.10f
+        }, matchWidth(top = 15))
+        val workAreaQuickRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+        }
+        ContinuumWorkAreaNavigationSpec.destinations
+            .filter { it != ContinuumWorkArea.START }
+            .forEachIndexed { index, destination ->
+                workAreaQuickRow.addView(
+                    actionButton(destination.symbol + "  " + destination.title).apply {
+                        minHeight = dp(52)
+                        textSize = 11.5f
+                        contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                        setOnClickListener { navigateWorkArea(destination) }
+                    },
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        if (index > 0) marginStart = dp(5)
+                    }
+                )
+            }
+        container.addView(workAreaQuickRow, matchWidth(top = 8))
         container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
             Color.rgb(153, 209, 255), true).apply {
             letterSpacing = 0.12f
@@ -951,6 +996,92 @@ class AgentActivity : Activity() {
         return container
     }
 
+    private fun buildBottomWorkAreaBar(): View {
+        val bar = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            setPadding(dp(5), dp(5), dp(5), dp(5))
+            background = GradientDrawable().apply {
+                setColor(Color.rgb(10, 17, 39))
+                setStroke(dp(1), BORDER)
+            }
+            contentDescription = "Navigation zu allen Continuum-Arbeitsbereichen"
+        }
+        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
+            bar.addView(
+                buildWorkAreaButton(destination, compact = true),
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            )
+        }
+        bottomWorkAreaBar = bar
+        refreshWorkAreaSelection()
+        return bar
+    }
+
+    private fun buildWorkAreaButton(destination: ContinuumWorkArea, compact: Boolean): TextView {
+        val item = textView(
+            if (compact) destination.symbol + "\n" + destination.title
+            else destination.symbol + "   " + destination.title,
+            if (compact) 11.5f else 14f, MUTED, true
+        ).apply {
+            gravity = Gravity.CENTER
+            minHeight = dp(if (compact) 60 else 47)
+            setPadding(dp(if (compact) 1 else 13), dp(5),
+                dp(if (compact) 1 else 13), dp(5))
+            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+            isClickable = true
+            isFocusable = true
+            setOnClickListener { navigateWorkArea(destination) }
+        }
+        workAreaButtons[destination] = item
+        return item
+    }
+
+    private fun refreshWorkAreaSelection() {
+        for ((destination, item) in workAreaButtons) {
+            val selected = destination == activeWorkArea
+            item.isSelected = selected
+            item.setTextColor(if (selected) CYAN else MUTED)
+            item.background = GradientDrawable().apply {
+                setColor(if (selected) Color.rgb(20, 46, 92) else Color.TRANSPARENT)
+                cornerRadius = dp(13).toFloat()
+                if (selected) setStroke(dp(1), Color.rgb(47, 132, 211))
+            }
+        }
+    }
+
+    private fun navigateWorkArea(destination: ContinuumWorkArea) {
+        activeWorkArea = destination
+        refreshWorkAreaSelection()
+        when (destination) {
+            ContinuumWorkArea.START -> showHomeDashboard()
+            ContinuumWorkArea.CHAT -> focusChatComposer()
+            ContinuumWorkArea.LERNEN -> showLearningCenter()
+            ContinuumWorkArea.ENTWICKELN -> showDevelopmentCenter()
+            ContinuumWorkArea.MEHR -> showMoreWorkAreas()
+        }
+    }
+
+    private fun showMoreWorkAreas() {
+        val labels = arrayOf(
+            "Forschung & Quellen", "Lokale KI-Modelle", "Wissensspeicher",
+            "System & Sicherheit", "Handy-Builder · Termux"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Weitere Arbeitsbereiche")
+            .setItems(labels) { _, index ->
+                when (index) {
+                    0 -> showResearchModeDialog()
+                    1 -> showModelCenter()
+                    2 -> showMemoryCenter()
+                    3 -> showSystemCenter()
+                    4 -> openMobileBuilder()
+                }
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
+    }
+
     private fun refreshConversationLayout() {
         val chat = conversationActive || keyboardCompact
         homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
@@ -984,6 +1115,8 @@ class AgentActivity : Activity() {
     }
 
     private fun showHomeDashboard() {
+        activeWorkArea = ContinuumWorkArea.START
+        refreshWorkAreaSelection()
         conversationActive = false
         input.clearFocus()
         (getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as? android.view.inputmethod.InputMethodManager)
@@ -994,6 +1127,8 @@ class AgentActivity : Activity() {
 
     private fun focusChatComposer() {
         if (!::input.isInitialized) return
+        activeWorkArea = ContinuumWorkArea.CHAT
+        refreshWorkAreaSelection()
         conversationActive = true
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
