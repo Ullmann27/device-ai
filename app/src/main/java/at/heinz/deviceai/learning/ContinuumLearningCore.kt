@@ -722,6 +722,13 @@ class ContinuumLearningCore(
         ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
     }
 
+    /** Read-only CDX1 quality audit under the existing shared model lock. */
+    fun intelligenceAudit(
+        cancelled: () -> Boolean = { false }
+    ): ContinuumIntelligenceAudit.Report = synchronized(CORE_LOCK) {
+        ContinuumIntelligenceOnDevice.run(this, cancelled)
+    }
+
     /** Inspect only filenames and metadata; never writes, trains or restores. */
     fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).storageEvidence()

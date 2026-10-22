@@ -40,6 +40,43 @@ export function wordEvidence(query,text){
   }
   return best;
 }
+/** Conservative, source-only lexical anchor gate. This does not prove factual truth.
+ * It never changes ranking rules for OWNER_CONFIRMED memory records.
+ * A source has to contain ALL distinctive terms of the question. Long technical
+ * terms and exact letter-digit identifiers are mandatory; if there are none,
+ * short domain words are anchored rather than silently bypassed. */
+const SOURCE_QUERY_OPERATORS=new Set(["analysiere","analysieren","bedeuten","bedeutet","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","darstelle","darstellen","definiere","definieren","definiert","erkläre","erklären","erklärst","erläutere","erläutern","erläuterst","erzaehle","funktionieren","funktionierend","funktioniert","funktionierte","funktionierten","nenne","nennen","unterscheide","unterscheiden","unterscheidet","untersuche","untersuchen","vergleiche","vergleichen","zeige","zeigen","zusammenfassen","zusammenfasst","zusammengefasst"]);
+const SOURCE_INFLECTION_TAILS=["","e","n","s","en","er","es","em"];
+const SOURCE_DIGIT=/\p{Nd}/u;
+const SOURCE_LETTER=/\p{L}/u;
+
+/** Directional compound policy: "Schlüssel" may occur in "Haustürschlüssel",
+ * but "Fehlerrückführung" is NOT evidenced by the generic "Führung". */
+export function sourceWordMatch(needle,word) {
+  if(needle===word)return true;
+  if(SOURCE_DIGIT.test(needle)||SOURCE_DIGIT.test(word))return false;
+  for(const na of SOURCE_INFLECTION_TAILS)for(const wb of SOURCE_INFLECTION_TAILS){
+    if(na.length===0&&wb.length===0)continue;
+    if(!needle.endsWith(na)||!word.endsWith(wb))continue;
+    const baseA=needle.slice(0,needle.length-na.length);
+    const baseB=word.slice(0,word.length-wb.length);
+    if(baseA.length>=6&&baseA===baseB)return true;
+  }
+  return needle.length>=8 && word.length>=needle.length+3 && word.endsWith(needle);
+}
+export function sourceTermEvidence(query,text){
+  if(typeof query!=="string"||typeof text!=="string"||query.length>4096||text.length===0)return false;
+  const terms=[...new Set(contentWords(query.normalize("NFC")))]
+    .filter(term=>!SOURCE_QUERY_OPERATORS.has(term));
+  const source=[...new Set(contentWords(text.normalize("NFC")))];
+  if(terms.length===0||source.length===0)return false;
+  const hard=terms.filter(term=>term.length>=12||
+    (term.length>=4&&SOURCE_LETTER.test(term)&&SOURCE_DIGIT.test(term)));
+  // For short questions, never consider a shared 5-letter prefix proof of the topic.
+  const anchors=hard.length?hard:terms.filter(term=>term.length>=4);
+  if(anchors.length===0)return false;
+  return anchors.every(needle=>source.some(word=>sourceWordMatch(needle,word)));
+}
 /** memories: [{id,text,...}]; semantic(query,text) optional, reported only. */
 export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const q=String(query).slice(0,1000);
@@ -47,6 +84,7 @@ export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const qv=weigh(wordGrams(q),idf);
   return memories.map(m=>{
     const text=String(m.text).slice(0,1000);
+    if((m.kind==='SOURCE_TEXT'||m.type==='SOURCE_TEXT')&&!sourceTermEvidence(q,text))return null;
     const evidence=wordEvidence(q,text);
     if(evidence<EVIDENCE_THRESHOLD)return null;
     const score=cosine(qv,weigh(wordGrams(text),idf));

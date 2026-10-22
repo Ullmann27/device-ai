@@ -498,42 +498,63 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
-        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(resources.configuration.screenWidthDp.toFloat(),
-            resources.configuration.screenHeightDp.toFloat())
-        val root = LinearLayout(this).apply {
-            orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(
+            resources.configuration.screenWidthDp.toFloat(),
+            resources.configuration.screenHeightDp.toFloat()
+        )
+        // The start pane must occupy the screen independently of its contents.
+        // A weighted vertical LinearLayout previously collapsed the phone pane
+        // on the owner's real Fold screen, placing the navigation at the top.
+        val root = android.widget.FrameLayout(this).apply {
             setBackgroundColor(BG)
+            layoutParams = android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            )
         }
-
+        val phonePane: View?
+        val phoneNavHeight: Int
         if (wide) {
-            root.addView(
-                buildRail(),
-                LinearLayout.LayoutParams(railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT)
-            )
-            root.addView(
-                buildConversationPane(wide = true),
-                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            )
+            phonePane = null
+            phoneNavHeight = 0
+            val wideContent = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setBackgroundColor(BG)
+            }
+            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+                railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
+            ))
+            wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ))
+            root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            ))
         } else {
-            root.addView(
-                buildConversationPane(wide = false),
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
-                )
+            val navScale = resources.configuration.screenWidthDp /
+                at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
+            phoneNavHeight = dp(
+                (at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * navScale).toInt()
             )
-            root.addView(
-                buildBottomWorkAreaBar(),
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
+            phonePane = buildConversationPane(wide = false)
+            root.addView(phonePane, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            ).apply { bottomMargin = phoneNavHeight })
+            root.addView(buildBottomWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                phoneNavHeight,
+                Gravity.BOTTOM
+            ))
         }
 
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             window.setDecorFitsSystemWindows(false)
             root.setOnApplyWindowInsetsListener { view, insets ->
-                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                val bars = insets.getInsets(
+                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+                )
                 val ime = insets.getInsets(WindowInsets.Type.ime())
                 val viewport = ComposerUiPolicy.viewport(
                     bars.top, bars.bottom, ime.bottom,
@@ -544,11 +565,18 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                bottomWorkAreaBar?.visibility = if (
-                    ContinuumWorkAreaNavigationSpec.showBottomBar(
-                        wide, viewport.compactDashboard
-                    )
-                ) View.VISIBLE else View.GONE
+                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
+                    wide, viewport.compactDashboard
+                )
+                bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
+                if (phonePane != null) {
+                    val paneParams = phonePane.layoutParams as android.widget.FrameLayout.LayoutParams
+                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                    if (paneParams.bottomMargin != requiredMargin) {
+                        paneParams.bottomMargin = requiredMargin
+                        phonePane.layoutParams = paneParams
+                    }
+                }
                 if (keyboardCompact != viewport.compactDashboard) {
                     keyboardCompact = viewport.compactDashboard
                     refreshConversationLayout()

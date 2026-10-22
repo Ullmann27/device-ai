@@ -54,11 +54,15 @@ export function parseTeamleaderArgs(args){
 export function teamleaderExitCode(result){
  return isFailedCycleOutcome(result?.outcome)?1:0;
 }
+/** Default external state directory shared with the verified mobile coding receipt. */
+export function defaultTeamleaderStateDir(root,home=os.homedir()){
+ const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
+ return path.join(home,'.local','state','device-ai-continuum',suffix);
+}
 export async function teamleaderMain(argv=process.argv.slice(2)){
  const opt=parseTeamleaderArgs(argv);
  const root=fs.realpathSync(path.resolve(opt.root??process.cwd()));
- const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
- const stateDir=resolveOutputDestination(opt.state??path.join(os.homedir(),'.local','state','device-ai-continuum',suffix));
+ const stateDir=resolveOutputDestination(opt.state??defaultTeamleaderStateDir(root));
  if(stateDir===root||stateDir.startsWith(root+path.sep))
   throw Error('State must remain outside the source checkout');
  if(opt.status){
