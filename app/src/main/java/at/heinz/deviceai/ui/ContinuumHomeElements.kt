@@ -312,7 +312,8 @@ object WaveChart {
             }
             p.strokePath(path, 2.6f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(60, 160, 255), color, Argb.rgb(255, 90, 190))), .18f + shimmer)
             p.strokePath(path, 1.1f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(80, 180, 255), color, Argb.rgb(255, 110, 200))), .95f)
-        }        if (phase != null && phase.isFinite() && layers > 0) {
+        }
+        if (phase != null && phase.isFinite() && layers > 0) {
             // Traveling marker interpolates adjacent real samples, never invented training observations.
             val sample = phase.coerceIn(0f, 1f) * (series.size - 1)
             val leftIndex = sample.toInt().coerceIn(0, series.lastIndex)
