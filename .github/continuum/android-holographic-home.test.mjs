@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {workspaceNav} from './workspace-nav-contract.mjs';
 
 const activity=fs.readFileSync('app/src/main/java/at/heinz/deviceai/AgentActivity.kt','utf8');
 const orb=fs.readFileSync('app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt','utf8');
@@ -38,10 +39,15 @@ test('image-inspired start screen preserves all seven real Android feature paths
  ];
  assert.match(dashboard,/ContinuumHologramView\(this\)/);
  assert.match(dashboard,/buildStatusRow\(\)/);
+ // work areas come from the always-visible grid (owner request 22.10.2026); System keeps its own button
+ const nav=workspaceNav(activity);
  for(const [label,call] of targets){
-  assert.ok(label==='System'?dashboard.includes('System   ·'):
-    dashboard.includes('"'+label+'"'),'Missing AI navigation tile '+label);
-  assert.ok(dashboard.includes(call),'Missing live handler '+call);
+  if(label==='System'){
+   assert.ok(dashboard.includes('System   ·')&&dashboard.includes(call),'Missing System button');
+   continue;
+  }
+  assert.ok(nav.homeReaches(dashboard,call.replace('()','')),'Missing AI navigation tile '+label);
+  assert.ok(activity.includes('private fun '+call.replace('()','')+'('),'Missing live handler '+call);
  }
  assert.match(dashboard,/neuralCuriosityButton = actionButton/);
  assert.doesNotMatch(dashboard,/Lumo/i);

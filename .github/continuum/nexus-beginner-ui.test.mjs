@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { workspaceNav } from './workspace-nav-contract.mjs';
 
 const activity = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/AgentActivity.kt', import.meta.url), 'utf8');
 const spec = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ContinuumNexusHomeSpec.kt', import.meta.url), 'utf8');
@@ -36,13 +37,14 @@ test('beginner destinations use real existing Android screens, not placeholder s
   assert.doesNotMatch(home, /TRIPLE_PHASE_VERIFIED|APK_INSTALLED|632 Tests bestanden/);
 });
 
-test('advanced routes remain available but collapsed until the user requests them', () => {
-  assert.match(home, /val moreFunctions = LinearLayout\(this\)\.apply \{/);
-  assert.match(home, /visibility = View.GONE/);
-  assert.match(home, /Weitere KI-Funktionen anzeigen/);
-  for (const target of ['showResearchModeDialog()', 'showLearningCenter()', 
-    'showModelCenter()', 'showDevelopmentCenter()', 'showMemoryCenter()',
-    'showSystemCenter()']) assert.ok(home.includes(target), 'Expert action lost: '+target);
+// Owner request 22.10.2026: the work areas are no longer collapsed; they are visible on the start screen.
+test('advanced routes are visible on the start screen instead of collapsed', () => {
+  const nav = workspaceNav(activity);
+  assert.match(home, /buildWorkAreaGrid\(\)/);
+  assert.doesNotMatch(home, /Weitere KI-Funktionen anzeigen/);
+  for (const target of ['showResearchModeDialog', 'showLearningCenter', 'showModelCenter',
+    'showDevelopmentCenter', 'showMemoryCenter']) assert.ok(nav.homeReaches(home, target), 'Expert action lost: '+target);
+  assert.ok(home.includes('showSystemCenter()'), 'Expert action lost: showSystemCenter()');
 });
 
 test('Nexus keeps real hologram and voice entry tied to Android speech and system state', () => {
@@ -71,9 +73,8 @@ test('personalisation is a real choice and cannot silently train models or insta
   assert.doesNotMatch(choice, /trainSgdStep|installPackage|launchApkInstall|exec\(/);
 });
 
-test('expert disclosure stays closed after leaving or returning from chat', () => {
+test('work-area bar gives way to the keyboard and follows the chat state', () => {
   const refresh=section('private fun refreshConversationLayout()', 'private fun showHomeDashboard()');
-  assert.match(refresh, /nexusExpertPanel\?\.visibility = if \(!chat && nexusExpertExpanded\)/);
-  assert.match(home, /nexusExpertExpanded = false/);
-  assert.match(home, /nexusExpertExpanded = show/);
+  assert.match(refresh, /workspaceBar\?\.visibility = if \(ContinuumWorkspaceNavSpec\.barVisible\(keyboardVisible\)\)/);
+  assert.match(refresh, /styleWorkspaceBar\(ContinuumWorkspaceNavSpec\.selected\(conversationActive\)\)/);
 });

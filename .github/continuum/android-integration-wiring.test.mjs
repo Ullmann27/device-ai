@@ -3,6 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {workspaceNav} from './workspace-nav-contract.mjs';
 const dir='app/src/main/java/at/heinz/deviceai/';
 const activity=fs.readFileSync(dir+'AgentActivity.kt','utf8');
 const core=fs.readFileSync(dir+'learning/ContinuumLearningCore.kt','utf8');
@@ -14,6 +15,7 @@ const status=fs.readFileSync(dir+'learning/ContinuumOfflineJobStatus.kt','utf8')
 const probe=fs.readFileSync(dir+'learning/ContinuumLocalContrastiveProbe.kt','utf8');
 const manifest=fs.readFileSync('app/src/main/AndroidManifest.xml','utf8');
 const ensure=(name,pass)=>assert.ok(pass,'Disconnected or unsupported code path: '+name);
+const nav=workspaceNav(activity);
 test('learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android',()=>{
  ensure('learning dashboard',activity.includes('showContinuumLearningDashboard()'));
  ensure('neural research action button',activity.includes('KONTRASTIV · EXPERIMENT PRÜFEN'));
@@ -216,7 +218,7 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
  const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
  ensure('model center from the core card',
-   cockpit?.includes('"Modelle"') && cockpit.includes('showModelCenter()'));
+   nav.homeReaches(cockpit??'','showModelCenter'));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -238,7 +240,7 @@ test('every area has a center reachable from the core card; no demo buttons; exp
  for(const [label,fn] of [['Lernen','showLearningCenter'],['Speicher','showMemoryCenter'],
   ['Entwicklung','showDevelopmentCenter'],['Modelle','showModelCenter'],
   ['System   ·','showSystemCenter']]){
-  ensure(label+' center on the cockpit',card.includes(label)&&card.includes(fn+'()'));
+  ensure(label+' center on the cockpit',label==='System   ·'?card.includes(label)&&card.includes(fn+'()'):nav.homeReaches(card,fn));
   assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
  }
  const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);

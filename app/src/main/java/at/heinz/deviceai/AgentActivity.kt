@@ -248,8 +248,9 @@ class AgentActivity : Activity() {
     private var homeHeader: View? = null
     private var modeSection: View? = null
     private val dashboardFeatures = ArrayList<View>()
-    private var nexusExpertPanel: LinearLayout? = null
-    private var nexusExpertExpanded = false
+    private var workspaceBar: LinearLayout? = null
+    private val workspaceBarItems = linkedMapOf<ContinuumWorkArea, LinearLayout>()
+    private var keyboardVisible = false
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
@@ -503,8 +504,10 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                if (keyboardCompact != viewport.compactDashboard) {
+                val imeVisible = insets.isVisible(WindowInsets.Type.ime())
+                if (keyboardCompact != viewport.compactDashboard || keyboardVisible != imeVisible) {
                     keyboardCompact = viewport.compactDashboard
+                    keyboardVisible = imeVisible
                     refreshConversationLayout()
                 }
                 insets
@@ -545,6 +548,22 @@ class AgentActivity : Activity() {
             matchWidth(top = 8)
         )
 
+        side.addView(sectionLabel("ARBEITSBEREICHE", top = 22))
+        for (item in ContinuumWorkspaceNavSpec.homeGrid.map { ContinuumWorkspaceNavSpec.item(it) }) {
+            side.addView(actionButton(item.symbol + "   " + item.label, compact = true).apply {
+                contentDescription = item.label + ". " + item.description
+                gravity = Gravity.CENTER_VERTICAL or Gravity.START
+                minHeight = dp(42)
+                setOnClickListener { openWorkArea(item.area) }
+            }, matchWidth(top = 6))
+        }
+        side.addView(actionButton(ContinuumWorkspaceNavSpec.MORE_SYMBOL + "   Alle Bereiche", compact = true).apply {
+            contentDescription = "Alle Arbeitsbereiche anzeigen"
+            gravity = Gravity.CENTER_VERTICAL or Gravity.START
+            minHeight = dp(42)
+            setOnClickListener { showWorkAreaList(ContinuumWorkspaceNavSpec.all.map { it.area }) }
+        }, matchWidth(top = 6))
+
         side.addView(sectionLabel("WERKZEUGE", top = 22))
         side.addView(
             actionButton("Lokaler Expertenmodus").apply {
@@ -568,7 +587,12 @@ class AgentActivity : Activity() {
         side.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
 
         side.addView(textView("v${BuildConfig.VERSION_NAME} · kein Root", 11f, MUTED))
-        return side
+        // scrollable so the added work areas never push the footer off short tablet screens
+        return ScrollView(this).apply {
+            isFillViewport = true
+            setBackgroundColor(Color.rgb(10, 15, 23))
+            addView(side)
+        }
     }
 
     private fun buildConversationPane(wide: Boolean): View {
@@ -667,9 +691,126 @@ class AgentActivity : Activity() {
         )
 
         pane.addView(buildComposer(), matchWidth())
+        if (!wide) pane.addView(buildWorkspaceBar(), matchWidth(top = 6))
         refreshConversationLayout()
         return pane
     }
+
+    /** Phone bottom bar: Start · Chat · Lernen · Entwickeln · Mehr. Every work area is at most two taps away. */
+    private fun buildWorkspaceBar(): View {
+        val bar = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            background = rounded(PANEL, 18, BORDER)
+            setPadding(dp(4), dp(3), dp(4), dp(3))
+        }
+        workspaceBarItems.clear()
+        for (item in ContinuumWorkspaceNavSpec.bottomBar.map { ContinuumWorkspaceNavSpec.item(it) }) {
+            val cell = workspaceBarCell(item.symbol, item.label, item.label + ". " + item.description) { openWorkArea(item.area) }
+            workspaceBarItems[item.area] = cell
+            bar.addView(cell, LinearLayout.LayoutParams(0, dp(54), 1f))
+        }
+        val more = ContinuumWorkspaceNavSpec.more.joinToString { ContinuumWorkspaceNavSpec.item(it).label }
+        bar.addView(workspaceBarCell(ContinuumWorkspaceNavSpec.MORE_SYMBOL, ContinuumWorkspaceNavSpec.MORE_LABEL,
+            "Weitere Bereiche: $more") { showWorkAreaList(ContinuumWorkspaceNavSpec.more) },
+            LinearLayout.LayoutParams(0, dp(54), 1f))
+        workspaceBar = bar
+        return bar
+    }
+
+    private fun workspaceBarCell(symbol: String, label: String, description: String, open: () -> Unit): LinearLayout =
+        LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            isClickable = true
+            isFocusable = true
+            contentDescription = description
+            setOnClickListener { open() }
+            addView(textView(symbol, 17f, MUTED, true).apply { gravity = Gravity.CENTER }, matchWidth())
+            addView(textView(label, 10.5f, MUTED, true).apply {
+                gravity = Gravity.CENTER
+                maxLines = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END
+            }, matchWidth())
+        }
+
+    private fun styleWorkspaceBar(selected: ContinuumWorkArea) {
+        for ((area, cell) in workspaceBarItems) {
+            val active = area == selected
+            cell.background = if (active) rounded(Color.rgb(24, 52, 104), 14, ACCENT) else null
+            cell.isSelected = active
+            for (i in 0 until cell.childCount) (cell.getChildAt(i) as? TextView)?.setTextColor(if (active) CYAN else MUTED)
+        }
+    }
+
+    /** Single entry point for every work area (bar, home grid, sidebar, list); opens existing screens only. */
+    private fun openWorkArea(area: ContinuumWorkArea) {
+        when (area) {
+            ContinuumWorkArea.START -> showHomeDashboard()
+            ContinuumWorkArea.CHAT -> focusChatComposer()
+            ContinuumWorkArea.RESEARCH -> showResearchModeDialog()
+            ContinuumWorkArea.LEARNING -> showLearningCenter()
+            ContinuumWorkArea.MODELS -> showModelCenter()
+            ContinuumWorkArea.DEVELOPMENT -> showDevelopmentCenter()
+            ContinuumWorkArea.MEMORY -> showMemoryCenter()
+            ContinuumWorkArea.TASKS -> showDevelopmentBacklog()
+            ContinuumWorkArea.BUILDER -> openMobileBuilder()
+            ContinuumWorkArea.SYSTEM -> showSystemCenter()
+            ContinuumWorkArea.FIRST_STEPS -> showFirstStepsGuide()
+        }
+    }
+
+    private fun showWorkAreaList(areas: List<ContinuumWorkArea>) {
+        val items = areas.map { ContinuumWorkspaceNavSpec.item(it) }
+        AlertDialog.Builder(this)
+            .setTitle("Arbeitsbereiche")
+            .setItems(items.map { it.symbol + "   " + it.label + "  ·  " + it.description }.toTypedArray()) { _, which ->
+                openWorkArea(items[which].area)
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
+    }
+
+    /** Home: the six work areas as compact tiles, always visible (formerly behind "Weitere KI-Funktionen"). */
+    private fun buildWorkAreaGrid(): View {
+        val box = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        box.addView(textView("ARBEITSBEREICHE", 10f, Color.rgb(153, 209, 255), true).apply {
+            letterSpacing = 0.12f
+        }, matchWidth())
+        val wide = resources.configuration.screenWidthDp >= 700 && resources.configuration.screenHeightDp >= 500
+        val columns = ContinuumWorkspaceNavSpec.gridColumns(
+            resources.configuration.screenWidthDp - if (wide) 336 else 28, resources.configuration.fontScale)
+        ContinuumWorkspaceNavSpec.homeGrid.chunked(columns).forEach { group ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            group.forEachIndexed { index, area ->
+                row.addView(workAreaTile(ContinuumWorkspaceNavSpec.item(area)),
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        if (index > 0) marginStart = dp(8)
+                    })
+            }
+            box.addView(row, matchWidth(top = 8))
+        }
+        return box
+    }
+
+    private fun workAreaTile(item: ContinuumWorkAreaItem): View =
+        LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            background = roundedGradient(Color.rgb(25, 40, 88), Color.rgb(16, 22, 54), 16, Color.rgb(78, 110, 210))
+            setPadding(dp(6), dp(10), dp(6), dp(9))
+            minimumHeight = dp(76)
+            elevation = dp(3).toFloat()
+            isClickable = true
+            isFocusable = true
+            contentDescription = item.label + ". " + item.description
+            setOnClickListener { openWorkArea(item.area) }
+            addView(textView(item.symbol, 20f, CYAN, true).apply { gravity = Gravity.CENTER }, matchWidth())
+            addView(textView(item.label, 12.5f, TEXT, true).apply {
+                gravity = Gravity.CENTER
+                maxLines = 1
+                ellipsize = android.text.TextUtils.TruncateAt.END
+            }, matchWidth(top = 4))
+        }
 
     private fun buildHeader(wide: Boolean): View {
         val header = LinearLayout(this).apply {
@@ -822,6 +963,7 @@ class AgentActivity : Activity() {
         ).apply { gravity = Gravity.CENTER; hologramStatus = this }, matchWidth())
         container.addView(hero, matchWidth())
         container.addView(buildStatusRow(), matchWidth(top = 11))
+        container.addView(buildWorkAreaGrid(), matchWidth(top = 14))
         container.addView(actionButton("★   ERSTE SCHRITTE · Deine KI einfach erklärt  ›", accent = true).apply {
             contentDescription = "Schritt-für-Schritt-Anleitung für Internet, Lernen, Modelle und Coding-Agent"
             minHeight = dp(56)
@@ -871,51 +1013,6 @@ class AgentActivity : Activity() {
             }
             container.addView(row, matchWidth(top = 9))
         }
-        val moreFunctions = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            visibility = View.GONE
-        }
-        nexusExpertPanel = moreFunctions
-        nexusExpertExpanded = false
-        val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
-            contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
-            setOnClickListener {
-                val show = !nexusExpertExpanded
-                nexusExpertExpanded = show
-                moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
-                text = if (show) "Weitere KI-Funktionen schließen  ▴"
-                    else "Weitere KI-Funktionen anzeigen  ▾"
-            }
-        }
-        container.addView(moreToggle, matchWidth(top = 13))
-        moreFunctions.addView(textView("EXPERTEN UND WEITERE FUNKTIONEN", 10f,
-            Color.rgb(153, 189, 252), true).apply {
-            letterSpacing = 0.14f
-        }, matchWidth(top = 8))
-
-        val options = listOf(
-            Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
-            Triple("⌕" to "Forschung", "Recherchieren und Quellen prüfen") { showResearchModeDialog() },
-            Triple("▤" to "Lernen", "Wissen aufbauen und verstehen") { showLearningCenter() },
-            Triple("⬡" to "Modelle", "Lokale KI-Modelle verwalten") { showModelCenter() },
-            Triple("⌘" to "Entwicklung", "Code und Aufgaben kontrollieren") { showDevelopmentCenter() },
-            Triple("▱" to "Speicher", "Erinnerungen und persönlichen Kontext") { showMemoryCenter() }
-        )
-        options.chunked(2).forEachIndexed { rowIndex, pair ->
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
-            pair.forEachIndexed { index, option ->
-                row.addView(cockpitTile(option.first.first, option.first.second,
-                    option.second, rowIndex == 0 && index == 0, option.third),
-                    LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(9)
-                    })
-            }
-            moreFunctions.addView(row, matchWidth(top = 9))
-        }
-        container.addView(moreFunctions, matchWidth())
         container.addView(actionButton("⌘   CODING-AGENT · SPRACHE & APP-IDEEN   ›", accent = true).apply {
             contentDescription = "Coding Agent und Spracheingabe für neue Apps und Programmieraufträge öffnen"
             minHeight = dp(57)
@@ -956,7 +1053,8 @@ class AgentActivity : Activity() {
         homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
         modeSection?.visibility = if (chat) View.GONE else View.VISIBLE
         dashboardFeatures.forEach { it.visibility = if (chat) View.GONE else View.VISIBLE }
-        nexusExpertPanel?.visibility = if (!chat && nexusExpertExpanded) View.VISIBLE else View.GONE
+        workspaceBar?.visibility = if (ContinuumWorkspaceNavSpec.barVisible(keyboardVisible)) View.VISIBLE else View.GONE
+        styleWorkspaceBar(ContinuumWorkspaceNavSpec.selected(conversationActive))
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
         dashboardSection?.let { dashboard ->
             dashboard.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
