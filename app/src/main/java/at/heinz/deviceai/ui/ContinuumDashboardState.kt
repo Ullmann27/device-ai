@@ -97,11 +97,17 @@ data class ContinuumDashboardState(
         /** Open diagnostics issues; null = the issue list could not be read (never shown as "no problems"). */
         val openIssues: Int? = null
     ) {
-        /** Only what the diagnostics list says; an empty list is not called "optimal". */
+        /** Short badge text: only what the diagnostics list says; an empty list is not called "optimal". */
         val overall: String get() = when (openIssues) {
-            null -> "Fehlerliste unlesbar"
-            0 -> "Keine offenen Fehler"
+            null -> "Liste unlesbar"
             else -> "$openIssues offen"
+        }
+        /** The same fact as a sentence for TalkBack. */
+        val overallSpoken: String get() = when (openIssues) {
+            null -> "Fehlerliste nicht lesbar"
+            0 -> "keine offenen Fehlermeldungen"
+            1 -> "eine offene Fehlermeldung"
+            else -> "$openIssues offene Fehlermeldungen"
         }
     }
 

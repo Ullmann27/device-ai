@@ -99,7 +99,7 @@ class SystemStatusElement(textScale: Float = 1f) : ContinuumElement(textScale) {
             if (i < rows.size - 1) p.drawLine(11f, y + 9f, w - 11f, y + 9f, .6f, Fill.Solid(ContinuumTheme.CARD_DIVIDER), .6f)
         }
     }
-    override fun describe(s: ContinuumDashboardState) = "Systemstatus ${s.system.overall}. CPU-Anteil der App " +
+    override fun describe(s: ContinuumDashboardState) = "Systemstatus: ${s.system.overallSpoken}. CPU-Anteil der App " +
         "${ContinuumDashboardState.percent(s.system.appCpuPercent)}, Netzwerk ${s.system.networkLabel}, Reaktionszeit " +
         ContinuumDashboardState.millis(s.model.latencyMs)
 }

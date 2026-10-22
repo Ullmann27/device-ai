@@ -1,0 +1,21 @@
+KILLED android-holographic-home.test.mjs :: transparent native 3D hero
+KILLED android-holographic-home.test.mjs :: reference start screen reaches all seven
+KILLED android-holographic-home.test.mjs :: responsive dashboard retains chat composer
+KILLED android-holographic-home.test.mjs :: large text scales the drawn start screen
+KILLED android-holographic-home.test.mjs :: start screen never manufactures
+KILLED android-integration-wiring.test.mjs :: local language model path is reachable
+KILLED android-integration-wiring.test.mjs :: every area has a center reachable from the start screen
+KILLED android-integration-wiring.test.mjs :: new visual start screen is local, accessible and honest
+KILLED app-navigation-wiring.test.mjs :: home work areas are reachable without expert-only controls
+KILLED app-navigation-wiring.test.mjs :: Fold rail offers the five work areas
+KILLED app-navigation-wiring.test.mjs :: Fold rail and start screen reach all actions at short heights
+KILLED app-navigation-wiring.test.mjs :: start screen adapts to large fonts
+KILLED app-navigation-wiring.test.mjs :: existing chat, learning monitoring and owner permission boundaries remain
+KILLED nexus-beginner-ui.test.mjs :: the five beginner destinations stay reachable
+KILLED nexus-beginner-ui.test.mjs :: start-screen routes use real existing Android screens
+KILLED nexus-beginner-ui.test.mjs :: advanced routes remain available
+KILLED nexus-beginner-ui.test.mjs :: fold, small display and enlarged-font behaviour
+KILLED nexus-beginner-ui.test.mjs :: start screen and chat never overlap
+KILLED coding-agent-speech-wiring.test.mjs :: coding agent has one integrated entry
+KILLED mobile-builder-existing-integration.test.mjs :: builder stays in the existing agent UI
+SUMMARY 20/20 mutations detected by their test

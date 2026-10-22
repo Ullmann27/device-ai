@@ -115,7 +115,8 @@ test('start screen never manufactures ready model or internet state',()=>{
  assert.doesNotMatch(collector,/online = [^\n]*status != null/);
  assert.match(collector,/status != null -> "Nur Startkern"/);
  // an empty or unreadable error list is never presented as "optimal"; a holdout score is not called "Leistung"
- assert.match(dashboardState,/null -> "Fehlerliste unlesbar"/);
+ assert.match(dashboardState,/null -> "Liste unlesbar"/);
+ assert.match(dashboardState,/0 -> "keine offenen Fehlermeldungen"/);
  assert.match(collector,/diagnostics\.open\(\)\.size \}\.getOrNull\(\)/);
  assert.doesNotMatch(dashboardState+homeScreen+drawn+collector,/"Optimal"|nominal|"Echtzeit"|"Leistung"|neue Erkenntnisse|aktive Projekte|aktive Quellen/);
  // connectivity is yes/no: no invented 100 % level for the network
