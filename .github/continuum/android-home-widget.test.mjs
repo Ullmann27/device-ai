@@ -53,8 +53,9 @@ test('notification requires user permission and follows real FAILED result only'
 });
 
 test('safe signing and increased signed preview version are unchanged except monotonic revision', () => {
-  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 14 else if \(deviceAiPreview\) 6 else 4/);
-  assert.match(gradle, /versionName = if \(deviceAiMentorPreview\) "0\.3\.11"/);
-  assert.match(render, /v0\.3\.11\.apk/);
+  assert.match(gradle, /versionCode = if \(deviceAiMentorPreview\) 15 else if \(deviceAiPreview\) 6 else 4/);
+  assert.match(gradle, /versionName = if \(deviceAiMentorPreview\) "0\.3\.12"/);
+  assert.match(render, /v0\.3\.12\.apk/);
+  assert.match(render, /prior_apk="DeviceAI-Continuum-v0\.3\.11-/);
   assert.match(render, /expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
 });
