@@ -5,13 +5,15 @@ import at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBench.Kind
 import at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBench.Split
 import java.security.MessageDigest
 import java.util.Random
+import kotlin.math.sqrt
 
 /**
  * Reproducible measurement run (JVM). Prints dataset hashes, baselines and trained CSX1 variants.
  * Thresholds are chosen on VALIDATION only; TEST numbers are reported once per variant.
  * Run: java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment [cycle1|select|final] [quick]
  *   cycle1 (default): logged cycle-1 comparison on TEST; select: feature variants on VALIDATION only;
- *   final: the variants fixed after selection, once on the frozen TEST.
+ *   final: the variants fixed after selection, once on the frozen TEST;
+ *   certify: milestone I1, Learn-then-Test certificate for V8 (calibration on fresh VALIDATION-distribution draws).
  */
 object ContinuumSpanAbstentionExperiment {
     private fun shuffled(cases: List<Case>, seed: Long) = cases.shuffled(Random(seed))
@@ -79,9 +81,71 @@ object ContinuumSpanAbstentionExperiment {
         }
     }
 
+    /** Wilson 95% interval for k of n. */
+    fun wilson(k: Int, n: Int, z: Double = 1.96): Pair<Double, Double> {
+        val p = k.toDouble() / n; val d = 1 + z * z / n
+        val centre = (p + z * z / (2 * n)) / d
+        val half = z * sqrt(p * (1 - p) / n + z * z / (4.0 * n * n)) / d
+        return (centre - half).coerceAtLeast(0.0) to (centre + half).coerceAtMost(1.0)
+    }
+
+    /**
+     * Per-question error rate (wrong span + unsupported answer) with Wilson interval, coverage, precision and the
+     * error-penalised score of Kalai et al. / OpenAI 2025 at confidence target 0.75 (correct +1, wrong -3, abstain 0).
+     */
+    fun riskLine(cases: List<Case>, predict: (Case) -> String?): String {
+        var answered = 0; var correct = 0
+        for (c in cases) { val p = predict(c); if (p != null) { answered++; if (p == c.example.answer) correct++ } }
+        val errors = answered - correct; val n = cases.size
+        val (lo, hi) = wilson(errors, n)
+        return "n=$n answered=$answered correct=$correct errors=$errors errorRate=${"%.3f".format(errors.toDouble() / n)} " +
+            "[${"%.3f".format(lo)}, ${"%.3f".format(hi)}] precision=${if (answered == 0) "-" else "%.3f".format(correct.toDouble() / answered)} " +
+            "score@0.75=${"%.3f".format((correct - 3.0 * errors) / n)}"
+    }
+
+    private fun certify() {
+        val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN)
+        val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)
+        val candidate = VARIANTS.keys.first { it.startsWith("V8 ") }
+        val t = train(train, validation, 1L, 30) { ContinuumResidualSpanCore(77, VARIANTS.getValue(candidate)) }
+        val modelSha = sha(t.model.save())
+        println("MODEL $candidate seed=1 steps=${t.steps} checkpointSha256=$modelSha")
+        // fresh, independent draws of the VALIDATION distribution (never the selection seed); TRAIN and TEST untouched
+        fun draws(range: IntRange) = range.flatMap { ContinuumSpanAbstentionBench.generate(Split.VALIDATION, seed = 90_000_000L + it) }
+        val calibration = draws(0..9); val holdout = draws(10..19)
+        val test = ContinuumSpanAbstentionBench.generate(Split.TEST)
+        check(ContinuumSpanAbstentionBench.sha256(test) == ContinuumSpanAbstentionBench.TEST_SHA256) { "TEST changed" }
+        println("CALIBRATION n=${calibration.size} sha=${ContinuumSpanAbstentionBench.sha256(calibration)}")
+        println("HOLDOUT     n=${holdout.size} sha=${ContinuumSpanAbstentionBench.sha256(holdout)} (exchangeable with CALIBRATION)")
+        println("TEST        n=${test.size} sha=${ContinuumSpanAbstentionBench.sha256(test)} (frozen; distribution shift: new values, held-out forms)")
+        val predictions = (calibration + holdout + test).associate { it.id + "|" + it.split + "|" + it.example.evidence + "|" + it.example.question to
+            t.model.predict(it.example.evidence, it.example.question) }
+        fun prediction(c: Case) = predictions.getValue(c.id + "|" + c.split + "|" + c.example.evidence + "|" + c.example.question)
+        val outcomes = calibration.map { c -> prediction(c).let { ContinuumCertifiedAbstention.Outcome(it.answer != null, it.confidence, it.answer == c.example.answer) } }
+        val policies = linkedMapOf<String, (Case) -> String?>(
+            "argmax (no threshold)" to { c -> prediction(c).answer },
+            "heuristic threshold ${"%.2f".format(t.threshold)} (VALIDATION score)" to { c -> prediction(c).let { if (it.answer != null && it.confidence >= t.threshold) it.answer else null } })
+        for (alpha in listOf(0.10, 0.05, 0.02)) {
+            val certificate = ContinuumCertifiedAbstention.calibrate(modelSha, outcomes, alpha, delta = 0.1)
+            println("CERTIFICATE alpha=$alpha delta=0.1 -> " + (certificate?.let {
+                "threshold=${"%.2f".format(it.threshold)} calibrationErrors=${it.calibrationErrors}/${it.calibrationQuestions} " +
+                    "answered=${it.calibrationAnswered} p=${"%.4f".format(it.pValue)}" } ?: "NONE (always abstain)"))
+            policies["certified alpha=$alpha"] = { c -> ContinuumCertifiedAbstention.answer(prediction(c), certificate) }
+        }
+        for ((name, policy) in policies) {
+            println("== $name")
+            println("  HOLDOUT       " + riskLine(holdout, policy))
+            println("  TEST ALL      " + riskLine(test, policy))
+            println("  TEST SEEN     " + riskLine(test.filter { !it.unseenForm }, policy))
+            println("  TEST UNSEEN   " + riskLine(test.filter { it.unseenForm }, policy))
+            println("  TEST          " + ContinuumSpanAbstentionBench.metrics(test, policy).line())
+        }
+    }
+
     @JvmStatic fun main(args: Array<String>) {
         val quick = args.contains("quick")
-        val mode = args.firstOrNull { it in setOf("cycle1", "select", "final", "diagnose") } ?: "cycle1"
+        val mode = args.firstOrNull { it in setOf("cycle1", "select", "final", "diagnose", "certify") } ?: "cycle1"
+        if (mode == "certify") { certify(); return }
         if (mode == "diagnose") {
             // learned scalar weights (last 14 parameters) and validation negation errors; no TEST access
             val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN)
