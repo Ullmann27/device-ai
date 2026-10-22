@@ -60,5 +60,10 @@ object ContinuumPreviewMain {
         }
         if (part == "phone") screen(assets, File(out, "phone.png"), ContinuumHomeLayout.phone(412f), 861f, density)
         if (part == "fold") screen(assets, File(out, "fold.png"), ContinuumHomeLayout.wide(840f), 649f, 1294f / 840f)
+        // what a fresh installation shows before anything was measured: every value "—", no sample numbers
+        if (part == "phone-empty") screen(assets, File(out, "phone-empty.png"), ContinuumHomeLayout.phone(412f), 861f, density,
+            ContinuumDashboardState())
+        if (part == "fold-empty") screen(assets, File(out, "fold-empty.png"), ContinuumHomeLayout.wide(840f), 649f, 1294f / 840f,
+            ContinuumDashboardState())
     }
 }
