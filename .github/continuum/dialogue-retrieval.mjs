@@ -40,19 +40,26 @@ export function wordEvidence(query,text){
   }
   return best;
 }
-/** Public citations require a complete long-term anchor, not generic compound tails.
- * Owner-confirmed memories preserve broader compound recognition. */
+/** For source observations every distinctive term must occur in the SAME citation.
+ * Owner-confirmed memories still use the historical broader wordEvidence.
+ * This is a lexical evidence gate, not proof of factual or semantic correctness. */
+// Common question operators are not topics that a source must literally name.
+// Scope to citation filtering: historic owner-fact ranking stays byte-identical.
+const SOURCE_QUERY_OPERATORS=new Set(["funktioniert","funktionieren","funktionierte","funktionierten","funktionierend","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","unterscheide","unterscheiden","unterscheidet","vergleiche","vergleichen","analysiere","analysieren","untersuche","untersuchen","zusammenfassen","zusammenfasst","zusammengefasst","erläutere","erläutern","erläuterst","erklärst","erklären","erkläre"]);
 export function sourceTermEvidence(query,text){
-  const terms=[...new Set(contentWords(query))];
-  if(terms.length!==1||terms[0].length<12)return true;
-  const needle=terms[0];
-  return contentWords(text).some(word=>{
+  const terms=[...new Set(contentWords(query))].filter(term=>!SOURCE_QUERY_OPERATORS.has(term));
+  const anchors=terms.filter(term=>term.length>=12||
+    (term.length>=4&&/\\p{L}/u.test(term)&&/\\p{Nd}/u.test(term)));
+  if(anchors.length===0)return true;
+  const source=[...new Set(contentWords(text))];
+  return anchors.every(needle=>source.some(word=>{
     if(word===needle)return true;
-    if(/[0-9]/u.test(needle)||/[0-9]/u.test(word))return false;
+    // Technical letter-digit IDs must match exactly, not via approximate prefixes.
+    if(/\\p{Nd}/u.test(needle)||/\\p{Nd}/u.test(word))return false;
     const shorter=Math.min(needle.length,word.length);
     let prefix=0;while(prefix<shorter&&needle[prefix]===word[prefix])prefix++;
     return shorter>=6&&Math.abs(needle.length-word.length)<=3&&prefix>=shorter-2;
-  });
+  }));
 }
 /** memories: [{id,text,...}]; semantic(query,text) optional, reported only. */
 export function rankMemories(query,memories,{semantic=null,limit=3}={}){

@@ -212,16 +212,20 @@ class ContinuumMemoryDialogue(private val directory:File) {
               e.sourceRef?.startsWith("https://")==true))
 
         /**
-         * Single long specialist terms in public excerpts must match a complete
-         * source term (or near-inflection), not an incidental compound head.
-         * Example: "Fehlerrückführung" is not evidenced by just "Führung".
-         * Owner-confirmed memories retain their separate German compound policy.
+         * SOURCE_TEXT must support every distinctive long term or letter-digit ID
+         * within the SAME excerpt; partial prefix/suffix overlap does not suffice.
+         * This is a lexical guard, not a factual guarantee. Owner memories unchanged.
          */
+        private val SOURCE_QUERY_OPERATORS=setOf("funktioniert","funktionieren","funktionierte","funktionierten","funktionierend","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","unterscheide","unterscheiden","unterscheidet","vergleiche","vergleichen","analysiere","analysieren","untersuche","untersuchen","zusammenfassen","zusammenfasst","zusammengefasst","erläutere","erläutern","erläuterst","erklärst","erklären","erkläre")
         internal fun sourceTermEvidence(query:String,text:String):Boolean {
-            val terms=contentWords(query).distinct()
-            if(terms.size!=1 || terms[0].length<12)return true
-            val needle=terms.single()
-            return contentWords(text).any { word ->
+            val terms=contentWords(query).distinct().filter { it !in SOURCE_QUERY_OPERATORS }
+            val anchors=terms.filter { term ->
+                term.length>=12 || (term.length>=4 &&
+                    term.any(Char::isLetter) && term.any(Char::isDigit))
+            }
+            if(anchors.isEmpty())return true
+            val source=contentWords(text).distinct()
+            return anchors.all { needle -> source.any { word ->
                 if(word==needle)true
                 else if(needle.any(Char::isDigit) || word.any(Char::isDigit))false
                 else {
@@ -229,7 +233,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
                     shorter>=6 && kotlin.math.abs(needle.length-word.length)<=3 &&
                         needle.zip(word).takeWhile { (a,b) -> a==b }.size>=shorter-2
                 }
-            }
+            } }
         }
 
         fun rank(bytes:ByteArray,query:String,experiences:List<LearningExperience>):List<ContinuumMemoryHit> {
