@@ -11,9 +11,27 @@ import kotlin.math.ln
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/** Bounded, stand-alone, offline EXP-04/05/06 shadow model. No production checkpoint or network use. */
+/**
+ * Bounded, stand-alone, offline EXP-04/05/06 shadow model. No production checkpoint or network use.
+ *
+ * [Features] switches input-feature variants without changing the 4,110 trainable parameters:
+ * `identifierPlaceholders` replaces tokens containing digits (entity ids, codes, numbers) in a
+ * candidate's context by `<id>`/`<num>` so arbitrary identifiers do not hash into learned buckets;
+ * `positionFeatures=false` zeroes the hand-coded "last token" and "absolute position" inputs;
+ * `entityProximity` (requires `positionFeatures=false`) reuses those two input slots for the
+ * closeness to the asked entity id inside the clause, counted in candidate tokens (entity before
+ * the candidate, entity after the candidate) – a binding cue whose weight is learned;
+ * `excludeCueWords` removes negation/contrast cue words (nicht, kein…, sondern, stattdessen) from the
+ * candidate set: they are inputs of the negation/contrast features, never an evidence answer;
+ * `multiTokenSpans` adds contiguous spans of 2..3 eligible tokens (same clause, separated only by
+ * whitespace) with exact source offsets, e.g. "12 Kilogramm"; the span length enters as a hashed
+ * context key `len:n`, so its preference is learned per question without new parameters.
+ * The default reproduces PR #61 exactly. Checkpoint v2 stores the variant; v1 checkpoints restore
+ * with the default variant.
+ */
 class ContinuumResidualSpanCore private constructor(
     private val seed: Int,
+    val features: Features,
     private val questionDelta: DoubleArray,
     private val contextDelta: DoubleArray,
     private val spanWeights: DoubleArray,
@@ -21,6 +39,23 @@ class ContinuumResidualSpanCore private constructor(
     private val abstainWeights: DoubleArray,
     var updates: Int
 ) {
+    data class Features(
+        val identifierPlaceholders: Boolean = false,
+        val positionFeatures: Boolean = true,
+        val entityProximity: Boolean = false,
+        val excludeCueWords: Boolean = false,
+        val multiTokenSpans: Boolean = false
+    ) {
+        init { require(!(entityProximity && positionFeatures)) { "entityProximity replaces the position inputs" } }
+        internal val flags: Int get() = (if (identifierPlaceholders) 1 else 0) or (if (positionFeatures) 0 else 2) or
+            (if (entityProximity) 4 else 0) or (if (excludeCueWords) 8 else 0) or (if (multiTokenSpans) 16 else 0)
+        companion object {
+            internal fun fromFlags(flags: Int): Features {
+                require(flags in 0..31 && !(flags and 4 != 0 && flags and 2 == 0)) { "unknown CSX1 feature flags " + flags }
+                return Features(flags and 1 != 0, flags and 2 == 0, flags and 4 != 0, flags and 8 != 0, flags and 16 != 0)
+            }
+        }
+    }
     data class Example(val evidence: String, val question: String, val answer: String?)
     data class Prediction(val answer: String?, val start: Int, val end: Int, val confidence: Double, val candidates: Int)
     data class Gradient(val loss: Double, val values: DoubleArray)
@@ -43,8 +78,9 @@ class ContinuumResidualSpanCore private constructor(
         val logSumExp: Double
     )
 
-    constructor(seed: Int = 20261022) : this(
+    constructor(seed: Int = 20261022, features: Features = Features()) : this(
         seed,
+        features,
         DoubleArray(EMBEDDING),
         DoubleArray(EMBEDDING),
         DoubleArray(SPAN_FEATURES),
@@ -191,6 +227,7 @@ class ContinuumResidualSpanCore private constructor(
         DataOutputStream(bos).use { out ->
             out.writeInt(MAGIC)
             out.writeInt(VERSION)
+            out.writeInt(features.flags)
             out.writeInt(seed)
             out.writeInt(updates)
             for (v in parameters()) out.writeDouble(v)
@@ -224,39 +261,33 @@ class ContinuumResidualSpanCore private constructor(
         val qb = embed(qBuckets, true, false)
         val qd = embed(qBuckets, true, true)
         val candidates = ArrayList<Candidate>()
-        for ((idx, t) in tokens.withIndex()) {
-            val word = normalize(t.value)
-            if (word.length < 2 || word in STOP_WORDS || word in ids || word in QUESTION_WORDS) continue
-            if (word in questionWords && !word.any(Char::isDigit)) continue
-            val sameClause = tokens.filter { it.clause == t.clause }
-            val index = sameClause.indexOf(t)
-            val neighbours = listOfNotNull(
-                sameClause.getOrNull(index - 2)?.let { "l2:" + normalize(it.value) },
-                sameClause.getOrNull(index - 1)?.let { "l1:" + normalize(it.value) },
-                sameClause.getOrNull(index + 1)?.let { "r1:" + normalize(it.value) }
-            )
-            val other = sameClause.filter { it !== t }.map { normalize(it.value) }
-            val cb = buckets(neighbours + other.filter { it.length >= 3 }.flatMap(::grams))
-            val basis = embed(cb, false, false)
-            val delta = embed(cb, false, true)
-            val residual = (0 until DIM).sumOf { qb[it] * delta[it] + qd[it] * basis[it] + qd[it] * delta[it] }
-            val questionGrams = questionWords.flatMap(::grams).toSet()
-            val overlap = questionGrams.intersect(other.flatMap(::grams).toSet()).size.toDouble() /
-                (1.0 + questionGrams.size)
-            val entityFound = if (ids.isEmpty()) 0.0 else if (sameClause.any {
-                normalize(it.value) in ids
-            }) 1.0 else -1.0
-            val left = sameClause.take(index).takeLast(3).map { normalize(it.value) }
-            val negation = if (left.any { it in NEGATIONS }) 1.0 else 0.0
-            val contrast = if (left.any { it in CONTRAST }) 1.0 else 0.0
-            val code = if (t.value.any(Char::isDigit) && t.value.any(Char::isLetter)) 1.0 else 0.0
-            val capital = if (t.value.firstOrNull()?.isUpperCase() == true) 1.0 else 0.0
-            val last = if (index == sameClause.lastIndex) 1.0 else 0.0
-            val features = doubleArrayOf(
-                residual, overlap, entityFound, negation, contrast, code, capital, last, 1.0 / (1.0 + idx)
-            )
-            candidates.add(Candidate(t, cb, basis, delta, features))
-            require(candidates.size <= MAX_CANDIDATES)
+        val isCandidate = tokens.map { t ->
+            val w = normalize(t.value)
+            !(w.length < 2 || w in STOP_WORDS || w in ids || w in QUESTION_WORDS || (w in questionWords && !w.any(Char::isDigit)) ||
+                (features.excludeCueWords && (w in NEGATIONS || w in CONTRAST)))
+        }
+        /** 1 / (1 + candidate tokens between this token and the nearest asked-id mention on that side), 0 if none. */
+        fun proximity(idx: Int, step: Int): Double {
+            var between = 0
+            var j = idx + step
+            while (j in tokens.indices && tokens[j].clause == tokens[idx].clause) {
+                if (normalize(tokens[j].value) in ids) return 1.0 / (1.0 + between)
+                if (isCandidate[j]) between++
+                j += step
+            }
+            return 0.0
+        }
+        // Candidate spans [i..j] with exact source offsets. A single token is the length-1 case and
+        // keeps the PR #61 keys and inputs bit-identically; longer spans exist only with multiTokenSpans.
+        val maxLength = if (features.multiTokenSpans) MAX_SPAN_TOKENS else 1
+        for (i in tokens.indices) {
+            if (!isCandidate[i]) continue
+            for (j in i until minOf(tokens.size, i + maxLength)) {
+                if (j > i && (!isCandidate[j] || tokens[j].clause != tokens[i].clause ||
+                        evidence.substring(tokens[j - 1].end, tokens[j].start).let { gap -> gap.isEmpty() || gap.any { !it.isWhitespace() } })) break
+                candidates.add(spanCandidate(evidence, tokens, i, j, ids, questionWords, qb, qd, ::proximity))
+                require(candidates.size <= if (features.multiTokenSpans) MAX_SPAN_CANDIDATES else MAX_CANDIDATES)
+            }
         }
         val maxOverlap = candidates.maxOfOrNull { it.features[1] } ?: 0.0
         val maxBinding = candidates.maxOfOrNull { it.features[2] } ?: 0.0
@@ -272,6 +303,50 @@ class ContinuumResidualSpanCore private constructor(
         require(denom.isFinite() && denom > 0.0)
         val probs = DoubleArray(logits.size) { exps[it] / denom }
         return Pass(candidates, qBuckets, qb, qd, nullFeatures, logits, probs, max + ln(denom))
+    }
+
+    private fun spanCandidate(
+        evidence: String, tokens: List<Token>, i: Int, j: Int, ids: Set<String>, questionWords: List<String>,
+        qb: DoubleArray, qd: DoubleArray, proximity: (Int, Int) -> Double
+    ): Candidate {
+        val first = tokens[i]
+        val sameClause = tokens.filter { it.clause == first.clause }
+        val index = sameClause.indexOf(first)
+        val endIndex = sameClause.indexOf(tokens[j])
+        val span = tokens.subList(i, j + 1)
+        val token = if (i == j) first else Token(evidence.substring(first.start, tokens[j].end), first.start, tokens[j].end, first.clause)
+        val neighbours = listOfNotNull(
+            sameClause.getOrNull(index - 2)?.let { "l2:" + contextWord(it.value) },
+            sameClause.getOrNull(index - 1)?.let { "l1:" + contextWord(it.value) },
+            sameClause.getOrNull(endIndex + 1)?.let { "r1:" + contextWord(it.value) }
+        )
+        val outside = sameClause.filterIndexed { k, _ -> k < index || k > endIndex }
+        val other = outside.map { contextWord(it.value) }
+        val lengthKey = if (features.multiTokenSpans) listOf("len:" + (j - i + 1)) else emptyList()
+        val cb = buckets(neighbours + other.filter { it.length >= 3 }.flatMap(::grams) + lengthKey)
+        val basis = embed(cb, false, false)
+        val delta = embed(cb, false, true)
+        val residual = (0 until DIM).sumOf { qb[it] * delta[it] + qd[it] * basis[it] + qd[it] * delta[it] }
+        val questionGrams = questionWords.flatMap(::grams).toSet()
+        val overlap = questionGrams.intersect(outside.map { normalize(it.value) }.flatMap(::grams).toSet()).size.toDouble() /
+            (1.0 + questionGrams.size)
+        val entityFound = if (ids.isEmpty()) 0.0 else if (sameClause.any { normalize(it.value) in ids }) 1.0 else -1.0
+        val left = sameClause.take(index).takeLast(3).map { normalize(it.value) }
+        val negation = if (left.any { it in NEGATIONS }) 1.0 else 0.0
+        val contrast = if (left.any { it in CONTRAST }) 1.0 else 0.0
+        val code = if (span.any { t -> t.value.any(Char::isDigit) && t.value.any(Char::isLetter) }) 1.0 else 0.0
+        val capital = if (first.value.firstOrNull()?.isUpperCase() == true) 1.0 else 0.0
+        val last = when {
+            features.entityProximity -> proximity(i, -1)
+            features.positionFeatures && endIndex == sameClause.lastIndex -> 1.0
+            else -> 0.0
+        }
+        val position = when {
+            features.entityProximity -> proximity(j, 1)
+            features.positionFeatures -> 1.0 / (1.0 + i)
+            else -> 0.0
+        }
+        return Candidate(token, cb, basis, delta, doubleArrayOf(residual, overlap, entityFound, negation, contrast, code, capital, last, position))
     }
 
     private fun embed(buckets: IntArray, question: Boolean, delta: Boolean): DoubleArray {
@@ -306,6 +381,13 @@ class ContinuumResidualSpanCore private constructor(
 
     private fun normalize(word: String): String = word.lowercase(java.util.Locale.ROOT)
 
+    /** Context key of a neighbouring word; identifiers become a type placeholder when enabled. */
+    private fun contextWord(word: String): String = when {
+        !features.identifierPlaceholders || word.none(Char::isDigit) -> normalize(word)
+        word.all(Char::isDigit) -> "<num>"
+        else -> "<id>"
+    }
+
     private fun grams(word: String): List<String> = buildList {
         for (n in 3..4) {
             if (word.length >= n) for (i in 0..word.length - n) add(word.substring(i, i + n))
@@ -328,10 +410,13 @@ class ContinuumResidualSpanCore private constructor(
         private const val SPAN_FEATURES = 9
         private const val NULL_FEATURES = 4
         const val PARAMETERS = 2 * EMBEDDING + SPAN_FEATURES + 1 + NULL_FEATURES
-        const val PAYLOAD_BYTES = 16 + PARAMETERS * 8
+        const val PAYLOAD_BYTES = 20 + PARAMETERS * 8
         const val SERIALIZED_BYTES = PAYLOAD_BYTES + 32
+        /** Checkpoint v1 (PR #61): no feature-flag field; restores with the default [Features]. */
+        const val LEGACY_PAYLOAD_BYTES = 16 + PARAMETERS * 8
+        const val LEGACY_SERIALIZED_BYTES = LEGACY_PAYLOAD_BYTES + 32
         private const val MAGIC = 0x43535833
-        private const val VERSION = 1
+        private const val VERSION = 2
         private const val MAX_UPDATES = 100000
         private const val MAX_WEIGHT = 1000.0
         private const val MAX_GRAD = 5.0
@@ -340,6 +425,8 @@ class ContinuumResidualSpanCore private constructor(
         private const val MAX_TOKENS = 128
         private const val MAX_CLAUSES = 16
         private const val MAX_CANDIDATES = 64
+        private const val MAX_SPAN_TOKENS = 3
+        private const val MAX_SPAN_CANDIDATES = 192
         private const val MAX_BUCKETS = 128
         private val STOP_WORDS = setOf(
             "der", "die", "das", "den", "dem", "des", "ein", "eine", "einer", "einen",
@@ -351,13 +438,16 @@ class ContinuumResidualSpanCore private constructor(
         private val CONTRAST = setOf("sondern", "stattdessen")
 
         fun restore(bytes: ByteArray): ContinuumResidualSpanCore {
-            require(bytes.size == SERIALIZED_BYTES)
-            val payload = bytes.copyOfRange(0, PAYLOAD_BYTES)
+            require(bytes.size == SERIALIZED_BYTES || bytes.size == LEGACY_SERIALIZED_BYTES)
+            val payloadSize = bytes.size - 32
+            val payload = bytes.copyOfRange(0, payloadSize)
             val actual = MessageDigest.getInstance("SHA-256").digest(payload)
-            require(MessageDigest.isEqual(actual, bytes.copyOfRange(PAYLOAD_BYTES, bytes.size)))
+            require(MessageDigest.isEqual(actual, bytes.copyOfRange(payloadSize, bytes.size)))
             return DataInputStream(ByteArrayInputStream(payload)).use { input ->
                 require(input.readInt() == MAGIC)
-                require(input.readInt() == VERSION)
+                val version = input.readInt()
+                require(version == if (payloadSize == PAYLOAD_BYTES) VERSION else 1)
+                val features = if (version == 1) Features() else Features.fromFlags(input.readInt())
                 val seed = input.readInt()
                 val updates = input.readInt()
                 require(updates in 0..MAX_UPDATES)
@@ -365,7 +455,7 @@ class ContinuumResidualSpanCore private constructor(
                 require(input.available() == 0 && flat.all {
                     it.isFinite() && kotlin.math.abs(it) <= MAX_WEIGHT
                 })
-                ContinuumResidualSpanCore(seed).apply {
+                ContinuumResidualSpanCore(seed, features).apply {
                     loadParameters(flat)
                     this.updates = updates
                 }
