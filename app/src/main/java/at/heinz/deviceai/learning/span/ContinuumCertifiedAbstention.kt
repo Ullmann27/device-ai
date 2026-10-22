@@ -83,11 +83,7 @@ object ContinuumCertifiedAbstention {
     ): String? {
         if (certificate == null) return null
         return synchronized(model) {
-            val currentSha = MessageDigest.getInstance("SHA-256")
-                .digest(model.save())
-                .joinToString("") { byte ->
-                    (byte.toInt() and 0xff).toString(16).padStart(2, '0')
-                }
+            val currentSha = checkpointSha256(model)
             if (currentSha != certificate.modelSha256) {
                 null
             } else {
@@ -98,4 +94,13 @@ object ContinuumCertifiedAbstention {
             }
         }
     }
+
+    /**
+     * SHA-256 (lowercase hex) of the complete checkpoint: weights, feature flags and update counter.
+     * Callers that also predict must hold the model lock across both steps (see [answer]).
+     */
+    internal fun checkpointSha256(model: ContinuumResidualSpanCore): String =
+        MessageDigest.getInstance("SHA-256")
+            .digest(model.save())
+            .joinToString("") { byte -> (byte.toInt() and 0xff).toString(16).padStart(2, '0') }
 }
