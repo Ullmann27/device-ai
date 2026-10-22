@@ -27,6 +27,7 @@ import kotlin.math.sqrt
  */
 class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
     enum class Binding { BAG, HRR }
+    enum class SelfFeatures { WORD_AND_TRIGRAMS, TRIGRAMS, NONE }
 
     data class Config(
         val binding: Binding = Binding.HRR,
@@ -36,7 +37,9 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         val dim: Int = 16,
         val buckets: Int = 2048,
         /** Ablation: embeddings and roles frozen at zero; only scalar feature and abstention weights learn. */
-        val scalarOnly: Boolean = false
+        val scalarOnly: Boolean = false,
+        /** What the candidate token itself contributes (SELF role): whole word + trigrams, trigrams only, or nothing. */
+        val self: SelfFeatures = SelfFeatures.WORD_AND_TRIGRAMS
     ) {
         init { require(dim in 4..64 && buckets in 64..65536) }
     }
@@ -133,10 +136,10 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
     // ---------------------------------------------------------------------------------------------
     // Features
     // ---------------------------------------------------------------------------------------------
-    private fun buckets(word: String): IntArray {
+    private fun buckets(word: String, wholeWord: Boolean = true): IntArray {
         val lower = word.lowercase(Locale.ROOT)
         val keys = ArrayList<String>()
-        keys += "w:$lower"
+        if (wholeWord) keys += "w:$lower"
         val padded = "^$lower$"
         for (i in 0..padded.length - 3) keys += "g:" + padded.substring(i, i + 3)
         return keys.map { k -> ((k.hashCode() * -0x61c88647).ushr(1)) % config.buckets }.distinct().toIntArray()
@@ -151,8 +154,8 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         return Bag(merged.keys.toIntArray(), merged.values.toDoubleArray())
     }
 
-    private fun wordRows(word: String, tableOffset: Int, scale: Double): List<Pair<Int, Double>> {
-        val b = buckets(word)
+    private fun wordRows(word: String, tableOffset: Int, scale: Double, wholeWord: Boolean = true): List<Pair<Int, Double>> {
+        val b = buckets(word, wholeWord)
         val w = scale / sqrt(b.size.toDouble())
         return b.map { (tableOffset + it * d) to w }
     }
@@ -196,6 +199,8 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
                     when {
                         t.text == anchor.text && t !== candidate -> listOf((fOffset + config.buckets * d) to scale)
                         t.isId -> listOf((fOffset + (config.buckets + 1) * d) to scale)
+                        t === candidate && config.self == SelfFeatures.NONE -> emptyList()
+                        t === candidate && config.self == SelfFeatures.TRIGRAMS -> wordRows(t.text, fOffset, scale, wholeWord = false)
                         else -> wordRows(t.text, fOffset, scale)
                     }
                 })
@@ -396,10 +401,23 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         return Session(steps, skipped, first, last)
     }
 
+    /** Diagnostics: abstention probability and the top candidates (text, hops, probability). Read-only. */
+    fun ranking(evidence: String, question: String, top: Int = 3): Pair<Double, List<Triple<String, Int, Double>>> {
+        val f = forward(evidence, question)
+        val ranked = f.candidates.withIndex().sortedByDescending { f.probabilities[it.index + 1] }.take(top)
+            .map { Triple(it.value.answer.text, it.value.hops, f.probabilities[it.index + 1]) }
+        return f.probabilities[0] to ranked
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Inference with proof
     // ---------------------------------------------------------------------------------------------
-    fun answer(evidence: String, question: String, threshold: Double = 0.0): Answer {
+    /**
+     * @param threshold minimum probability of the chosen answer (chosen on VALIDATION).
+     * @param conflictRatio abstain when the second-best distinct answer reaches this fraction of the best one
+     *   (fixed decision rule on learned probabilities, 0 = off; chosen on VALIDATION).
+     */
+    fun answer(evidence: String, question: String, threshold: Double = 0.0, conflictRatio: Double = 0.0): Answer {
         val digest = sha256(evidence)
         if (evidence.isBlank() || question.isBlank() || evidence.length > 16384 || question.length > 512)
             return Answer(null, 0.0, null, 0, "INVALID_INPUT")
@@ -413,6 +431,8 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         val (bestText, bestP) = merged.maxBy { it.value }
         if (probabilities[0] >= bestP) return Answer(null, probabilities[0], null, f.candidates.size, "ABSTAIN_LEARNED")
         if (bestP < threshold) return Answer(null, bestP, null, f.candidates.size, "ABSTAIN_THRESHOLD")
+        val second = merged.filterKeys { it != bestText }.values.maxOrNull() ?: 0.0
+        if (conflictRatio > 0 && second >= conflictRatio * bestP) return Answer(null, bestP, null, f.candidates.size, "ABSTAIN_CONFLICT")
         val best = f.candidates.withIndex().filter { it.value.answer.text == bestText }.maxBy { probabilities[it.index + 1] }.value
         val proof = Proof(best.answer.text, best.answer.start, best.answer.end, best.answer.sentence,
             best.anchor.text, best.anchor.start, best.anchor.end, best.hops,

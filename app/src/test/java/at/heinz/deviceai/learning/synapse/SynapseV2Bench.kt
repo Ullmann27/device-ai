@@ -223,10 +223,12 @@ object SynapseV2Bench {
         val lineRelation = RELATIONS.first { it.name == "line" }
         for (rel in RELATIONS) {
             val eForms = evidenceForms(rel, split); val qForms = questionForms(rel, split)
+            // every (evidence form, question form) pair in a fixed shuffled order, so that each question form meets each
+            // evidence form (an earlier cycling scheme paired some forms only with one question form: fixed on 22.10.)
+            val pairs = eForms.flatMap { e -> qForms.map { q -> e to q } }.shuffled(Random(seed + rel.name.hashCode()))
             repeat(per) { k ->
                 val e = g.entity(); val type = g.type(); val v = g.value(rel)
-                // balanced form coverage: cycle evidence forms and question forms independently
-                val ef = eForms[k % eForms.size]; val qf = qForms[(k / eForms.size + k) % qForms.size]
+                val (ef, qf) = pairs[k % pairs.size]
                 val sentence = fill(ef.first.text, type, e, v)
                 val q = ask(qf.first.text, e)
                 g.add(Category.ANSWER, rel.name, form(ef.second, qf.second), tag(ef, qf), sentence, q, v)
@@ -286,9 +288,11 @@ object SynapseV2Bench {
         // two-hop chains through production lines (only inheritable attributes)
         for (rel in chainRelations) {
             val tails = evidenceForms(rel, split); val bridges = evidenceForms(lineRelation, split); val qForms = questionForms(rel, split)
+            val triples = bridges.flatMap { b -> tails.flatMap { t -> qForms.map { q -> Triple(b, t, q) } } }
+                .shuffled(Random(seed + 31L * rel.name.hashCode()))
             repeat(per) { k ->
                 val e = g.entity(); val type = g.type(); val b = g.line(); val v = g.value(rel)
-                val bf = bridges[k % bridges.size]; val tf = tails[(k / bridges.size + k) % tails.size]; val qf = qForms[k % qForms.size]
+                val (bf, tf, qf) = triples[k % triples.size]
                 val bridge = fill(bf.first.text, type, e, b)
                 val tail = fill(tf.first.text, "Linie", b, v)
                 val newForm = bf.second || tf.second
@@ -312,6 +316,10 @@ object SynapseV2Bench {
         return g.out
     }
 
+    /** TRAIN value words (for TRAIN-only augmentation) and every value word of every split (collision checks only). */
+    fun trainValues(): Set<String> = VALUES.values.flatMap { it.getValue(Split.TRAIN) }.toSet()
+    fun allValues(): Set<String> = VALUES.values.flatMap { m -> m.values.flatten() }.toSet()
+
     fun sha256(cases: List<Case>): String {
         val md = MessageDigest.getInstance("SHA-256")
         for (c in cases) md.update((listOf(c.id, c.split, c.category, c.relation, c.form, c.overlap, c.evidence, c.question,
@@ -319,8 +327,12 @@ object SynapseV2Bench {
         return md.digest().joinToString("") { "%02x".format(it) }
     }
 
-    /** Frozen before any model was evaluated on TEST; changing the generator must be a visible, reviewed change. */
-    const val TEST_SHA256 = "c565a541c0225de1bd256ddcfa3b18fb87e9235886cc33d265eaeff923512832"
+    /**
+     * Frozen before any model was evaluated on TEST; changing the generator must be a visible, reviewed change.
+     * History: c565a541… (first freeze) was replaced once, BEFORE any TEST evaluation, after VALIDATION showed that the
+     * old form cycling never paired some evidence forms with some question forms (generator bug, all splits).
+     */
+    const val TEST_SHA256 = "18640df7caf1462b405d150145cbae9a879877984f1e19d39785b0b5aee53320"
 
     // ---------------------------------------------------------------------------------------------
     // Leakage report

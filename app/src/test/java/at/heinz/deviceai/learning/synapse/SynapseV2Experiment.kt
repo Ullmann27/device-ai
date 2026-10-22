@@ -64,15 +64,21 @@ object SynapseV2Experiment {
 
     fun examples(cases: List<Case>) = cases.map { SynapseV2Reasoner.Example(it.evidence, it.question, it.answer, it.bridge) }
 
-    /** Abstention threshold on VALIDATION: maximize correct − 2·(wrong + unsupported). */
-    fun chooseThreshold(model: SynapseV2Reasoner, validation: List<Case>): Double {
-        val answers = validation.map { c -> c to model.answer(c.evidence, c.question) }
-        var best = 0.0; var bestScore = Int.MIN_VALUE
-        for (t in (0..19).map { it * 0.05 }) {
-            val tally = Tally()
-            for ((c, a) in answers) tally.add(c, if (a.answer != null && a.confidence >= t) a.answer else null)
-            val score = tally.correct - 2 * (tally.wrong + tally.unsupported)
-            if (score > bestScore) { bestScore = score; best = t }
+    /** Decision rule chosen on VALIDATION: threshold and conflict ratio maximizing correct − 2·(wrong + unsupported). */
+    data class Rule(val threshold: Double, val conflictRatio: Double) {
+        override fun toString() = "threshold=${"%.2f".format(threshold)} conflict=${"%.2f".format(conflictRatio)}"
+    }
+
+    fun chooseRule(model: SynapseV2Reasoner, validation: List<Case>): Rule {
+        var best = Rule(0.0, 0.0); var bestScore = Int.MIN_VALUE
+        for (ratio in listOf(0.0, 0.2, 0.35, 0.5)) {
+            val answers = validation.map { c -> c to model.answer(c.evidence, c.question, 0.0, ratio) }
+            for (t in (0..19).map { it * 0.05 }) {
+                val tally = Tally()
+                for ((c, a) in answers) tally.add(c, if (a.answer != null && a.confidence >= t) a.answer else null)
+                val score = tally.correct - 2 * (tally.wrong + tally.unsupported)
+                if (score > bestScore) { bestScore = score; best = Rule(t, ratio) }
+            }
         }
         return best
     }
@@ -85,18 +91,74 @@ object SynapseV2Experiment {
         Variant("A3 A2 + Sinkhorn competition", Config(binding = Binding.HRR, sinkhorn = true), trainWith = Config(binding = Binding.HRR)),
         Variant("A4 A2 + learned proof-gated two-hop", Config(binding = Binding.HRR, twoHop = true)),
         Variant("A4b A1 bag + two-hop (binding ablation)", Config(binding = Binding.BAG, twoHop = true)),
-        Variant("S scalar features only (two-hop)", Config(binding = Binding.HRR, twoHop = true, scalarOnly = true))
+        Variant("S scalar features only (two-hop)", Config(binding = Binding.HRR, twoHop = true, scalarOnly = true)),
+        // cycle 2 (VALIDATION diagnosis: the right candidate ranks first but abstention wins for unseen values)
+        Variant("A4t A4 with candidate trigrams only", Config(binding = Binding.HRR, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.TRIGRAMS)),
+        Variant("A4n A4 without candidate self features", Config(binding = Binding.HRR, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.NONE)),
+        Variant("A4bt A4b with candidate trigrams only", Config(binding = Binding.BAG, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.TRIGRAMS)),
+        Variant("A4bn A4b without candidate self features", Config(binding = Binding.BAG, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.NONE))
     )
 
     private fun sha(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
-    class Trained(val model: SynapseV2Reasoner, val threshold: Double, val session: SynapseV2Reasoner.Session)
+    class Trained(val model: SynapseV2Reasoner, val rule: Rule, val session: SynapseV2Reasoner.Session) {
+        fun predict(c: Case): String? = model.answer(c.evidence, c.question, rule.threshold, rule.conflictRatio).answer
+    }
 
-    fun train(v: Variant, train: List<Case>, validation: List<Case>, seed: Long, epochs: Int): Trained {
+    /**
+     * TRAIN-only curricula (no VALIDATION/TEST content is used):
+     * - nonce: every TRAIN value word is replaced by a fresh invented word in each epoch, so that the model must read
+     *   the context instead of memorizing the closed TRAIN value lists;
+     * - questionDropout: each question word except the entity is dropped with this probability (robustness to unseen
+     *   question wording).
+     */
+    data class Recipe(val name: String, val nonce: Boolean = false, val questionDropout: Double = 0.0)
+    val PLAIN = Recipe("R0 plain")
+
+    private val CONSONANTS = "bdfgklmnprstvz"; private val VOWELS = "aeiou"
+    private val ENDINGS = listOf("ar", "on", "is", "el", "um", "ex", "it")
+    private val forbidden by lazy { SynapseV2Bench.allValues().map { it.lowercase() }.toSet() }
+    private fun nonce(rnd: java.util.Random): String {
+        while (true) {
+            val sb = StringBuilder()
+            repeat(2 + rnd.nextInt(2)) { sb.append(CONSONANTS[rnd.nextInt(CONSONANTS.length)]).append(VOWELS[rnd.nextInt(VOWELS.length)]) }
+            sb.append(ENDINGS[rnd.nextInt(ENDINGS.size)])
+            val w = sb.toString().replaceFirstChar { it.uppercaseChar() }
+            if (w.lowercase() !in forbidden) return w
+        }
+    }
+    private val trainValues by lazy { SynapseV2Bench.trainValues().sortedByDescending { it.length } }
+
+    fun augment(c: Case, recipe: Recipe, rnd: java.util.Random): SynapseV2Reasoner.Example {
+        var evidence = c.evidence; var answer = c.answer; var question = c.question
+        if (recipe.nonce) for (v in trainValues) {
+            val pattern = Regex("(?<![\\p{L}\\p{N}-])" + Regex.escape(v) + "(?![\\p{L}\\p{N}-])")
+            if (!pattern.containsMatchIn(evidence)) continue
+            val replacement = nonce(rnd)
+            evidence = pattern.replace(evidence, replacement)
+            if (answer == v) answer = replacement
+        }
+        if (recipe.questionDropout > 0) {
+            val tokens = SynapseV2Reasoner.tokenize(question)
+            val kept = tokens.filter { it.isId || rnd.nextDouble() >= recipe.questionDropout }
+            if (kept.any { !it.isId }) question = kept.joinToString(" ") { it.text } + "?"
+        }
+        return SynapseV2Reasoner.Example(evidence, question, answer, c.bridge)
+    }
+
+    fun train(v: Variant, train: List<Case>, validation: List<Case>, seed: Long, epochs: Int, recipe: Recipe = PLAIN): Trained {
         val learner = SynapseV2Reasoner(v.trainWith, seed)
-        val session = learner.train(examples(train), epochs, seed = seed)
+        val session = if (recipe == PLAIN) learner.train(examples(train), epochs, seed = seed) else {
+            val rnd = java.util.Random(seed * 7919 + 17)
+            var steps = 0; var skipped = 0; var first = 0.0; var last = 0.0
+            for (epoch in 0 until epochs) {
+                val s = learner.train(train.map { augment(it, recipe, rnd) }, 1, seed = seed * 1000 + epoch)
+                steps += s.steps; if (epoch == 0) { skipped = s.skipped; first = s.lossFirstEpoch }; last = s.lossLastEpoch
+            }
+            SynapseV2Reasoner.Session(steps, skipped, first, last)
+        }
         val model = if (v.trainWith == v.config) learner else SynapseV2Reasoner(v.config, seed).also { it.loadParameters(learner.parameters()) }
-        return Trained(model, chooseThreshold(model, validation), session)
+        return Trained(model, chooseRule(model, validation), session)
     }
 
     private fun parametersSha(m: SynapseV2Reasoner): String {
@@ -124,7 +186,7 @@ object SynapseV2Experiment {
 
     @JvmStatic fun main(args: Array<String>) {
         val quick = args.contains("quick")
-        val mode = args.firstOrNull { it in setOf("stats", "select", "final", "dump") } ?: "stats"
+        val mode = args.firstOrNull { it in setOf("stats", "select", "final", "dump", "recipes", "diagnose") } ?: "stats"
         if (mode == "dump") {
             // human review of generated material (VALIDATION, or TRAIN with "train"); TEST is not printed case by case
             val cases = SynapseV2Bench.generate(if (args.contains("train")) Split.TRAIN else Split.VALIDATION)
@@ -160,6 +222,36 @@ object SynapseV2Experiment {
         }
         val seeds = if (quick) listOf(1L) else listOf(1L, 2L, 3L)
         val epochs = if (quick) 8 else 25
+        if (mode == "diagnose") {
+            // VALIDATION only: why does the A4 model abstain on answerable questions?
+            val pick = args.firstOrNull { it.matches(Regex("A\\d\\w*")) } ?: "A4"
+            val t = train(VARIANTS.first { it.name.startsWith("$pick ") }, train, validation, 1L, epochs)
+            print(report("$pick fit on TRAIN itself", train, Predictor { c -> t.model.answer(c.evidence, c.question).answer }, breakdown = false))
+            for (c in train.filter { it.answer != null && it.category == SynapseV2Bench.Category.ANSWER }.take(6)) {
+                val (pNull, ranked) = t.model.ranking(c.evidence, c.question)
+                println("TRAINCASE | ${c.evidence} | ${c.question} -> pNull=${"%.3f".format(pNull)} top=" + ranked.joinToString { "${it.first}:${"%.3f".format(it.third)}" })
+            }
+            for (c in validation.filter { it.answer != null }) {
+                val a = t.model.answer(c.evidence, c.question)
+                if (a.answer == c.answer) continue
+                val (pNull, ranked) = t.model.ranking(c.evidence, c.question)
+                println("MISS ${c.category} ${c.form} | ${c.evidence} | ${c.question} -> gold ${c.answer} | got ${a.answer ?: "ABSTAIN"} " +
+                    "pNull=${"%.2f".format(pNull)} top=" + ranked.joinToString { "${it.first}/${it.second}:${"%.2f".format(it.third)}" })
+            }
+            return
+        }
+        if (mode == "recipes") {
+            // cycle 2: TRAIN curricula, compared on VALIDATION only
+            val recipes = listOf(PLAIN, Recipe("R1 nonce values", nonce = true), Recipe("R2 nonce values + question dropout 0.15", nonce = true, questionDropout = 0.15))
+            val chosen = args.filter { it.matches(Regex("A\\d\\w*|S")) }
+            for (v in VARIANTS.filter { v -> chosen.isEmpty() || chosen.any { v.name.startsWith("$it ") } }) for (r in recipes) for (seed in seeds) {
+                val t = train(v, train, validation, seed, epochs, r)
+                val tag = "${v.name} | ${r.name} seed=$seed steps=${t.session.steps} loss ${"%.3f".format(t.session.lossFirstEpoch)}->${"%.3f".format(t.session.lossLastEpoch)}"
+                print(report("$tag argmax (VALIDATION)", validation, Predictor { c -> t.model.answer(c.evidence, c.question).answer }, breakdown = seed == seeds.first()))
+                print(report("$tag ${t.rule} (VALIDATION)", validation, Predictor { c -> t.predict(c) }, breakdown = false))
+            }
+            return
+        }
         val evaluation = if (mode == "final") SynapseV2Bench.generate(Split.TEST).also {
             check(SynapseV2Bench.sha256(it) == SynapseV2Bench.TEST_SHA256) { "TEST changed: ${SynapseV2Bench.sha256(it)}" }
         } else validation
@@ -170,8 +262,8 @@ object SynapseV2Experiment {
             val tag = "${v.name} seed=$seed steps=${t.session.steps} skipped=${t.session.skipped} loss ${"%.3f".format(t.session.lossFirstEpoch)}->" +
                 "${"%.3f".format(t.session.lossLastEpoch)} params=${t.model.parameterCount} sha=${parametersSha(t.model)}"
             print(report("$tag argmax ($splitName)", evaluation, Predictor { c -> t.model.answer(c.evidence, c.question).answer }, breakdown = seed == seeds.first()))
-            print(report("$tag threshold=${"%.2f".format(t.threshold)} from VALIDATION ($splitName)", evaluation,
-                Predictor { c -> t.model.answer(c.evidence, c.question, t.threshold).answer }, breakdown = seed == seeds.first()))
+            print(report("$tag ${t.rule} from VALIDATION ($splitName)", evaluation, Predictor { c -> t.predict(c) },
+                breakdown = seed == seeds.first()))
         }
     }
 }
