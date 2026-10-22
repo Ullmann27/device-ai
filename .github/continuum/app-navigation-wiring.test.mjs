@@ -25,7 +25,11 @@ test('exactly five owner-visible work areas remain in fixed order', () => {
 });
 
 test('phone bottom navigation stays outside conversation pane and above system bar', () => {
-  assert.match(activity, /buildConversationPane\(wide = false\)[\s\S]*?MATCH_PARENT, 0, 1f[\s\S]*?root\.addView\(\s*buildBottomWorkAreaBar\(\)/);
+  const ui = member('private fun buildUi(): View');
+  assert.match(ui, /val root = android\\.widget\\.FrameLayout\\(this\\)/);
+  assert.match(ui, /phonePane = buildConversationPane\\(wide = false\\)/);
+  assert.match(ui, /bottomMargin = phoneNavHeight/);
+  assert.match(ui, /root\\.addView\\(buildBottomWorkAreaBar\\(\\), android\\.widget\\.FrameLayout\\.LayoutParams\\([\\s\\S]*?phoneNavHeight,[\\s\\S]*?Gravity\\.BOTTOM/);
   assert.match(activity, /root\.setOnApplyWindowInsetsListener/);
   assert.match(activity, /bottomWorkAreaBar\?\.visibility/);
   assert.match(activity, /ContinuumWorkAreaNavigationSpec\.showBottomBar/);
