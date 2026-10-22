@@ -116,7 +116,14 @@ class ContinuumDiagnostics(private val file: File, private val appVersion: Strin
         file.parentFile?.mkdirs()
         val tmp = File(file.parentFile, file.name + ".tmp")
         tmp.writeText(issues.joinToString("\n", postfix = "\n") { encode(it) }, Charsets.UTF_8)
-        if (!tmp.renameTo(file)) { file.delete(); check(tmp.renameTo(file)) { "diagnostics file not writable" } }
+        try {
+            java.nio.file.Files.move(tmp.toPath(), file.toPath(),
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+            java.nio.file.Files.move(tmp.toPath(), file.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        }
     }
 
     private fun encode(i: Issue) = listOf(i.fingerprint, i.component, i.code, i.severity.name, i.title, i.detail, i.recommendation,
