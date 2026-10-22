@@ -9,10 +9,11 @@ val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGN
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
 val deviceAiDesignPreview = providers.gradleProperty("deviceAiDesignPreview").orNull == "true"
+val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
-require(listOf(deviceAiPreview, deviceAiMentorPreview, deviceAiDesignPreview).count { it } <= 1) {
+require(listOf(deviceAiPreview, deviceAiMentorPreview, deviceAiDesignPreview, deviceAiFeaturePreview).count { it } <= 1) {
     "Use only one preview package ID at a time."
 }
 
@@ -39,11 +40,12 @@ android {
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
         // as an update. Main/production keeps its existing version.
-        versionCode = if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
-        versionName = if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        versionCode = if (deviceAiFeaturePreview) 8 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
+        versionName = if (deviceAiFeaturePreview) "0.3.13-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
-        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview
+        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
+            deviceAiFeaturePreview -> "Device AI Continuum Test"
             deviceAiDesignPreview -> "Device AI Design"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
@@ -53,7 +55,9 @@ android {
 
     buildTypes {
         getByName("debug") {
-            if (deviceAiDesignPreview) {
+            if (deviceAiFeaturePreview) {
+                applicationIdSuffix = ".featurepreview"
+            } else if (deviceAiDesignPreview) {
                 // Fresh, independent installation; never alters owner or earlier preview data.
                 applicationIdSuffix = ".designpreview"
             } else if (deviceAiMentorPreview) {
