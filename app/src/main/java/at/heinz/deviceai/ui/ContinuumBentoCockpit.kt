@@ -133,7 +133,14 @@ object ContinuumBentoCockpit {
     }
 
     fun show(activity: Activity, body: LinearLayout): AlertDialog {
-        val scroll = ScrollView(activity).apply {
+        val scroll = object : ScrollView(activity) {
+            private val sciFiEffects = ContinuumSciFiEffects(resources.displayMetrics.density)
+            override fun dispatchDraw(canvas: Canvas) {
+                super.dispatchDraw(canvas)
+                // Restrained terminal texture; scroll gestures and TalkBack stay untouched.
+                sciFiEffects.drawScanlines(canvas, width.toFloat(), height.toFloat())
+            }
+        }.apply {
             isFillViewport = false
             clipToPadding = false
             addView(body)
