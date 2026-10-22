@@ -42,8 +42,48 @@ class ContinuumCertifiedAbstentionTest {
         val outcomes = List(20) { Outcome(true, 0.99, true) }
         val certificate = ContinuumCertifiedAbstention.calibrate(sha, outcomes, alpha = 0.05, delta = 0.1)
         assertNull(certificate)
-        val p = ContinuumResidualSpanCore.Prediction("Graz", 0, 4, 0.99, 3)
-        assertNull(ContinuumCertifiedAbstention.answer(p, certificate))
+        val model = ContinuumResidualSpanCore(77)
+        assertNull(ContinuumCertifiedAbstention.answer(
+            model, "R10 steht in Wien.", "Wo steht R10?", certificate
+        ))
+    }
+
+    @Test fun certifiedThresholdCannotBeReusedAfterWeightsChangeOrOnOtherModel() {
+        val model = ContinuumResidualSpanCore(77)
+        val evidence = "Einheit R10 steht in Wien."
+        val question = "Wo steht R10?"
+        val training = ContinuumResidualSpanCore.Example(evidence, question, "Wien")
+        repeat(50) { model.train(training) }
+        val raw = model.predict(evidence, question)
+        assertEquals("Wien", raw.answer)
+        val checkpoint = model.save()
+        val sha = java.security.MessageDigest.getInstance("SHA-256")
+            .digest(checkpoint)
+            .joinToString("") { (it.toInt() and 0xff).toString(16).padStart(2, '0') }
+        val certificate = ContinuumCertifiedAbstention.Certificate(
+            modelSha256 = sha,
+            threshold = 0.0,
+            alpha = 0.05,
+            delta = 0.1,
+            calibrationQuestions = 100,
+            calibrationErrors = 0,
+            calibrationAnswered = 1,
+            pValue = 0.01
+        )
+        assertEquals("Wien", ContinuumCertifiedAbstention.answer(
+            model, evidence, question, certificate
+        ))
+        // The certificate is attached to the exact snapshot, not just its model class or seed.
+        assertNull(ContinuumCertifiedAbstention.answer(
+            ContinuumResidualSpanCore(77), evidence, question, certificate
+        ))
+        model.train(training)
+        assertNull(ContinuumCertifiedAbstention.answer(
+            model, evidence, question, certificate
+        ))
+        assertNull(ContinuumCertifiedAbstention.answer(
+            model, evidence, question, null
+        ))
     }
 
     @Test fun fixedSequenceStopsAtTheFirstFailureAndNeverSkipsAhead() {
