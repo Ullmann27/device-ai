@@ -43,7 +43,10 @@ object ContinuumSpanAbstentionBench {
         val questions: List<String>,  // last one is TEST-only
         val negated: String,
         val contrast: String?,
-        val values: List<String>
+        val values: List<String>,
+        /** VALIDATION-only forms (never in TRAIN or TEST): model selection for unseen forms without test peeking. */
+        val valFamilies: List<String> = emptyList(),
+        val valQuestion: String? = null
     )
 
     private val CITIES = listOf("Wien", "Graz", "Linz", "Salzburg", "Innsbruck", "Bregenz", "Klagenfurt", "Villach",
@@ -107,6 +110,16 @@ object ContinuumSpanAbstentionBench {
         )
     }
 
+    private val VALIDATION_FORMS = mapOf(
+        "location" to (listOf("{V} ist der Standort von {T} {E}.", "Standort von {T} {E} ist {V}.") to "Wo ist {E} stationiert?"),
+        "tool" to (listOf("Eine {V} gehört zur Ausstattung von {T} {E}.") to "Welches Werkzeug setzt {E} ein?"),
+        "module" to (listOf("In {T} {E} steckt das Modul {V}.") to "Welches Modul besitzt {E}?"),
+        "color" to (listOf("Die Farbe von {T} {E} ist {V}.") to "Wie ist {E} gefärbt?"),
+        "port" to (listOf("Über Port {V} erreicht man {T} {E}.") to "Über welchen Port erreicht man {E}?"),
+        "library" to (listOf("{T} {E} hängt von der Bibliothek {V} ab.") to "Von welcher Bibliothek hängt {E} ab?"),
+        "developer" to (listOf("Entwickelt wurde {T} {E} von {V}.") to "Wer entwickelte {E}?")
+    )
+
     private fun fill(t: String, r: Relation, e: String, v: String, a: String? = null) =
         t.replace("{T}", r.type).replace("{E}", e).replace("{V}", v).replace("{A}", a ?: "")
 
@@ -118,9 +131,16 @@ object ContinuumSpanAbstentionBench {
         }
     }
 
-    fun generate(split: Split, seed: Long = 20261022L + split.ordinal * 1000L, perRelation: Int = 0): List<Case> {
+    /**
+     * @param bindingCurriculum adds in-clause two-entity and temporal TRAIN examples for the module and port
+     * relations only (VALIDATION analogues use tool, the frozen TEST uses location). Off = cycle-1 TRAIN.
+     */
+    fun generate(split: Split, seed: Long = 20261022L + split.ordinal * 1000L, perRelation: Int = 0,
+                 bindingCurriculum: Boolean = false): List<Case> {
         val rnd = Random(seed)
-        val rels = relations(split, rnd)
+        val rels = relations(split, rnd).map { r ->
+            if (split != Split.VALIDATION) r else VALIDATION_FORMS.getValue(r.name).let { (f, q) -> r.copy(valFamilies = f, valQuestion = q) }
+        }
         val per = if (perRelation > 0) perRelation else when (split) { Split.TRAIN -> 8; Split.VALIDATION -> 5; Split.TEST -> 8 }
         val used = HashSet<String>()
         val out = ArrayList<Case>()
@@ -134,11 +154,12 @@ object ContinuumSpanAbstentionBench {
             repeat(per) { k ->
                 val e = entity(split, rnd, used)
                 val v = rel.values[k % rel.values.size]
-                val families = if (split == Split.TEST) rel.facts + rel.heldOut else rel.facts
+                val families = when (split) { Split.TEST -> rel.facts + rel.heldOut; Split.VALIDATION -> rel.facts + rel.valFamilies; else -> rel.facts }
+                val questions = if (split == Split.VALIDATION) rel.questions.take(trainQuestions) + rel.valQuestion!! else rel.questions
                 val famIndex = k % families.size
                 val unseenFamily = famIndex >= rel.facts.size
-                val qIndex = if (split == Split.TEST) k % rel.questions.size else k % trainQuestions
-                val q = fill(rel.questions[qIndex], rel, e, v)
+                val qIndex = if (split == Split.TRAIN) k % trainQuestions else k % questions.size
+                val q = fill(questions[qIndex], rel, e, v)
                 val unseen = unseenFamily || qIndex >= trainQuestions
                 val sentence = fill(families[famIndex], rel, e, v)
                 add(Kind.ANSWER, "F" + famIndex + "Q" + qIndex, rel, sentence, q, v, unseen = unseen)
@@ -148,7 +169,7 @@ object ContinuumSpanAbstentionBench {
                     traps = setOf(v), unseen = unseenFamily)
                 // hard negative 2: same relation, but the question names another entity
                 val stranger = entity(split, rnd, used)
-                add(Kind.OTHER_ENTITY, "F" + famIndex, rel, sentence, fill(rel.questions[qIndex], rel, stranger, v), null,
+                add(Kind.OTHER_ENTITY, "F" + famIndex, rel, sentence, fill(questions[qIndex], rel, stranger, v), null,
                     traps = setOf(v), unseen = unseen)
                 // hard negative 3: the only value is explicitly negated
                 if (k % 2 == 0) add(Kind.NEGATED, "N", rel, fill(rel.negated, rel, e, v), q, null, traps = setOf(v))
@@ -169,6 +190,33 @@ object ContinuumSpanAbstentionBench {
                         q, v, traps = setOf(ov))
                 }
             }
+        }
+        fun inClause(rel: Relation, count: Int, unseen: Boolean) = repeat(count) { k ->
+            val e1 = entity(split, rnd, used); val e2 = entity(split, rnd, used)
+            val a = rel.values[k % rel.values.size]; val b = rel.values[(k + 1) % rel.values.size]
+            val first = fill(rel.facts[0], rel, e1, a).removeSuffix("."); val second = fill(rel.facts[0], rel, e2, b).removeSuffix(".")
+            val q = fill(rel.questions[k % 2], rel, e2, b)
+            add(Kind.SAME_CLAUSE_ENTITIES, "S", rel, if (k % 2 == 0) "$first, $second." else "$second, $first.", q, b, traps = setOf(a), unseen = unseen)
+        }
+        fun temporal(rel: Relation, now: String, before: String, ask: String, count: Int, unseen: Boolean) = repeat(count) { k ->
+            val e = entity(split, rnd, used)
+            val a = rel.values[k % rel.values.size]; val b = rel.values[(k + 1) % rel.values.size]
+            val ev = if (k % 2 == 0) before.replace("{X}", a).replace("{E}", e).replace("{T}", rel.type) + ", " +
+                now.replace("{X}", b).replace("{E}", e).replace("{T}", rel.type) + "."
+            else now.replace("{X}", b).replace("{E}", e).replace("{T}", rel.type) + ", " +
+                before.replace("{X}", a).replace("{E}", e).replace("{T}", rel.type) + "."
+            add(Kind.TEMPORAL, "T", rel, ev.replaceFirstChar { it.uppercase() }, ask.replace("{E}", e), b, traps = setOf(a), unseen = unseen)
+        }
+        if (split == Split.TRAIN && bindingCurriculum) {
+            inClause(rels.first { it.name == "module" }, 6, false)
+            inClause(rels.first { it.name == "port" }, 6, false)
+            temporal(rels.first { it.name == "module" }, "heute verwendet {T} {E} Modul {X}", "früher verwendete {T} {E} Modul {X}",
+                "Welches Modul verwendet {E} heute?", 6, false)
+        }
+        if (split == Split.VALIDATION) {
+            val tool = rels.first { it.name == "tool" }
+            inClause(tool, 6, true)
+            temporal(tool, "heute nutzt {T} {E} eine {X}", "früher nutzte {T} {E} eine {X}", "Welches Werkzeug nutzt {E} heute?", 6, true)
         }
         if (split == Split.TEST) {
             // diagnostic forms that no training example shows

@@ -9,7 +9,9 @@ import java.util.Random
 /**
  * Reproducible measurement run (JVM). Prints dataset hashes, baselines and trained CSX1 variants.
  * Thresholds are chosen on VALIDATION only; TEST numbers are reported once per variant.
- * Run: java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment [quick]
+ * Run: java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment [cycle1|select|final] [quick]
+ *   cycle1 (default): logged cycle-1 comparison on TEST; select: feature variants on VALIDATION only;
+ *   final: the variants fixed after selection, once on the frozen TEST.
  */
 object ContinuumSpanAbstentionExperiment {
     private fun shuffled(cases: List<Case>, seed: Long) = cases.shuffled(Random(seed))
@@ -47,8 +49,50 @@ object ContinuumSpanAbstentionExperiment {
         return if (p.answer != null && p.confidence >= threshold) p.answer else null
     }
 
+    val VARIANTS = linkedMapOf(
+        "V2 legacy features (PR61)" to ContinuumResidualSpanCore.Features(),
+        "V3 no position shortcut" to ContinuumResidualSpanCore.Features(positionFeatures = false),
+        "V4 identifier placeholders" to ContinuumResidualSpanCore.Features(identifierPlaceholders = true),
+        "V5 placeholders + no position" to ContinuumResidualSpanCore.Features(identifierPlaceholders = true, positionFeatures = false),
+        "V6 entity proximity" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true)
+    )
+
+    private fun runVariants(names: List<String>, split: List<Case>, splitName: String, train: List<Case>, validation: List<Case>,
+                            seeds: List<Long>, epochs: Int, errors: Boolean) {
+        for (name in names) for (seed in seeds) {
+            val features = VARIANTS.getValue(name)
+            val t = train(train, validation, seed, epochs) { ContinuumResidualSpanCore(77, features) }
+            val tag = "$name seed=$seed steps=${t.steps} loss ${"%.4f".format(t.lossBefore)}->${"%.4f".format(t.lossAfter)} " +
+                "checkpoint=${sha(t.model.save()).take(16)}"
+            print(ContinuumSpanAbstentionBench.report("$tag argmax ($splitName)", split) { predict(t.model, it) })
+            print(ContinuumSpanAbstentionBench.report("$tag threshold=${"%.2f".format(t.threshold)} from VALIDATION ($splitName)", split) {
+                predict(t.model, it, t.threshold) })
+            if (errors && seed == seeds.first()) for (c in split.filter { it.unseenForm }) {
+                val p = predict(t.model, c)
+                if (p != c.example.answer) println("    ERR ${c.kind} ${c.relation}: '${c.example.evidence}' | '${c.example.question}' expected=${c.example.answer ?: "ABSTAIN"} got=${p ?: "ABSTAIN"}")
+            }
+        }
+    }
+
     @JvmStatic fun main(args: Array<String>) {
         val quick = args.contains("quick")
+        val mode = args.firstOrNull { it in setOf("cycle1", "select", "final") } ?: "cycle1"
+        if (mode != "cycle1") {
+            val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN, bindingCurriculum = args.contains("binding"))
+            val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)
+            println("TRAIN binding curriculum=${args.contains("binding")} trainSha=${ContinuumSpanAbstentionBench.sha256(train)}")
+            println("DATASET train=${train.size} validation=${validation.size} (unseen ${validation.count { it.unseenForm }}) " +
+                "validationSha=${ContinuumSpanAbstentionBench.sha256(validation)}")
+            val seeds = if (quick) listOf(1L) else listOf(1L, 2L, 3L)
+            val chosen = args.filter { it.matches(Regex("V\\d")) }.map { a -> VARIANTS.keys.first { it.startsWith(a + " ") } }
+            if (mode == "select") runVariants(chosen.ifEmpty { VARIANTS.keys.toList() }, validation, "VALIDATION", train, validation, seeds, if (quick) 10 else 30, true)
+            else {
+                val test = ContinuumSpanAbstentionBench.generate(Split.TEST)
+                check(ContinuumSpanAbstentionBench.sha256(test) == ContinuumSpanAbstentionBench.TEST_SHA256) { "TEST changed" }
+                runVariants(chosen.ifEmpty { VARIANTS.keys.toList() }, test, "TEST", train, validation, seeds, 30, false)
+            }
+            return
+        }
         val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN)
         val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)
         val test = ContinuumSpanAbstentionBench.generate(Split.TEST)
