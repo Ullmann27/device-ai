@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 TaskInterpreter, GoalSpec, LanguageCore and the reference reasoner.
 // - TaskInterpreter turns an owner GOAL into a GoalSpec: verifiable acceptance criteria (primitive input/output
 //   examples), the only capability (node contract test), open questions and an explicit abstention when nothing is

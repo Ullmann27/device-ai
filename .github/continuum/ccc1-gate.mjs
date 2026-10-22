@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 ToolCapabilityGate: decides whether a reasoner TEST_REQUEST may run. Permissions come only from OWNER entries
 // (the GOAL's grant plus GRANTED approvals); a reasoner can never widen them. The coding agent's own critic is asked
 // with exactly the contract it would render: what the critic refuses (e.g. tests on the agent's control-plane code)
