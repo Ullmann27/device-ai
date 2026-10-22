@@ -1,0 +1,130 @@
+DATASET train=780 validation=322 trainSha=60d7c3410f1b651cec7f417bc210292b2fca7a3a64ed1f80c14b5a71c0afa79b validationSha=4b9c3c1df406190874e3b6578fea20fe74cb36c9910c7db6f6de19d5e9bad8b6
+RECIPE R0 plain epochs=8 seeds=[1, 2, 3]
+== A5 A4bn with tied question/evidence embeddings seed=1 steps=6240 skipped=0 loss 0.905->0.187 params=65753 sha=bcfbfaa83384a87a argmax (VALIDATION)  (0.211 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 152/187 [75–86%], wrong 6, unjustified abstain 29 | abstained 122/135, unsupported 13 [6–16%] | coverage 53%, errors 19/322
+  1-HOP SUBSET         correct 127/148 [79–91%], wrong 3, unjustified abstain 18 | abstained 107/114, unsupported 7 [3–12%] | coverage 52%, errors 10/262
+  ANSWER               correct 49/60 [70–89%], wrong 1, unjustified abstain 10 | abstained 0/0, unsupported 0 | coverage 83%, errors 1/60
+  CONTRAST             correct 16/18 [67–97%], wrong 0, unjustified abstain 2 | abstained 0/0, unsupported 0 | coverage 89%, errors 0/18
+  HOP2                 correct 20/30 [49–81%], wrong 2, unjustified abstain 8 | abstained 0/0, unsupported 0 | coverage 73%, errors 2/30
+  HOP2_BROKEN          correct 0/0, wrong 0, unjustified abstain 0 | abstained 8/9, unsupported 1 [2–44%] | coverage 11%, errors 1/9
+  HOP2_CONTRADICTION   correct 0/0, wrong 0, unjustified abstain 0 | abstained 2/6, unsupported 4 [30–90%] | coverage 67%, errors 4/6
+  HOP2_DISTRACTOR      correct 5/9 [27–81%], wrong 1, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 67%, errors 1/9
+  HOP2_NEGATED_BRIDGE  correct 0/0, wrong 0, unjustified abstain 0 | abstained 5/6, unsupported 1 [3–56%] | coverage 17%, errors 1/6
+  MULTI_ENTITY         correct 17/18 [74–99%], wrong 0, unjustified abstain 1 | abstained 0/0, unsupported 0 | coverage 94%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 53/60, unsupported 7 [6–22%] | coverage 12%, errors 7/60
+  SAME_CLAUSE_ENTITIES correct 14/18 [55–91%], wrong 2, unjustified abstain 2 | abstained 0/0, unsupported 0 | coverage 89%, errors 2/18
+  SHARED_VALUE         correct 9/12 [47–91%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 75%, errors 0/12
+  TEMPORAL             correct 10/10 [72–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/10
+  UNRELATED_NEGATION   correct 12/12 [76–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/12
+  form NEW_BOTH        correct 10/17 [36–78%], wrong 0, unjustified abstain 7 | abstained 10/13, unsupported 3 [8–50%] | coverage 43%, errors 3/30
+  form NEW_EVIDENCE    correct 26/31 [67–93%], wrong 0, unjustified abstain 5 | abstained 15/19, unsupported 4 [9–43%] | coverage 60%, errors 4/50
+  form NEW_QUESTION    correct 22/42 [38–67%], wrong 3, unjustified abstain 17 | abstained 31/32, unsupported 1 [1–16%] | coverage 35%, errors 4/74
+  form SEEN            correct 94/97 [91–99%], wrong 3, unjustified abstain 0 | abstained 66/71, unsupported 5 [3–15%] | coverage 61%, errors 8/168
+  tag SEEN                           correct 94/97 [91–99%], wrong 3, unjustified abstain 0 | abstained 66/71, unsupported 5 [3–15%] | coverage 61%, errors 8/168
+  tag VALIDATION_ONLY                correct 47/72 [54–75%], wrong 3, unjustified abstain 22 | abstained 45/50, unsupported 5 [4–21%] | coverage 45%, errors 8/122
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 10/16 [39–82%], wrong 0, unjustified abstain 6 | abstained 9/12, unsupported 3 [9–53%] | coverage 46%, errors 3/28
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 1/2 [9–91%], wrong 0, unjustified abstain 1 | abstained 2/2, unsupported 0 [0–66%] | coverage 25%, errors 0/4
+== A5 A4bn with tied question/evidence embeddings seed=1 steps=6240 skipped=0 loss 0.905->0.187 params=65753 sha=bcfbfaa83384a87a threshold=0.35 conflict=0.00 from VALIDATION (VALIDATION)  (0.182 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 152/187 [75–86%], wrong 5, unjustified abstain 30 | abstained 123/135, unsupported 12 [5–15%] | coverage 52%, errors 17/322
+  1-HOP SUBSET         correct 127/148 [79–91%], wrong 2, unjustified abstain 19 | abstained 108/114, unsupported 6 [2–11%] | coverage 52%, errors 8/262
+  ANSWER               correct 49/60 [70–89%], wrong 1, unjustified abstain 10 | abstained 0/0, unsupported 0 | coverage 83%, errors 1/60
+  CONTRAST             correct 16/18 [67–97%], wrong 0, unjustified abstain 2 | abstained 0/0, unsupported 0 | coverage 89%, errors 0/18
+  HOP2                 correct 20/30 [49–81%], wrong 2, unjustified abstain 8 | abstained 0/0, unsupported 0 | coverage 73%, errors 2/30
+  HOP2_BROKEN          correct 0/0, wrong 0, unjustified abstain 0 | abstained 8/9, unsupported 1 [2–44%] | coverage 11%, errors 1/9
+  HOP2_CONTRADICTION   correct 0/0, wrong 0, unjustified abstain 0 | abstained 2/6, unsupported 4 [30–90%] | coverage 67%, errors 4/6
+  HOP2_DISTRACTOR      correct 5/9 [27–81%], wrong 1, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 67%, errors 1/9
+  HOP2_NEGATED_BRIDGE  correct 0/0, wrong 0, unjustified abstain 0 | abstained 5/6, unsupported 1 [3–56%] | coverage 17%, errors 1/6
+  MULTI_ENTITY         correct 17/18 [74–99%], wrong 0, unjustified abstain 1 | abstained 0/0, unsupported 0 | coverage 94%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 54/60, unsupported 6 [5–20%] | coverage 10%, errors 6/60
+  SAME_CLAUSE_ENTITIES correct 14/18 [55–91%], wrong 1, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 83%, errors 1/18
+  SHARED_VALUE         correct 9/12 [47–91%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 75%, errors 0/12
+  TEMPORAL             correct 10/10 [72–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/10
+  UNRELATED_NEGATION   correct 12/12 [76–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/12
+  form NEW_BOTH        correct 10/17 [36–78%], wrong 0, unjustified abstain 7 | abstained 11/13, unsupported 2 [4–42%] | coverage 40%, errors 2/30
+  form NEW_EVIDENCE    correct 26/31 [67–93%], wrong 0, unjustified abstain 5 | abstained 15/19, unsupported 4 [9–43%] | coverage 60%, errors 4/50
+  form NEW_QUESTION    correct 22/42 [38–67%], wrong 3, unjustified abstain 17 | abstained 31/32, unsupported 1 [1–16%] | coverage 35%, errors 4/74
+  form SEEN            correct 94/97 [91–99%], wrong 2, unjustified abstain 1 | abstained 66/71, unsupported 5 [3–15%] | coverage 60%, errors 7/168
+  tag SEEN                           correct 94/97 [91–99%], wrong 2, unjustified abstain 1 | abstained 66/71, unsupported 5 [3–15%] | coverage 60%, errors 7/168
+  tag VALIDATION_ONLY                correct 47/72 [54–75%], wrong 3, unjustified abstain 22 | abstained 45/50, unsupported 5 [4–21%] | coverage 45%, errors 8/122
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 10/16 [39–82%], wrong 0, unjustified abstain 6 | abstained 10/12, unsupported 2 [5–45%] | coverage 43%, errors 2/28
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 1/2 [9–91%], wrong 0, unjustified abstain 1 | abstained 2/2, unsupported 0 [0–66%] | coverage 25%, errors 0/4
+== A5 A4bn with tied question/evidence embeddings seed=2 steps=6240 skipped=0 loss 0.905->0.184 params=65753 sha=cd5c5a2c25b20876 argmax (VALIDATION)  (0.137 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 145/187 [71–83%], wrong 7, unjustified abstain 35 | abstained 124/135, unsupported 11 [5–14%] | coverage 51%, errors 18/322
+  1-HOP SUBSET         correct 121/148 [75–87%], wrong 4, unjustified abstain 23 | abstained 109/114, unsupported 5 [2–10%] | coverage 50%, errors 9/262
+== A5 A4bn with tied question/evidence embeddings seed=2 steps=6240 skipped=0 loss 0.905->0.184 params=65753 sha=cd5c5a2c25b20876 threshold=0.50 conflict=0.00 from VALIDATION (VALIDATION)  (0.115 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 137/187 [66–79%], wrong 5, unjustified abstain 45 | abstained 129/135, unsupported 6 [2–9%] | coverage 46%, errors 11/322
+  1-HOP SUBSET         correct 117/148 [72–85%], wrong 2, unjustified abstain 29 | abstained 112/114, unsupported 2 [0–6%] | coverage 46%, errors 4/262
+== A5 A4bn with tied question/evidence embeddings seed=3 steps=6240 skipped=0 loss 0.907->0.187 params=65753 sha=470b04006fd2d444 argmax (VALIDATION)  (0.086 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 139/187 [68–80%], wrong 6, unjustified abstain 42 | abstained 123/135, unsupported 12 [5–15%] | coverage 49%, errors 18/322
+  1-HOP SUBSET         correct 121/148 [75–87%], wrong 3, unjustified abstain 24 | abstained 108/114, unsupported 6 [2–11%] | coverage 50%, errors 9/262
+== A5 A4bn with tied question/evidence embeddings seed=3 steps=6240 skipped=0 loss 0.907->0.187 params=65753 sha=470b04006fd2d444 threshold=0.45 conflict=0.00 from VALIDATION (VALIDATION)  (0.082 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 135/187 [65–78%], wrong 5, unjustified abstain 47 | abstained 125/135, unsupported 10 [4–13%] | coverage 47%, errors 15/322
+  1-HOP SUBSET         correct 117/148 [72–85%], wrong 2, unjustified abstain 29 | abstained 110/114, unsupported 4 [1–9%] | coverage 47%, errors 6/262
+== A5h A4n (HRR) with tied embeddings seed=1 steps=6240 skipped=0 loss 0.776->0.157 params=65753 sha=2cb3f47bd37f164b argmax (VALIDATION)  (0.107 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 138/187 [67–80%], wrong 9, unjustified abstain 40 | abstained 124/135, unsupported 11 [5–14%] | coverage 49%, errors 20/322
+  1-HOP SUBSET         correct 116/148 [71–84%], wrong 3, unjustified abstain 29 | abstained 111/114, unsupported 3 [1–7%] | coverage 47%, errors 6/262
+  ANSWER               correct 45/60 [63–84%], wrong 1, unjustified abstain 14 | abstained 0/0, unsupported 0 | coverage 77%, errors 1/60
+  CONTRAST             correct 14/18 [55–91%], wrong 0, unjustified abstain 4 | abstained 0/0, unsupported 0 | coverage 78%, errors 0/18
+  HOP2                 correct 18/30 [42–75%], wrong 4, unjustified abstain 8 | abstained 0/0, unsupported 0 | coverage 73%, errors 4/30
+  HOP2_BROKEN          correct 0/0, wrong 0, unjustified abstain 0 | abstained 7/9, unsupported 2 [6–55%] | coverage 22%, errors 2/9
+  HOP2_CONTRADICTION   correct 0/0, wrong 0, unjustified abstain 0 | abstained 1/6, unsupported 5 [44–97%] | coverage 83%, errors 5/6
+  HOP2_DISTRACTOR      correct 4/9 [19–73%], wrong 2, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 67%, errors 2/9
+  HOP2_NEGATED_BRIDGE  correct 0/0, wrong 0, unjustified abstain 0 | abstained 5/6, unsupported 1 [3–56%] | coverage 17%, errors 1/6
+  MULTI_ENTITY         correct 15/18 [61–94%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 83%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 57/60, unsupported 3 [2–14%] | coverage 5%, errors 3/60
+  SAME_CLAUSE_ENTITIES correct 15/18 [61–94%], wrong 1, unjustified abstain 2 | abstained 0/0, unsupported 0 | coverage 89%, errors 1/18
+  SHARED_VALUE         correct 7/12 [32–81%], wrong 0, unjustified abstain 5 | abstained 0/0, unsupported 0 | coverage 58%, errors 0/12
+  TEMPORAL             correct 10/10 [72–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/10
+  UNRELATED_NEGATION   correct 10/12 [55–95%], wrong 1, unjustified abstain 1 | abstained 0/0, unsupported 0 | coverage 92%, errors 1/12
+  form NEW_BOTH        correct 6/17 [17–59%], wrong 0, unjustified abstain 11 | abstained 11/13, unsupported 2 [4–42%] | coverage 27%, errors 2/30
+  form NEW_EVIDENCE    correct 18/31 [41–74%], wrong 5, unjustified abstain 8 | abstained 14/19, unsupported 5 [12–49%] | coverage 56%, errors 10/50
+  form NEW_QUESTION    correct 18/42 [29–58%], wrong 3, unjustified abstain 21 | abstained 30/32, unsupported 2 [2–20%] | coverage 31%, errors 5/74
+  form SEEN            correct 96/97 [94–100%], wrong 1, unjustified abstain 0 | abstained 69/71, unsupported 2 [1–10%] | coverage 59%, errors 3/168
+  tag SEEN                           correct 96/97 [94–100%], wrong 1, unjustified abstain 0 | abstained 69/71, unsupported 2 [1–10%] | coverage 59%, errors 3/168
+  tag VALIDATION_ONLY                correct 36/72 [39–61%], wrong 7, unjustified abstain 29 | abstained 43/50, unsupported 7 [7–26%] | coverage 41%, errors 14/122
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 6/16 [18–61%], wrong 1, unjustified abstain 9 | abstained 10/12, unsupported 2 [5–45%] | coverage 32%, errors 3/28
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 0/2 [0–66%], wrong 0, unjustified abstain 2 | abstained 2/2, unsupported 0 [0–66%] | coverage 0%, errors 0/4
+== A5h A4n (HRR) with tied embeddings seed=1 steps=6240 skipped=0 loss 0.776->0.157 params=65753 sha=2cb3f47bd37f164b threshold=0.50 conflict=0.00 from VALIDATION (VALIDATION)  (0.101 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 136/187 [66–79%], wrong 9, unjustified abstain 42 | abstained 128/135, unsupported 7 [3–10%] | coverage 47%, errors 16/322
+  1-HOP SUBSET         correct 115/148 [70–84%], wrong 3, unjustified abstain 30 | abstained 112/114, unsupported 2 [0–6%] | coverage 46%, errors 5/262
+  ANSWER               correct 45/60 [63–84%], wrong 1, unjustified abstain 14 | abstained 0/0, unsupported 0 | coverage 77%, errors 1/60
+  CONTRAST             correct 14/18 [55–91%], wrong 0, unjustified abstain 4 | abstained 0/0, unsupported 0 | coverage 78%, errors 0/18
+  HOP2                 correct 17/30 [39–73%], wrong 4, unjustified abstain 9 | abstained 0/0, unsupported 0 | coverage 70%, errors 4/30
+  HOP2_BROKEN          correct 0/0, wrong 0, unjustified abstain 0 | abstained 7/9, unsupported 2 [6–55%] | coverage 22%, errors 2/9
+  HOP2_CONTRADICTION   correct 0/0, wrong 0, unjustified abstain 0 | abstained 4/6, unsupported 2 [10–70%] | coverage 33%, errors 2/6
+  HOP2_DISTRACTOR      correct 4/9 [19–73%], wrong 2, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 67%, errors 2/9
+  HOP2_NEGATED_BRIDGE  correct 0/0, wrong 0, unjustified abstain 0 | abstained 5/6, unsupported 1 [3–56%] | coverage 17%, errors 1/6
+  MULTI_ENTITY         correct 15/18 [61–94%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 83%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 58/60, unsupported 2 [1–11%] | coverage 3%, errors 2/60
+  SAME_CLAUSE_ENTITIES correct 14/18 [55–91%], wrong 1, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 83%, errors 1/18
+  SHARED_VALUE         correct 7/12 [32–81%], wrong 0, unjustified abstain 5 | abstained 0/0, unsupported 0 | coverage 58%, errors 0/12
+  TEMPORAL             correct 10/10 [72–100%], wrong 0, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 0/10
+  UNRELATED_NEGATION   correct 10/12 [55–95%], wrong 1, unjustified abstain 1 | abstained 0/0, unsupported 0 | coverage 92%, errors 1/12
+  form NEW_BOTH        correct 5/17 [13–53%], wrong 0, unjustified abstain 12 | abstained 13/13, unsupported 0 [0–23%] | coverage 17%, errors 0/30
+  form NEW_EVIDENCE    correct 17/31 [38–71%], wrong 5, unjustified abstain 9 | abstained 16/19, unsupported 3 [6–38%] | coverage 50%, errors 8/50
+  form NEW_QUESTION    correct 18/42 [29–58%], wrong 3, unjustified abstain 21 | abstained 30/32, unsupported 2 [2–20%] | coverage 31%, errors 5/74
+  form SEEN            correct 96/97 [94–100%], wrong 1, unjustified abstain 0 | abstained 69/71, unsupported 2 [1–10%] | coverage 59%, errors 3/168
+  tag SEEN                           correct 96/97 [94–100%], wrong 1, unjustified abstain 0 | abstained 69/71, unsupported 2 [1–10%] | coverage 59%, errors 3/168
+  tag VALIDATION_ONLY                correct 35/72 [37–60%], wrong 7, unjustified abstain 30 | abstained 45/50, unsupported 5 [4–21%] | coverage 39%, errors 12/122
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 5/16 [14–56%], wrong 1, unjustified abstain 10 | abstained 12/12, unsupported 0 [0–24%] | coverage 21%, errors 1/28
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 0/2 [0–66%], wrong 0, unjustified abstain 2 | abstained 2/2, unsupported 0 [0–66%] | coverage 0%, errors 0/4
+== A5h A4n (HRR) with tied embeddings seed=2 steps=6240 skipped=0 loss 0.790->0.151 params=65753 sha=e10b435a1fec86d4 argmax (VALIDATION)  (0.100 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 130/187 [63–76%], wrong 10, unjustified abstain 47 | abstained 126/135, unsupported 9 [4–12%] | coverage 46%, errors 19/322
+  1-HOP SUBSET         correct 106/148 [64–78%], wrong 6, unjustified abstain 36 | abstained 112/114, unsupported 2 [0–6%] | coverage 44%, errors 8/262
+== A5h A4n (HRR) with tied embeddings seed=2 steps=6240 skipped=0 loss 0.790->0.151 params=65753 sha=e10b435a1fec86d4 threshold=0.75 conflict=0.00 from VALIDATION (VALIDATION)  (0.096 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 121/187 [58–71%], wrong 2, unjustified abstain 64 | abstained 133/135, unsupported 2 [0–5%] | coverage 39%, errors 4/322
+  1-HOP SUBSET         correct 104/148 [62–77%], wrong 2, unjustified abstain 42 | abstained 113/114, unsupported 1 [0–5%] | coverage 41%, errors 3/262
+== A5h A4n (HRR) with tied embeddings seed=3 steps=6240 skipped=0 loss 0.759->0.157 params=65753 sha=c4efa9bf8099cc1b argmax (VALIDATION)  (0.097 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 128/187 [61–75%], wrong 7, unjustified abstain 52 | abstained 126/135, unsupported 9 [4–12%] | coverage 45%, errors 16/322
+  1-HOP SUBSET         correct 111/148 [67–81%], wrong 3, unjustified abstain 34 | abstained 110/114, unsupported 4 [1–9%] | coverage 45%, errors 7/262
+== A5h A4n (HRR) with tied embeddings seed=3 steps=6240 skipped=0 loss 0.759->0.157 params=65753 sha=c4efa9bf8099cc1b threshold=0.85 conflict=0.00 from VALIDATION (VALIDATION)  (0.100 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 114/187 [54–68%], wrong 1, unjustified abstain 72 | abstained 132/135, unsupported 3 [1–6%] | coverage 37%, errors 4/322
+  1-HOP SUBSET         correct 99/148 [59–74%], wrong 1, unjustified abstain 48 | abstained 112/114, unsupported 2 [0–6%] | coverage 39%, errors 3/262

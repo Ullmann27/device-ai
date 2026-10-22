@@ -124,3 +124,37 @@ Zum Vergleich: CSX1 hat 4.110 Parameter, PR-#71-Probe 4.096.
   Kriterium: richtig − 2 × (falsche Antwort + unbelegte Antwort).
 - **TEST:** wird erst danach **einmal** für alle Varianten gemessen; der Kandidat ist vorher festgelegt.
 - **Zeitmessung:** ms je Frage auf JVM x86_64, nicht ARM64.
+
+## 6. Auswahlzyklen auf VALIDATION (Mittel über 3 Seeds, mit auf VALIDATION gewählter Regel)
+
+| Zyklus | Variante | Epochen/Rezept | richtig /187 | Fehler /322 | Score (richtig − 2·Fehler) |
+|---|---|---|---|---|---|
+| 2 | A1 Bag, 1-Hop | 8 / R0 | 109,3 | 8,0 | 93,3 |
+| 2 | A2 HRR, 1-Hop | 8 / R0 | 106,7 | 3,7 | 99,3 |
+| 2 | A3 A2 + Sinkhorn | 8 / R0 | 76,3 | 13,7 | 48,9 |
+| 2 | A4 HRR + 2-Hop | 8 / R0 | 129,7 | 8,0 | 113,7 |
+| 2 | A4b Bag + 2-Hop | 8 / R0 | 133,3 | 11,7 | 110,0 |
+| 2 | A4n HRR + 2-Hop, ohne Kandidatenmerkmal | 8 / R0 | 136,7 | 9,7 | 117,3 |
+| 2 | **A4bn Bag + 2-Hop, ohne Kandidatenmerkmal** | **8 / R0** | **141,3** | **8,7** | **124,0** |
+| 2 | A4bn | 25 / R0 | 126,0 | 8,7 | 108,7 |
+| 2 | A4bn | 8 / R2 (Kunstwerte + Frage-Dropout) | 148,3 | 13,3 | 121,7 |
+| 2 | S nur Skalare | 8 / R0 | 69,0 | 0,0 | 69,0 |
+| 3 | A5 gebundene Einbettungen (Bag) | 8 / R0 | 141,3 | 14,3 | 112,7 |
+| 3 | A5h gebundene Einbettungen (HRR) | 8 / R0 | 123,7 | 8,0 | 107,7 |
+| 3 | A4bn | 15 / R0 | 134,0 | 10,7 | 112,7 |
+
+Untrainiert (U) und Heuristiken auf VALIDATION:
+- U: 12–28/187 richtig, 182–210 Fehler;
+- A0b: 110 richtig, 188 Fehler;
+- A0 (v1-Regeln): 3 richtig, 0 Fehler.
+
+Die Leistung stammt damit vollständig aus den trainierten Gewichten.
+
+**Vorab festgelegt (vor dem TEST-Lauf, eigener Commit):**
+- **Kandidat:** A4bn, 8 Epochen, Rezept R0, Schwelle und Konfliktverhältnis aus VALIDATION.
+- **Alle anderen Varianten** werden mit derselben Trainingseinstellung einmal auf TEST mitgemessen, nur zum Vergleich.
+- **Negative Befunde schon auf VALIDATION:**
+  - HRR-Rollenbindung ohne belastbaren Vorteil gegenüber Bag;
+  - Sinkhorn verdreifacht die falschen Antworten;
+  - gebundene Einbettungen und 25 Epochen verschlechtern;
+  - R2 bringt mehr richtige, aber auch mehr Fehler.
