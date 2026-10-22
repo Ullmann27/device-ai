@@ -228,3 +228,40 @@ Bei unbekannten Verneinungswörtern (Seed 1) gab A4n 13/48 unbelegte Antworten, 
   - eine Verschiebungs-VALIDATION mit zurückgehaltenen Verneinungs- und Zeitwörtern und eigenen Relationen;
   - einen neuen eingefrorenen TEST mit anderen Wörtern;
   - die Vorab-Festlegung, ob HRR oder Bag gewählt wird.
+
+## 8. Kategorienanalyse des einmaligen TEST-Laufs
+
+Quelle ist allein das Protokoll `final-test-e8-once.txt`. Es gab keinen zweiten TEST-Lauf und keine Optimierung. Die Kategorienaufschlüsselung druckt der Runner nur für Seed 1; ausgewertet ist die Regel aus VALIDATION.
+
+Abkürzungen: r = richtig, f = falsch beantwortet, „unbelegt“ = Antwort auf eine unbeantwortbare Frage.
+
+| Kategorie | A4bn (Kandidat) | A4n (HRR) | A4 (HRR) | A2 (HRR, 1-Hop) | A1 (Bag, 1-Hop) |
+|---|---|---|---|---|---|
+| **Mehrere Entitäten**, eigene Sätze | 13/30 r, 0 f | 16/30 r, 0 f | 14/30 r, 0 f | 11/30 r, 0 f | 13/30 r, 2 f |
+| Mehrere Entitäten **in einem Teilsatz** | 6/24 r, 1 f | 6/24 r, 2 f | 6/24 r, 0 f | 6/24 r, 0 f | 5/24 r, 1 f |
+| Gemeinsamer Wert | 11/24 r, 0 f | 9/24 r, 0 f | 9/24 r, 0 f | 7/24 r, 0 f | 10/24 r, 1 f |
+| **Verneinung**, bekanntes Wort | 0/48 unbelegt | 0/48 | 0/48 | 0/48 | 0/48 |
+| Verneinung, **unbekanntes Wort** | **28/48 unbelegt** | 13/48 | **9/48** | 11/48 | 23/48 |
+| Verneinung in fremdem Satz | 12/24 r, 1 f | 12/24 r, 1 f | 13/24 r, 1 f | 10/24 r, 1 f | 13/24 r, 2 f |
+| **Zeitbezug** | 12/16 r | 12/16 r | 12/16 r | 11/16 r, 1 f | **16/16 r** |
+| **Zwei-Hop** | 22/48 r, 4 f | 18/48 r, 2 f | 12/48 r, 2 f | – | 0/48 r, 4 f |
+| Zwei-Hop mit Ablenker | 8/12 r | 6/12 r | 2/12 r | – | 0/12 r, 2 f |
+| Zwei-Hop, gebrochene Brücke | 1/12 unbelegt | 0/12 | 0/12 | 0/12 | 2/12 |
+| **Zwei-Hop, widersprüchliche Kette** | **8/12 unbelegt** | 6/12 | 7/12 | 0/12 | 1/12 |
+| Zwei-Hop, verneinte Brücke | 0/12 unbelegt | 0/12 | 0/12 | 0/12 | 0/12 |
+| Satzform bekannt | 75/75 r | 74/75 r | 74/75 r | 65/75 r | 63/75 r, 7 f |
+| **neue Beleg-Form** | 29/80 r, 4 f | **34/80 r**, 5 f | 27/80 r, 3 f | 16/80 r, 2 f | 22/80 r, 6 f |
+| **neue Frage-Form** | **33/75 r** | 28/75 r | 20/75 r | 13/75 r | 18/75 r, 3 f |
+| **beides neu** | **15/74 r**, 3 f | 6/74 r, 2 f | 1/74 r, 2 f | 0/74 r, 2 f | 10/74 r, 8 f |
+
+**Befunde**
+1. **Mehrentitätenbindung.** Mit eigenen Sätzen je Entität gibt es fast keine Verwechslungen (0–2 falsch); der Preis ist, dass etwa die Hälfte der Fälle unbeantwortet bleibt. Stehen zwei Entitäten **in einem Teilsatz**, bleibt jede Variante bei 5–6 von 24. Die positionsgebundene HRR-Rolle hilft dort nicht. Diese Bindung braucht Satzstruktur, etwa wer zu welchem Wert gehört, und keine Positionsabstände.
+2. **Negation.** Bekannte Verneinungswörter werden in 0/48 Fällen beantwortet, sind also perfekt. Bei **unbekannten** Verneinungswörtern antwortet der Bag-Kandidat in 28/48 Fällen. HRR-Varianten reduzieren das auf 9–13/48, lösen es aber nicht. Das Modell erkennt Verneinung über das Wort selbst, nicht über eine Funktion im Satz.
+3. **Neue Satzstrukturen** sind die Hauptschwäche: 75/75 bei bekannten Formen, aber nur 0–15/74, wenn Frage und Beleg zugleich neu sind. Das deckt sich mit der bekannten CSX1-Grenze von 12/35.
+4. **Zeitbezug** ist robust (11–16/16). Ausgerechnet das einfachste Modell A1 ist hier fehlerfrei.
+5. **Falsche Zwei-Hop-Schlüsse:** Bei widersprüchlichen Ketten geben die gelernten Zwei-Hop-Varianten **6–8 von 12 unbelegte Antworten**. Der Beweis prüft nur, ob die Brückenkennung in zwei Sätzen steht, nicht ob die Kette **widerspruchsfrei** ist. Gebrochene und verneinte Brücken weist er dagegen fast immer zurück (0–2/12).
+
+**Nächste Schritte, nur mit neuem eingefrorenem TEST**
+- Den Beweis um eine Konsistenzprüfung ergänzen: Keine andere Belegstelle darf derselben Brücke oder Entität einen abweichenden Wert geben. Diese Regel ist symbolisch und billig und zielt direkt auf Befund 5.
+- Negation über Struktur statt Wortliste lernen: Training mit erfundenen Verneinungswörtern, nur in TRAIN, und eine Verschiebungs-VALIDATION mit zurückgehaltenen Wörtern.
+- Für die Bindung im selben Teilsatz eine explizite Zuordnung lernen (Entität ↔ Wert), etwa über Paar-Merkmale statt Einzelpositionen.
