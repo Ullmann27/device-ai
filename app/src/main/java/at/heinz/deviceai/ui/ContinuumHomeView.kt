@@ -25,10 +25,61 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
+    private var waveFramePending = false
+    private val waveFrame = object : Runnable {
+        override fun run() {
+            waveFramePending = false
+            if (!waveAnimationEnabled()) return
+            // Only the measured learning card needs another render pass.
+            views[Slot.LEARNING]?.invalidate()
+            scheduleWaveFrame()
+        }
+    }
+
+    private fun waveAnimationEnabled(): Boolean = isAttachedToWindow && windowVisibility == View.VISIBLE &&
+        visibility == View.VISIBLE && state.learning.live && state.learning.series.size >= 2 &&
+        state.learning.series.any { it > 0f } && views.containsKey(Slot.LEARNING)
+
+    private fun scheduleWaveFrame() {
+        if (!waveFramePending && waveAnimationEnabled()) {
+            waveFramePending = true
+            postOnAnimationDelayed(waveFrame, 33L)
+        }
+    }
+
+    private fun updateWaveAnimation() {
+        if (waveAnimationEnabled()) scheduleWaveFrame()
+        else {
+            removeCallbacks(waveFrame)
+            waveFramePending = false
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        updateWaveAnimation()
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(waveFrame)
+        waveFramePending = false
+        super.onDetachedFromWindow()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        updateWaveAnimation()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        updateWaveAnimation()
+    }
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) {
             field = value
             views.values.forEach { it.refresh() }
+            updateWaveAnimation()
         }
 
     init {
@@ -56,6 +107,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             addView(view)
         }
         requestLayout()
+        updateWaveAnimation()
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
@@ -144,6 +196,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             painter.begin(canvas)
             val saved = canvas.save()
             canvas.scale(density, density)
+            // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
+            element.motionPhase = if (slot == Slot.LEARNING && state.learning.live &&
+                state.learning.series.size >= 2 && state.learning.series.any { it > 0f }) {
+                (android.os.SystemClock.uptimeMillis() % 4200L).toFloat() / 4200f
+            } else null
             element.draw(painter, width / density, height / density, state)
             canvas.restoreToCount(saved)
         }
