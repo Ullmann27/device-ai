@@ -113,12 +113,12 @@ node --test \
   .github/continuum/cdx-large-curriculum.test.mjs \
   .github/continuum/training-monitor-wiring.test.mjs
 
-echo "[Continuum] Separate debug-signed preview package, not a Mentor Pair update"
+echo "[Continuum] Separate design-only package, not a Mentor Pair or prior Preview update"
 echo "[Continuum] Android JVM tests, API lint and separate Preview APK"
 gradle --no-daemon --max-workers=2 \
   -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
   :app:testDebugUnitTest :app:lintDebug :app:assembleDebug \
-  -PdeviceAiPreview=true --stacktrace
+  -PdeviceAiDesignPreview=true --stacktrace
 
 apk="app/build/outputs/apk/debug/app-debug.apk"
 test -s "$apk"
@@ -126,7 +126,7 @@ tools="$ANDROID_HOME/build-tools/35.0.0"
 "$tools/apksigner" verify --verbose --print-certs "$apk" > "$workspace/verify.txt"
 grep -Fq "Verified using v2 scheme (APK Signature Scheme v2): true" "$workspace/verify.txt"
 "$tools/aapt" dump badging "$apk" > "$workspace/badging.txt"
-grep -Fq "package: name='at.heinz.deviceai.preview' versionCode='6' versionName='0.3.3'" "$workspace/badging.txt"
+grep -Fq "package: name='at.heinz.deviceai.designpreview' versionCode='7' versionName='0.3.13-ui'" "$workspace/badging.txt"
 test "$(git rev-parse HEAD)" = "$commit" || { echo 'Source HEAD changed'; exit 69; }
 # Repository tests may chmod shell entrypoints from 0644 to 0755.
 # Treat these as harmless ONLY when their contents still match HEAD exactly.
@@ -153,7 +153,7 @@ output="$repo_root/continuum-preview-output"
 mkdir -p "$output"
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
 [[ "$apk_sha256" =~ ^[0-9a-f]{64}$ ]] || { echo 'Invalid hash'; exit 69; }
-immutable_apk="DeviceAI-Continuum-PremiumUI-preview-${apk_sha256}.apk"
+immutable_apk="DeviceAI-Continuum-DesignPreview-${apk_sha256}.apk"
 cp "$apk" "$output/$immutable_apk"
 (
  cd "$output"
@@ -162,7 +162,7 @@ cp "$apk" "$output/$immutable_apk"
 )
 cp "$workspace/badging.txt" "$output/PACKAGE-INFO-${apk_sha256}.txt"
 cp "$workspace/verify.txt" "$output/SIGNATURE-INFO-${apk_sha256}.txt"
-printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.preview\nversion_code=6\nversion_name=0.3.3\nsigner=isolated_ephemeral_debug_signer\nartifact=%s\napk_sha256=%s\nstatus=BUILD_VERIFIED_NOT_DEVICE_INSTALLED\n' \
+printf 'commit=%s\nbranch=%s\npackage=at.heinz.deviceai.designpreview\nversion_code=7\nversion_name=0.3.13-ui\nsigner=isolated_ephemeral_debug_signer\nartifact=%s\napk_sha256=%s\nstatus=BUILD_VERIFIED_NOT_DEVICE_INSTALLED\n' \
  "$commit" "$actual_branch" "$immutable_apk" "$apk_sha256" > "$output/BUILD-INFO-${apk_sha256}.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
 echo '[Continuum] Verified side-by-side preview APK published under immutable hash filename'
