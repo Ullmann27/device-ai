@@ -14,6 +14,7 @@ import kotlin.math.ln
  *   lm <families> …         NF-2 / NF-4: language modelling on DOC, VALIDATION BPB per epoch, speed, sparsity
  *   recall <families> …     NF-2 memory capacity: multi-query associative recall with growing numbers of pairs
  *   stream <base ckpts> …   NF-1: online learning on a CODE stream, forgetting on DOC, base checkpoint integrity
+ *   blt …                   NF-3: byte-latent model with entropy patches against fixed patches
  * Run: java -cp nf.jar at.heinz.deviceai.learning.nf.NfExperiment <repoRoot> <mode> [args]
  * Families: <G|T|D|L|Dna|Dnb|Gr|Dr>-<S|M|X>; G minGRU, T Transformer, D gated delta, L gated linear attention,
  * Dna delta without decay gate, Dnb delta without write gate, Gr/Dr with ReLU-threshold FFN.
@@ -93,6 +94,7 @@ object NfExperiment {
             "lm" -> NfLm.run(docs, tok, args)
             "recall" -> NfRecall.run(args)
             "stream" -> NfStream.run(docs, tok, args)
+            "blt" -> NfBltRun.run(docs, args)
             else -> error("unknown mode $mode")
         }
         println("PEAK heapMb=${"%.0f".format(peakHeapMb())}")
@@ -134,11 +136,11 @@ object NfLm {
                         "epoch" to "$epoch", "corpus" to NfCorpus.COMMIT, "l1" to "$l1")))
                     println("RUN $name seed=$seed epoch=$epoch trainNll=${"%.4f".format(loss / stepsPerEpoch)} valBPB=${"%.4f".format(v)} " +
                         "params=${model.params.count} trainSeconds=${"%.0f".format((System.nanoTime() - start) / 1e9)} " +
-                        (if (stats.total > 0) "ffnDensity=${"%.3f".format(stats.active.toDouble() / stats.total)} " else "") + "ckpt=$sha")
+                        (if (stats.total > 0) "ffnDensity=${"%.3f".format(stats.active.toDouble() / stats.total)} l1=$l1 " else "") + "ckpt=$sha")
                     System.out.flush()
                 }
             }
-            println("SPEED $name seed=$seed msPerToken=${"%.3f".format(NfExperiment.msPerToken(model, tok, validation))} " +
+            println("SPEED $name seed=$seed${if (config.ffn == Ffn.RELU) " l1=$l1" else ""} msPerToken=${"%.3f".format(NfExperiment.msPerToken(model, tok, validation))} " +
                 "stateFloats=${NfState.empty(model.config).layers.sumOf { it?.size ?: 0 }} paramBytes=${model.params.count * 4}")
             System.out.flush()
         }

@@ -126,6 +126,16 @@ gemessen gleicher Rechenzeit je Byte (±15 %) und mit festen Patches gleicher mi
 5. **Kosten:** n-Gramm-Tabelle im Speicher; zwei Modelle.
 6. **Abbruch:** Implementierung in dieser Sitzung nicht vollständig gradientengeprüft → nicht ausführen.
 
+**Präzisierung vom 22.10.2026, eingetragen vor dem ersten NF-3-Lauf** (Code `NfBlt.kt`, Gradienten- und
+Kausalitätstest bestanden):
+- lokales Byte-Modell d = 32 (Encoder- und Decoder-Block, je minGRU + MLP), globales Modell d = 64 (2 Blöcke) je Patch;
+- Entropie aus einem Byte-n-Gramm der Ordnung 4 (absolute Discounting, D = 0,75), nur aus DOC TRAIN;
+- Schwelle = Quantil der TRAIN-Entropien, sodass im Mittel jedes 3. Byte eine Grenze ist (Ziel-Patchlänge 3),
+  höchstens 16 Bytes je Patch; feste Patches: Länge 3;
+- 6 Epochen, gleicher Plan wie NF-2, Seeds 1–3; BPE-Referenzen: G-S (NF-2) und G-M (d = 64), ebenfalls 6 Epochen.
+- Rechenaufwand wird als gemessene ms/Byte (1 Thread, inkl. Patch-Berechnung) neben ms/Token × Token/Byte der
+  BPE-Modelle berichtet.
+
 ## 6. NF-4 – Ereignisgesteuerte Aktivität
 
 **Mechanismus.** Der MLP-Block nutzt ReLU mit gelernter Schwelle (Bias) und einer L1-Strafe auf die Aktivierungen

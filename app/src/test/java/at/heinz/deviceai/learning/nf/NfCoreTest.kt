@@ -50,6 +50,7 @@ class NfCoreTest {
         val r = Random(3)
         check("l2NormHeads", listOf(randomMat(r, 3, 6))) { t, n -> t.l2NormHeads(n[0], 2) }
         check("pickRows", listOf(randomMat(r, 4, 3))) { t, n -> t.pickRows(n[0], intArrayOf(3, 0, 0, 2)) }
+        check("rowConcat", listOf(randomMat(r, 1, 3), randomMat(r, 2, 3))) { t, n -> t.rowConcat(n[0], n[1]) }
         check("relu", listOf(randomMat(r, 3, 5, 1.0))) { t, n -> t.relu(n[0]) }
         check("sumScaled", listOf(randomMat(r, 2, 3))) { t, n -> t.sumScaled(n[0], .3f) }
         check("minGruScanFrom", listOf(Mat(4, 3, FloatArray(12) { r.nextFloat() }), randomMat(r, 4, 3))) { t, n ->
@@ -167,5 +168,35 @@ class NfCoreTest {
             assertEquals(a.first, b.first, 0.0)
             assertArrayEquals(a.second, b.second, 0f)
         }
+    }
+
+    @Test fun byteLatentModelHasExactGradientsAndStaysCausal() {
+        val model = NfBlt(8, 12, 4)
+        model.mats.getValue("emb").data.let { d -> for (i in d.indices) d[i] *= 25f }
+        model.mats.getValue("start").data.let { d -> for (i in d.indices) d[i] *= 25f }
+        val (ids, targets) = NfBlt.example("abcab ca")
+        val patch = NfBlt.fixedPatches(3)("abcab ca".toByteArray())
+        val grads = model.mats.mapValues { Mat(it.value.rows, it.value.cols) }
+        val tape = Tape()
+        val nodes = model.mats.mapValues { (n, m) -> tape.param(m, grads.getValue(n)) }
+        tape.backward(tape.crossEntropy(model.logits(tape, nodes, ids, patch), targets))
+        fun lossValue(): Double { val t = Tape(false); return t.crossEntropy(model.logits(t, model.frozenNodes(t), ids, patch), targets).value.data[0].toDouble() }
+        val rnd = Random(5)
+        for (name in model.mats.keys) repeat(2) {
+            val m = model.mats.getValue(name)
+            val i = if (name == "emb") ids[rnd.nextInt(ids.size)] * m.cols + rnd.nextInt(m.cols) else rnd.nextInt(m.data.size)
+            val keep = m.data[i]
+            m.data[i] = keep + 1e-2f; val up = lossValue()
+            m.data[i] = keep - 1e-2f; val down = lossValue()
+            m.data[i] = keep
+            val numeric = (up - down) / 2e-2
+            val analytic = grads.getValue(name).data[i].toDouble()
+            assertTrue("BLT $name[$i] analytic $analytic numeric $numeric", abs(numeric - analytic) <= 2e-2 * maxOf(1e-2, abs(numeric), abs(analytic)) + 2e-4)
+        }
+        // causality: changing a later byte never changes earlier predictions
+        val other = ids.copyOf().also { it[7] = 'z'.code }
+        val a = Tape(false).let { t -> model.logits(t, model.frozenNodes(t), ids, patch).value }
+        val b = Tape(false).let { t -> model.logits(t, model.frozenNodes(t), other, patch).value }
+        for (r in 0 until 7) for (c in 0 until a.cols) assertEquals("position $r", a[r, c], b[r, c], 1e-6f)
     }
 }

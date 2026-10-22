@@ -278,15 +278,17 @@ class NfAdamW(private val mats: Map<String, Mat>, private val weightDecay: Float
 }
 
 /**
- * Data-parallel trainer like LmTrainer, but only [trainable] parameters receive gradients and updates; all others are
- * tape constants (frozen base). Deterministic for a fixed thread count and batch order.
+ * Data-parallel trainer like LmTrainer for any NF network given as parameter [mats] and a [forward] that returns the
+ * logits of one example (it may add activation penalties). Only [trainable] parameters receive gradients and updates;
+ * all others are tape constants (frozen base). Deterministic for a fixed thread count and batch order.
  */
-class NfTrainer(val model: NfModel, val learningRate: Float, val weightDecay: Float, val warmup: Int, val totalSteps: Int,
-                val trainable: Set<String> = model.params.mats.keys, val clip: Float = 1f, val l1: Float = 0f,
-                threads: Int = 3) : AutoCloseable {
+class NfTrainer(val mats: LinkedHashMap<String, Mat>, val learningRate: Float, val weightDecay: Float, val warmup: Int,
+                val totalSteps: Int, val trainable: Set<String> = mats.keys, val clip: Float = 1f, val l1: Float = 0f,
+                threads: Int = 3,
+                private val forward: (Tape, Map<String, Node>, IntArray, NfState?, MutableList<Node>, Float) -> Node) : AutoCloseable {
     private val workers = threads
     private val pool: ExecutorService = Executors.newFixedThreadPool(threads) { r -> Thread(r, "nf-train").apply { isDaemon = true } }
-    private val trained = model.params.mats.filterKeys { it in trainable }
+    private val trained = mats.filterKeys { it in trainable }
     private val optimizer = NfAdamW(trained, weightDecay)
     private val buffers = List(threads) { trained.mapValues { Mat(it.value.rows, it.value.cols) } }
     val steps: Int get() = optimizer.steps
@@ -314,9 +316,9 @@ class NfTrainer(val model: NfModel, val learningRate: Float, val weightDecay: Fl
                     val (ids, targets) = batch[i]
                     if (targets.none { it >= 0 }) continue
                     val tape = Tape()
-                    val nodes = model.params.mats.mapValues { (n, m) -> buffers[w][n]?.let { g -> tape.param(m, g) } ?: tape.constant(m) }
+                    val nodes = mats.mapValues { (n, m) -> buffers[w][n]?.let { g -> tape.param(m, g) } ?: tape.constant(m) }
                     val penalty = ArrayList<Node>()
-                    val logits = model.logits(tape, nodes, ids, states?.get(i), null, penalty, l1 / totalTargets)
+                    val logits = forward(tape, nodes, ids, states?.get(i), penalty, l1 / totalTargets)
                     var loss = tape.crossEntropy(logits, targets, totalTargets)
                     sum += loss.value.data[0].toDouble() * totalTargets
                     for (pn in penalty) loss = tape.add(loss, pn)
@@ -328,12 +330,19 @@ class NfTrainer(val model: NfModel, val learningRate: Float, val weightDecay: Fl
         val total = buffers[0]
         for (w in 1 until workers) for ((n, m) in buffers[w]) { val t = total.getValue(n).data; for (i in t.indices) t[i] += m.data[i] }
         optimizer.step(total, lr ?: rate(optimizer.steps), clip)
-        check(model.params.allFinite()) { "non-finite parameter after step ${optimizer.steps}" }
+        check(mats.values.all { m -> m.data.all { it.isFinite() } }) { "non-finite parameter after step ${optimizer.steps}" }
         return losses / totalTargets
     }
 
     override fun close() { pool.shutdownNow() }
 }
+
+/** Trainer of an [NfModel] (the common case). */
+fun NfTrainer(model: NfModel, learningRate: Float, weightDecay: Float, warmup: Int, totalSteps: Int,
+              trainable: Set<String> = model.params.mats.keys, clip: Float = 1f, l1: Float = 0f, threads: Int = 3) =
+    NfTrainer(model.params.mats, learningRate, weightDecay, warmup, totalSteps, trainable, clip, l1, threads) { tape, nodes, ids, state, penalty, l1n ->
+        model.logits(tape, nodes, ids, state, null, penalty, l1n)
+    }
 
 /** Binary NF checkpoint (magic "NF1C"): configuration, tokenizer hash, metadata, parameters, SHA-256 trailer. */
 object NfCheckpoint {

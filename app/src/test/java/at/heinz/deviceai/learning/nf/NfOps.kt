@@ -234,3 +234,20 @@ fun Tape.sumScaled(x: Node, scale: Float): Node {
     }
     return node
 }
+
+/** Rows of [a] followed by the rows of [b] (same width). */
+fun Tape.rowConcat(a: Node, b: Node): Node {
+    val c = a.value.cols
+    require(b.value.cols == c)
+    val out = Mat(a.value.rows + b.value.rows, c)
+    System.arraycopy(a.value.data, 0, out.data, 0, a.value.data.size)
+    System.arraycopy(b.value.data, 0, out.data, a.value.data.size, b.value.data.size)
+    val node = Node(out, null)
+    record {
+        val g = node.grad ?: return@record
+        val ag = a.g().data; val bg = b.g().data
+        for (i in ag.indices) ag[i] += g.data[i]
+        for (i in bg.indices) bg[i] += g.data[a.value.data.size + i]
+    }
+    return node
+}
