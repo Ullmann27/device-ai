@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.text.InputType
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -71,6 +73,50 @@ class ContinuumMobileBuilderActivity : Activity() {
             column.addView(button, LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
         }
+        paragraph("EIGENER CODING-AGENT · LOKALER AUFTRAG", true)
+        paragraph("Wähle ein vorhandenes, freigegebenes JavaScript-Modul im Continuum-Checkout. " +
+            "Der Auftrag überprüft ein exportiertes Verhalten mit deinen Testfällen. " +
+            "Ein Patch wird ausschließlich zur Kontrolle erzeugt, niemals automatisch übernommen.")
+        fun codingInput(description: String): EditText = EditText(this).apply {
+            hint = description
+            inputType = InputType.TYPE_CLASS_TEXT
+            setSingleLine(true)
+            textSize = 15f
+            column.addView(this, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, px(52)))
+        }
+        val moduleInput = codingInput("Modul: .github/continuum/<name>.mjs")
+        val exportInput = codingInput("Exportierter Funktionsname")
+        val casesInput = codingInput("""JSON-Testfälle: [{"args":[5],"expected":15}]""")
+        val codingButton = Button(this).apply {
+            text = "Coding-Auftrag prüfen und starten"
+            isAllCaps = false
+            setOnClickListener {
+                val order = ContinuumMobileCodingJob.newOrder(
+                    moduleInput.text.toString().trim(),
+                    exportInput.text.toString().trim(),
+                    casesInput.text.toString().trim()
+                )
+                val problems = ContinuumMobileCodingJob.problems(order)
+                if (problems.isNotEmpty()) {
+                    status.text = problems.joinToString("\n")
+                    return@setOnClickListener
+                }
+                AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
+                    .setTitle("Eigenen Coding-Test auf dem Handy ausführen?")
+                    .setMessage("Termux prüft nur das angegebene Modul und die Testfälle. " +
+                        "Der lokale Coding-Worker kann bis zu 20 Minuten rechnen. " +
+                        "Er verändert weder den Hauptbranch noch installierte Apps oder Gewichte. " +
+                        "Auch ein erfolgreicher Patch bleibt ausschließlich ein Prüfvorschlag.")
+                    .setNegativeButton("Nicht starten", null)
+                    .setPositiveButton("Auftrag starten") { _, _ -> dispatchCoding(order) }
+                    .show()
+            }
+        }
+        column.addView(codingButton, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, px(58)))
+        paragraph("Coding-Läufe lassen sich derzeit nur über den bestehenden Termux-CLI-Abbruch " +
+            "gezielt stoppen. Bei einem offenen Auftrag startet die App keinen zweiten Auftrag.")
         val refreshButton = Button(this).apply {
             text = "Ergebnis in der App aktualisieren"
             isAllCaps = false
@@ -79,7 +125,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         column.addView(refreshButton, LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
         paragraph("Voraussetzungen: Termux mit Node.js 20+, Git, JDK 17, Gradle 8.11.1, ARM64-aapt2, SDK 36 und apksigner. In ~/.termux/termux.properties: allow-external-apps=true.")
-        paragraph("Freigabe: 'Run commands in Termux'. Es werden nur drei geprüfte Operationen gestartet; Ergebnis und Exitcode kommen über einen einmaligen Android-Rückkanal zurück.")
+        paragraph("Freigabe: 'Run commands in Termux'. Es werden nur fest freigegebene Operationen gestartet; Ergebnis und Exitcode kommen über einen einmaligen Android-Rückkanal zurück.")
         val scroll = ScrollView(this)
         scroll.addView(column)
         setContentView(scroll)
@@ -104,6 +150,25 @@ class ContinuumMobileBuilderActivity : Activity() {
     }
 
     private fun dispatch(operation: ContinuumMobileBuildPlan.Operation) {
+        val requestId = UUID.randomUUID().toString()
+        val plan = ContinuumMobileBuildPlan.command(operation)
+        dispatchApprovedCommand(operation.name, requestId, plan)
+    }
+
+    private fun dispatchCoding(order: ContinuumMobileCodingJob.Order) {
+        val problems = ContinuumMobileCodingJob.problems(order)
+        if (problems.isNotEmpty()) {
+            status.text = problems.joinToString("\n")
+            return
+        }
+        dispatchApprovedCommand("CODE_TEST", order.jobId, ContinuumMobileCodingJob.command(order))
+    }
+
+    private fun dispatchApprovedCommand(
+        operationName: String,
+        requestId: String,
+        plan: ContinuumMobileBuildPlan.Command
+    ) {
         if (checkSelfPermission(ContinuumMobileBuildPlan.TERMUX_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             status.text = "Termux-Berechtigung zunächst erlauben; dann den Auftrag erneut bestätigen."
             requestPermissions(arrayOf(ContinuumMobileBuildPlan.TERMUX_PERMISSION), 410)
@@ -138,15 +203,13 @@ class ContinuumMobileBuilderActivity : Activity() {
             }
             return
         }
-        val requestId = UUID.randomUUID().toString()
-        val plan = ContinuumMobileBuildPlan.command(operation)
         val receiverIntent = Intent(this, ContinuumMobileBuildResultReceiver::class.java).apply {
             // Keep request identity in the already populated Intent data. A
             // mutable Termux fill-in may carry the result, not replace our
             // original operation and request identity.
-            data = android.net.Uri.parse("continuum://termux-callback/${operation.name}/$requestId")
+            data = android.net.Uri.parse("continuum://termux-callback/${operationName}/$requestId")
             putExtra(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
-            putExtra(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operation.name)
+            putExtra(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operationName)
         }
         // Termux must fill the "result" Bundle; hence an explicit, mutable ONE_SHOT
         // PendingIntent to a non-exported receiver, not a mutable implicit intent.
@@ -167,7 +230,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         }
         if (!preferences.edit()
                 .putString(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
-                .putString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operation.name)
+                .putString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operationName)
                 .putLong(ContinuumMobileBuildResultReceiver.JOB_START, System.currentTimeMillis())
                 .commit()
         ) {
