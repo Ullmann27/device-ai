@@ -78,6 +78,40 @@ class ContinuumDiagnosticsTest {
         assertTrue("the package name stays readable for developers", Redaction.apply("at.heinz.deviceai.AgentActivity").contains("at.heinz.deviceai"))
     }
 
+    @Test fun malformedHistoryCannotBeSilentlyOverwritten() {
+        val directory = Files.createTempDirectory("diag-history").toFile()
+        val destination = File(directory, "issues.tsv")
+        destination.writeText("corrupt\\tentry", Charsets.UTF_8)
+        val before = destination.readBytes()
+        val diagnostics = ContinuumDiagnostics(destination, "v")
+        var rejected = false
+        try {
+            diagnostics.report("Kern", "BROKEN_CYCLE", Severity.ERROR, "Fehler", "", "prüfen")
+        } catch (_: IllegalStateException) {
+            rejected = true
+        }
+        assertTrue("corrupt original must be rejected", rejected)
+        assertTrue("original bytes must be preserved", before.contentEquals(destination.readBytes()))
+    }
+
+    @Test fun failedReplaceNeverDeletesAnExistingNonemptyDirectory() {
+        val directory = Files.createTempDirectory("diag-existing").toFile()
+        val destination = File(directory, "issues.tsv")
+        assertTrue(destination.mkdir())
+        val sentinel = File(destination, "preserve.txt")
+        sentinel.writeText("original data", Charsets.UTF_8)
+        val diagnostics = ContinuumDiagnostics(destination, "v")
+        var failed = false
+        try {
+            diagnostics.report("Kern", "SAVE_FAILED", Severity.WARNING, "Fehler", "", "prüfen")
+        } catch (_: Exception) {
+            failed = true
+        }
+        assertTrue("replacement of a directory must fail safely", failed)
+        assertTrue("existing directory must remain", destination.isDirectory)
+        assertEquals("original data", sentinel.readText(Charsets.UTF_8))
+    }
+
     @Test fun openIssuesAreOrderedBySeverityThenRecency() {
         val d = store()
         d.report("A", "INFO_ONE", Severity.INFO, "i", "", "r", 5)

@@ -125,5 +125,6 @@ test('start screen never manufactures ready model or internet state',()=>{
  assert.match(collector,/"1 Zug \(Thema\)"/);
  // the example numbers of the reference images exist only in the JVM preview sources
  assert.ok(!fs.existsSync(ui+'ReferencePreviewData.kt'));
- assert.ok(fs.existsSync('app/src/test/java/at/heinz/deviceai/ui/ReferencePreviewData.kt'));
+ assert.ok(fs.existsSync('tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/ReferencePreviewData.kt'));
+ // Offline reference data remains host-JVM-only, never compiled into the Android app.
 });

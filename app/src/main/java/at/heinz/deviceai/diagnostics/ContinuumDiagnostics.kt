@@ -109,14 +109,25 @@ class ContinuumDiagnostics(private val file: File, private val appVersion: Strin
 
     private fun load(): List<Issue> {
         if (!file.isFile) return emptyList()
-        return runCatching { file.readLines(Charsets.UTF_8).mapNotNull(::decode) }.getOrDefault(emptyList())
+        // Fail closed on read errors or malformed lines: never overwrite an
+        // existing diagnostic archive by mistaking unreadable data for no data.
+        return file.readLines(Charsets.UTF_8)
+            .filter { it.isNotBlank() }
+            .map { decode(it) ?: throw IllegalStateException("invalid diagnostics archive record") }
     }
 
     private fun save(issues: List<Issue>) {
         file.parentFile?.mkdirs()
         val tmp = File(file.parentFile, file.name + ".tmp")
         tmp.writeText(issues.joinToString("\n", postfix = "\n") { encode(it) }, Charsets.UTF_8)
-        if (!tmp.renameTo(file)) { file.delete(); check(tmp.renameTo(file)) { "diagnostics file not writable" } }
+        try {
+            java.nio.file.Files.move(tmp.toPath(), file.toPath(),
+                java.nio.file.StandardCopyOption.ATOMIC_MOVE,
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+            java.nio.file.Files.move(tmp.toPath(), file.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        }
     }
 
     private fun encode(i: Issue) = listOf(i.fingerprint, i.component, i.code, i.severity.name, i.title, i.detail, i.recommendation,
