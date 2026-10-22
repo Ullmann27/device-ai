@@ -30,11 +30,11 @@ import java.util.Locale
  * telemetry. Unknown measurements are shown explicitly as unknown.
  */
 object ContinuumBentoCockpit {
-    private const val WHITE = 0xFFF1F5FF.toInt()
-    private const val MUTED = 0xFFB1BFDC.toInt()
-    private const val CYAN = 0xFF00E5FF.toInt()
-    private const val VIOLET = 0xFFA855F7.toInt()
-    private const val AMBER = 0xFFFFC45C.toInt()
+    private val WHITE = 0xFFF1F5FF.toInt()
+    private val MUTED = 0xFFB1BFDC.toInt()
+    private val CYAN = 0xFF00E5FF.toInt()
+    private val VIOLET = 0xFFA855F7.toInt()
+    private val AMBER = 0xFFFFC45C.toInt()
 
     private fun dp(ctx: Context, amount: Float): Int =
         (amount * ctx.resources.displayMetrics.density + 0.5f).toInt()
@@ -135,7 +135,6 @@ object ContinuumBentoCockpit {
     fun show(activity: Activity, body: LinearLayout): AlertDialog {
         val scroll = ScrollView(activity).apply {
             isFillViewport = false
-            fillViewport = false
             clipToPadding = false
             addView(body)
         }
