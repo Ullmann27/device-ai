@@ -216,8 +216,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
          * within the SAME excerpt; partial prefix/suffix overlap does not suffice.
          * This is a lexical guard, not a factual guarantee. Owner memories unchanged.
          */
+        private val SOURCE_QUERY_OPERATORS=setOf("funktioniert","funktionieren","funktionierte","funktionierten","funktionierend","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","unterscheide","unterscheiden","unterscheidet","vergleiche","vergleichen","analysiere","analysieren","untersuche","untersuchen","zusammenfassen","zusammenfasst","zusammengefasst","erläutere","erläutern","erläuterst","erklärst","erklären","erkläre")
         internal fun sourceTermEvidence(query:String,text:String):Boolean {
-            val terms=contentWords(query).distinct()
+            val terms=contentWords(query).distinct().filter { it !in SOURCE_QUERY_OPERATORS }
             val anchors=terms.filter { term ->
                 term.length>=12 || (term.length>=4 &&
                     term.any(Char::isLetter) && term.any(Char::isDigit))
