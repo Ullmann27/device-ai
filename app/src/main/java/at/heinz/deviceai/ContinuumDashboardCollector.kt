@@ -183,12 +183,17 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 else -> own += size
             }
         }
-        val other = (used - own - knowledge - projects).coerceAtLeast(0L)
+        // Device-wide StatFs usage is the denominator. Only filesDir was classified above:
+        // "other" therefore contains the whole remaining occupied device filesystem
+        // (Android, other apps, caches AND any app paths outside filesDir).
+        // It must never be presented as a measured "System" size.
+        val appClassified = own + knowledge + projects
+        val other = (used - appClassified).coerceAtLeast(0L)
         Storage(ContinuumDashboardMath.usedPercent(total, stat.availableBytes), listOf(
-            ContinuumDashboardState.Segment("Eigene Daten", own, Argb.rgb(70, 110, 255)),
-            ContinuumDashboardState.Segment("Wissensquellen", knowledge, Argb.rgb(40, 220, 200)),
-            ContinuumDashboardState.Segment("Projekte", projects, Argb.rgb(190, 90, 255)),
-            ContinuumDashboardState.Segment("System", other, Argb.rgb(60, 190, 255))))
+            ContinuumDashboardState.Segment("App: eigene Dateien", own, Argb.rgb(70, 110, 255)),
+            ContinuumDashboardState.Segment("App: Wissensquellen", knowledge, Argb.rgb(40, 220, 200)),
+            ContinuumDashboardState.Segment("App: Projektdateien", projects, Argb.rgb(190, 90, 255)),
+            ContinuumDashboardState.Segment("Übrige Gerätebelegung", other, Argb.rgb(60, 190, 255))))
     }
 
     private fun sizeOf(file: File, depth: Int = 0): Long =
