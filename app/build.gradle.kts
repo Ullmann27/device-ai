@@ -44,8 +44,8 @@ android {
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
         // as an update. Main/production keeps its existing version.
-        versionCode = if (deviceAiFeaturePreview) 8 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
-        versionName = if (deviceAiFeaturePreview) "0.3.13-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        versionCode = if (deviceAiFeaturePreview) 9 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
+        versionName = if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
@@ -60,7 +60,7 @@ android {
     buildTypes {
         getByName("debug") {
             if (deviceAiFeaturePreview) {
-                applicationIdSuffix = ".featurepreview"
+                applicationIdSuffix = ".featurepreview2"
             } else if (deviceAiDesignPreview) {
                 // Fresh, independent installation; never alters owner or earlier preview data.
                 applicationIdSuffix = ".designpreview"
