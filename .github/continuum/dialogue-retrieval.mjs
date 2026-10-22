@@ -4,7 +4,7 @@
 //
 // Method selected on retrieval-benchmark.mjs DEV split, reported once on TEST
 // (docs/retrieval-benchmark.json): a memory qualifies only with real word
-// evidence (exact word, shared 5-letter prefix or trigram Dice >= 0.6) and is
+// evidence (exact word, tightly matched inflection/compound or trigram Dice >= 0.6) and is
 // ranked by TF-IDF cosine over character 3-5 grams inside content words, with
 // IDF learned from the current memory corpus. The neural similarity is still
 // computed and reported but has no weight: on the benchmark it changed the
@@ -32,7 +32,11 @@ export function wordEvidence(query,text){
   let best=0;
   for(const a of q)for(const b of t){
     if(a===b)return 1;
-    if(a.length>=5&&b.length>=5&&a.slice(0,5)===b.slice(0,5))best=Math.max(best,0.8);
+    // Alphanumeric identifiers such as Quantenkarussell987 require exact word evidence.
+    if(/[0-9]/u.test(a)||/[0-9]/u.test(b))continue;
+    const shorter=Math.min(a.length,b.length);
+    let prefix=0;while(prefix<shorter&&a[prefix]===b[prefix])prefix++;
+    if(shorter>=6&&Math.abs(a.length-b.length)<=3&&prefix>=shorter-2)best=Math.max(best,0.8);
     if(a.length>=5&&b.length>=a.length+3&&b.endsWith(a))best=Math.max(best,0.82);
     if(b.length>=5&&a.length>=b.length+3&&a.endsWith(b))best=Math.max(best,0.82);
     const A=trigrams(a),B=trigrams(b);let i=0;for(const x of A)if(B.has(x))i++;
