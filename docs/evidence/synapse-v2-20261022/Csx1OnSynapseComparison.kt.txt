@@ -1,0 +1,66 @@
+package at.heinz.deviceai.learning.span
+
+import at.heinz.deviceai.learning.synapse.SynapseV2Bench
+import at.heinz.deviceai.learning.synapse.SynapseV2Experiment
+import java.security.MessageDigest
+import java.util.Random
+
+/**
+ * Read-only CSX1 V8 comparison on the SYNAPSE v2 one-hop subset (research only, scratch build).
+ * CSX1 sources are taken unchanged from origin/opus/continuum-csx1-abstention-20261022 (4ef5717); nothing is written back.
+ *
+ * (a) "V8 frozen": trained exactly as documented (init 77, CSX1 TRAIN seed 1, 30 epochs) -> checkpoint must be 1786fa9e…;
+ *     evaluated out of domain (new relations, new forms), argmax and its CSX1-VALIDATION threshold.
+ * (b) "V8 retrained": the same V8 architecture trained on the SYNAPSE TRAIN one-hop cases with the CSX1 schedule
+ *     (rate 0.025/(1+0.05·epoch), 30 epochs; the 512-example cap of trainSession is bypassed by the identical loop),
+ *     threshold chosen on SYNAPSE VALIDATION. Gold spans CSX1 cannot represent are counted and skipped.
+ * Run: java -cp csx1cmp.jar at.heinz.deviceai.learning.span.Csx1OnSynapseComparison [validation|test]
+ */
+object Csx1OnSynapseComparison {
+    private fun sha(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
+
+    @JvmStatic fun main(args: Array<String>) {
+        val onTest = args.contains("test")
+        val v8Features = ContinuumSpanAbstentionExperiment.VARIANTS.getValue(ContinuumSpanAbstentionExperiment.VARIANTS.keys.first { it.startsWith("V8 ") })
+        val ctrain = ContinuumSpanAbstentionBench.generate(ContinuumSpanAbstentionBench.Split.TRAIN)
+        val cval = ContinuumSpanAbstentionBench.generate(ContinuumSpanAbstentionBench.Split.VALIDATION)
+        val frozen = ContinuumSpanAbstentionExperiment.train(ctrain, cval, 1L, 30) { ContinuumResidualSpanCore(77, v8Features) }
+        val checkpoint = sha(frozen.model.save())
+        println("V8 frozen checkpointSha256=$checkpoint expected=1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef " +
+            "match=${checkpoint == "1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef"} csx1Threshold=${frozen.threshold}")
+
+        val strain = SynapseV2Bench.generate(SynapseV2Bench.Split.TRAIN).filter { it.hops == 1 }
+        val sval = SynapseV2Bench.generate(SynapseV2Bench.Split.VALIDATION).filter { it.hops == 1 }
+        val evaluation = if (onTest) SynapseV2Bench.generate(SynapseV2Bench.Split.TEST).also {
+            check(SynapseV2Bench.sha256(it) == SynapseV2Bench.TEST_SHA256) { "TEST changed" }
+        }.filter { it.hops == 1 } else sval
+        val name = if (onTest) "TEST 1-hop subset" else "VALIDATION 1-hop subset"
+        fun predict(model: ContinuumResidualSpanCore, evidence: String, question: String, threshold: Double): String? =
+            runCatching { model.predict(evidence, question) }.getOrNull()?.let { if (it.answer != null && it.confidence >= threshold) it.answer else null }
+        print(SynapseV2Experiment.report("CSX1 V8 frozen (CSX1 TRAIN, out of domain) argmax ($name)", evaluation,
+            SynapseV2Experiment.Predictor { c -> predict(frozen.model, c.evidence, c.question, 0.0) }))
+        print(SynapseV2Experiment.report("CSX1 V8 frozen threshold=${frozen.threshold} from CSX1 VALIDATION ($name)", evaluation,
+            SynapseV2Experiment.Predictor { c -> predict(frozen.model, c.evidence, c.question, frozen.threshold) }, breakdown = false))
+
+        for (seed in listOf(1L, 2L, 3L)) {
+            val model = ContinuumResidualSpanCore(77, v8Features)
+            val all = strain.map { ContinuumResidualSpanCore.Example(it.evidence, it.question, it.answer) }
+            val usable = all.filter { runCatching { model.loss(it) }.isSuccess }
+            val examples = usable.shuffled(Random(seed))
+            for (epoch in 0 until 30) for (e in examples) model.train(e, 0.025 / (1.0 + 0.05 * epoch))
+            var bestT = 0.0; var bestScore = Int.MIN_VALUE
+            for (t in (0..19).map { it * 0.05 }) {
+                val tally = SynapseV2Experiment.Tally()
+                for (c in sval) tally.add(c, predict(model, c.evidence, c.question, t))
+                val score = tally.correct - 2 * (tally.wrong + tally.unsupported)
+                if (score > bestScore) { bestScore = score; bestT = t }
+            }
+            val tag = "CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=$seed usable=${usable.size}/${all.size} " +
+                "checkpoint=${sha(model.save()).take(16)}"
+            print(SynapseV2Experiment.report("$tag argmax ($name)", evaluation,
+                SynapseV2Experiment.Predictor { c -> predict(model, c.evidence, c.question, 0.0) }, breakdown = seed == 1L))
+            print(SynapseV2Experiment.report("$tag threshold=$bestT from SYNAPSE VALIDATION ($name)", evaluation,
+                SynapseV2Experiment.Predictor { c -> predict(model, c.evidence, c.question, bestT) }, breakdown = seed == 1L))
+        }
+    }
+}

@@ -39,7 +39,12 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         /** Ablation: embeddings and roles frozen at zero; only scalar feature and abstention weights learn. */
         val scalarOnly: Boolean = false,
         /** What the candidate token itself contributes (SELF role): whole word + trigrams, trigrams only, or nothing. */
-        val self: SelfFeatures = SelfFeatures.WORD_AND_TRIGRAMS
+        val self: SelfFeatures = SelfFeatures.WORD_AND_TRIGRAMS,
+        /**
+         * Siamese variant: question words and evidence fillers share ONE embedding table, so a word (or a word sharing
+         * character trigrams) in the question and in the evidence starts from the same vector.
+         */
+        val tied: Boolean = false
     ) {
         init { require(dim in 4..64 && buckets in 64..65536) }
     }
@@ -117,7 +122,7 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
     init {
         val rnd = Random(seed)
         if (!config.scalarOnly) {
-            for (i in qOffset until roleOffset) theta[i] = rnd.nextGaussian() * 0.1
+            for (i in qOffset until roleOffset) theta[i] = if (config.tied && i < fOffset) 0.0 else rnd.nextGaussian() * 0.1
             for (i in bridgeQueryOffset until scalarOffset) theta[i] = rnd.nextGaussian() * 0.1
         }
         // roles start as the identity of circular convolution (e_0): HRR starts exactly where BAG stays
@@ -129,6 +134,7 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
 
     private fun frozen(index: Int): Boolean = when {
         config.scalarOnly && index < scalarOffset -> true
+        config.tied && index < fOffset -> true // unused question table in the siamese variant
         config.binding == Binding.BAG && index in roleOffset until bridgeQueryOffset -> true
         else -> false
     }
@@ -175,7 +181,7 @@ class SynapseV2Reasoner(val config: Config, seed: Long = 20261022L) {
         val words = questionWords(question, entity)
         if (words.isEmpty()) return Bag(IntArray(0), DoubleArray(0))
         val scale = 1.0 / sqrt(words.size.toDouble())
-        return bag(words.flatMap { wordRows(it.text, qOffset, scale) })
+        return bag(words.flatMap { wordRows(it.text, if (config.tied) fOffset else qOffset, scale) })
     }
 
     private fun eligible(t: Token, anchorText: String, entity: String?): Boolean =

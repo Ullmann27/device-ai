@@ -55,6 +55,11 @@ object SynapseV2Experiment {
         val ms = (System.nanoTime() - start) / 1e6 / cases.size
         appendLine("== $name  (${"%.3f".format(ms)} ms/question, JVM x86_64, not ARM64)")
         appendLine("  ALL                  " + all.line())
+        if (cases.any { it.hops == 2 }) {
+            val oneHop = Tally()
+            for (c in cases) if (c.hops == 1) oneHop.add(c, predictor.predict(c))
+            appendLine("  1-HOP SUBSET         " + oneHop.line())
+        }
         if (breakdown) {
             for ((k, t) in byCategory) appendLine("  " + k.padEnd(21) + t.line())
             for ((k, t) in byForm) appendLine("  form " + k.padEnd(16) + t.line())
@@ -96,7 +101,12 @@ object SynapseV2Experiment {
         Variant("A4t A4 with candidate trigrams only", Config(binding = Binding.HRR, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.TRIGRAMS)),
         Variant("A4n A4 without candidate self features", Config(binding = Binding.HRR, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.NONE)),
         Variant("A4bt A4b with candidate trigrams only", Config(binding = Binding.BAG, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.TRIGRAMS)),
-        Variant("A4bn A4b without candidate self features", Config(binding = Binding.BAG, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.NONE))
+        Variant("A4bn A4b without candidate self features", Config(binding = Binding.BAG, twoHop = true, self = SynapseV2Reasoner.SelfFeatures.NONE)),
+        // cycle 3: siamese (tied) question/evidence embeddings
+        Variant("A5 A4bn with tied question/evidence embeddings", Config(binding = Binding.BAG, twoHop = true,
+            self = SynapseV2Reasoner.SelfFeatures.NONE, tied = true)),
+        Variant("A5h A4n (HRR) with tied embeddings", Config(binding = Binding.HRR, twoHop = true,
+            self = SynapseV2Reasoner.SelfFeatures.NONE, tied = true))
     )
 
     private fun sha(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
@@ -221,7 +231,13 @@ object SynapseV2Experiment {
             return
         }
         val seeds = if (quick) listOf(1L) else listOf(1L, 2L, 3L)
-        val epochs = if (quick) 8 else 25
+        val epochs = args.firstOrNull { it.startsWith("epochs=") }?.substringAfter('=')?.toInt() ?: if (quick) 8 else 25
+        val recipe = when {
+            args.contains("R2") -> Recipe("R2 nonce values + question dropout 0.15", nonce = true, questionDropout = 0.15)
+            args.contains("R1") -> Recipe("R1 nonce values", nonce = true)
+            else -> PLAIN
+        }
+        val only = args.filter { it.matches(Regex("A\\d\\w*|S")) }
         if (mode == "diagnose") {
             // VALIDATION only: why does the A4 model abstain on answerable questions?
             val pick = args.firstOrNull { it.matches(Regex("A\\d\\w*")) } ?: "A4"
@@ -256,9 +272,10 @@ object SynapseV2Experiment {
             check(SynapseV2Bench.sha256(it) == SynapseV2Bench.TEST_SHA256) { "TEST changed: ${SynapseV2Bench.sha256(it)}" }
         } else validation
         val splitName = if (mode == "final") "TEST" else "VALIDATION"
-        baselines(evaluation, splitName)
-        for (v in VARIANTS) for (seed in seeds) {
-            val t = train(v, train, validation, seed, epochs)
+        if (!args.contains("nobaselines")) baselines(evaluation, splitName)
+        println("RECIPE ${recipe.name} epochs=$epochs seeds=$seeds")
+        for (v in VARIANTS.filter { v -> only.isEmpty() || only.any { v.name.startsWith("$it ") } }) for (seed in seeds) {
+            val t = train(v, train, validation, seed, epochs, recipe)
             val tag = "${v.name} seed=$seed steps=${t.session.steps} skipped=${t.session.skipped} loss ${"%.3f".format(t.session.lossFirstEpoch)}->" +
                 "${"%.3f".format(t.session.lossLastEpoch)} params=${t.model.parameterCount} sha=${parametersSha(t.model)}"
             print(report("$tag argmax ($splitName)", evaluation, Predictor { c -> t.model.answer(c.evidence, c.question).answer }, breakdown = seed == seeds.first()))

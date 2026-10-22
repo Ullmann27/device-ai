@@ -40,6 +40,8 @@ class SynapseV2ReasonerTest {
 
     @Test fun hrrGradientsAreExact() = gradientMatches(Config(binding = Binding.HRR, twoHop = true))
     @Test fun bagGradientsAreExact() = gradientMatches(Config(binding = Binding.BAG, twoHop = true))
+    @Test fun tiedGradientsAreExact() = gradientMatches(Config(binding = Binding.BAG, twoHop = true,
+        self = SynapseV2Reasoner.SelfFeatures.NONE, tied = true))
 
     @Test fun bagNeverMovesRolesAndScalarOnlyNeverMovesEmbeddings() {
         val bag = SynapseV2Reasoner(Config(binding = Binding.BAG, twoHop = true), 3)
