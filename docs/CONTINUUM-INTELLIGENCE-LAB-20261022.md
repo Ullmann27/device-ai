@@ -18,6 +18,18 @@ Der bisherige CDX1-Gate prüft Trainings- und Audit-Cross-Entropy, aber **nicht*
 4. `gradle :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true` nur auf korrekt eingerichtetem, isoliertem Buildhost/Render-Preview und mit bisheriger Signaturprüfung.
 5. Auf Samsung bei erhaltener Installation den **aktiven Modell-Hash/Updates vor und nach** der manuellen Messung vergleichen. Keine Deinstallation; nur bestehendes signiertes Paket aktualisieren nach eigenständiger Owner-Freigabe.
 
+## Ausgeführte lokale Compiler-/Kontrollprüfungen
+
+Getestete Umgebung: Linux x86_64, OpenJDK 21, **kotlinc 1.9.0**. Beide neuen produktiven Kotlin-Module wurden aus dem Reviewbranch bytegenau lokal reproduziert; die von `git hash-object` ermittelten Git-Blob-SHAs stimmten mit GitHub überein:
+- `ContinuumIntelligenceAudit.kt`: `614d75868289e2db68feeefd9a211f9ee924b71f`
+- `ContinuumIntelligenceOnDevice.kt`: `e3b3e91c4f50802d420fd298611b1fcf8ec19545`
+
+`kotlinc ContinuumIntelligenceAudit.kt -d audit.jar` — erfolgreich.
+`kotlinc ContinuumIntelligenceAudit.kt Smoke.kt -include-runtime -d intelligence-smoke.jar` + `java -jar intelligence-smoke.jar` — erfolgreich: **sechs synthetische Evaluator-Kontrollgruppen**, darunter 20/20 Oracle-Antworten, 0/5 Halluzinationen; fünf künstliche falsche Antworten ergeben 5/5 unbelegte Behauptungen.
+`kotlinc ContinuumIntelligenceAudit.kt ContinuumIntelligenceOnDevice.kt StubCore.kt OnDeviceSmoke.kt -include-runtime -d ondevice-smoke.jar` + `java -jar ondevice-smoke.jar` — erfolgreich: **sechs isolierte Stub-Vertragsgruppen** (25 Outputs, fehlender Checkpoint, Modell-Hash-Wechsel, nicht verfügbare Inferenz, LKG-Recovery, Cancel).
+
+Dies ist echte Kotlin-Kompilation der zwei Modell-/Audit-Module und echte Laufzeitausführung der Kontrollfälle, **aber keine Ausführung der kompletten Android-Gradle-/JUnit-Suite**. `StubCore.kt` ist ein lokaler Prüf-Doppelgänger der Modell-API, nicht der private Samsung-Checkpoint. Die Android-Monitor-Activity wurde bislang nur im GitHub-Quellcode verifiziert und muss separat mit Android-SDK kompiliert werden. Weder ein realer neuronaler Qualitätsgewinn noch eine auf dem Gerät ausgeführte Inferenz ist daraus ableitbar. Die tatsächlichen JUnit-Tests im Repository sind noch auszuführen.
+
 ## Grenzen: Was die Ergebnisse nicht beweisen
 - 20 bekannte und 5 negative **autorisierte, aber synthetische** Beispiele, nicht allgemeines Sprachverständnis, neue Kenntnisse oder Coding-Intelligenz.
 - Die Positivfälle enthalten relativ einfache Fragen mit einzelner Beleginformation. Einige Werte stammen aus dem Vokabular des alten Curriculums, trotz neuer Formulierungen und Identitäten. Ein guter Score könnte teilweise Vorwissen/lexikalische Wiedererkennung statt allgemeine Transferleistung zeigen. Deshalb als nächstes wirklich andere Datendomänen und adversariale Negation/Zahlen/mehrteilige Belege unabhängig einfrieren.
