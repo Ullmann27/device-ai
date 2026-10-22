@@ -2617,13 +2617,22 @@ class AgentActivity : Activity() {
     }
 
     private fun showContinuumLearningDashboardDialog(message: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Continuum Learning Core v2")
-            .setMessage(message)
-            .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
-            .setNeutralButton("GEWICHTE / LABOR") { _, _ -> showLearningLabChoices() }
-            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
-            .show()
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "DEVICE AI · LERNSTAND", "Continuum Learning Core v2",
+            "Gesicherte Messwerte und Lernentscheidungen. Gewichte werden nur nach ausdrücklicher Auswahl geändert.")
+        panel.addView(cockpit.section(this, "LETZTER STATUS UND TRAININGSCHRONIK"), matchWidth(top = 10))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, message)
+        panel.addView(statusGrid, matchWidth(top = 4))
+        lateinit var dialog: AlertDialog
+        panel.addView(cockpit.section(this, "SICHERE AKTIONEN"), matchWidth(top = 12))
+        cockpit.grid(this, panel, listOf(
+            cockpit.action(this, "PAKET-IMPORT") { dialog.dismiss(); confirmPackageImport() },
+            cockpit.action(this, "GEWICHTE / LABOR") { dialog.dismiss(); showLearningLabChoices() },
+            cockpit.action(this, "VERSIONEN · ROLLBACK", primary = true) { dialog.dismiss(); showModelVersions() }
+        ), if (resources.configuration.screenWidthDp >= 600) 3 else 2)
+        panel.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     /** Gives the existing Learning Core dialog one entrypoint for all file and lab tasks. */
