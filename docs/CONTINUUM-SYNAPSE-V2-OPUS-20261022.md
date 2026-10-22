@@ -42,3 +42,85 @@ R7 im Einzelnen:
   - Passiv;
   - Zeitbezug „früher/heute“.
 - **Korrekt:** falsche Brücke, „niemals“ (nur weil die Regex-Wortfolge bricht), zwei Subjekte in einem Satz, kyrillisches Homoglyph-„М4“, Präfix-ID „M4“ vs. „M40“.
+
+## 3. Neuer Benchmark `SynapseV2Bench` (nur Testquellen, eingefroren)
+
+**Neues Material.** Nichts davon kommt im CSX1-TEST (`974e4ba3…`) oder in der PR-#71-DEV-Probe vor.
+- **Relationen:** Standort, Energiequelle, Sensor, Material, Betreiber, außerdem Linie als Brücke für 2-Hop-Ketten.
+- **Kennungen:** Format `XY-123`; Buchstaben und Ziffernbereiche sind je Aufteilung disjunkt. Brücken heißen `LN-123`.
+- **Werte:** je Aufteilung disjunkt, z. B. Orte auf -feld/-ingen/-bach (TRAIN), -hausen/-dorf (VALIDATION) und -stedt/-rode/-heim (TEST).
+- **Formen:** VALIDATION und TEST haben je eigene Satzfamilien und Frageformen. Jede neue TEST-Form trägt eine Markierung:
+  - `MORPH`: teilt einen Wortstamm mit TRAIN;
+  - `LEXICAL`: echtes neues Wort;
+  - `ORDER`: neue Wortstellung;
+  - `UNSEEN_CUE`: unbekanntes Negations- oder Zeitwort.
+
+| Aufteilung | Fälle | SHA-256 |
+|---|---|---|
+| TRAIN | 780 | `60d7c341…` |
+| VALIDATION | 322 | `4b9c3c1d…` |
+| **TEST (eingefroren)** | **592** | **`18640df7caf1462b405d150145cbae9a879877984f1e19d39785b0b5aee53320`** |
+
+**Kategorien:**
+- beantwortbar: Antwort, Kontrast „nicht A, sondern B“, Verneinung in fremdem Satz, mehrere Entitäten (eigene Sätze, ein Satz, gemeinsamer Wert), Zeitbezug, 2-Hop, 2-Hop mit Ablenkern;
+- unbeantwortbar: andere Relation, fremde Entität, unbekannte Relation (nur TEST), Verneinung, Verneinung mit unbekanntem Wort (nur TEST), gebrochene Brücke, widersprüchliche Kette, verneinte Brücke.
+
+**Leckagekontrolle** (`benchmark-stats.txt` und JUnit-Gate):
+- Überlappung von Entitäten und Werten zwischen allen drei Aufteilungen: **0**;
+- zurückgehaltene TEST- und VALIDATION-Vorlagen in TRAIN: **0**;
+- Wort-Trigramm-Überlappung der Belegtexte mit TRAIN: VALIDATION 4 %, TEST 3 %.
+
+**Ehrlicher Vermerk zum Einfrieren:**
+- Der TEST war zuerst unter `c565a541…` eingefroren.
+- VALIDATION zeigte dann einen Generatorfehler, der alle Aufteilungen betraf: Satzform und Frageform wurden zyklisch so gekoppelt, dass z. B. „befindet sich“ in TRAIN nie mit „Wo steht“ vorkam.
+- Der Generator wurde korrigiert und der TEST einmalig neu eingefroren (`18640df7…`). **Zu diesem Zeitpunkt hatte kein Modell den TEST gesehen.**
+- Das alte VALIDATION-Protokoll liegt als `cycle1-…-OBSOLETE-pairing-bug.txt` bei.
+
+## 4. Modelle (`SynapseV2Reasoner`, Hauptquelle, nur JVM und Schatten)
+
+**Gelernt** (Softmax über alle Belegtokens plus „Enthalten“, exakte analytische Gradienten):
+- gehashte Wort- und Zeichen-Trigramm-Einbettungen für Fragewörter (Q) und Belegfüller (F);
+- Rollenvektoren, die jeden Füller über exakte zirkuläre Faltung an seine Position relativ zum Kandidaten binden (HRR). Bei BAG ist jede Rolle die Identität;
+- zwei Sonderfüller, die die gefragte Entität von jeder anderen Kennung trennen;
+- Brückenvektor und Skalargewichte für 2-Hop, Enthaltungsgewichte.
+
+Die Gradienten sind gegen finite Differenzen geprüft (HRR, BAG, gebundene Einbettungen).
+
+**Fest und offengelegt:**
+- Tokenisierung, Satz- und Teilsatzgrenzen, Kennungsform, Kandidatenbildung;
+- eine kleine grammatische Stoppwortliste, nur aus dem TRAIN-Vokabular;
+- Entscheidungsregeln, die auf VALIDATION gewählt werden: Schwelle und Konfliktverhältnis;
+- der **strukturelle Beweis**:
+  - exakter Token an geprüften UTF-16-Offsets;
+  - SHA-256 des Belegtexts;
+  - 1-Hop: Der Antwortsatz nennt die gefragte Entität;
+  - 2-Hop: Die Brückenkennung steht wörtlich in zwei verschiedenen Sätzen.
+
+Ein Score kann damit keinen Text außerhalb des Belegs ausgeben. Der Beweis prüft **Quelltreue und Kettenintegrität, nicht die Wahrheit**.
+
+| Variante | Beschreibung |
+|---|---|
+| A0 | v1-Beweiskern aus PR #71 (nur Regeln) |
+| A0b | Oberflächenheuristik: letztes Inhaltswort im Satz der Entität |
+| U | A4-Architektur untrainiert (3 Initialisierungen) |
+| A1 | bilinear, Bag ohne Bindung, nur 1-Hop |
+| A2 | HRR-Rollenbindung, nur 1-Hop |
+| A3 | A2 + Sinkhorn-Wettbewerb der Entitäten (nur Inferenz) |
+| A4 | A2 + gelernte, beweisgebundene 2-Hop-Ketten |
+| A4b, A4bn, A4n, A4t, A4bt | Bindungs- und Kandidatenmerkmal-Ablationen (b = Bag, n = ohne, t = nur Trigramme) |
+| S | nur Skalarmerkmale (Einbettungen eingefroren auf 0) |
+| A5, A5h | gebundene („siamesische“) Frage- und Beleg-Einbettungen (Bag bzw. HRR) |
+
+Modellgröße: A4 hat 65.753 Parameter (2 × 2.048 Buckets × 16 Dimensionen + Rollen und Skalare).
+Zum Vergleich: CSX1 hat 4.110 Parameter, PR-#71-Probe 4.096.
+
+## 5. Protokoll
+
+- **Training:**
+  - nur TRAIN;
+  - 3 Initialisierungen bzw. Datenreihenfolgen (Seeds 1, 2, 3);
+  - SGD, Lernrate 0,05, L2 1e-5 auf berührten Zeilen.
+- **Auswahl** von Epochen, Rezept, Variante, Schwelle und Konfliktverhältnis: **nur auf VALIDATION**.
+  Kriterium: richtig − 2 × (falsche Antwort + unbelegte Antwort).
+- **TEST:** wird erst danach **einmal** für alle Varianten gemessen; der Kandidat ist vorher festgelegt.
+- **Zeitmessung:** ms je Frage auf JVM x86_64, nicht ARM64.
