@@ -149,6 +149,13 @@ Flag bleibt standardmäßig aus; der Code bleibt als geprüfte, darstellungssich
 Nebenbefund (nur beobachtet, nicht ausgewählt, weil auf TEST gesehen): V8 mit den zusätzlichen harten Negativen
 der `multiword`-Daten hatte 4 statt 6 unbelegte Antworten – Kandidat bleibt dennoch der in Zyklus 4 gewählte V8.
 
+## Meilenstein I1 – zertifizierte Enthaltung (Learn-then-Test)
+
+Eigenes Dokument: `docs/CONTINUUM-INTELLIGENCE-MILESTONE-I1-20261022.md`. Es enthält die Recherche mit Quellen, die
+Kritik am Versuchsaufbau, das Verfahren und die Ergebnisse. Kurz: Der Kandidat V8 erhält eine wählbare Fehlergrenze α
+mit Garantie. Bei α = 0,02 gibt er auf TEST 3/264 falsche Antworten (argmax: 16/264), bei 96 % Präzision und
+78 statt 99 richtigen Antworten. Die Garantie wurde auf einem Holdout und mit 200 Neuaufteilungen geprüft.
+
 ## Gesamtvergleich auf dem eingefrorenen TEST (argmax, 3 Seeds, gleiche TRAIN-/Trainingsbedingungen)
 
 | Variante | richtig /124 | unbelegt /140 | falsche Spanne | Fallen /202 | Teilsatzbindung | Verneinung unbelegt /28 | ungesehene Formen |
@@ -192,13 +199,15 @@ java -cp csx1.jar:junit-4.13.2.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitC
   at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest \
   at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest \
   at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest \
-  at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest            # OK (12 tests)
+  at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest \
+  at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest            # OK (16 tests)
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment cycle1      # Zyklus 1, TEST
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment select V2 V6 V8   # nur VALIDATION
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment final V8    # eingefrorener TEST
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment diagnose V8 # Gewichte, PR61-DEV
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment select multiword V8 V9  # Zyklus 5
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment final multiword V8 V9   # einmal TEST
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment certify   # Meilenstein I1
 ```
 Status: `SOURCE_INTEGRATED`, `JVM_TESTED` (kotlinc 2.0.20, JDK 21, Linux x86_64). Android-Gradle/APK/Gerät:
 `UNAVAILABLE` (kein SDK). Keine Android-Integration vorgenommen (Gates verlangen vorher Besitzerkontrolle).

@@ -132,6 +132,26 @@ object ContinuumSpanAbstentionExperiment {
                     "answered=${it.calibrationAnswered} p=${"%.4f".format(it.pValue)}" } ?: "NONE (always abstain)"))
             policies["certified alpha=$alpha"] = { c -> ContinuumCertifiedAbstention.answer(prediction(c), certificate) }
         }
+        // Guarantee check over many re-splits: 40 further draws, 200 random 20/20 splits at draw level (cases inside a
+        // draw share entities, so whole draws are exchanged). Violation = holdout error rate above alpha.
+        val blocks = (20..59).map { i -> ContinuumSpanAbstentionBench.generate(Split.VALIDATION, seed = 90_000_000L + i).map { c ->
+            val p = t.model.predict(c.example.evidence, c.example.question)
+            ContinuumCertifiedAbstention.Outcome(p.answer != null, p.confidence, p.answer == c.example.answer) } }
+        val splitter = Random(20261022L)
+        for (alpha in listOf(0.10, 0.05, 0.02)) {
+            var violations = 0; var none = 0; var holdoutRisk = 0.0
+            repeat(200) {
+                val order = blocks.indices.shuffled(splitter)
+                val cal = order.take(20).flatMap { blocks[it] }; val hold = order.drop(20).flatMap { blocks[it] }
+                val cert = ContinuumCertifiedAbstention.calibrate(modelSha, cal, alpha, delta = 0.1)
+                if (cert == null) none++
+                val risk = hold.count { cert != null && it.answered && it.confidence >= cert.threshold && !it.correct }.toDouble() / hold.size
+                holdoutRisk += risk
+                if (risk > alpha) violations++
+            }
+            println("GUARANTEE alpha=$alpha delta=0.1 resplits=200 violations=$violations (${"%.3f".format(violations / 200.0)}) " +
+                "noCertificate=$none meanHoldoutErrorRate=${"%.4f".format(holdoutRisk / 200)}")
+        }
         for ((name, policy) in policies) {
             println("== $name")
             println("  HOLDOUT       " + riskLine(holdout, policy))
