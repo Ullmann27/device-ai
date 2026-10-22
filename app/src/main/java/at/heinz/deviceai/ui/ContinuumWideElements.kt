@@ -167,7 +167,7 @@ class WideLearningCardElement(textScale: Float = 1f) : ContinuumElement(textScal
             ContinuumIcons.draw(p, if (up) Icon.ARROW_UP else Icon.CHEVRON_DOWN, 219f, 50.2f, 8.5f, Fill.Solid(color), 1.3f)
             p.drawText(label, 226.5f, 53.6f, t(500, 9.07f), Fill.Solid(color))
         }
-        WaveChart.draw(p, 13f, 60f, 256f, 107f, l.series)
+        WaveChart.draw(p, 13f, 60f, 256f, 107f, l.series, phase = motionPhase)
         val ys = floatArrayOf(122f, 138.3f, 155.2f, 172f)
         if (l.recent.isEmpty()) p.drawText("Heute noch keine Lernereignisse.", 13f, 124f, t(400, 8.04f), Fill.Solid(ContinuumTheme.TEXT_MUTED))
         for ((i, e) in l.recent.take(4).withIndex()) {
