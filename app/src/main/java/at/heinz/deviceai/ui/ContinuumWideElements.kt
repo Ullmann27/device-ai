@@ -161,7 +161,7 @@ class WideLearningCardElement(textScale: Float = 1f) : ContinuumElement(textScal
         p.drawText("heute", lx, 66.6f, t(400, 9.03f), Fill.Solid(Argb.rgb(200, 210, 228)))
         l.changePercent?.let { change ->
             val up = change >= 0
-            val color = if (up) ContinuumTheme.RED else ContinuumTheme.GREEN
+            val color = if (change > 0) ContinuumTheme.GREEN else if (change < 0) ContinuumTheme.RED else ContinuumTheme.TEXT_MUTED
             val label = (if (up) "+" else "") + change + "%"
             p.fillRoundRect(210f, 42f, 256f, 58.4f, 6f, Fill.Solid(Argb.withAlpha(color, .16f)))
             ContinuumIcons.draw(p, if (up) Icon.ARROW_UP else Icon.CHEVRON_DOWN, 219f, 50.2f, 8.5f, Fill.Solid(color), 1.3f)
@@ -196,7 +196,7 @@ class WideStorageCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         val ys = floatArrayOf(54.5f, 80.5f, 106.5f, 131.2f)
         for ((i, seg) in st.segments.take(4).withIndex()) {
             p.fillCircle(120f, ys[i] - 3.6f, 3.6f, Fill.Solid(seg.color))
-            p.drawText(ContinuumSurfaces.fit(p, seg.label, t(400, 8.6f), w - 136f), 129.9f, ys[i], t(400, 8.6f), Fill.Solid(Argb.rgb(205, 214, 232)))
+            p.drawText(ContinuumSurfaces.fit(p, ContinuumDashboardState.compactStorageLabel(seg.label), t(400, 8.6f), w - 136f), 129.9f, ys[i], t(400, 8.6f), Fill.Solid(Argb.rgb(205, 214, 232)))
             p.drawText(ContinuumDashboardState.bytes(seg.bytes), 129.9f, ys[i] + 10.6f, t(400, 8.2f), Fill.Solid(Argb.rgb(150, 160, 190)))
         }
         p.drawLine(12f, 147.4f, w - 12f, 147.4f, .7f, Fill.Solid(ContinuumTheme.CARD_DIVIDER))

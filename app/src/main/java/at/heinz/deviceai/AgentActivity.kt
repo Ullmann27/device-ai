@@ -175,7 +175,7 @@ class AgentActivity : Activity() {
     private lateinit var localBadge: TextView
     // views of the open model center (null while it is closed)
     private var modelCardText: TextView? = null
-    private var localActionButton: Button? = null
+    private var localActionButton: TextView? = null
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
     private var installedModels: List<ImportedLocalModel> = emptyList()
@@ -1123,40 +1123,46 @@ class AgentActivity : Activity() {
         experimental: List<CenterAction> = emptyList()
     ) {
         centerDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 78), Color.rgb(13, 24, 45),
-                22, Color.rgb(58, 107, 180))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
+        box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, "Status wird gelesen …")
+        box.addView(statusGrid, matchWidth(top = 3))
+        if (title == "Systemstatus") {
+            box.addView(cockpit.section(this, "HARDWARE · LETZTER DASHBOARD-MESSSTAND"),
+                matchWidth(top = 10))
+            val systemSnapshot = homeView?.state?.system
+                ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
+            box.addView(at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot),
+                matchWidth(top = 3))
+            box.addView(textView(
+                "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
+                10f, MUTED), matchWidth(top = 1))
         }
-        box.addView(textView("DEVICE AI · DEIN BEREICH", 11f, CYAN, true))
-        box.addView(textView(title, 21f, TEXT, true), matchWidth(top = 6))
-        box.addView(textView(intro, 13.3f, Color.rgb(203, 219, 239)), matchWidth(top = 9))
-        val statusView = textView("Status wird gelesen …", 12.5f, TEXT).apply {
-            background = rounded(Color.rgb(12, 26, 48), 14, Color.rgb(59, 96, 148))
-            setPadding(dp(12), dp(12), dp(12), dp(12))
-            setTextIsSelectable(true)
-        }
-        box.addView(statusView, matchWidth(top = 12))
         lateinit var dialog: AlertDialog
-        fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
-            setOnClickListener { dialog.dismiss(); action.run() }
-        }
-        actions.forEach { box.addView(button(it), matchWidth(top = 8)) }
+        fun makeAction(action: CenterAction): View =
+            cockpit.action(this, action.label, primary = action.accent,
+                critical = action.label.contains("LÖSCHEN", ignoreCase = true)) {
+                dialog.dismiss()
+                action.run()
+            }
+        box.addView(cockpit.section(this, "FUNKTIONEN · WÄHLE EIN WERKZEUG"), matchWidth(top = 9))
+        cockpit.grid(this, box, actions.map(::makeAction),
+            if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         if (experimental.isNotEmpty()) {
-            box.addView(textView("EXPERIMENTELL · nur Messungen; nichts davon wird in den aktiven Lernstand übernommen",
-                11f, AMBER, true), matchWidth(top = 16))
-            experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
+            box.addView(cockpit.section(this, "FORSCHUNG · EXPERIMENTELL, KEINE AUTOMATISCHE ÜBERNAHME"),
+                matchWidth(top = 10))
+            cockpit.grid(this, box, experimental.map(::makeAction),
+                if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         }
-        dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
+        dialog = cockpit.show(this, box)
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
         centerDialog = dialog
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        status { text -> if (dialog.isShowing) statusView.text = text }
+        status { value ->
+            if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
+        }
     }
 
     /**
@@ -2622,13 +2628,22 @@ class AgentActivity : Activity() {
     }
 
     private fun showContinuumLearningDashboardDialog(message: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Continuum Learning Core v2")
-            .setMessage(message)
-            .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
-            .setNeutralButton("GEWICHTE / LABOR") { _, _ -> showLearningLabChoices() }
-            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
-            .show()
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "DEVICE AI · LERNSTAND", "Continuum Learning Core v2",
+            "Gesicherte Messwerte und Lernentscheidungen. Gewichte werden nur nach ausdrücklicher Auswahl geändert.")
+        panel.addView(cockpit.section(this, "LETZTER STATUS UND TRAININGSCHRONIK"), matchWidth(top = 10))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, message)
+        panel.addView(statusGrid, matchWidth(top = 4))
+        lateinit var dialog: AlertDialog
+        panel.addView(cockpit.section(this, "SICHERE AKTIONEN"), matchWidth(top = 12))
+        cockpit.grid(this, panel, listOf(
+            cockpit.action(this, "PAKET-IMPORT") { dialog.dismiss(); confirmPackageImport() },
+            cockpit.action(this, "GEWICHTE / LABOR") { dialog.dismiss(); showLearningLabChoices() },
+            cockpit.action(this, "VERSIONEN · ROLLBACK", primary = true) { dialog.dismiss(); showModelVersions() }
+        ), if (resources.configuration.screenWidthDp >= 600) 3 else 2)
+        panel.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     /** Gives the existing Learning Core dialog one entrypoint for all file and lab tasks. */
@@ -3036,53 +3051,30 @@ class AgentActivity : Activity() {
      */
     private fun showModelCenter() {
         modelCenterDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
-                22, Color.rgb(56, 117, 193))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
-        box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
-        box.addView(textView(
-            "Für vollständig lokale natürliche Gespräche und Entwicklungsentwürfe brauchst du " +
-                "eine kompatible LiteRT-LM-Modelldatei. Der eigene Lernkern arbeitet auch ohne " +
-                "Sprachmodell. Der optionale Groq-Mentor kann getrennt davon einzelne Fragen " +
-                "beantworten: nur über dein Backend, mit Gerätefreigabe und ausdrücklicher " +
-                "Bestätigung jeder externen Frage. Er installiert kein lokales Modell.",
-            13f, MUTED), matchWidth(top = 10))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · MODELLE", "KI-Sprachmodell",
+            "Lokale Sprachmodelle sind optional. SWB1 und bestätigte Erinnerungen funktionieren ohne importiertes Modell. " +
+                "Externe Groq-Anfragen benötigen weiterhin jede separate Gerätefreigabe.")
+        box.addView(cockpit.section(this, "LOKALER SPRACHKERN · TATSÄCHLICHER LADESTATUS"), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
             setPadding(dp(13), dp(12), dp(13), dp(12))
             setTextIsSelectable(true)
         }
         box.addView(card, matchWidth(top = 14))
-        box.addView(textView("SCHRITT 1 · Modelldatei auswählen", 11.5f, CYAN, true),
-            matchWidth(top = 16))
-        box.addView(actionButton("MODELLDATEI IMPORTIEREN", accent = true).apply {
-            setOnClickListener { showModelImportDialog() }
-        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply {
-            topMargin = dp(7)
-        })
-        box.addView(textView("SCHRITT 2 · Modell auf dem Gerät starten", 11.5f, CYAN, true),
-            matchWidth(top = 14))
-        val action = actionButton("MODELL LADEN").apply {
-            setOnClickListener {
-                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
-            }
+        box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
+            showModelImportDialog()
         }
-        box.addView(action, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply { topMargin = dp(7) })
-        box.addView(textView(
-            "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
-                "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
-            12.5f, MUTED), matchWidth(top = 11))
-        box.addView(actionButton("GROQ-MENTOR · EXTERNE FRAGE (OPTIONAL)").apply {
-            setOnClickListener {
-                modelCenterDialog?.dismiss()
-                showGroqMentorDialog()
-            }
-        }, matchWidth(top = 12))
+        val action = cockpit.action(this, "2 · MODELL LADEN") {
+            if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+        }
+        cockpit.grid(this, box, listOf(importButton, action), 2)
+        box.addView(cockpit.section(this, "OPTIONAL · NUR NACH AUSDRÜCKLICHER FREIGABE"), matchWidth(top = 10))
+        box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
+            modelCenterDialog?.dismiss()
+            showGroqMentorDialog()
+        }, matchWidth(top = 5))
 
         val advanced = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -3125,10 +3117,8 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 16))
         box.addView(advanced, matchWidth(top = 8))
 
-        val dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { modelCenterDialog?.dismiss() }, matchWidth(top = 12))
+        val dialog = cockpit.show(this, box)
         dialog.setOnDismissListener {
             if (modelCenterDialog === dialog) {
                 modelCenterDialog = null
@@ -3139,8 +3129,6 @@ class AgentActivity : Activity() {
         modelCenterDialog = dialog
         modelCardText = card
         localActionButton = action
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         reloadInstalledModels()
         onLearningIo({
             val core = ContinuumLearningCore(filesDir)
@@ -4188,25 +4176,30 @@ class AgentActivity : Activity() {
                 }.show()
             return
         }
-        val choices = arrayOf(
-            "QUICK · Websuche und Wikipedia-Fallback · bis 15 Sekunden",
-            "STANDARD · mehr Quellen · bis 45 Sekunden",
-            "DEEP · Gegenbelege · bis 90 Sekunden"
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "RESEARCH · OPT-IN",
+            "WEB RECHERCHE", "Suchmodus auswählen. Jeder Lauf respektiert Internetfreigaben, Quellenbelege und deine Kontrolle.")
+        panel.addView(cockpit.section(this, "PRÜFTIEFE · MAXIMALE SUCHDAUER"), matchWidth(top = 10))
+        lateinit var dialog: AlertDialog
+        val labels = listOf(
+            "QUICK · bis 15 Sek.\nWebsuche mit Wikipedia-Fallback",
+            "STANDARD · bis 45 Sek.\nMehrere unabhängige Quellen und Belegprüfung",
+            "DEEP · bis 90 Sek.\nGegenbelege und dokumentierte Quellenkonflikte"
         )
-        // IMPORTANT: Never combine setMessage() with setItems() in a platform
-        // AlertDialog. The message panel hides the item list on Android/Fold.
-        // The next dialog contains the privacy explanation and search input.
-        AlertDialog.Builder(this)
-            .setTitle("WEB RECHERCHE · Suchmodus auswählen")
-            .setItems(choices) { _, index ->
+        val actions = labels.mapIndexed { index, label ->
+            cockpit.action(this, label, primary = index == 1) {
+                dialog.dismiss()
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
                 onLearningIo({
                     val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
-                    runCatching { checkpointStore.load() }.getOrNull() to runCatching { checkpointStore.loadDossier() }.getOrNull()
+                    runCatching { checkpointStore.load() }.getOrNull() to
+                        runCatching { checkpointStore.loadDossier() }.getOrNull()
                 }) { result -> offerResearchResume(result.getOrDefault(null to null)) }
             }
-            .setNegativeButton("Abbrechen", null)
-            .show()
+        }
+        cockpit.grid(this, panel, actions, if (resources.configuration.screenWidthDp >= 600) 3 else 1)
+        panel.addView(cockpit.action(this, "ABBRECHEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     private fun offerResearchResume(state: Pair<at.heinz.deviceai.cognitive.ResearchRunCheckpoint?, at.heinz.deviceai.cognitive.ResearchDossier?>) {
