@@ -136,9 +136,8 @@ class ContinuumMemoryDialogueTest {
             "Quantenkarussell987",records).isEmpty())
         assertTrue(ContinuumMemoryDialogue.rank(fixture(),
             "Was weißt du über Quantenkarussell987?",records).isEmpty())
-        assertTrue(ContinuumMemoryDialogue.wordEvidence(
-            "Quantenkarussell987", "Quantitative Statistik und Quantenmechanik") <
-            ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Quantenkarussell987", "Quantitative Statistik und Quantenmechanik"))
     }
 
     @Test fun exactGermanTechnicalTermKeepsItsSourceWithoutOtherErrorTexts() {
@@ -162,8 +161,8 @@ class ContinuumMemoryDialogueTest {
         assertEquals(1,hits.size)
         assertEquals(title,hits.single().text)
         assertEquals(1.0,ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",title),0.0)
-        assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",unrelated) <
-            ContinuumMemoryDialogue.EVIDENCE_THRESHOLD)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",unrelated))
         assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",vagueCompound)>=0.82)
         assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
             "Fehlerrückführung",vagueCompound))
