@@ -1,0 +1,21 @@
+R1 role=e_1 unbinding equals cyclic shift: max |difference| = 0.0
+R2 trainPair update vs finite differences: max error 7.877e-11 over 2800 parameters
+R3 occupancy 74/128 and 84/128, shared 60, jaccard 0.61
+R3 occupancy 62/128 and 64/128, shared 43, jaccard 0.52
+R3 occupancy 98/128 and 95/128, shared 83, jaccard 0.75
+R4 identifier erasure: |score(asked R10 clause) - score(other R99 clause)| = 0.0
+R5 parameters clamped at +-2 after 4000 updates with lr 0.5: 0
+R6 Sinkhorn: shared value: row R2 -> Nord 0.500 vs S?d 0.500 (raw prefers Nord 0.900); tie stays 0.50/0.50 (no decision)
+R7 wrong bridge                                     expected=ABSTAIN got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> OK
+R7 negation 'nie' (not in veto list)                expected=ABSTAIN got=Helium (TWO_HOP) -> UNSUPPORTED_ANSWER
+R7 negation 'niemals'                               expected=ABSTAIN got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> OK
+R7 prefix 'Falsch:'                                 expected=ABSTAIN got=Helium (TWO_HOP) -> UNSUPPORTED_ANSWER
+R7 negated question                                 expected=ABSTAIN got=Helium (TWO_HOP) -> UNSUPPORTED_ANSWER
+R7 module location asked, robot location given      expected=ABSTAIN got=Wien (DIRECT) -> UNSUPPORTED_ANSWER
+R7 unrelated negation vetoes a valid answer         expected=Wien got=ABSTAIN (ABSTAIN_NEGATION) -> UNJUSTIFIED_ABSTENTION
+R7 same-clause chain                                expected=Helium got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> UNJUSTIFIED_ABSTENTION
+R7 passive voice                                    expected=Helium got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> UNJUSTIFIED_ABSTENTION
+R7 two subjects, one clause                         expected=Neon got=Neon (TWO_HOP) -> OK
+R7 temporal: fr?her                                 expected=Neon got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> UNJUSTIFIED_ABSTENTION
+R7 homoglyph module id (Cyrillic ?)                 expected=ABSTAIN got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> OK
+R7 prefix id M4 vs M40                              expected=ABSTAIN got=ABSTAIN (ABSTAIN_NO_EVIDENCE) -> OK

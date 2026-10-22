@@ -1,0 +1,68 @@
+V8 frozen checkpointSha256=1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef expected=1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef match=true csx1Threshold=0.4
+== CSX1 V8 frozen (CSX1 TRAIN, out of domain) argmax (VALIDATION 1-hop subset)  (0.465 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 42/148 [22–36%], wrong 8, unjustified abstain 98 | abstained 112/114, unsupported 2 [0–6%] | coverage 20%, errors 10/262
+  ANSWER               correct 14/60 [14–35%], wrong 2, unjustified abstain 44 | abstained 0/0, unsupported 0 | coverage 27%, errors 2/60
+  CONTRAST             correct 7/18 [20–61%], wrong 1, unjustified abstain 10 | abstained 0/0, unsupported 0 | coverage 44%, errors 1/18
+  MULTI_ENTITY         correct 4/18 [9–45%], wrong 2, unjustified abstain 12 | abstained 0/0, unsupported 0 | coverage 33%, errors 2/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 58/60, unsupported 2 [1–11%] | coverage 3%, errors 2/60
+  SAME_CLAUSE_ENTITIES correct 5/18 [12–51%], wrong 0, unjustified abstain 13 | abstained 0/0, unsupported 0 | coverage 28%, errors 0/18
+  SHARED_VALUE         correct 2/12 [5–45%], wrong 0, unjustified abstain 10 | abstained 0/0, unsupported 0 | coverage 17%, errors 0/12
+  TEMPORAL             correct 6/10 [31–83%], wrong 3, unjustified abstain 1 | abstained 0/0, unsupported 0 | coverage 90%, errors 3/10
+  UNRELATED_NEGATION   correct 4/12 [14–61%], wrong 0, unjustified abstain 8 | abstained 0/0, unsupported 0 | coverage 33%, errors 0/12
+  form NEW_BOTH        correct 5/9 [27–81%], wrong 0, unjustified abstain 4 | abstained 6/7, unsupported 1 [3–51%] | coverage 38%, errors 1/16
+  form NEW_EVIDENCE    correct 0/23 [0–14%], wrong 0, unjustified abstain 23 | abstained 15/15, unsupported 0 [0–20%] | coverage 0%, errors 0/38
+  form NEW_QUESTION    correct 2/33 [2–20%], wrong 3, unjustified abstain 28 | abstained 28/29, unsupported 1 [1–17%] | coverage 10%, errors 4/62
+  form SEEN            correct 35/83 [32–53%], wrong 5, unjustified abstain 43 | abstained 63/63, unsupported 0 [0–6%] | coverage 27%, errors 5/146
+  tag SEEN                           correct 35/83 [32–53%], wrong 5, unjustified abstain 43 | abstained 63/63, unsupported 0 [0–6%] | coverage 27%, errors 5/146
+  tag VALIDATION_ONLY                correct 2/56 [1–12%], wrong 3, unjustified abstain 51 | abstained 43/44, unsupported 1 [0–12%] | coverage 6%, errors 4/100
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 5/9 [27–81%], wrong 0, unjustified abstain 4 | abstained 6/7, unsupported 1 [3–51%] | coverage 38%, errors 1/16
+== CSX1 V8 frozen threshold=0.4 from CSX1 VALIDATION (VALIDATION 1-hop subset)  (0.375 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 39/148 [20–34%], wrong 6, unjustified abstain 103 | abstained 112/114, unsupported 2 [0–6%] | coverage 18%, errors 8/262
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=1 usable=600/636 checkpoint=801efe72129a66dd argmax (VALIDATION 1-hop subset)  (0.105 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 93/148 [55–70%], wrong 7, unjustified abstain 48 | abstained 104/114, unsupported 10 [5–15%] | coverage 42%, errors 17/262
+  ANSWER               correct 36/60 [47–71%], wrong 0, unjustified abstain 24 | abstained 0/0, unsupported 0 | coverage 60%, errors 0/60
+  CONTRAST             correct 16/18 [67–97%], wrong 2, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 2/18
+  MULTI_ENTITY         correct 11/18 [39–80%], wrong 0, unjustified abstain 7 | abstained 0/0, unsupported 0 | coverage 61%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 50/60, unsupported 10 [9–28%] | coverage 17%, errors 10/60
+  SAME_CLAUSE_ENTITIES correct 11/18 [39–80%], wrong 0, unjustified abstain 7 | abstained 0/0, unsupported 0 | coverage 61%, errors 0/18
+  SHARED_VALUE         correct 5/12 [19–68%], wrong 0, unjustified abstain 7 | abstained 0/0, unsupported 0 | coverage 42%, errors 0/12
+  TEMPORAL             correct 5/10 [24–76%], wrong 5, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 5/10
+  UNRELATED_NEGATION   correct 9/12 [47–91%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 75%, errors 0/12
+  form NEW_BOTH        correct 2/9 [6–55%], wrong 0, unjustified abstain 7 | abstained 6/7, unsupported 1 [3–51%] | coverage 19%, errors 1/16
+  form NEW_EVIDENCE    correct 11/23 [29–67%], wrong 0, unjustified abstain 12 | abstained 13/15, unsupported 2 [4–38%] | coverage 34%, errors 2/38
+  form NEW_QUESTION    correct 10/33 [17–47%], wrong 1, unjustified abstain 22 | abstained 29/29, unsupported 0 [0–12%] | coverage 18%, errors 1/62
+  form SEEN            correct 70/83 [75–91%], wrong 6, unjustified abstain 7 | abstained 56/63, unsupported 7 [5–21%] | coverage 57%, errors 13/146
+  tag SEEN                           correct 70/83 [75–91%], wrong 6, unjustified abstain 7 | abstained 56/63, unsupported 7 [5–21%] | coverage 57%, errors 13/146
+  tag VALIDATION_ONLY                correct 21/56 [26–51%], wrong 1, unjustified abstain 34 | abstained 42/44, unsupported 2 [1–15%] | coverage 24%, errors 3/100
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 2/9 [6–55%], wrong 0, unjustified abstain 7 | abstained 6/7, unsupported 1 [3–51%] | coverage 19%, errors 1/16
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=1 usable=600/636 checkpoint=801efe72129a66dd threshold=0.5 from SYNAPSE VALIDATION (VALIDATION 1-hop subset)  (0.102 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 90/148 [53–68%], wrong 7, unjustified abstain 51 | abstained 108/114, unsupported 6 [2–11%] | coverage 39%, errors 13/262
+  ANSWER               correct 36/60 [47–71%], wrong 0, unjustified abstain 24 | abstained 0/0, unsupported 0 | coverage 60%, errors 0/60
+  CONTRAST             correct 16/18 [67–97%], wrong 2, unjustified abstain 0 | abstained 0/0, unsupported 0 | coverage 100%, errors 2/18
+  MULTI_ENTITY         correct 11/18 [39–80%], wrong 0, unjustified abstain 7 | abstained 0/0, unsupported 0 | coverage 61%, errors 0/18
+  NEGATED              correct 0/0, wrong 0, unjustified abstain 0 | abstained 30/30, unsupported 0 [0–11%] | coverage 0%, errors 0/30
+  OTHER_ENTITY         correct 0/0, wrong 0, unjustified abstain 0 | abstained 24/24, unsupported 0 [0–14%] | coverage 0%, errors 0/24
+  OTHER_RELATION       correct 0/0, wrong 0, unjustified abstain 0 | abstained 54/60, unsupported 6 [5–20%] | coverage 10%, errors 6/60
+  SAME_CLAUSE_ENTITIES correct 10/18 [34–75%], wrong 0, unjustified abstain 8 | abstained 0/0, unsupported 0 | coverage 56%, errors 0/18
+  SHARED_VALUE         correct 5/12 [19–68%], wrong 0, unjustified abstain 7 | abstained 0/0, unsupported 0 | coverage 42%, errors 0/12
+  TEMPORAL             correct 3/10 [11–60%], wrong 5, unjustified abstain 2 | abstained 0/0, unsupported 0 | coverage 80%, errors 5/10
+  UNRELATED_NEGATION   correct 9/12 [47–91%], wrong 0, unjustified abstain 3 | abstained 0/0, unsupported 0 | coverage 75%, errors 0/12
+  form NEW_BOTH        correct 2/9 [6–55%], wrong 0, unjustified abstain 7 | abstained 7/7, unsupported 0 [0–35%] | coverage 13%, errors 0/16
+  form NEW_EVIDENCE    correct 11/23 [29–67%], wrong 0, unjustified abstain 12 | abstained 14/15, unsupported 1 [1–30%] | coverage 32%, errors 1/38
+  form NEW_QUESTION    correct 10/33 [17–47%], wrong 1, unjustified abstain 22 | abstained 29/29, unsupported 0 [0–12%] | coverage 18%, errors 1/62
+  form SEEN            correct 67/83 [71–88%], wrong 6, unjustified abstain 10 | abstained 58/63, unsupported 5 [3–17%] | coverage 53%, errors 11/146
+  tag SEEN                           correct 67/83 [71–88%], wrong 6, unjustified abstain 10 | abstained 58/63, unsupported 5 [3–17%] | coverage 53%, errors 11/146
+  tag VALIDATION_ONLY                correct 21/56 [26–51%], wrong 1, unjustified abstain 34 | abstained 43/44, unsupported 1 [0–12%] | coverage 23%, errors 2/100
+  tag VALIDATION_ONLY|VALIDATION_ONL correct 2/9 [6–55%], wrong 0, unjustified abstain 7 | abstained 7/7, unsupported 0 [0–35%] | coverage 13%, errors 0/16
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=2 usable=600/636 checkpoint=dc199bff0e55a4c2 argmax (VALIDATION 1-hop subset)  (0.099 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 89/148 [52–68%], wrong 7, unjustified abstain 52 | abstained 104/114, unsupported 10 [5–15%] | coverage 40%, errors 17/262
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=2 usable=600/636 checkpoint=dc199bff0e55a4c2 threshold=0.6000000000000001 from SYNAPSE VALIDATION (VALIDATION 1-hop subset)  (0.103 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 79/148 [45–61%], wrong 7, unjustified abstain 62 | abstained 110/114, unsupported 4 [1–9%] | coverage 34%, errors 11/262
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=3 usable=600/636 checkpoint=5bb78582d82702aa argmax (VALIDATION 1-hop subset)  (0.104 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 95/148 [56–71%], wrong 7, unjustified abstain 46 | abstained 100/114, unsupported 14 [7–20%] | coverage 44%, errors 21/262
+== CSX1 V8 architecture retrained on SYNAPSE TRAIN 1-hop seed=3 usable=600/636 checkpoint=5bb78582d82702aa threshold=0.65 from SYNAPSE VALIDATION (VALIDATION 1-hop subset)  (0.110 ms/question, JVM x86_64, not ARM64)
+  ALL                  correct 85/148 [49–65%], wrong 6, unjustified abstain 57 | abstained 109/114, unsupported 5 [2–10%] | coverage 37%, errors 11/262

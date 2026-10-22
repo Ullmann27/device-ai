@@ -1,0 +1,3 @@
+SYNAPSE_DEV_ONLY seed=47 updates=1080 before=1/4 after=4/4
+SYNAPSE_DEV_ONLY seed=99 updates=1080 before=1/4 after=4/4
+SYNAPSE_DEV_ONLY seed=20261022 updates=1080 before=4/4 after=4/4
