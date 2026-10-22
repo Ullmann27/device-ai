@@ -4192,25 +4192,30 @@ class AgentActivity : Activity() {
                 }.show()
             return
         }
-        val choices = arrayOf(
-            "QUICK · Websuche und Wikipedia-Fallback · bis 15 Sekunden",
-            "STANDARD · mehr Quellen · bis 45 Sekunden",
-            "DEEP · Gegenbelege · bis 90 Sekunden"
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "RESEARCH · OPT-IN",
+            "WEB RECHERCHE", "Suchmodus auswählen. Jeder Lauf respektiert Internetfreigaben, Quellenbelege und deine Kontrolle.")
+        panel.addView(cockpit.section(this, "PRÜFTIEFE · MAXIMALE SUCHDAUER"), matchWidth(top = 10))
+        lateinit var dialog: AlertDialog
+        val labels = listOf(
+            "QUICK · bis 15 Sek.\nWebsuche mit Wikipedia-Fallback",
+            "STANDARD · bis 45 Sek.\nMehrere unabhängige Quellen und Belegprüfung",
+            "DEEP · bis 90 Sek.\nGegenbelege und dokumentierte Quellenkonflikte"
         )
-        // IMPORTANT: Never combine setMessage() with setItems() in a platform
-        // AlertDialog. The message panel hides the item list on Android/Fold.
-        // The next dialog contains the privacy explanation and search input.
-        AlertDialog.Builder(this)
-            .setTitle("WEB RECHERCHE · Suchmodus auswählen")
-            .setItems(choices) { _, index ->
+        val actions = labels.mapIndexed { index, label ->
+            cockpit.action(this, label, primary = index == 1) {
+                dialog.dismiss()
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
                 onLearningIo({
                     val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
-                    runCatching { checkpointStore.load() }.getOrNull() to runCatching { checkpointStore.loadDossier() }.getOrNull()
+                    runCatching { checkpointStore.load() }.getOrNull() to
+                        runCatching { checkpointStore.loadDossier() }.getOrNull()
                 }) { result -> offerResearchResume(result.getOrDefault(null to null)) }
             }
-            .setNegativeButton("Abbrechen", null)
-            .show()
+        }
+        cockpit.grid(this, panel, actions, if (resources.configuration.screenWidthDp >= 600) 3 else 1)
+        panel.addView(cockpit.action(this, "ABBRECHEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     private fun offerResearchResume(state: Pair<at.heinz.deviceai.cognitive.ResearchRunCheckpoint?, at.heinz.deviceai.cognitive.ResearchDossier?>) {
