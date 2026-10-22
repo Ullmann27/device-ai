@@ -15,6 +15,10 @@ import android.os.Looper
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
+import at.heinz.deviceai.learning.ContinuumIntelligenceAudit
+import at.heinz.deviceai.learning.ContinuumLearningCore
+import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
 import android.widget.ScrollView
 import android.widget.TextView
 import at.heinz.deviceai.learning.ContinuumAutonomousScheduler
@@ -36,6 +40,9 @@ class ContinuumTrainingMonitorActivity : Activity() {
     private lateinit var offlineCard: TextView
     private lateinit var cdxCard: TextView
     private lateinit var evidenceCard: TextView
+    private lateinit var intelligenceCard: TextView
+    private val intelligenceBusy = AtomicBoolean(false)
+    private val intelligenceCancelled = AtomicBoolean(false)
     private var visible = false
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density + 0.5f).toInt()
@@ -108,6 +115,22 @@ class ContinuumTrainingMonitorActivity : Activity() {
         offlineCard = addCard(content)
         cdxCard = addCard(content)
         evidenceCard = addCard(content)
+        intelligenceCard = addCard(content).apply {
+            text = "INTELLIGENZ-LAB · NOCH NICHT GEMESSEN\n" +
+                "Nur der vorhandene CDX1-Checkpoint wird auf 20 neue Fragen " +
+                "und 5 Fragen ohne Beleg geprüft. Keine Gewichte werden verändert."
+        }
+        content.addView(label("◇  INTELLIGENZ JETZT PRÜFEN · NUR LESEN", 14f,
+            Color.rgb(118, 221, 255), true).apply {
+            setPadding(dp(14), dp(18), dp(14), dp(18))
+            background = panel(Color.rgb(19, 44, 78))
+            isClickable = true
+            isFocusable = true
+            contentDescription = "CDX1 auf unbekannte Fragen prüfen, ohne Training"
+            setOnClickListener { startIntelligenceAudit() }
+        }, LinearLayout.LayoutParams(-1, -2).apply {
+            topMargin = dp(11)
+        })
         if (android.os.Build.VERSION.SDK_INT >= 33) {
             val granted = checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -153,9 +176,40 @@ class ContinuumTrainingMonitorActivity : Activity() {
     }
 
     override fun onPause() {
+        intelligenceCancelled.set(true)
         visible = false
         handler.removeCallbacks(tick)
         super.onPause()
+    }
+
+    private fun startIntelligenceAudit() {
+        if (!intelligenceBusy.compareAndSet(false, true)) return
+        intelligenceCancelled.set(false)
+        intelligenceCard.text = "INTELLIGENZ-LAB · MISST ECHTE CDX1-ANTWORTEN\n" +
+            "25 feste Forschungsfälle, keine Modelländerung und keine automatische Freigabe."
+        val appContext = applicationContext
+        val weakActivity = WeakReference(this)
+        val cancel = intelligenceCancelled
+        val ui = Handler(Looper.getMainLooper())
+        Thread({
+            val result = runCatching {
+                ContinuumLearningCore(appContext.filesDir).intelligenceAudit {
+                    cancel.get() || Thread.currentThread().isInterrupted
+                }
+            }.getOrElse {
+                ContinuumIntelligenceAudit.unavailable("UNAVAILABLE_NO_INFERENCE")
+            }
+            ui.post {
+                val activity = weakActivity.get()
+                if (activity != null && !activity.isFinishing && !activity.isDestroyed) {
+                    activity.intelligenceBusy.set(false)
+                    activity.intelligenceCard.text = result.summary()
+                }
+            }
+        }, "continuum-intelligence-readonly").apply {
+            isDaemon = true
+            start()
+        }
     }
 
     private fun stateLine(channel: String, name: String): String {
