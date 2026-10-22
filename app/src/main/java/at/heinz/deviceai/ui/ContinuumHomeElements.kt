@@ -113,6 +113,10 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         p.drawLine(divider, 16f, divider, 76f, .8f, solid(ContinuumTheme.CARD_DIVIDER))
         val x0 = divider + 16f
         p.drawText("Leistung", x0, 24f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))
+        // 24-hour change of the measured quality (owner request); declines are shown just as clearly as gains.
+        val delta = m.qualityDelta24h
+        p.drawText(ContinuumDashboardState.delta24h(delta), x0 + 38f, 24f, t(500, 7.4f), solid(when {
+            delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))
         drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), x0 + 113f, 43.9f, t(500, 12.36f), solid(ContinuumTheme.CYAN_SOFT))
         p.drawText("Reaktionszeit", x0, 61f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))
@@ -126,6 +130,7 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
 
     override fun describe(s: ContinuumDashboardState) = with(s.model) {
         "Modellstatus: $name, $stateLabel. Leistung ${ContinuumDashboardState.percent(qualityPercent)}, " +
+            "${ContinuumDashboardState.delta24h(qualityDelta24h)}, " +
             "Reaktionszeit ${ContinuumDashboardState.millis(latencyMs)}, Kontextfenster ${context ?: "unbekannt"}."
     }
 

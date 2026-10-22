@@ -25,6 +25,8 @@ data class ContinuumDashboardState(
         val stateLabel: String = "Offline",
         /** Measured quality in percent (holdout accuracy of the learning core); null = not measured. */
         val qualityPercent: Int? = null,
+        /** Change of [qualityPercent] against the measurement 24 h ago, in percentage points; null = no 24-h history yet. */
+        val qualityDelta24h: Int? = null,
         /** Median of the measured response times of the last chat answers; null = no answer measured yet. */
         val latencyMs: Int? = null,
         /** Real context capacity of the answering core, e.g. "8 Züge"; null = unknown. */
@@ -105,6 +107,14 @@ data class ContinuumDashboardState(
         const val UNKNOWN = "—"
 
         fun percent(value: Int?): String = value?.let { "$it%" } ?: UNKNOWN
+
+        /** "24 h: +3 Pkt.", "24 h: −2 Pkt.", "24 h: unverändert" or "24 h: noch kein Vergleich" – also shows declines. */
+        fun delta24h(value: Int?): String = when {
+            value == null -> "24 h: noch kein Vergleich"
+            value > 0 -> "24 h: +$value Pkt."
+            value < 0 -> "24 h: −${-value} Pkt."
+            else -> "24 h: unverändert"
+        }
         fun count(value: Int?): String = value?.toString() ?: UNKNOWN
         fun millis(value: Int?): String = value?.let { "$it ms" } ?: UNKNOWN
 

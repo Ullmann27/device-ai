@@ -820,6 +820,12 @@ class ContinuumLearningCore(
             semanticBefore,semanticAfter,emptyList(),reason)
     }
 
+    /** Metadata of every stored experience (type, provenance, creation time) for the start-screen statistics.
+     * Read-only and content-free: no text of owner facts or sources leaves the core through this call. */
+    fun experienceTimeline():List<Triple<LearningExperienceType,LearningProvenance,Long>> = synchronized(CORE_LOCK) {
+        store.all().map { Triple(it.type,it.provenance,it.createdAt) }
+    }
+
     /** Most recent training/import/rollback decisions (newest first) with their measurements. */
     fun trainingAudits(limit:Int=8):List<String> = synchronized(CORE_LOCK) {
         require(limit in 1..64)

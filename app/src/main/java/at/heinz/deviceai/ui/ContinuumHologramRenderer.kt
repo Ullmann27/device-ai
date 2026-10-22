@@ -92,6 +92,10 @@ class ContinuumHologramRenderer {
     private lateinit var wall: Fill
     private lateinit var rimLight: Fill
     private lateinit var floorGlow: Fill
+    private lateinit var padCore: Fill
+    private lateinit var contactGlow: Fill
+    private var orbitFills: List<Fill> = emptyList()
+    private var floorFills: List<Fill> = emptyList()
     private lateinit var brandFill: Fill
     private lateinit var taglineFill: Fill
 
@@ -175,6 +179,15 @@ class ContinuumHologramRenderer {
             floatArrayOf(0f, .35f, .65f, 1f))
         floorGlow = Fill.Radial(cx, flangeTopY + r * .02f, r * 2.2f,
             intArrayOf(Argb.of(90, 40, 120, 240), Argb.of(35, 30, 70, 180), 0), floatArrayOf(0f, .45f, 1f))
+        padCore = Fill.Radial(cx, padY, r * .32f, intArrayOf(Argb.of(255, 250, 255, 255), Argb.of(0, 160, 230, 255)))
+        contactGlow = Fill.Radial(cx, padY - r * .05f, r * .78f, intArrayOf(Argb.of(235, 225, 250, 255), Argb.of(150, 90, 200, 255),
+            Argb.of(0, 40, 120, 255)), floatArrayOf(0f, .35f, 1f))
+        orbitFills = orbits.map { o -> Fill.Linear(cx - r * o.a, cy, cx + r * o.a, cy, o.colors) }
+        floorFills = (0..3).map { i ->
+            val rx = r * (1.72f + i * .2f)
+            val color = if (i % 2 == 0) Argb.rgb(60, 180, 255) else Argb.rgb(140, 110, 255)
+            Fill.Linear(cx - rx, 0f, cx + rx, 0f, intArrayOf(color, Argb.rgb(40, 90, 200), Argb.rgb(190, 90, 240)))
+        }
         brandFill = Fill.Solid(Argb.rgb(222, 232, 248))
         taglineFill = Fill.Solid(Argb.rgb(178, 194, 222))
     }
@@ -191,9 +204,7 @@ class ContinuumHologramRenderer {
         drawSphere(p, f)
         drawOrbits(p, f, front = true)
         val contactY = padY - r * .05f
-        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f,
-            Fill.Radial(cx, contactY, r * .78f, intArrayOf(Argb.of(235, 225, 250, 255), Argb.of(150, 90, 200, 255), Argb.of(0, 40, 120, 255)),
-                floatArrayOf(0f, .35f, 1f)), .85f + f.energy * .15f)
+        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, .85f + f.energy * .15f)
         drawSparkles(p, f)
         if (showBrand) drawBrand(p)
     }
@@ -217,7 +228,7 @@ class ContinuumHologramRenderer {
             val color = when (s.tint) { 0 -> Argb.rgb(150, 210, 255); 1 -> Argb.rgb(110, 160, 255); else -> Argb.rgb(205, 160, 255) }
             p.fillCircle(x, y, s.size * .6f, Fill.Solid(color), twinkle * .9f)
             if (s.flare) {
-                p.fillCircle(x, y, 2.8f, Fill.Radial(x, y, 2.8f, intArrayOf(Argb.withAlpha(color, .5f), 0)), twinkle)
+                glow(p, x, y, 2.8f, Argb.withAlpha(color, .5f), twinkle)
                 p.drawLine(x - 3.6f, y, x + 3.6f, y, .35f, Fill.Solid(color), twinkle * .75f)
                 p.drawLine(x, y - 3.6f, x, y + 3.6f, .35f, Fill.Solid(color), twinkle * .75f)
             }
@@ -229,8 +240,7 @@ class ContinuumHologramRenderer {
         for (i in 0..3) {
             val rx = r * (1.72f + i * .2f); val ry = r * (.25f + i * .045f) * geometry.flat
             val color = if (i % 2 == 0) Argb.rgb(60, 180, 255) else Argb.rgb(140, 110, 255)
-            p.strokeOval(cx - rx, y - ry, cx + rx, y + ry, .7f * scale, Fill.Linear(cx - rx, 0f, cx + rx, 0f,
-                intArrayOf(color, Argb.rgb(40, 90, 200), Argb.rgb(190, 90, 240))), .5f - i * .1f)
+            p.strokeOval(cx - rx, y - ry, cx + rx, y + ry, .7f * scale, floorFills[i], .5f - i * .1f)
         }
         val rx = r * 1.72f; val ry = r * .25f * geometry.flat
         p.strokeArc(cx - rx, y - ry, cx + rx, y + ry, 15f + f.phase * 12f, 60f, 1.1f * scale,
@@ -248,7 +258,7 @@ class ContinuumHologramRenderer {
         val topY = padY
         p.fillOval(cx - r * .86f, topY - r * .118f, cx + r * .86f, topY + r * .118f, padGlow, 1f)
         p.fillOval(cx - r * .32f, topY - r * .05f, cx + r * .32f, topY + r * .05f,
-            Fill.Radial(cx, topY, r * .32f, intArrayOf(Argb.of(255, 250, 255, 255), Argb.of(0, 160, 230, 255))), glow)
+            padCore, glow)
         for (i in 1..4) {
             val rx = r * (.9f - i * .16f); val ry = r * (.112f - i * .02f)
             p.strokeOval(cx - rx, topY - ry, cx + rx, topY + ry, .7f * scale, Fill.Solid(Argb.rgb(200, 248, 255)), (.75f - i * .12f) * glow)
@@ -284,7 +294,7 @@ class ContinuumHologramRenderer {
             val wobble = sin(f.phase * .35f + i * 1.7f) * 2f
             p.save()
             p.rotate(o.tilt + wobble, cx, cy)
-            val fill = Fill.Linear(cx - a, cy, cx + a, cy, o.colors)
+            val fill = orbitFills[i]
             val start = if (front) 0f else 180f
             val k = if (front) 1f else .55f
             val wd = o.width * scale
@@ -355,7 +365,7 @@ class ContinuumHologramRenderer {
             p.fillCircle(x, y, d.size * scale, Fill.Solid(color), .5f + twinkle * .5f)
             if (i % 17 == 0) {
                 val g = 3.4f * scale
-                p.fillCircle(x, y, g, Fill.Radial(x, y, g, intArrayOf(Argb.withAlpha(color, .5f), 0)), twinkle)
+                glow(p, x, y, g, Argb.withAlpha(color, .5f), twinkle)
             }
         }
     }
@@ -412,7 +422,7 @@ class ContinuumHologramRenderer {
             p.fillCircle(sx, sy, (.5f + depth * .8f) * scale, Fill.Solid(color), (.2f + depth * .8f) * density)
             if (depth > .65f && i % 2 == 0) {
                 val g = 3.6f * scale
-                p.fillCircle(sx, sy, g, Fill.Radial(sx, sy, g, intArrayOf(Argb.withAlpha(color, .6f), 0)), density)
+                glow(p, sx, sy, g, Argb.withAlpha(color, .6f), density)
             }
         }
     }
@@ -510,7 +520,7 @@ class ContinuumHologramRenderer {
             val x = cx + spots[i * 2] * r; val y = cy + spots[i * 2 + 1] * r
             val pulse = .6f + .4f * sin(f.phase * (1.1f + i * .2f) + i * 1.3f)
             val size = r * (.03f + (i % 2) * .018f) * (1f + f.energy * .4f)
-            p.fillCircle(x, y, size * 3.6f, Fill.Radial(x, y, size * 3.6f, intArrayOf(Argb.of(170, 175, 232, 255), 0)), pulse)
+            glow(p, x, y, size * 3.6f, Argb.of(170, 175, 232, 255), pulse)
             p.drawLine(x - size * 3.2f, y, x + size * 3.2f, y, max(.4f, size * .16f), Fill.Solid(Argb.rgb(235, 250, 255)), pulse * .8f)
             p.drawLine(x, y - size * 3.2f, x, y + size * 3.2f, max(.4f, size * .16f), Fill.Solid(Argb.rgb(235, 250, 255)), pulse * .8f)
             p.fillCircle(x, y, size * .6f, Fill.Solid(Argb.rgb(248, 253, 255)), pulse)
@@ -536,6 +546,17 @@ class ContinuumHologramRenderer {
                 x += len + gap
             }
         }
+    }
+
+    private val unitGlows = HashMap<Int, Fill>()
+
+    /** Soft round glow: one cached unit-radius gradient per colour, positioned by transform (no per-frame allocation). */
+    private fun glow(p: ContinuumPainter, x: Float, y: Float, radius: Float, color: Int, alpha: Float) {
+        if (alpha <= 0f || radius <= 0f) return
+        val fill = unitGlows.getOrPut(color) { Fill.Radial(0f, 0f, 1f, intArrayOf(color, Argb.withAlpha(color, 0f))) }
+        p.save(); p.translate(x, y); p.scale(radius, radius)
+        p.fillCircle(0f, 0f, 1f, fill, alpha)
+        p.restore()
     }
 
     val sphereCenterY: Float get() = cy

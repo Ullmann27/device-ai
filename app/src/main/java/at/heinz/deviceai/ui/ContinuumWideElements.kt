@@ -117,6 +117,9 @@ class WideModelCardElement(textScale: Float = 1f) : ContinuumElement(textScale) 
         p.drawText("Leistung", 12.3f, 90.3f, t(400, 9.09f), Fill.Solid(Argb.rgb(205, 214, 232)))
         ModelStatusCardElement.drawSegmentBar(p, 65f, 83.8f, 189.6f, 91.6f, m.qualityPercent)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), w - 16.2f, 86f, t(500, 17.71f), Fill.Solid(ContinuumTheme.CYAN_SOFT), TextAlign.RIGHT)
+        val delta = m.qualityDelta24h
+        p.drawText(ContinuumDashboardState.delta24h(delta), 65f, 100.5f, t(500, 7.6f), Fill.Solid(when {
+            delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))
         p.drawLine(11f, 104f, w - 11f, 104f, .7f, Fill.Solid(ContinuumTheme.CARD_DIVIDER))
         val rows = listOf(
             Triple(Icon.CPU, "Modus", m.mode),
