@@ -598,7 +598,8 @@ class AgentActivity : Activity() {
             openHomeSlot(slot, x, y)
         }
         val windowWidth = resources.configuration.screenWidthDp.toFloat()
-        home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f)
+        home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f,
+            windowHeightDp = resources.configuration.screenHeightDp.toFloat())
         homeView = home
         dashboard.addView(home, matchWidth())
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
@@ -688,7 +689,8 @@ class AgentActivity : Activity() {
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element,
+            resources.configuration.screenWidthDp / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
@@ -968,7 +970,7 @@ class AgentActivity : Activity() {
         val u = resources.configuration.screenWidthDp / 412f
         val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, u) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
