@@ -39,6 +39,23 @@ class ContinuumHologramRenderer {
         }
     }
 
+    /**
+     * Vertical composition in units of the sphere radius, measured from the two references:
+     * phone (412 x 307 dp box) and Fold (410 x 291 dp box, compressed pedestal, no page marks).
+     */
+    data class Geometry(val centerY: Float, val radiusOfWidth: Float, val radiusOfHeight: Float, val pad: Float,
+                        val wall: Float, val brand: Float, val tagline: Float, val marks: Float?, val flat: Float = 1f) {
+        companion object {
+            val PHONE = Geometry(centerY = .381f, radiusOfWidth = .2455f, radiusOfHeight = .329f, pad = 1.11f,
+                wall = .33f, brand = 1.545f, tagline = 1.685f, marks = 1.795f)
+            val FOLD = Geometry(centerY = .495f, radiusOfWidth = .2366f, radiusOfHeight = .3334f, pad = .99f,
+                wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null, flat = .62f)
+        }
+    }
+
+    var geometry: Geometry = Geometry.PHONE
+        set(value) { field = value; w = 0f; h = 0f }
+
     /** Draw the "CONTINUUM / INTELLIGENCE LIVES ON" line and page marks below the pedestal. */
     var showBrand = true
     var pageCount = 3
@@ -50,6 +67,10 @@ class ContinuumHologramRenderer {
     private var cy = 0f
     private var r = 0f
     private var scale = 1f
+    private val padY get() = cy + r * geometry.pad
+    private val baseTopY get() = cy + r * (geometry.pad + .06f)
+    private val flangeTopY get() = cy + r * (geometry.pad + .06f + geometry.wall)
+    private val floorY get() = cy + r * (geometry.pad + .13f + geometry.wall)
 
     private lateinit var backdrop: Fill
     private lateinit var rays: Fill
@@ -102,9 +123,9 @@ class ContinuumHologramRenderer {
     fun layout(width: Float, height: Float) {
         if (width == w && height == h) return
         w = width; h = height
-        r = min(width * .2455f, height * .329f)
+        r = min(width * geometry.radiusOfWidth, height * geometry.radiusOfHeight)
         cx = width / 2f
-        cy = height * .381f
+        cy = height * geometry.centerY
         scale = r / 101f
         backdrop = Fill.Radial(cx, cy + r * .15f, r * 2.1f,
             intArrayOf(Argb.of(175, 24, 70, 175), Argb.of(110, 14, 46, 128), Argb.of(40, 8, 24, 70), 0),
@@ -137,12 +158,12 @@ class ContinuumHologramRenderer {
             intArrayOf(Argb.rgb(120, 230, 255), Argb.rgb(150, 170, 255), Argb.rgb(200, 140, 255)))
         infinityGlow = Fill.Radial(cx, cy + r * .1f, r * .5f,
             intArrayOf(Argb.of(150, 110, 150, 255), Argb.of(60, 100, 110, 255), 0), floatArrayOf(0f, .5f, 1f))
-        beam = Fill.Linear(0f, cy - r, 0f, cy + r * 1.13f,
+        beam = Fill.Linear(0f, cy - r, 0f, padY + r * .02f,
             intArrayOf(Argb.of(0, 170, 235, 255), Argb.of(150, 170, 235, 255), Argb.of(255, 220, 250, 255)), floatArrayOf(0f, .55f, 1f))
-        padGlow = Fill.Radial(cx, cy + r * 1.11f, r * .8f,
+        padGlow = Fill.Radial(cx, padY, r * .8f,
             intArrayOf(Argb.of(255, 230, 252, 255), Argb.of(245, 110, 220, 255), Argb.of(200, 30, 130, 245), Argb.of(0, 20, 80, 200)),
             floatArrayOf(0f, .18f, .55f, 1f))
-        padFace = Fill.Radial(cx, cy + r * 1.13f, r * 1.0f,
+        padFace = Fill.Radial(cx, padY + r * .02f, r * 1.0f,
             intArrayOf(Argb.rgb(40, 120, 230), Argb.rgb(14, 42, 104), Argb.rgb(10, 24, 62)), floatArrayOf(0f, .6f, 1f))
         baseFace = Fill.Linear(cx - r * 1.45f, 0f, cx + r * 1.45f, 0f,
             intArrayOf(Argb.rgb(14, 34, 80), Argb.rgb(6, 12, 34), Argb.rgb(7, 12, 36), Argb.rgb(30, 22, 74)))
@@ -152,7 +173,7 @@ class ContinuumHologramRenderer {
         rimLight = Fill.Linear(cx - r * 1.55f, 0f, cx + r * 1.55f, 0f,
             intArrayOf(Argb.rgb(60, 205, 255), Argb.rgb(70, 160, 255), Argb.rgb(120, 140, 255), Argb.rgb(210, 100, 240)),
             floatArrayOf(0f, .35f, .65f, 1f))
-        floorGlow = Fill.Radial(cx, cy + r * 1.52f, r * 2.2f,
+        floorGlow = Fill.Radial(cx, flangeTopY + r * .02f, r * 2.2f,
             intArrayOf(Argb.of(90, 40, 120, 240), Argb.of(35, 30, 70, 180), 0), floatArrayOf(0f, .45f, 1f))
         brandFill = Fill.Solid(Argb.rgb(222, 232, 248))
         taglineFill = Fill.Solid(Argb.rgb(178, 194, 222))
@@ -163,13 +184,13 @@ class ContinuumHologramRenderer {
         p.fillRect(0f, 0f, w, h, backdrop)
         drawRays(p, f)
         drawStars(p, f)
-        p.fillOval(cx - r * 2.2f, cy + r * 1.2f, cx + r * 2.2f, cy + r * 1.85f, floorGlow)
+        p.fillOval(cx - r * 2.2f, flangeTopY - r * .3f, cx + r * 2.2f, flangeTopY + r * .35f, floorGlow)
         drawFloor(p, f)
         drawPedestal(p, f)
         drawOrbits(p, f, front = false)
         drawSphere(p, f)
         drawOrbits(p, f, front = true)
-        val contactY = cy + r * 1.06f
+        val contactY = padY - r * .05f
         p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f,
             Fill.Radial(cx, contactY, r * .78f, intArrayOf(Argb.of(235, 225, 250, 255), Argb.of(150, 90, 200, 255), Argb.of(0, 40, 120, 255)),
                 floatArrayOf(0f, .35f, 1f)), .85f + f.energy * .15f)
@@ -204,14 +225,14 @@ class ContinuumHologramRenderer {
     }
 
     private fun drawFloor(p: ContinuumPainter, f: Frame) {
-        val y = cy + r * 1.57f
+        val y = floorY
         for (i in 0..3) {
-            val rx = r * (1.72f + i * .2f); val ry = r * (.25f + i * .045f)
+            val rx = r * (1.72f + i * .2f); val ry = r * (.25f + i * .045f) * geometry.flat
             val color = if (i % 2 == 0) Argb.rgb(60, 180, 255) else Argb.rgb(140, 110, 255)
             p.strokeOval(cx - rx, y - ry, cx + rx, y + ry, .7f * scale, Fill.Linear(cx - rx, 0f, cx + rx, 0f,
                 intArrayOf(color, Argb.rgb(40, 90, 200), Argb.rgb(190, 90, 240))), .5f - i * .1f)
         }
-        val rx = r * 1.72f; val ry = r * .25f
+        val rx = r * 1.72f; val ry = r * .25f * geometry.flat
         p.strokeArc(cx - rx, y - ry, cx + rx, y + ry, 15f + f.phase * 12f, 60f, 1.1f * scale,
             Fill.Solid(Argb.rgb(150, 230, 255)), .55f)
     }
@@ -219,12 +240,12 @@ class ContinuumHologramRenderer {
     private fun drawPedestal(p: ContinuumPainter, f: Frame) {
         val glow = .8f + f.energy * .2f
         // Flange (widest, bottom)
-        drawTier(p, rx = r * 1.56f, ry = r * .2f, topY = cy + r * 1.5f, height = r * .06f, face = baseFace, rimAlpha = .8f * glow)
+        drawTier(p, rx = r * 1.56f, ry = r * .2f * geometry.flat, topY = flangeTopY, height = r * .06f, face = baseFace, rimAlpha = .8f * glow)
         // Base cylinder
-        drawTier(p, rx = r * 1.43f, ry = r * .17f, topY = cy + r * 1.17f, height = r * .33f, face = baseFace, rimAlpha = .95f * glow)
+        drawTier(p, rx = r * 1.43f, ry = r * .17f * geometry.flat, topY = baseTopY, height = r * geometry.wall, face = baseFace, rimAlpha = .95f * glow)
         // Raised platform with the glowing projection surface
-        drawTier(p, rx = r * .97f, ry = r * .125f, topY = cy + r * 1.11f, height = r * .07f, face = padFace, rimAlpha = 1f * glow)
-        val topY = cy + r * 1.11f
+        drawTier(p, rx = r * .97f, ry = r * .125f * geometry.flat, topY = padY, height = r * .07f, face = padFace, rimAlpha = 1f * glow)
+        val topY = padY
         p.fillOval(cx - r * .86f, topY - r * .118f, cx + r * .86f, topY + r * .118f, padGlow, 1f)
         p.fillOval(cx - r * .32f, topY - r * .05f, cx + r * .32f, topY + r * .05f,
             Fill.Radial(cx, topY, r * .32f, intArrayOf(Argb.of(255, 250, 255, 255), Argb.of(0, 160, 230, 255))), glow)
@@ -296,10 +317,10 @@ class ContinuumHologramRenderer {
             val x0 = cx + t * r * .5f
             val x1 = cx + t * r * .16f
             val alpha = (.22f - abs(t) * .1f) * (.8f + .2f * sin(f.phase * .9f + i))
-            p.drawLine(x0, cy + r * 1.06f, x1, cy + r * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
+            p.drawLine(x0, padY - r * .05f, x1, cy + r * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
         }
-        p.drawLine(cx, cy - r * .98f, cx, cy + r * 1.1f, 4.5f * scale, beam, .25f + f.energy * .1f)
-        p.drawLine(cx, cy - r * .98f, cx, cy + r * 1.1f, 1.1f * scale, beam, .95f)
+        p.drawLine(cx, cy - r * .98f, cx, padY, 4.5f * scale, beam, .25f + f.energy * .1f)
+        p.drawLine(cx, cy - r * .98f, cx, padY, 1.1f * scale, beam, .95f)
         drawStateEffects(p, f)
         // inner sphere with the infinity mark
         p.fillCircle(cx, cy + r * .05f, r * .62f, infinityGlow, .5f + f.energy * .3f)
@@ -497,13 +518,14 @@ class ContinuumHologramRenderer {
     }
 
     private fun drawBrand(p: ContinuumPainter) {
-        val brand = ContinuumTheme.display(400, 13.6f * scale, 6.2f * scale)
-        val tagline = ContinuumTheme.display(500, 8.4f * scale, 4.0f * scale)
+        val brand = ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
+        val tagline = ContinuumTheme.display(500, 7.76f * scale, 7.76f * .476f * scale)
         // letter spacing also trails the last glyph; shift by half a space to keep the word optically centred
-        p.drawText("CONTINUUM", cx + brand.letterSpacing / 2f, cy + r * 1.545f, brand, brandFill, TextAlign.CENTER)
-        p.drawText("INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f, cy + r * 1.685f, tagline, taglineFill, TextAlign.CENTER)
-        if (pageCount > 1) {
-            val y = cy + r * 1.795f
+        p.drawText("CONTINUUM", cx + brand.letterSpacing / 2f, cy + r * geometry.brand, brand, brandFill, TextAlign.CENTER)
+        p.drawText("INTELLIGENCE  LIVES  ON", cx + tagline.letterSpacing / 2f, cy + r * geometry.tagline, tagline, taglineFill, TextAlign.CENTER)
+        val marks = geometry.marks
+        if (pageCount > 1 && marks != null) {
+            val y = cy + r * marks
             val active = 25f * scale; val idle = 10f * scale; val gap = 4.5f * scale; val thick = 2.3f * scale
             val total = active + (pageCount - 1) * idle + (pageCount - 1) * gap
             var x = cx - total / 2f
