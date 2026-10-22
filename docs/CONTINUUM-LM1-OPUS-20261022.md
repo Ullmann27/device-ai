@@ -181,7 +181,7 @@ Zusätzlich werden erfasst:
 
 **Lauf**
 - Befehl: `LmExperiment <repo> select store=<dir>` mit Code-Stand `9630fd49`, JAR-SHA-256 `27f84b6b…706a`, 4 Threads.
-- Start 15:40:34Z, Ende 17:02:38Z, **Exitcode 0**. Vollständiges Protokoll: `docs/evidence/lm1-20261022/select.log`.
+- Start 15:40:34Z, Ende 17:02:38Z, **Exitcode 0**. Vollständiges Protokoll: `docs/evidence/lm1-20261022/select-log.txt` (Endung `.txt`, weil `*.log` im Repository ignoriert wird).
 - Zusammenfassung mit `summarize.py` im selben Ordner: `select-summary.txt`.
 
 **Sicherung aller Trainingsstände**
