@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 DialogueOrchestrator: bounded state machine between a reasoner and the EXISTING coding Teamleader
 // (code-test job: canonical backlog -> isolated worktrees -> independent second run -> receipt).
 // The task state is derived from the DurableTaskJournal alone:
@@ -14,12 +13,21 @@ import {randomUUID} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {runMobileCodingJob,cancelMobileCodingJob} from '../../scripts/continuum-mobile-coding.mjs';
 import {envelope,envelopeProblems,newTaskId,sha256,CAPABILITY} from './ccc1-envelope.mjs';
-import {DurableTaskJournal,WriterLock,runtimeKey} from './ccc1-journal.mjs';
+import {DurableTaskJournal,JournalCorruption,WriterLock,runtimeKey} from './ccc1-journal.mjs';
 import {gateTestRequest} from './ccc1-gate.mjs';
 import {verifyJobReceipt,issueVerificationId} from './ccc1-verifier.mjs';
 import {recover,jobIdFor,pendingRequest,builderStateOf,teamleaderStateOf} from './ccc1-recovery.mjs';
+import {releaseDeadContinuumBuildLease} from './shared-build-lease.mjs';
 
 const FAILED_CODES=new Set(['CAPABILITY_DENIED','PROTOCOL_VIOLATION']);
+/**
+ * Job results that mean "the worker could not start yet" (another run holds the Teamleader lock or has priority).
+ * Nothing was executed, the coding job may be called again with the same id, so the request stays pending and the
+ * task waits instead of ending; permanent blocks (invalid order, unclean source, stale base) still become receipts.
+ */
+export const TRANSIENT_BLOCKS=new Set(['BLOCKED_JOB_RUNNING','BLOCKED_OTHER_WORK_FIRST']);
+/** Hard cap of a task journal: a reasoner that only talks (no requests) cannot grow a task without bound. */
+export const MAX_ENTRIES=96;
 
 /** Crash injection for the recovery experiments: CCC1_CRASH_AT=<label> and CCC1_CRASH_N=<occurrence>. */
 const crashCounts=new Map();
@@ -140,7 +148,9 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
  const root=fs.realpathSync(path.resolve(project));
  const key=runtimeKey(stateDir);
  const journal=DurableTaskJournal.forTask(stateDir,taskId,key);
- const first=journal.entries({allowTorn:true})[0];
+ let first;
+ try{first=journal.entries({allowTorn:true})[0];}
+ catch(e){if(e instanceof JournalCorruption)return {outcome:'STOPPED_CORRUPT_JOURNAL',report:{corruption:e.message}};throw e;}
  if(!first)throw Error('unknown task '+taskId);
  const lock=new WriterLock(stateDir,first.worktreeId);
  const held=lock.acquire();
@@ -160,6 +170,7 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
    const entries=journal.entries();
    const s=taskState(entries);
    if(s.terminal)return {outcome:s.state,report,entries};
+   if(entries.length>=MAX_ENTRIES){abort('BUDGET','journal length limit '+MAX_ENTRIES+' reached');continue;}
    if(head(root)!==binding.baseCommitSha){abort('STALE_BASE','checkout moved away from the bound commit '+binding.baseCommitSha.slice(0,12));continue;}
    if(now()>=binding.deadline){abort('DEADLINE','deadline passed');continue;}
    if(s.pending){
@@ -167,8 +178,11 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
     if(s.approval?.requested&&s.approval.decision===null)return {outcome:'WAITING_FOR_OWNER',report,entries};
     if(s.approval?.decision==='DENIED'){abort('APPROVAL_DENIED','the owner denied '+s.approval.request.payload.needs.join(', '));continue;}
     // decided jobs are final for this task: close them so the Teamleader does not retry a refuted hypothesis first
-    for(const r of s.receipts)if(r.payload.verdict!=='CONFIRMED'&&r.payload.execution!=='INTERRUPTED')
-     cancelJob({project:root,teamleaderState:teamleaderStateOf(stateDir),job:r.payload.job,reason:'CCC1: hypothesis decided ('+r.payload.verdict+')'});
+    const waitWorker=e=>({outcome:'WAITING_FOR_WORKER',reason:String(e.message).slice(0,300),report,entries:journal.entries()});
+    try{
+     for(const r of s.receipts)if(r.payload.verdict!=='CONFIRMED'&&r.payload.execution!=='INTERRUPTED')
+      cancelJob({project:root,teamleaderState:teamleaderStateOf(stateDir),job:r.payload.job,reason:'CCC1: hypothesis decided ('+r.payload.verdict+')'});
+    }catch(e){if(/LOCK_TIMEOUT/.test(e.message))return waitWorker(e);throw e;}
     const {report:fresh}=recover({project:root,stateDir,journal});
     const status=fresh.pending?.status??'NOT_STARTED';
     const retry='retry-after-interruption:'+q.messageId;
@@ -179,9 +193,14 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
       reason:'Die Ausführung dieses Auftrags wurde unterbrochen. Eine Wiederholung ist nicht idempotent und braucht die Freigabe des Besitzers.'});continue;}
      if(!answer)return {outcome:'WAITING_FOR_OWNER',report:fresh,entries};
      if(answer.payload.decision!=='GRANTED'){abort('APPROVAL_DENIED','the owner did not allow repeating an interrupted execution');continue;}
-     cancelJob({project:root,teamleaderState:teamleaderStateOf(stateDir),job,reason:'CCC1: interrupted execution closed by owner approval'});
+     // a crashed run may still hold the backlog lock (reclaimed by the store after 60 s): wait, never force it
+     try{cancelJob({project:root,teamleaderState:teamleaderStateOf(stateDir),job,reason:'CCC1: interrupted execution closed by owner approval'});}
+     catch(e){if(/LOCK_TIMEOUT/.test(e.message))return waitWorker(e);throw e;}
+     // the owner's approval is the manual inspection the build lease demands; it frees only a provably dead holder
+     const lease=releaseDeadContinuumBuildLease(root);
      const fields={request:q.messageId,receiptSha256:sha256('interrupted\0'+job),verdict:'INCONCLUSIVE'};
-     append('VERIFIER','RECEIPT',{...fields,job,status:'INTERRUPTED',reasons:['execution was interrupted; closed with owner approval, nothing claimed'],
+     append('VERIFIER','RECEIPT',{...fields,job,status:'INTERRUPTED',reasons:['execution was interrupted; closed with owner approval, nothing claimed',
+      'build lease: '+(lease.released?'released (holder pid '+lease.holder.pid+' no longer exists)':lease.reason)],
       patchSha256:null,evidenceSha256:null,runs:[],replayed:false,execution:'INTERRUPTED',cost:{cpuMillis:0,wallMillis:0}},
       {parentMessageId:q.messageId,verificationReceiptId:issueVerificationId(key,fields)});
      continue;
@@ -194,6 +213,8 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
     const receipt=await runJob({project:root,builderState:builderStateOf(stateDir),teamleaderState:teamleaderStateOf(stateDir),job,...order,budgetMinutes:q.payload.budgetMinutes});
     const cpu1=cpuMillis();
     crashPoint('after-execute');
+    if(TRANSIENT_BLOCKS.has(receipt?.status))
+     return {outcome:'WAITING_FOR_WORKER',reason:String(receipt.failure?.message??receipt.status).slice(0,300),report,entries:journal.entries()};
     const check=verifyJobReceipt(receipt,{job,commit:binding.baseCommitSha,...order});
     const fields={request:q.messageId,receiptSha256:sha256(JSON.stringify(receipt)),verdict:check.verdict};
     append('VERIFIER','RECEIPT',{...fields,job,status:String(receipt.status),reasons:check.reasons,patchSha256:receipt.patch?.sha256??null,

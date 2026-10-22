@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 RecoveryManager: what a new process may do after an abrupt stop. It never assumes success and never repeats
 // a non-idempotent step on its own. Order (specification section 3): repair a torn journal tail, verify the whole
 // journal (chain, MACs, binding), reconcile repository and worktrees, then classify the open job of the pending

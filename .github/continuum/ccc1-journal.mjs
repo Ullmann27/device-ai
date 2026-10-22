@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 DurableTaskJournal: the only state of a task (event sourcing, no second state file).
 // One append-only JSON line per EnvelopeV1, written with fsync; monotonic sequence; every entry hash-chained to its
 // predecessor; entries of trusted senders (OWNER, TEAMLEADER, VERIFIER) carry an HMAC of their hash with the runtime
@@ -99,6 +98,12 @@ export class DurableTaskJournal{
   const record={...env,sequence:list.length};
   const problems=envelopeProblems(record);
   if(problems.length)throw Error('invalid envelope: '+problems.join('; '));
+  // The rules that entries() enforces on read are enforced before the write: an invalid message is refused
+  // instead of turning the journal into a corrupt one.
+  const first=list[0];
+  if(!first&&(record.sender!=='OWNER'||record.kind!=='GOAL'))throw Error('a task journal starts with the owner GOAL');
+  if(first)for(const k of BINDING)if(canonical(record[k])!==canonical(first[k]))throw Error('message changes the task binding '+k);
+  if(record.parentMessageId&&!list.some(x=>x.messageId===record.parentMessageId))throw Error('message refers to an unknown parent');
   const prevHash=list.length?list.at(-1).hash:ZERO;
   const hash=sha256(canonical({...record,prevHash}));
   const line=JSON.stringify({...record,prevHash,hash,...(TRUSTED.has(record.sender)?{mac:createHmac('sha256',this.key).update(hash).digest('hex')}:{})})+'\n';

@@ -225,8 +225,21 @@ Zusätzlich werden erfasst:
   `LmExperiment <repo> final store=<checkpoints> kn=7 cdx1epochs=3 ckpt=512:<GM s1> ckpt=512:<GM s2> ckpt=512:<GM s3> ckpt=512:<TM s1> ckpt=512:<TM s2> ckpt=512:<TM s3>`
 - **Stand dieses Commits: TEST nicht ausgeführt.**
 
-## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – UNFERTIG
+## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – getestet
 
-- Gesichert in `bfba4fe9`. Jede Datei trägt in Zeile 1 den Vermerk „UNFERTIG (WIP)“.
 - Bausteine: EnvelopeV1/GoalSpec (`ccc1-envelope`), hash-verkettetes Journal mit HMAC (`ccc1-journal`), Fähigkeitsprüfung (`ccc1-gate`), Quittungsprüfer (`ccc1-verifier`), Wiederanlauf (`ccc1-recovery`), Dialogsteuerung (`ccc1-orchestrator`), Zielinterpretation mit austauschbarem Sprachkern (`ccc1-interpreter`).
-- Stand: Alle sieben Dateien bestehen `node --check`. **Es gibt noch keine Tests**, und nichts importiert die Module. Bis zu ihren Tests bleibt `reasoner-dialog.mjs` (Abschnitt 5, 8/8 Tests) der geprüfte Weg.
+- **Tests `node --test .github/continuum/ccc1.test.mjs`: 14/14**, davon 9 mit dem **echten** Coding-Job (kanonisches Backlog, isolierte Worktrees, unabhängiger zweiter Lauf) in einem Wegwerf-Repository:
+  - Schema, Rollen, Versionen; Journal erkennt Änderungen, gefälschte MACs, Kettenbruch, Bindungswechsel; Duplikate werden einmal angewendet;
+  - Gate: geschützte Module bleiben gesperrt (auch mit Besitzerfreigabe), nicht freigegebene Module brauchen eine Freigabe, Frist/Runden/CPU-Budget;
+  - Quittungsprüfer gegen echte Patch-Bytes, Läufe, festes Testprofil und genauen Auftrag;
+  - Ende-zu-Ende: Widerlegung → Revision → Bestätigung; lügender Reasoner → FAILED; manipulierte Job-Quittung → nie bestätigt; ins Journal gefälschte Quittung → Stopp;
+  - doppelte Zustellung, widersprüchliches Duplikat, verschobener Checkout (STALE_BASE), unerlaubte Aktion (CAPABILITY_DENIED), Freigabe erteilt/verweigert;
+  - Rundenlimit → Enthaltung, Zuglimit → Pause, harte Journalgrenze (96 Einträge) → Abbruch;
+  - **SIGKILL** vor/nach der Ausführung und mitten im Journal-Schreibvorgang → Fortsetzung ohne zweite Ausführung;
+  - **Stromausfall mitten im Job:** keine Wiederholung ohne Besitzer; nach Freigabe endet die Aufgabe trotzdem verifiziert.
+- **Gefundene und behobene Fehler:**
+  1. Das Journal nahm beim Schreiben Nachrichten mit fremder Commit-Bindung an und war danach unlesbar → wird jetzt vor dem Schreiben abgewiesen.
+  2. Ein gefälschtes Journal führte zu einer Ausnahme → jetzt sauberer Stopp `STOPPED_CORRUPT_JOURNAL`.
+  3. Vorübergehende Worker-Blockaden (Teamleiter-Sperre, Backlog-Sperre) beendeten die Aufgabe → jetzt `WAITING_FOR_WORKER`, der Auftrag bleibt offen, nichts wird ausgeführt.
+  4. **Produktfehler im Coding-Agenten:** Die gemeinsame Build-Sperre (`shared-build-lease.mjs`) bleibt nach einem Absturz für immer liegen; auf Android blockiert das jeden weiteren Job. Neu: `releaseDeadContinuumBuildLease` – nur nach ausdrücklicher Besitzerfreigabe und nur, wenn der Halteprozess auf diesem Gerät nachweislich nicht mehr existiert (Test 6/6). Alter allein gibt weiterhin nichts frei.
+- `reasoner-dialog.mjs` (Abschnitt 5) bleibt unverändert und getestet; CCC1 ist der Nachfolger mit vollständiger Spezifikation.

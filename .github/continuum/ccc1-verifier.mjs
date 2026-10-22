@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 ReceiptVerifier: independent check of a coding-job receipt against the order it must answer and the real
 // artifacts (patch bytes, run exit codes and counts, fixed allowlisted test profile, toolchain, job/commit/order
 // binding). Only the verifier issues a verificationReceiptId (HMAC over request, receipt hash and verdict); a

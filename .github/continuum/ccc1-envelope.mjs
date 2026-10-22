@@ -1,4 +1,3 @@
-// STATUS 22.10.2026: UNFERTIG (WIP) – syntaktisch geprüft, noch ohne Tests; von keinem Produktivpfad importiert.
 // CCC1 EnvelopeV1: the one message format between owner, reasoner, the existing coding Teamleader and the
 // verifier (docs/CONTINUUM-COGNITIVE-CONTINUITY-CCC1-20261022.md, section 2). Every field is checked strictly:
 // unknown fields, versions, sender/kind pairs and payload shapes are rejected. Payloads are structured data,
