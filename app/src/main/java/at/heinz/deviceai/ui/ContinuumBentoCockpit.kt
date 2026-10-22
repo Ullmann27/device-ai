@@ -55,7 +55,7 @@ object ContinuumBentoCockpit {
 
     fun panel(ctx: Context, eyebrow: String, title: String, description: String): LinearLayout =
         column(ctx).apply {
-            background = Glass(0xFF3B82F6.toInt(), surface = false)
+            background = Glass(0xFF3B82F6.toInt(), ctx.resources.displayMetrics.density, surface = false)
             setPadding(dp(ctx, 16f), dp(ctx, 18f), dp(ctx, 16f), dp(ctx, 16f))
             addView(text(ctx, eyebrow, 10.5f, CYAN, true))
             addView(text(ctx, title, 23f, WHITE, true), LinearLayout.LayoutParams(
@@ -71,7 +71,7 @@ object ContinuumBentoCockpit {
     }
 
     fun statusPane(ctx: Context): LinearLayout = column(ctx).apply {
-        background = Glass(CYAN)
+        background = Glass(CYAN, ctx.resources.displayMetrics.density)
         setPadding(dp(ctx, 11f), dp(ctx, 10f), dp(ctx, 11f), dp(ctx, 10f))
     }
 
@@ -87,7 +87,7 @@ object ContinuumBentoCockpit {
         val items = rows.map { line ->
             val separator = line.indexOf(':')
             column(ctx).apply {
-                background = Glass(VIOLET)
+                background = Glass(VIOLET, ctx.resources.displayMetrics.density)
                 setPadding(dp(ctx, 10f), dp(ctx, 9f), dp(ctx, 10f), dp(ctx, 9f))
                 if (separator in 1..45) {
                     addView(text(ctx, line.substring(0, separator).trim(), 10f, CYAN, true))
@@ -104,7 +104,7 @@ object ContinuumBentoCockpit {
     fun action(ctx: Context, label: String, primary: Boolean = false, critical: Boolean = false, run: () -> Unit): TextView {
         val color = if (critical) 0xFFEC4899.toInt() else if (primary) CYAN else VIOLET
         return text(ctx, "◈   " + label, 11.6f, WHITE, true).apply {
-            background = Glass(color)
+            background = Glass(color, ctx.resources.displayMetrics.density)
             gravity = Gravity.CENTER_VERTICAL
             minHeight = dp(ctx, 66f)
             setPadding(dp(ctx, 12f), dp(ctx, 12f), dp(ctx, 12f), dp(ctx, 12f))
@@ -175,7 +175,7 @@ object ContinuumBentoCockpit {
         }.replace("|", "\n")
     }
 
-    private class Glass(private val accent: Int, private val surface: Boolean = true) : Drawable() {
+    private class Glass(private val accent: Int, private val density: Float, private val surface: Boolean = true) : Drawable() {
         private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
         private val rect = RectF()
         private var fill: Shader? = null
@@ -196,7 +196,7 @@ object ContinuumBentoCockpit {
         }
 
         override fun draw(canvas: Canvas) {
-            val radius = if (surface) 18f else 24f
+            val radius = (if (surface) 18f else 24f) * density
             paint.style = Paint.Style.FILL
             paint.shader = fill
             paint.alpha = 255
@@ -205,11 +205,11 @@ object ContinuumBentoCockpit {
             canvas.drawRoundRect(RectF(rect.left + 1f, rect.top + 1f, rect.right - 1f,
                 rect.top + rect.height() * .65f), radius, radius, paint)
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 1.6f
+            paint.strokeWidth = 1.6f * density
             paint.shader = border
             canvas.drawRoundRect(RectF(rect.left + 1.5f, rect.top + 1.5f,
                 rect.right - 1.5f, rect.bottom - 1.5f), radius, radius, paint)
-            paint.strokeWidth = 1.1f
+            paint.strokeWidth = 1.1f * density
             paint.shader = null
             paint.color = accent
             paint.alpha = 120
