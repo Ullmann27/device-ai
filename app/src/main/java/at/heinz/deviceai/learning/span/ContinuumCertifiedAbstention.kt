@@ -1,5 +1,6 @@
 package at.heinz.deviceai.learning.span
 
+import java.security.MessageDigest
 import kotlin.math.exp
 import kotlin.math.ln
 
@@ -68,8 +69,33 @@ object ContinuumCertifiedAbstention {
         return minOf(1.0, exp(top) * terms.sumOf { exp(it - top) })
     }
 
-    /** Answer only above the certified threshold; without a certificate the model abstains. */
-    fun answer(prediction: ContinuumResidualSpanCore.Prediction, certificate: Certificate?): String? =
-        if (certificate != null && prediction.answer != null && prediction.confidence >= certificate.threshold)
-            prediction.answer else null
+    /**
+     * Fail-closed, checkpoint-bound inference: calibration belongs to an exact model snapshot.
+     * The current state hash and the prediction are computed while holding the SAME model lock,
+     * preventing a concurrent training/update from swapping weights between the two operations.
+     * No cached or externally supplied prediction may bypass this identity check.
+     */
+    fun answer(
+        model: ContinuumResidualSpanCore,
+        evidence: String,
+        question: String,
+        certificate: Certificate?
+    ): String? {
+        if (certificate == null) return null
+        return synchronized(model) {
+            val currentSha = MessageDigest.getInstance("SHA-256")
+                .digest(model.save())
+                .joinToString("") { byte ->
+                    (byte.toInt() and 0xff).toString(16).padStart(2, '0')
+                }
+            if (currentSha != certificate.modelSha256) {
+                null
+            } else {
+                val prediction = model.predict(evidence, question)
+                if (prediction.answer != null &&
+                    prediction.confidence >= certificate.threshold
+                ) prediction.answer else null
+            }
+        }
+    }
 }
