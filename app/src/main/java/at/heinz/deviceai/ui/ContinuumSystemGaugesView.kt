@@ -54,8 +54,8 @@ class ContinuumSystemGaugesView(
         val stroke = 5.2f * density
         val radius = min(cell * 0.35f, height * 0.26f)
         val cy = (height * .44f).coerceAtLeast(radius + stroke)
-        val labelSize = 10f * resources.scaledDensity
-        val valueSize = 14f * resources.scaledDensity
+        val labelSize = 10f * resources.displayMetrics.scaledDensity
+        val valueSize = 14f * resources.displayMetrics.scaledDensity
 
         values.forEachIndexed { i, entry ->
             val (name, nullablePercent, accent) = entry
