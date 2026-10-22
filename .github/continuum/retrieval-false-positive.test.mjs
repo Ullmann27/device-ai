@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {EVIDENCE_THRESHOLD,wordEvidence,rankMemories} from "./dialogue-retrieval.mjs";
+import {EVIDENCE_THRESHOLD,wordEvidence,sourceTermEvidence,rankMemories} from "./dialogue-retrieval.mjs";
 
 const observations=[
   {id:"physik",text:"Die Physik untersucht Quantenmechanik und andere Phänomene."},
@@ -8,6 +8,7 @@ const observations=[
   {id:"widrow",text:"Bernard Widrow erforschte technische Lernverfahren."},
   {id:"backprop",text:"Backpropagation heißt auch Fehlerrückführung."},
   {id:"softwaretest",text:"Softwaretest dient dazu, Fehler in Programmen zu erkennen."},
+  {id:"paedagogik",kind:"SOURCE_TEXT",text:"Pädagogik befasst sich mit Erziehung und der Führung eines Knaben."},
   {id:"aufrichtigkeit",text:"Aufrichtigkeit bedeutet die ehrliche Darstellung des eigenen Wissens."}
 ];
 
@@ -24,10 +25,19 @@ test("fabricated mixed letter-digit topic must abstain on real but unrelated sou
 });
 
 test("exact technical term retrieves only relevant citation and not loosely shared Fehler",()=>{
-  const hits=rankMemories("Fehlerrückführung",observations);
+  const sources=observations.map(x=>({...x,kind:"SOURCE_TEXT"}));
+  const hits=rankMemories("Fehlerrückführung",sources);
   assert.deepEqual(hits.map(x=>x.id),["backprop"]);
+  assert.ok(wordEvidence("Fehlerrückführung",sources.find(x=>x.id==="paedagogik").text)>=0.82);
+  assert.equal(sourceTermEvidence("Fehlerrückführung",sources.find(x=>x.id==="paedagogik").text),false);
+  assert.equal(sourceTermEvidence("Fehlerrückführung",sources.find(x=>x.id==="backprop").text),true);
   assert.equal(wordEvidence("Fehlerrückführung",observations[3].text),1);
   assert.ok(wordEvidence("Fehlerrückführung",observations[4].text)<EVIDENCE_THRESHOLD);
+});
+
+test("explicit owner memories retain compound matches without source-only guard",()=>{
+  const owner=[{id:"project",text:"Mein Projekt heißt Astra."}];
+  assert.deepEqual(rankMemories("Wo ist mein Forschungsprojekt?",owner).map(x=>x.id),["project"]);
 });
 
 test("German near-inflection and complete compound suffix remain retrievable",()=>{
