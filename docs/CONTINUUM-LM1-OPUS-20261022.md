@@ -89,3 +89,88 @@ Zusätzlich werden erfasst:
 - Gegenüber dem n-Gramm gilt dieselbe Regel. Verliert LM1 gegen das n-Gramm, wird das als negatives Ergebnis berichtet.
 
 **Nicht behauptet:** allgemeine Sprachkompetenz, Faktenwissen, Befolgen von Anweisungen. 500 KB Text reichen dafür nicht.
+
+## 5. Typisierter Dialog Reasoner ↔ Coding-Agent (`.github/continuum/reasoner-dialog.mjs`)
+
+**Nachrichten und Rollen**
+
+| Typ | Rolle | Inhalt (streng geprüft) |
+|---|---|---|
+| `GOAL` | Besitzer | Ziel als Text (bis 600 Zeichen), optional Beispiele |
+| `HYPOTHESIS` | Reasoner | Behauptung, Modul, Export, Begründung |
+| `PLAN` | Reasoner | 1–8 Schritte, Fähigkeit `node-contract-test` |
+| `TEST_REQUEST` | Reasoner | Bezug auf **die** Hypothese; 1–4 Fälle mit höchstens 3 einfachen Argumenten; JSON bis 300 Zeichen; Budget bis zum Besitzerlimit |
+| `RECEIPT` | **nur der Runner** | Ergebnis des echten Jobs, unabhängig nachgeprüft; Urteil `CONFIRMED`, `REFUTED` oder `INCONCLUSIVE` |
+| `CRITIQUE` | Reasoner | Bezug auf eine Quittung; **das Urteil muss dem der Quittung entsprechen** |
+| `REVISE` | Reasoner | Bezug auf die verworfene Hypothese, Änderung |
+| `ABSTAIN` | Reasoner | Begründung |
+
+**Ausführung**
+- Ein `TEST_REQUEST` läuft über den **bestehenden** `code-test`-Job aus PR #57: kanonisches Backlog, Teamleiter, Vertragstest im Git-Worktree, zweiter unabhängiger Worktree, Patch.
+- Der Runner prüft jede Job-Quittung selbst:
+  - Job, Commit und Auftrag (Modul, Export, Fall-Hash) stimmen;
+  - die Patch-Bytes entsprechen dem SHA;
+  - drei Läufe mit Exitcode 0 und ausgeführten Tests, die unabhängige Wiederholung mit mindestens so vielen Tests;
+  - keine Behauptung von Merge, Installation oder Gerät.
+- `GENERATED_TESTS_FAILED` widerlegt die Hypothese. Jeder andere Ausgang ist `INCONCLUSIVE`, also kein Befund.
+
+**Veröffentlichte Fähigkeit:** Vor jedem Auftrag fragt der Runner den Critic des Coding-Agenten mit genau dem Vertrag, der erzeugt würde (`capabilityCheck`). Der Critic schützt unter anderem den eigenen Kontrollcode des Agenten. Liegt ein Auftrag außerhalb der Fähigkeit, wird er abgelehnt, bevor ein Job läuft.
+
+**Integrität**
+- Das Journal ist append-only, als JSON-Zeilen geführt und hash-verkettet.
+- Quittungen tragen ein HMAC mit einem Schlüssel aus dem Runner-Zustand, den der Reasoner nicht bekommt.
+- Erkannt werden Änderungen, falsche Rollen, gebrochene Ketten und gefälschte Quittungen.
+- Grenze: Der HMAC schützt gegen einen Reasoner, der nur den Nachrichtenkanal hat. Gegen Code mit denselben Dateirechten schützt er nicht. Auf dem Gerät laufen App und Termux getrennt.
+
+**Ablauf**
+- Pro Runde ist höchstens ein Auftrag offen (Backpressure); die Zahl der Runden ist begrenzt.
+- Nach einem Absturz wird fortgesetzt: Die Job-ID steht vor der Ausführung im Journal, und der Replay-Schutz des Jobs verhindert einen zweiten Lauf.
+- Entschiedene Jobs werden im Backlog geschlossen. Sonst würde der Teamleiter eine widerlegte Hypothese vor der nächsten erneut versuchen; dieser Fehler ist im ersten End-to-End-Test aufgetreten und behoben.
+- Ergebnis ist höchstens ein Vertragstest-Patch **zur Prüfung durch den Besitzer**. Es gibt kein Merge, kein Push, keine Installation und keine Promotion.
+
+**Referenz-Reasoner (`hypothesis-reasoner.mjs`)**
+- Beispiele werden aus deutschem Text gelesen, z. B. `(5) → 15` oder `aus "a" wird "A"`.
+- Exportierte Funktionen werden mit Stelligkeit indiziert.
+- Die Rangfolge ist lexikalisch (IDF, einfache Stammformen) und austauschbar.
+- Nach einer Widerlegung gilt: nächster Kandidat. Bei `INCONCLUSIVE` gilt: Enthaltung ohne blinden Wiederholungsversuch.
+
+**Tests (`node --test .github/continuum/reasoner-dialog.test.mjs`): 8/8**, davon 4 mit echten Coding-Jobs in einem Fixture-Repository:
+- Schema, Rollen und Grenzen, einschließlich der Fähigkeit;
+- Journal-Manipulation;
+- Quittungsprüfung;
+- Beispielparser und Index;
+- **Widerlegung → Revision → Bestätigung** (12 Einträge, Quelle unverändert);
+- ein **lügender Reasoner**, der eine widerlegte Quittung als bestätigt ausgibt, wird gestoppt;
+- **Absturz nach der Ausführung**: die Fortsetzung läuft ohne zweite Ausführung (`replayed:true`);
+- Rundenlimit führt zur Enthaltung.
+
+## 6. Pilotstudien des Dialogs (`scripts/reasoner-dialog-pilot.mjs`, je einmal ausgeführt)
+
+**Aufbau**
+- 8 deutsche Ziele zu echten Continuum-Funktionen. Die erwarteten Werte stammen aus den Funktionen selbst und wurden vor dem Lauf geprüft.
+- 3 adversariale Ziele: falsches Beispiel, kein Beispiel, Beispiel mit Liste.
+- Suchraum: alle 75 Exporte von 13 abhängigkeitsfreien Modulen.
+- Bedingungen: lexikalische Rangfolge oder zufällige Rangfolge (Seed). Je Bedingung eine Schleife mit 3 Runden; der Einzelversuch ist Runde 1.
+
+**Pilot 1** (`eafbb2c1`, Belege in `docs/evidence/lm1-20261022/dialog-pilot1/`)
+- Ergebnis lexikalisch 4/8, zufällig 1/8.
+- 9 von 30 Jobs endeten `INCONCLUSIVE`. Grund: Der Critic des Coding-Agenten verweigert Vertragstests auf seinen eigenen Kontrollmodulen (`repair-*`, `kotlin-tokenizer`, `cefr-*`), und der Reasoner hatte solche vorgeschlagen.
+- Das ist ein **Fehler des Instruments**. Behoben wurde er durch die veröffentlichte Fähigkeit in `ff5e…`, vorab eingetragen als Pilot 2.
+
+**Pilot 2** (korrigiertes Protokoll, gleiche Aufgaben, Belege in `docs/evidence/lm1-20261022/dialog-pilot2/`)
+
+| Bedingung | richtig nach 1. Versuch | richtig nach ≤ 3 Runden | ungewollte Bestätigung | adversarial korrekt enthalten | Jobs |
+|---|---:|---:|---:|---:|---:|
+| lexikalisch | **5/8** | 5/8 | **0** | **3/3** | 17 |
+| zufällig | 1/8 | 1/8 | 0 | 3/3 | 25 |
+
+**Befunde** (n = 8, eine Pilotstudie, keine statistische Aussage)
+1. Das Protokoll trägt auf echtem Code.
+   - Jede Bestätigung beruht auf einem unabhängig wiederholten Vertragstest.
+   - Es gab **0 ungewollte Bestätigungen** und **0 Erfolgsbehauptungen ohne Quittung**.
+   - Alle adversarialen Ziele enden in Enthaltung.
+   - Ein Job dauert in der Fixture etwa 0,5 s.
+2. **Die begrenzte Selbstkritik-Schleife brachte hier nichts** (5/8 → 5/8, bei 9 zusätzlichen Jobs). Die Misserfolge sind systematische Rangfehler und keine knappen Fehlgriffe. Die Hypothese, dass die Schleife hilft, ist für diese Aufgaben **nicht bestätigt**.
+3. **Haupt-Fehlerquelle ist deutsch–englische Benennung:** „kanonisch“ ↔ `canonical`, „Befund“ ↔ `finding`, „Schlüsselwort“ ↔ `isKeyword`. Das Ziel von `isKeyword` liegt zudem im geschützten Modul und ist deshalb nicht prüfbar.
+   - Hier könnte ein gelernter Sprachkern messbar helfen, etwa mit zweisprachigen Assoziationen aus den Projektdokumenten.
+   - Das ist die nächste falsifizierbare Frage.
