@@ -109,7 +109,11 @@ class ContinuumDiagnostics(private val file: File, private val appVersion: Strin
 
     private fun load(): List<Issue> {
         if (!file.isFile) return emptyList()
-        return runCatching { file.readLines(Charsets.UTF_8).mapNotNull(::decode) }.getOrDefault(emptyList())
+        // Fail closed on read errors or malformed lines: never overwrite an
+        // existing diagnostic archive by mistaking unreadable data for no data.
+        return file.readLines(Charsets.UTF_8)
+            .filter { it.isNotBlank() }
+            .map { decode(it) ?: throw IllegalStateException("invalid diagnostics archive record") }
     }
 
     private fun save(issues: List<Issue>) {
