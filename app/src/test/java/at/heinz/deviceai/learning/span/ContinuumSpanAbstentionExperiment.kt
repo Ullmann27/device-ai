@@ -54,7 +54,9 @@ object ContinuumSpanAbstentionExperiment {
         "V3 no position shortcut" to ContinuumResidualSpanCore.Features(positionFeatures = false),
         "V4 identifier placeholders" to ContinuumResidualSpanCore.Features(identifierPlaceholders = true),
         "V5 placeholders + no position" to ContinuumResidualSpanCore.Features(identifierPlaceholders = true, positionFeatures = false),
-        "V6 entity proximity" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true)
+        "V6 entity proximity" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true),
+        "V7 PR61 features + cue words excluded" to ContinuumResidualSpanCore.Features(excludeCueWords = true),
+        "V8 entity proximity + cue words excluded" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true)
     )
 
     private fun runVariants(names: List<String>, split: List<Case>, splitName: String, train: List<Case>, validation: List<Case>,
@@ -76,7 +78,34 @@ object ContinuumSpanAbstentionExperiment {
 
     @JvmStatic fun main(args: Array<String>) {
         val quick = args.contains("quick")
-        val mode = args.firstOrNull { it in setOf("cycle1", "select", "final") } ?: "cycle1"
+        val mode = args.firstOrNull { it in setOf("cycle1", "select", "final", "diagnose") } ?: "cycle1"
+        if (mode == "diagnose") {
+            // learned scalar weights (last 14 parameters) and validation negation errors; no TEST access
+            val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN)
+            val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)
+            val names = listOf("residual", "overlap", "entity", "negation", "contrast", "code", "capital", "slot7", "slot8", "bias",
+                "null:1", "null:maxOverlap", "null:maxBinding", "null:noCandidates")
+            for (v in args.filter { it.matches(Regex("V\\d")) }) {
+                val name = VARIANTS.keys.first { it.startsWith("$v ") }
+                val t = train(train, validation, 1L, 30) { ContinuumResidualSpanCore(77, VARIANTS.getValue(name)) }
+                val w = t.model.parameters().takeLast(14)
+                // the five public PR61 DEV cases: regression/sanity only, never a blind test
+                val pr61 = listOf(
+                    ContinuumResidualSpanCore.Example("Roboter X77 steht in Salzburg.", "Wo befindet sich X77?", "Salzburg"),
+                    ContinuumResidualSpanCore.Example("Gerät K99 verwendet Modul XZ-902.", "Welches Modul verwendet K99?", "XZ-902"),
+                    ContinuumResidualSpanCore.Example("Roboter T82 nutzt eine Zange.", "Welches Werkzeug nutzt T82?", "Zange"),
+                    ContinuumResidualSpanCore.Example("Roboter X77 steht in Salzburg.", "Welches Werkzeug nutzt X77?", null),
+                    ContinuumResidualSpanCore.Example("Gerät K99 verwendet Modul XZ-902.", "Wo steht K99?", null))
+                println("PR61-DEV $name: " + pr61.joinToString { e -> (e.answer ?: "ABSTAIN") + "->" +
+                    (t.model.predict(e.evidence, e.question).answer ?: "ABSTAIN") } + " | checkpointSha256=" + sha(t.model.save()))
+                println("WEIGHTS $name: " + names.zip(w).joinToString { (n, x) -> n + "=" + "%.3f".format(x) })
+                for (c in validation.filter { it.kind == Kind.NEGATED || it.kind == Kind.CONTRAST }) {
+                    val p = t.model.predict(c.example.evidence, c.example.question)
+                    if (p.answer != c.example.answer) println("  ERR ${c.kind}: '${c.example.evidence}' | '${c.example.question}' -> ${p.answer} p=${"%.2f".format(p.confidence)}")
+                }
+            }
+            return
+        }
         if (mode != "cycle1") {
             val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN, bindingCurriculum = args.contains("binding"))
             val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)

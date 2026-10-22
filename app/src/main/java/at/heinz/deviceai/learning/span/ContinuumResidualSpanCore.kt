@@ -20,7 +20,9 @@ import kotlin.math.sqrt
  * `positionFeatures=false` zeroes the hand-coded "last token" and "absolute position" inputs;
  * `entityProximity` (requires `positionFeatures=false`) reuses those two input slots for the
  * closeness to the asked entity id inside the clause, counted in candidate tokens (entity before
- * the candidate, entity after the candidate) – a binding cue whose weight is learned.
+ * the candidate, entity after the candidate) – a binding cue whose weight is learned;
+ * `excludeCueWords` removes negation/contrast cue words (nicht, kein…, sondern, stattdessen) from the
+ * candidate set: they are inputs of the negation/contrast features, never an evidence answer.
  * The default reproduces PR #61 exactly. Checkpoint v2 stores the variant; v1 checkpoints restore
  * with the default variant.
  */
@@ -37,15 +39,16 @@ class ContinuumResidualSpanCore private constructor(
     data class Features(
         val identifierPlaceholders: Boolean = false,
         val positionFeatures: Boolean = true,
-        val entityProximity: Boolean = false
+        val entityProximity: Boolean = false,
+        val excludeCueWords: Boolean = false
     ) {
         init { require(!(entityProximity && positionFeatures)) { "entityProximity replaces the position inputs" } }
         internal val flags: Int get() = (if (identifierPlaceholders) 1 else 0) or (if (positionFeatures) 0 else 2) or
-            (if (entityProximity) 4 else 0)
+            (if (entityProximity) 4 else 0) or (if (excludeCueWords) 8 else 0)
         companion object {
             internal fun fromFlags(flags: Int): Features {
-                require(flags in 0..7 && flags != 5) { "unknown CSX1 feature flags " + flags }
-                return Features(flags and 1 != 0, flags and 2 == 0, flags and 4 != 0)
+                require(flags in 0..15 && !(flags and 4 != 0 && flags and 2 == 0)) { "unknown CSX1 feature flags " + flags }
+                return Features(flags and 1 != 0, flags and 2 == 0, flags and 4 != 0, flags and 8 != 0)
             }
         }
     }
@@ -256,7 +259,8 @@ class ContinuumResidualSpanCore private constructor(
         val candidates = ArrayList<Candidate>()
         val isCandidate = tokens.map { t ->
             val w = normalize(t.value)
-            !(w.length < 2 || w in STOP_WORDS || w in ids || w in QUESTION_WORDS || (w in questionWords && !w.any(Char::isDigit)))
+            !(w.length < 2 || w in STOP_WORDS || w in ids || w in QUESTION_WORDS || (w in questionWords && !w.any(Char::isDigit)) ||
+                (features.excludeCueWords && (w in NEGATIONS || w in CONTRAST)))
         }
         /** 1 / (1 + candidate tokens between this token and the nearest asked-id mention on that side), 0 if none. */
         fun proximity(idx: Int, step: Int): Double {

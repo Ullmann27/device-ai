@@ -15,7 +15,8 @@ class ContinuumResidualSpanCoreVariantsTest {
         ContinuumResidualSpanCore.Features(),
         ContinuumResidualSpanCore.Features(positionFeatures = false),
         ContinuumResidualSpanCore.Features(identifierPlaceholders = true),
-        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true)
+        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true),
+        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true)
     )
     private val examples = listOf(
         ContinuumResidualSpanCore.Example("Einheit AB12 steht in Wien, Einheit CD34 steht in Graz.", "Wo steht CD34?", "Graz"),

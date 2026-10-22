@@ -103,3 +103,66 @@ Zusätzliches Bindungs-Trainingscurriculum (Modul/Port): kein Gewinn → verworf
 Ehrliche Bewertung: V6 verbessert die **Entitätsbindung** messbar und reproduzierbar (Teilsatzbindung 3/6 → 6/6,
 Fallen −60 %), kostet aber **1–3 zusätzliche unbelegte Antworten**, konzentriert auf verneinte Werte. Keine der
 Varianten löst Zeitqualifikatoren zuverlässig oder Einheiten/Mehrwortantworten (0/6, Einzeltoken-Grenze).
+
+## Zyklus 4 – Diagnose der Negationsschwäche und H5 (Signalwörter sind keine Antworten)
+
+Diagnose (nur VALIDATION, `diagnose`-Modus): Das Modell antwortete bei verneinten Belegen teils **„nicht“ / „keine“** –
+die Signalwörter der Negations-/Kontrastmerkmale waren selbst Antwortkandidaten. Mit Entitätsnähe liegt „nicht“
+direkt hinter der Entität; im Training drückte das zusätzlich das gelernte Negationsgewicht (V6 −1,29 statt V2 −2,25).
+H5: `Features(excludeCueWords = true)` entfernt `nicht, kein, keine, keinen, sondern, stattdessen` aus der
+Kandidatenmenge (feste grammatische Einschränkung des Kandidatenraums, **keine Antwortregel**; separat ausgewiesen).
+VALIDATION: V8 (Nähe + Ausschluss) ≈ V6 im Rauschbereich (65,7 vs 66 richtig, 4,7 vs 5,3 unbelegt). Gelerntes
+Negationsgewicht mit V8 wieder −2,28.
+
+**Einmalige TEST-Messung V8** (eingefroren, 3 Seeds identisch; Log `cycle4-final-test-V8.txt`): 99/124 richtig,
+**6/140 unbelegt**, Fallen 3/202, Teilsatzbindung 6/6, Mehrfachentitäten 21/21, Verneinung 3/28 unbelegt.
+
+## Gesamtvergleich auf dem eingefrorenen TEST (argmax, 3 Seeds, gleiche TRAIN-/Trainingsbedingungen)
+
+| Variante | richtig /124 | unbelegt /140 | falsche Spanne | Fallen /202 | Teilsatzbindung | Verneinung unbelegt /28 | ungesehene Formen |
+|---|---|---|---|---|---|---|---|
+| V1 PR61-Kern + Originalrezept | 96 | 61 | 24 | 48 | – | 28* | 9/35 |
+| V2 PR61-Kern + hartes Curriculum | 94 | 9 | 16 | 11 | 3/6 | 5 | 9/35 |
+| V6 + gelernte Entitätsnähe | 97 | 10–12 | 8–9 | 3–5 | 6/6 | 7–8 | 12/35 |
+| **V8 + Nähe + Signalwörter keine Kandidaten** | **99** | **6** | **8–10** | **3** | **6/6** | **3** | **12/35** |
+| R2 Lexikonregel (Regel-Baseline) | 74 | 0 | 34 | 21 | 4/6 | 0 | 7/35 |
+
+(*V1-Wert aus Zyklus-1-Lauf mit 10 Epochen; im 30-Epochen-Lauf siehe Log.) Herkunft der Verbesserung:
+**Curriculum** (gelernte Gewichte, gleiche Architektur) erklärt den Großteil (unbelegt 61 → 9);
+**gelernte Entitätsnähe** (neue Eingaben, gelernte Gewichte) die Bindung; **Kandidatenraum-Einschränkung** (feste
+Grammatik) die Negationsfehler; **Schwelle**: keine (argmax). Eine VALIDATION-Schwelle senkt unbelegte Antworten
+weiter (V8: 6 → 6), kostet aber richtige Antworten (98/91/98) und wird nicht empfohlen.
+
+Öffentliche PR61-DEV-Fälle (nur Regression, kein Blindtest): PR61 3/5 mit 2 erfundenen Antworten → **V8 4/5, beide
+Enthaltungen korrekt, 0 erfundene Antworten** (`Salzburg` jetzt fälschliche Enthaltung).
+
+## Isolierter Kandidat (nur zur Besitzerkontrolle, keine Promotion)
+`Features(positionFeatures=false, entityProximity=true, excludeCueWords=true)`, Seed 77, TRAIN-Seed 1, 30 Epochen,
+7.380 Updates, Checkpoint v2 SHA-256 `1786fa9e58d2a1262c461bd2d9563cddf5478260ac62da88f160e868c3c3b7ef`,
+TRAIN `5743baa5…`, TEST `974e4ba3…`. Deterministisch reproduzierbar (siehe Befehle unten); es wird **keine**
+Binärdatei eingecheckt. SWB1/CDX1, Gerätecheckpoints und produktiver Chat wurden nicht berührt.
+
+## Gemessene Grenzen (offen)
+1. **Ungesehene Paraphrasen** (12/35): ohne lexikalisch-semantisches Vorwissen nicht erschließbar; Modell enthält sich
+   meist (sicher). Nächster Schritt: read-only SWB1-/CRE1-Ähnlichkeit als zusätzliche gelernte Eingabe testen.
+2. **Zeitqualifikatoren** (4/6): Nähe allein reicht nicht; braucht Qualifikator-Merkmal (heute/früher-Bindung).
+3. **Mehrwort/Einheiten** (0/6): Einzeltoken-Spanne. Nächster Schritt: Start-/End-Pointer mit exakten Quelloffsets,
+   Längenbegrenzung und Negativtests (nicht implementiert, keine Lösung behauptet).
+4. Verbleibende 6 unbelegte Antworten (3 andere Relation, 3 verneint).
+
+## Reproduktion
+```sh
+cd app/src
+kotlinc main/java/at/heinz/deviceai/learning/span/*.kt test/java/at/heinz/deviceai/learning/span/*.kt \
+  -cp junit-4.13.2.jar:hamcrest-core-1.3.jar -jvm-target 17 -include-runtime -d csx1.jar
+java -cp csx1.jar:junit-4.13.2.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitCore \
+  at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest \
+  at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest \
+  at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest            # OK (9 tests)
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment cycle1      # Zyklus 1, TEST
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment select V2 V6 V8   # nur VALIDATION
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment final V8    # eingefrorener TEST
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment diagnose V8 # Gewichte, PR61-DEV
+```
+Status: `SOURCE_INTEGRATED`, `JVM_TESTED` (kotlinc 2.0.20, JDK 21, Linux x86_64). Android-Gradle/APK/Gerät:
+`UNAVAILABLE` (kein SDK). Keine Android-Integration vorgenommen (Gates verlangen vorher Besitzerkontrolle).
