@@ -73,3 +73,17 @@ test("technical IDs reject near-identical but different digits in source excerpt
     {id:"right",kind:"SOURCE_TEXT",text:"SWB1 ist trainierbar."}
   ]).map(x=>x.id),["right"]);
 });
+
+test("common long question verbs do not suppress valid technical citations",()=>{
+  const src=[{id:"backprop",kind:"SOURCE_TEXT",text:"Backpropagation heißt auch Fehlerrückführung."},
+             {id:"other",kind:"SOURCE_TEXT",text:"Softwaretest hat andere Ziele."}];
+  for(const q of ["Wie funktioniert Fehlerrückführung?",
+                  "Beschreibe und analysiere Fehlerrückführung",
+                  "Kannst du Fehlerrückführung charakterisieren?",
+                  "Was unterscheidet Fehlerrückführung und Backpropagation?"]){
+    assert.equal(sourceTermEvidence(q,src[0].text),true,q);
+    assert.deepEqual(rankMemories(q,src).map(x=>x.id),["backprop"],q);
+  }
+  assert.equal(sourceTermEvidence("Wie funktioniert Quantenkarussell987?",src[0].text),false);
+  assert.equal(sourceTermEvidence("Vergleiche Fehlerrückführung und Softwaretest",src[0].text),false);
+});
