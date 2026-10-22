@@ -6,8 +6,8 @@ const read=relative=>fs.readFileSync(new URL('../../'+relative,import.meta.url),
 
 test('v0.3.12 updates the installed Mentor Pair package rather than creating a new app',()=>{
   const gradle=read('app/build.gradle.kts');
-  assert.match(gradle,/versionCode = if \(deviceAiMentorPreview\) 15 else if \(deviceAiPreview\) 6/);
-  assert.match(gradle,/versionName = if \(deviceAiMentorPreview\) "0\.3\.12"/);
+  assert.match(gradle,/versionCode = if \(deviceAiFeaturePreview\) 8 else if \(deviceAiDesignPreview\) 7 else if \(deviceAiMentorPreview\) 15 else if \(deviceAiPreview\) 6 else 4/);
+  assert.match(gradle,/else if \(deviceAiMentorPreview\) "0\.3\.12" else if \(deviceAiPreview\) "0\.3\.3"/);
   assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
   assert.match(gradle,/signingConfig = signingConfigs\.getByName\("mentorPreview"\)/);
 });
