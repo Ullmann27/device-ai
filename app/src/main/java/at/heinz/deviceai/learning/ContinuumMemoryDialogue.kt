@@ -181,6 +181,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             for(a in q)for(b in t) {
                 if(a==b)return 1.0
                 if(a.length>=5 && b.length>=5 && a.substring(0,5)==b.substring(0,5))best=maxOf(best,0.8)
+                // Whole-word German compound heads remain searchable (e.g. Schlüssel).
                 if(a.length>=5 && b.length>=a.length+3 && b.endsWith(a))best=maxOf(best,0.82)
                 if(b.length>=5 && a.length>=b.length+3 && a.endsWith(b))best=maxOf(best,0.82)
                 val ta=trigrams(a);val tb=trigrams(b)
@@ -210,6 +211,43 @@ class ContinuumMemoryDialogue(private val directory:File) {
               e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
               e.sourceRef?.startsWith("https://")==true))
 
+        /**
+         * SOURCE_TEXT must support every distinctive long term or letter-digit ID
+         * within the SAME excerpt; partial prefix/suffix overlap does not suffice.
+         * This is a lexical guard, not a factual guarantee. Owner memories unchanged.
+         */
+        /** Source observation citations: conservative, directional lexical anchor check.
+         * Does not change OWNER_CONFIRMED wordEvidence or train any weights. */
+        private val SOURCE_QUERY_OPERATORS=setOf("analysiere","analysieren","bedeuten","bedeutet","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","darstelle","darstellen","definiere","definieren","definiert","erkläre","erklären","erklärst","erläutere","erläutern","erläuterst","erzaehle","funktionieren","funktionierend","funktioniert","funktionierte","funktionierten","nenne","nennen","unterscheide","unterscheiden","unterscheidet","untersuche","untersuchen","vergleiche","vergleichen","zeige","zeigen","zusammenfassen","zusammenfasst","zusammengefasst")
+        private val SOURCE_INFLECTION_TAILS=listOf("","e","n","s","en","er","es","em")
+
+        internal fun sourceWordMatch(needle:String,word:String):Boolean {
+            if(needle==word)return true
+            if(needle.any(Char::isDigit)||word.any(Char::isDigit))return false
+            for(na in SOURCE_INFLECTION_TAILS)for(wb in SOURCE_INFLECTION_TAILS) {
+                if(na.isEmpty()&&wb.isEmpty())continue
+                if(!needle.endsWith(na)||!word.endsWith(wb))continue
+                val a=needle.dropLast(na.length)
+                val b=word.dropLast(wb.length)
+                if(a.length>=6&&a==b)return true
+            }
+            return needle.length>=8&&word.length>=needle.length+3&&word.endsWith(needle)
+        }
+
+        internal fun sourceTermEvidence(query:String,text:String):Boolean {
+            if(query.length>4096||text.isEmpty())return false
+            val terms=contentWords(java.text.Normalizer.normalize(query,java.text.Normalizer.Form.NFC))
+                .distinct().filter { it !in SOURCE_QUERY_OPERATORS }
+            val source=contentWords(java.text.Normalizer.normalize(text,java.text.Normalizer.Form.NFC)).distinct()
+            if(terms.isEmpty()||source.isEmpty())return false
+            val hard=terms.filter { term ->
+                term.length>=12||(term.length>=4&&term.any(Char::isLetter)&&term.any(Char::isDigit))
+            }
+            val anchors=if(hard.isNotEmpty())hard else terms.filter { it.length>=4 }
+            if(anchors.isEmpty())return false
+            return anchors.all { needle -> source.any { word -> sourceWordMatch(needle,word) } }
+        }
+
         fun rank(bytes:ByteArray,query:String,experiences:List<LearningExperience>):List<ContinuumMemoryHit> {
             val model=TrainableSubwordEncoder.restore(bytes)
             val q=query.take(1000)
@@ -221,6 +259,8 @@ class ContinuumMemoryDialogue(private val directory:File) {
             val qv=weigh(wordGrams(q),idf)
             return pool.mapNotNull { e ->
                 val text=e.content.take(1000)
+                if(e.type==LearningExperienceType.SOURCE_TEXT &&
+                    !sourceTermEvidence(q,text))return@mapNotNull null
                 if(wordEvidence(q,text)<EVIDENCE_THRESHOLD)return@mapNotNull null
                 val score=cosine(qv,weigh(wordGrams(text),idf))
                 if(!(score>0.0))return@mapNotNull null
