@@ -181,6 +181,34 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
 5. **Kosten:** n-Gramm-Tabelle; 256 Wahrscheinlichkeiten je Byte-Position.
 6. **Abbruch:** wenn NF-3/NF-6b-Infrastruktur in dieser Sitzung nicht fertig wird, bleibt es offen und sichtbar.
 
+## 8b. Research-Radar (Ergebnis C) – `.github/continuum/research-radar.mjs`
+
+- **Quelle:** arXiv-API (kostenlos, ohne Schlüssel), höchstens 25 Treffer je Thema, 3 s Pause zwischen Anfragen,
+  20 s Zeitlimit; Netzfehler werden je Thema protokolliert und brechen den Lauf nicht ab.
+- **Themen:** je NF-Experiment eine Suchanfrage (Gedächtnis, Fast Weights, adaptive Rechenverteilung, Sparsity,
+  verifiziertes Programmieren, On-Device-Effizienz).
+- **Dubletten:** Schlüssel = arXiv-Id ohne Version, sonst DOI, sonst normalisierter Titel; neue Versionen
+  aktualisieren den vorhandenen Eintrag.
+- **Einstufung (vorläufig, mit Begründung):** theoretisch interessant · auf lokaler Hardware umsetzbar (genannte
+  Modellgröße ≤ 1 Mrd. oder CPU/Mobil/Laptop) · nicht geeignet/zu teuer (≥ 7 Mrd. Parameter oder Großrechner genannt).
+  **„Unabhängig reproduziert“ und „messbar besser als unsere Methode“ gibt es nur mit eingetragenem Beleg** –
+  „besser“ ausschließlich über ein eigenes NF-Ergebnis, nie über die Behauptung eines Papers.
+- **Vorschläge:** Für die besten umsetzbaren/interessanten Quellen entsteht ein Vorregistrierungs-Gerüst mit den sechs
+  Fragen dieses Labors und – nur auf Wunsch – ein Backlog-Eintrag `RESEARCH_PROPOSAL` im Zustand **PROPOSED**.
+  Ausgeführt wird nichts: Der Besitzer nimmt an oder lehnt ab; der Teamleiter greift diese Art nicht selbst auf.
+- **Rechte:** Ideen dürfen eigene Implementierungen anregen; Code wird nie ohne Lizenzprüfung übernommen
+  (`codeLicence: unknown`, bis jemand die Lizenz prüft).
+- **Zeitplan:** `tick` läuft nur, wenn `enabled: true`, `approvedBy: "owner"` und das Intervall (Standard 7 Tage)
+  abgelaufen ist; `scan --force` ist der manuelle Lauf des Besitzers.
+  Vorlage: `.github/continuum/research-radar.config.example.json`.
+- **Befehle:** `node .github/continuum/research-radar.mjs tick|scan [--force]|report|propose [--backlog=<datei>]
+  --config=<datei> --state=<ordner>`.
+- **Tests:** 5/5 mit synthetischen Atom-Fixtures (Parser, Dubletten über Themen und Versionen, Einstufung, Zeitplan,
+  Fehlertoleranz, Vorschläge nur PROPOSED).
+- **Stand hier:** In dieser Cloud-Umgebung sperrt die Netzwerkrichtlinie `export.arxiv.org`; ein Live-Lauf wurde
+  deshalb **nicht** ausgeführt und es werden keine Live-Ergebnisse behauptet. Auf dem lokalen Worker des Besitzers
+  (oder nach Freigabe der Domain) ist der Lauf ohne Änderung möglich.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**

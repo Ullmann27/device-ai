@@ -15,7 +15,7 @@ const STOP=new Set(('der die das den dem des ein eine einen einem einer und oder
 /** Lowercase word stems of a text; camelCase and snake_case names are split into words. */
 export function tokens(text){
  const words=String(text).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[_\-./]/g,' ').toLowerCase()
-  .normalize('NFKD').replace(/[̀-ͯ]/g,'').split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP.has(w));
+  .normalize('NFKD').replace(/[\u0300-\u036f]/g,'').split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP.has(w));
  return words.map(stem);
 }
 function stem(w){

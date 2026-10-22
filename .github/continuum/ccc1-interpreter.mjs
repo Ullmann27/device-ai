@@ -19,7 +19,7 @@ const STOP=new Set(('der die das den dem des ein eine einen einem einer und oder
 
 export function tokens(text){
  return String(text).replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/[_\-./]/g,' ').toLowerCase().normalize('NFKD')
-  .replace(/[̀-ͯ]/g,'').split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP.has(w)).map(stem);
+  .replace(/[\u0300-\u036f]/g,'').split(/[^a-z0-9]+/).filter(w=>w.length>1&&!STOP.has(w)).map(stem);
 }
 function stem(w){
  if(w.length<=5)return w;
