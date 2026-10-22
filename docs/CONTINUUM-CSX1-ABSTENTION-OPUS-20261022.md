@@ -117,6 +117,38 @@ Negationsgewicht mit V8 wieder −2,28.
 **Einmalige TEST-Messung V8** (eingefroren, 3 Seeds identisch; Log `cycle4-final-test-V8.txt`): 99/124 richtig,
 **6/140 unbelegt**, Fallen 3/202, Teilsatzbindung 6/6, Mehrfachentitäten 21/21, Verneinung 3/28 unbelegt.
 
+## Zyklus 5 – H6 begrenzte Mehrwort-/Einheitenspannen – **negatives Ergebnis auf TEST**
+
+Umsetzung (Flag 16, `Features(multiTokenSpans = true)`, Standard aus und bitidentisch zu V8/V2 – beide
+Checkpoint-Hashes reproduziert): Kandidaten sind zusätzlich Spannen aus bis zu **3** benachbarten Kandidatentokens
+**im selben Teilsatz**, nur durch Leerraum getrennt; Antwort = **exakter Quelltext-Ausschnitt** `evidence[start, end)`;
+gelernte Längenmerkmale über einen gehashten `len:n`-Kontextschlüssel; höchstens 192 Kandidaten. Negativtests
+(`ContinuumResidualSpanCoreSpanTest`): kein Überschreiten von Komma/Satzende, keine Stoppwörter, keine Spanne > 3,
+abgefragte Entität nie Teil der Antwort, Vorhersage == exakter Teilstring, finite Differenzen, v2-Roundtrip.
+
+Daten (`multiword`-Option, TEST unverändert, Hash-Gate grün): TRAIN „Gerät X hat ein Gewicht von N Kilogramm“,
+„Roboter X ist N Meter lang“, „Paket X stammt von Vorname Nachname“ + Verneinungen/andere Relation als harte
+Negative; VALIDATION eigene Formen („Behälter X fasst N Liter“, „Die Autorin von Paket X ist …“); TEST bleibt die
+eingefrorene Form „Maschine X wiegt N Kilogramm.“ / „Wie schwer ist X?“. Einzeltoken-Modelle trainieren nie auf
+Mehrwort-Gold (nicht darstellbar). Fairer Vergleich: V8 und V9 mit **denselben** TRAIN-Daten (`trainSha=719fd98e…`).
+
+| (argmax, Seed 1; Seeds 2/3) | richtig | unbelegt | Fallen | Mehrwort | Teilsatzbindung | Verneinung unbelegt |
+|---|---|---|---|---|---|---|
+| VALIDATION V8 | 65/91 (66/66) | 7/100 | 12/156 | 0/12 | 5/6 | 4/24 |
+| VALIDATION **V9** | **73/91 (74/74)** | 6/100 | 7/156 | **10/12** | 4/6 | 3/24 |
+| TEST V8 (gleiche Daten) | 96/124 (98/98) | 4/140 | 4/202 | 0/6 | 6/6 | 2/28 |
+| TEST V9 | 94/124 (97/96) | **8/140** (8/7) | 4/202 | **1/6** (2/6, 1/6) | 6/6 | 4/28 |
+
+Auswahl auf VALIDATION fiel auf V9; die **einmalige TEST-Messung** (Log `cycle5-final-test-V8-V9-multiword.txt`)
+bestätigt das nicht: Mehrwort 1–2/6 statt 0/6, aber **mehr unbelegte Antworten** (7–8 statt 4, v. a. andere Relation
+und Verneinung) und nicht mehr richtige. Mit VALIDATION-Schwelle (0,45/0,55/0,60) V9 Mehrwort 0/6. Deutung: Die
+VALIDATION-Formen teilen Wörter mit der Frage („fasst“↔„fasst“, „Autorin“↔„Autorin“); die TEST-Form („wiegt“↔„Wie
+schwer“) nicht – dieselbe lexikalische Grenze wie bei ungesehenen Paraphrasen, kein gelerntes Einheitenkonzept.
+Mehr Kandidatenspannen = mehr Gelegenheiten zu erfundenen Antworten. **Entscheidung: V9 wird nicht übernommen**,
+Flag bleibt standardmäßig aus; der Code bleibt als geprüfte, darstellungssichere Option (exakte Offsets) erhalten.
+Nebenbefund (nur beobachtet, nicht ausgewählt, weil auf TEST gesehen): V8 mit den zusätzlichen harten Negativen
+der `multiword`-Daten hatte 4 statt 6 unbelegte Antworten – Kandidat bleibt dennoch der in Zyklus 4 gewählte V8.
+
 ## Gesamtvergleich auf dem eingefrorenen TEST (argmax, 3 Seeds, gleiche TRAIN-/Trainingsbedingungen)
 
 | Variante | richtig /124 | unbelegt /140 | falsche Spanne | Fallen /202 | Teilsatzbindung | Verneinung unbelegt /28 | ungesehene Formen |
@@ -126,6 +158,7 @@ Negationsgewicht mit V8 wieder −2,28.
 | V6 + gelernte Entitätsnähe | 97 | 10–12 | 8–9 | 3–5 | 6/6 | 7–8 | 12/35 |
 | **V8 + Nähe + Signalwörter keine Kandidaten** | **99** | **6** | **8–10** | **3** | **6/6** | **3** | **12/35** |
 | R2 Lexikonregel (Regel-Baseline) | 74 | 0 | 34 | 21 | 4/6 | 0 | 7/35 |
+| V9 V8 + Mehrwortspannen (Zyklus 5, multiword-TRAIN) | 94 | 8 | 13 | 4 | 6/6 | 4 | 11/35 |
 
 (Alle Werte aus den 30-Epochen-Logs, Seed 1; Seeds 2/3 siehe Logs.) Herkunft der Verbesserung:
 **Curriculum** (gelernte Gewichte, gleiche Architektur) erklärt den Großteil (unbelegt 61 → 9);
@@ -146,8 +179,8 @@ Binärdatei eingecheckt. SWB1/CDX1, Gerätecheckpoints und produktiver Chat wurd
 1. **Ungesehene Paraphrasen** (12/35): ohne lexikalisch-semantisches Vorwissen nicht erschließbar; Modell enthält sich
    meist (sicher). Nächster Schritt: read-only SWB1-/CRE1-Ähnlichkeit als zusätzliche gelernte Eingabe testen.
 2. **Zeitqualifikatoren** (4/6): Nähe allein reicht nicht; braucht Qualifikator-Merkmal (heute/früher-Bindung).
-3. **Mehrwort/Einheiten** (0/6): Einzeltoken-Spanne. Nächster Schritt: Start-/End-Pointer mit exakten Quelloffsets,
-   Längenbegrenzung und Negativtests (nicht implementiert, keine Lösung behauptet).
+3. **Mehrwort/Einheiten** (V8 0/6, V9 1–2/6): jetzt mit exakten Offsets **darstellbar** (Flag 16, getestet), aber für
+   die ungesehene TEST-Form nicht gelernt und mit mehr unbelegten Antworten erkauft (Zyklus 5). Nicht gelöst.
 4. Verbleibende 6 unbelegte Antworten (3 andere Relation, 3 verneint).
 
 ## Reproduktion
@@ -158,11 +191,14 @@ kotlinc main/java/at/heinz/deviceai/learning/span/*.kt test/java/at/heinz/device
 java -cp csx1.jar:junit-4.13.2.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitCore \
   at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest \
   at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest \
-  at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest            # OK (9 tests)
+  at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest \
+  at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest            # OK (12 tests)
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment cycle1      # Zyklus 1, TEST
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment select V2 V6 V8   # nur VALIDATION
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment final V8    # eingefrorener TEST
 java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment diagnose V8 # Gewichte, PR61-DEV
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment select multiword V8 V9  # Zyklus 5
+java -cp csx1.jar at.heinz.deviceai.learning.span.ContinuumSpanAbstentionExperiment final multiword V8 V9   # einmal TEST
 ```
 Status: `SOURCE_INTEGRATED`, `JVM_TESTED` (kotlinc 2.0.20, JDK 21, Linux x86_64). Android-Gradle/APK/Gerät:
 `UNAVAILABLE` (kein SDK). Keine Android-Integration vorgenommen (Gates verlangen vorher Besitzerkontrolle).
