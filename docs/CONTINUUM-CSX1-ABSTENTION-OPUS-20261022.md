@@ -64,3 +64,42 @@ Enthaltungsfähigkeit der Architektur. Mit denselben 4.110 Parametern, ohne Rege
 Antworten von ≈60 auf 9 (−85 %) bei −2 richtigen Antworten. Eine Schwelle allein (V1+0,80) erkauft dasselbe mit
 dem Verlust von 34 richtigen Antworten. Verbleibende Schwäche von V2: **ungesehene Satzformen** 9/35 richtig
 (bekannte Formen 85/89), gleiche-Teilsatz-Entitäten und Zeitqualifikator auf Zufallsniveau (3/6), Einheiten 0/6.
+
+## Zyklus 2 – Hypothesen H2/H3 zu ungesehenen Satzformen (nur VALIDATION) – **negatives Ergebnis**
+
+VALIDATION erhielt eigene, nur dort vorkommende Satzfamilien/Fragevorlagen (TRAIN/TEST unverändert; TEST-Hash geprüft).
+Achtung: Dadurch änderte sich VALIDATION nach Zyklus 1; die Schwellen der Zyklus-1-Tabelle beziehen sich auf die
+alte VALIDATION, die argmax-Zahlen sind unverändert reproduzierbar.
+- H2 Kennungs-Platzhalter (`<id>`/`<num>` statt Hash-Grams beliebiger IDs) und H3 Entfernen der Positionsabkürzung
+  („letztes Token“, absolute Position): **kein Gewinn** auf ungesehenen Formen (alle 1/8; Fehler fast nur Enthaltung).
+- Fehleranalyse: Bei unbekannten Formulierungen („Standort von“, „gehört zur Ausstattung“, „steckt das Modul“) erkennt
+  das lexikalische Modell die Relation nicht und **enthält sich** (sicheres Versagen, keine Erfindung). Mit zwei
+  Trainingsphrasierungen je Relation und 4.110 Parametern ist neue Paraphrase ohne lexikalisch-semantisches Vorwissen
+  nicht erschließbar – eine **gemessene Grenze**, kein Tuningproblem. Logs: `cycle2-select-validation.txt`.
+
+## Zyklus 3 – H4 gelernte Entitätsnähe (Bindung im Teilsatz)
+
+Hypothese: Die Positions-Slots tragen nachweislich nichts bei (V3≈V2); als gelernte Eingaben eignen sich stattdessen
+die Nähe zur gefragten Entitäts-ID im Teilsatz, gezählt in Kandidaten-Token (Entität davor / danach). Gewicht wird
+gelernt, keine Antwortregel, Parameterzahl unverändert 4.110 (`Features(positionFeatures=false, entityProximity=true)`).
+
+Auswahl nur auf VALIDATION (eigene Bindungs-/Zeitfälle mit Relation „Werkzeug“, TEST nutzt „Standort“):
+Bindung im Teilsatz 2/6 → 4/6, Fallen dort 3/6 → 0/6, alle Fallen 10 → 5, richtig 64 → 66/79, unbelegt gleich.
+Zusätzliches Bindungs-Trainingscurriculum (Modul/Port): kein Gewinn → verworfen.
+
+**Einmalige TEST-Messung** (eingefroren, 3 Seeds × 30 Epochen, argmax; Log `cycle3-final-test.txt`):
+
+| | V2 (PR61-Merkmale) | V6 (Entitätsnähe) |
+|---|---|---|
+| richtig (von 124) | 94 / 94 / 94 | **97 / 97 / 97** |
+| falsche Spanne | 16 | **8 / 9 / 8** |
+| Fallen: Verwechslung/Negation (von 202) | 11 | **3 / 5 / 3** |
+| gleicher Teilsatz, zwei Entitäten | 3/6 | **6/6** (Verwechslung 0) |
+| Zeitqualifikator „heute/früher“ | 3/6 | 4/6 |
+| ungesehene Formen | 9/35 | 12/35 |
+| unbelegte Antworten (von 140) | **9** | 10 / 12 / 11 |
+| davon verneinte Werte | 5 | 7 / 8 / 7 |
+
+Ehrliche Bewertung: V6 verbessert die **Entitätsbindung** messbar und reproduzierbar (Teilsatzbindung 3/6 → 6/6,
+Fallen −60 %), kostet aber **1–3 zusätzliche unbelegte Antworten**, konzentriert auf verneinte Werte. Keine der
+Varianten löst Zeitqualifikatoren zuverlässig oder Einheiten/Mehrwortantworten (0/6, Einzeltoken-Grenze).
