@@ -64,19 +64,6 @@ android {
     }
 
     sourceSets {
-        // The Java2D renderer and its image-regression suite run with the host
-        // JDK/kotlinc, not Android's java.desktop-free unit-test bootclasspath.
-        // Their sources and Opus' independent preview tests remain in GitHub;
-        // Android Gradle tests must not try to compile java.awt.
-        getByName("test") {
-            java.exclude(
-                "**/Java2DContinuumPainter.kt",
-                "**/ContinuumHomeScreenTest.kt",
-                "**/ContinuumPreviewMain.kt",
-                "**/ContinuumTypeCalibration.kt",
-                "**/ReferencePreviewData.kt"
-            )
-        }
         getByName("main") {
             if (deviceAiMobileAidlFallback) {
                 java.srcDir("src/termux/java")
