@@ -43,8 +43,11 @@ export function wordEvidence(query,text){
 /** For source observations every distinctive term must occur in the SAME citation.
  * Owner-confirmed memories still use the historical broader wordEvidence.
  * This is a lexical evidence gate, not proof of factual or semantic correctness. */
+// Common question operators are not topics that a source must literally name.
+// Scope to citation filtering: historic owner-fact ranking stays byte-identical.
+const SOURCE_QUERY_OPERATORS=new Set(["funktioniert","funktionieren","funktionierte","funktionierten","funktionierend","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","unterscheide","unterscheiden","unterscheidet","vergleiche","vergleichen","analysiere","analysieren","untersuche","untersuchen","zusammenfassen","zusammenfasst","zusammengefasst","erläutere","erläutern","erläuterst","erklärst","erklären","erkläre"]);
 export function sourceTermEvidence(query,text){
-  const terms=[...new Set(contentWords(query))];
+  const terms=[...new Set(contentWords(query))].filter(term=>!SOURCE_QUERY_OPERATORS.has(term));
   const anchors=terms.filter(term=>term.length>=12||
     (term.length>=4&&/\\p{L}/u.test(term)&&/\\p{Nd}/u.test(term)));
   if(anchors.length===0)return true;
