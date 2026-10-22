@@ -13,6 +13,10 @@ val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
+// Preserve the original two-variant invariant and enforce mutual exclusion for all previews.
+require(!(deviceAiPreview && deviceAiMentorPreview)) {
+    "Use only one preview package ID at a time."
+}
 require(listOf(deviceAiPreview, deviceAiMentorPreview, deviceAiDesignPreview, deviceAiFeaturePreview).count { it } <= 1) {
     "Use only one preview package ID at a time."
 }
