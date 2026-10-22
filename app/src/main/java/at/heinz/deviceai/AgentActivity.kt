@@ -1123,40 +1123,35 @@ class AgentActivity : Activity() {
         experimental: List<CenterAction> = emptyList()
     ) {
         centerDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 78), Color.rgb(13, 24, 45),
-                22, Color.rgb(58, 107, 180))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        box.addView(textView("DEVICE AI · DEIN BEREICH", 11f, CYAN, true))
-        box.addView(textView(title, 21f, TEXT, true), matchWidth(top = 6))
-        box.addView(textView(intro, 13.3f, Color.rgb(203, 219, 239)), matchWidth(top = 9))
-        val statusView = textView("Status wird gelesen …", 12.5f, TEXT).apply {
-            background = rounded(Color.rgb(12, 26, 48), 14, Color.rgb(59, 96, 148))
-            setPadding(dp(12), dp(12), dp(12), dp(12))
-            setTextIsSelectable(true)
-        }
-        box.addView(statusView, matchWidth(top = 12))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
+        box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, "Status wird gelesen …")
+        box.addView(statusGrid, matchWidth(top = 3))
         lateinit var dialog: AlertDialog
-        fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
-            setOnClickListener { dialog.dismiss(); action.run() }
-        }
-        actions.forEach { box.addView(button(it), matchWidth(top = 8)) }
+        fun makeAction(action: CenterAction): View =
+            cockpit.action(this, action.label, primary = action.accent,
+                critical = action.label.contains("LÖSCHEN", ignoreCase = true)) {
+                dialog.dismiss()
+                action.run()
+            }
+        box.addView(cockpit.section(this, "FUNKTIONEN · WÄHLE EIN WERKZEUG"), matchWidth(top = 9))
+        cockpit.grid(this, box, actions.map(::makeAction),
+            if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         if (experimental.isNotEmpty()) {
-            box.addView(textView("EXPERIMENTELL · nur Messungen; nichts davon wird in den aktiven Lernstand übernommen",
-                11f, AMBER, true), matchWidth(top = 16))
-            experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
+            box.addView(cockpit.section(this, "FORSCHUNG · EXPERIMENTELL, KEINE AUTOMATISCHE ÜBERNAHME"),
+                matchWidth(top = 10))
+            cockpit.grid(this, box, experimental.map(::makeAction),
+                if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         }
-        dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
+        dialog = cockpit.show(this, box)
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
         centerDialog = dialog
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        status { text -> if (dialog.isShowing) statusView.text = text }
+        status { value ->
+            if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
+        }
     }
 
     /**
