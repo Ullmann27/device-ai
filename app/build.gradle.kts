@@ -60,7 +60,7 @@ android {
     buildTypes {
         getByName("debug") {
             if (deviceAiFeaturePreview) {
-                applicationIdSuffix = ".featurepreview2"
+                applicationIdSuffix = ".featurepreview"
             } else if (deviceAiDesignPreview) {
                 // Fresh, independent installation; never alters owner or earlier preview data.
                 applicationIdSuffix = ".designpreview"
