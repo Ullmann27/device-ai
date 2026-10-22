@@ -175,7 +175,7 @@ class AgentActivity : Activity() {
     private lateinit var localBadge: TextView
     // views of the open model center (null while it is closed)
     private var modelCardText: TextView? = null
-    private var localActionButton: Button? = null
+    private var localActionButton: TextView? = null
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
     private var installedModels: List<ImportedLocalModel> = emptyList()
