@@ -12,6 +12,9 @@ import kotlin.math.min
  * [textScale] is the system font scale (clamped), applied to every text size.
  */
 abstract class ContinuumElement(protected val textScale: Float = 1f) {
+    /** Decorative motion only; does not change measured learning counts, samples or quality. */
+    var motionPhase: Float? = null
+        internal set
     abstract fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState)
     /** Spoken by TalkBack; contains the same real values that are drawn. */
     abstract fun describe(s: ContinuumDashboardState): String
@@ -186,7 +189,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
             ContinuumIcons.draw(p, if (up) Icon.ARROW_UP else Icon.CHEVRON_DOWN, cl + 9f, 54f, 8.5f, solid(color), 1.2f)
             p.drawText(label, cl + 14.5f, 57.3f, style, solid(color))
         }
-        WaveChart.draw(p, 14f, 72f, w - 11f, 112f, l.series)
+        WaveChart.draw(p, 14f, 72f, w - 11f, 112f, l.series, phase = motionPhase)
         val rows = l.recent.take(3)
         if (rows.isEmpty()) {
             p.drawText("Heute noch keine Lernereignisse.", 14f, 136f, t(400, 7.02f), solid(ContinuumTheme.TEXT_MUTED))
@@ -273,11 +276,16 @@ class DevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textScale
 /** Smooth layered waves of a real series; an empty series draws a flat baseline only. */
 object WaveChart {
     private val path = VectorPath()
-    fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, layers: Int = 3) {
+    fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, layers: Int = 3,
+             phase: Float? = null) {
         p.drawLine(l, b, r, b, .6f, Fill.Solid(Argb.rgb(40, 60, 110)), .8f)
         if (series.size < 2 || series.maxOrNull()?.let { it <= 0f } != false) return
         val maxV = series.maxOrNull()!!.coerceAtLeast(1e-6f)
         val colors = intArrayOf(Argb.rgb(40, 120, 255), Argb.rgb(150, 90, 255), Argb.rgb(255, 80, 180))
+        // Only decorative glow varies. The chart points always come from the actual learning journal.
+        val shimmer = phase?.takeIf { it.isFinite() }?.let {
+            0.08f * (1f + kotlin.math.sin(2f * kotlin.math.PI.toFloat() * it))
+        } ?: 0f
         for (layer in layers - 1 downTo 0) {
             // later layers are damped copies, giving the reference's multi-colour depth from the same data
             val damp = 1f - layer * .22f
@@ -302,8 +310,20 @@ object WaveChart {
                 val x0 = px(i - 1f); val x1 = px(i.toFloat()); val mid = (x0 + x1) / 2f
                 path.cubicTo(mid, py(i - 1), mid, py(i), x1, py(i))
             }
-            p.strokePath(path, 2.6f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(60, 160, 255), color, Argb.rgb(255, 90, 190))), .18f)
+            p.strokePath(path, 2.6f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(60, 160, 255), color, Argb.rgb(255, 90, 190))), .18f + shimmer)
             p.strokePath(path, 1.1f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(80, 180, 255), color, Argb.rgb(255, 110, 200))), .95f)
+        }
+        if (phase != null && phase.isFinite() && layers > 0) {
+            // Traveling marker interpolates adjacent real samples, never invented training observations.
+            val sample = phase.coerceIn(0f, 1f) * (series.size - 1)
+            val leftIndex = sample.toInt().coerceIn(0, series.lastIndex)
+            val rightIndex = (leftIndex + 1).coerceAtMost(series.lastIndex)
+            val fraction = sample - leftIndex
+            val measured = series[leftIndex] + (series[rightIndex] - series[leftIndex]) * fraction
+            val x = l + (r - l) * phase.coerceIn(0f, 1f)
+            val y = b - (b - t) * .95f * (measured / maxV)
+            p.fillCircle(x, y, 5f, Fill.Solid(Argb.rgb(65, 175, 255)), .13f)
+            p.fillCircle(x, y, 2.2f, Fill.Solid(Argb.rgb(170, 235, 255)), .93f)
         }
     }
 }
