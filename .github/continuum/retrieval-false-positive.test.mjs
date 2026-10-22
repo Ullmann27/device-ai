@@ -87,3 +87,30 @@ test("common long question verbs do not suppress valid technical citations",()=>
   assert.equal(sourceTermEvidence("Wie funktioniert Quantenkarussell987?",src[0].text),false);
   assert.equal(sourceTermEvidence("Vergleiche Fehlerrückführung und Softwaretest",src[0].text),false);
 });
+
+test("Argon audit: short-source anchors and exact directional compounds",()=>{
+  assert.equal(sourceTermEvidence("Was ist Osmose?","Die Osmose ist ein Stofftransport."),true);
+  assert.equal(sourceTermEvidence("Was ist Osmose?","Ein anderer Prozess ohne das Fachwort."),false);
+  assert.equal(sourceTermEvidence("Wie funktioniert Osmose in Graz?","Osmose wird erklärt."),false);
+  assert.equal(sourceTermEvidence("Was bedeutet Osmose?","Osmose ist ein Stofftransport."),true);
+  assert.equal(sourceTermEvidence("Was ist der Schlüssel?","Der Haustürschlüssel liegt dort."),true);
+  assert.equal(sourceTermEvidence("Was ist Fehlerrückführung?","Das System nutzt nur die Führung."),false);
+  assert.equal(sourceTermEvidence("Fehlerrückführung","Eine Rückführung gibt es."),false);
+  assert.equal(sourceTermEvidence("Speicherplan","Speicherplatz wird beschrieben."),false);
+  assert.equal(sourceTermEvidence("Speicherplatz","Speicherplan wird beschrieben."),false);
+  assert.equal(sourceTermEvidence("Pflanzen","Die Pflanze wächst."),true);
+  assert.equal(sourceTermEvidence("Vergleiche SWB1 und CSX1","SWB1 und CSX2 sind beschrieben."),false);
+  assert.equal(sourceTermEvidence("Vergleiche SWB1 und CSX1","SWB1 und CSX1 sind beschrieben."),true);
+  assert.deepEqual(rankMemories("Was ist Osmose?",[
+    {id:"irrelevant",kind:"SOURCE_TEXT",text:"Die Odyssee der Physik."},
+    {id:"relevant",kind:"SOURCE_TEXT",text:"Osmose bedeutet Diffusion durch eine Membran."}
+  ]).map(x=>x.id),["relevant"]);
+});
+
+test("Argon audit: normalisation, invalid input and repeated question operators",()=>{
+  assert.equal(sourceTermEvidence("Was bedeutet Fehlerrückführung?","Backpropagation bedeutet Fehlerrückführung."),true);
+  assert.equal(sourceTermEvidence("Fehlerrückführung","Fehlerrückführung".normalize("NFD")),true);
+  assert.equal(sourceTermEvidence("SWB1","SWB2"),false);
+  assert.equal(sourceTermEvidence("Was ist Osmose?",""),false);
+  assert.equal(sourceTermEvidence("Erkläre","Irgendeine Quelle"),false);
+});
