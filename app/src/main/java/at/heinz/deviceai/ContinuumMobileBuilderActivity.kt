@@ -55,6 +55,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         paragraph("Continuum · Android Builder", true)
         paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
+        status.setTextIsSelectable(true)
         for (operation in ContinuumMobileBuildPlan.Operation.entries) {
             val button = Button(this).apply {
                 text = operation.title
@@ -140,10 +141,12 @@ class ContinuumMobileBuilderActivity : Activity() {
         val last = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, null)
         val sha = preferences.getString(ContinuumMobileBuildResultReceiver.LAST_SHA, null)
         val pending = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)
+        val pendingOperation = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, null)
         val started = preferences.getLong(ContinuumMobileBuildResultReceiver.JOB_START, 0L)
         status.text = when {
             pending != null ->
-                "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt."
+                "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt." +
+                    if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else ""
             last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
             else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
         }
