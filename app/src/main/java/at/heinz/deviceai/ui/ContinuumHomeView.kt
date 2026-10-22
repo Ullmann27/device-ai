@@ -112,6 +112,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
+    /** Window dp per reference dp of the current composition (null before the first configure). */
+    val layoutScale: Float? get() = layoutSpec?.scale
 
     /** Height of a slot in dp (for tap zones inside an element). */
     fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f

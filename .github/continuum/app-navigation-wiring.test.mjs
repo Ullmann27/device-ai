@@ -102,3 +102,13 @@ test('recreated activity preserves chat selection and draft without persistent M
   assert.match(spec, /fun selectionAfterTap\(current: ContinuumWorkArea, tapped: ContinuumWorkArea\)/);
   assert.match(activity, /activeWorkArea = ContinuumWorkAreaNavigationSpec\.selectionAfterTap/);
 });
+
+test('design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics', () => {
+  const snapshot = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumUiSnapshot.kt');
+  assert.match(activity, /actionButton\("Startbildschirm für Design-Abnahme sichern"\)/);
+  assert.match(activity, /ContinuumUiSnapshot\.metrics\(this, homeView\?\.wide == true, homeView\?\.layoutScale\)/);
+  assert.match(snapshot, /if \(Build\.VERSION\.SDK_INT < 29\) return null/);
+  for (const field of ['screenWidthDp', 'screenHeightDp', 'densityDpi', 'fontScale', 'wideLayout', 'layoutScale', 'insetsPx'])
+    assert.match(snapshot, new RegExp(`put\\("${field}"`));
+  assert.doesNotMatch(read('app/src/main/AndroidManifest.xml'), /WRITE_EXTERNAL_STORAGE|READ_MEDIA_IMAGES/);
+});

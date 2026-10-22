@@ -868,6 +868,10 @@ class AgentActivity : Activity() {
             box.addView(actionButton(if (showHistory) "Nur offene Meldungen" else "Verlauf anzeigen").apply {
                 setOnClickListener { dialog.dismiss(); showDiagnosticsCenter(!showHistory) }
             }, matchWidth(top = 12))
+            box.addView(actionButton("Startbildschirm für Design-Abnahme sichern").apply {
+                contentDescription = "Startbildschirm als Bild mit Fenstermaßen für den Abgleich mit den Referenzbildern sichern"
+                setOnClickListener { dialog.dismiss(); window.decorView.postDelayed({ saveDesignSnapshot() }, 450L) }
+            }, matchWidth(top = 8))
             box.addView(actionButton("Diagnose sicher exportieren").apply {
                 setOnClickListener {
                     onLearningIo({ diagnostics.export() }) { exported ->
@@ -887,6 +891,23 @@ class AgentActivity : Activity() {
                 .create()
             dialog.show()
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+    }
+
+    /** Owner-triggered: the real rendering of this window plus its layout metrics, saved and offered for sharing. */
+    private fun saveDesignSnapshot() {
+        val root = window.decorView
+        if (root.width <= 0 || root.height <= 0) return
+        val bitmap = at.heinz.deviceai.ui.ContinuumUiSnapshot.render(root)
+        val metrics = at.heinz.deviceai.ui.ContinuumUiSnapshot.metrics(this, homeView?.wide == true, homeView?.layoutScale)
+        onLearningIo({ at.heinz.deviceai.ui.ContinuumUiSnapshot.save(this, bitmap, metrics) }) { result ->
+            val saved = result.getOrNull()
+            if (saved == null) {
+                Toast.makeText(this, "Abnahme-Bild braucht Android 10 oder neuer.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Gesichert: Bilder/Continuum/${saved.fileName}.png", Toast.LENGTH_LONG).show()
+                runCatching { startActivity(at.heinz.deviceai.ui.ContinuumUiSnapshot.shareIntent(saved)) }
+            }
         }
     }
 
