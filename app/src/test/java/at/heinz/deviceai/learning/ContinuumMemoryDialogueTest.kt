@@ -174,6 +174,38 @@ class ContinuumMemoryDialogueTest {
             "Schlüssel", "Der Haustürschlüssel ist sicher.") >=0.82)
     }
 
+    @Test fun technicalMultiTermQuestionsCannotBorrowOnlyOneSourceAnchor() {
+        val unrelated="Quantenmechanik ist ein Teilgebiet der Physik."
+        val supported="Backpropagation heißt auch Fehlerrückführung."
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Quantenkarussell987 und Quantenmechanik",unrelated))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung und Backpropagation",supported))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung und Softwaretest",supported))
+        val record=LearningExperienceFactory.create(
+            LearningExperienceType.SOURCE_TEXT,
+            LearningProvenance.MENTOR_WIKIPEDIA,
+            LearningTrustClass.SOURCE_OBSERVATION,
+            LearningStatus.OBSERVED,unrelated,
+            sourceRef="https://de.wikipedia.org/wiki/Quantenmechanik",now=1L)
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Erkläre Quantenkarussell987 und Quantenmechanik",listOf(record)).isEmpty())
+    }
+
+    @Test fun identifiersWithDigitsDemandExactSourceEvidence() {
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "SWB1","SWB2 verarbeitet die Daten."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "CSX1","CSX2 ist ein Forschungsmodell."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "SHA256","SHA257 wurde gespeichert."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CDX1","SWB1 hat trainierbare Gewichte."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CDX1","SWB1 und CDX1 sind getrennte Lernkerne."))
+    }
+
     @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
         val sentence = "Sternenreise ist mein Forschungsprojekt"
         val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)
