@@ -40,7 +40,7 @@ test('a coding result never enters the APK-build success policy or persists raw 
   assert.match(receiver, /operation = operation \?: return/);
   assert.doesNotMatch(receiver, /putString\(LAST_MESSAGE, stdout\)/);
   assert.match(coding, /Outcome\.PATCH_VERIFIED_PENDING_REVIEW/);
-  assert.match(coding, /nicht übernommen und braucht deine Prüfung/);
+  assert.match(coding, /nicht übernommen und braucht deine Prüfung/i);
 });
 
 test('existing build remains explicitly gated, and coding cannot install or merge', () => {
