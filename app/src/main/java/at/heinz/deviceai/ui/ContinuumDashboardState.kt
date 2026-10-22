@@ -126,6 +126,19 @@ data class ContinuumDashboardState(
 
         fun percent(value: Int?): String = value?.let { "$it%" } ?: UNKNOWN
 
+        /**
+         * Visual short labels for the physically narrow storage legend.
+         * The full, measured storage category remains in Segment.label and
+         * the element's spoken TalkBack description.
+         */
+        fun compactStorageLabel(label: String): String = when (label) {
+            "App: eigene Dateien" -> "Eigene"
+            "App: Wissensquellen" -> "Quellen"
+            "App: Projektdateien" -> "Projekte"
+            "Übrige Gerätebelegung" -> "Übrige"
+            else -> label
+        }
+
         /** "24 h: +3 Pkt.", "24 h: −2 Pkt.", "24 h: unverändert" or "24 h: noch kein Vergleich" – also shows declines. */
         fun delta24h(value: Int?): String = when {
             value == null -> "24 h: noch kein Vergleich"
