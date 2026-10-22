@@ -176,3 +176,57 @@ Zusätzlich werden erfasst:
 3. **Haupt-Fehlerquelle ist deutsch–englische Benennung:** „kanonisch“ ↔ `canonical`, „Befund“ ↔ `finding`, „Schlüsselwort“ ↔ `isKeyword`. Das Ziel von `isKeyword` liegt zudem im geschützten Modul und ist deshalb nicht prüfbar.
    - Hier könnte ein gelernter Sprachkern messbar helfen, etwa mit zweisprachigen Assoziationen aus den Projektdokumenten.
    - Das ist die nächste falsifizierbare Frage.
+
+## 7. Auswahllauf: Ergebnis auf VALIDATION und Sicherung (Stand 22.10.2026, vor TEST)
+
+**Lauf**
+- Befehl: `LmExperiment <repo> select store=<dir>` mit Code-Stand `9630fd49`, JAR-SHA-256 `27f84b6b…706a`, 4 Threads.
+- Start 15:40:34Z, Ende 17:02:38Z, **Exitcode 0**. Vollständiges Protokoll: `docs/evidence/lm1-20261022/select.log`.
+- Zusammenfassung mit `summarize.py` im selben Ordner: `select-summary.txt`.
+
+**Sicherung aller Trainingsstände**
+- Alle 128 Checkpoints (16 Läufe × 8 Epochen) liegen auf dem Datenzweig `opus/lm1-checkpoints-20261022`, Commit `977293a7`.
+- Jeder Dateiname ist der SHA-256 des Inhalts; vor dem Push wurden alle 128 nachgerechnet (0 Abweichungen).
+- `docs/evidence/lm1-20261022/CHECKPOINTS.tsv` nennt je Checkpoint Familie, Seed, Epoche, VALIDATION-BPB und Größe.
+- Das Training ist bei gleicher Threadzahl deterministisch; jeder Stand ist also auch aus dem Code reproduzierbar.
+
+**Ergebnisse auf VALIDATION** (kleiner ist besser; Mittel ± Standardabweichung über die Seeds)
+
+| Familie | Parameter | beste Epoche | VALIDATION-BPB | Seeds | ms/Token | Token/Byte |
+|---|---:|---:|---:|---:|---:|---:|
+| Unigramm | – | – | 5,063 | – | – | – |
+| CDX1 | 7.746 | 3 | 4,541 ± 0,038 | 3 | – | – |
+| LM1-TS-v512 | 49.632 | 8 | 3,157 ± 0,010 | 3 | 0,059 | 0,555 |
+| LM1-TM-v512 | 148.416 | 8 | 2,901 ± 0,008 | 3 | 0,174 | 0,555 |
+| LM1-GS-v512 | 41.504 | 8 | 2,709 ± 0,012 | 3 | 0,058 | 0,555 |
+| **LM1-GM-v512** | 132.160 | 8 | **2,225 ± 0,007** | 3 | 0,139 | 0,555 |
+| Ablation LM1-TM-v258 | 132.160 | 8 | 3,648 | 1 | 0,151 | 1,000 |
+| Ablation LM1-GM-v258 | 115.904 | 8 | 2,246 | 1 | 0,098 | 1,000 |
+| Ablation LM1-TM-v1024 | 181.184 | 8 | 2,604 | 1 | 0,173 | 0,427 |
+| Ablation LM1-GM-v1024 | 164.928 | 8 | 2,172 | 1 | 0,153 | 0,427 |
+| **Kneser-Ney-7-Gramm** | – | – | **1,963** | – | – | – |
+
+**Befunde (nur VALIDATION, noch keine TEST-Aussage)**
+1. **minGRU schlägt den Transformer** bei gleicher Größe deutlich: S um 0,45 BPB, M um 0,68 BPB, mit weniger Parametern und ähnlicher Geschwindigkeit.
+2. **Das Kneser-Ney-7-Gramm ist auf VALIDATION noch besser als jedes LM1-Modell** (1,963 gegen 2,225). Bei 428 KB Trainingstext merkt sich ein Zählmodell wiederkehrende Projektbegriffe besser als ein kleines neuronales Netz nach 8 Epochen.
+3. **Alle Familien verbessern sich noch in Epoche 8.** Die vorab festgelegten 8 Epochen begrenzen also das Ergebnis; die Auswahl bleibt trotzdem regelkonform.
+4. **Vokabular (je 1 Seed, nur Richtung):** Beim minGRU-M hilft ein größeres Vokabular leicht (258 → 512 → 1024: 2,246 → 2,225 → 2,172). Der reine Byte-Transformer (v258) ist deutlich schlechter (3,648), weil sein Kontext von 256 Token dann nur 255 Bytes umfasst und er pro Byte rechnen muss.
+
+**Anwendung der vorab festgelegten Auswahlregel (Abschnitt 4)**
+- TEST-Kandidat ist die beste 3-Seed-Familie: **LM1-GM-v512, Epoche 8**, Checkpoints
+  `7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd`,
+  `ad117ed5901a991941c220482cc486bf4e4dfdf9173e7f66f9cff320ec814eea`,
+  `44c4d4f30fac9428117837a86b9ddec97994e277aef802342c762acb0bc3507e`.
+- Vergleich (ebenfalls einmal):
+  - beste Familie der anderen Architektur: **LM1-TM-v512, Epoche 8** (`e77c39a0…`, `3ff091fa…`, `5abe2416…`);
+  - bestes n-Gramm: **KN-7**;
+  - **CDX1 mit 3 Epochen**, Seeds 1–3.
+- Der einmalige TEST-Befehl lautet damit:
+  `LmExperiment <repo> final store=<checkpoints> kn=7 cdx1epochs=3 ckpt=512:<GM s1> ckpt=512:<GM s2> ckpt=512:<GM s3> ckpt=512:<TM s1> ckpt=512:<TM s2> ckpt=512:<TM s3>`
+- **Stand dieses Commits: TEST nicht ausgeführt.**
+
+## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – UNFERTIG
+
+- Gesichert in `bfba4fe9`. Jede Datei trägt in Zeile 1 den Vermerk „UNFERTIG (WIP)“.
+- Bausteine: EnvelopeV1/GoalSpec (`ccc1-envelope`), hash-verkettetes Journal mit HMAC (`ccc1-journal`), Fähigkeitsprüfung (`ccc1-gate`), Quittungsprüfer (`ccc1-verifier`), Wiederanlauf (`ccc1-recovery`), Dialogsteuerung (`ccc1-orchestrator`), Zielinterpretation mit austauschbarem Sprachkern (`ccc1-interpreter`).
+- Stand: Alle sieben Dateien bestehen `node --check`. **Es gibt noch keine Tests**, und nichts importiert die Module. Bis zu ihren Tests bleibt `reasoner-dialog.mjs` (Abschnitt 5, 8/8 Tests) der geprüfte Weg.
