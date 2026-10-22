@@ -20,8 +20,9 @@ test('both layouts display the same measured journal series and native painter',
 
 test('missing or zero measurements render no fabricated decorative peaks', () => {
   assert.match(phone, /if \(series\.size < 2 \|\| series\.maxOrNull\(\)\?\.let \{ it <= 0f \} != false\) return/);
-  assert.match(phone, /val measured = series\[leftIndex\] \+ \(series\[rightIndex\] - series\[leftIndex\]\) \* fraction/);
-  assert.match(phone, /val y = b - \(b - t\) \* \.95f \* \(measured \/ maxV\)/);
+  // The marker follows the drawn Bézier between two real samples (WaveChartMarkerTest checks the geometry).
+  assert.match(phone, /val \(x, y\) = markerOnCurve\(l, t, r, b, series, maxV, phase\)/);
+  assert.match(phone, /py\(i0\) \+ \(py\(i0 \+ 1\) - py\(i0\)\) \* u \* u \* \(3f - 2f \* u\)/);
 });
 
 test('animation is lifecycle-bound, visible and backed by active learning', () => {

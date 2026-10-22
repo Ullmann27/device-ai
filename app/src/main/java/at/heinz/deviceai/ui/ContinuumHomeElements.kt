@@ -314,17 +314,30 @@ object WaveChart {
             p.strokePath(path, 1.1f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(80, 180, 255), color, Argb.rgb(255, 110, 200))), .95f)
         }
         if (phase != null && phase.isFinite() && layers > 0) {
-            // Traveling marker interpolates adjacent real samples, never invented training observations.
-            val sample = phase.coerceIn(0f, 1f) * (series.size - 1)
-            val leftIndex = sample.toInt().coerceIn(0, series.lastIndex)
-            val rightIndex = (leftIndex + 1).coerceAtMost(series.lastIndex)
-            val fraction = sample - leftIndex
-            val measured = series[leftIndex] + (series[rightIndex] - series[leftIndex]) * fraction
-            val x = l + (r - l) * phase.coerceIn(0f, 1f)
-            val y = b - (b - t) * .95f * (measured / maxV)
+            val (x, y) = markerOnCurve(l, t, r, b, series, maxV, phase)
             p.fillCircle(x, y, 5f, Fill.Solid(Argb.rgb(65, 175, 255)), .13f)
             p.fillCircle(x, y, 2.2f, Fill.Solid(Argb.rgb(170, 235, 255)), .93f)
         }
+    }
+
+    /**
+     * Point of the traveling marker on the drawn front curve. Between two real samples the curve is the cubic
+     * x(u) = x0 + (x1 − x0)(1.5u(1 − u) + u³), y(u) = y0 + (y1 − y0)u²(3 − 2u) (control points at the segment middle);
+     * x is mapped back to u by Newton steps, so the marker never leaves the line and never shows an invented value.
+     */
+    fun markerOnCurve(l: Float, t: Float, r: Float, b: Float, series: List<Float>, maxV: Float, phase: Float): Pair<Float, Float> {
+        val n = series.size
+        val f = phase.coerceIn(0f, 1f) * (n - 1)
+        val i0 = f.toInt().coerceIn(0, n - 2)
+        val local = (f - i0).coerceIn(0f, 1f)
+        var u = local
+        repeat(6) {
+            val g = 1.5f * u * (1f - u) + u * u * u - local
+            val d = 1.5f - 3f * u + 3f * u * u            // ≥ 0.75, so x(u) is monotonic
+            u = (u - g / d).coerceIn(0f, 1f)
+        }
+        fun py(i: Int) = b - (b - t) * .95f * (series[i] / maxV)
+        return l + (r - l) * (i0 + local) / (n - 1) to py(i0) + (py(i0 + 1) - py(i0)) * u * u * (3f - 2f * u)
     }
 }
 
