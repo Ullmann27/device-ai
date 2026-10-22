@@ -130,7 +130,9 @@ object ContinuumSpanAbstentionExperiment {
             println("CERTIFICATE alpha=$alpha delta=0.1 -> " + (certificate?.let {
                 "threshold=${"%.2f".format(it.threshold)} calibrationErrors=${it.calibrationErrors}/${it.calibrationQuestions} " +
                     "answered=${it.calibrationAnswered} p=${"%.4f".format(it.pValue)}" } ?: "NONE (always abstain)"))
-            policies["certified alpha=$alpha"] = { c -> ContinuumCertifiedAbstention.answer(prediction(c), certificate) }
+            policies["certified alpha=$alpha"] = { c ->
+                ContinuumCertifiedAbstention.answer(t.model, c.example.evidence, c.example.question, certificate)
+            }
         }
         // Guarantee check over many re-splits: 40 further draws, 200 random 20/20 splits at draw level (cases inside a
         // draw share entities, so whole draws are exchanged). Violation = holdout error rate above alpha.
