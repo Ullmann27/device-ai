@@ -155,7 +155,7 @@ Zusätzlich werden erfasst:
 **Pilot 1** (`eafbb2c1`, Belege in `docs/evidence/lm1-20261022/dialog-pilot1/`)
 - Ergebnis lexikalisch 4/8, zufällig 1/8.
 - 9 von 30 Jobs endeten `INCONCLUSIVE`. Grund: Der Critic des Coding-Agenten verweigert Vertragstests auf seinen eigenen Kontrollmodulen (`repair-*`, `kotlin-tokenizer`, `cefr-*`), und der Reasoner hatte solche vorgeschlagen.
-- Das ist ein **Fehler des Instruments**. Behoben wurde er durch die veröffentlichte Fähigkeit in `ff5e…`, vorab eingetragen als Pilot 2.
+- Das ist ein **Fehler des Instruments**. Behoben wurde er durch die veröffentlichte Fähigkeit in `66568cd2`, vorab eingetragen als Pilot 2.
 
 **Pilot 2** (korrigiertes Protokoll, gleiche Aufgaben, Belege in `docs/evidence/lm1-20261022/dialog-pilot2/`)
 
