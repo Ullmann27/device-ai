@@ -722,6 +722,16 @@ class ContinuumLearningCore(
         ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
     }
 
+    /** Pure research measurement. Entire 25-case audit shares the existing CORE_LOCK
+     * so regular SWB1/CDX1 training cannot change weights between the first and
+     * last question in this process. No file is written.
+     */
+    fun intelligenceAudit(
+        cancelled: () -> Boolean = { false }
+    ): ContinuumIntelligenceAudit.Report = synchronized(CORE_LOCK) {
+        ContinuumIntelligenceOnDevice.run(this, cancelled)
+    }
+
     /** Inspect only filenames and metadata; never writes, trains or restores. */
     fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).storageEvidence()
