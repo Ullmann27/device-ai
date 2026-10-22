@@ -52,3 +52,10 @@ test('existing build remains explicitly gated, and coding cannot install or merg
   assert.match(coding, /r\["deviceVerified"\] != false/);
   assert.doesNotMatch(activity, /PackageInstaller|installPackage|adb\s+install/);
 });
+
+test('running coding job exposes a selectable UUID for explicit Termux cancellation', () => {
+  assert.match(activity, /status\.setTextIsSelectable\(true\)/);
+  assert.match(activity, /pendingOperation == "CODE_TEST"/);
+  assert.match(activity, /Coding-Auftrags-ID: \$pending/);
+  assert.doesNotMatch(activity, /dispatchApprovedCommand\("CODE_CANCEL"/);
+});
