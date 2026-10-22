@@ -29,11 +29,8 @@ object ContinuumHomeLayout {
     const val WIDE_REFERENCE_WIDTH = 840f
     const val PHONE_NAV_HEIGHT = 74f
 
-    /** Wide layout from 700 dp width and 480 dp height (unfolded Fold, tablets, landscape); phone otherwise. */
-    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 700f && heightDp >= 480f
-
-    fun forWindow(widthDp: Float, heightDp: Float): Layout =
-        if (isWide(widthDp, heightDp)) wide(widthDp) else phone(widthDp)
+    /** Wide layout (navigation rail) from 700 dp width and 500 dp height: unfolded Fold, tablets; phone otherwise. */
+    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 700f && heightDp >= 500f
 
     private val phoneReference = mapOf(
         Slot.BRAND to Box(0f, 0f, 276f, 68.8f),

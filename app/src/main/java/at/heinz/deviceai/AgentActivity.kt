@@ -190,7 +190,6 @@ class AgentActivity : Activity() {
     @Volatile private var activeBootstrapGate: ToolGate? = null
     @Volatile private var activeNeuralCancellation: java.util.concurrent.atomic.AtomicBoolean? = null
     private var hologramView: ContinuumHologramView? = null
-    private var hologramStatus: TextView? = null
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -247,18 +246,13 @@ class AgentActivity : Activity() {
         }
     }
     private var dashboardSection: View? = null
-    private var homeHeader: View? = null
     private var modeSection: View? = null
-    private val dashboardFeatures = ArrayList<View>()
-    private var nexusExpertPanel: LinearLayout? = null
-    private var nexusExpertExpanded = false
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
     // Navigation is presentation-only; no learning-state or tool permission mutation.
     private var activeWorkArea = ContinuumWorkArea.START
     private var bottomWorkAreaBar: View? = null
-    private val workAreaButtons = linkedMapOf<ContinuumWorkArea, TextView>()
     // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
     private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
     private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
@@ -504,7 +498,8 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
-        val wide = resources.configuration.screenWidthDp >= 700 && resources.configuration.screenHeightDp >= 500
+        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(resources.configuration.screenWidthDp.toFloat(),
+            resources.configuration.screenHeightDp.toFloat())
         val root = LinearLayout(this).apply {
             orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
             setBackgroundColor(BG)
@@ -565,83 +560,6 @@ class AgentActivity : Activity() {
         return root
     }
 
-    private fun buildSidebar(): View {
-        val side = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(24), dp(18), dp(20))
-            setBackgroundColor(Color.rgb(10, 15, 23))
-        }
-
-        side.addView(textView("DEVICE AI", 12f, ACCENT, true))
-        side.addView(
-            textView("Persönlicher\nAndroid-Agent", 27f, TEXT, true).apply {
-                setPadding(0, dp(8), 0, dp(18))
-            }
-        )
-
-        side.addView(
-            actionButton("＋ Neue Sitzung", accent = true).apply {
-                setOnClickListener { newSession() }
-            },
-            matchWidth()
-        )
-
-        side.addView(sectionLabel("ARBEITSBEREICHE", top = 20))
-        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
-            side.addView(buildWorkAreaButton(destination, compact = false),
-                matchWidth(top = 7))
-        }
-        refreshWorkAreaSelection()
-
-        side.addView(sectionLabel("DEIN ASSISTENT", top = 24))
-        side.addView(
-            infoCard(
-                "Device AI",
-                "Fragen, recherchieren, Wissen lernen und Entwicklungsvorschläge sicher prüfen.",
-                "LOKAL"
-            ),
-            matchWidth(top = 8)
-        )
-
-        side.addView(sectionLabel("WERKZEUGE", top = 22))
-        side.addView(
-            actionButton("Lokaler Expertenmodus").apply {
-                setOnClickListener {
-                    startActivity(Intent(this@AgentActivity, MainActivity::class.java))
-                }
-            },
-            matchWidth(top = 8)
-        )
-
-        side.addView(
-            actionButton("Entwicklungsaufgabe").apply { setOnClickListener { showDevelopmentDialog() } },
-            matchWidth(top = 8)
-        )
-        side.addView(
-            actionButton("⚒ Handy-Builder · Termux").apply { setOnClickListener { openMobileBuilder() } },
-            matchWidth(top = 8)
-        )
-
-        val spacer = View(this)
-        side.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
-
-        side.addView(textView("v${BuildConfig.VERSION_NAME} · kein Root", 11f, MUTED))
-        // On compact foldable windows this sidebar has more actions than viewport height.
-        // A scrolling container keeps the bottom tools and version label reachable.
-        return ScrollView(this).apply {
-            isFillViewport = true
-            setFillViewport(true)
-            clipToPadding = false
-            addView(
-                side,
-                android.widget.FrameLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
-    }
-
     private fun buildConversationPane(wide: Boolean): View {
         val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
@@ -655,7 +573,8 @@ class AgentActivity : Activity() {
         home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f)
         homeView = home
         dashboard.addView(home, matchWidth())
-        // The former status badges stay initialised for their existing update paths; their facts are on the start screen.
+        // The former status badges are no longer shown (the reference screen has none). They stay initialised because
+        // existing update paths still write to them; device access, web consent and model state are in the system center.
         buildStatusRow()
 
         val details = LinearLayout(this).apply {
@@ -788,6 +707,7 @@ class AgentActivity : Activity() {
             else -> 0f
         }
         when (slot) {
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.BRAND -> showHomeDashboard()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SEARCH -> showKnowledgeArchiveSearch()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.NOTIFICATIONS -> showDiagnosticsCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.PROFILE -> showNexusPersonalization()
@@ -940,52 +860,6 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun buildHeader(wide: Boolean): View {
-        val header = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(3), dp(4), dp(3), dp(2))
-        }
-        val top = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_holo_logo)
-            contentDescription = "Device AI · holografisches Logo"
-            scaleType = ImageView.ScaleType.FIT_CENTER
-        }, LinearLayout.LayoutParams(dp(54), dp(54)))
-        val titleBox = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        titleBox.addView(textView("Device AI", if (wide) 33f else 27f, TEXT, true).apply {
-            val styled = SpannableString("Device AI")
-            styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            text = styled
-            setShadowLayer(dp(9).toFloat(), 0f, 0f, Color.rgb(24, 83, 171))
-            letterSpacing = 0.005f
-        })
-        titleBox.addView(textView("Dein persönlicher Android KI-Assistent",
-            if (wide) 12f else 10.6f, MUTED), matchWidth(top = 1))
-        top.addView(titleBox, LinearLayout.LayoutParams(0,
-            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-            marginStart = dp(8)
-        })
-        top.addView(actionButton("⚙", compact = true).apply {
-            contentDescription = "Einstellungen und Berechtigungen"
-            setOnClickListener { showSystemCenter() }
-        }, LinearLayout.LayoutParams(dp(43), dp(43)))
-        header.addView(top, matchWidth())
-        header.addView(textView(
-            "PRIVAT   •   LOKAL   •   LEISTUNGSSTARK", 9.4f,
-            Color.rgb(146, 171, 228), true
-        ).apply {
-            gravity = Gravity.CENTER
-            letterSpacing = 0.13f
-        }, matchWidth(top = 8))
-        return header
-    }
-
     private fun buildStatusRow(): View {
         val row = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -1062,197 +936,6 @@ class AgentActivity : Activity() {
         return card
     }
 
-    // The cockpit is intentionally shallow: primary actions are visible without knowing
-    // how the learning, tool permission or model subsystems work.
-    private fun buildBootstrapCoreCard(): View {
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-        }
-        val hero = verticalCard().apply {
-            background = roundedGradient(
-                Color.rgb(10, 25, 64), Color.rgb(15, 12, 46),
-                23, Color.rgb(64, 116, 237)
-            )
-            setPadding(dp(10), dp(9), dp(10), dp(10))
-            elevation = dp(6).toFloat()
-        }
-        hero.addView(textView("✦   DEVICE AI   ·   INTELLIGENZKERN", 10.5f,
-            Color.rgb(137, 215, 255), true).apply {
-            gravity = Gravity.CENTER
-            letterSpacing = 0.08f
-        }, matchWidth())
-        hero.addView(ContinuumHologramView(this).also { hologramView = it }, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 201)
-        ))
-        hero.addView(textView(
-            "BEREIT · Eine KI für dein Gerät.", 12f,
-            Color.rgb(198, 214, 244)
-        ).apply { gravity = Gravity.CENTER; hologramStatus = this }, matchWidth())
-        container.addView(hero, matchWidth())
-        container.addView(buildStatusRow(), matchWidth(top = 11))
-        container.addView(actionButton("★   ERSTE SCHRITTE · Deine KI einfach erklärt  ›", accent = true).apply {
-            contentDescription = "Schritt-für-Schritt-Anleitung für Internet, Lernen, Modelle und Coding-Agent"
-            minHeight = dp(56)
-            setOnClickListener { showFirstStepsGuide() }
-        }, matchWidth(top = 10))
-        container.addView(textView("DEINE ARBEITSBEREICHE · DIREKT ÖFFNEN", 10f,
-            Color.rgb(153, 209, 255), true).apply {
-            letterSpacing = 0.10f
-        }, matchWidth(top = 15))
-        // Respect small fold windows and the owner's system font scaling.
-        val quickWide = resources.configuration.screenWidthDp >= 700 &&
-            resources.configuration.screenHeightDp >= 500
-        val quickWidthDp = resources.configuration.screenWidthDp - if (quickWide) 336 else 28
-        val quickColumns = ContinuumWorkAreaNavigationSpec.quickActionColumns(
-            quickWidthDp, resources.configuration.fontScale
-        )
-        ContinuumWorkAreaNavigationSpec.destinations
-            .filter { it != ContinuumWorkArea.START }
-            .chunked(quickColumns)
-            .forEachIndexed { rowIndex, destinations ->
-                val workAreaQuickRow = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                }
-                destinations.forEachIndexed { index, destination ->
-                    workAreaQuickRow.addView(
-                        actionButton(destination.symbol + "  " + destination.title).apply {
-                            minHeight = dp(52)
-                            textSize = 13f
-                            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
-                            setOnClickListener { navigateWorkArea(destination) }
-                        },
-                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                            if (index > 0) marginStart = dp(8)
-                        }
-                    )
-                }
-                container.addView(workAreaQuickRow, matchWidth(top = if (rowIndex == 0) 8 else 7))
-            }
-        container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
-            Color.rgb(153, 209, 255), true).apply {
-            letterSpacing = 0.12f
-        }, matchWidth(top = 16))
-        val voice = ContinuumNexusHomeSpec.voice
-        container.addView(actionButton("🎙  ${voice.title}", accent = true).apply {
-            minHeight = dp(62)
-            contentDescription = voice.title + ". " + voice.description +
-                ". Öffnet die Spracheingabe des Geräts."
-            setOnClickListener { startVoiceInput() }
-        }, matchWidth(top = 9))
-        container.addView(textView(
-            "Sag oder schreibe, was du brauchst. Vor Geräteaktionen und einer App-Installation fragst du nach.",
-            12.5f, Color.rgb(192, 213, 247)
-        ), matchWidth(top = 7))
-
-        val wideNexus = resources.configuration.screenWidthDp >= 700 &&
-            resources.configuration.screenHeightDp >= 500
-        val usableWidthDp = resources.configuration.screenWidthDp -
-            if (wideNexus) 336 else 28
-        val nexusColumns = ContinuumNexusHomeSpec.columns(
-            usableWidthDp, resources.configuration.fontScale
-        )
-        ContinuumNexusHomeSpec.essentials.chunked(nexusColumns).forEach { group ->
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            group.forEachIndexed { index, item ->
-                val open: () -> Unit = {
-                    when (item.destination) {
-                        ContinuumNexusDestination.CHAT -> focusChatComposer()
-                        ContinuumNexusDestination.CREATE_APP -> showDevelopmentDialog()
-                        ContinuumNexusDestination.KNOWLEDGE -> showMemoryCenter()
-                        ContinuumNexusDestination.PERSONALIZE -> showNexusPersonalization()
-                        ContinuumNexusDestination.TASKS -> showDevelopmentBacklog()
-                    }
-                }
-                row.addView(cockpitTile(item.symbol, item.title, item.description,
-                    item.destination == ContinuumNexusDestination.CREATE_APP, open,
-                    item.destination.ordinal),
-                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(9)
-                    })
-            }
-            container.addView(row, matchWidth(top = 9))
-        }
-        val moreFunctions = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            visibility = View.GONE
-        }
-        nexusExpertPanel = moreFunctions
-        nexusExpertExpanded = false
-        val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
-            contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
-            setOnClickListener {
-                val show = !nexusExpertExpanded
-                nexusExpertExpanded = show
-                moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
-                text = if (show) "Weitere KI-Funktionen schließen  ▴"
-                    else "Weitere KI-Funktionen anzeigen  ▾"
-            }
-        }
-        container.addView(moreToggle, matchWidth(top = 13))
-        moreFunctions.addView(textView("EXPERTEN UND WEITERE FUNKTIONEN", 10f,
-            Color.rgb(153, 189, 252), true).apply {
-            letterSpacing = 0.14f
-        }, matchWidth(top = 8))
-
-        val options = listOf(
-            Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
-            Triple("⌕" to "Forschung", "Recherchieren und Quellen prüfen") { showResearchModeDialog() },
-            Triple("▤" to "Lernen", "Wissen aufbauen und verstehen") { showLearningCenter() },
-            Triple("⬡" to "Modelle", "Lokale KI-Modelle verwalten") { showModelCenter() },
-            Triple("⌘" to "Entwicklung", "Code und Aufgaben kontrollieren") { showDevelopmentCenter() },
-            Triple("▱" to "Speicher", "Erinnerungen und persönlichen Kontext") { showMemoryCenter() }
-        )
-        options.chunked(2).forEachIndexed { rowIndex, pair ->
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
-            pair.forEachIndexed { index, option ->
-                row.addView(cockpitTile(option.first.first, option.first.second,
-                    option.second, rowIndex == 0 && index == 0, option.third),
-                    LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(9)
-                    })
-            }
-            moreFunctions.addView(row, matchWidth(top = 9))
-        }
-        container.addView(moreFunctions, matchWidth())
-        container.addView(actionButton("⌘   CODING-AGENT · SPRACHE & APP-IDEEN   ›", accent = true).apply {
-            contentDescription = "Coding Agent und Spracheingabe für neue Apps und Programmieraufträge öffnen"
-            minHeight = dp(57)
-            setOnClickListener { showDevelopmentDialog() }
-        }, matchWidth(top = 10))
-        container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
-            contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
-            background = roundedGradient(
-                Color.rgb(24, 49, 99), Color.rgb(14, 30, 62),
-                18, Color.rgb(74, 154, 224)
-            )
-            minHeight = dp(57)
-            setOnClickListener { openMobileBuilder() }
-        }, matchWidth(top = 10))
-        container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
-            contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
-            background = roundedGradient(
-                Color.rgb(28, 45, 100), Color.rgb(18, 27, 62),
-                18, Color.rgb(97, 119, 216)
-            )
-            minHeight = dp(57)
-            setOnClickListener { showSystemCenter() }
-        }, matchWidth(top = 10))
-        neuralCuriosityButton = actionButton("✧   Lernimpuls · Noch keine Frage").apply {
-            isEnabled = false
-            background = roundedGradient(Color.rgb(18, 34, 65),
-                Color.rgb(14, 22, 50), 15, Color.rgb(53, 83, 161))
-            setOnClickListener { showNeuralCuriosityQuestion() }
-        }
-        container.addView(neuralCuriosityButton, matchWidth(top = 9))
-        dashboardFeatures.clear()
-        for (index in 1 until container.childCount) dashboardFeatures.add(container.getChildAt(index))
-        return container
-    }
-
     private fun buildBottomWorkAreaBar(): View {
         val u = resources.configuration.screenWidthDp / 412f
         val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
@@ -1284,41 +967,12 @@ class AgentActivity : Activity() {
         return container
     }
 
-    private fun buildWorkAreaButton(destination: ContinuumWorkArea, compact: Boolean): TextView {
-        val item = textView(
-            if (compact) destination.symbol + "\n" + destination.title
-            else destination.symbol + "   " + destination.title,
-            if (compact) 11.5f else 14f, MUTED, true
-        ).apply {
-            gravity = Gravity.CENTER
-            minHeight = dp(if (compact) 60 else 47)
-            setPadding(dp(if (compact) 1 else 13), dp(5),
-                dp(if (compact) 1 else 13), dp(5))
-            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
-            isClickable = true
-            isFocusable = true
-            setOnClickListener { navigateWorkArea(destination) }
-        }
-        workAreaButtons[destination] = item
-        return item
-    }
-
     private fun refreshWorkAreaSelection() {
         val index = ContinuumWorkAreaNavigationSpec.destinations.indexOf(activeWorkArea).coerceAtLeast(0)
         (navigationView?.element as? at.heinz.deviceai.ui.BottomNavElement)?.selected = index
         navigationView?.invalidate()
         (railView?.element as? at.heinz.deviceai.ui.RailElement)?.selected = index.coerceAtMost(3)
         railView?.invalidate()
-        for ((destination, item) in workAreaButtons) {
-            val selected = destination == activeWorkArea
-            item.isSelected = selected
-            item.setTextColor(if (selected) CYAN else MUTED)
-            item.background = GradientDrawable().apply {
-                setColor(if (selected) Color.rgb(20, 46, 92) else Color.TRANSPARENT)
-                cornerRadius = dp(13).toFloat()
-                if (selected) setStroke(dp(1), Color.rgb(47, 132, 211))
-            }
-        }
     }
 
     private fun navigateWorkArea(destination: ContinuumWorkArea) {
@@ -1357,7 +1011,6 @@ class AgentActivity : Activity() {
         val chat = conversationActive || keyboardCompact
         dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
         chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
-        homeHeader?.visibility = View.GONE
         modeSection?.visibility = if (chat) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
         if (::chatScroll.isInitialized) chatScroll.visibility = if (chat) View.VISIBLE else View.GONE
@@ -1393,66 +1046,6 @@ class AgentActivity : Activity() {
                     android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             }
         }
-    }
-
-    private fun cockpitTile(
-        symbol: String, title: String, explanation: String,
-        primary: Boolean, open: () -> Unit, nexusTone: Int = 0
-    ): View {
-        // The four beginner actions use the same blue/violet/teal/gold semantic
-        // accent palette as the portrait and fold references. Old expert tiles
-        // retain their original appearance through the default tone.
-        val palette = when (nexusTone) {
-            1 -> intArrayOf(0xFF164A85.toInt(), 0xFF09254F.toInt(),
-                0xFF46CFFF.toInt(), 0xFF157CCF.toInt(), 0xFF164C9A.toInt())
-            2 -> intArrayOf(0xFF3F2985.toInt(), 0xFF1C174B.toInt(),
-                0xFFB28BFF.toInt(), 0xFF7646DA.toInt(), 0xFF4332A4.toInt())
-            3 -> intArrayOf(0xFF08685F.toInt(), 0xFF073739.toInt(),
-                0xFF38E8DC.toInt(), 0xFF17B9B0.toInt(), 0xFF06777C.toInt())
-            4 -> intArrayOf(0xFF765127.toInt(), 0xFF392817.toInt(),
-                0xFFFFCC75.toInt(), 0xFFC4954A.toInt(), 0xFF795527.toInt())
-            else -> intArrayOf(
-                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
-                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
-                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234),
-                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
-                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152)
-            )
-        }
-        val item = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            background = roundedGradient(palette[0], palette[1], 18, palette[2])
-            setPadding(dp(10), dp(9), dp(9), dp(9))
-            elevation = dp(5).toFloat()
-            minimumHeight = dp(94)
-            isClickable = true
-            isFocusable = true
-            contentDescription = title + ". " + explanation
-            setOnClickListener { open() }
-        }
-        val icon = textView(symbol, 21f, Color.WHITE, true).apply {
-            gravity = Gravity.CENTER
-            background = roundedGradient(palette[3], palette[4], 11, palette[2])
-            setShadowLayer(dp(3).toFloat(), 0f, 0f, palette[2])
-        }
-        item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
-        val caption = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(9), 0, 0, 0)
-        }
-        caption.addView(textView(title, 13.5f, TEXT, true))
-        caption.addView(textView(explanation, 10.6f,
-            Color.rgb(172, 189, 222)).apply {
-            maxLines = 2
-            ellipsize = android.text.TextUtils.TruncateAt.END
-        }, matchWidth(top = 3))
-        item.addView(caption, LinearLayout.LayoutParams(0,
-            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        item.addView(textView("›", 22f, Color.rgb(155, 182, 255)).apply {
-            gravity = Gravity.CENTER
-        }, LinearLayout.LayoutParams(dp(13), dp(44)))
-        return item
     }
 
     private fun showNexusPersonalization() {
@@ -4267,14 +3860,6 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
-        hologramStatus?.text = when(state) {
-            ContinuumHologramView.State.READY -> "BEREIT · Eine KI für dein Gerät."
-            ContinuumHologramView.State.LISTENING -> "ZUHÖREN · Spracheingabe"
-            ContinuumHologramView.State.THINKING -> "NACHDENKEN · Antwort wird vorbereitet"
-            ContinuumHologramView.State.SPEAKING -> "SPRECHEN · Android-Sprachausgabe"
-            ContinuumHologramView.State.RESEARCH -> "RECHERCHE · Öffentliche Quellen prüfen"
-            ContinuumHologramView.State.LEARNING -> "LERNEN · Kandidat wird geprüft"
-        }
     }
 
     private fun stopVoiceAnimation() {
@@ -6952,24 +6537,6 @@ class AgentActivity : Activity() {
             }, { "Import abgelehnt, lokaler Stand unverändert: " + backlogError(it) })
             if (backlogList != null) refreshDevelopmentBacklog(text) else Toast.makeText(this, text, Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun infoCard(title: String, body: String, badge: String): View {
-        val card = verticalCard().apply {
-            setPadding(dp(13), dp(12), dp(13), dp(12))
-        }
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        row.addView(
-            textView(title, 15f, TEXT, true),
-            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        )
-        row.addView(statusBadge(badge, GREEN))
-        card.addView(row)
-        card.addView(textView(body, 12f, MUTED).apply { setPadding(0, dp(7), 0, 0) })
-        return card
     }
 
     private fun sectionLabel(value: String, top: Int): View =

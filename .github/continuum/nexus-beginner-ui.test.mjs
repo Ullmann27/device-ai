@@ -5,15 +5,20 @@ import fs from 'node:fs';
 const activity = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/AgentActivity.kt', import.meta.url), 'utf8');
 const spec = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ContinuumNexusHomeSpec.kt', import.meta.url), 'utf8');
 const hologram = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt', import.meta.url), 'utf8');
+const homeView = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt', import.meta.url), 'utf8');
+const layout = fs.readFileSync(new URL('../../app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt', import.meta.url), 'utf8');
 
 function section(start, end) {
   const first = activity.indexOf(start), last = activity.indexOf(end, first + start.length);
   assert.ok(first >= 0 && last > first, 'Missing Android source method boundary');
   return activity.slice(first, last);
 }
-const home = section('private fun buildBootstrapCoreCard(): View', 'private fun refreshConversationLayout()');
+// The reference start screen: its drawn slots (routed in openHomeSlot), the work-area navigation and the chat composer.
+const home = section('private fun buildConversationPane(wide: Boolean): View', 'private fun refreshDashboard()') +
+  section('private fun navigateWorkArea(', 'private fun refreshConversationLayout()') +
+  section('private fun buildComposer(): View', 'private fun sendCurrentInput()');
 
-test('Nexus front page advertises five distinct beginner destinations instead of developer jargon', () => {
+test('the five beginner destinations stay reachable from the reference start screen', () => {
   for (const title of [
     'Mit meiner KI sprechen',
     'App erstellen',
@@ -21,28 +26,22 @@ test('Nexus front page advertises five distinct beginner destinations instead of
     'KI personalisieren',
     'Meine Aufgaben'
   ]) assert.ok(spec.includes('"'+title+'"'), title);
-  assert.match(home, /ContinuumNexusHomeSpec\.essentials\.chunked\(nexusColumns\)/);
-  assert.match(home, /CONTINUUM NEXUS/);
+  for (const route of ['startVoiceInput()', 'showDevelopmentDialog()', 'showMemoryCenter()',
+    'showNexusPersonalization()', 'showDevelopmentBacklog()']) assert.ok(home.includes(route), 'Beginner destination lost: '+route);
 });
 
-test('beginner destinations use real existing Android screens, not placeholder success actions', () => {
-  assert.match(home, /setOnClickListener \{ startVoiceInput\(\) \}/);
-  for (const dest of [
-    'CREATE_APP -> showDevelopmentDialog()',
-    'KNOWLEDGE -> showMemoryCenter()',
-    'PERSONALIZE -> showNexusPersonalization()',
-    'TASKS -> showDevelopmentBacklog()'
-  ]) assert.ok(home.includes(dest), 'Missing action '+dest);
-  assert.doesNotMatch(home, /TRIPLE_PHASE_VERIFIED|APK_INSTALLED|632 Tests bestanden/);
+test('start-screen routes use real existing Android screens, not placeholder success actions', () => {
+  assert.match(home, /Slot\.PROFILE -> showNexusPersonalization\(\)/);
+  assert.match(home, /showMentorSources\(\) else showMemoryCenter\(\)/);
+  assert.match(home, /showDevelopmentBacklog\(\) else showDevelopmentCenter\(\)/);
+  assert.doesNotMatch(home + homeView, /TRIPLE_PHASE_VERIFIED|APK_INSTALLED|632 Tests bestanden/);
 });
 
-test('advanced routes remain available but collapsed until the user requests them', () => {
-  assert.match(home, /val moreFunctions = LinearLayout\(this\)\.apply \{/);
-  assert.match(home, /visibility = View.GONE/);
-  assert.match(home, /Weitere KI-Funktionen anzeigen/);
-  for (const target of ['showResearchModeDialog()', 'showLearningCenter()', 
+test('advanced routes remain available from the start screen, its rail and the More sheet', () => {
+  const more = section('private fun showMoreWorkAreas()', 'private fun refreshConversationLayout()');
+  for (const target of ['showResearchModeDialog()', 'showLearningCenter()',
     'showModelCenter()', 'showDevelopmentCenter()', 'showMemoryCenter()',
-    'showSystemCenter()']) assert.ok(home.includes(target), 'Expert action lost: '+target);
+    'showSystemCenter()']) assert.ok((home + more).includes(target), 'Expert action lost: '+target);
 });
 
 test('Nexus keeps real hologram and voice entry tied to Android speech and system state', () => {
@@ -55,11 +54,13 @@ test('Nexus keeps real hologram and voice entry tied to Android speech and syste
 
 test('fold, small display and enlarged-font behaviour are expressed by a pure policy', () => {
   assert.match(home, /resources\.configuration\.screenWidthDp/);
-  assert.match(home, /resources\.configuration\.fontScale/);
+  assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/);
+  assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\)/);
+  assert.match(layout, /fun phone\(widthDp: Float\): Layout/);
+  assert.match(layout, /fun wide\(widthDp: Float\): Layout/);
   assert.match(spec, /usableWidthDp >= 320/);
   assert.match(spec, /fontScale\.isFinite\(\)/);
   assert.match(spec, /fontScale <= 1\.25f/);
-  assert.match(home, /LinearLayout\.LayoutParams\.WRAP_CONTENT, 1f/);
 });
 
 test('personalisation is a real choice and cannot silently train models or install apps', () => {
@@ -71,9 +72,9 @@ test('personalisation is a real choice and cannot silently train models or insta
   assert.doesNotMatch(choice, /trainSgdStep|installPackage|launchApkInstall|exec\(/);
 });
 
-test('expert disclosure stays closed after leaving or returning from chat', () => {
+test('start screen and chat never overlap after leaving or returning from chat', () => {
   const refresh=section('private fun refreshConversationLayout()', 'private fun showHomeDashboard()');
-  assert.match(refresh, /nexusExpertPanel\?\.visibility = if \(!chat && nexusExpertExpanded\)/);
-  assert.match(home, /nexusExpertExpanded = false/);
-  assert.match(home, /nexusExpertExpanded = show/);
+  assert.match(refresh, /dashboardSection\?\.visibility = if \(chat\) View\.GONE else View\.VISIBLE/);
+  assert.match(refresh, /chatColumn\?\.visibility = if \(chat\) View\.VISIBLE else View\.GONE/);
+  assert.doesNotMatch(activity, /nexusExpertPanel|nexusExpertExpanded/);
 });
