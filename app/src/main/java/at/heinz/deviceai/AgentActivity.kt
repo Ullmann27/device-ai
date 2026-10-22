@@ -609,7 +609,7 @@ class AgentActivity : Activity() {
             clipToPadding = false
             addView(
                 side,
-                ScrollView.LayoutParams(
+                android.widget.FrameLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
