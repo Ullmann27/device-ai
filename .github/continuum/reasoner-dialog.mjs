@@ -25,6 +25,11 @@ export const VERDICTS=Object.freeze(['CONFIRMED','REFUTED','INCONCLUSIVE']);
 const MAX_TEXT=600,MAX_STEPS=8;
 
 const str=(v,max=MAX_TEXT)=>typeof v==='string'&&v.length>0&&v.length<=max;
+// Same value grammar as the contract operator (contract-test-template.mjs): 1..4 cases, at most 3 arguments,
+// every argument and expected value a primitive (string ≤ 120 characters, finite number, boolean, null).
+const primitive=v=>v===null||typeof v==='boolean'||typeof v==='number'&&Number.isFinite(v)||typeof v==='string'&&v.length<=120;
+export const validCase=c=>keysExactly(c,['args','expected'])&&Array.isArray(c.args)&&c.args.length<=3&&
+ c.args.every(primitive)&&Object.hasOwn(c,'expected')&&primitive(c.expected);
 const keysExactly=(o,allowed)=>o&&typeof o==='object'&&!Array.isArray(o)&&
  Object.keys(o).every(k=>allowed.includes(k));
 
@@ -57,8 +62,8 @@ export function validateBody(type,body){
   need(MODULE_RE.test(body?.module??''),'module must be .github/continuum/<name>.mjs');
   need(EXPORT_RE.test(body?.export??''),'export must be an identifier');
   const json=Array.isArray(body?.cases)?JSON.stringify(body.cases):'';
-  need(Array.isArray(body?.cases)&&body.cases.length>=1&&body.cases.length<=8&&
-   body.cases.every(c=>keysExactly(c,['args','expected'])&&Array.isArray(c.args)&&'expected' in c),'1..8 cases {args:[...],expected}');
+  need(Array.isArray(body?.cases)&&body.cases.length>=1&&body.cases.length<=4&&body.cases.every(validCase),
+   '1..4 cases {args:[≤3 primitives],expected:primitive}');
   need(json.length>=2&&json.length<=MAX_CASES_JSON,'cases JSON must be 2..'+MAX_CASES_JSON+' characters');
   need(Number.isSafeInteger(body?.budgetMinutes)&&body.budgetMinutes>=1&&body.budgetMinutes<=30,'budgetMinutes 1..30');
   break;}

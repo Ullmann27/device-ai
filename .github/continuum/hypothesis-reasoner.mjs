@@ -5,7 +5,7 @@
 // learned scorer (LM1) can be compared against this lexical one without changing the protocol.
 import fs from 'node:fs';
 import path from 'node:path';
-import {CAPABILITY} from './reasoner-dialog.mjs';
+import {CAPABILITY,validCase} from './reasoner-dialog.mjs';
 
 const STOP=new Set(('der die das den dem des ein eine einen einem einer und oder aus auf für fuer mit von zu zum zur im in ist '+
  'sind wird werden soll sollen muss kann eine einer als wie wenn dann bei nach vor über ueber unter nicht nur auch es sie er '+
@@ -138,7 +138,8 @@ export class HypothesisReasoner{
   const next=ranked.find(r=>!tried.has(r.c.module+'#'+r.c.export));
   const out=[];
   if(!next)return [{type:'ABSTAIN',body:{reason:'Kein weiterer Export passt zu Ziel und Beispielen; ohne geprüfte Quittung wird nichts behauptet.'}}];
-  let cases=examples;
+  let cases=examples.filter(validCase).slice(0,4);
+  if(!cases.length)return [{type:'ABSTAIN',body:{reason:'Die Beispiele sind keine einfachen Werte (Text, Zahl, Wahrheitswert); dafür gibt es keinen Vertragstest.'}}];
   while(cases.length>1&&JSON.stringify(cases).length>300)cases=cases.slice(0,-1);
   if(JSON.stringify(cases).length>300)return [{type:'ABSTAIN',body:{reason:'Die Beispiele sind für einen Testauftrag zu lang (über 300 Zeichen).'}}];
   const seq=view.entries.length;   // sequence number the HYPOTHESIS will receive
