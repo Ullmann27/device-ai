@@ -180,15 +180,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             var best=0.0
             for(a in q)for(b in t) {
                 if(a==b)return 1.0
-                // Mixed letter/digit identifiers need an EXACT word. A shared five-letter
-                // stem of "Quantenkarussell987" and "quantitativ" is not evidence.
-                if(a.any(Char::isDigit) || b.any(Char::isDigit))continue
-                // A common prefix is admissible only for a short morphological variation,
-                // not for unrelated long compounds sharing "quanten" or "fehler".
-                val shorter=minOf(a.length,b.length)
-                val prefix=a.zip(b).takeWhile { (left,right) -> left==right }.size
-                if(shorter>=6 && kotlin.math.abs(a.length-b.length)<=3 &&
-                    prefix>=shorter-2)best=maxOf(best,0.8)
+                if(a.length>=5 && b.length>=5 && a.substring(0,5)==b.substring(0,5))best=maxOf(best,0.8)
                 // Whole-word German compound heads remain searchable (e.g. Schlüssel).
                 if(a.length>=5 && b.length>=a.length+3 && b.endsWith(a))best=maxOf(best,0.82)
                 if(b.length>=5 && a.length>=b.length+3 && a.endsWith(b))best=maxOf(best,0.82)
