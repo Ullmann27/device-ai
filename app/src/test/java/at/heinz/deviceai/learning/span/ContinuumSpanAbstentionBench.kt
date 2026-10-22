@@ -136,7 +136,7 @@ object ContinuumSpanAbstentionBench {
      * relations only (VALIDATION analogues use tool, the frozen TEST uses location). Off = cycle-1 TRAIN.
      */
     fun generate(split: Split, seed: Long = 20261022L + split.ordinal * 1000L, perRelation: Int = 0,
-                 bindingCurriculum: Boolean = false): List<Case> {
+                 bindingCurriculum: Boolean = false, multiword: Boolean = false): List<Case> {
         val rnd = Random(seed)
         val rels = relations(split, rnd).map { r ->
             if (split != Split.VALIDATION) r else VALIDATION_FORMS.getValue(r.name).let { (f, q) -> r.copy(valFamilies = f, valQuestion = q) }
@@ -213,6 +213,35 @@ object ContinuumSpanAbstentionBench {
             temporal(rels.first { it.name == "module" }, "heute verwendet {T} {E} Modul {X}", "früher verwendete {T} {E} Modul {X}",
                 "Welches Modul verwendet {E} heute?", 6, false)
         }
+        if (multiword && split != Split.TEST) {
+            // Multi-token answers (number + unit, two-part names). Forms differ from the frozen TEST form
+            // ("wiegt N Kilogramm" / "Wie schwer"); VALIDATION again uses its own forms and unit.
+            val train = split == Split.TRAIN
+            val firsts = if (train) listOf("Anna", "Bernd", "Clara", "David", "Elena", "Felix") else listOf("Greta", "Hannes", "Ida", "Jonas")
+            val lasts = if (train) listOf("Huber", "Gruber", "Wagner", "Pichler", "Moser", "Mayer") else listOf("Steiner", "Hofer", "Leitner", "Berger")
+            val unitRel = Relation(if (train) "weight" else "capacity", if (train) "Gerät" else "Behälter", emptyList(), emptyList(),
+                emptyList(), "", null, emptyList())
+            val nameRel = Relation("author", "Paket", emptyList(), emptyList(), emptyList(), "", null, emptyList())
+            repeat(if (train) 10 else 6) { k ->
+                val e = entity(split, rnd, used)
+                val n = ((if (train) 100 else 300) + rnd.nextInt(100)).toString()
+                val (ev, q, unit) = if (train) {
+                    if (k % 2 == 0) Triple("Gerät $e hat ein Gewicht von $n Kilogramm.", "Welches Gewicht hat $e?", "$n Kilogramm")
+                    else Triple("Roboter $e ist $n Meter lang.", "Wie lang ist $e?", "$n Meter")
+                } else Triple("Behälter $e fasst $n Liter.", "Wie viel fasst $e?", "$n Liter")
+                add(Kind.UNIT_MULTIWORD, "MW", unitRel, ev, q, unit, traps = setOf(n), unseen = !train)
+                add(Kind.OTHER_RELATION, "MW", unitRel, ev, "Welche Farbe hat $e?", null, traps = setOf(n, unit), unseen = !train)
+                if (k % 2 == 0) {
+                    val neg = if (train) "Gerät $e hat kein Gewicht von $n Kilogramm." else "Behälter $e fasst keine $n Liter."
+                    add(Kind.NEGATED, "MWN", unitRel, neg, q, null, traps = setOf(n, unit), unseen = !train)
+                }
+                val e2 = entity(split, rnd, used)
+                val name = firsts[k % firsts.size] + " " + lasts[(k + 1) % lasts.size]
+                val form = if (train) "Paket $e2 stammt von $name." else "Die Autorin von Paket $e2 ist $name."
+                add(Kind.UNIT_MULTIWORD, "MWN2", nameRel, form, if (train) "Von wem stammt $e2?" else "Wer ist die Autorin von $e2?",
+                    name, traps = setOf(name.substringBefore(' '), name.substringAfter(' ')), unseen = !train)
+            }
+        }
         if (split == Split.VALIDATION) {
             val tool = rels.first { it.name == "tool" }
             inClause(tool, 6, true)
@@ -248,6 +277,7 @@ object ContinuumSpanAbstentionBench {
             val tokens = tokenRe.findAll(c.example.evidence).map { it.value }.toList()
             val answer = c.example.answer
             if (answer != null && c.kind != Kind.UNIT_MULTIWORD) require(tokens.count { it == answer } == 1) { "gold not unique in ${c.id}" }
+            if (answer != null && c.kind == Kind.UNIT_MULTIWORD) require(c.example.evidence.split(answer).size == 2) { "multiword gold not unique in ${c.id}" }
             if (answer == null) {
                 val q = tokenRe.findAll(c.example.question).map { it.value }.filter { it.any(Char::isDigit) && it.any(Char::isLetter) }.toList()
                 require(q.size == 1) { "question entity missing in ${c.id}" }

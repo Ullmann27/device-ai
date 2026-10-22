@@ -17,8 +17,9 @@ object ContinuumSpanAbstentionExperiment {
     private fun shuffled(cases: List<Case>, seed: Long) = cases.shuffled(Random(seed))
     private fun sha(bytes: ByteArray) = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
-    /** Trainable examples only (single-token gold); diagnostic multiword cases are never trained. */
-    fun trainable(cases: List<Case>) = cases.filter { it.kind != Kind.UNIT_MULTIWORD }.map { it.example }
+    /** Trainable examples: multi-token golds only for models with multiTokenSpans (otherwise unrepresentable). */
+    fun trainable(cases: List<Case>, multiToken: Boolean = false) =
+        cases.filter { multiToken || it.kind != Kind.UNIT_MULTIWORD }.map { it.example }
 
     /** Original PR61-style recipe: mostly positives, few negatives (ratio 1 negative : 4 positives). */
     fun originalRecipe(train: List<Case>): List<Case> {
@@ -31,7 +32,7 @@ object ContinuumSpanAbstentionExperiment {
 
     fun train(cases: List<Case>, validation: List<Case>, seed: Long, epochs: Int, make: () -> ContinuumResidualSpanCore): Trained {
         val model = make()
-        val examples = trainable(shuffled(cases, seed))
+        val examples = trainable(shuffled(cases, seed), model.features.multiTokenSpans)
         val s = model.trainSession(examples, epochs = epochs, maxMillis = 60_000)
         check(!s.interrupted) { "training interrupted; raise maxMillis or lower epochs" }
         // threshold on the best candidate probability, chosen on VALIDATION only (maximize correct - unsupported)
@@ -56,7 +57,9 @@ object ContinuumSpanAbstentionExperiment {
         "V5 placeholders + no position" to ContinuumResidualSpanCore.Features(identifierPlaceholders = true, positionFeatures = false),
         "V6 entity proximity" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true),
         "V7 PR61 features + cue words excluded" to ContinuumResidualSpanCore.Features(excludeCueWords = true),
-        "V8 entity proximity + cue words excluded" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true)
+        "V8 entity proximity + cue words excluded" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true),
+        "V9 V8 + multi-token spans" to ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true,
+            excludeCueWords = true, multiTokenSpans = true)
     )
 
     private fun runVariants(names: List<String>, split: List<Case>, splitName: String, train: List<Case>, validation: List<Case>,
@@ -107,9 +110,10 @@ object ContinuumSpanAbstentionExperiment {
             return
         }
         if (mode != "cycle1") {
-            val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN, bindingCurriculum = args.contains("binding"))
-            val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION)
-            println("TRAIN binding curriculum=${args.contains("binding")} trainSha=${ContinuumSpanAbstentionBench.sha256(train)}")
+            val multiword = args.contains("multiword")
+            val train = ContinuumSpanAbstentionBench.generate(Split.TRAIN, bindingCurriculum = args.contains("binding"), multiword = multiword)
+            val validation = ContinuumSpanAbstentionBench.generate(Split.VALIDATION, multiword = multiword)
+            println("TRAIN binding curriculum=${args.contains("binding")} multiword=$multiword trainSha=${ContinuumSpanAbstentionBench.sha256(train)}")
             println("DATASET train=${train.size} validation=${validation.size} (unseen ${validation.count { it.unseenForm }}) " +
                 "validationSha=${ContinuumSpanAbstentionBench.sha256(validation)}")
             val seeds = if (quick) listOf(1L) else listOf(1L, 2L, 3L)
