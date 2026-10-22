@@ -24,7 +24,9 @@ object ContinuumIntelligenceAudit {
         val expected: String?,
         val generated: String,
         val correct: Boolean,
-        val unsupportedClaim: Boolean
+        val unsupportedClaim: Boolean,
+        val noResponse: Boolean,
+        val validAbstention: Boolean
     )
 
     data class Report(
@@ -37,12 +39,13 @@ object ContinuumIntelligenceAudit {
         val unsupportedClaims: Int,
         val unsupportedQuestions: Int,
         val validAbstentions: Int,
+        val noResponses: Int,
         val rows: List<ResultRow>
     ) {
         val targetMet: Boolean get() =
             status == "MEASURED" && supportedQuestions == 20 &&
                 unsupportedQuestions == 5 && correctAnswers >= 16 &&
-                unsupportedClaims == 0
+                unsupportedClaims == 0 && validAbstentions == 5 && noResponses == 0
 
         fun summary(): String = when (status) {
             "MEASURED" -> buildString {
@@ -51,8 +54,9 @@ object ContinuumIntelligenceAudit {
                     .append("/").append(supportedQuestions)
                 append("\nUnbelegte Antworten: ").append(unsupportedClaims)
                     .append("/").append(unsupportedQuestions)
-                append("\nKorrekte Enthaltungen: ").append(validAbstentions)
+                append("\nAusdrücklich unbeantwortbar: ").append(validAbstentions)
                     .append("/").append(unsupportedQuestions)
+                append("\nLeere Antworten statt Enthaltung: ").append(noResponses)
                 append("\nForschungsziel 16/20 und 0/5: ")
                     .append(if (targetMet) "erreicht" else "nicht erreicht")
                 append("\nModell: ").append(checkpointSha256?.take(16) ?: "unbekannt")
@@ -102,7 +106,7 @@ object ContinuumIntelligenceAudit {
             .replace(Regex("\\s+"), " ")
 
     private val explicitAbstentions = setOf(
-        "", "unbekannt", "nicht bekannt", "weiß ich nicht",
+        "unbekannt", "nicht bekannt", "weiß ich nicht",
         "keine angabe", "keine information", "nicht angegeben"
     )
 
@@ -139,7 +143,9 @@ object ContinuumIntelligenceAudit {
                 expected = p.expected,
                 generated = response.take(128),
                 correct = p.expected != null && actual == normalized(p.expected),
-                unsupportedClaim = p.expected == null && !emptyOrAbstaining
+                unsupportedClaim = p.expected == null && actual.isNotEmpty() && !emptyOrAbstaining,
+                noResponse = p.expected == null && actual.isEmpty(),
+                validAbstention = p.expected == null && emptyOrAbstaining
             )
         }
         val known = probes.count { it.expected != null }
@@ -153,7 +159,8 @@ object ContinuumIntelligenceAudit {
             supportedQuestions = known,
             unsupportedClaims = rows.count { it.unsupportedClaim },
             unsupportedQuestions = missing,
-            validAbstentions = missing - rows.count { it.unsupportedClaim },
+            validAbstentions = rows.count { it.validAbstention },
+            noResponses = rows.count { it.noResponse },
             rows = rows
         )
     }
@@ -161,6 +168,6 @@ object ContinuumIntelligenceAudit {
     fun unavailable(reason: String): Report {
         require(reason in setOf("UNAVAILABLE_NO_CHECKPOINT", "UNAVAILABLE_CORRUPT",
             "UNAVAILABLE_NO_INFERENCE", "BLOCKED_MODEL_CHANGED", "INTERRUPTED"))
-        return Report(reason, null, 0, fixtureSha256(), 0, 20, 0, 5, 0, emptyList())
+        return Report(reason, null, 0, fixtureSha256(), 0, 20, 0, 5, 0, 0, emptyList())
     }
 }
