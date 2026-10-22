@@ -14,6 +14,7 @@ const system = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGau
 const collector = kotlin('app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt');
 const phone = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt');
 const wide = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumWideElements.kt');
+const state = kotlin('app/src/main/java/at/heinz/deviceai/ui/ContinuumDashboardState.kt');
 
 test('no new Flutter dependency and existing native layout remains authoritative', () => {
   assert.match(home, /class ContinuumHomeView/);
@@ -68,4 +69,13 @@ test('positive measured event deltas use green in both form factors', () => {
     assert.match(cards, /if \(change > 0\) ContinuumTheme\.GREEN/);
     assert.match(cards, /if \(change < 0\) ContinuumTheme\.RED/);
   }
+});
+
+test('both phone and Fold storage cards show compact legend without losing measured category names', () => {
+  assert.match(state, /fun compactStorageLabel\(label: String\)/);
+  for (const original of ['App: eigene Dateien','App: Wissensquellen','App: Projektdateien','Übrige Gerätebelegung']) {
+    assert.ok(state.includes(original), 'full storage category is retained: ' + original);
+  }
+  for (const cards of [phone, wide]) assert.match(cards, /ContinuumDashboardState\.compactStorageLabel\(seg\.label\)/);
+  assert.match(phone, /segments\.joinToString/);
 });
