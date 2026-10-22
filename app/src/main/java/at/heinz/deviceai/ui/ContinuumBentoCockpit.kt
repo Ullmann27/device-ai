@@ -218,7 +218,7 @@ object ContinuumBentoCockpit {
             paint.alpha = 255
         }
         override fun setAlpha(alpha: Int) { paint.alpha = alpha; invalidateSelf() }
-        @Suppress("DEPRECATION")
+        @Deprecated("Android Drawable.getOpacity is deprecated")
         override fun getOpacity(): Int = android.graphics.PixelFormat.TRANSLUCENT
         override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {
             paint.colorFilter = colorFilter
