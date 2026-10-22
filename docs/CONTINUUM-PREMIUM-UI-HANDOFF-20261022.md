@@ -48,16 +48,17 @@ gerenderten Referenzbild. Layout, Farben, Schriften, Karten und Navigation stimm
 
 | Anzeige | Quelle | wenn nicht verfügbar |
 |---|---|---|
-| Modellstatus Online/Offline, Name | `LocalModelRuntime.state == READY`, geladenes Modell; sonst Startkern | „Offline“, „Continuum-Kern“ |
-| Leistung % und Segmentbalken | Holdout-Genauigkeit des Lernkerns: (Intent + Semantik richtig) / Summe | „—“, leerer Balken |
+| Modellstatus | „Aktiv“ **nur** bei geladenem lokalem Sprachmodell im Zustand READY; lesbarer SWB1-Status heißt „Nur Startkern“ | „Nicht verfügbar“ |
+| „Prüffragen“ % und Segmentbalken | Anteil richtig beantworteter Holdout-Prüffragen des Lernkerns (Intent + Semantik). **Keine allgemeine Intelligenzbewertung**, so auch in TalkBack | „—“, leerer Balken |
 | 24-h-Veränderung | gespeicherter Messverlauf (alle 30 min, 30 Tage); Vergleich mit Messung von vor 24 h–3 Tagen; zeigt auch Rückgänge („−n Pkt.“) | „24 h: noch kein Vergleich“ |
 | Reaktionszeit | Median der gemessenen Chat-Antwortzeiten | „—“ |
-| Kontextfenster | Startkern: 8 Gesprächszüge; geladenes Modell: unbekannt | „—“ |
-| Lernen heute, Veränderung zu gestern, Stundenkurve | Erfahrungs-Zeitstempel des Lernkerns (`experienceTimeline`) | „—“ / keine Prozentangabe, wenn gestern 0 |
+| Kontextfenster | Startkern: „1 Zug (Thema)“. Er speichert 8 Züge, antwortet aber nur mit dem Thema des letzten. Beim geladenen Modell nicht gemeldet | „—“ |
+| Lernereignisse heute, Veränderung zu gestern, Stundenkurve | Erfahrungs-Zeitstempel des Lernkerns (`experienceTimeline`) | „—“ / keine Prozentangabe, wenn gestern 0 |
 | Speicher belegt, Segmente | `StatFs` des App-Datenträgers; Kategorien nach Verzeichnisnamen | „—“ |
-| Quellen | Anzahl gespeicherter Web-Notizen | „—“ |
-| Entwicklung: Projekte, laufend, Fehler, 14-Tage-Balken | Entwicklungs-Backlog (aktive, laufende, fehlgeschlagene Aufgaben; DONE-Übergänge je Tag) | „—“, „Status unbekannt“ |
-| Systemstatus/-aktivität (Fold) | App-CPU über `Process.getElapsedCpuTime`, RAM über `ActivityManager.MemoryInfo`, Netz `NET_CAPABILITY_VALIDATED` | GPU immer „—“ (nicht messbar) |
+| Quellen („N gespeicherte Quellen“) | Anzahl gespeicherter Web-Notizen | „—“ |
+| Entwicklung: offene Aufgaben, laufend, fehlgeschlagen, 14-Tage-Balken | Entwicklungs-Backlog (nicht abgeschlossene, laufende, fehlgeschlagene Aufgaben; DONE-Übergänge je Tag). Abzeichen „Keine Fehlschläge“ statt „Alle Systeme nominal“ | „—“, „Status unbekannt“ |
+| Systemstatus (Fold) | Abzeichen „n offen“ aus der Diagnoseliste. Ist die Liste nicht lesbar: „Liste unlesbar“. **Nie „Optimal“** | „Liste unlesbar“ |
+| Systemaktivität (Fold), Messung „alle 5 s“ | App-CPU über `Process.getElapsedCpuTime`, RAM über `ActivityManager.MemoryInfo`, Speicher über `StatFs`. Netz nur als Text (`NET_CAPABILITY_VALIDATED`), **ohne erfundenen Pegel** | GPU immer „—“ (nicht messbar) |
 | Glocken-Badge | offene Diagnosemeldungen + wartende Lernfrage | kein Badge bei 0 |
 | Kern-Labels (Verbunden, Denken, …) | echte Zustände (Internetmodus, beschäftigt, Zuhören, Recherche, Lernen, Autostudium) | „Bereit“ / „Aus“ |
 
@@ -103,7 +104,7 @@ initialisiert, weil bestehende Aktualisierungspfade sie beschreiben. Ihre Fakten
 |---|---|
 | SOURCE_INTEGRATED | ja |
 | KOTLIN_COMPILE_CHECKED | ja: `CONTINUUM_ANDROID_DEPS=<jars> scripts/android-kotlin-compile-check.sh <out>` → keine Fehler außerhalb der LiteRT-LM-Dateien (deren 127 Fehler sind unverändert: Google Maven ist hier gesperrt) |
-| JVM_TESTED | 12/12 JUnit-Tests (kotlinc 2.0.20 + JUnit 4.13.2, außerhalb von Gradle): `ContinuumDashboardMathTest`, `ContinuumDiagnosticsTest`, `ContinuumHomeScreenTest` |
+| JVM_TESTED | 13/13 JUnit-Tests (nach dem Audit; zuvor 12/12) (kotlinc 2.0.20 + JUnit 4.13.2, außerhalb von Gradle): `ContinuumDashboardMathTest`, `ContinuumDiagnosticsTest`, `ContinuumHomeScreenTest` |
 | Node-Quelltests | `node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs` → 808/813. Die 5 Fehlschläge sind die Linux-Sandbox-Tests in `scripts/continuum-isolated-node.test.mjs`: `/bin/setpriv` findet `libcap-ng.so.0` in diesem Container nicht (Umgebung, nicht UI) |
 | Gradle-Unit-Tests | nicht ausgeführt: Android SDK hier nicht verfügbar |
 | APK_BUILT | nein |
@@ -111,6 +112,41 @@ initialisiert, weil bestehende Aktualisierungspfade sie beschreiben. Ihre Fakten
 
 16 Quelltests, die das alte Cockpit lasen, prüfen jetzt den echten Startbildschirm, darunter: jedes antippbare Element
 hat eine Route zu einem echten Bildschirm. Eine Probe-Mutation (Route entfernt) lässt die Tests fehlschlagen.
+
+## Nachprüfung nach dem Besitzer-Audit (22.10.2026, abends)
+
+**Korrigiert: Anzeigen, die mehr behaupteten, als die Daten tragen**
+- „Online“ bei bloß lesbarem SWB1-Status.
+- „Leistung“ für die Holdout-Quote.
+- „Optimal“ bei leerer Fehlerliste. Dasselbe galt, wenn die Liste nicht lesbar war, weil der Fehler zu 0 wurde.
+- „Alle Systeme nominal“.
+- Netzwerk-Balken und Netzwerk-Ring auf 100 % bei bloßer Verbindung.
+- „Echtzeit“ statt der tatsächlichen Abtastung alle 5 s.
+- „8 Gesprächszüge“ Kontext.
+- „aktive“ Quellen und Projekte.
+
+Ein Node-Test sichert diese Regeln ab (`android-holographic-home.test.mjs`).
+
+**Diagnoseexport gegen Datenlecks**
+- Die Bereinigung wurde erweitert um: Authorization-Header, JWT, AWS-Schlüssel, private PEM-Schlüssel, `hf_`/`glpat-`-Token, Home-Pfade, IPv4-Adressen und die Namen des Besitzers. Der Paketname bleibt lesbar.
+- Ein neuer adversarialer JUnit-Test prüft **die Rohdatei auf der Festplatte und den Export** gegen 16 Geheimnisformen.
+- JVM jetzt **13/13**.
+
+**Keine leeren Tests**
+- `scripts/continuum-ui-test-mutations.mjs` bricht je umgestelltem Node-Test genau eine echte Funktion (Route, Handler, Barrierefreiheit, Ehrlichkeitsregel). Der Test muss dann rot werden.
+- Erster Lauf: 17/20. Drei Lücken wurden gefunden: Zwei Tests prüften Zeilen, die auch in einer zweiten Klasse stehen; eine Mutation war zu schwach.
+- Nach der Korrektur: **20/20**, Beleg in `docs/evidence/ui-20261022/mutation-check.txt`.
+
+**Die LiteRT-LM-Kompilierfehler stammen nicht aus PR #74**
+- Der SDK-freie Kompiliercheck läuft auf dem unveränderten Release `619ebeb` und auf diesem Zweig.
+- Ergebnis: **identische 127 Fehler nach Datei und Meldung**, nur in `localmodel/LiteRtLmLocalModelRuntime.kt` (109) und `localmodel/LocalModelCatalog.kt` (18).
+- Ursache: Die Abhängigkeit `com.google.ai.edge.litertlm:litertlm-android:0.18.0` gibt es nur auf Google Maven, und das ist hier gesperrt.
+- Der signierte 0.3.12-Build auf Render hat sie aufgelöst.
+- Ein SDK-freier Kompiliercheck **ersetzt keinen vollständigen Android-Build**.
+
+**Die 5 fehlschlagenden Node-Tests stammen nicht aus PR #74**
+- Dieselben 5 Sandbox-Tests schlagen in diesem Container auch auf dem unveränderten Release fehl (Node 808/813 dort wie hier).
+- Grund: `/bin/setpriv` findet `libcap-ng.so.0` nicht.
 
 ## Bekannte Grenzen
 
