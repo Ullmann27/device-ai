@@ -84,6 +84,8 @@ Zusätzlich werden erfasst:
   - das beste n-Gramm;
   - CDX1 mit der gewählten Epochenzahl, 3 Seeds.
 
+**Klarstellung vom 22.10.2026, 15:58 UTC** (eingetragen, bevor die Ablationsläufe begonnen hatten): TEST-Kandidaten kommen nur aus den Familien mit 3 Seeds (Vokabular 512). Die Ablationen mit Vokabular 258 und 1024 laufen mit einem Seed. Sie zeigen die Richtung, sind aber keine TEST-Kandidaten.
+
 **Zulässige Aussage**
 - „LM1 schlägt CDX1 auf ungesehenen Dokumenten“ nur, wenn der TEST-BPB **jedes** Kandidaten-Seeds kleiner ist als der **jedes** CDX1-Seeds.
 - Gegenüber dem n-Gramm gilt dieselbe Regel. Verliert LM1 gegen das n-Gramm, wird das als negatives Ergebnis berichtet.
