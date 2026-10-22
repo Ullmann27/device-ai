@@ -13,7 +13,7 @@ const observations=[
 ];
 
 test("fabricated mixed letter-digit topic must abstain on real but unrelated source topics",()=>{
-  const unrelated=observations.filter(x=>x.id!=="backprop");
+  const unrelated=observations.filter(x=>x.id!=="backprop").map(x=>({...x,kind:"SOURCE_TEXT"}));
   for(const query of [
     "Quantenkarussell987",
     "Was weißt du über Quantenkarussell987?",
@@ -21,7 +21,7 @@ test("fabricated mixed letter-digit topic must abstain on real but unrelated sou
   ]){
     assert.equal(rankMemories(query,unrelated).length,0,query);
   }
-  assert.ok(wordEvidence("Quantenkarussell987","Quantenmechanik und quantitative Statistik")<EVIDENCE_THRESHOLD);
+  assert.equal(sourceTermEvidence("Quantenkarussell987","Quantenmechanik und quantitative Statistik"),false);
 });
 
 test("exact technical term retrieves only relevant citation and not loosely shared Fehler",()=>{
@@ -32,7 +32,7 @@ test("exact technical term retrieves only relevant citation and not loosely shar
   assert.equal(sourceTermEvidence("Fehlerrückführung",sources.find(x=>x.id==="paedagogik").text),false);
   assert.equal(sourceTermEvidence("Fehlerrückführung",sources.find(x=>x.id==="backprop").text),true);
   assert.equal(wordEvidence("Fehlerrückführung",observations[3].text),1);
-  assert.ok(wordEvidence("Fehlerrückführung",observations[4].text)<EVIDENCE_THRESHOLD);
+  assert.equal(sourceTermEvidence("Fehlerrückführung",observations[4].text),false);
 });
 
 test("explicit owner memories retain compound matches without source-only guard",()=>{
