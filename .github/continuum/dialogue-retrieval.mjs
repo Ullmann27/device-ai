@@ -40,6 +40,20 @@ export function wordEvidence(query,text){
   }
   return best;
 }
+/** Public citations require a complete long-term anchor, not generic compound tails.
+ * Owner-confirmed memories preserve broader compound recognition. */
+export function sourceTermEvidence(query,text){
+  const terms=[...new Set(contentWords(query))];
+  if(terms.length!==1||terms[0].length<12)return true;
+  const needle=terms[0];
+  return contentWords(text).some(word=>{
+    if(word===needle)return true;
+    if(/[0-9]/u.test(needle)||/[0-9]/u.test(word))return false;
+    const shorter=Math.min(needle.length,word.length);
+    let prefix=0;while(prefix<shorter&&needle[prefix]===word[prefix])prefix++;
+    return shorter>=6&&Math.abs(needle.length-word.length)<=3&&prefix>=shorter-2;
+  });
+}
 /** memories: [{id,text,...}]; semantic(query,text) optional, reported only. */
 export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const q=String(query).slice(0,1000);
@@ -47,6 +61,7 @@ export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const qv=weigh(wordGrams(q),idf);
   return memories.map(m=>{
     const text=String(m.text).slice(0,1000);
+    if((m.kind==='SOURCE_TEXT'||m.type==='SOURCE_TEXT')&&!sourceTermEvidence(q,text))return null;
     const evidence=wordEvidence(q,text);
     if(evidence<EVIDENCE_THRESHOLD)return null;
     const score=cosine(qv,weigh(wordGrams(text),idf));

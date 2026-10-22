@@ -181,6 +181,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             for(a in q)for(b in t) {
                 if(a==b)return 1.0
                 if(a.length>=5 && b.length>=5 && a.substring(0,5)==b.substring(0,5))best=maxOf(best,0.8)
+                // Whole-word German compound heads remain searchable (e.g. Schlüssel).
                 if(a.length>=5 && b.length>=a.length+3 && b.endsWith(a))best=maxOf(best,0.82)
                 if(b.length>=5 && a.length>=b.length+3 && a.endsWith(b))best=maxOf(best,0.82)
                 val ta=trigrams(a);val tb=trigrams(b)
@@ -210,6 +211,27 @@ class ContinuumMemoryDialogue(private val directory:File) {
               e.provenance in setOf(LearningProvenance.REVIEWED_WEB_SOURCE,LearningProvenance.MENTOR_WIKIPEDIA) &&
               e.sourceRef?.startsWith("https://")==true))
 
+        /**
+         * Single long specialist terms in public excerpts must match a complete
+         * source term (or near-inflection), not an incidental compound head.
+         * Example: "Fehlerrückführung" is not evidenced by just "Führung".
+         * Owner-confirmed memories retain their separate German compound policy.
+         */
+        internal fun sourceTermEvidence(query:String,text:String):Boolean {
+            val terms=contentWords(query).distinct()
+            if(terms.size!=1 || terms[0].length<12)return true
+            val needle=terms.single()
+            return contentWords(text).any { word ->
+                if(word==needle)true
+                else if(needle.any(Char::isDigit) || word.any(Char::isDigit))false
+                else {
+                    val shorter=minOf(needle.length,word.length)
+                    shorter>=6 && kotlin.math.abs(needle.length-word.length)<=3 &&
+                        needle.zip(word).takeWhile { (a,b) -> a==b }.size>=shorter-2
+                }
+            }
+        }
+
         fun rank(bytes:ByteArray,query:String,experiences:List<LearningExperience>):List<ContinuumMemoryHit> {
             val model=TrainableSubwordEncoder.restore(bytes)
             val q=query.take(1000)
@@ -221,6 +243,8 @@ class ContinuumMemoryDialogue(private val directory:File) {
             val qv=weigh(wordGrams(q),idf)
             return pool.mapNotNull { e ->
                 val text=e.content.take(1000)
+                if(e.type==LearningExperienceType.SOURCE_TEXT &&
+                    !sourceTermEvidence(q,text))return@mapNotNull null
                 if(wordEvidence(q,text)<EVIDENCE_THRESHOLD)return@mapNotNull null
                 val score=cosine(qv,weigh(wordGrams(text),idf))
                 if(!(score>0.0))return@mapNotNull null
