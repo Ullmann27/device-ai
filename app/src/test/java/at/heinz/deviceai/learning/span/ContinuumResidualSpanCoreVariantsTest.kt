@@ -16,7 +16,9 @@ class ContinuumResidualSpanCoreVariantsTest {
         ContinuumResidualSpanCore.Features(positionFeatures = false),
         ContinuumResidualSpanCore.Features(identifierPlaceholders = true),
         ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true),
-        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true)
+        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true),
+        ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true, excludeCueWords = true,
+            multiTokenSpans = true)
     )
     private val examples = listOf(
         ContinuumResidualSpanCore.Example("Einheit AB12 steht in Wien, Einheit CD34 steht in Graz.", "Wo steht CD34?", "Graz"),
@@ -91,5 +93,45 @@ class ContinuumResidualSpanCoreVariantsTest {
         val b = ContinuumResidualSpanCore(77, ContinuumResidualSpanCore.Features())
         repeat(30) { a.train(examples[it % 3]); b.train(examples[it % 3]) }
         assertArrayEquals(a.parameters(), b.parameters(), 0.0)
+    }
+}
+
+/** Span-specific safety: exact offsets, no clause/punctuation crossing, length bound, stop/cue/asked-id exclusion. */
+class ContinuumResidualSpanCoreSpanTest {
+    private val spans = ContinuumResidualSpanCore.Features(positionFeatures = false, entityProximity = true,
+        excludeCueWords = true, multiTokenSpans = true)
+
+    @Test fun spanGoldUsesExactSourceOffsetsAndRejectsIllegalSpans() {
+        val model = ContinuumResidualSpanCore(77, spans)
+        val evidence = "Gerät AB12 hat ein Gewicht von 150 Kilogramm. Paket CD34 stammt von Anna Huber, Wien."
+        model.loss(ContinuumResidualSpanCore.Example(evidence, "Welches Gewicht hat AB12?", "150 Kilogramm"))
+        model.loss(ContinuumResidualSpanCore.Example(evidence, "Von wem stammt CD34?", "Anna Huber"))
+        fun illegal(answer: String) = runCatching {
+            model.loss(ContinuumResidualSpanCore.Example(evidence, "Von wem stammt CD34?", answer)) }.isFailure
+        assertTrue("crosses the comma", illegal("Huber, Wien"))
+        assertTrue("crosses the sentence boundary", illegal("Kilogramm. Paket"))
+        assertTrue("contains a stop word", illegal("Gewicht von 150"))
+        assertTrue("longer than three tokens", illegal("ein Gewicht von 150 Kilogramm"))
+        assertTrue("contains the asked id", illegal("CD34 stammt"))
+        assertEquals(0, model.updates)
+    }
+
+    @Test fun predictedSpanIsTheExactSubstringAndGradientsStayExact() {
+        val model = ContinuumResidualSpanCore(77, spans)
+        val e = ContinuumResidualSpanCore.Example("Roboter EF56 ist 12 Meter lang.", "Wie lang ist EF56?", "12 Meter")
+        repeat(60) { model.train(e, rate = 0.05) }
+        val p = model.predict(e.evidence, e.question)
+        assertEquals("12 Meter", p.answer)
+        assertEquals("12 Meter", e.evidence.substring(p.start, p.end))
+        val g = model.gradient(e); val params = model.parameters()
+        for (i in (0 until ContinuumResidualSpanCore.PARAMETERS).filter { abs(g.values[it]) > 1e-9 }.take(40)) {
+            model.loadParameters(params.copyOf().also { it[i] += 1e-6 }); val hi = model.loss(e)
+            model.loadParameters(params.copyOf().also { it[i] -= 1e-6 }); val lo = model.loss(e)
+            model.loadParameters(params)
+            assertTrue(abs((hi - lo) / 2e-6 - g.values[i]) < 1e-6)
+        }
+        val restored = ContinuumResidualSpanCore.restore(model.save())
+        assertEquals(spans, restored.features)
+        assertEquals(p, restored.predict(e.evidence, e.question))
     }
 }
