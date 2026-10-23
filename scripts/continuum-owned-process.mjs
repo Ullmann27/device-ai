@@ -34,6 +34,9 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
     let bytes=0,reason=null,closed=false,resultCode=null,forceTimer=null,done=false,terminationConfirmed=true;
     let trackingComplete=procPlatform;
     const currentIdentity=pid=>identity(pid,()=>{trackingComplete=false;});
+    // A descendant starts no earlier than the direct child. Older processes (init, the Termux app, this harness)
+    // cannot carry this run's marker, so an unreadable one of them does not block a positive cleanup claim.
+    let startFloor=Number(identity(process.pid)?.start??0);
     // Gradle creates a new session for its single-use daemon. Process-group
     // termination alone misses it. Track descendants with /proc start-time identity,
     // then also stop detached descendants before releasing the caller's lease.
@@ -41,6 +44,7 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
       if(!procPlatform||!child.pid){trackingComplete=false;return;}
       trackingComplete=true;
       const root=currentIdentity(child.pid);if(root&&!owned.has(root.pid))owned.set(root.pid,root);
+      if(root)startFloor=Math.max(startFloor,Number(root.start));
       let pids;
       try {pids=fs.readdirSync('/proc').filter(p=>/^[0-9]+$/.test(p));}
       catch {trackingComplete=false;return;}
@@ -51,7 +55,7 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
         try {
           if(fs.statSync('/proc/'+name).uid!==process.getuid())continue;
           const p=currentIdentity(Number(name));
-          if(!p||p.state==='Z')continue;
+          if(!p||p.state==='Z'||Number(p.start)<startFloor)continue;
           fd=fs.openSync('/proc/'+name+'/environ','r');
           const n=fs.readSync(fd,buffer,0,buffer.length,null);
           if(n===buffer.length){trackingComplete=false;continue;}

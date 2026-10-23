@@ -60,14 +60,31 @@ for (const platform of ['linux','android']) {
     assert.equal(r.terminationConfirmed,true);
   });
 }
-test('unreadable process tracking cannot claim confirmed cleanup',async t=>{
+test('an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup',async t=>{
+  if(!['linux','android'].includes(process.platform)){t.skip('/proc required');return;}
+  const open=fs.openSync;
+  fs.openSync=(file,...args)=>{
+    if(String(file)==='/proc/1/environ'||String(file)==='/proc/'+process.pid+'/environ')
+      throw Object.assign(Error('denied'),{code:'EACCES'});
+    return open(file,...args);
+  };
+  t.after(()=>{fs.openSync=open;});
+  const r=await runOwnedCommand(process.execPath,['-e','console.log("done")'],{env:process.env,timeout:2000});
+  assert.equal(r.ok,true);assert.equal(r.terminationConfirmed,true);
+});
+test('an unreadable process younger than the run blocks a confirmed cleanup',async t=>{
+  if(!['linux','android'].includes(process.platform)){t.skip('/proc required');return;}
   const open=fs.openSync;
   fs.openSync=(file,...args)=>{
     if(/^\/proc\/[0-9]+\/environ$/.test(String(file)))throw Object.assign(Error('denied'),{code:'EACCES'});
     return open(file,...args);
   };
   t.after(()=>{fs.openSync=open;});
-  const r=await runOwnedCommand(process.execPath,['-e','console.log("done")'],{env:process.env,timeout:2000});
+  // the direct child leaves a detached grandchild behind whose identity cannot be read: it might be ours
+  const code='const{spawn}=require("node:child_process");const p=spawn(process.execPath,["-e","setTimeout(()=>{},3000)"],'+
+    '{detached:true,stdio:"ignore"});console.log(p.pid);p.unref()';
+  const r=await runOwnedCommand(process.execPath,['-e',code],{env:process.env,timeout:2000});
+  t.after(()=>{try{process.kill(Number(r.output.trim()),'SIGKILL');}catch{}});
   assert.equal(r.ok,false);assert.equal(r.terminationConfirmed,false);
   assert.equal(r.error,'TERMINATION_UNCONFIRMED');
 });
