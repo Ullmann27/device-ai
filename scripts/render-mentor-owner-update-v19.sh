@@ -36,7 +36,7 @@ while read -r expected_blob source_path; do
   [[ "$actual_blob" == "$expected_blob" ]] ||
     die "Approved release file differs: $source_path"
 done <<'APPROVED_RELEASE_SOURCES'
-b4d7edf6174d7c0bfa6cf7fefd000a57bd0c837f app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+eba1c5499886541fb5795946cecbb0e289169adc app/src/main/java/at/heinz/deviceai/AgentActivity.kt
 8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
 2bb8817da268bdcca676aa9a9b48f56b50d06609 app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
 412d643296deb76ab07e9515f6881eba9df3a9b4 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
@@ -54,7 +54,7 @@ e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/Con
 697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
 f02e1e45be017b03202dedfbe6a9d0285bd04bc6 scripts/continuum-owned-app.mjs
 693a8bfd46a0afe5bcb8bc6c79e98206462b2fc2 scripts/continuum-owned-app.test.mjs
-f09b680a396db3532fd472aa338fea112963ea18 app/src/main/assets/continuum-training-studio-v1.json
+c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
 # but changes to tracked source or new executable/tests in source locations are not.
