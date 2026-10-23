@@ -7,8 +7,12 @@ package at.heinz.deviceai.intelligence.maxultra
  *
  * Bounded state per session: the entity registry derived from the stored owner facts, at most [MAX_SALIENT] recent
  * mentions, the last query and its entity. Nothing is learned, persisted or used to grant any action.
+ *
+ * [generalized] (CTX2, docs/research/CTX2-FACT-PHRASING-PREREG-20261024.md; off = CTX1 exactly as measured) adds more
+ * owner phrasings to the registry, takes the subject name of any fact as an entity of unknown gender, and calls a name
+ * unknown only when no stored fact contains it.
  */
-class Ctx1DialogueContext(facts: List<String>) {
+class Ctx1DialogueContext(facts: List<String>, private val generalized: Boolean = false) {
     enum class G { M, F, N }
     /** A referable thing; [known] is false for a name the owner never stored. */
     data class Ent(val surface: String, val genders: Set<G>, val aliases: Set<String>, val known: Boolean = true)
@@ -19,7 +23,7 @@ class Ctx1DialogueContext(facts: List<String>) {
     object Clarify : Decision { override fun toString() = "CLARIFY" }
     object Unknown : Decision { override fun toString() = "UNKNOWN" }
 
-    val registry: List<Ent> = buildRegistry(facts)
+    val registry: List<Ent> = buildRegistry(facts, generalized)
     private val facts = facts.toList()
     private val salient = ArrayList<Pair<Ent, Int>>()
     private var askedFor: Ent? = null
@@ -115,7 +119,8 @@ class Ctx1DialogueContext(facts: List<String>) {
             if (i == 0 || !t[0].isUpperCase() || t in DAYS) continue
             val before = toks[i - 1].lowercase()
             if (before in DETERMINERS || before in PREPOSITIONS) continue   // a common noun or a place, not a person
-            out += Ent(t, setOf(G.M, G.F), setOf(t), known = false) to i
+            val stored = generalized && facts.any { f -> tokens(f).any { it.equals(t, true) } }
+            out += Ent(t, setOf(G.M, G.F), setOf(t), known = stored) to i
         }
         return out
     }
@@ -180,7 +185,43 @@ class Ctx1DialogueContext(facts: List<String>) {
         private fun String.replaceToken(token: String, with: String): String =
             replace(Regex("(?iu)(?<![\\p{L}\\p{N}])" + Regex.escape(token) + "(?![\\p{L}\\p{N}])"), Regex.escapeReplacement(with))
 
-        fun buildRegistry(facts: List<String>): List<Ent> {
+        private val SUBJECT_VERBS = setOf("ist", "wohnt", "lebt", "arbeitet", "spielt", "frisst", "heißt", "hat")
+        private val NO_NAME = setOf("Ich", "Wir", "Mein", "Meine", "Unser", "Unsere", "Der", "Die", "Das", "Am", "Bei",
+            "Zu", "Ein", "Eine", "Es", "Er", "Sie", "Dein", "Deine")
+
+        private fun articleGenders(article: String): Set<G> = when (article.lowercase()) {
+            "eine", "die", "meine", "unsere" -> setOf(G.F)
+            "einen", "der" -> setOf(G.M)
+            "das" -> setOf(G.N)
+            else -> setOf(G.M, G.N)
+        }
+
+        /** CTX2 additions: more owner phrasings, then every fact subject name not registered yet (gender unknown). */
+        private fun generalizedEntities(facts: List<String>, out: LinkedHashMap<String, Ent>) {
+            val word = "(\\p{Lu}[\\p{L}-]+)"
+            val relationNamed = Regex("^(Mein|Meine) $word heißt $word\\.")
+            val haveOne = Regex("^Ich habe (einen|eine|ein) $word, (?:er|sie|es) heißt $word\\.")
+            val named = Regex("\\b(einen|eine|ein) $word namens $word\\b")
+            val isOur = Regex("^$word ist (unser|unsere) $word\\.")
+            val definite = Regex("^(Der|Die|Das) $word (?:ist|hat|steht|liegt)\\b")
+            for (f in facts) {
+                relationNamed.find(f)?.let { m -> out.putIfAbsent(m.groupValues[3], Ent(m.groupValues[3], articleGenders(m.groupValues[1]).let { if (it == setOf(G.M, G.N)) setOf(G.M) else it }, setOf(m.groupValues[3]))) }
+                haveOne.find(f)?.let { m -> out.putIfAbsent(m.groupValues[3], Ent(m.groupValues[3], articleGenders(m.groupValues[1]), setOf(m.groupValues[3]))) }
+                named.find(f)?.let { m -> out.putIfAbsent(m.groupValues[3], Ent(m.groupValues[3], articleGenders(m.groupValues[1]), setOf(m.groupValues[3], m.groupValues[2]))) }
+                isOur.find(f)?.let { m -> out.putIfAbsent(m.groupValues[1], Ent(m.groupValues[1], articleGenders(m.groupValues[2]), setOf(m.groupValues[1], m.groupValues[3]))) }
+                definite.find(f)?.let { m -> out.putIfAbsent(m.groupValues[2], Ent(m.groupValues[2], articleGenders(m.groupValues[1]), setOf(m.groupValues[2]))) }
+            }
+            for (f in facts) {
+                val toks = tokens(f)
+                val first = toks.firstOrNull() ?: continue
+                if (!first[0].isUpperCase() || first in NO_NAME || first in DAYS || out.values.any { e -> e.aliases.any { it.equals(first, true) } }) continue
+                val next = f.removePrefix(first).trimStart()
+                if (next.startsWith(",") || toks.getOrNull(1)?.lowercase() in SUBJECT_VERBS)
+                    out.putIfAbsent(first, Ent(first, setOf(G.M, G.F), setOf(first)))
+            }
+        }
+
+        fun buildRegistry(facts: List<String>, generalized: Boolean = false): List<Ent> {
             val out = LinkedHashMap<String, Ent>()
             val person = Regex("^(\\p{Lu}[\\p{L}-]+) ist (mein|meine) \\p{Lu}")
             val pet = Regex("^(Unser|Unsere) (\\p{Lu}[\\p{L}-]+) heißt (\\p{Lu}[\\p{L}-]+)\\.")
@@ -204,6 +245,7 @@ class Ctx1DialogueContext(facts: List<String>) {
                     out.putIfAbsent(noun, Ent(noun, nounGenders(m.groupValues[1], noun), setOf(noun)))
                 }
             }
+            if (generalized) generalizedEntities(facts, out)
             return out.values.toList()
         }
     }

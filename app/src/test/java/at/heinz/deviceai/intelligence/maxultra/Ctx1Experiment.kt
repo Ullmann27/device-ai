@@ -66,8 +66,9 @@ object Ctx1Experiment {
             LearningTrustClass.OWNER_CONFIRMED, LearningStatus.CONFIRMED, it, now = 1)
     }
 
-    fun evaluate(dialogs: List<Ctx1Corpus.Dialog>, withContext: Boolean, bytes: ByteArray, keepFailures: Int = 0): Tally {
-        val tally = Tally(if (withContext) "B1" else "B0")
+    fun evaluate(dialogs: List<Ctx1Corpus.Dialog>, withContext: Boolean, bytes: ByteArray, keepFailures: Int = 0,
+                 generalized: Boolean = false): Tally {
+        val tally = Tally(if (!withContext) "B0" else if (generalized) "B2" else "B1")
         val dir = Files.createTempDirectory("ctx1-").toFile()
         try {
             for (d in dialogs) {
@@ -75,7 +76,7 @@ object Ctx1Experiment {
                 val text = exps.associate { it.id to it.content }
                 val core = ContinuumMemoryDialogue(dir)
                 core.clear()
-                val ctx = if (withContext) Ctx1DialogueContext(d.facts) else null
+                val ctx = if (withContext) Ctx1DialogueContext(d.facts, generalized) else null
                 d.turns.forEachIndexed { i, t ->
                     val started = System.nanoTime()
                     var cited = emptyList<String>()
@@ -116,7 +117,7 @@ object Ctx1Experiment {
     private fun percentile(xs: List<Long>, p: Double): Double =
         if (xs.isEmpty()) 0.0 else xs.sorted()[((xs.size - 1) * p).toInt()] / 1e6
 
-    private fun json(value: Any?): String = when (value) {
+    fun json(value: Any?): String = when (value) {
         null -> "null"
         is String -> "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
         is Number, is Boolean -> value.toString()
