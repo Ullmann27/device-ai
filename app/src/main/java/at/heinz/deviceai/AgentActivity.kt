@@ -1337,6 +1337,7 @@ class AgentActivity : Activity() {
         learningIoStatus { learningCenterStatus() },
         listOf(
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
+            CenterAction("KONTEXT-TRAINING · MEHRSTUFIGE ÜBUNGEN", accent = true) { showContextTrainingGuide() },
             CenterAction("TRAININGS-MONITOR · LIVE", accent = true) {
                 startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
             },
@@ -1634,6 +1635,62 @@ class AgentActivity : Activity() {
         append(at.heinz.deviceai.learning.ContinuumOfflineJobStatus.read(this@AgentActivity).display())
         val practice = NeuralPracticeScheduler(this@AgentActivity)
         append("\n\nAUTO-ÜBEN: ").append(if (practice.enabled) "AN · " + practice.lastStatus.take(120) else "AUS")
+    }
+
+    /** Owner-readable lessons, not automatic neural training or memory writes.
+     * Templates are synthetic and copied only on an explicit tap.
+     */
+    private fun showContextTrainingGuide() {
+        val topics = arrayOf(
+            "Gruß-Beispiele · Klassifikation",
+            "Frage-Beispiele · Klassifikation",
+            "Kontext · Projektregeln als Erinnerungen",
+            "Logik · Belegbare Schlussfolgerung",
+            "Dialog · Rückbezug und Themenwechsel"
+        )
+        val samples = listOf(
+            listOf(
+                "„Servus, ich bin wieder da.“",
+                "„Guten Morgen, Continuum.“",
+                "„Grüß Gott und einen schönen Tag.“",
+                "„Hallo zusammen, wir legen los.“",
+                "„Schön dich wiederzusehen.“",
+                "„Liebe Grüße aus meiner Werkstatt.“"
+            ).joinToString("\n"),
+            listOf(
+                "„Welche Tests hat der Coding-Agent bestanden?“",
+                "„Warum braucht der Worker eine Sandbox?“",
+                "„Kann Continuum eine APK selbst bauen?“",
+                "„Was bedeutet ein Quellenwiderspruch?“",
+                "„Wie unterscheiden sich Modellgewichte und Gedächtnis?“",
+                "„Wann soll ein Patch zur Kontrolle angeboten werden?“"
+            ).joinToString("\n"),
+            "Merke dir: Continuum MASTER soll zuerst als persönliche Android-KI vollständig funktionieren.",
+            "Merke dir: Fakt: testprojekt42 | ist | appprojekt",
+            "Ich plane eine Android-Notiz-App mit zwei Ansichten. Welche Tests brauchen wir vor einem APK-Build?"
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Continuum MASTER · Kontexttraining")
+            .setMessage("Wähle eine Übung. Sie wird auf Wunsch als Text kopiert, aber niemals automatisch ausgeführt. " +
+                "Die ersten zwei Kategorien gehören ins LERN-GESPRÄCH: danach jeden Satz als Gruß oder Frage bestätigen. " +
+                "Erinnerungen und Fakten gehören dagegen in den normalen Chat und brauchen deine Speicherfreigabe. " +
+                "Die Logikübung benötigt ergänzend eine Regel und eine Prüf-Frage; sie ist nur ein synthetischer Test. " +
+                "Die Dialogübung prüft den aktuellen Stand und trainiert keine Gewichte. " +
+                "Deine bisherigen zwölf SWB1-/CDX1-Stufen werden dadurch nicht zurückgesetzt.")
+            .setItems(topics) { _, index ->
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                if (clipboard == null) {
+                    addAssistantMessage("Android-Zwischenablage nicht verfügbar. Der Trainingsstand bleibt unverändert.")
+                } else {
+                    clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Continuum Kontexttraining", samples[index]))
+                    addAssistantMessage("Kontexttraining · "+topics[index]+
+                        " wurde als reine Eingabevorlage kopiert. " +
+                        "Füge sie in die passende Chat-Rubrik ein. " +
+                        "Noch kein Training gestartet, keine Erinnerung gespeichert.")
+                }
+            }
+            .setNegativeButton("Schließen", null)
+            .show()
     }
 
     private fun showLearningGuide() {
