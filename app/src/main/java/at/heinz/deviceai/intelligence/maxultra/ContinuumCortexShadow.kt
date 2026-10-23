@@ -175,7 +175,8 @@ class WakeSleepShadowHabitCore(private val planner: EvidenceBoundedThoughtSearch
         val positive = probes.count { it.expected != null }
         val negative = probes.size - positive
         if (staged.isEmpty() || probes.size !in 3..128 || positive == 0 || negative == 0 ||
-            staged.keys.none { key -> probes.any { it.query == key && it.expected != null } }) {
+            probes.map { it.query }.toSet().size != probes.size ||
+            staged.keys.any { key -> probes.none { it.query == key && it.expected != null } }) {
             return Report(false, positive, negative, "INSUFFICIENT_INDEPENDENT_HOLDOUT", habits.size)
         }
         val candidate = LinkedHashMap(habits).apply { putAll(staged) }
