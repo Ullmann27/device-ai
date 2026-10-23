@@ -57,6 +57,12 @@ class KneserNeyBytes(val order: Int, train: List<String>) : SegmentScorer {
         }
     }
 
+    /** Probability of every byte value after [prefix], which starts a segment exactly as in [bits]. */
+    fun nextByteProbabilities(prefix: ByteArray): DoubleArray {
+        val b = prefix.copyOf(prefix.size + 1)
+        return DoubleArray(256) { x -> b[prefix.size] = x.toByte(); prob(b, prefix.size, order) }
+    }
+
     override fun bits(segment: String): Double {
         val b = segment.toByteArray(Charsets.UTF_8)
         var nats = 0.0
