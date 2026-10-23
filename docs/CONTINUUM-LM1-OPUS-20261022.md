@@ -225,6 +225,49 @@ Zusätzlich werden erfasst:
   `LmExperiment <repo> final store=<checkpoints> kn=7 cdx1epochs=3 ckpt=512:<GM s1> ckpt=512:<GM s2> ckpt=512:<GM s3> ckpt=512:<TM s1> ckpt=512:<TM s2> ckpt=512:<TM s3>`
 - **Stand dieses Commits: TEST nicht ausgeführt.**
 
+### 7a. Einmalige TEST-Auswertung (23.10.2026, 01:38–01:41 UTC)
+
+**Freigabe und Vorprüfung**
+- Ausgeführt nach ausdrücklicher Freigabe des Besitzers (Master-Fortsetzungsauftrag M4/M5 vom 23.10.2026, Abschnitt 3: „Prüfe zunächst, ob der vorregistrierte finale TEST tatsächlich noch unberührt ist. Falls dies bestätigt ist: … Führe die einmalige abschließende TEST-Auswertung durch.“).
+- **Unberührtheit vorher geprüft:**
+  - Nur der Modus `final` bewertet TEST, und er bricht ab, wenn der TEST-Hash nicht dem eingefrorenen entspricht.
+  - In keinem Protokoll, keiner Belegdatei und keinem Ausgabeverlauf dieser Sitzungen gibt es einen TEST-Wert. `testBPB=<Zahl>` kam vor diesem Lauf nirgends vor; der frühere Startversuch wurde vor der Ausführung abgewiesen.
+  - Das NF-Labor schließt alle LM1-TEST-Dokumente aus.
+  - Die sechs Checkpoints wurden gegen ihren Inhalts-Hash geprüft: 0 Abweichungen.
+- Befehl wie vorregistriert, mit derselben JAR wie der Auswahllauf (SHA-256 `27f84b6b…706a`, Code `9630fd49`).
+- Exitcode 0. TEST-Hash bestätigt (`0d11bf88…7188`).
+- Protokoll: `docs/evidence/lm1-20261022/final-test-20261023.txt` (SHA-256 `d9a02f68…cc46`).
+- Die bei der Gelegenheit neu berechneten VALIDATION-Werte stimmen exakt mit dem Auswahllauf überein; die Checkpoints sind also unverändert geladen.
+
+**Ergebnis auf TEST** (10 ungesehene Dokumente, 400 Segmente, 67.245 Bytes; kleiner ist besser)
+
+| Modell | TEST-BPB je Seed | Mittel | zum Vergleich VALIDATION |
+|---|---|---:|---:|
+| Unigramm | – | 4,987 | 5,063 |
+| CDX1, 3 Epochen | 4,278 · 4,285 · 4,320 | 4,295 | 4,541 |
+| LM1-TM-v512, Epoche 8 | 3,051 · 3,056 · 3,057 | 3,055 | 2,901 |
+| **LM1-GM-v512, Epoche 8** (Kandidat) | **2,443 · 2,440 · 2,435** | **2,439** | 2,225 |
+| **Kneser-Ney-7** | – | **2,150** | 1,963 |
+
+**Zulässige Aussagen nach Abschnitt 4**
+1. **„LM1 schlägt CDX1 auf ungesehenen Dokumenten“: gestützt.**
+   - Jeder Kandidaten-Seed liegt unter jedem CDX1-Seed (2,443 < 4,278).
+   - Der Abstand beträgt 1,86 BPB, also 43 % weniger Bits je Byte.
+2. **Gegen das Kneser-Ney-7-Gramm: LM1 verliert, ein negatives Ergebnis.**
+   - Kein Seed erreicht das n-Gramm; der Rückstand beträgt 0,289 BPB.
+   - Auf dieser Datenmenge (428 KB) ist ein Zählmodell weiterhin das stärkere Sprachmodell.
+3. **minGRU schlägt den Transformer auch auf TEST**, in allen Seeds, um 0,62 BPB.
+4. **Verallgemeinerung:** Alle Modelle sind auf TEST schlechter als auf VALIDATION (LM1-GM +0,21, KN-7 +0,19, LM1-TM +0,15). Die TEST-Dokumente sind schwerer; die Reihenfolge der Modelle bleibt gleich.
+
+**Nicht behauptet**
+- Allgemeines Sprachverständnis, Faktenwissen, Befolgen von Anweisungen, Programmierfähigkeit.
+- Gemessen ist nur die Vorhersage des nächsten Bytes auf Projekttext.
+
+**Konsequenz für den nächsten Zyklus**
+- Die beste Architektur ist LM1-G (minGRU). Sie verbesserte sich in Epoche 8 noch, und ein größeres Vokabular half: 1024 statt 512 ergab 2,172 statt 2,225 auf VALIDATION, bei einem Seed.
+- Der nächste Zyklus hat eigene, neu eingefrorene Daten und wird vor jedem Lauf registriert. Er prüft, ob mehr Daten, längeres Training und ein größeres Vokabular den Abstand zum n-Gramm schließen. Dazu kommt ein Hybrid aus n-Gramm und neuronalem Modell (NF-6b).
+- Der LM1-TEST ist damit verbraucht und wird nicht erneut für Entscheidungen verwendet.
+
 ## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – getestet
 
 - Bausteine: EnvelopeV1/GoalSpec (`ccc1-envelope`), hash-verkettetes Journal mit HMAC (`ccc1-journal`), Fähigkeitsprüfung (`ccc1-gate`), Quittungsprüfer (`ccc1-verifier`), Wiederanlauf (`ccc1-recovery`), Dialogsteuerung (`ccc1-orchestrator`), Zielinterpretation mit austauschbarem Sprachkern (`ccc1-interpreter`).
