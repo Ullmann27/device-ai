@@ -1,96 +1,150 @@
-"""Unit tests for continuum-design-diff.py: registration at full resolution, frozen offsets and live-value masks.
-
-Run: python3 -m unittest discover -s scripts -p 'test_continuum_*.py'
-"""
+"""Deterministic geometry/provenance regressions for the standalone visual QA CLI."""
 import importlib.util
-import unittest
+import json
 from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
 
 import numpy as np
 from PIL import Image, ImageDraw
 
-_spec = importlib.util.spec_from_file_location('design_diff', Path(__file__).with_name('continuum-design-diff.py'))
-diff = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(diff)
+SCRIPT = Path(__file__).with_name('continuum-design-diff.py')
+spec = importlib.util.spec_from_file_location('design_diff', SCRIPT)
+diff = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(diff)
 
 
-def scene(w=420, h=320, seed=7):
-    """A dark synthetic screen with shapes and a few hard edges."""
-    rng = np.random.default_rng(seed)
-    img = Image.new('RGB', (w, h), (6, 12, 34))
-    d = ImageDraw.Draw(img)
-    for _ in range(40):
-        x, y = int(rng.integers(0, w - 40)), int(rng.integers(0, h - 40))
-        s = int(rng.integers(6, 38))
-        color = tuple(int(c) for c in rng.integers(40, 255, 3))
-        (d.ellipse if rng.random() < .5 else d.rectangle)([x, y, x + s, y + s], outline=color, width=2)
-    return img
-
-
-class LocateTest(unittest.TestCase):
-    def test_finds_the_true_offset_and_reports_a_full_resolution_score(self):
-        reference = scene()
-        render = reference.crop((37, 23, 37 + 240, 23 + 180))
+class AlignmentTest(unittest.TestCase):
+    def test_refinement_score_is_measured_at_full_resolution(self):
+        rng = np.random.default_rng(6)
+        render = Image.fromarray(rng.integers(0, 256, (28, 24, 3), dtype=np.uint8))
+        reference = Image.new('RGB', (43, 49))
+        reference.paste(render, (7, 9))
         score, x, y = diff.locate(render, reference)
-        self.assertEqual((x, y), (37, 23))
-        full = diff.ncc(diff.edges(render), diff.edges(reference)[23:23 + 180, 37:37 + 240])
-        self.assertAlmostEqual(score, full, places=5)
-        self.assertLessEqual(score, 1.0 + 1e-6)
+        measured = diff.ncc(diff.edges(render), diff.edges(reference)[y:y+28, x:x+24])
+        self.assertAlmostEqual(score, measured, places=5)
 
-    def test_refinement_is_not_blocked_by_a_coarse_score(self):
-        # Like a real rendering, the image differs from the reference in fine detail (noise): downsampling averages
-        # that out, so coarse scores are higher than every full-resolution score. The refinement must still decide,
-        # find an offset that is not a multiple of the coarse step and report the full-resolution score.
-        reference = scene(seed=11)
-        crop = np.asarray(reference.crop((41, 30, 41 + 220, 30 + 170)), dtype=np.float32)
-        noisy = crop + np.random.default_rng(5).normal(0, 70, crop.shape)
-        render = Image.fromarray(np.clip(noisy, 0, 255).astype(np.uint8))
-        score, x, y = diff.locate(render, reference)
-        self.assertEqual((x, y), (41, 30))
-        full = diff.ncc(diff.edges(render), diff.edges(reference)[30:30 + 170, 41:41 + 220])
-        self.assertAlmostEqual(score, full, places=5)
-
-
-class CompareTest(unittest.TestCase):
-    def setUp(self):
-        self.reference = scene(900, 1700, seed=3)
-        self.f = 1.0
-
-    def crop(self, ox, oy, w=600, h=1400):
-        return self.reference.crop((ox, oy, ox + w, oy + h))
-
-    def test_frozen_offset_is_used_as_given(self):
-        report, *_ = diff.compare(self.crop(10, 5), self.reference, 'phone', self.f, offset=(10, 5))
-        self.assertEqual(report['registration'], 'frozen')
-        self.assertEqual(report['offsetPx'], [10, 5])
-        self.assertEqual(report['meanAbsDiff'], 0.0)
-
-    def test_live_values_are_masked_and_labels_are_not(self):
-        render = self.crop(10, 5).copy()
+    def test_known_translation_and_boundary(self):
+        render = Image.new('RGB', (40, 40))
         d = ImageDraw.Draw(render)
-        d.rectangle([100, 700, 180, 730], fill=(255, 255, 255))     # a different "number" than in the reference
-        k = diff.PX_PER_DP['phone']
-        texts = [{'text': '42 %', 'boxDp': [100 / k, 700 / k, 180 / k, 730 / k]},
-                 {'text': 'MODELLSTATUS', 'boxDp': [10 / k, 10 / k, 300 / k, 40 / k]}]
-        report, *_ = diff.compare(render, self.reference, 'phone', self.f, offset=(10, 5), texts=texts)
-        self.assertGreater(report['meanAbsDiff'], 0.0)
-        self.assertEqual(report['meanAbsDiffMasked'], 0.0)
-        self.assertLess(report['maskedFraction'], .01)              # only the value box (with margin), not the label
+        d.ellipse((7, 5, 30, 34), fill=(150, 230, 255))
+        d.rectangle((10, 16, 24, 23), fill=(10, 25, 30))
+        for offset in ((7, 9), (0, 0), (19, 17)):
+            with self.subTest(offset=offset):
+                reference = Image.new('RGB', (59, 57))
+                reference.paste(render, offset)
+                self.assertEqual(diff.locate(render, reference)[1:], offset)
 
-    def test_low_frequency_difference_ignores_fine_shifts_but_not_brightness(self):
-        base = self.crop(10, 5)
-        shifted = Image.fromarray(np.roll(np.asarray(base), 2, axis=1))     # same content, lines 2 px off
-        darker = Image.fromarray((np.asarray(base) * .6).astype(np.uint8))  # same lines, less light
-        r_shift, *_ = diff.compare(shifted, self.reference, 'phone', self.f, offset=(10, 5))
-        r_dark, *_ = diff.compare(darker, self.reference, 'phone', self.f, offset=(10, 5))
-        self.assertLess(r_shift['meanAbsDiffLowFreq'], r_shift['meanAbsDiff'] / 2)
-        self.assertGreater(r_dark['meanAbsDiffLowFreq'], r_shift['meanAbsDiffLowFreq'])
+    def test_oversized_locate_fails(self):
+        with self.assertRaises(ValueError):
+            diff.locate(Image.new('RGB', (20, 20)), Image.new('RGB', (19, 20)))
 
-    def test_live_value_pattern(self):
-        for text in ('62 %', '—', '3,1 GB', 'vor 6 Min'):
-            self.assertTrue(diff.LIVE_VALUE.search(text), text)
-        for text in ('Lernen & Forschung', 'MODELLSTATUS', 'Continuum'):
-            self.assertFalse(diff.LIVE_VALUE.search(text), text)
+
+class CliTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.render = Image.new('RGB', (40, 40))
+        ImageDraw.Draw(self.render).ellipse((8, 7, 30, 33), fill=(80, 220, 255))
+        self.render.save(self.root / 'render.png')
+        reference = Image.new('RGB', (60, 60))
+        reference.paste(self.render, (7, 9))
+        reference.save(self.root / 'reference.png')
+
+    def run_cli(self, *extra, out='out'):
+        return subprocess.run([sys.executable, str(SCRIPT), str(self.root/'render.png'),
+                               str(self.root/'reference.png'), str(self.root/out),
+                               '--density', '1.7306', *extra], capture_output=True, text=True)
+
+    def report(self, name='out'):
+        return json.loads((self.root/name/'report.json').read_text())
+
+    def test_fixed_offset_is_honoured_and_has_source_hashes(self):
+        result = self.run_cli('--offset-x', '3', '--offset-y', '4')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        report = self.report()
+        self.assertEqual(report['offsetPx'], [3, 4])
+        self.assertEqual(report['alignment']['mode'], 'fixed')
+        self.assertEqual(len(report['sources']['render']['sha256']), 64)
+        self.assertEqual(len(report['sources']['script']['sha256']), 64)
+
+    def test_invalid_offset_or_scale_fails_without_report(self):
+        for args in [('--offset-x','7'), ('--offset-x','-1','--offset-y','0'),
+                     ('--offset-x','21','--offset-y','0'), ('--scale','0'),
+                     ('--scale','nan'), ('--density','inf')]:
+            with self.subTest(args=args):
+                self.assertNotEqual(self.run_cli(*args).returncode, 0)
+                self.assertFalse((self.root/'out'/'report.json').exists())
+
+    def test_oversized_image_is_rejected_without_silent_crop(self):
+        self.render.resize((80, 40)).save(self.root/'render.png')
+        self.assertNotEqual(self.run_cli().returncode, 0)
+        self.assertFalse((self.root/'out'/'report.json').exists())
+
+    def test_alignment_replay_freezes_candidate_position_and_checks_reference(self):
+        self.assertEqual(self.run_cli('--offset-x','7','--offset-y','9').returncode, 0)
+        self.render.transpose(Image.Transpose.FLIP_LEFT_RIGHT).save(self.root/'render.png')
+        result = self.run_cli('--alignment',str(self.root/'out'/'report.json'),out='candidate')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.report('candidate')['offsetPx'], [7, 9])
+        Image.new('RGB', (60, 60), 'red').save(self.root/'reference.png')
+        self.assertNotEqual(self.run_cli('--alignment',str(self.root/'out'/'report.json'),out='bad').returncode, 0)
+        self.assertFalse((self.root/'bad'/'report.json').exists())
+
+    def test_alignment_rejects_changed_candidate_geometry(self):
+        self.assertEqual(self.run_cli('--offset-x','7','--offset-y','9').returncode, 0)
+        self.render.resize((41,40)).save(self.root/'render.png')
+        self.assertNotEqual(self.run_cli('--alignment',str(self.root/'out'/'report.json'),out='bad').returncode, 0)
+
+    def test_metrics_validate_window_insets_and_types(self):
+        valid = {'schema':'continuum-ui-snapshot','version':1,'windowPx':'40x40',
+                 'density':1.7306,'layoutScale':1,'wideLayout':False,
+                 'insetsPx':{'left':2,'top':3,'right':4,'bottom':5}}
+        path=self.root/'metrics.json'
+        path.write_text(json.dumps(valid))
+        # Explicit density is incompatible with --metrics: no ambiguous precedence.
+        result=subprocess.run([sys.executable,str(SCRIPT),str(self.root/'render.png'),
+                               str(self.root/'reference.png'),str(self.root/'good'),
+                               '--metrics',str(path),'--offset-x','7','--offset-y','9'],
+                              capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertEqual(self.report('good')['geometry']['cropBoxPx'],[2,3,36,35])
+        for patch in [{'windowPx':'41x40'},{'density':0},{'layoutScale':None},
+                      {'wideLayout':'false'},{'insetsPx':{'top':41}},
+                      {'insetsPx':{'left':0,'top':0,'right':-1,'bottom':0}}]:
+            with self.subTest(patch=patch):
+                path.write_text(json.dumps({**valid,**patch}))
+                result=subprocess.run([sys.executable,str(SCRIPT),str(self.root/'render.png'),
+                                       str(self.root/'reference.png'),str(self.root/'bad'),
+                                       '--metrics',str(path)],capture_output=True,text=True)
+                self.assertNotEqual(result.returncode,0)
+                self.assertFalse((self.root/'bad'/'report.json').exists())
+
+
+class ShapeMetricTest(unittest.TestCase):
+    def test_shape_metrics_detect_shift_and_brightness_without_mae(self):
+        a = Image.new('RGB',(64,64))
+        ImageDraw.Draw(a).ellipse((16,16,40,40),fill='white')
+        shifted = Image.new('RGB',(64,64))
+        shifted.paste(a,(6,0))
+        same = diff.shape_metrics(a,a)
+        moved = diff.shape_metrics(a,shifted)
+        self.assertEqual(same['brightMaskIoU'],1)
+        self.assertEqual(same['edgeDistancePx'],0)
+        self.assertLess(moved['brightMaskIoU'],same['brightMaskIoU'])
+        self.assertGreater(moved['edgeDistancePx'],0)
+        self.assertGreater(moved['luminanceProfileL1'],0)
+        dark = Image.fromarray((np.asarray(a)*.5).astype(np.uint8))
+        self.assertGreater(diff.shape_metrics(a,dark)['luminanceHistogramWasserstein'],0)
+
+    def test_empty_bright_masks_are_reported_explicitly(self):
+        a=Image.new('RGB',(20,20))
+        report=diff.shape_metrics(a,a)
+        self.assertIsNone(report['brightMaskIoU'])
+        self.assertEqual(report['renderBrightCoverage'],0)
 
 
 if __name__ == '__main__':
