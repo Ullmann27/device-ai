@@ -31,9 +31,9 @@ test("release uses existing signer, pinned source, and refuses dirty or unapprov
 
 test("release never replaces the old APK without byte-checked 0.3.17 rollback", () => {
   for (const marker of [
-    'prior_code" == "18"', 'versionCode=19', 'version_name=0.3.18',
+    'prior_code" == "18"', "versionCode='19'", 'version_name=0.3.18',
     'DeviceAI-Continuum-v0.3.17-$prior_sha.apk',
-    'versionCode=18', 'sha256sum --check --status',
+    "versionCode='18'", 'sha256sum --check --status',
     'apksigner', 'SIGNED_BUILD_VERIFIED_NOT_DEVICE_INSTALLED'
   ]) assert.ok(script.includes(marker), "Missing rollback or sign invariant: " + marker);
   assert.ok(!script.includes("CONTINUUM_MENTOR_SIGNING_PASSWORD=example"));
