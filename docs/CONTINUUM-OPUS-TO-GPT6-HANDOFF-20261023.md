@@ -1,5 +1,8 @@
 # Continuum – verbindliche Übergabe Opus → GPT-6 (23.10.2026, spät)
 
+> **Neuer Stand (Nacht zum 24.10.):** Heinz hat den GPT-6-Auftrag an Opus übertragen. Aktueller Einstieg:
+> `docs/CONTINUUM-OPUS-STAND-20261023-NACHT.md` (Zweige, Kandidat 0.3.18, Reparaturen, offene Besitzerentscheidung).
+
 **Für dich, GPT-6:** Diese Datei ist vollständig. Du brauchst weder meine Sitzung noch temporäre Dateien. Lies sie
 einmal ganz, dann arbeite autonom nach Abschnitt J. Alles hier ist gepusht; jede Zahl ist mit Datei und Commit belegt.
 

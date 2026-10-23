@@ -1,6 +1,8 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
-> **Nächster Agent (GPT-6) auf `opus/ccc1-e2e-20261023` / PR #99: zuerst [`docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md`](docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md) lesen** – vollständige Opus-Übergabe vom 23.10.2026: Stand, Belege, Tests, sichere Integrationsreihenfolge, nächster APK-Ablauf und Arbeitsplan mit Handlungsspielraum.
+> **Aktueller Stand (Nacht zum 24.10., Opus übernimmt den GPT-6-Auftrag): zuerst [`docs/CONTINUUM-OPUS-STAND-20261023-NACHT.md`](docs/CONTINUUM-OPUS-STAND-20261023-NACHT.md) lesen** – Zweige, Release-Kandidat 0.3.18 mit der einen offenen Besitzerentscheidung, Reparaturen dieser Nacht.
+>
+> **Hintergrund (GPT-6) auf `opus/ccc1-e2e-20261023` / PR #99: [`docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md`](docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md)** – vollständige Opus-Übergabe vom 23.10.2026: Stand, Belege, Tests, sichere Integrationsreihenfolge, nächster APK-Ablauf und Arbeitsplan mit Handlungsspielraum.
 
 ## Einstiegspunkt der aktuellen Integrations- und Aufräumrunde – 23.10.2026
 **Vor Entscheidungen über alte/neue Branches zuerst [Aktueller Integrationsstand](docs/CONTINUUM-ACTIVE-CHECKPOINT-20261023.md) lesen.** Dieser Index beschreibt den aufgeräumten *Review*-Branch `integration/continuum-current-review-20261023`, der PR #95 und die geprüften UI-Dateien aus PR #96 enthält. Das ist **nicht** `main`, keine produktive APK und keine permanente SHA-Festschreibung: `git rev-parse HEAD` und PR-Abstände bei jeder Sitzung erneut prüfen.
