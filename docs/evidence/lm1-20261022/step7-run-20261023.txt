@@ -1,0 +1,110 @@
+JAR 86368e317f1591c32956858066190423916805fe45e07c8e0df1682f3e99b51d code=6494699a start=2026-10-23T06:49:41Z
+NEW docs=25 candidates=1288 segments=1278 bytes=242488 droppedOverlap=10 droppedDuplicate=0 sha=2027cbbc274b3c76742da45d03d668195173b9487972d2adf4451b6214cd156b pinned=2027cbbc274b3c76742da45d03d668195173b9487972d2adf4451b6214cd156b
+ITEMS pairs=200 sha=6672edb9671cccc02e5b25cedbfb049637c7faa153ee194c704cf5a60c10cade pinned=6672edb9671cccc02e5b25cedbfb049637c7faa153ee194c704cf5a60c10cade families={position=40, case=40, compare=40, yesno=40, neighbour=40}
+TOKENIZER v512 sha=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+A1 BPB unigram newBPB=5.2651
+A1 BPB kn7 newBPB=2.4885
+A1 BPB CDX1 seed=1 newBPB=4.6884
+A1 BPB CDX1 seed=2 newBPB=4.7004
+A1 BPB CDX1 seed=3 newBPB=4.7778
+A1 BPB LM1-GM-v512 seed=1 newBPB=2.6954
+A1 BPB LM1-GM-v512 seed=2 newBPB=2.6955
+A1 BPB LM1-GM-v512 seed=3 newBPB=2.6941
+A1 BPB LM1-TM-v512 seed=1 newBPB=3.2273
+A1 BPB LM1-TM-v512 seed=2 newBPB=3.2282
+A1 BPB LM1-TM-v512 seed=3 newBPB=3.2331
+A2 NEXTWORD frequent-word correct=76/2000 acc=0.0380 ci95=[0.0305, 0.0473]
+A2 NEXTWORD word-bigram correct=82/2000 acc=0.0410 ci95=[0.0332, 0.0506]
+A2 NEXTWORD kn7 correct=46/2000 acc=0.0230 ci95=[0.0173, 0.0305]
+A2 NEXTWORD LM1-GM-v512 seed=1 correct=9/2000 acc=0.0045 ci95=[0.0024, 0.0085]
+A2 NEXTWORD LM1-GM-v512 seed=2 correct=11/2000 acc=0.0055 ci95=[0.0031, 0.0098]
+A2 NEXTWORD LM1-GM-v512 seed=3 correct=12/2000 acc=0.0060 ci95=[0.0034, 0.0105]
+A2 NEXTWORD LM1-TM-v512 seed=1 correct=3/2000 acc=0.0015 ci95=[0.0005, 0.0044]
+A2 NEXTWORD LM1-TM-v512 seed=2 correct=4/2000 acc=0.0020 ci95=[0.0008, 0.0051]
+A2 NEXTWORD LM1-TM-v512 seed=3 correct=1/2000 acc=0.0005 ci95=[0.0001, 0.0028]
+A2 MCNEMAR LM1-GM-v512 seed=1 vs kn7 onlyLm=4 onlyBase=41 p=9.33e-09
+A2 MCNEMAR LM1-GM-v512 seed=1 vs word-bigram onlyLm=3 onlyBase=76 p=2.72e-19
+A2 MCNEMAR LM1-GM-v512 seed=2 vs kn7 onlyLm=5 onlyBase=40 p=7.88e-08
+A2 MCNEMAR LM1-GM-v512 seed=2 vs word-bigram onlyLm=2 onlyBase=73 p=1.51e-19
+A2 MCNEMAR LM1-GM-v512 seed=3 vs kn7 onlyLm=3 onlyBase=37 p=1.95e-08
+A2 MCNEMAR LM1-GM-v512 seed=3 vs word-bigram onlyLm=3 onlyBase=73 p=1.94e-18
+A2 MCNEMAR LM1-TM-v512 seed=1 vs kn7 onlyLm=1 onlyBase=44 p=2.61e-12
+A2 MCNEMAR LM1-TM-v512 seed=1 vs word-bigram onlyLm=2 onlyBase=81 p=7.21e-22
+A2 MCNEMAR LM1-TM-v512 seed=2 vs kn7 onlyLm=2 onlyBase=44 p=3.08e-11
+A2 MCNEMAR LM1-TM-v512 seed=2 vs word-bigram onlyLm=1 onlyBase=79 p=1.34e-22
+A2 MCNEMAR LM1-TM-v512 seed=3 vs kn7 onlyLm=1 onlyBase=46 p=6.82e-13
+A2 MCNEMAR LM1-TM-v512 seed=3 vs word-bigram onlyLm=1 onlyBase=82 p=1.74e-23
+A3 GEN reference (real text) realWords=0.7812 copy24=0.0042 repeat3=0.0052 meanBytes=97.0
+A3 GEN kn7 greedy realWords=0.9681 copy24=0.0704 repeat3=0.0803 meanBytes=120.0
+A3 GEN kn7 t=0.8 realWords=0.8780 copy24=0.0119 repeat3=0.0000 meanBytes=120.0
+A3 GEN LM1-GM-v512 seed=1 greedy realWords=0.9547 copy24=0.0000 repeat3=0.6814 meanBytes=114.1
+A3 GEN LM1-GM-v512 seed=1 t=0.8 realWords=0.6783 copy24=0.0000 repeat3=0.0000 meanBytes=75.7
+A3 GEN LM1-GM-v512 seed=2 greedy realWords=0.9050 copy24=0.0000 repeat3=0.6800 meanBytes=104.1
+A3 GEN LM1-GM-v512 seed=2 t=0.8 realWords=0.6930 copy24=0.0029 repeat3=0.0000 meanBytes=51.5
+A3 GEN LM1-GM-v512 seed=3 greedy realWords=0.9511 copy24=0.0000 repeat3=0.7729 meanBytes=101.5
+A3 GEN LM1-GM-v512 seed=3 t=0.8 realWords=0.6775 copy24=0.0000 repeat3=0.0000 meanBytes=62.2
+A3 GEN LM1-TM-v512 seed=1 greedy realWords=0.7201 copy24=0.0000 repeat3=0.2663 meanBytes=96.3
+A3 GEN LM1-TM-v512 seed=1 t=0.8 realWords=0.2542 copy24=0.0000 repeat3=0.0000 meanBytes=92.0
+A3 GEN LM1-TM-v512 seed=2 greedy realWords=0.7987 copy24=0.0000 repeat3=0.4049 meanBytes=70.0
+A3 GEN LM1-TM-v512 seed=2 t=0.8 realWords=0.2517 copy24=0.0000 repeat3=0.0000 meanBytes=80.6
+A3 GEN LM1-TM-v512 seed=3 greedy realWords=0.5668 copy24=0.0000 repeat3=0.2647 meanBytes=72.9
+A3 GEN LM1-TM-v512 seed=3 t=0.8 realWords=0.2736 copy24=0.0000 repeat3=0.0000 meanBytes=73.6
+A3 SAMPLE 0 prompt | **Vorab festgelegt (vor dem TEST-Lauf, eigener Commit):** ⏎ -
+A3 SAMPLE 0 reference (real text) |  **Kandidat:** A4bn, 8 Epochen, Rezept R0, Schwelle und Konfliktverhältnis aus VALIDATION. ⏎ - **Alle anderen Varianten**
+A3 SAMPLE 0 kn7 greedy |  `docs/CONTINUUM-EXPERIMENTE.json` und `at.besitzer.deviceai.preview-APK und SHA-256 und Android-App und Tests sind **ni
+A3 SAMPLE 0 kn7 t=0.8 |  `lisierung bleiben neuen bzw. `git diff --checkpoint persistenter **LERN wall-clock time, ⏎ - contract from Treport.json`
+A3 SAMPLE 0 LM1-GM-v512 seed=1 greedy |  `<hash>`: 2026.10.10.10.2026-10.2026-10.10.2026-10.10.10.2026-10.10.2026-10.10.2026-10.10.2026-10.10.2026-10.10.10.2026
+A3 SAMPLE 0 LM1-GM-v512 seed=1 t=0.8 |  `CONDX1/Local-cance/Checkout confirf fresh the model model -tests.test.mjs`; lits with noch nicht für APK-Build und Zu
+A3 SAMPLE 0 LM1-TM-v512 seed=1 greedy |  `socalidentividence`-app:app:app:app/s/c/re-aval-avidate-aviden/device-avidence/c/re-avidence/deviceavidence/c/c/c/c/c/
+A3 SAMPLE 0 LM1-TM-v512 seed=1 t=0.8 |  `Comparignode-socal` blebledithehells, seque`, `reparainding.mjs` wir-ferdentiecopferdentier 2.mjs` nops, Gebacklogbenc
+A3 SAMPLE 1 prompt | `code-test`-Kette real prüfen. Dann Besitzerfreigabe für
+A3 SAMPLE 1 reference (real text) |  Preview-APK und Android-Rückkanal-Test. ⏎ 3. Danach Android-Cancel-UI nur mit separatem PendingIntent und race-sicherer 
+A3 SAMPLE 1 kn7 greedy |  die bestehende APK ist nicht automatische Reparate from the production and a deterministic steps (hard capability is a 
+A3 SAMPLE 1 kn7 t=0.8 |  `development backlog-investigation source accepting (clean-roomen `scripts/continuity terministisch them ⏎ authority=NONE
+A3 SAMPLE 1 LM1-GM-v512 seed=1 greedy |  dieselbe Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quell
+A3 SAMPLE 1 LM1-GM-v512 seed=1 t=0.8 |  einer gesabhängiger Commit fehlt, nicht gesamte Fehlermeldet (Links.ktlfernen
+A3 SAMPLE 1 LM1-TM-v512 seed=1 greedy |  dieselbene Quellenehängigen, Quellen, Quellen, Quellen, Quellen, Quellen, Schrufnalelielieren. Dielielielielielieliere
+A3 SAMPLE 1 LM1-TM-v512 seed=1 t=0.8 |  testsächen Commitzung: 207546432-Backend** Scherfundevice-Scs. Optobgrateweiten.17-Lahänispfätehendedings, Testäter
+A3 SAMPLE 2 prompt | unbemerkt verschluckt:** Wenn das positive `expectedAnswer`
+A3 SAMPLE 2 reference (real text) |  keine gültige Kandidatenspanne ergibt, liefert `trainSingleStep` `0.0` und erhöht den Fortschritt im umgebenden `trai
+A3 SAMPLE 2 kn7 greedy |  in `repair-loop.mjs`, `repair-loop.mjs`, `repair-loop.mjs`, `repair-loop.mjs`, `repair-loop.mjs`, `repair-loop.mjs`, `r
+A3 SAMPLE 2 kn7 t=0.8 |  is production bounded SWB1 bleiben vor Gradle-pass 2` nicht zulässig. Der Builder das Netzwerk/Autogenes `reach erfolg
+A3 SAMPLE 2 LM1-GM-v512 seed=1 greedy |  only are or only are or only are or only are or only are or only are or only are or only are or only are or only are or
+A3 SAMPLE 2 LM1-GM-v512 seed=1 t=0.8 |  ⏎ - 0`)` und `screigation-mentor/experiment.mjs`, `repair-conshared score check replacement/exity.prepair cancellation ap
+A3 SAMPLE 2 LM1-TM-v512 seed=1 greedy | :
+A3 SAMPLE 2 LM1-TM-v512 seed=1 t=0.8 |  und Traflegniert.minamplt doder abackloviewen; sokenchmjs` in `s`. ⏎ --once` wessydentiferden Shellen. ⏎ ernktionsy- Ag- Be
+A3 SAMPLE 3 prompt | Auswahl auf VALIDATION fiel auf V9; die **einmalige
+A3 SAMPLE 3 reference (real text) |  TEST-Messung** (Log `cycle5-final-test-V8-V9-multiword.txt`) ⏎ bestätigt das nicht: Mehrwort 1–2/6 statt 0/6, aber **m
+A3 SAMPLE 3 kn7 greedy | n Status and state after the same fixtures are not a substitute for the same fixtures are not a substitute for the same 
+A3 SAMPLE 3 kn7 t=0.8 | n Sicherheits- und `node --test` und `at.besitzt vor werden. Die zweiten Worktree nach M4 + M5 + generierung gegen die v
+A3 SAMPLE 3 LM1-GM-v512 seed=1 greedy | , überprüfbare Statuslerkennung. ⏎ - `<hash>`: 2026.10.10.10.2026-10.2026-10.10.2026-10.10.10.2026-10.10.2026-10.10.2026
+A3 SAMPLE 3 LM1-GM-v512 seed=1 t=0.8 |  und dieselben Trainingsparieren. ⏎ - Paarbeitsveränderte Fehler/Device-ai/continuum-tlablanner ausgebenen Protodance akt
+A3 SAMPLE 3 LM1-TM-v512 seed=1 greedy | führt. ⏎ - `<hash>`: `<hash>`: `<hash>`:ahl>`: `<hash>`: `<hash>`-<hash>`-<hash>`-<hash>`-<hash>`--<hash>`-<hash>`-<hash>
+A3 SAMPLE 3 LM1-TM-v512 seed=1 t=0.8 | folgt. Datuss, Gen, keine Beleleitormit-R-H-Bel. **nissen, bleiben. Brgwareges
+A3 SAMPLE 4 prompt | Die APK wurde vollständig von GitHub zurückgeladen und
+A3 SAMPLE 4 reference (real text) |  bytegleich mit dem gebauten Original verglichen. Der früher genannte Hash `110c41f9…` gehört zu einem älteren Buil
+A3 SAMPLE 4 kn7 greedy |  die App starten aus dem Research changes are not a substitute for the same fixtures are not a substitute for the same f
+A3 SAMPLE 4 kn7 t=0.8 |  dürfen nur nach den Builder** wurde nicht integrityHistories, ⏎ - physischem Statusabhängiger Messungen. Kandidaten. Ke
+A3 SAMPLE 4 LM1-GM-v512 seed=1 greedy |  überprüfbare Statuslerkennung. ⏎ - `<hash>`: 2026.10.10.10.2026-10.2026-10.10.2026-10.10.10.2026-10.10.2026-10.10.2026-
+A3 SAMPLE 4 LM1-GM-v512 seed=1 t=0.8 |  nach Ergebnisse-exmbildschirm, `CORK_MITLED`, `REVITED`, `EGERUM_ITE` and branch nach ausgeführt. SARFERECERF · · EX
+A3 SAMPLE 4 LM1-TM-v512 seed=1 greedy |  überprüfung, überprüfung überprüfen.
+A3 SAMPLE 4 LM1-TM-v512 seed=1 t=0.8 |  keine API-Testsportblauf** Beigeschltigebeiterung, Grat ist keinmen wurden nicht für eine Testatchter. Derm automautzt
+B INSTR unigram both=0 swapped=0 p=1.00 itemAcc=0.4525 position=0/0/21of80 case=0/0/40of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR kn7 both=0 swapped=0 p=1.00 itemAcc=0.4025 position=0/0/20of80 case=0/0/21of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR CDX1 seed=1 both=0 swapped=0 p=1.00 itemAcc=0.4125 position=0/0/23of80 case=0/0/22of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR CDX1 seed=2 both=0 swapped=0 p=1.00 itemAcc=0.4525 position=0/0/24of80 case=0/0/37of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR CDX1 seed=3 both=0 swapped=0 p=1.00 itemAcc=0.4475 position=0/0/23of80 case=0/0/36of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR LM1-GM-v512 seed=1 both=1 swapped=0 p=0.500 itemAcc=0.4175 position=0/0/22of80 case=0/0/24of80 compare=1/0/41of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR LM1-GM-v512 seed=2 both=0 swapped=0 p=1.00 itemAcc=0.4150 position=0/0/25of80 case=0/0/21of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR LM1-GM-v512 seed=3 both=1 swapped=0 p=0.500 itemAcc=0.4300 position=0/0/25of80 case=1/0/27of80 compare=0/0/40of80 yesno=0/0/40of80 neighbour=0/0/40of80
+B INSTR LM1-TM-v512 seed=1 both=1 swapped=2 p=0.875 itemAcc=0.3875 position=0/0/19of80 case=0/1/16of80 compare=0/1/39of80 yesno=0/0/40of80 neighbour=1/0/41of80
+B INSTR LM1-TM-v512 seed=2 both=3 swapped=6 p=0.910 itemAcc=0.3975 position=1/0/20of80 case=0/0/23of80 compare=2/0/42of80 yesno=0/0/40of80 neighbour=0/6/34of80
+B INSTR LM1-TM-v512 seed=3 both=3 swapped=2 p=0.500 itemAcc=0.3875 position=1/1/20of80 case=0/1/13of80 compare=1/0/41of80 yesno=0/0/40of80 neighbour=1/0/41of80
+VERDICT A1 GM beats CDX1 on NEW: SUPPORTED
+VERDICT A1 GM beats KN-7 on NEW: NOT SUPPORTED (negative result)
+VERDICT A2 GM predicts the next word better than kn7: NOT SUPPORTED
+VERDICT A2 GM predicts the next word better than word-bigram: NOT SUPPORTED
+VERDICT B LM1-GM-v512 processes these instructions: NOT SUPPORTED
+VERDICT B LM1-TM-v512 processes these instructions: NOT SUPPORTED
+CHECK B context-blind models answer both instructions alike (both = swapped = 0): ok
+exit=0 end=2026-10-23T06:54:42Z
