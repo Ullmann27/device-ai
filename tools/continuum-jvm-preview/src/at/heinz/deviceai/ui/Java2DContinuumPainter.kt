@@ -35,6 +35,12 @@ import kotlin.math.atan2
 class Java2DContinuumPainter(private val g: Graphics2D, private val assetRoot: File) : ContinuumPainter {
     private val stack = ArrayList<Pair<AffineTransform, Shape?>>()
 
+    /** A drawn text and its bounds in output pixels (for masking live values in the design comparison). */
+    class TextBox(val text: String, val left: Double, val top: Double, val right: Double, val bottom: Double)
+
+    /** When set, every drawn text is recorded with its pixel bounds. */
+    var textBoxes: MutableList<TextBox>? = null
+
     init {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
@@ -91,6 +97,12 @@ class Java2DContinuumPainter(private val g: Graphics2D, private val assetRoot: F
         withPaint(fill, alpha) {
             g.font = font
             g.drawString(text, left, y)
+        }
+        textBoxes?.let { boxes ->
+            val metrics = font.getLineMetrics(text, frc())
+            val bounds = g.transform.createTransformedShape(Rectangle2D.Float(left, y - metrics.ascent, width,
+                metrics.ascent + metrics.descent)).bounds2D
+            boxes += TextBox(text, bounds.minX, bounds.minY, bounds.maxX, bounds.maxY)
         }
     }
 

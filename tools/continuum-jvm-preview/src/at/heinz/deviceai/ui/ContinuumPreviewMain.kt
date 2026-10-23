@@ -16,6 +16,8 @@ object ContinuumPreviewMain {
         val image = BufferedImage((layout.width * density).toInt(), (heightDp * density).toInt(), BufferedImage.TYPE_INT_ARGB)
         val g = image.createGraphics()
         val p = Java2DContinuumPainter(g, assets)
+        val texts = ArrayList<Java2DContinuumPainter.TextBox>()
+        p.textBoxes = texts
         p.scale(density, density)
         ContinuumHomeScreen.drawBackground(p, layout.width, heightDp, layout)
         layout[ContinuumHomeLayout.Slot.HERO]?.let { box ->
@@ -34,6 +36,12 @@ object ContinuumPreviewMain {
         }
         g.dispose()
         ImageIO.write(image, "png", file)
+        // Drawn texts with their bounds in window dp: continuum-design-diff.py masks the live values with them (--texts);
+        // dp, not pixels, so the same list also fits a device snapshot of the same window size.
+        File(file.path.removeSuffix(".png") + ".texts.json").writeText(texts.joinToString(",\n", "[\n", "\n]\n") { t ->
+            "{\"text\":\"" + t.text.replace("\\", "\\\\").replace("\"", "\\\"") + "\",\"boxDp\":[" +
+                listOf(t.left, t.top, t.right, t.bottom).joinToString(",") { "%.2f".format(java.util.Locale.ROOT, it / density) } + "]}"
+        })
         println("wrote $file ${image.width}x${image.height}")
     }
 
