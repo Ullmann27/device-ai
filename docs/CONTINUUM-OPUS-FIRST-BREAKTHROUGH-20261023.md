@@ -144,7 +144,12 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 - **Forschung (Argon A–E):** **D ausgeführt** (vorregistriert, ein Lauf, `docs/research/CDX1-PATCH-ANOMALY-RESULT-20261023.md`):
   CDX1 erkennt nur ungewöhnliche Bytefolgen (99 %), keine Syntax-, Token-, Abschneide-, Hunk- oder semantischen Fehler;
   ein Byte-4-Gramm leistet dasselbe 6× schneller → kein CDX1-Signal in CCC1. Vorschlag: deterministische Prüfung auf
-  Steuer-/unsichtbare Zeichen in Patches. **A (TTT1), B (LCT1), C (WSC1), E (GGUF/Spine): nicht ausgeführt.**
+  Steuer-/unsichtbare Zeichen in Patches. **B ausgeführt** (vorregistriert, TEST einmal,
+  `docs/research/LCT1-REASONING-RESULT-20261023.md`): typisierter, quellgebundener Graph-Schlussfolgerer mit
+  unabhängigem Prüfer – 0 falsche Antworten in 600 Fällen aus 24 Varianten (Abdeckung 1,0; Prüfer lehnt 1 175/1 175
+  Mutationen ab); der Algorithmus der bisherigen `EvidenceBoundedThoughtSearch` gibt 150 falsche Antworten; latente
+  Fast-Weights bringen keinen Vorteil (übersehen Widersprüche bzw. nehmen falsche Umwege). Nur Test-Quellset.
+  **A (TTT1), C (WSC1), E (GGUF/Spine): nicht ausgeführt.**
 - **Nächster Schritt:** Besitzer: Termux-Checkout aktualisieren und CCC1 aus der App probieren. Integration: die
   Commits ab `c72bd98f` (Termux-Befehle, App-Diagnose, Fix #76) in den nächsten APK-Build übernehmen.
 
