@@ -70,6 +70,9 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
     override fun drawLine(x0: Float, y0: Float, x1: Float, y1: Float, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) {
         if (prepare(fill, alpha, Paint.Style.STROKE, width, roundCap)) canvas.drawLine(x0, y0, x1, y1, paint)
     }
+    override fun strokeSegments(points: FloatArray, count: Int, width: Float, fill: Fill, alpha: Float) {
+        if (count > 0 && prepare(fill, alpha, Paint.Style.STROKE, width, false)) canvas.drawLines(points, 0, count, paint)
+    }
     override fun fillPath(path: VectorPath, fill: Fill, alpha: Float) {
         if (prepare(fill, alpha, Paint.Style.FILL, 0f, false)) canvas.drawPath(android(path), paint)
     }

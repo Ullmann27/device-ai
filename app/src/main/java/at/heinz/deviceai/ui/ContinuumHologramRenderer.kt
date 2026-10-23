@@ -22,7 +22,7 @@ class ContinuumHologramRenderer {
     enum class Mode { READY, LISTENING, THINKING, SPEAKING, RESEARCH, LEARNING }
 
     /** [weights] has one entry per [Mode] (crossfaded), [energy] 0..1, [audio] 0..1 real speech envelope. */
-    class Frame(val phase: Float, val energy: Float, val audio: Float, val weights: FloatArray) {
+    class Frame(var phase: Float, var energy: Float, var audio: Float, val weights: FloatArray) {
         init { require(weights.size == Mode.entries.size) }
         fun weight(mode: Mode) = weights[mode.ordinal]
         companion object {
@@ -231,6 +231,9 @@ class ContinuumHologramRenderer {
         p.fillOval(cx - r * 2.2f, flangeTopY - r * .3f, cx + r * 2.2f, flangeTopY + r * .35f, floorGlow)
         drawFloor(p, f)
         drawPedestal(p, f)
+        val lift = ContinuumOrbitalRing.lift(f.phase, rs)
+        p.save()
+        p.translate(0f, lift)
         // One rotation for the whole network: slow turn plus a gentle nod, both from the animation phase.
         // A visible but unhurried, physically consistent rotation of the *same* 3-D nodes;
         // no new samples, faux device load or randomized per-frame particle locations.
@@ -248,10 +251,11 @@ class ContinuumHologramRenderer {
         drawSphere(p, f)
         p.setAdditive(true)
         drawOrbits(p, f, front = true)
+        drawSparkles(p, f)
+        p.restore()
         val contactY = padY - r * .05f
         val contactBreath = .4f + f.energy * .1f + .065f * (sin(f.phase * .8f) - sin(.4f * .8f))
-        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, contactBreath)
-        drawSparkles(p, f)
+        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, (contactBreath + lift / rs * 1.8f).coerceIn(.2f, .65f))
         p.setAdditive(false)
         if (showBrand) drawBrand(p)
     }
@@ -336,24 +340,21 @@ class ContinuumHologramRenderer {
         Orbit(7f, 1.18f, .6f, .45f, intArrayOf(Argb.rgb(90, 230, 255), Argb.rgb(150, 160, 255), Argb.rgb(240, 110, 220)), 1.1f)
     )
 
+    private val orbitalGeometry = orbits.map { ContinuumOrbitalRing(it.a, it.b, it.tilt) }
+
     private fun drawOrbits(p: ContinuumPainter, f: Frame, front: Boolean) {
         for ((i, o) in orbits.withIndex()) {
-            val a = rs * o.a; val b = rs * o.b
-            val wobble = sin(f.phase * .35f + i * 1.7f) * 2f
-            p.save()
-            p.rotate(o.tilt + wobble, cx, cy)
-            val fill = orbitFills[i]
-            val start = if (front) 0f else 180f
-            val k = if (front) 1f else .55f
+            val ring = orbitalGeometry[i]
+            if (!front) ring.project(f.phase, o.speed, cx, cy, rs)
+            val points = if (front) ring.front else ring.back
+            val count = if (front) ring.frontSize else ring.backSize
+            val k = if (front) 1f else .42f
             val wd = o.width * sphereScale
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 6.5f, fill, .05f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 3.2f, fill, .12f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 1.5f, fill, .5f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * .6f, orbitCore, .5f * k)
-            val travel = ((f.phase * 24f * o.speed + i * 77f) % 360f + 360f) % 360f
-            val local = if (front) travel % 180f else 180f + travel % 180f
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, local, 24f, wd * 1.6f, orbitSpark, .6f * k)
-            p.restore()
+            val fill = orbitFills[i]
+            p.strokeSegments(points, count, wd * 6.5f, fill, .05f * k)
+            p.strokeSegments(points, count, wd * 3.2f, fill, .12f * k)
+            p.strokeSegments(points, count, wd * 1.5f, fill, .5f * k)
+            p.strokeSegments(points, count, wd * .6f, orbitCore, .5f * k)
         }
     }
 
@@ -374,10 +375,10 @@ class ContinuumHologramRenderer {
             val x0 = cx + t * r * .5f
             val x1 = cx + t * rs * .16f
             val alpha = (.22f - abs(t) * .1f) * (.8f + .2f * sin(f.phase * .9f + i))
-            p.drawLine(x0, padY - r * .05f, x1, cy + rs * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
+            p.drawLine(x0, padY - r * .05f - ContinuumOrbitalRing.lift(f.phase, rs), x1, cy + rs * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
         }
-        p.drawLine(cx, cy - rs * .98f, cx, padY, 4.5f * scale, beam, .15f + f.energy * .08f)
-        p.drawLine(cx, cy - rs * .98f, cx, padY, 1.1f * scale, beam, .5f)
+        p.drawLine(cx, cy - rs * .98f, cx, padY - ContinuumOrbitalRing.lift(f.phase, rs), 4.5f * scale, beam, .15f + f.energy * .08f)
+        p.drawLine(cx, cy - rs * .98f, cx, padY - ContinuumOrbitalRing.lift(f.phase, rs), 1.1f * scale, beam, .5f)
         drawStateEffects(p, f)
         p.setAdditive(false)
         // inner sphere with the infinity mark; it hides the back half of the network

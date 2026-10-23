@@ -1,0 +1,42 @@
+{
+  "baseCommit": "6706da14f6d713bf34799a5cac5b64cf0d4e638e",
+  "candidateCodeCommit": "f052183",
+  "backend": "Java2D production renderer",
+  "state": "READY",
+  "seconds": [
+    0.0,
+    0.3333333333333333,
+    0.6666666666666666,
+    1.0,
+    1.3333333333333333,
+    1.6666666666666667,
+    2.0,
+    2.3333333333333335,
+    2.6666666666666665,
+    3.0,
+    3.3333333333333335,
+    3.6666666666666665,
+    4.0,
+    4.333333333333333,
+    4.666666666666667,
+    5.0,
+    5.333333333333333,
+    5.666666666666667,
+    6.0,
+    6.333333333333333,
+    6.666666666666667,
+    7.0,
+    7.333333333333333,
+    7.666666666666667,
+    8.0
+  ],
+  "samplingHz": 3,
+  "deviceFps": null,
+  "sha256": {
+    "fold-ready-0-4-8s.jpg": "738e6b665a221ee3fd07075d1beb5d383df5d514254f55a6fd36ce8c298d6f12",
+    "fold-ready-comparison.gif": "fcea7006c6f0cd51795d440027da3348261d35ccaaea3aa77cb3c80e6fd8966d",
+    "phone-ready-0-4-8s.jpg": "29658da3b4e27897d5d5fbdab71de6968957a2fe048034fc9cbc1d1d332dab68",
+    "phone-ready-comparison.gif": "cdd2d39561feff5e4c4f414a63dc589aba1e889935ca072562b22f1120d2de9a"
+  },
+  "gifNote": "Resized to 824px wide, shared palette, 3Hz evidence sampling. Loop restart jumps back to t=0; application motion does not."
+}

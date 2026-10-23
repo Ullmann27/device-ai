@@ -10,6 +10,10 @@ package at.heinz.deviceai.ui
  * Coordinates are in the caller's current transform; colours are ARGB integers; [alpha] multiplies the paint.
  */
 interface ContinuumPainter {
+    /** Batched independent segments (x0,y0,x1,y1). Android submits one native draw call, without frame allocations. */
+    fun strokeSegments(points: FloatArray, count: Int, width: Float, fill: Fill, alpha: Float) {
+        for (i in 0 until count step 4) drawLine(points[i], points[i + 1], points[i + 2], points[i + 3], width, fill, alpha, roundCap = false)
+    }
     fun save()
     fun restore()
     fun translate(dx: Float, dy: Float)

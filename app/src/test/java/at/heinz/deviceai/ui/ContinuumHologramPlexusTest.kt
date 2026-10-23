@@ -124,6 +124,10 @@ class ContinuumHologramPlexusTest {
         override fun strokeArc(left: Float, top: Float, right: Float, bottom: Float, startDegrees: Float, sweepDegrees: Float,
                                width: Float, fill: Fill, alpha: Float, roundCap: Boolean) { calls++ }
         override fun drawLine(x0: Float, y0: Float, x1: Float, y1: Float, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) { calls++ }
+        override fun strokeSegments(points: FloatArray, count: Int, width: Float, fill: Fill, alpha: Float) {
+            assertTrue("bounded native batch", count <= 74 * 4 && count % 4 == 0)
+            calls++ // Android Canvas.drawLines is one submission, not one call per segment.
+        }
         override fun fillPath(path: VectorPath, fill: Fill, alpha: Float) { calls++ }
         override fun strokePath(path: VectorPath, width: Float, fill: Fill, alpha: Float, roundCap: Boolean) { calls++ }
         override fun drawText(text: String, x: Float, y: Float, style: TextStyle, fill: Fill, align: TextAlign, alpha: Float) {
