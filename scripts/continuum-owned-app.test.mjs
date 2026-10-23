@@ -6,7 +6,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {createOwnedApp, verifyOwnedApp, buildOwnedApp, projectPath, RECIPE} from './continuum-owned-app.mjs';
 const fresh=()=>fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-test-'));
-const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner',aapt:'/fake/aapt'}};
+const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
 const inspect=async()=>ready;
 const sha=x=>createHash('sha256').update(x).digest('hex');
 function fake(home,{badGradle=false,badSigner=false,badPackage=false,mutate=false,missing=false,commands=[]}={}) {
@@ -19,7 +19,7 @@ function fake(home,{badGradle=false,badSigner=false,badPackage=false,mutate=fals
    return {ok:true,code:0,output:'Gradle simulated'};
   }
   if(file==='/fake/apksigner')return {ok:!badSigner,code:badSigner?1:0,output:badSigner?'BAD SIGNER':'Signer #1 certificate SHA-256 digest: '+'a'.repeat(64)};
-  if(file==='/fake/aapt')return {ok:true,code:0,output:"package: name='"+(badPackage?'evil.package':RECIPE.packageName)+"' versionCode='1' versionName='0.1.0'"};
+  if(file==='/fake/aapt2')return {ok:true,code:0,output:"package: name='"+(badPackage?'evil.package':RECIPE.packageName)+"' versionCode='1' versionName='0.1.0'"};
   throw Error('Unexpected command: '+file);
  };
 }
@@ -126,7 +126,7 @@ test('corrupt preexisting artifact blocks overwrites',async()=>{
 test('build never starts a package installer, app signature and source are validated',async()=>{
  const home=fresh();createOwnedApp({home});const commands=[];
  await build(home,{run:fake(home,{commands})});
- assert.deepEqual(commands.map(x=>x[0]),['/fake/gradle','/fake/apksigner','/fake/aapt']);
+ assert.deepEqual(commands.map(x=>x[0]),['/fake/gradle','/fake/apksigner','/fake/aapt2']);
 });
 test('symlinked existing project parent is refused before source reading',()=>{
  const home=fresh();createOwnedApp({home});
