@@ -10,6 +10,7 @@
 // module, so an unchanged repository costs almost nothing); the outcome stays IDLE.
 import fs from 'node:fs';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {startTask,runTask,taskState} from './ccc1-orchestrator.mjs';
 import {Ccc1Reasoner,indexExports,interpretGoal,LexicalLanguageCore} from './ccc1-interpreter.mjs';
 import {DisambiguatingProbeCore,ProbeLanguageCore} from './behaviour-probe.mjs';
@@ -23,9 +24,25 @@ export const OUTCOME_FOR={COMPLETED:'VERIFIED_PATCH_PENDING_REVIEW',ABSTAINED:'D
 const CORES={lexical:()=>new LexicalLanguageCore(),probe:root=>new ProbeLanguageCore({root}),
  disambiguate:root=>new DisambiguatingProbeCore({root})};
 
-/** Owner goal -> durable CCC1 task bound to the project's current commit. */
-export function submitGoal({project,stateDir,text,repoFullName='owner/device-ai',maxRounds=3,deadlineMinutes=24*60}){
- return startTask({project,stateDir,goal:{text},repoFullName,maxRounds,deadlineMinutes});
+const REPO=/^[A-Za-z0-9][A-Za-z0-9-]{0,38}\/[A-Za-z0-9._-]{1,100}$/;
+
+/**
+ * The repository a task is bound to: owner/name of the project's `origin` remote (GitHub URL, HTTPS or SSH), or
+ * local/<directory> for a checkout without one - never a placeholder such as owner/device-ai.
+ */
+export function repositoryOf(project){
+ const r=spawnSync('git',['remote','get-url','origin'],{cwd:project,encoding:'utf8',timeout:15000});
+ const m=r.status===0?/github\.com[:/]([^/\s]+\/[^/\s]+?)(?:\.git)?\/?$/.exec(r.stdout.trim()):null;
+ const name=m?m[1]:'local/'+path.basename(path.resolve(project)).replace(/[^A-Za-z0-9._-]/g,'-');
+ if(!REPO.test(name))throw Error('cannot derive the repository binding; pass repoFullName (owner/name)');
+ return name;
+}
+
+/** Owner goal -> durable CCC1 task bound to the project's repository and current commit. */
+export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,deadlineMinutes=24*60}){
+ const repo=repoFullName??repositoryOf(project);
+ if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
+ return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes});
 }
 
 /**
