@@ -613,8 +613,11 @@ class AgentActivity : Activity() {
                     return@post
                 }
                 val composerDraft = if (::input.isInitialized) {
+                    val hadIme = if (android.os.Build.VERSION.SDK_INT >= 30) {
+                        root.rootWindowInsets?.isVisible(WindowInsets.Type.ime()) ?: keyboardCompact
+                    } else keyboardCompact
                     ComposerReflowDraft(input.text.toString(), input.selectionStart,
-                        input.selectionEnd, input.hasFocus(), keyboardCompact)
+                        input.selectionEnd, input.hasFocus(), hadIme)
                 } else ComposerReflowDraft("", -1, -1, false, false)
                 val chatScrollY = if (::chatScroll.isInitialized) chatScroll.scrollY else 0
                 val previousHomeState = homeView?.state
