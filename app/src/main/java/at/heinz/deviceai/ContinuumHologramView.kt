@@ -35,6 +35,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
     private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
     private val frameWeights = FloatArray(State.entries.size)
+    private val renderFrame = ContinuumHologramRenderer.Frame(.4f, .18f, 0f, frameWeights)
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -173,7 +174,10 @@ class ContinuumHologramView @JvmOverloads constructor(
         val saved = canvas.save()
         canvas.scale(density, density)
         frameWeights.indices.forEach { frameWeights[it] = stateWeights[it] }
-        renderer.draw(painter, ContinuumHologramRenderer.Frame(phase, energy, audioEnergy, frameWeights))
+        renderFrame.phase = phase
+        renderFrame.energy = energy
+        renderFrame.audio = audioEnergy
+        renderer.draw(painter, renderFrame)
         canvas.restoreToCount(saved)
         if (canAnimate() && !framePending) {
             framePending = true

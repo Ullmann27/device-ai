@@ -21,7 +21,11 @@ const section=(start,end)=>{
 test('transparent native 3D hero has no network, model execution or fake status',()=>{
  assert.match(orb,/class ContinuumHologramView/);
  assert.match(orb,/override fun onDraw\(canvas: Canvas\)/);
- assert.match(orb,/renderer\.draw\(painter, ContinuumHologramRenderer\.Frame\(/);
+ assert.match(orb,/private val renderFrame = ContinuumHologramRenderer\.Frame\(/);
+ assert.match(orb,/renderFrame\.phase = phase/);
+ assert.match(orb,/renderFrame\.energy = energy/);
+ assert.match(orb,/renderFrame\.audio = audioEnergy/);
+ assert.match(orb,/renderer\.draw\(painter, renderFrame\)/);
  assert.match(renderer,/Fill\.Radial\(/);
  assert.match(renderer,/drawOrbits\(p, f, front = true\)/);
  // the backdrop glow ends in a fully transparent stop: the view paints no opaque background of its own
