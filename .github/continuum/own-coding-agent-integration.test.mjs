@@ -28,7 +28,7 @@ test('worker diagnostic route uses existing allowlisted build Activity, not exec
   assert.match(activity, /Explicit allowlisted Activity launch; never launch a shell/);
   const builder = read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
   assert.match(builder, /ContinuumMobileBuildPlan/);
-  assert.match(builder, /setPositiveButton\("Bauen"\)/);
+  assert.match(builder, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\)/);
 });
 
 test('generative coding remains constrained and model-agnostic with review-only outputs', () => {

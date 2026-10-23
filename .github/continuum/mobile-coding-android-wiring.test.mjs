@@ -44,8 +44,8 @@ test('a coding result never enters the APK-build success policy or persists raw 
 });
 
 test('existing build remains explicitly gated, and coding cannot install or merge', () => {
-  assert.match(activity, /if \(operation == ContinuumMobileBuildPlan\.Operation\.BUILD\)/);
-  assert.match(activity, /setPositiveButton\("Bauen"\) \{ _, _ -> dispatch\(operation\) \}/);
+  assert.match(activity, /val confirmation = when \(operation\)[\s\S]*Operation\.BUILD ->\s*"Lokalen Build starten\?" to/);
+  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation\) \}/);
   assert.match(activity, /text = "← Zurück zu Device AI"/);
   assert.match(coding, /r\["approvedForMerge"\] != false/);
   assert.match(coding, /r\["installed"\] != false/);
