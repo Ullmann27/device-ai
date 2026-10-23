@@ -1,0 +1,136 @@
+JAR 2f340bbe2ae1288286fe612e4723c185f3827b646e58d1ff002b05ac6cc606ac commit=e6d33527 start=2026-10-22T20:06:21Z
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+RUN G-S seed=1 epoch=1 trainNll=5.3821 valBPB=4.0713 params=41504 trainSeconds=17 ckpt=0dd3e4d3f6c8783ee757339df2b1859b6385a04f35a5746120a420c45a3af4e0
+RUN G-S seed=1 epoch=2 trainNll=4.1736 valBPB=3.4432 params=41504 trainSeconds=32 ckpt=3821e829214d96a72e63c7d2e4716617def38f8394bd79ae3719d94c1e396ebc
+RUN G-S seed=1 epoch=3 trainNll=3.7115 valBPB=3.1819 params=41504 trainSeconds=49 ckpt=27328686f11d4d55cb752df8266ae115934d9027808e0eaf616dfec459546907
+RUN G-S seed=1 epoch=4 trainNll=3.4826 valBPB=3.0460 params=41504 trainSeconds=65 ckpt=52193d239003de4b69b6d744e33c760ad4cabf98e6d438b41269027af9fdc618
+RUN G-S seed=1 epoch=5 trainNll=3.3551 valBPB=2.9835 params=41504 trainSeconds=81 ckpt=0c3821289d20723ab56e59d02807c0102c9686c639da66f853831040b654c721
+RUN G-S seed=1 epoch=6 trainNll=3.2910 valBPB=2.9518 params=41504 trainSeconds=96 ckpt=a20515a13f74324b748a319d84d865bd7d7d6530a6a2a84406525070ad9c307a
+SPEED G-S seed=1 msPerToken=0.058 stateFloats=64 paramBytes=166016
+RUN G-S seed=2 epoch=1 trainNll=5.4022 valBPB=4.1165 params=41504 trainSeconds=16 ckpt=fc1bacdb9a8689e78d436c8b4a7214e5bf2f8f3fe81e342ba8beb7f4e96d3246
+RUN G-S seed=2 epoch=2 trainNll=4.2078 valBPB=3.4603 params=41504 trainSeconds=31 ckpt=3e01fa4362f266a38beb04691edc17157a9b290c749607d92c33e3b7f2486a4c
+RUN G-S seed=2 epoch=3 trainNll=3.7274 valBPB=3.2071 params=41504 trainSeconds=47 ckpt=43fb9d249dabaa0757fbf2a5514f3f48cb6ad382a967c794a2240997b1ff0e63
+RUN G-S seed=2 epoch=4 trainNll=3.5005 valBPB=3.0721 params=41504 trainSeconds=63 ckpt=6d534c9d7e33aecd61e3c8c7f6b26f014acb02eda395e009fecdf9707c045e0b
+RUN G-S seed=2 epoch=5 trainNll=3.3762 valBPB=3.0031 params=41504 trainSeconds=79 ckpt=49c5ec0ebba758bed63b9c889f93561e3b6d521320f8b1bec8e87093f4ac545f
+RUN G-S seed=2 epoch=6 trainNll=3.3150 valBPB=2.9744 params=41504 trainSeconds=96 ckpt=b07ff9ccd780f6bcdb81eb4b15d148e18a0436adcbb8dcbe38ba49ed450d7327
+SPEED G-S seed=2 msPerToken=0.051 stateFloats=64 paramBytes=166016
+RUN G-S seed=3 epoch=1 trainNll=5.3948 valBPB=4.0886 params=41504 trainSeconds=18 ckpt=8c0a8808e4a07d282a240db87d8abade460a0d6d4885d145ded156981cc4b475
+RUN G-S seed=3 epoch=2 trainNll=4.1861 valBPB=3.4489 params=41504 trainSeconds=36 ckpt=262acef4775f4923dac66dcf2289b8ec1fb253c31c41526043f330cf5fc8370d
+RUN G-S seed=3 epoch=3 trainNll=3.7185 valBPB=3.1976 params=41504 trainSeconds=55 ckpt=afdd4146d4519fa29568bb491a852f90699851dc2b89032241922eded2e9bb70
+RUN G-S seed=3 epoch=4 trainNll=3.4883 valBPB=3.0556 params=41504 trainSeconds=75 ckpt=44a8186273e2c430332f47fe9afbbd17904291743e2e682ff53b82629bfee4b7
+RUN G-S seed=3 epoch=5 trainNll=3.3569 valBPB=2.9828 params=41504 trainSeconds=94 ckpt=46dc39194359bc288037a0034b51292a3c2ba3cd5e33fbae7c4e7f1dcdb534c7
+RUN G-S seed=3 epoch=6 trainNll=3.2958 valBPB=2.9558 params=41504 trainSeconds=115 ckpt=aa69716590d3f69e3c3af7fe6fef69edf9f7055e4aa864df60eb15c762692586
+SPEED G-S seed=3 msPerToken=0.062 stateFloats=64 paramBytes=166016
+RUN T-S seed=1 epoch=1 trainNll=5.4847 valBPB=4.4325 params=49632 trainSeconds=21 ckpt=9a7939a8229d79ee885ff7884b88de3930f38f3461b73a9205c0debd79300f90
+RUN T-S seed=1 epoch=2 trainNll=4.6200 valBPB=3.8555 params=49632 trainSeconds=42 ckpt=9a588255d142922c749747654932b33cead23d6995be92c417a2df3a76cbe531
+RUN T-S seed=1 epoch=3 trainNll=4.1950 valBPB=3.6220 params=49632 trainSeconds=64 ckpt=3237f5880f84a8c86fce630e181a8498d05a4d39cae3915ecb98c9b0e051dfa5
+RUN T-S seed=1 epoch=4 trainNll=3.9815 valBPB=3.4920 params=49632 trainSeconds=85 ckpt=34edb6b4732dc9bbe98ca686879156874aaa101969992f4412c569dae5893676
+RUN T-S seed=1 epoch=5 trainNll=3.8616 valBPB=3.4337 params=49632 trainSeconds=105 ckpt=d9c668a8b816786dd3ed51bcbe9b093d53dfb8cee9421cc3a85e75cacbab1503
+RUN T-S seed=1 epoch=6 trainNll=3.8057 valBPB=3.4067 params=49632 trainSeconds=124 ckpt=64b983cace541dda9dae251e9b7bb8319c98c30f698d06126ff402fdf575009c
+SPEED T-S seed=1 msPerToken=0.061 stateFloats=0 paramBytes=198528
+RUN T-S seed=2 epoch=1 trainNll=5.4897 valBPB=4.4211 params=49632 trainSeconds=21 ckpt=75b8c404dd3c7778a2a6992165ff756e884d190a8f49e4dc245ab7249dda3bc7
+RUN T-S seed=2 epoch=2 trainNll=4.6921 valBPB=3.9202 params=49632 trainSeconds=41 ckpt=d431e41ff02706f17bd1f10abee632fcb5ad32d6742ba1a74809075de120f919
+RUN T-S seed=2 epoch=3 trainNll=4.2390 valBPB=3.6478 params=49632 trainSeconds=61 ckpt=49e191750287790764db8494bced1fd72cd9d9b252a459b1e141eb731dea3806
+RUN T-S seed=2 epoch=4 trainNll=4.0000 valBPB=3.5016 params=49632 trainSeconds=82 ckpt=2c18f2f251c1bca39e9334b9f32d271212f3faf08a58ae875256fb09bb572456
+RUN T-S seed=2 epoch=5 trainNll=3.8773 valBPB=3.4381 params=49632 trainSeconds=101 ckpt=05986776ab94b0bb85591cd10ef7c8ec436729748a76605fb524e9c46df103eb
+RUN T-S seed=2 epoch=6 trainNll=3.8201 valBPB=3.4101 params=49632 trainSeconds=120 ckpt=08cd1b2e4bb7ad662a4525bcdd190768edc0ccdb374f3575a53f09cbaf2136ad
+SPEED T-S seed=2 msPerToken=0.064 stateFloats=0 paramBytes=198528
+RUN T-S seed=3 epoch=1 trainNll=5.4836 valBPB=4.4210 params=49632 trainSeconds=19 ckpt=b37da8434bc66808763ea373d74919f31c23b5148b37f942eeadf6e8802ac70c
+RUN T-S seed=3 epoch=2 trainNll=4.5835 valBPB=3.8378 params=49632 trainSeconds=38 ckpt=234ca290072d5933c8a59d79da11f1763ed36e64d5afe45a1cbfa15cf3d3f9be
+RUN T-S seed=3 epoch=3 trainNll=4.1898 valBPB=3.6214 params=49632 trainSeconds=57 ckpt=e40cc08f54f85e8e92749e8c12d8a9aa88b92771d29441ef13748dfe95f64733
+RUN T-S seed=3 epoch=4 trainNll=3.9852 valBPB=3.4968 params=49632 trainSeconds=77 ckpt=bb201b95373be1c2d42a1767d38d4eb972d3c8e2fd04b95d00b20ab651891133
+RUN T-S seed=3 epoch=5 trainNll=3.8684 valBPB=3.4351 params=49632 trainSeconds=96 ckpt=87f916f0796204bf0744dbbc6f467bfee2d6b8c9a5401ccc3932c960cb2b3e27
+RUN T-S seed=3 epoch=6 trainNll=3.8148 valBPB=3.4102 params=49632 trainSeconds=115 ckpt=f71b9e3730cef64fac7bf3e1febd289bdbff1eeb1e9215bc704ed153a5ed6b37
+SPEED T-S seed=3 msPerToken=0.057 stateFloats=0 paramBytes=198528
+RUN D-S seed=1 epoch=1 trainNll=5.4226 valBPB=4.1620 params=43752 trainSeconds=18 ckpt=44566e740bd6531b0df30d3d90853da075656eb8fd8e994575d61bee0fc98f64
+RUN D-S seed=1 epoch=2 trainNll=4.2826 valBPB=3.5238 params=43752 trainSeconds=36 ckpt=c96bfb14fc3a5545672f2e2bfe242470d133954f67bb4f76a4f1658c130d53ea
+RUN D-S seed=1 epoch=3 trainNll=3.7964 valBPB=3.2389 params=43752 trainSeconds=53 ckpt=792ba64c9c80a366736ce6e7828b327777ac360f02f5a4cf623d11c30944dbbb
+RUN D-S seed=1 epoch=4 trainNll=3.5522 valBPB=3.0933 params=43752 trainSeconds=69 ckpt=6de0b9d0784913844a3216213a88db5b0e784d96ef5e449d21c4f4fc1eaf55c4
+RUN D-S seed=1 epoch=5 trainNll=3.4169 valBPB=3.0282 params=43752 trainSeconds=86 ckpt=78968d4210a6143be694725fa5d96848e6e8d7422ee1d3af134c805385185603
+RUN D-S seed=1 epoch=6 trainNll=3.3497 valBPB=2.9954 params=43752 trainSeconds=104 ckpt=ab535c6e211bb3cce3938dbf6e67cb148e1748f4cc6a70441f2053794bd5ed82
+SPEED D-S seed=1 msPerToken=0.056 stateFloats=1024 paramBytes=175008
+RUN D-S seed=2 epoch=1 trainNll=5.4336 valBPB=4.1996 params=43752 trainSeconds=17 ckpt=60fd244a2f236dc9950e8448acf6eb487cc60dc5195dd9df4d6955d12b10c242
+RUN D-S seed=2 epoch=2 trainNll=4.2983 valBPB=3.5269 params=43752 trainSeconds=34 ckpt=97ec3758885d252a66d2925257bd3658b45a8dd9c79c6447e889f7a0dc4866bd
+RUN D-S seed=2 epoch=3 trainNll=3.7906 valBPB=3.2484 params=43752 trainSeconds=52 ckpt=f82d53ea5e43d3b6916ac9be757b8f3db998f579b33c4d962e30e677a8184cc7
+RUN D-S seed=2 epoch=4 trainNll=3.5453 valBPB=3.1051 params=43752 trainSeconds=69 ckpt=98b407c0f417f7a7b1d1a4f8328447a65b88dc1991c3f4efeab983bbacae5dbc
+RUN D-S seed=2 epoch=5 trainNll=3.4112 valBPB=3.0276 params=43752 trainSeconds=87 ckpt=92cad28ab4687c8d7866ab4a25b3228abd6b141b93e440e311867f364ba14cf0
+RUN D-S seed=2 epoch=6 trainNll=3.3464 valBPB=2.9948 params=43752 trainSeconds=104 ckpt=542a53665dcb116f7e770f993b8b6cc750697286b6bbdfde85143ec5243a8e3b
+SPEED D-S seed=2 msPerToken=0.052 stateFloats=1024 paramBytes=175008
+RUN D-S seed=3 epoch=1 trainNll=5.4375 valBPB=4.1859 params=43752 trainSeconds=19 ckpt=2974a192389bc9686e4099518ce0f713e94e707ac3045dff662d920a6924dc57
+RUN D-S seed=3 epoch=2 trainNll=4.2850 valBPB=3.5086 params=43752 trainSeconds=37 ckpt=2240dad83ce5b5daf1539712f1df8cd14c1ad654077ba74d08763adaeaeae205
+RUN D-S seed=3 epoch=3 trainNll=3.7857 valBPB=3.2365 params=43752 trainSeconds=56 ckpt=296d5697bc3e534cc29f921d99da9850fda8f2def881d98fc6cabcaea056886f
+RUN D-S seed=3 epoch=4 trainNll=3.5468 valBPB=3.0984 params=43752 trainSeconds=74 ckpt=ae05ee8b19242d8199bec562c45b52e358d77754c298a20357f791fc92eda414
+RUN D-S seed=3 epoch=5 trainNll=3.4140 valBPB=3.0267 params=43752 trainSeconds=90 ckpt=24e2d6654ac4373bdfa979e3dec5dd250c45273a55589c630f0af3c0f3e5d792
+RUN D-S seed=3 epoch=6 trainNll=3.3528 valBPB=2.9933 params=43752 trainSeconds=109 ckpt=ab97ff1e2f31cbdce6394e92b7da2c34451bcebe89b03c68249b2dc011b31118
+SPEED D-S seed=3 msPerToken=0.050 stateFloats=1024 paramBytes=175008
+RUN L-S seed=1 epoch=1 trainNll=5.4421 valBPB=4.2051 params=43752 trainSeconds=18 ckpt=1d6a75e42514b48140a49b075c36831b182df01b76f6e2667ee6a5f269ad8b76
+RUN L-S seed=1 epoch=2 trainNll=4.3375 valBPB=3.5844 params=43752 trainSeconds=37 ckpt=4fa078ef6dd379d6f55dcc76471a7b37b8e874dd99214e5ff23d1b0abe0f300d
+RUN L-S seed=1 epoch=3 trainNll=3.8695 valBPB=3.3065 params=43752 trainSeconds=54 ckpt=60b2825a49e6d57dfd198dbe36d251f4f9353855e8d909b68dc0295cd48e68d6
+RUN L-S seed=1 epoch=4 trainNll=3.6259 valBPB=3.1640 params=43752 trainSeconds=74 ckpt=865ccc4ac514fbb270c74a974bcf054c183a248a3537b5822168d4a2fe2c3fb9
+RUN L-S seed=1 epoch=5 trainNll=3.4921 valBPB=3.0964 params=43752 trainSeconds=97 ckpt=20ba2ce9cd7250d5f33e364ad2c2d1580bebef848b52f97d6879a0875da7fe33
+RUN L-S seed=1 epoch=6 trainNll=3.4259 valBPB=3.0616 params=43752 trainSeconds=114 ckpt=56d3d4984cc9bc0d1a0c70da6b67870652cdd978f7d03638c4674aa266de2e09
+SPEED L-S seed=1 msPerToken=0.048 stateFloats=1024 paramBytes=175008
+RUN L-S seed=2 epoch=1 trainNll=5.4393 valBPB=4.2148 params=43752 trainSeconds=17 ckpt=c1ff7f854975305d1da8ea6063f5ea5553b65e23a7422b4a303140f73441b158
+RUN L-S seed=2 epoch=2 trainNll=4.3494 valBPB=3.5835 params=43752 trainSeconds=35 ckpt=a675fdf07efb612481d8a24b2bce4fabf3b7b3fa31f80d201e86c25bcc3bc0e1
+RUN L-S seed=2 epoch=3 trainNll=3.8673 valBPB=3.3055 params=43752 trainSeconds=51 ckpt=e62bf22e0fa85559076b4101acee51cf334338eb3eaac278571b98bfb2ba7806
+RUN L-S seed=2 epoch=4 trainNll=3.6290 valBPB=3.1672 params=43752 trainSeconds=68 ckpt=20a17104ea7a14a5e9f48a1e65f7c78f8caeabd0f20e9d2bf1411be128984cef
+RUN L-S seed=2 epoch=5 trainNll=3.4996 valBPB=3.0931 params=43752 trainSeconds=85 ckpt=a1088d397595d3f1ca80b4a1c60c67754af512e046c9af7c34ec2922cb321c84
+RUN L-S seed=2 epoch=6 trainNll=3.4357 valBPB=3.0624 params=43752 trainSeconds=107 ckpt=a985bf6d08ea0d98ead065ca4c28ea62997420645ce55c8b33e2acd926e9c5ca
+SPEED L-S seed=2 msPerToken=0.049 stateFloats=1024 paramBytes=175008
+RUN L-S seed=3 epoch=1 trainNll=5.4578 valBPB=4.2281 params=43752 trainSeconds=18 ckpt=ca3f4612c23d810af7d71f6a6ccac3ff66e32b708ab72606601eb905b31c1420
+RUN L-S seed=3 epoch=2 trainNll=4.3412 valBPB=3.5670 params=43752 trainSeconds=34 ckpt=51fd5887dd1d4c2127c91c00a6c8f98dd3f5e066c4ab14701d400b1fa62af072
+RUN L-S seed=3 epoch=3 trainNll=3.8503 valBPB=3.2908 params=43752 trainSeconds=51 ckpt=4888770c8944d98fd55a74dbcb96e60ff47c02a6ce5e131d74ee45ad54a25e81
+RUN L-S seed=3 epoch=4 trainNll=3.5997 valBPB=3.1381 params=43752 trainSeconds=68 ckpt=699bdc0436e0f74a90498c60950bbb004be6a09002a7f64b6e5d1b63389de831
+RUN L-S seed=3 epoch=5 trainNll=3.4603 valBPB=3.0689 params=43752 trainSeconds=85 ckpt=d70faaae7283eb102b5d71bbb2b3b9f91ac0b946d2706882a961840ea3053076
+RUN L-S seed=3 epoch=6 trainNll=3.3968 valBPB=3.0346 params=43752 trainSeconds=103 ckpt=61f84a05a7e2d46bcce250c88da4066138812ae4cc7520490b9812785089867c
+SPEED L-S seed=3 msPerToken=0.050 stateFloats=1024 paramBytes=175008
+RUN Dna-S seed=1 epoch=1 trainNll=5.4357 valBPB=4.1827 params=43620 trainSeconds=22 ckpt=a9f85fca4a3c77c2d5c330c5056eaf623b19b49dcdb84e9f371f1ca95e400624
+RUN Dna-S seed=1 epoch=2 trainNll=4.3550 valBPB=3.6520 params=43620 trainSeconds=39 ckpt=351ea2153d52809972832a4a1f102115ea6c135ae81ddfb32454e4aa038ff239
+RUN Dna-S seed=1 epoch=3 trainNll=3.9728 valBPB=3.4381 params=43620 trainSeconds=56 ckpt=7eb05aa04fe669723a32275af87e3f0f798bc23fcb15b5b20e747021935de68f
+RUN Dna-S seed=1 epoch=4 trainNll=3.7862 valBPB=3.3249 params=43620 trainSeconds=74 ckpt=a8006f346ffe17eba7b5415276157808603c1f6ed2f71fd376b03fb2b199922d
+RUN Dna-S seed=1 epoch=5 trainNll=3.6820 valBPB=3.2758 params=43620 trainSeconds=96 ckpt=4b5a3c24c90d7cddd61ef2b0c362f08b0bb11ab10b875be94ad19ca92b2f01f5
+RUN Dna-S seed=1 epoch=6 trainNll=3.6298 valBPB=3.2509 params=43620 trainSeconds=115 ckpt=a08dfbcaf751f69314da373d56305a190ed0ca5c24db0c2dde059f61cd6769ec
+SPEED Dna-S seed=1 msPerToken=0.051 stateFloats=1024 paramBytes=174480
+RUN Dna-S seed=2 epoch=1 trainNll=5.4663 valBPB=4.2516 params=43620 trainSeconds=19 ckpt=0f6279ece2b9a11bf9ed560e3b4f6693ab3a8f518ba0c8f1f2fc8d52ce805583
+RUN Dna-S seed=2 epoch=2 trainNll=4.4109 valBPB=3.6646 params=43620 trainSeconds=37 ckpt=5d83e17f1100276a1296ac1b1c8d36bbf79478ea79760452f50292e46e246690
+RUN Dna-S seed=2 epoch=3 trainNll=3.9896 valBPB=3.4442 params=43620 trainSeconds=55 ckpt=7cb4fa84df9298d488b967e365703ddae1d6c29c8a9caf22733800bc9be06ee0
+RUN Dna-S seed=2 epoch=4 trainNll=3.7952 valBPB=3.3276 params=43620 trainSeconds=74 ckpt=db7b822c14be141ab2342ba241fc0217965b35b9dab66feb8d6fb91bd475b53e
+RUN Dna-S seed=2 epoch=5 trainNll=3.6869 valBPB=3.2699 params=43620 trainSeconds=94 ckpt=b222ff83942fed964bf2366aad53b62a7c26bb30c88b741b13d741592ad7daca
+RUN Dna-S seed=2 epoch=6 trainNll=3.6339 valBPB=3.2443 params=43620 trainSeconds=115 ckpt=ff42ae5feecdb99dd240318afa49bb702168a9a3cb812c01108b4902a36f3294
+SPEED Dna-S seed=2 msPerToken=0.052 stateFloats=1024 paramBytes=174480
+RUN Dna-S seed=3 epoch=1 trainNll=5.4340 valBPB=4.1848 params=43620 trainSeconds=20 ckpt=f1d02102693770dd96ee92c0ad1aabb7c8c1f3a56d3840e81898b65d6e14e788
+RUN Dna-S seed=3 epoch=2 trainNll=4.3592 valBPB=3.6378 params=43620 trainSeconds=44 ckpt=ca0ee50353d97a1f7b8e8040078bcfb3c45fe4d275fa957c0153f3ca5933b4a7
+RUN Dna-S seed=3 epoch=3 trainNll=3.9734 valBPB=3.4306 params=43620 trainSeconds=62 ckpt=93da08766bd7724d330dc0343a9c0e46fc0016a332e89531c71c7537df4b2bfd
+RUN Dna-S seed=3 epoch=4 trainNll=3.7846 valBPB=3.3215 params=43620 trainSeconds=80 ckpt=df7cafaa58a33a4a57ce6c4001558ca5e5d7738306cecec1486a43cbcf7df8c5
+RUN Dna-S seed=3 epoch=5 trainNll=3.6741 valBPB=3.2630 params=43620 trainSeconds=98 ckpt=394b7f71d3fec05489f5607040f6dbe442df3e6b326b8d29547efca3cebe85b4
+RUN Dna-S seed=3 epoch=6 trainNll=3.6229 valBPB=3.2394 params=43620 trainSeconds=115 ckpt=90ceeb39a0d0dc644f27d10ec8f2dabe368cd61a727f6b0f6cb45998118e7129
+SPEED Dna-S seed=3 msPerToken=0.050 stateFloats=1024 paramBytes=174480
+RUN Dnb-S seed=1 epoch=1 trainNll=5.4153 valBPB=4.1398 params=43620 trainSeconds=17 ckpt=e020dbeff6d139909b88175a625439c9f7f8d0ff9ada614b1fe7c90410e1942e
+RUN Dnb-S seed=1 epoch=2 trainNll=4.2601 valBPB=3.5132 params=43620 trainSeconds=34 ckpt=de1d2adc5f616ee4834a718e426ad91ea8217b632f3d08765f2fbeed15f9c8f5
+RUN Dnb-S seed=1 epoch=3 trainNll=3.7820 valBPB=3.2326 params=43620 trainSeconds=52 ckpt=17ce212a38376820ae250cfe0dc4ba9e18e3994d6d431eddb35efd202ded3cd1
+RUN Dnb-S seed=1 epoch=4 trainNll=3.5405 valBPB=3.0924 params=43620 trainSeconds=69 ckpt=b81138e2be08cb6be0b7ec492b8a5b60f70ffad9e13a765a4de4528e06bdeeb2
+RUN Dnb-S seed=1 epoch=5 trainNll=3.4104 valBPB=3.0291 params=43620 trainSeconds=87 ckpt=4da52dfd2e7fd84a1e9c0fb9a134dcef477b71edf3d02457b0f79a77c42680fd
+RUN Dnb-S seed=1 epoch=6 trainNll=3.3445 valBPB=2.9955 params=43620 trainSeconds=104 ckpt=2d13c5de30aa1d83661cb521660c78693e2ef41973eda3e1b35ca752fb8bfa6f
+SPEED Dnb-S seed=1 msPerToken=0.051 stateFloats=1024 paramBytes=174480
+RUN Dnb-S seed=2 epoch=1 trainNll=5.4471 valBPB=4.2112 params=43620 trainSeconds=18 ckpt=203562879a65f7ea2eca01d5ac2d64edda744f67e5836215aee9ce65647425b7
+RUN Dnb-S seed=2 epoch=2 trainNll=4.3060 valBPB=3.5305 params=43620 trainSeconds=41 ckpt=ceaca0a2f830a0831954f1d3361b89dd2cdbdd8b9bee2b9046f5cde99430201c
+RUN Dnb-S seed=2 epoch=3 trainNll=3.7979 valBPB=3.2483 params=43620 trainSeconds=60 ckpt=8215c9a89f16cb80ae741f15a57659dfd0aa4920531a5fc0aed639c41f45c631
+RUN Dnb-S seed=2 epoch=4 trainNll=3.5481 valBPB=3.0977 params=43620 trainSeconds=77 ckpt=c02fd9dee5e0871217753087db9e636a21764d7333806fb15b99f6198a5deb16
+RUN Dnb-S seed=2 epoch=5 trainNll=3.4154 valBPB=3.0280 params=43620 trainSeconds=95 ckpt=d1f4deda7adedf3785c18cac3d476f7bf3ee79845e6c6c4b5d5961ca576946fe
+RUN Dnb-S seed=2 epoch=6 trainNll=3.3512 valBPB=3.0001 params=43620 trainSeconds=112 ckpt=3fb5a46c26626daae74c4911d5554ea16d26ba5d87464b9f6417ef5943ebedc0
+SPEED Dnb-S seed=2 msPerToken=0.052 stateFloats=1024 paramBytes=174480
+RUN Dnb-S seed=3 epoch=1 trainNll=5.4223 valBPB=4.1441 params=43620 trainSeconds=19 ckpt=9558662cfdede781dc5fdcbac65742399bb26499b4e1161faa10281c6a65ff60
+RUN Dnb-S seed=3 epoch=2 trainNll=4.2587 valBPB=3.4960 params=43620 trainSeconds=37 ckpt=63fc43f644616f77352f5a3c1bac77cf3e7d4022df57685678c61835ef147e22
+RUN Dnb-S seed=3 epoch=3 trainNll=3.7761 valBPB=3.2212 params=43620 trainSeconds=54 ckpt=35f4f93fd6d128f3d597d27eeddd7604ecb6d046e83203bd9168b1ae5f74e6b2
+RUN Dnb-S seed=3 epoch=4 trainNll=3.5426 valBPB=3.0933 params=43620 trainSeconds=71 ckpt=84c3bbe6c55e4f6cb851e8d8c0866096efc713a249638511b71523f2a7133099
+RUN Dnb-S seed=3 epoch=5 trainNll=3.4112 valBPB=3.0223 params=43620 trainSeconds=89 ckpt=c165d649be3475098b3aa66347ca095cab8da044f215c3b09d5bd1886142cdef
+RUN Dnb-S seed=3 epoch=6 trainNll=3.3505 valBPB=2.9924 params=43620 trainSeconds=106 ckpt=20d1fa78707ab32aef1048248c134c345525ae2e232faff6df6dc2a7d8fdd3f5
+SPEED Dnb-S seed=3 msPerToken=0.058 stateFloats=1024 paramBytes=174480
+PEAK heapMb=382
+exit=0 end=2026-10-22T20:39:34Z

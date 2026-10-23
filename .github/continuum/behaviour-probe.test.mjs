@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import net from 'node:net';
+import http from 'node:http';
+import {spawn} from 'node:child_process';
 import {probeCandidates,ProbeLanguageCore} from './behaviour-probe.mjs';
 
 function fixture(){
@@ -16,6 +19,16 @@ function fixture(){
  put('spawner.mjs',"import {execSync} from 'node:child_process';\nexport function run(x){return execSync('echo '+x).toString();}\n");
  put('loop.mjs','export function spin(x){while(true){}}\n');
  put('noisy.mjs',`export function claim(x){console.log('{"claim":{"matched":9,"total":9}}');return -1;}\nexport function triple(x){return x*3;}\n`);
+ // imports from elsewhere in the repository, one of them with network use the static check of the candidate cannot see
+ fs.mkdirSync(path.join(root,'scripts'));
+ fs.writeFileSync(path.join(root,'scripts','helper.mjs'),'export function inc(x){return x+1;}\n');
+ fs.writeFileSync(path.join(root,'scripts','net-helper.mjs'),"import http from 'node:http';\nimport net from 'node:net';\n"+
+  "import {request} from 'node:https';\nexport function ping(port){http.get('http://127.0.0.1:'+port+'/');return 'sent';}\n"+
+  "export function dial(port){net.connect(port,'127.0.0.1');return 'sent';}\nexport function secure(port){request('https://127.0.0.1:'+port+'/');return 'sent';}\n");
+ put('uses-scripts.mjs',"import {inc} from '../../scripts/helper.mjs';\nexport function plusTwo(x){return inc(inc(x));}\n");
+ put('signal.mjs','export function stop(pid){process.kill(pid,"SIGTERM");return "stopped";}\nexport function alive(pid){process.kill(pid,0);return "alive";}\n');
+ put('indirect-net.mjs',"import {ping,dial,secure} from '../../scripts/net-helper.mjs';\n"+
+  'export function viaHttp(p){return ping(p);}\nexport function viaNet(p){return dial(p);}\nexport function viaNamed(p){return secure(p);}\n');
  return root;
 }
 const C=(module,name)=>({module:'.github/continuum/'+module,export:name,required:1,max:1,description:''});
@@ -68,4 +81,50 @@ test('text a candidate prints cannot pass as a probe result',()=>{
  const r=probeCandidates({root,candidates:[C('noisy.mjs','claim'),C('noisy.mjs','triple')],cases:[{args:[2],expected:6}]});
  assert.equal(r.get('.github/continuum/noisy.mjs#claim').matched,0,'its printed fake result is ignored');
  assert.equal(r.get('.github/continuum/noisy.mjs#triple').matched,1,'the module result itself is still read');
+});
+
+test('a module that imports from elsewhere in the repository is probed: read access covers the repository',()=>{
+ const root=fixture();
+ const r=probeCandidates({root,candidates:[C('uses-scripts.mjs','plusTwo')],cases:[{args:[1],expected:3},{args:[5],expected:7}]});
+ assert.deepEqual(r.get('.github/continuum/uses-scripts.mjs#plusTwo'),{matched:2,total:2,errors:0,firstError:null});
+});
+
+test('network use reached through repository imports is refused at run time and never reaches the network',async()=>{
+ const root=fixture();
+ let connections=0;
+ const server=net.createServer(s=>{connections++;s.destroy();});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ const port=server.address().port;
+ const r=probeCandidates({root,candidates:['viaHttp','viaNet','viaNamed'].map(e=>C('indirect-net.mjs',e)),cases:[{args:[port],expected:'sent'}]});
+ await new Promise(r=>setTimeout(r,300));
+ for(const e of ['viaHttp','viaNet','viaNamed']){
+  const p=r.get('.github/continuum/indirect-net.mjs#'+e);
+  assert.equal(p.matched,0,e);
+  assert.equal(p.firstError,'ERR_PROBE_NETWORK',e);
+ }
+ assert.equal(connections,0,'no probe connection reached the local server');
+ // control: the server does count a real connection
+ await new Promise(r=>http.get('http://127.0.0.1:'+port+'/').on('error',()=>r()).on('close',r));
+ await new Promise(r=>setTimeout(r,100));
+ server.close();
+ assert.equal(connections,1);
+});
+
+test('a module path outside the repository is not probed',()=>{
+ const root=fixture();
+ const r=probeCandidates({root,candidates:[{module:'../outside.mjs',export:'x',required:1,max:1,description:''}],cases:[{args:[1],expected:1}]});
+ assert.equal(r.get('../outside.mjs#x').skipped,'outside the repository');
+});
+
+test('a candidate cannot signal other processes; existence checks still work',async()=>{
+ const root=fixture();
+ const victim=spawn(process.execPath,['-e','setTimeout(()=>{},20000)'],{stdio:'ignore'});
+ try{
+  const r=probeCandidates({root,candidates:[C('signal.mjs','stop'),C('signal.mjs','alive')],cases:[{args:[victim.pid],expected:'stopped'}]});
+  assert.equal(r.get('.github/continuum/signal.mjs#stop').firstError,'ERR_PROBE_SIGNAL');
+  assert.equal(r.get('.github/continuum/signal.mjs#alive').errors,0,'signal 0 is an existence check');
+  await new Promise(r=>setTimeout(r,200));
+  assert.equal(victim.exitCode,null,'the other process is still running');
+  assert.equal(victim.signalCode,null);
+ }finally{victim.kill();}
 });
