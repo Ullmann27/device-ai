@@ -113,7 +113,7 @@ test('successful mock Gradle, real SHA verification and signed receipt - not dev
  assert.equal(result.productionReady,false);assert.match(result.apkSha256,/^[0-9a-f]{64}$/);
  assert.equal(result.apkSha256,sha(fs.readFileSync(result.artifact)));
  const gradle=commands.find(x=>x[0]==='/fake/gradle');
- for(const task of [':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug','--offline'])assert.ok(gradle[1].includes(task));
+ for(const task of [':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug','--offline','-Pkotlin.compiler.execution.strategy=in-process'])assert.ok(gradle[1].includes(task));
  assert.equal(verifyOwnedApp({home}).status,'SOURCE_VERIFIED');
 });
 test('corrupt preexisting artifact blocks overwrites',async()=>{
