@@ -128,7 +128,7 @@ test('the CLI keeps its state outside the repository and lists tasks',async()=>{
  const s=JSON.parse(lines.at(-1));
  assert.equal(s.schema,'continuum-ccc1-status');
  assert.equal(s.tasks.length,1);
- assert.deepEqual({...s.tasks[0],taskId:null},{taskId:null,state:'DRAFT',waitingForOwner:false,goal:TRIPLE,question:null,confirmed:null,uncheckedAlternatives:0});
+ assert.deepEqual({...s.tasks[0],taskId:null},{taskId:null,state:'DRAFT',waitingForOwner:false,goal:TRIPLE,question:null,confirmed:null,uncheckedAlternatives:0,review:null});
 });
 
 test('an idle cycle refreshes the code index only when asked, and probes again only what changed',async()=>{
