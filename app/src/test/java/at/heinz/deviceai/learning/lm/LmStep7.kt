@@ -27,8 +27,8 @@ object LmStep7 {
     const val MANIFEST = "docs/evidence/lm1-20261022/step7-new-docs.tsv"
     const val OVERLAP_BYTES = 50
     /** Pinned in the pre-registration commit, before any model was scored on NEW or on the items. */
-    const val NEW_SHA256 = ""
-    const val ITEMS_SHA256 = ""
+    const val NEW_SHA256 = "2027cbbc274b3c76742da45d03d668195173b9487972d2adf4451b6214cd156b"
+    const val ITEMS_SHA256 = "6672edb9671cccc02e5b25cedbfb049637c7faa153ee194c704cf5a60c10cade"
     const val POSITIONS = 2000
     const val PROMPTS = 40
     const val GENERATED_BYTES = 120

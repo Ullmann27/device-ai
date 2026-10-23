@@ -268,6 +268,70 @@ Zusätzlich werden erfasst:
 - Der nächste Zyklus hat eigene, neu eingefrorene Daten und wird vor jedem Lauf registriert. Er prüft, ob mehr Daten, längeres Training und ein größeres Vokabular den Abstand zum n-Gramm schließen. Dazu kommt ein Hybrid aus n-Gramm und neuronalem Modell (NF-6b).
 - Der LM1-TEST ist damit verbraucht und wird nicht erneut für Entscheidungen verwendet.
 
+### 7b. Vorregistrierung Schritt 7: Textgenerierung und Anweisungsverarbeitung auf neuen Daten (eingetragen 23.10.2026, vor jeder Bewertung)
+
+Auftrag: M4/M5, Abschnitt 3, Punkt 7 („Prüfe danach auf getrennten neuen Testdaten die Fähigkeiten zur Textgenerierung und Anweisungsverarbeitung“). Code: `app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7.kt` (Commit `86d4fd52`, Tests 7/7). Der LM1-TEST wird nicht berührt.
+
+**Modelle (fest)**
+- LM1-GM-v512, Epoche 8, Seeds 1–3: die TEST-Checkpoints `7a0af1e9…`, `ad117ed5…`, `44c4d4f3…`.
+- LM1-TM-v512, Epoche 8, Seeds 1–3: `e77c39a0…`, `3ff091fa…`, `5abe2416…`.
+- Baselines aus TRAIN: Kneser-Ney 7, Unigramm, CDX1 mit 3 Epochen (Seeds 1–3), häufigstes Wort, Wort-Bigramm.
+
+**Neue Daten NEW (eingefroren)**
+- 25 Markdown-Dokumente, die es beim Korpus-Commit `1d92db03` noch nicht gab. Sie sind per Blob-ID in `docs/evidence/lm1-20261022/step7-new-docs.tsv` festgelegt.
+- Ausgeschlossen sind dieser Bericht und der NF-Bericht. Beide stammen vom Experimentator und beschreiben genau diese Modelle; sie werden noch bearbeitet, und diese Vorregistrierung steht darin.
+- Datenschutzfilter und Segmentierung sind dieselben wie bei LM1.
+- Entfernt wurden 10 Segmente, die ein 50-Byte-Fenster mit dem LM1-Korpus teilen. Wiederholungen gab es keine.
+- Ergebnis: **1.278 Segmente, 242.488 Bytes, SHA-256 `2027cbbc274b3c76742da45d03d668195173b9487972d2adf4451b6214cd156b`.**
+
+**Anweisungspaare (eingefroren)**
+- 200 Paare in 5 Familien zu je 40:
+  - erstes oder letztes Wort einer Liste;
+  - Groß- oder Kleinschreibung;
+  - größere oder kleinere Zahl;
+  - „Ist m größer/kleiner als n?“ mit ja/nein;
+  - Nachfolger oder Vorgänger einer Zahl.
+- Beide Anweisungen eines Paares teilen Eingabe und Kandidaten, verlangen aber verschiedene Antworten.
+- **SHA-256 `6672edb9671cccc02e5b25cedbfb049637c7faa153ee194c704cf5a60c10cade`.**
+
+**Messungen**
+- **A1:** BPB auf NEW.
+- **A2:** gieriges nächstes Wort an 2.000 festen Wortanfängen.
+  - Eine Position ist ein Wortanfang nach genau einem Leerzeichen, mit mindestens 16 Bytes Kontext.
+  - Die Eingabe endet vor dem Leerzeichen. So zerlegt der BPE-Tokenizer sie genau wie im Training.
+  - Richtig ist eine Position nur, wenn „ Wort“ vollständig erzeugt wird und das Wort danach endet.
+- **A3:** 40 Anfänge von NEW-Segmenten (20–60 Zeichen), je 120 Bytes Fortsetzung.
+  - Erzeugt wird gierig und mit t = 0,8, top-k 40, festem Seed je Anfang.
+  - Kennzahlen: Anteil bekannter Wörter aus TRAIN, Anteil der 24-Byte-Fenster, die wörtlich in TRAIN vorkommen (Kopieren), und wiederholte Wort-3-Gramme.
+  - Als Referenz dient der echte Text.
+- **B:** Gewählt wird der Kandidat mit den wenigsten bedingten Bits nach der Anweisung. Je Paar wird gezählt:
+  - **both:** beide Anweisungen richtig;
+  - **swapped:** beide so beantwortet, als wären die Anweisungen vertauscht.
+  - Wer die Anweisung nicht liest, kann nie beide richtig haben.
+
+**Entscheidungsregeln**
+- **A1:**
+  - „LM1 schlägt CDX1 auf NEW“, wenn jeder GM-Seed unter jedem CDX1-Seed liegt.
+  - Gegen KN-7 gilt dieselbe Regel; sonst wird ein negatives Ergebnis berichtet.
+- **A2:** „LM1 sagt das nächste Wort besser vorher als X“ (X = KN-7 oder Wort-Bigramm) gilt, wenn für jeden GM-Seed
+  - mehr Positionen nur LM1 richtig hat als nur X,
+  - und der exakte McNemar-Test p < 0,01 ergibt.
+- **B:** „LM1 verarbeitet diese Anweisungen“ gilt, wenn für jeden GM-Seed
+  - both − swapped ≥ 20 ist (10 % der Paare),
+  - und der einseitige Vorzeichentest p < 0,01 ergibt.
+  - Dieselbe Regel wird zum Vergleich für TM angewandt.
+- **Gegenprobe des Messgerüsts:** Unigramm, KN-7 (6 Byte Kontext) und CDX1 (8 Byte) können die Anweisung nicht sehen und müssen both = swapped = 0 liefern. Sonst ist das Gerüst fehlerhaft und B ungültig.
+- **A3** ist beschreibend und hat keine Regel. Flüssigkeit, Zusammenhang oder Verständnis werden nicht behauptet.
+
+**Erwartung (vorab)**
+- A1 wie auf TEST.
+- B auf Zufallsniveau: LM1 hat nur Projektdokumentation und nie Anweisungen gesehen.
+
+**Grenzen**
+- Es gibt einen einzigen Lauf.
+- Die Anweisungsfamilien sind einfach und künstlich.
+- NEW stammt aus demselben Projekt; es ist zeitlich und inhaltlich verschoben, aber kein fremder Text.
+
 ## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – getestet
 
 - Bausteine: EnvelopeV1/GoalSpec (`ccc1-envelope`), hash-verkettetes Journal mit HMAC (`ccc1-journal`), Fähigkeitsprüfung (`ccc1-gate`), Quittungsprüfer (`ccc1-verifier`), Wiederanlauf (`ccc1-recovery`), Dialogsteuerung (`ccc1-orchestrator`), Zielinterpretation mit austauschbarem Sprachkern (`ccc1-interpreter`).
