@@ -1,0 +1,25 @@
+{
+ "schema": "continuum-design-registration",
+ "version": 1,
+ "note": "Frozen position of the start screen inside each reference image (device frame). Found once with --search (full-resolution edge correlation); every later comparison uses it so successive designs are measured at the same place.",
+ "phone": {
+  "offsetPx": [
+   115,
+   110
+  ],
+  "reference": "reference-phone.png",
+  "fullResolutionEdgeCorrelation": 0.237,
+  "determinedFrom": "size-412x861.png",
+  "determinedAtCommit": "21c231de (JVM preview, density 2)"
+ },
+ "wide": {
+  "offsetPx": [
+   78,
+   41
+  ],
+  "reference": "reference-fold.png",
+  "fullResolutionEdgeCorrelation": 0.203,
+  "determinedFrom": "size-840x649.png",
+  "determinedAtCommit": "21c231de (JVM preview, density 2)"
+ }
+}

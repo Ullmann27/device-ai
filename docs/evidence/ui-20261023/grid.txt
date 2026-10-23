@@ -1,0 +1,16 @@
+# Grid over the v6 renderer: aura x core halo x rim strength (lowsum = phone HERO + Fold HERO + Fold BRAND low-frequency difference)
+g-a0.0-c1.0-r0.6 lowsum 70.0 phoneHero 37.6/24.3/0.092 foldHero 41.3/26.5/0.054 foldBrand 35.4/19.2/0.123
+g-a0.2-c1.0-r0.4 lowsum 68.9 phoneHero 37.4/24.2/0.091 foldHero 40.9/26.0/0.054 foldBrand 35.3/18.7/0.123
+g-a0.2-c1.0-r0.6 lowsum 69.2 phoneHero 37.5/24.3/0.091 foldHero 40.9/26.0/0.054 foldBrand 35.5/18.9/0.123
+g-a0.35-c0.7-r0.6 lowsum 69.3 phoneHero 37.6/24.1/0.091 foldHero 41.0/25.9/0.054 foldBrand 35.9/19.3/0.123
+g-a0.35-c0.7-r1.0 lowsum 70.2 phoneHero 37.9/24.4/0.092 foldHero 41.0/26.0/0.055 foldBrand 36.3/19.8/0.124
+g-a0.35-c1.0-r0.6 lowsum 69.2 phoneHero 37.6/24.3/0.091 foldHero 40.7/25.7/0.054 foldBrand 35.9/19.2/0.123
+g-a0.35-c1.0-r1.0 lowsum 70.2 phoneHero 37.9/24.6/0.092 foldHero 40.8/25.8/0.055 foldBrand 36.3/19.8/0.124
+g-a0.7-c0.7-r0.6 lowsum 71.4 phoneHero 37.9/24.5/0.091 foldHero 41.1/25.9/0.054 foldBrand 37.4/21.0/0.123
+g-a0.7-c0.7-r1.0 lowsum 72.5 phoneHero 38.3/24.8/0.092 foldHero 41.2/26.0/0.055 foldBrand 37.8/21.7/0.124
+g-a0.7-c1.0-r0.6 lowsum 71.4 phoneHero 38.0/24.6/0.091 foldHero 40.9/25.8/0.054 foldBrand 37.4/21.0/0.123
+g-a0.7-c1.0-r1.0 lowsum 72.5 phoneHero 38.3/24.9/0.092 foldHero 41.0/25.9/0.055 foldBrand 37.8/21.7/0.124
+g-a1.0-c0.7-r0.6 lowsum 74.2 phoneHero 38.5/25.0/0.091 foldHero 41.7/26.4/0.054 foldBrand 39.0/22.8/0.123
+g-a1.0-c0.7-r1.0 lowsum 75.3 phoneHero 38.8/25.3/0.092 foldHero 41.8/26.5/0.055 foldBrand 39.4/23.5/0.124
+g-a1.0-c1.0-r0.6 lowsum 74.1 phoneHero 38.5/25.1/0.091 foldHero 41.5/26.2/0.054 foldBrand 39.0/22.8/0.123
+g-a1.0-c1.0-r1.0 lowsum 75.3 phoneHero 38.8/25.4/0.092 foldHero 41.5/26.4/0.055 foldBrand 39.4/23.5/0.124

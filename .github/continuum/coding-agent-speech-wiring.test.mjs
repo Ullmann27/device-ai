@@ -11,8 +11,10 @@ const tests=read('app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterT
 const builder=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
 
 test('coding agent has one integrated entry from Android home, no second app',()=>{
-  assert.match(activity,/CODING-AGENT · SPRACHE & APP-IDEEN/);
-  assert.match(activity,/setOnClickListener \{ showDevelopmentDialog\(\) \}/);
+  // start screen (label, card or navigation "Entwickeln") -> development center -> coding-agent dialog
+  assert.match(activity,/Slot\.LABEL_DEVELOPING -> showDevelopmentCenter\(\)/);
+  assert.match(activity,/ContinuumWorkArea\.ENTWICKELN -> showDevelopmentCenter\(\)/);
+  assert.match(activity,/CenterAction\("ENTWICKLUNGSAUFGABE · STARTEN", accent = true\) \{ showDevelopmentDialog\(\) \}/);
   assert.match(activity,/CONTINUUM.*Teamleiter|ContinuumDeviceTeamleaderScheduler/);
 });
 

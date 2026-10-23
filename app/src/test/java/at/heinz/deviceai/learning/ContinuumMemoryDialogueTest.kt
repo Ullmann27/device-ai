@@ -116,6 +116,136 @@ class ContinuumMemoryDialogueTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun inventedAlphanumericTermMustNotRetrieveUnrelatedWikipediaSources() {
+        val records=listOf(
+            "Die Physik untersucht Quantenmechanik und andere Phänomene.",
+            "Statistik ist die Lehre von quantitativen Informationen.",
+            "Bernard Widrow erforschte technische Lernverfahren."
+        ).mapIndexed { i, excerpt ->
+            LearningExperienceFactory.create(
+                LearningExperienceType.SOURCE_TEXT,
+                LearningProvenance.MENTOR_WIKIPEDIA,
+                LearningTrustClass.SOURCE_OBSERVATION,
+                LearningStatus.OBSERVED,
+                excerpt,
+                sourceRef="https://de.wikipedia.org/wiki/Quelle${i+1}",
+                now=1L
+            )
+        }
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Quantenkarussell987",records).isEmpty())
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Was weißt du über Quantenkarussell987?",records).isEmpty())
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Quantenkarussell987", "Quantitative Statistik und Quantenmechanik"))
+    }
+
+    @Test fun exactGermanTechnicalTermKeepsItsSourceWithoutOtherErrorTexts() {
+        val title="Backpropagation heißt auch Fehlerrückführung."
+        val unrelated="Softwaretest dient dazu, Fehler in Programmen zu erkennen."
+        val vagueCompound="Pädagogik ist die Lehre von Erziehung und der Führung eines Knaben."
+        val records=listOf(title,unrelated,vagueCompound,
+            "Aufrichtigkeit bedeutet die ehrliche Darstellung des eigenen Wissens.")
+            .mapIndexed { i, excerpt ->
+                LearningExperienceFactory.create(
+                    LearningExperienceType.SOURCE_TEXT,
+                    LearningProvenance.MENTOR_WIKIPEDIA,
+                    LearningTrustClass.SOURCE_OBSERVATION,
+                    LearningStatus.OBSERVED,
+                    excerpt,
+                    sourceRef="https://de.wikipedia.org/wiki/Beleg${i+1}",
+                    now=1L
+                )
+            }
+        val hits=ContinuumMemoryDialogue.rank(fixture(),"Fehlerrückführung",records)
+        assertEquals(1,hits.size)
+        assertEquals(title,hits.single().text)
+        assertEquals(1.0,ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",title),0.0)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",unrelated))
+        assertTrue(ContinuumMemoryDialogue.wordEvidence("Fehlerrückführung",vagueCompound)>=0.82)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",vagueCompound))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung",title))
+        assertTrue(ContinuumMemoryDialogue.wordEvidence(
+            "Pflanzen", "Die Pflanze wächst.") >=0.8)
+        assertTrue(ContinuumMemoryDialogue.wordEvidence(
+            "Schlüssel", "Der Haustürschlüssel ist sicher.") >=0.82)
+    }
+
+    @Test fun technicalMultiTermQuestionsCannotBorrowOnlyOneSourceAnchor() {
+        val unrelated="Quantenmechanik ist ein Teilgebiet der Physik."
+        val supported="Backpropagation heißt auch Fehlerrückführung."
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Quantenkarussell987 und Quantenmechanik",unrelated))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung und Backpropagation",supported))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung und Softwaretest",supported))
+        val record=LearningExperienceFactory.create(
+            LearningExperienceType.SOURCE_TEXT,
+            LearningProvenance.MENTOR_WIKIPEDIA,
+            LearningTrustClass.SOURCE_OBSERVATION,
+            LearningStatus.OBSERVED,unrelated,
+            sourceRef="https://de.wikipedia.org/wiki/Quantenmechanik",now=1L)
+        assertTrue(ContinuumMemoryDialogue.rank(fixture(),
+            "Erkläre Quantenkarussell987 und Quantenmechanik",listOf(record)).isEmpty())
+    }
+
+    @Test fun identifiersWithDigitsDemandExactSourceEvidence() {
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "SWB1","SWB2 verarbeitet die Daten."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "CSX1","CSX2 ist ein Forschungsmodell."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "SHA256","SHA257 wurde gespeichert."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CDX1","SWB1 hat trainierbare Gewichte."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CDX1","SWB1 und CDX1 sind getrennte Lernkerne."))
+    }
+
+    @Test fun longQuestionVerbsCannotBlockValidSourceEvidence() {
+        val citation="Backpropagation heißt auch Fehlerrückführung."
+        for (query in listOf(
+            "Wie funktioniert Fehlerrückführung?",
+            "Beschreibe und analysiere Fehlerrückführung",
+            "Kannst du Fehlerrückführung charakterisieren?",
+            "Was unterscheidet Fehlerrückführung und Backpropagation?"
+        )) assertTrue(query,ContinuumMemoryDialogue.sourceTermEvidence(query,citation))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wie funktioniert Quantenkarussell987?",citation))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche Fehlerrückführung und Softwaretest",citation))
+    }
+
+    @Test fun sourceOnlyArgonAnchorRegressionAndDirectionalCompounds() {
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist Osmose?", "Osmose bezeichnet einen Stofftransport."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist Osmose?", "Ein anderer Prozess mit anderem Namen."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wie funktioniert Osmose in Graz?", "Osmose wird erklärt."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was bedeutet Osmose?", "Osmose bezeichnet einen Stofftransport."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was ist der Schlüssel?", "Der Haustürschlüssel ist sicher."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung", "Die Rückführung ist eindeutig."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Speicherplan", "Speicherplatz wird beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Pflanzen", "Die Pflanze wächst."))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CSX1","SWB1 und CSX2 sind beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Vergleiche SWB1 und CSX1","SWB1 und CSX1 sind beschrieben."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Fehlerrückführung", java.text.Normalizer.normalize(
+                "Fehlerrückführung",java.text.Normalizer.Form.NFD)))
+    }
+
     @Test fun germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract() {
         val sentence = "Sternenreise ist mein Forschungsprojekt"
         val evidence = ContinuumMemoryDialogue.wordEvidence("Wie heißt mein Projekt?", sentence)

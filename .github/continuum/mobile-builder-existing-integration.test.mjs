@@ -31,8 +31,9 @@ test('mobile builder is added to existing worker chat routing', () => {
 
 test('builder stays in the existing agent UI and opens only an allowlisted Android activity', () => {
   assert.match(agent, /CenterAction\("HANDY-BUILDER · TERMUX"\) \{ openMobileBuilder\(\) \}/);
-  assert.match(agent, /BAUMEISTER · HANDY-BUILDER/);
-  assert.match(agent, /actionButton\("⚒ Handy-Builder · Termux"\)/);
+  // second entry from the start screen: navigation "Mehr" -> "Handy-Builder · Termux"
+  assert.match(agent, /"System & Sicherheit", "Handy-Builder · Termux"/);
+  assert.match(agent, /4 -> openMobileBuilder\(\)/);
   assert.match(agent, /ContinuumMobileBuilderRoute\.destination\(BuildConfig\.APPLICATION_ID\)/);
   assert.match(agent, /Intent\(\)\.setClassName\(destination\.packageName, destination\.className\)/);
   assert.match(agent, /catch \(_:\s*ActivityNotFoundException\)/);

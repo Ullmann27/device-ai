@@ -9,6 +9,12 @@ const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const activity = read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const spec = read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
 const manifest = read('app/src/main/AndroidManifest.xml');
+const member = signature => {
+  const start = activity.indexOf(signature);
+  assert.ok(start >= 0, 'missing ' + signature);
+  const next = activity.indexOf('\n    private fun ', start + signature.length);
+  return activity.slice(start, next < 0 ? undefined : next);
+};
 
 test('exactly five owner-visible work areas remain in fixed order', () => {
   for (const name of ['START', 'CHAT', 'LERNEN', 'ENTWICKELN', 'MEHR']) {
@@ -19,7 +25,11 @@ test('exactly five owner-visible work areas remain in fixed order', () => {
 });
 
 test('phone bottom navigation stays outside conversation pane and above system bar', () => {
-  assert.match(activity, /buildConversationPane\(wide = false\)[\s\S]*?MATCH_PARENT, 0, 1f[\s\S]*?root\.addView\(\s*buildBottomWorkAreaBar\(\)/);
+  const ui = member('private fun buildUi(): View');
+  assert.match(ui, /val root = android\.widget\.FrameLayout\(this\)/);
+  assert.match(ui, /phonePane = buildConversationPane\(wide = false\)/);
+  assert.match(ui, /bottomMargin = phoneNavHeight/);
+  assert.match(ui, /root\.addView\(buildBottomWorkAreaBar\(\), android\.widget\.FrameLayout\.LayoutParams\([\s\S]*?phoneNavHeight,[\s\S]*?Gravity\.BOTTOM/);
   assert.match(activity, /root\.setOnApplyWindowInsetsListener/);
   assert.match(activity, /bottomWorkAreaBar\?\.visibility/);
   assert.match(activity, /ContinuumWorkAreaNavigationSpec\.showBottomBar/);
@@ -36,18 +46,20 @@ test('all navigation taps route to existing trusted screens', () => {
   assert.match(activity, /contentDescription = ContinuumWorkAreaNavigationSpec\.accessibilityLabel\(destination\)/);
 });
 
-test('home work areas are visible without opening expert-only controls', () => {
-  assert.match(activity, /DEINE ARBEITSBEREICHE · DIREKT ÖFFNEN/);
-  assert.match(activity, /workAreaQuickRow/);
-  assert.match(activity, /setOnClickListener \{ navigateWorkArea\(destination\) \}/);
-  assert.match(activity, /nexusExpertExpanded = false/);
+test('home work areas are reachable without expert-only controls', () => {
+  const bar = member('private fun buildBottomWorkAreaBar(): View');
+  assert.match(bar, /for \(destination in ContinuumWorkAreaNavigationSpec\.destinations\)/);
+  assert.match(bar, /setOnClickListener \{ navigateWorkArea\(destination\) \}/);
+  assert.match(bar, /contentDescription = ContinuumWorkAreaNavigationSpec\.accessibilityLabel\(destination\)/);
+  assert.doesNotMatch(activity, /nexusExpertExpanded|Weitere KI-Funktionen anzeigen/);
 });
 
-test('desktop sidebar offers same five work areas without second bottom bar', () => {
-  assert.match(activity, /buildSidebar\(\)/);
-  assert.match(activity, /sectionLabel\("ARBEITSBEREICHE"/);
-  assert.match(activity, /for \(destination in ContinuumWorkAreaNavigationSpec\.destinations\)/);
-  assert.match(activity, /buildWorkAreaButton\(destination, compact = false\)/);
+test('Fold rail offers the five work areas without a second bottom bar', () => {
+  const rail = member('private fun buildRail(): View');
+  for (const area of ['START', 'CHAT', 'LERNEN', 'ENTWICKELN'])
+    assert.match(rail, new RegExp('navigateWorkArea\\(ContinuumWorkArea\\.' + area + '\\)'));
+  assert.match(rail, /showMoreWorkAreas\(\)/);
+  assert.match(activity, /buildRail\(\),/);
   assert.match(spec, /!wide && !keyboardVisible/);
 });
 
@@ -57,24 +69,29 @@ test('existing chat, learning monitoring and owner permission boundaries remain'
   assert.match(activity, /private fun showDevelopmentCenter\(\)/);
   assert.match(activity, /private fun openMobileBuilder\(\)/);
   assert.match(activity, /startActivity\(Intent\(this@AgentActivity, ContinuumTrainingMonitorActivity::class\.java\)\)/);
-  assert.match(activity, /setOnClickListener \{ openMobileBuilder\(\) \}/);
+  assert.match(member('private fun showMoreWorkAreas()'), /4 -> openMobileBuilder\(\)/);
   assert.match(manifest, /android:name="\.AgentActivity"/);
   assert.doesNotMatch(spec, /Runtime\.getRuntime|ProcessBuilder|FileOutputStream|train\(|startActivity|deleteRecursively/);
 });
 
 
-test('foldable sidebar scrolls to reach all actions at short heights', () => {
-  assert.match(activity, /private fun buildSidebar\(\): View/);
-  assert.match(activity, /\/\/ On compact foldable windows this sidebar has more actions than viewport height\./);
-  assert.match(activity, /return ScrollView\(this\)\.apply \{/);
-  assert.match(activity, /addView\(\s*side,\s*android\.widget\.FrameLayout\.LayoutParams/);
+test('Fold rail and start screen reach all actions at short heights', () => {
+  assert.match(member('private fun buildRail(): View'), /element\.targets\(\(b - t\) \/ density\)/);
+  assert.match(member('private fun buildConversationPane(wide: Boolean): View'), /val dashboardScroll = ScrollView\(this\)/);
 });
 
-test('quick actions adapt to large fonts and rotated compact screens', () => {
-  assert.match(spec, /fun quickActionColumns\(usableWidthDp: Int, fontScale: Float\): Int/);
-  assert.match(spec, /fontScale in 0\.5f\.\.1\.25f/);
-  assert.match(activity, /val quickColumns = ContinuumWorkAreaNavigationSpec\.quickActionColumns\(/);
-  assert.match(activity, /\.chunked\(quickColumns\)/);
+test('start screen adapts to large fonts, rotated compact screens and the unfolded Fold', () => {
+  const layout = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt');
+  // owner decision 22.10.2026: the unfolded Fold uses the wide composition also with a larger display zoom
+  assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\) = widthDp >= 600f && heightDp >= 480f/);
+  assert.match(activity, /windowHeightDp = resources\.configuration\.screenHeightDp\.toFloat\(\)/);
+  // drawn elements scale with their slot, otherwise content overflows every window that is not exactly 412/840 dp
+  const home = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
+  assert.match(home, /val k = density \* \(layoutSpec\?\.scale \?: 1f\)\n\s+canvas\.scale\(k, k\)/);
+  assert.match(home, /element\.draw\(painter, width \/ k, height \/ k, state\)/);
+  assert.match(activity, /val wide = at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isWide\(/);
+  assert.match(activity, /home\.configure\(windowWidth, wide, railOffset = /);
+  assert.match(read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt'), /fontScale\.coerceIn\(\.85f, 1\.3f\)/);
 });
 
 test('recreated activity preserves chat selection and draft without persistent More selection', () => {
@@ -84,4 +101,14 @@ test('recreated activity preserves chat selection and draft without persistent M
   assert.match(activity, /refreshConversationLayout\(\)\s*refreshWorkAreaSelection\(\)/);
   assert.match(spec, /fun selectionAfterTap\(current: ContinuumWorkArea, tapped: ContinuumWorkArea\)/);
   assert.match(activity, /activeWorkArea = ContinuumWorkAreaNavigationSpec\.selectionAfterTap/);
+});
+
+test('design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics', () => {
+  const snapshot = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumUiSnapshot.kt');
+  assert.match(activity, /actionButton\("Startbildschirm für Design-Abnahme sichern"\)/);
+  assert.match(activity, /ContinuumUiSnapshot\.metrics\(this, homeView\?\.wide == true, homeView\?\.layoutScale\)/);
+  assert.match(snapshot, /if \(Build\.VERSION\.SDK_INT < 29\) return null/);
+  for (const field of ['screenWidthDp', 'screenHeightDp', 'densityDpi', 'fontScale', 'wideLayout', 'layoutScale', 'insetsPx'])
+    assert.match(snapshot, new RegExp(`put\\("${field}"`));
+  assert.doesNotMatch(read('app/src/main/AndroidManifest.xml'), /WRITE_EXTERNAL_STORAGE|READ_MEDIA_IMAGES/);
 });

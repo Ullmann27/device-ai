@@ -31,7 +31,8 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             operationName != prefs.getString(JOB_OPERATION, null)
         ) return
 
-        val operation = try {
+        val codingOrder = operationName == "CODE_TEST"
+        val operation = if (codingOrder) null else try {
             ContinuumMobileBuildPlan.Operation.valueOf(operationName)
         } catch (_: IllegalArgumentException) {
             return
@@ -53,6 +54,22 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()
         val truncated = originalLength == null || originalLength > stdout.length.toLong()
 
+        if (codingOrder) {
+            val receipt = ContinuumMobileCodingJob.evaluate(
+                id, exitCode, errorCode, if (truncated) null else stdout
+            )
+            // Keep only the strictly validated summary; never persist raw Termux output,
+            // generated code, arbitrary paths or the full candidate patch.
+            prefs.edit()
+                .remove(JOB_ID)
+                .remove(JOB_OPERATION)
+                .remove(JOB_START)
+                .remove(LAST_SHA)
+                .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))
+                .commit()
+            return
+        }
+
         val payload = if (!truncated && stdout.length <= 32_768) {
             try { JSONObject(stdout) } catch (_: Exception) { null }
         } else null
@@ -65,7 +82,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val ownerCopyStatus = payload?.optJSONObject("ownerInstallCopy")?.optString("status")
 
         val outcome = ContinuumMobileResultPolicy.evaluate(
-            operation = operation,
+            operation = operation ?: return,
             exitCode = exitCode,
             termuxError = errorCode,
             reportedStatus = reportedStatus,

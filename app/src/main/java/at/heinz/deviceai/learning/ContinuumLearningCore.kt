@@ -722,6 +722,13 @@ class ContinuumLearningCore(
         ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
     }
 
+    /** Read-only CDX1 quality audit under the existing shared model lock. */
+    fun intelligenceAudit(
+        cancelled: () -> Boolean = { false }
+    ): ContinuumIntelligenceAudit.Report = synchronized(CORE_LOCK) {
+        ContinuumIntelligenceOnDevice.run(this, cancelled)
+    }
+
     /** Inspect only filenames and metadata; never writes, trains or restores. */
     fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).storageEvidence()
@@ -818,6 +825,12 @@ class ContinuumLearningCore(
         appendAudit("snapshot-import",accepted,0,intentBefore,intentAfter,semanticBefore,semanticAfter,emptyList(),reason)
         ContinualLearningReport("snapshot-import",accepted,0,replay.size,intentBefore,intentAfter,
             semanticBefore,semanticAfter,emptyList(),reason)
+    }
+
+    /** Metadata of every stored experience (type, provenance, creation time) for the start-screen statistics.
+     * Read-only and content-free: no text of owner facts or sources leaves the core through this call. */
+    fun experienceTimeline():List<Triple<LearningExperienceType,LearningProvenance,Long>> = synchronized(CORE_LOCK) {
+        store.all().map { Triple(it.type,it.provenance,it.createdAt) }
     }
 
     /** Most recent training/import/rollback decisions (newest first) with their measurements. */

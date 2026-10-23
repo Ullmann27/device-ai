@@ -8,11 +8,22 @@ val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGN
 
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
+val deviceAiDesignPreview = providers.gradleProperty("deviceAiDesignPreview").orNull == "true"
+val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
+// Owner-requested in-place update of the EXISTING signed Mentor Pair app. Never used by disposable previews.
+val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate").orNull == "true"
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
+// Preserve the original two-variant invariant and enforce mutual exclusion for all previews.
 require(!(deviceAiPreview && deviceAiMentorPreview)) {
     "Use only one preview package ID at a time."
+}
+require(listOf(deviceAiPreview, deviceAiMentorPreview, deviceAiDesignPreview, deviceAiFeaturePreview).count { it } <= 1) {
+    "Use only one preview package ID at a time."
+}
+require(!deviceAiOwnerSignedUpdate || (deviceAiMentorPreview && !mentorSigningPath.isNullOrBlank() && !mentorSigningPassword.isNullOrBlank())) {
+    "Owner signed update requires the existing Mentor Pair package and persistent signing credentials."
 }
 
 android {
@@ -38,11 +49,13 @@ android {
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
         // as an update. Main/production keeps its existing version.
-        versionCode = if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
-        versionName = if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        versionCode = if (deviceAiOwnerSignedUpdate) 16 else if (deviceAiFeaturePreview) 9 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
+        versionName = if (deviceAiOwnerSignedUpdate) "0.3.15" else if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
-        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview
+        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
+            deviceAiFeaturePreview -> "Device AI Continuum Test"
+            deviceAiDesignPreview -> "Device AI Design"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
             else -> "Device AI"
@@ -51,7 +64,12 @@ android {
 
     buildTypes {
         getByName("debug") {
-            if (deviceAiMentorPreview) {
+            if (deviceAiFeaturePreview) {
+                applicationIdSuffix = ".featurepreview"
+            } else if (deviceAiDesignPreview) {
+                // Fresh, independent installation; never alters owner or earlier preview data.
+                applicationIdSuffix = ".designpreview"
+            } else if (deviceAiMentorPreview) {
                 // Independent signing and app storage: never overwrite the tested Sol preview.
                 applicationIdSuffix = ".mentorpaired"
                 if ("mentorPreview" in signingConfigs.names) {

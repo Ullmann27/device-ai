@@ -117,6 +117,7 @@ class AgentActivity : Activity() {
     )
 
     companion object {
+        @Volatile private var crashHandlerInstalled = false
         private const val SPEECH_REQUEST = 2207
         private const val MODEL_IMPORT_REQUEST = 2208
         private const val DEV_SOURCE_REQUEST = 2209
@@ -174,7 +175,7 @@ class AgentActivity : Activity() {
     private lateinit var localBadge: TextView
     // views of the open model center (null while it is closed)
     private var modelCardText: TextView? = null
-    private var localActionButton: Button? = null
+    private var localActionButton: TextView? = null
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
     private var installedModels: List<ImportedLocalModel> = emptyList()
@@ -189,7 +190,6 @@ class AgentActivity : Activity() {
     @Volatile private var activeBootstrapGate: ToolGate? = null
     @Volatile private var activeNeuralCancellation: java.util.concurrent.atomic.AtomicBoolean? = null
     private var hologramView: ContinuumHologramView? = null
-    private var hologramStatus: TextView? = null
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -246,18 +246,33 @@ class AgentActivity : Activity() {
         }
     }
     private var dashboardSection: View? = null
-    private var homeHeader: View? = null
     private var modeSection: View? = null
-    private val dashboardFeatures = ArrayList<View>()
-    private var nexusExpertPanel: LinearLayout? = null
-    private var nexusExpertExpanded = false
     private var conversationActive = false
     private var keyboardTitle: TextView? = null
     private var keyboardCompact = false
     // Navigation is presentation-only; no learning-state or tool permission mutation.
     private var activeWorkArea = ContinuumWorkArea.START
     private var bottomWorkAreaBar: View? = null
-    private val workAreaButtons = linkedMapOf<ContinuumWorkArea, TextView>()
+    // Reference-design start screen (PR #74): real data only, see ContinuumDashboardCollector.
+    private var homeView: at.heinz.deviceai.ui.ContinuumHomeView? = null
+    private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
+    private var railView: at.heinz.deviceai.ui.ContinuumElementView? = null
+    private var chatColumn: LinearLayout? = null
+    private val diagnostics by lazy {
+        at.heinz.deviceai.diagnostics.ContinuumDiagnostics(java.io.File(filesDir, "diagnostics/issues-v1.tsv"),
+            BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")")
+    }
+    private val dashboardCollector by lazy { ContinuumDashboardCollector(applicationContext, diagnostics) }
+    private val responseTimesMs = ArrayDeque<Long>()
+    private var requestStartedAt = 0L
+    private var dashboardCollecting = false
+    private var knownOpenIssues: Set<String>? = null
+    private val dashboardRefresh = object : Runnable {
+        override fun run() {
+            refreshDashboard()
+            mainHandler.postDelayed(this, 5_000L)
+        }
+    }
 
     private val modeButtons = linkedMapOf<AssistantMode, Button>()
     private var mode = AssistantMode.AUTO
@@ -321,6 +336,7 @@ class AgentActivity : Activity() {
 
         window.statusBarColor = BG
         window.navigationBarColor = BG
+        installCrashDiagnostics()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         bootstrapMemory = BootstrapMemoryStore(this)
@@ -422,6 +438,8 @@ class AgentActivity : Activity() {
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
+        mainHandler.removeCallbacks(dashboardRefresh)
+        mainHandler.post(dashboardRefresh)
     }
 
     override fun onPause() {
@@ -432,6 +450,7 @@ class AgentActivity : Activity() {
         approvedModelWebSession.getAndSet(null)?.cancel()
         activeWebResearchSession?.cancel()
         mainHandler.removeCallbacks(foregroundLearningCheck)
+        mainHandler.removeCallbacks(dashboardRefresh)
         super.onPause()
     }
 
@@ -479,41 +498,63 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
-        val wide = resources.configuration.screenWidthDp >= 700 && resources.configuration.screenHeightDp >= 500
-        val root = LinearLayout(this).apply {
-            orientation = if (wide) LinearLayout.HORIZONTAL else LinearLayout.VERTICAL
+        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(
+            resources.configuration.screenWidthDp.toFloat(),
+            resources.configuration.screenHeightDp.toFloat()
+        )
+        // The start pane must occupy the screen independently of its contents.
+        // A weighted vertical LinearLayout previously collapsed the phone pane
+        // on the owner's real Fold screen, placing the navigation at the top.
+        val root = android.widget.FrameLayout(this).apply {
             setBackgroundColor(BG)
+            layoutParams = android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            )
         }
-
+        val phonePane: View?
+        val phoneNavHeight: Int
         if (wide) {
-            root.addView(
-                buildSidebar(),
-                LinearLayout.LayoutParams(dp(292), LinearLayout.LayoutParams.MATCH_PARENT)
-            )
-            root.addView(
-                buildConversationPane(wide = true),
-                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
-            )
+            phonePane = null
+            phoneNavHeight = 0
+            val wideContent = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setBackgroundColor(BG)
+            }
+            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+                railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
+            ))
+            wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ))
+            root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            ))
         } else {
-            root.addView(
-                buildConversationPane(wide = false),
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
-                )
+            val navScale = resources.configuration.screenWidthDp /
+                at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
+            phoneNavHeight = dp(
+                (at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * navScale).toInt()
             )
-            root.addView(
-                buildBottomWorkAreaBar(),
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
+            phonePane = buildConversationPane(wide = false)
+            root.addView(phonePane, android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            ).apply { bottomMargin = phoneNavHeight })
+            root.addView(buildBottomWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                phoneNavHeight,
+                Gravity.BOTTOM
+            ))
         }
 
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             window.setDecorFitsSystemWindows(false)
             root.setOnApplyWindowInsetsListener { view, insets ->
-                val bars = insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                val bars = insets.getInsets(
+                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+                )
                 val ime = insets.getInsets(WindowInsets.Type.ime())
                 val viewport = ComposerUiPolicy.viewport(
                     bars.top, bars.bottom, ime.bottom,
@@ -524,11 +565,18 @@ class AgentActivity : Activity() {
                 ) {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
-                bottomWorkAreaBar?.visibility = if (
-                    ContinuumWorkAreaNavigationSpec.showBottomBar(
-                        wide, viewport.compactDashboard
-                    )
-                ) View.VISIBLE else View.GONE
+                val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
+                    wide, viewport.compactDashboard
+                )
+                bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
+                if (phonePane != null) {
+                    val paneParams = phonePane.layoutParams as android.widget.FrameLayout.LayoutParams
+                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                    if (paneParams.bottomMargin != requiredMargin) {
+                        paneParams.bottomMargin = requiredMargin
+                        phonePane.layoutParams = paneParams
+                    }
+                }
                 if (keyboardCompact != viewport.compactDashboard) {
                     keyboardCompact = viewport.compactDashboard
                     refreshConversationLayout()
@@ -540,103 +588,29 @@ class AgentActivity : Activity() {
         return root
     }
 
-    private fun buildSidebar(): View {
-        val side = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(18), dp(24), dp(18), dp(20))
-            setBackgroundColor(Color.rgb(10, 15, 23))
-        }
-
-        side.addView(textView("DEVICE AI", 12f, ACCENT, true))
-        side.addView(
-            textView("Persönlicher\nAndroid-Agent", 27f, TEXT, true).apply {
-                setPadding(0, dp(8), 0, dp(18))
-            }
-        )
-
-        side.addView(
-            actionButton("＋ Neue Sitzung", accent = true).apply {
-                setOnClickListener { newSession() }
-            },
-            matchWidth()
-        )
-
-        side.addView(sectionLabel("ARBEITSBEREICHE", top = 20))
-        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
-            side.addView(buildWorkAreaButton(destination, compact = false),
-                matchWidth(top = 7))
-        }
-        refreshWorkAreaSelection()
-
-        side.addView(sectionLabel("DEIN ASSISTENT", top = 24))
-        side.addView(
-            infoCard(
-                "Device AI",
-                "Fragen, recherchieren, Wissen lernen und Entwicklungsvorschläge sicher prüfen.",
-                "LOKAL"
-            ),
-            matchWidth(top = 8)
-        )
-
-        side.addView(sectionLabel("WERKZEUGE", top = 22))
-        side.addView(
-            actionButton("Lokaler Expertenmodus").apply {
-                setOnClickListener {
-                    startActivity(Intent(this@AgentActivity, MainActivity::class.java))
-                }
-            },
-            matchWidth(top = 8)
-        )
-
-        side.addView(
-            actionButton("Entwicklungsaufgabe").apply { setOnClickListener { showDevelopmentDialog() } },
-            matchWidth(top = 8)
-        )
-        side.addView(
-            actionButton("⚒ Handy-Builder · Termux").apply { setOnClickListener { openMobileBuilder() } },
-            matchWidth(top = 8)
-        )
-
-        val spacer = View(this)
-        side.addView(spacer, LinearLayout.LayoutParams(1, 0, 1f))
-
-        side.addView(textView("v${BuildConfig.VERSION_NAME} · kein Root", 11f, MUTED))
-        // On compact foldable windows this sidebar has more actions than viewport height.
-        // A scrolling container keeps the bottom tools and version label reachable.
-        return ScrollView(this).apply {
-            isFillViewport = true
-            setFillViewport(true)
-            clipToPadding = false
-            addView(
-                side,
-                android.widget.FrameLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
-    }
-
     private fun buildConversationPane(wide: Boolean): View {
-        val pane = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(
-                if (wide) dp(22) else dp(14),
-                if (wide) dp(20) else dp(14),
-                if (wide) dp(22) else dp(14),
-                dp(14)
-            )
-        }
+        val pane = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        dashboardSection = dashboard
-        // Reference-led mobile flow: brand -> transparent holographic hero ->
-        // live status -> actual feature tiles -> mode selection. The dashboard
-        // remains scrollable and the real composer/chat stay anchored below.
-        dashboard.addView(buildHeader(wide).also { homeHeader = it })
-        dashboard.addView(buildBootstrapCoreCard(), matchWidth(top = 10))
-        dashboard.addView(buildModeRow().also { modeSection = it }, matchWidth(top = 10))
+        // Start screen of the owner's reference images: one view per measured slot, real values only
+        // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
+        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it }) { slot, x, y ->
+            openHomeSlot(slot, x, y)
+        }
+        val windowWidth = resources.configuration.screenWidthDp.toFloat()
+        // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
+        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
+            windowHeightDp = resources.configuration.screenHeightDp.toFloat())
+        homeView = home
+        dashboard.addView(home, matchWidth())
+        // The former status badges are no longer shown (the reference screen has none). They stay initialised because
+        // existing update paths still write to them; device access, web consent and model state are in the system center.
+        buildStatusRow()
 
+        val details = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(dp(14), 0, dp(14), dp(10))
+        }
         planCard = verticalCard().apply {
             visibility = View.GONE
             setPadding(dp(14), dp(12), dp(14), dp(12))
@@ -646,28 +620,27 @@ class AgentActivity : Activity() {
             setPadding(0, dp(7), 0, 0)
         }
         planCard.addView(planText)
-        dashboard.addView(planCard, matchWidth(top = 10))
-
+        details.addView(planCard, matchWidth(top = 6))
         activityText = textView("Bereit", 12f, MUTED).apply {
             setPadding(dp(4), dp(8), dp(4), dp(7))
         }
-        dashboard.addView(activityText, matchWidth())
-        // The dashboard must scroll independently: otherwise its fixed-height cards
-        // can push the composer under the system navigation bar on narrow displays.
+        details.addView(activityText, matchWidth())
+        dashboard.addView(details, matchWidth())
         val dashboardScroll = ScrollView(this).apply {
             isFillViewport = false
             clipToPadding = false
-            setPadding(0, 0, 0, dp(6))
         }
         dashboardScroll.addView(dashboard, matchWidth())
         dashboardSection = dashboardScroll
-        pane.addView(
-            dashboardScroll,
-            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0,
-                1f)
-        )
+        pane.addView(dashboardScroll, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
 
-        keyboardTitle = textView("‹ START   ·   Device AI", 14f, CYAN, true).apply {
+        // Conversation column: shown for the "Chat" area (and while typing), never on top of the start screen.
+        val column = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(if (wide) dp(22) else dp(14), if (wide) dp(20) else dp(14), if (wide) dp(22) else dp(14), dp(14))
+        }
+        chatColumn = column
+        keyboardTitle = textView("‹ START   ·   Continuum", 14f, CYAN, true).apply {
             visibility = View.GONE
             minimumHeight = dp(44)
             gravity = Gravity.CENTER_VERTICAL
@@ -677,20 +650,21 @@ class AgentActivity : Activity() {
             setPadding(dp(4), dp(3), 0, dp(6))
             setOnClickListener { showHomeDashboard() }
         }
-        pane.addView(keyboardTitle, matchWidth())
+        column.addView(keyboardTitle, matchWidth())
+        column.addView(buildModeRow().also { modeSection = it }, matchWidth(top = 4))
 
         neuralMonitor = textView("NEURON · Bereit · Training per Knopf starten", 11f, CYAN, true).apply {
             contentDescription = "Neuronaler Lernfortschritt und Trainingsfehler"
             setPadding(dp(8), dp(5), dp(8), dp(3))
         }
-        pane.addView(neuralMonitor, matchWidth())
+        column.addView(neuralMonitor, matchWidth())
         neuralProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             progress = 0
             isIndeterminate = false
             contentDescription = "Fortschritt des lokalen neuronalen Trainings"
         }
-        pane.addView(neuralProgress, matchWidth())
+        column.addView(neuralProgress, matchWidth())
 
         chatScroll = ScrollView(this).apply {
             isFillViewport = true
@@ -703,64 +677,240 @@ class AgentActivity : Activity() {
             setPadding(0, dp(4), 0, dp(4))
         }
         chatScroll.addView(chatContainer, matchWidth())
-        pane.addView(
-            chatScroll,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1f
-            )
-        )
-
-        pane.addView(buildComposer(), matchWidth())
+        column.addView(chatScroll, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        column.addView(buildComposer(), matchWidth())
+        pane.addView(column, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
         refreshConversationLayout()
         return pane
     }
 
-    private fun buildHeader(wide: Boolean): View {
-        val header = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(3), dp(4), dp(3), dp(2))
+    /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
+    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(
+        resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
+
+    private fun buildRail(): View {
+        val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
+            resources.configuration.fontScale.coerceIn(.85f, 1.3f))
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element,
+            resources.configuration.screenWidthDp / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            isClickable = false
         }
-        val top = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
+        railView = drawn
+        val actions = listOf<Pair<String, () -> Unit>>(
+            "Start" to { navigateWorkArea(ContinuumWorkArea.START) },
+            "Chat" to { navigateWorkArea(ContinuumWorkArea.CHAT) },
+            "Lernen" to { navigateWorkArea(ContinuumWorkArea.LERNEN) },
+            "Entwickeln" to { navigateWorkArea(ContinuumWorkArea.ENTWICKELN) },
+            "Analysieren" to { showResearchModeDialog() },
+            "Speicher" to { showMemoryCenter() },
+            "System" to { showSystemCenter() },
+            "Mehr" to { showMoreWorkAreas() }
+        )
+        val density = resources.displayMetrics.density
+        val container = object : android.widget.FrameLayout(this) {
+            override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+                super.onLayout(changed, l, t, r, b)
+                val targets = element.targets((b - t) / density)
+                for (i in 1 until childCount) {
+                    val (top, bottom) = targets[i - 1]
+                    getChildAt(i).layout(0, (top * density).toInt(), r - l, (bottom * density).toInt())
+                }
+            }
         }
-        top.addView(ImageView(this).apply {
-            setImageResource(R.drawable.device_ai_holo_logo)
-            contentDescription = "Device AI · holografisches Logo"
-            scaleType = ImageView.ScaleType.FIT_CENTER
-        }, LinearLayout.LayoutParams(dp(54), dp(54)))
-        val titleBox = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_VERTICAL
+        container.addView(drawn, android.widget.FrameLayout.LayoutParams(
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
+        for ((label, action) in actions) {
+            container.addView(View(this).apply {
+                contentDescription = label
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { action() }
+            }, android.widget.FrameLayout.LayoutParams(1, 1))
         }
-        titleBox.addView(textView("Device AI", if (wide) 33f else 27f, TEXT, true).apply {
-            val styled = SpannableString("Device AI")
-            styled.setSpan(ForegroundColorSpan(CYAN), 7, styled.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            text = styled
-            setShadowLayer(dp(9).toFloat(), 0f, 0f, Color.rgb(24, 83, 171))
-            letterSpacing = 0.005f
-        })
-        titleBox.addView(textView("Dein persönlicher Android KI-Assistent",
-            if (wide) 12f else 10.6f, MUTED), matchWidth(top = 1))
-        top.addView(titleBox, LinearLayout.LayoutParams(0,
-            LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-            marginStart = dp(8)
-        })
-        top.addView(actionButton("⚙", compact = true).apply {
-            contentDescription = "Einstellungen und Berechtigungen"
-            setOnClickListener { showSystemCenter() }
-        }, LinearLayout.LayoutParams(dp(43), dp(43)))
-        header.addView(top, matchWidth())
-        header.addView(textView(
-            "PRIVAT   •   LOKAL   •   LEISTUNGSSTARK", 9.4f,
-            Color.rgb(146, 171, 228), true
-        ).apply {
-            gravity = Gravity.CENTER
-            letterSpacing = 0.13f
-        }, matchWidth(top = 8))
-        return header
+        return container
+    }
+
+    /** Taps on the start screen open the existing owner-controlled screens; nothing here starts work on its own. */
+    private fun openHomeSlot(slot: at.heinz.deviceai.ui.ContinuumHomeLayout.Slot, @Suppress("UNUSED_PARAMETER") x: Float, y: Float) {
+        val heightDp = when (slot) {
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.STORAGE, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.DEVELOPMENT ->
+                homeView?.slotHeightDp(slot) ?: 0f
+            else -> 0f
+        }
+        when (slot) {
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.BRAND -> showHomeDashboard()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SEARCH -> showKnowledgeArchiveSearch()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.NOTIFICATIONS -> showDiagnosticsCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.PROFILE -> showNexusPersonalization()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.MODEL_PILL, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.MODEL -> showModelCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_CONNECTED -> showInternetSettings()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_THINKING -> navigateWorkArea(ContinuumWorkArea.CHAT)
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_LEARNING, at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LEARNING -> showLearningCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_ANALYSING -> showResearchModeDialog()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_DEVELOPING -> showDevelopmentCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.LABEL_EVOLVING -> showContinuumLearningDashboard()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.STORAGE ->
+                if (heightDp > 0f && y / heightDp > .78f) showMentorSources() else showMemoryCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.DEVELOPMENT ->
+                if (homeView?.wide == true && heightDp > 0f && y / heightDp > .47f) showDevelopmentBacklog() else showDevelopmentCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_STATUS -> showSystemCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_ACTIVITY -> showDiagnosticsCenter()
+            else -> Unit
+        }
+    }
+
+    /** Collects the real start-screen values off the UI thread (every 5 s while the activity is visible). */
+    private fun refreshDashboard() {
+        if (homeView == null || dashboardCollecting || !foregroundLearningActive) return
+        dashboardCollecting = true
+        val modelReady = ::localRuntime.isInitialized && localRuntime.state == LocalModelState.READY
+        val live = ContinuumDashboardCollector.Live(
+            modelName = if (::localRuntime.isInitialized) localRuntime.loadedModel?.let { it.id + " " + it.version } else null,
+            modelReady = modelReady,
+            modelLoading = ::localRuntime.isInitialized && localRuntime.state == LocalModelState.LOADING,
+            internetMode = internetConsent.mode.name,
+            busy = busy,
+            listening = voiceListening,
+            speaking = voiceSpeaking,
+            researching = activeResearchCancellation != null || modelWebActive,
+            learningActive = learningVisualActive || activeNeuralCancellation != null,
+            builderJobRunning = getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
+                .contains(ContinuumMobileBuildResultReceiver.JOB_ID),
+            practiceEnabled = NeuralPracticeScheduler(this).enabled,
+            autoStudyEnabled = at.heinz.deviceai.learning.ContinuumDualCoreAutoStudy.isEnabled(this),
+            curiosityPending = neuralCuriosityRadar.peek() != null,
+            responseTimesMs = responseTimesMs.toList()
+        )
+        onLearningIo({ dashboardCollector.collect(live) to diagnostics.open() }) { result ->
+            dashboardCollecting = false
+            result.onSuccess { (state, open) ->
+                homeView?.state = state
+                navigationView?.state = state
+                railView?.state = state
+                announceNewIssues(open)
+            }
+        }
+    }
+
+    /** Immediate, de-duplicated notice for every newly opened problem (the full list is in the diagnostics center). */
+    private fun announceNewIssues(open: List<at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Issue>) {
+        val ids = open.map { it.fingerprint + ":" + it.count }.toSet()
+        val known = knownOpenIssues
+        knownOpenIssues = ids
+        if (known == null) return
+        val fresh = open.filter { (it.fingerprint + ":" + it.count) !in known }
+        if (fresh.isNotEmpty()) {
+            val first = fresh.first()
+            Toast.makeText(this, "${first.severity.label}: ${first.title}" +
+                (if (fresh.size > 1) " (+${fresh.size - 1} weitere)" else "") + " · Glocke öffnet das Diagnosezentrum",
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun installCrashDiagnostics() {
+        if (crashHandlerInstalled) return
+        crashHandlerInstalled = true
+        val previous = Thread.getDefaultUncaughtExceptionHandler()
+        val store = diagnostics
+        Thread.setDefaultUncaughtExceptionHandler { thread, error ->
+            runCatching {
+                store.report("App", "CRASH", at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Severity.CRITICAL,
+                    "Absturz: " + error.javaClass.simpleName,
+                    error.stackTrace.take(8).joinToString(" < ") { it.className.substringAfterLast('.') + "." + it.methodName + ":" + it.lineNumber },
+                    "App neu öffnen. Tritt der Absturz erneut auf: Diagnose exportieren und an die Entwicklung senden.")
+            }
+            previous?.uncaughtException(thread, error)
+        }
+    }
+
+    /** Persistent problem list with acknowledgement and a redacted export; also lists real pending hints. */
+    private fun showDiagnosticsCenter(showHistory: Boolean = false) {
+        onLearningIo({ if (showHistory) diagnostics.all() else diagnostics.open() }) { result ->
+            val issues = result.getOrElse { emptyList() }
+            val box = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                background = roundedGradient(Color.rgb(14, 30, 64), Color.rgb(8, 16, 38), 22, Color.rgb(58, 107, 180))
+                setPadding(dp(18), dp(16), dp(18), dp(18))
+            }
+            box.addView(textView("CONTINUUM · FEHLER & DIAGNOSE", 11f, CYAN, true))
+            box.addView(textView(if (showHistory) "Verlauf aller Meldungen" else "Offene Meldungen: ${issues.size}", 19f, TEXT, true), matchWidth(top = 6))
+            box.addView(textView("Meldungen bleiben sichtbar, bis eine spätere Prüfung sie als behoben bestätigt oder du sie quittierst. " +
+                "Zugangsdaten und persönliche Inhalte werden vor dem Speichern entfernt.", 12f, MUTED), matchWidth(top = 6))
+            if (neuralCuriosityRadar.peek() != null) {
+                box.addView(actionButton("✧  Lernimpuls: unsicheres Beispiel beantworten", accent = true).apply {
+                    setOnClickListener { showNeuralCuriosityQuestion() }
+                }, matchWidth(top = 10))
+            }
+            if (issues.isEmpty()) box.addView(textView(if (showHistory) "Noch keine Meldungen gespeichert." else
+                "Keine offenen Fehler. Alle bisher gemeldeten Probleme sind behoben oder quittiert.", 13f, GREEN), matchWidth(top = 12))
+            lateinit var dialog: AlertDialog
+            for (issue in issues.take(40)) {
+                val color = when (issue.severity) {
+                    at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Severity.CRITICAL, at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Severity.ERROR -> Color.rgb(255, 92, 120)
+                    at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Severity.WARNING -> AMBER
+                    else -> CYAN
+                }
+                val card = verticalCard().apply { setPadding(dp(12), dp(10), dp(12), dp(10)) }
+                card.addView(textView("${issue.severity.label.uppercase()} · ${issue.component} · ${issue.status.label}", 10.5f, color, true))
+                card.addView(textView(issue.title, 14f, TEXT, true), matchWidth(top = 3))
+                card.addView(textView("Zuerst ${at.heinz.deviceai.diagnostics.ContinuumDiagnostics.iso(issue.firstSeen)} · zuletzt " +
+                    "${at.heinz.deviceai.diagnostics.ContinuumDiagnostics.iso(issue.lastSeen)} · ${issue.count}× · Code ${issue.code}", 11f, MUTED), matchWidth(top = 3))
+                if (issue.detail.isNotEmpty()) card.addView(textView("Details: " + issue.detail, 11.5f, TEXT).apply { setTextIsSelectable(true) }, matchWidth(top = 4))
+                card.addView(textView("Empfehlung: " + issue.recommendation, 12f, GREEN), matchWidth(top = 4))
+                if (issue.status == at.heinz.deviceai.diagnostics.ContinuumDiagnostics.Status.OPEN) {
+                    card.addView(actionButton("Quittieren", compact = true).apply {
+                        setOnClickListener {
+                            onLearningIo({ diagnostics.acknowledge(issue.fingerprint) }) { dialog.dismiss(); refreshDashboard(); showDiagnosticsCenter(showHistory) }
+                        }
+                    }, matchWidth(top = 6))
+                }
+                box.addView(card, matchWidth(top = 10))
+            }
+            box.addView(actionButton(if (showHistory) "Nur offene Meldungen" else "Verlauf anzeigen").apply {
+                setOnClickListener { dialog.dismiss(); showDiagnosticsCenter(!showHistory) }
+            }, matchWidth(top = 12))
+            box.addView(actionButton("Startbildschirm für Design-Abnahme sichern").apply {
+                contentDescription = "Startbildschirm als Bild mit Fenstermaßen für den Abgleich mit den Referenzbildern sichern"
+                setOnClickListener { dialog.dismiss(); window.decorView.postDelayed({ saveDesignSnapshot() }, 450L) }
+            }, matchWidth(top = 8))
+            box.addView(actionButton("Diagnose sicher exportieren").apply {
+                setOnClickListener {
+                    onLearningIo({ diagnostics.export() }) { exported ->
+                        exported.onSuccess { text ->
+                            startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_SUBJECT, "Continuum Diagnose")
+                                putExtra(Intent.EXTRA_TEXT, text)
+                            }, "Diagnose teilen"))
+                        }
+                    }
+                }
+            }, matchWidth(top = 8))
+            dialog = AlertDialog.Builder(this)
+                .setView(ScrollView(this).apply { addView(box) })
+                .setPositiveButton("Schließen", null)
+                .create()
+            dialog.show()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+    }
+
+    /** Owner-triggered: the real rendering of this window plus its layout metrics, saved and offered for sharing. */
+    private fun saveDesignSnapshot() {
+        val root = window.decorView
+        if (root.width <= 0 || root.height <= 0) return
+        val bitmap = at.heinz.deviceai.ui.ContinuumUiSnapshot.render(root)
+        val metrics = at.heinz.deviceai.ui.ContinuumUiSnapshot.metrics(this, homeView?.wide == true, homeView?.layoutScale)
+        onLearningIo({ at.heinz.deviceai.ui.ContinuumUiSnapshot.save(this, bitmap, metrics) }) { result ->
+            val saved = result.getOrNull()
+            if (saved == null) {
+                Toast.makeText(this, "Abnahme-Bild braucht Android 10 oder neuer.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Gesichert: Bilder/Continuum/${saved.fileName}.png", Toast.LENGTH_LONG).show()
+                runCatching { startActivity(at.heinz.deviceai.ui.ContinuumUiSnapshot.shareIntent(saved)) }
+            }
+        }
     }
 
     private fun buildStatusRow(): View {
@@ -839,249 +989,43 @@ class AgentActivity : Activity() {
         return card
     }
 
-    // The cockpit is intentionally shallow: primary actions are visible without knowing
-    // how the learning, tool permission or model subsystems work.
-    private fun buildBootstrapCoreCard(): View {
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
+    private fun buildBottomWorkAreaBar(): View {
+        val u = resources.configuration.screenWidthDp / 412f
+        val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
+            resources.configuration.fontScale.coerceIn(.85f, 1.3f))
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, u) { _, _ -> }.apply {
+            importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            isClickable = false
         }
-        val hero = verticalCard().apply {
-            background = roundedGradient(
-                Color.rgb(10, 25, 64), Color.rgb(15, 12, 46),
-                23, Color.rgb(64, 116, 237)
-            )
-            setPadding(dp(10), dp(9), dp(10), dp(10))
-            elevation = dp(6).toFloat()
+        navigationView = drawn
+        val container = android.widget.FrameLayout(this).apply {
+            contentDescription = "Navigation zu allen Continuum-Arbeitsbereichen"
+            minimumHeight = dp((at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * u).toInt())
         }
-        hero.addView(textView("✦   DEVICE AI   ·   INTELLIGENZKERN", 10.5f,
-            Color.rgb(137, 215, 255), true).apply {
-            gravity = Gravity.CENTER
-            letterSpacing = 0.08f
-        }, matchWidth())
-        hero.addView(ContinuumHologramView(this).also { hologramView = it }, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            dp(if (resources.configuration.screenWidthDp >= 700) 244 else 201)
-        ))
-        hero.addView(textView(
-            "BEREIT · Eine KI für dein Gerät.", 12f,
-            Color.rgb(198, 214, 244)
-        ).apply { gravity = Gravity.CENTER; hologramStatus = this }, matchWidth())
-        container.addView(hero, matchWidth())
-        container.addView(buildStatusRow(), matchWidth(top = 11))
-        container.addView(actionButton("★   ERSTE SCHRITTE · Deine KI einfach erklärt  ›", accent = true).apply {
-            contentDescription = "Schritt-für-Schritt-Anleitung für Internet, Lernen, Modelle und Coding-Agent"
-            minHeight = dp(56)
-            setOnClickListener { showFirstStepsGuide() }
-        }, matchWidth(top = 10))
-        container.addView(textView("DEINE ARBEITSBEREICHE · DIREKT ÖFFNEN", 10f,
-            Color.rgb(153, 209, 255), true).apply {
-            letterSpacing = 0.10f
-        }, matchWidth(top = 15))
-        // Respect small fold windows and the owner's system font scaling.
-        val quickWide = resources.configuration.screenWidthDp >= 700 &&
-            resources.configuration.screenHeightDp >= 500
-        val quickWidthDp = resources.configuration.screenWidthDp - if (quickWide) 336 else 28
-        val quickColumns = ContinuumWorkAreaNavigationSpec.quickActionColumns(
-            quickWidthDp, resources.configuration.fontScale
-        )
-        ContinuumWorkAreaNavigationSpec.destinations
-            .filter { it != ContinuumWorkArea.START }
-            .chunked(quickColumns)
-            .forEachIndexed { rowIndex, destinations ->
-                val workAreaQuickRow = LinearLayout(this).apply {
-                    orientation = LinearLayout.HORIZONTAL
-                }
-                destinations.forEachIndexed { index, destination ->
-                    workAreaQuickRow.addView(
-                        actionButton(destination.symbol + "  " + destination.title).apply {
-                            minHeight = dp(52)
-                            textSize = 13f
-                            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
-                            setOnClickListener { navigateWorkArea(destination) }
-                        },
-                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                            if (index > 0) marginStart = dp(8)
-                        }
-                    )
-                }
-                container.addView(workAreaQuickRow, matchWidth(top = if (rowIndex == 0) 8 else 7))
-            }
-        container.addView(textView("CONTINUUM NEXUS · DEIN KI-ARBEITSPLATZ", 10f,
-            Color.rgb(153, 209, 255), true).apply {
-            letterSpacing = 0.12f
-        }, matchWidth(top = 16))
-        val voice = ContinuumNexusHomeSpec.voice
-        container.addView(actionButton("🎙  ${voice.title}", accent = true).apply {
-            minHeight = dp(62)
-            contentDescription = voice.title + ". " + voice.description +
-                ". Öffnet die Spracheingabe des Geräts."
-            setOnClickListener { startVoiceInput() }
-        }, matchWidth(top = 9))
-        container.addView(textView(
-            "Sag oder schreibe, was du brauchst. Vor Geräteaktionen und einer App-Installation fragst du nach.",
-            12.5f, Color.rgb(192, 213, 247)
-        ), matchWidth(top = 7))
-
-        val wideNexus = resources.configuration.screenWidthDp >= 700 &&
-            resources.configuration.screenHeightDp >= 500
-        val usableWidthDp = resources.configuration.screenWidthDp -
-            if (wideNexus) 336 else 28
-        val nexusColumns = ContinuumNexusHomeSpec.columns(
-            usableWidthDp, resources.configuration.fontScale
-        )
-        ContinuumNexusHomeSpec.essentials.chunked(nexusColumns).forEach { group ->
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            group.forEachIndexed { index, item ->
-                val open: () -> Unit = {
-                    when (item.destination) {
-                        ContinuumNexusDestination.CHAT -> focusChatComposer()
-                        ContinuumNexusDestination.CREATE_APP -> showDevelopmentDialog()
-                        ContinuumNexusDestination.KNOWLEDGE -> showMemoryCenter()
-                        ContinuumNexusDestination.PERSONALIZE -> showNexusPersonalization()
-                        ContinuumNexusDestination.TASKS -> showDevelopmentBacklog()
-                    }
-                }
-                row.addView(cockpitTile(item.symbol, item.title, item.description,
-                    item.destination == ContinuumNexusDestination.CREATE_APP, open,
-                    item.destination.ordinal),
-                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(9)
-                    })
-            }
-            container.addView(row, matchWidth(top = 9))
+        container.addView(drawn, android.widget.FrameLayout.LayoutParams(
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT, dp((at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * u).toInt())))
+        val targets = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
+            targets.addView(View(this).apply {
+                contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { navigateWorkArea(destination) }
+            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f))
         }
-        val moreFunctions = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            visibility = View.GONE
-        }
-        nexusExpertPanel = moreFunctions
-        nexusExpertExpanded = false
-        val moreToggle = actionButton("Weitere KI-Funktionen anzeigen  ▾").apply {
-            contentDescription = "Weitere KI-Funktionen wie Forschung, Modelle und Entwicklerwerkzeuge"
-            setOnClickListener {
-                val show = !nexusExpertExpanded
-                nexusExpertExpanded = show
-                moreFunctions.visibility = if (show) View.VISIBLE else View.GONE
-                text = if (show) "Weitere KI-Funktionen schließen  ▴"
-                    else "Weitere KI-Funktionen anzeigen  ▾"
-            }
-        }
-        container.addView(moreToggle, matchWidth(top = 13))
-        moreFunctions.addView(textView("EXPERTEN UND WEITERE FUNKTIONEN", 10f,
-            Color.rgb(153, 189, 252), true).apply {
-            letterSpacing = 0.14f
-        }, matchWidth(top = 8))
-
-        val options = listOf(
-            Triple("●" to "Chat", "Fragen, Ideen, Probleme lösen") { focusChatComposer() },
-            Triple("⌕" to "Forschung", "Recherchieren und Quellen prüfen") { showResearchModeDialog() },
-            Triple("▤" to "Lernen", "Wissen aufbauen und verstehen") { showLearningCenter() },
-            Triple("⬡" to "Modelle", "Lokale KI-Modelle verwalten") { showModelCenter() },
-            Triple("⌘" to "Entwicklung", "Code und Aufgaben kontrollieren") { showDevelopmentCenter() },
-            Triple("▱" to "Speicher", "Erinnerungen und persönlichen Kontext") { showMemoryCenter() }
-        )
-        options.chunked(2).forEachIndexed { rowIndex, pair ->
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
-            pair.forEachIndexed { index, option ->
-                row.addView(cockpitTile(option.first.first, option.first.second,
-                    option.second, rowIndex == 0 && index == 0, option.third),
-                    LinearLayout.LayoutParams(0,
-                        LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
-                        if (index > 0) marginStart = dp(9)
-                    })
-            }
-            moreFunctions.addView(row, matchWidth(top = 9))
-        }
-        container.addView(moreFunctions, matchWidth())
-        container.addView(actionButton("⌘   CODING-AGENT · SPRACHE & APP-IDEEN   ›", accent = true).apply {
-            contentDescription = "Coding Agent und Spracheingabe für neue Apps und Programmieraufträge öffnen"
-            minHeight = dp(57)
-            setOnClickListener { showDevelopmentDialog() }
-        }, matchWidth(top = 10))
-        container.addView(actionButton("⚒   BAUMEISTER · HANDY-BUILDER   ›").apply {
-            contentDescription = "Continuum Android-Builder aus der Haupt-App öffnen"
-            background = roundedGradient(
-                Color.rgb(24, 49, 99), Color.rgb(14, 30, 62),
-                18, Color.rgb(74, 154, 224)
-            )
-            minHeight = dp(57)
-            setOnClickListener { openMobileBuilder() }
-        }, matchWidth(top = 10))
-        container.addView(actionButton("⚙   System   ·   Geräteinfos & Sicherheit   ›").apply {
-            contentDescription = "System, Geräteinfos, Berechtigungen und Automatisierung"
-            background = roundedGradient(
-                Color.rgb(28, 45, 100), Color.rgb(18, 27, 62),
-                18, Color.rgb(97, 119, 216)
-            )
-            minHeight = dp(57)
-            setOnClickListener { showSystemCenter() }
-        }, matchWidth(top = 10))
-        neuralCuriosityButton = actionButton("✧   Lernimpuls · Noch keine Frage").apply {
-            isEnabled = false
-            background = roundedGradient(Color.rgb(18, 34, 65),
-                Color.rgb(14, 22, 50), 15, Color.rgb(53, 83, 161))
-            setOnClickListener { showNeuralCuriosityQuestion() }
-        }
-        container.addView(neuralCuriosityButton, matchWidth(top = 9))
-        dashboardFeatures.clear()
-        for (index in 1 until container.childCount) dashboardFeatures.add(container.getChildAt(index))
+        container.addView(targets, android.widget.FrameLayout.LayoutParams(
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
+        bottomWorkAreaBar = container
+        refreshWorkAreaSelection()
         return container
     }
 
-    private fun buildBottomWorkAreaBar(): View {
-        val bar = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER
-            setPadding(dp(5), dp(5), dp(5), dp(5))
-            background = GradientDrawable().apply {
-                setColor(Color.rgb(10, 17, 39))
-                setStroke(dp(1), BORDER)
-            }
-            contentDescription = "Navigation zu allen Continuum-Arbeitsbereichen"
-        }
-        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
-            bar.addView(
-                buildWorkAreaButton(destination, compact = true),
-                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            )
-        }
-        bottomWorkAreaBar = bar
-        refreshWorkAreaSelection()
-        return bar
-    }
-
-    private fun buildWorkAreaButton(destination: ContinuumWorkArea, compact: Boolean): TextView {
-        val item = textView(
-            if (compact) destination.symbol + "\n" + destination.title
-            else destination.symbol + "   " + destination.title,
-            if (compact) 11.5f else 14f, MUTED, true
-        ).apply {
-            gravity = Gravity.CENTER
-            minHeight = dp(if (compact) 60 else 47)
-            setPadding(dp(if (compact) 1 else 13), dp(5),
-                dp(if (compact) 1 else 13), dp(5))
-            contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
-            isClickable = true
-            isFocusable = true
-            setOnClickListener { navigateWorkArea(destination) }
-        }
-        workAreaButtons[destination] = item
-        return item
-    }
-
     private fun refreshWorkAreaSelection() {
-        for ((destination, item) in workAreaButtons) {
-            val selected = destination == activeWorkArea
-            item.isSelected = selected
-            item.setTextColor(if (selected) CYAN else MUTED)
-            item.background = GradientDrawable().apply {
-                setColor(if (selected) Color.rgb(20, 46, 92) else Color.TRANSPARENT)
-                cornerRadius = dp(13).toFloat()
-                if (selected) setStroke(dp(1), Color.rgb(47, 132, 211))
-            }
-        }
+        val index = ContinuumWorkAreaNavigationSpec.destinations.indexOf(activeWorkArea).coerceAtLeast(0)
+        (navigationView?.element as? at.heinz.deviceai.ui.BottomNavElement)?.selected = index
+        navigationView?.invalidate()
+        (railView?.element as? at.heinz.deviceai.ui.RailElement)?.selected = index.coerceAtMost(3)
+        railView?.invalidate()
     }
 
     private fun navigateWorkArea(destination: ContinuumWorkArea) {
@@ -1118,30 +1062,10 @@ class AgentActivity : Activity() {
 
     private fun refreshConversationLayout() {
         val chat = conversationActive || keyboardCompact
-        homeHeader?.visibility = if (chat) View.GONE else View.VISIBLE
-        modeSection?.visibility = if (chat) View.GONE else View.VISIBLE
-        dashboardFeatures.forEach { it.visibility = if (chat) View.GONE else View.VISIBLE }
-        nexusExpertPanel?.visibility = if (!chat && nexusExpertExpanded) View.VISIBLE else View.GONE
+        dashboardSection?.visibility = if (chat) View.GONE else View.VISIBLE
+        chatColumn?.visibility = if (chat) View.VISIBLE else View.GONE
+        modeSection?.visibility = if (chat) View.VISIBLE else View.GONE
         keyboardTitle?.visibility = if (chat) View.VISIBLE else View.GONE
-        dashboardSection?.let { dashboard ->
-            dashboard.visibility = if (keyboardCompact) View.GONE else View.VISIBLE
-            val params = dashboard.layoutParams as? LinearLayout.LayoutParams
-            if (params != null) {
-                val wantedHeight = if (chat) LinearLayout.LayoutParams.WRAP_CONTENT else 0
-                val wantedWeight = if (chat) 0f else 1f
-                if (params.height != wantedHeight || params.weight != wantedWeight) {
-                    params.height = wantedHeight
-                    params.weight = wantedWeight
-                    dashboard.layoutParams = params
-                }
-            }
-        }
-        hologramView?.let { orb ->
-            val params = orb.layoutParams
-            val wanted = dp(if (chat || resources.configuration.screenHeightDp < 500) 92
-                else if (resources.configuration.screenWidthDp >= 700) 244 else 201)
-            if (params != null && params.height != wanted) { params.height = wanted; orb.layoutParams = params }
-        }
         if (::chatScroll.isInitialized) chatScroll.visibility = if (chat) View.VISIBLE else View.GONE
         val training = learningVisualActive || activeNeuralCancellation != null
         if (::neuralMonitor.isInitialized) neuralMonitor.visibility = if (chat || training) View.VISIBLE else View.GONE
@@ -1175,66 +1099,6 @@ class AgentActivity : Activity() {
                     android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
             }
         }
-    }
-
-    private fun cockpitTile(
-        symbol: String, title: String, explanation: String,
-        primary: Boolean, open: () -> Unit, nexusTone: Int = 0
-    ): View {
-        // The four beginner actions use the same blue/violet/teal/gold semantic
-        // accent palette as the portrait and fold references. Old expert tiles
-        // retain their original appearance through the default tone.
-        val palette = when (nexusTone) {
-            1 -> intArrayOf(0xFF164A85.toInt(), 0xFF09254F.toInt(),
-                0xFF46CFFF.toInt(), 0xFF157CCF.toInt(), 0xFF164C9A.toInt())
-            2 -> intArrayOf(0xFF3F2985.toInt(), 0xFF1C174B.toInt(),
-                0xFFB28BFF.toInt(), 0xFF7646DA.toInt(), 0xFF4332A4.toInt())
-            3 -> intArrayOf(0xFF08685F.toInt(), 0xFF073739.toInt(),
-                0xFF38E8DC.toInt(), 0xFF17B9B0.toInt(), 0xFF06777C.toInt())
-            4 -> intArrayOf(0xFF765127.toInt(), 0xFF392817.toInt(),
-                0xFFFFCC75.toInt(), 0xFFC4954A.toInt(), 0xFF795527.toInt())
-            else -> intArrayOf(
-                if (primary) Color.rgb(21, 62, 124) else Color.rgb(25, 34, 88),
-                if (primary) Color.rgb(12, 30, 59) else Color.rgb(18, 19, 52),
-                if (primary) Color.rgb(65, 193, 255) else Color.rgb(113, 95, 234),
-                if (primary) Color.rgb(29, 125, 209) else Color.rgb(88, 57, 206),
-                if (primary) Color.rgb(25, 83, 179) else Color.rgb(42, 51, 152)
-            )
-        }
-        val item = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            background = roundedGradient(palette[0], palette[1], 18, palette[2])
-            setPadding(dp(10), dp(9), dp(9), dp(9))
-            elevation = dp(5).toFloat()
-            minimumHeight = dp(94)
-            isClickable = true
-            isFocusable = true
-            contentDescription = title + ". " + explanation
-            setOnClickListener { open() }
-        }
-        val icon = textView(symbol, 21f, Color.WHITE, true).apply {
-            gravity = Gravity.CENTER
-            background = roundedGradient(palette[3], palette[4], 11, palette[2])
-            setShadowLayer(dp(3).toFloat(), 0f, 0f, palette[2])
-        }
-        item.addView(icon, LinearLayout.LayoutParams(dp(39), dp(43)))
-        val caption = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(9), 0, 0, 0)
-        }
-        caption.addView(textView(title, 13.5f, TEXT, true))
-        caption.addView(textView(explanation, 10.6f,
-            Color.rgb(172, 189, 222)).apply {
-            maxLines = 2
-            ellipsize = android.text.TextUtils.TruncateAt.END
-        }, matchWidth(top = 3))
-        item.addView(caption, LinearLayout.LayoutParams(0,
-            LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        item.addView(textView("›", 22f, Color.rgb(155, 182, 255)).apply {
-            gravity = Gravity.CENTER
-        }, LinearLayout.LayoutParams(dp(13), dp(44)))
-        return item
     }
 
     private fun showNexusPersonalization() {
@@ -1284,40 +1148,46 @@ class AgentActivity : Activity() {
         experimental: List<CenterAction> = emptyList()
     ) {
         centerDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 78), Color.rgb(13, 24, 45),
-                22, Color.rgb(58, 107, 180))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
+        box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, "Status wird gelesen …")
+        box.addView(statusGrid, matchWidth(top = 3))
+        if (title == "Systemstatus") {
+            box.addView(cockpit.section(this, "HARDWARE · LETZTER DASHBOARD-MESSSTAND"),
+                matchWidth(top = 10))
+            val systemSnapshot = homeView?.state?.system
+                ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
+            box.addView(at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot),
+                matchWidth(top = 3))
+            box.addView(textView(
+                "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
+                10f, MUTED), matchWidth(top = 1))
         }
-        box.addView(textView("DEVICE AI · DEIN BEREICH", 11f, CYAN, true))
-        box.addView(textView(title, 21f, TEXT, true), matchWidth(top = 6))
-        box.addView(textView(intro, 13.3f, Color.rgb(203, 219, 239)), matchWidth(top = 9))
-        val statusView = textView("Status wird gelesen …", 12.5f, TEXT).apply {
-            background = rounded(Color.rgb(12, 26, 48), 14, Color.rgb(59, 96, 148))
-            setPadding(dp(12), dp(12), dp(12), dp(12))
-            setTextIsSelectable(true)
-        }
-        box.addView(statusView, matchWidth(top = 12))
         lateinit var dialog: AlertDialog
-        fun button(action: CenterAction) = actionButton(action.label, accent = action.accent).apply {
-            setOnClickListener { dialog.dismiss(); action.run() }
-        }
-        actions.forEach { box.addView(button(it), matchWidth(top = 8)) }
+        fun makeAction(action: CenterAction): View =
+            cockpit.action(this, action.label, primary = action.accent,
+                critical = action.label.contains("LÖSCHEN", ignoreCase = true)) {
+                dialog.dismiss()
+                action.run()
+            }
+        box.addView(cockpit.section(this, "FUNKTIONEN · WÄHLE EIN WERKZEUG"), matchWidth(top = 9))
+        cockpit.grid(this, box, actions.map(::makeAction),
+            if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         if (experimental.isNotEmpty()) {
-            box.addView(textView("EXPERIMENTELL · nur Messungen; nichts davon wird in den aktiven Lernstand übernommen",
-                11f, AMBER, true), matchWidth(top = 16))
-            experimental.forEach { box.addView(button(it), matchWidth(top = 8)) }
+            box.addView(cockpit.section(this, "FORSCHUNG · EXPERIMENTELL, KEINE AUTOMATISCHE ÜBERNAHME"),
+                matchWidth(top = 10))
+            cockpit.grid(this, box, experimental.map(::makeAction),
+                if (resources.configuration.screenWidthDp >= 600) 3 else 2)
         }
-        dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
+        dialog = cockpit.show(this, box)
         dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
         centerDialog = dialog
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        status { text -> if (dialog.isShowing) statusView.text = text }
+        status { value ->
+            if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
+        }
     }
 
     /**
@@ -2783,13 +2653,22 @@ class AgentActivity : Activity() {
     }
 
     private fun showContinuumLearningDashboardDialog(message: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Continuum Learning Core v2")
-            .setMessage(message)
-            .setNegativeButton("PAKET-IMPORT") { _, _ -> confirmPackageImport() }
-            .setNeutralButton("GEWICHTE / LABOR") { _, _ -> showLearningLabChoices() }
-            .setPositiveButton("VERSIONEN · ROLLBACK") { _, _ -> showModelVersions() }
-            .show()
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "DEVICE AI · LERNSTAND", "Continuum Learning Core v2",
+            "Gesicherte Messwerte und Lernentscheidungen. Gewichte werden nur nach ausdrücklicher Auswahl geändert.")
+        panel.addView(cockpit.section(this, "LETZTER STATUS UND TRAININGSCHRONIK"), matchWidth(top = 10))
+        val statusGrid = cockpit.statusPane(this)
+        cockpit.updateStatus(statusGrid, message)
+        panel.addView(statusGrid, matchWidth(top = 4))
+        lateinit var dialog: AlertDialog
+        panel.addView(cockpit.section(this, "SICHERE AKTIONEN"), matchWidth(top = 12))
+        cockpit.grid(this, panel, listOf(
+            cockpit.action(this, "PAKET-IMPORT") { dialog.dismiss(); confirmPackageImport() },
+            cockpit.action(this, "GEWICHTE / LABOR") { dialog.dismiss(); showLearningLabChoices() },
+            cockpit.action(this, "VERSIONEN · ROLLBACK", primary = true) { dialog.dismiss(); showModelVersions() }
+        ), if (resources.configuration.screenWidthDp >= 600) 3 else 2)
+        panel.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     /** Gives the existing Learning Core dialog one entrypoint for all file and lab tasks. */
@@ -3197,53 +3076,30 @@ class AgentActivity : Activity() {
      */
     private fun showModelCenter() {
         modelCenterDialog?.dismiss()
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
-                22, Color.rgb(56, 117, 193))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        box.addView(textView("DEVICE AI · EINRICHTUNG", 11f, CYAN, true))
-        box.addView(textView("KI-Sprachmodell", 22f, TEXT, true), matchWidth(top = 5))
-        box.addView(textView(
-            "Für vollständig lokale natürliche Gespräche und Entwicklungsentwürfe brauchst du " +
-                "eine kompatible LiteRT-LM-Modelldatei. Der eigene Lernkern arbeitet auch ohne " +
-                "Sprachmodell. Der optionale Groq-Mentor kann getrennt davon einzelne Fragen " +
-                "beantworten: nur über dein Backend, mit Gerätefreigabe und ausdrücklicher " +
-                "Bestätigung jeder externen Frage. Er installiert kein lokales Modell.",
-            13f, MUTED), matchWidth(top = 10))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val box = cockpit.panel(this, "DEVICE AI · MODELLE", "KI-Sprachmodell",
+            "Lokale Sprachmodelle sind optional. SWB1 und bestätigte Erinnerungen funktionieren ohne importiertes Modell. " +
+                "Externe Groq-Anfragen benötigen weiterhin jede separate Gerätefreigabe.")
+        box.addView(cockpit.section(this, "LOKALER SPRACHKERN · TATSÄCHLICHER LADESTATUS"), matchWidth(top = 10))
         val card = textView("Modellstatus wird geprüft …", 13f, TEXT).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
             setPadding(dp(13), dp(12), dp(13), dp(12))
             setTextIsSelectable(true)
         }
         box.addView(card, matchWidth(top = 14))
-        box.addView(textView("SCHRITT 1 · Modelldatei auswählen", 11.5f, CYAN, true),
-            matchWidth(top = 16))
-        box.addView(actionButton("MODELLDATEI IMPORTIEREN", accent = true).apply {
-            setOnClickListener { showModelImportDialog() }
-        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply {
-            topMargin = dp(7)
-        })
-        box.addView(textView("SCHRITT 2 · Modell auf dem Gerät starten", 11.5f, CYAN, true),
-            matchWidth(top = 14))
-        val action = actionButton("MODELL LADEN").apply {
-            setOnClickListener {
-                if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
-            }
+        box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
+            showModelImportDialog()
         }
-        box.addView(action, LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, dp(51)).apply { topMargin = dp(7) })
-        box.addView(textView(
-            "Du kannst die lokale Basis und bestätigte Erinnerungen auch ohne Sprachmodell verwenden. " +
-                "Das Sprachmodell wird erst nach deiner Auswahl geladen.",
-            12.5f, MUTED), matchWidth(top = 11))
-        box.addView(actionButton("GROQ-MENTOR · EXTERNE FRAGE (OPTIONAL)").apply {
-            setOnClickListener {
-                modelCenterDialog?.dismiss()
-                showGroqMentorDialog()
-            }
-        }, matchWidth(top = 12))
+        val action = cockpit.action(this, "2 · MODELL LADEN") {
+            if (localRuntime.loadedModel != null) unloadModel() else chooseInstalledModel()
+        }
+        cockpit.grid(this, box, listOf(importButton, action), 2)
+        box.addView(cockpit.section(this, "OPTIONAL · NUR NACH AUSDRÜCKLICHER FREIGABE"), matchWidth(top = 10))
+        box.addView(cockpit.action(this, "GROQ-MENTOR · EXTERNE EINZELFRAGE") {
+            modelCenterDialog?.dismiss()
+            showGroqMentorDialog()
+        }, matchWidth(top = 5))
 
         val advanced = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -3286,10 +3142,8 @@ class AgentActivity : Activity() {
         }, matchWidth(top = 16))
         box.addView(advanced, matchWidth(top = 8))
 
-        val dialog = AlertDialog.Builder(this)
-            .setView(ScrollView(this).apply { addView(box) })
-            .setPositiveButton("Schließen", null)
-            .create()
+        box.addView(cockpit.action(this, "SCHLIESSEN") { modelCenterDialog?.dismiss() }, matchWidth(top = 12))
+        val dialog = cockpit.show(this, box)
         dialog.setOnDismissListener {
             if (modelCenterDialog === dialog) {
                 modelCenterDialog = null
@@ -3300,8 +3154,6 @@ class AgentActivity : Activity() {
         modelCenterDialog = dialog
         modelCardText = card
         localActionButton = action
-        dialog.show()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         reloadInstalledModels()
         onLearningIo({
             val core = ContinuumLearningCore(filesDir)
@@ -4049,14 +3901,6 @@ class AgentActivity : Activity() {
             else -> ContinuumHologramView.State.READY
         }
         hologramView?.setState(state)
-        hologramStatus?.text = when(state) {
-            ContinuumHologramView.State.READY -> "BEREIT · Eine KI für dein Gerät."
-            ContinuumHologramView.State.LISTENING -> "ZUHÖREN · Spracheingabe"
-            ContinuumHologramView.State.THINKING -> "NACHDENKEN · Antwort wird vorbereitet"
-            ContinuumHologramView.State.SPEAKING -> "SPRECHEN · Android-Sprachausgabe"
-            ContinuumHologramView.State.RESEARCH -> "RECHERCHE · Öffentliche Quellen prüfen"
-            ContinuumHologramView.State.LEARNING -> "LERNEN · Kandidat wird geprüft"
-        }
     }
 
     private fun stopVoiceAnimation() {
@@ -4357,25 +4201,30 @@ class AgentActivity : Activity() {
                 }.show()
             return
         }
-        val choices = arrayOf(
-            "QUICK · Websuche und Wikipedia-Fallback · bis 15 Sekunden",
-            "STANDARD · mehr Quellen · bis 45 Sekunden",
-            "DEEP · Gegenbelege · bis 90 Sekunden"
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val panel = cockpit.panel(this, "RESEARCH · OPT-IN",
+            "WEB RECHERCHE", "Suchmodus auswählen. Jeder Lauf respektiert Internetfreigaben, Quellenbelege und deine Kontrolle.")
+        panel.addView(cockpit.section(this, "PRÜFTIEFE · MAXIMALE SUCHDAUER"), matchWidth(top = 10))
+        lateinit var dialog: AlertDialog
+        val labels = listOf(
+            "QUICK · bis 15 Sek.\nWebsuche mit Wikipedia-Fallback",
+            "STANDARD · bis 45 Sek.\nMehrere unabhängige Quellen und Belegprüfung",
+            "DEEP · bis 90 Sek.\nGegenbelege und dokumentierte Quellenkonflikte"
         )
-        // IMPORTANT: Never combine setMessage() with setItems() in a platform
-        // AlertDialog. The message panel hides the item list on Android/Fold.
-        // The next dialog contains the privacy explanation and search input.
-        AlertDialog.Builder(this)
-            .setTitle("WEB RECHERCHE · Suchmodus auswählen")
-            .setItems(choices) { _, index ->
+        val actions = labels.mapIndexed { index, label ->
+            cockpit.action(this, label, primary = index == 1) {
+                dialog.dismiss()
                 researchMode = ResearchMode.values()[index.coerceIn(0, ResearchMode.values().lastIndex)]
                 onLearningIo({
                     val checkpointStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
-                    runCatching { checkpointStore.load() }.getOrNull() to runCatching { checkpointStore.loadDossier() }.getOrNull()
+                    runCatching { checkpointStore.load() }.getOrNull() to
+                        runCatching { checkpointStore.loadDossier() }.getOrNull()
                 }) { result -> offerResearchResume(result.getOrDefault(null to null)) }
             }
-            .setNegativeButton("Abbrechen", null)
-            .show()
+        }
+        cockpit.grid(this, panel, actions, if (resources.configuration.screenWidthDp >= 600) 3 else 1)
+        panel.addView(cockpit.action(this, "ABBRECHEN") { dialog.dismiss() }, matchWidth(top = 12))
+        dialog = cockpit.show(this, panel)
     }
 
     private fun offerResearchResume(state: Pair<at.heinz.deviceai.cognitive.ResearchRunCheckpoint?, at.heinz.deviceai.cognitive.ResearchDossier?>) {
@@ -6228,6 +6077,7 @@ class AgentActivity : Activity() {
     }
 
     private fun addUserMessage(value: String) {
+        requestStartedAt = android.os.SystemClock.elapsedRealtime()
         conversationActive = true
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
@@ -6257,6 +6107,11 @@ class AgentActivity : Activity() {
     }
 
     private fun addAssistantMessage(value: String) {
+        if (requestStartedAt > 0L) {
+            responseTimesMs.addLast(android.os.SystemClock.elapsedRealtime() - requestStartedAt)
+            while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
+            requestStartedAt = 0L
+        }
         conversationActive = true
         refreshConversationLayout()
         (dashboardSection as? ScrollView)?.scrollTo(0, 0)
@@ -6728,24 +6583,6 @@ class AgentActivity : Activity() {
             }, { "Import abgelehnt, lokaler Stand unverändert: " + backlogError(it) })
             if (backlogList != null) refreshDevelopmentBacklog(text) else Toast.makeText(this, text, Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun infoCard(title: String, body: String, badge: String): View {
-        val card = verticalCard().apply {
-            setPadding(dp(13), dp(12), dp(13), dp(12))
-        }
-        val row = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-        }
-        row.addView(
-            textView(title, 15f, TEXT, true),
-            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        )
-        row.addView(statusBadge(badge, GREEN))
-        card.addView(row)
-        card.addView(textView(body, 12f, MUTED).apply { setPadding(0, dp(7), 0, 0) })
-        return card
     }
 
     private fun sectionLabel(value: String, top: Int): View =
