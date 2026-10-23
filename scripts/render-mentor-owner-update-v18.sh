@@ -3,19 +3,20 @@
 set -Eeuo pipefail
 umask 077
 die() { printf 'OWNER_V18_BLOCKED: %s\n' "$*" >&2; exit 69; }
-: "$CONTINUUM_RELEASE_SHA" "$CONTINUUM_ASTRA_UI_SHA"
+: "${CONTINUUM_RELEASE_SHA:?Pinned signed owner release commit required}"
+: "${CONTINUUM_ASTRA_UI_SHA:?Reviewed premium UI ancestor required}"
 : "$CONTINUUM_MENTOR_SIGNING_P12_BASE64" "$CONTINUUM_MENTOR_SIGNING_PASSWORD"
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 render_publisher_root="$repo_root"
-signed_release_ref="integration/continuum-owner-apk-v18-candidate-20261023"
+signed_release_ref="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
 [[ "$actual_branch" == "$signed_release_ref" ]] || die "Unexpected release branch"
 commit="$(git rev-parse --verify HEAD)"
 [[ "$commit" =~ ^[a-f0-9]{40}$ && "$commit" == "$CONTINUUM_RELEASE_SHA" ]] || die "Unapproved source SHA"
 [[ "$CONTINUUM_ASTRA_UI_SHA" =~ ^[a-f0-9]{40}$ ]] || die "Missing full Astra SHA"
 git merge-base --is-ancestor "$CONTINUUM_ASTRA_UI_SHA" "$commit" ||
-  die "Latest reviewed Astra UI source not integrated"
+  die "Reviewed premium UI source not integrated"
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || die "Dirty source checkout"
 for required in \
   app/src/main/java/at/heinz/deviceai/AgentActivity.kt \
