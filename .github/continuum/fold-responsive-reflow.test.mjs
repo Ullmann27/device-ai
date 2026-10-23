@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const activity = fs.readFileSync(path.join(root, 'app/src/main/java/at/heinz/deviceai/AgentActivity.kt'), 'utf8');
 const layout = fs.readFileSync(path.join(root, 'app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt'), 'utf8');
+const composer = fs.readFileSync(path.join(root, 'app/src/main/java/at/heinz/deviceai/ComposerReflowDraft.kt'), 'utf8');
 
 test('unfold reflows from actual laid out root window width, not stale screenWidthDp', () => {
   assert.match(activity, /root\.addOnLayoutChangeListener/);
@@ -20,13 +21,22 @@ test('unfold reflows from actual laid out root window width, not stale screenWid
 test('reflow preserves the active agent, user draft, conversation views and dashboard telemetry', () => {
   const code = activity.split('root.addOnLayoutChangeListener')[1]?.split('return root')[0];
   assert.ok(code, 'size change handler');
-  // since the Fold7 composer fix (222a6a4d) the draft keeps text, selection, focus and IME, and is restored after the rebuild
-  assert.match(code, /if \(::input\.isInitialized\) \{[\s\S]*?ComposerReflowDraft\(input\.text\.toString\(\), input\.selectionStart,\s*input\.selectionEnd, input\.hasFocus\(\), hadIme\)/);
+  // The PR #96 composer snapshot supersedes the historical single-string 'draft'.
+  assert.match(code, /val composerDraft = if \(::input\.isInitialized\) \{/);
+  assert.match(code, /ComposerReflowDraft\(input\.text\.toString\(\), input\.selectionStart,/);
+  assert.match(code, /input\.selectionEnd, input\.hasFocus\(\), hadIme\)/);
   assert.match(code, /editor\.setText\(composerDraft\.text\)/);
+  assert.match(code, /composerDraft\.safeSelection\(\)/);
+  assert.match(code, /editor\.setSelection\(selectionStart, selectionEnd\)/);
+  assert.match(code, /composerDraft\.hadFocus && rebuiltComposer != null/);
+  assert.match(code, /rebuiltComposer\.requestFocus\(\)/);
+  assert.match(code, /composerDraft\.imeWasVisible/);
+  assert.match(code, /input === rebuiltComposer/);
   assert.match(code, /chatMessages\.add\(child\)/);
   assert.match(code, /chatMessages\.forEach \{ chatContainer\.addView\(it\) \}/);
   assert.match(code, /previousHomeState\?\.let \{ homeView\?\.state = it \}/);
   assert.doesNotMatch(code, /onDestroy\(|localRuntime\.unload|bootstrapMemory\s*=/);
+  assert.match(composer, /fun safeSelection\(\): Pair<Int, Int>/);
 });
 
 test('Fold rail and phone navigation are mutually exclusive after a reflow', () => {
