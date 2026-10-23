@@ -47,6 +47,16 @@ object ContinuumCortexShadowChecks {
             if (it.sourceId == "src3") it.copy(target = "60Hz") else it
         }) }.isFailure)
 
+        val incomplete = WakeSleepShadowHabitCore(planner)
+        check(incomplete.stage(grid) && incomplete.stage(city))
+        check(!incomplete.consolidate(listOf(
+            WakeSleepShadowHabitCore.Probe(grid, "50Hz"),
+            WakeSleepShadowHabitCore.Probe(unknown, null),
+            WakeSleepShadowHabitCore.Probe(EvidenceBoundedThoughtSearch.Query(
+                "missing", EvidenceBoundedThoughtSearch.Question.CITY), null)
+        )).accepted)
+        check(incomplete.habitCount() == 0)
+
         val habits = WakeSleepShadowHabitCore(planner)
         check(habits.stage(grid))
         check(!habits.consolidate(emptyList()).accepted)
