@@ -16,6 +16,8 @@ object ContinuumPreviewMain {
         val image = BufferedImage((layout.width * density).toInt(), (heightDp * density).toInt(), BufferedImage.TYPE_INT_ARGB)
         val g = image.createGraphics()
         val p = Java2DContinuumPainter(g, assets)
+        val texts = ArrayList<Java2DContinuumPainter.TextBox>()
+        p.textBoxes = texts
         p.scale(density, density)
         ContinuumHomeScreen.drawBackground(p, layout.width, heightDp, layout)
         layout[ContinuumHomeLayout.Slot.HERO]?.let { box ->
@@ -23,17 +25,25 @@ object ContinuumPreviewMain {
             renderer.geometry = if (layout.wide) ContinuumHologramRenderer.Geometry.FOLD else ContinuumHologramRenderer.Geometry.PHONE
             renderer.layout(box.width, box.height)
             p.save(); p.translate(box.left, box.top)
+            // the hologram is a child view on the device and is clipped to its box
+            p.clipRect(0f, 0f, box.width, box.height)
             renderer.draw(p, ContinuumHologramRenderer.Frame.still())
             p.restore()
         }
         for ((slot, element) in ContinuumHomeScreen.elements(layout, 1f)) {
             val box = layout[slot] ?: continue
-            p.save(); p.translate(box.left, box.top)
-            element.draw(p, box.width, box.height, state)
+            p.save(); p.translate(box.left, box.top); p.scale(layout.scale, layout.scale)
+            element.draw(p, box.width / layout.scale, box.height / layout.scale, state)
             p.restore()
         }
         g.dispose()
         ImageIO.write(image, "png", file)
+        // Drawn texts with their bounds in window dp: continuum-design-diff.py masks the live values with them (--texts);
+        // dp, not pixels, so the same list also fits a device snapshot of the same window size.
+        File(file.path.removeSuffix(".png") + ".texts.json").writeText(texts.joinToString(",\n", "[\n", "\n]\n") { t ->
+            "{\"text\":\"" + t.text.replace("\\", "\\\\").replace("\"", "\\\"") + "\",\"boxDp\":[" +
+                listOf(t.left, t.top, t.right, t.bottom).joinToString(",") { "%.2f".format(java.util.Locale.ROOT, it / density) } + "]}"
+        })
         println("wrote $file ${image.width}x${image.height}")
     }
 
@@ -65,5 +75,12 @@ object ContinuumPreviewMain {
             ContinuumDashboardState())
         if (part == "fold-empty") screen(assets, File(out, "fold-empty.png"), ContinuumHomeLayout.wide(840f), 649f, 1294f / 840f,
             ContinuumDashboardState())
+        // Any window size, chosen exactly like AgentActivity: size <widthDp> <heightDp> [empty]
+        if (part == "size") {
+            val w = args[3].toFloat(); val h = args[4].toFloat(); val empty = args.getOrNull(5) == "empty"
+            val layout = if (ContinuumHomeLayout.isWide(w, h)) ContinuumHomeLayout.wide(w, h) else ContinuumHomeLayout.phone(w)
+            screen(assets, File(out, "size-${w.toInt()}x${h.toInt()}${if (empty) "-empty" else ""}.png"), layout, h, 2f,
+                if (empty) ContinuumDashboardState() else ReferencePreviewData.state)
+        }
     }
 }

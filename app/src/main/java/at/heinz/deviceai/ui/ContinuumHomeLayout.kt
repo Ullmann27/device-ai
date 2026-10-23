@@ -29,8 +29,17 @@ object ContinuumHomeLayout {
     const val WIDE_REFERENCE_WIDTH = 840f
     const val PHONE_NAV_HEIGHT = 74f
 
-    /** Wide layout (navigation rail) from 700 dp width and 500 dp height: unfolded Fold, tablets; phone otherwise. */
-    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 700f && heightDp >= 500f
+    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */
+    fun railWidthDp(windowWidthDp: Float): Float {
+        require(windowWidthDp.isFinite() && windowWidthDp > 0f)
+        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH
+    }
+
+    /**
+     * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display
+     * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
+     */
+    fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f
 
     private val phoneReference = mapOf(
         Slot.BRAND to Box(0f, 0f, 276f, 68.8f),
@@ -79,9 +88,46 @@ object ContinuumHomeLayout {
         return Layout(false, widthDp, u, 787f * u, phoneReference.mapValues { it.value.scaled(u) })
     }
 
-    fun wide(widthDp: Float): Layout {
+    const val WIDE_REFERENCE_HEIGHT = 649f
+    private val TOP_BAR = setOf(Slot.BRAND, Slot.SEARCH, Slot.NOTIFICATIONS, Slot.PROFILE, Slot.MODEL_PILL)
+    private val HERO_BAND = setOf(Slot.LABEL_CONNECTED, Slot.LABEL_LEARNING, Slot.LABEL_DEVELOPING, Slot.LABEL_THINKING,
+        Slot.LABEL_ANALYSING, Slot.LABEL_EVOLVING, Slot.SYSTEM_STATUS)
+    private val FIRST_ROW = setOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE)
+    private val SECOND_ROW = setOf(Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
+
+    /**
+     * Wide composition for a [widthDp] x [heightDp] window, scaled uniformly with the width like the reference
+     * (840 x 649 dp, landscape). A window that is taller than that proportion – the Fold7 main display held upright is
+     * almost square – would otherwise end in an empty band. The extra height first enlarges the hero stage: the hologram
+     * box grows in height and, as far as the side columns allow, in width, so the core itself becomes larger; the side
+     * labels and the system status column move with the hologram's centre. What remains opens the gaps above both card
+     * rows equally. Cards keep their reference shape. [heightDp] = 0 keeps the reference proportion.
+     */
+    fun wide(widthDp: Float, heightDp: Float = 0f): Layout {
         require(widthDp > 0f)
         val u = widthDp / WIDE_REFERENCE_WIDTH
-        return Layout(true, widthDp, u, 649f * u, wideReference.mapValues { it.value.scaled(u) })
+        val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
+        val hero = wideReference.getValue(Slot.HERO)
+        val heroGrow = minOf(extra, 150f)
+        // the hologram radius is min(width * .2366, height * .3334): widen in the same ratio, at most 70 dp per side
+        val heroWiden = minOf(heroGrow * (.3334f / .2366f), 140f)
+        val rowGap = (extra - heroGrow) / 2f
+        val firstRow = heroGrow + rowGap
+        val secondRow = heroGrow + 2f * rowGap
+        val boxes = wideReference.mapValues { (slot, b) ->
+            when {
+                slot in TOP_BAR -> b
+                slot == Slot.HERO -> Box(b.left - heroWiden / 2f, b.top, b.right + heroWiden / 2f, b.bottom + heroGrow)
+                slot == Slot.RAIL -> b.copy(bottom = b.bottom + extra)
+                slot in HERO_BAND -> {
+                    val shift = heroGrow * ((b.top + b.bottom) / 2f - hero.top) / hero.height
+                    b.copy(top = b.top + shift, bottom = b.bottom + shift)
+                }
+                slot in FIRST_ROW -> b.copy(top = b.top + firstRow, bottom = b.bottom + firstRow)
+                slot in SECOND_ROW -> b.copy(top = b.top + secondRow, bottom = b.bottom + secondRow)
+                else -> b
+            }.scaled(u)
+        }
+        return Layout(true, widthDp, u, (WIDE_REFERENCE_HEIGHT + extra) * u, boxes)
     }
 }

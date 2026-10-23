@@ -82,7 +82,13 @@ test('Fold rail and start screen reach all actions at short heights', () => {
 
 test('start screen adapts to large fonts, rotated compact screens and the unfolded Fold', () => {
   const layout = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt');
-  assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\) = widthDp >= 700f && heightDp >= 500f/);
+  // owner decision 22.10.2026: the unfolded Fold uses the wide composition also with a larger display zoom
+  assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\) = widthDp >= 600f && heightDp >= 480f/);
+  assert.match(activity, /windowHeightDp = resources\.configuration\.screenHeightDp\.toFloat\(\)/);
+  // drawn elements scale with their slot, otherwise content overflows every window that is not exactly 412/840 dp
+  const home = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
+  assert.match(home, /val k = density \* \(layoutSpec\?\.scale \?: 1f\)\n\s+canvas\.scale\(k, k\)/);
+  assert.match(home, /element\.draw\(painter, width \/ k, height \/ k, state\)/);
   assert.match(activity, /val wide = at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isWide\(/);
   assert.match(activity, /home\.configure\(windowWidth, wide, railOffset = /);
   assert.match(read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt'), /fontScale\.coerceIn\(\.85f, 1\.3f\)/);
@@ -95,4 +101,14 @@ test('recreated activity preserves chat selection and draft without persistent M
   assert.match(activity, /refreshConversationLayout\(\)\s*refreshWorkAreaSelection\(\)/);
   assert.match(spec, /fun selectionAfterTap\(current: ContinuumWorkArea, tapped: ContinuumWorkArea\)/);
   assert.match(activity, /activeWorkArea = ContinuumWorkAreaNavigationSpec\.selectionAfterTap/);
+});
+
+test('design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics', () => {
+  const snapshot = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumUiSnapshot.kt');
+  assert.match(activity, /actionButton\("Startbildschirm für Design-Abnahme sichern"\)/);
+  assert.match(activity, /ContinuumUiSnapshot\.metrics\(this, homeView\?\.wide == true, homeView\?\.layoutScale\)/);
+  assert.match(snapshot, /if \(Build\.VERSION\.SDK_INT < 29\) return null/);
+  for (const field of ['screenWidthDp', 'screenHeightDp', 'densityDpi', 'fontScale', 'wideLayout', 'layoutScale', 'insetsPx'])
+    assert.match(snapshot, new RegExp(`put\\("${field}"`));
+  assert.doesNotMatch(read('app/src/main/AndroidManifest.xml'), /WRITE_EXTERNAL_STORAGE|READ_MEDIA_IMAGES/);
 });

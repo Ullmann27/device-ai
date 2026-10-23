@@ -1,0 +1,42 @@
+"""Radial colour profile and rim radius of the hologram sphere: reference vs render (aligned via the frozen offset)."""
+import json, sys
+import numpy as np
+from PIL import Image
+S, which = sys.argv[1], sys.argv[2]
+R = 'docs/design_targets/continuum-2026-10-22'
+reg = json.load(open(f'{R}/registration.json'))
+for kind, img, ref, k, hero, geo in (('phone', 'size-412x861', 'reference-phone.png', 1.7306, (0, 68.8, 412, 375.6), (.381, .2455, .329)),
+                                      ('wide', 'size-840x649', 'reference-fold.png', 1.54, (212, 0, 622, 291), (.495, .2366, .3334))):
+    ox, oy = reg[kind]['offsetPx']
+    ref_im = np.asarray(Image.open(f'{R}/{ref}').convert('RGB'), dtype=np.float32)
+    ren = Image.open(f'{S}/ui/{which}/{img}.png').convert('RGB')
+    f = k / 2.0
+    ren = np.asarray(ren.resize((round(ren.width * f), round(ren.height * f)), Image.LANCZOS), dtype=np.float32)
+    l, t, r, b = hero
+    w, h = r - l, b - t
+    rad = min(w * geo[1], h * geo[2])
+    cx, cy = (l + w / 2) * k, (t + h * geo[0]) * k
+    R0 = rad * k
+    print(f'== {kind}: model centre ({cx/k:.1f},{cy/k:.1f}) dp, r={rad:.1f} dp = {R0:.0f} px')
+    yy, xx = np.mgrid[0:ren.shape[0], 0:ren.shape[1]]
+    dist = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2) / R0
+    ang = np.degrees(np.arctan2(yy - cy, xx - cx))
+    upper = (ang < -10) | (ang > 190)          # exclude the pedestal below
+    ref_al = ref_im[oy:oy + ren.shape[0], ox:ox + ren.shape[1]]
+    print(' ring   ref RGB (lum)          ren RGB (lum)')
+    for lo in np.arange(0, 1.6, .1):
+        m = (dist >= lo) & (dist < lo + .1) & (np.abs(ang - 90) > 35)
+        a, c = ref_al[m].mean(0), ren[m].mean(0)
+        print(f' {lo:.1f}-{lo+.1:.1f}  {a.astype(int)} ({a.mean():5.1f})   {c.astype(int)} ({c.mean():5.1f})')
+    # rim: radius of maximum luminance along rays in the upper half
+    lum_ref = ref_al.mean(2); lum_ren = ren.mean(2)
+    radii_ref, radii_ren = [], []
+    for a_deg in range(-170, -10, 5):
+        t_ = np.radians(a_deg)
+        rs = np.arange(.6 * R0, 1.4 * R0, 1)
+        xs = (cx + rs * np.cos(t_)).astype(int); ys = (cy + rs * np.sin(t_)).astype(int)
+        ok = (xs >= 0) & (ys >= 0) & (xs < lum_ref.shape[1]) & (ys < lum_ref.shape[0])
+        if ok.sum() < 20: continue
+        radii_ref.append(rs[ok][np.argmax(lum_ref[ys[ok], xs[ok]])] / k)
+        radii_ren.append(rs[ok][np.argmax(lum_ren[ys[ok], xs[ok]])] / k)
+    print(f' rim radius (median of brightest point per ray, upper half): ref {np.median(radii_ref):.1f} dp, render {np.median(radii_ren):.1f} dp')

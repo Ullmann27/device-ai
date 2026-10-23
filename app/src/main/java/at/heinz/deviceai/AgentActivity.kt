@@ -598,7 +598,9 @@ class AgentActivity : Activity() {
             openHomeSlot(slot, x, y)
         }
         val windowWidth = resources.configuration.screenWidthDp.toFloat()
-        home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f)
+        // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
+        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
+            windowHeightDp = resources.configuration.screenHeightDp.toFloat())
         homeView = home
         dashboard.addView(home, matchWidth())
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
@@ -682,13 +684,15 @@ class AgentActivity : Activity() {
         return pane
     }
 
-    /** Width of the Fold/tablet navigation rail: 76 dp of the 840 dp wide reference, scaled with the window. */
-    private fun railWidthPx(): Int = dp((resources.configuration.screenWidthDp * 76f / 840f).toInt())
+    /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
+    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(
+        resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
 
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element,
+            resources.configuration.screenWidthDp / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
@@ -866,6 +870,10 @@ class AgentActivity : Activity() {
             box.addView(actionButton(if (showHistory) "Nur offene Meldungen" else "Verlauf anzeigen").apply {
                 setOnClickListener { dialog.dismiss(); showDiagnosticsCenter(!showHistory) }
             }, matchWidth(top = 12))
+            box.addView(actionButton("Startbildschirm für Design-Abnahme sichern").apply {
+                contentDescription = "Startbildschirm als Bild mit Fenstermaßen für den Abgleich mit den Referenzbildern sichern"
+                setOnClickListener { dialog.dismiss(); window.decorView.postDelayed({ saveDesignSnapshot() }, 450L) }
+            }, matchWidth(top = 8))
             box.addView(actionButton("Diagnose sicher exportieren").apply {
                 setOnClickListener {
                     onLearningIo({ diagnostics.export() }) { exported ->
@@ -885,6 +893,23 @@ class AgentActivity : Activity() {
                 .create()
             dialog.show()
             dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        }
+    }
+
+    /** Owner-triggered: the real rendering of this window plus its layout metrics, saved and offered for sharing. */
+    private fun saveDesignSnapshot() {
+        val root = window.decorView
+        if (root.width <= 0 || root.height <= 0) return
+        val bitmap = at.heinz.deviceai.ui.ContinuumUiSnapshot.render(root)
+        val metrics = at.heinz.deviceai.ui.ContinuumUiSnapshot.metrics(this, homeView?.wide == true, homeView?.layoutScale)
+        onLearningIo({ at.heinz.deviceai.ui.ContinuumUiSnapshot.save(this, bitmap, metrics) }) { result ->
+            val saved = result.getOrNull()
+            if (saved == null) {
+                Toast.makeText(this, "Abnahme-Bild braucht Android 10 oder neuer.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Gesichert: Bilder/Continuum/${saved.fileName}.png", Toast.LENGTH_LONG).show()
+                runCatching { startActivity(at.heinz.deviceai.ui.ContinuumUiSnapshot.shareIntent(saved)) }
+            }
         }
     }
 
@@ -968,7 +993,7 @@ class AgentActivity : Activity() {
         val u = resources.configuration.screenWidthDp / 412f
         val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
-        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element) { _, _ -> }.apply {
+        val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, u) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }

@@ -25,10 +25,61 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
+    private var waveFramePending = false
+    private val waveFrame = object : Runnable {
+        override fun run() {
+            waveFramePending = false
+            if (!waveAnimationEnabled()) return
+            // Only the measured learning card needs another render pass.
+            views[Slot.LEARNING]?.invalidate()
+            scheduleWaveFrame()
+        }
+    }
+
+    private fun waveAnimationEnabled(): Boolean = isAttachedToWindow && windowVisibility == View.VISIBLE &&
+        visibility == View.VISIBLE && state.learning.live && state.learning.series.size >= 2 &&
+        state.learning.series.any { it > 0f } && views.containsKey(Slot.LEARNING)
+
+    private fun scheduleWaveFrame() {
+        if (!waveFramePending && waveAnimationEnabled()) {
+            waveFramePending = true
+            postOnAnimationDelayed(waveFrame, 33L)
+        }
+    }
+
+    private fun updateWaveAnimation() {
+        if (waveAnimationEnabled()) scheduleWaveFrame()
+        else {
+            removeCallbacks(waveFrame)
+            waveFramePending = false
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        updateWaveAnimation()
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(waveFrame)
+        waveFramePending = false
+        super.onDetachedFromWindow()
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        updateWaveAnimation()
+    }
+
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        updateWaveAnimation()
+    }
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) {
             field = value
             views.values.forEach { it.refresh() }
+            updateWaveAnimation()
         }
 
     init {
@@ -40,8 +91,9 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
      * Builds the element views for a window [windowWidthDp] wide. In the wide composition the navigation rail is a
      * separate view on the left; [railOffset] shifts every slot so the remaining slots keep their reference positions.
      */
-    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false) {
-        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp) else ContinuumHomeLayout.phone(windowWidthDp)
+    fun configure(windowWidthDp: Float, wide: Boolean, railOffset: Float = 0f, includeNavigation: Boolean = false,
+                  windowHeightDp: Float = 0f) {
+        val spec = if (wide) ContinuumHomeLayout.wide(windowWidthDp, windowHeightDp) else ContinuumHomeLayout.phone(windowWidthDp)
         if (spec == layoutSpec && offset == railOffset && views.isNotEmpty()) return
         layoutSpec = spec
         offset = railOffset
@@ -56,9 +108,12 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             addView(view)
         }
         requestLayout()
+        updateWaveAnimation()
     }
 
     val wide: Boolean get() = layoutSpec?.wide == true
+    /** Window dp per reference dp of the current composition (null before the first configure). */
+    val layoutScale: Float? get() = layoutSpec?.scale
 
     /** Height of a slot in dp (for tap zones inside an element). */
     fun slotHeightDp(slot: Slot): Float = layoutSpec?.get(slot)?.height ?: 0f
@@ -143,8 +198,16 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         override fun onDraw(canvas: Canvas) {
             painter.begin(canvas)
             val saved = canvas.save()
-            canvas.scale(density, density)
-            element.draw(painter, width / density, height / density, state)
+            // Elements are drawn in reference dp; the slot box is the reference box times the layout scale, so the
+            // content must be scaled by the same factor or it overflows narrower windows (360 dp phones, Fold7).
+            val k = density * (layoutSpec?.scale ?: 1f)
+            canvas.scale(k, k)
+            // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
+            element.motionPhase = if (slot == Slot.LEARNING && state.learning.live &&
+                state.learning.series.size >= 2 && state.learning.series.any { it > 0f }) {
+                (android.os.SystemClock.uptimeMillis() % 4200L).toFloat() / 4200f
+            } else null
+            element.draw(painter, width / k, height / k, state)
             canvas.restoreToCount(saved)
         }
     }
@@ -152,7 +215,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
 
 /** Standalone drawn element (phone navigation bar, Fold rail) used outside the scrolling start screen. */
 @SuppressLint("ViewConstructor")
-class ContinuumElementView(context: Context, val element: ContinuumElement, private val onTap: (Float, Float) -> Unit) : View(context) {
+class ContinuumElementView(context: Context, val element: ContinuumElement, private val designScale: Float = 1f,
+                           private val onTap: (Float, Float) -> Unit) : View(context) {
     private val density = resources.displayMetrics.density
     private val painter = AndroidContinuumPainter(context.assets)
     private var tapX = 0f
@@ -176,8 +240,10 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
     override fun onDraw(canvas: Canvas) {
         painter.begin(canvas)
         val saved = canvas.save()
-        canvas.scale(density, density)
-        element.draw(painter, width / density, height / density, state)
+        // [designScale] = window width / reference width, like the start-screen slots
+        val k = density * designScale
+        canvas.scale(k, k)
+        element.draw(painter, width / k, height / k, state)
         canvas.restoreToCount(saved)
     }
 }

@@ -57,7 +57,8 @@ test('fold, small display and enlarged-font behaviour are expressed by a pure po
   assert.match(homeView, /resources\.configuration\.fontScale\.coerceIn\(\.85f, 1\.3f\)/);
   assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\)/);
   assert.match(layout, /fun phone\(widthDp: Float\): Layout/);
-  assert.match(layout, /fun wide\(widthDp: Float\): Layout/);
+  // still a pure function of the window: width, and since the upright-Fold fill also the height
+  assert.match(layout, /fun wide\(widthDp: Float, heightDp: Float = 0f\): Layout/);
   assert.match(spec, /usableWidthDp >= 320/);
   assert.match(spec, /fontScale\.isFinite\(\)/);
   assert.match(spec, /fontScale <= 1\.25f/);

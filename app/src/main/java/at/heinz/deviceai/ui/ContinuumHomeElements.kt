@@ -12,6 +12,9 @@ import kotlin.math.min
  * [textScale] is the system font scale (clamped), applied to every text size.
  */
 abstract class ContinuumElement(protected val textScale: Float = 1f) {
+    /** Decorative motion only; does not change measured learning counts, samples or quality. */
+    var motionPhase: Float? = null
+        internal set
     abstract fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState)
     /** Spoken by TalkBack; contains the same real values that are drawn. */
     abstract fun describe(s: ContinuumDashboardState): String
@@ -186,7 +189,7 @@ class LearningCardElement(textScale: Float = 1f) : ContinuumElement(textScale) {
             ContinuumIcons.draw(p, if (up) Icon.ARROW_UP else Icon.CHEVRON_DOWN, cl + 9f, 54f, 8.5f, solid(color), 1.2f)
             p.drawText(label, cl + 14.5f, 57.3f, style, solid(color))
         }
-        WaveChart.draw(p, 14f, 72f, w - 11f, 112f, l.series)
+        WaveChart.draw(p, 14f, 72f, w - 11f, 112f, l.series, phase = motionPhase)
         val rows = l.recent.take(3)
         if (rows.isEmpty()) {
             p.drawText("Heute noch keine Lernereignisse.", 14f, 136f, t(400, 7.02f), solid(ContinuumTheme.TEXT_MUTED))
@@ -273,11 +276,16 @@ class DevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textScale
 /** Smooth layered waves of a real series; an empty series draws a flat baseline only. */
 object WaveChart {
     private val path = VectorPath()
-    fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, layers: Int = 3) {
+    fun draw(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, layers: Int = 3,
+             phase: Float? = null) {
         p.drawLine(l, b, r, b, .6f, Fill.Solid(Argb.rgb(40, 60, 110)), .8f)
         if (series.size < 2 || series.maxOrNull()?.let { it <= 0f } != false) return
         val maxV = series.maxOrNull()!!.coerceAtLeast(1e-6f)
         val colors = intArrayOf(Argb.rgb(40, 120, 255), Argb.rgb(150, 90, 255), Argb.rgb(255, 80, 180))
+        // Only decorative glow varies. The chart points always come from the actual learning journal.
+        val shimmer = phase?.takeIf { it.isFinite() }?.let {
+            0.08f * (1f + kotlin.math.sin(2f * kotlin.math.PI.toFloat() * it))
+        } ?: 0f
         for (layer in layers - 1 downTo 0) {
             // later layers are damped copies, giving the reference's multi-colour depth from the same data
             val damp = 1f - layer * .22f
@@ -302,9 +310,98 @@ object WaveChart {
                 val x0 = px(i - 1f); val x1 = px(i.toFloat()); val mid = (x0 + x1) / 2f
                 path.cubicTo(mid, py(i - 1), mid, py(i), x1, py(i))
             }
-            p.strokePath(path, 2.6f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(60, 160, 255), color, Argb.rgb(255, 90, 190))), .18f)
+            p.strokePath(path, 2.6f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(60, 160, 255), color, Argb.rgb(255, 90, 190))), .18f + shimmer)
             p.strokePath(path, 1.1f, Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(80, 180, 255), color, Argb.rgb(255, 110, 200))), .95f)
         }
+        if (phase != null && phase.isFinite() && layers > 0) {
+            val (x, y) = markerOnCurve(l, t, r, b, series, maxV, phase)
+            p.fillCircle(x, y, 5f, Fill.Solid(Argb.rgb(65, 175, 255)), .13f)
+            p.fillCircle(x, y, 2.2f, Fill.Solid(Argb.rgb(170, 235, 255)), .93f)
+        }
+    }
+
+    private val ridgeBase = Fill.Solid(Argb.rgb(40, 60, 110))
+    private val meshFill = Fill.Solid(Argb.rgb(70, 140, 255))
+    private val contourFill = Fill.Solid(Argb.rgb(150, 110, 255))
+    private val sampleGlow = Fill.Solid(Argb.rgb(90, 170, 255))
+    private val sampleCore = Fill.Solid(Argb.rgb(200, 240, 255))
+    private val baselineGlow = Fill.Solid(Argb.rgb(90, 160, 255))
+    private var ridgeKey = FloatArray(0)
+    private var ridgeFills = emptyList<Fill>()
+
+    /**
+     * Mountain style of the measured system activity (as in reference-fold.png): the series is a luminous ridge over
+     * a wireframe made from the same data - vertical mesh lines from the baseline up to the drawn curve, and contour
+     * lines that are the curve scaled to 2/3 and 1/3 - with a glowing point on every real sample and a glowing
+     * baseline. Nothing is invented: every height is a measured value or a fixed fraction of it.
+     */
+    fun drawRidge(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, meshStep: Float = 5.5f) {
+        p.drawLine(l, b, r, b, .6f, ridgeBase, .8f)
+        if (series.size < 2 || series.maxOrNull()?.let { it <= 0f } != false) return
+        val maxV = series.maxOrNull()!!.coerceAtLeast(1e-6f)
+        val key = floatArrayOf(l, t, r, b)
+        if (!key.contentEquals(ridgeKey)) {
+            ridgeKey = key
+            ridgeFills = listOf(
+                // light rises from the horizon: brightest at the baseline, as in the reference
+                Fill.Linear(0f, t, 0f, b, intArrayOf(Argb.of(70, 60, 110, 255), Argb.of(150, 60, 84, 232), Argb.of(215, 72, 92, 245)), floatArrayOf(0f, .65f, 1f)),
+                Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(70, 170, 255), Argb.rgb(150, 100, 255), Argb.rgb(255, 100, 200))))
+        }
+        val n = series.size
+        fun px(i: Int) = l + (r - l) * i / (n - 1)
+        fun py(i: Int, k: Float = 1f) = b - (b - t) * .95f * (series[i] / maxV) * k
+        fun curve(k: Float) {
+            path.reset()
+            path.moveTo(px(0), py(0, k))
+            for (i in 1 until n) {
+                val mid = (px(i - 1) + px(i)) / 2f
+                path.cubicTo(mid, py(i - 1, k), mid, py(i, k), px(i), py(i, k))
+            }
+        }
+        curve(1f)
+        path.lineTo(px(n - 1), b).lineTo(px(0), b).close()
+        p.fillPath(path, ridgeFills[0])
+        p.setAdditive(true)
+        var x = l
+        while (x <= r + .01f) {
+            val (_, y) = markerOnCurve(l, t, r, b, series, maxV, ((x - l) / (r - l)).coerceIn(0f, 1f))
+            p.drawLine(x, b, x, y, .5f, meshFill, .42f, roundCap = false)
+            x += meshStep
+        }
+        for (k in floatArrayOf(.34f, .67f)) {
+            curve(k)
+            p.strokePath(path, .55f, contourFill, .35f)
+        }
+        curve(1f)
+        p.strokePath(path, 3.2f, ridgeFills[1], .22f)
+        p.strokePath(path, 1.2f, ridgeFills[1], .95f)
+        for (i in 0 until n) {
+            p.fillCircle(px(i), py(i), 2.6f, sampleGlow, .22f)
+            p.fillCircle(px(i), py(i), .95f, sampleCore, .9f)
+        }
+        p.drawLine(l, b, r, b, 5f, baselineGlow, .3f)
+        p.drawLine(l, b, r, b, 1.2f, sampleCore, .8f)
+        p.setAdditive(false)
+    }
+
+    /**
+     * Point of the traveling marker on the drawn front curve. Between two real samples the curve is the cubic
+     * x(u) = x0 + (x1 − x0)(1.5u(1 − u) + u³), y(u) = y0 + (y1 − y0)u²(3 − 2u) (control points at the segment middle);
+     * x is mapped back to u by Newton steps, so the marker never leaves the line and never shows an invented value.
+     */
+    fun markerOnCurve(l: Float, t: Float, r: Float, b: Float, series: List<Float>, maxV: Float, phase: Float): Pair<Float, Float> {
+        val n = series.size
+        val f = phase.coerceIn(0f, 1f) * (n - 1)
+        val i0 = f.toInt().coerceIn(0, n - 2)
+        val local = (f - i0).coerceIn(0f, 1f)
+        var u = local
+        repeat(6) {
+            val g = 1.5f * u * (1f - u) + u * u * u - local
+            val d = 1.5f - 3f * u + 3f * u * u            // ≥ 0.75, so x(u) is monotonic
+            u = (u - g / d).coerceIn(0f, 1f)
+        }
+        fun py(i: Int) = b - (b - t) * .95f * (series[i] / maxV)
+        return l + (r - l) * (i0 + local) / (n - 1) to py(i0) + (py(i0 + 1) - py(i0)) * u * u * (3f - 2f * u)
     }
 }
 

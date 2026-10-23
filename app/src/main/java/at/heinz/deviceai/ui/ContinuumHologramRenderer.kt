@@ -40,21 +40,29 @@ class ContinuumHologramRenderer {
     }
 
     /**
-     * Vertical composition in units of the sphere radius, measured from the two references:
+     * Vertical composition in units of the composition radius, measured from the two references:
      * phone (412 x 307 dp box) and Fold (410 x 291 dp box, compressed pedestal, no page marks).
+     * [sphere] is the glass sphere's radius over the composition radius (rim measured at the brightest point per ray:
+     * phone 99.3 dp of 100.9, Fold 100.7 dp of 97.0); [haloNodes], [aura] and [bloom] set the network and glow
+     * around it (radial colour profiles of the references: the Fold glows further out than the phone).
      */
     data class Geometry(val centerY: Float, val radiusOfWidth: Float, val radiusOfHeight: Float, val pad: Float,
-                        val wall: Float, val brand: Float, val tagline: Float, val marks: Float?, val flat: Float = 1f) {
+                        val wall: Float, val brand: Float, val tagline: Float, val marks: Float?, val flat: Float = 1f,
+                        val sphere: Float = 1f, val haloNodes: Int = 28, val aura: Float = .25f, val bloom: Float = .6f) {
         companion object {
             val PHONE = Geometry(centerY = .381f, radiusOfWidth = .2455f, radiusOfHeight = .329f, pad = 1.11f,
                 wall = .33f, brand = 1.545f, tagline = 1.685f, marks = 1.795f)
             val FOLD = Geometry(centerY = .495f, radiusOfWidth = .2366f, radiusOfHeight = .3334f, pad = .99f,
-                wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null, flat = .62f)
+                wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null, flat = .62f, sphere = 1.04f, haloNodes = 72, aura = .35f, bloom = 1f)
         }
     }
 
     var geometry: Geometry = Geometry.PHONE
-        set(value) { field = value; w = 0f; h = 0f }
+        set(value) {
+            if (value.haloNodes != field.haloNodes) plexus = ContinuumHologramPlexus(value.haloNodes)
+            field = value; w = 0f; h = 0f
+        }
+    private var plexus = ContinuumHologramPlexus(Geometry.PHONE.haloNodes)
 
     /** Draw the "CONTINUUM / INTELLIGENCE LIVES ON" line and page marks below the pedestal. */
     var showBrand = true
@@ -67,6 +75,9 @@ class ContinuumHologramRenderer {
     private var cy = 0f
     private var r = 0f
     private var scale = 1f
+    /** Radius of the glass sphere and its stroke scale (composition radius [r] places pedestal and text). */
+    private var rs = 0f
+    private var sphereScale = 1f
     private val padY get() = cy + r * geometry.pad
     private val baseTopY get() = cy + r * (geometry.pad + .06f)
     private val flangeTopY get() = cy + r * (geometry.pad + .06f + geometry.wall)
@@ -98,10 +109,29 @@ class ContinuumHologramRenderer {
     private var floorFills: List<Fill> = emptyList()
     private lateinit var brandFill: Fill
     private lateinit var taglineFill: Fill
+    private lateinit var coreHalo: Fill
+    private lateinit var aura: Fill
+    private lateinit var auraMagenta: Fill
 
     private val path = VectorPath()
     private val stars = Array(70) { Star(it) }
-    private val dust = Array(420) { Dust(it) }
+
+    /** Network colours by depth bucket: violet at the back, blue in the middle, cyan-white at the front. */
+    private val depthFills = Array(DEPTH_BUCKETS) { i ->
+        val t = i / (DEPTH_BUCKETS - 1f)
+        Fill.Solid(if (t < .5f) Argb.mix(Argb.rgb(96, 78, 214), Argb.rgb(58, 138, 255), t * 2f)
+        else Argb.mix(Argb.rgb(58, 138, 255), Argb.rgb(178, 236, 255), t * 2f - 1f))
+    }
+    private val nodeCool = Fill.Solid(Argb.rgb(196, 242, 255))
+    private val nodeViolet = Fill.Solid(Argb.rgb(184, 150, 255))
+    private val nodePink = Fill.Solid(Argb.rgb(255, 140, 220))
+    private val dustFills = arrayOf(Fill.Solid(Argb.rgb(150, 220, 255)), Fill.Solid(Argb.rgb(170, 140, 255)),
+        Fill.Solid(Argb.rgb(255, 120, 170)), Fill.Solid(Argb.rgb(255, 160, 96)))
+    private val pulseFill = Fill.Solid(Argb.rgb(236, 250, 255))
+    private val haloFill = Fill.Solid(Argb.rgb(110, 170, 255))
+    private val accentFill = Fill.Solid(Argb.rgb(236, 112, 226))
+    private val orbitCore = Fill.Solid(Argb.rgb(232, 248, 255))
+    private val orbitSpark = Fill.Solid(Argb.rgb(235, 250, 255))
 
     private class Star(i: Int) {
         val u = (i * 0.618034f + .137f) % 1f
@@ -111,19 +141,6 @@ class ContinuumHologramRenderer {
         val flare = i % 11 == 0
     }
 
-    /** Particles inside the glass sphere (uniform on the disc, a warm cluster in the upper right as in the reference). */
-    private class Dust(i: Int) {
-        val radius: Float
-        val angle: Float
-        val warm = i % 6 == 0
-        val size = if (i % 13 == 0) 1.15f else if (i % 3 == 0) .75f else .45f
-        init {
-            val t = (i * 0.618034f + .11f) % 1f
-            radius = sqrt((i * 0.754877f + .07f) % 1f) * .93f
-            angle = if (warm) (-.9f + t * 1.3f) else t * 2f * PI.toFloat()
-        }
-    }
-
     fun layout(width: Float, height: Float) {
         if (width == w && height == h) return
         w = width; h = height
@@ -131,38 +148,50 @@ class ContinuumHologramRenderer {
         cx = width / 2f
         cy = height * geometry.centerY
         scale = r / 101f
+        rs = r * geometry.sphere
+        sphereScale = rs / 101f
         backdrop = Fill.Radial(cx, cy + r * .15f, r * 2.1f,
             intArrayOf(Argb.of(175, 24, 70, 175), Argb.of(110, 14, 46, 128), Argb.of(40, 8, 24, 70), 0),
             floatArrayOf(0f, .36f, .68f, 1f))
         rays = Fill.Linear(0f, cy - r * 1.25f, 0f, cy - r * .2f,
             intArrayOf(0, Argb.of(90, 80, 170, 255), Argb.of(0, 80, 170, 255)), floatArrayOf(0f, .55f, 1f))
-        bloom = Fill.Radial(cx, cy, r * 1.34f,
-            intArrayOf(0, 0, Argb.of(190, 70, 165, 255), Argb.of(95, 90, 120, 255), Argb.of(30, 100, 90, 255), 0),
+        // Sphere colours follow the radial profile of the references (saturated blue, little red): a bright cyan-blue
+        // shell around the core at 0.4-0.6 r, a darker band at 0.6-0.8 r, a violet-white rim and a blue aura outside.
+        bloom = Fill.Radial(cx, cy, rs * 1.34f,
+            intArrayOf(0, 0, Argb.of(190, 70, 150, 255), Argb.of(105, 80, 115, 255), Argb.of(36, 90, 90, 255), 0),
             floatArrayOf(0f, .68f, .75f, .82f, .91f, 1f))
-        glass = Fill.Radial(cx, cy + r * .08f, r,
-            intArrayOf(Argb.of(245, 8, 22, 76), Argb.of(248, 5, 14, 52), Argb.of(248, 10, 30, 110), Argb.of(252, 40, 104, 250)),
-            floatArrayOf(0f, .55f, .87f, 1f))
-        glassCyan = Fill.Radial(cx - r * .66f, cy + r * .1f, r * .8f,
-            intArrayOf(Argb.of(95, 40, 210, 255), Argb.of(30, 40, 180, 255), 0), floatArrayOf(0f, .55f, 1f))
-        glassViolet = Fill.Radial(cx + r * .6f, cy - r * .1f, r * .85f,
-            intArrayOf(Argb.of(120, 150, 60, 235), Argb.of(40, 120, 50, 220), 0), floatArrayOf(0f, .55f, 1f))
-        rim = Fill.Sweep(cx, cy, intArrayOf(Argb.rgb(120, 150, 255), Argb.rgb(70, 170, 255), Argb.rgb(60, 220, 255),
-            Argb.rgb(120, 240, 255), Argb.rgb(210, 245, 255), Argb.rgb(170, 130, 255), Argb.rgb(230, 90, 230), Argb.rgb(120, 150, 255)),
-            floatArrayOf(0f, .14f, .38f, .55f, .72f, .83f, .92f, 1f))
-        innerGlass = Fill.Radial(cx - r * .08f, cy - r * .1f, r * .44f,
-            intArrayOf(Argb.of(160, 50, 44, 150), Argb.of(150, 28, 26, 104), Argb.of(175, 46, 66, 190), Argb.of(225, 100, 160, 255)),
+        // two-sided aura as in the references: teal-cyan light on the left, magenta on the right
+        aura = Fill.Radial(cx - rs * .3f, cy, rs * 1.7f,
+            intArrayOf(0, 0, Argb.of(150, 18, 120, 225), Argb.of(80, 16, 92, 190), 0), floatArrayOf(0f, .45f, .55f, .75f, 1f))
+        auraMagenta = Fill.Radial(cx + rs * .35f, cy - rs * .05f, rs * 1.5f,
+            intArrayOf(0, 0, Argb.of(120, 130, 50, 215), Argb.of(50, 100, 40, 175), 0), floatArrayOf(0f, .5f, .6f, .78f, 1f))
+        glass = Fill.Radial(cx, cy + rs * .08f, rs,
+            intArrayOf(Argb.of(244, 12, 26, 104), Argb.of(246, 8, 20, 84), Argb.of(248, 10, 28, 102), Argb.of(250, 28, 62, 180),
+                Argb.of(252, 58, 96, 240)),
+            floatArrayOf(0f, .5f, .78f, .92f, 1f))
+        glassCyan = Fill.Radial(cx - rs * .66f, cy + rs * .1f, rs * .8f,
+            intArrayOf(Argb.of(80, 30, 190, 255), Argb.of(26, 30, 160, 255), 0), floatArrayOf(0f, .55f, 1f))
+        glassViolet = Fill.Radial(cx + rs * .6f, cy - rs * .1f, rs * .85f,
+            intArrayOf(Argb.of(110, 140, 60, 240), Argb.of(36, 110, 50, 225), 0), floatArrayOf(0f, .55f, 1f))
+        coreHalo = Fill.Radial(cx, cy, rs * .68f,
+            intArrayOf(0, 0, Argb.of(205, 40, 132, 255), Argb.of(110, 40, 100, 245), 0), floatArrayOf(0f, .55f, .68f, .82f, 1f))
+        rim = Fill.Sweep(cx, cy, intArrayOf(Argb.rgb(250, 96, 222), Argb.rgb(150, 112, 255), Argb.rgb(70, 170, 255),
+            Argb.rgb(60, 222, 255), Argb.rgb(150, 236, 255), Argb.rgb(226, 242, 255), Argb.rgb(200, 150, 255), Argb.rgb(250, 96, 222)),
+            floatArrayOf(0f, .16f, .32f, .46f, .62f, .74f, .87f, 1f))
+        innerGlass = Fill.Radial(cx - rs * .08f, cy - rs * .1f, rs * .44f,
+            intArrayOf(Argb.of(205, 34, 48, 176), Argb.of(195, 22, 30, 124), Argb.of(200, 36, 62, 198), Argb.of(230, 86, 146, 255)),
             floatArrayOf(0f, .55f, .88f, 1f))
         innerRim = Fill.Sweep(cx, cy, intArrayOf(Argb.rgb(170, 110, 255), Argb.rgb(90, 160, 255), Argb.rgb(120, 225, 255),
             Argb.rgb(205, 235, 255), Argb.rgb(200, 110, 255), Argb.rgb(170, 110, 255)), floatArrayOf(0f, .25f, .5f, .7f, .85f, 1f))
-        innerSpecular = Fill.Radial(cx - r * .14f, cy - r * .22f, r * .2f,
-            intArrayOf(Argb.of(150, 210, 230, 255), Argb.of(30, 160, 190, 255), 0), floatArrayOf(0f, .5f, 1f))
-        specular = Fill.Radial(cx - r * .45f, cy - r * .55f, r * .5f,
-            intArrayOf(Argb.of(120, 200, 235, 255), Argb.of(30, 130, 200, 255), 0), floatArrayOf(0f, .45f, 1f))
-        infinity = Fill.Linear(cx - r * .32f, cy, cx + r * .32f, cy,
-            intArrayOf(Argb.rgb(120, 230, 255), Argb.rgb(150, 170, 255), Argb.rgb(200, 140, 255)))
-        infinityGlow = Fill.Radial(cx, cy + r * .1f, r * .5f,
-            intArrayOf(Argb.of(150, 110, 150, 255), Argb.of(60, 100, 110, 255), 0), floatArrayOf(0f, .5f, 1f))
-        beam = Fill.Linear(0f, cy - r, 0f, padY + r * .02f,
+        innerSpecular = Fill.Radial(cx - rs * .14f, cy - rs * .22f, rs * .2f,
+            intArrayOf(Argb.of(130, 200, 225, 255), Argb.of(26, 150, 185, 255), 0), floatArrayOf(0f, .5f, 1f))
+        specular = Fill.Radial(cx - rs * .45f, cy - rs * .55f, rs * .5f,
+            intArrayOf(Argb.of(110, 190, 230, 255), Argb.of(26, 120, 190, 255), 0), floatArrayOf(0f, .45f, 1f))
+        infinity = Fill.Linear(cx - rs * .32f, cy, cx + rs * .32f, cy,
+            intArrayOf(Argb.rgb(70, 222, 255), Argb.rgb(120, 146, 255), Argb.rgb(214, 100, 255)))
+        infinityGlow = Fill.Radial(cx, cy + rs * .1f, rs * .5f,
+            intArrayOf(Argb.of(120, 80, 120, 255), Argb.of(50, 80, 90, 245), 0), floatArrayOf(0f, .5f, 1f))
+        beam = Fill.Linear(0f, cy - rs, 0f, padY + r * .02f,
             intArrayOf(Argb.of(0, 170, 235, 255), Argb.of(150, 170, 235, 255), Argb.of(255, 220, 250, 255)), floatArrayOf(0f, .55f, 1f))
         padGlow = Fill.Radial(cx, padY, r * .8f,
             intArrayOf(Argb.of(255, 230, 252, 255), Argb.of(245, 110, 220, 255), Argb.of(200, 30, 130, 245), Argb.of(0, 20, 80, 200)),
@@ -182,7 +211,7 @@ class ContinuumHologramRenderer {
         padCore = Fill.Radial(cx, padY, r * .32f, intArrayOf(Argb.of(255, 250, 255, 255), Argb.of(0, 160, 230, 255)))
         contactGlow = Fill.Radial(cx, padY - r * .05f, r * .78f, intArrayOf(Argb.of(235, 225, 250, 255), Argb.of(150, 90, 200, 255),
             Argb.of(0, 40, 120, 255)), floatArrayOf(0f, .35f, 1f))
-        orbitFills = orbits.map { o -> Fill.Linear(cx - r * o.a, cy, cx + r * o.a, cy, o.colors) }
+        orbitFills = orbits.map { o -> Fill.Linear(cx - rs * o.a, cy, cx + rs * o.a, cy, o.colors) }
         floorFills = (0..3).map { i ->
             val rx = r * (1.72f + i * .2f)
             val color = if (i % 2 == 0) Argb.rgb(60, 180, 255) else Argb.rgb(140, 110, 255)
@@ -197,15 +226,25 @@ class ContinuumHologramRenderer {
         p.fillRect(0f, 0f, w, h, backdrop)
         drawRays(p, f)
         drawStars(p, f)
+        p.fillCircle(cx - rs * .3f, cy, rs * 1.7f, aura, geometry.aura)
+        p.fillCircle(cx + rs * .35f, cy - rs * .05f, rs * 1.5f, auraMagenta, geometry.aura)
         p.fillOval(cx - r * 2.2f, flangeTopY - r * .3f, cx + r * 2.2f, flangeTopY + r * .35f, floorGlow)
         drawFloor(p, f)
         drawPedestal(p, f)
+        // One rotation for the whole network: slow turn plus a gentle nod, both from the animation phase.
+        plexus.project(f.phase * .16f, .3f + .05f * sin(f.phase * .21f), cx, cy, rs, f.phase)
+        // Light layers add up (crossings and dense regions glow); glass, core and text cover.
+        p.setAdditive(true)
+        drawHalo(p, f)
         drawOrbits(p, f, front = false)
+        p.setAdditive(false)
         drawSphere(p, f)
+        p.setAdditive(true)
         drawOrbits(p, f, front = true)
         val contactY = padY - r * .05f
-        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, .85f + f.energy * .15f)
+        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, .4f + f.energy * .1f)
         drawSparkles(p, f)
+        p.setAdditive(false)
         if (showBrand) drawBrand(p)
     }
 
@@ -280,31 +319,32 @@ class ContinuumHologramRenderer {
 
     private class Orbit(val tilt: Float, val a: Float, val b: Float, val speed: Float, val colors: IntArray, val width: Float)
 
+    // Ring extents measured on the references: the widest ring reaches about 1.4 sphere radii beside the sphere.
     private val orbits = listOf(
-        Orbit(-11f, 1.78f, .36f, 1f, intArrayOf(Argb.rgb(80, 225, 255), Argb.rgb(120, 170, 255), Argb.rgb(210, 110, 255)), 1.5f),
-        Orbit(22f, 1.5f, .5f, -.8f, intArrayOf(Argb.rgb(120, 140, 255), Argb.rgb(190, 110, 255), Argb.rgb(255, 120, 210)), 1.25f),
-        Orbit(-38f, 1.34f, .44f, .65f, intArrayOf(Argb.rgb(230, 100, 220), Argb.rgb(150, 120, 255), Argb.rgb(80, 210, 255)), 1.05f),
-        Orbit(74f, 1.2f, .31f, -.55f, intArrayOf(Argb.rgb(80, 215, 255), Argb.rgb(150, 150, 255), Argb.rgb(90, 225, 255)), .95f),
-        Orbit(7f, 1.28f, .62f, .45f, intArrayOf(Argb.rgb(90, 230, 255), Argb.rgb(150, 160, 255), Argb.rgb(240, 110, 220)), 1.1f)
+        Orbit(-11f, 1.42f, .34f, 1f, intArrayOf(Argb.rgb(80, 225, 255), Argb.rgb(120, 170, 255), Argb.rgb(210, 110, 255)), 1.5f),
+        Orbit(22f, 1.32f, .48f, -.8f, intArrayOf(Argb.rgb(120, 140, 255), Argb.rgb(190, 110, 255), Argb.rgb(255, 120, 210)), 1.25f),
+        Orbit(-36f, 1.22f, .42f, .65f, intArrayOf(Argb.rgb(230, 100, 220), Argb.rgb(150, 120, 255), Argb.rgb(80, 210, 255)), 1.05f),
+        Orbit(74f, 1.14f, .3f, -.55f, intArrayOf(Argb.rgb(80, 215, 255), Argb.rgb(150, 150, 255), Argb.rgb(90, 225, 255)), .95f),
+        Orbit(7f, 1.18f, .6f, .45f, intArrayOf(Argb.rgb(90, 230, 255), Argb.rgb(150, 160, 255), Argb.rgb(240, 110, 220)), 1.1f)
     )
 
     private fun drawOrbits(p: ContinuumPainter, f: Frame, front: Boolean) {
         for ((i, o) in orbits.withIndex()) {
-            val a = r * o.a; val b = r * o.b
+            val a = rs * o.a; val b = rs * o.b
             val wobble = sin(f.phase * .35f + i * 1.7f) * 2f
             p.save()
             p.rotate(o.tilt + wobble, cx, cy)
             val fill = orbitFills[i]
             val start = if (front) 0f else 180f
             val k = if (front) 1f else .55f
-            val wd = o.width * scale
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 6.5f, fill, .08f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 3.2f, fill, .2f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 1.5f, fill, .85f * k)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * .6f, Fill.Solid(Argb.rgb(232, 248, 255)), .85f * k)
+            val wd = o.width * sphereScale
+            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 6.5f, fill, .05f * k)
+            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 3.2f, fill, .12f * k)
+            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * 1.5f, fill, .5f * k)
+            p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, 180f, wd * .6f, orbitCore, .5f * k)
             val travel = ((f.phase * 24f * o.speed + i * 77f) % 360f + 360f) % 360f
             val local = if (front) travel % 180f else 180f + travel % 180f
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, local, 24f, wd * 1.6f, Fill.Solid(Argb.rgb(235, 250, 255)), .9f * k)
+            p.strokeArc(cx - a, cy - b, cx + a, cy + b, local, 24f, wd * 1.6f, orbitSpark, .6f * k)
             p.restore()
         }
     }
@@ -313,140 +353,159 @@ class ContinuumHologramRenderer {
         val breath = 1f + sin(f.phase * 1.4f) * (.006f + f.energy * .008f) + f.audio * .02f
         p.save()
         p.scale(breath, breath, cx, cy)
-        p.fillCircle(cx, cy, r * 1.3f, bloom)
-        p.fillCircle(cx, cy, r, glass)
-        p.fillCircle(cx, cy, r, glassCyan)
-        p.fillCircle(cx, cy, r, glassViolet)
-        drawDust(p, f)
-        drawNetwork(p, f)
-        drawInnerOrbits(p, f)
-        // centre beam from the pad through the core
+        p.fillCircle(cx, cy, rs * 1.3f, bloom, geometry.bloom)
+        p.fillCircle(cx, cy, rs, glass)
+        p.fillCircle(cx, cy, rs, glassCyan)
+        p.fillCircle(cx, cy, rs, glassViolet)
+        p.setAdditive(true)
+        p.fillCircle(cx, cy, rs * .68f, coreHalo, .85f + f.energy * .15f)
+        drawPlexus(p, f, front = false)
         // fan of light rays rising from the projection pad
         for (i in 0 until 15) {
             val t = (i - 7) / 7f
             val x0 = cx + t * r * .5f
-            val x1 = cx + t * r * .16f
+            val x1 = cx + t * rs * .16f
             val alpha = (.22f - abs(t) * .1f) * (.8f + .2f * sin(f.phase * .9f + i))
-            p.drawLine(x0, padY - r * .05f, x1, cy + r * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
+            p.drawLine(x0, padY - r * .05f, x1, cy + rs * .12f, (if (i % 3 == 0) 1.1f else .6f) * scale, beam, alpha)
         }
-        p.drawLine(cx, cy - r * .98f, cx, padY, 4.5f * scale, beam, .25f + f.energy * .1f)
-        p.drawLine(cx, cy - r * .98f, cx, padY, 1.1f * scale, beam, .95f)
+        p.drawLine(cx, cy - rs * .98f, cx, padY, 4.5f * scale, beam, .15f + f.energy * .08f)
+        p.drawLine(cx, cy - rs * .98f, cx, padY, 1.1f * scale, beam, .5f)
         drawStateEffects(p, f)
-        // inner sphere with the infinity mark
-        p.fillCircle(cx, cy + r * .05f, r * .62f, infinityGlow, .5f + f.energy * .3f)
-        p.fillCircle(cx, cy, r * .4f, innerGlass)
-        p.strokeCircle(cx, cy, r * .4f, r * .06f, innerRim, .18f)
-        p.strokeCircle(cx, cy, r * .4f, r * .02f, innerRim, .95f)
-        p.fillOval(cx - r * .3f, cy - r * .36f, cx + r * .02f, cy - r * .12f, innerSpecular)
+        p.setAdditive(false)
+        // inner sphere with the infinity mark; it hides the back half of the network
+        p.fillCircle(cx, cy + rs * .05f, rs * .62f, infinityGlow, .32f + f.energy * .2f)
+        p.fillCircle(cx, cy, rs * .4f, innerGlass)
+        p.strokeCircle(cx, cy, rs * .4f, rs * .06f, innerRim, .18f)
+        p.strokeCircle(cx, cy, rs * .4f, rs * .02f, innerRim, .95f)
+        p.fillOval(cx - rs * .3f, cy - rs * .36f, cx + rs * .02f, cy - rs * .12f, innerSpecular)
         drawInfinity(p, f)
+        p.setAdditive(true)
+        drawPlexus(p, f, front = true)
         // rim: bloom ring, crisp edge, highlight arc and specular
-        p.strokeCircle(cx, cy, r * 1.01f, r * .16f, rim, .13f)
-        p.strokeCircle(cx, cy, r, r * .08f, rim, .35f)
-        p.strokeCircle(cx, cy, r, r * .036f, rim, .95f)
-        p.strokeCircle(cx, cy, r * .993f, r * .01f, Fill.Solid(Argb.rgb(215, 248, 255)), .8f)
-        p.strokeArc(cx - r * .955f, cy - r * .955f, cx + r * .955f, cy + r * .955f, 196f, 72f, r * .022f,
-            Fill.Solid(Argb.rgb(230, 250, 255)), .75f)
-        p.fillOval(cx - r * .82f, cy - r * .9f, cx - r * .05f, cy - r * .32f, specular)
+        p.strokeCircle(cx, cy, rs * 1.01f, rs * .16f, rim, .05f)
+        p.strokeCircle(cx, cy, rs, rs * .08f, rim, .1f)
+        p.strokeCircle(cx, cy, rs, rs * .036f, rim, .3f)
+        p.strokeCircle(cx, cy, rs * .993f, rs * .01f, rimEdge, .18f)
+        p.strokeArc(cx - rs * .955f, cy - rs * .955f, cx + rs * .955f, cy + rs * .955f, 196f, 72f, rs * .022f, rimHighlight, .4f)
+        p.fillOval(cx - rs * .82f, cy - rs * .9f, cx - rs * .05f, cy - rs * .32f, specular)
+        p.setAdditive(false)
         p.restore()
     }
 
-    private fun drawDust(p: ContinuumPainter, f: Frame) {
-        val turn = f.phase * .05f
-        for ((i, d) in dust.withIndex()) {
-            val angle = d.angle + turn * (if (i % 2 == 0) 1f else -.6f)
-            val x = cx + cos(angle) * d.radius * r
-            val y = cy + sin(angle) * d.radius * r
+    private val rimEdge = Fill.Solid(Argb.rgb(215, 248, 255))
+    private val rimHighlight = Fill.Solid(Argb.rgb(230, 250, 255))
+
+    private fun depthFill(t: Float) = depthFills[(t * (DEPTH_BUCKETS - 1) + .5f).toInt().coerceIn(0, DEPTH_BUCKETS - 1)]
+
+    /**
+     * One half of the spatial network inside the glass ([front] = facing the viewer). Back links are thin, dim and
+     * violet; front links sharp, bright and cyan-white. Over the core the front half is faint, so the infinity
+     * mark stays clearly readable. Light pulses travel along a fixed subset of front links.
+     */
+    private fun drawPlexus(p: ContinuumPainter, f: Frame, front: Boolean) {
+        val px = plexus
+        val intensity = .82f + f.weight(Mode.THINKING) * .25f + f.weight(Mode.LEARNING) * .18f
+        drawArcs(p, front, intensity)
+        val core = rs * .42f
+        for (e in 0 until px.edgeCount) {
+            val a = px.edgeA[e]; val b = px.edgeB[e]
+            if (px.layer[a] == ContinuumHologramPlexus.Layer.HALO) continue
+            val d = (px.depth[a] + px.depth[b]) * .5f
+            if ((d >= 0f) != front) continue
+            val t = (d + 1f) * .5f
+            var alpha = (.08f + .8f * t * t) * intensity
+            if (front) {
+                val mx = (px.sx[a] + px.sx[b]) * .5f - cx; val my = (px.sy[a] + px.sy[b]) * .5f - cy
+                if (mx * mx + my * my < core * core) alpha *= .3f
+            }
+            p.drawLine(px.sx[a], px.sy[a], px.sx[b], px.sy[b], (.36f + .74f * t) * sphereScale,
+                if (e % 6 == 0) accentFill else depthFill(t), alpha)
+        }
+        if (front) for (e in 0 until px.edgeCount step 7) {
+            val a = px.edgeA[e]; val b = px.edgeB[e]
+            if (px.layer[a] == ContinuumHologramPlexus.Layer.HALO || px.depth[a] + px.depth[b] < 0f) continue
+            val t = (f.phase * .3f + e * .618034f) % 1f
+            val t1 = min(1f, t + .16f)
+            val x0 = px.sx[a] + (px.sx[b] - px.sx[a]) * t; val y0 = px.sy[a] + (px.sy[b] - px.sy[a]) * t
+            val x1 = px.sx[a] + (px.sx[b] - px.sx[a]) * t1; val y1 = px.sy[a] + (px.sy[b] - px.sy[a]) * t1
+            p.drawLine(x0, y0, x1, y1, .9f * sphereScale, pulseFill, .75f * intensity * sin(t * PI.toFloat()))
+        }
+        for (i in 0 until px.nodeCount) {
+            val layer = px.layer[i]
+            if (layer == ContinuumHologramPlexus.Layer.HALO) continue
+            val d = px.depth[i]
+            if ((d >= 0f) != front) continue
+            val t = (d + 1f) * .5f
+            val fill = if (i % 11 == 0) nodePink else if (layer == ContinuumHologramPlexus.Layer.INNER) nodeViolet else nodeCool
+            p.fillCircle(px.sx[i], px.sy[i], (.4f + 1.05f * t) * sphereScale, fill, (.12f + .85f * t) * intensity)
+            if (front && t > .78f && i % 3 == 0) {
+                glow(p, px.sx[i], px.sy[i], 3.6f * sphereScale, Argb.withAlpha((fill as Fill.Solid).argb, .6f), intensity)
+            }
+        }
+        for (i in 0 until px.dustCount) {
+            val d = px.dustDepth[i]
+            if ((d >= 0f) != front) continue
+            val t = (d + 1f) * .5f
             val twinkle = .5f + .5f * sin(f.phase * (.9f + (i % 7) * .11f) + i * 1.3f)
-            val color = when {
-                d.warm -> if (i % 12 == 0) Argb.rgb(255, 150, 90) else Argb.rgb(255, 110, 170)
-                i % 5 == 0 -> Argb.rgb(170, 140, 255)
-                else -> Argb.rgb(150, 220, 255)
-            }
-            p.fillCircle(x, y, d.size * scale, Fill.Solid(color), .5f + twinkle * .5f)
-            if (i % 17 == 0) {
-                val g = 3.4f * scale
-                glow(p, x, y, g, Argb.withAlpha(color, .5f), twinkle)
+            val fill = when (px.dustTint[i]) { 2 -> dustFills[if (i % 2 == 0) 2 else 3]; 1 -> dustFills[1]; else -> dustFills[0] }
+            p.fillCircle(px.dustX[i], px.dustY[i], px.dustSize[i] * (.75f + .55f * t) * sphereScale, fill, (.35f + .65f * t) * (.5f + .5f * twinkle))
+            if (front && i % 17 == 0) glow(p, px.dustX[i], px.dustY[i], 3.4f * sphereScale, Argb.withAlpha(fill.argb, .5f), twinkle)
+        }
+    }
+
+    /** The part of every light arc on the [front] or back half (circle angles 0..180 are in front). */
+    private fun drawArcs(p: ContinuumPainter, front: Boolean, intensity: Float) {
+        val px = plexus
+        for (i in 0 until px.arcCount) {
+            val from = px.arcFrom[i]; val to = from + px.arcSweepNow[i]
+            var window = if (front) 0f else 180f
+            while (window < to) {
+                val a = max(from, window); val b = min(to, window + 180f)
+                if (b > a) drawArc(p, i, a, b, front, intensity)
+                window += 360f
             }
         }
     }
 
-    /** Great circles of a slowly turning sphere: the luminous interior lattice. */
-    private fun drawNetwork(p: ContinuumPainter, f: Frame) {
-        val turn = f.phase * .16f
-        val density = .7f + f.weight(Mode.THINKING) * .3f + f.weight(Mode.LEARNING) * .2f
-        val circles = 18
-        for (k in 0 until circles) {
-            val inclination = (k * 31f + 9f) * (PI.toFloat() / 180f)
-            val node = k * 2.39996f + turn
-            val nx = sin(inclination) * cos(node); val ny = cos(inclination); val nz = sin(inclination) * sin(node)
-            var ux = -nz; val uy = 0f; var uz = nx
-            var len = sqrt(ux * ux + uz * uz)
-            if (len < 1e-3f) { ux = 1f; uz = 0f; len = 1f }
-            ux /= len; uz /= len
-            val vx = ny * uz - nz * uy; val vy = nz * ux - nx * uz; val vz = nx * uy - ny * ux
-            val color = when (k % 5) { 0, 3 -> Argb.rgb(120, 225, 255); 1 -> Argb.rgb(90, 150, 255); 2 -> Argb.rgb(180, 130, 255); else -> Argb.rgb(240, 120, 215) }
-            for (half in 0..1) {
-                path.reset()
-                var started = false
-                var done = false
-                for (step in 0..48) {
-                    if (done) break
-                    val t = step * (PI.toFloat() * 2f / 48f)
-                    val x = cos(t) * ux + sin(t) * vx; val y = cos(t) * uy + sin(t) * vy; val z = cos(t) * uz + sin(t) * vz
-                    val inHalf = (z >= 0f) == (half == 0)
-                    if (inHalf) {
-                        val sx = cx + x * r * .965f; val sy = cy + y * r * .965f
-                        if (!started) { path.moveTo(sx, sy); started = true } else path.lineTo(sx, sy)
-                    } else if (started) done = true
-                }
-                if (path.isEmpty) continue
-                if (half == 0) {
-                    p.strokePath(path, 3.4f * scale, Fill.Solid(color), .13f * density)
-                    p.strokePath(path, 1.3f * scale, Fill.Solid(color), .45f * density)
-                    p.strokePath(path, .55f * scale, Fill.Solid(Argb.mix(color, Argb.rgb(255, 255, 255), .55f)), .95f * density)
-                } else {
-                    p.strokePath(path, .6f * scale, Fill.Solid(color), .38f * density)
-                }
-            }
-        }
-        // Glowing nodes on a Fibonacci sphere
-        val n = 30
-        for (i in 0 until n) {
-            val y = 1f - (i + .5f) * 2f / n
-            val radius = sqrt(1f - y * y)
-            val angle = i * 2.39996f + turn
-            val x = cos(angle) * radius; val z = sin(angle) * radius
-            val sx = cx + x * r * .9f; val sy = cy + y * r * .9f
-            val depth = (z + 1f) * .5f
-            val color = if (i % 5 == 0) Argb.rgb(255, 140, 220) else Argb.rgb(190, 240, 255)
-            p.fillCircle(sx, sy, (.5f + depth * .8f) * scale, Fill.Solid(color), (.2f + depth * .8f) * density)
-            if (depth > .65f && i % 2 == 0) {
-                val g = 3.6f * scale
-                glow(p, sx, sy, g, Argb.withAlpha(color, .6f), density)
-            }
-        }
+    private fun drawArc(p: ContinuumPainter, i: Int, from: Float, to: Float, front: Boolean, intensity: Float) {
+        val px = plexus
+        val a = rs * px.arcRadius[i]; val b = a * px.arcRatio[i]
+        val start = if (px.arcMirror[i]) -to else from
+        val fill = arcFills[i % arcFills.size]
+        val k = (if (front) 1f else .32f) * intensity
+        p.save(); p.rotate(px.arcAngle[i], cx, cy)
+        p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, to - from, 3.2f * sphereScale, fill, .12f * k)
+        p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, to - from, 1.2f * sphereScale, fill, .45f * k)
+        if (front) p.strokeArc(cx - a, cy - b, cx + a, cy + b, start, to - from, .5f * sphereScale, arcCores[i % arcCores.size], .9f * k)
+        p.restore()
     }
 
-    private val innerOrbits = floatArrayOf(-28f, .86f, .34f, 34f, .8f, .4f, 72f, .74f, .26f, -64f, .7f, .3f, 8f, .9f, .22f)
+    private val arcColors = intArrayOf(Argb.rgb(120, 225, 255), Argb.rgb(90, 150, 255), Argb.rgb(180, 130, 255), Argb.rgb(240, 120, 215))
+    private val arcFills = Array(arcColors.size) { Fill.Solid(arcColors[it]) }
+    private val arcCores = Array(arcColors.size) { Fill.Solid(Argb.mix(arcColors[it], Argb.rgb(255, 255, 255), .55f)) }
 
-    /** Bright elliptical light paths inside the glass, as in the reference interior. */
-    private fun drawInnerOrbits(p: ContinuumPainter, f: Frame) {
-        for (i in 0 until innerOrbits.size / 3) {
-            val tilt = innerOrbits[i * 3] + sin(f.phase * .25f + i) * 3f
-            val a = r * innerOrbits[i * 3 + 1]; val b = r * innerOrbits[i * 3 + 2]
-            val color = if (i % 2 == 0) Argb.rgb(110, 225, 255) else Argb.rgb(190, 130, 255)
-            p.save(); p.rotate(tilt, cx, cy)
-            p.strokeOval(cx - a, cy - b, cx + a, cy + b, 3.4f * scale, Fill.Solid(color), .12f)
-            p.strokeOval(cx - a, cy - b, cx + a, cy + b, .9f * scale, Fill.Solid(color), .6f)
-            p.strokeArc(cx - a, cy - b, cx + a, cy + b, 10f + i * 40f + f.phase * 10f, 60f, .7f * scale,
-                Fill.Solid(Argb.rgb(235, 250, 255)), .85f)
-            p.restore()
+    /** The sparse network around the sphere (behind the glass, so only its outer part shows). */
+    private fun drawHalo(p: ContinuumPainter, f: Frame) {
+        val px = plexus
+        val k = geometry.aura
+        for (e in 0 until px.edgeCount) {
+            val a = px.edgeA[e]; val b = px.edgeB[e]
+            if (px.layer[a] != ContinuumHologramPlexus.Layer.HALO) continue
+            val t = ((px.depth[a] + px.depth[b]) * .5f + 1f) * .5f
+            p.drawLine(px.sx[a], px.sy[a], px.sx[b], px.sy[b], (.4f + .45f * t) * sphereScale, haloFill, (.12f + .35f * t) * k)
+        }
+        for (i in 0 until px.nodeCount) {
+            if (px.layer[i] != ContinuumHologramPlexus.Layer.HALO) continue
+            val t = (px.depth[i] + 1f) * .5f
+            val twinkle = .6f + .4f * sin(f.phase * (.8f + (i % 5) * .15f) + i)
+            p.fillCircle(px.sx[i], px.sy[i], (.5f + .7f * t) * sphereScale, if (i % 4 == 0) nodePink else nodeCool, (.3f + .6f * t) * twinkle * k)
+            if (i % 5 == 0) glow(p, px.sx[i], px.sy[i], 3f * sphereScale, Argb.of(150, 150, 210, 255), twinkle * k)
         }
     }
 
     private fun drawInfinity(p: ContinuumPainter, f: Frame) {
-        val a = r * .29f; val b = r * .135f
-        val oy = cy + r * .02f
+        val a = rs * .29f; val b = rs * .135f
+        val oy = cy + rs * .02f
         path.reset()
         for (i in 0..96) {
             val t = i * (2f * PI.toFloat() / 96f)
@@ -456,28 +515,31 @@ class ContinuumHologramRenderer {
         }
         path.close()
         val pulse = .85f + f.energy * .15f + f.audio * .2f
-        p.strokePath(path, r * .16f, infinity, .16f * pulse)
-        p.strokePath(path, r * .075f, infinity, 1f)
-        p.strokePath(path, r * .032f, Fill.Solid(Argb.rgb(70, 80, 190)), .55f)
-        p.strokePath(path, r * .013f, Fill.Solid(Argb.rgb(240, 252, 255)), .8f * pulse)
+        p.setAdditive(true)
+        p.strokePath(path, rs * .17f, infinity, .22f * pulse)
+        p.setAdditive(false)
+        p.strokePath(path, rs * .085f, infinity, 1f)
+        p.strokePath(path, rs * .032f, infinityCore, .55f)
+        p.strokePath(path, rs * .011f, infinityHighlight, .6f * pulse)
     }
 
+    private val infinityCore = Fill.Solid(Argb.rgb(70, 80, 190))
+    private val infinityHighlight = Fill.Solid(Argb.rgb(240, 252, 255))
+
     private fun drawStateEffects(p: ContinuumPainter, f: Frame) {
-        val cyan = Argb.rgb(90, 225, 255)
-        val violet = Argb.rgb(160, 120, 255)
         val listening = f.weight(Mode.LISTENING)
         if (listening > .02f) for (i in 0..2) {
             val progress = (f.phase * .5f + i / 3f) % 1f
-            val radius = r * (.45f + (1f - progress) * .5f)
-            p.strokeCircle(cx, cy, radius, 1.1f * scale, Fill.Solid(cyan), listening * progress * .7f)
+            val radius = rs * (.45f + (1f - progress) * .5f)
+            p.strokeCircle(cx, cy, radius, 1.1f * sphereScale, stateCyan, listening * progress * .7f)
         }
         val thinking = f.weight(Mode.THINKING)
         if (thinking > .02f) {
             p.save(); p.rotate(f.phase * 44f, cx, cy)
             for (i in 0..2) {
-                val radius = r * (.5f + i * .12f)
-                p.strokeArc(cx - radius, cy - radius, cx + radius, cy + radius, i * 110f, 78f, 1.7f * scale,
-                    Fill.Solid(if (i == 1) cyan else violet), thinking * .85f)
+                val radius = rs * (.5f + i * .12f)
+                p.strokeArc(cx - radius, cy - radius, cx + radius, cy + radius, i * 110f, 78f, 1.7f * sphereScale,
+                    if (i == 1) stateCyan else stateViolet, thinking * .85f)
             }
             p.restore()
         }
@@ -487,29 +549,29 @@ class ContinuumHologramRenderer {
             for (line in 0..2) {
                 path.reset()
                 for (i in 0..64) {
-                    val x = cx - r * .62f + i * (r * 1.24f / 64f)
+                    val x = cx - rs * .62f + i * (rs * 1.24f / 64f)
                     val taper = sin(i * PI.toFloat() / 64f)
                     val wave = sin(i * .27f - f.phase * 8f + line * .8f) * taper
-                    val y = cy + r * .58f + (line - 1) * 4f * scale + wave * f.audio * r * (.12f - line * .02f)
+                    val y = cy + rs * .58f + (line - 1) * 4f * sphereScale + wave * f.audio * rs * (.12f - line * .02f)
                     if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
                 }
-                p.strokePath(path, .9f * scale, Fill.Solid(if (line == 1) Argb.rgb(204, 248, 255) else cyan), speaking * (.4f + f.audio * .6f))
+                p.strokePath(path, .9f * sphereScale, if (line == 1) speechCore else stateCyan, speaking * (.4f + f.audio * .6f))
             }
         }
         val research = f.weight(Mode.RESEARCH)
         if (research > .02f) {
             p.save(); p.rotate(f.phase * 34f, cx, cy)
-            val rr = r * .78f
-            p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -65f, 105f, 1.8f * scale, Fill.Solid(cyan), research * .85f)
-            p.drawLine(cx, cy, cx + rr * .7f, cy - rr * .7f, .8f * scale, Fill.Solid(cyan), research * .5f)
+            val rr = rs * .78f
+            p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -65f, 105f, 1.8f * sphereScale, stateCyan, research * .85f)
+            p.drawLine(cx, cy, cx + rr * .7f, cy - rr * .7f, .8f * sphereScale, stateCyan, research * .5f)
             p.restore()
         }
         val learning = f.weight(Mode.LEARNING)
         if (learning > .02f) for (i in 0 until 12) {
             val progress = (f.phase * .24f + i / 12f) % 1f
-            val x = cx + sin(i * 2.4f + progress * 3f) * r * (.55f - progress * .35f)
-            val y = cy + r * 1.05f - progress * r * 1.05f
-            p.fillCircle(x, y, (1.3f + progress * .6f) * scale, Fill.Solid(if (i % 2 == 0) violet else cyan),
+            val x = cx + sin(i * 2.4f + progress * 3f) * rs * (.55f - progress * .35f)
+            val y = cy + rs * 1.05f - progress * rs * 1.05f
+            p.fillCircle(x, y, (1.3f + progress * .6f) * sphereScale, if (i % 2 == 0) stateViolet else stateCyan,
                 learning * sin(progress * PI.toFloat()) * .9f)
         }
     }
@@ -517,15 +579,21 @@ class ContinuumHologramRenderer {
     private fun drawSparkles(p: ContinuumPainter, f: Frame) {
         val spots = floatArrayOf(-0.93f, -0.3f, 0.97f, -0.2f, -0.55f, 0.84f, 0.62f, 0.8f, 0.02f, -1.0f, 0.38f, -0.93f)
         for (i in 0 until spots.size / 2) {
-            val x = cx + spots[i * 2] * r; val y = cy + spots[i * 2 + 1] * r
+            val x = cx + spots[i * 2] * rs; val y = cy + spots[i * 2 + 1] * rs
             val pulse = .6f + .4f * sin(f.phase * (1.1f + i * .2f) + i * 1.3f)
-            val size = r * (.03f + (i % 2) * .018f) * (1f + f.energy * .4f)
+            val size = rs * (.03f + (i % 2) * .018f) * (1f + f.energy * .4f)
             glow(p, x, y, size * 3.6f, Argb.of(170, 175, 232, 255), pulse)
-            p.drawLine(x - size * 3.2f, y, x + size * 3.2f, y, max(.4f, size * .16f), Fill.Solid(Argb.rgb(235, 250, 255)), pulse * .8f)
-            p.drawLine(x, y - size * 3.2f, x, y + size * 3.2f, max(.4f, size * .16f), Fill.Solid(Argb.rgb(235, 250, 255)), pulse * .8f)
-            p.fillCircle(x, y, size * .6f, Fill.Solid(Argb.rgb(248, 253, 255)), pulse)
+            p.drawLine(x - size * 3.2f, y, x + size * 3.2f, y, max(.4f, size * .16f), sparkLine, pulse * .8f)
+            p.drawLine(x, y - size * 3.2f, x, y + size * 3.2f, max(.4f, size * .16f), sparkLine, pulse * .8f)
+            p.fillCircle(x, y, size * .6f, sparkCore, pulse)
         }
     }
+
+    private val stateCyan = Fill.Solid(Argb.rgb(90, 225, 255))
+    private val stateViolet = Fill.Solid(Argb.rgb(160, 120, 255))
+    private val speechCore = Fill.Solid(Argb.rgb(204, 248, 255))
+    private val sparkLine = Fill.Solid(Argb.rgb(235, 250, 255))
+    private val sparkCore = Fill.Solid(Argb.rgb(248, 253, 255))
 
     private fun drawBrand(p: ContinuumPainter) {
         val brand = ContinuumTheme.display(400, 11.83f * scale, 11.83f * .456f * scale)
@@ -560,5 +628,9 @@ class ContinuumHologramRenderer {
     }
 
     val sphereCenterY: Float get() = cy
-    val sphereRadius: Float get() = r
+    val sphereRadius: Float get() = rs
+
+    private companion object {
+        const val DEPTH_BUCKETS = 9
+    }
 }
