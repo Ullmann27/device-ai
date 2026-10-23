@@ -1,5 +1,9 @@
 # Continuum — umsetzungsfertige Übergabe an Opus (CCC1) und Astra (Android UI)
 
+> **Nachtrag 23.10.2026:** Der jetzt bevorzugte, aufgeräumte **Quell-Review-Stand ist [PR #97](https://github.com/Ullmann27/device-ai/pull/97), Branch `integration/continuum-current-review-20261023`**. Er enthält den aktuellen PR-95-Stand einschließlich CCC1-Preflight/CSX3-Adapter und die drei geprüften PR-96-Fold7-Dateien. Diesen tatsächlichen Branch-HEAD statt des damaligen PR-95/96-Splitstatus verwenden. [Kanonischer Arbeitsindex](CONTINUUM-ACTIVE-CHECKPOINT-20261023.md). **Nicht produktiv freigegeben.**
+
+
+
 Stand: 23.10.2026, ausschließlich Device AI Continuum. Kein Main-Merge, keine Signierung, keine API-Kosten.
 Der integrierte Ausgangsstand ist **PR #94** (`0499e2a0d95187edcb3f0b8736339154bc563edb`). Der isolierte Forschungszweig ist **PR #95** (`integration/continuum-verifier-first-spine-20261023`); die Fold-Reflow-Reparatur liegt getrennt in **PR #96** (`integration/continuum-composer-reflow-fix-20261023`, basierend auf PR #95).
 
