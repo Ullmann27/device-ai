@@ -224,6 +224,24 @@ export function verifyOwnedApp({home=os.homedir()}={}) {
     return {status:'SOURCE_VERIFIED',project:dest,recipe:RECIPE.id,packageName:RECIPE.packageName,
        sourceSha256:SHA(manifestText())};
 }
+/** The generated Gradle output is writable but must never escape via a symlink. */
+function outputWithinProject(project) {
+    let ancestor = project;
+    for (const part of ['app','build','outputs','apk','debug']) {
+      ancestor = path.join(ancestor,part);
+      if (!fs.existsSync(ancestor)) {
+        try { fs.lstatSync(ancestor); } catch (e) {
+          if (e.code === 'ENOENT') continue;
+          return false;
+        }
+      }
+      try {
+        const info = fs.lstatSync(ancestor);
+        if (!info.isDirectory() || info.isSymbolicLink()) return false;
+      } catch (e) { if (e.code !== 'ENOENT') return false; }
+    }
+    return true;
+}
 function executable(name,env) {
     for(const directory of (env.PATH||'').split(path.delimiter)) {
       if (!directory) continue;
@@ -240,6 +258,7 @@ function execute(file,args,{cwd,env,timeout}) {
 export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=process.arch,run=execute,inspect=null,lease=null}={}) {
     const source=verifyOwnedApp({home});
     if (source.status!=='SOURCE_VERIFIED') return source;
+    if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
     const {doctor,resolveTermuxEnvironment} = await import('./continuum-mobile-builder.mjs');
     const resolvedEnv=resolveTermuxEnvironment(env,arch);
     const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch});
@@ -251,6 +270,7 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
       return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const release=lease||((await import('../.github/continuum/shared-build-lease.mjs')).acquireContinuumBuildLease(source.project));
     try {
+      if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
       const args=['--no-daemon','--max-workers=2','--offline','--console=plain',
         '-Pandroid.aapt2FromMavenOverride='+aapt2,
         '-Pkotlin.compiler.execution.strategy=in-process',
@@ -259,6 +279,7 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
       if(!gradleRun.ok)return {status:'FAILED_BUILD',exitCode:gradleRun.code};
       const integrity=verifyOwnedApp({home});
       if(integrity.status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
+      if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
       const apk=path.join(source.project,'app/build/outputs/apk/debug/app-debug.apk');
       if(!fs.existsSync(apk)||!fs.lstatSync(apk).isFile()||fs.lstatSync(apk).isSymbolicLink())
         return {status:'FAILED_NO_APK'};
