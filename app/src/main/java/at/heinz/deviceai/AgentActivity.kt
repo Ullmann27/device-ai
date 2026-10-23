@@ -612,8 +612,10 @@ class AgentActivity : Activity() {
                 if (!at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, actualWidthDp)) {
                     return@post
                 }
-                val draft = if (::input.isInitialized) input.text.toString() else ""
-                val draftSelection = if (::input.isInitialized) input.selectionStart else -1
+                val composerDraft = if (::input.isInitialized) {
+                    ComposerReflowDraft(input.text.toString(), input.selectionStart,
+                        input.selectionEnd, input.hasFocus(), keyboardCompact)
+                } else ComposerReflowDraft("", -1, -1, false, false)
                 val chatScrollY = if (::chatScroll.isInitialized) chatScroll.scrollY else 0
                 val previousHomeState = homeView?.state
                 val planVisible = if (::planCard.isInitialized) planCard.visibility else View.GONE
@@ -634,9 +636,11 @@ class AgentActivity : Activity() {
                 keyboardCompact = false
                 setContentView(buildUi())
                 chatMessages.forEach { chatContainer.addView(it) }
-                if (::input.isInitialized && draft.isNotEmpty()) {
-                    input.setText(draft)
-                    input.setSelection(draftSelection.coerceIn(0, draft.length))
+                val rebuiltComposer = if (::input.isInitialized) input else null
+                rebuiltComposer?.let { editor ->
+                    editor.setText(composerDraft.text)
+                    val (selectionStart, selectionEnd) = composerDraft.safeSelection()
+                    editor.setSelection(selectionStart, selectionEnd)
                 }
                 planMessage?.let { planText.text = it }
                 planCard.visibility = planVisible
@@ -645,6 +649,24 @@ class AgentActivity : Activity() {
                 neuralMessage?.let { neuralMonitor.text = it }
                 neuralProgress.progress = neuralPercent
                 refreshConversationLayout()
+                // setContentView recreates the editor on Fold reflow: restore keyboard
+                // focus only when the previous editor really owned it.
+                if (composerDraft.hadFocus && rebuiltComposer != null) {
+                    rebuiltComposer.requestFocus()
+                    if (composerDraft.imeWasVisible) {
+                        rebuiltComposer.post {
+                            if (::input.isInitialized && input === rebuiltComposer &&
+                                rebuiltComposer.isAttachedToWindow && rebuiltComposer.hasFocus() &&
+                                !isFinishing && !isDestroyed
+                            ) {
+                                val manager = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                                    as? android.view.inputmethod.InputMethodManager
+                                manager?.showSoftInput(rebuiltComposer,
+                                    android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+                            }
+                        }
+                    }
+                }
                 refreshWorkAreaSelection()
                 refreshHologramState()
                 chatScroll.post { if (uiWindowRoot?.isAttachedToWindow == true) chatScroll.scrollTo(0, chatScrollY) }
