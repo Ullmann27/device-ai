@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
+import {acquireContinuumBuildLease,releaseDeadContinuumBuildLease} from './shared-build-lease.mjs';
 
 function fixture(action) {
  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-build-lease-'));
@@ -69,4 +69,26 @@ test('independent source roots have independent leases',()=>
   const releaseA=acquireContinuumBuildLease(root,{stateRoot});
   const releaseB=acquireContinuumBuildLease(other,{stateRoot});
   releaseB();releaseA();
+ }));
+
+test('only a provably dead holder on this host can be released, and only through the explicit owner step',()=>
+ fixture(({root,stateRoot})=>{
+  assert.equal(releaseDeadContinuumBuildLease(root,{stateRoot}).reason,'NO_LEASE');
+  const release=acquireContinuumBuildLease(root,{stateRoot});
+  assert.deepEqual(releaseDeadContinuumBuildLease(root,{stateRoot}).reason,'HOLDER_ALIVE','a live holder is never released');
+  release();
+  // a crashed worker: lock left behind by a process that no longer exists
+  const dead=spawnSync(process.execPath,['--input-type=module','-e',
+   'import {acquireContinuumBuildLease as a} from '+JSON.stringify(new URL('./shared-build-lease.mjs',import.meta.url).href)+';'+
+   'a('+JSON.stringify(root)+',{stateRoot:'+JSON.stringify(stateRoot)+'});process.exit(0);'],{encoding:'utf8',timeout:5000});
+  assert.equal(dead.status,0,dead.stderr);
+  assert.throws(()=>acquireContinuumBuildLease(root,{stateRoot}),/CONTINUUM_BUILD_LEASE_BUSY/,'age or a dead holder alone frees nothing');
+  const lock=fs.readdirSync(stateRoot).find(f=>f.endsWith('.lock'));
+  const holder=JSON.parse(fs.readFileSync(path.join(stateRoot,lock),'utf8'));
+  fs.writeFileSync(path.join(stateRoot,lock),JSON.stringify({...holder,hostname:'another-host'})+'\n');
+  assert.equal(releaseDeadContinuumBuildLease(root,{stateRoot}).reason,'FOREIGN_OR_UNKNOWN_HOLDER');
+  fs.writeFileSync(path.join(stateRoot,lock),JSON.stringify(holder)+'\n');
+  const r=releaseDeadContinuumBuildLease(root,{stateRoot});
+  assert.equal(r.released,true);assert.equal(r.reason,'HOLDER_DEAD');
+  acquireContinuumBuildLease(root,{stateRoot})();
  }));
