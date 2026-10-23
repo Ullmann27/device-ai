@@ -1,0 +1,21 @@
+# Code index on the real repository (clone at d0bd336a), 23.10.2026, x86_64
+## build 1: code-index.mjs at d0bd336a (cache-key bug: modules in an import cycle shared one key, 57 exports without probe data; tests counted transitively)
+{"modules":104,"exports":436,"runnable":273,"deterministic":267,"withTests":435,"clusters":11,"nearDuplicates":48,"modulesProbed":95,"seconds":47}
+exit=0
+## build 2: key fixed, direct test links, all runnable exports compared
+{"modules":104,"exports":436,"runnable":297,"deterministic":290,"withTests":432,"clusters":11,"nearDuplicates":49,"modulesProbed":104,"seconds":45.9}
+exit=0
+## build 3: as committed in 313e6ffc (only exports with >= 3 different results compared)
+{"modules":104,"exports":436,"runnable":297,"deterministic":290,"comparable":51,"exportsInTestedModules":432,"clusters":4,"nearDuplicates":2,"modulesProbed":104,"seconds":45.3}
+exit=0
+## build 3 again, from the cache
+{"modules":104,"exports":436,"runnable":297,"deterministic":290,"comparable":51,"exportsInTestedModules":432,"clusters":4,"nearDuplicates":2,"modulesProbed":0,"seconds":0.3}
+exit=0
+## show (build 3)
+{"modules":104,"exports":436,"runnable":297,"deterministic":290,"comparable":51,"exportsInTestedModules":432,"clusters":4,"nearDuplicates":2,"modulesProbed":104,"seconds":45.3}
+cluster .github/continuum/ccc1-envelope.mjs#sha256 = .github/continuum/cre-encoder.mjs#sha256 = .github/continuum/development-backlog.mjs#sha256Hex = .github/continuum/portable-subword.mjs#sha256 = .github/continuum/repair-diagnostics.mjs#sha256
+cluster .github/continuum/assoc-language-core.mjs#identifierParts = .github/continuum/ccc1-interpreter.mjs#tokens = .github/continuum/dialogue-retrieval.mjs#contentWords = .github/continuum/hypothesis-reasoner.mjs#tokens
+cluster .github/continuum/autonomous-teamleader.mjs#publicTeamleaderRepairReport = .github/continuum/development-backlog.mjs#repoPath
+cluster .github/continuum/development-backlog.mjs#clip = .github/continuum/development-backlog.mjs#singleLine
+near 0.966 .github/continuum/dialogue-retrieval.mjs#words ~ .github/continuum/trainable-context-decoder.mjs#tokenizeForDecoder
+near 0.931 .github/continuum/ccc1-envelope.mjs#canonical ~ .github/continuum/development-backlog.mjs#canonical

@@ -1,0 +1,31 @@
+# LM1 step 7 - NEW documents (docs/CONTINUUM-LM1-OPUS-20261022.md, section 7b). Fixed before any model saw them.
+# Rule: every Markdown file on a remote branch head of this repository (fetched 2026-10-23, about 02:10 UTC) whose path
+# does not exist at the corpus commit 1d92db03, without docs/evidence/; per path the version on the most recently
+# committed branch head. Excluded: docs/CONTINUUM-LM1-OPUS-20261022.md and docs/CONTINUUM-NEURAL-FRONTIER-LAB-20261022.md
+# (the experimenter's own reports about these models; still being edited, and this pre-registration is written there).
+# path	blob	branch	branch_head_utc
+docs/CONTINUUM-AAA-OPUS-HANDOFF-20261022.md	9ca3dd90548f2926edc934724a8f5a6572a059a6	opus/continuum-aaa-ui-20261022	2026-10-23T01:35:35Z
+docs/CONTINUUM-AAA-UI-OPUS-20261022.md	3aa83851a3408e192a4182b92d0050058bd2d94d	opus/continuum-aaa-ui-20261022	2026-10-23T01:35:35Z
+docs/CONTINUUM-APP-NAVIGATION-COMPLETION-20261022.md	82694657e506f1a1342b7a80fe516f7949c278e2	opus/continuum-aaa-ui-20261022	2026-10-23T01:35:35Z
+docs/CONTINUUM-ARGON4-REVIEW-20261022.md	9f111c41c4807a75269811e9e516bc4388d548dd	chatgpt/continuum-argon-qf2-source-proof-20261022	2026-10-22T12:57:34Z
+docs/CONTINUUM-COGNITIVE-CONTINUITY-CCC1-20261022.md	ec4d6eb7ffc0008fe5d5a157aaf3301d4feb5001	chatgpt/continuum-release-integration-audit-20261022	2026-10-22T15:26:50Z
+docs/CONTINUUM-CSX1-ABSTENTION-OPUS-20261022.md	e0d330a0fffa5ce5a2735a844d8c8c98804f57d2	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-CSX1-ARGON-REVIEW-20261022.md	2c829d642e449d64d9e0d8ee694f706625d20476	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-CSX1-FIRST-TRAINED-MILESTONE-20261022.md	313799801e974dc9d2568aea80da191b5013d282	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-EXP-OMEGA-GEMINI-REVIEW-20261022.md	d6c7f3fd5671cbc059bfdf22f40c45af86d95d02	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-HOLOGRAPHIC-UI-ABNAHME.md	0690ef2d1ace90bc66c98b7b0e1002957e2cce5c	astra/continuum-holographic-ui-20261019	2026-10-19T04:17:18Z
+docs/CONTINUUM-I2-SELECTIVE-RISK-OPUS-20261022.md	b7b4c24021b15bd13f17933ce5ee045001245636	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-INTEGRATION-AUDIT-20261022.md	3b17b90b24c7c4cd12a5a695266b46866c37b22b	chatgpt/continuum-release-integration-audit-20261022	2026-10-22T15:26:50Z
+docs/CONTINUUM-INTELLIGENCE-LAB-20261022.md	38f6e701149808d169d6433969d82842625abeb8	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-INTELLIGENCE-MILESTONE-I1-20261022.md	383e2e76a0931e286a93b0bee67dcf48c698db9f	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-LOCAL-CREATION-LAB-RESEARCH-20261022.md	2b2b34340877b2cf331258f1b5480632533d90bb	chatgpt/continuum-release-integration-audit-20261022	2026-10-22T15:26:50Z
+docs/CONTINUUM-MEMORY-SOURCE-RETRIEVAL-QF1-20261022.md	b7f6bc5add0646919ec1a4d155017f48d8c19e71	chatgpt/continuum-argon-qf2-source-proof-20261022	2026-10-22T12:57:34Z
+docs/CONTINUUM-OPUS-ANDROID-UI-20261022.md	b24feb90f6c82643c32e559e8a0d819d181db6a6	chatgpt/continuum-opus-android-coding-ui-20261022	2026-10-22T04:51:01Z
+docs/CONTINUUM-OPUS-INTELLIGENCE-RESUME-20261022.md	99562a5cca1df286ca1bae9289eaf5eff2d12b10	opus/continuum-i2-selective-risk-20261022	2026-10-22T14:17:36Z
+docs/CONTINUUM-PREMIUM-UI-HANDOFF-20261022.md	591638ce8c40e78ad523bf6dce5ceccfc9f501e2	opus/continuum-aaa-ui-20261022	2026-10-23T01:35:35Z
+docs/CONTINUUM-RECOVERY-MILESTONE-20261021.md	5f45c203d43772baa12a72b9582688280ac997c4	opus/continuum-aaa-ui-20261022	2026-10-23T01:35:35Z
+docs/CONTINUUM-RENDER-DELIVERY-20261022.md	bc024b6724d0c0518edbb3867ed50b0d773caac8	chatgpt/continuum-render-delivery-audit-20261022	2026-10-22T03:01:03Z
+docs/CONTINUUM-RENDER-FIRST-BUILD-20261022.md	bd7387ac3b39736b76f696e591fda5067fc35e2a	review/render-first-portable-build-20261022	2026-10-22T03:04:42Z
+docs/CONTINUUM-SYNAPSE-V2-OPUS-20261022.md	5b2504fd5cce9b8812f5d9bda9d2bbbb516aa7e1	opus/continuum-synapse-v2-20261022	2026-10-22T16:21:07Z
+docs/CONTINUUM-SYNAPSE-ZERO-SHADOW-20261022.md	4f338f7a7b5488d3ebfeb74ec4203413c0a2fc13	opus/continuum-synapse-v2-20261022	2026-10-22T16:21:07Z
+release-artifacts/README.md	eaf49d4edfb8a900800977d967ea952d8ed2f8bd	artifacts/sol61-preview-20261019	2026-10-19T05:31:05Z
