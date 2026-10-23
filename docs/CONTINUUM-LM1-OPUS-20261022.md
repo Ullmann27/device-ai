@@ -332,6 +332,84 @@ Auftrag: M4/M5, Abschnitt 3, Punkt 7 („Prüfe danach auf getrennten neuen Test
 - Die Anweisungsfamilien sind einfach und künstlich.
 - NEW stammt aus demselben Projekt; es ist zeitlich und inhaltlich verschoben, aber kein fremder Text.
 
+### 7c. Ergebnis Schritt 7 (einmaliger Lauf 23.10.2026, 06:49–06:54 UTC, Code `6494699a`)
+
+- Protokoll: `docs/evidence/lm1-20261022/step7-run-20261023.txt`, Startskript `run-step7.sh.txt`.
+- Exitcode 0. NEW- und Anweisungs-Hash entsprechen der Vorregistrierung.
+- Die sechs Checkpoints wurden vor dem Lauf gegen ihren Inhalts-Hash geprüft.
+- **Gegenprobe des Messgerüsts bestanden:** Unigramm, KN-7 und CDX1 liefern both = swapped = 0.
+
+**A1 – BPB auf NEW (1.278 Segmente, 242.488 Bytes; kleiner ist besser)**
+
+| Modell | NEW-BPB je Seed | zum Vergleich TEST |
+|---|---|---:|
+| Unigramm | 5,265 | 4,987 |
+| CDX1, 3 Epochen | 4,688 · 4,700 · 4,778 | 4,295 |
+| LM1-TM-v512 | 3,227 · 3,228 · 3,233 | 3,055 |
+| **LM1-GM-v512** | **2,695 · 2,696 · 2,694** | 2,439 |
+| **Kneser-Ney 7** | **2,489** | 2,150 |
+
+- **„LM1 schlägt CDX1 auf NEW“: gestützt**, mit rund 2,0 BPB Abstand.
+- **Gegen KN-7 verliert LM1 erneut, ein negatives Ergebnis.** Der Abstand ist aber kleiner: 0,206 statt 0,289 auf TEST.
+- Alle Modelle sind auf den neueren Dokumenten schlechter als auf TEST; die Reihenfolge bleibt gleich.
+
+**A2 – gieriges nächstes Wort (2.000 Positionen)**
+
+| Modell | richtig |
+|---|---:|
+| häufigstes Wort | 3,8 % |
+| Wort-Bigramm | 4,1 % |
+| KN-7 | 2,3 % |
+| LM1-GM (Seeds 1–3) | 0,45 · 0,55 · 0,60 % |
+| LM1-TM (Seeds 1–3) | 0,15 · 0,20 · 0,05 % |
+
+- **Nicht gestützt, gegen beide Baselines** (McNemar p < 10⁻⁷ zugunsten der Baselines).
+- **Nachträglich, nicht vorregistriert** (`step7-posthoc-20261023.txt`, `LmStep7Posthoc.kt`, LM1-GM Seed 1). Der erste gierige Token an den 2.000 Wortgrenzen war:
+  - 664-mal ein Leerzeichen mit Satz- oder Formatzeichen (etwa `` ` ``);
+  - 432-mal eine Fortsetzung des aktuellen Worts;
+  - 406-mal ein Satzzeichen;
+  - nur 322-mal ein neues Wort;
+  - 84-mal ein Zeilenumbruch, 48-mal das Segmentende, 44-mal eine Ziffer.
+- Ohne Segmentende bleibt es bei 9 von 2.000 Treffern. **Das Ende-Symbol ist also nicht die Ursache.** LM1 wählt an Wortgrenzen selten ein neues Wort, und wenn, meist das falsche.
+
+**A3 – Generierung (40 Anfänge, 120 Bytes; beschreibend)**
+
+| Erzeugung | bekannte Wörter | 24-Byte-Fenster aus TRAIN | wiederholte 3-Gramme | mittlere Länge |
+|---|---:|---:|---:|---:|
+| echter Text | 0,78 | 0,004 | 0,005 | 97 B |
+| KN-7 gierig | 0,97 | 0,070 | 0,080 | 120 B |
+| KN-7, t = 0,8 | 0,88 | 0,012 | 0,000 | 120 B |
+| LM1-GM gierig | 0,91–0,95 | 0,000 | 0,68–0,77 | 102–114 B |
+| LM1-GM, t = 0,8 | 0,68–0,69 | 0,000–0,003 | 0,000 | 52–76 B |
+| LM1-TM gierig | 0,57–0,80 | 0,000 | 0,26–0,40 | 70–96 B |
+
+- **LM1-GM gierig** gerät in Schleifen, z. B. „dieselbe Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. …“.
+- **LM1-GM mit Stichprobe:**
+  - rund zwei Drittel bekannte Wörter;
+  - dazu erfundene Zusammensetzungen wie „gesabhängiger“ oder „Fehlermeldet“;
+  - kein wörtliches Kopieren aus TRAIN.
+- **KN-7** erzeugt fast nur bekannte Wörter, kopiert aber gierig 7 % seiner 24-Byte-Fenster wörtlich aus TRAIN.
+- Flüssigkeit, Zusammenhang und Verständnis werden ausdrücklich nicht behauptet; es gibt keine Regel.
+
+**B – Anweisungen (200 Paare; Zufallsniveau der Einzelantworten 0,433)**
+
+| Modell | both | swapped | Einzeltreffer |
+|---|---|---|---:|
+| Unigramm, KN-7, CDX1 (blind) | 0 | 0 | 0,40–0,45 |
+| LM1-GM | 1 · 0 · 1 | 0 · 0 · 0 | 0,415–0,430 |
+| LM1-TM | 1 · 3 · 3 | 2 · 6 · 2 | 0,388–0,398 |
+
+- **„LM1 verarbeitet diese Anweisungen“: nicht gestützt**, für GM wie für TM. Das wurde so erwartet.
+
+**Gesamtbefund Schritt 7**
+- LM1 ist ein Byte-Vorhersager für Projekttext. Es ist besser als CDX1 und schlechter als ein Zählmodell.
+- **Textgenerierung:** nicht brauchbar. Gierig entstehen Schleifen, mit Stichprobe viele Kunstwörter.
+- **Anweisungsverarbeitung:** nicht vorhanden.
+- Für den nächsten Zyklus folgt daraus:
+  - mehr und andere Daten;
+  - ein Training gezielt auf den Rest des n-Gramm-Modells (Meilenstein D);
+  - für Antworten im Produkt nicht freie Generation, sondern belegte Bausteine (Gedächtnis mit Quellen, typisierte Aufgaben).
+
 ## 8. CCC1-Laufzeit (`.github/continuum/ccc1-*.mjs`) – getestet
 
 - Bausteine: EnvelopeV1/GoalSpec (`ccc1-envelope`), hash-verkettetes Journal mit HMAC (`ccc1-journal`), Fähigkeitsprüfung (`ccc1-gate`), Quittungsprüfer (`ccc1-verifier`), Wiederanlauf (`ccc1-recovery`), Dialogsteuerung (`ccc1-orchestrator`), Zielinterpretation mit austauschbarem Sprachkern (`ccc1-interpreter`).
