@@ -1,0 +1,37 @@
+✔ bounded process executes argv directly and reports its actual exit (160.730804ms)
+✔ timeout kills the process group and never reports success (603.735792ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (584.513831ms)
+✔ oversized process logs are bounded and fail closed (489.388216ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (809.641859ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (596.111686ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (545.481249ms)
+✔ unreadable process tracking cannot claim confirmed cleanup (143.766493ms)
+✖ unreadable proc stat is not confused with an exited process (115.670664ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4287.50646
+
+✖ failing tests:
+
+test at scripts/continuum-owned-process.test.mjs:74:1
+✖ unreadable proc stat is not confused with an exited process (115.670664ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol/scripts/continuum-owned-process.test.mjs:82:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

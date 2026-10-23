@@ -45,5 +45,5 @@ test('existing mobile builder remains opt-in, not falsely labelled an app genera
   assert.match(activity,/noch keine lokale Build-Aufgabe gestartet/);
   assert.match(activity,/kompatibles lokales Sprachmodell benötigt/);
   assert.match(builder,/Lokalen Build starten\?/);
-  assert.match(builder,/setPositiveButton\("Bauen"\)/);
+  assert.match(builder,/if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\)/);
 });

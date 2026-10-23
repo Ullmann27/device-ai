@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import {createHmac,timingSafeEqual} from 'node:crypto';
 import {RECEIPT_SCHEMA,REPAIR_PROFILE_COMMAND} from '../../scripts/continuum-mobile-coding.mjs';
 import {canonical,sha256} from './ccc1-envelope.mjs';
+export {verifyOwnedProjectReceipt} from './owned-project-evidence.mjs';
 
 /** The only test command a coding receipt may report (fixed profile of the existing job). */
 export const ALLOWED_PROFILE='node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)';

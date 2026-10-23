@@ -23,6 +23,7 @@ import java.util.UUID
  */
 class ContinuumMobileBuilderActivity : Activity() {
     private lateinit var status: TextView
+    private var selectedProject = ContinuumOwnedProject.NOTES
     private val preferences by lazy {
         getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, MODE_PRIVATE)
     }
@@ -56,28 +57,54 @@ class ContinuumMobileBuilderActivity : Activity() {
         paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
         status.setTextIsSelectable(true)
+        selectedProject = ContinuumOwnedProject.ofId(preferences.getString("selected_m4_project_v1", null))
+            ?: ContinuumOwnedProject.NOTES
+        val projectCatalogReady = runCatching {
+            assets.open("continuum-owned-project-plans-v1.json").bufferedReader().use {
+                ContinuumOwnedProjectPlan.readCatalog(it.readText())
+            }
+            true
+        }.getOrDefault(false)
         for (operation in ContinuumMobileBuildPlan.Operation.entries) {
             if (operation == ContinuumMobileBuildPlan.Operation.PROJECT_CREATE) {
                 paragraph("M4 · EIGENE ANDROID-APP", true)
-                paragraph("Erstelle eine echte, getrennte Notiz-App mit zwei Ansichten und lokaler Speicherung. " +
-                    "Die geprüfte Vorlage wird nur unter ~/continuum-projects/m4-notes erstellt. " +
+                paragraph("Wähle eine getrennte Notiz- oder Zähler-App mit zwei Ansichten und privater lokaler Speicherung. " +
+                    "Nur die beiden geprüften Projektpläne unter ~/continuum-projects werden ausgeführt. " +
                     "Bestehende Projekte, Continuum-Daten und installierte Apps werden nicht überschrieben.")
+                column.addView(Button(this).apply {
+                    text = "Projekt: ${selectedProject.title} (antippen zum Wechseln)"
+                    isAllCaps = false
+                    isEnabled = projectCatalogReady
+                    setOnClickListener {
+                        selectedProject = ContinuumOwnedProject.entries[
+                            (selectedProject.ordinal + 1) % ContinuumOwnedProject.entries.size]
+                        preferences.edit().putString("selected_m4_project_v1", selectedProject.id).commit()
+                        text = "Projekt: ${selectedProject.title} (antippen zum Wechseln)"
+                    }
+                }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, px(56)))
+                if (!projectCatalogReady) paragraph("Projektkatalog ungültig. M4 bleibt bis zu einer geprüften App-Aktualisierung gesperrt.")
             }
             val button = Button(this).apply {
-                text = operation.title
+                text = when (operation) {
+                    ContinuumMobileBuildPlan.Operation.PROJECT_CREATE -> "M4 · Gewähltes Projekt erzeugen"
+                    ContinuumMobileBuildPlan.Operation.PROJECT_BUILD -> "M4 · Gewähltes Projekt testen und bauen"
+                    else -> operation.title
+                }
                 isAllCaps = false
+                isEnabled = !operation.name.startsWith("PROJECT_") || projectCatalogReady
                 setOnClickListener {
+                    val project = selectedProject
                     val confirmation = when (operation) {
                         ContinuumMobileBuildPlan.Operation.BUILD ->
                             "Lokalen Build starten?" to
                                 "Termux führt Tests, Lint und einen APK-Build auf diesem Telefon aus. Das kann bis zu 35 Minuten dauern und Akku/Speicher beanspruchen. Keine Installation erfolgt."
                         ContinuumMobileBuildPlan.Operation.PROJECT_CREATE ->
-                            "Eigenständige Notiz-App erzeugen?" to
-                                "Termux legt ein neues, fest geprüftes Android-Projekt unter ~/continuum-projects/m4-notes an. " +
+                            "Projekt ${project.title} erzeugen?" to
+                                "Termux legt den geprüften Plan unter ~/continuum-projects/${project.id} an. " +
                                 "Keine Änderungen an Device AI, keine Installation. Ein bereits vorhandenes Projekt wird nicht überschrieben."
                         ContinuumMobileBuildPlan.Operation.PROJECT_BUILD ->
-                            "Eigenständige Notiz-App testen und bauen?" to
-                                "Termux führt im getrennten Notiz-Projekt Kotlin-Tests, Android-Lint und den Offline-APK-Build aus. " +
+                            "Projekt ${project.title} testen und bauen?" to
+                                "Termux führt im getrennten Projekt Kotlin-Tests, Android-Lint und den Offline-APK-Build aus. " +
                                 "Signatur, Paketname und Quellintegrität werden geprüft. Kein automatisches Installieren."
                         else -> null
                     }
@@ -86,9 +113,9 @@ class ContinuumMobileBuilderActivity : Activity() {
                             .setTitle(confirmation.first)
                             .setMessage(confirmation.second)
                             .setNegativeButton("Abbrechen", null)
-                            .setPositiveButton("Bestätigen") { _, _ -> dispatch(operation) }
+                            .setPositiveButton("Bestätigen") { _, _ -> dispatch(operation, project) }
                             .show()
-                    } else dispatch(operation)
+                    } else dispatch(operation, project)
                 }
             }
             column.addView(button, LinearLayout.LayoutParams(
@@ -209,6 +236,9 @@ class ContinuumMobileBuilderActivity : Activity() {
         val ccc1Task = preferences.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null)
         val abortPending = preferences.getString(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null) != null
         val abortMessage = preferences.getString(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE, null)
+        val recovery = if (preferences.contains(ContinuumMobileBuildResultReceiver.STATUS_JOB_ID))
+            "M4-Belegabfrage wartet auf Rückmeldung."
+        else preferences.getString(ContinuumMobileBuildResultReceiver.STATUS_MESSAGE, null)
         val ccc1 = listOfNotNull(
             ccc1Task?.let { "Offener CCC1-Auftrag: $it" },
             if (abortPending) "Ein CCC1-Abbruch ist unterwegs; kein Ergebnis bestätigt." else abortMessage
@@ -219,13 +249,15 @@ class ContinuumMobileBuilderActivity : Activity() {
                     (if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else "")
             last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
             else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
-        } + ccc1
+        } + ccc1 + (recovery?.let { "\n$it" } ?: "")
     }
 
-    private fun dispatch(operation: ContinuumMobileBuildPlan.Operation) {
+    private fun dispatch(operation: ContinuumMobileBuildPlan.Operation, project: ContinuumOwnedProject) {
         val requestId = UUID.randomUUID().toString()
-        val plan = ContinuumMobileBuildPlan.command(operation)
-        dispatchApprovedCommand(operation.name, requestId, plan)
+        val plan = ContinuumMobileBuildPlan.command(operation, project)
+        dispatchApprovedCommand(operation.name, requestId, plan,
+            slot = if (operation == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS) ResultSlot.PROJECT_STATUS else ResultSlot.MAIN,
+            project = if (operation.name.startsWith("PROJECT_")) project else null)
     }
 
     private fun dispatchCoding(order: ContinuumMobileCodingJob.Order) {
@@ -256,19 +288,21 @@ class ContinuumMobileBuilderActivity : Activity() {
     }
 
     /**
-     * One-shot result slots in the preferences. Every job uses MAIN (one outstanding job); a CCC1 abort has its own
-     * slot so it can reach a running CCC1 step without dropping that step's result.
+     * MAIN serializes writing/build jobs. Abort and read-only M4 recovery each have
+     * one separate slot; neither replaces a pending build's callback identity.
      */
-    private enum class ResultSlot(val idKey: String, val operationKey: String?, val startKey: String) {
-        MAIN(ContinuumMobileBuildResultReceiver.JOB_ID, ContinuumMobileBuildResultReceiver.JOB_OPERATION, ContinuumMobileBuildResultReceiver.JOB_START),
-        CCC1_ABORT(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null, ContinuumMobileBuildResultReceiver.ABORT_JOB_START)
+    private enum class ResultSlot(val idKey: String, val operationKey: String?, val startKey: String, val projectKey: String? = null) {
+        MAIN(ContinuumMobileBuildResultReceiver.JOB_ID, ContinuumMobileBuildResultReceiver.JOB_OPERATION, ContinuumMobileBuildResultReceiver.JOB_START, ContinuumMobileBuildResultReceiver.JOB_PROJECT),
+        CCC1_ABORT(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null, ContinuumMobileBuildResultReceiver.ABORT_JOB_START),
+        PROJECT_STATUS(ContinuumMobileBuildResultReceiver.STATUS_JOB_ID, null, ContinuumMobileBuildResultReceiver.STATUS_JOB_START, ContinuumMobileBuildResultReceiver.STATUS_PROJECT)
     }
 
     private fun dispatchApprovedCommand(
         operationName: String,
         requestId: String,
         plan: ContinuumMobileBuildPlan.Command,
-        slot: ResultSlot = ResultSlot.MAIN
+        slot: ResultSlot = ResultSlot.MAIN,
+        project: ContinuumOwnedProject? = null
     ) {
         if (checkSelfPermission(ContinuumMobileBuildPlan.TERMUX_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             status.text = "Termux-Berechtigung zunächst erlauben; dann den Auftrag erneut bestätigen."
@@ -292,6 +326,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                     .setPositiveButton("Als ungeklärt markieren") { _, _ ->
                         val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
                         slot.operationKey?.let { edit.remove(it) }
+                        slot.projectKey?.let { edit.remove(it) }
                         edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
                                 "Voriger Termux-Auftrag hat keinen Abschlussnachweis geliefert.")
                             .commit()
@@ -331,6 +366,10 @@ class ContinuumMobileBuilderActivity : Activity() {
             .putString(slot.idKey, requestId)
             .putLong(slot.startKey, System.currentTimeMillis())
         slot.operationKey?.let { pendingEdit.putString(it, operationName) }
+        slot.projectKey?.let {
+            if (project != null) pendingEdit.putString(it, project.id) else pendingEdit.remove(it)
+        }
+        if (slot == ResultSlot.PROJECT_STATUS) pendingEdit.remove(ContinuumMobileBuildResultReceiver.STATUS_MESSAGE)
         if (slot == ResultSlot.CCC1_ABORT) pendingEdit.remove(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE)
         if (!pendingEdit.commit()) {
             callback.cancel()
@@ -360,6 +399,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         if (id == preferences.getString(slot.idKey, null)) {
             val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
             slot.operationKey?.let { edit.remove(it) }
+            slot.projectKey?.let { edit.remove(it) }
             edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, message).commit()
         }
         refreshReceipt()
