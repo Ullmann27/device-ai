@@ -157,3 +157,23 @@ nf6a = res['gated']['at1'] >= res['ungated']['at1'] and (res['gated']['unintende
                                                        res['gated']['at1'] > res['ungated']['at1'])
 print(f'  docs better than lexical (>= 2 more @1, 0 unintended): {"SUPPORTED" if docs_better else "NOT SUPPORTED"}')
 print(f'  NF-6a gated >= ungated @1 and (fewer unintended or more correct): {"SUPPORTED" if nf6a else "NOT SUPPORTED"}')
+
+print('\n== NF-5b execution-guided pre-check (section 8d; same 17 tasks, lexical vs probe, real coding jobs)')
+rows = json.loads((D / 'nf5b-results.json').read_text(encoding='utf-8'))
+res = {}
+for c in ('lexical', 'probe'):
+    reg = [r for r in rows if r['condition'] == c and r['gold']]
+    adv = [r for r in rows if r['condition'] == c and not r['gold']]
+    res[c] = dict(at1=sum(r['correctAt1'] for r in reg), at3=sum(r['correctAt3'] for r in reg),
+                  new=sum(r['correctAt1'] for r in reg if r['task'] in new),
+                  unintended=[r['task'] for r in rows if r['condition'] == c and r['unintended']],
+                  adv=sum(bool(r['adversarialOk']) for r in adv), jobs=sum(r['jobs'] for r in rows if r['condition'] == c),
+                  seconds=sum(r['ms'] for r in rows if r['condition'] == c) / 1000)
+    print(f'  {c:8} correct@1 {res[c]["at1"]}/14 (new {res[c]["new"]}/6) correct@<=3 {res[c]["at3"]}/14 '
+          f'unintended {len(res[c]["unintended"])} {res[c]["unintended"]} adversarial ok {res[c]["adv"]}/3 '
+          f'jobs {res[c]["jobs"]} wall {res[c]["seconds"]:.1f} s')
+gain = res['probe']['at1'] - res['lexical']['at1']
+checks = [('probe@1 >= lexical@1 + 3', gain >= 3), ('no unintended confirmation', not res['probe']['unintended']),
+          ('3/3 correct abstentions', res['probe']['adv'] == 3)]
+for name, ok in checks: print(f'  {name}: {"met" if ok else "VIOLATED"}')
+print(f'  NF-5b: {"SUPPORTED" if all(ok for _, ok in checks) else "REFUTED"} (gain @1 {gain:+d} of 14)')

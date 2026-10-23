@@ -18,9 +18,13 @@ Die Auswertung nach den vorregistrierten Regeln steht in `docs/CONTINUUM-NEURAL-
 | `evaluate.py`, `evaluation.txt` | Auswertung aller Läufe nach den vorregistrierten Regeln (Abschnitt 10 des NF-Dokuments) | `python3 evaluate.py` | – | – |
 | `nf5-study-run.txt`, `nf5-results.json` | NF-5/NF-6a: 14 Aufgaben + 3 Gegenproben, 5 Bedingungen, echte Coding-Jobs | `scripts/nf5-ranker-study.mjs` @ `3bde2844` | – | 20:53:01 |
 | `nf5-gold-rank-posthoc.txt` | **Nachträglich, nicht vorregistriert:** Rang der gemeinten Funktion je Ranker | `scripts/nf5-gold-rank-posthoc.mjs` | – | – |
+| `nf5b-study-run.txt`, `nf5b-results.json` | NF-5b: gleiche 17 Aufgaben, `lexical` gegen `probe` (Abschnitt 8d) | `scripts/nf5-ranker-study.mjs <out> lexical probe` @ `1bfb5d00` | – | 01:53:14 (23.10.) |
+| `nf5b-ambiguity-posthoc.txt` | **Nachträglich, nicht vorregistriert:** Welche Funktionen erfüllen alle Beispiele je Aufgabe | `scripts/nf5b-ambiguity-posthoc.mjs` | – | – |
 
 - Zeitmessungen in diesen Protokollen (`SPEED …`) liefen unter paralleler Last und sind **nicht fair vergleichbar**.
   Der faire Vergleich ist der Modus `speed` (ein Prozess, ein Thread, verschachtelt in 5 Runden).
 - Die 162 Checkpoints (34 MB) liegen auf dem Datenzweig `opus/nf-checkpoints-20261022` mit `MANIFEST.tsv`.
 - sha256: `nf5-results.json` d8c4f90855e539a23daaff17bcabea3585181f3bc79fc29fb7efaf1b76214da2,
-  `nf5-study-run.txt` 2ee083b5a67054c6dd37bbd03f2ea711fb3cb95bda0d9701c7fc9b1e404dc4ed.
+  `nf5-study-run.txt` 2ee083b5a67054c6dd37bbd03f2ea711fb3cb95bda0d9701c7fc9b1e404dc4ed,
+  `nf5b-results.json` fcd22c10811e1e25261689aa5763c88c38d9b8c99136e02581ffc967fbcd3a17,
+  `nf5b-study-run.txt` 977da37b6c629dd0210de4884016b66babc64b8948b605ecb2e3b8b8959469bd.

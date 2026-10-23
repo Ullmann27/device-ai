@@ -414,6 +414,41 @@ analysiert wurde, ist als **nachträglich** gekennzeichnet.
 | NF-4 | BPB ≤ +0,02 und ≤ 0,85 Zeit | **erfüllt**, vor allem durch ReLU, Sparsity allein 5–8 % |
 | NF-5 | Dokumentassoziation > lexikalisch | **nicht gestützt** |
 | NF-6a | Quittungs-Gating > alles konsolidieren | **nicht gestützt** |
+| NF-5b | Vorprüfung: ≥ 3 mehr im 1. Versuch, 0 ungewollt, 3/3 Enthaltungen | **widerlegt**: +7, aber 1 ungewollte Bestätigung (10.8) |
 | NF-6b | Zählmodell-verankertes Delta-Gedächtnis | **offen**, nicht implementiert |
 
 Der NFC1-TEST wurde nicht ausgeführt. Nach Abschnitt 9 kommen dafür zuerst die bestätigten Varianten in Frage: NF-4 λ = 1e-3 gegen G-S und NF-3 Entropie gegen feste Patches. Die außergewöhnliche Wiederholung mit neuem Seed und die Leckprüfung stehen davor noch aus.
+
+### 10.8 NF-5b – Ausführungsgeleitete Vorprüfung (Lauf 23.10.2026, 01:52–01:53 UTC, Commit `1bfb5d00`)
+
+Gleiche 17 Aufgaben, gleiche CCC1-Laufzeit, echte Coding-Jobs. Auswertung: `evaluate.py`, Protokolle `nf5b-study-run.txt` und `nf5b-results.json`.
+
+| Bedingung | richtig im 1. Versuch | davon neue | richtig in ≤ 3 Runden | ungewollt bestätigt | adversarial korrekt | Coding-Jobs | Dauer gesamt |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| lexical | 5/14 | 0/6 | 5/14 | 0 | 3/3 | 35 | 24,2 s |
+| probe | 12/14 | 6/6 | 12/14 | **1** (`canonical`) | 3/3 | 19 | 29,2 s |
+
+- **Nach der vorab festgelegten Regel: widerlegt.**
+  - Kriterium 1 erfüllt: 7 Aufgaben mehr statt der geforderten 3.
+  - Kriterium 3 erfüllt: 3/3 korrekte Enthaltungen.
+  - Kriterium 2 verletzt: Es gab eine ungewollte Bestätigung, und schon eine genügt.
+- **Der Fall `canonical`.** Das Ziel lautet „Erzeuge die kanonische JSON-Schreibweise eines Werts: ("x") → "\"x\"", (5) → "5" und (true) → "true"“.
+  - Bestätigt wurde `capability-research.mjs#canonical` statt der gemeinten `development-backlog.mjs#canonical`.
+  - Beide liefern auf den drei Beispielen dasselbe. Der Vertragstest prüft genau diese Beispiele und quittiert deshalb CONFIRMED.
+  - Die Funktionen sind trotzdem verschieden (nachträglich geprüft):
+    - `1.5` ergibt `"1.5"` bzw. einen Fehler;
+    - ein einzelnes Surrogat wird maskiert bzw. abgelehnt;
+    - 30 Ebenen Verschachtelung ergeben einen Fehler bzw. ein Ergebnis.
+  - Die lexikalische Rangfolge hat diese Funktion nie vorgeschlagen. Erst die Vorprüfung macht jede Funktion, die alle Beispiele erfüllt, zum Spitzenkandidaten.
+- **Nachträglich, nicht vorregistriert (`nf5b-ambiguity-posthoc.txt`, `scripts/nf5b-ambiguity-posthoc.mjs`).** In 4 von 15 Aufgaben mit Beispielen erfüllen mehrere Funktionen alle Beispiele:
+  - `sha256`: vier Funktionen. Drei waren vorab als gleichwertig genannt; die vierte, `repair-diagnostics.mjs#sha256`, rechnet ebenfalls SHA-256.
+  - `clip`: zwei Funktionen, beide vorab als gleichwertig genannt.
+  - `canonical`: zwei Funktionen, siehe oben.
+  - `json-digest`: zwei Funktionen. `relational-memory-data.mjs#fingerprint` hasht `JSON.stringify` ohne sortierte Schlüssel und weicht bei `{b:1,a:2}` ab. Hier hat die Vorprüfung nur dank der lexikalischen Reihenfolge richtig gewählt.
+  - Die zweite verfehlte Aufgabe ist `kotlin-keyword`. Die gemeinte Funktion besteht die Beispiele, wird aber wie in 10.6 vom Fähigkeits-Gate nicht zugelassen.
+- **Bewertung**
+  - Die Vorprüfung trennt Kandidaten nach ihrem Verhalten. Genau das war der Engpass von NF-5.
+  - Sie verstärkt aber ein bekanntes Problem des Programmierens aus Beispielen: Wenige Beispiele legen eine Funktion nicht fest.
+  - Die Sicherheitsgrenze bleibt die Quittung, und die ist nur so gut wie der Vertrag.
+- **Nächster falsifizierbarer Schritt (NF-5c, noch nicht vorregistriert).** Wenn mehrere verschiedene Funktionen alle Beispiele erfüllen, sucht das System selbst nach einer Eingabe, die sie unterscheidet, wie beim orakelgeführten Synthetisieren (Jha et al., ICSE 2010). Statt eine Funktion zu bestätigen, fragt es den Besitzer nach dem gewünschten Ergebnis. Findet es keine solche Eingabe, meldet es die Funktionen als verhaltensgleich im geprüften Bereich.
+- Weder eine Quittung noch ein Gewicht noch eine produktive Datei wurde verändert. Die Vorprüfung lief nur auf Kopien der Module.
