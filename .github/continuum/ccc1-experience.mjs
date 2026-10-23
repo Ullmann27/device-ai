@@ -20,7 +20,9 @@ export function experienceOf(taskId,entries,{coreId=null,unchecked=[]}={}){
  const hypotheses=entries.filter(e=>e.kind==='TEST_REQUEST').map(request=>{
   const receipt=entries.find(e=>e.kind==='RECEIPT'&&e.payload.request===request.messageId);
   const h=byId.get(request.payload.hypothesis);
-  return {module:h?.payload.module??request.payload.module,export:h?.payload.export??request.payload.export,
+  const repair=h?.payload.repair?.chain??request.payload.repair?.chain??null;
+  return {module:repair?null:h?.payload.module??request.payload.module,export:repair?null:h?.payload.export??request.payload.export,
+   ...(repair?{repair,patchSha256:receipt?.payload.patchSha256??null}:{}),
    verdict:receipt?.payload.verdict??'NO_RECEIPT',receiptSha256:receipt?.payload.receiptSha256??null};
  });
  const abstain=entries.find(e=>e.kind==='ABSTAIN')?.payload.reason??null;
@@ -28,7 +30,7 @@ export function experienceOf(taskId,entries,{coreId=null,unchecked=[]}={}){
  return {schema:'continuum-ccc1-experience',version:1,taskId,goalSha256:sha(goal?.payload.text??''),
   baseCommitSha:goal?.baseCommitSha??null,outcome:s.state,coreId,
   question:abstain?.startsWith('Mehrdeutig')?abstain:null,abstainReason:abstain&&!abstain.startsWith('Mehrdeutig')?abstain:null,
-  hypotheses,confirmed:confirmed?{module:confirmed.module,export:confirmed.export}:null,
+  hypotheses,confirmed:confirmed?confirmed.repair?{repair:confirmed.repair,patchSha256:confirmed.patchSha256}:{module:confirmed.module,export:confirmed.export}:null,
   uncheckedAlternatives:unchecked.slice(0,10),rounds:s.rounds,cpuMillis:s.cpuMillis};
 }
 

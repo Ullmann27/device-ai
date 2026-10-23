@@ -28,7 +28,8 @@ function fixture(){
  fs.writeFileSync(path.join(dir,'math-utils.test.mjs'),"import test from 'node:test';\nimport assert from 'node:assert/strict';\n"+
   "import {triple} from './math-utils.mjs';\ntest('baseline',()=>assert.equal(triple(2),6));\n");
  const git=(...a)=>{const r=spawnSync('git',a,{cwd:root,encoding:'utf8',timeout:15000});assert.equal(r.status,0,r.stderr);return r.stdout.trim();};
- git('init','-q');git('add','.');git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','seed');
+ // an isolated working branch: the CLI's CCC1 preflight refuses main/master/production checkouts
+ git('init','-q','-b','ccc1-work');git('add','.');git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','seed');
  return {home,root,state:path.join(home,'ccc1-state'),git};
 }
 
@@ -107,8 +108,16 @@ test('damaged journals are reported, never repaired, and stop the worker; the ex
  });
 });
 
+/** The CLI's preflight requires the CCC1 runtime inside the project (as in the Termux checkout); copied and committed. */
+function withCcc1Runtime(f){
+ for(const name of ['ccc1-cli.mjs','ccc1-worker.mjs','ccc1-path-policy.mjs','local-teamleader-loop.mjs'])
+  fs.copyFileSync(new URL('./'+name,import.meta.url),path.join(f.root,'.github','continuum',name));
+ f.git('add','.');f.git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','ccc1 runtime');
+ return f;
+}
+
 test('the CLI keeps its state outside the repository and lists tasks',async()=>{
- const f=fixture();
+ const f=withCcc1Runtime(fixture());
  const lines=[];
  await assert.rejects(cli(['status','--state',path.join(f.root,'state'),'--project',f.root],l=>lines.push(l)),/CCC1_STATE_INSIDE_SOURCE|outside the repository/);
  await cli(['submit','--project',f.root,'--state',f.state,'--goal',TRIPLE],l=>lines.push(l));
@@ -167,4 +176,27 @@ test('tasks are bound to the real repository, never to a placeholder',()=>{
   assert.equal(repositoryOf(f.root),'Ullmann27/device-ai',url);
  }
  assert.throws(()=>submitGoal({project:f.root,stateDir:f.state,text:TRIPLE,repoFullName:'owner'}),/owner\/name/);
+});
+
+test('submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime',async()=>{
+ const bare=fixture();
+ await assert.rejects(cli(['submit','--project',bare.root,'--state',bare.state,'--repair','node'],()=>{}),/CCC1_REQUIRED_FILE_MISSING/);
+ const f=withCcc1Runtime(fixture());
+ f.git('checkout','-q','-b','main');
+ await assert.rejects(cli(['submit','--project',f.root,'--state',f.state,'--repair','node'],()=>{}),/CCC1_BRANCH_NOT_ISOLATED/);
+ f.git('checkout','-q','ccc1-work');
+ fs.writeFileSync(path.join(f.root,'stray.txt'),'x');
+ await assert.rejects(cli(['submit','--project',f.root,'--state',f.state,'--goal',TRIPLE],()=>{}),/CCC1_WORKTREE_NOT_CLEAN/);
+ fs.rmSync(path.join(f.root,'stray.txt'));
+ await assert.rejects(cli(['submit','--project',f.root,'--state',f.state,'--goal',TRIPLE,'--repair','node'],()=>{}),/exactly one of/);
+ assert.equal(listTasks(f.state).length,0,'no task was created');
+ const lines=[];
+ await cli(['submit','--project',f.root,'--state',f.state,'--repair','node'],l=>lines.push(l));
+ const submitted=JSON.parse(lines[0]);
+ assert.equal(submitted.branch,'ccc1-work');
+ assert.equal(submitted.sourceCommit,f.git('rev-parse','HEAD'));
+ assert.deepEqual(listTasks(f.state).map(t=>[t.taskId,t.state]),[[submitted.taskId,'DRAFT']]);
+ const compiled=[];
+ await cli(['compile','--project',f.root,'--state',f.state,'--repair','node'],l=>compiled.push(l));
+ assert.equal(JSON.parse(compiled[0]).status,'READY');
 });

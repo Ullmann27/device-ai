@@ -17,6 +17,9 @@ import {DisambiguatingProbeCore,ProbeLanguageCore} from './behaviour-probe.mjs';
 import {DurableTaskJournal,JournalCorruption,runtimeKey} from './ccc1-journal.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 import {buildCodeIndex,saveCodeIndex} from './code-index.mjs';
+import {assessCcc1Preflight} from './ccc1-local-preflight.mjs';
+import {REPAIR_CAPABILITY} from './ccc1-envelope.mjs';
+import {REPAIR_CHAINS} from '../../scripts/continuum-mobile-coding.mjs';
 
 export const OUTCOME_FOR={COMPLETED:'VERIFIED_PATCH_PENDING_REVIEW',ABSTAINED:'DONE_INVESTIGATION',ABORTED:'DONE_INVESTIGATION',
  FAILED:'ERROR',STOPPED_CORRUPT_JOURNAL:'ERROR',WAITING_FOR_WORKER:'INTERRUPTED',BLOCKED_WRITER_ACTIVE:'INTERRUPTED',
@@ -43,6 +46,35 @@ export function submitGoal({project,stateDir,text,repoFullName=null,maxRounds=3,
  const repo=repoFullName??repositoryOf(project);
  if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
  return startTask({project,stateDir,goal:{text},repoFullName:repo,maxRounds,deadlineMinutes});
+}
+
+/**
+ * Owner repair order -> durable CCC1 task. The owner grants exactly node-repair:<chain>; the failure is found by
+ * running the fixed chain in an isolated worktree, never guessed. CPU budget covers baseline, candidates and the
+ * independent second run of a real suite.
+ */
+export function submitRepair({project,stateDir,chain,repoFullName=null,maxRounds=2,deadlineMinutes=24*60}){
+ if(!REPAIR_CHAINS.includes(chain))throw Error('chain must be one of '+REPAIR_CHAINS.join(', '));
+ const repo=repoFullName??repositoryOf(project);
+ if(!REPO.test(repo))throw Error('repoFullName must be owner/name');
+ return startTask({project,stateDir,goal:{text:`Repariere die fehlschlagenden Tests der Testkette ${chain}.`,repair:{chain}},
+  repoFullName:repo,permissions:[REPAIR_CAPABILITY+':'+chain],maxRounds,deadlineMinutes,maxCpuMillis:3_600_000});
+}
+
+/**
+ * Task compiler for a repair order: the read-only CCC1 preflight (isolated non-production branch, clean checkout,
+ * state outside the source, required modules, Node version) and the fixed plan. Nothing runs and nothing is claimed.
+ */
+export function compileRepair({project,stateDir,chain}){
+ const out={schema:'continuum-ccc1-compiled-goal',version:1,kind:'REPAIR',chain:REPAIR_CHAINS.includes(chain)?chain:null,
+  status:null,question:null,preflight:null,plan:[]};
+ if(!out.chain)return {...out,status:'NEEDS_OWNER',question:'Welche Testkette soll repariert werden? ('+REPAIR_CHAINS.join(', ')+')'};
+ const pf=assessCcc1Preflight({project,stateDir});
+ out.preflight={result:pf.result,sourceCommit:pf.sourceCommit,checkedBranch:pf.checkedBranch,findings:[...pf.findings]};
+ if(pf.result!=='READY_TO_REQUEST_OWNER_REVIEW')return {...out,status:'BLOCKED',question:('Vorprüfung blockiert: '+pf.findings.join(', ')).slice(0,600)};
+ return {...out,status:'READY',plan:['Testkette '+chain+' am Commit '+pf.sourceCommit.slice(0,12)+' im isolierten Worktree ausführen',
+  'bei echtem Fehler: deterministische Reparaturkandidaten der bestehenden Pipeline prüfen',
+  'Patch in zweitem unabhängigem Worktree wiederholen','Quittung durch den CCC1-Verifier prüfen','Patch nur zur Prüfung anbieten; kein Merge, keine Installation']};
 }
 
 /**

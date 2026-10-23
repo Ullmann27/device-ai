@@ -4,14 +4,19 @@
 // repository. A confirmed task is a contract-test patch pending the owner's review - nothing is merged or installed.
 // Usage:
 //   node .github/continuum/ccc1-cli.mjs compile  --project <repo> --goal "<goal with examples>"   (dry run, no state)
+//   node .github/continuum/ccc1-cli.mjs compile  --project <repo> --state <dir> --repair node|android|jvm   (read-only preflight)
 //   node .github/continuum/ccc1-cli.mjs submit   --project <repo> --state <dir> --goal "<goal with examples>" [--repo owner/name]
+//   node .github/continuum/ccc1-cli.mjs submit   --project <repo> --state <dir> --repair node|android|jvm [--repo owner/name]
+// `submit` runs the read-only CCC1 preflight first and creates no task unless it is READY (isolated non-production
+// branch, clean checkout, state outside the source).
 //   node .github/continuum/ccc1-cli.mjs status   --state <dir> [--format json]
 //   node .github/continuum/ccc1-cli.mjs run-once --project <repo> --state <dir> [--core disambiguate|probe|lexical] [--index-on-idle true]
 //   node .github/continuum/ccc1-cli.mjs loop     --project <repo> --state <dir> --cycles <n> [--interval <minutes>] [--index-on-idle true]
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {submitGoal,listTasks,runCcc1Cycle,compileGoal} from './ccc1-worker.mjs';
+import {submitGoal,submitRepair,listTasks,runCcc1Cycle,compileGoal,compileRepair} from './ccc1-worker.mjs';
+import {assessCcc1Preflight} from './ccc1-local-preflight.mjs';
 import {ExperienceLog} from './ccc1-experience.mjs';
 import {runTeamleaderLoop} from './local-teamleader-loop.mjs';
 import {ensureCcc1StateOutsideSource} from './ccc1-path-policy.mjs';
@@ -41,7 +46,8 @@ export function statusJson(tasks,experience){
   const r=records.get(t.taskId);
   return {taskId:t.taskId,state:t.state,waitingForOwner:t.waitingForOwner,goal:t.goal.slice(0,200),
    question:(r?.question??r?.abstainReason??null)?.slice(0,600)??null,
-   confirmed:r?.confirmed?`${r.confirmed.module}#${r.confirmed.export}`:null,
+   confirmed:r?.confirmed?(r.confirmed.repair?'repair:'+r.confirmed.repair+'@'+String(r.confirmed.patchSha256).slice(0,12):
+    `${r.confirmed.module}#${r.confirmed.export}`):null,
    uncheckedAlternatives:r?.uncheckedAlternatives?.length??0};
  })};
 }
@@ -49,6 +55,11 @@ export function statusJson(tasks,experience){
 export async function main(argv=process.argv.slice(2),out=console.log){
  const o=parseArgs(argv);
  if(o.command==='compile'){
+  if(o.repair!==undefined){
+   if(!o.project||!o.state)throw Error('compile --repair needs --project and --state');
+   out(JSON.stringify(compileRepair({project:o.project,stateDir:o.state,chain:o.repair})));
+   return;
+  }
   if(!o.project||!o.goal)throw Error('compile needs --project and --goal');
   out(JSON.stringify(await compileGoal({project:o.project,text:o.goal})));
   return;
@@ -57,8 +68,12 @@ export async function main(argv=process.argv.slice(2),out=console.log){
  if(o.project)o.state=outside(o.project,o.state);
  switch(o.command){
   case 'submit':{
-   if(!o.project||!o.goal)throw Error('submit needs --project and --goal');
-   out(JSON.stringify({taskId:submitGoal({project:o.project,stateDir:o.state,text:o.goal,repoFullName:o.repo??null})}));
+   if(!o.project||(o.goal===undefined)===(o.repair===undefined))throw Error('submit needs --project and exactly one of --goal, --repair');
+   const pf=assessCcc1Preflight({project:o.project,stateDir:o.state});
+   if(pf.result!=='READY_TO_REQUEST_OWNER_REVIEW')throw Error('CCC1_PREFLIGHT_BLOCKED: '+pf.findings.join(', '));
+   const taskId=o.repair!==undefined?submitRepair({project:o.project,stateDir:o.state,chain:o.repair,repoFullName:o.repo??null}):
+    submitGoal({project:o.project,stateDir:o.state,text:o.goal,repoFullName:o.repo??null});
+   out(JSON.stringify({taskId,sourceCommit:pf.sourceCommit,branch:pf.checkedBranch}));
    return;
   }
   case 'status':{
