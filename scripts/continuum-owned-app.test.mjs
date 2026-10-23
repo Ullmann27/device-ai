@@ -33,6 +33,10 @@ test('M4 creates an isolated app with two screens and offline local persistence'
  const app=fs.readFileSync(path.join(projectPath(home),'app/src/main/java/at/heinz/continuum/m4notes/MainActivity.kt'),'utf8');
  assert.match(app,/showNotes\(\)/);assert.match(app,/showAbout\(\)/);
  assert.match(app,/getSharedPreferences/);assert.match(app,/\.commit\(\)/);
+ assert.match(app,/onSaveInstanceState\(outState: Bundle\)/);
+ assert.match(app,/captureDraft\(\)/);
+ assert.match(app,/draft \?: prefs\.getString\("note", ""\)/);
+ assert.match(app,/if \(persisted\) draft = normalized/);
  const manifest=fs.readFileSync(path.join(projectPath(home),'app/src/main/AndroidManifest.xml'),'utf8');
  assert.doesNotMatch(manifest,/uses-permission|INTERNET|REQUEST_INSTALL_PACKAGES/);
  assert.match(manifest,/android:exported="true"/);
