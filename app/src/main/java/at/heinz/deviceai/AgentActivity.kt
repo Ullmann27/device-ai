@@ -106,6 +106,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.UUID
+import kotlin.math.roundToInt
 
 class AgentActivity : Activity() {
     private var pendingContinuumPackageModel:ByteArray?=null
@@ -598,7 +599,7 @@ class AgentActivity : Activity() {
             openHomeSlot(slot, x, y)
         }
         val windowWidth = resources.configuration.screenWidthDp.toFloat()
-        home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f,
+        home.configure(windowWidth, wide, railOffset = if (wide) at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(windowWidth) else 0f,
             windowHeightDp = resources.configuration.screenHeightDp.toFloat())
         homeView = home
         dashboard.addView(home, matchWidth())
@@ -684,7 +685,7 @@ class AgentActivity : Activity() {
     }
 
     /** Width of the Fold/tablet navigation rail: 76 dp of the 840 dp wide reference, scaled with the window. */
-    private fun railWidthPx(): Int = dp((resources.configuration.screenWidthDp * 76f / 840f).toInt())
+    private fun railWidthPx(): Int = (at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(\n        resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density).roundToInt()
 
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
