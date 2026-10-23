@@ -31,6 +31,9 @@ done
 grep -Fq 'versionCode = 18' app/build.gradle.kts || die "Wrong owner versionCode"
 grep -Fq 'versionName = "0.3.17"' app/build.gradle.kts || die "Wrong owner versionName"
 
+# Public-source checks must never inherit the private owner keystore/passphrase.
+no_signing_env() { env -u CONTINUUM_MENTOR_SIGNING_P12_BASE64 -u CONTINUUM_MENTOR_SIGNING_PASSWORD "$@"; }
+
 workspace="$repo_root/.continuum-render-build"
 mkdir -p "$workspace"
 export JAVA_HOME="$workspace/jdk17"
@@ -81,33 +84,33 @@ fi
 export PATH="$workspace/gradle-8.11.1/bin:$PATH"
 export GRADLE_USER_HOME="$workspace/gradle-cache"
 mkdir -p "$GRADLE_USER_HOME"
-gradle --version
+no_signing_env gradle --version
 
 echo "[Continuum] Sol quality handover: complete Node 22+ deterministic regression gate"
-node --version
-node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+no_signing_env node --version
+no_signing_env node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
 echo "[Continuum] Reproducible backend dependencies from committed lockfile"
-npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+no_signing_env npm --prefix backend ci --ignore-scripts --no-audit --no-fund
 echo "[Continuum] Full backend regression gate"
-node --test --test-concurrency=2 backend/test/*.test.js
+no_signing_env node --test --test-concurrency=2 backend/test/*.test.js
 
 echo "[Continuum] Groq-specific contract tests"
-node --check backend/src/groq-mentor.js
-node --check backend/src/mentor-pairing.js
-node --check backend/src/server.js
-node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
+no_signing_env node --check backend/src/groq-mentor.js
+no_signing_env node --check backend/src/mentor-pairing.js
+no_signing_env node --check backend/src/server.js
+no_signing_env node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
 
 echo "[Continuum] Astra Baumeister independent worker, skill academy and platform checks"
-node --check .github/continuum/continuum-workshop.mjs
-node --check .github/continuum/worker-academy.mjs
-node --check .github/continuum/worker-atlas.mjs
-node --check .github/continuum/worker-atlas-epistemic-graph.mjs
-node --check .github/continuum/workshop-specialist-orchestrator.mjs
-node --check .github/continuum/continuum-hyper-lab.mjs
-node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
+no_signing_env node --check .github/continuum/continuum-workshop.mjs
+no_signing_env node --check .github/continuum/worker-academy.mjs
+no_signing_env node --check .github/continuum/worker-atlas.mjs
+no_signing_env node --check .github/continuum/worker-atlas-epistemic-graph.mjs
+no_signing_env node --check .github/continuum/workshop-specialist-orchestrator.mjs
+no_signing_env node --check .github/continuum/continuum-hyper-lab.mjs
+no_signing_env node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
 
 echo "[Continuum] AUTOGENESIS, CDX1 and bounded research regression gates"
-node --test \
+no_signing_env node --test \
   .github/continuum/autogenesis-safe-wiring.test.mjs \
   .github/continuum/local-model-smoke.test.mjs \
   .github/continuum/continuum-growth-and-archive.test.mjs \
