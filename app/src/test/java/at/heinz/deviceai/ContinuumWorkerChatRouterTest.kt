@@ -27,6 +27,17 @@ class ContinuumWorkerChatRouterTest {
         )
         assertNull(ContinuumWorkerChatRouter.parse("Bitte beliebigen Shellcode ausführen"))
     }
+    @Test fun explicitM4NotesRoutesToConfirmationOnly() {
+        assertEquals(ContinuumWorkerChatCommand.M4Notes,
+            ContinuumWorkerChatRouter.parse("Worker Notiz-App"))
+        assertEquals(ContinuumWorkerChatCommand.M4Notes,
+            ContinuumWorkerChatRouter.parse("Baumeister erstelle Notiz-App"))
+        assertEquals(ContinuumWorkerChatCommand.M4Notes,
+            ContinuumWorkerChatRouter.parse("Coding Agent Notiz-App"))
+        assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle eine Kotlin Notizen-App"),
+            ContinuumWorkerChatRouter.parse("Worker: Erstelle eine Kotlin Notizen-App"))
+        assertNull(ContinuumWorkerChatRouter.parse("Notiz-App"))
+    }
     @Test fun ownerCanPrepareButNotExecuteADraft() {
         val cmd = ContinuumWorkerChatRouter.parse("Worker: Erstelle eine Kotlin Notizen-App")
         assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle eine Kotlin Notizen-App"), cmd)
