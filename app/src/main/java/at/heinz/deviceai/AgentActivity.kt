@@ -1673,7 +1673,7 @@ class AgentActivity : Activity() {
             }
         AlertDialog.Builder(this)
             .setTitle("CONTINUUM MASTER · TRAININGSSTUDIO")
-            .setMessage("15 Rubriken mit einzeln kopierbaren Übungen und mehrteiligen Gesprächsfolgen. " +
+            .setMessage("${categories.length()} Rubriken mit einzeln kopierbaren Übungen und mehrteiligen Gesprächsfolgen. " +
                 "Jede Vorlage ist lediglich Text. Nur das normale Bestätigungsverfahren kann " +
                 "später Erinnerungen speichern oder Modellgewichte verändern. " +
                 "Dialogtests allein trainieren noch kein freies Sprachmodell.")
