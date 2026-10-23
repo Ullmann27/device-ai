@@ -56,7 +56,7 @@ Verified on that branch, not on the integration SHA itself; re-run on the frozen
 |---|---|
 | ALL_NODE (`.github/continuum` + `scripts`) | 981 tests: 975 pass, 0 fail, 6 skipped (need `kotlinc`); those 7 tests pass with `kotlinc` on PATH. The six historical failures are fixed (stale Fold7 reflow contract; unterminated awk in `continuum-isolated-node.sh`). |
 | BACKEND_TESTS | 60/60 after `npm ci` from the lockfile (7 fail without installed dependencies) |
-| KOTLIN/JVM unit tests | 813/813 + 4 Checks programs via `scripts/android-kotlin-unit-check.sh` (outside Gradle; LiteRT-LM compile-only stub) |
+| KOTLIN/JVM unit tests | 817/817 (165 classes) + 4 Checks programs via `scripts/android-kotlin-unit-check.sh` (outside Gradle; LiteRT-LM compile-only stub) |
 | ANDROID_LINT / Gradle / Robolectric UI | not executed (no SDK, Google Maven unreachable) |
 | CCC1_ANDROID_BRIDGE | wired and JVM-checked; real repair through the app's Termux calls on a repository clone (`docs/evidence/ccc1-e2e-20261023/`); device not executed |
 | SIGNED_APK_VERSION_GT_17 | NOT BUILT (see `docs/CONTINUUM-PREMIUM-UI-INTEGRATION-GATE-20261023.md`, PR #98) |

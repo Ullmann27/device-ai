@@ -12,7 +12,7 @@ Statusbegriffe: **bestanden** = hier ausgeführt und grün · **nicht ausgeführ
 | Durchbruchsziel | Stand |
 |---|---|
 | **A. CCC1 Ende zu Ende** | **bestanden außerhalb des Geräts:** echter Reparaturlauf über genau die Termux-Aufrufe der App auf einem Klon des echten Repositorys – echter Fehler gefunden, bestehende Pipeline, unabhängiger zweiter Arbeitsstand, CCC1-Verifier, Patch nur angeboten; zweimal reproduziert (gleicher Patch-Hash). **Nicht ausgeführt:** derselbe Lauf auf dem Fold7/Termux. |
-| **B. Android als Ganzes** | CCC1-Brücke in Activity/Empfänger verdrahtet; alle 202 Hauptquellen kompilieren, **813/813 Kotlin-Unit-Tests** + 4 Prüfprogramme grün (außerhalb Gradle). **Nicht ausgeführt:** Gradle/AGP-Build, Lint, Robolectric-UI-Tests, Gerät. |
+| **B. Android als Ganzes** | CCC1-Brücke in Activity/Empfänger verdrahtet; alle 202 Hauptquellen kompilieren, **817/817 Kotlin-Unit-Tests** + 4 Prüfprogramme grün (außerhalb Gradle). **Nicht ausgeführt:** Gradle/AGP-Build, Lint, Robolectric-UI-Tests, Gerät. |
 | **C. Signierte Besitzer-APK > 17** | **nicht gebaut.** Kein Android-SDK/Signierschlüssel hier; versionCode liegt in `app/build.gradle.kts` (Astra/Integration); laut PR #98 keine Besitzer-APK ohne Astras vollständige Premium-UI. Schritte unten. |
 
 ## A. CCC1-Fortschritt (die Kette)
@@ -54,6 +54,8 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 | `687b3a56` → `2ee743a9` | veralteter Fold7-Reflow-Test (Fassung aus PR #98 wörtlich übernommen) |
 | `122f5c67` | Sandbox-Fix: unvollständiges awk-Programm in `continuum-isolated-node.sh` |
 | `e077b933` | `scripts/android-kotlin-unit-check.sh`: alle Kotlin-Unit-Tests ohne SDK/Gradle |
+| `32cc82e1` | Verifier-Test: zeitüberschrittene Läufe bestätigen nie |
+| `29fe255e`, `e7136b5b` | Forschung D: CDX1 als Patch-Anomalie-Sensor (vorregistriert, ein Lauf) |
 
 ## Pflichtprüfungen (Auftrag §3)
 
@@ -92,7 +94,7 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 | Node `.github/continuum/*.test.mjs` + `scripts/*.test.mjs` | **981 Tests: 975 bestanden, 0 fehlgeschlagen, 6 übersprungen** (brauchen `kotlinc`) |
 | dieselben 7 Kotlin-abhängigen Node-Tests mit `kotlinc` im PATH | **7/7 bestanden** |
 | Backend `backend/test/*.test.js` | **60/60 bestanden** mit `npm ci` aus dem Lockfile; ohne Abhängigkeiten 7 rot (Umgebung, nicht Code) |
-| Kotlin-Unit-Tests (`scripts/android-kotlin-unit-check.sh`) | **813/813 bestanden** (164 Klassen) + 4 Prüfprogramme PASS |
+| Kotlin-Unit-Tests (`scripts/android-kotlin-unit-check.sh`) | **817/817 bestanden** (165 Klassen) + 4 Prüfprogramme PASS |
 | Android-Hauptquellen kompilieren | bestanden (LiteRT-LM nur als Kompilier-Platzhalter, sonst Werkzeug nicht verfügbar) |
 | Gradle/AGP, Android-Lint, Robolectric-UI (`src/uiTest`), APK, Fold7 | **nicht ausgeführt** (Werkzeug nicht verfügbar: kein SDK, Google Maven gesperrt) |
 | GitHub Actions | nicht ausgeführt; Läufe auf `main` scheitern laut Audit ohne Step-Daten |
@@ -119,7 +121,10 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
   Android-Kette (Gradle) kann das Minuten dauern. Ergebnis zählt nie.
 - **Reparaturbreite:** Bewiesen ist der deterministische Weg (hier `REVERT_FILE_TO_PARENT`). Fehler, die keine
   vorhandene Strategie abdeckt, enden ehrlich als `FAILED_REPAIR`/`ABSTAINED`.
-- **Forschung (Argon A–E):** in diesem Arbeitsblock **nicht ausgeführt** – CCC1-E2E und Integration hatten Vorrang.
+- **Forschung (Argon A–E):** **D ausgeführt** (vorregistriert, ein Lauf, `docs/research/CDX1-PATCH-ANOMALY-RESULT-20261023.md`):
+  CDX1 erkennt nur ungewöhnliche Bytefolgen (99 %), keine Syntax-, Token-, Abschneide-, Hunk- oder semantischen Fehler;
+  ein Byte-4-Gramm leistet dasselbe 6× schneller → kein CDX1-Signal in CCC1. Vorschlag: deterministische Prüfung auf
+  Steuer-/unsichtbare Zeichen in Patches. **A (TTT1), B (LCT1), C (WSC1), E (GGUF/Spine): nicht ausgeführt.**
 - **Nächster Schritt:** Draft-PR prüfen und in PR #97 übernehmen; PR #98 dazu; dann Gates 2–4 oben.
 
 **Rollback:** Branch-Commits sind klein und einzeln revertierbar; vor `89b353d5` liegt unverändert `81180313`
