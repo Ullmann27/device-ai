@@ -23,12 +23,17 @@ class AndroidContinuumPainter(private val assets: AssetManager) : ContinuumPaint
     private val shaders = IdentityHashMap<Fill, Shader>()
     private val paths = IdentityHashMap<VectorPath, Pair<Int, Path>>()
 
+    private val additiveMode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.ADD)
+
     fun begin(target: Canvas) {
         canvas = target
+        paint.xfermode = null
         // gradient fills are allocated per layout; drop cached shaders of fills that are no longer used
         if (shaders.size > 512) shaders.clear()
         if (paths.size > 128) paths.clear()
     }
+
+    override fun setAdditive(on: Boolean) { paint.xfermode = if (on) additiveMode else null }
 
     override fun save() { canvas.save() }
     override fun restore() { canvas.restore() }

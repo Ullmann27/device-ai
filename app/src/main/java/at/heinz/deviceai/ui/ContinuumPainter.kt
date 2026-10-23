@@ -39,6 +39,13 @@ interface ContinuumPainter {
     /** Distance from baseline to the top of capital letters (positive), used for vertical centring. */
     fun capHeight(style: TextStyle): Float
 
+    /**
+     * Light layers: while on, fills and strokes add their light to what is below (Porter-Duff ADD) instead of
+     * covering it, so crossing lines and dense regions glow brighter while dark areas stay dark. Off by default;
+     * every caller that turns it on turns it off again.
+     */
+    fun setAdditive(on: Boolean) {}
+
     fun fillCircle(cx: Float, cy: Float, radius: Float, fill: Fill, alpha: Float = 1f) =
         fillOval(cx - radius, cy - radius, cx + radius, cy + radius, fill, alpha)
     fun strokeCircle(cx: Float, cy: Float, radius: Float, width: Float, fill: Fill, alpha: Float = 1f) =

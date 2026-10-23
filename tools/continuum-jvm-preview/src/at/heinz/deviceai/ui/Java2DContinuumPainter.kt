@@ -147,13 +147,42 @@ class Java2DContinuumPainter(private val g: Graphics2D, private val assetRoot: F
         g.draw(shape)
     }
 
+    private var additive = false
+    override fun setAdditive(on: Boolean) { additive = on }
+
     private inline fun withPaint(fill: Fill, alpha: Float, draw: () -> Unit) {
         if (alpha <= 0f) return
         val oldComposite = g.composite
         g.paint = paint(fill)
-        g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceIn(0f, 1f))
+        g.composite = if (additive) AdditiveComposite(alpha.coerceIn(0f, 1f))
+        else AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceIn(0f, 1f))
         draw()
         g.composite = oldComposite
+    }
+
+    /**
+     * Porter-Duff ADD like android.graphics.PorterDuff.Mode.ADD: destination + source colour x source alpha x [alpha],
+     * saturated. Anti-aliasing stays correct: Java2D blends the composed tile into the destination by coverage.
+     */
+    private class AdditiveComposite(private val alpha: Float) : java.awt.Composite {
+        override fun createContext(srcColorModel: ColorModel, dstColorModel: ColorModel, hints: RenderingHints?) =
+            object : java.awt.CompositeContext {
+                override fun dispose() {}
+                override fun compose(src: Raster, dstIn: Raster, dstOut: java.awt.image.WritableRaster) {
+                    val w = minOf(src.width, dstIn.width, dstOut.width); val h = minOf(src.height, dstIn.height, dstOut.height)
+                    var s: Any? = null; var d: Any? = null
+                    for (y in 0 until h) for (x in 0 until w) {
+                        s = src.getDataElements(src.minX + x, src.minY + y, s)
+                        d = dstIn.getDataElements(dstIn.minX + x, dstIn.minY + y, d)
+                        val sc = srcColorModel.getRGB(s); val dc = dstColorModel.getRGB(d)
+                        val a = (sc ushr 24) / 255f * alpha
+                        fun add(shift: Int) = minOf(255, ((dc shr shift) and 255) + (((sc shr shift) and 255) * a + .5f).toInt())
+                        val out = (minOf(255, (dc ushr 24) + (a * 255f + .5f).toInt()) shl 24) or (add(16) shl 16) or (add(8) shl 8) or add(0)
+                        d = dstColorModel.getDataElements(out, d)
+                        dstOut.setDataElements(dstOut.minX + x, dstOut.minY + y, d)
+                    }
+                }
+            }
     }
 
     private fun paint(fill: Fill): Paint = when (fill) {

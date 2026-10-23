@@ -25,6 +25,8 @@ object ContinuumPreviewMain {
             renderer.geometry = if (layout.wide) ContinuumHologramRenderer.Geometry.FOLD else ContinuumHologramRenderer.Geometry.PHONE
             renderer.layout(box.width, box.height)
             p.save(); p.translate(box.left, box.top)
+            // the hologram is a child view on the device and is clipped to its box
+            p.clipRect(0f, 0f, box.width, box.height)
             renderer.draw(p, ContinuumHologramRenderer.Frame.still())
             p.restore()
         }
