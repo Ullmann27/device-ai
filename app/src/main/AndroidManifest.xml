@@ -90,6 +90,7 @@
         <activity
             android:name=".AgentActivity"
             android:exported="true"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
