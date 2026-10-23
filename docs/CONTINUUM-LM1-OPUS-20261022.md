@@ -428,3 +428,44 @@ Auftrag: M4/M5, Abschnitt 3, Punkt 7 („Prüfe danach auf getrennten neuen Test
   3. Vorübergehende Worker-Blockaden (Teamleiter-Sperre, Backlog-Sperre) beendeten die Aufgabe → jetzt `WAITING_FOR_WORKER`, der Auftrag bleibt offen, nichts wird ausgeführt.
   4. **Produktfehler im Coding-Agenten:** Die gemeinsame Build-Sperre (`shared-build-lease.mjs`) bleibt nach einem Absturz für immer liegen; auf Android blockiert das jeden weiteren Job. Neu: `releaseDeadContinuumBuildLease` – nur nach ausdrücklicher Besitzerfreigabe und nur, wenn der Halteprozess auf diesem Gerät nachweislich nicht mehr existiert (Test 6/6). Alter allein gibt weiterhin nichts frei.
 - `reasoner-dialog.mjs` (Abschnitt 5) bleibt unverändert und getestet; CCC1 ist der Nachfolger mit vollständiger Spezifikation.
+
+## 9. LM1-Runtime – lokaler Inferenzpfad (`app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt`)
+
+**Zweck:** LM1 außerhalb des Forschungsgerüsts ausführen. Später ruft die App es über einen Hintergrund-Worker auf; dafür ist eine kleine, testbare Schnittstelle vorbereitet. Die Android-Verdrahtung ist ausdrücklich nicht Teil dieses Schritts.
+
+**Funktionen**
+
+| Anforderung | Umsetzung |
+|---|---|
+| verifiziertes Checkpointformat | `LmRuntime.load(bytes, tokenizerBytes, expectedSha256)` lädt nur Bytes mit dem erwarteten SHA-256. Danach prüft `LmCheckpoint.decode` Körper-Prüfsumme, Tokenizer-Bindung, Layout und Endlichkeit. Größenlimit 64 MB. |
+| passender Tokenizer | Die serialisierte BPE-Datei (2 KB) muss den im Checkpoint stehenden Hash haben. Sie liegt auf dem Datenzweig `opus/lm1-checkpoints-20261022` unter `tokenizer/`. |
+| echte Modellvorhersage | minGRU läuft Schritt für Schritt mit einem Zustandsvektor je Schicht. Er nutzt dieselben Rechenkerne wie das Training, die Logits sind **bitgleich** zum vollen Vorwärtsdurchlauf (Test, Toleranz 0). Der Transformer rechnet sein Fenster je Token neu. |
+| deterministisch oder reproduzierbar gesampelt | gierig (`temperature = 0`) oder Temperatur plus top-k mit festem Seed |
+| Kontextgrenzen | Ist der Prompt zu lang, wird er von links gekürzt und das gemeldet (`promptTruncated`). Stopp `CONTEXT` am Fensterende. |
+| Laufzeit- und Speicherlimits | höchstens 512 neue Token, 60 s, 8 KB Prompt; Stoppgründe `MAX_TOKENS`, `TIME`, `EOS`, `CONTEXT` |
+| Abbruch | `cancelled()` wird vor jedem Token abgefragt; Stopp `CANCELLED` |
+| beschädigte Checkpoints | Abgelehnt werden: ein verändertes Byte, ein falscher erwarteter Hash, ein fremder Tokenizer, gekürzte oder übergroße Dateien, eine beschädigte Datei im Store (alles getestet). |
+| freie Generation ≠ Faktenabruf | Jedes Ergebnis trägt `Kind.FREE_GENERATION`. Die Runtime beantwortet keine Faktenfragen. Fakten kommen aus dem Wissensarchiv mit Quellen. |
+
+**Tests:**
+- `LmRuntimeTest` 5/5;
+- zusammen mit `LmCoreTest` und `LmStep7Test` 19/19.
+
+**Echter Lauf** (`docs/evidence/lm1-20261022/runtime-demo-20261023.txt`):
+- LM1-GM-v512, Seed 1, Epoche 8, Checkpoint `7a0af1e9…`;
+- ein Thread, JVM auf x86_64; ARM64 ist nicht gemessen.
+
+| Messgröße | Wert |
+|---|---|
+| Parameter | 132.160 (0,50 MB) |
+| ms je Token, schrittweise | **0,41** |
+| ms je Token, volle Neuberechnung (bisher `LmEval.generate`) | 3,39 |
+| gleiche gierige Ausgabe wie der Forschungsgenerator | 15/15 |
+
+- **Textqualität:** wie in Schritt 7. Gierig entstehen Schleifen („übersprungenen übersprungenen …“), mit Stichprobe Kunstwörter.
+- Die Runtime ist damit technisch nutzbar. Das Modell ist für Antworten an den Besitzer noch nicht brauchbar.
+
+**Offen**
+- Messung auf ARM64 bzw. dem Fold.
+- Anbindung an die App über einen Worker. Die Schnittstelle dafür wird mit Astra abgestimmt; seine Dateien werden nicht bearbeitet.
+- Quantisierung, erst wenn ein besseres Modell vorliegt.
