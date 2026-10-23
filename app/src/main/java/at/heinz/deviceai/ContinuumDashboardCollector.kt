@@ -162,7 +162,12 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 learning = if (live.learningActive) "Lernt gerade" else if (live.practiceEnabled) "Auto-Üben an" else "Bereit",
                 analysing = if (live.researching) "Recherchiert" else "Bereit",
                 developing = if (live.builderJobRunning || running > 0) "Aktiv" else "Bereit",
-                evolving = if (live.autoStudyEnabled || publicStudy) "Automatisch an" else "Aus"
+                evolving = when {
+                    live.autoStudyEnabled -> "CDX1-Autostudium an"
+                    publicStudy -> "Öffentliches Lernen an"
+                    live.practiceEnabled -> "Auto-Üben an"
+                    else -> "Aus"
+                }
             ),
             pendingNotifications = (openIssues ?: 0) + (if (live.curiosityPending) 1 else 0)
         )
