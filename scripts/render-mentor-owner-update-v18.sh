@@ -11,7 +11,11 @@ cd "$repo_root"
 render_publisher_root="$repo_root"
 signed_release_ref="astra/render-mentor-apk-builder-20261019"
 actual_branch="$(git branch --show-current)"
-[[ "$actual_branch" == "$signed_release_ref" ]] || die "Unexpected release branch"
+if [[ -n "$actual_branch" && "$actual_branch" != "$signed_release_ref" ]]; then
+  die "Unexpected release branch"
+fi
+# Render checks out detached HEAD; the exact approved 40-character SHA gate below
+# remains mandatory and prevents branch or commit substitution.
 commit="$(git rev-parse --verify HEAD)"
 [[ "$commit" =~ ^[a-f0-9]{40}$ && "$commit" == "$CONTINUUM_RELEASE_SHA" ]] || die "Unapproved source SHA"
 [[ "$CONTINUUM_ASTRA_UI_SHA" =~ ^[a-f0-9]{40}$ ]] || die "Missing full Astra SHA"
