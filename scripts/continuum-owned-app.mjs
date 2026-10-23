@@ -238,6 +238,7 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
     try {
       const args=['--no-daemon','--max-workers=2','--offline','--console=plain',
         '-Pandroid.aapt2FromMavenOverride='+aapt2,
+        '-Pkotlin.compiler.execution.strategy=in-process',
         ':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug'];
       const gradleRun=await run(gradle,args,{cwd:source.project,env:resolvedEnv,timeout:35*60*1000});
       if(!gradleRun.ok)return {status:'FAILED_BUILD',exitCode:gradleRun.code};
