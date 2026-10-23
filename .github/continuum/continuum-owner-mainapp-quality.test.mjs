@@ -41,7 +41,7 @@ test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',
   assert.match(activity,/liveHardwareGauges\?\.updateTelemetry\(state\.system\)/);
 });
 test('CCC1 integrated in same owner-app source without changing private app identity',()=>{
-  assert.match(ccc1,/class ContinuumCcc1Bridge/);
+  assert.match(ccc1,/internal object ContinuumCcc1Bridge/);
   assert.match(activity,/ContinuumCcc1Bridge/);
   assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 18\s*versionName = "0\.3\.17"/);
   assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
