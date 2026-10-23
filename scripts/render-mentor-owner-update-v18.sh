@@ -18,9 +18,34 @@ fi
 # remains mandatory and prevents branch or commit substitution.
 commit="$(git rev-parse --verify HEAD)"
 [[ "$commit" =~ ^[a-f0-9]{40}$ && "$commit" == "$CONTINUUM_RELEASE_SHA" ]] || die "Unapproved source SHA"
-[[ "$CONTINUUM_ASTRA_UI_SHA" =~ ^[a-f0-9]{40}$ ]] || die "Missing full Astra SHA"
-git merge-base --is-ancestor "$CONTINUUM_ASTRA_UI_SHA" "$commit" ||
-  die "Reviewed premium UI source not integrated"
+[[ "$CONTINUUM_ASTRA_UI_SHA" == "811803138c86a5c1a7a2a2b9cd196580a574a4a1" ]] ||
+  die "Unexpected reviewed UI baseline"
+# Render uses a shallow detached-HEAD checkout; old commit objects can be missing.
+# If ancestry is available it must pass. Otherwise, verify approved source blobs
+# from this reviewed release, not a misleading ancestor check on absent objects.
+if git cat-file -e "$CONTINUUM_ASTRA_UI_SHA^{commit}" 2>/dev/null; then
+  git merge-base --is-ancestor "$CONTINUUM_ASTRA_UI_SHA" "$commit" ||
+    die "Approved UI baseline is not an ancestor"
+else
+  echo "[Continuum] Shallow checkout: enforcing approved UI/CCC1 blob attestations"
+fi
+while read -r expected_blob source_path; do
+  [[ "$expected_blob" =~ ^[a-f0-9]{40}$ && -f "$source_path" ]] ||
+    die "Missing approved release file: $source_path"
+  actual_blob="$(git hash-object -- "$source_path")"
+  [[ "$actual_blob" == "$expected_blob" ]] ||
+    die "Approved release file differs: $source_path"
+done <<'APPROVED_RELEASE_SOURCES'
+ec21b085e70df4ff27cec57cecb85ac2cc56ffb0 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+2bb8817da268bdcca676aa9a9b48f56b50d06609 app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
+412d643296deb76ab07e9515f6881eba9df3a9b4 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
+edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5 app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt
+e243a487a2011906a9c149a2324b63b39ad2f25c app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt
+8ee9b9a7b171a209b43c8560e41c38d8fa57d136 app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt
+520db0554c0e4d8803d674f229f243f51f2aba17 app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt
+a3faa9a9a7058661cd5a4970b88bc7b16943e5a0 app/build.gradle.kts
+APPROVED_RELEASE_SOURCES
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] || die "Dirty source checkout"
 for required in \
   app/src/main/java/at/heinz/deviceai/AgentActivity.kt \
