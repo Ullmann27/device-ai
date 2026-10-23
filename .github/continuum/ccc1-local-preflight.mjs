@@ -11,7 +11,7 @@ const REQUIRED = Object.freeze([
   '.github/continuum/local-teamleader-loop.mjs'
 ]);
 const REV = /^[a-f0-9]{40}$/;
-const FORBIDDEN_BRANCHES = new Set(['main','master','production','release']);
+const FORBIDDEN_BRANCH = /^(?:main|master|production|prod|release)(?:$|[/-])/i;
 
 function fail(code) { throw new Error(code); }
 
@@ -49,7 +49,7 @@ export function assessCcc1Preflight({project, stateDir, runGit = (root,args) =>
     try {commit=runGit(root,['rev-parse','--verify','HEAD']).trim();if(!REV.test(commit))findings.push('CCC1_COMMIT_INVALID');}
     catch{findings.push('CCC1_COMMIT_UNVERIFIED');}
     try {branch=runGit(root,['branch','--show-current']).trim();
-      if(!branch || FORBIDDEN_BRANCHES.has(branch.toLowerCase()))findings.push('CCC1_BRANCH_NOT_ISOLATED');
+      if(!branch || FORBIDDEN_BRANCH.test(branch))findings.push('CCC1_BRANCH_NOT_ISOLATED');
     }catch{findings.push('CCC1_BRANCH_UNVERIFIED');}
     try{if(runGit(root,['status','--porcelain','--untracked-files=normal']).trim()) findings.push('CCC1_WORKTREE_NOT_CLEAN');}
     catch{findings.push('CCC1_WORKTREE_UNVERIFIED');}
