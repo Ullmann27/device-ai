@@ -2,11 +2,17 @@
 
 Eigenständiger, persönlicher Android-Assistent. **Forschungsziel:** einen lernfähigen Assistenten mit langlebiger Identität, überprüfbarer Erinnerung, kontrollierter Webrecherche und sicherer Geräteinteraktion schrittweise selbst aufbauen – ohne vorausgesetzten Cloud-Server oder extern importierte KI-Gewichte.
 
-## Stabilisierungsphase (Oktober 2026)
+## Aktueller Entwicklungsstand – 23. Oktober 2026
 
-Der aktuelle Entwicklungszweig befindet sich in einer **Qualitäts- und Aufräumrunde ohne neue Kernfeatures**. Die verbindliche [Stabilisierungs-Baseline mit lokalen Test- und APK-Abnahmekriterien](docs/CONTINUUM-STABILIZATION-BASELINE.md) beschreibt, wann ein sauberer Neustart zulässig ist.
+**Verbindlicher Einstieg für Weiterentwickler:** [Aktueller Integrationsstand, Alt-/Neuzweig-Inventur, CCC1 und Release-Gates](docs/CONTINUUM-ACTIVE-CHECKPOINT-20261023.md).
 
-**Wichtig:** Ein fehlgeschlagener GitHub-Actions-Job ohne ausgeführte Schritte ist weder ein bestandener Test noch ein nachgewiesener Codefehler. Bis ein vollständiger lokaler Qualitätstest und ein Android-Gerätetest vorliegen, ist PR #19 ausdrücklich keine freigegebene Release-Version.
+- **Referenz der bislang installierten Besitzer-App:** signierte Version `0.3.16`, `versionCode 17`, Paket `at.heinz.deviceai.mentorpaired`. Eine neue `0.3.17` ist **nicht gebaut**.
+- **Aktuellster gemeinsamer Quell-Review:** `integration/continuum-current-review-20261023` (PR #94 UI/Opus/GGUF + PR #95 Cognitive-Spine/Cortex/CCC1-Shell + selektiv übernommener PR-#96-Fold7-Fix). **Nicht mit `main` verwechseln.** Kein Release und keine automatische Fusion.
+- **Bewusst zurückgehalten:** eigene LM1-/CSX3-/CDX1-Forschungsadapter, neue Fast-Weights und Shadow-Habits; ohne unabhängige Kalibrierung kein Ersatz für den Hauptchat. CCC1-End-to-End über Android/Termux und die vollständige Android-/Geräteabnahme bleiben offen.
+- **Bewahrt, nicht gelöscht:** ältere Seitenzweige und Messbelege. Insbesondere PR #72 (I2-Risikozertifizierung) und #90 (visuelle QA) haben noch selektiv zu prüfende Ergänzungen.
+- **Nachweisregel:** Ein fehlgeschlagener GitHub-Actions-Job ohne ausgeführte Job-Schritte ist weder ein bestandener Test noch ein nachgewiesener Quellcodefehler.
+
+Der frühere [Stabilisierungsplan](docs/CONTINUUM-STABILIZATION-BASELINE.md) bleibt als historischer Nachweis erhalten; sein früherer PR-#19-Stand ist **nicht** die aktuelle Quellbaseline.
 
 ## Aktuelle Implementierung
 
@@ -36,17 +42,14 @@ Der Android-Startkern funktioniert ohne Modellimport. Es handelt sich derzeit um
 
 ## Builds und Installation
 
-Der Workflow [`Build Device AI APK`](.github/workflows/android.yml) führt `gradle :app:testDebugUnitTest` und `gradle :app:assembleDebug` aus. Anschließend erstellt er eine separate Preview mit `-PdeviceAiPreview=true`.
+Die ältere [GitHub-Actions-Debug-APK-Route](.github/workflows/android.yml) ist **nicht** die Besitzer-Update-Signierung. Sie ersetzt weder den lokalen [Termux-Builder](scripts/continuum-mobile-builder.mjs) noch das für `0.3.16` bestehende, getrennt geschützte Owner-Signing-Gate. Der Android-Preview-Builder verwendet ein separates Paket `at.heinz.deviceai.preview`.
 
-- `DeviceAI-v0.3-debug-apk`: reguläres Paket `at.heinz.deviceai`
-- `DeviceAI-v0.3.1-preview-debug-apk`: Testpaket `at.heinz.deviceai.preview`
+**Owner-Update-Bedingungen:** neuer `versionCode >17`, Paket `at.heinz.deviceai.mentorpaired`, unverändertes Besitzer-Signierzertifikat, saubere Tests, APK-Hash, archiviertes Rollback und tatsächliche Fold7-Abnahme. `scripts/render-mentor-owner-update-v17.sh` ist nur für die alte Version 17 geeignet und darf nicht als neuer Release-Builder missbraucht werden.
 
-Ausschließlich erfolgreiche, **zum exakten Commit gehörige** CI-Artefakte gelten als gebaut und getestet. Eine erfolgreich kompilierte APK ist noch kein Installationstest auf einem Samsung Fold.
-
-**Signaturhinweis:** Die Debug-Signatur kann sich zwischen CI-Läufen ändern. Eine Aktualisierung einer bereits installierten APK kann deshalb trotz passender Versionsnummer verweigert werden. Bestehende Apps mit persönlichen Daten nicht einfach deinstallieren. Langfristig benötigt der Releaseprozess einen geschützten, stabilen Signierschlüssel, der nicht im Git-Repository liegt.
+`main` und der aktuelle Integrations-Review haben **keine nachgewiesene vollständige Build-/Test-/Gerätefreigabe** für eine neue APK. Keine Deinstallation der bestehenden Besitzer-App, keinen Schlüssel in Git speichern und keine Installation ohne ausdrückliche Freigabe. Siehe [Release-Gates](docs/CONTINUUM-INTEGRATION-GATES-20261023.md).
 
 ## Sicherheit
 
 Recherchetexte und andere externe Informationen sind Daten, keine Anweisungen und keine eigenständige Berechtigung für Gerätezugriff. Erlernte Befehle dürfen nur zu bekannten, lesenden Werkzeugen führen. Android- und Shizuku-Grenzen bleiben wirksam; private App-Sandboxen sind ohne weitergehende Berechtigungen nicht allgemein zugänglich.
 
-Der laufende Arbeitsstand wird in [PR #19](https://github.com/Ullmann27/device-ai/pull/19) entwickelt. PR-Head, tatsächliche Buildprotokolle und APK-Artefakte müssen immer separat geprüft werden; die Beschreibung eines PRs ist kein Testnachweis. Keine Änderungen werden ohne gesonderte Prüfung nach `main` gemergt.
+**Fortsetzung:** [Einziger aktueller Review-Einstieg](docs/CONTINUUM-ACTIVE-CHECKPOINT-20261023.md). Der historische [PR #19](https://github.com/Ullmann27/device-ai/pull/19) bleibt erhalten, ist aber nicht mehr die führende Arbeitslinie. PR-Head, echte Buildprotokolle und APK-Artefakte immer getrennt prüfen; kein ungeprüfter Merge nach `main`.
