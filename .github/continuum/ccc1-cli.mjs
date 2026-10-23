@@ -4,7 +4,7 @@
 // repository. A confirmed task is a contract-test patch pending the owner's review - nothing is merged or installed.
 // Usage:
 //   node .github/continuum/ccc1-cli.mjs compile  --project <repo> --goal "<goal with examples>"   (dry run, no state)
-//   node .github/continuum/ccc1-cli.mjs submit   --project <repo> --state <dir> --goal "<goal with examples>"
+//   node .github/continuum/ccc1-cli.mjs submit   --project <repo> --state <dir> --goal "<goal with examples>" [--repo owner/name]
 //   node .github/continuum/ccc1-cli.mjs status   --state <dir> [--format json]
 //   node .github/continuum/ccc1-cli.mjs run-once --project <repo> --state <dir> [--core disambiguate|probe|lexical] [--index-on-idle true]
 //   node .github/continuum/ccc1-cli.mjs loop     --project <repo> --state <dir> --cycles <n> [--interval <minutes>] [--index-on-idle true]
@@ -58,7 +58,7 @@ export async function main(argv=process.argv.slice(2),out=console.log){
  switch(o.command){
   case 'submit':{
    if(!o.project||!o.goal)throw Error('submit needs --project and --goal');
-   out(JSON.stringify({taskId:submitGoal({project:o.project,stateDir:o.state,text:o.goal})}));
+   out(JSON.stringify({taskId:submitGoal({project:o.project,stateDir:o.state,text:o.goal,repoFullName:o.repo??null})}));
    return;
   }
   case 'status':{

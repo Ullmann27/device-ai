@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {submitGoal,listTasks,runCcc1Cycle,OUTCOME_FOR,compileGoal} from './ccc1-worker.mjs';
+import {submitGoal,listTasks,runCcc1Cycle,OUTCOME_FOR,compileGoal,repositoryOf} from './ccc1-worker.mjs';
 import {ExperienceLog} from './ccc1-experience.mjs';
 import {runTeamleaderLoop} from './local-teamleader-loop.mjs';
 import {main as cli} from './ccc1-cli.mjs';
@@ -152,4 +152,19 @@ test('the task compiler answers before any task or coding job: ready, ambiguous,
  const lines=[];
  await cli(['compile','--project',f.root,'--goal',TRIPLE],l=>lines.push(l));
  assert.equal(JSON.parse(lines[0]).status,'READY');
+});
+
+test('tasks are bound to the real repository, never to a placeholder',()=>{
+ const f=fixture();
+ assert.equal(repositoryOf(f.root),'local/device-ai','a checkout without origin is named as local');
+ const taskId=submitGoal({project:f.root,stateDir:f.state,text:TRIPLE});
+ const goal=JSON.parse(fs.readFileSync(path.join(f.state,'tasks',taskId+'.jsonl'),'utf8').split('\n')[0]);
+ assert.equal(JSON.stringify(goal).includes('"repoFullName":"local/device-ai"'),true);
+ assert.equal(JSON.stringify(goal).includes('owner/device-ai'),false);
+ for(const url of ['https://github.com/Ullmann27/device-ai','https://github.com/Ullmann27/device-ai.git','git@github.com:Ullmann27/device-ai.git']){
+  spawnSync('git',['remote','remove','origin'],{cwd:f.root});
+  f.git('remote','add','origin',url);
+  assert.equal(repositoryOf(f.root),'Ullmann27/device-ai',url);
+ }
+ assert.throws(()=>submitGoal({project:f.root,stateDir:f.state,text:TRIPLE,repoFullName:'owner'}),/owner\/name/);
 });
