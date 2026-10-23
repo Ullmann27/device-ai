@@ -37,22 +37,20 @@ fi
 
 # Build the exactly reviewed combined source, never the old delivery branch's Android classes.
 # The original signing service keeps the existing private key; no keys are logged or exported.
+# Render clones a pinned build branch with no configured git remote. Never fetch
+# other branches inside its confidential signing environment.
+# The reviewed source from PR #84 must first be integrated into this builder branch
+# via a GitHub review/merge (no main/production branch is touched).
 render_publisher_root="$repo_root"
 signed_release_ref="integration/continuum-aaa-lm1-ccc1-preview-20261023"
 signed_release_sha="f23934e2b38c3e473e06ce4421020e79d8b9158a"
-git fetch --no-tags --depth=1 origin "refs/heads/$signed_release_ref"
-actual_release_sha="$(git rev-parse FETCH_HEAD)"
-if [[ "$actual_release_sha" != "$signed_release_sha" ]]; then
-  echo "Refusing moving or unexpected signed update source" >&2
+if [[ ! -f "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt" ]] ||
+   ! grep -Fq 'val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate")' app/build.gradle.kts ||
+   [[ ! -f ".github/continuum/ccc1-orchestrator.mjs" ]]; then
+  echo "Reviewed integrated source or code16 signed variant is absent; refusing deployment" >&2
   exit 69
 fi
-source_checkout="$render_publisher_root/.continuum-signed-owner-source"
-test ! -e "$source_checkout"
-git worktree add --detach "$source_checkout" "$signed_release_sha"
-cd "$source_checkout"
-repo_root="$(pwd)"
 commit="$(git rev-parse HEAD)"
-test "$commit" = "$signed_release_sha"
 workspace="$repo_root/.continuum-render-build"
 mkdir -p "$workspace"
 export JAVA_HOME="$workspace/jdk17"
