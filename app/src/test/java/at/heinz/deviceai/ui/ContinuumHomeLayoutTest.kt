@@ -28,6 +28,13 @@ class ContinuumHomeLayoutTest {
         assertEquals(649f * .9f, b.contentHeight, 1e-3f)
     }
 
+    @Test fun theRailWidthIsTheRailSlotOfTheScaledReference() {
+        for (w in listOf(656f, 750f, 832f, 840f)) {
+            assertEquals("$w dp", ContinuumHomeLayout.wide(w).boxes.getValue(Slot.RAIL).width, ContinuumHomeLayout.railWidthDp(w), 1e-3f)
+        }
+        assertEquals(76f, ContinuumHomeLayout.railWidthDp(840f), 0f)
+    }
+
     @Test fun anUprightFoldIsFilledAndTheCardsKeepTheirShape() {
         for ((w, h) in listOf(750f to 790f, 656f to 690f, 832f to 708f, 840f to 649f, 1000f to 1400f)) {
             val ref = ContinuumHomeLayout.wide(w)

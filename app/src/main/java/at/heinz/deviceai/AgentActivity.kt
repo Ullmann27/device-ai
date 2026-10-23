@@ -598,7 +598,8 @@ class AgentActivity : Activity() {
             openHomeSlot(slot, x, y)
         }
         val windowWidth = resources.configuration.screenWidthDp.toFloat()
-        home.configure(windowWidth, wide, railOffset = if (wide) windowWidth * 76f / 840f else 0f,
+        // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
+        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
             windowHeightDp = resources.configuration.screenHeightDp.toFloat())
         homeView = home
         dashboard.addView(home, matchWidth())
@@ -683,8 +684,9 @@ class AgentActivity : Activity() {
         return pane
     }
 
-    /** Width of the Fold/tablet navigation rail: 76 dp of the 840 dp wide reference, scaled with the window. */
-    private fun railWidthPx(): Int = dp((resources.configuration.screenWidthDp * 76f / 840f).toInt())
+    /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
+    private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(
+        resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
 
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
