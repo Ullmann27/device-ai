@@ -32,6 +32,12 @@ object ContinuumCortexPipelineChecks {
             WakeSleepShadowHabitCore.Probe(EvidenceBoundedThoughtSearch.Query("Z77",EvidenceBoundedThoughtSearch.Question.CITY),"Graz"),
             WakeSleepShadowHabitCore.Probe(EvidenceBoundedThoughtSearch.Query("other",EvidenceBoundedThoughtSearch.Question.CITY),null)))
         check(report.accepted && report.activeHabits == 1)
+        pipeline.resetResearchSession()
+        check(pipeline.activeHabits() == 0)
+        val fresh = pipeline.wakeTurn("Und wie sieht es dort aus?", first, null,
+            EvidenceBoundedThoughtSearch.Question.CITY)
+        check(fresh.subject == null && fresh.result == null && fresh.updates == 0 &&
+            fresh.status == ContinuumCortexResearchPipeline.Status.ABSTAIN_NO_SAFE_PATH)
         println("PASS: pipeline, conversation-focus and evidence-graph shadow checks")
     }
 }
