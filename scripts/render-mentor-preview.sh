@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Owner-approved owner-approved, in-place Continuum 0.3.16 Fold/motion update with unchanged signer.
 # The original 0.3.12 builder is retained below for immediate Git revert and audit.
-exec bash scripts/render-mentor-owner-update-v17.sh
+# v0.3.17: retain the long-tested persistent owner signature, but only publish the
+# fully tested CCC1 + premium UI branch with independently verified rollback.
+exec bash scripts/render-mentor-owner-update-v18.sh
 # Isolated Render static-build APK compilation. Never commits, merges, or writes secrets.
 set -Eeuo pipefail
 umask 077
