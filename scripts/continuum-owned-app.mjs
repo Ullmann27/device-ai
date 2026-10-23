@@ -112,7 +112,7 @@ class MainActivity : Activity() {
             setOnClickListener {
                 val normalized = NotePolicy.normalized(editor.text.toString())
                 val persisted = prefs.edit().putString("note", normalized).commit()
-                result.text = if (persisted) "Gespeichert (${normalized.length} Zeichen)." else "Speichern fehlgeschlagen."
+                result.text = if (persisted) "Gespeichert (${'${'}normalized.length} Zeichen)." else "Speichern fehlgeschlagen."
             }
         }
         body.addView(heading)
