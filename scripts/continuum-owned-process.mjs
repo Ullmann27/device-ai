@@ -13,13 +13,17 @@ function identity(pid,onUnavailable) {
     return null;
   }
 }
-/** Fixed builder tools only. Async cancellation/timeout terminates the POSIX process group. */
-export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutputBytes=512*1024}={}) {
+/**
+ * Fixed builder tools only. Async cancellation/timeout terminates the POSIX process group.
+ * `inheritOutput` passes stdout/stderr through unchanged (no capture, no output limit); `exitSignal` names the
+ * signal that ended the direct child, if any.
+ */
+export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutputBytes=512*1024,inheritOutput=false}={}) {
   if(typeof file!=='string'||!path.isAbsolute(file)||!Array.isArray(args)||
     !Number.isSafeInteger(timeout)||timeout<1||timeout>35*60*1000||
     !Number.isSafeInteger(maxOutputBytes)||maxOutputBytes<1||maxOutputBytes>2*1024*1024)
-    return {ok:false,code:null,output:'',error:'INVALID_COMMAND',timedOut:false,cancelled:false};
-  if(signal?.aborted)return {ok:false,code:null,output:'',error:'ABORTED',timedOut:false,cancelled:true};
+    return {ok:false,code:null,exitSignal:null,output:'',error:'INVALID_COMMAND',timedOut:false,cancelled:false};
+  if(signal?.aborted)return {ok:false,code:null,exitSignal:null,output:'',error:'ABORTED',timedOut:false,cancelled:true};
   return new Promise(resolve=>{
     const grouped=process.platform!=='win32';
     const procPlatform=['linux','android'].includes(process.platform);
@@ -28,10 +32,10 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
     const marker='CONTINUUM_OWNED_RUN_ID='+randomUUID();
     let child;
     try {child=spawn(file,args,{cwd,env:{...(env??process.env),CONTINUUM_OWNED_RUN_ID:marker.split('=')[1]},
-      shell:false,detached:grouped,stdio:['ignore','pipe','pipe']});}
-    catch {resolve({ok:false,code:null,output:'',error:'SPAWN_ERROR',timedOut:false,cancelled:false});return;}
+      shell:false,detached:grouped,stdio:['ignore',...(inheritOutput?['inherit','inherit']:['pipe','pipe'])]});}
+    catch {resolve({ok:false,code:null,exitSignal:null,output:'',error:'SPAWN_ERROR',timedOut:false,cancelled:false});return;}
     const chunks=[],owned=new Map();
-    let bytes=0,reason=null,closed=false,resultCode=null,forceTimer=null,done=false,terminationConfirmed=true;
+    let bytes=0,reason=null,closed=false,resultCode=null,resultSignal=null,forceTimer=null,done=false,terminationConfirmed=true;
     let trackingComplete=procPlatform;
     const currentIdentity=pid=>identity(pid,()=>{trackingComplete=false;});
     // A descendant starts no earlier than the direct child. Older processes (init, the Termux app, this harness)
@@ -91,7 +95,8 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
       if(done||!closed||forceTimer)return;
       done=true;clearTimeout(timer);clearInterval(descendantsTimer);signal?.removeEventListener('abort',abort);
       if(!terminationConfirmed&&!reason)reason='TERMINATION_UNCONFIRMED';
-      resolve({ok:resultCode===0&&!reason&&terminationConfirmed,code:resultCode,output:Buffer.concat(chunks).toString('utf8'),
+      resolve({ok:resultCode===0&&!reason&&terminationConfirmed,code:resultCode,exitSignal:resultSignal,
+        output:Buffer.concat(chunks).toString('utf8'),
         error:reason,timedOut:reason==='TIMEOUT',cancelled:reason==='ABORTED',terminationConfirmed});
     };
     const forceAndConfirm=async()=>{
@@ -112,8 +117,8 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
       if(!closed) {
         // An inaccessible descendant can hold a pipe open. Return a bounded
         // unconfirmed result, instead of waiting forever for the close event.
-        terminationConfirmed=false;closed=true;resultCode=child.exitCode;
-        child.stdout.destroy();child.stderr.destroy();child.unref();
+        terminationConfirmed=false;closed=true;resultCode=child.exitCode;resultSignal=child.signalCode;
+        child.stdout?.destroy();child.stderr?.destroy();child.unref();
       }
       if(!terminationConfirmed&&!reason)reason='TERMINATION_UNCONFIRMED';
       forceTimer=null;finish();
@@ -128,14 +133,14 @@ export async function runOwnedCommand(file,args,{cwd,env,timeout,signal,maxOutpu
     const timer=setTimeout(()=>stop('TIMEOUT'),timeout);
     signal?.addEventListener('abort',abort,{once:true});
     if(signal?.aborted)abort();
-    for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>{
+    for(const stream of inheritOutput?[]:[child.stdout,child.stderr])stream.on('data',chunk=>{
       const room=maxOutputBytes-bytes;
       if(room>0){const kept=chunk.subarray(0,room);chunks.push(Buffer.from(kept));bytes+=kept.length;}
       if(chunk.length>room)stop('OUTPUT_LIMIT');
     });
     child.on('error',()=>{if(!reason)reason='SPAWN_ERROR';});
-    child.on('close',code=>{
-      resultCode=code;closed=true;
+    child.on('close',(code,exitSignal)=>{
+      resultCode=code;resultSignal=exitSignal;closed=true;
       if(!reason&&!forceTimer) {
         remember();
         const remaining=[...owned.values()].some(p=>{

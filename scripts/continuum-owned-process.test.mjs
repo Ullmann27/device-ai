@@ -23,6 +23,12 @@ test('owner cancellation is asynchronous and cannot become a successful exit',as
   const r=await pending;
   assert.equal(r.ok,false);assert.equal(r.cancelled,true);assert.equal(r.timedOut,false);
 });
+test('the signal that ended the direct child is reported, an exit code is not',async()=>{
+  const killed=await runOwnedCommand(process.execPath,['-e','process.kill(process.pid,"SIGKILL")'],{env:process.env,timeout:5000});
+  assert.equal(killed.ok,false);assert.equal(killed.code,null);assert.equal(killed.exitSignal,'SIGKILL');
+  const exited=await runOwnedCommand(process.execPath,['-e','process.exitCode=4'],{env:process.env,timeout:5000});
+  assert.equal(exited.code,4);assert.equal(exited.exitSignal,null);
+});
 test('oversized process logs are bounded and fail closed',async()=>{
   const r=await runOwnedCommand(process.execPath,['-e','process.stdout.write("x".repeat(1000000))'],
     {env:process.env,timeout:2000,maxOutputBytes:4096});
