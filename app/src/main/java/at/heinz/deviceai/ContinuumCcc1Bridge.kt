@@ -73,16 +73,46 @@ internal object ContinuumCcc1Bridge {
         return ContinuumMobileBuildPlan.Command(ContinuumMobileBuildPlan.NODE_EXECUTABLE, args.toList(), ContinuumMobileBuildPlan.PROJECT_DIR)
     }
 
-    private fun invalid(operation: Operation) =
-        Result(Outcome.INVALID_RESULT, operation, "INVALID", "Keine verlässliche CCC1-Rückmeldung; nichts bestätigt.")
+    private fun invalid(operation: Operation, why: String? = null) =
+        Result(Outcome.INVALID_RESULT, operation, "INVALID", why ?: "Keine verlässliche CCC1-Rückmeldung; nichts bestätigt.")
+
+    /**
+     * Why Termux gave no bridge answer at all: the result channel itself, or fixed markers of our own builder script
+     * in stderr (its usage line without CCC1 operations, a missing module). Only matched, never shown; null otherwise.
+     */
+    fun diagnose(exitCode: Int?, termuxError: Int?, stderr: String?): String? {
+        val text = stderr?.take(4096).orEmpty()
+        return when {
+            termuxError != null && termuxError != -1 ->
+                "Termux konnte den Befehl nicht starten (Node.js in Termux installiert, allow-external-apps=true?). Nichts ausgeführt."
+            "Mobile Builder: Usage:" in text && "ccc1-" !in text ->
+                "Der Termux-Checkout ~/device-ai ist älter als die App und kennt CCC1 noch nicht. Bitte in Termux aktualisieren " +
+                    "(Anleitung: docs/CONTINUUM-CCC1-AUF-DEM-GERAET.md). Nichts ausgeführt."
+            "Cannot find module" in text && "continuum-mobile-builder.mjs" in text ->
+                "Im Termux-Checkout ~/device-ai fehlt das Builder-Skript. Checkout prüfen. Nichts ausgeführt."
+            exitCode == 127 -> "Termux fand ein benötigtes Programm nicht (Node.js oder Git). Nichts ausgeführt."
+            else -> null
+        }
+    }
+
+    /** App-owned next steps for refusal codes; the text Termux sends is never displayed. */
+    private fun guidance(codes: String): String = buildList {
+        if ("CCC1_BRANCH_NOT_ISOLATED" in codes)
+            add("Termux-Checkout steht auf main/master/release oder auf keinem Branch – in Termux: bash scripts/continuum-teamleader-termux.sh ccc1-prepare")
+        if ("CCC1_WORKTREE_NOT_CLEAN" in codes) add("Ungesicherte Änderungen im Termux-Checkout – in Termux: git -C ~/device-ai status --short")
+        if ("CCC1_REQUIRED_FILE" in codes) add("Termux-Checkout ist zu alt für CCC1 – bitte aktualisieren")
+        if ("CCC1_NODE_VERSION" in codes) add("Node.js 20 oder neuer nötig – in Termux: pkg upgrade nodejs")
+        if ("CCC1_STATE" in codes) add("Zustandsordner liegt im Checkout – den Standardordner verwenden")
+    }.joinToString("") { "\n• $it" }
 
     /** Finding codes named in a refusal (e.g. CCC1_BRANCH_NOT_ISOLATED), never the raw text. */
     private fun findings(text: Any?): String =
         Regex("CCC1_[A-Z_]{3,40}").findAll(text as? String ?: "").map { it.value }.distinct().take(6).joinToString(", ")
 
-    fun evaluate(expected: Operation, exitCode: Int?, termuxError: Int?, stdout: String?): Result {
-        if (exitCode == null || termuxError != -1 || stdout == null || stdout.length > MAX_RESULT_CHARS) return invalid(expected)
-        val r = try { StrictJson.parseObject(stdout) } catch (_: IllegalArgumentException) { return invalid(expected) }
+    fun evaluate(expected: Operation, exitCode: Int?, termuxError: Int?, stdout: String?, stderr: String? = null): Result {
+        val unreadable = invalid(expected, diagnose(exitCode, termuxError, stderr))
+        if (exitCode == null || termuxError != -1 || stdout == null || stdout.length > MAX_RESULT_CHARS) return unreadable
+        val r = try { StrictJson.parseObject(stdout) } catch (_: IllegalArgumentException) { return unreadable }
         if (r["schema"] != "continuum-ccc1-bridge" || r["version"] != 1L || r["operation"] != expected.cli) return invalid(expected)
         val status = r["status"] as? String ?: return invalid(expected)
         if (status != "OK") {
@@ -92,7 +122,7 @@ internal object ContinuumCcc1Bridge {
             if (exitCode == 0 || !CODE.matches(status) || !(blocked || status == "FAILED_CCC1")) return invalid(expected)
             val named = findings(failure["message"]).ifEmpty { code }
             return Result(if (blocked) Outcome.BLOCKED else Outcome.FAILED, expected, status,
-                (if (blocked) "CCC1 hat nichts ausgeführt: " else "CCC1-Schritt fehlgeschlagen: ") + named + ".")
+                (if (blocked) "CCC1 hat nichts ausgeführt: " else "CCC1-Schritt fehlgeschlagen: ") + named + "." + guidance(named + " " + code))
         }
         if (exitCode != 0) return invalid(expected)
         val result = r["result"] as? Map<*, *> ?: return invalid(expected)
@@ -116,9 +146,10 @@ internal object ContinuumCcc1Bridge {
                 Result(Outcome.OK, Operation.COMPILE_REPAIR, "READY",
                     "Vorprüfung bestanden: Testkette $chain am Commit ${commit.take(12)} auf Branch $branch. Noch nichts ausgeführt.")
             }
-            "BLOCKED" -> Result(Outcome.BLOCKED, Operation.COMPILE_REPAIR, "BLOCKED",
-                "Vorprüfung blockiert: " + ((pf?.get("findings") as? List<*>)?.joinToString(", ") { findings(it) }
-                    ?.ifEmpty { null } ?: "unbekannt") + ". Nichts ausgeführt.")
+            "BLOCKED" -> {
+                val named = (pf?.get("findings") as? List<*>)?.joinToString(", ") { findings(it) }?.ifEmpty { null } ?: "unbekannt"
+                Result(Outcome.BLOCKED, Operation.COMPILE_REPAIR, "BLOCKED", "Vorprüfung blockiert: $named. Nichts ausgeführt." + guidance(named))
+            }
             "NEEDS_OWNER" -> Result(Outcome.BLOCKED, Operation.COMPILE_REPAIR, "NEEDS_OWNER", "Bitte eine Testkette wählen.")
             else -> null
         }

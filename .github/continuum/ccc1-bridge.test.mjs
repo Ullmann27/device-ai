@@ -208,6 +208,6 @@ test('Android speaks the same fixed CCC1 operations and stores only validated su
  assert.doesNotMatch(activity,/ProcessBuilder\(|Runtime\.getRuntime\(|sh\s+-c/);
  // an abort has its own one-shot slot; the receiver binds it to the abort operation and never stores raw output
  assert.match(receiver,/if \(id != prefs\.getString\(ABORT_JOB_ID, null\)\) return/);
- assert.match(receiver,/ContinuumCcc1Bridge\.evaluate\(ccc1, exitCode, errorCode, if \(truncated\) null else stdout\)/);
- assert.doesNotMatch(receiver,/putString\((LAST_MESSAGE|ABORT_MESSAGE), stdout\)/);
+ assert.match(receiver,/ContinuumCcc1Bridge\.evaluate\(ccc1, exitCode, errorCode, if \(truncated\) null else stdout,\s*bundle\?\.getString\("stderr"\)\)/);
+ assert.doesNotMatch(receiver,/putString\((LAST_MESSAGE|ABORT_MESSAGE), (stdout|stderr|bundle)/);
 });

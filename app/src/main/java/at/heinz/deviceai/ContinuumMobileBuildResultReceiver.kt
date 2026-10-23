@@ -65,7 +65,9 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val truncated = originalLength == null || originalLength > stdout.length.toLong()
 
         if (ccc1 != null) {
-            val result = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout)
+            // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.
+            val result = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,
+                bundle?.getString("stderr"))
             // Only the validated summary, the task id and a verified patch hash; never Termux output or code.
             val editor = prefs.edit()
             if (abortSlot) {

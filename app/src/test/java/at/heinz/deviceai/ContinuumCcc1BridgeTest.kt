@@ -62,6 +62,26 @@ class ContinuumCcc1BridgeTest {
         assertTrue(blocked.message.contains("CCC1_BRANCH_NOT_ISOLATED"))
     }
 
+    @Test fun termuxProblemsAreExplainedWithoutShowingTermuxText() {
+        val oldCheckout = ContinuumCcc1Bridge.evaluate(Operation.STATUS, 2, -1, "",
+            "Mobile Builder: Usage: doctor|build|status|code-test|code-repair|code-cancel [--project PATH] [--state-dir PATH]")
+        assertEquals(Outcome.INVALID_RESULT, oldCheckout.outcome)
+        assertTrue(oldCheckout.message.contains("älter als die App"))
+        assertTrue("Termux text is never shown", !oldCheckout.message.contains("Usage"))
+        val currentUsage = ContinuumCcc1Bridge.evaluate(Operation.STATUS, 2, -1, "",
+            "Mobile Builder: Usage: doctor|build|status|code-test|code-repair|code-cancel|ccc1-compile-repair|ccc1-status")
+        assertEquals("Keine verlässliche CCC1-Rückmeldung; nichts bestätigt.", currentUsage.message)
+        assertTrue(ContinuumCcc1Bridge.evaluate(Operation.STATUS, null, 2, null, null).message.contains("konnte den Befehl nicht starten"))
+        assertTrue(ContinuumCcc1Bridge.evaluate(Operation.RUN_ONCE, 1, -1, "",
+            "Error: Cannot find module '/data/data/com.termux/files/home/device-ai/scripts/continuum-mobile-builder.mjs'")
+            .message.contains("fehlt das Builder-Skript"))
+        val blocked = eval(Operation.SUBMIT_REPAIR, "submit-blocked", exit = 2)
+        assertTrue(blocked.message.contains("ccc1-prepare"))
+        // a readable bridge answer is judged on its own; stderr never changes a result
+        assertEquals("READY", ContinuumCcc1Bridge.evaluate(Operation.COMPILE_REPAIR, 0, -1, fixture("compile-ready"),
+            "Mobile Builder: Usage: doctor").status)
+    }
+
     @Test fun nothingUnverifiedOrForeignIsAccepted() {
         val ok = fixture("status-verified")
         val invalid = Outcome.INVALID_RESULT
