@@ -1,6 +1,7 @@
 // CCC1 experience log: one record per finished task, derived only from the verified task journal (receipts come from
 // the verifier, never from the reasoner). Hypotheses stay proposals; a record says which ones the independent contract
-// test confirmed or refuted, which question was asked and what it cost. Append-only JSONL with a hash chain; a task is
+// test confirmed or refuted, which question was asked and what it cost, and which comparable candidates the probe could
+// not run (a confirmation among the checkable candidates only). Append-only JSONL with a hash chain; a task is
 // recorded once. This is the raw material for learning from verified results - nothing here trains or promotes.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -11,7 +12,7 @@ import {taskState} from './ccc1-orchestrator.mjs';
 const sha=v=>createHash('sha256').update(typeof v==='string'?v:canonical(v)).digest('hex');
 
 /** The record of a finished task, or null while it is still open. */
-export function experienceOf(taskId,entries,{coreId=null}={}){
+export function experienceOf(taskId,entries,{coreId=null,unchecked=[]}={}){
  const s=taskState(entries);
  if(!s.terminal)return null;
  const goal=entries.find(e=>e.kind==='GOAL');
@@ -27,7 +28,8 @@ export function experienceOf(taskId,entries,{coreId=null}={}){
  return {schema:'continuum-ccc1-experience',version:1,taskId,goalSha256:sha(goal?.payload.text??''),
   baseCommitSha:goal?.baseCommitSha??null,outcome:s.state,coreId,
   question:abstain?.startsWith('Mehrdeutig')?abstain:null,abstainReason:abstain&&!abstain.startsWith('Mehrdeutig')?abstain:null,
-  hypotheses,confirmed:confirmed?{module:confirmed.module,export:confirmed.export}:null,rounds:s.rounds,cpuMillis:s.cpuMillis};
+  hypotheses,confirmed:confirmed?{module:confirmed.module,export:confirmed.export}:null,
+  uncheckedAlternatives:unchecked.slice(0,10),rounds:s.rounds,cpuMillis:s.cpuMillis};
 }
 
 /** Append-only, hash-chained JSONL; append() is idempotent per task. */

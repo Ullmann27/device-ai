@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {submitGoal,listTasks,runCcc1Cycle,OUTCOME_FOR} from './ccc1-worker.mjs';
+import {submitGoal,listTasks,runCcc1Cycle,OUTCOME_FOR,compileGoal} from './ccc1-worker.mjs';
 import {ExperienceLog} from './ccc1-experience.mjs';
 import {runTeamleaderLoop} from './local-teamleader-loop.mjs';
 import {main as cli} from './ccc1-cli.mjs';
@@ -55,7 +55,8 @@ test('a submitted goal is confirmed by the real job, reported for review and rec
  assert.equal(entry.record.hypotheses.at(-1).verdict,'CONFIRMED');
  assert.match(entry.record.hypotheses.at(-1).receiptSha256,/^[0-9a-f]{64}$/);
  assert.equal(entry.record.baseCommitSha,f.git('rev-parse','HEAD'));
- assert.equal(entry.record.coreId,'probe-disambiguate-v1');
+ assert.equal(entry.record.coreId,'probe-disambiguate-v2');
+ assert.deepEqual(entry.record.uncheckedAlternatives,[],'every comparable candidate could be run');
  const idle=await runCcc1Cycle({project:f.root,stateDir:f.state});
  assert.equal(idle.outcome,'IDLE');
  assert.equal(log.entries().length,1,'a finished task is recorded once');
@@ -114,4 +115,41 @@ test('the CLI keeps its state outside the repository and lists tasks',async()=>{
  await cli(['status','--state',f.state],l=>lines.push(l));
  assert.match(lines.at(-1),/^1 task\(s\), 0 experience record\(s\)$/);
  assert.match(lines.at(-2),/DRAFT/);
+ await cli(['status','--state',f.state,'--format','json'],l=>lines.push(l));
+ const s=JSON.parse(lines.at(-1));
+ assert.equal(s.schema,'continuum-ccc1-status');
+ assert.equal(s.tasks.length,1);
+ assert.deepEqual({...s.tasks[0],taskId:null},{taskId:null,state:'DRAFT',waitingForOwner:false,goal:TRIPLE,question:null,confirmed:null,uncheckedAlternatives:0});
+});
+
+test('an idle cycle refreshes the code index only when asked, and probes again only what changed',async()=>{
+ const f=fixture();
+ assert.deepEqual(await runCcc1Cycle({project:f.root,stateDir:f.state}),{outcome:'IDLE',detail:'CCC1: no open task'});
+ assert.ok(!fs.existsSync(path.join(f.state,'code-index.json')));
+ const first=await runCcc1Cycle({project:f.root,stateDir:f.state,indexOnIdle:true});
+ assert.equal(first.outcome,'IDLE');
+ assert.match(first.detail,/code index 4 exports \(4 runnable\), 2 module\(s\) probed/);
+ const index=JSON.parse(fs.readFileSync(path.join(f.state,'code-index.json'),'utf8'));
+ assert.equal(index.schema,'continuum-code-index');
+ assert.match((await runCcc1Cycle({project:f.root,stateDir:f.state,indexOnIdle:true})).detail,/0 module\(s\) probed/);
+ assert.equal(f.git('status','--porcelain'),'','nothing is written into the repository');
+});
+
+test('the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner',async()=>{
+ const f=fixture();
+ const ready=await compileGoal({project:f.root,text:TRIPLE});
+ assert.equal(ready.status,'READY');
+ assert.equal(ready.arity,1);
+ assert.deepEqual(ready.matching,['.github/continuum/math-utils.mjs#triple']);
+ const ambiguous=await compileGoal({project:f.root,text:CANON});
+ assert.equal(ambiguous.status,'AMBIGUOUS');
+ assert.match(ambiguous.question,/^Mehrdeutig/);
+ assert.equal((await compileGoal({project:f.root,text:'Finde die Funktion: (5) → 17 und (8) → 26.'})).status,'NO_MATCH');
+ const vague=await compileGoal({project:f.root,text:'Finde die Funktion, die Zahlen verdreifacht.'});
+ assert.equal(vague.status,'NEEDS_OWNER');
+ assert.ok(!fs.existsSync(f.state),'no task, no journal');
+ assert.equal(f.git('status','--porcelain'),'');
+ const lines=[];
+ await cli(['compile','--project',f.root,'--goal',TRIPLE],l=>lines.push(l));
+ assert.equal(JSON.parse(lines[0]).status,'READY');
 });
