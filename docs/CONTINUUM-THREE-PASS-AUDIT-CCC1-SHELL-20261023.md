@@ -26,6 +26,8 @@ Der Preflight führt keine Reparatur aus, nutzt **ausschließlich** read-only `g
 
 ### Ausführbare Anweisungen für Opus – im sauberen isolierten Checkout
 
+**Branch-Voraussetzung:** Die neue `ccc1-local-preflight.mjs` und ihre Tests befinden sich in **PR #95**, nicht in Opus' bisherigem PR-#92-Branch. Opus muss diese beiden Dateien erst selektiv und konfliktfrei in den eigenen Arbeitszweig übernehmen oder die Prüfungen auf einem separaten PR-#95-Checkout starten. Niemals eine fehlende Datei als erfolgreich ausgeführten Test melden.
+
 ```bash
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 STATE_ROOT="$HOME/.local/state/continuum-ccc1"
