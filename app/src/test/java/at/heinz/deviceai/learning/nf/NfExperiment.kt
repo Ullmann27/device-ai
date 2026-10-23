@@ -16,6 +16,7 @@ import kotlin.math.ln
  *   stream <base ckpts> …   NF-1: online learning on a CODE stream, forgetting on DOC, base checkpoint integrity
  *   blt …                   NF-3: byte-latent model with entropy patches against fixed patches
  *   speed ckpt=…            fair single-thread inference timing of several checkpoints, interleaved
+ *   hybrid ckpt=… vocab=258  NF-6b-lite: byte model mixed with Kneser-Ney 7, fixed vs count-anchored, cross-fitted
  * Run: java -cp nf.jar at.heinz.deviceai.learning.nf.NfExperiment <repoRoot> <mode> [args]
  * Families: <G|T|D|L|Dna|Dnb|Gr|Dr>-<S|M|X>; G minGRU, T Transformer, D gated delta, L gated linear attention,
  * Dna delta without decay gate, Dnb delta without write gate, Gr/Dr with ReLU-threshold FFN.
@@ -76,7 +77,8 @@ object NfExperiment {
         val root = File(args.getOrElse(0) { "." })
         val mode = args.getOrElse(1) { "corpus" }
         val docs = NfCorpus.load(root)
-        val tok = tokenizer(docs)
+        // vocab=258: one token per byte (NF-6b-lite byte models); otherwise the frozen NFC1 BPE v512
+        val tok = if (arg(args, "vocab") == "258") LmBpeTokenizer.bytes() else tokenizer(docs)
         println("NFC1 commit=${NfCorpus.COMMIT} docs=${docs.size} tokenizer=v${tok.vocabSize} sha=${tok.sha256}")
         for (domain in NfCorpus.Domain.values()) for (split in Split.values()) {
             val d = docs.filter { it.domain == domain && it.split == split }
@@ -96,6 +98,7 @@ object NfExperiment {
             "recall" -> NfRecall.run(args)
             "stream" -> NfStream.run(docs, tok, args)
             "blt" -> NfBltRun.run(docs, args)
+            "hybrid" -> NfHybrid.run(docs, tok, args)
             "speed" -> {
                 // Fair inference timing: all checkpoints in one process, interleaved over 5 rounds, single thread.
                 val validation = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.VALIDATION)
