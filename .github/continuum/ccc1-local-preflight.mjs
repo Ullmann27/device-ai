@@ -64,6 +64,29 @@ export function assessCcc1Preflight({project, stateDir, runGit = (root,args) =>
     findings:Object.freeze([...new Set(findings)])});
 }
 
+const PROJECT_HINT='~/device-ai';
+/**
+ * Owner guidance for preflight findings (German, one line each, with the exact Termux command where one exists).
+ * Text for a human in Termux; the Android app maps the codes with its own texts and never displays this output.
+ */
+export function explainCcc1Findings(findings, project=PROJECT_HINT){
+  const hints=new Map();
+  for(const finding of findings){
+    const code=String(finding).split(':')[0];
+    if(code==='CCC1_BRANCH_NOT_ISOLATED')hints.set(code,'Der Checkout steht auf main/master/release/production oder auf keinem Branch. '+
+      'CCC1 arbeitet nur auf einem eigenen Arbeitsbranch: bash scripts/continuum-teamleader-termux.sh ccc1-prepare');
+    else if(code==='CCC1_WORKTREE_NOT_CLEAN')hints.set(code,'Im Checkout gibt es ungesicherte Änderungen oder neue Dateien: git -C '+project+
+      ' status --short. Eigene Änderungen committen oder sichern; CCC1 verwirft nichts.');
+    else if(code==='CCC1_REQUIRED_FILE_MISSING'||code==='CCC1_REQUIRED_FILE_OUTSIDE_PROJECT')hints.set(code,
+      'Der Checkout ist zu alt für CCC1 oder unvollständig. Auf den CCC1-Stand aktualisieren (docs/CONTINUUM-CCC1-AUF-DEM-GERAET.md).');
+    else if(code==='CCC1_NODE_VERSION_UNSUPPORTED')hints.set(code,'Node.js 20 oder neuer ist nötig; in Termux: pkg upgrade nodejs');
+    else if(code.startsWith('CCC1_STATE'))hints.set('CCC1_STATE','Der Zustandsordner liegt im Checkout oder zeigt per Link hinein. '+
+      'Standard ohne --state-dir verwenden: ~/.local/state/device-ai-continuum/ccc1');
+    else hints.set(code,code+': '+project+' ist kein vollständiger Git-Checkout dieses Projekts.');
+  }
+  return [...hints.values()];
+}
+
 export function parseArgs(args){
   const options={};
   for(let i=0;i<args.length;i+=2){
