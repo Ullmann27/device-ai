@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {probeInputs,observeOutputs,findAmbiguity,ambiguityQuestion,DisambiguatingProbeCore} from './behaviour-probe.mjs';
-import {Ccc1Reasoner,indexExports,LexicalLanguageCore} from './ccc1-interpreter.mjs';
+import {Ccc1Reasoner,indexExports,LexicalLanguageCore,interpretGoal} from './ccc1-interpreter.mjs';
 import {startTask,runTask} from './ccc1-orchestrator.mjs';
 
 process.env.HOME=fs.mkdtempSync(path.join(os.tmpdir(),'nf5c-home-'));
@@ -111,4 +111,22 @@ test('end to end with the real coding job: question first, nothing confirmed; th
  const hypothesis=second.entries.filter(e=>e.kind==='HYPOTHESIS').at(-1);
  assert.notEqual(hypothesis.payload.export,'canonStrict');
  assert.equal(f.git('status','--porcelain'),'','the source checkout stays untouched');
+});
+
+test('a comparable candidate the probe cannot run travels with the decision instead of disappearing',async()=>{
+ const f=fixture();
+ fs.writeFileSync(path.join(f.root,'.github','continuum','remote-json.mjs'),
+  "import https from 'node:https';\n/** Canonical JSON of a value, checked remotely. */\nexport function canonRemote(v){return JSON.stringify(v);}\n");
+ const remote={module:'.github/continuum/remote-json.mjs',export:'canonRemote',required:1,max:1,description:''};
+ const candidates=[C('canonLoose'),remote];
+ const spec=interpretGoal({text:GOAL});
+ const flat=new DisambiguatingProbeCore({root:f.root,base:{id:'flat',rank:async(_g,cs)=>cs.map(()=>1)}});
+ await flat.rank(GOAL,candidates);
+ assert.equal(await flat.clarify(spec,candidates),null,'one checkable match: no question');
+ assert.deepEqual(flat.lastAmbiguity.full,['.github/continuum/json-tools.mjs#canonLoose']);
+ assert.deepEqual(flat.lastAmbiguity.unchecked,[{candidate:'.github/continuum/remote-json.mjs#canonRemote',reason:'imports a network or process module'}]);
+ const ranked=new DisambiguatingProbeCore({root:f.root,base:{id:'ranked',rank:async(_g,cs)=>cs.map((_c,i)=>1-i)}});
+ await ranked.rank(GOAL,candidates);
+ await ranked.clarify(spec,candidates);
+ assert.deepEqual(ranked.lastAmbiguity.unchecked,[],'a candidate the base ranking puts lower is not reported');
 });

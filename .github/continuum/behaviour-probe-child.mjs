@@ -1,11 +1,38 @@
-// Child of behaviour-probe.mjs. Runs under the Node permission model (read-only file access to one module, no file
-// writes, no child processes, no workers): imports the module, calls each requested export on the example arguments
-// and reports, per export, how many results equal the expected values (mode "match") or every result itself, typed,
-// so that candidates can be told apart (mode "outputs"). Input and output are JSON on stdin/stdout.
+// Child of behaviour-probe.mjs. Runs under the Node permission model (read-only file access to the repository, no file
+// writes, no child processes, no workers) with network and signals refused below: imports the module, calls each
+// requested export on the example arguments and reports, per export, how many results equal the expected values (mode
+// "match") or every result itself, typed, so that candidates can be told apart (mode "outputs"). Input and output are
+// JSON on stdin/stdout.
+import net from 'node:net';
+import tls from 'node:tls';
+import dgram from 'node:dgram';
+import dns from 'node:dns';
+import http from 'node:http';
+import https from 'node:https';
+import http2 from 'node:http2';
+import {syncBuiltinESMExports} from 'node:module';
 import {pathToFileURL} from 'node:url';
 import {isDeepStrictEqual} from 'node:util';
 
-for(const name of ['fetch','WebSocket','EventSource'])globalThis[name]=undefined;   // network is excluded by the parent's static check; this removes the globals as well
+// Node 22's permission model does not restrict the network, and imports may now reach the whole repository, so every
+// way the repository's code could open a socket or resolve a name throws ERR_PROBE_NETWORK before the module loads.
+// Defence in depth against side effects of the owner's own code, not a sandbox for hostile code.
+const denied=()=>{throw Object.assign(new Error('network access is disabled while probing'),{code:'ERR_PROBE_NETWORK'});};
+for(const name of ['fetch','WebSocket','EventSource'])globalThis[name]=undefined;
+net.Socket.prototype.connect=denied;net.Server.prototype.listen=denied;
+net.connect=net.createConnection=tls.connect=dgram.createSocket=denied;
+http.request=http.get=https.request=https.get=http2.connect=denied;
+for(const api of [dns,dns.promises,dns.Resolver.prototype,dns.promises.Resolver.prototype])
+ for(const k of Object.getOwnPropertyNames(api))if(k!=='constructor'&&k!=='Resolver'&&typeof api[k]==='function')api[k]=denied;
+try{process.binding=denied;}catch{}
+syncBuiltinESMExports();
+// probe inputs are small numbers such as 1 or 7, so a candidate must never signal other processes; existence checks
+// (signal 0) stay possible
+const kill=process.kill.bind(process);
+process.kill=(pid,signal)=>{
+ if(signal===0)return kill(pid,0);
+ throw Object.assign(new Error('signals are disabled while probing'),{code:'ERR_PROBE_SIGNAL'});
+};
 
 /** Primitive in the sense of a CCC1 acceptance case: usable as an expected value. */
 const primitive=v=>v===null||typeof v==='boolean'||typeof v==='number'&&Number.isFinite(v)||typeof v==='string'&&v.length<=120;
@@ -39,7 +66,7 @@ for(const name of exports){
  const fn=mod?.[name];
  if(mode==='outputs'){
   result[name]=cases.map(c=>{
-   if(typeof fn!=='function')return {error:importError??'not a function'};
+   if(typeof fn!=='function')return importError?{error:importError,unloadable:true}:{error:'not a function'};
    try{
     const out=fn(...c.args);
     if(out&&typeof out.then==='function'){out.catch?.(()=>{});return {error:'asynchronous result'};}
@@ -50,7 +77,7 @@ for(const name of exports){
   continue;
  }
  const r={matched:0,total:cases.length,errors:0,firstError:null};
- if(typeof fn!=='function'){r.errors=cases.length;r.firstError=importError??'not a function';result[name]=r;continue;}
+ if(typeof fn!=='function'){r.errors=cases.length;r.firstError=importError??'not a function';if(importError)r.unloadable=true;result[name]=r;continue;}
  for(const c of cases){
   try{
    const out=fn(...c.args);
