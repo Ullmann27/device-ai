@@ -47,4 +47,12 @@ class ContinuumCortexResearchPipeline(
     @Synchronized fun consolidateShadow(probes: List<WakeSleepShadowHabitCore.Probe>):
         WakeSleepShadowHabitCore.Report = sleep.consolidate(probes)
     @Synchronized fun activeHabits(): Int = sleep.habitCount()
+
+    /** Bound to the Android New Chat action if this research pipeline is ever opted in.
+     * Prevents a previous conversation's focused entity and cache leaking into a new one.
+     */
+    @Synchronized fun resetResearchSession() {
+        fastWeights.reset()
+        sleep.reset()
+    }
 }
