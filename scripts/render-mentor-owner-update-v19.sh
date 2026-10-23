@@ -52,8 +52,8 @@ e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/Con
 479849bd277d4781f53db216e2dd884c1f87f355 app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt
 2736d947f40d0fbefb16a5f9470542fdfbe2b949 app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt
 697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
-d8fef48aeadafc24e469d33abe0ef6da321bb332 scripts/continuum-owned-app.mjs
-a65e558b2c08f32bca4bb8d87073d451a9f0c067 scripts/continuum-owned-app.test.mjs
+83692c7ae749f451cae495aa95bc52107165334f scripts/continuum-owned-app.mjs
+e287909e67074a1ac53764c1ecc22b3a36ac5105 scripts/continuum-owned-app.test.mjs
 c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
 f4a01789c3a48942c4c83955d31519d3a1fb2744 scripts/continuum-training-studio.test.mjs
 5ddd43cb32120c43cd2f854897136178464b3645 app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt
