@@ -36,7 +36,7 @@ while read -r expected_blob source_path; do
   [[ "$actual_blob" == "$expected_blob" ]] ||
     die "Approved release file differs: $source_path"
 done <<'APPROVED_RELEASE_SOURCES'
-945dd025e7a6b441033649597d5848d278b54570 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
 8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
 2bb8817da268bdcca676aa9a9b48f56b50d06609 app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
 412d643296deb76ab07e9515f6881eba9df3a9b4 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
@@ -45,6 +45,19 @@ e243a487a2011906a9c149a2324b63b39ad2f25c app/src/main/java/at/heinz/deviceai/ui/
 a62abbbf1d005a1ea6fc05310c1dd7b401ecc740 app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt
 520db0554c0e4d8803d674f229f243f51f2aba17 app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt
 8dac48b9eee7f5af74a777c8cd301b6e1576e49a app/build.gradle.kts
+acfebe1fa5d882013b11f11133cabc0c5d01409b app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt
+3cb8e5d5c28b98edfa3043f756fb09e907088f48 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt
+e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt
+384ab70a79c2eb09f13478e89aa06ee89739eed2 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt
+479849bd277d4781f53db216e2dd884c1f87f355 app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt
+2736d947f40d0fbefb16a5f9470542fdfbe2b949 app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt
+697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
+83692c7ae749f451cae495aa95bc52107165334f scripts/continuum-owned-app.mjs
+e287909e67074a1ac53764c1ecc22b3a36ac5105 scripts/continuum-owned-app.test.mjs
+c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
+f4a01789c3a48942c4c83955d31519d3a1fb2744 scripts/continuum-training-studio.test.mjs
+5ddd43cb32120c43cd2f854897136178464b3645 app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt
+b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8 app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
 # but changes to tracked source or new executable/tests in source locations are not.

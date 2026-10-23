@@ -108,6 +108,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val artifactHash = payload?.optString("apkSha256")
         val signerHash = payload?.optString("signerSha256")
         val sourceCommit = payload?.optString("commit")
+        val sourceSha256 = payload?.optString("sourceSha256")
         val packageName = payload?.optString("packageName")
         val versionCode = payload?.optInt("versionCode", -1)
         val ownerCopyStatus = payload?.optJSONObject("ownerInstallCopy")?.optString("status")
@@ -121,7 +122,8 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             signerSha256 = signerHash,
             sourceCommit = sourceCommit,
             packageName = packageName,
-            versionCode = versionCode
+            versionCode = versionCode,
+            sourceSha256 = sourceSha256
         )
         val text = if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
             ContinuumMobileResultPolicy.statusExplanation(reportedStatus)
@@ -132,6 +134,9 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE)
                 "\nQuell-Commit: $sourceCommit\nPaket: $packageName · VersionCode: $versionCode"
             else ""
+        val projectProvenance =
+            if (outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE)
+                "\nM4-Projekt: $packageName · Versionscode: $versionCode" else ""
         val ownerCopyMessage =
             if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
                     (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED &&
@@ -148,9 +153,10 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             .remove(JOB_ID)
             .remove(JOB_OPERATION)
             .remove(JOB_START)
-            .putString(LAST_MESSAGE, text + buildProvenance + ownerCopyMessage)
+            .putString(LAST_MESSAGE, text + buildProvenance + projectProvenance + ownerCopyMessage)
             .remove(LAST_SHA)
-        if (outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE &&
+        if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
+                outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE) &&
             artifactHash != null
         ) {
             editor.putString(LAST_SHA, artifactHash)

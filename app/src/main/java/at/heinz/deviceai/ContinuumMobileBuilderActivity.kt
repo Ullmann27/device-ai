@@ -57,16 +57,36 @@ class ContinuumMobileBuilderActivity : Activity() {
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
         status.setTextIsSelectable(true)
         for (operation in ContinuumMobileBuildPlan.Operation.entries) {
+            if (operation == ContinuumMobileBuildPlan.Operation.PROJECT_CREATE) {
+                paragraph("M4 · EIGENE ANDROID-APP", true)
+                paragraph("Erstelle eine echte, getrennte Notiz-App mit zwei Ansichten und lokaler Speicherung. " +
+                    "Die geprüfte Vorlage wird nur unter ~/continuum-projects/m4-notes erstellt. " +
+                    "Bestehende Projekte, Continuum-Daten und installierte Apps werden nicht überschrieben.")
+            }
             val button = Button(this).apply {
                 text = operation.title
                 isAllCaps = false
                 setOnClickListener {
-                    if (operation == ContinuumMobileBuildPlan.Operation.BUILD) {
+                    val confirmation = when (operation) {
+                        ContinuumMobileBuildPlan.Operation.BUILD ->
+                            "Lokalen Build starten?" to
+                                "Termux führt Tests, Lint und einen APK-Build auf diesem Telefon aus. Das kann bis zu 35 Minuten dauern und Akku/Speicher beanspruchen. Keine Installation erfolgt."
+                        ContinuumMobileBuildPlan.Operation.PROJECT_CREATE ->
+                            "Eigenständige Notiz-App erzeugen?" to
+                                "Termux legt ein neues, fest geprüftes Android-Projekt unter ~/continuum-projects/m4-notes an. " +
+                                "Keine Änderungen an Device AI, keine Installation. Ein bereits vorhandenes Projekt wird nicht überschrieben."
+                        ContinuumMobileBuildPlan.Operation.PROJECT_BUILD ->
+                            "Eigenständige Notiz-App testen und bauen?" to
+                                "Termux führt im getrennten Notiz-Projekt Kotlin-Tests, Android-Lint und den Offline-APK-Build aus. " +
+                                "Signatur, Paketname und Quellintegrität werden geprüft. Kein automatisches Installieren."
+                        else -> null
+                    }
+                    if (confirmation != null) {
                         AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
-                            .setTitle("Lokalen Build starten?")
-                            .setMessage("Termux führt Tests, Lint und einen APK-Build auf diesem Telefon aus. Das kann bis zu 35 Minuten dauern und Akku/Speicher beanspruchen. Keine Installation erfolgt.")
+                            .setTitle(confirmation.first)
+                            .setMessage(confirmation.second)
                             .setNegativeButton("Abbrechen", null)
-                            .setPositiveButton("Bauen") { _, _ -> dispatch(operation) }
+                            .setPositiveButton("Bestätigen") { _, _ -> dispatch(operation) }
                             .show()
                     } else dispatch(operation)
                 }
