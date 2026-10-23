@@ -24,8 +24,8 @@ Die Termux-/Android-Grenze ist nicht mit einer Betriebssystem-Sandbox gleichzuse
 
 ## Nachweis
 
-- Exakt getestete neue `scripts/continuum-owned-app.mjs`: Git-Blob `f02e1e45be017b03202dedfbe6a9d0285bd04bc6`.
-- Exakt getestete `scripts/continuum-owned-app.test.mjs`: Git-Blob `693a8bfd46a0afe5bcb8bc6c79e98206462b2fc2`.
+- Exakt getestete neue `scripts/continuum-owned-app.mjs`: Git-Blob `03894c0dfe696e1963a22dd962bbe4047f94a320`.
+- Exakt getestete `scripts/continuum-owned-app.test.mjs`: Git-Blob `eddabe2a51be6ef761ede0d53c4eade4544054c6`.
 - Lokal mit Node 22: **23/23 Tests, 0 Fehler**. Darunter echte Quellgenerierung auf isoliertem temporärem Dateisystem, SHA-/Symlink- und Überschreibungsschutz sowie simulierte (NICHT echte) Gradle-/Signatur-/Paket-/APK-Rückläufe.
 - Mit Kotlin-Compiler und **lokalen Android-API-Stubs** kompilierten `MainActivity.kt` und `NotePolicy.kt` syntaktisch; `NotePolicy.kt` zusätzlich alleine mit `kotlinc`. **Das ist kein Android-SDK-Compile und kein APK-Build.**
 - Zusätzlich **21/21 statische, direkt am GitHub-Quellzweig geprüfte Integrationsbedingungen**: gleiche Git-Blobs wie lokal getestet; unveränderte Besitzer-Paket-ID/Code19; Button-/Termux-/Receipt-Verkabelung; Sicherungsgrenzen; keine Installation.
@@ -70,3 +70,9 @@ Vor PR-Abschluss wurden drei weitere Quell-/Statusordner-Symlink-Angriffsfälle 
 Bei der erneuten Übernahme wurde ein realer Integrationsfehler entdeckt: `continuum-owned-app.mjs` verlangte zusätzlich zu `aapt2` ein Legacy-`aapt`-Programm, obwohl der vorhandene autorisierte `doctor()` nur `aapt2` als Voraussetzung bestätigt. Dies konnte einen betriebsbereiten Termux-Build fälschlich als `BLOCKED_MISSING_TOOLCHAIN` ablehnen. M4 verwendet jetzt dasselbe von `doctor()` verifizierte native `aapt2 dump badging` wie der Haupt-Builder. Der vorhandene M4-Test-Dummy wurde entsprechend auf `aapt2` korrigiert. Die beiden oben referenzierten Git-Blobs wurden exakt lokal mit Node 22 ausgeführt: **23 von 23 Tests bestanden, 0 Fehler, 0 Übersprungene**. Dies ersetzt keine echte ARM64-/Android-SDK-Buildabnahme.
 
 Zusätzlich wurde die Besitzer-Release-Prüfung `scripts/render-mentor-owner-update-v19.sh` für den aktuellen isolierten M4-/Trainingsquellstand um 10 weitere geprüfte Hash-Gates ergänzt (insgesamt 19), unter anderem Android-Kategorie-Buttons, Termux-Routing, Ergebnisvalidierung, Modelltrainingsstudio und M4-Skripte. Dadurch darf ein künftiger Render-Release nur den exakt freigegebenen Gesamtstand verwenden; weder `main` noch Render wurde aktualisiert. Die neue Trainingsoberfläche bleibt ein separates Modul innerhalb des M4-Branches und ist keine Voraussetzung für den Projektbuild.
+
+## M4-Qualitätsrunde · Notiztext und Android-Ansichten (23.10.2026)
+
+Zusätzliche Geräte-Logik: Ein ungespeicherter Notizentwurf bleibt beim Wechsel der zwei Bildschirme erhalten und wird in `onSaveInstanceState` für eine Android-Neuerstellung der Activity gesichert. Speichern in `SharedPreferences` bleibt ausdrücklich erst beim Druck auf **Lokal speichern** erlaubt. Ein fehlgeschlagener `commit()` behauptet keinen Erfolg und lässt den Entwurf bestehen. Der neue Source-Blob ist `03894c0dfe696e1963a22dd962bbe4047f94a320`; Tests `eddabe2a51be6ef761ede0d53c4eade4544054c6`. **Node 22: 23/23 grün, 0 übersprungen; genau diese Blobs auf GitHub.** Die daraus erzeugten aktuellen Kotlin-Klassen `MainActivity.kt` + `NotePolicy.kt` kompilierten syntaktisch mit lokalem `kotlinc` und expliziten Android-API-Stubs (Exit 0). Dies ist weiterhin **kein offizieller Android-SDK-Build** und keine Geräteabnahme.
+
+Parallel liegt das separat anwählbare **Continuum Trainingsstudio** in der Besitzer-UI mit **18 Themenrubriken, 256 Übungen und 600 Eingabeschritten**; darin österreichische Alltagssprache, Grammatik und Tippfehler. Diese Vorlagen verbessern Modellgewichte **nicht automatisch**. Die 30-Sekunden-Automatisierung bleibt ein gesonderter Implementierungs- und Validierungsauftrag, damit keine bloße Fragenwiederholung als nachgewiesener Lernfortschritt ausgegeben wird.
