@@ -58,3 +58,29 @@ Fortsetzung: zuerst `git status --short` und `git rev-parse HEAD`, anschließend
 obigen gezielten Gradle-Befehl. Tests/Sequenzbelege unter
 `docs/evidence/live-hologram-20261023/` beachten; offene Gerätenachweise nicht
 als erledigt deklarieren. Nutzungskontingent hier nicht verifiziert auslesbar.
+
+## Abgeschlossener Nachweis am Codecommit f052183
+
+Draft-PR: https://github.com/Ullmann27/device-ai/pull/91.
+22 gezielte standalone JVM-Tests bestanden; 23 Node-Vertragstests bestanden.
+Android-Kotlin-Kompilierung und 37 gezielte Gradle-JUnit-Tests bestanden
+(0 Fehler, 0 übersprungen), konfigurierter Android-Lint: keine Befunde.
+Die bestehende Lintkonfiguration prüft nur `NewApi`; kein vollständiger
+Barrierefreiheits-/Performance-Audit daraus abgeleitet. Die JVM-Suiten
+überschneiden sich; Testzahlen nicht als unabhängige Belege addieren.
+
+[Phone-Bewegungsvergleich](evidence/live-hologram-20261023/phone-ready-comparison.gif),
+[Fold-Bewegungsvergleich](evidence/live-hologram-20261023/fold-ready-comparison.gif).
+Links jeweils Code17, rechts Kandidat; echte Rendererframes bei 0–8 Sekunden,
+3 Hz Vorschauabtastung, keine Geräte-FPS. GIF-Schleifenstart springt zurück,
+die laufende Appbewegung nicht. Statische Tafeln zeigen 0/4/8 Sekunden.
+Nur eine neue Echtzeitvariante implementiert; keine Hybrid-Assets oder
+unbelegten Behauptungen über höhere Bildrate/geringeren Akkuverbrauch.
+Neue Ringe: maximal 370 Segmente, 40 native Zeichenbatches pro Frame.
+Gesamtes Renderbudget weiterhin durch bestehenden <2600-Drawcall-Test begrenzt.
+
+Reproduktion mit vorhandenen JDK17/Kotlin-Werkzeugen:
+`bash scripts/continuum-hologram-preview.sh build/hologram-motion`
+(`KOTLINC` und `JAVA` können explizite Toolchainpfade sein).
+Der letzte Commit ergänzt ausschließlich Evidenz/Dokumentation; der geprüfte
+Produktionscode ist `f0521833b151312243cb9af504a4614a0836d9e1`.
