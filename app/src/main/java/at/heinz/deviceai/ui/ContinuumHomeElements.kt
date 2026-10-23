@@ -21,6 +21,17 @@ abstract class ContinuumElement(protected val textScale: Float = 1f) {
     protected fun t(weight: Int, size: Float, spacing: Float = 0f) = text(weight, size * textScale, spacing * textScale)
     protected fun d(weight: Int, size: Float, spacing: Float = 0f) = ContinuumTheme.display(weight, size * textScale, spacing * textScale)
     protected fun solid(color: Int) = Fill.Solid(color)
+
+    /** Keep compact labels completely inside their actual Android View, even at larger font scales. */
+    protected fun fittedTitle(p: ContinuumPainter, value: String, weight: Int, baseSize: Float,
+                              availableWidth: Float): TextStyle {
+        val preferred = t(weight, baseSize)
+        val measured = p.measureText(value, preferred)
+        val ratio = if (measured > availableWidth && measured > 0f) {
+            (availableWidth / measured).coerceIn(.55f, 1f)
+        } else 1f
+        return t(weight, baseSize * ratio)
+    }
 }
 
 /** Logo, "Continuum" and the subtitle (phone reference: 64 dp tall header). */
@@ -30,13 +41,17 @@ class HeaderBrandElement(textScale: Float = 1f, private val large: Boolean = fal
             // Fold reference: logo 66 x 34 dp, title 20.7 sp, subtitle 8.5 sp (box origin 80/30 dp)
             ContinuumIcons.logo(p, 45.3f, 23.2f, 66f, 34f)
             p.drawText("Continuum", 87f, 31.7f, d(500, 20.7f), solid(ContinuumTheme.TEXT))
-            p.drawText("Dein KI-Universum. Ohne Grenzen.", 87.5f, 48f, t(400, 8.5f), solid(Argb.rgb(166, 190, 226)))
+            val subtitle = "Dein KI-Universum. Ohne Grenzen."
+            val style = fittedTitle(p, subtitle, 400, 8.5f, (w - 91f).coerceAtLeast(1f))
+            p.drawText(ContinuumSurfaces.fit(p, subtitle, style, w - 91f), 87.5f, 48f, style, solid(Argb.rgb(166, 190, 226)))
             return
         }
         val cy = h * .52f
         ContinuumIcons.logo(p, 43.3f, cy, 48.6f, 25f)
         p.drawText("Continuum", 79f, cy + 7.5f, d(500, 21.66f), solid(ContinuumTheme.TEXT))
-        p.drawText("Dein KI-Universum. Ohne Grenzen.", 79.5f, cy + 17.9f, t(400, 8.74f), solid(Argb.rgb(166, 190, 226)))
+        val subtitle = "Dein KI-Universum. Ohne Grenzen."
+        val style = fittedTitle(p, subtitle, 400, 8.74f, (w - 83f).coerceAtLeast(1f))
+        p.drawText(ContinuumSurfaces.fit(p, subtitle, style, w - 83f), 79.5f, cy + 17.9f, style, solid(Argb.rgb(166, 190, 226)))
     }
     override fun describe(s: ContinuumDashboardState) = "Continuum. Dein KI-Universum. Ohne Grenzen."
 }
@@ -89,13 +104,19 @@ class CoreLabelElement(val icon: Icon, val title: String, private val status: (C
         if (boxed) {
             ContinuumSurfaces.glassCard(p, 0f, 0f, w, h, 12f)
             ContinuumSurfaces.iconDisc(p, icon, 26f, cy, 30f, 16f)
-            p.drawText(title, 51f, cy - 1.5f, t(700, 8.6f), solid(ContinuumTheme.LABEL_CYAN))
+            val titleWidth = (w - 55f).coerceAtLeast(1f)
+            val titleStyle = fittedTitle(p, title, 700, 8.6f, titleWidth)
+            p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, titleWidth), 51f, cy - 1.5f, titleStyle,
+                solid(ContinuumTheme.LABEL_CYAN))
             p.drawText(ContinuumSurfaces.fit(p, status(s), t(400, 7.8f), w - 56f), 51f, cy + 10.5f, t(400, 7.8f),
                 solid(ContinuumTheme.TEXT_SECONDARY))
             return
         }
         ContinuumSurfaces.iconDisc(p, icon, 13.5f, cy, 27f, 14.5f)
-        p.drawText(title, 32.5f, cy - 1.2f, t(700, 7.95f), solid(ContinuumTheme.LABEL_CYAN))
+        val titleWidth = (w - 35f).coerceAtLeast(1f)
+        val titleStyle = fittedTitle(p, title, 700, 7.95f, titleWidth)
+        p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, titleWidth), 32.5f, cy - 1.2f, titleStyle,
+            solid(ContinuumTheme.LABEL_CYAN))
         p.drawText(ContinuumSurfaces.fit(p, status(s), t(400, 6.63f), w - 33f), 32.5f, cy + 8.6f, t(400, 6.63f),
             solid(ContinuumTheme.TEXT_SECONDARY))
     }
