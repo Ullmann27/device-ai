@@ -10,6 +10,13 @@ import org.junit.Test
 class ContinuumHomeLayoutTest {
     private val cards = listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
 
+    @Test fun railWidthTracksReferenceForPhoneAndFoldWidths() {
+        assertEquals(76f, ContinuumHomeLayout.railWidthDp(840f), 1e-4f)
+        assertEquals(68.4f, ContinuumHomeLayout.railWidthDp(756f), 1e-4f)
+        assertEquals(75f * 76f / 84f, ContinuumHomeLayout.railWidthDp(750f), 1e-4f)
+        assertTrue(ContinuumHomeLayout.railWidthDp(656f) > 0f)
+    }
+
     @Test fun compositionFollowsTheWindowSize() {
         assertFalse("Fold7 cover display (411 dp)", ContinuumHomeLayout.isWide(411f, 900f))
         assertFalse("360 dp Samsung phone", ContinuumHomeLayout.isWide(360f, 740f))
