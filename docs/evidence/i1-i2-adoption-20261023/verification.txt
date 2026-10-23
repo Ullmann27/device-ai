@@ -1,0 +1,32 @@
+# Übernahme PR #72 in opus/ccc1-e2e-20261023 – Prüfprotokoll (23.10.2026)
+Quelle: opus/continuum-i2-selective-risk-20261022 @ 1c72f8a28bd2a33f6aeb069fc1e4856d1cb802d1
+Prüfbaum: Branch-HEAD 6c7d600e + die 11 übernommenen Code-/Testdateien (bytegleich mit e9714f70)
+Umgebung: Linux x86_64, OpenJDK "21.0.12.1" 2026-08-18, kotlinc 2.0.x (Wrapper), JUnit 4.13.2; kein SDK, kein Gradle, kein Gerät
+
+## 1. scripts/android-kotlin-unit-check.sh (Haupt- und Testquellen, alle JUnit-Klassen, alle *Checks)
+classes=173 checks=4 junit: OK (852 tests)
+KOTLIN_UNIT_TESTS_CHECKED: all JUnit classes and Checks programs pass (outside Gradle; not lint, not an APK, not a device)
+exit=0
+Vergleich ohne Übernahme (HEAD 6c7d600e): classes=168 checks=4 junit: OK (827 tests)
+
+## 2. Reproduktion der PR-#72-Belege (aus app/, Klassenpfad wie im Skript)
+java ... ContinuumSelectiveRiskExperiment              -> exit 0, 105 Zeilen, sha256 431da1fd17db3e626df1fcd61e2f8b83011324b07a03117349a0f24a98f39753
+   Beleg i2-selective-risk-run.txt                  -> sha256 431da1fd17db3e626df1fcd61e2f8b83011324b07a03117349a0f24a98f39753  (cmp: identisch)
+java ... ContinuumSpanAbstentionExperiment certify    -> exit 0, 40 Zeilen, sha256 af097d3c5b0008321b4eaccb3475e7c65bbfa3b3a609cbbe7fb8037455625618
+   Beleg i1-certify-after-i2-refactor.txt           -> sha256 af097d3c5b0008321b4eaccb3475e7c65bbfa3b3a609cbbe7fb8037455625618  (cmp: identisch)
+
+## 3. Standardverhalten des Span-Kerns: ContinuumResidualSpanCoreChecks, alter gegen neuen Kern
+diff alt/neu: keine Abweichung (13 Zeilen). Ausgabe:
+    PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+    PASS missing/ambiguous gold targets rejected without updates
+    PASS checked synthetic counterfactual and negative leakage guards
+    PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+    PASS cancellation and preflight fail-before-first-update
+    MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+    MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+    CASE expected=Salzburg, predicted=Salzburg
+    CASE expected=XZ-902, predicted=XZ-902
+    CASE expected=Zange, predicted=Zange
+    CASE expected=ABSTAIN, predicted=Salzburg
+    CASE expected=ABSTAIN, predicted=XZ-902
+    PASS executable JVM test finished; public dev cases are not a blind holdout.
