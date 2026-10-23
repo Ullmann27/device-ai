@@ -524,6 +524,7 @@ analysiert wurde, ist als **nachträglich** gekennzeichnet.
 | NF-5b | Vorprüfung: ≥ 3 mehr im 1. Versuch, 0 ungewollt, 3/3 Enthaltungen | **widerlegt**: +7, aber 1 ungewollte Bestätigung (10.8) |
 | NF-6b-lite | feste Mischung ≤ KN-7 − 0,05 (alle Seeds); Verankerung ≤ fest − 0,02 | **beide widerlegt** (G-M-b: 0,042–0,052; Verankerung ±0,0006), aber bestes BPB des Zyklus (10.9) |
 | NF-5c | Rückfrage statt falscher Bestätigung (H5c-1 bis H5c-4) | **gestützt**: 0 falsche Bestätigungen (NF-5b auf der Bank: 7), 12/13 erkannt, 0 unnötige Fragen, 9/11 aufgelöst (10.10) |
+| NF-7 (NFC2) | Residual-Training: Mischung ≤ unabhängig − 0,02 und ≤ KN-7 − 0,05 (alle Seeds) | **beide widerlegt**: Residual-Mischung 0,010–0,017 *schlechter* als unabhängig, nur 0,021–0,023 besser als KN-7; NFC2 TEST nicht ausgeführt (10.11) |
 | NF-6b | Zählmodell-verankertes Delta-Gedächtnis | **offen**, nicht implementiert |
 
 Der NFC1-TEST wurde nicht ausgeführt. Nach Abschnitt 9 kommen dafür zuerst die bestätigten Varianten in Frage: NF-4 λ = 1e-3 gegen G-S und NF-3 Entropie gegen feste Patches. Die außergewöhnliche Wiederholung mit neuem Seed und die Leckprüfung stehen davor noch aus.
@@ -620,3 +621,39 @@ Protokolle: `nf5c-study-run.txt` und `nf5c-results.json`; Aufgaben `nf5c-tasks.j
 - Erwartete Fehler müssen als Beispiel ausdrückbar werden. Dafür muss der Vertrag „soll mit Fehler X abbrechen“ zulassen; das ist eine Protokolländerung und braucht die Freigabe des Besitzers.
 - Unterscheidende Eingaben gezielter erzeugen, etwa Brüche bei Zahlenfunktionen.
 - Der Worker stellt Rückfragen bereits dauerhaft an den Besitzer (Meilenstein E).
+
+### 10.11 NF-7 – Restmodell gegen Kneser-Ney 7 (Lauf 23.10.2026, 07:59–08:36 UTC, Jar aus `524c1afc`)
+
+**Ablauf** (Belege in `docs/evidence/nf-20261022/`)
+- Training: `nf7-independent.txt`, `nf7-residual.txt`, `nf7-residual-insample.txt`.
+- Mischung: `nf7-hybrid.txt`.
+- Befehle: `run-nf7.sh.txt`.
+- Unabhängige Nachrechnung: `evaluate.py` → `nf7-evaluate-20261023.txt`.
+- Die 54 Checkpoints (3 Arme × 3 Seeds × 6 Epochen) liegen auf dem Datenzweig `opus/nf-checkpoints-20261022` (`fab239d3`). Ihre Dateinamen sind die SHA-256-Werte, vor dem Hochladen geprüft.
+
+**NFC2 VALIDATION** (5 Dokumente, 34.313 Bytes; λ per Cross-Fitting über die Dokument-Hälften 2/3), Epoche 6. Werte in BPB, je Seed 1, 2, 3.
+
+| Arm | neuronal allein | feste Mischung mit KN-7 | λ (Hälfte 0/1) |
+|---|---|---|---|
+| KN-7 allein | – | 1,8856 | – |
+| unabhängig (`G-M`) | 2,393 · 2,409 · 2,431 | **1,8474 · 1,8502 · 1,8519** | 0,15–0,20 |
+| Residual, kreuzvalidierte Ziele (`G-M-res`, Hauptarm) | 3,990 · 4,076 · 4,063 | 1,8640 · 1,8646 · 1,8623 | 0,075–0,10 |
+| Residual, In-Sample-Ziele (`G-M-resin`, ohne Regel) | 8,280 · 8,104 · 8,244 | 1,8852 · 1,8857 · 1,8851 | 0–0,025 |
+
+**Regeln (je Seed)**
+- **H7-1** (Residual-Mischung ≤ unabhängige Mischung − 0,02): Gewinn −0,0166, −0,0144, −0,0104 → **widerlegt**. Das Residual-Training macht die Mischung schlechter.
+- **H7-2** (Residual-Mischung ≤ KN-7 − 0,05): Gewinn +0,0216, +0,0210, +0,0233 → **widerlegt**.
+- **TEST:** Nach Abschnitt 8f, Punkt 6 wird NFC2 TEST deshalb **nicht** ausgeführt. Er bleibt unberührt; die Sperrdatei von `hybrid-test` existiert nicht.
+
+**Was die Messung zeigt**
+- **Der Nachtrag 8f-A war nötig.** Mit In-Sample-Zielen lernt das Netz praktisch nichts Brauchbares: allein 8,1–8,3 BPB, Mischung = KN-7. Kreuzvalidierte Ziele bringen 0,021–0,023 BPB mehr. Ohne den Nachtrag wäre das Experiment an einem Konstruktionsfehler gescheitert, nicht an der Idee.
+- **Bei dieser Modellgröße hilft Residual-Training trotzdem nicht.** Das unabhängig trainierte Netz ergänzt KN-7 besser: Mischung 1,847–1,852 gegen 1,862–1,865. Plausibel ist folgende Erklärung, sie ist aber nicht getestet: Mit λ = 0,5 beim Training verteilt das Netz seine Wahrscheinlichkeit auf Bytes, die KN-7 schlecht vorhersagt. Bei der Messung wählt das Cross-Fitting jedoch λ ≈ 0,1, sodass dieser Teil kaum zählt. λ beim Training war vorab festgelegt und wurde nicht abgestimmt.
+- **Das unabhängige Modell erreicht auch auf NFC2 nicht die NF-6b-Schwelle.** Sein Gewinn gegenüber KN-7 beträgt 0,034–0,038 BPB, wie in NF-6b-lite, das 0,042–0,052 erreichte.
+
+**Grenzen**
+- Die Zeiten je Token (`SPEED`) liefen neben anderer Arbeit in der Sitzung und sind nicht vergleichbar.
+- Alle Arme haben dieselbe Architektur (115.904 Parameter, 128 Zustandswerte), die Inferenzkosten sind also gleich.
+- VALIDATION ist klein (5 Dokumente). Es gab einen Zyklus und keine ARM64-Messung.
+
+**Konsequenz:** Residual-Training wird bei dieser Modellgröße nicht weiterverfolgt. Der nächste Schritt im Radar ist ein stärkeres Zählmodell: ∞-Gramm mit Suffix-Array (NF-8).
+

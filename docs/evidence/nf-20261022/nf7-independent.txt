@@ -1,0 +1,31 @@
+JAR 10f7968b223288703759dc23063411d0ef8304af52ed40ec5f133b9002b1ab3b commit=524c1afc start=2026-10-23T07:59:16Z args=lm G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 corpus=nfc2 store=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/nf7/ckpt
+NFC2 commit=9fb4361c896315e9e974dd5d8feab5ce1ce65803 docs=83 tokenizer=v258 sha=f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b
+SPLIT DOC TRAIN docs=71 segments=2506 bytes=422096 sha=e09a7cda131ebc583e7c9dc49c3d0d999f8d1beedfa7357d4e05863b373c3cf4
+SPLIT DOC VALIDATION docs=5 segments=180 bytes=34313 sha=73ec893c44549f039e2c4a281a60a62eec4df300060bd6e15b201561cdaf0146
+SPLIT DOC TEST docs=7 segments=219 bytes=38346 sha=3deec29e97940625223b664f9180e54a605fa9225a7defa782183b43962a68bb
+SPLIT CODE TRAIN docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE VALIDATION docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE TEST docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+RUN G-M seed=1 epoch=1 trainNll=3.5479 valBPB=3.6226 params=115904 trainSeconds=36 ckpt=7c45d58e7004e79df077a682133852f7b644daf71e7acd3bac94e2e8a273c91d
+RUN G-M seed=1 epoch=2 trainNll=2.1976 valBPB=2.9437 params=115904 trainSeconds=75 ckpt=0f596fda6eb4a90557b405cbbc964baae023e69ad438661a40d35bdb57c95d3f
+RUN G-M seed=1 epoch=3 trainNll=1.9007 valBPB=2.6617 params=115904 trainSeconds=112 ckpt=18ef0f45a6fbf833e3daa11f280d1c6d9ef3e4b0e15f77db1f88b497e4f3156d
+RUN G-M seed=1 epoch=4 trainNll=1.7573 valBPB=2.5158 params=115904 trainSeconds=149 ckpt=87f986c57fde2cb92e7628284b4145cd7e565ce6018d1deb03e68ee3f87b0ed1
+RUN G-M seed=1 epoch=5 trainNll=1.6664 valBPB=2.4345 params=115904 trainSeconds=184 ckpt=b279b7f86e820e1b8b88c413bb086b2cb230878b9ce3d18da716b53bf4ea3203
+RUN G-M seed=1 epoch=6 trainNll=1.6179 valBPB=2.3926 params=115904 trainSeconds=220 ckpt=6738e828b90a6e20f99ff6439c8cd1330e43db78738626d13eee7a80cbbe9672
+SPEED G-M seed=1 msPerToken=0.079 stateFloats=128 paramBytes=463616
+RUN G-M seed=2 epoch=1 trainNll=3.5403 valBPB=3.6224 params=115904 trainSeconds=36 ckpt=3ec8a33c2b15ef806027d2129b13bf51b7efd4efa18d2c54f9a33ed2f473780e
+RUN G-M seed=2 epoch=2 trainNll=2.2218 valBPB=2.9739 params=115904 trainSeconds=73 ckpt=f6e929a4f170c4fbbe104d154c4147b19ac44733b433321f63db6d09a01cc8ae
+RUN G-M seed=2 epoch=3 trainNll=1.9271 valBPB=2.6943 params=115904 trainSeconds=110 ckpt=2018b478bc228df119fc9fe608823903063ec093507f73d73675946547111b3e
+RUN G-M seed=2 epoch=4 trainNll=1.7798 valBPB=2.5508 params=115904 trainSeconds=146 ckpt=16b0084251893ab331f185cde5c03a81121a8883275d35fa80e5a06bb0bdde0d
+RUN G-M seed=2 epoch=5 trainNll=1.6889 valBPB=2.4510 params=115904 trainSeconds=184 ckpt=13a1b03242a14683fd191071e8cf379ebf145bfb5da84ca34c6abc048af3c51f
+RUN G-M seed=2 epoch=6 trainNll=1.6369 valBPB=2.4089 params=115904 trainSeconds=222 ckpt=3e5d0ecfe26fa58e3028698faeb8f5373178631f09acc28f65a459b5e7452eef
+SPEED G-M seed=2 msPerToken=0.080 stateFloats=128 paramBytes=463616
+RUN G-M seed=3 epoch=1 trainNll=3.5636 valBPB=3.6871 params=115904 trainSeconds=39 ckpt=0431d34ea31582ad2b1c3d7193839c253f898b5c8c2e40e37d01ee61774bc5bc
+RUN G-M seed=3 epoch=2 trainNll=2.2520 valBPB=3.0232 params=115904 trainSeconds=76 ckpt=e6dfc04102b8a413bbaa0b81dcbf440402e55215e59c8b3d885008471c01b66f
+RUN G-M seed=3 epoch=3 trainNll=1.9461 valBPB=2.7511 params=115904 trainSeconds=115 ckpt=3a39f25864ae887d57ea064431bda4c636b7e3eee49ae461bddfa0ccb57c933c
+RUN G-M seed=3 epoch=4 trainNll=1.7998 valBPB=2.5761 params=115904 trainSeconds=152 ckpt=071bde70266eaa0cb072f917cc82e6290597f69f85deff73b5ddcf6f9277908f
+RUN G-M seed=3 epoch=5 trainNll=1.7078 valBPB=2.4711 params=115904 trainSeconds=192 ckpt=0a1b55ed69b99c81c5d4308e313c3f2ee9e58ab53e18484e93801332e8e12580
+RUN G-M seed=3 epoch=6 trainNll=1.6540 valBPB=2.4305 params=115904 trainSeconds=230 ckpt=f3216e993041213dae11845e4d4e56d03db632c4bd95bff2af8875e754c3d35f
+SPEED G-M seed=3 msPerToken=0.095 stateFloats=128 paramBytes=463616
+PEAK heapMb=372
+exit=0 end=2026-10-23T08:10:35Z

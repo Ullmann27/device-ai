@@ -469,3 +469,100 @@ Auftrag: M4/M5, Abschnitt 3, Punkt 7 („Prüfe danach auf getrennten neuen Test
 - Messung auf ARM64 bzw. dem Fold.
 - Anbindung an die App über einen Worker. Die Schnittstelle dafür wird mit Astra abgestimmt; seine Dateien werden nicht bearbeitet.
 - Quantisierung, erst wenn ein besseres Modell vorliegt.
+
+## 10. CCC1-Worker auf der bestehenden lokalen Schleife (Meilenstein E)
+
+**Grundsatz:** keine zweite Architektur. Der Worker ist eine Zyklus-Funktion für die vorhandene `runTeamleaderLoop` (`local-teamleader-loop.mjs`). Die Schleife bringt bereits mit:
+- einen dauerhaften Checkpoint;
+- endlich viele Zyklen;
+- die Bindung an den HEAD der Quelle;
+- Rückzug nach Fehlern;
+- die Signalbehandlung.
+
+**Bausteine**
+
+| Baustein | Aufgabe |
+|---|---|
+| `ccc1-worker.mjs` | `submitGoal` macht aus einem Besitzerziel einen dauerhaften CCC1-Auftrag, gebunden an den aktuellen Commit. `runCcc1Cycle` treibt je Zyklus den ältesten Auftrag, der weiterkommen kann, einmal durch den Orchestrator. `listTasks` zeigt beschädigte Journale an (`CORRUPT`), repariert sie aber nie. |
+| `OUTCOME_FOR` | übersetzt CCC1-Ausgänge in die Sprache der Schleife: `COMPLETED` → `VERIFIED_PATCH_PENDING_REVIEW`; `ABSTAINED`/`ABORTED` → `DONE_INVESTIGATION`; `FAILED`/beschädigtes Journal → `ERROR`; Warten auf Worker, Sperre oder Zuglimit → `INTERRUPTED`; nur Besitzerentscheidungen offen → `NO_READY_INVESTIGATION`. Der CCC1-Ausgang bleibt im Detail erhalten. |
+| `ccc1-experience.mjs` | ein Datensatz je beendetem Auftrag, nur aus dem geprüften Journal abgeleitet. Er enthält Ziel-Hash, Basis-Commit, Hypothesen mit Urteil und Quittungs-Hash, Rückfrage, Kosten und nicht prüfbare Alternativen. Die JSONL-Datei ist hash-verkettet, nur anhängend, und jeder Auftrag steht genau einmal darin. Das ist das Lernformat für geprüfte Erfahrungen; trainiert wird damit noch nichts. |
+| `ccc1-cli.mjs` | `submit`, `status` (auch `--format json` für die App), `run-once` und `loop`. Kein Netz, kein GitHub-Token, keine Shell aus Text. Der Zustand muss außerhalb des Repositorys liegen. |
+
+**Tests:** `ccc1-worker.test.mjs` 6/6, davon 3 mit echten Coding-Jobs.
+
+### 10a. Erster echter Lauf auf einem Repository-Klon (23.10.2026, 07:46–07:52 UTC, Commit `73958363`)
+
+**Aufbau**
+- Ein lokaler Klon dieses Zweigs bekommt drei Ziele.
+- Danach laufen `ccc1-cli.mjs loop --cycles 4 --interval 1` mit dem Kern `probe-disambiguate-v1`.
+- Befehle und Protokolle: `docs/evidence/ccc1-20261023/` (`run-worker-e2e.sh.txt`, `worker-loop-e2e-20261023.txt`, `worker-experience-e2e-20261023.jsonl`).
+
+| Auftrag | Ziel | Ergebnis | CPU-Zeit |
+|---|---|---|---|
+| `t-8ff2100990…` | Titel normalisieren, 2 Beispiele | `COMPLETED`: `research-radar.mjs#normalizeTitle`, unabhängiger Vertragstest bestätigt | 160 s |
+| `t-b7479e737b…` | kanonische JSON-Schreibweise, 3 Beispiele | `COMPLETED`: `development-backlog.mjs#canonical` bestätigt | 162 s |
+| `t-b4055675c9…` | „Kotlin-Schlüsselwörter erkennen“, ohne Beispiele | `ABSTAINED`: „Welche Eingaben und erwarteten Ergebnisse belegen das Ziel?“ | 0 s |
+
+- Die Schleife lief 4 Zyklen mit 0 Fehlern und endete in `LIMIT_REACHED`.
+- Der Checkout blieb unverändert, und jeder Auftrag steht genau einmal im Erfahrungsprotokoll.
+
+**Gefundener Fehler: Eine Alternative war unsichtbar.**
+- `ccc1-envelope.mjs#canonical` erfüllt die drei Beispiele ebenfalls.
+- Die Vorprüfung konnte diese Funktion aber nicht laden: `ERR_ACCESS_DENIED`, weil sie aus `scripts/` importiert und v1 nur das eigene Verzeichnis lesen durfte.
+- Beide Funktionen verhalten sich verschieden. `development-backlog#canonical` lehnt nicht ganzzahlige Zahlen ab, `ccc1-envelope#canonical` nicht.
+- Die Bestätigung war also nur unter den prüfbaren Kandidaten eindeutig. Gemeldet wurde das nirgends.
+
+### 10b. Korrektur: Vorprüfung v2, Task-Compiler, Code-Index und zweiter echter Lauf
+
+**Vorprüfung v2** (`766f13f8`)
+- Der Prüfprozess darf das ganze Repository lesen, Modulpfade außerhalb werden abgewiesen.
+- Weil Imports jetzt weiter reichen, verweigert der Prozess zur Laufzeit jede Netz-API mit `ERR_PROBE_NETWORK` (Node 22 sperrt das Netz im Permission Model nicht), dazu Signale an fremde Prozesse (`ERR_PROBE_SIGNAL`); der Heap ist auf 256 MB begrenzt.
+- Nicht prüfbare Kandidaten, die die lexikalische Rangfolge mindestens so hoch einstuft wie den besten geprüften Treffer, werden mit der Entscheidung gemeldet (`uncheckedAlternatives`).
+- **Tests** (`behaviour-probe.test.mjs` 9/9):
+  - Ein Netzaufruf über einen Repository-Import erreicht einen lokalen Testserver nicht, eine Kontrollverbindung wird gezählt.
+  - Ein Kandidat kann einen fremden Prozess nicht beenden.
+
+**Wirkung am echten Repository** (`docs/evidence/ccc1-20261023/probe-coverage-v1-v2-20261023.txt`; gleiche 258 Exporte mit einem Argument, gleiche 29 Eingaben)
+
+| | ausführbar | `ERR_ACCESS_DENIED` | Netz-/Prozess-Import (nicht geprüft) | Zeitlimit |
+|---|---|---|---|---|
+| v1 (`73958363`) | 132 | 58 | 66 | 2 |
+| v2 (`d0bd336a`) | **189** | 1 | 66 | 2 |
+
+**Task-Compiler** (`ccc1-cli.mjs compile`)
+- Er übersetzt ein Ziel in einen typisierten GoalSpec und macht einen Probelauf des ersten Reasoner-Schritts: Vorprüfung und Mehrdeutigkeitsprüfung.
+- Er braucht dafür weder Auftrag noch Journal noch Coding-Job.
+- Antwort: `READY`, `AMBIGUOUS` mit Rückfrage, `NO_MATCH` oder `NEEDS_OWNER`. Test 1/1.
+
+**Code-Index** (`code-index.mjs`; erster Bau `ec83dc5e`, Korrektur `313e6ffc`)
+- Der erste Bau am echten Repository deckte einen Fehler auf. Module mit gegenseitigen Imports bekamen denselben Cache-Schlüssel, deshalb fehlten bei 57 Exporten die Prüfdaten. Behoben; der neue Test schlägt ohne die Korrektur fehl.
+- **Stand `313e6ffc`, x86_64:**
+  - 104 Module mit 436 Exporten, davon 297 ausführbar und 290 deterministisch;
+  - 51 vergleichbare Exporte (mindestens 3 verschiedene Ergebnisse auf dem Pool);
+  - 4 Cluster und 2 Fast-Dubletten;
+  - Bau 45 s, Neubau aus dem Cache 0,3 s.
+- **Cluster:**
+  - fünf gleichwertige SHA-256-Funktionen in fünf Modulen;
+  - vier gleichwertige Tokenisierer;
+  - zwei weitere Paare.
+- **Fast-Dubletten:** `ccc1-envelope#canonical` ~ `development-backlog#canonical` mit 0,931 Übereinstimmung. Das ist genau das Paar, das der erste Lauf nicht vergleichen konnte. Der Index findet es jetzt ohne Besitzerziel.
+- Beleg: `code-index-real-repo-20261023.txt`.
+
+**Zweiter echter Lauf** (23.10.2026, 08:23–08:29 UTC, Klon bei `d0bd336a`, Kern `probe-disambiguate-v2`, gleiche drei Ziele, `--index-on-idle true`)
+
+| Auftrag | Ergebnis | gegenüber Lauf 1 |
+|---|---|---|
+| Titel normalisieren | `COMPLETED`: `research-radar#normalizeTitle` vom Vertragstest bestätigt (178 s CPU) | gleich, aber jetzt mit 10 gemeldeten, nicht prüfbaren Alternativen |
+| kanonische JSON-Schreibweise | `ABSTAINED` mit Rückfrage: „Mehrdeutig: 2 Funktionen erfüllen alle Beispiele … Bei (5.5) ergibt sich: "5.5" (`ccc1-envelope#canonical`); Fehler INVALID_FIELD (`development-backlog#canonical`). Welches Ergebnis ist gewollt?“ | **korrigiert**: Lauf 1 bestätigte eine der beiden ungefragt |
+| Kotlin-Schlüsselwörter, ohne Beispiele | `ABSTAINED`: „Welche Eingaben …?“ | gleich |
+| Zyklus 4 (leer) | Code-Index aufgefrischt | neu |
+
+- Die Schleife lief 4 Zyklen mit 0 Fehlern; der Checkout blieb unverändert.
+- Die Index-Zahlen im Herzschlag dieses Laufs stammen noch vom Stand mit dem Cache-Fehler (`d0bd336a`). Die korrigierten Zahlen stehen oben.
+- Belege: `worker-loop-e2e-v2-20261023.txt`, `worker-experience-e2e-v2-20261023.jsonl`, `run-worker-e2e-v2.sh.txt`.
+
+**Offene Grenzen**
+- Die Meldung nicht prüfbarer Alternativen ist bei schwacher lexikalischer Rangfolge unscharf. Bei `normalizeTitle` waren es 10, darunter die Exporte von `behaviour-probe.mjs`, die wegen ihres `child_process`-Imports nie geprüft werden.
+- `reasoner-dialog#canonical` bleibt aus demselben Grund ungeprüft und wird gemeldet.
+- Der Task-Compiler ist beratend. Bestätigt wird weiterhin nur durch den Vertragstest.
+- Nichts davon ist mit der App verbunden oder auf dem Gerät gemessen.

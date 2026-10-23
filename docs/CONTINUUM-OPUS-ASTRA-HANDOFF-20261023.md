@@ -7,6 +7,8 @@
 Stand: 23.10.2026, ausschließlich Device AI Continuum. Kein Main-Merge, keine Signierung, keine API-Kosten.
 Der integrierte Ausgangsstand ist **PR #94** (`0499e2a0d95187edcb3f0b8736339154bc563edb`). Der isolierte Forschungszweig ist **PR #95** (`integration/continuum-verifier-first-spine-20261023`); die Fold-Reflow-Reparatur liegt getrennt in **PR #96** (`integration/continuum-composer-reflow-fix-20261023`, basierend auf PR #95).
 
+> **Schnittstellen im Detail** (LM1-Runtime-API, CCC1-CLI mit `compile`/`submit`/`status --format json`, Code-Index, Prüfbefehle): [CONTINUUM-OPUS-CCC1-INTERFACES-20261023.md](CONTINUUM-OPUS-CCC1-INTERFACES-20261023.md). Sie stammt aus PR #92 (`efcf4e3a`) und wurde beim Übertragen auf die Integrationslinie umbenannt, damit diese Übergabe nicht überschrieben wird.
+
 ## 1. Opus: CCC1 fertigstellen, nicht ein zweites System bauen
 
 **Quell-API:**
