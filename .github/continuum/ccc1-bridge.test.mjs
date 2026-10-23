@@ -11,6 +11,7 @@ import {spawnSync} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {parseArgs,CCC1_COMMANDS} from '../../scripts/continuum-mobile-builder.mjs';
+import {main as cli} from './ccc1-cli.mjs';
 
 process.env.HOME=fs.mkdtempSync(path.join(os.tmpdir(),'ccc1-bridge-home-'));
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);   // never start real repair sessions inside a repair worktree
@@ -32,6 +33,19 @@ function fixture({broken=true}={}){
  git('init','-q','-b','ccc1-work');commit('seed');
  if(broken){fs.writeFileSync(path.join(dir,'text-utils.mjs'),GOOD.replace('toLowerCase','toUpperCase'));commit('regression: slug upper-cases');}
  return {home,root,git,state:path.join(home,'ccc1-state')};
+}
+
+/**
+ * Real bridge answers are kept as the Android contract (app/src/test/resources/ccc1-bridge, evaluated by
+ * ContinuumCcc1BridgeTest): CCC1_WRITE_BRIDGE_FIXTURES=1 writes them from this run, otherwise every answer must keep
+ * the recorded shape (same keys and value types), so Kotlin never validates a format Node no longer produces.
+ */
+const FIXTURES=fileURLToPath(new URL('../../app/src/test/resources/ccc1-bridge/',import.meta.url));
+const shape=v=>Array.isArray(v)?(v.length?[shape(v[0])]:[]):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,shape(v[k])])):v===null?null:typeof v;
+function contract(name,json){
+ const file=path.join(FIXTURES,name+'.json');
+ if(process.env.CCC1_WRITE_BRIDGE_FIXTURES==='1'){fs.mkdirSync(FIXTURES,{recursive:true});fs.writeFileSync(file,JSON.stringify(json,null,2)+'\n');return;}
+ assert.deepEqual(shape(json),shape(JSON.parse(fs.readFileSync(file,'utf8'))),'bridge answer '+name+' changed its shape; regenerate the Android fixtures');
 }
 
 /** One Termux RUN_COMMAND: node <builder> <op> <validated args>; stdout must be exactly one JSON document. */
@@ -62,12 +76,13 @@ test('the bridge accepts only the fixed CCC1 operations with validated values',(
   assert.throws(()=>parseArgs(args),re,args.join(' '));
 });
 
-test('owner chain over the bridge: real regression -> verified patch for review; replays never run again',{skip:nested,timeout:600000},()=>{
+test('owner chain over the bridge: real regression -> verified patch for review; replays never run again',{skip:nested,timeout:600000},async()=>{
  const f=fixture();
  const compiled=bridge(f,'ccc1-compile-repair',['--chain','node']);
  assert.equal(compiled.code,0,compiled.stderr);
  assert.equal(compiled.json.schema,'continuum-ccc1-bridge');
  assert.equal(compiled.json.result.status,'READY',JSON.stringify(compiled.json));
+ contract('compile-ready',compiled.json);
  const order=randomUUID();
  const sub=bridge(f,'ccc1-submit-repair',['--chain','node','--order',order]);
  assert.equal(sub.code,0,sub.stderr);
@@ -75,6 +90,7 @@ test('owner chain over the bridge: real regression -> verified patch for review;
  const {taskId}=sub.json.result;
  assert.equal(sub.json.result.duplicate,false);
  assert.equal(sub.json.result.sourceCommit,f.git('rev-parse','HEAD'));
+ contract('submit-ok',sub.json);
  // the return channel was lost and the app sends the same order again: same task, nothing new
  const again=bridge(f,'ccc1-submit-repair',['--chain','node','--order',order]);
  assert.deepEqual([again.json.result.taskId,again.json.result.duplicate],[taskId,true]);
@@ -85,23 +101,34 @@ test('owner chain over the bridge: real regression -> verified patch for review;
  assert.equal(run.code,0,run.stderr);
  assert.equal(run.json.result.ccc1,'COMPLETED',JSON.stringify(run.json));
  assert.equal(run.json.result.outcome,'VERIFIED_PATCH_PENDING_REVIEW');
+ contract('run-verified',run.json);
  const status=bridge(f,'ccc1-status');
  assert.equal(status.code,0);
  const t=status.json.result.tasks.find(x=>x.taskId===taskId);
  assert.equal(t.state,'COMPLETED');
  assert.match(t.confirmed,/^repair:node@[0-9a-f]{12}$/);
+ contract('status-verified',status.json);
  assert.equal(status.json.result.tasks.length,1,'replays created no second task');
  // the owner sees the confirmed patch itself, re-hashed from disk; it is only offered: the checkout is untouched
  assert.equal(t.review.intact,true);
  assert.equal(t.review.patchSha256.slice(0,12),t.confirmed.split('@')[1]);
  assert.deepEqual(t.review.files,['.github/continuum/text-utils.mjs']);
- assert.match(t.review.preview,/^-.*toUpperCase.*\n\+.*toLowerCase/m);
+ assert.deepEqual([t.review.preview,t.review.path],[null,null],'the patch text stays in Termux; the app gets hash, files and integrity');
  assert.equal(f.git('status','--porcelain'),'');
- const original=fs.readFileSync(t.review.path);
- fs.appendFileSync(t.review.path,'+ injected\n');
- const tampered=bridge(f,'ccc1-status').json.result.tasks[0].review;
- assert.deepEqual([tampered.intact,tampered.preview],[false,null],'a changed patch file is never shown as the confirmed patch');
- fs.writeFileSync(t.review.path,original);
+ // in Termux the owner reads the patch itself; a changed file is never shown as the confirmed patch
+ const local=[];
+ await cli(['status','--state',f.state,'--format','json'],l=>local.push(l));
+ const review=JSON.parse(local.at(-1)).tasks[0].review;
+ assert.match(review.preview,/^-.*toUpperCase.*\n\+.*toLowerCase/m);
+ assert.equal(review.bytes,fs.statSync(review.path).size);
+ const original=fs.readFileSync(review.path);
+ fs.appendFileSync(review.path,'+ injected\n');
+ const tamperedStatus=bridge(f,'ccc1-status').json;
+ const tampered=tamperedStatus.result.tasks[0].review;
+ assert.equal(tampered.intact,false,'a changed patch file is not intact');
+ contract('status-tampered',tamperedStatus);
+ fs.writeFileSync(review.path,original);
+ assert.equal(bridge(f,'ccc1-status').json.result.tasks[0].review.intact,true);
 
  // re-running the finished order: answered from the record, nothing executes
  const replay=bridge(f,'ccc1-submit-repair',['--chain','node','--order',order]);
@@ -111,6 +138,7 @@ test('owner chain over the bridge: real regression -> verified patch for review;
  const late=bridge(f,'ccc1-abort',['--task',taskId]);
  assert.equal(late.code,0);
  assert.deepEqual([late.json.result.journal,late.json.result.state],['ALREADY_ENDED','COMPLETED'],'a finished task cannot be cancelled into another state');
+ contract('abort-ended',late.json);
 });
 
 test('a worker crash before execution is never a success; the owner cancels the pending order cleanly',{skip:nested,timeout:600000},()=>{
@@ -127,6 +155,7 @@ test('a worker crash before execution is never a success; the owner cancels the 
  assert.equal(abort.json.result.journal,'ABORTED');
  assert.equal(abort.json.result.state,'ABORTED');
  assert.equal(abort.json.result.job.status,'BLOCKED_NO_SUCH_JOB','the job had not started; nothing to stop');
+ contract('abort-aborted',abort.json);
  assert.equal(bridge(f,'ccc1-run-once').json.result.outcome,'IDLE','an aborted task never runs');
  s=bridge(f,'ccc1-status').json.result.tasks[0];
  assert.deepEqual([s.state,s.confirmed],['ABORTED',null]);
@@ -140,6 +169,7 @@ test('refusals are data with exit code 2: protected branch, dirty tree, state in
  assert.equal(r.code,2);
  assert.equal(r.json.status,'BLOCKED_PREFLIGHT');
  assert.match(r.json.failure.message,/CCC1_BRANCH_NOT_ISOLATED/);
+ contract('submit-blocked',r.json);
  f.git('checkout','-q','ccc1-work');
  fs.writeFileSync(path.join(f.root,'stray.txt'),'x');
  r=bridge(f,'ccc1-submit-repair',['--chain','node','--order',randomUUID()]);
@@ -163,4 +193,21 @@ test('refusals are data with exit code 2: protected branch, dirty tree, state in
  assert.equal(run.json.result.outcome,'ERROR');
  assert.match(run.json.result.detail,/damaged task journal/);
  assert.equal(fs.existsSync(path.join(f.state,'builder')),false,'no job was started');
+});
+
+test('Android speaks the same fixed CCC1 operations and stores only validated summaries',()=>{
+ const src=name=>fs.readFileSync(fileURLToPath(new URL('../../app/src/main/java/at/heinz/deviceai/'+name,import.meta.url)),'utf8');
+ const bridgeKt=src('ContinuumCcc1Bridge.kt'),activity=src('ContinuumMobileBuilderActivity.kt'),receiver=src('ContinuumMobileBuildResultReceiver.kt');
+ const kotlinOps=[...bridgeKt.matchAll(/\("CCC1_[A-Z_]+", "(ccc1-[a-z-]+)"/g)].map(m=>m[1]);
+ assert.deepEqual(kotlinOps,[...CCC1_COMMANDS],'Kotlin and the builder script name the same operations');
+ assert.match(bridgeKt,/r\["schema"\] != "continuum-ccc1-bridge"/);
+ assert.match(bridgeKt,/termuxError != -1/);
+ // the activity builds CCC1 commands only through the validated bridge and the existing approved dispatch
+ assert.match(activity,/ContinuumCcc1Bridge\.command\(operation, chain, orderId = requestId, taskId = task\)/);
+ assert.match(activity,/dispatchApprovedCommand\(operation\.jobOperation, requestId, plan, slot\)/);
+ assert.doesNotMatch(activity,/ProcessBuilder\(|Runtime\.getRuntime\(|sh\s+-c/);
+ // an abort has its own one-shot slot; the receiver binds it to the abort operation and never stores raw output
+ assert.match(receiver,/if \(id != prefs\.getString\(ABORT_JOB_ID, null\)\) return/);
+ assert.match(receiver,/ContinuumCcc1Bridge\.evaluate\(ccc1, exitCode, errorCode, if \(truncated\) null else stdout\)/);
+ assert.doesNotMatch(receiver,/putString\((LAST_MESSAGE|ABORT_MESSAGE), stdout\)/);
 });

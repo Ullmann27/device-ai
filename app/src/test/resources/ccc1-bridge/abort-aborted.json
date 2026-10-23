@@ -1,0 +1,15 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-abort",
+  "status": "OK",
+  "result": {
+    "taskId": "t-6f404f9a8a6af4df",
+    "journal": "ABORTED",
+    "state": "ABORTED",
+    "job": {
+      "job": "48c959ef-ba32-4df0-af31-bb333bac6469",
+      "status": "BLOCKED_NO_SUCH_JOB"
+    }
+  }
+}

@@ -65,6 +65,7 @@ const BUILD_COMMANDS=['doctor','build','status','code-test','code-repair','code-
 /** Fixed CCC1 operations of the Android bridge: the existing ccc1-cli contract (compile, submit, run-once, status, abort). */
 export const CCC1_COMMANDS=Object.freeze(['ccc1-compile-repair','ccc1-submit-repair','ccc1-run-once','ccc1-status','ccc1-abort']);
 export const CCC1_BRIDGE_SCHEMA='continuum-ccc1-bridge';
+export const CCC1_BRIDGE_TASKS=10;
 export function defaultCcc1State(){return path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');}
 
 function inside(root, file) {
@@ -375,6 +376,10 @@ export async function ccc1(o){
   }
   let result=null;
   try{result=JSON.parse(lines.at(-1));}catch{return {...base,status:'FAILED_CCC1',failure:{code:'CCC1_NO_RESULT',message:'no JSON result'}};}
+  // The Android result channel is small and the app never stores generated code: the newest tasks only, and the
+  // patch text stays in Termux (hash, files, strategy and integrity travel; `ccc1-cli status` shows the preview).
+  if(o.command==='ccc1-status')result={...result,tasks:result.tasks.slice(-CCC1_BRIDGE_TASKS)
+    .map(t=>t.review?{...t,review:{...t.review,preview:null,path:null}}:t)};
   return {...base,status:'OK',result};
 }
 
