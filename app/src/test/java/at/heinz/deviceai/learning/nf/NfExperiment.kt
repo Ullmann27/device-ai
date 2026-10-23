@@ -15,6 +15,7 @@ import kotlin.math.ln
  *   recall <families> …     NF-2 memory capacity: multi-query associative recall with growing numbers of pairs
  *   stream <base ckpts> …   NF-1: online learning on a CODE stream, forgetting on DOC, base checkpoint integrity
  *   blt …                   NF-3: byte-latent model with entropy patches against fixed patches
+ *   speed ckpt=…            fair single-thread inference timing of several checkpoints, interleaved
  * Run: java -cp nf.jar at.heinz.deviceai.learning.nf.NfExperiment <repoRoot> <mode> [args]
  * Families: <G|T|D|L|Dna|Dnb|Gr|Dr>-<S|M|X>; G minGRU, T Transformer, D gated delta, L gated linear attention,
  * Dna delta without decay gate, Dnb delta without write gate, Gr/Dr with ReLU-threshold FFN.
@@ -95,6 +96,22 @@ object NfExperiment {
             "recall" -> NfRecall.run(args)
             "stream" -> NfStream.run(docs, tok, args)
             "blt" -> NfBltRun.run(docs, args)
+            "speed" -> {
+                // Fair inference timing: all checkpoints in one process, interleaved over 5 rounds, single thread.
+                val validation = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.VALIDATION)
+                val store = store(args)
+                val models = args.filter { it.startsWith("ckpt=") }.map { it.substringAfter('=') }.map { sha ->
+                    val r = NfCheckpoint.decode(store.get(sha)); "${r.meta["family"]}/s${r.meta["seed"]}/l1=${r.meta["l1"]}" to NfModel(r.params)
+                }
+                val times = models.associate { it.first to ArrayList<Double>() }
+                repeat(5) { for ((name, model) in models) times.getValue(name) += msPerToken(model, tok, validation) }
+                for ((name, model) in models) {
+                    val stats = FfnStats(); bpb(model, tok, validation.take(80), stats)
+                    val t = times.getValue(name).sorted()
+                    println("SPEED-FAIR $name medianMsPerToken=${"%.4f".format(t[2])} minMsPerToken=${"%.4f".format(t[0])} " +
+                        (if (stats.total > 0) "ffnDensity=${"%.3f".format(stats.active.toDouble() / stats.total)}" else ""))
+                }
+            }
             else -> error("unknown mode $mode")
         }
         println("PEAK heapMb=${"%.0f".format(peakHeapMb())}")
