@@ -30,6 +30,8 @@ export const DEFAULT_TOPICS=Object.freeze([
   terms:['sparse','sparsity','spiking','relu','threshold','event','cpu','neuromorphic']},
  {id:'nf5-verified-coding',experiment:'NF-5',query:'abs:"program synthesis" AND abs:verifier OR abs:"execution feedback" AND abs:"small model"',
   terms:['verifier','execution','program synthesis','test','repair','agent','feedback','self-improvement']},
+ {id:'nf6-hybrid',experiment:'NF-6',query:'abs:"n-gram" AND abs:"language model" AND (abs:interpolation OR abs:"infini-gram" OR abs:"kNN-LM")',
+  terms:['n-gram','infini-gram','interpolation','knn','count','hybrid','mixture','retrieval']},
  {id:'cpu-efficiency',experiment:'all',query:'abs:"on-device" AND abs:"language model" AND abs:quantization',
   terms:['on-device','mobile','cpu','quantization','arm','edge','int8','4-bit']}
 ]);
@@ -157,6 +159,43 @@ export async function scan({store,topics=DEFAULT_TOPICS,maxResults=25,fetchImpl=
  return run;
 }
 
+/**
+ * Findings from another lawful source (an agent's web search, the owner's reading list) when the arXiv API is not
+ * reachable. Every finding needs a title, an https URL, a summary of at least 20 characters and a known topic; an
+ * arXiv id is taken from an arxiv.org URL so the same paper merges with scanned records. Provenance (method, query,
+ * retrieval time) is kept on the record. Invalid findings are rejected with a reason, never guessed.
+ */
+export function importFindings(store,doc,{topics=DEFAULT_TOPICS,now=new Date()}={}){
+ const byId=new Map(topics.map(t=>[t.id,t]));
+ const method=String(doc?.method??'');
+ if(!['websearch','manual'].includes(method))throw Error('method must be websearch or manual');
+ const run={at:now.toISOString(),import:method,retrievedAt:doc.retrievedAt??null,topics:[],rejected:[]};
+ const groups=new Map();
+ for(const [i,f] of (Array.isArray(doc.findings)?doc.findings:[]).entries()){
+  const why=!f?.title?'title missing':!/^https:\/\/[^\s]+$/.test(f.url??'')?'url must be https':
+   String(f.summary??'').trim().length<20?'summary shorter than 20 characters':!byId.has(f.topic)?'unknown topic '+f.topic:null;
+  if(why){run.rejected.push({index:i,reason:why});continue;}
+  const ax=String(f.url).match(/arxiv\.org\/(?:abs|pdf|html)\/(\d{4}\.\d{4,5})(?:v(\d+))?/);
+  const record={arxiv:f.arxiv??ax?.[1],version:ax?.[2]?Number(ax[2]):1,title:String(f.title).trim(),summary:String(f.summary).trim(),
+   authors:[],published:f.published??null,updated:null,doi:f.doi??null,categories:[],url:f.url,
+   provenance:[{method,query:f.query??doc.query??null,retrievedAt:doc.retrievedAt??now.toISOString(),note:f.note??null}]};
+  if(!record.arxiv)delete record.arxiv;
+  if(!groups.has(f.topic))groups.set(f.topic,[]);
+  groups.get(f.topic).push(record);
+ }
+ for(const [topicId,records] of groups){
+  const before=new Map(records.map(r=>[recordKey(r),store.doc.records[recordKey(r)]]));
+  const counts=store.upsert(records,byId.get(topicId),now);
+  for(const r of records){
+   const key=recordKey(r),rec=store.doc.records[key];
+   if(before.get(key))rec.provenance=[...(before.get(key).provenance??[]),...r.provenance];
+  }
+  run.topics.push({id:topicId,imported:records.length,...counts});
+ }
+ store.doc.runs=[...store.doc.runs,run].slice(-52);
+ return run;
+}
+
 /** Ranked view: category, best relevance over the record's topics, reasons. */
 export function report(store,{topics=DEFAULT_TOPICS,evidence={},now=Date.now(),limit=20}={}){
  const byId=new Map(topics.map(t=>[t.id,t]));
@@ -208,6 +247,11 @@ async function main(argv){
   const run=await scan({store,maxResults:Math.min(50,Number(config.maxResults??25))});
   store.save();console.log(JSON.stringify(run));return;
  }
+ if(cmd==='import'){
+  if(!args.file||!fs.existsSync(args.file))throw Error('import needs --file=<findings.json>');
+  const run=importFindings(store,JSON.parse(fs.readFileSync(args.file,'utf8')));
+  store.save();console.log(JSON.stringify(run));return;
+ }
  if(cmd==='report'){for(const r of report(store,{evidence}))console.log(`${r.relevance}\t${r.category}\t${r.key}\t${r.title}`);return;}
  if(cmd==='propose'){
   const ps=proposals(store,{evidence,limit:Number(args.limit??3)});
@@ -220,7 +264,7 @@ async function main(argv){
   markProposed(store,ps.map(p=>p.key));store.save();
   console.log(JSON.stringify(ps.map(p=>({id:p.id,key:p.key}))));return;
  }
- console.log('usage: research-radar.mjs tick|scan [--force]|report|propose [--backlog=<file>] --config=<file> --state=<dir>');
+ console.log('usage: research-radar.mjs tick|scan [--force]|import --file=<findings.json>|report|propose [--backlog=<file>] --config=<file> --state=<dir>');
 }
 
 if(import.meta.url===`file://${process.argv[1]}`)main(process.argv.slice(2)).catch(e=>{console.error(e.message);process.exit(1);});

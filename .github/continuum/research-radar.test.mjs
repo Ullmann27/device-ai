@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {parseArxivAtom,recordKey,normalizeTitle,largestModel,classify,relevance,due,RadarStore,scan,report,proposals,
- markProposed,DEFAULT_TOPICS,CATEGORIES} from './research-radar.mjs';
+ markProposed,importFindings,DEFAULT_TOPICS,CATEGORIES} from './research-radar.mjs';
 import {BacklogStore} from './development-backlog.mjs';
 
 // Synthetic feed in the arXiv Atom format (no real paper is claimed here).
@@ -99,4 +99,26 @@ test('proposals only PROPOSE in the backlog, carry the six questions and are mad
  assert.ok(tasks.every(t=>t.state==='PROPOSED'&&t.kind==='RESEARCH_PROPOSAL'&&t.source==='research-radar'));
  markProposed(store,ps.map(p=>p.key));
  assert.equal(proposals(store,{limit:5}).length,0,'each source is proposed once');
+});
+
+test('findings from a web search are validated, merged with scanned papers by arXiv id and keep their provenance',async()=>{
+ const store=new RadarStore(path.join(temp(),'radar.json'));
+ await scan({store,topics:[DEFAULT_TOPICS[1]],fetchImpl:async()=>({ok:true,text:async()=>feed(SMALL)}),sleep:async()=>{},now:new Date('2026-10-01T00:00:00Z')});
+ const run=importFindings(store,{method:'websearch',retrievedAt:'2026-10-23T02:00:00Z',query:'gated delta rule 2026',findings:[
+  {title:'Gated Delta Fast Weights on a CPU',url:'https://arxiv.org/abs/2609.00001v2',topic:'nf2-fast-weights',
+   summary:'Same paper found again through a web search, newer version.'},
+  {title:'A source without arXiv id',url:'https://example.org/paper',topic:'nf4-sparse-events',summary:'ReLU sparsity on CPU for small models, measured.'},
+  {title:'No https',url:'http://example.org/x',topic:'nf2-fast-weights',summary:'should be rejected because of the plain http url'},
+  {title:'Too short',url:'https://example.org/y',topic:'nf2-fast-weights',summary:'short'},
+  {title:'Unknown topic',url:'https://example.org/z',topic:'nf9',summary:'a perfectly long summary for an unknown topic id'}]},
+  {now:new Date('2026-10-23T02:00:00Z')});
+ assert.deepEqual(run.rejected.map(r=>r.reason),['url must be https','summary shorter than 20 characters','unknown topic nf9']);
+ const merged=store.doc.records['arxiv:2609.00001'];
+ assert.equal(merged.version,2,'the newer version from the web search updates the scanned record');
+ assert.deepEqual(merged.provenance.map(p=>p.method),['websearch']);
+ const other=Object.values(store.doc.records).find(r=>r.url==='https://example.org/paper');
+ assert.ok(other&&other.key.startsWith('title:')&&other.provenance[0].query==='gated delta rule 2026');
+ assert.equal(classify(other).category,'FEASIBLE','CPU named -> feasible, preliminary');
+ assert.throws(()=>importFindings(store,{method:'guess',findings:[]}),/websearch or manual/);
+ assert.equal(store.doc.runs.at(-1).import,'websearch');
 });
