@@ -27,7 +27,7 @@ export function parseArgs(argv){
 }
 
 function outside(project,stateDir){
- ensureCcc1StateOutsideSource(project,stateDir);
+ return ensureCcc1StateOutsideSource(project,stateDir);
 }
 
 /**
@@ -54,7 +54,7 @@ export async function main(argv=process.argv.slice(2),out=console.log){
   return;
  }
  if(!o.state)throw Error('--state <dir> is required');
- if(o.project)outside(o.project,o.state);
+ if(o.project)o.state=outside(o.project,o.state);
  switch(o.command){
   case 'submit':{
    if(!o.project||!o.goal)throw Error('submit needs --project and --goal');
