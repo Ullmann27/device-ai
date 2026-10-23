@@ -29,6 +29,12 @@ object ContinuumHomeLayout {
     const val WIDE_REFERENCE_WIDTH = 840f
     const val PHONE_NAV_HEIGHT = 74f
 
+    /** Shared Fold rail width in dp, used for both the rendered rail and the dashboard offset. */
+    fun railWidthDp(windowWidthDp: Float): Float {
+        require(windowWidthDp.isFinite() && windowWidthDp > 0f)
+        return windowWidthDp * 76f / WIDE_REFERENCE_WIDTH
+    }
+
     /**
      * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display
      * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
