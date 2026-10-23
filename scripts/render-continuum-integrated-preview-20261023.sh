@@ -149,7 +149,7 @@ while IFS= read -r -d '' changed; do
   echo "Allowed chmod-only change with exact Git content: $changed"
 done < <(git diff --name-only -z)
 
-output="$repo_root/continuum-integrated-output"
+output="$repo_root/continuum-aaa-output"
 mkdir -p "$output"
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
 [[ "$apk_sha256" =~ ^[0-9a-f]{64}$ ]] || { echo 'Invalid hash'; exit 69; }
