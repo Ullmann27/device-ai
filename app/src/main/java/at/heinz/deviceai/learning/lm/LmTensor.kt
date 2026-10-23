@@ -36,7 +36,8 @@ class Tape(val training: Boolean = true) {
     }
     fun constant(value: Mat): Node = Node(value, null)
 
-    private fun record(step: () -> Unit) { if (training) steps += step }
+    /** Records the backward step of an operation; internal so that research operations can extend the tape. */
+    internal fun record(step: () -> Unit) { if (training) steps += step }
 
     /** Seeds d(loss)/d(loss) = 1 for a 1x1 loss node and runs every recorded step backwards. */
     fun backward(loss: Node) {

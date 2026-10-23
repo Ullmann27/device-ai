@@ -64,6 +64,19 @@ class KneserNeyBytes(val order: Int, train: List<String>) : SegmentScorer {
         return nats / ln(2.0)
     }
 
+    /** Per byte of [segment]: its probability, the order of the longest context seen in TRAIN and that context's count. */
+    class Detail(val prob: DoubleArray, val order: IntArray, val count: LongArray)
+
+    fun detail(segment: String): Detail {
+        val b = segment.toByteArray(Charsets.UTF_8)
+        val o = IntArray(b.size); val n = LongArray(b.size)
+        for (i in b.indices) for (k in order downTo 1) {
+            val total = ctxTotal[k][dropLast(pack(b, i, k), k)] ?: continue
+            o[i] = k; n[i] = total; break
+        }
+        return Detail(DoubleArray(b.size) { prob(b, it, order) }, o, n)
+    }
+
     private fun prob(b: ByteArray, i: Int, k: Int): Double {
         val lower = if (k == 1) 1.0 / 256 else prob(b, i, k - 1)
         val key = pack(b, i, k)
