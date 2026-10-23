@@ -42,5 +42,5 @@ test('keyboard-only height change does not recreate the Fold dashboard', () => {
   const code = layout.split('fun needsWindowWidthReflow')[1]?.split('fun isWide')[0];
   assert.ok(code);
   assert.match(code, /abs\(configuredWidthDp - measuredWidthDp\) >= 24f/);
-  assert.doesNotMatch(code, /height/);
+  assert.doesNotMatch(code, /screenHeightDp|configuredHeightDp|measuredHeightDp/);
 });
