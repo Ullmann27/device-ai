@@ -613,7 +613,11 @@ class AgentActivity : Activity() {
                     return@post
                 }
                 val draft = if (::input.isInitialized) input.text.toString() else ""
+                val draftSelection = if (::input.isInitialized) input.selectionStart else -1
+                val chatScrollY = if (::chatScroll.isInitialized) chatScroll.scrollY else 0
                 val previousHomeState = homeView?.state
+                val planVisible = if (::planCard.isInitialized) planCard.visibility else View.GONE
+                val planMessage = if (::planText.isInitialized) planText.text else null
                 val activityMessage = if (::activityText.isInitialized) activityText.text else null
                 val neuralMessage = if (::neuralMonitor.isInitialized) neuralMonitor.text else null
                 val neuralPercent = if (::neuralProgress.isInitialized) neuralProgress.progress else 0
@@ -632,8 +636,10 @@ class AgentActivity : Activity() {
                 chatMessages.forEach { chatContainer.addView(it) }
                 if (::input.isInitialized && draft.isNotEmpty()) {
                     input.setText(draft)
-                    input.setSelection(draft.length)
+                    input.setSelection(draftSelection.coerceIn(0, draft.length))
                 }
+                planMessage?.let { planText.text = it }
+                planCard.visibility = planVisible
                 previousHomeState?.let { homeView?.state = it }
                 activityMessage?.let { activityText.text = it }
                 neuralMessage?.let { neuralMonitor.text = it }
@@ -641,8 +647,9 @@ class AgentActivity : Activity() {
                 refreshConversationLayout()
                 refreshWorkAreaSelection()
                 refreshHologramState()
+                chatScroll.post { if (uiWindowRoot?.isAttachedToWindow == true) chatScroll.scrollTo(0, chatScrollY) }
                 // The new insets listener recalculates IME and navigation reservations.
-                root.requestLayout()
+                uiWindowRoot?.requestApplyInsets()
             }
         }
         return root
