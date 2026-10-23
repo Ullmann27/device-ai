@@ -50,6 +50,13 @@ Job übernommen hatte, `ccc1-abort`. Antwort `WRITER_ACTIVE`, Job `CANCELLED`. D
 `confirmed`; zweiter Abbruch `ALREADY_ENDED`; danach `IDLE`. Der Lauf rechnete hier noch zu Ende (70 s) –
 seit `f6a23243` stoppt die Reparatur nach einem Abbruch vor dem unabhängigen Lauf (`TASK_ABORTED_BY_OWNER`).
 
+**Wiederholung mit Schrittgrenzen-Abbruch (`cancel-step-boundary/`, Code `c397ff1b`):** gleicher Ablauf und gleiche
+Regression auf frischem Klon, Abbruch 5 s nach Übernahme des Jobs. `ccc1-run-once` endet nach **38,7 s statt 70,6 s**
+mit demselben Ergebnis (`DONE_INVESTIGATION` / `ABSTAINED`, kein Patch, zweiter Abbruch `ALREADY_ENDED`, danach
+`IDLE`). Im Berichtsordner liegt nur die JUnit-Datei der Baseline (886 Testfälle, 1 rot): kein Kandidatenlauf, kein
+Bericht, kein unabhängiger Lauf; Checkout sauber, temporäre Arbeitsbäume entfernt. Der gerade laufende Prüfschritt
+(hier die Baseline) läuft immer zu Ende – sein Prozess wird nicht beendet.
+
 ## Ablehnungen am echten Repository (refusals/)
 
 `main`-Branch → `BLOCKED_PREFLIGHT` (`CCC1_BRANCH_NOT_ISOLATED`), ungesicherte Datei → `CCC1_WORKTREE_NOT_CLEAN`,

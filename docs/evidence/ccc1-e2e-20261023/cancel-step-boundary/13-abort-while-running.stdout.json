@@ -1,0 +1,15 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-abort",
+  "status": "OK",
+  "result": {
+    "taskId": "t-760dcb9d2c48dcdb",
+    "journal": "WRITER_ACTIVE",
+    "state": "APPROVED",
+    "job": {
+      "job": "5f16b131-a8ae-486c-8aae-4bf22fd1512b",
+      "status": "CANCELLED"
+    }
+  }
+}

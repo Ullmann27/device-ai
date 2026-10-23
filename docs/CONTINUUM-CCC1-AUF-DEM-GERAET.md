@@ -40,7 +40,8 @@ es ab, ohne etwas zu verändern).
 **In der App:** Android Builder → „CCC1 · Reparaturauftrag“ → Testkette wählen → *CCC1-Vorprüfung* →
 *Reparaturauftrag einreichen* → *einen Schritt ausführen* (kann mehrere Minuten dauern) → *CCC1-Status abrufen*.
 Erst der Status zeigt einen geprüften Patch (Hash, Dateien, „NICHT übernommen“). *Abbrechen* stoppt einen laufenden
-Auftrag; ein Abbruch zählt nie als Erfolg.
+Auftrag, sobald der gerade laufende Prüfschritt fertig ist (Node-Kette: Sekunden bis eine Minute, Gradle: ein
+Gradle-Schritt); ein Abbruch zählt nie als Erfolg.
 
 **In Termux** (gleiche Brücke, gleicher Zustand):
 

@@ -136,8 +136,9 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 - **Rückkanalgröße:** Die App nimmt höchstens 32 768 Zeichen; der Status ist dafür auf die 10 neuesten Aufträge ohne
   Patch-Text begrenzt. Ob Termux `stdout_original_length` immer mitsendet (sonst gilt die Antwort als abgeschnitten),
   ist auf dem Gerät zu bestätigen – das galt schon für die bestehenden Coding-Aufträge.
-- **Abbruch rechnet** die laufende Testkette noch zu Ende (nur die unabhängige Wiederholung entfällt); bei der
-  Android-Kette (Gradle) kann das Minuten dauern. Ergebnis zählt nie.
+- **Abbruch** wirkt seit `c397ff1b` an der nächsten Schrittgrenze (vor jedem Prüfprofil, jedem Kandidaten und dem
+  unabhängigen Lauf); gemessen 38,7 s statt 70,6 s bis zum Ende des Schritts. Der gerade laufende Prüfschritt läuft
+  zu Ende (bei der Android-Kette ein Gradle-Schritt, also Minuten). Ergebnis zählt nie.
 - **Reparaturbreite:** Bewiesen ist der deterministische Weg (hier `REVERT_FILE_TO_PARENT`). Fehler, die keine
   vorhandene Strategie abdeckt, enden ehrlich als `FAILED_REPAIR`/`ABSTAINED`.
 - **Forschung (Argon A–E):** **D ausgeführt** (vorregistriert, ein Lauf, `docs/research/CDX1-PATCH-ANOMALY-RESULT-20261023.md`):
