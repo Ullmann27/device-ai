@@ -14,6 +14,7 @@ const gauges=read('app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesV
 const labels=read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt');
 const gradle=read('app/build.gradle.kts');
 const ccc1=read('app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt');
+const builderActivity=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
 
 test('living hologram schedules subsequent visible frames and stops callbacks on detach',()=>{
   assert.match(hologram,/private val drawFrame = Runnable \{[\s\S]*?invalidate\(\)[\s\S]*?scheduleFrame\(\)/);
@@ -42,7 +43,7 @@ test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',
 });
 test('CCC1 integrated in same owner-app source without changing private app identity',()=>{
   assert.match(ccc1,/internal object ContinuumCcc1Bridge/);
-  assert.match(activity,/ContinuumCcc1Bridge/);
+  assert.match(builderActivity,/ContinuumCcc1Bridge\.command\(operation, chain, orderId = requestId, taskId = task\)/);
   assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 18\s*versionName = "0\.3\.17"/);
   assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
 });
