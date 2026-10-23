@@ -7,6 +7,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicBoolean
 
 /** Issue #76: FAILED_SAVE_CYCLE_IllegalStateException in the public-study job. */
 class ContinuumStudyAuditWriteTest {
@@ -20,13 +21,17 @@ class ContinuumStudyAuditWriteTest {
         val memory = mutableMapOf<String, Long>()
         val disk = mutableMapOf<String, Long>()
         var writes = 0
+        var failingWrites = 0                       // writes that fail on disk (reported false, nothing written)
+        var duringWrite: (() -> Unit)? = null       // one-shot: e.g. onStopJob arriving while the write completes
         inner class Editor {
             private val modified = mutableMapOf<String, Long>()
             fun putLong(key: String, value: Long) = apply { modified[key] = value }
             fun commit(): Boolean {
                 memory.putAll(modified); modified.clear()       // commitToMemory clears the editor
                 val written = CountDownLatch(1)
+                if (failingWrites > 0) { failingWrites--; return false }
                 if (disk != memory) { disk.clear(); disk.putAll(memory); writes++ }
+                duringWrite?.also { duringWrite = null }?.invoke()
                 written.countDown()                             // the write is complete
                 return try { written.await(); true } catch (_: InterruptedException) { false }
             }
@@ -58,6 +63,28 @@ class ContinuumStudyAuditWriteTest {
         assertEquals("STOPPED", ContinuumStudyAuditWrite.commit({ calls++; false }, { true }, { Long.MAX_VALUE }, { true }))
         assertEquals(1, calls)
         assertTrue(Thread.currentThread().isInterrupted)
+    }
+
+    @Test fun aStopArrivingDuringTheWriteKeepsTheWrittenAuditOnce() {
+        val prefs = AndroidLikePrefs()
+        val stop = AtomicBoolean(false)
+        prefs.duringWrite = { stop.set(true); Thread.currentThread().interrupt() }   // onStopJob mid-write
+        val edit = prefs.Editor().putLong("attempts", 3)
+        assertNull("written once, confirmed by the retry", ContinuumStudyAuditWrite.commit({ edit.commit() }, { stop.get() },
+            { Long.MAX_VALUE }, { true }))
+        assertEquals(3L, prefs.disk["attempts"])
+        assertEquals(1, prefs.writes)
+    }
+
+    @Test fun aStopDuringTheRetryOfAFailedWriteIsAnInterruptionNotADiskFault() {
+        val prefs = AndroidLikePrefs()
+        val stop = AtomicBoolean(false)
+        prefs.failingWrites = 1
+        prefs.duringWrite = { stop.set(true); Thread.currentThread().interrupt() }   // arrives during the retry
+        val edit = prefs.Editor().putLong("attempts", 4)
+        assertEquals("STOPPED", ContinuumStudyAuditWrite.commit({ edit.commit() }, { stop.get() }, { Long.MAX_VALUE }, { true }))
+        assertEquals("the retry did write", 4L, prefs.disk["attempts"])
+        assertEquals(1, prefs.writes)
     }
 
     @Test fun aWriteThatKeepsFailingGetsAFixedCause() {

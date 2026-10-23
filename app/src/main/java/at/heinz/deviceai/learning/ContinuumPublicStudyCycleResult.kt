@@ -68,6 +68,8 @@ internal object ContinuumStudyAuditWrite {
         } finally {
             if (interrupted) Thread.currentThread().interrupt()
         }
+        // A stop that reached the thread during a write (the latch then reports false) is an interruption, not a disk fault.
+        if (runCatching(stopRequested).getOrDefault(false)) return "STOPPED"
         return when {
             runCatching(freeBytes).getOrDefault(Long.MAX_VALUE) < MIN_FREE_BYTES -> "STORAGE_FULL"
             !runCatching(writable).getOrDefault(true) -> "NOT_WRITABLE"
