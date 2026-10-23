@@ -78,3 +78,18 @@ Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-
 - Android-Gesamtbaseline mit echtem SDK: 861 Tests, 2 Fehler, 3 übersprungen. Reproduzierte Fehler:
   veralteter BuildPlan-Test (nur 3 statt 6 Operationen), fehlender nackter Imperativ „installier“ im Sicherheitsfilter.
   Reparatur und vollständiger Wiederholungslauf in Arbeit; SDK-/JDK-/Proxy-Blocker inzwischen aufgelöst.
+
+- Task 2: kanonischer Generator hat Notizen UND Zähler mit echtem SDK/Gradle offline gebaut und die neuen
+  CCC1-Buildbelege bestätigt. Echte Signer-/aapt2-Aufrufe auf derselben privaten APK-Prüfkopie; lesende Recovery
+  bestätigte beide historischen Belege. Finale, nach dem Commit wiederholte APK-/Byteprüfung und Git-Belegsicherung folgen.
+- Frische JUnit-/Lint-/Logdateien werden privat gesichert und beim Status erneut gehasht. Alte Reports/APKs
+  werden vor --rerun-tasks archiviert. Zusatzquellen, sämtliche vorhandene Cache-/Output-Symlinks und Hardlinks
+  blockieren. Asynchroner Abbruch/Timeout/Outputlimit; auch Gradles abgetrennte Daemon-Kinder werden über
+  Linux-PID-Startidentität beendet und ihr Ende geprüft. Unbestätigte Beendigung hält die Lease zurück.
+- Node-Gesamtregression nach lazy CCC1-Profil-Import: 1067/1067, keine Fehler/Skips. Separater M4-Zieltestlauf
+  nach den letzten Abbruchänderungen im Log /workspace/scratch/node-m4-checkpoint.tap (wird in die Übergabe kopiert).
+- SDK-Hauptregression nach den beiden ursprünglichen Kotlin-Reparaturen: BUILD SUCCESSFUL, 861 Tests,
+  keine Fehler, drei Paritäts-Fixtures noch übersprungen. Fixtures anschließend mit vorhandenen Node-Programmen
+  erzeugt; vollständiger Wiederholungslauf mit neuen Android-Plan-/Status-Tests läuft.
+- Task 3 in Arbeit: Kotlin-Plan-Pins, Auswahl und feste CLI-Argumente, projektgebundener Rückkanal,
+  historischer Projektstatus, Host/Termux-Trennung; Robolectric-UI-Test ergänzt, noch nicht als bestanden gezählt.

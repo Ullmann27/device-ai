@@ -4,11 +4,13 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import {createHash} from 'node:crypto';
-import {spawnSync} from 'node:child_process';
+import {createHash,randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {getProjectPlan, projectPlanSha256} from './continuum-project-plan.mjs';
 import {counterFiles} from './continuum-counter-recipe.mjs';
+import {runOwnedCommand} from './continuum-owned-process.mjs';
+import {readOwnedFile,readOwnedBuildEvidence,OWNED_RECEIPT_SCHEMA} from '../.github/continuum/owned-project-evidence.mjs';
+import {verifyOwnedProjectReceipt} from '../.github/continuum/ccc1-verifier.mjs';
 
 export const RECIPE = Object.freeze({id:'m4-notes',packageName:'at.heinz.continuum.m4notes',versionCode:1,versionName:'0.1.0'});
 const SHA = b => createHash('sha256').update(b).digest('hex');
@@ -269,12 +271,25 @@ export function verifyOwnedApp({home=os.homedir(),recipeId=RECIPE.id}={}) {
 }
 /** The generated Gradle output is writable but must never escape via a symlink. */
 function outputWithinProject(project) {
-    for (const part of ['.gradle','.kotlin','build']) {
+    // Check all existing writable outputs/caches, including lint and unit-test paths.
+    // A link below app/build/intermediates can be a write escape just like an APK link.
+    let entries=0;
+    const check=(file,depth=0)=>{
+      if(depth>32||++entries>50000)return false;
+      let st;
+      try {st=fs.lstatSync(file);}catch(e){return e.code==='ENOENT';}
+      if(st.isSymbolicLink())return false;
+      if(st.isFile())return depth>0&&st.nlink===1;
+      if(!st.isDirectory())return false;
+      const dir=fs.opendirSync(file);
       try {
-        const info = fs.lstatSync(path.join(project,part));
-        if (!info.isDirectory() || info.isSymbolicLink()) return false;
-      } catch (e) { if (e.code !== 'ENOENT') return false; }
-    }
+        let item;
+        while((item=dir.readSync()))if(!check(path.join(file,item.name),depth+1))return false;
+        return true;
+      } finally {dir.closeSync();}
+    };
+    for(const root of ['.gradle','.kotlin','build','app/build'])
+      if(!check(path.join(project,root)))return false;
     let ancestor = project;
     for (const part of ['app','build','outputs','apk','debug']) {
       ancestor = path.join(ancestor,part);
@@ -291,111 +306,202 @@ function outputWithinProject(project) {
     }
     return true;
 }
-function executable(name,env) {
-    for(const directory of (env.PATH||'').split(path.delimiter)) {
-      if (!directory) continue;
-      const candidate=path.join(directory,name);
-      try {const st=fs.statSync(candidate);if(st.isFile()&&(st.mode&0o111))return candidate;}catch{}
+function ownedState(home,create=true) {
+    let state=fs.realpathSync(home);
+    for(const part of ['.local','state','device-ai-continuum','owned-projects']) {
+      state=path.join(state,part);
+      try {
+        const st=fs.lstatSync(state);
+        if(!st.isDirectory()||st.isSymbolicLink())throw Error('UNSAFE_STATE');
+      } catch(error) {
+        if(error.code!=='ENOENT')throw error;
+        if(!create)return null;
+        fs.mkdirSync(state,{mode:0o700});
+      }
     }
-    return null;
+    return state;
 }
-function execute(file,args,{cwd,env,timeout}) {
-    const r=spawnSync(file,args,{cwd,env,timeout,encoding:'utf8',shell:false,maxBuffer:1024*512});
-    return {ok:r.status===0&&!r.error,code:r.status,output:(r.stdout||'')+'\n'+(r.stderr||'')};
+function persistProjectReceipt(state,recipeId,receipt) {
+    const name='latest-'+recipeId+'.json',target=path.join(state,name);
+    try {
+      const old=JSON.parse(readOwnedFile(state,name,256*1024).bytes);
+      if(old.schema!==OWNED_RECEIPT_SCHEMA||old.recipe!==recipeId)throw Error('UNSAFE_STATE');
+    } catch(error) {if(error.code!=='ENOENT')throw error;}
+    const tmp=path.join(state,'.receipt-'+randomUUID()+'.tmp');
+    try {
+      fs.writeFileSync(tmp,JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
+      fs.renameSync(tmp,target);
+    } finally {fs.rmSync(tmp,{force:true});}
+    return receipt;
+}
+/** Read-only recovery: a historical report must still match current source, proof files and APK bytes. */
+export function readOwnedAppStatus({home=os.homedir(),recipeId=RECIPE.id}={}) {
+    const source=verifyOwnedApp({home,recipeId});
+    if(source.status!=='SOURCE_VERIFIED')return source;
+    try {
+      const state=ownedState(home,false);
+      if(!state||!fs.existsSync(path.join(state,'latest-'+recipeId+'.json')))
+        return {status:'NO_PROJECT_BUILD_REPORT',recipe:recipeId};
+      const r=JSON.parse(readOwnedFile(state,'latest-'+recipeId+'.json',256*1024).bytes);
+      if(r.schema!==OWNED_RECEIPT_SCHEMA||r.version!==1||r.recipe!==recipeId)throw Error('INVALID_RECEIPT');
+      const check=verifyOwnedProjectReceipt(r,{plan:getProjectPlan(recipeId),sourceSha256:source.sourceSha256,
+        project:source.project,artifactRoot:state});
+      return {status:'PROJECT_BUILD_STATUS',recipe:recipeId,packageName:source.packageName,
+        sourceSha256:source.sourceSha256,planSha256:source.planSha256,buildStatus:r.status,
+        toolchainProfile:r.toolchainProfile,verification:check.verdict,
+        ...(check.verdict==='CONFIRMED'?{apkSha256:r.apkSha256,signerSha256:r.signerSha256,
+          versionCode:r.versionCode,artifact:r.artifact}:{}),installed:false,deviceVerified:false};
+    } catch {return {status:'BLOCKED_INVALID_BUILD_REPORT',recipe:recipeId};}
 }
 /** Never build modified sources; perform real Gradle, APK identity and signature checks. */
 export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolchainProfile='termux-arm64',
-    env=process.env,arch=process.arch,run=execute,inspect=null,lease=null}={}) {
+    env=process.env,arch=process.arch,run=runOwnedCommand,inspect=null,lease=null,signal=null}={}) {
     const plan=getProjectPlan(recipeId),recipe=recipeFor(plan);
+    if(signal?.aborted)return {status:'BUILD_CANCELLED'};
+    if(!['termux-arm64','host-sdk'].includes(toolchainProfile))return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const source=verifyOwnedApp({home,recipeId});
     if (source.status!=='SOURCE_VERIFIED') return source;
     if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
     const {doctor,resolveTermuxEnvironment} = await import('./continuum-mobile-builder.mjs');
     const resolvedEnv=resolveTermuxEnvironment(env,arch);
-    const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch,profile:toolchainProfile});
-    if(tools.status!=='READY_FOR_EXPERIMENTAL_BUILD')return {status:'BLOCKED_MISSING_TOOLCHAIN'};
+    const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch,profile:toolchainProfile,
+      run:(file,args,options)=>run(file,args,{...options,signal})});
+    if(signal?.aborted)return {status:'BUILD_CANCELLED'};
+    if(tools.status!=='READY_FOR_EXPERIMENTAL_BUILD'||
+      tools.profile!==undefined&&tools.profile!==toolchainProfile)return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const gradle=tools.bin?.gradle, aapt2=tools.bin?.aapt2, signer=tools.bin?.apksigner;
     // The verified Termux doctor supplies native aapt2, not legacy aapt.
     // Reuse its exact executable, as the existing Continuum Android builder does.
     if(!gradle||!aapt2||!signer)
       return {status:'BLOCKED_MISSING_TOOLCHAIN'};
-    const release=lease||((await import('../.github/continuum/shared-build-lease.mjs')).acquireContinuumBuildLease(source.project));
+    let state;
+    try {state=ownedState(home);}catch {return {status:'BLOCKED_UNSAFE_STATE'};}
+    let release,releaseAllowed=true;
+    try {release=lease||((await import('../.github/continuum/shared-build-lease.mjs')).acquireContinuumBuildLease(source.project));}
+    catch {return {status:'BLOCKED_BUILD_BUSY'};}
+    const startedAt=Date.now(),job=randomUUID();
+    const base={schema:OWNED_RECEIPT_SCHEMA,version:1,job,recipe:recipeId,startedAt,toolchainProfile,
+      planSha256:source.planSha256,sourceSha256:source.sourceSha256,project:source.project,
+      packageName:recipe.packageName,versionCode:recipe.versionCode,
+      installed:false,deviceVerified:false,productionReady:false};
+    const finish=report=>{
+      try {return persistProjectReceipt(state,recipeId,{...base,...report,finishedAt:Date.now()});}
+      catch {return {...base,status:'FAILED_BUILD_STATE',finishedAt:Date.now()};}
+    };
     try {
-      if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
-      const args=['--no-daemon','--max-workers=2','--offline','--console=plain',
+      if(signal?.aborted)return finish({status:'BUILD_CANCELLED'});
+      if (!outputWithinProject(source.project)) return finish({status:'BLOCKED_UNSAFE_BUILD_OUTPUT'});
+      const runName='run-'+job,runDir=path.join(state,runName);
+      fs.mkdirSync(runDir,{mode:0o700});
+      // Preserve old output as audit data, then require reports/APK at newly produced paths.
+      // --rerun-tasks prevents cache/up-to-date results from being advertised as new executions.
+      const oldPaths=['app/build/test-results/testDebugUnitTest/TEST-'+plan.tests.unitClass+'.xml',
+        'app/build/reports/lint-results-debug.xml',plan.build.artifact];
+      try {
+        for(let i=0;i<oldPaths.length;i++) {
+          const file=path.join(source.project,oldPaths[i]);
+          try {fs.lstatSync(file);}catch(e){if(e.code==='ENOENT')continue;throw e;}
+          readOwnedFile(source.project,oldPaths[i],i===2?plan.limits.maxApkBytes:2*1024*1024);
+          fs.renameSync(file,path.join(runDir,'previous-'+i));
+        }
+      } catch {return finish({status:'BLOCKED_UNSAFE_BUILD_OUTPUT'});}
+      persistProjectReceipt(state,recipeId,{...base,status:'BUILD_RUNNING'});
+      const args=['--no-daemon','--max-workers=2','--offline','--console=plain','--rerun-tasks',
         '-Pandroid.aapt2FromMavenOverride='+aapt2,
         '-Pkotlin.compiler.execution.strategy=in-process',
         ':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug'];
-      const gradleRun=await run(gradle,args,{cwd:source.project,env:resolvedEnv,timeout:35*60*1000});
-      if(!gradleRun.ok)return {status:'FAILED_BUILD',exitCode:gradleRun.code};
+      const gradleRun=await run(gradle,args,{cwd:source.project,env:resolvedEnv,timeout:plan.limits.maxBuildMillis,signal});
+      const log=Buffer.from(gradleRun.output||'');
+      fs.writeFileSync(path.join(runDir,'gradle.log'),log,{flag:'wx',mode:0o600});
+      if(gradleRun.terminationConfirmed===false) {
+        releaseAllowed=false;
+        return finish({status:'BUILD_TERMINATION_UNCONFIRMED'});
+      }
+      if(signal?.aborted||gradleRun.cancelled)return finish({status:'BUILD_CANCELLED'});
+      if(!gradleRun.ok)return finish({status:gradleRun.timedOut?'BUILD_TIMED_OUT':'FAILED_BUILD',exitCode:gradleRun.code});
       const integrity=verifyOwnedApp({home,recipeId});
-      if(integrity.status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
-      if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
+      if(integrity.status!=='SOURCE_VERIFIED')return finish({status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'});
+      if (!outputWithinProject(source.project)) return finish({status:'BLOCKED_UNSAFE_BUILD_OUTPUT'});
       const apk=path.join(source.project,'app/build/outputs/apk/debug/app-debug.apk');
       if(!fs.existsSync(apk)||!fs.lstatSync(apk).isFile()||fs.lstatSync(apk).isSymbolicLink())
-        return {status:'FAILED_NO_APK'};
-      const homeRoot=fs.realpathSync(home);
-      let state=homeRoot;
-      for (const segment of ['.local','state','device-ai-continuum','owned-projects']) {
-        state=path.join(state,segment);
-        if (!fs.existsSync(state)) fs.mkdirSync(state,{mode:0o700});
-        const directory=fs.lstatSync(state);
-        if (!directory.isDirectory() || directory.isSymbolicLink())
-          return {status:'BLOCKED_UNSAFE_STATE'};
-      }
+        return finish({status:'FAILED_NO_APK'});
+      let evidence;
+      try {
+        const reports=readOwnedBuildEvidence(source.project,plan,startedAt);
+        evidence={log:{file:runName+'/gradle.log',sha256:SHA(log)}};
+        for(const kind of ['unit','lint']) {
+          const proof=reports[kind],bytes=readOwnedFile(source.project,proof.file).bytes;
+          if(SHA(bytes)!==proof.sha256)throw Error('REPORT_CHANGED');
+          const file=runName+'/'+kind+'.xml';
+          fs.writeFileSync(path.join(state,file),bytes,{flag:'wx',mode:0o600});
+          evidence[kind]={...proof,file};
+        }
+      } catch {return finish({status:'FAILED_BUILD_EVIDENCE'});}
       // Exactly the bytes copied into this private stage must pass both independent
       // verifiers and the final digest. Never check a mutable Gradle output and then
       // copy potentially different bytes into the owner artifact.
-      const {randomUUID}=await import('node:crypto');
       const staged=path.join(state,'.m4-apk-'+randomUUID()+'.tmp');
       try {
-        try { fs.copyFileSync(apk,staged,fs.constants.COPYFILE_EXCL);fs.chmodSync(staged,0o600); }
-        catch { return {status:'FAILED_ARTIFACT_COPY'}; }
+        try {
+          const bytes=readOwnedFile(source.project,plan.build.artifact,plan.limits.maxApkBytes).bytes;
+          fs.writeFileSync(staged,bytes,{flag:'wx',mode:0o600});
+        } catch { return finish({status:'FAILED_ARTIFACT_COPY'}); }
         const stagedSize=fs.statSync(staged).size;
         const stagedDigest=SHA(fs.readFileSync(staged));
         const unchanged=()=>{
           try {
             const st=fs.lstatSync(staged);
             return st.isFile()&&!st.isSymbolicLink()&&st.size===stagedSize&&
-              SHA(fs.readFileSync(staged))===stagedDigest;
+              SHA(readOwnedFile(state,path.basename(staged),plan.limits.maxApkBytes).bytes)===stagedDigest;
           } catch { return false; }
         };
         const cert=await run(signer,['verify','--verbose','--print-certs',staged],
-          {cwd:source.project,env:resolvedEnv,timeout:30000});
+          {cwd:source.project,env:resolvedEnv,timeout:30000,signal});
+        if(signal?.aborted||cert.cancelled)return finish({status:'BUILD_CANCELLED'});
         const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
         if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))
-          return {status:'FAILED_APK_SIGNATURE'};
-        if(!unchanged())return {status:'FAILED_ARTIFACT_CHANGED'};
+          return finish({status:'FAILED_APK_SIGNATURE'});
+        if(!unchanged())return finish({status:'FAILED_ARTIFACT_CHANGED'});
         const identity=await run(aapt2,['dump','badging',staged],
-          {cwd:source.project,env:resolvedEnv,timeout:30000});
+          {cwd:source.project,env:resolvedEnv,timeout:30000,signal});
+        if(signal?.aborted||identity.cancelled)return finish({status:'BUILD_CANCELLED'});
         if(!identity.ok || !identity.output.includes(
           "package: name='"+recipe.packageName+"' versionCode='1' versionName='0.1.0'"))
-          return {status:'FAILED_APK_IDENTITY'};
-        if(!unchanged())return {status:'FAILED_ARTIFACT_CHANGED'};
+          return finish({status:'FAILED_APK_IDENTITY'});
+        if(!unchanged())return finish({status:'FAILED_ARTIFACT_CHANGED'});
         if(verifyOwnedApp({home,recipeId}).status!=='SOURCE_VERIFIED')
-          return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
+          return finish({status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'});
         if(!outputWithinProject(source.project))
-          return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
+          return finish({status:'BLOCKED_UNSAFE_BUILD_OUTPUT'});
         const digest=stagedDigest;
         const saved=path.join(state,(recipeId==='m4-notes'?'Continuum-M4-Notes-':'Continuum-M4-Counter-')+digest.slice(0,16)+'.apk');
         try{fs.copyFileSync(staged,saved,fs.constants.COPYFILE_EXCL);}
-        catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}
+        catch(error){if(error.code!=='EEXIST')return finish({status:'FAILED_ARTIFACT_COPY'});}
         if(!fs.lstatSync(saved).isFile()||fs.lstatSync(saved).isSymbolicLink()||
-           SHA(fs.readFileSync(saved))!==digest)return {status:'FAILED_ARTIFACT_COPY'};
-        return {status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
+           SHA(readOwnedFile(state,path.basename(saved),plan.limits.maxApkBytes).bytes)!==digest)
+             return finish({status:'FAILED_ARTIFACT_COPY'});
+        const result={...base,status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
           packageName:recipe.packageName,versionCode:1,apkSha256:digest,recipe:recipeId,
           signerSha256:certMatch[1].toLowerCase(),sourceSha256:source.sourceSha256,
           planSha256:source.planSha256,toolchainProfile,
-          project:source.project,artifact:saved,installed:false,productionReady:false};
+          project:source.project,artifact:saved,evidence,finishedAt:Date.now(),
+          gradle:{exitCode:0,timedOut:false,tasks:plan.build.tasks},
+          toolchain:{profile:toolchainProfile,executionHost:tools.executionHost||null},
+          deviceAcceptance:'NOT_RUN',installed:false,deviceVerified:false,productionReady:false};
+        const verification=verifyOwnedProjectReceipt(result,{plan,sourceSha256:source.sourceSha256,
+          project:source.project,artifactRoot:state});
+        if(verification.verdict!=='CONFIRMED')return finish({status:'FAILED_BUILD_EVIDENCE'});
+        return finish({...result,verification});
       } finally {
         try { fs.rmSync(staged,{force:true}); } catch { /* explicit artifact verification still mandatory */ }
       }
 
-    } finally {release();}
+    } catch {return finish({status:signal?.aborted?'BUILD_CANCELLED':'FAILED_BUILD_IO'});}
+    finally {if(releaseAllowed)release();}
 }
 async function main() {
   const [command,...args]=process.argv.slice(2);
-  if (!['create','verify','build'].includes(command))throw Error('USAGE: create|verify|build [--recipe m4-notes|m4-counter] [--host-sdk]');
+  if (!['create','verify','build','status'].includes(command))throw Error('USAGE: create|verify|build|status [--recipe m4-notes|m4-counter] [--host-sdk]');
   let recipeId=RECIPE.id, toolchainProfile='termux-arm64',seenRecipe=false,seenHost=false;
   for(let i=0;i<args.length;i++) {
     if(args[i]==='--recipe'&&!seenRecipe&&args[i+1]) {recipeId=args[++i];seenRecipe=true;}
@@ -403,10 +509,17 @@ async function main() {
     else throw Error('UNSUPPORTED_PROJECT_ARGUMENT');
   }
   getProjectPlan(recipeId);
-  const options={recipeId,toolchainProfile};
-  const report=command==='create'?createOwnedApp(options):command==='verify'?verifyOwnedApp(options):await buildOwnedApp(options);
+  const controller=new AbortController(),abort=()=>controller.abort();
+  process.once('SIGINT',abort);process.once('SIGTERM',abort);
+  const options={recipeId,toolchainProfile,signal:controller.signal};
+  let report;
+  try {
+    report=command==='create'?createOwnedApp(options):command==='verify'?verifyOwnedApp(options):
+      command==='status'?readOwnedAppStatus(options):await buildOwnedApp(options);
+  } finally {process.removeListener('SIGINT',abort);process.removeListener('SIGTERM',abort);}
   process.stdout.write(JSON.stringify(report)+'\n');
-  if(!['PROJECT_CREATED_NOT_BUILT','SOURCE_VERIFIED','EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED'].includes(report.status))process.exitCode=2;
+  if(!['PROJECT_CREATED_NOT_BUILT','SOURCE_VERIFIED','EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
+    'PROJECT_BUILD_STATUS','NO_PROJECT_BUILD_REPORT'].includes(report.status))process.exitCode=2;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))
     main().catch(error=>{process.stderr.write('Continuum M4: '+String(error.message).slice(0,240)+'\n');process.exitCode=2;});
