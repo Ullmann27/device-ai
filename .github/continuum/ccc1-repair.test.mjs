@@ -107,6 +107,8 @@ test('the verifier confirms a repair only from real artifacts: failing baseline,
   ['a baseline that did not fail',r=>{r.commands[0]={...r.commands[0],passed:true,exitCode:0,failed:0};r.evidence.baselineFailed=0;}],
   ['an independent run with fewer tests',r=>{r.commands[2].executed=2;r.evidence.independentExecuted=2;}],
   ['a failing independent run',r=>{r.commands[2]={...r.commands[2],passed:false,failed:1};}],
+  ['a timed-out candidate run',r=>{r.commands[1].timedOut=true;}],
+  ['a timed-out independent run',r=>{r.commands[2].timedOut=true;}],
   ['a command outside the allowlist',r=>{r.commands[1].command='node evil.js';}],
   ['a missing evidence hash',r=>{r.evidence.verificationSha256=null;}],
   ['insufficient evidence',r=>{r.evidence.evidenceSufficient=false;}]];
