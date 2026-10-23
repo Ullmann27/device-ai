@@ -128,3 +128,22 @@ test('build never starts a package installer, app signature and source are valid
  await build(home,{run:fake(home,{commands})});
  assert.deepEqual(commands.map(x=>x[0]),['/fake/gradle','/fake/apksigner','/fake/aapt']);
 });
+test('symlinked existing project parent is refused before source reading',()=>{
+ const home=fresh();createOwnedApp({home});
+ const parent=path.join(home,'continuum-projects'), moved=path.join(home,'saved-projects');
+ fs.renameSync(parent,moved);fs.symlinkSync(moved,parent);
+ assert.equal(verifyOwnedApp({home}).status,'BLOCKED_UNSAFE_PROJECT_PARENT');
+});
+test('symlinked nested source ancestors are rejected before build',()=>{
+ const home=fresh();createOwnedApp({home});
+ const parent=path.join(projectPath(home),'app/src/main');
+ fs.renameSync(parent,parent+'-moved');fs.symlinkSync(parent+'-moved',parent);
+ assert.equal(verifyOwnedApp({home}).status,'BLOCKED_UNSAFE_SOURCE_PATH');
+});
+test('symbolic state parent never receives an APK artifact',async()=>{
+ const home=fresh(),outside=fresh();createOwnedApp({home});
+ fs.symlinkSync(outside,path.join(home,'.local'));
+ const result=await build(home,{run:fake(home)});
+ assert.equal(result.status,'BLOCKED_UNSAFE_STATE');
+ assert.deepEqual(fs.readdirSync(outside),[]);
+});
