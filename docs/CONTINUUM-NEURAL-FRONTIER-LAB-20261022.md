@@ -263,6 +263,31 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
 - Byte-Modelle mit 6 Epochen sind schwächer als BPE-Modelle (LM1: v258 2,246 gegen v512 2,225 bei M).
 - Gewonnen werden kann also nur durch die Mischung, nicht durch das neuronale Modell allein.
 
+## 8d. Vorregistrierung NF-5b: Ausführungsgeleitete Vorprüfung (eingetragen 23.10.2026, vor dem Lauf)
+
+**Anlass:** Die NF-5-Fehleranalyse in 10.6 zeigt: Wortzuordnung allein reicht nicht. Erst das Verhalten einer Funktion auf den Beispielen trennt die Kandidaten.
+
+1. **Mechanismus** (`.github/continuum/behaviour-probe.mjs`, Tests 5/5)
+   - Vor dem Job wird jeder Kandidat mit passender Stelligkeit auf den Beispielen des Ziels ausgeführt, in einem eigenen Node-Prozess je Modul.
+   - Dabei gilt das Berechtigungsmodell: nur Lesen im Modulordner, kein Schreiben, keine Prozesse oder Worker, 3 s Zeitlimit. Module mit Netzwerk- oder Prozessimporten werden nicht ausgeführt.
+   - Kandidaten, die alle Beispiele treffen, kommen nach vorn; sonst gilt die lexikalische Reihenfolge.
+2. **Bekannt:** ausführungsgeleitetes Programming-by-Example (Verbruggen et al., ICLR 2025) und die Rangbildung klassischer PBE-Systeme.
+3. **Anders**
+   - Die Vorprüfung ordnet nur. Entschieden wird weiter allein durch die unabhängige Vertragstest-Quittung im isolierten Worktree.
+   - Die Ausführung ist abgeschottet. Die Tests weisen nach, dass ein schreibender Kandidat gestoppt wird und gedruckter Text kein Ergebnis vortäuschen kann.
+4. **Widerlegend**
+   - `probe` löst im 1. Versuch nicht mindestens 3 der 14 regulären Aufgaben mehr als `lexical`; oder
+   - es gibt mindestens eine ungewollte Bestätigung; oder
+   - es gibt weniger als 3 von 3 korrekten Enthaltungen.
+   - Die 6 neuen Aufgaben werden getrennt berichtet.
+5. **Kosten:** ein Kindprozess je Modul und Aufgabe; die Dauer wird gemessen.
+6. **Grenzen**
+   - Das Berechtigungsmodell prüft Pfade. Bereits offene Deskriptoren bleiben beschreibbar, und ein Kandidat könnte seine eigene Rangfolge manipulieren.
+   - Beides ändert nur die Reihenfolge der Hypothesen, nie eine Bestätigung.
+   - Das Netzwerk wird nur über die statische Importprüfung ausgeschlossen.
+
+**Lauf:** `scripts/nf5-ranker-study.mjs <out> lexical probe`, gleiche Aufgaben, gleiche CCC1-Laufzeit, höchstens 3 Runden.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**

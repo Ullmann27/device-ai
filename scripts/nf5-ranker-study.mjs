@@ -9,6 +9,7 @@
 //   docs     AssocLanguageCore learned from the owner's Markdown only (no task was ever seen)
 //   gated    docs + learning from the VERIFIED receipts of all other tasks (leave-one-out; receipts of the docs run)
 //   ungated  docs + learning from the first proposal of all other tasks as if it were true (no verification)
+//   probe    NF-5b: lexical + sandboxed execution of the candidates on the goal's examples (section 8d)
 // Usage: node scripts/nf5-ranker-study.mjs <outDir> [condition ...]
 import fs from 'node:fs';
 import os from 'node:os';
@@ -19,6 +20,7 @@ import {fileURLToPath} from 'node:url';
 import {startTask,runTask} from '../.github/continuum/ccc1-orchestrator.mjs';
 import {Ccc1Reasoner,indexExports,LexicalLanguageCore} from '../.github/continuum/ccc1-interpreter.mjs';
 import {AssocLanguageCore} from '../.github/continuum/assoc-language-core.mjs';
+import {ProbeLanguageCore} from '../.github/continuum/behaviour-probe.mjs';
 import {DurableTaskJournal,runtimeKey} from '../.github/continuum/ccc1-journal.mjs';
 import {MODULES as PILOT_MODULES,TASKS as PILOT_TASKS} from './reasoner-dialog-pilot.mjs';
 
@@ -44,7 +46,7 @@ export const NEW_TASKS=[
 ];
 /** Pilot tasks; identical SHA-256 implementations elsewhere count as correct for the checksum task. */
 export const TASKS=[...PILOT_TASKS.map(t=>t.id==='sha256'?{...t,equivalent:SHA.filter(s=>s!==t.gold)}:t),...NEW_TASKS];
-export const CONDITIONS=['random','lexical','docs','gated','ungated'];
+export const CONDITIONS=['random','lexical','docs','gated','ungated','probe'];
 
 function fixture(home){
  const root=path.join(home,'device-ai'),dir=path.join(root,'.github','continuum');
@@ -72,7 +74,8 @@ async function runOne(task,core){
  const root=fixture(home);
  const state=path.join(home,'state');
  const taskId=startTask({project:root,stateDir:state,goal:task.goal,repoFullName:'owner/device-ai',maxRounds:3,deadlineMinutes:20});
- const reasoner=new Ccc1Reasoner({candidates:indexExports(root),languageCore:core,budgetMinutes:3});
+ // a core factory gets the fixture root (the probe executes the fixture's modules, never the working tree)
+ const reasoner=new Ccc1Reasoner({candidates:indexExports(root),languageCore:typeof core==='function'?core(root):core,budgetMinutes:3});
  const t0=Date.now();
  const r=await runTask({project:root,stateDir:state,taskId,reasoner,maxTurns:24});
  const entries=new DurableTaskJournal(path.join(state,'tasks',taskId+'.jsonl'),runtimeKey(state)).entries();
@@ -103,6 +106,7 @@ async function main(){
    let core;
    if(condition==='random')core=hashCore(task.id);
    else if(condition==='lexical')core=new LexicalLanguageCore();
+   else if(condition==='probe')core=root=>new ProbeLanguageCore({root});
    else{
     [core]=fresh();
     if(condition!=='docs')for(const [id,run] of docsRun){
