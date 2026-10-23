@@ -1411,6 +1411,7 @@ class AgentActivity : Activity() {
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
             CenterAction("TEAMLEITER · JETZT PRÜFEN") { runDeviceTeamleaderCheck() },
             CenterAction("HANDY-BUILDER · TERMUX") { openMobileBuilder() },
+            CenterAction("CCC1 · REPARATUR-AGENT (TERMUX)") { openMobileBuilder() },
             CenterAction("GROQ · CODING-ZWEITMEINUNG (OPTIONAL)") {
                 showGroqMentorDialog(
                     "Analysiere mit mir einen Android- oder Kotlin-Buildfehler. " +
