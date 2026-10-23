@@ -84,7 +84,9 @@ test('start screen adapts to large fonts, rotated compact screens and the unfold
   const layout = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeLayout.kt');
   // owner decision 22.10.2026: the unfolded Fold uses the wide composition also with a larger display zoom
   assert.match(layout, /fun isWide\(widthDp: Float, heightDp: Float\) = widthDp >= 600f && heightDp >= 480f/);
-  assert.match(activity, /windowHeightDp = resources\.configuration\.screenHeightDp\.toFloat\(\)/);
+  assert.match(activity, /windowHeightDp = renderedWindowHeightDp \?: resources\.configuration\.screenHeightDp\.toFloat\(\)/);
+  assert.match(activity, /renderedWindowWidthDp = actualWidthDp/);
+  assert.match(activity, /root\.addOnLayoutChangeListener/);
   // drawn elements scale with their slot, otherwise content overflows every window that is not exactly 412/840 dp
   const home = read('app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt');
   assert.match(home, /val k = density \* \(layoutSpec\?\.scale \?: 1f\)\n\s+canvas\.scale\(k, k\)/);
