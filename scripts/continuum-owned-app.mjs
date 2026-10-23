@@ -217,15 +217,40 @@ export function verifyOwnedApp({home=os.homedir()}={}) {
                     return {status:'BLOCKED_UNSAFE_SOURCE_PATH',file:name};
             }
             const stat = fs.lstatSync(full);
-            if (!stat.isFile()||stat.isSymbolicLink()||SHA(fs.readFileSync(full))!==SHA(body))
+            if (!stat.isFile()||stat.isSymbolicLink()||stat.size!==Buffer.byteLength(body)||SHA(fs.readFileSync(full))!==SHA(body))
                 return {status:'BLOCKED_SOURCE_CHANGED',file:name};
         } catch { return {status:'BLOCKED_SOURCE_MISSING',file:name}; }
+    }
+    // Gradle loads buildSrc, source-set overlays and extra Kotlin/Java automatically.
+    // Hashing only the expected files does not constrain those additional inputs.
+    const allowedDirectories = new Set();
+    for (const name of Object.keys(expected)) {
+        const parts = name.split('/');
+        for (let i=1;i<parts.length;i++) allowedDirectories.add(parts.slice(0,i).join('/'));
+    }
+    const outputs = new Set(['.gradle','.kotlin','build','app/build']);
+    const pending = [''];
+    while (pending.length) {
+        const directory = pending.pop();
+        for (const entry of fs.readdirSync(path.join(dest,directory),{withFileTypes:true})) {
+            const name = directory ? directory+'/'+entry.name : entry.name;
+            if (outputs.has(name)) continue; // roots checked separately before and after Gradle
+            if (Object.hasOwn(expected,name)) continue;
+            if (entry.isDirectory() && allowedDirectories.has(name)) pending.push(name);
+            else return {status:'BLOCKED_UNEXPECTED_SOURCE',file:name};
+        }
     }
     return {status:'SOURCE_VERIFIED',project:dest,recipe:RECIPE.id,packageName:RECIPE.packageName,
        sourceSha256:SHA(manifestText())};
 }
 /** The generated Gradle output is writable but must never escape via a symlink. */
 function outputWithinProject(project) {
+    for (const part of ['.gradle','.kotlin','build']) {
+      try {
+        const info = fs.lstatSync(path.join(project,part));
+        if (!info.isDirectory() || info.isSymbolicLink()) return false;
+      } catch (e) { if (e.code !== 'ENOENT') return false; }
+    }
     let ancestor = project;
     for (const part of ['app','build','outputs','apk','debug']) {
       ancestor = path.join(ancestor,part);
@@ -300,21 +325,32 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
       try {
         try { fs.copyFileSync(apk,staged,fs.constants.COPYFILE_EXCL);fs.chmodSync(staged,0o600); }
         catch { return {status:'FAILED_ARTIFACT_COPY'}; }
+        const stagedSize=fs.statSync(staged).size;
+        const stagedDigest=SHA(fs.readFileSync(staged));
+        const unchanged=()=>{
+          try {
+            const st=fs.lstatSync(staged);
+            return st.isFile()&&!st.isSymbolicLink()&&st.size===stagedSize&&
+              SHA(fs.readFileSync(staged))===stagedDigest;
+          } catch { return false; }
+        };
         const cert=await run(signer,['verify','--verbose','--print-certs',staged],
           {cwd:source.project,env:resolvedEnv,timeout:30000});
         const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
         if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))
           return {status:'FAILED_APK_SIGNATURE'};
+        if(!unchanged())return {status:'FAILED_ARTIFACT_CHANGED'};
         const identity=await run(aapt2,['dump','badging',staged],
           {cwd:source.project,env:resolvedEnv,timeout:30000});
         if(!identity.ok || !identity.output.includes(
           "package: name='"+RECIPE.packageName+"' versionCode='1' versionName='0.1.0'"))
           return {status:'FAILED_APK_IDENTITY'};
+        if(!unchanged())return {status:'FAILED_ARTIFACT_CHANGED'};
         if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')
           return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
         if(!outputWithinProject(source.project))
           return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
-        const digest=SHA(fs.readFileSync(staged));
+        const digest=stagedDigest;
         const saved=path.join(state,'Continuum-M4-Notes-'+digest.slice(0,16)+'.apk');
         try{fs.copyFileSync(staged,saved,fs.constants.COPYFILE_EXCL);}
         catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}

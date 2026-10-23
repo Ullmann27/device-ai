@@ -47,13 +47,16 @@ chmod -R a-w -- "$root"
 # Root directory is mounted read-only INSIDE a new mount namespace, and the
 # untrusted Node process receives no host filesystem, credentials, or network.
 # Drop capabilities after chroot; do not run external shell strings from code.
-prlimit --cpu=8 --as=3221225472 --nproc=32 --nofile=64 -- \
+prlimit --cpu=8 --as=3221225472 --nofile=64 -- \
  timeout --signal=TERM --kill-after=1s 12s \
  env -i PATH=/usr/sbin:/usr/bin:/bin HOME=/work LC_ALL=C ROOT="$root" \
  unshare --user --map-root-user --mount --net --ipc --pid --fork --kill-child \
  --propagation private /bin/sh -ec '
    mount --bind "$ROOT" "$ROOT"
    mount -o remount,bind,ro "$ROOT"
-   exec chroot "$ROOT" /bin/setpriv --no-new-privs --bounding-set=-all \
+   # Apply the process budget after entering the new user namespace: before
+   # unshare it counts unrelated host processes for the caller and can prevent
+   # timeout/unshare from forking at all. CPU/address-space limits still cover setup.
+   exec prlimit --nproc=32 -- chroot "$ROOT" /bin/setpriv --no-new-privs --bounding-set=-all \
      --inh-caps=-all --ambient-caps=-all /bin/node /work/candidate.mjs
  '

@@ -34,8 +34,8 @@ Interfaces: bestehende `createOwnedApp`, `verifyOwnedApp`, `buildOwnedApp` bleib
 
 - [x] M4-Baseline: `env -u NODE_TEST_CONTEXT node --test scripts/continuum-owned-app.test.mjs` → 29/29.
 - [ ] Volle Node-/Backend-/Kotlin-Baseline protokollieren und jeden Fehler klassifizieren.
-- [ ] Zusätzliche Quelle/Buildskript als Negativtest ausführen, erwartetes RED dokumentieren.
-- [ ] Kleinste Ursachenreparaturen; gezielte Tests und Regression grün; Commit/Push.
+- [x] Zusätzliche Quelle/Buildskript als Negativtest ausgeführt: zunächst 7/8 rot, Größen-Leseprobe zusätzlich rot.
+- [x] Kleinste Ursachenreparaturen; Node 1049/1049 grün, 0 übersprungen; Backend 60/60; Commit/Push.
 
 ## Task 2: Versionierter Projektplan und unabhängig geprüfte Buildbelege
 
@@ -65,3 +65,7 @@ Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-
 - Erste volle Node-Baseline: 1041 Tests, 1025 bestanden, 10 Fehler, 6 übersprungen (Kotlin fehlt).
   Fünf veraltete Quellstrukturtests und fünf Sandbox-Tests werden untersucht; keine neuen Funktionen vor deren Klärung.
 - Offizielle SDK-/Gradle-Downloads sind hier erreichbar; echte Android-Tests haben Vorrang vor Stub-Compiles.
+
+- Task 1 Zwischensicherung: Zusatzquellen, Cache-Symlinks, übergroße Quellen und veränderte APK-Prüfkopien blockieren.
+  Sandbox-Prozessbudget wird erst nach dem User-Namespace gesetzt; CPU/RAM/Timeout gelten weiterhin ab Start.
+  Fünf veraltete statische Tests an vorhandenes M4-Bestätigungsrouting angepasst. SDK-Gradle-Prüfung läuft separat.

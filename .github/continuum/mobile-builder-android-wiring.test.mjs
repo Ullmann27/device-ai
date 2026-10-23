@@ -29,8 +29,8 @@ test('fixed Termux command entrypoint with no raw chat or shell', () => {
   assert.match(activity, /putExtra\("com\.termux\.RUN_COMMAND_ARGUMENTS", plan\.args\.toTypedArray\(\)\)/);
 });
 test('requires explicit owner confirmation before expensive build', () => {
-  assert.match(activity, /if \(operation == ContinuumMobileBuildPlan\.Operation\.BUILD\)/);
-  assert.match(activity, /setPositiveButton\("(?:Bauen|Lokal bauen)"\) \{ _, _ -> dispatch\(operation\) \}/);
+  assert.match(activity, /val confirmation = when \(operation\)[\s\S]*Operation\.BUILD ->/);
+  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation\) \}/);
   assert.match(activity, /startService\(intent\)/);
 });
 test('does not claim successful build or installation just for dispatching', () => {
