@@ -43,7 +43,7 @@ fi
 # via a GitHub review/merge (no main/production branch is touched).
 render_publisher_root="$repo_root"
 signed_release_ref="fix/continuum-fold-live-responsive-20261023"
-signed_release_sha="964da530776fecbc7076682d77b90d81d07fd77d"
+signed_release_sha="9b62d8be945b5d9303c5d35376f5c070ed3ee532"
 if [[ ! -f "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt" ]] ||
    ! grep -Fq 'val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate")' app/build.gradle.kts ||
    [[ ! -f ".github/continuum/ccc1-orchestrator.mjs" ]]; then
