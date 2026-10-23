@@ -1,13 +1,13 @@
 name: Continuum UI screenshots (emulator, research)
 
 # Real Android build checks and screenshots of the start screen for the UI acceptance of PR #79/#80 and successors.
-# Runs only for opus/continuum-aaa-ui-* branches or on demand. Builds a debug APK (never signed with the owner's key,
+# Runs for isolated UI branches or on demand. Builds a debug APK (never signed with the owner's key,
 # never installed anywhere but the throw-away emulator) and publishes screenshots, UI dumps and a build report to the
-# evidence branch opus/continuum-ui-evidence-20261022 and as a workflow artifact.
+# evidence branch astra/continuum-visual-evidence-20261023 and as a workflow artifact.
 
 on:
   push:
-    branches: [ "opus/continuum-aaa-ui-*" ]
+    branches: [ "opus/continuum-aaa-ui-*", "astra/continuum-visual-*" ]
   workflow_dispatch:
 
 permissions:
@@ -34,10 +34,15 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Node 20
+      - name: Set up Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
+
+      - name: Screenshot acceptance negative fixtures
+        id: qa
+        continue-on-error: true
+        run: python3 -m unittest discover -s scripts -p 'test_continuum_emulator_screenshots.py' -v
 
       - name: Node UI regression tests
         id: node
@@ -62,16 +67,38 @@ jobs:
       - name: JVM unit tests
         id: unit
         continue-on-error: true
-        run: gradle :app:testDebugUnitTest --stacktrace
+        run: gradle -PdeviceAiFeaturePreview=true :app:testDebugUnitTest --stacktrace
 
       - name: Android lint
         id: lint
         continue-on-error: true
-        run: gradle :app:lintDebug --stacktrace
+        run: gradle -PdeviceAiFeaturePreview=true :app:lintDebug --stacktrace
 
       - name: Debug APK
         id: apk
-        run: gradle :app:assembleDebug --stacktrace
+        run: gradle -PdeviceAiFeaturePreview=true :app:assembleDebug --stacktrace
+
+      - name: Verify preview APK package and signature
+        id: verify
+        run: |
+          mkdir -p "$EVIDENCE"
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$SDK/build-tools/35.0.0/aapt" dump badging "$APK" > "$EVIDENCE/apk-badging.txt"
+          "$SDK/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK" > "$EVIDENCE/apk-signature.txt"
+          python3 - "$EVIDENCE" <<'PY'
+          import pathlib, re, sys
+          evidence = pathlib.Path(sys.argv[1])
+          badging = (evidence / "apk-badging.txt").read_text()
+          package = re.search(r"^package: name='([^']+)'", badging, re.MULTILINE)
+          if not package or package.group(1) != "at.heinz.deviceai.featurepreview":
+              raise SystemExit("APK package mismatch; emulator installation blocked")
+          certificate = (evidence / "apk-signature.txt").read_text()
+          if not re.search(r"^Signer #1 certificate SHA-256 digest: [0-9a-fA-F]{64}$", certificate, re.MULTILINE):
+              raise SystemExit("Verified signer fingerprint missing; emulator installation blocked")
+          print("Feature-preview package and APK signature verified")
+          PY
+          sha256sum "$APK" > "$EVIDENCE/apk-sha256.txt"
 
       - name: Enable KVM
         run: |
@@ -84,15 +111,17 @@ jobs:
         continue-on-error: true
         run: |
           export ADB=$SDK/platform-tools/adb
+          export AAPT=$SDK/build-tools/35.0.0/aapt
           echo no | $SDK/cmdline-tools/latest/bin/avdmanager create avd -n continuum \
             -k "system-images;android-35;google_apis;x86_64" -d pixel_7 --force
           nohup $SDK/emulator/emulator -avd continuum -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect \
             -no-snapshot -memory 4096 > "$EVIDENCE/emulator-boot.txt" 2>&1 &
-          $ADB wait-for-device
+          timeout 120s "$ADB" wait-for-device
           for i in $(seq 1 150); do
             [ "$($ADB shell getprop sys.boot_completed | tr -d '\r')" = "1" ] && break
             sleep 4
           done
+          test "$($ADB shell getprop sys.boot_completed | tr -d '\r')" = "1"
           $ADB shell settings put global window_animation_scale 0
           $ADB shell settings put global transition_animation_scale 0
           # Deterministic still frames (the hologram honours the system animator setting); the script re-enables
@@ -109,10 +138,14 @@ jobs:
             echo "commit: $GITHUB_SHA"
             echo "ref: $GITHUB_REF"
             echo "run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo "expected-package: at.heinz.deviceai.featurepreview"
+            echo "gradle-property: deviceAiFeaturePreview=true"
+            echo "screenshot-negative-fixtures: ${{ steps.qa.outcome }}"
             echo "node-ui-tests: ${{ steps.node.outcome }}"
             echo "unit-tests: ${{ steps.unit.outcome }}"
             echo "lint: ${{ steps.lint.outcome }}"
             echo "assembleDebug: ${{ steps.apk.outcome }}"
+            echo "apk-package-and-signature: ${{ steps.verify.outcome }}"
             echo "emulator-screenshots: ${{ steps.shots.outcome }}"
             if [ -f "$APK" ]; then
               echo "apk-sha256: $(sha256sum "$APK" | cut -c1-64)"
@@ -147,7 +180,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BR=opus/continuum-ui-evidence-20261022
+          BR=astra/continuum-visual-evidence-20261023
           DEST="runs/$GITHUB_RUN_ID-${GITHUB_SHA::8}"
           W="$RUNNER_TEMP/evidence-repo"
           mkdir -p "$W" && cd "$W"
@@ -155,14 +188,16 @@ jobs:
           git config user.name "continuum-ui-screenshots"
           git config user.email "actions@users.noreply.github.com"
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          pushed=false
           for attempt in 1 2 3; do
             if git fetch -q origin "$BR" 2>/dev/null; then git checkout -q -B "$BR" FETCH_HEAD; else git checkout -q --orphan "$BR"; fi
             mkdir -p "$DEST" && cp -r "$EVIDENCE"/. "$DEST"/
             git add -A
             git commit -q -m "evidence: UI screenshots for ${GITHUB_SHA::8} (run $GITHUB_RUN_ID)" || true
-            git push -q origin "HEAD:refs/heads/$BR" && break
+            if git push -q origin "HEAD:refs/heads/$BR"; then pushed=true; break; fi
             git reset -q --hard && sleep 5
           done
+          test "$pushed" = true
 
       - name: Upload evidence artifact
         if: always()
@@ -173,3 +208,23 @@ jobs:
             ${{ github.workspace }}/../ui-evidence
             app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: warn
+
+      # Keep collecting diagnostics after a failed check, then fail the job honestly.
+      - name: Required UI acceptance gate
+        if: always()
+        env:
+          QA: ${{ steps.qa.outcome }}
+          NODE: ${{ steps.node.outcome }}
+          UNIT: ${{ steps.unit.outcome }}
+          LINT: ${{ steps.lint.outcome }}
+          APK: ${{ steps.apk.outcome }}
+          VERIFY: ${{ steps.verify.outcome }}
+          SHOTS: ${{ steps.shots.outcome }}
+        run: |
+          failed=0
+          for check in QA NODE UNIT LINT APK VERIFY SHOTS; do
+            result="${!check}"
+            echo "$check: $result"
+            if [ "$result" != success ]; then failed=1; fi
+          done
+          test "$failed" -eq 0
