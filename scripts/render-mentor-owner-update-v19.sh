@@ -55,6 +55,7 @@ e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/Con
 03894c0dfe696e1963a22dd962bbe4047f94a320 scripts/continuum-owned-app.mjs
 eddabe2a51be6ef761ede0d53c4eade4544054c6 scripts/continuum-owned-app.test.mjs
 c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
+f4a01789c3a48942c4c83955d31519d3a1fb2744 scripts/continuum-training-studio.test.mjs
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
 # but changes to tracked source or new executable/tests in source locations are not.
