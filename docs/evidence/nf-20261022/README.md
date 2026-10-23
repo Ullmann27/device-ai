@@ -20,10 +20,13 @@ Die Auswertung nach den vorregistrierten Regeln steht in `docs/CONTINUUM-NEURAL-
 | `nf5-gold-rank-posthoc.txt` | **Nachträglich, nicht vorregistriert:** Rang der gemeinten Funktion je Ranker | `scripts/nf5-gold-rank-posthoc.mjs` | – | – |
 | `nf5b-study-run.txt`, `nf5b-results.json` | NF-5b: gleiche 17 Aufgaben, `lexical` gegen `probe` (Abschnitt 8d) | `scripts/nf5-ranker-study.mjs <out> lexical probe` @ `1bfb5d00` | – | 01:53:14 (23.10.) |
 | `nf5b-ambiguity-posthoc.txt` | **Nachträglich, nicht vorregistriert:** Welche Funktionen erfüllen alle Beispiele je Aufgabe | `scripts/nf5b-ambiguity-posthoc.mjs` | – | – |
+| `nf6b-byte-models.txt` | NF-6b-lite: Byte-minGRU G-S-b und G-M-b, je 3 Seeds, 6 Epochen | `lm G-S G-M seeds=1,2,3 epochs=6 threads=4 vocab=258` @ `8f175ab1` | `148bde8519a188a7` | 02:05:48 (23.10.) |
+| `nf6b-hybrid.txt` | NF-6b-lite: feste und verankerte Mischung mit KN-7, Cross-Fitting auf DOC VALIDATION | `hybrid vocab=258` mit den sechs Epoche-6-Checkpoints @ `8f175ab1` | `148bde8519a188a7` | 02:06:27 (23.10.) |
+| `run-chain3.sh.txt` | Startskript von NF-6b-lite | – | – | – |
 
 - Zeitmessungen in diesen Protokollen (`SPEED …`) liefen unter paralleler Last und sind **nicht fair vergleichbar**.
   Der faire Vergleich ist der Modus `speed` (ein Prozess, ein Thread, verschachtelt in 5 Runden).
-- Die 162 Checkpoints (34 MB) liegen auf dem Datenzweig `opus/nf-checkpoints-20261022` mit `MANIFEST.tsv`.
+- Die 162 Checkpoints (34 MB) von Batch 1 und 2 sowie die 36 Byte-Checkpoints von NF-6b-lite liegen auf dem Datenzweig `opus/nf-checkpoints-20261022` mit `MANIFEST.tsv`.
 - sha256: `nf5-results.json` d8c4f90855e539a23daaff17bcabea3585181f3bc79fc29fb7efaf1b76214da2,
   `nf5-study-run.txt` 2ee083b5a67054c6dd37bbd03f2ea711fb3cb95bda0d9701c7fc9b1e404dc4ed,
   `nf5b-results.json` fcd22c10811e1e25261689aa5763c88c38d9b8c99136e02581ffc967fbcd3a17,

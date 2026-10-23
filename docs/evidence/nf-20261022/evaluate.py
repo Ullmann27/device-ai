@@ -177,3 +177,17 @@ checks = [('probe@1 >= lexical@1 + 3', gain >= 3), ('no unintended confirmation'
           ('3/3 correct abstentions', res['probe']['adv'] == 3)]
 for name, ok in checks: print(f'  {name}: {"met" if ok else "VIOLATED"}')
 print(f'  NF-5b: {"SUPPORTED" if all(ok for _, ok in checks) else "REFUTED"} (gain @1 {gain:+d} of 14)')
+
+print('\n== NF-6b-lite count-anchored mixture (section 8c; byte minGRU + KN-7, 2-fold cross-fitting on DOC VALIDATION)')
+mix = {}
+for line in (D / 'nf6b-hybrid.txt').read_text(encoding='utf-8').splitlines():
+    if line.startswith('HYBRID G-'):
+        f = dict(re.findall(r'(\w+)=([-\d.]+)', line)); mix.setdefault(line.split()[1], []).append(f)
+for fam, rs in mix.items():
+    kn = [float(r['knBPB']) for r in rs]; fixed = [float(r['fixedBPB']) for r in rs]
+    anchored = [float(r['anchoredBPB']) for r in rs]; neural = [float(r['neuralBPB']) for r in rs]
+    h1 = all(k - x >= 0.05 for k, x in zip(kn, fixed)); h2 = all(x - a >= 0.02 for x, a in zip(fixed, anchored))
+    print(f'  {fam}-b seeds {len(rs)} neural {st.mean(neural):.4f} KN-7 {kn[0]:.4f} fixed {" ".join(f"{x:.4f}" for x in fixed)} '
+          f'anchored {" ".join(f"{a:.4f}" for a in anchored)}')
+    print(f'    gain fixed vs KN-7 {" ".join(f"{k - x:+.4f}" for k, x in zip(kn, fixed))} -> H6b-1 {"SUPPORTED" if h1 else "REFUTED"}; '
+          f'gain anchored vs fixed {" ".join(f"{x - a:+.4f}" for x, a in zip(fixed, anchored))} -> H6b-2 {"SUPPORTED" if h2 else "REFUTED"}')

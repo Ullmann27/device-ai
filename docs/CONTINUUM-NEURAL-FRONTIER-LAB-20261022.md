@@ -415,6 +415,7 @@ analysiert wurde, ist als **nachträglich** gekennzeichnet.
 | NF-5 | Dokumentassoziation > lexikalisch | **nicht gestützt** |
 | NF-6a | Quittungs-Gating > alles konsolidieren | **nicht gestützt** |
 | NF-5b | Vorprüfung: ≥ 3 mehr im 1. Versuch, 0 ungewollt, 3/3 Enthaltungen | **widerlegt**: +7, aber 1 ungewollte Bestätigung (10.8) |
+| NF-6b-lite | feste Mischung ≤ KN-7 − 0,05 (alle Seeds); Verankerung ≤ fest − 0,02 | **beide widerlegt** (G-M-b: 0,042–0,052; Verankerung ±0,0006), aber bestes BPB des Zyklus (10.9) |
 | NF-6b | Zählmodell-verankertes Delta-Gedächtnis | **offen**, nicht implementiert |
 
 Der NFC1-TEST wurde nicht ausgeführt. Nach Abschnitt 9 kommen dafür zuerst die bestätigten Varianten in Frage: NF-4 λ = 1e-3 gegen G-S und NF-3 Entropie gegen feste Patches. Die außergewöhnliche Wiederholung mit neuem Seed und die Leckprüfung stehen davor noch aus.
@@ -452,3 +453,30 @@ Gleiche 17 Aufgaben, gleiche CCC1-Laufzeit, echte Coding-Jobs. Auswertung: `eval
   - Die Sicherheitsgrenze bleibt die Quittung, und die ist nur so gut wie der Vertrag.
 - **Nächster falsifizierbarer Schritt (NF-5c, noch nicht vorregistriert).** Wenn mehrere verschiedene Funktionen alle Beispiele erfüllen, sucht das System selbst nach einer Eingabe, die sie unterscheidet, wie beim orakelgeführten Synthetisieren (Jha et al., ICSE 2010). Statt eine Funktion zu bestätigen, fragt es den Besitzer nach dem gewünschten Ergebnis. Findet es keine solche Eingabe, meldet es die Funktionen als verhaltensgleich im geprüften Bereich.
 - Weder eine Quittung noch ein Gewicht noch eine produktive Datei wurde verändert. Die Vorprüfung lief nur auf Kopien der Module.
+
+### 10.9 NF-6b-lite – Zählmodell-verankerte Mischung (Lauf 23.10.2026, 01:46–02:06 UTC, Jar aus `8f175ab1`)
+
+Protokolle `nf6b-byte-models.txt` und `nf6b-hybrid.txt`, Startskript `run-chain3.sh.txt`, Auswertung `evaluate.py`.
+
+| Variante | neuronal allein | KN-7 | feste Mischung (Seeds 1–3) | verankert (Seeds 1–3) | λ (Hälfte 0 / Hälfte 1) |
+|---|---:|---:|---|---|---|
+| G-S-b (33 k Parameter) | 3,084 | 1,978 | 1,959 · 1,959 · 1,961 | 1,958 · 1,959 · 1,961 | 0,075 / 0,050 |
+| G-M-b (116 k Parameter) | 2,438 | 1,978 | 1,926 · 1,930 · 1,936 | 1,926 · 1,930 · 1,936 | 0,200–0,225 / 0,150–0,175 |
+
+- **H6b-1 (feste Mischung ≤ KN-7 − 0,05 bei allen Seeds): widerlegt.**
+  - G-S-b gewinnt nur 0,017–0,019.
+  - G-M-b gewinnt 0,042–0,052. Nur Seed 1 erreicht die Schwelle.
+- **H6b-2 (verankert ≤ fest − 0,02): widerlegt.**
+  - Die Verankerung ändert höchstens 0,0006 BPB.
+  - Die gelernten Gewichte für Zählung und Ordnung bleiben nahe null. KN-7 nutzt seine Zählungen über die Interpolation offenbar schon selbst.
+- **Nach Abschnitt 8c kommt deshalb keine Mischung in den NFC1-TEST.**
+- **Berichtet, ohne Regel**
+  - Die Mischung ist das beste Ergebnis dieses Zyklus: 1,926–1,936 BPB. KN-7 allein erreicht 1,978, das beste BPE-Modell G-M 2,392.
+  - Der Gewinn wächst mit der Stärke des neuronalen Modells: G-S-b (allein 3,08) bringt 0,018, G-M-b (allein 2,44) bringt 0,047.
+  - Das neuronale Modell bekommt rund 20 % Gewicht. Es ergänzt das Zählmodell, ersetzt es aber nicht.
+- **Folgerung für den nächsten Zyklus**
+  - Bisher wird das neuronale Modell unabhängig vom Zählmodell trainiert und erst danach gemischt.
+  - Naheliegend ist ein Training gezielt auf das, was KN-7 verfehlt: Residual-Lernen mit einem n-Gramm-Modell (Li, Cai, Xu, Watanabe, Findings of EMNLP 2022, arXiv 2210.14431). Übernommen wird nur die Idee, kein Code.
+  - Das wird als eigener Zyklus mit neu eingefrorenen Daten vorregistriert.
+- Zeit je Token (ein Thread, unter Last): G-S-b 0,04 ms, G-M-b 0,10 ms, dazu KN-7.
+- Die 36 neuen Checkpoints liegen auf dem Datenzweig.

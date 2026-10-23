@@ -85,3 +85,9 @@
   no unintended confirmation: VIOLATED
   3/3 correct abstentions: met
   NF-5b: REFUTED (gain @1 +7 of 14)
+
+== NF-6b-lite count-anchored mixture (section 8c; byte minGRU + KN-7, 2-fold cross-fitting on DOC VALIDATION)
+  G-S-b seeds 3 neural 3.0839 KN-7 1.9781 fixed 1.9588 1.9588 1.9612 anchored 1.9584 1.9586 1.9608
+    gain fixed vs KN-7 +0.0193 +0.0193 +0.0169 -> H6b-1 REFUTED; gain anchored vs fixed +0.0004 +0.0002 +0.0004 -> H6b-2 REFUTED
+  G-M-b seeds 3 neural 2.4376 KN-7 1.9781 fixed 1.9260 1.9296 1.9361 anchored 1.9261 1.9298 1.9355
+    gain fixed vs KN-7 +0.0521 +0.0485 +0.0420 -> H6b-1 REFUTED; gain anchored vs fixed -0.0001 -0.0002 +0.0006 -> H6b-2 REFUTED
