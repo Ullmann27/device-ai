@@ -7,6 +7,8 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {getProjectPlan, projectPlanSha256} from './continuum-project-plan.mjs';
+import {counterFiles} from './continuum-counter-recipe.mjs';
 
 export const RECIPE = Object.freeze({id:'m4-notes',packageName:'at.heinz.continuum.m4notes',versionCode:1,versionName:'0.1.0'});
 const SHA = b => createHash('sha256').update(b).digest('hex');
@@ -163,49 +165,71 @@ Build nur über die explizite Termux-Operation, niemals durch automatische Insta
 `
 });
 const MANIFEST_NAME = 'continuum-source-manifest.json';
-const manifestText = () => JSON.stringify({schema:'continuum-owned-project',version:1,recipe:RECIPE,files:Object.fromEntries(Object.entries(FILES).map(([name,value])=>[name,SHA(value)]))},null,2)+'\n';
-export function projectPath(home=os.homedir()) {
+const recipeFor = plan => ({id:plan.id,packageName:plan.app.packageName,versionCode:plan.app.versionCode,versionName:plan.app.versionName});
+function sourceFiles(plan) {
+    const files={...FILES};
+    if(plan.id==='m4-counter') {
+      for(const name of Object.keys(files)) if(name.endsWith('.kt')&&!name.endsWith('.gradle.kts')) delete files[name];
+      Object.assign(files,counterFiles());
+      files['settings.gradle.kts']=files['settings.gradle.kts'].replace('ContinuumNotesM4','ContinuumCounterM4');
+      files['README.md']='# Continuum M4 – lokaler Zähler\n\nZwei Ansichten; privater lokaler Zähler 0..9999; keine Berechtigungen. Installation nur nach Besitzerprüfung.\n';
+      for(const name of ['app/build.gradle.kts','app/src/main/AndroidManifest.xml']) {
+        files[name]=files[name].replaceAll(RECIPE.packageName,plan.app.packageName)
+          .replaceAll('Continuum Notizen','Continuum Zähler');
+      }
+    }
+    files['continuum-project-plan.json']=JSON.stringify(plan,null,2)+'\n';
+    return files;
+}
+const manifestText = plan => JSON.stringify({schema:'continuum-owned-project',version:2,recipe:recipeFor(plan),
+    planSha256:projectPlanSha256(plan),
+    files:Object.fromEntries(Object.entries(sourceFiles(plan)).map(([name,value])=>[name,SHA(value)]))},null,2)+'\n';
+export function projectPath(home=os.homedir(),recipeId=RECIPE.id) {
+    const plan=getProjectPlan(recipeId);
     if (typeof home !== 'string' || !path.isAbsolute(home)) throw Error('INVALID_HOME');
     const stat = fs.lstatSync(home);
     if (!stat.isDirectory() || stat.isSymbolicLink()) throw Error('UNSAFE_HOME');
-    return path.join(fs.realpathSync(home),PROJECT_DIR,RECIPE.id);
+    return path.join(fs.realpathSync(home),PROJECT_DIR,plan.id);
 }
-function ensureSafeParent(home) {
-    const project = projectPath(home);
+function ensureSafeParent(home,recipeId) {
+    const project = projectPath(home,recipeId);
     const parent = path.dirname(project);
     if (!fs.existsSync(parent)) fs.mkdirSync(parent,{mode:0o700});
     const stat = fs.lstatSync(parent);
     if (!stat.isDirectory() || stat.isSymbolicLink()) throw Error('UNSAFE_PROJECT_PARENT');
     return project;
 }
-export function createOwnedApp({home=os.homedir()}={}) {
-    const dest = ensureSafeParent(home);
-    if (fs.existsSync(dest) || fs.existsSync(path.dirname(dest)) && fs.readdirSync(path.dirname(dest)).includes(RECIPE.id))
-        return {status:'BLOCKED_PROJECT_EXISTS',recipe:RECIPE.id};
+export function createOwnedApp({home=os.homedir(),recipeId=RECIPE.id}={}) {
+    const plan=getProjectPlan(recipeId),recipe=recipeFor(plan);
+    const dest = ensureSafeParent(home,recipeId);
+    if (fs.existsSync(dest) || fs.existsSync(path.dirname(dest)) && fs.readdirSync(path.dirname(dest)).includes(recipe.id))
+        return {status:'BLOCKED_PROJECT_EXISTS',recipe:recipe.id};
     // mkdir is exclusive; never overwrite or delete an existing owner's project.
     try { fs.mkdirSync(dest,{mode:0o700}); }
-    catch (error) { if (error.code === 'EEXIST') return {status:'BLOCKED_PROJECT_EXISTS',recipe:RECIPE.id}; throw error; }
+    catch (error) { if (error.code === 'EEXIST') return {status:'BLOCKED_PROJECT_EXISTS',recipe:recipe.id}; throw error; }
     try {
-        for (const [name,value] of Object.entries({...FILES,[MANIFEST_NAME]:manifestText()})) {
+        for (const [name,value] of Object.entries({...sourceFiles(plan),[MANIFEST_NAME]:manifestText(plan)})) {
             const full = path.join(dest,name);
             fs.mkdirSync(path.dirname(full),{recursive:true,mode:0o700});
             fs.writeFileSync(full,value,{flag:'wx',mode:0o600});
         }
     } catch (error) {
         // Do not remove/overwrite anything after a partial failure: the owner may inspect or recover it.
-        return {status:'FAILED_PROJECT_CREATION',recipe:RECIPE.id,reason:error.code||'WRITE_FAILED'};
+        return {status:'FAILED_PROJECT_CREATION',recipe:recipe.id,reason:error.code||'WRITE_FAILED'};
     }
-    return {status:'PROJECT_CREATED_NOT_BUILT',recipe:RECIPE.id,packageName:RECIPE.packageName,
-       project:dest,sourceSha256:SHA(manifestText()),files:Object.keys(FILES).length,apk:null,installed:false};
+    return {status:'PROJECT_CREATED_NOT_BUILT',recipe:recipe.id,packageName:recipe.packageName,
+       project:dest,sourceSha256:SHA(manifestText(plan)),planSha256:projectPlanSha256(plan),
+       files:Object.keys(sourceFiles(plan)).length,apk:null,installed:false};
 }
-export function verifyOwnedApp({home=os.homedir()}={}) {
-    const dest = projectPath(home);
+export function verifyOwnedApp({home=os.homedir(),recipeId=RECIPE.id}={}) {
+    const plan=getProjectPlan(recipeId),recipe=recipeFor(plan);
+    const dest = projectPath(home,recipeId);
     const parent = path.dirname(dest);
     if (fs.existsSync(parent) && (!fs.lstatSync(parent).isDirectory() || fs.lstatSync(parent).isSymbolicLink()))
         return {status:'BLOCKED_UNSAFE_PROJECT_PARENT'};
     if (!fs.existsSync(dest)) return {status:'BLOCKED_PROJECT_NOT_FOUND'};
     if (fs.lstatSync(dest).isSymbolicLink()||!fs.lstatSync(dest).isDirectory()) return {status:'BLOCKED_UNSAFE_PROJECT'};
-    const expected = {...FILES,[MANIFEST_NAME]:manifestText()};
+    const expected = {...sourceFiles(plan),[MANIFEST_NAME]:manifestText(plan)};
     for (const [name,body] of Object.entries(expected)) {
         const full = path.join(dest,name);
         try {
@@ -240,8 +264,8 @@ export function verifyOwnedApp({home=os.homedir()}={}) {
             else return {status:'BLOCKED_UNEXPECTED_SOURCE',file:name};
         }
     }
-    return {status:'SOURCE_VERIFIED',project:dest,recipe:RECIPE.id,packageName:RECIPE.packageName,
-       sourceSha256:SHA(manifestText())};
+    return {status:'SOURCE_VERIFIED',project:dest,recipe:recipe.id,packageName:recipe.packageName,
+       sourceSha256:SHA(manifestText(plan)),planSha256:projectPlanSha256(plan)};
 }
 /** The generated Gradle output is writable but must never escape via a symlink. */
 function outputWithinProject(project) {
@@ -280,13 +304,15 @@ function execute(file,args,{cwd,env,timeout}) {
     return {ok:r.status===0&&!r.error,code:r.status,output:(r.stdout||'')+'\n'+(r.stderr||'')};
 }
 /** Never build modified sources; perform real Gradle, APK identity and signature checks. */
-export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=process.arch,run=execute,inspect=null,lease=null}={}) {
-    const source=verifyOwnedApp({home});
+export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolchainProfile='termux-arm64',
+    env=process.env,arch=process.arch,run=execute,inspect=null,lease=null}={}) {
+    const plan=getProjectPlan(recipeId),recipe=recipeFor(plan);
+    const source=verifyOwnedApp({home,recipeId});
     if (source.status!=='SOURCE_VERIFIED') return source;
     if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
     const {doctor,resolveTermuxEnvironment} = await import('./continuum-mobile-builder.mjs');
     const resolvedEnv=resolveTermuxEnvironment(env,arch);
-    const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch});
+    const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch,profile:toolchainProfile});
     if(tools.status!=='READY_FOR_EXPERIMENTAL_BUILD')return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const gradle=tools.bin?.gradle, aapt2=tools.bin?.aapt2, signer=tools.bin?.apksigner;
     // The verified Termux doctor supplies native aapt2, not legacy aapt.
@@ -302,7 +328,7 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
         ':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug'];
       const gradleRun=await run(gradle,args,{cwd:source.project,env:resolvedEnv,timeout:35*60*1000});
       if(!gradleRun.ok)return {status:'FAILED_BUILD',exitCode:gradleRun.code};
-      const integrity=verifyOwnedApp({home});
+      const integrity=verifyOwnedApp({home,recipeId});
       if(integrity.status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
       if (!outputWithinProject(source.project)) return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
       const apk=path.join(source.project,'app/build/outputs/apk/debug/app-debug.apk');
@@ -343,22 +369,23 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
         const identity=await run(aapt2,['dump','badging',staged],
           {cwd:source.project,env:resolvedEnv,timeout:30000});
         if(!identity.ok || !identity.output.includes(
-          "package: name='"+RECIPE.packageName+"' versionCode='1' versionName='0.1.0'"))
+          "package: name='"+recipe.packageName+"' versionCode='1' versionName='0.1.0'"))
           return {status:'FAILED_APK_IDENTITY'};
         if(!unchanged())return {status:'FAILED_ARTIFACT_CHANGED'};
-        if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')
+        if(verifyOwnedApp({home,recipeId}).status!=='SOURCE_VERIFIED')
           return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
         if(!outputWithinProject(source.project))
           return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
         const digest=stagedDigest;
-        const saved=path.join(state,'Continuum-M4-Notes-'+digest.slice(0,16)+'.apk');
+        const saved=path.join(state,(recipeId==='m4-notes'?'Continuum-M4-Notes-':'Continuum-M4-Counter-')+digest.slice(0,16)+'.apk');
         try{fs.copyFileSync(staged,saved,fs.constants.COPYFILE_EXCL);}
         catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}
         if(!fs.lstatSync(saved).isFile()||fs.lstatSync(saved).isSymbolicLink()||
            SHA(fs.readFileSync(saved))!==digest)return {status:'FAILED_ARTIFACT_COPY'};
         return {status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
-          packageName:RECIPE.packageName,versionCode:1,apkSha256:digest,
+          packageName:recipe.packageName,versionCode:1,apkSha256:digest,recipe:recipeId,
           signerSha256:certMatch[1].toLowerCase(),sourceSha256:source.sourceSha256,
+          planSha256:source.planSha256,toolchainProfile,
           project:source.project,artifact:saved,installed:false,productionReady:false};
       } finally {
         try { fs.rmSync(staged,{force:true}); } catch { /* explicit artifact verification still mandatory */ }
@@ -368,8 +395,16 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
 }
 async function main() {
   const [command,...args]=process.argv.slice(2);
-  if (args.length || !['create','verify','build'].includes(command))throw Error('USAGE: create|verify|build (no extra arguments)');
-  const report=command==='create'?createOwnedApp():command==='verify'?verifyOwnedApp():await buildOwnedApp();
+  if (!['create','verify','build'].includes(command))throw Error('USAGE: create|verify|build [--recipe m4-notes|m4-counter] [--host-sdk]');
+  let recipeId=RECIPE.id, toolchainProfile='termux-arm64',seenRecipe=false,seenHost=false;
+  for(let i=0;i<args.length;i++) {
+    if(args[i]==='--recipe'&&!seenRecipe&&args[i+1]) {recipeId=args[++i];seenRecipe=true;}
+    else if(args[i]==='--host-sdk'&&command==='build'&&!seenHost) {toolchainProfile='host-sdk';seenHost=true;}
+    else throw Error('UNSUPPORTED_PROJECT_ARGUMENT');
+  }
+  getProjectPlan(recipeId);
+  const options={recipeId,toolchainProfile};
+  const report=command==='create'?createOwnedApp(options):command==='verify'?verifyOwnedApp(options):await buildOwnedApp(options);
   process.stdout.write(JSON.stringify(report)+'\n');
   if(!['PROJECT_CREATED_NOT_BUILT','SOURCE_VERIFIED','EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED'].includes(report.status))process.exitCode=2;
 }

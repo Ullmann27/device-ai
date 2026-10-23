@@ -69,3 +69,12 @@ Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-
 - Task 1 Zwischensicherung: Zusatzquellen, Cache-Symlinks, übergroße Quellen und veränderte APK-Prüfkopien blockieren.
   Sandbox-Prozessbudget wird erst nach dem User-Namespace gesetzt; CPU/RAM/Timeout gelten weiterhin ab Start.
   Fünf veraltete statische Tests an vorhandenes M4-Bestätigungsrouting angepasst. SDK-Gradle-Prüfung läuft separat.
+
+- Task 2 Teilabschluss: versionierter Plan-Katalog (Notizen/Zähler) mit strikter Vollidentität und Planhash;
+  gemeinsamer Generator, getrennte Verzeichnisse/Pakete. CLI akzeptiert nur die beiden festen Plan-IDs.
+  Expliziter Host-SDK-Doctor ersetzt keine Termux-Abnahme. Zieltests: 72/72 bestanden.
+- Tatsächlicher erster SDK-Lauf der ursprünglichen M4-Vorlage: 3 Unit-Tests, Lint und assembleDebug erfolgreich.
+  Die spätere finale APK muss noch durch den erweiterten kanonischen Generator samt unabhängigen Belegen laufen.
+- Android-Gesamtbaseline mit echtem SDK: 861 Tests, 2 Fehler, 3 übersprungen. Reproduzierte Fehler:
+  veralteter BuildPlan-Test (nur 3 statt 6 Operationen), fehlender nackter Imperativ „installier“ im Sicherheitsfilter.
+  Reparatur und vollständiger Wiederholungslauf in Arbeit; SDK-/JDK-/Proxy-Blocker inzwischen aufgelöst.

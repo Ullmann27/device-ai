@@ -126,7 +126,9 @@ export function execute(file,args,{cwd,env=process.env,timeout=PROBE_MS}={}) {
   const r=spawnSync(file,args,{cwd,env,shell:false,encoding:'utf8',timeout,maxBuffer:MAX_LOG});
   return {ok:r.status===0&&!r.error,output:(r.stdout||'')+(r.stderr||''),code:r.status, timedOut:r.error?.code==='ETIMEDOUT', error:r.error?.code||null};
 }
-export async function doctor({env=process.env,arch=process.arch,run=execute}={}) {
+export async function doctor({env=process.env,arch=process.arch,run=execute,profile='termux-arm64'}={}) {
+  if(!['termux-arm64','host-sdk'].includes(profile))
+    return {status:'UNAVAILABLE',profile,checks:{supportedProfile:false}};
   const resolvedEnv=resolveTermuxEnvironment(env,arch);
   const bin={git:executable('git',resolvedEnv),java:executable('java',resolvedEnv),gradle:resolvedEnv.CONTINUUM_GRADLE_PATH||executable('gradle',resolvedEnv),aapt2:resolvedEnv.CONTINUUM_AAPT2_PATH||executable('aapt2',resolvedEnv),apksigner:executable('apksigner',resolvedEnv)};
   const report={};
@@ -134,16 +136,20 @@ export async function doctor({env=process.env,arch=process.arch,run=execute}={})
     report[k]=await run(bin[k],args,{env:resolvedEnv,timeout:PROBE_MS});
   }
   const sdk=resolvedEnv.ANDROID_HOME||resolvedEnv.ANDROID_SDK_ROOT||null;
+  const host=profile==='host-sdk';
+  const javaVersion=Number(/(?:openjdk|java) version\s+["']?(\d+)/i.exec(report.java.output)?.[1]);
   const checks={
-    termuxArm64:isTermuxArm64(resolvedEnv,arch),
+    ...(host?{hostSdk:process.platform==='linux'&&arch==='x64'&&!isTermuxArm64(resolvedEnv,arch)}:
+      {termuxArm64:isTermuxArm64(resolvedEnv,arch)}),
     git:report.git.ok,
-    java17:report.java.ok&&/(?:openjdk|java) version\s+["']?17(?:[.\s"']|$)/i.test(report.java.output),
+    java17:report.java.ok&&(host?javaVersion>=17:javaVersion===17),
     gradle8111:report.gradle.ok&&/\bGradle 8\.11\.1\b/.test(report.gradle.output),
-    nativeAapt2:arch==='arm64'&&report.aapt2.ok,
+    nativeAapt2:(host||arch==='arm64')&&report.aapt2.ok,
     signer:report.apksigner.ok,
     sdk36:!!sdk&&fs.existsSync(path.join(sdk,'platforms/android-36/android.jar')),
   };
-  return {schemaVersion:VERSION,status:Object.values(checks).every(Boolean)?'READY_FOR_EXPERIMENTAL_BUILD':'UNAVAILABLE',checks,bin,sdk};
+  return {schemaVersion:VERSION,status:Object.values(checks).every(Boolean)?'READY_FOR_EXPERIMENTAL_BUILD':'UNAVAILABLE',
+    profile,executionHost:{platform:process.platform,arch},checks,bin,sdk};
 }
 function safeState(project,stateDir) {
   const state=path.resolve(stateDir);
