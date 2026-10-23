@@ -1,0 +1,17 @@
+✔ bounded process executes argv directly and reports its actual exit (92.016883ms)
+✔ timeout kills the process group and never reports success (508.876287ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (475.836764ms)
+✔ oversized process logs are bounded and fail closed (406.685735ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (842.968807ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (538.032855ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (517.171469ms)
+✔ unreadable process tracking cannot claim confirmed cleanup (136.799967ms)
+✔ unreadable proc stat is not confused with an exited process (171.366916ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3807.208933

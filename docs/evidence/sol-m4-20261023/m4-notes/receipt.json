@@ -1,0 +1,80 @@
+{
+  "schema": "continuum-owned-build-receipt",
+  "version": 1,
+  "job": "01405c28-2915-4736-ac6b-db965e50bd12",
+  "recipe": "m4-notes",
+  "startedAt": 1792791608395,
+  "toolchainProfile": "host-sdk",
+  "planSha256": "dd0bd6218c8e54ca5c8ff44129aabbf92273ca30206c9fadd9daf18e853faf20",
+  "sourceSha256": "186b687db17f6c46855a49a4c95cb8b532173c29c3d1a1dd8beea32c025da467",
+  "project": "/workspace/scratch/sol-m4-trial-home/continuum-projects/m4-notes",
+  "packageName": "at.heinz.continuum.m4notes",
+  "versionCode": 1,
+  "installed": false,
+  "deviceVerified": false,
+  "productionReady": false,
+  "status": "EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED",
+  "apkSha256": "196f40c756cd67c85486bb7fd43e25769d86b6911cb7edeb19cb041163e35d22",
+  "signerSha256": "bc6c439abe04c0338fc7219cc90b1b0234750e086539606d7a20aa348af9a78e",
+  "artifact": "/workspace/scratch/sol-m4-trial-home/.local/state/device-ai-continuum/owned-projects/Continuum-M4-Notes-196f40c756cd67c8.apk",
+  "evidence": {
+    "log": {
+      "file": "run-01405c28-2915-4736-ac6b-db965e50bd12/gradle.log",
+      "sha256": "adfdc8662653802d34aa8cc674123183a2cea4246374c9d1652120f18efe1337"
+    },
+    "unit": {
+      "file": "run-01405c28-2915-4736-ac6b-db965e50bd12/unit.xml",
+      "sha256": "bd284854fdae470ede413727237f9dd4598373a71d7cea4cadb3424ee8e65fdc",
+      "executed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "cases": [
+        "boundsNotes",
+        "keepsEmptyNotes",
+        "trimsWhitespace"
+      ]
+    },
+    "lint": {
+      "file": "run-01405c28-2915-4736-ac6b-db965e50bd12/lint.xml",
+      "sha256": "b1c82ee1e583899fe9d985c01ecf2d9e8fb95ae443d6da11f3c8b70255a03ca4",
+      "errors": 0,
+      "warnings": 2
+    },
+    "signature": {
+      "file": "run-01405c28-2915-4736-ac6b-db965e50bd12/signature.txt",
+      "sha256": "77fdac6fd87bcdd04965e79a88c7a2f97b746b9db5279f9e7db3a0d15b30ee23",
+      "apkSha256": "196f40c756cd67c85486bb7fd43e25769d86b6911cb7edeb19cb041163e35d22",
+      "exitCode": 0
+    },
+    "identity": {
+      "file": "run-01405c28-2915-4736-ac6b-db965e50bd12/identity.txt",
+      "sha256": "6cbfa65cd276f0ec505c428202b6dac6943098dcff434e592df360e8a942d61e",
+      "apkSha256": "196f40c756cd67c85486bb7fd43e25769d86b6911cb7edeb19cb041163e35d22",
+      "exitCode": 0
+    }
+  },
+  "finishedAt": 1792791637644,
+  "gradle": {
+    "exitCode": 0,
+    "timedOut": false,
+    "tasks": [
+      ":app:testDebugUnitTest",
+      ":app:lintDebug",
+      ":app:assembleDebug"
+    ]
+  },
+  "toolchain": {
+    "profile": "host-sdk",
+    "executionHost": {
+      "platform": "linux",
+      "arch": "x64"
+    }
+  },
+  "deviceAcceptance": "NOT_RUN",
+  "verification": {
+    "verdict": "CONFIRMED",
+    "reasons": [
+      "plan, source, executed unit tests, lint and APK bytes match; installation and device tests remain pending"
+    ]
+  }
+}

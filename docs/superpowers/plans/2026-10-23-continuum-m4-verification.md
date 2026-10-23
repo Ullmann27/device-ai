@@ -33,7 +33,7 @@ Files: `scripts/continuum-owned-app*`, bestehende fehlschlagende Regressionstest
 Interfaces: bestehende `createOwnedApp`, `verifyOwnedApp`, `buildOwnedApp` bleiben standardmäßig kompatibel.
 
 - [x] M4-Baseline: `env -u NODE_TEST_CONTEXT node --test scripts/continuum-owned-app.test.mjs` → 29/29.
-- [ ] Volle Node-/Backend-/Kotlin-Baseline protokollieren und jeden Fehler klassifizieren.
+- [x] Volle Node-/Backend-/Kotlin-Baseline protokollieren und jeden Fehler klassifizieren.
 - [x] Zusätzliche Quelle/Buildskript als Negativtest ausgeführt: zunächst 7/8 rot, Größen-Leseprobe zusätzlich rot.
 - [x] Kleinste Ursachenreparaturen; Node 1049/1049 grün, 0 übersprungen; Backend 60/60; Commit/Push.
 
@@ -43,21 +43,21 @@ Files: neues `scripts/continuum-project-plan.mjs`, bestehender Generator, `.gith
 jeweilige Unit-/Negativtests. Interfaces: `validateProjectPlan(plan)`, feste Plan-IDs; Verifier liefert
 `CONFIRMED` ausschließlich bei Plan-/Quell-/APK-/Testbindung, sonst `INCONCLUSIVE`.
 
-- [ ] Failing Tests für ungültige Pläne, fremde Pakete/Rechte, Quellenzusätze, alte Reports und manipulierte APK.
-- [ ] Planvalidierung und zweites festes Rezept; kein beliebiger Quellcode.
-- [ ] Explizites Host-SDK-Profil, Offline-Gradle, echte JUnit-/Lint-Belege und persistiertes lesendes `status`.
-- [ ] CCC1-Verifier-Erweiterung mit echten Dateihashes und Mutationsfällen ausführen.
-- [ ] Zwei Rezepte generieren und mindestens ein echtes APK unabhängig prüfen; Commit/Push.
+- [x] Failing Tests für ungültige Pläne, fremde Pakete/Rechte, Quellenzusätze, alte Reports und manipulierte APK.
+- [x] Planvalidierung und zweites festes Rezept; kein beliebiger Quellcode.
+- [x] Explizites Host-SDK-Profil, Offline-Gradle, echte JUnit-/Lint-Belege und persistiertes lesendes `status`.
+- [x] CCC1-Verifier-Erweiterung mit echten Dateihashes und Mutationsfällen ausführen.
+- [x] Zwei Rezepte generieren und mindestens ein echtes APK unabhängig prüfen; Commit/Push.
 
 ## Task 3: Android-Verbindung und abschließende Übergabe
 
 Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-Activity/Receiver und Kotlin-Tests;
 `docs/CONTINUUM-SOL-TO-GPT6-HANDOFF-20261023.md`, Belege und Experimentregister.
 
-- [ ] Kotlin-Tests für Planwahl, Callback-Zuordnung, historischen Status und sichere Fehler zuerst ausführen.
-- [ ] Feste Android-Aktionen mit bestehender Termux-Route verbinden; keine zweite Workerarchitektur.
-- [ ] Node, Backend, Kotlin, verfügbare Android-Gradle/Lint/UI-Prüfungen wirklich ausführen und dokumentieren.
-- [ ] Separater Review des Gesamt-Diffs; Befunde beheben; Handoff, Rollback, Draft-PR, letzter Push und Remoteprüfung.
+- [x] Kotlin-Tests für Planwahl, Callback-Zuordnung, historischen Status und sichere Fehler zuerst ausführen.
+- [x] Feste Android-Aktionen mit bestehender Termux-Route verbinden; keine zweite Workerarchitektur.
+- [x] Node, Backend, Kotlin, verfügbare Android-Gradle/Lint/UI-Prüfungen wirklich ausführen und dokumentieren.
+- [x] Separater Review des Gesamt-Diffs; Befunde beheben; Handoff, Rollback, Draft-PR, letzter Push und Remoteprüfung.
 
 ## Fortschritt / Entscheidungen
 
@@ -105,3 +105,7 @@ Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-
 - Neuer Recovery-Widgettest: 2/2 Builder-UI-Tests grün, ursprüngliche Build-Identität bleibt während
   separater lesender Statusabfrage erhalten. Abschließende SDK-/Node-Gesamtläufe laufen vor der Belegsicherung.
 - Backend-Endregression erneut 60/60; gezielte Prozessregression 10/10 nach Reviewkorrekturen.
+
+- Abschluss A/B: Implementierung c787c098… eingefroren/gepusht, volle Node1074/1074, Backend60/60, SDK-JUnit873/873 (acht UI-Fälle), vier Checks-Programme und Lint grün. Keine Skips.
+- Beide getrennten APKs final offline mit dem kanonischen Generator gebaut, nach Export mit echten Signer-/aapt2-Werkzeugen und CCC1 erneut geprüft; Quellen, Artefakte und wirkliche Logs dauerhaft in docs/evidence/sol-m4-20261023.
+- C/D und S1–S5 nicht implementiert oder als neue Sprachforschung ausgegeben; konkrete Anschlussabgrenzung folgt in der vollständigen Übergabe.
