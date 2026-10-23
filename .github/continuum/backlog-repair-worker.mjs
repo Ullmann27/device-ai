@@ -129,6 +129,9 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       }finally{fs.rmSync(pending,{force:true});}
     };
     writeReport();
+    // An owner cancel (code-cancel, ccc1-abort) aborts the backlog task while the session computes: stop before the
+    // independent run instead of producing a result that can no longer count; nothing is learned from it.
+    if(store.read().doc.tasks.find(t=>t.id===task.id)?.state==='ABORTED')throw Error('TASK_ABORTED_BY_OWNER');
     if(report.outcome!=='VERIFIED'||!report.verified){
       outcome={status:'FAILED',head,taskId:task.id,reason:report.outcome,
         report:path.join(reportDir,'report.json')};
