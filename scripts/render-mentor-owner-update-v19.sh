@@ -52,8 +52,8 @@ e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/Con
 479849bd277d4781f53db216e2dd884c1f87f355 app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt
 2736d947f40d0fbefb16a5f9470542fdfbe2b949 app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt
 697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
-f02e1e45be017b03202dedfbe6a9d0285bd04bc6 scripts/continuum-owned-app.mjs
-693a8bfd46a0afe5bcb8bc6c79e98206462b2fc2 scripts/continuum-owned-app.test.mjs
+03894c0dfe696e1963a22dd962bbe4047f94a320 scripts/continuum-owned-app.mjs
+eddabe2a51be6ef761ede0d53c4eade4544054c6 scripts/continuum-owned-app.test.mjs
 c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
