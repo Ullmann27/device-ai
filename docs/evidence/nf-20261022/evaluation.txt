@@ -1,0 +1,93 @@
+== NF-2 language modelling, size S, DOC VALIDATION BPB at epoch 6 (3 seeds)
+  G-S    2.9607 ± 0.0121 (2.9518, 2.9744, 2.9558)
+  T-S    3.4090 ± 0.0020 (3.4067, 3.4101, 3.4102)
+  D-S    2.9945 ± 0.0011 (2.9954, 2.9948, 2.9933)
+  L-S    3.0529 ± 0.0158 (3.0616, 3.0624, 3.0346)
+  Dna-S  3.2449 ± 0.0058 (3.2509, 3.2443, 3.2394)
+  Dnb-S  2.9960 ± 0.0039 (2.9955, 3.0001, 2.9924)
+  D better than G (pre-registered NF-2 a): mean gap -0.0338 BPB, complete separation False, min gap 0.02 -> NOT SUPPORTED
+  G better than D (reverse, reported): mean gap +0.0338 BPB, complete separation True, min gap 0.02 -> SUPPORTED
+  D better than L (erase term): mean gap +0.0584 BPB, complete separation True, min gap 0.02 -> SUPPORTED
+  D better than Dna (decay gate): mean gap +0.2504 BPB, complete separation True, min gap 0.02 -> SUPPORTED
+  D better than Dnb (write gate): mean gap +0.0015 BPB, complete separation False, min gap 0.02 -> NOT SUPPORTED
+
+== NF-2 memory (MQAR), accuracy per number of pairs N (3 seeds)
+  D-S   params   31528 state  1024 | N=4: 0.307 N=8: 0.164 N=16: 0.085 N=24: 0.052 N=32: 0.041 | acc16 per seed [0.074, 0.092, 0.088]
+  G-S   params   29280 state    64 | N=4: 0.141 N=8: 0.088 N=16: 0.051 N=24: 0.031 N=32: 0.026 | acc16 per seed [0.052, 0.047, 0.055]
+  T-S   params   34336 state     0 | N=4: 0.263 N=8: 0.130 N=16: 0.096 N=24: 0.053 N=32: 0.037 | acc16 per seed [0.097, 0.089, 0.103]
+  L-S   params   31528 state  1024 | N=4: 0.201 N=8: 0.103 N=16: 0.069 N=24: 0.052 N=32: 0.041 | acc16 per seed [0.063, 0.062, 0.081]
+  G-M   params  107712 state   128 | N=4: 0.237 N=8: 0.153 N=16: 0.077 N=24: 0.047 N=32: 0.034 | acc16 per seed [0.076, 0.082, 0.074]
+  G-X   params  412032 state   256 | N=4: 0.319 N=8: 0.175 N=16: 0.086 N=24: 0.053 N=32: 0.038 | acc16 per seed [0.091, 0.092, 0.075]
+  D-S >= G-S + 0.10 at N=16 in every seed (NF-2 b): False  (D-S 0.085, G-S 0.051)
+  D-S >= G-X + 0.10 at N=16 in every seed (research question): False  (G-X 0.086, 412032 parameters vs D-S 31528)
+
+== NF-1 multi-speed memory: prequential CODE stream after DOC training (bases G-S and D-S, 3 seeds each)
+  base G-S
+    BASE     stream 4.1632 codeVal 4.0929 docVal 2.9607 | gain +0.0000 forgetting +0.0000 updates 0 base intact True
+    CARRY    stream 4.1621 codeVal 4.0929 docVal 2.9607 | gain +0.0012 forgetting +0.0000 updates 0 base intact True
+    FT       stream 3.1821 codeVal 3.1221 docVal 4.3198 | gain +0.9812 forgetting +1.3591 updates 572 base intact True
+    REPLAY   stream 3.1876 codeVal 3.1059 docVal 3.3067 | gain +0.9756 forgetting +0.3461 updates 572 base intact True
+    ADAPT    stream 3.5815 codeVal 3.5356 docVal 3.7014 | gain +0.5817 forgetting +0.7407 updates 572 base intact True
+    SURPRISE stream 3.6952 codeVal 3.5826 docVal 3.6587 | gain +0.4681 forgetting +0.6980 updates 246 base intact True
+    TWO      stream 3.5826 codeVal 3.5279 docVal 3.6927 | gain +0.5806 forgetting +0.7320 updates 572 base intact True
+    TWOS     stream 3.6933 codeVal 3.5809 docVal 3.6457 | gain +0.4700 forgetting +0.6851 updates 249 base intact True
+    H1a ADAPT >= 50 % of FT gain (0.582 vs 0.981) and <= 25 % of FT forgetting (0.741 vs 1.359): REFUTED
+    H1b SURPRISE >= 80 % of ADAPT gain (0.468 vs 0.582) with <= 60 % of updates (246 vs 572): SUPPORTED
+    H1c CARRY lowers stream BPB vs BASE (gain +0.0012): SUPPORTED
+    H1d TWO better than CARRY and ADAPT alone (0.5806 vs 0.0012 / 0.5817): REFUTED
+  base D-S
+    BASE     stream 4.1513 codeVal 4.0780 docVal 2.9945 | gain +0.0000 forgetting +0.0000 updates 0 base intact True
+    CARRY    stream 4.1465 codeVal 4.0780 docVal 2.9945 | gain +0.0048 forgetting +0.0000 updates 0 base intact True
+    FT       stream 3.1888 codeVal 3.1280 docVal 4.3387 | gain +0.9624 forgetting +1.3442 updates 572 base intact True
+    REPLAY   stream 3.2092 codeVal 3.1206 docVal 3.3548 | gain +0.9421 forgetting +0.3603 updates 572 base intact True
+    ADAPT    stream 3.5952 codeVal 3.5633 docVal 3.7626 | gain +0.5561 forgetting +0.7681 updates 572 base intact True
+    SURPRISE stream 3.7089 codeVal 3.6064 docVal 3.6934 | gain +0.4424 forgetting +0.6989 updates 242 base intact True
+    TWO      stream 3.5987 codeVal 3.5678 docVal 3.7642 | gain +0.5525 forgetting +0.7697 updates 572 base intact True
+    TWOS     stream 3.7137 codeVal 3.6110 docVal 3.6842 | gain +0.4375 forgetting +0.6897 updates 239 base intact True
+    H1a ADAPT >= 50 % of FT gain (0.556 vs 0.962) and <= 25 % of FT forgetting (0.768 vs 1.344): REFUTED
+    H1b SURPRISE >= 80 % of ADAPT gain (0.442 vs 0.556) with <= 60 % of updates (242 vs 572): REFUTED
+    H1c CARRY lowers stream BPB vs BASE (gain +0.0048): SUPPORTED
+    H1d TWO better than CARRY and ADAPT alone (0.5525 vs 0.0048 / 0.5561): REFUTED
+
+== NF-3 adaptive compute: byte-latent entropy patches vs fixed patches vs BPE (DOC VALIDATION, epoch 6)
+  BLT-entropy    3.0060 ± 0.0167 (2.9867, 3.0155, 3.0157)  ms/byte 0.0803 (under parallel load)
+  BLT-fixed      3.0448 ± 0.0096 (3.0338, 3.0495, 3.0512)  ms/byte 0.0670 (under parallel load)
+  G-M (BPE)      2.3919 ± 0.0136 (2.3803, 2.3885, 2.4069)
+  G-S (BPE)      2.9607 ± 0.0121 (2.9518, 2.9744, 2.9558)
+  entropy patches better than fixed patches: mean gap +0.0389 BPB, complete separation True, min gap 0.0 -> SUPPORTED
+  entropy patches >= 0.03 better than BPE G-S: mean gap -0.0453 BPB, complete separation False, min gap 0.03 -> NOT SUPPORTED
+  entropy patches >= 0.03 better than BPE G-M: mean gap -0.6141 BPB, complete separation False, min gap 0.03 -> NOT SUPPORTED
+
+== NF-4 event-driven activity: fair single-thread timing (one process, 5 interleaved rounds)
+  G-S              median ms/token 0.0435
+  T-S              median ms/token 0.0591
+  D-S              median ms/token 0.0506
+  L-S              median ms/token 0.0467
+  Gr-S l1=0.0      median ms/token 0.0336  active FFN share 0.436
+  Gr-S l1=0.001    median ms/token 0.0320  active FFN share 0.131
+  Gr-S l1=0.0: BPB 2.9888 (G-S 2.9607, limit +0.02) ms/token 0.0336 (limit 0.0370 = 0.85 x G-S) -> NOT MET
+  Gr-S l1=0.001: BPB 2.9714 (G-S 2.9607, limit +0.02) ms/token 0.0320 (limit 0.0370 = 0.85 x G-S) -> SUCCESS
+  decomposition: GELU -> ReLU (same sparsity mechanism off) +22.9% time; sparsity alone (ReLU, active share 0.44 -> 0.13) +4.8% time
+
+== NF-5 / NF-6a learning reasoner (14 regular tasks incl. 6 new, 3 adversarial; real coding jobs)
+  random   correct@1 0/14 (new 0/6) correct@<=3 1/14 unintended 0 adversarial ok 3/3 jobs 44
+  lexical  correct@1 5/14 (new 0/6) correct@<=3 5/14 unintended 0 adversarial ok 3/3 jobs 35
+  docs     correct@1 5/14 (new 0/6) correct@<=3 5/14 unintended 0 adversarial ok 3/3 jobs 35
+  gated    correct@1 5/14 (new 0/6) correct@<=3 5/14 unintended 0 adversarial ok 3/3 jobs 35
+  ungated  correct@1 5/14 (new 0/6) correct@<=3 5/14 unintended 0 adversarial ok 3/3 jobs 35
+  docs better than lexical (>= 2 more @1, 0 unintended): NOT SUPPORTED
+  NF-6a gated >= ungated @1 and (fewer unintended or more correct): NOT SUPPORTED
+
+== NF-5b execution-guided pre-check (section 8d; same 17 tasks, lexical vs probe, real coding jobs)
+  lexical  correct@1 5/14 (new 0/6) correct@<=3 5/14 unintended 0 [] adversarial ok 3/3 jobs 35 wall 24.2 s
+  probe    correct@1 12/14 (new 6/6) correct@<=3 12/14 unintended 1 ['canonical'] adversarial ok 3/3 jobs 19 wall 29.2 s
+  probe@1 >= lexical@1 + 3: met
+  no unintended confirmation: VIOLATED
+  3/3 correct abstentions: met
+  NF-5b: REFUTED (gain @1 +7 of 14)
+
+== NF-6b-lite count-anchored mixture (section 8c; byte minGRU + KN-7, 2-fold cross-fitting on DOC VALIDATION)
+  G-S-b seeds 3 neural 3.0839 KN-7 1.9781 fixed 1.9588 1.9588 1.9612 anchored 1.9584 1.9586 1.9608
+    gain fixed vs KN-7 +0.0193 +0.0193 +0.0169 -> H6b-1 REFUTED; gain anchored vs fixed +0.0004 +0.0002 +0.0004 -> H6b-2 REFUTED
+  G-M-b seeds 3 neural 2.4376 KN-7 1.9781 fixed 1.9260 1.9296 1.9361 anchored 1.9261 1.9298 1.9355
+    gain fixed vs KN-7 +0.0521 +0.0485 +0.0420 -> H6b-1 REFUTED; gain anchored vs fixed -0.0001 -0.0002 +0.0006 -> H6b-2 REFUTED

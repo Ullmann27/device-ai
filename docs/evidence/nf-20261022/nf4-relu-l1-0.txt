@@ -1,0 +1,31 @@
+JAR 3a60683a6a225e6ee70a2ccff8d616737be92e36c5fc9084102ba2723396156e commit=4220c410 start=2026-10-22T20:39:46Z args=lm Gr-S seeds=1,2,3 epochs=6 threads=3 l1=0 store=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/nf/ckpt
+NFC1 commit=68b0a33512d18570ddf450e8f9205a60dbee1c66 docs=239 tokenizer=v512 sha=296567efa53d0461a73e548615fc412afc330610ac086b8c4fc2335e74bb6224
+SPLIT DOC TRAIN docs=71 segments=2446 bytes=422773 sha=86ad7f86d8073e349150e45ac86d09d75716fe9b31160c3fa4411f1f54b6cca3
+SPLIT DOC VALIDATION docs=9 segments=395 bytes=60365 sha=e6c7c3f61377fa14f8d496f0225256916fbe29c94e50f980289a5399c2fa90e1
+SPLIT DOC TEST docs=8 segments=251 bytes=43124 sha=3bbb7b5b6fd5195217507cf99365cd0141cd4f7e2620402dbfb7f6bb568ac7dd
+SPLIT CODE TRAIN docs=126 segments=6138 bytes=1306918 sha=78324e710c6cb10359846df5922cbdf6b27caa42eed8b0e44d12084baa6c0c5c
+SPLIT CODE VALIDATION docs=14 segments=318 bytes=66085 sha=68cb72c9a04aa0160d1b1892828d64405c88c5f82b12be9224773c3e4fdb4774
+SPLIT CODE TEST docs=11 segments=475 bytes=100826 sha=ac3881236bac73db6baca830e2e037395a0bf5eca750466bc2407a98522c3b25
+RUN Gr-S seed=1 epoch=1 trainNll=5.3896 valBPB=4.1032 params=41504 trainSeconds=14 ffnDensity=0.474 l1=0.0 ckpt=52e284f35801debc46d66eef9b38af6f315caabb54484f3bc23c529514b031eb
+RUN Gr-S seed=1 epoch=2 trainNll=4.2015 valBPB=3.4636 params=41504 trainSeconds=27 ffnDensity=0.438 l1=0.0 ckpt=b8f257d0354d45ece57c7cbb7d6ce00d3830b5f3c57ae07154dff59740ed7df6
+RUN Gr-S seed=1 epoch=3 trainNll=3.7371 valBPB=3.2085 params=41504 trainSeconds=40 ffnDensity=0.430 l1=0.0 ckpt=c937cd19c4dc901f39087a5434cc3539d65cf7da06916a5485ed8a6bda101a59
+RUN Gr-S seed=1 epoch=4 trainNll=3.5148 valBPB=3.0757 params=41504 trainSeconds=53 ffnDensity=0.427 l1=0.0 ckpt=65498bc8911919baf9f39821a1880d38657832bab6278d7427f89d3817295e6c
+RUN Gr-S seed=1 epoch=5 trainNll=3.3892 valBPB=3.0097 params=41504 trainSeconds=66 ffnDensity=0.426 l1=0.0 ckpt=2a62a865532c01ec7d086680625c3a9787db27e20d5b8971c523bc327c749256
+RUN Gr-S seed=1 epoch=6 trainNll=3.3248 valBPB=2.9826 params=41504 trainSeconds=78 ffnDensity=0.425 l1=0.0 ckpt=c899e6ffea7cb09c91a46983ca292bc800a123851edce8bc781ca5d0d3d8c956
+SPEED Gr-S seed=1 l1=0.0 msPerToken=0.033 stateFloats=64 paramBytes=166016
+RUN Gr-S seed=2 epoch=1 trainNll=5.4059 valBPB=4.1321 params=41504 trainSeconds=13 ffnDensity=0.484 l1=0.0 ckpt=1d079a64775304db8596930b6cfa82af99dadbf1d7d9763b3cacde3686cb1ff6
+RUN Gr-S seed=2 epoch=2 trainNll=4.2383 valBPB=3.4818 params=41504 trainSeconds=26 ffnDensity=0.457 l1=0.0 ckpt=c8c5ce41af3285c4ecf8648035cdb7a5f072d187589b0a9d1f066e606c0ec522
+RUN Gr-S seed=2 epoch=3 trainNll=3.7563 valBPB=3.2241 params=41504 trainSeconds=39 ffnDensity=0.446 l1=0.0 ckpt=e183e6d9f580add4474db44f16a97a0b324ca3dc1ef2139c7c2196d6ecfdb7f5
+RUN Gr-S seed=2 epoch=4 trainNll=3.5277 valBPB=3.0862 params=41504 trainSeconds=51 ffnDensity=0.444 l1=0.0 ckpt=2c976c8f3c0fddbfb596c5d6393b7a51ec29125247a751238e20afea963c03e2
+RUN Gr-S seed=2 epoch=5 trainNll=3.4013 valBPB=3.0165 params=41504 trainSeconds=64 ffnDensity=0.443 l1=0.0 ckpt=8a1989745408e1472b5012ee22752c13cf1110760b8f3f54075ae1de9652584c
+RUN Gr-S seed=2 epoch=6 trainNll=3.3373 valBPB=2.9876 params=41504 trainSeconds=77 ffnDensity=0.443 l1=0.0 ckpt=9f970d9b80111147d634b97f64390ca98b1faded5c214e68ce4aa1eec0ea4ccb
+SPEED Gr-S seed=2 l1=0.0 msPerToken=0.037 stateFloats=64 paramBytes=166016
+RUN Gr-S seed=3 epoch=1 trainNll=5.3981 valBPB=4.1057 params=41504 trainSeconds=12 ffnDensity=0.478 l1=0.0 ckpt=e773225567ee3def9e59139301c68c8d2cf71549923cb6d7d64e2b4d3467604f
+RUN Gr-S seed=3 epoch=2 trainNll=4.2132 valBPB=3.4731 params=41504 trainSeconds=25 ffnDensity=0.454 l1=0.0 ckpt=7666f973d0db6264e6e803b1ef489d42c1be07bc9ceba447d81db44ae3eee869
+RUN Gr-S seed=3 epoch=3 trainNll=3.7514 valBPB=3.2261 params=41504 trainSeconds=38 ffnDensity=0.445 l1=0.0 ckpt=9afcb4c21bc5e88f32a3fe7388028f1a332e3778d39093f5fa02b90561dae2f0
+RUN Gr-S seed=3 epoch=4 trainNll=3.5293 valBPB=3.1014 params=41504 trainSeconds=51 ffnDensity=0.441 l1=0.0 ckpt=acbaa33a463e9b39cdf4ef7119a81ae981e35197f291b91f26f577c4c195b2bd
+RUN Gr-S seed=3 epoch=5 trainNll=3.4003 valBPB=3.0279 params=41504 trainSeconds=64 ffnDensity=0.441 l1=0.0 ckpt=e184b439e17ac03b0f58a064aed138943e51739624543250ee3ca489b4cc53b3
+RUN Gr-S seed=3 epoch=6 trainNll=3.3387 valBPB=2.9962 params=41504 trainSeconds=77 ffnDensity=0.441 l1=0.0 ckpt=ecf49d60b37efd56c0fc821071abe3474e122416327165c61fc15b4cc2f155db
+SPEED Gr-S seed=3 l1=0.0 msPerToken=0.045 stateFloats=64 paramBytes=166016
+PEAK heapMb=284
+exit=0 end=2026-10-22T20:43:47Z
