@@ -191,3 +191,41 @@ test('M4 refuses a redirected output appearing during a Gradle run',async()=>{
  assert.deepEqual(commands,[]);
  assert.deepEqual(fs.readdirSync(outside),[]);
 });
+
+test('M4 identity checker reads exactly the same private staged APK as apksigner',async()=>{
+ const home=fresh();createOwnedApp({home});const commands=[];
+ const result=await build(home,{run:fake(home,{commands})});
+ assert.equal(result.status,'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED');
+ const signer=commands.find(x=>x[0]==='/fake/apksigner');
+ const identity=commands.find(x=>x[0]==='/fake/aapt2');
+ assert.ok(signer&&identity);
+ const staged=signer[1].at(-1);
+ assert.equal(staged,identity[1].at(-1));
+ assert.notEqual(staged,path.join(projectPath(home),'app/build/outputs/apk/debug/app-debug.apk'));
+ assert.ok(staged.startsWith(path.join(home,'.local/state/device-ai-continuum/owned-projects')+path.sep));
+ assert.ok(!fs.existsSync(staged));
+ assert.equal(sha(fs.readFileSync(result.artifact)),result.apkSha256);
+});
+test('changing the original Gradle APK after staged signature check cannot alter published bytes',async()=>{
+ const home=fresh();createOwnedApp({home});
+ const initial=Buffer.alloc(9000,42),modified=Buffer.alloc(9000,17);
+ const original=path.join(projectPath(home),'app/build/outputs/apk/debug/app-debug.apk');
+ const base=fake(home);
+ const run=async(file,args,opts)=>{
+  const reply=await base(file,args,opts);
+  if(file==='/fake/apksigner')fs.writeFileSync(original,modified);
+  return reply;
+ };
+ const result=await build(home,{run});
+ assert.equal(result.status,'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED');
+ assert.equal(result.apkSha256,sha(initial));
+ assert.equal(sha(fs.readFileSync(result.artifact)),sha(initial));
+ assert.equal(sha(fs.readFileSync(original)),sha(modified));
+});
+test('failed signature validation leaves no private verification-stage residue',async()=>{
+ const home=fresh();createOwnedApp({home});
+ const result=await build(home,{run:fake(home,{badSigner:true})});
+ assert.equal(result.status,'FAILED_APK_SIGNATURE');
+ const state=path.join(home,'.local/state/device-ai-continuum/owned-projects');
+ assert.deepEqual(fs.readdirSync(state),[]);
+});
