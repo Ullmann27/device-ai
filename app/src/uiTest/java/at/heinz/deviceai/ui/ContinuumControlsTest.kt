@@ -16,6 +16,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.Robolectric
+import java.io.File
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
@@ -100,5 +102,88 @@ class ContinuumControlsTest {
         val bitmap = Bitmap.createBitmap(pane.width, pane.height, Bitmap.Config.ARGB_8888)
         pane.draw(Canvas(bitmap))
         bitmap.recycle()
+    }
+
+    @Test fun dialogThemePreservesExplicitApprovalAndCancellation() {
+        val controller = Robolectric.buildActivity(android.app.Activity::class.java)
+        controller.get().setTheme(R.style.AppTheme)
+        val activity = controller.setup().get()
+        try {
+            var approved = 0
+            fun dialog() = android.app.AlertDialog.Builder(activity).setTitle("Aktion freigeben")
+                .setMessage("Widget-Test: Es wird keine reale Aktion ausgeführt.")
+                .setPositiveButton("Freigeben") { _, _ -> approved++ }
+                .setNegativeButton("Abbrechen", null).show()
+            val cancelled = dialog()
+            assertEquals(0, approved)
+            assertEquals("Abbrechen", cancelled.getButton(-2).text)
+            cancelled.getButton(-2).performClick()
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertEquals(0, approved)
+            assertFalse(cancelled.isShowing)
+            val confirmed = dialog()
+            confirmed.getButton(-1).performClick()
+            org.robolectric.Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertEquals(1, approved)
+            confirmed.dismiss()
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun glassHonoursDrawableAlphaAndControlsVisiblyChangeState() {
+        val ctx = context()
+        val glass = ContinuumBentoCockpit.statusPane(ctx).background
+        glass.setBounds(0, 0, 240, 120)
+        val hidden = Bitmap.createBitmap(240, 120, Bitmap.Config.ARGB_8888)
+        glass.alpha = 0; glass.draw(Canvas(hidden))
+        assertEquals(0, hidden.getPixel(120, 60))
+        glass.alpha = 255; glass.draw(Canvas(hidden))
+        assertTrue(android.graphics.Color.alpha(hidden.getPixel(120, 60)) > 200)
+        hidden.recycle()
+        val button = ContinuumBentoCockpit.action(ctx, "Trainingsnachweise öffnen", primary = true) {}
+        measure(button, 280)
+        val normal = capture(button, "action-normal")
+        button.isPressed = true
+        val pressed = capture(button, "action-pressed")
+        assertFalse("pressed state must visibly differ", normal.sameAs(pressed))
+        button.isPressed = false; button.isSelected = true
+        val selected = capture(button, "action-selected")
+        button.isSelected = false; button.isEnabled = false
+        val disabled = capture(button, "action-disabled")
+        assertFalse("disabled state must visibly differ", normal.sameAs(disabled))
+        listOf(normal, pressed, selected, disabled).forEach { it.recycle() }
+    }
+
+    @Test fun nativePanelsAndGaugesRemainReadableAtPhoneAndFoldWidths() {
+        for (width in listOf(320, 720)) {
+            val ctx = context(1.3f)
+            val body = ContinuumBentoCockpit.panel(ctx, "CONTINUUM · WIDGET-PRÜFUNG",
+                "Lernen & Forschung", "Native Darstellung bei 130 % Schrift. Keine Geräteabnahme.")
+            val status = ContinuumBentoCockpit.statusPane(ctx)
+            ContinuumBentoCockpit.updateStatus(status, "Modell: unbekannt|Training: kein Messwert|Gewichte: —")
+            body.addView(status)
+            body.addView(ContinuumBentoCockpit.section(ctx, "AKTIONEN"))
+            ContinuumBentoCockpit.grid(ctx, body, listOf(
+                ContinuumBentoCockpit.action(ctx, "Trainingsnachweise öffnen", primary = true) {},
+                ContinuumBentoCockpit.action(ctx, "Gespeicherte Quellen ansehen") {},
+                ContinuumBentoCockpit.action(ctx, "Experiment prüfen") {},
+                ContinuumBentoCockpit.action(ctx, "Auswahl löschen", critical = true) {}), 3)
+            body.addView(ContinuumBentoCockpit.section(ctx, "SYSTEM · KEINE MESSWERTE"))
+            val gauges = ContinuumSystemGaugesView(ctx, ContinuumDashboardState.SystemStatus())
+            body.addView(gauges)
+            measure(body, width)
+            assertTrue(gauges.contentDescription.toString().contains("GPU: nicht messbar"))
+            assertTrue(gauges.measuredHeight > 100 * ctx.resources.displayMetrics.density)
+            capture(body, "panel-${width}dp-font130").recycle()
+        }
+    }
+
+    private fun capture(view: View, name: String): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        view.draw(Canvas(bitmap))
+        System.getProperty("continuum.ui.evidenceDir")?.let { path ->
+            val dir = File(path).apply { mkdirs() }
+            File(dir, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        }
+        return bitmap
     }
 }

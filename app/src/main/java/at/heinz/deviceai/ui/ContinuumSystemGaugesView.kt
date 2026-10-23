@@ -24,6 +24,10 @@ class ContinuumSystemGaugesView(
     private val density = resources.displayMetrics.density
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     private val ring = RectF()
+    private var columns = 4
+    private var rowHeight = 0f
+    private val gradients = arrayOfNulls<SweepGradient>(4)
+    private val boldFace = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
 
     private val values: List<Triple<String, Int?, Int>> = listOf(
         Triple("App-CPU", telemetry.appCpuPercent, 0xFF00E5FF.toInt()),
@@ -42,26 +46,40 @@ class ContinuumSystemGaugesView(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val needed = (130f * density).toInt()
+        val font = resources.configuration.fontScale.coerceAtLeast(1f)
+        columns = ContinuumGridPolicy.gaugeColumns(width / density, font)
+        val needed = (110f * font * density * ((values.size + columns - 1) / columns)).toInt()
         val height = View.resolveSize(needed, heightMeasureSpec)
         setMeasuredDimension(width, height)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        rowHeight = h.toFloat() / ((values.size + columns - 1) / columns)
+        val cell = w.toFloat() / columns
+        for (i in values.indices) {
+            val cx = cell * (i % columns + .5f)
+            val cy = rowHeight * (i / columns + .43f)
+            val accent = values[i].third
+            gradients[i] = SweepGradient(cx, cy, intArrayOf(accent, Color.WHITE, accent), null)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (width <= 0 || height <= 0) return
 
-        val cell = width.toFloat() / values.size
+        val cell = width.toFloat() / columns
         val stroke = 5.2f * density
-        val radius = min(cell * 0.35f, height * 0.26f)
-        val cy = (height * .44f).coerceAtLeast(radius + stroke)
-        val labelSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10f, resources.displayMetrics)
-        val valueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
+        val radius = min(cell * 0.30f, rowHeight * 0.27f)
+        val labelSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
+        val valueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15f, resources.displayMetrics)
 
         values.forEachIndexed { i, entry ->
             val (name, nullablePercent, accent) = entry
             val percent = nullablePercent?.coerceIn(0, 100)
-            val cx = cell * (i + .5f)
+            val cx = cell * (i % columns + .5f)
+            val cy = rowHeight * (i / columns + .43f)
             ring.set(cx - radius, cy - radius, cx + radius, cy + radius)
 
             paint.reset()
@@ -79,8 +97,7 @@ class ContinuumSystemGaugesView(
                 canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
 
                 paint.strokeWidth = stroke
-                paint.shader = SweepGradient(cx, cy,
-                    intArrayOf(accent, Color.WHITE, accent), null)
+                paint.shader = gradients[i]
                 canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
                 paint.shader = null
             }
@@ -89,8 +106,7 @@ class ContinuumSystemGaugesView(
             paint.isAntiAlias = true
             paint.style = Paint.Style.FILL
             paint.textAlign = Paint.Align.CENTER
-            paint.typeface = android.graphics.Typeface.create(
-                android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+            paint.typeface = boldFace
             paint.textSize = valueSize
             paint.color = 0xFFF1F5FF.toInt()
             val centerY = cy - (paint.ascent() + paint.descent()) / 2f
@@ -99,7 +115,7 @@ class ContinuumSystemGaugesView(
             paint.typeface = android.graphics.Typeface.DEFAULT
             paint.textSize = labelSize
             paint.color = 0xFFB1BFDC.toInt()
-            canvas.drawText(name, cx, cy + radius + 21f * density, paint)
+            canvas.drawText(name, cx, cy + radius + labelSize * 1.45f, paint)
         }
     }
 }

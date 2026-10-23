@@ -16,6 +16,9 @@ if (continuumUiWidgetTests) tasks.withType<org.gradle.api.tasks.testing.Test>().
     doFirst {
         systemProperty("robolectric.offline", "true")
         systemProperty("robolectric.dependency.dir", layout.buildDirectory.dir("ui-test-sdk").get().asFile.absolutePath)
+        providers.gradleProperty("continuumUiEvidenceDir").orNull?.let {
+            systemProperty("continuum.ui.evidenceDir", it)
+        }
     }
 }
 

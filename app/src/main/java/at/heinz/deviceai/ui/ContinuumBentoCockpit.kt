@@ -198,12 +198,19 @@ object ContinuumBentoCockpit {
     private class Glass(private val accent: Int, private val density: Float, private val surface: Boolean = true) : Drawable() {
         private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
         private val rect = RectF()
+        private val sheenRect = RectF()
+        private val edgeRect = RectF()
+        private var drawableAlpha = 255
         private var fill: Shader? = null
         private var border: Shader? = null
         private var sheen: Shader? = null
 
         override fun onBoundsChange(bounds: android.graphics.Rect) {
             rect.set(bounds.left.toFloat(), bounds.top.toFloat(), bounds.right.toFloat(), bounds.bottom.toFloat())
+            sheenRect.set(rect.left + density, rect.top + density, rect.right - density,
+                rect.top + rect.height() * .65f)
+            edgeRect.set(rect)
+            edgeRect.inset(.8f * density, .8f * density)
             val w = rect.width().coerceAtLeast(1f)
             val h = rect.height().coerceAtLeast(1f)
             fill = LinearGradient(rect.left, rect.top, rect.right, rect.bottom,
@@ -219,25 +226,28 @@ object ContinuumBentoCockpit {
             val radius = (if (surface) 18f else 24f) * density
             paint.style = Paint.Style.FILL
             paint.shader = fill
-            paint.alpha = 255
+            paint.alpha = drawableAlpha
             canvas.drawRoundRect(rect, radius, radius, paint)
             paint.shader = sheen
-            canvas.drawRoundRect(RectF(rect.left + 1f, rect.top + 1f, rect.right - 1f,
-                rect.top + rect.height() * .65f), radius, radius, paint)
+            canvas.drawRoundRect(sheenRect, radius, radius, paint)
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 1.6f * density
             paint.shader = border
-            canvas.drawRoundRect(RectF(rect.left + 1.5f, rect.top + 1.5f,
-                rect.right - 1.5f, rect.bottom - 1.5f), radius, radius, paint)
+            canvas.drawRoundRect(edgeRect, radius, radius, paint)
             paint.strokeWidth = 1.1f * density
             paint.shader = null
             paint.color = accent
-            paint.alpha = 120
+            paint.alpha = 120 * drawableAlpha / 255
             canvas.drawArc(rect.left + radius, rect.top + 1f,
                 rect.right - radius, rect.top + radius * 1.2f, 193f, 145f, false, paint)
-            paint.alpha = 255
+            paint.alpha = drawableAlpha
         }
-        override fun setAlpha(alpha: Int) { paint.alpha = alpha; invalidateSelf() }
+        override fun setAlpha(alpha: Int) { drawableAlpha = alpha.coerceIn(0, 255); invalidateSelf() }
+        override fun getAlpha(): Int = drawableAlpha
+        override fun getOutline(outline: android.graphics.Outline) {
+            outline.setRoundRect(bounds, (if (surface) 18f else 24f) * density)
+            outline.alpha = drawableAlpha / 255f
+        }
         @Deprecated("Android Drawable.getOpacity is deprecated")
         override fun getOpacity(): Int = android.graphics.PixelFormat.TRANSLUCENT
         override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) {
