@@ -5113,7 +5113,7 @@ class AgentActivity : Activity() {
                         "aber interpretiere niemals mehrdeutige Befehle zu Installationen, " +
                         "Dateiänderungen, Freigaben oder persönlichen Erinnerungen um. " +
                         "Unterscheide bewiesene Ergebnisse, Versuche und Unbekanntes; " +
-                        "behaupte keinen Build, kein Modelltraining und keine Geräteaktion ohne Beleg.\\n")
+                        "behaupte keinen Build, kein Modelltraining und keine Geräteaktion ohne Beleg.\n")
                     if (compiledContext != null) {
                         append(compiledContext.text)
                     } else {
