@@ -269,6 +269,7 @@ class AgentActivity : Activity() {
             BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")")
     }
     private val dashboardCollector by lazy { ContinuumDashboardCollector(applicationContext, diagnostics) }
+    private var liveHardwareGauges: at.heinz.deviceai.ui.ContinuumSystemGaugesView? = null
     private val responseTimesMs = ArrayDeque<Long>()
     private var requestStartedAt = 0L
     private var dashboardCollecting = false
@@ -880,6 +881,7 @@ class AgentActivity : Activity() {
             dashboardCollecting = false
             result.onSuccess { (state, open) ->
                 homeView?.state = state
+                if (centerDialog?.isShowing == true) liveHardwareGauges?.updateTelemetry(state.system)
                 navigationView?.state = state
                 railView?.state = state
                 announceNewIssues(open)
@@ -1247,6 +1249,7 @@ class AgentActivity : Activity() {
         experimental: List<CenterAction> = emptyList()
     ) {
         centerDialog?.dismiss()
+        liveHardwareGauges = null
         val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
         val box = cockpit.panel(this, "DEVICE AI · DEIN BEREICH", title, intro)
         box.addView(cockpit.section(this, "LIVE-STATUS · ECHTE GERÄTEDATEN"), matchWidth(top = 12))
@@ -1254,12 +1257,13 @@ class AgentActivity : Activity() {
         cockpit.updateStatus(statusGrid, "Status wird gelesen …")
         box.addView(statusGrid, matchWidth(top = 3))
         if (title == "Systemstatus") {
-            box.addView(cockpit.section(this, "HARDWARE · LETZTER DASHBOARD-MESSSTAND"),
+            box.addView(cockpit.section(this, "HARDWARE · LIVE-WERTE (ALLE 5 SEKUNDEN)"),
                 matchWidth(top = 10))
             val systemSnapshot = homeView?.state?.system
                 ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
-            box.addView(at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot),
-                matchWidth(top = 3))
+            val gauges = at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot)
+            liveHardwareGauges = gauges
+            box.addView(gauges, matchWidth(top = 3))
             box.addView(textView(
                 "App-CPU statt Gesamt-CPU. GPU ist auf diesem Android-Gerät derzeit nicht zuverlässig messbar.",
                 10f, MUTED), matchWidth(top = 1))
@@ -1282,7 +1286,12 @@ class AgentActivity : Activity() {
         }
         box.addView(cockpit.action(this, "SCHLIESSEN") { dialog.dismiss() }, matchWidth(top = 14))
         dialog = cockpit.show(this, box)
-        dialog.setOnDismissListener { if (centerDialog === dialog) centerDialog = null }
+        dialog.setOnDismissListener {
+            if (centerDialog === dialog) {
+                centerDialog = null
+                liveHardwareGauges = null
+            }
+        }
         centerDialog = dialog
         status { value ->
             if (dialog.isShowing) cockpit.updateStatus(statusGrid, value)
