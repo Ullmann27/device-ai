@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Owner-approved temporary delivery of the signed, in-place Continuum 0.3.15 update.
+# The original 0.3.12 builder is retained below for immediate Git revert and audit.
+exec bash scripts/render-mentor-owner-update-v16.sh
 # Isolated Render static-build APK compilation. Never commits, merges, or writes secrets.
 set -Eeuo pipefail
 umask 077
