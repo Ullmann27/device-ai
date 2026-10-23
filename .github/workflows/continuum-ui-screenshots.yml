@@ -1,9 +1,10 @@
 name: Continuum UI screenshots (emulator, research)
 
 # Real Android build checks and screenshots of the start screen for the UI acceptance of PR #79/#80 and successors.
-# Runs only for opus/continuum-aaa-ui-* branches or on demand. Builds a debug APK (never signed with the owner's key,
-# never installed anywhere but the throw-away emulator) and publishes screenshots, UI dumps and a build report to the
-# evidence branch opus/continuum-ui-evidence-20261022 and as a workflow artifact.
+# Runs only for opus/continuum-aaa-ui-* branches or on demand. Builds the integration candidate as the feature preview
+# (-PdeviceAiFeaturePreview=true: package at.heinz.deviceai.featurepreview, versionCode 9, its own data; debug key,
+# never the owner's main app), installs it only on a throw-away emulator, checks that every tap opens its target and
+# publishes screenshots, UI dumps and a build report to opus/continuum-ui-evidence-20261022 and as an artifact.
 
 on:
   push:
@@ -39,6 +40,15 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Python UI tool tests (design diff, tap targets)
+        id: python
+        continue-on-error: true
+        run: |
+          mkdir -p "$EVIDENCE"
+          pip install --quiet numpy pillow
+          python3 -m unittest discover -s scripts -p 'test_continuum_*.py' 2>&1 | tee "$EVIDENCE/python-ui-tests.txt"
+          test "${PIPESTATUS[0]}" -eq 0
+
       - name: Node UI regression tests
         id: node
         continue-on-error: true
@@ -62,16 +72,16 @@ jobs:
       - name: JVM unit tests
         id: unit
         continue-on-error: true
-        run: gradle :app:testDebugUnitTest --stacktrace
+        run: gradle :app:testDebugUnitTest -PdeviceAiFeaturePreview=true --stacktrace
 
       - name: Android lint
         id: lint
         continue-on-error: true
-        run: gradle :app:lintDebug --stacktrace
+        run: gradle :app:lintDebug -PdeviceAiFeaturePreview=true --stacktrace
 
       - name: Debug APK
         id: apk
-        run: gradle :app:assembleDebug --stacktrace
+        run: gradle :app:assembleDebug -PdeviceAiFeaturePreview=true --stacktrace
 
       - name: Enable KVM
         run: |
@@ -98,7 +108,8 @@ jobs:
           # Deterministic still frames (the hologram honours the system animator setting); the script re-enables
           # animation for one extra screenshot at the end.
           $ADB shell settings put global animator_duration_scale 0
-          python3 scripts/continuum-emulator-screenshots.py app/build/outputs/apk/debug/app-debug.apk "$EVIDENCE/shots"
+          python3 scripts/continuum-emulator-screenshots.py app/build/outputs/apk/debug/app-debug.apk "$EVIDENCE/shots" \
+            at.heinz.deviceai.featurepreview at.heinz.deviceai.AgentActivity
 
       - name: Build report
         if: always()
@@ -109,15 +120,23 @@ jobs:
             echo "commit: $GITHUB_SHA"
             echo "ref: $GITHUB_REF"
             echo "run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo "python-ui-tests: ${{ steps.python.outcome }}"
             echo "node-ui-tests: ${{ steps.node.outcome }}"
             echo "unit-tests: ${{ steps.unit.outcome }}"
             echo "lint: ${{ steps.lint.outcome }}"
             echo "assembleDebug: ${{ steps.apk.outcome }}"
-            echo "emulator-screenshots: ${{ steps.shots.outcome }}"
+            echo "emulator-screenshots-and-tap-targets: ${{ steps.shots.outcome }}"
+            python3 -c "import json; r=json.load(open('$EVIDENCE/shots/report.json')); print('tap-targets:', r.get('tapSummary'), 'installed:', r.get('installed'))" 2>/dev/null || echo "tap-targets: no report"
             if [ -f "$APK" ]; then
               echo "apk-sha256: $(sha256sum "$APK" | cut -c1-64)"
               echo "apk-bytes: $(stat -c %s "$APK")"
               $SDK/build-tools/35.0.0/aapt dump badging "$APK" | grep -E "^(package|sdkVersion|targetSdkVersion|launchable-activity)"
+              # the candidate must be the feature preview, never the main package
+              if $SDK/build-tools/35.0.0/aapt dump badging "$APK" | grep -q "^package: name='at.heinz.deviceai.featurepreview' versionCode='9'"; then
+                echo "variant-check: OK (at.heinz.deviceai.featurepreview, versionCode 9)"
+              else
+                echo "variant-check: FAIL (not the feature-preview package)"
+              fi
               $SDK/build-tools/35.0.0/apksigner verify --print-certs "$APK" | grep -E "Signer #1 certificate (DN|SHA-256)"
             fi
             python3 - <<'PY'
