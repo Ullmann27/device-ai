@@ -226,6 +226,41 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
     private val painter = AndroidContinuumPainter(context.assets)
     private var tapX = 0f
     private var tapY = 0f
+    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    private var pulseScheduled = false
+    private val pulseFrame = Runnable {
+        pulseScheduled = false
+        if (canPulse()) invalidate()
+    }
+    private fun canPulse(): Boolean = isShown && isAttachedToWindow &&
+        android.animation.ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
+    private fun schedulePulse() {
+        if (!pulseScheduled && canPulse()) {
+            pulseScheduled = true
+            postOnAnimationDelayed(pulseFrame, 66L)
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        schedulePulse()
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(pulseFrame)
+        pulseScheduled = false
+        super.onDetachedFromWindow()
+    }
+
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (isVisible) schedulePulse()
+        else {
+            removeCallbacks(pulseFrame)
+            pulseScheduled = false
+        }
+    }
+
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) { field = value; contentDescription = element.describe(value); invalidate() }
 
@@ -248,7 +283,11 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
         // [designScale] = window width / reference width, like the start-screen slots
         val k = density * designScale
         canvas.scale(k, k)
+        element.motionPhase = if (canPulse()) {
+            (android.os.SystemClock.uptimeMillis() % 4800L).toFloat() / 4800f
+        } else null
         element.draw(painter, width / k, height / k, state)
         canvas.restoreToCount(saved)
+        schedulePulse()
     }
 }
