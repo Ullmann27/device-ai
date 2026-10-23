@@ -30,8 +30,10 @@ test('v18 is the only owner update variant in new release profile', () => {
 test('Astra source and exact commit gates precede signing operations', () => {
   const signature=script.indexOf('base64 --decode');
   assert.ok(signature>0);
-  for(const term of ['CONTINUUM_RELEASE_SHA','CONTINUUM_ASTRA_UI_SHA','merge-base --is-ancestor','git status --porcelain','ContinuumCcc1Bridge.kt','ContinuumHologramRenderer.kt'])
+  for(const term of ['CONTINUUM_RELEASE_SHA','CONTINUUM_ASTRA_UI_SHA','merge-base --is-ancestor','core.fileMode=false diff --quiet','ContinuumCcc1Bridge.kt','ContinuumHologramRenderer.kt'])
     assert.ok(script.indexOf(term)>=0 && script.indexOf(term)<signature,term);
+  assert.match(script, /APPROVED_RELEASE_SOURCES/);
+  assert.match(script, /git hash-object --/);
 });
 test('existing signed owner 0.3.16 remains the immutable rollback, not the new output', () => {
   const old=fs.readFileSync(existingBuild,'utf8');
