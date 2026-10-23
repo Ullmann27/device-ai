@@ -231,8 +231,9 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
     const tools=inspect?await inspect():await doctor({env:resolvedEnv,arch});
     if(tools.status!=='READY_FOR_EXPERIMENTAL_BUILD')return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const gradle=tools.bin?.gradle, aapt2=tools.bin?.aapt2, signer=tools.bin?.apksigner;
-    const aapt=tools.bin?.aapt||executable('aapt',resolvedEnv)||path.join(resolvedEnv.ANDROID_HOME||'', 'build-tools','35.0.0','aapt');
-    if(!gradle||!aapt2||!signer||(!tools.bin?.aapt&&!executable('aapt',resolvedEnv)&&!fs.existsSync(aapt)))
+    // The verified Termux doctor supplies native aapt2, not legacy aapt.
+    // Reuse its exact executable, as the existing Continuum Android builder does.
+    if(!gradle||!aapt2||!signer)
       return {status:'BLOCKED_MISSING_TOOLCHAIN'};
     const release=lease||((await import('../.github/continuum/shared-build-lease.mjs')).acquireContinuumBuildLease(source.project));
     try {
@@ -250,7 +251,7 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
       const cert=await run(signer,['verify','--verbose','--print-certs',apk],{cwd:source.project,env:resolvedEnv,timeout:30000});
       const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
       if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))return {status:'FAILED_APK_SIGNATURE'};
-      const identity=await run(aapt,['dump','badging',apk],{cwd:source.project,env:resolvedEnv,timeout:30000});
+      const identity=await run(aapt2,['dump','badging',apk],{cwd:source.project,env:resolvedEnv,timeout:30000});
       if(!identity.ok || !identity.output.includes("package: name='"+RECIPE.packageName+"' versionCode='1' versionName='0.1.0'"))
         return {status:'FAILED_APK_IDENTITY'};
       if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
