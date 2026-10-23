@@ -48,7 +48,11 @@ a3faa9a9a7058661cd5a4970b88bc7b16943e5a0 app/build.gradle.kts
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
 # but changes to tracked source or new executable/tests in source locations are not.
-git diff --quiet HEAD -- || die "Tracked source differs from approved release commit"
+if ! git diff --quiet HEAD --; then
+  echo "[Continuum] Changed tracked paths (status and names only):" >&2
+  git diff --name-status HEAD -- | head -60 >&2
+  die "Tracked source differs from approved release commit"
+fi
 new_source_files="$(git ls-files --others --exclude-standard -- \
   app/src scripts backend/src backend/test .github/continuum .github/workflows)"
 [[ -z "$new_source_files" ]] || die "Untracked source files detected in release checkout"
