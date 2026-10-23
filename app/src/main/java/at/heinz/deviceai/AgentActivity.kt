@@ -1860,6 +1860,14 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
                 ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
+                ContinuumWorkerChatCommand.M4Notes -> {
+                    addAssistantMessage(
+                        "M4 · Eigene Notiz-App: Der geprüfte Projektgenerator ist im Android-Builder " +
+                            "verfügbar. Wähle dort 'M4 · Eigene Notiz-App erzeugen' und bestätige " +
+                            "den Auftrag ausdrücklich. Noch kein Projekt erzeugt und keine APK gebaut."
+                    )
+                    openMobileBuilder()
+                }
                 is ContinuumWorkerChatCommand.Draft -> {
                     devController.setGoal(baumeister.goal)
                     if (devController.state.goal == baumeister.goal) {
