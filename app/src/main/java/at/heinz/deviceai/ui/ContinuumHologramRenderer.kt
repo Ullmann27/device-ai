@@ -232,7 +232,9 @@ class ContinuumHologramRenderer {
         drawFloor(p, f)
         drawPedestal(p, f)
         // One rotation for the whole network: slow turn plus a gentle nod, both from the animation phase.
-        plexus.project(f.phase * .16f, .3f + .05f * sin(f.phase * .21f), cx, cy, rs, f.phase)
+        // A visible but unhurried, physically consistent rotation of the *same* 3-D nodes;
+        // no new samples, faux device load or randomized per-frame particle locations.
+        plexus.project(f.phase * .52f, .3f + .08f * sin(f.phase * .28f), cx, cy, rs, f.phase)
         // Light layers add up (crossings and dense regions glow); glass, core and text cover.
         p.setAdditive(true)
         drawHalo(p, f)
@@ -242,7 +244,8 @@ class ContinuumHologramRenderer {
         p.setAdditive(true)
         drawOrbits(p, f, front = true)
         val contactY = padY - r * .05f
-        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, .4f + f.energy * .1f)
+        val contactBreath = .4f + f.energy * .1f + .065f * sin(f.phase * .8f)
+        p.fillOval(cx - r * .78f, contactY - r * .14f, cx + r * .78f, contactY + r * .14f, contactGlow, contactBreath)
         drawSparkles(p, f)
         p.setAdditive(false)
         if (showBrand) drawBrand(p)
