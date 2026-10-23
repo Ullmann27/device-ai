@@ -283,14 +283,6 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
       const apk=path.join(source.project,'app/build/outputs/apk/debug/app-debug.apk');
       if(!fs.existsSync(apk)||!fs.lstatSync(apk).isFile()||fs.lstatSync(apk).isSymbolicLink())
         return {status:'FAILED_NO_APK'};
-      const cert=await run(signer,['verify','--verbose','--print-certs',apk],{cwd:source.project,env:resolvedEnv,timeout:30000});
-      const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
-      if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))return {status:'FAILED_APK_SIGNATURE'};
-      const identity=await run(aapt2,['dump','badging',apk],{cwd:source.project,env:resolvedEnv,timeout:30000});
-      if(!identity.ok || !identity.output.includes("package: name='"+RECIPE.packageName+"' versionCode='1' versionName='0.1.0'"))
-        return {status:'FAILED_APK_IDENTITY'};
-      if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
-      const digest=SHA(fs.readFileSync(apk));
       const homeRoot=fs.realpathSync(home);
       let state=homeRoot;
       for (const segment of ['.local','state','device-ai-continuum','owned-projects']) {
@@ -300,14 +292,42 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
         if (!directory.isDirectory() || directory.isSymbolicLink())
           return {status:'BLOCKED_UNSAFE_STATE'};
       }
-      const saved=path.join(state,'Continuum-M4-Notes-'+digest.slice(0,16)+'.apk');
-      try{fs.copyFileSync(apk,saved,fs.constants.COPYFILE_EXCL);}
-      catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}
-      if(!fs.lstatSync(saved).isFile()||fs.lstatSync(saved).isSymbolicLink()||SHA(fs.readFileSync(saved))!==digest)
-        return {status:'FAILED_ARTIFACT_COPY'};
-      return {status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',packageName:RECIPE.packageName,
-        versionCode:1,apkSha256:digest,signerSha256:certMatch[1].toLowerCase(),sourceSha256:source.sourceSha256,
-        project:source.project,artifact:saved,installed:false,productionReady:false};
+      // Exactly the bytes copied into this private stage must pass both independent
+      // verifiers and the final digest. Never check a mutable Gradle output and then
+      // copy potentially different bytes into the owner artifact.
+      const {randomUUID}=await import('node:crypto');
+      const staged=path.join(state,'.m4-apk-'+randomUUID()+'.tmp');
+      try {
+        try { fs.copyFileSync(apk,staged,fs.constants.COPYFILE_EXCL);fs.chmodSync(staged,0o600); }
+        catch { return {status:'FAILED_ARTIFACT_COPY'}; }
+        const cert=await run(signer,['verify','--verbose','--print-certs',staged],
+          {cwd:source.project,env:resolvedEnv,timeout:30000});
+        const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
+        if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))
+          return {status:'FAILED_APK_SIGNATURE'};
+        const identity=await run(aapt2,['dump','badging',staged],
+          {cwd:source.project,env:resolvedEnv,timeout:30000});
+        if(!identity.ok || !identity.output.includes(
+          "package: name='"+RECIPE.packageName+"' versionCode='1' versionName='0.1.0'"))
+          return {status:'FAILED_APK_IDENTITY'};
+        if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')
+          return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
+        if(!outputWithinProject(source.project))
+          return {status:'BLOCKED_UNSAFE_BUILD_OUTPUT'};
+        const digest=SHA(fs.readFileSync(staged));
+        const saved=path.join(state,'Continuum-M4-Notes-'+digest.slice(0,16)+'.apk');
+        try{fs.copyFileSync(staged,saved,fs.constants.COPYFILE_EXCL);}
+        catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}
+        if(!fs.lstatSync(saved).isFile()||fs.lstatSync(saved).isSymbolicLink()||
+           SHA(fs.readFileSync(saved))!==digest)return {status:'FAILED_ARTIFACT_COPY'};
+        return {status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
+          packageName:RECIPE.packageName,versionCode:1,apkSha256:digest,
+          signerSha256:certMatch[1].toLowerCase(),sourceSha256:source.sourceSha256,
+          project:source.project,artifact:saved,installed:false,productionReady:false};
+      } finally {
+        try { fs.rmSync(staged,{force:true}); } catch { /* explicit artifact verification still mandatory */ }
+      }
+
     } finally {release();}
 }
 async function main() {
