@@ -230,6 +230,39 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
   deshalb **nicht** ausgeführt und es werden keine Live-Ergebnisse behauptet. Auf dem lokalen Worker des Besitzers
   (oder nach Freigabe der Domain) ist der Lauf ohne Änderung möglich.
 
+## 8c. Vorregistrierung NF-6b-lite: Zählmodell-verankerte Mischung (eingetragen 23.10.2026, vor jedem Lauf)
+
+**Anlass.**
+- Der LM1-TEST zeigt es: Kneser-Ney-7 schlägt jedes neuronale LM1-Modell, und zwar auf VALIDATION wie auf TEST.
+- NF-6b sieht vor, dass ein Zählmodell das neuronale Modell verankert. Seine vorregistrierte Vergleichsbasis ist eine feste Mischung.
+- Diese vereinfachte Fassung prüft zuerst die Mischung selbst. Das überraschungsgesteuerte Schreiben in Fast Weights (volles NF-6b) bleibt offen.
+
+**Modelle (NFC1-Daten, nur DOC TRAIN)**
+- Byte-Varianten G-S-b und G-M-b: minGRU, Vokabular 258, also ein Token je Byte. Gleicher Plan wie NF-2: 6 Epochen, Seeds 1–3; ausgewertet wird Epoche 6.
+- Kneser-Ney-Byte-n-Gramm der Ordnung 7, dieselbe Implementierung wie in LM1.
+
+**Mischung je Byte:** `p = λ · p_neuronal + (1 − λ) · p_KN`.
+- **fest:** λ auf einem Raster mit Schritt 0,025.
+- **verankert:** `λ = σ(a + b · ln(1 + n) + c · o / 7)`.
+  - n ist die Zahl der Beobachtungen des längsten bekannten n-Gramm-Kontexts, o dessen Ordnung.
+  - Das Gate vertraut dem Zählmodell also dort, wo es viel gesehen hat.
+
+**Faire Anpassung:**
+- VALIDATION wird nach Dokument-Hash in zwei Hälften geteilt.
+- λ bzw. (a, b, c) werden auf der einen Hälfte bestimmt und auf der anderen gemessen, dann umgekehrt (Cross-Fitting).
+- Berichtet wird der BPB über beide Hälften.
+
+**Entscheidungsregeln (je Seed, alle Seeds müssen erfüllen)**
+- H6b-1 „Die Mischung ist besser als das Zählmodell allein“: feste Mischung ≤ KN-7 − 0,05 BPB.
+- H6b-2 „Die Verankerung hilft“: verankert ≤ fest − 0,02 BPB. Das ist die NF-6b-Schwelle aus Abschnitt 8.
+- Berichtet, ohne Regel: Vergleich mit dem besten BPE-Modell G-M (2,392).
+
+**TEST:** Erfüllt eine Variante H6b-1, kommt die beste Mischung beim Zyklusabschluss (Abschnitt 9) zusammen mit KN-7 und G-M einmal in den DOC TEST.
+
+**Grenzen**
+- Byte-Modelle mit 6 Epochen sind schwächer als BPE-Modelle (LM1: v258 2,246 gegen v512 2,225 bei M).
+- Gewonnen werden kann also nur durch die Mischung, nicht durch das neuronale Modell allein.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**
