@@ -151,3 +151,43 @@ test('symbolic state parent never receives an APK artifact',async()=>{
  assert.equal(result.status,'BLOCKED_UNSAFE_STATE');
  assert.deepEqual(fs.readdirSync(outside),[]);
 });
+
+test('M4 refuses a symlinked Gradle build output before running Gradle',async()=>{
+ const home=fresh(), outside=fresh(); createOwnedApp({home});
+ const buildDir=path.join(projectPath(home),'app/build');
+ fs.symlinkSync(outside,buildDir);
+ const commands=[];
+ const result=await build(home,{run:fake(home,{commands})});
+ assert.equal(result.status,'BLOCKED_UNSAFE_BUILD_OUTPUT');
+ assert.deepEqual(commands,[]);
+ assert.deepEqual(fs.readdirSync(outside),[]);
+});
+test('M4 refuses a symlinked nested APK output before running Gradle',async()=>{
+ const home=fresh(), outside=fresh(); createOwnedApp({home});
+ const buildDir=path.join(projectPath(home),'app/build/outputs/apk');
+ fs.mkdirSync(path.dirname(buildDir),{recursive:true});
+ fs.symlinkSync(outside,buildDir);
+ const commands=[];
+ const result=await build(home,{run:fake(home,{commands})});
+ assert.equal(result.status,'BLOCKED_UNSAFE_BUILD_OUTPUT');
+ assert.deepEqual(commands,[]);
+ assert.deepEqual(fs.readdirSync(outside),[]);
+});
+test('M4 refuses a redirected output appearing during a Gradle run',async()=>{
+ const home=fresh(), outside=fresh(); createOwnedApp({home});
+ const commands=[];
+ const base=fake(home,{commands});
+ const run=async(file,args,options)=>{
+   if(file==='/fake/gradle'){
+     const dir=path.join(projectPath(home),'app/build/outputs');
+     fs.mkdirSync(path.dirname(dir),{recursive:true});
+     fs.symlinkSync(outside,dir);
+     return {ok:true,code:0,output:'Gradle mocked'};
+   }
+   return base(file,args,options);
+ };
+ const result=await build(home,{run});
+ assert.equal(result.status,'BLOCKED_UNSAFE_BUILD_OUTPUT');
+ assert.deepEqual(commands,[]);
+ assert.deepEqual(fs.readdirSync(outside),[]);
+});
