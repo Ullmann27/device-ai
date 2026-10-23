@@ -58,12 +58,20 @@ besser als ein gewöhnlicher geprüfter Cache?
 ## Messgrößen (HOLDOUT)
 
 Falsche Antworten gegen Gold (veraltet, widersprüchlich, unbelegt), verpasste, Trefferquote (aus Cache/Gewohnheit),
-Laufzeit je Frage (Median, p95; JVM, kein Gerät), Kosten der Schlaf-Phase, Zahl und Gründe verworfener Kandidaten.
+Laufzeit je Frage (Median, p95; JVM, kein Gerät) auf den **zuvor gelösten Fragen** (gleiche Relationsfolge und
+Erwähnung wie eine Frage der Wach-Phase) und auf allen HOLDOUT-Fragen, Kosten der Schlaf-Phase, Zahl und Gründe
+verworfener Kandidaten.
+
+*Präzisierung vor dem ersten Lauf:* Die Fragestellung betrifft zuvor gelöste Wege; der Median über alle Fragen
+würde bei einer Trefferquote unter 50 % nur die Laufzeit ungelöster Fragen messen. Die Laufzeitregeln gelten daher
+für die Teilmenge der zuvor gelösten Fragen; die Laufzeit über alle Fragen wird zusätzlich berichtet.
 
 ## Entscheidungsregeln
 
-1. **Schneller ohne Verlust:** WSC1 hat 0 falsche Antworten **und** Median-Laufzeit ≤ 0,5 × FULL.
-2. **WSC1 statt Cache** nur, wenn zusätzlich Trefferquote ≥ CACHE + 0,10 **oder** Median ≤ 0,5 × CACHE bei ebenfalls
+1. **Schneller ohne Verlust:** WSC1 hat 0 falsche Antworten (alle HOLDOUT-Fragen) **und** Median-Laufzeit auf den
+   zuvor gelösten Fragen ≤ 0,5 × FULL auf denselben Fragen.
+2. **WSC1 statt Cache** nur, wenn zusätzlich Trefferquote (alle Fragen) ≥ CACHE + 0,10 **oder** Median auf den zuvor
+   gelösten Fragen ≤ 0,5 × CACHE bei ebenfalls
    0 falschen Antworten. Sonst ist der gewöhnliche geprüfte Cache vorzuziehen.
 3. Das Tor muss alle unbestätigten und alle absichtlich fehlerhaften Kandidaten verwerfen; sonst gilt WSC1 als nicht
    sicher, unabhängig von 1 und 2.
