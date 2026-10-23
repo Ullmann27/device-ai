@@ -58,10 +58,17 @@ Nicht ausgeführt: Gradle `:app:testDebugUnitTest :app:lintDebug :app:assembleDe
    `FAILED_SAVE_CYCLE`; danach Issue #76 schließen.
 4. Optional: `dl.google.com` in den erlaubten Domains der Umgebung, dann kann ich Gradle selbst ausführen.
 
-## Als Nächstes (laufend)
+## Forschung dieser Nacht: CTX1 (S1/S2 aus Sols Übergabe §6)
 
-- **S1/S2** (Sols Übergabe §6): heutiger Dialogkern gegen eine begrenzte Kontextroutine auf versiegelten,
-  ungesehenen Mehrturn-Dialogen; vorregistriert, TEST einmal. Konkrete Lücke im Kern: Fürwörter („er“, „sie“, „es“)
-  sind Stoppwörter, die Anschlusserkennung kennt nur „darüber/dazu/damit/weiter/noch mehr/und warum/und wie“.
+Heutiger Dialogkern (B0) gegen eine begrenzte Kontextroutine vor demselben Kern (B1), vorregistriert
+(`docs/research/CTX1-DIALOGUE-CONTEXT-PREREG-20261024.md`, Commit `8026fb5c`), TEST einmal auf 480 ungesehenen
+Dialogen (1080 Züge): **B0 433 falsche Behauptungen, 631/920 richtig; B1 0 falsch, 920/920 richtig**, 80/80 nötige
+Rückfragen, 80/80 Enthaltungen bei Unbekannten, Routine 0,10 ms. Entscheidungsregel erfüllt → Vorschlag einer
+abschaltbaren Anbindung (standardmäßig aus, nur nach Besitzerprüfung). Grenzen: synthetische Daten vom selben Autor,
+feste Fakt-Formulierungen. Bericht `docs/research/CTX1-DIALOGUE-CONTEXT-RESULT-20261024.md`, Register `EXP-14`.
+Nebenbefund im heutigen Kern (nachgeprüft): Die Anschlussregel „und wie“ hängt die vorige Frage an und zitiert dann
+die alte Antwort.
+
+## Als Nächstes
 - **S3** besteht im Kern schon (`EXPERIENCE_REPLAY`: unabhängig geprüfter Patch für denselben Diagnose-Fingerabdruck,
   nur wenn der Abschnitt noch genau einmal passt; danach Kritiker, echte Tests, unabhängiger Lauf).
