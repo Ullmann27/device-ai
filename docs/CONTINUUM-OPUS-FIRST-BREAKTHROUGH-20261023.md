@@ -13,7 +13,25 @@ Statusbegriffe: **bestanden** = hier ausgeführt und grün · **nicht ausgeführ
 |---|---|
 | **A. CCC1 Ende zu Ende** | **bestanden außerhalb des Geräts:** echter Reparaturlauf über genau die Termux-Aufrufe der App auf einem Klon des echten Repositorys – echter Fehler gefunden, bestehende Pipeline, unabhängiger zweiter Arbeitsstand, CCC1-Verifier, Patch nur angeboten; zweimal reproduziert (gleicher Patch-Hash). **Nicht ausgeführt:** derselbe Lauf auf dem Fold7/Termux. |
 | **B. Android als Ganzes** | CCC1-Brücke in Activity/Empfänger verdrahtet; alle 202 Hauptquellen kompilieren, **817/817 Kotlin-Unit-Tests** + 4 Prüfprogramme grün (außerhalb Gradle). **Nicht ausgeführt:** Gradle/AGP-Build, Lint, Robolectric-UI-Tests, Gerät. |
-| **C. Signierte Besitzer-APK > 17** | **nicht gebaut.** Kein Android-SDK/Signierschlüssel hier; versionCode liegt in `app/build.gradle.kts` (Astra/Integration); laut PR #98 keine Besitzer-APK ohne Astras vollständige Premium-UI. Schritte unten. |
+| **C. Signierte Besitzer-APK > 17** | **Von der Integration gebaut (nicht von mir):** 0.3.17 / Code 18 aus `astra/render-mentor-apk-builder-20261019` @ `285639ba` (enthält diesen Branch bis `c72bd98f`), Render-Signierdienst, Gradle-Tests + Lint grün, gleiches Zertifikat (PR #100, Kommentar vom 23.10. 15:38). **Nicht bestätigt:** Installation und Test auf dem Fold7. |
+
+## CCC1 auf dem Gerät (Nachtrag 23.10. abends)
+
+Die App 0.3.17 schickt `ccc1-*` an den **Termux-Checkout** `~/device-ai`. Laut Issue #41 stand der zuletzt auf einem
+alten Commit (`91291cb2`). Nachgestellt: Dort antwortet `ccc1-status` mit Exit 2, leerem stdout und der alten
+Usage-Zeile – die App zeigt nur „Keine verlässliche CCC1-Rückmeldung“. **Lösung ohne neue APK:** drei Git-Befehle in
+Termux (`docs/CONTINUUM-CCC1-AUF-DEM-GERAET.md`), danach `bash scripts/continuum-teamleader-termux.sh ccc1-check`.
+Wörtlich durchgespielt: danach `BEREIT`, und der Kotlin-Code der **installierten** App (`285639ba`) akzeptiert alle
+Antworten (Vorprüfung, Einreichen, Schritt, Status, Abbruch). Neu in Termux: `ccc1-check [--full]`, `ccc1-prepare`,
+`ccc1-once`, `ccc1-status`, `ccc1-review`. Für die **nächste** APK: Die App erkennt „Checkout zu alt“, „Builder fehlt“
+und „Termux startet nicht“ selbst und nennt zu jedem Vorprüfungscode den nächsten Schritt (`0a268a86`).
+
+**Issue #76 (`FAILED_SAVE_CYCLE_IllegalStateException`):** Am Android-15-Framework nachgewiesen, dass `commit()` bei
+gesetztem Interrupt-Flag `false` meldet, auch wenn geschrieben wurde. Abgefangen und mit festen Ursachencodes
+versehen (`7c6291f9`). Ob genau das die Gerätemeldungen auslöste, ist ohne Gerätelog offen.
+
+**GitHub Actions:** Jeder Lauf endet nach ~2 s ohne Schritte und ohne Logs (HTTP 404) – keine Codeursache;
+Konto-/Runner-Einstellungen (Actions-Minuten, Ausgabenlimit) prüfen.
 
 ## A. CCC1-Fortschritt (die Kette)
 
@@ -91,13 +109,14 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 
 | Prüfung | Ergebnis |
 |---|---|
-| Node `.github/continuum/*.test.mjs` + `scripts/*.test.mjs` | **981 Tests: 975 bestanden, 0 fehlgeschlagen, 6 übersprungen** (brauchen `kotlinc`) |
+| Node `.github/continuum/*.test.mjs` + `scripts/*.test.mjs` | **985 Tests: 979 bestanden, 0 fehlgeschlagen, 6 übersprungen** (brauchen `kotlinc`) |
 | dieselben 7 Kotlin-abhängigen Node-Tests mit `kotlinc` im PATH | **7/7 bestanden** |
 | Backend `backend/test/*.test.js` | **60/60 bestanden** mit `npm ci` aus dem Lockfile; ohne Abhängigkeiten 7 rot (Umgebung, nicht Code) |
-| Kotlin-Unit-Tests (`scripts/android-kotlin-unit-check.sh`) | **817/817 bestanden** (165 Klassen) + 4 Prüfprogramme PASS |
+| Kotlin-Unit-Tests (`scripts/android-kotlin-unit-check.sh`) | **822/822 bestanden** (166 Klassen) + 4 Prüfprogramme PASS |
+| ausgelieferte APK-Quelle `285639ba` (Node) | **992 Tests: 986 bestanden, 0 fehlgeschlagen**, 6 übersprungen |
 | Android-Hauptquellen kompilieren | bestanden (LiteRT-LM nur als Kompilier-Platzhalter, sonst Werkzeug nicht verfügbar) |
 | Gradle/AGP, Android-Lint, Robolectric-UI (`src/uiTest`), APK, Fold7 | **nicht ausgeführt** (Werkzeug nicht verfügbar: kein SDK, Google Maven gesperrt) |
-| GitHub Actions | nicht ausgeführt; Läufe auf `main` scheitern laut Audit ohne Step-Daten |
+| GitHub Actions | nicht ausführbar: jeder Lauf endet nach ~2 s ohne Schritte/Logs (Konto-/Runner-Ebene) |
 
 ## C. Weg zur Besitzer-APK (nicht in diesem Branch)
 
@@ -112,8 +131,8 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
 
 ## F. Offene Punkte, Risiken, nächster Schritt
 
-- **Gerät:** Termux-RUN_COMMAND mit den neuen `ccc1-*`-Operationen und die Activity sind nicht auf dem Fold7 gelaufen.
-  Termux muss Node ≥ 20 haben; der State liegt unter `~/.local/state/device-ai-continuum/ccc1`.
+- **Gerät:** CCC1 aus der App ist auf dem Fold7 noch nicht gelaufen; zuerst den Termux-Checkout aktualisieren
+  (`docs/CONTINUUM-CCC1-AUF-DEM-GERAET.md`) und das Ergebnis von `ccc1-check --full` festhalten.
 - **Rückkanalgröße:** Die App nimmt höchstens 32 768 Zeichen; der Status ist dafür auf die 10 neuesten Aufträge ohne
   Patch-Text begrenzt. Ob Termux `stdout_original_length` immer mitsendet (sonst gilt die Antwort als abgeschnitten),
   ist auf dem Gerät zu bestätigen – das galt schon für die bestehenden Coding-Aufträge.
@@ -125,7 +144,8 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
   CDX1 erkennt nur ungewöhnliche Bytefolgen (99 %), keine Syntax-, Token-, Abschneide-, Hunk- oder semantischen Fehler;
   ein Byte-4-Gramm leistet dasselbe 6× schneller → kein CDX1-Signal in CCC1. Vorschlag: deterministische Prüfung auf
   Steuer-/unsichtbare Zeichen in Patches. **A (TTT1), B (LCT1), C (WSC1), E (GGUF/Spine): nicht ausgeführt.**
-- **Nächster Schritt:** Draft-PR prüfen und in PR #97 übernehmen; PR #98 dazu; dann Gates 2–4 oben.
+- **Nächster Schritt:** Besitzer: Termux-Checkout aktualisieren und CCC1 aus der App probieren. Integration: die
+  Commits ab `c72bd98f` (Termux-Befehle, App-Diagnose, Fix #76) in den nächsten APK-Build übernehmen.
 
 **Rollback:** Branch-Commits sind klein und einzeln revertierbar; vor `89b353d5` liegt unverändert `81180313`
 (PR-#97-Basis). Für die App: Activity/Empfänger-Änderungen stecken nur in `e6824816` (eine Revert-Operation).
