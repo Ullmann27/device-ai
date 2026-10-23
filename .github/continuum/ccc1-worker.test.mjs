@@ -110,7 +110,7 @@ test('damaged journals are reported, never repaired, and stop the worker; the ex
 test('the CLI keeps its state outside the repository and lists tasks',async()=>{
  const f=fixture();
  const lines=[];
- await assert.rejects(cli(['status','--state',path.join(f.root,'state'),'--project',f.root],l=>lines.push(l)),/outside the repository/);
+ await assert.rejects(cli(['status','--state',path.join(f.root,'state'),'--project',f.root],l=>lines.push(l)),/CCC1_STATE_INSIDE_SOURCE|outside the repository/);
  await cli(['submit','--project',f.root,'--state',f.state,'--goal',TRIPLE],l=>lines.push(l));
  await cli(['status','--state',f.state],l=>lines.push(l));
  assert.match(lines.at(-1),/^1 task\(s\), 0 experience record\(s\)$/);
