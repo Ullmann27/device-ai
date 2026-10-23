@@ -14,6 +14,9 @@ metrics JSON, or a JVM preview with --density/--scale), and reference-phone.png 
 4. --texts <render>.texts.json (written by the JVM preview) masks drawn live values (texts with digits or the unknown
    value dash): the *Masked metrics leave those pixels out, so real measurements that differ from the reference's
    sample numbers do not count as a design difference.
+5. Composition and colour character: meanAbsDiffLowFreq compares both images blurred by 4 dp (Gaussian), i.e. where
+   light, colour and mass sit, independent of the exact position of fine lines and particles (which a different but
+   equally good network can never reproduce pixel by pixel). Edges still measure the fine structure.
 Numbers describe pixel agreement, not perceived quality; font rasterisation and the reference's photographic glow
 always leave a residual difference.
 
@@ -39,6 +42,7 @@ WIDE = {  # reference dp, from ContinuumHomeLayout.wideReference
 PX_PER_DP = {'phone': 1.7306, 'wide': 1.54}
 LIVE_VALUE = re.compile(r'[0-9—]')     # measured values contain digits; unknown values are drawn as an em dash
 MASK_MARGIN_DP = 3.0
+LOW_FREQ_DP = 4.0
 
 
 def edges(img):
@@ -112,9 +116,11 @@ def compare(render, reference, kind, f, offset=None, texts=None, scale=1.0):
     region = reference.crop((ox, oy, ox + resized.width, oy + resized.height))
     a, b = np.asarray(resized, dtype=np.float32), np.asarray(region, dtype=np.float32)
     ea, eb = edges(resized), edges(region)
+    k = PX_PER_DP[kind]
+    blur = ImageFilter.GaussianBlur(LOW_FREQ_DP * k)
+    la, lb = np.asarray(resized.filter(blur), dtype=np.float32), np.asarray(region.filter(blur), dtype=np.float32)
     score = ncc(ea, eb)
     diff = np.abs(a - b).mean(axis=2)
-    k = PX_PER_DP[kind]
     excluded = live_value_mask(texts, resized.size, k / scale) if texts is not None else None
     slots = {}
     for name, (l, t, r, btm) in boxes.items():
@@ -124,14 +130,16 @@ def compare(render, reference, kind, f, offset=None, texts=None, scale=1.0):
             continue
         sa, sb, sea, seb = a[y0:y1, x0:x1], b[y0:y1, x0:x1], ea[y0:y1, x0:x1], eb[y0:y1, x0:x1]
         mad, edge = slot_metrics(sa, sb, sea, seb)
-        slots[name] = {'meanAbsDiff': mad, 'edgeCorrelation': edge}
+        slots[name] = {'meanAbsDiff': mad, 'edgeCorrelation': edge,
+                       'meanAbsDiffLowFreq': round(float(np.abs(la[y0:y1, x0:x1] - lb[y0:y1, x0:x1]).mean()), 1)}
         if excluded is not None:
             keep = ~excluded[y0:y1, x0:x1]
             mmad, medge = slot_metrics(sa, sb, sea, seb, keep)
             slots[name].update({'meanAbsDiffMasked': mmad, 'edgeCorrelationMasked': medge,
                                 'maskedFraction': round(float(1 - keep.mean()), 3)})
     report = {'kind': kind, 'scaleToReference': round(f, 4), 'registration': registration, 'offsetPx': [ox, oy],
-              'edgeCorrelation': round(score, 3), 'meanAbsDiff': round(float(diff.mean()), 1), 'slots': slots}
+              'edgeCorrelation': round(score, 3), 'meanAbsDiff': round(float(diff.mean()), 1),
+              'meanAbsDiffLowFreq': round(float(np.abs(la - lb).mean()), 1), 'slots': slots}
     if excluded is not None:
         keep = ~excluded
         report['meanAbsDiffMasked'] = round(float(diff[keep].mean()), 1)

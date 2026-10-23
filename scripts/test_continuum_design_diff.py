@@ -77,6 +77,15 @@ class CompareTest(unittest.TestCase):
         self.assertEqual(report['meanAbsDiffMasked'], 0.0)
         self.assertLess(report['maskedFraction'], .01)              # only the value box (with margin), not the label
 
+    def test_low_frequency_difference_ignores_fine_shifts_but_not_brightness(self):
+        base = self.crop(10, 5)
+        shifted = Image.fromarray(np.roll(np.asarray(base), 2, axis=1))     # same content, lines 2 px off
+        darker = Image.fromarray((np.asarray(base) * .6).astype(np.uint8))  # same lines, less light
+        r_shift, *_ = diff.compare(shifted, self.reference, 'phone', self.f, offset=(10, 5))
+        r_dark, *_ = diff.compare(darker, self.reference, 'phone', self.f, offset=(10, 5))
+        self.assertLess(r_shift['meanAbsDiffLowFreq'], r_shift['meanAbsDiff'] / 2)
+        self.assertGreater(r_dark['meanAbsDiffLowFreq'], r_shift['meanAbsDiffLowFreq'])
+
     def test_live_value_pattern(self):
         for text in ('62 %', '—', '3,1 GB', 'vor 6 Min'):
             self.assertTrue(diff.LIVE_VALUE.search(text), text)
