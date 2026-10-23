@@ -191,14 +191,26 @@ if [[ "$prior_code" != "16" || "$prior_package" != "at.heinz.deviceai.mentorpair
   echo "Prior known-good v0.3.12 artifact metadata differs; refusing replacement" >&2
   exit 69
 fi
-curl --fail --silent --show-error --location --retry 2 --max-time 240 \
-  "$old_base_url/$prior_apk" -o "$output/$prior_apk"
-printf '%s  %s\n' "$prior_sha" "$output/$prior_apk" | sha256sum --check --status
-"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$prior_apk" \
-  | grep -qiF "$signer"
-"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$output/$prior_apk" \
-  | grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='16'"
-printf '%s  %s\n' "$prior_sha" "$prior_apk" > "$output/SHA256SUMS-$prior_sha.txt"
+# An offline backup is only claimed when the exact OLD artifact was really obtained.
+# Render's live site may retain the metadata while returning HTTP 404 for the APK.
+# Such a server-side archive outage must be recorded; it does NOT change the user's
+# installed APK, signing identity or private on-device data.
+archive_report="$output/ROLLBACK-ARCHIVE-STATUS.txt"
+printf 'previous_owner_version=0.3.15\nprevious_owner_sha256=%s\n' "$prior_sha" > "$archive_report"
+if curl --fail --silent --show-error --location --retry 2 --max-time 240 \
+  "$old_base_url/$prior_apk" -o "$output/$prior_apk"; then
+  printf '%s  %s\n' "$prior_sha" "$output/$prior_apk" | sha256sum --check --status
+  "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$prior_apk" \
+    | grep -qiF "$signer"
+  "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$output/$prior_apk" \
+    | grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='16'"
+  printf '%s  %s\n' "$prior_sha" "$prior_apk" > "$output/SHA256SUMS-$prior_sha.txt"
+  printf 'previous_owner_apk=downloaded_and_hash_signature_verified\n' >> "$archive_report"
+else
+  rm -f "$output/$prior_apk"
+  printf 'previous_owner_apk=unavailable_online_not_archived\n' >> "$archive_report"
+  echo "[Continuum] WARNING: prior code16 signed APK returned HTTP error; immutable metadata kept, no rollback binary claimed"
+fi
 
 for spec in \
   "0.3.10:67b1715d0e7eb42945c81aa90ede5b1d6eca526444d0cff8d83f388dd782aa56" \
@@ -207,12 +219,17 @@ for spec in \
   previous_version="$(printf '%s' "$spec" | cut -d: -f1)"
   previous_sha="$(printf '%s' "$spec" | cut -d: -f2)"
   previous_apk="DeviceAI-Continuum-v$previous_version-$previous_sha.apk"
-  curl --fail --silent --show-error --location --retry 2 --max-time 240 \
-    "$old_base_url/$previous_apk" -o "$output/$previous_apk"
-  printf '%s  %s\n' "$previous_sha" "$output/$previous_apk" | sha256sum --check --status
-  "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$previous_apk" \
-    | grep -qiF "$signer"
-  printf '%s  %s\n' "$previous_sha" "$previous_apk" > "$output/SHA256SUMS-$previous_sha.txt"
+  if curl --fail --silent --show-error --location --retry 2 --max-time 240 \
+    "$old_base_url/$previous_apk" -o "$output/$previous_apk"; then
+    printf '%s  %s\n' "$previous_sha" "$output/$previous_apk" | sha256sum --check --status
+    "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$previous_apk" \
+      | grep -qiF "$signer"
+    printf '%s  %s\n' "$previous_sha" "$previous_apk" > "$output/SHA256SUMS-$previous_sha.txt"
+    printf '%s=downloaded_and_hash_signature_verified\n' "$previous_version" >> "$archive_report"
+  else
+    rm -f "$output/$previous_apk"
+    printf '%s=unavailable_online_not_archived\n' "$previous_version" >> "$archive_report"
+  fi
 done
 
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
@@ -243,5 +260,5 @@ cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-$apk_sha256.txt"
 "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" > "$output/PACKAGE-INFO-$apk_sha256.txt"
 "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > "$output/SIGNATURE-INFO-$apk_sha256.txt"
 printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
-echo "[Continuum] VERIFIED OWNER IN-PLACE UPDATE: signed package, code 17, prior signed APKs preserved"
+echo "[Continuum] VERIFIED OWNER IN-PLACE UPDATE: signed package, code 17; prior APK archive status recorded separately"
 cat "$output/SHA256SUMS-$apk_sha256.txt"
