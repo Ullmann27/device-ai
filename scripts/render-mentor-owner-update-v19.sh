@@ -36,7 +36,7 @@ while read -r expected_blob source_path; do
   [[ "$actual_blob" == "$expected_blob" ]] ||
     die "Approved release file differs: $source_path"
 done <<'APPROVED_RELEASE_SOURCES'
-945dd025e7a6b441033649597d5848d278b54570 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+5c4244c0fbc5e454a9071f6719870d038247a932 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
 8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
 2bb8817da268bdcca676aa9a9b48f56b50d06609 app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
 412d643296deb76ab07e9515f6881eba9df3a9b4 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
