@@ -168,8 +168,19 @@ mkdir -p "$output"
 signer="$expected_signer"
 old_base_url="https://device-ai-mentor-apk-preview.onrender.com"
 old_metadata="$workspace/prior-build-info.txt"
-curl --fail --silent --show-error --location --retry 2 --max-time 120 \
-  "$old_base_url/BUILD-INFO.txt" -o "$old_metadata"
+# GitHub PR #85 recorded the precise 0.3.15 owner APK and its SHA-256.
+# Public BUILD-INFO may be unavailable on an otherwise functioning static site;
+# in that case fall back ONLY to those independently documented pinned values.
+if ! curl --fail --silent --show-error --location --retry 2 --max-time 120 \
+  "$old_base_url/BUILD-INFO.txt" -o "$old_metadata"; then
+  echo "[Continuum] Prior BUILD-INFO unavailable; requiring immutable documented v0.3.15 APK."
+  {
+    printf 'version_code=16\n'
+    printf 'package=at.heinz.deviceai.mentorpaired\n'
+    printf 'apk_sha256=62c0b0ad8d9a3c4a3621a72f5a2fbe17c60e2acf8ac72d26fa88052c1e670fe2\n'
+    printf 'artifact=DeviceAI-Continuum-v0.3.15-62c0b0ad8d9a3c4a3621a72f5a2fbe17c60e2acf8ac72d26fa88052c1e670fe2.apk\n'
+  } > "$old_metadata"
+fi
 prior_code="$(sed -n 's/^version_code=//p' "$old_metadata" | head -1)"
 prior_package="$(sed -n 's/^package=//p' "$old_metadata" | head -1)"
 prior_sha="$(sed -n 's/^apk_sha256=//p' "$old_metadata" | head -1)"
