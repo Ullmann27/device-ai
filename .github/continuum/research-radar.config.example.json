@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "approvedBy": null,
+  "intervalDays": 7,
+  "maxResults": 25,
+  "better": {},
+  "reproduced": {}
+}
