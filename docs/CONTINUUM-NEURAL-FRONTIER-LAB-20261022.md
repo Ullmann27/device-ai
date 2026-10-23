@@ -288,6 +288,54 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
 
 **Lauf:** `scripts/nf5-ranker-study.mjs <out> lexical probe`, gleiche Aufgaben, gleiche CCC1-Laufzeit, höchstens 3 Runden.
 
+## 8e. Vorregistrierung NF-5c: Mehrdeutigkeit erkennen statt falsch bestätigen (eingetragen 23.10.2026, vor jedem Studienlauf)
+
+**Anlass:** In NF-5b (10.8) wurde eine Funktion falsch bestätigt, weil die Beispiele zwei verschiedene Funktionen offenließen. Der Vertragstest prüft nur die Beispiele.
+
+1. **Mechanismus** (Commit `884caecd`; Tests `behaviour-disambiguation` 5/5, davon einer mit echtem Coding-Job)
+   - Vor der ersten Hypothese wird geprüft, ob mindestens zwei prüfbare Kandidaten alle Beispiele erfüllen.
+   - Ist das so, laufen sie in derselben Sandbox wie NF-5b auf weiteren einfachen Eingaben. Das sind erst Varianten der Beispielwerte, dann Standardwerte desselben Typs, dann andere Typen; deterministisch, höchstens 48.
+   - **Weichen die typisierten Ergebnisse ab:** Der Reasoner enthält sich und stellt eine präzise Rückfrage mit der Eingabe und dem Ergebnis jedes Kandidaten. Es läuft kein Job.
+   - **Stimmen sie überein:** Die Kandidaten gelten im geprüften Bereich als verhaltensgleich, und der Dialog läuft wie in NF-5b.
+   - Das Protokoll ändert sich nicht; der Besitzer antwortet mit einem weiteren Beispiel.
+2. **Bekannt:**
+   - orakelgeführte Synthese mit unterscheidenden Eingaben (Jha, Gulwani, Seshia, Tiwari, ICSE 2010);
+   - ausführungsgeleitetes Programming-by-Example (Verbruggen et al., ICLR 2025).
+3. **Aufgaben** (eingefroren in `docs/evidence/nf-20261022/nf5c-tasks.json`, SHA-256 `30066739591d761c6c4f78830fb000e0b078f0702aa53a8c3c3c46dfb1906640`; Bauer `scripts/nf5c-tasks.mjs`)
+   - **Bank (15):** Paare plausibler Implementierungen in `scripts/nf5c-bank/`. 13 Paare unterscheiden sich an Randfällen, 2 verhalten sich gleich.
+     - Die gemeinte Variante bestimmt ein Münzwurf mit festem Seed.
+     - Beispiele sind die ersten zwei Werte des Typ-Pools, auf denen beide Varianten übereinstimmen.
+     - Die Ziele sind neutral formuliert.
+   - **Echte Funktionen (4):** mechanisch geschürft mit `scripts/nf5c-task-miner.mjs` am Commit `9fb4361c`: `integrityOf`, `insertImport`, `normalizeTitle`, `editDistance`. Die Beispiele lassen hier keine zweite Funktion offen.
+     - Vor jedem Lauf wurde die Regel einmal geändert. Regel 1 (ungenutzte Module, ein Argument) ergab 1 von 117 aufrufbaren Exporten. Regel 2 (alle Module, nie genutzte Ziel-Funktionen, ein oder zwei Argumente) ist die gültige.
+     - **Befund:** Nur wenige Projektfunktionen passen in die CCC1-Vertragssprache, die einfache Werte verlangt.
+     - Gründe bei Regel 1: 36 Exporte importieren Dateien außerhalb ihres Ordners, 34 liefern nie einfache Werte, 35 werfen immer einen Fehler.
+   - **Neue Gegenproben (2):** falsches Beispiel; kein Beispiel.
+   - **Historisch (17):** nur Vergleich; Module wie in NF-5b, Commit `14702b0d`. Das sind keine unabhängigen Testdaten, denn der Mechanismus entstand nach diesem Fehler.
+   - **Gleichwertig (zählt als richtig):** gleiche Ergebnisse auf Pool, NF-5c-Eingaben und 40 zufälligen Eingaben. Das ist breiter, als NF-5c selbst prüft.
+4. **Bedingungen**
+   - `lexical`, `probe` (NF-5b) und `disambiguate` (NF-5c); echte Coding-Jobs über CCC1; höchstens 3 Runden.
+   - Rückfragen beantwortet ein simulierter Besitzer mit dem Ergebnis der gemeinten Funktion auf der gefragten Eingabe. Danach läuft die Aufgabe erneut.
+   - Höchstens zwei Antworten je Aufgabe, denn CCC1 prüft höchstens 4 Beispiele. Ist das Ergebnis der gemeinten Funktion kein einfacher Wert (etwa ein Fehler), gilt die Frage als nicht beantwortbar und wird getrennt gezählt.
+5. **Entscheidungsregeln für NF-5c**
+   - **H5c-1 Sicherheit:** 0 ungewollte Bestätigungen in allen Gruppen, auch nach der Antwort.
+   - **H5c-2 Erkennung:** Rückfrage in mindestens 12 der 13 mehrdeutigen Bank-Paare.
+   - **H5c-3 keine unnötigen Fragen:** höchstens 1 Rückfrage in Bank- oder echten Aufgaben, bei denen keine verschiedene Funktion die Beispiele erfüllt.
+   - **H5c-4 Auflösung:** Mindestens 80 % der beantworteten Rückfragen (Bank und echte Aufgaben) enden mit der Bestätigung der gemeinten oder einer gleichwertigen Funktion.
+   - **H5c-5 historisch, nur berichtet:** Nutzen im Vergleich zu NF-5b (12 von 14). Als Nutzen zählt eine richtige Bestätigung oder eine Rückfrage, die die gemeinte Funktion enthält.
+   - Gegenproben: Alle müssen sich enthalten.
+   - **NF-5c gilt als gestützt, wenn H5c-1 bis H5c-4 erfüllt sind.**
+6. **Erwartung (vorab):**
+   - Bei ganzen Prozent zeigt sich der Unterschied zwischen Abrunden und Runden erst bei Anteilen wie 0,125. Solche Eingaben erzeugt NF-5c vermutlich nicht.
+   - Dort droht eine ungewollte Bestätigung, je nach Münzwurf.
+7. **Vor dem Einfrieren korrigiert:** `-0` geht beim JSON-Transport aus der Sandbox verloren. Ein Beispiel `(-3) → 0` wäre für jede Funktion unerfüllbar gewesen. Erkannt wird `-0` jetzt an der typisierten Darstellung.
+8. **Rauchprobe des Studienskripts:** nur mit einer eigenen, nicht eingefrorenen Aufgabe (`Gib den Text unverändert zurück`). Keine eingefrorene Aufgabe lief vor diesem Eintrag.
+9. **Grenzen**
+   - Die Bank habe ich selbst geschrieben, nach dem Mechanismus.
+   - Es gibt nur wenige echte Aufgaben.
+   - Der Besitzer ist simuliert.
+   - Es gibt einen einzigen Lauf.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**

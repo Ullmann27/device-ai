@@ -41,14 +41,16 @@ export const BANK=[
 export const MINED_GOALS={
  '.github/continuum/development-backlog.mjs#integrityOf':'Berechne die Integritätsprüfsumme eines Backlog-Dokuments',
  '.github/continuum/repair-strategies.mjs#insertImport':'Füge einer Quelldatei eine Import-Zeile hinzu',
- '.github/continuum/research-radar.mjs#normalizeTitle':'Normalisiere einen Titel für den Dublettenvergleich'
+ '.github/continuum/research-radar.mjs#normalizeTitle':'Normalisiere einen Titel für den Dublettenvergleich',
+ '.github/continuum/repair-strategies.mjs#editDistance':'Berechne den Bearbeitungsabstand zwischen zwei Texten'
 };
 export const ADVERSARIAL=[
  {id:'adv5c-wrong-example',goal:{text:'Wandle einen Text in eine Prüfsumme um: ("abc") → "xyz".'}},
  {id:'adv5c-no-example',goal:{text:'Finde die Funktion, die eine Zahl auf ganze Zahlen rundet.'}}
 ];
 
-const usable=o=>o&&!o.skipped&&o.primitive===true&&!Object.is(o.json,-0);
+// -0 does not survive the JSON transport from the probe child; its typed rendering does
+const usable=o=>o&&!o.skipped&&o.primitive===true&&o.value!=='-0';
 const sig=o=>!o||o.skipped?'unobserved':'error' in o?'error:'+o.error:'value:'+o.value;
 const lit=v=>typeof v==='string'?JSON.stringify(v):String(v);
 export const goalText=(intent,examples)=>`${intent}: ${examples.map(e=>`(${e.args.map(lit).join(', ')}) → ${lit(e.expected)}`).join(' und ')}.`;

@@ -3,16 +3,16 @@
 // Conditions: lexical (baseline), probe (NF-5b), disambiguate (NF-5c). Groups: bank (15 pairs), mined (real functions),
 // adversarial (2 new goals) and historical (the 17 NF-5 tasks, comparison only; modules as in NF-5b at 14702b0d).
 // Every claim is decided by the real coding job through the CCC1 runtime (contract test, isolated worktrees,
-// independent second run); at most 3 rounds. An NF-5c question is answered by a simulated owner with the intended
-// function's result on the asked input, and the task runs once more with that additional example.
-// Usage: node scripts/nf5c-study.mjs <tasksJson> <outDir> [condition ...]
+// independent second run); at most 3 rounds. NF-5c questions are answered by a simulated owner with the intended
+// function's result on the asked input (at most two answers, each one more example), and the task runs again.
+// Usage: node scripts/nf5c-study.mjs <tasksJson> <outDir> [condition ...] [--groups=bank,...]
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {startTask,runTask} from '../.github/continuum/ccc1-orchestrator.mjs';
-import {Ccc1Reasoner,indexExports,LexicalLanguageCore} from '../.github/continuum/ccc1-interpreter.mjs';
+import {Ccc1Reasoner,indexExports,LexicalLanguageCore,interpretGoal} from '../.github/continuum/ccc1-interpreter.mjs';
 import {ProbeLanguageCore,DisambiguatingProbeCore,observeOutputs} from '../.github/continuum/behaviour-probe.mjs';
 import {DurableTaskJournal,runtimeKey} from '../.github/continuum/ccc1-journal.mjs';
 import {TASKS as HISTORICAL,MODULES as HIST_MODULES} from './nf5-ranker-study.mjs';
@@ -97,22 +97,30 @@ async function runOne(task,condition,goal){
 async function main(){
  const tasksFile=process.argv[2];
  const out=path.resolve(process.argv[3]??'nf5c-study');
- const only=process.argv.slice(4);
+ const groups=process.argv.find(a=>a.startsWith('--groups='))?.slice(9).split(',')??null;   // smoke tests only
+ const only=process.argv.slice(4).filter(a=>!a.startsWith('--'));
  fs.mkdirSync(out,{recursive:true});
  const doc=JSON.parse(fs.readFileSync(tasksFile,'utf8'));
  const tasks=[...doc.bank,...doc.mined,...doc.adversarial,
-  ...HISTORICAL.map(t=>({id:'hist-'+t.id,group:'historical',gold:t.gold,equivalent:t.equivalent,goal:t.goal}))];
+  ...HISTORICAL.map(t=>({id:'hist-'+t.id,group:'historical',gold:t.gold,equivalent:t.equivalent,goal:t.goal}))]
+  .filter(t=>!groups||groups.includes(t.group));
  const rows=[];
  for(const condition of CONDITIONS){
   if(only.length&&!only.includes(condition))continue;
   for(const task of tasks){
    const r=await runOne(task,condition,task.goal);
    const row={condition,task:task.id,group:task.group,kind:task.kind??null,gold:task.gold,...r};
-   if(condition==='disambiguate'&&r.question&&r.answer?.usable){
-    const extra=` Außerdem (${r.ambiguity.input.map(lit).join(', ')}) → ${lit(r.answer.expected)}.`;
-    const after=await runOne(task,condition,{text:task.goal.text+extra});
-    row.after={extra,outcome:after.outcome,confirmed:after.confirmed,correct:after.correct,unintended:after.unintended,
-     question:after.question,jobs:after.jobs,ms:after.ms};
+   if(condition==='disambiguate'&&r.question){
+    // the simulated owner answers up to two questions, each as one more example (CCC1 checks at most 4 examples)
+    let text=task.goal.text,current=r,examples=interpretGoal({text}).acceptance.length;
+    const extras=[];
+    while(current.question&&current.answer?.usable&&extras.length<2&&examples<4){
+     const extra=` Außerdem (${current.ambiguity.input.map(lit).join(', ')}) → ${lit(current.answer.expected)}.`;
+     text+=extra;extras.push(extra);examples++;
+     current=await runOne(task,condition,{text});
+    }
+    row.after=extras.length?{extras,outcome:current.outcome,confirmed:current.confirmed,correct:current.correct,unintended:current.unintended,
+     question:current.question,answerUsable:current.answer?.usable??null}:{extras,notExpressible:true};
    }
    rows.push(row);
    console.log(JSON.stringify(row));
@@ -133,12 +141,13 @@ export function summarize(rows,doc){
    const gr=cr.filter(r=>r.group===g);
    if(!gr.length)continue;
    const reg=gr.filter(r=>r.gold!==null),adv=gr.filter(r=>r.gold===null);
-   const after=gr.filter(r=>r.after);
+   const after=gr.filter(r=>r.after?.extras?.length);
    console.log(`SUMMARY ${c} ${g}: tasks ${reg.length} correct@1 ${reg.filter(r=>r.correctAt1).length} correct ${reg.filter(r=>r.correct).length} `+
     `unintended ${gr.filter(r=>r.unintended).length} questions ${gr.filter(r=>r.question).length} (with gold ${gr.filter(r=>r.questionHasGold).length}) `+
     `useful ${reg.filter(r=>r.correct||r.questionHasGold).length} adversarialOk ${adv.filter(r=>r.adversarialOk).length}/${adv.length} `+
     `jobs ${gr.reduce((n,r)=>n+r.jobs,0)} ms ${gr.reduce((n,r)=>n+r.ms,0)}`+
-    (after.length?` | after answer: ${after.length} reruns, correct ${after.filter(r=>r.after.correct).length}, unintended ${after.filter(r=>r.after.unintended).length}, asked again ${after.filter(r=>r.after.question).length}`:''));
+    (after.length?` | after answers: ${after.length} answered (${after.reduce((n,r)=>n+r.after.extras.length,0)} answers), correct ${after.filter(r=>r.after.correct).length}, unintended ${after.filter(r=>r.after.unintended).length}, still asking ${after.filter(r=>r.after.question).length}`:'')+
+    ` | not expressible ${gr.filter(r=>r.after?.notExpressible).length}`);
   }
  }
  const d=rows.filter(r=>r.condition==='disambiguate');
@@ -146,7 +155,7 @@ export function summarize(rows,doc){
  const unintended=d.filter(r=>r.unintended).length+d.filter(r=>r.after?.unintended).length;
  const askedAmbiguous=d.filter(r=>bankAmbiguous.has(r.task)&&r.question).length;
  const unnecessary=d.filter(r=>r.question&&needs.has(r.task)&&!needs.get(r.task)).length;
- const answered=d.filter(r=>r.after&&r.group!=='historical');
+ const answered=d.filter(r=>r.after?.extras?.length&&r.group!=='historical');
  const resolved=answered.filter(r=>r.after.correct).length;
  const hist=d.filter(r=>r.group==='historical'&&r.gold!==null);
  const histUseful=hist.filter(r=>r.correct||r.questionHasGold).length;

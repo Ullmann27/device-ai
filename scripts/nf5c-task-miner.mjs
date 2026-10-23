@@ -30,7 +30,8 @@ const NETWORK=/(?:from\s+|import\s*\(\s*|require\s*\(\s*)['"](?:node:)?(?:net|ht
 export const POOL=['abc','Hallo Welt','a-b-c','x_y','Ä','','42','der Hund läuft',0,1,2,7,42,-3,1.5,true,false,null].map(v=>[v]);
 export const POOL2=[['abc',2],['Hallo Welt',5],['a-b-c',1],['x_y',0],['der Hund läuft',3],['abc','b'],['Hallo Welt','Welt'],
  ['a-b-c','-'],[2,3],[7,-3],[1.5,2],['abc',true]];
-const usable=o=>o&&!o.skipped&&o.primitive===true&&!Object.is(o.json,-0);
+// -0 does not survive the JSON transport from the probe child; its typed rendering does
+const usable=o=>o&&!o.skipped&&o.primitive===true&&o.value!=='-0';
 const sig=o=>!o||o.skipped?'unobserved':'error' in o?'error:'+o.error:'value:'+o.value;
 
 /** Copies all non-test modules of the pinned commit into a fresh fixture; returns its root. */
