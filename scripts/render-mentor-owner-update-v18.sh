@@ -46,7 +46,12 @@ e243a487a2011906a9c149a2324b63b39ad2f25c app/src/main/java/at/heinz/deviceai/ui/
 520db0554c0e4d8803d674f229f243f51f2aba17 app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt
 a3faa9a9a7058661cd5a4970b88bc7b16943e5a0 app/build.gradle.kts
 APPROVED_RELEASE_SOURCES
-[[ -z "$(git status --porcelain --untracked-files=normal)" ]] || die "Dirty source checkout"
+# Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
+# but changes to tracked source or new executable/tests in source locations are not.
+git diff --quiet HEAD -- || die "Tracked source differs from approved release commit"
+new_source_files="$(git ls-files --others --exclude-standard -- \
+  app/src scripts backend/src backend/test .github/continuum .github/workflows)"
+[[ -z "$new_source_files" ]] || die "Untracked source files detected in release checkout"
 for required in \
   app/src/main/java/at/heinz/deviceai/AgentActivity.kt \
   app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt \
