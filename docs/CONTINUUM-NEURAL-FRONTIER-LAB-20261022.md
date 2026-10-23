@@ -236,6 +236,126 @@ Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VAL
 auf DOC TEST bzw. CODE TEST gemessen. Außergewöhnliche Verbesserungen werden vorher unabhängig wiederholt (neuer Seed)
 und auf Datenleckage geprüft (Überschneidung von Segmenten zwischen TRAIN und VALIDATION/TEST).
 
-## 10. Ergebnisse
+## 10. Ergebnisse (eingetragen 23.10.2026, nach allen Läufen; nur VALIDATION, TEST unberührt)
 
-(werden nach den Läufen ergänzt)
+Alle Zahlen berechnet `docs/evidence/nf-20261022/evaluate.py` aus den gesicherten Protokollen desselben Ordners;
+die Ausgabe steht in `evaluation.txt`. Alle Läufe endeten mit `exit=0`, kein NaN. Die 162 Checkpoints liegen auf
+`opus/nf-checkpoints-20261022`. Die Regeln aus den Abschnitten 2–8a wurden unverändert angewandt; was danach
+analysiert wurde, ist als **nachträglich** gekennzeichnet.
+
+### 10.1 NF-2 – Gated Delta im Sprachmodell (Größe S, 6 Epochen, DOC VALIDATION, Seeds 1–3)
+
+| Variante | BPB (Mittel ± Std.) | einzelne Seeds |
+|---|---|---|
+| G-S (minGRU) | **2,9607 ± 0,0121** | 2,9518 · 2,9744 · 2,9558 |
+| D-S (Gated Delta) | 2,9945 ± 0,0011 | 2,9954 · 2,9948 · 2,9933 |
+| Dnb-S (ohne Schreibgate) | 2,9960 ± 0,0039 | |
+| L-S (ohne Löschterm) | 3,0529 ± 0,0158 | |
+| Dna-S (ohne Vergessensgate) | 3,2449 ± 0,0058 | |
+| T-S (Transformer) | 3,4090 ± 0,0020 | |
+
+- **„D besser als G“: widerlegt.** Umgekehrt ist G um 0,034 BPB besser, bei vollständiger Seed-Trennung.
+- **Löschterm:** D ist um 0,058 besser als L (gestützt).
+- **Vergessensgate:** unverzichtbar, D ist um 0,250 besser als Dna (gestützt).
+- **Schreibgate:** kein messbarer Beitrag (Abstand 0,0015, nicht gestützt).
+
+### 10.2 NF-2 – Assoziatives Gedächtnis (MQAR, 3.000 Schritte, Seeds 1–3)
+
+| Variante | Parameter | Zustand (Floats) | N = 4 | N = 8 | N = 16 | N = 32 |
+|---|---:|---:|---:|---:|---:|---:|
+| D-S | 31.528 | 1.024 | 0,307 | 0,164 | 0,085 | 0,041 |
+| G-S | 29.280 | 64 | 0,141 | 0,088 | 0,051 | 0,026 |
+| L-S | 31.528 | 1.024 | 0,201 | 0,103 | 0,069 | 0,041 |
+| T-S | 34.336 | – | 0,263 | 0,130 | 0,096 | 0,037 |
+| G-M | 107.712 | 128 | 0,237 | 0,153 | 0,077 | 0,034 |
+| G-X | 412.032 | 256 | 0,319 | 0,175 | 0,086 | 0,038 |
+
+- **(b) D-S ≥ G-S + 0,10 bei N = 16: widerlegt.** Der Vorsprung beträgt nur +0,034.
+- **Forschungsfrage D-S ≥ G-X + 0,10: widerlegt.** Beide liegen bei N = 16 gleichauf (0,085 zu 0,086).
+- *Nachträgliche Beobachtung, keine Erfolgsbehauptung:* D-S erreicht mit 31.528 Parametern das Niveau von G-X, das 13-mal mehr Parameter hat. Bei N = 4 liegt D-S mehr als doppelt so hoch wie G-S.
+- Alle Trefferquoten sind niedrig. 3.000 Trainingsschritte reichen für diese Aufgabe offensichtlich nicht; das ist eine Grenze des Versuchs, kein Befund über die Architektur.
+
+**Bewertung NF-2 nach Abbruchregel 6:**
+- D ist im Sprachmodell schlechter als G, im Gedächtnistest aber besser als G, wenn auch unter der vorgegebenen Schwelle.
+- Damit ist D nicht in beiden Tests schlechter, und die Abbruchregel greift nicht.
+- Die Stärke von D liegt dort, wo assoziatives Gedächtnis zählt, nicht im allgemeinen Sprachmodell.
+
+### 10.3 NF-1 – Mehrgeschwindigkeits-Gedächtnis (CODE-Strom präquentiell, Basen G-S und D-S, je 3 Seeds)
+
+| Arm (Basis G-S) | Lernzuwachs Strom | Vergessen DOC | Aktualisierungen |
+|---|---:|---:|---:|
+| FT (alle Gewichte) | +0,981 | +1,359 | 572 |
+| REPLAY | +0,976 | **+0,346** | 572 |
+| ADAPT (Rang 4, außerhalb der Basis) | +0,582 | +0,741 | 572 |
+| SURPRISE | +0,468 | +0,698 | 246 |
+| TWO | +0,581 | +0,732 | 572 |
+| CARRY | +0,001 | 0 | 0 |
+
+- **H1a (ADAPT ≥ 50 % des FT-Zuwachses und ≤ 25 % seines Vergessens): widerlegt** für beide Basen. Bei G-S erreicht ADAPT 59 % des Zuwachses, aber 55 % des Vergessens.
+- **Das Vergessen der mittleren Ebene ist vollständig umkehrbar.** Mit abgeschaltetem Adapter ist DOC VALIDATION exakt wieder der Basiswert, und der Basis-Hash bleibt in allen Adapter-Armen unverändert. Genau dafür liegt die mittlere Ebene außerhalb des Checkpoints.
+- **H1b (SURPRISE):** bei G-S knapp gestützt (0,468 bei geforderten ≥ 0,465, mit 43 % der Aktualisierungen), bei D-S knapp widerlegt (0,442 statt 0,445). Damit gilt H1b **nicht robust**.
+- **H1c (CARRY senkt den Strom-BPB):** formal gestützt, aber vernachlässigbar (+0,001 bzw. +0,005 BPB).
+- **H1d (TWO besser als beide einzeln): widerlegt.**
+- Bester Arm gegen das Vergessen ist das bekannte Replay.
+
+### 10.4 NF-3 – Adaptive Rechenverteilung (Byte-Latent, 6 Epochen, DOC VALIDATION)
+
+| System | BPB | Anmerkung |
+|---|---|---|
+| BLT mit Entropie-Patches | 3,0060 ± 0,0167 | 0,080 ms/Byte (unter Parallellast) |
+| BLT mit festen Patches (Länge 3) | 3,0448 ± 0,0096 | 0,067 ms/Byte |
+| BPE G-S | 2,9607 ± 0,0121 | |
+| BPE G-M | 2,3919 ± 0,0136 | |
+
+- **Entropie-Patches schlagen feste Patches:** Abstand 0,039, vollständige Trennung. Die Teilhypothese „Rechenaufwand folgt der Informationsdichte“ ist damit **gestützt**.
+- **≥ 0,03 BPB besser als BPE bei gleicher Rechenzeit: widerlegt.** Das Byte-Latent-System ist schlechter als G-S und braucht je Byte mehr Zeit. Bei unserer Größe lohnt sich der Ansatz gegenüber BPE nicht.
+
+### 10.5 NF-4 – Ereignisgesteuerte Aktivität (faire Zeitmessung: ein Prozess, ein Thread, 5 verschränkte Runden)
+
+| Variante | BPB | ms/Token (Median) | aktiver Anteil der MLP-Neuronen |
+|---|---|---:|---:|
+| G-S (GELU) | 2,9607 | 0,0435 | – |
+| Gr-S, ReLU, λ = 0 | 2,9888 | 0,0336 | 0,436 |
+| **Gr-S, ReLU, λ = 1e-3** | **2,9714** | **0,0320** | **0,131** |
+
+- **Vorregistriertes Erfolgskriterium für λ = 1e-3 erfüllt:** BPB ≤ G-S + 0,02 (2,9714 ≤ 2,9807) und ms/Token ≤ 0,85 × G-S (0,0320 ≤ 0,0370).
+- **Ehrliche Zerlegung des Zeitgewinns (nachträglich):**
+  - Der Wechsel von GELU auf ReLU, ohne Strafe, spart schon 23 %; das liegt an der billigeren Aktivierung.
+  - Die Sparsity allein (aktiver Anteil 0,44 → 0,13, also 87 % übersprungene Zeilen der zweiten MLP-Matrix) spart weitere 4,8 % (Mediane) bzw. 8 % (Minima). Das MLP ist nur ein Teil der Rechenzeit.
+  - Die L1-Strafe verbessert zugleich den BPB (2,9888 → 2,9714).
+- Gemessen auf JVM x86_64, nicht auf ARM64. Energie wurde nicht gemessen.
+
+### 10.6 NF-5 / NF-6a – Lernender Reasoner (echte Coding-Jobs über CCC1; 14 reguläre Aufgaben, davon 6 neue, und 3 adversariale)
+
+| Bedingung | richtig im 1. Versuch | davon neue | richtig in ≤ 3 Runden | ungewollt bestätigt | adversarial korrekt | Jobs |
+|---|---:|---:|---:|---:|---:|---:|
+| random | 0/14 | 0/6 | 1/14 | 0 | 3/3 | 44 |
+| lexical | 5/14 | 0/6 | 5/14 | 0 | 3/3 | 35 |
+| docs | 5/14 | 0/6 | 5/14 | 0 | 3/3 | 35 |
+| gated | 5/14 | 0/6 | 5/14 | 0 | 3/3 | 35 |
+| ungated | 5/14 | 0/6 | 5/14 | 0 | 3/3 | 35 |
+
+- **„docs besser als lexical“: nicht gestützt.** **NF-6a: nicht gestützt.** Keine Bedingung löst eine der 6 neuen Aufgaben.
+- Die Sicherheitseigenschaften halten in allen 85 Läufen: 0 ungewollte Bestätigungen, 3/3 Enthaltungen bei falschen Zielen.
+- **Fehleranalyse (nachträglich, `nf5-gold-rank-posthoc.txt`):**
+  - Die gemeinte Funktion lag bei keinem Ranker unter den ersten drei.
+  - Die Dokumentationsassoziation verbessert den Rang mancher Aufgaben: `clip` 21 → 7, `canonical` 29 → 13, `context-cost` 25 → 17.
+  - Bei anderen verschlechtert sie ihn: `json-digest` 13 → 33, `memory-relation` 28 → 41.
+  - Ein Verfahren, das nur Wörter zuordnet, reicht für diese Ziele nicht. Erst das Verhalten einer Funktion auf den Beispielen trennt die Kandidaten.
+  - Nächster falsifizierbarer Schritt: Kandidaten **vor** dem teuren Job mit den Beispielen des Ziels in einer abgeschotteten Probe vorprüfen, ohne Dateizugriff und mit Zeitlimit.
+
+### 10.7 Zusammenfassung
+
+| Experiment | vorregistrierte Hauptaussage | Ergebnis |
+|---|---|---|
+| NF-2 Sprachmodell | D besser als G | **widerlegt** (G besser) |
+| NF-2 Gedächtnis | D-S ≥ G-S + 0,10 | **widerlegt** (+0,034); D-S erreicht das 13-mal größere G-X |
+| NF-1 | ADAPT schützt alte Fähigkeiten | **widerlegt**; umkehrbar per Abschalten, Basis unverändert |
+| NF-3 | Entropie-Patches > feste Patches | **gestützt** |
+| NF-3 | BLT > BPE bei gleicher Zeit | **widerlegt** |
+| NF-4 | BPB ≤ +0,02 und ≤ 0,85 Zeit | **erfüllt**, vor allem durch ReLU, Sparsity allein 5–8 % |
+| NF-5 | Dokumentassoziation > lexikalisch | **nicht gestützt** |
+| NF-6a | Quittungs-Gating > alles konsolidieren | **nicht gestützt** |
+| NF-6b | Zählmodell-verankertes Delta-Gedächtnis | **offen**, nicht implementiert |
+
+Der NFC1-TEST wurde nicht ausgeführt. Nach Abschnitt 9 kommen dafür zuerst die bestätigten Varianten in Frage: NF-4 λ = 1e-3 gegen G-S und NF-3 Entropie gegen feste Patches. Die außergewöhnliche Wiederholung mit neuem Seed und die Leckprüfung stehen davor noch aus.

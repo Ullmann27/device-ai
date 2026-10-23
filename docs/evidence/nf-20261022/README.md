@@ -14,6 +14,8 @@ Die Auswertung nach den vorregistrierten Regeln steht in `docs/CONTINUUM-NEURAL-
 | `nf1-stream.txt` | NF-1 Online-Lernen auf CODE, Vergessen auf DOC | `stream` mit den sechs Epoche-6-Checkpoints von G-S/D-S | `3a60683a6a225e6e` | 21:36:43 |
 | `nf2-recall.txt` | NF-2 assoziatives Abrufen (MQAR) | `recall D-S G-S T-S L-S G-M G-X seeds=1,2,3 steps=3000` | `3a60683a6a225e6e` | 22:35:44 |
 | `run-chain2.sh.txt` | Startskript von Batch 2 (Reihenfolge wie vorregistriert) | – | – | – |
+| `nf4-speed-fair.txt` | NF-4/NF-2 faire Zeitmessung: 18 Epoche-6-Checkpoints, ein Prozess, ein Thread, 5 verschränkte Runden | `speed` @ `d340c60e` | `3bf1b6c5e41b278a` | 00:48:23 (23.10.) |
+| `evaluate.py`, `evaluation.txt` | Auswertung aller Läufe nach den vorregistrierten Regeln (Abschnitt 10 des NF-Dokuments) | `python3 evaluate.py` | – | – |
 | `nf5-study-run.txt`, `nf5-results.json` | NF-5/NF-6a: 14 Aufgaben + 3 Gegenproben, 5 Bedingungen, echte Coding-Jobs | `scripts/nf5-ranker-study.mjs` @ `3bde2844` | – | 20:53:01 |
 | `nf5-gold-rank-posthoc.txt` | **Nachträglich, nicht vorregistriert:** Rang der gemeinten Funktion je Ranker | `scripts/nf5-gold-rank-posthoc.mjs` | – | – |
 
