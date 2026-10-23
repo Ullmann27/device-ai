@@ -122,7 +122,7 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         val deltaX = x0 + p.measureText(QUALITY_LABEL, t(400, 8.27f)) + 5f
         p.drawText(ContinuumDashboardState.delta24h(delta), deltaX, 24f, t(500, 7.4f), solid(when {
             delta == null || delta == 0 -> ContinuumTheme.TEXT_MUTED; delta > 0 -> ContinuumTheme.GREEN; else -> ContinuumTheme.RED }))
-        drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent)
+        drawSegmentBar(p, x0, 34.7f, x0 + 103f, 43.9f, m.qualityPercent, phase = motionPhase)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), x0 + 113f, 43.9f, t(500, 12.36f), solid(ContinuumTheme.CYAN_SOFT))
         p.drawText("Reaktionszeit", x0, 61f, t(400, 8.27f), solid(ContinuumTheme.TEXT_SECONDARY))
         p.drawText(ContinuumDashboardState.millis(m.latencyMs), x0, 76.5f, t(500, 11f), solid(ContinuumTheme.CYAN_SOFT))
@@ -144,7 +144,7 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
         const val QUALITY_LABEL = "Prüffragen"
 
         /** Segmented level bar; without a measurement all segments stay dark (no invented level). */
-        fun drawSegmentBar(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, percent: Int?, segments: Int = 20) {
+        fun drawSegmentBar(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, percent: Int?, segments: Int = 20, phase: Float? = null) {
             val gap = (r - l) * .012f * 2.2f
             val width = ((r - l) - gap * (segments - 1)) / segments
             val lit = percent?.let { (it.coerceIn(0, 100) * segments + 50) / 100 } ?: 0
@@ -157,7 +157,19 @@ class ModelStatusCardElement(textScale: Float = 1f) : ContinuumElement(textScale
                     else -> Argb.mix(Argb.rgb(170, 150, 255), Argb.rgb(255, 160, 230), (i - segments * .85f) / (segments * .15f))
                 }
                 p.fillRoundRect(x, t, x + width, b, width * .3f, Fill.Solid(color))
-                if (i < lit) p.fillRoundRect(x - .6f, t - .6f, x + width + .6f, b + .6f, width * .4f, Fill.Solid(color), .18f)
+                if (i < lit) {
+                    p.fillRoundRect(x - .6f, t - .6f, x + width + .6f, b + .6f, width * .4f, Fill.Solid(color), .18f)
+                    // Decorative reflection crosses only the real, measured illuminated segments.
+                    if (phase != null && phase.isFinite() && lit > 0) {
+                        val scan = phase.coerceIn(0f, 1f) * lit
+                        val distance = kotlin.math.abs((i + .5f) - scan)
+                        if (distance < 1.75f) {
+                            val alpha = .20f * (1f - distance / 1.75f)
+                            p.fillRoundRect(x, t, x + width, b, width * .3f,
+                                Fill.Solid(Argb.rgb(216, 246, 255)), alpha)
+                        }
+                    }
+                }
             }
         }
     }
@@ -485,6 +497,16 @@ class BottomNavElement(private val labels: List<Pair<Icon, String>>, var selecte
                 p.drawText(item.second, cx, 44f, t(500, 9.5f), Fill.Solid(Argb.rgb(70, 170, 255)), TextAlign.CENTER)
                 p.fillRoundRect(cx - 16f, 47.2f, cx + 16f, 48.8f, .8f, Fill.Solid(Argb.rgb(70, 170, 255)))
                 p.fillRoundRect(cx - 18f, 46f, cx + 18f, 50f, 2f, Fill.Solid(Argb.rgb(70, 170, 255)), .18f)
+                // Persistent cinematic glow, without changing the active navigation destination.
+                val pulse = motionPhase?.takeIf { it.isFinite() }?.let {
+                    .35f + .65f * kotlin.math.abs(kotlin.math.sin(Math.PI.toFloat() * it))
+                } ?: .35f
+                p.fillRoundRect(cx - 20f, 46.3f, cx + 20f, 50.3f, 2f,
+                    Fill.Solid(Argb.rgb(90, 190, 255)), .23f * pulse)
+                if (motionPhase != null) {
+                    val scan = cx - 18f + (36f * motionPhase!!.coerceIn(0f, 1f))
+                    p.fillCircle(scan, 48f, 2.5f, Fill.Solid(Argb.rgb(220, 245, 255)), .55f * pulse)
+                }
             } else {
                 ContinuumIcons.draw(p, item.first, cx, 20.2f, 22f, Fill.Solid(Argb.rgb(168, 190, 225)), 1.6f)
                 p.drawText(item.second, cx, 44f, t(500, 8.95f), Fill.Solid(Argb.rgb(178, 190, 212)), TextAlign.CENTER)
