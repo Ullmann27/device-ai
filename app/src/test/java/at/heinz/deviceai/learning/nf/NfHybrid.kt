@@ -82,6 +82,35 @@ object NfHybrid {
         return Bytes(DoubleArray(raw.size) { exp(-nll[it]) }, k.prob, k.order, k.count)
     }
 
+    /**
+     * NF-7 TEST (section 8f, item 6), at most once: KN-7 from TRAIN; λ of each model fitted on all of VALIDATION; neural,
+     * KN-7 and the fixed mixture scored on TEST. Refuses to run twice for the same checkpoint store.
+     */
+    fun runTest(docs: List<NfCorpus.Doc>, tok: LmBpeTokenizer, args: Array<String>) {
+        require(NfExperiment.arg(args, "corpus") == "nfc2" && NfExperiment.arg(args, "once") == "NF7") { "NF-7 TEST needs corpus=nfc2 once=NF7" }
+        val store = NfExperiment.store(args)
+        val marker = java.io.File(NfExperiment.arg(args, "store") ?: "nf-checkpoints", "nf7-test-done")
+        check(!marker.exists()) { "NF-7 TEST has already been run with this store: ${marker.readText()}" }
+        marker.writeText("started ${java.time.Instant.now()}\n")
+        val kn = KneserNeyBytes(7, NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.TRAIN))
+        val validation = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.VALIDATION)
+        val test = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.TEST)
+        println("HYBRID-TEST validationSegments=${validation.size} testSegments=${test.size} testBytes=${NfCorpus.bytes(test)}")
+        for (sha in args.filter { it.startsWith("ckpt=") }.map { it.substringAfter('=') }) {
+            val restored = NfCheckpoint.decode(store.get(sha))
+            val model = NfModel(restored.params)
+            val fit = concat(validation.map { bytesOf(model, tok, kn, it) })
+            val lambda = bestFixed(fit).coerceIn(1e-6, 1 - 1e-6)
+            val scored = concat(test.map { bytesOf(model, tok, kn, it) })
+            val n = scored.size.toDouble()
+            println("HYBRID-TEST ${restored.meta["family"]} seed=${restored.meta["seed"]} epoch=${restored.meta["epoch"]} ckpt=$sha " +
+                "lambda=${"%.3f".format(lambda)} neuralBPB=${"%.4f".format(fixedBits(scored, 1.0) / n)} " +
+                "knBPB=${"%.4f".format(fixedBits(scored, 0.0) / n)} fixedBPB=${"%.4f".format(fixedBits(scored, lambda) / n)}")
+            System.out.flush()
+        }
+        marker.appendText("finished ${java.time.Instant.now()}\n")
+    }
+
     fun run(docs: List<NfCorpus.Doc>, tok: LmBpeTokenizer, args: Array<String>) {
         val train = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.TRAIN)
         val validationDocs = docs.filter { it.domain == NfCorpus.Domain.DOC && it.split == Split.VALIDATION }.sortedBy { it.path }

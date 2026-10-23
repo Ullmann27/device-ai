@@ -49,6 +49,30 @@ object NfResidual {
 
     fun targetProbabilities(kn: KneserNeyBytes, segment: String, targets: Int) = targetProbabilities(kn.detail(segment).prob, targets)
 
+    class Overlap(val segments: Int, val verbatim: Int, val bytes: Int, val covered: Int)
+
+    /**
+     * Leakage check before TEST (section 9): how many [other] segments occur verbatim in [train], and how many of their
+     * bytes lie in a [window]-byte window that also occurs in [train] (exact bytes, hashed with collisions checked).
+     */
+    fun overlap(train: List<String>, other: List<String>, window: Int = 50): Overlap {
+        val seen = HashMap<String, Unit>()
+        val trainSegments = train.toHashSet()
+        for (s in train) {
+            val b = s.toByteArray(Charsets.UTF_8)
+            for (i in 0..b.size - window) seen[String(b, i, window, Charsets.ISO_8859_1)] = Unit
+        }
+        var bytes = 0; var covered = 0; var verbatim = 0
+        for (s in other) {
+            if (s in trainSegments) verbatim++
+            val b = s.toByteArray(Charsets.UTF_8)
+            val mark = BooleanArray(b.size)
+            for (i in 0..b.size - window) if (String(b, i, window, Charsets.ISO_8859_1) in seen) for (k in i until i + window) mark[k] = true
+            bytes += b.size; covered += mark.count { it }
+        }
+        return Overlap(other.size, verbatim, bytes, covered)
+    }
+
     /**
      * Cross-fitted count-model probabilities for training (amendment to section 8f, before any NFC2 model run): KN-7 scored
      * on its own training text is inflated, because every 7-gram counts itself, so the mixture loss would teach the network

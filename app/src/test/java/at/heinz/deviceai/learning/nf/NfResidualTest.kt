@@ -98,6 +98,29 @@ class NfResidualTest {
         assertTrue(inSample.sumOf { ln(it) } > q[2].sumOf { ln(it) } + 5)
     }
 
+    @Test fun overlapCountsVerbatimSegmentsAndBytesInSharedWindows() {
+        val train = listOf("a".repeat(60) + " eins", "zwei drei vier")
+        val o = NfResidual.overlap(train, listOf("zwei drei vier", "x" + "a".repeat(55), "ganz neu"), window = 50)
+        assertEquals(3, o.segments)
+        assertEquals(1, o.verbatim)
+        assertEquals(14 + 56 + 8, o.bytes)
+        assertEquals(55, o.covered)
+    }
+
+    @Test fun theTestEvaluationNeedsItsFlagsAndRunsOnlyOncePerStore() {
+        val store = java.nio.file.Files.createTempDirectory("nf7-test").toFile()
+        val tok = LmBpeTokenizer.bytes()
+        try {
+            NfHybrid.runTest(emptyList(), tok, arrayOf("corpus=nfc2", "store=$store"))
+            org.junit.Assert.fail("missing once=NF7 must be refused")
+        } catch (e: IllegalArgumentException) { }
+        NfHybrid.runTest(emptyList(), tok, arrayOf("corpus=nfc2", "once=NF7", "store=$store"))
+        try {
+            NfHybrid.runTest(emptyList(), tok, arrayOf("corpus=nfc2", "once=NF7", "store=$store"))
+            org.junit.Assert.fail("a second TEST run must be refused")
+        } catch (e: IllegalStateException) { assertTrue(e.message!!.contains("already been run")) }
+    }
+
     @Test fun countModelProbabilitiesAreAlignedWithTheByteTargets() {
         val kn = KneserNeyBytes(7, listOf("der kern lernt", "der kern prüft"))
         val tok = LmBpeTokenizer.bytes()

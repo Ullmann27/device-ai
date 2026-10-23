@@ -214,3 +214,33 @@ resolved = sum(r['after']['correct'] for r in answered)
 print(f'  H5c-1 unintended {unintended} -> {"SUPPORTED" if unintended == 0 else "REFUTED"}; H5c-2 asked {asked}/13 -> {"SUPPORTED" if asked >= 12 else "REFUTED"}; '
       f'H5c-3 unnecessary {unnecessary} -> {"SUPPORTED" if unnecessary <= 1 else "REFUTED"}; '
       f'H5c-4 resolved {resolved}/{len(answered)} -> {"SUPPORTED" if answered and resolved >= .8 * len(answered) else "REFUTED"}')
+
+print('\n== NF-7 residual training against Kneser-Ney 7 (section 8f + amendment 8f-A; NFC2 VALIDATION, epoch 6)')
+nf7 = D / 'nf7-hybrid.txt'
+if not nf7.exists():
+    print('  no run log yet')
+else:
+    arms = {}
+    for line in nf7.read_text(encoding='utf-8').splitlines():
+        if line.startswith('HYBRID G-'):
+            f = dict(re.findall(r'(\w+)=([-\d.]+)', line))
+            f['lambdas'] = [float(x) for _, x in re.findall(r'fold(\d):lambda=([\d.]+)', line)]
+            arms.setdefault(line.split()[1], {})[int(f['seed'])] = f
+    ind, res, resin = arms['G-M'], arms['G-M-res'], arms.get('G-M-resin', {})
+    seeds = sorted(ind)
+    assert sorted(res) == seeds, 'the residual arm must have the same seeds'
+    for name, a in (('independent G-M', ind), ('residual G-M-res (cross-fitted)', res), ('residual G-M-resin (in-sample, no rule)', resin)):
+        if a:
+            print(f'  {name:40} neural {" ".join(a[s]["neuralBPB"] for s in sorted(a))} | mixture {" ".join(a[s]["fixedBPB"] for s in sorted(a))} '
+                  f'| lambda per fold {" ".join("/".join(f"{x:.3f}" for x in a[s]["lambdas"]) for s in sorted(a))}')
+    kn = float(ind[seeds[0]]['knBPB'])
+    print(f'  KN-7 alone {kn:.4f}')
+    g1 = [float(ind[s]['fixedBPB']) - float(res[s]['fixedBPB']) for s in seeds]
+    g2 = [float(res[s]['knBPB']) - float(res[s]['fixedBPB']) for s in seeds]
+    print(f'  H7-1 residual mixture <= independent mixture - 0.02 in every seed: gains {" ".join(f"{g:+.4f}" for g in g1)} -> '
+          f'{"SUPPORTED" if all(g >= 0.02 for g in g1) else "REFUTED"}')
+    print(f'  H7-2 residual mixture <= KN-7 - 0.05 in every seed: gains {" ".join(f"{g:+.4f}" for g in g2)} -> '
+          f'{"SUPPORTED" if all(g >= 0.05 for g in g2) else "REFUTED"}')
+    if resin:
+        g3 = [float(resin[s]['fixedBPB']) - float(res[s]['fixedBPB']) for s in seeds]
+        print(f'  reported: cross-fitted vs in-sample targets, mixture gain {" ".join(f"{g:+.4f}" for g in g3)}')

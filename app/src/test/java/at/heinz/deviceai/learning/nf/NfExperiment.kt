@@ -20,6 +20,8 @@ import kotlin.math.ln
  *   blt …                   NF-3: byte-latent model with entropy patches against fixed patches
  *   speed ckpt=…            fair single-thread inference timing of several checkpoints, interleaved
  *   hybrid ckpt=… vocab=258  NF-6b-lite: byte model mixed with Kneser-Ney 7, fixed vs count-anchored, cross-fitted
+ *   hybrid-test ckpt=… vocab=258 corpus=nfc2 once=NF7  NF-7 TEST: λ fitted on all of VALIDATION, scored once on TEST
+ *   overlap                 leakage check: TRAIN segments and 50-byte windows found again in VALIDATION and TEST
  * Run: java -cp nf.jar at.heinz.deviceai.learning.nf.NfExperiment <repoRoot> <mode> [args]
  * Families: <G|T|D|L|Dna|Dnb|Gr|Dr>-<S|M|X>; G minGRU, T Transformer, D gated delta, L gated linear attention,
  * Dna delta without decay gate, Dnb delta without write gate, Gr/Dr with ReLU-threshold FFN.
@@ -106,6 +108,12 @@ object NfExperiment {
             "stream" -> NfStream.run(docs, tok, args)
             "blt" -> NfBltRun.run(docs, args)
             "hybrid" -> NfHybrid.run(docs, tok, args)
+            "hybrid-test" -> NfHybrid.runTest(docs, tok, args)
+            "overlap" -> for (split in listOf(Split.VALIDATION, Split.TEST)) {
+                val o = NfResidual.overlap(NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.TRAIN), NfCorpus.segments(docs, NfCorpus.Domain.DOC, split))
+                println("OVERLAP $split segments=${o.segments} verbatimSegments=${o.verbatim} bytes=${o.bytes} " +
+                    "bytesIn50ByteWindowsSeenInTrain=${o.covered} share=${"%.4f".format(o.covered.toDouble() / maxOf(1, o.bytes))}")
+            }
             "speed" -> {
                 // Fair inference timing: all checkpoints in one process, interleaved over 5 rounds, single thread.
                 val validation = NfCorpus.segments(docs, NfCorpus.Domain.DOC, Split.VALIDATION)
