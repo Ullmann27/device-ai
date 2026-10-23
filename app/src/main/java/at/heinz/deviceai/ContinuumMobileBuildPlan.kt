@@ -5,7 +5,10 @@ internal object ContinuumMobileBuildPlan {
     enum class Operation(val title: String, val cli: String) {
         DOCTOR("Werkzeuge prüfen", "doctor"),
         BUILD("APK auf dem Handy bauen", "build"),
-        STATUS("Letzten Buildbericht anzeigen", "status")
+        STATUS("Letzten Buildbericht anzeigen", "status"),
+        PROJECT_CREATE("M4 · Eigene Notiz-App erzeugen", "create"),
+        PROJECT_VERIFY("M4 · App-Quellen prüfen", "verify"),
+        PROJECT_BUILD("M4 · Eigene Notiz-App bauen", "build")
     }
 
     const val TERMUX_PACKAGE = "com.termux"
@@ -19,6 +22,10 @@ internal object ContinuumMobileBuildPlan {
     data class Command(val executable: String, val args: List<String>, val workDir: String)
 
     fun command(operation: Operation): Command {
+        if (operation == Operation.PROJECT_CREATE || operation == Operation.PROJECT_VERIFY ||
+            operation == Operation.PROJECT_BUILD) {
+            return Command(NODE_EXECUTABLE, listOf("$PROJECT_DIR/scripts/continuum-owned-app.mjs", operation.cli), PROJECT_DIR)
+        }
         val args = mutableListOf(BUILDER_SCRIPT, operation.cli)
         if (operation == Operation.BUILD) {
             args.add("--project")
