@@ -1,0 +1,3 @@
+not ok 1 - only repository owner comments may trigger learning and memory mutations
+# pass 1
+# fail 1

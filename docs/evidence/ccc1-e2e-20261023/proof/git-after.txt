@@ -1,0 +1,1 @@
+--- checkout after: HEAD=98f1408248e4a3fa575c75faf81979bfb1488303 branch=ccc1-proof-20261023 porcelain=[] worktrees=1
