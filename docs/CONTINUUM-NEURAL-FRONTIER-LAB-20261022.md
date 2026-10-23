@@ -336,6 +336,45 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
    - Der Besitzer ist simuliert.
    - Es gibt einen einzigen Lauf.
 
+## 8f. Vorregistrierung NF-7: neuronales Modell gezielt für den Rest von KN-7 trainieren (eingetragen 23.10.2026, vor jedem Lauf)
+
+**Anlass:** In NF-6b-lite (10.9) war die nachträgliche Mischung aus Byte-minGRU und KN-7 das beste Ergebnis des Zyklus. Der Gewinn wuchs mit dem neuronalen Modell, aber dieses wurde unabhängig vom Zählmodell trainiert.
+
+1. **Mechanismus** (`NfOps.mixtureCrossEntropy`, `NfLm residual=λ`; Tests `NfResidualTest` 5/5)
+   - Trainiert wird direkt auf dem Mischungsverlust −log(λ·p_nn(y) + (1−λ)·p_KN(y)).
+   - Der exakte Gradient ist die Kreuzentropie, gewichtet mit der neuronalen Verantwortung λ·p_nn(y)/(λ·p_nn(y) + (1−λ)·p_KN(y)).
+   - Positionen, die KN-7 schon gut vorhersagt, lehren das Netz also weniger.
+   - λ beim Training ist fest auf 0,5 gesetzt und wird nicht abgestimmt.
+   - **Bekannt:** Residual-Lernen mit einem n-Gramm-Modell (Li et al., Findings EMNLP 2022). Dort geschieht das im Log-Raum, hier im Wahrscheinlichkeitsraum. Die Log-Variante bräuchte je Position alle 256 KN-Wahrscheinlichkeiten und wird nicht geprüft.
+2. **Neue Datentrennung NFC2** (Protokoll `nf7-nfc2-freeze.txt`)
+   - Markdown-Dokumentation am signierten Stand `9fb4361c`, gefiltert und segmentiert wie LM1/NFC1, aufgeteilt nach SHA-256("nfc2" + Pfad).
+   - Draußen bleiben: Protokolle, Lizenztexte, die Berichte des Experimentators und alle Dokumente, die bei LM1 (verbraucht) oder NFC1 (reserviert) TEST sind.
+
+   | Teil | Dokumente | Segmente | Bytes | SHA-256 |
+   |---|---:|---:|---:|---|
+   | TRAIN | 71 | 2.506 | 422.096 | `e09a7cda…` |
+   | VALIDATION | 5 | 180 | 34.313 | `73ec893c…0146` |
+   | **TEST (eingefroren, unberührt)** | 7 | 219 | 38.346 | `3deec29e…68bb` |
+
+   - Der Code bricht ab, wenn VALIDATION oder TEST vom Pin abweichen.
+3. **Modelle**
+   - G-M als Byte-Modell wie G-M-b in NF-6b-lite: minGRU, Vokabular 258, d = 64, 2 Schichten.
+   - 6 Epochen, Seeds 1–3, gleiche Hyperparameter.
+   - Je Seed zwei Trainingsarten: unabhängig (Kreuzentropie) und Residual (Mischungsverlust mit λ = 0,5).
+   - KN-7 wird aus NFC2 TRAIN gebaut.
+4. **Messung** (wie NF-6b-lite, `NfHybrid`, Epoche 6)
+   - BPB auf NFC2 VALIDATION für KN-7, das neuronale Modell allein und die feste Mischung.
+   - λ der Mischung wird per Cross-Fitting über die Dokument-Hälften bestimmt; für beide Trainingsarten gleich.
+5. **Entscheidungsregeln (je Seed; alle Seeds müssen erfüllen)**
+   - **H7-1 „Residual-Training hilft“:** Mischung(Residual) ≤ Mischung(unabhängig) − 0,02 BPB.
+   - **H7-2 „deutlich besser als das Zählmodell“:** Mischung(Residual) ≤ KN-7 − 0,05 BPB. Das ist die Schwelle, die NF-6b-lite knapp verfehlte.
+   - **Berichtet, ohne Regel:** das neuronale Modell allein (bei Residual-Training vermutlich schlechter), das gewählte λ, die Parameter und die Zeit je Token.
+6. **TEST:** Nur wenn H7-1 und H7-2 gestützt sind, werden die Mischungen beider Trainingsarten und KN-7 einmal auf NFC2 TEST gemessen. Gilt dort für jeden Seed Residual < unabhängig, ist das Ergebnis bestätigt.
+7. **Grenzen**
+   - λ beim Training ist nicht abgestimmt.
+   - VALIDATION ist klein (5 Dokumente).
+   - Es gibt einen einzigen Zyklus, und die Zeit wird auf x86_64 gemessen, nicht auf ARM64.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**

@@ -1,8 +1,10 @@
 package at.heinz.deviceai.learning.nf
 
+import at.heinz.deviceai.learning.lm.Kernels
 import at.heinz.deviceai.learning.lm.Mat
 import at.heinz.deviceai.learning.lm.Node
 import at.heinz.deviceai.learning.lm.Tape
+import kotlin.math.ln
 import kotlin.math.sqrt
 
 /*
@@ -248,6 +250,47 @@ fun Tape.rowConcat(a: Node, b: Node): Node {
         val ag = a.g().data; val bg = b.g().data
         for (i in ag.indices) ag[i] += g.data[i]
         for (i in bg.indices) bg[i] += g.data[a.value.data.size + i]
+    }
+    return node
+}
+
+/**
+ * Mixture cross-entropy (NF-7): −log(λ·softmax(logits)[y] + (1−λ)·q) per counted target, summed and divided by
+ * [normalizer] (default: the number of counted targets). [q] is the count model's probability of each target (0 where it
+ * has none, e.g. EOS). The exact gradient is the cross-entropy gradient weighted by the neural responsibility
+ * λ·p_y / (λ·p_y + (1−λ)·q): positions the count model already predicts well teach the network less.
+ */
+fun Tape.mixtureCrossEntropy(logits: Node, targets: IntArray, q: DoubleArray, lambda: Double, normalizer: Int = -1): Node {
+    val t = logits.value.rows; val v = logits.value.cols
+    require(targets.size == t && q.size == t && lambda > 0.0 && lambda <= 1.0)
+    val probs = Mat(t, v)
+    val weight = FloatArray(t)
+    var total = 0.0; var count = 0
+    for (r in 0 until t) {
+        val y = targets[r]
+        if (y < 0) continue
+        require(y < v && q[r] >= 0.0 && q[r] <= 1.0)
+        Kernels.softmaxRow(logits.value.data, r * v, v, probs.data)
+        val py = probs.data[r * v + y].toDouble()
+        val m = maxOf(lambda * py + (1 - lambda) * q[r], 1e-300)
+        total -= ln(m)
+        weight[r] = (lambda * py / m).toFloat()
+        count++
+    }
+    require(count > 0) { "no target" }
+    val norm = if (normalizer > 0) normalizer else count
+    val out = Mat(1, 1); out.data[0] = (total / norm).toFloat()
+    val node = Node(out, null)
+    record {
+        val g = node.grad ?: return@record
+        val scale = g.data[0] / norm
+        val lg = logits.g().data
+        for (r in 0 until t) {
+            val y = targets[r]
+            if (y < 0) continue
+            val w = scale * weight[r]
+            for (j in 0 until v) lg[r * v + j] += w * (probs.data[r * v + j] - if (j == y) 1f else 0f)
+        }
     }
     return node
 }

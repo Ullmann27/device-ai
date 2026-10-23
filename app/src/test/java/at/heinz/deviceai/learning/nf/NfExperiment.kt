@@ -1,8 +1,11 @@
 package at.heinz.deviceai.learning.nf
 
+import at.heinz.deviceai.learning.lm.KneserNeyBytes
 import at.heinz.deviceai.learning.lm.LmBpeTokenizer
 import at.heinz.deviceai.learning.lm.LmCheckpointStore
 import at.heinz.deviceai.learning.lm.LmCorpus.Split
+import at.heinz.deviceai.learning.lm.Node
+import at.heinz.deviceai.learning.lm.Tape
 import java.io.File
 import java.lang.management.ManagementFactory
 import java.util.Random
@@ -23,7 +26,7 @@ import kotlin.math.ln
  */
 object NfExperiment {
     const val VOCAB = 512
-    private fun arg(args: Array<String>, key: String) = args.firstOrNull { it.startsWith("$key=") }?.substringAfter('=')
+    fun arg(args: Array<String>, key: String) = args.firstOrNull { it.startsWith("$key=") }?.substringAfter('=')
 
     fun family(name: String, vocab: Int, context: Int = 256): NfConfig {
         val (arch, size) = name.split('-').let { it[0] to it[1] }
@@ -76,10 +79,14 @@ object NfExperiment {
     @JvmStatic fun main(args: Array<String>) {
         val root = File(args.getOrElse(0) { "." })
         val mode = args.getOrElse(1) { "corpus" }
-        val docs = NfCorpus.load(root)
+        // corpus=nfc2: the NF-7 split (NfCorpus2); otherwise the frozen NFC1
+        val nfc2 = arg(args, "corpus") == "nfc2"
+        val docs = if (nfc2) NfCorpus2.load(root) else NfCorpus.load(root)
+        if (nfc2) for ((split, pin) in listOf(Split.VALIDATION to NfCorpus2.VALIDATION_SHA256, Split.TEST to NfCorpus2.TEST_SHA256))
+            check(NfCorpus.sha256(docs.filter { it.split == split }) == pin) { "NFC2 $split differs from the pre-registration" }
         // vocab=258: one token per byte (NF-6b-lite byte models); otherwise the frozen NFC1 BPE v512
         val tok = if (arg(args, "vocab") == "258") LmBpeTokenizer.bytes() else tokenizer(docs)
-        println("NFC1 commit=${NfCorpus.COMMIT} docs=${docs.size} tokenizer=v${tok.vocabSize} sha=${tok.sha256}")
+        println("${if (nfc2) "NFC2 commit=" + NfCorpus2.COMMIT else "NFC1 commit=" + NfCorpus.COMMIT} docs=${docs.size} tokenizer=v${tok.vocabSize} sha=${tok.sha256}")
         for (domain in NfCorpus.Domain.values()) for (split in Split.values()) {
             val d = docs.filter { it.domain == domain && it.split == split }
             val segs = d.flatMap { it.segments }
@@ -135,11 +142,18 @@ object NfLm {
         val epochs = NfExperiment.intArg(args, "epochs", 4)
         val l1 = NfExperiment.floatArg(args, "l1", 0f)
         val store = NfExperiment.store(args)
+        val corpus = if (NfExperiment.arg(args, "corpus") == "nfc2") NfCorpus2.COMMIT else NfCorpus.COMMIT
+        // residual=λ (NF-7): train on the mixture loss with Kneser-Ney 7 instead of plain cross-entropy
+        val residual = NfExperiment.floatArg(args, "residual", 0f)
+        require(residual == 0f || tok.vocabSize == 258) { "residual training needs the byte vocabulary (vocab=258)" }
+        val kn = if (residual > 0f) KneserNeyBytes(7, train) else null
         val families = args.drop(2).filter { Regex("[A-Za-z]+-[SMX]").matches(it) }
         for (name in families) for (seed in NfExperiment.seeds(args)) {
             val config = NfExperiment.family(name, tok.vocabSize)
             val model = NfModel(NfParams.init(config, seed))
             val sequences = train.map { NfExperiment.pair(tok, it, config.context) }
+            val qs = kn?.let { k -> train.mapIndexed { i, s -> NfResidual.targetProbabilities(k, s, sequences[i].second.size) } }
+            val label = if (residual > 0f) "$name-res" else name
             val batch = 16
             val stepsPerEpoch = (sequences.size + batch - 1) / batch
             val rnd = Random(seed * 31 + 7)
@@ -149,18 +163,23 @@ object NfLm {
                 for (epoch in 1..epochs) {
                     val order = sequences.indices.shuffled(rnd)
                     var loss = 0.0
-                    for (b in 0 until stepsPerEpoch) loss += trainer.step(order.subList(b * batch, minOf(order.size, (b + 1) * batch)).map { sequences[it] })
+                    for (b in 0 until stepsPerEpoch) {
+                        val idx = order.subList(b * batch, minOf(order.size, (b + 1) * batch))
+                        loss += trainer.step(idx.map { sequences[it] }, lossFn = qs?.let { q ->
+                            { tape: Tape, logits: Node, i: Int, total: Int -> tape.mixtureCrossEntropy(logits, sequences[idx[i]].second, q[idx[i]], residual.toDouble(), total) }
+                        })
+                    }
                     val stats = FfnStats()
                     val v = NfExperiment.bpb(model, tok, validation, stats)
-                    val sha = store.put(NfCheckpoint.encode(model.params, tok.sha256, mapOf("family" to name, "seed" to "$seed",
-                        "epoch" to "$epoch", "corpus" to NfCorpus.COMMIT, "l1" to "$l1")))
-                    println("RUN $name seed=$seed epoch=$epoch trainNll=${"%.4f".format(loss / stepsPerEpoch)} valBPB=${"%.4f".format(v)} " +
+                    val sha = store.put(NfCheckpoint.encode(model.params, tok.sha256, mapOf("family" to label, "seed" to "$seed",
+                        "epoch" to "$epoch", "corpus" to corpus, "l1" to "$l1", "residual" to "$residual")))
+                    println("RUN $label seed=$seed epoch=$epoch trainNll=${"%.4f".format(loss / stepsPerEpoch)} valBPB=${"%.4f".format(v)} " +
                         "params=${model.params.count} trainSeconds=${"%.0f".format((System.nanoTime() - start) / 1e9)} " +
                         (if (stats.total > 0) "ffnDensity=${"%.3f".format(stats.active.toDouble() / stats.total)} l1=$l1 " else "") + "ckpt=$sha")
                     System.out.flush()
                 }
             }
-            println("SPEED $name seed=$seed${if (config.ffn == Ffn.RELU) " l1=$l1" else ""} msPerToken=${"%.3f".format(NfExperiment.msPerToken(model, tok, validation))} " +
+            println("SPEED $label seed=$seed${if (config.ffn == Ffn.RELU) " l1=$l1" else ""} msPerToken=${"%.3f".format(NfExperiment.msPerToken(model, tok, validation))} " +
                 "stateFloats=${NfState.empty(model.config).layers.sumOf { it?.size ?: 0 }} paramBytes=${model.params.count * 4}")
             System.out.flush()
         }

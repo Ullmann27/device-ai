@@ -301,9 +301,11 @@ class NfTrainer(val mats: LinkedHashMap<String, Mat>, val learningRate: Float, v
 
     /**
      * One step on (ids, targets) pairs; targets −1 are ignored. Returns the mean NLL (nats per counted target) before the
-     * update. [states] (one per sequence, may be null) are carried memories that are read and advanced.
+     * update. [states] (one per sequence, may be null) are carried memories that are read and advanced. [lossFn] replaces the
+     * cross-entropy (arguments: tape, logits, index in [batch], total counted targets of the batch).
      */
-    fun step(batch: List<Pair<IntArray, IntArray>>, states: List<NfState?>? = null, lr: Float? = null): Double {
+    fun step(batch: List<Pair<IntArray, IntArray>>, states: List<NfState?>? = null, lr: Float? = null,
+             lossFn: ((Tape, Node, Int, Int) -> Node)? = null): Double {
         require(batch.isNotEmpty())
         val totalTargets = batch.sumOf { (_, t) -> t.count { it >= 0 } }
         require(totalTargets > 0)
@@ -319,7 +321,7 @@ class NfTrainer(val mats: LinkedHashMap<String, Mat>, val learningRate: Float, v
                     val nodes = mats.mapValues { (n, m) -> buffers[w][n]?.let { g -> tape.param(m, g) } ?: tape.constant(m) }
                     val penalty = ArrayList<Node>()
                     val logits = forward(tape, nodes, ids, states?.get(i), penalty, l1 / totalTargets)
-                    var loss = tape.crossEntropy(logits, targets, totalTargets)
+                    var loss = lossFn?.invoke(tape, logits, i, totalTargets) ?: tape.crossEntropy(logits, targets, totalTargets)
                     sum += loss.value.data[0].toDouble() * totalTargets
                     for (pn in penalty) loss = tape.add(loss, pn)
                     tape.backward(loss)
