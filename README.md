@@ -15,3 +15,12 @@ trainieren muss. Der Code liegt in PR #75 (`opus/continuum-language-core-2026102
 - **Benutzung:** Ordner `checkpoints/` als `store=` übergeben, z. B.
   `LmExperiment <repo> final store=checkpoints kn=7 cdx1epochs=3 ckpt=512:<sha> …`.
 - **Grenzen:** Forschungsgewichte. Sie werden von keiner App-Funktion geladen und ersetzen weder SWB1 noch CDX1.
+
+## Tokenizer für die LM1-Runtime (ergänzt 23.10.2026)
+
+- `tokenizer/tokenizer-v512-94375c73….lmbp` (2.040 Bytes): das serialisierte BPE-Vokabular v512, an das alle
+  v512-Checkpoints gebunden sind (SHA-256 `94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f`).
+- Damit lädt `LmRuntime` (PR #75) einen Checkpoint ohne Korpus:
+  `LmRuntime.load(LmCheckpointStore(checkpoints), <sha256>, tokenizerBytes)`. Die Runtime prüft Datei-Hash,
+  Tokenizer-Bindung, Layout und Endlichkeit und lehnt alles andere ab.
+- Erzeugt deterministisch aus TRAIN am Korpus-Commit `1d92db03` durch `LmRuntimeDemo`; jeder kann sie so nachbauen.
