@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Code semantic index (Milestone E): what every export of .github/continuum does, grounded in execution instead of
-// names. Per export: signature, doc comment, the tests that import its module, and a behaviour fingerprint - its
+// names. Per export: signature, doc comment, the tests that import its module directly, and a behaviour fingerprint - its
 // type-tagged results on a fixed pool of primitive inputs (POOL_VERSION), run twice through the NF-5c probe (no file
 // writes, no processes, no signals, no network) so that non-deterministic exports are recognised. Exports with the
 // same fingerprint cannot be told apart by any example from the pool (clusters); exports that agree on almost every
 // input are near duplicates. Both are where an owner goal is most likely ambiguous, and both are refactoring hints.
+// Only exports with at least three different results on the pool are compared (others mostly expect objects).
 // Module results are cached by the SHA-256 of the module and of every repository file it imports (transitively), so a
 // rebuild probes only what changed (and everything again when the pool or the probe sandbox changes). Nothing is
 // written into the repository: the index and its cache live in the worker's state directory. The index describes; it
@@ -26,6 +27,7 @@ export const POOL_1=Object.freeze(['','a','A','abc','Hallo Welt','a-b-c','Ã„','â
  0,1,-1,2,7,1.5,-2.5,100,255,256,1e6,true,false,null]);
 export const POOL_2=Object.freeze(['','a','abc','Hallo Welt',0,1,-1,2.5,true,null]);
 const NEAR=0.9;
+const MIN_DISTINCT=3;
 
 const sha=s=>createHash('sha256').update(s).digest('hex');
 const HERE=path.dirname(fileURLToPath(import.meta.url));
@@ -64,6 +66,18 @@ export function importClosure(repo,file){
  return {files:[...files].map(f=>path.relative(repo,f)).sort(),builtins:[...builtins].sort(),packages:[...packages].sort()};
 }
 
+/** Repository files a file imports itself (relative specifiers only). */
+export function directImports(repo,file){
+ const out=new Set();
+ for(const m of fs.readFileSync(file,'utf8').matchAll(SPECIFIER)){
+  const s=m[1]??m[2]??m[3];
+  if(!s.startsWith('./')&&!s.startsWith('../'))continue;
+  const f=path.resolve(path.dirname(file),s);
+  if(f.startsWith(repo+path.sep)&&fs.existsSync(f))out.add(path.relative(repo,f));
+ }
+ return [...out].sort();
+}
+
 const shown=o=>!o||o.skipped?'?':'error' in o?'!'+o.error:o.value;
 
 /** Fingerprint of observations on the doubled pool: equal halves mean deterministic on the pool. */
@@ -77,7 +91,7 @@ export function fingerprintOf(arity,observations){
   return {runnable:false,reason:'every call needs a refused capability ('+first[0].error+')'};
  const values=first.map(shown);
  return {runnable:true,reason:null,deterministic:values.every((v,i)=>v===shown(second[i])),errorRate:errors/n,
-  fingerprint:sha(JSON.stringify([POOL_VERSION,arity,values])),values};
+  distinct:new Set(values).size,fingerprint:sha(JSON.stringify([POOL_VERSION,arity,values])),values};
 }
 
 function readJson(file,fallback){try{return JSON.parse(fs.readFileSync(file,'utf8'));}catch{return fallback;}}
@@ -98,9 +112,9 @@ export function buildCodeIndex({root,cacheFile=null,timeoutMs=5000}){
  const all=indexExports(repo);
  const testFiles=fs.readdirSync(path.join(repo,'.github','continuum')).filter(f=>f.endsWith('.test.mjs')).sort()
   .map(f=>path.join(repo,'.github','continuum',f));
+ // a test counts for the modules it imports itself, not for everything those modules reach
  const testsOf=new Map();
- for(const t of testFiles)for(const f of importClosure(repo,t).files)
-  if(f!==path.relative(repo,t)){if(!testsOf.has(f))testsOf.set(f,[]);testsOf.get(f).push(path.relative(repo,t));}
+ for(const t of testFiles)for(const f of directImports(repo,t)){if(!testsOf.has(f))testsOf.set(f,[]);testsOf.get(f).push(path.relative(repo,t));}
  const cacheKey=CACHE_KEY();
  const cache=cacheFile?readJson(cacheFile,{schema:'continuum-code-index-cache',cacheKey,entries:{}}):null;
  if(cache&&cache.cacheKey!==cacheKey){cache.cacheKey=cacheKey;cache.entries={};}
@@ -110,7 +124,8 @@ export function buildCodeIndex({root,cacheFile=null,timeoutMs=5000}){
  let probed=0;
  for(const [module,candidates] of byModule){
   const closure=importClosure(repo,path.join(repo,module));
-  const closureSha256=sha(JSON.stringify(closure.files.map(f=>[f,sha(fs.readFileSync(path.join(repo,f)))])));
+  // the module itself is part of the key: modules that import each other have the same closure
+  const closureSha256=sha(JSON.stringify([module,closure.files.map(f=>[f,sha(fs.readFileSync(path.join(repo,f)))])]));
   modules.push({module,closureSha256,files:closure.files.length,builtins:closure.builtins,packages:closure.packages,
    tests:testsOf.get(module)??[]});
   let entries=cache?.entries[closureSha256];
@@ -135,7 +150,9 @@ export function buildCodeIndex({root,cacheFile=null,timeoutMs=5000}){
   for(const k of Object.keys(cache.entries))if(!live.has(k))delete cache.entries[k];
   writeJson(cacheFile,cache);
  }
- const comparable=exports.filter(e=>e.runnable&&e.deterministic&&e.errorRate<1);
+ // only exports with at least MIN_DISTINCT different results on the pool are compared: functions that expect objects
+ // mostly answer every primitive the same way (one error, one empty value), and their agreement says nothing
+ const comparable=exports.filter(e=>e.runnable&&e.deterministic&&e.distinct>=MIN_DISTINCT);
  const groups=new Map();
  for(const e of comparable){if(!groups.has(e.fingerprint))groups.set(e.fingerprint,[]);groups.get(e.fingerprint).push(e.module+'#'+e.export);}
  const clusters=[...groups.values()].filter(g=>g.length>1).sort((a,b)=>b.length-a.length||a[0].localeCompare(b[0]));
@@ -152,7 +169,8 @@ export function buildCodeIndex({root,cacheFile=null,timeoutMs=5000}){
  const runnable=exports.filter(e=>e.runnable);
  return {schema:'continuum-code-index',version:1,poolVersion:POOL_VERSION,exports,modules,clusters,nearDuplicates,
   stats:{modules:modules.length,exports:exports.length,runnable:runnable.length,deterministic:runnable.filter(e=>e.deterministic).length,
-   withTests:exports.filter(e=>e.tests.length).length,clusters:clusters.length,nearDuplicates:nearDuplicates.length,
+   comparable:comparable.length,exportsInTestedModules:exports.filter(e=>e.tests.length).length,clusters:clusters.length,
+   nearDuplicates:nearDuplicates.length,
    modulesProbed:probed,seconds:Math.round((Date.now()-t0)/100)/10}};
 }
 

@@ -23,6 +23,10 @@ function fixture(){
  put('uses-helper.mjs',"import {inc} from '../../scripts/helper.mjs';\nexport function plusOne(x){return inc(x);}\n");
  fs.writeFileSync(path.join(root,'scripts','helper.mjs'),'export function inc(x){return x+1;}\n');
  put('math.test.mjs',"import test from 'node:test';\nimport {double} from './math.mjs';\ntest('d',()=>{});\n");
+ // two modules that import each other have the same import closure
+ put('ping.mjs',"import {pong} from './pong.mjs';\nexport function ping(x){return 'ping'+x;}\nexport function both(x){return pong(x)+1;}\n");
+ put('pong.mjs',"import {ping} from './ping.mjs';\nexport function pong(x){return x*10;}\n");
+ put('ping.test.mjs',"import test from 'node:test';\nimport {ping} from './ping.mjs';\ntest('p',()=>{});\n");
  return root;
 }
 const find=(index,key)=>index.exports.find(e=>e.module+'#'+e.export==='.github/continuum/'+key);
@@ -61,14 +65,26 @@ test('fingerprints separate behaviour, find indistinguishable exports and near d
  assert.ok(near&&near.agreement>=0.9&&near.agreement<1,'they differ only on non-integer numbers');
  assert.deepEqual(find(index,'math.mjs#double').tests,['.github/continuum/math.test.mjs']);
  assert.deepEqual(find(index,'canon.mjs#canonLoose').tests,[]);
+ assert.deepEqual(find(index,'pong.mjs#pong').tests,[],'reached only through ping.mjs: not counted as tested');
  assert.equal(index.stats.modulesProbed,index.stats.modules);
+});
+
+test('modules that import each other keep their own results',()=>{
+ const root=fixture();
+ const cacheFile=path.join(fs.mkdtempSync(path.join(os.tmpdir(),'code-index-cycle-')),'cache.json');
+ for(const index of [buildCodeIndex({root,cacheFile}),buildCodeIndex({root,cacheFile})]){
+  assert.equal(find(index,'pong.mjs#pong').runnable,true);
+  assert.equal(find(index,'ping.mjs#ping').runnable,true);
+  assert.notEqual(find(index,'pong.mjs#pong').fingerprint,find(index,'ping.mjs#ping').fingerprint);
+  assert.ok(index.exports.every(e=>'runnable' in e),'every export has probe data');
+ }
 });
 
 test('the cache probes only modules whose import closure changed',()=>{
  const root=fixture();
  const cacheFile=path.join(fs.mkdtempSync(path.join(os.tmpdir(),'code-index-state-')),'cache.json');
  const first=buildCodeIndex({root,cacheFile});
- assert.equal(first.stats.modulesProbed,4);
+ assert.equal(first.stats.modulesProbed,6);
  assert.equal(buildCodeIndex({root,cacheFile}).stats.modulesProbed,0);
  fs.writeFileSync(path.join(root,'scripts','helper.mjs'),'export function inc(x){return x+2;}\n');
  const third=buildCodeIndex({root,cacheFile});
@@ -82,7 +98,7 @@ test('the CLI keeps the index outside the repository',async()=>{
  const state=fs.mkdtempSync(path.join(os.tmpdir(),'code-index-cli-'));
  const lines=[];
  await main(['build','--project',root,'--state',state],l=>lines.push(l));
- assert.equal(JSON.parse(lines[0]).exports,12);
+ assert.equal(JSON.parse(lines[0]).exports,15);
  await main(['show','--state',state],l=>lines.push(l));
  assert.ok(lines.some(l=>l.startsWith('cluster ')));
  assert.ok(lines.some(l=>l.startsWith('near ')));
