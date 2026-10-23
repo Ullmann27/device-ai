@@ -4,17 +4,23 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {spawnSync} from 'node:child_process';
+import {spawn,spawnSync} from 'node:child_process';
 import {executeOwnerRepairTask,validateOwnerRepairTask,assessIndependentOwnerEvidence} from './backlog-repair-worker.mjs';
 import {BacklogStore,emptyDocument,applyOps,nextEligible} from './development-backlog.mjs';
 import {runChain} from './repair-loop.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
-function fixture(broken){
+function fixture(broken,{slowTest=false}={}){
  const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-owner-task-'));
  const root=path.join(base,'checkout'),state=path.join(base,'state');
  const dir=path.join(root,'.github','continuum');
  fs.mkdirSync(dir,{recursive:true});fs.mkdirSync(state);
+ const marker=path.join(state,'slow-test-started');
+ // a check that runs for a minute and records its process, so a cancel can be observed while it runs
+ if(slowTest)fs.writeFileSync(path.join(dir,'slow.test.mjs'),
+  "import test from 'node:test';\nimport fs from 'node:fs';\n"+
+  `test('slow check',async()=>{fs.writeFileSync(${JSON.stringify(marker)},String(process.pid));`+
+  'await new Promise(r=>setTimeout(r,60000));});\n');
  fs.writeFileSync(path.join(dir,'math.mjs'),
   'export function square(n){return n*n}\n'+
   'export function quad(n){return '+(broken?'sqare':'square')+'(square(n))}\n');
@@ -27,7 +33,7 @@ function fixture(broken){
  };
  git('init','-q');git('add','.');
  git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','baseline');
- return {base,root,state,git,head:git('rev-parse','HEAD')};
+ return {base,root,state,git,marker,head:git('rev-parse','HEAD')};
 }
 function accepted(store,f,base=f.head){
  store.apply([{op:'propose',actor:'owner',at:1,
@@ -163,6 +169,35 @@ test('an owner cancel during the session stops at the next step boundary and is 
   const [dir]=fs.readdirSync(path.join(f.state,'reports'));
   assert.deepEqual(fs.readdirSync(path.join(f.state,'reports',dir)),['node-junit.xml'],
    'only the baseline ran: no candidate test, no patch, no report, no independent run');
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(f.git('worktree','list').split('\n').length,1,'temporary worktrees are removed');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
+test('an owner cancel during a running check step ends that step within seconds and is never DONE',
+ {skip:nested||(!['linux','android'].includes(process.platform)&&'/proc required'),timeout:180000},()=>{
+ const f=fixture(true,{slowTest:true});
+ try{
+  const file=path.join(f.state,'development-backlog.json');
+  const store=new BacklogStore(file,{actor:'owner'});accepted(store,f);
+  // the owner cancels from another process (ccc1-abort via Termux) while the baseline check is running
+  const script=`import fs from 'node:fs';import {BacklogStore} from ${JSON.stringify(new URL('./development-backlog.mjs',import.meta.url).href)};
+const [file,marker]=process.argv.slice(1);const until=Date.now()+60000;
+while(!fs.existsSync(marker)&&Date.now()<until)await new Promise(r=>setTimeout(r,25));
+new BacklogStore(file,{actor:'android-owner'}).apply([{op:'abort',actor:'android-owner',at:Date.now(),id:'repair-owner-one',reason:'Owner cancelled on Android'}]);
+fs.writeFileSync(marker+'.aborted',String(Date.now()));`;
+  spawn(process.execPath,['--input-type=module','-e',script,file,f.marker],{detached:true,stdio:'ignore'}).unref();
+  assert.throws(()=>executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:5}),
+   /TASK_ABORTED_BY_OWNER/);
+  const stoppedAfter=Date.now()-Number(fs.readFileSync(f.marker+'.aborted','utf8'));
+  const pid=Number(fs.readFileSync(f.marker,'utf8'));
+  let state=null;try{state=fs.readFileSync('/proc/'+pid+'/stat','utf8').split(') ')[1].split(' ')[0];}catch{}
+  assert.ok(state===null||state==='Z','the 60 s test file process '+pid+' still runs: '+state);
+  assert.ok(stoppedAfter<10000,'the running baseline ended '+stoppedAfter+' ms after the cancel, not after 60 s');
+  assert.equal(store.read().doc.tasks.find(t=>t.id==='repair-owner-one').state,'ABORTED');
+  const [dir]=fs.readdirSync(path.join(f.state,'reports'));
+  const left=fs.readdirSync(path.join(f.state,'reports',dir));
+  assert.ok(!left.includes('report.json')&&!left.includes('repair.patch')&&!left.includes('independent-check'),left.join(','));
   assert.equal(f.git('status','--porcelain'),'');
   assert.equal(f.git('worktree','list').split('\n').length,1,'temporary worktrees are removed');
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}

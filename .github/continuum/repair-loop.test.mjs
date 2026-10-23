@@ -254,7 +254,7 @@ test('end-to-end: injected fault is reproduced, repaired in isolation, verified 
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });
 
-test('a checkpoint runs before every step and a throwing checkpoint stops the session before the next one',{skip:nested},()=>{
+test('a checkpoint runs before and after every check step and a throwing checkpoint stops the session',{skip:nested},()=>{
  const {dir,head}=tempRepo();
  const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-loop-stop-'));
  try{
@@ -263,13 +263,15 @@ test('a checkpoint runs before every step and a throwing checkpoint stops the se
    const steps=[];
    assert.throws(()=>repairSession({wt,base:head,chain:'node',out,ledger:emptyLedger(),
     checkpoint:step=>{steps.push(step);if(step.startsWith('candidate:'))throw Error('OWNER_STOP');}}),/OWNER_STOP/);
-   assert.deepEqual(steps.map(s=>s.split(':')[0]),['profile','candidate'],'baseline ran, the first candidate never started');
+   assert.deepEqual(steps.map(s=>s.split(':')[0]),['profile','checked','candidate'],'baseline ran, the first candidate never started');
    assert.equal(fs.existsSync(path.join(out,'repair.patch')),false);
    // without a stop every check run, the candidate runs included, passes a checkpoint first
    steps.length=0;
    const report=repairSession({wt,base:head,chain:'node',out,ledger:emptyLedger(),checkpoint:step=>{steps.push(step);}});
    assert.equal(report.outcome,'VERIFIED');
    assert.equal(steps.filter(s=>s==='profile:node-continuum').length,1+report.attempts.filter(a=>a.tests).length);
+   assert.equal(steps.filter(s=>s==='checked:node-continuum').length,1+report.attempts.filter(a=>a.tests).length,
+    'every check result passes the checkpoint again before it is used');
    assert.equal(steps.filter(s=>s.startsWith('candidate:')).length,report.attempts.length);
    assert.throws(()=>repairSession({wt,base:head,chain:'node',out,checkpoint:'stop'}),/checkpoint must be a function/);
   }finally{removeWorktree(dir,wt);}

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {parseKotlinDiagnostics,readJUnitDirectory,parseJUnit,parseJsErrorText,sha256} from './repair-diagnostics.mjs';
 import {proposeCandidates,applyEdits} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
@@ -21,13 +22,58 @@ import {isIsolatedExecutor} from './isolated-executor.mjs';
 export const BRANCH_PREFIX='continuum-agent/';
 
 const DEPTH=strictRepairDepth(process.env.CONTINUUM_REPAIR_DEPTH);
-function run(cmd,args,{cwd,timeoutMs=120000,env}={}){
+// Runs from the trusted checkout of this module, never from the worktree whose checks it supervises.
+const STEP_WATCHDOG=fileURLToPath(new URL('./step-watchdog.mjs',import.meta.url));
+const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
+
+/** `abortWatch`: null, or {backlog, taskId} of the owner task whose abort also ends a running check step. */
+function checkAbortWatch(abortWatch){
+  if(abortWatch===null)return;
+  if(typeof abortWatch!=='object'||typeof abortWatch.backlog!=='string'||!path.isAbsolute(abortWatch.backlog)||
+     typeof abortWatch.taskId!=='string'||!TASK_ID.test(abortWatch.taskId))throw Error('Invalid abort watch');
+}
+
+/** The file spawn would execute for `cmd`: like execvp, the first executable match on the child's PATH. */
+function resolveCommand(cmd,env,cwd){
+  if(cmd.includes('/'))return path.isAbsolute(cmd)?cmd:null;
+  for(const dir of String(env.PATH??'/usr/bin:/bin').split(path.delimiter)){
+    const file=path.resolve(cwd??process.cwd(),dir||'.',cmd);
+    try{if(fs.statSync(file).isFile()){fs.accessSync(file,fs.constants.X_OK);return file;}}catch{}
+  }
+  return null;
+}
+
+function readStepReceipt(file){
+  try{
+    const r=JSON.parse(fs.readFileSync(file,'utf8'));
+    return r?.schemaVersion===1?{terminationConfirmed:r.terminationConfirmed===true}:{terminationConfirmed:false};
+  }catch(error){
+    if(error.code==='ENOENT')return null;
+    return {terminationConfirmed:false};
+  }
+}
+
+function run(cmd,args,{cwd,timeoutMs=120000,env,abortWatch=null}={}){
   const started=Date.now();
   // Child checks see the depth, so a test suite cannot start a nested repair loop.
   const childEnv={...process.env,...env,GIT_TERMINAL_PROMPT:'0',CONTINUUM_REPAIR_DEPTH:String(DEPTH+1)};
   delete childEnv.NODE_TEST_CONTEXT; // a nested `node --test` must report on its own, not to a parent runner
-  const r=spawnSync(cmd,args,{cwd,timeout:timeoutMs,encoding:'utf8',maxBuffer:64*1024*1024,shell:false,env:childEnv});
-  return {status:r.status,signal:r.signal,error:r.error?.code??null,stdout:r.stdout??'',stderr:r.stderr??'',ms:Date.now()-started};
+  // With an abort watch the step watchdog runs the command in its own process group and stops it once the owner
+  // task is aborted. Streams, exit status and the timeout signal reach this spawnSync unchanged. A command that
+  // does not resolve runs directly, so it fails exactly as before.
+  const command=abortWatch?resolveCommand(cmd,childEnv,cwd):null;
+  const scratch=command?fs.mkdtempSync(path.join(os.tmpdir(),'continuum-step-')):null;
+  const receipt=scratch&&path.join(scratch,'stopped.json');
+  try{
+    const r=command
+      ?spawnSync(process.execPath,[STEP_WATCHDOG,abortWatch.backlog,abortWatch.taskId,receipt,String(timeoutMs),String(process.pid),
+        '--',command,...args],
+        {cwd,timeout:timeoutMs,encoding:'utf8',maxBuffer:64*1024*1024,shell:false,env:childEnv})
+      :spawnSync(cmd,args,{cwd,timeout:timeoutMs,encoding:'utf8',maxBuffer:64*1024*1024,shell:false,env:childEnv});
+    const stoppedByOwner=receipt?readStepReceipt(receipt):null;
+    return {status:r.status,signal:r.signal,error:r.error?.code??null,stdout:r.stdout??'',stderr:r.stderr??'',ms:Date.now()-started,
+      ...(stoppedByOwner?{stoppedByOwner}:{})};
+  }finally{if(scratch)fs.rmSync(scratch,{recursive:true,force:true});}
 }
 export function git(cwd,args,opts={}){
   const r=run('git',args,{cwd,timeoutMs:opts.timeoutMs??120000});
@@ -125,9 +171,10 @@ function refuseExecutor(executor){
   throw Error('ISOLATION_EXECUTOR_NOT_INTEGRATED');
 }
 
-export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null,abortWatch=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
   refuseExecutor(executor);
+  checkAbortWatch(abortWatch);
   const p=factory(wt,out);
   for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
   for(const f of p.junitFiles??[])fs.rmSync(f,{force:true});
@@ -139,7 +186,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
   // A test inside the Continuum suite must never start that suite again: each level would spawn the next one.
   if(DEPTH>0&&name==='node-continuum')throw Error('Nested Continuum suite run refused (CONTINUUM_REPAIR_DEPTH='+DEPTH+')');
-  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
+  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env,abortWatch});
+  let stoppedByOwner=r.stoppedByOwner??null;
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
@@ -171,19 +219,20 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
     const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
     const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
-      if(deadline!==null&&Date.now()>=deadline)break;
+      if(stoppedByOwner||deadline!==null&&Date.now()>=deadline)break;
       const again=run(p.cmd,['--test','--test-reporter=tap',file],{
-        cwd:p.cwd,timeoutMs:Math.min(120000,remaining())
+        cwd:p.cwd,timeoutMs:Math.min(120000,remaining()),abortWatch
       });
+      stoppedByOwner??=again.stoppedByOwner??null;
       diagnostics.unshift(...parseJsErrorText(again.stdout+'\n'+again.stderr,wt));
     }
   }
   // A test profile passes only with executed evidence: exit 0 with no real test
   // run (missing report, only file placeholders or skips) is not a pass.
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
-  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0);
+  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0)&&!stoppedByOwner;
   return {profile:name,passed,testProfile,exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
-    outputTail:text.slice(-3000)};
+    outputTail:text.slice(-3000),...(stoppedByOwner?{stoppedByOwner}:{})};
 }
 
 /**
@@ -215,16 +264,20 @@ function stepCheckpoint(checkpoint){
 }
 
 /**
- * `checkpoint(step)` runs before each check profile; a running profile always completes (its process is never
- * killed), but no further profile starts once the checkpoint throws.
+ * `checkpoint(step)` runs before each check profile and again after it, before its result is used: once it throws,
+ * no further profile starts and the result of one that ran during an abort never counts. Without `abortWatch` a
+ * running profile completes; with it, the step watchdog also ends a running profile once the task is aborted.
  */
-export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null}={}){
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null,abortWatch=null}={}){
   refuseExecutor(executor);
-  const beforeStep=stepCheckpoint(checkpoint);
+  checkAbortWatch(abortWatch);
+  const atStep=stepCheckpoint(checkpoint);
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
-    beforeStep('profile:'+name);
-    const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);
+    atStep('profile:'+name);
+    const r=runProfile(name,wt,out,{deadline,forceRerun,abortWatch});results.push(r);
+    atStep('checked:'+name);
+    if(r.stoppedByOwner)throw Error('CHECK_STEP_STOPPED_BY_OWNER');
     if(!r.passed)break;
   }
   return {passed:results.every(r=>r.passed),results,diagnostics:results.flatMap(r=>r.diagnostics)};
@@ -435,10 +488,11 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 /**
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
- * `checkpoint(step)` runs at every step boundary (each check profile, the local provider, each candidate); when it
- * throws, the session ends with that error and leaves no report (the caller removes the worktree).
+ * `checkpoint(step)` runs at every step boundary (before and after each check profile, the local provider, each
+ * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
+ * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null,abortWatch=null}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
   const beforeStep=stepCheckpoint(checkpoint);
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
@@ -450,7 +504,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
       reason:'No generative model is invoked by this repair pipeline'},
     baseline:null,attempts:[],verified:null,outcome:null};
-  const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep});
+  const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
@@ -553,7 +607,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       log(c.strategy+' -> FAILED_SYNTAX');
       continue;
     }
-    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep});
+    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
     const evidence=evidenceSufficient(baseline.results,check.results);

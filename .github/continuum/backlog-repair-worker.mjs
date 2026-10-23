@@ -112,18 +112,20 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   let outcome=null;
   const deadline=Date.now()+budgetMinutes*60_000;
   // An owner cancel (code-cancel, ccc1-abort) aborts the backlog task while the session computes. Every step boundary
-  // (each check profile, each candidate, before the independent run) then stops the work instead of producing a
-  // result that can no longer count; nothing is learned from it. A check profile that already runs completes.
+  // (before and after each check profile, each candidate, before the independent run) then stops the work instead of
+  // producing a result that can no longer count; nothing is learned from it. The abort watch ends a check profile
+  // that is already running: its watchdog stops the step's process group within about a second.
   const checkpoint=()=>{
     if(store.read().doc.tasks.find(t=>t.id===task.id)?.state==='ABORTED')throw Error('TASK_ABORTED_BY_OWNER');
   };
+  const abortWatch={backlog:backlogPath,taskId:task.id};
   try{
     fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,checkpoint});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,checkpoint,abortWatch});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     const writeReport=()=>{
@@ -154,7 +156,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       git(independent,['apply','--binary',patchFile]);
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
-      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint});
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
       const independentlyPassed=assessment.passed;
