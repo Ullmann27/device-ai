@@ -4,7 +4,7 @@
 // never shell text. Deviation from the specification, documented: the owner answers an APPROVAL_REQUEST with
 // the additional kind APPROVAL (the specification names the request but not the answer).
 import {createHash,randomUUID} from 'node:crypto';
-import {MODULE_RE,EXPORT_RE,MAX_CASES_JSON} from '../../scripts/continuum-mobile-coding.mjs';
+import {MODULE_RE,EXPORT_RE,MAX_CASES_JSON,REPAIR_CHAINS} from '../../scripts/continuum-mobile-coding.mjs';
 
 export const SCHEMA_VERSION=1;
 export const SENDERS=Object.freeze(['OWNER','REASONER','TEAMLEADER','VERIFIER']);
@@ -20,8 +20,14 @@ export const SENDER_KINDS=Object.freeze({
 export const VERDICTS=Object.freeze(['CONFIRMED','REFUTED','INCONCLUSIVE']);
 /** ABORT reasons; CAPABILITY_DENIED and PROTOCOL_VIOLATION end a task as FAILED, all others as ABORTED. */
 export const ABORT_CODES=Object.freeze(['OWNER','DEADLINE','BUDGET','ROUND_LIMIT','STALE_BASE','APPROVAL_DENIED','CAPABILITY_DENIED','PROTOCOL_VIOLATION']);
-/** The only capability of the existing coding agent this protocol can request (owner contract test). */
+/** Capability of the existing coding agent for an owner contract test (protocol v1 knew only this one). */
 export const CAPABILITY='node-contract-test';
+/**
+ * Protocol v2 adds the existing owner repair path: run a fixed test chain, repair a real failure with the
+ * deterministic repair pipeline, verify independently. Permission `node-repair:<chain>` names the chain.
+ */
+export const REPAIR_CAPABILITY='node-repair';
+export const CAPABILITIES=Object.freeze([CAPABILITY,REPAIR_CAPABILITY]);
 const ENVELOPE_FIELDS=['schemaVersion','sessionId','taskId','messageId','sequence','parentMessageId','sender','kind','payload',
  'repoFullName','baseCommitSha','worktreeId','deadline','maxRounds','maxCpuMillis','maxMemoryBytes','permissions',
  'checkpointHash','createdAt','protocolHash','verificationReceiptId'];
@@ -30,7 +36,7 @@ const TASK_ID=/^t-[0-9a-f]{16}$/;
 const SHA=/^[0-9a-f]{40}$/;
 const HEX64=/^[0-9a-f]{64}$/;
 const REPO=/^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/;
-const PERMISSION=/^node-contract-test(:\.github\/continuum\/[A-Za-z][A-Za-z0-9_-]{0,63}\.mjs)?$/;
+const PERMISSION=/^(node-contract-test(:\.github\/continuum\/[A-Za-z][A-Za-z0-9_-]{0,63}\.mjs)?|node-repair(:(node|android|jvm))?)$/;
 
 const str=(v,max=600)=>typeof v==='string'&&v.length>0&&v.length<=max;
 const keysExactly=(o,allowed)=>o!==null&&typeof o==='object'&&!Array.isArray(o)&&Object.keys(o).every(k=>allowed.includes(k));
@@ -48,29 +54,46 @@ export function canonical(v){
 }
 export const sha256=s=>createHash('sha256').update(s).digest('hex');
 /** Hash of the protocol definition; peers with a different contract are detected, not trusted. */
-export const PROTOCOL_HASH=sha256(canonical({SCHEMA_VERSION,SENDERS,KINDS,SENDER_KINDS,VERDICTS,ABORT_CODES,CAPABILITY,ENVELOPE_FIELDS}));
+export const PROTOCOL_HASH_V1=sha256(canonical({SCHEMA_VERSION,SENDERS,KINDS,SENDER_KINDS,VERDICTS,ABORT_CODES,CAPABILITY,ENVELOPE_FIELDS}));
+export const PROTOCOL_HASH=sha256(canonical({SCHEMA_VERSION,SENDERS,KINDS,SENDER_KINDS,VERDICTS,ABORT_CODES,CAPABILITY,ENVELOPE_FIELDS,CAPABILITIES}));
+/** New tasks carry v2; a v1 task keeps its own hash for every later entry, so its journal binding stays intact. */
+export const KNOWN_PROTOCOL_HASHES=Object.freeze([PROTOCOL_HASH_V1,PROTOCOL_HASH]);
+const repairOf=v=>keysExactly(v,['chain'])&&REPAIR_CHAINS.includes(v?.chain);
 
 /** Strict payload schema per kind; returns problems (empty = valid). */
 export function payloadProblems(kind,p){
  const out=[];const need=(ok,msg)=>{if(!ok)out.push(kind+': '+msg);};
  switch(kind){
  case 'GOAL':
-  need(keysExactly(p,['text','examples']),'only text, examples');
+  need(keysExactly(p,['text','examples','repair']),'only text, examples, repair');
   need(str(p?.text),'text 1..600 characters');
   need(p?.examples===undefined||Array.isArray(p.examples)&&p.examples.length<=8&&p.examples.every(validCase),'examples: at most 8 primitive cases');
+  need(p?.repair===undefined||repairOf(p.repair)&&p.examples===undefined,'repair: {chain: '+REPAIR_CHAINS.join('|')+'} without examples');
   break;
  case 'HYPOTHESIS':
-  need(keysExactly(p,['claim','module','export','basis','confidence']),'only claim, module, export, basis, confidence');
+  if(p&&typeof p==='object'&&Object.hasOwn(p,'repair')){
+   need(keysExactly(p,['claim','repair','basis','confidence']),'repair hypothesis: only claim, repair, basis, confidence');
+   need(repairOf(p.repair),'repair: {chain: '+REPAIR_CHAINS.join('|')+'}');
+  }else{
+   need(keysExactly(p,['claim','module','export','basis','confidence']),'only claim, module, export, basis, confidence');
+   need(MODULE_RE.test(p?.module??'')&&EXPORT_RE.test(p?.export??''),'module .github/continuum/<name>.mjs and an export identifier');
+  }
   need(str(p?.claim)&&str(p?.basis),'claim and basis 1..600 characters');
-  need(MODULE_RE.test(p?.module??'')&&EXPORT_RE.test(p?.export??''),'module .github/continuum/<name>.mjs and an export identifier');
   need(p?.confidence===undefined||typeof p.confidence==='number'&&p.confidence>=0&&p.confidence<=1,'confidence 0..1');
   break;
  case 'PLAN':
   need(keysExactly(p,['steps','capability']),'only steps, capability');
   need(Array.isArray(p?.steps)&&p.steps.length>=1&&p.steps.length<=8&&p.steps.every(s=>str(s,200)),'1..8 steps');
-  need(p?.capability===CAPABILITY,'capability must be '+CAPABILITY);
+  need(CAPABILITIES.includes(p?.capability),'capability must be one of '+CAPABILITIES.join(', '));
   break;
  case 'TEST_REQUEST':{
+  if(p&&typeof p==='object'&&Object.hasOwn(p,'repair')){
+   need(keysExactly(p,['hypothesis','repair','budgetMinutes']),'repair request: only hypothesis, repair, budgetMinutes');
+   need(ref(p?.hypothesis),'hypothesis must be a message id');
+   need(repairOf(p.repair),'repair: {chain: '+REPAIR_CHAINS.join('|')+'}');
+   need(Number.isSafeInteger(p?.budgetMinutes)&&p.budgetMinutes>=1&&p.budgetMinutes<=30,'budgetMinutes 1..30');
+   break;
+  }
   need(keysExactly(p,['hypothesis','module','export','cases','budgetMinutes']),'only hypothesis, module, export, cases, budgetMinutes');
   need(ref(p?.hypothesis),'hypothesis must be a message id');
   need(MODULE_RE.test(p?.module??'')&&EXPORT_RE.test(p?.export??''),'module and export');
@@ -115,7 +138,7 @@ export function envelopeProblems(e){
  const out=[];const need=(ok,msg)=>{if(!ok)out.push(msg);};
  if(!keysExactly(e,ENVELOPE_FIELDS))return ['unknown envelope fields: '+Object.keys(e??{}).filter(k=>!ENVELOPE_FIELDS.includes(k)).join(',')];
  need(e.schemaVersion===SCHEMA_VERSION,'unsupported schemaVersion '+e.schemaVersion);
- need(e.protocolHash===PROTOCOL_HASH,'foreign protocol hash');
+ need(KNOWN_PROTOCOL_HASHES.includes(e.protocolHash),'foreign protocol hash');
  need(ref(e.sessionId)&&TASK_ID.test(e.taskId??'')&&ref(e.messageId),'session, task and message ids');
  need(Number.isSafeInteger(e.sequence)&&e.sequence>=0,'sequence');
  need(e.parentMessageId===null||ref(e.parentMessageId),'parentMessageId');
@@ -142,7 +165,7 @@ export function envelope({binding,sender,kind,payload,sequence,parentMessageId=n
  return {schemaVersion:SCHEMA_VERSION,sessionId:binding.sessionId,taskId:binding.taskId,messageId:randomUUID(),sequence,
   parentMessageId,sender,kind,payload,repoFullName:binding.repoFullName,baseCommitSha:binding.baseCommitSha,worktreeId:binding.worktreeId,
   deadline:binding.deadline,maxRounds:binding.maxRounds,maxCpuMillis:binding.maxCpuMillis,maxMemoryBytes:binding.maxMemoryBytes,
-  permissions:[...binding.permissions],checkpointHash:binding.checkpointHash??null,createdAt:now.toISOString(),protocolHash:PROTOCOL_HASH,
+  permissions:[...binding.permissions],checkpointHash:binding.checkpointHash??null,createdAt:now.toISOString(),protocolHash:binding.protocolHash??PROTOCOL_HASH,
   verificationReceiptId};
 }
 

@@ -58,11 +58,15 @@ export function recordSession(ledger,report,meta={}){
   // absent: no independent observation -> neither positive NOR negative
   //         training label (do not poison learning with an unknown outcome).
   const provisional=report.outcome==='VERIFIED';
+  // OS confinement protects owner state, but candidate-controlled runtime
+  // reports are not an independent semantic oracle. Never train/replay broad
+  // model code from a green local report, even if a caller passes a true flag.
+  const isolatedReview=provisional&&report.verified?.strategy==='LOCAL_ISOLATED_PATCH';
   const independentRejected=provisional&&meta.independentPass===false;
   const independentPending=provisional&&meta.independentPass!==true&&
-    meta.independentPass!==false;
-  const acceptedPatch=provisional&&meta.independentPass===true?report.verified:null;
-  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':
+    meta.independentPass!==false||isolatedReview;
+  const acceptedPatch=provisional&&meta.independentPass===true&&!isolatedReview?report.verified:null;
+  const finalOutcome=isolatedReview?'PENDING_OWNER_REVIEW':independentRejected?'NO_VERIFIED_REPAIR':
     independentPending?'PENDING_INDEPENDENT_VERIFICATION':report.outcome;
   const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
     if(a.outcome==='VERIFIED'&&independentRejected)
@@ -87,9 +91,9 @@ export function recordSession(ledger,report,meta={}){
   // A provisional successful session has NO independent classification yet.
   // Keep its diagnostic attempts for investigation, but do not train from
   // either an asserted win or its possibly stale failed-test labels.
-  const learned=independentPending?[]:attempts.filter(a=>
+  const learned=independentPending?[]:attempts.filter(a=>a.strategy!=='LOCAL_ISOLATED_PATCH'&&(
     ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome)||
-    (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX'));
+    (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
     kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
     status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'

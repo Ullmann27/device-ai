@@ -9,6 +9,7 @@ import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
 import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
+import {isIsolatedExecutor} from './isolated-executor.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -113,8 +114,20 @@ export const CHAINS=Object.freeze({
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
-export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
+/**
+ * Executor guard (from the isolation design of 76b98b22, whose test came back with the #94 integration): an executor
+ * object never grants execution rights unless it is a trusted isolated executor, and container execution is not wired
+ * into this repair loop, so even a trusted one fails closed instead of silently running on the host.
+ */
+function refuseExecutor(executor){
+  if(executor===null||executor===undefined)return;
+  if(!isIsolatedExecutor(executor))throw Error('UNTRUSTED_ISOLATION_EXECUTOR');
+  throw Error('ISOLATION_EXECUTOR_NOT_INTEGRATED');
+}
+
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
+  refuseExecutor(executor);
   const p=factory(wt,out);
   for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
   for(const f of p.junitFiles??[])fs.rmSync(f,{force:true});
@@ -124,6 +137,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false}={}){
   if(forceRerun&&name!=='android-compile'&&name!=='android-unit')
     throw Error('Forced rerun is supported for Android check profiles only');
   const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
+  // A test inside the Continuum suite must never start that suite again: each level would spawn the next one.
+  if(DEPTH>0&&name==='node-continuum')throw Error('Nested Continuum suite run refused (CONTINUUM_REPAIR_DEPTH='+DEPTH+')');
   const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env});
   const text=r.stdout+'\n'+r.stderr;
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
@@ -193,7 +208,8 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out,{deadline=null,forceRerun=false}={}){
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
+  refuseExecutor(executor);
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
     const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);

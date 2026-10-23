@@ -1,10 +1,11 @@
-// CCC1 ToolCapabilityGate: decides whether a reasoner TEST_REQUEST may run. Permissions come only from OWNER entries
+// CCC1 ToolCapabilityGate: decides whether a reasoner TEST_REQUEST (contract test or repair) may run. Permissions come only from OWNER entries
 // (the GOAL's grant plus GRANTED approvals); a reasoner can never widen them. The coding agent's own critic is asked
 // with exactly the contract it would render: what the critic refuses (e.g. tests on the agent's control-plane code)
 // stays refused even with owner approval. Rounds, deadline and CPU budget are enforced before every execution.
 import {critique} from './repair-critic.mjs';
 import {renderOwnerNodeContract} from './contract-test-template.mjs';
-import {CAPABILITY} from './ccc1-envelope.mjs';
+import {CAPABILITY,REPAIR_CAPABILITY} from './ccc1-envelope.mjs';
+import {REPAIR_CHAINS} from '../../scripts/continuum-mobile-coding.mjs';
 
 /** Would the existing coding agent accept a contract test for this module/export/cases at all? */
 export function capabilityCheck(module,exportName,casesJson){
@@ -27,6 +28,8 @@ export function effectivePermissions(entries){
 }
 
 export const permissionFor=module=>CAPABILITY+':'+module;
+/** A repair request names a fixed test chain; the owner grants node-repair (any chain) or node-repair:<chain>. */
+export const repairPermissionFor=chain=>REPAIR_CAPABILITY+':'+chain;
 
 /**
  * Decision for one TEST_REQUEST payload: ALLOW, NEEDS_APPROVAL (owner must grant `needs`) or DENY (with reasons).
@@ -39,6 +42,14 @@ export function gateTestRequest(payload,entries,{rounds,cpuMillis,now=Date.now()
  if(rounds>=goal.maxRounds)reasons.push('round limit '+goal.maxRounds+' reached');
  if(cpuMillis!==null&&cpuMillis>=goal.maxCpuMillis)reasons.push('CPU budget '+goal.maxCpuMillis+' ms used up');
  if(now+payload.budgetMinutes*60_000>goal.deadline)reasons.push('request budget exceeds the remaining time');
+ if(payload.repair){
+  if(!REPAIR_CHAINS.includes(payload.repair.chain))reasons.push('outside the worker capability: unknown test chain');
+  if(reasons.length)return {decision:'DENY',reasons,needs:[]};
+  const granted=effectivePermissions(entries);
+  const need=repairPermissionFor(payload.repair.chain);
+  if(granted.has(REPAIR_CAPABILITY)||granted.has(need))return {decision:'ALLOW',reasons:[],needs:[]};
+  return {decision:'NEEDS_APPROVAL',reasons:['repair of this chain is not covered by the owner grant'],needs:[need]};
+ }
  const capability=capabilityCheck(payload.module,payload.export,JSON.stringify(payload.cases));
  if(!capability.allowed)reasons.push('outside the worker capability: '+capability.reasons.join('; '));
  if(reasons.length)return {decision:'DENY',reasons,needs:[]};

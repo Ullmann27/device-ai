@@ -17,6 +17,12 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val JOB_START = "job_start"
         const val LAST_MESSAGE = "last_message"
         const val LAST_SHA = "last_sha"
+        /** CCC1 task the owner can cancel next (validated id only). */
+        const val CCC1_TASK = "ccc1_task"
+        /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */
+        const val ABORT_JOB_ID = "ccc1_abort_job_id"
+        const val ABORT_JOB_START = "ccc1_abort_job_start"
+        const val ABORT_MESSAGE = "ccc1_abort_message"
         const val RESULT_BUNDLE = "result"
         const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"
     }
@@ -27,12 +33,16 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val id = intent.getStringExtra(JOB_ID) ?: return
         val operationName = intent.getStringExtra(JOB_OPERATION) ?: return
 
-        if (id != prefs.getString(JOB_ID, null) ||
+        val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)
+        val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT
+        if (abortSlot) {
+            if (id != prefs.getString(ABORT_JOB_ID, null)) return
+        } else if (id != prefs.getString(JOB_ID, null) ||
             operationName != prefs.getString(JOB_OPERATION, null)
         ) return
 
         val codingOrder = operationName == "CODE_TEST"
-        val operation = if (codingOrder) null else try {
+        val operation = if (codingOrder || ccc1 != null) null else try {
             ContinuumMobileBuildPlan.Operation.valueOf(operationName)
         } catch (_: IllegalArgumentException) {
             return
@@ -53,6 +63,25 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val stdout = bundle?.getString("stdout") ?: ""
         val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()
         val truncated = originalLength == null || originalLength > stdout.length.toLong()
+
+        if (ccc1 != null) {
+            val result = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout)
+            // Only the validated summary, the task id and a verified patch hash; never Termux output or code.
+            val editor = prefs.edit()
+            if (abortSlot) {
+                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).putString(ABORT_MESSAGE, result.message)
+            } else {
+                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_START).remove(LAST_SHA)
+                    .putString(LAST_MESSAGE, result.message)
+                if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)
+            }
+            if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)
+            else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&
+                (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)
+            ) editor.remove(CCC1_TASK)
+            editor.commit()
+            return
+        }
 
         if (codingOrder) {
             val receipt = ContinuumMobileCodingJob.evaluate(

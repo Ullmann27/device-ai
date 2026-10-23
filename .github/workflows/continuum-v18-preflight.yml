@@ -1,0 +1,31 @@
+name: Continuum Owner v18 Source Preflight
+on:
+  push:
+    branches:
+      - integration/continuum-owner-apk-v18-candidate-20261023
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release-preflight:
+    name: Parse and audit source-only owner release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check v18 signing script syntax without ever using a key
+        run: bash -n scripts/render-mentor-owner-update-v18.sh
+      - name: Test explicit release block, version, package and rollback checks
+        run: node --test .github/continuum/continuum-owner-v18-release.test.mjs
+      - name: Regression of Android↔CCC1 bridge and Fold7 composer contracts
+        run: node --test .github/continuum/ccc1-bridge.test.mjs .github/continuum/fold-responsive-reflow.test.mjs
+      - name: Verify no accidental secret-bearing release in CI
+        run: |
+          if test -n "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:-}"; then
+            echo 'Unexpected private key in source-only job' >&2
+            exit 1
+          fi
+          echo 'Source-only preflight; no APK was built or signed.'

@@ -53,8 +53,10 @@ test('system gauges show only measured values and explain unknown GPU', () => {
   assert.match(system, /telemetry\.memoryPercent/);
   assert.match(system, /telemetry\.storagePercent/);
   assert.match(system, /Triple\("GPU", null/);
-  assert.match(system, /contentDescription = values\.joinToString/);
+  assert.match(system, /contentDescription = describeTelemetry\(\)/);
+  assert.match(system, /private fun describeTelemetry\(\): String = values\.joinToString/);
   assert.match(activity, /ContinuumSystemGaugesView\(this, systemSnapshot\)/);
+  assert.match(activity, /liveHardwareGauges\?\.updateTelemetry\(state\.system\)/);
   assert.match(activity, /App-CPU statt Gesamt-CPU/);
 });
 test('device storage legend does not present unidentified data as measured system bytes', () => {

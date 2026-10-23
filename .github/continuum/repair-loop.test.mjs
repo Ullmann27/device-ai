@@ -400,3 +400,16 @@ test('repair cleanup cannot silently ignore a failed Git worktree removal',
     .filter(x=>x.startsWith('worktree ')).length,1);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('a test inside the Continuum suite cannot start the suite again (no recursive suite runs)',()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-nested-'));
+ try{
+  fs.mkdirSync(path.join(dir,'.github','continuum'),{recursive:true});
+  fs.writeFileSync(path.join(dir,'.github','continuum','one.test.mjs'),"import test from 'node:test';\ntest('x',()=>{});\n");
+  const probe=`import {runProfile} from ${JSON.stringify(new URL('./repair-loop.mjs',import.meta.url).href)};
+try{runProfile('node-continuum',${JSON.stringify(dir)},${JSON.stringify(dir)});console.log('RAN');}catch(e){console.log('REFUSED '+e.message);}`;
+  const r=spawnSync(process.execPath,['--input-type=module','-e',probe],{encoding:'utf8',timeout:60000,
+   env:{...process.env,CONTINUUM_REPAIR_DEPTH:'1',NODE_TEST_CONTEXT:''}});
+  assert.match(r.stdout,/REFUSED Nested Continuum suite run refused/,r.stdout+r.stderr);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});

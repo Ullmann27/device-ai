@@ -19,49 +19,79 @@ import kotlin.math.min
  */
 class ContinuumSystemGaugesView(
     context: Context,
-    private val telemetry: ContinuumDashboardState.SystemStatus
+    private var telemetry: ContinuumDashboardState.SystemStatus
 ) : View(context) {
     private val density = resources.displayMetrics.density
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     private val ring = RectF()
+    private var columns = 4
+    private var rowHeight = 0f
+    private val gradients = arrayOfNulls<SweepGradient>(5)
+    private val boldFace = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
 
-    private val values: List<Triple<String, Int?, Int>> = listOf(
-        Triple("App-CPU", telemetry.appCpuPercent, 0xFF00E5FF.toInt()),
-        Triple("GPU", null, 0xFFA855F7.toInt()),
-        Triple("RAM", telemetry.memoryPercent, 0xFFEC4899.toInt()),
-        Triple("Speicher", telemetry.storagePercent, 0xFF3B82F6.toInt())
-    )
+    private val values: List<Triple<String, Int?, Int>>
+        get() = listOf(
+            Triple("App-CPU", telemetry.appCpuPercent, 0xFF00E5FF.toInt()),
+            Triple("Akku", telemetry.batteryPercent, 0xFF3BE7C3.toInt()),
+            Triple("RAM", telemetry.memoryPercent, 0xFFEC4899.toInt()),
+            Triple("Speicher", telemetry.storagePercent, 0xFF3B82F6.toInt()),
+            Triple("GPU", null, 0xFFA855F7.toInt())
+        )
+
+    /** The open system panel reflects the same 5-second sampler as the dashboard. */
+    fun updateTelemetry(next: ContinuumDashboardState.SystemStatus) {
+        if (telemetry == next) return
+        telemetry = next
+        contentDescription = describeTelemetry()
+        invalidate()
+    }
+
+    private fun describeTelemetry(): String = values.joinToString(". ") { (name, measured, _) ->
+        "$name: " + (measured?.let { "${it.coerceIn(0, 100)} Prozent" } ?: "nicht messbar")
+    }
 
     init {
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         isFocusable = true
-        contentDescription = values.joinToString(". ") { (name, measured, _) ->
-            "$name: " + (measured?.let { "${it.coerceIn(0, 100)} Prozent" } ?: "nicht messbar")
-        }
+        contentDescription = describeTelemetry()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val needed = (130f * density).toInt()
+        val font = resources.configuration.fontScale.coerceAtLeast(1f)
+        columns = ContinuumGridPolicy.gaugeColumns(width / density, font)
+        val needed = (110f * font * density * ((values.size + columns - 1) / columns)).toInt()
         val height = View.resolveSize(needed, heightMeasureSpec)
         setMeasuredDimension(width, height)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        rowHeight = h.toFloat() / ((values.size + columns - 1) / columns)
+        val cell = w.toFloat() / columns
+        for (i in values.indices) {
+            val cx = cell * (i % columns + .5f)
+            val cy = rowHeight * (i / columns + .43f)
+            val accent = values[i].third
+            gradients[i] = SweepGradient(cx, cy, intArrayOf(accent, Color.WHITE, accent), null)
+        }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (width <= 0 || height <= 0) return
 
-        val cell = width.toFloat() / values.size
+        val cell = width.toFloat() / columns
         val stroke = 5.2f * density
-        val radius = min(cell * 0.35f, height * 0.26f)
-        val cy = (height * .44f).coerceAtLeast(radius + stroke)
-        val labelSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10f, resources.displayMetrics)
-        val valueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, resources.displayMetrics)
+        val radius = min(cell * 0.30f, rowHeight * 0.27f)
+        val labelSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12f, resources.displayMetrics)
+        val valueSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15f, resources.displayMetrics)
 
         values.forEachIndexed { i, entry ->
             val (name, nullablePercent, accent) = entry
             val percent = nullablePercent?.coerceIn(0, 100)
-            val cx = cell * (i + .5f)
+            val cx = cell * (i % columns + .5f)
+            val cy = rowHeight * (i / columns + .43f)
             ring.set(cx - radius, cy - radius, cx + radius, cy + radius)
 
             paint.reset()
@@ -79,8 +109,7 @@ class ContinuumSystemGaugesView(
                 canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
 
                 paint.strokeWidth = stroke
-                paint.shader = SweepGradient(cx, cy,
-                    intArrayOf(accent, Color.WHITE, accent), null)
+                paint.shader = gradients[i]
                 canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
                 paint.shader = null
             }
@@ -89,8 +118,7 @@ class ContinuumSystemGaugesView(
             paint.isAntiAlias = true
             paint.style = Paint.Style.FILL
             paint.textAlign = Paint.Align.CENTER
-            paint.typeface = android.graphics.Typeface.create(
-                android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
+            paint.typeface = boldFace
             paint.textSize = valueSize
             paint.color = 0xFFF1F5FF.toInt()
             val centerY = cy - (paint.ascent() + paint.descent()) / 2f
@@ -99,7 +127,7 @@ class ContinuumSystemGaugesView(
             paint.typeface = android.graphics.Typeface.DEFAULT
             paint.textSize = labelSize
             paint.color = 0xFFB1BFDC.toInt()
-            canvas.drawText(name, cx, cy + radius + 21f * density, paint)
+            canvas.drawText(name, cx, cy + radius + labelSize * 1.45f, paint)
         }
     }
 }

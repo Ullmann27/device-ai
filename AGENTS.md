@@ -1,4 +1,10 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
+
+## Einstiegspunkt der aktuellen Integrations- und Aufräumrunde – 23.10.2026
+**Vor Entscheidungen über alte/neue Branches zuerst [Aktueller Integrationsstand](docs/CONTINUUM-ACTIVE-CHECKPOINT-20261023.md) lesen.** Dieser Index beschreibt den aufgeräumten *Review*-Branch `integration/continuum-current-review-20261023`, der PR #95 und die geprüften UI-Dateien aus PR #96 enthält. Das ist **nicht** `main`, keine produktive APK und keine permanente SHA-Festschreibung: `git rev-parse HEAD` und PR-Abstände bei jeder Sitzung erneut prüfen.
+
+**Übergabe- und Zweigregel:** Bestehende ältere Zweige, Artefakte, Experimente und Belege vorerst **nicht löschen, schließen oder automatisch mergen**. Ihre Abstammung, fehlende Dateipfade, Quellidentität und Ersatzfähigkeit zuerst vergleichen. #72 (I2-Risikozertifizierung) und #90 (UI-QA) sind bewusst erhaltene, noch nicht vollständig übernommene Forschung/Testkandidaten. #70 (QF2+ Quellenanker) ist in den verglichenen Kern-Dateien bereits byte-identisch. CCC1 gehört Opus; UI/Fold-Abnahme gehört Astra; keine parallelen Worker- oder Receipt-Systeme erfinden. Für neue Codeänderungen zuerst einen klaren kleinsten Prüfgegenstand definieren und danach isoliert testen.
+
 **Vor jeder Codemodifikation** `docs/CONTINUUM-EXPERIMENTVERTRAG.md` und `docs/CONTINUUM-EXPERIMENTE.json` sowie [Issue #41](https://github.com/Ullmann27/device-ai/issues/41) lesen. Geltungsbereich nur dieses Projekt, keine Vermischung mit Lumo. Bewahre die Experimente für künftige Entwicklungsrunden.
 
 ## Nicht verhandelbares Produktziel

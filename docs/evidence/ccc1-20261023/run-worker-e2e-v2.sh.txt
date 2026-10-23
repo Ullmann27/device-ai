@@ -1,0 +1,20 @@
+#!/bin/bash
+# CCC1 worker, second real run with probe v2 (repository read access, network/signal guards, unchecked alternatives
+# reported) and the code index refreshed in idle cycles. Same three goals and loop settings as the first run.
+S=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad
+E=$S/e2e2
+rm -rf $E && mkdir -p $E/home && git clone -q --branch opus/continuum-intelligence-next-20261023 /home/user/device-ai $E/device-ai
+cd $E/device-ai && export HOME=$E/home && CLI=.github/continuum/ccc1-cli.mjs
+{
+ echo "clone=$(git rev-parse HEAD)"
+ node $CLI submit --project . --state $E/state --goal 'Normalisiere einen Titel für den Dublettenvergleich: ("abc") → "abc" und ("Hallo Welt") → "hallo welt".'
+ node $CLI submit --project . --state $E/state --goal 'Erzeuge die kanonische JSON-Schreibweise eines Werts: ("x") → "\"x\"", (5) → "5" und (true) → "true".'
+ node $CLI submit --project . --state $E/state --goal 'Finde die Funktion, die Kotlin-Schlüsselwörter erkennt.'
+ echo "start=$(date -u +%FT%TZ) commit=$(git rev-parse --short HEAD)"
+ timeout 1800 node $CLI loop --project . --state $E/state --cycles 4 --interval 1 --index-on-idle true 2>&1
+ echo "exit=$? end=$(date -u +%FT%TZ)"
+ node $CLI status --state $E/state
+ node $CLI status --state $E/state --format json
+ git status --porcelain | head -5; echo "(clean checkout above if empty)"
+} > $E/loop-run.txt 2>&1
+echo finished >> $E/loop-run.txt

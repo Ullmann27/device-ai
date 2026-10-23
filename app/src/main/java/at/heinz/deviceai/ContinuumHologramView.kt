@@ -35,6 +35,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     // State order equals ContinuumHologramRenderer.Mode order (READY … LEARNING).
     private val stateWeights = FloatArray(State.entries.size).apply { this[0] = 1f }
     private val frameWeights = FloatArray(State.entries.size)
+    private val renderFrame = ContinuumHologramRenderer.Frame(.4f, .18f, 0f, frameWeights)
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -54,7 +55,18 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     private val drawFrame = Runnable {
         framePending = false
-        if (canAnimate()) invalidate()
+        if (canAnimate()) {
+            invalidate()
+            scheduleFrame()
+        }
+    }
+
+    /** Owns the single visible-view frame callback, even before the first draw. */
+    private fun scheduleFrame() {
+        if (canAnimate() && !framePending) {
+            framePending = true
+            postOnAnimationDelayed(drawFrame, if (currentState == State.READY) 16L else 8L)
+        }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
         override fun onChange(selfChange: Boolean) = updateMotionPolicy()
@@ -127,6 +139,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         updateMotionPolicy()
     }
 
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        if (isAttachedToWindow) updateMotionPolicy()
+    }
+
     private fun canAnimate() = motionAllowed && isAttachedToWindow && aggregatedVisible && windowVisibility == VISIBLE
 
     private fun updateMotionPolicy() {
@@ -142,6 +159,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             consumedAudioMs = 0L
         }
         invalidate()
+        scheduleFrame()
     }
 
     private fun settleState() {
@@ -173,13 +191,12 @@ class ContinuumHologramView @JvmOverloads constructor(
         val saved = canvas.save()
         canvas.scale(density, density)
         frameWeights.indices.forEach { frameWeights[it] = stateWeights[it] }
-        renderer.draw(painter, ContinuumHologramRenderer.Frame(phase, energy, audioEnergy, frameWeights))
+        renderFrame.phase = phase
+        renderFrame.energy = energy
+        renderFrame.audio = audioEnergy
+        renderer.draw(painter, renderFrame)
         canvas.restoreToCount(saved)
-        if (canAnimate() && !framePending) {
-            framePending = true
-            // Ready uses about 20fps, active states 30fps; paused views schedule nothing.
-            postOnAnimationDelayed(drawFrame, if (currentState == State.READY) 40L else 24L)
-        }
+        scheduleFrame()
     }
 
     private fun advanceFrame() {

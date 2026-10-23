@@ -9,7 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {randomUUID} from 'node:crypto';
-import {CAPABILITY,validCase} from './ccc1-envelope.mjs';
+import {CAPABILITY,REPAIR_CAPABILITY,validCase} from './ccc1-envelope.mjs';
 import {capabilityCheck} from './ccc1-gate.mjs';
 
 const STOP=new Set(('der die das den dem des ein eine einen einem einer und oder aus auf für fuer mit von zu zum zur im in ist '+
@@ -87,6 +87,9 @@ export function parseExamples(text){
 
 /** TaskInterpreter: GOAL payload -> GoalSpec. Abstains instead of guessing when nothing is verifiable. */
 export function interpretGoal(goal){
+ // a repair goal names a fixed test chain; the failure itself is found by running it, not guessed from the text
+ if(goal.repair)return {goal:goal.text,kind:'REPAIR',chain:goal.repair.chain,acceptance:[],capability:REPAIR_CAPABILITY,arity:null,
+  openQuestions:[],abstain:false,reason:null};
  const found=goal.examples?.length?goal.examples:parseExamples(goal.text);
  const acceptance=found.filter(validCase).slice(0,4);
  const openQuestions=[];
@@ -94,7 +97,7 @@ export function interpretGoal(goal){
  else if(!acceptance.length)openQuestions.push('Die Beispiele müssen einfache Werte sein (Text, Zahl, Wahrheitswert).');
  const arity=acceptance[0]?.args.length??null;
  if(acceptance.some(c=>c.args.length!==arity))openQuestions.push('Alle Beispiele brauchen dieselbe Anzahl Argumente.');
- return {goal:goal.text,acceptance,capability:CAPABILITY,arity,openQuestions,abstain:openQuestions.length>0,
+ return {goal:goal.text,kind:'CONTRACT',acceptance,capability:CAPABILITY,arity,openQuestions,abstain:openQuestions.length>0,
   reason:openQuestions.join(' ')||null};
 }
 
@@ -120,8 +123,36 @@ export class LexicalLanguageCore{
 const msg=(kind,payload,parentMessageId=null)=>({messageId:randomUUID(),parentMessageId,kind,payload});
 
 export class Ccc1Reasoner{
- constructor({candidates,languageCore=new LexicalLanguageCore(),budgetMinutes=3}){
-  this.candidates=candidates;this.core=languageCore;this.budgetMinutes=budgetMinutes;
+ constructor({candidates,languageCore=new LexicalLanguageCore(),budgetMinutes=3,repairBudgetMinutes=25}){
+  this.candidates=candidates;this.core=languageCore;this.budgetMinutes=budgetMinutes;this.repairBudgetMinutes=repairBudgetMinutes;
+ }
+ /**
+  * Repair goal: one hypothesis (the existing pipeline can repair a failure of the chain), one gated request; the
+  * receipt decides. No guessing about causes: a passing chain or a repair that did not survive is reported as such.
+  */
+ repairTurn(view,spec){
+  const critiqued=new Set(view.entries.filter(e=>e.kind==='CRITIQUE').map(e=>e.payload.receipt));
+  const open=view.entries.find(e=>e.kind==='RECEIPT'&&!critiqued.has(e.messageId));
+  if(!open){
+   const h=msg('HYPOTHESIS',{claim:`Die bestehende Reparaturpipeline kann einen Fehler der Testkette ${spec.chain} am gebundenen Commit beheben.`,
+    repair:{chain:spec.chain},basis:'Ausdrücklicher Reparaturauftrag des Besitzers; über die Ursache wird nichts vermutet.',confidence:0.5});
+   return [h,
+    msg('PLAN',{capability:REPAIR_CAPABILITY,steps:['Testkette '+spec.chain+' im isolierten Worktree ausführen','echten Fehler und Diagnosen erfassen',
+     'deterministische Reparaturkandidaten prüfen','Patch unabhängig in zweitem Worktree wiederholen','Quittung prüfen und Patch zur Prüfung anbieten']},h.messageId),
+    msg('TEST_REQUEST',{hypothesis:h.messageId,repair:{chain:spec.chain},budgetMinutes:this.repairBudgetMinutes},h.messageId)];
+  }
+  const request=view.entries.find(e=>e.messageId===open.payload.request);
+  const v=open.payload.verdict;
+  const why=String(open.payload.reasons?.[0]??open.payload.status).slice(0,300);
+  const critique=msg('CRITIQUE',{receipt:open.messageId,verdict:v,reason:v==='CONFIRMED'?
+   'Ein echter Testfehler wurde repariert und unabhängig bestätigt; der Patch liegt zur Prüfung durch den Besitzer bereit.':why},open.messageId);
+  if(v==='CONFIRMED')return [critique];
+  if(v==='INCONCLUSIVE'&&open.payload.execution==='INTERRUPTED'&&view.rounds<view.maxRounds)
+   return [critique,msg('TEST_REQUEST',{...request.payload},request.payload.hypothesis)];
+  const reason=open.payload.status==='NO_FAILURE_FOUND'?`Die Testkette ${spec.chain} läuft am gebundenen Commit ohne Fehler; es gibt nichts zu reparieren.`:
+   v==='REFUTED'?'Die bestehende Reparaturpipeline hat keinen unabhängig bestätigten Patch gefunden: '+why:
+   'Die Quittung entscheidet nichts ('+why+'); kein blinder Wiederholungsversuch.';
+  return [critique,msg('ABSTAIN',{reason:reason.slice(0,600)})];
  }
  async ranked(spec){
   const scores=await this.core.rank(spec.goal,this.candidates);
@@ -133,6 +164,11 @@ export class Ccc1Reasoner{
  async propose(view,spec,parent){
   const ranked=await this.ranked(spec);
   const tried=new Set(view.entries.filter(e=>e.kind==='HYPOTHESIS').map(e=>e.payload.module+'#'+e.payload.export));
+  // a core that can tell candidates apart may ask the owner first instead of letting one of them be confirmed (NF-5c)
+  if(!tried.size&&typeof this.core.clarify==='function'){
+   const question=await this.core.clarify(spec,ranked.map(r=>r.c));
+   if(question)return [msg('ABSTAIN',{reason:question})];
+  }
   const next=ranked.find(r=>!tried.has(r.c.module+'#'+r.c.export));
   if(!next)return [msg('ABSTAIN',{reason:'Kein weiterer prüfbarer Export passt zu Ziel und Beispielen; ohne verifizierte Quittung wird nichts behauptet.'})];
   const top=ranked[0].s,second=ranked[1]?.s??0;
@@ -146,6 +182,7 @@ export class Ccc1Reasoner{
  }
  async turn(view){
   const spec=interpretGoal(view.goal);
+  if(spec.kind==='REPAIR')return this.repairTurn(view,spec);
   if(spec.abstain)return [msg('ABSTAIN',{reason:spec.reason})];
   const critiqued=new Set(view.entries.filter(e=>e.kind==='CRITIQUE').map(e=>e.payload.receipt));
   const open=view.entries.find(e=>e.kind==='RECEIPT'&&!critiqued.has(e.messageId));

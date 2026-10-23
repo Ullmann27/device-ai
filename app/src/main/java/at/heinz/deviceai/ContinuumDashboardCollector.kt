@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import android.app.ActivityManager
+import android.os.BatteryManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -146,7 +147,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 series = ContinuumDashboardMath.dailySeries(doneTimes, now), projects = projects
             ),
             system = ContinuumDashboardState.SystemStatus(
-                appCpuPercent = cpu, memoryPercent = memory, storagePercent = storage?.usedPercent,
+                appCpuPercent = cpu, batteryPercent = batteryCapacity(), memoryPercent = memory, storagePercent = storage?.usedPercent,
                 networkOnline = online, networkLabel = when (online) { true -> "Verbunden"; false -> "Offline"; null -> "Unbekannt" },
                 activity = cpuSeries.toList(), openIssues = openIssues
             ),
@@ -161,7 +162,12 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
                 learning = if (live.learningActive) "Lernt gerade" else if (live.practiceEnabled) "Auto-Üben an" else "Bereit",
                 analysing = if (live.researching) "Recherchiert" else "Bereit",
                 developing = if (live.builderJobRunning || running > 0) "Aktiv" else "Bereit",
-                evolving = if (live.autoStudyEnabled || publicStudy) "Automatisch an" else "Aus"
+                evolving = when {
+                    live.autoStudyEnabled -> "CDX1-Autostudium an"
+                    publicStudy -> "Öffentliches Lernen an"
+                    live.practiceEnabled -> "Auto-Üben an"
+                    else -> "Aus"
+                }
             ),
             pendingNotifications = (openIssues ?: 0) + (if (live.curiosityPending) 1 else 0)
         )
@@ -198,6 +204,12 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
 
     private fun sizeOf(file: File, depth: Int = 0): Long =
         if (file.isFile) file.length() else if (depth > 6) 0L else file.listFiles().orEmpty().sumOf { sizeOf(it, depth + 1) }
+
+    /** Android's current battery level, or unknown if the platform does not provide one. */
+    private fun batteryCapacity(): Int? = runCatching {
+        val manager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+        manager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY).takeIf { it in 0..100 }
+    }.getOrNull()
 
     /** App CPU share since the previous sample, device RAM in use, validated internet connection. */
     private fun systemSamples(): Triple<Int?, Int?, Boolean?> {
