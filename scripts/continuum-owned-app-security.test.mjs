@@ -46,7 +46,7 @@ test('Gradle project cache cannot redirect writes outside the project', async t 
 });
 test('changing private staged bytes between independent APK checks blocks publication', async t => {
   const f = fixture(t);
-  const inspect = async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',
+  const inspect = async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},
     bin:{gradle:'/fake/gradle', apksigner:'/fake/apksigner', aapt2:'/fake/aapt2'}});
   const result = await buildOwnedApp({home:f.home, inspect, lease:()=>{}, run:async(file,args)=>{
     if (file==='/fake/gradle') {
@@ -68,7 +68,7 @@ test('changing private staged bytes between independent APK checks blocks public
 });
 test('Gradle exit zero without fresh JUnit and lint evidence never certifies an APK', async t => {
   const f=fixture(t);
-  const inspect=async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',
+  const inspect=async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},
     bin:{gradle:'/fake/gradle',apksigner:'/fake/apksigner',aapt2:'/fake/aapt2'}});
   const result=await buildOwnedApp({home:f.home,inspect,lease:()=>{},run:async(file)=>{
     if(file==='/fake/gradle') {
@@ -102,10 +102,25 @@ test('a linked report directory is refused before Gradle can write through it',a
 });
 test('unconfirmed process termination retains the shared lease for owner inspection',async t=>{
   const f=fixture(t);let releases=0;
-  const inspect=async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',
+  const inspect=async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},
     bin:{gradle:'/fake/gradle',apksigner:'/fake/apksigner',aapt2:'/fake/aapt2'}});
   const result=await buildOwnedApp({home:f.home,inspect,lease:()=>{releases++;},
     run:async()=>({ok:false,code:null,output:'termination not confirmed',terminationConfirmed:false})});
   assert.equal(result.status,'BUILD_TERMINATION_UNCONFIRMED');
   assert.equal(releases,0);
+});
+test('ENOSPC while saving a log cannot release an unconfirmed process lease',async t=>{
+  const f=fixture(t);let releases=0;
+  const write=fs.writeFileSync;
+  fs.writeFileSync=(file,...args)=>{
+    if(String(file).endsWith('/gradle.log'))throw Object.assign(Error('disk full'),{code:'ENOSPC'});
+    return write(file,...args);
+  };
+  t.after(()=>{fs.writeFileSync=write;});
+  const result=await buildOwnedApp({home:f.home,lease:()=>{releases++;},
+    inspect:async()=>({status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},
+      bin:{gradle:'/fake/gradle',apksigner:'/fake/apksigner',aapt2:'/fake/aapt2'}}),
+    run:async()=>({ok:false,code:null,output:'still running',terminationConfirmed:false})});
+  assert.equal(releases,0);
+  assert.equal(result.status,'BUILD_TERMINATION_UNCONFIRMED');
 });

@@ -30,7 +30,7 @@ test('fixed Termux command entrypoint with no raw chat or shell', () => {
 });
 test('requires explicit owner confirmation before expensive build', () => {
   assert.match(activity, /val confirmation = when \(operation\)[\s\S]*Operation\.BUILD ->/);
-  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation\) \}/);
+  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation, project\) \}/);
   assert.match(activity, /startService\(intent\)/);
 });
 test('does not claim successful build or installation just for dispatching', () => {

@@ -6,12 +6,15 @@ import org.junit.Test
 
 class ContinuumMobileBuildPlanTest {
     @Test fun approvedOperationsHaveFixedExecutableAndWorkingDirectory() {
-        assertEquals(3, ContinuumMobileBuildPlan.Operation.entries.size)
+        assertEquals(setOf("DOCTOR", "BUILD", "STATUS"),
+            ContinuumMobileBuildPlan.Operation.entries.filterNot { it.name.startsWith("PROJECT_") }.map { it.name }.toSet())
         for (operation in ContinuumMobileBuildPlan.Operation.entries) {
             val request = ContinuumMobileBuildPlan.command(operation)
             assertEquals(ContinuumMobileBuildPlan.NODE_EXECUTABLE, request.executable)
             assertEquals(ContinuumMobileBuildPlan.PROJECT_DIR, request.workDir)
-            assertEquals(ContinuumMobileBuildPlan.BUILDER_SCRIPT, request.args[0])
+            assertEquals(if (operation.name.startsWith("PROJECT_"))
+                "${ContinuumMobileBuildPlan.PROJECT_DIR}/scripts/continuum-owned-app.mjs"
+                else ContinuumMobileBuildPlan.BUILDER_SCRIPT, request.args[0])
             assertEquals(operation.cli, request.args[1])
             assertFalse(request.args.any { it.contains(";") || it.contains("\n") || it.contains("&&") })
         }

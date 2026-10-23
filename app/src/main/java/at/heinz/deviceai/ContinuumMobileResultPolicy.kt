@@ -15,7 +15,8 @@ internal object ContinuumMobileResultPolicy {
         INVALID_RESULT,
         PROJECT_CREATED,
         PROJECT_SOURCES_VERIFIED,
-        PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE
+        PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE,
+        PROJECT_STATUS_REPORTED
     }
 
     fun evaluate(
@@ -28,7 +29,13 @@ internal object ContinuumMobileResultPolicy {
         sourceCommit: String? = null,
         packageName: String? = null,
         versionCode: Int? = null,
-        sourceSha256: String? = null
+        sourceSha256: String? = null,
+        recipeId: String? = null,
+        expectedProject: ContinuumOwnedProject = ContinuumOwnedProject.NOTES,
+        planSha256: String? = null,
+        toolchainProfile: String? = null,
+        verification: String? = null,
+        buildStatus: String? = null
     ): Outcome {
         if (exitCode == null || termuxError != -1) return Outcome.INVALID_RESULT
         if (exitCode != 0) {
@@ -38,6 +45,11 @@ internal object ContinuumMobileResultPolicy {
             else if (operation == ContinuumMobileBuildPlan.Operation.PROJECT_BUILD) Outcome.BUILD_FAILED
             else Outcome.EXECUTION_FAILED
         }
+        val projectBound = recipeId == expectedProject.id && packageName == expectedProject.packageName &&
+            planSha256 == expectedProject.planSha256 && sourceSha256 != null &&
+            Regex("[0-9a-f]{64}").matches(sourceSha256)
+        val apkBound = apkSha256 != null && Regex("[0-9a-f]{64}").matches(apkSha256) &&
+            signerSha256 != null && Regex("[0-9a-f]{64}").matches(signerSha256) && versionCode == 1
         return when (operation) {
             ContinuumMobileBuildPlan.Operation.DOCTOR ->
                 if (reportedStatus == "READY_FOR_EXPERIMENTAL_BUILD") Outcome.TOOLCHAIN_READY
@@ -54,21 +66,26 @@ internal object ContinuumMobileResultPolicy {
                 } else Outcome.INVALID_RESULT
             ContinuumMobileBuildPlan.Operation.PROJECT_CREATE ->
                 if (reportedStatus == "PROJECT_CREATED_NOT_BUILT" &&
-                    packageName == "at.heinz.continuum.m4notes" && sourceSha256 != null &&
-                    Regex("[0-9a-f]{64}").matches(sourceSha256)
+                    projectBound
                 ) Outcome.PROJECT_CREATED else Outcome.INVALID_RESULT
             ContinuumMobileBuildPlan.Operation.PROJECT_VERIFY ->
                 if (reportedStatus == "SOURCE_VERIFIED" &&
-                    packageName == "at.heinz.continuum.m4notes" && sourceSha256 != null &&
-                    Regex("[0-9a-f]{64}").matches(sourceSha256)
+                    projectBound
                 ) Outcome.PROJECT_SOURCES_VERIFIED else Outcome.INVALID_RESULT
             ContinuumMobileBuildPlan.Operation.PROJECT_BUILD ->
                 if (reportedStatus == "EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED" &&
-                    packageName == "at.heinz.continuum.m4notes" && versionCode == 1 &&
-                    sourceSha256 != null && Regex("[0-9a-f]{64}").matches(sourceSha256) &&
-                    apkSha256 != null && Regex("[0-9a-f]{64}").matches(apkSha256) &&
-                    signerSha256 != null && Regex("[0-9a-f]{64}").matches(signerSha256)
+                    projectBound && apkBound && toolchainProfile == "termux-arm64" && verification == "CONFIRMED"
                 ) Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE else Outcome.INVALID_RESULT
+            ContinuumMobileBuildPlan.Operation.PROJECT_STATUS -> when {
+                reportedStatus == "NO_PROJECT_BUILD_REPORT" && recipeId == expectedProject.id -> Outcome.PROJECT_STATUS_REPORTED
+                reportedStatus == "PROJECT_BUILD_STATUS" && projectBound && buildStatus in projectBuildStatuses &&
+                    verification in setOf("CONFIRMED", "INCONCLUSIVE") &&
+                    toolchainProfile in setOf("termux-arm64", "host-sdk") &&
+                    (verification != "CONFIRMED" ||
+                        buildStatus == "EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED" && apkBound) ->
+                    Outcome.PROJECT_STATUS_REPORTED
+                else -> Outcome.INVALID_RESULT
+            }
             ContinuumMobileBuildPlan.Operation.STATUS ->
                 if (reportedStatus == "NO_BUILD_REPORT" ||
                     reportedStatus == "EXPERIMENTAL_APK_BUILT_NOT_DEVICE_TESTED" ||
@@ -81,6 +98,26 @@ internal object ContinuumMobileResultPolicy {
                     reportedStatus == "FAILED_APK_IDENTITY"
                 ) Outcome.STATUS_REPORTED else Outcome.INVALID_RESULT
         }
+    }
+
+    private val projectBuildStatuses = setOf(
+        "EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED", "BUILD_RUNNING", "BUILD_CANCELLED", "BUILD_TIMED_OUT",
+        "BUILD_TERMINATION_UNCONFIRMED", "BLOCKED_UNSAFE_BUILD_OUTPUT", "BLOCKED_SOURCE_CHANGED_DURING_BUILD",
+        "FAILED_NO_APK", "FAILED_BUILD_EVIDENCE", "FAILED_APK_SIGNATURE", "FAILED_ARTIFACT_COPY",
+        "FAILED_ARTIFACT_CHANGED", "FAILED_APK_IDENTITY", "FAILED_BUILD_IO", "FAILED_BUILD_STATE", "FAILED_BUILD"
+    )
+
+    fun projectStatusExplanation(status: String?, verification: String?, profile: String?): String = when {
+        status == "NO_PROJECT_BUILD_REPORT" -> "Für dieses Projekt liegt noch kein gespeicherter Buildbeleg vor."
+        verification == "CONFIRMED" && profile == "host-sdk" ->
+            "Historischer Host-SDK-Build: Quellen, Tests, Lint und APK-Datei stimmen noch mit dem Beleg überein. " +
+                "Das ist kein Termux- oder Fold7-Nachweis. Keine Installation bestätigt."
+        verification == "CONFIRMED" ->
+            "Historischer M4-Buildbeleg: Quellen, Tests, Lint und APK-Datei wurden erneut abgeglichen. " +
+                "Installation und Geräteabnahme stehen weiterhin aus."
+        status == "BUILD_RUNNING" ->
+            "Gespeicherter M4-Auftrag läuft oder wurde unterbrochen. Vor einer Wiederholung Termux prüfen; kein Abschluss bestätigt."
+        else -> "Der gespeicherte M4-Auftrag hat keinen aktuell bestätigten APK-Abschlussbeleg. Kein neuer Erfolg nachgewiesen."
     }
 
     /**
@@ -126,10 +163,12 @@ internal object ContinuumMobileResultPolicy {
         Outcome.EXECUTION_FAILED -> "Der Termux-Befehl ist fehlgeschlagen oder wurde abgebrochen."
         Outcome.INVALID_RESULT -> "Keine verlässliche Termux-Antwort; kein erfolgreicher Build nachgewiesen."
         Outcome.PROJECT_CREATED ->
-            "Die lokale M4-Notiz-App wurde als eigenständiges Android-Projekt erzeugt. Noch keine APK gebaut."
+            "Das gewählte M4-Projekt wurde als eigenständige Android-App-Quelle erzeugt. Noch keine APK gebaut."
         Outcome.PROJECT_SOURCES_VERIFIED ->
             "Die fest vorgegebenen M4-Projektquellen stimmen mit der Vorlage überein. Noch kein APK-Build bestätigt."
         Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE ->
-            "Termux meldet eine signatur- und paketgeprüfte M4-Notiz-App-APK. Weder Installation noch Gerätetest bestätigt."
+            "Termux meldet eine signatur- und paketgeprüfte M4-Projekt-APK. Weder Installation noch Gerätetest bestätigt."
+        Outcome.PROJECT_STATUS_REPORTED ->
+            "Ein gespeicherter M4-Projektbeleg wurde erneut gelesen; das ist kein neuer Build."
     }
 }

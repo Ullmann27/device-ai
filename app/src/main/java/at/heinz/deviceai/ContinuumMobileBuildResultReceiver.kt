@@ -14,7 +14,13 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val PREFERENCES = "continuum_mobile_build_v1"
         const val JOB_ID = "job_id"
         const val JOB_OPERATION = "job_operation"
+        const val JOB_PROJECT = "job_project_v1"
         const val JOB_START = "job_start"
+        /** Read-only recovery must remain available while a build callback is missing. */
+        const val STATUS_JOB_ID = "project_status_job_id_v1"
+        const val STATUS_JOB_START = "project_status_job_start_v1"
+        const val STATUS_PROJECT = "project_status_project_v1"
+        const val STATUS_MESSAGE = "project_status_message_v1"
         const val LAST_MESSAGE = "last_message"
         const val LAST_SHA = "last_sha"
         /** CCC1 task the owner can cancel next (validated id only). */
@@ -35,8 +41,11 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
 
         val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)
         val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT
+        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name
         if (abortSlot) {
             if (id != prefs.getString(ABORT_JOB_ID, null)) return
+        } else if (projectStatusSlot) {
+            if (id != prefs.getString(STATUS_JOB_ID, null)) return
         } else if (id != prefs.getString(JOB_ID, null) ||
             operationName != prefs.getString(JOB_OPERATION, null)
         ) return
@@ -73,7 +82,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             if (abortSlot) {
                 editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).putString(ABORT_MESSAGE, result.message)
             } else {
-                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_START).remove(LAST_SHA)
+                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)
                     .putString(LAST_MESSAGE, result.message)
                 if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)
             }
@@ -94,6 +103,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             prefs.edit()
                 .remove(JOB_ID)
                 .remove(JOB_OPERATION)
+                .remove(JOB_PROJECT)
                 .remove(JOB_START)
                 .remove(LAST_SHA)
                 .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))
@@ -109,6 +119,14 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         val signerHash = payload?.optString("signerSha256")
         val sourceCommit = payload?.optString("commit")
         val sourceSha256 = payload?.optString("sourceSha256")
+        val planSha256 = payload?.optString("planSha256")
+        val recipeId = payload?.optString("recipe")
+        val expectedProject = ContinuumOwnedProject.ofId(prefs.getString(if (projectStatusSlot) STATUS_PROJECT else JOB_PROJECT, null))
+            ?: ContinuumOwnedProject.NOTES
+        val profile = payload?.optString("toolchainProfile")
+        val verification = payload?.optJSONObject("verification")?.optString("verdict")
+            ?: payload?.optString("verification")
+        val buildStatus = payload?.optString("buildStatus")
         val packageName = payload?.optString("packageName")
         val versionCode = payload?.optInt("versionCode", -1)
         val ownerCopyStatus = payload?.optJSONObject("ownerInstallCopy")?.optString("status")
@@ -123,9 +141,16 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
             sourceCommit = sourceCommit,
             packageName = packageName,
             versionCode = versionCode,
-            sourceSha256 = sourceSha256
+            sourceSha256 = sourceSha256,
+            recipeId = recipeId, expectedProject = expectedProject, planSha256 = planSha256,
+            toolchainProfile = profile, verification = verification, buildStatus = buildStatus
         )
-        val text = if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
+        val projectHistoryVerified = outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_STATUS_REPORTED &&
+            reportedStatus == "PROJECT_BUILD_STATUS" && verification == "CONFIRMED"
+        val text = if (outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_STATUS_REPORTED) {
+            ContinuumMobileResultPolicy.projectStatusExplanation(
+                if (reportedStatus == "NO_PROJECT_BUILD_REPORT") reportedStatus else buildStatus, verification, profile)
+        } else if (outcome == ContinuumMobileResultPolicy.Outcome.STATUS_REPORTED) {
             ContinuumMobileResultPolicy.statusExplanation(reportedStatus)
         } else {
             ContinuumMobileResultPolicy.explanation(outcome)
@@ -135,7 +160,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
                 "\nQuell-Commit: $sourceCommit\nPaket: $packageName · VersionCode: $versionCode"
             else ""
         val projectProvenance =
-            if (outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE)
+            if (outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE || projectHistoryVerified)
                 "\nM4-Projekt: $packageName · Versionscode: $versionCode" else ""
         val ownerCopyMessage =
             if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
@@ -149,14 +174,22 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
                     else -> ""
                 }
             } else ""
+        if (projectStatusSlot) {
+            prefs.edit().remove(STATUS_JOB_ID).remove(STATUS_JOB_START).remove(STATUS_PROJECT)
+                .putString(STATUS_MESSAGE, text + projectProvenance +
+                    if (projectHistoryVerified && artifactHash != null) "\nSHA-256: $artifactHash" else "")
+                .commit()
+            return
+        }
         val editor = prefs.edit()
             .remove(JOB_ID)
             .remove(JOB_OPERATION)
+            .remove(JOB_PROJECT)
             .remove(JOB_START)
             .putString(LAST_MESSAGE, text + buildProvenance + projectProvenance + ownerCopyMessage)
             .remove(LAST_SHA)
         if ((outcome == ContinuumMobileResultPolicy.Outcome.BUILD_REPORTED_UNVERIFIED_ON_DEVICE ||
-                outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE) &&
+                outcome == ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE || projectHistoryVerified) &&
             artifactHash != null
         ) {
             editor.putString(LAST_SHA, artifactHash)

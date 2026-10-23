@@ -32,10 +32,12 @@ class ContinuumOwnedAppContractTest {
         val op = ContinuumMobileBuildPlan.Operation.PROJECT_CREATE
         assertEquals(ContinuumMobileResultPolicy.Outcome.PROJECT_CREATED,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "PROJECT_CREATED_NOT_BUILT",
-                packageName = pkg, sourceSha256 = sha))
+                packageName = pkg, sourceSha256 = sha, recipeId = "m4-notes",
+                planSha256 = ContinuumOwnedProject.NOTES.planSha256))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED",
-                packageName = pkg, sourceSha256 = sha))
+                packageName = pkg, sourceSha256 = sha, recipeId = "m4-notes",
+                planSha256 = ContinuumOwnedProject.NOTES.planSha256))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "PROJECT_CREATED_NOT_BUILT",
                 packageName = pkg, sourceSha256 = "invalid"))
@@ -45,7 +47,8 @@ class ContinuumOwnedAppContractTest {
         val op = ContinuumMobileBuildPlan.Operation.PROJECT_VERIFY
         assertEquals(ContinuumMobileResultPolicy.Outcome.PROJECT_SOURCES_VERIFIED,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "SOURCE_VERIFIED",
-                packageName = pkg, sourceSha256 = sha))
+                packageName = pkg, sourceSha256 = sha, recipeId = "m4-notes",
+                planSha256 = ContinuumOwnedProject.NOTES.planSha256))
         assertEquals(ContinuumMobileResultPolicy.Outcome.INVALID_RESULT,
             ContinuumMobileResultPolicy.evaluate(op, 0, -1, "SOURCE_VERIFIED",
                 packageName = "at.heinz.deviceai.mentorpaired", sourceSha256 = sha))
@@ -63,7 +66,9 @@ class ContinuumOwnedAppContractTest {
             exit: Int = 0,
             err: Int = -1
         ) = ContinuumMobileResultPolicy.evaluate(
-            op, exit, err, status, apkHash, signerHash, null, packageName, version, sourceHash
+            op, exit, err, status, apkHash, signerHash, null, packageName, version, sourceHash,
+            recipeId = "m4-notes", planSha256 = ContinuumOwnedProject.NOTES.planSha256,
+            toolchainProfile = "termux-arm64", verification = "CONFIRMED"
         )
 
         assertEquals(ContinuumMobileResultPolicy.Outcome.PROJECT_BUILD_REPORTED_UNVERIFIED_ON_DEVICE, eval())

@@ -9,7 +9,7 @@ import {getProjectPlan} from './continuum-project-plan.mjs';
 import {verifyOwnedProjectReceipt} from '../.github/continuum/ccc1-verifier.mjs';
 import {mockOwnedReports} from './fixtures/owned-build.mjs';
 const fresh=()=>fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-test-'));
-const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
+const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
 const inspect=async()=>ready;
 const sha=x=>createHash('sha256').update(x).digest('hex');
 function fake(home,{badGradle=false,badSigner=false,badPackage=false,mutate=false,missing=false,commands=[]}={}) {
@@ -262,7 +262,11 @@ test('CCC1 independently rejects forged plan, source, execution, evidence and de
   r=>{r.packageName='at.heinz.deviceai.mentorpaired';},r=>{r.deviceVerified=true;},
   r=>{r.installed=true;},r=>{r.gradle.timedOut=true;},r=>{r.gradle.tasks=['exec'];},
   r=>{r.evidence.unit.file='../owner.xml';},r=>{r.evidence.lint.sha256='f'.repeat(64);},
-  r=>{r.artifact='/etc/passwd';},r=>{r.finishedAt=r.startedAt-1;},r=>{r.toolchainProfile='unknown';}
+  r=>{r.artifact='/etc/passwd';},r=>{r.finishedAt=r.startedAt-1;},r=>{r.toolchainProfile='unknown';},
+  r=>{r.toolchainProfile='host-sdk';},r=>{r.signerSha256='b'.repeat(64);},
+  r=>{r.toolchain={profile:'termux-arm64',executionHost:{platform:'linux',arch:'x64'}};},
+  r=>{r.evidence.signature.apkSha256='f'.repeat(64);},r=>{delete r.evidence.signature;},
+  r=>{r.evidence.identity.exitCode=1;}
  ]) {
   const changed=structuredClone(result);mutate(changed);
   assert.equal(verifyOwnedProjectReceipt(changed,binding).verdict,'INCONCLUSIVE');

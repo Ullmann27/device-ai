@@ -141,6 +141,11 @@ export function verifyOwnedProjectReceipt(receipt,{plan,sourceSha256,project,art
     if(!['termux-arm64','host-sdk'].includes(r.toolchainProfile)||
       r.packageName!==plan.app.packageName||r.versionCode!==plan.app.versionCode||
       !hex(r.apkSha256)||!hex(r.signerSha256))throw Error('INVALID_ARTIFACT_IDENTITY');
+    const host=r.toolchain?.executionHost;
+    if(r.toolchain?.profile!==r.toolchainProfile||
+      (r.toolchainProfile==='host-sdk'?
+        host?.platform!=='linux'||host?.arch!=='x64':
+        !['android','linux'].includes(host?.platform)||host?.arch!=='arm64'))throw Error('INCONSISTENT_TOOLCHAIN_PROVENANCE');
     const source=readOwnedFile(project,'continuum-source-manifest.json');
     if(sha(source.bytes)!==sourceSha256)throw Error('SOURCE_MANIFEST_CHANGED');
     const manifest=JSON.parse(source.bytes);
@@ -154,13 +159,22 @@ export function verifyOwnedProjectReceipt(receipt,{plan,sourceSha256,project,art
       JSON.stringify(r.gradle.tasks)!==JSON.stringify(plan.build.tasks))throw Error('INVALID_GRADLE_PROOF');
     const artifact=path.relative(artifactRoot,r.artifact).split(path.sep).join('/');
     if(sha(readOwnedFile(artifactRoot,artifact,plan.limits.maxApkBytes).bytes)!==r.apkSha256)throw Error('ARTIFACT_CHANGED');
-    for(const kind of ['unit','lint','log']) {
+    for(const kind of ['unit','lint','log','signature','identity']) {
       const proof=r.evidence?.[kind];
       if(!proof||!hex(proof.sha256))throw Error('MISSING_BUILD_EVIDENCE');
       const {bytes}=readOwnedFile(artifactRoot,proof.file);
       if(sha(bytes)!==proof.sha256)throw Error('BUILD_EVIDENCE_CHANGED');
       if(kind==='unit')parseOwnedJUnit(bytes.toString('utf8'),plan);
       if(kind==='lint')parseOwnedLint(bytes.toString('utf8'));
+      if(kind==='signature'||kind==='identity') {
+        if(proof.apkSha256!==r.apkSha256||proof.exitCode!==0)throw Error('INVALID_APK_TOOL_PROOF');
+        const text=bytes.toString('utf8');
+        if(kind==='signature'&&/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(text)?.[1].toLowerCase()!==r.signerSha256)
+          throw Error('SIGNER_PROOF_MISMATCH');
+        if(kind==='identity'&&!text.includes("package: name='"+plan.app.packageName+
+          "' versionCode='"+plan.app.versionCode+"' versionName='"+plan.app.versionName+"'"))
+          throw Error('PACKAGE_PROOF_MISMATCH');
+      }
     }
     return {verdict:'CONFIRMED',reasons:['plan, source, executed unit tests, lint and APK bytes match; installation and device tests remain pending']};
   } catch(error) {reasons.push(error.code||error.message||'INVALID_BUILD_EVIDENCE');}

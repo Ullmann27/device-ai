@@ -45,7 +45,7 @@ test('a coding result never enters the APK-build success policy or persists raw 
 
 test('existing build remains explicitly gated, and coding cannot install or merge', () => {
   assert.match(activity, /val confirmation = when \(operation\)[\s\S]*Operation\.BUILD ->/);
-  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation\) \}/);
+  assert.match(activity, /if \(confirmation != null\)[\s\S]*setPositiveButton\("Bestätigen"\) \{ _, _ -> dispatch\(operation, project\) \}/);
   assert.match(activity, /text = "← Zurück zu Device AI"/);
   assert.match(coding, /r\["approvedForMerge"\] != false/);
   assert.match(coding, /r\["installed"\] != false/);

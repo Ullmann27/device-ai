@@ -93,3 +93,15 @@ Files: `ContinuumMobileBuildPlan.kt`, `ContinuumMobileResultPolicy.kt`, Builder-
   erzeugt; vollständiger Wiederholungslauf mit neuen Android-Plan-/Status-Tests läuft.
 - Task 3 in Arbeit: Kotlin-Plan-Pins, Auswahl und feste CLI-Argumente, projektgebundener Rückkanal,
   historischer Projektstatus, Host/Termux-Trennung; Robolectric-UI-Test ergänzt, noch nicht als bestanden gezählt.
+- SDK-/UI-Zwischenstand: 872 JUnit-Tests, 0 Fehler, 0 Skips; alle sieben damaligen Robolectric-Widgettests
+  enthalten. SWB2/CRE1-Paritätsdaten anschließend erfolgreich unabhängig mit Node abgeglichen.
+- Frischer Gesamt-Diff-Review fand fünf konkrete Fehler: Android-Prozessplattform, schnell verwaiste
+  Daemon-Kinder, Lease-Freigabe bei ENOSPC im Log, widersprüchliche Herkunft/erfundener Signer-Fingerprint
+  und durch MAIN blockierte Recovery. Alle durch neue Negativtests reproduziert und korrigiert.
+  Ein weiterer Reviewfall (unlesbares proc/stat) wurde ebenfalls zuerst rot und danach grün ausgeführt.
+- Prozesskontrolle nutzt für feste vertrauenswürdige Tools eine geerbte zufällige Lauf-ID plus PID-Startzeit
+  auf Linux UND Android. Fehlende /proc-Prüfbarkeit liefert keinen positiven Abschluss und hält die Lease;
+  die direkte ChildProcess-Instanz wird trotzdem beendet. Das ist keine OS-Sandbox gegen bösartige Tools.
+- Neuer Recovery-Widgettest: 2/2 Builder-UI-Tests grün, ursprüngliche Build-Identität bleibt während
+  separater lesender Statusabfrage erhalten. Abschließende SDK-/Node-Gesamtläufe laufen vor der Belegsicherung.
+- Backend-Endregression erneut 60/60; gezielte Prozessregression 10/10 nach Reviewkorrekturen.

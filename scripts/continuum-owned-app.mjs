@@ -411,10 +411,11 @@ export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolch
         '-Pkotlin.compiler.execution.strategy=in-process',
         ':app:testDebugUnitTest',':app:lintDebug',':app:assembleDebug'];
       const gradleRun=await run(gradle,args,{cwd:source.project,env:resolvedEnv,timeout:plan.limits.maxBuildMillis,signal});
+      // Retain before any fallible I/O, including ENOSPC while writing this log.
+      if(gradleRun.terminationConfirmed===false)releaseAllowed=false;
       const log=Buffer.from(gradleRun.output||'');
       fs.writeFileSync(path.join(runDir,'gradle.log'),log,{flag:'wx',mode:0o600});
       if(gradleRun.terminationConfirmed===false) {
-        releaseAllowed=false;
         return finish({status:'BUILD_TERMINATION_UNCONFIRMED'});
       }
       if(signal?.aborted||gradleRun.cancelled)return finish({status:'BUILD_CANCELLED'});
@@ -457,6 +458,9 @@ export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolch
         };
         const cert=await run(signer,['verify','--verbose','--print-certs',staged],
           {cwd:source.project,env:resolvedEnv,timeout:30000,signal});
+        if(cert.terminationConfirmed===false) {
+          releaseAllowed=false;return finish({status:'BUILD_TERMINATION_UNCONFIRMED'});
+        }
         if(signal?.aborted||cert.cancelled)return finish({status:'BUILD_CANCELLED'});
         const certMatch=/certificate SHA-256 digest:\s*([a-fA-F0-9]{64})/i.exec(cert.output);
         if(!cert.ok||!certMatch||!EXPECTED_CERT.test(certMatch[1].toLowerCase()))
@@ -464,6 +468,9 @@ export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolch
         if(!unchanged())return finish({status:'FAILED_ARTIFACT_CHANGED'});
         const identity=await run(aapt2,['dump','badging',staged],
           {cwd:source.project,env:resolvedEnv,timeout:30000,signal});
+        if(identity.terminationConfirmed===false) {
+          releaseAllowed=false;return finish({status:'BUILD_TERMINATION_UNCONFIRMED'});
+        }
         if(signal?.aborted||identity.cancelled)return finish({status:'BUILD_CANCELLED'});
         if(!identity.ok || !identity.output.includes(
           "package: name='"+recipe.packageName+"' versionCode='1' versionName='0.1.0'"))
@@ -480,6 +487,11 @@ export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolch
         if(!fs.lstatSync(saved).isFile()||fs.lstatSync(saved).isSymbolicLink()||
            SHA(readOwnedFile(state,path.basename(saved),plan.limits.maxApkBytes).bytes)!==digest)
              return finish({status:'FAILED_ARTIFACT_COPY'});
+        for(const [kind,proof] of [['signature',cert],['identity',identity]]) {
+          const bytes=Buffer.from(proof.output),file=runName+'/'+kind+'.txt';
+          fs.writeFileSync(path.join(state,file),bytes,{flag:'wx',mode:0o600});
+          evidence[kind]={file,sha256:SHA(bytes),apkSha256:digest,exitCode:proof.code};
+        }
         const result={...base,status:'EXPERIMENTAL_PROJECT_APK_BUILT_NOT_DEVICE_TESTED',
           packageName:recipe.packageName,versionCode:1,apkSha256:digest,recipe:recipeId,
           signerSha256:certMatch[1].toLowerCase(),sourceSha256:source.sourceSha256,
@@ -496,7 +508,7 @@ export async function buildOwnedApp({home=os.homedir(),recipeId=RECIPE.id,toolch
         try { fs.rmSync(staged,{force:true}); } catch { /* explicit artifact verification still mandatory */ }
       }
 
-    } catch {return finish({status:signal?.aborted?'BUILD_CANCELLED':'FAILED_BUILD_IO'});}
+    } catch {return finish({status:!releaseAllowed?'BUILD_TERMINATION_UNCONFIRMED':signal?.aborted?'BUILD_CANCELLED':'FAILED_BUILD_IO'});}
     finally {if(releaseAllowed)release();}
 }
 async function main() {
