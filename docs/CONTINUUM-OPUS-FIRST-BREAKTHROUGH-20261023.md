@@ -153,7 +153,9 @@ zählt nicht, erst der Status mit unversehrtem, zur Bestätigung passendem Patch
   Gewohnheiten mit Abhängigkeiten, Gültigkeitsfenster und Quittung – nach Wissensänderungen 0 falsche Antworten in
   1 200 Fragen, zuvor gelöste Fragen rund 13× schneller, Trefferquote 30 % gegen 0,3 % beim gewöhnlichen Cache; ohne
   Abhängigkeiten 129 falsche Antworten. Der Gewinn ist deterministisch, kein Gewicht verändert. Register: `EXP-13`.
-  **A (TTT1), E (GGUF/Spine): nicht ausgeführt.**
+  **A ausgeführt** (`docs/research/TTT1-WORKING-MEMORY-RESULT-20261023.md`): Entitätsspeicher 680/680 ohne falschen
+  Rückbezug, Fast-Weights 73 falsch → nicht übernommen. **E (GGUF/Spine): Werkzeug nicht verfügbar** (kein Modell,
+  keine Laufzeit hier). PR #72 (I1/I2) selektiv übernommen. **Fortsetzung: `docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md`.**
 - **Nächster Schritt:** Besitzer: Termux-Checkout aktualisieren und CCC1 aus der App probieren. Integration: die
   Commits ab `c72bd98f` (Termux-Befehle, App-Diagnose, Fix #76) in den nächsten APK-Build übernehmen.
 

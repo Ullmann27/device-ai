@@ -133,9 +133,9 @@
     },
     {
       "id": "EXP-13",
-      "title": "Argon research: traceable reasoning (LCT1), guarded consolidation (WSC1), CDX1 patch sensor",
+      "title": "Argon research: traceable reasoning (LCT1), guarded consolidation (WSC1), working memory (TTT1), CDX1 patch sensor",
       "status": "RESEARCH_SHADOW",
-      "present": "Test source set only; pre-registered, single TEST runs: LCT1 0 wrong in 600 cases, WSC1 0 wrong and 13x faster on solved questions, CDX1 no gain over a 4-gram",
+      "present": "Test source set only; pre-registered, single TEST runs: LCT1 0 wrong in 600 cases, WSC1 0 wrong and 13x faster on solved questions, TTT1 entity store 0 wrong (fast weights 73 wrong, not adopted), CDX1 no gain over a 4-gram",
       "entry": "docs/research/LCT1-REASONING-RESULT-20261023.md",
       "depends": "Authenticated owner seal for real facts; LCT1 verifier as the only source of WSC1 habits",
       "gate": "0 wrong answers on held-out negatives, verifier rejects all mutations, no latent shortcut without proven gain"
