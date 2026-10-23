@@ -6,14 +6,15 @@
 - Opus bearbeitet nicht: `AgentActivity.kt`, `ContinuumHologramView.kt`, `app/src/main/java/at/heinz/deviceai/ui/**`, `AndroidManifest.xml`, `app/build.gradle.kts`, Release- und Render-Skripte.
 - Das gemeinsame Update braucht dieselbe App-ID, denselben Signierschlüssel und einen versionCode größer als 17. Opus baut keine Besitzer-APK.
 
-**Arbeitszweig:** `opus/continuum-intelligence-next-20261023`, PR #92 (Entwurf). Er liegt auf `astra/render-mentor-apk-builder-20261019` mit der signierten Quelle 0.3.16 (`6706da14`).
+**Arbeitszweig:** `opus/ccc1-e2e-20261023` auf PR #97 (`integration/continuum-current-review-20261023`); Ergebnis und
+Übergabe: `docs/CONTINUUM-OPUS-FIRST-BREAKTHROUGH-20261023.md`. Historisch: PR #92 (`opus/continuum-intelligence-next-20261023`).
 
 ## 1. Was läuft und was nicht verbunden ist
 
 | Baustein | Ort | Geprüft | In der App |
 |---|---|---|---|
 | LM1-Runtime: prüfendes Laden, schrittweise Generierung, Grenzen, Abbruch | `learning/lm/LmRuntime.kt` (Hauptquellen) | JUnit 5/5; echter Checkpoint mit 0,41 ms je Token (x86_64) | **nein**: keine Aufrufstelle, nicht auf ARM64 gemessen |
-| CCC1-Worker: Aufträge, Zyklen, Erfahrungsprotokoll, CLI | `.github/continuum/ccc1-worker.mjs`, `ccc1-cli.mjs`, `ccc1-experience.mjs` | Node-Tests, echter Lauf auf einem Repository-Klon | **nein**: Die Termux-Brücke kennt CCC1 noch nicht. |
+| CCC1-Worker: Aufträge, Zyklen, Erfahrungsprotokoll, CLI | `.github/continuum/ccc1-worker.mjs`, `ccc1-cli.mjs`, `ccc1-experience.mjs` | Node-Tests, echte Reparatur über die Brücke auf einem Repository-Klon (`docs/evidence/ccc1-e2e-20261023/`) | **ja, quellseitig:** `ccc1-*` im Builder-Skript, `ContinuumCcc1Bridge.kt`, Activity-Bereich „CCC1 · Reparaturauftrag“; **nicht** auf dem Gerät geprüft |
 | Vorprüfung v2: Sandbox mit Repository-Lesezugriff, Netz- und Signalsperre | `.github/continuum/behaviour-probe*.mjs` | Node-Tests | indirekt, über den Worker |
 | Code-Index mit Verhaltens-Fingerabdrücken | `.github/continuum/code-index.mjs` | Node-Tests | **nein** |
 | Research-Radar (Werkzeug) | `.github/continuum/research-radar.mjs` | Node-Tests; kein Live-Lauf, arXiv ist hier gesperrt | **nein** |
@@ -48,6 +49,26 @@ Klasse: `at.heinz.deviceai.learning.lm.LmRuntime`.
 **Empfehlung:** noch **nicht** in der Hauptansicht zeigen. Die Textqualität reicht nicht: Schleifen, Anweisungen auf Zufallsniveau (LM1-Bericht, Schritt 7). Höchstens eine Laboransicht mit klarer Kennzeichnung.
 
 ## 3. Schnittstelle B: CCC1-Worker über die Termux-Brücke
+
+**Umgesetzt (Branch `opus/ccc1-e2e-20261023`):** Die App ruft nicht `ccc1-cli.mjs` direkt, sondern die festen
+Operationen des bestehenden Builder-Skripts; Antwort ist genau ein JSON-Dokument, Exit 2 bei jeder Ablehnung:
+
+| Operation (`scripts/continuum-mobile-builder.mjs …`) | zusätzliche Werte | CLI dahinter | `result` |
+|---|---|---|---|
+| `ccc1-compile-repair` | `--chain node\|android\|jvm` | `compile --repair` (nur lesende Vorprüfung) | `continuum-ccc1-compiled-goal` mit `status` READY/BLOCKED/NEEDS_OWNER, `preflight`, `plan` |
+| `ccc1-submit-repair` | `--chain`, `--order <UUIDv4 der App>` | `submit --repair --order` | `{taskId, duplicate, sourceCommit, branch}`; gleiche Auftrags-ID oder offener gleicher Auftrag → derselbe Auftrag |
+| `ccc1-run-once` | – | `run-once` | `{outcome, ccc1, taskId, detail}` – zählt allein nie als bestätigt |
+| `ccc1-status` | – | `status --format json` | `continuum-ccc1-status`, neueste 10 Aufträge, `review` ohne Patch-Text und Pfad |
+| `ccc1-abort` | `--task t-<16 hex>` | `abort` | `{taskId, journal: ABORTED\|ALREADY_ENDED\|WRITER_ACTIVE, state, job}` |
+
+Hülle: `{"schema":"continuum-ccc1-bridge","version":1,"operation":…,"status":"OK"|"BLOCKED_PREFLIGHT"|"BLOCKED_STATE_PATH"|"FAILED_CCC1", "result"|"failure":{code,message}}`.
+Zustand: `~/.local/state/device-ai-continuum/ccc1` (eigener Standard, außerhalb des Checkouts, Symlinks hinein
+werden abgelehnt). `review` (nur bei bestätigter Reparatur): `patchSha256`, `bytes`, `intact` (Hash beim Lesen neu
+berechnet), `strategy`, `files`; in Termux zeigt `ccc1-cli.mjs status --format json` zusätzlich Pfad und Vorschau.
+Kotlin: `ContinuumCcc1Bridge.command(...)` / `evaluate(...)`; ein Abbruch nutzt einen eigenen einmaligen Rückkanal-Slot.
+Echte Antworten als Vertrag: `app/src/test/resources/ccc1-bridge/` (von `ccc1-bridge.test.mjs` aktuell gehalten).
+
+Der folgende Abschnitt beschreibt die darunterliegende CLI (Vertragstest-Ziele mit Beispielen).
 
 **Muster:** wie `ContinuumMobileCodingJob`. Android schickt nur
 - ein festes Skript,
@@ -99,7 +120,7 @@ und nie Shell-Text. Das Skript prüft dieselbe Grammatik ein zweites Mal.
 - Längengrenzen wie oben.
 - Nichts aus diesen Texten wird ausgeführt oder als Befehl verstanden.
 
-**Zustandsordner:** muss außerhalb des Repositorys liegen; das CLI erzwingt das. Vorschlag: `$HOME/.continuum/ccc1-state` in Termux.
+**Zustandsordner:** muss außerhalb des Repositorys liegen; das CLI erzwingt das. Die Brücke nutzt `~/.local/state/device-ai-continuum/ccc1`.
 
 ## 4. Schnittstelle C: Code-Index
 

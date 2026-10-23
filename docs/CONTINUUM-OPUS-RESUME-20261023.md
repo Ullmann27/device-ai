@@ -7,13 +7,16 @@ Dieses Dokument reicht zum Wiedereinstieg allein aus GitHub. Nichts hier hängt 
 - **Astra:** Android-Oberfläche, Hologramm, Design.
 - **Opus (dieser Strang):** KI, also LM1, CCC1, Coding-Agent, Worker und Forschung.
 - Opus bearbeitet nicht: `AgentActivity.kt`, `ContinuumHologramView.kt`, `app/src/main/java/at/heinz/deviceai/ui/**`, `AndroidManifest.xml`, `app/build.gradle.kts`, Release- und Render-Skripte.
-- Die Schnittstellen für Astra stehen in `docs/CONTINUUM-OPUS-ASTRA-HANDOFF-20261023.md`.
+- Die Schnittstellen für Astra stehen in `docs/CONTINUUM-OPUS-CCC1-INTERFACES-20261023.md`
+  (`docs/CONTINUUM-OPUS-ASTRA-HANDOFF-20261023.md` ist seit PR #97 die gemeinsame Übergabe der Integration).
+- **Aktueller Stand und Übergabe:** `docs/CONTINUUM-OPUS-FIRST-BREAKTHROUGH-20261023.md`.
 
 ## Zweige (alle auf GitHub)
 
 | Zweig | PR | Inhalt | letzter Stand |
 |---|---|---|---|
-| `opus/continuum-intelligence-next-20261023` | #92 (Draft, Basis `astra/render-mentor-apk-builder-20261019`) | **aktueller Arbeitszweig**: `9fb4361c` (signierte Quelle 0.3.16 `6706da14` plus Release-Protokoll) und kontrolliert übernommene KI-Forschung | siehe `git log` |
+| `opus/ccc1-e2e-20261023` | Draft gegen #97 (`integration/continuum-current-review-20261023`) | **aktueller Arbeitszweig**: CCC1-Reparatur Ende zu Ende über die Termux-Brücke, Android-Verdrahtung, Belege, Testfixes | siehe `git log` |
+| `opus/continuum-intelligence-next-20261023` | #92 (Draft, Basis `astra/render-mentor-apk-builder-20261019`) | früherer Arbeitszweig: `9fb4361c` (signierte Quelle 0.3.16 `6706da14` plus Release-Protokoll) und kontrolliert übernommene KI-Forschung; in #97 enthalten | siehe `git log` |
 | `opus/continuum-language-core-20261022` | #75 | LM1, Schritt 7, LM1-Runtime, CCC1 | `6919264d` |
 | `opus/continuum-neural-frontier-lab-20261022` | #82 | NFC1-Experimente NF-1 bis NF-6b-lite | `14702b0d` |
 | `opus/lm1-checkpoints-20261022` | – (Datenzweig, nie mergen) | 128+2 LM1-Checkpoints, `tokenizer/tokenizer-v512-94375c73….lmbp` | `d2304a76` |

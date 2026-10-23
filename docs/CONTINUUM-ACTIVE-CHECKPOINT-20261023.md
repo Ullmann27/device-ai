@@ -42,9 +42,9 @@ owner-signierte APK 0.3.16 / versionCode 17
 | Modelle | `LocalModelHost`, `LocalModelRuntime`, `learning/TinyContextDecoder.kt`, `learning/lm/LmRuntime.kt` | CDX1/LM1 Forschungsmodelle, kein nachgewiesener Ersatz des Hauptchats |
 | Quellen/Antworten | `ContinuumMemoryDialogue.kt`, `learning/span/ContinuumResidualSpanCore.kt`, `intelligence/ContinuumCognitiveSpine.kt`, `ResidualSpanResearchAdapter.kt` | Lexikon-/Literalspan-Prüfung ist keine unabhängige Tatsachenzertifizierung |
 | Denken/Lernen | `intelligence/maxultra/ContinuumCortexShadow.kt`, `ContinuumCortexResearchPipeline.kt`, `learning/span/ContinuumCounterfactualCurriculum.kt` | experimentell; keine automatische Besitzergewichts-Promotion |
-| CCC1 | `.github/continuum/ccc1-cli.mjs`, `ccc1-worker.mjs`, `ccc1-verifier.mjs`, `local-teamleader-loop.mjs`, `ccc1-path-policy.mjs` | CCC1 Node-Worker quellseitig; Android Ende-zu-Ende noch offen |
+| CCC1 | `.github/continuum/ccc1-cli.mjs`, `ccc1-worker.mjs`, `ccc1-verifier.mjs`, `local-teamleader-loop.mjs`, `ccc1-path-policy.mjs` | Auf `opus/ccc1-e2e-20261023`: echter Reparaturlauf über die Termux-Aufrufe der App am Repository-Klon belegt (`docs/evidence/ccc1-e2e-20261023/`); Gerät offen |
 | Lokaler Shell-Gate | `.github/continuum/ccc1-local-preflight.mjs`, `ccc1-local-preflight.test.mjs` | NUR lesende Vorprüfung; kein Workerstart, kein OS-Sandbox-Beweis |
-| Android↔Termux | `ContinuumMobileBuilderActivity.kt`, `ContinuumMobileCodingJob.kt`, `ContinuumMobileBuildResultReceiver.kt`, `ToolExecutionReceiptStore.kt`, `ShizukuBridge.kt` | bestehenden Rückkanal wiederverwenden; echter aktueller CCC1-Zyklus nicht belegt |
+| Android↔Termux | `ContinuumMobileBuilderActivity.kt`, `ContinuumMobileCodingJob.kt`, `ContinuumMobileBuildResultReceiver.kt`, `ContinuumCcc1Bridge.kt`, `ToolExecutionReceiptStore.kt`, `ShizukuBridge.kt` | CCC1-Operationen über den bestehenden Rückkanal verdrahtet und JVM-geprüft (`opus/ccc1-e2e-20261023`); Fold7/Termux-Lauf offen |
 | APK-Auslieferung | `app/build.gradle.kts`, `scripts/render-mentor-owner-update-v17.sh` | aktuell weiterhin versionCode 17 bei Owner-Signed-Update; keine neue 0.3.17-APK |
 
 ## Historische PRs: erhalten, NICHT ungeprüft überschreiben oder löschen
@@ -64,6 +64,10 @@ Die folgende Bewertung beruht auf GitHub-Commit-Abstammung und Quellbaum-Verglei
 Andere ältere PRs bleiben bis zu einer **separaten Code-/Belegentscheidung** erhalten und werden nicht als automatisch geprüft oder veraltet eingestuft. Divergenz allein heißt nicht, dass ein Feature fehlt: sie kann auch aus nachfolgenden Anpassungen stammen.
 
 ## Die aktuelle CCC1-Sperre (was Opus wirklich fertigstellen muss)
+
+**Stand 23.10.2026 abends:** Punkte 1–4 sind auf `opus/ccc1-e2e-20261023` quellseitig umgesetzt und außerhalb des
+Geräts belegt; offen bleibt der Lauf auf dem Fold7 und Punkt 5. Details, Prüfmatrix und Grenzen:
+`docs/CONTINUUM-OPUS-FIRST-BREAKTHROUGH-20261023.md`.
 
 Korrekte CLI-Aufrufe: `compile`, `submit`, `status`, `run-once`, `loop`; es gibt keinen Kommandovertrag `cycle --state-dir --trigger`. Ein gemeinsam autorisiertes **Owner→Android→Termux→CCC1→verifizierte Receipts→Android-Review** ist das offene E2E-Gate. Die bereits vorhandenen Lease-/Journal-/Verifier-/Backlog-Module dürfen nicht dupliziert oder umgangen werden.
 
