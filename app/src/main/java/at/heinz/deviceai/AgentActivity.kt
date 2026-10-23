@@ -258,6 +258,12 @@ class AgentActivity : Activity() {
     private var navigationView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var railView: at.heinz.deviceai.ui.ContinuumElementView? = null
     private var chatColumn: LinearLayout? = null
+    // Real measured viewport can outgrow screenWidthDp after unfolding on Samsung Fold.
+    // These overrides affect only UI geometry; the models, workers and data are untouched.
+    private var renderedWindowWidthDp: Float? = null
+    private var renderedWindowHeightDp: Float? = null
+    private var uiWindowRoot: View? = null
+    private var viewportRebuildScheduled = false
     private val diagnostics by lazy {
         at.heinz.deviceai.diagnostics.ContinuumDiagnostics(java.io.File(filesDir, "diagnostics/issues-v1.tsv"),
             BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")")
@@ -498,10 +504,13 @@ class AgentActivity : Activity() {
     }
 
     private fun buildUi(): View {
-        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(
-            resources.configuration.screenWidthDp.toFloat(),
-            resources.configuration.screenHeightDp.toFloat()
-        )
+        val windowWidthDp = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
+        val windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
+        val wide = at.heinz.deviceai.ui.ContinuumHomeLayout.isWide(windowWidthDp, windowHeightDp)
+        // A wide rebuild must drop stale references to the old phone bottom bar.
+        bottomWorkAreaBar = null
+        navigationView = null
+        railView = null
         // The start pane must occupy the screen independently of its contents.
         // A weighted vertical LinearLayout previously collapsed the phone pane
         // on the owner's real Fold screen, placing the navigation at the top.
@@ -532,7 +541,7 @@ class AgentActivity : Activity() {
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT
             ))
         } else {
-            val navScale = resources.configuration.screenWidthDp /
+            val navScale = windowWidthDp /
                 at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
             phoneNavHeight = dp(
                 (at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_NAV_HEIGHT * navScale).toInt()
@@ -585,6 +594,57 @@ class AgentActivity : Activity() {
             }
             root.post { root.requestApplyInsets() }
         }
+        // The Fold can resize an existing Activity without immediately supplying a
+        // fresh Configuration. Observe the actual window width, not just screenWidthDp.
+        // Rebuild is posted after layout, never during ViewGroup.onLayout.
+        uiWindowRoot = root
+        root.addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
+            if (right <= left || bottom <= top || viewportRebuildScheduled) return@addOnLayoutChangeListener
+            val measuredWidthDp = (right - left) / resources.displayMetrics.density
+            if (!at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, measuredWidthDp)) {
+                return@addOnLayoutChangeListener
+            }
+            viewportRebuildScheduled = true
+            root.post {
+                viewportRebuildScheduled = false
+                if (uiWindowRoot !== root || !root.isAttachedToWindow || isFinishing || isDestroyed) return@post
+                val actualWidthDp = root.width / resources.displayMetrics.density
+                if (!at.heinz.deviceai.ui.ContinuumHomeLayout.needsWindowWidthReflow(windowWidthDp, actualWidthDp)) {
+                    return@post
+                }
+                val draft = if (::input.isInitialized) input.text.toString() else ""
+                val previousHomeState = homeView?.state
+                val activityMessage = if (::activityText.isInitialized) activityText.text else null
+                val neuralMessage = if (::neuralMonitor.isInitialized) neuralMonitor.text else null
+                val neuralPercent = if (::neuralProgress.isInitialized) neuralProgress.progress else 0
+                val chatMessages = mutableListOf<View>()
+                if (::chatContainer.isInitialized) {
+                    while (chatContainer.childCount > 0) {
+                        val child = chatContainer.getChildAt(0)
+                        chatContainer.removeViewAt(0)
+                        chatMessages.add(child)
+                    }
+                }
+                renderedWindowWidthDp = actualWidthDp
+                renderedWindowHeightDp = root.height / resources.displayMetrics.density
+                keyboardCompact = false
+                setContentView(buildUi())
+                chatMessages.forEach { chatContainer.addView(it) }
+                if (::input.isInitialized && draft.isNotEmpty()) {
+                    input.setText(draft)
+                    input.setSelection(draft.length)
+                }
+                previousHomeState?.let { homeView?.state = it }
+                activityMessage?.let { activityText.text = it }
+                neuralMessage?.let { neuralMonitor.text = it }
+                neuralProgress.progress = neuralPercent
+                refreshConversationLayout()
+                refreshWorkAreaSelection()
+                refreshHologramState()
+                // The new insets listener recalculates IME and navigation reservations.
+                root.requestLayout()
+            }
+        }
         return root
     }
 
@@ -597,10 +657,10 @@ class AgentActivity : Activity() {
         val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it }) { slot, x, y ->
             openHomeSlot(slot, x, y)
         }
-        val windowWidth = resources.configuration.screenWidthDp.toFloat()
+        val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
-            windowHeightDp = resources.configuration.screenHeightDp.toFloat())
+            windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat())
         homeView = home
         dashboard.addView(home, matchWidth())
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
@@ -686,13 +746,13 @@ class AgentActivity : Activity() {
 
     /** Width of the Fold/tablet navigation rail in px, rounded once; the dashboard offset is derived from it. */
     private fun railWidthPx(): Int = Math.round(at.heinz.deviceai.ui.ContinuumHomeLayout.railWidthDp(
-        resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
+        renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) * resources.displayMetrics.density)
 
     private fun buildRail(): View {
         val element = at.heinz.deviceai.ui.RailElement(at.heinz.deviceai.ui.ContinuumHomeScreen.railNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
         val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element,
-            resources.configuration.screenWidthDp / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
+            (renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) / at.heinz.deviceai.ui.ContinuumHomeLayout.WIDE_REFERENCE_WIDTH) { _, _ -> }.apply {
             importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             isClickable = false
         }
@@ -990,7 +1050,7 @@ class AgentActivity : Activity() {
     }
 
     private fun buildBottomWorkAreaBar(): View {
-        val u = resources.configuration.screenWidthDp / 412f
+        val u = (renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()) / 412f
         val element = at.heinz.deviceai.ui.BottomNavElement(at.heinz.deviceai.ui.ContinuumHomeScreen.phoneNavigation, 0,
             resources.configuration.fontScale.coerceIn(.85f, 1.3f))
         val drawn = at.heinz.deviceai.ui.ContinuumElementView(this, element, u) { _, _ -> }.apply {
