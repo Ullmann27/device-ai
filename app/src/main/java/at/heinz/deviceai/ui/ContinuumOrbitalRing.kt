@@ -23,8 +23,10 @@ internal class ContinuumOrbitalRing(private val radius: Float, minor: Float, til
     fun project(phase: Float, speed: Float, cx: Float, cy: Float, scale: Float) {
         backSize = 0; frontSize = 0
         // Independent axes/frequencies; unlike a 2D wobble this changes the projected ring's depth and shape.
-        val yaw = (phase - .4f) * .18f * speed
-        val pitch = .18f * sin((phase - .4f) * .37f * speed)
+        // A clearly visible physical precession: READY progresses ~0.41 phase/s, so
+        // this is about 29 degrees/second for the first ring, not an almost static 4 degrees/s.
+        val yaw = (phase - .4f) * 1.25f * speed
+        val pitch = .22f * sin((phase - .4f) * .65f * speed)
         val c = cos(yaw); val s = sin(yaw); val cp = cos(pitch); val sp = sin(pitch)
         val ct = cos(tilt); val st = sin(tilt)
         for (i in 0..steps) {
