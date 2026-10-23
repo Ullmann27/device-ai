@@ -1,0 +1,16 @@
+test: 360 dialogs, 680 scored turns
+variant                        K             S          S+FW   (richtig/falsch/unn?tige R?ckfrage)
+CONTINUE                 120/0/0       120/0/0       120/0/0
+SWITCH                    80/0/0        80/0/0        80/0/0
+RETURN                    40/0/0        40/0/0        40/0/0
+LONG_DISTANCE           120/0/40       160/0/0       160/0/0
+TYPE_CONSTRAINT           0/40/0        40/0/0        40/0/0
+AMBIGUOUS                40/40/0        80/0/0       40/40/0
+TYPE_DESCRIPTION         22/18/0        40/0/0        40/0/0
+NEW_SESSION               80/0/0        80/0/0        80/0/0
+PATTERN                   40/0/0        40/0/0        7/33/0
+CORRECT                      542           680           607
+WRONG                         98             0            73
+UNNECESSARY_ASK               40             0             0
+time/state: {K={medianNanosPerTurn=811, p95NanosPerTurn=3813, peakStateBytes=48, meanPeakStateBytes=36.0}, S={medianNanosPerTurn=270, p95NanosPerTurn=660, peakStateBytes=84, meanPeakStateBytes=54.28888888888889}, S+FW={medianNanosPerTurn=3307, p95NanosPerTurn=11143, peakStateBytes=2516, meanPeakStateBytes=2350.4666666666667}}
+S+FW seeds: seed 1: wrong 73, correct 607, seed 2: wrong 72, correct 608, seed 3: wrong 70, correct 610, seed 4: wrong 75, correct 605, seed 5: wrong 75, correct 605

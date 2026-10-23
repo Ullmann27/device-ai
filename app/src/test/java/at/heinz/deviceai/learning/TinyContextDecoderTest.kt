@@ -21,6 +21,19 @@ class TinyContextDecoderTest {
         assertThrows(IllegalArgumentException::class.java) { model.train(holdout) }
     }
 
+    @Test fun byteSurprisalsAreTheReadOnlyTermsOfTheAuditLoss() {
+        val model=TinyContextDecoder(seed=7)
+        model.train(DecoderCorpus(listOf("export function slug(t){return t.trim();}"),DecoderSplit.TRAIN),steps=400)
+        val before=model.updates
+        val text="return t.trim(); // é"
+        val bits=model.byteSurprisalBits(text)
+        assertEquals(text.toByteArray(Charsets.UTF_8).size+1,bits.size)
+        assertTrue(bits.all { it.isFinite() && it>=0.0 })
+        val audit=model.evaluate(DecoderCorpus(listOf(text),DecoderSplit.AUDIT))/kotlin.math.ln(2.0)
+        assertEquals(audit,bits.average(),1e-9)
+        assertEquals(before,model.updates)
+    }
+
     @Test fun deterministicTrainingGenerationAndChecksummedSnapshotRoundTrip() {
         val a=TinyContextDecoder(91);val b=TinyContextDecoder(91)
         a.train(training,steps=1500,maxMillis=5000);b.train(training,steps=1500,maxMillis=5000)

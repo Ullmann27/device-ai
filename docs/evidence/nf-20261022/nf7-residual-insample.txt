@@ -1,0 +1,31 @@
+JAR 10f7968b223288703759dc23063411d0ef8304af52ed40ec5f133b9002b1ab3b commit=524c1afc start=2026-10-23T08:22:33Z args=lm G-M seeds=1,2,3 epochs=6 threads=4 vocab=258 corpus=nfc2 residual=0.5 residualQ=insample store=/tmp/claude-0/-home-user/c23f6fcb-2774-52f4-ab4f-07c0e8643898/scratchpad/nf7/ckpt
+NFC2 commit=9fb4361c896315e9e974dd5d8feab5ce1ce65803 docs=83 tokenizer=v258 sha=f5f85a95e5046abcde7813eb7178161722163766cd0fa73dd7c1b3f682b73f8b
+SPLIT DOC TRAIN docs=71 segments=2506 bytes=422096 sha=e09a7cda131ebc583e7c9dc49c3d0d999f8d1beedfa7357d4e05863b373c3cf4
+SPLIT DOC VALIDATION docs=5 segments=180 bytes=34313 sha=73ec893c44549f039e2c4a281a60a62eec4df300060bd6e15b201561cdaf0146
+SPLIT DOC TEST docs=7 segments=219 bytes=38346 sha=3deec29e97940625223b664f9180e54a605fa9225a7defa782183b43962a68bb
+SPLIT CODE TRAIN docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE VALIDATION docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+SPLIT CODE TEST docs=0 segments=0 bytes=0 sha=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+RUN G-M-resin seed=1 epoch=1 trainNll=1.2452 valBPB=7.3079 params=115904 trainSeconds=52 ckpt=01761143937ba1d93391b9458a4356a3d4fa29d5e286997d5ad6dbde562c50e5
+RUN G-M-resin seed=1 epoch=2 trainNll=1.1188 valBPB=8.0197 params=115904 trainSeconds=118 ckpt=1043a56d1b9df8524c097e88b2dad75ac1080114a2cf7d8d02ef0a1c885721d8
+RUN G-M-resin seed=1 epoch=3 trainNll=1.0937 valBPB=8.0680 params=115904 trainSeconds=177 ckpt=a193a34fb624f5e60fab9939cf5f93f81284e95340b18870ce8fe4727415ad9f
+RUN G-M-resin seed=1 epoch=4 trainNll=1.0737 valBPB=8.2598 params=115904 trainSeconds=218 ckpt=5a5928161d823a06decdf7015a251af570b41fea2cb5a6415b5cf75a66dec87d
+RUN G-M-resin seed=1 epoch=5 trainNll=1.0632 valBPB=8.1811 params=115904 trainSeconds=266 ckpt=ad9304b1f6a967c427f829d58b2a5923e535713e67454b4144c04e3b148de3ac
+RUN G-M-resin seed=1 epoch=6 trainNll=1.0568 valBPB=8.2796 params=115904 trainSeconds=309 ckpt=74ca56d56c8c07eb0f8fa0530d4006ea4e789e4d411efce6a88bc9a73a2bf840
+SPEED G-M-resin seed=1 msPerToken=0.089 stateFloats=128 paramBytes=463616
+RUN G-M-resin seed=2 epoch=1 trainNll=1.2475 valBPB=7.3009 params=115904 trainSeconds=43 ckpt=cc2df49866db18eac9edd80d48c21c5460c31c4e2338643c9bd730b0791f42bb
+RUN G-M-resin seed=2 epoch=2 trainNll=1.1216 valBPB=7.7383 params=115904 trainSeconds=88 ckpt=176783e587de916d49f36fef1913f7a1af0c6c01ed4c0bd84d61885826981d18
+RUN G-M-resin seed=2 epoch=3 trainNll=1.0939 valBPB=7.8805 params=115904 trainSeconds=125 ckpt=0a9deec816f442a0fc1551fb801af26a6248e0bad8d4ce401947aec5b09b620e
+RUN G-M-resin seed=2 epoch=4 trainNll=1.0769 valBPB=8.0832 params=115904 trainSeconds=163 ckpt=dbe91b8f4c94b39a51d0e4b50f163897abf99e5aa216b2e1f3394827f71ae41e
+RUN G-M-resin seed=2 epoch=5 trainNll=1.0640 valBPB=8.0732 params=115904 trainSeconds=203 ckpt=4eccd551d3dcb1e92c1932c01dd025a3ca87009a22060eeac3129fa425e740fd
+RUN G-M-resin seed=2 epoch=6 trainNll=1.0573 valBPB=8.1035 params=115904 trainSeconds=239 ckpt=a2a5f7bf3fa331559ccf2cb65009393b9893e024cb2abc2b36fe8c5984625ae4
+SPEED G-M-resin seed=2 msPerToken=0.086 stateFloats=128 paramBytes=463616
+RUN G-M-resin seed=3 epoch=1 trainNll=1.2487 valBPB=7.3681 params=115904 trainSeconds=39 ckpt=ba32dfb33d631b18fc061d0d502b4bf62ff8956f1c3d94e2325daf3d48e4de4a
+RUN G-M-resin seed=3 epoch=2 trainNll=1.1237 valBPB=7.9301 params=115904 trainSeconds=77 ckpt=0dbf28caf65a9ced9231514ac202f561a8b5f9c831ceb0a770692c2ba6ff9b9c
+RUN G-M-resin seed=3 epoch=3 trainNll=1.1004 valBPB=8.2322 params=115904 trainSeconds=113 ckpt=5d0971b56857ab5a42a5548ff170e233193095d6026c9933412eb902ec14feaa
+RUN G-M-resin seed=3 epoch=4 trainNll=1.0827 valBPB=8.2959 params=115904 trainSeconds=148 ckpt=112a8070279de29fdde3fdb3d37862e867326e3a72ff7a38de77e51957635994
+RUN G-M-resin seed=3 epoch=5 trainNll=1.0712 valBPB=8.2421 params=115904 trainSeconds=182 ckpt=f81345199bbb05a8949e1f01502105f3b9612f16dacd172fc3109eb32f7e4c20
+RUN G-M-resin seed=3 epoch=6 trainNll=1.0637 valBPB=8.2435 params=115904 trainSeconds=216 ckpt=fcf05efef8eb6866781b5f42cb8ee91cd7deab6c0daafcfc3d0daa81935d159b
+SPEED G-M-resin seed=3 msPerToken=0.076 stateFloats=128 paramBytes=463616
+PEAK heapMb=826
+exit=0 end=2026-10-23T08:35:26Z

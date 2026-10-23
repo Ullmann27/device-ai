@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
-import {assessCcc1Preflight,parseArgs} from './ccc1-local-preflight.mjs';
+import {assessCcc1Preflight,parseArgs,explainCcc1Findings} from './ccc1-local-preflight.mjs';
 const SHA='a'.repeat(40);
 const REQUIRED=['ccc1-cli.mjs','ccc1-worker.mjs','ccc1-path-policy.mjs','local-teamleader-loop.mjs'];
 function setup(){
@@ -54,4 +54,17 @@ test('rejects invalid state path and non-directory parent',()=>{
     assert.equal(r.result,'BLOCKED');assert.ok(r.findings.includes('CCC1_STATE_NOT_DIRECTORY'));
     assert.throws(()=>parseArgs(['--project','x','--project','y']),/ARGUMENTS_INVALID/);
   }finally{f.cleanup();}
+});
+test('every preflight finding gets one owner hint with the concrete next step, codes are never dropped', () => {
+  const hints = explainCcc1Findings(['CCC1_BRANCH_NOT_ISOLATED', 'CCC1_WORKTREE_NOT_CLEAN',
+    'CCC1_REQUIRED_FILE_MISSING:.github/continuum/ccc1-cli.mjs', 'CCC1_REQUIRED_FILE_MISSING:.github/continuum/ccc1-worker.mjs',
+    'CCC1_NODE_VERSION_UNSUPPORTED', 'CCC1_STATE_INSIDE_SOURCE', 'CCC1_GIT_ROOT_UNVERIFIED']);
+  assert.equal(hints.length, 6, 'one hint per kind of finding');
+  assert.match(hints[0], /ccc1-prepare/);
+  assert.match(hints[1], /git -C ~\/device-ai status --short/);
+  assert.match(hints[2], /zu alt/);
+  assert.match(hints[3], /pkg upgrade nodejs/);
+  assert.match(hints[4], /~\/\.local\/state\/device-ai-continuum\/ccc1/);
+  assert.match(hints[5], /^CCC1_GIT_ROOT_UNVERIFIED: /);
+  assert.deepEqual(explainCcc1Findings([]), []);
 });

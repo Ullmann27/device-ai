@@ -143,6 +143,14 @@ class TinyContextDecoder private constructor(
     }
     @Synchronized fun evaluate(corpus:DecoderCorpus,conditioning:DoubleArray=DoubleArray(CONDITION)):Double =
         loss(samples(corpus),condition(conditioning))
+    /** Research (experiment D): surprisal in bits of every byte of [text] and of its end marker, from exactly the
+     * causal samples [evaluate] averages. Read-only: no update, no state change. */
+    @Synchronized fun byteSurprisalBits(text:String,conditioning:DoubleArray=DoubleArray(CONDITION)):DoubleArray {
+        val c=condition(conditioning)
+        return samples(DecoderCorpus(listOf(text),DecoderSplit.AUDIT)).map {
+            -ln(forward(it.context,c).p[it.target].coerceAtLeast(1e-12))/ln(2.0)
+        }.toDoubleArray()
+    }
 
     @Synchronized fun train(
         corpus:DecoderCorpus,steps:Int=1000,learningRate:Double=.035,

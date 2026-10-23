@@ -6,16 +6,18 @@
 // The reasoner only proposes. Permissions come from the owner; receipts from the verifier; a critique that
 // contradicts its receipt, an unauthorized request or a message while a request is pending ends the task as FAILED.
 // Deadline, round limit, CPU budget and the commit binding are checked before every execution. Nothing here merges,
-// pushes, installs or promotes: a confirmed hypothesis is a contract-test patch pending the owner's review.
+// pushes, installs or promotes: a confirmed hypothesis is a contract-test or repair patch pending the owner's review.
+// Protocol v2: a repair goal (fixed test chain) runs the EXISTING owner repair path through the same journal, gate,
+// recovery and verifier; only the job (runMobileRepairJob) and the receipt check (verifyRepairReceipt) differ.
 import fs from 'node:fs';
 import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
-import {runMobileCodingJob,cancelMobileCodingJob} from '../../scripts/continuum-mobile-coding.mjs';
+import {runMobileCodingJob,runMobileRepairJob,cancelMobileCodingJob} from '../../scripts/continuum-mobile-coding.mjs';
 import {envelope,envelopeProblems,newTaskId,sha256,CAPABILITY} from './ccc1-envelope.mjs';
 import {DurableTaskJournal,JournalCorruption,WriterLock,runtimeKey} from './ccc1-journal.mjs';
 import {gateTestRequest} from './ccc1-gate.mjs';
-import {verifyJobReceipt,issueVerificationId} from './ccc1-verifier.mjs';
+import {verifyJobReceipt,verifyRepairReceipt,issueVerificationId} from './ccc1-verifier.mjs';
 import {recover,jobIdFor,pendingRequest,builderStateOf,teamleaderStateOf} from './ccc1-recovery.mjs';
 import {releaseDeadContinuumBuildLease} from './shared-build-lease.mjs';
 
@@ -90,8 +92,8 @@ export function startTask({project,stateDir,goal,repoFullName,worktreeId='main',
 }
 
 function bindingOf(goal){
- const {sessionId,taskId,repoFullName,baseCommitSha,worktreeId,deadline,maxRounds,maxCpuMillis,maxMemoryBytes,permissions,checkpointHash}=goal;
- return {sessionId,taskId,repoFullName,baseCommitSha,worktreeId,deadline,maxRounds,maxCpuMillis,maxMemoryBytes,permissions,checkpointHash};
+ const {sessionId,taskId,repoFullName,baseCommitSha,worktreeId,deadline,maxRounds,maxCpuMillis,maxMemoryBytes,permissions,checkpointHash,protocolHash}=goal;
+ return {sessionId,taskId,repoFullName,baseCommitSha,worktreeId,deadline,maxRounds,maxCpuMillis,maxMemoryBytes,permissions,checkpointHash,protocolHash};
 }
 
 /** Owner decision on an APPROVAL_REQUEST, or an owner ABORT. Needs the worktree's writer lock. */
@@ -129,7 +131,10 @@ export function reasonerProblem(m,s,entries){
  case 'TEST_REQUEST':{
   const h=byId(m.payload.hypothesis);
   if(h?.kind!=='HYPOTHESIS')return 'TEST_REQUEST must reference a HYPOTHESIS';
-  if(h.payload.module!==m.payload.module||h.payload.export!==m.payload.export)return 'TEST_REQUEST must test exactly its hypothesis';
+  if(Boolean(h.payload.repair)!==Boolean(m.payload.repair))return 'TEST_REQUEST must test exactly its hypothesis';
+  if(m.payload.repair&&h.payload.repair.chain!==m.payload.repair.chain)return 'TEST_REQUEST must test exactly its hypothesis';
+  if(m.payload.repair&&!entries[0].payload.repair)return 'a repair request needs a repair goal of the owner';
+  if(!m.payload.repair&&(h.payload.module!==m.payload.module||h.payload.export!==m.payload.export))return 'TEST_REQUEST must test exactly its hypothesis';
   const earlier=entries.filter(e=>e.kind==='TEST_REQUEST'&&e.payload.hypothesis===h.messageId);
   const interruptedOnly=earlier.every(q=>s.receipts.some(r=>r.payload.request===q.messageId&&r.payload.execution==='INTERRUPTED'));
   if(earlier.length&&!interruptedOnly)return 'this hypothesis was already tested; REVISE it instead';
@@ -143,8 +148,8 @@ export function reasonerProblem(m,s,entries){
  * Runs or resumes one task until it ends, waits for the owner, or the turn limit is reached. `reasoner.turn(view)`
  * gets a JSON view and returns messages [{messageId, parentMessageId?, kind, payload}].
  */
-export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobileCodingJob,cancelJob=cancelMobileCodingJob,
- maxTurns=16,now=()=>Date.now()}){
+export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobileCodingJob,runRepairJob=runMobileRepairJob,
+ cancelJob=cancelMobileCodingJob,maxTurns=16,now=()=>Date.now()}){
  const root=fs.realpathSync(path.resolve(project));
  const key=runtimeKey(stateDir);
  const journal=DurableTaskJournal.forTask(stateDir,taskId,key);
@@ -207,15 +212,18 @@ export async function runTask({project,stateDir,taskId,reasoner,runJob=runMobile
     }
     if(s.cpuMillis>=binding.maxCpuMillis){abort('BUDGET','CPU budget used up');continue;}
     if(process.memoryUsage().rss>binding.maxMemoryBytes){abort('BUDGET','memory budget exceeded by the runtime process');continue;}
-    const order={module:q.payload.module,exportName:q.payload.export,casesJson:JSON.stringify(q.payload.cases)};
+    const repair=q.payload.repair??null;
+    const order=repair?null:{module:q.payload.module,exportName:q.payload.export,casesJson:JSON.stringify(q.payload.cases)};
     crashPoint('before-execute');
     const cpu0=cpuMillis(),t0=Date.now();
-    const receipt=await runJob({project:root,builderState:builderStateOf(stateDir),teamleaderState:teamleaderStateOf(stateDir),job,...order,budgetMinutes:q.payload.budgetMinutes});
+    const common={project:root,builderState:builderStateOf(stateDir),teamleaderState:teamleaderStateOf(stateDir),job,budgetMinutes:q.payload.budgetMinutes};
+    const receipt=repair?await runRepairJob({...common,chain:repair.chain}):await runJob({...common,...order});
     const cpu1=cpuMillis();
     crashPoint('after-execute');
     if(TRANSIENT_BLOCKS.has(receipt?.status))
      return {outcome:'WAITING_FOR_WORKER',reason:String(receipt.failure?.message??receipt.status).slice(0,300),report,entries:journal.entries()};
-    const check=verifyJobReceipt(receipt,{job,commit:binding.baseCommitSha,...order});
+    const check=repair?verifyRepairReceipt(receipt,{job,commit:binding.baseCommitSha,chain:repair.chain}):
+     verifyJobReceipt(receipt,{job,commit:binding.baseCommitSha,...order});
     const fields={request:q.messageId,receiptSha256:sha256(JSON.stringify(receipt)),verdict:check.verdict};
     append('VERIFIER','RECEIPT',{...fields,job,status:String(receipt.status),reasons:check.reasons,patchSha256:receipt.patch?.sha256??null,
      evidenceSha256:receipt.evidence?.verificationSha256??null,

@@ -42,9 +42,9 @@ owner-signierte APK 0.3.16 / versionCode 17
 | Modelle | `LocalModelHost`, `LocalModelRuntime`, `learning/TinyContextDecoder.kt`, `learning/lm/LmRuntime.kt` | CDX1/LM1 Forschungsmodelle, kein nachgewiesener Ersatz des Hauptchats |
 | Quellen/Antworten | `ContinuumMemoryDialogue.kt`, `learning/span/ContinuumResidualSpanCore.kt`, `intelligence/ContinuumCognitiveSpine.kt`, `ResidualSpanResearchAdapter.kt` | Lexikon-/Literalspan-Prüfung ist keine unabhängige Tatsachenzertifizierung |
 | Denken/Lernen | `intelligence/maxultra/ContinuumCortexShadow.kt`, `ContinuumCortexResearchPipeline.kt`, `learning/span/ContinuumCounterfactualCurriculum.kt` | experimentell; keine automatische Besitzergewichts-Promotion |
-| CCC1 | `.github/continuum/ccc1-cli.mjs`, `ccc1-worker.mjs`, `ccc1-verifier.mjs`, `local-teamleader-loop.mjs`, `ccc1-path-policy.mjs` | CCC1 Node-Worker quellseitig; Android Ende-zu-Ende noch offen |
+| CCC1 | `.github/continuum/ccc1-cli.mjs`, `ccc1-worker.mjs`, `ccc1-verifier.mjs`, `local-teamleader-loop.mjs`, `ccc1-path-policy.mjs` | Auf `opus/ccc1-e2e-20261023`: echter Reparaturlauf über die Termux-Aufrufe der App am Repository-Klon belegt (`docs/evidence/ccc1-e2e-20261023/`); Gerät offen |
 | Lokaler Shell-Gate | `.github/continuum/ccc1-local-preflight.mjs`, `ccc1-local-preflight.test.mjs` | NUR lesende Vorprüfung; kein Workerstart, kein OS-Sandbox-Beweis |
-| Android↔Termux | `ContinuumMobileBuilderActivity.kt`, `ContinuumMobileCodingJob.kt`, `ContinuumMobileBuildResultReceiver.kt`, `ToolExecutionReceiptStore.kt`, `ShizukuBridge.kt` | bestehenden Rückkanal wiederverwenden; echter aktueller CCC1-Zyklus nicht belegt |
+| Android↔Termux | `ContinuumMobileBuilderActivity.kt`, `ContinuumMobileCodingJob.kt`, `ContinuumMobileBuildResultReceiver.kt`, `ContinuumCcc1Bridge.kt`, `ToolExecutionReceiptStore.kt`, `ShizukuBridge.kt` | CCC1-Operationen über den bestehenden Rückkanal verdrahtet und JVM-geprüft (`opus/ccc1-e2e-20261023`); Fold7/Termux-Lauf offen |
 | APK-Auslieferung | `app/build.gradle.kts`, `scripts/render-mentor-owner-update-v17.sh` | aktuell weiterhin versionCode 17 bei Owner-Signed-Update; keine neue 0.3.17-APK |
 
 ## Historische PRs: erhalten, NICHT ungeprüft überschreiben oder löschen
@@ -55,7 +55,7 @@ Die folgende Bewertung beruht auf GitHub-Commit-Abstammung und Quellbaum-Verglei
 |---|---|---|
 | #52, #78, #79, #81, #84 | Git-Vorfahren des aktuellen Review-Stands (`behind=0` bei Commit-Vergleich) | Quellhistorie ist enthalten; keinen zweiten Merge |
 | #70 QF2+ | `dialogue-retrieval.mjs` und `ContinuumMemoryDialogue.kt` sind zum PR-70-HEAD **blob-identisch** | Bereits übernommen; keine erneute Kopie |
-| #72 I2 selektive Risikozertifizierung | eigenständiger Entwicklungszweig; 34 dort vorhandene Dateien fehlen im aktuellen Baum, einschließlich `ContinuumSelectiveRiskCertification.kt` und separaten Beleg-/Testdateien | Wichtiges, **noch nicht übernommenes Forschungsmodul**. [PR #72](https://github.com/Ullmann27/device-ai/pull/72) erhalten; erst API-/Holdout-/Checkpoint-Kompatibilität nachweisen, dann selektiv übernehmen |
+| #72 I2 selektive Risikozertifizierung | eigenständiger Entwicklungszweig; 34 dort vorhandene Dateien fehlten im aktuellen Baum, einschließlich `ContinuumSelectiveRiskCertification.kt` und separaten Beleg-/Testdateien | **Selektiv übernommen in PR #99** (`e9714f70` + Doku): neuerer Span-Kern, I1, I2, Tests, 5 Dokumente, 16 Belege – Verträglichkeit nachgewiesen (852/852 Kotlin-Tests, Standardverhalten des Kerns bitgleich, I1-/I2-Belege bytegleich reproduziert; `docs/CONTINUUM-I1-I2-ADOPTION-20261023.md`). Drei veraltete Übergabe-/Review-Dokumente bleiben nur auf [PR #72](https://github.com/Ullmann27/device-ai/pull/72) |
 | #75 und #82 | zentrale CCC1-/NFC1-Codepfade sind weitgehend vorhanden, aber zwölf alte Quellen-/Isolations-Belegdokumente fehlen im aktuellen Baum | Belege im [PR #82](https://github.com/Ullmann27/device-ai/pull/82) erhalten; Test- und Experimentprovenienz vor ggf. dokumentiertem Transfer prüfen |
 | #83 Fold-Rail | keine fehlenden Dateipfade, aber aktuelle Dateiinhalte von älterem Spezial-Patch abweichend | aktuelle, weiterentwickelte Layoutimplementierung prüfen; keinen alten Vollfile-Overwrite |
 | #90 visuelle QA | vier dort vorhandene Doku-/Testdateien fehlen, etwa `scripts/test_continuum_emulator_screenshots.py` | [PR #90](https://github.com/Ullmann27/device-ai/pull/90) als expliziten QA-Kandidaten für Astra erhalten; Tests vor Integration gegen *aktuelle* Skripte ausführen |
@@ -64,6 +64,10 @@ Die folgende Bewertung beruht auf GitHub-Commit-Abstammung und Quellbaum-Verglei
 Andere ältere PRs bleiben bis zu einer **separaten Code-/Belegentscheidung** erhalten und werden nicht als automatisch geprüft oder veraltet eingestuft. Divergenz allein heißt nicht, dass ein Feature fehlt: sie kann auch aus nachfolgenden Anpassungen stammen.
 
 ## Die aktuelle CCC1-Sperre (was Opus wirklich fertigstellen muss)
+
+**Stand 23.10.2026 abends:** Punkte 1–4 sind auf `opus/ccc1-e2e-20261023` quellseitig umgesetzt und außerhalb des
+Geräts belegt; offen bleibt der Lauf auf dem Fold7 und Punkt 5. Details, Prüfmatrix und Grenzen:
+`docs/CONTINUUM-OPUS-FIRST-BREAKTHROUGH-20261023.md`.
 
 Korrekte CLI-Aufrufe: `compile`, `submit`, `status`, `run-once`, `loop`; es gibt keinen Kommandovertrag `cycle --state-dir --trigger`. Ein gemeinsam autorisiertes **Owner→Android→Termux→CCC1→verifizierte Receipts→Android-Review** ist das offene E2E-Gate. Die bereits vorhandenen Lease-/Journal-/Verifier-/Backlog-Module dürfen nicht dupliziert oder umgangen werden.
 

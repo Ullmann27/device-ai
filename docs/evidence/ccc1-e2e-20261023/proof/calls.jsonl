@@ -1,0 +1,9 @@
+{"call":"01-compile","argv":"ccc1-compile-repair --chain node","exitCode":0,"seconds":0.1}
+{"call":"02-submit","argv":"ccc1-submit-repair --chain node --order a4e344a7-de77-41b0-849b-c06a0498b6f2","exitCode":0,"seconds":0.1}
+{"call":"03-submit-same-order","argv":"ccc1-submit-repair --chain node --order a4e344a7-de77-41b0-849b-c06a0498b6f2","exitCode":0,"seconds":0.1}
+{"call":"04-status-before","argv":"ccc1-status","exitCode":0,"seconds":0.1}
+{"call":"05-run-once","argv":"ccc1-run-once","exitCode":0,"seconds":70.0}
+{"call":"06-status-after","argv":"ccc1-status","exitCode":0,"seconds":0.1}
+{"call":"07-submit-finished-order","argv":"ccc1-submit-repair --chain node --order a4e344a7-de77-41b0-849b-c06a0498b6f2","exitCode":0,"seconds":0.1}
+{"call":"08-run-once-again","argv":"ccc1-run-once","exitCode":0,"seconds":0.1}
+{"call":"09-abort-finished","argv":"ccc1-abort --task t-a1bf9c70fe199bb7","exitCode":0,"seconds":0.1}

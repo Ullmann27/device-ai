@@ -118,6 +118,49 @@ class ContinuumMobileBuilderActivity : Activity() {
             ViewGroup.LayoutParams.MATCH_PARENT, px(58)))
         paragraph("Coding-Läufe lassen sich derzeit nur über den bestehenden Termux-CLI-Abbruch " +
             "gezielt stoppen. Bei einem offenen Auftrag startet die App keinen zweiten Auftrag.")
+        paragraph("CCC1 · REPARATURAUFTRAG", true)
+        paragraph("CCC1 führt eine feste Testkette in einem isolierten Arbeitsstand aus. Findet sie einen echten Fehler, " +
+            "sucht die bestehende Reparatur-Pipeline einen Patch; ein zweiter, unabhängiger Lauf und der CCC1-Verifier " +
+            "prüfen ihn. Der Patch wird nur zur Prüfung angeboten – nie übernommen, gemergt oder installiert.")
+        var chain = ContinuumCcc1Bridge.Chain.NODE
+        val chainButton = Button(this).apply {
+            text = "Testkette: ${chain.cli} (antippen zum Wechseln)"
+            isAllCaps = false
+            setOnClickListener {
+                chain = ContinuumCcc1Bridge.Chain.entries[(chain.ordinal + 1) % ContinuumCcc1Bridge.Chain.entries.size]
+                text = "Testkette: ${chain.cli} (antippen zum Wechseln)"
+            }
+        }
+        column.addView(chainButton, LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, px(52)))
+        for (operation in ContinuumCcc1Bridge.Operation.entries) {
+            val button = Button(this).apply {
+                text = operation.title
+                isAllCaps = false
+                setOnClickListener {
+                    val question = when (operation) {
+                        ContinuumCcc1Bridge.Operation.SUBMIT_REPAIR -> "Reparaturauftrag für die Testkette ${chain.cli} anlegen?" to
+                            "Termux prüft zuerst Branch, sauberen Arbeitsstand und Zustandsordner. Der Auftrag wird nur angelegt, noch nicht ausgeführt."
+                        ContinuumCcc1Bridge.Operation.RUN_ONCE -> "Nächsten CCC1-Schritt ausführen?" to
+                            "Termux führt den nächsten offenen CCC1-Auftrag aus: Testkette, Reparaturkandidaten und unabhängige Prüfung. " +
+                            "Das kann bis zu 30 Minuten dauern. Hauptbranch, installierte Apps und Gewichte bleiben unverändert; " +
+                            "ein Patch bleibt ein Prüfvorschlag."
+                        ContinuumCcc1Bridge.Operation.ABORT -> "CCC1-Auftrag abbrechen?" to
+                            "Der zuletzt bekannte offene Auftrag wird beendet und ein laufender Job gestoppt. Ein Abbruch zählt nie als Erfolg."
+                        else -> null
+                    }
+                    if (question == null) dispatchCcc1(operation, chain)
+                    else AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
+                        .setTitle(question.first)
+                        .setMessage(question.second)
+                        .setNegativeButton("Nicht starten", null)
+                        .setPositiveButton("Bestätigen") { _, _ -> dispatchCcc1(operation, chain) }
+                        .show()
+                }
+            }
+            column.addView(button, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, px(52)))
+        }
         val refreshButton = Button(this).apply {
             text = "Ergebnis in der App aktualisieren"
             isAllCaps = false
@@ -143,13 +186,20 @@ class ContinuumMobileBuilderActivity : Activity() {
         val pending = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)
         val pendingOperation = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, null)
         val started = preferences.getLong(ContinuumMobileBuildResultReceiver.JOB_START, 0L)
+        val ccc1Task = preferences.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null)
+        val abortPending = preferences.getString(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null) != null
+        val abortMessage = preferences.getString(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE, null)
+        val ccc1 = listOfNotNull(
+            ccc1Task?.let { "Offener CCC1-Auftrag: $it" },
+            if (abortPending) "Ein CCC1-Abbruch ist unterwegs; kein Ergebnis bestätigt." else abortMessage
+        ).joinToString("\n").let { if (it.isEmpty()) "" else "\n$it" }
         status.text = when {
             pending != null ->
                 "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt." +
                     (if (pendingOperation == "CODE_TEST") "\nCoding-Auftrags-ID: $pending (für gezielten Termux-Abbruch)." else "")
             last != null -> last + if (sha != null) "\nSHA-256: $sha" else ""
             else -> "Noch kein Rückbericht vom mobilen Builder. Kein Geräte-Build bestätigt."
-        }
+        } + ccc1
     }
 
     private fun dispatch(operation: ContinuumMobileBuildPlan.Operation) {
@@ -167,10 +217,38 @@ class ContinuumMobileBuilderActivity : Activity() {
         dispatchApprovedCommand("CODE_TEST", order.jobId, ContinuumMobileCodingJob.command(order))
     }
 
+    /** CCC1 step: fixed operation, chain from the selector, this request id as idempotent order id. */
+    private fun dispatchCcc1(operation: ContinuumCcc1Bridge.Operation, chain: ContinuumCcc1Bridge.Chain) {
+        val requestId = UUID.randomUUID().toString()
+        val task = preferences.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null)
+        if (operation == ContinuumCcc1Bridge.Operation.ABORT && task == null) {
+            status.text = "Kein offener CCC1-Auftrag bekannt. Zuerst den CCC1-Status abrufen."
+            return
+        }
+        val plan = try {
+            ContinuumCcc1Bridge.command(operation, chain, orderId = requestId, taskId = task)
+        } catch (_: IllegalArgumentException) {
+            status.text = "Ungültiger CCC1-Auftrag; nichts gestartet."
+            return
+        }
+        val slot = if (operation == ContinuumCcc1Bridge.Operation.ABORT) ResultSlot.CCC1_ABORT else ResultSlot.MAIN
+        dispatchApprovedCommand(operation.jobOperation, requestId, plan, slot)
+    }
+
+    /**
+     * One-shot result slots in the preferences. Every job uses MAIN (one outstanding job); a CCC1 abort has its own
+     * slot so it can reach a running CCC1 step without dropping that step's result.
+     */
+    private enum class ResultSlot(val idKey: String, val operationKey: String?, val startKey: String) {
+        MAIN(ContinuumMobileBuildResultReceiver.JOB_ID, ContinuumMobileBuildResultReceiver.JOB_OPERATION, ContinuumMobileBuildResultReceiver.JOB_START),
+        CCC1_ABORT(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null, ContinuumMobileBuildResultReceiver.ABORT_JOB_START)
+    }
+
     private fun dispatchApprovedCommand(
         operationName: String,
         requestId: String,
-        plan: ContinuumMobileBuildPlan.Command
+        plan: ContinuumMobileBuildPlan.Command,
+        slot: ResultSlot = ResultSlot.MAIN
     ) {
         if (checkSelfPermission(ContinuumMobileBuildPlan.TERMUX_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             status.text = "Termux-Berechtigung zunächst erlauben; dann den Auftrag erneut bestätigen."
@@ -183,20 +261,18 @@ class ContinuumMobileBuilderActivity : Activity() {
             status.text = "Termux ist nicht installiert oder nicht sichtbar. Kein lokaler Worker verfügbar."
             return
         }
-        val pendingId = preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)
+        val pendingId = preferences.getString(slot.idKey, null)
         if (pendingId != null) {
-            val started = preferences.getLong(ContinuumMobileBuildResultReceiver.JOB_START, 0)
+            val started = preferences.getLong(slot.startKey, 0)
             if (started > 0 && System.currentTimeMillis() - started > 60 * 60 * 1000L) {
                 AlertDialog.Builder(this)
                     .setTitle("Vorherigen Auftrag ohne Rückmeldung abschließen?")
                     .setMessage("Der frühere Vorgang hat seit über einer Stunde nicht geantwortet. Prüfe zuerst Termux: Dort könnte ein Prozess noch laufen. Ein neuer Auftrag kann Ressourcen beanspruchen.")
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Als ungeklärt markieren") { _, _ ->
-                        preferences.edit()
-                            .remove(ContinuumMobileBuildResultReceiver.JOB_ID)
-                            .remove(ContinuumMobileBuildResultReceiver.JOB_OPERATION)
-                            .remove(ContinuumMobileBuildResultReceiver.JOB_START)
-                            .putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
+                        val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
+                        slot.operationKey?.let { edit.remove(it) }
+                        edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
                                 "Voriger Termux-Auftrag hat keinen Abschlussnachweis geliefert.")
                             .commit()
                         refreshReceipt()
@@ -231,12 +307,12 @@ class ContinuumMobileBuilderActivity : Activity() {
             putExtra("com.termux.RUN_COMMAND_BACKGROUND", true)
             putExtra(ContinuumMobileBuildResultReceiver.COMMAND_PENDING_INTENT, callback)
         }
-        if (!preferences.edit()
-                .putString(ContinuumMobileBuildResultReceiver.JOB_ID, requestId)
-                .putString(ContinuumMobileBuildResultReceiver.JOB_OPERATION, operationName)
-                .putLong(ContinuumMobileBuildResultReceiver.JOB_START, System.currentTimeMillis())
-                .commit()
-        ) {
+        val pendingEdit = preferences.edit()
+            .putString(slot.idKey, requestId)
+            .putLong(slot.startKey, System.currentTimeMillis())
+        slot.operationKey?.let { pendingEdit.putString(it, operationName) }
+        if (slot == ResultSlot.CCC1_ABORT) pendingEdit.remove(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE)
+        if (!pendingEdit.commit()) {
             callback.cancel()
             status.text = "Der lokale Auftragsstatus konnte nicht gesichert werden. Nichts gestartet."
             return
@@ -244,30 +320,27 @@ class ContinuumMobileBuilderActivity : Activity() {
         try {
             if (startService(intent) == null) {
                 callback.cancel()
-                cancelUnstarted(requestId, "Termux hat die Auftragsauslösung nicht angenommen.")
+                cancelUnstarted(requestId, "Termux hat die Auftragsauslösung nicht angenommen.", slot)
             } else {
                 status.text = "Auftrag an Termux übermittelt. Der tatsächliche Exitcode wird abgewartet; kein Build-Erfolg bestätigt."
             }
         } catch (_: SecurityException) {
             callback.cancel()
-            cancelUnstarted(requestId, "Termux-Zugriff verweigert. RUN_COMMAND und allow-external-apps prüfen.")
+            cancelUnstarted(requestId, "Termux-Zugriff verweigert. RUN_COMMAND und allow-external-apps prüfen.", slot)
         } catch (_: IllegalStateException) {
             callback.cancel()
-            cancelUnstarted(requestId, "Android hat den Termux-Dienststart verhindert.")
+            cancelUnstarted(requestId, "Android hat den Termux-Dienststart verhindert.", slot)
         } catch (e: RuntimeException) {
             callback.cancel()
-            cancelUnstarted(requestId, "Termux-Start gescheitert: ${e.javaClass.simpleName}.")
+            cancelUnstarted(requestId, "Termux-Start gescheitert: ${e.javaClass.simpleName}.", slot)
         }
     }
 
-    private fun cancelUnstarted(id: String, message: String) {
-        if (id == preferences.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null)) {
-            preferences.edit()
-                .remove(ContinuumMobileBuildResultReceiver.JOB_ID)
-                .remove(ContinuumMobileBuildResultReceiver.JOB_OPERATION)
-                .remove(ContinuumMobileBuildResultReceiver.JOB_START)
-                .putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, message)
-                .commit()
+    private fun cancelUnstarted(id: String, message: String, slot: ResultSlot = ResultSlot.MAIN) {
+        if (id == preferences.getString(slot.idKey, null)) {
+            val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
+            slot.operationKey?.let { edit.remove(it) }
+            edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, message).commit()
         }
         refreshReceipt()
     }

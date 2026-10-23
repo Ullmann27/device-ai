@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "base": "98f1408248e4a3fa575c75faf81979bfb1488303",
+  "chain": "node",
+  "startedAt": "2026-10-23T12:26:45.302Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "exitCode": 1,
+        "timedOut": false,
+        "ms": 22276,
+        "tests": {
+          "total": 880,
+          "failed": 1,
+          "skipped": 88,
+          "placeholders": 0,
+          "executed": 792,
+          "passed": 791,
+          "skippedCaseDigest": "879006acabb566ff7f20c9688257c51d0dc367d77ffd2ee9991f6da73748dff3"
+        },
+        "diagnostics": 1
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.only repository owner comments may trigger learning and memory mutations",
+        "file": ".github/continuum/console-policy.test.mjs",
+        "line": 10,
+        "col": 12,
+        "message": "Expected values to be strictly equal:true !== false",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "ab9fb0c071a383df"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "5d89648a13fc734f",
+      "strategy": "REVERT_FILE_TO_PARENT",
+      "diagnostic": "ab9fb0c071a383df",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Restore .github/continuum/console-policy.mjs to the parent commit (regression culprit search)",
+      "score": 0.4,
+      "critic": {
+        "approved": true,
+        "risk": 0.637,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/console-policy.mjs",
+          "oldText": "  return name.length>0 && name.toLowerCase().startsWith(parts[0].toLowerCase());",
+          "newText": "  return name.length>0 && name.toLowerCase()===parts[0].toLowerCase();",
+          "line": 8
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/console-policy.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 23374,
+          "tests": {
+            "total": 880,
+            "failed": 0,
+            "skipped": 88,
+            "placeholders": 0,
+            "executed": 792,
+            "passed": 792,
+            "skippedCaseDigest": "879006acabb566ff7f20c9688257c51d0dc367d77ffd2ee9991f6da73748dff3"
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "5d89648a13fc734f",
+    "strategy": "REVERT_FILE_TO_PARENT",
+    "description": "Restore .github/continuum/console-policy.mjs to the parent commit (regression culprit search)",
+    "patch": "diff --git a/.github/continuum/console-policy.mjs b/.github/continuum/console-policy.mjs\nindex 418b7d4..7dc9812 100644\n--- a/.github/continuum/console-policy.mjs\n+++ b/.github/continuum/console-policy.mjs\n@@ -5,5 +5,5 @@ export function isOwnerComment(repository, login) {\n   const parts=repository.split(\"/\");\n   if (parts.length!==2 || !parts[0] || !parts[1]) return false;\n   const name=login.trim();\n-  return name.length>0 && name.toLowerCase().startsWith(parts[0].toLowerCase());\n+  return name.length>0 && name.toLowerCase()===parts[0].toLowerCase();\n }\n",
+    "patchSha256": "d4caa68debf9ba72f048301c1a3e093e97809f51336936f307a63ab8d3086b33",
+    "files": [
+      ".github/continuum/console-policy.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 23374,
+        "tests": {
+          "total": 880,
+          "failed": 0,
+          "skipped": 88,
+          "placeholders": 0,
+          "executed": 792,
+          "passed": 792,
+          "skippedCaseDigest": "879006acabb566ff7f20c9688257c51d0dc367d77ffd2ee9991f6da73748dff3"
+        }
+      }
+    ],
+    "reviewRequired": true,
+    "confidence": 0.28
+  },
+  "outcome": "VERIFIED",
+  "finishedAt": "2026-10-23T12:27:31.767Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "98f1408248e4a3fa575c75faf81979bfb1488303",
+    "chain": "node",
+    "conclusion": "VERIFIED",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 1,
+        "proof": "e638aa0917974f8a5c26b0add711a48b928d069a9b646632afc59d1bd512886c"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "5ce34d6132a4ea30",
+        "approved": true,
+        "proof": "081f444bc5b4e64168a777829537c7ec408a89a35c07c0ccceb9684857f26ed6"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "5ce34d6132a4ea30",
+        "editedFiles": 1,
+        "proof": "cc946e62f068c8fb7aa9d7c623df0834b404f72f7be23d1c1a0ed2dd58c7bce6"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "5ce34d6132a4ea30",
+        "passed": true,
+        "executed": true,
+        "profiles": 1,
+        "proof": "3b394eefbb65941cee62ae35fae17b3aa75d99f570dda05382e3f71e776c28db"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "PATCH_PENDING_REVIEW",
+        "patchSha256": "d4caa68debf9ba72f048301c1a3e093e97809f51336936f307a63ab8d3086b33",
+        "approvedForMerge": false,
+        "proof": "448d799ed6631ade60a1c26c55ec84572e48bde4ac25b79ecebaa891c36a75c5"
+      }
+    ],
+    "integrity": "058dd1300f21693cddada81f9b9ecbc8757f348d272cbe8c63bc30992699aac8"
+  },
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 792,
+        "failed": 0,
+        "skipped": 88
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  }
+}

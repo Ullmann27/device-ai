@@ -1,0 +1,249 @@
+{
+    "schema": "cdx1-patch-anomaly-report",
+    "version": 1,
+    "datasetSha256": "61efb1240f67839565b7fea4aee65fb23fd36f8488d02426a8f5f3d4c29940c7",
+    "items": {
+        "train": 1795,
+        "cal": 503,
+        "test": 598
+    },
+    "cdx1": {
+        "parameters": 7746,
+        "bytes": 61968,
+        "updates": 400000,
+        "trainMillis": 14276,
+        "trainTexts": 524,
+        "auditBitsBefore": 8.0058,
+        "auditBitsAfter": 4.5413
+    },
+    "ngram": {
+        "order": 4,
+        "entries": 66011
+    },
+    "timingMillisPerFragment": {
+        "cdx1Median": 2.4854,
+        "cdx1P95": 3.8148,
+        "ngramMedian": 0.4365,
+        "ngramP95": 0.7525
+    },
+    "pairedWinRateCdx1Mean": {
+        "INCOMPLETE_HUNK": 0.5104,
+        "MISSING_TOKEN": 0.5104,
+        "ODD_BYTES": 1.0,
+        "SEMANTIC": 0.2727,
+        "SYNTAX": 0.6875,
+        "TRUNCATED": 0.375
+    },
+    "cdx1Max": {
+        "threshold": 7.55,
+        "fpr": 0.0833,
+        "groups": {
+            "INCOMPLETE_HUNK": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.4781,
+                "parser": 1.0,
+                "parserOrModel": 1.0
+            },
+            "MISSING_TOKEN": {
+                "n": 96,
+                "tpr": 0.0833,
+                "auroc": 0.5246,
+                "parser": 0.5208,
+                "parserOrModel": 0.5729
+            },
+            "ODD_BYTES": {
+                "n": 96,
+                "tpr": 0.9896,
+                "auroc": 0.998,
+                "parser": 0.6979,
+                "parserOrModel": 1.0
+            },
+            "SEMANTIC": {
+                "n": 22,
+                "tpr": 0.1364,
+                "auroc": 0.5526,
+                "parser": 0.0,
+                "parserOrModel": 0.1364
+            },
+            "SYNTAX": {
+                "n": 96,
+                "tpr": 0.0833,
+                "auroc": 0.5288,
+                "parser": 0.9167,
+                "parserOrModel": 0.9167
+            },
+            "TRUNCATED": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.4903,
+                "parser": 0.9167,
+                "parserOrModel": 0.9271
+            }
+        },
+        "parserUndetected": {
+            "n": 113,
+            "tpr": 0.3363,
+            "auroc": 0.6606
+        }
+    },
+    "cdx1Mean": {
+        "threshold": 4.7959,
+        "fpr": 0.0625,
+        "groups": {
+            "INCOMPLETE_HUNK": {
+                "n": 96,
+                "tpr": 0.0521,
+                "auroc": 0.4863,
+                "parser": 1.0,
+                "parserOrModel": 1.0
+            },
+            "MISSING_TOKEN": {
+                "n": 96,
+                "tpr": 0.0521,
+                "auroc": 0.5014,
+                "parser": 0.5208,
+                "parserOrModel": 0.5208
+            },
+            "ODD_BYTES": {
+                "n": 96,
+                "tpr": 0.3021,
+                "auroc": 0.7684,
+                "parser": 0.6979,
+                "parserOrModel": 0.8021
+            },
+            "SEMANTIC": {
+                "n": 22,
+                "tpr": 0.0455,
+                "auroc": 0.5923,
+                "parser": 0.0,
+                "parserOrModel": 0.0455
+            },
+            "SYNTAX": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.5107,
+                "parser": 0.9167,
+                "parserOrModel": 0.9167
+            },
+            "TRUNCATED": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.4717,
+                "parser": 0.9167,
+                "parserOrModel": 0.9271
+            }
+        },
+        "parserUndetected": {
+            "n": 113,
+            "tpr": 0.1062,
+            "auroc": 0.5855
+        }
+    },
+    "ngramMax": {
+        "threshold": 7.4081,
+        "fpr": 0.0417,
+        "groups": {
+            "INCOMPLETE_HUNK": {
+                "n": 96,
+                "tpr": 0.0417,
+                "auroc": 0.4807,
+                "parser": 1.0,
+                "parserOrModel": 1.0
+            },
+            "MISSING_TOKEN": {
+                "n": 96,
+                "tpr": 0.0417,
+                "auroc": 0.5113,
+                "parser": 0.5208,
+                "parserOrModel": 0.5417
+            },
+            "ODD_BYTES": {
+                "n": 96,
+                "tpr": 0.9896,
+                "auroc": 0.9965,
+                "parser": 0.6979,
+                "parserOrModel": 1.0
+            },
+            "SEMANTIC": {
+                "n": 22,
+                "tpr": 0.0,
+                "auroc": 0.549,
+                "parser": 0.0,
+                "parserOrModel": 0.0
+            },
+            "SYNTAX": {
+                "n": 96,
+                "tpr": 0.0417,
+                "auroc": 0.5268,
+                "parser": 0.9167,
+                "parserOrModel": 0.9167
+            },
+            "TRUNCATED": {
+                "n": 96,
+                "tpr": 0.0313,
+                "auroc": 0.509,
+                "parser": 0.9167,
+                "parserOrModel": 0.9271
+            }
+        },
+        "parserUndetected": {
+            "n": 113,
+            "tpr": 0.2832,
+            "auroc": 0.6486
+        }
+    },
+    "ngramMean": {
+        "threshold": 3.1473,
+        "fpr": 0.0521,
+        "groups": {
+            "INCOMPLETE_HUNK": {
+                "n": 96,
+                "tpr": 0.0521,
+                "auroc": 0.5,
+                "parser": 1.0,
+                "parserOrModel": 1.0
+            },
+            "MISSING_TOKEN": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.5293,
+                "parser": 0.5208,
+                "parserOrModel": 0.5417
+            },
+            "ODD_BYTES": {
+                "n": 96,
+                "tpr": 0.2188,
+                "auroc": 0.7196,
+                "parser": 0.6979,
+                "parserOrModel": 0.7708
+            },
+            "SEMANTIC": {
+                "n": 22,
+                "tpr": 0.0909,
+                "auroc": 0.6283,
+                "parser": 0.0,
+                "parserOrModel": 0.0909
+            },
+            "SYNTAX": {
+                "n": 96,
+                "tpr": 0.0625,
+                "auroc": 0.5218,
+                "parser": 0.9167,
+                "parserOrModel": 0.9167
+            },
+            "TRUNCATED": {
+                "n": 96,
+                "tpr": 0.0521,
+                "auroc": 0.5155,
+                "parser": 0.9167,
+                "parserOrModel": 0.9375
+            }
+        },
+        "parserUndetected": {
+            "n": 113,
+            "tpr": 0.115,
+            "auroc": 0.6014
+        }
+    }
+}

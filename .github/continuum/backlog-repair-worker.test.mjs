@@ -148,6 +148,26 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
 
+test('an owner cancel during the session stops at the next step boundary and is never DONE',
+ {skip:nested,timeout:180000},()=>{
+ const f=fixture(true);
+ try{
+  const file=path.join(f.state,'development-backlog.json');
+  const store=new BacklogStore(file,{actor:'owner'});accepted(store,f);
+  // the owner cancels while candidates are being prepared (the provider hook runs inside the session)
+  const cancel=()=>{store.apply([{op:'abort',actor:'android-owner',at:Date.now(),id:'repair-owner-one',reason:'Owner cancelled on Android'}]);return null;};
+  cancel.allowedPaths=['.github/continuum/math.mjs'];
+  assert.throws(()=>executeOwnerRepairTask({root:f.root,file,out:path.join(f.state,'reports'),budgetMinutes:2,candidateProvider:cancel}),
+   /TASK_ABORTED_BY_OWNER/);
+  assert.equal(store.read().doc.tasks.find(t=>t.id==='repair-owner-one').state,'ABORTED');
+  const [dir]=fs.readdirSync(path.join(f.state,'reports'));
+  assert.deepEqual(fs.readdirSync(path.join(f.state,'reports',dir)),['node-junit.xml'],
+   'only the baseline ran: no candidate test, no patch, no report, no independent run');
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(f.git('worktree','list').split('\n').length,1,'temporary worktrees are removed');
+ }finally{fs.rmSync(f.base,{recursive:true,force:true});}
+});
+
 test('passing fixture is not reported as successful code development',
  {skip:nested,timeout:180000},()=>{
  const f=fixture(false);

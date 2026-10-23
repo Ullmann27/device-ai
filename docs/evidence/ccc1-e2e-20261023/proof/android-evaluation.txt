@@ -1,0 +1,21 @@
+01-compile -> OK READY task=null verifiedPatch=null
+   Vorprüfung bestanden: Testkette node am Commit 98f1408248e4 auf Branch ccc1-proof-20261023. Noch nichts ausgeführt.
+02-submit -> OK SUBMITTED task=t-a1bf9c70fe199bb7 verifiedPatch=null
+   CCC1-Auftrag t-a1bf9c70fe199bb7 für Commit 98f1408248e4 angelegt. Noch nichts ausgeführt.
+03-submit-same-order -> OK DUPLICATE task=t-a1bf9c70fe199bb7 verifiedPatch=null
+   Dieser Auftrag ist schon als t-a1bf9c70fe199bb7 angelegt; nichts wurde doppelt angelegt oder ausgeführt.
+04-status-before -> OK STATUS task=t-a1bf9c70fe199bb7 verifiedPatch=null
+   1 CCC1-Auftrag/Aufträge
+   t-a1bf9c70fe199bb7: DRAFT
+05-run-once -> OK VERIFIED_PATCH_PENDING_REVIEW task=t-a1bf9c70fe199bb7 verifiedPatch=null
+   CCC1 meldet für t-a1bf9c70fe199bb7 einen unabhängig geprüften Reparatur-Patch. Bestätigt ist er erst, wenn der Status ihn als unversehrt zeigt. Nichts wurde übernommen.
+06-status-after -> OK STATUS task=null verifiedPatch=d4caa68debf9ba72f048301c1a3e093e97809f51336936f307a63ab8d3086b33
+   1 CCC1-Auftrag/Aufträge
+   t-a1bf9c70fe199bb7: COMPLETED
+     Geprüfter Patch d4caa68debf9 (.github/continuum/console-policy.mjs; REVERT_FILE_TO_PARENT). NICHT übernommen – bitte in Termux prüfen.
+07-submit-finished-order -> OK DUPLICATE task=t-a1bf9c70fe199bb7 verifiedPatch=null
+   Dieser Auftrag ist schon als t-a1bf9c70fe199bb7 angelegt; nichts wurde doppelt angelegt oder ausgeführt.
+08-run-once-again -> OK IDLE task=null verifiedPatch=null
+   Kein offener CCC1-Auftrag.
+09-abort-finished -> OK ALREADY_ENDED task=null verifiedPatch=null
+   CCC1-Auftrag t-a1bf9c70fe199bb7 war bereits beendet (COMPLETED); nichts geändert.
