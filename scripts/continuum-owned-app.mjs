@@ -186,12 +186,22 @@ export function createOwnedApp({home=os.homedir()}={}) {
 }
 export function verifyOwnedApp({home=os.homedir()}={}) {
     const dest = projectPath(home);
+    const parent = path.dirname(dest);
+    if (fs.existsSync(parent) && (!fs.lstatSync(parent).isDirectory() || fs.lstatSync(parent).isSymbolicLink()))
+        return {status:'BLOCKED_UNSAFE_PROJECT_PARENT'};
     if (!fs.existsSync(dest)) return {status:'BLOCKED_PROJECT_NOT_FOUND'};
     if (fs.lstatSync(dest).isSymbolicLink()||!fs.lstatSync(dest).isDirectory()) return {status:'BLOCKED_UNSAFE_PROJECT'};
     const expected = {...FILES,[MANIFEST_NAME]:manifestText()};
     for (const [name,body] of Object.entries(expected)) {
         const full = path.join(dest,name);
         try {
+            let ancestor = dest;
+            for (const segment of name.split('/').slice(0,-1)) {
+                ancestor = path.join(ancestor,segment);
+                const directory = fs.lstatSync(ancestor);
+                if (!directory.isDirectory() || directory.isSymbolicLink())
+                    return {status:'BLOCKED_UNSAFE_SOURCE_PATH',file:name};
+            }
             const stat = fs.lstatSync(full);
             if (!stat.isFile()||stat.isSymbolicLink()||SHA(fs.readFileSync(full))!==SHA(body))
                 return {status:'BLOCKED_SOURCE_CHANGED',file:name};
@@ -244,9 +254,15 @@ export async function buildOwnedApp({home=os.homedir(),env=process.env,arch=proc
         return {status:'FAILED_APK_IDENTITY'};
       if(verifyOwnedApp({home}).status!=='SOURCE_VERIFIED')return {status:'BLOCKED_SOURCE_CHANGED_DURING_BUILD'};
       const digest=SHA(fs.readFileSync(apk));
-      const homeRoot=fs.realpathSync(home),state=path.join(homeRoot,'.local','state','device-ai-continuum','owned-projects');
-      fs.mkdirSync(state,{recursive:true,mode:0o700});
-      if(fs.lstatSync(state).isSymbolicLink())return {status:'BLOCKED_UNSAFE_STATE'};
+      const homeRoot=fs.realpathSync(home);
+      let state=homeRoot;
+      for (const segment of ['.local','state','device-ai-continuum','owned-projects']) {
+        state=path.join(state,segment);
+        if (!fs.existsSync(state)) fs.mkdirSync(state,{mode:0o700});
+        const directory=fs.lstatSync(state);
+        if (!directory.isDirectory() || directory.isSymbolicLink())
+          return {status:'BLOCKED_UNSAFE_STATE'};
+      }
       const saved=path.join(state,'Continuum-M4-Notes-'+digest.slice(0,16)+'.apk');
       try{fs.copyFileSync(apk,saved,fs.constants.COPYFILE_EXCL);}
       catch(error){if(error.code!=='EEXIST')return {status:'FAILED_ARTIFACT_COPY'};}
