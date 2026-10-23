@@ -91,3 +91,18 @@
     gain fixed vs KN-7 +0.0193 +0.0193 +0.0169 -> H6b-1 REFUTED; gain anchored vs fixed +0.0004 +0.0002 +0.0004 -> H6b-2 REFUTED
   G-M-b seeds 3 neural 2.4376 KN-7 1.9781 fixed 1.9260 1.9296 1.9361 anchored 1.9261 1.9298 1.9355
     gain fixed vs KN-7 +0.0521 +0.0485 +0.0420 -> H6b-1 REFUTED; gain anchored vs fixed -0.0001 -0.0002 +0.0006 -> H6b-2 REFUTED
+
+== NF-5c ambiguity questions (section 8e; lexical / probe = NF-5b / disambiguate = NF-5c; real coding jobs)
+  lexical      bank        correct 5/15 unintended 3 questions 0 jobs 29
+  lexical      mined       correct 1/4 unintended 0 questions 0 jobs 12
+  lexical      historical  correct 5/14 unintended 0 questions 0 jobs 35
+  lexical      adversarial correct 0/0 unintended 0 questions 0 jobs 3
+  probe        bank        correct 8/15 unintended 7 questions 0 jobs 15
+  probe        mined       correct 2/4 unintended 0 questions 0 jobs 8
+  probe        historical  correct 12/14 unintended 1 questions 0 jobs 19
+  probe        adversarial correct 0/0 unintended 0 questions 0 jobs 3
+  disambiguate bank        correct 2/15 unintended 0 questions 13 jobs 2 | answered 11: correct 9, unintended 0
+  disambiguate mined       correct 2/4 unintended 0 questions 0 jobs 8
+  disambiguate historical  correct 11/14 unintended 0 questions 2 jobs 17 | answered 1: correct 1, unintended 0
+  disambiguate adversarial correct 0/0 unintended 0 questions 0 jobs 3
+  H5c-1 unintended 0 -> SUPPORTED; H5c-2 asked 12/13 -> SUPPORTED; H5c-3 unnecessary 0 -> SUPPORTED; H5c-4 resolved 9/11 -> SUPPORTED

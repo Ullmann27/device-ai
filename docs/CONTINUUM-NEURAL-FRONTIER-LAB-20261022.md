@@ -464,6 +464,7 @@ analysiert wurde, ist als **nachträglich** gekennzeichnet.
 | NF-6a | Quittungs-Gating > alles konsolidieren | **nicht gestützt** |
 | NF-5b | Vorprüfung: ≥ 3 mehr im 1. Versuch, 0 ungewollt, 3/3 Enthaltungen | **widerlegt**: +7, aber 1 ungewollte Bestätigung (10.8) |
 | NF-6b-lite | feste Mischung ≤ KN-7 − 0,05 (alle Seeds); Verankerung ≤ fest − 0,02 | **beide widerlegt** (G-M-b: 0,042–0,052; Verankerung ±0,0006), aber bestes BPB des Zyklus (10.9) |
+| NF-5c | Rückfrage statt falscher Bestätigung (H5c-1 bis H5c-4) | **gestützt**: 0 falsche Bestätigungen (NF-5b auf der Bank: 7), 12/13 erkannt, 0 unnötige Fragen, 9/11 aufgelöst (10.10) |
 | NF-6b | Zählmodell-verankertes Delta-Gedächtnis | **offen**, nicht implementiert |
 
 Der NFC1-TEST wurde nicht ausgeführt. Nach Abschnitt 9 kommen dafür zuerst die bestätigten Varianten in Frage: NF-4 λ = 1e-3 gegen G-S und NF-3 Entropie gegen feste Patches. Die außergewöhnliche Wiederholung mit neuem Seed und die Leckprüfung stehen davor noch aus.
@@ -528,3 +529,35 @@ Protokolle `nf6b-byte-models.txt` und `nf6b-hybrid.txt`, Startskript `run-chain3
   - Das wird als eigener Zyklus mit neu eingefrorenen Daten vorregistriert.
 - Zeit je Token (ein Thread, unter Last): G-S-b 0,04 ms, G-M-b 0,10 ms, dazu KN-7.
 - Die 36 neuen Checkpoints liegen auf dem Datenzweig.
+
+### 10.10 NF-5c – Rückfrage statt falscher Bestätigung (Lauf 23.10.2026, 07:35–07:43 UTC, Commit `b895ed7e`)
+
+Protokolle: `nf5c-study-run.txt` und `nf5c-results.json`; Aufgaben `nf5c-tasks.json` (SHA-256 `30066739…`). Die Urteile berechnen das Studienskript und `evaluate.py` unabhängig voneinander; beide kommen zum selben Ergebnis.
+
+| Gruppe | lexical: richtig / falsch bestätigt | NF-5b: richtig / falsch bestätigt | NF-5c: richtig / falsch bestätigt / Rückfragen | Coding-Jobs (lexical / NF-5b / NF-5c) |
+|---|---|---|---|---|
+| Bank (15) | 5 / 3 | 8 / **7** | 2 / **0** / 13 | 29 / 15 / 2 |
+| echte Funktionen (4) | 1 / 0 | 2 / 0 | 2 / 0 / 0 | 12 / 8 / 8 |
+| historisch (14, nur Vergleich) | 5 / 0 | 12 / 1 | 11 / **0** / 2 | 35 / 19 / 17 |
+| Gegenproben (5) | alle enthalten | alle enthalten | alle enthalten | – |
+
+**Nach den vorab festgelegten Regeln ist NF-5c gestützt:**
+- **H5c-1:** keine einzige falsche Bestätigung in allen Gruppen, auch nach den Antworten des simulierten Besitzers.
+- **H5c-2:** Rückfrage in 12 von 13 mehrdeutigen Bank-Paaren.
+- **H5c-3:** keine unnötige Frage.
+- **H5c-4:** 9 von 11 beantworteten Rückfragen enden mit der gemeinten Funktion. 2 fragen nach zwei Antworten weiter (Schlüssel, Runden; dort erfüllen bis zu 6 Funktionen die Beispiele). Keine endet falsch.
+
+**Einzelbefunde**
+- **Nicht erkannt wurde wie vorhergesagt das Prozent-Paar** (Runden gegen Abrunden; 23 Eingaben ohne Unterschied). NF-5c bestätigte die lexikalisch erste Variante, und die war zufällig die gemeinte. Das Restrisiko bleibt also: Unterschiede außerhalb der erzeugten Eingaben bleiben unsichtbar.
+- **NF-5b bestätigt auf der Bank 7 von 15 Mal die falsche Funktion,** zum Beispiel `parseWholeStrict` für „Runde eine Zahl“ und für „Quadrat“, weil die Beispiele (0) → 0 und (1) → 1 das zulassen. Die reine Vorprüfung ist ohne Rückfrage also gefährlich, sobald die Beispiele schwach sind.
+- **Nicht beantwortbar waren 2 Rückfragen auf der Bank und 1 historische** (`canonical`): Dort ist das gewollte Ergebnis ein Fehler oder `undefined`, und das kann die CCC1-Vertragssprache nicht ausdrücken. Es wurde nichts bestätigt.
+- **Historisch** löst die Rückfrage `clip` nach einer Antwort richtig auf (`("\n", 4) → "\n"`). `canonical` wird nicht mehr falsch bestätigt. Der Nutzen liegt bei 13 von 14 statt 12 von 14.
+- **Gestaltungsfehler der echten Aufgaben:** 2 der 4 geschürften Funktionen (`editDistance`, `insertImport`) liegen in `repair-strategies.mjs`. Dieses Modul schützt das Fähigkeits-Gate vor Eigenveränderung. Alle drei Bedingungen enthielten sich dort korrekt. Das Schürfwerkzeug hätte geschützte Module ausschließen müssen.
+- **Kosten:** NF-5c spart auf der Bank Coding-Jobs (2 statt 15), weil vor jedem Job gefragt wird. Die Mehrdeutigkeitsprüfung kostet je Aufgabe rund 0,2 s.
+
+**Grenzen:** Die Bank habe ich nach dem Mechanismus selbst geschrieben. Der Besitzer ist simuliert. Es gibt einen einzigen Lauf und nur 2 lösbare echte Aufgaben ohne Mehrdeutigkeit.
+
+**Nächste Schritte**
+- Erwartete Fehler müssen als Beispiel ausdrückbar werden. Dafür muss der Vertrag „soll mit Fehler X abbrechen“ zulassen; das ist eine Protokolländerung und braucht die Freigabe des Besitzers.
+- Unterscheidende Eingaben gezielter erzeugen, etwa Brüche bei Zahlenfunktionen.
+- Der Worker stellt Rückfragen bereits dauerhaft an den Besitzer (Meilenstein E).

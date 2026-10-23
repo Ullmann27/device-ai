@@ -191,3 +191,26 @@ for fam, rs in mix.items():
           f'anchored {" ".join(f"{a:.4f}" for a in anchored)}')
     print(f'    gain fixed vs KN-7 {" ".join(f"{k - x:+.4f}" for k, x in zip(kn, fixed))} -> H6b-1 {"SUPPORTED" if h1 else "REFUTED"}; '
           f'gain anchored vs fixed {" ".join(f"{x - a:+.4f}" for x, a in zip(fixed, anchored))} -> H6b-2 {"SUPPORTED" if h2 else "REFUTED"}')
+
+print('\n== NF-5c ambiguity questions (section 8e; lexical / probe = NF-5b / disambiguate = NF-5c; real coding jobs)')
+rows = json.loads((D / 'nf5c-results.json').read_text(encoding='utf-8'))
+spec = json.loads((D / 'nf5c-tasks.json').read_text(encoding='utf-8'))
+for c in ('lexical', 'probe', 'disambiguate'):
+    for g in ('bank', 'mined', 'historical', 'adversarial'):
+        gr = [r for r in rows if r['condition'] == c and r['group'] == g]
+        reg = [r for r in gr if r['gold']]
+        ans = [r for r in gr if (r.get('after') or {}).get('extras')]
+        print(f'  {c:12} {g:11} correct {sum(r["correct"] for r in reg)}/{len(reg)} unintended {sum(r["unintended"] for r in gr)} '
+              f'questions {sum(bool(r["question"]) for r in gr)} jobs {sum(r["jobs"] for r in gr)}'
+              + (f' | answered {len(ans)}: correct {sum(r["after"]["correct"] for r in ans)}, unintended {sum(r["after"]["unintended"] for r in ans)}' if ans else ''))
+d = [r for r in rows if r['condition'] == 'disambiguate']
+ambiguous = {t['id'] for t in spec['bank'] if t['kind'] == 'ambiguous'}
+needs = {t['id']: any(k not in t['equivalent'] for k in t['alsoMeetExamples']) for t in spec['bank'] + spec['mined']}
+unintended = sum(r['unintended'] for r in d) + sum(bool((r.get('after') or {}).get('unintended')) for r in d)
+asked = sum(1 for r in d if r['task'] in ambiguous and r['question'])
+unnecessary = sum(1 for r in d if r['question'] and r['task'] in needs and not needs[r['task']])
+answered = [r for r in d if (r.get('after') or {}).get('extras') and r['group'] != 'historical']
+resolved = sum(r['after']['correct'] for r in answered)
+print(f'  H5c-1 unintended {unintended} -> {"SUPPORTED" if unintended == 0 else "REFUTED"}; H5c-2 asked {asked}/13 -> {"SUPPORTED" if asked >= 12 else "REFUTED"}; '
+      f'H5c-3 unnecessary {unnecessary} -> {"SUPPORTED" if unnecessary <= 1 else "REFUTED"}; '
+      f'H5c-4 resolved {resolved}/{len(answered)} -> {"SUPPORTED" if answered and resolved >= .8 * len(answered) else "REFUTED"}')

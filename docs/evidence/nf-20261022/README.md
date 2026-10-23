@@ -23,6 +23,8 @@ Die Auswertung nach den vorregistrierten Regeln steht in `docs/CONTINUUM-NEURAL-
 | `nf6b-byte-models.txt` | NF-6b-lite: Byte-minGRU G-S-b und G-M-b, je 3 Seeds, 6 Epochen | `lm G-S G-M seeds=1,2,3 epochs=6 threads=4 vocab=258` @ `8f175ab1` | `148bde8519a188a7` | 02:05:48 (23.10.) |
 | `nf6b-hybrid.txt` | NF-6b-lite: feste und verankerte Mischung mit KN-7, Cross-Fitting auf DOC VALIDATION | `hybrid vocab=258` mit den sechs Epoche-6-Checkpoints @ `8f175ab1` | `148bde8519a188a7` | 02:06:27 (23.10.) |
 | `run-chain3.sh.txt` | Startskript von NF-6b-lite | – | – | – |
+| `nf5c-tasks.json`, `nf5c-tasks-mined.json`, `nf5c-miner-run.txt` | NF-5c: eingefrorene Aufgaben (Bank, echte Funktionen, Gegenproben) und ihr Schürflauf | `scripts/nf5c-tasks.mjs`, `scripts/nf5c-task-miner.mjs` @ `b895ed7e` | – | 07:30 (23.10.) |
+| `nf5c-study-run.txt`, `nf5c-results.json` | NF-5c: lexical, probe, disambiguate mit echten Coding-Jobs | `scripts/nf5c-study.mjs` @ `b895ed7e` | – | 07:43:49 (23.10.) |
 
 - Zeitmessungen in diesen Protokollen (`SPEED …`) liefen unter paralleler Last und sind **nicht fair vergleichbar**.
   Der faire Vergleich ist der Modus `speed` (ein Prozess, ein Thread, verschachtelt in 5 Runden).
