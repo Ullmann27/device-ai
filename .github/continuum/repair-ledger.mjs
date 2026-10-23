@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import {mergeExperiences} from './repair-experience.mjs';
+import {sha256} from './repair-diagnostics.mjs';
 
 /**
  * Persistent repair ledger: every attempt with diagnosis, strategy, minimal
@@ -12,6 +13,22 @@ export const MAX_ATTEMPTS=400;
 const OUTCOMES=new Set(['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE','REJECTED_BY_CRITIC','NOT_APPLICABLE',
   'FAILED_SYNTAX','SYNTAX_CHECK_ERROR']);
 const HEX=/^[0-9a-f]{1,64}$/;
+const SHA256=/^[0-9a-f]{64}$/;
+export const MAX_LEDGER_EDIT_CHARS=20000;
+
+/**
+ * An edit too large to keep (e.g. a whole-file revert of a big Kotlin file) is recorded by file, digests and lengths
+ * only. Storing it verbatim would exceed the ledger limits and fail the whole session record; without its text it can
+ * never be replayed from the ledger.
+ */
+function ledgerEdit(e){
+  if(e.oldText.length+e.newText.length<=MAX_LEDGER_EDIT_CHARS)return e;
+  return {file:e.file,oldText:'',newText:'',line:e.line??null,omitted:{oldSha256:sha256(e.oldText),
+    newSha256:sha256(e.newText),oldLength:e.oldText.length,newLength:e.newText.length}};
+}
+const validOmission=e=>e.oldText===''&&e.newText===''&&SHA256.test(e.omitted?.oldSha256??'')&&
+  SHA256.test(e.omitted.newSha256??'')&&Number.isSafeInteger(e.omitted.oldLength)&&Number.isSafeInteger(e.omitted.newLength)&&
+  e.omitted.oldLength>=0&&e.omitted.newLength>=0&&e.omitted.oldLength+e.omitted.newLength>MAX_LEDGER_EDIT_CHARS;
 
 export function emptyLedger(){return {schemaVersion:2,attempts:[],experiences:[],sessions:[]};}
 
@@ -22,7 +39,8 @@ export function verifyLedger(data){
   for(const a of data.attempts){
     if(!a||!OUTCOMES.has(a.outcome)||typeof a.strategy!=='string'||a.strategy.length>80||!HEX.test(a.diagnostic??'')||!HEX.test(a.candidate??''))
       throw Error('Invalid ledger attempt');
-    if(!Array.isArray(a.edits)||a.edits.length>3||a.edits.some(e=>typeof e.file!=='string'||e.file.includes('..')||typeof e.oldText!=='string'||typeof e.newText!=='string'||e.oldText.length+e.newText.length>20000))
+    if(!Array.isArray(a.edits)||a.edits.length>3||a.edits.some(e=>typeof e.file!=='string'||e.file.includes('..')||typeof e.oldText!=='string'||typeof e.newText!=='string'||e.oldText.length+e.newText.length>MAX_LEDGER_EDIT_CHARS||
+       e.omitted!==undefined&&!validOmission(e)))
       throw Error('Invalid ledger edits');
     if(a.syntaxReason!==undefined&&a.syntaxReason!==null&&
        (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
@@ -77,7 +95,7 @@ export function recordSession(ledger,report,meta={}){
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
-    outcome:a.outcome,edits:a.edits,confidence:a.score??null,
+    outcome:a.outcome,edits:(a.edits??[]).map(ledgerEdit),confidence:a.score??null,
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
       executed:t.tests?.executed??0,skipped:t.tests?.skipped??0})),
