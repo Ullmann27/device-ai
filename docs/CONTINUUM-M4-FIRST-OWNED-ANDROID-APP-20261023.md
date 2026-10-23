@@ -24,8 +24,8 @@ Die Termux-/Android-Grenze ist nicht mit einer Betriebssystem-Sandbox gleichzuse
 
 ## Nachweis
 
-- Exakt getestete neue `scripts/continuum-owned-app.mjs`: Git-Blob `ae57c1933f550525b0bf59fa0ca2708e380e033c`.
-- Exakt getestete `scripts/continuum-owned-app.test.mjs`: Git-Blob `bd282be406807d2bc16057b9bc0a3d11889b3c1b`.
+- Exakt getestete neue `scripts/continuum-owned-app.mjs`: Git-Blob `f02e1e45be017b03202dedfbe6a9d0285bd04bc6`.
+- Exakt getestete `scripts/continuum-owned-app.test.mjs`: Git-Blob `693a8bfd46a0afe5bcb8bc6c79e98206462b2fc2`.
 - Lokal mit Node 22: **23/23 Tests, 0 Fehler**. Darunter echte Quellgenerierung auf isoliertem temporärem Dateisystem, SHA-/Symlink- und Überschreibungsschutz sowie simulierte (NICHT echte) Gradle-/Signatur-/Paket-/APK-Rückläufe.
 - Mit Kotlin-Compiler und **lokalen Android-API-Stubs** kompilierten `MainActivity.kt` und `NotePolicy.kt` syntaktisch; `NotePolicy.kt` zusätzlich alleine mit `kotlinc`. **Das ist kein Android-SDK-Compile und kein APK-Build.**
 - Zusätzlich **21/21 statische, direkt am GitHub-Quellzweig geprüfte Integrationsbedingungen**: gleiche Git-Blobs wie lokal getestet; unveränderte Besitzer-Paket-ID/Code19; Button-/Termux-/Receipt-Verkabelung; Sicherungsgrenzen; keine Installation.
@@ -64,3 +64,9 @@ Erst nach Device-Verifikation dieser begrenzten Vorlage: Versionierte, **typisie
 ## Sicherheitsnachtrag
 
 Vor PR-Abschluss wurden drei weitere Quell-/Statusordner-Symlink-Angriffsfälle nach einem echten Befund hinzugefügt. Der letzte Quellstand und seine Tests sind byteidentisch zwischen lokalem Node-22-Prüflauf und GitHub. Abschluss: 23/23, 0 fehlgeschlagen, 0 übersprungen. Die Eigentümer-App wurde nicht gebaut oder installiert.
+
+## GPT-6 Nachprüfung · Termux-Buildwerkzeug (23.10.2026)
+
+Bei der erneuten Übernahme wurde ein realer Integrationsfehler entdeckt: `continuum-owned-app.mjs` verlangte zusätzlich zu `aapt2` ein Legacy-`aapt`-Programm, obwohl der vorhandene autorisierte `doctor()` nur `aapt2` als Voraussetzung bestätigt. Dies konnte einen betriebsbereiten Termux-Build fälschlich als `BLOCKED_MISSING_TOOLCHAIN` ablehnen. M4 verwendet jetzt dasselbe von `doctor()` verifizierte native `aapt2 dump badging` wie der Haupt-Builder. Der vorhandene M4-Test-Dummy wurde entsprechend auf `aapt2` korrigiert. Die beiden oben referenzierten Git-Blobs wurden exakt lokal mit Node 22 ausgeführt: **23 von 23 Tests bestanden, 0 Fehler, 0 Übersprungene**. Dies ersetzt keine echte ARM64-/Android-SDK-Buildabnahme.
+
+Zusätzlich wurde die Besitzer-Release-Prüfung `scripts/render-mentor-owner-update-v19.sh` für den aktuellen isolierten M4-/Trainingsquellstand um 10 weitere geprüfte Hash-Gates ergänzt (insgesamt 19), unter anderem Android-Kategorie-Buttons, Termux-Routing, Ergebnisvalidierung, Modelltrainingsstudio und M4-Skripte. Dadurch darf ein künftiger Render-Release nur den exakt freigegebenen Gesamtstand verwenden; weder `main` noch Render wurde aktualisiert. Die neue Trainingsoberfläche bleibt ein separates Modul innerhalb des M4-Branches und ist keine Voraussetzung für den Projektbuild.
