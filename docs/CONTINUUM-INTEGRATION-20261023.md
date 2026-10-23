@@ -17,11 +17,11 @@
 ## Derzeitige Qualitätsgrenze (verbindlich)
 - **SOURCE_STAGED**: ja, auf isoliertem Branch.
 - **SOURCE_MERGE_REVIEW**: teilweise, bekannte gemeinsame Module ausgewählt; vollständige Gradle-/Node-Kompatibilität steht aus.
-- **NODE_TESTED**: nein, nicht auf *dieser kombinierten* Revision.
-- **KOTLIN_COMPILED**: nein, nicht auf *dieser kombinierten* Revision.
-- **APK_BUILT**: nein.
-- **APK_SIGNED / PACKAGE_VERIFIED**: nein.
-- **DEVICE_VERIFIED / RELEASE_APPROVED**: nein.
+- **NODE_TESTED**: ja, laut Render-Log des festgehaltenen Commits (u. a. 887 Tests ohne Fehler; weitere Suites bestanden).
+- **KOTLIN_COMPILED**: ja, Android-Kotlin- und Testquellen kompiliert auf Render.
+- **APK_BUILT**: ja, Render-Deploy `dep-dbddtkgae00c73frkt90` erfolgreich (Commit `f0c8f6eadd3469fd5e04d77848b3d290428ce211`).
+- **APK_SIGNED / PACKAGE_VERIFIED**: ja, Skript-Gate `apksigner` (v2) + `aapt`/Paketprüfung erfolgreich, andernfalls hätte der Render-Deploy abgebrochen.
+- **DEVICE_VERIFIED / RELEASE_APPROVED**: nein; keine automatische Freigabe als signiertes Update der produktiven App.
 - `LmStep7.kt` und `LmStep7Test.kt` aus dem unterbrochenen Cloud-Arbeitsverzeichnis **nicht in GitHub gefunden**: nicht stillschweigend als enthalten behaupten.
 - NF-Experimente und Checkpoints bleiben bewusst in ihrem eigenen Forschungszweig. Keine vorzeitige Promotion nach Android.
 - LM1-Finaltest aus PR #75 wurde bereits einmal ausgeführt; er darf **nicht wiederholt oder für weitere Modellauswahl benutzt** werden.
@@ -42,3 +42,13 @@
 
 ## Weiterarbeit ohne Code-Sperren
 Der Branch bleibt vollständig lesbar. Alle Änderungen wurden einzeln gepusht. Keine fremden Worktrees, keine Force-Pushes, kein Main-Merge.
+## Tatsächlicher Render-Build (23.10.2026)
+- Dienst `srv-dbddtk8ae00c73frkrhg`, Deployment `dep-dbddtkgae00c73frkt90`, erfolgreich `live` am 23.10.2026 04:18:42 UTC.
+- Exakter APK-Quellcommit **`f0c8f6eadd3469fd5e04d77848b3d290428ce211`**; spätere Dokumentationscommits gehören NICHT zu diesem APK-Build.
+- Android Buildprotokoll: `BUILD SUCCESSFUL in 4m 20s`, 54 Gradle-Aufgaben ausgeführt. Haupt-Kotlin und JVM-Testquellen kompiliert, Unit-Tests, Android-Lint und `assembleDebug` ohne Buildfehler.
+- Node-Teilprüfung: 887 Tests, 0 Fehler; weitere getrennte Suites (60, 26, 34, 30 Tests) ebenfalls 0 Fehler.
+- Direktdownload: `https://device-ai-continuum-full-preview-20261023.onrender.com/DeviceAI-Continuum-Integrated-3ba5669900b917cc6fc4ac57ba3d7e541fd48524a3b7ba67d351fa87a9055201.apk`.
+- Gemeldeter APK-SHA-256: `3ba5669900b917cc6fc4ac57ba3d7e541fd48524a3b7ba67d351fa87a9055201` (Render-Buildskript hat seine lokale Kopie verifiziert). Kein unabhängiger Abruf/Hashcheck der HTTPS-Datei innerhalb dieser Sitzung möglich; Render hat den Dienst live geschaltet.
+- Es ist eine **separat installierbare APK mit `at.heinz.deviceai.featurepreview`**, kein signaturkompatibles Update für `at.heinz.deviceai.mentorpaired`.
+- **Begrenzung:** LM1-Klassen und CCC1/Research-Radar-Module sind im Quell-/Buildstand vorhanden; ein nutzerseitig funktionierender LM1-Chat oder autonome Anwendung der Forschungsgewichte wurde auf echter Hardware nicht nachgewiesen. Unfertiges Step-7-Training ist nicht Bestandteil dieses Builds.
+- Bestehendes Nutzergerät, private Gewichte und Haupt-APK wurden nicht verändert.
