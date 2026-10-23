@@ -3,6 +3,7 @@ package at.heinz.deviceai.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.os.PowerManager
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -25,25 +26,30 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val views = linkedMapOf<Slot, ElementView>()
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
+    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private var waveFramePending = false
     private val waveFrame = object : Runnable {
         override fun run() {
             waveFramePending = false
             if (!waveAnimationEnabled()) return
-            // Only the measured learning card needs another render pass.
+            // Moving light follows authentic measurements; data points never change here.
+            // Static or missing data: header glow still breathes, but no fictional data is drawn.
             views[Slot.LEARNING]?.invalidate()
+            views[Slot.MODEL]?.invalidate()
+            views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+            invalidate()
             scheduleWaveFrame()
         }
     }
 
     private fun waveAnimationEnabled(): Boolean = isAttachedToWindow && windowVisibility == View.VISIBLE &&
-        visibility == View.VISIBLE && state.learning.live && state.learning.series.size >= 2 &&
-        state.learning.series.any { it > 0f } && views.containsKey(Slot.LEARNING)
+        visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&
+        !powerManager.isPowerSaveMode
 
     private fun scheduleWaveFrame() {
         if (!waveFramePending && waveAnimationEnabled()) {
             waveFramePending = true
-            postOnAnimationDelayed(waveFrame, 33L)
+            postOnAnimationDelayed(waveFrame, 66L)
         }
     }
 
@@ -203,9 +209,8 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val k = density * (layoutSpec?.scale ?: 1f)
             canvas.scale(k, k)
             // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
-            element.motionPhase = if (slot == Slot.LEARNING && state.learning.live &&
-                state.learning.series.size >= 2 && state.learning.series.any { it > 0f }) {
-                (android.os.SystemClock.uptimeMillis() % 4200L).toFloat() / 4200f
+            element.motionPhase = if (waveAnimationEnabled()) {
+                (android.os.SystemClock.uptimeMillis() % 4800L).toFloat() / 4800f
             } else null
             element.draw(painter, width / k, height / k, state)
             canvas.restoreToCount(saved)
@@ -221,6 +226,41 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
     private val painter = AndroidContinuumPainter(context.assets)
     private var tapX = 0f
     private var tapY = 0f
+    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    private var pulseScheduled = false
+    private val pulseFrame = Runnable {
+        pulseScheduled = false
+        if (canPulse()) invalidate()
+    }
+    private fun canPulse(): Boolean = isShown && isAttachedToWindow &&
+        android.animation.ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
+    private fun schedulePulse() {
+        if (!pulseScheduled && canPulse()) {
+            pulseScheduled = true
+            postOnAnimationDelayed(pulseFrame, 66L)
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        schedulePulse()
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(pulseFrame)
+        pulseScheduled = false
+        super.onDetachedFromWindow()
+    }
+
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (isVisible) schedulePulse()
+        else {
+            removeCallbacks(pulseFrame)
+            pulseScheduled = false
+        }
+    }
+
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) { field = value; contentDescription = element.describe(value); invalidate() }
 
@@ -243,7 +283,11 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
         // [designScale] = window width / reference width, like the start-screen slots
         val k = density * designScale
         canvas.scale(k, k)
+        element.motionPhase = if (canPulse()) {
+            (android.os.SystemClock.uptimeMillis() % 4800L).toFloat() / 4800f
+        } else null
         element.draw(painter, width / k, height / k, state)
         canvas.restoreToCount(saved)
+        schedulePulse()
     }
 }

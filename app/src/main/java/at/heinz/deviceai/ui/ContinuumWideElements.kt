@@ -28,6 +28,14 @@ class RailElement(private val items: List<Pair<Icon, String>>, var selected: Int
                     Fill.Linear(0f, iy - 14f, 0f, iy + 32f, intArrayOf(Argb.rgb(20, 60, 130), Argb.rgb(12, 34, 84))))
                 p.strokeRoundRect(11f, iy - 13.6f * k, w - 11f, iy + 32.4f * k, 9f, 1f, Fill.Solid(Argb.rgb(50, 140, 240)), .9f)
                 p.fillRoundRect(9f, iy - 9f * k, 11.6f, iy + 26f * k, 1.3f, Fill.Solid(Argb.rgb(80, 190, 255)))
+                val phase = motionPhase?.takeIf { it.isFinite() }
+                if (phase != null) {
+                    val scanY = (iy - 9f * k) + (35f * k) * phase.coerceIn(0f, 1f)
+                    p.fillCircle(10.3f, scanY, 2.6f, Fill.Solid(Argb.rgb(195, 240, 255)), .65f)
+                    val pulse = .12f + .14f * kotlin.math.abs(kotlin.math.sin(phase * Math.PI.toFloat()))
+                    p.fillRoundRect(9f, iy - 9f * k, 11.6f, iy + 26f * k, 1.3f,
+                        Fill.Solid(Argb.rgb(100, 210, 255)), pulse)
+                }
                 ContinuumIcons.draw(p, item.first, cx, iy, 20f, Fill.Linear(cx, iy - 10f, cx, iy + 10f,
                     intArrayOf(Argb.rgb(130, 225, 255), Argb.rgb(50, 130, 255))), 1.9f)
                 p.drawText(item.second, cx, ly, t(500, 8.9f), Fill.Solid(Argb.rgb(110, 200, 255)), TextAlign.CENTER)
@@ -115,7 +123,7 @@ class WideModelCardElement(textScale: Float = 1f) : ContinuumElement(textScale) 
         ContinuumSurfaces.pill(p, 61f, 50.3f, 19.5f, m.stateLabel, t(500, 8.88f), if (m.online) ContinuumTheme.GREEN else ContinuumTheme.AMBER, minWidth = 56f)
         ContinuumSurfaces.chevron(p, w - 19f, 20f, 14f)
         p.drawText(ModelStatusCardElement.QUALITY_LABEL, 12.3f, 90.3f, t(400, 9.09f), Fill.Solid(Argb.rgb(205, 214, 232)))
-        ModelStatusCardElement.drawSegmentBar(p, 65f, 83.8f, 189.6f, 91.6f, m.qualityPercent)
+        ModelStatusCardElement.drawSegmentBar(p, 65f, 83.8f, 189.6f, 91.6f, m.qualityPercent, phase = motionPhase)
         p.drawText(ContinuumDashboardState.percent(m.qualityPercent), w - 16.2f, 86f, t(500, 17.71f), Fill.Solid(ContinuumTheme.CYAN_SOFT), TextAlign.RIGHT)
         val delta = m.qualityDelta24h
         p.drawText(ContinuumDashboardState.delta24h(delta), 65f, 100.5f, t(500, 7.6f), Fill.Solid(when {
@@ -273,6 +281,15 @@ class SystemActivityElement(textScale: Float = 1f) : ContinuumElement(textScale)
         p.drawText("Systemaktivität", 50f, 23.4f, t(500, 11.3f), Fill.Solid(ContinuumTheme.TEXT))
         ContinuumSurfaces.pill(p, w - 10f, 11f, 18f, "alle 5 s", t(500, 8.2f), ContinuumTheme.CYAN, alignRight = true)
         WaveChart.drawRidge(p, 9.7f, 34f, w - 10f, 73f, sy.activity)
+        // Light traces the measured CPU sample curve, never manufactures readings.
+        val phase = motionPhase?.takeIf { it.isFinite() }
+        if (phase != null && sy.activity.size >= 2 && sy.activity.any { it > 0f }) {
+            val maxSample = sy.activity.maxOrNull()?.coerceAtLeast(1e-6f) ?: 1e-6f
+            val (mx, my) = WaveChart.markerOnCurve(9.7f, 34f, w - 10f, 73f,
+                sy.activity, maxSample, phase)
+            p.fillCircle(mx, my, 4f, Fill.Solid(Argb.rgb(100, 180, 255)), .2f)
+            p.fillCircle(mx, my, 1.8f, Fill.Solid(Argb.rgb(220, 246, 255)), .9f)
+        }
         val gauges = listOf(
             Triple("CPU", sy.appCpuPercent, intArrayOf(Argb.rgb(40, 200, 255), Argb.rgb(60, 140, 255))),
             Triple("GPU", null as Int?, intArrayOf(Argb.rgb(150, 110, 255), Argb.rgb(190, 120, 255))),

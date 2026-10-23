@@ -36,6 +36,18 @@ object ContinuumHomeLayout {
     }
 
     /**
+     * The Activity may keep the cover-display configuration while its real window has
+     * expanded to the Fold inner display. Rebuild only on a substantial actual WIDTH
+     * change; height-only changes (IME / system bars) must never reset the screen.
+     */
+    fun needsWindowWidthReflow(configuredWidthDp: Float, measuredWidthDp: Float): Boolean {
+        if (!configuredWidthDp.isFinite() || !measuredWidthDp.isFinite() ||
+            configuredWidthDp <= 0f || measuredWidthDp <= 0f
+        ) return false
+        return kotlin.math.abs(configuredWidthDp - measuredWidthDp) >= 24f
+    }
+
+    /**
      * Wide layout (navigation rail) from 600 dp width and 480 dp height: the unfolded Fold also with a larger display
      * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
      */

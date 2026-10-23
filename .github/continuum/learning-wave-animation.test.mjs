@@ -25,13 +25,18 @@ test('missing or zero measurements render no fabricated decorative peaks', () =>
   assert.match(phone, /py\(i0\) \+ \(py\(i0 \+ 1\) - py\(i0\)\) \* u \* u \* \(3f - 2f \* u\)/);
 });
 
-test('animation is lifecycle-bound, visible and backed by active learning', () => {
-  assert.match(home, /state\.learning\.live && state\.learning\.series\.size >= 2/);
+test('continuous decorative motion is lifecycle-bound, visible, power-aware and never edits measurements', () => {
   assert.match(home, /windowVisibility == View\.VISIBLE/);
+  assert.match(home, /ValueAnimator\.areAnimatorsEnabled\(\)/);
+  assert.match(home, /!powerManager\.isPowerSaveMode/);
   assert.match(home, /views\[Slot\.LEARNING\]\?\.invalidate\(\)/);
-  assert.match(home, /postOnAnimationDelayed\(waveFrame, 33L\)/);
+  assert.match(home, /views\[Slot\.MODEL\]\?\.invalidate\(\)/);
+  assert.match(home, /views\[Slot\.SYSTEM_ACTIVITY\]\?\.invalidate\(\)/);
+  assert.match(home, /postOnAnimationDelayed\(waveFrame, 66L\)/);
   assert.match(home, /override fun onDetachedFromWindow\(\)/);
   assert.match(home, /removeCallbacks\(waveFrame\)/);
-  assert.match(home, /element\.motionPhase = if \(slot == Slot\.LEARNING/);
+  assert.match(home, /element\.motionPhase = if \(waveAnimationEnabled\(\)\)/);
+  assert.match(phone, /if \(i < lit\) \{/);
+  assert.match(phone, /val scan = phase\.coerceIn\(0f, 1f\) \* lit/);
   assert.doesNotMatch(home, /androidx\.compose|Handler\.postDelayed\(this, 16/);
 });

@@ -10,6 +10,21 @@ import org.junit.Test
 class ContinuumHomeLayoutTest {
     private val cards = listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
 
+    @Test fun unfoldingTriggersActualWindowReflowWithoutChangingLearningState() {
+        // Stale cover-display Configuration can persist while the root now fills
+        // the unfolded display. Layout must be based on the measured width.
+        assertTrue(ContinuumHomeLayout.needsWindowWidthReflow(411f, 750f))
+        assertTrue(ContinuumHomeLayout.isWide(750f, 790f))
+        // Folding back must reflow to the compact phone composition.
+        assertTrue(ContinuumHomeLayout.needsWindowWidthReflow(750f, 411f))
+        assertFalse(ContinuumHomeLayout.isWide(411f, 900f))
+        // IME, system bars and minor dp rounding are not fold events.
+        assertFalse(ContinuumHomeLayout.needsWindowWidthReflow(750f, 750f))
+        assertFalse(ContinuumHomeLayout.needsWindowWidthReflow(750f, 739f))
+        assertFalse(ContinuumHomeLayout.needsWindowWidthReflow(750f, Float.NaN))
+        assertFalse(ContinuumHomeLayout.needsWindowWidthReflow(750f, 0f))
+    }
+
     @Test fun compositionFollowsTheWindowSize() {
         assertFalse("Fold7 cover display (411 dp)", ContinuumHomeLayout.isWide(411f, 900f))
         assertFalse("360 dp Samsung phone", ContinuumHomeLayout.isWide(360f, 740f))
