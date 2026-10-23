@@ -85,6 +85,8 @@ data class ContinuumDashboardState(
     data class SystemStatus(
         /** CPU share of this app process, measured over the last refresh interval. */
         val appCpuPercent: Int? = null,
+        /** System-reported battery capacity; unknown when Android supplies no valid reading. */
+        val batteryPercent: Int? = null,
         /** Device RAM in use. */
         val memoryPercent: Int? = null,
         /** Device storage in use. */
