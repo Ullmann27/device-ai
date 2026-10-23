@@ -29,7 +29,7 @@ test('bounded topic frontier persists discoveries and avoids duplicate processin
   assert.match(scheduler,/putString\("topic_pending"/);
   assert.match(scheduler,/putString\("topic_visited"/);
   assert.match(scheduler,/scheduler\.addDiscovered\(discovered\)/);
-  assert.match(scheduler,/scheduler\.recordCycle\(phase,selectedTopic,added,accepted\)/);
+  assert.match(scheduler,/scheduler\.recordCycle\(phase,selectedTopic,added,accepted,stopRequested=\{ stopping\.get\(\) \}\)/);
   assert.match(scheduler,/Automatisch entdeckte Themen in Warteschlange/);
 });
 
