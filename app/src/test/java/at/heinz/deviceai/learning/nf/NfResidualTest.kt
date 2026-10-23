@@ -82,6 +82,22 @@ class NfResidualTest {
         assertFalse(NfCorpus2.eligible("THIRD_PARTY_NOTICES.md"))
     }
 
+    @Test fun crossFittedProbabilitiesComeFromCountModelsWithoutTheDocumentsOwnFold() {
+        fun doc(path: String, vararg s: String) = NfCorpus.Doc(path, NfCorpus.Domain.DOC, LmCorpus.Split.TRAIN, s.toList())
+        val a = doc("a.md", "der kern lernt aus fehlern", "der worker wartet")
+        val b = doc("b.md", "der kern prüft jede quittung")
+        val c = doc("c.md", "der kern lernt aus quittungen")
+        val q = NfResidual.crossFitted(listOf(a, b, c), folds = 2)
+        assertEquals(4, q.size)
+        val withoutB = KneserNeyBytes(7, a.segments + c.segments)
+        assertArrayEquals(withoutB.detail(b.segments[0]).prob, q[2], 0.0)
+        val withoutAC = KneserNeyBytes(7, b.segments)
+        assertArrayEquals(withoutAC.detail(c.segments[0]).prob, q[3], 0.0)
+        // in-sample probabilities are inflated: every 7-gram counts itself
+        val inSample = KneserNeyBytes(7, a.segments + b.segments + c.segments).detail(b.segments[0]).prob
+        assertTrue(inSample.sumOf { ln(it) } > q[2].sumOf { ln(it) } + 5)
+    }
+
     @Test fun countModelProbabilitiesAreAlignedWithTheByteTargets() {
         val kn = KneserNeyBytes(7, listOf("der kern lernt", "der kern prüft"))
         val tok = LmBpeTokenizer.bytes()

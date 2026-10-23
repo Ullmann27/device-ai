@@ -143,17 +143,24 @@ object NfLm {
         val l1 = NfExperiment.floatArg(args, "l1", 0f)
         val store = NfExperiment.store(args)
         val corpus = if (NfExperiment.arg(args, "corpus") == "nfc2") NfCorpus2.COMMIT else NfCorpus.COMMIT
-        // residual=λ (NF-7): train on the mixture loss with Kneser-Ney 7 instead of plain cross-entropy
+        // residual=λ (NF-7): train on the mixture loss with Kneser-Ney 7 instead of plain cross-entropy; the count model's
+        // probabilities come cross-fitted over 5 document folds (default) or, residualQ=insample, from KN-7 on all of TRAIN
         val residual = NfExperiment.floatArg(args, "residual", 0f)
         require(residual == 0f || tok.vocabSize == 258) { "residual training needs the byte vocabulary (vocab=258)" }
-        val kn = if (residual > 0f) KneserNeyBytes(7, train) else null
+        val inSample = NfExperiment.arg(args, "residualQ") == "insample"
+        val knProbs = when {
+            residual == 0f -> null
+            inSample -> KneserNeyBytes(7, train).let { kn -> train.map { kn.detail(it).prob } }
+            else -> NfResidual.crossFitted(docs.filter { it.domain == NfCorpus.Domain.DOC && it.split == Split.TRAIN })
+        }
+        check(knProbs == null || knProbs.size == train.size)
         val families = args.drop(2).filter { Regex("[A-Za-z]+-[SMX]").matches(it) }
         for (name in families) for (seed in NfExperiment.seeds(args)) {
             val config = NfExperiment.family(name, tok.vocabSize)
             val model = NfModel(NfParams.init(config, seed))
             val sequences = train.map { NfExperiment.pair(tok, it, config.context) }
-            val qs = kn?.let { k -> train.mapIndexed { i, s -> NfResidual.targetProbabilities(k, s, sequences[i].second.size) } }
-            val label = if (residual > 0f) "$name-res" else name
+            val qs = knProbs?.mapIndexed { i, p -> NfResidual.targetProbabilities(p, sequences[i].second.size) }
+            val label = if (residual == 0f) name else if (inSample) "$name-resin" else "$name-res"
             val batch = 16
             val stepsPerEpoch = (sequences.size + batch - 1) / batch
             val rnd = Random(seed * 31 + 7)
@@ -172,7 +179,8 @@ object NfLm {
                     val stats = FfnStats()
                     val v = NfExperiment.bpb(model, tok, validation, stats)
                     val sha = store.put(NfCheckpoint.encode(model.params, tok.sha256, mapOf("family" to label, "seed" to "$seed",
-                        "epoch" to "$epoch", "corpus" to corpus, "l1" to "$l1", "residual" to "$residual")))
+                        "epoch" to "$epoch", "corpus" to corpus, "l1" to "$l1", "residual" to "$residual",
+                        "residualQ" to if (residual == 0f) "-" else if (inSample) "insample" else "crossfit5")))
                     println("RUN $label seed=$seed epoch=$epoch trainNll=${"%.4f".format(loss / stepsPerEpoch)} valBPB=${"%.4f".format(v)} " +
                         "params=${model.params.count} trainSeconds=${"%.0f".format((System.nanoTime() - start) / 1e9)} " +
                         (if (stats.total > 0) "ffnDensity=${"%.3f".format(stats.active.toDouble() / stats.total)} l1=$l1 " else "") + "ckpt=$sha")

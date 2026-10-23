@@ -375,6 +375,26 @@ Bestätigungen. Wegen kleiner Aufgabenzahl wird keine statistische Signifikanz b
    - VALIDATION ist klein (5 Dokumente).
    - Es gibt einen einzigen Zyklus, und die Zeit wird auf x86_64 gemessen, nicht auf ARM64.
 
+**Nachtrag 8f-A (23.10.2026, vor jedem Modelllauf auf NFC2)**
+
+Bis dahin lief auf NFC2 nur das Einfrieren (Aufteilungsstatistik, keine Modellbewertung).
+
+- **Fehler im Plan**
+  - Die Trainingswahrscheinlichkeiten des Zählmodells kämen von einem KN-7, das auf genau diesen Texten gebaut ist.
+  - Dort zählt jedes 7-Gramm sich selbst mit, die Wahrscheinlichkeiten sind also überhöht.
+  - Der Mischungsverlust würde das Netz dann fast überall entlasten, auch dort, wo KN-7 auf neuem Text schwach ist.
+- **Korrektur, Hauptarm „Residual“ (`G-M-res`)**
+  - Die Trainingswahrscheinlichkeiten werden über die Dokumente kreuzvalidiert (`NfResidual.crossFitted`).
+  - Es gibt 5 Teile: Dokument-Index nach Pfad modulo 5.
+  - Jedes Dokument wird von einem KN-7 aus den anderen 4 Teilen bewertet.
+  - Test: `crossFittedProbabilitiesComeFromCountModelsWithoutTheDocumentsOwnFold`.
+  - Für die Messung bleibt KN-7 aus ganz NFC2 TRAIN.
+- **Zusatzarm ohne Regel (`G-M-resin`, `residualQ=insample`)**
+  - Residual mit den In-Sample-Wahrscheinlichkeiten, wie ursprünglich geschrieben.
+  - Er zeigt, ob die Kreuzvalidierung zählt.
+- **Unverändert:** H7-1, H7-2 und die TEST-Regel gelten für den Hauptarm.
+- **Präzisierung:** 9fb4361c ist die signierte Quelle 6706da14 plus deren Release-Protokoll (ein zusätzliches Dokument), nicht die signierte Quelle selbst.
+
 ## 9. Abschluss des Zyklus und TEST
 
 Am Ende werden die je Experiment besten Varianten (nach den Regeln oben, nur VALIDATION) und ihre Baselines **einmal**
