@@ -14,6 +14,7 @@ import {fileURLToPath} from 'node:url';
 import {submitGoal,listTasks,runCcc1Cycle,compileGoal} from './ccc1-worker.mjs';
 import {ExperienceLog} from './ccc1-experience.mjs';
 import {runTeamleaderLoop} from './local-teamleader-loop.mjs';
+import {ensureCcc1StateOutsideSource} from './ccc1-path-policy.mjs';
 
 export function parseArgs(argv){
  const [command,...rest]=argv;
@@ -26,8 +27,7 @@ export function parseArgs(argv){
 }
 
 function outside(project,stateDir){
- const p=fs.realpathSync(project),s=path.resolve(stateDir);
- if(s===p||s.startsWith(p+path.sep))throw Error('the CCC1 state must stay outside the repository');
+ ensureCcc1StateOutsideSource(project,stateDir);
 }
 
 /**
