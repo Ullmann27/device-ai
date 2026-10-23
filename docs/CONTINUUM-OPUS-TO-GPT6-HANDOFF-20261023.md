@@ -79,7 +79,7 @@ Abhängigkeiten, Gleichstand → Rückfrage), nie aus 16-D-Fast-Weights.
 
 ## E. Tests (zuletzt am Branch ausgeführt; Linux-Container, Node 22, JDK 21)
 
-Node 986/980/0/6 · Kotlin 855/855 + 4 Checks (`scripts/android-kotlin-unit-check.sh`) · Backend 60/60 · I1/I2-Belege
+Am Stand `b35fed41` erneut ausgeführt: Node 986/980/0/6 · Kotlin 855/855 + 4 Checks (`scripts/android-kotlin-unit-check.sh`) · Backend 60/60 · I1/I2-Belege
 bytegleich reproduziert. **Nicht ausgeführt** (kein SDK): Gradle/AGP, Lint, Robolectric-UI (`src/uiTest`), APK, Gerät.
 GitHub Actions: jeder Lauf endet nach ~2 s ohne Schritte (Konto-/Runner-Ebene, Issue #54) – keine Codeursache.
 
@@ -98,14 +98,31 @@ GitHub Actions: jeder Lauf endet nach ~2 s ohne Schritte (Konto-/Runner-Ebene, I
 `0a268a86` (CCC1-Diagnose) und `7c6291f9` (Fix #76). Optional `e9714f70` (APK-neutral). Alles andere wirkt über den
 Termux-Checkout oder ist Forschung.
 
-## H. Sichere Integrationsreihenfolge (keine Cherry-Picks, Astras UI nie überschreiben)
+## H. Integrationsstand – geprüft nach GPT-6s Übernahme (ersetzt die frühere Reihenfolge)
 
-1. PR #99 als Ganzes in `integration/continuum-current-review-20261023` (Probe-Merge konfliktfrei). Vorher prüfen, ob
-   die Basis inzwischen weitergewandert ist; dann erneut `git merge-tree --write-tree` laufen lassen.
-2. Astras Premium-UI (PR #98 und ihr zuletzt **gepushter** Stand) laut `docs/CONTINUUM-PREMIUM-UI-INTEGRATION-GATE-20261023.md`.
-3. Auf dem eingefrorenen Integrations-SHA: Node-Suite, Kotlin-Check, Backend; dann mit echtem SDK
-   `./gradlew :app:testDebugUnitTest :app:lintDebug` und Robolectric-UI.
-4. In den Signierzweig `astra/render-mentor-apk-builder-20261019` (Probe-Merge konfliktfrei) bzw. den dort üblichen Weg.
+- Mein gesamter Stand bis `b35fed41` ist **bereits enthalten** (per `git merge-base --is-ancestor` geprüft) in:
+  - `gpt6/continuum-0.3.18-release-preflight-20261023` @ `0afd4ca0` (Merge „reconcile signed 0.3.17 UI and Opus
+    research/CCC1 for owner v0.3.18“),
+  - `gpt6/continuum-m4-first-owned-app-20261023` @ `b842d471` (PR #107),
+  - `sol/continuum-master-m4-research-integration-20261023` @ `e4fd67c3` (PR #108).
+- Probe-Merge meines HEAD in alle drei: konfliktfrei, kein Commit fehlt. **PR #99 daher nicht erneut separat mergen**;
+  er bleibt Herkunfts- und Review-Referenz. Nach `b35fed41` kam auf meinem Zweig nur noch dieser Doku-Nachtrag.
+- Nach jeder weiteren Zusammenführung am resultierenden SHA erneut: Node-Suite, Backend, Kotlin (echtes Gradle oder
+  `scripts/android-kotlin-unit-check.sh`); Release-Pins neu prüfen (laut Sol passen 14/22 Pins, 8 bewusst geänderte
+  Dateien brauchen eine neue Freigabe). Sols M4-Übergabe: `docs/CONTINUUM-SOL-TO-GPT6-HANDOFF-20261023.md` auf PR #108.
+
+## H2. Beweisstand je Baustein (bewiesen ≠ Gerät)
+
+| Baustein | Bewiesen (wo) | Offen / experimentell |
+|---|---|---|
+| CCC1-Kette | Host-E2E auf Repo-Klon über die exakten Termux-Aufrufe, 18 Negativfälle, Abbruch an Schrittgrenze (38,7 s) | Lauf auf dem Fold7; laufender Prüfschritt wird nicht beendet |
+| Termux-Befehle `ccc1-*` | Linux-Funktionstest (`teamleader-termux.test.mjs`) | auf dem Gerät |
+| Android-Brücke / Diagnose | Kotlin-JVM-Tests; Code der installierten App akzeptiert alle Antworten | Gerät; Diagnose erst ab nächster APK |
+| Issue #76 | Mechanismus am Android-15-Framework-Bytecode, Tests mit AOSP-naher Attrappe | Gerät → Issue offen lassen |
+| I1/I2 + neuer Span-Kern | 852 → 855 Tests grün, I1/I2-Belege bytegleich, Kern-Standardverhalten bitgleich | kein Aufrufer im App-Code; Zertifikat nicht attestiert |
+| LCT1 / WSC1 / TTT1 | vorregistriert, TEST je einmal: 0 falsch (synthetische Daten, vorgeparste Eingaben) | echte Besitzerfakten, Sprachanalyse, Anbindung nur hinter Tor |
+| CDX1 (D), Fast-Weights | negativ gemessen | nicht weiterverfolgen ohne neue Hypothese |
+| Release 0.3.18/19 | Fingerprint bekannt, Probe-Merges konfliktfrei | signierter Build, Rollback-Artefakt, Gerät – GPT-6/Besitzer |
 
 ## I. Nächster Build und Verifikation (signierter Update-Kandidat)
 
