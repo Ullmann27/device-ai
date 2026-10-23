@@ -148,7 +148,7 @@ test('owner task executes red -> isolated repair -> independent green -> reviewa
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}
 });
 
-test('an owner cancel during the session stops before the independent run and is never DONE',
+test('an owner cancel during the session stops at the next step boundary and is never DONE',
  {skip:nested,timeout:180000},()=>{
  const f=fixture(true);
  try{
@@ -161,8 +161,8 @@ test('an owner cancel during the session stops before the independent run and is
    /TASK_ABORTED_BY_OWNER/);
   assert.equal(store.read().doc.tasks.find(t=>t.id==='repair-owner-one').state,'ABORTED');
   const [dir]=fs.readdirSync(path.join(f.state,'reports'));
-  assert.equal(fs.existsSync(path.join(f.state,'reports',dir,'independent-check')),false,'no independent run after the cancel');
-  assert.equal(fs.existsSync(path.join(f.state,'reports',dir,'repair.patch')),true,'the candidate stays inspectable, nothing is applied');
+  assert.deepEqual(fs.readdirSync(path.join(f.state,'reports',dir)),['node-junit.xml'],
+   'only the baseline ran: no candidate test, no patch, no report, no independent run');
   assert.equal(f.git('status','--porcelain'),'');
   assert.equal(f.git('worktree','list').split('\n').length,1,'temporary worktrees are removed');
  }finally{fs.rmSync(f.base,{recursive:true,force:true});}

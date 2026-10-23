@@ -208,10 +208,22 @@ export function evidenceSufficient(baselineResults,candidateResults){
   return {sufficient:reasons.length===0,reasons};
 }
 
-export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null}={}){
+/** Step boundary hook of a repair run: null, or a function that throws to stop before the next step. */
+function stepCheckpoint(checkpoint){
+  if(checkpoint!==null&&typeof checkpoint!=='function')throw Error('Repair checkpoint must be a function');
+  return checkpoint??(()=>{});
+}
+
+/**
+ * `checkpoint(step)` runs before each check profile; a running profile always completes (its process is never
+ * killed), but no further profile starts once the checkpoint throws.
+ */
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null}={}){
   refuseExecutor(executor);
+  const beforeStep=stepCheckpoint(checkpoint);
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
+    beforeStep('profile:'+name);
     const r=runProfile(name,wt,out,{deadline,forceRerun});results.push(r);
     if(!r.passed)break;
   }
@@ -423,9 +435,12 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 /**
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
+ * `checkpoint(step)` runs at every step boundary (each check profile, the local provider, each candidate); when it
+ * throws, the session ends with that error and leaves no report (the caller removes the worktree).
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null}){
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
+  const beforeStep=stepCheckpoint(checkpoint);
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
   fs.mkdirSync(out,{recursive:true});
   resetWorktree(wt,base);
@@ -435,7 +450,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
       reason:'No generative model is invoked by this repair pipeline'},
     baseline:null,attempts:[],verified:null,outcome:null};
-  const baseline=runChain(chain,wt,out,{deadline});
+  const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
@@ -461,6 +476,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     // risk, test command or authority. Every proposal still traverses all gates.
     report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
       localRequests:0,verifiedModelExecution:false,reason:'No model execution independently established'};
+    beforeStep('provider');
     try{
       if(typeof candidateProvider!=='function'||!localScope.length||Date.now()>=deadline)throw Error('LOCAL_PROVIDER_UNAVAILABLE');
       const result=candidateProvider({diagnostics:structuredClone(actionable),readFile:ctx.readFile,base,chain,deadline});
@@ -494,6 +510,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   const perStrategy=new Map();
   for(const c of ranked){
     if(report.attempts.filter(a=>a.outcome!=='REJECTED_BY_CRITIC').length>=maxCandidates||Date.now()>deadline)break;
+    beforeStep('candidate:'+c.id);
     // keep strategy diversity: at most two tries per strategy family in one session
     const family=c.strategy.split(':')[0];
     if((perStrategy.get(family)??0)>=2)continue;
@@ -536,7 +553,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       log(c.strategy+' -> FAILED_SYNTAX');
       continue;
     }
-    const check=runChain(chain,wt,out,{deadline});
+    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
     const evidence=evidenceSufficient(baseline.results,check.results);
