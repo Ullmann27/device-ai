@@ -58,15 +58,18 @@ object ContinuumBentoCockpit {
             background = Glass(0xFF3B82F6.toInt(), ctx.resources.displayMetrics.density, surface = false)
             setPadding(dp(ctx, 16f), dp(ctx, 18f), dp(ctx, 16f), dp(ctx, 16f))
             addView(text(ctx, eyebrow, 10.5f, CYAN, true))
-            addView(text(ctx, title, 23f, WHITE, true), LinearLayout.LayoutParams(
+            addView(text(ctx, title, 23f, WHITE, true).apply {
+                if (android.os.Build.VERSION.SDK_INT >= 28) isAccessibilityHeading = true
+            }, LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply { topMargin = dp(ctx, 6f) })
-            if (description.isNotBlank()) addView(text(ctx, description, 12.5f, MUTED),
+            if (description.isNotBlank()) addView(text(ctx, description, 14f, MUTED),
                 LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                     .apply { topMargin = dp(ctx, 7f) })
         }
 
-    fun section(ctx: Context, label: String): TextView = text(ctx, label, 10.5f, CYAN, true).apply {
+    fun section(ctx: Context, label: String): TextView = text(ctx, label, 12f, CYAN, true).apply {
+        if (android.os.Build.VERSION.SDK_INT >= 28) isAccessibilityHeading = true
         setPadding(dp(ctx, 4f), dp(ctx, 10f), 0, dp(ctx, 7f))
     }
 
@@ -90,10 +93,10 @@ object ContinuumBentoCockpit {
                 background = Glass(VIOLET, ctx.resources.displayMetrics.density)
                 setPadding(dp(ctx, 10f), dp(ctx, 9f), dp(ctx, 10f), dp(ctx, 9f))
                 if (separator in 1..45) {
-                    addView(text(ctx, line.substring(0, separator).trim(), 10f, CYAN, true))
-                    addView(text(ctx, line.substring(separator + 1).trim().ifBlank { "—" }, 11.5f, WHITE))
+                    addView(text(ctx, line.substring(0, separator).trim(), 12f, CYAN, true))
+                    addView(text(ctx, line.substring(separator + 1).trim().ifBlank { "—" }, 14f, WHITE))
                 } else {
-                    addView(text(ctx, line, 11.5f, WHITE))
+                    addView(text(ctx, line, 14f, WHITE))
                 }
                 contentDescription = line
             }
@@ -102,9 +105,8 @@ object ContinuumBentoCockpit {
     }
 
     fun action(ctx: Context, label: String, primary: Boolean = false, critical: Boolean = false, run: () -> Unit): TextView {
-        val color = if (critical) 0xFFEC4899.toInt() else if (primary) CYAN else VIOLET
-        return text(ctx, "◈   " + label, 11.6f, WHITE, true).apply {
-            background = Glass(color, ctx.resources.displayMetrics.density)
+        return text(ctx, label, 14f, WHITE, true).apply {
+            ContinuumControls.button(this, primary, critical)
             gravity = Gravity.CENTER_VERTICAL
             minHeight = dp(ctx, 66f)
             setPadding(dp(ctx, 12f), dp(ctx, 12f), dp(ctx, 12f), dp(ctx, 12f))
@@ -116,19 +118,37 @@ object ContinuumBentoCockpit {
     }
 
     fun grid(ctx: Context, target: LinearLayout, items: List<View>, columns: Int) {
-        val count = columns.coerceAtLeast(1)
-        for (start in items.indices step count) {
-            val row = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL }
-            for (index in start until (start + count).coerceAtMost(items.size)) {
-                val view = items[index]
-                row.addView(view, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
-                    if (index > start) marginStart = dp(ctx, 7f)
-                })
+        if (items.isEmpty()) return
+        target.addView(AdaptiveGrid(ctx, items, columns), LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+    }
+
+    /** Reflows only when measured column count changes; view instances and callbacks are retained. */
+    private class AdaptiveGrid(ctx: Context, private val items: List<View>, private val maximum: Int) : LinearLayout(ctx) {
+        private var columns = 0
+        init { orientation = VERTICAL }
+        override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+            val available = (MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight) /
+                resources.displayMetrics.density
+            val count = ContinuumGridPolicy.columns(available, resources.configuration.fontScale, maximum)
+            if (count != columns) {
+                val focused = findFocus()
+                items.forEach { (it.parent as? ViewGroup)?.removeView(it) }
+                removeAllViews()
+                columns = count
+                for (start in items.indices step count) {
+                    val row = LinearLayout(context).apply { orientation = HORIZONTAL; isBaselineAligned = false }
+                    for (index in start until (start + count).coerceAtMost(items.size)) {
+                        row.addView(items[index], LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+                            if (index > start) marginStart = dp(context, 8f)
+                        })
+                    }
+                    addView(row, LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        .apply { topMargin = dp(context, 8f) })
+                }
+                focused?.requestFocus()
             }
-            val missing = count - (items.size - start).coerceAtMost(count)
-            repeat(missing) { row.addView(View(ctx), LinearLayout.LayoutParams(0, 1, 1f)) }
-            target.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(ctx, 7f) })
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
     }
 

@@ -184,6 +184,7 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             isClickable = true
             isFocusable = true
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+            ContinuumControls.feedback(this)
             refresh()
             setOnClickListener { onSlot(slot, downX / density, downY / density) }
         }

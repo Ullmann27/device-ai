@@ -790,6 +790,8 @@ class AgentActivity : Activity() {
         for ((label, action) in actions) {
             container.addView(View(this).apply {
                 contentDescription = label
+                tag = ContinuumWorkArea.entries.firstOrNull { it.title == label }
+                at.heinz.deviceai.ui.ContinuumControls.feedback(this, 12f)
                 isClickable = true
                 isFocusable = true
                 setOnClickListener { action() }
@@ -1035,8 +1037,7 @@ class AgentActivity : Activity() {
                 isAllCaps = false
                 setTypeface(typeface, Typeface.BOLD)
                 setTextColor(TEXT)
-                minHeight = 0
-                minWidth = 0
+                at.heinz.deviceai.ui.ContinuumControls.button(this)
                 setPadding(dp(8), 0, dp(8), 0)
                 setOnClickListener {
                     if (value == AssistantMode.CLOUD) showResearchModeDialog()
@@ -1046,7 +1047,7 @@ class AgentActivity : Activity() {
             modeButtons[value] = button
             card.addView(
                 button,
-                LinearLayout.LayoutParams(0, dp(38), 1f).apply {
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
                     if (index > 0) marginStart = dp(4)
                 }
             )
@@ -1075,6 +1076,8 @@ class AgentActivity : Activity() {
         for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
             targets.addView(View(this).apply {
                 contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                tag = destination
+                at.heinz.deviceai.ui.ContinuumControls.feedback(this, 12f)
                 isClickable = true
                 isFocusable = true
                 setOnClickListener { navigateWorkArea(destination) }
@@ -1093,6 +1096,10 @@ class AgentActivity : Activity() {
         navigationView?.invalidate()
         (railView?.element as? at.heinz.deviceai.ui.RailElement)?.selected = index.coerceAtMost(3)
         railView?.invalidate()
+        for (destination in ContinuumWorkAreaNavigationSpec.destinations) {
+            bottomWorkAreaBar?.findViewWithTag<View>(destination)?.isSelected = destination == activeWorkArea
+            (railView?.parent as? View)?.findViewWithTag<View>(destination)?.isSelected = destination == activeWorkArea
+        }
     }
 
     private fun navigateWorkArea(destination: ContinuumWorkArea) {
@@ -1680,7 +1687,7 @@ class AgentActivity : Activity() {
             textSize = 23f
             setOnClickListener { newSession() }
         }
-        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(42), dp(47)))
+        inputRow.addView(newChat, LinearLayout.LayoutParams(dp(48), dp(48)))
         input = EditText(this).apply {
             hint = "Schreibe eine Nachricht …"
             setOnTouchListener { _, event ->
@@ -1703,6 +1710,7 @@ class AgentActivity : Activity() {
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE or
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
             setPadding(dp(12), dp(9), dp(10), dp(9))
+            at.heinz.deviceai.ui.ContinuumControls.feedback(this, 18f)
         }
         inputRow.addView(input, LinearLayout.LayoutParams(0,
             LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
@@ -1712,7 +1720,7 @@ class AgentActivity : Activity() {
             contentDescription = "Spracheingabe starten"
             setOnClickListener { startVoiceInput() }
         }
-        inputRow.addView(mic, LinearLayout.LayoutParams(dp(43), dp(47)).apply {
+        inputRow.addView(mic, LinearLayout.LayoutParams(dp(48), dp(48)).apply {
             marginStart = dp(6)
         })
         shell.addView(inputRow, matchWidth())
@@ -1723,10 +1731,8 @@ class AgentActivity : Activity() {
         }
         fun smallButton(label: String, description: String, run: () -> Unit): Button =
             actionButton(label, compact = true).apply {
-                textSize = 10.6f
+                textSize = 12f
                 contentDescription = description
-                background = roundedGradient(Color.rgb(25, 35, 81),
-                    Color.rgb(15, 22, 56), 16, Color.rgb(93, 107, 190))
                 setOnClickListener { run() }
             }
         actions.addView(
@@ -1734,19 +1740,19 @@ class AgentActivity : Activity() {
                 if (localRuntime.state == LocalModelState.READY) setMode(AssistantMode.LOCAL)
                 else showModelCenter()
             },
-            LinearLayout.LayoutParams(0, dp(42), 1.35f)
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.35f)
         )
         actions.addView(
             smallButton("◎ Web", "Recherche nur nach Freigabe") {
                 showResearchModeDialog()
             },
-            LinearLayout.LayoutParams(0, dp(42), .90f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .90f).apply { marginStart = dp(4) }
         )
         actions.addView(
             smallButton("⌁ Datei", "Quelldatei im Entwicklungszentrum auswählen") {
                 showDevelopmentDialog()
             },
-            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
         voiceButton = smallButton(
             if (voiceEnabled) "TON AN" else "TON AUS",
@@ -1762,7 +1768,7 @@ class AgentActivity : Activity() {
             } else { voiceEngine?.stop(); stopVoiceAnimation() }
         }
         actions.addView(voiceButton,
-            LinearLayout.LayoutParams(0, dp(42), .94f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .94f).apply { marginStart = dp(4) }
         )
         sendButton = actionButton("➤", accent = true, compact = true).apply {
             textSize = 21f
@@ -1772,7 +1778,7 @@ class AgentActivity : Activity() {
             }
         }
         actions.addView(sendButton,
-            LinearLayout.LayoutParams(0, dp(42), .85f).apply { marginStart = dp(4) }
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, .85f).apply { marginStart = dp(4) }
         )
         shell.addView(actions, matchWidth(top = 8))
         return shell
@@ -5826,11 +5832,7 @@ class AgentActivity : Activity() {
     private fun applyModeStyles() {
         modeButtons.forEach { (value, button) ->
             val selected = value == mode
-            button.background = rounded(
-                if (selected) ACCENT_DARK else Color.TRANSPARENT,
-                12,
-                if (selected) ACCENT else null
-            )
+            button.isSelected = selected
             button.setTextColor(if (selected) TEXT else MUTED)
         }
     }
@@ -6674,10 +6676,8 @@ class AgentActivity : Activity() {
             isAllCaps = false
             setTypeface(typeface, Typeface.BOLD)
             setTextColor(Color.rgb(224, 232, 246))
-            background = rounded(SURFACE, 14, BORDER)
-            setPadding(dp(13), 0, dp(13), 0)
-            minWidth = 0
-            minHeight = 0
+            at.heinz.deviceai.ui.ContinuumControls.button(this)
+            setPadding(dp(13), dp(6), dp(13), dp(6))
         }
 
     private fun actionButton(
@@ -6691,24 +6691,15 @@ class AgentActivity : Activity() {
             isAllCaps = false
             setTypeface(typeface, Typeface.BOLD)
             setTextColor(TEXT)
-            background = if (accent) {
-                roundedGradient(Color.rgb(30, 160, 244), Color.rgb(59, 78, 229),
-                    15, Color.rgb(142, 227, 255))
-            } else {
-                roundedGradient(Color.rgb(36, 57, 91), Color.rgb(24, 40, 69),
-                    15, Color.rgb(66, 97, 145))
-            }
-            setPadding(if (compact) dp(8) else dp(12), 0, if (compact) dp(8) else dp(12), 0)
+            at.heinz.deviceai.ui.ContinuumControls.button(this, primary = accent)
+            setPadding(if (compact) dp(8) else dp(12), dp(6), if (compact) dp(8) else dp(12), dp(6))
             elevation = dp(2).toFloat()
-            minWidth = 0
-            minHeight = 0
         }
 
     private fun verticalCard(): LinearLayout =
         LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(19, 40, 71),
-                Color.rgb(15, 26, 47), 21, Color.rgb(51, 90, 142))
+            background = at.heinz.deviceai.ui.ContinuumControls.surface(this@AgentActivity, 21f)
             elevation = dp(2).toFloat()
         }
 

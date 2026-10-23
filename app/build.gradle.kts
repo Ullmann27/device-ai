@@ -3,6 +3,22 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Optional desktop widget QA; ordinary Android/Termux unit/build tasks keep their existing dependencies.
+val continuumUiWidgetTests = providers.gradleProperty("continuumUiWidgetTests").orNull == "true"
+val uiTestAndroidSdk by configurations.creating { isTransitive = false }
+val uiTestResourceSdk by configurations.creating { isTransitive = false }
+val prepareUiTestSdk = tasks.register<Sync>("prepareUiTestSdk") {
+    from(uiTestAndroidSdk, uiTestResourceSdk)
+    into(layout.buildDirectory.dir("ui-test-sdk"))
+}
+if (continuumUiWidgetTests) tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    dependsOn(prepareUiTestSdk)
+    doFirst {
+        systemProperty("robolectric.offline", "true")
+        systemProperty("robolectric.dependency.dir", layout.buildDirectory.dir("ui-test-sdk").get().asFile.absolutePath)
+    }
+}
+
 val mentorSigningPath = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_FILE").orNull
 val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_PASSWORD").orNull
 
@@ -99,6 +115,9 @@ android {
         buildConfig = true
     }
 
+    testOptions { unitTests.isIncludeAndroidResources = continuumUiWidgetTests }
+    if (continuumUiWidgetTests) sourceSets.getByName("test").java.srcDir("src/uiTest/java")
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -121,6 +140,12 @@ kotlin {
 }
 
 dependencies {
+    if (continuumUiWidgetTests) {
+        // Runtime API 28 and Robolectric 4.14.1's API 35 resource platform, resolved via Gradle's proxy/cache.
+        uiTestAndroidSdk("org.robolectric:android-all-instrumented:9-robolectric-4913185-2-i7")
+        uiTestResourceSdk("org.robolectric:android-all-instrumented:15-robolectric-12650502-i7")
+        testImplementation("org.robolectric:robolectric:4.14.1")
+    }
     implementation("androidx.annotation:annotation:1.9.1")
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")
