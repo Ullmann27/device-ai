@@ -151,3 +151,60 @@ fold  ALL mad  25.3 low  14.3 edge  0.206 | masked mad 25.1 edge 0.197
       STORAGE          mad  25.1 low  14.1 edge  0.296 | masked 22.7 0.303
       DEVELOPMENT      mad  21.7 low   9.9 edge  0.227 | masked 21.7 0.226
       SYSTEM_ACTIVITY  mad  30.7 low  20.3 edge   0.13 | masked 30.4 0.119
+== v8
+phone ALL mad  24.8 low  14.6 edge  0.241 | masked mad 24.8 edge 0.232
+      BRAND            mad  27.9 low  15.4 edge  0.235 | masked 27.9 0.235
+      HERO             mad  37.6 low  24.3 edge  0.091 | masked 37.6 0.091
+      MODEL            mad  19.5 low   9.1 edge  0.315 | masked 18.7 0.333
+      LEARNING         mad  20.1 low  10.0 edge  0.369 | masked 19.7 0.378
+      STORAGE          mad  22.1 low  11.1 edge  0.399 | masked 20.9 0.393
+      DEVELOPMENT      mad  17.6 low   7.8 edge  0.228 | masked 17.4 0.208
+      NAV              mad  12.5 low   7.8 edge  0.492 | masked 12.5 0.492
+fold  ALL mad  25.3 low  14.4 edge  0.206 | masked mad 25.1 edge 0.198
+      RAIL             mad  19.0 low   9.5 edge  0.201 | masked 19.0 0.201
+      BRAND            mad  35.7 low  19.2 edge  0.127 | masked 35.7 0.127
+      HERO             mad  40.5 low  25.7 edge  0.057 | masked 40.5 0.057
+      SYSTEM_STATUS    mad  18.2 low   8.6 edge  0.343 | masked 16.9 0.359
+      MODEL            mad  17.2 low   7.9 edge  0.429 | masked 15.9 0.472
+      LEARNING         mad  22.4 low  11.9 edge  0.355 | masked 22.4 0.336
+      STORAGE          mad  25.1 low  14.1 edge  0.296 | masked 22.7 0.303
+      DEVELOPMENT      mad  21.7 low   9.9 edge  0.227 | masked 21.7 0.226
+      SYSTEM_ACTIVITY  mad  31.3 low  21.2 edge  0.136 | masked 31.0 0.125
+== v9
+phone ALL mad  24.8 low  14.6 edge  0.241 | masked mad 24.8 edge 0.232
+      BRAND            mad  27.9 low  15.4 edge  0.235 | masked 27.9 0.235
+      HERO             mad  37.6 low  24.3 edge  0.091 | masked 37.6 0.091
+      MODEL            mad  19.5 low   9.1 edge  0.315 | masked 18.7 0.333
+      LEARNING         mad  20.1 low  10.0 edge  0.369 | masked 19.7 0.378
+      STORAGE          mad  22.1 low  11.1 edge  0.399 | masked 20.9 0.393
+      DEVELOPMENT      mad  17.6 low   7.8 edge  0.228 | masked 17.4 0.208
+      NAV              mad  12.5 low   7.8 edge  0.492 | masked 12.5 0.492
+fold  ALL mad  25.2 low  14.2 edge  0.206 | masked mad 25.0 edge 0.198
+      RAIL             mad  19.0 low   9.5 edge  0.201 | masked 19.0 0.201
+      BRAND            mad  35.7 low  19.2 edge  0.127 | masked 35.7 0.127
+      HERO             mad  40.5 low  25.7 edge  0.057 | masked 40.5 0.057
+      SYSTEM_STATUS    mad  18.2 low   8.6 edge  0.343 | masked 16.9 0.359
+      MODEL            mad  17.2 low   7.9 edge  0.429 | masked 15.9 0.472
+      LEARNING         mad  22.4 low  11.9 edge  0.355 | masked 22.4 0.336
+      STORAGE          mad  25.1 low  14.1 edge  0.296 | masked 22.7 0.303
+      DEVELOPMENT      mad  21.7 low   9.9 edge  0.227 | masked 21.7 0.226
+      SYSTEM_ACTIVITY  mad  30.0 low  18.4 edge  0.139 | masked 29.7 0.131
+== v10
+phone ALL mad  24.8 low  14.6 edge  0.241 | masked mad 24.8 edge 0.232
+      BRAND            mad  27.9 low  15.4 edge  0.235 | masked 27.9 0.235
+      HERO             mad  37.6 low  24.3 edge  0.091 | masked 37.6 0.091
+      MODEL            mad  19.5 low   9.1 edge  0.315 | masked 18.7 0.333
+      LEARNING         mad  20.1 low  10.0 edge  0.369 | masked 19.7 0.378
+      STORAGE          mad  22.1 low  11.1 edge  0.399 | masked 20.9 0.393
+      DEVELOPMENT      mad  17.6 low   7.8 edge  0.228 | masked 17.4 0.208
+      NAV              mad  12.5 low   7.8 edge  0.492 | masked 12.5 0.492
+fold  ALL mad  25.2 low  14.1 edge  0.206 | masked mad 25.0 edge 0.198
+      RAIL             mad  19.0 low   9.5 edge  0.201 | masked 19.0 0.201
+      BRAND            mad  35.7 low  19.2 edge  0.127 | masked 35.7 0.127
+      HERO             mad  40.5 low  25.7 edge  0.057 | masked 40.5 0.057
+      SYSTEM_STATUS    mad  18.2 low   8.6 edge  0.343 | masked 16.9 0.359
+      MODEL            mad  17.2 low   7.9 edge  0.429 | masked 15.9 0.472
+      LEARNING         mad  22.4 low  11.9 edge  0.355 | masked 22.4 0.336
+      STORAGE          mad  25.1 low  14.1 edge  0.296 | masked 22.7 0.303
+      DEVELOPMENT      mad  21.7 low   9.9 edge  0.227 | masked 21.7 0.226
+      SYSTEM_ACTIVITY  mad  30.0 low  18.1 edge  0.141 | masked 29.7 0.134

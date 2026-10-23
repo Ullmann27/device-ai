@@ -262,13 +262,17 @@ class WideDevelopmentCardElement(textScale: Float = 1f) : ContinuumElement(textS
  * Android without root: —), RAM and storage use. Connectivity has no measured level and therefore no gauge.
  */
 class SystemActivityElement(textScale: Float = 1f) : ContinuumElement(textScale) {
+    private val gaugeTrack = Fill.Solid(Argb.rgb(30, 46, 88))
+    private val gaugeGlows = listOf(Argb.rgb(40, 200, 255), Argb.rgb(150, 110, 255), Argb.rgb(255, 90, 150), Argb.rgb(40, 170, 255))
+        .map { Fill.Solid(it) }
+
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
         val sy = s.system
         ContinuumSurfaces.glassCard(p, 0f, 0f, w, h)
         ContinuumSurfaces.iconDisc(p, Icon.PULSE, 26f, 19.5f, 36f, 20f)
         p.drawText("Systemaktivität", 50f, 23.4f, t(500, 11.3f), Fill.Solid(ContinuumTheme.TEXT))
         ContinuumSurfaces.pill(p, w - 10f, 11f, 18f, "alle 5 s", t(500, 8.2f), ContinuumTheme.CYAN, alignRight = true)
-        WaveChart.draw(p, 9.7f, 34f, w - 10f, 73f, sy.activity)
+        WaveChart.drawRidge(p, 9.7f, 34f, w - 10f, 73f, sy.activity)
         val gauges = listOf(
             Triple("CPU", sy.appCpuPercent, intArrayOf(Argb.rgb(40, 200, 255), Argb.rgb(60, 140, 255))),
             Triple("GPU", null as Int?, intArrayOf(Argb.rgb(150, 110, 255), Argb.rgb(190, 120, 255))),
@@ -278,10 +282,14 @@ class SystemActivityElement(textScale: Float = 1f) : ContinuumElement(textScale)
         val xs = floatArrayOf(42.2f, 120.1f, 198f, 278.6f).map { it * w / 324.7f }
         for ((i, g) in gauges.withIndex()) {
             val cx = xs[i]; val cy = 112f; val rr = 21.5f
-            p.strokeCircle(cx, cy, rr, 5f, Fill.Solid(Argb.rgb(24, 38, 72)))
+            p.strokeCircle(cx, cy, rr, 6.5f, gaugeTrack)
             g.second?.let { v ->
-                p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -90f, 360f * v.coerceIn(0, 100) / 100f, 9f, Fill.Solid(g.third[0]), .15f, roundCap = false)
-                p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -90f, 360f * v.coerceIn(0, 100) / 100f, 5f,
+                // measured share only; the glow is additive light around the same arc
+                val sweep = 360f * v.coerceIn(0, 100) / 100f
+                p.setAdditive(true)
+                p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -90f, sweep, 12f, gaugeGlows[i], .2f, roundCap = false)
+                p.setAdditive(false)
+                p.strokeArc(cx - rr, cy - rr, cx + rr, cy + rr, -90f, sweep, 6.5f,
                     Fill.Sweep(cx, cy, intArrayOf(g.third[1], g.third[0], g.third[1])), roundCap = false)
             }
             p.drawText(ContinuumDashboardState.percent(g.second), cx, cy + 4f, t(500, 11.2f), Fill.Solid(Argb.rgb(226, 238, 255)), TextAlign.CENTER)

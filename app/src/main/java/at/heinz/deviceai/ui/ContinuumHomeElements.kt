@@ -320,6 +320,70 @@ object WaveChart {
         }
     }
 
+    private val ridgeBase = Fill.Solid(Argb.rgb(40, 60, 110))
+    private val meshFill = Fill.Solid(Argb.rgb(70, 140, 255))
+    private val contourFill = Fill.Solid(Argb.rgb(150, 110, 255))
+    private val sampleGlow = Fill.Solid(Argb.rgb(90, 170, 255))
+    private val sampleCore = Fill.Solid(Argb.rgb(200, 240, 255))
+    private val baselineGlow = Fill.Solid(Argb.rgb(90, 160, 255))
+    private var ridgeKey = FloatArray(0)
+    private var ridgeFills = emptyList<Fill>()
+
+    /**
+     * Mountain style of the measured system activity (as in reference-fold.png): the series is a luminous ridge over
+     * a wireframe made from the same data - vertical mesh lines from the baseline up to the drawn curve, and contour
+     * lines that are the curve scaled to 2/3 and 1/3 - with a glowing point on every real sample and a glowing
+     * baseline. Nothing is invented: every height is a measured value or a fixed fraction of it.
+     */
+    fun drawRidge(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, series: List<Float>, meshStep: Float = 5.5f) {
+        p.drawLine(l, b, r, b, .6f, ridgeBase, .8f)
+        if (series.size < 2 || series.maxOrNull()?.let { it <= 0f } != false) return
+        val maxV = series.maxOrNull()!!.coerceAtLeast(1e-6f)
+        val key = floatArrayOf(l, t, r, b)
+        if (!key.contentEquals(ridgeKey)) {
+            ridgeKey = key
+            ridgeFills = listOf(
+                // light rises from the horizon: brightest at the baseline, as in the reference
+                Fill.Linear(0f, t, 0f, b, intArrayOf(Argb.of(70, 60, 110, 255), Argb.of(150, 60, 84, 232), Argb.of(215, 72, 92, 245)), floatArrayOf(0f, .65f, 1f)),
+                Fill.Linear(l, 0f, r, 0f, intArrayOf(Argb.rgb(70, 170, 255), Argb.rgb(150, 100, 255), Argb.rgb(255, 100, 200))))
+        }
+        val n = series.size
+        fun px(i: Int) = l + (r - l) * i / (n - 1)
+        fun py(i: Int, k: Float = 1f) = b - (b - t) * .95f * (series[i] / maxV) * k
+        fun curve(k: Float) {
+            path.reset()
+            path.moveTo(px(0), py(0, k))
+            for (i in 1 until n) {
+                val mid = (px(i - 1) + px(i)) / 2f
+                path.cubicTo(mid, py(i - 1, k), mid, py(i, k), px(i), py(i, k))
+            }
+        }
+        curve(1f)
+        path.lineTo(px(n - 1), b).lineTo(px(0), b).close()
+        p.fillPath(path, ridgeFills[0])
+        p.setAdditive(true)
+        var x = l
+        while (x <= r + .01f) {
+            val (_, y) = markerOnCurve(l, t, r, b, series, maxV, ((x - l) / (r - l)).coerceIn(0f, 1f))
+            p.drawLine(x, b, x, y, .5f, meshFill, .42f, roundCap = false)
+            x += meshStep
+        }
+        for (k in floatArrayOf(.34f, .67f)) {
+            curve(k)
+            p.strokePath(path, .55f, contourFill, .35f)
+        }
+        curve(1f)
+        p.strokePath(path, 3.2f, ridgeFills[1], .22f)
+        p.strokePath(path, 1.2f, ridgeFills[1], .95f)
+        for (i in 0 until n) {
+            p.fillCircle(px(i), py(i), 2.6f, sampleGlow, .22f)
+            p.fillCircle(px(i), py(i), .95f, sampleCore, .9f)
+        }
+        p.drawLine(l, b, r, b, 5f, baselineGlow, .3f)
+        p.drawLine(l, b, r, b, 1.2f, sampleCore, .8f)
+        p.setAdditive(false)
+    }
+
     /**
      * Point of the traveling marker on the drawn front curve. Between two real samples the curve is the cubic
      * x(u) = x0 + (x1 − x0)(1.5u(1 − u) + u³), y(u) = y0 + (y1 − y0)u²(3 − 2u) (control points at the segment middle);
