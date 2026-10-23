@@ -1,0 +1,16 @@
+JAR 542b1aa9313840f30752dd413c49b4598881f29ab4af1c61b87a20d87232c9b9 code=b7b58761+runtime start=2026-10-23T06:58:37Z nproc=4
+TOKENIZER file=tokenizer-v512-94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f.lmbp bytes=2040 sha=94375c73d1f6e2d04b790738580143fa8c1b9b456d40fa7eb6b4009877bd892f
+MODEL ckpt=7a0af1e99554f9e73fbe4212d0aa4bf8ec97745efca56998d9b42bac4fad44fd arch=MINGRU parameters=132160 parameterBytes=528640 context=256 family=LM1-GM-v512 seed=1 epoch=8
+GREEDY Der Coding-Agent | -Dateien, übersprungenen übersprungenen übersprungenen übersprungenen übersprungenen übersprungenen übersprungenen übersprungenen über | stop=MAX_TOKENS tokens=64
+GREEDY Continuum lernt | . | stop=EOS tokens=1
+GREEDY Die Quittung | . | stop=EOS tokens=1
+GREEDY Wenn der Test | s, Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - Ein Quellen. ⏎ - E | stop=MAX_TOKENS tokens=64
+GREEDY Der Besitzer | freigabe. ⏎ - `<hash>`: 2026.10.10.10.2026-10.2026-10.10.2026-10.10.10.2 | stop=MAX_TOKENS tokens=64
+SPEED rounds=3 prompts=5 newTokens<=64 msPerToken stepwise=0.408 fullRecompute=3.386 (medians, one thread, JVM x86_64, not ARM64)
+SAMPLED t=0.8 seed=100 Der Coding-Agent | , ⏎ - Der Reparaturen mit geprüft weiterhin nicht dokumentiert und neuer privaten | stop=EOS
+SAMPLED t=0.8 seed=101 Continuum lernt |  ⏎ oder bidentity and persistent, ⏎ - `main` verwendet. Bei zur Research |**. Dendines | stop=EOS
+SAMPLED t=0.8 seed=102 Die Quittung |  erkannter Statusfunkte, normalen | stop=EOS
+SAMPLED t=0.8 seed=103 Wenn der Test | fälcten getrennte Bereinung gesicherten Node | stop=EOS
+SAMPLED t=0.8 seed=104 Der Besitzer | drücks, aktuell- und data. The seinen signierter App compiles; | stop=EOS
+MEMORY heapUsedMb=43 parameterMb=0.50
+exit=0 end=2026-10-23T06:58:43Z

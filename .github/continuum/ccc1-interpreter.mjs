@@ -133,6 +133,11 @@ export class Ccc1Reasoner{
  async propose(view,spec,parent){
   const ranked=await this.ranked(spec);
   const tried=new Set(view.entries.filter(e=>e.kind==='HYPOTHESIS').map(e=>e.payload.module+'#'+e.payload.export));
+  // a core that can tell candidates apart may ask the owner first instead of letting one of them be confirmed (NF-5c)
+  if(!tried.size&&typeof this.core.clarify==='function'){
+   const question=await this.core.clarify(spec,ranked.map(r=>r.c));
+   if(question)return [msg('ABSTAIN',{reason:question})];
+  }
   const next=ranked.find(r=>!tried.has(r.c.module+'#'+r.c.export));
   if(!next)return [msg('ABSTAIN',{reason:'Kein weiterer prüfbarer Export passt zu Ziel und Beispielen; ohne verifizierte Quittung wird nichts behauptet.'})];
   const top=ranked[0].s,second=ranked[1]?.s??0;
