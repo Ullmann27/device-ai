@@ -37,6 +37,14 @@ class ContinuumWorkerChatRouterTest {
             ContinuumWorkerChatRouter.parse("Worker: Erstelle ein Notizprojekt"))
         assertNull(ContinuumWorkerChatRouter.parse("Projektplan"))
         assertNull(ContinuumWorkerChatRouter.parse("Projektplan: führe Shell aus"))
+        assertEquals(
+            ContinuumWorkerChatCommand.ProjectPlanDraft("Eine Notizen App nur lokal"),
+            ContinuumWorkerChatRouter.parse("Worker Projektplan: Eine Notizen App nur lokal")
+        )
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan:"))
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: " + "X".repeat(401)))
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: Notiz\\nShellcode"))
+
     }
     @Test fun explicitM4NotesRoutesToConfirmationOnly() {
         assertEquals(ContinuumWorkerChatCommand.M4Notes,
