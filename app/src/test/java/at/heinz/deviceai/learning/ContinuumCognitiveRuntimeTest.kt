@@ -115,6 +115,45 @@ class ContinuumCognitiveRuntimeTest {
         } finally {dir.deleteRecursively()}
     }
 
+    @Test fun aNewConversationIdWithoutExplicitResetCannotLeakGlobalResolvedQueryToModel() {
+        val dir=Files.createTempDirectory("continuum-foreign-global-topic").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"first-session")
+            assertTrue(first.reply("Wo wohnt Leo?").grounded)
+            // This reproduces the problematic case without a UI-triggered reset:
+            // the baseline persisted history still belongs to another session ID.
+            val fresh=ContinuumCognitiveRuntime(dir,core,"completely-new-session")
+            val turn=fresh.reply("und wie?")
+            assertTrue("Precondition: profile-wide baseline can supply a stale resolution",
+                turn.dialogue.resolvedQuery.contains("Wo wohnt Leo?"))
+            assertFalse("New model prompt must not import that old topic",
+                turn.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertFalse("New model prompt must not import the old owner's answer",
+                turn.localModelPrompt.contains("Graz"))
+            assertTrue("Ambiguous continuation needs clarification",
+                turn.localModelPrompt.contains("Bitte frage nach"))
+            assertEquals(1,core.activeOwnerFacts().size)
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun sameRuntimeMayOnlyContextualizeOwnPreviouslyGroundedQuestion() {
+        val dir=Files.createTempDirectory("continuum-runtime-own-topic").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val runtime=ContinuumCognitiveRuntime(dir,core,"one-continuous-session")
+            assertTrue(runtime.reply("Wo wohnt Leo?").grounded)
+            val next=runtime.reply("und wie?")
+            assertTrue(next.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertTrue(next.localModelPrompt.contains("und wie?"))
+            assertTrue(next.localModelPrompt.contains("nicht unabhängig bestätigt"))
+            val separate=ContinuumCognitiveRuntime(dir,core,"another-runtime")
+            assertFalse(separate.reply("und wie?").localModelPrompt.contains("Wo wohnt Leo?"))
+        } finally {dir.deleteRecursively()}
+    }
+
     @Test fun onlyCurrentTurnResolutionMayProvideLocalGeneratorContext() {
         val dir=Files.createTempDirectory("continuum-context-contract").toFile()
         try {
