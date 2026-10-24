@@ -1378,6 +1378,7 @@ class AgentActivity : Activity() {
         ),
         experimental = listOf(
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
+            CenterAction("AUTO-DIALOGE · HINTERGRUNDFORSCHUNG EIN/AUS") { showAutoDialogueResearchDialog() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
             CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
             CenterAction("CDX1 · HINTERGRUND-ÜBEN · EIN/AUS") { showDualCoreAutoStudyDialog() },
@@ -3713,6 +3714,55 @@ class AgentActivity : Activity() {
                             ". Forschungsgewichte bleiben unverändert."
                     })
                 }
+            }
+            .show()
+    }
+
+    private fun showAutoDialogueResearchDialog() {
+        val policy = at.heinz.deviceai.learning.ContinuumAutoDialoguePolicy
+        val enabled = policy.isEnabled(this)
+        val stage = runCatching {
+            at.heinz.deviceai.learning.ContinuumAutoDialogueLab(filesDir).attemptedStages()
+                .toString() + "/" +
+                at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculum.MAX_STAGES
+        }.getOrDefault("Status nicht lesbar – automatisches Training gesperrt")
+        AlertDialog.Builder(this)
+            .setTitle("Continuum · automatische Dialogforschung")
+            .setMessage(
+                "Continuum erzeugt selbstständig kurze, fiktive Mehrturn-Gespräche " +
+                    "und kennt deren richtige Antworten unabhängig vom trainierten Modell. " +
+                    "Jede tägliche Runde verwendet neue Roboter-Identitäten, getrennte " +
+                    "Trainings- und unbekannte Prüfbeispiele sowie einen festen Schutztest. " +
+                    "Eine Runde ist auf 32 CRE1-Trainingsschritte begrenzt. " +
+                    "Trainiert wird ausschließlich im CRE1-Forschungsspeicher; " +
+                    "deine eigenen Erinnerungen, SWB1-Gewichte, CDX1 und produktive " +
+                    "Antworten werden davon nicht verändert. " +
+                    "Es gibt keine Mikrofonaufnahme, keinen Cloud-Zwang, keine Webanfrage " +
+                    "und keine automatischen Faktenfreigaben. Android kann den täglichen " +
+                    "Lauf aufgrund von Akku, Hitze, Speicher oder Zeitbudget verschieben. " +
+                    "Nach 64 unterschiedlichen Forschungsstufen stoppt diese erste " +
+                    "Generation automatisch, bis ein neues überprüftes Curriculum existiert. " +
+                    "\n\nAktiv: " + (if (enabled) "EIN" else "AUS") +
+                    "\nVersuchte Stufen: " + stage +
+                    "\nLetzter Bericht: " + policy.lastResult(this)
+            ).setNegativeButton("Schließen", null)
+            .setNeutralButton("AUTO-DIALOGE AUS") { _, _ ->
+                addAssistantMessage(if (policy.setEnabled(this, false))
+                    "Automatische CRE1-Dialogforschung ausgeschaltet. Vorhandene Gewichte bleiben erhalten."
+                else "Die Einstellung konnte nicht gespeichert werden.")
+            }
+            .setPositiveButton("AUTO-DIALOGE FREIGEBEN") { _, _ ->
+                val saved = policy.setEnabled(this, true)
+                val scheduled = if (saved) runCatching {
+                    at.heinz.deviceai.learning.ContinuumAutonomousScheduler(this).restore()
+                }.getOrDefault(false) else false
+                addAssistantMessage(when {
+                    !saved -> "Freigabe konnte nicht gespeichert werden."
+                    !scheduled -> "Freigabe gespeichert, aber Android-Hintergrundjob nicht registriert. " +
+                        "Systemstatus prüfen; noch kein Trainingslauf bestätigt."
+                    else -> "CRE1-Dialogforschung freigegeben. Android plant begrenzte " +
+                        "Offline-Lernzyklen; tatsächliche Trainingsläufe im Lernstatus überprüfen."
+                })
             }
             .show()
     }
