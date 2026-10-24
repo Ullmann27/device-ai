@@ -8,7 +8,7 @@ const script = readFileSync(join(root, 'scripts/render-mentor-owner-update-v19.s
 const section = script.match(/done <<'APPROVED_RELEASE_SOURCES'\r?\n([\s\S]*?)\r?\nAPPROVED_RELEASE_SOURCES/);
 if (!section) throw new Error('The owner release source gate is absent or malformed');
 const entries = section[1].trim().split(/\r?\n/).map(line => line.trim().split(/\s+/));
-if (entries.length !== 22) throw new Error(`Expected 22 source attestations, got ${entries.length}`);
+if (entries.length !== 32) throw new Error(`Expected 32 source attestations (22 reviewed original paths and ten added Android sources), got ${entries.length}`);
 const seen = new Set();
 const files = entries.map(([expected, source, ...extra]) => {
   if (extra.length || !/^[a-f0-9]{40}$/.test(expected) ||
