@@ -27,6 +27,23 @@ case "${CONTINUUM_OWNER_RELEASE_VERSION:-18}" in
     }
     exec bash scripts/render-mentor-owner-update-v19.sh
     ;;
+  20)
+    approved="${CONTINUUM_OWNER_V20_APPROVED_SHA:-}"
+    requested="${CONTINUUM_RELEASE_SHA:-}"
+    current="$(git rev-parse --verify HEAD 2>/dev/null)" || {
+      echo "OWNER_V20_BLOCKED: No valid source revision" >&2
+      exit 69
+    }
+    if [[ ! "$approved" =~ ^[a-f0-9]{40}$ || "$approved" != "$requested" || "$requested" != "$current" ]]; then
+      echo "OWNER_V20_BLOCKED: Owner-approved source SHA missing or mismatched" >&2
+      exit 69
+    fi
+    [[ -s scripts/render-mentor-owner-update-v20.sh ]] || {
+      echo "OWNER_V20_BLOCKED: Reviewed v20 release script unavailable" >&2
+      exit 69
+    }
+    exec bash scripts/render-mentor-owner-update-v20.sh
+    ;;
   *)
     echo "OWNER_RELEASE_BLOCKED: Unsupported release version" >&2
     exit 69
