@@ -763,8 +763,14 @@ class ContinuumLearningCore(
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
     fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }
+    fun contextShadowEnabled() = at.heinz.deviceai.learning.context.Ctx3Shadow.enabled(directory)
+    fun configureContextShadow(enabled:Boolean) = at.heinz.deviceai.learning.context.Ctx3Shadow.configure(directory,enabled)
+    fun contextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory)
     fun replyFromMemory(input:String):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
-        dialogue.reply(loadModel().save(),store.all(),input,nowMillis())
+        val bytes=loadModel().save(); val experiences=store.all()
+        val answer=dialogue.reply(bytes,experiences,input,nowMillis())
+        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds) }
+        answer
     }
     /** One immutable model/experience view for answer AND CRE1 candidates.
      * Keeps provenance stable throughout the turn even when an owner fact is
@@ -778,6 +784,7 @@ class ContinuumLearningCore(
             val snapshot=loadModel().save()
             val experiences=store.all()
             val turn=dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)
+            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds) }
             val hits=if(turn.grounded) {
                 val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
                     .associateBy { it.id }
