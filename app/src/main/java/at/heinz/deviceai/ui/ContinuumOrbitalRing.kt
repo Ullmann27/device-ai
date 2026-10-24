@@ -61,7 +61,7 @@ internal class ContinuumOrbitalRing(private val radius: Float, minor: Float, til
     }
 
     companion object {
-        /** ±2.4% of radius, separate from core rotation and orbital precession; no layout mutation. */
-        fun lift(phase: Float, radius: Float): Float = -.024f * radius * sin((phase - .4f) * .85f)
+        /** ±5% of radius: legible breathing at rest on a phone without disturbing the fixed layout. */
+        fun lift(phase: Float, radius: Float): Float = -.05f * radius * sin((phase - .4f) * .85f)
     }
 }
