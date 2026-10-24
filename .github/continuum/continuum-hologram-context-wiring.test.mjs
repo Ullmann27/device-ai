@@ -26,6 +26,14 @@ test('single hologram frame callback advances phase independently of Canvas onDr
  assert.ok(!draw.includes('scheduleFrame()'), 'onDraw must not queue duplicate callbacks');
  assert.ok(orb.includes('if (canAnimate() && !framePending)'));
 });
+test('Android window visibility and focus can restore orbital clock without cached view visibility',()=>{
+ assert.ok(orb.includes('override fun onVisibilityChanged(changedView: View, visibility: Int)'));
+ assert.ok(orb.includes('override fun onWindowFocusChanged(hasWindowFocus: Boolean)'));
+ assert.ok(orb.includes('isAttachedToWindow && isShown && windowVisibility == VISIBLE'));
+ assert.ok(!orb.includes('aggregatedVisible'), 'a cached visibility flag can freeze an attached View');
+ assert.ok(orb.includes('visibleFrameCount++'), 'frames must be countable for device diagnosis');
+ assert.ok(orb.includes('motionDiagnostics()'), 'owner must see blocked system gate');
+});
 test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=>{
  const paused=segment(activity,'override fun onPause() {','override fun onSaveInstanceState(');
  const resumed=segment(activity,'override fun onResume() {','override fun onPause()');
