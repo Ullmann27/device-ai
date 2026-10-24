@@ -30,7 +30,7 @@ Die übrigen neun Einträge sind identisch mit ihren bisher attestierten SHA40. 
 - `app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt`
 - `app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt`
 - `app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt`
-- `app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt`
+- `app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt` – aktueller Git-Blob `9e78dadd95dde7cc59aea712d99ac518c31d061a` (zusätzliche konservative Abgrenzung der Modellprompts nach Runtime-Identität)
 - `app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt`
 - `app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt`
 - `app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt`
@@ -47,3 +47,6 @@ Die Manifest-/Exportentscheidung ist zu verifizieren: `ContinuumM5LabActivity` u
 5. Fold7-Animation, Termux und Update-Datenerhalt benötigen einen echten Gerätelauf. Alte Preview-APKs und Host-Simulationen ersetzen ihn nicht.
 
 **Keine Besitzerfreigabe wurde erteilt, kein Code hinter eine private Sitzung verschoben.**
+
+
+**Nachtrag zur Kommunikation:** Die zweite Quellenkontrolle fand einen verbliebenen Umweg über `turn.resolvedQuery`, den eine neue Gesprächs-ID ohne expliziten Baseline-Reset nutzen konnte. Der aktuelle Runtime-Code erlaubt einem lokalen Sprachmodell kontextuelle Vervollständigung nur noch aus einer **vorherigen bestätigten Frage derselben Runtime-Instanz**, nicht aus einer ungebundenen profilweiten Historie. Zwei Regressionen reproduzieren den ursprünglichen Fall mit und ohne UI-Reset; sie müssen bei vollständiger Android-JUnit-Regression noch tatsächlich bestehen. Keine Änderung der Besitzergewichte oder Freigaben.
