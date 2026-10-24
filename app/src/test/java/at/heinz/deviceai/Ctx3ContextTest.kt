@@ -20,6 +20,22 @@ class Ctx3ContextTest {
   c.decide("Fokus App",listOf(a),"v1")
   assertTrue(c.decide("Wo steht sie?",listOf(a),"v2") is Ctx3Decision.Clarify)
  }
+ @Test fun mixedUnknownsAndNonAdjacentNegationNeverReuseOldFocus() {
+  val c=Ctx3Context();c.decide("Fokus App",listOf(a,b),"v1")
+  assertTrue(c.decide("Wo steht die App?",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  assertTrue(c.decide("Wo steht sie?",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  assertTrue(c.decide("Wo steht Fokus App und Gustav?",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  assertTrue(c.decide("Wo wohnt Gustav?",listOf(a,b),"v1") is Ctx3Decision.Abstain)
+  c.decide("Fokus App",listOf(a,b),"v1")
+  assertTrue(c.decide("Nicht die Fokus App",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  assertTrue(c.decide("Wo steht sie?",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+  c.decide("Fokus App",listOf(a,b),"v1")
+  assertTrue(c.decide("Sie meine ich nicht",listOf(a,b),"v1") is Ctx3Decision.Clarify)
+ }
+ @Test fun factualGenderIsNotWidenedByAnAttributeFact() {
+  val e=Ctx3EntityIndex.fromFacts(mapOf("s1" to "Anna ist meine Schwester.","s2" to "Anna wohnt in Wels."))
+  assertEquals(setOf("sie"),e.single().pronouns)
+ }
  @Test fun overlappingAliasesAndQuotedCommandsFailClosed() {
   val c=Ctx3Context()
   assertTrue(c.decide("Wo steht die App?",listOf(a,b),"v1") is Ctx3Decision.Clarify)

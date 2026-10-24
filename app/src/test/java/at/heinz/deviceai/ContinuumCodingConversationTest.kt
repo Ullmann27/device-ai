@@ -26,6 +26,19 @@ class ContinuumCodingConversationTest {
   assertNull(c.accept("nicht lokal, sondern mit Internet").project)
   assertNull(c.approve(0,"x"))
  }
+ @Test fun fiveTurnDialogueDoesNotTurnAQuestionIntoAnExplicitRequirement() {
+  val c=ContinuumCodingConversation()
+  for(text in listOf("Servus","Ich möchte eine kleine App","Für Notizen","Soll sie lokal speichern?"))assertNull(c.accept(text).project)
+  assertEquals(ContinuumOwnedProject.NOTES,c.accept("Ja, nur lokal").project)
+  assertNull(c.accept("nicht offline").project)
+ }
+ @Test fun explicitRejectionsAndInternetChangesInvalidateEveryPreview() {
+  for(text in listOf("Ich will keine Notizapp offline","keine Zählerapp offline"))assertNull(ContinuumCodingConversation().accept(text).project)
+  for(text in listOf("Das soll nicht nur lokal bleiben","Ich brauche doch Internet","Nein, ich möchte das nicht")) {
+   val c=ContinuumCodingConversation();c.accept("Notizen App offline")
+   assertNull(text,c.accept(text).project)
+  }
+ }
  @Test fun independentCatalogMustStillValidateBeforeHandoff() {
   val c=ContinuumCodingConversation();c.accept("Notizen App");val p=c.accept("lokal")
   assertEquals(ContinuumOwnedProject.NOTES,c.approve(p.revision,p.planSha256!!))

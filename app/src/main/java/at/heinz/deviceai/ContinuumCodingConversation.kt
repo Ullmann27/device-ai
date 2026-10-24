@@ -19,13 +19,18 @@ internal class ContinuumCodingConversation {
    conditional=true
    issue="Bedingter oder zitierter Wunsch: Bitte den tatsächlichen Auftrag ausdrücklich formulieren.";return render()
   }
+  if(t.startsWith("nein")||t in setOf("abbrechen","stopp","stop")) {project=null;local=false;issue="Auftrag verworfen. Bitte neuen Auftrag beginnen.";return render()}
+  if(input.trimEnd().endsWith("?")) {
+   last=Preview(revision,"Bitte formuliere oder bestätige die gewünschte Anforderung ausdrücklich.",null,null,last.explicit)
+   return last
+  }
   val unsupported=Regex("\\b(abhaken|löschen|loeschen|synchronisieren|sync|cloud|aufgaben|todo)\\b").containsMatchIn(t)
   if(unsupported){issue="Diese Funktion wird von den zwei Vorlagen noch nicht unterstützt. Bitte einen neuen begrenzten Auftrag starten.";return render()}
   if(conditional&&(t.startsWith("ich möchte")||t.startsWith("ich will"))){issue=null;conditional=false}
   if(issue!=null)return render()
   val notes=Regex("\\b(notizen|notiz|notizapp|texte?|aufschreiben)\\b").containsMatchIn(t)
   val counter=Regex("\\b(zähler|zaehler|zählen|zaehlen|zählerapp)\\b").containsMatchIn(t)
-  if(notes&&counter||Regex("\\b(nicht|keine?)\\s+(?:die\\s+)?(?:notizen|notiz|zähler|zaehler)\\b").containsMatchIn(t)) {
+  if(notes&&counter||Regex("\\b(nicht|keine?)\\s+(?:die\\s+)?(?:notizen|notiz|notizapp|zähler|zaehler|zählerapp|zaehlerapp)\\b").containsMatchIn(t)) {
    issue="Die Projektart ist widersprüchlich. Bitte einen neuen eindeutigen Auftrag starten.";return render()
   }
   if(notes||counter) {
@@ -35,7 +40,8 @@ internal class ContinuumCodingConversation {
   }
   val offline=Regex("\\b(offline|lokal|nur auf dem gerät|nur auf meinem handy)\\b").containsMatchIn(t)||
    Regex("internet\\s+(?:brauch(?:e)?\\s+ich\\s+)?nicht").containsMatchIn(t)||t.contains("kein internet")
-  if(t.contains("nicht lokal")||t.contains("nicht offline")||t.contains("mit internet")||t.contains("online")) {
+  if(Regex("nicht(?:\\s+\\w+){0,2}\\s+(?:lokal|offline)").containsMatchIn(t)||t.contains("nicht kein")||
+   (t.contains("internet")&&!offline)||t.contains("online")) {
    issue="Internet/Synchronisierung wird von diesen Offline-Plänen nicht unterstützt.";local=false
   } else if(offline)local=true
   return render()

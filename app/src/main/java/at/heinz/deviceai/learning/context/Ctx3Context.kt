@@ -36,22 +36,34 @@ class Ctx3Context {
   // Prefer a full compound alias over contained generic nouns. Equal alias spans
   // retain every entity: a collision is ambiguity, never registry order.
   val mentions=hits.filter { h->hits.none { it.start<=h.start&&it.end>=h.end&&(it.end-it.start)>(h.end-h.start) } }
-  fun negative(i:Int)=i>0&&words[i-1] in setOf("nicht","kein","keine","keinen")
+  val trailingCorrection = words.lastOrNull()=="nicht"&&words.any { it in setOf("meine","meinte","gemeint") }
+  fun negative(i:Int):Boolean {
+   if(trailingCorrection)return true
+   var before=i-1
+   while(before>=0&&words[before] in setOf("der","die","das","den","dem","mehr"))before--
+   return before>=0&&words[before] in setOf("nicht","kein","keine","keinen")
+  }
   val rejected=mentions.filter { negative(it.start) }.map { it.e.id }.toSet()
   val positive=mentions.filterNot { negative(it.start) }.map { it.e }.distinctBy { it.id }
   if(rejected.isNotEmpty())focus=focus.filterNot { it.id in rejected }
+  val covered=hits.flatMap { (it.start until it.end).toList() }.toSet()
+  val ordinary=setOf("wer","was","wie","wo","und","ich","nicht","nein","erzähl","erzähle","kannst","kann","bitte","servus","hallo","farbe","alter","name","jahre","hilfe","text","app","gerät","projekt","datei","notizen","zähler","montag","dienstag","mittwoch","donnerstag","freitag","samstag","sonntag","sie","er","es")
+  val unknown=Regex("[\\p{L}\\p{N}]+").findAll(input).map { it.value }.withIndex().any {
+   it.index !in covered&&it.value.first().isUpperCase()&&it.value.lowercase(Locale.ROOT) !in ordinary
+  }
+  if(unknown){focus=emptyList();return if(positive.isNotEmpty())Ctx3Decision.Clarify("MIXED_UNKNOWN_REFERENT")else Ctx3Decision.Abstain("NO_CONFIRMED_ENTITY")}
   if(positive.isNotEmpty()) {
    if(rejected.isNotEmpty()&&positive.size!=1){focus=emptyList();return Ctx3Decision.Clarify("MULTIPLE_REPLACEMENTS")}
    // A single surface span which denotes several entities is not a multi-entity question.
    if(mentions.filterNot { negative(it.start) }.groupBy { it.start to it.end }.any { it.value.map { m->m.e.id }.distinct().size>1 })
-    return Ctx3Decision.Clarify("ALIAS_COLLISION")
+    {focus=emptyList();return Ctx3Decision.Clarify("ALIAS_COLLISION")}
    focus=positive.takeLast(8);age=0
    return Ctx3Decision.Query(input,positive.flatMap { it.sourceIds }.toSet())
   }
   if(rejected.isNotEmpty()){focus=emptyList();return Ctx3Decision.Clarify("ONLY_NEGATED_ENTITIES")}
   val ref=words.withIndex().firstOrNull { it.value in setOf("er","ihn","ihm","sie","es","damit","dazu","darüber","des") }
   if(ref!=null) {
-   if(negative(ref.index)){focus=emptyList();return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
+   if(negative(ref.index)||trailingCorrection){focus=emptyList();return Ctx3Decision.Clarify("REJECTED_PRONOUN")}
    val possible=focus.filter { ref.value in it.pronouns || ref.value in setOf("damit","dazu","darüber","des") }.distinctBy { it.id }
    if(possible.size!=1)return Ctx3Decision.Clarify("NO_UNIQUE_REFERENT")
    val target=possible.single();age=0
@@ -92,7 +104,7 @@ object Ctx3EntityIndex {
      text.startsWith("Das ")->setOf("es")
      else->setOf("er","ihn","ihm","sie","es")
     }
-    genders.getOrPut(name){linkedSetOf()}.addAll(g)
+    if(name !in genders)genders[name]=g.toMutableSet() else genders.getValue(name).retainAll(g)
    }
   }
   return names.entries.take(128).map { (name,ids)->Ctx3Entity(name.lowercase(Locale.ROOT),name,setOf(name),genders.getValue(name),ids.toSet()) }
