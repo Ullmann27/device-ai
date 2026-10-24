@@ -43,7 +43,7 @@ class ContinuumWorkerChatRouterTest {
         )
         assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan:"))
         assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: " + "X".repeat(401)))
-        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: Notiz\\nShellcode"))
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: Notiz\nShellcode"))
 
     }
     @Test fun explicitM4NotesRoutesToConfirmationOnly() {
