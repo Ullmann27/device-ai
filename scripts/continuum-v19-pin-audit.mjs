@@ -17,14 +17,24 @@ const files = entries.map(([expected, source, ...extra]) => {
     throw new Error('Malformed, unsafe, or duplicate attested path');
   }
   seen.add(source);
-  const fullPath = join(root, source);
   let actual = null;
   try {
-    if (lstatSync(fullPath).isFile()) {
-      actual = execFileSync('git', ['hash-object', '--', source],
-        { cwd: root, encoding: 'utf8' }).trim();
+    // lstat on only the final file misses symlinked parent directories.
+    // Every path component must be a real directory except the final regular file.
+    const parts = source.split('/');
+    let current = root;
+    for (let i = 0; i < parts.length; i++) {
+      current = join(current, parts[i]);
+      const item = lstatSync(current);
+      if (item.isSymbolicLink() ||
+          (i < parts.length - 1 && !item.isDirectory()) ||
+          (i === parts.length - 1 && !item.isFile())) {
+        throw new Error('Non-regular or redirected attested source path');
+      }
     }
-  } catch { /* fail closed for absent, unreadable and unsupported files */ }
+    actual = execFileSync('git', ['hash-object', '--', source],
+      { cwd: root, encoding: 'utf8' }).trim();
+  } catch { /* fail closed for symlinks, missing and unsupported path components */ }
   return { path: source, expected, actual, matches: actual === expected };
 });
 const head = execFileSync('git', ['rev-parse', '--verify', 'HEAD'],
