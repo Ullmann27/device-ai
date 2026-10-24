@@ -360,14 +360,15 @@ class ContinuumHologramRenderer {
 
     private fun drawSphere(p: ContinuumPainter, f: Frame) {
         val breath = 1f + sin(f.phase * 1.4f) * (.006f + f.energy * .008f) + f.audio * .02f
+        val lightPulse = .94f + .06f * cos((f.phase - .4f) * 1.7f)
         p.save()
         p.scale(breath, breath, cx, cy)
-        p.fillCircle(cx, cy, rs * 1.3f, bloom, geometry.bloom)
+        p.fillCircle(cx, cy, rs * 1.3f, bloom, geometry.bloom * lightPulse)
         p.fillCircle(cx, cy, rs, glass)
         p.fillCircle(cx, cy, rs, glassCyan)
         p.fillCircle(cx, cy, rs, glassViolet)
         p.setAdditive(true)
-        p.fillCircle(cx, cy, rs * .68f, coreHalo, .85f + f.energy * .15f)
+        p.fillCircle(cx, cy, rs * .68f, coreHalo, (.85f + f.energy * .15f) * lightPulse)
         drawPlexus(p, f, front = false)
         // fan of light rays rising from the projection pad
         for (i in 0 until 15) {

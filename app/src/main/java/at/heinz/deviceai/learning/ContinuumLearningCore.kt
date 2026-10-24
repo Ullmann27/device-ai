@@ -769,8 +769,8 @@ class ContinuumLearningCore(
     fun contextShadowEvents(conversationId:String=defaultContextConversation) = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory,conversationId)
     fun recentContextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.recentEvents(directory)
     fun resetContextConversation(conversationId:String) = at.heinz.deviceai.learning.context.Ctx3Shadow.reset(directory,conversationId)
-    /** Explicit new chat: discard the profile's bounded dialogue context, never owner facts or weights.
-     * The baseline has one profile-local history; this does not introduce per-id baseline storage.
+    /** Explicit new chat: discard this chat's bounded dialogue context, never owner facts or weights.
+     * One profile-local history remains; a stale id cannot discard a newer bound conversation.
      * Validate the shadow identity before discarding any baseline context.
      */
     fun resetDialogueConversation(conversationId:String,stillCurrent:()->Boolean={true}):Boolean = synchronized(CORE_LOCK) {
@@ -778,13 +778,13 @@ class ContinuumLearningCore(
         // Check its lifetime under the same lock as replacement conversations.
         if(!stillCurrent())return@synchronized false
         resetContextConversation(conversationId)
-        dialogue.clear()
-        true
+        dialogue.clear(conversationId)
     }
-    fun replyFromMemory(input:String,conversationId:String=defaultContextConversation):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
+    fun replyFromMemory(input:String,conversationId:String?=null):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
+        ContinuumMemoryDialogue.requireConversationId(conversationId)
         val bytes=loadModel().save(); val experiences=store.all()
-        val answer=dialogue.reply(bytes,experiences,input,nowMillis())
-        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds,conversationId) }
+        val answer=dialogue.replyInConversation(bytes,experiences,input,nowMillis(),conversationId)
+        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds,conversationId?:defaultContextConversation) }
         answer
     }
     /** One immutable model/experience view for answer AND CRE1 candidates.
@@ -794,23 +794,36 @@ class ContinuumLearningCore(
     fun replyWithEvidence(
         input:String,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
-    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithEvidenceInConversation(input,defaultContextConversation,rerank)
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithContextEvidence(input,null,rerank).let { it.dialogue to it.evidence }
 
     fun replyWithEvidenceInConversation(
         input:String,conversationId:String,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
-    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> =
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithContextEvidenceInConversation(input,conversationId,rerank).let { it.dialogue to it.evidence }
+
+    fun replyWithContextEvidenceInConversation(
+        input:String,conversationId:String,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):ContinuumMemoryReply = replyWithContextEvidence(input,conversationId,rerank)
+
+    private fun replyWithContextEvidence(
+        input:String,conversationId:String?,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?
+    ):ContinuumMemoryReply =
         synchronized(CORE_LOCK) {
+            ContinuumMemoryDialogue.requireConversationId(conversationId)
             val snapshot=loadModel().save()
             val experiences=store.all()
-            val turn=dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)
-            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId) }
+            val previous=try { dialogue.history(conversationId).lastOrNull()?.takeIf { it.topic.isNotBlank() }?.resolvedQuery }
+                catch (_:IllegalArgumentException) { null } // reply quarantines the damaged context below.
+            val turn=dialogue.replyInConversation(snapshot,experiences,input,nowMillis(),conversationId,rerank)
+            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId?:defaultContextConversation) }
             val hits=if(turn.grounded) {
                 val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
                     .associateBy { it.id }
                 turn.memoryIds.mapNotNull(byId::get)
             } else emptyList()
-            turn to hits
+            ContinuumMemoryReply(turn,hits,previous)
         }
 
     fun dialogueHistory():List<ContinuumDialogueTurn> = synchronized(CORE_LOCK) { dialogue.history() }

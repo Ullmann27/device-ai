@@ -441,6 +441,7 @@ class AgentActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        hologramView?.setHostResumed(true)
         if (::bridge.isInitialized) bridge.refresh()
         if (::cloudBadge.isInitialized) updateCloudBadge()
         if (::modelCatalog.isInitialized) reloadInstalledModels()
@@ -454,6 +455,7 @@ class AgentActivity : Activity() {
     }
 
     override fun onPause() {
+        hologramView?.setHostResumed(false)
         foregroundLearningActive = false
         stopVoiceAnimation()
         voiceEngine?.stop()
@@ -477,6 +479,7 @@ class AgentActivity : Activity() {
 
     override fun onDestroy() {
         sessionResetLifetime.set(false)
+        hologramView?.setHostResumed(false)
         foregroundLearningActive = false
         mainHandler.removeCallbacks(foregroundLearningCheck)
         clearLifecycleTimeout()
@@ -693,7 +696,7 @@ class AgentActivity : Activity() {
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         // Start screen of the owner's reference images: one view per measured slot, real values only
         // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
-        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it }) { slot, x, y ->
+        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it; it.setHostResumed(foregroundLearningActive) }) { slot, x, y ->
             openHomeSlot(slot, x, y)
         }
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()

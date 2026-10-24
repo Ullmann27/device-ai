@@ -5,6 +5,11 @@ import org.junit.Test
 import kotlin.math.abs
 
 class ContinuumOrbitalRingTest {
+    @Test fun readySphereLiftIsVisibleWithinTheFirstSecondAndRemainsGentle() {
+        val phaseAfterOneSecond = .4f + .28f + .18f * .72f
+        assertTrue("READY float should be visible without waiting many seconds", abs(ContinuumOrbitalRing.lift(phaseAfterOneSecond, 101f)) >= 2f)
+        assertEquals(0f, ContinuumOrbitalRing.lift(.4f, 101f), 0f)
+    }
     @Test fun deterministicPerspectiveHasTwoContinuousBoundedDepthHalves() {
         val a = ContinuumOrbitalRing(1.42f, .34f, -11f)
         val b = ContinuumOrbitalRing(1.42f, .34f, -11f)
@@ -35,7 +40,7 @@ class ContinuumOrbitalRingTest {
         ring.project(phaseAfterFourSeconds, 1f, 206f, 117f, 101f)
         assertTrue(start.indices.any { abs(start[it] - ring.front[it]) > 4f })
         assertTrue(abs(ContinuumOrbitalRing.lift(phaseAfterFourSeconds, 101f)) > 1.5f)
-        for (i in 0..1000) assertTrue(abs(ContinuumOrbitalRing.lift(i * .13f, 101f)) <= 2.425f)
+        for (i in 0..1000) assertTrue(abs(ContinuumOrbitalRing.lift(i * .13f, 101f)) <= 4.546f)
         val plexus = ContinuumHologramPlexus(28)
         plexus.project(.064f, .3f, 206f, 117f, 101f)
         val x = plexus.sx.copyOf(); val links = plexus.edgeA.copyOf()

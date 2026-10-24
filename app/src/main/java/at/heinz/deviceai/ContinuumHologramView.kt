@@ -44,6 +44,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     @Volatile private var pendingAudioMs = 0L
     private var consumedAudioMs = 0L
     private var animationsEnabled = true
+    private var hostResumed = true
     private var motionAllowed = false
     private var aggregatedVisible = false
     private var framePending = false
@@ -56,6 +57,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val drawFrame = Runnable {
         framePending = false
         if (canAnimate()) {
+            // Advance on the single frame clock even when Android coalesces or skips a draw.
+            advanceFrame()
             invalidate()
             scheduleFrame()
         }
@@ -108,6 +111,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         updateMotionPolicy()
     }
 
+    /** Activity lifecycle is separate from window visibility (e.g. translucent overlays). */
+    fun setHostResumed(resumed: Boolean) {
+        if (hostResumed == resumed) return
+        hostResumed = resumed
+        updateMotionPolicy()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         if (!observersRegistered) {
@@ -144,7 +154,12 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
-    private fun canAnimate() = motionAllowed && isAttachedToWindow && aggregatedVisible && windowVisibility == VISIBLE
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) updateMotionPolicy()
+    }
+
+    private fun canAnimate() = hostResumed && motionAllowed && isAttachedToWindow && aggregatedVisible && isShown && windowVisibility == VISIBLE
 
     private fun updateMotionPolicy() {
         motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
@@ -185,7 +200,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         super.onDraw(canvas)
         val density = resources.displayMetrics.density
         if (width <= 0 || height <= 0) return
-        advanceFrame()
         renderer.layout(width / density, height / density)
         painter.begin(canvas)
         val saved = canvas.save()

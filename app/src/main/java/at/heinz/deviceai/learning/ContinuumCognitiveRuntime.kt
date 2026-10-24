@@ -46,7 +46,6 @@ class ContinuumCognitiveRuntime(
 
     fun reply(input:String):ContinuumCognitiveTurn {
         require(input.trim().length in 1..512)
-        val previous=runCatching { core.dialogueHistory() }.getOrDefault(emptyList())
         // A damaged checkpoint cannot be used, even with a plausible manifest.
         val snapshot=if(cre1Checkpoint.exists()) {
             runCatching {
@@ -70,7 +69,7 @@ class ContinuumCognitiveRuntime(
         }
         var shadow=emptyList<ContinuumShadowScore>()
         var didRerank=false
-        val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId) { resolved,candidates ->
+        val (turn,ranked,previous)=core.replyWithContextEvidenceInConversation(input,conversationId) { resolved,candidates ->
             // The callback runs before the dialogue file is written. It may
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.
@@ -119,11 +118,14 @@ class ContinuumCognitiveRuntime(
      */
     internal fun localPrompt(
         question:String,prior:List<ContinuumDialogueTurn>,resolved:String
+    ):String = localPrompt(question,prior.lastOrNull()?.takeIf { it.topic.isNotBlank() }?.resolvedQuery,resolved)
+
+    private fun localPrompt(
+        question:String,previousQuery:String?,resolved:String
     ):String {
         val clean=question.trim().take(512)
         if(!REFERENTIAL.containsMatchIn(clean))return resolved.take(512)
-        val earlier=prior.lastOrNull { it.topic.isNotBlank() }?.resolvedQuery
-            ?.take(320) ?: return clean
+        val earlier=previousQuery?.take(320) ?: return clean
         return ("Vorherige Gesprächsfrage: "+earlier+
             "\nAktuelle Anschlussfrage: "+clean+
             "\nBeziehe Pronomen nur bei eindeutigem Kontext. "+
