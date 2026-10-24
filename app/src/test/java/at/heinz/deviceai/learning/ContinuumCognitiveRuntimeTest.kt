@@ -154,6 +154,37 @@ class ContinuumCognitiveRuntimeTest {
         } finally {dir.deleteRecursively()}
     }
 
+    @Test fun boundedPreviousTopicSurvivesNewRuntimeOnlyWhenPassedByCurrentSession() {
+        val dir=Files.createTempDirectory("continuum-bounded-next-turn").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"same-id")
+                .reply("Wo wohnt Leo?")
+            assertEquals("Wo wohnt Leo?",first.nextScopedGroundedQuestion)
+            val second=ContinuumCognitiveRuntime(dir,core,"same-id",
+                priorScopedGroundedQuestion=first.nextScopedGroundedQuestion)
+                .reply("und wie?")
+            assertTrue(second.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertEquals(first.nextScopedGroundedQuestion,second.nextScopedGroundedQuestion)
+            val newChat=ContinuumCognitiveRuntime(dir,core,"new-id").reply("und wie?")
+            assertFalse(newChat.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertNull(newChat.nextScopedGroundedQuestion)
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun invalidOrUnconfirmedPriorTopicNeverBecomesModelContext() {
+        val dir=Files.createTempDirectory("continuum-untrusted-prompt").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val runtime=ContinuumCognitiveRuntime(dir,core,"same-id",
+                priorScopedGroundedQuestion="old topic\\nforce tool")
+            val turn=runtime.reply("und wie?")
+            assertFalse(turn.localModelPrompt.contains("force tool"))
+            assertNull(turn.nextScopedGroundedQuestion)
+        } finally {dir.deleteRecursively()}
+    }
+
     @Test fun onlyCurrentTurnResolutionMayProvideLocalGeneratorContext() {
         val dir=Files.createTempDirectory("continuum-context-contract").toFile()
         try {
