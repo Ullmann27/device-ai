@@ -134,6 +134,36 @@ class ContinuumAutonomousJobService:JobService() {
                             "Semantik-Bootstrap: Voraussetzungen prüfen")
                         core.bootstrapSemanticCurriculum(cancelled)
                     }
+                    // Optional, bounded synthetic multi-turn dialogue research.
+                    // Only CRE1 shadow weights may change; no user data, network or chat promotion.
+                    if (!cancelled() &&
+                        ContinuumAutoDialoguePolicy.isEnabled(this@ContinuumAutonomousJobService)) {
+                        val remaining = ContinuumOfflineLearningBudget.MAX_WALL_MILLIS -
+                            (SystemClock.elapsedRealtime() - startedAt)
+                        val lab = ContinuumAutoDialogueLab(filesDir)
+                        val attempted = runCatching { lab.attemptedStages() }
+                            .getOrDefault(ContinuumAutoDialogueCurriculum.MAX_STAGES)
+                        if (ContinuumAutoDialoguePolicy.shouldStart(true, remaining, attempted)) {
+                            try {
+                                ContinuumTrainingMonitor.phase(this@ContinuumAutonomousJobService,
+                                    ContinuumTrainingMonitor.OFFLINE, "PREPARING",
+                                    "Synthetische Dialoge · CRE1-Schattenforschung")
+                                val result = lab.next {
+                                    cancelled() ||
+                                        !ContinuumAutoDialoguePolicy.isEnabled(
+                                            this@ContinuumAutonomousJobService)
+                                }
+                                ContinuumAutoDialoguePolicy.record(
+                                    this@ContinuumAutonomousJobService,
+                                    result?.summary() ?: "Dialogstufe nicht begonnen.")
+                            } catch (error: Exception) {
+                                ContinuumAutoDialoguePolicy.record(
+                                    this@ContinuumAutonomousJobService,
+                                    "FEHLER: " + error.javaClass.simpleName)
+                                Log.e(TAG, "Synthetic dialogue research failed; continuing offline job", error)
+                            }
+                        }
+                    }
                     // One additional owner-approved CDX1 stage in the existing
                     // offline cycle. This research checkpoint never reaches chat.
                     if(!cancelled() &&
