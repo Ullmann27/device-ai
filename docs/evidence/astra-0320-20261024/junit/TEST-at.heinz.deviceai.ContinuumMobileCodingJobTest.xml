@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumMobileCodingJobTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:01" hostname="5c9e18abbd30" time="0.014">
+  <properties/>
+  <testcase name="unsafeOrdersAreRejectedBeforeTermux" classname="at.heinz.deviceai.ContinuumMobileCodingJobTest" time="0.001"/>
+  <testcase name="failuresAndBlocksAreShownHonestly" classname="at.heinz.deviceai.ContinuumMobileCodingJobTest" time="0.009"/>
+  <testcase name="realNodeReceiptPassesWhenSupplied" classname="at.heinz.deviceai.ContinuumMobileCodingJobTest" time="0.0"/>
+  <testcase name="onlyACompleteIndependentReceiptCountsAsVerifiedPatch" classname="at.heinz.deviceai.ContinuumMobileCodingJobTest" time="0.001"/>
+  <testcase name="orderBecomesFixedArgvWithoutShell" classname="at.heinz.deviceai.ContinuumMobileCodingJobTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

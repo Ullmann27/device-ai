@@ -1,0 +1,242 @@
+{
+  "sourceHead": "d7429145ad5dff64364ed47f9ceb0c07a5a8ed85",
+  "state": "BLOCKED_NOT_OWNER_APPROVED",
+  "ownerVersionName": "0.3.20",
+  "ownerVersionCode": 21,
+  "ownerPackage": "at.heinz.deviceai.mentorpaired",
+  "ownerCertificateSha256": "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc",
+  "oldV20Attestations": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "oldV20AttestedBlob": "1f636f35b09837c13bb954b48da1fabe7039cb05",
+      "candidateBlob": "86dd39fc357deb58b3583a83468b4446b76d3244",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "oldV20AttestedBlob": "682f6f5946828b7b2a1e9b7d5d37a6e8481b74fe",
+      "candidateBlob": "c7fb2c1480c4bc7d0bf1d7dff73712cf829385a5",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "oldV20AttestedBlob": "2bb8817da268bdcca676aa9a9b48f56b50d06609",
+      "candidateBlob": "9b27cc7d7e7b005d23f4f7cc2be32f4b792ec1ec",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "oldV20AttestedBlob": "35a92c7a8587e22d6e5dfaa93550407371d5e304",
+      "candidateBlob": "35a92c7a8587e22d6e5dfaa93550407371d5e304",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+      "oldV20AttestedBlob": "edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5",
+      "candidateBlob": "d4b0dbb34112c5b426f8b604bf9456f40ad32d19",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+      "oldV20AttestedBlob": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "candidateBlob": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "oldV20AttestedBlob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "candidateBlob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "oldV20AttestedBlob": "520db0554c0e4d8803d674f229f243f51f2aba17",
+      "candidateBlob": "333c867b5740847d878ac96b6c4b3e595c8286f7",
+      "matches": false
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "oldV20AttestedBlob": "9bd2f119ca06e7f91a9a7cf616e5154fa5776e6c",
+      "candidateBlob": "4851524f8bec3120570ac9c16b012f4d48a99f78",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "oldV20AttestedBlob": "a3f6d68db2cbccabd640928926c3ca28d92dc058",
+      "candidateBlob": "a3f6d68db2cbccabd640928926c3ca28d92dc058",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+      "oldV20AttestedBlob": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "candidateBlob": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+      "oldV20AttestedBlob": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "candidateBlob": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "oldV20AttestedBlob": "b1cdf34bb2cfdca831d874a63b443eedcaf6c857",
+      "candidateBlob": "b1cdf34bb2cfdca831d874a63b443eedcaf6c857",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "oldV20AttestedBlob": "a900cdc73b757cec751ecc23825a92153da257ad",
+      "candidateBlob": "a900cdc73b757cec751ecc23825a92153da257ad",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt",
+      "oldV20AttestedBlob": "a4f1b385739d99912081fffbaa405900e98e8fed",
+      "candidateBlob": "a4f1b385739d99912081fffbaa405900e98e8fed",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+      "oldV20AttestedBlob": "9a6f7a4c4bebc36c4dab8041491643bca2696df5",
+      "candidateBlob": "9a6f7a4c4bebc36c4dab8041491643bca2696df5",
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-owned-app.mjs",
+      "oldV20AttestedBlob": "c735606419fcdec445fd3b344eecba2bdee55989",
+      "candidateBlob": "c735606419fcdec445fd3b344eecba2bdee55989",
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-owned-app.test.mjs",
+      "oldV20AttestedBlob": "65cec140fa13896131f18403c69c8a868781e9b7",
+      "candidateBlob": "65cec140fa13896131f18403c69c8a868781e9b7",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/assets/continuum-training-studio-v1.json",
+      "oldV20AttestedBlob": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "candidateBlob": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-training-studio.test.mjs",
+      "oldV20AttestedBlob": "f4a01789c3a48942c4c83955d31519d3a1fb2744",
+      "candidateBlob": "f4a01789c3a48942c4c83955d31519d3a1fb2744",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "oldV20AttestedBlob": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "candidateBlob": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+      "oldV20AttestedBlob": "b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8",
+      "candidateBlob": "b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "oldV20AttestedBlob": "983138c8e8cc9b25189288c7202d4e17f699f959",
+      "candidateBlob": "983138c8e8cc9b25189288c7202d4e17f699f959",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/assets/continuum-owned-project-plans-v1.json",
+      "oldV20AttestedBlob": "d19297d5715821ac1073934adde07c64ddf25d5b",
+      "candidateBlob": "d19297d5715821ac1073934adde07c64ddf25d5b",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
+      "oldV20AttestedBlob": "53efcb096fe152189a1731948706b4ccb1294790",
+      "candidateBlob": "53efcb096fe152189a1731948706b4ccb1294790",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+      "oldV20AttestedBlob": "b2732626709517ee49fb0213796ed272e8e0f76c",
+      "candidateBlob": "b2732626709517ee49fb0213796ed272e8e0f76c",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+      "oldV20AttestedBlob": "22234d244c08f6e7b041509eca7ea6df4d13cc24",
+      "candidateBlob": "22234d244c08f6e7b041509eca7ea6df4d13cc24",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "oldV20AttestedBlob": "656532f9798b0b5b53cf2973d296faf2ee8e6afe",
+      "candidateBlob": "7cdf1121e2f7c61ca49125a45e4b776908c6626c",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "oldV20AttestedBlob": "8c9da619e62608155c496c25919f2c213616e7b7",
+      "candidateBlob": "f0f901298f4365581d72c686aa0a65ed31b80610",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "oldV20AttestedBlob": "9872c2209b550d8b4c361f087ddc09595324b681",
+      "candidateBlob": "9872c2209b550d8b4c361f087ddc09595324b681",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+      "oldV20AttestedBlob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c",
+      "candidateBlob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+      "oldV20AttestedBlob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe",
+      "candidateBlob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe",
+      "matches": true
+    },
+    {
+      "path": "app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt",
+      "oldV20AttestedBlob": "d084e0b9f7914df7edeeff1d1ad8b405b98cbcd4",
+      "candidateBlob": "e8929a78617218bc689e23748f6461bf3f88a31b",
+      "matches": false
+    },
+    {
+      "path": ".github/continuum/continuum-hologram-context-wiring.test.mjs",
+      "oldV20AttestedBlob": "5dfb45ee936b121f7751fc5256dfbab3b6c5d4b0",
+      "candidateBlob": "899e0e2fc31e2534bd9a0709bcfc473b2bee9b46",
+      "matches": false
+    }
+  ],
+  "mismatchCount": 10,
+  "unattestedChangedOrNewMainSources": [
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculum.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+    "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+    "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeView.kt"
+  ],
+  "blockers": [
+    "Exact v21 candidate source/manifest has NOT received owner approval",
+    "Dispatcher has no approved v21 recipe; historical v19/v20 recipes and fingerprints unchanged",
+    "Owner private Render signer not accessed; no replacement key",
+    "No physical Fold7 animation, thermal, loaded-model or install verification; no new APK assembled or signed"
+  ],
+  "rollback": {
+    "commit": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+    "builder_commit": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+    "source_branch": "astra/render-mentor-apk-builder-20261019",
+    "package": "at.heinz.deviceai.mentorpaired",
+    "version_code": "20",
+    "version_name": "0.3.19",
+    "android_min_sdk": "26",
+    "signing": "persistent_private_mentor_key_same_certificate_as_v0.3.12",
+    "artifact": "DeviceAI-Continuum-v0.3.19-1f486e96439708ff96e7f427276217b835e15f7a029a4f72cea8178f4bf82a19.apk",
+    "apk_sha256": "1f486e96439708ff96e7f427276217b835e15f7a029a4f72cea8178f4bf82a19",
+    "status": "SIGNED_BUILD_VERIFIED_NOT_DEVICE_INSTALLED"
+  }
+}

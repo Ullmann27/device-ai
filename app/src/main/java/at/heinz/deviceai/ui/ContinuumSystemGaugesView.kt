@@ -1,5 +1,7 @@
 package at.heinz.deviceai.ui
 
+import android.animation.ValueAnimator
+import android.os.PowerManager
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -38,12 +40,61 @@ class ContinuumSystemGaugesView(
             Triple("GPU", null, 0xFFA855F7.toInt())
         )
 
+    private var foregroundActive = false
+    private var transition: ValueAnimator? = null
+    private val displayed = FloatArray(5) { values[it].second?.coerceIn(0, 100)?.toFloat() ?: Float.NaN }
+    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+
+    fun setForegroundActive(active: Boolean) {
+        foregroundActive = active
+        if (!active) settle()
+    }
+
+    private fun motionAllowed() = foregroundActive && isAttachedToWindow && isShown &&
+        windowVisibility == VISIBLE && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
+
+    private fun settle() {
+        transition?.cancel()
+        transition = null
+        values.forEachIndexed { i, entry -> displayed[i] = entry.second?.coerceIn(0, 100)?.toFloat() ?: Float.NaN }
+        invalidate()
+    }
+
+    override fun onDetachedFromWindow() { settle(); super.onDetachedFromWindow() }
+    override fun onVisibilityAggregated(isVisible: Boolean) {
+        super.onVisibilityAggregated(isVisible)
+        if (!isVisible) settle()
+    }
+
     /** The open system panel reflects the same 5-second sampler as the dashboard. */
     fun updateTelemetry(next: ContinuumDashboardState.SystemStatus) {
         if (telemetry == next) return
+        transition?.cancel()
+        transition = null
+        val from = displayed.copyOf()
         telemetry = next
         contentDescription = describeTelemetry()
-        invalidate()
+        val target = FloatArray(5) { values[it].second?.coerceIn(0, 100)?.toFloat() ?: Float.NaN }
+        // Missing/new measurements appear immediately. Never invent a zero baseline.
+        for (i in displayed.indices) if (!from[i].isFinite() || !target[i].isFinite()) {
+            from[i] = target[i]
+            displayed[i] = target[i]
+        }
+        if (!motionAllowed() || from.indices.none { from[it].isFinite() && from[it] != target[it] }) {
+            settle()
+            return
+        }
+        transition = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 450L
+            addUpdateListener {
+                if (!motionAllowed()) { settle(); return@addUpdateListener }
+                val t = it.animatedValue as Float
+                for (i in displayed.indices) displayed[i] = from[i] + (target[i] - from[i]) * t
+                if (t >= 1f) transition = null
+                invalidate()
+            }
+            start()
+        }
     }
 
     private fun describeTelemetry(): String = values.joinToString(". ") { (name, measured, _) ->
@@ -102,15 +153,16 @@ class ContinuumSystemGaugesView(
             paint.color = 0xFF1E2942.toInt()
             canvas.drawArc(ring, -90f, 360f, false, paint)
 
-            if (percent != null && percent > 0) {
+            val animatedPercent = displayed[i]
+            if (percent != null && animatedPercent.isFinite() && animatedPercent > 0f) {
                 // Glow is behind the sharp colored arc, not a global blur of text.
                 paint.strokeWidth = stroke * 1.8f
                 paint.color = (accent and 0x00FFFFFF) or (0x3A shl 24)
-                canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
+                canvas.drawArc(ring, -90f, animatedPercent * 3.6f, false, paint)
 
                 paint.strokeWidth = stroke
                 paint.shader = gradients[i]
-                canvas.drawArc(ring, -90f, percent * 3.6f, false, paint)
+                canvas.drawArc(ring, -90f, animatedPercent * 3.6f, false, paint)
                 paint.shader = null
             }
 

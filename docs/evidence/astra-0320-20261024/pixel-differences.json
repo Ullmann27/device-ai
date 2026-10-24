@@ -1,0 +1,68 @@
+{
+  "sourceHead": "d7429145ad5dff64364ed47f9ceb0c07a5a8ed85",
+  "clock": "Robolectric native Canvas virtual 0/1/2s; not physical Fold7",
+  "centralMask": "distance < 0.32 sphere radii from fixed center",
+  "outerMask": "1.05..1.6 sphere radii",
+  "metrics": [
+    {
+      "size": [
+        412,
+        307
+      ],
+      "seconds": [
+        0,
+        1
+      ],
+      "changedPixels": {
+        "all": 121655,
+        "centralGlass": 3293,
+        "outerOrbitBand": 39975
+      }
+    },
+    {
+      "size": [
+        412,
+        307
+      ],
+      "seconds": [
+        1,
+        2
+      ],
+      "changedPixels": {
+        "all": 34621,
+        "centralGlass": 3158,
+        "outerOrbitBand": 12596
+      }
+    },
+    {
+      "size": [
+        410,
+        291
+      ],
+      "seconds": [
+        0,
+        1
+      ],
+      "changedPixels": {
+        "all": 109580,
+        "centralGlass": 3283,
+        "outerOrbitBand": 43648
+      }
+    },
+    {
+      "size": [
+        410,
+        291
+      ],
+      "seconds": [
+        1,
+        2
+      ],
+      "changedPixels": {
+        "all": 31646,
+        "centralGlass": 1999,
+        "outerOrbitBand": 12944
+      }
+    }
+  ]
+}

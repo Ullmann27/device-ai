@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:11" hostname="5c9e18abbd30" time="0.024">
+  <properties/>
+  <testcase name="immediateEndOfSequenceCannotFakeAnExplicitUnknownAnswer" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.008"/>
+  <testcase name="perfectAnswersAndHonestUnknownsMeetResearchTarget" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.001"/>
+  <testcase name="missingGenerationMustNeverMasqueradeAsAbstention" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.0"/>
+  <testcase name="cancellingImmediatelyDoesNotAccessOrAlterModel" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.003"/>
+  <testcase name="independentFixedAuditIsNotOldCurriculum" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.001"/>
+  <testcase name="malformedModelIdentifiersAndProbeInputsAreRejected" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.001"/>
+  <testcase name="missingCheckpointIsReportedAndNeverCreatesDecoderFiles" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.005"/>
+  <testcase name="unsupportedGuessesFailEvenWhenAllKnownAnswersAreCorrect" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.001"/>
+  <testcase name="partialAnswersAndEchoesAreNotCountedAsCorrect" classname="at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

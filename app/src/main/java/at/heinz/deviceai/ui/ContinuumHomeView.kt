@@ -27,24 +27,38 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     private val backgroundPainter = AndroidContinuumPainter(context.assets)
     private val sciFiEffects = ContinuumSciFiEffects(density)
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+    private var learningMotionUntil = 0L
+    private var modelMotionUntil = 0L
+    private var systemMotionUntil = 0L
+    private fun now() = android.os.SystemClock.uptimeMillis()
+    private var foregroundActive = false
+    fun setForegroundActive(active: Boolean) {
+        foregroundActive = active
+        updateWaveAnimation()
+    }
     private var waveFramePending = false
     private val waveFrame = object : Runnable {
         override fun run() {
             waveFramePending = false
-            if (!waveAnimationEnabled()) return
+            if (!waveAnimationEnabled()) {
+                views[Slot.LEARNING]?.invalidate()
+                views[Slot.MODEL]?.invalidate()
+                views[Slot.SYSTEM_ACTIVITY]?.invalidate()
+                return
+            }
             // Moving light follows authentic measurements; data points never change here.
-            // Static or missing data: header glow still breathes, but no fictional data is drawn.
-            views[Slot.LEARNING]?.invalidate()
-            views[Slot.MODEL]?.invalidate()
-            views[Slot.SYSTEM_ACTIVITY]?.invalidate()
-            invalidate()
+            // One brief highlight per new measurement; no endless activity on unchanged history.
+            // No running light on an idle quality score or historical learning curve.
+            if (now() <= learningMotionUntil) views[Slot.LEARNING]?.invalidate()
+            if (now() <= modelMotionUntil) views[Slot.MODEL]?.invalidate()
+            if (now() <= systemMotionUntil) views[Slot.SYSTEM_ACTIVITY]?.invalidate()
             scheduleWaveFrame()
         }
     }
 
-    private fun waveAnimationEnabled(): Boolean = isAttachedToWindow && windowVisibility == View.VISIBLE &&
+    private fun waveAnimationEnabled(): Boolean = foregroundActive && isAttachedToWindow && windowVisibility == View.VISIBLE &&
         visibility == View.VISIBLE && isShown && android.animation.ValueAnimator.areAnimatorsEnabled() &&
-        !powerManager.isPowerSaveMode
+        !powerManager.isPowerSaveMode && now() < maxOf(learningMotionUntil, modelMotionUntil, systemMotionUntil)
 
     private fun scheduleWaveFrame() {
         if (!waveFramePending && waveAnimationEnabled()) {
@@ -83,6 +97,10 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
     }
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) {
+            val until = now() + 900L
+            if (value.learning.series != field.learning.series && value.learning.series.size > 1) learningMotionUntil = until
+            if (value.model.qualityPercent != field.model.qualityPercent && value.model.qualityPercent != null) modelMotionUntil = until
+            if (value.system.activity != field.system.activity && value.system.activity.size > 1) systemMotionUntil = until
             field = value
             views.values.forEach { it.refresh() }
             updateWaveAnimation()
@@ -210,8 +228,19 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
             val k = density * (layoutSpec?.scale ?: 1f)
             canvas.scale(k, k)
             // Decorative phase follows the uptime clock; historical sample coordinates remain unchanged.
-            element.motionPhase = if (waveAnimationEnabled()) {
-                (android.os.SystemClock.uptimeMillis() % 4800L).toFloat() / 4800f
+            val active = when (slot) {
+                Slot.LEARNING -> now() < learningMotionUntil
+                Slot.MODEL -> now() < modelMotionUntil
+                Slot.SYSTEM_ACTIVITY -> now() < systemMotionUntil
+                else -> false
+            }
+            element.motionPhase = if (active && waveAnimationEnabled()) {
+                val until = when (slot) {
+                    Slot.LEARNING -> learningMotionUntil
+                    Slot.MODEL -> modelMotionUntil
+                    else -> systemMotionUntil
+                }
+                (1f - (until - now()) / 900f).coerceIn(0f, 1f)
             } else null
             element.draw(painter, width / k, height / k, state)
             canvas.restoreToCount(saved)
@@ -227,41 +256,6 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
     private val painter = AndroidContinuumPainter(context.assets)
     private var tapX = 0f
     private var tapY = 0f
-    private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-    private var pulseScheduled = false
-    private val pulseFrame = Runnable {
-        pulseScheduled = false
-        if (canPulse()) invalidate()
-    }
-    private fun canPulse(): Boolean = isShown && isAttachedToWindow &&
-        android.animation.ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
-    private fun schedulePulse() {
-        if (!pulseScheduled && canPulse()) {
-            pulseScheduled = true
-            postOnAnimationDelayed(pulseFrame, 66L)
-        }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        schedulePulse()
-    }
-
-    override fun onDetachedFromWindow() {
-        removeCallbacks(pulseFrame)
-        pulseScheduled = false
-        super.onDetachedFromWindow()
-    }
-
-    override fun onVisibilityAggregated(isVisible: Boolean) {
-        super.onVisibilityAggregated(isVisible)
-        if (isVisible) schedulePulse()
-        else {
-            removeCallbacks(pulseFrame)
-            pulseScheduled = false
-        }
-    }
-
     var state: ContinuumDashboardState = ContinuumDashboardState()
         set(value) { field = value; contentDescription = element.describe(value); invalidate() }
 
@@ -284,11 +278,8 @@ class ContinuumElementView(context: Context, val element: ContinuumElement, priv
         // [designScale] = window width / reference width, like the start-screen slots
         val k = density * designScale
         canvas.scale(k, k)
-        element.motionPhase = if (canPulse()) {
-            (android.os.SystemClock.uptimeMillis() % 4800L).toFloat() / 4800f
-        } else null
+        element.motionPhase = null // Navigation selection is stable; real workload animates in its own card.
         element.draw(painter, width / k, height / k, state)
         canvas.restoreToCount(saved)
-        schedulePulse()
     }
 }

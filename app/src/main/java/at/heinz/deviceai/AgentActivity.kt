@@ -304,6 +304,8 @@ class AgentActivity : Activity() {
     private var modelImportActive = false
     private var modelUnloading = false
     @Volatile private var localRuntimeError: String? = null
+    // A rejected candidate does not invalidate an independently loaded, verified runtime.
+    private var localImportError: String? = null
     private var lifecycleTimeout: Runnable? = null
     private val mainHandler = Handler(Looper.getMainLooper())
     private val localAgentExecutor = Executors.newSingleThreadExecutor { runnable ->
@@ -452,6 +454,8 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         // Only the foreground Activity may advance the hologram's orbital clock.
         hologramView?.setForegroundActive(true)
+        homeView?.setForegroundActive(true)
+        liveHardwareGauges?.setForegroundActive(true)
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
@@ -462,6 +466,8 @@ class AgentActivity : Activity() {
     override fun onPause() {
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
+        homeView?.setForegroundActive(false)
+        liveHardwareGauges?.setForegroundActive(false)
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
@@ -713,6 +719,7 @@ class AgentActivity : Activity() {
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
             windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat())
+        home.setForegroundActive(foregroundLearningActive)
         homeView = home
         dashboard.addView(home, matchWidth())
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
@@ -1281,6 +1288,7 @@ class AgentActivity : Activity() {
             val systemSnapshot = homeView?.state?.system
                 ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
             val gauges = at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot)
+            gauges.setForegroundActive(foregroundLearningActive)
             liveHardwareGauges = gauges
             box.addView(gauges, matchWidth(top = 3))
             box.addView(textView(
@@ -5097,22 +5105,26 @@ class AgentActivity : Activity() {
             refreshLocalModelUi()
             return
         }
+        val testedModel = localRuntime.loadedModel ?: return
+        val identity = "${testedModel.id} · ${testedModel.version} · SHA-256 ${testedModel.sha256} · ${testedModel.byteCount} Bytes"
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
         activeChatCancellation = cancellation
         activeLocalRequest = true
         localRuntimeError = null
         setBusy(true)
         addToolActivity(if(direct)
-            "MODELLTEST · direkte lokale Qwen-Inferenz ohne Werkzeugausführung"
+            "MODELLTEST · direkte lokale Inferenz ohne Werkzeugausführung"
             else "MODELLTEST · isolierte Textgenerierung ohne Gerätewerkzeuge")
         localAgentExecutor.execute {
             val started = System.nanoTime()
             val result = runCatching {
+                check(localRuntime.loadedModel == testedModel) { "Model identity changed before test." }
                 val generated = generateLocal(cancellation) { callback ->
                     val question="Antworte auf Deutsch in genau einem kurzen Satz: Was macht ein Roboter auf dem Mond?"
                     if(direct)localRuntime.stream(question,callback)
                     else localRuntime.streamThinking(question,callback)
                 }
+                check(localRuntime.loadedModel == testedModel) { "Model identity changed during test." }
                 generated.failure?.let { throw IllegalStateException(it) }
                 check(generated.proposal == null && generated.rejectedToolResponses.isEmpty()) {
                     "Der isolierte Modelltest darf keine Werkzeugvorschläge erzeugen."
@@ -5129,7 +5141,7 @@ class AgentActivity : Activity() {
                     onSuccess = { answer ->
                         addAssistantMessage("MODELLTEST "+
                             (if(direct)"DIREKT" else "THINKING")+
-                            " ERFOLGREICH · ${elapsed} ms\n\n" + answer)
+                            " ERFOLGREICH · ${elapsed} ms\nGeprüfte Katalogidentität: $identity\n\n" + answer)
                         addToolActivity("MODELLTEST · native Textgenerierung abgeschlossen; kein Tool ausgeführt")
                     },
                     onFailure = { failure ->
@@ -6032,28 +6044,30 @@ class AgentActivity : Activity() {
         val metadata = pendingModelImport ?: return
         pendingModelImport = null
         modelImportActive = true
-        localRuntimeError = null
+        localImportError = null
         refreshLocalModelUi()
-        scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.")
+        scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.", forImport = true)
         localAgentExecutor.execute {
             val result = runCatching {
                 val source = contentResolver.openInputStream(uri)
                     ?: error("Dokument kann nicht geöffnet werden.")
-                modelCatalog.import(metadata.first, metadata.second, source, metadata.third)
+                source.use { modelCatalog.import(metadata.first, metadata.second, it, metadata.third) }
             }
             runOnUiThread {
                 clearLifecycleTimeout()
                 modelImportActive = false
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onSuccess { model ->
-                    localRuntimeError = null
+                    localImportError = null
                     addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
                     reloadInstalledModels()
                     loadModel(model)
                 }.onFailure { error ->
-                    localRuntimeError = error.message ?: "Model import failed."
+                    localImportError = error.message ?: "Model import failed."
                     addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
-                        ContinuumUiCopy.modelFailure(error.message))
+                        ContinuumUiCopy.modelFailure(error.message) + "\n" + (error.message ?: "Import fehlgeschlagen.") +
+                        "\n" + (localRuntime.loadedModel?.let { "Weiterhin geladen: ${it.id} · ${it.version} · SHA-256 ${it.sha256}" }
+                            ?: "Kein Modell geladen."))
                     refreshLocalModelUi()
                 }
             }
@@ -6120,16 +6134,20 @@ class AgentActivity : Activity() {
                     "Antworten werden nicht automatisch als Fakten bestätigt."
             else -> "Modellstatus konnte nicht bestimmt werden. Prüfe die Modellverwaltung."
         }
+        loaded?.let {
+            card.append("\nGeladene Katalog-ID: ${it.id} · Version ${it.version}\nSHA-256: ${it.sha256}\nBytes: ${it.byteCount}")
+        }
+        localImportError?.let { card.append("\nLetzter Import abgewiesen: $it\nDer Importstatus ist vom geladenen Modell getrennt.") }
         localActionButton?.let { button ->
             button.text = if (loaded != null) "MODELL ENTLADEN" else "MODELL LADEN"
             button.isEnabled = !busy && !modelUnloading && (loaded != null || models.isNotEmpty())
         }
     }
 
-    private fun scheduleLifecycleTimeout(message: String) {
+    private fun scheduleLifecycleTimeout(message: String, forImport: Boolean = false) {
         clearLifecycleTimeout()
         lifecycleTimeout = Runnable {
-            localRuntimeError = message
+            if (forImport) localImportError = message else localRuntimeError = message
             refreshLocalModelUi()
         }.also { mainHandler.postDelayed(it, 120_000) }
     }

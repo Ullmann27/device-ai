@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.ContentObserver
 import android.graphics.Canvas
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -56,6 +57,30 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var phase = .4f
     private var energy = .18f
     private var audioEnergy = 0f
+    private var thermalStatus = 0
+    // Stored as Any so API26–28 never resolve the API29 listener class on construction.
+    private var thermalListener: Any? = null
+
+    private fun onThermalStatus(status: Int) {
+        thermalStatus = status
+        updateMotionPolicy()
+    }
+
+    @android.annotation.TargetApi(29)
+    private fun observeThermalPressure() {
+        thermalStatus = powerManager.currentThermalStatus
+        val listener = PowerManager.OnThermalStatusChangedListener { onThermalStatus(it) }
+        powerManager.addThermalStatusListener(context.mainExecutor, listener)
+        thermalListener = listener
+    }
+
+    @android.annotation.TargetApi(29)
+    private fun releaseThermalObserver() {
+        (thermalListener as? PowerManager.OnThermalStatusChangedListener)?.let {
+            powerManager.removeThermalStatusListener(it)
+        }
+        thermalListener = null
+    }
 
     private val drawFrame = Runnable {
         framePending = false
@@ -73,7 +98,8 @@ class ContinuumHologramView @JvmOverloads constructor(
     private fun scheduleFrame() {
         if (canAnimate() && !framePending) {
             framePending = true
-            postOnAnimationDelayed(drawFrame, if (currentState == State.READY) 16L else 8L)
+            // Vsync-paced with a positive delay; moderate heat reduces requests, severe heat stops them.
+            postOnAnimationDelayed(drawFrame, if (thermalStatus >= 2) 32L else 8L)
         }
     }
     private val motionObserver = object : ContentObserver(mainHandler) {
@@ -134,6 +160,7 @@ class ContinuumHologramView @JvmOverloads constructor(
             context.contentResolver.registerContentObserver(
                 Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE), false, motionObserver)
             context.registerReceiver(powerReceiver, IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED))
+            if (Build.VERSION.SDK_INT >= 29) observeThermalPressure()
             observersRegistered = true
         }
         updateMotionPolicy()
@@ -147,6 +174,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (observersRegistered) {
             context.contentResolver.unregisterContentObserver(motionObserver)
             context.unregisterReceiver(powerReceiver)
+            if (Build.VERSION.SDK_INT >= 29) releaseThermalObserver()
             observersRegistered = false
         }
         super.onDetachedFromWindow()
@@ -182,6 +210,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         !animationsEnabled -> "Kugel: In-App-Animation ausgeschaltet"
         !ValueAnimator.areAnimatorsEnabled() -> "Kugel: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
         powerManager.isPowerSaveMode -> "Kugel: Energiesparmodus blockiert Bewegung."
+        thermalStatus >= 3 -> "Kugel: Temperatur hoch · Bewegung pausiert."
         !foregroundActive -> "Kugel: Activity nicht im Vordergrund."
         !isAttachedToWindow -> "Kugel: View nicht am Fenster."
         !isShown || windowVisibility != VISIBLE -> "Kugel: View derzeit unsichtbar."
@@ -189,7 +218,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     }
 
     private fun updateMotionPolicy() {
-        motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
+        motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode && thermalStatus < 3
         removeCallbacks(drawFrame)
         framePending = false
         lastFrameMs = 0L

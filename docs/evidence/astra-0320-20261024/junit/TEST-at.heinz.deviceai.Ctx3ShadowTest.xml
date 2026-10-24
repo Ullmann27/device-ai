@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.Ctx3ShadowTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:02" hostname="5c9e18abbd30" time="0.118">
+  <properties/>
+  <testcase name="offByDefaultAndOptInNeverWritesDialogueOrCitesRevokedFacts" classname="at.heinz.deviceai.Ctx3ShadowTest" time="0.097"/>
+  <testcase name="actualLearningCoreUsesTheSameOptInAndKeepsBaselineAnswers" classname="at.heinz.deviceai.Ctx3ShadowTest" time="0.009"/>
+  <testcase name="independentCoreConversationsCannotBorrowOneAnothersPronouns" classname="at.heinz.deviceai.Ctx3ShadowTest" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

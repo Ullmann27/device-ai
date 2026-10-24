@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:09" hostname="5c9e18abbd30" time="0.11">
+  <properties/>
+  <testcase name="generationIsOptimisticallyLockedAndSymlinkedActiveFileIsRefused" classname="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" time="0.013"/>
+  <testcase name="interruptedPublishNeverLosesPreviouslyVerifiedPair" classname="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" time="0.048"/>
+  <testcase name="twoStoreInstancesSerializeWithinSameJvmAndNeverOverlapFileLock" classname="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" time="0.012"/>
+  <testcase name="corruptedActivePairRecoversExactLastKnownGoodButCannotTrainOverCorruption" classname="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" time="0.027"/>
+  <testcase name="failedFirstCommitLeavesNoActiveBundleOrLegacyChanges" classname="at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

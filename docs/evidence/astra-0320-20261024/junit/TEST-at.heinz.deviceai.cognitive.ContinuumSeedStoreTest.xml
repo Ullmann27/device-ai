@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuumSeedStoreTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:04" hostname="5c9e18abbd30" time="0.032">
+  <properties/>
+  <testcase name="primaryRoundTripAndLkgFallbackWork" classname="at.heinz.deviceai.cognitive.ContinuumSeedStoreTest" time="0.032"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

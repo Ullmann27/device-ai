@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.KnowledgeReasoningTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:16" hostname="5c9e18abbd30" time="0.004">
+  <properties/>
+  <testcase name="generalizesAcrossUnseenNamesAndMultipleHops" classname="at.heinz.deviceai.learning.KnowledgeReasoningTest" time="0.002"/>
+  <testcase name="malformedQueriesWithDeviceKeywordsNeverRequestTools" classname="at.heinz.deviceai.learning.KnowledgeReasoningTest" time="0.0"/>
+  <testcase name="contradictionsDoNotBecomeFactsAndCannotPoisonDescendants" classname="at.heinz.deviceai.learning.KnowledgeReasoningTest" time="0.001"/>
+  <testcase name="revisionsInvalidateDerivedKnowledgeAndPreserveOtherFacts" classname="at.heinz.deviceai.learning.KnowledgeReasoningTest" time="0.0"/>
+  <testcase name="negativeEvidenceIsExplicitAndCyclesAreBounded" classname="at.heinz.deviceai.learning.KnowledgeReasoningTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

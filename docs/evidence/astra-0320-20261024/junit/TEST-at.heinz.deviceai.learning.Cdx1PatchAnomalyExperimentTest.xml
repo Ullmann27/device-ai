@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:09" hostname="5c9e18abbd30" time="0.006">
+  <properties/>
+  <testcase name="aurocCountsTiesAsHalfAndOrdersCorrectly" classname="at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest" time="0.004"/>
+  <testcase name="nearestRankPercentileAndNgramSurprisalBehave" classname="at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest" time="0.002"/>
+  <testcase name="maxWindowFindsTheLocalAnomalyThatTheMeanDilutes" classname="at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

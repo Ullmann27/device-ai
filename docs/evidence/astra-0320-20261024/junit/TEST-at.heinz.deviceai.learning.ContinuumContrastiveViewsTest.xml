@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumContrastiveViewsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:10" hostname="5c9e18abbd30" time="0.287">
+  <properties/>
+  <testcase name="maskedRetrievalIsDeterministic" classname="at.heinz.deviceai.learning.ContinuumContrastiveViewsTest" time="0.008"/>
+  <testcase name="candidateTrainingDoesNotOverwriteTheLastGoodSnapshot" classname="at.heinz.deviceai.learning.ContinuumContrastiveViewsTest" time="0.234"/>
+  <testcase name="interruptedTrainingIsNotSilentlyAccepted" classname="at.heinz.deviceai.learning.ContinuumContrastiveViewsTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

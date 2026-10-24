@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:03" hostname="5c9e18abbd30" time="0.152">
+  <properties/>
+  <testcase name="modelAttemptingToCallToolsDuringReasoningIsNeverAccepted" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.076"/>
+  <testcase name="alteredNumberAndLocationBothFailClosed" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.014"/>
+  <testcase name="sameEntitiesAndNumbersCannotAuthorizeChangedRelationships" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.007"/>
+  <testcase name="additionalUnsupportedCityDoesNotPassLexicalAnchorGate" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.007"/>
+  <testcase name="modelFailureReturnsDeterministicFallbackAndNoFactIsCreated" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.039"/>
+  <testcase name="unavailableModelFallsBackWithoutForgettingOrAdditionalHistoryWrites" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.003"/>
+  <testcase name="modelPreservesRawOwnerFactWithoutRepeatingUiBoilerplateOrDialogueTurn" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.005"/>
+  <testcase name="ungroundedQuestionNeverInvokesModelOrAcceptsInventedPersonalFact" classname="at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

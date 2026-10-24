@@ -1,0 +1,49 @@
+{
+  "sourceHead": "d7429145ad5dff64364ed47f9ceb0c07a5a8ed85",
+  "pr": 117,
+  "branch": "astra/continuum-0320-visual-integration-20261024",
+  "sdk": {
+    "tests": 975,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "robolectric": 35,
+    "exitCode": 0
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 0,
+    "scope": "Repository configured NewApi lint gate",
+    "exitCode": 0
+  },
+  "backend": {
+    "tests": 60,
+    "passed": 60,
+    "failures": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "node": {
+    "discovered": 1111,
+    "passed": 1105,
+    "failures": 0,
+    "skipped": 6,
+    "exitCode": 0,
+    "note": "Kotlin PATH missing from full Node invocation. Only 3 affected files rerun with real toolchain; see node-kotlin-completion.txt.",
+    "completionRun": {
+      "tests": 11,
+      "passed": 11,
+      "failures": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    "uniqueCasesExecutedAcrossBothRuns": 1111
+  },
+  "instrumentation": "COMPILED_NOT_DEVICE_EXECUTED",
+  "device": "UNAVAILABLE_ADB_EMPTY",
+  "apk": "NOT_BUILT_NOT_SIGNED_NOT_RELEASED",
+  "releaseGateExitCode": 69,
+  "oldV20MismatchCount": 10,
+  "unattestedMainSources": 6,
+  "parity": "CRE1/SWB1/SWB2/backlog verified exit0"
+}
