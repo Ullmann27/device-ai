@@ -30,6 +30,8 @@ object ContinuumWorkerChatRouter {
         setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
     )
     fun parse(raw: String): ContinuumWorkerChatCommand? {
+        // Do not silently normalize multiline or control-bearing tool-addressed text.
+        if (raw.any { it.code < 0x20 }) return null
         val text = raw.trim().replace(Regex("""\s+"""), " ")
         projectPlanDraftPattern.matchEntire(text)?.let { match ->
             val request = match.groupValues[1].trim()
