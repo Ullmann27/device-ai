@@ -18,7 +18,7 @@ fi
 # remains mandatory and prevents branch or commit substitution.
 commit="$(git rev-parse --verify HEAD)"
 [[ "$commit" =~ ^[a-f0-9]{40}$ && "$commit" == "$CONTINUUM_RELEASE_SHA" &&
-   "${CONTINUUM_OWNER_V22_APPROVED_SHA:-}" == "$commit" ]] || die "Unapproved v21 builder SHA"
+   "${CONTINUUM_OWNER_V22_APPROVED_SHA:-}" == "$commit" ]] || die "Unapproved v22 builder SHA"
 # A source proposal is not an approval. Require exact separate owner approval.
 node scripts/continuum-v22-source-gate.mjs || die "Source inventory or exact owner authorization failed"
 [[ "$CONTINUUM_ASTRA_UI_SHA" == "811803138c86a5c1a7a2a2b9cd196580a574a4a1" ]] ||
