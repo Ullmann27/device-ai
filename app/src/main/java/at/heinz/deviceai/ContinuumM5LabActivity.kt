@@ -57,7 +57,10 @@ class ContinuumM5LabActivity:Activity() {
   if(acceptedTurns.isNotEmpty())transcript.append("\nAngaben wiederhergestellt. Bitte Plan erneut kontrollieren; keine Freigabe übernommen.")
   val input=EditText(this).apply { hint="Dein App-Wunsch";maxLines=4;filters=arrayOf(android.text.InputFilter.LengthFilter(512));column.addView(this) }
   draftInput=input
-  input.setText(savedInstanceState?.getString("m5_draft_v1")?.take(512).orEmpty())
+  // Chat handoff is intentionally only an unsubmitted draft, never an approved requirement.
+  val carriedDraft = if(savedInstanceState!=null) savedInstanceState.getString("m5_draft_v1")
+   else intent.getStringExtra("m5_initial_draft_v1")
+  input.setText(carriedDraft?.take(512).orEmpty())
   val handoff=Button(this).apply {text="Plan prüfen und an Builder übergeben";isAllCaps=false;isEnabled=false}
   // A changed but unsent draft revokes a ready plan, including an already open dialog.
   // Changes remain revoking even if the user deletes the draft back to its old text.
