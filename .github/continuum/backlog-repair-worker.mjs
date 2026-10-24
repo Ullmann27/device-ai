@@ -10,11 +10,12 @@ import {
   BacklogStore, nextEligible, newToken, sha256Hex, singleLine
 } from './development-backlog.mjs';
 import {
-  git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS
+  git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS, validateRepairExecutor
 } from './repair-loop.mjs';
 import {emptyLedger, loadLedger, saveLedger, recordSession} from './repair-ledger.mjs';
 import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handoffs.mjs';
 import {validateVerifiedReport} from './repair-publish.mjs';
+import {validateCodingTask} from './coding-task.mjs';
 
 const COMMIT=/^[0-9a-f]{40}$/;
 const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -62,7 +63,7 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
   const sufficient=evidenceSufficient(baselineResults,verified.results);
   const profiles=verified.results.map(r=>({
     profile:r.profile,passed:r.passed===true,executed:r.tests?.executed??0,
-    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0
+    failed:r.tests?.failed??0,skipped:r.tests?.skipped??0,...(r.isolation?{isolation:r.isolation}:{})
   }));
   const actualTests=profiles.reduce((sum,p)=>sum+p.executed,0);
   const passed=verified.passed===true&&sufficient.sufficient&&actualTests>0&&
@@ -76,7 +77,10 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
  */
-export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null}={}){
+export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,executor=null,executorAbortMode=null}={}){
+  // Validate execution authority before reading/mutating backlog claims or starting checks.
+  validateRepairExecutor(executor,{abortWatch:{},executorAbortMode});
+  const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
     throw Error('Valid root, backlog file, out and budgetMinutes=1..30 required');
   if(id!==null&&!TASK_ID.test(id))throw Error('Invalid task ID');
@@ -102,6 +106,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   const eligible=nextEligible(store.read().doc,['REPAIR'],['owner'],head,id);
   if(!eligible)return {status:'NO_READY_TASK',head};
   const task=validateOwnerRepairTask(eligible,head);
+  if(taskSpec&&(taskSpec.id!==task.id||taskSpec.sourceCommit!==head||taskSpec.chain!==task.subject.chain))
+    throw Error('CODING_TASK_BINDING_MISMATCH');
   const token=newToken(),at=Date.now();
   const claimed=store.apply([{op:'claim',actor,at,id:task.id,owner:actor,
     token,leaseMs:2*60*60*1000}]);
@@ -125,7 +131,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,checkpoint,abortWatch});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,checkpoint,abortWatch,executor,executorAbortMode});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     const writeReport=()=>{
@@ -156,17 +162,18 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       git(independent,['apply','--binary',patchFile]);
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
-      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch});
+      const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor,executorAbortMode});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
       const independentlyPassed=assessment.passed;
+      if(report.coding)report.coding.milestones.push(independentlyPassed?'INDEPENDENT_VERIFIED':'INDEPENDENT_FAILED');
       report.independent={passed:independentlyPassed,profiles,
         evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons};
       // Persist the independent verdict before the backlog can become DONE.
       writeReport();
       const independentReceipt=path.join(independentOut,'verification.json');
       const receipt={
-        schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,
+        schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,execution:report.execution,
         checkedAt:new Date().toISOString(),passed:independentlyPassed,
         evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
         executedTests:actualTests,profiles

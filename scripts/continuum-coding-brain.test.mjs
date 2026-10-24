@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
 import {queryLocalCodingBrain} from './continuum-local-brain.mjs';
 const key='a'.repeat(40);
 const proposal={plan:['Find page rounding','Check regression'],hypothesis:'Truncation loses the final page',patches:[{file:'lib/pages.mjs',oldText:'x/y',newText:'(x+y-1)/y'}]};
@@ -18,4 +19,10 @@ test('coding output cannot add tools, duplicate paths, unknown files or blank hu
   {...proposal,patches:[{...proposal.patches[0],file:'scripts/run.mjs'}]},
   {...proposal,patches:[{...proposal.patches[0],oldText:''}]}])
   await assert.rejects(queryLocalCodingBrain({userPrompt:'repair',allowedTrackedPaths:['lib/pages.mjs'],apiKey:key,fetchImpl:async()=>answer(p)}));
+});
+test('coding CLI UTF-8 transport accommodates the character-bounded multilingual context',()=>{
+ const input=JSON.stringify({userPrompt:'汉'.repeat(14000),allowedTrackedPaths:['lib/pages.mjs'],timeoutMs:100});
+ const r=spawnSync(process.execPath,[new URL('./continuum-local-brain-cli.mjs',import.meta.url).pathname,'coding'],{
+  input,encoding:'utf8',env:{...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:''},timeout:2000,shell:false});
+ assert.match(r.stderr,/LOCAL_AUTH_REQUIRED/);assert.doesNotMatch(r.stderr,/TOO_LARGE/);
 });

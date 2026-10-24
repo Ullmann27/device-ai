@@ -14,7 +14,7 @@ if(!['health','chat','patch','coding'].includes(command)) {
       process.stdin.setEncoding('utf8');
       for await(const chunk of process.stdin){
         raw+=chunk;
-        if(Buffer.byteLength(raw)>(command==='coding'?40_000:16_384))throw Error('LOCAL_PATCH_REQUEST_TOO_LARGE');
+        if(Buffer.byteLength(raw)>(command==='coding'?180_000:16_384))throw Error('LOCAL_PATCH_REQUEST_TOO_LARGE');
       }
       const request=JSON.parse(raw);
       if(Object.keys(request).sort().join(',')!=='allowedTrackedPaths,timeoutMs,userPrompt')
