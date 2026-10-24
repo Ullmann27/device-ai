@@ -1,6 +1,6 @@
 {
   "412x307": {
-    "timestampsSeconds": [
+    "virtualTimestampsSeconds": [
       0,
       1,
       2
@@ -9,12 +9,16 @@
       121655,
       34637
     ],
+    "centralSphereDifferentPixels": [
+      16895,
+      13976
+    ],
     "width": 412,
     "height": 307,
-    "claim": "Robolectric native Canvas driven by actual scheduled callbacks; not physical device"
+    "scope": "native Robolectric Canvas, real frame callback, no injected phase; no physical device/FPS claim"
   },
   "410x291": {
-    "timestampsSeconds": [
+    "virtualTimestampsSeconds": [
       0,
       1,
       2
@@ -23,8 +27,12 @@
       109580,
       31610
     ],
+    "centralSphereDifferentPixels": [
+      16900,
+      7975
+    ],
     "width": 410,
     "height": 291,
-    "claim": "Robolectric native Canvas driven by actual scheduled callbacks; not physical device"
+    "scope": "native Robolectric Canvas, real frame callback, no injected phase; no physical device/FPS claim"
   }
 }

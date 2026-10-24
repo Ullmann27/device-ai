@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "sourceHead": "074fa80729a088644769df300c23b2e093e56553",
+  "scope": "New integrated source, not earlier signed0.3.19. COMPILED comes from real SDK Gradle; WIRED means named Android/research entry, not general language competence. LM1 and CTX3 are intentionally not WIRED into productive chat. RELEASED false means this exact new source is not signed/published.",
+  "modules": [
+    {
+      "name": "SWB1 and scoped dialogue",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "AgentActivity.runContinuumDialogue → CognitiveDecisionBridge → Runtime → Core → dialogue.replyInConversation",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest",
+          "cases": 12,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "CRE1 research and observer",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/Cre1ResearchLab.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Runtime shadow observer; explicit training lab; hash-bound promotion gate",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.Cre1ResearchLabTest",
+          "cases": 5,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "Autonomous dialogue research",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing daily offline JobService; separate explicit owner opt-in; one durable stage cursor",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest",
+          "cases": 4,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "CDX1 research",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing CDX1 laboratory and opt-in daily offline stage; not chat",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest",
+          "cases": 3,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml"
+        },
+        {
+          "suite": "at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest",
+          "cases": 1,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml"
+        },
+        {
+          "suite": "at.heinz.deviceai.learning.TinyContextDecoderTest",
+          "cases": 6,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml"
+        }
+      ],
+      "boundary": "Curriculum/decoder host tests; no new live daily CDX1 job or chat promotion."
+    },
+    {
+      "name": "LM1",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": false,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Research inference API; NOT connected to owner chat because quality failed",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+          "cases": 5,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "TinyNN and NeuralDialogue",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/NeuralDialogue.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing Neuron command and NeuralPracticeScheduler",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.learning.NeuralDialogueTest",
+          "cases": 3,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "Knowledge archive and dashboard",
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Archive → actual dashboard count/cache; source recall separately labelled",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumDashboardArchiveUiTest",
+          "cases": 1,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.ContinuumDashboardArchiveUiTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "Local model catalog",
+      "source": "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing verified LiteRT-LM import/load and optional chat route; device identity unknown here",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.localmodel.LocalModelCatalogTest",
+          "cases": 2,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "Hologram",
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Activity foreground/visibility → one frame callback → existing renderer",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumHologramMotionUiTest",
+          "cases": 5,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.ContinuumHologramMotionUiTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "M5 project planner",
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Main chat → reviewed M5 plan → existing M4 builder",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumCodingConversationTest",
+          "cases": 12,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "M4 builder / Termux",
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing explicit owner controls and authenticated one-shot job/receipt transport",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumMobileBuilderRouteTest",
+          "cases": 4,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "CTX3 shadow",
+      "source": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": false,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "OFF/SHADOW only; previous independent TEST3 failed",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.Ctx3SessionTest",
+          "cases": 1,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.Ctx3SessionTest.xml"
+        }
+      ],
+      "boundary": "Host evidence only; no source existence or passing unit test grants memory/model/release authority"
+    },
+    {
+      "name": "CCC1 development repair",
+      "source": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "SOURCE_PRESENT": true,
+      "COMPILED": true,
+      "WIRED": true,
+      "TESTED": true,
+      "DEVICE_VERIFIED": false,
+      "RELEASED": false,
+      "connectionScope": "Existing Android builder → authenticated Termux bridge → canonical Node CCC1 worker/verifier; no second pipeline",
+      "testEvidence": [
+        {
+          "suite": "at.heinz.deviceai.ContinuumCcc1BridgeTest",
+          "cases": 4,
+          "failures": 0,
+          "skipped": 0,
+          "proof": "junit/TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml"
+        }
+      ],
+      "boundary": "Host Node/SDK regression; no current phone BUILD/REPAIR receipt in this session."
+    }
+  ],
+  "canonicalRepairPipeline": "Existing CCC1/M4/Termux contract preserved and covered by full Node/SDK suites; no new worker",
+  "deviceModelIdentity": "UNKNOWN_NO_ADB_DEVICE",
+  "releaseEvidence": "release-blockers.json",
+  "summary": "summary.json"
+}

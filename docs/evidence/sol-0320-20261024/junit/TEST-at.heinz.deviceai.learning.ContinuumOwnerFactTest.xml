@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumOwnerFactTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:29" hostname="5c9e18abbd30" time="0.084">
+  <properties/>
+  <testcase name="sourceAndAuditChurnPreservesOwnerFactsAndRevocationsAcrossRestart" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.042"/>
+  <testcase name="activeOwnerFactsExcludeRevokedOnes" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.002"/>
+  <testcase name="rememberingARevokedFactAgainMakesItUsableAgain" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.003"/>
+  <testcase name="corruptPrimaryCannotResurrectARevokedFactFromAnOlderBackup" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.001"/>
+  <testcase name="missingPrimaryWithAnOlderBackupCannotStartAnEmptyLedger" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.001"/>
+  <testcase name="syncOfAnEmptyOwnerMemoryChangesNothing" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.001"/>
+  <testcase name="syncAddsMissingFactsInOneWriteAndNeverUndoesARevocation" classname="at.heinz.deviceai.learning.ContinuumOwnerFactTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

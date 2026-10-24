@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralTeachingAuditTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:35" hostname="5c9e18abbd30" time="0.101">
+  <properties/>
+  <testcase name="approvedLessonProducesMeasurableOutcomeAndSurvivesSnapshot" classname="at.heinz.deviceai.learning.NeuralTeachingAuditTest" time="0.005"/>
+  <testcase name="interruptedRetrainingNeverChangesApprovedLessonsOrWeights" classname="at.heinz.deviceai.learning.NeuralTeachingAuditTest" time="0.004"/>
+  <testcase name="oldLabelIsExcludedWhenUserCorrectsExactlyOnePhrase" classname="at.heinz.deviceai.learning.NeuralTeachingAuditTest" time="0.006"/>
+  <testcase name="onlyAcceptedTrainingMayChangePriorMeasurements" classname="at.heinz.deviceai.learning.NeuralTeachingAuditTest" time="0.081"/>
+  <testcase name="unapprovedExamplesAreRejectedBeforeAnyUpdates" classname="at.heinz.deviceai.learning.NeuralTeachingAuditTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

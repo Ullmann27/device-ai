@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:21" hostname="5c9e18abbd30" time="0.177">
+  <properties/>
+  <testcase name="corruptedDnaStopsTheCycleBeforeBacklogRecovery" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.008"/>
+  <testcase name="corruptedPreviousStatusCannotBeSilentlyOverwrittenByPeriodicCycle" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.001"/>
+  <testcase name="invalidDeferredReasonCannotModifyExistingTeamleaderStatus" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.001"/>
+  <testcase name="uninitializedDnaDoesNotPreventExistingSafeHousekeeping" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.059"/>
+  <testcase name="aCorruptedReportFailsClosedWithoutSilentlyResettingIt" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.002"/>
+  <testcase name="unknownBatteryDeferralPersistsSafelyAndCanRecover" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.011"/>
+  <testcase name="aCorruptedSharedBacklogIsReportedAsFailedNotReset" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.001"/>
+  <testcase name="firstAndroidCycleUsesExistingBacklogAndPersistsNoPersonalText" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.02"/>
+  <testcase name="backgroundAndManualTeamleaderCannotOverlapOrOverwriteStatus" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.018"/>
+  <testcase name="cancelledCycleDoesNotClaimWorkOrReportCompletedTasks" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.001"/>
+  <testcase name="taskIsVisibleForFuturePcButNeverClaimedByAndroidHousekeeping" classname="at.heinz.deviceai.cognitive.DeviceTeamleaderTest" time="0.048"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
