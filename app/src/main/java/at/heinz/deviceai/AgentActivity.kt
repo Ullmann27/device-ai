@@ -2046,7 +2046,7 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
                     "Continuum Baumeister · lokale Werkstatt.\n" +
                         "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
-                        "'Worker Builder', 'Worker: <deine App-Idee>' oder " +
+                        "'Worker Builder', 'Worker Projektplan', 'Worker: <deine App-Idee>' oder " +
                         "'Baumeister programmiere ...' per Sprache.\n" +
                         "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
