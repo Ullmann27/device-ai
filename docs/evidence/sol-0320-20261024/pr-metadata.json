@@ -24,7 +24,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
       "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 590,
+      "changed_count": 66,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 82,
@@ -50,7 +57,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 599,
+      "changed_count": 71,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 84,
@@ -75,7 +89,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 639,
+      "changed_count": 71,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 92,
@@ -100,7 +121,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 679,
+      "changed_count": 68,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 93,
@@ -125,7 +153,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 651,
+      "changed_count": 67,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 95,
@@ -151,7 +186,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
       "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 730,
+      "changed_count": 65,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 99,
@@ -174,7 +216,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 787,
+      "changed_count": 47,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 108,
@@ -197,7 +246,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 830,
+      "changed_count": 33,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 109,
@@ -219,7 +275,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 861,
+      "changed_count": 25,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 110,
@@ -241,7 +304,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 861,
+      "changed_count": 25,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 111,
@@ -263,7 +333,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 865,
+      "changed_count": 24,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 112,
@@ -284,7 +361,14 @@
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 875,
+      "changed_count": 17,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 113,
@@ -304,7 +388,14 @@
     "different_source_paths": [
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 887,
+      "changed_count": 8,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 114,
@@ -324,7 +415,14 @@
     "different_source_paths": [
       "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
     ],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 890,
+      "changed_count": 6,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
   },
   {
     "number": 115,
@@ -342,6 +440,19 @@
     "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
     "identical_source_count": 138,
     "different_source_paths": [],
-    "absent_source_paths": []
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 901,
+      "changed_count": 0,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": [
+      ".github/continuum/continuum-dashboard-archive-source.test.mjs",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculum.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculumTest.kt",
+      "scripts/continuum-module-wiring-audit.mjs"
+    ]
   }
 ]

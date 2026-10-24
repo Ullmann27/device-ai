@@ -1,0 +1,122 @@
+{
+  "sourceHead": "cf276cbf5c50cce210fc226350ce86f1cec50620",
+  "total": 32,
+  "matched": 26,
+  "reviewRequired": 6,
+  "status": "OWNER_REVIEW_REQUIRED",
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "expected": "1f636f35b09837c13bb954b48da1fabe7039cb05",
+      "actual": "d527eb7f7a8163a9517f53e6a02f81ec53ca48a4",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "9c3f9a9d85baf79b744bc4ef88dd046a717a11aa",
+          "subject": "Expose explicit opt-in for automated synthetic dialogue research in Learning Center"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "expected": "071af65313d79c0840bf3d772b4cac3dc8e09825",
+      "actual": "682f6f5946828b7b2a1e9b7d5d37a6e8481b74fe",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "f4d575c52614f570353bd1f2df29be896eadc3d7",
+          "subject": "fix(hologram): restart live orbit clock from real visibility and expose device diagnosis"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "expected": "520db0554c0e4d8803d674f229f243f51f2aba17",
+      "actual": "333c867b5740847d878ac96b6c4b3e595c8286f7",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "2de443e1f620fd23a22468f322e1e6e2be7a4c83",
+          "subject": "Fix dashboard source count to reflect archived sources instead of unrelated web-review notes"
+        }
+      ]
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "expected": "8dac48b9eee7f5af74a777c8cd301b6e1576e49a",
+      "actual": "4851524f8bec3120570ac9c16b012f4d48a99f78",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "5418bf6364607bb8df650a8b4a52180ef8934fa7",
+          "subject": "release(android): bump signed owner hologram repair to 0.3.19 code20"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "expected": "656532f9798b0b5b53cf2973d296faf2ee8e6afe",
+      "actual": "7cdf1121e2f7c61ca49125a45e4b776908c6626c",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "55803bc31411c6495b7589b46b2e2ad73fc6e634",
+          "subject": "fix(context): bind persisted dialogue and stale resets to conversation identity"
+        }
+      ]
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "expected": "8c9da619e62608155c496c25919f2c213616e7b7",
+      "actual": "f0f901298f4365581d72c686aa0a65ed31b80610",
+      "matches": false,
+      "role": "WIRING_OR_UI",
+      "changesSincePin": [
+        {
+          "commit": "55803bc31411c6495b7589b46b2e2ad73fc6e634",
+          "subject": "fix(context): bind persisted dialogue and stale resets to conversation identity"
+        }
+      ]
+    }
+  ],
+  "attestedBaseCommit": "7f1f5040e8af53feb12372a8956e0cfce40020eb",
+  "unattestedApkSourceChanges": [
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculum.kt",
+      "blob": "f7771c7c36436ac7b3fbdaf45f27b4dd9b87a2a1"
+    },
+    {
+      "status": "A",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "blob": "53be8a189168f374b0a3174771fef961a311f278"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "blob": "31debd954cd9ee427721ce0d61e1affe5035c5dd"
+    },
+    {
+      "status": "M",
+      "path": "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "blob": "821d5b783324b0e19aa01fc2d6709927fecceff1"
+    }
+  ],
+  "releaseGate": {
+    "commands": [
+      "no_signing_env node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs",
+      "no_signing_env node --test --test-concurrency=2 backend/test/*.test.js",
+      "no_signing_env node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs",
+      "no_signing_env node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs",
+      "no_signing_env node --test .github/continuum/autogenesis-safe-wiring.test.mjs .github/continuum/local-model-smoke.test.mjs .github/continuum/continuum-growth-and-archive.test.mjs .github/continuum/autonomous-topic-frontier.test.mjs .github/continuum/research-job-permission.test.mjs .github/continuum/cdx-large-curriculum.test.mjs .github/continuum/training-monitor-wiring.test.mjs",
+      "gradle --no-daemon --max-workers=2 -Dorg.gradle.jvmargs=\"-Xmx1600m -XX:MaxMetaspaceSize=512m\" -PcontinuumUiWidgetTests=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true -PdeviceAiOwnerSignedUpdate=true --stacktrace"
+    ],
+    "androidSdk": "SDK_UNAVAILABLE",
+    "note": "Read-only report; no owner approval. Quality gates may run with a real local SDK without signing keys. Owner signing and rollback gates remain mandatory in the authorized private Render build."
+  }
+}

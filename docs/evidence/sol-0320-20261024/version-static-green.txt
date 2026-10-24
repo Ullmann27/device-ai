@@ -1,0 +1,31 @@
+✔ living hologram schedules subsequent visible frames and stops callbacks on detach (0.951374ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.127619ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.172677ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.159107ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.183373ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.115372ms)
+✔ new same-package release script parses in bash (4.829067ms)
+✔ v18 release fails before any build without explicit owner approval (2.068454ms)
+✔ historical v18 script stays pinned and current owner build uses code20 (0.194599ms)
+✔ Astra source and exact commit gates precede signing operations (0.189742ms)
+✔ existing signed owner 0.3.16 remains the immutable rollback, not the new output (0.22215ms)
+✔ owner candidate advances to 0.3.20/21 without a new application ID (1.528802ms)
+✔ release uses existing signer, pinned source, and refuses dirty or unapproved code (0.263812ms)
+✔ release never replaces the old APK without byte-checked 0.3.17 rollback (0.176232ms)
+✔ relevant UI and CCC1 source blobs are explicitly attested (0.202792ms)
+✔ owner release executes the optional Android widget and lifecycle test source set (0.418862ms)
+✔ v20 uses identical owner certificate and requires 0.3.18 byte-valid rollback (0.146387ms)
+✔ v20 attests all prior thirty-two sources and pixel-motion/widget tests (0.588915ms)
+✔ default signing entrypoint retains v18 (21.511666ms)
+✔ explicit v19 requires owner-approved pinned exact commit (33.912086ms)
+✔ unknown release version always fails closed (16.752683ms)
+✔ non-code values cannot override the source pin guard (17.674388ms)
+✔ v20 is impossible without both independently pinned SHA variables (35.767058ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 343.959637

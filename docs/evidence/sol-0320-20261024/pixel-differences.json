@@ -1,0 +1,30 @@
+{
+  "412x307": {
+    "timestampsSeconds": [
+      0,
+      1,
+      2
+    ],
+    "differentPixelsPerAdjacentPair": [
+      121655,
+      34637
+    ],
+    "width": 412,
+    "height": 307,
+    "claim": "Robolectric native Canvas driven by actual scheduled callbacks; not physical device"
+  },
+  "410x291": {
+    "timestampsSeconds": [
+      0,
+      1,
+      2
+    ],
+    "differentPixelsPerAdjacentPair": [
+      109580,
+      31610
+    ],
+    "width": 410,
+    "height": 291,
+    "claim": "Robolectric native Canvas driven by actual scheduled callbacks; not physical device"
+  }
+}
