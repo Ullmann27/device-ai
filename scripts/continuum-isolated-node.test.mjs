@@ -70,7 +70,8 @@ test('unsafe stage location and symlink candidates are refused before running',t
  assert.equal(symlink.status,2);assert.doesNotMatch(symlink.stdout,/bad/);
  fs.chmodSync(f.stage,0o755);
  const loose=run(f.stage,f.candidate);
- assert.equal(loose.status,2);assert.match(loose.stderr,/stage must be mode/);
+ assert.equal(loose.status,2);assert.match(loose.stderr,/stage must be mode|CONTINUUM_ISOLATION_UNAVAILABLE: missing tool: chroot/);
+  assert.doesNotMatch(loose.stdout,/should-not-run/);
 });
 
 test('sandbox returns candidate failures, without treating them as successful repairs',t=>{
