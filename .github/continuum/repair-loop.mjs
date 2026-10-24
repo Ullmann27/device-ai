@@ -526,6 +526,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     // is sent to the next revision. The fingerprint survives in the durable report.
     const message=code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid or unchanged. Produce a different exact oldText/newText change.':
       code==='CODING_REPEATED_PATCH'?'The same previously rejected candidate was returned again. Produce a different change.':
+      code==='CODING_MODEL_UNAVAILABLE'||code==='LOCAL_PROVIDER_UNAVAILABLE'?
+        'The previous local model invocation was unavailable. No patch was accepted or executed.':
       'The previous proposal was rejected by the coding safety or schema gate: '+code+'. Correct the proposal.';
     diagnostics=[{kind:'CODING_REJECTED_OUTPUT',file:taskSpec.allowedPaths[0],line:1,message,
       fingerprint:sha256(code+'\0'+(fingerprint??'')).slice(0,16)},...boundedDiagnostics(diagnostics)].slice(0,10);
