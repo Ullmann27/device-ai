@@ -13,6 +13,7 @@ function fixture(run) {
     writeFileSync(join(root, 'scripts/render-mentor-preview.sh'), entry);
     writeFileSync(join(root, 'scripts/render-mentor-owner-update-v18.sh'), 'echo OWNER_V18_DISPATCHED');
     writeFileSync(join(root, 'scripts/render-mentor-owner-update-v19.sh'), 'echo OWNER_V19_DISPATCHED');
+    writeFileSync(join(root, 'scripts/render-mentor-owner-update-v20.sh'), 'echo OWNER_V20_DISPATCHED');
     execFileSync('git', ['init', '-q'], {cwd: root});
     execFileSync('git', ['-C', root, 'config', 'user.name', 'fixture']);
     execFileSync('git', ['-C', root, 'config', 'user.email', 'fixture@example.invalid']);
@@ -26,6 +27,7 @@ function fixture(run) {
         CONTINUUM_OWNER_RELEASE_VERSION: '18',
         CONTINUUM_RELEASE_SHA: '',
         CONTINUUM_OWNER_V19_APPROVED_SHA: '',
+        CONTINUUM_OWNER_V20_APPROVED_SHA: '',
         ...vars
       }
     });
@@ -57,7 +59,7 @@ test('explicit v19 requires owner-approved pinned exact commit', () => fixture((
   assert.equal(approved.stdout.trim(), 'OWNER_V19_DISPATCHED');
 }));
 test('unknown release version always fails closed', () => fixture(({invoke}) => {
-  const result = invoke({CONTINUUM_OWNER_RELEASE_VERSION: '20'});
+  const result = invoke({CONTINUUM_OWNER_RELEASE_VERSION: '21'});
   assert.equal(result.status, 69);
   assert.doesNotMatch(result.stdout, /DISPATCHED/);
 }));
@@ -66,4 +68,27 @@ test('non-code values cannot override the source pin guard', () => fixture(({hea
     CONTINUUM_RELEASE_SHA: head, CONTINUUM_OWNER_V19_APPROVED_SHA: head + ' '});
   assert.equal(result.status, 69);
   assert.doesNotMatch(result.stdout, /DISPATCHED/);
+}));
+
+test('v20 is impossible without both independently pinned SHA variables', () => fixture(({head, invoke}) => {
+  for (const vars of [
+    {CONTINUUM_OWNER_RELEASE_VERSION: '20'},
+    {CONTINUUM_OWNER_RELEASE_VERSION: '20', CONTINUUM_RELEASE_SHA: head},
+    {CONTINUUM_OWNER_RELEASE_VERSION: '20', CONTINUUM_OWNER_V20_APPROVED_SHA: head},
+    {CONTINUUM_OWNER_RELEASE_VERSION: '20',
+      CONTINUUM_OWNER_V20_APPROVED_SHA: '0'.repeat(40), CONTINUUM_RELEASE_SHA: '0'.repeat(40)},
+    {CONTINUUM_OWNER_RELEASE_VERSION: '20',
+      CONTINUUM_OWNER_V20_APPROVED_SHA: head + ' ', CONTINUUM_RELEASE_SHA: head}
+  ]) {
+    const denied = invoke(vars);
+    assert.equal(denied.status, 69);
+    assert.doesNotMatch(denied.stdout, /DISPATCHED/);
+  }
+  const approved = invoke({
+    CONTINUUM_OWNER_RELEASE_VERSION: '20',
+    CONTINUUM_OWNER_V20_APPROVED_SHA: head,
+    CONTINUUM_RELEASE_SHA: head
+  });
+  assert.equal(approved.status, 0);
+  assert.equal(approved.stdout.trim(), 'OWNER_V20_DISPATCHED');
 }));
