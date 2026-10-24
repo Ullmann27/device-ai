@@ -1,0 +1,6 @@
+Exception in thread "main" java.util.NoSuchElementException: List is empty.
+	at kotlin.collections.CollectionsKt___CollectionsKt.first(_Collections.kt:222)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContext.decide(Ctx1DialogueContext.kt:83)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx1Experiment.evaluate(Ctx1Experiment.kt:88)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx1Experiment.evaluate$default(Ctx1Experiment.kt:69)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx2Experiment.main(Ctx2Experiment.kt:40)
