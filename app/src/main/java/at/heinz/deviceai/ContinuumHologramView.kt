@@ -44,6 +44,9 @@ class ContinuumHologramView @JvmOverloads constructor(
     @Volatile private var pendingAudioMs = 0L
     private var consumedAudioMs = 0L
     private var animationsEnabled = true
+    // A visible window is not proof that its Activity is still foregrounded.
+    // The owner Activity explicitly pauses/resumes this one animation loop.
+    private var foregroundActive = false
     private var motionAllowed = false
     private var aggregatedVisible = false
     private var framePending = false
@@ -102,6 +105,13 @@ class ContinuumHologramView @JvmOverloads constructor(
         pendingAudioMs = SystemClock.uptimeMillis()
     }
 
+    /** Explicit Activity lifecycle. Keeps phase continuity without background callbacks. */
+    fun setForegroundActive(active: Boolean) {
+        if (foregroundActive == active) return
+        foregroundActive = active
+        updateMotionPolicy()
+    }
+
     /** Explicit reduced motion preference; system animator scale is also respected. */
     fun setAnimationsEnabled(enabled: Boolean) {
         animationsEnabled = enabled
@@ -144,7 +154,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
-    private fun canAnimate() = motionAllowed && isAttachedToWindow && aggregatedVisible && windowVisibility == VISIBLE
+    private fun canAnimate() = foregroundActive && motionAllowed && isAttachedToWindow && aggregatedVisible && windowVisibility == VISIBLE
 
     private fun updateMotionPolicy() {
         motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
