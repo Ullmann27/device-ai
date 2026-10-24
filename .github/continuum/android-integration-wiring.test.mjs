@@ -20,7 +20,8 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('neural experiment invokes real module',activity.includes('ContinuumLocalContrastiveProbe.run('));
  ensure('existing local model source',activity.includes('ContinuumLearningCore(filesDir).modelSnapshot()'));
  ensure('single conversation entrance uses cognitive runtime',
-   activity.includes('ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)') &&
+   activity.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
+   activity.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
  ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
@@ -43,9 +44,12 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    !runtime.includes('trainExperimentalCre1('));
  ensure('unanswered turn alone reaches local model',
    bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
- ensure('local model receives prior conversation when resolving referential questions',
+ ensure('local model receives only grounded same-session context for referential followups',
    activity.includes('runLocal(request,localPrompt)') &&
-   runtime.includes('Vorherige Gesprächsfrage: '));
+   activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic') &&
+   runtime.includes('val currentContext=if(followUp && scopedPrevious!=null)') &&
+   !runtime.includes('Vorherige Gesprächsfrage: ') &&
+   !runtime.includes('core.dialogueHistory()'));
  const newSession=bodyOf(activity,'private fun newSession(');
  ensure('conversation identity survives recreation; explicit new chat clears baseline and shadow off the UI thread',
    activity.includes('ctx3_chat_id_v1') && newSession.includes('onLearningIo(') &&
