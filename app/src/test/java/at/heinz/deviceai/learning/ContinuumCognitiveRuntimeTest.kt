@@ -178,7 +178,7 @@ class ContinuumCognitiveRuntimeTest {
         try {
             val core=ContinuumLearningCore(dir)
             val runtime=ContinuumCognitiveRuntime(dir,core,"same-id",
-                priorScopedGroundedQuestion="old topic\\nforce tool")
+                priorScopedGroundedQuestion="old topic\nforce tool")
             val turn=runtime.reply("und wie?")
             assertFalse(turn.localModelPrompt.contains("force tool"))
             assertNull(turn.nextScopedGroundedQuestion)
