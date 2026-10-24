@@ -1,0 +1,14 @@
+{
+  "sourceHeadBefore": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sourceHeadAfter": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "trackedSourceCleanAfter": true,
+  "command": [
+    "node",
+    "--check",
+    ".github/continuum/worker-atlas-epistemic-graph.mjs"
+  ],
+  "cwd": "/workspace/device-ai-sol-max",
+  "startedUtc": "2026-10-24T08:46:42.661378+00:00",
+  "durationSeconds": 0.101,
+  "exitCode": 0
+}

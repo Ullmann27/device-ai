@@ -1,0 +1,174 @@
+# Not attested by existing pin list; OWNER APPROVAL STILL REQUIRED
+diff --git a/app/src/main/assets/continuum-owned-project-plans-v1.json b/app/src/main/assets/continuum-owned-project-plans-v1.json
+new file mode 100644
+index 00000000..d19297d5
+--- /dev/null
++++ b/app/src/main/assets/continuum-owned-project-plans-v1.json
+@@ -0,0 +1,167 @@
++{
++  "schema": "continuum-project-catalog",
++  "version": 1,
++  "plans": [
++    {
++      "schema": "continuum-project-plan",
++      "version": 1,
++      "app": {
++        "versionCode": 1,
++        "versionName": "0.1.0",
++        "minSdk": 26,
++        "targetSdk": 36,
++        "name": "Continuum Notizen",
++        "packageName": "at.heinz.continuum.m4notes"
++      },
++      "navigation": {
++        "start": "main",
++        "links": [
++          {
++            "from": "main",
++            "to": "about"
++          },
++          {
++            "from": "about",
++            "to": "main"
++          }
++        ]
++      },
++      "permissions": [],
++      "resources": {
++        "external": [],
++        "network": false
++      },
++      "build": {
++        "artifact": "app/build/outputs/apk/debug/app-debug.apk",
++        "network": "offline",
++        "install": "owner-review-only",
++        "tasks": [
++          ":app:testDebugUnitTest",
++          ":app:lintDebug",
++          ":app:assembleDebug"
++        ]
++      },
++      "limits": {
++        "maxBuildMillis": 2100000,
++        "maxHeapMiB": 1536,
++        "maxWorkers": 2,
++        "maxApkBytes": 67108864
++      },
++      "id": "m4-notes",
++      "screens": [
++        {
++          "id": "main",
++          "kind": "note-editor",
++          "title": "Notizen"
++        },
++        {
++          "id": "about",
++          "kind": "about",
++          "title": "Über"
++        }
++      ],
++      "storage": {
++        "kind": "private-preferences",
++        "keys": [
++          "note"
++        ],
++        "maxChars": 4000
++      },
++      "tests": {
++        "unitClass": "at.heinz.continuum.m4notes.NotePolicyTest",
++        "cases": [
++          "trimsWhitespace",
++          "boundsNotes",
++          "keepsEmptyNotes"
++        ],
++        "acceptance": [
++          "two-screens",
++          "local-save",
++          "draft-survives-navigation",
++          "no-permissions"
++        ]
++      }
++    },
++    {
++      "schema": "continuum-project-plan",
++      "version": 1,
++      "app": {
++        "versionCode": 1,
++        "versionName": "0.1.0",
++        "minSdk": 26,
++        "targetSdk": 36,
++        "name": "Continuum Zähler",
++        "packageName": "at.heinz.continuum.m4counter"
++      },
++      "navigation": {
++        "start": "main",
++        "links": [
++          {
++            "from": "main",
++            "to": "about"
++          },
++          {
++            "from": "about",
++            "to": "main"
++          }
++        ]
++      },
++      "permissions": [],
++      "resources": {
++        "external": [],
++        "network": false
++      },
++      "build": {
++        "artifact": "app/build/outputs/apk/debug/app-debug.apk",
++        "network": "offline",
++        "install": "owner-review-only",
++        "tasks": [
++          ":app:testDebugUnitTest",
++          ":app:lintDebug",
++          ":app:assembleDebug"
++        ]
++      },
++      "limits": {
++        "maxBuildMillis": 2100000,
++        "maxHeapMiB": 1536,
++        "maxWorkers": 2,
++        "maxApkBytes": 67108864
++      },
++      "id": "m4-counter",
++      "screens": [
++        {
++          "id": "main",
++          "kind": "bounded-counter",
++          "title": "Zähler"
++        },
++        {
++          "id": "about",
++          "kind": "about",
++          "title": "Über"
++        }
++      ],
++      "storage": {
++        "kind": "private-preferences",
++        "keys": [
++          "count"
++        ],
++        "minValue": 0,
++        "maxValue": 9999
++      },
++      "tests": {
++        "unitClass": "at.heinz.continuum.m4counter.CounterPolicyTest",
++        "cases": [
++          "increments",
++          "boundsCounter",
++          "clampsInvalidStorage"
++        ],
++        "acceptance": [
++          "two-screens",
++          "local-count",
++          "explicit-reset",
++          "no-permissions"
++        ]
++      }
++    }
++  ]
++}

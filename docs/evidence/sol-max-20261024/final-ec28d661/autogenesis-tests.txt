@@ -1,0 +1,190 @@
+TAP version 13
+# Subtest: retrieval-only orthography never becomes a command or a memory write
+ok 1 - retrieval-only orthography never becomes a command or a memory write
+  ---
+  duration_ms: 5.368058
+  type: 'test'
+  ...
+# Subtest: local Qwen direct smoke is distinct from tool-free thinking smoke
+ok 2 - local Qwen direct smoke is distinct from tool-free thinking smoke
+  ---
+  duration_ms: 0.335809
+  type: 'test'
+  ...
+# Subtest: research counter reflects durable archive not just mentor insertion
+ok 3 - research counter reflects durable archive not just mentor insertion
+  ---
+  duration_ms: 3.127979
+  type: 'test'
+  ...
+# Subtest: auto-discovered titles can reach only the official MediaWiki API
+ok 4 - auto-discovered titles can reach only the official MediaWiki API
+  ---
+  duration_ms: 7.323353
+  type: 'test'
+  ...
+# Subtest: bounded topic frontier persists discoveries and avoids duplicate processing
+ok 5 - bounded topic frontier persists discoveries and avoids duplicate processing
+  ---
+  duration_ms: 0.250453
+  type: 'test'
+  ...
+# Subtest: provider rate limits are obeyed, and background work remains finite
+ok 6 - provider rate limits are obeyed, and background work remains finite
+  ---
+  duration_ms: 0.139117
+  type: 'test'
+  ...
+# Subtest: archive capacity grows without deleting sources or exhausting phone storage
+ok 7 - archive capacity grows without deleting sources or exhausting phone storage
+  ---
+  duration_ms: 0.117595
+  type: 'test'
+  ...
+# Subtest: training rejection identifies each failing holdout and does not promote unsafe candidates
+ok 8 - training rejection identifies each failing holdout and does not promote unsafe candidates
+  ---
+  duration_ms: 0.185967
+  type: 'test'
+  ...
+# Subtest: owner facts win, and retrieval is clearly labelled a non-verified excerpt
+ok 9 - owner facts win, and retrieval is clearly labelled a non-verified excerpt
+  ---
+  duration_ms: 39.579532
+  type: 'test'
+  ...
+# Subtest: research and legal backup menu indices match their action labels
+ok 10 - research and legal backup menu indices match their action labels
+  ---
+  duration_ms: 4.299901
+  type: 'test'
+  ...
+# Subtest: large CDX1 curriculum supplies 576 fictional pairs with 50 untouched audit cases
+ok 11 - large CDX1 curriculum supplies 576 fictional pairs with 50 untouched audit cases
+  ---
+  duration_ms: 0.80703
+  type: 'test'
+  ...
+# Subtest: a CDX1 candidate must pass novel AND historic audits before checkpoint promotion
+ok 12 - a CDX1 candidate must pass novel AND historic audits before checkpoint promotion
+  ---
+  duration_ms: 0.184915
+  type: 'test'
+  ...
+# Subtest: CDX1 large rounds are owner-approved and persisted only on completed evaluation
+ok 13 - CDX1 large rounds are owner-approved and persisted only on completed evaluation
+  ---
+  duration_ms: 0.203673
+  type: 'test'
+  ...
+# Subtest: Android UI offers a clearly separated CDX1 large-lab action and reporting
+ok 14 - Android UI offers a clearly separated CDX1 large-lab action and reporting
+  ---
+  duration_ms: 0.389348
+  type: 'test'
+  ...
+# Subtest: 1,632 diverse training examples are partitioned into twelve nonoverlapping balanced stages
+ok 15 - 1,632 diverse training examples are partitioned into twelve nonoverlapping balanced stages
+  ---
+  duration_ms: 7.180861
+  type: 'test'
+  ...
+# Subtest: stage acceptance protects new, old, owner and previously introduced independent audits
+ok 16 - stage acceptance protects new, old, owner and previously introduced independent audits
+  ---
+  duration_ms: 0.267798
+  type: 'test'
+  ...
+# Subtest: owner-controlled recurrent public research has finite allowed sources and limits
+ok 17 - owner-controlled recurrent public research has finite allowed sources and limits
+  ---
+  duration_ms: 0.259756
+  type: 'test'
+  ...
+# Subtest: citation archive and Android UI preserve verification, provenance and explicit consent
+ok 18 - citation archive and Android UI preserve verification, provenance and explicit consent
+  ---
+  duration_ms: 0.659641
+  type: 'test'
+  ...
+# Subtest: explicit owner command has precedence over all alternate chat routing
+ok 19 - explicit owner command has precedence over all alternate chat routing
+  ---
+  duration_ms: 0.916182
+  type: 'test'
+  ...
+# Subtest: diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline
+ok 20 - diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline
+  ---
+  duration_ms: 0.220097
+  type: 'test'
+  ...
+# Subtest: the diagnostic requires a loaded model, blocks empty responses and surfaces failures
+ok 21 - the diagnostic requires a loaded model, blocks empty responses and surfaces failures
+  ---
+  duration_ms: 0.145767
+  type: 'test'
+  ...
+# Subtest: Android 14+ background network jobs declare ACCESS_NETWORK_STATE
+ok 22 - Android 14+ background network jobs declare ACCESS_NETWORK_STATE
+  ---
+  duration_ms: 0.818637
+  type: 'test'
+  ...
+# Subtest: persisted source research job is registered but never exported
+ok 23 - persisted source research job is registered but never exported
+  ---
+  duration_ms: 0.183763
+  type: 'test'
+  ...
+# Subtest: owner consent, cellular network and measured 20pct resource gates remain required
+ok 24 - owner consent, cellular network and measured 20pct resource gates remain required
+  ---
+  duration_ms: 0.292684
+  type: 'test'
+  ...
+# Subtest: owner can open the native live monitor without exported Android access
+ok 25 - owner can open the native live monitor without exported Android access
+  ---
+  duration_ms: 2.303954
+  type: 'test'
+  ...
+# Subtest: visualisation differentiates actual weight training, research and recent completion
+ok 26 - visualisation differentiates actual weight training, research and recent completion
+  ---
+  duration_ms: 0.259125
+  type: 'test'
+  ...
+# Subtest: training state is persisted by channel and stale starts are not shown as live
+ok 27 - training state is persisted by channel and stale starts are not shown as live
+  ---
+  duration_ms: 0.18172
+  type: 'test'
+  ...
+# Subtest: public research records the real source and audit lifecycle and keeps the 15-minute plan
+ok 28 - public research records the real source and audit lifecycle and keeps the 15-minute plan
+  ---
+  duration_ms: 0.274988
+  type: 'test'
+  ...
+# Subtest: offline job records deferral, failures and interrupts without rewriting model weights
+ok 29 - offline job records deferral, failures and interrupts without rewriting model weights
+  ---
+  duration_ms: 2.434148
+  type: 'test'
+  ...
+# Subtest: CDX1 audits are separate and the signed mentor update advances to code 15 without changing main
+ok 30 - CDX1 audits are separate and the signed mentor update advances to code 15 without changing main
+  ---
+  duration_ms: 0.263672
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1255.600391

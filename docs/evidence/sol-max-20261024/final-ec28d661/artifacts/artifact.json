@@ -1,0 +1,16 @@
+{
+  "file": "DeviceAI-Continuum-ec28d661-preview-debug.apk",
+  "sourceHead": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sha256": "b3d179ea7c89a8d01495a37e06b78a68594c2926bba00d0458b854a5c7429616",
+  "bytes": 55837205,
+  "packageName": "at.heinz.deviceai.preview",
+  "versionCode": 6,
+  "versionName": "0.3.3",
+  "signing": "standard disposable Android Debug certificate",
+  "signerCertificateSha256": "e4d1291879e6d079e3e3d5f798ed77b0881199d9a5a0390186a23a5de07ace70",
+  "apksignerExitCode": 0,
+  "aapt2ExitCode": 0,
+  "ownerSigningUsed": false,
+  "installed": false,
+  "deviceTested": false
+}
