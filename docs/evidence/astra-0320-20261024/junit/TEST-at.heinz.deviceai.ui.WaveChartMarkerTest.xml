@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.WaveChartMarkerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:35" hostname="5c9e18abbd30" time="0.093">
+  <properties/>
+  <testcase name="markerHitsEveryRealSampleExactly" classname="at.heinz.deviceai.ui.WaveChartMarkerTest" time="0.001"/>
+  <testcase name="markerStaysOnTheDrawnBezierBetweenSamples" classname="at.heinz.deviceai.ui.WaveChartMarkerTest" time="0.092"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

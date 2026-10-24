@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:03" hostname="5c9e18abbd30" time="0.037">
+  <properties/>
+  <testcase name="emptyTaskSetYieldsEmptyReport" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.004"/>
+  <testcase name="systemExceptionRecordedAndRunContinues" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.001"/>
+  <testcase name="counterOverflowSaturates" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.004"/>
+  <testcase name="taskCountBounded" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.002"/>
+  <testcase name="measuredValuesAggregate" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.001"/>
+  <testcase name="benchmarkSystemCountIsBounded" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.002"/>
+  <testcase name="negativeLatencyIsRecordedAsError" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.008"/>
+  <testcase name="cancellationStopsOtherSystemsDuringSameTask" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.001"/>
+  <testcase name="cancellationStopsBeforeNextTask" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.0"/>
+  <testcase name="negativeLatencyRejectedByModel" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.004"/>
+  <testcase name="unmeasuredFieldsAreNullAndOutputDeterministic" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.006"/>
+  <testcase name="negativeCountersRejected" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.0"/>
+  <testcase name="preCancelledRunsNothing" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.0"/>
+  <testcase name="csvEscapesAndJsonEscapes" classname="at.heinz.deviceai.benchmark.BenchmarkRunnerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

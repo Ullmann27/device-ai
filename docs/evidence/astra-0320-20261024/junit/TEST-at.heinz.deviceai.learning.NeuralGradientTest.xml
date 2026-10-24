@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.NeuralGradientTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:49:19" hostname="5c9e18abbd30" time="0.003">
+  <properties/>
+  <testcase name="entireBatchIsValidatedBeforeMutatingAnyWeights" classname="at.heinz.deviceai.learning.NeuralGradientTest" time="0.001"/>
+  <testcase name="everyBackpropagatedGradientAgreesWithFiniteDifferences" classname="at.heinz.deviceai.learning.NeuralGradientTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

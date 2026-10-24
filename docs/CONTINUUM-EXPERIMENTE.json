@@ -63,7 +63,7 @@
       "id": "EXP-05",
       "title": "Own local generation and LiteRT-LM",
       "status": "RESEARCH_SHADOW",
-      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion.",
+      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion. Astra PR117 at d7429145: rejected import diagnostics identify expected/actual SHA and preserve the prior catalog model; UI and smoke-test output distinguish loaded identity from failed import. No new model execution or LM1 promotion; device identity remains unknown.",
       "entry": "docs/CONTINUUM-ARGON-RESEARCH-IMPLEMENTATION-20261017.md",
       "depends": "Compatible local model bytes and memory budget",
       "gate": "Live model-only answers and latency/thermal benchmark"

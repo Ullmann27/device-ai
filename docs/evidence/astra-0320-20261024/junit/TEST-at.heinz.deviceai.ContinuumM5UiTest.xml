@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumM5UiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:48:58" hostname="5c9e18abbd30" time="2.254">
+  <properties/>
+  <testcase name="oldDialogCannotApproveANewConversationWithTheSamePlanRevision" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.469"/>
+  <testcase name="consumedBuilderPlanCannotBeRearmedByActivityRecreation" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.455"/>
+  <testcase name="recreationWithAnUnsubmittedDraftNeverRestoresPlanApproval" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.238"/>
+  <testcase name="chatCarriedProjectTextIsOnlyAnUnsubmittedDraft" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.21"/>
+  <testcase name="naturalRequestRequiresPlanReviewAndOnlyOpensExistingBuilder" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.3"/>
+  <testcase name="unsupportedSavedStateCannotDisplayAnApparentlyValidOldPlan" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.159"/>
+  <testcase name="changedUnsubmittedDraftInvalidatesOpenBuilderConfirmation" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.199"/>
+  <testcase name="recreationKeepsRequirementsAndDraftWithoutAuthorizingExecution" classname="at.heinz.deviceai.ContinuumM5UiTest" time="0.223"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
