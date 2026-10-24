@@ -446,6 +446,8 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
+        // Only the foreground Activity may advance the hologram's orbital clock.
+        hologramView?.setForegroundActive(true)
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
@@ -455,6 +457,7 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         foregroundLearningActive = false
+        hologramView?.setForegroundActive(false)
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
