@@ -36,6 +36,51 @@ class ContinuumHologramMotionUiTest {
             it.getFloat(view)
         }
 
+    @Test fun realFrameClockChangesPhoneAndFoldPixelsWithoutInjectingPhase() {
+        for ((width, height) in listOf(412 to 307, 410 to 291)) {
+            val controller = Robolectric.buildActivity(Activity::class.java).setup()
+            val view = ContinuumHologramView(controller.get())
+            val frames = mutableListOf<Bitmap>()
+            try {
+                assertTrue("Visual QA requires enabled Android animations", ValueAnimator.areAnimatorsEnabled())
+                controller.get().setContentView(view)
+                view.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY))
+                view.layout(0, 0, width, height)
+                if (height == 291) view.setGeometry(at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.FOLD)
+                view.setForegroundActive(true)
+                val phases = mutableListOf<Float>()
+                repeat(3) { index ->
+                    if (index > 0) shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                    phases.add(phase(view))
+                    val frame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    frames.add(frame)
+                    view.draw(Canvas(frame))
+                    System.getProperty("continuum.ui.evidenceDir")?.let { path ->
+                        val out = java.io.File(path).apply { mkdirs() }
+                        java.io.File(out, "orb-${width}x$height-$index.png").outputStream().use {
+                            assertTrue(frame.compress(Bitmap.CompressFormat.PNG, 100, it))
+                        }
+                    }
+                }
+                assertTrue(phases[1] > phases[0] && phases[2] > phases[1])
+                assertFalse("First real second must visibly change Canvas pixels", frames[0].sameAs(frames[1]))
+                assertFalse("Continuous motion must change the next second too", frames[1].sameAs(frames[2]))
+                view.setForegroundActive(false)
+                val paused = phase(view)
+                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                assertEquals("Paused view must keep its last pose", paused, phase(view), 0f)
+                assertFalse(pending(view))
+                repeat(3) { view.setForegroundActive(true) }
+                shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+                assertTrue("Resume must not duplicate the clock", phase(view) - paused in 0.1f..0.6f)
+            } finally {
+                frames.forEach { it.recycle() }
+                controller.pause().stop().destroy()
+            }
+        }
+    }
+
     @Test fun foregroundAndReducedMotionHaveOneBoundedLifecycleClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()
