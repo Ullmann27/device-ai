@@ -47,7 +47,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   };
   if(response.status!==0||response.error||response.signal){
     const message=String(response.stderr??'').slice(0,400);
-    const matched=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_NOOP_PATCH|CODING_RESPONSE_INVALID) ([a-f0-9]{64})\\s*$/m.exec(message);
+    const matched=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_NOOP_PATCH|CODING_RESPONSE_INVALID) ([a-f0-9]{64})\s*$/m.exec(message);
     throw matched?failure(matched[1],matched[2]):failure('CODING_MODEL_UNAVAILABLE');
   }
   let result;try{result=JSON.parse(response.stdout);}catch{
