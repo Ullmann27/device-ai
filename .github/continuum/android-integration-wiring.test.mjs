@@ -435,7 +435,8 @@ test('explicit M5 project planning command reaches reviewed builder without bypa
    router.includes('ContinuumWorkerChatCommand.ProjectPlan'));
  ensure('chat launches existing project-plan activity not a shell job',
    activity.includes('ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()') &&
-   activity.includes('private fun openM5ProjectPlan()') &&
+   activity.includes('private fun openM5ProjectPlan(initialDraft: String? = null)') &&
+   activity.includes('initialDraft?.takeIf { it.length in 1..400 && it.none { char -> char.code < 0x20 } }') &&
    activity.includes('Intent(this, ContinuumM5LabActivity::class.java)') &&
    activity.includes('startActivity(planIntent)') &&
    activity.includes('is ContinuumWorkerChatCommand.ProjectPlanDraft -> openM5ProjectPlan(baumeister.request)'));
@@ -449,12 +450,18 @@ test('explicit M5 project planning command reaches reviewed builder without bypa
    router.includes('projectPlanDraftPattern.matchEntire(text)') &&
    lab.includes('intent.getStringExtra("m5_initial_draft_v1")') &&
    lab.includes('input.setText(carriedDraft?.take(512).orEmpty())'));
- ensure('consumed M5 approval is removed from the SavedState replay source before Builder launch',()=>{
+ ensure('consumed M5 approval is removed from the SavedState replay source before Builder launch',(()=>{
    const approved=lab.indexOf('conversation.approve(p.revision,p.planSha256!!)');
    const clear=lab.indexOf('acceptedTurns.clear()',approved);
    const launch=lab.indexOf('startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)',approved);
    return approved>=0 && clear>approved && launch>clear;
- }());
+ })());
+ ensure('the M5 handoff selects a project once and never reverts a later owner switch after recreation',(()=>{
+   const builder=fs.readFileSync(dir+'ContinuumMobileBuilderActivity.kt','utf8');
+   const guard=builder.indexOf('if (savedInstanceState == null) ContinuumOwnedProject.ofId(intent.getStringExtra("m5_project"))');
+   const store=builder.indexOf('preferences.edit().putString("selected_m4_project_v1", it.id).commit()',guard);
+   return guard>=0 && store>guard && builder.split('intent.getStringExtra("m5_project")').length===2;
+ })());
  ensure('M5 approval remains hash, revision and empty-input bound',
    lab.includes('draftVersion==shownDraftVersion') &&
    lab.includes('conversation.approve(p.revision,p.planSha256!!)') &&

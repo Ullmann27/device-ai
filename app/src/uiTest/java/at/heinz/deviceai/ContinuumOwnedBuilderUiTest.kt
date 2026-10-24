@@ -54,6 +54,27 @@ class ContinuumOwnedBuilderUiTest {
         } finally {controller.pause().stop().destroy();}
     }
 
+    @Test fun anM5HandoffSelectsItsProjectOnceAndARecreationKeepsTheOwnersLaterSwitch() {
+        val app = RuntimeEnvironment.getApplication()
+        val prefs = app.getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, 0)
+        prefs.edit().clear().commit()
+        val counter = ContinuumOwnedProject.entries.first { it.id == "m4-counter" }
+        val intent = Intent(app, ContinuumMobileBuilderActivity::class.java)
+            .putExtra("m5_project", counter.id).putExtra("m5_plan_sha", counter.planSha256)
+        val controller = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java, intent).setup()
+        try {
+            fun selector() = buttons(controller.get().findViewById(android.R.id.content)).single { it.text.toString().startsWith("Projekt:") }
+            assertTrue(selector().text.toString().contains(counter.title))
+            assertEquals("the handoff is stored like a manual choice", counter.id, prefs.getString("selected_m4_project_v1", null))
+            selector().performClick()                       // the owner switches away from the handed-over plan
+            val switched = prefs.getString("selected_m4_project_v1", null)
+            assertNotEquals(counter.id, switched)
+            controller.recreate()                           // fold/rotation: the Intent still carries the old extra
+            assertEquals(switched, prefs.getString("selected_m4_project_v1", null))
+            assertFalse("a recreation must not revert to the stale handoff", selector().text.toString().contains(counter.title))
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun recoveryQueryKeepsTheOriginalPendingBuildAndItsCallbackIdentity() {
         val app = RuntimeEnvironment.getApplication()
         val prefs = app.getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, 0)

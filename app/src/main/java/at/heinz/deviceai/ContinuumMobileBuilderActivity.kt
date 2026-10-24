@@ -64,8 +64,13 @@ class ContinuumMobileBuilderActivity : Activity() {
         status.setTextIsSelectable(true)
         selectedProject = ContinuumOwnedProject.ofId(preferences.getString("selected_m4_project_v1", null))
             ?: ContinuumOwnedProject.NOTES
-        ContinuumOwnedProject.ofId(intent.getStringExtra("m5_project"))?.let {
-            if (intent.getStringExtra("m5_plan_sha") == it.planSha256) selectedProject = it
+        // The M5 handoff is a one-shot selection: applied on the first creation only and stored like a manual choice.
+        // Re-applying the still attached Intent extra after fold/rotation would revert the owner's later explicit switch.
+        if (savedInstanceState == null) ContinuumOwnedProject.ofId(intent.getStringExtra("m5_project"))?.let {
+            if (intent.getStringExtra("m5_plan_sha") == it.planSha256) {
+                selectedProject = it
+                preferences.edit().putString("selected_m4_project_v1", it.id).commit()
+            }
         }
         val projectCatalogReady = runCatching {
             assets.open("continuum-owned-project-plans-v1.json").bufferedReader().use {
