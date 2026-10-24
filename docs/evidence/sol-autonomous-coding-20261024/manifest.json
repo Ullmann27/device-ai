@@ -1,0 +1,36 @@
+{
+  "kotlin": {
+    "version": "2.4.0",
+    "home": "/workspace/scratch/toolchains/kotlinc",
+    "archive_sha256": "ba1b9e6eb6ddc3275079224f2e9ea4a2b02eef7d59ce2d38404f04b22613c20a",
+    "official_checksum_matched": true
+  },
+  "jdk": {
+    "version": "21.0.13+9",
+    "vendor": "Eclipse Temurin",
+    "home": "/workspace/scratch/toolchains/jdk-21.0.13+9",
+    "archive_sha256": "d7f5d5cf865a2902b70ff549b97586a7d3f234e016f041ab447ea740c7d66d1c",
+    "official_checksum_matched": true
+  },
+  "gradle": {
+    "version": "8.11.1",
+    "home": "/workspace/scratch/toolchains/gradle-8.11.1",
+    "archive_sha256": "f397b287023acdba1e9f6fc5ea72d22dd63669d59ed4a289a29b1a76eee151c6",
+    "official_checksum_matched": true
+  },
+  "sdk": {
+    "home": "/workspace/scratch/toolchains/android-sdk",
+    "platform": "android-36_r02",
+    "build_tools": [
+      "35.0.0",
+      "36.0.0"
+    ],
+    "platform_tools": "37.0.1",
+    "official_repository_sha1_matched": true
+  },
+  "env_scripts": [
+    "/workspace/scratch/toolchains/android-test-env.sh",
+    "/workspace/scratch/toolchains/android-gradle-env.sh"
+  ],
+  "deps": "/workspace/scratch/android-deps"
+}

@@ -1,0 +1,101 @@
+{
+  "schema": "runtime-isolated-owner-multifile-proof-v1",
+  "modelUsed": false,
+  "state": "CURRENT_UNCOMMITTED_INTEGRATION",
+  "sourceBase": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2",
+  "fixtureCommit": "e1d21621d586273ee5008f2c5e5fb50183ec58d0",
+  "defaultAbortPolicyRejectedBeforeClaim": true,
+  "providerCalls": 1,
+  "status": "DONE",
+  "approvedForMerge": false,
+  "files": [
+    "lib/tags.mjs",
+    "lib/summary.mjs"
+  ],
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "baseline": [
+    {
+      "tests": {
+        "total": 3,
+        "failed": 2,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 3,
+        "passed": 1
+      },
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:f9cb3de7fe3810796e00cec72f29142e2d3a4beada075443c5614024efdca182",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000,
+        "sourceSha256": "213f89bb2008d90a3d4050d5ed9c3e0c78c7f4ecbc4ea8aa464c73bebd004344",
+        "profile": "node-continuum",
+        "untrustedReports": true
+      }
+    }
+  ],
+  "candidate": [
+    {
+      "profile": "node-continuum",
+      "passed": true,
+      "testProfile": true,
+      "exitCode": 0,
+      "ms": 0,
+      "tests": {
+        "total": 3,
+        "failed": 0,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 3,
+        "passed": 3
+      },
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:f9cb3de7fe3810796e00cec72f29142e2d3a4beada075443c5614024efdca182",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000,
+        "sourceSha256": "9f4568f80050373b8e4a19e1df481598e0d9743d72f60fd55d5c80831d67bbdd",
+        "profile": "node-continuum",
+        "untrustedReports": true
+      }
+    }
+  ],
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 3,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  },
+  "learning": {
+    "experiences": 0,
+    "outcome": "PENDING_OWNER_REVIEW"
+  },
+  "ownerSourceUnchanged": true,
+  "report": "/workspace/scratch/isolation-owner-multifile-fixture/out/coding-scoped-one-e1d21621d586-1792870693459-f03c0478/report.json",
+  "patchSha256": "560faa3ba033464751cfdcac6841453382a8a73089ba446aee3c33be0a8aba1a"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "novel-pagination-20261024",
+  "sourceCommit": "1e4562b550e10a72d054fb787c950800a5bd11fb",
+  "kind": "BUGFIX",
+  "goal": "Fix page counting for a nonempty partial final page while preserving integer input validation.",
+  "allowedPaths": [
+    "lib/pagination.mjs"
+  ],
+  "acceptance": [
+    "Every item must fit in the counted pages.",
+    "Empty input needs zero pages.",
+    "Invalid inputs still throw RangeError."
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 3,
+    "maxContextChars": 8000
+  }
+}

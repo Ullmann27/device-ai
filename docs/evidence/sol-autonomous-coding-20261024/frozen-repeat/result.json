@@ -1,0 +1,94 @@
+{
+  "schema": "continuum-real-local-coding-experiment",
+  "version": 1,
+  "implementationCommit": "2c985fba1556a7b7133defa1a4601e4e4df53fdb",
+  "fixtureCommit": "ef0b484787e993f0b1f8a4d73a696bac674829c6",
+  "fixtureNature": "newly authored application regression; not a blind model-training contamination guarantee",
+  "configuredModel": "qwen2.5-coder-1.5b-instruct-q4_k_m",
+  "modelSha256": "cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
+  "elapsedMs": 65872,
+  "parentCpuMicros": 108333,
+  "parentMaxRssKiB": 45232,
+  "modelResources": "server resource measurements recorded separately; parent RSS excludes inference server",
+  "originalSourceUnchanged": true,
+  "originalSourceSha256": "e4368e59a3472e4cecd26120ec902964f5f8693c997445c63bb22ce1b2281e70",
+  "prepared": {
+    "id": "novel-pagination-20261024",
+    "ccc1TaskId": "t-cb332f6288631ad3",
+    "fingerprint": "00f49c7315d9ccc2fa068baa8842ac311a091ea03d81db58f3935f7d1c40c629",
+    "replayed": false
+  },
+  "result": {
+    "schema": "continuum-coding-task-result",
+    "version": 1,
+    "id": "novel-pagination-20261024",
+    "ccc1TaskId": "t-cb332f6288631ad3",
+    "taskFingerprint": "00f49c7315d9ccc2fa068baa8842ac311a091ea03d81db58f3935f7d1c40c629",
+    "sourceCommit": "ef0b484787e993f0b1f8a4d73a696bac674829c6",
+    "status": "ABSTAINED",
+    "receipts": [
+      {
+        "schema": "continuum-mobile-coding-receipt",
+        "version": 1,
+        "job": "b4127130-98f3-4c20-876a-83ee46f105ae",
+        "operation": "code-repair",
+        "taskId": "mob-bd1bd658297e4b26",
+        "commit": "ef0b484787e993f0b1f8a4d73a696bac674829c6",
+        "toolchain": {
+          "node": "v24.19.0",
+          "platform": "linux",
+          "arch": "x64",
+          "git": "git version 2.52.0"
+        },
+        "order": {
+          "chain": "node"
+        },
+        "status": "FAILED_REPAIR",
+        "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+        "patch": null,
+        "evidence": null,
+        "commands": [
+          {
+            "phase": "baseline",
+            "exitCode": 1,
+            "passed": false,
+            "executed": 12,
+            "failed": 4,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          }
+        ],
+        "failure": {
+          "code": "NO_VERIFIED_REPAIR",
+          "message": "Repair ended NO_VERIFIED_REPAIR"
+        },
+        "backlog": {
+          "state": "READY",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "error": {
+            "code": "NO_VERIFIED_REPAIR",
+            "message": "NO_VERIFIED_REPAIR"
+          }
+        },
+        "approvedForMerge": false,
+        "apk": null,
+        "installed": false,
+        "deviceVerified": false,
+        "createdAt": "2026-10-24T19:44:21.831Z",
+        "repair": {
+          "outcome": "NO_VERIFIED_REPAIR",
+          "strategy": null,
+          "files": [],
+          "diagnostics": 4,
+          "attempts": 0
+        }
+      }
+    ],
+    "approvedForMerge": false,
+    "deviceVerified": false,
+    "neuralTraining": false
+  },
+  "deviceVerified": false,
+  "remoteInference": false
+}
