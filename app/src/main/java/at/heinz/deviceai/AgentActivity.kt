@@ -1381,6 +1381,9 @@ class AgentActivity : Activity() {
             CenterAction("AUTO-DIALOGE · HINTERGRUNDFORSCHUNG EIN/AUS") { showAutoDialogueResearchDialog() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
             CenterAction("CDX1 · GROSSES PAARARCHIV · 12 STUFEN") { showCdxLargeLabDialog() },
+            CenterAction("CDX1 · ECHTE ANTWORTEN PRÜFEN (NUR LESEN)") {
+                startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
+            },
             CenterAction("CDX1 · HINTERGRUND-ÜBEN · EIN/AUS") { showDualCoreAutoStudyDialog() },
             CenterAction("CDX1 · EIGENE TESTFRAGE (OHNE TRAINING)") { showCdxPromptTest() },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
@@ -3829,16 +3832,30 @@ class AgentActivity : Activity() {
                     "Nur Kandidaten mit besserem Trainingsverlust und ohne "+
                     "Verschlechterung beider festen Audits dürfen gespeichert werden. "+
                     "Das produktive SWB1 und persönliche Erinnerungen bleiben getrennt. "+
-                    "CDX1 generiert noch keine geprüften Antworten im normalen Chat."
+                    "CDX1 generiert noch keine geprüften Antworten im normalen Chat."+
+                    (if(state.completed>=state.total)
+                        "\n\nAlle zwölf Stufen wurden bereits geprüft. "+
+                        "Es werden keine weiteren Stufen in diesem Archiv trainiert. "+
+                        "Prüfe jetzt die tatsächlich generierten Antworten im "+
+                        "read-only-Intelligenzlabor (20 belegte + 5 unbeantwortbare Fälle). "+
+                        "Ein besserer Trainingsverlust allein ist keine Chatfreigabe."
+                     else "")
             }, { error ->
                 "CDX1-Paararchiv kann nicht geöffnet werden: "+failureName(error)+
                     ". Keine Modellgewichte wurden geändert."
             })
+            val finished = result.getOrNull()?.let { it.completed >= it.total } == true
             AlertDialog.Builder(this)
                 .setTitle("CDX1 · Großes Beleg-Antwort-Trainingsarchiv")
                 .setMessage(text)
                 .setNegativeButton("Schließen",null)
-                .setPositiveButton("NÄCHSTE STUFE PRÜFEN") { _, _ -> runCdxLargeLab() }
+                .setPositiveButton(if(finished) "ANTWORTQUALITÄT PRÜFEN" else "NÄCHSTE STUFE PRÜFEN") { _, _ ->
+                    if(finished) {
+                        startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
+                    } else {
+                        runCdxLargeLab()
+                    }
+                }
                 .show()
         }
     }
