@@ -10,6 +10,7 @@ import {fileURLToPath} from 'node:url';
 import {canonical,sha256Hex,parseStrict} from '../.github/continuum/development-backlog.mjs';
 import {validateCodingTask,taskFingerprint} from '../.github/continuum/coding-task.mjs';
 import {prepareCodingTask,runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
 
 export const BRIDGE_SCHEMA='continuum-typed-coding-bridge';
 export const BRIDGE_VERSION=1;
@@ -20,10 +21,25 @@ const ERROR_CODES=new Set([
  'CODING_TASK_INVALID','CODING_TASK_STALE_SOURCE','CODING_TASK_DIRTY_SOURCE',
  'CODING_TASK_ID_REUSED','CODING_TASK_ID_INVALID','CODING_GRANT_UNSAFE',
  'CODING_GRANT_CORRUPT','CODING_CHAIN_BINDING_MISMATCH',
- 'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE'
+ 'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE',
+ 'CODING_ISOLATION_REQUIRED','CODING_ISOLATION_UNAVAILABLE'
 ]);
 const DEFAULT_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const DEFAULT_STATE=path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');
+/** Only an owner-provisioned, external configuration may enable generated code.
+ * The exact config is read using the existing isolation policy's symlink and
+ * source-tree gates. There is no fallback to host/Termux shell execution. */
+export function ownerCodingExecutor({project,env=process.env}={}){
+ const configPath=env.CONTINUUM_CODING_ISOLATION_CONFIG;
+ if(typeof configPath!=='string'||!path.isAbsolute(configPath)||configPath.length>1024)
+  throw Error('CODING_ISOLATION_UNAVAILABLE');
+ try{
+  const config=loadIsolationConfig(configPath,{sourceRoot:project});
+  return createIsolatedExecutor(config);
+ }catch{
+  throw Error('CODING_ISOLATION_UNAVAILABLE');
+ }
+}
 function blocked(operation,id,code){
  return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation,id,
   status:'BLOCKED',failure:{code},approvedForMerge:false,installed:false,deviceVerified:false};
@@ -55,7 +71,8 @@ export function fixedArgs(argv){
 }
 export async function executeTypedBridge(command,{
  project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
- prepare=prepareCodingTask,run=runCodingTask
+ prepare=prepareCodingTask,run=runCodingTask,
+ isolationLoader=ownerCodingExecutor
 }={}){
  const {op,id,hash,encoded}=command;
  if(op==='prepare'){
@@ -76,7 +93,14 @@ export async function executeTypedBridge(command,{
  try{
   // Run only a previously prepared grant; the orchestrator checks it against
   // the exact source SHA, allowed paths and currently active CCC1 journal.
-  const r=await run({project,stateDir,id});
+  // Do not even invoke the CCC1/model worker if OS-level confinement is absent.
+  // The worker independently rechecks the executor brand and abort mode.
+  let executor;
+  try{executor=await isolationLoader({project,stateDir});}
+  catch{return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');}
+  if(!executor)return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');
+  const r=await run({project,stateDir,id,executor,
+    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true});
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');
   const verified=(r.status==='PATCH_PENDING_OWNER_REVIEW'&&
