@@ -11,8 +11,8 @@ function fixture(run) {
   try {
     mkdirSync(join(root, 'scripts'));
     writeFileSync(join(root, 'scripts/render-mentor-preview.sh'), entry);
-    writeFileSync(join(root, 'scripts/render-mentor-owner-update-v18.sh'), "printf 'OWNER_V18_DISPATCHED\\n'");
-    writeFileSync(join(root, 'scripts/render-mentor-owner-update-v19.sh'), "printf 'OWNER_V19_DISPATCHED\\n'");
+    writeFileSync(join(root, 'scripts/render-mentor-owner-update-v18.sh'), 'echo OWNER_V18_DISPATCHED');
+    writeFileSync(join(root, 'scripts/render-mentor-owner-update-v19.sh'), 'echo OWNER_V19_DISPATCHED');
     execFileSync('git', ['init', '-q'], {cwd: root});
     execFileSync('git', ['-C', root, 'config', 'user.name', 'fixture']);
     execFileSync('git', ['-C', root, 'config', 'user.email', 'fixture@example.invalid']);
