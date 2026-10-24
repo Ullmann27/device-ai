@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: continuum-v19-integration-{{ github.ref }}
+  group: continuum-v19-integration-review
   cancel-in-progress: false
 jobs:
   verify:
