@@ -1648,9 +1648,65 @@ class AgentActivity : Activity() {
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
-            CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() }
+            CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
+            CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
         )
     )
+
+    /**
+     * Measures the actual Samsung/Android View animation path, not simulated Canvas frames.
+     * Read-only: no model, memory, system animation setting or thermal policy is changed.
+     */
+    private fun showHologramMotionAudit() {
+        val target = hologramView
+        if (target == null) {
+            AlertDialog.Builder(this)
+                .setTitle("Hologramm · Diagnose")
+                .setMessage("Die Kugel ist noch nicht erstellt. Zur Startseite wechseln und erneut prüfen.")
+                .setPositiveButton("Schließen", null).show()
+            return
+        }
+        val first = target.sampleMotion()
+        mainHandler.postDelayed({
+            if (isFinishing || isDestroyed) return@postDelayed
+            if (hologramView !== target) {
+                AlertDialog.Builder(this)
+                    .setTitle("Hologramm · Diagnose")
+                    .setMessage("Das Layout wurde während des Tests neu erstellt. Auf der Startseite erneut prüfen.")
+                    .setPositiveButton("Schließen", null).show()
+                return@postDelayed
+            }
+            val second = target.sampleMotion()
+            val callbackDelta = (second.callbackCount - first.callbackCount).coerceAtLeast(0)
+            val drawnDelta = (second.drawCount - first.drawCount).coerceAtLeast(0)
+            val phaseDelta = second.phase - first.phase
+            val verdict = when {
+                callbackDelta == 0L ->
+                    "KEINE ANIMATIONSFRAMES. Bitte den angezeigten Sperrgrund prüfen."
+                drawnDelta == 0L ->
+                    "ANIMATIONS-CALLBACKS OHNE CANVAS-ZEICHNUNG. Renderer-/View-Verkabelung prüfen."
+                phaseDelta <= 0f ->
+                    "ZEICHNUNG ERKANNT, ABER KEINE FORTSCHREITENDE PHASE. Uhr/Policy prüfen."
+                else ->
+                    "FRAMES UND PHASE LAUFEN. Falls die Kugel trotzdem starr wirkt, sichtbaren " +
+                        "Kernbereich und Compositing anhand echter Gerätebilder untersuchen."
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Hologramm-Gerätediagnose")
+                .setMessage(
+                    "Messdauer: 1,6 Sekunden\\n" +
+                        "Animations-Callbacks: $callbackDelta\\n" +
+                        "Wirkliche Canvas-Zeichnungen: $drawnDelta\\n" +
+                        "Phasenänderung: ${"%.3f".format(java.util.Locale.ROOT, phaseDelta)}\\n\\n" +
+                        "Start: ${first.reason}\\n" +
+                        "Ende: ${second.reason}\\n\\n" +
+                        verdict +
+                        "\\n\\nKeine Daten verändert. Diese Anzeige fotografieren."
+                )
+                .setPositiveButton("Schließen", null)
+                .show()
+        }, 1_600L)
+    }
 
     private fun showQuickActionsDialog() {
         quickActionsDialog?.dismiss()
