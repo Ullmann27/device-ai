@@ -67,7 +67,7 @@ M4-Builder `scripts/continuum-owned-app.mjs` über Termux → CCC1-Prüfung → 
 | 5 `node --test` (Standard-Discovery) | `4f6cc98f` | **250/250 pass** |
 | `scripts/android-kotlin-unit-check.sh` (kotlinc + JUnit außerhalb Gradle) | `0e51aff0` | **183 Klassen, 4 Check-Programme, JUnit OK (907 Tests)** |
 | Ctx1/Ctx2/Ctx3-Testklassen mit Fix, Harness-Klassenpfad | `4f6cc98f` | **28/28 pass** |
-| Wiederholung Gate 1 + Kotlin-Harness am exakten Stand `4f6cc98f` | `4f6cc98f` | siehe Abschnitt 4a |
+| Wiederholung Gate 1 + Kotlin-Harness am exakten Stand `4f6cc98f` | `4f6cc98f` | **1097/1097** und **JUnit OK (908 Tests)**, siehe 4a |
 | 6 `gradle --no-daemon --max-workers=2` (Unit, Robolectric `uiTest`, lint, assembleDebug) | – | **SDK_UNAVAILABLE** (dl.google.com gesperrt) |
 
 Alle Node-Läufe mit `env -u NODE_TEST_CONTEXT -u CONTINUUM_REPAIR_DEPTH`, ohne Signierumgebung.
@@ -75,7 +75,11 @@ Bestandene Tests sind **keine** bestätigte Android-Gerätefunktion.
 
 ### 4a. Wiederholung am exakten Stand `4f6cc98f`
 
-Wird nach Abschluss des Laufs hier eingetragen (eigener Commit). Fehlt der Eintrag, gilt der Lauf als **nicht geprüft**.
+Abgeschlossen am 24.10.2026 (Prüfstand per `git rev-parse` = `4f6cc98f`; der Dokument-Commit danach ändert nur Doku/Bericht):
+
+- Gate 1 `node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs`: **1097/1097 pass**, 0 fail, EXIT 0.
+- `scripts/android-kotlin-unit-check.sh`: **183 Klassen, 4 Check-Programme, JUnit OK (908 Tests)**, EXIT 0
+  (907 + neuer Regressionstest). Außerhalb Gradle: kein lint, keine APK, kein Gerät.
 
 ## 5. Release-Blocker: 11 von 22 v19-Fingerabdrücken weichen ab + 10 nicht attestierte APK-Quellen
 
