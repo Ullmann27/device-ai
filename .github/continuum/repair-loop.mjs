@@ -493,7 +493,7 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 /** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
  * Every revision is applied to base, never on top of a failed candidate. */
 function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
-  const scope=new Set(taskSpec.allowedPaths),seen=new Set(),history=[];
+  const scope=new Set(taskSpec.allowedPaths),seen=new Set(),history=[],rejectedResponses=new Set();
   const readFile=file=>{
     if(!scope.has(file))return null;
     try{const full=boundedWorktreeFile(wt,file);return fs.statSync(full).size<=750_000?fs.readFileSync(full,'utf8'):null;}
@@ -501,7 +501,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
   };
   report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
     localRequests:0,verifiedModelExecution:false,candidateStatus:'NOT_REQUESTED',
-    repeatedCandidates:0,history:[],reason:'Provider calls do not independently establish model execution'};
+    repeatedCandidates:0,history:[],rejections:[],reason:'Provider calls do not independently establish model execution'};
   report.coding={taskId:taskSpec.id,sourceCommit:base,allowedPaths:[...scope],
     milestones:['BASELINE_FAILED'],candidateCount:0,contextSha256:null};
   let diagnostics=actionable;
@@ -511,10 +511,35 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       hypothesis:attempt.hypothesis};
     history.push(entry);report.inference.history=structuredClone(history.slice(-3));
   };
+  const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
+    'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE',
+    'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
+    'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH']);
+  const rejectModel=(code,rawFingerprint=null)=>{
+    const fingerprint=typeof rawFingerprint==='string'&&/^[a-f0-9]{64}$/.test(rawFingerprint)?rawFingerprint:null;
+    const repeated=fingerprint!==null&&rejectedResponses.has(fingerprint);
+    if(fingerprint)rejectedResponses.add(fingerprint);
+    const entry={code,repeated,...(fingerprint?{responseSha256:fingerprint}:{})};
+    report.inference.rejections.push(entry);
+    report.inference.lastRejectCode=code;
+    // A rejected proposal was never tested. Only a fixed diagnostic, not raw model output,
+    // is sent to the next revision. The fingerprint survives in the durable report.
+    const message=code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid or unchanged. Produce a different exact oldText/newText change.':
+      code==='CODING_REPEATED_PATCH'?'The same previously rejected candidate was returned again. Produce a different change.':
+      code==='CODING_MODEL_UNAVAILABLE'||code==='LOCAL_PROVIDER_UNAVAILABLE'?
+        'The previous local model invocation was unavailable. No patch was accepted or executed.':
+      'The previous proposal was rejected by the coding safety or schema gate: '+code+'. Correct the proposal.';
+    diagnostics=[{kind:'CODING_REJECTED_OUTPUT',file:taskSpec.allowedPaths[0],line:1,message,
+      fingerprint:sha256(code+'\0'+(fingerprint??'')).slice(0,16)},...boundedDiagnostics(diagnostics)].slice(0,10);
+    history.push({candidate:fingerprint?.slice(0,16)??'provider-rejection',outcome:'REJECTED_MODEL_OUTPUT',
+      diagnostic:code,hypothesis:''});
+    report.inference.history=structuredClone(history.slice(-3));
+    return repeated;
+  };
   for(let revision=0;revision<taskSpec.limits.maxModelCalls&&report.coding.candidateCount<maxCandidates&&Date.now()<deadline;revision++){
     resetWorktree(wt,base);
     beforeStep('provider');
-    let candidate;
+    let candidate,repeatedRejected=false;
     report.inference.localRequests++;
     try{
       if(typeof candidateProvider!=='function')throw Error('LOCAL_PROVIDER_UNAVAILABLE');
@@ -539,16 +564,22 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       report.coding.contextSha256=raw.context.contextSha256;
       report.inference.candidateStatus='PROPOSED';
       report.coding.milestones.push('LOCAL_PROPOSAL_RECEIVED');
-    }catch{
+    }catch(error){
       report.inference.candidateStatus='UNAVAILABLE_OR_REJECTED';
+      const claimedCode=error?.code??error?.message;
+      const code=knownCodes.has(claimedCode)?claimedCode:'CODING_PROVIDER_ERROR';
+      repeatedRejected=rejectModel(code,error?.responseSha256);
     }
     beforeStep('provided');
     if(Date.now()>=deadline)break;
-    if(!candidate)continue;
+    if(!candidate){if(repeatedRejected)break;continue;}
     const c=candidate;
     if(seen.has(c.id)){
       report.inference.repeatedCandidates++;
       report.inference.candidateStatus='REPEATED_PATCH_REJECTED';
+      // Keep feedback without rerunning a known-failing patch. Preserve existing
+      // candidate-budget semantics and let the next model call revise it.
+      rejectModel('CODING_REPEATED_PATCH',sha256(c.id));
       continue;
     }
     seen.add(c.id);report.coding.candidateCount++;

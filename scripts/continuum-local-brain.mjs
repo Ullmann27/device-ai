@@ -4,6 +4,7 @@
  * writes Git files, mutates memories or opens sockets outside 127.0.0.1.
  * Requires Node.js 20+ and a separately configured bearer secret.
  */
+import {createHash} from 'node:crypto';
 const LOOPBACK = 'http://127.0.0.1:8089';
 const MAX_RESPONSE_BYTES = 32_768;
 const MAX_FACTS = 12;
@@ -179,6 +180,12 @@ export async function checkLocalBrain({fetchImpl = globalThis.fetch, timeoutMs =
   }
 }
 
+/** A model answer fingerprint, never raw rejected text, crosses the CLI boundary. */
+function codingResponseInvalid(raw) {
+ const digest=createHash('sha256').update(typeof raw==='string'?raw:'').digest('hex');
+ return Error('CODING_RESPONSE_INVALID:'+digest);
+}
+
 /** Generative task seam; data only. Rights and exact-source hunks are checked again by the worker. */
 export async function queryLocalCodingBrain({userPrompt,allowedTrackedPaths,apiKey,model='local',timeoutMs=60_000,fetchImpl=globalThis.fetch}={}){
  if(typeof apiKey!=='string'||!/^[A-Za-z0-9_-]{32,128}$/.test(apiKey))throw Error('LOCAL_AUTH_REQUIRED');
@@ -202,15 +209,15 @@ export async function queryLocalCodingBrain({userPrompt,allowedTrackedPaths,apiK
      {role:'user',content:prompt}],response_format:{type:'json_schema',json_schema:{name:'continuum_coding_proposal_v1',strict:true,schema}}})});
   const payload=await boundedJsonResponse(response);
   const raw=payload?.choices?.[0]?.message?.content;
-  if(typeof raw!=='string'||raw.length>24000)throw Error('CODING_RESPONSE_INVALID');
-  let p;try{p=JSON.parse(raw);}catch{throw Error('CODING_RESPONSE_INVALID');}
+  if(typeof raw!=='string'||raw.length>24000)throw codingResponseInvalid(raw);
+  let p;try{p=JSON.parse(raw);}catch{throw codingResponseInvalid(raw);}
   if(!p||Array.isArray(p)||Object.keys(p).sort().join(',')!=='hypothesis,patches,plan'||
    !Array.isArray(p.plan)||p.plan.length<1||p.plan.length>8||p.plan.some(s=>typeof s!=='string'||!s.trim()||s.length>300)||
    typeof p.hypothesis!=='string'||!p.hypothesis.trim()||p.hypothesis.length>600||
    !Array.isArray(p.patches)||p.patches.length<1||p.patches.length>3||new Set(p.patches.map(x=>x?.file)).size!==p.patches.length||
    p.patches.some(x=>!x||Object.keys(x).sort().join(',')!=='file,newText,oldText'||!paths.includes(x.file)||
     typeof x.oldText!=='string'||typeof x.newText!=='string'||!x.oldText.trim()||!x.newText.trim()||
-    x.oldText===x.newText||x.oldText.length>3200||x.newText.length>3200||/\0/.test(x.oldText+x.newText)))throw Error('CODING_RESPONSE_INVALID');
+    x.oldText===x.newText||x.oldText.length>3200||x.newText.length>3200||/\0/.test(x.oldText+x.newText)))throw codingResponseInvalid(raw);
   return {mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal:p};
  }finally{clearTimeout(timer);controller.abort();}
 }
