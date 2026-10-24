@@ -44,7 +44,7 @@ class ContinuumCognitiveRuntime(
     // The profile's persisted dialogue-v1.bin has no per-conversation identity.
     // A new runtime must therefore never inherit its inferred topic in a model prompt.
     private var lastScopedGroundedQuestion:String?=priorScopedGroundedQuestion?.takeIf {
-        it.isNotBlank() && it.length<=320 && !it.any(Char::isISOControl)
+        it.isNotBlank() && it.length<=320 && it.none { ch -> ch.code < 0x20 || ch.code == 0x7f }
     }
 
     private val cre1Checkpoint=File(appDirectory,
