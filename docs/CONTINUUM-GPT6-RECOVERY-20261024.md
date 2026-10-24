@@ -73,3 +73,19 @@ Neu sind zwei JVM-Regressionsfälle: Wechsel der ID ohne Reset bei vorhandener a
 
 ### Weiterführungspriorität
 Führe die neue `ContinuumCognitiveRuntimeTest`-Klasse und `ContinuumHologramMotionUiTest` mit `-PcontinuumUiWidgetTests=true :app:testDebugUnitTest` real aus, inklusive Vergleich der im Sol-Screenshot gezeigten Fehlersituation. Ist der Android-SDK/Gradle-Lauf weiterhin nicht verfügbar, markiere explizit `SDK_UNAVAILABLE` und lasse Owner-V19-Signierung blockiert. Kein Main-Merge und kein Umgehen der PIN-Matrix. Nach konkreter Besitzerfreigabe erst finale Source-SHA freigeben und sämtliche Gates neu ausführen.
+
+## Letzter Integrationsschritt – Hauptchat zu lokalem kognitivem Modell
+
+Bei unabhängigem Lesen der aktuellen `AgentActivity.kt` ergab sich: Sie erstellt für jede Nachricht einen **neuen** `ContinuumCognitiveRuntime`. Deshalb konnte der zuvor eingebaute runtimeinterne Referenzkontext im normalen Chat nicht die nächste Nachricht erreichen, obwohl der isolierte Unit-Test mit derselben Runtime bestanden hätte. Der sichere Kontextpfad wurde jetzt direkt angeschlossen:
+
+- `AgentActivity` besitzt eine flüchtige `LocalPromptSession(id,groundedTopic)`, die nur zur aktuellen `sessionId` gelesen wird; die Anfrage bindet diese ID vor dem Hintergrundjob.
+- `ContinuumCognitiveRuntime` erlaubt eine optionale bereits geerdete, auf 320 Zeichen begrenzte Vorfrage. Sie muss frei von Steuerzeichen sein. Eingehende alte profilweite `dialogueHistory()` oder `resolvedQuery` dienen weiterhin **nicht** als Modellpromptquelle.
+- Das echte Runtime-Ergebnis trägt `nextScopedGroundedQuestion`. Nur nach identitätsgeprüftem Ergebnis wird es von `AgentActivity` für dieselbe Session übernommen. `newSession()` löscht es explizit; Activity-Restart beginnt konservativ ohne lokales Vorwissen. Keine Besitzerfakten/Gewichte/Toolberechtigungen geändert.
+- Zwei zusätzliche JVM-Regressionen prüfen echte Neuinstanziierung der Runtime mit derselben Session und die Ablehnung von Kontext mit Steuerzeichen. `.github/continuum/continuum-hologram-context-wiring.test.mjs` kontrolliert nun den tatsächlichen Activity-Übergabepfad.
+- Die bestehende **isolierte** v19-GitHub-Android-QA-Workflow-Datei wurde auf diesen Fortsetzungszweig verdrahtet. Erster Run `40087677781` ist mit `failure` beendet, **ohne Runner-Schritte/Logs**. Dies ist keine Aussage über einen Kompilierfehler dieser Änderung. Weitere identische Neustarts vermeiden.
+
+Außerdem mit dem GitHub-Connector **lesend** geprüft: Render-Workspace `tea-d7qe6dosfn5c73e2rnag`, bestehender Besitzer-Signierdienst `srv-dbaue53bc2fs73crkop0` ist weiterhin auf Branch `astra/render-mentor-apk-builder-20261019` mit Live-Build `285639ba` (0.3.17) und `autoDeploy=off`. Kein 0.3.18-Build getriggert, keine Schlüssel gelesen.
+
+Technologieabgleich: Aktuelle offizielle LiteRT-LM-Android-Anleitung und llama.cpp-Android/GGUF-Anleitung geben unterstützte lokale Wege; daraus wurde **keine neue ungetestete Abhängigkeit** in den bevorstehenden Owner-Release hineingezogen. Ein tatsächlich geladenes neues Sprachmodell auf Fold7 ist weiterhin nicht nachgewiesen.
+
+**Testgrenze:** Kein Android SDK/Gradle im aktuellen Container; direkter Netzwerkzugang zu GitHub/Google SDK über diesen Container funktioniert nicht. Die Gesamtregression auf dem nach diesen Commits neuen SHA ist **nicht bestanden beziehungsweise nicht ausgeführt**. Die Sol-Belege zu `ec28d661` bleiben historische, korrekte Belege und wurden nicht auf diesen HEAD umetikettiert. Sicherheitsfreigabe und Besitzer-Signierung bleiben gesperrt.
