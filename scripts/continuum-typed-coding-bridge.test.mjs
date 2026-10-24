@@ -68,15 +68,15 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
    {phase:'candidate',executed:3,failed:0,exitCode:0,passed:true},
    {phase:'independent',executed:3,failed:0,exitCode:0,passed:true}]
  };
- const result={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
+ const reviewResult={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
   ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',receipts:[trustedReceipt]};
- const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>result});
+ const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
  assert.equal(verified.patchSha256,'d'.repeat(64));
  assert.equal(verified.approvedForMerge,false);assert.equal(verified.deviceVerified,false);
- const forged={...result,receipts:[{...trustedReceipt,evidence:{verificationSha256:'e'.repeat(64)}}]};
+ const forged={...reviewResult,receipts:[{...trustedReceipt,evidence:{verificationSha256:'e'.repeat(64)}}]};
  assert.equal(verifiedCodingReviewReceipt(forged),null);
- assert.equal(verifiedCodingReviewReceipt({...result,receipts:[{...trustedReceipt,commit:'b'.repeat(40)}]}),null);
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[{...trustedReceipt,commit:'b'.repeat(40)}]}),null);
  assert.equal(verifiedCodingReviewReceipt({...result,receipts:[{...trustedReceipt,commands:trustedReceipt.commands.slice(0,2)}]}),null);
  const falsePositive=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>forged});
  assert.equal(falsePositive.status,'EXECUTION_REPORTED_UNVERIFIED');
