@@ -50,6 +50,14 @@ class LocalDialogueQualityGateTest {
     }
 
     @Test
+    fun explicitRequestToRepeatPriorAnswerIsRespected() {
+        val result = LocalDialogueQualityGate.evaluate(
+            "Wiederhole deine letzte Antwort.", originalAnswer, originalQuestion, originalAnswer
+        )
+        assertTrue(result.success)
+    }
+
+    @Test
     fun answeringSameQuestionTwiceMayBeIdentical() {
         val check = LocalDialogueQualityGate.evaluate(
             originalQuestion, originalAnswer, originalQuestion, originalAnswer
