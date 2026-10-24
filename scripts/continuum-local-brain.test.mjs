@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
-import {queryLocalBrain, checkLocalBrain} from './continuum-local-brain.mjs';
+import {queryLocalBrain, queryLocalCodingBrain, checkLocalBrain} from './continuum-local-brain.mjs';
 
 const SECRET='R'.repeat(48);
 const SHA='a'.repeat(64);
@@ -129,4 +129,17 @@ test('schema-compatible server response still cannot smuggle authority or unsafe
       allowedTrackedPaths:['lib/maths.mjs'],fetchImpl:fakeFetch(JSON.stringify(bad))}),
     /LOCAL_PATCH_SCHEMA_REJECTED/);
   }
+});
+
+test('coding rejects same-text patches with deterministic digest, never discloses model output',async()=>{
+ const raw=JSON.stringify({plan:['Fix pagination'],hypothesis:'Needs a changed return',patches:[
+  {file:'lib/pages.mjs',oldText:'return a/b;',newText:'return a/b;'}]});
+ const options={userPrompt:'Fix pagination',allowedTrackedPaths:['lib/pages.mjs'],apiKey:SECRET,fetchImpl:fakeFetch(raw)};
+ const sha=(await import('node:crypto')).createHash('sha256').update(raw).digest('hex');
+ await assert.rejects(queryLocalCodingBrain(options),error=>{
+  assert.equal(error.message,'CODING_NOOP_PATCH '+sha);
+  assert.equal(error.message.includes('return a/b'),false);
+  return true;
+ });
+ await assert.rejects(queryLocalCodingBrain({...options,fetchImpl:fakeFetch('{not valid json')}),/CODING_RESPONSE_INVALID [a-f0-9]{64}/);
 });
