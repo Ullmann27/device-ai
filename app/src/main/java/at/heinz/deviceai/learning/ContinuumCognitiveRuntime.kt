@@ -46,7 +46,6 @@ class ContinuumCognitiveRuntime(
 
     fun reply(input:String):ContinuumCognitiveTurn {
         require(input.trim().length in 1..512)
-        val previous=runCatching { core.dialogueHistory() }.getOrDefault(emptyList())
         // A damaged checkpoint cannot be used, even with a plausible manifest.
         val snapshot=if(cre1Checkpoint.exists()) {
             runCatching {
@@ -95,7 +94,7 @@ class ContinuumCognitiveRuntime(
         }
         val byId=shadow.associateBy { it.memoryId }
         val scores=ranked.mapNotNull { byId[it.id] }
-        val contextPrompt=localPrompt(input,previous,turn.resolvedQuery)
+        val contextPrompt=localPrompt(input,turn.resolvedQuery)
         val trace=buildString {
             append("SWB1=").append(turn.modelHash.take(12))
             append(" · Fakten=").append(turn.memoryIds.size)
@@ -113,21 +112,26 @@ class ContinuumCognitiveRuntime(
             scores,contextPrompt,trace,ranked)
     }
 
-    /** The local generator receives conversation context but not an invented
-     * assertion that a pronoun has been resolved. A factual reply still needs
-     * independent evidence or must disclose that none is available.
+    /**
+     * A profile-wide dialogue history has no conversation ID. Passing its last
+     * subject to an LLM would leak a previous session even after a chat reset.
+     * Only this turn's resolved query is allowed to supply continuation context.
+     * If it has not resolved the pronoun, ask for clarification instead.
+     * This neither promotes an unconfirmed topic to an owner fact nor trains a model.
      */
-    internal fun localPrompt(
-        question:String,prior:List<ContinuumDialogueTurn>,resolved:String
-    ):String {
+    internal fun localPrompt(question:String,resolved:String):String {
         val clean=question.trim().take(512)
-        if(!REFERENTIAL.containsMatchIn(clean))return resolved.take(512)
-        val earlier=prior.lastOrNull { it.topic.isNotBlank() }?.resolvedQuery
-            ?.take(320) ?: return clean
-        return ("Vorherige Gesprächsfrage: "+earlier+
-            "\nAktuelle Anschlussfrage: "+clean+
-            "\nBeziehe Pronomen nur bei eindeutigem Kontext. "+
-            "Erfinde keine persönlichen Fakten.").take(1024)
+        val candidate=resolved.trim().take(512)
+        if (candidate==clean) {
+            if (!REFERENTIAL.containsMatchIn(clean)) return clean
+            return ("Aktuelle Frage: "+clean+
+                "\nDer Bezug des Pronomens ist nicht eindeutig aufgelöst. "+
+                "Bitte frage nach, statt frühere Gesprächsinhalte oder Besitzerfakten zu erfinden.").take(1024)
+        }
+        return ("Aktuelle Frage: "+clean+
+            "\nVom bestehenden Gedächtnisdialog vorgeschlagene Anschlussfrage: "+candidate+
+            "\nDer Bezug ist nicht unabhängig bestätigt. "+
+            "Nutze nur ausdrücklich bestätigte Belege; frage bei Mehrdeutigkeit nach.").take(1024)
     }
 
     companion object {
