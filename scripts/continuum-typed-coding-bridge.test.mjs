@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {canonical,sha256Hex} from '../.github/continuum/development-backlog.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {createCodingCandidateProvider} from '../.github/continuum/coding-provider.mjs';
 import {decodePreparedTask,fixedArgs,executeTypedBridge,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
 
 const SOURCE='a'.repeat(40);
@@ -63,4 +69,46 @@ test('failed host runtime redacts unexpected exception text',async()=>{
   {run:async()=>{throw Error('UNTRUSTED-SENSITIVE-DATA');}});
  assert.equal(r.failure.code,'RUN_FAILED');
  assert.equal(JSON.stringify(r).includes('UNTRUSTED-SENSITIVE-DATA'),false);
+});
+
+test('actual CCC1 prepare and isolated coding repair are accessible through the typed Termux boundary',
+ {skip:!!process.env.CONTINUUM_REPAIR_DEPTH},async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'typed-android-ccc1-'));
+ const root=path.join(dir,'repo'),state=path.join(dir,'state');
+ fs.mkdirSync(path.join(root,'lib'),{recursive:true});
+ fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});
+ fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\\n');
+ fs.writeFileSync(path.join(root,'.github/continuum/offset.test.mjs'),
+  "import test from 'node:test';import assert from 'node:assert/strict';import {offset} from '../../lib/offset.mjs';test('offset',()=>assert.equal(offset(3,8),5));\\n");
+ const git=(...args)=>{const p=spawnSync('git',args,{cwd:root,encoding:'utf8'});
+  assert.equal(p.status,0,p.stderr);return p.stdout.trim();};
+ try{
+  git('init','-q','-b','coding-android-fixture');git('add','.');
+  git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','broken baseline');
+  const spec={...task(),id:'job-real-bridge',sourceCommit:git('rev-parse','HEAD'),allowedPaths:['lib/offset.mjs'],
+   goal:'Fix offset symmetry',acceptance:['offset(3,8) equals five']};
+  const args=prepareArgs(spec);
+  const prep=await executeTypedBridge(args,{project:root,stateDir:state});
+  assert.equal(prep.status,'PREPARED_NOT_EXECUTED');
+  assert.match(prep.ccc1TaskId,/^t-[a-f0-9]{16}$/);
+  const replay=await executeTypedBridge(args,{project:root,stateDir:state});
+  assert.equal(replay.replayed,true);
+  let calls=0;
+  const completed=await executeTypedBridge({op:'run',id:spec.id,hash:args.hash},{
+   project:root,stateDir:state,
+   run:params=>runCodingTask({...params,providerFactory:({task:boundTask})=>
+    createCodingCandidateProvider({root,task:boundTask,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
+     run:()=>{calls++;return {status:0,stdout:JSON.stringify({
+      mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,
+      proposal:{plan:['Fix negative ordering'],hypothesis:'Negative ordering is wrong',
+       patches:[{file:'lib/offset.mjs',oldText:'a-b',newText:'a>b?a-b:b-a'}]}
+     })};}})})
+  });
+  assert.equal(calls,1);
+  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW');
+  assert.match(completed.patchSha256,/^[a-f0-9]{64}$/);
+  assert.equal(completed.installed,false);
+  assert.equal(completed.approvedForMerge,false);
+  assert.equal(git('status','--porcelain'),'');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
