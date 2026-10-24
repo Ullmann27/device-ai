@@ -190,6 +190,10 @@ class AgentActivity : Activity() {
     @Volatile private var activeBootstrapGate: ToolGate? = null
     @Volatile private var activeNeuralCancellation: java.util.concurrent.atomic.AtomicBoolean? = null
     private var hologramView: ContinuumHologramView? = null
+    private data class LocalPromptSession(val id:String,val groundedTopic:String?)
+    // This Activity owns the short-lived context; no profile-global conversation file
+    // or neural weights gain new permissions. Never persist this across session changes.
+    @Volatile private var scopedLocalPromptSession:LocalPromptSession?=null
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -446,6 +450,8 @@ class AgentActivity : Activity() {
         if (::modelCatalog.isInitialized) reloadInstalledModels()
         refreshNeuralPracticeUi()
         foregroundLearningActive = true
+        // Only the foreground Activity may advance the hologram's orbital clock.
+        hologramView?.setForegroundActive(true)
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
@@ -455,6 +461,7 @@ class AgentActivity : Activity() {
 
     override fun onPause() {
         foregroundLearningActive = false
+        hologramView?.setForegroundActive(false)
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
@@ -693,7 +700,13 @@ class AgentActivity : Activity() {
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         // Start screen of the owner's reference images: one view per measured slot, real values only
         // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
-        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it }) { slot, x, y ->
+        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also {
+            hologramView = it
+            // The dashboard may be rebuilt while the Activity is already resumed
+            // (Fold layout or home/chat navigation). New views must inherit the
+            // current lifecycle immediately, not wait for another onResume().
+            it.setForegroundActive(foregroundLearningActive)
+        }) { slot, x, y ->
             openHomeSlot(slot, x, y)
         }
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
@@ -2352,6 +2365,8 @@ class AgentActivity : Activity() {
     private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {
         if(busy || localAgentExecutor.isShutdown)return
         val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val requestSessionId=sessionId
+        val priorScopedTopic=scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic
         activeChatCancellation=cancellation
         activeLocalRequest=true
         setBusy(true)
@@ -2367,7 +2382,8 @@ class AgentActivity : Activity() {
                     !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
                 }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
                 val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(
-                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId),
+                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,
+                        conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic),
                     // Confirmed facts retain their exact deterministic meaning. Lexical
                     // anchors cannot prove that a model paraphrase is entailed.
                     null
@@ -2410,17 +2426,20 @@ class AgentActivity : Activity() {
                     (if(turn.contextReset)
                         " · Gesprächskontext war unlesbar: gesichert und neu begonnen, Erinnerungen unverändert"
                         else "")
-                Pair(Triple(answer,evidence+" · "+cognitive.trace+
+                Triple(Triple(answer,evidence+" · "+cognitive.trace+
                     (if(decision.usedLocalModel)" · lokale Formulierung mit Ankerprüfung" else ""),
                     turn.grounded || archiveAnswer!=null || legacyFallback && fallback!=null),
-                    cognitive.localModelPrompt)
+                    cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion)
             }
             runOnUiThread {
                 if(isFinishing || isDestroyed || activeChatCancellation !== cancellation)return@runOnUiThread
                 activeChatCancellation=null
                 activeLocalRequest=false
                 setBusy(false)
-                result.onSuccess { (dialogueResult,localPrompt) ->
+                result.onSuccess { (dialogueResult,localPrompt,nextTopic) ->
+                    // An old queued reply cannot set the next chat's runtime context.
+                    if(sessionId==requestSessionId)
+                        scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)
                     val (answer,evidence,grounded)=dialogueResult
                     // confirmed memory answers stay deterministic; only an unanswered
                     // turn reaches a loaded local language model (reasoning chain)
@@ -6399,6 +6418,7 @@ class AgentActivity : Activity() {
                 return@onLearningIo
             }
             sessionId = UUID.randomUUID().toString()
+            scopedLocalPromptSession=null
             agentLoops = 0
             planCard.visibility = View.GONE
             chatContainer.removeAllViews()

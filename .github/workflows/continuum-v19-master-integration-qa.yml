@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - "chatgpt/continuum-master-integration-v19-20261024"
+      - "chatgpt/continuum-hologram-context-recovery-20261024"
     paths:
       - "app/**"
       - "scripts/**"

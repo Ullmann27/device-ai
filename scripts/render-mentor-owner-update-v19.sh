@@ -36,28 +36,38 @@ while read -r expected_blob source_path; do
   [[ "$actual_blob" == "$expected_blob" ]] ||
     die "Approved release file differs: $source_path"
 done <<'APPROVED_RELEASE_SOURCES'
-c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
-8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
+1f636f35b09837c13bb954b48da1fabe7039cb05 app/src/main/java/at/heinz/deviceai/AgentActivity.kt
+071af65313d79c0840bf3d772b4cac3dc8e09825 app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt
 2bb8817da268bdcca676aa9a9b48f56b50d06609 app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt
-412d643296deb76ab07e9515f6881eba9df3a9b4 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
+35a92c7a8587e22d6e5dfaa93550407371d5e304 app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt
 edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5 app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt
 e243a487a2011906a9c149a2324b63b39ad2f25c app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt
 a62abbbf1d005a1ea6fc05310c1dd7b401ecc740 app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt
 520db0554c0e4d8803d674f229f243f51f2aba17 app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt
 8dac48b9eee7f5af74a777c8cd301b6e1576e49a app/build.gradle.kts
-acfebe1fa5d882013b11f11133cabc0c5d01409b app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt
-3cb8e5d5c28b98edfa3043f756fb09e907088f48 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt
-e8c153afe22dbdef67dfeb3044d40e7fba97bf61 app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt
-384ab70a79c2eb09f13478e89aa06ee89739eed2 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt
-479849bd277d4781f53db216e2dd884c1f87f355 app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt
-2736d947f40d0fbefb16a5f9470542fdfbe2b949 app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt
-697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
-83692c7ae749f451cae495aa95bc52107165334f scripts/continuum-owned-app.mjs
-e287909e67074a1ac53764c1ecc22b3a36ac5105 scripts/continuum-owned-app.test.mjs
+a3f6d68db2cbccabd640928926c3ca28d92dc058 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt
+6ebec7bad39cb842e22a8031f4728338221b0da2 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt
+79f365032047fa1818c5d60ed83485a32d9c626b app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt
+b1cdf34bb2cfdca831d874a63b443eedcaf6c857 app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt
+a900cdc73b757cec751ecc23825a92153da257ad app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt
+a4f1b385739d99912081fffbaa405900e98e8fed app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt
+9a6f7a4c4bebc36c4dab8041491643bca2696df5 app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt
+c735606419fcdec445fd3b344eecba2bdee55989 scripts/continuum-owned-app.mjs
+65cec140fa13896131f18403c69c8a868781e9b7 scripts/continuum-owned-app.test.mjs
 c0e4fc9a075ec88e3be572b29d15bc718a838fad app/src/main/assets/continuum-training-studio-v1.json
 f4a01789c3a48942c4c83955d31519d3a1fb2744 scripts/continuum-training-studio.test.mjs
-5ddd43cb32120c43cd2f854897136178464b3645 app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt
+e0981a9a8052f72bc5959ae2de68319fc1692e66 app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt
 b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8 app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt
+983138c8e8cc9b25189288c7202d4e17f699f959 app/src/main/AndroidManifest.xml
+d19297d5715821ac1073934adde07c64ddf25d5b app/src/main/assets/continuum-owned-project-plans-v1.json
+53efcb096fe152189a1731948706b4ccb1294790 app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt
+b2732626709517ee49fb0213796ed272e8e0f76c app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt
+22234d244c08f6e7b041509eca7ea6df4d13cc24 app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt
+656532f9798b0b5b53cf2973d296faf2ee8e6afe app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt
+8c9da619e62608155c496c25919f2c213616e7b7 app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt
+9872c2209b550d8b4c361f087ddc09595324b681 app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt
+cb9e51b1362c22df06cde7e21247a48f12d69e8c app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt
+f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt
 APPROVED_RELEASE_SOURCES
 # Render restores SDK/Gradle caches as untracked files. Cache output is harmless,
 # but changes to tracked source or new executable/tests in source locations are not.

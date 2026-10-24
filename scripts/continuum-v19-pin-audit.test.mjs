@@ -13,9 +13,9 @@ function fixture(action) {
   execFileSync('git', ['-C', dir, 'config', 'user.email', 'unit@example.invalid']);
   execFileSync('git', ['-C', dir, 'config', 'user.name', 'test']);
   mkdirSync(join(dir, 'scripts'));
-  for(let i=0;i<22;i++) writeFileSync(join(dir, `file-${i}.kt`), `version-${i}\n`);
+  for(let i=0;i<32;i++) writeFileSync(join(dir, `file-${i}.kt`), `version-${i}\n`);
   const sha = i => execFileSync('git', ['hash-object', `file-${i}.kt`], {cwd:dir,encoding:'utf8'}).trim();
-  const pins = Array.from({length:22},(_,i)=>`${sha(i)} file-${i}.kt`).join('\n');
+  const pins = Array.from({length:32},(_,i)=>`${sha(i)} file-${i}.kt`).join('\n');
   writeFileSync(join(dir,'scripts','render-mentor-owner-update-v19.sh'), `done <<'APPROVED_RELEASE_SOURCES'\n${pins}\nAPPROVED_RELEASE_SOURCES\n`);
   execFileSync('git',['-C',dir,'add','.']);
   execFileSync('git',['-C',dir,'commit','-q','-m','fixture']);
@@ -23,7 +23,7 @@ function fixture(action) {
  } finally {rmSync(dir,{recursive:true,force:true})}
 }
 function run(dir,...args){const r=spawnSync(process.execPath,[source,...args],{cwd:dir,encoding:'utf8'});return {...r,report:r.stdout?JSON.parse(r.stdout):null};}
-test('unchanged 22 source pins pass',()=>fixture(dir=>{const r=run(dir);assert.equal(r.status,0);assert.equal(r.report.matched,22)}));
+test('unchanged 32 source pins pass',()=>fixture(dir=>{const r=run(dir);assert.equal(r.status,0);assert.equal(r.report.matched,32)}));
 test('changed protected source fails closed',()=>fixture(dir=>{writeFileSync(join(dir,'file-3.kt'),'tampered\n');const r=run(dir);assert.equal(r.status,2);assert.equal(r.report.reviewRequired,1);assert.equal(r.report.files[0].path,'file-3.kt')}));
 test('report-only does not turn a mismatch into approval',()=>fixture(dir=>{writeFileSync(join(dir,'file-1.kt'),'tampered');const r=run(dir,'--report-only');assert.equal(r.status,0);assert.equal(r.report.status,'OWNER_REVIEW_REQUIRED')}));
 test('symlink is never accepted as an attested regular source',()=>fixture(dir=>{rmSync(join(dir,'file-0.kt'));symlinkSync('file-1.kt',join(dir,'file-0.kt'));const r=run(dir);assert.equal(r.status,2);assert.equal(r.report.reviewRequired,1)}));
