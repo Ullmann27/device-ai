@@ -43,7 +43,13 @@ object LocalDialogueQualityGate {
 
         val distinctFollowUp = !previousRequest.isNullOrBlank() &&
             normalized(previousRequest) != question
-        if (distinctFollowUp && !previousResponse.isNullOrBlank() && !uncertainty) {
+        // Quoting a previous answer on explicit request is not an unwanted echo.
+        val userRequestedRepetition = question.startsWith("wiederhole ") ||
+            question.startsWith("zitiere ") ||
+            question.startsWith("wiederhol ") ||
+            question.contains(" wortwörtlich ")
+        if (distinctFollowUp && !previousResponse.isNullOrBlank() &&
+            !uncertainty && !userRequestedRepetition) {
             val reference = previousResponse.take(MAX_REFERENCE_CHARS)
             if (normalized(reference) == current) {
                 return Evaluation(false, 0.1, "Vorherige Antwort wortgleich wiederholt. Beantworte die neue Frage.")
