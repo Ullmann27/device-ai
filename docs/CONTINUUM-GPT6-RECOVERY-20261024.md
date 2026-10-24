@@ -38,3 +38,27 @@ Die Freigabe von geänderten Source-Pins und neuen APK-Quellen erfordert eine ko
 
 ### Zusätzliche echte lokale Kotlin-Laufprüfung
 `app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt` wurde aus dem vorliegenden GitHub-Blob **bytegenau** lokal rekonstruiert; `git hash-object` ergab exakt `35a92c7a8587e22d6e5dfaa93550407371d5e304`, identisch zu GitHub. Dieser Produktions-Kotlin-Code wurde mit vorhandenem `kotlinc` (1.9, JVM) kompiliert und gemeinsam mit einem unabhängigen ausführbaren Test gestartet. **Exit 0**: Zwei projizierte Tiefenhälften, Ringkoordinaten ändern sich bei vier Sekunden, sichtbarer Lift größer als vier Pixel bei Radius 101 und 1.001 Grenzwertprüfungen innerhalb ±5,051 Pixel. Dies ist ein echter **isolierter Kotlin/JVM-Lauf**, ausdrücklich **kein** gesamter Android-SDK-/Robolectric-/Gradle-Test und kein Bildschirmanimationsbeweis.
+
+## Kontrollgang 3 und erneute tatsächliche Source-Verifikation
+
+### Zweigabstammung
+Verglichen mit `chatgpt/continuum-hologram-context-recovery-20261024`: `fix/continuum-fold-motion-regression-gates-20261023`, `fix/continuum-fold-live-responsive-20261023` und `gpt6/continuum-0.3.18-release-preflight-20261023` waren **0 Commits voraus**, vollständig enthalten. `sol/continuum-hologram-intelligence-20261024` liegt weiterhin exakt auf dem alten Sol-HEAD `f65181fe` und ist 13+ Review-Commits zurück. Die alten `astra/continuum-live-hologram-20261023` und `integration/continuum-all-current-20261023` weichen nach Git-Vergleich ab, aber `ContinuumHologramRenderer.kt` hat **denselben GitHub-Blob** wie unser Zweig (`2bb8817da268bdcca676aa9a9b48f56b50d06609`); pauschaler Fremdbranch-Merge wurde aus Sicherheits- und Regressionsgründen nicht vorgenommen. `opus/continuum-next-20261023` ist ein älterer abweichender Testquellpfad, nicht direkt in den produktiven Kern zu mergen.
+
+### Zusätzlicher UI-Test und Besitzerquellenmatrix
+Neu gepusht: `app/src/uiTest/java/at/heinz/deviceai/ContinuumHologramMotionUiTest.kt` mit zwei echten Robolectric-Hostwidget-Prüfungen auf `@Config(sdk=[28])`: Vordergrund-/Pause-/Reduced-Motion-Verhalten und eine Canvas-Zeichnung ohne eigenen Phasenfortschritt. **Noch nicht per Android-SDK ausgeführt**. Sols Screenshot dokumentiert einen *anderen, lokalen* Gradle-Offlinelauf `--tests ...ContinuumHologramMotionUiTest` mit **Exit1 nach 57s**, zeigt jedoch nicht den Stacktrace oder die konkrete Testursache. Deshalb ist keine Bestätigung eines Vorher-/Nachher-Erfolgs zulässig.
+
+Alle22 SHA-Pins wurden danach erneut live über GitHub verglichen: 9 passend, 13 verschieden; die seit dem alten Release nicht attestierten zehn Android-Dateien zusätzlich. Der vollständige Eigentümerprüfantrag mit **13 exakten aktuellen SHA40-Werten** und allen zehn APK-Quellpfaden liegt in `docs/evidence/CONTINUUM-OWNER-SOURCE-REVIEW-20261024.md`. Kein Releasepin, kein Owner-Zertifikat, keine Render-Konfiguration und kein signierter App-Build verändert.
+
+### Tatsächlich durchgeführte Prüfungen in dieser Sitzung
+- Drei getrennte Quellprüfgänge: branch ancestry/Blobs, UI-/Cognition-Eingriffstests auf GitHub, Quell-Signiermatrix.
+- 20/20 Quellinvarianten für Frame-Takt, Policy/Lifecycle, Context prompt und kontrollierte Datenflüsse bestanden.
+- Vier eigene negative Code-Mutationen wurden erwartungsgemäß von den Quellverträgen erkannt.
+- Frühere isolierte Kotlin/JVM-Prüfung des echten OrbitalRing-Blobs, beschrieben oben, keine gesamte Gradle-Regression.
+- Android SDK und Gradle in diesem ChatGPT-Container nicht vorhanden. GitHub direkte DNS-Git-Verbindung hier nicht verfügbar; GitHub-Connector sicherte alle Commits. **Kein behauptetes komplett grünes `testDebugUnitTest` auf diesem aktuellen HEAD.**
+- Vorherige 1099 Node, 940 SDK-/JUnit-/Robolectric und Gradle-/Lint-/Preview-Erfolge stammen **ausschließlich** von Sols eingefrorenem Code `ec28d661` und gelten nicht als frisch bestandene Tests dieser Hologramm-Änderungen.
+
+### Next exact steps
+1. In einer autorisierten Umgebung mit Android SDK 36/Gradle 8.11.1 auf dem **neuesten HEAD** `-PcontinuumUiWidgetTests=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug` und komplette Node-/Backend-Gates ausführen; die beiden hinzugefügten Robolectric-Fälle gegen den echten Animator-/Power-Mode unter Robolectric prüfen. Sols fehlenden `hologram-green.txt`-Stacktrace nicht erfinden.
+2. Bei Testfehlern gezielte Rot-/Grünreparaturen auf einem neuen Reviewbranch, erneut testen und sichern. Physische Fold7-Animation und Termux danach separat bestätigen.
+3. **Nur nach genauer ausdrücklicher Besitzerfreigabe** aller13 geänderten Pin-Quellen und zehn weiteren Android-Quellen die attestierten Werte ändern, einen neuen finalen SHA einfrieren und die Gesamtsuite vollständig erneut ausführen.
+4. Danach und nur bei vollständig grünen Release-Gates die bereits konfigurierte owner-signierte Render-Pipeline verwenden, v0.3.17-Rollback erneut unabhängig prüfen und den signierten v0.3.18/code19-APK mit SHA256, App-ID, Versionscode, Zertifikat und direkt abrufbarer HTTPS-Datei verifizieren.
