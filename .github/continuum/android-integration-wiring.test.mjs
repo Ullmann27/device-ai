@@ -449,6 +449,12 @@ test('explicit M5 project planning command reaches reviewed builder without bypa
    router.includes('projectPlanDraftPattern.matchEntire(text)') &&
    lab.includes('intent.getStringExtra("m5_initial_draft_v1")') &&
    lab.includes('input.setText(carriedDraft?.take(512).orEmpty())'));
+ ensure('consumed M5 approval is removed from the SavedState replay source before Builder launch',()=>{
+   const approved=lab.indexOf('conversation.approve(p.revision,p.planSha256!!)');
+   const clear=lab.indexOf('acceptedTurns.clear()',approved);
+   const launch=lab.indexOf('startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)',approved);
+   return approved>=0 && clear>approved && launch>clear;
+ }());
  ensure('M5 approval remains hash, revision and empty-input bound',
    lab.includes('draftVersion==shownDraftVersion') &&
    lab.includes('conversation.approve(p.revision,p.planSha256!!)') &&
