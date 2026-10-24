@@ -62,7 +62,11 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
 });
 test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
- ensure('single shared runtime is called from the chat',dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)'));
+ ensure('single shared runtime is called from chat with scoped session-only context',
+   dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
+   dialogue.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
+   dialogue.includes('val requestSessionId=sessionId') &&
+   dialogue.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
  ensure('local model context is separate from user-authorized memory input',
    dialogue?.includes('runLocal(request,localPrompt)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text)') &&
