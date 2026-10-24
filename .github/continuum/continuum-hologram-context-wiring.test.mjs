@@ -32,6 +32,8 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=
  const policy=segment(orb,'private fun updateMotionPolicy() {','private fun settleState()');
  assert.ok(paused.includes('hologramView?.setForegroundActive(false)'));
  assert.ok(resumed.includes('hologramView?.setForegroundActive(true)'));
+ assert.ok(activity.includes('it.setForegroundActive(foregroundLearningActive)'),
+   'Fold/home rebuild must inherit current foreground status');
  assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));
  assert.ok(policy.includes('removeCallbacks(drawFrame)'));
  assert.ok(policy.includes('framePending = false'));
