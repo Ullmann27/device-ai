@@ -15,6 +15,7 @@ class ContinuumM5LabActivity:Activity() {
  private lateinit var transcriptView:TextView
  override fun onSaveInstanceState(outState:Bundle) {
   outState.putInt("m5_state_version",1)
+  outState.putBoolean("m5_requires_restart",conversation.preview().revision>32)
   outState.putStringArrayList("m5_turns_v1",ArrayList(acceptedTurns))
   if(::draftInput.isInitialized)outState.putString("m5_draft_v1",draftInput.text.toString().take(512))
   if(::transcriptView.isInitialized)outState.putString("m5_transcript_v1",transcriptView.text.toString().takeLast(12000))
@@ -23,8 +24,9 @@ class ContinuumM5LabActivity:Activity() {
  override fun onCreate(savedInstanceState:Bundle?) {
   super.onCreate(savedInstanceState)
   val restored=runCatching {savedInstanceState?.getStringArrayList("m5_turns_v1")}.getOrNull()
-  if(savedInstanceState?.getInt("m5_state_version")==1&&restored!=null&&restored.size<=32&&restored.all {it.length<=512}) {
-   for(turn in restored){acceptedTurns.add(turn);conversation.accept(turn)}
+  val restoreValid=savedInstanceState?.getInt("m5_state_version")==1&&savedInstanceState.getBoolean("m5_requires_restart")==false&&restored!=null&&restored.size<=32&&restored.all {it.length<=512}
+  if(restoreValid) {
+   for(turn in restored!!){acceptedTurns.add(turn);conversation.accept(turn)}
   }
   val column=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(24,24,24,24) }
   fun text(value:String)=TextView(this).apply { text=value;textSize=16f;setPadding(0,12,0,12);column.addView(this) }
@@ -48,7 +50,7 @@ class ContinuumM5LabActivity:Activity() {
   button("Shadow-Bericht aktualisieren"){refreshShadow()};refreshShadow()
   text("Ohne gesicherten Android-Zustand bitte den unbestätigten Auftrag neu eingeben. Freigaben werden nie wiederhergestellt.")
   text("Gespräch → geprüfter Projektplan. Unterstützt: Notizen oder Zähler, nur lokal. Keine Aufgabenverwaltung mit Abhaken/Löschen oder Synchronisierung.")
-  val transcript=text(savedInstanceState?.getString("m5_transcript_v1")?.takeLast(12000)?:conversation.preview().message)
+  val transcript=text(if(restoreValid)savedInstanceState?.getString("m5_transcript_v1")?.takeLast(12000)?:conversation.preview().message else conversation.preview().message)
   transcriptView=transcript
   if(acceptedTurns.isNotEmpty())transcript.append("\nAngaben wiederhergestellt. Bitte Plan erneut kontrollieren; keine Freigabe übernommen.")
   val input=EditText(this).apply { hint="Dein App-Wunsch";maxLines=4;filters=arrayOf(android.text.InputFilter.LengthFilter(512));column.addView(this) }

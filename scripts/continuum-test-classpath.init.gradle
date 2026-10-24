@@ -1,0 +1,13 @@
+// JVM research helpers use the actual SDK/Gradle runtime, never private session paths or compile stubs.
+gradle.projectsEvaluated {
+    def target = gradle.rootProject.project(':app')
+    target.tasks.register('continuumExportTestClasspath') {
+        doLast {
+            def output = target.findProperty('continuumClasspathFile')
+            if (!output) throw new GradleException('Set -PcontinuumClasspathFile=/absolute/output.txt')
+            def file = new File(output.toString())
+            if (!file.isAbsolute()) throw new GradleException('Classpath output must be absolute')
+            file.text = target.tasks.named('testDebugUnitTest').get().classpath.asPath
+        }
+    }
+}

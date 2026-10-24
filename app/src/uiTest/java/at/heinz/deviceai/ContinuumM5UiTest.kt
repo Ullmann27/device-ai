@@ -11,6 +11,30 @@ import org.robolectric.shadows.ShadowAlertDialog
 @RunWith(RobolectricTestRunner::class) @Config(sdk=[28])
 class ContinuumM5UiTest {
  private fun views(v:View):List<View> = listOf(v)+(if(v is ViewGroup)(0 until v.childCount).flatMap { views(v.getChildAt(it)) }else emptyList())
+ @Test fun unsupportedSavedStateCannotDisplayAnApparentlyValidOldPlan() {
+  val bundle=android.os.Bundle().apply {putInt("m5_state_version",99);putString("m5_transcript_v1","Planvorschau: veralteter Auftrag")}
+  val c=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).create(bundle).start().resume()
+  try {
+   val all=views(c.get().findViewById(android.R.id.content))
+   assertFalse(all.filterIsInstance<TextView>().any {it.text.toString().contains("veralteter Auftrag")})
+   assertFalse(all.filterIsInstance<Button>().single {it.text=="Plan prüfen und an Builder übergeben"}.isEnabled)
+  } finally {c.pause().stop().destroy()}
+ }
+ @Test fun oldDialogCannotApproveANewConversationWithTheSamePlanRevision() {
+  val c=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).setup()
+  try {
+   val a=c.get();val all=views(a.findViewById(android.R.id.content))
+   val input=all.filterIsInstance<EditText>().single()
+   val send=all.filterIsInstance<Button>().single {it.text=="Anforderung ergänzen"}
+   val handoff=all.filterIsInstance<Button>().single {it.text=="Plan prüfen und an Builder übergeben"}
+   input.setText("Notizen offline");send.performClick();handoff.performClick()
+   val stale=ShadowAlertDialog.getLatestAlertDialog()
+   all.filterIsInstance<Button>().single {it.text=="Neuen Auftrag beginnen"}.performClick()
+   input.setText("Notizen offline");send.performClick()
+   stale.getButton(AlertDialog.BUTTON_POSITIVE).performClick();Shadows.shadowOf(android.os.Looper.getMainLooper()).idle()
+   assertNull(Shadows.shadowOf(a).nextStartedActivity)
+  } finally {c.pause().stop().destroy()}
+ }
  @Test fun recreationKeepsRequirementsAndDraftWithoutAuthorizingExecution() {
   val old=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).setup()
   val a=old.get();var all=views(a.findViewById(android.R.id.content))

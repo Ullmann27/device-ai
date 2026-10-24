@@ -20,17 +20,17 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('neural experiment invokes real module',activity.includes('ContinuumLocalContrastiveProbe.run('));
  ensure('existing local model source',activity.includes('ContinuumLearningCore(filesDir).modelSnapshot()'));
  ensure('single conversation entrance uses cognitive runtime',
-   activity.includes('ContinuumCognitiveRuntime(filesDir,core)') &&
+   activity.includes('ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)') &&
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
  ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
-   runtime.includes('core.replyWithEvidence(input)') &&
+   runtime.includes('core.replyWithEvidenceInConversation(input,conversationId)') &&
    core.includes('fun replyWithEvidence(') &&
    core.includes('dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)') &&
    core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)') &&
    core.includes('turn.memoryIds.mapNotNull(byId::get)'));
  ensure('CRE1 cannot expand the SWB1 evidence pool or alter hit provenance',
-   runtime.includes('val (turn,ranked)=core.replyWithEvidence(input)') &&
+   runtime.includes('val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId)') &&
    memory.includes('reordered.toSet()==hits.toSet()') &&
    memory.includes('reordered.map { it.id }.distinct().size==hits.size') &&
    cre1Gate.includes('semanticById.keys!=swb1.map { it.id }.toSet()'));
@@ -46,6 +46,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('local model receives prior conversation when resolving referential questions',
    activity.includes('runLocal(request,localPrompt)') &&
    runtime.includes('Vorherige Gesprächsfrage: '));
+ ensure('conversation identity survives recreation and resets separately',activity.includes('ctx3_chat_id_v1') && bodyOf(activity,'private fun newSession(').includes('resetContextConversation(sessionId)'));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));
@@ -57,7 +58,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
 });
 test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
- ensure('single shared runtime is called from the chat',dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core)'));
+ ensure('single shared runtime is called from the chat',dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)'));
  ensure('local model context is separate from user-authorized memory input',
    dialogue?.includes('runLocal(request,localPrompt)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text)') &&

@@ -16,7 +16,7 @@ object Ctx3Experiment {
   val sha=ContinuumMemoryDialogue.hash(raw);require(sha==SEALED_SHA256)
   val output=File(args[1]);require(!output.exists()) {"Do not overwrite a research report"}
   val corpus=JSONArray(raw.toString(Charsets.UTF_8));val bytes=Ctx1Experiment.swb1()
-  val systems=linkedMapOf<String,Any>();var heapPeak=0L
+  val systems=linkedMapOf<String,Any>();val comparisons=arrayListOf<Map<String,Any>>();var heapPeak=0L
   for(arm in 0..3) {
    val counts=linkedMapOf<String,Int>();val nanos=ArrayList<Long>();var extra=0;var stateMax=0;var historyMax=0L
    val errors=arrayListOf<String>()
@@ -35,13 +35,13 @@ object Ctx3Experiment {
       val gold=strings(t.getJSONArray("gold")).toSet()
       require(expected in setOf("QUERY","CLARIFY","ABSTAIN")&&facts.containsAll(gold)&&input.length<=512)
       require(expected!="QUERY"||gold.isNotEmpty())
-      var cited=emptyList<String>();var clarified=false;val start=System.nanoTime()
+      var cited=emptyList<String>();var clarified=false;var answer="";var query=input;var outcome="CRASH";var explicitScope=false;val start=System.nanoTime()
       try {
        when(arm) {
-        0->cited=core.reply(bytes,exps,input,i+1L).memoryIds.map {byId.getValue(it)}
+        0->{val turn=core.reply(bytes,exps,input,i+1L);answer=turn.answer;cited=turn.memoryIds.map {byId.getValue(it)}}
         1,2->when(val q=ctx.decide(input)) {
          is Ctx1DialogueContext.Ask->{
-          cited=core.reply(bytes,exps.filter {q.scope==null||it.content in q.scope},q.query.take(512),i+1L).memoryIds.map {byId.getValue(it)}
+          query=q.query;val scope=q.scope;explicitScope=scope!=null;val turn=core.reply(bytes,exps.filter {scope==null||it.content in scope},q.query.take(512),i+1L);answer=turn.answer;cited=turn.memoryIds.map {byId.getValue(it)}
           ctx.observe(cited)
          }
          Ctx1DialogueContext.Clarify->clarified=true
@@ -49,6 +49,7 @@ object Ctx3Experiment {
         }
         3->when(val q=ctx3.decide(input,entities,sha+dialog.getString("id"))) {
          is Ctx3Decision.Query->{
+          query=q.query;explicitScope=q.sourceIds.isNotEmpty()
           val hits=ContinuumMemoryDialogue.rank(bytes,q.query,exps.filter {q.sourceIds.isEmpty()||it.id in q.sourceIds}).take(3)
           cited=hits.map {it.text};ctx3.observe(hits.map {it.id}.toSet(),entities)
          }
@@ -57,7 +58,7 @@ object Ctx3Experiment {
         }
        }
        extra+=cited.drop(1).count {it !in gold}
-       val outcome=when(expected) {
+       outcome=when(expected) {
         "QUERY"->when {clarified->"UNNEEDED_CLARIFY";cited.isEmpty()->"MISSED";cited.first() in gold->"CORRECT";else->"WRONG"}
         "CLARIFY"->when {clarified->"CLARIFIED";cited.isEmpty()->"MISSED_CLARIFY";else->"WRONG"}
         else->when {clarified->"UNNEEDED_CLARIFY";cited.isEmpty()->"ABSTAINED";else->"WRONG"}
@@ -67,7 +68,10 @@ object Ctx3Experiment {
        add("CRASH");errors.add(dialog.getString("id")+":"+i+":"+e.javaClass.simpleName)
        ctx=Ctx1DialogueContext(facts,arm==2);ctx3.reset();core.clear()
       }
-      nanos+=System.nanoTime()-start
+      val elapsed=System.nanoTime()-start;nanos+=elapsed
+      comparisons.add(linkedMapOf("system" to if(arm==3)"CTX3" else "B$arm","dialog" to dialog.getString("id"),"turn" to i,
+       "input" to input,"expected" to expected,"gold" to gold.toList(),"explicitSourceScope" to explicitScope,"decision" to if(outcome=="CRASH")"ERROR" else if(clarified)"CLARIFY" else if(cited.isEmpty())"ABSTAIN" else "QUERY",
+       "query" to query,"cited" to cited,"citedSourceIds" to cited.mapNotNull {f->byId.entries.firstOrNull {it.value==f}?.key},"actualBaselineAnswer" to answer,"outcome" to outcome,"millis" to elapsed/1e6))
       stateMax=maxOf(stateMax,if(arm==3)ctx3.stateSize() else if(arm==0)0 else ctx.stateSize())
       historyMax=maxOf(historyMax,File(dir,"dialogue-v1.bin").length())
       heapPeak=maxOf(heapPeak,Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())
@@ -82,8 +86,8 @@ object Ctx3Experiment {
   }
   val result=linkedMapOf<String,Any>("experiment" to "CTX3","split" to "INDEPENDENT_TEST3","commit" to args[2],"corpusSha256" to sha,
    "dialogs" to corpus.length(),"turns" to (0 until corpus.length()).sumOf {corpus.getJSONObject(it).getJSONArray("turns").length()},
-   "systems" to systems,"wholeJvmObservedHeapPeakBytes" to heapPeak,
+   "systems" to systems,"comparisons" to comparisons,"wholeJvmObservedHeapPeakBytes" to heapPeak,
    "notes" to "Cold fixed arm order; heap peak is whole JVM, not per model or Android. CTX3 uses the exact shadow rank path; B0/B1/B2 use the existing persisted dialogue. Crashes are outcomes, not omitted turns.")
-  check(output.createNewFile());output.writeText(Ctx1Experiment.json(result)+"\n");println(Ctx1Experiment.json(result))
+  check(output.createNewFile());output.writeText(org.json.JSONObject(result).toString(2)+"\n");println(org.json.JSONObject(systems).toString())
  }
 }
