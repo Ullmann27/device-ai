@@ -5829,6 +5829,12 @@ class AgentActivity : Activity() {
                     "Eine weitere ausdrückliche Bestätigung ist für die Ausführung erforderlich.")
                 .setNegativeButton("Nicht übergeben", null)
                 .setPositiveButton("Vorbereitung freigeben") { _, _ ->
+                    // Fields can change while an AlertDialog is open. Consent is valid
+                    // only for the still-visible reviewed snapshot.
+                    if (reviewedRevision != rev || reviewedHash != hash || copiedDraft != json) {
+                        status.text = "Auftrag seit der Prüfung geändert. Neue Freigabe erforderlich."
+                        return@setPositiveButton
+                    }
                     val authorization = conversation.approveCodingTask(rev, hash, ownerConfirmed = true)
                     if (authorization == null || authorization.task.canonicalJson() != json) {
                         status.text = "Freigabe ungültig oder Anforderungen geändert. Kein Auftrag gestartet."
