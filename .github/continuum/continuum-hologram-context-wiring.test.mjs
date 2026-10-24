@@ -49,10 +49,24 @@ test('local model prompt never reads a profile-wide old dialogue after session c
  assert.ok(reply.includes('val currentContext=if(followUp && scopedPrevious!=null)'));
  assert.ok(!reply.includes('localPrompt(input,turn.resolvedQuery)'));
  assert.ok(cognition.includes('@Synchronized fun reply(input:String):ContinuumCognitiveTurn'));
+ assert.ok(cognition.includes('priorScopedGroundedQuestion:String?=null'));
+ assert.ok(cognition.includes('val nextScopedGroundedQuestion:String?=null'));
+ assert.ok(cognition.includes('lastScopedGroundedQuestion=when {'));
  assert.ok(!reply.includes('core.dialogueHistory()'));
  const prompt=segment(cognition,'internal fun localPrompt(question:String,resolved:String):String','companion object {');
  assert.ok(prompt.includes('if (candidate==clean)'));
  assert.ok(prompt.includes('Bitte frage nach'));
  assert.ok(prompt.includes('nicht unabhängig bestätigt'));
  assert.ok(!prompt.includes('prior.lastOrNull'));
+});
+
+test('each AgentActivity chat turn captures only its session-scoped local-model topic',()=>{
+ assert.ok(activity.includes('private data class LocalPromptSession(val id:String,val groundedTopic:String?)'));
+ assert.ok(activity.includes('private var scopedLocalPromptSession:LocalPromptSession?=null'));
+ assert.ok(activity.includes('val requestSessionId=sessionId'));
+ assert.ok(activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
+ assert.ok(activity.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic'));
+ assert.ok(activity.includes('cognitive.localModelPrompt,cognitive.nextScopedGroundedQuestion'));
+ assert.ok(activity.includes('scopedLocalPromptSession=LocalPromptSession(requestSessionId,nextTopic)'));
+ assert.ok(activity.includes('scopedLocalPromptSession=null'), 'new chat must clear old session topic');
 });
