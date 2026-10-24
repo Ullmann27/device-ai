@@ -1,3 +1,4 @@
+import '../.github/continuum/typed-android-coding-wiring.test.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {canonical,sha256Hex} from '../.github/continuum/development-backlog.mjs';
