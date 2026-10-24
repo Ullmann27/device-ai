@@ -7,6 +7,7 @@ sealed class ContinuumWorkerChatCommand {
     data object Backlog : ContinuumWorkerChatCommand()
     data object DevelopmentCenter : ContinuumWorkerChatCommand()
     data object MobileBuilder : ContinuumWorkerChatCommand()
+    data object ProjectPlan : ContinuumWorkerChatCommand()
     data object M4Notes : ContinuumWorkerChatCommand()
     data class Draft(val goal: String) : ContinuumWorkerChatCommand()
 }
@@ -40,6 +41,9 @@ object ContinuumWorkerChatRouter {
             "worker notiz-app", "baumeister notiz-app", "coding agent notiz-app",
             "worker erstelle notiz-app", "baumeister erstelle notiz-app" ->
                 ContinuumWorkerChatCommand.M4Notes
+            "worker projektplan", "baumeister projektplan", "coding agent projektplan",
+            "worker projekt planen", "baumeister projekt planen" ->
+                ContinuumWorkerChatCommand.ProjectPlan
             "worker builder", "baumeister builder", "worker termux", "baumeister termux",
             "worker handy builder", "baumeister handy builder" ->
                 ContinuumWorkerChatCommand.MobileBuilder
