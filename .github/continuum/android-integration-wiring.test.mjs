@@ -27,7 +27,9 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
    runtime.includes('core.replyWithEvidenceInConversation(input,conversationId)') &&
    core.includes('fun replyWithEvidence(') &&
-   core.includes('dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)') &&
+   core.includes('dialogue.replyInConversation(snapshot,experiences,input,nowMillis(),conversationId,rerank)') &&
+   core.includes('ContinuumMemoryDialogue.requireConversationId(conversationId)') &&
+   memory.includes('saved.conversationId==conversationId') &&
    core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)') &&
    core.includes('turn.memoryIds.mapNotNull(byId::get)'));
  ensure('CRE1 cannot expand the SWB1 evidence pool or alter hit provenance',

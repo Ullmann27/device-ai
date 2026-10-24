@@ -15,23 +15,28 @@ data class ContinuumDialogueTurn(
     /** The stored conversation context was unreadable; it was moved aside and this turn started fresh. */
     val contextReset:Boolean=false
 )
-
 /** Bounded contextual retrieval from current ledger entries using the active SWB1.
  * Conversation text never trains weights or grants tool authority. Old responses
  * are not factual memory; every answer reselects current nonrevoked evidence.
  */
 class ContinuumMemoryDialogue(private val directory:File) {
     private val file=File(directory,"dialogue-v1.bin")
+    private data class SavedHistory(val conversationId:String?,val turns:List<ContinuumDialogueTurn>)
 
     fun reply(bytes:ByteArray,experiences:List<LearningExperience>,input:String,at:Long,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):ContinuumDialogueTurn = replyInConversation(bytes,experiences,input,at,null,rerank)
+
+    internal fun replyInConversation(bytes:ByteArray,experiences:List<LearningExperience>,input:String,at:Long,
+        conversationId:String?,rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
     ):ContinuumDialogueTurn {
         require(input.trim().length in 1..512 && at>=0)
+        requireConversationId(conversationId)
         // The history is only conversation context (memories live in the ledger),
         // so an unreadable file must not block every later turn: it is kept as
         // dialogue-v1.bin.corrupt-<time> and the conversation starts fresh.
         var contextReset=false
-        val history=try { history() } catch (e:IllegalArgumentException) {
+        val history=try { history(conversationId) } catch (e:IllegalArgumentException) {
             quarantine(at)
             contextReset=true
             emptyList()
@@ -83,17 +88,29 @@ class ContinuumMemoryDialogue(private val directory:File) {
             }
         }.take(1000)
         val turn=ContinuumDialogueTurn(at,text.take(320),resolved,answer,topic,hash(bytes),selected.map { it.id },selected.isNotEmpty(),contextReset)
-        save((history+turn).takeLast(8))
+        save((history+turn).takeLast(8),conversationId)
         return turn
     }
 
-    fun history():List<ContinuumDialogueTurn> {
-        if(!file.exists())return emptyList()
+    /** Owner-local diagnostics; model inputs must use the explicitly scoped overload. */
+    fun history():List<ContinuumDialogueTurn> = readHistory().turns
+
+    internal fun history(conversationId:String?):List<ContinuumDialogueTurn> {
+        requireConversationId(conversationId)
+        val saved=readHistory()
+        // One bounded current history: a different or unknown identity never supplies context.
+        return if(saved.conversationId==conversationId)saved.turns else emptyList()
+    }
+
+    private fun readHistory():SavedHistory {
+        if(!file.exists())return SavedHistory(null,emptyList())
         require(file.length() in 36..65536) { "Ungültige Dialogdatei" }
         return LearningSnapshot.decode(file.readBytes()) { input ->
-            require(input.readInt()==0x43444c31)
+            val magic=input.readInt()
+            require(magic==0x43444c31 || magic==0x43444c32)
+            val conversationId=if(magic==0x43444c32)input.readUTF().also { requireConversationId(it) } else null
             val count=input.readInt().also { require(it in 0..8) }
-            List(count) {
+            val turns=List(count) {
                 val at=input.readLong().also { require(it>=0) }
                 val text=input.readUTF().also { require(it.length<=320) }
                 val query=input.readUTF().also { require(it.length<=512) }
@@ -106,10 +123,20 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 require(grounded==ids.isNotEmpty())
                 ContinuumDialogueTurn(at,text,query,answer,topic,modelHash,ids,grounded)
             }
+            SavedHistory(conversationId,turns)
         }
     }
 
     fun clear() { check(!file.exists()||file.delete()) { "Dialog konnte nicht gelöscht werden" } }
+
+    /** An old explicit chat cannot erase a newer bound chat. Unknown legacy context may be reset. */
+    internal fun clear(conversationId:String):Boolean {
+        requireConversationId(conversationId)
+        val owner=try { readHistory().conversationId } catch (_:IllegalArgumentException) { null }
+        if(owner!=null && owner!=conversationId)return false
+        clear()
+        return true
+    }
 
     /** Keeps the unreadable bytes for inspection (newest [MAX_QUARANTINED] files). */
     private fun quarantine(at:Long) {
@@ -121,9 +148,12 @@ class ContinuumMemoryDialogue(private val directory:File) {
             .sortedByDescending { it.lastModified() }.drop(MAX_QUARANTINED).forEach { it.delete() }
     }
 
-    private fun save(turns:List<ContinuumDialogueTurn>) {
+    private fun save(turns:List<ContinuumDialogueTurn>,conversationId:String?) {
         val bytes=LearningSnapshot.encode { out ->
-            out.writeInt(0x43444c31);out.writeInt(turns.size)
+            // Existing v1 remains the legacy format. v2 binds identity and turns in one atomic snapshot.
+            out.writeInt(if(conversationId==null)0x43444c31 else 0x43444c32)
+            if(conversationId!=null)out.writeUTF(conversationId)
+            out.writeInt(turns.size)
             turns.forEach { t ->
                 out.writeLong(t.at);out.writeUTF(t.input);out.writeUTF(t.resolvedQuery)
                 out.writeUTF(t.answer);out.writeUTF(t.topic);out.writeUTF(t.modelHash)
@@ -141,6 +171,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     companion object {
         const val MAX_QUARANTINED=3
+        internal fun requireConversationId(id:String?) {
+            require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
+        }
         fun hash(bytes:ByteArray):String=MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 
         /** Mirrors .github/continuum/dialogue-retrieval.mjs exactly (cross-runtime fixture).

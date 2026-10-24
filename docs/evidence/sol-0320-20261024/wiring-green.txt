@@ -1,0 +1,36 @@
+✔ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (7.142195ms)
+✔ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (0.995649ms)
+✔ background consolidation records failure without losing interrupted source trials (0.219096ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.32235ms)
+✔ activity request codes are unique and every one has a result handler (7.121965ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.267217ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (8.933047ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (5.358364ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (0.385833ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.263612ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (0.601153ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (0.744937ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (1.113465ms)
+✔ Teamleader Android UI reports status without false success (0.14792ms)
+✔ live model status does not revert the beginner cockpit to English (0.582256ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (0.35719ms)
+✔ new visual start screen is local, accessible and honest about capabilities (0.567493ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (0.196242ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.210853ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (0.338012ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (0.449127ms)
+✔ home dashboard source total is grounded in real content-addressed archive (0.739379ms)
+✔ archive scans are capped instead of repeated every five seconds (0.124896ms)
+✔ single hologram frame callback advances phase independently of Canvas onDraw (1.524375ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.206077ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram (0.159157ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (1.184821ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic (0.326855ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 452.274913
