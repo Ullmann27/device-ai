@@ -26,6 +26,31 @@ class ContinuumCdxLargeCurriculumTest {
         assertThrows(IllegalArgumentException::class.java) {corpus.trainingStage(12)}
     }
 
+    @Test fun danglingStageCursorLinkIsRejectedWithoutResettingTheTrainingProgress() {
+        val dir=Files.createTempDirectory("continuum-cdx-cursor-link").toFile()
+        try {
+            val cursor=java.io.File(dir,"learning-core-v2/cdx-pairs-v1-stage.txt")
+            cursor.parentFile!!.mkdirs()
+            Files.createSymbolicLink(cursor.toPath(),java.io.File(dir,"missing-stage").toPath())
+            assertThrows(IllegalArgumentException::class.java) {
+                ContinuumCdxLargeLab(dir).next()
+            }
+            assertTrue(Files.isSymbolicLink(cursor.toPath()))
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun completedStageCursorIsReadOnlyAndNeverReentersTraining() {
+        val dir=Files.createTempDirectory("continuum-cdx-cursor-done").toFile()
+        try {
+            val cursor=java.io.File(dir,"learning-core-v2/cdx-pairs-v1-stage.txt")
+            cursor.parentFile!!.mkdirs()
+            cursor.writeText("12")
+            val lab=ContinuumCdxLargeLab(dir)
+            assertNull(lab.next())
+            assertEquals("12",cursor.readText())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun cancelledRoundsNeverModifyDecoderNorStagePointer() {
         val dir=Files.createTempDirectory("continuum-cdx-big-cancel").toFile()
         try {

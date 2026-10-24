@@ -71,14 +71,15 @@ android {
         versionCode = if (deviceAiFeaturePreview) 9 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
         versionName = if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         if (deviceAiOwnerSignedUpdate) {
-            versionCode = 21
-            versionName = "0.3.20"
+            versionCode = 22
+            versionName = "0.3.21"
         }
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
             deviceAiFeaturePreview -> "Device AI Continuum Test"
             deviceAiDesignPreview -> "Device AI Design"
+            deviceAiOwnerSignedUpdate -> "Continuum"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
             else -> "Device AI"

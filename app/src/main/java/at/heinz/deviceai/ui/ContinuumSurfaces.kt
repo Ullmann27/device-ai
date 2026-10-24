@@ -21,6 +21,22 @@ object ContinuumSurfaces {
         p.strokeArc(r - radius * 2f, b - radius * 2f, r, b, 0f, 90f, 1.2f, Fill.Solid(Argb.rgb(150, 110, 255)), .55f)
     }
 
+
+    /** Shallow extruded glass control: inset bevel, directional highlights and a restrained bottom rim.
+     * Shared between left and right hologram controls so lighting does not imply a mismatched layout.
+     */
+    fun raisedControlCard(p: ContinuumPainter, l: Float, t: Float, r: Float, b: Float, radius: Float = 12f) {
+        glassCard(p, l, t, r, b, radius)
+        val height = b - t
+        p.fillRoundRect(l + 1.5f, t + 1.5f, r - 1.5f, t + height * .38f, radius - 1.5f,
+            Fill.Linear(l, t, l, t + height * .38f,
+                intArrayOf(Argb.of(39, 160, 215, 255), Argb.of(0, 160, 215, 255))))
+        p.drawLine(l + radius * .75f, t + 1.7f, r - radius * .75f, t + 1.7f, 1f,
+            Fill.Solid(Argb.of(120, 178, 232, 255)))
+        p.drawLine(l + radius * .75f, b - 1.8f, r - radius * .75f, b - 1.8f, 1.35f,
+            Fill.Solid(Argb.of(92, 84, 58, 168)))
+    }
+
     /** Round icon disc with blue ring and glowing line icon. */
     fun iconDisc(p: ContinuumPainter, icon: Icon, cx: Float, cy: Float, diameter: Float, iconSize: Float = diameter * .54f,
                  glow: Boolean = true) {
@@ -31,6 +47,12 @@ object ContinuumSurfaces {
             intArrayOf(Argb.rgb(18, 44, 100), Argb.rgb(8, 20, 52))))
         p.strokeCircle(cx, cy, rr, 1f, Fill.Linear(cx - rr, cy - rr, cx + rr, cy + rr,
             intArrayOf(Argb.rgb(70, 160, 255), Argb.rgb(40, 70, 160), Argb.rgb(110, 90, 230))), .9f)
+        // Small optical highlight makes each button read as a raised 3D control.
+        p.fillCircle(cx - rr * .28f, cy - rr * .32f, rr * .45f,
+            Fill.Radial(cx - rr * .3f, cy - rr * .35f, rr * .45f,
+                intArrayOf(Argb.of(115, 170, 230, 255), 0)))
+        p.strokeArc(cx - rr + 1f, cy - rr + 1f, cx + rr - 1f, cy + rr - 1f,
+            20f, 155f, .9f, Fill.Solid(Argb.of(160, 160, 220, 255)), .8f)
         iconGlow(p, icon, cx, cy, iconSize)
     }
 

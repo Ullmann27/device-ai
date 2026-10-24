@@ -44,6 +44,40 @@ case "${CONTINUUM_OWNER_RELEASE_VERSION:-18}" in
     }
     exec bash scripts/render-mentor-owner-update-v20.sh
     ;;
+  21)
+    approved="${CONTINUUM_OWNER_V21_APPROVED_SHA:-}"
+    requested="${CONTINUUM_RELEASE_SHA:-}"
+    current="$(git rev-parse --verify HEAD 2>/dev/null)" || {
+      echo "OWNER_V21_BLOCKED: No valid source revision" >&2
+      exit 69
+    }
+    if [[ ! "$approved" =~ ^[a-f0-9]{40}$ || "$approved" != "$requested" || "$requested" != "$current" ]]; then
+      echo "OWNER_V21_BLOCKED: Exact owner-approved release builder SHA missing or mismatched" >&2
+      exit 69
+    fi
+    [[ -s scripts/render-mentor-owner-update-v21.sh ]] || {
+      echo "OWNER_V21_BLOCKED: Reviewed v21 release script unavailable" >&2
+      exit 69
+    }
+    exec bash scripts/render-mentor-owner-update-v21.sh
+    ;;
+  22)
+    approved="${CONTINUUM_OWNER_V22_APPROVED_SHA:-}"
+    requested="${CONTINUUM_RELEASE_SHA:-}"
+    current="$(git rev-parse --verify HEAD 2>/dev/null)" || {
+      echo "OWNER_V22_BLOCKED: No valid source revision" >&2
+      exit 69
+    }
+    if [[ ! "$approved" =~ ^[a-f0-9]{40}$ || "$approved" != "$requested" || "$requested" != "$current" ]]; then
+      echo "OWNER_V22_BLOCKED: Exact owner-approved release builder SHA missing or mismatched" >&2
+      exit 69
+    fi
+    [[ -s scripts/render-mentor-owner-update-v22.sh ]] || {
+      echo "OWNER_V22_BLOCKED: Reviewed v22 release script unavailable" >&2
+      exit 69
+    }
+    exec bash scripts/render-mentor-owner-update-v22.sh
+    ;;
   *)
     echo "OWNER_RELEASE_BLOCKED: Unsupported release version" >&2
     exit 69

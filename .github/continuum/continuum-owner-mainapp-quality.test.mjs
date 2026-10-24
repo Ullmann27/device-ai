@@ -29,7 +29,9 @@ test('orbital rings use visible phase movement, not the old near-static factor',
 });
 test('header and the six orbital text labels are fitted to their real drawing boxes',()=>{
   assert.match(labels,/protected fun fittedTitle/);
-  assert.match(labels,/ContinuumSurfaces\.fit\(p, title, titleStyle, titleWidth\)/);
+  assert.match(labels,/ContinuumSurfaces\.fit\(p, title, titleStyle, available\)/);
+  assert.match(labels,/val alignment = if \(mirrored\) TextAlign\.RIGHT else TextAlign\.LEFT/);
+  assert.match(labels,/ContinuumSurfaces\.raisedControlCard\(p,/);
   assert.match(labels,/ContinuumSurfaces\.fit\(p, subtitle, style, w - 91f\)/);
 });
 test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',()=>{
@@ -44,7 +46,7 @@ test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',
 test('CCC1 integrated in same owner-app source without changing private app identity',()=>{
   assert.match(ccc1,/internal object ContinuumCcc1Bridge/);
   assert.match(builderActivity,/ContinuumCcc1Bridge\.command\(operation, chain, orderId = requestId, taskId = task\)/);
-  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 21\s*versionName = "0\.3\.20"/);
+  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 22\s*versionName = "0\.3\.21"/);
   assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
 });
 test('existing on-device learning state and protected independent training are never reset by launch',()=>{

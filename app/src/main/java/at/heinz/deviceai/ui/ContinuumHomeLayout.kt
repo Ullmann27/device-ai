@@ -53,18 +53,19 @@ object ContinuumHomeLayout {
      */
     fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f
 
+    // Centerline of the hologram is 206 dp. Opposing controls use equal widths and mirrored x-coordinates.
     private val phoneReference = mapOf(
         Slot.BRAND to Box(0f, 0f, 276f, 68.8f),
         Slot.SEARCH to Box(279f, 22f, 311f, 54f),
         Slot.NOTIFICATIONS to Box(322f, 22f, 354f, 54f),
         Slot.PROFILE to Box(364f, 22f, 396f, 54f),
         Slot.HERO to Box(0f, 68.8f, 412f, 375.6f),
-        Slot.LABEL_CONNECTED to Box(10.8f, 96f, 150f, 126f),
-        Slot.LABEL_LEARNING to Box(10.8f, 165.4f, 150f, 195.4f),
-        Slot.LABEL_DEVELOPING to Box(10.8f, 242.2f, 150f, 272.2f),
-        Slot.LABEL_THINKING to Box(321.1f, 96f, 412f, 126f),
-        Slot.LABEL_ANALYSING to Box(321.1f, 165.4f, 412f, 195.4f),
-        Slot.LABEL_EVOLVING to Box(321.1f, 242.2f, 412f, 272.2f),
+        Slot.LABEL_CONNECTED to Box(10f, 96f, 119f, 136f),
+        Slot.LABEL_LEARNING to Box(10f, 165.4f, 119f, 205.4f),
+        Slot.LABEL_DEVELOPING to Box(10f, 242.2f, 119f, 282.2f),
+        Slot.LABEL_THINKING to Box(293f, 96f, 402f, 136f),
+        Slot.LABEL_ANALYSING to Box(293f, 165.4f, 402f, 205.4f),
+        Slot.LABEL_EVOLVING to Box(293f, 242.2f, 402f, 282.2f),
         Slot.MODEL to Box(13.3f, 380.3f, 398.8f, 469.4f),
         Slot.LEARNING to Box(13.3f, 479.6f, 215.5f, 661.6f),
         Slot.STORAGE to Box(224.8f, 479.6f, 398.8f, 661.6f),
@@ -72,6 +73,7 @@ object ContinuumHomeLayout {
         Slot.NAV to Box(0f, 787f, 412f, 787f + PHONE_NAV_HEIGHT)
     )
 
+    // Wide reference centerline is 417 dp (the center of the existing hero slot).
     private val wideReference = mapOf(
         Slot.RAIL to Box(0f, 0f, 76f, 649f),
         Slot.BRAND to Box(80f, 30f, 420f, 86f),
@@ -80,12 +82,12 @@ object ContinuumHomeLayout {
         Slot.PROFILE to Box(657.7f, 42.2f, 686.3f, 70.8f),
         Slot.MODEL_PILL to Box(709f, 30.5f, 826f, 72.7f),
         Slot.HERO to Box(212f, 0f, 622f, 291f),
-        Slot.LABEL_CONNECTED to Box(90f, 97f, 212f, 138f),
-        Slot.LABEL_LEARNING to Box(90f, 148.5f, 212f, 192f),
-        Slot.LABEL_DEVELOPING to Box(90f, 201.3f, 212f, 247f),
-        Slot.LABEL_THINKING to Box(550f, 97.4f, 647.4f, 137.7f),
-        Slot.LABEL_ANALYSING to Box(550f, 151.3f, 647.4f, 191.6f),
-        Slot.LABEL_EVOLVING to Box(550f, 204.5f, 647.4f, 243.5f),
+        Slot.LABEL_CONNECTED to Box(188f, 97f, 302f, 138f),
+        Slot.LABEL_LEARNING to Box(188f, 148.5f, 302f, 192f),
+        Slot.LABEL_DEVELOPING to Box(188f, 201.3f, 302f, 247f),
+        Slot.LABEL_THINKING to Box(532f, 97f, 646f, 138f),
+        Slot.LABEL_ANALYSING to Box(532f, 148.5f, 646f, 192f),
+        Slot.LABEL_EVOLVING to Box(532f, 201.3f, 646f, 247f),
         Slot.SYSTEM_STATUS to Box(657.1f, 84.4f, 829.2f, 276f),
         Slot.MODEL to Box(87.7f, 290.9f, 335.7f, 475.3f),
         Slot.LEARNING to Box(345.5f, 290.9f, 613f, 475.3f),

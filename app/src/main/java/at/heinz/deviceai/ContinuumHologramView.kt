@@ -51,6 +51,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private var foregroundActive = false
     private var motionAllowed = false
     private var visibleFrameCount = 0L
+    private var drawnFrameCount = 0L
     private var framePending = false
     private var observersRegistered = false
     private var lastFrameMs = 0L
@@ -206,6 +207,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
 
     /** No private content. Owner can inspect this by long-pressing the hologram. */
+    /** Read only on the Android UI thread. Compares scheduled callbacks and real View draws. */
+    data class MotionSample(val callbackCount: Long, val drawCount: Long, val phase: Float, val reason: String)
+
+    fun sampleMotion(): MotionSample = MotionSample(visibleFrameCount, drawnFrameCount, phase, motionDiagnostics())
+
     internal fun motionDiagnostics(): String = when {
         !animationsEnabled -> "Kugel: In-App-Animation ausgeschaltet"
         !ValueAnimator.areAnimatorsEnabled() -> "Kugel: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
@@ -214,7 +220,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         !foregroundActive -> "Kugel: Activity nicht im Vordergrund."
         !isAttachedToWindow -> "Kugel: View nicht am Fenster."
         !isShown || windowVisibility != VISIBLE -> "Kugel: View derzeit unsichtbar."
-        else -> "Kugel: LIVE · Frames $visibleFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+        else -> "Kugel: LIVE · Callbacks $visibleFrameCount · Canvas $drawnFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
     }
 
     private fun updateMotionPolicy() {
@@ -265,6 +271,7 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.energy = energy
         renderFrame.audio = audioEnergy
         renderer.draw(painter, renderFrame)
+        drawnFrameCount++
         canvas.restoreToCount(saved)
     }
 
