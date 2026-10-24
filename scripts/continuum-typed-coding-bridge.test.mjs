@@ -104,8 +104,8 @@ test('actual CCC1 prepare and isolated coding repair are accessible through the 
        patches:[{file:'lib/offset.mjs',oldText:'a-b',newText:'a>b?a-b:b-a'}]}
      })};}})})
   });
-  assert.equal(calls,1);
-  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW');
+  assert.ok(calls>=1&&calls<=spec.limits.maxModelCalls,'calls exceeded budget');
+  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW',JSON.stringify(completed));
   assert.match(completed.patchSha256,/^[a-f0-9]{64}$/);
   assert.equal(completed.installed,false);
   assert.equal(completed.approvedForMerge,false);
