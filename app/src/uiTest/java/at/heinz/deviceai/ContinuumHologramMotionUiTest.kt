@@ -66,6 +66,48 @@ class ContinuumHologramMotionUiTest {
         } finally {controller.pause().stop().destroy()}
     }
 
+    @Test fun differentOrbitalPhasesActuallyChangeRenderedPixels() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val activity = controller.get()
+        val view = ContinuumHologramView(activity)
+        try {
+            view.setAnimationsEnabled(false)
+            activity.setContentView(view)
+            view.measure(View.MeasureSpec.makeMeasureSpec(412, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(307, View.MeasureSpec.EXACTLY))
+            view.layout(0, 0, 412, 307)
+            val phaseField = ContinuumHologramView::class.java.getDeclaredField("phase").apply {
+                isAccessible = true
+            }
+            val before = Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888)
+            val after = Bitmap.createBitmap(412, 307, Bitmap.Config.ARGB_8888)
+            try {
+                phaseField.setFloat(view, 0.4f)
+                view.draw(Canvas(before))
+                phaseField.setFloat(view, 2.6f)
+                view.draw(Canvas(after))
+                assertFalse(
+                    "Real Android Canvas pixels must change with the orb/ring phase",
+                    before.sameAs(after)
+                )
+            } finally {
+                before.recycle()
+                after.recycle()
+            }
+        } finally { controller.pause().stop().destroy() }
+    }
+
+    @Test fun deviceMotionDiagnosticNeverReportsLiveBeforeForegroundActivation() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val view = ContinuumHologramView(controller.get())
+        try {
+            controller.get().setContentView(view)
+            assertFalse(view.motionDiagnostics().contains("LIVE"))
+            view.setForegroundActive(false)
+            assertFalse(view.motionDiagnostics().contains("LIVE"))
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun renderingAtRestDoesNotByItselfAdvanceTheOrbitClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()
