@@ -5413,9 +5413,6 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val successful=run.blocker==null && run.response.isNotBlank()
-                    if (successful && sessionId == localSessionId) {
-                        lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
-                    }
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
                             .recordLocalOutcome(successful)
@@ -5424,6 +5421,9 @@ class AgentActivity : Activity() {
                     }
                     if (localRuntime.state != LocalModelState.GENERATING) localRuntimeError = null
                     addAssistantMessage(run.response.ifBlank { "Das lokale Modell hat keine Antwort erzeugt." })
+                    if (successful && sessionId == localSessionId) {
+                        lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
+                    }
                     persistRequestedMemory(text, run.experience?.evaluation)
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
@@ -6608,6 +6608,9 @@ class AgentActivity : Activity() {
     }
 
     private fun addAssistantMessage(value: String) {
+        // A non-model answer becomes the latest turn and invalidates any older
+        // local-model prompt context. Successful local model runs set it after rendering.
+        lastLocalReply = null
         if (requestStartedAt > 0L) {
             responseTimesMs.addLast(android.os.SystemClock.elapsedRealtime() - requestStartedAt)
             while (responseTimesMs.size > 20) responseTimesMs.removeFirst()
