@@ -98,19 +98,35 @@ class ContinuumCognitiveRuntimeTest {
         } finally { dir.deleteRecursively() }
     }
 
-    @Test fun pronounContinuationCarriesPreviousQuestionOnlyToLocalFallback() {
-        val dir=Files.createTempDirectory("continuum-references").toFile()
+    @Test fun unresolvedPronounNeverBorrowsAnotherConversationFromProfileHistory() {
+        val dir=Files.createTempDirectory("continuum-context-privacy").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"previous-session")
+            assertTrue(first.reply("Wo wohnt Leo?").grounded)
+            core.resetDialogueConversation("previous-session")
+            val current=ContinuumCognitiveRuntime(dir,core,"fresh-session")
+            val result=current.reply("Was ist mit ihm?")
+            assertFalse(result.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertFalse(result.localModelPrompt.contains("Graz"))
+            assertTrue(result.localModelPrompt.contains("nicht eindeutig"))
+            assertTrue(core.activeOwnerFacts().isNotEmpty())
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun onlyCurrentTurnResolutionMayProvideLocalGeneratorContext() {
+        val dir=Files.createTempDirectory("continuum-context-contract").toFile()
         try {
             val runtime=ContinuumCognitiveRuntime(dir)
-            val previous=ContinuumDialogueTurn(1L,"Was ist mit Leo?",
-                "Was ist mit Leo?","keine Erinnerung","Was ist mit Leo?",
-                "0".repeat(64),emptyList(),false)
-            val prompt=runtime.localPrompt("Was ist mit ihm?",listOf(previous),"Was ist mit ihm?")
-            assertTrue(prompt.contains("Was ist mit Leo?"))
-            assertTrue(prompt.contains("Was ist mit ihm?"))
-            assertTrue(prompt.contains("Erfinde keine persönlichen Fakten"))
-            assertEquals("Wie geht es dir?",runtime.localPrompt("Wie geht es dir?",
-                listOf(previous),"Wie geht es dir?"))
-        } finally { dir.deleteRecursively() }
+            val ambiguous=runtime.localPrompt("Was ist mit ihm?","Was ist mit ihm?")
+            assertFalse(ambiguous.contains("Leo"))
+            assertTrue(ambiguous.contains("Bitte frage nach"))
+            val continued=runtime.localPrompt("und wie?","Wo wohnt Leo? und wie?")
+            assertTrue(continued.contains("Wo wohnt Leo? und wie?"))
+            assertTrue(continued.contains("nicht unabhängig bestätigt"))
+            assertEquals("Wie geht es dir?",runtime.localPrompt("Wie geht es dir?","Wie geht es dir?"))
+        } finally {dir.deleteRecursively()}
     }
+
 }
