@@ -78,6 +78,29 @@ class ContinuumM5UiTest {
    assertNull(Shadows.shadowOf(a).nextStartedActivity)
   } finally {controller.pause().stop().destroy()}
  }
+ @Test fun recreationWithAnUnsubmittedDraftNeverRestoresPlanApproval() {
+  val original=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).setup()
+  val root=views(original.get().findViewById(android.R.id.content))
+  val input=root.filterIsInstance<EditText>().single()
+  val send=root.filterIsInstance<Button>().single {it.text=="Anforderung ergänzen"}
+  val handoff=root.filterIsInstance<Button>().single {it.text=="Plan prüfen und an Builder übergeben"}
+  input.setText("Notizen offline")
+  send.performClick()
+  assertTrue(handoff.isEnabled)
+  input.setText("Stopp, noch nicht bauen")
+  assertFalse(handoff.isEnabled)
+  val saved=android.os.Bundle()
+  original.saveInstanceState(saved).pause().stop().destroy()
+  val restored=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).create(saved).start().resume()
+  try {
+   val restoredViews=views(restored.get().findViewById(android.R.id.content))
+   val restoredInput=restoredViews.filterIsInstance<EditText>().single()
+   val restoredHandoff=restoredViews.filterIsInstance<Button>().single {it.text=="Plan prüfen und an Builder übergeben"}
+   assertEquals("Stopp, noch nicht bauen",restoredInput.text.toString())
+   assertFalse("Restoration of unsent text must never silently restore approval",restoredHandoff.isEnabled)
+   assertNull(Shadows.shadowOf(restored.get()).nextStartedActivity)
+  } finally {restored.pause().stop().destroy()}
+ }
  @Test fun naturalRequestRequiresPlanReviewAndOnlyOpensExistingBuilder() {
   val controller=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).setup()
   try {
