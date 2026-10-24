@@ -13,6 +13,7 @@ import android.os.PowerManager
 import android.os.SystemClock
 import android.provider.Settings
 import android.util.AttributeSet
+import android.widget.Toast
 import android.view.View
 import at.heinz.deviceai.ui.AndroidContinuumPainter
 import at.heinz.deviceai.ui.ContinuumHologramRenderer
@@ -48,7 +49,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     // The owner Activity explicitly pauses/resumes this one animation loop.
     private var foregroundActive = false
     private var motionAllowed = false
-    private var aggregatedVisible = false
+    private var visibleFrameCount = 0L
     private var framePending = false
     private var observersRegistered = false
     private var lastFrameMs = 0L
@@ -59,6 +60,7 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val drawFrame = Runnable {
         framePending = false
         if (canAnimate()) {
+            visibleFrameCount++
             // The motion clock advances independently of a completed Canvas draw.
             // Invalidation requests only rendering, not the next state transition.
             advanceFrame()
@@ -86,6 +88,11 @@ class ContinuumHologramView @JvmOverloads constructor(
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         isClickable = false
         isFocusable = false
+        // A long-press gives the owner a concrete reason when animation looks frozen.
+        setOnLongClickListener {
+            Toast.makeText(context, motionDiagnostics(), Toast.LENGTH_LONG).show()
+            true
+        }
     }
 
     /** Call on the UI thread. State changes crossfade over the existing orb. */
@@ -129,7 +136,6 @@ class ContinuumHologramView @JvmOverloads constructor(
             context.registerReceiver(powerReceiver, IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED))
             observersRegistered = true
         }
-        aggregatedVisible = isShown
         updateMotionPolicy()
     }
 
@@ -148,7 +154,6 @@ class ContinuumHologramView @JvmOverloads constructor(
 
     override fun onVisibilityAggregated(isVisible: Boolean) {
         super.onVisibilityAggregated(isVisible)
-        aggregatedVisible = isVisible
         updateMotionPolicy()
     }
 
@@ -157,7 +162,31 @@ class ContinuumHologramView @JvmOverloads constructor(
         if (isAttachedToWindow) updateMotionPolicy()
     }
 
-    private fun canAnimate() = foregroundActive && motionAllowed && isAttachedToWindow && aggregatedVisible && windowVisibility == VISIBLE
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (isAttachedToWindow) updateMotionPolicy()
+    }
+
+    override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+        super.onWindowFocusChanged(hasWindowFocus)
+        // Re-evaluate scheduling after Samsung Fold window/cover transitions.
+        if (isAttachedToWindow) updateMotionPolicy()
+    }
+
+    /** Actual View visibility, not a callback-cached flag that can go stale. */
+    private fun canAnimate() =
+        foregroundActive && motionAllowed && isAttachedToWindow && isShown && windowVisibility == VISIBLE
+
+    /** No private content. Owner can inspect this by long-pressing the hologram. */
+    internal fun motionDiagnostics(): String = when {
+        !animationsEnabled -> "Kugel: In-App-Animation ausgeschaltet"
+        !ValueAnimator.areAnimatorsEnabled() -> "Kugel: Android-Animationen ausgeschaltet. Bedienungshilfen/Entwickleroptionen prüfen."
+        powerManager.isPowerSaveMode -> "Kugel: Energiesparmodus blockiert Bewegung."
+        !foregroundActive -> "Kugel: Activity nicht im Vordergrund."
+        !isAttachedToWindow -> "Kugel: View nicht am Fenster."
+        !isShown || windowVisibility != VISIBLE -> "Kugel: View derzeit unsichtbar."
+        else -> "Kugel: LIVE · Frames $visibleFrameCount · Phase ${"%.2f".format(java.util.Locale.ROOT, phase)}"
+    }
 
     private fun updateMotionPolicy() {
         motionAllowed = animationsEnabled && ValueAnimator.areAnimatorsEnabled() && !powerManager.isPowerSaveMode
