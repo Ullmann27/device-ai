@@ -52,6 +52,25 @@ class LocalModelCatalogTest {
         }
     }
 
+    @Test fun failedNewImportReportsBothHashesAndPreservesPreviouslyVerifiedModel() {
+        val directory = Files.createTempDirectory("model-import-identity").toFile()
+        try {
+            val catalog = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            val oldBytes = "previous valid model".toByteArray()
+            val old = catalog.import("owner-name", "v1", ByteArrayInputStream(oldBytes), contentHash(oldBytes.decodeToString()))
+            val candidate = "different downloaded bytes".toByteArray()
+            val failure = assertThrows(IllegalArgumentException::class.java) {
+                catalog.import("owner-name", "v2", ByteArrayInputStream(candidate), "0".repeat(64))
+            }
+            assertTrue("Mismatch must identify the expected digest", failure.message!!.contains("0".repeat(64)))
+            assertTrue("Mismatch must identify the actually read bytes", failure.message!!.contains(contentHash(candidate.decodeToString())))
+            assertEquals(old, catalog.get(old.id, old.version))
+            assertEquals(listOf(old), catalog.all())
+            assertNull(catalog.get("owner-name", "v2"))
+            assertFalse(directory.listFiles()!!.any { it.name.startsWith("model-import-") })
+        } finally { directory.deleteRecursively() }
+    }
+
     @Test
     fun importRejectsBadHashesOversizedAndUnsupportedModelsWithoutCataloging() {
         val directory = Files.createTempDirectory("device-ai-models-invalid").toFile()

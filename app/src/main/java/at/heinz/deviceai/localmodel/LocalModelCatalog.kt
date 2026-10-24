@@ -125,7 +125,8 @@ class LocalModelCatalog(
             require(total > 0) { "Model file is empty." }
             val hash = digest.digest().toHex()
             require(MessageDigest.isEqual(hash.toByteArray(), expectedSha256.toByteArray())) {
-                "Model SHA-256 does not match the expected digest."
+                "Model SHA-256 does not match the expected digest. " +
+                    "Expected: $expectedSha256; actual: $hash; bytes: $total."
             }
             val capabilities = inspector.inspect(temporary)
             require(capabilities.text && LocalModelBackend.CPU in capabilities.supportedBackends) {
