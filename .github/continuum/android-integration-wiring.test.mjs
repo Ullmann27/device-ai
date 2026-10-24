@@ -425,3 +425,28 @@ test('Android-first Teamleader is scheduled, observable and serialized across ba
    job.includes('jobFinished(params, false)') &&
    !job.includes('reschedule = result.state == "ERROR"'));
 });
+
+test('explicit M5 project planning command reaches reviewed builder without bypassing approval',()=>{
+ const router=fs.readFileSync(dir+'ContinuumWorkerChatRouter.kt','utf8');
+ const lab=fs.readFileSync(dir+'ContinuumM5LabActivity.kt','utf8');
+ ensure('M5 command has dedicated typed route',
+   router.includes('data object ProjectPlan : ContinuumWorkerChatCommand()') &&
+   router.includes('"worker projektplan"') &&
+   router.includes('ContinuumWorkerChatCommand.ProjectPlan'));
+ ensure('chat launches existing project-plan activity not a shell job',
+   activity.includes('ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()') &&
+   activity.includes('private fun openM5ProjectPlan()') &&
+   activity.includes('startActivity(Intent(this, ContinuumM5LabActivity::class.java))'));
+ ensure('external preview retains existing builder route',
+   activity.includes('if (destination.externalPackage)') &&
+   activity.includes('openMobileBuilder()'));
+ ensure('M5 laboratory is non-exported and respects builder feature gate',
+   manifest.includes('android:name=".ContinuumM5LabActivity" android:exported="false" android:enabled="${mobileBuilderEnabled}"'));
+ ensure('M5 approval remains hash, revision and empty-input bound',
+   lab.includes('draftVersion==shownDraftVersion') &&
+   lab.includes('conversation.approve(p.revision,p.planSha256!!)') &&
+   lab.includes('input.text.isEmpty()') &&
+   lab.includes('startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)'));
+ ensure('M5 laboratory has no direct privileged execution',
+   !lab.includes('RUN_COMMAND') && !lab.includes('dispatchCcc1(') && !lab.includes('dispatchApprovedCommand('));
+});
