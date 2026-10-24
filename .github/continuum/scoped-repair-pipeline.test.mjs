@@ -180,3 +180,23 @@ test('repeated identical rejected model answer stops without starting third proc
   assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
+
+test('unmatched oldText is explained to the model before a valid revision',{skip:nested},()=>{
+ const f=fixture();try{
+  let calls=0;const requests=[];
+  const candidateProvider=provider(f,input=>{
+   requests.push(input);calls++;
+   const result=proposal(f,'return a>b?a-b:b-a;');
+   if(calls===1)result.patches[0].oldText='return not-present;';
+   return result;
+  });
+  const report=session(f,candidateProvider);
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(calls,2);
+  assert.equal(report.inference.localRequests,2);
+  assert.equal(requests[1].history[0].outcome,'CODING_PATCH_NOT_EXACT');
+  assert.match(requests[1].history[0].candidate,/^[a-f0-9]{64}$/);
+  assert.match(requests[1].history[0].diagnostic,/exactly one unique/);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
