@@ -1,5 +1,5 @@
-55087d0f641f716c4350ab2e03e8792a5fcf0f908347da7d38e4c5866e6b6817  docs/evidence/sol-m5-20261024/README.md
-e7cd58ef6c7adcd761171db4a59e63013261d9302c3cf9167ec98d82b9b7f7b9  docs/evidence/sol-m5-20261024/changed-files.txt
+8acbd549d4e0cdc6b0e1ae553f8c930e8a1c96bc37e792b231dc77a6ea840080  docs/evidence/sol-m5-20261024/README.md
+39a9d0ae53d1404920b4d6de5b5da366f69172f607291ae6ad5506f0e143e41d  docs/evidence/sol-m5-20261024/changed-files.txt
 0e5acdec00b61912da9f21f291366cf212d81f319adceff7dbb0510253b6b9e2  docs/evidence/sol-m5-20261024/diagnostics/README.md
 b2c48a51344776d742f24aaf9e9888606c2b6d310c38aefd3fcb153308917eed  docs/evidence/sol-m5-20261024/diagnostics/ShadowProcessProbe.kt
 dfbbf6c394932577d226ad68dfd62912404bb1e4769c5f7304f1f7bfa5d101ae  docs/evidence/sol-m5-20261024/diagnostics/TaxonomyTrace.kt
@@ -15,6 +15,8 @@ f8351014680b5fbd3302cbe2f3004f8594c794d594c9bc83f449435299147c87  docs/evidence/
 e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809  docs/evidence/sol-m5-20261024/tests/android-lint.xml
 2f0a9e9790fc371c414d43a0a095aeb0c089ba3a4d25f086ca775dc13f9f8b9b  docs/evidence/sol-m5-20261024/tests/backend-final.tap
 527da58ac9b4217a5308cf1efea679380517d9a72d3022ff8bb24987cf2f4702  docs/evidence/sol-m5-20261024/tests/classpath-export.log
+6e5c4c88be7a34411039aa230704c11b3919221a6887316774cdab6b68cc0b6b  docs/evidence/sol-m5-20261024/tests/ctx1-known-regression.json
+d29fad06c2243aee3e58f6285a5077df5c46ee812b3ec53991c3bb41b4848301  docs/evidence/sol-m5-20261024/tests/ctx1-known-regression.log
 a9289eb706a0ab1e4406e8cc0df9c5ae39388ec96c884384cf9c0bdea75d7efc  docs/evidence/sol-m5-20261024/tests/ctx2-b1-still-crashes-known.log
 76bddbf67d537385a70a717732246abe1363824057d5bb68b4eee8fb3be0cc58  docs/evidence/sol-m5-20261024/tests/ctx2-green.log
 b32058e4f64db4dd1fa8bc17d2c92df1993b500ef5aae019a6dc8132ffd589cf  docs/evidence/sol-m5-20261024/tests/ctx2-original-test2.log

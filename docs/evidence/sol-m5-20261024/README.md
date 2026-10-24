@@ -1,6 +1,6 @@
 # M5 – gesicherte Host-/SDK-Belege, kein Gerätelauf
 
-Start331e2d25, endgültiger Code-Freeze **fc1d996135d98165a7102d0a4e67b9ff34a0b1f0**.
+Start 331e2d25, endgültiger Code-Freeze **fc1d996135d98165a7102d0a4e67b9ff34a0b1f0**.
 [Draft-PR109](https://github.com/Ullmann27/device-ai/pull/109), kein Merge/Signieren/Installieren.
 
 - `summary.json`: echte Endzahlen; `tests/`: wirkliche rote Gegenbeispiele und grüne Abschlüsse.
@@ -10,6 +10,7 @@ Start331e2d25, endgültiger Code-Freeze **fc1d996135d98165a7102d0a4e67b9ff34a0b1
 - `android-junit-xml.tar.gz`: alle tatsächlichen JUnit-XML-Ergebnisse; `android-lint.xml`: Haupt-App-Lint,
   gemäß bestehendem Gradleprofil `NewApi`, kein umfassendes Sicherheitsaudit.
 - CTX3: unabhängiger einmaliger TEST3, **FAIL**, keine Promotion. Report/Freeze/Korpus in `docs/research/`.
+- Bekannte ursprüngliche CTX1-Regression erneut920/0 (B1),80 Rückfragen/80 Enthaltungen; alte Originalberichte unverändert.
 - Bekannte TEST2-Fehler: alle27 exakt reproduziert, Taxonomie und ausführbare Diagnose unter `diagnostics/`.
 - Sitzungstest zusätzlich in zwei echten getrennten JVMs: `tests/process-restart.log`; ON-Schalter bleibt,
   Entitätsfokus geht verloren und verlangt eine Rückfrage. Keine Android-Prozessabnahme daraus ableiten.

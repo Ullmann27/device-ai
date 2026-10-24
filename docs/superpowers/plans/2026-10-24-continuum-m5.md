@@ -19,28 +19,28 @@ Keine automatische Aktion aus Interpretation, kein untrusted Shelltext. Alte CTX
 - Trainingsdaten/bedingte/indirekte Befehle: keine Geräte-/Buildausführung.
 
 ## Task 1 – CTX2
-- [ ] Negativtest Ctx2NegationTest schreiben und vor Fix ausführen (NoSuchElementException).
-- [ ] generalized-only Negationssemantik implementieren, CTX1/CTX2-Suite ausführen.
-- [ ] Geöffnetes TEST2 als Regression ausführen; Originalberichte erhalten; commit/push.
+- [x] Negativtest Ctx2NegationTest schreiben und vor Fix ausführen (NoSuchElementException).
+- [x] generalized-only Negationssemantik implementieren, CTX1/CTX2-Suite ausführen.
+- [x] Geöffnetes TEST2 als Regression ausführen; Originalberichte erhalten; commit/push.
 
 ## Task 2 – Kontextadapter
 Files: learning/context/Ctx3Context.kt, Ctx3Shadow.kt, ContinuumLearningCore.kt, entsprechende Tests.
 Interface: decide(input, entities) → Query(query,sourceIds) | Clarify(reason) | Abstain(reason).
-- [ ] Tests für Alias-/Pronomenmehrdeutigkeit, fünf Turns, Negation, Quelle/Widerruf, Größenlimits zuerst rot.
-- [ ] Begrenzte Entitätsmengen und Quellbindung implementieren; Shadow standardmäßig OFF, unveränderte Baselineantwort.
-- [ ] Befehlsfreiheit und Quellkonstanz testen; commit/push vor neuem Forschungsdurchlauf.
+- [x] Tests für Alias-/Pronomenmehrdeutigkeit, fünf Turns, Negation, Quelle/Widerruf, Größenlimits zuerst rot.
+- [x] Begrenzte Entitätsmengen und Quellbindung implementieren; Shadow standardmäßig OFF, unveränderte Baselineantwort.
+- [x] Befehlsfreiheit und Quellkonstanz testen; commit/push vor neuem Forschungsdurchlauf.
 
 ## Task 3 – Gespräch zu Coding-Plan
 Files: ContinuumCodingConversation.kt, ContinuumM5LabActivity.kt, BuilderActivity/Manifest, JVM-/UI-Tests.
 Interface: accept(text) → Preview/Clarify/Unsupported; approve(revision,hash) → ContinuumOwnedProject?
-- [ ] Mehrteilige Notes/Counter-Fälle, fehlende Offline-Angabe, Widerspruch/Sync/Todo, veraltete Freigabe zuerst rot.
-- [ ] Feste M4-Planbindung und explizite Vorschau/Freigabe; keine automatische Ausführung.
-- [ ] Android-Labor mit OFF/SHADOW-Anzeige und existierendem Builder verbinden; UI-Integration testen; commit/push.
+- [x] Mehrteilige Notes/Counter-Fälle, fehlende Offline-Angabe, Widerspruch/Sync/Todo, veraltete Freigabe zuerst rot.
+- [x] Feste M4-Planbindung und explizite Vorschau/Freigabe; keine automatische Ausführung.
+- [x] Android-Labor mit OFF/SHADOW-Anzeige und existierendem Builder verbinden; UI-Integration testen; commit/push.
 
 ## Task 4 – Messung und Gesamtabschluss
-- [ ] Unabhängigen TEST3 nur mit versiegeltem Hash vorregistrieren und Code einfrieren; einmalige finale Messung.
-- [ ] CTX1/CTX2 bekannte Regression, volle Node-/Backend-/SDK-/Lint-/UI-Suites; Fehler beheben.
-- [ ] Frischer Gesamt-Diff-Review, wichtige Befunde RED→GREEN; vollständige M5-Übergabe, Draft-PR und Push.
+- [x] Unabhängigen TEST3 nur mit versiegeltem Hash vorregistrieren und Code einfrieren; einmalige finale Messung.
+- [x] CTX1/CTX2 bekannte Regression, volle Node-/Backend-/SDK-/Lint-/UI-Suites; Fehler beheben.
+- [x] Frischer Gesamt-Diff-Review, wichtige Befunde RED→GREEN; vollständige M5-Übergabe, Draft-PR und Push.
 
 ## Ledger
 Baseline läuft auf unverändertem 331e2d2. TEST2 ist geöffnet und darf nur Regression heißen.
@@ -56,3 +56,5 @@ P1-Activity: versioniertes Android-SavedState mit höchstens32 Eingaben,512 Zeic
 P3: UNRESOLVED_RETRIEVAL_SCOPE wird ausdrücklich nicht als aufgelöste Referenz geloggt. Metadaten binden Modellhash und Quellenrevision; keine Rohtexte. DEV-Leistungslauf 0/10/50/128/256 Fakten,OFF/ON,kurz/lang und Widerruf vorbereitet.
 Reviewkorrekturen vollständig RED→GREEN: unbekannte Namen/Negation/Aliasfokus/negative Projektanforderungen. Zusätzliche SavedState-Version wurde zuerst als veraltete gültige Vorschau reproduziert und danach abgefangen. Echte SDK-JUnit-Aggregation jetzt912 Fälle,0 Fehler/Skips; abschließendes Lint wartet noch auf Abschluss. Zwei statische Node-Quellewartungen verlangten die alte Runtime-Signatur; sie prüfen jetzt explizit Gesprächs-ID und Reset und bestehen20/20 im betroffenen Modul.
 Freeze9a30327/f93473a wurde vor jeder TEST3-Ausführung ausgesetzt: Nachtragsfälle „noch nicht bauen“ und indirekter Dokumenttext invalidierten eine fertige Vorschau nicht. Isolierter Regressionstest rot; Fix außerhalb des CTX3-Algorithmus. Kein TEST3-Inhalt wurde gelesen/ausgeführt, unabhängiger Evaluator wartet. Neuer Gesamt-Freeze nach Prüfung; alter Freeze bleibt nachvollziehbar erhalten. Volle Node-Endsuite nach Verdrahtungskorrektur1085/1085,Backend60/60 grün.
+
+Abschluss: Codefc1d996, genau eine unabhängige TEST3-Messung, FAIL/keine Promotion. Node1085/1085,Backend60/60,SDK913/913 inkl12Widgetfälle,4Checks/Lint/Parität grün. Zusätzliche Nachtragsfälle und echte JVM-Neustartprobe belegt. P2-Generalisierungsstudie und30-Sekunden-Modus bewusst offen; vollständige Anschlussarbeit in M5-Übergabe.
