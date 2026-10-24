@@ -5,7 +5,6 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Looper
-import android.provider.Settings
 import android.view.View
 import org.junit.Assert.*
 import org.junit.Test
