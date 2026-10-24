@@ -1694,14 +1694,14 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this)
                 .setTitle("Continuum · Hologramm-Gerätediagnose")
                 .setMessage(
-                    "Messdauer: 1,6 Sekunden\\n" +
-                        "Animations-Callbacks: $callbackDelta\\n" +
-                        "Wirkliche Canvas-Zeichnungen: $drawnDelta\\n" +
-                        "Phasenänderung: ${"%.3f".format(java.util.Locale.ROOT, phaseDelta)}\\n\\n" +
-                        "Start: ${first.reason}\\n" +
-                        "Ende: ${second.reason}\\n\\n" +
+                    "Messdauer: 1,6 Sekunden\n" +
+                        "Animations-Callbacks: $callbackDelta\n" +
+                        "Wirkliche Canvas-Zeichnungen: $drawnDelta\n" +
+                        "Phasenänderung: ${"%.3f".format(java.util.Locale.ROOT, phaseDelta)}\n\n" +
+                        "Start: ${first.reason}\n" +
+                        "Ende: ${second.reason}\n\n" +
                         verdict +
-                        "\\n\\nKeine Daten verändert. Diese Anzeige fotografieren."
+                        "\n\nKeine Daten verändert. Diese Anzeige fotografieren."
                 )
                 .setPositiveButton("Schließen", null)
                 .show()
