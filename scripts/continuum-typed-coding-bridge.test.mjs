@@ -93,19 +93,19 @@ test('actual CCC1 prepare and isolated coding repair are accessible through the 
   assert.match(prep.ccc1TaskId,/^t-[a-f0-9]{16}$/);
   const replay=await executeTypedBridge(args,{project:root,stateDir:state});
   assert.equal(replay.replayed,true);
-  let calls=0;
+  let calls=0,rawRun=null;
   const completed=await executeTypedBridge({op:'run',id:spec.id,hash:args.hash},{
    project:root,stateDir:state,
-   run:params=>runCodingTask({...params,providerFactory:({task:boundTask})=>
+   run:async params=>{rawRun=await runCodingTask({...params,providerFactory:({task:boundTask})=>
     createCodingCandidateProvider({root,task:boundTask,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
      run:()=>{calls++;return {status:0,stdout:JSON.stringify({
       mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,
       proposal:{plan:['Fix negative ordering'],hypothesis:'Negative ordering is wrong',
        patches:[{file:'lib/offset.mjs',oldText:'a-b',newText:'a>b?a-b:b-a'}]}
-     })};}})})
+     })};}})});return rawRun;}
   });
   assert.ok(calls>=1&&calls<=spec.limits.maxModelCalls,'calls exceeded budget');
-  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW',JSON.stringify(completed));
+  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW',JSON.stringify({bridge:completed,rawStatus:rawRun?.status,receipts:rawRun?.receipts,events:rawRun?.entries?.length}));
   assert.match(completed.patchSha256,/^[a-f0-9]{64}$/);
   assert.equal(completed.installed,false);
   assert.equal(completed.approvedForMerge,false);
