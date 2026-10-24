@@ -92,9 +92,13 @@ class ContinuumM5LabActivity:Activity() {
      "\nDie Bestätigung öffnet nur den vorhandenen Builder. Erzeugen und Bauen brauchen dort erneut deine Bestätigung.")
     .setNegativeButton("Abbrechen",null).setPositiveButton("Plan übernehmen") { _,_->
      if(!isFinishing&&!isDestroyed&&conversation===requestedConversation&&draftVersion==shownDraftVersion&&input.text.isEmpty()&&catalogValid())conversation.approve(p.revision,p.planSha256!!)?.let { selected->
+      // A consumed single-use approval must not be recreated from old accepted
+      // turns after Android saves/restores this Activity while the Builder is open.
+      acceptedTurns.clear()
+      transcript.text=(transcript.text.toString()+"\nContinuum: Plan einmalig übergeben; für einen weiteren Auftrag bitte neu eingeben.").takeLast(12000)
+      handoff.isEnabled=false
       startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)
        .putExtra("m5_project",selected.id).putExtra("m5_plan_sha",selected.planSha256))
-      handoff.isEnabled=false
      }
     }.show()
   }
