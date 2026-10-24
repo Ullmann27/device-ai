@@ -54,7 +54,7 @@
       "id": "EXP-04",
       "title": "SWB1/CRE1 shadow learning",
       "status": "RESEARCH_SHADOW",
-      "present": "Frozen weights, model provenance and holdout gates",
+      "present": "Frozen weights, model provenance and holdout gates 2026-10-24 Sol PR116: existing opt-in auto-dialogue CRE1 round exercised on real SDK-compiled host classes at074fa807:32 steps, separate audit loss0.804442→0.801303; SWB1/facts unchanged. Durable cursor/link and interruption gates tested. Research-only; no general language or device-quality promotion.",
       "entry": "docs/CONTINUUM-RESEARCH-LEARNING-GATE.md",
       "depends": "Separate train/audit and signed weights",
       "gate": "Out-of-distribution negative/number/negation battery"
@@ -144,7 +144,7 @@
       "id": "EXP-14",
       "title": "CTX1 (S1/S2): bounded context routine in front of the memory dialogue core",
       "status": "RESEARCH_SHADOW",
-      "present": "Test source set only; pre-registered, single TEST run on 480 unseen dialogs (1080 turns): today's core 433 wrong claims and 631/920 grounded answers, routine + same core 0 wrong and 920/920, 80/80 questions back, 80/80 abstentions; routine 0.10 ms median M5: CTX2 generalized-only negation crash fixed; known-open TEST2 B2 885 correct/27 wrong. Independent TEST3 (24 dialogs/198 turns) after code freeze fc1d996: CTX3 13 correct/3 wrong vs B0 111/77, preregistered correctness criterion FAIL. No active promotion; optional OFF/SHADOW only. Explicit session namespaces/revisions/withdrawal tested. docs/research/CTX3-INDEPENDENT-RESULT-20261024.md.",
+      "present": "Test source set only; pre-registered, single TEST run on 480 unseen dialogs (1080 turns): today's core 433 wrong claims and 631/920 grounded answers, routine + same core 0 wrong and 920/920, 80/80 questions back, 80/80 abstentions; routine 0.10 ms median M5: CTX2 generalized-only negation crash fixed; known-open TEST2 B2 885 correct/27 wrong. Independent TEST3 (24 dialogs/198 turns) after code freeze fc1d996: CTX3 13 correct/3 wrong vs B0 111/77, preregistered correctness criterion FAIL. No active promotion; optional OFF/SHADOW only. Explicit session namespaces/revisions/withdrawal tested. docs/research/CTX3-INDEPENDENT-RESULT-20261024.md. Sol PR116 at074fa807 binds the existing deterministic dialogue snapshot to explicit chat identity, protecting retrieval/reset across sessions. CTX3 itself remains OFF/SHADOW; this is not a CTX3 promotion.",
       "entry": "docs/research/CTX1-DIALOGUE-CONTEXT-RESULT-20261024.md",
       "depends": "Real owner-memory phrasings as a new TEST split; revocation test; switch default off in ContinuumLearningCore.replyFromMemory",
       "gate": "Fewer than half the wrong claims of today's core, no loss of grounded answers, at most 5 % needless questions back, routine p95 at most 20 ms"
