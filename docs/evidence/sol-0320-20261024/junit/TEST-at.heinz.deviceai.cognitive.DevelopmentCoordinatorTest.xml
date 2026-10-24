@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" tests="27" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:21" hostname="5c9e18abbd30" time="0.054">
+  <properties/>
+  <testcase name="otherRolesRejectUnknownEnumsAndFields" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.01"/>
+  <testcase name="duplicateEditPathsAndNoopEditsAreRejected" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="deadlineBeforeFirstCallTimesOutWithoutModelUse" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="callFailureMidChainCancelsRuntimeAndFails" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="unsafeEditPathsAreRejected" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.003"/>
+  <testcase name="forbiddenFilesCannotBeSelectedAsSources" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="callBudgetIsEnforcedWithoutRetry" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="coordinatorIsSingleUse" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.003"/>
+  <testcase name="successfulFourRoleChainReturnsOneNotExecutedProposal" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.002"/>
+  <testcase name="noModelLoadedFailsVisiblyWithRealAdapterAndNoCloudFallback" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.002"/>
+  <testcase name="staleBaseHashIsRejected" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="toolProposalsAreRejectedAndRuntimeCancelled" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="promptInjectionInSourceStaysInsideEscapedDataAndCannotGrantAuthority" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="sourceBytesAreCountedAsUtf8" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="cumulativePromptBudgetFailsExplicitlyBeforeAnyCall" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="cancellationBeforeCallsPreventsAnyModelUse" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="malformedFirstOutputIsNotRetried" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="limitsCannotExceedHardCeilings" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="deadlineAfterCallDiscardsResultAndCancelsRuntime" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="oversizedContextIsRejectedNotClipped" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.013"/>
+  <testcase name="outputOverflowIsRejectedIncludingMultibyte" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="cancellationDuringCallStopsChain" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="cancellationAfterCallDiscardsResultAndStops" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="modelCannotRaiseLimitsViaUnknownFields" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.0"/>
+  <testcase name="malformedJsonVariantsAreRejected" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.001"/>
+  <testcase name="realAdapterRunsSequentiallyThroughThinkingChannelOnly" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.009"/>
+  <testcase name="workersCauseNoSideEffectsOnSources" classname="at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

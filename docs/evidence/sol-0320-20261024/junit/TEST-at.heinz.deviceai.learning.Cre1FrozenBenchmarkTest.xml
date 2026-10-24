@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-24T14:12:30" hostname="5c9e18abbd30" time="0.354">
+  <properties/>
+  <testcase name="revokedFactsAreNotResurrectedIntoAuditCandidatePool" classname="at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest" time="0.053"/>
+  <testcase name="realEncodersProvideReproducibleReadOnlyEvidenceAudit" classname="at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest" time="0.251"/>
+  <testcase name="cancellationAndCorruptWeightsCannotProducePartialPromotion" classname="at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

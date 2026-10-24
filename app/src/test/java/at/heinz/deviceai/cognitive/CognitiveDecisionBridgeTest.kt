@@ -39,7 +39,9 @@ class CognitiveDecisionBridgeTest {
                 val model = ContinuumReasoningAdapter {
                     ReasoningPassResult("local-fixture", answer, 2L)
                 }
-                val result = CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir, core), model)
+                // Both tamper probes belong to one explicit chat; a new default identity
+                // intentionally starts a fresh bounded history instead of accumulating it.
+                val result = CognitiveDecisionBridge(ContinuumCognitiveRuntime(dir, core, "tamper-chat"), model)
                     .respond("Wo wohnt Leo?")
                 assertFalse(result.usedLocalModel)
                 assertTrue(result.anchorRejectedModelOutput)

@@ -86,8 +86,9 @@ class ContinuumAutoDialogueLab(private val filesDir: File) {
     }
 
     private fun readStage(): Int {
-        if (!stageFile.exists()) return 0
         require(!Files.isSymbolicLink(stageFile.toPath())) { "Stage symlink forbidden" }
+        // exists() follows links: a dangling link must not reset an already consumed curriculum.
+        if (!stageFile.exists()) return 0
         require(stageFile.isFile && stageFile.length() in 1..3) { "Invalid stage file" }
         return stageFile.readText(Charsets.UTF_8).trim().toIntOrNull()?.also {
             require(it in 0..ContinuumAutoDialogueCurriculum.MAX_STAGES)

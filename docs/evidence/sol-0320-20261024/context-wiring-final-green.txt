@@ -1,0 +1,13 @@
+✔ single hologram frame callback advances phase independently of Canvas onDraw (1.538366ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.45096ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram (0.173728ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (2.308291ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic (1.330207ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 241.501525

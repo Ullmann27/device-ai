@@ -1,0 +1,458 @@
+[
+  {
+    "number": 75,
+    "title": "LM1: eigener lokaler Sprachkern – TEST: schlägt CDX1, verliert gegen Kneser-Ney 7; CCC1 Reasoner↔Coding-Agent getestet (Forschung, Draft)",
+    "base": "opus/continuum-mobile-coding-e2e-20261022",
+    "base_sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82",
+    "head": "opus/continuum-language-core-20261022",
+    "head_sha": "6919264d91aa9f80c88c93ec8f6398f3448a99fb",
+    "merged": false,
+    "state": "open",
+    "body": "Intelligenz-Masterauftrag vom 22.10.2026; Grundlage ist PR #69, Abschnitt 6.5. Basis ist PR #57 (`1d92db03`).\n\n- Nur Forschung: keine App-Anbindung, keine Änderung an SWB1-, CDX1- oder CSX1-Gewichten, kein Merge nach `main`.\n- Protokoll: `docs/CONTINUUM-LM1-OPUS-20261022.md`.\n\n## 1. LM1 – Ergebnis des einmaligen TEST-Laufs (23.10.2026)\n\n- **Freigabe:** ausdrücklich durch den Besitzer (Master-Fortsetzungsauftrag M4/M5, Abschnitt 3).\n- **Unberührtheit vorher nachgewiesen:**\n  - Nur der Modus `final` bewertet TEST, und er prüft den eingefrorenen Hash.\n  - Vorher gab es nirgends einen TEST-Wert.\n  - Die Checkpoints wurden gegen ihren Inhalts-Hash geprüft.\n- **Ausführung:**\n  - dieselbe JAR wie der Auswahllauf, Exitcode 0;\n  - VALIDATION-Werte exakt reproduziert;\n  - Protokoll `docs/evidence/lm1-20261022/final-test-20261023.txt`.\n\n| Modell | TEST-BPB (Seeds 1–3) | Mittel |\n|---|---|---:|\n| Unigramm | – | 4,987 |\n| CDX1, 3 Epochen | 4,278 · 4,285 · 4,320 | 4,295 |\n| LM1-Transformer M (v512) | 3,051 · 3,056 · 3,057 | 3,055 |\n| **LM1-minGRU M (v512)**, vorab gewählter Kandidat | **2,443 · 2,440 · 2,435** | **2,439** |\n| **Kneser-Ney 7** | – | **2,150** |\n\n**Aussagen nach der vorab festgelegten Regel**\n- **LM1 schlägt CDX1 auf ungesehenen Dokumenten:** gestützt. Jeder Seed ist besser, um 1,86 BPB, also mit 43 % weniger Bits.\n- **LM1 verliert gegen Kneser-Ney 7 um 0,29 BPB:** ein negatives Ergebnis.\n- minGRU schlägt den Transformer auch auf TEST.\n- Nicht behauptet: Sprachverständnis, Anweisungen befolgen, Programmieren.\n- Der LM1-TEST ist damit verbraucht.\n\n**Konsequenz:** Der nächste Schritt ist die vorregistrierte Mischung aus Byte-minGRU und Kneser-Ney (NF-6b-lite). Sie läuft in PR #82.\n\n## 2. CCC1 – typisierte Laufzeit Reasoner ↔ Coding-Agent (getestet)\n\n- **Bausteine:** Envelope, hash-verkettetes HMAC-Journal, Fähigkeits-Gate, Quittungsprüfung, Wiederherstellung, Orchestrator und Reasoner.\n- **Tests:** 14 Tests, davon 9 mit echten Coding-Jobs. Sie haben 4 echte Fehler gefunden und behoben:\n  - Journal-Bindung;\n  - beschädigtes Journal;\n  - vorübergehende Sperren beendeten Aufgaben;\n  - die Build-Sperre blieb nach einem Absturz für immer bestehen; sie wird jetzt nur nach Besitzerfreigabe gelöst.\n- **Pilot 2:** lexikalisch 5/8, zufällig 1/8; 0 ungewollte Bestätigungen, 3/3 korrekte Enthaltungen.\n- **Weiterentwicklung in PR #82:**\n  - Lernende Rangfolge (NF-5): nicht gestützt.\n  - Abgeschottete, ausführungsgeleitete Vorprüfung (NF-5b): vorregistriert, Lauf aktiv.\n\n## Prüfstatus\n\n| Stufe | Stand |\n|---|---|\n| SOURCE_INTEGRATED | ja (Forschung) |\n| JVM_TESTED | LM1 7/7 |\n| NODE_TESTED | CCC1 14/14, Dialog 8/8 |\n| APK_BUILT / DEVICE_VERIFIED / RELEASE_APPROVED | nein |\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nhttps://claude.ai/code/session_01KTkwD89ZMMrGPBva5rXu24",
+    "fetched_head": "6919264d91aa9f80c88c93ec8f6398f3448a99fb",
+    "common_ancestor_with_pr115": "66e6b0d81a131925c1f9a3e2ccb47b938e6f05e7",
+    "head_is_ancestor_of_pr115": false,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 120,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 590,
+      "changed_count": 66,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 82,
+    "title": "Continuum Neural Frontier Lab (NFC1): Ergebnisse NF-1 bis NF-6b-lite, ausführungsgeleitete Vorprüfung, Research-Radar (Forschung, Draft)",
+    "base": "opus/continuum-language-core-20261022",
+    "base_sha": "7361e987aebd0b85a9c3492aed97065c0869229d",
+    "head": "opus/continuum-neural-frontier-lab-20261022",
+    "head_sha": "14702b0da94f2dd901c1dbad63c382b616b2c66a",
+    "merged": false,
+    "state": "open",
+    "body": "## Zweck\n\nExperimenteller Forschungszweig neben LM1 (PR #75) mit eigenem, vorab eingefrorenem Datensatz NFC1:\n- Teile DOC und CODE, jeweils TRAIN, VALIDATION und TEST, mit Hashes;\n- der LM1-TEST ist vollständig ausgeschlossen.\n\nAlle Hypothesen und Entscheidungsregeln wurden **vor** dem jeweiligen Lauf committet:\n\n| Commit | Inhalt |\n|---|---|\n| `e6d33527`, `4220c410` | NF-1 bis NF-4 |\n| `3bde2844` | NF-5 / NF-6a |\n| `84cf8e2a` | NF-6b-lite |\n| `1bfb5d00` | NF-5b |\n\n- Code liegt nur in Testquellen und `.github/continuum/`; nichts gelangt in die APK.\n- Produktive Gewichte bleiben unberührt. Der NFC1-TEST ist noch unberührt.\n- Details: `docs/CONTINUUM-NEURAL-FRONTIER-LAB-20261022.md`, Abschnitt 10.\n- Rohprotokolle: `docs/evidence/nf-20261022/`; `evaluate.py` wendet die Regeln automatisch an.\n- 198 Checkpoints liegen auf dem Datenzweig `opus/nf-checkpoints-20261022`.\n\n## Ergebnisse (nur VALIDATION, nach vorab festgelegten Regeln)\n\n| Experiment | vorregistrierte Aussage | Ergebnis |\n|---|---|---|\n| NF-2 Sprachmodell | Gated Delta besser als minGRU | **widerlegt** (minGRU 2,961 gegen 2,995) |\n| NF-2 Gedächtnis (MQAR) | D-S ≥ G-S + 0,10 | **widerlegt** (+0,034); D-S erreicht das 13-mal größere G-X |\n| NF-1 | Adapter schützt alte Fähigkeiten | **widerlegt**; Vergessen durch Abschalten vollständig umkehrbar, Basis-Hash unverändert |\n| NF-3 | Entropie-Patches besser als feste Patches | **gestützt** |\n| NF-3 | BLT besser als BPE bei gleicher Zeit | **widerlegt** |\n| NF-4 | BPB ≤ +0,02 bei ≤ 0,85 der Zeit | **erfüllt**: 2,971 BPB, 0,032 ms/Token; vor allem durch ReLU, Sparsity allein 5–8 % |\n| NF-5 | Dokumentassoziation besser als lexikalisch | **nicht gestützt** |\n| NF-6a | Quittungs-Gating besser als ungeprüftes Lernen | **nicht gestützt** |\n| NF-5b | ausführungsgeleitete Vorprüfung | **widerlegt** (Details unten) |\n| NF-6b-lite | Mischung Byte-minGRU + KN-7 | **beide Hypothesen widerlegt**, trotzdem bestes BPB des Zyklus (Details unten) |\n\n**NF-5b – ausführungsgeleitete Vorprüfung**\n- **Mechanismus:** Kandidaten laufen vor dem Coding-Job abgeschottet auf den Beispielen des Ziels: Berechtigungsmodell, kein Schreiben, keine Prozesse, Zeitlimit.\n- **Treffer im ersten Versuch:** 12/14 statt 5/14; neue Aufgaben 6/6 statt 0/6.\n- **Aufwand:** 19 statt 35 Coding-Jobs.\n- **Warum widerlegt:** eine ungewollte Bestätigung. Für `canonical` erfüllen zwei verschiedene Funktionen alle drei Beispiele, und der Vertragstest bestätigt die falsche.\n- **Post-hoc-Analyse:** Bei 4 von 15 Aufgaben legen die Beispiele die Funktion nicht eindeutig fest.\n- **Nächster Schritt (NF-5c):** eine unterscheidende Eingabe suchen und den Besitzer fragen, statt zu bestätigen.\n\n**NF-6b-lite – Mischung aus Byte-minGRU und Kneser-Ney 7**\n- **G-M-b:** 1,926–1,936 BPB gegenüber 1,978 für KN-7 allein.\n- **Schwelle verfehlt:** Gefordert waren mindestens 0,05 Gewinn bei jedem Seed; erreicht wurden 0,042–0,052.\n- **Verankerung über Zählungen:** bringt nichts (±0,0006).\n- **Folgerung:** Der Gewinn wächst mit dem neuronalen Modell. Das spricht für ein neuronales Modell, das gezielt auf den Rest des n-Gramm-Modells trainiert wird (Li et al., Findings EMNLP 2022). Das wird als neuer Zyklus vorregistriert.\n\n## Research-Radar (`.github/continuum/research-radar.mjs`)\n\n- arXiv-Abruf ohne Schlüssel und Import aus rechtmäßigen Quellen (Websuche, manuell) mit Herkunftsnachweis.\n- Dubletten werden über arXiv-ID, DOI und Titel erkannt; die Einstufung ist transparent.\n- Vorschläge werden nur als PROPOSED eingetragen.\n- Erster echter Lauf: 14 Funde, 3 Vorschläge. `export.arxiv.org` ist durch die Netzwerkrichtlinie gesperrt.\n\n## Prüfstatus\n\n| Stufe | Stand |\n|---|---|\n| SOURCE_INTEGRATED | ja (Forschung, Testquellen) |\n| JVM_TESTED | NF 7/7, Hybrid 5/5 |\n| NODE_TESTED | Radar 6/6, Vorprüfung 5/5 |\n| APK_BUILT / DEVICE_VERIFIED / RELEASE_APPROVED | nein, nicht vorgesehen |\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nhttps://claude.ai/code/session_01KTkwD89ZMMrGPBva5rXu24",
+    "fetched_head": "14702b0da94f2dd901c1dbad63c382b616b2c66a",
+    "common_ancestor_with_pr115": "66e6b0d81a131925c1f9a3e2ccb47b938e6f05e7",
+    "head_is_ancestor_of_pr115": false,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 120,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 599,
+      "changed_count": 71,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 84,
+    "title": "Continuum Integrationskandidat: AAA-UI + LM1-Quellkern + CCC1 + Research-Radar (Build noch offen)",
+    "base": "opus/continuum-aaa-ui-20261022",
+    "base_sha": "c717a28255f243d7da33b88a70e7fd4c1ee724ca",
+    "head": "integration/continuum-aaa-lm1-ccc1-preview-20261023",
+    "head_sha": "f23934e2b38c3e473e06ce4421020e79d8b9158a",
+    "merged": false,
+    "state": "open",
+    "body": "**Isolierter Integrationskandidat, kein Production-/Main-Merge.**\n\n- Ausgangsbasis: PR #81 @ c717a28255f243d7da33b88a70e7fd4c1ee724ca.\n- Importiert aus PR #82 @ 14702b0da94f2dd901c1dbad63c382b616b2c66a: originaler LM1-Kotlin-Kern (5 Dateien), 3 Test-/Forschungsdateien, CCC1-Module und ihre Tests, Reasoner-Module, sicherheitsgeprüfte Dead-Lease-Recovery, Research-Radar und Behaviour-Probes samt Tests.\n- Keine Änderung an UI-Renderdateien; keine Änderung an produktiven App-Daten oder Gewichten; keine autonome Aktivierung der Forschungsmodelle.\n- `scripts/render-continuum-integrated-preview-20261023.sh` bereitet bekannten Render-Buildweg mit dem separaten Paket `at.heinz.deviceai.featurepreview` und prüfbaren SHA-256-Artefakten vor.\n- Vollständiger Stand: `docs/CONTINUUM-INTEGRATION-20261023.md`.\n\n**Ehrlicher Status:** SOURCE_STAGED; kombinierte Node-/Gradle-Tests, signierter APK-Build, Geräteabnahme und HTTPS-Download sind noch NICHT bestanden / nicht vorhanden. GitHub Actions Runner derzeit 0 Schritte; Render-Ausführung erfordert korrekte Service-/Workspace-Zuordnung. Unveröffentlichte Step-7-Arbeit aus Cloud nicht enthalten. LM1-Finaltest bereits verbraucht, nicht erneut ausführen.\n\nWeiterer Schritt: Kombinierten Source- und Build-Gate ausführen, ggf. reparieren, nur erfolgreich verifizierten APK-Hash ausliefern. Kein blindes Merge, kein Code-Sperren.\n\n## Render-Preview erfolgreich gebaut (23.10.2026)\n- **Quelle des installierbaren Artefakts:** `f0c8f6eadd3469fd5e04d77848b3d290428ce211` (unveränderlicher Build-Commit; nachfolgende Dokumentationsupdates NICHT eingebaut).\n- **Render:** `dep-dbddtkgae00c73frkt90` / `srv-dbddtk8ae00c73frkrhg`, `live`.\n- **Build:** `BUILD SUCCESSFUL`, 54 Gradle-Aufgaben; Unit-Tests, Lint, `assembleDebug`, v2-Signatur- und Paketprüfung erfolgreich. Große Node-Suite: 887 Tests, 0 Fehler.\n- **Direkt-APK:** https://device-ai-continuum-full-preview-20261023.onrender.com/DeviceAI-Continuum-Integrated-3ba5669900b917cc6fc4ac57ba3d7e541fd48524a3b7ba67d351fa87a9055201.apk\n- **SHA-256:** `3ba5669900b917cc6fc4ac57ba3d7e541fd48524a3b7ba67d351fa87a9055201`\n- **Wichtig:** Side-by-side Feature-Preview, kein Update der produktiven Mentor-App. APK wurde noch nicht auf Samsung Fold installiert/getestet; experimentelle LM1/CCC1-Quellmodule sind enthalten, aber deren vollständige aktive Android-Laufzeitintegration ist offen.\n- **Dokumentation:** `docs/CONTINUUM-INTEGRATION-20261023.md`. Bitte weiterhin Draft halten; kein Main-Merge.\n",
+    "fetched_head": "f23934e2b38c3e473e06ce4421020e79d8b9158a",
+    "common_ancestor_with_pr115": "f23934e2b38c3e473e06ce4421020e79d8b9158a",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 121,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 639,
+      "changed_count": 71,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 92,
+    "title": "Continuum Intelligence Next: CCC1-Worker mit Task-Compiler, Vorprüfung v2, Code-Index, NF-5c/NF-7 (Forschung, Draft)",
+    "base": "astra/render-mentor-apk-builder-20261019",
+    "base_sha": "9fb4361c896315e9e974dd5d8feab5ce1ce65803",
+    "head": "opus/continuum-intelligence-next-20261023",
+    "head_sha": "efcf4e3a5bbf55b7987a131b0d507ad32b753fbf",
+    "merged": false,
+    "state": "open",
+    "body": "KI- und Coding-Agent-Strang (Opus), parallel zu Astra und streng getrennt.\n\n- **Basis:** `9fb4361c` = signierte Quelle `6706da14` (0.3.16, versionCode 17) plus Release-Protokoll.\n- **Unberührt:** `AgentActivity.kt`, `ContinuumHologramView.kt`, `ui/**`, `AndroidManifest.xml`, `app/build.gradle.kts`, Release- und Render-Skripte.\n- **In diesem Zweig nicht vorgesehen:** Merge, APK-Bau, `main`. Die Hauptquellen der App bekamen in dieser Sitzung keine Änderung; alles Neue sind Node-Werkzeuge, Testquellen und Dokumente.\n\n**HEAD `efcf4e3a`.** Wiedereinstieg: `docs/CONTINUUM-OPUS-RESUME-20261023.md`. Schnittstellen für Astra: `docs/CONTINUUM-OPUS-ASTRA-HANDOFF-20261023.md`.\n\n## Ergebnisse\n\n| Bereich | Ergebnis | Beleg |\n|---|---|---|\n| **NF-5c** | gestützt: 0 ungewollte Bestätigungen (NF-5b: 7), 12 von 13 Mehrdeutigkeiten erkannt, 0 unnötige Fragen | NF-Bericht 10.10 |\n| **NF-7** (Restmodell gegen KN-7, neue Datentrennung NFC2) | **beide Regeln widerlegt.** Die Residual-Mischung ist 0,010–0,017 BPB *schlechter* als ein unabhängig trainiertes Netz; KN-7 liegt bei 1,8856. Der Nachtrag (kreuzvalidierte Zählmodell-Ziele, vor jedem Lauf) war nötig: In-Sample bringt null Gewinn. **NFC2 TEST nicht ausgeführt.** | NF-Bericht 10.11; `evaluate.py`; 54 Checkpoints auf `opus/nf-checkpoints-20261022` (`fab239d3`) |\n| **CCC1-Worker** auf der bestehenden `runTeamleaderLoop` | Aufträge, Erfahrungsprotokoll mit Hash-Kette, CLI `compile`, `submit`, `status --format json`, `run-once` und `loop` | LM1-Bericht 10 |\n| **Erster echter Lauf** (Repository-Klon) | 2 bestätigt, 1 Rückfrage. **Fehler gefunden:** `ccc1-envelope#canonical` war für die Vorprüfung unsichtbar (`ERR_ACCESS_DENIED`). | 10a |\n| **Vorprüfung v2** | Lesezugriff auf das Repository; Netz-APIs (`ERR_PROBE_NETWORK`, auch über Repository-Imports) und Signale (`ERR_PROBE_SIGNAL`) zur Laufzeit gesperrt; 256 MB Heap; nicht prüfbare Alternativen werden gemeldet. Ausführbar am echten Repository: **132 → 189 von 258**. | 10b; Tests mit lokalem Testserver und Kontrollverbindung |\n| **Zweiter echter Lauf** | Das kanonische Ziel wird jetzt zur **Rückfrage** („bei (5.5): \"5.5\" oder Fehler INVALID_FIELD?“) statt zu einer ungefragten Bestätigung. 4 Zyklen, 0 Fehler, Checkout unverändert. | 10b |\n| **Task-Compiler** | `READY`, `AMBIGUOUS`, `NO_MATCH` oder `NEEDS_OWNER` vor jedem Auftrag und Coding-Job; beratend | 10b |\n| **Code-Index** (Verhaltens-Fingerabdrücke) | echtes Repository: 436 Exporte, 297 ausführbar, 4 Cluster (z. B. 5 gleiche SHA-256-Funktionen), 2 Fast-Dubletten, darunter das `canonical`-Paar. 45 s Bau, 0,3 s aus dem Cache. Fehler beim ersten Bau gefunden und behoben (Import-Zyklen). | 10b |\n| **Repository-Bindung** | Aufträge sind an `origin` (`owner/name`) gebunden statt an den Platzhalter `owner/device-ai` | Test |\n| **Forschungsradar 23.10.** | Prioritäten gegen gemessene Engpässe, Quellen und Lizenzen geprüft | `docs/CONTINUUM-RESEARCH-RADAR-20261023.md` |\n\n## Prüfungen (lokal; GitHub Actions hat auf diesem Konto keinen Runner)\n\n**Node:**\n- `ccc1-worker` 9/9 auf dem End-Stand `efcf4e3a`;\n- vor der letzten Code-Änderung (Repository-Bindung): `behaviour-probe` 9/9, `behaviour-disambiguation` 6/6, `code-index` 6/6, `ccc1` 14/14.\n\n**JUnit:** `NfResidualTest` 8/8, `NfCoreTest` 7/7, `NfHybridTest` 5/5.\n\n| Stufe | Stand |\n|---|---|\n| SOURCE_INTEGRATED | ja (Forschungs- und Agentenpfade) |\n| JVM_TESTED / NODE_TESTED | ja (siehe oben) |\n| APK_BUILT / DEVICE_VERIFIED / RELEASE_APPROVED | **nein** |\n\n## Offen\n- Termux-Operationen der App für `compile`, `submit` und `status --format json`; die gemeinsame Integration läuft laut Besitzer auf PR #97.\n- Messungen auf ARM64/Fold.\n- NF-8 (∞-Gramm) vorregistrieren.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nhttps://claude.ai/code/session_01KTkwD89ZMMrGPBva5rXu24",
+    "fetched_head": "efcf4e3a5bbf55b7987a131b0d507ad32b753fbf",
+    "common_ancestor_with_pr115": "9fb4361c896315e9e974dd5d8feab5ce1ce65803",
+    "head_is_ancestor_of_pr115": false,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 122,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 679,
+      "changed_count": 68,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 93,
+    "title": "Draft: Fehlenden GGUF-/lokalen Kontextpfad isoliert wiederherstellen (Sols Integrationsaudit)",
+    "base": "astra/render-mentor-apk-builder-20261019",
+    "base_sha": "9fb4361c896315e9e974dd5d8feab5ce1ce65803",
+    "head": "integration/continuum-gguf-context-recovery-20261023",
+    "head_sha": "adee374c59cb02031537e95a92eaa0f9cb2bc4f5",
+    "merged": false,
+    "state": "open",
+    "body": "## Anschluss zu Sols Kurzaudit (PR #91, Commit `c60addce`)\n\n**Zweck:** fehlende, zuvor geprüfte GGUF-Dateiadmission und begrenzte lokale Kontextaufbereitung wieder als **isolierten Integrationskandidaten** bereitstellen. Signierte Code17-Quellbasis `9fb4361c`, keine Änderung vorhandener Dateien.\n\n### Änderungen\n- Fünf historisch byteidentische Skripte aus `3f09c542`: `continuum-gguf.mjs`, Smoke-CLI, GGUF-Tests, `continuum-local-context.mjs` und Kontext-Tests.\n- Dokumentierte Integrationsvoraussetzungen und explizite Prüfkommandos in `docs/CONTINUUM-GGUF-KONTEXT-ANBINDUNG-20261023.md`.\n- **Nicht zurückgeportet:** ältere `continuum-local-brain.mjs`-Fassung, da die signierte Basis bereits ein neueres korrektes `response_format.json_schema` und zusätzliche Fail-Closed-Tests besitzt.\n\n### Sicherheits- und Freigabestatus\n- **PENDING TEST**: Aktuelle kombinierte Node-/GGUF-/Brain-/Sandbox-Tests und Android-Anbindung wurden für diese neue Kombination hier nicht ausgeführt. Historische GGUF-/Linux-x86-Ergebnisse aus PR #53 zählen nicht als aktuelle Bestätigung.\n- Keine automatische Modellladung, kein Download, keine Runtime-Aktivierung, keine APK und kein Samsung-Gerätetest.\n- Kein Eigentümergewicht, Checkpoint, Signatur-, Paket-, Main-, Astra- oder Opus-Zweig geändert.\n- Vor einem Merge die neueste Opus-Arbeit einfrieren, isoliert vergleichen, Node-Tests sowie OS- und Android-Gates ausführen und Besitzerfreigabe einholen.\n\n**Dokumentation:** [GGUF-/Kontextintegration](../blob/integration/continuum-gguf-context-recovery-20261023/docs/CONTINUUM-GGUF-KONTEXT-ANBINDUNG-20261023.md)\n",
+    "fetched_head": "adee374c59cb02031537e95a92eaa0f9cb2bc4f5",
+    "common_ancestor_with_pr115": "9fb4361c896315e9e974dd5d8feab5ce1ce65803",
+    "head_is_ancestor_of_pr115": false,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 123,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 651,
+      "changed_count": 67,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 95,
+    "title": "Draft: Verifier-first Spine, CDX1-Schattenstudie und begrenzter Kontext-Trichter",
+    "base": "integration/continuum-ui-opus-gguf-20261023",
+    "base_sha": "0499e2a0d95187edcb3f0b8736339154bc563edb",
+    "head": "integration/continuum-verifier-first-spine-20261023",
+    "head_sha": "83f01067155a0f89777a4a1aad801d89a6170056",
+    "merged": false,
+    "state": "open",
+    "body": "Ausgangsbasis: PR #94. Enthält eine **nebenwirkungsfreie** Kotlin-Quellen-/Enthaltungsentscheidung samt JUnit-Einstieg, eine nicht autoritative CDX1-Byte-Likelihood-Schattenstudie mit synthetischen Gegenbeispielen und einen quellgepinnten, lexikalisch geprüften **read-only** GGUF-Kontextkandidatenplan mit Node-Tests. Detaillierter Vergleich der fünf weiteren Vorschläge: `docs/CONTINUUM-FIVE-SYNERGIES-CODE-AUDIT-20261023.md`.\n\n**Nicht produktiv angeschlossen**: Kein Ersatz des Android-Hauptchats; keine neue Termux/Shizuku-Berechtigung, kein Code-Merge, keine Lerndaten-Promotion, keine Änderung an Main oder Signierung. Kein Beweis für allgemeine Intelligenz oder null Halluzinationen. Die enthaltenen JUnit/Node-Tests benötigen noch die **kombinierte** Ausführung auf dem echten Repo/Buildumfeld. Release-Gates und Besitzerfreigabe weiter offen.",
+    "fetched_head": "83f01067155a0f89777a4a1aad801d89a6170056",
+    "common_ancestor_with_pr115": "83f01067155a0f89777a4a1aad801d89a6170056",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 125,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 730,
+      "changed_count": 65,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 99,
+    "title": "Draft: CCC1 Ende zu Ende – echte Reparatur über die Termux-Brücke, Android-Verdrahtung, Belege und grüne Testsuiten",
+    "base": "integration/continuum-current-review-20261023",
+    "base_sha": "811803138c86a5c1a7a2a2b9cd196580a574a4a1",
+    "head": "opus/ccc1-e2e-20261023",
+    "head_sha": "8f88cc445b2239861e75a34b6e132cf21f6e1290",
+    "merged": false,
+    "state": "open",
+    "body": "**Draft. Kein Merge nach `main`, kein Release, keine Besitzerschlüssel berührt.**\n\n## Neuer Stand (Nacht zum 24.10.2026) – Opus übernimmt den GPT-6-Auftrag\n\nEinstieg: [`docs/CONTINUUM-OPUS-STAND-20261023-NACHT.md`](https://github.com/Ullmann27/device-ai/blob/opus/continuum-next-20261023/docs/CONTINUUM-OPUS-STAND-20261023-NACHT.md) auf `opus/continuum-next-20261023`.\n\n| Zweig | Zweck |\n|---|---|\n| `opus/continuum-next-20261023` | Integrationslinie auf Sols PR #108 plus Reparaturen dieser Nacht (für den Termux-Checkout) |\n| `opus/continuum-0.3.18-candidate-20261023` | APK-Kandidat 0.3.18 / code 19, [Kandidatendokument](https://github.com/Ullmann27/device-ai/blob/opus/continuum-0.3.18-candidate-20261023/docs/CONTINUUM-OPUS-0.3.18-KANDIDAT-20261023.md) |\n\n**Reparaturen dieser Nacht**\n\n- **Prozessverfolgung (M4):** Zwei rote Tests am neuesten Stand behoben. Ein unlesbarer älterer Prozess (PID 1, auf dem Telefon z. B. die Termux-App) blockierte jede bestätigte Aufräummeldung.\n- **Issue #76, Doppelfehler:** Ein Stopp während der Schreibwiederholung wird jetzt als `STOPPED` gemeldet, nicht als Plattenfehler. Das Issue bleibt offen bis zur Gerätebestätigung.\n- **CCC1, Abbruch:** Ein Abbruch beendet jetzt auch den gerade laufenden Prüfschritt über einen Schrittwächter mit eigener Prozessgruppe.\n  - Echter Lauf über die Termux-Aufrufe: **6,5 s** statt 38,7 s (Abbruch an der Schrittgrenze) bzw. 70,6 s (ohne Abbruch).\n  - 10 von 10 Mutationen werden erkannt.\n- **CCC1, Reparatur-Ledger:** Eine Kandidaten-Änderung über 20 000 Zeichen ließ das Speichern des Ledgers scheitern. Das ist behoben.\n- **Release 0.3.18:** Der letzte freigegebene v19-Stand `b842d471` wäre auf Render gescheitert:\n  - 5 Node-Tests rot;\n  - 2 Kotlin-Tests rot, einer davon ein echter Sicherheitsfehler: „Installier das …“ wurde als Gerätewerkzeug eingestuft.\n  - Am Kandidaten bestehen jetzt alle v19-Prüfungen vor Gradle: Node 1035 + 6 übersprungen, Backend 60/60, Sonder-Gates 26/34/30.\n  - Kotlin: 863/863 + 4 Prüfprogramme.\n  - **Eine Besitzerentscheidung bleibt offen:** den Fingerabdruck für `BootstrapBrain.kt` im Build-Skript freigeben.\n\nNicht ausgeführt: Gradle, Lint, APK, Signatur, Gerät (`dl.google.com` ist in dieser Umgebung gesperrt).\n\n---\n\n## Übergabe Opus → GPT-6 (Abschluss 23.10.2026, Hintergrund)\n\n- **Übergabedatei:** `docs/CONTINUUM-OPUS-TO-GPT6-HANDOFF-20261023.md`.\n- **Stand dieses PRs:** Branch `opus/ccc1-e2e-20261023`, HEAD `8f88cc44`.\n- **Bereits übernommen:** Mein Stand bis `b35fed41` steckt in `gpt6/continuum-0.3.18-release-preflight-20261023` @ `0afd4ca0`, in GPT-6-M4 `b842d471` (PR #107) und in Sols PR #108 `e4fd67c3`.\n- **Diesen PR deshalb nicht erneut separat mergen.** Er bleibt Herkunfts- und Review-Referenz.\n\n### Geprüft am Stand `b35fed41` (Linux-Container, Node 22, JDK 21)\n\n| Prüfung | Ergebnis |\n|---|---|\n| Node `.github/continuum` + `scripts` | 986 Tests: 980 bestanden, 0 fehlgeschlagen, 6 übersprungen (brauchen `kotlinc`) |\n| Kotlin (`scripts/android-kotlin-unit-check.sh`) | 855/855 + 4 Prüfprogramme |\n| Backend | 60/60 |\n| Gradle, Lint, Robolectric-UI, APK, Fold7 | nicht ausgeführt (kein SDK hier) |\n\n**Forschung** (vorregistriert, TEST je einmal, nur Test-Quellset):\n- LCT1: 0 falsch in 600 Fällen.\n- WSC1: 0 falsch nach Wissensänderungen.\n- TTT1: Entitätsspeicher 680/680, Fast-Weights nicht übernommen.\n- CDX1: kein Nutzen.\n- Register: `EXP-13`.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nhttps://claude.ai/code/session_01KTkwD89ZMMrGPBva5rXu24",
+    "fetched_head": "8f88cc445b2239861e75a34b6e132cf21f6e1290",
+    "common_ancestor_with_pr115": "b35fed4179964ce376d4a8236957cbc54f7025c7",
+    "head_is_ancestor_of_pr115": false,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 130,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 787,
+      "changed_count": 47,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 108,
+    "title": "Continuum M4: zwei echte SDK-APKs, geprüfte Projektpläne und Android-Anbindung",
+    "base": "gpt6/continuum-m4-first-owned-app-20261023",
+    "base_sha": "b842d471183fcf181f392d522a0d0a8f5936a649",
+    "head": "sol/continuum-master-m4-research-integration-20261023",
+    "head_sha": "e4fd67c3e83314e3c32019e516ebd750a1433f2f",
+    "merged": false,
+    "state": "open",
+    "body": "M4 hatte noch keinen echten APK-Nachweis; zusätzliche Build-Eingaben, veränderte Prüfbytes und verlorene Rückmeldungen konnten die geprüfte Kette unterbrechen. Dieser isolierte Zweig bindet zwei begrenzte Projektpläne (Notizen/Zähler) an Quellen, echte Unit-/Lint-Belege, Paket, Signatur und APK-Bytes. Beide separaten Apps sind mit dem echten Android-SDK offline gebaut und nach dem Export unabhängig mit CCC1, apksigner und aapt2 geprüft.\n\nBasis: `b842d471183fcf181f392d522a0d0a8f5936a649` aus PR #107. Eingefrorene Implementierung: `c787c0986a2dd944e41cfa08bf4ceba226148a07`. APK-/Belegabschluss: `3d7fdb03eafb71c41bc8fa05d252ddc43b83d9a2`. Vollständiger Übergabestand: `e4fd67c3e83314e3c32019e516ebd750a1433f2f`.\n\nÄnderungen:\n\n- Gemeinsamer versionierter Plan-Katalog und Kotlin-/Node-Validierung; getrennte Pakete und private Speicherung, keine App-Berechtigungen.\n- Bestehender M4-Generator und CCC1-Verifier erweitert; zusätzliche Quellen, Symlinks/Hardlinks, alte Reports und ausgetauschte APK-Bytes blockieren. Kein zweiter Repair-Worker.\n- Persistierte Buildbelege und lesende Wiederaufnahme; Android-Projektwahl, feste Termux-Argumente und eigener einmaliger Recovery-Slot erhalten die ausstehende Build-Identität.\n- Begrenzte asynchrone Toolläufe verfolgen auch abgetrennte/verwaiste Daemons auf Linux und Android. Fehlende Prozesssicht oder unbestätigtes Ende hält die Lease, auch bei ENOSPC.\n- Reproduzierte Regressionen behoben: Linux-Namespace-Prozesslimit, veraltete Wiring-Tests und nackter Schreibimperativ „installier“. Frischer Gesamt-Diff-Review samt Nachprüfung abgeschlossen.\n\nTatsächlich ausgeführt:\n\n- Ursprüngliche M4-Suite: 29/29.\n- Vollständige Node-Suite: 1074/1074; Backend: 60/60.\n- Echtes SDK: 873/873 JUnit-Fälle einschließlich acht Robolectric-Widgetfällen; 0 Fehler/Skips; Android-Lint erfolgreich. Vier zusätzliche JVM-Checks-Programme und SWB2/CRE1-Node/Kotlin-Parität erfolgreich.\n- Zwei echte separate APKs, je drei ausgeführte Unit-Tests und Lint (0 Fehler, 2 dokumentierte Warnungen). Signatur/Paket/SHA-256 nach dem Export erneut mit realen Tools geprüft.\n\n[APKs, genaue Hashes, Originalreceipts, Quellen, Rohlogs und wiederholbarer Audit](https://github.com/Ullmann27/device-ai/blob/e4fd67c3e83314e3c32019e516ebd750a1433f2f/docs/evidence/sol-m4-20261023/README.md)\n\n[Vollständige GPT-6-Übergabe mit Fehlern, Messungen, Grenzen, Rollback und nächsten Schritten](https://github.com/Ullmann27/device-ai/blob/e4fd67c3e83314e3c32019e516ebd750a1433f2f/docs/CONTINUUM-SOL-TO-GPT6-HANDOFF-20261023.md)\n\nStatus: **HOST_SDK_VERIFIED_NOT_DEVICE_TESTED**. Aktuelle Fold7-App→Termux→ARM64-Build→App-Kette und Geräteabnahme fehlen. Zwei feste Rezepte, keine allgemeine LLM-Codegenerierung. Keine neue Dialoglern-/S1–S5-Messung und kein neuer 30-Sekunden-Modus.\n\nKeine Besitzer-APK gebaut, kein Besitzer-Schlüssel/keine Gewichte verändert, keine Installation, kein Merge nach main. Bestehende v19-Release-/Rollback-Gates unverändert: 14/22 alte Pins stimmen, acht geänderte Dateien benötigen erneuten Review und Besitzerfreigabe. Premium-Haupt-UI unverändert. PR bleibt Draft.\n\nAbschließende Transportprüfung: frischer GitHub-Klon von `e4fd67c3e83314e3c32019e516ebd750a1433f2f`; beide APKs dort erneut mit CCC1 und realen apksigner/aapt2 geprüft, alle 69 Bundle-Dateihashes passend, sauberer Checkout. Für diesen Commit meldet GitHub keine Workflow-Runs/Statuskontexte; die genannten Testbelege stammen aus den tatsächlich ausgeführten Host-/SDK-Läufen.",
+    "fetched_head": "e4fd67c3e83314e3c32019e516ebd750a1433f2f",
+    "common_ancestor_with_pr115": "e4fd67c3e83314e3c32019e516ebd750a1433f2f",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 130,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 830,
+      "changed_count": 33,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 109,
+    "title": "M5: sicherer Gesprächsauftrag, Kontextisolation und unabhängige Gegenprüfung",
+    "base": "opus/continuum-next-20261023",
+    "base_sha": "331e2d25c655b07e578ce4fa49da64fbc4f97c61",
+    "head": "sol/continuum-m5-context-coding-experiments-20261024",
+    "head_sha": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+    "merged": false,
+    "state": "open",
+    "body": "Ein mehrteiliger begrenzter App-Auftrag kann jetzt lokale Anforderungen klären, eine hashgebundene M4-Planvorschau anzeigen und nach ausdrücklicher Kontrolle den bestehenden Builder mit der richtigen Projektwahl öffnen. Erzeugen und Bauen behalten ihre eigenen Besitzerbestätigungen. CTX2-Negationsabsturz repariert; Forschungsadapter OFF/SHADOW verwendet getrennte Gesprächs-IDs, aktuelle bestätigte Quellen und unveränderte sichtbare Baselineantworten.\n\nBasis: `331e2d25c655b07e578ce4fa49da64fbc4f97c61`, enthält die vollständige vorherige Sol-M4-Arbeit. Ausschließlich eigener Zweig, kein Main-Merge, keine Besitzer-APK, Signierung oder Installation.\n\nTatsächlich geprüft: 1085/1085 Node, 60/60 Backend, 913/913 echte SDK-JUnit-Fälle inklusive Robolectric; Android-Lint erfolgreich. Neue Negativtests reproduzierten und reparierten unbekannte/verneinte Referenzen, Aliasverwechslung, Gesprächsvermischung, abgelehnte/indirekte Anforderungen, veraltete Bestätigungen und Activity-Zustandsverlust.\n\nUnabhängiger TEST3 nach Freeze `fc1d996135d98165a7102d0a4e67b9ff34a0b1f0`: genau eine Ausführung auf 24 unabhängig geschriebenen Dialogen/198 Turns. CTX3 WRONG 3 statt B0 77, aber CORRECT nur13 statt111. **Vorregistrierung verfehlt; keine Produktivpromotion, keine nachträgliche Optimierung am TEST3.** Der Auftragsdialog ist von diesem nicht erfolgreichen Forschungskandidaten getrennt.\n\nOriginale CTX1-/CTX2-Berichte bleiben erhalten. TEST2 ist bekannte Entwicklungsdiagnose: B2 885 richtig/27 falsch/8 unnötige Rückfragen; alle27 Fehler unabhängig reproduziert und taxonomiert. Freeze-/Datensatzhashes und Rohdaten sind unverschlüsselt im Repository.\n\nAbschlussstand: `c9ae9dcf76df7385486b18aaa2e3e41ddcf4aad2`. Keine Implementierungsänderung nach dem endgültigen Freeze; alle23 Sourcehashes weiterhin passend. Aktuelle Fold7-/Termux-Geräteabnahme fehlt; kein allgemeiner Sprach- oder Coding-Agent, sondern zwei geprüfte Projektvorlagen.\n\n[Vollständige Übergabe an GPT-6/Claude](https://github.com/Ullmann27/device-ai/blob/c9ae9dcf76df7385486b18aaa2e3e41ddcf4aad2/docs/CONTINUUM-SOL-M5-TO-GPT6-HANDOFF-20261024.md) · [Test-/Lifecycle-Belege und reproduzierbare Befehle](https://github.com/Ullmann27/device-ai/blob/c9ae9dcf76df7385486b18aaa2e3e41ddcf4aad2/docs/evidence/sol-m5-20261024/README.md) · [Unabhängiger negativer CTX3-Befund](https://github.com/Ullmann27/device-ai/blob/c9ae9dcf76df7385486b18aaa2e3e41ddcf4aad2/docs/research/CTX3-INDEPENDENT-RESULT-20261024.md) · [Lastmessung](https://github.com/Ullmann27/device-ai/blob/c9ae9dcf76df7385486b18aaa2e3e41ddcf4aad2/docs/research/CTX3-PERFORMANCE-DEV-20261024.md)\n\nZusätzlich abgeschlossen: echte Trennung von Shadow-Sitzungen über explizite ID/Namespace/Quellenrevision, parallele Abfragen, Quellenwiderruf, ungültige IDs; zweiter JVM-Prozess übernimmt keinen alten Fokus. Versionierter Android-SavedState erhält unbestätigte Angaben/Entwurf, übernimmt keine Freigabe. Alte Dialoge nach Reset und ungültige Zustandsversionen sind getestet. Ursprüngliche CTX1-Regression weiterhin920 richtig/0 falsch; unveränderte Originalberichte.\n\nDEV-Last:1150 Aufrufe,0/10/50/128/256 Fakten,OFF/ON,kurz/lang mit Widerruf,0 Ausführungsfehler/unerlaubte Quell-IDs. Zusatzaufwand und p95-Ausreißer dokumentiert; keine Telefon-RAM-/Akku-/Thermikbehauptung. Einzelvergleich gegen unabhängige Erwartungen:26 Verbesserungen,99 Verschlechterungen; keine Aufwertung allein wegen anderer Quellen-IDs. Sprachliche Intent-Generalisation und30-Sekunden-Modus bleiben offen.\n\nFrischer Remote-Klon des Abschluss-SHA:38 Belegdateihashes,23 eingefrorene Quellen und Ergebnisbindungen geprüft, sauberer Checkout; alte M4-APKs erneut mit echten Signer/aapt2/CCC1 geprüft. Keine zweite TEST3-Ausführung. GitHub meldet für den Abschlusscommit keine Workflow-Runs/Statuskontexte; die Testbelege stammen aus den tatsächlich ausgeführten Host-/SDK-Läufen. Besitzer-Release-Gates unverändert,13/22 alte Pins passend, erneuter Quellenreview/Freigabe weiterhin erforderlich.",
+    "fetched_head": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+    "common_ancestor_with_pr115": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 133,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 861,
+      "changed_count": 25,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 110,
+    "title": "Draft: M5-Planfreigabe gegen unbearbeitete Entwürfe und veraltete Dialoge härten",
+    "base": "sol/continuum-m5-context-coding-experiments-20261024",
+    "base_sha": "144ab574b4c06e9bed926f78158a7183e6dfb013",
+    "head": "chatgpt/continuum-m5-draft-approval-guard-20261024",
+    "head_sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+    "merged": false,
+    "state": "open",
+    "body": "## Anschluss und Scope\n\nDirekt auf Sol PR #109, Baseline `144ab574b4c06e9bed926f78158a7183e6dfb013`. Genau zwei Kotlin-Dateien plus dokumentierter Nachweis. Keine Änderungen an `main`, Signierung, Modellen/Gewichten, CCC1, M4-Rezepten oder Termux-Befehlen.\n\n## Tatsächlicher Fehler und Patch\n\nEin nach Anzeige der M5-Planfreigabe **veränderter, aber nicht abgeschickter Entwurf** änderte die kanonische Planrevision nicht. Deshalb konnte das noch offene alte AlertDialog eine Projektwahl in den Builder übergeben. `TextWatcher` sperrt jetzt die Freigabeschaltfläche bei jeder Entwurfsänderung. Der Dialog ist an die beim Öffnen erfasste Entwurfsrevision und leeren Input gebunden. SavedState-Recreation mit ungesendetem Entwurf darf eine Planfreigabe nicht reaktivieren. Bisherige Plan-SHA-/Revision-/Owner-Gates bleiben unverändert.\n\nZwei neue Robolectric-Regressionen: stale dialog nach Korrektur und SavedState-Recreation mit ungesendetem Entwurf.\n\n## Verifikationsstatus / Limit\n\n**SOURCE_INTEGRATED, TESTS_PENDING:** Frischer GitHub-Source-Read und Base/HEAD-Vergleich durchgeführt: 5 neue Commits, 0 behind, exakt 3 geänderte Dateien (2 Kotlin + Dokument). Quellinvarianten gesichtet. Aktuelles Host-Umfeld hat kein Android SDK, Gradle, Robolectric-Dependencies; **neue JUnit-/Widget-/Lint-/Gesamttests wurden hier nicht ausgeführt**. Sols ältere 1085/1085 Node, 60/60 Backend und 913/913 SDK-JUnit sind kein Nachweis für diesen Head.\n\n**Kein Main-Merge / Besitzer-Release / APK / Fold7-Lauf.** Vor Integration zwingend echte SDK-JUnit/Robolectric, Lint, Node und Backend-Regressionen auf exakt diesem HEAD durchführen und bei Fehlern fail-closed bleiben.\n\nTechnische Übergabe, Schritte, Rollback, offene GitHub-Actions-Fehler: `docs/CONTINUUM-GPT6-M5-DRAFT-APPROVAL-GUARD-20261024.md`.\n",
+    "fetched_head": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+    "common_ancestor_with_pr115": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 133,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 861,
+      "changed_count": 25,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 111,
+    "title": "Draft: Continuum Master – M5-Chat angeschlossen, v19-Quelle abgesichert und APK-QA vorbereitet",
+    "base": "chatgpt/continuum-m5-draft-approval-guard-20261024",
+    "base_sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c",
+    "head": "chatgpt/continuum-master-integration-v19-20261024",
+    "head_sha": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2",
+    "merged": false,
+    "state": "open",
+    "body": "## Echter Anschluss und sichere Release-Kontrolle\n\nAuf Basis von PR #110 @ `f382aeda2612723ae3eacdf0fe96e87fbf10e04c`, mit allen Sol-M4/M5- und Opus-CCC1-Arbeiten. Kein Main-Merge, keine Gewichtsänderung, keine Änderung an privaten Signierschlüsseln.\n\n**Implementiert:**\n- `Worker Projektplan` → M5-Labor im bestehenden Besitzerpaket; separater Preview-Weg fällt auf den bestehenden Builder zurück.\n- `Worker Projektplan: ...` → bis 400 Zeichen nur als unbestätigter Android-Eingabefeld-Entwurf. Keine Shell, keine Besitzerfreigabe, kein Build ohne explizite Folgeaktionen.\n- Kontrollzeichen vor Router-Whitespace-Normalisierung verwerfen; bestehende `Worker: ...`-Aufträge unverändert.\n- Neue Kotlin-Router-/Robolectric- und Node-Verdrahtungsregressionen.\n- Unabhängiger **nur lesender** v19-Fingerabdruck-Auditor mit 5/5 real lokal grünen Node-22-Git-Fixture-Negativtests; Byte-SHA der beiden Testdateien nach dem GitHub-Push mit dem getesteten Stand abgeglichen.\n- Gesonderter GitHub Actions Review-Workflow mit SDK36/Gradle/JUnit/Robolectric/Lint und isolierter Preview-APK ohne Owner-Signing.\n\n**Ist-Status:** 15/15 direkte GitHub-Quellinvarianten erfüllt. v19 altes Signiergate bewusst unverändert: 11/22 Quellfingerabdrücke stimmen, **11 erfordern neuen Review**. Neu gestartete CI-Läufe [40061340541](https://github.com/Ullmann27/device-ai/actions/runs/40061340541) und [40061349892](https://github.com/Ullmann27/device-ai/actions/runs/40061349892) scheiterten bereits vor Runner-Schritten; keine Android-SDK-Tests für diesen HEAD, keine neue Besitzer-APK, keine Rollback-Prüfung, kein Chrome-Link. Besitzer-/Render-Signing erst nach echter Prüfung und Workspace-Auswahl.\n\n**Vollständiger reproduzierbarer Verlauf und nächste Schritte:** `docs/CONTINUUM-MASTER-INTEGRATION-20261024.md`.\n\n**Wichtig:** Dies ist ein *Draft-/Source-Integration-PR*, kein Release und kein produktiv freigegebenes Sprachmodell. CTX3 bleibt OFF/SHADOW. Weder ursprüngliche 22-Pin-Gates lockern noch die neue M5-Funktion als bereits auf Fold7 installiert ausgeben.\n## Ergänzung nach ausdrücklich bestätigtem Render-Workspace (24.10.)\n\n- Live Owner-Signierdienst: `srv-dbaue53bc2fs73crkop0`, autoDeploy OFF, letzter verifizierter Build `285639ba...` (0.3.17/code18), Paket `at.heinz.deviceai.mentorpaired`, veröffentlichte BUILD-INFO via HTTPS abrufbar und Hash `0ef181f0...72e998`.\n- Der Render-Buildcommand verweist weiterhin auf `render-mentor-preview.sh`, der vorher zwingend v18 ausführte. **Auf diesem Reviewbranch** jetzt optionaler expliziter v19-Dispatch eingebaut: Default v18 bleibt gleich; v19 verlangt separate Owner-Approved-HEAD-SHA, `CONTINUUM_RELEASE_SHA`, Releaseversion 19 und unverändertes v19-Skript. Falsche/Fremdwerte Exit 69.\n- `scripts/render-mentor-preview-dispatch.test.mjs` hinzugefügt; ein isolierter lokaler Bash-Test der erreichbaren Dispatch-Verzweigung mit Stub-Skripten bestand 5/5. Der komplette Repo-Node-/SDK-/Robolectric-Testlauf ist weiterhin **offen**.\n- Weder Live-Signerbranch noch Render-Umgebungsvariablen oder Deployments verändert. Kein neuer v19-Download. Bestehende **11/22 Quellpins abweichend**, daher v19-Signing strikt blockiert.\n\nVollständige aktualisierte Fakten und Gate-Liste in `docs/CONTINUUM-MASTER-INTEGRATION-20261024.md`.\n",
+    "fetched_head": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2",
+    "common_ancestor_with_pr115": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 133,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 865,
+      "changed_count": 24,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 112,
+    "title": "Continuum Max: sichere M5/M4/CCC1-Integration, volle SDK-Prüfung und v19-Prüfpaket",
+    "base": "opus/continuum-sol-handoff-20261024",
+    "base_sha": "d0f0892e156b9bcfa6a9a80d6fcd515173a62565",
+    "head": "sol/continuum-max-20261024",
+    "head_sha": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+    "merged": false,
+    "state": "open",
+    "body": "Activity-Neustarts und veraltete Bestätigungen konnten den Gesprächskontext einer Ersatzinstanz löschen, neue Job-IDs entfernen oder einen anderen CCC1-Auftrag abbrechen. Die bestehende M5/M4/Termux/CCC1-Kette bindet Reset, Dialoge und Abbruchantworten jetzt an ihre Lebenszeit beziehungsweise konkrete Job-/Auftragsidentität. Kein neuer Worker, kein zweites Gedächtnis, CTX3 bleibt OFF/SHADOW.\n\nDrei Kontrollrunden einschließlich unabhängiger Quellprüfung und Mutationsprüfungen der Opus-Reparaturen 01cf6f80/0e51aff0/4f6cc98f. Releasebericht bewahrt vollständige mehrzeilige Befehle; v19-Gate führt nun die wirklichen Robolectric-Widgettests aus.\n\nVerifikation auf dem gemeinsamen eingefrorenen Code-SHA ec28d661e27090c91a3eb83707bf5f46376b97b5: 1099/1099 Node, 252/252 zusätzliche Discovery, 60/60 Backend, 940/940 echte SDK-JUnit einschließlich 26 Robolectric-Fällen, Gradle/Lint/Preview-APK und vier Checks sowie SWB2/CRE1-Parität erfolgreich; alle 25 Jobidentitäten bestätigen denselben sauberen Quellstand. Die spätere Spitze bd7c35b886eb733a012c5bbbcbd3b07985413384 enthält ausschließlich Dokumentation/Belege.\n\n0.3.17-Rollbackbytes, Paket, Version, SHA und bestehendes Besitzerzertifikat unabhängig verifiziert. Besitzer-Signierung 0.3.18/code19 bleibt BLOCKED: keine der 22 bisherigen Quellpin-Zeilen geändert, 11 Abweichungen und 10 weitere APK-Quellen warten auf ausdrückliche Besitzerfreigabe. Kein Render-Deploy, kein Besitzerkey-Zugriff, keine Installation. Gebaute separate Debug-Preview ist kein Besitzerupdate. Fold7/ARM64-Termux und Issue76 benötigen weiterhin Geräteabnahme.\n\nVollständige Übergabe mit kopierbarem Fortsetzungsprompt: docs/CONTINUUM-SOL-MAX-HANDOFF-20261024.md. Prüfpaket samt Rohlogs/JUnit-XML/Einzeldiffs: docs/evidence/sol-max-20261024/README.md.",
+    "fetched_head": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+    "common_ancestor_with_pr115": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 134,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 875,
+      "changed_count": 17,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 113,
+    "title": "Continuum: Hologramm-Takt und Kontextübergabe nach Sol-Ausfall absichern",
+    "base": "sol/continuum-max-20261024",
+    "base_sha": "f65181fe87244071ddb3286eccd6f11a23da2e52",
+    "head": "chatgpt/continuum-hologram-context-recovery-20261024",
+    "head_sha": "5be8b5c9521e97e6e482e35574bae1fb80928fa7",
+    "merged": false,
+    "state": "open",
+    "body": "## Ursache und Reparatur\nSols letzter Hologramm-/Intelligenz-Fortsetzungszweig enthält aktuell keine Commits über PR #112 hinaus. Diese unabhängige Fortsetzung übernimmt ausschließlich den verifizierten GitHub-Quellstand f65181fe und repariert:\n\n- Hologramm: Bewegungsphase und Frame-Update laufen in genau einem View-Callback statt abhängig vom Canvas-Draw; beim Activity-Pausieren stoppen alle Callbacks.\n- Lifecycle: `AgentActivity` übergibt beim Resume/Pause den Vordergrundstatus; neu erzeugte Fold/Home-Views übernehmen den aktuellen Zustand direkt.\n- Kommunikation: lokale Modellprompts enthalten keine alte profilweite Dialoghistorie mehr; unaufgelöste Pronomen verlangen Rückfrage und nur die aktuell vom Dialogkern aufgelöste Anschlussfrage kann Kontext liefern.\n- Gezielte Tests: Kotlin-Regressionsfälle für Sitzungsgrenze, Node-Quellverdrahtung für Animation und Kontext.\n\n## Prüfstand\nQuellprüfung gegen tatsächliche GitHub-Blobs: 20/20 Quellinvarianten bestanden. Vollständige Node-/Gradle-/Robolectric-/Android-SDK-Tests auf DIESEM HEAD noch offen, weil lokales Android SDK/Gradle fehlen und GitHub-Runner zuletzt vor Testausführung scheiterten. Vorheriger Sol-Code auf ec28d661 war vollständig SDK-getestet; diese früheren Ergebnisse werden nicht als neue Tests ausgegeben.\n\n## Release\nKein Main-Write, keine Signierung, kein Render-Deploy. v19-Pins weiterhin 11/22 mismatch und zehn neue APK-Quellen; ausdrückliche Besitzerfreigabe und frischer SDK-Test erforderlich. Keine APK- oder Gerätevalidierung behauptet.\n\n### Abschließender Quellabgleich\nAktueller Fortsetzungs-HEAD: `8eb5e8e28a60ad556c91ef6f5fecd15f1d082e54` (10 Commits über Sols f65181fe). 20/20 GitHub-Blob-Quellinvarianten erfüllt; vier gezielte Mutationen für Tick/Pause/Fold/Session erzeugten erwartete negative Ergebnisse. Das ist keine SDK-, Geräte- oder Gesamtsuiten-Ausführung. V19-Signierpins nach frischem 22-Dateien-Abgleich: **10 passend, 12 abweichend** (zusätzlicher Diff `ContinuumHologramView.kt`); zehn bislang unpinnte APK-Quelldateien bleiben zur Freigabe. Exakte Änderungen/Blocker siehe `docs/CONTINUUM-GPT6-RECOVERY-20261024.md`. Kein Besitzer-Update und kein APK-Downloadlink.\n\n### Erweiterte Hologramm-Bewegung und reale Kotlin-Prüfung\nZusätzlich wurde die vorhandene Kugelschwebeauslenkung kontrolliert von ±2,4 % auf ±5 % Radius erhöht (bei 101dp Radius ca. ±5dp), vorhandener Kotlin-Regressionsgrenzwert angepasst. Das Produktionsquellfile `ContinuumOrbitalRing.kt` wurde lokal byteidentisch per Git-Blob-SHA `35a92c7a8587e22d6e5dfaa93550407371d5e304` bestätigt, dann mit `kotlinc` 1.9 kompiliert und mit vier eigenständigen Laufbedingungen (Ring verändert, Hub sichtbar, Grenzen, Vorder-/Hinterringe) erfolgreich ausgeführt, Exit 0. **Kein Android-SDK-Build dieses PRs.**\n\nDas letzte Besitzer-Gate weist nun **13 abweichende Pins / 9 passende Pins** bei 22 attestierten Quelldateien auf, weil zwei früher freigegebene Grafikquellen bewusst geändert wurden. Zehn weitere APK-Quellen stehen ebenfalls zur expliziten Besitzerprüfung. Quelle: aktualisiertes GitHub-Handoff. Weder Source-Fingerabdrücke im Signierskript noch Render-Umgebung verändert.\n\n## Abschließende Sicherheitsreparatur / Teststand vom 24.10.2026\nAuch der zweite, indirekte Cross-Session-Promptpfad über `turn.resolvedQuery` wurde auf eigenem fortsetzbaren Branch blockiert. `ContinuumCognitiveRuntime` verwendet für Modellkontext ausschließlich vorherige belegte Fragen derselben Runtimeinstanz; neue Gesprächs-IDs erhalten keine alte profilweite Frage. Zwei Regressionen (mit/ohne Reset, sichere eigene Folgefrage) und neue Android-Robolectric-Klasse `ContinuumHologramMotionUiTest` gepusht. Neue 14/14 spezifische **Quell**checks erfolgreich; komplette JVM-/Robolectric-/SDK-Tests für den aktuellen SHA weiter **offen**. Besitzer-Gate weiterhin 13 abweichende Pins/9 passende und zehn zusätzlich zu prüfende APK-Quellen, dokumentiert in `docs/evidence/CONTINUUM-OWNER-SOURCE-REVIEW-20261024.md`. Keine APK signiert, kein Render-Deploy und keine Main-Mutation.\n\n## Zusätzlicher Live-Chat-Anschluss – neuer Code und CI-Status\nAuf dem tatsächlichen App-Pfad erstellt `AgentActivity` je Anfrage eine neue `ContinuumCognitiveRuntime`. PR #113 überträgt jetzt ausschließlich die letzte geerdete Frage derselben Chat-ID über eine flüchtige, beim Session-Reset gelöschte `LocalPromptSession`. Kein ungebundener Profilkontext, keine Fakten-/Gewichtsänderungen. Kotlin-Regressionen und GitHub-Source-Wiring erweitert. GitHub-V19-QA-Workflow hört nun auf diesen Branch; Run `40087677781` ist fehlgeschlagen, **ohne verfügbare Runner-Schritte/Logs**, nicht als gescheiterter Kompiliertest interpretiert. Besitzer-Release weiterhin blockiert; 13/22 Source-Pins abweichend, weitere zehn Android-Quellen ungeprüft. Technische Übergabe: `docs/CONTINUUM-GPT6-RECOVERY-20261024.md`. Signierdienst live unverändert 0.3.17/code18, `autoDeploy=no`.",
+    "fetched_head": "5be8b5c9521e97e6e482e35574bae1fb80928fa7",
+    "common_ancestor_with_pr115": "5be8b5c9521e97e6e482e35574bae1fb80928fa7",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 135,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 887,
+      "changed_count": 8,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 114,
+    "title": "Continuum 0.3.19: lebendige Kugel, sichtbare Frame-Diagnose, signiertes Besitzer-Update",
+    "base": "astra/render-mentor-apk-builder-20261019",
+    "base_sha": "7f1f5040e8af53feb12372a8956e0cfce40020eb",
+    "head": "chatgpt/continuum-owner-0.3.19-hologram-20261024",
+    "head_sha": "5859ec5dc72d77dca9bff1760e1f419883e864a0",
+    "merged": true,
+    "state": "closed",
+    "body": "Echtes Fold7-Kundenfeedback: Kugel in signierter 0.3.18 vollkommen starr. Fix: Fenster-/View-Sichtbarkeit live prüfen statt gecachtem Aggregat, Frame-Zähler und long-press On-Device-Diagnose, Fensterwechsel rearm, Android-Robolectric-Pixelvergleich über zwei reale Canvas-Bilder. Vollständige isolierte Render QA auf Source `5be8b5c9521e97e6e482e35574bae1fb80928fa7` **BUILD SUCCESSFUL**, Node/Backend, Gradle/JVM/Robolectric/Lint/Preview. Neue Besitzer-Version **0.3.19/code20** bei unverändertem Paket/Sig; v20 release script prüft 34 Source-Blobs und heruntergeladene v0.3.18 incl SHA & Zertifikat als Rollback. Release-Dispatcher nur per zwei identischen expliziten Owner-/HEAD-SHA-Freigaben; v18/19 Default/Alt-Gates erhalten. Bitte kein Main-Merge, keine Force-Pushes, keine ungeprüften Fingerabdrücke. Release erst nach grüner kompletter Signierer-QA und unabhängig bestätigten APK-Metadaten.",
+    "fetched_head": "5859ec5dc72d77dca9bff1760e1f419883e864a0",
+    "common_ancestor_with_pr115": "5859ec5dc72d77dca9bff1760e1f419883e864a0",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 135,
+    "different_source_paths": [
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutonomousScheduler.kt"
+    ],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 890,
+      "changed_count": 6,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": []
+  },
+  {
+    "number": 115,
+    "title": "Draft: autonomen Continuum-Dialogtrainer mit tatsächlichem Modulaudit isoliert integrieren",
+    "base": "astra/render-mentor-apk-builder-20261019",
+    "base_sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62",
+    "head": "chatgpt/continuum-autonomous-dialogue-research-20261024",
+    "head_sha": "9794761067e6bd1f8f2188426288f8134de53e4e",
+    "merged": false,
+    "state": "open",
+    "body": "## Ziel\nSystematische Anschlussprüfung und erster autonomer, lokaler Mehrturn-Dialog-Lernkreislauf für CRE1. Nicht als fertige generative KI ausgeben.\n\n## Nachgewiesene Lücken\n- Hauptchat ruft CognitiveDecisionBridge mit Reasoning-Adapter null auf.\n- LM1 ist als trainierbare Forschungslaufzeit vorhanden, aber nicht an den produktiven Android-Chat angeschlossen.\n- GGUF-Hilfsskripte existieren, bilden keinen Android-Modellimport.\n- Bestehendes NEURON stoppt bei Wiederholungs-Stagnation; CRE1 erhält keine automatischen synthetischen Dialoge.\n\n## Quelländerungen\n- ContinuumAutoDialogueCurriculum.kt: 16 Trainings-, 8 neue Holdout-, 8 feste Holdout-Szenarien je Stufe.\n- ContinuumAutoDialogueResearch.kt: maximal 64 voneinander getrennte Forschungsstufen, gehashte CRE1-Snapshots nur über vorhandenes Gate, separate owner-opt-in Settings.\n- ContinuumAutonomousScheduler.kt: ein CRE1-Übungsschritt im bestehenden täglichen, ressourcenbegrenzten Android-Offlinejob.\n- AgentActivity.kt: Schalter und Status im experimentellen Lernzentrum.\n- ContinuumAutoDialogueCurriculumTest.kt: Spaltungs-/Grenz- und Quellenisolationstests.\n- scripts/continuum-module-wiring-audit.mjs und docs/CONTINUUM-MODULE-WIRING-AUDIT-20261024.md: Architekturprüfpfad und bekannte Anschlusslücken.\n\n## Grenzen / Release-Gate\n**DRAFT – KEIN OWNER RELEASE.** Noch keine echten Gradle/SDK-/Fold7-Testläufe in dieser Sitzung. Es wurde weder main verändert noch ein Signierzweig überschrieben. Vor einer APK: vollständige Unit-/Instrumentierungs-/Android-Lint- und Geräteabnahme mit genauer Branch-SHA, Versionscode, identischem Besitzerzertifikat. Trainingsresultate im Produkt nur nach unabhängiger Generalisierung; keine automatische Übernahme von Chat-/Forschungsfakten.\n\n## Auftrag für nächste Entwicklungsrunde\nEigene LM1-Runtime mit kontrolliertem Experiment zu Frage-Antwort-Dialogen ausbauen, Quellenkontexte und echte Evaluationsbelege verbindlich anschließen, ModuleConnectionManifest vor jeder APK, einen autonomen lokalen Coding-Worker mit statischer Sicherheitsgrenze prüfen.",
+    "fetched_head": "9794761067e6bd1f8f2188426288f8134de53e4e",
+    "common_ancestor_with_pr115": "9794761067e6bd1f8f2188426288f8134de53e4e",
+    "head_is_ancestor_of_pr115": true,
+    "source_comparison_scope": "learning, cognitive, localmodel and two GGUF/context scripts; tests assessed separately",
+    "identical_source_count": 138,
+    "different_source_paths": [],
+    "absent_source_paths": [],
+    "full_source_scope": "app/src, scripts, .github/continuum, backend/src, backend/test",
+    "full_source_comparison": {
+      "identical_count": 901,
+      "changed_count": 0,
+      "absent_paths": []
+    },
+    "absent_from_signed_source": [
+      ".github/continuum/continuum-dashboard-archive-source.test.mjs",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculum.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/ContinuumAutoDialogueResearch.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/ContinuumAutoDialogueCurriculumTest.kt",
+      "scripts/continuum-module-wiring-audit.mjs"
+    ]
+  }
+]

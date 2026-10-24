@@ -41,8 +41,8 @@ class ContinuumCognitiveRuntime(
     private val conversationId:String=java.util.UUID.randomUUID().toString(),
     priorScopedGroundedQuestion:String?=null
 ) {
-    // The profile's persisted dialogue-v1.bin has no per-conversation identity.
-    // A new runtime must therefore never inherit its inferred topic in a model prompt.
+    // Persisted retrieval is conversation-bound. Model prompts still use only the
+    // explicitly carried, bounded topic of this runtime/session (defence in depth).
     private var lastScopedGroundedQuestion:String?=priorScopedGroundedQuestion?.takeIf {
         it.isNotBlank() && it.length<=320 && it.none { ch -> ch.code < 0x20 || ch.code == 0x7f }
     }
@@ -105,7 +105,7 @@ class ContinuumCognitiveRuntime(
         val scores=ranked.mapNotNull { byId[it.id] }
         // Only a grounded question already seen by THIS conversation runtime can
         // contextualize a later follow-up. The core's resolvedQuery may contain
-        // a profile-wide topic belonging to another conversation ID.
+        // an inferred retrieval topic; model context keeps its own explicit session boundary.
         val clean=input.trim().take(512)
         val followUp=REFERENTIAL.containsMatchIn(clean) || CONTINUATION.containsMatchIn(clean)
         val scopedPrevious=lastScopedGroundedQuestion
@@ -135,8 +135,8 @@ class ContinuumCognitiveRuntime(
     }
 
     /**
-     * A profile-wide dialogue history has no conversation ID. Passing its last
-     * subject to an LLM would leak a previous session even after a chat reset.
+     * Owner-local diagnostic history is not a model-context authority. Passing its last
+     * subject to an LLM would bypass the explicit session boundary.
      * Only this turn's resolved query is allowed to supply continuation context.
      * If it has not resolved the pronoun, ask for clarification instead.
      * This neither promotes an unconfirmed topic to an owner fact nor trains a model.

@@ -51,7 +51,7 @@ test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=
  assert.ok(orb.includes('!powerManager.isPowerSaveMode'));
 });
 test('local model prompt never reads a profile-wide old dialogue after session change',()=>{
- const reply=segment(cognition,'fun reply(input:String):ContinuumCognitiveTurn {','/**\n     * A profile-wide dialogue history');
+ const reply=segment(cognition,'fun reply(input:String):ContinuumCognitiveTurn {','internal fun localPrompt(question:String,resolved:String):String');
  assert.ok(reply.includes('localPrompt(clean,currentContext)'));
  assert.ok(reply.includes('val scopedPrevious=lastScopedGroundedQuestion'));
  assert.ok(reply.includes('val currentContext=if(followUp && scopedPrevious!=null)'));

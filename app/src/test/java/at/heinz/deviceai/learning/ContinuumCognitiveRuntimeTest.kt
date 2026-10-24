@@ -122,12 +122,13 @@ class ContinuumCognitiveRuntimeTest {
             core.confirmOwnerFact("Leo wohnt in Graz.")
             val first=ContinuumCognitiveRuntime(dir,core,"first-session")
             assertTrue(first.reply("Wo wohnt Leo?").grounded)
-            // This reproduces the problematic case without a UI-triggered reset:
-            // the baseline persisted history still belongs to another session ID.
+            // A fresh identity must be isolated in the persisted core as well as the model prompt,
+            // even when no Activity reset ran between these turns.
             val fresh=ContinuumCognitiveRuntime(dir,core,"completely-new-session")
             val turn=fresh.reply("und wie?")
-            assertTrue("Precondition: profile-wide baseline can supply a stale resolution",
-                turn.dialogue.resolvedQuery.contains("Wo wohnt Leo?"))
+            assertEquals("The core must not resolve against another chat", "und wie?",
+                turn.dialogue.resolvedQuery)
+            assertFalse("No foreign memory answer may escape before local routing", turn.grounded)
             assertFalse("New model prompt must not import that old topic",
                 turn.localModelPrompt.contains("Wo wohnt Leo?"))
             assertFalse("New model prompt must not import the old owner's answer",
