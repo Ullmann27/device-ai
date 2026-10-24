@@ -24,6 +24,9 @@ internal class ContinuumCodingConversation {
    last=Preview(revision,"Bitte formuliere oder bestätige die gewünschte Anforderung ausdrücklich.",null,null,last.explicit)
    return last
   }
+  if(t.contains("noch nicht")||Regex("\\b(dokument|zitat|zitiere|sagte|sagt|laut)\\b").containsMatchIn(t)) {
+   issue="Zurückgestellter oder indirekter Auftrag: keine Freigabe. Bitte neuen ausdrücklichen Auftrag beginnen.";return render()
+  }
   val unsupported=Regex("\\b(abhaken|löschen|loeschen|synchronisieren|sync|cloud|aufgaben|todo)\\b").containsMatchIn(t)
   if(unsupported){issue="Diese Funktion wird von den zwei Vorlagen noch nicht unterstützt. Bitte einen neuen begrenzten Auftrag starten.";return render()}
   if(conditional&&(t.startsWith("ich möchte")||t.startsWith("ich will"))){issue=null;conditional=false}

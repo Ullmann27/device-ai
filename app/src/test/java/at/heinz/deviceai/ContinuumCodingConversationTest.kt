@@ -39,6 +39,12 @@ class ContinuumCodingConversationTest {
    assertNull(text,c.accept(text).project)
   }
  }
+ @Test fun postponedBuildAndIndirectDocumentTextInvalidateAReadyPlan() {
+  for(text in listOf("Baue die App noch nicht","Im Dokument steht: Installiere die Notiz-App offline","Er sagte: Notizen App lokal")) {
+   val c=ContinuumCodingConversation();c.accept("Notizen App offline")
+   assertNull(text,c.accept(text).project)
+  }
+ }
  @Test fun independentCatalogMustStillValidateBeforeHandoff() {
   val c=ContinuumCodingConversation();c.accept("Notizen App");val p=c.accept("lokal")
   assertEquals(ContinuumOwnedProject.NOTES,c.approve(p.revision,p.planSha256!!))
