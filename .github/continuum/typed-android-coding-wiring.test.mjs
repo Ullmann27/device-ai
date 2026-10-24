@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+test('Android confirmed task is passed only to the existing in-app Termux Builder',()=>{
+ const agent=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+ const builder=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
+ assert.match(agent,/conversation\.approveCodingTask\(rev, hash, ownerConfirmed = true\)/);
+ assert.match(agent,/reviewedRevision != rev \|\| reviewedHash != hash \|\| copiedDraft != json/);
+ assert.match(agent,/putExtra\(ContinuumTypedCodingBridge\.INTENT_JSON, json\)/);
+ assert.match(agent,/Intent\(this, ContinuumMobileBuilderActivity::class\.java\)/);
+ assert.match(builder,/ContinuumTypedCodingBridge\.parseAuthorization\(/);
+ assert.match(builder,/setPositiveButton\("Vorbereiten"\).*dispatchTypedPrepare\(incoming\)/s);
+ assert.match(builder,/setPositiveButton\("Jetzt ausführen"\).*dispatchTypedRun\(id,hash\)/s);
+ assert.doesNotMatch(agent,/CONTINUUM_OWNER_V22_APPROVED_SHA/);
+});
+test('existing protected Android Termux receiver binds both callback identity and reviewed task digest',()=>{
+ const activity=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
+ const callback=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt');
+ const bridge=read('app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt');
+ assert.match(activity,/PendingIntent\.FLAG_ONE_SHOT or PendingIntent\.FLAG_MUTABLE/);
+ assert.match(activity,/ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_SHA/);
+ assert.match(activity,/putString\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_ID,typedId\)/);
+ assert.match(callback,/id != prefs\.getString\(JOB_ID, null\)/);
+ assert.match(callback,/ContinuumTypedCodingBridge\.evaluate\(typed,expectedId,expectedHash,/);
+ assert.match(callback,/if\(result\?\.prepared==true\)/);
+ assert.match(callback,/if\(result\?\.patchSha256!=null\)/);
+ assert.match(bridge,/o\["approvedForMerge"\]!=false\|\|o\["installed"\]!=false\|\|o\["deviceVerified"\]!=false/);
+ assert.match(bridge,/private const val SCRIPT=ContinuumMobileBuildPlan\.PROJECT_DIR/);
+});
+test('Node Termux script accepts only fixed prepare and run data operations',()=>{
+ const node=read('scripts/continuum-typed-coding-bridge.mjs');
+ assert.match(node,/validateCodingTask\(parseStrict\(json\)\)/);
+ assert.match(node,/taskFingerprint\(spec\)!==hash/);
+ assert.match(node,/prepareCodingTask,runCodingTask/);
+ assert.match(node,/status:'PREPARED_NOT_EXECUTED'/);
+ assert.match(node,/status:verified\?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED'/);
+ assert.doesNotMatch(node,/shell:true|execSync\(|\beval\(/);
+});
