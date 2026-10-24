@@ -38,10 +38,26 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    configuredModel:env.CONTINUUM_LOCAL_BRAIN_MODEL??'local',verifiedModelExecution:false,contextSha256:context.contextSha256,
    promptSha256:sha256Hex(userPrompt),exitCode:response.status??null};
   if(evidence){fs.writeFileSync(path.join(evidence,`request-${number}.json`),JSON.stringify({...trace,userPrompt,response:response.stdout??''},null,2)+'\n',{flag:'wx',mode:0o600});}
-  if(response.status!==0||response.error||response.signal)throw Error('CODING_MODEL_UNAVAILABLE');
-  let result;try{result=JSON.parse(response.stdout);}catch{throw Error('CODING_REPLY_INVALID');}
-  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false)throw Error('CODING_REPLY_INVALID');
-  const proposal=validateCodingProposal(result.proposal,spec);
+  // CLI stderr is never trusted as an action. Extract only a finite protocol code and
+  // digest; the raw stderr, prompt and model output never enter repair feedback.
+  const failure=(code,fingerprint=null)=>{
+    const error=Error(code);error.code=code;
+    if(/^[a-f0-9]{64}$/.test(fingerprint??''))error.responseFingerprint=fingerprint;
+    return error;
+  };
+  if(response.status!==0||response.error||response.signal){
+    const message=String(response.stderr??'').slice(0,400);
+    const matched=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_NOOP_PATCH|CODING_RESPONSE_INVALID) ([a-f0-9]{64})\\s*$/m.exec(message);
+    throw matched?failure(matched[1],matched[2]):failure('CODING_MODEL_UNAVAILABLE');
+  }
+  let result;try{result=JSON.parse(response.stdout);}catch{
+    throw failure('CODING_REPLY_INVALID',sha256Hex(String(response.stdout??'')));
+  }
+  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false)
+    throw failure('CODING_REPLY_INVALID',sha256Hex(String(response.stdout??'')));
+  let proposal;
+  try{proposal=validateCodingProposal(result.proposal,spec);}
+  catch{throw failure('CODING_PROPOSAL_INVALID',sha256Hex(String(response.stdout??'')));}
   return {mode:result.mode,trusted:false,autoApply:false,...proposal,localRequests:1,
    context:{commit:base,contextSha256:context.contextSha256,ranges:context.ranges.map(({text,...r})=>r)},trace};
  };
