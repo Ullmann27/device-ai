@@ -46,7 +46,10 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('local model receives prior conversation when resolving referential questions',
    activity.includes('runLocal(request,localPrompt)') &&
    runtime.includes('Vorherige Gesprächsfrage: '));
- ensure('conversation identity survives recreation and resets separately',activity.includes('ctx3_chat_id_v1') && bodyOf(activity,'private fun newSession(').includes('resetContextConversation(sessionId)'));
+ const newSession=bodyOf(activity,'private fun newSession(');
+ ensure('conversation identity survives recreation; explicit new chat clears baseline and shadow off the UI thread',
+   activity.includes('ctx3_chat_id_v1') && newSession.includes('onLearningIo(') &&
+   newSession.includes('resetDialogueConversation(closingSession)'));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));

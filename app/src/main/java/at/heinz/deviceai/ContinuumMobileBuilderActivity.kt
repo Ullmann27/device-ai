@@ -198,8 +198,9 @@ class ContinuumMobileBuilderActivity : Activity() {
                 text = operation.title
                 isAllCaps = false
                 setOnClickListener {
+                    val requestedChain = chain
                     val question = when (operation) {
-                        ContinuumCcc1Bridge.Operation.SUBMIT_REPAIR -> "Reparaturauftrag für die Testkette ${chain.cli} anlegen?" to
+                        ContinuumCcc1Bridge.Operation.SUBMIT_REPAIR -> "Reparaturauftrag für die Testkette ${requestedChain.cli} anlegen?" to
                             "Termux prüft zuerst Branch, sauberen Arbeitsstand und Zustandsordner. Der Auftrag wird nur angelegt, noch nicht ausgeführt."
                         ContinuumCcc1Bridge.Operation.RUN_ONCE -> "Nächsten CCC1-Schritt ausführen?" to
                             "Termux führt den nächsten offenen CCC1-Auftrag aus: Testkette, Reparaturkandidaten und unabhängige Prüfung. " +
@@ -209,12 +210,12 @@ class ContinuumMobileBuilderActivity : Activity() {
                             "Der zuletzt bekannte offene Auftrag wird beendet und ein laufender Job gestoppt. Ein Abbruch zählt nie als Erfolg."
                         else -> null
                     }
-                    if (question == null) dispatchCcc1(operation, chain)
+                    if (question == null) dispatchCcc1(operation, requestedChain)
                     else AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
                         .setTitle(question.first)
                         .setMessage(question.second)
                         .setNegativeButton("Nicht starten", null)
-                        .setPositiveButton("Bestätigen") { _, _ -> dispatchCcc1(operation, chain) }
+                        .setPositiveButton("Bestätigen") { _, _ -> dispatchCcc1(operation, requestedChain) }
                         .show()
                 }
             }
@@ -317,6 +318,8 @@ class ContinuumMobileBuilderActivity : Activity() {
         slot: ResultSlot = ResultSlot.MAIN,
         project: ContinuumOwnedProject? = null
     ) {
+        // A confirmation belongs to its live Activity, never to an instance replaced by recreation.
+        if (isFinishing || isDestroyed) return
         if (checkSelfPermission(ContinuumMobileBuildPlan.TERMUX_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
             status.text = "Termux-Berechtigung zunächst erlauben; dann den Auftrag erneut bestätigen."
             requestPermissions(arrayOf(ContinuumMobileBuildPlan.TERMUX_PERMISSION), 410)
@@ -337,6 +340,12 @@ class ContinuumMobileBuilderActivity : Activity() {
                     .setMessage("Der frühere Vorgang hat seit über einer Stunde nicht geantwortet. Prüfe zuerst Termux: Dort könnte ein Prozess noch laufen. Ein neuer Auftrag kann Ressourcen beanspruchen.")
                     .setNegativeButton("Abbrechen", null)
                     .setPositiveButton("Als ungeklärt markieren") { _, _ ->
+                        if (isFinishing || isDestroyed) return@setPositiveButton
+                        // The callback may have arrived and a different foreground instance started a new job.
+                        if (preferences.getString(slot.idKey, null) != pendingId) {
+                            refreshReceipt()
+                            return@setPositiveButton
+                        }
                         val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
                         slot.operationKey?.let { edit.remove(it) }
                         slot.projectKey?.let { edit.remove(it) }

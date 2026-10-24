@@ -1,0 +1,11 @@
+commit=285639ba94d75cc427cb17b7421f12f48296ec1f
+builder_commit=285639ba94d75cc427cb17b7421f12f48296ec1f
+source_branch=astra/render-mentor-apk-builder-20261019
+package=at.heinz.deviceai.mentorpaired
+version_code=18
+version_name=0.3.17
+android_min_sdk=26
+signing=persistent_private_mentor_key_same_certificate_as_v0.3.12
+artifact=DeviceAI-Continuum-v0.3.17-0ef181f011990cae1ec7b0b71c09fddf7ab0824dd132e80a702e37363a72e998.apk
+apk_sha256=0ef181f011990cae1ec7b0b71c09fddf7ab0824dd132e80a702e37363a72e998
+status=SIGNED_BUILD_VERIFIED_NOT_DEVICE_INSTALLED

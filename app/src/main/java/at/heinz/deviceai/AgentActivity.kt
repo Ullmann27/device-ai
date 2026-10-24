@@ -6388,14 +6388,22 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
-        ContinuumLearningCore(filesDir).resetContextConversation(sessionId)
-        sessionId = UUID.randomUUID().toString()
-        agentLoops = 0
-        planCard.visibility = View.GONE
-        chatContainer.removeAllViews()
-        showHomeDashboard()
-        addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
-        addToolActivity("Neue Sitzung")
+        val closingSession = sessionId
+        setBusy(true)
+        onLearningIo({ ContinuumLearningCore(filesDir).resetDialogueConversation(closingSession) }) { result ->
+            setBusy(false)
+            if (result.isFailure) {
+                Toast.makeText(this, "Der bisherige Gesprächskontext konnte nicht zurückgesetzt werden. Bitte erneut versuchen.", Toast.LENGTH_LONG).show()
+                return@onLearningIo
+            }
+            sessionId = UUID.randomUUID().toString()
+            agentLoops = 0
+            planCard.visibility = View.GONE
+            chatContainer.removeAllViews()
+            showHomeDashboard()
+            addHomeGreeting("Neue Sitzung gestartet. Was soll ich tun?")
+            addToolActivity("Neue Sitzung")
+        }
     }
 
     private fun addUserMessage(value: String) {

@@ -1,0 +1,13 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+.E
+Time: 0.05
+There was 1 failure:
+1) aTurnWhoseOnlyMentionsAreNegatedNoLongerCrashesEitherVariant(at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest)
+java.util.NoSuchElementException: List is empty.
+	at kotlin.collections.CollectionsKt___CollectionsKt.first(_Collections.kt:222)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContext.decide(Ctx1DialogueContext.kt:84)
+	at at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.aTurnWhoseOnlyMentionsAreNegatedNoLongerCrashesEitherVariant(Ctx2FactPhrasingTest.kt:62)
+
+FAILURES!!!
+Tests run: 1,  Failures: 1
+
