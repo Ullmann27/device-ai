@@ -1439,6 +1439,28 @@ class AgentActivity : Activity() {
         )
     )
 
+    /** M5 review is local and tool-free; external previews expose only their existing Builder. */
+    private fun openM5ProjectPlan() {
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        if (destination.externalPackage) {
+            addAssistantMessage(
+                "M5 · Projektplan: Öffne im vorhandenen Handy-Builder den Bereich " +
+                    "'M5 · Gespräch zu Projektplan (Forschung)'. " +
+                    "Es wird noch nichts erzeugt, gebaut oder installiert."
+            )
+            openMobileBuilder()
+            return
+        }
+        try {
+            startActivity(Intent(this, ContinuumM5LabActivity::class.java))
+        } catch (_: ActivityNotFoundException) {
+            addAssistantMessage("Das M5-Labor ist in dieser App-Version nicht erreichbar. Kein Auftrag gestartet.")
+            openMobileBuilder()
+        } catch (_: SecurityException) {
+            addAssistantMessage("Android hat den M5-Projektplan blockiert. Kein Auftrag gestartet.")
+        }
+    }
+
     private fun openMobileBuilder() {
         val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
         val intent = Intent().setClassName(destination.packageName, destination.className)
@@ -2034,6 +2056,7 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
                 ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
+                ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()
                 ContinuumWorkerChatCommand.M4Notes -> {
                     addAssistantMessage(
                         "M4 · Eigene Notiz-App: Der geprüfte Projektgenerator ist im Android-Builder " +
