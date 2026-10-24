@@ -1439,6 +1439,31 @@ class AgentActivity : Activity() {
         )
     )
 
+    /** M5 review is local and tool-free; external previews expose only their existing Builder. */
+    private fun openM5ProjectPlan(initialDraft: String? = null) {
+        val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+        if (destination.externalPackage) {
+            addAssistantMessage(
+                "M5 · Projektplan: Öffne im vorhandenen Handy-Builder den Bereich " +
+                    "'M5 · Gespräch zu Projektplan (Forschung)'. " +
+                    "Es wird noch nichts erzeugt, gebaut oder installiert."
+            )
+            openMobileBuilder()
+            return
+        }
+        try {
+            val planIntent = Intent(this, ContinuumM5LabActivity::class.java)
+            initialDraft?.takeIf { it.length in 1..400 && it.none { char -> char.code < 0x20 } }
+                ?.let { planIntent.putExtra("m5_initial_draft_v1", it) }
+            startActivity(planIntent)
+        } catch (_: ActivityNotFoundException) {
+            addAssistantMessage("Das M5-Labor ist in dieser App-Version nicht erreichbar. Kein Auftrag gestartet.")
+            openMobileBuilder()
+        } catch (_: SecurityException) {
+            addAssistantMessage("Android hat den M5-Projektplan blockiert. Kein Auftrag gestartet.")
+        }
+    }
+
     private fun openMobileBuilder() {
         val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
         val intent = Intent().setClassName(destination.packageName, destination.className)
@@ -2024,7 +2049,7 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Help -> addAssistantMessage(
                     "Continuum Baumeister · lokale Werkstatt.\n" +
                         "Befehle: 'Worker Status', 'Worker Aufgaben', 'Worker Werkstatt', " +
-                        "'Worker Builder', 'Worker: <deine App-Idee>' oder " +
+                        "'Worker Builder', 'Worker Projektplan', 'Worker: <deine App-Idee>' oder " +
                         "'Baumeister programmiere ...' per Sprache.\n" +
                         "Der Android-Teamleiter prüft den Backlog. Der mobile Termux-Builder " +
                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
@@ -2034,6 +2059,8 @@ class AgentActivity : Activity() {
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
                 ContinuumWorkerChatCommand.MobileBuilder -> openMobileBuilder()
+                ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()
+                is ContinuumWorkerChatCommand.ProjectPlanDraft -> openM5ProjectPlan(baumeister.request)
                 ContinuumWorkerChatCommand.M4Notes -> {
                     addAssistantMessage(
                         "M4 · Eigene Notiz-App: Der geprüfte Projektgenerator ist im Android-Builder " +

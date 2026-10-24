@@ -57,7 +57,10 @@ class ContinuumM5LabActivity:Activity() {
   if(acceptedTurns.isNotEmpty())transcript.append("\nAngaben wiederhergestellt. Bitte Plan erneut kontrollieren; keine Freigabe übernommen.")
   val input=EditText(this).apply { hint="Dein App-Wunsch";maxLines=4;filters=arrayOf(android.text.InputFilter.LengthFilter(512));column.addView(this) }
   draftInput=input
-  input.setText(savedInstanceState?.getString("m5_draft_v1")?.take(512).orEmpty())
+  // Chat handoff is intentionally only an unsubmitted draft, never an approved requirement.
+  val carriedDraft = if(savedInstanceState!=null) savedInstanceState.getString("m5_draft_v1")
+   else intent.getStringExtra("m5_initial_draft_v1")
+  input.setText(carriedDraft?.take(512).orEmpty())
   val handoff=Button(this).apply {text="Plan prüfen und an Builder übergeben";isAllCaps=false;isEnabled=false}
   // A changed but unsent draft revokes a ready plan, including an already open dialog.
   // Changes remain revoking even if the user deletes the draft back to its old text.
@@ -89,9 +92,13 @@ class ContinuumM5LabActivity:Activity() {
      "\nDie Bestätigung öffnet nur den vorhandenen Builder. Erzeugen und Bauen brauchen dort erneut deine Bestätigung.")
     .setNegativeButton("Abbrechen",null).setPositiveButton("Plan übernehmen") { _,_->
      if(!isFinishing&&!isDestroyed&&conversation===requestedConversation&&draftVersion==shownDraftVersion&&input.text.isEmpty()&&catalogValid())conversation.approve(p.revision,p.planSha256!!)?.let { selected->
+      // A consumed single-use approval must not be recreated from old accepted
+      // turns after Android saves/restores this Activity while the Builder is open.
+      acceptedTurns.clear()
+      transcript.text=(transcript.text.toString()+"\nContinuum: Plan einmalig übergeben; für einen weiteren Auftrag bitte neu eingeben.").takeLast(12000)
+      handoff.isEnabled=false
       startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)
        .putExtra("m5_project",selected.id).putExtra("m5_plan_sha",selected.planSha256))
-      handoff.isEnabled=false
      }
     }.show()
   }

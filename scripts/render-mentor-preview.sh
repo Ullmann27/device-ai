@@ -3,7 +3,35 @@
 # The original 0.3.12 builder is retained below for immediate Git revert and audit.
 # v0.3.17: retain the long-tested persistent owner signature, but only publish the
 # fully tested CCC1 + premium UI branch with independently verified rollback.
-exec bash scripts/render-mentor-owner-update-v18.sh
+# Explicit release selection. Default preserves the currently published v0.3.17
+# signed owner update; v19 is forbidden without a second owner-pinned source SHA.
+set -Eeuo pipefail
+case "${CONTINUUM_OWNER_RELEASE_VERSION:-18}" in
+  18)
+    exec bash scripts/render-mentor-owner-update-v18.sh
+    ;;
+  19)
+    approved="${CONTINUUM_OWNER_V19_APPROVED_SHA:-}"
+    requested="${CONTINUUM_RELEASE_SHA:-}"
+    current="$(git rev-parse --verify HEAD 2>/dev/null)" || {
+      echo "OWNER_V19_BLOCKED: No valid source revision" >&2
+      exit 69
+    }
+    if [[ ! "$approved" =~ ^[a-f0-9]{40}$ || "$approved" != "$requested" || "$requested" != "$current" ]]; then
+      echo "OWNER_V19_BLOCKED: Owner-approved source SHA missing or mismatched" >&2
+      exit 69
+    fi
+    [[ -s scripts/render-mentor-owner-update-v19.sh ]] || {
+      echo "OWNER_V19_BLOCKED: Reviewed v19 release script unavailable" >&2
+      exit 69
+    }
+    exec bash scripts/render-mentor-owner-update-v19.sh
+    ;;
+  *)
+    echo "OWNER_RELEASE_BLOCKED: Unsupported release version" >&2
+    exit 69
+    ;;
+esac
 # Isolated Render static-build APK compilation. Never commits, merges, or writes secrets.
 set -Eeuo pipefail
 umask 077

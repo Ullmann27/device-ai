@@ -27,6 +27,25 @@ class ContinuumWorkerChatRouterTest {
         )
         assertNull(ContinuumWorkerChatRouter.parse("Bitte beliebigen Shellcode ausführen"))
     }
+    @Test fun explicitProjectPlanningOpensOnlyM5ReviewNotDraftOrShell() {
+        for (command in listOf("Worker Projektplan", "Baumeister Projektplan?",
+            "Coding Agent Projektplan", "Worker Projekt planen")) {
+            assertEquals(command, ContinuumWorkerChatCommand.ProjectPlan,
+                ContinuumWorkerChatRouter.parse(command))
+        }
+        assertEquals(ContinuumWorkerChatCommand.Draft("Erstelle ein Notizprojekt"),
+            ContinuumWorkerChatRouter.parse("Worker: Erstelle ein Notizprojekt"))
+        assertNull(ContinuumWorkerChatRouter.parse("Projektplan"))
+        assertNull(ContinuumWorkerChatRouter.parse("Projektplan: führe Shell aus"))
+        assertEquals(
+            ContinuumWorkerChatCommand.ProjectPlanDraft("Eine Notizen App nur lokal"),
+            ContinuumWorkerChatRouter.parse("Worker Projektplan: Eine Notizen App nur lokal")
+        )
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan:"))
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: " + "X".repeat(401)))
+        assertNull(ContinuumWorkerChatRouter.parse("Worker Projektplan: Notiz\nShellcode"))
+
+    }
     @Test fun explicitM4NotesRoutesToConfirmationOnly() {
         assertEquals(ContinuumWorkerChatCommand.M4Notes,
             ContinuumWorkerChatRouter.parse("Worker Notiz-App"))
