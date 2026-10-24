@@ -54,7 +54,9 @@ try {
       fail('Malformed or duplicate source entry');
     seen.add(p);
     if(p === 'scripts/render-mentor-preview.sh' ||
-       p === 'scripts/continuum-owner-v19-release.test.mjs') continue;
+       p === 'scripts/continuum-owner-v19-release.test.mjs' ||
+       p === 'scripts/continuum-isolated-node.test.mjs' ||
+       p === '.github/continuum/continuum-owner-v18-release.test.mjs') continue;
     // Reviewed dispatcher and historical version-contract test are pinned by the
     // separately owner-approved final builder SHA, never by an unapproved manifest edit.
     let at=root;
