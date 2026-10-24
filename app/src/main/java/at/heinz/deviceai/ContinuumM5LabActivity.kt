@@ -76,9 +76,10 @@ class ContinuumM5LabActivity:Activity() {
    transcript.text=(transcript.text.toString()+"\nDu: "+value+"\nContinuum: "+p.message).takeLast(12000)
    handoff.isEnabled=p.project!=null&&catalogValid()
   }
-  handoff.isEnabled=conversation.preview().project!=null&&catalogValid()
+  handoff.isEnabled=conversation.preview().project!=null&&input.text.isEmpty()&&catalogValid()
   column.addView(handoff)
   handoff.setOnClickListener {
+   if(input.text.isNotEmpty())return@setOnClickListener
    val p=conversation.preview();val project=p.project?:return@setOnClickListener
    val requestedConversation=conversation
    val shownDraftVersion=draftVersion
