@@ -88,4 +88,43 @@ class ContinuumBuilderLifecycleUiTest {
             assertEquals("node", args[args.indexOf("--chain") + 1])
         } finally { c.pause().stop().destroy() }
     }
+
+    @Test fun aStaleAbortConfirmationCannotRetargetToANewerCcc1Task() {
+        prepareTermux()
+        val prefs = RuntimeEnvironment.getApplication().getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, 0)
+        val oldTask = "t-1111111111111111"
+        val newTask = "t-2222222222222222"
+        prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, oldTask).commit()
+        val c = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            buttons(c.get().findViewById(android.R.id.content))
+                .single { it.text == "CCC1-Auftrag abbrechen" }.performClick()
+            val dialog = ShadowAlertDialog.getLatestAlertDialog()
+            assertTrue(dialog.findViewById<android.widget.TextView>(android.R.id.message).text.contains(oldTask))
+            // A status callback updates the next cancellable task while the owner reads the dialog.
+            prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, newTask).commit()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertNull("A confirmation for the previous task must not abort its successor", shadowOf(RuntimeEnvironment.getApplication()).nextStartedService)
+            assertEquals(newTask, prefs.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null))
+            assertNull(prefs.getString(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null))
+        } finally { c.pause().stop().destroy() }
+    }
+
+    @Test fun anAbortDispatchPersistsTheExactTargetWithItsSeparateCallbackSlot() {
+        prepareTermux()
+        val prefs = RuntimeEnvironment.getApplication().getSharedPreferences(ContinuumMobileBuildResultReceiver.PREFERENCES, 0)
+        val target = "t-1111111111111111"
+        prefs.edit().putString(ContinuumMobileBuildResultReceiver.CCC1_TASK, target).commit()
+        val c = Robolectric.buildActivity(ContinuumMobileBuilderActivity::class.java).setup()
+        try {
+            buttons(c.get().findViewById(android.R.id.content)).single { it.text == "CCC1-Auftrag abbrechen" }.performClick()
+            ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+            shadowOf(android.os.Looper.getMainLooper()).idle()
+            assertNotNull(shadowOf(RuntimeEnvironment.getApplication()).nextStartedService)
+            assertNotNull(prefs.getString(ContinuumMobileBuildResultReceiver.ABORT_JOB_ID, null))
+            assertEquals(target, prefs.getString(ContinuumMobileBuildResultReceiver.ABORT_TASK, null))
+            assertNull(prefs.getString(ContinuumMobileBuildResultReceiver.JOB_ID, null))
+        } finally { c.pause().stop().destroy() }
+    }
 }

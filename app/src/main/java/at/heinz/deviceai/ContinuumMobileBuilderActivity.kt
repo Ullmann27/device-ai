@@ -199,6 +199,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                 isAllCaps = false
                 setOnClickListener {
                     val requestedChain = chain
+                    val requestedTask = preferences.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null)
                     val question = when (operation) {
                         ContinuumCcc1Bridge.Operation.SUBMIT_REPAIR -> "Reparaturauftrag für die Testkette ${requestedChain.cli} anlegen?" to
                             "Termux prüft zuerst Branch, sauberen Arbeitsstand und Zustandsordner. Der Auftrag wird nur angelegt, noch nicht ausgeführt."
@@ -207,7 +208,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                             "Das kann bis zu 30 Minuten dauern. Hauptbranch, installierte Apps und Gewichte bleiben unverändert; " +
                             "ein Patch bleibt ein Prüfvorschlag."
                         ContinuumCcc1Bridge.Operation.ABORT -> "CCC1-Auftrag abbrechen?" to
-                            "Der zuletzt bekannte offene Auftrag wird beendet und ein laufender Job gestoppt. Ein Abbruch zählt nie als Erfolg."
+                            "Auftrag ${requestedTask ?: "nicht vorhanden"} wird beendet und ein laufender Job gestoppt. Ein Abbruch zählt nie als Erfolg."
                         else -> null
                     }
                     if (question == null) dispatchCcc1(operation, requestedChain)
@@ -215,7 +216,14 @@ class ContinuumMobileBuilderActivity : Activity() {
                         .setTitle(question.first)
                         .setMessage(question.second)
                         .setNegativeButton("Nicht starten", null)
-                        .setPositiveButton("Bestätigen") { _, _ -> dispatchCcc1(operation, requestedChain) }
+                        .setPositiveButton("Bestätigen") { _, _ ->
+                            if (operation == ContinuumCcc1Bridge.Operation.ABORT &&
+                                preferences.getString(ContinuumMobileBuildResultReceiver.CCC1_TASK, null) != requestedTask) {
+                                status.text = "Der offene CCC1-Auftrag hat sich geändert. Bitte den Abbruch neu prüfen."
+                                return@setPositiveButton
+                            }
+                            dispatchCcc1(operation, requestedChain)
+                        }
                         .show()
                 }
             }
@@ -298,7 +306,8 @@ class ContinuumMobileBuilderActivity : Activity() {
             return
         }
         val slot = if (operation == ContinuumCcc1Bridge.Operation.ABORT) ResultSlot.CCC1_ABORT else ResultSlot.MAIN
-        dispatchApprovedCommand(operation.jobOperation, requestId, plan, slot)
+        dispatchApprovedCommand(operation.jobOperation, requestId, plan, slot,
+            abortTask = if (operation == ContinuumCcc1Bridge.Operation.ABORT) task else null)
     }
 
     /**
@@ -316,7 +325,8 @@ class ContinuumMobileBuilderActivity : Activity() {
         requestId: String,
         plan: ContinuumMobileBuildPlan.Command,
         slot: ResultSlot = ResultSlot.MAIN,
-        project: ContinuumOwnedProject? = null
+        project: ContinuumOwnedProject? = null,
+        abortTask: String? = null
     ) {
         // A confirmation belongs to its live Activity, never to an instance replaced by recreation.
         if (isFinishing || isDestroyed) return
@@ -347,6 +357,7 @@ class ContinuumMobileBuilderActivity : Activity() {
                             return@setPositiveButton
                         }
                         val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
+                        if (slot == ResultSlot.CCC1_ABORT) edit.remove(ContinuumMobileBuildResultReceiver.ABORT_TASK)
                         slot.operationKey?.let { edit.remove(it) }
                         slot.projectKey?.let { edit.remove(it) }
                         edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
@@ -393,6 +404,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         }
         if (slot == ResultSlot.PROJECT_STATUS) pendingEdit.remove(ContinuumMobileBuildResultReceiver.STATUS_MESSAGE)
         if (slot == ResultSlot.CCC1_ABORT) pendingEdit.remove(ContinuumMobileBuildResultReceiver.ABORT_MESSAGE)
+            .putString(ContinuumMobileBuildResultReceiver.ABORT_TASK, abortTask)
         if (!pendingEdit.commit()) {
             callback.cancel()
             status.text = "Der lokale Auftragsstatus konnte nicht gesichert werden. Nichts gestartet."
@@ -420,6 +432,7 @@ class ContinuumMobileBuilderActivity : Activity() {
     private fun cancelUnstarted(id: String, message: String, slot: ResultSlot = ResultSlot.MAIN) {
         if (id == preferences.getString(slot.idKey, null)) {
             val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
+            if (slot == ResultSlot.CCC1_ABORT) edit.remove(ContinuumMobileBuildResultReceiver.ABORT_TASK)
             slot.operationKey?.let { edit.remove(it) }
             slot.projectKey?.let { edit.remove(it) }
             edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE, message).commit()

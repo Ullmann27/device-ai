@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+ok 1 - learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android
+  ---
+  duration_ms: 2.30741
+  type: 'test'
+  ...
+# Subtest: cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+ok 2 - cognitive runtime owns the single chat path, privacy boundaries and background diagnostics
+  ---
+  duration_ms: 0.922772
+  type: 'test'
+  ...
+# Subtest: background consolidation records failure without losing interrupted source trials
+ok 3 - background consolidation records failure without losing interrupted source trials
+  ---
+  duration_ms: 0.252185
+  type: 'test'
+  ...
+# Subtest: experimental module is inspectable and not on any automatic model promotion path
+ok 4 - experimental module is inspectable and not on any automatic model promotion path
+  ---
+  duration_ms: 0.235721
+  type: 'test'
+  ...
+# Subtest: activity request codes are unique and every one has a result handler
+ok 5 - activity request codes are unique and every one has a result handler
+  ---
+  duration_ms: 3.126618
+  type: 'test'
+  ...
+# Subtest: scheduled offline job names the JobService declared in the manifest
+ok 6 - scheduled offline job names the JobService declared in the manifest
+  ---
+  duration_ms: 0.23596
+  type: 'test'
+  ...
+# Subtest: user-visible texts contain line breaks, not a literal backslash-n
+ok 7 - user-visible texts contain line breaks, not a literal backslash-n
+  ---
+  duration_ms: 5.444374
+  type: 'test'
+  ...
+# Subtest: learning-core and research store I/O stays off the UI thread in dialogs and chat input
+ok 8 - learning-core and research store I/O stays off the UI thread in dialogs and chat input
+  ---
+  duration_ms: 1.247775
+  type: 'test'
+  ...
+# Subtest: neural weights are saved by compare-and-swap and foreground practice can be stopped
+ok 9 - neural weights are saved by compare-and-swap and foreground practice can be stopped
+  ---
+  duration_ms: 0.246667
+  type: 'test'
+  ...
+# Subtest: startup bootstrap training stops with the activity and is retried later
+ok 10 - startup bootstrap training stops with the activity and is retried later
+  ---
+  duration_ms: 0.237013
+  type: 'test'
+  ...
+# Subtest: startup I/O off the UI thread and shell commands stop with their activity
+ok 11 - startup I/O off the UI thread and shell commands stop with their activity
+  ---
+  duration_ms: 4.087186
+  type: 'test'
+  ...
+# Subtest: local language model path is reachable: model center, loading, chat escalation and reasoning chain
+ok 12 - local language model path is reachable: model center, loading, chat escalation and reasoning chain
+  ---
+  duration_ms: 0.685739
+  type: 'test'
+  ...
+# Subtest: every area has a center reachable from the start screen; no demo buttons; experiments marked
+ok 13 - every area has a center reachable from the start screen; no demo buttons; experiments marked
+  ---
+  duration_ms: 1.286943
+  type: 'test'
+  ...
+# Subtest: Teamleader Android UI reports status without false success
+ok 14 - Teamleader Android UI reports status without false success
+  ---
+  duration_ms: 0.146818
+  type: 'test'
+  ...
+# Subtest: live model status does not revert the beginner cockpit to English
+ok 15 - live model status does not revert the beginner cockpit to English
+  ---
+  duration_ms: 0.339886
+  type: 'test'
+  ...
+# Subtest: model setup stays usable for beginners while preserving SHA-256 integrity
+ok 16 - model setup stays usable for beginners while preserving SHA-256 integrity
+  ---
+  duration_ms: 0.406444
+  type: 'test'
+  ...
+# Subtest: new visual start screen is local, accessible and honest about capabilities
+ok 17 - new visual start screen is local, accessible and honest about capabilities
+  ---
+  duration_ms: 0.562066
+  type: 'test'
+  ...
+# Subtest: neural training failures expose bounded diagnostics without claiming saved weights
+ok 18 - neural training failures expose bounded diagnostics without claiming saved weights
+  ---
+  duration_ms: 0.175681
+  type: 'test'
+  ...
+# Subtest: Wikipedia article research uses bounded authentic extracts and original citations
+ok 19 - Wikipedia article research uses bounded authentic extracts and original citations
+  ---
+  duration_ms: 0.271724
+  type: 'test'
+  ...
+# Subtest: Android-first Teamleader is scheduled, observable and serialized across background and chat
+ok 20 - Android-first Teamleader is scheduled, observable and serialized across background and chat
+  ---
+  duration_ms: 0.33599
+  type: 'test'
+  ...
+# Subtest: explicit M5 project planning command reaches reviewed builder without bypassing approval
+ok 21 - explicit M5 project planning command reaches reviewed builder without bypassing approval
+  ---
+  duration_ms: 0.412133
+  type: 'test'
+  ...
+# Subtest: the bridge accepts only the fixed CCC1 operations with validated values
+ok 22 - the bridge accepts only the fixed CCC1 operations with validated values
+  ---
+  duration_ms: 2.634837
+  type: 'test'
+  ...
+# Subtest: owner chain over the bridge: real regression -> verified patch for review; replays never run again
+ok 23 - owner chain over the bridge: real regression -> verified patch for review; replays never run again
+  ---
+  duration_ms: 1319.747612
+  type: 'test'
+  ...
+# Subtest: a worker crash before execution is never a success; the owner cancels the pending order cleanly
+ok 24 - a worker crash before execution is never a success; the owner cancels the pending order cleanly
+  ---
+  duration_ms: 501.922602
+  type: 'test'
+  ...
+# Subtest: refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+ok 25 - refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal
+  ---
+  duration_ms: 481.574682
+  type: 'test'
+  ...
+# Subtest: Android speaks the same fixed CCC1 operations and stores only validated summaries
+ok 26 - Android speaks the same fixed CCC1 operations and stores only validated summaries
+  ---
+  duration_ms: 0.703025
+  type: 'test'
+  ...
+# Subtest: coding job is owner-confirmed and arguments stay within the fixed Node/Termux plan
+ok 27 - coding job is owner-confirmed and arguments stay within the fixed Node/Termux plan
+  ---
+  duration_ms: 1.642952
+  type: 'test'
+  ...
+# Subtest: coding and existing builder operations share immutable callback identity and one owner lease
+ok 28 - coding and existing builder operations share immutable callback identity and one owner lease
+  ---
+  duration_ms: 0.192346
+  type: 'test'
+  ...
+# Subtest: a coding result never enters the APK-build success policy or persists raw stdout
+ok 29 - a coding result never enters the APK-build success policy or persists raw stdout
+  ---
+  duration_ms: 0.224994
+  type: 'test'
+  ...
+# Subtest: existing build remains explicitly gated, and coding cannot install or merge
+ok 30 - existing build remains explicitly gated, and coding cannot install or merge
+  ---
+  duration_ms: 0.387686
+  type: 'test'
+  ...
+# Subtest: running coding job exposes a selectable UUID for explicit Termux cancellation
+ok 31 - running coding job exposes a selectable UUID for explicit Termux cancellation
+  ---
+  duration_ms: 0.135221
+  type: 'test'
+  ...
+# Subtest: owner version advances to 0.3.18/19 without a new application ID
+ok 32 - owner version advances to 0.3.18/19 without a new application ID
+  ---
+  duration_ms: 0.933738
+  type: 'test'
+  ...
+# Subtest: release uses existing signer, pinned source, and refuses dirty or unapproved code
+ok 33 - release uses existing signer, pinned source, and refuses dirty or unapproved code
+  ---
+  duration_ms: 0.18829
+  type: 'test'
+  ...
+# Subtest: release never replaces the old APK without byte-checked 0.3.17 rollback
+ok 34 - release never replaces the old APK without byte-checked 0.3.17 rollback
+  ---
+  duration_ms: 0.751767
+  type: 'test'
+  ...
+# Subtest: relevant UI and CCC1 source blobs are explicitly attested
+ok 35 - relevant UI and CCC1 source blobs are explicitly attested
+  ---
+  duration_ms: 0.131716
+  type: 'test'
+  ...
+# Subtest: owner release executes the optional Android widget and lifecycle test source set
+ok 36 - owner release executes the optional Android widget and lifecycle test source set
+  ---
+  duration_ms: 0.31606
+  type: 'test'
+  ...
+1..36
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2574.919608

@@ -4,8 +4,39 @@ import at.heinz.deviceai.learning.ContinuumLearningCore
 import org.junit.Assert.*
 import org.junit.Test
 import java.nio.file.Files
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ContinuumDialogueSessionResetTest {
+    @Test fun aQueuedResetFromADestroyedActivityCannotEraseAReplacementConversation() {
+        val dir = Files.createTempDirectory("continuum-stale-session-reset").toFile()
+        val release = CountDownLatch(1)
+        val oldExecutor = Executors.newSingleThreadExecutor()
+        val alive = AtomicBoolean(true)
+        try {
+            val old = ContinuumLearningCore(dir)
+            old.confirmOwnerFact("Max wohnt in Graz.")
+            old.replyFromMemory("Wo wohnt Max?", "old-chat")
+            oldExecutor.execute { check(release.await(10, TimeUnit.SECONDS)) }
+            oldExecutor.execute { old.resetDialogueConversation("old-chat", alive::get) }
+            alive.set(false) // onDestroy shuts down gracefully; already queued work still runs.
+            oldExecutor.shutdown()
+            val replacement = ContinuumLearningCore(dir)
+            replacement.replyFromMemory("Wo wohnt Max?", "replacement-chat")
+            val newHistory = replacement.dialogueHistory()
+            release.countDown()
+            check(oldExecutor.awaitTermination(10, TimeUnit.SECONDS))
+            assertEquals("A delayed reset from a dead Activity must not erase newer context", newHistory, replacement.dialogueHistory())
+            assertEquals(1, replacement.activeOwnerFacts().size)
+        } finally {
+            release.countDown()
+            oldExecutor.shutdownNow()
+            dir.deleteRecursively()
+        }
+    }
+
     @Test fun explicitNewSessionDropsOldTopicWithoutChangingOwnerFactsOrWeights() {
         val dir = Files.createTempDirectory("continuum-session-reset").toFile()
         try {

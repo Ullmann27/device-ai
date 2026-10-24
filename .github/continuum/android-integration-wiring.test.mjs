@@ -49,7 +49,8 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  const newSession=bodyOf(activity,'private fun newSession(');
  ensure('conversation identity survives recreation; explicit new chat clears baseline and shadow off the UI thread',
    activity.includes('ctx3_chat_id_v1') && newSession.includes('onLearningIo(') &&
-   newSession.includes('resetDialogueConversation(closingSession)'));
+   newSession.includes('resetDialogueConversation(closingSession) { sessionResetLifetime.get() }') &&
+   bodyOf(activity,'override fun onDestroy(').includes('sessionResetLifetime.set(false)'));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));

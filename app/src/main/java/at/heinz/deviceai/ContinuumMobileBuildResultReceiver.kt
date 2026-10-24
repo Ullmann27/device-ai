@@ -28,6 +28,7 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */
         const val ABORT_JOB_ID = "ccc1_abort_job_id"
         const val ABORT_JOB_START = "ccc1_abort_job_start"
+        const val ABORT_TASK = "ccc1_abort_task_v1"
         const val ABORT_MESSAGE = "ccc1_abort_message"
         const val RESULT_BUNDLE = "result"
         const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"
@@ -75,21 +76,34 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
 
         if (ccc1 != null) {
             // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.
-            val result = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,
+            val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,
                 bundle?.getString("stderr"))
+            val expectedAbortTask = if (abortSlot) prefs.getString(ABORT_TASK, null) else null
+            // evaluate already strictly validated/bounded this JSON. Bind its task as well as its callback id.
+            val abortTargetMatches = !abortSlot || (expectedAbortTask != null &&
+                evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {
+                    JSONObject(stdout).getJSONObject("result").getString("taskId") == expectedAbortTask
+                }.getOrDefault(false))
+            val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)
+                evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = "INVALID_RESULT",
+                    message = "Keine auftragsgebundene CCC1-Abbruchrückmeldung; nichts bestätigt.", taskId = null)
+                else evaluated
             // Only the validated summary, the task id and a verified patch hash; never Termux output or code.
             val editor = prefs.edit()
             if (abortSlot) {
-                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).putString(ABORT_MESSAGE, result.message)
+                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).remove(ABORT_TASK).putString(ABORT_MESSAGE, result.message)
             } else {
                 editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)
                     .putString(LAST_MESSAGE, result.message)
                 if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)
             }
-            if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)
-            else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&
-                (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)
-            ) editor.remove(CCC1_TASK)
+            // A late abort(A) must not replace/clear B reported by a newer MAIN status callback.
+            if (!abortSlot || (abortTargetMatches && prefs.getString(CCC1_TASK, null) == expectedAbortTask)) {
+                if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)
+                else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&
+                    (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)
+                ) editor.remove(CCC1_TASK)
+            }
             editor.commit()
             return
         }
