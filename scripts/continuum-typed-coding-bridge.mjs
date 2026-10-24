@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+/**
+ * Continuum Android -> Termux fixed, owner-confirmed typed coding bridge.
+ * Android invokes only this file via RUN_COMMAND. No shell interpretation,
+ * remote calls, direct Git writes, merge, install, APK or model promotion.
+ */
+import os from 'node:os';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {canonical,sha256Hex,parseStrict} from '../.github/continuum/development-backlog.mjs';
+import {validateCodingTask,taskFingerprint} from '../.github/continuum/coding-task.mjs';
+import {prepareCodingTask,runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+
+export const BRIDGE_SCHEMA='continuum-typed-coding-bridge';
+export const BRIDGE_VERSION=1;
+export const BRIDGE_LIMIT=12000;
+const ID=/^[a-z][a-z0-9-]{2,63}$/;
+const SHA=/^[a-f0-9]{64}$/;
+const ERROR_CODES=new Set([
+ 'CODING_TASK_INVALID','CODING_TASK_STALE_SOURCE','CODING_TASK_DIRTY_SOURCE',
+ 'CODING_TASK_ID_REUSED','CODING_TASK_ID_INVALID','CODING_GRANT_UNSAFE',
+ 'CODING_GRANT_CORRUPT','CODING_CHAIN_BINDING_MISMATCH',
+ 'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE'
+]);
+const DEFAULT_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const DEFAULT_STATE=path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');
+function blocked(operation,id,code){
+ return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation,id,
+  status:'BLOCKED',failure:{code},approvedForMerge:false,installed:false,deviceVerified:false};
+}
+function exactEncoded(raw){
+ if(typeof raw!=='string'||raw.length<4||raw.length>BRIDGE_LIMIT||!/^[A-Za-z0-9_-]+$/.test(raw))
+  throw Error('CODING_BRIDGE_INPUT_INVALID');
+ const bytes=Buffer.from(raw,'base64url');
+ if(bytes.length<10||bytes.length>8192||bytes.toString('base64url')!==raw)
+  throw Error('CODING_BRIDGE_INPUT_INVALID');
+ const json=bytes.toString('utf8');
+ if(!Buffer.from(json,'utf8').equals(bytes))throw Error('CODING_BRIDGE_INPUT_INVALID');
+ return json;
+}
+export function decodePreparedTask(encoded,hash){
+ if(!SHA.test(hash??''))throw Error('CODING_BRIDGE_BINDING_INVALID');
+ const json=exactEncoded(encoded);
+ const spec=validateCodingTask(parseStrict(json));
+ if(canonical(spec)!==json||taskFingerprint(spec)!==hash)
+  throw Error('CODING_BRIDGE_BINDING_INVALID');
+ return spec;
+}
+export function fixedArgs(argv){
+ const [op,...args]=argv;
+ if(op==='prepare'&&args.length===2)return {op,encoded:args[0],hash:args[1]};
+ if(op==='run'&&args.length===2&&ID.test(args[0])&&SHA.test(args[1]))
+  return {op,id:args[0],hash:args[1]};
+ throw Error('CODING_BRIDGE_COMMAND_INVALID');
+}
+export async function executeTypedBridge(command,{
+ project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
+ prepare=prepareCodingTask,run=runCodingTask
+}={}){
+ const {op,id,hash,encoded}=command;
+ if(op==='prepare'){
+  let task;
+  try{task=decodePreparedTask(encoded,hash);}catch{return blocked('prepare',null,'INVALID_TASK');}
+  try{
+   const r=prepare({project,stateDir,task});
+   if(r.id!==task.id||r.fingerprint!==hash||typeof r.ccc1TaskId!=='string')
+    return blocked('prepare',task.id,'PREPARATION_UNVERIFIED');
+   return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'prepare',
+    id:task.id,sourceCommit:task.sourceCommit,taskSha256:hash,ccc1TaskId:r.ccc1TaskId,
+    replayed:r.replayed===true,status:'PREPARED_NOT_EXECUTED',
+    approvedForMerge:false,installed:false,deviceVerified:false};
+  }catch(e){return blocked('prepare',task.id,ERROR_CODES.has(e?.message)?e.message:'PREPARE_FAILED');}
+ }
+ if(op!=='run'||!ID.test(id??'')||!SHA.test(hash??''))
+  return blocked('run',null,'INVALID_RUN_BINDING');
+ try{
+  // Run only a previously prepared grant; the orchestrator checks it against
+  // the exact source SHA, allowed paths and currently active CCC1 journal.
+  const r=await run({project,stateDir,id});
+  if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
+   return blocked('run',id,'RUN_BINDING_MISMATCH');
+  const verified=(r.status==='PATCH_PENDING_OWNER_REVIEW'&&
+    Array.isArray(r.receipts)&&r.receipts.some(x=>
+      x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'&&
+      SHA.test(x.patch?.sha256??'')&&x.evidence));
+  return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'run',
+   id,sourceCommit:r.sourceCommit,taskSha256:hash,
+   status:verified?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
+   resultStatus:String(r.status).slice(0,64),
+   patchSha256:verified?r.receipts.find(x=>x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW')?.patch?.sha256:null,
+   approvedForMerge:false,installed:false,deviceVerified:false};
+ }catch(e){return blocked('run',id,ERROR_CODES.has(e?.message)?e.message:'RUN_FAILED');}
+}
+async function main(){
+ let operation='unknown',id=null,result;
+ try{
+  const args=fixedArgs(process.argv.slice(2));
+  operation=args.op;id=args.id??null;
+  result=await executeTypedBridge(args);
+ }catch{result=blocked(operation,id,'INVALID_COMMAND');}
+ // Single small, data-only result through the existing one-shot Android callback.
+ process.stdout.write(JSON.stringify(result)+'\n');
+ if(result.status==='BLOCKED')process.exitCode=2;
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ main().catch(()=>{process.stdout.write(JSON.stringify(blocked('unknown',null,'BRIDGE_FAILED'))+'\n');process.exitCode=2;});
+}
