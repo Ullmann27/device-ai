@@ -44,3 +44,21 @@ test('symlinked ancestor cannot launder an unchanged file hash into a trusted pa
   assert.equal(r.report.reviewRequired,1);
   assert.equal(r.report.files[0].path,'alias/file-0.kt');
 }));
+
+test('the report names why each attested source changed, its review role and unattested new APK sources',()=>fixture(dir=>{
+  const base=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
+  writeFileSync(join(dir,'file-3.kt'),'changed\n');
+  mkdirSync(join(dir,'app','src','main'),{recursive:true});
+  writeFileSync(join(dir,'app','src','main','NewScreen.kt'),'class NewScreen\n');
+  execFileSync('git',['-C',dir,'add','.']);
+  execFileSync('git',['-C',dir,'commit','-q','-m','feat: change a pinned file and add a screen']);
+  const r=run(dir,'--report-only');
+  assert.equal(r.status,0);
+  assert.equal(r.report.status,'OWNER_REVIEW_REQUIRED');
+  assert.equal(r.report.files[0].path,'file-3.kt');
+  assert.equal(r.report.files[0].role,'WIRING_OR_UI');
+  assert.deepEqual(r.report.files[0].changesSincePin.map(c=>c.subject),['feat: change a pinned file and add a screen']);
+  assert.equal(r.report.attestedBaseCommit,base);
+  assert.deepEqual(r.report.unattestedApkSourceChanges.map(c=>[c.status,c.path]),[['A','app/src/main/NewScreen.kt']]);
+  assert.ok(['SDK_AVAILABLE','SDK_UNAVAILABLE'].includes(r.report.releaseGate.androidSdk));
+}));
