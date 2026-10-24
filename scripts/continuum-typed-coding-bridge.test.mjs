@@ -8,7 +8,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
 import {createCodingCandidateProvider} from '../.github/continuum/coding-provider.mjs';
-import {decodePreparedTask,fixedArgs,executeTypedBridge,ownerCodingExecutor,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
+import {decodePreparedTask,fixedArgs,executeTypedBridge,ownerCodingExecutor,verifiedCodingReviewReceipt,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
 
 const SOURCE='a'.repeat(40);
 function task(){return {
@@ -59,15 +59,28 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
   id:args.id,taskFingerprint:'c'.repeat(64),sourceCommit:SOURCE,status:'COMPLETED',receipts:[]
  })});
  assert.equal(mismatch.status,'BLOCKED');assert.equal(mismatch.failure.code,'RUN_BINDING_MISMATCH');
- const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>({
-  id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
-  status:'PATCH_PENDING_OWNER_REVIEW',
-  receipts:[{status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',patch:{sha256:'d'.repeat(64)},
-    evidence:{verificationSha256:'e'.repeat(64),independentExecuted:3}}]
- })});
+ const trustedReceipt={
+  operation:'code-repair',status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',
+  commit:SOURCE,backlog:{state:'DONE'},patch:{sha256:'d'.repeat(64)},
+  evidence:{verificationSha256:'e'.repeat(64),evidenceSufficient:true,baselineFailed:1,
+   candidateExecuted:3,independentExecuted:3},
+  commands:[{phase:'baseline',executed:3,failed:1,exitCode:1,passed:false},
+   {phase:'candidate',executed:3,failed:0,exitCode:0,passed:true},
+   {phase:'independent',executed:3,failed:0,exitCode:0,passed:true}]
+ };
+ const result={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
+  ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',receipts:[trustedReceipt]};
+ const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>result});
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
  assert.equal(verified.patchSha256,'d'.repeat(64));
  assert.equal(verified.approvedForMerge,false);assert.equal(verified.deviceVerified,false);
+ const forged={...result,receipts:[{...trustedReceipt,evidence:{verificationSha256:'e'.repeat(64)}}]};
+ assert.equal(verifiedCodingReviewReceipt(forged),null);
+ assert.equal(verifiedCodingReviewReceipt({...result,receipts:[{...trustedReceipt,commit:'b'.repeat(40)}]}),null);
+ assert.equal(verifiedCodingReviewReceipt({...result,receipts:[{...trustedReceipt,commands:trustedReceipt.commands.slice(0,2)}]}),null);
+ const falsePositive=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>forged});
+ assert.equal(falsePositive.status,'EXECUTION_REPORTED_UNVERIFIED');
+ assert.equal(falsePositive.patchSha256,null);
 });
 test('failed host runtime redacts unexpected exception text',async()=>{
  const args=prepareArgs();
