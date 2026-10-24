@@ -20,9 +20,8 @@ class ContinuumAutoDialogueCurriculumTest {
                 assertTrue(item.query.contains("Person B:"))
                 assertEquals(3, item.candidates.size)
                 assertEquals(3, item.candidates.distinct().size)
-                val namedRobot = Regex("(?:S[0-9]{4}|F[0-9]{3})")
-                    .find(item.query)?.value
-                assertTrue(namedRobot != null)
+                val namedRobot = requireNotNull(Regex("(?:S[0-9]{4}|F[0-9]{3})")
+                    .find(item.query)?.value) { "Missing robot identity in synthetic dialogue" }
                 assertTrue(item.candidates.all { namedRobot in it })
                 assertFalse(item.query.contains("http"))
             }
