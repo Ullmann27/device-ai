@@ -12,6 +12,7 @@ import at.heinz.deviceai.cognitive.DeviceDevelopmentBacklog
 import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.diagnostics.ContinuumDiagnostics
 import at.heinz.deviceai.learning.ContinuumLearningCore
+import at.heinz.deviceai.learning.ContinuumKnowledgeArchive
 import at.heinz.deviceai.learning.ContinuumPublicStudyScheduler
 import at.heinz.deviceai.learning.LearningExperienceType
 import at.heinz.deviceai.learning.LearningProvenance
@@ -53,6 +54,10 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
     private var lastCpuMs = -1L
     private var lastWallMs = -1L
     private val cpuSeries = ArrayDeque<Float>()
+    // The archive and the web review journal are distinct stores. Scanning the
+    // source archive on every five-second UI refresh would waste device I/O.
+    private var cachedArchiveCount: Int? = null
+    private var lastArchiveCountAtMs = -1L
 
     fun collect(live: Live, now: Long = System.currentTimeMillis()): ContinuumDashboardState {
         val learningCore = guard("Lernkern", "LEARNING_STATUS", "Lernkern-Status nicht lesbar",
@@ -98,8 +103,19 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         }
 
         val storage = storage()
-        val sources = guard("Quellen", "SOURCES_READ", "Gespeicherte Quellen nicht lesbar", "Gedächtniszentrum öffnen.") {
-            WebLearningJournal(context).notes().size
+        val sources = guard("Quellen", "SOURCES_READ", "Wissensarchiv nicht lesbar",
+            "Wissensarchiv im Lernzentrum prüfen; bei Fehler Diagnose exportieren.") {
+            val elapsed = SystemClock.elapsedRealtime()
+            val previous = cachedArchiveCount
+            if (previous != null && lastArchiveCountAtMs >= 0 &&
+                elapsed >= lastArchiveCountAtMs && elapsed - lastArchiveCountAtMs < 30_000L) {
+                previous
+            } else {
+                ContinuumKnowledgeArchive(files).stats().values.sum().also { fresh ->
+                    cachedArchiveCount = fresh
+                    lastArchiveCountAtMs = elapsed
+                }
+            }
         }
         val publicStudy = runCatching { ContinuumPublicStudyScheduler(context).enabled }.getOrDefault(false)
 
