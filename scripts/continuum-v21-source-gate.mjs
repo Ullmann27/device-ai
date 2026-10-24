@@ -69,8 +69,13 @@ try {
     .split('\u0000').filter(Boolean);
   const missing = allMainPaths.filter(p => !seen.has(p));
   if (missing.length) fail('New or missing unattested Android inputs: ' + missing.slice(0, 5).join(', '));
-  if (git('diff', '--name-only', 'HEAD', '--', 'app', 'scripts', 'backend', '.github/continuum'))
-    fail('Tracked release inputs differ from HEAD');
+  // Render may restore mode bits from its build cache, including executable flags.
+  // Verify actual CONTENT; every original release input is already hash-pinned above.
+  // Treat mode-only changes as harmless, but never ignore changed tracked bytes.
+  const modifiedTracked = git('-c', 'core.fileMode=false', 'diff', '--name-only', 'HEAD', '--',
+    'app', 'scripts', 'backend', '.github/continuum');
+  if (modifiedTracked)
+    fail('Tracked release CONTENT differs from HEAD: ' + modifiedTracked.slice(0, 400));
   const untracked = git('ls-files', '--others', '--exclude-standard', '--',
     'app/src', 'scripts', 'backend/src', 'backend/test', '.github/continuum', '.github/workflows');
   if (untracked) fail('Untracked release executable or Android source');
