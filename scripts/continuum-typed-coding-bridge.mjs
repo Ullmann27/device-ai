@@ -69,6 +69,33 @@ export function fixedArgs(argv){
   return {op,id:args[0],hash:args[1]};
  throw Error('CODING_BRIDGE_COMMAND_INVALID');
 }
+/** Only a fully evidenced CCC1 review receipt may enter the Android success UI.
+ * A string status, a patch SHA or an arbitrary truthy evidence object alone
+ * must never suffice. The original immutable owner tests stay authoritative. */
+export function verifiedCodingReviewReceipt(result){
+ if(result?.status!=='PATCH_PENDING_OWNER_REVIEW'||
+    !/^t-[a-f0-9]{16}$/.test(result.ccc1TaskId??'')||
+    !/^[a-f0-9]{40}$/.test(result.sourceCommit??'')||
+    !Array.isArray(result.receipts))return null;
+ for(const receipt of result.receipts){
+  const evidence=receipt?.evidence;
+  if(receipt?.operation!=='code-repair'||receipt.status!=='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'||
+     receipt.commit!==result.sourceCommit||receipt.backlog?.state!=='DONE'||
+     !SHA.test(receipt.patch?.sha256??'')||
+     !SHA.test(evidence?.verificationSha256??'')||evidence.evidenceSufficient!==true||
+     !Number.isSafeInteger(evidence.baselineFailed)||evidence.baselineFailed<1||
+     !Number.isSafeInteger(evidence.candidateExecuted)||evidence.candidateExecuted<1||
+     !Number.isSafeInteger(evidence.independentExecuted)||
+     evidence.independentExecuted<evidence.candidateExecuted)continue;
+  const phases=receipt.commands;
+  if(!Array.isArray(phases)||phases.length!==3||
+     phases.map(p=>p?.phase).join(',')!=='baseline,candidate,independent')continue;
+  if(!phases.slice(1).every(p=>p.exitCode===0&&p.passed===true&&
+     Number.isSafeInteger(p.executed)&&p.executed>0&&p.failed===0))continue;
+  return receipt.patch.sha256;
+ }
+ return null;
+}
 export async function executeTypedBridge(command,{
  project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
  prepare=prepareCodingTask,run=runCodingTask,
@@ -103,15 +130,12 @@ export async function executeTypedBridge(command,{
     executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true});
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');
-  const verified=(r.status==='PATCH_PENDING_OWNER_REVIEW'&&
-    Array.isArray(r.receipts)&&r.receipts.some(x=>
-      x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'&&
-      SHA.test(x.patch?.sha256??'')&&x.evidence));
+  const verifiedPatch=verifiedCodingReviewReceipt(r);
   return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'run',
    id,sourceCommit:r.sourceCommit,taskSha256:hash,
-   status:verified?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
+   status:verifiedPatch?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
    resultStatus:String(r.status).slice(0,64),
-   patchSha256:verified?r.receipts.find(x=>x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW')?.patch?.sha256:null,
+   patchSha256:verifiedPatch,
    approvedForMerge:false,installed:false,deviceVerified:false};
  }catch(e){return blocked('run',id,ERROR_CODES.has(e?.message)?e.message:'RUN_FAILED');}
 }
