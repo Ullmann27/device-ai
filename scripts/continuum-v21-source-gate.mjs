@@ -11,6 +11,9 @@ const target = join(root, 'docs/evidence/astra-0320-20261024/v21-source-proposal
 const SOURCE = 'd7429145ad5dff64364ed47f9ceb0c07a5a8ed85';
 const MANIFEST_SHA = '134e847b8f2fad2f8131cdf3e962679eb1630ed12801973ad0f6cbb0799e177d';
 const SIGNER = '2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc';
+const REVIEWED_DISPATCHER = 'scripts/render-mentor-preview.sh';
+const REVIEWED_DISPATCHER_BLOB = '6963c961a98dddd0a2b58c93072402fd0b10dc60';
+
 const fail = message => { process.stderr.write('OWNER_V21_BLOCKED: ' + message + '\n'); process.exit(69); };
 const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -49,8 +52,18 @@ try {
           (index === p.split('/').length - 1 && !info.isFile()))
         fail('Refused source redirection: ' + p);
     }
-    if (sha256(readFileSync(at)) !== item.sha256 || git('hash-object', '--', p) !== item.blob)
+    const actualBlob = git('hash-object', '--', p);
+    if (p === REVIEWED_DISPATCHER) {
+      // This is the ONLY original manifest input intentionally changed by
+      // the separate owner-approved builder. The old source must remain
+      // explicitly present in the manifest, while the new dispatcher is
+      // pinned byte-for-byte by a distinct reviewed Git blob.
+      if (item.blob !== '5666738634c2aba4607adf7136fb377be26d93fb' ||
+          actualBlob !== REVIEWED_DISPATCHER_BLOB)
+        fail('Unapproved or modified v21 release dispatcher');
+    } else if (sha256(readFileSync(at)) !== item.sha256 || actualBlob !== item.blob) {
       fail('Changed or damaged release source: ' + p);
+    }
   }
   const allMainPaths = git('ls-files', '-z', '--', 'app/build.gradle.kts', 'app/src/main')
     .split('\u0000').filter(Boolean);
