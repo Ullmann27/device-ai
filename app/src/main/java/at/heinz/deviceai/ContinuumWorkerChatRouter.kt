@@ -8,6 +8,7 @@ sealed class ContinuumWorkerChatCommand {
     data object DevelopmentCenter : ContinuumWorkerChatCommand()
     data object MobileBuilder : ContinuumWorkerChatCommand()
     data object ProjectPlan : ContinuumWorkerChatCommand()
+    data class ProjectPlanDraft(val request: String) : ContinuumWorkerChatCommand()
     data object M4Notes : ContinuumWorkerChatCommand()
     data class Draft(val goal: String) : ContinuumWorkerChatCommand()
 }
@@ -24,8 +25,18 @@ object ContinuumWorkerChatRouter {
             """(?:bitte\s+)?((?:erstelle|baue|entwickle|programmiere)\s+.{1,390})$""",
         RegexOption.IGNORE_CASE
     )
+    private val projectPlanDraftPattern = Regex(
+        """^(?:worker|baumeister|coding[ -]?agent)\s+projektplan\s*:\s*(.{1,400})$""",
+        setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
+    )
     fun parse(raw: String): ContinuumWorkerChatCommand? {
         val text = raw.trim().replace(Regex("""\s+"""), " ")
+        projectPlanDraftPattern.matchEntire(text)?.let { match ->
+            val request = match.groupValues[1].trim()
+            return if (request.isNotBlank() && request.length <= 400 &&
+                request.none { it.code < 0x20 }) ContinuumWorkerChatCommand.ProjectPlanDraft(request)
+            else null
+        }
         return when (text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')) {
             "worker", "baumeister", "coding agent", "coding-agent", "programmierer",
             "worker hilfe", "baumeister hilfe", "coding agent hilfe" ->
