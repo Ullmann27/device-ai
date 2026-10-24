@@ -142,3 +142,61 @@ test('local teamleader forwards the scoped provider through the canonical owner 
  assert.equal(result.status,'DONE');assert.equal(calls,1);assert.equal(JSON.parse(fs.readFileSync(result.report,'utf8')).independent.passed,true);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
+
+test('a no-op model rejection is passed as actionable feedback before second valid candidate',{skip:nested},()=>{
+ const f=fixture();try{
+  let calls=0;const digest='e'.repeat(64);const inputs=[];
+  const candidateProvider=provider(f,input=>{
+   inputs.push(input);calls++;
+   if(calls===1){const error=Error('CODING_NOOP_PATCH');error.code='CODING_NOOP_PATCH';error.responseFingerprint=digest;throw error;}
+   return proposal(f,'return a>b?a-b:b-a;');
+  });
+  const report=session(f,candidateProvider);
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(calls,2);
+  assert.equal(report.inference.localRequests,2);
+  assert.equal(inputs[1].history.length,1);
+  assert.equal(inputs[1].history[0].candidate,digest);
+  assert.equal(inputs[1].history[0].outcome,'CODING_NOOP_PATCH');
+  assert.match(inputs[1].history[0].diagnostic,/identical/);
+  assert.equal(report.verified.reviewRequired,true);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('repeated identical rejected model answer stops without starting third process',{skip:nested},()=>{
+ const f=fixture();try{
+  let calls=0;
+  const candidateProvider=provider(f,()=>{
+   calls++;const error=Error('CODING_NOOP_PATCH');error.code='CODING_NOOP_PATCH';
+   error.responseFingerprint='e'.repeat(64);throw error;
+  },{calls:3});
+  const report=session(f,candidateProvider);
+  assert.equal(calls,2);
+  assert.equal(report.inference.localRequests,2);
+  assert.equal(report.inference.repeatedCandidates,1);
+  assert.equal(report.inference.candidateStatus,'REPEATED_INVALID_RESPONSE');
+  assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
+  assert.equal(report.verified,null);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+
+test('unmatched oldText is explained to the model before a valid revision',{skip:nested},()=>{
+ const f=fixture();try{
+  let calls=0;const requests=[];
+  const candidateProvider=provider(f,input=>{
+   requests.push(input);calls++;
+   const result=proposal(f,'return a>b?a-b:b-a;');
+   if(calls===1)result.patches[0].oldText='return not-present;';
+   return result;
+  });
+  const report=session(f,candidateProvider);
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(calls,2);
+  assert.equal(report.inference.localRequests,2);
+  assert.equal(requests[1].history[0].outcome,'CODING_PATCH_NOT_EXACT');
+  assert.match(requests[1].history[0].candidate,/^[a-f0-9]{64}$/);
+  assert.match(requests[1].history[0].diagnostic,/exactly one unique/);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});

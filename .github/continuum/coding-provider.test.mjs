@@ -23,3 +23,20 @@ test('provider binds task, retrieves source, retains bounded revision history an
   assert.throws(()=>provider({base:'f'.repeat(40),chain:'node',deadline:Date.now()+10000}),/BINDING/);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('provider surfaces fixed no-op code and response fingerprint without raw stderr',()=>{
+ const {root,task}=fixture();
+ try{
+  const hash='e'.repeat(64);
+  const provider=createCodingCandidateProvider({root,task,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},run:()=>({
+   status:1,stdout:'',stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH '+hash+String.fromCharCode(10)+'secret ignored'
+  })});
+  assert.throws(()=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10000}),e=>{
+   assert.equal(e.code,'CODING_NOOP_PATCH');
+   assert.equal(e.responseFingerprint,hash);
+   assert.equal(e.message,'CODING_NOOP_PATCH');
+   return true;
+  });
+  assert.throws(()=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10000}),/CODING_MODEL_BUDGET_EXHAUSTED|CODING_NOOP_PATCH/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
