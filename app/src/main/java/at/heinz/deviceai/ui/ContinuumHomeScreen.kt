@@ -23,9 +23,9 @@ object ContinuumHomeScreen {
             Slot.LABEL_CONNECTED to CoreLabelElement(Icon.GLOBE, "VERBUNDEN", { it.core.connected }, textScale, wide),
             Slot.LABEL_LEARNING to CoreLabelElement(Icon.BOOK, "LERNEN", { it.core.learning }, textScale, wide),
             Slot.LABEL_DEVELOPING to CoreLabelElement(Icon.CODE, "ENTWICKELN", { it.core.developing }, textScale, wide),
-            Slot.LABEL_THINKING to CoreLabelElement(Icon.BRAIN, "DENKEN", { it.core.thinking }, textScale, wide),
-            Slot.LABEL_ANALYSING to CoreLabelElement(Icon.CHART_UP, "ANALYSIEREN", { it.core.analysing }, textScale, wide),
-            Slot.LABEL_EVOLVING to CoreLabelElement(Icon.ATOM, "EVOLVIEREN", { it.core.evolving }, textScale, wide)
+            Slot.LABEL_THINKING to CoreLabelElement(Icon.BRAIN, "DENKEN", { it.core.thinking }, textScale, wide, mirrored = true),
+            Slot.LABEL_ANALYSING to CoreLabelElement(Icon.CHART_UP, "ANALYSIEREN", { it.core.analysing }, textScale, wide, mirrored = true),
+            Slot.LABEL_EVOLVING to CoreLabelElement(Icon.ATOM, "EVOLVIEREN", { it.core.evolving }, textScale, wide, mirrored = true)
         )
         if (wide) {
             map[Slot.MODEL] = WideModelCardElement(textScale)

@@ -78,8 +78,12 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
     }
 
     private fun readStage():Int {
+        // A dangling symbolic link has exists() == false; check the link first to
+        // prevent silently resetting consumed training stages to zero.
+        require(!Files.isSymbolicLink(stateFile.toPath())) {
+            "CDX1 stage cursor cannot be a symbolic link"
+        }
         if(!stateFile.exists())return 0
-        require(!Files.isSymbolicLink(stateFile.toPath()))
         require(stateFile.length() in 1..3)
         return stateFile.readText().trim().toIntOrNull()?.also {
             require(it in 0..ContinuumCdxLargeCurriculum.STAGES)
