@@ -1,0 +1,17 @@
+# app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt
+# old approved blob 5ddd43cb32120c43cd2f854897136178464b3645
+# reviewed candidate blob e0981a9a8052f72bc5959ae2de68319fc1692e66
+# OWNER APPROVAL STILL REQUIRED
+diff --git a/5ddd43cb32120c43cd2f854897136178464b3645 b/e0981a9a8052f72bc5959ae2de68319fc1692e66
+index 5ddd43cb..e0981a9a 100644
+--- a/5ddd43cb32120c43cd2f854897136178464b3645
++++ b/e0981a9a8052f72bc5959ae2de68319fc1692e66
+@@ -36,7 +36,7 @@ object BootstrapBrain {
+         // The deterministic intent recognizer must not mistake a dangerous mixed
+         // request or forged role header for permission to run a harmless-looking tool.
+         if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
+-            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)\b|installier(?:e|en|st)\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
++            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
+         ) return BootstrapDecision(
+             BootstrapKind.REPLY,
+             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +

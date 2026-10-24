@@ -71,8 +71,10 @@ const unattestedApkSourceChanges = !attestedBaseCommit ? null :
   git('diff', '--name-status', '--no-renames', attestedBaseCommit, 'HEAD', '--', 'app/src/main').split('\n').filter(Boolean)
     .map(line => line.split('\t')).filter(([, path]) => !attested.has(path))
     .map(([status, path]) => ({ status, path, blob: status === 'D' ? null : git('rev-parse', `HEAD:${path}`) || null }));
-const gateCommands = script.split(/\r?\n/).map(line => line.trim())
-  .filter(line => /^no_signing_env node --test|^gradle /.test(line)).map(line => line.replace(/\s*\\$/, ''));
+// A physical shell line is not a complete gate: dropping continuations would
+// turn the bounded research check into bare discovery and lose all Android tasks.
+const gateCommands = script.replace(/[ \t]*\\\r?\n[ \t]*/g, ' ').split(/\r?\n/).map(line => line.trim())
+  .filter(line => /^no_signing_env node --test(?:\s|$)|^gradle /.test(line));
 const sdkHome = process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT || '';
 let sdkReady = false;
 try { sdkReady = !!sdkHome && lstatSync(join(sdkHome, 'platforms', 'android-36')).isDirectory(); } catch { /* absent */ }
@@ -82,6 +84,6 @@ const report = { sourceHead: head, total: files.length, matched,
   files: files.filter(entry => !entry.matches).map(entry => ({ ...entry, role: roleOf(entry.path), changesSincePin: changesSincePin(entry) })),
   attestedBaseCommit, unattestedApkSourceChanges,
   releaseGate: { commands: gateCommands, androidSdk: sdkReady ? 'SDK_AVAILABLE' : 'SDK_UNAVAILABLE',
-    note: 'Gradle tests, lint, assembleDebug, signing and the rollback check run only in the owner-approved Render build' } };
+    note: 'Read-only report; no owner approval. Quality gates may run with a real local SDK without signing keys. Owner signing and rollback gates remain mandatory in the authorized private Render build.' } };
 process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
 if (matched !== files.length && !process.argv.includes('--report-only')) process.exitCode = 2;

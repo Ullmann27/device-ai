@@ -1,0 +1,8 @@
+/workspace/scratch/continuum-max/wiring-before-opus.mjs:457
+ }());
+ ^
+
+SyntaxError: missing ) after argument list
+    at checkSyntax (node:internal/main/check_syntax:72:5)
+
+Node.js v24.19.0

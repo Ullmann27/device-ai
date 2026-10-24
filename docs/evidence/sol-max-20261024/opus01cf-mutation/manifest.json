@@ -1,0 +1,25 @@
+{
+  "headAtSnapshot": "3018524a0075db03b0282836d526da3eb818b8fa",
+  "source": "/workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+  "sourceSha256": "c1fa01561195156109aed027145acb5be52dcb96c141129cafcacb174e524368",
+  "mutantSourceSha256": "ff9c8b254228f15ddfd44f59eab4e29f135fe3c2c57b9b3c79ead0deed7243a6",
+  "guardRemoved": "if (savedInstanceState == null) ContinuumOwnedProject.ofId",
+  "controlMainJarSha256": "dd63ca6edb9c68792d5b740ff722fc59c8ad996a9e3408b308de2817cc68d8f8",
+  "method": "anM5HandoffSelectsItsProjectOnceAndARecreationKeepsTheOwnersLaterSwitch",
+  "testSourceSha256": "5f17bd78f443ee99853a200dde60e7598a92245f09e50104af53bbd146c46ee8",
+  "repositorySourceMutated": false,
+  "result": {
+    "control": {
+      "tests": 1,
+      "failures": 0,
+      "exitCode": 0
+    },
+    "guardRemoved": {
+      "tests": 1,
+      "failures": 1,
+      "exitCode": 1
+    },
+    "methodFailure": "expected m4-notes, actual m4-counter after recreation"
+  },
+  "harnessNote": "Initial standalone success printed its result but did not terminate because Robolectric left threads alive. Harness was corrected to exit using actual JUnit status; clean control and mutant runs archived. Initial output retained separately."
+}

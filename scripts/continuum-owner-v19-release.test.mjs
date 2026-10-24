@@ -46,3 +46,12 @@ test("relevant UI and CCC1 source blobs are explicitly attested", () => {
     "ContinuumDashboardCollector.kt", "ContinuumCcc1Bridge.kt", "app/build.gradle.kts"
   ]) assert.ok(script.includes(rel), "Missing source attestation: " + rel);
 });
+
+test("owner release executes the optional Android widget and lifecycle test source set", () => {
+  const commands = script.replace(/[ \t]*\\\r?\n[ \t]*/g, " ").split(/\r?\n/);
+  const androidGate = commands.find(line => line.startsWith("gradle ") && line.includes(":app:testDebugUnitTest"));
+  assert.ok(androidGate, "Missing executed Android unit-test gate");
+  assert.ok(androidGate.includes("-PcontinuumUiWidgetTests=true"),
+    "Owner release omits M5 and builder lifecycle widgets from its real test source set");
+  assert.match(gradle, /if \(continuumUiWidgetTests\) sourceSets\.getByName\("test"\)\.java\.srcDir\("src\/uiTest\/java"\)/);
+});

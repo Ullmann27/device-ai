@@ -204,10 +204,13 @@ test('Android speaks the same fixed CCC1 operations and stores only validated su
  assert.match(bridgeKt,/termuxError != -1/);
  // the activity builds CCC1 commands only through the validated bridge and the existing approved dispatch
  assert.match(activity,/ContinuumCcc1Bridge\.command\(operation, chain, orderId = requestId, taskId = task\)/);
- assert.match(activity,/dispatchApprovedCommand\(operation\.jobOperation, requestId, plan, slot\)/);
+ assert.match(activity,/dispatchApprovedCommand\(operation\.jobOperation, requestId, plan, slot,\s*abortTask = if \(operation == ContinuumCcc1Bridge\.Operation\.ABORT\) task else null\)/);
+ assert.match(activity,/putString\(ContinuumMobileBuildResultReceiver\.ABORT_TASK, abortTask\)/);
  assert.doesNotMatch(activity,/ProcessBuilder\(|Runtime\.getRuntime\(|sh\s+-c/);
  // an abort has its own one-shot slot; the receiver binds it to the abort operation and never stores raw output
  assert.match(receiver,/if \(id != prefs\.getString\(ABORT_JOB_ID, null\)\) return/);
+ assert.match(receiver,/prefs\.getString\(ABORT_TASK, null\)/);
+ assert.match(receiver,/prefs\.getString\(CCC1_TASK, null\) == expectedAbortTask/);
  assert.match(receiver,/ContinuumCcc1Bridge\.evaluate\(ccc1, exitCode, errorCode, if \(truncated\) null else stdout,\s*bundle\?\.getString\("stderr"\)\)/);
  assert.doesNotMatch(receiver,/putString\((LAST_MESSAGE|ABORT_MESSAGE), (stdout|stderr|bundle)/);
 });

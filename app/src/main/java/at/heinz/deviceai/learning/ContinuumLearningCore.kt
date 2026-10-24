@@ -769,6 +769,18 @@ class ContinuumLearningCore(
     fun contextShadowEvents(conversationId:String=defaultContextConversation) = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory,conversationId)
     fun recentContextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.recentEvents(directory)
     fun resetContextConversation(conversationId:String) = at.heinz.deviceai.learning.context.Ctx3Shadow.reset(directory,conversationId)
+    /** Explicit new chat: discard the profile's bounded dialogue context, never owner facts or weights.
+     * The baseline has one profile-local history; this does not introduce per-id baseline storage.
+     * Validate the shadow identity before discarding any baseline context.
+     */
+    fun resetDialogueConversation(conversationId:String,stillCurrent:()->Boolean={true}):Boolean = synchronized(CORE_LOCK) {
+        // A destroyed Activity may still have queued I/O or be waiting behind training.
+        // Check its lifetime under the same lock as replacement conversations.
+        if(!stillCurrent())return@synchronized false
+        resetContextConversation(conversationId)
+        dialogue.clear()
+        true
+    }
     fun replyFromMemory(input:String,conversationId:String=defaultContextConversation):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
         val bytes=loadModel().save(); val experiences=store.all()
         val answer=dialogue.reply(bytes,experiences,input,nowMillis())

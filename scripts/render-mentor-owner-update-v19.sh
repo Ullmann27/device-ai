@@ -182,6 +182,7 @@ keytool -list -keystore "$CONTINUUM_MENTOR_SIGNING_FILE" -storepass "$CONTINUUM_
 echo "[Continuum] Android JVM tests, API lint and Mentor Preview APK"
 gradle --no-daemon --max-workers=2 \
   -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+  -PcontinuumUiWidgetTests=true \
   :app:testDebugUnitTest :app:lintDebug :app:assembleDebug \
   -PdeviceAiMentorPreview=true -PdeviceAiOwnerSignedUpdate=true --stacktrace
 

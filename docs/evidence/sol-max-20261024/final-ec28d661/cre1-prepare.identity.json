@@ -1,0 +1,15 @@
+{
+  "sourceHeadBefore": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sourceHeadAfter": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "trackedSourceCleanAfter": true,
+  "command": [
+    "node",
+    ".github/continuum/cre-parity.mjs",
+    "prepare",
+    "/workspace/scratch/continuum-max/final/cre1-parity"
+  ],
+  "cwd": "/workspace/device-ai-sol-max",
+  "startedUtc": "2026-10-24T08:46:40.388265+00:00",
+  "durationSeconds": 0.615,
+  "exitCode": 0
+}
