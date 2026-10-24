@@ -436,12 +436,19 @@ test('explicit M5 project planning command reaches reviewed builder without bypa
  ensure('chat launches existing project-plan activity not a shell job',
    activity.includes('ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()') &&
    activity.includes('private fun openM5ProjectPlan()') &&
-   activity.includes('startActivity(Intent(this, ContinuumM5LabActivity::class.java))'));
+   activity.includes('Intent(this, ContinuumM5LabActivity::class.java)') &&
+   activity.includes('startActivity(planIntent)') &&
+   activity.includes('is ContinuumWorkerChatCommand.ProjectPlanDraft -> openM5ProjectPlan(baumeister.request)'));
  ensure('external preview retains existing builder route',
    activity.includes('if (destination.externalPackage)') &&
    activity.includes('openMobileBuilder()'));
  ensure('M5 laboratory is non-exported and respects builder feature gate',
    manifest.includes('android:name=".ContinuumM5LabActivity" android:exported="false" android:enabled="${mobileBuilderEnabled}"'));
+ ensure('carried M5 text stays an unsubmitted, bounded draft',
+   router.includes('data class ProjectPlanDraft(val request: String)') &&
+   router.includes('projectPlanDraftPattern.matchEntire(text)') &&
+   lab.includes('intent.getStringExtra("m5_initial_draft_v1")') &&
+   lab.includes('input.setText(carriedDraft?.take(512).orEmpty())'));
  ensure('M5 approval remains hash, revision and empty-input bound',
    lab.includes('draftVersion==shownDraftVersion') &&
    lab.includes('conversation.approve(p.revision,p.planSha256!!)') &&
