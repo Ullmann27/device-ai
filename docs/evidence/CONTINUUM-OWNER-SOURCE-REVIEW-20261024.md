@@ -56,3 +56,23 @@ Die Manifest-/Exportentscheidung ist zu verifizieren: `ContinuumM5LabActivity` u
 `AgentActivity.kt` führt für die aktuelle `sessionId` nun eine flüchtige `LocalPromptSession` mit der letzten **nachweislich geerdeten** eigenen Frage. Vor einem neuen Runtimeaufruf wird nur der explizit zur gleichen Chat-ID gehörende Kontext übergeben. Der generierte `nextScopedGroundedQuestion` wird nur beim erfolgreichen und identitätsgebundenen Rückruf übernommen. Bei `newSession()` wird er gelöscht; nach Activity-Neuerstellung standardmäßig kein Fremdkontext. `ContinuumCognitiveRuntime.kt` prüft Länge und Steuerzeichen des übernommenen Kontextes. Dies ändert **keine** Gewichte, Besitzerfakten, signierenden Schlüssel oder andere Buildklassen.
 
 Zusätzliche JVM-Regressionen zur isolierten Fortführung derselben Session und zur Verweigerung von Steuerzeichen angelegt. Die Runtime- und Activity-Blobs oben entsprechen dem gepushten Stand. Die vollständige JUnit-/Robolectric-Prüfung auf dem neuesten Commit ist weiterhin offen. Neue APK-Signierung blockiert.
+
+
+## Unabhängig einzeln abgefragte GitHub-Blobs für alle zehn zusätzlichen APK-Quellen
+
+Die folgende Tabelle ergänzt den früheren Prüfbericht. Sie identifiziert exakt die Quellbytes, die tatsächlich in die nächste APK eingehen sollen; sie ist **noch keine Signierung**.
+
+| Quelle | Blob-SHA1 | Sicherheits- und Funktionsrolle |
+|---|---|---|
+| `app/src/main/AndroidManifest.xml` | `983138c8e8cc9b25189288c7202d4e17f699f959` | Berechtigungen, Komponenten, Exportgrenzen |
+| `app/src/main/assets/continuum-owned-project-plans-v1.json` | `d19297d5715821ac1073934adde07c64ddf25d5b` | Nur zwei Hash-verankerte Projektvorlagen |
+| `app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt` | `53efcb096fe152189a1731948706b4ccb1294790` | Strikter, kanonischer Projektkatalog |
+| `app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt` | `b2732626709517ee49fb0213796ed272e8e0f76c` | Freigabepflichtige Auftragsdialoge |
+| `app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt` | `22234d244c08f6e7b041509eca7ea6df4d13cc24` | Nicht exportiertes M5-Labor; ungesendete Entwürfe |
+| `app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt` | `656532f9798b0b5b53cf2973d296faf2ee8e6afe` | SWB1-/CRE1-Kontext mit sitzungsgebundener Prompt-Herkunft |
+| `app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt` | `8c9da619e62608155c496c25919f2c213616e7b7` | Bestehende bestätigte Besitzerfakten und Lernschutz |
+| `app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt` | `9872c2209b550d8b4c361f087ddc09595324b681` | Abgeschlossene Forschungszyklen und Ergebnisvertrag |
+| `app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt` | `cb9e51b1362c22df06cde7e21247a48f12d69e8c` | CTX3-Forschungsmodell ohne Freigabe |
+| `app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt` | `f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe` | CTX3 ausschließlich OFF/SHADOW; keine Antwortüberschreibung |
+
+Prüfung des AndroidManifest: `ContinuumM5LabActivity` `exported=false`, `ContinuumMobileBuildResultReceiver` `exported=false`, `ContinuumMobileBuilderActivity` `exported=true` bei `enabled=${mobileBuilderEnabled}`. Der Besitzer-Dialog bestätigt feste Termux-Aufträge nochmals vor Ausführung; keine Modellantwort darf ein freies Shellkommando werden. Dies ist eine quellbasierte Sicherheitsprüfung, kein Ersatz für den echten SDK-Test.
