@@ -96,29 +96,33 @@ class HeaderButtonElement(val kind: Kind, textScale: Float = 1f) : ContinuumElem
     }
 }
 
-/** One of the six labels around the core: icon disc, cyan title and a real status line. */
-class CoreLabelElement(val icon: Icon, val title: String, private val status: (ContinuumDashboardState) -> String,
-                       textScale: Float = 1f, private val boxed: Boolean = false) : ContinuumElement(textScale) {
+/** Raised, symmetrical controls around the hologram.
+ * Left controls: outer-left icon and inward title. Right controls: inward title and outer-right icon.
+ * Only the card's internal arrangement is mirrored: text glyphs and icons are never reflected.
+ */
+class CoreLabelElement(
+    val icon: Icon,
+    val title: String,
+    private val status: (ContinuumDashboardState) -> String,
+    textScale: Float = 1f,
+    private val boxed: Boolean = false,
+    val mirrored: Boolean = false
+) : ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
         val cy = h / 2f
-        if (boxed) {
-            ContinuumSurfaces.glassCard(p, 0f, 0f, w, h, 12f)
-            ContinuumSurfaces.iconDisc(p, icon, 26f, cy, 30f, 16f)
-            val titleWidth = (w - 55f).coerceAtLeast(1f)
-            val titleStyle = fittedTitle(p, title, 700, 8.6f, titleWidth)
-            p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, titleWidth), 51f, cy - 1.5f, titleStyle,
-                solid(ContinuumTheme.LABEL_CYAN))
-            p.drawText(ContinuumSurfaces.fit(p, status(s), t(400, 7.8f), w - 56f), 51f, cy + 10.5f, t(400, 7.8f),
-                solid(ContinuumTheme.TEXT_SECONDARY))
-            return
-        }
-        ContinuumSurfaces.iconDisc(p, icon, 13.5f, cy, 27f, 14.5f)
-        val titleWidth = (w - 35f).coerceAtLeast(1f)
-        val titleStyle = fittedTitle(p, title, 700, 7.95f, titleWidth)
-        p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, titleWidth), 32.5f, cy - 1.2f, titleStyle,
-            solid(ContinuumTheme.LABEL_CYAN))
-        p.drawText(ContinuumSurfaces.fit(p, status(s), t(400, 6.63f), w - 33f), 32.5f, cy + 8.6f, t(400, 6.63f),
-            solid(ContinuumTheme.TEXT_SECONDARY))
+        val discCenter = if (mirrored) w - 18f else 18f
+        val textAnchor = if (mirrored) w - 40f else 40f
+        val available = (w - 46f).coerceAtLeast(1f)
+        val alignment = if (mirrored) TextAlign.RIGHT else TextAlign.LEFT
+        ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, if (boxed) 12f else 11f)
+        ContinuumSurfaces.iconDisc(p, icon, discCenter, cy, if (boxed) 33f else 30f,
+            if (boxed) 18.5f else 16f)
+        val titleStyle = fittedTitle(p, title, 700, if (boxed) 9f else 8.25f, available)
+        val statusStyle = t(400, if (boxed) 8f else 7f)
+        p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, available),
+            textAnchor, cy - 1.9f, titleStyle, solid(ContinuumTheme.LABEL_CYAN), alignment)
+        p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, available),
+            textAnchor, cy + 10.4f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY), alignment)
     }
     override fun describe(s: ContinuumDashboardState) = "$title: ${status(s)}"
 }
