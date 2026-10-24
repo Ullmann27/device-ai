@@ -80,9 +80,12 @@ class Ctx1DialogueContext(facts: List<String>, private val generalized: Boolean 
         if (mentions.isNotEmpty()) {
             mentions.forEach { (e, i) -> if (!generalized || !negated(lower, i)) touch(e) }
             val wanted = mentions.filter { !negated(lower, it.second) }.map { it.first }
-            val main = wanted.first()
-            if (!main.known) return remember(Unknown, main)
-            return remember(Ask(cleanNegation(input), scope(wanted.filter { it.known })), main, day)
+            // only negated mentions ("nicht X" with no target it could read) fall through instead of crashing
+            if (wanted.isNotEmpty()) {
+                val main = wanted.first()
+                if (!main.known) return remember(Unknown, main)
+                return remember(Ask(cleanNegation(input), scope(wanted.filter { it.known })), main, day)
+            }
         }
         if (pronoun != null) {
             val g = PRONOUNS.getValue(pronoun.value)

@@ -54,6 +54,16 @@ class Ctx2FactPhrasingTest {
         assertTrue(stored.decide("Wer ist Gerda?") is Ask)
     }
 
+    @Test fun aTurnWhoseOnlyMentionsAreNegatedNoLongerCrashesEitherVariant() {
+        // TEST2 aborted with NoSuchElementException here: "wanted.first()" on an empty list
+        for (generalized in listOf(false, true)) {
+            val c = Ctx1DialogueContext(facts + "Max ist mein Bruder.", generalized)
+            c.decide("Erzähl mir von Anna.")
+            val d = c.decide("Nicht Max.")
+            assertTrue("generalized=$generalized: $d", d !is Ask || d.scope?.none { it.contains("Max") } != false)
+        }
+    }
+
     @Test fun ctx2CorpusRewritesTheIntroducingFactsAndKeepsGoldStored() {
         val dialogs = Ctx2Corpus.split(Ctx1Corpus.Split.DEV, 5L, 2)
         assertEquals(Ctx1Corpus.FAMILIES.size * 2, dialogs.size)
