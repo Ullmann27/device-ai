@@ -11,6 +11,7 @@ import {runMobileRepairJob,jobTaskId,readReceipt} from '../../scripts/continuum-
 import {builderStateOf} from './ccc1-recovery.mjs';
 import {localTeamleaderDriver} from './autonomous-teamleader.mjs';
 import {git} from './repair-loop.mjs';
+import {isIsolatedExecutor} from './isolated-executor.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 
 const ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -52,7 +53,11 @@ export function prepareCodingTask({project,stateDir,task}){
  }finally{fs.closeSync(fd);}
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
- providerFactory=options=>createCodingCandidateProvider(options),env=process.env}={}){
+ requireIsolation=false,providerFactory=options=>createCodingCandidateProvider(options),env=process.env}={}){
+ // Android untrusted-model execution is never allowed to inherit the legacy
+ // host fallback. A branded executor is required BEFORE journal/model access.
+ if(requireIsolation && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
+  throw Error('CODING_ISOLATION_REQUIRED');
  const grant=readGrant(grantFile(project,stateDir,id));
  if(git(project,['rev-parse','HEAD']).stdout.trim()!==grant.task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
  const receipts=[];
