@@ -29,7 +29,9 @@ test('orbital rings use visible phase movement, not the old near-static factor',
 });
 test('header and the six orbital text labels are fitted to their real drawing boxes',()=>{
   assert.match(labels,/protected fun fittedTitle/);
-  assert.match(labels,/ContinuumSurfaces\.fit\(p, title, titleStyle, titleWidth\)/);
+  assert.match(labels,/ContinuumSurfaces\.fit\(p, title, titleStyle, available\)/);
+  assert.match(labels,/val alignment = if \(mirrored\) TextAlign\.RIGHT else TextAlign\.LEFT/);
+  assert.match(labels,/ContinuumSurfaces\.raisedControlCard\(p,/);
   assert.match(labels,/ContinuumSurfaces\.fit\(p, subtitle, style, w - 91f\)/);
 });
 test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',()=>{
