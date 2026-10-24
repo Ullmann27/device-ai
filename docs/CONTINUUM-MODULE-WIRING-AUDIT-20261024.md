@@ -9,6 +9,7 @@ Die Besitzer-APK ist nicht automatisch ein gemeinsamer produktiver Sprachkern, o
 3. Die GGUF-/Kontextskripte existieren in `scripts/`, sind keine eingebettete Android-GGUF-Inferenz; die vorhandene Android-Importoberfläche benötigt eine `.litertlm`-Datei.
 4. `NeuralPracticeScheduler` wiederholt Eigentümer-lektorierte Beispiele nur bis zur Stagnation. `ContinuumAutonomousScheduler` plant endliche Offlinejobs und optional eine CDX1-Forschungsstufe. Bisher gab es **keinen eigenen, automatisch synthetisierten CRE1-Multiturn-Korpus pro Runde**.
 5. Der Android-Teamleiterstatus `READY` meldet ausdrücklich nur Prüfung von Backlog und Lernkern; keinen abgeschlossenen Android-Build oder eine kontinuierlich ausführende Kodier-KI.
+6. **Bestätigter Dashboard-Zählerfehler**: `ContinuumDashboardCollector` verwendete für `sources` ausschließlich `WebLearningJournal.notes().size`; die mehrhundert Einträge aus `ContinuumKnowledgeArchive` wurden beim Start-Dashboard nicht mitgezählt. Im Draft umgestellt auf die tatsächlichen archivierten Quellen mit 30-Sekunden-Cache. Das verändert keine Quelldaten.
 
 Die folgenden PRs besitzen getrennte, teils divergierende Commits und dürfen nicht blind gemergt werden: #75 (LM1), #82 (NFC1), #92 (Opus), #93 (GGUF), #99 (CCC1), #112 (Sol), #113 (Hologramm). Die aktuelle Signierbasis ist Nachfahre von Sol #112 und Kontext #113. Vor neuen Integrationen pro Datei Quell-/Blob-Identität vergleichen.
 
@@ -20,6 +21,7 @@ Die folgenden PRs besitzen getrennte, teils divergierende Commits und dürfen ni
 - `ContinuumAutonomousScheduler`: CRE1-Aufgabe läuft nur als begrenzter Teilschritt des existierenden täglichen Offlinejobs, nicht als zweiter Endlosservice.
 - `ContinuumAutoDialogueCurriculumTest`: Split-, Audit- und Bereichstests; Tests wurden als Quellcode geschrieben, aber in diesem Chat **nicht mit Gradle/JVM ausgeführt**.
 - `scripts/continuum-module-wiring-audit.mjs`: reproduzierbare statische Bestandsaufnahme. Nicht als Inferenz-, Hardware- oder APK-Test interpretieren.
+- `ContinuumDashboardCollector.kt` und `.github/continuum/continuum-dashboard-archive-source.test.mjs`: korrigierte Quelle der Startseiten-Zählung und statischer Regressionstest.
 
 ## Mindestnachweise vor irgendeinem signierten Update
 
