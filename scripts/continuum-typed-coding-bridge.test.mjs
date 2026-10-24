@@ -58,6 +58,15 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
   id:args.id,taskFingerprint:'c'.repeat(64),sourceCommit:SOURCE,status:'COMPLETED',receipts:[]
  })});
  assert.equal(mismatch.status,'BLOCKED');assert.equal(mismatch.failure.code,'RUN_BINDING_MISMATCH');
+ const verified=await executeTypedBridge(args,{run:async()=>({
+  id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
+  status:'PATCH_PENDING_OWNER_REVIEW',
+  receipts:[{status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',patch:{sha256:'d'.repeat(64)},
+    evidence:{verificationSha256:'e'.repeat(64),independentExecuted:3}}]
+ })});
+ assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
+ assert.equal(verified.patchSha256,'d'.repeat(64));
+ assert.equal(verified.approvedForMerge,false);assert.equal(verified.deviceVerified,false);
 });
 test('failed host runtime redacts unexpected exception text',async()=>{
  const args=prepareArgs();
