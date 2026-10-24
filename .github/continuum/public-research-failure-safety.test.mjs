@@ -40,6 +40,18 @@ test('research attempts and pending topics remain truthful when a source has fai
   assert.match(source, /if\(weightsAccepted\)edit\.putLong\("accepted"/);
 });
 
+test('issue #76: an interrupt flag never loses the cycle audit, and a failed write carries a fixed cause', () => {
+  assert.doesNotMatch(source, /check\(edit\.commit\(\)\)/);
+  assert.match(source, /ContinuumStudyAuditWrite\.commit\(\{ edit\.commit\(\) \},stopRequested,/);
+  assert.match(source, /\?\.let \{ throw ContinuumStudyAuditNotPersisted\(it\) \}/);
+  assert.match(source, /if\(reason=="STOPPED"\)phase="INTERRUPTED"/);
+  assert.match(source, /reschedule=false\s*\n\s*Log\.w\("ContinuumPublicStudy","Research cycle audit not persisted"\)/);
+  assert.match(states, /internal object ContinuumStudyAuditWrite/);
+  assert.match(states, /"STORAGE_FULL"/);
+  assert.match(states, /"NOT_WRITABLE"/);
+  assert.match(states, /"COMMIT_FALSE"/);
+});
+
 test('safety budget, source isolation and holdout gate are unchanged', () => {
   assert.match(source, /conn\.instanceFollowRedirects=false/);
   assert.match(source, /MAX_RESPONSE_BYTES/);

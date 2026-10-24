@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-20",
+  "updated": "2026-10-24",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -18,10 +18,10 @@
       "id": "EXP-00",
       "title": "On-device Android APK builder",
       "status": "DEVICE_TOOLCHAIN_VERIFIED",
-      "present": "Samsung Android 16 ARM64: JDK17/Gradle8.11.1/SDK36/AAPT2/apksigner Doctor verified on device 2026-10-19; manual Termux-preview APK built, SHA/signature checked at source commit 1477fa5 and Android Builder opened. App-triggered complete build, newly integrated high-end UI APK and independent M4 evidence NOT yet verified.",
+      "present": "Samsung Android 16 ARM64: on-device Doctor (Git/JDK17/Gradle8.11.1/SDK36/ARM64-AAPT2/apksigner) passed; real earlier build and signed preview APK at 91291cb201d140bc301bcb341b49a674d8d08165 with owner Download copy, reported by owner 2026-10-21. Current integrated source checkpoint 8968233ffe7d5a63801bc825f75d91c92426b321 has download-publication race fix and new negative tests in PR #48; these patches have not yet been run on device. Sol M4 checkpoint c787c098 (2026-10-23): explicit optional Linux-x64 host-sdk profile built two separate APKs with real SDK/Gradle offline, current-source JUnit/lint and independent signer/package/SHA checks; docs/evidence/sol-m4-20261023. This does not close the current Termux/Fold7 gate.",
       "entry": "scripts/continuum-mobile-builder.mjs",
       "depends": "Android ARM64 Termux, JDK17, Gradle8.11.1, SDK36, native aapt2, APK signer",
-      "gate": "Current feature-HEAD Node/Kotlin/lint validation, owner-triggered in-app APK build with hash/certificate evidence, owner-approved install and new one-launcher high-end UI acceptance"
+      "gate": "Samsung safe-fetch current source at checkpoint 8968233ffe7d5a63801bc825f75d91c92426b321, execute real Node negative tests, app-triggered build callback with exit 0, Gradle JUnit/lint/APK signer/source-SHA evidence, stable separate at.heinz.deviceai.preview package; docs/CONTINUUM-M1-ANDROID-ABSCHLUSS-20261021.md. No Main merge or unapproved install."
     },
     {
       "id": "EXP-01",
@@ -36,7 +36,7 @@
       "id": "EXP-02",
       "title": "CEGIS program synthesis",
       "status": "RESEARCH_SHADOW",
-      "present": "Existing CEGIS repair-loop plus explicit serial recipe/control transfer laboratory with independent fresh-worktree checks, immutable shadow measurements and regression gates (82 Node tests; mocked Gradle integration). Owner reports original Samsung 632-test triple-phase recipe; second-file device transfer not yet observed here.",
+      "present": "Existing CEGIS repair-loop plus explicit serial recipe/control transfer laboratory with independent fresh-worktree checks, immutable shadow measurements and regression gates (82 Node tests; mocked Gradle integration). Owner reports original Samsung 632-test triple-phase recipe; second-file device transfer not yet observed here. PR #49: opt-in local candidates can enter the canonical owner REPAIR worker only as complete bounded numeric JS modules; critic, executed tests and fresh independent worktree remain mandatory. Explicit path scope and exact-source replay preserve the opt-in boundary. Container integration proof, not Samsung or model-quality proof.",
       "entry": ".github/continuum/repair-loop.mjs",
       "depends": "Typed candidate interface, M4 tests",
       "gate": "Run existing Samsung receipt on a different source with fixed Android compile/unit checks; compare both independently verified arms, then additional novel holdouts. No training/promotion."
@@ -63,7 +63,7 @@
       "id": "EXP-05",
       "title": "Own local generation and LiteRT-LM",
       "status": "RESEARCH_SHADOW",
-      "present": "Experimental CDX1 and Android model-loading interfaces",
+      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion.",
       "entry": "docs/CONTINUUM-ARGON-RESEARCH-IMPLEMENTATION-20261017.md",
       "depends": "Compatible local model bytes and memory budget",
       "gate": "Live model-only answers and latency/thermal benchmark"
@@ -90,19 +90,19 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Samsung Android 16 2026-10-19: real Android -> Termux RUN_COMMAND -> Android DOCTOR and STATUS callbacks successfully displayed in installed Preview (Node builder 28/28 passed at e332825). BUILD callback not yet device-tested; no authenticated cross-package lease/replay proof or independent APK ingest.",
+      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed. Argon review: native single-active-job guard already rejects a second STATUS/DOCTOR/BUILD request during pending BUILD. On integration branch, receipt hardening now binds callback operation/UUID in URI and validates 40-hex commit, preview package, versionCode and existing sha256/signer, with Termux err == -1. These new changes require device runtime verification; owner Samsung 0.3.10 does not yet include them. Sol M4: two allowlisted hash-bound project plans, persistent private build evidence and read-only project status, separate one-shot recovery slot preserving MAIN callback; actual SDK compile, 873 JUnit cases including 8 Robolectric UI cases passed. Current phone callback/SELinux/cancellation remains unverified. M5 2026-10-24: bounded reviewed conversation-to-builder selection, revision/hash control and Android SavedState tested under SDK/Robolectric; no direct tool dispatch. Physical phone acceptance remains open. Max continuation 2026-10-24 at ec28d661: explicit chat reset is lifetime-checked inside CORE_LOCK; destroyed/stale builder dialogs and CCC1 abort target/late-receipt races repaired without a second transport. Full real SDK940 tests including26 Robolectric widgets, Node1099 and backend60 passed; host preview APK verified. docs/evidence/sol-max-20261024. Existing owner source pins unchanged; owner signing and Fold7 acceptance remain blocked/pending.",
       "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
-      "gate": "Real app-triggered BUILD callback, replay/lease robustness, SHA/certificate/device proof and owner-approved verified APK install"
+      "gate": "On the current integrated source, app-button BUILD must actually produce a validated Android→Termux→App completion receipt with exact Git commit/SHA/signing/package verification; inspect replay/lease and failure paths. No automatic installation. Include operation-id URI identity, payload binding and negative tests for missing/wrong commit/package/version. Never claim current-source M1 closed before an actual Android->Termux->Android BUILD callback and independently checked commit."
     },
     {
       "id": "EXP-09",
       "title": "Cross-platform capability recipes",
-      "status": "IDEA",
-      "present": "Android native first; optional Flutter/Godot/iOS/macOS",
+      "status": "SOURCE_INTEGRATED",
+      "present": "Versioned typed bounded Android project catalog v1, fixed notes/counter recipes, separate packages/private storage/no permissions. Two real independently verified HOST_SDK APKs at c787c098; docs/evidence/sol-m4-20261023. Existing CCC1 verifier has the owned-project evidence profile; no second repair pipeline, arbitrary source or LLM generation.",
       "entry": "docs/CONTINUUM-EXPERIMENTVERTRAG.md",
-      "depends": "Real platform compiler and signing",
-      "gate": "Per-platform reproducible independent build"
+      "depends": "Android Termux ARM64 primary; Gradle8.11.1/JDK17/SDK36/native aapt2; optional explicit host-sdk test profile",
+      "gate": "Current Fold7 app->Termux->project->ARM64 APK->app completion and interruption/recovery/data tests; installation requires separate owner decision. Per-platform independent build before adding further platforms or free candidate generation."
     },
     {
       "id": "EXP-10",
@@ -130,6 +130,24 @@
       "entry": "docs/NEURAL_CONTINUITY.md",
       "depends": "Signed owner memory, immutable evidence",
       "gate": "Model replacement without owner fact corruption"
+    },
+    {
+      "id": "EXP-13",
+      "title": "Argon research: traceable reasoning (LCT1), guarded consolidation (WSC1), working memory (TTT1), CDX1 patch sensor",
+      "status": "RESEARCH_SHADOW",
+      "present": "Test source set only; pre-registered, single TEST runs: LCT1 0 wrong in 600 cases, WSC1 0 wrong and 13x faster on solved questions, TTT1 entity store 0 wrong (fast weights 73 wrong, not adopted), CDX1 no gain over a 4-gram",
+      "entry": "docs/research/LCT1-REASONING-RESULT-20261023.md",
+      "depends": "Authenticated owner seal for real facts; LCT1 verifier as the only source of WSC1 habits",
+      "gate": "0 wrong answers on held-out negatives, verifier rejects all mutations, no latent shortcut without proven gain"
+    },
+    {
+      "id": "EXP-14",
+      "title": "CTX1 (S1/S2): bounded context routine in front of the memory dialogue core",
+      "status": "RESEARCH_SHADOW",
+      "present": "Test source set only; pre-registered, single TEST run on 480 unseen dialogs (1080 turns): today's core 433 wrong claims and 631/920 grounded answers, routine + same core 0 wrong and 920/920, 80/80 questions back, 80/80 abstentions; routine 0.10 ms median M5: CTX2 generalized-only negation crash fixed; known-open TEST2 B2 885 correct/27 wrong. Independent TEST3 (24 dialogs/198 turns) after code freeze fc1d996: CTX3 13 correct/3 wrong vs B0 111/77, preregistered correctness criterion FAIL. No active promotion; optional OFF/SHADOW only. Explicit session namespaces/revisions/withdrawal tested. docs/research/CTX3-INDEPENDENT-RESULT-20261024.md.",
+      "entry": "docs/research/CTX1-DIALOGUE-CONTEXT-RESULT-20261024.md",
+      "depends": "Real owner-memory phrasings as a new TEST split; revocation test; switch default off in ContinuumLearningCore.replyFromMemory",
+      "gate": "Fewer than half the wrong claims of today's core, no loss of grounded answers, at most 5 % needless questions back, routine p95 at most 20 ms"
     }
   ]
 }

@@ -73,6 +73,7 @@
         <!-- EXP-00/08: Builder is a tool screen, not a second home-screen app.
              Exported only for explicit allowlisted navigation from an installed
              Device AI main package; disabled in non-preview builds. -->
+        <activity android:name=".ContinuumM5LabActivity" android:exported="false" android:enabled="${mobileBuilderEnabled}" />
         <activity
             android:name=".ContinuumMobileBuilderActivity"
             android:exported="true"
@@ -90,6 +91,7 @@
         <activity
             android:name=".AgentActivity"
             android:exported="true"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

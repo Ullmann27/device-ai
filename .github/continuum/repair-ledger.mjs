@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import {mergeExperiences} from './repair-experience.mjs';
+import {sha256} from './repair-diagnostics.mjs';
 
 /**
  * Persistent repair ledger: every attempt with diagnosis, strategy, minimal
@@ -12,6 +13,22 @@ export const MAX_ATTEMPTS=400;
 const OUTCOMES=new Set(['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE','REJECTED_BY_CRITIC','NOT_APPLICABLE',
   'FAILED_SYNTAX','SYNTAX_CHECK_ERROR']);
 const HEX=/^[0-9a-f]{1,64}$/;
+const SHA256=/^[0-9a-f]{64}$/;
+export const MAX_LEDGER_EDIT_CHARS=20000;
+
+/**
+ * An edit too large to keep (e.g. a whole-file revert of a big Kotlin file) is recorded by file, digests and lengths
+ * only. Storing it verbatim would exceed the ledger limits and fail the whole session record; without its text it can
+ * never be replayed from the ledger.
+ */
+function ledgerEdit(e){
+  if(e.oldText.length+e.newText.length<=MAX_LEDGER_EDIT_CHARS)return e;
+  return {file:e.file,oldText:'',newText:'',line:e.line??null,omitted:{oldSha256:sha256(e.oldText),
+    newSha256:sha256(e.newText),oldLength:e.oldText.length,newLength:e.newText.length}};
+}
+const validOmission=e=>e.oldText===''&&e.newText===''&&SHA256.test(e.omitted?.oldSha256??'')&&
+  SHA256.test(e.omitted.newSha256??'')&&Number.isSafeInteger(e.omitted.oldLength)&&Number.isSafeInteger(e.omitted.newLength)&&
+  e.omitted.oldLength>=0&&e.omitted.newLength>=0&&e.omitted.oldLength+e.omitted.newLength>MAX_LEDGER_EDIT_CHARS;
 
 export function emptyLedger(){return {schemaVersion:2,attempts:[],experiences:[],sessions:[]};}
 
@@ -22,7 +39,8 @@ export function verifyLedger(data){
   for(const a of data.attempts){
     if(!a||!OUTCOMES.has(a.outcome)||typeof a.strategy!=='string'||a.strategy.length>80||!HEX.test(a.diagnostic??'')||!HEX.test(a.candidate??''))
       throw Error('Invalid ledger attempt');
-    if(!Array.isArray(a.edits)||a.edits.length>3||a.edits.some(e=>typeof e.file!=='string'||e.file.includes('..')||typeof e.oldText!=='string'||typeof e.newText!=='string'||e.oldText.length+e.newText.length>20000))
+    if(!Array.isArray(a.edits)||a.edits.length>3||a.edits.some(e=>typeof e.file!=='string'||e.file.includes('..')||typeof e.oldText!=='string'||typeof e.newText!=='string'||e.oldText.length+e.newText.length>MAX_LEDGER_EDIT_CHARS||
+       e.omitted!==undefined&&!validOmission(e)))
       throw Error('Invalid ledger edits');
     if(a.syntaxReason!==undefined&&a.syntaxReason!==null&&
        (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
@@ -58,11 +76,15 @@ export function recordSession(ledger,report,meta={}){
   // absent: no independent observation -> neither positive NOR negative
   //         training label (do not poison learning with an unknown outcome).
   const provisional=report.outcome==='VERIFIED';
+  // OS confinement protects owner state, but candidate-controlled runtime
+  // reports are not an independent semantic oracle. Never train/replay broad
+  // model code from a green local report, even if a caller passes a true flag.
+  const isolatedReview=provisional&&report.verified?.strategy==='LOCAL_ISOLATED_PATCH';
   const independentRejected=provisional&&meta.independentPass===false;
   const independentPending=provisional&&meta.independentPass!==true&&
-    meta.independentPass!==false;
-  const acceptedPatch=provisional&&meta.independentPass===true?report.verified:null;
-  const finalOutcome=independentRejected?'NO_VERIFIED_REPAIR':
+    meta.independentPass!==false||isolatedReview;
+  const acceptedPatch=provisional&&meta.independentPass===true&&!isolatedReview?report.verified:null;
+  const finalOutcome=isolatedReview?'PENDING_OWNER_REVIEW':independentRejected?'NO_VERIFIED_REPAIR':
     independentPending?'PENDING_INDEPENDENT_VERIFICATION':report.outcome;
   const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
     if(a.outcome==='VERIFIED'&&independentRejected)
@@ -73,7 +95,7 @@ export function recordSession(ledger,report,meta={}){
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
-    outcome:a.outcome,edits:a.edits,confidence:a.score??null,
+    outcome:a.outcome,edits:(a.edits??[]).map(ledgerEdit),confidence:a.score??null,
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
       executed:t.tests?.executed??0,skipped:t.tests?.skipped??0})),
@@ -87,9 +109,9 @@ export function recordSession(ledger,report,meta={}){
   // A provisional successful session has NO independent classification yet.
   // Keep its diagnostic attempts for investigation, but do not train from
   // either an asserted win or its possibly stale failed-test labels.
-  const learned=independentPending?[]:attempts.filter(a=>
+  const learned=independentPending?[]:attempts.filter(a=>a.strategy!=='LOCAL_ISOLATED_PATCH'&&(
     ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome)||
-    (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX'));
+    (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
     kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
     status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'

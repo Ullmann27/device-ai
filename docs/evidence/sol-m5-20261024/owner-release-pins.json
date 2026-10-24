@@ -1,0 +1,139 @@
+{
+  "releaseExecuted": false,
+  "matched": 13,
+  "total": 22,
+  "files": [
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "expected": "c151ade5d88d7434f818a5ed5c1b27e3eddc7aa5",
+      "actual": "24f24d2e392e1143917454728b699343e99dabdf",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "expected": "8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3",
+      "actual": "8b99c6dae6626d2ed251bb723d75ed0a9ba3b8a3",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt",
+      "expected": "2bb8817da268bdcca676aa9a9b48f56b50d06609",
+      "actual": "2bb8817da268bdcca676aa9a9b48f56b50d06609",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt",
+      "expected": "412d643296deb76ab07e9515f6881eba9df3a9b4",
+      "actual": "412d643296deb76ab07e9515f6881eba9df3a9b4",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumSystemGaugesView.kt",
+      "expected": "edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5",
+      "actual": "edaa4acbab2c9f2086d26d95e1044a3ccc4c7fc5",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ui/ContinuumHomeElements.kt",
+      "expected": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "actual": "e243a487a2011906a9c149a2324b63b39ad2f25c",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "expected": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "actual": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "expected": "520db0554c0e4d8803d674f229f243f51f2aba17",
+      "actual": "520db0554c0e4d8803d674f229f243f51f2aba17",
+      "matches": true
+    },
+    {
+      "path": "app/build.gradle.kts",
+      "expected": "8dac48b9eee7f5af74a777c8cd301b6e1576e49a",
+      "actual": "8dac48b9eee7f5af74a777c8cd301b6e1576e49a",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "expected": "acfebe1fa5d882013b11f11133cabc0c5d01409b",
+      "actual": "e047b5f5827d5a1e12a970d0fbfea9e17c6b8411",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+      "expected": "3cb8e5d5c28b98edfa3043f756fb09e907088f48",
+      "actual": "6ebec7bad39cb842e22a8031f4728338221b0da2",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+      "expected": "e8c153afe22dbdef67dfeb3044d40e7fba97bf61",
+      "actual": "79f365032047fa1818c5d60ed83485a32d9c626b",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "expected": "384ab70a79c2eb09f13478e89aa06ee89739eed2",
+      "actual": "402fc6f7bb302881fd450c62d4bc0a76e7fab749",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "expected": "479849bd277d4781f53db216e2dd884c1f87f355",
+      "actual": "479849bd277d4781f53db216e2dd884c1f87f355",
+      "matches": true
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt",
+      "expected": "2736d947f40d0fbefb16a5f9470542fdfbe2b949",
+      "actual": "a4f1b385739d99912081fffbaa405900e98e8fed",
+      "matches": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+      "expected": "697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb",
+      "actual": "697e678ab5fb10bcb80ceaf709ec7b43fa23e8bb",
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-owned-app.mjs",
+      "expected": "83692c7ae749f451cae495aa95bc52107165334f",
+      "actual": "c735606419fcdec445fd3b344eecba2bdee55989",
+      "matches": false
+    },
+    {
+      "path": "scripts/continuum-owned-app.test.mjs",
+      "expected": "e287909e67074a1ac53764c1ecc22b3a36ac5105",
+      "actual": "65cec140fa13896131f18403c69c8a868781e9b7",
+      "matches": false
+    },
+    {
+      "path": "app/src/main/assets/continuum-training-studio-v1.json",
+      "expected": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "actual": "c0e4fc9a075ec88e3be572b29d15bc718a838fad",
+      "matches": true
+    },
+    {
+      "path": "scripts/continuum-training-studio.test.mjs",
+      "expected": "f4a01789c3a48942c4c83955d31519d3a1fb2744",
+      "actual": "f4a01789c3a48942c4c83955d31519d3a1fb2744",
+      "matches": true
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
+      "expected": "5ddd43cb32120c43cd2f854897136178464b3645",
+      "actual": "e0981a9a8052f72bc5959ae2de68319fc1692e66",
+      "matches": false
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
+      "expected": "b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8",
+      "actual": "b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8",
+      "matches": true
+    }
+  ]
+}

@@ -11,6 +11,32 @@ class BootstrapBrainTest {
         assertTrue(BootstrapBrain.decide("Was kannst du?", emptyList()).message.contains("Forschungsziele"))
         assertTrue(BootstrapBrain.decide("Erkläre Quantenmechanik", emptyList()).message.contains("noch nicht"))
     }
+    @Test fun capabilityDialogueHandlesAustrianSpeechAndTyposWithoutToolUse() {
+        val examples = listOf(
+            "Was kannst du alles?",
+            "Was kanst du ales?",
+            "Wos kannst du?",
+            "Wos konnst du eigentlich?",
+            "Hilfe"
+        )
+        examples.forEach { utterance ->
+            val decision = BootstrapBrain.decide(utterance, emptyList())
+            assertEquals(utterance, BootstrapKind.REPLY, decision.kind)
+            assertNull(utterance, decision.tool)
+            assertFalse(utterance, decision.allowNeuralRecall)
+            assertTrue(utterance, decision.message.contains("Was möchtest du"))
+            assertTrue(utterance, decision.message.contains("noch nicht nachgewiesen"))
+        }
+        assertEquals(
+            BootstrapKind.REPLY,
+            BootstrapBrain.decide("Wos kannst du?", emptyList()).kind
+        )
+        assertEquals(
+            BootstrapKind.REPLY,
+            BootstrapBrain.decide("Installier das und zeig mir den Akku", emptyList()).kind
+        )
+    }
+
     @Test fun explicitMemoryOnlyAndSensitiveDataRejected() {
         val fact = BootstrapBrain.decide("Merke dir: Ich bevorzuge dunkle Oberflächen", emptyList())
         assertEquals(BootstrapKind.REMEMBER, fact.kind)

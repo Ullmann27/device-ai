@@ -1,0 +1,2 @@
+POSTHOC first greedy token classes over 2000 positions: {line-break=84, word-continues=432, space-other=664, end-of-segment=48, space-word=322, punctuation=406, digit=44}
+POSTHOC accuracy with the end-of-segment token excluded at every step: 9/2000

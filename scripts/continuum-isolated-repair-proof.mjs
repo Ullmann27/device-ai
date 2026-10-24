@@ -1,0 +1,17 @@
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import assert from 'node:assert/strict';import {spawnSync} from 'node:child_process';
+import {createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
+import {executeOwnerRepairTask} from '../.github/continuum/backlog-repair-worker.mjs';
+import {BacklogStore} from '../.github/continuum/development-backlog.mjs';
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-broad-proof-')),root=path.join(temp,'repo'),state=path.join(temp,'state');fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});fs.mkdirSync(state);
+const relative='.github/continuum/catalog.mjs';
+const source="export function canonicalTags(items){return items.map(x=>x.trim()).filter(Boolean).sort();}\nexport function summary(items){return canonicalTags(items).join(',');}\n";
+fs.writeFileSync(path.join(root,relative),source);
+fs.writeFileSync(path.join(root,'.github/continuum/catalog.test.mjs'),"import test from 'node:test';import assert from 'node:assert/strict';import {canonicalTags,summary} from './catalog.mjs';test('case normalization',()=>assert.deepEqual(canonicalTags([' BETA ','alpha']),['alpha','beta']));test('empty tags',()=>assert.deepEqual(canonicalTags([' ','']),[]));test('duplicate canonical tags',()=>assert.equal(summary(['B','b','A']),'a,b'));\n");
+const git=(...args)=>{const r=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stderr);return r.stdout.trim();};git('init','-q');git('add','.');git('-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture');const head=git('rev-parse','HEAD');
+const file=path.join(state,'backlog.json'),store=new BacklogStore(file,{actor:'owner'});store.apply([{op:'propose',actor:'owner',at:1,task:{id:'isolated-proof-one',kind:'REPAIR',title:'Normalize tags',source:'owner',subject:{base:head,chain:'node'}}},{op:'accept',actor:'owner',at:2,id:'isolated-proof-one'}]);
+const provider=()=>({mode:'LOCAL_LOOPBACK_PATCH_SHADOW',trusted:false,autoApply:false,patch:{file:relative,oldText:'items.map(x=>x.trim()).filter(Boolean).sort()',newText:'[...new Set(items.map(x=>x.trim().toLowerCase()).filter(Boolean))].sort()'}});Object.defineProperty(provider,'allowedPaths',{value:[relative]});
+const executor=createIsolatedExecutor(JSON.parse(fs.readFileSync(process.argv[2])));
+const outcome=executeOwnerRepairTask({root,file,out:path.join(temp,'reports'),budgetMinutes:2,candidateProvider:provider,executor});assert.equal(outcome.status,'DONE');assert.equal(outcome.learningEligible,false);assert.equal(outcome.approvedForMerge,false);
+const report=JSON.parse(fs.readFileSync(outcome.report));assert.equal(report.verified.strategy,'LOCAL_ISOLATED_PATCH');assert.equal(report.independent.passed,true);assert.equal(report.baseline.passed,false);assert.ok(report.independent.profiles.every(p=>p.isolation.network==='none'));
+const ledger=JSON.parse(fs.readFileSync(path.join(state,'repair-ledger.json')));assert.deepEqual(ledger.experiences,[]);assert.equal(fs.readFileSync(path.join(root,relative),'utf8'),source);assert.equal(git('status','--porcelain'),'');
+process.stdout.write(JSON.stringify({schema:'continuum-isolated-repair-proof-v1',actualModelUsed:false,status:outcome.status,strategy:report.verified.strategy,baseline:report.baseline.results.map(r=>r.tests),independent:report.independent,learningEligible:false,approvedForMerge:false,ownerSourceUnchanged:true,patchSha256:outcome.patchSha256},null,2)+'\n');

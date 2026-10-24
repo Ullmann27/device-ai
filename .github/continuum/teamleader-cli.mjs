@@ -12,12 +12,12 @@ import {buildTeamleaderHandoff} from './teamleader-review-handoff.mjs';
 
 export function parseTeamleaderArgs(args){
  const allowed=new Set(['--root','--state','--budget-minutes',
-  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles']);
+  '--once','--loop','--status','--retry','--interval-minutes','--max-cycles','--durable']);
  const opts={once:false,loop:false,status:false,retry:false};
  for(let i=0;i<args.length;i++){
   const key=args[i];
   if(!allowed.has(key))throw Error('Unknown Teamleader option '+key);
-  if(['--once','--loop','--status','--retry'].includes(key)){
+  if(['--once','--loop','--status','--retry','--durable'].includes(key)){
    if(opts[key.slice(2)])throw Error('Duplicate option '+key);
    opts[key.slice(2)]=true;
   }else{
@@ -31,6 +31,8 @@ export function parseTeamleaderArgs(args){
  if([opts.once,opts.loop,opts.status].filter(Boolean).length!==1)
   throw Error('Choose exactly one of --once, --loop or --status');
  if(opts.retry&&!opts.once)throw Error('--retry requires --once');
+ if(opts.durable&&(!opts.loop||opts.maxCycles===undefined))
+  throw Error('--durable requires --loop with explicit --max-cycles');
  if(opts.budgetMinutes!==undefined&&
    (!/^\d+$/.test(opts.budgetMinutes)||Number(opts.budgetMinutes)<1||
     Number(opts.budgetMinutes)>30))throw Error('Budget 1..30 minutes required');
@@ -52,11 +54,15 @@ export function parseTeamleaderArgs(args){
 export function teamleaderExitCode(result){
  return isFailedCycleOutcome(result?.outcome)?1:0;
 }
+/** Default external state directory shared with the verified mobile coding receipt. */
+export function defaultTeamleaderStateDir(root,home=os.homedir()){
+ const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
+ return path.join(home,'.local','state','device-ai-continuum',suffix);
+}
 export async function teamleaderMain(argv=process.argv.slice(2)){
  const opt=parseTeamleaderArgs(argv);
  const root=fs.realpathSync(path.resolve(opt.root??process.cwd()));
- const suffix=crypto.createHash('sha256').update(root).digest('hex').slice(0,12);
- const stateDir=resolveOutputDestination(opt.state??path.join(os.homedir(),'.local','state','device-ai-continuum',suffix));
+ const stateDir=resolveOutputDestination(opt.state??defaultTeamleaderStateDir(root));
  if(stateDir===root||stateDir.startsWith(root+path.sep))
   throw Error('State must remain outside the source checkout');
  if(opt.status){
@@ -121,6 +127,9 @@ export async function teamleaderMain(argv=process.argv.slice(2)){
     intervalMinutes:Number(opt.intervalMinutes??60),
     maxCycles:opt.maxCycles===undefined?null:Number(opt.maxCycles),
     signal:controller.signal,log:console.log,
+    // Opt-in checkpoint is outside Git and bound to a clean immutable HEAD.
+    stateFile:opt.durable?path.join(stateDir,'teamleader-loop-checkpoint.json'):null,
+    sourceRoot:opt.durable?root:null,
     onHeartbeat:heartbeat=>{
      fs.mkdirSync(stateDir,{recursive:true,mode:0o700});
      const tmp=heartbeatFile+'.tmp-'+process.pid;

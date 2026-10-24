@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: owner version advances to 0.3.18/19 without a new application ID
+ok 1 - owner version advances to 0.3.18/19 without a new application ID
+  ---
+  duration_ms: 1.348555
+  type: 'test'
+  ...
+# Subtest: release uses existing signer, pinned source, and refuses dirty or unapproved code
+ok 2 - release uses existing signer, pinned source, and refuses dirty or unapproved code
+  ---
+  duration_ms: 0.193097
+  type: 'test'
+  ...
+# Subtest: release never replaces the old APK without byte-checked 0.3.17 rollback
+ok 3 - release never replaces the old APK without byte-checked 0.3.17 rollback
+  ---
+  duration_ms: 1.390558
+  type: 'test'
+  ...
+# Subtest: relevant UI and CCC1 source blobs are explicitly attested
+ok 4 - relevant UI and CCC1 source blobs are explicitly attested
+  ---
+  duration_ms: 0.547795
+  type: 'test'
+  ...
+# Subtest: owner release executes the optional Android widget and lifecycle test source set
+not ok 5 - owner release executes the optional Android widget and lifecycle test source set
+  ---
+  duration_ms: 0.823405
+  type: 'test'
+  location: '/workspace/device-ai-sol-max/scripts/continuum-owner-v19-release.test.mjs:50:1'
+  failureType: 'testCodeFailure'
+  error: 'Owner release omits M5 and builder lifecycle widgets from its real test source set'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-owner-v19-release.test.mjs:54:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131.66266

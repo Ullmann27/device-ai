@@ -127,6 +127,7 @@ class ContinuumLearningCore(
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
+    private val defaultContextConversation=java.util.UUID.randomUUID().toString()
     private val checkpoints=ModelCheckpointStore(File(directory,"checkpoints"))
     // Optional observer reports real gradient-entry and post-gradient audit phases.
     // Observing never changes the model and failures cannot abort its training.
@@ -722,6 +723,13 @@ class ContinuumLearningCore(
         ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
     }
 
+    /** Read-only CDX1 quality audit under the existing shared model lock. */
+    fun intelligenceAudit(
+        cancelled: () -> Boolean = { false }
+    ): ContinuumIntelligenceAudit.Report = synchronized(CORE_LOCK) {
+        ContinuumIntelligenceOnDevice.run(this, cancelled)
+    }
+
     /** Inspect only filenames and metadata; never writes, trains or restores. */
     fun pairedDecoderStorageEvidence():String=synchronized(CORE_LOCK) {
         ContinuumDecoderBridge(directory).storageEvidence()
@@ -756,8 +764,28 @@ class ContinuumLearningCore(
     fun similarity(left:String,right:String):Double=synchronized(CORE_LOCK) { loadModel().similarity(left,right) }
     fun modelSnapshot():ByteArray=synchronized(CORE_LOCK) { loadModel().save() }
     fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }
-    fun replyFromMemory(input:String):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
-        dialogue.reply(loadModel().save(),store.all(),input,nowMillis())
+    fun contextShadowEnabled() = at.heinz.deviceai.learning.context.Ctx3Shadow.enabled(directory)
+    fun configureContextShadow(enabled:Boolean) = at.heinz.deviceai.learning.context.Ctx3Shadow.configure(directory,enabled)
+    fun contextShadowEvents(conversationId:String=defaultContextConversation) = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory,conversationId)
+    fun recentContextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.recentEvents(directory)
+    fun resetContextConversation(conversationId:String) = at.heinz.deviceai.learning.context.Ctx3Shadow.reset(directory,conversationId)
+    /** Explicit new chat: discard the profile's bounded dialogue context, never owner facts or weights.
+     * The baseline has one profile-local history; this does not introduce per-id baseline storage.
+     * Validate the shadow identity before discarding any baseline context.
+     */
+    fun resetDialogueConversation(conversationId:String,stillCurrent:()->Boolean={true}):Boolean = synchronized(CORE_LOCK) {
+        // A destroyed Activity may still have queued I/O or be waiting behind training.
+        // Check its lifetime under the same lock as replacement conversations.
+        if(!stillCurrent())return@synchronized false
+        resetContextConversation(conversationId)
+        dialogue.clear()
+        true
+    }
+    fun replyFromMemory(input:String,conversationId:String=defaultContextConversation):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
+        val bytes=loadModel().save(); val experiences=store.all()
+        val answer=dialogue.reply(bytes,experiences,input,nowMillis())
+        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds,conversationId) }
+        answer
     }
     /** One immutable model/experience view for answer AND CRE1 candidates.
      * Keeps provenance stable throughout the turn even when an owner fact is
@@ -766,11 +794,17 @@ class ContinuumLearningCore(
     fun replyWithEvidence(
         input:String,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithEvidenceInConversation(input,defaultContextConversation,rerank)
+
+    fun replyWithEvidenceInConversation(
+        input:String,conversationId:String,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
     ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> =
         synchronized(CORE_LOCK) {
             val snapshot=loadModel().save()
             val experiences=store.all()
             val turn=dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)
+            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId) }
             val hits=if(turn.grounded) {
                 val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
                     .associateBy { it.id }
@@ -818,6 +852,12 @@ class ContinuumLearningCore(
         appendAudit("snapshot-import",accepted,0,intentBefore,intentAfter,semanticBefore,semanticAfter,emptyList(),reason)
         ContinualLearningReport("snapshot-import",accepted,0,replay.size,intentBefore,intentAfter,
             semanticBefore,semanticAfter,emptyList(),reason)
+    }
+
+    /** Metadata of every stored experience (type, provenance, creation time) for the start-screen statistics.
+     * Read-only and content-free: no text of owner facts or sources leaves the core through this call. */
+    fun experienceTimeline():List<Triple<LearningExperienceType,LearningProvenance,Long>> = synchronized(CORE_LOCK) {
+        store.all().map { Triple(it.type,it.provenance,it.createdAt) }
     }
 
     /** Most recent training/import/rollback decisions (newest first) with their measurements. */

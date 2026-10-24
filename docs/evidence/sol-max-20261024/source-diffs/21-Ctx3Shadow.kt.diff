@@ -1,0 +1,71 @@
+# Not attested by existing pin list; OWNER APPROVAL STILL REQUIRED
+diff --git a/app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt b/app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt
+new file mode 100644
+index 00000000..f93b6479
+--- /dev/null
++++ b/app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt
+@@ -0,0 +1,64 @@
++package at.heinz.deviceai.learning.context
++
++import at.heinz.deviceai.learning.*
++import java.io.File
++import java.nio.file.Files
++import java.nio.file.StandardCopyOption
++
++/** Opt-in, read-only comparison. No response replacement, fact insertion, tool call or weight update. */
++object Ctx3Shadow {
++ data class Event(val inputSha256:String,val decision:String,val reason:String,val baselineIds:List<String>,val proposedIds:List<String>,val conversationSha256:String="",val modelSha256:String="",val sourceVersion:String="")
++ private data class Session(val context:Ctx3Context=Ctx3Context(),val events:MutableList<Event> = arrayListOf(),var touched:Long=System.nanoTime())
++ private data class Key(val directory:String,val conversationId:String)
++ private val sessions=linkedMapOf<Key,Session>()
++ private fun key(dir:File,id:String):Key {
++  require(Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)){"Invalid conversation identity"}
++  return Key(dir.canonicalPath,id)
++ }
++ @Synchronized fun reset(dir:File,conversationId:String){sessions.remove(key(dir,conversationId))}
++ private fun flag(dir:File)=File(dir,"ctx3-shadow-v1.enabled")
++ @Synchronized fun enabled(dir:File)=runCatching { flag(dir).let {it.isFile&&it.length() in 7..16&&it.readText()=="SHADOW-v1\n"} }.getOrDefault(false)
++ @Synchronized fun configure(dir:File,on:Boolean) {
++  check(dir.isDirectory||dir.mkdirs())
++  val tmp=File.createTempFile("ctx3-",".tmp",dir)
++  try {
++   tmp.writeText(if(on)"SHADOW-v1\n" else "OFF-v1\n")
++   Files.move(tmp.toPath(),flag(dir).toPath(),StandardCopyOption.REPLACE_EXISTING,StandardCopyOption.ATOMIC_MOVE)
++  } finally {tmp.delete()}
++  sessions.keys.removeAll {it.directory==dir.canonicalPath}
++ }
++ @Synchronized fun events(dir:File,conversationId:String):List<Event> = sessions[key(dir,conversationId)]?.events?.toList().orEmpty()
++ /** Owner-local diagnostics only; never used as context for another conversation. */
++ @Synchronized fun recentEvents(dir:File):List<Event> = sessions.filterKeys {it.directory==dir.canonicalPath}.values.flatMap {it.events}.takeLast(32)
++ @Synchronized fun evaluate(dir:File,bytes:ByteArray,experiences:List<LearningExperience>,input:String,baseline:List<String>,conversationId:String) {
++  val key=key(dir,conversationId)
++  if(!enabled(dir))return
++  val now=System.nanoTime()
++  sessions.entries.removeAll {now-it.value.touched>15*60*1_000_000_000L}
++  val s=sessions.remove(key)?:Session()
++  s.touched=now;sessions[key]=s
++  while(sessions.size>16)sessions.remove(sessions.keys.first())
++  val facts=experiences.filter { it.type==LearningExperienceType.USER_FACT&&
++   it.provenance==LearningProvenance.USER_CONFIRMED&&it.trust==LearningTrustClass.OWNER_CONFIRMED&&
++   it.status in setOf(LearningStatus.CONFIRMED,LearningStatus.LEARNED,LearningStatus.REPLAY_PENDING) }
++  val event=runCatching {
++   require(facts.size<=256&&facts.all { it.content.length<=4096 })
++   val pool=facts.associate { it.id to it.content }
++   val version=ContinuumMemoryDialogue.hash(pool.entries.sortedBy { it.key }.joinToString("\u0000"){it.key+"\u0000"+it.value}.toByteArray())
++   val entities=Ctx3EntityIndex.fromFacts(pool)
++   val decision=s.context.decide(input,entities,version)
++   val result=when(decision) {
++    is Ctx3Decision.Query->{
++     val allowed=if(decision.sourceIds.isEmpty())facts else facts.filter { it.id in decision.sourceIds }
++     val hits=ContinuumMemoryDialogue.rank(bytes,decision.query,allowed).take(3).map { it.id }
++     s.context.observe(hits.toSet(),entities)
++     Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"QUERY",if(decision.sourceIds.isEmpty())"UNRESOLVED_RETRIEVAL_SCOPE" else "CURRENT_CONFIRMED_SOURCE_SCOPE",baseline.take(3),hits)
++    }
++    is Ctx3Decision.Clarify->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"CLARIFY",decision.reason,baseline.take(3),emptyList())
++    is Ctx3Decision.Abstain->Event(ContinuumMemoryDialogue.hash(input.toByteArray()),"ABSTAIN",decision.reason,baseline.take(3),emptyList())
++   }
++   result.copy(conversationSha256=ContinuumMemoryDialogue.hash(conversationId.toByteArray()),modelSha256=ContinuumMemoryDialogue.hash(bytes),sourceVersion=version)
++  }.getOrElse {s.context.reset();Event(ContinuumMemoryDialogue.hash(input.take(512).toByteArray()),"ERROR","SAFE_SHADOW_FAILURE",baseline.take(3),emptyList())}
++  s.events.add(event);while(s.events.size>32)s.events.removeAt(0)
++ }
++}

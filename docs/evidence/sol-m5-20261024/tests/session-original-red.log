@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+...E
+Time: 0.223
+There was 1 failure:
+1) independentCoreConversationsCannotBorrowOneAnothersPronouns(at.heinz.deviceai.Ctx3ShadowTest)
+org.junit.ComparisonFailure: expected:<[CLARIF]Y> but was:<[QUER]Y>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.Ctx3ShadowTest.independentCoreConversationsCannotBorrowOneAnothersPronouns(Ctx3ShadowTest.kt:27)
+
+FAILURES!!!
+Tests run: 3,  Failures: 1
+

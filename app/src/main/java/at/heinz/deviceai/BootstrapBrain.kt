@@ -36,7 +36,7 @@ object BootstrapBrain {
         // The deterministic intent recognizer must not mistake a dangerous mixed
         // request or forged role header for permission to run a harmless-looking tool.
         if (Regex("""(?i)^(system|developer|assistant|tool)\s*:""").containsMatchIn(text) ||
-            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)\b|installier(?:e|en|st)\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
+            Regex("""(?i)\b(lösch\w*|entfern\w*|deinstallier(?:e|en|st)?\b|installier(?:e|en|st)?\b|verschieb\w*|starte\w*|stoppe?\w*|überweis\w*|bezahl\w*)\b""").containsMatchIn(text)
         ) return BootstrapDecision(
             BootstrapKind.REPLY,
             "Dieser Satz enthält eine nachgeahmte Rolle oder einen verändernden Geräteauftrag. " +
@@ -96,19 +96,27 @@ object BootstrapBrain {
         if (low.contains("wer bist du") || low.contains("wie heißt du")) return BootstrapDecision(
             BootstrapKind.REPLY, "Ich bin Device AI Continuum – ein eigener Android-Startkern mit " +
                 "lokaler, ausdrücklich gesteuerter Erinnerung. Ich bin noch kein großes Sprachmodell.")
-        if (low.contains("was kannst du") || low == "hilfe" || low == "befehle") return BootstrapDecision(
-            BootstrapKind.REPLY, "Ich kann dich begrüßen, per Android-TTS sprechen, Sprachtexte entgegennehmen, " +
-                "Fakten auf Wunsch speichern, Feedback zählen und mit Shizuku lesend Akku, Speicher, " +
-                "Downloads, Apps, Lumo-Fehler und Geräteinformationen prüfen. " +
-                "Für Internetrecherche tippe auf WEB RECHERCHE, wähle QUICK, STANDARD oder DEEP " +
-                "und suche ein Thema in der deutschsprachigen Wikipedia. Eigene HTTPS-Quellen sind ebenfalls möglich. " +
-                "Schreiben: „Merke dir: ...“, Abrufen: „Was weißt du?“, Löschen: „Vergiss alles“. " +
-                "Du kannst mir neue Nur-Lese-Befehle beibringen mit „Trainiere: <Satz> => Akku“. " +
-                "Beziehungen: Merke dir: Fakt: Nova | ist | Mobilgerät. " +
-                "Regeln: Merke dir: Regel: Mobilgerät | besitzt | Betriebssystem. " +
-                "Fragen: Prüfe Wissen: Nova | besitzt | Betriebssystem. " +
-                "Neuron Demo startet nach Freigabe ein echtes neuronales Lernexperiment. " +
-                "Freies Sprachdenken und autonomes Lernen sind noch Forschungsziele.")
+        // Harmless self-capability questions may tolerate common German/Austrian variants.
+        // This never rewrites, confirms or triggers a device or coding instruction.
+        if (low.contains("was kannst du") || low.contains("was kanst du") ||
+            low.contains("wos kannst du") || low.contains("wos konnst du") ||
+            low == "hilfe" || low == "befehle"
+        ) return BootstrapDecision(
+            BootstrapKind.REPLY,
+            "Servus! Ich bin Continuum. Du kannst mit mir auf Deutsch schreiben und " +
+                "die Android-Sprachausgabe verwenden. Ich kann ausdrücklich bestätigte Fakten " +
+                "lokal speichern, gespeicherte Beziehungen prüfen und bei fehlenden Belegen " +
+                "auch sagen, dass ich etwas noch nicht weiß. Mit deiner Freigabe kann ich " +
+                "Gerätedaten wie Akku und Speicher nur lesend prüfen. Im Lernzentrum gibt es " +
+                "Lernexperimente und verschiedene Gesprächsübungen. Der Entwicklungsbereich " +
+                "enthält einen experimentellen CCC1-Reparaturagenten und einen getrennten " +
+                "Android-Projektgenerator; ein vollständig autonomer App-Build auf diesem " +
+                "Telefon ist noch nicht nachgewiesen. Ein lokal geladenes Sprachmodell " +
+                "kann weitere Fragen beantworten, wenn es eingerichtet und bereit ist. " +
+                "Natürliches freies Gespräch und selbstständiges Lernen bleiben wichtige " +
+                "Forschungsziele. Was möchtest du als Erstes probieren – reden, etwas " +
+                "lernen, dein Gerät prüfen oder eine kleine App planen?"
+        )
         fun tool(name: String, args: Map<String, Any?> = emptyMap()): BootstrapDecision =
             BootstrapDecision(BootstrapKind.DEVICE_TOOL, tool = name, arguments = args)
         BootstrapTraining.resolve(text, learnedCommands)?.let { name ->

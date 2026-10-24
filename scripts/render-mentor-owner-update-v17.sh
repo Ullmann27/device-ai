@@ -1,0 +1,264 @@
+#!/usr/bin/env bash
+# Isolated Render static-build APK compilation. Never commits, merges, or writes secrets.
+set -Eeuo pipefail
+umask 077
+
+printf '[Continuum] same-package signed Continuum owner update v0.3.16, code 17\n'
+command -v bash >/dev/null
+command -v curl >/dev/null
+command -v unzip >/dev/null
+command -v tar >/dev/null
+command -v sha256sum >/dev/null
+command -v node >/dev/null
+command -v git >/dev/null
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+# The original Mentor service is still pinned to the older branch.
+# Review integration branch is allowed; never upload an APK without exact package/version/certificate verification.
+expected_branch="astra/continuum-experiment-charter-20261019"
+render_delivery_branch="astra/render-mentor-apk-builder-20261019"
+actual_branch="$(git branch --show-current)"
+if [[ "$actual_branch" != "$expected_branch" && "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "integration/continuum-astra-20261021" && "$actual_branch" != "" ]]; then
+  echo "Refusing wrong source branch: $actual_branch" >&2
+  exit 69
+fi
+# Only the established Render delivery branch is authorized; the private
+# signing material stays in that service and never enters the repository.
+if [[ "$actual_branch" != "$render_delivery_branch" && "$actual_branch" != "" ]]; then
+  echo "Refusing any branch other than approved signer-owning delivery branch" >&2
+  exit 69
+fi
+commit="$(git rev-parse HEAD)"
+if [[ ! "$commit" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "Invalid source commit" >&2
+  exit 69
+fi
+
+# Build the exactly reviewed combined source, never the old delivery branch's Android classes.
+# The original signing service keeps the existing private key; no keys are logged or exported.
+# Render clones a pinned build branch with no configured git remote. Never fetch
+# other branches inside its confidential signing environment.
+# The reviewed Fold/UI update source must first be integrated into this builder branch
+# via a GitHub review/merge (no main/production branch is touched).
+render_publisher_root="$repo_root"
+signed_release_ref="fix/continuum-fold-live-responsive-20261023"
+signed_release_sha="9b62d8be945b5d9303c5d35376f5c070ed3ee532"
+if [[ ! -f "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt" ]] ||
+   ! grep -Fq 'val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate")' app/build.gradle.kts ||
+   [[ ! -f ".github/continuum/ccc1-orchestrator.mjs" ]]; then
+  echo "Reviewed integrated source or code16 signed variant is absent; refusing deployment" >&2
+  exit 69
+fi
+commit="$(git rev-parse HEAD)"
+workspace="$repo_root/.continuum-render-build"
+mkdir -p "$workspace"
+export JAVA_HOME="$workspace/jdk17"
+if [[ ! -x "$JAVA_HOME/bin/java" ]]; then
+  echo "[Continuum] Installing isolated OpenJDK 17"
+  mkdir -p "$JAVA_HOME"
+  curl --fail --location --retry 2 --max-time 360 \
+    "https://api.adoptium.net/v3/binary/latest/17/ga/linux/x64/jdk/hotspot/normal/eclipse" \
+    -o "$workspace/jdk17.tar.gz"
+  tar -xzf "$workspace/jdk17.tar.gz" -C "$JAVA_HOME" --strip-components=1
+  rm -f "$workspace/jdk17.tar.gz"
+fi
+export PATH="$JAVA_HOME/bin:$PATH"
+java -version
+
+export ANDROID_HOME="$workspace/android-sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+if [[ ! -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]]; then
+  echo "[Continuum] Installing checksum-verified Android SDK command line tools"
+  curl --fail --location --retry 2 --max-time 360 \
+    "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip" \
+    -o "$workspace/android-cli.zip"
+  echo "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee  $workspace/android-cli.zip" \
+    | sha256sum --check --status
+  mkdir -p "$ANDROID_HOME/cmdline-tools/latest" "$workspace/android-cli-unzip"
+  unzip -q "$workspace/android-cli.zip" -d "$workspace/android-cli-unzip"
+  mv "$workspace/android-cli-unzip/cmdline-tools/"* "$ANDROID_HOME/cmdline-tools/latest/"
+  rm -rf "$workspace/android-cli-unzip" "$workspace/android-cli.zip"
+fi
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/build-tools/35.0.0:$PATH"
+echo "[Continuum] Accepting SDK licenses for approved toolchain"
+yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses >/dev/null || true
+sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-36" "build-tools;35.0.0"
+
+if [[ ! -x "$workspace/gradle-8.11.1/bin/gradle" ]]; then
+  echo "[Continuum] Installing checksum-verified Gradle"
+  curl --fail --location --retry 2 --max-time 360 \
+    "https://services.gradle.org/distributions/gradle-8.11.1-bin.zip" \
+    -o "$workspace/gradle.zip"
+  curl --fail --location --retry 2 --max-time 60 \
+    "https://services.gradle.org/distributions/gradle-8.11.1-bin.zip.sha256" \
+    -o "$workspace/gradle.zip.sha256"
+  expected="$(tr -d '[:space:]' < "$workspace/gradle.zip.sha256")"
+  echo "$expected  $workspace/gradle.zip" | sha256sum --check --status
+  unzip -q "$workspace/gradle.zip" -d "$workspace"
+  rm -f "$workspace/gradle.zip" "$workspace/gradle.zip.sha256"
+fi
+export PATH="$workspace/gradle-8.11.1/bin:$PATH"
+export GRADLE_USER_HOME="$workspace/gradle-cache"
+mkdir -p "$GRADLE_USER_HOME"
+gradle --version
+
+echo "[Continuum] Sol quality handover: complete Node 22+ deterministic regression gate"
+node --version
+node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs
+echo "[Continuum] Reproducible backend dependencies from committed lockfile"
+npm --prefix backend ci --ignore-scripts --no-audit --no-fund
+echo "[Continuum] Full backend regression gate"
+node --test --test-concurrency=2 backend/test/*.test.js
+
+echo "[Continuum] Groq-specific contract tests"
+node --check backend/src/groq-mentor.js
+node --check backend/src/mentor-pairing.js
+node --check backend/src/server.js
+node --test backend/test/groq-mentor.test.js backend/test/mentor-answer-format.test.js backend/test/mentor-pairing.test.js .github/continuum/groq-mentor-ui-wiring.test.mjs
+
+echo "[Continuum] Astra Baumeister independent worker, skill academy and platform checks"
+node --check .github/continuum/continuum-workshop.mjs
+node --check .github/continuum/worker-academy.mjs
+node --check .github/continuum/worker-atlas.mjs
+node --check .github/continuum/worker-atlas-epistemic-graph.mjs
+node --check .github/continuum/workshop-specialist-orchestrator.mjs
+node --check .github/continuum/continuum-hyper-lab.mjs
+node --test .github/continuum/continuum-workshop.test.mjs .github/continuum/worker-academy.test.mjs .github/continuum/worker-atlas.test.mjs .github/continuum/worker-atlas-epistemic-graph.test.mjs .github/continuum/workshop-specialist-orchestrator.test.mjs .github/continuum/continuum-hyper-lab.test.mjs
+
+echo "[Continuum] AUTOGENESIS, CDX1 and bounded research regression gates"
+node --test \
+  .github/continuum/autogenesis-safe-wiring.test.mjs \
+  .github/continuum/local-model-smoke.test.mjs \
+  .github/continuum/continuum-growth-and-archive.test.mjs \
+  .github/continuum/autonomous-topic-frontier.test.mjs \
+  .github/continuum/research-job-permission.test.mjs \
+  .github/continuum/cdx-large-curriculum.test.mjs \
+  .github/continuum/training-monitor-wiring.test.mjs
+
+echo "[Continuum] Require persistent mentor preview signing (not disposable debug key)"
+: "${CONTINUUM_MENTOR_SIGNING_P12_BASE64:?Persistent signing keystore is missing}"
+: "${CONTINUUM_MENTOR_SIGNING_PASSWORD:?Signing password is missing}"
+printf '%s' "$CONTINUUM_MENTOR_SIGNING_P12_BASE64" | base64 --decode > "$workspace/mentor-preview-signing.p12"
+chmod 600 "$workspace/mentor-preview-signing.p12"
+export CONTINUUM_MENTOR_SIGNING_FILE="$workspace/mentor-preview-signing.p12"
+keytool -list -keystore "$CONTINUUM_MENTOR_SIGNING_FILE" -storepass "$CONTINUUM_MENTOR_SIGNING_PASSWORD" -storetype PKCS12 >/dev/null
+
+echo "[Continuum] Android JVM tests, API lint and Mentor Preview APK"
+gradle --no-daemon --max-workers=2 \
+  -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+  :app:testDebugUnitTest :app:lintDebug :app:assembleDebug \
+  -PdeviceAiMentorPreview=true -PdeviceAiOwnerSignedUpdate=true --stacktrace
+
+apk="app/build/outputs/apk/debug/app-debug.apk"
+test -s "$apk"
+"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose "$apk"
+cert_details="$("$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$apk")"
+expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"
+if ! grep -qiF "$expected_signer" <<< "$cert_details"; then
+  echo "Refusing APK signed by an unexpected or temporary debug key." >&2
+  exit 69
+fi
+"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" \
+  | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='17' versionName='0.3.16'"
+
+# Archive last signed code16 APK and immutable older releases before replacing the static publication.
+output="$render_publisher_root/mentor-build-output"
+mkdir -p "$output"
+signer="$expected_signer"
+old_base_url="https://device-ai-mentor-apk-preview.onrender.com"
+old_metadata="$workspace/prior-build-info.txt"
+# GitHub PR #85 recorded the precise 0.3.15 owner APK and its SHA-256.
+# Public BUILD-INFO may be unavailable on an otherwise functioning static site;
+# in that case fall back ONLY to those independently documented pinned values.
+if ! curl --fail --silent --show-error --location --retry 2 --max-time 120 \
+  "$old_base_url/BUILD-INFO.txt" -o "$old_metadata"; then
+  echo "[Continuum] Prior BUILD-INFO unavailable; requiring immutable documented v0.3.15 APK."
+  {
+    printf 'version_code=16\n'
+    printf 'package=at.heinz.deviceai.mentorpaired\n'
+    printf 'apk_sha256=62c0b0ad8d9a3c4a3621a72f5a2fbe17c60e2acf8ac72d26fa88052c1e670fe2\n'
+    printf 'artifact=DeviceAI-Continuum-v0.3.15-62c0b0ad8d9a3c4a3621a72f5a2fbe17c60e2acf8ac72d26fa88052c1e670fe2.apk\n'
+  } > "$old_metadata"
+fi
+prior_code="$(sed -n 's/^version_code=//p' "$old_metadata" | head -1)"
+prior_package="$(sed -n 's/^package=//p' "$old_metadata" | head -1)"
+prior_sha="$(sed -n 's/^apk_sha256=//p' "$old_metadata" | head -1)"
+prior_apk="$(sed -n 's/^artifact=//p' "$old_metadata" | head -1)"
+if [[ "$prior_code" != "16" || "$prior_package" != "at.heinz.deviceai.mentorpaired" ||
+      ! "$prior_sha" =~ ^[a-f0-9]{64}$ ||
+      "$prior_apk" != "DeviceAI-Continuum-v0.3.15-$prior_sha.apk" ]]; then
+  echo "Prior known-good v0.3.12 artifact metadata differs; refusing replacement" >&2
+  exit 69
+fi
+# An offline backup is only claimed when the exact OLD artifact was really obtained.
+# Render's live site may retain the metadata while returning HTTP 404 for the APK.
+# Such a server-side archive outage must be recorded; it does NOT change the user's
+# installed APK, signing identity or private on-device data.
+archive_report="$output/ROLLBACK-ARCHIVE-STATUS.txt"
+printf 'previous_owner_version=0.3.15\nprevious_owner_sha256=%s\n' "$prior_sha" > "$archive_report"
+if curl --fail --silent --show-error --location --retry 2 --max-time 240 \
+  "$old_base_url/$prior_apk" -o "$output/$prior_apk"; then
+  printf '%s  %s\n' "$prior_sha" "$output/$prior_apk" | sha256sum --check --status
+  "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$prior_apk" \
+    | grep -qiF "$signer"
+  "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$output/$prior_apk" \
+    | grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='16'"
+  printf '%s  %s\n' "$prior_sha" "$prior_apk" > "$output/SHA256SUMS-$prior_sha.txt"
+  printf 'previous_owner_apk=downloaded_and_hash_signature_verified\n' >> "$archive_report"
+else
+  rm -f "$output/$prior_apk"
+  printf 'previous_owner_apk=unavailable_online_not_archived\n' >> "$archive_report"
+  echo "[Continuum] WARNING: prior code16 signed APK returned HTTP error; immutable metadata kept, no rollback binary claimed"
+fi
+
+for spec in \
+  "0.3.10:67b1715d0e7eb42945c81aa90ede5b1d6eca526444d0cff8d83f388dd782aa56" \
+  "0.3.11:e529374f9e4eb4bde149c156e1f217405500c7c9c88711efa1b437d63bd01b72" \
+  "0.3.12:c62135ab9385fb948816f1432d75cca13dcbdc7e5be9ecb01ff298accea06a97"; do
+  previous_version="$(printf '%s' "$spec" | cut -d: -f1)"
+  previous_sha="$(printf '%s' "$spec" | cut -d: -f2)"
+  previous_apk="DeviceAI-Continuum-v$previous_version-$previous_sha.apk"
+  if curl --fail --silent --show-error --location --retry 2 --max-time 240 \
+    "$old_base_url/$previous_apk" -o "$output/$previous_apk"; then
+    printf '%s  %s\n' "$previous_sha" "$output/$previous_apk" | sha256sum --check --status
+    "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$previous_apk" \
+      | grep -qiF "$signer"
+    printf '%s  %s\n' "$previous_sha" "$previous_apk" > "$output/SHA256SUMS-$previous_sha.txt"
+    printf '%s=downloaded_and_hash_signature_verified\n' "$previous_version" >> "$archive_report"
+  else
+    rm -f "$output/$previous_apk"
+    printf '%s=unavailable_online_not_archived\n' "$previous_version" >> "$archive_report"
+  fi
+done
+
+apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
+[[ "$apk_sha256" =~ ^[a-f0-9]{64}$ ]] || { echo "Invalid APK SHA-256"; exit 69; }
+immutable_apk="DeviceAI-Continuum-v0.3.16-$apk_sha256.apk"
+cp "$apk" "$output/$immutable_apk"
+(
+ cd "$output"
+ printf '%s  %s\n' "$apk_sha256" "$immutable_apk" > "SHA256SUMS-$apk_sha256.txt"
+ sha256sum --check --status "SHA256SUMS-$apk_sha256.txt"
+)
+"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$output/$immutable_apk" \
+  | grep -qiF "$signer"
+{
+  printf 'commit=%s\n' "$commit"
+  printf 'builder_commit=%s\n' "$(git -C "$render_publisher_root" rev-parse HEAD)"
+  printf 'source_branch=%s\n' "$signed_release_ref"
+  printf 'package=at.heinz.deviceai.mentorpaired\n'
+  printf 'version_code=17\n'
+  printf 'version_name=0.3.16\n'
+  printf 'android_min_sdk=26\n'
+  printf 'signing=persistent_private_mentor_key_same_certificate_as_v0.3.12\n'
+  printf 'artifact=%s\n' "$immutable_apk"
+  printf 'apk_sha256=%s\n' "$apk_sha256"
+  printf 'status=SIGNED_BUILD_VERIFIED_NOT_DEVICE_INSTALLED\n'
+} > "$output/BUILD-INFO.txt"
+cp "$output/BUILD-INFO.txt" "$output/BUILD-INFO-$apk_sha256.txt"
+"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" > "$output/PACKAGE-INFO-$apk_sha256.txt"
+"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > "$output/SIGNATURE-INFO-$apk_sha256.txt"
+printf 'User-agent: *\nDisallow: /\n' > "$output/robots.txt"
+echo "[Continuum] VERIFIED OWNER IN-PLACE UPDATE: signed package, code 17; prior APK archive status recorded separately"
+cat "$output/SHA256SUMS-$apk_sha256.txt"

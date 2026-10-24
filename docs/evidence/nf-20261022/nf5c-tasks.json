@@ -1,0 +1,619 @@
+{
+ "frozen": "2026-10-23T07:33:55.121Z",
+ "minedFrom": {
+  "commit": "9fb4361c",
+  "eligible": 4
+ },
+ "bank": [
+  {
+   "id": "bank-trim-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "trimSpaces",
+    "trimBlank"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#trimBlank",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "abc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "Hallo Welt"
+    }
+   ],
+   "goal": {
+    "text": "Entferne den Leerraum am Anfang und Ende eines Textes: (\"abc\") → \"abc\" und (\"Hallo Welt\") → \"Hallo Welt\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#trimSpaces"
+   ]
+  },
+  {
+   "id": "bank-slug-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "slugAscii",
+    "slugLetters"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#slugLetters",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "abc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "hallo-welt"
+    }
+   ],
+   "goal": {
+    "text": "Mache aus einem Titel einen Slug für Links: klein geschrieben, Wörter mit Bindestrichen verbunden: (\"abc\") → \"abc\" und (\"Hallo Welt\") → \"hallo-welt\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#slugAscii"
+   ]
+  },
+  {
+   "id": "bank-capitalize-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "capitalizeFirst",
+    "capitalizeWord"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#capitalizeWord",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "Abc"
+    },
+    {
+     "args": [
+      "a-b-c"
+     ],
+     "expected": "A-b-c"
+    }
+   ],
+   "goal": {
+    "text": "Schreibe ein Wort mit großem Anfangsbuchstaben: (\"abc\") → \"Abc\" und (\"a-b-c\") → \"A-b-c\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#capitalizeFirst"
+   ]
+  },
+  {
+   "id": "bank-count-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "countWordsSplit",
+    "countWordsTokens"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#countWordsTokens",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": 1
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": 2
+    }
+   ],
+   "goal": {
+    "text": "Zähle die Wörter eines Satzes: (\"abc\") → 1 und (\"Hallo Welt\") → 2."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#countWordsSplit"
+   ]
+  },
+  {
+   "id": "bank-initials-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "initialsUpper",
+    "initialsAsIs"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#initialsUpper",
+   "examples": [
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "HW"
+    },
+    {
+     "args": [
+      "Ä"
+     ],
+     "expected": "Ä"
+    }
+   ],
+   "goal": {
+    "text": "Bilde die Initialen eines Namens: (\"Hallo Welt\") → \"HW\" und (\"Ä\") → \"Ä\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#initialsAsIs"
+   ]
+  },
+  {
+   "id": "bank-key-text-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "keyLower",
+    "keySnake"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#keySnake",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "abc"
+    },
+    {
+     "args": [
+      "a-b-c"
+     ],
+     "expected": "a-b-c"
+    }
+   ],
+   "goal": {
+    "text": "Normalisiere einen Schlüssel für die Suche: (\"abc\") → \"abc\" und (\"a-b-c\") → \"a-b-c\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#trimSpaces",
+    ".github/continuum/text-tools.mjs#trimBlank",
+    ".github/continuum/text-tools.mjs#slugAscii",
+    ".github/continuum/text-tools.mjs#slugLetters",
+    ".github/continuum/text-tools.mjs#keyLower"
+   ]
+  },
+  {
+   "id": "bank-eq-upper-text-tools",
+   "group": "bank",
+   "kind": "equivalent",
+   "pair": [
+    "upperText",
+    "upperConcat"
+   ],
+   "gold": ".github/continuum/text-tools.mjs#upperText",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "ABC"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "HALLO WELT"
+    }
+   ],
+   "goal": {
+    "text": "Schreibe einen Wert in Großbuchstaben: (\"abc\") → \"ABC\" und (\"Hallo Welt\") → \"HALLO WELT\"."
+   },
+   "equivalent": [
+    ".github/continuum/text-tools.mjs#upperConcat"
+   ],
+   "alsoMeetExamples": [
+    ".github/continuum/text-tools.mjs#upperConcat"
+   ]
+  },
+  {
+   "id": "bank-round-number-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "roundHalfUp",
+    "roundHalfEven"
+   ],
+   "gold": ".github/continuum/number-tools.mjs#roundHalfEven",
+   "examples": [
+    {
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "args": [
+      1
+     ],
+     "expected": 1
+    }
+   ],
+   "goal": {
+    "text": "Runde eine Zahl auf eine ganze Zahl: (0) → 0 und (1) → 1."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/id-tools.mjs#parseWholeStrict",
+    ".github/continuum/id-tools.mjs#parseWholeLoose",
+    ".github/continuum/number-tools.mjs#roundHalfUp",
+    ".github/continuum/number-tools.mjs#kilobytesCeil",
+    ".github/continuum/number-tools.mjs#squareMul",
+    ".github/continuum/number-tools.mjs#squarePow"
+   ]
+  },
+  {
+   "id": "bank-percent-number-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "percentRound",
+    "percentFloor"
+   ],
+   "gold": ".github/continuum/number-tools.mjs#percentRound",
+   "examples": [
+    {
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "args": [
+      1
+     ],
+     "expected": 100
+    }
+   ],
+   "goal": {
+    "text": "Rechne einen Anteil in ganze Prozent um: (0) → 0 und (1) → 100."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/number-tools.mjs#percentFloor"
+   ]
+  },
+  {
+   "id": "bank-is-number-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "isPositive",
+    "isNotNegative"
+   ],
+   "gold": ".github/continuum/number-tools.mjs#isNotNegative",
+   "examples": [
+    {
+     "args": [
+      1
+     ],
+     "expected": true
+    },
+    {
+     "args": [
+      -3
+     ],
+     "expected": false
+    }
+   ],
+   "goal": {
+    "text": "Prüfe, ob eine Zahl positiv ist: (1) → true und (-3) → false."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/number-tools.mjs#isPositive"
+   ]
+  },
+  {
+   "id": "bank-kilobytes-number-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "kilobytesRound",
+    "kilobytesCeil"
+   ],
+   "gold": ".github/continuum/number-tools.mjs#kilobytesRound",
+   "examples": [
+    {
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "args": [
+      1024
+     ],
+     "expected": 1
+    }
+   ],
+   "goal": {
+    "text": "Rechne eine Byte-Zahl in Kilobyte um: (0) → 0 und (1024) → 1."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/number-tools.mjs#kilobytesCeil"
+   ]
+  },
+  {
+   "id": "bank-eq-square-number-tools",
+   "group": "bank",
+   "kind": "equivalent",
+   "pair": [
+    "squareMul",
+    "squarePow"
+   ],
+   "gold": ".github/continuum/number-tools.mjs#squareMul",
+   "examples": [
+    {
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "args": [
+      1
+     ],
+     "expected": 1
+    }
+   ],
+   "goal": {
+    "text": "Berechne das Quadrat einer Zahl: (0) → 0 und (1) → 1."
+   },
+   "equivalent": [
+    ".github/continuum/number-tools.mjs#squarePow"
+   ],
+   "alsoMeetExamples": [
+    ".github/continuum/id-tools.mjs#parseWholeStrict",
+    ".github/continuum/id-tools.mjs#parseWholeLoose",
+    ".github/continuum/number-tools.mjs#roundHalfUp",
+    ".github/continuum/number-tools.mjs#roundHalfEven",
+    ".github/continuum/number-tools.mjs#kilobytesCeil",
+    ".github/continuum/number-tools.mjs#squarePow"
+   ]
+  },
+  {
+   "id": "bank-parse-id-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "parseWholeStrict",
+    "parseWholeLoose"
+   ],
+   "gold": ".github/continuum/id-tools.mjs#parseWholeStrict",
+   "examples": [
+    {
+     "args": [
+      "42"
+     ],
+     "expected": 42
+    },
+    {
+     "args": [
+      "7"
+     ],
+     "expected": 7
+    }
+   ],
+   "goal": {
+    "text": "Lies eine ganze Zahl aus einem Text: (\"42\") → 42 und (\"7\") → 7."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/id-tools.mjs#parseWholeLoose",
+    ".github/continuum/number-tools.mjs#roundHalfEven"
+   ]
+  },
+  {
+   "id": "bank-ticket-id-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "ticketPad",
+    "ticketPadAbs"
+   ],
+   "gold": ".github/continuum/id-tools.mjs#ticketPadAbs",
+   "examples": [
+    {
+     "args": [
+      0
+     ],
+     "expected": "0000"
+    },
+    {
+     "args": [
+      1
+     ],
+     "expected": "0001"
+    }
+   ],
+   "goal": {
+    "text": "Formatiere eine Ticketnummer vierstellig mit führenden Nullen: (0) → \"0000\" und (1) → \"0001\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/id-tools.mjs#ticketPad"
+   ]
+  },
+  {
+   "id": "bank-last-id-tools",
+   "group": "bank",
+   "kind": "ambiguous",
+   "pair": [
+    "lastCharAt",
+    "lastCharSafe"
+   ],
+   "gold": ".github/continuum/id-tools.mjs#lastCharAt",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "c"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "t"
+    }
+   ],
+   "goal": {
+    "text": "Gib das letzte Zeichen eines Textes zurück: (\"abc\") → \"c\" und (\"Hallo Welt\") → \"t\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": [
+    ".github/continuum/id-tools.mjs#lastCharSafe"
+   ]
+  }
+ ],
+ "mined": [
+  {
+   "id": "mined-integrityOf",
+   "group": "mined",
+   "kind": "real",
+   "gold": ".github/continuum/development-backlog.mjs#integrityOf",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "ce8e9b4d070d6d2d7a044f9e32af6346efa84db5c986f50faec150c4f50842fc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "67857ecf5157534b993cb783208f48d632de74191b2a54abedb0b1f97dcc7f32"
+    }
+   ],
+   "goal": {
+    "text": "Berechne die Integritätsprüfsumme eines Backlog-Dokuments: (\"abc\") → \"ce8e9b4d070d6d2d7a044f9e32af6346efa84db5c986f50faec150c4f50842fc\" und (\"Hallo Welt\") → \"67857ecf5157534b993cb783208f48d632de74191b2a54abedb0b1f97dcc7f32\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": []
+  },
+  {
+   "id": "mined-insertImport",
+   "group": "mined",
+   "kind": "real",
+   "gold": ".github/continuum/repair-strategies.mjs#insertImport",
+   "examples": [
+    {
+     "args": [
+      "abc",
+      "b"
+     ],
+     "expected": "\nimport b\nabc"
+    },
+    {
+     "args": [
+      "Hallo Welt",
+      "Welt"
+     ],
+     "expected": "\nimport Welt\nHallo Welt"
+    }
+   ],
+   "goal": {
+    "text": "Füge einer Quelldatei eine Import-Zeile hinzu: (\"abc\", \"b\") → \"\\nimport b\\nabc\" und (\"Hallo Welt\", \"Welt\") → \"\\nimport Welt\\nHallo Welt\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": []
+  },
+  {
+   "id": "mined-normalizeTitle",
+   "group": "mined",
+   "kind": "real",
+   "gold": ".github/continuum/research-radar.mjs#normalizeTitle",
+   "examples": [
+    {
+     "args": [
+      "abc"
+     ],
+     "expected": "abc"
+    },
+    {
+     "args": [
+      "Hallo Welt"
+     ],
+     "expected": "hallo welt"
+    }
+   ],
+   "goal": {
+    "text": "Normalisiere einen Titel für den Dublettenvergleich: (\"abc\") → \"abc\" und (\"Hallo Welt\") → \"hallo welt\"."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": []
+  },
+  {
+   "id": "mined-editDistance",
+   "group": "mined",
+   "kind": "real",
+   "gold": ".github/continuum/repair-strategies.mjs#editDistance",
+   "examples": [
+    {
+     "args": [
+      "abc",
+      "b"
+     ],
+     "expected": 2
+    },
+    {
+     "args": [
+      "Hallo Welt",
+      "Welt"
+     ],
+     "expected": 6
+    }
+   ],
+   "goal": {
+    "text": "Berechne den Bearbeitungsabstand zwischen zwei Texten: (\"abc\", \"b\") → 2 und (\"Hallo Welt\", \"Welt\") → 6."
+   },
+   "equivalent": [],
+   "alsoMeetExamples": []
+  }
+ ],
+ "adversarial": [
+  {
+   "id": "adv5c-wrong-example",
+   "goal": {
+    "text": "Wandle einen Text in eine Prüfsumme um: (\"abc\") → \"xyz\"."
+   },
+   "group": "adversarial",
+   "gold": null,
+   "equivalent": []
+  },
+  {
+   "id": "adv5c-no-example",
+   "goal": {
+    "text": "Finde die Funktion, die eine Zahl auf ganze Zahlen rundet."
+   },
+   "group": "adversarial",
+   "gold": null,
+   "equivalent": []
+  }
+ ]
+}

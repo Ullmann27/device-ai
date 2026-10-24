@@ -1,0 +1,127 @@
+✔ unmanifested build input is rejected: buildSrc/build.gradle.kts (6.309381ms)
+✔ unmanifested build input is rejected: app/src/debug/AndroidManifest.xml (1.976093ms)
+✔ unmanifested build input is rejected: app/src/main/java/Injected.kt (2.467154ms)
+✔ unmanifested build input is rejected: init.gradle (2.003203ms)
+✔ unmanifested build input is rejected: app/extra.gradle.kts (1.500675ms)
+✔ oversized source is rejected before reading it into memory (2.262154ms)
+✔ Gradle project cache cannot redirect writes outside the project (3.137124ms)
+✔ changing private staged bytes between independent APK checks blocks publication (8.81957ms)
+✔ Gradle exit zero without fresh JUnit and lint evidence never certifies an APK (4.165386ms)
+✔ an already cancelled project build never probes or starts tools (1.326923ms)
+✔ a linked report directory is refused before Gradle can write through it (1.601987ms)
+✔ unconfirmed process termination retains the shared lease for owner inspection (2.174551ms)
+✖ ENOSPC while saving a log cannot release an unconfirmed process lease (3.655847ms)
+✔ M4 creates an isolated app with two screens and offline local persistence (5.630187ms)
+✔ source manifest binds every created source file to a digest (1.735399ms)
+✔ repeat create refuses replacement and does not touch owner notes (1.365231ms)
+✔ empty project query blocks (0.166361ms)
+✔ corrupted template is never promoted as verified (0.96749ms)
+✔ removed file is never verified (1.161543ms)
+✔ symlink source cannot escape trusted project (1.417399ms)
+✔ external symbolic project destination is never accepted (0.771043ms)
+✔ symbolic home or parent is rejected (0.633786ms)
+✔ relative paths are forbidden (0.21209ms)
+✔ build reports unavailable when recipe not created (0.624753ms)
+✔ toolchain unavailable cannot call build tool (2.963402ms)
+✔ failing Gradle tests prevent any APK claim (3.779163ms)
+✔ a disappearing APK is never reported successful (4.013267ms)
+✔ false signature is rejected (5.363706ms)
+✔ foreign package is rejected even if signed (3.97538ms)
+✔ source change during Gradle is blocked and not saved (2.41241ms)
+✔ successful mock Gradle, real SHA verification and signed receipt - not device success (9.544143ms)
+✔ corrupt preexisting artifact blocks overwrites (4.787825ms)
+✔ build never starts a package installer, app signature and source are validated (5.983951ms)
+✔ symlinked existing project parent is refused before source reading (0.638264ms)
+✔ symlinked nested source ancestors are rejected before build (0.684854ms)
+✔ symbolic state parent never receives an APK artifact (1.558913ms)
+✔ M4 refuses a symlinked Gradle build output before running Gradle (1.419543ms)
+✔ M4 refuses a symlinked nested APK output before running Gradle (1.588578ms)
+✔ M4 refuses a redirected output appearing during a Gradle run (3.134991ms)
+✔ M4 identity checker reads exactly the same private staged APK as apksigner (5.644348ms)
+✔ changing the original Gradle APK after staged signature check cannot alter published bytes (6.117682ms)
+✔ failed signature validation leaves no private verification-stage residue (3.998464ms)
+✔ lost callback can recover a verified historical receipt but never changed APK bytes (8.318283ms)
+✖ CCC1 independently rejects forged plan, source, execution, evidence and device claims (13.974881ms)
+✔ bounded process executes argv directly and reports its actual exit (43.216926ms)
+✔ timeout kills the process group and never reports success (425.547178ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (375.975652ms)
+✔ oversized process logs are bounded and fail closed (295.998403ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (629.120119ms)
+✖ inherited run identity catches a rapidly orphaned detached child on linux (43.462107ms)
+✖ inherited run identity catches a rapidly orphaned detached child on android (34.286203ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 47
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2221.712633
+
+✖ failing tests:
+
+test at scripts/continuum-owned-app-security.test.mjs:112:1
+✖ ENOSPC while saving a log cannot release an unconfirmed process lease (3.655847ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol/scripts/continuum-owned-app-security.test.mjs:124:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-owned-app.test.mjs:254:1
+✖ CCC1 independently rejects forged plan, source, execution, evidence and device claims (13.974881ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'CONFIRMED'
+  - 'INCONCLUSIVE'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol/scripts/continuum-owned-app.test.mjs:270:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'CONFIRMED',
+    expected: 'INCONCLUSIVE',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-owned-process.test.mjs:46:3
+✖ inherited run identity catches a rapidly orphaned detached child on linux (43.462107ms)
+  AssertionError [ERR_ASSERTION]: orphan still running: R
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol/scripts/continuum-owned-process.test.mjs:59:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-owned-process.test.mjs:46:3
+✖ inherited run identity catches a rapidly orphaned detached child on android (34.286203ms)
+  AssertionError [ERR_ASSERTION]: orphan still running: R
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol/scripts/continuum-owned-process.test.mjs:59:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

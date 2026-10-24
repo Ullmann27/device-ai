@@ -1,0 +1,21 @@
+{
+  "sourceHeadBefore": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "sourceHeadAfter": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "trackedSourceCleanAfter": true,
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/autogenesis-safe-wiring.test.mjs",
+    ".github/continuum/local-model-smoke.test.mjs",
+    ".github/continuum/continuum-growth-and-archive.test.mjs",
+    ".github/continuum/autonomous-topic-frontier.test.mjs",
+    ".github/continuum/research-job-permission.test.mjs",
+    ".github/continuum/cdx-large-curriculum.test.mjs",
+    ".github/continuum/training-monitor-wiring.test.mjs"
+  ],
+  "cwd": "/workspace/device-ai-sol-max",
+  "startedUtc": "2026-10-24T08:46:45.993354+00:00",
+  "durationSeconds": 1.573,
+  "exitCode": 0
+}

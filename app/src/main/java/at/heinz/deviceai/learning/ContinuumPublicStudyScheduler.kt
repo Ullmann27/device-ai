@@ -127,7 +127,7 @@ class ContinuumPublicStudyScheduler(context:Context) {
     }
 
     @Synchronized fun recordCycle(phase:String,topic:String?,sourceAdded:Boolean=false,
-                                  weightsAccepted:Boolean=false) {
+                                  weightsAccepted:Boolean=false,stopRequested:()->Boolean={ false }) {
         val edit=prefs.edit()
             .putLong("attempts",(prefs.getLong("attempts",0L)+1L).coerceAtMost(Long.MAX_VALUE-1))
             .putString("phase",phase.take(65))
@@ -142,7 +142,10 @@ class ContinuumPublicStudyScheduler(context:Context) {
         }
         if(sourceAdded)edit.putLong("sources",prefs.getLong("sources",0L)+1L)
         if(weightsAccepted)edit.putLong("accepted",prefs.getLong("accepted",0L)+1L)
-        check(edit.commit()) { "Study audit not persisted" }
+        val prefsDir=java.io.File(app.applicationInfo.dataDir,"shared_prefs")
+        ContinuumStudyAuditWrite.commit({ edit.commit() },stopRequested,
+            { android.os.StatFs(prefsDir.path).availableBytes },{ prefsDir.canWrite() })
+            ?.let { throw ContinuumStudyAuditNotPersisted(it) }
     }
 
     fun recordResourceDeferral(reason:String) {
@@ -464,13 +467,18 @@ class ContinuumPublicStudyJobService:JobService() {
                 if(!stopping.get()) {
                     phase=ContinuumPublicStudyCycleResult.withDeferral(phase,budget.deferredReason)
                     val saved=runCatching {
-                        scheduler.recordCycle(phase,selectedTopic,added,accepted)
+                        scheduler.recordCycle(phase,selectedTopic,added,accepted,stopRequested={ stopping.get() })
                     }
                     if(saved.isFailure) {
-                        // A failed durable audit is not a verified research success.
+                        // A failed durable audit is not a verified research success. The cause is a fixed code
+                        // (issue #76); a stop that arrived during the write is an interruption, not a failure, and
+                        // an impaired disk is not retried at once.
+                        val reason=(saved.exceptionOrNull() as? ContinuumStudyAuditNotPersisted)?.reason
                         phase="FAILED_SAVE_CYCLE_"+
-                            (saved.exceptionOrNull()?.javaClass?.simpleName ?: "Unknown")
+                            (reason ?: saved.exceptionOrNull()?.javaClass?.simpleName ?: "Unknown")
+                        if(reason=="STOPPED")phase="INTERRUPTED"
                         phase=phase.take(65)
+                        reschedule=false
                         Log.w("ContinuumPublicStudy","Research cycle audit not persisted")
                     }
                     val outcome=ContinuumPublicStudyCycleResult.outcome(phase)

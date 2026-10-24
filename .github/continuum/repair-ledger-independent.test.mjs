@@ -140,3 +140,39 @@ test('syntax checker errors remain audit evidence without becoming failed-strate
  assert.equal(interrupted.attempts[0].syntaxReason,'SYNTAX_CHECK_INTERRUPTED');
  assert.deepEqual(interrupted.experiences,[],'interrupted parsing says nothing about syntax validity');
 });
+
+test('an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed',async()=>{
+ const {proposeCandidates}=await import('./repair-strategies.mjs');
+ const crypto=await import('node:crypto');
+ const big='x'.repeat(15000);
+ const source=report();
+ // e.g. a whole-region revert of a large Kotlin file, independently verified
+ source.attempts[0].edits=[{file:'app/src/main/java/Big.kt',oldText:big,newText:big+'y',line:3}];
+ const result=recordSession(emptyLedger(),source,{trigger:'accepted-owner-task',independentPass:true});
+ const [edit]=result.attempts[0].edits;
+ assert.equal(result.attempts[0].outcome,'VERIFIED');
+ assert.equal(result.sessions[0].outcome,'VERIFIED');
+ assert.deepEqual(edit,{file:'app/src/main/java/Big.kt',oldText:'',newText:'',line:3,omitted:{
+  oldSha256:crypto.createHash('sha256').update(big).digest('hex'),
+  newSha256:crypto.createHash('sha256').update(big+'y').digest('hex'),oldLength:15000,newLength:15001}});
+ assert.equal(source.attempts[0].edits[0].oldText,big,'the session report keeps the full edit');
+ // a file whose two characters an empty hunk would match exactly once: the replay must still not happen
+ const replays=proposeCandidates([{fingerprint:'2'.repeat(16),kind:'JS_UNRESOLVED'}],
+  {readFile:()=>'ab',experience:result.attempts,jsSiblings:new Map(),changedInBase:[]});
+ assert.equal(replays.some(c=>c.strategy==='EXPERIENCE_REPLAY'),false);
+ // a small verified edit is still replayed as before
+ const small=report();
+ small.attempts[0].edits=[{file:'a.mjs',oldText:'ab',newText:'ac',line:1}];
+ const kept=recordSession(emptyLedger(),small,{trigger:'accepted-owner-task',independentPass:true});
+ assert.deepEqual(kept.attempts[0].edits,small.attempts[0].edits);
+ assert.equal(proposeCandidates([{fingerprint:'2'.repeat(16),kind:'JS_UNRESOLVED'}],
+  {readFile:()=>'ab',experience:kept.attempts,jsSiblings:new Map(),changedInBase:[]})
+  .filter(c=>c.strategy==='EXPERIENCE_REPLAY').length,1);
+ // an omission cannot smuggle text or wrong lengths past the ledger check
+ const forged=structuredClone(result);
+ forged.attempts[0].edits[0].oldText='x';
+ assert.throws(()=>verifyLedger(forged),/Invalid ledger edits/);
+ const short=structuredClone(result);
+ short.attempts[0].edits[0].omitted.oldLength=1;short.attempts[0].edits[0].omitted.newLength=1;
+ assert.throws(()=>verifyLedger(short),/Invalid ledger edits/);
+});

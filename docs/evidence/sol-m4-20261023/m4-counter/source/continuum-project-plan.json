@@ -1,0 +1,81 @@
+{
+  "schema": "continuum-project-plan",
+  "version": 1,
+  "app": {
+    "versionCode": 1,
+    "versionName": "0.1.0",
+    "minSdk": 26,
+    "targetSdk": 36,
+    "name": "Continuum Zähler",
+    "packageName": "at.heinz.continuum.m4counter"
+  },
+  "navigation": {
+    "start": "main",
+    "links": [
+      {
+        "from": "main",
+        "to": "about"
+      },
+      {
+        "from": "about",
+        "to": "main"
+      }
+    ]
+  },
+  "permissions": [],
+  "resources": {
+    "external": [],
+    "network": false
+  },
+  "build": {
+    "artifact": "app/build/outputs/apk/debug/app-debug.apk",
+    "network": "offline",
+    "install": "owner-review-only",
+    "tasks": [
+      ":app:testDebugUnitTest",
+      ":app:lintDebug",
+      ":app:assembleDebug"
+    ]
+  },
+  "limits": {
+    "maxBuildMillis": 2100000,
+    "maxHeapMiB": 1536,
+    "maxWorkers": 2,
+    "maxApkBytes": 67108864
+  },
+  "id": "m4-counter",
+  "screens": [
+    {
+      "id": "main",
+      "kind": "bounded-counter",
+      "title": "Zähler"
+    },
+    {
+      "id": "about",
+      "kind": "about",
+      "title": "Über"
+    }
+  ],
+  "storage": {
+    "kind": "private-preferences",
+    "keys": [
+      "count"
+    ],
+    "minValue": 0,
+    "maxValue": 9999
+  },
+  "tests": {
+    "unitClass": "at.heinz.continuum.m4counter.CounterPolicyTest",
+    "cases": [
+      "increments",
+      "boundsCounter",
+      "clampsInvalidStorage"
+    ],
+    "acceptance": [
+      "two-screens",
+      "local-count",
+      "explicit-reset",
+      "no-permissions"
+    ]
+  }
+}

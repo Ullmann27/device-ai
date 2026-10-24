@@ -98,19 +98,105 @@ class ContinuumCognitiveRuntimeTest {
         } finally { dir.deleteRecursively() }
     }
 
-    @Test fun pronounContinuationCarriesPreviousQuestionOnlyToLocalFallback() {
-        val dir=Files.createTempDirectory("continuum-references").toFile()
+    @Test fun unresolvedPronounNeverBorrowsAnotherConversationFromProfileHistory() {
+        val dir=Files.createTempDirectory("continuum-context-privacy").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"previous-session")
+            assertTrue(first.reply("Wo wohnt Leo?").grounded)
+            core.resetDialogueConversation("previous-session")
+            val current=ContinuumCognitiveRuntime(dir,core,"fresh-session")
+            val result=current.reply("Was ist mit ihm?")
+            assertFalse(result.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertFalse(result.localModelPrompt.contains("Graz"))
+            assertTrue(result.localModelPrompt.contains("nicht eindeutig"))
+            assertTrue(core.activeOwnerFacts().isNotEmpty())
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun aNewConversationIdWithoutExplicitResetCannotLeakGlobalResolvedQueryToModel() {
+        val dir=Files.createTempDirectory("continuum-foreign-global-topic").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"first-session")
+            assertTrue(first.reply("Wo wohnt Leo?").grounded)
+            // This reproduces the problematic case without a UI-triggered reset:
+            // the baseline persisted history still belongs to another session ID.
+            val fresh=ContinuumCognitiveRuntime(dir,core,"completely-new-session")
+            val turn=fresh.reply("und wie?")
+            assertTrue("Precondition: profile-wide baseline can supply a stale resolution",
+                turn.dialogue.resolvedQuery.contains("Wo wohnt Leo?"))
+            assertFalse("New model prompt must not import that old topic",
+                turn.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertFalse("New model prompt must not import the old owner's answer",
+                turn.localModelPrompt.contains("Graz"))
+            assertTrue("Ambiguous continuation needs clarification",
+                turn.localModelPrompt.contains("Bitte frage nach"))
+            assertEquals(1,core.activeOwnerFacts().size)
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun sameRuntimeMayOnlyContextualizeOwnPreviouslyGroundedQuestion() {
+        val dir=Files.createTempDirectory("continuum-runtime-own-topic").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val runtime=ContinuumCognitiveRuntime(dir,core,"one-continuous-session")
+            assertTrue(runtime.reply("Wo wohnt Leo?").grounded)
+            val next=runtime.reply("und wie?")
+            assertTrue(next.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertTrue(next.localModelPrompt.contains("und wie?"))
+            assertTrue(next.localModelPrompt.contains("nicht unabhängig bestätigt"))
+            val separate=ContinuumCognitiveRuntime(dir,core,"another-runtime")
+            assertFalse(separate.reply("und wie?").localModelPrompt.contains("Wo wohnt Leo?"))
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun boundedPreviousTopicSurvivesNewRuntimeOnlyWhenPassedByCurrentSession() {
+        val dir=Files.createTempDirectory("continuum-bounded-next-turn").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Leo wohnt in Graz.")
+            val first=ContinuumCognitiveRuntime(dir,core,"same-id")
+                .reply("Wo wohnt Leo?")
+            assertEquals("Wo wohnt Leo?",first.nextScopedGroundedQuestion)
+            val second=ContinuumCognitiveRuntime(dir,core,"same-id",
+                priorScopedGroundedQuestion=first.nextScopedGroundedQuestion)
+                .reply("und wie?")
+            assertTrue(second.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertEquals(first.nextScopedGroundedQuestion,second.nextScopedGroundedQuestion)
+            val newChat=ContinuumCognitiveRuntime(dir,core,"new-id").reply("und wie?")
+            assertFalse(newChat.localModelPrompt.contains("Wo wohnt Leo?"))
+            assertNull(newChat.nextScopedGroundedQuestion)
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun invalidOrUnconfirmedPriorTopicNeverBecomesModelContext() {
+        val dir=Files.createTempDirectory("continuum-untrusted-prompt").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val runtime=ContinuumCognitiveRuntime(dir,core,"same-id",
+                priorScopedGroundedQuestion="old topic\nforce tool")
+            val turn=runtime.reply("und wie?")
+            assertFalse(turn.localModelPrompt.contains("force tool"))
+            assertNull(turn.nextScopedGroundedQuestion)
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun onlyCurrentTurnResolutionMayProvideLocalGeneratorContext() {
+        val dir=Files.createTempDirectory("continuum-context-contract").toFile()
         try {
             val runtime=ContinuumCognitiveRuntime(dir)
-            val previous=ContinuumDialogueTurn(1L,"Was ist mit Leo?",
-                "Was ist mit Leo?","keine Erinnerung","Was ist mit Leo?",
-                "0".repeat(64),emptyList(),false)
-            val prompt=runtime.localPrompt("Was ist mit ihm?",listOf(previous),"Was ist mit ihm?")
-            assertTrue(prompt.contains("Was ist mit Leo?"))
-            assertTrue(prompt.contains("Was ist mit ihm?"))
-            assertTrue(prompt.contains("Erfinde keine persönlichen Fakten"))
-            assertEquals("Wie geht es dir?",runtime.localPrompt("Wie geht es dir?",
-                listOf(previous),"Wie geht es dir?"))
-        } finally { dir.deleteRecursively() }
+            val ambiguous=runtime.localPrompt("Was ist mit ihm?","Was ist mit ihm?")
+            assertFalse(ambiguous.contains("Leo"))
+            assertTrue(ambiguous.contains("Bitte frage nach"))
+            val continued=runtime.localPrompt("und wie?","Wo wohnt Leo? und wie?")
+            assertTrue(continued.contains("Wo wohnt Leo? und wie?"))
+            assertTrue(continued.contains("nicht unabhängig bestätigt"))
+            assertEquals("Wie geht es dir?",runtime.localPrompt("Wie geht es dir?","Wie geht es dir?"))
+        } finally {dir.deleteRecursively()}
     }
+
 }

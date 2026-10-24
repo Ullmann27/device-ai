@@ -3,16 +3,46 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// Optional desktop widget QA; ordinary Android/Termux unit/build tasks keep their existing dependencies.
+val continuumUiWidgetTests = providers.gradleProperty("continuumUiWidgetTests").orNull == "true"
+val uiTestAndroidSdk by configurations.creating { isTransitive = false }
+val uiTestResourceSdk by configurations.creating { isTransitive = false }
+val prepareUiTestSdk = tasks.register<Sync>("prepareUiTestSdk") {
+    from(uiTestAndroidSdk, uiTestResourceSdk)
+    into(layout.buildDirectory.dir("ui-test-sdk"))
+}
+if (continuumUiWidgetTests) tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+    dependsOn(prepareUiTestSdk)
+    doFirst {
+        systemProperty("robolectric.offline", "true")
+        systemProperty("robolectric.dependency.dir", layout.buildDirectory.dir("ui-test-sdk").get().asFile.absolutePath)
+        providers.gradleProperty("continuumUiEvidenceDir").orNull?.let {
+            systemProperty("continuum.ui.evidenceDir", it)
+        }
+    }
+}
+
 val mentorSigningPath = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_FILE").orNull
 val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_PASSWORD").orNull
 
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
+val deviceAiDesignPreview = providers.gradleProperty("deviceAiDesignPreview").orNull == "true"
+val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").orNull == "true"
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
+// Owner-requested in-place update of the EXISTING signed Mentor Pair app. Never used by disposable previews.
+val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate").orNull == "true"
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
+// Preserve the original two-variant invariant and enforce mutual exclusion for all previews.
 require(!(deviceAiPreview && deviceAiMentorPreview)) {
     "Use only one preview package ID at a time."
+}
+require(listOf(deviceAiPreview, deviceAiMentorPreview, deviceAiDesignPreview, deviceAiFeaturePreview).count { it } <= 1) {
+    "Use only one preview package ID at a time."
+}
+require(!deviceAiOwnerSignedUpdate || (deviceAiMentorPreview && !mentorSigningPath.isNullOrBlank() && !mentorSigningPassword.isNullOrBlank())) {
+    "Owner signed update requires the existing Mentor Pair package and persistent signing credentials."
 }
 
 android {
@@ -38,11 +68,17 @@ android {
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
         // as an update. Main/production keeps its existing version.
-        versionCode = if (deviceAiMentorPreview) 13 else if (deviceAiPreview) 6 else 4
-        versionName = if (deviceAiMentorPreview) "0.3.10" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        versionCode = if (deviceAiFeaturePreview) 9 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
+        versionName = if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
+        if (deviceAiOwnerSignedUpdate) {
+            versionCode = 20
+            versionName = "0.3.19"
+        }
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
-        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview
+        manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
+            deviceAiFeaturePreview -> "Device AI Continuum Test"
+            deviceAiDesignPreview -> "Device AI Design"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
             else -> "Device AI"
@@ -51,7 +87,12 @@ android {
 
     buildTypes {
         getByName("debug") {
-            if (deviceAiMentorPreview) {
+            if (deviceAiFeaturePreview) {
+                applicationIdSuffix = ".featurepreview"
+            } else if (deviceAiDesignPreview) {
+                // Fresh, independent installation; never alters owner or earlier preview data.
+                applicationIdSuffix = ".designpreview"
+            } else if (deviceAiMentorPreview) {
                 // Independent signing and app storage: never overwrite the tested Sol preview.
                 applicationIdSuffix = ".mentorpaired"
                 if ("mentorPreview" in signingConfigs.names) {
@@ -77,6 +118,9 @@ android {
         buildConfig = true
     }
 
+    testOptions { unitTests.isIncludeAndroidResources = continuumUiWidgetTests }
+    if (continuumUiWidgetTests) sourceSets.getByName("test").java.srcDir("src/uiTest/java")
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -99,6 +143,12 @@ kotlin {
 }
 
 dependencies {
+    if (continuumUiWidgetTests) {
+        // Runtime API 28 and Robolectric 4.14.1's API 35 resource platform, resolved via Gradle's proxy/cache.
+        uiTestAndroidSdk("org.robolectric:android-all-instrumented:9-robolectric-4913185-2-i7")
+        uiTestResourceSdk("org.robolectric:android-all-instrumented:15-robolectric-12650502-i7")
+        testImplementation("org.robolectric:robolectric:4.14.1")
+    }
     implementation("androidx.annotation:annotation:1.9.1")
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")

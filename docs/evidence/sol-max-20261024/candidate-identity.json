@@ -1,0 +1,21 @@
+{
+  "sourceHead": "ec28d661e27090c91a3eb83707bf5f46376b97b5",
+  "status": "OWNER_REVIEW_REQUIRED",
+  "sourcePinsUnchanged": true,
+  "changedPins": 11,
+  "additionalApkSources": 10,
+  "appSourceTreeSha256": "3eaf7d5bc66d53cb05cc0d40aa182d576bf9c5a7cdad060ee25d7626b4e3f3f1",
+  "ownerSigningTriggered": false,
+  "rollback": {
+    "url": "https://device-ai-mentor-apk-preview.onrender.com/DeviceAI-Continuum-v0.3.17-0ef181f011990cae1ec7b0b71c09fddf7ab0824dd132e80a702e37363a72e998.apk",
+    "bytes": 55735626,
+    "sha256": "0ef181f011990cae1ec7b0b71c09fddf7ab0824dd132e80a702e37363a72e998",
+    "certificateSha256": "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc",
+    "package": "at.heinz.deviceai.mentorpaired",
+    "versionCode": 18,
+    "versionName": "0.3.17",
+    "apksignerVerified": true,
+    "downloadByteHashVerified": true,
+    "installationTested": false
+  }
+}

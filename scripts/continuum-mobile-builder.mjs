@@ -16,8 +16,12 @@ const MAX_LOG = 512 * 1024;
 
 export function parseArgs(args) {
   const [command, ...rest] = args;
-  if (!['doctor', 'build', 'status'].includes(command)) throw Error('Usage: doctor|build|status [--project PATH] [--state-dir PATH] [--offline]');
-  const o = { command, project: process.cwd(), stateDir: path.join(os.homedir(), '.local/state/device-ai-continuum/mobile-builder'), offline: false };
+  if (![...BUILD_COMMANDS,...CCC1_COMMANDS].includes(command)) throw Error('Usage: doctor|build|status|code-test|code-repair|code-cancel|'+CCC1_COMMANDS.join('|')+' [--project PATH] [--state-dir PATH] [--offline] [--job UUID --module M --export E --cases-json J --chain node|android|jvm --budget-minutes N] [--order UUID] [--task t-<16 hex>]');
+  const o = { command, project: process.cwd(), stateDir: command.startsWith('ccc1-')?defaultCcc1State():path.join(os.homedir(), '.local/state/device-ai-continuum/mobile-builder'), offline: false };
+  // Coding-job values are validated data (never shell text); only the two coding operations accept them.
+  const CODING={'--job':'job','--module':'module','--export':'exportName','--cases-json':'casesJson','--chain':'chain','--budget-minutes':'budgetMinutes'};
+  // CCC1 operations take only a fixed chain and the Android request id (repair orders) or a task id (owner abort).
+  const CCC1={'--chain':'chain','--order':'order','--task':'task'};
   const seen = new Set();
   for (let i=0;i<rest.length;i++) {
     const flag=rest[i];
@@ -28,10 +32,41 @@ export function parseArgs(args) {
       const v=rest[++i]; if(!v||v.startsWith('--')) throw Error('Missing value for '+flag);
       o[flag==='--project'?'project':'stateDir']=v; continue;
     }
+    if(Object.hasOwn(CODING,flag)&&command.startsWith('code-')) {
+      const v=rest[++i]; if(v===undefined||v.startsWith('--')) throw Error('Missing value for '+flag);
+      o[CODING[flag]]=v; continue;
+    }
+    if(Object.hasOwn(CCC1,flag)&&command.startsWith('ccc1-')) {
+      const v=rest[++i]; if(v===undefined||v.startsWith('--')) throw Error('Missing value for '+flag);
+      o[CCC1[flag]]=v; continue;
+    }
     throw Error('Unsupported argument: '+flag);
+  }
+  if(o.budgetMinutes!==undefined){
+    if(!/^\d{1,2}$/.test(o.budgetMinutes)) throw Error('--budget-minutes must be 1..30');
+    o.budgetMinutes=Number(o.budgetMinutes);
+  }
+  if(command==='code-cancel'&&['module','exportName','casesJson','chain','budgetMinutes'].some(k=>o[k]!==undefined)) throw Error('code-cancel accepts only --job');
+  if(command==='code-test'&&o.chain!==undefined) throw Error('code-test does not take --chain');
+  if(command==='code-repair'&&['module','exportName','casesJson'].some(k=>o[k]!==undefined)) throw Error('code-repair accepts only --job, --chain and --budget-minutes');
+  if(command.startsWith('ccc1-')){
+    if(['ccc1-compile-repair','ccc1-submit-repair'].includes(command)!==(o.chain!==undefined)) throw Error(command+': --chain is required for repair orders only');
+    if((command==='ccc1-submit-repair')!==(o.order!==undefined)) throw Error(command+': --order is required for ccc1-submit-repair only');
+    if(o.order!==undefined&&!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(o.order)) throw Error('--order must be a lowercase UUIDv4');
+    if((command==='ccc1-abort')!==(o.task!==undefined)) throw Error(command+': --task is required for ccc1-abort only');
+    if(o.chain!==undefined&&!['node','android','jvm'].includes(o.chain)) throw Error('--chain must be node, android or jvm');
+    if(o.task!==undefined&&!/^t-[0-9a-f]{16}$/.test(o.task)) throw Error('--task must be a CCC1 task id');
+    if(o.offline) throw Error(command+' does not take --offline');
   }
   return o;
 }
+
+const BUILD_COMMANDS=['doctor','build','status','code-test','code-repair','code-cancel'];
+/** Fixed CCC1 operations of the Android bridge: the existing ccc1-cli contract (compile, submit, run-once, status, abort). */
+export const CCC1_COMMANDS=Object.freeze(['ccc1-compile-repair','ccc1-submit-repair','ccc1-run-once','ccc1-status','ccc1-abort']);
+export const CCC1_BRIDGE_SCHEMA='continuum-ccc1-bridge';
+export const CCC1_BRIDGE_TASKS=10;
+export function defaultCcc1State(){return path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');}
 
 function inside(root, file) {
   const p=path.relative(root,file);
@@ -91,7 +126,9 @@ export function execute(file,args,{cwd,env=process.env,timeout=PROBE_MS}={}) {
   const r=spawnSync(file,args,{cwd,env,shell:false,encoding:'utf8',timeout,maxBuffer:MAX_LOG});
   return {ok:r.status===0&&!r.error,output:(r.stdout||'')+(r.stderr||''),code:r.status, timedOut:r.error?.code==='ETIMEDOUT', error:r.error?.code||null};
 }
-export async function doctor({env=process.env,arch=process.arch,run=execute}={}) {
+export async function doctor({env=process.env,arch=process.arch,run=execute,profile='termux-arm64'}={}) {
+  if(!['termux-arm64','host-sdk'].includes(profile))
+    return {status:'UNAVAILABLE',profile,checks:{supportedProfile:false}};
   const resolvedEnv=resolveTermuxEnvironment(env,arch);
   const bin={git:executable('git',resolvedEnv),java:executable('java',resolvedEnv),gradle:resolvedEnv.CONTINUUM_GRADLE_PATH||executable('gradle',resolvedEnv),aapt2:resolvedEnv.CONTINUUM_AAPT2_PATH||executable('aapt2',resolvedEnv),apksigner:executable('apksigner',resolvedEnv)};
   const report={};
@@ -99,16 +136,20 @@ export async function doctor({env=process.env,arch=process.arch,run=execute}={})
     report[k]=await run(bin[k],args,{env:resolvedEnv,timeout:PROBE_MS});
   }
   const sdk=resolvedEnv.ANDROID_HOME||resolvedEnv.ANDROID_SDK_ROOT||null;
+  const host=profile==='host-sdk';
+  const javaVersion=Number(/(?:openjdk|java) version\s+["']?(\d+)/i.exec(report.java.output)?.[1]);
   const checks={
-    termuxArm64:isTermuxArm64(resolvedEnv,arch),
+    ...(host?{hostSdk:process.platform==='linux'&&arch==='x64'&&!isTermuxArm64(resolvedEnv,arch)}:
+      {termuxArm64:isTermuxArm64(resolvedEnv,arch)}),
     git:report.git.ok,
-    java17:report.java.ok&&/(?:openjdk|java) version\s+["']?17(?:[.\s"']|$)/i.test(report.java.output),
+    java17:report.java.ok&&(host?javaVersion>=17:javaVersion===17),
     gradle8111:report.gradle.ok&&/\bGradle 8\.11\.1\b/.test(report.gradle.output),
-    nativeAapt2:arch==='arm64'&&report.aapt2.ok,
+    nativeAapt2:(host||arch==='arm64')&&report.aapt2.ok,
     signer:report.apksigner.ok,
     sdk36:!!sdk&&fs.existsSync(path.join(sdk,'platforms/android-36/android.jar')),
   };
-  return {schemaVersion:VERSION,status:Object.values(checks).every(Boolean)?'READY_FOR_EXPERIMENTAL_BUILD':'UNAVAILABLE',checks,bin,sdk};
+  return {schemaVersion:VERSION,status:Object.values(checks).every(Boolean)?'READY_FOR_EXPERIMENTAL_BUILD':'UNAVAILABLE',
+    profile,executionHost:{platform:process.platform,arch},checks,bin,sdk};
 }
 function safeState(project,stateDir) {
   const state=path.resolve(stateDir);
@@ -173,13 +214,21 @@ export async function copyVerifiedApkToOwnerDownloads({
     tmp=path.join(folder,'.'+filename+'.'+randomUUID()+'.tmp');
     fs.copyFileSync(apk,tmp,fs.constants.COPYFILE_EXCL);
     if(await sha256(tmp)!==digest)return {status:'UNAVAILABLE',reason:'COPY_HASH_MISMATCH'};
-    if(fs.existsSync(target))return {status:'UNAVAILABLE',reason:'DESTINATION_BECAME_OCCUPIED'};
-    fs.renameSync(tmp,target);
-    tmp=null;
-    if(await sha256(target)!==digest) {
-      fs.unlinkSync(target);
-      return {status:'UNAVAILABLE',reason:'FINAL_COPY_HASH_MISMATCH'};
+    // Android shared Downloads may not support hard links. COPYFILE_EXCL makes
+    // creation fail if another process published the same filename after the
+    // initial check; renameSync(tmp,target) could instead replace owner files.
+    // Keep our private source and staging copy intact on a conflicting target.
+    try {
+      fs.copyFileSync(tmp,target,fs.constants.COPYFILE_EXCL);
+    } catch (error) {
+      if(error?.code==='EEXIST')
+        return {status:'UNAVAILABLE',reason:'DESTINATION_BECAME_OCCUPIED'};
+      throw error;
     }
+    // Never remove an unexpected target on a digest mismatch: another owner
+    // process may have replaced it, and deleting it would destroy owner data.
+    if(await sha256(target)!==digest)
+      return {status:'UNAVAILABLE',reason:'FINAL_COPY_HASH_MISMATCH'};
     return {status:'COPIED',apk:target,sha256:digest,alreadyPresent:false};
   } catch (error) {
     return {status:'UNAVAILABLE',reason:'COPY_IO_ERROR',errorCode:error?.code||null};
@@ -296,11 +345,56 @@ export function readStatus(stateDir) {
   if(r.schemaVersion!==VERSION)throw Error('Unsupported report schema');
   return r;
 }
+async function coding(o) {
+  const {runMobileCodingJob,runMobileRepairJob,cancelMobileCodingJob}=await import('./continuum-mobile-coding.mjs');
+  const project=fs.realpathSync(path.resolve(o.project));
+  if(o.command==='code-cancel')return cancelMobileCodingJob({project,job:o.job});
+  if(o.command==='code-repair')return runMobileRepairJob({project,builderState:safeState(project,o.stateDir),job:o.job,chain:o.chain,
+    ...(o.budgetMinutes===undefined?{}:{budgetMinutes:o.budgetMinutes})});
+  return runMobileCodingJob({project,builderState:safeState(project,o.stateDir),job:o.job,module:o.module,
+    exportName:o.exportName,casesJson:o.casesJson,...(o.budgetMinutes===undefined?{}:{budgetMinutes:o.budgetMinutes})});
+}
+/**
+ * One CCC1 step for the Android bridge through the EXISTING ccc1-cli (same preflight, journal, gate and verifier).
+ * Returns {schema, version, operation, status: OK | BLOCKED_* | FAILED_CCC1, result | failure}; never throws for refusals.
+ */
+export async function ccc1(o){
+  const {main:cli}=await import('../.github/continuum/ccc1-cli.mjs');
+  const base={schema:CCC1_BRIDGE_SCHEMA,version:1,operation:o.command};
+  const project=fs.realpathSync(path.resolve(o.project));
+  let state;
+  try{state=safeState(project,o.stateDir??defaultCcc1State());}
+  catch(e){return {...base,status:'BLOCKED_STATE_PATH',failure:{code:'CCC1_STATE_PATH',message:String(e.message).slice(0,400)}};}
+  const argv={
+    'ccc1-compile-repair':['compile','--project',project,'--state',state,'--repair',o.chain],
+    'ccc1-submit-repair':['submit','--project',project,'--state',state,'--repair',o.chain,'--order',o.order],
+    'ccc1-run-once':['run-once','--project',project,'--state',state],
+    'ccc1-status':['status','--state',state,'--format','json'],
+    'ccc1-abort':['abort','--project',project,'--state',state,'--task',o.task]
+  }[o.command];
+  const lines=[];
+  try{await cli(argv,line=>lines.push(String(line)));}
+  catch(e){
+    const message=String(e?.message??e).slice(0,400);
+    const code=(/^(CCC1_[A-Z_]+)/.exec(message)?.[1])??'CCC1_ERROR';
+    return {...base,status:code==='CCC1_PREFLIGHT_BLOCKED'?'BLOCKED_PREFLIGHT':code.startsWith('CCC1_STATE')?'BLOCKED_STATE_PATH':'FAILED_CCC1',
+      failure:{code,message}};
+  }
+  let result=null;
+  try{result=JSON.parse(lines.at(-1));}catch{return {...base,status:'FAILED_CCC1',failure:{code:'CCC1_NO_RESULT',message:'no JSON result'}};}
+  // The Android result channel is small and the app never stores generated code: the newest tasks only, and the
+  // patch text stays in Termux (hash, files, strategy and integrity travel; `ccc1-cli status` shows the preview).
+  if(o.command==='ccc1-status')result={...result,tasks:result.tasks.slice(-CCC1_BRIDGE_TASKS)
+    .map(t=>t.review?{...t,review:{...t.review,preview:null,path:null}}:t)};
+  return {...base,status:'OK',result};
+}
+
 async function main() {
   const o=parseArgs(process.argv.slice(2));
-  const r=o.command==='status'?readStatus(o.stateDir):o.command==='doctor'?await doctor():await build(o);
+  const r=o.command.startsWith('ccc1-')?await ccc1(o):o.command.startsWith('code-')?await coding(o):o.command==='status'?readStatus(o.stateDir):o.command==='doctor'?await doctor():await build(o);
   process.stdout.write(JSON.stringify(r,null,2)+'\n');
   // STATUS reports past failures as data; only execution/parsing errors fail the query itself.
-  if(o.command!=='status'&&(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_')))process.exitCode=2;
+  if(o.command!=='status'&&(r.status==='UNAVAILABLE'||r.status.startsWith('BLOCKED_')||r.status.startsWith('FAILED_')||
+    (['code-test','code-repair'].includes(o.command)&&r.status==='CANCELLED')))process.exitCode=2;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{process.stderr.write('Mobile Builder: '+e.message+'\n');process.exitCode=2;});

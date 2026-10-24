@@ -20,17 +20,18 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('neural experiment invokes real module',activity.includes('ContinuumLocalContrastiveProbe.run('));
  ensure('existing local model source',activity.includes('ContinuumLearningCore(filesDir).modelSnapshot()'));
  ensure('single conversation entrance uses cognitive runtime',
-   activity.includes('ContinuumCognitiveRuntime(filesDir,core)') &&
+   activity.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
+   activity.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
  ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
-   runtime.includes('core.replyWithEvidence(input)') &&
+   runtime.includes('core.replyWithEvidenceInConversation(input,conversationId)') &&
    core.includes('fun replyWithEvidence(') &&
    core.includes('dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)') &&
    core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)') &&
    core.includes('turn.memoryIds.mapNotNull(byId::get)'));
  ensure('CRE1 cannot expand the SWB1 evidence pool or alter hit provenance',
-   runtime.includes('val (turn,ranked)=core.replyWithEvidence(input)') &&
+   runtime.includes('val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId)') &&
    memory.includes('reordered.toSet()==hits.toSet()') &&
    memory.includes('reordered.map { it.id }.distinct().size==hits.size') &&
    cre1Gate.includes('semanticById.keys!=swb1.map { it.id }.toSet()'));
@@ -43,9 +44,17 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    !runtime.includes('trainExperimentalCre1('));
  ensure('unanswered turn alone reaches local model',
    bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
- ensure('local model receives prior conversation when resolving referential questions',
+ ensure('local model receives only grounded same-session context for referential followups',
    activity.includes('runLocal(request,localPrompt)') &&
-   runtime.includes('Vorherige Gesprächsfrage: '));
+   activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic') &&
+   runtime.includes('val currentContext=if(followUp && scopedPrevious!=null)') &&
+   !runtime.includes('Vorherige Gesprächsfrage: ') &&
+   !runtime.includes('core.dialogueHistory()'));
+ const newSession=bodyOf(activity,'private fun newSession(');
+ ensure('conversation identity survives recreation; explicit new chat clears baseline and shadow off the UI thread',
+   activity.includes('ctx3_chat_id_v1') && newSession.includes('onLearningIo(') &&
+   newSession.includes('resetDialogueConversation(closingSession) { sessionResetLifetime.get() }') &&
+   bodyOf(activity,'override fun onDestroy(').includes('sessionResetLifetime.set(false)'));
  ensure('owner memory synchronization',activity.includes('core.syncOwnerFacts(bootstrapMemory.facts())'));
  ensure('explicit remember re-confirms revoked facts',activity.includes('confirmOwnerFact(fact)'));
  ensure('background job wired at application startup',activity.includes('ContinuumAutonomousScheduler(this).restore()'));
@@ -57,7 +66,11 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
 });
 test('cognitive runtime owns the single chat path, privacy boundaries and background diagnostics',()=>{
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
- ensure('single shared runtime is called from the chat',dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core)'));
+ ensure('single shared runtime is called from chat with scoped session-only context',
+   dialogue?.includes('ContinuumCognitiveRuntime(filesDir,core,') &&
+   dialogue.includes('conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic') &&
+   dialogue.includes('val requestSessionId=sessionId') &&
+   dialogue.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
  ensure('local model context is separate from user-authorized memory input',
    dialogue?.includes('runLocal(request,localPrompt)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text)') &&
@@ -214,9 +227,8 @@ test('startup I/O off the UI thread and shell commands stop with their activity'
  ensure('stopped bridge drops its shell',/fun stop\(\)[\s\S]*?shell = null\s*\n\s*\}/.test(bridge));
 });
 test('local language model path is reachable: model center, loading, chat escalation and reasoning chain',()=>{
- const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- ensure('model center from the core card',
-   cockpit?.includes('"Modelle"') && cockpit.includes('showModelCenter()'));
+ const slots=bodyOf(activity,'private fun openHomeSlot(');
+ ensure('model center from the start screen',/Slot\.MODEL -> showModelCenter\(\)/.test(slots));
  ensure('model center from chat',/request\.equals\("Modellverwaltung", true\)\) \{[\s\S]{0,120}showModelCenter\(\)/.test(activity));
  const center=bodyOf(activity,'private fun showModelCenter(');
  ensure('center imports a model',center.includes('showModelImportDialog()'));
@@ -233,12 +245,11 @@ test('local language model path is reachable: model center, loading, chat escala
  ensure('model list read off the UI thread',bodyOf(activity,'private fun reloadInstalledModels(').includes('onLearningIo('));
  ensure('no catalog read in the UI refresh',!bodyOf(activity,'private fun refreshLocalModelUi(').includes('modelCatalog.all()'));
 });
-test('every area has a center reachable from the core card; no demo buttons; experiments marked',()=>{
- const card=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- for(const [label,fn] of [['Lernen','showLearningCenter'],['Speicher','showMemoryCenter'],
-  ['Entwicklung','showDevelopmentCenter'],['Modelle','showModelCenter'],
-  ['System   ·','showSystemCenter']]){
-  ensure(label+' center on the cockpit',card.includes(label)&&card.includes(fn+'()'));
+test('every area has a center reachable from the start screen; no demo buttons; experiments marked',()=>{
+ const reach=bodyOf(activity,'private fun openHomeSlot(')+bodyOf(activity,'private fun navigateWorkArea(')+
+  bodyOf(activity,'private fun showMoreWorkAreas(');
+ for(const fn of ['showLearningCenter','showMemoryCenter','showDevelopmentCenter','showModelCenter','showSystemCenter']){
+  ensure(fn+' reachable from the start screen',reach.includes(fn+'()'));
   assert.ok(activity.includes('private fun '+fn+'('),fn+' not found');
  }
  const labels=[...activity.matchAll(/actionButton\("([^"]+)"/g),...activity.matchAll(/CenterAction\("([^"]+)"/g)].map(m=>m[1]);
@@ -323,27 +334,28 @@ test('model setup stays usable for beginners while preserving SHA-256 integrity'
    developer.includes('dp(52)'));
 });
 
-test('new visual cockpit is local, accessible and honest about capabilities',()=>{
+test('new visual start screen is local, accessible and honest about capabilities',()=>{
  const art=fs.readFileSync(dir+'ContinuumHologramView.kt','utf8');
+ const renderer=fs.readFileSync(dir+'ui/ContinuumHologramRenderer.kt','utf8');
+ const homeView=fs.readFileSync(dir+'ui/ContinuumHomeView.kt','utf8');
  const copy=fs.readFileSync(dir+'ContinuumUiCopy.kt','utf8');
- const cockpit=bodyOf(activity,'private fun buildBootstrapCoreCard(');
- const tile=bodyOf(activity,'private fun cockpitTile(');
- const status=bodyOf(activity,'private fun buildStatusRow(');
+ const pane=bodyOf(activity,'private fun buildConversationPane(');
+ const slots=bodyOf(activity,'private fun openHomeSlot(');
  ensure('drawing is local and motion follows visibility and power policy',
    art.includes('class ContinuumHologramView') &&
    art.includes('override fun onDraw(') &&
    art.includes('canAnimate()') && art.includes('isPowerSaveMode') &&
-   !/URL\(|https?:\/\//.test(art));
- ensure('cockpit uses real native drawing and named feature tiles',
-   cockpit.includes('ContinuumHologramView(this)') &&
-   cockpit.includes('cockpitTile('));
- ensure('feature tiles are keyboard and accessibility reachable',
-   tile.includes('isClickable = true') && tile.includes('isFocusable = true') &&
-   tile.includes('contentDescription = title + ". " + explanation'));
- ensure('interactive status explicitly opens a help dialog',
-   status.includes('showConnectivityHelp("device")') &&
-   status.includes('showConnectivityHelp("web")') &&
-   status.includes('showConnectivityHelp("core")'));
+   !/URL\(|https?:\/\//.test(art+renderer));
+ ensure('start screen uses real native drawing and named slots',
+   pane.includes('ContinuumHologramView(this)') && pane.includes('ContinuumHomeView('));
+ const elementView=homeView.slice(homeView.indexOf('inner class ElementView'),homeView.indexOf('/** Standalone drawn element'));
+ ensure('start-screen elements are keyboard and accessibility reachable',
+   elementView.includes('isClickable = true') && elementView.includes('isFocusable = true') &&
+   elementView.includes('contentDescription = element.describe(state)'));
+ ensure('status labels and cards open the real settings and status screens',
+   /Slot\.LABEL_CONNECTED -> showInternetSettings\(\)/.test(slots) &&
+   /Slot\.SYSTEM_STATUS -> showSystemCenter\(\)/.test(slots) &&
+   /Slot\.NOTIFICATIONS -> showDiagnosticsCenter\(\)/.test(slots));
  ensure('no automatic cloud fallback and no fake model readiness',
    copy.includes('Es gibt keinen automatischen Cloud-Ersatz.') &&
    copy.includes('Freies Sprachmodell noch nicht geladen'));
@@ -424,4 +436,49 @@ test('Android-first Teamleader is scheduled, observable and serialized across ba
  ensure('periodic background worker does not retry permanent failures in a tight loop',
    job.includes('jobFinished(params, false)') &&
    !job.includes('reschedule = result.state == "ERROR"'));
+});
+
+test('explicit M5 project planning command reaches reviewed builder without bypassing approval',()=>{
+ const router=fs.readFileSync(dir+'ContinuumWorkerChatRouter.kt','utf8');
+ const lab=fs.readFileSync(dir+'ContinuumM5LabActivity.kt','utf8');
+ ensure('M5 command has dedicated typed route',
+   router.includes('data object ProjectPlan : ContinuumWorkerChatCommand()') &&
+   router.includes('"worker projektplan"') &&
+   router.includes('ContinuumWorkerChatCommand.ProjectPlan'));
+ ensure('chat launches existing project-plan activity not a shell job',
+   activity.includes('ContinuumWorkerChatCommand.ProjectPlan -> openM5ProjectPlan()') &&
+   activity.includes('private fun openM5ProjectPlan(initialDraft: String? = null)') &&
+   activity.includes('initialDraft?.takeIf { it.length in 1..400 && it.none { char -> char.code < 0x20 } }') &&
+   activity.includes('Intent(this, ContinuumM5LabActivity::class.java)') &&
+   activity.includes('startActivity(planIntent)') &&
+   activity.includes('is ContinuumWorkerChatCommand.ProjectPlanDraft -> openM5ProjectPlan(baumeister.request)'));
+ ensure('external preview retains existing builder route',
+   activity.includes('if (destination.externalPackage)') &&
+   activity.includes('openMobileBuilder()'));
+ ensure('M5 laboratory is non-exported and respects builder feature gate',
+   manifest.includes('android:name=".ContinuumM5LabActivity" android:exported="false" android:enabled="${mobileBuilderEnabled}"'));
+ ensure('carried M5 text stays an unsubmitted, bounded draft',
+   router.includes('data class ProjectPlanDraft(val request: String)') &&
+   router.includes('projectPlanDraftPattern.matchEntire(text)') &&
+   lab.includes('intent.getStringExtra("m5_initial_draft_v1")') &&
+   lab.includes('input.setText(carriedDraft?.take(512).orEmpty())'));
+ ensure('consumed M5 approval is removed from the SavedState replay source before Builder launch',(()=>{
+   const approved=lab.indexOf('conversation.approve(p.revision,p.planSha256!!)');
+   const clear=lab.indexOf('acceptedTurns.clear()',approved);
+   const launch=lab.indexOf('startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)',approved);
+   return approved>=0 && clear>approved && launch>clear;
+ })());
+ ensure('the M5 handoff selects a project once and never reverts a later owner switch after recreation',(()=>{
+   const builder=fs.readFileSync(dir+'ContinuumMobileBuilderActivity.kt','utf8');
+   const guard=builder.indexOf('if (savedInstanceState == null) ContinuumOwnedProject.ofId(intent.getStringExtra("m5_project"))');
+   const store=builder.indexOf('preferences.edit().putString("selected_m4_project_v1", it.id).commit()',guard);
+   return guard>=0 && store>guard && builder.split('intent.getStringExtra("m5_project")').length===2;
+ })());
+ ensure('M5 approval remains hash, revision and empty-input bound',
+   lab.includes('draftVersion==shownDraftVersion') &&
+   lab.includes('conversation.approve(p.revision,p.planSha256!!)') &&
+   lab.includes('input.text.isEmpty()') &&
+   lab.includes('startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)'));
+ ensure('M5 laboratory has no direct privileged execution',
+   !lab.includes('RUN_COMMAND') && !lab.includes('dispatchCcc1(') && !lab.includes('dispatchApprovedCommand('));
 });

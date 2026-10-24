@@ -1,0 +1,77 @@
+# scripts/continuum-owned-app.test.mjs
+# old approved blob e287909e67074a1ac53764c1ecc22b3a36ac5105
+# reviewed candidate blob 65cec140fa13896131f18403c69c8a868781e9b7
+# OWNER APPROVAL STILL REQUIRED
+diff --git a/e287909e67074a1ac53764c1ecc22b3a36ac5105 b/65cec140fa13896131f18403c69c8a868781e9b7
+index e287909e..65cec140 100644
+--- a/e287909e67074a1ac53764c1ecc22b3a36ac5105
++++ b/65cec140fa13896131f18403c69c8a868781e9b7
+@@ -4,9 +4,12 @@ import fs from 'node:fs';
+ import os from 'node:os';
+ import path from 'node:path';
+ import {createHash} from 'node:crypto';
+-import {createOwnedApp, verifyOwnedApp, buildOwnedApp, projectPath, RECIPE} from './continuum-owned-app.mjs';
++import {createOwnedApp, verifyOwnedApp, buildOwnedApp, readOwnedAppStatus, projectPath, RECIPE} from './continuum-owned-app.mjs';
++import {getProjectPlan} from './continuum-project-plan.mjs';
++import {verifyOwnedProjectReceipt} from '../.github/continuum/ccc1-verifier.mjs';
++import {mockOwnedReports} from './fixtures/owned-build.mjs';
+ const fresh=()=>fs.mkdtempSync(path.join(os.tmpdir(),'continuum-m4-test-'));
+-const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
++const ready={status:'READY_FOR_EXPERIMENTAL_BUILD',profile:'termux-arm64',executionHost:{platform:'android',arch:'arm64'},bin:{gradle:'/fake/gradle',aapt2:'/fake/aapt2',apksigner:'/fake/apksigner'}};
+ const inspect=async()=>ready;
+ const sha=x=>createHash('sha256').update(x).digest('hex');
+ function fake(home,{badGradle=false,badSigner=false,badPackage=false,mutate=false,missing=false,commands=[]}={}) {
+@@ -14,6 +17,7 @@ function fake(home,{badGradle=false,badSigner=false,badPackage=false,mutate=fals
+   commands.push([file,args]);
+   if(file==='/fake/gradle'){
+    if(badGradle)return {ok:false,code:1,output:'failed tests'};
++   mockOwnedReports(projectPath(home));
+    if(mutate)fs.appendFileSync(path.join(projectPath(home),'app/build.gradle.kts'),'// attack');
+    if(!missing){const dir=path.join(projectPath(home),'app/build/outputs/apk/debug');fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'app-debug.apk'),Buffer.alloc(9000,42));}
+    return {ok:true,code:0,output:'Gradle simulated'};
+@@ -227,5 +231,44 @@ test('failed signature validation leaves no private verification-stage residue',
+  const result=await build(home,{run:fake(home,{badSigner:true})});
+  assert.equal(result.status,'FAILED_APK_SIGNATURE');
+  const state=path.join(home,'.local/state/device-ai-continuum/owned-projects');
+- assert.deepEqual(fs.readdirSync(state),[]);
++ assert.deepEqual(fs.readdirSync(state).filter(n=>n.endsWith('.tmp')||n.endsWith('.apk')),[]);
++ const status=readOwnedAppStatus({home});
++ assert.equal(status.status,'PROJECT_BUILD_STATUS');
++ assert.equal(status.buildStatus,'FAILED_APK_SIGNATURE');
++ assert.equal(status.verification,'INCONCLUSIVE');
++ assert.equal(status.artifact,undefined);
++});
++test('lost callback can recover a verified historical receipt but never changed APK bytes',async()=>{
++ const home=fresh();createOwnedApp({home});
++ assert.equal(readOwnedAppStatus({home}).status,'NO_PROJECT_BUILD_REPORT');
++ const commands=[],result=await build(home,{run:fake(home,{commands})});
++ const recovered=readOwnedAppStatus({home});
++ assert.equal(recovered.verification,'CONFIRMED');
++ assert.equal(recovered.apkSha256,result.apkSha256);
++ assert.equal(commands.length,3,'status never executes tools or repeats a build');
++ fs.writeFileSync(result.artifact,'changed APK');
++ const changed=readOwnedAppStatus({home});
++ assert.equal(changed.verification,'INCONCLUSIVE');
++ assert.equal(changed.artifact,undefined);
++});
++test('CCC1 independently rejects forged plan, source, execution, evidence and device claims',async()=>{
++ const home=fresh();createOwnedApp({home});
++ const result=await build(home,{run:fake(home)});
++ const binding={plan:getProjectPlan(),sourceSha256:result.sourceSha256,project:result.project,
++  artifactRoot:path.dirname(result.artifact)};
++ assert.equal(verifyOwnedProjectReceipt(result,binding).verdict,'CONFIRMED');
++ for(const mutate of [
++  r=>{r.planSha256='f'.repeat(64);},r=>{r.sourceSha256='f'.repeat(64);},
++  r=>{r.packageName='at.heinz.deviceai.mentorpaired';},r=>{r.deviceVerified=true;},
++  r=>{r.installed=true;},r=>{r.gradle.timedOut=true;},r=>{r.gradle.tasks=['exec'];},
++  r=>{r.evidence.unit.file='../owner.xml';},r=>{r.evidence.lint.sha256='f'.repeat(64);},
++  r=>{r.artifact='/etc/passwd';},r=>{r.finishedAt=r.startedAt-1;},r=>{r.toolchainProfile='unknown';},
++  r=>{r.toolchainProfile='host-sdk';},r=>{r.signerSha256='b'.repeat(64);},
++  r=>{r.toolchain={profile:'termux-arm64',executionHost:{platform:'linux',arch:'x64'}};},
++  r=>{r.evidence.signature.apkSha256='f'.repeat(64);},r=>{delete r.evidence.signature;},
++  r=>{r.evidence.identity.exitCode=1;}
++ ]) {
++  const changed=structuredClone(result);mutate(changed);
++  assert.equal(verifyOwnedProjectReceipt(changed,binding).verdict,'INCONCLUSIVE');
++ }
+ });

@@ -1,0 +1,132 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig
+> Task :app:checkDebugAarMetadata
+> Task :app:generateDebugResValues
+> Task :app:compileDebugAidl
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:mergeDebugResources
+> Task :app:processDebugMainManifest
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:processDebugManifest
+> Task :app:javaPreCompileDebug
+> Task :app:processDebugManifestForPackage
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:processDebugResources
+> Task :app:prepareUiTestSdk
+> Task :app:packageDebugUnitTestForUnitTest
+> Task :app:generateDebugUnitTestConfig
+> Task :app:continuumExportTestClasspath
+> Task :app:compileDebugKotlin
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:347:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:348:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:350:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:567:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2668:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2683:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2712:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:2732:40 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:4689:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/AgentBackendClient.kt:451:24 'when' expression over a subject of type 'Any?' is not exhaustive. Add a 'null' or 'else' branch.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:31:24 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ArrayList<String!>'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt:55:57 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:69:45 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt:70:46 Unnecessary safe call on a non-null receiver of type 'Bundle'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:80:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:81:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:276:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:278:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt:371:51 'field scaledDensity: Float' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:151:31 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:152:37 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt:166:49 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ContinuumTrainingMonitor.Snapshot'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/MainActivity.kt:68:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/MainActivity.kt:69:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:92:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumCdxLargeLab.kt:92:32 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumDeviceTeamleaderScheduler.kt:41:61 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:288:31 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt:398:37 Unnecessary safe call on a non-null receiver of type 'SubwordTrainingResult'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:84:25 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt:246:37 No cast needed.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/NeuralPracticeScheduler.kt:61:22 'val networkType: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:261:15 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/learning/TinyContextDecoder.kt:261:35 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'File?'.
+w: file:///workspace/device-ai-sol-max/app/src/main/java/at/heinz/deviceai/ui/ContinuumHologramRenderer.kt:451:86 No cast needed.
+
+> Task :app:compileDebugJavaWithJavac
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:processDebugJavaRes
+
+> Task :app:compileDebugUnitTestKotlin
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/DeviceDevelopmentBacklogTest.kt:131:53 Unnecessary non-null assertion (!!) on a non-null receiver of type 'DevelopmentBacklogStore.Recovery'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/ResearchEngineTest.kt:139:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:47:38 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:48:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:49:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:50:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/cognitive/WikipediaExtractResearchProviderTest.kt:51:29 Unnecessary non-null assertion (!!) on a non-null receiver of type 'ResearchRequest'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Ctx1Experiment.kt:105:115 No cast needed.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:15:46 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/learning/NeuralLearningCoachTest.kt:16:66 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NeuralCommand'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt:126:66 Redundant call of conversion method.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/learning/nf/NfExperiment.kt:89:33 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Any?'.
+w: file:///workspace/device-ai-sol-max/app/src/test/java/at/heinz/deviceai/learning/nf/NfStream.kt:91:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'NfTrainer'.
+w: file:///workspace/device-ai-sol-max/app/src/uiTest/java/at/heinz/deviceai/ui/ContinuumControlsTest.kt:67:18 'fun recycle(): Unit' is deprecated. Deprecated in Java.
+
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugUnitTestJavaRes
+
+> Task :app:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS: -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+
+ContinuumBuilderLifecycleUiTest > anOldConfirmationCannotDispatchAfterItsActivityWasDestroyed FAILED
+    java.lang.AssertionError at ContinuumBuilderLifecycleUiTest.kt:47
+
+ContinuumBuilderLifecycleUiTest > acknowledgingAnOldLostCallbackCannotEraseANewerJobsIdentity FAILED
+    java.lang.AssertionError at ContinuumBuilderLifecycleUiTest.kt:68
+
+ContinuumBuilderLifecycleUiTest > ccc1ConfirmationDispatchesTheChainShownInItsDialog FAILED
+    org.junit.ComparisonFailure at ContinuumBuilderLifecycleUiTest.kt:88
+
+19 tests completed, 3 failed
+
+> Task :app:testDebugUnitTest FAILED
+[Incubating] Problems report is available at: file:///workspace/device-ai-sol-max/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///workspace/device-ai-sol-max/app/build/reports/tests/testDebugUnitTest/index.html
+
+* Try:
+> Run with --scan to get full insights.
+
+BUILD FAILED in 2m 3s
+31 actionable tasks: 31 executed

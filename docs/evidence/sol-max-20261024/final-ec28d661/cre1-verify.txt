@@ -1,0 +1,2 @@
+CRE1 Kotlin/Node inference parity verified on 7 cases
+CRE1 Kotlin/Node SGD parity verified over 526336 weights (max error 3.469446951953614e-18)

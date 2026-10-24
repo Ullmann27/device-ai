@@ -73,7 +73,9 @@ export function pullRequestBody(report,attempt,extra=''){
     `### Repair\nStrategy \`${attempt.strategy}\` — ${attempt.description}\nCritic risk ${attempt.critic?.risk} · changed lines ${attempt.critic?.changedLines} · review required: ${report.verified.reviewRequired?'yes':'no'} · confidence ${report.verified.confidence}`,'',
     '### Verification in an isolated worktree',tests,'',
     `Patch SHA-256: \`${report.verified.patchSha256}\``,'',
-    'Generated deterministically (no LLM, no paid API). The agent may be wrong about intent; tests only prove the checks pass.',
+    report.inference?.mode==='LOCAL_CANDIDATE_PROVIDER'
+      ? 'Includes an opt-in local candidate proposal. Independent model quality is unmeasured; fixed tests and owner review determine acceptance. No paid API.'
+      : 'Generated deterministically (no LLM, no paid API). The agent may be wrong about intent; tests only prove the checks pass.',
     extra
   ].join('\n');
 }

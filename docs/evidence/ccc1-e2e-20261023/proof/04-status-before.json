@@ -1,0 +1,24 @@
+{
+  "schema": "continuum-ccc1-bridge",
+  "version": 1,
+  "operation": "ccc1-status",
+  "status": "OK",
+  "result": {
+    "schema": "continuum-ccc1-status",
+    "version": 1,
+    "experienceRecords": 0,
+    "taskCount": 1,
+    "tasks": [
+      {
+        "taskId": "t-a1bf9c70fe199bb7",
+        "state": "DRAFT",
+        "waitingForOwner": false,
+        "goal": "Repariere die fehlschlagenden Tests der Testkette node.",
+        "question": null,
+        "confirmed": null,
+        "uncheckedAlternatives": 0,
+        "review": null
+      }
+    ]
+  }
+}
