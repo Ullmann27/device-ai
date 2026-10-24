@@ -81,6 +81,32 @@ class ContinuumHologramMotionUiTest {
         }
     }
 
+    @Test fun thermalPressureStopsAndRecoversTheSameClock() {
+        val controller = Robolectric.buildActivity(Activity::class.java).setup()
+        val view = ContinuumHologramView(controller.get())
+        try {
+            controller.get().setContentView(view)
+            view.setForegroundActive(true)
+            // The production API29 listener forwards the integer thermal status here.
+            val thermal = ContinuumHologramView::class.java.declaredMethods
+                .singleOrNull { it.name.startsWith("onThermalStatus") }
+            assertNotNull("Hologram must consume Android thermal pressure", thermal)
+            thermal!!.isAccessible = true
+            thermal.invoke(view, 3) // THERMAL_STATUS_SEVERE
+            val stopped = phase(view)
+            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            assertEquals(stopped, phase(view), 0f)
+            assertFalse(pending(view))
+            assertTrue(view.motionDiagnostics().contains("Temperatur"))
+            thermal.invoke(view, 2) // THERMAL_STATUS_MODERATE: slower, still continuous
+            shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)
+            assertTrue(phase(view) > stopped)
+            thermal.invoke(view, 0)
+            view.setForegroundActive(false)
+            assertFalse(pending(view))
+        } finally { controller.pause().stop().destroy() }
+    }
+
     @Test fun foregroundAndReducedMotionHaveOneBoundedLifecycleClock() {
         val controller = Robolectric.buildActivity(Activity::class.java).setup()
         val activity = controller.get()

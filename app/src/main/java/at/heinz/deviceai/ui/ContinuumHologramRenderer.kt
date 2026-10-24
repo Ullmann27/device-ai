@@ -386,8 +386,14 @@ class ContinuumHologramRenderer {
         p.fillCircle(cx, cy, rs * .4f, innerGlass)
         p.strokeCircle(cx, cy, rs * .4f, rs * .06f, innerRim, .18f)
         p.strokeCircle(cx, cy, rs * .4f, rs * .02f, innerRim, .95f)
+        // The central glass has its own parallax reflection; the brand mark remains legible.
+        p.save()
+        p.translate(sin(f.phase * .83f) * rs * .08f, cos(f.phase * .61f) * rs * .035f)
         p.fillOval(cx - rs * .3f, cy - rs * .36f, cx + rs * .02f, cy - rs * .12f, innerSpecular)
+        p.restore()
+        drawEnergyCore(p, f, front = false)
         drawInfinity(p, f)
+        drawEnergyCore(p, f, front = true)
         p.setAdditive(true)
         drawPlexus(p, f, front = true)
         // rim: bloom ring, crisp edge, highlight arc and specular
@@ -399,6 +405,35 @@ class ContinuumHologramRenderer {
         p.fillOval(cx - rs * .82f, cy - rs * .9f, cx - rs * .05f, cy - rs * .32f, specular)
         p.setAdditive(false)
         p.restore()
+    }
+
+    // Reuses the same bounded 3-D orbit buffers as the outer rings; no particle worker or random samples.
+    private val coreOrbits = arrayOf(
+        ContinuumOrbitalRing(.35f, .17f, -28f),
+        ContinuumOrbitalRing(.32f, .12f, 62f)
+    )
+
+    private fun drawEnergyCore(p: ContinuumPainter, f: Frame, front: Boolean) {
+        val pulse = .78f + .12f * sin(f.phase * 2.1f) + f.energy * .1f
+        p.setAdditive(true)
+        for (i in coreOrbits.indices) {
+            val orbit = coreOrbits[i]
+            if (!front) orbit.project(f.phase, if (i == 0) 1.35f else -.95f, cx, cy, rs)
+            val points = if (front) orbit.front else orbit.back
+            val count = if (front) orbit.frontSize else orbit.backSize
+            val opacity = (if (front) .62f else .2f) * pulse
+            val fill = if (i == 0) stateCyan else stateViolet
+            p.strokeSegments(points, count, 3.2f * sphereScale, fill, opacity * .16f)
+            p.strokeSegments(points, count, .75f * sphereScale, fill, opacity)
+            // Three ordered packets on each visible half; no telemetry or progress claim.
+            for (packet in 0..2) {
+                if (count < 4) continue
+                val position = (f.phase * (if (i == 0) .22f else .16f) + packet / 3f) % 1f
+                val offset = ((count / 4 - 1) * position).toInt() * 4
+                p.fillCircle(points[offset], points[offset + 1], 1.15f * sphereScale, orbitSpark, opacity)
+            }
+        }
+        p.setAdditive(false)
     }
 
     private val rimEdge = Fill.Solid(Argb.rgb(215, 248, 255))
