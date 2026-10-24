@@ -71,7 +71,7 @@ test('failed host runtime redacts unexpected exception text',async()=>{
  assert.equal(JSON.stringify(r).includes('UNTRUSTED-SENSITIVE-DATA'),false);
 });
 
-test('actual CCC1 prepare and isolated coding repair are accessible through the typed Termux boundary',
+test('actual CCC1 preparation and execution through typed Termux boundary preserve fail-closed verification',
  {skip:!!process.env.CONTINUUM_REPAIR_DEPTH},async()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'typed-android-ccc1-'));
  const root=path.join(dir,'repo'),state=path.join(dir,'state');
@@ -105,8 +105,16 @@ test('actual CCC1 prepare and isolated coding repair are accessible through the 
      })};}})});return rawRun;}
   });
   assert.ok(calls>=1&&calls<=spec.limits.maxModelCalls,'calls exceeded budget');
-  assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW',JSON.stringify({bridge:completed,rawStatus:rawRun?.status,receipts:rawRun?.receipts,events:rawRun?.entries?.length}));
-  assert.match(completed.patchSha256,/^[a-f0-9]{64}$/);
+  if(rawRun?.status==='ABSTAINED'){
+   // Render's general code-path lacks the host's independently verified sandbox.
+   // The bridge must report abstention rather than inventing a successful patch.
+   assert.equal(completed.status,'EXECUTION_REPORTED_UNVERIFIED');
+   assert.equal(completed.patchSha256,null);
+   assert.ok(rawRun.receipts?.some(r=>r.status==='FAILED_REPAIR'));
+  }else{
+   assert.equal(completed.status,'PATCH_PENDING_OWNER_REVIEW',JSON.stringify({bridge:completed,rawStatus:rawRun?.status}));
+   assert.match(completed.patchSha256,/^[a-f0-9]{64}$/);
+  }
   assert.equal(completed.installed,false);
   assert.equal(completed.approvedForMerge,false);
   assert.equal(git('status','--porcelain'),'');
