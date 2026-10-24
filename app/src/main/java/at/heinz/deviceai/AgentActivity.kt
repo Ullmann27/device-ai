@@ -3844,19 +3844,25 @@ class AgentActivity : Activity() {
                 "CDX1-Paararchiv kann nicht geöffnet werden: "+failureName(error)+
                     ". Keine Modellgewichte wurden geändert."
             })
-            val finished = result.getOrNull()?.let { it.completed >= it.total } == true
-            AlertDialog.Builder(this)
+            val state = result.getOrNull()
+            val finished = state?.let { it.completed >= it.total } == true
+            val dialog = AlertDialog.Builder(this)
                 .setTitle("CDX1 · Großes Beleg-Antwort-Trainingsarchiv")
                 .setMessage(text)
                 .setNegativeButton("Schließen",null)
-                .setPositiveButton(if(finished) "ANTWORTQUALITÄT PRÜFEN" else "NÄCHSTE STUFE PRÜFEN") { _, _ ->
+            // A failed cursor/model read must never expose a training button.
+            if(state != null) {
+                dialog.setPositiveButton(
+                    if(finished) "ANTWORTQUALITÄT PRÜFEN" else "NÄCHSTE STUFE PRÜFEN"
+                ) { _, _ ->
                     if(finished) {
                         startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
                     } else {
                         runCdxLargeLab()
                     }
                 }
-                .show()
+            }
+            dialog.show()
         }
     }
 
