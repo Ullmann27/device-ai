@@ -24,7 +24,9 @@ data class ContinuumCognitiveTurn(
     val localModelPrompt:String,
     val trace:String,
     /** Authorized raw evidence selected in this exact dialogue turn. */
-    val evidenceHits:List<ContinuumMemoryHit> = emptyList()
+    val evidenceHits:List<ContinuumMemoryHit> = emptyList(),
+    /** Only a grounded topic from this runtime; never a retrieved profile-global subject. */
+    val nextScopedGroundedQuestion:String?=null
 ) {
     val grounded:Boolean get()=dialogue.grounded
     val answer:String get()=dialogue.answer
@@ -36,11 +38,14 @@ data class ContinuumCognitiveTurn(
 class ContinuumCognitiveRuntime(
     private val appDirectory:File,
     private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),
-    private val conversationId:String=java.util.UUID.randomUUID().toString()
+    private val conversationId:String=java.util.UUID.randomUUID().toString(),
+    priorScopedGroundedQuestion:String?=null
 ) {
     // The profile's persisted dialogue-v1.bin has no per-conversation identity.
     // A new runtime must therefore never inherit its inferred topic in a model prompt.
-    private var lastScopedGroundedQuestion:String?=null
+    private var lastScopedGroundedQuestion:String?=priorScopedGroundedQuestion?.takeIf {
+        it.isNotBlank() && it.length<=320 && !it.any(Char::isISOControl)
+    }
 
     private val cre1Checkpoint=File(appDirectory,
         "learning-core-v2/cre1-research/cre1-research-v1.cre1")
@@ -126,7 +131,7 @@ class ContinuumCognitiveRuntime(
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
-            scores,contextPrompt,trace,ranked)
+            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion)
     }
 
     /**
