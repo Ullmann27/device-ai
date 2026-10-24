@@ -62,3 +62,16 @@ test('the report names why each attested source changed, its review role and una
   assert.deepEqual(r.report.unattestedApkSourceChanges.map(c=>[c.status,c.path]),[['A','app/src/main/NewScreen.kt']]);
   assert.ok(['SDK_AVAILABLE','SDK_UNAVAILABLE'].includes(r.report.releaseGate.androidSdk));
 }));
+
+test('release commands preserve every continued test file, Android task and build option',()=>fixture(dir=>{
+  const release=join(dir,'scripts','render-mentor-owner-update-v19.sh');
+  writeFileSync(release,readFileSync(release,'utf8')+
+    'no_signing_env node --test \\\n  .github/continuum/autogenesis-safe-wiring.test.mjs \\\n  scripts/continuum-owned-app.test.mjs\n'+
+    'gradle --no-daemon --max-workers=2 \\\n  -PcontinuumUiWidgetTests=true \\\n  :app:testDebugUnitTest :app:lintDebug :app:assembleDebug \\\n  -PdeviceAiMentorPreview=true --stacktrace\n');
+  const r=run(dir,'--report-only');
+  assert.equal(r.status,0);
+  assert.deepEqual(r.report.releaseGate.commands,[
+    'no_signing_env node --test .github/continuum/autogenesis-safe-wiring.test.mjs scripts/continuum-owned-app.test.mjs',
+    'gradle --no-daemon --max-workers=2 -PcontinuumUiWidgetTests=true :app:testDebugUnitTest :app:lintDebug :app:assembleDebug -PdeviceAiMentorPreview=true --stacktrace'
+  ]);
+}));
