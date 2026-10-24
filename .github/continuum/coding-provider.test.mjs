@@ -29,7 +29,7 @@ test('provider surfaces fixed no-op code and response fingerprint without raw st
  try{
   const hash='e'.repeat(64);
   const provider=createCodingCandidateProvider({root,task,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},run:()=>({
-   status:1,stdout:'',stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH '+hash+'\\nsecret ignored'
+   status:1,stdout:'',stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH '+hash+String.fromCharCode(10)+'secret ignored'
   })});
   assert.throws(()=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10000}),e=>{
    assert.equal(e.code,'CODING_NOOP_PATCH');
