@@ -14,6 +14,7 @@ class ContinuumM5LabActivity:Activity() {
  private lateinit var draftInput:EditText
  private lateinit var transcriptView:TextView
  override fun onSaveInstanceState(outState:Bundle) {
+  outState.putInt("m5_state_version",1)
   outState.putStringArrayList("m5_turns_v1",ArrayList(acceptedTurns))
   if(::draftInput.isInitialized)outState.putString("m5_draft_v1",draftInput.text.toString().take(512))
   if(::transcriptView.isInitialized)outState.putString("m5_transcript_v1",transcriptView.text.toString().takeLast(12000))
@@ -22,7 +23,7 @@ class ContinuumM5LabActivity:Activity() {
  override fun onCreate(savedInstanceState:Bundle?) {
   super.onCreate(savedInstanceState)
   val restored=runCatching {savedInstanceState?.getStringArrayList("m5_turns_v1")}.getOrNull()
-  if(restored!=null&&restored.size<=32&&restored.all {it.length<=512}) {
+  if(savedInstanceState?.getInt("m5_state_version")==1&&restored!=null&&restored.size<=32&&restored.all {it.length<=512}) {
    for(turn in restored){acceptedTurns.add(turn);conversation.accept(turn)}
   }
   val column=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(24,24,24,24) }
@@ -36,18 +37,20 @@ class ContinuumM5LabActivity:Activity() {
   fun refreshShadow() {
    val on=core.contextShadowEnabled()
    shadow.text="CTX3 Shadow: "+if(on)"EIN" else "AUS"
-   val e=core.contextShadowEvents().lastOrNull()
+   val e=core.recentContextShadowEvents().lastOrNull()
    shadowStatus.text="Aktiver Antwortkern: bestehender Gedächtnisdialog. Forschung: CTX3 ${if(on)"SHADOW" else "OFF"}."+
-    (e?.let { "\nEntscheidung: ${it.decision}; Grund: ${it.reason}\nBaseline-Quellen: ${it.baselineIds}\nShadow-Quellen: ${it.proposedIds}" }?:"\nNoch kein Shadow-Bericht in dieser Sitzung.")
+    (e?.let { "\nHistorische Sitzung: ${it.conversationSha256.take(12)}; Quellenrevision: ${it.sourceVersion.take(12)}\nEntscheidung: ${it.decision}; Grund: ${it.reason}\nBaseline-Quellen: ${it.baselineIds}\nShadow-Quellen: ${it.proposedIds}" }?:"\nNoch kein Shadow-Bericht in dieser Sitzung.")
   }
   shadow.setOnClickListener {
    runCatching {core.configureContextShadow(!core.contextShadowEnabled())}.onFailure {shadowStatus.text="Schalter konnte nicht gesichert werden."}
    refreshShadow()
   }
   button("Shadow-Bericht aktualisieren"){refreshShadow()};refreshShadow()
+  text("Ohne gesicherten Android-Zustand bitte den unbestätigten Auftrag neu eingeben. Freigaben werden nie wiederhergestellt.")
   text("Gespräch → geprüfter Projektplan. Unterstützt: Notizen oder Zähler, nur lokal. Keine Aufgabenverwaltung mit Abhaken/Löschen oder Synchronisierung.")
   val transcript=text(savedInstanceState?.getString("m5_transcript_v1")?.takeLast(12000)?:conversation.preview().message)
   transcriptView=transcript
+  if(acceptedTurns.isNotEmpty())transcript.append("\nAngaben wiederhergestellt. Bitte Plan erneut kontrollieren; keine Freigabe übernommen.")
   val input=EditText(this).apply { hint="Dein App-Wunsch";maxLines=4;filters=arrayOf(android.text.InputFilter.LengthFilter(512));column.addView(this) }
   draftInput=input
   input.setText(savedInstanceState?.getString("m5_draft_v1")?.take(512).orEmpty())
@@ -61,6 +64,7 @@ class ContinuumM5LabActivity:Activity() {
    transcript.text=(transcript.text.toString()+"\nDu: "+value+"\nContinuum: "+p.message).takeLast(12000)
    handoff.isEnabled=p.project!=null&&catalogValid()
   }
+  handoff.isEnabled=conversation.preview().project!=null&&catalogValid()
   column.addView(handoff)
   handoff.setOnClickListener {
    val p=conversation.preview();val project=p.project?:return@setOnClickListener

@@ -127,6 +127,7 @@ class ContinuumLearningCore(
     private val modelFile=File(directory,"subword-v1.bin")
     private val modelBackup=File(directory,"subword-v1.lkg")
     private val dialogue=ContinuumMemoryDialogue(directory)
+    private val defaultContextConversation=java.util.UUID.randomUUID().toString()
     private val checkpoints=ModelCheckpointStore(File(directory,"checkpoints"))
     // Optional observer reports real gradient-entry and post-gradient audit phases.
     // Observing never changes the model and failures cannot abort its training.
@@ -765,11 +766,13 @@ class ContinuumLearningCore(
     fun modelHash():String=synchronized(CORE_LOCK) { ContinuumMemoryDialogue.hash(loadModel().save()) }
     fun contextShadowEnabled() = at.heinz.deviceai.learning.context.Ctx3Shadow.enabled(directory)
     fun configureContextShadow(enabled:Boolean) = at.heinz.deviceai.learning.context.Ctx3Shadow.configure(directory,enabled)
-    fun contextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory)
-    fun replyFromMemory(input:String):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
+    fun contextShadowEvents(conversationId:String=defaultContextConversation) = at.heinz.deviceai.learning.context.Ctx3Shadow.events(directory,conversationId)
+    fun recentContextShadowEvents() = at.heinz.deviceai.learning.context.Ctx3Shadow.recentEvents(directory)
+    fun resetContextConversation(conversationId:String) = at.heinz.deviceai.learning.context.Ctx3Shadow.reset(directory,conversationId)
+    fun replyFromMemory(input:String,conversationId:String=defaultContextConversation):ContinuumDialogueTurn=synchronized(CORE_LOCK) {
         val bytes=loadModel().save(); val experiences=store.all()
         val answer=dialogue.reply(bytes,experiences,input,nowMillis())
-        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds) }
+        runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,bytes,experiences,input,answer.memoryIds,conversationId) }
         answer
     }
     /** One immutable model/experience view for answer AND CRE1 candidates.
@@ -779,12 +782,17 @@ class ContinuumLearningCore(
     fun replyWithEvidence(
         input:String,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithEvidenceInConversation(input,defaultContextConversation,rerank)
+
+    fun replyWithEvidenceInConversation(
+        input:String,conversationId:String,
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
     ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> =
         synchronized(CORE_LOCK) {
             val snapshot=loadModel().save()
             val experiences=store.all()
             val turn=dialogue.reply(snapshot,experiences,input,nowMillis(),rerank)
-            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds) }
+            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId) }
             val hits=if(turn.grounded) {
                 val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
                     .associateBy { it.id }

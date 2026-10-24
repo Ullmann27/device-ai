@@ -35,7 +35,8 @@ data class ContinuumCognitiveTurn(
  */
 class ContinuumCognitiveRuntime(
     private val appDirectory:File,
-    private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory)
+    private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),
+    private val conversationId:String=java.util.UUID.randomUUID().toString()
 ) {
     private val cre1Checkpoint=File(appDirectory,
         "learning-core-v2/cre1-research/cre1-research-v1.cre1")
@@ -69,7 +70,7 @@ class ContinuumCognitiveRuntime(
         }
         var shadow=emptyList<ContinuumShadowScore>()
         var didRerank=false
-        val (turn,ranked)=core.replyWithEvidence(input) { resolved,candidates ->
+        val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId) { resolved,candidates ->
             // The callback runs before the dialogue file is written. It may
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.

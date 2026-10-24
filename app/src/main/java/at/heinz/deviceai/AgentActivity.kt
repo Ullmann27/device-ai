@@ -340,6 +340,9 @@ class AgentActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
+            Regex("[a-f0-9-]{36}").matches(it)
+        }?.let { sessionId = it }
 
         window.statusBarColor = BG
         window.navigationBarColor = BG
@@ -467,6 +470,7 @@ class AgentActivity : Activity() {
             WORK_AREA_STATE_KEY,
             if (conversationActive) ContinuumWorkArea.CHAT.name else ContinuumWorkArea.START.name
         )
+        outState.putString("ctx3_chat_id_v1",sessionId)
         super.onSaveInstanceState(outState)
     }
 
@@ -2334,7 +2338,7 @@ class AgentActivity : Activity() {
                     !it.contradictory && it.text.length in 20..400 && it.sourceUrl.length in 10..400
                 }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
                 val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(
-                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core),
+                    at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId),
                     // Confirmed facts retain their exact deterministic meaning. Lexical
                     // anchors cannot prove that a model paraphrase is entailed.
                     null
@@ -4102,7 +4106,7 @@ class AgentActivity : Activity() {
                 val last=runCatching { core.dialogueHistory().lastOrNull() }.getOrNull()
                 val resolved=if(last!=null && !last.grounded)
                     runCatching {
-                        at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core)
+                        at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,conversationId=sessionId)
                             .reply(last.input)
                     }.getOrNull()
                     else null
@@ -6357,6 +6361,7 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Ein Auftrag läuft noch.", Toast.LENGTH_SHORT).show()
             return
         }
+        ContinuumLearningCore(filesDir).resetContextConversation(sessionId)
         sessionId = UUID.randomUUID().toString()
         agentLoops = 0
         planCard.visibility = View.GONE
