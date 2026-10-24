@@ -5,6 +5,7 @@
 ## Git-Identität und dauerhafte Sicherung
 
 - Ausschließlich `Ullmann27/device-ai`, Fortsetzungsbranch **sol/continuum-max-20261024**; isolierte Worktree.
+- **Draft-PR112:** https://github.com/Ullmann27/device-ai/pull/112 gegen den unveränderten Opus-Übergabezweig. Kein Merge/Auto-Merge angefordert.
 - Startremote erneut geprüft: `opus/continuum-sol-handoff-20261024` = **d0f0892e156b9bcfa6a9a80d6fcd515173a62565**.
 - **Gemeinsamer eingefrorener, vollständig geprüfter Code-/Releasekandidat: ec28d661e27090c91a3eb83707bf5f46376b97b5**.25 Jobidentitäten bestätigen genau diesen HEAD vor und nach jedem Prüflauf, getrackte Quellen unverändert.
 - Danach folgen ausschließlich Dokumentation/Prüfbelege. Tatsächlichen neuesten Dokumentations-HEAD mit `git ls-remote origin refs/heads/sol/continuum-max-20261024` lesen; Identität dieses vollständigen Handoffs mit `git log -1 --format=%H -- docs/CONTINUUM-SOL-MAX-HANDOFF-20261024.md`. Dies ist keine falsche zusätzliche Code-Testbehauptung über spätere Commits.
