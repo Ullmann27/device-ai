@@ -101,6 +101,23 @@ class ContinuumM5UiTest {
    assertNull(Shadows.shadowOf(restored.get()).nextStartedActivity)
   } finally {restored.pause().stop().destroy()}
  }
+ @Test fun chatCarriedProjectTextIsOnlyAnUnsubmittedDraft() {
+  val request=android.content.Intent(RuntimeEnvironment.getApplication(),ContinuumM5LabActivity::class.java)
+   .putExtra("m5_initial_draft_v1","Ich möchte eine Notizen App nur lokal")
+  val controller=Robolectric.buildActivity(ContinuumM5LabActivity::class.java,request).setup()
+  try {
+   val a=controller.get()
+   val all=views(a.findViewById(android.R.id.content))
+   val input=all.filterIsInstance<EditText>().single()
+   val handoff=all.filterIsInstance<Button>().single {it.text=="Plan prüfen und an Builder übergeben"}
+   assertEquals("Ich möchte eine Notizen App nur lokal",input.text.toString())
+   assertFalse(handoff.isEnabled)
+   assertNull(Shadows.shadowOf(a).nextStartedActivity)
+   all.filterIsInstance<Button>().single {it.text=="Anforderung ergänzen"}.performClick()
+   assertTrue(handoff.isEnabled)
+   assertNull(Shadows.shadowOf(a).nextStartedActivity)
+  } finally {controller.pause().stop().destroy()}
+ }
  @Test fun naturalRequestRequiresPlanReviewAndOnlyOpensExistingBuilder() {
   val controller=Robolectric.buildActivity(ContinuumM5LabActivity::class.java).setup()
   try {
