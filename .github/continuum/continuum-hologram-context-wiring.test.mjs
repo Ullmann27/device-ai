@@ -1,0 +1,52 @@
+// Defensive source-contract tests for the shared Android on-device UI/runtime.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+
+const root='app/src/main/java/at/heinz/deviceai/';
+const orb=readFileSync(root+'ContinuumHologramView.kt','utf8');
+const activity=readFileSync(root+'AgentActivity.kt','utf8');
+const cognition=readFileSync(root+'learning/ContinuumCognitiveRuntime.kt','utf8');
+
+const segment=(src,start,end)=>{
+ const a=src.indexOf(start);
+ assert.notEqual(a,-1,'Missing '+start);
+ const b=src.indexOf(end,a+start.length);
+ assert.ok(b>a,'Missing ending '+end);
+ return src.slice(a,b);
+};
+
+test('single hologram frame callback advances phase independently of Canvas onDraw',()=>{
+ const callback=segment(orb,'private val drawFrame = Runnable {','/** Owns the single visible-view frame callback');
+ const draw=segment(orb,'override fun onDraw(canvas: Canvas) {','private fun advanceFrame()');
+ assert.ok(callback.includes('advanceFrame()'));
+ assert.ok(callback.includes('postInvalidateOnAnimation()'));
+ assert.ok(callback.includes('scheduleFrame()'));
+ assert.ok(!draw.includes('advanceFrame()'), 'onDraw must not drive the motion clock');
+ assert.ok(!draw.includes('scheduleFrame()'), 'onDraw must not queue duplicate callbacks');
+ assert.ok(orb.includes('if (canAnimate() && !framePending)'));
+});
+test('foreground lifecycle explicitly pauses, cancels, and resumes hologram',()=>{
+ const paused=segment(activity,'override fun onPause() {','override fun onSaveInstanceState(');
+ const resumed=segment(activity,'override fun onResume() {','override fun onPause()');
+ const policy=segment(orb,'private fun updateMotionPolicy() {','private fun settleState()');
+ assert.ok(paused.includes('hologramView?.setForegroundActive(false)'));
+ assert.ok(resumed.includes('hologramView?.setForegroundActive(true)'));
+ assert.ok(orb.includes('foregroundActive && motionAllowed && isAttachedToWindow'));
+ assert.ok(policy.includes('removeCallbacks(drawFrame)'));
+ assert.ok(policy.includes('framePending = false'));
+ assert.ok(policy.includes('lastFrameMs = 0L'));
+ assert.ok(policy.includes('scheduleFrame()'));
+ assert.ok(orb.includes('ValueAnimator.areAnimatorsEnabled()'));
+ assert.ok(orb.includes('!powerManager.isPowerSaveMode'));
+});
+test('local model prompt never reads a profile-wide old dialogue after session change',()=>{
+ const reply=segment(cognition,'fun reply(input:String):ContinuumCognitiveTurn {','/**\n     * A profile-wide dialogue history');
+ assert.ok(reply.includes('localPrompt(input,turn.resolvedQuery)'));
+ assert.ok(!reply.includes('core.dialogueHistory()'));
+ const prompt=segment(cognition,'internal fun localPrompt(question:String,resolved:String):String','companion object {');
+ assert.ok(prompt.includes('if (candidate==clean)'));
+ assert.ok(prompt.includes('Bitte frage nach'));
+ assert.ok(prompt.includes('nicht unabhängig bestätigt'));
+ assert.ok(!prompt.includes('prior.lastOrNull'));
+});
