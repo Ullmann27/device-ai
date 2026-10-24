@@ -38,13 +38,17 @@ class ContinuumCognitiveRuntime(
     private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),
     private val conversationId:String=java.util.UUID.randomUUID().toString()
 ) {
+    // The profile's persisted dialogue-v1.bin has no per-conversation identity.
+    // A new runtime must therefore never inherit its inferred topic in a model prompt.
+    private var lastScopedGroundedQuestion:String?=null
+
     private val cre1Checkpoint=File(appDirectory,
         "learning-core-v2/cre1-research/cre1-research-v1.cre1")
 
     private val cre1Manifest=File(appDirectory,
         "learning-core-v2/cre1-research/cre1-promotion.properties")
 
-    fun reply(input:String):ContinuumCognitiveTurn {
+    @Synchronized fun reply(input:String):ContinuumCognitiveTurn {
         require(input.trim().length in 1..512)
         // A damaged checkpoint cannot be used, even with a plausible manifest.
         val snapshot=if(cre1Checkpoint.exists()) {
@@ -94,7 +98,20 @@ class ContinuumCognitiveRuntime(
         }
         val byId=shadow.associateBy { it.memoryId }
         val scores=ranked.mapNotNull { byId[it.id] }
-        val contextPrompt=localPrompt(input,turn.resolvedQuery)
+        // Only a grounded question already seen by THIS conversation runtime can
+        // contextualize a later follow-up. The core's resolvedQuery may contain
+        // a profile-wide topic belonging to another conversation ID.
+        val clean=input.trim().take(512)
+        val followUp=REFERENTIAL.containsMatchIn(clean) || CONTINUATION.containsMatchIn(clean)
+        val scopedPrevious=lastScopedGroundedQuestion
+        val currentContext=if(followUp && scopedPrevious!=null)
+            (scopedPrevious+" "+clean).take(512) else clean
+        val contextPrompt=localPrompt(clean,currentContext)
+        lastScopedGroundedQuestion=when {
+            !turn.grounded -> null
+            followUp -> scopedPrevious
+            else -> clean.take(320)
+        }
         val trace=buildString {
             append("SWB1=").append(turn.modelHash.take(12))
             append(" · Fakten=").append(turn.memoryIds.size)
@@ -123,13 +140,13 @@ class ContinuumCognitiveRuntime(
         val clean=question.trim().take(512)
         val candidate=resolved.trim().take(512)
         if (candidate==clean) {
-            if (!REFERENTIAL.containsMatchIn(clean)) return clean
+            if (!REFERENTIAL.containsMatchIn(clean) && !CONTINUATION.containsMatchIn(clean)) return clean
             return ("Aktuelle Frage: "+clean+
                 "\nDer Bezug des Pronomens ist nicht eindeutig aufgelöst. "+
                 "Bitte frage nach, statt frühere Gesprächsinhalte oder Besitzerfakten zu erfinden.").take(1024)
         }
         return ("Aktuelle Frage: "+clean+
-            "\nVom bestehenden Gedächtnisdialog vorgeschlagene Anschlussfrage: "+candidate+
+            "\nNur innerhalb dieses aktuellen Runtime-Gesprächs gebildete Anschlussfrage: "+candidate+
             "\nDer Bezug ist nicht unabhängig bestätigt. "+
             "Nutze nur ausdrücklich bestätigte Belege; frage bei Mehrdeutigkeit nach.").take(1024)
     }
@@ -145,6 +162,7 @@ class ContinuumCognitiveRuntime(
 
         private val REFERENTIAL=Regex(
             "(?iu)\\b(ihm|ihn|er|sie|ihr|ihre|seine|dessen|deren|darüber|dazu)\\b")
+        private val CONTINUATION=Regex("(?iu)\\b(und wie|und warum|noch mehr|weiter)\\b")
         private fun sha256(bytes:ByteArray):String=
             MessageDigest.getInstance("SHA-256").digest(bytes)
                 .joinToString("") { "%02x".format(it) }
