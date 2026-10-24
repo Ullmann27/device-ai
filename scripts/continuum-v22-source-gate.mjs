@@ -53,7 +53,10 @@ try {
        typeof item.blob !== 'string' || !/^[a-f0-9]{40}$/.test(item.blob))
       fail('Malformed or duplicate source entry');
     seen.add(p);
-    if(p === 'scripts/render-mentor-preview.sh') continue; // pinned by final approved builder commit
+    if(p === 'scripts/render-mentor-preview.sh' ||
+       p === 'scripts/continuum-owner-v19-release.test.mjs') continue;
+    // Reviewed dispatcher and historical version-contract test are pinned by the
+    // separately owner-approved final builder SHA, never by an unapproved manifest edit.
     let at=root;
     const segments=p.split('/');
     for(let i=0;i<segments.length;i++){
