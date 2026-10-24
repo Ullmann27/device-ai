@@ -528,7 +528,10 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},taskSpec);
       const edits=proposal.patches.map(p=>{
         const before=readFile(p.file);
-        if(typeof before!=='string'||before.split(p.oldText).length!==2)throw Error('LOCAL_PATCH_NOT_EXACT');
+        if(typeof before!=='string'||before.split(p.oldText).length!==2){
+          const error=Error('CODING_PATCH_NOT_EXACT');error.code='CODING_PATCH_NOT_EXACT';
+          error.responseFingerprint=sha256(JSON.stringify(proposal));throw error;
+        }
         return {file:p.file,oldText:before,newText:before.replace(p.oldText,()=>p.newText)};
       });
       candidate={id:sha256('LOCAL_SCOPED_PATCH\0'+JSON.stringify([...edits].sort((a,b)=>a.file.localeCompare(b.file)))).slice(0,16),
@@ -544,7 +547,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       // discarded. Error text itself is untrusted; only fixed codes and hashes
       // are admitted to future prompts and persisted reports.
       const allowed=new Set(['CODING_NOOP_PATCH','CODING_RESPONSE_INVALID',
-        'CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID']);
+        'CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID','CODING_PATCH_NOT_EXACT']);
       const code=allowed.has(error?.code)?error.code:'CODING_PROVIDER_UNAVAILABLE';
       const digest=/^[a-f0-9]{64}$/.test(error?.responseFingerprint??'')?error.responseFingerprint:null;
       report.inference.candidateStatus=allowed.has(code)?code:'UNAVAILABLE_OR_REJECTED';
@@ -554,7 +557,9 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
           report.inference.candidateStatus='REPEATED_INVALID_RESPONSE';
         } else rejectedResponses.add(digest);
       }
-      const guidance=code==='CODING_NOOP_PATCH'
+      const guidance=code==='CODING_PATCH_NOT_EXACT'
+        ? 'Rejected: oldText was absent or appeared more than once in its granted baseline source; quote exactly one unique unchanged source span.'
+        : code==='CODING_NOOP_PATCH'
         ? 'Rejected: oldText and newText were identical; propose an actual distinct source replacement against baseline.'
         : code==='CODING_RESPONSE_INVALID'||code==='CODING_REPLY_INVALID'||code==='CODING_PROPOSAL_INVALID'
           ? 'Rejected model output: provide valid bounded JSON with exact, distinct oldText/newText on a granted path.'
