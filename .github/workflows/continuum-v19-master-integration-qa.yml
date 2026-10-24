@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - "chatgpt/continuum-master-integration-v19-20261024"
+    paths:
+      - "app/**"
+      - "scripts/**"
+      - "backend/**"
+      - ".github/continuum/**"
+      - ".github/workflows/continuum-v19-master-integration-qa.yml"
   workflow_dispatch:
 permissions:
   contents: read
