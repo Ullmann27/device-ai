@@ -48,6 +48,22 @@ class Ctx1DialogueContext(facts: List<String>, private val generalized: Boolean 
         val cue = lower.any { it in CORRECTION_CUES } || lower.firstOrNull() == "und"
         val questionLike = input.trimEnd().endsWith("?") && lower.firstOrNull() != "und"
 
+        // CTX2 repair only. A rejected referent is not positive salience. A
+        // correction with no unique replacement invalidates the old question;
+        // a later pronoun must ask again, rather than resurrecting that target.
+        if (generalized) {
+            val rejected = mentions.filter { negated(lower, it.second) }.map { it.first }.toSet()
+            val rejectedPronoun = pronoun != null && negated(lower, pronoun.index)
+            if (rejected.isNotEmpty() || rejectedPronoun) {
+                val replacements = mentions.filter { !negated(lower, it.second) }.map { it.first }.distinct()
+                salient.removeAll { it.first in rejected }
+                if (rejectedPronoun || replacements.size != 1) {
+                    salient.clear(); lastQuery = null; lastEntity = null; askedFor = null; lastDay = null
+                    return Clarify
+                }
+            }
+        }
+
         // A short re-targeting turn ("Und Paul?", "Nein, ich meinte Anna.", "Nicht Max, sondern Paul.", "Und am Mittwoch?")
         // repeats the last question for a new entity or day.
         if (!questionLike && cue && lastQuery != null) {
@@ -62,7 +78,7 @@ class Ctx1DialogueContext(facts: List<String>, private val generalized: Boolean 
                 return remember(Ask(lastQuery!!.replace(previousDay, day)), null, day).also { askedFor = null }
         }
         if (mentions.isNotEmpty()) {
-            mentions.forEach { (e, _) -> touch(e) }
+            mentions.forEach { (e, i) -> if (!generalized || !negated(lower, i)) touch(e) }
             val wanted = mentions.filter { !negated(lower, it.second) }.map { it.first }
             val main = wanted.first()
             if (!main.known) return remember(Unknown, main)

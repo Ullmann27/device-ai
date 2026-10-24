@@ -53,12 +53,20 @@ class ContinuumMobileBuilderActivity : Activity() {
         }
         column.addView(backToAgent, LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, px(48)))
+        column.addView(Button(this).apply {
+            text = "M5 · Gespräch zu Projektplan (Forschung)"
+            isAllCaps = false
+            setOnClickListener { startActivity(Intent(this@ContinuumMobileBuilderActivity, ContinuumM5LabActivity::class.java)) }
+        })
         paragraph("Continuum · Android Builder", true)
         paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
         status.setTextIsSelectable(true)
         selectedProject = ContinuumOwnedProject.ofId(preferences.getString("selected_m4_project_v1", null))
             ?: ContinuumOwnedProject.NOTES
+        ContinuumOwnedProject.ofId(intent.getStringExtra("m5_project"))?.let {
+            if (intent.getStringExtra("m5_plan_sha") == it.planSha256) selectedProject = it
+        }
         val projectCatalogReady = runCatching {
             assets.open("continuum-owned-project-plans-v1.json").bufferedReader().use {
                 ContinuumOwnedProjectPlan.readCatalog(it.readText())

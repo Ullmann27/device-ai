@@ -1,0 +1,33 @@
+{
+  "baseCommit": "331e2d25c655b07e578ce4fa49da64fbc4f97c61",
+  "codeCommit": "fc1d996135d98165a7102d0a4e67b9ff34a0b1f0",
+  "branch": "sol/continuum-m5-context-coding-experiments-20261024",
+  "pr": 109,
+  "node": {
+    "tests": 1085,
+    "pass": 1085,
+    "fail": 0,
+    "skip": 0
+  },
+  "backend": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "skip": 0
+  },
+  "androidJUnit": {
+    "tests": 913,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "robolectricWidgetCases": 12,
+  "kotlinChecksPrograms": 4,
+  "scope": "HOST_SDK_AND_JVM_NOT_PHYSICAL_ANDROID",
+  "newOwnerApkBuilt": false,
+  "test3Invocations": 1,
+  "test3Decision": "FAIL_NO_PROMOTION",
+  "performanceRawSha256": "4247755bea3991426b5cce27ac17755f62e9b504beddc4d4abc206928dbc0357",
+  "ownerWeightsChanged": false,
+  "newModelTrainingExperiment": false
+}

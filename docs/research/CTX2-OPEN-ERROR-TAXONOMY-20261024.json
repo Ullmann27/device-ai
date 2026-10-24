@@ -1,0 +1,1283 @@
+{
+  "schema": "continuum-ctx2-open-error-taxonomy",
+  "version": 1,
+  "date": "2026-10-24",
+  "experimentId": "EXP-14",
+  "evaluationStatus": "KNOWN_OPEN_TEST2_DEVELOPMENT_DIAGNOSIS",
+  "sourceReport": {
+    "path": "docs/research/ctx2-open-b2-report-20261024.json",
+    "sha256": "be7abf235f5f9539dfbb3c5aa5183c1503faae7fab942f90b74ad4829250ae31",
+    "system": "B2",
+    "totals": {
+      "CORRECT": 885,
+      "WRONG": 27,
+      "MISSED": 0,
+      "UNNEEDED_CLARIFY": 8,
+      "CLARIFIED": 80,
+      "ABSTAINED": 80
+    },
+    "failureRecords": 35,
+    "wrongRecords": 27,
+    "unneededClarifyRecords": 8,
+    "commitMetadataPresent": false
+  },
+  "frozenB2": {
+    "repairCommit": "44c4d743e64f41cde2f6489e2e34ee7ba03ea012",
+    "contextSourceSha256": "84008954049406050b31b05afca4abea38ba1a3fddda0bc7a31f45a1dfc61a34",
+    "corpusSha256": "2a7242bf6a93a2366fb36275f431cfeeba8ff7f651c3033e8617ca73c4c9222a",
+    "corpusSeed": 20261104,
+    "dialogsPerFamily": 40,
+    "diagnosticDialogs": 27,
+    "exactQueryAndFirstCitationReproductions": 27,
+    "noGradle": true
+  },
+  "primaryCounts": {
+    "ENTITY_REGISTRATION_MISSING": 13,
+    "PRONOUN_GENDER_AND_RECENCY": 14
+  },
+  "overlappingCategoryCounts": {
+    "entity": 27,
+    "pronoun": 27,
+    "time": 0,
+    "source": 27,
+    "rewriting": 27,
+    "stale": 13
+  },
+  "categoryInterpretation": {
+    "entity": "Falscher Referent;13 fehlende Gegenstände und14 zu breit typisierte Haustiere.",
+    "pronoun": "Alle27 Fehlzüge sind Pronomenfragen.",
+    "time": "Keine Kalender-/Zeitauflösungsursache; Alterszahlen zählen nicht als Zeitauflösung.",
+    "source": "Alle27 Erstbelege liegen außerhalb Gold, aber innerhalb des aktuellen bestätigten Dialogpools; keine unabhängige Widerrufs-/Provenienzverletzung.",
+    "rewriting": "Alle27 Pronomen werden zum falschen Entitynamen umgeschrieben; keine separat nachgewiesene Regex-/Tippfehlerursache.",
+    "stale": "Nur13 SWITCH-Fälle: alter Personenfokus überlebt den tatsächlichen Themenwechsel; RETURN14 nutzt einen frischen falschen Kandidaten."
+  },
+  "independentSourceAuthorizationViolationsObserved": 0,
+  "cases": [
+    {
+      "dialogId": "ctx2-test-switch-0",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Welche Farbe hat sie eigentlich?",
+      "rewrittenQuery": "Welche Farbe hat Konrad eigentlich?",
+      "intendedEntity": "Kaffeemaschine",
+      "selectedEntity": "Konrad",
+      "pronoun": "sie",
+      "firstCited": "Konrad arbeitet als Tischler.",
+      "gold": [
+        "Unsere Kaffeemaschine hat die Farbe Silber."
+      ],
+      "scope": [
+        "Das ist Konrad, mein Schulfreund.",
+        "Konrad ist 65 Jahre alt.",
+        "Konrad wohnt in Leoben.",
+        "Konrad arbeitet als Tischler.",
+        "Konrad spielt gern Volleyball."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Konrad.",
+        "Sag mir etwas über meine Kaffeemaschine."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Konrad",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Konrad"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-2",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat er?",
+      "rewrittenQuery": "Was für eine Farbe hat Clemens?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Clemens",
+      "pronoun": "er",
+      "firstCited": "Clemens arbeitet als Gärtner.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Silber."
+      ],
+      "scope": [
+        "Mein Mitbewohner Clemens ist 49 Jahre alt.",
+        "Clemens wohnt in Dornbirn.",
+        "Clemens arbeitet als Gärtner.",
+        "Clemens spielt gern Golf."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Clemens?",
+        "Sag mir etwas über mein Kühlschrank."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Clemens",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Clemens"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-8",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Welche Farbe hat er eigentlich?",
+      "rewrittenQuery": "Welche Farbe hat Gregor eigentlich?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Gregor",
+      "pronoun": "er",
+      "firstCited": "Gregor arbeitet als Elektriker.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Violett."
+      ],
+      "scope": [
+        "Gregor, mein Enkel, wohnt in Dornbirn.",
+        "Gregor ist 12 Jahre alt.",
+        "Gregor arbeitet als Elektriker.",
+        "Gregor spielt gern Golf."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Gregor?",
+        "Kennst du mein Kühlschrank?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Gregor",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Gregor"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-9",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat sie?",
+      "rewrittenQuery": "Was für eine Farbe hat Clemens?",
+      "intendedEntity": "Kaffeemaschine",
+      "selectedEntity": "Clemens",
+      "pronoun": "sie",
+      "firstCited": "Clemens arbeitet als Gärtner.",
+      "gold": [
+        "Unsere Kaffeemaschine hat die Farbe Braun."
+      ],
+      "scope": [
+        "Clemens, mein Schwager, wohnt in Dornbirn.",
+        "Clemens ist 53 Jahre alt.",
+        "Clemens arbeitet als Gärtner.",
+        "Clemens spielt gern Tarock."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Clemens.",
+        "Kennst du meine Kaffeemaschine?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Clemens",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Clemens"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-17",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat sie?",
+      "rewrittenQuery": "Was für eine Farbe hat Theresa?",
+      "intendedEntity": "Kaffeemaschine",
+      "selectedEntity": "Theresa",
+      "pronoun": "sie",
+      "firstCited": "Theresa arbeitet als Bäckerin.",
+      "gold": [
+        "Unsere Kaffeemaschine hat die Farbe Orange."
+      ],
+      "scope": [
+        "Meine Taufpatin Theresa ist 20 Jahre alt.",
+        "Theresa wohnt in Amstetten.",
+        "Theresa arbeitet als Bäckerin.",
+        "Theresa spielt gern Volleyball."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Theresa.",
+        "Kennst du meine Kaffeemaschine?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Theresa",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Theresa"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-19",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat er?",
+      "rewrittenQuery": "Was für eine Farbe hat Antonia?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Antonia",
+      "pronoun": "er",
+      "firstCited": "Antonia arbeitet als Gärtnerin.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Orange."
+      ],
+      "scope": [
+        "Das ist Antonia, meine Nichte.",
+        "Antonia ist 37 Jahre alt.",
+        "Antonia wohnt in Dornbirn.",
+        "Antonia arbeitet als Gärtnerin.",
+        "Antonia spielt gern Volleyball."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Antonia?",
+        "Sag mir etwas über mein Kühlschrank."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Antonia",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Antonia"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-20",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat er?",
+      "rewrittenQuery": "Was für eine Farbe hat Valentin?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Valentin",
+      "pronoun": "er",
+      "firstCited": "Valentin arbeitet als Apotheker.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Violett."
+      ],
+      "scope": [
+        "Das ist Valentin, mein Enkel.",
+        "Valentin ist 22 Jahre alt.",
+        "Valentin wohnt in Villach.",
+        "Valentin arbeitet als Apotheker.",
+        "Valentin spielt gern Volleyball."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Valentin.",
+        "Sag mir etwas über mein Kühlschrank."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Valentin",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Valentin"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-21",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Welche Farbe hat er eigentlich?",
+      "rewrittenQuery": "Welche Farbe hat Clemens eigentlich?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Clemens",
+      "pronoun": "er",
+      "firstCited": "Clemens arbeitet als Bäcker.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Violett."
+      ],
+      "scope": [
+        "Clemens, mein Schulfreund, wohnt in Steyr.",
+        "Clemens ist 8 Jahre alt.",
+        "Clemens arbeitet als Bäcker.",
+        "Clemens spielt gern Tarock."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Clemens?",
+        "Kennst du mein Kühlschrank?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Clemens",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Clemens"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-22",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat sie?",
+      "rewrittenQuery": "Was für eine Farbe hat Magdalena?",
+      "intendedEntity": "Nähmaschine",
+      "selectedEntity": "Magdalena",
+      "pronoun": "sie",
+      "firstCited": "Magdalena arbeitet als Friseurin.",
+      "gold": [
+        "Unsere Nähmaschine hat die Farbe Türkis."
+      ],
+      "scope": [
+        "Das ist Magdalena, meine Chefin.",
+        "Magdalena ist 28 Jahre alt.",
+        "Magdalena wohnt in Villach.",
+        "Magdalena arbeitet als Friseurin.",
+        "Magdalena spielt gern Schlagzeug."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Magdalena?",
+        "Kennst du meine Nähmaschine?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Magdalena",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Magdalena"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-23",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Welche Farbe hat sie eigentlich?",
+      "rewrittenQuery": "Welche Farbe hat Raphael eigentlich?",
+      "intendedEntity": "Kaffeemaschine",
+      "selectedEntity": "Raphael",
+      "pronoun": "sie",
+      "firstCited": "Raphael arbeitet als Tischler.",
+      "gold": [
+        "Unsere Kaffeemaschine hat die Farbe Silber."
+      ],
+      "scope": [
+        "Raphael, mein Taufpate, wohnt in Wels.",
+        "Raphael ist 59 Jahre alt.",
+        "Raphael arbeitet als Tischler.",
+        "Raphael spielt gern Schlagzeug."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Raphael.",
+        "Kennst du meine Kaffeemaschine?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Raphael",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Raphael"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-24",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Welche Farbe hat er eigentlich?",
+      "rewrittenQuery": "Welche Farbe hat Ferdinand eigentlich?",
+      "intendedEntity": "Kühlschrank",
+      "selectedEntity": "Ferdinand",
+      "pronoun": "er",
+      "firstCited": "Ferdinand arbeitet als Elektriker.",
+      "gold": [
+        "Unser Kühlschrank hat die Farbe Violett."
+      ],
+      "scope": [
+        "Ferdinand, mein Neffe, wohnt in Steyr.",
+        "Ferdinand ist 30 Jahre alt.",
+        "Ferdinand arbeitet als Elektriker.",
+        "Ferdinand spielt gern Tarock."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Ferdinand?",
+        "Sag mir etwas über mein Kühlschrank."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Ferdinand",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Ferdinand"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-31",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat sie?",
+      "rewrittenQuery": "Was für eine Farbe hat Valerie?",
+      "intendedEntity": "Nähmaschine",
+      "selectedEntity": "Valerie",
+      "pronoun": "sie",
+      "firstCited": "Valerie arbeitet als Tischlerin.",
+      "gold": [
+        "Unsere Nähmaschine hat die Farbe Silber."
+      ],
+      "scope": [
+        "Das ist Valerie, meine Mitbewohnerin.",
+        "Valerie ist 75 Jahre alt.",
+        "Valerie wohnt in Wels.",
+        "Valerie arbeitet als Tischlerin.",
+        "Valerie spielt gern Badminton."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Valerie.",
+        "Kennst du meine Nähmaschine?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Valerie",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Valerie"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-switch-32",
+      "turn": 3,
+      "family": "SWITCH",
+      "primaryCategory": "ENTITY_REGISTRATION_MISSING",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting",
+        "stale"
+      ],
+      "input": "Was für eine Farbe hat sie?",
+      "rewrittenQuery": "Was für eine Farbe hat Magdalena?",
+      "intendedEntity": "Kaffeemaschine",
+      "selectedEntity": "Magdalena",
+      "pronoun": "sie",
+      "firstCited": "Magdalena arbeitet als Gärtnerin.",
+      "gold": [
+        "Unsere Kaffeemaschine hat die Farbe Orange."
+      ],
+      "scope": [
+        "Meine Mitbewohnerin Magdalena ist 45 Jahre alt.",
+        "Magdalena wohnt in Amstetten.",
+        "Magdalena arbeitet als Gärtnerin.",
+        "Magdalena spielt gern Golf."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Magdalena?",
+        "Sag mir etwas über meine Kaffeemaschine."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Magdalena",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Magdalena"
+        ],
+        "known": true
+      },
+      "reason": "Der Gegenstand fehlt im Register; sein korrekt zitierter Einführungszug aktualisiert den Personenfokus nicht."
+    },
+    {
+      "dialogId": "ctx2-test-return-8",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Als was arbeitet er denn?",
+      "rewrittenQuery": "Als was arbeitet Strolchi denn?",
+      "intendedEntity": "Bernhard",
+      "selectedEntity": "Strolchi",
+      "pronoun": "er",
+      "firstCited": "Strolchi ist 35 Jahre alt.",
+      "gold": [
+        "Bernhard arbeitet als Bäcker."
+      ],
+      "scope": [
+        "Strolchi ist das Haustier der Familie, eine Ziege.",
+        "Strolchi ist 35 Jahre alt.",
+        "Strolchi frisst am liebsten Hirse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Bernhard?",
+        "Kennst du Strolchi?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Strolchi",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Strolchi"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-10",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was spielt er am liebsten?",
+      "rewrittenQuery": "Was spielt Strolchi am liebsten?",
+      "intendedEntity": "Konrad",
+      "selectedEntity": "Strolchi",
+      "pronoun": "er",
+      "firstCited": "Strolchi frisst am liebsten Bananen.",
+      "gold": [
+        "Konrad spielt gern Akkordeon."
+      ],
+      "scope": [
+        "Strolchi ist das Haustier der Familie, eine Ratte.",
+        "Strolchi ist 10 Jahre alt.",
+        "Strolchi frisst am liebsten Bananen."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Konrad?",
+        "Kennst du Strolchi?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Strolchi",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Strolchi"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-11",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wo wohnt er jetzt?",
+      "rewrittenQuery": "Wo wohnt Kiki jetzt?",
+      "intendedEntity": "Matthias",
+      "selectedEntity": "Kiki",
+      "pronoun": "er",
+      "firstCited": "Kiki ist 68 Jahre alt.",
+      "gold": [
+        "Matthias wohnt in Leoben."
+      ],
+      "scope": [
+        "Kiki ist das Haustier der Familie, eine Ratte.",
+        "Kiki ist 68 Jahre alt.",
+        "Kiki frisst am liebsten Gurken."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Matthias?",
+        "Kennst du Kiki?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Kiki",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Kiki"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-16",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Als was arbeitet er denn?",
+      "rewrittenQuery": "Als was arbeitet Kiki denn?",
+      "intendedEntity": "Clemens",
+      "selectedEntity": "Kiki",
+      "pronoun": "er",
+      "firstCited": "Kiki ist 45 Jahre alt.",
+      "gold": [
+        "Clemens arbeitet als Gärtner."
+      ],
+      "scope": [
+        "Kiki ist das Haustier der Familie, eine Ziege.",
+        "Kiki ist 45 Jahre alt.",
+        "Kiki frisst am liebsten Nüsse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Clemens.",
+        "Sag mir etwas über Kiki."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Kiki",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Kiki"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-17",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was spielt er denn gern?",
+      "rewrittenQuery": "Was spielt Strolchi denn gern?",
+      "intendedEntity": "Konrad",
+      "selectedEntity": "Strolchi",
+      "pronoun": "er",
+      "firstCited": "Strolchi ist 36 Jahre alt.",
+      "gold": [
+        "Konrad spielt gern Schlagzeug."
+      ],
+      "scope": [
+        "Strolchi ist das Haustier der Familie, eine Ziege.",
+        "Strolchi ist 36 Jahre alt.",
+        "Strolchi frisst am liebsten Gras."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Konrad?",
+        "Kennst du Strolchi?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Strolchi",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Strolchi"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-19",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wie alt ist er eigentlich?",
+      "rewrittenQuery": "Wie alt ist Nala eigentlich?",
+      "intendedEntity": "Gregor",
+      "selectedEntity": "Nala",
+      "pronoun": "er",
+      "firstCited": "Nala ist 11 Jahre alt.",
+      "gold": [
+        "Mein Taufpate Gregor ist 66 Jahre alt."
+      ],
+      "scope": [
+        "Nala ist das Haustier der Familie, eine Ziege.",
+        "Nala ist 11 Jahre alt.",
+        "Nala frisst am liebsten Löwenzahn."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Gregor?",
+        "Sag mir etwas über Nala."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Nala",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Nala"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-20",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was arbeitet er eigentlich?",
+      "rewrittenQuery": "Was arbeitet Flocki eigentlich?",
+      "intendedEntity": "Bernhard",
+      "selectedEntity": "Flocki",
+      "pronoun": "er",
+      "firstCited": "Flocki ist 12 Jahre alt.",
+      "gold": [
+        "Bernhard arbeitet als Bäcker."
+      ],
+      "scope": [
+        "Flocki ist das Haustier der Familie, eine Ratte.",
+        "Flocki ist 12 Jahre alt.",
+        "Flocki frisst am liebsten Nüsse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Bernhard?",
+        "Kennst du Flocki?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Flocki",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Flocki"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-22",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was arbeitet er eigentlich?",
+      "rewrittenQuery": "Was arbeitet Brutus eigentlich?",
+      "intendedEntity": "Konrad",
+      "selectedEntity": "Brutus",
+      "pronoun": "er",
+      "firstCited": "Brutus ist 42 Jahre alt.",
+      "gold": [
+        "Konrad arbeitet als Gärtner."
+      ],
+      "scope": [
+        "Brutus ist das Haustier der Familie, eine Ziege.",
+        "Brutus ist 42 Jahre alt.",
+        "Brutus frisst am liebsten Nüsse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Konrad.",
+        "Sag mir etwas über Brutus."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Brutus",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Brutus"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-23",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wie alt ist er eigentlich?",
+      "rewrittenQuery": "Wie alt ist Brutus eigentlich?",
+      "intendedEntity": "Clemens",
+      "selectedEntity": "Brutus",
+      "pronoun": "er",
+      "firstCited": "Brutus ist 19 Jahre alt.",
+      "gold": [
+        "Clemens ist 72 Jahre alt."
+      ],
+      "scope": [
+        "Brutus ist das Haustier der Familie, eine Ziege.",
+        "Brutus ist 19 Jahre alt.",
+        "Brutus frisst am liebsten Gurken."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Clemens.",
+        "Sag mir etwas über Brutus."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Brutus",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Brutus"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-26",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was spielt er am liebsten?",
+      "rewrittenQuery": "Was spielt Moritz am liebsten?",
+      "intendedEntity": "Bernhard",
+      "selectedEntity": "Moritz",
+      "pronoun": "er",
+      "firstCited": "Moritz frisst am liebsten Löwenzahn.",
+      "gold": [
+        "Bernhard spielt gern Golf."
+      ],
+      "scope": [
+        "Moritz ist das Haustier der Familie, eine Ziege.",
+        "Moritz ist 62 Jahre alt.",
+        "Moritz frisst am liebsten Löwenzahn."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Kennst du Bernhard?",
+        "Kennst du Moritz?"
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Moritz",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Moritz"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-27",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wo wohnt er jetzt?",
+      "rewrittenQuery": "Wo wohnt Flocki jetzt?",
+      "intendedEntity": "Gregor",
+      "selectedEntity": "Flocki",
+      "pronoun": "er",
+      "firstCited": "Flocki ist 15 Jahre alt.",
+      "gold": [
+        "Gregor, mein Chef, wohnt in Amstetten."
+      ],
+      "scope": [
+        "Flocki ist das Haustier der Familie, eine Ziege.",
+        "Flocki ist 15 Jahre alt.",
+        "Flocki frisst am liebsten Hirse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Gregor.",
+        "Sag mir etwas über Flocki."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Flocki",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Flocki"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-36",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wie alt ist er eigentlich?",
+      "rewrittenQuery": "Wie alt ist Kiki eigentlich?",
+      "intendedEntity": "Clemens",
+      "selectedEntity": "Kiki",
+      "pronoun": "er",
+      "firstCited": "Kiki ist 8 Jahre alt.",
+      "gold": [
+        "Mein Schulfreund Clemens ist 45 Jahre alt."
+      ],
+      "scope": [
+        "Kiki ist das Haustier der Familie, eine Ratte.",
+        "Kiki ist 8 Jahre alt.",
+        "Kiki frisst am liebsten Gurken."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Clemens.",
+        "Sag mir etwas über Kiki."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Kiki",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Kiki"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-37",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Wie alt ist er eigentlich?",
+      "rewrittenQuery": "Wie alt ist Nala eigentlich?",
+      "intendedEntity": "Severin",
+      "selectedEntity": "Nala",
+      "pronoun": "er",
+      "firstCited": "Nala ist 54 Jahre alt.",
+      "gold": [
+        "Severin ist 65 Jahre alt."
+      ],
+      "scope": [
+        "Nala ist das Haustier der Familie, eine Ratte.",
+        "Nala ist 54 Jahre alt.",
+        "Nala frisst am liebsten Gras."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Severin.",
+        "Sag mir etwas über Nala."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Nala",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Nala"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    },
+    {
+      "dialogId": "ctx2-test-return-39",
+      "turn": 3,
+      "family": "RETURN",
+      "primaryCategory": "PRONOUN_GENDER_AND_RECENCY",
+      "tags": [
+        "entity",
+        "pronoun",
+        "source",
+        "rewriting"
+      ],
+      "input": "Was arbeitet er eigentlich?",
+      "rewrittenQuery": "Was arbeitet Strolchi eigentlich?",
+      "intendedEntity": "Ferdinand",
+      "selectedEntity": "Strolchi",
+      "pronoun": "er",
+      "firstCited": "Strolchi ist 60 Jahre alt.",
+      "gold": [
+        "Ferdinand arbeitet als Bäcker."
+      ],
+      "scope": [
+        "Strolchi ist das Haustier der Familie, eine Ratte.",
+        "Strolchi ist 60 Jahre alt.",
+        "Strolchi frisst am liebsten Nüsse."
+      ],
+      "scopeExcludesAllGold": true,
+      "citationsInCurrentDialogFacts": true,
+      "precedingInputs": [
+        "Sag mir etwas über Ferdinand.",
+        "Sag mir etwas über Strolchi."
+      ],
+      "selectedEntityRegistry": {
+        "surface": "Strolchi",
+        "genders": [
+          "M",
+          "F"
+        ],
+        "aliases": [
+          "Strolchi"
+        ],
+        "known": true
+      },
+      "reason": "Das zuvor weiblich eingeführte Haustier trägt im Register M/F; die jüngere Erwähnung verdrängt beim Pronomen er die Person."
+    }
+  ],
+  "limits": [
+    "Nur bekannte offene TEST2-Fehler; kein frischer Blindnachweis.",
+    "Nur27 WRONG klassifiziert;8 UNNEEDED_CLARIFY separat ausgeschlossen.",
+    "Keine Aussage über Güte von CTX3 oder allgemeine Sprachfähigkeit.",
+    "Kein Einblick in versiegelten TEST3; keine Produktregeln geändert."
+  ],
+  "reproduction": "docs/evidence/sol-m5-20261024/diagnostics/reproduce-ctx2-open-taxonomy.sh"
+}

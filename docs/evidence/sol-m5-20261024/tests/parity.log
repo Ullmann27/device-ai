@@ -1,0 +1,4 @@
+SWB2 cross-runtime parity verified: 350 rounds, 700 updates, 4113 weights within 1e-8
+Cross-runtime parity verified: 4113 weights, max error 1.3877787807814457e-17
+CRE1 Kotlin/Node inference parity verified on 7 cases
+CRE1 Kotlin/Node SGD parity verified over 526336 weights (max error 3.469446951953614e-18)

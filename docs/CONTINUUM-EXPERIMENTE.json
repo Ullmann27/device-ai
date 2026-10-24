@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-23",
+  "updated": "2026-10-24",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -90,7 +90,7 @@
       "id": "EXP-08",
       "title": "Android local job/result bridge",
       "status": "SOURCE_INTEGRATED",
-      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed. Argon review: native single-active-job guard already rejects a second STATUS/DOCTOR/BUILD request during pending BUILD. On integration branch, receipt hardening now binds callback operation/UUID in URI and validates 40-hex commit, preview package, versionCode and existing sha256/signer, with Termux err == -1. These new changes require device runtime verification; owner Samsung 0.3.10 does not yet include them. Sol M4: two allowlisted hash-bound project plans, persistent private build evidence and read-only project status, separate one-shot recovery slot preserving MAIN callback; actual SDK compile, 873 JUnit cases including 8 Robolectric UI cases passed. Current phone callback/SELinux/cancellation remains unverified.",
+      "present": "Samsung Android 16 on 2026-10-21: owner confirmed real Android→Termux DOCTOR and STATUS callback; local status CLI returned historical successful signed preview APK on older two-core commit 91291cb2. New current-feature app→Termux BUILD callback, lease/authenticated replay and owner device-tested artifact are NOT proven. Only fixed commands, request IDs and one-shot Android callback allowed. Argon review: native single-active-job guard already rejects a second STATUS/DOCTOR/BUILD request during pending BUILD. On integration branch, receipt hardening now binds callback operation/UUID in URI and validates 40-hex commit, preview package, versionCode and existing sha256/signer, with Termux err == -1. These new changes require device runtime verification; owner Samsung 0.3.10 does not yet include them. Sol M4: two allowlisted hash-bound project plans, persistent private build evidence and read-only project status, separate one-shot recovery slot preserving MAIN callback; actual SDK compile, 873 JUnit cases including 8 Robolectric UI cases passed. Current phone callback/SELinux/cancellation remains unverified. M5 2026-10-24: bounded reviewed conversation-to-builder selection, revision/hash control and Android SavedState tested under SDK/Robolectric; no direct tool dispatch. Physical phone acceptance remains open.",
       "entry": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
       "depends": "Versioned job IDs, authenticated IPC and user grants",
       "gate": "On the current integrated source, app-button BUILD must actually produce a validated Android→Termux→App completion receipt with exact Git commit/SHA/signing/package verification; inspect replay/lease and failure paths. No automatic installation. Include operation-id URI identity, payload binding and negative tests for missing/wrong commit/package/version. Never claim current-source M1 closed before an actual Android->Termux->Android BUILD callback and independently checked commit."
@@ -144,7 +144,7 @@
       "id": "EXP-14",
       "title": "CTX1 (S1/S2): bounded context routine in front of the memory dialogue core",
       "status": "RESEARCH_SHADOW",
-      "present": "Test source set only; pre-registered, single TEST run on 480 unseen dialogs (1080 turns): today's core 433 wrong claims and 631/920 grounded answers, routine + same core 0 wrong and 920/920, 80/80 questions back, 80/80 abstentions; routine 0.10 ms median",
+      "present": "Test source set only; pre-registered, single TEST run on 480 unseen dialogs (1080 turns): today's core 433 wrong claims and 631/920 grounded answers, routine + same core 0 wrong and 920/920, 80/80 questions back, 80/80 abstentions; routine 0.10 ms median M5: CTX2 generalized-only negation crash fixed; known-open TEST2 B2 885 correct/27 wrong. Independent TEST3 (24 dialogs/198 turns) after code freeze fc1d996: CTX3 13 correct/3 wrong vs B0 111/77, preregistered correctness criterion FAIL. No active promotion; optional OFF/SHADOW only. Explicit session namespaces/revisions/withdrawal tested. docs/research/CTX3-INDEPENDENT-RESULT-20261024.md.",
       "entry": "docs/research/CTX1-DIALOGUE-CONTEXT-RESULT-20261024.md",
       "depends": "Real owner-memory phrasings as a new TEST split; revocation test; switch default off in ContinuumLearningCore.replyFromMemory",
       "gate": "Fewer than half the wrong claims of today's core, no loss of grounded answers, at most 5 % needless questions back, routine p95 at most 20 ms"
