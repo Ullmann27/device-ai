@@ -45,3 +45,6 @@ Interface: accept(text) → Preview/Clarify/Unsupported; approve(revision,hash) 
 ## Ledger
 Baseline läuft auf unverändertem 331e2d2. TEST2 ist geöffnet und darf nur Regression heißen.
 Ruling: Besitzer verlangt autonome Implementierung; keine erneuten Design-/Routinefreigaben. Kosten: begrenzter Scope muss klar bleiben.
+
+Task 1: CTX2-Regressionssuite zuerst 4 Tests/3 Fehler, danach CTX1/CTX2 zusammen18/18 grün. SDK-Ausgang889/889 inkl8UI, Node1085/1085. Ursprünglicher TEST2-Runner scheitert bereits im unveränderten B1-Arm; deshalb keine falsche B2-Gesamtmessung behaupten. Reparierter B2 wird getrennt als bekannte TEST2-Regression gemessen. Keine Veränderung des B1-Verhaltens zur Rettung eines Forschungswerts.
+Unabhängiger TEST3:24 Dialoge/198 Züge/42923 Bytes, SHA256 e5681030efe4f83a471cc2e91dae7bf3ed577f889b0fc0aabd48cf39bfd39077; Inhalt bis Freeze nicht vom Implementierer gelesen.
