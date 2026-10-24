@@ -452,6 +452,8 @@ class AgentActivity : Activity() {
         foregroundLearningActive = true
         // Only the foreground Activity may advance the hologram's orbital clock.
         hologramView?.setForegroundActive(true)
+        homeView?.setForegroundActive(true)
+        liveHardwareGauges?.setForegroundActive(true)
         refreshHologramState()
         mainHandler.removeCallbacks(foregroundLearningCheck)
         mainHandler.postDelayed(foregroundLearningCheck, 15_000L)
@@ -462,6 +464,8 @@ class AgentActivity : Activity() {
     override fun onPause() {
         foregroundLearningActive = false
         hologramView?.setForegroundActive(false)
+        homeView?.setForegroundActive(false)
+        liveHardwareGauges?.setForegroundActive(false)
         stopVoiceAnimation()
         voiceEngine?.stop()
         webToolGate.cancel()
@@ -713,6 +717,7 @@ class AgentActivity : Activity() {
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
         home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
             windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat())
+        home.setForegroundActive(foregroundLearningActive)
         homeView = home
         dashboard.addView(home, matchWidth())
         // The former status badges are no longer shown (the reference screen has none). They stay initialised because
@@ -1281,6 +1286,7 @@ class AgentActivity : Activity() {
             val systemSnapshot = homeView?.state?.system
                 ?: at.heinz.deviceai.ui.ContinuumDashboardState.SystemStatus()
             val gauges = at.heinz.deviceai.ui.ContinuumSystemGaugesView(this, systemSnapshot)
+            gauges.setForegroundActive(foregroundLearningActive)
             liveHardwareGauges = gauges
             box.addView(gauges, matchWidth(top = 3))
             box.addView(textView(

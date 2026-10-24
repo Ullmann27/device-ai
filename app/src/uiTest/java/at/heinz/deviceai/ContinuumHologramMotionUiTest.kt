@@ -66,6 +66,24 @@ class ContinuumHologramMotionUiTest {
                 assertTrue(phases[1] > phases[0] && phases[2] > phases[1])
                 assertFalse("First real second must visibly change Canvas pixels", frames[0].sameAs(frames[1]))
                 assertFalse("Continuous motion must change the next second too", frames[1].sameAs(frames[2]))
+                // Separate proof for the innermost glass and outer orbit band, in actual pixel coordinates.
+                val geometry = if (height == 291) at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.FOLD
+                    else at.heinz.deviceai.ui.ContinuumHologramRenderer.Geometry.PHONE
+                val radius = minOf(width * geometry.radiusOfWidth, height * geometry.radiusOfHeight) * geometry.sphere
+                val centerY = height * geometry.centerY
+                for (index in 0..1) {
+                    var coreChanged = 0
+                    var orbitChanged = 0
+                    for (y in 0 until height) for (x in 0 until width) {
+                        if (frames[index].getPixel(x, y) == frames[index + 1].getPixel(x, y)) continue
+                        val dx = x - width / 2f; val dy = y - centerY
+                        val rr = (dx * dx + dy * dy) / (radius * radius)
+                        if (rr < .32f * .32f) coreChanged++
+                        if (rr in 1.05f * 1.05f..1.6f * 1.6f) orbitChanged++
+                    }
+                    assertTrue("Central glass must visibly change ($coreChanged)", coreChanged > 200)
+                    assertTrue("Outer orbits must visibly change ($orbitChanged)", orbitChanged > 200)
+                }
                 view.setForegroundActive(false)
                 val paused = phase(view)
                 shadowOf(Looper.getMainLooper()).idleFor(1, TimeUnit.SECONDS)

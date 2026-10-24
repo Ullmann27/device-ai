@@ -25,7 +25,10 @@ test('missing or zero measurements render no fabricated decorative peaks', () =>
   assert.match(phone, /py\(i0\) \+ \(py\(i0 \+ 1\) - py\(i0\)\) \* u \* u \* \(3f - 2f \* u\)/);
 });
 
-test('continuous decorative motion is lifecycle-bound, visible, power-aware and never edits measurements', () => {
+test('new-sample highlights are finite, foreground-bound and never edit measurements', () => {
+  assert.match(home, /foregroundActive && isAttachedToWindow/);
+  assert.match(home, /now\(\) < maxOf\(learningMotionUntil, modelMotionUntil, systemMotionUntil\)/);
+  assert.match(home, /value\.learning\.series != field\.learning\.series/);
   assert.match(home, /windowVisibility == View\.VISIBLE/);
   assert.match(home, /ValueAnimator\.areAnimatorsEnabled\(\)/);
   assert.match(home, /!powerManager\.isPowerSaveMode/);
@@ -35,7 +38,7 @@ test('continuous decorative motion is lifecycle-bound, visible, power-aware and 
   assert.match(home, /postOnAnimationDelayed\(waveFrame, 66L\)/);
   assert.match(home, /override fun onDetachedFromWindow\(\)/);
   assert.match(home, /removeCallbacks\(waveFrame\)/);
-  assert.match(home, /element\.motionPhase = if \(waveAnimationEnabled\(\)\)/);
+  assert.match(home, /element\.motionPhase = if \(active && waveAnimationEnabled\(\)\)/);
   assert.match(phone, /if \(i < lit\) \{/);
   assert.match(phone, /val scan = phase\.coerceIn\(0f, 1f\) \* lit/);
   assert.doesNotMatch(home, /androidx\.compose|Handler\.postDelayed\(this, 16/);
