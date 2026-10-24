@@ -1,0 +1,12 @@
+✔ v22 is strictly an owner in-place update and leaves historical releases intact (18.411802ms)
+✔ missing or wrong exact SHA cannot reach owner signer (138.512194ms)
+✔ a v22 source proposal is never mistaken for signed authorization (262.197192ms)
+✔ exact approved source blob inventory is internally complete (CI simulation, NEVER signs) (370.688902ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 944.492156

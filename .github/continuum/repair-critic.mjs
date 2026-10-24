@@ -8,6 +8,7 @@ import {renderOwnerNodeContract} from './contract-test-template.mjs';
 export const LIMITS=Object.freeze({maxFiles:3,maxChangedLines:40});
 
 const FORBIDDEN_PATHS=[
+  /^\.github\/continuum\/(?:coding-|isolated-)/,
   /^\.github\/continuum\/(?:local-brain-repair|local-numeric-patch)\.mjs$/,
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // M4 release gates, proof validators, Sol handoff and local launchers are
@@ -108,6 +109,10 @@ export function critique(candidate){
     const {removed,added}=changedLines(e.oldText??'',e.newText??'');
     changed+=Math.max(removed.length,added.length);
     const addedText=added.join('\n'),removedText=removed.join('\n');
+    if(candidate.strategy==='LOCAL_SCOPED_PATCH'&&(
+      /['"](?:node:)?(?:assert(?:\/strict)?|test|fs(?:\/promises)?|process|module|vm|worker_threads|net|http|https|tls|dgram|dns|inspector)['"]/.test(addedText)||
+      /\b(?:globalThis|global|process|require|Deno|Bun)\b|\b(?:java\.io|java\.nio|kotlin\.io|java\.lang\.reflect)\b/.test(addedText)))
+      reasons.push('scoped source may not access runtime, test or report capabilities');
     for(const [pattern,why] of DANGEROUS){
       const global=new RegExp(pattern.source,pattern.flags.includes('g')?pattern.flags:pattern.flags+'g');
       const newCount=(addedText.match(global)??[]).length;
@@ -124,5 +129,5 @@ export function critique(candidate){
   const revert=String(candidate.strategy).startsWith('REVERT_');
   const risk=Math.min(1,changed/LIMITS.maxChangedLines*0.5+(candidate.strategy==='REVERT_FILE_TO_PARENT'?0.4:revert?0.25:0)+(1-(candidate.prior??0.5))*0.3);
   return {approved:reasons.length===0,risk:Number(risk.toFixed(3)),reasons,changedLines:changed,
-    reviewRequired:revert||candidate.strategy==='LOCAL_MODEL_PATCH'||changed>10};
+    reviewRequired:revert||candidate.strategy==='LOCAL_MODEL_PATCH'||candidate.strategy==='LOCAL_SCOPED_PATCH'||changed>10};
 }
