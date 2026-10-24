@@ -61,9 +61,10 @@ class Ctx1DialogueContext(facts: List<String>, private val generalized: Boolean 
             if (target == null && day != null && previousDay != null)
                 return remember(Ask(lastQuery!!.replace(previousDay, day)), null, day).also { askedFor = null }
         }
-        if (mentions.isNotEmpty()) {
+        val wanted = mentions.filter { !negated(lower, it.second) }.map { it.first }
+        if (wanted.isNotEmpty()) {
+            // only negated mentions ("nicht X" with no target it could read) fall through instead of crashing
             mentions.forEach { (e, _) -> touch(e) }
-            val wanted = mentions.filter { !negated(lower, it.second) }.map { it.first }
             val main = wanted.first()
             if (!main.known) return remember(Unknown, main)
             return remember(Ask(cleanNegation(input), scope(wanted.filter { it.known })), main, day)
