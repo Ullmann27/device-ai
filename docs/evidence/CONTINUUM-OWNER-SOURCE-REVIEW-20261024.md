@@ -7,7 +7,7 @@ Quellbranch: `chatgpt/continuum-hologram-context-recovery-20261024`. Grundlage: 
 
 | Zu prüfende Datei | Aktueller Blob-SHA40 | Funktion | Besitzerfreigabe |
 |---|---|---|---|
-| `app/src/main/java/at/heinz/deviceai/AgentActivity.kt` | `2faaaba60a850ab75c911c1dbcc476956db23093` | Android UI, Lifecycle, Chat | **NEIN** |
+| `app/src/main/java/at/heinz/deviceai/AgentActivity.kt` | `1f636f35b09837c13bb954b48da1fabe7039cb05` | Android UI, Lifecycle, Chat | **NEIN** |
 | `app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt` | `071af65313d79c0840bf3d772b4cac3dc8e09825` | Animationstakt / Vordergrundsteuerung | **NEIN** |
 | `app/src/main/java/at/heinz/deviceai/ui/ContinuumOrbitalRing.kt` | `35a92c7a8587e22d6e5dfaa93550407371d5e304` | Sichtbarer Schwebehub | **NEIN** |
 | `app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt` | `a3f6d68db2cbccabd640928926c3ca28d92dc058` | M4/M5 Builder-Lifecycle | **NEIN** |
@@ -30,7 +30,7 @@ Die übrigen neun Einträge sind identisch mit ihren bisher attestierten SHA40. 
 - `app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt`
 - `app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt`
 - `app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt`
-- `app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt` – aktueller Git-Blob `9e78dadd95dde7cc59aea712d99ac518c31d061a` (zusätzliche konservative Abgrenzung der Modellprompts nach Runtime-Identität)
+- `app/src/main/java/at/heinz/deviceai/learning/ContinuumCognitiveRuntime.kt` – aktueller Git-Blob `656532f9798b0b5b53cf2973d296faf2ee8e6afe` (zusätzliche konservative Abgrenzung der Modellprompts nach Runtime-Identität)
 - `app/src/main/java/at/heinz/deviceai/learning/ContinuumLearningCore.kt`
 - `app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyCycleResult.kt`
 - `app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt`
@@ -50,3 +50,9 @@ Die Manifest-/Exportentscheidung ist zu verifizieren: `ContinuumM5LabActivity` u
 
 
 **Nachtrag zur Kommunikation:** Die zweite Quellenkontrolle fand einen verbliebenen Umweg über `turn.resolvedQuery`, den eine neue Gesprächs-ID ohne expliziten Baseline-Reset nutzen konnte. Der aktuelle Runtime-Code erlaubt einem lokalen Sprachmodell kontextuelle Vervollständigung nur noch aus einer **vorherigen bestätigten Frage derselben Runtime-Instanz**, nicht aus einer ungebundenen profilweiten Historie. Zwei Regressionen reproduzieren den ursprünglichen Fall mit und ohne UI-Reset; sie müssen bei vollständiger Android-JUnit-Regression noch tatsächlich bestehen. Keine Änderung der Besitzergewichte oder Freigaben.
+
+
+## Sicherer Sitzungsanschluss an die Haupt-App
+`AgentActivity.kt` führt für die aktuelle `sessionId` nun eine flüchtige `LocalPromptSession` mit der letzten **nachweislich geerdeten** eigenen Frage. Vor einem neuen Runtimeaufruf wird nur der explizit zur gleichen Chat-ID gehörende Kontext übergeben. Der generierte `nextScopedGroundedQuestion` wird nur beim erfolgreichen und identitätsgebundenen Rückruf übernommen. Bei `newSession()` wird er gelöscht; nach Activity-Neuerstellung standardmäßig kein Fremdkontext. `ContinuumCognitiveRuntime.kt` prüft Länge und Steuerzeichen des übernommenen Kontextes. Dies ändert **keine** Gewichte, Besitzerfakten, signierenden Schlüssel oder andere Buildklassen.
+
+Zusätzliche JVM-Regressionen zur isolierten Fortführung derselben Session und zur Verweigerung von Steuerzeichen angelegt. Die Runtime- und Activity-Blobs oben entsprechen dem gepushten Stand. Die vollständige JUnit-/Robolectric-Prüfung auf dem neuesten Commit ist weiterhin offen. Neue APK-Signierung blockiert.
