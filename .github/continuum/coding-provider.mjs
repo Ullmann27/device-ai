@@ -4,6 +4,11 @@ import {validateCodingTask,taskFingerprint,validateCodingProposal} from './codin
 import {buildRepositoryContext} from './coding-context.mjs';
 import {sha256Hex} from './development-backlog.mjs';
 const CLI=fileURLToPath(new URL('../../scripts/continuum-local-brain-cli.mjs',import.meta.url));
+function rejectedModelOutput(code,responseSha256=null) {
+ const error=Error(code);error.code=code;
+ if(typeof responseSha256==='string'&&/^[a-f0-9]{64}$/.test(responseSha256))error.responseSha256=responseSha256;
+ return error;
+}
 
 export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null}={}){
  const spec=validateCodingTask(task),fingerprint=taskFingerprint(spec);
@@ -38,10 +43,21 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    configuredModel:env.CONTINUUM_LOCAL_BRAIN_MODEL??'local',verifiedModelExecution:false,contextSha256:context.contextSha256,
    promptSha256:sha256Hex(userPrompt),exitCode:response.status??null};
   if(evidence){fs.writeFileSync(path.join(evidence,`request-${number}.json`),JSON.stringify({...trace,userPrompt,response:response.stdout??''},null,2)+'\n',{flag:'wx',mode:0o600});}
-  if(response.status!==0||response.error||response.signal)throw Error('CODING_MODEL_UNAVAILABLE');
-  let result;try{result=JSON.parse(response.stdout);}catch{throw Error('CODING_REPLY_INVALID');}
-  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false)throw Error('CODING_REPLY_INVALID');
-  const proposal=validateCodingProposal(result.proposal,spec);
+  if(response.status!==0||response.error||response.signal){
+   // The trusted local CLI reports only a fixed rejection code and SHA-256,
+   // never the unsafe model response, prompt, token or arbitrary stderr text.
+   const rejected=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_RESPONSE_INVALID:([a-f0-9]{64})$/
+    .exec(String(response.stderr??'').trim());
+   if(rejected)throw rejectedModelOutput('CODING_RESPONSE_INVALID',rejected[1]);
+   throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
+  }
+  const responseSha256=sha256Hex(String(response.stdout??''));
+  let result;try{result=JSON.parse(response.stdout);}catch{throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);}
+  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false)
+   throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);
+  let proposal;
+  try{proposal=validateCodingProposal(result.proposal,spec);}
+  catch{throw rejectedModelOutput('CODING_PROPOSAL_INVALID',responseSha256);}
   return {mode:result.mode,trusted:false,autoApply:false,...proposal,localRequests:1,
    context:{commit:base,contextSha256:context.contextSha256,ranges:context.ranges.map(({text,...r})=>r)},trace};
  };
