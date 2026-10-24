@@ -1,6 +1,6 @@
 package at.heinz.deviceai
 
-import android.util.Base64
+import java.util.Base64
 import at.heinz.deviceai.learning.StrictJson
 
 /** One-shot Termux transport for owner-approved, commit-bound coding tasks.
@@ -61,7 +61,7 @@ internal object ContinuumTypedCodingBridge {
         require(task.problems().isEmpty()&&task.fingerprint()==authorization.taskSha256)
         val json=task.canonicalJson()
         require(json.length<=MAX_JSON)
-        val encoded=Base64.encodeToString(json.toByteArray(Charsets.UTF_8),Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
+        val encoded=Base64.getUrlEncoder().withoutPadding().encodeToString(json.toByteArray(Charsets.UTF_8))
         return ContinuumMobileBuildPlan.Command(ContinuumMobileBuildPlan.NODE_EXECUTABLE,
             listOf(SCRIPT,"prepare",encoded,authorization.taskSha256),ContinuumMobileBuildPlan.PROJECT_DIR)
     }
