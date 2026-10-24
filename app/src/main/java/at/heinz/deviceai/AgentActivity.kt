@@ -696,7 +696,13 @@ class AgentActivity : Activity() {
         val dashboard = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         // Start screen of the owner's reference images: one view per measured slot, real values only
         // (ContinuumHomeView + ContinuumDashboardCollector). The living core is the existing hologram view.
-        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also { hologramView = it }) { slot, x, y ->
+        val home = at.heinz.deviceai.ui.ContinuumHomeView(this, ContinuumHologramView(this).also {
+            hologramView = it
+            // The dashboard may be rebuilt while the Activity is already resumed
+            // (Fold layout or home/chat navigation). New views must inherit the
+            // current lifecycle immediately, not wait for another onResume().
+            it.setForegroundActive(foregroundLearningActive)
+        }) { slot, x, y ->
             openHomeSlot(slot, x, y)
         }
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
