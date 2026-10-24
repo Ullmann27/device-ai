@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, symlinkSync, renameSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -28,3 +28,19 @@ test('changed protected source fails closed',()=>fixture(dir=>{writeFileSync(joi
 test('report-only does not turn a mismatch into approval',()=>fixture(dir=>{writeFileSync(join(dir,'file-1.kt'),'tampered');const r=run(dir,'--report-only');assert.equal(r.status,0);assert.equal(r.report.status,'OWNER_REVIEW_REQUIRED')}));
 test('symlink is never accepted as an attested regular source',()=>fixture(dir=>{rmSync(join(dir,'file-0.kt'));symlinkSync('file-1.kt',join(dir,'file-0.kt'));const r=run(dir);assert.equal(r.status,2);assert.equal(r.report.reviewRequired,1)}));
 test('duplicate release pins fail before reporting',()=>fixture(dir=>{let p=join(dir,'scripts','render-mentor-owner-update-v19.sh');let s=readFileSync(p,'utf8');s=s.replace(/file-1.kt/,'file-0.kt');writeFileSync(p,s);const r=run(dir);assert.notEqual(r.status,0);assert.match(r.stderr,/duplicate/)}));
+
+test('symlinked ancestor cannot launder an unchanged file hash into a trusted path',()=>fixture(dir=>{
+  mkdirSync(join(dir,'real'));
+  renameSync(join(dir,'file-0.kt'),join(dir,'real','file-0.kt'));
+  symlinkSync('real',join(dir,'alias'),'dir');
+  const pinFile=join(dir,'scripts','render-mentor-owner-update-v19.sh');
+  const pinned=readFileSync(pinFile,'utf8').replace(/file-0\.kt/, 'alias/file-0.kt');
+  writeFileSync(pinFile,pinned);
+  // The content still has the exact expected SHA, so only directory validation detects this.
+  const actual=execFileSync('git',['hash-object','--','alias/file-0.kt'],{cwd:dir,encoding:'utf8'}).trim();
+  assert.ok(pinned.includes(actual+' alias/file-0.kt'));
+  const r=run(dir);
+  assert.equal(r.status,2);
+  assert.equal(r.report.reviewRequired,1);
+  assert.equal(r.report.files[0].path,'alias/file-0.kt');
+}));
