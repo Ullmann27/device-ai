@@ -10,6 +10,7 @@ import {fileURLToPath} from 'node:url';
 import {canonical,sha256Hex,parseStrict} from '../.github/continuum/development-backlog.mjs';
 import {validateCodingTask,taskFingerprint} from '../.github/continuum/coding-task.mjs';
 import {prepareCodingTask,runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
 
 export const BRIDGE_SCHEMA='continuum-typed-coding-bridge';
 export const BRIDGE_VERSION=1;
@@ -20,10 +21,25 @@ const ERROR_CODES=new Set([
  'CODING_TASK_INVALID','CODING_TASK_STALE_SOURCE','CODING_TASK_DIRTY_SOURCE',
  'CODING_TASK_ID_REUSED','CODING_TASK_ID_INVALID','CODING_GRANT_UNSAFE',
  'CODING_GRANT_CORRUPT','CODING_CHAIN_BINDING_MISMATCH',
- 'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE'
+ 'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE',
+ 'CODING_ISOLATION_REQUIRED','CODING_ISOLATION_UNAVAILABLE'
 ]);
 const DEFAULT_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const DEFAULT_STATE=path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');
+/** Only an owner-provisioned, external configuration may enable generated code.
+ * The exact config is read using the existing isolation policy's symlink and
+ * source-tree gates. There is no fallback to host/Termux shell execution. */
+export function ownerCodingExecutor({project,env=process.env}={}){
+ const configPath=env.CONTINUUM_CODING_ISOLATION_CONFIG;
+ if(typeof configPath!=='string'||!path.isAbsolute(configPath)||configPath.length>1024)
+  throw Error('CODING_ISOLATION_UNAVAILABLE');
+ try{
+  const config=loadIsolationConfig(configPath,{sourceRoot:project});
+  return createIsolatedExecutor(config);
+ }catch{
+  throw Error('CODING_ISOLATION_UNAVAILABLE');
+ }
+}
 function blocked(operation,id,code){
  return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation,id,
   status:'BLOCKED',failure:{code},approvedForMerge:false,installed:false,deviceVerified:false};
@@ -53,9 +69,37 @@ export function fixedArgs(argv){
   return {op,id:args[0],hash:args[1]};
  throw Error('CODING_BRIDGE_COMMAND_INVALID');
 }
+/** Only a fully evidenced CCC1 review receipt may enter the Android success UI.
+ * A string status, a patch SHA or an arbitrary truthy evidence object alone
+ * must never suffice. The original immutable owner tests stay authoritative. */
+export function verifiedCodingReviewReceipt(result){
+ if(result?.status!=='PATCH_PENDING_OWNER_REVIEW'||
+    !/^t-[a-f0-9]{16}$/.test(result.ccc1TaskId??'')||
+    !/^[a-f0-9]{40}$/.test(result.sourceCommit??'')||
+    !Array.isArray(result.receipts))return null;
+ for(const receipt of result.receipts){
+  const evidence=receipt?.evidence;
+  if(receipt?.operation!=='code-repair'||receipt.status!=='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'||
+     receipt.commit!==result.sourceCommit||receipt.backlog?.state!=='DONE'||
+     !SHA.test(receipt.patch?.sha256??'')||
+     !SHA.test(evidence?.verificationSha256??'')||evidence.evidenceSufficient!==true||
+     !Number.isSafeInteger(evidence.baselineFailed)||evidence.baselineFailed<1||
+     !Number.isSafeInteger(evidence.candidateExecuted)||evidence.candidateExecuted<1||
+     !Number.isSafeInteger(evidence.independentExecuted)||
+     evidence.independentExecuted<evidence.candidateExecuted)continue;
+  const phases=receipt.commands;
+  if(!Array.isArray(phases)||phases.length!==3||
+     phases.map(p=>p?.phase).join(',')!=='baseline,candidate,independent')continue;
+  if(!phases.slice(1).every(p=>p.exitCode===0&&p.passed===true&&
+     Number.isSafeInteger(p.executed)&&p.executed>0&&p.failed===0))continue;
+  return receipt.patch.sha256;
+ }
+ return null;
+}
 export async function executeTypedBridge(command,{
  project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
- prepare=prepareCodingTask,run=runCodingTask
+ prepare=prepareCodingTask,run=runCodingTask,
+ isolationLoader=ownerCodingExecutor
 }={}){
  const {op,id,hash,encoded}=command;
  if(op==='prepare'){
@@ -76,18 +120,22 @@ export async function executeTypedBridge(command,{
  try{
   // Run only a previously prepared grant; the orchestrator checks it against
   // the exact source SHA, allowed paths and currently active CCC1 journal.
-  const r=await run({project,stateDir,id});
+  // Do not even invoke the CCC1/model worker if OS-level confinement is absent.
+  // The worker independently rechecks the executor brand and abort mode.
+  let executor;
+  try{executor=await isolationLoader({project,stateDir});}
+  catch{return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');}
+  if(!executor)return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');
+  const r=await run({project,stateDir,id,executor,
+    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true});
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');
-  const verified=(r.status==='PATCH_PENDING_OWNER_REVIEW'&&
-    Array.isArray(r.receipts)&&r.receipts.some(x=>
-      x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'&&
-      SHA.test(x.patch?.sha256??'')&&x.evidence));
+  const verifiedPatch=verifiedCodingReviewReceipt(r);
   return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'run',
    id,sourceCommit:r.sourceCommit,taskSha256:hash,
-   status:verified?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
+   status:verifiedPatch?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
    resultStatus:String(r.status).slice(0,64),
-   patchSha256:verified?r.receipts.find(x=>x?.status==='REPAIR_PATCH_VERIFIED_PENDING_REVIEW')?.patch?.sha256:null,
+   patchSha256:verifiedPatch,
    approvedForMerge:false,installed:false,deviceVerified:false};
  }catch(e){return blocked('run',id,ERROR_CODES.has(e?.message)?e.message:'RUN_FAILED');}
 }
