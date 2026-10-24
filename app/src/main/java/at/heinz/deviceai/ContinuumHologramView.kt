@@ -59,7 +59,10 @@ class ContinuumHologramView @JvmOverloads constructor(
     private val drawFrame = Runnable {
         framePending = false
         if (canAnimate()) {
-            invalidate()
+            // The motion clock advances independently of a completed Canvas draw.
+            // Invalidation requests only rendering, not the next state transition.
+            advanceFrame()
+            postInvalidateOnAnimation()
             scheduleFrame()
         }
     }
@@ -195,7 +198,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         super.onDraw(canvas)
         val density = resources.displayMetrics.density
         if (width <= 0 || height <= 0) return
-        advanceFrame()
         renderer.layout(width / density, height / density)
         painter.begin(canvas)
         val saved = canvas.save()
@@ -206,7 +208,6 @@ class ContinuumHologramView @JvmOverloads constructor(
         renderFrame.audio = audioEnergy
         renderer.draw(painter, renderFrame)
         canvas.restoreToCount(saved)
-        scheduleFrame()
     }
 
     private fun advanceFrame() {
