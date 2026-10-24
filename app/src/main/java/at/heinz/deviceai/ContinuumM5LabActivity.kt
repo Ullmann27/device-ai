@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
 import android.content.Intent
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.*
 import at.heinz.deviceai.learning.context.Ctx3Shadow
 
@@ -57,6 +59,14 @@ class ContinuumM5LabActivity:Activity() {
   draftInput=input
   input.setText(savedInstanceState?.getString("m5_draft_v1")?.take(512).orEmpty())
   val handoff=Button(this).apply {text="Plan prüfen und an Builder übergeben";isAllCaps=false;isEnabled=false}
+  // A changed but unsent draft revokes a ready plan, including an already open dialog.
+  // Changes remain revoking even if the user deletes the draft back to its old text.
+  var draftVersion=0L
+  input.addTextChangedListener(object:TextWatcher {
+   override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int) = Unit
+   override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int) = Unit
+   override fun afterTextChanged(s:Editable?) {draftVersion++;handoff.isEnabled=false}
+  })
   fun catalogValid()=runCatching {
    assets.open("continuum-owned-project-plans-v1.json").bufferedReader().use {ContinuumOwnedProjectPlan.readCatalog(it.readText())};true
   }.getOrDefault(false)
@@ -66,17 +76,19 @@ class ContinuumM5LabActivity:Activity() {
    transcript.text=(transcript.text.toString()+"\nDu: "+value+"\nContinuum: "+p.message).takeLast(12000)
    handoff.isEnabled=p.project!=null&&catalogValid()
   }
-  handoff.isEnabled=conversation.preview().project!=null&&catalogValid()
+  handoff.isEnabled=conversation.preview().project!=null&&input.text.isEmpty()&&catalogValid()
   column.addView(handoff)
   handoff.setOnClickListener {
+   if(input.text.isNotEmpty())return@setOnClickListener
    val p=conversation.preview();val project=p.project?:return@setOnClickListener
    val requestedConversation=conversation
+   val shownDraftVersion=draftVersion
    AlertDialog.Builder(this).setTitle("Projektplan kontrollieren")
     .setMessage(p.message+"\nExplizit: "+p.explicit.joinToString()+"\nVorlagenannahmen: "+p.inferred.joinToString()+
      "\nPaket: "+project.packageName+"\nPlanhash: "+project.planSha256+"\nRevision: "+p.revision+
      "\nDie Bestätigung öffnet nur den vorhandenen Builder. Erzeugen und Bauen brauchen dort erneut deine Bestätigung.")
     .setNegativeButton("Abbrechen",null).setPositiveButton("Plan übernehmen") { _,_->
-     if(!isFinishing&&!isDestroyed&&conversation===requestedConversation&&catalogValid())conversation.approve(p.revision,p.planSha256!!)?.let { selected->
+     if(!isFinishing&&!isDestroyed&&conversation===requestedConversation&&draftVersion==shownDraftVersion&&input.text.isEmpty()&&catalogValid())conversation.approve(p.revision,p.planSha256!!)?.let { selected->
       startActivity(Intent(this,ContinuumMobileBuilderActivity::class.java)
        .putExtra("m5_project",selected.id).putExtra("m5_plan_sha",selected.planSha256))
       handoff.isEnabled=false
