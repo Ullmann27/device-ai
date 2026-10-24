@@ -19,29 +19,41 @@ import kotlin.math.min
  */
 class ContinuumSystemGaugesView(
     context: Context,
-    private val telemetry: ContinuumDashboardState.SystemStatus
+    private var telemetry: ContinuumDashboardState.SystemStatus
 ) : View(context) {
     private val density = resources.displayMetrics.density
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
     private val ring = RectF()
     private var columns = 4
     private var rowHeight = 0f
-    private val gradients = arrayOfNulls<SweepGradient>(4)
+    private val gradients = arrayOfNulls<SweepGradient>(5)
     private val boldFace = android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT, android.graphics.Typeface.BOLD)
 
-    private val values: List<Triple<String, Int?, Int>> = listOf(
-        Triple("App-CPU", telemetry.appCpuPercent, 0xFF00E5FF.toInt()),
-        Triple("GPU", null, 0xFFA855F7.toInt()),
-        Triple("RAM", telemetry.memoryPercent, 0xFFEC4899.toInt()),
-        Triple("Speicher", telemetry.storagePercent, 0xFF3B82F6.toInt())
-    )
+    private val values: List<Triple<String, Int?, Int>>
+        get() = listOf(
+            Triple("App-CPU", telemetry.appCpuPercent, 0xFF00E5FF.toInt()),
+            Triple("Akku", telemetry.batteryPercent, 0xFF3BE7C3.toInt()),
+            Triple("RAM", telemetry.memoryPercent, 0xFFEC4899.toInt()),
+            Triple("Speicher", telemetry.storagePercent, 0xFF3B82F6.toInt()),
+            Triple("GPU", null, 0xFFA855F7.toInt())
+        )
+
+    /** The open system panel reflects the same 5-second sampler as the dashboard. */
+    fun updateTelemetry(next: ContinuumDashboardState.SystemStatus) {
+        if (telemetry == next) return
+        telemetry = next
+        contentDescription = describeTelemetry()
+        invalidate()
+    }
+
+    private fun describeTelemetry(): String = values.joinToString(". ") { (name, measured, _) ->
+        "$name: " + (measured?.let { "${it.coerceIn(0, 100)} Prozent" } ?: "nicht messbar")
+    }
 
     init {
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         isFocusable = true
-        contentDescription = values.joinToString(". ") { (name, measured, _) ->
-            "$name: " + (measured?.let { "${it.coerceIn(0, 100)} Prozent" } ?: "nicht messbar")
-        }
+        contentDescription = describeTelemetry()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

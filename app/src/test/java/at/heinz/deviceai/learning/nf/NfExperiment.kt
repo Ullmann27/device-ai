@@ -7,7 +7,6 @@ import at.heinz.deviceai.learning.lm.LmCorpus.Split
 import at.heinz.deviceai.learning.lm.Node
 import at.heinz.deviceai.learning.lm.Tape
 import java.io.File
-import java.lang.management.ManagementFactory
 import java.util.Random
 import kotlin.math.ln
 
@@ -75,8 +74,24 @@ object NfExperiment {
         return (System.nanoTime() - start) / 1e6 / tokens
     }
 
-    private fun peakHeapMb() = ManagementFactory.getMemoryPoolMXBeans().filter { it.type == java.lang.management.MemoryType.HEAP }
-        .sumOf { it.peakUsage.used } / 1e6
+    /**
+     * Read real JVM peak memory through reflection: Android's unit-test compile classpath
+     * excludes java.management, while the standalone NF research CLI runs on a desktop JVM.
+     * No app-runtime dependency on JMX is introduced.
+     */
+    private fun peakHeapMb(): Double {
+        val factory = Class.forName("java.lang.management.ManagementFactory")
+        val poolInterface = Class.forName("java.lang.management.MemoryPoolMXBean")
+        val usageClass = Class.forName("java.lang.management.MemoryUsage")
+        val beans = factory.getMethod("getMemoryPoolMXBeans").invoke(null) as List<*>
+        var totalPeakBytes = 0L
+        for (bean in beans) {
+            if (bean == null || poolInterface.getMethod("getType").invoke(bean).toString() != "HEAP") continue
+            val peakUsage = poolInterface.getMethod("getPeakUsage").invoke(bean) ?: continue
+            totalPeakBytes += (usageClass.getMethod("getUsed").invoke(peakUsage) as Number).toLong()
+        }
+        return totalPeakBytes / 1e6
+    }
 
     @JvmStatic fun main(args: Array<String>) {
         val root = File(args.getOrElse(0) { "." })
