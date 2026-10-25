@@ -73,7 +73,7 @@ test('malformed model name is rejected before invoking the local child',()=>{
   assert.throws(()=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10_000}),
    /CODING_MODEL_CONFIG_INVALID/);
   assert.equal(calls,0);
-  for(const controlName of ['unsafe\\nmodel','unsafe\\rmodel']){
+  for(const controlName of ['unsafe\nmodel','unsafe\rmodel']){
    const providerWithControl=createCodingCandidateProvider({root,task,env:{
     CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40),CONTINUUM_LOCAL_BRAIN_MODEL:controlName
    },run:()=>{calls++;return {status:0,stdout:'{}'};}});
