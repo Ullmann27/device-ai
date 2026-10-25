@@ -56,9 +56,16 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 experiences.filter { eligible(it) }.map { it.content.take(2048) })
             else null
         val recoveredHits=proposal?.let { rank(bytes,it.query,experiences) }.orEmpty()
-        val hits=if(recoveredHits.isNotEmpty() &&
+        val retrievedHits=if(recoveredHits.isNotEmpty() &&
             wordEvidence(proposal!!.query,recoveredHits.first().text)>=0.82)
             recoveredHits else firstHits
+        // A mention of an entity as a value does not define that entity.
+        // Preserve the existing rank/Node contract and filter only the
+        // dialogue evidence presented for explicit subject-definition questions.
+        val hits=retrievedHits.filter {
+            it.kind!="Bestätigte Nutzererinnerung" ||
+                ownerMemoryAnswersDefinition(text,it.text)
+        }
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
         // A greeting must not accidentally cite memories containing the word "Hallo".
         // An unanswered new question invalidates the old topic; only retrieved evidence
@@ -171,6 +178,22 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     companion object {
         const val MAX_QUARANTINED=3
+        // A personal fact that merely contains "Orion" cannot answer
+        // "Was ist Orion?". Only a claim whose subject is Orion qualifies.
+        // Unsupported declarations fail closed; this is not general NLP.
+        private val DEFINITION_QUESTION=Regex("""(?iu)^(?:was|wer)\s+ist\s+(.+?)\s*[?!.\s]*$""")
+        private val OWNER_SUBJECT_CLAIM=Regex(
+            """(?iu)^(.{1,120}?)\s+(?:ist|war|sind|waren|bedeutet|bezeichnet|heißt|heisst)\s+.+$"""
+        )
+        internal fun ownerMemoryAnswersDefinition(question:String,fact:String):Boolean {
+            val query=DEFINITION_QUESTION.matchEntire(question.trim()) ?: return true
+            val claim=OWNER_SUBJECT_CLAIM.matchEntire(fact.trim()) ?: return false
+            fun normalize(value:String):String=value.trim()
+                .trim('“','”','"','\'','?','!','.',':')
+                .lowercase(Locale.ROOT).replace(Regex("""\s+""")," ")
+            return normalize(query.groupValues[1])==normalize(claim.groupValues[1])
+        }
+
         internal fun requireConversationId(id:String?) {
             require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
         }

@@ -1374,6 +1374,9 @@ class AgentActivity : Activity() {
             CenterAction("TRAININGS-MONITOR · LIVE", accent = true) {
                 startActivity(Intent(this@AgentActivity, ContinuumTrainingMonitorActivity::class.java))
             },
+            CenterAction("EXPERIMENTE · ANSCHLÜSSE UND SKILLS PRÜFEN", accent = true) {
+                showExperimentIntegrationReview()
+            },
             CenterAction("AUTO-ÜBEN · EIN/AUS") { showNeuralPracticeDialog() },
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
@@ -1399,10 +1402,72 @@ class AgentActivity : Activity() {
             },
             CenterAction("CDX1 · HINTERGRUND-ÜBEN · EIN/AUS") { showDualCoreAutoStudyDialog() },
             CenterAction("CDX1 · EIGENE TESTFRAGE (OHNE TRAINING)") { showCdxPromptTest() },
+            CenterAction("CTX3 · KONTEXT-SHADOW DIREKT TESTEN") {
+                startActivity(Intent(this@AgentActivity, ContinuumM5LabActivity::class.java))
+            },
             CenterAction("KONTRASTIV · EXPERIMENT PRÜFEN") { showContinuumContrastiveExperiment() },
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
     )
+
+    /**
+     * Read-only inventory of real research runtime hooks and a bounded owner-review
+     * projection of this activity's existing (ephemeral) experiences. Nothing here
+     * enables tools, changes memories/weights, or promotes a learned skill.
+     */
+    private fun showExperimentIntegrationReview() {
+        onLearningIo({
+            val core=ContinuumLearningCore(filesDir)
+            val cdx=runCatching { core.pairedDecoderStatus() }.getOrNull()
+            val cre=runCatching { core.cre1ResearchStatus() }.getOrNull()
+            val ctx=runCatching { core.contextShadowEnabled() }.getOrDefault(false)
+            val experiences=experienceStore.all()
+            val skills=runCatching {
+                at.heinz.deviceai.cognitive.ExperienceCompiler().compile(experiences)
+            }
+            buildString {
+                append("ECHTE MODULANSCHLÜSSE · NUR LESEN\n\n")
+                append("SWB1: regulärer Gedächtnisabruf mit bestätigten Fakten.\n")
+                append("CRE1: ")
+                append(if(cre?.available==true) "Forschungscheckpoint vorhanden" else "kein trainierter Forschungscheckpoint nachgewiesen")
+                append("; aktive semantische Neubewertung nur nach bestandenem Promotion-Gate.\n")
+                append("CDX1: ")
+                append(if(cdx?.available==true) "geprüfter Decoder-Checkpoint vorhanden" else "kein verfügbarer Decoder-Checkpoint")
+                append("; Chatfreigabe nicht erteilt.\n")
+                append("CTX3: ").append(if(ctx) "SHADOW EIN" else "SHADOW AUS")
+                append("; in M5-Labor einschaltbar, kein Überschreiben von Chatantworten.\n")
+                append("LM1: Kotlin-Laufzeit vorhanden, kein nachgewiesener aktiver Modelladapter/Checkpoint im Hauptchat.\n")
+                append("CCC1: bestehende Owner-Freigabe-/Receipt-Grenzen unverändert.\n\n")
+                append("SKILL-ABSTRAKTION · EXISTIERENDER EXPERIENCE-COMPILER\n")
+                append("Beobachtungen nur aus dieser laufenden App-Sitzung: ").append(experiences.size)
+                skills.fold(onSuccess={ candidates ->
+                    append("\nZur Besitzerprüfung geeignete Vorschläge: ")
+                        .append(candidates.count { it.eligibleForOwnerReview })
+                    append("\nBlockierte Vorschläge: ")
+                        .append(candidates.count { !it.eligibleForOwnerReview })
+                    candidates.take(5).forEach { candidate ->
+                        append("\n• ").append(candidate.taskType.take(65))
+                            .append(": ").append(candidate.occurrenceCount).append(" Nachweise")
+                            .append(" · Score ").append(candidate.meanEvaluationScore)
+                            .append(" · ")
+                            .append(candidate.promotionBlockedReason ?: "nur Review, NICHT aktiviert")
+                    }
+                },onFailure={
+                    append("\nPrüfung blockiert: ").append(it.javaClass.simpleName)
+                })
+                append("\n\nKeine autonome Skill-Freigabe, keine Änderung am produktiven Chat, kein Training.")
+            }
+        }) { result ->
+            if(isFinishing || isDestroyed)return@onLearningIo
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Experimentanschlüsse")
+                .setMessage(result.getOrElse {
+                    "Anschlussprüfung nicht verfügbar ("+failureName(it)+")."
+                })
+                .setPositiveButton("Schließen",null)
+                .show()
+        }
+    }
 
     /** The two trainable cores are version-coupled, not continuously re-wired. */
     private fun cdx1BindingLabel(value: String): String = when(value) {
