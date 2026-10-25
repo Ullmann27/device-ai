@@ -100,9 +100,14 @@ test('actual CCC1 preparation and execution through typed Termux boundary preser
  const root=path.join(dir,'repo'),state=path.join(dir,'state');
  fs.mkdirSync(path.join(root,'lib'),{recursive:true});
  fs.mkdirSync(path.join(root,'.github/continuum'),{recursive:true});
- fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\\n');
+ fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\n');
  fs.writeFileSync(path.join(root,'.github/continuum/offset.test.mjs'),
-  "import test from 'node:test';import assert from 'node:assert/strict';import {offset} from '../../lib/offset.mjs';test('offset',()=>assert.equal(offset(3,8),5));\\n");
+  "import test from 'node:test';import assert from 'node:assert/strict';import {offset} from '../../lib/offset.mjs';test('offset',()=>assert.equal(offset(3,8),5));\n");
+ // The synthetic fixture must be executable source, not literal backslash-n text.
+ for(const fixture of ['lib/offset.mjs','.github/continuum/offset.test.mjs']){
+  const syntax=spawnSync(process.execPath,['--check',path.join(root,fixture)],{encoding:'utf8'});
+  assert.equal(syntax.status,0,syntax.stderr);
+ }
  const git=(...args)=>{const p=spawnSync('git',args,{cwd:root,encoding:'utf8'});
   assert.equal(p.status,0,p.stderr);return p.stdout.trim();};
  try{
@@ -128,6 +133,30 @@ test('actual CCC1 preparation and execution through typed Termux boundary preser
   await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
    requireIsolation:true}),/CODING_ISOLATION_REQUIRED/);
   assert.equal(fs.existsSync(path.join(state,'coding-grants',spec.id+'.json')),true);
+  // Wrong owner-provided hash must be rejected while the journal and model
+  // invocation remain untouched. This check does not need a local sandbox.
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:'e'.repeat(64),
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_TASK_BINDING_MISMATCH/);
+  assert.equal(modelCalls,0,'wrong SHA must never call the model');
+  const grantPath=path.join(state,'coding-grants',spec.id+'.json');
+  const originalGrant=fs.readFileSync(grantPath,'utf8');
+  const damaged=JSON.parse(originalGrant);
+  damaged.ccc1TaskId='t-not-a-valid-id';
+  fs.writeFileSync(grantPath,JSON.stringify(damaged));
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:args.hash,
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_GRANT_CORRUPT/);
+  fs.writeFileSync(grantPath,originalGrant);
+  fs.appendFileSync(path.join(root,'lib/offset.mjs'),'// local uncommitted change\n');
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:args.hash,
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_TASK_DIRTY_SOURCE/);
+  assert.equal(modelCalls,0,'corrupt grant and dirty checkout must never call model');
+  fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\n');
   assert.equal(git('status','--porcelain'),'');
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
@@ -164,6 +193,7 @@ test('the protected runner receives an explicit strict-isolation requirement',as
  });
  assert.equal(params.requireIsolation,true);
  assert.equal(params.executorAbortMode,'CHECKPOINT_BOUNDARY_ONLY');
+ assert.equal(params.expectedTaskFingerprint,args.hash);
  assert.equal(r.status,'EXECUTION_REPORTED_UNVERIFIED');
  assert.equal(r.patchSha256,null);
 });
