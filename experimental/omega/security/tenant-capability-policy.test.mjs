@@ -44,6 +44,7 @@ test('tampered or forged tenant claims fail signature verification',()=>{
 test('attacker key cannot replace externally pinned trusted key',()=>{
  assert.equal(check({trustedPublicKey:attackerPublic}).allowed,false);
  assert.equal(check({expectedKeySha256:digest(attackerPublic)}).allowed,false);
+ assert.equal(check({trustedPublicKey:privateKey}).allowed,false);
 });
 test('unknown fields, wildcard scope, reused actions and malformed signatures fail',()=>{
  for(const grant of [{...signed(),admin:true},{...signed(),signature:'A'.repeat(88)},
