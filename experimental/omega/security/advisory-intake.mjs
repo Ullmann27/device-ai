@@ -37,6 +37,17 @@ function validateInventory(inventory){
  return {project:inventory.project,sourceCommit:inventory.sourceCommit,components};
 }
 
+/** Detached validated values; no owner authorization is created here. */
+export function snapshotOwnedInventory(inventory){
+ const owner=validateInventory(inventory);
+ return Object.freeze({
+   schema:'CONTINUUM_OWNER_INVENTORY_V1',
+   project:owner.project,
+   sourceCommit:owner.sourceCommit,
+   components:Object.freeze(owner.components.map(c=>Object.freeze(c)))
+ });
+}
+
 function normalizeAdvisory(raw){
  let serialized;
  try{serialized=JSON.stringify(raw);}catch{invalid();}

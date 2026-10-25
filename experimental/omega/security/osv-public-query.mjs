@@ -3,7 +3,7 @@
  * Does not attempt to exploit, patch, install, authenticate or scan remote hosts.
  */
 import {createHash} from 'node:crypto';
-import {evaluateOwnedOsvSnapshot} from './advisory-intake.mjs';
+import {evaluateOwnedOsvSnapshot,snapshotOwnedInventory} from './advisory-intake.mjs';
 import {readBoundedOsvResponse} from './bounded-osv-response.mjs';
 const ENDPOINT='https://api.osv.dev/v1/querybatch';
 const ID=/^[A-Za-z][A-Za-z0-9._-]{2,90}$/;
@@ -18,9 +18,10 @@ export async function queryOwnedOsvPublicApi({inventory,networkConsent=false,fet
  if(typeof fetchImpl!=='function'||!Number.isSafeInteger(timeoutMs)||timeoutMs<500||timeoutMs>10000)
    fail('OSV_INVALID_CLIENT');
  // Reuse strict owner-inventory validation; no scan if inventory is malformed.
- const local=evaluateOwnedOsvSnapshot({inventory,advisories:[]});
- if(inventory.components.length>MAX_COMPONENTS)fail('OSV_QUERY_BUDGET_EXCEEDED');
- const components=[...inventory.components].sort((a,b)=>(a.ecosystem+'|'+a.name+'|'+a.version)
+ const snapshot=snapshotOwnedInventory(inventory);
+ const local=evaluateOwnedOsvSnapshot({inventory:snapshot,advisories:[]});
+ if(snapshot.components.length>MAX_COMPONENTS)fail('OSV_QUERY_BUDGET_EXCEEDED');
+ const components=[...snapshot.components].sort((a,b)=>(a.ecosystem+'|'+a.name+'|'+a.version)
    .localeCompare(b.ecosystem+'|'+b.name+'|'+b.version,'en'));
  const findings=[];
  for(let at=0;at<components.length;at+=MAX_BATCH){
