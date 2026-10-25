@@ -171,7 +171,10 @@ class BoundedAgentOrchestrator(
     private val checkpointStore: AgentCheckpointStore? = null,
     private val clock: () -> Long = System::currentTimeMillis,
     private val callIdPrefix: String = UUID.randomUUID().toString(),
-    private val cancellation: DeliberationCancellation = DeliberationCancellation()
+    private val cancellation: DeliberationCancellation = DeliberationCancellation(),
+    // Trusted caller declares the evaluator's scope; model output cannot set this.
+    // Form-only checks may allow a reply but never establish a successful skill example.
+    private val evaluationConfirmsOutcome: Boolean = true
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -363,7 +366,11 @@ class BoundedAgentOrchestrator(
                 retries = retry,
                 confidenceBefore = 0.5,
                 confidenceAfter = lastEvaluation.score,
-                outcome = if (lastEvaluation.success) ExperienceOutcome.SUCCESS else ExperienceOutcome.FAILURE,
+                outcome = when {
+                    !lastEvaluation.success -> ExperienceOutcome.FAILURE
+                    evaluationConfirmsOutcome -> ExperienceOutcome.SUCCESS
+                    else -> ExperienceOutcome.PARTIAL
+                },
                 startedAt = startedAt,
                 completedAt = finishedAt,
                 evaluation = lastEvaluation
