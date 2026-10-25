@@ -74,3 +74,16 @@ test('old release source approval cannot authorize v23',()=>{
  assert.equal(old.status,69);
  assert.match(old.stderr,/OWNER_V23_BLOCKED/);
 });
+
+test('historical v22 Git tree and 927 pinned sources are independently audited offline',()=>{
+ const release=readFileSync(resolve(root,'scripts/render-mentor-owner-update-v23.sh'),'utf8');
+ assert.match(release,/node scripts\/continuum-v22-historical-attestation\.mjs/);
+ assert.doesNotMatch(release,/git fetch[^\n]*origin/);
+ const r=spawnSync(process.execPath,['scripts/continuum-v22-historical-attestation.mjs'],{
+   cwd:root,encoding:'utf8',timeout:30000,
+   env:{PATH:process.env.PATH,HOME:process.env.HOME}
+ });
+ assert.equal(r.status,0,r.stderr);
+ assert.match(r.stdout,/OWNER_V22_HISTORICAL_TREE_VERIFIED/);
+ assert.match(r.stdout,/approved_files=927/);
+});
