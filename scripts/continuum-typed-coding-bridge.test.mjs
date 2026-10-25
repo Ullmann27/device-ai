@@ -89,6 +89,17 @@ test('run requires saved exact fingerprint and cannot claim installation',async 
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
  assert.equal(verified.patchSha256,proofHash);
  assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),true);
+ const externalRoot=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-receipt-outside-'));
+ t.after(()=>fs.rmSync(externalRoot,{recursive:true,force:true}));
+ const externalPath=path.join(externalRoot,'repair.patch');
+ fs.writeFileSync(externalPath,proofBytes);
+ const escapedReceipt={...trustedReceipt,patch:{...trustedReceipt.patch,path:externalPath}};
+ assert.equal(reviewPatchStillAvailable({...reviewResult,receipts:[escapedReceipt]},proofHash,reviewState),false);
+ const symlinkPath=path.join(proofDir,'symlink.patch');
+ fs.symlinkSync(externalPath,symlinkPath);
+ assert.equal(reviewPatchStillAvailable({...reviewResult,receipts:[
+  {...trustedReceipt,patch:{...trustedReceipt.patch,path:symlinkPath}}
+ ]},proofHash,reviewState),false);
  fs.appendFileSync(proofFile,'altered');
  assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),false);
  const altered=await executeTypedBridge(args,{stateDir:reviewState,
@@ -126,6 +137,7 @@ test('run requires saved exact fingerprint and cannot claim installation',async 
   {...trustedReceipt,evidence:{...trustedReceipt.evidence,baselineFailed:2}},
   {...trustedReceipt,evidence:{...trustedReceipt.evidence,independentExecuted:4}},
   {...trustedReceipt,commands:[{...trustedReceipt.commands[0],passed:true},...trustedReceipt.commands.slice(1)]},
+  {...trustedReceipt,commands:[{...trustedReceipt.commands[0],exitCode:null},...trustedReceipt.commands.slice(1)]},
   {...trustedReceipt,commands:[trustedReceipt.commands[0],
    {...trustedReceipt.commands[1],executed:2},trustedReceipt.commands[2]]}
  ])assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[forgedReceipt]}),null);
