@@ -113,6 +113,30 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
  assert.equal(falsePositive.status,'EXECUTION_REPORTED_UNVERIFIED');
  assert.equal(falsePositive.patchSha256,null);
 });
+test('archived real Qwen repair receipt stays reviewable only with explicit bound chain',()=>{
+ const archive=new URL('../docs/evidence/sol-autonomous-coding-20261024/first-model-run/result.json',import.meta.url);
+ const evidence=JSON.parse(fs.readFileSync(archive,'utf8'));
+ assert.equal(evidence.schema,'continuum-real-local-coding-experiment');
+ assert.equal(evidence.result.status,'PATCH_PENDING_OWNER_REVIEW');
+ const original=evidence.result.receipts[0];
+ assert.equal(original.order.chain,'node');
+ assert.equal(original.evidence.baselineFailed,4);
+ assert.equal(original.evidence.baselineExecuted,12);
+ assert.equal(original.evidence.candidateExecuted,12);
+ assert.equal(original.evidence.independentExecuted,12);
+ // The historical record predates the current explicit result.chain field.
+ // Never infer it in production. Only the test supplies the known job order.
+ assert.equal(verifiedCodingReviewReceipt(evidence.result),null);
+ const pinned={...evidence.result,chain:original.order.chain};
+ assert.equal(verifiedCodingReviewReceipt(pinned),original.patch.sha256);
+ for(const mutation of [
+  {...original,order:{chain:'android'}},
+  {...original,taskId:'mob-'+'f'.repeat(16)},
+  {...original,evidence:{...original.evidence,candidateExecuted:11}},
+  {...original,commands:[...original.commands.slice(0,2),{...original.commands[2],failed:1}]}
+ ])assert.equal(verifiedCodingReviewReceipt({...pinned,receipts:[mutation]}),null);
+});
+
 test('failed host runtime redacts unexpected exception text',async()=>{
  const args=prepareArgs();
  const result=await executeTypedBridge(args,{prepare:()=>{throw Error('UNTRUSTED-SENSITIVE-DATA');}});
