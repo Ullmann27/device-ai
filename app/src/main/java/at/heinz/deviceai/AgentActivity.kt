@@ -176,6 +176,7 @@ class AgentActivity : Activity() {
     private lateinit var localBadge: TextView
     // views of the open model center (null while it is closed)
     private var modelCardText: TextView? = null
+    private var selectedModelStatusText: TextView? = null
     private var localActionButton: TextView? = null
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
@@ -3565,16 +3566,16 @@ class AgentActivity : Activity() {
         }
         box.addView(card, matchWidth(top = 14))
         box.addView(cockpit.section(this, "UNSERE AUSGEWÄHLTEN MODELLE"), matchWidth(top = 12))
-        box.addView(textView(
-            "GEMMA 4 E4B · Lokales Android-Sprachmodell, noch nicht auf diesem Gerät bestätigt. " +
-                "Der tatsächliche Ladezustand steht oben.\n\n" +
-                ContinuumSelectedModels.REMOTE_STATUS + "\n\n" +
-                ContinuumSelectedModels.RETIREMENT_GATE,
+        val selectedStatus = textView(
+            ContinuumSelectedModels.gemmaStatus(installedModels.map { it.id }, localRuntime.loadedModel?.id) +
+                "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
+                "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE,
             13f, MUTED
         ).apply {
             background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
             setPadding(dp(13), dp(12), dp(13), dp(12))
-        }, matchWidth(top = 8))
+        }
+        box.addView(selectedStatus, matchWidth(top = 8))
         cockpit.grid(this, box, listOf(
             cockpit.action(this, "1 · GEMMA-QUELLE ÖFFNEN", primary = true) {
                 runCatching {
@@ -3649,11 +3650,13 @@ class AgentActivity : Activity() {
             if (modelCenterDialog === dialog) {
                 modelCenterDialog = null
                 modelCardText = null
+                selectedModelStatusText = null
                 localActionButton = null
             }
         }
         modelCenterDialog = dialog
         modelCardText = card
+        selectedModelStatusText = selectedStatus
         localActionButton = action
         reloadInstalledModels()
         onLearningIo({
@@ -6456,6 +6459,10 @@ class AgentActivity : Activity() {
         localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
         val card = modelCardText ?: return
+        selectedModelStatusText?.text =
+            ContinuumSelectedModels.gemmaStatus(models.map { it.id }, loaded?.id) +
+                "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
+                "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE
         val shown = loaded ?: models.firstOrNull()
         card.text = when {
             localRuntimeError != null ->
