@@ -128,6 +128,13 @@ test('actual CCC1 preparation and execution through typed Termux boundary preser
   await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
    requireIsolation:true}),/CODING_ISOLATION_REQUIRED/);
   assert.equal(fs.existsSync(path.join(state,'coding-grants',spec.id+'.json')),true);
+  // Wrong owner-provided hash must be rejected while the journal and model
+  // invocation remain untouched. This check does not need a local sandbox.
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:'e'.repeat(64),
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_TASK_BINDING_MISMATCH/);
+  assert.equal(modelCalls,0,'wrong SHA must never call the model');
   assert.equal(git('status','--porcelain'),'');
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
@@ -164,6 +171,7 @@ test('the protected runner receives an explicit strict-isolation requirement',as
  });
  assert.equal(params.requireIsolation,true);
  assert.equal(params.executorAbortMode,'CHECKPOINT_BOUNDARY_ONLY');
+ assert.equal(params.expectedTaskFingerprint,args.hash);
  assert.equal(r.status,'EXECUTION_REPORTED_UNVERIFIED');
  assert.equal(r.patchSha256,null);
 });
