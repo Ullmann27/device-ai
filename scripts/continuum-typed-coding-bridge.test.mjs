@@ -127,7 +127,8 @@ test('archived real Qwen repair receipt stays reviewable only with explicit boun
  // The historical record predates the current explicit result.chain field.
  // Never infer it in production. Only the test supplies the known job order.
  assert.equal(verifiedCodingReviewReceipt(evidence.result),null);
- const pinned={...evidence.result,chain:original.order.chain};
+ // This archived record predates receiptJobs; only this test binds its recorded job explicitly.
+ const pinned={...evidence.result,chain:original.order.chain,receiptJobs:[original.job]};
  assert.equal(verifiedCodingReviewReceipt(pinned),original.patch.sha256);
  for(const mutation of [
   {...original,order:{chain:'android'}},
