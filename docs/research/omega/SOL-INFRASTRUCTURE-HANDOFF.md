@@ -32,6 +32,16 @@ Official Gradle 8.11.1 distribution and Android CLI downloaded locally and check
 
 Plan and task ledger: `docs/research/omega/SOL-INFRASTRUCTURE-PLAN.md`. Independent read-only audits investigate old experiment refs and CDX1 collapse; findings will be published without changing any other developer branch.
 
+## Repair checkpoint 2: PR #149 runtime adoption
+
+Inspected live PR #149 at `febffb293f12702df5714ee20c8fb66471b493b9`. Adopted its existing `LocalQwenPromptPolicy`, `LocalModelGenerationPolicy` and associated JVM tests; connected its three bounded `maxOutputToken` uses in `LiteRtLmLocalModelRuntime`. Original request text is preserved, including a user-authored `/no_think`; no forced switch is appended. Native output cap becomes 2048 for the supported Gemma4 compact-family IDs and 1024 otherwise. These are caps, not quality or device-throughput evidence. Character-based 16000 input limit remains; token-aware full-context planning is still open.
+
+No duplicated `LocalModelImportPreset`, Gemma buttons or conflicting single-line telemetry copied from #149: #148 already has the shared selected-model metadata and premium import dialog. PR #149 stays unchanged/open, original SHA is provenance. Updated an older source-wiring assertion that required the removed forced-switch implementation; real prompt behavior now has JVM regression coverage.
+
+Verified RED→GREEN: new Qwen tests initially failed 2/5 on unwanted appended text; generation policy tests initially could not resolve the absent policy. Actual official `kotlinc` 2.4.0 compilation plus JUnit execution now passes all 8 policy tests. Full Android main compilation was reached successfully on JDK17; unit compilation in that in-progress run saw the policy test before its new main class was in that build snapshot, so that run is NOT a green Android result. A complete stable-source Gradle rerun remains required. Initial JRE-only and JDK17 proxy-CA issues were diagnosed; official JDK17 compiler and the session's system CA trust are now used without disabling TLS.
+
+Live DeepSeek read-only preflight was repeated successfully: revision `1bae0e1088993b9b82de08f59de5be5a34e42170`, 48 shards, 510296708312 declared bytes, 0 downloaded. Current four-file offline Node suite is 20/20 (includes two model-selection tests). ADB reports no attached device. No owner keys are present or used.
+
 ## Safety / rollback / next entry
 
 No remote service mutation or model weight download. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch. Next: finish local checkout of the exact base and inspect build scripts/toolchain, then publish measured results here.

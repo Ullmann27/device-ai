@@ -7,7 +7,6 @@ const probe=read('app/src/main/java/at/heinz/deviceai/learning/ContinuumOrthogra
 const dialogue=read('app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt');
 const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
 const research=read('app/src/main/java/at/heinz/deviceai/learning/ContinuumPublicStudyScheduler.kt');
-const qwen=read('app/src/main/java/at/heinz/deviceai/localmodel/LocalQwenPromptPolicy.kt');
 
 test('retrieval-only orthography never becomes a command or a memory write',()=>{
   assert.match(probe,/internal object ContinuumOrthographyProbe/);
@@ -21,13 +20,13 @@ test('retrieval-only orthography never becomes a command or a memory write',()=>
   assert.match(dialogue,/!Regex\("\(\?i\)\^\(merke\|lösche\|entferne/);
 });
 
-test('local Qwen direct smoke is distinct from tool-free thinking smoke',()=>{
+test('local direct smoke is distinct from tool-free thinking smoke',()=>{
   assert.match(activity,/Continuum Modelltest Direkt/);
   assert.match(activity,/private fun runLocalSmokeTest\(direct:Boolean=false\)/);
   assert.match(activity,/if\(direct\)localRuntime\.stream\(question,callback\)/);
   assert.match(activity,/else localRuntime\.streamThinking\(question,callback\)/);
-  assert.match(qwen,/\/no_think/);
-  assert.match(qwen,/if \(!isQwen3\) return prompt/);
+  // Prompt-preservation behavior is executed by LocalQwenPromptPolicyTest;
+  // this source contract protects only the two actual smoke-test entry paths.
 });
 
 test('research counter reflects durable archive not just mentor insertion',()=>{
