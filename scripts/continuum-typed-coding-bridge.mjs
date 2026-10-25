@@ -22,7 +22,8 @@ const ERROR_CODES=new Set([
  'CODING_TASK_ID_REUSED','CODING_TASK_ID_INVALID','CODING_GRANT_UNSAFE',
  'CODING_GRANT_CORRUPT','CODING_CHAIN_BINDING_MISMATCH',
  'CCC1_PREFLIGHT_FAILED','CCC1_SOURCE_NOT_CLEAN','CODING_MODEL_UNAVAILABLE',
- 'CODING_ISOLATION_REQUIRED','CODING_ISOLATION_UNAVAILABLE'
+ 'CODING_ISOLATION_REQUIRED','CODING_ISOLATION_UNAVAILABLE',
+ 'CODING_TASK_BINDING_MISMATCH'
 ]);
 const DEFAULT_ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const DEFAULT_STATE=path.join(os.homedir(),'.local/state/device-ai-continuum/ccc1');
@@ -127,7 +128,8 @@ export async function executeTypedBridge(command,{
   catch{return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');}
   if(!executor)return blocked('run',id,'CODING_ISOLATION_UNAVAILABLE');
   const r=await run({project,stateDir,id,executor,
-    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true});
+    executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,
+    expectedTaskFingerprint:hash});
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');
   const verifiedPatch=verifiedCodingReviewReceipt(r);
