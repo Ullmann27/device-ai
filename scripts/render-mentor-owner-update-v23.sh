@@ -60,17 +60,12 @@ grep -Fq 'versionName = "0.3.22"' app/build.gradle.kts || die "Wrong owner versi
 # Public-source checks must never inherit the private owner keystore/passphrase.
 no_signing_env() { env -u CONTINUUM_MENTOR_SIGNING_P12_BASE64 -u CONTINUUM_MENTOR_SIGNING_PASSWORD -u CONTINUUM_OWNER_V23_QA "$@"; }
 
-# An actual owner release may NOT waive the immutable historical v22 audit.
-# Render's shallow checkout can omit source objects, so explicitly retrieve
-# the exact pinned historical tree. Failure must block the signing phase.
-historical_source="ec92490bbe7d75a2b9c16a47a94a1991f61837cc"
-if ! git cat-file -e "${historical_source}^{tree}" 2>/dev/null; then
-  echo "[Continuum] Fetching immutable historical v22 source for full tests"
-  git fetch --no-tags --depth=1 origin "$historical_source" ||
-    die "Historical v22 source unavailable for mandatory owner regression"
-fi
-git cat-file -e "${historical_source}^{tree}" ||
-  die "Historical v22 source tree required; no release-test skip allowed"
+# A signed v23 release must verify the complete immutable v22 Git tree.
+# Render's authorized private checkout has no origin remote. Verify the exact
+# 2243 historical tree entries and root SHA-1 from the pinned GitHub snapshot,
+# plus the original 927-source manifest; NEVER skip this audit.
+node scripts/continuum-v22-historical-attestation.mjs ||
+  die "Historical v22 Git-tree identity audit failed; signing forbidden"
 
 workspace="$repo_root/.continuum-render-build"
 mkdir -p "$workspace"
