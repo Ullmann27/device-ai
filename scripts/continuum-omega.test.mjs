@@ -1,5 +1,6 @@
 // Keep opt-in research regressions in the existing M6 Node test discovery.
 import '../experimental/omega/repair/numeric-verifier.test.mjs';
+import '../experimental/omega/benchmarks/controlled-repair.test.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {critique} from '../.github/continuum/repair-critic.mjs';

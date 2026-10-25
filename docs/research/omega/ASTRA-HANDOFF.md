@@ -40,3 +40,11 @@ Backend unverändert: 60/60 PASS. Vollständiger Node-Lauf nach EXP-15 steht noc
 4. RPK1 an vorhandenen CEFR-Ranker anschließen; H-MAC an bestehenden ExperienceCompiler. EIG-SC, gemeinsamer Checkpoint-DAG, Operator-VM, AEGIS und ARCHETYP bislang Plan, nicht neue funktionsfähige Module.
 
 Default `candidateVerifier=null` erhält die bestehende Pipeline. Kein Einbau in Besitzer-App/produktive Lerngewichte. Revert der EXP-15-Änderungen oder kein Import des optionalen Verifiers stellt bisherigen Pfad wieder her; keine Datenmigration. App-ID, Signatur, Besitzerrelease und main bleiben unverändert. Suiteautoren sind vertrauenswürdige Prüfautoren; Hashes beweisen weder Wahrheit noch Authentizität. Der numerische Prototyp bleibt eng begrenzt.
+
+## Checkpoint: Vergleichsprotokoll eingefroren
+
+VH-SR-Implementierung remote bestätigt: https://github.com/Ullmann27/device-ai/commit/6345fab3fceaa2cd44ca5de30aa82c9fbe229feb .
+
+`experimental/omega/benchmarks/controlled-repair.mjs` führt beide Varianten über `executeOwnerRepairTask` aus. Je fünf synthetische Aufgaben, zwei Wiederholungen, abwechselnde Reihenfolge, maximal zwei Vorschläge. Separate Online-/Bewertungszahlen; kein blinder Holdout. Ein separater Entwicklungsfall prüft die Messung. Benchmark-Kommando: `env -u NODE_TEST_CONTEXT node experimental/omega/benchmarks/controlled-repair.mjs > results.json`. Ergebnis erst nach diesem Checkpoint ausführen und archivieren. Entwicklungsprüfung: 2/2 PASS; kein Benchmarkerfolg vorweggenommen. Parent-CPU/RSS sind keine Messung des gesamten Prozessbaums.
+
+Ruling: Zeilen-Codec vorerst verschoben, weil die bestehende Schnittstelle bereits exakt gebunden ist und kein neues echtes Modell-A/B vorliegt. Die nächste Priorität bleibt gemessene zusätzliche Verifikation; Kosten der Verschiebung: kein Codec-Nutzenvergleich in diesem Meilenstein. RPK1/H-MAC/EIG-SC folgen erst nach diesem Messinstrument; keine zehn unverbundenen Kerne anlegen.
