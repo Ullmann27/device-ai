@@ -1,0 +1,83 @@
+{
+  "sourceCommit": "c3ebad7ced76b5edff0721a883f1e332044755a6",
+  "status": "MEASURED_RESEARCH_ONLY",
+  "files": [
+    {
+      "file": "report.json",
+      "bytes": 15011,
+      "sha256": "7381b9337d48d4a8e27a86793195868784f5063751d7d465649f8c06d3453b88"
+    },
+    {
+      "file": "stage-0.cdx.base64",
+      "bytes": 82717,
+      "sha256": "015c564f256c0b18af9af2229f4250dad9f7d738a09c645851cb5e0dedba97a5"
+    },
+    {
+      "file": "stage-120.cdx.base64",
+      "bytes": 82717,
+      "sha256": "af169f05a5dcfa616f98471ae2ac91e674184c7b844c5dbdc641c0cf20a47306"
+    },
+    {
+      "file": "stage-600.cdx.base64",
+      "bytes": 82717,
+      "sha256": "05a6cdfcb07003723a18e8521377d8b03e3cecd0ac3f11ecfbf98b20a6ff196e"
+    },
+    {
+      "file": "stage-6000.cdx.base64",
+      "bytes": 82717,
+      "sha256": "df6ef50839efdad02003cc860f773171a495f3fc3930f451a1d49d265a163a8e"
+    }
+  ],
+  "stages": [
+    {
+      "updates": 0,
+      "trainLoss": 5.549392709124249,
+      "legacyDevLoss": 5.548727840098728,
+      "trainCorrect": 0,
+      "trainCount": 4,
+      "legacyDevCorrect": 0,
+      "legacyDevCount": 2
+    },
+    {
+      "updates": 120,
+      "trainLoss": 5.288070502697411,
+      "legacyDevLoss": 5.309766766952311,
+      "trainCorrect": 0,
+      "trainCount": 4,
+      "legacyDevCorrect": 0,
+      "legacyDevCount": 2
+    },
+    {
+      "updates": 600,
+      "trainLoss": 3.4924905979163148,
+      "legacyDevLoss": 3.8312615105036745,
+      "trainCorrect": 0,
+      "trainCount": 4,
+      "legacyDevCorrect": 0,
+      "legacyDevCount": 2
+    },
+    {
+      "updates": 6000,
+      "trainLoss": 0.2520098680698633,
+      "legacyDevLoss": 4.172228459702591,
+      "trainCorrect": 1,
+      "trainCount": 4,
+      "legacyDevCorrect": 0,
+      "legacyDevCount": 2
+    }
+  ],
+  "independent": {
+    "cases": 16,
+    "strictCorrect": 0,
+    "acceptedCorrect": 0,
+    "ended": 16
+  },
+  "ownerWeightsModified": false,
+  "productionPromotion": false,
+  "limits": [
+    "Synthetic new decoder weights, not unavailable Fold7 checkpoint",
+    "Legacy DEV already consumed; independent fixture opened only after final weights frozen",
+    "Loss decrease does not establish free-generation quality",
+    "No CDX generation repair or production promotion claimed"
+  ]
+}

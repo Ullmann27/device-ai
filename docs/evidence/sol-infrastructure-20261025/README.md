@@ -1,6 +1,6 @@
 # Continuum infrastructure repair evidence
 
-Tested source: [`31e26ca48d411a73af42ec7d752af9195fd4adc8`](https://github.com/Ullmann27/device-ai/commit/31e26ca48d411a73af42ec7d752af9195fd4adc8). Official branch `sol/continuum-infrastructure-repair-20261025`, Draft PR #150. Later evidence/comment-only commits do not change executable behavior.
+Tested source: [`31e26ca48d411a73af42ec7d752af9195fd4adc8`](https://github.com/Ullmann27/device-ai/commit/31e26ca48d411a73af42ec7d752af9195fd4adc8). Official branch `sol/continuum-infrastructure-repair-20261025`, Draft PR #150. The immediate infrastructure closure at `0222622d` changes evidence/comments only. Later brain work is separately measured in `../sol-brain-20261025/README.md`; these full-suite results must not be relabelled as tests of that later source.
 
 ## Measured results
 
