@@ -63,12 +63,24 @@ test('a v22 source proposal is never mistaken for signed authorization',()=>{
 });
 
 test('exact approved source blob inventory is internally complete (CI simulation, NEVER signs)',()=>{
+ const manifest=JSON.parse(get('docs/release/continuum-0321-source-proposal-20261024.json'));
+ const tree=ref=>new Map(execFileSync('git',['ls-tree','-r','-z',ref],{cwd:root,encoding:'utf8'})
+  .split('\0').filter(Boolean).map(line=>{const m=/^\d+ blob ([a-f0-9]{40})\t(.+)$/.exec(line);return m?[m[2],m[1]]:['',''];}));
+ const approved=tree(manifest.sourceHead),current=tree('HEAD');
+ assert.equal(manifest.files.length,927);
+ for(const entry of manifest.files)assert.equal(approved.get(entry.path),entry.blob,entry.path);
  const r=gate({
   CONTINUUM_OWNER_V22_APPROVED_SOURCE_SHA:'ec92490bbe7d75a2b9c16a47a94a1991f61837cc',
   CONTINUUM_OWNER_V22_APPROVED_MANIFEST_BLOB:'36433bba220cb5706e286d8145df4c7a61734c0b',
   CONTINUUM_RELEASE_SHA:head(), CONTINUUM_OWNER_V22_APPROVED_SHA:head()
  });
- assert.equal(r.status,0,r.stderr);
- assert.match(r.stdout,/OWNER_V22_SOURCE_VERIFIED/);
- assert.match(r.stdout,/files=927/);
+ if(manifest.files.every(entry=>current.get(entry.path)===entry.blob)){
+  assert.equal(r.status,0,r.stderr);
+  assert.match(r.stdout,/OWNER_V22_SOURCE_VERIFIED/);
+  assert.match(r.stdout,/files=927/);
+ }else{
+  // A development descendant must never reuse the historical owner's source approval.
+  assert.equal(r.status,69,r.stderr);
+  assert.match(r.stderr,/OWNER_V22_BLOCKED: Altered approved source/);
+ }
 });

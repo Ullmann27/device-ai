@@ -5,6 +5,23 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 class ContinuumCodingConversationTest {
+ @Test fun generalKotlinRequirementsRequestBoundSourceScopeAndAcceptance() {
+  val c=ContinuumCodingConversation()
+  val p=c.accept("Ich möchte einen Fehler im Kotlin-Modul korrigieren")
+  assertNull(p.project)
+  assertTrue(p.message,p.message.contains("Commit"))
+  assertTrue(p.message,p.message.contains("Dateien"))
+  assertTrue(p.message,p.message.contains("Akzeptanz"))
+  assertFalse(p.message,p.message.contains("Welche App meinst du"))
+  assertNull(c.approve(p.revision,"0".repeat(64)))
+ }
+ @Test fun generalCodingQuestionNeverClaimsExecution() {
+  val c=ContinuumCodingConversation()
+  val p=c.accept("Kannst du einen Compiler-Fehler im Kotlin-Code beheben?")
+  assertNull(p.project)
+  assertTrue(p.message,p.message.contains("ausdrücklich"))
+  assertFalse(p.message,p.message.contains("gestartet."))
+ }
  @Test fun multiTurnNotesPlanNeedsExplicitStorageAndRevisionBoundApproval() {
   val c=ContinuumCodingConversation()
   assertNull(c.accept("Servus, ich möchte eine kleine App für Notizen").project)

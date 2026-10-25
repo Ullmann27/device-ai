@@ -23,6 +23,10 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val STATUS_MESSAGE = "project_status_message_v1"
         const val LAST_MESSAGE = "last_message"
         const val LAST_SHA = "last_sha"
+        const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"
+        const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"
+        const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"
+        const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"
         /** CCC1 task the owner can cancel next (validated id only). */
         const val CCC1_TASK = "ccc1_task"
         /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */
@@ -52,7 +56,8 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         ) return
 
         val codingOrder = operationName == "CODE_TEST"
-        val operation = if (codingOrder || ccc1 != null) null else try {
+        val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)
+        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {
             ContinuumMobileBuildPlan.Operation.valueOf(operationName)
         } catch (_: IllegalArgumentException) {
             return
@@ -104,6 +109,30 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
                     (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)
                 ) editor.remove(CCC1_TASK)
             }
+            editor.commit()
+            return
+        }
+
+        if (typed != null) {
+            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)
+            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)
+            val result=if(expectedId!=null && expectedHash!=null)
+                ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,
+                    exitCode,errorCode,if(truncated)null else stdout)
+                else null
+            val message=result?.message ?:
+                "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."
+            val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)
+                .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)
+                .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA)
+                .putString(LAST_MESSAGE,message)
+            if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {
+                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA)
+                if(result?.prepared==true)
+                    editor.putString(TYPED_PREPARED_ID,result.id)
+                        .putString(TYPED_PREPARED_SHA,result.hash)
+            }
+            if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)
             editor.commit()
             return
         }

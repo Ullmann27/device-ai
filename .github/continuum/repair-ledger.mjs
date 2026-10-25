@@ -79,7 +79,7 @@ export function recordSession(ledger,report,meta={}){
   // OS confinement protects owner state, but candidate-controlled runtime
   // reports are not an independent semantic oracle. Never train/replay broad
   // model code from a green local report, even if a caller passes a true flag.
-  const isolatedReview=provisional&&report.verified?.strategy==='LOCAL_ISOLATED_PATCH';
+  const isolatedReview=provisional&&['LOCAL_ISOLATED_PATCH','LOCAL_SCOPED_PATCH'].includes(report.verified?.strategy);
   const independentRejected=provisional&&meta.independentPass===false;
   const independentPending=provisional&&meta.independentPass!==true&&
     meta.independentPass!==false||isolatedReview;
@@ -109,7 +109,7 @@ export function recordSession(ledger,report,meta={}){
   // A provisional successful session has NO independent classification yet.
   // Keep its diagnostic attempts for investigation, but do not train from
   // either an asserted win or its possibly stale failed-test labels.
-  const learned=independentPending?[]:attempts.filter(a=>a.strategy!=='LOCAL_ISOLATED_PATCH'&&(
+  const learned=independentPending?[]:attempts.filter(a=>!['LOCAL_ISOLATED_PATCH','LOCAL_SCOPED_PATCH'].includes(a.strategy)&&(
     ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome)||
     (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({

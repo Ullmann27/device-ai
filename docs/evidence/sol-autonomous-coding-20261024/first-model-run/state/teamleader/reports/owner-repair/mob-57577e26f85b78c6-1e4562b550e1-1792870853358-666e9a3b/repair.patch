@@ -1,0 +1,11 @@
+diff --git a/lib/pagination.mjs b/lib/pagination.mjs
+index dbe074e..6dfbe31 100644
+--- a/lib/pagination.mjs
++++ b/lib/pagination.mjs
+@@ -2,5 +2,5 @@ export function countPages(items, pageSize) {
+   if (!Number.isInteger(items) || items < 0 || !Number.isInteger(pageSize) || pageSize <= 0) {
+     throw new RangeError('nonnegative integer items and positive integer page size required');
+   }
+-  return Math.floor(items / pageSize);
++  return Math.floor(items / pageSize) + (items % pageSize === 0 ? 0 : 1);
+ }

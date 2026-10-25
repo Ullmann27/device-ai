@@ -324,7 +324,7 @@ export function runTeamleaderCycle({
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
-export async function localTeamleaderDriver(){
+export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null}={}){
  const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,emptyLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
@@ -374,7 +374,7 @@ export async function localTeamleaderDriver(){
    return executeOwnerRepairTask({
     root,file:path.join(stateDir,'development-backlog.json'),
     out:path.join(stateDir,'reports','owner-repair'),
-    id:taskId,budgetMinutes,actor:'continuum-task-worker'
+    id:taskId,budgetMinutes,actor:'continuum-task-worker',candidateProvider,executor,executorAbortMode
    });
   },
   readyInvestigation(root,stateDir){
@@ -431,7 +431,7 @@ export async function localTeamleaderDriver(){
    const deadline=Date.now()+budgetMinutes*60_000;
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
-      maxCandidates:3,deadline,shadowObserver});
+      maxCandidates:3,deadline,shadowObserver,executor,executorAbortMode});
     // The first successful worktree is not an independent verdict.
     // Reapply the patch to a fresh second worktree and rerun the fixed checks.
     if(result.outcome==='VERIFIED'){
@@ -445,7 +445,7 @@ export async function localTeamleaderDriver(){
       git(independent,['apply','--binary',patchFile]);
       const secondOut=path.join(out,'independent-check');
       fsApi.mkdirSync(secondOut,{recursive:true,mode:0o700});
-      const verified=runChain('node',independent,secondOut,{deadline});
+      const verified=runChain('node',independent,secondOut,{deadline,executor,executorAbortMode});
       const suff=evidenceSufficient(result.baseline.results,verified.results);
       const profiles=verified.results.map(r=>({
        profile:r.profile,passed:r.passed,executed:r.tests?.executed??0,

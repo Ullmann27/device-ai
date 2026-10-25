@@ -10,7 +10,9 @@ import {buildIndex,collectKotlin} from './code-analyzer.mjs';
 import {strictRepairDepth,finishRepairReport} from './repair-cycle-safety.mjs';
 import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kotlin-syntax.mjs';
 import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
-import {isIsolatedExecutor} from './isolated-executor.mjs';
+import {isIsolatedExecutor,validIsolationEvidence} from './isolated-executor.mjs';
+import {isLocalNumericPatch} from './local-numeric-patch.mjs';
+import {validateCodingTask,validateCodingProposal} from './coding-task.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -160,24 +162,24 @@ export const CHAINS=Object.freeze({
 /** Profiles whose evidence is executed tests (independent of flags in a report). */
 export const TEST_PROFILES=Object.freeze(['node-continuum','node-backend','android-unit','jvm-harness']);
 
-/**
- * Executor guard (from the isolation design of 76b98b22, whose test came back with the #94 integration): an executor
- * object never grants execution rights unless it is a trusted isolated executor, and container execution is not wired
- * into this repair loop, so even a trusted one fails closed instead of silently running on the host.
- */
-function refuseExecutor(executor){
+/** A trusted executor never silently falls back to host execution. Container cancellation is
+ * currently bounded at profile checkpoints only, and requires explicit opt-in. */
+export function validateRepairExecutor(executor,{abortWatch=null,executorAbortMode=null}={}){
   if(executor===null||executor===undefined)return;
   if(!isIsolatedExecutor(executor))throw Error('UNTRUSTED_ISOLATION_EXECUTOR');
-  throw Error('ISOLATION_EXECUTOR_NOT_INTEGRATED');
+  if(executorAbortMode!==null&&executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY')
+    throw Error('INVALID_ISOLATION_ABORT_MODE');
+  if(abortWatch!==null&&executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY')
+    throw Error('ISOLATION_ABORT_WATCH_UNSUPPORTED');
 }
 
-export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null,abortWatch=null}={}){
+export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=null,abortWatch=null,executorAbortMode=null}={}){
   const factory=PROFILES[name];if(!factory)throw Error('Unknown check profile '+name);
-  refuseExecutor(executor);
+  validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   checkAbortWatch(abortWatch);
   const p=factory(wt,out);
-  for(const d of p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
-  for(const f of p.junitFiles??[])fs.rmSync(f,{force:true});
+  for(const d of executor?[]:p.cleanDirs??[])fs.rmSync(d,{recursive:true,force:true});
+  for(const f of executor?[]:p.junitFiles??[])fs.rmSync(f,{force:true});
   if(deadline!==null&&(!Number.isSafeInteger(deadline)||deadline<=Date.now()))
     throw Error('Repair test deadline exhausted before '+name);
   const remaining=()=>deadline===null?p.timeoutMs:Math.min(p.timeoutMs,Math.max(1,deadline-Date.now()));
@@ -186,9 +188,12 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const args=forceRerun?[...p.args,'--rerun-tasks']:p.args;
   // A test inside the Continuum suite must never start that suite again: each level would spawn the next one.
   if(DEPTH>0&&name==='node-continuum')throw Error('Nested Continuum suite run refused (CONTINUUM_REPAIR_DEPTH='+DEPTH+')');
-  const r=run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env,abortWatch});
+  const r=executor?executor.execute(name,wt,out,{deadline,forceRerun}):run(p.cmd,args,{cwd:p.cwd,timeoutMs:remaining(),env:p.env,abortWatch});
+  if(executor&&(!Array.isArray(r?.junitFiles)||!validIsolationEvidence(r.isolation,name)))
+    throw Error('ISOLATION_INVALID_PROFILE_EVIDENCE');
   let stoppedByOwner=r.stoppedByOwner??null;
-  const text=r.stdout+'\n'+r.stderr;
+  const localize=text=>executor?text.replaceAll('/work/',wt+'/'):text;
+  const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
   const skippedCaseHashes=[];
@@ -204,8 +209,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
       else skippedCaseHashes.push(...ids);
     }
   };
-  for(const dir of p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
-  for(const file of p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(fs.readFileSync(file,'utf8'),wt));
+  for(const dir of executor?[]:p.junitDirs??[])addTests(readJUnitDirectory(dir,wt));
+  for(const file of executor?r.junitFiles:p.junitFiles??[])if(fs.existsSync(file))addTests(parseJUnit(localize(fs.readFileSync(file,'utf8')),wt));
   // Permit pre-existing JUnit skips only with a complete, stable case-identity
   // digest. ANSK independently compares the same identity across all green runs.
   if(tests.skipped>0&&completeSkipIdentities&&
@@ -215,7 +220,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
-  if(p.junitFiles){
+  if(p.junitFiles&&!executor){
     const listed=new Set(p.args.filter(a=>/^\.github\/continuum\/[\w.-]+\.test\.mjs$/.test(a)));
     const crashed=[...new Set(diagnostics.filter(d=>!d.file&&listed.has(d.testFile)).map(d=>d.testFile))].slice(0,3);
     for(const file of crashed){
@@ -231,7 +236,7 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   // run (missing report, only file placeholders or skips) is not a pass.
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
   const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0)&&!stoppedByOwner;
-  return {profile:name,passed,testProfile,exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+  return {profile:name,passed,testProfile,...(executor?{isolation:r.isolation}:{}),exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
     outputTail:text.slice(-3000),...(stoppedByOwner?{stoppedByOwner}:{})};
 }
 
@@ -268,14 +273,14 @@ function stepCheckpoint(checkpoint){
  * no further profile starts and the result of one that ran during an abort never counts. Without `abortWatch` a
  * running profile completes; with it, the step watchdog also ends a running profile once the task is aborted.
  */
-export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null,abortWatch=null}={}){
-  refuseExecutor(executor);
+export function runChain(chain,wt,out,{deadline=null,forceRerun=false,executor=null,checkpoint=null,abortWatch=null,executorAbortMode=null}={}){
+  validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   checkAbortWatch(abortWatch);
   const atStep=stepCheckpoint(checkpoint);
   const results=[];
   for(const name of CHAINS[chain]??(()=>{throw Error('Unknown chain '+chain);})()){
     atStep('profile:'+name);
-    const r=runProfile(name,wt,out,{deadline,forceRerun,abortWatch});results.push(r);
+    const r=runProfile(name,wt,out,{deadline,forceRerun,executor,abortWatch,executorAbortMode});results.push(r);
     atStep('checked:'+name);
     if(r.stoppedByOwner)throw Error('CHECK_STEP_STOPPED_BY_OWNER');
     if(!r.passed)break;
@@ -485,6 +490,156 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
  }
 }
 
+/** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
+ * Every revision is applied to base, never on top of a failed candidate. */
+function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
+  const scope=new Set(taskSpec.allowedPaths),seen=new Set(),history=[],rejectedResponses=new Set();
+  const readFile=file=>{
+    if(!scope.has(file))return null;
+    try{const full=boundedWorktreeFile(wt,file);return fs.statSync(full).size<=750_000?fs.readFileSync(full,'utf8'):null;}
+    catch{return null;}
+  };
+  report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
+    localRequests:0,verifiedModelExecution:false,candidateStatus:'NOT_REQUESTED',
+    repeatedCandidates:0,history:[],rejections:[],reason:'Provider calls do not independently establish model execution'};
+  report.coding={taskId:taskSpec.id,sourceCommit:base,allowedPaths:[...scope],
+    milestones:['BASELINE_FAILED'],candidateCount:0,contextSha256:null};
+  let diagnostics=actionable;
+  const boundedDiagnostics=items=>items.slice(0,10).map(d=>({...d,message:String(d.message??'').slice(0,1000)}));
+  const remember=attempt=>{
+    const entry={candidate:attempt.candidate,outcome:attempt.outcome,diagnostic:attempt.remainingDiagnostics?.length?attempt.remainingDiagnostics.map(d=>[d.kind,d.file,d.message].filter(Boolean).join(' ')).join('\n').slice(0,1000):attempt.syntax?.reason??attempt.diagnostic,
+      hypothesis:attempt.hypothesis};
+    history.push(entry);report.inference.history=structuredClone(history.slice(-3));
+  };
+  const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PATCH_NOT_EXACT','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
+    'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE',
+    'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
+    'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH']);
+  const rejectModel=(code,rawFingerprint=null)=>{
+    const fingerprint=typeof rawFingerprint==='string'&&/^[a-f0-9]{64}$/.test(rawFingerprint)?rawFingerprint:null;
+    const repeated=fingerprint!==null&&rejectedResponses.has(fingerprint);
+    if(fingerprint)rejectedResponses.add(fingerprint);
+    const entry={code,repeated,...(fingerprint?{responseSha256:fingerprint}:{})};
+    report.inference.rejections.push(entry);
+    report.inference.lastRejectCode=code;
+    // A rejected proposal was never tested. Only a fixed diagnostic, not raw model output,
+    // is sent to the next revision. The fingerprint survives in the durable report.
+    const message=code==='CODING_PATCH_NOT_EXACT'?'Rejected patch: oldText was missing or matched more than once in the unchanged baseline. Select exactly one unique existing source span.':
+       code==='CODING_NOOP_PATCH'?'The previous patch replaced a source span with identical bytes. Propose a genuine change to a uniquely matching allowed source span.':
+       code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid. Provide exact valid JSON with distinct oldText/newText replacements.':
+      code==='CODING_REPEATED_PATCH'?'The same previously rejected candidate was returned again. Produce a different change.':
+      code==='CODING_MODEL_UNAVAILABLE'||code==='LOCAL_PROVIDER_UNAVAILABLE'?
+        'The previous local model invocation was unavailable. No patch was accepted or executed.':
+      'The previous proposal was rejected by the coding safety or schema gate: '+code+'. Correct the proposal.';
+    diagnostics=[{kind:'CODING_REJECTED_OUTPUT',file:taskSpec.allowedPaths[0],line:1,message,
+      fingerprint:sha256(code+'\0'+(fingerprint??'')).slice(0,16)},...boundedDiagnostics(diagnostics)].slice(0,10);
+    history.push({candidate:fingerprint?.slice(0,16)??'provider-rejection',outcome:'REJECTED_MODEL_OUTPUT',
+      diagnostic:code,hypothesis:''});
+    report.inference.history=structuredClone(history.slice(-3));
+    return repeated;
+  };
+  for(let revision=0;revision<taskSpec.limits.maxModelCalls&&report.coding.candidateCount<maxCandidates&&Date.now()<deadline;revision++){
+    resetWorktree(wt,base);
+    beforeStep('provider');
+    let candidate,repeatedRejected=false;
+    report.inference.localRequests++;
+    try{
+      if(typeof candidateProvider!=='function')throw Error('LOCAL_PROVIDER_UNAVAILABLE');
+      const raw=candidateProvider({wt,base,chain,deadline,readFile,
+        diagnostics:structuredClone(boundedDiagnostics(diagnostics)),history:structuredClone(history.slice(-3))});
+      // The context record is provenance data only; it cannot grant files or commands.
+      if(raw?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||raw.trusted!==false||raw.autoApply!==false||raw.localRequests!==1||
+         raw.context?.commit!==base||!/^[a-f0-9]{64}$/.test(raw.context.contextSha256??'')||
+         !Array.isArray(raw.context.ranges)||raw.context.ranges.length>24)
+        throw Error('CODING_PROPOSAL_CONTEXT_INVALID');
+      const proposal=validateCodingProposal({plan:raw.plan,hypothesis:raw.hypothesis,patches:raw.patches},taskSpec);
+      const edits=proposal.patches.map(p=>{
+        const before=readFile(p.file);
+        if(typeof before!=='string'||before.split(p.oldText).length!==2){
+         const error=Error('CODING_PATCH_NOT_EXACT');
+         error.code='CODING_PATCH_NOT_EXACT';
+         error.responseSha256=sha256(JSON.stringify(proposal));
+         throw error;
+       }
+        return {file:p.file,oldText:before,newText:before.replace(p.oldText,()=>p.newText)};
+      });
+      candidate={id:sha256('LOCAL_SCOPED_PATCH\0'+JSON.stringify([...edits].sort((a,b)=>a.file.localeCompare(b.file)))).slice(0,16),
+        strategy:'LOCAL_SCOPED_PATCH',diagnostic:diagnostics[0]?.fingerprint??actionable[0].fingerprint,
+        diagnosticKind:diagnostics[0]?.kind??actionable[0].kind,prior:0.2,score:0.38,
+        description:'Task-scoped local proposal; fixed tests and independent owner review required',
+        hypothesis:proposal.hypothesis,plan:proposal.plan,edits};
+      report.coding.contextSha256=raw.context.contextSha256;
+      report.inference.candidateStatus='PROPOSED';
+      report.coding.milestones.push('LOCAL_PROPOSAL_RECEIVED');
+    }catch(error){
+      report.inference.candidateStatus='UNAVAILABLE_OR_REJECTED';
+      const claimedCode=error?.code??error?.message;
+      const code=knownCodes.has(claimedCode)?claimedCode:'CODING_PROVIDER_ERROR';
+      repeatedRejected=rejectModel(code,error?.responseSha256);
+    }
+    beforeStep('provided');
+    if(Date.now()>=deadline)break;
+    if(!candidate){if(repeatedRejected)break;continue;}
+    const c=candidate;
+    if(seen.has(c.id)){
+      report.inference.repeatedCandidates++;
+      report.inference.candidateStatus='REPEATED_PATCH_REJECTED';
+      // Keep feedback without rerunning a known-failing patch. Preserve existing
+      // candidate-budget semantics and let the next model call revise it.
+      rejectModel('CODING_REPEATED_PATCH',sha256(c.id));
+      continue;
+    }
+    seen.add(c.id);report.coding.candidateCount++;
+    beforeStep('candidate:'+c.id);
+    const verdict=critique(c);
+    const attempt={candidate:c.id,strategy:c.strategy,diagnostic:c.diagnostic,diagnosticKind:c.diagnosticKind,
+      description:c.description,hypothesis:c.hypothesis,plan:c.plan,score:c.score,critic:verdict,edits:c.edits};
+    const record=()=>{report.attempts.push(attempt);remember(attempt);log(c.strategy+' -> '+attempt.outcome);};
+    if(!verdict.approved){attempt.outcome='REJECTED_BY_CRITIC';record();continue;}
+    report.coding.milestones.push('CANDIDATE_CRITIC_APPROVED');
+    // A worktree is not an OS sandbox. Only the already-reviewed numeric grammar
+    // may execute on the host; a structurally accepted general patch requires OS isolation.
+    if(!executor&&!c.edits.every(isLocalNumericPatch)){
+      attempt.outcome='REJECTED_BY_EXECUTION_POLICY';record();continue;
+    }
+    try{
+      const prepared=[...applyEdits(readFile,c.edits)].map(([file,content])=>[boundedWorktreeFile(wt,file),content]);
+      for(const [file,content] of prepared)fs.writeFileSync(file,content);
+    }catch{attempt.outcome='NOT_APPLICABLE';record();continue;}
+    let syntax;
+    try{
+      syntax=checkCandidateJsSyntax(wt,c.edits.map(e=>e.file),{timeoutMs:Math.min(10000,Math.max(1,deadline-Date.now()))});
+      if(syntax.passed){
+        const kotlin=checkCandidateKotlinSyntax(wt,c.edits.map(e=>e.file),{base});
+        attempt.kotlinSyntax=kotlin;if(!kotlin.passed)syntax=kotlin;
+      }
+    }catch(error){attempt.outcome='SYNTAX_CHECK_ERROR';attempt.syntaxReason=error?.code??'INVALID_CHECK_REQUEST';record();continue;}
+    attempt.syntax=syntax;
+    if(!syntax.passed){
+      diagnostics=[{kind:'CANDIDATE_SYNTAX',file:syntax.failedFile,message:syntax.reason,
+        fingerprint:sha256(c.id+'\0'+syntax.reason).slice(0,16)}];
+      attempt.outcome='FAILED_SYNTAX';record();continue;
+    }
+    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch,executor,executorAbortMode});
+    attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,
+      exitCode:r.exitCode,ms:r.ms,tests:r.tests,...(r.isolation?{isolation:r.isolation}:{})}));
+    attempt.remainingDiagnostics=boundedDiagnostics(check.diagnostics);
+    diagnostics=check.diagnostics;
+    attempt.evidence=evidenceSufficient(baseline.results,check.results);
+    attempt.outcome=!check.passed?'FAILED_TESTS':attempt.evidence.sufficient?'VERIFIED':'INSUFFICIENT_EVIDENCE';
+    report.coding.milestones.push(attempt.outcome==='VERIFIED'?'CANDIDATE_VERIFIED':'CANDIDATE_TESTS_FAILED');
+    record();
+    if(attempt.outcome==='VERIFIED'){
+      const patch=git(wt,['diff','--binary',base]).stdout;
+      report.verified={candidate:c.id,strategy:c.strategy,description:c.description,patch,patchSha256:sha256(patch),
+        files:c.edits.map(e=>e.file),tests:attempt.tests,reviewRequired:true,confidence:Number((c.score*0.7).toFixed(3))};
+      fs.writeFileSync(path.join(out,'repair.patch'),patch);break;
+    }
+  }
+  if(!report.verified)resetWorktree(wt,base);
+  return finishRepairReport(report,report.verified?'VERIFIED':'NO_VERIFIED_REPAIR');
+}
+
 /**
  * One repair session on commit `base` in `wt` (an existing clean worktree).
  * Returns a report; never touches the caller's checkout.
@@ -492,7 +647,11 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
  * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
  * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null,abortWatch=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null}){
+  validateRepairExecutor(executor,{abortWatch,executorAbortMode});
+  const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
+  if(taskSpec&&(taskSpec.sourceCommit!==base||taskSpec.chain!==chain))throw Error('CODING_TASK_BINDING_MISMATCH');
+  if(!Number.isSafeInteger(maxCandidates)||maxCandidates<1||maxCandidates>12)throw Error('Invalid repair candidate limit');
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
   const beforeStep=stepCheckpoint(checkpoint);
   if(!path.isAbsolute(out))throw Error('Report directory must be absolute (checks run inside the worktree)');
@@ -504,7 +663,8 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
       reason:'No generative model is invoked by this repair pipeline'},
     baseline:null,attempts:[],verified:null,outcome:null};
-  const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch});
+  report.execution={mode:executor?'OS_ISOLATED':'HOST_LEGACY',cancellation:executor&&abortWatch?'CHECKPOINT_BOUNDARY_ONLY':abortWatch?'STEP_WATCHDOG':'NONE'};
+  const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch,executor,executorAbortMode});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
@@ -514,6 +674,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     report.baselineTail=baseline.results.at(-1)?.outputTail;
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
+  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
   const ctx=context(wt,base,ledger.attempts);
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.
@@ -607,7 +768,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
       log(c.strategy+' -> FAILED_SYNTAX');
       continue;
     }
-    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch});
+    const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch,executor,executorAbortMode});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,exitCode:r.exitCode,ms:r.ms,tests:r.tests}));
     attempt.remainingDiagnostics=check.diagnostics.slice(0,10);
     const evidence=evidenceSufficient(baseline.results,check.results);

@@ -1452,6 +1452,7 @@ class AgentActivity : Activity() {
         } },
         listOf(
             CenterAction("ENTWICKLUNGSAUFGABE · STARTEN", accent = true) { showDevelopmentDialog() },
+            CenterAction("CODING-AUFTRAG ENTWERFEN") { showCodingTaskDraftDialog() },
             CenterAction("AUFGABEN · BACKLOG") { showDevelopmentBacklog() },
             CenterAction("ANLEITUNG · DEINE EIGENE KI") { showFirstStepsGuide() },
             CenterAction("TEAMLEITER · STATUS") { showDeviceTeamleaderStatus() },
@@ -5627,6 +5628,10 @@ class AgentActivity : Activity() {
                 openMobileBuilder()
             }
         }, matchWidth(top = 8))
+        box.addView(actionButton("CODING-AUFTRAG ENTWERFEN").apply {
+            contentDescription = "Begrenzten Coding-Auftrag mit Commit, ausgewählten Dateien und Akzeptanzkriterien entwerfen; keine Ausführung"
+            setOnClickListener { showCodingTaskDraftDialog() }
+        }, matchWidth(top = 6))
         box.addView(actionButton("SPRACHMODELL EINRICHTEN").apply {
             setOnClickListener {
                 // Preserve the current goal through the dialog's dismiss handler.
@@ -5721,6 +5726,144 @@ class AgentActivity : Activity() {
             .show()
         devDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         refreshDevelopmentUi()
+    }
+
+    /** General task intake only. This dialog has no transport, model or tool execution hook. */
+    private fun showCodingTaskDraftDialog() {
+        val conversation = ContinuumCodingConversation()
+        val taskId = "job-${java.util.UUID.randomUUID()}"
+        val box = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = rounded(Color.rgb(13, 23, 43), 16, BORDER)
+            setPadding(dp(20), dp(18), dp(20), dp(20))
+        }
+        box.addView(textView("CODING-AUFTRAG ENTWERFEN", 18f, TEXT, true))
+        box.addView(textView(
+            "Formuliere ein konkretes Ziel und wähle höchstens drei JS- oder Kotlin-Quellpfade aus einem vollständigen Git-Commit. " +
+                "Dieser Dialog prüft nur Auftragsfelder und kopiert einen Entwurf. Quelltext wird hier nicht gelesen. Für eine spätere Ausführung sind Worker-Konfiguration " +
+                "und eine gesonderte ausdrückliche Besitzerbestätigung erforderlich. TEST/DEPENDENCY bleiben zunächst Untersuchungsaufträge.",
+            12f, MUTED), matchWidth(top = 8))
+        var copiedDraft: String? = null
+        var reviewedRevision: Int? = null
+        var reviewedHash: String? = null
+        val copyButton = actionButton("ENTWURF KOPIEREN").apply { isEnabled = false }
+        val prepareButton = actionButton("AUFTRAG AN TERMUX ÜBERGEBEN").apply { isEnabled = false }
+        val status = textView("Noch kein vollständiger Auftragsentwurf. Commit, Dateien und Akzeptanzkriterien angeben.", 12f, AMBER)
+        fun field(label: String, hintText: String, lines: Int = 1, initial: String = "", number: Boolean = false): EditText {
+            box.addView(textView(label, 12f, TEXT, true), matchWidth(top = 10))
+            return EditText(this).apply {
+                hint = hintText
+                setHintTextColor(MUTED)
+                setTextColor(TEXT)
+                textSize = 14f
+                minLines = lines
+                maxLines = maxOf(lines, 3)
+                if (number) inputType = InputType.TYPE_CLASS_NUMBER
+                setText(initial)
+                addTextChangedListener(object : android.text.TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun afterTextChanged(s: android.text.Editable?) {
+                        copiedDraft = null
+                        reviewedRevision = null
+                        reviewedHash = null
+                        copyButton.isEnabled = false
+                        prepareButton.isEnabled = false
+                        status.text = "Anforderungen geändert. Entwurf erneut prüfen; kein Auftrag übergeben."
+                    }
+                })
+                box.addView(this, matchWidth(top = 4))
+            }
+        }
+        val goal = field("Ziel", "Welche konkrete Änderung soll entstehen?", 2)
+        val kind = field("Auftragsart", "BUGFIX / FEATURE / REFACTOR / TEST / COMPILER / DEPENDENCY")
+        val commit = field("Quell-Commit", "Vollständige Git-SHA, 40 kleine Hex-Zeichen")
+        val paths = field("Ausdrücklich erlaubte Dateien · 1 bis 3", "Ein relativer JS-/Kotlin-Quellpfad pro Zeile", 3)
+        val acceptance = field("Akzeptanzkriterien · 1 bis 8", "Ein prüfbares Ergebnis pro Zeile", 3)
+        val chain = field("Feste Prüfkette", "node für JS oder android für Kotlin")
+        val modelCalls = field("Höchstens Modellaufrufe · 1 bis 3", "1..3", initial = "1", number = true)
+        val contextChars = field("Höchstens Kontextzeichen · 2048 bis 24000", "2048..24000", initial = "8192", number = true)
+        box.addView(actionButton("ENTWURF PRÜFEN", accent = true).apply {
+            setOnClickListener {
+                val draft = ContinuumCodingTask.Draft(
+                    id = taskId,
+                    sourceCommit = commit.text.toString().trim(),
+                    kind = ContinuumCodingTask.Kind.entries.firstOrNull { it.name == kind.text.toString().trim() },
+                    goal = goal.text.toString().trim(),
+                    allowedPaths = paths.text.toString().lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList(),
+                    acceptance = acceptance.text.toString().lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.toList(),
+                    chain = ContinuumCodingTask.Chain.entries.firstOrNull { it.wire == chain.text.toString().trim() },
+                    limits = ContinuumCodingTask.Limits(modelCalls.text.toString().toIntOrNull() ?: 0, contextChars.text.toString().toIntOrNull() ?: 0)
+                )
+                val preview = conversation.draftCodingTask(draft)
+                copiedDraft = preview.codingTask?.canonicalJson()
+                reviewedRevision = preview.revision.takeIf { copiedDraft != null }
+                reviewedHash = preview.taskSha256
+                copyButton.isEnabled = copiedDraft != null
+                prepareButton.isEnabled = copiedDraft != null
+                status.text = preview.message
+            }
+        }, matchWidth(top = 12))
+        copyButton.setOnClickListener {
+            val text = copiedDraft ?: return@setOnClickListener
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Continuum Coding-Auftragsentwurf", text))
+            Toast.makeText(this, "Entwurf kopiert. Kein Auftrag übergeben oder gestartet.", Toast.LENGTH_LONG).show()
+        }
+        box.addView(copyButton, matchWidth(top = 6))
+        prepareButton.setOnClickListener {
+            val rev = reviewedRevision ?: return@setOnClickListener
+            val hash = reviewedHash ?: return@setOnClickListener
+            val json = copiedDraft ?: return@setOnClickListener
+            // Never send an order to another installed package, including Preview.
+            if (ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID).externalPackage) {
+                status.text = "In dieser App steht kein interner Haupt-App-Builder zur Verfügung. Kein Auftrag übergeben."
+                return@setOnClickListener
+            }
+            AlertDialog.Builder(this)
+                .setTitle("Diesen Coding-Auftrag in Termux vorbereiten?")
+                .setMessage("Freigegebener Quell-Commit: ${commit.text.toString().trim().take(12)}\n" +
+                    "SHA-256 des Auftrags: ${hash.take(16)}…\n\n" +
+                    "Dieser Schritt registriert den Auftrag im vorhandenen CCC1-Backlog. " +
+                    "Das lokale Modell startet NICHT automatisch. " +
+                    "Eine weitere ausdrückliche Bestätigung ist für die Ausführung erforderlich.")
+                .setNegativeButton("Nicht übergeben", null)
+                .setPositiveButton("Vorbereitung freigeben") { _, _ ->
+                    // Fields can change while an AlertDialog is open. Consent is valid
+                    // only for the still-visible reviewed snapshot.
+                    if (reviewedRevision != rev || reviewedHash != hash || copiedDraft != json) {
+                        status.text = "Auftrag seit der Prüfung geändert. Neue Freigabe erforderlich."
+                        return@setPositiveButton
+                    }
+                    val authorization = conversation.approveCodingTask(rev, hash, ownerConfirmed = true)
+                    if (authorization == null || authorization.task.canonicalJson() != json) {
+                        status.text = "Freigabe ungültig oder Anforderungen geändert. Kein Auftrag gestartet."
+                        return@setPositiveButton
+                    }
+                    val destination = ContinuumMobileBuilderRoute.destination(BuildConfig.APPLICATION_ID)
+                    if (destination.externalPackage) {
+                        status.text = "Haupt-App-Builder nicht verfügbar. Kein Auftrag übergeben."
+                        return@setPositiveButton
+                    }
+                    val intent = Intent(this, ContinuumMobileBuilderActivity::class.java).apply {
+                        putExtra(ContinuumTypedCodingBridge.INTENT_JSON, json)
+                        putExtra(ContinuumTypedCodingBridge.INTENT_SHA, hash)
+                    }
+                    try {
+                        startActivity(intent)
+                    } catch (_: android.content.ActivityNotFoundException) {
+                        status.text = "Coding-Builder nicht erreichbar. Kein Auftrag gestartet."
+                    } catch (_: SecurityException) {
+                        status.text = "Android blockiert den Coding-Builder. Kein Auftrag gestartet."
+                    }
+                }.show()
+        }
+        box.addView(prepareButton, matchWidth(top = 6))
+        box.addView(status.apply { setTextIsSelectable(true) }, matchWidth(top = 10))
+        AlertDialog.Builder(this)
+            .setView(ScrollView(this).apply { addView(box) })
+            .setNegativeButton("SCHLIESSEN", null)
+            .show()
     }
 
     private fun refreshDevelopmentUi() {
