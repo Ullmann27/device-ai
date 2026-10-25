@@ -90,7 +90,7 @@ test('rejection diagnostics and fingerprint reach the next model revision',()=>{
   assert.equal(second.history[0].outcome,'REJECTED_MODEL_OUTPUT');
   assert.equal(second.history[0].candidate,'b'.repeat(16));
   assert.equal(second.diagnostics[0].kind,'CODING_REJECTED_OUTPUT');
-  assert.match(second.diagnostics[0].message,/unchanged/);
+  assert.match(second.diagnostics[0].message,/valid JSON/);
   assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
