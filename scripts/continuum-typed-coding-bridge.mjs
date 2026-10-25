@@ -4,6 +4,7 @@
  * Android invokes only this file via RUN_COMMAND. No shell interpretation,
  * remote calls, direct Git writes, merge, install, APK or model promotion.
  */
+import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -117,6 +118,24 @@ export function verifiedCodingReviewReceipt(result){
  }
  return null;
 }
+/** Historic success is not evidence that its patch is still present.
+ * Limit the read to the existing external Continuum state tree and inspect
+ * actual bytes before claiming a patch is available for owner review. */
+export function reviewPatchStillAvailable(result,hash,stateDir){
+ if(!SHA.test(hash??'')||typeof stateDir!=='string')return false;
+ try{
+  const stateRoot=fs.realpathSync(path.dirname(path.resolve(stateDir)));
+  const receipt=result?.receipts?.find(r=>r?.patch?.sha256===hash);
+  const file=receipt?.patch?.path;
+  if(typeof file!=='string'||file.length>2048||!path.isAbsolute(file))return false;
+  const stat=fs.lstatSync(file);
+  if(!stat.isFile()||stat.isSymbolicLink()||stat.size<1||stat.size>1024*1024||
+     !Number.isSafeInteger(receipt.patch.bytes)||stat.size!==receipt.patch.bytes)return false;
+  const real=fs.realpathSync(file);
+  if(!real.startsWith(stateRoot+path.sep))return false;
+  return sha256Hex(fs.readFileSync(file))===hash;
+ }catch{return false;}
+}
 export async function executeTypedBridge(command,{
  project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
  prepare=prepareCodingTask,run=runCodingTask,
@@ -153,11 +172,12 @@ export async function executeTypedBridge(command,{
   if(r.id!==id||r.taskFingerprint!==hash||!SHA.test(r.taskFingerprint))
    return blocked('run',id,'RUN_BINDING_MISMATCH');
   const verifiedPatch=verifiedCodingReviewReceipt(r);
+  const reviewable=verifiedPatch!==null&&reviewPatchStillAvailable(r,verifiedPatch,stateDir);
   return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'run',
    id,sourceCommit:r.sourceCommit,taskSha256:hash,
-   status:verifiedPatch?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
+   status:reviewable?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED',
    resultStatus:String(r.status).slice(0,64),
-   patchSha256:verifiedPatch,
+   patchSha256:reviewable?verifiedPatch:null,
    approvedForMerge:false,installed:false,deviceVerified:false};
  }catch(e){return blocked('run',id,ERROR_CODES.has(e?.message)?e.message:'RUN_FAILED');}
 }
