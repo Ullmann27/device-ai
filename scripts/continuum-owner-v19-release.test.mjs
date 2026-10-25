@@ -12,8 +12,8 @@ const nextScript = read("scripts/render-mentor-owner-update-v20.sh");
 const manifest = read("app/src/main/AndroidManifest.xml");
 const expectedSigner = "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc";
 
-test("owner candidate advances to 0.3.21/22 without a new application ID", () => {
-  assert.match(gradle, /if \(deviceAiOwnerSignedUpdate\)\s*\{\s*versionCode = 22\s*versionName = "0\.3\.21"/);
+test("owner candidate advances to 0.3.22/23 without a new application ID", () => {
+  assert.match(gradle, /if \(deviceAiOwnerSignedUpdate\)\s*\{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
   assert.match(gradle, /applicationId = "at\.heinz\.deviceai"/);
   assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
   assert.match(manifest, /android:enabled="\$\{mobileBuilderEnabled\}"/);
