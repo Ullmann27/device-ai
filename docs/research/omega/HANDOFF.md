@@ -1,6 +1,12 @@
 # Continuum OMEGA – laufender, übernehmbarer Arbeitsstand
 
-Stand: 25.10.2026, erster veröffentlichter Forschungscheckpoint. **Kein Release.**
+Stand: 25.10.2026, laufende Stabilisierung nach erstem Forschungscheckpoint. **Kein Release.**
+
+### Fortschritt nach dem ersten Checkpoint
+
+Erster vollständig gepushter Checkpoint: `0d4a0c88a99b8a88e92534083fd424794e5df524`; Draft-PR [#133](https://github.com/Ullmann27/device-ai/pull/133).
+Die unten genannten Analysator-/Bridge-Ursachen sind jetzt repariert: 32 gezielte Tests bestanden. Analysatorgrenze 1.000.000 UTF-8-Bytes mit explizitem Fehler bei Überschreitung; zwei neue Regressionen zuerst rot gesehen. Bridge-Status wird anhand tatsächlichen Verhaltens geprüft. Backend-Abhängigkeiten ignoriert. QA akzeptiert ausdrücklich gebundene OMEGA-Forschungsbranches und nutzt vorhandenes Gradle statt nicht existentem Wrapper. Vollständiger Node-Lauf und echte Android-Prüfung laufen; die ursprünglichen Baseline-Belege bleiben unverändert.
+Plan und gesamte A–F-Anschlussarchitektur: [`PLAN.md`](PLAN.md).
 
 ## Einstieg
 

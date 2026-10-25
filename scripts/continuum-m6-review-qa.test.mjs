@@ -20,9 +20,9 @@ function fixture(t){
  git('init','-q','-b','integration/continuum-m6-all-verified-20261025');
  git('add','.');git('-c','user.name=QA Fixture','-c','user.email=qa@example.invalid','commit','-qm','test source');
  const sha=git('rev-parse','HEAD');
- const run=(expected)=>spawnSync('bash',[RUNNER],{
+ const run=(expected,extraEnv={})=>spawnSync('bash',[RUNNER],{
   cwd:root,encoding:'utf8',timeout:15000,
-  env:{...process.env,HOME:home,CONTINUUM_M6_QA_EXPECTED_SHA:expected}
+  env:{...process.env,HOME:home,CONTINUUM_M6_QA_EXPECTED_SHA:expected,...extraEnv}
  });
  return {root,home,sha,git,run};
 }
@@ -46,6 +46,15 @@ test('M6 QA rejects another branch and preserves owner checkout',t=>{
  assert.equal(result.status,69,result.stderr);
  assert.match(result.stderr,/unexpected branch/);
  assert.equal(fs.existsSync(path.join(f.home,'.local')),false);
+});
+test('M6 QA allows an explicitly pinned research branch but never main',t=>{
+ const f=fixture(t),branch='research/continuum-omega-fixture';f.git('checkout','-qb',branch);
+ assert.equal(f.run(f.sha).status,69);
+ const result=f.run(f.sha,{CONTINUUM_M6_QA_EXPECTED_BRANCH:branch});
+ assert.equal(result.status,1); // reaches the real missing-source syntax failure
+ assert.match(result.stdout,/syntax-continuum-local-brain/);
+ f.git('checkout','-qb','main');
+ assert.equal(f.run(f.sha,{CONTINUUM_M6_QA_EXPECTED_BRANCH:'main'}).status,69);
 });
 test('M6 QA writes fail-closed nonrelease evidence outside the source tree',t=>{
  const f=fixture(t);

@@ -15,7 +15,7 @@ import {tokenize} from './kotlin-tokenizer.mjs';
  * name to every member called `foo`. That over-approximates reachability, so
  * an UNREFERENCED/TEST_ONLY finding is evidence, never proof.
  */
-const MAX_FILES=3000, MAX_BYTES=400000;
+const MAX_FILES=3000, MAX_BYTES=1000000;
 const DECL_KW=new Set(['class','interface','object','fun','val','var','typealias']);
 const MODIFIERS=new Set(['private','protected','internal','public','override','open','abstract','final','data','enum',
  'sealed','inner','companion','inline','suspend','operator','infix','tailrec','external','const','lateinit','annotation',
@@ -127,7 +127,9 @@ export function buildIndex(files){
   if(files.length>MAX_FILES)throw Error('Too many source files');
   const parsed=[];
   for(const file of files){
-    if(!file.path.endsWith('.kt')||file.content.length>MAX_BYTES)continue;
+    if(!file.path.endsWith('.kt'))continue;
+    if(Buffer.byteLength(file.content,'utf8')>MAX_BYTES)
+      throw Error('Source byte limit exceeded: '+file.path);
     parsed.push(indexFile(file));
   }
   const byName=new Map();const byQualified=new Map();
@@ -269,8 +271,8 @@ export function collectKotlin(root){
       if(entry.isDirectory()){if(entry.name!=='build'&&!entry.name.startsWith('.'))stack.push(full);}
       else if(entry.isFile()&&entry.name.endsWith('.kt')){
         if(files.length>=MAX_FILES)throw Error('Source file limit exceeded');
-        if(fs.statSync(full).size<=MAX_BYTES)
-          files.push({path:path.relative(root,full).replaceAll(path.sep,'/'),content:fs.readFileSync(full,'utf8')});
+        if(fs.statSync(full).size>MAX_BYTES)throw Error('Source byte limit exceeded: '+full);
+        files.push({path:path.relative(root,full).replaceAll(path.sep,'/'),content:fs.readFileSync(full,'utf8')});
       }
     }
   }

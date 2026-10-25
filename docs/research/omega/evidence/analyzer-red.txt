@@ -1,0 +1,79 @@
+✔ finds candidate orphan but not referenced class (3.039673ms)
+✔ ignores non-Kotlin sources (0.145489ms)
+✔ enforces source limit (0.596776ms)
+✖ indexes a large app entry point instead of silently losing its references (4.321497ms)
+✖ oversized UTF-8 sources fail explicitly instead of producing incomplete findings (0.21955ms)
+✔ lexer ignores comments and string text but sees template references (0.948534ms)
+✔ imports resolve the right declaration when simple names collide (0.272399ms)
+✔ constructor properties and header lambdas stay inside their class (0.276926ms)
+✔ reachability separates production, test-only and unreferenced code (7.353458ms)
+✔ call chains follow real references from an entry point (3.685071ms)
+✔ manifest entry points resolve relative component names (0.349495ms)
+✖ repository analysis reaches the learning core from the chat activity (533.72351ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 9
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 615.723854
+
+✖ failing tests:
+
+test at .github/continuum/code-analyzer.test.mjs:21:1
+✖ indexes a large app entry point instead of silently losing its references (4.321497ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(callChain(index,'p.App','p.Core.teach'))
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/code-analyzer.test.mjs:23:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/code-analyzer.test.mjs:26:1
+✖ oversized UTF-8 sources fail explicitly instead of producing incomplete findings (0.21955ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/code-analyzer.test.mjs:27:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Source byte limit exceeded/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/code-analyzer.test.mjs:83:1
+✖ repository analysis reaches the learning core from the chat activity (533.72351ms)
+  AssertionError [ERR_ASSERTION]: chat must reach the learning core
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/code-analyzer.test.mjs:87:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -18,6 +18,15 @@ test('enforces source limit',()=>{
  assert.throws(()=>analyzeSources(Array.from({length:3001},(_,i)=>({path:i+'.kt',content:''}))));
 });
 
+test('indexes a large app entry point instead of silently losing its references',()=>{
+ const index=buildIndex([{path:'main/p/App.kt',content:'/*'+ 'x'.repeat(410000)+'*/\npackage p\nclass App { override fun onCreate(){ Core().teach() } }\nclass Core { fun teach()=1 }'}]);
+ assert.ok(callChain(index,'p.App','p.Core.teach'));
+});
+
+test('oversized UTF-8 sources fail explicitly instead of producing incomplete findings',()=>{
+ assert.throws(()=>buildIndex([{path:'main/p/Huge.kt',content:'//'+ 'ä'.repeat(510000)}]),/Source byte limit exceeded/);
+});
+
 test('lexer ignores comments and string text but sees template references',()=>{
  const ids=tokenize(`/* Hidden /* nested */ still */ // Gone\nval a = "Text Ghost \${Real.value} $alsoReal" + """raw Ghost2 \${Raw2}"""\nval c = 'x'`)
   .filter(t=>t.type==='id').map(t=>t.text);
