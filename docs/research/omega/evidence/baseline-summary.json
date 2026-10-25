@@ -1,0 +1,35 @@
+{
+  "schema": "continuum-omega-baseline",
+  "version": 1,
+  "sourceCommit": "821df5d1acf68f0caf10369298352a3589f56a97",
+  "date": "2026-10-25",
+  "node": "v24.19.0",
+  "platform": "Linux",
+  "arch": "x86_64",
+  "nodeTests": {
+    "tests": 1190,
+    "pass": 1181,
+    "fail": 3,
+    "skipped": 6,
+    "durationMs": 52889.264709
+  },
+  "backendTests": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 1293.278777
+  },
+  "android": "NOT_RUN",
+  "modelInference": "NOT_RUN",
+  "device": "UNAVAILABLE",
+  "actions": {
+    "runId": 40173640084,
+    "checkRunId": 121109606842,
+    "node": "failure before test steps",
+    "android": "skipped",
+    "cause": "GitHub annotation: failed recent account payments or spending limit must increase"
+  },
+  "ownerApkBuilt": false,
+  "weightsChanged": false
+}
