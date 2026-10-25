@@ -181,9 +181,9 @@ export async function checkLocalBrain({fetchImpl = globalThis.fetch, timeoutMs =
 }
 
 /** A model answer fingerprint, never raw rejected text, crosses the CLI boundary. */
-function codingResponseInvalid(raw) {
+function codingResponseInvalid(raw,code='CODING_RESPONSE_INVALID') {
  const digest=createHash('sha256').update(typeof raw==='string'?raw:'').digest('hex');
- return Error('CODING_RESPONSE_INVALID:'+digest);
+ return Error(code+':'+digest);
 }
 
 /** Generative task seam; data only. Rights and exact-source hunks are checked again by the worker. */
@@ -217,7 +217,8 @@ export async function queryLocalCodingBrain({userPrompt,allowedTrackedPaths,apiK
    !Array.isArray(p.patches)||p.patches.length<1||p.patches.length>3||new Set(p.patches.map(x=>x?.file)).size!==p.patches.length||
    p.patches.some(x=>!x||Object.keys(x).sort().join(',')!=='file,newText,oldText'||!paths.includes(x.file)||
     typeof x.oldText!=='string'||typeof x.newText!=='string'||!x.oldText.trim()||!x.newText.trim()||
-    x.oldText===x.newText||x.oldText.length>3200||x.newText.length>3200||/\0/.test(x.oldText+x.newText)))throw codingResponseInvalid(raw);
+    x.oldText.length>3200||x.newText.length>3200||/\0/.test(x.oldText+x.newText)))throw codingResponseInvalid(raw);
+  if(p.patches.some(x=>x.oldText===x.newText))throw codingResponseInvalid(raw,'CODING_NOOP_PATCH');
   return {mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal:p};
  }finally{clearTimeout(timer);controller.abort();}
 }
