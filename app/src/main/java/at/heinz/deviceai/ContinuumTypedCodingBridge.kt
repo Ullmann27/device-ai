@@ -55,6 +55,40 @@ internal object ContinuumTypedCodingBridge {
             ContinuumCodingTask.Authorization(task,hash)
         }.getOrNull()
     }
+
+    /**
+     * Human-readable, lossless review of exactly the task bound to the typed bridge.
+     * This remains presentation only; a task hash cannot authenticate its author.
+     */
+    fun preparationReview(authorization:ContinuumCodingTask.Authorization):String? = runCatching {
+        val task=authorization.task
+        require(task.problems().isEmpty() && task.fingerprint()==authorization.taskSha256)
+        require(task.canonicalJson().length in 2..MAX_JSON)
+        buildString {
+            append("AUFTRAG VOLLSTÄNDIG PRÜFEN\n\n")
+            append("Task-ID:\n").append(task.id).append("\n\n")
+            append("Auftragsart:\n").append(task.kind.name).append("\n\n")
+            append("Ziel (vollständig):\n").append(task.goal).append("\n\n")
+            append("Quell-Commit (40 Zeichen):\n").append(task.sourceCommit).append("\n\n")
+            append("Erlaubte Quelldateien (").append(task.allowedPaths.size).append("):\n")
+            task.allowedPaths.forEachIndexed { index, sourcePath ->
+                append(index+1).append(". ").append(sourcePath).append('\n')
+            }
+            append("\nAkzeptanzkriterien (").append(task.acceptance.size).append("):\n")
+            task.acceptance.forEachIndexed { index, criterion ->
+                append(index+1).append(". ").append(criterion).append('\n')
+            }
+            append("\nPrüfkette:\n").append(task.chain.wire).append("\n\n")
+            append("Ressourcenlimits:\n")
+            append("Maximale Modellaufrufe: ").append(task.limits.maxModelCalls).append('\n')
+            append("Maximale Kontextzeichen: ").append(task.limits.maxContextChars).append("\n\n")
+            append("Vollständiger Task-SHA-256:\n").append(authorization.taskSha256).append("\n\n")
+            append("VORBEREITUNG: Nur den an den Fingerabdruck gebundenen CCC1-Auftrag anlegen. ")
+            append("Kein KI-Modell ausführen, keinen Patch übernehmen, keine APK installieren. ")
+            append("Ein passender SHA-256-Fingerabdruck ist keine kryptografische Besitzeridentität.")
+        }
+    }.getOrNull()
+
     private const val SCRIPT=ContinuumMobileBuildPlan.PROJECT_DIR + "/scripts/continuum-typed-coding-bridge.mjs"
     fun commandPrepare(authorization:ContinuumCodingTask.Authorization):ContinuumMobileBuildPlan.Command {
         val task=authorization.task
