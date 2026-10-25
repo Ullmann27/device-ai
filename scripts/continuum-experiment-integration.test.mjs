@@ -19,7 +19,7 @@ test("CTX3 test is discoverable and stays confined to existing nonexported lab",
   assert.match(activity, /ContinuumM5LabActivity::class\.java/);
 });
 test("Orion personal memory is not mistaken for an entity definition", () => {
-  assert.match(dialogue, /val answerableHits=hits\.filter/);
+  assert.match(dialogue, /val hits=retrievedHits\.filter/);
   assert.match(dialogue, /ownerMemoryAnswersDefinition\(text,it\.text\)/);
   assert.match(dialogue, /normalize\(query\.groupValues\[1\]\)==normalize\(claim\.groupValues\[1\]\)/);
 });
