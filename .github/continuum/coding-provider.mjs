@@ -16,8 +16,26 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
  const source=fs.realpathSync(root);
  let evidence=null;
  if(evidenceDir!==null){
-  fs.mkdirSync(evidenceDir,{recursive:true,mode:0o700});evidence=fs.realpathSync(evidenceDir);
-  if(evidence===source||evidence.startsWith(source+path.sep)||evidence!==path.resolve(evidenceDir))throw Error('CODING_EVIDENCE_UNSAFE');
+  // Reject unsafe paths BEFORE creating any directory. Check an existing
+  // ancestor as well, because an external symlink may point inside source.
+  if(typeof evidenceDir!=='string'||!path.isAbsolute(evidenceDir))
+   throw Error('CODING_EVIDENCE_UNSAFE');
+  const requested=path.resolve(evidenceDir);
+  if(requested===source||requested.startsWith(source+path.sep))
+   throw Error('CODING_EVIDENCE_UNSAFE');
+  let existing=requested;
+  while(!fs.existsSync(existing)){
+   const parent=path.dirname(existing);
+   if(parent===existing)throw Error('CODING_EVIDENCE_UNSAFE');
+   existing=parent;
+  }
+  const ancestor=fs.realpathSync(existing);
+  if(ancestor===source||ancestor.startsWith(source+path.sep))
+   throw Error('CODING_EVIDENCE_UNSAFE');
+  fs.mkdirSync(requested,{recursive:true,mode:0o700});
+  evidence=fs.realpathSync(requested);
+  if(evidence===source||evidence.startsWith(source+path.sep)||evidence!==requested)
+   throw Error('CODING_EVIDENCE_UNSAFE');
  }
  let calls=0;
  const provider=({base,chain,deadline,diagnostics=[],history=[]}={})=>{
