@@ -42,6 +42,33 @@ class ContinuumCoreMirrorTest {
         }
     }
 
+    @Test fun foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows() {
+        val fold = ContinuumHologramRenderer.Geometry.FOLD
+        val layouts = listOf(
+            ContinuumHomeLayout.wide(656f, 690f),
+            ContinuumHomeLayout.wide(750f, 790f),
+            ContinuumHomeLayout.wide(840f, 649f),
+            ContinuumHomeLayout.wide(840f, 840f),
+            ContinuumHomeLayout.wide(840f, 1040f),
+            ContinuumHomeLayout.wide(920f, 1080f)
+        )
+        layouts.forEach { layout ->
+            val hero = layout.boxes.getValue(Slot.HERO)
+            val centerX = (hero.left + hero.right) / 2f
+            val sphereRadius = minOf(
+                hero.width * fold.radiusOfWidth,
+                hero.height * fold.radiusOfHeight
+            ) * fold.sphere
+            val clearance = 8f * layout.scale
+            pairs.forEach { (leftSlot, rightSlot) ->
+                val left = layout.boxes.getValue(leftSlot)
+                val right = layout.boxes.getValue(rightSlot)
+                assertTrue("$leftSlot sphere collision", left.right + clearance <= centerX - sphereRadius + .01f)
+                assertTrue("$rightSlot sphere collision", centerX + sphereRadius + clearance <= right.left + .01f)
+            }
+        }
+    }
+
     @Test fun onlyRightHandCardsReverseElementOrderNotLetters() {
         for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.wide(750f, 790f))) {
             val elements = ContinuumHomeScreen.elements(layout, 1f)
