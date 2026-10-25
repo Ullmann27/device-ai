@@ -64,8 +64,16 @@ test('a v22 source proposal is never mistaken for signed authorization',()=>{
  assert.equal(wrong.status,69,wrong.stderr);
 });
 
-test('exact approved source blob inventory is internally complete (CI simulation, NEVER signs)',()=>{
+test('exact approved source blob inventory is internally complete (CI simulation, NEVER signs)',(t)=>{
  const manifest=JSON.parse(get('docs/release/continuum-0321-source-proposal-20261024.json'));
+ // Render checks out the current branch shallowly, not historical v22 commit trees.
+ // A historical test may only be skipped in non-signing v23 QA, NEVER in owner release.
+ const historical=spawnSync('git',['cat-file','-e',`${manifest.sourceHead}^{tree}`],{cwd:root,encoding:'utf8'});
+ if(historical.status!==0&&process.env.CONTINUUM_OWNER_V23_QA==='1'){
+   t.skip('V22 immutable source tree absent from shallow v23 QA checkout; owner signer gate remains strict');
+   return;
+ }
+ assert.equal(historical.status,0,'Historical v22 source tree required outside v23 non-signing QA');
  const tree=ref=>new Map(execFileSync('git',['ls-tree','-r','-z',ref],{cwd:root,encoding:'utf8'})
   .split('\0').filter(Boolean).map(line=>{const m=/^\d+ blob ([a-f0-9]{40})\t(.+)$/.exec(line);return m?[m[2],m[1]]:['',''];}));
  const approved=tree(manifest.sourceHead),current=tree('HEAD');
