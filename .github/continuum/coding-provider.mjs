@@ -46,9 +46,9 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   if(response.status!==0||response.error||response.signal){
    // The trusted local CLI reports only a fixed rejection code and SHA-256,
    // never the unsafe model response, prompt, token or arbitrary stderr text.
-   const rejected=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_RESPONSE_INVALID:([a-f0-9]{64})$/
+   const rejected=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
     .exec(String(response.stderr??'').trim());
-   if(rejected)throw rejectedModelOutput('CODING_RESPONSE_INVALID',rejected[1]);
+   if(rejected)throw rejectedModelOutput(rejected[1],rejected[2]);
    throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
   }
   const responseSha256=sha256Hex(String(response.stdout??''));
