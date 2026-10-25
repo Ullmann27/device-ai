@@ -134,7 +134,7 @@ test('no-op fingerprint crosses fixed local CLI only, never arbitrary stderr',()
  try{
   const hash='e'.repeat(64);
   const provider=createCodingCandidateProvider({root:f.root,task:f.task,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
-   run:()=>({status:1,stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH:'+hash+'\\n'})});
+   run:()=>({status:1,stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH:'+hash+'\n'})});
   assert.throws(()=>provider({base:f.head,chain:'node',deadline:Date.now()+10000}),error=>{
    assert.equal(error.code,'CODING_NOOP_PATCH');assert.equal(error.responseSha256,hash);
    assert.equal(error.message,'CODING_NOOP_PATCH');return true;
