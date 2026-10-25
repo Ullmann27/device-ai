@@ -37,7 +37,10 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   // This local subprocess only needs its own bounded model configuration.
   // Never inherit GitHub, Render, owner-secret, proxy or tracing credentials.
   const model=env.CONTINUUM_LOCAL_BRAIN_MODEL??'local';
-  if(typeof model!=='string'||model.length>100||!/^[A-Za-z0-9_.:/-]+$/.test(model))
+  // A model identifier is inert JSON data, not a CLI argument. Preserve
+  // owner-chosen local model names (including spaces and longer identifiers).
+  if(typeof model!=='string'||!model.trim()||model.length>128||
+     /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(model))
    throw Error('CODING_MODEL_CONFIG_INVALID');
   const childEnv={
    CONTINUUM_LOCAL_BRAIN_API_KEY:env.CONTINUUM_LOCAL_BRAIN_API_KEY,
