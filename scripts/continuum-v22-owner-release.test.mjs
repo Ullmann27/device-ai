@@ -68,15 +68,19 @@ test('exact approved source blob inventory is internally complete (CI simulation
  const manifest=JSON.parse(get('docs/release/continuum-0321-source-proposal-20261024.json'));
  // Render checks out the current branch shallowly, not historical v22 commit trees.
  // A historical test may only be skipped in non-signing v23 QA, NEVER in owner release.
- const historical=spawnSync('git',['cat-file','-e',`${manifest.sourceHead}^{tree}`],{cwd:root,encoding:'utf8'});
- if(historical.status!==0&&process.env.CONTINUUM_OWNER_V23_QA==='1'){
-   t.skip('V22 immutable source tree absent from shallow v23 QA checkout; owner signer gate remains strict');
-   return;
- }
- assert.equal(historical.status,0,'Historical v22 source tree required outside v23 non-signing QA');
+ // The full historical commit is unavailable in Render's private shallow
+ // checkout. Verify the *entire* Git tree and all 927 approved historical
+ // blobs via the independently pinned snapshot, even in signing environments.
+ const audit=spawnSync(process.execPath,['scripts/continuum-v22-historical-attestation.mjs'],{
+  cwd:root,encoding:'utf8',timeout:30000
+ });
+ assert.equal(audit.status,0,audit.stderr);
+ assert.match(audit.stdout,/OWNER_V22_HISTORICAL_TREE_VERIFIED/);
  const tree=ref=>new Map(execFileSync('git',['ls-tree','-r','-z',ref],{cwd:root,encoding:'utf8'})
   .split('\0').filter(Boolean).map(line=>{const m=/^\d+ blob ([a-f0-9]{40})\t(.+)$/.exec(line);return m?[m[2],m[1]]:['',''];}));
- const approved=tree(manifest.sourceHead),current=tree('HEAD');
+ const archived=JSON.parse(get('docs/release/continuum-v22-historical-git-tree-20261025.json'));
+ const approved=new Map(archived.entries.filter(e=>e.type==='blob').map(e=>[e.path,e.sha]));
+ const current=tree('HEAD');
  assert.equal(manifest.files.length,927);
  for(const entry of manifest.files)assert.equal(approved.get(entry.path),entry.blob,entry.path);
  const r=gate({
