@@ -1,0 +1,108 @@
+{
+  "repository": "https://github.com/Ullmann27/device-ai",
+  "branch": "research/continuum-omega-vhsr-20261025",
+  "pr": "https://github.com/Ullmann27/device-ai/pull/133",
+  "base": "821df5d1acf68f0caf10369298352a3589f56a97",
+  "codeHead": "c721f785a5afc65cc05ec3415d9d0f7844d5ad88",
+  "commits": [
+    {
+      "sha": "0d4a0c88a99b8a88e92534083fd424794e5df524",
+      "subject": "docs(omega): preserve forensic baseline and reproducible research handoff",
+      "url": "https://github.com/Ullmann27/device-ai/commit/0d4a0c88a99b8a88e92534083fd424794e5df524"
+    },
+    {
+      "sha": "4b9ead538514680427f3330ef6b6e1938f9123d5",
+      "subject": "fix(qa): retain large Kotlin sources and verify bridge behavior",
+      "url": "https://github.com/Ullmann27/device-ai/commit/4b9ead538514680427f3330ef6b6e1938f9123d5"
+    },
+    {
+      "sha": "6345fab3fceaa2cd44ca5de30aa82c9fbe229feb",
+      "subject": "feat(omega): add opt-in counterexample veto to canonical repair pipeline",
+      "url": "https://github.com/Ullmann27/device-ai/commit/6345fab3fceaa2cd44ca5de30aa82c9fbe229feb"
+    },
+    {
+      "sha": "da8196c9c1cdb46aa20d651b330d99e49f4cf7f3",
+      "subject": "test(omega): freeze controlled baseline and counterexample comparison",
+      "url": "https://github.com/Ullmann27/device-ai/commit/da8196c9c1cdb46aa20d651b330d99e49f4cf7f3"
+    },
+    {
+      "sha": "602c8446bbe32d4102b016984fd28bcba9001ef0",
+      "subject": "docs(omega): publish measured replay and prioritize shared intelligence core",
+      "url": "https://github.com/Ullmann27/device-ai/commit/602c8446bbe32d4102b016984fd28bcba9001ef0"
+    },
+    {
+      "sha": "c078396b87b671ee2fb6a727fc95d6503cd60815",
+      "subject": "feat(dialogue): connect bounded conversation context and evidence-aware experience",
+      "url": "https://github.com/Ullmann27/device-ai/commit/c078396b87b671ee2fb6a727fc95d6503cd60815"
+    },
+    {
+      "sha": "1f6bc3f41be0817d382437a24eafbc48a87561b3",
+      "subject": "docs(architecture): map shared brain connections and archive Android regression",
+      "url": "https://github.com/Ullmann27/device-ai/commit/1f6bc3f41be0817d382437a24eafbc48a87561b3"
+    },
+    {
+      "sha": "c721f785a5afc65cc05ec3415d9d0f7844d5ad88",
+      "subject": "fix(dialogue): reset native conversation at each bounded prompt boundary",
+      "url": "https://github.com/Ullmann27/device-ai/commit/c721f785a5afc65cc05ec3415d9d0f7844d5ad88"
+    }
+  ],
+  "changedFiles": [
+    ".github/continuum/backlog-repair-worker.mjs",
+    ".github/continuum/code-analyzer.mjs",
+    ".github/continuum/code-analyzer.test.mjs",
+    ".github/continuum/continuum-local-dialogue-quality-wiring.test.mjs",
+    ".github/continuum/repair-critic.mjs",
+    ".github/continuum/repair-loop.mjs",
+    ".github/continuum/repair-research-verifier.mjs",
+    ".github/continuum/repair-research-verifier.test.mjs",
+    ".github/continuum/research-verifier-integration.test.mjs",
+    ".github/continuum/typed-android-coding-wiring.test.mjs",
+    ".gitignore",
+    "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/BoundedAgent.kt",
+    "app/src/main/java/at/heinz/deviceai/cognitive/LocalConversationContext.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+    "app/src/main/java/at/heinz/deviceai/localmodel/LocalConversationBoundary.kt",
+    "app/src/test/java/at/heinz/deviceai/cognitive/LocalIntelligenceIntegrationTest.kt",
+    "app/src/test/java/at/heinz/deviceai/localmodel/LocalConversationBoundaryTest.kt",
+    "docs/CONTINUUM-EXPERIMENTE.json",
+    "docs/research/omega/ARCHITECTURE.md",
+    "docs/research/omega/ASTRA-HANDOFF.md",
+    "docs/research/omega/HANDOFF.md",
+    "docs/research/omega/PLAN.md",
+    "docs/research/omega/REVIEW.md",
+    "docs/research/omega/evidence/SHA256SUMS",
+    "docs/research/omega/evidence/analyzer-red.txt",
+    "docs/research/omega/evidence/android-final-summary.json",
+    "docs/research/omega/evidence/android-final.txt",
+    "docs/research/omega/evidence/android-junit-summary.json",
+    "docs/research/omega/evidence/android-unit-lint-compile.txt",
+    "docs/research/omega/evidence/backend-install.txt",
+    "docs/research/omega/evidence/baseline-backend.txt",
+    "docs/research/omega/evidence/baseline-node.txt",
+    "docs/research/omega/evidence/baseline-summary.json",
+    "docs/research/omega/evidence/benchmark-smoke.txt",
+    "docs/research/omega/evidence/branch-inventory.json",
+    "docs/research/omega/evidence/controlled-replay.json",
+    "docs/research/omega/evidence/conversation-boundary-green.txt",
+    "docs/research/omega/evidence/conversation-boundary-red.txt",
+    "docs/research/omega/evidence/intelligence-green.txt",
+    "docs/research/omega/evidence/intelligence-red.txt",
+    "docs/research/omega/evidence/node-omega-full.txt",
+    "docs/research/omega/evidence/omega-gate-green.txt",
+    "docs/research/omega/evidence/omega-protected-red.txt",
+    "docs/research/omega/evidence/pr-lineage.json",
+    "docs/research/omega/evidence/review-wiring-green.txt",
+    "docs/research/omega/evidence/review-wiring-red.txt",
+    "docs/research/omega/evidence/stabilization-focused.txt",
+    "experimental/omega/benchmarks/controlled-repair.mjs",
+    "experimental/omega/benchmarks/controlled-repair.test.mjs",
+    "experimental/omega/repair/numeric-suite.mjs",
+    "experimental/omega/repair/numeric-verifier.mjs",
+    "experimental/omega/repair/numeric-verifier.test.mjs",
+    "experimental/omega/repair/numeric-worker.mjs",
+    "scripts/continuum-m6-review-qa.sh",
+    "scripts/continuum-m6-review-qa.test.mjs",
+    "scripts/continuum-omega.test.mjs"
+  ]
+}

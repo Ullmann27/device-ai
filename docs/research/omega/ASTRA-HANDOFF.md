@@ -1,3 +1,17 @@
+# Aktueller Übergabestand — alle verwendbaren Quellen gepusht
+
+Code-SHA: [c721f785a5afc65cc05ec3415d9d0f7844d5ad88](https://github.com/Ullmann27/device-ai/commit/c721f785a5afc65cc05ec3415d9d0f7844d5ad88). Branch `research/continuum-omega-vhsr-20261025`, [Draft-PR #133](https://github.com/Ullmann27/device-ai/pull/133), Basis unverändert `821df5d1...`. Diese Dokumentation ist ein eigener Folgecommit; dessen SHA ist `git log -1 --format=%H -- docs/research/omega/ASTRA-HANDOFF.md`.
+
+**Abschließende Regression auf Code-SHA:** Node 1202 PASS / 0 FAIL / 6 SKIP (56.389s); Android 975 PASS / 0 FAIL / 3 SKIP, Compile und konfigurierte NewApi-Lintprüfung PASS. Backend unverändert, vorher 60/60 PASS. Acht neue Kotlin-Integrations-/Lebenszyklustests enthalten. Belege und Befehle: `evidence/final-validation.json`, `android-reviewed.txt`, `node-reviewed.txt`. Reviewbefunde behoben; kein Geräte-/Modellerfolg erfunden.
+
+**Sofortiger Einstieg:** [Architektur](ARCHITECTURE.md), [Reparaturen, Messung, Folgeauftrag](RESULTS.md), [sämtliche Codecommits und Dateiliste](COMMITS.json), [unabhängiges Review](REVIEW.md). Aktive Verbesserung: zusätzliche Reparaturgegenbeispiele im bestehenden CCC1-Pfad; lokaler Dialog mit vier begrenzten Paaren, Erinnerungsprovenienz, PARTIAL bei bloßer Formprüfung und frischer nativer Conversation pro vollständigem Prompt. Tool-Fortsetzungen behalten ihren Turn; Owner-/Receipt-Gates bleiben erhalten.
+
+**Offenes Ziel:** Kein fertig abgenommener JARVIS-Intelligence-Core auf Fold7. Nächster größter Erkenntnisgewinn: fünf native Dialogszenarien mit vorhandenem lokalen Modell gegen Baseline, semantische Kriterien und Geräte-Ressourcenmessung. LM1 besitzt keinen nachgewiesenen Hauptdialog-Aufrufer; LM2/EWC nicht implementiert nachgewiesen. Keine neue Skill-/ARCHETYP-/Evolution-Lernfähigkeit behauptet. Vor Integration parallele PR #134/#135 vergleichen; keine automatischen Merges oder Besitzerreleases.
+
+**Rückfall:** Vor Übernahme dieses Forschungsbranches bleibt Produktivstand unverändert. VH-SR ist default-off; Dialogänderungen können auf Elternstand zurückgenommen werden. Keine Datenmigration und keine Änderung bestehender Gewichte. Frühere Fehlversuche bleiben archiviert; spätere grüne Läufe löschen keine negative Evidenz.
+
+---
+
 # Astra: übernehmbarer GitHub-Stand (2026-10-25)
 
 Repository: https://github.com/Ullmann27/device-ai · Branch `research/continuum-omega-vhsr-20261025` · Draft https://github.com/Ullmann27/device-ai/pull/133 · Basis `821df5d1acf68f0caf10369298352a3589f56a97` (erneut remote geprüft).

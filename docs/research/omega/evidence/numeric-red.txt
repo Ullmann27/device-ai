@@ -1,0 +1,77 @@
+✖ independent examples and metamorphic relations reject constant pseudo-repairs (0.764368ms)
+✖ a bounded exact distance passes all four frozen checks reproducibly (0.191297ms)
+✖ metamorphic failure supplies the distinguishing pair (0.144767ms)
+✖ non-finite values, foreign exports and capability-bearing code never pass (0.10038ms)
+✖ suite mutation, malformed cases, unbounded inputs and empty verification are rejected (0.249705ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 171.856386
+
+✖ failing tests:
+
+test at experimental/omega/repair/numeric-verifier.test.mjs:13:1
+✖ independent examples and metamorphic relations reject constant pseudo-repairs (0.764368ms)
+  Error: NOT_IMPLEMENTED
+      at createNumericVerifier (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.mjs:1:48)
+      at check (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:11:79)
+      at TestContext.<anonymous> (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:14:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at experimental/omega/repair/numeric-verifier.test.mjs:17:1
+✖ a bounded exact distance passes all four frozen checks reproducibly (0.191297ms)
+  Error: NOT_IMPLEMENTED
+      at createNumericVerifier (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.mjs:1:48)
+      at check (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:11:79)
+      at TestContext.<anonymous> (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:19:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at experimental/omega/repair/numeric-verifier.test.mjs:22:1
+✖ metamorphic failure supplies the distinguishing pair (0.144767ms)
+  Error: NOT_IMPLEMENTED
+      at createNumericVerifier (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.mjs:1:48)
+      at check (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:11:79)
+      at TestContext.<anonymous> (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:24:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at experimental/omega/repair/numeric-verifier.test.mjs:28:1
+✖ non-finite values, foreign exports and capability-bearing code never pass (0.10038ms)
+  Error: NOT_IMPLEMENTED
+      at createNumericVerifier (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.mjs:1:48)
+      at check (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:11:79)
+      at TestContext.<anonymous> (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:33:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at experimental/omega/repair/numeric-verifier.test.mjs:35:1
+✖ suite mutation, malformed cases, unbounded inputs and empty verification are rejected (0.249705ms)
+  Error: NOT_IMPLEMENTED
+      at createNumericVerifier (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.mjs:1:48)
+      at TestContext.<anonymous> (file:///workspace/device-ai/experimental/omega/repair/numeric-verifier.test.mjs:36:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
