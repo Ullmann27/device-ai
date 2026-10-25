@@ -83,3 +83,26 @@ test('malformed model name is rejected before invoking the local child',()=>{
   assert.equal(calls,0);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
 });
+
+test('unsafe evidence paths fail before dirtying the source checkout',t=>{
+ const {root,task}=fixture();
+ const outside=fs.mkdtempSync(path.join(os.tmpdir(),'coding-evidence-alias-'));
+ t.after(()=>{fs.rmSync(outside,{recursive:true,force:true});fs.rmSync(root,{recursive:true,force:true});});
+ const direct=path.join(root,'untrusted-evidence','request');
+ const alias=path.join(outside,'source-link');
+ fs.symlinkSync(root,alias);
+ for(const rejected of [direct,path.join(alias,'injected-subdir','receipt'),'relative/evidence']){
+  assert.throws(()=>createCodingCandidateProvider({root,task,
+   env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},evidenceDir:rejected}),
+   /CODING_EVIDENCE_UNSAFE/);
+ }
+ assert.equal(fs.existsSync(direct),false);
+ assert.equal(fs.existsSync(path.join(root,'injected-subdir')),false);
+ const status=spawnSync('git',['status','--porcelain'],{cwd:root,encoding:'utf8'});
+ assert.equal(status.status,0);assert.equal(status.stdout,'');
+ const valid=path.join(outside,'state','coding-evidence','job');
+ const provider=createCodingCandidateProvider({root,task,
+  env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},evidenceDir:valid});
+ assert.equal(fs.existsSync(valid),true);
+ assert.deepEqual(provider.taskSpec.allowedPaths,['lib/pages.mjs']);
+});
