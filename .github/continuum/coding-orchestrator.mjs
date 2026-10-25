@@ -60,6 +60,9 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
  if(requireIsolation && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
   throw Error('CODING_ISOLATION_REQUIRED');
  const grant=readGrant(grantFile(project,stateDir,id));
+ // The grant file name, embedded task identity and journal identity must agree.
+ if(grant.task.id!==id || !/^t-[a-f0-9]{16}$/.test(grant.ccc1TaskId))
+  throw Error('CODING_GRANT_CORRUPT');
  // Check the owner's prepared-task SHA BEFORE CCC1 journal mutation, model
  // inference or running any untrusted candidate. Null preserves older callers.
  if(expectedTaskFingerprint!==null &&
@@ -67,6 +70,7 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
      grant.fingerprint!==expectedTaskFingerprint))
   throw Error('CODING_TASK_BINDING_MISMATCH');
  if(git(project,['rev-parse','HEAD']).stdout.trim()!==grant.task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
+ if(git(project,['status','--porcelain']).stdout.trim())throw Error('CODING_TASK_DIRTY_SOURCE');
  const receipts=[];
  const result=await runTask({project,stateDir,taskId:grant.ccc1TaskId,
   reasoner:new Ccc1Reasoner({candidates:[],repairBudgetMinutes:20}),maxTurns:16,
