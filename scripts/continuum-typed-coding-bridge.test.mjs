@@ -73,11 +73,22 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
    {phase:'independent',executed:3,failed:0,exitCode:0,passed:true}]
  };
  const reviewResult={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,chain:'node',
-  ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',receipts:[trustedReceipt]};
+  ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',
+  receiptJobs:[receiptJob],receipts:[trustedReceipt]};
  const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
  assert.equal(verified.patchSha256,'d'.repeat(64));
  assert.equal(verified.approvedForMerge,false);assert.equal(verified.deviceVerified,false);
+ // A correctly shaped receipt from a different CCC1 request must never be
+ // promoted just because commit, chain and test counts happen to match.
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receiptJobs:[]}),null);
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receiptJobs:['22222222-2222-4222-8222-222222222222']}),null);
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receiptJobs:[receiptJob,receiptJob]}),null);
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receiptJobs:[receiptJob,'outside-uuid']}),null);
+ const mismatchedJob='22222222-2222-4222-8222-222222222222';
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[
+  {...trustedReceipt,job:mismatchedJob,taskId:jobTaskId(mismatchedJob)}
+ ]}),null);
  const forged={...reviewResult,receipts:[{...trustedReceipt,evidence:{verificationSha256:'e'.repeat(64)}}]};
  assert.equal(verifiedCodingReviewReceipt(forged),null);
  assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[{...trustedReceipt,commit:'b'.repeat(40)}]}),null);
