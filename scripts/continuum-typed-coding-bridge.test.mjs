@@ -9,7 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
 import {jobTaskId,RECEIPT_SCHEMA,RECEIPT_VERSION} from './continuum-mobile-coding.mjs';
 import {createCodingCandidateProvider} from '../.github/continuum/coding-provider.mjs';
-import {decodePreparedTask,fixedArgs,executeTypedBridge,ownerCodingExecutor,verifiedCodingReviewReceipt,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
+import {decodePreparedTask,fixedArgs,executeTypedBridge,ownerCodingExecutor,verifiedCodingReviewReceipt,reviewPatchStillAvailable,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
 
 const SOURCE='a'.repeat(40);
 function task(){return {
@@ -48,7 +48,16 @@ test('prepared confirmation is separate from execution; same bound task is idemp
  assert.equal(one.deviceVerified,false);assert.equal(one.approvedForMerge,false);
  assert.equal(two.replayed,true);assert.deepEqual(calls,['job-bridge-test','job-bridge-test']);
 });
-test('run requires saved exact fingerprint and cannot claim installation',async()=>{
+test('run requires saved exact fingerprint and cannot claim installation',async t=>{
+ const artifactRoot=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-review-proof-'));
+ t.after(()=>fs.rmSync(artifactRoot,{recursive:true,force:true}));
+ const proofDir=path.join(artifactRoot,'teamleader','reports');
+ fs.mkdirSync(proofDir,{recursive:true});
+ const proofFile=path.join(proofDir,'repair.patch');
+ const proofBytes=Buffer.from('diff --git a/lib/math.mjs b/lib/math.mjs\n');
+ const proofHash=sha256Hex(proofBytes);
+ fs.writeFileSync(proofFile,proofBytes);
+ const reviewState=path.join(artifactRoot,'ccc1');
  const args={op:'run',id:'job-bridge-test',hash:'b'.repeat(64)};
  const result=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>({
   id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,status:'FAILED',
@@ -65,7 +74,7 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
   schema:RECEIPT_SCHEMA,version:RECEIPT_VERSION,job:receiptJob,taskId:jobTaskId(receiptJob),
   order:{chain:'node'},approvedForMerge:false,installed:false,deviceVerified:false,
   operation:'code-repair',status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',
-  commit:SOURCE,backlog:{state:'DONE'},patch:{sha256:'d'.repeat(64)},
+  commit:SOURCE,backlog:{state:'DONE'},patch:{sha256:proofHash,path:proofFile,bytes:proofBytes.length},
   evidence:{verificationSha256:'e'.repeat(64),evidenceSufficient:true,
    baselineExecuted:3,baselineFailed:1,candidateExecuted:3,independentExecuted:3},
   commands:[{phase:'baseline',executed:3,failed:1,exitCode:1,passed:false},
@@ -75,9 +84,22 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
  const reviewResult={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,chain:'node',
   ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',
   receiptJobs:[receiptJob],receipts:[trustedReceipt]};
- const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
+ const verified=await executeTypedBridge(args,{stateDir:reviewState,
+  isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
- assert.equal(verified.patchSha256,'d'.repeat(64));
+ assert.equal(verified.patchSha256,proofHash);
+ assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),true);
+ fs.appendFileSync(proofFile,'altered');
+ assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),false);
+ const altered=await executeTypedBridge(args,{stateDir:reviewState,
+  isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
+ assert.equal(altered.status,'EXECUTION_REPORTED_UNVERIFIED');
+ assert.equal(altered.patchSha256,null);
+ fs.writeFileSync(proofFile,proofBytes);
+ assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),true);
+ fs.unlinkSync(proofFile);
+ assert.equal(reviewPatchStillAvailable(reviewResult,proofHash,reviewState),false);
+ fs.writeFileSync(proofFile,proofBytes);
  assert.equal(verified.approvedForMerge,false);assert.equal(verified.deviceVerified,false);
  // A correctly shaped receipt from a different CCC1 request must never be
  // promoted just because commit, chain and test counts happen to match.
