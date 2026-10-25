@@ -51,6 +51,9 @@ run_step node-targeted env -u NODE_TEST_CONTEXT node --test --test-concurrency=2
  scripts/continuum-typed-coding-bridge.test.mjs
 run_step node-full env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 \
  .github/continuum/*.test.mjs scripts/*.test.mjs
+# Research-only security checks; no network calls or owner device actions.
+run_step node-omega-security env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 \
+ experimental/omega/security/*.test.mjs
 command -v npm >/dev/null || fail 'npm required for backend checks'
 run_step backend-install-offline npm --prefix backend ci --offline --ignore-scripts --no-audit --no-fund
 run_step backend-tests env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 backend/test/*.test.js
