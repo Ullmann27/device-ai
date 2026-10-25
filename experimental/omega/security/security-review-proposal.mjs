@@ -1,0 +1,87 @@
+/**
+ * JARVIS-MO: read-only security-review proposal, not a CCC1 execution grant.
+ * Local hashes detect accidental/tampered report changes, NOT source authenticity.
+ * A trusted owner workflow must separately attest inventory, OSV and scope.
+ */
+import {createHash} from 'node:crypto';
+
+const sha = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) &&
+  (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);
+const HEX40 = /^[a-f0-9]{40}$/;
+const HEX64 = /^[a-f0-9]{64}$/;
+const ADVISORY = /^[A-Za-z][A-Za-z0-9._-]{2,90}$/;
+const PKG = /^[A-Za-z0-9@_.+:/-]{1,200}$/;
+const VERSION = /^[A-Za-z0-9][A-Za-z0-9_.+!~:-]{0,79}$/;
+const SCHEMA = 'CONTINUUM_SECURITY_REVIEW_V1';
+const REVIEW = 'CONTINUUM_SECURITY_REVIEW_PROPOSAL_V1';
+const KEYS = ['schema','project','sourceCommit','inventorySha256','advisorySetSha256',
+  'checkedComponents','checkedAdvisories','findings','reportStatus','coverage',
+  'vulnerabilityFreeClaim','patchesGenerated','automaticActions','reportSha256'];
+const MATCH = new Set(['EXACT_LISTED_VERSION', 'RANGE_REQUIRES_REVIEW']);
+const fail = () => { throw Error('SECURITY_REVIEW_PROPOSAL_INVALID'); };
+const string = (v, re) => typeof v === 'string' && re.test(v);
+const exact = (v, keys) => plain(v) && Object.keys(v).sort().join('|') === [...keys].sort().join('|');
+const findingsKey = x => [x.advisoryId,x.ecosystem,x.packageName,x.installedVersion].join('\u0000');
+
+function validateReport(report) {
+  if (!exact(report, KEYS) || report.schema !== SCHEMA ||
+      report.reportStatus !== 'SECURITY_FINDINGS_PENDING_OWNER_REVIEW' ||
+      report.coverage !== 'SUPPLIED_ADVISORIES_AND_EXACT_VERSION_LISTS_ONLY' ||
+      report.vulnerabilityFreeClaim !== false || report.patchesGenerated !== 0 ||
+      report.automaticActions !== 0 || !string(report.project,/^[A-Za-z0-9_-]{1,80}$/) ||
+      !string(report.sourceCommit,HEX40) || !string(report.inventorySha256,HEX64) ||
+      !string(report.advisorySetSha256,HEX64) || !string(report.reportSha256,HEX64) ||
+      !Number.isSafeInteger(report.checkedComponents) || report.checkedComponents < 0 ||
+      report.checkedComponents > 500 || !Number.isSafeInteger(report.checkedAdvisories) ||
+      report.checkedAdvisories < 0 || report.checkedAdvisories > 500 ||
+      !Array.isArray(report.findings) || report.findings.length > 500) fail();
+  const {reportSha256, ...body} = report;
+  if (reportSha256 !== sha(body)) fail();
+  const seen = new Set();
+  for (const f of report.findings) {
+    if (!exact(f,['advisoryId','ecosystem','packageName','installedVersion','match','action']) ||
+        !string(f.advisoryId,ADVISORY) || !string(f.ecosystem,/^[A-Za-z][A-Za-z0-9.]{1,25}$/) ||
+        !string(f.packageName,PKG) || f.packageName.split('/').some(x => x === '..' || x === '.') ||
+        !string(f.installedVersion,VERSION) || !MATCH.has(f.match) ||
+        f.action !== 'OWNER_SECURITY_REVIEW_REQUIRED') fail();
+    const id = findingsKey(f);
+    if (seen.has(id)) fail();
+    seen.add(id);
+  }
+}
+
+/** Only a review proposal; it cannot be submitted as a continuum-coding-task. */
+export function draftOwnedSecurityReview({report, finding} = {}) {
+  validateReport(report);
+  if (!exact(finding,['advisoryId','ecosystem','packageName','installedVersion'])) fail();
+  const id = [finding.advisoryId,finding.ecosystem,finding.packageName,finding.installedVersion].join('\u0000');
+  const result = report.findings.find(x => findingsKey(x) === id);
+  if (!result) fail();
+  const p = {
+    schema: REVIEW, version: 1, project: report.project,
+    sourceCommit: report.sourceCommit, reportSha256: report.reportSha256,
+    inventorySha256: report.inventorySha256, advisorySetSha256: report.advisorySetSha256,
+    finding: {advisoryId: result.advisoryId, ecosystem: result.ecosystem,
+      packageName: result.packageName, installedVersion: result.installedVersion,
+      match: result.match},
+    disposition: result.match === 'EXACT_LISTED_VERSION' ?
+      'REVIEW_EXACT_ADVISORY_MATCH' : 'ANALYST_MUST_RESOLVE_AFFECTED_RANGE',
+    state: 'PENDING_OWNER_SECURITY_REVIEW',
+    nextGate: 'INDEPENDENT_PROVENANCE_AND_APPLICABILITY_REVIEW',
+    ccc1Ready: false, authorized: false, executionAllowed: false,
+    patchAllowed: false, sourceAuthenticated: false,
+    autoMerge: false, dataExfiltrationAllowed: false,
+    note: 'Untrusted advisory evidence; owner must independently verify applicability before preparing a separately authorized CCC1 task.'
+  };
+  return Object.freeze({...p, proposalSha256:sha(p)});
+}
+
+export function verifyOwnedSecurityProposal(proposal) {
+  if (!plain(proposal) || !string(proposal.proposalSha256,HEX64)) return false;
+  const {proposalSha256, ...p} = proposal;
+  return proposalSha256 === sha(p) && p.schema === REVIEW && p.version === 1 &&
+    p.authorized === false && p.executionAllowed === false && p.ccc1Ready === false &&
+    p.patchAllowed === false && p.autoMerge === false && p.sourceAuthenticated === false &&
+    p.dataExfiltrationAllowed === false && p.state === 'PENDING_OWNER_SECURITY_REVIEW';
+}
