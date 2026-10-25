@@ -1,0 +1,37 @@
+✔ independent examples and metamorphic relations reject constant pseudo-repairs (67.038052ms)
+✔ a bounded exact distance passes all four frozen checks reproducibly (162.344374ms)
+✔ metamorphic failure supplies the distinguishing pair (53.777616ms)
+✔ non-finite values, foreign exports and capability-bearing code never pass (187.221457ms)
+✔ suite mutation, malformed cases, unbounded inputs and empty verification are rejected (57.184681ms)
+✖ model patches cannot rewrite OMEGA evaluators or benchmark definitions (1.26577ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 623.336177
+
+✖ failing tests:
+
+test at scripts/continuum-omega.test.mjs:6:1
+✖ model patches cannot rewrite OMEGA evaluators or benchmark definitions (1.26577ms)
+  AssertionError [ERR_ASSERTION]: experimental/omega/repair/numeric-worker.mjs
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/scripts/continuum-omega.test.mjs:9:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

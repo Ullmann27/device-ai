@@ -38,3 +38,6 @@ google-services.json
 developer-agent-report/
 agent-repair/
 agent-kotlin-benchmark/
+
+# Reproducibly installed backend dependencies are not source or dirty QA state.
+/backend/node_modules/

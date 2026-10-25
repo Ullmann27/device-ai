@@ -8,6 +8,7 @@ import {renderOwnerNodeContract} from './contract-test-template.mjs';
 export const LIMITS=Object.freeze({maxFiles:3,maxChangedLines:40});
 
 const FORBIDDEN_PATHS=[
+  /^experimental\/omega\//,
   /^\.github\/continuum\/(?:coding-|isolated-)/,
   /^\.github\/continuum\/(?:local-brain-repair|local-numeric-patch)\.mjs$/,
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,

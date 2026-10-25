@@ -165,7 +165,7 @@ class LiteRtLmLocalModelRuntime(
         val effectivePrompt = LocalQwenPromptPolicy.directUserPrompt(
             loadedModel?.id, prompt, MAX_PROMPT_CHARACTERS
         )
-        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, false)
+        streamMessage(Message.user(Contents.of(effectivePrompt)), effectivePrompt.length, callback, false, freshPrompt = true)
     }
 
     override fun streamThinking(prompt: String, callback: LocalInferenceCallback) {
@@ -185,7 +185,8 @@ class LiteRtLmLocalModelRuntime(
         message: Message,
         promptCharacters: Int,
         callback: LocalInferenceCallback,
-        isolatedThinking: Boolean
+        isolatedThinking: Boolean,
+        freshPrompt: Boolean = false
     ) {
         val activeConversation: Conversation
         val startNanos = System.nanoTime()
@@ -205,7 +206,19 @@ class LiteRtLmLocalModelRuntime(
                     )
                 )
             } else {
-                checkNotNull(conversation)
+                try {
+                    selectLocalConversation(conversation, freshPrompt, create = {
+                        checkNotNull(engine).createConversation(ConversationConfig(
+                            systemInstruction = Contents.of(systemPrompt),
+                            tools = ToolRegistry.all().map(::registeredToolProvider),
+                            automaticToolCalling = false,
+                            maxOutputToken = MAX_OUTPUT_TOKENS
+                        ))
+                    }, close = { if (it.isAlive) it.close() }).also { conversation = it }
+                } catch (failure: Exception) {
+                    state = LocalModelState.FAILED
+                    throw failure
+                }
             }
             inferenceConversation = activeConversation
             inferenceActive = true

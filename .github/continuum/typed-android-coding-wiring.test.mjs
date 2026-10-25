@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {fixedArgs,executeTypedBridge} from '../../scripts/continuum-typed-coding-bridge.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 test('Android confirmed task is passed only to the existing in-app Termux Builder',()=>{
@@ -31,12 +32,18 @@ test('existing protected Android Termux receiver binds both callback identity an
  assert.match(bridge,/o\["approvedForMerge"\]!=false\|\|o\["installed"\]!=false\|\|o\["deviceVerified"\]!=false/);
  assert.match(bridge,/private const val SCRIPT=ContinuumMobileBuildPlan\.PROJECT_DIR/);
 });
-test('Node Termux script accepts only fixed prepare and run data operations',()=>{
- const node=read('scripts/continuum-typed-coding-bridge.mjs');
- assert.match(node,/validateCodingTask\(parseStrict\(json\)\)/);
- assert.match(node,/taskFingerprint\(spec\)!==hash/);
- assert.match(node,/prepareCodingTask,runCodingTask/);
- assert.match(node,/status:'PREPARED_NOT_EXECUTED'/);
- assert.match(node,/status:verified\?'PATCH_PENDING_OWNER_REVIEW':'EXECUTION_REPORTED_UNVERIFIED'/);
- assert.doesNotMatch(node,/shell:true|execSync\(|\beval\(/);
+test('Node Termux accepts fixed operations and never promotes an unevidenced success status',async()=>{
+ const id='coding-fixed-operation',hash='a'.repeat(64);
+ assert.deepEqual(fixedArgs(['run',id,hash]),{op:'run',id,hash});
+ assert.deepEqual(fixedArgs(['prepare','encoded',hash]),{op:'prepare',encoded:'encoded',hash});
+ for(const args of [['exec','echo hi'],['run',id,hash,'extra'],['run','../bad',hash]])
+  assert.throws(()=>fixedArgs(args),/CODING_BRIDGE_COMMAND_INVALID/);
+ // Substitute only the external worker boundary; exercise the real receipt/status gate.
+ const result=await executeTypedBridge({op:'run',id,hash},{
+  isolationLoader:()=>({}),
+  run:async()=>({id,taskFingerprint:hash,sourceCommit:'b'.repeat(40),status:'PATCH_PENDING_OWNER_REVIEW'})
+ });
+ assert.equal(result.status,'EXECUTION_REPORTED_UNVERIFIED');
+ assert.equal(result.patchSha256,null);
+ assert.equal(result.approvedForMerge,false);
 });

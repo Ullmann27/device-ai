@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-24",
+  "updated": "2026-10-25",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -148,6 +148,15 @@
       "entry": "docs/research/CTX1-DIALOGUE-CONTEXT-RESULT-20261024.md",
       "depends": "Real owner-memory phrasings as a new TEST split; revocation test; switch default off in ContinuumLearningCore.replyFromMemory",
       "gate": "Fewer than half the wrong claims of today's core, no loss of grounded answers, at most 5 % needless questions back, routine p95 at most 20 ms"
+    },
+    {
+      "id": "EXP-15",
+      "title": "OMEGA VH-SR additional counterexample veto",
+      "status": "EXPERIMENTAL_OPT_IN_TESTED",
+      "present": "Trusted frozen numeric suites add counterexamples to the existing scoped repair loop and repeat in its independent worktree. No production activation, model training or generalization claim. See docs/research/omega/ASTRA-HANDOFF.md.",
+      "entry": "experimental/omega/repair/numeric-verifier.mjs",
+      "depends": "Existing CCC1 owner backlog, coding task, exact patches, repair tests and receipts; Node and Git for host experiment",
+      "gate": "Controlled synthetic replay archived: 2/10 versus 8/10 correct, zero model calls, higher actual verifier compute; not a blind generalization result. Real-model fixed-budget holdout and Fold7 execution NOT_RUN. See docs/research/omega/ASTRA-HANDOFF.md."
     }
   ]
 }
