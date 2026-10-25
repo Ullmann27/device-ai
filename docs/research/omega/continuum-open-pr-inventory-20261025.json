@@ -1,0 +1,1896 @@
+{
+  "schema": "CONTINUUM_READ_ONLY_PR_AUDIT_V1",
+  "repository": "Ullmann27/device-ai",
+  "observedAt": "2026-10-25",
+  "count": 118,
+  "pullRequests": [
+    {
+      "number": 150,
+      "title": "WIP: Continuum infrastructure audit, Android verification and proven repairs",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/150",
+      "head": {
+        "ref": "sol/continuum-infrastructure-repair-20261025",
+        "sha": "79b85cfab7ee0b378a13b279d4a14568583fc9e2"
+      },
+      "base": {
+        "ref": "feature/continuum-model-center-selected-models-20261025",
+        "sha": "30303ca9103fa2034aa384fcf5f730402ecd0e6c"
+      },
+      "updatedAt": "2026-10-25T18:56:34Z"
+    },
+    {
+      "number": 149,
+      "title": "fix(android): remove forced Qwen thinking suppression and allow Gemma-sized output",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/149",
+      "head": {
+        "ref": "fix/continuum-local-model-quality-gemma-20261025",
+        "sha": "febffb293f12702df5714ee20c8fb66471b493b9"
+      },
+      "base": {
+        "ref": "integration/continuum-soul-infrastructure-20261025",
+        "sha": "52c4fdadf9aa97cd7683a30be005da9b67db1311"
+      },
+      "updatedAt": "2026-10-25T18:34:35Z"
+    },
+    {
+      "number": 148,
+      "title": "feat(android): connect Gemma and DeepSeek choices to existing model-center UI",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/148",
+      "head": {
+        "ref": "feature/continuum-model-center-selected-models-20261025",
+        "sha": "30303ca9103fa2034aa384fcf5f730402ecd0e6c"
+      },
+      "base": {
+        "ref": "integration/continuum-soul-infrastructure-20261025",
+        "sha": "52c4fdadf9aa97cd7683a30be005da9b67db1311"
+      },
+      "updatedAt": "2026-10-25T18:36:27Z"
+    },
+    {
+      "number": 147,
+      "title": "integration(continuum): model research, DeepSeek virtual fabric and verifiable QA",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/147",
+      "head": {
+        "ref": "integration/continuum-soul-infrastructure-20261025",
+        "sha": "52c4fdadf9aa97cd7683a30be005da9b67db1311"
+      },
+      "base": {
+        "ref": "config/continuum-deepseek-gemma-selection-20261025",
+        "sha": "fe1b23300346946c748b24903fa85c8ec5999dfd"
+      },
+      "updatedAt": "2026-10-25T18:17:59Z"
+    },
+    {
+      "number": 146,
+      "title": "config(models): pin Gemma Fold7 download and DeepSeek training selection",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/146",
+      "head": {
+        "ref": "config/continuum-deepseek-gemma-selection-20261025",
+        "sha": "fe1b23300346946c748b24903fa85c8ec5999dfd"
+      },
+      "base": {
+        "ref": "integration/continuum-experiment-activation-20261025",
+        "sha": "413fa3c2a49f9c589b1f92d62525a621c8b9eeda"
+      },
+      "updatedAt": "2026-10-25T17:28:33Z"
+    },
+    {
+      "number": 145,
+      "title": "research(native-lm): establish own-model training data provenance and evaluation boundaries",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/145",
+      "head": {
+        "ref": "research/continuum-native-foundation-20261025",
+        "sha": "2cc3c1e53943a73a7f9e24321d321dda1bb3e0b1"
+      },
+      "base": {
+        "ref": "integration/continuum-experiment-activation-20261025",
+        "sha": "413fa3c2a49f9c589b1f92d62525a621c8b9eeda"
+      },
+      "updatedAt": "2026-10-25T17:15:30Z"
+    },
+    {
+      "number": 143,
+      "title": "integrate(android): expose experiment connections, CTX3 lab and read-only skill review",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/143",
+      "head": {
+        "ref": "integration/continuum-experiment-activation-20261025",
+        "sha": "413fa3c2a49f9c589b1f92d62525a621c8b9eeda"
+      },
+      "base": {
+        "ref": "integration/continuum-owner-v23-jarvis-20261025",
+        "sha": "d368220596912a2b3d0766b0bb3f324db60ec658"
+      },
+      "updatedAt": "2026-10-25T17:00:23Z"
+    },
+    {
+      "number": 142,
+      "title": "fix(dialogue): distinguish ORION-47 recall from entity definitions",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/142",
+      "head": {
+        "ref": "fix/continuum-orion47-definition-intent-20261025",
+        "sha": "62d6bb10971d4702de9daf391c65c9823dcef0c5"
+      },
+      "base": {
+        "ref": "integration/continuum-owner-v23-jarvis-20261025",
+        "sha": "d368220596912a2b3d0766b0bb3f324db60ec658"
+      },
+      "updatedAt": "2026-10-25T16:41:41Z"
+    },
+    {
+      "number": 140,
+      "title": "release(owner-v23): candidate signed in-place 0.3.22 with independent owner approval and v22 rollback",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/140",
+      "head": {
+        "ref": "release/continuum-owner-v23-candidate-20261025",
+        "sha": "015e1bf53f40c223a0fb2d52b557618c4a544572"
+      },
+      "base": {
+        "ref": "integration/continuum-owner-v23-jarvis-20261025",
+        "sha": "d368220596912a2b3d0766b0bb3f324db60ec658"
+      },
+      "updatedAt": "2026-10-25T15:57:27Z"
+    },
+    {
+      "number": 139,
+      "title": "integration(owner-v23): JARVIS dialog + typed review, same-package 0.3.22 preflight",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/139",
+      "head": {
+        "ref": "integration/continuum-owner-v23-jarvis-20261025",
+        "sha": "d368220596912a2b3d0766b0bb3f324db60ec658"
+      },
+      "base": {
+        "ref": "research/continuum-omega-vhsr-20261025",
+        "sha": "5824126e25d3672156a8bf1487c20164497d5481"
+      },
+      "updatedAt": "2026-10-25T14:51:06Z"
+    },
+    {
+      "number": 138,
+      "title": "research(jarvis): international architecture research for Continuum intelligence core",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/138",
+      "head": {
+        "ref": "research/jarvis-international-adaptation-20261025",
+        "sha": "6b06bbf29b031252fbe8df317c9ac1c82973cf7c"
+      },
+      "base": {
+        "ref": "research/continuum-omega-vhsr-20261025",
+        "sha": "c721f785a5afc65cc05ec3415d9d0f7844d5ad88"
+      },
+      "updatedAt": "2026-10-25T14:06:00Z"
+    },
+    {
+      "number": 137,
+      "title": "research(omega): isolated P-256 signature review, negative-test suite and handoff",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/137",
+      "head": {
+        "ref": "research/continuum-p256-signature-review-chatgpt-20261025",
+        "sha": "64fa217c23cb35ebe9f83548d1b1d086fbb60e5f"
+      },
+      "base": {
+        "ref": "research/continuum-typed-review-chatgpt-20261025",
+        "sha": "93b92c03cc8bc5df840edeaf0d48590bfeaed13b"
+      },
+      "updatedAt": "2026-10-25T13:41:29Z"
+    },
+    {
+      "number": 136,
+      "title": "docs(omega): preserve agent handoffs and private GitHub access boundaries",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/136",
+      "head": {
+        "ref": "research/continuum-agent-handoff-standard-20261025",
+        "sha": "395e6e8d7e3de061d155a6c96481a42ec1939c4c"
+      },
+      "base": {
+        "ref": "research/continuum-typed-review-chatgpt-20261025",
+        "sha": "93b92c03cc8bc5df840edeaf0d48590bfeaed13b"
+      },
+      "updatedAt": "2026-10-25T13:30:25Z"
+    },
+    {
+      "number": 135,
+      "title": "fix(android): show complete bound coding task before CCC1 PREPARE",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/135",
+      "head": {
+        "ref": "research/continuum-typed-review-chatgpt-20261025",
+        "sha": "e7ac9fdd94f9c568e1a3a55f42846c88dddb87d9"
+      },
+      "base": {
+        "ref": "research/continuum-omega-resume-chatgpt-20261025",
+        "sha": "0c682e3e5fd9c804d957859249d1dee81df01983"
+      },
+      "updatedAt": "2026-10-25T13:44:39Z"
+    },
+    {
+      "number": 134,
+      "title": "research(omega): JARVIS-MO defensive advisory intelligence foundation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/134",
+      "head": {
+        "ref": "research/continuum-omega-resume-chatgpt-20261025",
+        "sha": "0c682e3e5fd9c804d957859249d1dee81df01983"
+      },
+      "base": {
+        "ref": "research/continuum-omega-vhsr-20261025",
+        "sha": "4b9ead538514680427f3330ef6b6e1938f9123d5"
+      },
+      "updatedAt": "2026-10-25T12:24:40Z"
+    },
+    {
+      "number": 133,
+      "title": "Continuum: stabilize M6, verify repair counterexamples and connect local intelligence",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/133",
+      "head": {
+        "ref": "research/continuum-omega-vhsr-20261025",
+        "sha": "5824126e25d3672156a8bf1487c20164497d5481"
+      },
+      "base": {
+        "ref": "integration/continuum-m6-all-verified-20261025",
+        "sha": "821df5d1acf68f0caf10369298352a3589f56a97"
+      },
+      "updatedAt": "2026-10-25T14:07:39Z"
+    },
+    {
+      "number": 132,
+      "title": "Continuum M6: geprüfte Entwicklungszweige integrieren, NOOP-/Exact-Match-Feedback ergänzen und Releasegrenzen bewahren",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/132",
+      "head": {
+        "ref": "integration/continuum-m6-all-verified-20261025",
+        "sha": "821df5d1acf68f0caf10369298352a3589f56a97"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-m6-run-binding-preflight-20261025",
+        "sha": "efadbc1ac65ccc4a0943d4b47f4290de9be9797e"
+      },
+      "updatedAt": "2026-10-25T07:40:53Z"
+    },
+    {
+      "number": 131,
+      "title": "Continuum M6 Gesamtintegration – bestehende Haupt-App, Coding-Pipeline und konfliktfreie No-op-Diagnose",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/131",
+      "head": {
+        "ref": "integration/continuum-m6-all-verified-20261025",
+        "sha": "821df5d1acf68f0caf10369298352a3589f56a97"
+      },
+      "base": {
+        "ref": "release/continuum-owner-0321-20261024",
+        "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2"
+      },
+      "updatedAt": "2026-10-25T07:40:10Z"
+    },
+    {
+      "number": 130,
+      "title": "Continuum M6: Besitzer-Hash vor Coding-RUN prüfen und Recovery-Übergabe absichern",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/130",
+      "head": {
+        "ref": "chatgpt/continuum-m6-run-binding-preflight-20261025",
+        "sha": "efadbc1ac65ccc4a0943d4b47f4290de9be9797e"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-typed-coding-isolation-recovery-20261025",
+        "sha": "9f14139b9b4f7b1c02de2c5bc2a568f75c30714c"
+      },
+      "updatedAt": "2026-10-25T05:22:05Z"
+    },
+    {
+      "number": 129,
+      "title": "Continuum Coding: Pflicht-Sandbox für Android-Ausführung und strikte Patch-Beweisprüfung",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/129",
+      "head": {
+        "ref": "chatgpt/continuum-typed-coding-isolation-recovery-20261025",
+        "sha": "9f14139b9b4f7b1c02de2c5bc2a568f75c30714c"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-typed-android-coding-bridge-20261024",
+        "sha": "8ff3dbf04522e9667a3d875ab74a86e4557f3b58"
+      },
+      "updatedAt": "2026-10-25T03:30:16Z"
+    },
+    {
+      "number": 128,
+      "title": "Continuum Coding V1: sichere Android → Termux → CCC1 Auftragspipeline mit zweifacher Besitzerfreigabe",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/128",
+      "head": {
+        "ref": "chatgpt/continuum-typed-android-coding-bridge-20261024",
+        "sha": "8ff3dbf04522e9667a3d875ab74a86e4557f3b58"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-coding-rejection-feedback-20261024",
+        "sha": "364c6aea766e395bc7026cc6fca7b24f7e5bf45b"
+      },
+      "updatedAt": "2026-10-24T20:50:24Z"
+    },
+    {
+      "number": 127,
+      "title": "Coding Agent V1: ungültige lokale Patches mit sicherem Feedback erneut prüfen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/127",
+      "head": {
+        "ref": "chatgpt/continuum-coding-rejection-feedback-20261024",
+        "sha": "364c6aea766e395bc7026cc6fca7b24f7e5bf45b"
+      },
+      "base": {
+        "ref": "sol/continuum-autonomous-coding-20261024",
+        "sha": "c46ad26bbb7982f8c602ac8fc528658f56f3747e"
+      },
+      "updatedAt": "2026-10-24T20:51:20Z"
+    },
+    {
+      "number": 126,
+      "title": "Continuum Coding V1: ungültige Modellantworten diagnostizieren statt blind wiederholen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/126",
+      "head": {
+        "ref": "chatgpt/continuum-coding-invalid-feedback-20261024",
+        "sha": "c5f3575fd1839696f8c6b643fe6cac34a94fc52b"
+      },
+      "base": {
+        "ref": "sol/continuum-autonomous-coding-20261024",
+        "sha": "c46ad26bbb7982f8c602ac8fc528658f56f3747e"
+      },
+      "updatedAt": "2026-10-25T05:22:03Z"
+    },
+    {
+      "number": 125,
+      "title": "Continuum: lokale Coding-Pipeline mit Revisionen, Retrieval und isolierter Verifikation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/125",
+      "head": {
+        "ref": "sol/continuum-autonomous-coding-20261024",
+        "sha": "c46ad26bbb7982f8c602ac8fc528658f56f3747e"
+      },
+      "base": {
+        "ref": "release/continuum-owner-0321-20261024",
+        "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2"
+      },
+      "updatedAt": "2026-10-24T20:51:18Z"
+    },
+    {
+      "number": 124,
+      "title": "Continuum 0.3.21: EIN Haupt-App-Update mit bisheriger Besitzer-Signatur",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/124",
+      "head": {
+        "ref": "release/continuum-owner-0321-20261024",
+        "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2"
+      },
+      "base": {
+        "ref": "integration/continuum-0320-all-connected-20261024",
+        "sha": "cc453facbaf02cf03ab263f96a0116d4de0548ef"
+      },
+      "updatedAt": "2026-10-24T18:26:28Z"
+    },
+    {
+      "number": 123,
+      "title": "Continuum Gesamtintegration: 3D-Kugelmenüs, CDX1-Abschluss, Cursor-Reparatur und vollständiges Android-QA",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/123",
+      "head": {
+        "ref": "integration/continuum-0320-all-connected-20261024",
+        "sha": "cc453facbaf02cf03ab263f96a0116d4de0548ef"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-0321-local-dialogue-quality-20261024",
+        "sha": "7b30d63110807cc44972afb34345d769a3991c6e"
+      },
+      "updatedAt": "2026-10-24T17:42:45Z"
+    },
+    {
+      "number": 122,
+      "title": "CDX1 nach 12/12: Lernperiodizität dokumentieren und echtes Antwortaudit öffnen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/122",
+      "head": {
+        "ref": "chatgpt/continuum-cdx1-postrun-audit-20261024",
+        "sha": "06e102e78155d6d4d76943f0425eacf8c5028535"
+      },
+      "base": {
+        "ref": "sol/continuum-0320-integration-20261024",
+        "sha": "3d7326d047ee91a91105f6f3e352ada613b6ff87"
+      },
+      "updatedAt": "2026-10-24T17:18:24Z"
+    },
+    {
+      "number": 121,
+      "title": "Continuum UI: gespiegelte Kugel-Menüs, symmetrische Steuerfelder und 3D-Tiefe",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/121",
+      "head": {
+        "ref": "chatgpt/continuum-core-mirror-20261024",
+        "sha": "691456865177cf9d6c6d4eb0191d69ae43330b73"
+      },
+      "base": {
+        "ref": "sol/continuum-0320-integration-20261024",
+        "sha": "3d7326d047ee91a91105f6f3e352ada613b6ff87"
+      },
+      "updatedAt": "2026-10-24T17:13:35Z"
+    },
+    {
+      "number": 120,
+      "title": "Continuum: lokaler Qwen-Dialog – Wiederholungen prüfen und Anschlusskontext sauber führen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/120",
+      "head": {
+        "ref": "chatgpt/continuum-0321-local-dialogue-quality-20261024",
+        "sha": "7b30d63110807cc44972afb34345d769a3991c6e"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-0321-fold7-orb-runtime-diagnostics-20261024",
+        "sha": "ccf2ea9884c98f9e45691294c7323e5b8d679bc9"
+      },
+      "updatedAt": "2026-10-24T16:58:55Z"
+    },
+    {
+      "number": 118,
+      "title": "Draft: Continuum v21 – eigener fail-closed Besitzer-Signierpfad und vollständiges 245-Dateien-Quellgate",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/118",
+      "head": {
+        "ref": "chatgpt/continuum-0320-v21-release-review-20261024",
+        "sha": "aa8780a8489e9e972e9a35a5af9e22866a0ea6e2"
+      },
+      "base": {
+        "ref": "astra/continuum-0320-visual-integration-20261024",
+        "sha": "f43785aadd07ab7849abd7a739502c327c56971a"
+      },
+      "updatedAt": "2026-10-24T18:19:12Z"
+    },
+    {
+      "number": 117,
+      "title": "Draft: Continuum 0.3.20 — räumlicher Energiekern und ehrliche Messwertanimation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/117",
+      "head": {
+        "ref": "astra/continuum-0320-visual-integration-20261024",
+        "sha": "f43785aadd07ab7849abd7a739502c327c56971a"
+      },
+      "base": {
+        "ref": "sol/continuum-0320-integration-20261024",
+        "sha": "3d7326d047ee91a91105f6f3e352ada613b6ff87"
+      },
+      "updatedAt": "2026-10-24T14:59:22Z"
+    },
+    {
+      "number": 116,
+      "title": "Draft: Continuum 0.3.20 — sichere Dialogintegration, autonomes CRE1-Lernen und volle SDK-Prüfung",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/116",
+      "head": {
+        "ref": "sol/continuum-0320-integration-20261024",
+        "sha": "3d7326d047ee91a91105f6f3e352ada613b6ff87"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-autonomous-dialogue-research-20261024",
+        "sha": "9794761067e6bd1f8f2188426288f8134de53e4e"
+      },
+      "updatedAt": "2026-10-24T17:19:08Z"
+    },
+    {
+      "number": 115,
+      "title": "Draft: autonomen Continuum-Dialogtrainer mit tatsächlichem Modulaudit isoliert integrieren",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/115",
+      "head": {
+        "ref": "chatgpt/continuum-autonomous-dialogue-research-20261024",
+        "sha": "9794761067e6bd1f8f2188426288f8134de53e4e"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62"
+      },
+      "updatedAt": "2026-10-24T13:47:58Z"
+    },
+    {
+      "number": 113,
+      "title": "Continuum: Hologramm-Takt und Kontextübergabe nach Sol-Ausfall absichern",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/113",
+      "head": {
+        "ref": "chatgpt/continuum-hologram-context-recovery-20261024",
+        "sha": "5be8b5c9521e97e6e482e35574bae1fb80928fa7"
+      },
+      "base": {
+        "ref": "sol/continuum-max-20261024",
+        "sha": "f65181fe87244071ddb3286eccd6f11a23da2e52"
+      },
+      "updatedAt": "2026-10-24T12:04:46Z"
+    },
+    {
+      "number": 112,
+      "title": "Continuum Max: sichere M5/M4/CCC1-Integration, volle SDK-Prüfung und v19-Prüfpaket",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/112",
+      "head": {
+        "ref": "sol/continuum-max-20261024",
+        "sha": "f65181fe87244071ddb3286eccd6f11a23da2e52"
+      },
+      "base": {
+        "ref": "opus/continuum-sol-handoff-20261024",
+        "sha": "d0f0892e156b9bcfa6a9a80d6fcd515173a62565"
+      },
+      "updatedAt": "2026-10-24T08:58:18Z"
+    },
+    {
+      "number": 111,
+      "title": "Draft: Continuum Master – M5-Chat angeschlossen, v19-Quelle abgesichert und APK-QA vorbereitet",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/111",
+      "head": {
+        "ref": "chatgpt/continuum-master-integration-v19-20261024",
+        "sha": "ec4fa6db4e57d40d25a6e8ed1c794b4d96c046c2"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-m5-draft-approval-guard-20261024",
+        "sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c"
+      },
+      "updatedAt": "2026-10-24T06:39:20Z"
+    },
+    {
+      "number": 110,
+      "title": "Draft: M5-Planfreigabe gegen unbearbeitete Entwürfe und veraltete Dialoge härten",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/110",
+      "head": {
+        "ref": "chatgpt/continuum-m5-draft-approval-guard-20261024",
+        "sha": "f382aeda2612723ae3eacdf0fe96e87fbf10e04c"
+      },
+      "base": {
+        "ref": "sol/continuum-m5-context-coding-experiments-20261024",
+        "sha": "144ab574b4c06e9bed926f78158a7183e6dfb013"
+      },
+      "updatedAt": "2026-10-24T03:56:38Z"
+    },
+    {
+      "number": 109,
+      "title": "M5: sicherer Gesprächsauftrag, Kontextisolation und unabhängige Gegenprüfung",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/109",
+      "head": {
+        "ref": "sol/continuum-m5-context-coding-experiments-20261024",
+        "sha": "144ab574b4c06e9bed926f78158a7183e6dfb013"
+      },
+      "base": {
+        "ref": "opus/continuum-next-20261023",
+        "sha": "331e2d25c655b07e578ce4fa49da64fbc4f97c61"
+      },
+      "updatedAt": "2026-10-24T03:51:04Z"
+    },
+    {
+      "number": 108,
+      "title": "Continuum M4: zwei echte SDK-APKs, geprüfte Projektpläne und Android-Anbindung",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/108",
+      "head": {
+        "ref": "sol/continuum-master-m4-research-integration-20261023",
+        "sha": "e4fd67c3e83314e3c32019e516ebd750a1433f2f"
+      },
+      "base": {
+        "ref": "gpt6/continuum-m4-first-owned-app-20261023",
+        "sha": "b842d471183fcf181f392d522a0d0a8f5936a649"
+      },
+      "updatedAt": "2026-10-23T21:51:54Z"
+    },
+    {
+      "number": 107,
+      "title": "M4: Eigene Android-App aus Continuum erzeugen, prüfen und über Termux bauen – unabhängige Quelle",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/107",
+      "head": {
+        "ref": "gpt6/continuum-m4-first-owned-app-20261023",
+        "sha": "b842d471183fcf181f392d522a0d0a8f5936a649"
+      },
+      "base": {
+        "ref": "gpt6/continuum-0.3.18-release-preflight-20261023",
+        "sha": "0afd4ca0e44d7222affb7ea89de2cf940376e4c3"
+      },
+      "updatedAt": "2026-10-23T20:28:27Z"
+    },
+    {
+      "number": 100,
+      "title": "Draft: Owner APK 0.3.17 (code 18) – CCC1 integrated, latest Astra UI + same-signer release gates",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/100",
+      "head": {
+        "ref": "integration/continuum-owner-apk-v18-candidate-20261023",
+        "sha": "4c0b62beae6badc54794351d3012dc1a4dd477a3"
+      },
+      "base": {
+        "ref": "opus/ccc1-e2e-20261023",
+        "sha": "c72bd98fb17c40d78381e2e11a0e9d15cebd3f5b"
+      },
+      "updatedAt": "2026-10-23T15:38:36Z"
+    },
+    {
+      "number": 99,
+      "title": "Draft: CCC1 Ende zu Ende – echte Reparatur über die Termux-Brücke, Android-Verdrahtung, Belege und grüne Testsuiten",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/99",
+      "head": {
+        "ref": "opus/ccc1-e2e-20261023",
+        "sha": "8f88cc445b2239861e75a34b6e132cf21f6e1290"
+      },
+      "base": {
+        "ref": "integration/continuum-current-review-20261023",
+        "sha": "811803138c86a5c1a7a2a2b9cd196580a574a4a1"
+      },
+      "updatedAt": "2026-10-23T23:26:18Z"
+    },
+    {
+      "number": 98,
+      "title": "Draft: Fold7-Test reparieren und Astras vollständiges Premium-Design für CCC1-APK erhalten",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/98",
+      "head": {
+        "ref": "integration/continuum-premium-ui-preservation-20261023",
+        "sha": "2a5a614fff7724f4836071e3aa1a94c479964571"
+      },
+      "base": {
+        "ref": "opus/ccc1-e2e-20261023",
+        "sha": "66fd91172b2dbcc99aadf54c222590458c70ccc9"
+      },
+      "updatedAt": "2026-10-23T12:19:18Z"
+    },
+    {
+      "number": 97,
+      "title": "Draft: Continuum aufgeräumter aktueller Integrationsstand (PR95 + Fold7-Fix) und eindeutiger Agent-Einstieg",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/97",
+      "head": {
+        "ref": "integration/continuum-current-review-20261023",
+        "sha": "811803138c86a5c1a7a2a2b9cd196580a574a4a1"
+      },
+      "base": {
+        "ref": "integration/continuum-verifier-first-spine-20261023",
+        "sha": "83f01067155a0f89777a4a1aad801d89a6170056"
+      },
+      "updatedAt": "2026-10-23T10:45:44Z"
+    },
+    {
+      "number": 96,
+      "title": "Draft: Fold7-Chat-Composer beim Layoutwechsel vollständig erhalten",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/96",
+      "head": {
+        "ref": "integration/continuum-composer-reflow-fix-20261023",
+        "sha": "8ae9463e715dadcd2d1704cd013d7de9e09ffe66"
+      },
+      "base": {
+        "ref": "integration/continuum-verifier-first-spine-20261023",
+        "sha": "5caaab2cbadd6780f1f52f08258fa3cdc8ca53cc"
+      },
+      "updatedAt": "2026-10-23T10:07:00Z"
+    },
+    {
+      "number": 95,
+      "title": "Draft: Verifier-first Spine, CDX1-Schattenstudie und begrenzter Kontext-Trichter",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/95",
+      "head": {
+        "ref": "integration/continuum-verifier-first-spine-20261023",
+        "sha": "83f01067155a0f89777a4a1aad801d89a6170056"
+      },
+      "base": {
+        "ref": "integration/continuum-ui-opus-gguf-20261023",
+        "sha": "0499e2a0d95187edcb3f0b8736339154bc563edb"
+      },
+      "updatedAt": "2026-10-23T10:26:37Z"
+    },
+    {
+      "number": 93,
+      "title": "Draft: Fehlenden GGUF-/lokalen Kontextpfad isoliert wiederherstellen (Sols Integrationsaudit)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/93",
+      "head": {
+        "ref": "integration/continuum-gguf-context-recovery-20261023",
+        "sha": "adee374c59cb02031537e95a92eaa0f9cb2bc4f5"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "9fb4361c896315e9e974dd5d8feab5ce1ce65803"
+      },
+      "updatedAt": "2026-10-23T08:15:25Z"
+    },
+    {
+      "number": 92,
+      "title": "Continuum Intelligence Next: CCC1-Worker mit Task-Compiler, Vorprüfung v2, Code-Index, NF-5c/NF-7 (Forschung, Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/92",
+      "head": {
+        "ref": "opus/continuum-intelligence-next-20261023",
+        "sha": "efcf4e3a5bbf55b7987a131b0d507ad32b753fbf"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "9fb4361c896315e9e974dd5d8feab5ce1ce65803"
+      },
+      "updatedAt": "2026-10-23T11:45:42Z"
+    },
+    {
+      "number": 91,
+      "title": "UI: räumlich bewegtes READY-Hologramm und einheitliche native Bedienflächen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/91",
+      "head": {
+        "ref": "astra/continuum-live-hologram-20261023",
+        "sha": "c60addce1ecfb2557d46af7198e476c005f39afb"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "9fb4361c896315e9e974dd5d8feab5ce1ce65803"
+      },
+      "updatedAt": "2026-10-23T14:16:19Z"
+    },
+    {
+      "number": 90,
+      "title": "UI QA: reproducible visual comparisons and verified preview navigation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/90",
+      "head": {
+        "ref": "astra/continuum-visual-engineering-20261023",
+        "sha": "66b7580111f39dd9abe65964c08b303f2a6185cf"
+      },
+      "base": {
+        "ref": "opus/continuum-aaa-ui-20261022",
+        "sha": "c717a28255f243d7da33b88a70e7fd4c1ee724ca"
+      },
+      "updatedAt": "2026-10-23T06:44:53Z"
+    },
+    {
+      "number": 84,
+      "title": "Continuum Integrationskandidat: AAA-UI + LM1-Quellkern + CCC1 + Research-Radar (Build noch offen)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/84",
+      "head": {
+        "ref": "integration/continuum-aaa-lm1-ccc1-preview-20261023",
+        "sha": "f23934e2b38c3e473e06ce4421020e79d8b9158a"
+      },
+      "base": {
+        "ref": "opus/continuum-aaa-ui-20261022",
+        "sha": "c717a28255f243d7da33b88a70e7fd4c1ee724ca"
+      },
+      "updatedAt": "2026-10-23T04:28:10Z"
+    },
+    {
+      "number": 83,
+      "title": "UI: gemeinsame Fold-Rail-Geometrie zwischen Host und Layout (isolierter Patch)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/83",
+      "head": {
+        "ref": "chatgpt/continuum-layout-pixel-alignment-20261023",
+        "sha": "b7a1e1e02358df9216fc61dd667634d96977b9db"
+      },
+      "base": {
+        "ref": "opus/continuum-aaa-ui-20261022",
+        "sha": "93cd4c08bc961e07ea0dc2834e5b9b4d38a41195"
+      },
+      "updatedAt": "2026-10-23T00:43:23Z"
+    },
+    {
+      "number": 82,
+      "title": "Continuum Neural Frontier Lab (NFC1): Ergebnisse NF-1 bis NF-6b-lite, ausführungsgeleitete Vorprüfung, Research-Radar (Forschung, Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/82",
+      "head": {
+        "ref": "opus/continuum-neural-frontier-lab-20261022",
+        "sha": "14702b0da94f2dd901c1dbad63c382b616b2c66a"
+      },
+      "base": {
+        "ref": "opus/continuum-language-core-20261022",
+        "sha": "7361e987aebd0b85a9c3492aed97065c0869229d"
+      },
+      "updatedAt": "2026-10-23T02:10:02Z"
+    },
+    {
+      "number": 81,
+      "title": "AAA-UI: Plexus-Hologramm, Systemaktivität aus echten Messreihen, korrigierter Bildvergleich, Emulator-Abnahme der Feature-Preview (Fold7, #80, Astra)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/81",
+      "head": {
+        "ref": "opus/continuum-aaa-ui-20261022",
+        "sha": "c717a28255f243d7da33b88a70e7fd4c1ee724ca"
+      },
+      "base": {
+        "ref": "integration/continuum-aaa-bento-cockpits-20261022",
+        "sha": "77f517a1556cb8a60390b3696f97503018946b49"
+      },
+      "updatedAt": "2026-10-23T01:36:01Z"
+    },
+    {
+      "number": 80,
+      "title": "Native measured learning-wave shimmer for Phone/Fold (research UI, draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/80",
+      "head": {
+        "ref": "feature/continuum-measured-neon-wave-20261022",
+        "sha": "fe869f079c4d88085b0dc2476e1ae02a6fac40f2"
+      },
+      "base": {
+        "ref": "integration/continuum-aaa-bento-cockpits-20261022",
+        "sha": "77f517a1556cb8a60390b3696f97503018946b49"
+      },
+      "updatedAt": "2026-10-22T19:30:43Z"
+    },
+    {
+      "number": 79,
+      "title": "AAA+-Cockpits: native responsive glass panels, scanlines, ambient glow and retained real telemetry",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/79",
+      "head": {
+        "ref": "integration/continuum-aaa-bento-cockpits-20261022",
+        "sha": "77f517a1556cb8a60390b3696f97503018946b49"
+      },
+      "base": {
+        "ref": "integration/continuum-full-feature-candidate-20261022",
+        "sha": "29f70b9729060609b385aae35a1e39a12d98eae0"
+      },
+      "updatedAt": "2026-10-22T19:28:46Z"
+    },
+    {
+      "number": 78,
+      "title": "Continuum vollständiger Funktionskandidat: Premium-UI + QF2+ + kanonischer Coding-Agent + CDX1-Leselabor",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/78",
+      "head": {
+        "ref": "integration/continuum-full-feature-candidate-20261022",
+        "sha": "29f70b9729060609b385aae35a1e39a12d98eae0"
+      },
+      "base": {
+        "ref": "integration/continuum-premium-ui-preview-20261022",
+        "sha": "2b2da964df368457be666192054346238deb1e79"
+      },
+      "updatedAt": "2026-10-22T18:20:20Z"
+    },
+    {
+      "number": 77,
+      "title": "Integrationskandidat: Premium-UI Phone/Fold mit datenschonender Diagnose-Reparatur und separatem Render-APK-Preview",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/77",
+      "head": {
+        "ref": "integration/continuum-premium-ui-preview-20261022",
+        "sha": "2b2da964df368457be666192054346238deb1e79"
+      },
+      "base": {
+        "ref": "opus/continuum-premium-ui-20261022",
+        "sha": "a9882c6966e4b7aea884d703792d55a5da8e2e47"
+      },
+      "updatedAt": "2026-10-22T17:29:47Z"
+    },
+    {
+      "number": 75,
+      "title": "LM1: eigener lokaler Sprachkern – TEST: schlägt CDX1, verliert gegen Kneser-Ney 7; CCC1 Reasoner↔Coding-Agent getestet (Forschung, Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/75",
+      "head": {
+        "ref": "opus/continuum-language-core-20261022",
+        "sha": "6919264d91aa9f80c88c93ec8f6398f3448a99fb"
+      },
+      "base": {
+        "ref": "opus/continuum-mobile-coding-e2e-20261022",
+        "sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82"
+      },
+      "updatedAt": "2026-10-23T06:59:41Z"
+    },
+    {
+      "number": 73,
+      "title": "EXP-SYNAPSE-ZERO v2: frozen benchmark, ablations and single TEST run – candidate does not transfer (draft, research shadow)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/73",
+      "head": {
+        "ref": "opus/continuum-synapse-v2-20261022",
+        "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4"
+      },
+      "base": {
+        "ref": "experiment/continuum-synapse-zero-20261022",
+        "sha": "2b58ed17861de986d97c756be4205993e1233f32"
+      },
+      "updatedAt": "2026-10-22T16:21:10Z"
+    },
+    {
+      "number": 72,
+      "title": "I2 · Bedingte Antwortqualität P(falsch | beantwortet) zertifizieren (Forschung, Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/72",
+      "head": {
+        "ref": "opus/continuum-i2-selective-risk-20261022",
+        "sha": "1c72f8a28bd2a33f6aeb069fc1e4856d1cb802d1"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-i1-model-binding-20261022",
+        "sha": "07b66f40d098aed5b038c94ac872011065277f7d"
+      },
+      "updatedAt": "2026-10-22T14:17:54Z"
+    },
+    {
+      "number": 71,
+      "title": "EXP-SYNAPSE-ZERO · Eigenes 2-Hop-Shadow-Reasoning und 4096-Parameter-Rollenlernen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/71",
+      "head": {
+        "ref": "experiment/continuum-synapse-zero-20261022",
+        "sha": "2b58ed17861de986d97c756be4205993e1233f32"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-navigation-signed-delivery-20261022",
+        "sha": "619ebeb2831c8184a91e3c08e165ed4f4794f969"
+      },
+      "updatedAt": "2026-10-22T13:19:24Z"
+    },
+    {
+      "number": 70,
+      "title": "Argon-Review · QF2+ Quellenbelege: Node-Syntaxfix, Kurzanker und Deutsch-Komposita",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/70",
+      "head": {
+        "ref": "chatgpt/continuum-argon-qf2-source-proof-20261022",
+        "sha": "b21bf20f635a2cc768a07ae34c67eaedada68a61"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-bundled-quality-qf2-20261022",
+        "sha": "13e67c958e626aca56659579efa158b82c056de3"
+      },
+      "updatedAt": "2026-10-22T12:58:06Z"
+    },
+    {
+      "number": 69,
+      "title": "Continuum Release-Inventur: reale 0.3.12-Anschlüsse, Abhängigkeiten und Sicherheitsgates",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/69",
+      "head": {
+        "ref": "chatgpt/continuum-release-integration-audit-20261022",
+        "sha": "8be5d8f08d593fdde4639c7d80cf067098789a5b"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-navigation-signed-delivery-20261022",
+        "sha": "619ebeb2831c8184a91e3c08e165ed4f4794f969"
+      },
+      "updatedAt": "2026-10-22T15:26:52Z"
+    },
+    {
+      "number": 68,
+      "title": "I1 · CSX1-Zertifikatsbindung und reparierter Experiment-Runner (Forschung)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/68",
+      "head": {
+        "ref": "chatgpt/continuum-i1-model-binding-20261022",
+        "sha": "07b66f40d098aed5b038c94ac872011065277f7d"
+      },
+      "base": {
+        "ref": "opus/continuum-csx1-abstention-20261022",
+        "sha": "4ef5717f1fb3ce4c36e2343bc53062b78b0d879d"
+      },
+      "updatedAt": "2026-10-22T12:30:48Z"
+    },
+    {
+      "number": 67,
+      "title": "QF2 · Mehrteilige Fachfragen und exakte Modellkennungen im Chat-Quellennachweis",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/67",
+      "head": {
+        "ref": "chatgpt/continuum-bundled-quality-qf2-20261022",
+        "sha": "13e67c958e626aca56659579efa158b82c056de3"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-memory-retrieval-no-false-evidence-20261022",
+        "sha": "ffb2ba01b6d2d9aaaef2a499e0e7147dca1ec598"
+      },
+      "updatedAt": "2026-10-22T12:37:49Z"
+    },
+    {
+      "number": 66,
+      "title": "QF1 · Continuum Chat-Gedächtnis: falsche Wikipedia-Zitate bei unbekannten Fachbegriffen vermeiden",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/66",
+      "head": {
+        "ref": "chatgpt/continuum-memory-retrieval-no-false-evidence-20261022",
+        "sha": "ffb2ba01b6d2d9aaaef2a499e0e7147dca1ec598"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-navigation-signed-delivery-20261022",
+        "sha": "619ebeb2831c8184a91e3c08e165ed4f4794f969"
+      },
+      "updatedAt": "2026-10-22T11:56:00Z"
+    },
+    {
+      "number": 65,
+      "title": "APK 0.3.12 (15): signierte datenbewahrende Continuum-Navigation über vorhandenen Render-Build",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/65",
+      "head": {
+        "ref": "chatgpt/continuum-navigation-signed-delivery-20261022",
+        "sha": "619ebeb2831c8184a91e3c08e165ed4f4794f969"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-app-navigation-completion-20261022",
+        "sha": "e2453ee26e151322c1ae84ba8d8698ca77c67c5b"
+      },
+      "updatedAt": "2026-10-22T10:50:48Z"
+    },
+    {
+      "number": 64,
+      "title": "Continuum UI: Opus-Navigation nach Nutzungslimit vervollständigt (mobile + Fold/Desktop)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/64",
+      "head": {
+        "ref": "chatgpt/continuum-app-navigation-completion-20261022",
+        "sha": "e2453ee26e151322c1ae84ba8d8698ca77c67c5b"
+      },
+      "base": {
+        "ref": "opus/continuum-app-navigation-20261022",
+        "sha": "1a96ac1d908d7bd5778b687af5dc5bbf4792bc34"
+      },
+      "updatedAt": "2026-10-22T09:49:07Z"
+    },
+    {
+      "number": 62,
+      "title": "CSX1 + milestone I1: certified honest abstention (draft, research shadow)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/62",
+      "head": {
+        "ref": "opus/continuum-csx1-abstention-20261022",
+        "sha": "4ef5717f1fb3ce4c36e2343bc53062b78b0d879d"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-residual-pointer-built-20261022",
+        "sha": "21365a4e2cf1e0a8fa101e069fa4e019d36143a6"
+      },
+      "updatedAt": "2026-10-22T09:06:37Z"
+    },
+    {
+      "number": 61,
+      "title": "CSX1: selbst implementierter trainierbarer Residual-Pointer mit JVM-Gegenprobe und Offline-Selbstlern-Gate",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/61",
+      "head": {
+        "ref": "chatgpt/continuum-residual-pointer-built-20261022",
+        "sha": "21365a4e2cf1e0a8fa101e069fa4e019d36143a6"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-csx1-research-gate-20261022",
+        "sha": "5a1926e57794faabd8b5de8634b4a1ad73e77ebf"
+      },
+      "updatedAt": "2026-10-22T08:17:37Z"
+    },
+    {
+      "number": 60,
+      "title": "CSX1 Forschung: Argon-Span-Pointer kritisch geprüft und sichere Opus-Integrationsgates dokumentiert",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/60",
+      "head": {
+        "ref": "chatgpt/continuum-csx1-research-gate-20261022",
+        "sha": "5a1926e57794faabd8b5de8634b4a1ad73e77ebf"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-intelligence-lab-readonly-20261022",
+        "sha": "1259375d243f4a1ba8b29b2b95d11c5fd075cb46"
+      },
+      "updatedAt": "2026-10-22T07:48:31Z"
+    },
+    {
+      "number": 59,
+      "title": "Continuum EXP-04/05: CDX1-Intelligenz-Labor mit 20+5 echten Antwortprüfungen (read-only)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/59",
+      "head": {
+        "ref": "chatgpt/continuum-intelligence-lab-readonly-20261022",
+        "sha": "1259375d243f4a1ba8b29b2b95d11c5fd075cb46"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "17e22bc2d9e1851fd634f44b8aadc04479556983"
+      },
+      "updatedAt": "2026-10-22T06:15:20Z"
+    },
+    {
+      "number": 58,
+      "title": "Continuum M4: bestehenden Opus-Coding-Job in Android Builder anzeigen und sicher auslösen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/58",
+      "head": {
+        "ref": "chatgpt/continuum-opus-android-coding-ui-20261022",
+        "sha": "76b98b2230073a6aa8c122a00e1c00e183751ad2"
+      },
+      "base": {
+        "ref": "opus/continuum-mobile-coding-e2e-20261022",
+        "sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82"
+      },
+      "updatedAt": "2026-10-22T04:51:36Z"
+    },
+    {
+      "number": 57,
+      "title": "Mobile coding job: Termux channel → canonical Teamleader → verifiable receipt (EXP-00/M4.2, draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/57",
+      "head": {
+        "ref": "opus/continuum-mobile-coding-e2e-20261022",
+        "sha": "1d92db03b87558c0b330dc584fd1f4c025a93c82"
+      },
+      "base": {
+        "ref": "sol/continuum-isolated-research-20261021",
+        "sha": "8897fd6630800b297fbda8f8638c7b615cf2b172"
+      },
+      "updatedAt": "2026-10-22T03:45:59Z"
+    },
+    {
+      "number": 56,
+      "title": "Continuum: Render-first build entrypoint without GitHub Actions",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/56",
+      "head": {
+        "ref": "review/render-first-portable-build-20261022",
+        "sha": "3ee306eaababa8ac63dfbed3852a59faac4eef89"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "17e22bc2d9e1851fd634f44b8aadc04479556983"
+      },
+      "updatedAt": "2026-10-22T03:06:12Z"
+    },
+    {
+      "number": 55,
+      "title": "Continuum: Render APK-Auslieferung unabhängig und datenverlustfrei prüfen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/55",
+      "head": {
+        "ref": "chatgpt/continuum-render-delivery-audit-20261022",
+        "sha": "5865735d17a1e60b9bdb92e143a1304b78f86197"
+      },
+      "base": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "17e22bc2d9e1851fd634f44b8aadc04479556983"
+      },
+      "updatedAt": "2026-10-22T03:01:56Z"
+    },
+    {
+      "number": 53,
+      "title": "Continuum: isolated repair execution, persistent worker and measured local GGUF research",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/53",
+      "head": {
+        "ref": "sol/continuum-isolated-research-20261021",
+        "sha": "8897fd6630800b297fbda8f8638c7b615cf2b172"
+      },
+      "base": {
+        "ref": "astra/continuum-local-coding-milestone-20261021",
+        "sha": "377bc05b8a8d96494f4cee7be8665fde3317f1e7"
+      },
+      "updatedAt": "2026-10-21T18:36:28Z"
+    },
+    {
+      "number": 52,
+      "title": "Continuum 0.3.11 signed in-place Mentor Pair update — owner-safe review",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/52",
+      "head": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62"
+      },
+      "base": {
+        "ref": "backup/mentor-apk-before-pr50-update-20261021",
+        "sha": "305122e867052878d96b6c3dec9e63c82eb94fd0"
+      },
+      "updatedAt": "2026-10-24T12:24:32Z"
+    },
+    {
+      "number": 51,
+      "title": "Continuum: separate PR50 Android preview APK build and verification delivery",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/51",
+      "head": {
+        "ref": "chatgpt/continuum-apk-preview-20261021",
+        "sha": "18d6c064d4a49b85bc1f2a4032b0fbe7d147ef92"
+      },
+      "base": {
+        "ref": "chatgpt/continuum-llama-recovery-20261021",
+        "sha": "73c32158f0e7a0a726abfe08fe9cb8b24e7ff887"
+      },
+      "updatedAt": "2026-10-21T17:58:58Z"
+    },
+    {
+      "number": 50,
+      "title": "Continuum recovery: llama.cpp schema fix, durable Teamleader CLI and Linux isolation proof",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/50",
+      "head": {
+        "ref": "chatgpt/continuum-llama-recovery-20261021",
+        "sha": "73c32158f0e7a0a726abfe08fe9cb8b24e7ff887"
+      },
+      "base": {
+        "ref": "sol/continuum-isolated-research-20261021",
+        "sha": "66e6b0d81a131925c1f9a3e2ccb47b938e6f05e7"
+      },
+      "updatedAt": "2026-10-21T14:53:46Z"
+    },
+    {
+      "number": 49,
+      "title": "Local coding: scoped numeric llama.cpp candidates, canonical repair and independent verification",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/49",
+      "head": {
+        "ref": "astra/continuum-local-coding-milestone-20261021",
+        "sha": "377bc05b8a8d96494f4cee7be8665fde3317f1e7"
+      },
+      "base": {
+        "ref": "integration/continuum-astra-20261021",
+        "sha": "dfd876c23e2e88faa2ff7ee2f7f75138b416929a"
+      },
+      "updatedAt": "2026-10-21T13:30:07Z"
+    },
+    {
+      "number": 48,
+      "title": "Continuum 0.3.9 integrated: public research safety + dual-core CDX1 + atomic checkpoints",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/48",
+      "head": {
+        "ref": "integration/continuum-astra-20261021",
+        "sha": "dfd876c23e2e88faa2ff7ee2f7f75138b416929a"
+      },
+      "base": {
+        "ref": "astra/continuum-experiment-charter-20261019",
+        "sha": "06a41709ac1eba32b3081e0aee63e450fce3b3dc"
+      },
+      "updatedAt": "2026-10-21T12:42:11Z"
+    },
+    {
+      "number": 46,
+      "title": "Verify public-source failure recovery and Android worker safety",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/46",
+      "head": {
+        "ref": "astra/continuum-research-verification-20261021",
+        "sha": "79727b3b474bb28dce7e9c35d96f7aa904892b4b"
+      },
+      "base": {
+        "ref": "astra/continuum-experiment-charter-20261019",
+        "sha": "06a41709ac1eba32b3081e0aee63e450fce3b3dc"
+      },
+      "updatedAt": "2026-10-21T07:11:18Z"
+    },
+    {
+      "number": 45,
+      "title": "Continuum CDX1: atomarer Paar-Checkpoint mit geprüftem Last-Known-Good",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/45",
+      "head": {
+        "ref": "astra/continuum-atomic-paired-checkpoints-20261021",
+        "sha": "b85f9adccf440392473c37b20940b90bee8aca56"
+      },
+      "base": {
+        "ref": "astra/continuum-dual-core-binding-20261021",
+        "sha": "91291cb201d140bc301bcb341b49a674d8d08165"
+      },
+      "updatedAt": "2026-10-21T04:04:14Z"
+    },
+    {
+      "number": 44,
+      "title": "Device AI Continuum: SWB1/CDX1 als versionsfeste lernende Zwei-Kerne-Pipeline",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/44",
+      "head": {
+        "ref": "astra/continuum-dual-core-binding-20261021",
+        "sha": "91291cb201d140bc301bcb341b49a674d8d08165"
+      },
+      "base": {
+        "ref": "astra/continuum-experiment-charter-20261019",
+        "sha": "152a010442ab82a080470d1ab9fe677051938795"
+      },
+      "updatedAt": "2026-10-21T03:10:44Z"
+    },
+    {
+      "number": 42,
+      "title": "Android-first Experimentvertrag + eigener lokaler APK-Build-Adapter (Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/42",
+      "head": {
+        "ref": "astra/continuum-experiment-charter-20261019",
+        "sha": "06a41709ac1eba32b3081e0aee63e450fce3b3dc"
+      },
+      "base": {
+        "ref": "backup/render-mentor-before-pr42-delivery-20261020",
+        "sha": "23a954ecf9f1c926f480b3601120bfbcd2ce67bf"
+      },
+      "updatedAt": "2026-10-21T06:46:21Z"
+    },
+    {
+      "number": 40,
+      "title": "Continuum Mentor pairing: owner-approved Groq Android connection and isolated APK",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/40",
+      "head": {
+        "ref": "astra/render-mentor-apk-builder-20261019",
+        "sha": "afd8ea3f0ff6e73c646b71b60d1157977abbcd62"
+      },
+      "base": {
+        "ref": "astra/continuum-optional-groq-mentor-20261019",
+        "sha": "d84de6478bde0f6995a05265a26aae083da127f1"
+      },
+      "updatedAt": "2026-10-24T12:24:32Z"
+    },
+    {
+      "number": 39,
+      "title": "Continuum: opt-in free-tier Groq language mentor without exposing personal memory",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/39",
+      "head": {
+        "ref": "astra/continuum-optional-groq-mentor-20261019",
+        "sha": "564057812b3b5ee32c42a2dab31c992cc4e4669d"
+      },
+      "base": {
+        "ref": "astra/continuum-samsung-research-hotfix-20261019",
+        "sha": "d82d7dcfa4543b9c312e978dbd15b0c9f0c8ba77"
+      },
+      "updatedAt": "2026-10-20T14:14:20Z"
+    },
+    {
+      "number": 38,
+      "title": "Samsung hotfix: prevent irrelevant research evidence and oversized follow-up aborts",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/38",
+      "head": {
+        "ref": "astra/continuum-samsung-research-hotfix-20261019",
+        "sha": "d82d7dcfa4543b9c312e978dbd15b0c9f0c8ba77"
+      },
+      "base": {
+        "ref": "astra/continuum-integrated-apk-20261019",
+        "sha": "95add3691e0c5472511eb266873f7a77512a8408"
+      },
+      "updatedAt": "2026-10-19T06:30:41Z"
+    },
+    {
+      "number": 37,
+      "title": "Continuum integrated APK: latest Sol Android + safe research, CRE1 and DNA guardian",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/37",
+      "head": {
+        "ref": "astra/continuum-integrated-apk-20261019",
+        "sha": "95add3691e0c5472511eb266873f7a77512a8408"
+      },
+      "base": {
+        "ref": "handoff/sol61-continuum-20261019",
+        "sha": "752bee2c0a3f597c3c5181afba319e892c1976e8"
+      },
+      "updatedAt": "2026-10-19T05:39:23Z"
+    },
+    {
+      "number": 36,
+      "title": "SOL 6.1: vollständige Code- und Artefaktübergabe an Astra",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/36",
+      "head": {
+        "ref": "handoff/sol61-continuum-20261019",
+        "sha": "752bee2c0a3f597c3c5181afba319e892c1976e8"
+      },
+      "base": {
+        "ref": "continuum/argon-safety-review-20261017",
+        "sha": "ab2365aeafa12140cc1ecc07f8f674a6ca424346"
+      },
+      "updatedAt": "2026-10-19T05:31:25Z"
+    },
+    {
+      "number": 35,
+      "title": "Continuum: animated native hologram with real Android voice and task states",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/35",
+      "head": {
+        "ref": "astra/continuum-holographic-ui-20261019",
+        "sha": "f5b88ad052e1f237053319822fbcee248d685045"
+      },
+      "base": {
+        "ref": "astra/continuum-blacklab-20261019",
+        "sha": "ef38dbe98864b8857d0726d40c6db3a3dd2b4a96"
+      },
+      "updatedAt": "2026-10-19T04:17:39Z"
+    },
+    {
+      "number": 34,
+      "title": "Continuum PR34: CRE1 cached projection training, canary audits and bounded daemon shadow bridge",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/34",
+      "head": {
+        "ref": "astra/continuum-blacklab-20261019",
+        "sha": "ef38dbe98864b8857d0726d40c6db3a3dd2b4a96"
+      },
+      "base": {
+        "ref": "astra/continuum-research-learning-gate-20261019",
+        "sha": "68ee7cc74086b472ac6ca209b6bf2379c99eedb6"
+      },
+      "updatedAt": "2026-10-19T03:58:26Z"
+    },
+    {
+      "number": 33,
+      "title": "Continuum: verified extractive CRE1 shadow learning and signed P-256 research packages",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/33",
+      "head": {
+        "ref": "astra/continuum-research-learning-gate-20261019",
+        "sha": "68ee7cc74086b472ac6ca209b6bf2379c99eedb6"
+      },
+      "base": {
+        "ref": "astra/continuum-offline-public-research-20261018",
+        "sha": "93b2d9f9009e9c2695085a31201a6cf6c35ea899"
+      },
+      "updatedAt": "2026-10-19T03:30:31Z"
+    },
+    {
+      "number": 32,
+      "title": "Continuum: no-paid-API persistent public research worker with bounded source memory",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/32",
+      "head": {
+        "ref": "astra/continuum-offline-public-research-20261018",
+        "sha": "93b2d9f9009e9c2695085a31201a6cf6c35ea899"
+      },
+      "base": {
+        "ref": "astra/continuum-always-on-web-20261018",
+        "sha": "4e27e4658649fd6040581e2fc7848654d0aba49f"
+      },
+      "updatedAt": "2026-10-18T21:13:14Z"
+    },
+    {
+      "number": 31,
+      "title": "Device AI: persistent owner-controlled ALWAYS_ON web consent and Android tool integration",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/31",
+      "head": {
+        "ref": "astra/continuum-always-on-web-20261018",
+        "sha": "4e27e4658649fd6040581e2fc7848654d0aba49f"
+      },
+      "base": {
+        "ref": "continuum/argon-safety-review-20261017",
+        "sha": "ab2365aeafa12140cc1ecc07f8f674a6ca424346"
+      },
+      "updatedAt": "2026-10-18T20:53:37Z"
+    },
+    {
+      "number": 30,
+      "title": "Continuum: signed DNA integrity guardian for autonomous Android teamleader",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/30",
+      "head": {
+        "ref": "astra/continuum-dna-guardian-20261018",
+        "sha": "92ce6a35edf946abcf6387e10c940e329b835e21"
+      },
+      "base": {
+        "ref": "continuum/argon-safety-review-20261017",
+        "sha": "ab2365aeafa12140cc1ecc07f8f674a6ca424346"
+      },
+      "updatedAt": "2026-10-18T20:29:27Z"
+    },
+    {
+      "number": 28,
+      "title": "Continuum: verifizierte Node-/Backend-Stabilisierung und lokale Modellschutzmaßnahmen",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/28",
+      "head": {
+        "ref": "continuum/argon-safety-review-20261017",
+        "sha": "ab2365aeafa12140cc1ecc07f8f674a6ca424346"
+      },
+      "base": {
+        "ref": "copilot/pr-12-working-first-vertical-slice",
+        "sha": "ec4b4caecd64835e56af924dae1f7ad825059bfc"
+      },
+      "updatedAt": "2026-10-18T20:15:52Z"
+    },
+    {
+      "number": 27,
+      "title": "Continuum: revoke one owner-confirmed answer correction without affecting other questions",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/27",
+      "head": {
+        "ref": "copilot/continuum-selective-correction-revocation-20261015",
+        "sha": "c3b77c0093cfddbc7193f805730dd6ba2eae7823"
+      },
+      "base": {
+        "ref": "copilot/continuum-owner-answer-corrections-20261015",
+        "sha": "251518aabd6cec964252c0acb3812c1883e85fe0"
+      },
+      "updatedAt": "2026-10-15T19:00:08Z"
+    },
+    {
+      "number": 26,
+      "title": "Continuum: owner-corrected answers for exact questions with auditable revocation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/26",
+      "head": {
+        "ref": "copilot/continuum-owner-answer-corrections-20261015",
+        "sha": "251518aabd6cec964252c0acb3812c1883e85fe0"
+      },
+      "base": {
+        "ref": "copilot/continuum-feedback-ledger-20261015",
+        "sha": "890163335db1aa1faf50a784342bef76e3c73e59"
+      },
+      "updatedAt": "2026-10-15T18:30:59Z"
+    },
+    {
+      "number": 25,
+      "title": "Continuum: persist explicit feedback in revocable experience ledger",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/25",
+      "head": {
+        "ref": "copilot/continuum-feedback-ledger-20261015",
+        "sha": "890163335db1aa1faf50a784342bef76e3c73e59"
+      },
+      "base": {
+        "ref": "copilot/pr-12-working-first-vertical-slice",
+        "sha": "240d50c4769e82ddf950f6195cac11b9ad87a314"
+      },
+      "updatedAt": "2026-10-15T17:36:31Z"
+    },
+    {
+      "number": 24,
+      "title": "Android integration: offline job observability, bounded contrastive probe and source retry repair",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/24",
+      "head": {
+        "ref": "copilot/continuum-android-integration-20261015",
+        "sha": "983a162bf66e97ee415e57dfb46a8b13b2595ef8"
+      },
+      "base": {
+        "ref": "copilot/continuum-contrastive-recovery-20261015",
+        "sha": "91d64be88886b956a5d22e34fa36018dffe9dbd1"
+      },
+      "updatedAt": "2026-10-15T15:40:12Z"
+    },
+    {
+      "number": 22,
+      "title": "ci(agent): activate the hourly Continuum developer-agent check (owner decision)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/22",
+      "head": {
+        "ref": "continuum-agent/activate-hourly-developer-agent",
+        "sha": "408300c8f16beb875ead3895c1a103bd312f951e"
+      },
+      "base": {
+        "ref": "main",
+        "sha": "b2d829ce040ff66d9dcc90d753ce35d0e65a40bf"
+      },
+      "updatedAt": "2026-10-15T07:11:54Z"
+    },
+    {
+      "number": 21,
+      "title": "[Continuum agent] KOTLIN_TYPO_REFERENCE repairs the deliberately broken Android build (acceptance demo)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/21",
+      "head": {
+        "ref": "continuum-agent/repair-22582016d3-e2cd043b",
+        "sha": "3db71056a3c586ac587ec965ab2ecaecf3c36b21"
+      },
+      "base": {
+        "ref": "copilot/continuum-agent-repair-demo",
+        "sha": "22582016d3b8d0a215793d3c5a11a69812c100c0"
+      },
+      "updatedAt": "2026-10-15T07:10:23Z"
+    },
+    {
+      "number": 19,
+      "title": "Device AI Continuum: Learning Core, Cognitive Runtime und Offline-Teamleiter (Draft)",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/19",
+      "head": {
+        "ref": "copilot/pr-12-working-first-vertical-slice",
+        "sha": "ec4b4caecd64835e56af924dae1f7ad825059bfc"
+      },
+      "base": {
+        "ref": "copilot/copilotcontinuum-phase2-intelligence-direct",
+        "sha": "d533bcd226535ac98fcff4be2bb024cf91964123"
+      },
+      "updatedAt": "2026-10-17T06:19:44Z"
+    },
+    {
+      "number": 18,
+      "title": "Harden compute task bounds and result verification",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/18",
+      "head": {
+        "ref": "copilot/inspect-extend-compute-distributed-task-code",
+        "sha": "fcdc3a3700c3f6f5b67fdeeaef404ad3549cf96c"
+      },
+      "base": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "updatedAt": "2026-10-13T08:26:06Z"
+    },
+    {
+      "number": 17,
+      "title": "Harden untrusted research evidence boundaries",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/17",
+      "head": {
+        "ref": "copilot/fix-64243701-1415878393-f443f816-2b3d-4c73-8097-d7df0cb722ca",
+        "sha": "7b229dd001416fdaa5a0b7dcb5e7ebdfd89cfce8"
+      },
+      "base": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "updatedAt": "2026-10-13T15:11:21Z"
+    },
+    {
+      "number": 16,
+      "title": "Add benchmark harness comparing single-pass baseline vs Continuum pipeline",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/16",
+      "head": {
+        "ref": "copilot/add-benchmark-measurement-harness",
+        "sha": "a4087693ab61eee8810654b4761e792481d9a3b0"
+      },
+      "base": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "updatedAt": "2026-10-13T08:22:34Z"
+    },
+    {
+      "number": 14,
+      "title": "Add deterministic Continuum persistence failure tests",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/14",
+      "head": {
+        "ref": "copilot/add-deterministic-jvm-unit-tests",
+        "sha": "262ed0ded56cfb8aaf5d9031c36e52f5c0a3d511"
+      },
+      "base": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "updatedAt": "2026-10-13T08:21:51Z"
+    },
+    {
+      "number": 12,
+      "title": "Route hard local-chat tasks through the bounded reasoning chain as an unverified advisory",
+      "state": "open",
+      "draft": false,
+      "url": "https://github.com/Ullmann27/device-ai/pull/12",
+      "head": {
+        "ref": "copilot/copilotcontinuum-phase2-intelligence-direct",
+        "sha": "d533bcd226535ac98fcff4be2bb024cf91964123"
+      },
+      "base": {
+        "ref": "copilot/continuum-phase2-intelligence-direct",
+        "sha": "917aafcfc6c2cf5e88c286c479bc04cba111fa65"
+      },
+      "updatedAt": "2026-10-13T08:20:42Z"
+    },
+    {
+      "number": 11,
+      "title": "Continuum Phase 2: effective intelligence and proof-carrying learning",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/11",
+      "head": {
+        "ref": "copilot/continuum-phase2-intelligence-direct",
+        "sha": "917aafcfc6c2cf5e88c286c479bc04cba111fa65"
+      },
+      "base": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "updatedAt": "2026-10-13T07:25:52Z"
+    },
+    {
+      "number": 10,
+      "title": "Continuum Phase 1 CI validation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/10",
+      "head": {
+        "ref": "copilot/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "base": {
+        "ref": "copilot/deepresearch-p0-durable-agent-memory",
+        "sha": "3923aac7c3949f47ebb09aa54e4f491e0c98c1a4"
+      },
+      "updatedAt": "2026-10-13T05:48:45Z"
+    },
+    {
+      "number": 9,
+      "title": "Continuum Phase 1 direct implementation",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/9",
+      "head": {
+        "ref": "work/continuum-phase1-direct",
+        "sha": "fa4285d6120e262e8f7e40fa5497e23be930a5af"
+      },
+      "base": {
+        "ref": "copilot/deepresearch-p0-durable-agent-memory",
+        "sha": "3923aac7c3949f47ebb09aa54e4f491e0c98c1a4"
+      },
+      "updatedAt": "2026-10-13T05:48:32Z"
+    },
+    {
+      "number": 8,
+      "title": "Continuum Phase 1: persistent seed, context compiler and compute fabric",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/8",
+      "head": {
+        "ref": "copilot/continuum-phase1-runtime",
+        "sha": "9eaa591239b54dc486ecc9d94457621963e34a91"
+      },
+      "base": {
+        "ref": "copilot/deepresearch-p0-durable-agent-memory",
+        "sha": "3923aac7c3949f47ebb09aa54e4f491e0c98c1a4"
+      },
+      "updatedAt": "2026-10-13T05:38:43Z"
+    },
+    {
+      "number": 6,
+      "title": "P0 Deep Research: durable checkpoints, replay guard and hybrid memory retrieval",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/6",
+      "head": {
+        "ref": "copilot/deepresearch-p0-durable-agent-memory",
+        "sha": "3923aac7c3949f47ebb09aa54e4f491e0c98c1a4"
+      },
+      "base": {
+        "ref": "copilot/part4-agent-research",
+        "sha": "463953edea61cbc9059933451430ae949bf84db8"
+      },
+      "updatedAt": "2026-10-13T05:08:16Z"
+    },
+    {
+      "number": 5,
+      "title": "Part 4: bounded agent, tools, skills and research",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/5",
+      "head": {
+        "ref": "copilot/part4-agent-research",
+        "sha": "463953edea61cbc9059933451430ae949bf84db8"
+      },
+      "base": {
+        "ref": "copilot/part3-memory-model-ecology",
+        "sha": "7c274a5240321142b31aa1d9da0ef74301e42137"
+      },
+      "updatedAt": "2026-10-13T01:21:00Z"
+    },
+    {
+      "number": 3,
+      "title": "Part 3: memory, experience and model ecology",
+      "state": "open",
+      "draft": true,
+      "url": "https://github.com/Ullmann27/device-ai/pull/3",
+      "head": {
+        "ref": "copilot/part3-memory-model-ecology",
+        "sha": "7c274a5240321142b31aa1d9da0ef74301e42137"
+      },
+      "base": {
+        "ref": "main",
+        "sha": "64a7550bc4b48ff5317b78067d5751fc4e55e8f4"
+      },
+      "updatedAt": "2026-10-12T18:57:30Z"
+    }
+  ]
+}
