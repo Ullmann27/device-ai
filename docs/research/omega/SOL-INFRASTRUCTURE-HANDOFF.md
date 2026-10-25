@@ -1,6 +1,6 @@
 # SOL infrastructure repair handoff — 2026-10-25
 
-Status: WIP / UNVERIFIED. No implementation changes in this first checkpoint.
+Current status: **SOURCE_INTEGRATED / HOST_TESTED / REVIEW_ONLY**. Historical checkpoint sections retain their original WIP status for traceability. Device inference/installation and a new owner release remain unverified/unauthorized.
 
 **Current target correction:** the already published owner APK was independently verified as versionCode **23 / 0.3.22**, hash `1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8`, original signer `2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc`. This branch therefore targets **24 / 0.3.23** for a future owner-approved update. No new APK has been signed or installed here. Earlier checkpoint paragraphs below are historical records, not current release authorizations.
 
@@ -72,4 +72,24 @@ Because published code23 already exists, advanced only the future owner-source v
 
 ## Safety / rollback / next entry
 
-No remote service mutation or model weight download. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch. Next: finish local checkout of the exact base and inspect build scripts/toolchain, then publish measured results here.
+No remote service mutation or DeepSeek weight download. The official Gemma original was downloaded only for host byte verification; no model was executed. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch.
+
+## Final measured source checkpoint
+
+Executed stable source: **`31e26ca48d411a73af42ec7d752af9195fd4adc8`**.
+
+- Full Node with actual Kotlin compiler: **1238 passed / 0 failed / 0 skipped**, 163.6 s. The formerly intermittent OMEGA case passed; its 25 ms production VM limit is unchanged. Original failing concurrent run is retained.
+- Full Android Gradle: **BUILD SUCCESSFUL**, Kotlin/Java compilation and configured **NewApi lint: 0 issues**. **1035 cases: 1032 passed / 3 optional parity cases skipped**. **36 Robolectric/widget cases**, including the real Gemma dialog correction/picker test, all passed.
+- The existing parity scripts then generated synthetic fixtures; actual Gradle-compiled Kotlin main/test classes ran both parity classes: **4/4 passed**, including all three previously skipped cases. Independent Node verification checked **4113 SWB1/SWB2 weights** after 350 rounds / 700 updates, **526336 CRE1 SGD weights** (max error `3.469446951953614e-18`) and seven inference cases. No owner weights or promotion; not an independent intelligence benchmark.
+- Backend syntax check and **60/60 tests passed** on the identical backend source.
+- Gemma original-file byte hash and existing published v23 APK/certificate were independently verified; neither proves new-source Fold7 inference/installation.
+
+Full commands, raw logs, counts and receipts: `docs/evidence/sol-infrastructure-20261025/README.md` and `verification.json`. The final evidence/documentation checkpoint changes no executable behavior after the tested SHA; its only Kotlin-source change clarifies that budget selection uses owner-supplied labels, not independently verified model identity.
+
+Independent read-only review of core diff through `526cd43fdb04381903a7eaadd51968868cfade10`: **no confirmed Critical/Important regressions**. Minor wording corrected. Subsequent owner version bump, current-version assertions and UI-looper test correction were verified by the author and full tests, not independently rereviewed. Native output-cap compatibility/quality, remaining context-token planning, semantic equivalence of every historical branch and physical-device behavior remain unproven.
+
+## Next entry / remaining project work
+
+Continue from this branch's actual published HEAD and immutable tested SHA above. Next acceptance: owner-approved same-package code24 release with a freshly reviewed source inventory, original signer and Fold7 checks: Gemma import/load/inference, ORION definition/recall/revocation, NEURON typography/large font/IME/Fold/rotation and current Android→Termux→CCC1→APK receipts. Qwen remains until Gemma succeeds. Phone access and fresh signing approval were not available here.
+
+Then follow the recorded safe connections: durable canonical skill-review evidence, authenticated read-only Atlas/Academy status, reviewed hash/path-bound DevelopmentCoordinator proposals into existing typed CCC1 with OS isolation and independent tests. Comprehensive submenu redesign, actual DeepSeek serving/bridge, persistent Virtual Model Fabric storage, autonomous discovery and unrestricted language-to-new-APK generation are **not completed by this repair batch**. Preserve negative CTX3/Synapse/LM1 results and research gates.

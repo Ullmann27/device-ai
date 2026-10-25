@@ -3,7 +3,8 @@ package at.heinz.deviceai.localmodel
 import java.util.Locale
 
 /**
- * Bounded generation limits selected by verified catalog model ID.
+ * Bounded generation limits selected by owner-supplied catalog model labels.
+ * Family matching chooses a budget; it does not verify the model's identity.
  *
  * Tokens are a maximum, not a request to generate that many tokens. A different
  * native model pack may reject the requested budget; actual LiteRT-LM model

@@ -63,7 +63,7 @@
       "id": "EXP-05",
       "title": "Own local generation and LiteRT-LM",
       "status": "RESEARCH_SHADOW",
-      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion. Astra PR117 at d7429145: rejected import diagnostics identify expected/actual SHA and preserve the prior catalog model; UI and smoke-test output distinguish loaded identity from failed import. No new model execution or LM1 promotion; device identity remains unknown. 2026-10-24: official Qwen2.5-Coder1.5B Q4_K_M GGUF SHA256 cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046 actually inferred on x86_64 CPU llama.cpp b11861; first coding experiment2calls successful, frozen repeat3calls rejected. No Fold7 GGUF measurement, no weight change/promotion.",
+      "present": "Experimental CDX1 and Android model-loading interfaces Existing authenticated fixed-loopback llama.cpp client now has an opt-in restricted repair adapter (PR #49); no GGUF was executed or measured here, no neural weight changes or automatic model promotion. Astra PR117 at d7429145: rejected import diagnostics identify expected/actual SHA and preserve the prior catalog model; UI and smoke-test output distinguish loaded identity from failed import. No new model execution or LM1 promotion; device identity remains unknown. 2026-10-24: official Qwen2.5-Coder1.5B Q4_K_M GGUF SHA256 cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046 actually inferred on x86_64 CPU llama.cpp b11861; first coding experiment2calls successful, frozen repeat3calls rejected. No Fold7 GGUF measurement, no weight change/promotion. Sol PR150 2026-10-25: original Gemma E4B file at immutable Hub revision e6a3892a8c22cf87ff99583996149cf3cb32452b independently downloaded/resumed and SHA256 verified over 3659530240 bytes; no phone import/inference. Selected-model UI now checks actual imported/loaded record SHA, not just its owner-supplied ID. PR149 bounded output/prompt policy adopted. Exact source 31e26ca48d411a73af42ec7d752af9195fd4adc8 passed full SDK compilation/NewApi lint, 1032 unit/widget cases plus separately completed 3 parity cases; Node1238/backend60. docs/evidence/sol-infrastructure-20261025. No model-quality promotion; output/context native compatibility still requires device tests.",
       "entry": "docs/CONTINUUM-ARGON-RESEARCH-IMPLEMENTATION-20261017.md",
       "depends": "Compatible local model bytes and memory budget",
       "gate": "Live model-only answers and latency/thermal benchmark"
@@ -126,7 +126,7 @@
       "id": "EXP-12",
       "title": "Identity and checkpoint continuity",
       "status": "RESEARCH_SHADOW",
-      "present": "Snapshot/rollback and model swap",
+      "present": "Snapshot/rollback and model swap Sol PR150 at 31e26ca48d411a73af42ec7d752af9195fd4adc8: paired CDX status/read-only audit/probe no longer trigger SWB1 backup restoration or recovery-audit writes; two observed failing file-preservation regressions now pass. Normal explicit/ordinary recovery is retained. Host-tested only, not a verified phone model replacement.",
       "entry": "docs/NEURAL_CONTINUITY.md",
       "depends": "Signed owner memory, immutable evidence",
       "gate": "Model replacement without owner fact corruption"
