@@ -12,6 +12,7 @@ Brain implementation freeze: `bc33e09d7f25339b9d7617e90c124a8341726de1`. Researc
 | Focused Node regressions | 30 pass; all 8 newly introduced identifier cases failed before repair | `identifier-node-after.txt` |
 | Focused Kotlin actual SDK-class regressions | 17 pass; both new tests failed before repair | `identifier-kotlin-after.txt` |
 | Independent after-freeze identifier benchmark | 100→244 exact result sets /288; wrong-hit queries144→0; previous positive retrieval74/96 unchanged | `identifier-independent-holdout-v1.json` |
+| Final Android SDK build of brain source | BUILD SUCCESSFUL; 17/17 focused tests,0skip; Kotlin/Java compilation; configured NewApi lint0issues | `android-focused-c3ebad7c.txt`, focused summary, JUnit XML and lint XML |
 | Actual selected Gemma CPU inference | 4/4 frozen short synthetic probes correct; official native LiteRT-LM API0.18.1 | `gemma-host-probe-v1.json`, native log and runtime provenance |
 | CDX1 fixed paired-training generation | Final train1/4, consumed legacy DEV0/2, independent0/16; no promotion | `cdx-baseline-v1/report.json`, manifest and four synthetic model checkpoints |
 
@@ -53,3 +54,5 @@ The recorded process exited successfully and saved all stage weights before test
 ## Resume and limits
 
 Continue from `docs/research/omega/SOL-BRAIN-HANDOFF.md`. Next bounded work is CDX generation-collapse repair with new independent quality evidence, then reasoning-aware main-dialogue routing through existing evidence/privacy/tool gates. No blind activation of CTX3/LM1 or new parallel framework. Gemma is not yet imported/validated on Fold7; DeepSeek remains metadata-only with no allocated inference GPU. Free-language coding→new installable APK is unverified. The working session is ending, not the long-term project.
+
+Final Android command and exact test/source scope are recorded in `android-focused-summary.json`. This removes the pending SDK compilation blocker for the identifier repair. It does not replace the earlier whole-suite run or physical-device acceptance.
