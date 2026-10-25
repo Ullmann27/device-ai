@@ -1,24 +1,19 @@
 package at.heinz.deviceai.localmodel
 
 /**
- * Experimental per-turn soft switch for compatible Qwen3 checkpoints.
+ * Legacy compatibility entrypoint for direct local model prompts.
  *
- * LiteRT-LM packages may embed their own chat templates, so this is a hint,
- * not a guarantee that thinking is disabled. No assistant role/prefix tokens
- * are injected: only the documented Qwen3 user-message soft switch is used.
- * It is never applied to isolated deeper-reasoning passes or tool results.
+ * Do not automatically append /no_think to Qwen3 input: compatible thinking
+ * checkpoints can use reasoning when prompted, and non-Qwen models such as
+ * Gemma must receive the original request unchanged. The user may explicitly
+ * include a supported model-family switch in their input. No role delimiter
+ * or privileged tool proposal is ever synthesized here.
  */
 internal object LocalQwenPromptPolicy {
-    private const val SOFT_SWITCH = "/no_think"
-
+    @Suppress("UNUSED_PARAMETER")
     fun directUserPrompt(modelId: String?, prompt: String, maxCharacters: Int): String {
         require(prompt.isNotBlank() && maxCharacters > 0)
         require(prompt.length <= maxCharacters)
-        val isQwen3 = modelId?.contains("qwen3", ignoreCase = true) == true
-        if (!isQwen3) return prompt
-        if (prompt.trimEnd().endsWith(SOFT_SWITCH)) return prompt
-        // Fail closed instead of silently truncating the original user request.
-        val suffix = "\n\n$SOFT_SWITCH"
-        return if (prompt.length + suffix.length <= maxCharacters) prompt + suffix else prompt
+        return prompt
     }
 }

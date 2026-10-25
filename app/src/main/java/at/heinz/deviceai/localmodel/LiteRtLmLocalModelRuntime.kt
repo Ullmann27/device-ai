@@ -136,7 +136,7 @@ class LiteRtLmLocalModelRuntime(
                             systemInstruction = Contents.of(systemPrompt),
                             tools = ToolRegistry.all().map(::registeredToolProvider),
                             automaticToolCalling = false,
-                            maxOutputToken = MAX_OUTPUT_TOKENS
+                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(model.id)
                         )
                     )
                     synchronized(lock) {
@@ -202,7 +202,7 @@ class LiteRtLmLocalModelRuntime(
                         ),
                         tools = emptyList(),
                         automaticToolCalling = false,
-                        maxOutputToken = MAX_OUTPUT_TOKENS
+                        maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                     )
                 )
             } else {
@@ -212,7 +212,7 @@ class LiteRtLmLocalModelRuntime(
                             systemInstruction = Contents.of(systemPrompt),
                             tools = ToolRegistry.all().map(::registeredToolProvider),
                             automaticToolCalling = false,
-                            maxOutputToken = MAX_OUTPUT_TOKENS
+                            maxOutputToken = LocalModelGenerationPolicy.maxOutputTokens(loadedModel?.id)
                         ))
                     }, close = { if (it.isAlive) it.close() }).also { conversation = it }
                 } catch (failure: Exception) {
@@ -471,6 +471,5 @@ class LiteRtLmLocalModelRuntime(
         const val MAX_PROMPT_CHARACTERS = 16_000
         const val MAX_RESPONSE_CHARACTERS = 64_000
         const val MAX_TOOL_RESPONSES = 4
-        const val MAX_OUTPUT_TOKENS = 512
     }
 }
