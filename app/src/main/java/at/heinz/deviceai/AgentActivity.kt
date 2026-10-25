@@ -97,6 +97,7 @@ import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.cognitive.WebLearningCandidate
 import at.heinz.deviceai.cognitive.GroundedWebRecall
 import at.heinz.deviceai.localmodel.ImportedLocalModel
+import at.heinz.deviceai.localmodel.LocalModelImportPreset
 import at.heinz.deviceai.localmodel.LocalInferenceEvent
 import at.heinz.deviceai.localmodel.LocalModelBackend
 import at.heinz.deviceai.localmodel.LocalModelCatalog
@@ -3565,6 +3566,9 @@ class AgentActivity : Activity() {
         }
         box.addView(card, matchWidth(top = 14))
         box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        box.addView(cockpit.action(this, "GEMMA 4 E4B · PRÜFWERT VORBELEGEN", primary = true) {
+            showModelImportDialog(preselectGemma4 = true)
+        }, matchWidth(top = 8))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
         }
@@ -6202,7 +6206,7 @@ class AgentActivity : Activity() {
         }.joinToString("\n")
     }
 
-    private fun showModelImportDialog() {
+    private fun showModelImportDialog(preselectGemma4: Boolean = false) {
         val fields = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
@@ -6236,6 +6240,17 @@ class AgentActivity : Activity() {
         fields.addView(textView("Veröffentlichter SHA-256-Prüfwert", 12f, CYAN, true),
             matchWidth(top = 12))
         fields.addView(digest, matchWidth(top = 6))
+        if (preselectGemma4) {
+            id.setText(LocalModelImportPreset.GEMMA4_E4B_ID)
+            version.setText(LocalModelImportPreset.GEMMA4_E4B_VERSION)
+            digest.setText(LocalModelImportPreset.GEMMA4_E4B_SHA256)
+            fields.addView(textView(
+                "Gemma 4 E4B: Die veröffentlichten Dateiangaben wurden vorbefüllt. " +
+                    "Wähle nur die unveränderte Originaldatei aus dem offiziellen LiteRT-Archiv. " +
+                    "Der Import überprüft den SHA-256 der tatsächlichen Datei; " +
+                    "das Laden des Modells bleibt ein gesonderter Gerätetest.",
+                12f, MUTED), matchWidth(top = 10))
+        }
         val warning = textView("", 12.5f, AMBER)
         fields.addView(warning, matchWidth(top = 10))
         val dialog = AlertDialog.Builder(this)
