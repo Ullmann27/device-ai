@@ -34,4 +34,10 @@ else
 fi
 printf 'SOURCE=%s\nSTATUS=PASSED_NODE_TESTS_ONLY\nHUB_STATUS=%s\nANDROID_APK=NOT_BUILT\nMODEL_WEIGHTS=NOT_DOWNLOADED\nREAL_DEEPSEEK_INFERENCE=NOT_RUN\n' "$ACTUAL" "$HUB_STATUS" >"$OUT/STATUS.txt"
 cat "$OUT/TESTS.txt"
+echo "CONTINUUM_SOUL_HUB_STATUS=$HUB_STATUS"
+if [[ "$HUB_EXIT" -ne 0 ]]; then
+  sed -n "1p" "$OUT/HUB-ERROR.txt"
+else
+  node -e 'const fs=require("node:fs"); const r=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); console.log("CONTINUUM_SOUL_HUB_REVISION="+r.revision+" SHARDS="+r.shardsDeclared+" DECLARED_BYTES="+r.declaredWeightBytes)' "$OUT/HUB.txt"
+fi
 echo "CONTINUUM_SOUL_INFRA_QA_PASSED=$ACTUAL"
