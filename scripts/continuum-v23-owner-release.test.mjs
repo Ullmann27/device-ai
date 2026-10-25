@@ -20,15 +20,15 @@ test('owner release v23 keeps existing package, signer and version 23 only',()=>
  const gradle=readFileSync(resolve(root,'app/build.gradle.kts'),'utf8');
  const shell=readFileSync(resolve(root,'scripts/render-mentor-owner-update-v23.sh'),'utf8');
  const router=readFileSync(resolve(root,'scripts/render-mentor-preview.sh'),'utf8');
- assert.match(gradle,/applicationIdSuffix = "\\.mentorpaired"/);
- assert.match(gradle,/if \\(deviceAiOwnerSignedUpdate\\) \\{[\\s\\S]*?versionCode = 23\\s*versionName = "0\\.3\\.22"/);
- assert.match(shell,/versionCode='23' versionName='0\\.3\\.22'/);
- assert.match(shell,/versionCode='22' versionName='0\\.3\\.21'/);
+ assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
+ assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
+ assert.match(shell,/versionCode='23' versionName='0\.3\.22'/);
+ assert.match(shell,/versionCode='22' versionName='0\.3\.21'/);
  assert.match(shell,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
  assert.match(shell,/expected_previous_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"/);
  assert.match(router,/CONTINUUM_OWNER_V23_APPROVED_SHA/);
  for(const n of [18,19,20,21,22,23])
-   assert.match(router,new RegExp('^  '+n+'\\\\)','m'));
+   assert.match(router,new RegExp('^  '+n+'\\)','m'));
  for(const p of ['scripts/render-mentor-preview.sh','scripts/render-mentor-owner-update-v23.sh']){
    const pcheck=spawnSync('bash',['-n',p],{cwd:root,encoding:'utf8'});
    assert.equal(pcheck.status,0,pcheck.stderr);
