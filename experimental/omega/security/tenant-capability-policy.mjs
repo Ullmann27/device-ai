@@ -44,6 +44,7 @@ export function evaluateSignedTenantCapability({grant,resource,action,nowMs,
      grant.expiresAtMs-grant.notBeforeMs>300_000||
      grant.expiresAtMs<=grant.notBeforeMs||
      typeof grant.signature!=='string'||!B64.test(grant.signature))return deny;
+  if(trustedPublicKey?.type==='private')return deny;
   const key=trustedPublicKey?.type==='public' ? trustedPublicKey : createPublicKey(trustedPublicKey);
   if(key.asymmetricKeyType!=='ed25519')return deny;
   const pinned=createHash('sha256').update(key.export({format:'der',type:'spki'})).digest('hex');
