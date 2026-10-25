@@ -1,0 +1,75 @@
+name: Continuum M6 Integration QA
+
+on:
+  push:
+    branches:
+      - integration/continuum-m6-all-verified-20261025
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-m6-integration-qa
+  cancel-in-progress: true
+
+jobs:
+  node-contracts:
+    name: Node coding, security and integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout with complete Git ancestry
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate the JavaScript interface and fixtures
+        run: |
+          node --check scripts/continuum-local-brain.mjs
+          node --check .github/continuum/coding-provider.mjs
+          node --check .github/continuum/repair-loop.mjs
+          node --check .github/continuum/coding-orchestrator.mjs
+          node --check scripts/continuum-typed-coding-bridge.mjs
+          node --check .github/continuum/coding-rejection-feedback.test.mjs
+      - name: Targeted coding and recovery tests
+        env:
+          NODE_TEST_CONTEXT: ''
+        run: |
+          node --test \
+            .github/continuum/coding-rejection-feedback.test.mjs \
+            .github/continuum/scoped-repair-pipeline.test.mjs \
+            .github/continuum/coding-provider.test.mjs \
+            .github/continuum/coding-orchestrator.test.mjs \
+            .github/continuum/coding-task.test.mjs \
+            scripts/continuum-typed-coding-bridge.test.mjs \
+            scripts/continuum-coding-brain.test.mjs
+      - name: Full Continuum Node regression suite
+        run: env -u NODE_TEST_CONTEXT node --test .github/continuum/*.test.mjs scripts/*.test.mjs
+
+  android-compile:
+    name: Android JVM, lint and compile (no publication)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: node-contracts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Ensure Android 36 SDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Check Android tests, lint and compilation (never sign or upload APK)
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
