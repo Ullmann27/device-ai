@@ -11,6 +11,7 @@ import {canonical,sha256Hex,parseStrict} from '../.github/continuum/development-
 import {validateCodingTask,taskFingerprint} from '../.github/continuum/coding-task.mjs';
 import {prepareCodingTask,runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
 import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
+import {JOB_RE,jobTaskId,RECEIPT_SCHEMA,RECEIPT_VERSION} from './continuum-mobile-coding.mjs';
 
 export const BRIDGE_SCHEMA='continuum-typed-coding-bridge';
 export const BRIDGE_VERSION=1;
@@ -77,13 +78,21 @@ export function verifiedCodingReviewReceipt(result){
  if(result?.status!=='PATCH_PENDING_OWNER_REVIEW'||
     !/^t-[a-f0-9]{16}$/.test(result.ccc1TaskId??'')||
     !/^[a-f0-9]{40}$/.test(result.sourceCommit??'')||
+    !['node','android'].includes(result.chain)||
     !Array.isArray(result.receipts))return null;
  for(const receipt of result.receipts){
   const evidence=receipt?.evidence;
-  if(receipt?.operation!=='code-repair'||receipt.status!=='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'||
+  // Only a canonical repair-job receipt bound to the same task source and
+  // chain may enter the owner-review UI; arbitrary lookalike JSON is not proof.
+  if(receipt?.schema!==RECEIPT_SCHEMA||receipt.version!==RECEIPT_VERSION||
+     !JOB_RE.test(receipt.job??'')||receipt.taskId!==jobTaskId(receipt.job)||
+     receipt.order?.chain!==result.chain||
+     receipt.operation!=='code-repair'||receipt.status!=='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'||
      receipt.commit!==result.sourceCommit||receipt.backlog?.state!=='DONE'||
+     receipt.approvedForMerge!==false||receipt.installed!==false||receipt.deviceVerified!==false||
      !SHA.test(receipt.patch?.sha256??'')||
      !SHA.test(evidence?.verificationSha256??'')||evidence.evidenceSufficient!==true||
+     !Number.isSafeInteger(evidence.baselineExecuted)||evidence.baselineExecuted<1||
      !Number.isSafeInteger(evidence.baselineFailed)||evidence.baselineFailed<1||
      !Number.isSafeInteger(evidence.candidateExecuted)||evidence.candidateExecuted<1||
      !Number.isSafeInteger(evidence.independentExecuted)||
@@ -91,8 +100,15 @@ export function verifiedCodingReviewReceipt(result){
   const phases=receipt.commands;
   if(!Array.isArray(phases)||phases.length!==3||
      phases.map(p=>p?.phase).join(',')!=='baseline,candidate,independent')continue;
-  if(!phases.slice(1).every(p=>p.exitCode===0&&p.passed===true&&
-     Number.isSafeInteger(p.executed)&&p.executed>0&&p.failed===0))continue;
+  const [baseline,candidate,independent]=phases;
+  if(baseline.passed!==false||baseline.exitCode===0||baseline.timedOut===true||
+     !Number.isSafeInteger(baseline.executed)||baseline.executed!==evidence.baselineExecuted||
+     !Number.isSafeInteger(baseline.failed)||baseline.failed!==evidence.baselineFailed||
+     baseline.failed<1||baseline.failed>baseline.executed)continue;
+  if(![candidate,independent].every(p=>p.exitCode===0&&p.passed===true&&
+     p.timedOut!==true&&Number.isSafeInteger(p.executed)&&p.executed>0&&p.failed===0))continue;
+  if(candidate.executed!==evidence.candidateExecuted||
+     independent.executed!==evidence.independentExecuted)continue;
   return receipt.patch.sha256;
  }
  return null;
