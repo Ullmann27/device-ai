@@ -14,7 +14,11 @@
       "weight_sha256": null,
       "download_state": "NOT_DOWNLOADED",
       "runtime_state": "NOT_DEPLOYED",
-      "android_import_compatible": false
+      "android_import_compatible": false,
+      "pinned_hub_revision": "1bae0e1088993b9b82de08f59de5be5a34e42170",
+      "declared_weight_shards": 48,
+      "declared_weight_bytes": 510296708312,
+      "hub_metadata_state": "LIVE_PINNED_METADATA_READ_ONLY"
     },
     "on_device": {
       "model_id": "litert-community/gemma-4-E4B-it-litert-lm",
@@ -47,5 +51,5 @@
     "no_unauthorized_external_compute": true,
     "production_branch_untouched": true
   },
-  "status": "PROJECT_DECISION_RECORDED_NOT_A_MODEL_INSTALLATION"
+  "status": "PROJECT_MODEL_SELECTION_WITH_PINNED_REMOTE_METADATA_NOT_INSTALLED"
 }
