@@ -13,6 +13,7 @@ import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mo
 import {isIsolatedExecutor,validIsolationEvidence} from './isolated-executor.mjs';
 import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 import {validateCodingTask,validateCodingProposal} from './coding-task.mjs';
+import {runCandidateVerifier} from './repair-research-verifier.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -492,7 +493,7 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 
 /** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
  * Every revision is applied to base, never on top of a failed candidate. */
-function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
+function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
   const scope=new Set(taskSpec.allowedPaths),seen=new Set(),history=[],rejectedResponses=new Set();
   const readFile=file=>{
     if(!scope.has(file))return null;
@@ -626,6 +627,22 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     attempt.remainingDiagnostics=boundedDiagnostics(check.diagnostics);
     diagnostics=check.diagnostics;
     attempt.evidence=evidenceSufficient(baseline.results,check.results);
+    // Explicit trusted research capability, default off. It can only veto a
+    // candidate that already passed the immutable standard test chain.
+    if(check.passed&&attempt.evidence.sufficient&&candidateVerifier!==null){
+      beforeStep('research-verifier');
+      attempt.researchVerification=runCandidateVerifier(candidateVerifier,{base,deadline,
+        sources:c.edits.map(e=>({file:e.file,source:readFile(e.file)}))});
+      beforeStep('research-verified');
+      if(attempt.researchVerification?.status!=='PASS'){
+        attempt.evidence={sufficient:false,reasons:['Additional research verification did not pass']};
+        const counterexample=attempt.researchVerification?.counterexample;
+        diagnostics=[{kind:'RESEARCH_COUNTEREXAMPLE',file:counterexample?.file??c.edits[0].file,line:1,
+          message:counterexample?JSON.stringify(counterexample):'Additional verification abstained; no repair is verified.',
+          fingerprint:sha256(c.id+'\0research-verifier').slice(0,16)}];
+        attempt.remainingDiagnostics=boundedDiagnostics(diagnostics);
+      }
+    }
     attempt.outcome=!check.passed?'FAILED_TESTS':attempt.evidence.sufficient?'VERIFIED':'INSUFFICIENT_EVIDENCE';
     report.coding.milestones.push(attempt.outcome==='VERIFIED'?'CANDIDATE_VERIFIED':'CANDIDATE_TESTS_FAILED');
     record();
@@ -647,10 +664,11 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
  * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
  * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null}){
   validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
   if(taskSpec&&(taskSpec.sourceCommit!==base||taskSpec.chain!==chain))throw Error('CODING_TASK_BINDING_MISMATCH');
+  if(candidateVerifier!==null&&!taskSpec)throw Error('RESEARCH_VERIFIER_REQUIRES_SCOPED_TASK');
   if(!Number.isSafeInteger(maxCandidates)||maxCandidates<1||maxCandidates>12)throw Error('Invalid repair candidate limit');
   if(DEPTH>0)throw Error('Nested repair sessions are not allowed');
   const beforeStep=stepCheckpoint(checkpoint);
@@ -674,7 +692,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     report.baselineTail=baseline.results.at(-1)?.outputTail;
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
-  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
+  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
   const ctx=context(wt,base,ledger.attempts);
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.

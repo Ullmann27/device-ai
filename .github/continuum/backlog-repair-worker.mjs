@@ -10,12 +10,13 @@ import {
   BacklogStore, nextEligible, newToken, sha256Hex, singleLine
 } from './development-backlog.mjs';
 import {
-  git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS, validateRepairExecutor
+  git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS, validateRepairExecutor, boundedWorktreeFile
 } from './repair-loop.mjs';
 import {emptyLedger, loadLedger, saveLedger, recordSession} from './repair-ledger.mjs';
 import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handoffs.mjs';
 import {validateVerifiedReport} from './repair-publish.mjs';
 import {validateCodingTask} from './coding-task.mjs';
+import {runCandidateVerifier} from './repair-research-verifier.mjs';
 
 const COMMIT=/^[0-9a-f]{40}$/;
 const TASK_ID=/^[a-z][a-z0-9-]{2,63}$/;
@@ -77,10 +78,11 @@ export function assessIndependentOwnerEvidence(baselineResults,verified){
  * and never appears in the resulting public report. Build/profile commands are
  * from repair-loop.mjs, NEVER from a task description or untrusted evidence.
  */
-export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,executor=null,executorAbortMode=null}={}){
+export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,actor='continuum-task-worker',candidateProvider=null,candidateVerifier=null,executor=null,executorAbortMode=null}={}){
   // Validate execution authority before reading/mutating backlog claims or starting checks.
   validateRepairExecutor(executor,{abortWatch:{},executorAbortMode});
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
+  if(candidateVerifier!==null&&!taskSpec)throw Error('RESEARCH_VERIFIER_REQUIRES_SCOPED_TASK');
   if(!root||!file||!out||!Number.isSafeInteger(budgetMinutes)||budgetMinutes<1||budgetMinutes>30)
     throw Error('Valid root, backlog file, out and budgetMinutes=1..30 required');
   if(id!==null&&!TASK_ID.test(id))throw Error('Invalid task ID');
@@ -131,7 +133,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,checkpoint,abortWatch,executor,executorAbortMode});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,checkpoint,abortWatch,executor,executorAbortMode});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
     const writeReport=()=>{
@@ -165,10 +167,25 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor,executorAbortMode});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
+      let researchVerification=null;
+      if(candidateVerifier!==null){
+        checkpoint();
+        researchVerification=runCandidateVerifier(candidateVerifier,{base:head,deadline,
+          sources:report.verified.files.map(file=>({file,source:fs.readFileSync(boundedWorktreeFile(independent,file),'utf8')}))});
+        checkpoint();
+        const primary=report.attempts.find(a=>a.candidate===report.verified.candidate)?.researchVerification;
+        if(researchVerification?.status!=='PASS'||primary?.status!=='PASS'||
+           researchVerification.candidateSha256!==primary.candidateSha256||
+           researchVerification.suiteSha256!==primary.suiteSha256){
+          assessment.passed=false;assessment.evidenceSufficient=false;
+          assessment.reasons.push('Independent research verification did not pass with identical source and suite');
+        }
+      }
       const independentlyPassed=assessment.passed;
       if(report.coding)report.coding.milestones.push(independentlyPassed?'INDEPENDENT_VERIFIED':'INDEPENDENT_FAILED');
       report.independent={passed:independentlyPassed,profiles,
-        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons};
+        evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
+        ...(candidateVerifier!==null?{researchVerification}:{})};
       // Persist the independent verdict before the backlog can become DONE.
       writeReport();
       const independentReceipt=path.join(independentOut,'verification.json');

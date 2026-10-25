@@ -1,0 +1,1350 @@
+{
+  "sourceBase": "821df5d1acf68f0caf10369298352a3589f56a97",
+  "androidSourcesUnmodified": true,
+  "suites": [
+    {
+      "name": "at.heinz.deviceai.learning.NeuralGradientTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumOwnedProjectPlanTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.BoundedIoTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumCodingTaskTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumDialogueSessionResetTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ComposerReflowDraftTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumNexusHomeSpecTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WebLearningInboxTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.RidgeChartTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.LearningExperienceStoreTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.GroqInvocationRouterTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.Ctx3ContextTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumSeedTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumPublicModelPackageTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralPracticeTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumCcc1BridgeTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.AgentToolLayerTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralDialogueTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentBacklogTest",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.TinyNeuralNetworkTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelCatalogTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDialogueAuditTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralLearningCoachTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ComputeResultVerifierTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.RetrievalBenchmarkTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryEcologyTest",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ComposerUiPolicyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralCuriosityRadarTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.nf.NfCoreTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.GroundedWebRecallTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.InternetConsentPolicyTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cre1PromotionGateTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ComputeFabricTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumOwnerFactTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ChatReasoningRouterTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralTeachingAuditTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumMobileResultPolicyTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumHologramPlexusTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.BoundedAgentTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumOwnedAppContractTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.MentorCurriculumTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.MentorRecallTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumContrastiveGateTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.TinyContextDecoderTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ModelCheckpointStoreTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AiContextCompilerTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralSnapshotImportTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.LocalFirstPolicyTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentSharedHashTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.KnowledgeDialogueTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.TtsHologramSignalTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLearningCoreTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.benchmark.BenchmarkRunnerTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumBimodalConditionerTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumCodingConversationTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AgentCheckpointStoreTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.Ctx3ShadowTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumBenchmarkTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumContrastiveViewsTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cre1InferenceEncoderTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumGridPolicyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AdaptiveIdentityTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.IdentityStateTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.NeuralSnapshotCasTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumWorkerChatRouterTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralTransferExperimentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.HologramAudioTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalToolTurnGateTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumMemoryDialogueTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.MentorConceptNetworkTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.CognitiveRaidTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cre1ResearchLabTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.CognitivePersistenceTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumDashboardMathTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumUiCopyTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumMobileBuildPlanTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.lm.LmRuntimeTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.lm.LmStep7Test",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumSeedStoreTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DeviceTeamleaderTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolExecutionReceiptStoreTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumMobileCodingJobTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralCommandParserTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.nf.NfResidualTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchEngineTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ApprovedWebToolGateTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.StrictJsonTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumOrbitalRingTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumStateTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.MentorSemanticModelTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolRegistryTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.TrainableSubwordEncoderTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumTopicFrontierTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.MentorCuriosityPlannerTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.Cre1PromotionAuditTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.nf.NfHybridTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.lm.LmCoreTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.KnowledgeReasoningTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.OnlineNaiveBayesTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumSourceNoveltyTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumHomeLayoutTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.ContinuumCoreMirrorTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumMobileBuilderRouteTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ContinuumTypedCodingBridgeTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DevelopmentUiControllerTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.DeliberationTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.LearningIntegrationTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.BootstrapBrainTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ui.WaveChartMarkerTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumContrastiveParityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "name": "at.heinz.deviceai.Ctx3SessionTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumPublicCurriculumTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ResearchHttpTransportTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.WebResearchIntegrationTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumOrthographyProbeTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.ToolReplayGuardTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumDecoderBridgeTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.AgentCancellationRegressionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}
