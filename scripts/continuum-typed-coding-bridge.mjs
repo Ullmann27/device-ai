@@ -79,13 +79,17 @@ export function verifiedCodingReviewReceipt(result){
     !/^t-[a-f0-9]{16}$/.test(result.ccc1TaskId??'')||
     !/^[a-f0-9]{40}$/.test(result.sourceCommit??'')||
     !['node','android'].includes(result.chain)||
-    !Array.isArray(result.receipts))return null;
+    !Array.isArray(result.receipts)||
+    !Array.isArray(result.receiptJobs)||result.receiptJobs.length<1||
+    result.receiptJobs.length>16||!result.receiptJobs.every(job=>typeof job==='string'&&JOB_RE.test(job))||
+    new Set(result.receiptJobs).size!==result.receiptJobs.length)return null;
  for(const receipt of result.receipts){
   const evidence=receipt?.evidence;
   // Only a canonical repair-job receipt bound to the same task source and
   // chain may enter the owner-review UI; arbitrary lookalike JSON is not proof.
   if(receipt?.schema!==RECEIPT_SCHEMA||receipt.version!==RECEIPT_VERSION||
-     !JOB_RE.test(receipt.job??'')||receipt.taskId!==jobTaskId(receipt.job)||
+     !JOB_RE.test(receipt.job??'')||!result.receiptJobs.includes(receipt.job)||
+     receipt.taskId!==jobTaskId(receipt.job)||
      receipt.order?.chain!==result.chain||
      receipt.operation!=='code-repair'||receipt.status!=='REPAIR_PATCH_VERIFIED_PENDING_REVIEW'||
      receipt.commit!==result.sourceCommit||receipt.backlog?.state!=='DONE'||
