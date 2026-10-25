@@ -135,6 +135,23 @@ test('actual CCC1 preparation and execution through typed Termux boundary preser
    providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
   }),/CODING_TASK_BINDING_MISMATCH/);
   assert.equal(modelCalls,0,'wrong SHA must never call the model');
+  const grantPath=path.join(state,'coding-grants',spec.id+'.json');
+  const originalGrant=fs.readFileSync(grantPath,'utf8');
+  const damaged=JSON.parse(originalGrant);
+  damaged.ccc1TaskId='t-not-a-valid-id';
+  fs.writeFileSync(grantPath,JSON.stringify(damaged)+'\\n');
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:args.hash,
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_GRANT_CORRUPT/);
+  fs.writeFileSync(grantPath,originalGrant);
+  fs.appendFileSync(path.join(root,'lib/offset.mjs'),'// local uncommitted change\\n');
+  await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
+   expectedTaskFingerprint:args.hash,
+   providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
+  }),/CODING_TASK_DIRTY_SOURCE/);
+  assert.equal(modelCalls,0,'corrupt grant and dirty checkout must never call model');
+  fs.writeFileSync(path.join(root,'lib/offset.mjs'),'export function offset(a,b){return a-b;}\\n');
   assert.equal(git('status','--porcelain'),'');
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
