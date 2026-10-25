@@ -22,7 +22,11 @@ const builderPaths=new Set([
   'scripts/render-mentor-preview.sh',
   'scripts/render-mentor-owner-update-v23.sh',
   'scripts/continuum-v23-source-gate.mjs',
-  'scripts/continuum-v23-owner-release.test.mjs'
+  'scripts/continuum-v23-owner-release.test.mjs',
+  // v22 full immutable Git-tree verification in private shallow checkouts;
+  // exact v23 builder SHA pins these auditable release-only verification inputs.
+  'scripts/continuum-v22-owner-release.test.mjs',
+  'scripts/continuum-v22-historical-attestation.mjs'
 ]);
 try{
   // Owner must explicitly approve the frozen source, inventory and exact
