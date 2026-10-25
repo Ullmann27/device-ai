@@ -1,0 +1,51 @@
+{
+  "schema": "CONTINUUM_MODEL_SELECTION_V1",
+  "recorded_on": "2026-10-25",
+  "project": "Device AI Continuum",
+  "repository": "Ullmann27/device-ai",
+  "decision": "DeepSeek V4.1 Flash-1017 is the target external high-capacity development/coding teacher; Gemma 4 E4B IT LiteRT-LM is the target offline Fold7 model; Qwen3 is deprecated for primary use only after Gemma is verified.",
+  "roles": {
+    "research_teacher": {
+      "model_id": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "format": "safetensors",
+      "license_spdx": "MIT",
+      "target_environment": "authorized_external_compute",
+      "weight_sha256": null,
+      "download_state": "NOT_DOWNLOADED",
+      "runtime_state": "NOT_DEPLOYED",
+      "android_import_compatible": false
+    },
+    "on_device": {
+      "model_id": "litert-community/gemma-4-E4B-it-litert-lm",
+      "source": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm",
+      "filename": "gemma-4-E4B-it.litertlm",
+      "download_url": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm/resolve/main/gemma-4-E4B-it.litertlm",
+      "file_sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+      "catalog_id": "gemma4-e4b-it",
+      "catalog_version": "official-0b2a8980",
+      "approx_file_size_gb": 3.66,
+      "format": "litertlm",
+      "license_spdx": "Apache-2.0",
+      "download_state": "NOT_DOWNLOADED",
+      "device_load_test": "NOT_RUN",
+      "chat_quality_benchmark": "NOT_RUN"
+    },
+    "retired_candidate": {
+      "family": "Qwen3",
+      "intent": "REPLACE_AS_PREFERRED_MODEL",
+      "deletion_state": "NOT_PERFORMED",
+      "deletion_gate": "Only after Gemma import + exact SHA verification + Fold7 native load + basic inference test + explicit on-device user action; never touch SWB1 owner memories or learned weights"
+    }
+  },
+  "constraints": {
+    "existing_app_package": "at.heinz.deviceai.mentorpaired",
+    "same_app_only": true,
+    "existing_owner_signing_required": true,
+    "no_cloud_llm_required_for_regular_offline_chat": true,
+    "model_training_data_private_by_default": true,
+    "no_unauthorized_external_compute": true,
+    "production_branch_untouched": true
+  },
+  "status": "PROJECT_DECISION_RECORDED_NOT_A_MODEL_INSTALLATION"
+}
