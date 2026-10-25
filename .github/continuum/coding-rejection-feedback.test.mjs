@@ -52,7 +52,7 @@ test('invalid model output carries SHA-256 only, not discarded raw source',async
  const raw=JSON.stringify(p);
  await assert.rejects(queryLocalCodingBrain({userPrompt:'Fix distance',allowedTrackedPaths:['lib/math.mjs'],
    apiKey:'A'.repeat(40),fetchImpl:async()=>Response.json({choices:[{message:{content:raw}}]})}),error=>{
-  assert.equal(error.message,'CODING_RESPONSE_INVALID:'+digest(raw));
+  assert.equal(error.message,'CODING_NOOP_PATCH:'+digest(raw));
   assert.equal(error.message.includes('return a-b;'),false);
   return true;
  });
@@ -90,7 +90,7 @@ test('rejection diagnostics and fingerprint reach the next model revision',()=>{
   assert.equal(second.history[0].outcome,'REJECTED_MODEL_OUTPUT');
   assert.equal(second.history[0].candidate,'b'.repeat(16));
   assert.equal(second.diagnostics[0].kind,'CODING_REJECTED_OUTPUT');
-  assert.match(second.diagnostics[0].message,/unchanged/);
+  assert.match(second.diagnostics[0].message,/valid JSON/);
   assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
@@ -115,5 +115,68 @@ test('unknown provider errors never leak their message to the durable report',()
   assert.equal(report.inference.localRequests,3);
   assert.ok(report.inference.rejections.every(x=>x.code==='CODING_PROVIDER_ERROR'));
   assert.equal(JSON.stringify(report).includes('SECRET-TEST-SENTINEL'),false);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+
+test('no-op coding response is distinct from malformed model JSON, both with redacted digest',async()=>{
+ const unchanged=JSON.stringify({plan:['Keep source'],hypothesis:'Already correct',
+  patches:[{file:'lib/math.mjs',oldText:'return a-b;',newText:'return a-b;'}]});
+ const invalid='private sensitive text {invalid-json';
+ const query=raw=>queryLocalCodingBrain({userPrompt:'Fix distance',allowedTrackedPaths:['lib/math.mjs'],
+  apiKey:'A'.repeat(40),fetchImpl:async()=>Response.json({choices:[{message:{content:raw}}]})});
+ await assert.rejects(query(unchanged),e=>e.message==='CODING_NOOP_PATCH:'+digest(unchanged)
+  &&!e.message.includes('return a-b;'));
+ await assert.rejects(query(invalid),e=>e.message==='CODING_RESPONSE_INVALID:'+digest(invalid)
+  &&!e.message.includes('private sensitive text'));
+});
+test('no-op fingerprint crosses fixed local CLI only, never arbitrary stderr',()=>{
+ const f=fixture();
+ try{
+  const hash='e'.repeat(64);
+  const provider=createCodingCandidateProvider({root:f.root,task:f.task,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
+   run:()=>({status:1,stderr:'LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_NOOP_PATCH:'+hash+'\n'})});
+  assert.throws(()=>provider({base:f.head,chain:'node',deadline:Date.now()+10000}),error=>{
+   assert.equal(error.code,'CODING_NOOP_PATCH');assert.equal(error.responseSha256,hash);
+   assert.equal(error.message,'CODING_NOOP_PATCH');return true;
+  });
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('no-op model rejection is used in second candidate without raw output or host writes',()=>{
+ const f=fixture();let calls=0;let revised;
+ try{
+  const report=runSession(f,input=>{
+   calls++;
+   if(calls===1){const e=Error('CODING_NOOP_PATCH');e.code='CODING_NOOP_PATCH';e.responseSha256='f'.repeat(64);throw e;}
+   revised=input;return validProposal(f);
+  });
+  assert.equal(calls,2);assert.equal(report.outcome,'VERIFIED');
+  assert.equal(report.inference.rejections[0].code,'CODING_NOOP_PATCH');
+  assert.match(revised.diagnostics[0].message,/identical bytes/);
+  assert.equal(revised.history[0].candidate,'f'.repeat(16));
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+
+test('an unmatched oldText gives exact-baseline diagnostics and then repairs safely',()=>{
+ const f=fixture();let calls=0;let next;
+ try{
+  const report=runSession(f,input=>{
+   calls++;
+   if(calls===1){
+    const bad=validProposal(f);
+    bad.patches[0].oldText='return missing_source;';
+    return bad;
+   }
+   next=input;
+   return validProposal(f);
+  });
+  assert.equal(calls,2);
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(report.inference.rejections.length,1);
+  assert.equal(report.inference.rejections[0].code,'CODING_PATCH_NOT_EXACT');
+  assert.match(report.inference.rejections[0].responseSha256,/^[a-f0-9]{64}$/);
+  assert.equal(next.diagnostics[0].kind,'CODING_REJECTED_OUTPUT');
+  assert.match(next.diagnostics[0].message,/exactly one unique existing source span/);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });

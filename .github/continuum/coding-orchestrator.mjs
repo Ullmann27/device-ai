@@ -86,10 +86,14 @@ export async function runCodingTask({project,stateDir,id,executor=null,executorA
   if(entry.kind!=='RECEIPT'||receipts.some(r=>r.job===entry.payload.job))continue;
   const receipt=readReceipt(builderStateOf(stateDir),entry.payload.job);if(receipt)receipts.push(receipt);
  }
+ // Match future owner-review receipts to jobs in this task's validated CCC1 journal.
+ const receiptJobs=[...new Set((result.entries??[])
+  .filter(entry=>entry.kind==='RECEIPT'&&typeof entry.payload?.job==='string')
+  .map(entry=>entry.payload.job))];
  const experience=experienceOf(grant.ccc1TaskId,result.entries??[],{coreId:'typed-coding-adapter-v1'});
  if(experience)new ExperienceLog(path.join(stateDir,'experience.jsonl')).append(experience);
  return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
-  taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,
+  taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
   status:result.outcome==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':result.outcome,
-  receipts,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
+  receiptJobs,receipts,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
 }

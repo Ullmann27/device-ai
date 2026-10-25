@@ -123,8 +123,21 @@ object ContinuumHomeLayout {
         val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
         val hero = wideReference.getValue(Slot.HERO)
         val heroGrow = minOf(extra, 150f)
-        // the hologram radius is min(width * .2366, height * .3334): widen in the same ratio, at most 70 dp per side
-        val heroWiden = minOf(heroGrow * (.3334f / .2366f), 140f)
+        // The renderer's width/height ratio governs enlargement, capped by the 8dp label clearance below.
+        // Keep the actually rendered glass sphere outside both mirrored control columns.
+        // Tall Fold windows enlarge the hero vertically; its width must not grow past the
+        // inner text edges. The renderer's radius/sphere factors are the source of truth.
+        val foldGeometry = ContinuumHologramRenderer.Geometry.FOLD
+        val heroCenterX = (hero.left + hero.right) / 2f
+        val controlInnerEdge = wideReference.getValue(Slot.LABEL_THINKING).left
+        val sphereClearance = 8f
+        val permittedSphereRadius = (controlInnerEdge - heroCenterX - sphereClearance).coerceAtLeast(0f)
+        val permittedHeroWidth = permittedSphereRadius / (foldGeometry.radiusOfWidth * foldGeometry.sphere)
+        val heroWiden = minOf(
+            heroGrow * (foldGeometry.radiusOfHeight / foldGeometry.radiusOfWidth),
+            140f,
+            (permittedHeroWidth - hero.width).coerceAtLeast(0f)
+        )
         val rowGap = (extra - heroGrow) / 2f
         val firstRow = heroGrow + rowGap
         val secondRow = heroGrow + 2f * rowGap
