@@ -72,3 +72,13 @@ test('tampered evidence is rejected, but hash is no digital signature',()=>{
 test('different inventory pins produce different review receipts',()=>{
  assert.notEqual(evaluate().reportSha256,evaluate([osv],{...inventory,sourceCommit:'b'.repeat(40)}).reportSha256);
 });
+
+test('bounded OSV snapshots reject oversized or malformed version ranges',()=>{
+ const base={id:'OSV-2026-RANGES',affected:[{package:{ecosystem:'npm',name:'@org/example'},ranges:[{type:'SEMVER',events:[{introduced:'0'}]}]}]};
+ for(const bad of [
+  {...base,summary:'X'.repeat(512001)},
+  {...base,affected:[{...base.affected[0],ranges:Array(65).fill({type:'SEMVER',events:[{introduced:'0'}]})}]},
+  {...base,affected:[{...base.affected[0],ranges:[{type:'SHELL',events:[{introduced:'0'}]}]}]},
+  {...base,affected:[{...base.affected[0],ranges:[{type:'SEMVER',events:[{exec:'unsafe'}]}]}]}
+ ])assert.throws(()=>evaluate([bad]),/OMEGA_ADVISORY_INPUT_INVALID/);
+});
