@@ -779,8 +779,20 @@ class AgentActivity : Activity() {
         column.addView(buildModeRow().also { modeSection = it }, matchWidth(top = 4))
 
         neuralMonitor = textView("NEURON · Bereit · Training per Knopf starten", 11f, CYAN, true).apply {
-            contentDescription = "Neuronaler Lernfortschritt und Trainingsfehler"
+            // The status is persistent, but the chat must never disappear behind a growing header.
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            contentDescription = "Lernstatus anzeigen: zum vollständigen Text antippen"
             setPadding(dp(8), dp(5), dp(8), dp(3))
+            isClickable = true
+            isFocusable = true
+            setOnClickListener {
+                AlertDialog.Builder(this@AgentActivity)
+                    .setTitle("NEURON · Lernstatus")
+                    .setMessage(neuralMonitor.text)
+                    .setPositiveButton("Schließen", null)
+                    .show()
+            }
         }
         column.addView(neuralMonitor, matchWidth())
         neuralProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
