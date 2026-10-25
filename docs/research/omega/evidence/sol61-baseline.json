@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "93b92c03cc8bc5df840edeaf0d48590bfeaed13b",
+  "nodeVersion": "v20.20.1",
+  "command": "node --test experimental/omega/security/*.test.mjs",
+  "verifiedOriginalBlobs": 18,
+  "tests": 80,
+  "pass": 80,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "durationMs": 817.861879,
+  "realProposalVerifier": true,
+  "liveOsvQuery": false,
+  "androidTestsRun": false,
+  "androidBuildRun": false
+}
