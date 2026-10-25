@@ -101,6 +101,43 @@ class ContinuumIntelligenceAuditTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun readOnlyAuditDoesNotRecoverDamagedSwb1FromBackup() {
+        val dir = Files.createTempDirectory("continuum-intelligence-no-recovery").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            val modelDir = java.io.File(dir, "learning-core-v2").apply { mkdirs() }
+            val backup = TrainableSubwordEncoder().save()
+            java.io.File(modelDir, "subword-v1.lkg").writeBytes(backup)
+            val damaged = backup.copyOf().also { it[40] = (it[40].toInt() xor 0x55).toByte() }
+            java.io.File(modelDir, "subword-v1.bin").writeBytes(damaged)
+            fun files() = dir.walkTopDown().filter { it.isFile }.associate {
+                it.relativeTo(dir).path to java.security.MessageDigest.getInstance("SHA-256")
+                    .digest(it.readBytes()).joinToString("") { b -> "%02x".format(b.toInt() and 255) }
+            }
+            val before = files()
+            val report = core.intelligenceAudit()
+            assertEquals("Read-only audit must not restore weights or append recovery records", before, files())
+            assertEquals("UNAVAILABLE_CORRUPT", report.status)
+            assertFalse(report.targetMet)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun readOnlyPairedProbeDoesNotRecoverDamagedSwb1FromBackup() {
+        val dir = Files.createTempDirectory("continuum-paired-no-recovery").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            val modelDir = java.io.File(dir, "learning-core-v2").apply { mkdirs() }
+            val backup = TrainableSubwordEncoder().save()
+            java.io.File(modelDir, "subword-v1.lkg").writeBytes(backup)
+            val damaged = backup.copyOf().also { it[40] = (it[40].toInt() xor 0x55).toByte() }
+            val active = java.io.File(modelDir, "subword-v1.bin").apply { writeBytes(damaged) }
+            assertNull(core.experimentalPairedDecoderContinuation("Der Code ist NOVA.", "Wie heißt der Code?"))
+            assertArrayEquals(damaged, active.readBytes())
+            assertArrayEquals(backup, java.io.File(modelDir, "subword-v1.lkg").readBytes())
+            assertEquals(setOf("subword-v1.bin", "subword-v1.lkg"), modelDir.list()!!.toSet())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun malformedModelIdentifiersAndProbeInputsAreRejected() {
         val answers = probes.map { it.expected ?: "" }
         assertThrows(IllegalArgumentException::class.java) {

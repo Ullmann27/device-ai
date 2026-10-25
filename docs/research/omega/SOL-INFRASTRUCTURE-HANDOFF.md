@@ -42,6 +42,12 @@ Verified RED→GREEN: new Qwen tests initially failed 2/5 on unwanted appended t
 
 Live DeepSeek read-only preflight was repeated successfully: revision `1bae0e1088993b9b82de08f59de5be5a34e42170`, 48 shards, 510296708312 declared bytes, 0 downloaded. Current four-file offline Node suite is 20/20 (includes two model-selection tests). ADB reports no attached device. No owner keys are present or used.
 
+## Repair checkpoint 3: genuinely read-only paired diagnostics
+
+Two regression cases against actual SDK-compiled baseline classes reproduced the defect: `readOnlyAuditDoesNotRecoverDamagedSwb1FromBackup` and `readOnlyPairedProbeDoesNotRecoverDamagedSwb1FromBackup` both failed. The audit created recovery/experience files and changed active SWB1 bytes. Repaired the paired status/probe boundary to use a nonrecovering validated snapshot. Corrupt live SWB1 returns `CORRUPT` / no generation; it is not silently repaired by diagnosis. Normal `loadModel()` recovery, stored backups, owner facts and training paths remain intact.
+
+Verified with official Kotlin compiler against the real SDK-compiled main classes (no Android stubs): the updated core and full `ContinuumIntelligenceAuditTest` compiled and ran **11/11 PASS**, including missing checkpoint, cancellation, unsupported-answer scoring and both file-preservation regressions. Full Gradle suite is still pending a stable combined-source run. This repair does not improve CDX1 answer weights or cure the reported n-collapse; architectural findings and device limits are in `CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md`.
+
 ## Safety / rollback / next entry
 
 No remote service mutation or model weight download. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch. Next: finish local checkout of the exact base and inspect build scripts/toolchain, then publish measured results here.
