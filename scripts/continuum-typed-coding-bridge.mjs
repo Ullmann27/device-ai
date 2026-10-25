@@ -106,7 +106,7 @@ export function verifiedCodingReviewReceipt(result){
   if(!Array.isArray(phases)||phases.length!==3||
      phases.map(p=>p?.phase).join(',')!=='baseline,candidate,independent')continue;
   const [baseline,candidate,independent]=phases;
-  if(baseline.passed!==false||baseline.exitCode===0||baseline.timedOut===true||
+  if(baseline.passed!==false||!Number.isSafeInteger(baseline.exitCode)||baseline.exitCode<1||baseline.timedOut===true||
      !Number.isSafeInteger(baseline.executed)||baseline.executed!==evidence.baselineExecuted||
      !Number.isSafeInteger(baseline.failed)||baseline.failed!==evidence.baselineFailed||
      baseline.failed<1||baseline.failed>baseline.executed)continue;
