@@ -24,7 +24,9 @@ test('v22 is strictly an owner in-place update and leaves historical releases in
  assert.match(recipe,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
  assert.match(recipe,/expected_previous_sha="c28597b7c28b495d36a161edc3b5bf938f8197a749b016bc6d2513807afa0b1f"/);
  assert.match(recipe,/versionCode='21' versionName='0\.3\.20'/);
- assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 22\s*versionName = "0\.3\.21"/);
+ // The historical v22 script is retained, but its source approval never
+ // grants permission for a later in-place owner update.
+ assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
  for(const p of ['scripts/render-mentor-preview.sh','scripts/render-mentor-owner-update-v22.sh']){
   const r=spawnSync('bash',['-n',p],{cwd:root,encoding:'utf8',timeout:10000});
   assert.equal(r.status,0,r.stderr);
@@ -62,8 +64,16 @@ test('a v22 source proposal is never mistaken for signed authorization',()=>{
  assert.equal(wrong.status,69,wrong.stderr);
 });
 
-test('exact approved source blob inventory is internally complete (CI simulation, NEVER signs)',()=>{
+test('exact approved source blob inventory is internally complete (CI simulation, NEVER signs)',(t)=>{
  const manifest=JSON.parse(get('docs/release/continuum-0321-source-proposal-20261024.json'));
+ // Render checks out the current branch shallowly, not historical v22 commit trees.
+ // A historical test may only be skipped in non-signing v23 QA, NEVER in owner release.
+ const historical=spawnSync('git',['cat-file','-e',`${manifest.sourceHead}^{tree}`],{cwd:root,encoding:'utf8'});
+ if(historical.status!==0&&process.env.CONTINUUM_OWNER_V23_QA==='1'){
+   t.skip('V22 immutable source tree absent from shallow v23 QA checkout; owner signer gate remains strict');
+   return;
+ }
+ assert.equal(historical.status,0,'Historical v22 source tree required outside v23 non-signing QA');
  const tree=ref=>new Map(execFileSync('git',['ls-tree','-r','-z',ref],{cwd:root,encoding:'utf8'})
   .split('\0').filter(Boolean).map(line=>{const m=/^\d+ blob ([a-f0-9]{40})\t(.+)$/.exec(line);return m?[m[2],m[1]]:['',''];}));
  const approved=tree(manifest.sourceHead),current=tree('HEAD');
