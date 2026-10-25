@@ -156,7 +156,7 @@
       "present": "Trusted frozen numeric suites add counterexamples to the existing scoped repair loop and repeat in its independent worktree. No production activation, model training or generalization claim. See docs/research/omega/ASTRA-HANDOFF.md.",
       "entry": "experimental/omega/repair/numeric-verifier.mjs",
       "depends": "Existing CCC1 owner backlog, coding task, exact patches, repair tests and receipts; Node and Git for host experiment",
-      "gate": "Fixed-budget baseline comparison pending; model cannot edit experimental/omega; Fold7 execution and real-model holdout NOT_RUN."
+      "gate": "Controlled synthetic replay archived: 2/10 versus 8/10 correct, zero model calls, higher actual verifier compute; not a blind generalization result. Real-model fixed-budget holdout and Fold7 execution NOT_RUN. See docs/research/omega/ASTRA-HANDOFF.md."
     }
   ]
 }

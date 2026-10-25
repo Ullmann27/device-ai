@@ -66,3 +66,7 @@ Vollständiger Node-Lauf vor dieser Android-Änderung: 1208 Tests, 1202 PASS, 6 
 ## Dialogstand und Gesamtarchitektur gesichert
 
 Dialog-Code: https://github.com/Ullmann27/device-ai/commit/c078396b87b671ee2fb6a727fc95d6503cd60815 . `ARCHITECTURE.md` dokumentiert reale Aufrufer, Status, Zweige, LM1/LM2/EWC-Lücken und Folgeauftrag. Android-Gesamtsuite auf diesem SHA: 976 Tests, 973 PASS, 3 SKIP, 0 FAIL/ERROR; Lint/Compile PASS (Belege `android-final*`). Review läuft separat lesend. Konkreter offener Reviewbefund: `continuum-local-dialogue-quality-wiring.test.mjs` erwartet noch den ersetzten Einzelturn-Prompt und die frühere Methodensignatur; gezielt ROT, Update und vollständige Node-Regressionsprüfung folgen. Noch kein abgeschlossener JARVIS-Gerätemeilenstein.
+
+## Review-Fix: tatsächliche native Kontextgrenze
+
+Architektur-/Androidbelege: https://github.com/Ullmann27/device-ai/commit/1f6bc3f41be0817d382437a24eafbc48a87561b3 . Unabhängiger Reviewer fand native Gesprächsretention und einen veralteten Node-Test. `LiteRtLmLocalModelRuntime` beginnt jetzt für jeden vollständigen Prompt eine frische native Conversation, behält aber Tool-Fortsetzungen. Neue Lebenszyklusfunktion und Tests `LocalConversationBoundary*`; keine weitere Modellinstanz. 8/8 gezielte Kotlin- und 3/3 Node-Tests PASS. Vollständige Regression folgt nach diesem Sicherungspunkt. Details und zurückgestellte Geräteurteile: `REVIEW.md`.
