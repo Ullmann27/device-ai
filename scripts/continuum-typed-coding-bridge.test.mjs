@@ -7,6 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {jobTaskId,RECEIPT_SCHEMA,RECEIPT_VERSION} from './continuum-mobile-coding.mjs';
 import {createCodingCandidateProvider} from '../.github/continuum/coding-provider.mjs';
 import {decodePreparedTask,fixedArgs,executeTypedBridge,ownerCodingExecutor,verifiedCodingReviewReceipt,BRIDGE_SCHEMA} from './continuum-typed-coding-bridge.mjs';
 
@@ -59,16 +60,19 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
   id:args.id,taskFingerprint:'c'.repeat(64),sourceCommit:SOURCE,status:'COMPLETED',receipts:[]
  })});
  assert.equal(mismatch.status,'BLOCKED');assert.equal(mismatch.failure.code,'RUN_BINDING_MISMATCH');
+ const receiptJob='11111111-1111-4111-8111-111111111111';
  const trustedReceipt={
+  schema:RECEIPT_SCHEMA,version:RECEIPT_VERSION,job:receiptJob,taskId:jobTaskId(receiptJob),
+  order:{chain:'node'},approvedForMerge:false,installed:false,deviceVerified:false,
   operation:'code-repair',status:'REPAIR_PATCH_VERIFIED_PENDING_REVIEW',
   commit:SOURCE,backlog:{state:'DONE'},patch:{sha256:'d'.repeat(64)},
-  evidence:{verificationSha256:'e'.repeat(64),evidenceSufficient:true,baselineFailed:1,
-   candidateExecuted:3,independentExecuted:3},
+  evidence:{verificationSha256:'e'.repeat(64),evidenceSufficient:true,
+   baselineExecuted:3,baselineFailed:1,candidateExecuted:3,independentExecuted:3},
   commands:[{phase:'baseline',executed:3,failed:1,exitCode:1,passed:false},
    {phase:'candidate',executed:3,failed:0,exitCode:0,passed:true},
    {phase:'independent',executed:3,failed:0,exitCode:0,passed:true}]
  };
- const reviewResult={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,
+ const reviewResult={id:args.id,taskFingerprint:args.hash,sourceCommit:SOURCE,chain:'node',
   ccc1TaskId:'t-'+'f'.repeat(16),status:'PATCH_PENDING_OWNER_REVIEW',receipts:[trustedReceipt]};
  const verified=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>reviewResult});
  assert.equal(verified.status,'PATCH_PENDING_OWNER_REVIEW');
@@ -77,6 +81,22 @@ test('run requires saved exact fingerprint and cannot claim installation',async(
  const forged={...reviewResult,receipts:[{...trustedReceipt,evidence:{verificationSha256:'e'.repeat(64)}}]};
  assert.equal(verifiedCodingReviewReceipt(forged),null);
  assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[{...trustedReceipt,commit:'b'.repeat(40)}]}),null);
+ // A believable patch hash is insufficient when the job identity, test
+ // baseline, selected chain or independent execution counts disagree.
+ for(const forgedReceipt of [
+  {...trustedReceipt,schema:'arbitrary-receipt'},
+  {...trustedReceipt,job:'not-a-v4-uuid'},
+  {...trustedReceipt,taskId:'mob-'+'0'.repeat(16)},
+  {...trustedReceipt,order:{chain:'android'}},
+  {...trustedReceipt,approvedForMerge:true},
+  {...trustedReceipt,evidence:{...trustedReceipt.evidence,baselineExecuted:0}},
+  {...trustedReceipt,evidence:{...trustedReceipt.evidence,baselineFailed:2}},
+  {...trustedReceipt,evidence:{...trustedReceipt.evidence,independentExecuted:4}},
+  {...trustedReceipt,commands:[{...trustedReceipt.commands[0],passed:true},...trustedReceipt.commands.slice(1)]},
+  {...trustedReceipt,commands:[trustedReceipt.commands[0],
+   {...trustedReceipt.commands[1],executed:2},trustedReceipt.commands[2]]}
+ ])assert.equal(verifiedCodingReviewReceipt({...reviewResult,receipts:[forgedReceipt]}),null);
+ assert.equal(verifiedCodingReviewReceipt({...reviewResult,chain:'android'}),null);
  assert.equal(verifiedCodingReviewReceipt({...result,receipts:[{...trustedReceipt,commands:trustedReceipt.commands.slice(0,2)}]}),null);
  const falsePositive=await executeTypedBridge(args,{isolationLoader:()=>({mock:true}),run:async()=>forged});
  assert.equal(falsePositive.status,'EXECUTION_REPORTED_UNVERIFIED');
