@@ -75,12 +75,31 @@ class ContinuumMobileBuilderActivity : Activity() {
                 text = "Bestätigten Auftrag in CCC1 vorbereiten"
                 isAllCaps = false
                 setOnClickListener {
+                    val review = ContinuumTypedCodingBridge.preparationReview(incoming)
+                    if (review == null) {
+                        status.text = "Auftragsbindung ungültig. Keine CCC1-Vorbereitung."
+                        return@setOnClickListener
+                    }
+                    val reviewText = TextView(this@ContinuumMobileBuilderActivity).apply {
+                        text = review
+                        textSize = 16f
+                        setTextIsSelectable(true)
+                        setPadding(px(20), px(8), px(20), px(16))
+                    }
+                    val reviewScroll = ScrollView(this@ContinuumMobileBuilderActivity).apply {
+                        addView(reviewText)
+                    }
                     AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
-                        .setTitle("Coding-Auftrag vorbereiten?")
-                        .setMessage("Termux bindet den Auftrag an diesen Commit und reserviert seine CCC1-Auftragskennung. " +
-                            "Der Quellstand muss unverändert und der Checkout sicher sein. Keine KI-Ausführung.")
-                        .setNegativeButton("Abbrechen",null)
-                        .setPositiveButton("Vorbereiten") { _, _ -> dispatchTypedPrepare(incoming) }
+                        .setTitle("Vollständigen Coding-Auftrag prüfen")
+                        .setView(reviewScroll)
+                        .setNegativeButton("Abbrechen", null)
+                        .setPositiveButton("Vorbereiten") { _, _ ->
+                            if (ContinuumTypedCodingBridge.preparationReview(incoming) != review) {
+                                status.text = "Auftragsdaten seit der Prüfung verändert. Nichts vorbereitet."
+                            } else {
+                                dispatchTypedPrepare(incoming)
+                            }
+                        }
                         .show()
                 }
             },LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,px(54)))
