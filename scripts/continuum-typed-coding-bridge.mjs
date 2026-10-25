@@ -133,7 +133,8 @@ export function reviewPatchStillAvailable(result,hash,stateDir){
      !Number.isSafeInteger(receipt.patch.bytes)||stat.size!==receipt.patch.bytes)return false;
   const real=fs.realpathSync(file);
   if(!real.startsWith(stateRoot+path.sep))return false;
-  return sha256Hex(fs.readFileSync(file))===hash;
+  // Read the canonical path rather than resolving one name and reopening another.
+  return sha256Hex(fs.readFileSync(real))===hash;
  }catch{return false;}
 }
 export async function executeTypedBridge(command,{
