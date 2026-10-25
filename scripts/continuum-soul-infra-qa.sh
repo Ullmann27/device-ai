@@ -22,6 +22,16 @@ if [[ "$STATUS" -ne 0 ]]; then
   cat "$OUT/TESTS.txt"
   exit "$STATUS"
 fi
-printf 'SOURCE=%s\nSTATUS=PASSED_NODE_TESTS_ONLY\nANDROID_APK=NOT_BUILT\nMODEL_WEIGHTS=NOT_DOWNLOADED\nREAL_DEEPSEEK_INFERENCE=NOT_RUN\n' "$ACTUAL" >"$OUT/STATUS.txt"
+# Read only the official Hub metadata; network errors never become pass.
+set +e
+node scripts/continuum-deepseek-hub-preflight.mjs >"$OUT/HUB.txt" 2>"$OUT/HUB-ERROR.txt"
+HUB_EXIT=$?
+set -e
+if [[ "$HUB_EXIT" -eq 0 ]]; then
+  HUB_STATUS="METADATA_READ_ONLY_PINNED"
+else
+  HUB_STATUS="BLOCKED_HUB_METADATA"
+fi
+printf 'SOURCE=%s\nSTATUS=PASSED_NODE_TESTS_ONLY\nHUB_STATUS=%s\nANDROID_APK=NOT_BUILT\nMODEL_WEIGHTS=NOT_DOWNLOADED\nREAL_DEEPSEEK_INFERENCE=NOT_RUN\n' "$ACTUAL" "$HUB_STATUS" >"$OUT/STATUS.txt"
 cat "$OUT/TESTS.txt"
 echo "CONTINUUM_SOUL_INFRA_QA_PASSED=$ACTUAL"
