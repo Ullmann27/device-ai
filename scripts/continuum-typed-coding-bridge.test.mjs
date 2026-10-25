@@ -139,7 +139,7 @@ test('actual CCC1 preparation and execution through typed Termux boundary preser
   const originalGrant=fs.readFileSync(grantPath,'utf8');
   const damaged=JSON.parse(originalGrant);
   damaged.ccc1TaskId='t-not-a-valid-id';
-  fs.writeFileSync(grantPath,JSON.stringify(damaged)+'\\n');
+  fs.writeFileSync(grantPath,JSON.stringify(damaged));
   await assert.rejects(runCodingTask({project:root,stateDir:state,id:spec.id,
    expectedTaskFingerprint:args.hash,
    providerFactory:()=>{modelCalls++;throw Error('MODEL_MUST_NOT_RUN');}
