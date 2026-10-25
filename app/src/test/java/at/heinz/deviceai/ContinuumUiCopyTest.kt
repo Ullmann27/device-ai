@@ -5,6 +5,15 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ContinuumUiCopyTest {
+    @Test fun corruptDecoderIsNotMisdiagnosedAsMissingOrSentToTraining() {
+        val corrupt = ContinuumUiCopy.cdxUnavailableStatus("CORRUPT")
+        assertTrue(corrupt.contains("beschädigt"))
+        assertFalse(corrupt.contains("Paarlabor"))
+        assertFalse(corrupt.contains("noch keinen"))
+        assertTrue(ContinuumUiCopy.cdxUnavailableStatus("NO_CHECKPOINT").contains("Paarlabor"))
+        assertTrue(ContinuumUiCopy.cdxUnavailableStatus("RECOVERED_LKG").contains("Sicherung"))
+        assertFalse(ContinuumUiCopy.cdxUnavailableStatus("UNKNOWN").contains("Paarlabor"))
+    }
     @Test fun showsPlainLanguageMissingPrerequisites() {
         val state = ContinuumUiCopy.developmentRequirements(
             modelReady = false, hasGoal = false, sources = 0

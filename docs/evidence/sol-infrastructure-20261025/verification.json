@@ -1,0 +1,88 @@
+{
+  "schema": "CONTINUUM_HOST_VERIFICATION_V1",
+  "source_commit": "31e26ca48d411a73af42ec7d752af9195fd4adc8",
+  "source_tree": "34685baae024f288b8d10949e6a2342b26b0a7be",
+  "recorded_at": "2026-10-25T19:34:33.466261+00:00",
+  "toolchain": {
+    "node": "24.19.0",
+    "jdk": "17.0.21+9",
+    "kotlin": "2.4.0",
+    "gradle": "8.11.1",
+    "agp": "8.10.0",
+    "android_sdk": 36,
+    "build_tools": "35.0.0",
+    "standalone_kotlinc_runtime_jvm": "21.0.12.1"
+  },
+  "node": {
+    "passed": 1238,
+    "failed": 0,
+    "skipped": 0,
+    "owner_source_qa_mode": "CONTINUUM_OWNER_V23_QA=1"
+  },
+  "android": {
+    "build": "SUCCESSFUL",
+    "junit": {
+      "tests": 1035,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "passed": 1032
+    },
+    "robolectric_widget_cases": 36,
+    "configured_lint": "NewApi",
+    "lint_issues": 0
+  },
+  "separate_node_kotlin_node_parity": {
+    "junit_passed": 4,
+    "formerly_skipped_cases_executed": 3,
+    "swb_weights": 4113,
+    "cre1_sgd_weights": 526336,
+    "cre1_max_absolute_error": 3.469446951953614e-18
+  },
+  "backend": {
+    "syntax": "PASS",
+    "passed": 60,
+    "failed": 0
+  },
+  "new_owner_target": {
+    "package": "at.heinz.deviceai.mentorpaired",
+    "version_code": 24,
+    "version_name": "0.3.23",
+    "new_signed_apk": "NOT_BUILT",
+    "device_acceptance": "NOT_RUN"
+  },
+  "gemma_device_inference": "NOT_RUN",
+  "deepseek_inference": "NOT_RUN",
+  "model_weight_promotion": false,
+  "main_merge": false,
+  "remote_service_mutation": false,
+  "review": {
+    "independently_reviewed_through": "526cd43fdb04381903a7eaadd51968868cfade10",
+    "confirmed_critical_or_important": 0,
+    "later_config_fixture_delta": "AUTHOR_REVIEWED",
+    "minor_comment": "CORRECTED_IN_EVIDENCE_CHECKPOINT"
+  },
+  "evidence_sha256": {
+    "README.md": "effd76c5c4cf239f0dd425010c781e2b0245e70b0589d352369c1c7b3ec1f7fd",
+    "android-final-31e26ca4.txt": "fb1f65a91451db0fbc28744f108dd2b15cd8beca2cd1841a40f8e6088ba74c1c",
+    "android-initial-526cd43f.txt": "46e225bc3f5137b19d911166bb92775ed8c5de6730286e91975c1bd290ac3bca",
+    "android-junit-summary.json": "852cf6aa9b3b51221887c458ff4719a4b70d99294c908622dc33c16b55e403b3",
+    "android-newapi-lint-31e26ca4.xml": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "backend-526cd43f.txt": "df7d29e97af7a12d0a32a9d9330856146ed4d8a5dc0ae5b930271a6a5a8559b8",
+    "deepseek-live-metadata.json": "e37f387067b4229df7a0c36336fbe3432d9a707fb2152c1a55de409b92217c13",
+    "gemma-original-byte-verification.json": "af4b7ed49993400220617d068928f499e2d4925daac8032e420bd0486e19d39a",
+    "node-final-31e26ca4.txt": "9939d7b82faae942170a8db4c565df89959bb273aa4596a45809938e4a166abc",
+    "node-initial-526cd43f.txt": "c183dd04a91a2a4aef5b7a474ed8f463700df5778a8561be8affac694c430c23",
+    "parity-31e26ca4.txt": "f4fa216acf8de5730cd48570018b6e0a5259aa505d0afa3433700b9293319782",
+    "published-v23-apk-badging.txt": "46eb4edcf04664c9c3995ff337e3899437697f99d1517cd83e7cd820df4fcb12",
+    "published-v23-apk-signature.txt": "59a3cccdb31373ab531b16c8e4ba7c528f0fc7b4f8296a91f34e395aa34a088e",
+    "published-v23-build-info.txt": "ba78950050488194c0c257eed6d0e5fbb241a94cf0da0da01ad2ebe3c4c0d192",
+    "published-v23-independent-verification.json": "d62a10c2e59ce91302ead0725d2b0faf0195f244be12bc8b01d48e90449b059a",
+    "read-only-audit-after.txt": "bb0b11bca1ea27783caca98d0f4d8c802e9deedaf04b845c3d9925cbcebf678b",
+    "read-only-audit-before.txt": "d30295ea065dfd68cd60bf216cd271b1f28df794f026221d0d456a84933c77b8",
+    "render-inventory.json": "bad18cbe48470da0ea0e6dc5204f0862b42d68752e40954e39eec5d709a6a6e1"
+  },
+  "evidence_normalization": {
+    "android-final-31e26ca4.txt": "Trailing whitespace only; all diagnostic and result content preserved"
+  }
+}

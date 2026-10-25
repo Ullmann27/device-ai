@@ -50,6 +50,16 @@ const SOURCE_INFLECTION_TAILS=["","e","n","s","en","er","es","em"];
 const SOURCE_DIGIT=/\p{Nd}/u;
 const SOURCE_LETTER=/\p{L}/u;
 
+// Preserve original identifier spelling before contentWords drops short numbers.
+// This gate covers one distinct explicit identifier, not comparison entailment.
+function singleIdentifierEvidence(query,text){
+  const identifiers=value=>[...new Set((value.normalize('NFC').toLowerCase()
+    .match(/[\p{L}\p{N}]+(?:[-._][\p{L}\p{N}]+)*/gu)??[])
+    .filter(token=>SOURCE_LETTER.test(token)&&SOURCE_DIGIT.test(token)))];
+  const required=identifiers(query);
+  return required.length!==1||identifiers(text).includes(required[0]);
+}
+
 /** Directional compound policy: "Schlüssel" may occur in "Haustürschlüssel",
  * but "Fehlerrückführung" is NOT evidenced by the generic "Führung". */
 export function sourceWordMatch(needle,word) {
@@ -66,6 +76,7 @@ export function sourceWordMatch(needle,word) {
 }
 export function sourceTermEvidence(query,text){
   if(typeof query!=="string"||typeof text!=="string"||query.length>4096||text.length===0)return false;
+  if(!singleIdentifierEvidence(query,text))return false;
   const terms=[...new Set(contentWords(query.normalize("NFC")))]
     .filter(term=>!SOURCE_QUERY_OPERATORS.has(term));
   const source=[...new Set(contentWords(text.normalize("NFC")))];
@@ -84,6 +95,7 @@ export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const qv=weigh(wordGrams(q),idf);
   return memories.map(m=>{
     const text=String(m.text).slice(0,1000);
+    if(!singleIdentifierEvidence(q,text))return null;
     if((m.kind==='SOURCE_TEXT'||m.type==='SOURCE_TEXT')&&!sourceTermEvidence(q,text))return null;
     const evidence=wordEvidence(q,text);
     if(evidence<EVIDENCE_THRESHOLD)return null;

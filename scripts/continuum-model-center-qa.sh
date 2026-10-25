@@ -8,13 +8,18 @@ cd "$(git rev-parse --show-toplevel)"
 expected_ref="feature/continuum-model-center-selected-models-20261025"
 head_sha="$(git rev-parse --verify HEAD)"
 [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]] || { echo "QA: invalid Git HEAD" >&2; exit 69; }
-if [[ -n "${CONTINUUM_MODEL_CENTER_QA_SHA:-}" && "$head_sha" != "$CONTINUUM_QA_SOURCE_SHA" ]]; then
+if [[ ! "${CONTINUUM_MODEL_CENTER_QA_SHA:-}" =~ ^[a-f0-9]{40}$ ||
+      "$head_sha" != "$CONTINUUM_MODEL_CENTER_QA_SHA" ]]; then
   echo "QA: source SHA does not match requested commit" >&2
   exit 69
 fi
 branch="$(git branch --show-current)"
 if [[ -n "$branch" && "$branch" != "$expected_ref" ]]; then
   echo "QA: expected dedicated review source branch" >&2
+  exit 69
+fi
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "QA: source checkout must start clean" >&2
   exit 69
 fi
 echo "CONTINUUM_QA_SOURCE=$head_sha"
@@ -78,7 +83,7 @@ gradle --no-daemon --max-workers=2 --console=plain \
     tail -n 100 "$out/ANDROID-QA.log"; exit 69;
   }
 # Same Android code and Manifest class paths. No owner signing is possible in this QA environment.
-printf 'source_sha=%s\nstatus=MODEL_CENTER_ANDROID_QA_GREEN_NO_SIGNING\nowner_package=at.heinz.deviceai.mentorpaired\ntarget_version_code=23\nsigner=NOT_PRESENT\n' "$head_sha" > "$out/STATUS.txt"
+printf 'source_sha=%s\nstatus=MODEL_CENTER_ANDROID_QA_GREEN_NO_SIGNING\nowner_package=at.heinz.deviceai.mentorpaired\ntarget_version_code=24\nsigner=NOT_PRESENT\n' "$head_sha" > "$out/STATUS.txt"
 echo '<!doctype html><title>Continuum model center preflight</title><pre>QA results in STATUS.txt. No APK or signing keys published.</pre>' > "$out/index.html"
 printf 'User-agent: *\nDisallow: /\n' > "$out/robots.txt"
 echo "CONTINUUM_MODEL_CENTER_QA_PASSED=$head_sha"

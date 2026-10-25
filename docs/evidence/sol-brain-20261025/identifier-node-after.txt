@@ -1,0 +1,38 @@
+✔ greetings do not cite incidental memory and preserve an established topic (36.939814ms)
+✔ unanswered new topic removes stale conversational reference (19.383801ms)
+✔ only explicitly cited observations and owner lessons are eligible for retrieval (8.854415ms)
+✔ audits the actual lexical production retriever versus two neural scores (605.111554ms)
+✔ published retrieval benchmark is reproducible from code and frozen data (973.995714ms)
+✔ adopted ranking beats the previous production ranking on DEV and on report-only TEST (852.8318ms)
+✔ benchmark queries never appear among candidate passages (0.730663ms)
+✔ retrieval requires word evidence and never invents a memory (0.509722ms)
+✔ German compound noun retrieval recognizes heads in personal memories (5.434273ms)
+✔ German compound suffixes work symmetrically for common family questions (0.255613ms)
+✔ substring fragments below five characters cannot become compound evidence (0.131113ms)
+✔ unrelated queries do not force an invented matching memory (0.382439ms)
+✔ fabricated mixed letter-digit topic must abstain on real but unrelated source topics (7.664453ms)
+✔ exact technical term retrieves only relevant citation and not loosely shared Fehler (3.027605ms)
+✔ explicit owner memories retain compound matches without source-only guard (0.351732ms)
+✔ German near-inflection and complete compound suffix remain retrievable (0.335106ms)
+✔ compound technical questions require every distinctive source anchor (1.403855ms)
+✔ technical IDs reject near-identical but different digits in source excerpts (0.626078ms)
+✔ common long question verbs do not suppress valid technical citations (1.647614ms)
+✔ Argon audit: short-source anchors and exact directional compounds (0.803753ms)
+✔ Argon audit: normalisation, invalid input and repeated question operators (0.332549ms)
+✔ single identifier ORION-47 remains retrievable but ORION-48 cannot use its evidence (7.455048ms)
+✔ single identifier R1 remains retrievable but R2 cannot use its evidence (1.783367ms)
+✔ single identifier A-7 remains retrievable but A-8 cannot use its evidence (0.51894ms)
+✔ single identifier SN_15 remains retrievable but SN_16 cannot use its evidence (0.677888ms)
+✔ single identifier PRJ-04 remains retrievable but PRJ-4 cannot use its evidence (1.035075ms)
+✔ single identifier V4.1 remains retrievable but V4.2 cannot use its evidence (0.405989ms)
+✔ unrelated short identifier cannot borrow a generic shared verb (0.387097ms)
+✔ identifier boundaries are literal rather than substring matches (1.714956ms)
+✔ handwritten rewordings are separate and independently checked (384.950285ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3581.497223

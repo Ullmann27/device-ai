@@ -21,8 +21,8 @@ test('v18 release fails before any build without explicit owner approval', () =>
   assert.notEqual(r.status,0);
   assert.match(r.stderr,/CONTINUUM_RELEASE_SHA|unbound variable/);
 });
-test('historical v18 script remains intact and current owner build advances to code23', () => {
-  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
+test('historical v18 script remains intact and current owner build advances beyond published code23', () => {
+  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 24\s*versionName = "0\.3\.23"/);
   assert.match(script,/versionCode='18' versionName='0\.3\.17'/);
   assert.match(script,/at\.heinz\.deviceai\.mentorpaired/);
   assert.match(script,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);

@@ -1,5 +1,7 @@
 package at.heinz.deviceai
 
+import at.heinz.deviceai.localmodel.ImportedLocalModel
+
 /**
  * Owner-selected model catalog is UI metadata only.
  * Neither a selection nor a valid source hash proves a model is loaded or running.
@@ -15,12 +17,17 @@ internal object ContinuumSelectedModels {
     const val REMOTE_SOURCE = "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"
 
     /** Selection is not installation. "Loaded" is a live native-runtime observation only. */
-    fun gemmaStatus(importedModelIds: Collection<String>, loadedModelId: String?): String =
+    fun gemmaStatus(importedModels: Collection<ImportedLocalModel>, loadedModel: ImportedLocalModel?): String =
         when {
-            loadedModelId == LOCAL_ID -> "Gemma 4 E4B: lokal geladen; Antwortqualität noch separat prüfen."
-            LOCAL_ID in importedModelIds -> "Gemma 4 E4B: importiert, derzeit nicht geladen."
+            loadedModel?.let(::isSelectedGemma) == true -> "Gemma 4 E4B: lokal geladen; Antwortqualität noch separat prüfen."
+            importedModels.any(::isSelectedGemma) -> "Gemma 4 E4B: importiert, derzeit nicht geladen."
+            loadedModel?.id == LOCAL_ID || importedModels.any { it.id == LOCAL_ID } ->
+                "Gemma 4 E4B: Kennung vorhanden, Originaldatei nicht nachgewiesen; der gespeicherte SHA-256 weicht ab."
             else -> "Gemma 4 E4B: ausgewählt, noch nicht importiert."
         }
+
+    private fun isSelectedGemma(model: ImportedLocalModel): Boolean =
+        model.id == LOCAL_ID && model.sha256 == LOCAL_SHA256
 
     /** A configured checkpoint by itself is not an operating GPU server. */
     const val REMOTE_STATUS =

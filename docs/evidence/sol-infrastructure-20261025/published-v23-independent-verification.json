@@ -1,0 +1,14 @@
+{
+  "artifact_url": "https://device-ai-mentor-apk-preview.onrender.com/DeviceAI-Continuum-v0.3.22-1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8.apk",
+  "bytes": 55886349,
+  "verified_sha256": "1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8",
+  "verified_package": "at.heinz.deviceai.mentorpaired",
+  "verified_version_code": 23,
+  "verified_version_name": "0.3.22",
+  "verified_signer_sha256": "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc",
+  "apksigner_v2": true,
+  "declared_source_commit": "015e1bf53f40c223a0fb2d52b557618c4a544572",
+  "new_integration_artifact": false,
+  "device_installation": "NOT_RUN",
+  "note": "Existing published APK independently downloaded/hashed/inspected, never executed or installed; source commit is the published BUILD-INFO declaration."
+}

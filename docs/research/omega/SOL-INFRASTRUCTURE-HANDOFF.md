@@ -1,0 +1,95 @@
+# SOL infrastructure repair handoff — 2026-10-25
+
+Current status: **SOURCE_INTEGRATED / HOST_TESTED / REVIEW_ONLY**. Historical checkpoint sections retain their original WIP status for traceability. Device inference/installation and a new owner release remain unverified/unauthorized.
+
+**Current target correction:** the already published owner APK was independently verified as versionCode **23 / 0.3.22**, hash `1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8`, original signer `2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc`. This branch therefore targets **24 / 0.3.23** for a future owner-approved update. No new APK has been signed or installed here. Earlier checkpoint paragraphs below are historical records, not current release authorizations.
+
+## Source identity and authorization
+
+Official repository only: Ullmann27/device-ai (private; accessible to authorized collaborators). Working branch: sol/continuum-infrastructure-repair-20261025. Base: PR #148 at 30303ca9103fa2034aa384fcf5f730402ecd0e6c. Owner requested source audit, fixes, tests, feature branches and Draft PR; no release signing, installation, paid compute or main merge authorized here.
+
+Read AGENTS.md, docs/CONTINUUM-EXPERIMENTVERTRAG.md, docs/CONTINUUM-EXPERIMENTE.json and live Issue #41. EXP-00/02/04/05/08/11/12/14 are audit subjects; no research promotion.
+
+Live GitHub metadata confirms PRs #139, #140, #142, #143, #145, #146, #147 and #148 are open Drafts at the SHAs in the owner handoff. Additional PR #149 at febffb293f12702df5714ee20c8fb66471b493b9 changes local-model prompt/token policy; inspect before overlapping work. Main remains 190f5eabaa60fc59292b2b80d3086aafd7743a80.
+
+## Ordered work
+
+1. Reconstruct ancestry and branch/file differences; preserve all developer branches. Check required historical handoffs and actual runtime entry points.
+2. Run current selected-model/status/ORION and Node/backend baselines. Provision only official local Android toolchain if absent; run Gradle Kotlin compilation, unit/widget tests and configured lint. Record errors before repairs.
+3. For each reproduced defect: add a failing behavioral regression, repair the cause, run focused and appropriate integration checks, commit and publish.
+4. Inventory remaining experiments and real Android/backend/worker reachability, distinguishing source, host tests, physical-device and production status. Connect only evidence-supported components through existing gates.
+5. Checkpoint reproducible evidence and exact SHAs; preserve signer, weights, owner memory, checkpoints and Qwen fallback.
+
+## Verification at this checkpoint
+
+GitHub PR metadata and main/head refs: read successfully. PR #148/#147 GitHub check-runs: zero registered checks (not evidence of failure or success; external QA needs receipts). Official checkout is in progress in authorized cloud workspace. Node/JVM/Gradle/lint/device: NOT_RUN at this checkpoint. No owner key or Fold7 device attached; signing and physical acceptance remain BLOCKED.
+
+## Repair checkpoint 1
+
+Base tested: `5d944d49af099a0a66660f5a126c9c7231e0547c`, implementation tree of PR #148. Actual Linux/Node 24.19 baseline: 1234 tests, 1227 passed, 1 failed, 6 skipped (unavailable standalone kotlinc); backend 60/60 passed. Failure was `model setup stays usable for beginners while preserving SHA-256 integrity`: its source scanner still searched the removed no-argument importer signature. Updated discovery to the actual parameterized function and preserved all mandatory hash/validation checks.
+
+Reproduced QA defect with executable real-Git fixtures: `continuum-model-center-qa.sh` read `CONTINUUM_QA_SOURCE_SHA` although its documented pin is `CONTINUUM_MODEL_CENTER_QA_SHA`, causing an unbound-variable exit even for an exact pin. It also allowed missing pins and dirty sources. Added required 40-hex exact pin and clean-source guard before toolchain/network side effects. New regression cases were observed failing before the fix. Focused verification: `node --test scripts/continuum-model-center-qa.test.mjs .github/continuum/android-integration-wiring.test.mjs scripts/continuum-model-center.test.mjs scripts/continuum-model-selection.test.mjs` → 30/30 passed; `bash -n` and `git diff --check` passed. This is a QA/integration repair, not an Android inference claim.
+
+Official Gradle 8.11.1 distribution and Android CLI downloaded locally and checksum-verified. SDK 36 provisioning and full Gradle checks are in progress; no Render services changed. Gemma original-file verification is in progress from official immutable Hub revision `e6a3892a8c22cf87ff99583996149cf3cb32452b`; original-file size is 3659530240 bytes and publisher LFS SHA matches the selected SHA. Full-byte result remains NOT_VERIFIED until hashing completes. DeepSeek weights are not downloaded.
+
+Plan and task ledger: `docs/research/omega/SOL-INFRASTRUCTURE-PLAN.md`. Independent read-only audits investigate old experiment refs and CDX1 collapse; findings will be published without changing any other developer branch.
+
+## Repair checkpoint 2: PR #149 runtime adoption
+
+Inspected live PR #149 at `febffb293f12702df5714ee20c8fb66471b493b9`. Adopted its existing `LocalQwenPromptPolicy`, `LocalModelGenerationPolicy` and associated JVM tests; connected its three bounded `maxOutputToken` uses in `LiteRtLmLocalModelRuntime`. Original request text is preserved, including a user-authored `/no_think`; no forced switch is appended. Native output cap becomes 2048 for the supported Gemma4 compact-family IDs and 1024 otherwise. These are caps, not quality or device-throughput evidence. Character-based 16000 input limit remains; token-aware full-context planning is still open.
+
+No duplicated `LocalModelImportPreset`, Gemma buttons or conflicting single-line telemetry copied from #149: #148 already has the shared selected-model metadata and premium import dialog. PR #149 stays unchanged/open, original SHA is provenance. Updated an older source-wiring assertion that required the removed forced-switch implementation; real prompt behavior now has JVM regression coverage.
+
+Verified RED→GREEN: new Qwen tests initially failed 2/5 on unwanted appended text; generation policy tests initially could not resolve the absent policy. Actual official `kotlinc` 2.4.0 compilation plus JUnit execution now passes all 8 policy tests. Full Android main compilation was reached successfully on JDK17; unit compilation in that in-progress run saw the policy test before its new main class was in that build snapshot, so that run is NOT a green Android result. A complete stable-source Gradle rerun remains required. Initial JRE-only and JDK17 proxy-CA issues were diagnosed; official JDK17 compiler and the session's system CA trust are now used without disabling TLS.
+
+Live DeepSeek read-only preflight was repeated successfully: revision `1bae0e1088993b9b82de08f59de5be5a34e42170`, 48 shards, 510296708312 declared bytes, 0 downloaded. Current four-file offline Node suite is 20/20 (includes two model-selection tests). ADB reports no attached device. No owner keys are present or used.
+
+## Repair checkpoint 3: genuinely read-only paired diagnostics
+
+Two regression cases against actual SDK-compiled baseline classes reproduced the defect: `readOnlyAuditDoesNotRecoverDamagedSwb1FromBackup` and `readOnlyPairedProbeDoesNotRecoverDamagedSwb1FromBackup` both failed. The audit created recovery/experience files and changed active SWB1 bytes. Repaired the paired status/probe boundary to use a nonrecovering validated snapshot. Corrupt live SWB1 returns `CORRUPT` / no generation; it is not silently repaired by diagnosis. Normal `loadModel()` recovery, stored backups, owner facts and training paths remain intact.
+
+Verified with official Kotlin compiler against the real SDK-compiled main classes (no Android stubs): the updated core and full `ContinuumIntelligenceAuditTest` compiled and ran **11/11 PASS**, including missing checkpoint, cancellation, unsupported-answer scoring and both file-preservation regressions. Full Gradle suite is still pending a stable combined-source run. This repair does not improve CDX1 answer weights or cure the reported n-collapse; architectural findings and device limits are in `CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md`.
+
+## Repair checkpoint 4: model identity and truthful CDX guidance
+
+Selected Gemma status now consumes actual `ImportedLocalModel` records, including SHA-256, instead of free-form IDs. A different file imported under `gemma4-e4b-it` cannot be reported as the selected original; a correct import plus a different loaded version remains "importiert, derzeit nicht geladen". Both actual Android status callers pass the full records. No file is deleted or model promoted.
+
+The CDX read-only test now distinguishes a missing checkpoint, corrupt/broken binding, recovery copy and unknown state. Only a genuinely absent checkpoint suggests the pair laboratory; corruption does not suggest starting training. Added behavioral unit coverage. Kotlin compilation and JUnit for selected-model status, UI-copy and status-excerpt suites: **15/15 PASS**. Node source wiring: **27/27 PASS**. Invalid type/no-function RED was observed before the new typed/helper interfaces.
+
+Added `ContinuumModelImportUiTest` to exercise the real activity's premium import dialog: selected fields, invalid-hash correction in place, then only the manual Android document picker. **WIP / NOT_RUN in this checkpoint**, pending real SDK/Robolectric/full Gradle below. The activity is attached without unrelated startup training/services; this is not a physical-device test. Next action is a stable-source complete Android and Node rerun.
+
+## Combined-source checkpoint and newly verified published release
+
+Stable source `526cd43fdb04381903a7eaadd51968868cfade10`: real Android compilation and configured NewApi lint completed; JUnit/widget run executed 1035 tests, **1031 passed / 1 failed / 3 skipped**. The newly authored import UI test inspected the dialog before Robolectric delivered its queued `OnShow` callback. Added the explicit main-looper drain before interaction; rerun remains pending at this checkpoint. No production dialog workaround was introduced.
+
+Complete Node run with actual `kotlinc` and `CONTINUUM_OWNER_V23_QA=1`: **1237 passed / 1 failed / 0 skipped**, 409.2 s. Failure: OMEGA `metamorphic failure supplies the distinguishing pair` returned fail-closed `ABSTAIN` rather than `FAIL` during concurrent compiler load. Existing numeric worker has a 25 ms VM limit. Same unmodified isolated five-test numeric suite immediately passed 5/5. This is not an established new logic regression; no deadline or safety gate is relaxed. Run the final full Node suite without concurrent Gradle to resolve the host resource concern. Backend syntax and 60/60 tests passed. Initial full logs are preserved in `docs/evidence/sol-infrastructure-20261025/`.
+
+Gemma **actual original bytes** were downloaded at immutable revision `e6a3892a8c22cf87ff99583996149cf3cb32452b`, interrupted/resumed at the same revision, then hashed: **3659530240 bytes**, exact selected SHA-256 `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`. Receipt archived separately; device import/load/inference remain NOT_RUN. Model weights are not committed to Git.
+
+Owner confirmed Render workspace `My Workspace`. Read-only inventory reports 24 visible services, 23 matching official Device AI/Continuum scope; this does not prove a spare quota slot. No service was created, changed, deleted, resumed or redeployed. Latest published APK source is older release candidate `015e1bf53f40c223a0fb2d52b557618c4a544572`. Downloaded its existing 55886349-byte APK and independently checked hash, package/version and `apksigner verify`: certificate matches the established owner identity. This is evidence about the **existing** artifact, not this branch or an installed Fold7 update.
+
+Because published code23 already exists, advanced only the future owner-source version to **24 / 0.3.23** and updated current-version contract assertions / model-center QA target metadata. Existing historical release scripts, source inventories and owner approvals are unchanged and cannot authorize code24. All four new version assertions were observed failing on code23; focused version/release/QA regressions now pass **26/26**. This branch still needs an independently approved fresh release-source inventory and authorized signing before a new owner APK.
+
+## Safety / rollback / next entry
+
+No remote service mutation or DeepSeek weight download. The official Gemma original was downloaded only for host byte verification; no model was executed. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch.
+
+## Final measured source checkpoint
+
+Executed stable source: **`31e26ca48d411a73af42ec7d752af9195fd4adc8`**.
+
+- Full Node with actual Kotlin compiler: **1238 passed / 0 failed / 0 skipped**, 163.6 s. The formerly intermittent OMEGA case passed; its 25 ms production VM limit is unchanged. Original failing concurrent run is retained.
+- Full Android Gradle: **BUILD SUCCESSFUL**, Kotlin/Java compilation and configured **NewApi lint: 0 issues**. **1035 cases: 1032 passed / 3 optional parity cases skipped**. **36 Robolectric/widget cases**, including the real Gemma dialog correction/picker test, all passed.
+- The existing parity scripts then generated synthetic fixtures; actual Gradle-compiled Kotlin main/test classes ran both parity classes: **4/4 passed**, including all three previously skipped cases. Independent Node verification checked **4113 SWB1/SWB2 weights** after 350 rounds / 700 updates, **526336 CRE1 SGD weights** (max error `3.469446951953614e-18`) and seven inference cases. No owner weights or promotion; not an independent intelligence benchmark.
+- Backend syntax check and **60/60 tests passed** on the identical backend source.
+- Gemma original-file byte hash and existing published v23 APK/certificate were independently verified; neither proves new-source Fold7 inference/installation.
+
+Full commands, raw logs, counts and receipts: `docs/evidence/sol-infrastructure-20261025/README.md` and `verification.json`. The final evidence/documentation checkpoint changes no executable behavior after the tested SHA; its only Kotlin-source change clarifies that budget selection uses owner-supplied labels, not independently verified model identity.
+
+Independent read-only review of core diff through `526cd43fdb04381903a7eaadd51968868cfade10`: **no confirmed Critical/Important regressions**. Minor wording corrected. Subsequent owner version bump, current-version assertions and UI-looper test correction were verified by the author and full tests, not independently rereviewed. Native output-cap compatibility/quality, remaining context-token planning, semantic equivalence of every historical branch and physical-device behavior remain unproven.
+
+## Next entry / remaining project work
+
+Continue from this branch's actual published HEAD and immutable tested SHA above. Next acceptance: owner-approved same-package code24 release with a freshly reviewed source inventory, original signer and Fold7 checks: Gemma import/load/inference, ORION definition/recall/revocation, NEURON typography/large font/IME/Fold/rotation and current Android→Termux→CCC1→APK receipts. Qwen remains until Gemma succeeds. Phone access and fresh signing approval were not available here.
+
+Then follow the recorded safe connections: durable canonical skill-review evidence, authenticated read-only Atlas/Academy status, reviewed hash/path-bound DevelopmentCoordinator proposals into existing typed CCC1 with OS isolation and independent tests. Comprehensive submenu redesign, actual DeepSeek serving/bridge, persistent Virtual Model Fabric storage, autonomous discovery and unrestricted language-to-new-APK generation are **not completed by this repair batch**. Preserve negative CTX3/Synapse/LM1 results and research gates.

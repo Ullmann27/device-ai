@@ -720,7 +720,11 @@ class ContinuumLearningCore(
      * replace the SWB1/CRE1 memory gate or the productive chat model.
      */
     fun pairedDecoderStatus():ContinuumDecoderBridge.Status=synchronized(CORE_LOCK) {
-        ContinuumDecoderBridge(directory).pairedStatus(loadModel().save())
+        val snapshot=runCatching { modelSnapshotReadOnly() }.getOrElse {
+            return@synchronized ContinuumDecoderBridge.Status(
+                false,0,7746,null,conditioningState="CORRUPT")
+        }
+        ContinuumDecoderBridge(directory).pairedStatus(snapshot)
     }
 
     /** Read-only CDX1 quality audit under the existing shared model lock. */
@@ -755,8 +759,10 @@ class ContinuumLearningCore(
     fun experimentalPairedDecoderContinuation(
         evidence:String,question:String,maxBytes:Int=48
     ):DecoderGeneration?=synchronized(CORE_LOCK) {
+        val snapshot=runCatching { modelSnapshotReadOnly() }.getOrNull()
+            ?: return@synchronized null
         ContinuumDecoderBridge(directory).experimentalPairedContinuation(
-            evidence,question,loadModel().save(),maxBytes
+            evidence,question,snapshot,maxBytes
         )
     }
 
@@ -951,6 +957,11 @@ class ContinuumLearningCore(
             now=nowMillis()
         ))
     }
+
+    /** Diagnostic reads must not recover weights, rename files or append audits. */
+    private fun modelSnapshotReadOnly():ByteArray =
+        if(!modelFile.exists()) TrainableSubwordEncoder().save()
+        else TrainableSubwordEncoder.restore(modelFile.readBytes()).save()
 
     /**
      * Active weights. Unreadable bytes (not an I/O error) are replaced by the

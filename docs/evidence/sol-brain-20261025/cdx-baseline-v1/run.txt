@@ -1,0 +1,482 @@
+{
+  "schema": "CDX1_FIXED_GENERATION_PROBE_V1",
+  "contextBytes": 8,
+  "data": "Existing app synthetic pair TRAIN and consumed legacy DEV; independent TEST not used for training",
+  "independentTest": [
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Elin wohnt in Bregenz.",
+      "evidence": "Elin wohnt in Bregenz.",
+      "question": "Wo wohnt Elin?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-01",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Oskar lebt in Steyr.",
+      "evidence": "Oskar lebt in Steyr.",
+      "question": "Wo lebt Oskar?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-02",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Zora ist Botanikerin.",
+      "evidence": "Zora ist Botanikerin.",
+      "question": "Was arbeitet Zora?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-03",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Bruno trägt eine Weste.",
+      "evidence": "Bruno trägt eine Weste.",
+      "question": "Was trägt Bruno?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-04",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Villach",
+      "evidence": "Rika wohnt in Villach.",
+      "question": "Welche Stadt ist Rikas Wohnort?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-05",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Geologe",
+      "evidence": "Tarek ist Geologe.",
+      "question": "Welchen Beruf hat Tarek?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-06",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "silber",
+      "evidence": "Drohne Q26 hat eine silberne Hülle.",
+      "question": "Welche Farbe hat die Hülle von Q26?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-07",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Akkustrom",
+      "evidence": "Roboter C48 nutzt Akkustrom.",
+      "question": "Womit wird C48 betrieben?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-08",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "U54 befindet sich in Leoben.",
+      "evidence": "In der Liste steht: U54 befindet sich in Leoben.",
+      "question": "Wo befindet sich U54?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-09",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Pinsel",
+      "evidence": "Kian hält einen Pinsel.",
+      "question": "Welches Werkzeug hält Kian?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-10",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Nela wohnt in Krems.",
+      "evidence": "Ayo wohnt in Melk. Nela wohnt in Krems.",
+      "question": "Wo wohnt Nela?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-11",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "Kappe",
+      "evidence": "Einheit H35 trägt keinen Helm, sondern eine Kappe.",
+      "question": "Was trägt H35?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-12",
+      "acceptedCorrect": false,
+      "supported": true
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "UNBEKANNT",
+      "evidence": "Nur Fenna wohnt in Tulln.",
+      "question": "Wo wohnt Jaro?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-13",
+      "acceptedCorrect": false,
+      "supported": false
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "UNBEKANNT",
+      "evidence": "Roboter M36 ist orange.",
+      "question": "Welche Energiequelle nutzt M36?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-14",
+      "acceptedCorrect": false,
+      "supported": false
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "UNBEKANNT",
+      "evidence": "Die Farbe von Riko ist nicht angegeben.",
+      "question": "Welche Farbe hat Riko?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-15",
+      "acceptedCorrect": false,
+      "supported": false
+    },
+    {
+      "stopReason": "LEGACY_NO_REASON",
+      "reference": "UNBEKANNT",
+      "evidence": "Edda trägt einen Schal.",
+      "question": "Wie alt ist Edda?",
+      "bytes": 17,
+      "ended": true,
+      "strictCorrect": false,
+      "text": "Nora ist Ärztin.",
+      "id": "xfer-16",
+      "acceptedCorrect": false,
+      "supported": false
+    }
+  ],
+  "parameterCount": 7746,
+  "encoderSha256": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+  "independentFixtureSha256": "582a895a295c64f128c79623032d93cdf4ea83cedafbcf51130e7acd2488fad9",
+  "stages": [
+    {
+      "devLoss": 5.548727840098728,
+      "sha256": "74656e10b84133aa5cd14fc5938aa3146d02580ce9eb605605fdca81a2d142e1",
+      "dev": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Tim wohnt in Wien.",
+          "question": "Wo wohnt Tim?",
+          "bytes": 48,
+          "ended": false,
+          "text": "��79u�``9uj�`�S`�`u7��7���u�uj�`99�9`��u�2u�9���",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Eva ist Köchin.",
+          "question": "Was arbeitet Eva?",
+          "bytes": 48,
+          "ended": false,
+          "text": "��2�u�հ_��#9r:5���u���\u00035%�a���u�-u�-�_��\u0001���-�",
+          "acceptedCorrect": false
+        }
+      ],
+      "trainLoss": 5.549392709124249,
+      "updates": 0,
+      "train": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Mira wohnt in Graz.",
+          "question": "Wo wohnt Mira?",
+          "bytes": 48,
+          "ended": false,
+          "text": "��2�u^�j�2����\u0003���\u0010�G`H7��S���u��99`:``9uՃ8�-\u001b",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Lea wohnt in Linz.",
+          "question": "Wo wohnt Lea?",
+          "bytes": 48,
+          "ended": false,
+          "text": "�<2��r\u00125!���\b�5� �ڶ��T\u000eH���zj� �\u0019S���\nu�a%u)Ee",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Nora arbeitet als Ärztin.",
+          "question": "Was arbeitet Nora?",
+          "bytes": 48,
+          "ended": false,
+          "text": "�<2��r\u00125!�G�97�_}ɨ�ϻ0Nar�ɰ���}�k�a\t#�`�2\u0012���M",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Paul trägt einen Helm.",
+          "question": "Was trägt Paul?",
+          "bytes": 48,
+          "ended": false,
+          "text": "��2�u^�-�2\t�x�ӷ��9\u0012��p<-uZ9�:��9u�ue\b7u��-2�ω#",
+          "acceptedCorrect": false
+        }
+      ]
+    },
+    {
+      "devLoss": 5.309766766952311,
+      "sha256": "2313f9c3627173ec2e77a6a345c49f3918598fbd7692a5474ee339b316ba09f9",
+      "dev": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Tim wohnt in Wien.",
+          "question": "Wo wohnt Tim?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Eva ist Köchin.",
+          "question": "Was arbeitet Eva?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        }
+      ],
+      "trainLoss": 5.288070502697411,
+      "updates": 120,
+      "train": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Mira wohnt in Graz.",
+          "question": "Wo wohnt Mira?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Lea wohnt in Linz.",
+          "question": "Wo wohnt Lea?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Nora arbeitet als Ärztin.",
+          "question": "Was arbeitet Nora?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Paul trägt einen Helm.",
+          "question": "Was trägt Paul?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        }
+      ]
+    },
+    {
+      "devLoss": 3.8312615105036745,
+      "sha256": "f902c3baaa49bdd06d01b576c8811733326489592ef1b29a697b6c45d1aa4480",
+      "dev": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Tim wohnt in Wien.",
+          "question": "Wo wohnt Tim?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Eva ist Köchin.",
+          "question": "Was arbeitet Eva?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        }
+      ],
+      "trainLoss": 3.4924905979163148,
+      "updates": 600,
+      "train": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Mira wohnt in Graz.",
+          "question": "Wo wohnt Mira?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Lea wohnt in Linz.",
+          "question": "Wo wohnt Lea?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Nora arbeitet als Ärztin.",
+          "question": "Was arbeitet Nora?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Paul trägt einen Helm.",
+          "question": "Was trägt Paul?",
+          "bytes": 48,
+          "ended": false,
+          "text": "                                                ",
+          "acceptedCorrect": false
+        }
+      ]
+    },
+    {
+      "devLoss": 4.172228459702591,
+      "sha256": "9662f026df9d65d05d91f3d49539111c469149f8c8e007af6a4a68e0065e8145",
+      "dev": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Tim wohnt in Wien.",
+          "question": "Wo wohnt Tim?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Eva ist Köchin.",
+          "question": "Was arbeitet Eva?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": false
+        }
+      ],
+      "trainLoss": 0.2520098680698633,
+      "updates": 6000,
+      "train": [
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Mira wohnt in Graz.",
+          "question": "Wo wohnt Mira?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Lea wohnt in Linz.",
+          "question": "Wo wohnt Lea?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": false
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Nora arbeitet als Ärztin.",
+          "question": "Was arbeitet Nora?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": true
+        },
+        {
+          "stopReason": "LEGACY_NO_REASON",
+          "evidence": "Paul trägt einen Helm.",
+          "question": "Was trägt Paul?",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin.",
+          "acceptedCorrect": false
+        }
+      ]
+    }
+  ],
+  "productionPromotion": false,
+  "ownerWeightsModified": false,
+  "sourceCommit": "c3ebad7ced76b5edff0721a883f1e332044755a6",
+  "finalSha256": "9662f026df9d65d05d91f3d49539111c469149f8c8e007af6a4a68e0065e8145",
+  "byteBudget": 48,
+  "status": "MEASURED_RESEARCH_ONLY"
+}

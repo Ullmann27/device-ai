@@ -1,0 +1,35 @@
+{
+  "sourceCommitAtLaunch": "c3ebad7ced76b5edff0721a883f1e332044755a6",
+  "laterChanges": "Evidence/docs only; no executable source changes during verification",
+  "command": "JAVA_HOME=/workspace/continuum-toolchain/jdk17 ANDROID_HOME=/workspace/continuum-toolchain/android-sdk ANDROID_SDK_ROOT=/workspace/continuum-toolchain/android-sdk GRADLE_USER_HOME=/workspace/continuum-toolchain/gradle-user-home /workspace/continuum-toolchain/gradle-8.11.1/bin/gradle --no-daemon --continue --max-workers=2 --console=plain -Dorg.gradle.jvmargs=\"-Xmx2200m -XX:MaxMetaspaceSize=650m -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts\" -PdeviceAiMentorPreview=true -PcontinuumUiWidgetTests=true -Pkotlin.compiler.execution.strategy=in-process :app:testDebugUnitTest --tests \"*ContinuumIdentifierGroundingTest\" --tests \"*ContinuumMemoryDialogueTest\" :app:lintDebug :app:compileDebugKotlin",
+  "exitCode": 0,
+  "gradle": "BUILD SUCCESSFUL in 2m 42s",
+  "tests": [
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-10-25T20:15:26",
+      "xmlSha256": "c3d8843bfb4aec25a8c2831a62d84f63084b0e710ac4130d3c00f310edf46b03"
+    },
+    {
+      "class": "at.heinz.deviceai.learning.ContinuumMemoryDialogueTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "timestamp": "2026-10-25T20:15:27",
+      "xmlSha256": "396c16e27c524e4d76376dbd2979b32e42071d8f763c67062c7b1a76875b6d10"
+    }
+  ],
+  "totalTests": 17,
+  "failed": 0,
+  "skipped": 0,
+  "lintIssues": 0,
+  "lintScope": "configured NewApi; analysis tasks ran, report task up-to-date",
+  "scope": "Focused two-class tests plus real Android Kotlin/Java compilation and configured lint; not a repeat of the entire suite",
+  "device": "NOT_RUN",
+  "signedApk": "NOT_BUILT"
+}
