@@ -22,6 +22,16 @@ Live GitHub metadata confirms PRs #139, #140, #142, #143, #145, #146, #147 and #
 
 GitHub PR metadata and main/head refs: read successfully. PR #148/#147 GitHub check-runs: zero registered checks (not evidence of failure or success; external QA needs receipts). Official checkout is in progress in authorized cloud workspace. Node/JVM/Gradle/lint/device: NOT_RUN at this checkpoint. No owner key or Fold7 device attached; signing and physical acceptance remain BLOCKED.
 
+## Repair checkpoint 1
+
+Base tested: `5d944d49af099a0a66660f5a126c9c7231e0547c`, implementation tree of PR #148. Actual Linux/Node 24.19 baseline: 1234 tests, 1227 passed, 1 failed, 6 skipped (unavailable standalone kotlinc); backend 60/60 passed. Failure was `model setup stays usable for beginners while preserving SHA-256 integrity`: its source scanner still searched the removed no-argument importer signature. Updated discovery to the actual parameterized function and preserved all mandatory hash/validation checks.
+
+Reproduced QA defect with executable real-Git fixtures: `continuum-model-center-qa.sh` read `CONTINUUM_QA_SOURCE_SHA` although its documented pin is `CONTINUUM_MODEL_CENTER_QA_SHA`, causing an unbound-variable exit even for an exact pin. It also allowed missing pins and dirty sources. Added required 40-hex exact pin and clean-source guard before toolchain/network side effects. New regression cases were observed failing before the fix. Focused verification: `node --test scripts/continuum-model-center-qa.test.mjs .github/continuum/android-integration-wiring.test.mjs scripts/continuum-model-center.test.mjs scripts/continuum-model-selection.test.mjs` → 30/30 passed; `bash -n` and `git diff --check` passed. This is a QA/integration repair, not an Android inference claim.
+
+Official Gradle 8.11.1 distribution and Android CLI downloaded locally and checksum-verified. SDK 36 provisioning and full Gradle checks are in progress; no Render services changed. Gemma original-file verification is in progress from official immutable Hub revision `e6a3892a8c22cf87ff99583996149cf3cb32452b`; original-file size is 3659530240 bytes and publisher LFS SHA matches the selected SHA. Full-byte result remains NOT_VERIFIED until hashing completes. DeepSeek weights are not downloaded.
+
+Plan and task ledger: `docs/research/omega/SOL-INFRASTRUCTURE-PLAN.md`. Independent read-only audits investigate old experiment refs and CDX1 collapse; findings will be published without changing any other developer branch.
+
 ## Safety / rollback / next entry
 
 No remote service mutation or model weight download. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch. Next: finish local checkout of the exact base and inspect build scripts/toolchain, then publish measured results here.

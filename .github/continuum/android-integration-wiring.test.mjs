@@ -310,7 +310,7 @@ test('live model status does not revert the beginner cockpit to English',()=>{
 
 test('model setup stays usable for beginners while preserving SHA-256 integrity',()=>{
  const model=bodyOf(activity,'private fun showModelCenter()');
- const importer=bodyOf(activity,'private fun showModelImportDialog()');
+ const importer=bodyOf(activity,'private fun showModelImportDialog(');
  const developer=bodyOf(activity,'private fun showDevelopmentDialog()');
  ensure('model onboarding begins with import and load, while expert functions are collapsed',
    model?.includes('MODELLDATEI IMPORTIEREN') &&

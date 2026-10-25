@@ -8,13 +8,18 @@ cd "$(git rev-parse --show-toplevel)"
 expected_ref="feature/continuum-model-center-selected-models-20261025"
 head_sha="$(git rev-parse --verify HEAD)"
 [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]] || { echo "QA: invalid Git HEAD" >&2; exit 69; }
-if [[ -n "${CONTINUUM_MODEL_CENTER_QA_SHA:-}" && "$head_sha" != "$CONTINUUM_QA_SOURCE_SHA" ]]; then
+if [[ ! "${CONTINUUM_MODEL_CENTER_QA_SHA:-}" =~ ^[a-f0-9]{40}$ ||
+      "$head_sha" != "$CONTINUUM_MODEL_CENTER_QA_SHA" ]]; then
   echo "QA: source SHA does not match requested commit" >&2
   exit 69
 fi
 branch="$(git branch --show-current)"
 if [[ -n "$branch" && "$branch" != "$expected_ref" ]]; then
   echo "QA: expected dedicated review source branch" >&2
+  exit 69
+fi
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "QA: source checkout must start clean" >&2
   exit 69
 fi
 echo "CONTINUUM_QA_SOURCE=$head_sha"
