@@ -156,3 +156,27 @@ test('no-op model rejection is used in second candidate without raw output or ho
   assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
+
+test('an unmatched oldText gives exact-baseline diagnostics and then repairs safely',()=>{
+ const f=fixture();let calls=0;let next;
+ try{
+  const report=runSession(f,input=>{
+   calls++;
+   if(calls===1){
+    const bad=validProposal(f);
+    bad.patches[0].oldText='return missing_source;';
+    return bad;
+   }
+   next=input;
+   return validProposal(f);
+  });
+  assert.equal(calls,2);
+  assert.equal(report.outcome,'VERIFIED');
+  assert.equal(report.inference.rejections.length,1);
+  assert.equal(report.inference.rejections[0].code,'CODING_PATCH_NOT_EXACT');
+  assert.match(report.inference.rejections[0].responseSha256,/^[a-f0-9]{64}$/);
+  assert.equal(next.diagnostics[0].kind,'CODING_REJECTED_OUTPUT');
+  assert.match(next.diagnostics[0].message,/exactly one unique existing source span/);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
