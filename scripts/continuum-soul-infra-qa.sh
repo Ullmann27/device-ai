@@ -14,7 +14,7 @@ node -e 'if (Number(process.versions.node.split(".")[0]) < 20) process.exit(1)'
 OUT="$ROOT/soul-infrastructure-qa"
 mkdir -p "$OUT"
 set +e
-node --test scripts/continuum-native-corpus.test.mjs scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deepseek-hub-preflight.test.mjs >"$OUT/TESTS.txt" 2>&1
+node --test scripts/continuum-native-corpus.test.mjs scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deepseek-hub-preflight.test.mjs scripts/continuum-model-selection.test.mjs >"$OUT/TESTS.txt" 2>&1
 STATUS=$?
 set -e
 if [[ "$STATUS" -ne 0 ]]; then
