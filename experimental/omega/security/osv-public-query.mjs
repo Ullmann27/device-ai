@@ -4,6 +4,7 @@
  */
 import {createHash} from 'node:crypto';
 import {evaluateOwnedOsvSnapshot} from './advisory-intake.mjs';
+import {readBoundedOsvResponse} from './bounded-osv-response.mjs';
 const ENDPOINT='https://api.osv.dev/v1/querybatch';
 const ID=/^[A-Za-z][A-Za-z0-9._-]{2,90}$/;
 const MAX_BATCH=20, MAX_COMPONENTS=200, MAX_RESPONSE_BYTES=1_000_000;
@@ -34,8 +35,11 @@ export async function queryOwnedOsvPublicApi({inventory,networkConsent=false,fet
      const length=response.headers?.get?.('content-length');
      if(length!==null&&length!==undefined&&(+length>MAX_RESPONSE_BYTES||!Number.isSafeInteger(+length)))
        fail('OSV_RESPONSE_TOO_LARGE');
-     body=await response.text();
-   }catch{fail('OSV_REMOTE_RESPONSE_UNAVAILABLE');}
+     body=await readBoundedOsvResponse(response);
+   }catch(e){
+     if(['OSV_RESPONSE_TOO_LARGE','OSV_RESPONSE_INVALID','OSV_RESPONSE_STREAM_REQUIRED'].includes(e?.message))throw e;
+     fail('OSV_REMOTE_RESPONSE_UNAVAILABLE');
+   }
    if(typeof body!=='string'||Buffer.byteLength(body,'utf8')>MAX_RESPONSE_BYTES)fail('OSV_RESPONSE_TOO_LARGE');
    let data;try{data=JSON.parse(body);}catch{fail('OSV_RESPONSE_INVALID');}
    if(!record(data)||!Array.isArray(data.results)||data.results.length!==batch.length)fail('OSV_RESPONSE_INVALID');
