@@ -6230,19 +6230,13 @@ class AgentActivity : Activity() {
     }
 
     private fun showModelImportDialog(useSelectedGemma: Boolean = false) {
-        val fields = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
-                22, Color.rgb(56, 117, 193))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        fields.addView(textView("MODELLIMPORT · SCHRITT 1", 11f, CYAN, true))
-        fields.addView(textView("Modell sicher auswählen", 20f, TEXT, true), matchWidth(top = 8))
-        fields.addView(textView(
-            "Dafür benötigst du eine LiteRT-LM-kompatible Modelldatei sowie die " +
-                "Modell-ID, Version und den veröffentlichten SHA-256-Prüfwert des Anbieters. " +
-                "Der Prüfwert schützt davor, versehentlich eine veränderte Datei zu verwenden. " +
-                "Ohne diese Angaben wird nichts importiert.", 13f, MUTED), matchWidth(top = 10))
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val fields = cockpit.panel(this, "DEVICE AI · MODELLIMPORT",
+            "Modell sicher auswählen",
+            "Benötigt werden eine LiteRT-LM-kompatible Modelldatei, Modell-ID, Version " +
+                "und der veröffentlichte SHA-256-Prüfwert. Ohne passende Angaben wird nichts importiert. " +
+                "Der Dateihash schützt gegen veränderte Dateien, garantiert aber noch keine " +
+                "Kompatibilität oder erfolgreiche Inferenz.")
         fun field(hintText: String): EditText = EditText(this).apply {
             hint = hintText
             inputType = InputType.TYPE_CLASS_TEXT
