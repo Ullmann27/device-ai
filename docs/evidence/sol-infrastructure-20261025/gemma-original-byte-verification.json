@@ -1,0 +1,13 @@
+{
+  "source": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm",
+  "revision": "e6a3892a8c22cf87ff99583996149cf3cb32452b",
+  "filename": "gemma-4-E4B-it.litertlm",
+  "bytes": 3659530240,
+  "sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+  "expected_sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+  "download": "interrupted then resumed using Range at the same immutable revision",
+  "device_import": "NOT_RUN",
+  "inference": "NOT_RUN",
+  "checked_at": "2026-10-25T19:17:08.835973+00:00",
+  "verdict": "PASS_ACTUAL_BYTES"
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "CONTINUUM_PINNED_DEEPSEEK_HUB_PREFLIGHT_V1",
+  "modelId": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "metadataSource": "https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4.1-Flash-1017/revision/1bae0e1088993b9b82de08f59de5be5a34e42170?blobs=true",
+  "revision": "1bae0e1088993b9b82de08f59de5be5a34e42170",
+  "declaredWeightBytes": 510296708312,
+  "shardsDeclared": 48,
+  "shardsWithPublishedLfsDigest": 0,
+  "actualWeightBytesDownloaded": 0,
+  "verifiedWeightBytes": 0,
+  "integrity": "METADATA_ONLY_NO_FILE_HASH_VERIFIED",
+  "downloadStatus": "NOT_STARTED",
+  "inferenceStatus": "NOT_STARTED",
+  "costIncurredByThisCommand": false,
+  "serverCapacity": {
+    "schema": "CONTINUUM_VIRTUAL_MODEL_FABRIC_CAPACITY_V1",
+    "repo": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    "weightBytes": 510296708312,
+    "recommendedVolumeGiB": 695,
+    "provisionedVolumeGiB": 768,
+    "h200VerifiedCount": 0,
+    "hostRamGiB": 0,
+    "engramCpuOffloadGiB": 183.1,
+    "steps": [
+      "Pin immutable Hugging Face revision and inspect model weight-shard inventory",
+      "Use authorized persistent network volume in the SAME datacenter as compatible 4xH200 GPU host",
+      "Download immutable revision once via Hugging Face Xet/cache onto that volume",
+      "Verify model shard inventory and immutable source revision before any model serving",
+      "Use the official vLLM 1017 mixed-precision model recipe with Engram CPU offload",
+      "Expose serving only over authenticated private HTTPS/tunnel with explicit owner cloud consent",
+      "Keep on-device Gemma and private SWB1 as offline fallback; never implicitly upload personal memories"
+    ],
+    "blockers": [
+      "FOUR_H200_IN_ONE_COMPATIBLE_HOST_NOT_VERIFIED",
+      "CONSERVATIVE_HOST_RAM_BUDGET_NOT_MET"
+    ],
+    "canDownloadWeights": "NO",
+    "canServeModel": "UNVERIFIED_REQUIRES_REAL_GPU_AND_NATIVE_VLLM_SMOKE",
+    "createsComputeOrCharges": false,
+    "executesModel": false,
+    "storesWeightBytes": false
+  }
+}

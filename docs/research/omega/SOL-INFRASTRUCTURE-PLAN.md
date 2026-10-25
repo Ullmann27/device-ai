@@ -10,7 +10,7 @@ Tech: Node 24, Kotlin/AGP as pinned in the repository, Gradle 8.11.1, Android SD
 
 ## Constraints and review focus
 
-- Package `at.heinz.deviceai.mentorpaired`, next owner version 23 / 0.3.22; no signer or release-source-authorization changes.
+- Package `at.heinz.deviceai.mentorpaired`, next owner version 24 / 0.3.23 after independent discovery/verification of published version 23; no signer or release-source-authorization changes.
 - No main merge, owner APK signing, installation, paid compute or research-weight promotion.
 - Check exact source, malformed/missing pin, dirty checkout, incompatible imported model, failed/cancelled generation, general questions mistaken for owner memories, narrow/wide UI and interrupted workers.
 - No new backlogs, shell-from-text or worktree-as-OS-sandbox claims. Existing Qwen remains a fallback until actual Gemma acceptance.

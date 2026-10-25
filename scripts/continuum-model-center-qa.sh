@@ -83,7 +83,7 @@ gradle --no-daemon --max-workers=2 --console=plain \
     tail -n 100 "$out/ANDROID-QA.log"; exit 69;
   }
 # Same Android code and Manifest class paths. No owner signing is possible in this QA environment.
-printf 'source_sha=%s\nstatus=MODEL_CENTER_ANDROID_QA_GREEN_NO_SIGNING\nowner_package=at.heinz.deviceai.mentorpaired\ntarget_version_code=23\nsigner=NOT_PRESENT\n' "$head_sha" > "$out/STATUS.txt"
+printf 'source_sha=%s\nstatus=MODEL_CENTER_ANDROID_QA_GREEN_NO_SIGNING\nowner_package=at.heinz.deviceai.mentorpaired\ntarget_version_code=24\nsigner=NOT_PRESENT\n' "$head_sha" > "$out/STATUS.txt"
 echo '<!doctype html><title>Continuum model center preflight</title><pre>QA results in STATUS.txt. No APK or signing keys published.</pre>' > "$out/index.html"
 printf 'User-agent: *\nDisallow: /\n' > "$out/robots.txt"
 echo "CONTINUUM_MODEL_CENTER_QA_PASSED=$head_sha"

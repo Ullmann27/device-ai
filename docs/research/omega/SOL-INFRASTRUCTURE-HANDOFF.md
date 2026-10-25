@@ -2,6 +2,8 @@
 
 Status: WIP / UNVERIFIED. No implementation changes in this first checkpoint.
 
+**Current target correction:** the already published owner APK was independently verified as versionCode **23 / 0.3.22**, hash `1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8`, original signer `2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc`. This branch therefore targets **24 / 0.3.23** for a future owner-approved update. No new APK has been signed or installed here. Earlier checkpoint paragraphs below are historical records, not current release authorizations.
+
 ## Source identity and authorization
 
 Official repository only: Ullmann27/device-ai (private; accessible to authorized collaborators). Working branch: sol/continuum-infrastructure-repair-20261025. Base: PR #148 at 30303ca9103fa2034aa384fcf5f730402ecd0e6c. Owner requested source audit, fixes, tests, feature branches and Draft PR; no release signing, installation, paid compute or main merge authorized here.
@@ -55,6 +57,18 @@ Selected Gemma status now consumes actual `ImportedLocalModel` records, includin
 The CDX read-only test now distinguishes a missing checkpoint, corrupt/broken binding, recovery copy and unknown state. Only a genuinely absent checkpoint suggests the pair laboratory; corruption does not suggest starting training. Added behavioral unit coverage. Kotlin compilation and JUnit for selected-model status, UI-copy and status-excerpt suites: **15/15 PASS**. Node source wiring: **27/27 PASS**. Invalid type/no-function RED was observed before the new typed/helper interfaces.
 
 Added `ContinuumModelImportUiTest` to exercise the real activity's premium import dialog: selected fields, invalid-hash correction in place, then only the manual Android document picker. **WIP / NOT_RUN in this checkpoint**, pending real SDK/Robolectric/full Gradle below. The activity is attached without unrelated startup training/services; this is not a physical-device test. Next action is a stable-source complete Android and Node rerun.
+
+## Combined-source checkpoint and newly verified published release
+
+Stable source `526cd43fdb04381903a7eaadd51968868cfade10`: real Android compilation and configured NewApi lint completed; JUnit/widget run executed 1035 tests, **1031 passed / 1 failed / 3 skipped**. The newly authored import UI test inspected the dialog before Robolectric delivered its queued `OnShow` callback. Added the explicit main-looper drain before interaction; rerun remains pending at this checkpoint. No production dialog workaround was introduced.
+
+Complete Node run with actual `kotlinc` and `CONTINUUM_OWNER_V23_QA=1`: **1237 passed / 1 failed / 0 skipped**, 409.2 s. Failure: OMEGA `metamorphic failure supplies the distinguishing pair` returned fail-closed `ABSTAIN` rather than `FAIL` during concurrent compiler load. Existing numeric worker has a 25 ms VM limit. Same unmodified isolated five-test numeric suite immediately passed 5/5. This is not an established new logic regression; no deadline or safety gate is relaxed. Run the final full Node suite without concurrent Gradle to resolve the host resource concern. Backend syntax and 60/60 tests passed. Initial full logs are preserved in `docs/evidence/sol-infrastructure-20261025/`.
+
+Gemma **actual original bytes** were downloaded at immutable revision `e6a3892a8c22cf87ff99583996149cf3cb32452b`, interrupted/resumed at the same revision, then hashed: **3659530240 bytes**, exact selected SHA-256 `0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0`. Receipt archived separately; device import/load/inference remain NOT_RUN. Model weights are not committed to Git.
+
+Owner confirmed Render workspace `My Workspace`. Read-only inventory reports 24 visible services, 23 matching official Device AI/Continuum scope; this does not prove a spare quota slot. No service was created, changed, deleted, resumed or redeployed. Latest published APK source is older release candidate `015e1bf53f40c223a0fb2d52b557618c4a544572`. Downloaded its existing 55886349-byte APK and independently checked hash, package/version and `apksigner verify`: certificate matches the established owner identity. This is evidence about the **existing** artifact, not this branch or an installed Fold7 update.
+
+Because published code23 already exists, advanced only the future owner-source version to **24 / 0.3.23** and updated current-version contract assertions / model-center QA target metadata. Existing historical release scripts, source inventories and owner approvals are unchanged and cannot authorize code24. All four new version assertions were observed failing on code23; focused version/release/QA regressions now pass **26/26**. This branch still needs an independently approved fresh release-source inventory and authorized signing before a new owner APK.
 
 ## Safety / rollback / next entry
 

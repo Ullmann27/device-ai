@@ -27,6 +27,7 @@ class ContinuumModelImportUiTest {
         val activity = Robolectric.buildActivity(AgentActivity::class.java).get()
         AgentActivity::class.java.getDeclaredMethod("showModelImportDialog", Boolean::class.javaPrimitiveType)
             .apply { isAccessible = true }.invoke(activity, true)
+        shadowOf(android.os.Looper.getMainLooper()).idle()
         val dialog = ShadowAlertDialog.getLatestAlertDialog()
         try {
             val children = views(dialog.findViewById(android.R.id.content))

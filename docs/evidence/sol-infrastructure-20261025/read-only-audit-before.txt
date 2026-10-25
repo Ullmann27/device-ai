@@ -1,0 +1,31 @@
+JUnit version 4.13.2
+...E.....E...
+Time: 0.229
+There were 2 failures:
+1) readOnlyAuditDoesNotRecoverDamagedSwb1FromBackup(at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest)
+java.lang.AssertionError: Read-only audit must not restore weights or append recovery records expected:<{learning-core-v2/subword-v1.bin=87235e0d75f4e018daebd2dc6a5459a4f89f3a05eddcec8821f02c40e7e12862, learning-core-v2/subword-v1.lkg=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593}> but was:<{learning-core-v2/experiences-v2.bin=ae4000c85e9210e5dc847ec25a8c6638cb4ec2838baf2e6ebf4a666d36af0290, learning-core-v2/subword-v1.bin=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593, learning-core-v2/subword-v1.bin.corrupt-1792955280465=87235e0d75f4e018daebd2dc6a5459a4f89f3a05eddcec8821f02c40e7e12862, learning-core-v2/subword-v1.lkg=107e389da39ce7fb5a40f97c8e5aea366e4f4bd61863973f443ab8ab59477593}>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.readOnlyAuditDoesNotRecoverDamagedSwb1FromBackup(ContinuumIntelligenceAuditTest.kt:119)
+2) readOnlyPairedProbeDoesNotRecoverDamagedSwb1FromBackup(at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest)
+arrays first differed at element [40]; expected:<96> but was:<53>
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:78)
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:28)
+	at org.junit.Assert.internalArrayEquals(Assert.java:534)
+	at org.junit.Assert.assertArrayEquals(Assert.java:343)
+	at org.junit.Assert.assertArrayEquals(Assert.java:354)
+	at at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.readOnlyPairedProbeDoesNotRecoverDamagedSwb1FromBackup(ContinuumIntelligenceAuditTest.kt:135)
+	... 30 trimmed
+Caused by: java.lang.AssertionError: expected:<96> but was:<53>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at org.junit.internal.ExactComparisonCriteria.assertElementsEqual(ExactComparisonCriteria.java:8)
+	at org.junit.internal.ComparisonCriteria.arrayEquals(ComparisonCriteria.java:76)
+	... 36 more
+
+FAILURES!!!
+Tests run: 11,  Failures: 2
+
