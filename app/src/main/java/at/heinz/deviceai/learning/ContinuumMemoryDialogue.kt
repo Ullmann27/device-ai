@@ -56,13 +56,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
                 experiences.filter { eligible(it) }.map { it.content.take(2048) })
             else null
         val recoveredHits=proposal?.let { rank(bytes,it.query,experiences) }.orEmpty()
-        val hits=if(recoveredHits.isNotEmpty() &&
+        val retrievedHits=if(recoveredHits.isNotEmpty() &&
             wordEvidence(proposal!!.query,recoveredHits.first().text)>=0.82)
             recoveredHits else firstHits
         // A mention of an entity as a value does not define that entity.
         // Preserve the existing rank/Node contract and filter only the
         // dialogue evidence presented for explicit subject-definition questions.
-        val answerableHits=hits.filter {
+        val hits=retrievedHits.filter {
             it.kind!="Bestätigte Nutzererinnerung" ||
                 ownerMemoryAnswersDefinition(text,it.text)
         }
@@ -74,13 +74,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // Validate byte-for-byte candidate identity, not just IDs: a callback
         // can change ranking, but may not forge provenance, scores or content.
         val selected=if(greeting)emptyList<ContinuumMemoryHit>()
-            else if(rerank==null || answerableHits.isEmpty())answerableHits else runCatching {
-                val reordered=rerank(resolved,answerableHits)
-                require(reordered.size==answerableHits.size &&
-                    reordered.map { it.id }.distinct().size==answerableHits.size &&
-                    reordered.toSet()==answerableHits.toSet()) { "CRE1 changed the eligible candidate set" }
+            else if(rerank==null || hits.isEmpty())hits else runCatching {
+                val reordered=rerank(resolved,hits)
+                require(reordered.size==hits.size &&
+                    reordered.map { it.id }.distinct().size==hits.size &&
+                    reordered.toSet()==hits.toSet()) { "CRE1 changed the eligible candidate set" }
                 reordered
-            }.getOrDefault(answerableHits)
+            }.getOrDefault(hits)
         val topic=when {
             greeting -> previousTopic
             selected.isEmpty() -> ""
