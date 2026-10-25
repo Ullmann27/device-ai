@@ -3564,7 +3564,31 @@ class AgentActivity : Activity() {
             setTextIsSelectable(true)
         }
         box.addView(card, matchWidth(top = 14))
-        box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        box.addView(cockpit.section(this, "UNSERE AUSGEWÄHLTEN MODELLE"), matchWidth(top = 12))
+        box.addView(textView(
+            "GEMMA 4 E4B · Lokales Android-Sprachmodell, noch nicht auf diesem Gerät bestätigt. " +
+                "Der tatsächliche Ladezustand steht oben.\n\n" +
+                ContinuumSelectedModels.REMOTE_STATUS + "\n\n" +
+                ContinuumSelectedModels.RETIREMENT_GATE,
+            13f, MUTED
+        ).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+        }, matchWidth(top = 8))
+        cockpit.grid(this, box, listOf(
+            cockpit.action(this, "1 · GEMMA-QUELLE ÖFFNEN", primary = true) {
+                runCatching {
+                    startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse(ContinuumSelectedModels.LOCAL_SOURCE)))
+                }.onFailure {
+                    Toast.makeText(this, "Die Modellseite konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
+                }
+            },
+            cockpit.action(this, "2 · GEMMA-IMPORT VORAUSFÜLLEN") {
+                showModelImportDialog(useSelectedGemma = true)
+            }
+        ), 2)
+        box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
         }
@@ -6202,7 +6226,7 @@ class AgentActivity : Activity() {
         }.joinToString("\n")
     }
 
-    private fun showModelImportDialog() {
+    private fun showModelImportDialog(useSelectedGemma: Boolean = false) {
         val fields = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
@@ -6236,6 +6260,18 @@ class AgentActivity : Activity() {
         fields.addView(textView("Veröffentlichter SHA-256-Prüfwert", 12f, CYAN, true),
             matchWidth(top = 12))
         fields.addView(digest, matchWidth(top = 6))
+        if (useSelectedGemma) {
+            id.setText(ContinuumSelectedModels.LOCAL_ID)
+            version.setText(ContinuumSelectedModels.LOCAL_VERSION)
+            digest.setText(ContinuumSelectedModels.LOCAL_SHA256)
+            fields.addView(textView(
+                "Gemma-Angaben sind vorausgefüllt. Lade die Originaldatei selbst herunter " +
+                    "und prüfe die Herkunft. Continuum überprüft die gewählte Datei " +
+                    "beim Import gegen diesen SHA-256; eine erfolgreiche Geräteinferenz " +
+                    "ist damit noch nicht bewiesen.",
+                12f, MUTED
+            ), matchWidth(top = 8))
+        }
         val warning = textView("", 12.5f, AMBER)
         fields.addView(warning, matchWidth(top = 10))
         val dialog = AlertDialog.Builder(this)
