@@ -273,4 +273,46 @@ class ContinuumMemoryDialogueTest {
         }
     }
 
+    @Test fun orion47RecallKeepsExactDigitsButDoesNotInventDefinition() {
+        val dir=Files.createTempDirectory("continuum-orion47").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val fact="Mein Testwort ist ORION-47."
+            core.confirmOwnerFact(fact)
+            val personal=core.replyFromMemory("Wie lautet mein Testwort?")
+            assertTrue(personal.grounded)
+            assertTrue(personal.answer.contains(fact))
+            val unrelated=core.replyFromMemory("Was ist Orion?")
+            assertFalse("Personal memory is not an Orion definition",unrelated.grounded)
+            assertTrue(unrelated.memoryIds.isEmpty())
+            assertFalse(unrelated.answer.contains(fact))
+            val subjectQuestion=core.replyFromMemory("Was ist mein Testwort?")
+            assertTrue(subjectQuestion.grounded)
+            assertTrue(subjectQuestion.answer.contains(fact))
+            core.revokeOwnerFact(fact)
+            val revoked=core.replyFromMemory("Wie lautet mein Testwort?")
+            assertFalse(revoked.grounded)
+            assertFalse(revoked.answer.contains(fact))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test fun definitionMatchesOwnerFactSubjectNotIncidentalMention() {
+        val dir=Files.createTempDirectory("continuum-definition-subject").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Mein Testwort ist ORION-47.")
+            core.confirmOwnerFact("Orion ist ein Sternbild.")
+            val definition=core.replyFromMemory("Was ist Orion?")
+            assertTrue(definition.grounded)
+            assertTrue(definition.answer.contains("Orion ist ein Sternbild."))
+            assertFalse(definition.answer.contains("Mein Testwort ist ORION-47."))
+            val direct=core.replyFromMemory("Wie lautet mein Testwort?")
+            assertTrue(direct.grounded)
+            assertTrue(direct.answer.contains("Mein Testwort ist ORION-47."))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
 }

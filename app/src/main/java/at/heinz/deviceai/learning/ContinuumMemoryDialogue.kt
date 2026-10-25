@@ -59,6 +59,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
         val hits=if(recoveredHits.isNotEmpty() &&
             wordEvidence(proposal!!.query,recoveredHits.first().text)>=0.82)
             recoveredHits else firstHits
+        // A mention of an entity as a value does not define that entity.
+        // Preserve the existing rank/Node contract and filter only the
+        // dialogue evidence presented for explicit subject-definition questions.
+        val answerableHits=hits.filter {
+            it.kind!="Bestätigte Nutzererinnerung" ||
+                ownerMemoryAnswersDefinition(text,it.text)
+        }
         val greeting=Regex("(?i)^(hallo|servus|guten (morgen|tag|abend)|hey)[!.\\s]*$").matches(text)
         // A greeting must not accidentally cite memories containing the word "Hallo".
         // An unanswered new question invalidates the old topic; only retrieved evidence
@@ -67,13 +74,13 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // Validate byte-for-byte candidate identity, not just IDs: a callback
         // can change ranking, but may not forge provenance, scores or content.
         val selected=if(greeting)emptyList<ContinuumMemoryHit>()
-            else if(rerank==null || hits.isEmpty())hits else runCatching {
-                val reordered=rerank(resolved,hits)
-                require(reordered.size==hits.size &&
-                    reordered.map { it.id }.distinct().size==hits.size &&
-                    reordered.toSet()==hits.toSet()) { "CRE1 changed the eligible candidate set" }
+            else if(rerank==null || answerableHits.isEmpty())answerableHits else runCatching {
+                val reordered=rerank(resolved,answerableHits)
+                require(reordered.size==answerableHits.size &&
+                    reordered.map { it.id }.distinct().size==answerableHits.size &&
+                    reordered.toSet()==answerableHits.toSet()) { "CRE1 changed the eligible candidate set" }
                 reordered
-            }.getOrDefault(hits)
+            }.getOrDefault(answerableHits)
         val topic=when {
             greeting -> previousTopic
             selected.isEmpty() -> ""
@@ -171,6 +178,22 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
     companion object {
         const val MAX_QUARANTINED=3
+        // A personal fact that merely contains "Orion" cannot answer
+        // "Was ist Orion?". Only a claim whose subject is Orion qualifies.
+        // Unsupported declarations fail closed; this is not general NLP.
+        private val DEFINITION_QUESTION=Regex("""(?iu)^(?:was|wer)\s+ist\s+(.+?)\s*[?!.\s]*$""")
+        private val OWNER_SUBJECT_CLAIM=Regex(
+            """(?iu)^(.{1,120}?)\s+(?:ist|war|sind|waren|bedeutet|bezeichnet|heißt|heisst)\s+.+$"""
+        )
+        internal fun ownerMemoryAnswersDefinition(question:String,fact:String):Boolean {
+            val query=DEFINITION_QUESTION.matchEntire(question.trim()) ?: return true
+            val claim=OWNER_SUBJECT_CLAIM.matchEntire(fact.trim()) ?: return false
+            fun normalize(value:String):String=value.trim()
+                .trim('“','”','"','\'','?','!','.',':')
+                .lowercase(Locale.ROOT).replace(Regex("""\s+""")," ")
+            return normalize(query.groupValues[1])==normalize(claim.groupValues[1])
+        }
+
         internal fun requireConversationId(id:String?) {
             require(id==null || Regex("[A-Za-z0-9][A-Za-z0-9_-]{0,79}").matches(id)) { "Invalid conversation identity" }
         }
