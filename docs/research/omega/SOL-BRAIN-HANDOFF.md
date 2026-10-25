@@ -15,8 +15,19 @@ Use the existing Kotlin/Node memory runtime, byte decoder and local-model contra
 
 ## Baseline / evidence / stopping rules
 
-Current brain work: WIP / NOT_YET_TESTED. The previous full suite is not proof of new changes. Write failing behavioral regressions before fixes, freeze benchmark definitions before candidate measurement, record separate model identities and data provenance. A fall in loss or an increased update counter is not an answer-quality improvement. New weights require separate namespace, old snapshots and explicit promotion conditions; no automatic owner-memory mutation.
+Current brain work: ACTIVE / PARTIALLY_HOST_TESTED. The previous full suite is not proof of new changes. Write failing behavioral regressions before fixes, freeze benchmark definitions before candidate measurement, record separate model identities and data provenance. A fall in loss or an increased update counter is not an answer-quality improvement. New weights require separate namespace, old snapshots and explicit promotion conditions; no automatic owner-memory mutation.
 
 At each validated step: exact commit, command, result and limits here; push to PR #150. Stop/rethink a hypothesis that fails, do not endlessly replay the same strategy. No free shell from model text or second backlog/repair framework.
 
 Next entry: exact-ID regression and smallest mirrored fix, then actual decoder and Gemma measurements. Rollback by reverting individual new commits; previous source/weights remain recoverable.
+
+
+## First measured repair checkpoint
+
+The baseline failed all eight new Node ID cases and both new Kotlin tests. The mirrored original-text eligibility repair now passes 17/17 focused Node cases and 30/30 broader existing retrieval/false-positive/paraphrase/audit cases. Kotlin compilation against real SDK classes and the actual SDK module ABI (`-module-name DeviceAI_app_debug -jvm-target 17`) passes all 17 tests across the new identifier and existing memory dialogue suites, including golden cross-runtime scores, definitions, revocation and conversation reset. An initial mixed-module CLI harness produced NoSuchMethodError; matching the real module ABI fixed that harness issue, without changing product logic.
+
+Actual main-dialog behavior: a wrong single explicit identifier yields no grounded memory IDs, clears its topic and cannot enter CRE1 reranking. Exact matches and original model/fact bytes remain unchanged. This is a bounded deterministic correctness improvement, not new neural capability or general entity/relation entailment. New full Android Gradle verification is pending.
+
+Google's official native Python LiteRT-LM API0.18.1 Linux x86_64 wheel was discovered and SHA256 checked against official PyPI metadata, inspected and installed into an isolated local venv. It successfully imports and opens metadata from the selected Gemma original. This is not inference yet. Frozen synthetic four-case smoke and a source-pinned, tool-free CPU probe are included WIP; run only from a clean committed source under an external wall-time limit. Native process has an 8GiB address-space /180CPU-second bound, 2threads,2048context,128output and32thinking tokens. Existing Android runtime stays0.18.0; host measurements do not validate its Fold7 compatibility.
+
+Archived text logs normalize trailing whitespace only; all diagnostic and result content is retained.

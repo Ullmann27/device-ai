@@ -277,6 +277,20 @@ class ContinuumMemoryDialogue(private val directory:File) {
         private val SOURCE_QUERY_OPERATORS=setOf("analysiere","analysieren","bedeuten","bedeutet","beschreibe","beschreiben","beschreibst","charakterisiere","charakterisieren","darstelle","darstellen","definiere","definieren","definiert","erkläre","erklären","erklärst","erläutere","erläutern","erläuterst","erzaehle","funktionieren","funktionierend","funktioniert","funktionierte","funktionierten","nenne","nennen","unterscheide","unterscheiden","unterscheidet","untersuche","untersuchen","vergleiche","vergleichen","zeige","zeigen","zusammenfassen","zusammenfasst","zusammengefasst")
         private val SOURCE_INFLECTION_TAILS=listOf("","e","n","s","en","er","es","em")
 
+        // Inspect original text before contentWords drops short numeric suffixes.
+        // One explicit identifier is required literally; comparison entailment is separate.
+        private val IDENTIFIER_TOKEN=Regex("[\\p{L}\\p{N}]+(?:[-._][\\p{L}\\p{N}]+)*")
+        private fun singleIdentifierEvidence(query:String,text:String):Boolean {
+            fun identifiers(value:String):Set<String> = IDENTIFIER_TOKEN.findAll(
+                java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFC)
+                    .lowercase(Locale.ROOT))
+                .map { it.value }.filter { token ->
+                    token.any(Char::isLetter)&&token.any(Char::isDigit)
+                }.toSet()
+            val required=identifiers(query)
+            return required.size!=1||required.single() in identifiers(text)
+        }
+
         internal fun sourceWordMatch(needle:String,word:String):Boolean {
             if(needle==word)return true
             if(needle.any(Char::isDigit)||word.any(Char::isDigit))return false
@@ -292,6 +306,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
         internal fun sourceTermEvidence(query:String,text:String):Boolean {
             if(query.length>4096||text.isEmpty())return false
+            if(!singleIdentifierEvidence(query,text))return false
             val terms=contentWords(java.text.Normalizer.normalize(query,java.text.Normalizer.Form.NFC))
                 .distinct().filter { it !in SOURCE_QUERY_OPERATORS }
             val source=contentWords(java.text.Normalizer.normalize(text,java.text.Normalizer.Form.NFC)).distinct()
@@ -315,6 +330,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             val qv=weigh(wordGrams(q),idf)
             return pool.mapNotNull { e ->
                 val text=e.content.take(1000)
+                if(!singleIdentifierEvidence(q,text))return@mapNotNull null
                 if(e.type==LearningExperienceType.SOURCE_TEXT &&
                     !sourceTermEvidence(q,text))return@mapNotNull null
                 if(wordEvidence(q,text)<EVIDENCE_THRESHOLD)return@mapNotNull null
