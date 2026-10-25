@@ -40,7 +40,7 @@ test("duplicate prompts with conflicting answers or disjoint groups fail closed"
   assert.throws(() => buildCorpus([a,conflicting]),/Conflicting/);
   assert.throws(() => buildCorpus([a,example("b","group2","gleiche frage")]),/cross-group/);
   assert.throws(() => buildCorpus([a,{...a}]),/Duplicate example ID/);
-  assert.equal(all(buildCorpus([a,example("b","group1","gleiche frage")])).length,1);
+  assert.equal(all(buildCorpus([a,{...example("b","group1","gleiche frage"),completion:a.completion}])).length,1);
 });
 
 test("reject unsupported reviews, bad source IDs, secrets and personally identifying emails", () => {
