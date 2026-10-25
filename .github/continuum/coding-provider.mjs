@@ -34,15 +34,30 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   if(userPrompt.length>28000)throw Error('CODING_PROMPT_BOUNDS');
   const timeoutMs=Math.min(60_000,deadline-Date.now()-500);
   if(timeoutMs<100)throw Error('CODING_DEADLINE_EXHAUSTED');
-  const childEnv={...env,NODE_OPTIONS:'',NODE_V8_COVERAGE:'',NODE_USE_ENV_PROXY:'0'};delete childEnv.NODE_TEST_CONTEXT;
+  // This local subprocess only needs its own bounded model configuration.
+  // Never inherit GitHub, Render, owner-secret, proxy or tracing credentials.
+  const model=env.CONTINUUM_LOCAL_BRAIN_MODEL??'local';
+  if(typeof model!=='string'||model.length>100||!/^[A-Za-z0-9_.:/-]+$/.test(model))
+   throw Error('CODING_MODEL_CONFIG_INVALID');
+  const childEnv={
+   CONTINUUM_LOCAL_BRAIN_API_KEY:env.CONTINUUM_LOCAL_BRAIN_API_KEY,
+   CONTINUUM_LOCAL_BRAIN_MODEL:model,
+   NODE_OPTIONS:'',NODE_V8_COVERAGE:'',NODE_USE_ENV_PROXY:'0'
+  };
   const number=++calls,started=Date.now();
   const response=run(process.execPath,[CLI,'coding'],{shell:false,encoding:'utf8',input:JSON.stringify({userPrompt,allowedTrackedPaths:spec.allowedPaths,timeoutMs}),
    env:childEnv,timeout:timeoutMs+500,maxBuffer:40_000});
   const trace={schema:'continuum-coding-model-request',version:1,taskId:spec.id,taskFingerprint:fingerprint,sourceCommit:base,
    request:number,startedAt:new Date(started).toISOString(),elapsedMs:Date.now()-started,
-   configuredModel:env.CONTINUUM_LOCAL_BRAIN_MODEL??'local',verifiedModelExecution:false,contextSha256:context.contextSha256,
+   configuredModel:model,verifiedModelExecution:false,contextSha256:context.contextSha256,
    promptSha256:sha256Hex(userPrompt),exitCode:response.status??null};
-  if(evidence){fs.writeFileSync(path.join(evidence,`request-${number}.json`),JSON.stringify({...trace,userPrompt,response:response.stdout??''},null,2)+'\n',{flag:'wx',mode:0o600});}
+  // Raw code context and model output remain transient. Diagnostic evidence
+  // retains hashes and byte counts, never the potentially private contents.
+  const responseText=String(response.stdout??'');
+  if(evidence)fs.writeFileSync(path.join(evidence,`request-${number}.json`),
+   JSON.stringify({...trace,responseSha256:sha256Hex(responseText),
+    responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false},null,2)+'\n',
+   {flag:'wx',mode:0o600});
   if(response.status!==0||response.error||response.signal){
    // The trusted local CLI reports only a fixed rejection code and SHA-256,
    // never the unsafe model response, prompt, token or arbitrary stderr text.
