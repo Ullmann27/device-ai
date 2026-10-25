@@ -53,12 +53,19 @@ export function prepareCodingTask({project,stateDir,task}){
  }finally{fs.closeSync(fd);}
 }
 export async function runCodingTask({project,stateDir,id,executor=null,executorAbortMode=null,
- requireIsolation=false,providerFactory=options=>createCodingCandidateProvider(options),env=process.env}={}){
+ requireIsolation=false,expectedTaskFingerprint=null,
+ providerFactory=options=>createCodingCandidateProvider(options),env=process.env}={}){
  // Android untrusted-model execution is never allowed to inherit the legacy
  // host fallback. A branded executor is required BEFORE journal/model access.
  if(requireIsolation && (!isIsolatedExecutor(executor) || executorAbortMode!=='CHECKPOINT_BOUNDARY_ONLY'))
   throw Error('CODING_ISOLATION_REQUIRED');
  const grant=readGrant(grantFile(project,stateDir,id));
+ // Check the owner's prepared-task SHA BEFORE CCC1 journal mutation, model
+ // inference or running any untrusted candidate. Null preserves older callers.
+ if(expectedTaskFingerprint!==null &&
+    (!/^[a-f0-9]{64}$/.test(expectedTaskFingerprint) ||
+     grant.fingerprint!==expectedTaskFingerprint))
+  throw Error('CODING_TASK_BINDING_MISMATCH');
  if(git(project,['rev-parse','HEAD']).stdout.trim()!==grant.task.sourceCommit)throw Error('CODING_TASK_STALE_SOURCE');
  const receipts=[];
  const result=await runTask({project,stateDir,taskId:grant.ccc1TaskId,
