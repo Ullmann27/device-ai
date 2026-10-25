@@ -3569,7 +3569,7 @@ class AgentActivity : Activity() {
         box.addView(card, matchWidth(top = 14))
         box.addView(cockpit.section(this, "UNSERE AUSGEWÄHLTEN MODELLE"), matchWidth(top = 12))
         val selectedStatus = textView(
-            ContinuumSelectedModels.gemmaStatus(installedModels.map { it.id }, localRuntime.loadedModel?.id) +
+            ContinuumSelectedModels.gemmaStatus(installedModels, localRuntime.loadedModel) +
                 "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
                 "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE,
             13f, MUTED
@@ -3836,9 +3836,7 @@ class AgentActivity : Activity() {
                         source,query,maxBytes=48)
                     val cdxText=if(output==null) {
                         val status=core.pairedDecoderStatus()
-                        if(status.available) "CDX1-Test derzeit nicht verfügbar. "+
-                            cdx1BindingLabel(status.conditioningState)+"."
-                        else "CDX1 hat noch keinen eigenen Forschungscheckpoint. Starte erst das Paarlabor."
+                        ContinuumUiCopy.cdxUnavailableStatus(status.conditioningState)
                     } else buildString {
                         append("CDX1 · LESENDER TEST (KEIN TRAINING)\n")
                         append("Beleg: ").append(source).append("\nFrage: ").append(query)
@@ -6456,7 +6454,7 @@ class AgentActivity : Activity() {
         localBadge.background = rounded(PANEL, 14, BORDER)
         val card = modelCardText ?: return
         selectedModelStatusText?.text =
-            ContinuumSelectedModels.gemmaStatus(models.map { it.id }, loaded?.id) +
+            ContinuumSelectedModels.gemmaStatus(models, loaded) +
                 "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
                 "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE
         val shown = loaded ?: models.firstOrNull()

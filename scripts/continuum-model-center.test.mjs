@@ -38,7 +38,7 @@ test("existing owner model center shows choices without automatically downloadin
   assert.match(agent,/modelCatalog\.import\(metadata\.first, metadata\.second, it, metadata\.third\)/);
 });
 test("selected model has a live status binding and never grants shell rights", () => {
-  assert.match(agent,/ContinuumSelectedModels\.gemmaStatus\(models\.map \{ it\.id \}, loaded\?\.id\)/);
+  assert.match(agent,/ContinuumSelectedModels\.gemmaStatus\(models, loaded\)/);
   assert.match(agent,/selectedModelStatusText\?\.text/);
   assert.match(agent,/selectedModelStatusText = null/);
   assert.match(selected,/kein verbundener Inferenzserver/);

@@ -5,6 +5,16 @@ package at.heinz.deviceai
  * This layer never changes authorization, inference, state or evidence.
  */
 object ContinuumUiCopy {
+    fun cdxUnavailableStatus(conditioningState: String): String = when (conditioningState) {
+        "CORRUPT" -> "CDX1-Checkpoint oder SWB1-Bindung beschädigt bzw. nicht lesbar. " +
+            "Vor weiterem Training zuerst Diagnose und Sicherung prüfen. Es wurde nichts zurückgesetzt."
+        "RECOVERED_LKG" -> "CDX1-Sicherung ist nur lesend verfügbar. " +
+            "Vor weiterem Training die gezielte Wiederherstellung prüfen."
+        "NO_CHECKPOINT" -> "CDX1 hat noch keinen eigenen Forschungscheckpoint. Starte erst das Paarlabor."
+        else -> "CDX1-Lesetest derzeit nicht verfügbar. Prüfe den Bindungsstatus im Lernzentrum. " +
+            "Es wurde nichts trainiert oder zurückgesetzt."
+    }
+
     fun developmentRequirements(modelReady: Boolean, hasGoal: Boolean, sources: Int): String {
         require(sources >= 0)
         return listOf(

@@ -48,6 +48,14 @@ Two regression cases against actual SDK-compiled baseline classes reproduced the
 
 Verified with official Kotlin compiler against the real SDK-compiled main classes (no Android stubs): the updated core and full `ContinuumIntelligenceAuditTest` compiled and ran **11/11 PASS**, including missing checkpoint, cancellation, unsupported-answer scoring and both file-preservation regressions. Full Gradle suite is still pending a stable combined-source run. This repair does not improve CDX1 answer weights or cure the reported n-collapse; architectural findings and device limits are in `CONTINUUM-INFRASTRUCTURE-AUDIT-20261025.md`.
 
+## Repair checkpoint 4: model identity and truthful CDX guidance
+
+Selected Gemma status now consumes actual `ImportedLocalModel` records, including SHA-256, instead of free-form IDs. A different file imported under `gemma4-e4b-it` cannot be reported as the selected original; a correct import plus a different loaded version remains "importiert, derzeit nicht geladen". Both actual Android status callers pass the full records. No file is deleted or model promoted.
+
+The CDX read-only test now distinguishes a missing checkpoint, corrupt/broken binding, recovery copy and unknown state. Only a genuinely absent checkpoint suggests the pair laboratory; corruption does not suggest starting training. Added behavioral unit coverage. Kotlin compilation and JUnit for selected-model status, UI-copy and status-excerpt suites: **15/15 PASS**. Node source wiring: **27/27 PASS**. Invalid type/no-function RED was observed before the new typed/helper interfaces.
+
+Added `ContinuumModelImportUiTest` to exercise the real activity's premium import dialog: selected fields, invalid-hash correction in place, then only the manual Android document picker. **WIP / NOT_RUN in this checkpoint**, pending real SDK/Robolectric/full Gradle below. The activity is attached without unrelated startup training/services; this is not a physical-device test. Next action is a stable-source complete Android and Node rerun.
+
 ## Safety / rollback / next entry
 
 No remote service mutation or model weight download. A git worktree is not an OS sandbox. No shell from model text, grant bypass, speculative training promotion or release-manifest reuse. Revert individual commits on this working branch to return to PR #148; never reset another branch. Next: finish local checkout of the exact base and inspect build scripts/toolchain, then publish measured results here.
