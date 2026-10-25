@@ -46,7 +46,7 @@ test('battery, app CPU, RAM and GPU measurements remain honestly distinguished',
 test('CCC1 integrated in same owner-app source without changing private app identity',()=>{
   assert.match(ccc1,/internal object ContinuumCcc1Bridge/);
   assert.match(builderActivity,/ContinuumCcc1Bridge\.command\(operation, chain, orderId = requestId, taskId = task\)/);
-  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 22\s*versionName = "0\.3\.21"/);
+  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
   assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
 });
 test('existing on-device learning state and protected independent training are never reset by launch',()=>{
