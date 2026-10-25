@@ -1426,37 +1426,37 @@ class AgentActivity : Activity() {
                 at.heinz.deviceai.cognitive.ExperienceCompiler().compile(experiences)
             }
             buildString {
-                append("ECHTE MODULANSCHLÜSSE · NUR LESEN\\n\\n")
-                append("SWB1: regulärer Gedächtnisabruf mit bestätigten Fakten.\\n")
+                append("ECHTE MODULANSCHLÜSSE · NUR LESEN\n\n")
+                append("SWB1: regulärer Gedächtnisabruf mit bestätigten Fakten.\n")
                 append("CRE1: ")
                 append(if(cre?.available==true) "Forschungscheckpoint vorhanden" else "kein trainierter Forschungscheckpoint nachgewiesen")
-                append("; aktive semantische Neubewertung nur nach bestandenem Promotion-Gate.\\n")
+                append("; aktive semantische Neubewertung nur nach bestandenem Promotion-Gate.\n")
                 append("CDX1: ")
                 append(if(cdx?.available==true) "geprüfter Decoder-Checkpoint vorhanden" else "kein verfügbarer Decoder-Checkpoint")
-                append("; Chatfreigabe nicht erteilt.\\n")
+                append("; Chatfreigabe nicht erteilt.\n")
                 append("CTX3: ").append(if(ctx) "SHADOW EIN" else "SHADOW AUS")
-                append("; in M5-Labor einschaltbar, kein Überschreiben von Chatantworten.\\n")
-                append("LM1: Kotlin-Laufzeit vorhanden, kein nachgewiesener aktiver Modelladapter/Checkpoint im Hauptchat.\\n")
-                append("CCC1: bestehende Owner-Freigabe-/Receipt-Grenzen unverändert.\\n\\n")
-                append("SKILL-ABSTRAKTION · EXISTIERENDER EXPERIENCE-COMPILER\\n")
+                append("; in M5-Labor einschaltbar, kein Überschreiben von Chatantworten.\n")
+                append("LM1: Kotlin-Laufzeit vorhanden, kein nachgewiesener aktiver Modelladapter/Checkpoint im Hauptchat.\n")
+                append("CCC1: bestehende Owner-Freigabe-/Receipt-Grenzen unverändert.\n\n")
+                append("SKILL-ABSTRAKTION · EXISTIERENDER EXPERIENCE-COMPILER\n")
                 append("Beobachtungen nur aus dieser laufenden App-Sitzung: ").append(experiences.size)
                 skills.fold(onSuccess={ candidates ->
-                    append("\\nZur Besitzerprüfung geeignete Vorschläge: ")
+                    append("\nZur Besitzerprüfung geeignete Vorschläge: ")
                         .append(candidates.count { it.eligibleForOwnerReview })
-                    append("\\nBlockierte Vorschläge: ")
+                    append("\nBlockierte Vorschläge: ")
                         .append(candidates.count { !it.eligibleForOwnerReview })
                     candidates.take(5).forEach { candidate ->
-                        append("\\n• ").append(candidate.taskType.take(65))
+                        append("\n• ").append(candidate.taskType.take(65))
                             .append(": ").append(candidate.occurrenceCount).append(" Nachweise")
                             .append(" · Score ").append(candidate.meanEvaluationScore)
                             .append(" · ")
                             .append(candidate.promotionBlockedReason ?: "nur Review, NICHT aktiviert")
                     }
                 },onFailure={
-                    append("\\nPrüfung blockiert: ").append(it.javaClass.simpleName)
+                    append("\nPrüfung blockiert: ").append(it.javaClass.simpleName)
                 })
-                append("\\n\\nKeine autonome Skill-Freigabe, keine Änderung am produktiven Chat, kein Training.")
-            }.replace("\\n", "\n")
+                append("\n\nKeine autonome Skill-Freigabe, keine Änderung am produktiven Chat, kein Training.")
+            }
         }) { result ->
             if(isFinishing || isDestroyed)return@onLearningIo
             AlertDialog.Builder(this)
