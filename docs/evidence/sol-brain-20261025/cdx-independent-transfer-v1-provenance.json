@@ -1,0 +1,44 @@
+{
+  "fixtureId": "cdx-independent-transfer-20261025-v1",
+  "fixturePath": "/tmp/cdx-independent-transfer-20261025-v1.json",
+  "fixtureSha256": "582a895a295c64f128c79623032d93cdf4ea83cedafbcf51130e7acd2488fad9",
+  "authoredUtc": "2026-10-25T20:07:17.987948+00:00",
+  "authorRole": "Independent /root/cdx_audit fixture-author subagent",
+  "repositoryHeadObserved": "d53d80459337feefb056d03fb6f93bf53a02c5b7",
+  "sourceCheckpointCaveat": "Observed shared checkout only; author changed no repository file or ref.",
+  "trainingInputSource": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3740-3743",
+  "excludedTrainingAndDevInputs": [
+    {
+      "evidence": "Mira wohnt in Graz.",
+      "question": "Wo wohnt Mira?"
+    },
+    {
+      "evidence": "Lea wohnt in Linz.",
+      "question": "Wo wohnt Lea?"
+    },
+    {
+      "evidence": "Nora arbeitet als Ärztin.",
+      "question": "Was arbeitet Nora?"
+    },
+    {
+      "evidence": "Paul trägt einen Helm.",
+      "question": "Was trägt Paul?"
+    },
+    {
+      "evidence": "Tim wohnt in Wien.",
+      "question": "Wo wohnt Tim?"
+    },
+    {
+      "evidence": "Eva ist Köchin.",
+      "question": "Was arbeitet Eva?"
+    }
+  ],
+  "additionalExclusion": "No identical evidence/question pair in the previously published 25-probe ContinuumIntelligenceAudit fixture.",
+  "encoderBase64FileSha256": "013fad8d56ee24ae007a033dcc6005a2f34d3c9355123bbbbab16bf02e3fce8c",
+  "encoderDecodedBytesSha256": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+  "predictionAccessBeforeFreeze": "NONE",
+  "evaluationOrTrainingByAuthor": "NOT_RUN",
+  "priorContextDisclosure": "Author investigated CDX1 source architecture and old audit previously; saw no predictions from the newly frozen training protocol.",
+  "independenceLimit": "Authored synthetic cases, not independently sampled human data; task families overlap training and prior curriculum, exact inputs do not. This is bounded transfer, not a general-intelligence benchmark.",
+  "reusePolicy": "After first evaluation treat this fixture as consumed for tuning; retain negative results and freeze a fresh independent set for any later tuned model."
+}
