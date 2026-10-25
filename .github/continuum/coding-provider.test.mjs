@@ -68,7 +68,7 @@ test('malformed model name is rejected before invoking the local child',()=>{
  const {root,task}=fixture();let calls=0;
  try{
   const provider=createCodingCandidateProvider({root,task,env:{
-   CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40),CONTINUUM_LOCAL_BRAIN_MODEL:'--inspect=0.0.0.0'
+   CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40),CONTINUUM_LOCAL_BRAIN_MODEL:'\u0000unsafe-model'
   },run:()=>{calls++;return {status:0,stdout:'{}'};}});
   assert.throws(()=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10_000}),
    /CODING_MODEL_CONFIG_INVALID/);
