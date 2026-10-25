@@ -511,7 +511,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       hypothesis:attempt.hypothesis};
     history.push(entry);report.inference.history=structuredClone(history.slice(-3));
   };
-  const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
+  const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
     'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE',
     'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
     'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH']);
@@ -524,7 +524,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     report.inference.lastRejectCode=code;
     // A rejected proposal was never tested. Only a fixed diagnostic, not raw model output,
     // is sent to the next revision. The fingerprint survives in the durable report.
-    const message=code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid or unchanged. Produce a different exact oldText/newText change.':
+    const message=code==='CODING_NOOP_PATCH'?'The previous patch replaced a source span with identical bytes. Propose a genuine change to a uniquely matching allowed source span.':
+       code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid. Provide exact valid JSON with distinct oldText/newText replacements.':
       code==='CODING_REPEATED_PATCH'?'The same previously rejected candidate was returned again. Produce a different change.':
       code==='CODING_MODEL_UNAVAILABLE'||code==='LOCAL_PROVIDER_UNAVAILABLE'?
         'The previous local model invocation was unavailable. No patch was accepted or executed.':
