@@ -62,3 +62,7 @@ Vergleichsbelege gesichert: https://github.com/Ullmann27/device-ai/commit/602c84
 Gezielte Android-Integration: 6/6 PASS nach vorherigem Compile-RED. Szenarien: Mehrnachrichtenkontext, Nutzererinnerung mit Attribution, strukturierter Lösungsweg, ToolGate/Ergebnisabgleich, 41→42-Korrektur nach unabhängiger Prüffunktion, Kontextgrenzen/Reset. Das Modell und der Gerätetreiber sind deterministische Testadapter: dies sind Integrationsverträge, keine fünf gemessenen nativen Dialogerfolge. Reale Modellwahl, natürliche Qualität und Fold7-RAM/Latenz bleiben NOT_RUN. Die Klassifikation/Planqualität wird damit nicht gelernt.
 
 Vollständiger Node-Lauf vor dieser Android-Änderung: 1208 Tests, 1202 PASS, 6 SKIP, 0 FAIL, 58.762s. Der Watchdog-Fehler unter vorheriger Last ist nicht reproduziert, aber nicht ursächlich behoben. Gesamte Android-/Node-Regression nach Dialogänderungen folgt.
+
+## Dialogstand und Gesamtarchitektur gesichert
+
+Dialog-Code: https://github.com/Ullmann27/device-ai/commit/c078396b87b671ee2fb6a727fc95d6503cd60815 . `ARCHITECTURE.md` dokumentiert reale Aufrufer, Status, Zweige, LM1/LM2/EWC-Lücken und Folgeauftrag. Android-Gesamtsuite auf diesem SHA: 976 Tests, 973 PASS, 3 SKIP, 0 FAIL/ERROR; Lint/Compile PASS (Belege `android-final*`). Review läuft separat lesend. Konkreter offener Reviewbefund: `continuum-local-dialogue-quality-wiring.test.mjs` erwartet noch den ersetzten Einzelturn-Prompt und die frühere Methodensignatur; gezielt ROT, Update und vollständige Node-Regressionsprüfung folgen. Noch kein abgeschlossener JARVIS-Gerätemeilenstein.
