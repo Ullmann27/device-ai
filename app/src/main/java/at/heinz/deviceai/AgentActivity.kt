@@ -176,6 +176,7 @@ class AgentActivity : Activity() {
     private lateinit var localBadge: TextView
     // views of the open model center (null while it is closed)
     private var modelCardText: TextView? = null
+    private var selectedModelStatusText: TextView? = null
     private var localActionButton: TextView? = null
     private var modelCenterDialog: AlertDialog? = null
     // catalog listing, refreshed off the UI thread (reloadInstalledModels)
@@ -2700,8 +2701,10 @@ class AgentActivity : Activity() {
         if (!busy) {
             neuralMonitor.text = if (practice.enabled)
                 "NEURON · AUTO-LERNEN · " + practice.attempts + " Zyklen, " +
-                    practice.improvements + " Verbesserungen · " + practice.lastStatus.take(110)
-            else "NEURON · Auto-Lernen aus · " + practice.lastStatus.take(140)
+                    practice.improvements + " Verbesserungen\n" +
+                    ContinuumStatusExcerpt.readable(practice.lastStatus, 110)
+            else "NEURON · Auto-Lernen aus\n" +
+                ContinuumStatusExcerpt.readable(practice.lastStatus, 140)
         }
     }
 
@@ -3564,7 +3567,31 @@ class AgentActivity : Activity() {
             setTextIsSelectable(true)
         }
         box.addView(card, matchWidth(top = 14))
-        box.addView(cockpit.section(this, "MODELL EINRICHTEN · 2 SCHRITTE"), matchWidth(top = 11))
+        box.addView(cockpit.section(this, "UNSERE AUSGEWÄHLTEN MODELLE"), matchWidth(top = 12))
+        val selectedStatus = textView(
+            ContinuumSelectedModels.gemmaStatus(installedModels.map { it.id }, localRuntime.loadedModel?.id) +
+                "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
+                "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE,
+            13f, MUTED
+        ).apply {
+            background = rounded(Color.rgb(11, 27, 51), 15, Color.rgb(63, 104, 164))
+            setPadding(dp(13), dp(12), dp(13), dp(12))
+        }
+        box.addView(selectedStatus, matchWidth(top = 8))
+        cockpit.grid(this, box, listOf(
+            cockpit.action(this, "1 · GEMMA-QUELLE ÖFFNEN", primary = true) {
+                runCatching {
+                    startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse(ContinuumSelectedModels.LOCAL_SOURCE)))
+                }.onFailure {
+                    Toast.makeText(this, "Die Modellseite konnte nicht geöffnet werden.", Toast.LENGTH_LONG).show()
+                }
+            },
+            cockpit.action(this, "2 · GEMMA-IMPORT VORAUSFÜLLEN") {
+                showModelImportDialog(useSelectedGemma = true)
+            }
+        ), 2)
+        box.addView(cockpit.section(this, "ANDERE MODELLE · MANUELL"), matchWidth(top = 11))
         val importButton = cockpit.action(this, "1 · MODELLDATEI IMPORTIEREN", primary = true) {
             showModelImportDialog()
         }
@@ -3625,11 +3652,13 @@ class AgentActivity : Activity() {
             if (modelCenterDialog === dialog) {
                 modelCenterDialog = null
                 modelCardText = null
+                selectedModelStatusText = null
                 localActionButton = null
             }
         }
         modelCenterDialog = dialog
         modelCardText = card
+        selectedModelStatusText = selectedStatus
         localActionButton = action
         reloadInstalledModels()
         onLearningIo({
@@ -6202,20 +6231,14 @@ class AgentActivity : Activity() {
         }.joinToString("\n")
     }
 
-    private fun showModelImportDialog() {
-        val fields = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            background = roundedGradient(Color.rgb(20, 42, 77), Color.rgb(13, 23, 45),
-                22, Color.rgb(56, 117, 193))
-            setPadding(dp(20), dp(18), dp(20), dp(20))
-        }
-        fields.addView(textView("MODELLIMPORT · SCHRITT 1", 11f, CYAN, true))
-        fields.addView(textView("Modell sicher auswählen", 20f, TEXT, true), matchWidth(top = 8))
-        fields.addView(textView(
-            "Dafür benötigst du eine LiteRT-LM-kompatible Modelldatei sowie die " +
-                "Modell-ID, Version und den veröffentlichten SHA-256-Prüfwert des Anbieters. " +
-                "Der Prüfwert schützt davor, versehentlich eine veränderte Datei zu verwenden. " +
-                "Ohne diese Angaben wird nichts importiert.", 13f, MUTED), matchWidth(top = 10))
+    private fun showModelImportDialog(useSelectedGemma: Boolean = false) {
+        val cockpit = at.heinz.deviceai.ui.ContinuumBentoCockpit
+        val fields = cockpit.panel(this, "DEVICE AI · MODELLIMPORT",
+            "Modell sicher auswählen",
+            "Benötigt werden eine LiteRT-LM-kompatible Modelldatei, Modell-ID, Version " +
+                "und der veröffentlichte SHA-256-Prüfwert. Ohne passende Angaben wird nichts importiert. " +
+                "Der Dateihash schützt gegen veränderte Dateien, garantiert aber noch keine " +
+                "Kompatibilität oder erfolgreiche Inferenz.")
         fun field(hintText: String): EditText = EditText(this).apply {
             hint = hintText
             inputType = InputType.TYPE_CLASS_TEXT
@@ -6236,6 +6259,18 @@ class AgentActivity : Activity() {
         fields.addView(textView("Veröffentlichter SHA-256-Prüfwert", 12f, CYAN, true),
             matchWidth(top = 12))
         fields.addView(digest, matchWidth(top = 6))
+        if (useSelectedGemma) {
+            id.setText(ContinuumSelectedModels.LOCAL_ID)
+            version.setText(ContinuumSelectedModels.LOCAL_VERSION)
+            digest.setText(ContinuumSelectedModels.LOCAL_SHA256)
+            fields.addView(textView(
+                "Gemma-Angaben sind vorausgefüllt. Lade die Originaldatei selbst herunter " +
+                    "und prüfe die Herkunft. Continuum überprüft die gewählte Datei " +
+                    "beim Import gegen diesen SHA-256; eine erfolgreiche Geräteinferenz " +
+                    "ist damit noch nicht bewiesen.",
+                12f, MUTED
+            ), matchWidth(top = 8))
+        }
         val warning = textView("", 12.5f, AMBER)
         fields.addView(warning, matchWidth(top = 10))
         val dialog = AlertDialog.Builder(this)
@@ -6420,6 +6455,10 @@ class AgentActivity : Activity() {
         localBadge.setTextColor(if (state == LocalModelUiState.NO_MODEL || state == LocalModelUiState.INSTALLED) GREEN else color)
         localBadge.background = rounded(PANEL, 14, BORDER)
         val card = modelCardText ?: return
+        selectedModelStatusText?.text =
+            ContinuumSelectedModels.gemmaStatus(models.map { it.id }, loaded?.id) +
+                "\n\n" + ContinuumSelectedModels.REMOTE_STATUS +
+                "\n\n" + ContinuumSelectedModels.RETIREMENT_GATE
         val shown = loaded ?: models.firstOrNull()
         card.text = when {
             localRuntimeError != null ->
