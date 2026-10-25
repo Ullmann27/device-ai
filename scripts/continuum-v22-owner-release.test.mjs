@@ -24,7 +24,9 @@ test('v22 is strictly an owner in-place update and leaves historical releases in
  assert.match(recipe,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
  assert.match(recipe,/expected_previous_sha="c28597b7c28b495d36a161edc3b5bf938f8197a749b016bc6d2513807afa0b1f"/);
  assert.match(recipe,/versionCode='21' versionName='0\.3\.20'/);
- assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{\s*versionCode = 22\s*versionName = "0\.3\.21"/);
+ // The historical v22 script is retained, but its source approval never
+ // grants permission for a later in-place owner update.
+ assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 23\s*versionName = "0\.3\.22"/);
  for(const p of ['scripts/render-mentor-preview.sh','scripts/render-mentor-owner-update-v22.sh']){
   const r=spawnSync('bash',['-n',p],{cwd:root,encoding:'utf8',timeout:10000});
   assert.equal(r.status,0,r.stderr);
