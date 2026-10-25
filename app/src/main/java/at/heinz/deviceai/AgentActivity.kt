@@ -2701,8 +2701,10 @@ class AgentActivity : Activity() {
         if (!busy) {
             neuralMonitor.text = if (practice.enabled)
                 "NEURON · AUTO-LERNEN · " + practice.attempts + " Zyklen, " +
-                    practice.improvements + " Verbesserungen · " + practice.lastStatus.take(110)
-            else "NEURON · Auto-Lernen aus · " + practice.lastStatus.take(140)
+                    practice.improvements + " Verbesserungen\n" +
+                    ContinuumStatusExcerpt.readable(practice.lastStatus, 110)
+            else "NEURON · Auto-Lernen aus\n" +
+                ContinuumStatusExcerpt.readable(practice.lastStatus, 140)
         }
     }
 
