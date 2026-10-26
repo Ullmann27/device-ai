@@ -58,6 +58,8 @@ test('approved task source commit stays bound through Android prepare, run, call
  // RUN binds to a prepared record from the same private storage, not mutable model stdout.
  assert.match(activity,/val commit=preferences\.getString\(ContinuumMobileBuildResultReceiver\.TYPED_PREPARED_COMMIT,null\)/);
  assert.match(activity,/typedId=id,typedHash=hash,typedCommit=commit/);
+ assert.match(activity,/mit Quell-Commit \$\{commit\.take\(12\)\} wird gestartet/);
+ assert.match(activity,/edit\.remove\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_ID\)[\s\S]*\.remove\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_COMMIT\)/);
  assert.match(activity,/TYPED_EXPECTED_COMMIT,typedCommit/);
  assert.match(activity,/TYPED_PREPARED_COMMIT\)/);
  assert.match(callback,/const val TYPED_EXPECTED_COMMIT =/);
