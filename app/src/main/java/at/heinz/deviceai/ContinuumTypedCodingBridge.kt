@@ -105,7 +105,7 @@ internal object ContinuumTypedCodingBridge {
             listOf(SCRIPT,"run",id,hash),ContinuumMobileBuildPlan.PROJECT_DIR)
     }
     /** Callback never trusts model text or arbitrary Termux stdout. */
-    fun evaluate(operation:Operation,id:String,hash:String,exitCode:Int?,termuxError:Int?,stdout:String?):Result {
+    fun evaluate(operation:Operation,id:String,hash:String,exitCode:Int?,termuxError:Int?,stdout:String?,expectedSourceCommit:String):Result {
         fun invalid()=Result(operation,id,hash,"INVALID","Coding-Rückmeldung ungültig. Kein Erfolg bestätigt.")
         if(!ID.matches(id)||!SHA.matches(hash)||termuxError != -1||exitCode==null||
             stdout==null||stdout.length !in 2..MAX_RESPONSE)return invalid()
@@ -122,6 +122,7 @@ internal object ContinuumTypedCodingBridge {
         }
         if(exitCode!=0||o["taskSha256"]!=hash)return invalid()
         val source=(o["sourceCommit"] as? String)?.takeIf { COMMIT.matches(it) }?:return invalid()
+        if(!COMMIT.matches(expectedSourceCommit)||source!=expectedSourceCommit)return invalid()
         if(operation==Operation.PREPARE && status=="PREPARED_NOT_EXECUTED") {
             if(!CCC1.matches(o["ccc1TaskId"] as? String ?: "" ) || o["replayed"] !is Boolean)return invalid()
             return Result(operation,id,hash,status,
