@@ -2,7 +2,7 @@
 import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {fileURLToPath} from 'node:url';
 import {validateCodingTask,taskFingerprint,validateCodingProposal} from './coding-task.mjs';
 import {buildRepositoryContext} from './coding-context.mjs';
-import {sha256Hex} from './development-backlog.mjs';
+import {sha256Hex,parseStrict} from './development-backlog.mjs';
 const CLI=fileURLToPath(new URL('../../scripts/continuum-local-brain-cli.mjs',import.meta.url));
 function rejectedModelOutput(code,responseSha256=null) {
  const error=Error(code);error.code=code;
@@ -38,8 +38,43 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    throw Error('CODING_EVIDENCE_UNSAFE');
  }
  let calls=0;
+ const priorRequests=()=>{
+  if(!evidence)return [];
+  if(fs.realpathSync(evidence)!==evidence||!fs.lstatSync(evidence).isDirectory())throw Error('CODING_EVIDENCE_UNSAFE');
+  const names=fs.readdirSync(evidence).filter(name=>/^request-.*\.json$/.test(name)).sort();
+  if(names.length>spec.limits.maxModelCalls)throw Error('CODING_EVIDENCE_INVALID');
+  return names.map((name,index)=>{
+   const file=path.join(evidence,name),stat=fs.lstatSync(file);
+   if(name!==`request-${index+1}.json`||!stat.isFile()||stat.isSymbolicLink()||stat.size>8192)
+    throw Error('CODING_EVIDENCE_INVALID');
+   let record;try{record=parseStrict(fs.readFileSync(file,'utf8'));}catch{throw Error('CODING_EVIDENCE_INVALID');}
+   if(record?.schema!=='continuum-coding-model-request'||record.version!==1||record.request!==index+1)
+    throw Error('CODING_EVIDENCE_INVALID');
+   if(record.taskId!==spec.id||record.taskFingerprint!==fingerprint||record.sourceCommit!==spec.sourceCommit)
+    throw Error('CODING_EVIDENCE_BINDING_MISMATCH');
+   return record;
+  });
+ };
+ const writeTrace=(number,record,{reserve=false}={})=>{
+  const file=path.join(evidence,`request-${number}.json`);
+  if(reserve){
+   // A process loss after this reservation consumes the request. Never infer
+   // first and discover EEXIST afterwards, or reset the owner budget on resume.
+   let fd;
+   try{fd=fs.openSync(file,'wx',0o600);fs.writeFileSync(fd,JSON.stringify(record,null,2)+'\n');fs.fsyncSync(fd);}
+   finally{if(fd!==undefined)fs.closeSync(fd);}
+   const dir=fs.openSync(evidence,'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+  }else{
+   const pending=file+'.tmp-'+process.pid;
+   try{
+    fs.writeFileSync(pending,JSON.stringify(record,null,2)+'\n',{flag:'wx',mode:0o600});
+    fs.renameSync(pending,file);
+   }finally{fs.rmSync(pending,{force:true});}
+  }
+ };
  const provider=({base,chain,deadline,diagnostics=[],history=[]}={})=>{
   if(base!==spec.sourceCommit||chain!==spec.chain)throw Error('CODING_TASK_BINDING_MISMATCH');
+  if(evidence)calls=priorRequests().length;
   if(calls>=spec.limits.maxModelCalls)throw Error('CODING_MODEL_BUDGET_EXHAUSTED');
   if(!Number.isSafeInteger(deadline)||deadline-Date.now()<600)throw Error('CODING_DEADLINE_EXHAUSTED');
   const context=buildRepositoryContext({root:source,commit:base,allowedPaths:spec.allowedPaths,
@@ -65,20 +100,21 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    CONTINUUM_LOCAL_BRAIN_MODEL:model,
    NODE_OPTIONS:'',NODE_V8_COVERAGE:'',NODE_USE_ENV_PROXY:'0'
   };
+  if(evidence){calls=priorRequests().length;if(calls>=spec.limits.maxModelCalls)throw Error('CODING_MODEL_BUDGET_EXHAUSTED');}
   const number=++calls,started=Date.now();
+  const trace={schema:'continuum-coding-model-request',version:1,taskId:spec.id,taskFingerprint:fingerprint,sourceCommit:base,
+   request:number,startedAt:new Date(started).toISOString(),elapsedMs:0,
+   configuredModel:model,verifiedModelExecution:false,contextSha256:context.contextSha256,
+   promptSha256:sha256Hex(userPrompt),exitCode:null};
+  if(evidence)writeTrace(number,{...trace,status:'RESERVED',rawContentStored:false},{reserve:true});
   const response=run(process.execPath,[CLI,'coding'],{shell:false,encoding:'utf8',input:JSON.stringify({userPrompt,allowedTrackedPaths:spec.allowedPaths,timeoutMs}),
    env:childEnv,timeout:timeoutMs+500,maxBuffer:40_000});
-  const trace={schema:'continuum-coding-model-request',version:1,taskId:spec.id,taskFingerprint:fingerprint,sourceCommit:base,
-   request:number,startedAt:new Date(started).toISOString(),elapsedMs:Date.now()-started,
-   configuredModel:model,verifiedModelExecution:false,contextSha256:context.contextSha256,
-   promptSha256:sha256Hex(userPrompt),exitCode:response.status??null};
+  trace.elapsedMs=Date.now()-started;trace.exitCode=response.status??null;
   // Raw code context and model output remain transient. Diagnostic evidence
   // retains hashes and byte counts, never the potentially private contents.
   const responseText=String(response.stdout??'');
-  if(evidence)fs.writeFileSync(path.join(evidence,`request-${number}.json`),
-   JSON.stringify({...trace,responseSha256:sha256Hex(responseText),
-    responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false},null,2)+'\n',
-   {flag:'wx',mode:0o600});
+  if(evidence)writeTrace(number,{...trace,status:'RESPONDED',responseSha256:sha256Hex(responseText),
+    responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false});
   if(response.status!==0||response.error||response.signal){
    // The trusted local CLI reports only a fixed rejection code and SHA-256,
    // never the unsafe model response, prompt, token or arbitrary stderr text.
