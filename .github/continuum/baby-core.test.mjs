@@ -60,7 +60,7 @@ test("html extraction strips active content and preserves public links",()=>{
 test("legacy overconfident beliefs are downgraded until revalidated",()=>{
   const legacy=createBabyState(100);
   legacy.schemaVersion=1;
-  legacy.beliefs=[{id:"belief-old",text:"An old broad claim with insufficient precise support.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
+  legacy.beliefs=[{id:"belief-old",text:"A broad claim about replay is not confirmed by any independent evidence and remains provisional until carefully revalidated.",confidence:.92,uncertainty:.08,status:"GROUNDED_OBSERVATION",citationUrls:["https://example.org/a"],createdAt:50,lastValidatedAt:50}];
   const migrated=migrateBabyState(legacy,200);
   assert.equal(migrated.schemaVersion,3);
   assert.equal(migrated.memoryRewardVersion,2);
