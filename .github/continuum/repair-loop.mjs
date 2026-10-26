@@ -197,11 +197,18 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
   const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
-  const skippedCaseHashes=[];
-  let completeSkipIdentities=true;
+  const skippedCaseHashes=[],executedCaseHashes=[];
+  let completeSkipIdentities=true,completeExecutedIdentities=true;
   const addTests=j=>{
     for(const k of ['total','failed','skipped','placeholders','executed','passed'])tests[k]+=j[k]??0;
     diagnostics.push(...j.diagnostics);
+    if(j.executed>0){
+      const ids=j.executedCaseHashes;
+      if(!Array.isArray(ids)||ids.length!==j.executed||
+         ids.some(id=>typeof id!=='string'||!/^[0-9a-f]{64}$/.test(id)))
+        completeExecutedIdentities=false;
+      else executedCaseHashes.push(...ids);
+    }
     if(j.skipped>0){
       const ids=j.skippedCaseHashes;
       if(!Array.isArray(ids)||ids.length!==j.skipped||
@@ -218,6 +225,12 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
      skippedCaseHashes.length===tests.skipped&&
      new Set(skippedCaseHashes).size===skippedCaseHashes.length)
     tests.skippedCaseDigest=sha256(skippedCaseHashes.sort().join('\0'));
+  // Only an exact, unique collection of executed testcase names may establish
+  // a stable suite identity for independent red/green comparison.
+  if(tests.executed>0&&completeExecutedIdentities&&
+     executedCaseHashes.length===tests.executed&&
+     new Set(executedCaseHashes).size===executedCaseHashes.length)
+    tests.executedCaseHashes=Object.freeze([...executedCaseHashes].sort());
   // Test files that crash while importing report only "test failed" in JUnit;
   // re-run just those (same fixed runner, TAP) to recover the real error location.
   // Only files that were arguments of the fixed command itself are re-run.
