@@ -4,7 +4,7 @@
   "baseline": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
   "candidateFrozen": true,
   "freshIndependentBenchmark": "REQUESTED_FROM_PARENT_AFTER_FREEZE",
-  "status": "HOST_FOCUSED_VERIFIED_FULL_NODE_RUNNING",
+  "status": "HOST_FOCUSED_VERIFIED_FULL_NODE_INTERRUPTED_RESOURCE_COORDINATION",
   "files": {
     ".github/continuum/dialogue-retrieval.mjs": "5da1aa368040dd341c3bd85aa6c4effaa62ad21e6c91ded8f99b3e2e66bac71a",
     "app/src/main/java/at/heinz/deviceai/learning/ContinuumMemoryDialogue.kt": "a7830d96ccd5718d0f870ac886b5ebf571e05619e806a9df5cb15a46c68c3bcd",
@@ -14,5 +14,6 @@
   "ownerFactsChanged": false,
   "failedCtx3Lm1Activated": false,
   "newAndroidGradleVerification": "NOT_RUN",
-  "deviceVerification": "NOT_RUN"
+  "deviceVerification": "NOT_RUN",
+  "fullNode": "INTERRUPTED_AT_PARENT_REQUEST_TO_FREE_TWO_CORE_HOST_FOR_NATIVE_INFERENCE"
 }

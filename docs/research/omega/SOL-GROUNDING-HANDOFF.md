@@ -41,3 +41,7 @@ Node focused91/91 and broader16/16 PASS. Previously consumed regression fixtures
 Source candidate `4bf74b1b827aab56bbe03e032c21c03c508484c8` is pushed in Draft PR153: https://github.com/Ullmann27/device-ai/pull/153 . The complete actual5-class Kotlin run finished42/42 PASS (exit0), including conversation identity/revocation and runtime CRE1 pool integrity. All33 shared fixture cases execute under both trust classes. Source/fixture SHA256 identities are in `candidate-freeze.json`.
 
 Parent was asked to commission a newly authored benchmark AFTER this freeze against baseline `c391b83244bd2cc945a1b37bcdd829da27e15ba6`. No tuning after that request. The whole Node project suite is RUNNING with concurrency2; the raw final result will be archived separately. Root still owns full new Android Gradle integration and routing. Candidate source changes remain limited to the2 mirrored retrieval files.
+
+## Shared-host resource coordination
+
+Parent requested stopping heavy Node work while the native three-arm Gemma/Qwen matrix occupies the2-core host. The whole Node run was stopped immediately, including its child test processes, and its partial output is retained as `node-full-interrupted.tap`. Status: INTERRUPTED_RESOURCE_COORDINATION, exit1, no whole-suite success claim; full integrated Node validation is deferred to parent. No reported `not ok` occurred in the retained partial log. No heavy process remains on this worktree. Source candidate remains unchanged/frozen at `4bf74b1b827aab56bbe03e032c21c03c508484c8`.
