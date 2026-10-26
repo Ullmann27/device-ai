@@ -99,7 +99,7 @@ export function parseJsError(text,root){
 
 /** JUnit XML (Gradle and `node --test --test-reporter=junit`). */
 export function parseJUnit(xml,root){
-  const out=[],skippedCaseHashes=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
+  const out=[],skippedCaseHashes=[],executedCaseHashes=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
   const text=String(xml).slice(0,MAX_TEXT);
   const attr=(src,name)=>xmlDecode((src.match(new RegExp('\\b'+name+'="([^"]*)"'))??[])[1]??'');
   for(const m of text.matchAll(/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g)){
@@ -110,6 +110,11 @@ export function parseJUnit(xml,root){
     // Node 20 names it by absolute path, Node 22 relative to the working directory.
     const placeholder=/\bname="[^"]*\.test\.m?js"/.test(attrs);
     if(placeholder)placeholders++;
+    if(!placeholder&&!/<skipped\b/.test(body)){
+      const name=attr(attrs,'name'),classname=attr(attrs,'classname');
+      // Identity is hashed; never send untrusted testcase labels to public receipts.
+      executedCaseHashes.push(name&&classname?sha256(classname+'\0'+name):null);
+    }
     if(/<skipped\b/.test(body)){
       skipped++;
       const name=attr(attrs,'name'),classname=attr(attrs,'classname');
@@ -146,7 +151,7 @@ export function parseJUnit(xml,root){
   // executed = real test cases that ran (not skipped, not file placeholders);
   // passed = executed test cases without failure (a crashed file is not a test)
   const executed=total-skipped-placeholders;
-  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out,skippedCaseHashes};
+  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out,skippedCaseHashes,executedCaseHashes};
 }
 
 /** Node error text (stderr or TAP comments) for modules that fail while loading. */
@@ -179,7 +184,7 @@ export function parseJsErrorText(text,root){
 }
 
 export function readJUnitDirectory(dir,root){
-  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[],skippedCaseHashes:[]};
+  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[],skippedCaseHashes:[],executedCaseHashes:[]};
   if(!fs.existsSync(dir))return result;
   for(const name of fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort().slice(0,2000)){
     const file=path.join(dir,name);
@@ -188,6 +193,7 @@ export function readJUnitDirectory(dir,root){
     for(const k of ['total','failed','skipped','placeholders','executed','passed'])result[k]+=part[k];
     result.diagnostics.push(...part.diagnostics.slice(0,MAX_DIAGNOSTICS-result.diagnostics.length));
     result.skippedCaseHashes.push(...part.skippedCaseHashes);
+    result.executedCaseHashes.push(...part.executedCaseHashes);
   }
   return result;
 }
