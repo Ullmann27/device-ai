@@ -61,7 +61,9 @@ class InteractiveLabTest {
    assertEquals(1,ResearchFeedback(root).trainingCandidates().size)
    assertEquals(LearningExperienceType.USER_FEEDBACK,good.experience.type)
    assertThrows(IllegalArgumentException::class.java){ledger.review(draft.experience.id,draft.reviewDigest,ResearchFeedback.Review.REVOKE,3)}
+   val fingerprint=ledger.trainingFingerprint()
    ledger.review(good.experience.id,good.reviewDigest,ResearchFeedback.Review.REVOKE,3)
+   assertNotEquals(fingerprint,ledger.trainingFingerprint())
    assertTrue(ResearchFeedback(root).trainingCandidates().isEmpty())
    assertEquals(LearningStatus.REVOKED,ledger.propose("Nein, ich meinte Druck.","turn-1").experience.status)
    assertThrows(IllegalArgumentException::class.java){ledger.propose("Speichere eine Vermutung.","turn-2")}
@@ -76,4 +78,45 @@ class InteractiveLabTest {
    jobs.forEach(Thread::start);jobs.forEach(Thread::join);assertEquals(1,successes.get())
   } finally {root.deleteRecursively()}
  }
+ @Test fun existingClaimGraphConflictRequiresClarification() {
+  val graph=at.heinz.deviceai.cognitive.ClaimGraph()
+  graph.add("src:a1","src:a2",at.heinz.deviceai.cognitive.ClaimRelation.CONTRADICTS)
+  val es=listOf(entities[0].copy(sourceIds=setOf("src:a1","src:a2")))
+  val c=InteractiveDialogueContext()
+  c.record("s","Erkläre Aster.","Zwei widersprüchliche Belege.",es,"v1")
+  val d=c.plan("s","Warum?",es,"v1",relations=graph)
+  assertTrue(d.clarification);assertEquals("CONTRADICTORY_SOURCES",d.reason)
+ }
+ @Test fun incompatibleConfirmedRevisionsAreExcludedUntilRevocation() {
+  val root=Files.createTempDirectory("interactive-conflict").toFile()
+  try {
+   val ledger=ResearchFeedback(root)
+   val a=ledger.propose("Nein, Antwort A.","turn",1)
+   val b=ledger.propose("Nein, Antwort B.","turn",2)
+   val ac=ledger.review(a.experience.id,a.reviewDigest,ResearchFeedback.Review.CONFIRM,2)
+   ledger.review(b.experience.id,b.reviewDigest,ResearchFeedback.Review.CONFIRM,2)
+   assertTrue(ledger.trainingCandidates().isEmpty())
+   ledger.review(ac.experience.id,ac.reviewDigest,ResearchFeedback.Review.REVOKE,3)
+   assertEquals(listOf(b.experience.id),ledger.trainingCandidates().map{it.id})
+  } finally {root.deleteRecursively()}
+ }
+
+ @Test fun realArchiveGateRemainsInTheResearchRoutingPath() {
+  val root=Files.createTempDirectory("interactive-archive").toFile()
+  try {
+   val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(root)
+   val unrelated=archive.save(at.heinz.deviceai.learning.ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+    "Nobelpreis für Wirtschaft", "https://de.wikipedia.org/wiki/Wirtschaft", "Synthetic test fixture",
+    "Dieser synthetische Auszug behandelt Wirtschaft und nicht Planeten.")
+   val c=InteractiveDialogueContext();c.record("s","Erkläre Aster.","Aster hat wenig Druck.",entities,"v1")
+   val question="Welche Folgen hat das für Menschen, die dort leben möchten?"
+   val hits=archive.search(question,limit=20)
+   assertTrue(hits.any{it.source.id==unrelated.id&&it.score>=5})
+   val offline=InteractiveResearchRouting.inspect(c,"s",question,entities,"v1",hits,false)
+   assertEquals(InteractiveResearchRouting.Route.MODEL_NOT_CONFIGURED,offline.route);assertNull(offline.archiveId)
+   assertEquals(InteractiveResearchRouting.Route.LOCAL_MODEL_NEEDED,
+    InteractiveResearchRouting.inspect(c,"s",question,entities,"v1",hits,true).route)
+  } finally {root.deleteRecursively()}
+ }
+
 }

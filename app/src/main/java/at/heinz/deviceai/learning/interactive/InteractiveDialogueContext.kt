@@ -1,6 +1,8 @@
 package at.heinz.deviceai.learning.interactive
 
 import at.heinz.deviceai.cognitive.LocalConversationContext
+import at.heinz.deviceai.cognitive.ClaimGraph
+import at.heinz.deviceai.cognitive.ClaimRelation
 import at.heinz.deviceai.learning.context.Ctx3Context
 import at.heinz.deviceai.learning.context.Ctx3Entity
 import java.security.MessageDigest
@@ -32,8 +34,18 @@ class InteractiveDialogueContext(private val raw:LocalConversationContext=LocalC
    it.aliases.size in 1..8 && it.aliases.all { a->a.length in 1..80 && a.none(Char::isISOControl) } &&
    it.sourceIds.size in 1..32 && it.sourceIds.all { s->s.length in 1..160 && s.none(Char::isISOControl) } })
   val immutable=entities.map { it.copy(aliases=it.aliases.toSet(),pronouns=it.pronouns.toSet(),sourceIds=it.sourceIds.toSet()) }
-  val digest=hash(sourceRevision+immutable.sortedBy { it.id }.joinToString { e->
-   listOf(e.id,e.label,e.aliases.sorted().joinToString(),e.pronouns.sorted().joinToString(),e.sourceIds.sorted().joinToString()).joinToString("\u0000") })
+  // Length-prefixed encoding: alias lists containing separators cannot collide.
+  val canonical=java.io.ByteArrayOutputStream()
+  java.io.DataOutputStream(canonical).use { out ->
+   out.writeUTF(sourceRevision)
+   for(e in immutable.sortedBy { it.id }) {
+    out.writeUTF(e.id);out.writeUTF(e.label)
+    for(values in listOf(e.aliases,e.pronouns,e.sourceIds)) {
+     out.writeInt(values.size);values.sorted().forEach(out::writeUTF)
+    }
+   }
+  }
+  val digest=MessageDigest.getInstance("SHA-256").digest(canonical.toByteArray()).joinToString(""){"%02x".format(it)}
   if(session!=sessionId || revision!=digest){clear();session=sessionId;revision=digest}
   registry=immutable
  }
@@ -61,12 +73,17 @@ class InteractiveDialogueContext(private val raw:LocalConversationContext=LocalC
  }
 
  @Synchronized fun plan(sessionId:String,question:String,entities:List<Ctx3Entity>,
-                        sourceRevision:String,mode:Mode=Mode.ADAPTIVE):Decision {
+                        sourceRevision:String,mode:Mode=Mode.ADAPTIVE,relations:ClaimGraph?=null):Decision {
   require(question.length in 1..512)
   bind(sessionId,entities,sourceRevision)
-  val (ids,reason)=resolve(question)
+  val (ids,resolutionReason)=resolve(question)
   val selected=registry.filter { it.id in ids }
-  val ambiguous=ids.size!=1
+  val sources=selected.flatMap { it.sourceIds }.toSet()
+  val conflict=sources.any { id->relations?.relations(id)?.any {
+   it.relation==ClaimRelation.CONTRADICTS && it.fromId in sources && it.toId in sources
+  }==true }
+  val reason=if(conflict)"CONTRADICTORY_SOURCES" else resolutionReason
+  val ambiguous=ids.size!=1 || conflict
   if(mode==Mode.RAW)return Decision(ids,reason,ambiguous,raw.render(sessionId),selected.flatMap { it.sourceIds }.toSet())
   val relevant=turns.filter { t->ids.any { it in t.ids } }
   val packet=buildString {
@@ -110,6 +127,5 @@ class InteractiveDialogueContext(private val raw:LocalConversationContext=LocalC
   private val GENERAL_REFERENCES=setOf("das","dies","diese","dieser","damit","dazu","darüber","daraus","davon","dadurch")
   private val REFERENCES=GENERAL_REFERENCES+setOf("er","ihm","ihn","sie","es","dort")
   private fun clean(s:String,n:Int)=s.take(n).map { if(it.isISOControl())' ' else if(it=='[')'(' else if(it==']')')' else it }.joinToString("")
-  private fun hash(s:String)=MessageDigest.getInstance("SHA-256").digest(s.toByteArray()).joinToString(""){"%02x".format(it)}
  }
 }

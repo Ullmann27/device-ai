@@ -56,9 +56,17 @@ class ResearchFeedback(root:File) {
   check(store.updateStatus(id,next,now));candidate(store.all().single { it.id==id })
  }
  fun all():List<Candidate> = synchronized(LOCK) { store.all().map(::candidate) }
+ /** Checkpoint consumers must match this live fingerprint before any reuse. Revocation
+  * invalidates derived research checkpoints; it does not claim weight unlearning. */
+ fun trainingFingerprint():String = synchronized(LOCK) {
+  val canonical=trainingCandidates().sortedBy{it.id}.joinToString("\n"){"${it.id}|${it.contentHash}|${it.updatedAt}"}
+  MessageDigest.getInstance("SHA-256").digest(canonical.toByteArray()).joinToString(""){"%02x".format(it)}
+ }
  fun trainingCandidates():List<LearningExperience> = synchronized(LOCK) {
   store.all().filter { it.type==LearningExperienceType.USER_FEEDBACK && it.status==LearningStatus.CONFIRMED &&
    it.provenance==LearningProvenance.SYNTHETIC_FIXTURE && it.sourceRef?.startsWith("interactive:")==true }
+   // Multiple confirmed revisions of one turn are unresolved, not two positive labels.
+   .groupBy{it.sourceRef!!.substringBeforeLast(":v")}.values.filter{it.size==1}.flatten()
  }
  companion object {
   private val LOCK=Any()
