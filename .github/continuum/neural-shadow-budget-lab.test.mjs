@@ -61,3 +61,27 @@ test('research-disabled public replay produces exactly zero public gradients',()
  const trial=trainRound(seeded,{steps:250,now:100,researchReplayEvery:0});
  assert.equal(trial.report.sourceUpdates,0);
 });
+
+test('default research sweep is strictly bounded to nine non-promotable trials',()=>{
+ const state=createNeuralState();
+ const result=runShadowBudgetSweep(state,{budgets:[250]});
+ assert.equal(result.profiles.length,3);
+ assert.deepEqual(result.profiles.map(x=>x.policy),
+   REPLAY_ABLATIONS.map(x=>x.name));
+ assert.ok(result.profiles.every(x=>x.auditUsedForSelection===false));
+ assert.equal(result.weightsWritten,false);
+});
+test('oversized ablation grid rejected before training',()=>{
+ const original=createNeuralState(),before=JSON.stringify(original);
+ assert.throws(()=>runShadowBudgetSweep(original,{budgets:[250,500,1000,2000]}),
+   /INVALID_SHADOW_BUDGET/);
+ assert.equal(JSON.stringify(original),before);
+});
+test('legacy model hash and every baseline byte survive research measurements',()=>{
+ const original=createNeuralState(),snapshot=JSON.stringify(original),bytes=exportWeights(original);
+ const trial=runShadowBudgetSweep(original,{budgets:[250],replayAblations:[REPLAY_ABLATIONS[2]]});
+ assert.equal(trial.preservedBaseline,true);
+ assert.equal(JSON.stringify(original),snapshot);
+ assert.deepEqual(exportWeights(original),bytes);
+ assert.ok(trial.profiles.every(row=>row.publicSourceUpdates===0));
+});
