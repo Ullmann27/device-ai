@@ -9,7 +9,7 @@ die() { printf 'OWNER_V25_BLOCKED: %s\n' "$*" >&2; exit 69; }
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 render_publisher_root="$repo_root"
-signed_release_ref="release/continuum-owner-v24-candidate-20261026"
+signed_release_ref="release/continuum-owner-v25-candidate-20261026"
 actual_branch="$(git branch --show-current)"
 if [[ -n "$actual_branch" && "$actual_branch" != "$signed_release_ref" ]]; then
   die "Unexpected release branch"
@@ -18,7 +18,7 @@ fi
 # remains mandatory and prevents branch or commit substitution.
 commit="$(git rev-parse --verify HEAD)"
 [[ "$commit" =~ ^[a-f0-9]{40}$ && "$commit" == "$CONTINUUM_RELEASE_SHA" &&
-   "${CONTINUUM_OWNER_V25_APPROVED_SHA:-}" == "$commit" ]] || die "Unapproved v24 builder SHA"
+   "${CONTINUUM_OWNER_V25_APPROVED_SHA:-}" == "$commit" ]] || die "Unapproved v25 builder SHA"
 # A source proposal is not an approval. Require exact separate owner approval.
 node scripts/continuum-v25-source-gate.mjs || die "Source inventory or exact owner authorization failed"
 [[ "$CONTINUUM_ASTRA_UI_SHA" == "811803138c86a5c1a7a2a2b9cd196580a574a4a1" ]] ||
@@ -60,7 +60,7 @@ grep -Fq 'versionName = "0.3.24"' app/build.gradle.kts || die "Wrong owner versi
 # Public-source checks must never inherit the private owner keystore/passphrase.
 no_signing_env() { env -u CONTINUUM_MENTOR_SIGNING_P12_BASE64 -u CONTINUUM_MENTOR_SIGNING_PASSWORD -u CONTINUUM_OWNER_V25_QA "$@"; }
 
-# A signed v24 release must verify the complete immutable v22 Git tree.
+# A signed v25 release must verify the complete immutable v22 Git tree.
 # Render's authorized private checkout has no origin remote. Verify the exact
 # 2243 historical tree entries and root SHA-1 from the pinned GitHub snapshot,
 # plus the original 927-source manifest; NEVER skip this audit.
@@ -181,7 +181,7 @@ fi
 
 
 # Preserve both previously signed owner builds before publishing a new one.
-# The current public owner endpoint now serves 0.3.22, not 0.3.21.
+# The current public owner endpoint serves 0.3.23/code24, our required rollback.
 # Both artifacts must retain the exact installed-app package and owner signer.
 output="$render_publisher_root/mentor-build-output"
 mkdir -p "$output"
