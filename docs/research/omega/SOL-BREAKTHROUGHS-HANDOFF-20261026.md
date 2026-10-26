@@ -21,3 +21,12 @@ For each source change: reproduce a behavioral failure, make the smallest justif
 START_CHECKPOINT / UNVERIFIED_NEW_WORK. No new implementation yet. Previous full and focused results remain at their original SHAs under `docs/evidence/sol-infrastructure-20261025` and `docs/evidence/sol-brain-20261025`.
 
 Next: independent CDX diagnosis/alternatives, exact remaining memory eligibility failures, existing typed coding sandbox slice and DeepSeek bridge; root owns actual main-dialogue/Gemma integration and combined verification. Rollback by reverting individual new commits on a new review branch. No source branch is force-updated or closed.
+
+
+## First main-dialogue repair / pre-inference freeze
+
+Two independently reproduced plumbing failures: (1) every grounded recall suppresses an explicit why/compare/analyse task; (2) original requests longer than512 characters are replaced by the memory engine's512-character input before model inference, deleting later instructions. RED logs archived. The bounded policy now retains exact direct recall, allows explicit synthesis through the existing local agent, preserves original long model requests, carries retrieval as labelled JSON data and falls back to the exact original recall on failed synthesis. Model conclusions grant no fact/tool/write authority. Nine focused JVM checks PASS; actual AgentActivity SDK compile is still PENDING. Task-intent detection is an explicit lexical rule, not neural semantics. Qwen retained.
+
+Independent evaluator authored20 previously unused synthetic German cases without predictions/candidate-code inspection; fixture SHAea8f83cb45765a9034fd777954e4e62a36fd35647c41d9922bbe2fe0b0d841a7, committed BEFORE inference. Runtime matrix is predeclared: selected GemmaAPI0.18.1 and0.18.0, public Qwen3-0.6B reference0.18.0, same4096context/256output/2CPUthreads/greedy/explicit thinking-off. Reference Qwen actual original SHA is separately pinned; installed Fold7 Qwen identity is unknown. Model acceptance/results are NOT_RUN at this checkpoint.
+
+Official Google Maven metadata confirms Android0.18.1 exists. Official release notes identify its patch as an EmbeddingGemma2 source-build ABI fix; Kotlin API sources do not change between0.18.0/0.18.1. Do not invent a Gemma4-specific bug or infer device compatibility from host version alone. Android remains0.18.0 pending actual evidence. Official PyPI0.18.0 wheel checksum verified and isolated host toolchain installed; comparison will execute actual selected bytes. Existing0.18.1 smoke results remain separate.

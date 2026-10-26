@@ -1,0 +1,61 @@
+{
+  "schema": "CONTINUUM_LOCAL_LANGUAGE_RUNTIME_MATRIX_V1",
+  "fixture": "config/research/gemma-host-de-exact-v1.json",
+  "fixtureSha256": "ea8f83cb45765a9034fd777954e4e62a36fd35647c41d9922bbe2fe0b0d841a7",
+  "frozenBeforePredictions": true,
+  "protocol": {
+    "contextTokens": 4096,
+    "maxOutputTokens": 256,
+    "threads": 2,
+    "thinkingEnabled": false,
+    "sampler": {
+      "topK": 1,
+      "topP": 1.0,
+      "temperature": 1.0,
+      "seed": 73
+    },
+    "wallTimeSeconds": 300,
+    "cpuTimeSeconds": 240,
+    "addressSpaceGiB": 8
+  },
+  "runs": [
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.1"
+    },
+    {
+      "model": "gemma-selected",
+      "runtime": "0.18.0"
+    },
+    {
+      "model": "qwen3-public-reference",
+      "runtime": "0.18.0"
+    }
+  ],
+  "models": {
+    "gemma-selected": {
+      "sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+      "bytes": 3659530240,
+      "repository": "litert-community/gemma-4-E4B-it-litert-lm",
+      "revision": "e6a3892a8c22cf87ff99583996149cf3cb32452b",
+      "role": "Owner-selected original; actual Fold7 acceptance NOT_RUN"
+    },
+    "qwen3-public-reference": {
+      "sha256": "c5f39b4191926786c3e6668b62af4d6eb15248dfc7a5348252a9b406f33f2108",
+      "bytes": 613722264,
+      "repository": "litert-community/Qwen3-0.6B",
+      "revision": "fed81d17517e6ea64362e917ecf7e5accff12492",
+      "file": "Qwen3-0.6B.litertlm",
+      "license": "Apache-2.0",
+      "role": "Public same-family reference; installed owner Qwen file/hash unknown, NOT an exact-device model comparison"
+    }
+  },
+  "limits": [
+    "No tools, private memories, API requests, training or promotion",
+    "Fixture authors required Gemma identity; Qwen is an explicit predeclared reference extension with identical prompts/scoring",
+    "Thinking disabled explicitly for both; no forced /no_think text; not a thinking-mode comparison",
+    "No physical Android acceptance or broad intelligence claim",
+    "Fresh native conversation per task; bounded quoted history tests are not long-session/device performance proof",
+    "Native Python successful return does not expose exact EOS-vs-token-budget reason; record that limit"
+  ]
+}
