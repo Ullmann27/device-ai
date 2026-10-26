@@ -58,6 +58,21 @@ class LocalFirstPolicyTest {
     }
 
     @Test
+    fun sameSessionLocalFollowUpKeepsActualQuestionAndBoundedConversationContext() {
+        val question="Welche Folgen hat das für Menschen, die dort leben möchten?"
+        val memoryOnlyPrompt="Aktuelle Frage: "+question+
+            "\\nDer Bezug des Pronomens ist nicht eindeutig aufgelöst."
+        assertEquals(question,LocalFirstPolicy.localModelQuestion(
+            question,memoryOnlyPrompt,hasSameSessionLocalTurn=true,grounded=false))
+        assertEquals(memoryOnlyPrompt,LocalFirstPolicy.localModelQuestion(
+            question,memoryOnlyPrompt,hasSameSessionLocalTurn=false,grounded=false))
+        assertEquals(memoryOnlyPrompt,LocalFirstPolicy.localModelQuestion(
+            question,memoryOnlyPrompt,hasSameSessionLocalTurn=true,grounded=true))
+        assertEquals(AssistantRoute.LOCAL_MODEL,LocalFirstPolicy.afterMemory(
+            grounded=false,localModelReady=true,request=question))
+    }
+
+    @Test
     fun modelUiExposesNoModelAndRuntimeLifecycleStates() {
         assertEquals(
             LocalModelUiState.NO_MODEL,
