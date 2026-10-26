@@ -112,8 +112,20 @@ export function recordSession(ledger,report,meta={}){
   // A provisional successful session has NO independent classification yet.
   // Keep its diagnostic attempts for investigation, but do not train from
   // either an asserted win or its possibly stale failed-test labels.
+  // A failed process or runner with zero executed failed tests is an
+  // infrastructure incident, not a strategy-quality observation. Preserve its
+  // attempt for audit, but never turn it into a negative learning signal.
+  const hasExecutedFailedTests=a=>(a.tests??[]).some(t=>{
+    if(t.passed!==false)return false;
+    const total=t.total,executed=t.executed,failed=t.failed,skipped=t.skipped;
+    return [total,executed,failed,skipped].every(Number.isSafeInteger)&&
+      executed>0&&failed>0&&failed<=executed&&
+      total>=executed&&total<=1_000_000&&
+      skipped>=0&&skipped<=total-executed;
+  });
   const learned=independentPending?[]:attempts.filter(a=>!['LOCAL_ISOLATED_PATCH','LOCAL_SCOPED_PATCH'].includes(a.strategy)&&(
-    ['VERIFIED','FAILED_TESTS','INSUFFICIENT_EVIDENCE'].includes(a.outcome)||
+    a.outcome==='VERIFIED'||a.outcome==='INSUFFICIENT_EVIDENCE'||
+    (a.outcome==='FAILED_TESTS'&&hasExecutedFailedTests(a))||
     (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
     kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
