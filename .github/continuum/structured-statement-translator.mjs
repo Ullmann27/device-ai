@@ -56,6 +56,10 @@ function parse(source){
       forward.set(name,alias);reverse.set(alias,name);
     }
   }
+  // Property names are literals, not lexical variable bindings.
+  // This restricted grammar rejects collisions instead of guessing scope.
+  if([...forward.keys()].some(name=>body.some((t,i)=>t===name&&body[i-1]==='.')))
+    throw Error('BINDING_PROPERTY_COLLISION');
   const statements=[];
   let start=open+1,paren=0,bracket=0;
   for(let i=open+1;i<v.length-1;i++){
