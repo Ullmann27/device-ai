@@ -12,7 +12,7 @@ import {git,createWorktree,removeWorktree,runChain,evidenceSufficient,boundedWor
 
 const HEX64=/^[a-f0-9]{64}$/;
 const sha256=v=>crypto.createHash('sha256').update(v).digest('hex');
-const isTestFile=x=>/(^|\/)(test|tests|__tests__)(\/|$)|(\.|\/)(test|spec)\.[cm]?[jt]s$|Test\.kt$/i.test(x);
+const isTestFile=x=>/(^|\/)(test|tests|__tests__|specs|fixtures)(\/|$)|(?:^|[-_.])(?:test|spec)\.[cm]?[jt]s$|(?:Test|Spec)\.kt$/i.test(x);
 export const CCC1_RESEARCH_OUTCOMES=Object.freeze({
   PASS:'DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED',
   INTERRUPTED:'INTERRUPTED_NO_LEARNING',
