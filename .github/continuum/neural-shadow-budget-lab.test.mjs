@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNeuralState,exportWeights,trainRound,ingestPublicSources} from './neural-core.mjs';
-import {STEP_BUDGETS,characterizeStagnation,
+import {STEP_BUDGETS,REPLAY_ABLATIONS,characterizeStagnation,
  runShadowBudgetSweep} from './neural-shadow-budget-lab.mjs';
 
 test('two short experiments preserve exact original model bytes, rounds and history',()=>{
  const original=createNeuralState(),initial=JSON.stringify(original),bytes=exportWeights(original);
- const result=runShadowBudgetSweep(original,{budgets:[250,500],now:42});
+ const result=runShadowBudgetSweep(original,{budgets:[250,500],replayAblations:[REPLAY_ABLATIONS[0]],now:42});
  assert.equal(result.status,'RESEARCH_ONLY_NOT_PROMOTABLE');
  assert.equal(result.promoted,false);assert.equal(result.weightsWritten,false);
  assert.equal(result.requiresFreshUnseenHoldout,true);
