@@ -59,3 +59,23 @@ Follow-up commits:
 **Test environment qualification:** The original GitHub module bodies and test callback functions were re-fetched after commits and evaluated in a fresh V8 isolate with a test-only compile-only `vm.Script` shim. They were *not* executed through `node --test` in an authenticated complete Git checkout. A similar precursor translator (not identical blob) ran 6/6 actual `node --test` locally under Node22. Do not aggregate those counts into a fabricated native suite result.
 
 **Review gate now clearer:** NTW1's research score can rank a **hypothesis**, and statement-level translation can create a **candidate**. Neither action counts as a successful repair nor guarantees semantic correctness. CCC1/ToolGate/isolated-executor remains the ONLY authorized pathway to try source code, and only an independent verified test receipt can move a candidate to a reviewable result. A declared SHA string is not sufficient as such a receipt.
+
+
+## Provenance-bound shadow proposals (further hardening)
+
+The ranker-to-translator adapter now requires two explicit immutable task identifiers before returning **any** candidate:
+- `sourceCommit`: a syntactically valid lowercase 40-hex Git commit, preserving the already-reviewed source identity expected by the canonical Android↔Termux coding task.
+- `taskSha256`: a lowercase 64-hex typed task fingerprint.
+- `sourceSha256`: SHA-256 digest of the source snippet calculated by Node `crypto.createHash('sha256')`.
+- `candidateSha256`: SHA-256 digest of the proposed edited source, also calculated by Node `crypto`.
+
+These are **bindings and consistency checks**, not authorization, attestation or a proof that the commit/task fingerprint was verified by Git. A future CCC1 adapter must compare them to a canonical owner-approved grant, source tree and independently measured receipt before execution or learning.
+
+Exact current GitHub blobs:
+- `.github/continuum/coin-wm-v3-structured-shadow.mjs`: `22bcd1a7b105fa4e3f4e4d8acb1f881ed243f08a`.
+- `.github/continuum/coin-wm-v3-structured-shadow.test.mjs`: `7068031daef4f86fb71f5ca40cd06697ac9a3a35`.
+- `.github/continuum/structured-statement-translator.mjs`: `97e05a743ab1822c5952f1e2f13ff8e560639a77`.
+
+Exact-source V8 replay after the final identity binding: **4/4 adapter tests PASS** and the separately re-fetched **5/5 translator tests PASS**. Because the V8 isolated runner has no native Node `crypto`, its hash adapter is explicitly **test-only deterministic, NOT cryptographic**; it verifies data flow and digest consistency, not real SHA-256 generation. The source uses the standard actual Node crypto API; full Node CLI native suite on current GitHub blobs is still NOT_RUN.
+
+The adapter rejects missing/malformed source commit or task hash, bad/mismatched shadow models, invalid operator sets, invalid states, over-budget candidate counts, and a forged `applyToCode` implementation. It does **not** execute code, call CCC1, promote a model or produce an independent verification receipt.
