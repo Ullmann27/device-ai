@@ -8,8 +8,8 @@ import {fileURLToPath} from 'node:url';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const read=path=>readFileSync(resolve(root,path),'utf8');
 const head=()=>execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
-const approvedSource='440432253dd0cc4968fea56b0c70793e9b90661f';
-const inventory='101cf496c6ea7373c248555fda8b6d5719d2128a';
+const approvedSource='1ea194134ee540e99e2745dda439e440d245a2ac';
+const inventory='2d617e27eec2923437ed1e8a1f1cf73eac4aa7b9';
 function gate(vars={}){
  return spawnSync(process.execPath,['scripts/continuum-v24-source-gate.mjs'],{
   cwd:root,encoding:'utf8',timeout:120000,

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "state": "SOURCE_PROPOSAL_NOT_OWNER_APPROVAL",
-  "sourceHead": "440432253dd0cc4968fea56b0c70793e9b90661f",
+  "sourceHead": "1ea194134ee540e99e2745dda439e440d245a2ac",
   "package": "at.heinz.deviceai.mentorpaired",
   "versionCode": 24,
   "versionName": "0.3.23",
@@ -2545,7 +2545,7 @@
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/cognitive/VirtualModelFabricTest.kt",
-      "blob": "bbed6e66e489541478208bc1dedcf12b69b285ca"
+      "blob": "4a05e3e2ce7003e754a288df980aa5203c115d93"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/cognitive/WebLearningInboxTest.kt",
