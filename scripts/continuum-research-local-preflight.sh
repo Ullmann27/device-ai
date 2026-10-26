@@ -27,6 +27,10 @@ node --version > "$out/node-version.txt"
 paths=(
   scripts/continuum-research-tap-summary.mjs
   scripts/continuum-research-tap-summary.test.mjs
+  scripts/continuum-neuron-demo-review-jvm.sh
+  .github/continuum/neuron-demo-isolation-wiring.test.mjs
+  app/src/main/java/at/heinz/deviceai/learning/NeuralDemoSandbox.kt
+  app/src/test/java/at/heinz/deviceai/learning/NeuralDemoSandboxTest.kt
   .github/continuum/research-evidence-gate.mjs
   .github/continuum/research-evidence-gate.test.mjs
   .github/continuum/research-repair-bridge.mjs
@@ -40,6 +44,7 @@ paths=(
 sha256sum "${paths[@]}" > "$out/checked-source-sha256.txt"
 tests=(
   scripts/continuum-research-tap-summary.test.mjs
+  .github/continuum/neuron-demo-isolation-wiring.test.mjs
   .github/continuum/research-evidence-gate.test.mjs
   .github/continuum/research-repair-bridge.test.mjs
   .github/continuum/repair-research-verifier.test.mjs
@@ -62,6 +67,7 @@ else
   exit 1
 fi
 kotlin_status=NOT_RUN_MISSING_JVM_DEPS
+neural_demo_status=NOT_RUN_MISSING_JVM_DEPS
 if [[ -n "${CONTINUUM_FABRIC_JVM_DEPS:-}" ]]; then
   if bash scripts/continuum-feedback-review-jvm.sh "$out/kotlin-feedback" > "$out/kotlin-runner.log" 2>&1; then
     kotlin_status=PASS
@@ -70,8 +76,15 @@ if [[ -n "${CONTINUUM_FABRIC_JVM_DEPS:-}" ]]; then
     tail -n 70 "$out/kotlin-runner.log" >&2
     exit 1
   fi
+  if bash scripts/continuum-neuron-demo-review-jvm.sh "$out/kotlin-neuron" > "$out/kotlin-neuron-runner.log" 2>&1; then
+    neural_demo_status=PASS
+  else
+    echo "NEURON_DEMO_JVM_TESTS_FAILED; output=$out/kotlin-neuron-runner.log" >&2
+    tail -n 70 "$out/kotlin-neuron-runner.log" >&2
+    exit 1
+  fi
 fi
-printf 'schema=continuum-research-preflight-v1\nsource_sha=%s\nbranch=%s\nnode_tests=%s\nkotlin_jvm_tests=%s\nandroid_sdk=NOT_RUN\nowner_signing=NOT_RUN\nrelease_eligible=FALSE\n' \
-  "$head_sha" "$branch" "$node_status" "$kotlin_status" > "$out/STATUS.txt"
+printf 'schema=continuum-research-preflight-v1\nsource_sha=%s\nbranch=%s\nnode_tests=%s\nkotlin_jvm_tests=%s\nneural_demo_jvm_tests=%s\nandroid_sdk=NOT_RUN\nowner_signing=NOT_RUN\nrelease_eligible=FALSE\n' \
+  "$head_sha" "$branch" "$node_status" "$kotlin_status" "$neural_demo_status" > "$out/STATUS.txt"
 cat "$out/STATUS.txt"
 printf 'logs=%s\n' "$out"
