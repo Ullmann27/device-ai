@@ -1,0 +1,118 @@
+✔ baby extracts interaction structure and constraints (1.846589ms)
+✔ baby turns evidence into bounded beliefs and epistemic goals (3.420035ms)
+✔ goal policy balances priority reward and exploration (0.681389ms)
+✔ public web guard blocks local and reserved addresses (3.475197ms)
+✔ html extraction strips active content and preserves public links (1.528298ms)
+✔ legacy overconfident beliefs are downgraded until revalidated (0.320423ms)
+✔ interaction profile and explicit owner rules learn without becoming web beliefs (0.751875ms)
+✔ weak skills autonomously create curriculum goals and competent skills close them (1.590061ms)
+✔ memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts (1.126952ms)
+✔ deep research plan uses distinct focused search queries for interaction and metacognition (0.31133ms)
+✔ html extraction removes navigation chrome before learning (0.28459ms)
+✔ baby memory migration removes navigation noise and merges citation-marker duplicates (0.339182ms)
+✔ memory retrieval reward depends on relevance quality rather than raw hit count (0.325081ms)
+✔ retrospective audit quarantines unrelated historical research without destroying provenance (0.42353ms)
+✔ new off-topic content stays quarantined even with several citation markers (0.279211ms)
+✔ uncited attribution and invalid evidence URLs cannot promote a claim (0.301536ms)
+✖ duplicate consolidation keeps explicitly grounded provenance isolated from legacy rows (1.711856ms)
+✖ grounded duplicate cannot inherit confidence, identity or citations from provisional row (0.529149ms)
+✖ evidence ingestion never grafts unverified citations onto verified same-claim support (1.041483ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 16
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112.240697
+
+✖ failing tests:
+
+test at .github/continuum/baby-core.test.mjs:204:1
+✖ duplicate consolidation keeps explicitly grounded provenance isolated from legacy rows (1.711856ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      citationUrls: [
+        'https://publisher.example/paper',
+  +     'https://unverified.example/legacy'
+      ],
+      confidence: 0.9,
+      contradictionIds: [],
+  +   createdAt: 1,
+  -   createdAt: 10,
+      evidenceMode: 'EXPLICIT_CITATION',
+      id: 'explicit',
+  +   lastValidatedAt: 99,
+  -   lastValidatedAt: 20,
+      query: 'spaced repetition',
+      sourceDiversity: 1,
+      status: 'GROUNDED_OBSERVATION',
+      supportCount: 1,
+      text: 'Spaced repetition improves durable recall through repeated retrieval practice.',
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/baby-core.test.mjs:217:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 'explicit', text: 'Spaced repetition improves durable recall through repeated retrieval practice.', query: 'spaced repetition', status: 'GROUNDED_OBSERVATION', evidenceMode: 'EXPLICIT_CITATION', confidence: 0.9, uncertainty: 0.1, citationUrls: [ 'https://publisher.example/paper', 'https://unverified.example/legacy' ], supportCount: 1, sourceDiversity: 1, createdAt: 1, lastValidatedAt: 99, contradictionIds: [] },
+    expected: { id: 'explicit', text: 'Spaced repetition improves durable recall through repeated retrieval practice.', query: 'spaced repetition', status: 'GROUNDED_OBSERVATION', evidenceMode: 'EXPLICIT_CITATION', confidence: 0.9, uncertainty: 0.1, citationUrls: [ 'https://publisher.example/paper' ], supportCount: 1, sourceDiversity: 1, createdAt: 10, lastValidatedAt: 20, contradictionIds: [] },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/baby-core.test.mjs:222:1
+✖ grounded duplicate cannot inherit confidence, identity or citations from provisional row (0.529149ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'PROVISIONAL'
+  - 'GROUNDED_OBSERVATION'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/baby-core.test.mjs:241:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PROVISIONAL',
+    expected: 'GROUNDED_OBSERVATION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/baby-core.test.mjs:259:1
+✖ evidence ingestion never grafts unverified citations onto verified same-claim support (1.041483ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'https://unverified.example/guess',
+      'https://publisher.example/a',
+      'https://publisher.example/b',
+      'https://publisher.example/c'
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/baby-core.test.mjs:275:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'https://unverified.example/guess', 'https://publisher.example/a', 'https://publisher.example/b', 'https://publisher.example/c' ],
+    expected: [ 'https://publisher.example/a', 'https://publisher.example/b', 'https://publisher.example/c' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

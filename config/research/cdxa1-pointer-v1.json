@@ -1,0 +1,1257 @@
+{
+  "schema": "CDXA1_NEURAL_POINTER_PROTOCOL_V1",
+  "status": "FROZEN_BEFORE_TRAINING_OR_PREDICTION",
+  "experiment": "EXP-05",
+  "task": "Return full unique supporting evidence sentence verbatim or UNBEKANNT; 3 bounded German factual relation families",
+  "architecture": "Shared16hidden tanh neural pointer softmax over all source whitespace-token chunks, UNBEKANNT, EOS. Previous predicted pointer is state. No forced next-pointer or EOS, no answer/template supplied at inference.",
+  "features": "CDXA1_FEATURES_V1; generic CSX-style overlap/binding/negation/boundary features,32FNV1a word/3-4gram buckets and learned MLP; see source, no semantic proof",
+  "seed": 91,
+  "hidden": 16,
+  "epochs": [
+    0,
+    10,
+    30,
+    80
+  ],
+  "rate": 0.01,
+  "batchSize": 64,
+  "optimizer": "Adam beta1=.9 beta2=.999 epsilon=1e-8; TRAIN teacher-forced pointer CE; no DEV gradients",
+  "maxOutputTokens": 128,
+  "maxEvidenceBytes": 1024,
+  "maxQuestionBytes": 256,
+  "maxSourceTokens": 128,
+  "selection": "Highest in-family DEV exact+EOS, then fewer epochs. Every stage/stratum/challenge output retained. No finalTEST tuning.",
+  "comparators": {
+    "rule": "Separate deterministic lexical relation/name/negation extraction baseline, never neural fallback",
+    "csx": "Actual ContinuumResidualSpanCore multiTokenSpans/identifierPlaceholders/entityProximity/excludeCueWords, same TRAIN plus goldSpan annotations,30epochs,.025rate; expand selected literal span to source sentence for format fairness",
+    "cdx": "Actual TinyContextDecoder same64TRAIN,seed91,rate.035,120000updates, raw and train-mean-centered×32; unchanged16D frozenSWB1; no app integration"
+  },
+  "provenance": {
+    "author": "CDX implementation agent, synthetic public-only fixtures before predictions",
+    "generatorSeed": 20261026,
+    "trainNames": [
+      "Asta",
+      "Bert",
+      "Cora",
+      "Dino",
+      "Elva",
+      "Finn",
+      "Gero",
+      "Hedi"
+    ],
+    "unseenDevNames": [
+      "Ivo",
+      "Jule",
+      "Keno",
+      "Lina",
+      "Mona",
+      "Niko",
+      "Oda",
+      "Pia"
+    ],
+    "trainValues": [
+      [
+        "Aachen",
+        "Jena",
+        "Kiel",
+        "Potsdam",
+        "Rostock",
+        "Weimar",
+        "Koblenz",
+        "Halle"
+      ],
+      [
+        "Bäcker",
+        "Tischler",
+        "Gärtner",
+        "Lehrer",
+        "Sänger",
+        "Pilot"
+      ],
+      [
+        "einen Hut",
+        "eine Kappe",
+        "einen Helm",
+        "eine Mütze"
+      ]
+    ],
+    "unseenDevValues": [
+      [
+        "Mainz",
+        "Erfurt",
+        "Fulda",
+        "Lübeck",
+        "Bamberg",
+        "Siegen"
+      ],
+      [
+        "Koch",
+        "Maler",
+        "Geiger",
+        "Bote",
+        "Schneider",
+        "Richter"
+      ],
+      [
+        "einen Kranz",
+        "einen Turban",
+        "ein Tuch",
+        "eine Haube"
+      ]
+    ],
+    "independentTest": "Separate evaluator, withheld until source/checkpoint/tokenizer/data/inference freeze; not this author's dataset"
+  },
+  "limits": [
+    "Neural retrieval/copying primitive with engineered inputs, not general learned semantics or free paraphrase generation",
+    "Existing CSX already has related features; this model adds autoregressive learned pointer transitions/EOS, not a second runtime",
+    "Deterministic baseline may equal/beat model; no advantage over rule-based extraction presumed",
+    "Out-of-family and contradictory challenges separately reported",
+    "No runtime promotion or owner weights"
+  ],
+  "train": [
+    {
+      "id": "train-positive-00",
+      "stratum": "literal_supported",
+      "evidence": "Asta wohnt in Aachen.",
+      "question": "Wo wohnt Asta?",
+      "answer": "Asta wohnt in Aachen.",
+      "goldSpan": "Aachen",
+      "supported": true
+    },
+    {
+      "id": "train-positive-01",
+      "stratum": "literal_supported",
+      "evidence": "Bert hat eine Kappe auf. Bert arbeitet als Bäcker.",
+      "question": "Was arbeitet Bert?",
+      "answer": "Bert arbeitet als Bäcker.",
+      "goldSpan": "Bäcker",
+      "supported": true
+    },
+    {
+      "id": "train-positive-02",
+      "stratum": "literal_supported",
+      "evidence": "Cora wohnt in Kiel. Dino trägt eine Mütze. Cora trägt einen Hut.",
+      "question": "Was trägt Cora?",
+      "answer": "Cora trägt einen Hut.",
+      "goldSpan": "einen Hut",
+      "supported": true
+    },
+    {
+      "id": "train-positive-03",
+      "stratum": "literal_supported",
+      "evidence": "Dino lebt in Jena.",
+      "question": "Wo wohnt Dino?",
+      "answer": "Dino lebt in Jena.",
+      "goldSpan": "Jena",
+      "supported": true
+    },
+    {
+      "id": "train-positive-04",
+      "stratum": "literal_supported",
+      "evidence": "Elva ist von Beruf Tischler. Elva trägt einen Hut.",
+      "question": "Was arbeitet Elva?",
+      "answer": "Elva ist von Beruf Tischler.",
+      "goldSpan": "Tischler",
+      "supported": true
+    },
+    {
+      "id": "train-positive-05",
+      "stratum": "literal_supported",
+      "evidence": "Gero hat einen Helm auf. Finn hat eine Kappe auf. Finn lebt in Weimar.",
+      "question": "Was trägt Finn?",
+      "answer": "Finn hat eine Kappe auf.",
+      "goldSpan": "eine Kappe",
+      "supported": true
+    },
+    {
+      "id": "train-positive-06",
+      "stratum": "literal_supported",
+      "evidence": "Gero wohnt in Kiel.",
+      "question": "Wo lebt Gero?",
+      "answer": "Gero wohnt in Kiel.",
+      "goldSpan": "Kiel",
+      "supported": true
+    },
+    {
+      "id": "train-positive-07",
+      "stratum": "literal_supported",
+      "evidence": "Hedi hat eine Mütze auf. Hedi arbeitet als Gärtner.",
+      "question": "Welchen Beruf hat Hedi?",
+      "answer": "Hedi arbeitet als Gärtner.",
+      "goldSpan": "Gärtner",
+      "supported": true
+    },
+    {
+      "id": "train-positive-08",
+      "stratum": "literal_supported",
+      "evidence": "Asta trägt einen Helm. Bert trägt eine Kappe. Asta wohnt in Aachen.",
+      "question": "Was hat Asta auf?",
+      "answer": "Asta trägt einen Helm.",
+      "goldSpan": "einen Helm",
+      "supported": true
+    },
+    {
+      "id": "train-positive-09",
+      "stratum": "literal_supported",
+      "evidence": "Bert lebt in Potsdam.",
+      "question": "Wo lebt Bert?",
+      "answer": "Bert lebt in Potsdam.",
+      "goldSpan": "Potsdam",
+      "supported": true
+    },
+    {
+      "id": "train-positive-10",
+      "stratum": "literal_supported",
+      "evidence": "Cora ist von Beruf Lehrer. Cora trägt einen Helm.",
+      "question": "Welchen Beruf hat Cora?",
+      "answer": "Cora ist von Beruf Lehrer.",
+      "goldSpan": "Lehrer",
+      "supported": true
+    },
+    {
+      "id": "train-positive-11",
+      "stratum": "literal_supported",
+      "evidence": "Elva hat einen Hut auf. Dino hat eine Mütze auf. Dino lebt in Potsdam.",
+      "question": "Was hat Dino auf?",
+      "answer": "Dino hat eine Mütze auf.",
+      "goldSpan": "eine Mütze",
+      "supported": true
+    },
+    {
+      "id": "train-positive-12",
+      "stratum": "literal_supported",
+      "evidence": "Elva wohnt in Rostock.",
+      "question": "In welcher Stadt wohnt Elva?",
+      "answer": "Elva wohnt in Rostock.",
+      "goldSpan": "Rostock",
+      "supported": true
+    },
+    {
+      "id": "train-positive-13",
+      "stratum": "literal_supported",
+      "evidence": "Finn arbeitet als Sänger. Finn hat eine Kappe auf.",
+      "question": "Was ist Finn von Beruf?",
+      "answer": "Finn arbeitet als Sänger.",
+      "goldSpan": "Sänger",
+      "supported": true
+    },
+    {
+      "id": "train-positive-14",
+      "stratum": "literal_supported",
+      "evidence": "Gero trägt einen Hut. Hedi trägt eine Mütze. Gero wohnt in Koblenz.",
+      "question": "Welche Kleidung trägt Gero?",
+      "answer": "Gero trägt einen Hut.",
+      "goldSpan": "einen Hut",
+      "supported": true
+    },
+    {
+      "id": "train-positive-15",
+      "stratum": "literal_supported",
+      "evidence": "Hedi lebt in Weimar.",
+      "question": "In welcher Stadt wohnt Hedi?",
+      "answer": "Hedi lebt in Weimar.",
+      "goldSpan": "Weimar",
+      "supported": true
+    },
+    {
+      "id": "train-positive-16",
+      "stratum": "literal_supported",
+      "evidence": "Asta ist von Beruf Pilot. Asta trägt einen Hut.",
+      "question": "Was ist Asta von Beruf?",
+      "answer": "Asta ist von Beruf Pilot.",
+      "goldSpan": "Pilot",
+      "supported": true
+    },
+    {
+      "id": "train-positive-17",
+      "stratum": "literal_supported",
+      "evidence": "Bert lebt in Jena. Cora hat einen Helm auf. Bert hat eine Kappe auf.",
+      "question": "Welche Kleidung trägt Bert?",
+      "answer": "Bert hat eine Kappe auf.",
+      "goldSpan": "eine Kappe",
+      "supported": true
+    },
+    {
+      "id": "train-positive-18",
+      "stratum": "literal_supported",
+      "evidence": "Cora wohnt in Koblenz.",
+      "question": "Wo wohnt Cora?",
+      "answer": "Cora wohnt in Koblenz.",
+      "goldSpan": "Koblenz",
+      "supported": true
+    },
+    {
+      "id": "train-positive-19",
+      "stratum": "literal_supported",
+      "evidence": "Dino arbeitet als Bäcker. Dino hat eine Mütze auf.",
+      "question": "Was arbeitet Dino?",
+      "answer": "Dino arbeitet als Bäcker.",
+      "goldSpan": "Bäcker",
+      "supported": true
+    },
+    {
+      "id": "train-positive-20",
+      "stratum": "literal_supported",
+      "evidence": "Finn trägt eine Kappe. Elva trägt einen Helm. Elva wohnt in Rostock.",
+      "question": "Was trägt Elva?",
+      "answer": "Elva trägt einen Helm.",
+      "goldSpan": "einen Helm",
+      "supported": true
+    },
+    {
+      "id": "train-positive-21",
+      "stratum": "literal_supported",
+      "evidence": "Finn lebt in Halle.",
+      "question": "Wo wohnt Finn?",
+      "answer": "Finn lebt in Halle.",
+      "goldSpan": "Halle",
+      "supported": true
+    },
+    {
+      "id": "train-positive-22",
+      "stratum": "literal_supported",
+      "evidence": "Gero ist von Beruf Tischler. Gero trägt einen Helm.",
+      "question": "Was arbeitet Gero?",
+      "answer": "Gero ist von Beruf Tischler.",
+      "goldSpan": "Tischler",
+      "supported": true
+    },
+    {
+      "id": "train-positive-23",
+      "stratum": "literal_supported",
+      "evidence": "Asta hat einen Hut auf. Hedi lebt in Halle. Hedi hat eine Mütze auf.",
+      "question": "Was trägt Hedi?",
+      "answer": "Hedi hat eine Mütze auf.",
+      "goldSpan": "eine Mütze",
+      "supported": true
+    },
+    {
+      "id": "train-positive-24",
+      "stratum": "literal_supported",
+      "evidence": "Asta wohnt in Aachen.",
+      "question": "Wo lebt Asta?",
+      "answer": "Asta wohnt in Aachen.",
+      "goldSpan": "Aachen",
+      "supported": true
+    },
+    {
+      "id": "train-positive-25",
+      "stratum": "literal_supported",
+      "evidence": "Bert arbeitet als Gärtner. Bert hat eine Kappe auf.",
+      "question": "Welchen Beruf hat Bert?",
+      "answer": "Bert arbeitet als Gärtner.",
+      "goldSpan": "Gärtner",
+      "supported": true
+    },
+    {
+      "id": "train-positive-26",
+      "stratum": "literal_supported",
+      "evidence": "Dino trägt eine Mütze. Cora trägt einen Hut. Cora wohnt in Kiel.",
+      "question": "Was hat Cora auf?",
+      "answer": "Cora trägt einen Hut.",
+      "goldSpan": "einen Hut",
+      "supported": true
+    },
+    {
+      "id": "train-positive-27",
+      "stratum": "literal_supported",
+      "evidence": "Dino lebt in Jena.",
+      "question": "Wo lebt Dino?",
+      "answer": "Dino lebt in Jena.",
+      "goldSpan": "Jena",
+      "supported": true
+    },
+    {
+      "id": "train-positive-28",
+      "stratum": "literal_supported",
+      "evidence": "Elva ist von Beruf Lehrer. Elva trägt einen Hut.",
+      "question": "Welchen Beruf hat Elva?",
+      "answer": "Elva ist von Beruf Lehrer.",
+      "goldSpan": "Lehrer",
+      "supported": true
+    },
+    {
+      "id": "train-positive-29",
+      "stratum": "literal_supported",
+      "evidence": "Finn hat eine Kappe auf. Gero hat einen Helm auf. Finn lebt in Weimar.",
+      "question": "Was hat Finn auf?",
+      "answer": "Finn hat eine Kappe auf.",
+      "goldSpan": "eine Kappe",
+      "supported": true
+    },
+    {
+      "id": "train-positive-30",
+      "stratum": "literal_supported",
+      "evidence": "Gero wohnt in Kiel.",
+      "question": "In welcher Stadt wohnt Gero?",
+      "answer": "Gero wohnt in Kiel.",
+      "goldSpan": "Kiel",
+      "supported": true
+    },
+    {
+      "id": "train-positive-31",
+      "stratum": "literal_supported",
+      "evidence": "Hedi arbeitet als Sänger. Hedi hat eine Mütze auf.",
+      "question": "Was ist Hedi von Beruf?",
+      "answer": "Hedi arbeitet als Sänger.",
+      "goldSpan": "Sänger",
+      "supported": true
+    },
+    {
+      "id": "train-positive-32",
+      "stratum": "literal_supported",
+      "evidence": "Bert trägt eine Kappe. Asta wohnt in Aachen. Asta trägt einen Helm.",
+      "question": "Welche Kleidung trägt Asta?",
+      "answer": "Asta trägt einen Helm.",
+      "goldSpan": "einen Helm",
+      "supported": true
+    },
+    {
+      "id": "train-positive-33",
+      "stratum": "literal_supported",
+      "evidence": "Bert lebt in Potsdam.",
+      "question": "In welcher Stadt wohnt Bert?",
+      "answer": "Bert lebt in Potsdam.",
+      "goldSpan": "Potsdam",
+      "supported": true
+    },
+    {
+      "id": "train-positive-34",
+      "stratum": "literal_supported",
+      "evidence": "Cora ist von Beruf Pilot. Cora trägt einen Helm.",
+      "question": "Was ist Cora von Beruf?",
+      "answer": "Cora ist von Beruf Pilot.",
+      "goldSpan": "Pilot",
+      "supported": true
+    },
+    {
+      "id": "train-positive-35",
+      "stratum": "literal_supported",
+      "evidence": "Elva hat einen Hut auf. Dino lebt in Potsdam. Dino hat eine Mütze auf.",
+      "question": "Welche Kleidung trägt Dino?",
+      "answer": "Dino hat eine Mütze auf.",
+      "goldSpan": "eine Mütze",
+      "supported": true
+    },
+    {
+      "id": "train-positive-36",
+      "stratum": "literal_supported",
+      "evidence": "Elva wohnt in Rostock.",
+      "question": "Wo wohnt Elva?",
+      "answer": "Elva wohnt in Rostock.",
+      "goldSpan": "Rostock",
+      "supported": true
+    },
+    {
+      "id": "train-positive-37",
+      "stratum": "literal_supported",
+      "evidence": "Finn arbeitet als Bäcker. Finn hat eine Kappe auf.",
+      "question": "Was arbeitet Finn?",
+      "answer": "Finn arbeitet als Bäcker.",
+      "goldSpan": "Bäcker",
+      "supported": true
+    },
+    {
+      "id": "train-positive-38",
+      "stratum": "literal_supported",
+      "evidence": "Gero trägt einen Hut. Hedi trägt eine Mütze. Gero wohnt in Koblenz.",
+      "question": "Was trägt Gero?",
+      "answer": "Gero trägt einen Hut.",
+      "goldSpan": "einen Hut",
+      "supported": true
+    },
+    {
+      "id": "train-positive-39",
+      "stratum": "literal_supported",
+      "evidence": "Hedi lebt in Weimar.",
+      "question": "Wo wohnt Hedi?",
+      "answer": "Hedi lebt in Weimar.",
+      "goldSpan": "Weimar",
+      "supported": true
+    },
+    {
+      "id": "train-positive-40",
+      "stratum": "literal_supported",
+      "evidence": "Asta ist von Beruf Tischler. Asta trägt einen Hut.",
+      "question": "Was arbeitet Asta?",
+      "answer": "Asta ist von Beruf Tischler.",
+      "goldSpan": "Tischler",
+      "supported": true
+    },
+    {
+      "id": "train-positive-41",
+      "stratum": "literal_supported",
+      "evidence": "Bert hat eine Kappe auf. Cora hat einen Helm auf. Bert lebt in Jena.",
+      "question": "Was trägt Bert?",
+      "answer": "Bert hat eine Kappe auf.",
+      "goldSpan": "eine Kappe",
+      "supported": true
+    },
+    {
+      "id": "train-positive-42",
+      "stratum": "literal_supported",
+      "evidence": "Cora wohnt in Koblenz.",
+      "question": "Wo lebt Cora?",
+      "answer": "Cora wohnt in Koblenz.",
+      "goldSpan": "Koblenz",
+      "supported": true
+    },
+    {
+      "id": "train-positive-43",
+      "stratum": "literal_supported",
+      "evidence": "Dino hat eine Mütze auf. Dino arbeitet als Gärtner.",
+      "question": "Welchen Beruf hat Dino?",
+      "answer": "Dino arbeitet als Gärtner.",
+      "goldSpan": "Gärtner",
+      "supported": true
+    },
+    {
+      "id": "train-positive-44",
+      "stratum": "literal_supported",
+      "evidence": "Elva wohnt in Rostock. Finn trägt eine Kappe. Elva trägt einen Helm.",
+      "question": "Was hat Elva auf?",
+      "answer": "Elva trägt einen Helm.",
+      "goldSpan": "einen Helm",
+      "supported": true
+    },
+    {
+      "id": "train-positive-45",
+      "stratum": "literal_supported",
+      "evidence": "Finn lebt in Halle.",
+      "question": "Wo lebt Finn?",
+      "answer": "Finn lebt in Halle.",
+      "goldSpan": "Halle",
+      "supported": true
+    },
+    {
+      "id": "train-positive-46",
+      "stratum": "literal_supported",
+      "evidence": "Gero trägt einen Helm. Gero ist von Beruf Lehrer.",
+      "question": "Welchen Beruf hat Gero?",
+      "answer": "Gero ist von Beruf Lehrer.",
+      "goldSpan": "Lehrer",
+      "supported": true
+    },
+    {
+      "id": "train-positive-47",
+      "stratum": "literal_supported",
+      "evidence": "Hedi lebt in Halle. Hedi hat eine Mütze auf. Asta hat einen Hut auf.",
+      "question": "Was hat Hedi auf?",
+      "answer": "Hedi hat eine Mütze auf.",
+      "goldSpan": "eine Mütze",
+      "supported": true
+    },
+    {
+      "id": "train-negative-00",
+      "stratum": "absent_entity",
+      "evidence": "Bert wohnt in Aachen.",
+      "question": "Wo wohnt Asta?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-01",
+      "stratum": "absent_relation",
+      "evidence": "Bert hat eine Kappe auf.",
+      "question": "Was arbeitet Bert?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-02",
+      "stratum": "negated_only",
+      "evidence": "Dino hat eine Mütze auf. Cora trägt nicht einen Helm.",
+      "question": "Was trägt Cora?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-03",
+      "stratum": "absent_entity",
+      "evidence": "Elva lebt in Potsdam.",
+      "question": "Wo lebt Dino?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-04",
+      "stratum": "absent_relation",
+      "evidence": "Elva trägt einen Hut.",
+      "question": "Welchen Beruf hat Elva?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-05",
+      "stratum": "negated_only",
+      "evidence": "Finn hat nicht eine Kappe auf. Gero trägt einen Helm.",
+      "question": "Was hat Finn auf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-06",
+      "stratum": "absent_entity",
+      "evidence": "Hedi wohnt in Koblenz.",
+      "question": "In welcher Stadt wohnt Gero?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-07",
+      "stratum": "absent_relation",
+      "evidence": "Hedi hat eine Mütze auf.",
+      "question": "Was ist Hedi von Beruf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-08",
+      "stratum": "negated_only",
+      "evidence": "Bert hat eine Kappe auf. Asta trägt nicht einen Hut.",
+      "question": "Welche Kleidung trägt Asta?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-09",
+      "stratum": "absent_entity",
+      "evidence": "Cora lebt in Jena.",
+      "question": "Wo wohnt Bert?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-10",
+      "stratum": "absent_relation",
+      "evidence": "Cora trägt einen Helm.",
+      "question": "Was arbeitet Cora?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-11",
+      "stratum": "negated_only",
+      "evidence": "Elva trägt einen Hut. Dino hat nicht eine Mütze auf.",
+      "question": "Was trägt Dino?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-12",
+      "stratum": "absent_entity",
+      "evidence": "Finn wohnt in Rostock.",
+      "question": "Wo lebt Elva?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-13",
+      "stratum": "absent_relation",
+      "evidence": "Finn hat eine Kappe auf.",
+      "question": "Welchen Beruf hat Finn?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-14",
+      "stratum": "negated_only",
+      "evidence": "Gero trägt nicht einen Helm. Hedi hat eine Mütze auf.",
+      "question": "Was hat Gero auf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "train-negative-15",
+      "stratum": "absent_entity",
+      "evidence": "Asta lebt in Halle.",
+      "question": "In welcher Stadt wohnt Hedi?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    }
+  ],
+  "dev": [
+    {
+      "id": "dev-positive-00",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Ivo wohnt in Mainz.",
+      "question": "Wo wohnt Ivo?",
+      "answer": "Ivo wohnt in Mainz.",
+      "goldSpan": "Mainz",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-01",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Jule arbeitet als Koch. Jule hat einen Turban auf.",
+      "question": "Was arbeitet Jule?",
+      "answer": "Jule arbeitet als Koch.",
+      "goldSpan": "Koch",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-02",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Lina trägt eine Haube. Keno wohnt in Fulda. Keno trägt einen Kranz.",
+      "question": "Was trägt Keno?",
+      "answer": "Keno trägt einen Kranz.",
+      "goldSpan": "einen Kranz",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-03",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Lina lebt in Erfurt.",
+      "question": "Wo wohnt Lina?",
+      "answer": "Lina lebt in Erfurt.",
+      "goldSpan": "Erfurt",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-04",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Mona ist von Beruf Maler. Mona trägt einen Kranz.",
+      "question": "Was arbeitet Mona?",
+      "answer": "Mona ist von Beruf Maler.",
+      "goldSpan": "Maler",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-05",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Niko lebt in Siegen. Niko hat einen Turban auf. Oda hat ein Tuch auf.",
+      "question": "Was trägt Niko?",
+      "answer": "Niko hat einen Turban auf.",
+      "goldSpan": "einen Turban",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-06",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Oda wohnt in Fulda.",
+      "question": "Wo lebt Oda?",
+      "answer": "Oda wohnt in Fulda.",
+      "goldSpan": "Fulda",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-07",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Pia hat eine Haube auf. Pia arbeitet als Geiger.",
+      "question": "Welchen Beruf hat Pia?",
+      "answer": "Pia arbeitet als Geiger.",
+      "goldSpan": "Geiger",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-08",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Jule trägt einen Turban. Ivo wohnt in Fulda. Ivo trägt ein Tuch.",
+      "question": "Was hat Ivo auf?",
+      "answer": "Ivo trägt ein Tuch.",
+      "goldSpan": "ein Tuch",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-09",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Jule lebt in Lübeck.",
+      "question": "Wo lebt Jule?",
+      "answer": "Jule lebt in Lübeck.",
+      "goldSpan": "Lübeck",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-10",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Keno trägt ein Tuch. Keno ist von Beruf Bote.",
+      "question": "Welchen Beruf hat Keno?",
+      "answer": "Keno ist von Beruf Bote.",
+      "goldSpan": "Bote",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-11",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Mona hat einen Kranz auf. Lina hat eine Haube auf. Lina lebt in Siegen.",
+      "question": "Was hat Lina auf?",
+      "answer": "Lina hat eine Haube auf.",
+      "goldSpan": "eine Haube",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-12",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Mona wohnt in Bamberg.",
+      "question": "In welcher Stadt wohnt Mona?",
+      "answer": "Mona wohnt in Bamberg.",
+      "goldSpan": "Bamberg",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-13",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Niko hat einen Turban auf. Niko arbeitet als Schneider.",
+      "question": "Was ist Niko von Beruf?",
+      "answer": "Niko arbeitet als Schneider.",
+      "goldSpan": "Schneider",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-14",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Oda trägt einen Kranz. Pia trägt eine Haube. Oda wohnt in Fulda.",
+      "question": "Welche Kleidung trägt Oda?",
+      "answer": "Oda trägt einen Kranz.",
+      "goldSpan": "einen Kranz",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-15",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Pia lebt in Siegen.",
+      "question": "In welcher Stadt wohnt Pia?",
+      "answer": "Pia lebt in Siegen.",
+      "goldSpan": "Siegen",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-16",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Ivo trägt einen Kranz. Ivo ist von Beruf Richter.",
+      "question": "Was ist Ivo von Beruf?",
+      "answer": "Ivo ist von Beruf Richter.",
+      "goldSpan": "Richter",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-17",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Keno hat ein Tuch auf. Jule hat einen Turban auf. Jule lebt in Siegen.",
+      "question": "Welche Kleidung trägt Jule?",
+      "answer": "Jule hat einen Turban auf.",
+      "goldSpan": "einen Turban",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-18",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Keno wohnt in Mainz.",
+      "question": "Wo wohnt Keno?",
+      "answer": "Keno wohnt in Mainz.",
+      "goldSpan": "Mainz",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-19",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Lina arbeitet als Koch. Lina hat eine Haube auf.",
+      "question": "Was arbeitet Lina?",
+      "answer": "Lina arbeitet als Koch.",
+      "goldSpan": "Koch",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-20",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Mona trägt ein Tuch. Niko trägt einen Turban. Mona wohnt in Fulda.",
+      "question": "Was trägt Mona?",
+      "answer": "Mona trägt ein Tuch.",
+      "goldSpan": "ein Tuch",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-21",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Niko lebt in Erfurt.",
+      "question": "Wo wohnt Niko?",
+      "answer": "Niko lebt in Erfurt.",
+      "goldSpan": "Erfurt",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-22",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Oda trägt ein Tuch. Oda ist von Beruf Maler.",
+      "question": "Was arbeitet Oda?",
+      "answer": "Oda ist von Beruf Maler.",
+      "goldSpan": "Maler",
+      "supported": true
+    },
+    {
+      "id": "dev-positive-23",
+      "stratum": "unseen_entity_new_fact",
+      "evidence": "Ivo hat einen Kranz auf. Pia hat eine Haube auf. Pia lebt in Siegen.",
+      "question": "Was trägt Pia?",
+      "answer": "Pia hat eine Haube auf.",
+      "goldSpan": "eine Haube",
+      "supported": true
+    },
+    {
+      "id": "dev-negative-00",
+      "stratum": "absent_entity",
+      "evidence": "Jule wohnt in Mainz.",
+      "question": "Wo wohnt Ivo?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-01",
+      "stratum": "absent_relation",
+      "evidence": "Jule hat einen Turban auf.",
+      "question": "Was arbeitet Jule?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-02",
+      "stratum": "negated_only",
+      "evidence": "Keno trägt nicht ein Tuch. Lina hat eine Haube auf.",
+      "question": "Was trägt Keno?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-03",
+      "stratum": "absent_entity",
+      "evidence": "Mona lebt in Lübeck.",
+      "question": "Wo lebt Lina?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-04",
+      "stratum": "absent_relation",
+      "evidence": "Mona trägt einen Kranz.",
+      "question": "Welchen Beruf hat Mona?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-05",
+      "stratum": "negated_only",
+      "evidence": "Oda trägt ein Tuch. Niko hat nicht einen Turban auf.",
+      "question": "Was hat Niko auf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-06",
+      "stratum": "absent_entity",
+      "evidence": "Pia wohnt in Mainz.",
+      "question": "In welcher Stadt wohnt Oda?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-07",
+      "stratum": "absent_relation",
+      "evidence": "Pia hat eine Haube auf.",
+      "question": "Was ist Pia von Beruf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-08",
+      "stratum": "negated_only",
+      "evidence": "Ivo trägt nicht einen Kranz. Jule hat einen Turban auf.",
+      "question": "Welche Kleidung trägt Ivo?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-09",
+      "stratum": "absent_entity",
+      "evidence": "Keno lebt in Lübeck.",
+      "question": "Wo wohnt Jule?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-10",
+      "stratum": "absent_relation",
+      "evidence": "Keno trägt ein Tuch.",
+      "question": "Was arbeitet Keno?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-11",
+      "stratum": "negated_only",
+      "evidence": "Lina hat nicht eine Haube auf. Mona trägt einen Kranz.",
+      "question": "Was trägt Lina?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-12",
+      "stratum": "absent_entity",
+      "evidence": "Niko wohnt in Mainz.",
+      "question": "Wo lebt Mona?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-13",
+      "stratum": "absent_relation",
+      "evidence": "Niko hat einen Turban auf.",
+      "question": "Welchen Beruf hat Niko?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-14",
+      "stratum": "negated_only",
+      "evidence": "Pia hat eine Haube auf. Oda trägt nicht ein Tuch.",
+      "question": "Was hat Oda auf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-15",
+      "stratum": "absent_entity",
+      "evidence": "Ivo lebt in Lübeck.",
+      "question": "In welcher Stadt wohnt Pia?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-16",
+      "stratum": "absent_relation",
+      "evidence": "Ivo trägt einen Kranz.",
+      "question": "Was ist Ivo von Beruf?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-negative-17",
+      "stratum": "negated_only",
+      "evidence": "Jule hat nicht einen Turban auf. Keno trägt ein Tuch.",
+      "question": "Welche Kleidung trägt Jule?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false
+    },
+    {
+      "id": "dev-changed-00",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Bert lebt in Erfurt. Asta wohnt in Mainz.",
+      "question": "Wo wohnt Asta?",
+      "answer": "Asta wohnt in Mainz.",
+      "goldSpan": "Mainz",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-01",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Cora arbeitet als Geiger. Bert ist von Beruf Koch.",
+      "question": "Was arbeitet Bert?",
+      "answer": "Bert ist von Beruf Koch.",
+      "goldSpan": "Koch",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-02",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Dino hat eine Haube auf. Cora trägt einen Kranz.",
+      "question": "Was trägt Cora?",
+      "answer": "Cora trägt einen Kranz.",
+      "goldSpan": "einen Kranz",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-03",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Elva wohnt in Bamberg. Dino lebt in Erfurt.",
+      "question": "Wo lebt Dino?",
+      "answer": "Dino lebt in Erfurt.",
+      "goldSpan": "Erfurt",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-04",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Elva arbeitet als Maler. Finn ist von Beruf Richter.",
+      "question": "Welchen Beruf hat Elva?",
+      "answer": "Elva arbeitet als Maler.",
+      "goldSpan": "Maler",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-05",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Gero trägt ein Tuch. Finn hat einen Turban auf.",
+      "question": "Was hat Finn auf?",
+      "answer": "Finn hat einen Turban auf.",
+      "goldSpan": "einen Turban",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-06",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Gero wohnt in Fulda. Hedi lebt in Erfurt.",
+      "question": "In welcher Stadt wohnt Gero?",
+      "answer": "Gero wohnt in Fulda.",
+      "goldSpan": "Fulda",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-07",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Hedi ist von Beruf Geiger. Asta arbeitet als Geiger.",
+      "question": "Was ist Hedi von Beruf?",
+      "answer": "Hedi ist von Beruf Geiger.",
+      "goldSpan": "Geiger",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-08",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Asta trägt ein Tuch. Bert hat einen Turban auf.",
+      "question": "Welche Kleidung trägt Asta?",
+      "answer": "Asta trägt ein Tuch.",
+      "goldSpan": "ein Tuch",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-09",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Bert lebt in Lübeck. Cora wohnt in Bamberg.",
+      "question": "Wo wohnt Bert?",
+      "answer": "Bert lebt in Lübeck.",
+      "goldSpan": "Lübeck",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-10",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Dino ist von Beruf Richter. Cora arbeitet als Bote.",
+      "question": "Was arbeitet Cora?",
+      "answer": "Cora arbeitet als Bote.",
+      "goldSpan": "Bote",
+      "supported": true
+    },
+    {
+      "id": "dev-changed-11",
+      "stratum": "known_entity_changed_fact",
+      "evidence": "Elva trägt einen Kranz. Dino hat eine Haube auf.",
+      "question": "Was trägt Dino?",
+      "answer": "Dino hat eine Haube auf.",
+      "goldSpan": "eine Haube",
+      "supported": true
+    },
+    {
+      "id": "dev-challenge-00",
+      "stratum": "out_of_family_contradictory",
+      "evidence": "Ivo wohnt in Mainz. Ivo wohnt in Erfurt.",
+      "question": "Wo wohnt Ivo?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-01",
+      "stratum": "out_of_family_multiple_subjects",
+      "evidence": "Ivo wohnt in Mainz. Jule wohnt in Erfurt.",
+      "question": "Wo wohnen Ivo und Jule?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-02",
+      "stratum": "out_of_family_contrast_correction",
+      "evidence": "Ivo wohnt nicht in Mainz, sondern in Erfurt.",
+      "question": "Wo wohnt Ivo?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-03",
+      "stratum": "out_of_family_unseen_relation",
+      "evidence": "Ivo wohnt in Mainz.",
+      "question": "Wie alt ist Ivo?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-04",
+      "stratum": "out_of_family_unseen_relation",
+      "evidence": "Ivo hat ein Rad.",
+      "question": "Was hat Ivo?",
+      "answer": "Ivo hat ein Rad.",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-05",
+      "stratum": "out_of_family_pronoun",
+      "evidence": "Ivo wohnt in Mainz.",
+      "question": "Wo wohnt er?",
+      "answer": "UNBEKANNT",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-06",
+      "stratum": "out_of_family_inverted_syntax",
+      "evidence": "In Mainz wohnt Ivo.",
+      "question": "Wo wohnt Ivo?",
+      "answer": "In Mainz wohnt Ivo.",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    },
+    {
+      "id": "dev-challenge-07",
+      "stratum": "out_of_family_unseen_question_wording",
+      "evidence": "Ivo wohnt in Mainz.",
+      "question": "Was ist Ivos Wohnort?",
+      "answer": "Ivo wohnt in Mainz.",
+      "goldSpan": null,
+      "supported": false,
+      "outOfFamily": true
+    }
+  ]
+}

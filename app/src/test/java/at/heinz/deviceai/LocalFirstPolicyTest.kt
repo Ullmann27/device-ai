@@ -88,4 +88,53 @@ class LocalFirstPolicyTest {
             LocalFirstPolicy.modelUiState(LocalModelState.FAILED, hasInstalledModel = true, localMode = false)
         )
     }
+
+    @Test
+    fun unquotedReasoningWordsAsRecallSubjectsMustNotTriggerModelSynthesis() {
+        val directRecall = listOf(
+            "Was habe ich über analysiere gespeichert?",
+            "Was habe ich zu vergleiche notiert?",
+            "Was weißt du über warum aus meiner Erinnerung?",
+            "Wo steht plane in meiner Notiz?",
+            "Wo steht bewerte in meinen Notizen?",
+            "Wann habe ich analysiere geschrieben?"
+        )
+        for (request in directRecall) {
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+        val realSynthesis = listOf(
+            "Was habe ich über analysiere gespeichert und warum ist es relevant?",
+            "Bitte analysiere, was ich über warum gespeichert habe.",
+            "Was habe ich zu plane notiert? Vergleiche es mit meiner letzten Notiz."
+        )
+        for (request in realSynthesis) {
+            assertEquals(request, AssistantRoute.LOCAL_MODEL,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+    }
+
+    @Test
+    fun quotedWordsAndLexicalDefinitionsDoNotTurnVerifiedRecallIntoModelClaims() {
+        val directRecall = listOf(
+            "Was habe ich über „analysiere“ gespeichert?",
+            "Was weißt du über \"warum\" aus meiner Erinnerung?",
+            "Wo steht 'plane' in meiner Notiz?",
+            "Was habe ich zu `vergleiche` gespeichert?",
+            "Was bedeutet das Wort analysiere?"
+        )
+        for (request in directRecall) {
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+        assertEquals(AssistantRoute.LOCAL_MODEL,
+            LocalFirstPolicy.afterMemory(true, true,
+                "Bitte analysiere den Widerspruch zur zitierten Frage „warum“." ))
+        assertEquals(AssistantRoute.LOCAL_MODEL,
+            LocalFirstPolicy.afterMemory(true, true,
+                "Warum ist die gespeicherte Zahl unplausibel?"))
+        assertEquals(AssistantRoute.LOCAL_MODEL,
+            LocalFirstPolicy.afterMemory(true, true,
+                "Was bedeutet das Wort analysiere und warum ist es wichtig?"))
+    }
 }
