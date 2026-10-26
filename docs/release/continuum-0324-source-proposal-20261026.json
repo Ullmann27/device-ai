@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "state": "SOURCE_PROPOSAL_NOT_OWNER_APPROVAL",
-  "sourceHead": "c80b72537ab6bbca84687261ab1a385f9fb2788b",
+  "sourceHead": "db23e9ce06a0a54cb487b6bf25521906e0c9b312",
   "package": "at.heinz.deviceai.mentorpaired",
   "versionCode": 25,
   "versionName": "0.3.24",
@@ -29,7 +29,7 @@
     },
     {
       "path": ".github/continuum/android-integration-wiring.test.mjs",
-      "blob": "aed60e2a956406dd917225eb313fe52f3c3f6ed0"
+      "blob": "8626b93c10b493ce1352a52b54a1e8149ae40662"
     },
     {
       "path": ".github/continuum/android-mobile-battery-contract.test.mjs",
@@ -3981,11 +3981,11 @@
     },
     {
       "path": "scripts/continuum-v25-owner-release.test.mjs",
-      "blob": "7202e1c3fb2941956a04a45160fdb3a4f4817591"
+      "blob": "56107838ef32b3e6a1b2eb24547c96091dd6af07"
     },
     {
       "path": "scripts/continuum-v25-source-gate.mjs",
-      "blob": "c68e90e153479eb9d3784157c90606bf8e34f253"
+      "blob": "dbda167447ad8ad30214dc330edb8dea9c3513a0"
     },
     {
       "path": "scripts/fixtures/owned-build.mjs",
@@ -4117,7 +4117,7 @@
     },
     {
       "path": "scripts/render-mentor-owner-update-v25.sh",
-      "blob": "1c81b3d972f40cb8b6e8a314cb23f71407ad46af"
+      "blob": "a8e6b455c8cdeb0fc0302e7bb989f47f28ae309f"
     },
     {
       "path": "scripts/render-mentor-preview-dispatch.test.mjs",
