@@ -107,6 +107,6 @@ class LocalFirstPolicyTest {
                 "Bitte analysiere den Widerspruch zur zitierten Frage „warum“." ))
         assertEquals(AssistantRoute.LOCAL_MODEL,
             LocalFirstPolicy.afterMemory(true, true,
-                "Warum ist die gespeicherte Zahl unplausibel?"))
+                "Warum ist die gespeicherte Zahl unplausibel?"))\n        assertEquals(AssistantRoute.LOCAL_MODEL,\n            LocalFirstPolicy.afterMemory(true, true,\n                "Was bedeutet das Wort analysiere und warum ist es wichtig?"))
     }
 }
