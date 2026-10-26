@@ -1,0 +1,142 @@
+✖ selected model snapshot is exact, immutable and reports byte/GiB units (1.790497ms)
+✖ GPU marketing names and virtual storage never establish serving capability (0.709168ms)
+✖ capacity arithmetic separates full weights from active MoE compute/offload (0.303776ms)
+✖ transfer lower bound uses decimal Mbps, GiB bytes and explicit utilization (0.28155ms)
+✖ capacity rejects arithmetic overflow and independently reports storage policy (0.795872ms)
+✖ reject moving, other or materially changed snapshots before capacity calculations (1.095192ms)
+✖ CLI remains a read-only blocked plan without download authority or runtime proof (55.089017ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 153.000072
+
+✖ failing tests:
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:19:1
+✖ selected model snapshot is exact, immutable and reports byte/GiB units (1.790497ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '1bae0e1088993b9b82de08f59de5be5a34e42170'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:20:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '1bae0e1088993b9b82de08f59de5be5a34e42170',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:30:1
+✖ GPU marketing names and virtual storage never establish serving capability (0.709168ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 511000000000
+  - 510296708312
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:32:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 511000000000,
+    expected: 510296708312,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:45:1
+✖ capacity arithmetic separates full weights from active MoE compute/offload (0.303776ms)
+  TypeError: Cannot read properties of undefined (reading 'fullWeightResidencyGiB')
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:47:33)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:56:1
+✖ transfer lower bound uses decimal Mbps, GiB bytes and explicit utilization (0.28155ms)
+  TypeError: tier.estimateTransfer is not a function
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:57:18)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:69:1
+✖ capacity rejects arithmetic overflow and independently reports storage policy (0.795872ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:73:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Invalid/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:76:1
+✖ reject moving, other or materially changed snapshots before capacity calculations (1.095192ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:79:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /revision/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-tier-plan.test.mjs:89:1
+✖ CLI remains a read-only blocked plan without download authority or runtime proof (55.089017ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - '1bae0e1088993b9b82de08f59de5be5a34e42170'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-tier-plan.test.mjs:94:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '1bae0e1088993b9b82de08f59de5be5a34e42170',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

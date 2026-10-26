@@ -1,0 +1,24 @@
+✔ snapshot verification binds second read to immutable revision and remains zero-cost (81.742433ms)
+✔ reject mutable identity and inconsistent pinned response (2.684546ms)
+✔ missing shard blocks declared integrity claim (2.475163ms)
+✔ absence of per-shard digests cannot become a verification success (1.277026ms)
+✔ non-allowlisted URLs, timeouts and HTTP failures fail closed (0.713723ms)
+✔ oversize and malformed metadata are rejected (1.122594ms)
+✔ reject stale mutable metadata and altered inventory sizes (1.741254ms)
+✔ mutable latest URL cannot silently select another checkpoint (0.475889ms)
+✔ metadata deadline bounds a fetch that ignores AbortSignal (100.43158ms)
+✔ selected model snapshot is exact, immutable and reports byte/GiB units (6.97036ms)
+✔ GPU marketing names and virtual storage never establish serving capability (0.841022ms)
+✔ capacity arithmetic separates full weights from active MoE compute/offload (0.481598ms)
+✔ transfer lower bound uses decimal Mbps, GiB bytes and explicit utilization (0.735521ms)
+✔ capacity rejects arithmetic overflow and independently reports storage policy (0.382019ms)
+✔ reject moving, other or materially changed snapshots before capacity calculations (1.492828ms)
+✔ CLI remains a read-only blocked plan without download authority or runtime proof (112.270958ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 725.161032

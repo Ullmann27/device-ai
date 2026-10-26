@@ -26,3 +26,13 @@ The capacity plan must calculate from 48 shards / 510296708312 bytes at revision
 ## Next entry and rollback
 
 Inspect `.github/continuum/local-coding-brain.mjs`, existing backend mentor pairing/transport and tests, then record failing regressions before implementation. Revert this branch's commits to remove the prototype; remote teacher remains opt-in and offline behavior must remain available.
+
+## Capacity/Hub checkpoint
+
+Reproduced capacity defects (7 red cases): unpinned/approximate defaults, GPU names treated as verified requirements, absent transfer assumptions, unsafe integer arithmetic and other valid-looking revisions accepted. Hub negatives reproduced selection through mutable HEAD and a fetch ignoring AbortSignal exceeding its configured deadline. Raw failures: `docs/evidence/sol-deepseek-20261026/{capacity-red,hub-red}.txt`.
+
+Implemented exact selected revision and 48-shard/510296708312-byte inventory validation; byte/GiB and 100/1000/10000 Mbps transfer estimates at explicit 80% utilization; storage policy identified as a local assumption; runtime memory/topology/offload remain unknown. Immutable `config.json` read-only inspection reports 384 routed experts / 6 active per token / 1 shared expert; no active parameter count inferred. Authenticated serving still needs measured runtime/weights. No download authorization is synthesized from GPU names.
+
+`node --test scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deepseek-hub-preflight.test.mjs`: **16 PASS**, raw output `capacity-hub-green.txt`. No inference, resource creation or weight download.
+
+Actual coding seam is `.github/continuum/coding-provider.mjs` -> `scripts/continuum-local-brain-cli.mjs` -> `queryLocalCodingBrain` in `scripts/continuum-local-brain.mjs`; the earlier intended `local-coding-brain.mjs` filename does not exist. Backend Groq mentor already has separate authenticated pairing and per-request consent, but is text-only and not a DeepSeek coding bridge. Reuse the existing canonical proposal/repair contract, not that route's tool permissions.

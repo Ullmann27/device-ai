@@ -1,0 +1,15 @@
+✔ selected model snapshot is exact, immutable and reports byte/GiB units (2.512397ms)
+✔ GPU marketing names and virtual storage never establish serving capability (0.798165ms)
+✔ capacity arithmetic separates full weights from active MoE compute/offload (0.277238ms)
+✔ transfer lower bound uses decimal Mbps, GiB bytes and explicit utilization (0.592659ms)
+✔ capacity rejects arithmetic overflow and independently reports storage policy (0.372578ms)
+✔ reject moving, other or materially changed snapshots before capacity calculations (0.849731ms)
+✔ CLI remains a read-only blocked plan without download authority or runtime proof (48.518366ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 137.806487

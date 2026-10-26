@@ -2,34 +2,34 @@
 /**
  * Read-only Hub metadata preflight for an explicitly chosen DeepSeek checkpoint.
  * Does not download weights, allocate GPU instances or change credentials.
- * The mutable HEAD is only a discovery step; its commit is pinned and re-read.
+ * Reads only the selected immutable revision; a moving HEAD cannot change the teacher.
  */
-import { inspectHubManifest, buildStoragePlan, MODEL_ID } from "./continuum-deepseek-tier-plan.mjs";
+import { inspectHubManifest, buildStoragePlan, MODEL_ID, PINNED_REVISION } from "./continuum-deepseek-tier-plan.mjs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const HUB_BASE = "https://huggingface.co/api/models/" + MODEL_ID;
-const SHA40 = /^[a-f0-9]{40}$/;
+const PINNED_URL = HUB_BASE + "/revision/" + PINNED_REVISION + "?blobs=true";
 const MAX_METADATA_BYTES = 4 * 1024 * 1024;
 
 export async function readHubJson(url, { fetchFn = fetch, timeoutMs = 20000 } = {}) {
   if (!Number.isInteger(timeoutMs) || timeoutMs < 100 || timeoutMs > 60000) {
     throw Error("Invalid metadata timeout");
   }
-  if (url !== HUB_BASE + "?blobs=true" &&
-      !(url.startsWith(HUB_BASE + "/revision/") &&
-        SHA40.test(url.slice((HUB_BASE + "/revision/").length).replace(/\?blobs=true$/, "")) &&
-        url.endsWith("?blobs=true"))) {
-    throw Error("Rejected non-allowlisted metadata URL");
-  }
+  if (url !== PINNED_URL) throw Error("Rejected non-allowlisted metadata URL");
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let timeout;
+  const expired = new Promise((_, reject) => {
+    timeout = setTimeout(() => {controller.abort(); reject(Error("Hub metadata timeout"));}, timeoutMs);
+  });
+  // Some adapters do not honor AbortSignal. Bound fetch and body reads as well.
+  const bounded = promise => Promise.race([promise, expired]);
   try {
-    const response = await fetchFn(url, {
+    const response = await bounded(fetchFn(url, {
       method: "GET", redirect: "error",
       headers: { "accept": "application/json" },
       signal: controller.signal
-    });
+    }));
     if (!response || response.status !== 200) throw Error("Hub metadata request did not return HTTP 200");
     const declaredLength = Number(response.headers?.get?.("content-length") ?? 0);
     if (!Number.isFinite(declaredLength) || declaredLength > MAX_METADATA_BYTES) {
@@ -41,16 +41,17 @@ export async function readHubJson(url, { fetchFn = fetch, timeoutMs = 20000 } = 
     let count = 0;
     try {
       while (true) {
-        const { value, done } = await reader.read();
+        const { value, done } = await bounded(reader.read());
         if (done) break;
         count += value.byteLength;
         if (count > MAX_METADATA_BYTES) throw Error("Hub metadata body too large");
         chunks.push(value);
       }
     } finally {
-      await reader.cancel().catch(() => {});
+      reader.cancel().catch(() => {});
+      reader.releaseLock();
     }
-    const text = Buffer.concat(chunks, count).toString("utf8");
+    const text = new TextDecoder("utf-8", {fatal:true}).decode(Buffer.concat(chunks, count));
     const json = JSON.parse(text);
     if (json === null || typeof json !== "object" || Array.isArray(json)) {
       throw Error("Hub metadata must be a JSON object");
@@ -58,16 +59,13 @@ export async function readHubJson(url, { fetchFn = fetch, timeoutMs = 20000 } = 
     return json;
   } finally {
     clearTimeout(timeout);
+    controller.abort();
   }
 }
 
 export async function inspectPinnedDeepSeek({ fetchFn = fetch, timeoutMs = 20000 } = {}) {
-  const latest = await readHubJson(HUB_BASE + "?blobs=true", { fetchFn, timeoutMs });
-  const revision = latest.sha;
-  if (typeof revision !== "string" || !SHA40.test(revision)) {
-    throw Error("Hub did not provide an immutable 40-character revision");
-  }
-  const pinnedUrl = HUB_BASE + "/revision/" + revision + "?blobs=true";
+  const revision = PINNED_REVISION;
+  const pinnedUrl = PINNED_URL;
   const pinned = await readHubJson(pinnedUrl, { fetchFn, timeoutMs });
   if (pinned.sha !== revision) throw Error("Pinned model revision changed");
   const inventory = inspectHubManifest(pinned);
