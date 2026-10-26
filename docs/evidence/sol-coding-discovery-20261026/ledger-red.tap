@@ -1,0 +1,53 @@
+✖ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (881.055428ms)
+✔ durable scoped diagnostics never cross task authorization or source boundaries (1743.221517ms)
+✖ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (196.090057ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2945.212536
+
+✖ failing tests:
+
+test at .github/continuum/scoped-repair-pipeline.test.mjs:86:1
+✖ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (881.055428ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/scoped-repair-pipeline.test.mjs:95:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/scoped-repair-pipeline.test.mjs:125:1
+✖ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (196.090057ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/scoped-repair-pipeline.test.mjs:130:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

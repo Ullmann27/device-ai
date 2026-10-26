@@ -1,0 +1,98 @@
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (47.307675ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (34.512132ms)
+✔ malformed model name is rejected before invoking the local child (59.860854ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (22.184642ms)
+✖ same canonical job resumes its request budget without repeating evidence slots (45.823772ms)
+✖ request reservation is durable before inference and interrupted calls consume the budget (29.240418ms)
+✖ foreign or corrupt persisted requests block before another inference (44.429387ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 4
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 407.767428
+
+✖ failing tests:
+
+test at .github/continuum/coding-provider.test.mjs:110:1
+✖ same canonical job resumes its request budget without repeating evidence slots (45.823772ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "EEXIST: file already exists, open '/tmp/coding-resume-Cm3Que/request-1.json'"
+      at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:119:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: EEXIST: file already exists, open '/tmp/coding-resume-Cm3Que/request-1.json'
+        at Object.openSync (node:fs:622:18)
+        at Object.writeFileSync (node:fs:2497:35)
+        at provider (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.mjs:78:18)
+        at invoke (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:116:25)
+        at file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:119:26
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:119:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-provider.test.mjs:127:1
+✖ request reservation is durable before inference and interrupted calls consume the budget (29.240418ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:140:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-provider.test.mjs:145:1
+✖ foreign or corrupt persisted requests block before another inference (44.429387ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /CODING_EVIDENCE_BINDING_MISMATCH/. Input:
+  
+  "Error: EEXIST: file already exists, open '/tmp/coding-foreign-evidence-vqGofz/request-1.json'"
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:153:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: EEXIST: file already exists, open '/tmp/coding-foreign-evidence-vqGofz/request-1.json'
+        at Object.openSync (node:fs:622:18)
+        at Object.writeFileSync (node:fs:2497:35)
+        at provider (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.mjs:78:18)
+        at invoke (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:151:25)
+        at file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:153:20
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/.github/continuum/coding-provider.test.mjs:153:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25),
+    expected: /CODING_EVIDENCE_BINDING_MISMATCH/,
+    operator: 'throws',
+    diff: 'simple'
+  }

@@ -8,6 +8,7 @@ import {createWorktree,removeWorktree,repairSession} from './repair-loop.mjs';
 import {executeOwnerRepairTask} from './backlog-repair-worker.mjs';
 import {BacklogStore} from './development-backlog.mjs';
 import {critique} from './repair-critic.mjs';
+import {emptyLedger,recordSession,saveLedger,loadLedger} from './repair-ledger.mjs';
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
 const moduleText='export function distance(a,b){return a-b;}\n';
 function fixture({twoFiles=false}={}) {
@@ -80,6 +81,56 @@ test('repeated scoped patch is rejected without a second candidate check',{skip:
  assert.equal(calls,3);assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
  assert.equal(report.attempts.filter(a=>a.tests).length,1);assert.equal(report.inference.repeatedCandidates,2);
  assert.equal(report.inference.localRequests,3);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again',{skip:nested},()=>{
+ const f=fixture();try{
+  const first=session(f,provider(f,()=>proposal(f,'return 5;')),{maxCandidates:1});
+  assert.equal(first.attempts[0].outcome,'FAILED_TESTS');
+  const ledgerFile=path.join(f.state,'repair-ledger.json');
+  saveLedger(ledgerFile,recordSession(emptyLedger(),first));
+  const inputs=[];
+  const second=session(f,provider(f,input=>{inputs.push(input);return proposal(f,inputs.length===1?'return 5;':'return a>b?a-b:b-a;');}),
+   {ledger:loadLedger(ledgerFile)});
+  assert.equal(inputs[0].history.length,1);
+  assert.equal(inputs[0].history[0].outcome,'FAILED_TESTS');
+  assert.equal(inputs[0].history[0].candidate,first.attempts[0].candidate);
+  assert.match(inputs[0].history[0].diagnostic,/failed=1/);
+  assert.equal(second.inference.repeatedCandidates,1);
+  assert.equal(second.attempts.length,1);
+  assert.equal(second.attempts[0].outcome,'VERIFIED');
+  assert.equal(second.outcome,'VERIFIED');
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('durable scoped diagnostics never cross task authorization or source boundaries',{skip:nested},()=>{
+ const f=fixture();try{
+  const first=session(f,provider(f,()=>proposal(f,'return 5;')),{maxCandidates:1});
+  const ledger=recordSession(emptyLedger(),first);
+  for(const change of [{id:'different-owner-task'},{goal:'Different acceptance intent'},{limits:{maxModelCalls:2,maxContextChars:12000}}]){
+   let history;
+   const candidateProvider=provider(f,input=>{history=input.history;return proposal(f,'return 5;');});
+   candidateProvider.taskSpec=Object.freeze({...candidateProvider.taskSpec,...change});
+   const report=session(f,candidateProvider,{ledger,maxCandidates:1});
+   assert.deepEqual(history,[]);
+   assert.equal(report.attempts[0].outcome,'FAILED_TESTS');
+  }
+  const altered=structuredClone(ledger);
+  altered.attempts[0].baseCommit='f'.repeat(40);
+  let history;
+  session(f,provider(f,input=>{history=input.history;return proposal(f,'return 5;');}),{ledger:altered,maxCandidates:1});
+  assert.deepEqual(history,[]);
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('exhausted or corrupt durable model budgets retain explicit codes and stop revision retries',{skip:nested},()=>{
+ const f=fixture();try{
+  for(const code of ['CODING_MODEL_BUDGET_EXHAUSTED','CODING_EVIDENCE_INVALID','CODING_EVIDENCE_BINDING_MISMATCH']){
+   let calls=0;
+   const report=session(f,provider(f,()=>{calls++;throw Error(code);}));
+   assert.equal(calls,1);
+   assert.equal(report.inference.lastRejectCode,code);
+   assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
+  }
  }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
 });
 test('scoped proposals cannot edit outside task grants or change context commit',{skip:nested},()=>{

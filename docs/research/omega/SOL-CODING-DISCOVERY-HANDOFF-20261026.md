@@ -57,17 +57,30 @@ remain consumed; corrupt or foreign evidence blocks. No new backlog or job
 state store was added. Final response records still contain hashes and byte
 counts, without raw source, model reply or inherited credentials.
 
-Next small slices: verify recovery/negative paths and preserve fixed blocked
-codes; reuse only same-task/source bounded repair diagnostics; run actual
-Docker isolation proof; then attempt the narrowest real candidate path if a
-verified local model is available. Full Node suite follows source changes.
+Second red/green slice: scoped repair ignored all earlier canonical ledger
+attempts. Two failing tests showed empty history on same-task restart and three
+pointless retries after a durable budget/corruption block. The repair ledger now
+optionally records the typed-task fingerprint on scoped attempts. Same exact
+task/source/chain reuses at most three negative candidate IDs and fixed profile
+test counts. Raw model hypotheses and diagnostic output are not persisted for
+this reuse; no automatic patch replay or training is enabled. Different owner
+task/goal/limits/source gets no history. Terminal evidence/budget codes remain
+explicit and stop revision retries. Focused scoped/provider/ledger: 32/32 PASS
+before the additional malformed-ledger-binding check.
+
+Next: actual Docker isolation proof, then full Node suite. Local model files and
+llama-server are absent on this host; do not conflate an injected candidate
+infrastructure proof with actual neural generation.
 
 ## Current capability findings and gaps
 
 Linux x86_64 uid/gid 1000; Node24.19.0. The exact local Docker socket responds
 with server28.4.0. bwrap/unshare exist; a user+mount+network+PID namespace probe
-exited0. No Docker image was initially present. These checks do not themselves
-prove the existing executor can run a profile.
+exited0. No Docker image was initially present. Built a tiny offline FROM-scratch
+image from the fixed local Dockerfile: SHA256
+`635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b`.
+No package/model download. These checks do not themselves prove the existing
+executor can run a profile.
 
 Existing typed bridge already requires the branded Docker executor before any
 journal/model access. Existing path: typed grant → CCC1 journal → mobile repair
