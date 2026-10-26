@@ -24,6 +24,8 @@ test('v25 same owner package and strictly newer version with signed v24 rollback
  const router=read('scripts/render-mentor-preview.sh');
  assert.match(gradle,/versionCode = 25\s*versionName = "0\.3\.24"/);
  assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
+ assert.match(signer,/signed_release_ref="release\\/continuum-owner-v25-candidate-20261026"/);
+ assert.doesNotMatch(signer,/signed_release_ref="release\\/continuum-owner-v24-candidate-20261026"/);
  assert.match(signer,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
  assert.match(signer,/expected_previous_sha="4ff06e079bc835a51777ac89a8773bb24d90bccda7fb37e0d0ce899163d02003"/);
  assert.match(signer,/"24\|0\.3\.23\|\$expected_previous_sha"/);
