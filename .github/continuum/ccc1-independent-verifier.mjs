@@ -62,6 +62,40 @@ function measured(run){
     throw Error('TEST_RUN_INTERRUPTED');
   return t;
 }
+/**
+ * Strict suite-coverage parity for the same fixed CCC1 test profile.
+ * A green exit code is insufficient if tests vanish between RED and GREEN.
+ * This compares structured evidence, not test authenticity; the OS executor,
+ * immutable test sources and owner grant remain separate mandatory gates.
+ */
+export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
+  const baseline=baselineRun?.results?.[0];
+  const candidate=candidateRun?.results?.[0];
+  if(baselineRun?.results?.length!==1||candidateRun?.results?.length!==1||
+     baseline?.profile!=='node-continuum'||candidate?.profile!==baseline.profile||
+     baseline.testProfile!==true||candidate.testProfile!==true)
+    throw Error('TEST_PROFILE_PARITY_INVALID');
+  const required=['executed','failed','skipped','passed','total','placeholders'];
+  for(const evidence of [baseline.tests,candidate.tests]){
+    if(!evidence||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
+       evidence.executed<1||evidence.passed+evidence.failed!==evidence.executed)
+      throw Error('TEST_COUNT_EVIDENCE_INVALID');
+  }
+  if(candidate.tests.executed<baseline.tests.executed)
+    throw Error('EXECUTED_TEST_COVERAGE_REGRESSION');
+  if(candidate.tests.skipped!==baseline.tests.skipped)
+    throw Error('SKIPPED_TEST_SET_CHANGED');
+  if(baseline.tests.skipped>0){
+    const digest=baseline.tests.skippedCaseDigest;
+    if(typeof digest!=='string'||!HEX64.test(digest)||
+       digest!==candidate.tests.skippedCaseDigest)
+      throw Error('SKIPPED_TEST_IDENTITY_CHANGED');
+  }
+  return Object.freeze({
+    profile:baseline.profile,baselineExecuted:baseline.tests.executed,
+    candidateExecuted:candidate.tests.executed,skipped:baseline.tests.skipped
+  });
+}
 function apply(wt,file,originalDigest,text){
   const full=boundedWorktreeFile(wt,file),current=fs.readFileSync(full);
   if(sha256(current)!==originalDigest)throw Error('SOURCE_BYTES_CHANGED');
@@ -145,7 +179,9 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
     apply(primary,file,approved.sourceSha256,approved.code);
     green=runChain('node',primary,out,{deadline,executor});
     testsUnchanged(primary,testSet);changedOnly(primary,file);
-    if(!measured(green).passed||!evidenceSufficient(red.results,green.results).sufficient)
+    const primaryEvidence=measured(green);
+    assertCcc1TestEvidenceParity(red,green);
+    if(!primaryEvidence.passed||!evidenceSufficient(red.results,green.results).sufficient)
       return report(CCC1_RESEARCH_OUTCOMES.FAILED,'CANDIDATE_NOT_GREEN',ids,red,green);
     fresh=createWorktree(project,task.sourceCommit);
     ensureCcc1StateOutsideSource(project,fresh);
@@ -154,6 +190,8 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
     second=runChain('node',fresh,out,{deadline,executor});
     testsUnchanged(fresh,testSet);changedOnly(fresh,file);
     const verified=measured(second),first=measured(green);
+    assertCcc1TestEvidenceParity(red,second);
+    assertCcc1TestEvidenceParity(green,second);
     if(!verified.passed||!evidenceSufficient(red.results,second.results).sufficient||
        verified.tests.executed<first.tests.executed||verified.tests.skipped>first.tests.skipped)
       return report(CCC1_RESEARCH_OUTCOMES.FAILED,'FRESH_RUN_NOT_GREEN',ids,red,green,second);
