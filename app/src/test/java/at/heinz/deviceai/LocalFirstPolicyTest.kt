@@ -108,7 +108,7 @@ class LocalFirstPolicyTest {
         assertEquals(AssistantRoute.LOCAL_MODEL,
             LocalFirstPolicy.afterMemory(true, true,
                 "Warum ist die gespeicherte Zahl unplausibel?"))
-        assertEqualsAssistantRoute.LOCAL_MODEL,
+        assertEquals(AssistantRoute.LOCAL_MODEL,
             LocalFirstPolicy.afterMemory(true, true,
                 "Was bedeutet das Wort analysiere und warum ist es wichtig?"))
     }
