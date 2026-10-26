@@ -1,0 +1,107 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {spawnSync,execFileSync} from 'node:child_process';
+import {dirname,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const read=path=>readFileSync(resolve(root,path),'utf8');
+const head=()=>execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
+const approvedSource='440432253dd0cc4968fea56b0c70793e9b90661f';
+const inventory='101cf496c6ea7373c248555fda8b6d5719d2128a';
+function gate(vars={}){
+ return spawnSync(process.execPath,['scripts/continuum-v24-source-gate.mjs'],{
+  cwd:root,encoding:'utf8',timeout:120000,
+  env:{PATH:process.env.PATH,HOME:process.env.HOME,...vars}
+ });
+}
+function dispatch(vars={}){
+ return spawnSync('bash',['scripts/render-mentor-preview.sh'],{
+  cwd:root,encoding:'utf8',timeout:15000,
+  env:{PATH:process.env.PATH,HOME:process.env.HOME,
+   CONTINUUM_OWNER_RELEASE_VERSION:'24',...vars}
+ });
+}
+
+test('v24 remains one in-place owner package with exact older certificate and rollback',()=>{
+ const gradle=read('app/build.gradle.kts');
+ const router=read('scripts/render-mentor-preview.sh');
+ const shell=read('scripts/render-mentor-owner-update-v24.sh');
+ assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 24\s*versionName = "0\.3\.23"/);
+ assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
+ assert.match(router,/CONTINUUM_OWNER_V24_APPROVED_SHA/);
+ assert.match(router,/CONTINUUM_OWNER_RELEASE_VERSION:-18/);
+ for(const number of [18,19,20,21,22,24])
+  assert.match(router,new RegExp('^  '+number+'\\)','m'));
+ assert.match(shell,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
+ assert.match(shell,/expected_previous_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"/);
+ assert.match(shell,/versionCode='24' versionName='0\.3\.23'/);
+ assert.match(shell,/versionCode='22' versionName='0\.3\.21'/);
+ for(const script of ['scripts/render-mentor-preview.sh','scripts/render-mentor-owner-update-v24.sh']){
+  const check=spawnSync('bash',['-n',script],{cwd:root,encoding:'utf8',timeout:10000});
+  assert.equal(check.status,0,check.stderr);
+ }
+});
+
+test('v24 dispatcher rejects missing, mismatched and legacy owner grants',()=>{
+ for(const vars of [
+  {},
+  {CONTINUUM_RELEASE_SHA:head()},
+  {CONTINUUM_OWNER_V24_APPROVED_SHA:head()},
+  {CONTINUUM_OWNER_V24_APPROVED_SHA:'0'.repeat(40),CONTINUUM_RELEASE_SHA:'0'.repeat(40)},
+  {CONTINUUM_OWNER_V23_APPROVED_SHA:head(),CONTINUUM_RELEASE_SHA:head()}
+ ]){
+  const r=dispatch(vars);
+  assert.equal(r.status,69,r.stderr);
+  assert.match(r.stderr,/OWNER_V24_BLOCKED/);
+ }
+});
+
+test('v24 source gate rejects partial, mismatched and old-version approval',()=>{
+ for(const vars of [
+  {},
+  {CONTINUUM_OWNER_V24_APPROVED_SOURCE_SHA:approvedSource},
+  {CONTINUUM_OWNER_V24_APPROVED_MANIFEST_BLOB:inventory},
+  {CONTINUUM_OWNER_V23_APPROVED_SOURCE_SHA:approvedSource,
+   CONTINUUM_OWNER_V23_APPROVED_MANIFEST_BLOB:inventory,
+   CONTINUUM_RELEASE_SHA:head(),CONTINUUM_OWNER_V23_APPROVED_SHA:head()},
+  {CONTINUUM_OWNER_V24_APPROVED_SOURCE_SHA:'0'.repeat(40),
+   CONTINUUM_OWNER_V24_APPROVED_MANIFEST_BLOB:inventory,
+   CONTINUUM_RELEASE_SHA:head(),CONTINUUM_OWNER_V24_APPROVED_SHA:head()}
+ ]){
+  const r=gate(vars);
+  assert.equal(r.status,69,r.stderr);
+  assert.match(r.stderr,/OWNER_V24_BLOCKED/);
+ }
+});
+
+test('v24 frozen source manifest authenticates all 1027 executable blobs in an unmodified checkout',()=>{
+ const data=JSON.parse(read('docs/release/continuum-0323-source-proposal-20261026.json'));
+ assert.equal(data.state,'SOURCE_PROPOSAL_NOT_OWNER_APPROVAL');
+ assert.equal(data.sourceHead,approvedSource);
+ assert.equal(data.package,'at.heinz.deviceai.mentorpaired');
+ assert.equal(data.versionCode,24);
+ assert.equal(data.versionName,'0.3.23');
+ assert.equal(data.files.length,1027);
+ const r=gate({
+  CONTINUUM_OWNER_V24_APPROVED_SOURCE_SHA:approvedSource,
+  CONTINUUM_OWNER_V24_APPROVED_MANIFEST_BLOB:inventory,
+  CONTINUUM_RELEASE_SHA:head(),
+  CONTINUUM_OWNER_V24_APPROVED_SHA:head()
+ });
+ assert.equal(r.status,0,r.stderr);
+ assert.match(r.stdout,/OWNER_V24_SOURCE_VERIFIED/);
+ assert.match(r.stdout,/files=1027/);
+ // Passing a deterministic offline source test never authorizes signing.
+});
+
+test('QA builder always uses a deliberately different certificate, not the owner key',()=>{
+ const script=read('scripts/continuum-owner-v24-build-qa.sh');
+ assert.match(script,/qa-only\.p12/);
+ assert.match(script,/NONOWNER-QA-NOT-INSTALLABLE/);
+ assert.match(script,/owner_installable=FALSE/);
+ assert.match(script,/apksigner.*verify/);
+ assert.match(script,/versionCode='24' versionName='0\.3\.23'/);
+ assert.doesNotMatch(script,/CONTINUUM_MENTOR_SIGNING_P12_BASE64/);
+});
