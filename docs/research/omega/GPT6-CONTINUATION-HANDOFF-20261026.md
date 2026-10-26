@@ -25,3 +25,9 @@ The initial source review found a new PR151 defect: a *quoted* synthesis keyword
 ## Frozen independent 60-case grounding evaluator
 
 New **source-controlled** regression runner `scripts/continuum-grounding-independent-eval.mjs` + unit checks `scripts/continuum-grounding-independent-eval.test.mjs`; runs exact Git-object baseline `c391b832` vs PR153 candidate `4bf74b1b` on independent SHA-256 pinned 60-case fixture, preserves raw results, never rewrites an earlier report. Full instructions and honest status in `docs/evidence/gpt6-brain-routing-20261026/GROUNDING-EVALUATOR.md`. The **real 60-case execution is NOT_RUN** on this connector-only runtime because it lacks the private Git objects/full authorized clone. Next developer should run commands, archive raw report, and only then consider PR153 integration.
+
+## Fresh independent evidence (actual measured outcomes)
+
+The frozen PR151 independent 60-case fixture was executed unchanged against the exact baseline `c391b832` and candidate `4bf74b1b` Node retrieval algorithms in a limited fresh V8 isolate. Raw scores/all case IDs and detailed analysis are at `docs/evidence/gpt6-brain-routing-20261026/grounding-independent-direct-replay-v1.json` and `GROUNDING-RESULTS.md`. **In-scope:19/48→36/48 exact; false hits37→0; missed positives5→12. Challenges:8/12→6/12.** Candidate preserves only24/31 prior in-scope true-positive IDs. No code tuning against this now-consumed independent fixture. Fixture SHA-256 independently recomputed and verified, see `GROUNDING-FIXTURE-SHA256.md`. Review comment posted to PR153.
+
+**Decision: PR153 remains a separate Draft and is NOT promoted.** Next action is to repeat with the pinned Node script on an authorized full checkout, review Android/Kotlin parity and decide a formal recall tradeoff before selective integration. Our existing quotation/synthesis route fix remains in this separate PR157, where further Android SDK integration is still NOT_RUN.
