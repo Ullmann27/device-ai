@@ -2588,7 +2588,12 @@ class AgentActivity : Activity() {
                     // local agent; its conclusions acquire no confirmed-memory authority.
                     if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
                             localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
-                        val modelQuestion=LocalFirstPolicy.localModelQuestion(request,localPrompt)
+                        val modelQuestion=LocalFirstPolicy.localModelQuestion(
+                            request,localPrompt,
+                            hasSameSessionLocalTurn=localConversationContext
+                                .render(requestSessionId).isNotBlank(),
+                            grounded=grounded
+                        )
                         if(grounded) {
                             val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
                                 .boundedOrNull(answer,evidence)
