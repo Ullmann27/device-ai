@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "status": "START_CHECKPOINT_UNVERIFIED",
+  "observedAt": "2026-10-26",
+  "repository": "Ullmann27/device-ai",
+  "base": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+  "branch": "astra/continuum-brain-integration-20261026",
+  "pullRequests": [
+    {
+      "number": 151,
+      "head": "sol/continuum-brain-breakthroughs-20261026",
+      "sha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "base": "sol/continuum-infrastructure-repair-20261025",
+      "baseSha": "ad14f8b82f9be2cd0026bc16eef71a16bec41424",
+      "state": "open"
+    },
+    {
+      "number": 152,
+      "head": "sol/cdx-generation-repair-20261026",
+      "sha": "e53c91404fce44ac32aa448b901a9eeeb90d2431",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open"
+    },
+    {
+      "number": 153,
+      "head": "sol/grounding-relations-20261026",
+      "sha": "b41408b3cae889b4727b00648a0340419298b1f0",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open"
+    },
+    {
+      "number": 154,
+      "head": "sol/deepseek-authenticated-bridge-20261026",
+      "sha": "2fb604609d8f7c86ec49fe5ebd4d9158b80beb5a",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open"
+    },
+    {
+      "number": 155,
+      "head": "sol/coding-discovery-safety-20261026",
+      "sha": "d08d6396aa91f1abe43fa1e3a615be61fb18cfd7",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+      "state": "open"
+    },
+    {
+      "number": 156,
+      "head": "sol/continuum-fast-repair-20261026",
+      "sha": "df4b395ff6cee7fdedbe742560f1685eaff5767c",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "state": "open"
+    },
+    {
+      "number": 157,
+      "head": "review/continuum-brain-safety-continuation-20261026",
+      "sha": "95e6ad4f4a80d51a5a3293dbb914cdb9288d8c29",
+      "base": "sol/continuum-brain-breakthroughs-20261026",
+      "baseSha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+      "state": "open"
+    },
+    {
+      "number": 158,
+      "head": "review/continuum-baby-memory-migration-20261026",
+      "sha": "4cff5abda4f71bcb46795323e468cf0e0fb3429a",
+      "base": "main",
+      "baseSha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+      "state": "open"
+    }
+  ],
+  "scope": [
+    "EXP-00",
+    "EXP-01",
+    "EXP-02",
+    "EXP-04",
+    "EXP-05",
+    "EXP-06",
+    "EXP-08",
+    "EXP-11",
+    "EXP-12",
+    "EXP-14"
+  ],
+  "tests": "NOT_RUN",
+  "productionPromotion": false
+}
