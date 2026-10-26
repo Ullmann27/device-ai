@@ -1,6 +1,6 @@
 # CDX generation repair — 2026-10-26
 
-Status: **WIP / UNVERIFIED**, EXP-05 research shadow; no runtime activation.
+Status: **PARTIALLY_MEASURED / RESEARCH_SHADOW**, EXP-05; no runtime activation.
 
 Official base: `c391b832`, branch `sol/cdx-generation-repair-20261026`,
 integration target `sol/continuum-brain-breakthroughs-20261026`. Work is isolated
@@ -21,7 +21,7 @@ resources, memory routing and Gemma are outside this repair's write scope.
    evaluation cases. Execute once with exact source/checkpoint hashes; archive
    all outputs, positive and negative results, provenance and reproduction.
 
-Checks at this initial checkpoint: **NOT_RUN**. Existing baseline evidence is in
+Checks at the initial checkpoint were **NOT_RUN**. Existing baseline evidence is in
 `docs/evidence/sol-brain-20261025/cdx-baseline-v1/`: 6000 updates, train1/4,
 consumed DEV0/2, consumed independent TEST0/16 despite loss5.55→0.25.
 
@@ -33,8 +33,25 @@ Diagnostic source: `experimental/brain/Cdx1CausalDiagnosis.kt` compiles against
 the real SDK classes with module `DeviceAI_app_debug`, target17. It compares
 teacher forcing with the inference forward function, ablates conditioner
 vectors, and finite-differences30 nonzero parameter derivatives across every
-weight array. **WIP:** scratch run completed; repeat from this committed source
-before archiving measured results. No app code has changed.
+weight array. Frozen source `1f18e6bc008508225216f58fbaaa7c0f5d192f40` measured
+maximum absolute error5.85e-11, exact train/infer forward agreement and bit-exact
+reproduction of original6000 binary hash. No app code has changed.
 
-Next entry: archive pinned diagnostic/reproduction evidence before modifications. Rollback by
+`docs/evidence/sol-cdx-20261026/` archives all12 matched raw/unit/centered models,
+diagnostics, outputs and manifests. Frozen protocol `f2406ff6` used original4
+TRAIN pairs and newly authored20 DEV, no old TEST16. Centered×32 at30000 updates
+was selected by frozen DEV rule: TRAIN4/4 vs raw1/4; known-fact wording4/8 vs
+raw2/8. All changed-fact4, unseen-entity4 and unsupported4 DEV remain wrong.
+Real generation regression RED3/4wrong→GREEN4/4correct. This demonstrates only
+known-fact wording transfer/memorization repair; no novel-fact generalization.
+
+Next bounded hypothesis: separately named full-evidence neural pointer
+transducer, new train/dev protocol, no template replacement or app integration.
+Every next-pointer/abstention/EOS choice must come from trained neural scores;
+raw source tokens are its dynamic output vocabulary. Engineered lexical,
+sentence-boundary/negation-presence and relative-pointer inputs are explicit
+inductive biases, not a claim of learned general semantics. Parent authors NEW
+independent cases only after final source/model freeze.
+
+Next entry: freeze narrow pointer task, protocol and architecture before training. Rollback by
 reverting individual research commits; prior source and checkpoints remain.
