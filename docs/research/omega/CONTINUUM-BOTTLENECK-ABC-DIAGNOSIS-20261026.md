@@ -40,8 +40,8 @@ Case 2 fixes the model policy bias to favor the unrelated divide operator:
 
 ## Exactly what was independently tested
 
-1. **Native Node.js v22.16.0** local harness with lightweight test-only stand-ins for the imported Canonical Coding Task, small neural ranker, branded transformer and CCC1 validator: **4/4 PASS** in the final run. This is an isolated *adapter control-flow* test, not native execution with the complete GitHub module graph.
-2. Re-fetched **exact original GitHub blobs** for coding-task, NTW1, real structured transformer, CCC1 verifier, new diagnosis module and new test bodies. Executed the original test callbacks against actual original production module bodies inside a fresh V8 isolate with host-only **test shims** for Node crypto, passive VM syntax compilation, `critique`, serialization and OS. **4/4 PASS**. In this mode crypto is *not real SHA-256* and no OS sandbox was instantiated.
+1. **Native Node.js v22.16.0** local harness with lightweight test-only stand-ins for the imported Canonical Coding Task, small neural ranker, branded transformer and CCC1 validator: **4/4 PASS** in the final run (before pagination was added). This is an isolated *adapter control-flow* test, not native execution with the complete GitHub module graph.
+2. Re-fetched **exact original GitHub blobs** for coding-task, NTW1, real structured transformer, CCC1 verifier, new diagnosis module and new test bodies. Executed the original test callbacks against actual original production module bodies inside a fresh V8 isolate with host-only **test shims** for Node crypto, passive VM syntax compilation, `critique`, serialization and OS. **4/4 PASS** before the additional pagination test. In this mode crypto is *not real SHA-256* and no OS sandbox was instantiated.
 3. **NOT RUN**: full native `node --test` on exact new PR commit; authorized Docker-based CCC1 RED → GREEN → fresh GREEN; independently sealed holdout; Android/Fold7/owner-signed APK. None should be inferred from (1) or (2).
 
 ## Next highest-value step
@@ -61,3 +61,12 @@ Then create **one genuinely approved controlled source commit** with a real fail
 A future trusted evidence recorder is still required because `runIndependentCcc1PatchVerification` discards raw temp outputs and emits only a reduced report. Do not weaken its safety gates or add a user-supplied `sandboxRunner` to compensate.
 
 No review result from this research adapter may automatically train NTW1, update the repair ledger, merge to main, or install an Android app.
+
+
+## Additional first pagination task (same stage-1 gate)
+
+Follow-up commit `0ce214c0389a62fc6b58c19289de4467e2e81709` adds an actual registered **pagination** operator and a separate synthetic typed task with `src/pagination.mjs` as its sole permitted path. It measures all three A/B/C arms on source `const start = batchNo * width` and expected correction `const start = (batchNo - 1) * width`. Its five independent control-flow and linkage assertions are not an actual behavioral test of pagination, since no patch candidate is executed.
+
+Post-commit re-read of the **exact GitHub module sources and all five test callbacks** against the original canonical coding-task validator, real NTW1 implementation, real branded atomic translator, genuine read-only CCC1 binder and new measurement module gave **5/5 PASS** in fresh V8. As previously stated, the isolated harness replaces host crypto and `vm.Script` (syntax-only) with test shims; native full Node with the exact repository files and Docker CCC1 are still NOT_RUN.
+
+This leaves two explicit public development cases available for Stage 2 and a demonstrated policy against optimistic neural top-1 scoring. Neither is a hidden holdout or an independent repaired patch.
