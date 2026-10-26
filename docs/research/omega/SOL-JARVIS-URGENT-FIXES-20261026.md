@@ -38,11 +38,26 @@ GREEN-Ausgaben. Gezielter Node-Lauf mit realem Reportlimit-Docker-Test und beste
 Executor-/CCC1-/Android-Wiring-Regressionsprüfungen: **47 PASS / 0 FAIL / 0 SKIP**.
 
 Der reproduzierbare gemeinsame JVM-Runner enthält jetzt zusätzlich die zwei
-Claim-Gate-Tests. Der abschließende Quellenstand und weitere Ergebnisse werden
-nach dem letzten Lauf unten ergänzt. Bestehender Branch bleibt offen, keine
+Claim-Gate-Tests: **17 JVM-Tests und 9 tatsächliche JVM→Node-Vertragsprüfungen
+bestanden, jeweils ohne Fehler oder Skip.** Geprüfter und bereits gepushter
+Code-Commit: `3e8e0ef7341fe1886f160c53b1949a7f1ac763c7`.
+Abschließender kompletter Node-Lauf auf genau diesem Code:
+**1352 PASS / 0 FAIL / 7 SKIP**, 1359 gesamt, Node v24.19.0, Exit 0,
+92,572 Sekunden. Der echte Docker-Reportlimit-Test war dabei eingeschaltet.
+Die sieben Auslassungen sind wie zuvor sechs ältere `kotlinc`-PATH-Tests und
+der separat tatsächlich ausgeführte gemeinsame JVM→Node-Test.
+Exakter Befehl und Quell-SHA: `urgent/full-native.json`; vollständige Ausgabe:
+`urgent/full-native.tap`. Keine verbleibenden fehlgeschlagenen Tests in diesem Lauf.
+Bestehender Branch bleibt offen, keine
 Änderung an Main, keine APK/Installation oder produktive Modellfreigabe.
 
 Die bisher offenen Punkte 1 und 2 in der großen Abschlussübergabe sind damit auf
 Quell-/Regressionsniveau repariert. Die übrigen Integrationslücken bleiben offen:
 geschützte semantische Oracles, Chat→Coding, produktiver Registry-Aufrufer,
 mobile Isolation, echte lokale Modellinferenz und Android-/Besitzer-APK-Abnahme.
+
+Weiterentwicklung beginnt nun beim bislang dritten Punkt (geschützte semantische
+Oracles und danach die fehlenden produktiven Verbindungen), nicht erneut bei den
+beiden hier geschlossenen Reproduktionen. Die Owner-/Sandbox-/Review-Gates bleiben
+maßgeblich. Vollständige Android-SDK-Kompilierung und Fold7-Abnahme sind weiterhin
+NOT_RUN; der neue Coordinator-Einstieg und UI-Controller sind nativ JVM-geprüft.

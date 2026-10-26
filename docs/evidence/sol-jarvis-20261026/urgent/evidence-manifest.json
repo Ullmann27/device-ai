@@ -1,0 +1,50 @@
+{
+  "codeCommit": "3e8e0ef7341fe1886f160c53b1949a7f1ac763c7",
+  "nodeTests": {
+    "pass": 1352,
+    "fail": 0,
+    "skip": 7
+  },
+  "jvmTests": 17,
+  "crossLanguageNodeTests": 9,
+  "androidSdkBuild": "NOT_RUN",
+  "sourceDoubles": "Synthetic model adapter and Gradle reports only; genuine production coordinator, UI controller, fixed runner and Docker executor",
+  "files": [
+    {
+      "name": "claim-green.txt",
+      "sha256": "ce86ed3a88ff05da6a5fa31025e36b178eede26a5b73f79a1c3da4319426fa09"
+    },
+    {
+      "name": "claim-red.txt",
+      "sha256": "2c2d47ea7db34574e629969f41d7d1f70a582a4f94829dd819d2407d148cf62c"
+    },
+    {
+      "name": "full-native.json",
+      "sha256": "7991ac26b75e5c7ecb364899bf4df5a0130a448d16f3dbebcb3af1a12c054236"
+    },
+    {
+      "name": "full-native.tap",
+      "sha256": "2888ad5509a30d6cba2cf60cf88a74541a5d27598580504ea7869d640e1275d4"
+    },
+    {
+      "name": "green.tap",
+      "sha256": "bd9a9b2126f6ef330b65ccf068b96dde155e067324d196dc0e9848b079b7414f"
+    },
+    {
+      "name": "jvm-all-green.txt",
+      "sha256": "06af98fb1bf57edf83a6f8d7ac21fefb371b7f4575599b5d2ab3e3c50ea32a25"
+    },
+    {
+      "name": "jvm-compile.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "node-cross-language-green.tap",
+      "sha256": "c26502c9062d77de93f552a09a83dfa17c63321ebfad54142f92c3a917a35e91"
+    },
+    {
+      "name": "report-cap-red.tap",
+      "sha256": "511c1e3cc6b60276cc5af2f13ad149cab0d41f988b802c3e275e6f807b1c5d9e"
+    }
+  ]
+}

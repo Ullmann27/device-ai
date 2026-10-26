@@ -2,8 +2,9 @@
 
 > **Besitzer-Folgeauftrag bei 10%: Nachtrag maßgeblich:**
 > [SOL-JARVIS-URGENT-FIXES-20261026.md](SOL-JARVIS-URGENT-FIXES-20261026.md).
-> Der Android-Backlog-Startfehler und das stille Android-Reportlimit werden dort
-> mit neuen RED/GREEN-Belegen geschlossen. Die folgenden Abschlussmessungen
+> Aktueller Code: `3e8e0ef7341fe1886f160c53b1949a7f1ac763c7`.
+> Der Android-Backlog-Startfehler und das stille Android-Reportlimit sind dort
+> mit neuen RED/GREEN-Belegen repariert. Die folgenden älteren Abschlussmessungen
 > bleiben an ihren ursprünglichen Code-Commit gebunden und werden nicht umetikettiert.
 
 Stand: 26.10.2026. **Auf ausdrücklichen Besitzerauftrag bei gemeldeten etwa 20%
