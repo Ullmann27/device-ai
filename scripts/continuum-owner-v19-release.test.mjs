@@ -13,7 +13,7 @@ const manifest = read("app/src/main/AndroidManifest.xml");
 const expectedSigner = "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc";
 
 test("owner candidate advances beyond published 0.3.22/code23 without a new application ID", () => {
-  assert.match(gradle, /if \(deviceAiOwnerSignedUpdate\)\s*\{[\s\S]*?versionCode = 24\s*versionName = "0\.3\.23"/);
+  assert.match(gradle, /if \(deviceAiOwnerSignedUpdate\)\s*\{[\s\S]*?versionCode = 25\s*versionName = "0\.3\.24"/);
   assert.match(gradle, /applicationId = "at\.heinz\.deviceai"/);
   assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
   assert.match(manifest, /android:enabled="\$\{mobileBuilderEnabled\}"/);

@@ -2540,8 +2540,11 @@ class AgentActivity : Activity() {
                     (request.contains("?") || request.startsWith("Was ist ",true) ||
                         request.startsWith("Erkläre ",true))) {
                     runCatching {
-                        at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
-                            .search(request,limit=2).firstOrNull { it.score>=5 }
+                        at.heinz.deviceai.learning.ContinuumArchiveAnswerPolicy.select(
+                            request,
+                            at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                                .search(request,limit=20)
+                        )
                     }.getOrNull()
                 } else null
                 val archiveAnswer=archiveHit?.source?.let { document ->
@@ -2585,7 +2588,12 @@ class AgentActivity : Activity() {
                     // local agent; its conclusions acquire no confirmed-memory authority.
                     if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
                             localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
-                        val modelQuestion=LocalFirstPolicy.localModelQuestion(request,localPrompt)
+                        val modelQuestion=LocalFirstPolicy.localModelQuestion(
+                            request,localPrompt,
+                            hasSameSessionLocalTurn=localConversationContext
+                                .render(requestSessionId).isNotBlank(),
+                            grounded=grounded
+                        )
                         if(grounded) {
                             val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
                                 .boundedOrNull(answer,evidence)
