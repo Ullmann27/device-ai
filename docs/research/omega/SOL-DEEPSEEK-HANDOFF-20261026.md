@@ -1,6 +1,6 @@
 # DeepSeek authenticated bridge — 2026-10-26
 
-Status: `WIP / UNVERIFIED`; research-only, no model inference.
+Status: `RESEARCH_SHADOW / PROTOCOL_TESTED / INFERENCE_BLOCKED`; no model inference.
 
 ## Checkpoint and scope
 
@@ -46,3 +46,17 @@ Bridge contract unit tests: **8 PASS** (`bridge-unit-green.txt`; initial absence
 The first direct Node live metadata attempt failed `BLOCKED_HUB_METADATA: fetch failed` (raw `pinned-hub-live-first-failure.txt`). No inference/weights were attempted. The managed runtime uses inherited HTTP proxy/CA settings; Node's environment-proxy support must be enabled for network metadata requests in this executor.
 
 `coding-provider.mjs` is concurrently owned by the coding-discovery task for durable reservations. Coordinate its minimal optional remote seam with that owner before editing. Real local TLS integration and existing CLI entrypoint still `NOT_RUN` at this checkpoint.
+
+## Connected provider/TLS checkpoint
+
+Coordinated with coding-discovery. Its reservation commit `216fa837ee8d40b8bb5c32b7ca374d21045a0553` was cherry-picked as `31331293` only to build/test the remote seam safely; preserve the original commit when integrating and do not duplicate it. The handoff did not exist at this branch's base, so the cherry-pick retained its document. No repair-ledger/loop changes were adopted.
+
+The optional `remoteTeacher` argument on the EXISTING provider requires an owner-facing exact-prompt consent callback, scoped server credential and external canonical job evidenceDir. Consent is checked before durable reservation/CLI. The shared 1–3 request allowance, source/task identity, resume/crash reservations and independent repair gates remain the same. `coding-remote` is an explicit mode on the EXISTING CLI; local mode never switches to remote implicitly. Proxy/CA trust is preserved for HTTPS; unrelated credentials are withheld. Remote stdout/error identities are rechecked and failures never select another provider.
+
+- `provider-remote-red.txt`: four failing tests demonstrated the absent remote seam (not an observed production data leak).
+- `node --test .github/continuum/coding-provider-remote.test.mjs .github/continuum/coding-provider.test.mjs scripts/continuum-deepseek-bridge.test.mjs scripts/continuum-coding-brain.test.mjs`: **22 PASS**, raw `provider-bridge-green.txt`.
+- `node --test scripts/continuum-deepseek-https.test.mjs`: **2 PASS**, real loopback TLS sockets, ephemeral trusted certificate, actual provider→fixed CLI→HTTPS→validated canonical proposal, durable replay budget refusal; wrong token/revision, absent consent, malformed stdin, untrusted TLS and stalled endpoint denied. `https-integration.txt`. Synthetic fixture only, no model/inference.
+- Wider scoped local/coding/negative/Hub/capacity/TLS tests: **57 PASS**, raw `scoped-integration-green.txt`; a final config-identity linkage case added afterward awaits the next verification.
+- Read-only live selected Hub metadata succeeds with `NODE_USE_ENV_PROXY=1` using inherited proxy/CA: selected revision, 48 shards / 510296708312 bytes, zero LFS digests advertised, **zero downloaded/verified bytes**, inference `NOT_STARTED`. `pinned-hub-live.json` supersedes the recorded first direct-fetch failure.
+
+Full setup/protocol, provenance/train-audit reuse and missing-resource requirements: `docs/CONTINUUM-DEEPSEEK-BRIDGE-20261026.md`. No endpoint/backend deployment, Android UI/runtime test, native training, owner memory or signing changes. Missing resources: separately authorized no-charge compute/storage, verified full checkpoint bytes, supported pinned runtime/conversion/kernels/topology, authenticated operator endpoint with capability/revision/privacy/billing enforcement, owner-reviewed per-job integration. No financial or inference success inferred from an authenticated server assertion.

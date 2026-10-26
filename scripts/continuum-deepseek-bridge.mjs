@@ -10,6 +10,12 @@ import {buildCodingRequest,parseCodingResponse} from './continuum-local-brain.mj
 import {MODEL_ID,PINNED_REVISION} from './continuum-deepseek-tier-plan.mjs';
 
 export const REMOTE_LIMITS = Object.freeze({maxRequestBytes:98_304,maxResponseBytes:32_768,maxOutputTokens:1800});
+export const REMOTE_FAILURE_CODES = Object.freeze(['REMOTE_ENDPOINT_INVALID','REMOTE_REQUEST_INVALID',
+  'REMOTE_REQUEST_TOO_LARGE','REMOTE_CONSENT_REQUIRED','REMOTE_AUTH_REQUIRED','REMOTE_UNAVAILABLE',
+  'REMOTE_REDIRECT_REFUSED','REMOTE_AUTH_REJECTED','REMOTE_RATE_LIMITED','REMOTE_RESPONSE_TOO_LARGE',
+  'REMOTE_RESPONSE_INVALID','REMOTE_CAPABILITY_MISMATCH','REMOTE_DEADLINE_EXCEEDED',
+  'REMOTE_IDENTITY_OR_REQUEST_MISMATCH','REMOTE_COST_POLICY_MISMATCH','REMOTE_OUTPUT_BUDGET_EXCEEDED',
+  'REMOTE_OUTPUT_CONTRACT_REJECTED','REMOTE_PROPOSAL_INVALID']);
 const SHA40=/^[a-f0-9]{40}$/, SHA64=/^[a-f0-9]{64}$/;
 const sha = text => createHash('sha256').update(text).digest('hex');
 const exact=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
@@ -63,7 +69,7 @@ export function describeDeepSeekCodingRequest(request,{clock=Date.now}={}) {
   return prepare(request,clock).disclosure;
 }
 
-function checkConsent(consent,disclosure) {
+export function validateDeepSeekConsent(consent,disclosure) {
   if(!exact(consent,CONSENT_KEYS)||consent.schema!=='CONTINUUM_REMOTE_MODEL_JOB_CONSENT_V1'||
     consent.requestSha256!==disclosure.requestSha256||consent.expiresAt!==disclosure.deadline||
     consent.allowExternal!==true||consent.allowRepositoryContext!==true||
@@ -110,7 +116,7 @@ function validateCapabilities(caps) {
  */
 export async function queryDeepSeekCodingBrain({request,consent,apiKey,fetchImpl=globalThis.fetch,clock=Date.now}={}) {
   const ready=prepare(request,clock);
-  checkConsent(consent,ready.disclosure);
+  validateDeepSeekConsent(consent,ready.disclosure);
   if(typeof apiKey!=='string'||!/^[A-Za-z0-9_-]{32,128}$/.test(apiKey))throw blocked('REMOTE_AUTH_REQUIRED');
   if(typeof fetchImpl!=='function')throw blocked('REMOTE_UNAVAILABLE');
   const controller=new AbortController();let timer;

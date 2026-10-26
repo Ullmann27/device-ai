@@ -1,0 +1,30 @@
+✔ remote seam needs explicit config, server credential and durable canonical job evidence (38.994103ms)
+✔ declined or mismatched per-request consent consumes no reservation and starts no child (112.760369ms)
+✔ approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents (32.500636ms)
+✔ remote CLI failure cannot silently invoke a local or another remote model (30.828337ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (39.836392ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (31.034925ms)
+✔ malformed model name is rejected before invoking the local child (60.467172ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (21.144857ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (58.124366ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (31.656ms)
+✔ foreign or corrupt persisted requests block before another inference (31.073216ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (30.771319ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (2.678067ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (54.071911ms)
+✔ no opt-in, wrong payload consent, secrets/memory/training or paid allowance never sends a request (6.471036ms)
+✔ endpoint, authentication and request bounds are validated before network (0.818064ms)
+✔ authenticated capability/identity/privacy preflight happens before the consented prompt (33.253801ms)
+✔ successful HTTPS transport reuses the untrusted canonical proposal contract (2.661838ms)
+✔ revision drift, replay, paid, truncated, tool and over-budget responses fail closed (6.124221ms)
+✔ HTTP errors and untrusted exception text are sanitized; no retry or private output (3.301502ms)
+✔ output byte limit is enforced on streamed bodies even without content-length (0.523428ms)
+✔ deadline bounds both a fetch and a body reader ignoring AbortSignal (261.241301ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1207.274854

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import * as tier from "./continuum-deepseek-tier-plan.mjs";
 
 const REVISION = "1bae0e1088993b9b82de08f59de5be5a34e42170";
@@ -14,6 +15,14 @@ const fakeHub = () => ({
     rfilename: "model-" + String(i+1).padStart(5,"0") + "-of-00048.safetensors",
     size: Math.floor(WEIGHTS / 48) + (i < WEIGHTS % 48 ? 1 : 0)
   }))
+});
+
+test("capacity and transport identity stay tied to the existing selected teacher config", () => {
+  const teacher = JSON.parse(readFileSync(new URL('../config/continuum-selected-models.json',import.meta.url),'utf8')).roles.research_teacher;
+  assert.equal(tier.MODEL_ID,teacher.model_id);
+  assert.equal(tier.PINNED_REVISION,teacher.pinned_hub_revision);
+  assert.equal(tier.DECLARED_WEIGHT_BYTES,teacher.declared_weight_bytes);
+  assert.equal(teacher.declared_weight_shards,48);
 });
 
 test("selected model snapshot is exact, immutable and reports byte/GiB units", () => {
