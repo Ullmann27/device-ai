@@ -1,0 +1,31 @@
+# id<TAB>query<TAB>memory<TAB>owner hit<TAB>source hit
+multi-id-wrong-second	Wo wohnen ROBOT-36 und MOTOR-52?	ROBOT-36 und MOTOR-53 wohnen in Graz.	false	false
+multi-id-positive	Wo wohnen ROBOT-36 und MOTOR-52?	ROBOT-36 und MOTOR-52 wohnen in Graz.	true	true
+multi-id-wrong-short	Vergleiche Module A-7 und B-8	Module A-7 und B-9 sind geprüft.	false	false
+multi-id-positive-short	Vergleiche Module A-7 und B-8	Module A-7 und B-8 sind geprüft.	true	true
+multi-id-wrong-third	Erkläre Module V4.1, SN_15 und R1	Module V4.1, SN_16 und R1 sind geprüft.	false	false
+multi-id-positive-third	Erkläre Module V4.1, SN_15 und R1	Module V4.1, SN_15 und R1 sind geprüft.	true	true
+unknown-name	Wo wohnt Nemo?	Leo wohnt in Graz.	false	false
+wrong-relation	Wo arbeitet Leo?	Leo wohnt in Graz.	false	false
+wrong-relation-reverse	Wo wohnt Leo?	Leo arbeitet in Graz.	false	false
+wrong-subject-as-object	Wo wohnt Leo?	Nemo wohnt bei Leo.	false	false
+exact-name	Wo wohnt Leo?	Leo wohnt in Graz.	true	true
+work-location	Wo arbeitet Leo?	Leo arbeitet in Wien.	true	true
+work-employer	Wo arbeitet Leo?	Leo arbeitet bei Acme.	true	true
+residence-alias	Wo wohnt Leo?	Leo lebt in Graz.	true	false
+residence-reverse-alias	Wo lebt Leo?	Leo wohnt in Graz.	true	false
+residence-since	Wo wohnt Leo?	Leo lebt seit Jahren in Graz.	true	false
+residence-home	Wo wohnt Leo?	Das Zuhause von Leo ist in Graz.	true	false
+residence-moved	Wo wohnt Leo?	Leo ist nach Graz gezogen.	true	false
+inverted-id	WO WOHNT "z6"?	In Graz wohnt Roboter Z6.	true	true
+repeated-id	Wo wohnt Z6 und Z6?	Roboter Z6 wohnt in Graz.	true	true
+quoted-name	Wo wohnt "Leo"?	Leo wohnt in Graz.	true	true
+mixed-case	WO WOHNT léo?	LÉO wohnt in Graz.	true	true
+plural-name	Wo wohnen Leo und Nemo?	Leo und Nemo wohnen in Graz.	true	true
+plural-name-missing	Wo wohnen Leo und Nemo?	Leo und Lena wohnen in Graz.	false	false
+single-in-plural	Wo wohnt Leo?	Leo und Nemo wohnen in Graz.	true	false
+negated-location	Wo wohnt Leo?	Leo wohnt nicht in Graz.	false	false
+work-role-is-not-place	Wo arbeitet Leo?	Leo arbeitet als Koch.	false	false
+incidental-id	Wo wohnt R1?	Roboter R2 wohnt bei R1.	false	false
+no-id-golden-project	Wo ist mein Forschungsprojekt?	Mein Projekt heißt Astra.	true	false
+no-id-golden-compound	Wo ist der Schlüssel?	Der Haustürschlüssel liegt dort.	true	true

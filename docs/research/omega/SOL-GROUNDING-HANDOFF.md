@@ -19,3 +19,13 @@ Next: reproduce failures with RED tests, read existing LCT1/CSX proof/relation s
 At initial checkpoint: code changes NONE; tests NOT_RUN; Gradle/device/APK tests NOT_RUN. Parent will integrate and run heavy Gradle verification. Host standalone Kotlin checks may use actual precompiled classes with JDK17/kotlinc from `/workspace/continuum-toolchain`; distinguish host checks from Android/device validation.
 
 Rollback: revert individual new source commits. No main merges, APK signing/installation, owner data writes, failed-path activation or foreign branch changes.
+
+## RED reproduction checkpoint
+
+Baseline source `a7aebe1ecab4fe7a63470fa004a65c8184454027` passes the existing focused retrieval baseline (25/25 Node). The new shared 30-case fixture executes both owner/source policy arms: Node42/60 PASS,18/60 FAIL as expected. Both new Kotlin behavioral tests fail on the known grounding errors; all17 existing identifier/dialogue tests pass (19run,2fail). Raw logs are under `docs/evidence/sol-grounding-20261026/`.
+
+Root cause: the original-text ID helper explicitly bypasses every query with more than one distinct ID. Owner admission then requires only the best shared content word; a generic predicate or a person mentioned as a value can qualify. The old owner-subject guard applies only to `Was/Wer ist` at dialogue level, not to `Wo wohnt/lebt/arbeitet`.
+
+Reuse analysis: LCT1 is test-source-only, requiring typed facts and exact subject+relation per verified hop; it cannot safely be activated on unstructured owner prose. `ContinuumEvidenceSpanProbe` (CSX1) already uses anchored subject/relation templates, bounded robot IDs and original literal spans. CSX3 remains a confidence-uncalibrated extractive proposal. The candidate will apply only the narrow subject/relation eligibility principle in the existing mirrored retriever, without importing a new reasoner, learned semantics, evidence authority or memory store.
+
+Tests remain RED / implementation NOT_STARTED at this checkpoint. Added positive short-ID cases explicitly include a shared ordinary content word: the task does not silently broaden lexical recall for cases with no original lexical evidence.
