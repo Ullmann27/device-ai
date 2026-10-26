@@ -1,0 +1,30 @@
+{
+  "comparedUncompressed": true,
+  "sameTrainingDifferentEvaluation": true,
+  "matches": {
+    "101-CRE1_TRAINED.bin.gz": true,
+    "73-SWB1_TRAINED.bin.gz": true,
+    "101-CDX1_UNTRAINED.bin.gz": true,
+    "211-CRE1_TRAINED.bin.gz": true,
+    "211-SWB2_UNTRAINED.bin.gz": true,
+    "211-SWB2_TRAINED.bin.gz": true,
+    "211-SWB1_TRAINED.bin.gz": true,
+    "101-SWB1_UNTRAINED.bin.gz": true,
+    "73-SWB2_AFTER_SECOND_FAMILY.bin.gz": true,
+    "73-CRE1_TRAINED.bin.gz": true,
+    "73-SWB1_UNTRAINED.bin.gz": true,
+    "101-SWB1_TRAINED.bin.gz": true,
+    "211-SWB2_AFTER_SECOND_FAMILY.bin.gz": true,
+    "73-CRE1_UNTRAINED.bin.gz": true,
+    "73-SWB2_UNTRAINED.bin.gz": true,
+    "211-CRE1_UNTRAINED.bin.gz": true,
+    "101-SWB2_UNTRAINED.bin.gz": true,
+    "211-CDX1_UNTRAINED.bin.gz": true,
+    "73-SWB2_TRAINED.bin.gz": true,
+    "101-SWB2_AFTER_SECOND_FAMILY.bin.gz": true,
+    "73-CDX1_UNTRAINED.bin.gz": true,
+    "101-SWB2_TRAINED.bin.gz": true,
+    "101-CRE1_UNTRAINED.bin.gz": true,
+    "211-SWB1_UNTRAINED.bin.gz": true
+  }
+}

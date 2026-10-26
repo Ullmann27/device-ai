@@ -1,0 +1,19 @@
+{
+  "tools": {
+    "java": true,
+    "javac": false,
+    "node": true,
+    "gradle": false,
+    "adb": false,
+    "apksigner": false,
+    "kotlinc": false
+  },
+  "androidSdkFound": false,
+  "workspaceModelFiles": [],
+  "newRemoteModelCalls": 0,
+  "newModelDownloads": 0,
+  "newDependencyDownloads": 0,
+  "deviceAttached": "NOT_VERIFIED",
+  "apkBuild": "NOT_RUN",
+  "ownerSigning": "NOT_RUN"
+}

@@ -1,0 +1,12 @@
+✔ v25 same owner package and strictly newer version with signed v24 rollback (11.521303ms)
+✔ v25 manifest freezes only the revised coding features and unchanged UI sources (3191.310754ms)
+✔ v25 gate fails closed on absent old, or partial grants (174.11237ms)
+✔ v25 QA signing is intentionally never an owner-app installer (0.636541ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3457.891963

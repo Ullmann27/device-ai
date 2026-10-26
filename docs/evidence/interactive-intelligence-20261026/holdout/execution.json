@@ -1,0 +1,49 @@
+[
+  {
+    "name": "evaluate",
+    "command": [
+      "bash",
+      "scripts/continuum-interactive-lab.sh",
+      "/workspace/kotlin-tests/interactive-holdout",
+      "evaluate",
+      "holdout"
+    ],
+    "exitCode": 0,
+    "seconds": 57.511683225631714,
+    "userSeconds": 65.148175,
+    "systemSeconds": 1.864812,
+    "cumulativeMaxRssKiB": 816960
+  },
+  {
+    "name": "baseline",
+    "command": [
+      "java",
+      "-cp",
+      "/workspace/kotlin-tests/interactive-holdout/classes:/workspace/toolchains/kotlin/android-all-15.jar:/workspace/toolchains/kotlin/kotlin-script-runtime-2.2.0.jar:/workspace/toolchains/kotlin/kotlin-stdlib-2.2.0.jar:/workspace/toolchains/kotlin/hamcrest-core-1.3.jar:/workspace/toolchains/kotlin/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/toolchains/kotlin/kotlin-daemon-embeddable-2.2.0.jar:/workspace/toolchains/kotlin/junit-4.13.2.jar:/workspace/toolchains/kotlin/annotations-13.0.jar:/workspace/toolchains/kotlin/kotlin-reflect-1.6.10.jar:/workspace/toolchains/kotlin/kotlin-compiler-embeddable-2.2.0.jar",
+      "at.heinz.deviceai.research.interactive.LabBaseline",
+      "/workspace/device-ai/experimental/interactive-intelligence/fixtures/holdout.tsv"
+    ],
+    "exitCode": 0,
+    "seconds": 0.8146443367004395,
+    "userSeconds": 0.4676910000000021,
+    "systemSeconds": 0.06075800000000009,
+    "cumulativeMaxRssKiB": 816960
+  },
+  {
+    "name": "suite",
+    "command": [
+      "java",
+      "-cp",
+      "/workspace/kotlin-tests/interactive-holdout/classes:/workspace/toolchains/kotlin/android-all-15.jar:/workspace/toolchains/kotlin/kotlin-script-runtime-2.2.0.jar:/workspace/toolchains/kotlin/kotlin-stdlib-2.2.0.jar:/workspace/toolchains/kotlin/hamcrest-core-1.3.jar:/workspace/toolchains/kotlin/kotlinx-coroutines-core-jvm-1.8.0.jar:/workspace/toolchains/kotlin/kotlin-daemon-embeddable-2.2.0.jar:/workspace/toolchains/kotlin/junit-4.13.2.jar:/workspace/toolchains/kotlin/annotations-13.0.jar:/workspace/toolchains/kotlin/kotlin-reflect-1.6.10.jar:/workspace/toolchains/kotlin/kotlin-compiler-embeddable-2.2.0.jar",
+      "at.heinz.deviceai.research.interactive.LabSuite",
+      "/workspace/device-ai/experimental/interactive-intelligence/fixtures/train.tsv",
+      "/workspace/device-ai/experimental/interactive-intelligence/fixtures/holdout.tsv",
+      "/workspace/kotlin-tests/interactive-holdout"
+    ],
+    "exitCode": 0,
+    "seconds": 8.084258079528809,
+    "userSeconds": 6.552551000000008,
+    "systemSeconds": 0.2671739999999998,
+    "cumulativeMaxRssKiB": 816960
+  }
+]

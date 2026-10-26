@@ -1,0 +1,4 @@
+originalTrainFamilyBefore=12/12
+originalTrainFamilyAfter=12/12
+secondFamilyUpdates=96
+NoReplayOrEwcClaim=true

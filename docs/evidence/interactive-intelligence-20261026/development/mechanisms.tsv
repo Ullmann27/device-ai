@@ -1,0 +1,17 @@
+experiment	arm	correct	total	wrong	abstain	cost	meaning
+C	NO_QUESTION_73	20	40	20	0	0	balanced_alias_game
+C	EXTRA_TRAINING_73	20	40	20	0	400	actual_SWB1_updates
+C	ONE_ORACLE_QUESTION_73	40	40	0	0	40	one_truthful_answer_per_case
+C	NO_QUESTION_101	20	40	20	0	0	balanced_alias_game
+C	EXTRA_TRAINING_101	20	40	20	0	400	actual_SWB1_updates
+C	ONE_ORACLE_QUESTION_101	40	40	0	0	40	one_truthful_answer_per_case
+C	NO_QUESTION_211	20	40	20	0	0	balanced_alias_game
+C	EXTRA_TRAINING_211	20	40	20	0	400	actual_SWB1_updates
+C	ONE_ORACLE_QUESTION_211	40	40	0	0	40	one_truthful_answer_per_case
+D	PRESSURE_ONLY_HEURISTIC	12	16	4	0	16	NOT_GEMMA
+D	EXPLICIT_CAUSAL_MODEL	16	16	0	0	16	finite_boolean_oracle
+E	UNCHECKED_SYNTHETIC_DRAFT	20	80	60	0	0	no_model_generation
+E	ORACLE_CRITIC	20	80	0	60	80	claim_filter_not_Gemma_quality
+G1	LEAVE_ONE_OUT	2	3	1	0	7	redundancy_counterexample_candidate_rejected
+G2	SINGLE_ORDER	16	24	8	0	24	order_sensitive_synthetic_ranker
+G2	PERMUTATION_CONSENSUS	8	24	0	16	48	coverage_tradeoff_not_truth_proof
