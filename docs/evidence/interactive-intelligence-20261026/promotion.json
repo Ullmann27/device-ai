@@ -1,0 +1,12 @@
+{
+ "schemaVersion":1,
+ "sourceSha":"d7df7a45ea8002d8adaf2b45745b373416ae96dd",
+ "productionActivation":false,
+ "dialogueV1":{"eligible":false,"reason":"4/8 adversarial wrong references versus0baseline; easy168/168does not override safety regression"},
+ "researchFeedback":{"eligibleForSeparateSourceReview":true,"ownerMemoryEnabled":false,"productionWeightTraining":false,"scope":"Synthetic-only durable digest-bound candidate lifecycle; same-process locking"},
+ "trainedEncoders":{"eligible":false,"reason":"No held-out ranking gain over corresponding untrained model"},
+ "leaveOneOut":{"eligible":false,"reason":"Redundant evidence counterexample"},
+ "questionPlanner":{"eligible":false,"reason":"Truthful finite-oracle game only; actual human dialog not evaluated"},
+ "counterfactualCritic":{"eligible":false,"reason":"Typed finite mechanism only; natural language/Gemma comparison NOT_RUN"},
+ "permutationConsensus":{"eligible":false,"reason":"8/24correct,16abstentions; true accuracy not certified"}
+}

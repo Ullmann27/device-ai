@@ -1,0 +1,17 @@
+case	arm	expected	selected	correct	wrong	abstain
+trailing-negation	ADAPTIVE	?	a	false	true	false
+trailing-negation	CTX3	?	?	true	false	true
+two-part-correction	ADAPTIVE	b	b	true	false	false
+two-part-correction	CTX3	b	?	false	false	true
+quoted-mention	ADAPTIVE	b	?	false	false	true
+quoted-mention	CTX3	b	?	false	false	true
+uncertain-owner	ADAPTIVE	?	b	false	true	false
+uncertain-owner	CTX3	?	?	true	false	true
+question-is-not-selection	ADAPTIVE	?	b	false	true	false
+question-is-not-selection	CTX3	?	?	true	false	true
+no-longer	ADAPTIVE	?	a	false	true	false
+no-longer	CTX3	?	?	true	false	true
+explicit-switch	ADAPTIVE	b	b	true	false	false
+explicit-switch	CTX3	b	?	false	false	true
+model-echo	ADAPTIVE	a	a	true	false	false
+model-echo	CTX3	a	?	false	false	true

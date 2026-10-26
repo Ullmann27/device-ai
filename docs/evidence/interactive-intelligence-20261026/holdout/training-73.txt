@@ -1,0 +1,3 @@
+updates=96 per arm
+nanos=436877546
+trainOnly=true

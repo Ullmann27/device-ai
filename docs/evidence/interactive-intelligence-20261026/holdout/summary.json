@@ -1,0 +1,317 @@
+{
+  "scope": "synthetic native JVM research; NOT device or Gemma inference",
+  "files": {
+    "baseline-holdout.tsv": "a8d8141748612523cf0d6c57bf73a4fa7827a824dfdfbf355f750a1bd4a70dbb",
+    "cdx1-101.txt": "7631d1db6a591a9ff5ada6e6a5559022581f04a77590a66d960c5b300f076877",
+    "cdx1-211.txt": "957a4908e562c9f008cedd4329d9d0932110e270bb471202df1d5b6b1d25f7ee",
+    "cdx1-73.txt": "10628b4d1474d012a34cd717512681c952e77b0a1027e204c7bb2c642990821f",
+    "compile.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compiler.txt": "d61fe2cf822b50a0a19f99e2cfbfc1e95d6ec3dcecc7342f47d874d995886d5b",
+    "counterfactual-oracle.tsv": "7269bca04ea9d747dfcfc6f80119de6e4e5876a8b4b7e520f10091f3f428b137",
+    "evaluate.log": "0a72acd1071ffe5a2b13f6860d9670b05edc0d9b92a7c84d3515a39df3e24440",
+    "execution.json": "fa772ed986532a2b431a9145eaca7c7f4bb680e3342f427bb190e3e7ed4dec09",
+    "initial-resource-wrapper-error.txt": "c67fd0a0abe148fe355e00feea0132e48b7c4d2f2354a8d3e28d28ab1e97ec90",
+    "java.txt": "bf61371a588e139353579c26bedbc9693004380fe8e053aa012cb6f7d2c43f20",
+    "junit.txt": "0a72acd1071ffe5a2b13f6860d9670b05edc0d9b92a7c84d3515a39df3e24440",
+    "mechanisms.tsv": "72daf9e1ec52ce3087546c1e1fc8901436bc2f44b027220b4a98d84e4c3bfebc",
+    "models.tsv": "e0db709c6b294275a46d8de5f33e34eaa4078eb3290816c0f9197a47e1335c5c",
+    "node.txt": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "results-holdout.tsv": "a98a606dac3b374a28469bf2953bd37256c54e53ebf0b8a5ab975dcf2b399598",
+    "retention-101.txt": "bcb4c3201428e903a631b6b9fc2c667dbc00d6c16b945f6789298835ab725350",
+    "retention-211.txt": "bcb4c3201428e903a631b6b9fc2c667dbc00d6c16b945f6789298835ab725350",
+    "retention-73.txt": "bcb4c3201428e903a631b6b9fc2c667dbc00d6c16b945f6789298835ab725350",
+    "source-blobs.sha256": "737e95902150693450ce45149add1d345d693d4b14f67c42a5b642a32afe8d92",
+    "source-sha.txt": "5a4b95b106c7411c624a0aaf6cc8f9b3064a8daa075f45929a1d1cdceedcb810",
+    "suite.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "training-101.txt": "161baf0e291573e47266f40f87ea0198ee45ab8ef98bef72981a9d9264e0c99e",
+    "training-211.txt": "b5f9e590bf6fb5a17fce72aecf259c77a2284f42798c51e2a2e3ee35f0cfd08c",
+    "training-73.txt": "a74989523693cde157420dffaf288c8bf147bb8f6674c7046630f62a4571c6b9",
+    "training-lineage.txt": "22207d08bc29f72f7f0042cb16242a4c0cc59bc7b42c55a50a47b946e2b2d97f"
+  },
+  "dialogue": {
+    "baseline-holdout.tsv": {
+      "CTX3_BASELINE": {
+        "n": 168,
+        "correct": 60,
+        "notApplicable": 0,
+        "abstain": 156,
+        "wrong": 0,
+        "retained": 156,
+        "p50Microseconds": 104.299,
+        "p95Microseconds": 361.534,
+        "maxContextBytes": 363
+      }
+    },
+    "results-holdout.tsv": {
+      "RAW": {
+        "n": 168,
+        "correct": 0,
+        "notApplicable": 168,
+        "abstain": 48,
+        "wrong": 0,
+        "retained": 156,
+        "p50Microseconds": 252.823,
+        "p95Microseconds": 2169.73,
+        "maxContextBytes": 363
+      },
+      "STRUCTURED": {
+        "n": 168,
+        "correct": 168,
+        "notApplicable": 0,
+        "abstain": 48,
+        "wrong": 0,
+        "retained": 168,
+        "p50Microseconds": 258.207,
+        "p95Microseconds": 2639.447,
+        "maxContextBytes": 471
+      },
+      "ADAPTIVE": {
+        "n": 168,
+        "correct": 168,
+        "notApplicable": 0,
+        "abstain": 48,
+        "wrong": 0,
+        "retained": 168,
+        "p50Microseconds": 267.244,
+        "p95Microseconds": 3386.49,
+        "maxContextBytes": 834
+      }
+    }
+  },
+  "models": {
+    "SWB1_UNTRAINED": {
+      "correct": 34,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "SWB2_UNTRAINED": {
+      "correct": 36,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "CRE1_UNTRAINED": {
+      "correct": 36,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "SWB1_TRAINED": {
+      "correct": 34,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "SWB2_TRAINED": {
+      "correct": 36,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "CRE1_TRAINED": {
+      "correct": 36,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "SWB2_AFTER_SECOND_FAMILY": {
+      "correct": 36,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    },
+    "CDX1_UNTRAINED_EXACT_ANSWER": {
+      "correct": 0,
+      "total": 36,
+      "seeds": [
+        73,
+        101,
+        211
+      ]
+    }
+  },
+  "mechanisms": [
+    {
+      "experiment": "C",
+      "arm": "NO_QUESTION_73",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "0",
+      "meaning": "balanced_alias_game"
+    },
+    {
+      "experiment": "C",
+      "arm": "EXTRA_TRAINING_73",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "400",
+      "meaning": "actual_SWB1_updates"
+    },
+    {
+      "experiment": "C",
+      "arm": "ONE_ORACLE_QUESTION_73",
+      "correct": "40",
+      "total": "40",
+      "wrong": "0",
+      "abstain": "0",
+      "cost": "40",
+      "meaning": "one_truthful_answer_per_case"
+    },
+    {
+      "experiment": "C",
+      "arm": "NO_QUESTION_101",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "0",
+      "meaning": "balanced_alias_game"
+    },
+    {
+      "experiment": "C",
+      "arm": "EXTRA_TRAINING_101",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "400",
+      "meaning": "actual_SWB1_updates"
+    },
+    {
+      "experiment": "C",
+      "arm": "ONE_ORACLE_QUESTION_101",
+      "correct": "40",
+      "total": "40",
+      "wrong": "0",
+      "abstain": "0",
+      "cost": "40",
+      "meaning": "one_truthful_answer_per_case"
+    },
+    {
+      "experiment": "C",
+      "arm": "NO_QUESTION_211",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "0",
+      "meaning": "balanced_alias_game"
+    },
+    {
+      "experiment": "C",
+      "arm": "EXTRA_TRAINING_211",
+      "correct": "20",
+      "total": "40",
+      "wrong": "20",
+      "abstain": "0",
+      "cost": "400",
+      "meaning": "actual_SWB1_updates"
+    },
+    {
+      "experiment": "C",
+      "arm": "ONE_ORACLE_QUESTION_211",
+      "correct": "40",
+      "total": "40",
+      "wrong": "0",
+      "abstain": "0",
+      "cost": "40",
+      "meaning": "one_truthful_answer_per_case"
+    },
+    {
+      "experiment": "D",
+      "arm": "PRESSURE_ONLY_HEURISTIC",
+      "correct": "12",
+      "total": "16",
+      "wrong": "4",
+      "abstain": "0",
+      "cost": "16",
+      "meaning": "NOT_GEMMA"
+    },
+    {
+      "experiment": "D",
+      "arm": "EXPLICIT_CAUSAL_MODEL",
+      "correct": "16",
+      "total": "16",
+      "wrong": "0",
+      "abstain": "0",
+      "cost": "16",
+      "meaning": "finite_boolean_oracle"
+    },
+    {
+      "experiment": "E",
+      "arm": "UNCHECKED_SYNTHETIC_DRAFT",
+      "correct": "20",
+      "total": "80",
+      "wrong": "60",
+      "abstain": "0",
+      "cost": "0",
+      "meaning": "no_model_generation"
+    },
+    {
+      "experiment": "E",
+      "arm": "ORACLE_CRITIC",
+      "correct": "20",
+      "total": "80",
+      "wrong": "0",
+      "abstain": "60",
+      "cost": "80",
+      "meaning": "claim_filter_not_Gemma_quality"
+    },
+    {
+      "experiment": "G1",
+      "arm": "LEAVE_ONE_OUT",
+      "correct": "2",
+      "total": "3",
+      "wrong": "1",
+      "abstain": "0",
+      "cost": "7",
+      "meaning": "redundancy_counterexample_candidate_rejected"
+    },
+    {
+      "experiment": "G2",
+      "arm": "SINGLE_ORDER",
+      "correct": "16",
+      "total": "24",
+      "wrong": "8",
+      "abstain": "0",
+      "cost": "24",
+      "meaning": "order_sensitive_synthetic_ranker"
+    },
+    {
+      "experiment": "G2",
+      "arm": "PERMUTATION_CONSENSUS",
+      "correct": "8",
+      "total": "24",
+      "wrong": "0",
+      "abstain": "16",
+      "cost": "48",
+      "meaning": "coverage_tradeoff_not_truth_proof"
+    }
+  ]
+}
