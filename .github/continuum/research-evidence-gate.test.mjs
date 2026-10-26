@@ -86,3 +86,21 @@ test('no caller input is ever mutated',()=>{
  const receipt=baseline(),v=verifier(),raw=JSON.stringify({receipt,v});
  review(receipt,v);assert.equal(JSON.stringify({receipt,v}),raw);
 });
+
+test('falsification scorecard: naive status-only check misses 12 of 13 corruptions',()=>{
+ const changes=[
+  x=>{x.before=[]},x=>{x.after[0].evidenceComplete=false},
+  x=>{x.fresh[0].executed=2},x=>{x.fresh[0].executedCaseHashes[0]=H(99)},
+  x=>{x.after[0].executedCaseHashes=[H(10),H(10),H(12)]},
+  x=>{x.before[0].skipped=1},x=>{x.after[0].exitCode=1},
+  x=>{x.before[0].failed=0},x=>{x.ownerReviewRequired=false},
+  x=>{x.testEvidenceAuthenticated=true},x=>{x.status='CHECKS_FAILED_NO_LEARNING'},
+  x=>{x.sourceCommit='b'.repeat(40)},x=>{x.reason='FAKE_SUCCESS'}
+ ];
+ let naive=0,strict=0;
+ for(const mutate of changes){const receipt=baseline();mutate(receipt);
+  if(receipt.status==='DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED'&&verifier().status==='PASS')naive++;
+  if(review(receipt).status==='RESEARCH_REVIEW_REQUIRED')strict++;
+ }
+ assert.equal(changes.length,13);assert.equal(naive,12);assert.equal(strict,0);
+});
