@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const read=p=>readFileSync(resolve(root,p),'utf8');
 const head=()=>execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
-const SOURCE='097c3448b28e8ac82b44ff4b1abf34eaec38f8cc', MANIFEST_BLOB='78590258b0056b528c667c0358b969c8f8ae016d', COUNT=1034;
+const SOURCE='c80b72537ab6bbca84687261ab1a385f9fb2788b', MANIFEST_BLOB='981133e7c17d5ff4fc0ee39c87ebf7811c098ec5', COUNT=1034;
 const gate=vars=>spawnSync(process.execPath,['scripts/continuum-v25-source-gate.mjs'],{
  cwd:root,encoding:'utf8',timeout:120000,
  env:{PATH:process.env.PATH,HOME:process.env.HOME,...vars}

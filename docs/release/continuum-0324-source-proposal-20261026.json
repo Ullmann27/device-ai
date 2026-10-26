@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "state": "SOURCE_PROPOSAL_NOT_OWNER_APPROVAL",
-  "sourceHead": "097c3448b28e8ac82b44ff4b1abf34eaec38f8cc",
+  "sourceHead": "c80b72537ab6bbca84687261ab1a385f9fb2788b",
   "package": "at.heinz.deviceai.mentorpaired",
   "versionCode": 25,
   "versionName": "0.3.24",
@@ -509,11 +509,11 @@
     },
     {
       "path": ".github/continuum/continuum-owner-mainapp-quality.test.mjs",
-      "blob": "50de98542994427d5239289179523c1c6bcc0cd4"
+      "blob": "52e3067643930d5bbc421dbb5f152019126b5d91"
     },
     {
       "path": ".github/continuum/continuum-owner-v18-release.test.mjs",
-      "blob": "f8ae45556ed16d4920227ef14c94b61aaf557f3d"
+      "blob": "5c8c40a36dc7d822c011398b1e36afcaa0f456c3"
     },
     {
       "path": ".github/continuum/continuum-v21-owner-release.test.mjs",
@@ -1316,12 +1316,12 @@
       "blob": "d8a2b0463b8a9a45c82cfafe955df2b520f5fc8c"
     },
     {
-      "path": "app/src/main/AndroidManifest.xml",
-      "blob": "983138c8e8cc9b25189288c7202d4e17f699f959"
-    },
-    {
       "path": "app/src/main/aidl/at/heinz/deviceai/IDeviceShell.aidl",
       "blob": "7673ae83491ba4ea77dc22b50493b19cc1bf7c5b"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "blob": "983138c8e8cc9b25189288c7202d4e17f699f959"
     },
     {
       "path": "app/src/main/assets/continuum-owned-project-plans-v1.json",
@@ -1396,6 +1396,18 @@
       "blob": "8f9aa72de6e30c6cee1b3cd94aaa92810b967cfb"
     },
     {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkModel.kt",
+      "blob": "ed1956583e66c86f80c31b94d08a18793a3ca42f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkReport.kt",
+      "blob": "5d0f7b1b644815d696a883756f67b2f1b613476c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkRunner.kt",
+      "blob": "db76f61015bf450ec73e2a200c5ddcffe2a2312f"
+    },
+    {
       "path": "app/src/main/java/at/heinz/deviceai/BootstrapBrain.kt",
       "blob": "e0981a9a8052f72bc5959ae2de68319fc1692e66"
     },
@@ -1410,178 +1422,6 @@
     {
       "path": "app/src/main/java/at/heinz/deviceai/BoundedIo.kt",
       "blob": "351eb30fcd196cf14d3c62bd040af504a60b1cad"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
-      "blob": "1835375c6420b14ee9bf431cd9d855e48bfc0dc1"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ComposerReflowDraft.kt",
-      "blob": "02b860f20dc99e0d1ada8747696f63e21bce34e4"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ComposerUiPolicy.kt",
-      "blob": "d92a5c03997f0d783d4d45e9613a1d727992c47a"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
-      "blob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
-      "blob": "9eb0d5cb090fa88cc0b4af649682c234778e4f73"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingTask.kt",
-      "blob": "5b7833cb1b59521e35b936ef154bef605a05fa9f"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCoreArtView.kt",
-      "blob": "ab94b5e2fef4cb2fa05a26a34bc348a01e329f93"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
-      "blob": "333c867b5740847d878ac96b6c4b3e595c8286f7"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumFirstSteps.kt",
-      "blob": "01f4e37f986aebc93a2ec48acae65484b3f678a7"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
-      "blob": "ef04053be4c2a26695cf9f681c8406f620c79e63"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
-      "blob": "22234d244c08f6e7b041509eca7ea6df4d13cc24"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
-      "blob": "6ebec7bad39cb842e22a8031f4728338221b0da2"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
-      "blob": "bb4be3fc7b4b82ba48de5711c9b6de9cc38abe0d"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
-      "blob": "1d68e78ed6f99a87f6b3d6ddf758734f70a10ade"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderRoute.kt",
-      "blob": "4ff37654794498a4062ef77045bd443410b8363f"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileCodingJob.kt",
-      "blob": "4f9c0d0af96fc96396c46fd82f7470fcf1ef1db1"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
-      "blob": "79f365032047fa1818c5d60ed83485a32d9c626b"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumNexusHomeSpec.kt",
-      "blob": "dd2299a083174db78e2f13b1a19fc23ef7b75ce0"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
-      "blob": "53efcb096fe152189a1731948706b4ccb1294790"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumSelectedModels.kt",
-      "blob": "2ef1a93dd6776f2bf830ae9f21c5db7097644def"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumStatusExcerpt.kt",
-      "blob": "a46f1832c9fc460c5d4d801e86012b5af141ac03"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
-      "blob": "e1871932855c65b5e2e60f13cd2243e34f3d20d4"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt",
-      "blob": "703f95c3c7d6fc1e16e3362cedc511f325ad39ce"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt",
-      "blob": "f7b9d421b36ff876015922c15bc50abf5f4b6c50"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
-      "blob": "d405d7feded22087ab1b00ae8e080b1b8299c493"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt",
-      "blob": "c154f06a567c964797beccf00c7659196b624f3e"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
-      "blob": "a900cdc73b757cec751ecc23825a92153da257ad"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
-      "blob": "7362f67e61a6a18ac9d19a6b077884dd52ccac07"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt",
-      "blob": "5e989d155ca0e8e20a7ed7596d45fbf5afbc1581"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/GroqInvocationRouter.kt",
-      "blob": "fd88291c19d3ac16be7cd96377bff183e33b552a"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
-      "blob": "313530d45824a01ccf3b551891c71f327ecb0403"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
-      "blob": "3b81091541bad76ebf71237b6ba821cff02c2367"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/MainActivity.kt",
-      "blob": "5cba57afbc9cf3256bb8a90a5391b2815ac6c117"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/MentorDeviceIdentity.kt",
-      "blob": "8da0878b0ce29924b8acbe022012592ee64a2144"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt",
-      "blob": "25ff15e943a7538ef74f581a14523449e040cda6"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ShellUserService.kt",
-      "blob": "6a55cf1a7ed06e0d636654898b54f8b3b2ffcbb1"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt",
-      "blob": "428908fe9be5656eae0603211610fabfad90e94e"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
-      "blob": "5b0bffdb39c96da3828fe71cb5e6fbb0e551471e"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
-      "blob": "fd212811a303102c37ed73a3c7f00dc42ada397c"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
-      "blob": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkModel.kt",
-      "blob": "ed1956583e66c86f80c31b94d08a18793a3ca42f"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkReport.kt",
-      "blob": "5d0f7b1b644815d696a883756f67b2f1b613476c"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/benchmark/BenchmarkRunner.kt",
-      "blob": "db76f61015bf450ec73e2a200c5ddcffe2a2312f"
     },
     {
       "path": "app/src/main/java/at/heinz/deviceai/cognitive/AdaptiveIdentity.kt",
@@ -1812,16 +1652,136 @@
       "blob": "3d129637d6673b7d0f4c94d95172c0cb7ec7ec84"
     },
     {
+      "path": "app/src/main/java/at/heinz/deviceai/CommandInterpreter.kt",
+      "blob": "1835375c6420b14ee9bf431cd9d855e48bfc0dc1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ComposerReflowDraft.kt",
+      "blob": "02b860f20dc99e0d1ada8747696f63e21bce34e4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ComposerUiPolicy.kt",
+      "blob": "d92a5c03997f0d783d4d45e9613a1d727992c47a"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCcc1Bridge.kt",
+      "blob": "a62abbbf1d005a1ea6fc05310c1dd7b401ecc740"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingConversation.kt",
+      "blob": "9eb0d5cb090fa88cc0b4af649682c234778e4f73"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCodingTask.kt",
+      "blob": "5b7833cb1b59521e35b936ef154bef605a05fa9f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumCoreArtView.kt",
+      "blob": "ab94b5e2fef4cb2fa05a26a34bc348a01e329f93"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumDashboardCollector.kt",
+      "blob": "333c867b5740847d878ac96b6c4b3e595c8286f7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumFirstSteps.kt",
+      "blob": "01f4e37f986aebc93a2ec48acae65484b3f678a7"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumHologramView.kt",
+      "blob": "ef04053be4c2a26695cf9f681c8406f620c79e63"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumM5LabActivity.kt",
+      "blob": "22234d244c08f6e7b041509eca7ea6df4d13cc24"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt",
+      "blob": "1d68e78ed6f99a87f6b3d6ddf758734f70a10ade"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderRoute.kt",
+      "blob": "4ff37654794498a4062ef77045bd443410b8363f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildPlan.kt",
+      "blob": "6ebec7bad39cb842e22a8031f4728338221b0da2"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt",
+      "blob": "bb4be3fc7b4b82ba48de5711c9b6de9cc38abe0d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileCodingJob.kt",
+      "blob": "4f9c0d0af96fc96396c46fd82f7470fcf1ef1db1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumMobileResultPolicy.kt",
+      "blob": "79f365032047fa1818c5d60ed83485a32d9c626b"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumNexusHomeSpec.kt",
+      "blob": "dd2299a083174db78e2f13b1a19fc23ef7b75ce0"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumOwnedProjectPlan.kt",
+      "blob": "53efcb096fe152189a1731948706b4ccb1294790"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumSelectedModels.kt",
+      "blob": "2ef1a93dd6776f2bf830ae9f21c5db7097644def"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumStatusExcerpt.kt",
+      "blob": "a46f1832c9fc460c5d4d801e86012b5af141ac03"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingMonitorActivity.kt",
+      "blob": "e1871932855c65b5e2e60f13cd2243e34f3d20d4"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTrainingWidget.kt",
+      "blob": "703f95c3c7d6fc1e16e3362cedc511f325ad39ce"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt",
+      "blob": "f7b9d421b36ff876015922c15bc50abf5f4b6c50"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumUiCopy.kt",
+      "blob": "d405d7feded22087ab1b00ae8e080b1b8299c493"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt",
+      "blob": "c154f06a567c964797beccf00c7659196b624f3e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt",
+      "blob": "a900cdc73b757cec751ecc23825a92153da257ad"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutor.kt",
+      "blob": "7362f67e61a6a18ac9d19a6b077884dd52ccac07"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/DeviceToolExecutorRunner.kt",
+      "blob": "5e989d155ca0e8e20a7ed7596d45fbf5afbc1581"
+    },
+    {
       "path": "app/src/main/java/at/heinz/deviceai/diagnostics/ContinuumDiagnostics.kt",
       "blob": "7f5eed334ebfaf40492034d04a0726cda59af7d6"
     },
     {
-      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumCognitiveSpine.kt",
-      "blob": "bf64ecc418d7ee0b5db563fba9a6c9e45e034bee"
+      "path": "app/src/main/java/at/heinz/deviceai/GroqInvocationRouter.kt",
+      "blob": "fd88291c19d3ac16be7cd96377bff183e33b552a"
     },
     {
-      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ResidualSpanResearchAdapter.kt",
-      "blob": "f1cc96ec083b912e3e5684d3820661720843fa57"
+      "path": "app/src/main/java/at/heinz/deviceai/HologramAudio.kt",
+      "blob": "313530d45824a01ccf3b551891c71f327ecb0403"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ContinuumCognitiveSpine.kt",
+      "blob": "bf64ecc418d7ee0b5db563fba9a6c9e45e034bee"
     },
     {
       "path": "app/src/main/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexResearchPipeline.kt",
@@ -1830,6 +1790,18 @@
     {
       "path": "app/src/main/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexShadow.kt",
       "blob": "135901226b845654c49444fbd5fe108312e294aa"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/intelligence/ResidualSpanResearchAdapter.kt",
+      "blob": "f1cc96ec083b912e3e5684d3820661720843fa57"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
+      "blob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
+      "blob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe"
     },
     {
       "path": "app/src/main/java/at/heinz/deviceai/learning/ContextDecoderResearchMain.kt",
@@ -2016,6 +1988,30 @@
       "blob": "ca2c12ced1f427f289d40dabc325d36b25d00cfa"
     },
     {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
+      "blob": "a81eb0256ad6c59584df78ee589d4c7490545e29"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
+      "blob": "7bc91176ea240bd287fcc214a8204d93298a9f17"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
+      "blob": "5c5705d614f8bb457cfb10bd497e646577667005"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
+      "blob": "1df9dc9378a732e37e8e4568a2d46310442d15a8"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
+      "blob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
+      "blob": "bc1176e2b230439c3fa36d6be996444eaab8efbd"
+    },
+    {
       "path": "app/src/main/java/at/heinz/deviceai/learning/MentorConceptNetwork.kt",
       "blob": "8356c19447c5f1431aed3925c3cb1809cb472e73"
     },
@@ -2076,6 +2072,22 @@
       "blob": "d3001ddf123afeadee35a3a5b82bdcd74a572f8f"
     },
     {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCertifiedAbstention.kt",
+      "blob": "6c01a6f669bd8c5264648604a54eb986c0e2d282"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCounterfactualCurriculum.kt",
+      "blob": "7a0694c70de6f3d9461e91d1e6e9506db61aa33f"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt",
+      "blob": "5b0b22e849023fa5e771e3e3e6daf4b3106c501d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumSelectiveRiskCertification.kt",
+      "blob": "75f75353458b30169182757358ea935590239239"
+    },
+    {
       "path": "app/src/main/java/at/heinz/deviceai/learning/StrictJson.kt",
       "blob": "f6ed3f4be8b0690f52b1e072b17ed4101853baed"
     },
@@ -2100,52 +2112,8 @@
       "blob": "6eec44f7183720f96721db755258bda144f0b620"
     },
     {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt",
-      "blob": "cb9e51b1362c22df06cde7e21247a48f12d69e8c"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Shadow.kt",
-      "blob": "f93b6479e5d6577ba6cb33c5bf74b0077aeff6fe"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmBpeTokenizer.kt",
-      "blob": "a81eb0256ad6c59584df78ee589d4c7490545e29"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCheckpointStore.kt",
-      "blob": "7bc91176ea240bd287fcc214a8204d93298a9f17"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmCorpus.kt",
-      "blob": "5c5705d614f8bb457cfb10bd497e646577667005"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmModel.kt",
-      "blob": "1df9dc9378a732e37e8e4568a2d46310442d15a8"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmRuntime.kt",
-      "blob": "6de174dc400bfc5bd5bfb0facc56fc4820550b25"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/lm/LmTensor.kt",
-      "blob": "bc1176e2b230439c3fa36d6be996444eaab8efbd"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCertifiedAbstention.kt",
-      "blob": "6c01a6f669bd8c5264648604a54eb986c0e2d282"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumCounterfactualCurriculum.kt",
-      "blob": "7a0694c70de6f3d9461e91d1e6e9506db61aa33f"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumResidualSpanCore.kt",
-      "blob": "5b0b22e849023fa5e771e3e3e6daf4b3106c501d"
-    },
-    {
-      "path": "app/src/main/java/at/heinz/deviceai/learning/span/ContinuumSelectiveRiskCertification.kt",
-      "blob": "75f75353458b30169182757358ea935590239239"
+      "path": "app/src/main/java/at/heinz/deviceai/LocalFirstPolicy.kt",
+      "blob": "3b81091541bad76ebf71237b6ba821cff02c2367"
     },
     {
       "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
@@ -2174,6 +2142,38 @@
     {
       "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalToolTurnGate.kt",
       "blob": "0c9d67983796bc2ed774aa3fda2ac7fcfd8ff250"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/MainActivity.kt",
+      "blob": "5cba57afbc9cf3256bb8a90a5391b2815ac6c117"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/MentorDeviceIdentity.kt",
+      "blob": "8da0878b0ce29924b8acbe022012592ee64a2144"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/SecureTokenStore.kt",
+      "blob": "25ff15e943a7538ef74f581a14523449e040cda6"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShellUserService.kt",
+      "blob": "6a55cf1a7ed06e0d636654898b54f8b3b2ffcbb1"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt",
+      "blob": "428908fe9be5656eae0603211610fabfad90e94e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolExecutionReceiptStore.kt",
+      "blob": "5b0bffdb39c96da3828fe71cb5e6fbb0e551471e"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/ToolRegistry.kt",
+      "blob": "fd212811a303102c37ed73a3c7f00dc42ada397c"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/TtsHologramSignal.kt",
+      "blob": "c8dcbcb54410c7c8b48fcf12cf0b1196a2fe8eb3"
     },
     {
       "path": "app/src/main/java/at/heinz/deviceai/ui/AndroidContinuumPainter.kt",
@@ -2328,140 +2328,16 @@
       "blob": "3ef5a811ea3e62190d9657cfab00b2d0b1a716e1"
     },
     {
+      "path": "app/src/test/java/at/heinz/deviceai/benchmark/BenchmarkRunnerTest.kt",
+      "blob": "8c361dab925361cde5d9e1e1c666bf1b61429a84"
+    },
+    {
       "path": "app/src/test/java/at/heinz/deviceai/BootstrapBrainTest.kt",
       "blob": "b70389ca1c6ff1a2b87cf0a8a75f2f3a70acd9c8"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/BoundedIoTest.kt",
       "blob": "e1caa8e6a119f16a9b846ee069951e46dd0f92a7"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ComposerReflowDraftTest.kt",
-      "blob": "143a022c30997df08da039cba51551c67a2988eb"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ComposerUiPolicyTest.kt",
-      "blob": "034cb81c4f198ed37e747918a262bef02e6b9456"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCcc1BridgeTest.kt",
-      "blob": "e40b6aecc326ebaff44c3edb135f3694f55c9f20"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingConversationTest.kt",
-      "blob": "e46234db65b59cfcce1fe2107e091e769e0287d0"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingPreparationReviewTest.kt",
-      "blob": "c2edc78695a05f63a020360cca8bb656ba22141a"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingTaskTest.kt",
-      "blob": "eeaf877ea0c716c14602af612591e08123f88664"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumDialogueSessionResetTest.kt",
-      "blob": "b78fef257d676f1d3619cadb0d76f6f582515598"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuildPlanTest.kt",
-      "blob": "add42d00b07f1ea6112bfa0a0bca1199c245b9bf"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuilderRouteTest.kt",
-      "blob": "1db053e4a75b0c5785e2e0666634df06874c86a7"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileCodingJobTest.kt",
-      "blob": "033a96372ba36689c766f560b74a9b851924c39b"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileResultPolicyTest.kt",
-      "blob": "61a3c2d8b704f23a47c237b9f50aacb7dcaa61d8"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumNexusHomeSpecTest.kt",
-      "blob": "d211d08ac26bfddb8122eac93664297031008c17"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt",
-      "blob": "a4f1b385739d99912081fffbaa405900e98e8fed"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedProjectPlanTest.kt",
-      "blob": "a0b2562b2072e472855bd4c6fe98a33a9c718ed8"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumSelectedModelsTest.kt",
-      "blob": "9340e8af304c95187e0a179ec06d71c2ec299e0f"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumStatusExcerptTest.kt",
-      "blob": "221634bccb6556de0d1bf7d7b9f56f57ba7d9dc4"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumTypedCodingBridgeTest.kt",
-      "blob": "5a36f8b4dd3f9bb4a02e1394cad1e1e1d19614b5"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumUiCopyTest.kt",
-      "blob": "9cc61d6c969976dda43b748761c951bed64a8550"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpecTest.kt",
-      "blob": "0f9a1daffb8adfa92330c88470be4275e53c2040"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
-      "blob": "9a6f7a4c4bebc36c4dab8041491643bca2696df5"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/Ctx3ContextTest.kt",
-      "blob": "2ea42fb4102c268d7654d8671e87b5b7794740d4"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/Ctx3SessionTest.kt",
-      "blob": "3765cd9a1192d0e796a06ede6bb60da51acfe6dd"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/Ctx3ShadowTest.kt",
-      "blob": "0846363dc1fb2c2ece817a3b07c0d86b2b557426"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/GroqInvocationRouterTest.kt",
-      "blob": "b32a16d01f1143fe3f7990d70865073eadb64672"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/HologramAudioTest.kt",
-      "blob": "415fe5ccecf278c21a9e4608acac269afdc37883"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/LocalFirstPolicyTest.kt",
-      "blob": "8b396d3273beacded47ed788d1d05e777d93ffbf"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/NeuralSnapshotCasTest.kt",
-      "blob": "9b800ba91a4c99c009e1834b020ccee6c702d0f8"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ToolExecutionReceiptStoreTest.kt",
-      "blob": "33875a8f32d3355e4f1c700431f9d6798c108252"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ToolRegistryTest.kt",
-      "blob": "8850aac187a0526a50d8afadaddb8b8a9a0153a7"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/ToolReplayGuardTest.kt",
-      "blob": "63ffb278ea826de48375441ce6607a3a3f5d1318"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/TtsHologramSignalTest.kt",
-      "blob": "d10895978c05665460730f83f33ba794bad3942d"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/benchmark/BenchmarkRunnerTest.kt",
-      "blob": "8c361dab925361cde5d9e1e1c666bf1b61429a84"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/cognitive/AdaptiveIdentityTest.kt",
@@ -2692,8 +2568,108 @@
       "blob": "a4567f16c6b6032c9a2d9471ee39d4b032deb61e"
     },
     {
+      "path": "app/src/test/java/at/heinz/deviceai/ComposerReflowDraftTest.kt",
+      "blob": "143a022c30997df08da039cba51551c67a2988eb"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ComposerUiPolicyTest.kt",
+      "blob": "034cb81c4f198ed37e747918a262bef02e6b9456"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCcc1BridgeTest.kt",
+      "blob": "e40b6aecc326ebaff44c3edb135f3694f55c9f20"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingConversationTest.kt",
+      "blob": "e46234db65b59cfcce1fe2107e091e769e0287d0"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingPreparationReviewTest.kt",
+      "blob": "c2edc78695a05f63a020360cca8bb656ba22141a"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumCodingTaskTest.kt",
+      "blob": "eeaf877ea0c716c14602af612591e08123f88664"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumDialogueSessionResetTest.kt",
+      "blob": "b78fef257d676f1d3619cadb0d76f6f582515598"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuilderRouteTest.kt",
+      "blob": "1db053e4a75b0c5785e2e0666634df06874c86a7"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileBuildPlanTest.kt",
+      "blob": "add42d00b07f1ea6112bfa0a0bca1199c245b9bf"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileCodingJobTest.kt",
+      "blob": "033a96372ba36689c766f560b74a9b851924c39b"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumMobileResultPolicyTest.kt",
+      "blob": "61a3c2d8b704f23a47c237b9f50aacb7dcaa61d8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumNexusHomeSpecTest.kt",
+      "blob": "d211d08ac26bfddb8122eac93664297031008c17"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedAppContractTest.kt",
+      "blob": "a4f1b385739d99912081fffbaa405900e98e8fed"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumOwnedProjectPlanTest.kt",
+      "blob": "a0b2562b2072e472855bd4c6fe98a33a9c718ed8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumSelectedModelsTest.kt",
+      "blob": "9340e8af304c95187e0a179ec06d71c2ec299e0f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumStatusExcerptTest.kt",
+      "blob": "221634bccb6556de0d1bf7d7b9f56f57ba7d9dc4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumTypedCodingBridgeTest.kt",
+      "blob": "5a36f8b4dd3f9bb4a02e1394cad1e1e1d19614b5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumUiCopyTest.kt",
+      "blob": "9cc61d6c969976dda43b748761c951bed64a8550"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpecTest.kt",
+      "blob": "0f9a1daffb8adfa92330c88470be4275e53c2040"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ContinuumWorkerChatRouterTest.kt",
+      "blob": "9a6f7a4c4bebc36c4dab8041491643bca2696df5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/Ctx3ContextTest.kt",
+      "blob": "2ea42fb4102c268d7654d8671e87b5b7794740d4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/Ctx3SessionTest.kt",
+      "blob": "3765cd9a1192d0e796a06ede6bb60da51acfe6dd"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/Ctx3ShadowTest.kt",
+      "blob": "0846363dc1fb2c2ece817a3b07c0d86b2b557426"
+    },
+    {
       "path": "app/src/test/java/at/heinz/deviceai/diagnostics/ContinuumDiagnosticsTest.kt",
       "blob": "7691ba9a8c95dbcf3ca793410ab3833b4879a785"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/GroqInvocationRouterTest.kt",
+      "blob": "b32a16d01f1143fe3f7990d70865073eadb64672"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/HologramAudioTest.kt",
+      "blob": "415fe5ccecf278c21a9e4608acac269afdc37883"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/intelligence/ContinuumCognitiveSpineChecks.kt",
@@ -2702,10 +2678,6 @@
     {
       "path": "app/src/test/java/at/heinz/deviceai/intelligence/ContinuumCognitiveSpineTest.kt",
       "blob": "ef1d086ae36b72a52775be6b089d593dfd409014"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/intelligence/ResidualSpanResearchAdapterTest.kt",
-      "blob": "7a936aa47dd9f8a4cf77813295d43570c5105d65"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/intelligence/maxultra/ContinuumCortexPipelineChecks.kt",
@@ -2798,6 +2770,10 @@
     {
       "path": "app/src/test/java/at/heinz/deviceai/intelligence/maxultra/Wsc1Experiment.kt",
       "blob": "976c95c7471530852be5effc3d21f75389c37e7d"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/intelligence/ResidualSpanResearchAdapterTest.kt",
+      "blob": "7a936aa47dd9f8a4cf77813295d43570c5105d65"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/learning/Cdx1PatchAnomalyExperiment.kt",
@@ -3004,6 +2980,38 @@
       "blob": "659e615868065cc779db09ee3bb7c4766289fcd6"
     },
     {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt",
+      "blob": "af5e773691cfa306caf6ad7f36eb28f1d63de7e5"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmCoreTest.kt",
+      "blob": "695083e518984bf4366465c5b7c945c1a7bd9ce9"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmExperiment.kt",
+      "blob": "1da2d4c0bb9e4cef3271e8f3b7056cd550b75174"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeDemo.kt",
+      "blob": "a4ceb1e6847b2cc6a42efa422cb7cb6a41ad87a4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeTest.kt",
+      "blob": "809b725909a7244c0f7cf8715e2f8dafba9df9c8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7.kt",
+      "blob": "93e04b7b4f2a943f3519445d8de4fec2b27ec063"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7Posthoc.kt",
+      "blob": "a827c19138f3b1f757c95ee9d63f7ccab706fe24"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7Test.kt",
+      "blob": "2a957b8b45ca02a0a25a387043072ae37dfdda86"
+    },
+    {
       "path": "app/src/test/java/at/heinz/deviceai/learning/MentorConceptNetworkTest.kt",
       "blob": "91eed7ad61e63bc5c28b3474cb21ce4da53e6d89"
     },
@@ -3064,66 +3072,6 @@
       "blob": "da6a24a5cd7fa18f48a582d7deb249048ddccfb3"
     },
     {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/OnlineNaiveBayesTest.kt",
-      "blob": "14379c72a450ae9b3da75ba8322a040e2e4efce0"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/RetrievalBenchmarkTest.kt",
-      "blob": "6845eabbf04d2eca856fdba5e861c1a2d000ae6c"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/StrictJsonTest.kt",
-      "blob": "94c7a813eab3d81bab4849c0fadb4196505912b4"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/Swb2ExperimentalEncoderTest.kt",
-      "blob": "af3aed05851af1f70417037e14453022b5dab30f"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
-      "blob": "ec5ecdd11c3b245e8638b9c2ad5ddc1890e4c295"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyNeuralNetworkTest.kt",
-      "blob": "d692fdcb2595a3c9534a6819758068e364c00b16"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/TrainableSubwordEncoderTest.kt",
-      "blob": "14a4b0cca463ea7ce4888b7b000f20f55665b53f"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmBaselines.kt",
-      "blob": "af5e773691cfa306caf6ad7f36eb28f1d63de7e5"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmCoreTest.kt",
-      "blob": "695083e518984bf4366465c5b7c945c1a7bd9ce9"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmExperiment.kt",
-      "blob": "1da2d4c0bb9e4cef3271e8f3b7056cd550b75174"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeDemo.kt",
-      "blob": "a4ceb1e6847b2cc6a42efa422cb7cb6a41ad87a4"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmRuntimeTest.kt",
-      "blob": "809b725909a7244c0f7cf8715e2f8dafba9df9c8"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7.kt",
-      "blob": "93e04b7b4f2a943f3519445d8de4fec2b27ec063"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7Posthoc.kt",
-      "blob": "a827c19138f3b1f757c95ee9d63f7ccab706fe24"
-    },
-    {
-      "path": "app/src/test/java/at/heinz/deviceai/learning/lm/LmStep7Test.kt",
-      "blob": "2a957b8b45ca02a0a25a387043072ae37dfdda86"
-    },
-    {
       "path": "app/src/test/java/at/heinz/deviceai/learning/nf/NfBlt.kt",
       "blob": "bd9165de7bf323923481a49a69b38db26a3f8aec"
     },
@@ -3168,6 +3116,14 @@
       "blob": "a3fd500ea6f77292698b06d6a023fdc68db1891b"
     },
     {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/OnlineNaiveBayesTest.kt",
+      "blob": "14379c72a450ae9b3da75ba8322a040e2e4efce0"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/RetrievalBenchmarkTest.kt",
+      "blob": "6845eabbf04d2eca856fdba5e861c1a2d000ae6c"
+    },
+    {
       "path": "app/src/test/java/at/heinz/deviceai/learning/span/ContinuumCertifiedAbstentionTest.kt",
       "blob": "e3b029e76e0a0832846a28973f1b93fc42180d26"
     },
@@ -3208,6 +3164,30 @@
       "blob": "9153e30bcfcd6a1197ab735e65496ab72d721c36"
     },
     {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/StrictJsonTest.kt",
+      "blob": "94c7a813eab3d81bab4849c0fadb4196505912b4"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/Swb2ExperimentalEncoderTest.kt",
+      "blob": "af3aed05851af1f70417037e14453022b5dab30f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyContextDecoderTest.kt",
+      "blob": "ec5ecdd11c3b245e8638b9c2ad5ddc1890e4c295"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TinyNeuralNetworkTest.kt",
+      "blob": "d692fdcb2595a3c9534a6819758068e364c00b16"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/learning/TrainableSubwordEncoderTest.kt",
+      "blob": "14a4b0cca463ea7ce4888b7b000f20f55665b53f"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/LocalFirstPolicyTest.kt",
+      "blob": "8b396d3273beacded47ed788d1d05e777d93ffbf"
+    },
+    {
       "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalConversationBoundaryTest.kt",
       "blob": "22a939ddf2699a39e47ec4430b498f4a20498969"
     },
@@ -3230,6 +3210,26 @@
     {
       "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalToolTurnGateTest.kt",
       "blob": "0f41d9eba89d1bc8cf3455e1b2c6ab5985d0bc47"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/NeuralSnapshotCasTest.kt",
+      "blob": "9b800ba91a4c99c009e1834b020ccee6c702d0f8"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolExecutionReceiptStoreTest.kt",
+      "blob": "33875a8f32d3355e4f1c700431f9d6798c108252"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolRegistryTest.kt",
+      "blob": "8850aac187a0526a50d8afadaddb8b8a9a0153a7"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/ToolReplayGuardTest.kt",
+      "blob": "63ffb278ea826de48375441ce6607a3a3f5d1318"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/TtsHologramSignalTest.kt",
+      "blob": "d10895978c05665460730f83f33ba794bad3942d"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumCoreMirrorTest.kt",
@@ -3456,10 +3456,6 @@
       "blob": "3ab5c92f64fafa37dc0fb9c61bb8f70ef60a75aa"
     },
     {
-      "path": "backend/README.md",
-      "blob": "0be14582d127f4c1a29b9899e50ce26aaff4ae55"
-    },
-    {
       "path": "backend/package-lock.json",
       "blob": "268144b4f6851a1ef17587a4b49a5e5a7295b7aa"
     },
@@ -3478,6 +3474,10 @@
     {
       "path": "backend/public/mentor.js",
       "blob": "4816c2cffe4aa02bb0a864fb57c2cfd0133bf665"
+    },
+    {
+      "path": "backend/README.md",
+      "blob": "0be14582d127f4c1a29b9899e50ce26aaff4ae55"
     },
     {
       "path": "backend/src/android-web-tools.js",
@@ -3981,11 +3981,11 @@
     },
     {
       "path": "scripts/continuum-v25-owner-release.test.mjs",
-      "blob": "288b1d529ab6adf4f604d9eae66cd058b494bc4c"
+      "blob": "7202e1c3fb2941956a04a45160fdb3a4f4817591"
     },
     {
       "path": "scripts/continuum-v25-source-gate.mjs",
-      "blob": "bea081726a0c1e1cdffde4d21ca5b95817523f29"
+      "blob": "c68e90e153479eb9d3784157c90606bf8e34f253"
     },
     {
       "path": "scripts/fixtures/owned-build.mjs",
