@@ -270,7 +270,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
         /**
          * SOURCE_TEXT must support every distinctive long term or letter-digit ID
          * within the SAME excerpt; partial prefix/suffix overlap does not suffice.
-         * This is a lexical guard, not a factual guarantee. Owner memories unchanged.
+         * This is a lexical guard, not a factual guarantee.
          */
         /** Source observation citations: conservative, directional lexical anchor check.
          * Does not change OWNER_CONFIRMED wordEvidence or train any weights. */
@@ -278,9 +278,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
         private val SOURCE_INFLECTION_TAILS=listOf("","e","n","s","en","er","es","em")
 
         // Inspect original text before contentWords drops short numeric suffixes.
-        // One explicit identifier is required literally; comparison entailment is separate.
+        // Every explicit ID must occur in this candidate; this is not entailment.
         private val IDENTIFIER_TOKEN=Regex("[\\p{L}\\p{N}]+(?:[-._][\\p{L}\\p{N}]+)*")
-        private fun singleIdentifierEvidence(query:String,text:String):Boolean {
+        private fun identifierEvidence(query:String,text:String):Boolean {
             fun identifiers(value:String):Set<String> = IDENTIFIER_TOKEN.findAll(
                 java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFC)
                     .lowercase(Locale.ROOT))
@@ -288,7 +288,55 @@ class ContinuumMemoryDialogue(private val directory:File) {
                     token.any(Char::isLetter)&&token.any(Char::isDigit)
                 }.toSet()
             val required=identifiers(query)
-            return required.size!=1||required.single() in identifiers(text)
+            val present=identifiers(text)
+            return required.all { it in present }
+        }
+
+        // Same bounded subject/relation gate as Node: anchored CSX1-style
+        // claims and LCT1's exact subject+relation principle, no research activation.
+        private const val LOCATION_VERBS="wohnt|wohnen|lebt|leben|arbeitet|arbeiten"
+        private const val LOCATION_PREPOSITIONS="in|im|bei|am|an|auf"
+        private val LOCATION_QUESTION=Regex("""^wo ($LOCATION_VERBS) (.{1,160}?)\s*[?!.]*$""")
+        private val LOCATION_CLAIM=Regex("""^(.{1,120}?) ($LOCATION_VERBS) (.{1,180})$""")
+        private val LOCATION_INVERTED=Regex("""^(?:$LOCATION_PREPOSITIONS) (.{1,160}?) ($LOCATION_VERBS) (.{1,120})$""")
+        private val LOCATION_TAIL=Regex("""^(?:seit [\p{L}\p{N} ]{1,40} )?(?:$LOCATION_PREPOSITIONS) [\p{L}\p{N}][\p{L}\p{N} ._'’"-]{0,159}$""")
+        private val LOCATION_NEGATION=Regex("""(?:^|[^\p{L}\p{N}])(?:nicht|kein(?:e|en|em|er|es)?|weder|nirgends)(?=$|[^\p{L}\p{N}])""")
+        // Same explicit whitespace set as JavaScript, including NBSP and BOM.
+        private val LOCATION_SPACE=Regex("""[\u0009-\u000d\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+""")
+        private fun locationQuestionEvidence(query:String,text:String):Boolean {
+            fun normalize(value:String):String=java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFC)
+                .lowercase(Locale.ROOT).replace(LOCATION_SPACE," ").trim(' ')
+            val question=LOCATION_QUESTION.matchEntire(normalize(query)) ?: return true
+            fun subjects(value:String):Set<String>? {
+                val names=value.split(Regex("""\s*,\s*|\s+und\s+""")).map { part -> part.trim()
+                    .replace(Regex("""^["“”'‘’]+|["“”'‘’]+$"""),"")
+                    .replace(Regex("""^(?:der )?roboter """),"")
+                    .replace(Regex("""^["“”'‘’]+|["“”'‘’]+$"""),"").trim() }
+                if(names.any { name -> name.isEmpty()||name.length>120||
+                    !Regex("""^[\p{L}\p{N}][\p{L}\p{N} ._'’-]*$""").matches(name)||
+                    Regex("""(?:^| )(?:was|wie|warum|wieso|weshalb|darüber|dazu|damit|weiter)(?:$| )""")
+                        .containsMatchIn(name) })return null
+                return names.toSet()
+            }
+            // Resolved follow-ups and unsupported query syntax keep their existing policy.
+            val requested=subjects(question.groupValues[2]) ?: return true
+            fun relation(verb:String)=if(verb.startsWith("arbeit"))"work" else "residence"
+            fun supports(phrase:String,verb:String,place:String):Boolean {
+                val claimed=subjects(phrase) ?: return false
+                return relation(verb)==relation(question.groupValues[1])&&
+                    !LOCATION_NEGATION.containsMatchIn(place)&&requested.all { it in claimed }
+            }
+            val claim=normalize(text).replace(Regex("""[.!?]+$"""),"").trim()
+            val direct=LOCATION_CLAIM.matchEntire(claim)
+            if(direct!=null&&LOCATION_TAIL.matches(direct.groupValues[3])&&
+                supports(direct.groupValues[1],direct.groupValues[2],direct.groupValues[3]))return true
+            val inverted=LOCATION_INVERTED.matchEntire(claim)
+            if(inverted!=null&&supports(inverted.groupValues[3],inverted.groupValues[2],inverted.groupValues[1]))return true
+            val home=Regex("""^(?:das )?zuhause von (.{1,120}?) ist (.{1,180})$""").matchEntire(claim)
+            if(home!=null&&LOCATION_TAIL.matches(home.groupValues[2])&&
+                supports(home.groupValues[1],"wohnt",home.groupValues[2]))return true
+            val moved=Regex("""^(.{1,120}?) ist nach (.{1,160}) gezogen$""").matchEntire(claim)
+            return moved!=null&&supports(moved.groupValues[1],"wohnt",moved.groupValues[2])
         }
 
         internal fun sourceWordMatch(needle:String,word:String):Boolean {
@@ -306,7 +354,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
 
         internal fun sourceTermEvidence(query:String,text:String):Boolean {
             if(query.length>4096||text.isEmpty())return false
-            if(!singleIdentifierEvidence(query,text))return false
+            if(!identifierEvidence(query,text)||!locationQuestionEvidence(query,text))return false
             val terms=contentWords(java.text.Normalizer.normalize(query,java.text.Normalizer.Form.NFC))
                 .distinct().filter { it !in SOURCE_QUERY_OPERATORS }
             val source=contentWords(java.text.Normalizer.normalize(text,java.text.Normalizer.Form.NFC)).distinct()
@@ -330,7 +378,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
             val qv=weigh(wordGrams(q),idf)
             return pool.mapNotNull { e ->
                 val text=e.content.take(1000)
-                if(!singleIdentifierEvidence(q,text))return@mapNotNull null
+                if(!identifierEvidence(q,text)||!locationQuestionEvidence(q,text))return@mapNotNull null
                 if(e.type==LearningExperienceType.SOURCE_TEXT &&
                     !sourceTermEvidence(q,text))return@mapNotNull null
                 if(wordEvidence(q,text)<EVIDENCE_THRESHOLD)return@mapNotNull null

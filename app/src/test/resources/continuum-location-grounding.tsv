@@ -29,3 +29,6 @@ work-role-is-not-place	Wo arbeitet Leo?	Leo arbeitet als Koch.	false	false
 incidental-id	Wo wohnt R1?	Roboter R2 wohnt bei R1.	false	false
 no-id-golden-project	Wo ist mein Forschungsprojekt?	Mein Projekt heißt Astra.	true	false
 no-id-golden-compound	Wo ist der Schlüssel?	Der Haustürschlüssel liegt dort.	true	true
+unicode-space-subject	Wo wohnt Nemo?	Leo wohnt in Graz.	false	false
+unicode-composed-subject	Wo wohnt Léo?	Léo wohnt in Graz.	true	true
+same-topic-follow-up	Wo wohnt Leo? Und wie?	Leo wohnt in Graz.	true	true
