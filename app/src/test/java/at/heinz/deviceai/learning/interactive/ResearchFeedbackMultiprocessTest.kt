@@ -79,6 +79,18 @@ class ResearchFeedbackMultiprocessTest {
                 lock.guard { throw IllegalStateException("deliberate interruption") }
             }
             assertEquals("recovered", lock.guard { "recovered" })
+
+            // An attacker-controlled lock-file symlink must not silently bypass
+            // the kernel lock or write to the target outside the ledger.
+            val externalLockTarget = File(root, "external-lock-target")
+            externalLockTarget.writeText("untouched")
+            val lockPath = File(File(root, "interactive-feedback-v1"), ".review.lock").toPath()
+            Files.delete(lockPath)
+            Files.createSymbolicLink(lockPath, externalLockTarget.toPath())
+            assertThrows(IOException::class.java) { ResearchFeedback(root).all() }
+            assertEquals("untouched", externalLockTarget.readText())
+            Files.deleteIfExists(lockPath)
+
             val link = File(root, "linked-root")
             Files.createSymbolicLink(link.toPath(), external.toPath())
             assertThrows(IOException::class.java) { ResearchFeedback(link).all() }
