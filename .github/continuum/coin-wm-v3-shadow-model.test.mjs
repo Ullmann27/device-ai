@@ -60,3 +60,13 @@ test('no untrusted-code executor, host primitives or production adapter is prese
   assert.equal(Object.hasOwn(model,'grantPermission'),false);
   assert.equal(Object.hasOwn(model,'trainFromOwnerMemory'),false);
 });
+
+test('shadow and promotion policy cannot be overwritten by a caller',()=>{
+  const model=new CoinWmV3ShadowModel(1);
+  assert.equal(model.promotionEligible,false);
+  assert.equal(model.status,'RESEARCH_SHADOW');
+  assert.throws(()=>{model.promotionEligible=true;},TypeError);
+  assert.throws(()=>{model.status='PROMOTED';},TypeError);
+  assert.equal(model.promotionEligible,false);
+  assert.equal(model.status,'RESEARCH_SHADOW');
+});
