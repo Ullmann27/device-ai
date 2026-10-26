@@ -15,7 +15,7 @@ done
 for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter; do sources+=("$root/app/src/main/java/at/heinz/deviceai/$name.kt"); done
 for name in ContinuumKnowledgeArchive ContinuumArchiveAnswerPolicy ContinuumLearningExperience LearningSnapshot TrainableSubwordEncoder Swb2ExperimentalEncoder Cre1InferenceEncoder TinyContextDecoder; do sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt"); done
 sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/context/Ctx3Context.kt")
-while IFS= read -r f; do sources+=("$f"); done < <(find "$root/experimental/interactive-intelligence/src" "$root/experimental/interactive-intelligence/test" -name '*.kt' -type f | sort)
+while IFS= read -r f; do sources+=("$f"); done < <(find "$root/experimental/interactive-intelligence/src" "$root/experimental/interactive-intelligence/test" "$root/app/src/main/java/at/heinz/deviceai/learning/interactive" -name '*.kt' -type f | sort)
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -version > "$out/compiler.txt" 2>&1
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -no-reflect -classpath "$cp" -jvm-target 17 -d "$out/classes" "${sources[@]}" > "$out/compile.txt" 2>&1
 cd "$root"

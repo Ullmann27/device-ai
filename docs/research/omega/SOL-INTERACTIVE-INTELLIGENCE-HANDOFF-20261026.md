@@ -22,3 +22,6 @@ Initial native baseline and Kotlin runner next. All commands, raw outputs and so
 
 ## First native baseline (before candidate implementation)
 Kotlin2.2.0 / Java21, actual current CTX3 and LocalConversationContext, 168 synthetic development scenarios: CTX3 exact reference/safe abstention 60/168; 156 abstentions, zero wrong non-abstaining references. Raw four-turn context retains required literal premise on156/168 (12long-dialogue losses). This measures a deliberately narrow registry/context task; it does not measure Gemma output accuracy. Baseline code and fixtures frozen in the next checkpoint. Seal includes168train/168dev/168holdout; holdout not evaluated before candidate freeze.
+
+## A/B first native development result
+Seven native regression checks pass (long retention, model-topic poisoning, explicit correction, session/revision isolation, aliases/bounds, durable review/revocation and eight-thread stale-review race). Structured and adaptive A arms168/168 on development; original raw context still156/168 premise retention. This is templated synthetic development, not a general language benchmark. No holdout opened yet. B uses a dedicated research instance of existing FileLearningExperienceStore with SYNTHETIC USER_FEEDBACK only; classification does not authorize storage/confirmation. No productive caller/weights/owner facts.
