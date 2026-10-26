@@ -42,6 +42,10 @@ test('read-only binding checks the canonical typed task and all four identities'
  assert.equal(typeof result.trainStep,'undefined');
  assert.equal(typeof result.appendVerifiedEntry,'undefined');
  assert.ok(Object.isFrozen(result));
+ assert.ok(Object.isFrozen(result.candidate));
+ const pinned=result.candidate.code;
+ item.candidate.code='malicious late mutation';
+ assert.equal(result.candidate.code,pinned);
 });
 
 test('invalid source, task or patch hash cannot cross the research binding',()=>{
