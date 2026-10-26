@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+....E...
+Time: 0.162
+There was 1 failure:
+1) retrievalLimitCannotRemoveTheActualLongModelTask(at.heinz.deviceai.LocalFirstPolicyTest)
+org.junit.ComparisonFailure: expected:<... Daten Daten Daten D[aten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten Daten
+Die eigentliche Aufgabe: berechne 19 plus 28 und antworte nur mit der Zahl.]> but was:<... Daten Daten Daten D[]>
+	at org.junit.Assert.assertEquals(Assert.java:117)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.LocalFirstPolicyTest.retrievalLimitCannotRemoveTheActualLongModelTask(LocalFirstPolicyTest.kt:51)
+
+FAILURES!!!
+Tests run: 7,  Failures: 1

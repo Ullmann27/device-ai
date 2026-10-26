@@ -1,0 +1,696 @@
+{
+  "schema": "continuum.cdxa1.independent-test",
+  "schemaVersion": 1,
+  "fixtureId": "CDXA1-INDEPENDENT-TEST32-20261026-V1",
+  "dataRole": "LOCKED_TEST_NOT_FOR_TRAINING_OR_TUNING",
+  "authoredOn": "2026-10-26",
+  "authorRole": "independent evaluator /root/experiment_audit",
+  "instruction": "Vollständigen passenden Belegsatz oder UNBEKANNT",
+  "supportedProtocol": {
+    "evidence": "1–3 bounded German factual sentences",
+    "query": "one named subject and one positive relation family",
+    "relations": [
+      "wohnt in / lebt in",
+      "arbeitet als / ist von Beruf",
+      "trägt / hat ... auf"
+    ],
+    "unknown": "requested subject or requested relation absent, or only negated matching evidence",
+    "guaranteesExcluded": [
+      "arithmetic",
+      "new-word generation",
+      "cross-sentence inference",
+      "ambiguous/multiple supports",
+      "contradiction resolution",
+      "out-of-family relations"
+    ]
+  },
+  "scoring": {
+    "primary": "Exact match after Unicode NFC normalization and stripping leading/trailing Unicode whitespace only. Case, internal whitespace, punctuation and all other characters remain exact.",
+    "acceptedAnswers": "A prediction is correct iff normalized prediction equals at least one normalized acceptedAnswers entry. No post-hoc alternatives may be added.",
+    "outputContract": "Return a full supporting evidence sentence verbatim or exactly UNBEKANNT. Partial spans, added explanation, concatenated sentences and UNBEKANNT with added punctuation fail unless explicitly listed.",
+    "supportedDenominator": 32,
+    "supportedPositiveDenominator": 18,
+    "supportedUnknownDenominator": 14,
+    "metrics": [
+      "supported exact correct /32",
+      "full-sentence support exact /18",
+      "correct UNBEKANNT /14",
+      "negative non-abstentions /14",
+      "positive abstentions /18",
+      "non-UNBEKANNT outputs not equal to any complete evidence sentence, diagnostic only"
+    ],
+    "challengeReporting": "Eight challenges have a separate denominator and per-case categories. They must never be included in the supported32 pass rate. C04 accepts either full support or abstention and must be reported as a multiple-valid-support challenge.",
+    "diagnosticMeaning": "An exact source copy is measured extraction, not independent fact verification or general intelligence.",
+    "execution": "Each case gets a fresh independent generation with no previous-case history. Pass only instruction, evidence and question to the model. Never pass id, authorLabel, stratum, relationFamily, acceptedAnswers or evaluator notes.",
+    "freezeBeforeEvaluation": [
+      "source commit",
+      "model checkpoint SHA256",
+      "tokenizer SHA256 and tokenization description",
+      "training corpus SHA256",
+      "training seed and step count",
+      "deterministic decoding settings, resource and token ceilings"
+    ],
+    "noTuning": "Do not inspect candidate outputs before fixture freeze; do not tune weights, prompts, thresholds, decoding, tokenizer or code on this TEST. Any correction after reading results consumes this TEST and requires a new independent holdout."
+  },
+  "shuffle": {
+    "algorithm": "Fisher-Yates descending, LCG state=(1664525*state+1013904223) mod 2^32, j=state mod(i+1)",
+    "seedHex": "0xCD0A1E26"
+  },
+  "supportedCases": [
+    {
+      "authorLabel": "N01",
+      "stratum": "absent_entity",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Cem wohnt in Brünn.",
+        "Zoë trägt eine blaue Jacke."
+      ],
+      "evidence": "Cem wohnt in Brünn. Zoë trägt eine blaue Jacke.",
+      "question": "Wo wohnt Gül?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T01"
+    },
+    {
+      "authorLabel": "P09",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Nneka lebt in Enugu.",
+        "Nneka trägt einen türkisfarbenen Mantel.",
+        "Ivo trägt eine graue Jacke."
+      ],
+      "evidence": "Nneka lebt in Enugu. Nneka trägt einen türkisfarbenen Mantel. Ivo trägt eine graue Jacke.",
+      "question": "Was trägt Nneka?",
+      "acceptedAnswers": [
+        "Nneka trägt einen türkisfarbenen Mantel."
+      ],
+      "notes": "",
+      "id": "T02"
+    },
+    {
+      "authorLabel": "P17",
+      "stratum": "within_family_paraphrase",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Oisín ist von Beruf Bootsbauer.",
+        "Oisín lebt in Galway.",
+        "Bjarne arbeitet als Uhrmacher."
+      ],
+      "evidence": "Oisín ist von Beruf Bootsbauer. Oisín lebt in Galway. Bjarne arbeitet als Uhrmacher.",
+      "question": "Welchen Beruf hat Oisín?",
+      "acceptedAnswers": [
+        "Oisín ist von Beruf Bootsbauer."
+      ],
+      "notes": "",
+      "id": "T03"
+    },
+    {
+      "authorLabel": "N10",
+      "stratum": "negation_only",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Kamil trägt einen gestreiften Pullover.",
+        "Dženan lebt nicht in Mostar.",
+        "Nneka lebt in Enugu."
+      ],
+      "evidence": "Kamil trägt einen gestreiften Pullover. Dženan lebt nicht in Mostar. Nneka lebt in Enugu.",
+      "question": "Wo wohnt Dženan?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T04"
+    },
+    {
+      "authorLabel": "P11",
+      "stratum": "same_entity_other_relation",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Ákos trägt einen braunen Hut.",
+        "Ákos ist von Beruf Fährmann."
+      ],
+      "evidence": "Ákos trägt einen braunen Hut. Ákos ist von Beruf Fährmann.",
+      "question": "Welchen Beruf hat Ákos?",
+      "acceptedAnswers": [
+        "Ákos ist von Beruf Fährmann."
+      ],
+      "notes": "",
+      "id": "T05"
+    },
+    {
+      "authorLabel": "P13",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Esmé arbeitet als Illustratorin.",
+        "Esmé lebt in Saint-Malo.",
+        "Rúnar lebt in Ísafjörður."
+      ],
+      "evidence": "Esmé arbeitet als Illustratorin. Esmé lebt in Saint-Malo. Rúnar lebt in Ísafjörður.",
+      "question": "Wo lebt Esmé?",
+      "acceptedAnswers": [
+        "Esmé lebt in Saint-Malo."
+      ],
+      "notes": "",
+      "id": "T06"
+    },
+    {
+      "authorLabel": "N13",
+      "stratum": "negation_only",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Cem hat keine Schirmmütze auf.",
+        "Ákos trägt einen braunen Hut."
+      ],
+      "evidence": "Cem hat keine Schirmmütze auf. Ákos trägt einen braunen Hut.",
+      "question": "Was hat Cem auf?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T07"
+    },
+    {
+      "authorLabel": "P12",
+      "stratum": "same_entity_other_relation",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Dženan hat eine blaue Kappe auf.",
+        "Dženan lebt in Mostar."
+      ],
+      "evidence": "Dženan hat eine blaue Kappe auf. Dženan lebt in Mostar.",
+      "question": "Was hat Dženan auf?",
+      "acceptedAnswers": [
+        "Dženan hat eine blaue Kappe auf."
+      ],
+      "notes": "",
+      "id": "T08"
+    },
+    {
+      "authorLabel": "P05",
+      "stratum": "same_relation_distractor",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Jovan ist von Beruf Keramiker.",
+        "Ylva ist von Beruf Geologin."
+      ],
+      "evidence": "Jovan ist von Beruf Keramiker. Ylva ist von Beruf Geologin.",
+      "question": "Welchen Beruf hat Jovan?",
+      "acceptedAnswers": [
+        "Jovan ist von Beruf Keramiker."
+      ],
+      "notes": "",
+      "id": "T09"
+    },
+    {
+      "authorLabel": "N02",
+      "stratum": "absent_entity",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Ivo arbeitet als Drechsler.",
+        "Anouk wohnt in Deventer."
+      ],
+      "evidence": "Ivo arbeitet als Drechsler. Anouk wohnt in Deventer.",
+      "question": "Welchen Beruf hat Nneka?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T10"
+    },
+    {
+      "authorLabel": "N11",
+      "stratum": "negation_only",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Esmé arbeitet nicht als Illustratorin."
+      ],
+      "evidence": "Esmé arbeitet nicht als Illustratorin.",
+      "question": "Welchen Beruf hat Esmé?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T11"
+    },
+    {
+      "authorLabel": "N09",
+      "stratum": "negation_only",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Ylva wohnt nicht in Umeå."
+      ],
+      "evidence": "Ylva wohnt nicht in Umeå.",
+      "question": "Wo wohnt Ylva?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T12"
+    },
+    {
+      "authorLabel": "P16",
+      "stratum": "within_family_paraphrase",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Rúnar lebt in Ísafjörður.",
+        "Anouk lebt in Deventer.",
+        "Rúnar hat eine Wollmütze auf."
+      ],
+      "evidence": "Rúnar lebt in Ísafjörður. Anouk lebt in Deventer. Rúnar hat eine Wollmütze auf.",
+      "question": "Wo wohnt Rúnar?",
+      "acceptedAnswers": [
+        "Rúnar lebt in Ísafjörður."
+      ],
+      "notes": "",
+      "id": "T13"
+    },
+    {
+      "authorLabel": "N07",
+      "stratum": "absent_relation",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Ákos wohnt in Szeged.",
+        "Ákos arbeitet als Fährmann."
+      ],
+      "evidence": "Ákos wohnt in Szeged. Ákos arbeitet als Fährmann.",
+      "question": "Was trägt Ákos?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T14"
+    },
+    {
+      "authorLabel": "P03",
+      "stratum": "ordinary_positive",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Sören trägt einen dunkelgrünen Hut."
+      ],
+      "evidence": "Sören trägt einen dunkelgrünen Hut.",
+      "question": "Was trägt Sören?",
+      "acceptedAnswers": [
+        "Sören trägt einen dunkelgrünen Hut."
+      ],
+      "notes": "",
+      "id": "T15"
+    },
+    {
+      "authorLabel": "N05",
+      "stratum": "absent_relation",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Siobhán trägt einen violetten Mantel.",
+        "Siobhán arbeitet als Tontechnikerin."
+      ],
+      "evidence": "Siobhán trägt einen violetten Mantel. Siobhán arbeitet als Tontechnikerin.",
+      "question": "Wo wohnt Siobhán?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T16"
+    },
+    {
+      "authorLabel": "P07",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "İdil trägt eine gelbe Mütze.",
+        "Oisín wohnt in Sligo.",
+        "İdil lebt in İzmir."
+      ],
+      "evidence": "İdil trägt eine gelbe Mütze. Oisín wohnt in Sligo. İdil lebt in İzmir.",
+      "question": "Wo lebt İdil?",
+      "acceptedAnswers": [
+        "İdil lebt in İzmir."
+      ],
+      "notes": "",
+      "id": "T17"
+    },
+    {
+      "authorLabel": "N03",
+      "stratum": "absent_entity",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Béla trägt einen roten Schal.",
+        "Jovan lebt in Novi Sad."
+      ],
+      "evidence": "Béla trägt einen roten Schal. Jovan lebt in Novi Sad.",
+      "question": "Was trägt Hjördis?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T18"
+    },
+    {
+      "authorLabel": "P01",
+      "stratum": "ordinary_positive",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Aïcha wohnt in Görlitz."
+      ],
+      "evidence": "Aïcha wohnt in Görlitz.",
+      "question": "Wo wohnt Aïcha?",
+      "acceptedAnswers": [
+        "Aïcha wohnt in Görlitz."
+      ],
+      "notes": "",
+      "id": "T19"
+    },
+    {
+      "authorLabel": "N12",
+      "stratum": "negation_only",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Hjördis wohnt in Akureyri.",
+        "Hjördis ist nicht von Beruf Vermesserin.",
+        "Rúnar arbeitet als Lotse."
+      ],
+      "evidence": "Hjördis wohnt in Akureyri. Hjördis ist nicht von Beruf Vermesserin. Rúnar arbeitet als Lotse.",
+      "question": "Welchen Beruf hat Hjördis?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T20"
+    },
+    {
+      "authorLabel": "P18",
+      "stratum": "within_family_paraphrase",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Miyu arbeitet als Buchbinderin.",
+        "Béla trägt einen roten Schal.",
+        "Miyu hat einen beigefarbenen Filzhut auf."
+      ],
+      "evidence": "Miyu arbeitet als Buchbinderin. Béla trägt einen roten Schal. Miyu hat einen beigefarbenen Filzhut auf.",
+      "question": "Was trägt Miyu?",
+      "acceptedAnswers": [
+        "Miyu hat einen beigefarbenen Filzhut auf."
+      ],
+      "notes": "",
+      "id": "T21"
+    },
+    {
+      "authorLabel": "P02",
+      "stratum": "ordinary_positive",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Bjarne arbeitet als Uhrmacher."
+      ],
+      "evidence": "Bjarne arbeitet als Uhrmacher.",
+      "question": "Welchen Beruf hat Bjarne?",
+      "acceptedAnswers": [
+        "Bjarne arbeitet als Uhrmacher."
+      ],
+      "notes": "",
+      "id": "T22"
+    },
+    {
+      "authorLabel": "N08",
+      "stratum": "absent_relation",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Bjarne lebt in Odense.",
+        "Sören trägt einen dunkelgrünen Hut.",
+        "Bjarne arbeitet als Uhrmacher."
+      ],
+      "evidence": "Bjarne lebt in Odense. Sören trägt einen dunkelgrünen Hut. Bjarne arbeitet als Uhrmacher.",
+      "question": "Was trägt Bjarne?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T23"
+    },
+    {
+      "authorLabel": "N04",
+      "stratum": "absent_entity",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Chloé lebt in Namur.",
+        "Kamil wohnt in Białystok.",
+        "Esmé arbeitet als Illustratorin."
+      ],
+      "evidence": "Chloé lebt in Namur. Kamil wohnt in Białystok. Esmé arbeitet als Illustratorin.",
+      "question": "Wo lebt Dženan?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T24"
+    },
+    {
+      "authorLabel": "P04",
+      "stratum": "same_relation_distractor",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Zoë lebt in Lübeck.",
+        "Cem lebt in Brünn."
+      ],
+      "evidence": "Zoë lebt in Lübeck. Cem lebt in Brünn.",
+      "question": "Wo lebt Cem?",
+      "acceptedAnswers": [
+        "Cem lebt in Brünn."
+      ],
+      "notes": "",
+      "id": "T25"
+    },
+    {
+      "authorLabel": "N14",
+      "stratum": "negation_only",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Zoë arbeitet als Botanikerin.",
+        "Zoë trägt keinen blauen Schal.",
+        "Sławomir trägt einen gelben Mantel."
+      ],
+      "evidence": "Zoë arbeitet als Botanikerin. Zoë trägt keinen blauen Schal. Sławomir trägt einen gelben Mantel.",
+      "question": "Was trägt Zoë?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T26"
+    },
+    {
+      "authorLabel": "P06",
+      "stratum": "same_relation_distractor",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Gül hat eine weiße Schirmmütze auf.",
+        "Béla trägt einen roten Schal."
+      ],
+      "evidence": "Gül hat eine weiße Schirmmütze auf. Béla trägt einen roten Schal.",
+      "question": "Was hat Gül auf?",
+      "acceptedAnswers": [
+        "Gül hat eine weiße Schirmmütze auf."
+      ],
+      "notes": "",
+      "id": "T27"
+    },
+    {
+      "authorLabel": "P10",
+      "stratum": "same_entity_other_relation",
+      "relationFamily": "residence",
+      "evidenceSentences": [
+        "Hjördis wohnt in Akureyri.",
+        "Hjördis arbeitet als Vermesserin."
+      ],
+      "evidence": "Hjördis wohnt in Akureyri. Hjördis arbeitet als Vermesserin.",
+      "question": "Wo wohnt Hjördis?",
+      "acceptedAnswers": [
+        "Hjördis wohnt in Akureyri."
+      ],
+      "notes": "",
+      "id": "T28"
+    },
+    {
+      "authorLabel": "P15",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "clothing",
+      "evidenceSentences": [
+        "Kamil trägt einen gestreiften Pullover.",
+        "Nils trägt einen schwarzen Mantel.",
+        "Kamil wohnt in Białystok."
+      ],
+      "evidence": "Kamil trägt einen gestreiften Pullover. Nils trägt einen schwarzen Mantel. Kamil wohnt in Białystok.",
+      "question": "Was trägt Kamil?",
+      "acceptedAnswers": [
+        "Kamil trägt einen gestreiften Pullover."
+      ],
+      "notes": "",
+      "id": "T29"
+    },
+    {
+      "authorLabel": "N06",
+      "stratum": "absent_relation",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Nils wohnt in Falun.",
+        "Nils hat eine grüne Mütze auf."
+      ],
+      "evidence": "Nils wohnt in Falun. Nils hat eine grüne Mütze auf.",
+      "question": "Welchen Beruf hat Nils?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "notes": "",
+      "id": "T30"
+    },
+    {
+      "authorLabel": "P08",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Anouk arbeitet als Restauratorin.",
+        "Miyu wohnt in Kobe.",
+        "Miyu arbeitet als Buchbinderin."
+      ],
+      "evidence": "Anouk arbeitet als Restauratorin. Miyu wohnt in Kobe. Miyu arbeitet als Buchbinderin.",
+      "question": "Welchen Beruf hat Miyu?",
+      "acceptedAnswers": [
+        "Miyu arbeitet als Buchbinderin."
+      ],
+      "notes": "",
+      "id": "T31"
+    },
+    {
+      "authorLabel": "P14",
+      "stratum": "entity_and_relation_distractors",
+      "relationFamily": "profession",
+      "evidenceSentences": [
+        "Chloé wohnt in Namur.",
+        "Sławomir arbeitet als Glasbläser.",
+        "Chloé arbeitet als Apothekerin."
+      ],
+      "evidence": "Chloé wohnt in Namur. Sławomir arbeitet als Glasbläser. Chloé arbeitet als Apothekerin.",
+      "question": "Welchen Beruf hat Sławomir?",
+      "acceptedAnswers": [
+        "Sławomir arbeitet als Glasbläser."
+      ],
+      "notes": "",
+      "id": "T32"
+    }
+  ],
+  "challengeCases": [
+    {
+      "id": "C01",
+      "category": "out_of_family_relation",
+      "evidenceSentences": [
+        "Léontine besitzt einen Dackel.",
+        "Kamil wohnt in Białystok."
+      ],
+      "evidence": "Léontine besitzt einen Dackel. Kamil wohnt in Białystok.",
+      "question": "Welches Tier besitzt Léontine?",
+      "acceptedAnswers": [
+        "Léontine besitzt einen Dackel."
+      ],
+      "reasonOutOfScope": "Possession of an animal is outside the three declared relation families."
+    },
+    {
+      "id": "C02",
+      "category": "arithmetic_across_sentences",
+      "evidenceSentences": [
+        "Tilda hat drei Birnen.",
+        "Tilda bekommt zwei Birnen."
+      ],
+      "evidence": "Tilda hat drei Birnen. Tilda bekommt zwei Birnen.",
+      "question": "Wie viele Birnen hat Tilda insgesamt?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "reasonOutOfScope": "Requires arithmetic and combining two sentences; no single sentence gives the requested total."
+    },
+    {
+      "id": "C03",
+      "category": "contrastive_negation_clause",
+      "evidenceSentences": [
+        "Gül wohnt nicht in Ankara, sondern in Bursa."
+      ],
+      "evidence": "Gül wohnt nicht in Ankara, sondern in Bursa.",
+      "question": "Wo wohnt Gül?",
+      "acceptedAnswers": [
+        "Gül wohnt nicht in Ankara, sondern in Bursa."
+      ],
+      "reasonOutOfScope": "Contains a negated alternative plus positive contrast inside one sentence, outside the simple negation-only family."
+    },
+    {
+      "id": "C04",
+      "category": "multiple_valid_supports",
+      "evidenceSentences": [
+        "Béla wohnt in Pécs.",
+        "Béla wohnt in Vác."
+      ],
+      "evidence": "Béla wohnt in Pécs. Béla wohnt in Vác.",
+      "question": "Wo wohnt Béla?",
+      "acceptedAnswers": [
+        "UNBEKANNT",
+        "Béla wohnt in Pécs.",
+        "Béla wohnt in Vác."
+      ],
+      "reasonOutOfScope": "There is no unique supporting sentence. For this challenge only, either supported full sentence or abstention is accepted; no claim of resolving residence ambiguity."
+    },
+    {
+      "id": "C05",
+      "category": "explicit_contradiction",
+      "evidenceSentences": [
+        "Anouk lebt in Deventer.",
+        "Anouk lebt nicht in Deventer."
+      ],
+      "evidence": "Anouk lebt in Deventer. Anouk lebt nicht in Deventer.",
+      "question": "Wo lebt Anouk?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "reasonOutOfScope": "Positive and explicitly negated matching evidence conflict; this challenge predeclares conservative abstention, outside the guaranteed supported family."
+    },
+    {
+      "id": "C06",
+      "category": "ambiguous_pronoun",
+      "evidenceSentences": [
+        "Jovan spricht mit Ivo.",
+        "Er lebt in Pécs."
+      ],
+      "evidence": "Jovan spricht mit Ivo. Er lebt in Pécs.",
+      "question": "Wo lebt Jovan?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "reasonOutOfScope": "The pronoun can refer to either person; resolving it would require cross-sentence interpretation beyond the supported task."
+    },
+    {
+      "id": "C07",
+      "category": "negated_question",
+      "evidenceSentences": [
+        "Jovan arbeitet als Keramiker."
+      ],
+      "evidence": "Jovan arbeitet als Keramiker.",
+      "question": "Welchen Beruf hat Jovan nicht?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "reasonOutOfScope": "The query asks for an unsupported negative relation; negated queries are outside the positive single-relation question family."
+    },
+    {
+      "id": "C08",
+      "category": "multiple_subject_question",
+      "evidenceSentences": [
+        "Ylva arbeitet als Geologin.",
+        "Anouk arbeitet als Restauratorin."
+      ],
+      "evidence": "Ylva arbeitet als Geologin. Anouk arbeitet als Restauratorin.",
+      "question": "Welche Berufe haben Ylva und Anouk?",
+      "acceptedAnswers": [
+        "UNBEKANNT"
+      ],
+      "reasonOutOfScope": "Two requested subjects and required multiple-sentence output exceed the supported one-subject task."
+    }
+  ]
+}

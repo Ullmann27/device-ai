@@ -22,6 +22,42 @@ class LocalFirstPolicyTest {
     }
 
     @Test
+    fun aRetrievedFactMustNotSuppressAnExplicitSynthesisTask() {
+        for (request in listOf(
+            "Warum könnte Miras Wohnort für den Arbeitsweg wichtig sein?",
+            "Vergleiche die beiden gespeicherten Projektpläne.",
+            "Bitte leite daraus einen vorsichtigen Vorschlag ab.",
+            "Analysiere den Widerspruch und begründe deine Einschätzung."
+        )) {
+            assertEquals(request, AssistantRoute.LOCAL_MODEL,
+                LocalFirstPolicy.afterMemory(true, true, request))
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(true, false, request))
+        }
+    }
+
+    @Test
+    fun directRecallAndQuotedReasoningWordsKeepTheExactMemoryPath() {
+        for (request in listOf("Wo wohnt Mira?", "Was habe ich über Lea gespeichert?",
+            "Was ist ORION-47?", "Was bedeutet das Wort Vergleich?")) {
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(true, true, request))
+        }
+    }
+
+    @Test fun retrievalLimitCannotRemoveTheActualLongModelTask() {
+        val original = "Gegebener Kontext: " + "Daten ".repeat(100) +
+            "\nDie eigentliche Aufgabe: berechne 19 plus 28 und antworte nur mit der Zahl."
+        assertEquals(original, LocalFirstPolicy.localModelQuestion(original, original.take(512)))
+    }
+
+    @Test fun shortScopedFollowUpStillUsesItsConversationBoundResolution() {
+        val scoped = "Aktuelle Frage: Und warum?\nAnschlussfrage aus diesem Gespräch: Wo wohnt Mira? Und warum?"
+        assertEquals(scoped, LocalFirstPolicy.localModelQuestion("Und warum?", scoped))
+        assertEquals("Hallo", LocalFirstPolicy.localModelQuestion("Hallo", "Hallo"))
+    }
+
+    @Test
     fun modelUiExposesNoModelAndRuntimeLifecycleStates() {
         assertEquals(
             LocalModelUiState.NO_MODEL,

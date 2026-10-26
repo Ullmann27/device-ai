@@ -1,0 +1,1296 @@
+{
+  "status": "NOT_RUN_OWNER_STOP",
+  "fixtureSha256": "6a1a414786b22eec0573e25dd7f8aaf1972f5f2a5916181173fc612265672c12",
+  "predictions": [
+    {
+      "caseId": "UF-01-named-home",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "same_subject_relation",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-01-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-01-named-home",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "same_subject_relation",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-01-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-02-inverted-home",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "inverted_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-02-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-02-inverted-home",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "inverted_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-02-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-03-lives-synonym",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "paraphrased_positive",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-03-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-03-lives-synonym",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "paraphrased_positive",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-03-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-04-named-work",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "same_subject_relation",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-04-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-04-named-work",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "same_subject_relation",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-04-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-05-inverted-work",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "inverted_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-05-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-05-inverted-work",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "inverted_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-05-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-06-work-adverb",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "paraphrased_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-06-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-06-work-adverb",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "paraphrased_positive",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-06-work"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-07-unknown-name",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "unknown_subject",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-07-unknown-name",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "unknown_subject",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-08-short-id-prefix",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "short_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-08-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-08-short-id-prefix",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "short_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-08-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-09-hyphen-id",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "hyphen_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-09-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-09-hyphen-id",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "hyphen_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-09-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-10-underscore-id",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "underscore_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-10-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-10-underscore-id",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "underscore_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-10-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-11-mixed-id",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "mixed_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-11-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-11-mixed-id",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "mixed_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-11-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-12-single-letter",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "short_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-12-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-12-single-letter",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "short_identifier",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-12-exact"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-13-two-identifiers",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "all_explicit_identifiers",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-13-both"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-13-two-identifiers",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "all_explicit_identifiers",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-13-both"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-14-split-identifiers",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "all_explicit_identifiers",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-14-split-identifiers",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "all_explicit_identifiers",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-15-negation-only",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "negated_relation",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-15-negation-only",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "negated_relation",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-16-negated-with-distractors",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "negated_relation",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-16-negated-with-distractors",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "negated_relation",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-17-positive-and-negative",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "negation_distractor",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-17-positive"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-17-positive-and-negative",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "negation_distractor",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-17-positive"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-18-home-does-not-prove-work",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "relation_mismatch",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-18-home-does-not-prove-work",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "relation_mismatch",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-19-work-does-not-prove-home",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "relation_mismatch",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-19-work-does-not-prove-home",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "relation_mismatch",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-20-same-record-wrong-binding",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "subject_relation_binding",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-20-same-record-wrong-binding",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "subject_relation_binding",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-21-two-qualified-hits",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "multiple_positive_records",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-21-direct",
+        "UF-21-inverted"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-21-two-qualified-hits",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "multiple_positive_records",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-21-direct",
+        "ST-21-inverted"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-22-three-identifiers",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "all_explicit_identifiers",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-22-all"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-22-three-identifiers",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "all_explicit_identifiers",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-22-all"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-23-home-wohnhaft",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "paraphrased_positive",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-23-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-23-home-wohnhaft",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "paraphrased_positive",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-23-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-24-work-negated-other-clause",
+      "scope": "in_scope",
+      "kind": "USER_FACT",
+      "category": "negation_distractor",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-24-positive"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-24-work-negated-other-clause",
+      "scope": "in_scope",
+      "kind": "SOURCE_TEXT",
+      "category": "negation_distractor",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-24-positive"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-25-definition",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "definition_challenge",
+      "polarity": "mixed",
+      "expectedIds": [
+        "UF-25-definition"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-25-definition",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "definition_challenge",
+      "polarity": "mixed",
+      "expectedIds": [
+        "ST-25-definition"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-26-unresolved-pronoun",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "pronoun_challenge",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-26-unresolved-pronoun",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "pronoun_challenge",
+      "polarity": "negative",
+      "expectedIds": [],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-27-resolved-pronoun",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "pronoun_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-27-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-27-resolved-pronoun",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "pronoun_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-27-home"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-28-house-chain",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "multihop_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-28-chain"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-28-house-chain",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "multihop_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-28-chain"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-29-alias-chain",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "multihop_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-29-chain"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-29-alias-chain",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "multihop_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-29-chain"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "UF-30-elimination",
+      "scope": "challenge",
+      "kind": "USER_FACT",
+      "category": "negation_entailment_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "UF-30-elimination"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    },
+    {
+      "caseId": "ST-30-elimination",
+      "scope": "challenge",
+      "kind": "SOURCE_TEXT",
+      "category": "negation_entailment_challenge",
+      "polarity": "positive",
+      "expectedIds": [
+        "ST-30-elimination"
+      ],
+      "baseline": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      },
+      "candidate": {
+        "status": "NOT_RUN",
+        "rawHits": null,
+        "returnedIds": null,
+        "sourceTermEvidence": null
+      }
+    }
+  ]
+}

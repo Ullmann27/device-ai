@@ -16,14 +16,22 @@ object LocalFirstPolicy {
 
     /**
      * After the memory lookup of a chat turn: an answer grounded in confirmed
-     * memory or a reviewed source stays the deterministic answer; only a turn
-     * that nothing covers goes to a loaded local language model.
+     * memory stays exact for direct recall. An explicit synthesis task may use
+     * the local model, whose conclusions never acquire memory/fact authority.
      */
-    fun afterMemory(grounded: Boolean, localModelReady: Boolean): AssistantRoute = when {
-        grounded -> AssistantRoute.LOCAL_CORE
-        localModelReady -> AssistantRoute.LOCAL_MODEL
+    fun afterMemory(grounded: Boolean, localModelReady: Boolean, request: String = ""): AssistantRoute = when {
+        localModelReady && (!grounded || SYNTHESIS.containsMatchIn(request)) -> AssistantRoute.LOCAL_MODEL
         else -> AssistantRoute.LOCAL_CORE
     }
+
+    /** The memory engine accepts only512 characters; that is not the model's task limit. */
+    fun localModelQuestion(original: String, scopedRecallPrompt: String): String =
+        if (original.length > 512) original else scopedRecallPrompt
+
+    // An explicit, bounded intent rule, not a semantic-understanding claim.
+    // Nouns such as "Vergleich" in a direct definition are deliberately excluded.
+    private val SYNTHESIS = Regex("(?iu)\\b(warum|wieso|weshalb|begründe|begründen|vergleiche|vergleichen|" +
+        "analysiere|analysieren|plane|bewerte|bewerten|schlussfolgere)\\b|\\bleite\\b.{0,80}\\bab\\b")
 
     fun modelUiState(runtimeState: LocalModelState, hasInstalledModel: Boolean, localMode: Boolean): LocalModelUiState =
         when (runtimeState) {
