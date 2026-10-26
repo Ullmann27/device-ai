@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "seeds": [
+    73,
+    101,
+    211
+  ],
+  "synthetic": true,
+  "independentlyBlinded": false,
+  "splitMethod": "disjoint names and follow-up wording; shared case families; no test-driven retuning",
+  "files": {
+    "train": {
+      "sha256": "d76e1a46cb9cd0d110cf615085cf4f343758121307570a69c5cf5ef715e88b91",
+      "cases": 168
+    },
+    "dev": {
+      "sha256": "bda857d20edf0f22eedd865518788b26de3a215cd05b513fcd2cf201e4cfa1b4",
+      "cases": 168
+    },
+    "holdout": {
+      "sha256": "c0341367e9a1425c6f054bf74dcad4225eaca3e73733658a10ac65b01930393f",
+      "cases": 168
+    }
+  }
+}

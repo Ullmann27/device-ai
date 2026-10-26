@@ -19,3 +19,6 @@ Implementation choice: a bounded, opt-in Kotlin laboratory using the actual Loca
 
 ## Execution and next step
 Initial native baseline and Kotlin runner next. All commands, raw outputs and source hashes go under `docs/evidence/interactive-intelligence-20261026`. SDK/Gradle/APK/device/LLM NOT_RUN. Commit/push each stable increment; final handoff will replace this start status.
+
+## First native baseline (before candidate implementation)
+Kotlin2.2.0 / Java21, actual current CTX3 and LocalConversationContext, 168 synthetic development scenarios: CTX3 exact reference/safe abstention 60/168; 156 abstentions, zero wrong non-abstaining references. Raw four-turn context retains required literal premise on156/168 (12long-dialogue losses). This measures a deliberately narrow registry/context task; it does not measure Gemma output accuracy. Baseline code and fixtures frozen in the next checkpoint. Seal includes168train/168dev/168holdout; holdout not evaluated before candidate freeze.
