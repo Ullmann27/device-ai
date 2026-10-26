@@ -1,0 +1,78 @@
+✖ remote seam needs explicit config, server credential and durable canonical job evidence (35.620669ms)
+✖ declined or mismatched per-request consent consumes no reservation and starts no child (26.067935ms)
+✖ approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents (30.666498ms)
+✖ remote CLI failure cannot silently invoke a local or another remote model (27.222636ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 273.218817
+
+✖ failing tests:
+
+test at .github/continuum/coding-provider-remote.test.mjs:29:1
+✖ remote seam needs explicit config, server credential and durable canonical job evidence (35.620669ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /REMOTE_DURABLE_EVIDENCE_REQUIRED/. Input:
+  
+  'Error: LOCAL_AUTH_REQUIRED'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: LOCAL_AUTH_REQUIRED
+        at createCodingCandidateProvider (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider.mjs:15:82)
+        at file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:31:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:31:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.start (node:internal/test_runner/test:1242:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: /REMOTE_DURABLE_EVIDENCE_REQUIRED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-provider-remote.test.mjs:36:1
+✖ declined or mismatched per-request consent consumes no reservation and starts no child (26.067935ms)
+  Error: LOCAL_AUTH_REQUIRED
+      at createCodingCandidateProvider (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider.mjs:15:82)
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:39:13)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at .github/continuum/coding-provider-remote.test.mjs:45:1
+✖ approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents (30.666498ms)
+  Error: LOCAL_AUTH_REQUIRED
+      at createCodingCandidateProvider (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider.mjs:15:82)
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:67:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at .github/continuum/coding-provider-remote.test.mjs:84:1
+✖ remote CLI failure cannot silently invoke a local or another remote model (27.222636ms)
+  Error: LOCAL_AUTH_REQUIRED
+      at createCodingCandidateProvider (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider.mjs:15:82)
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/.github/continuum/coding-provider-remote.test.mjs:86:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

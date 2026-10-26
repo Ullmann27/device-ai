@@ -1,0 +1,128 @@
+✖ snapshot verification binds second read to immutable revision and remains zero-cost (48.782658ms)
+✔ reject mutable identity and inconsistent pinned response (3.025945ms)
+✖ missing shard blocks declared integrity claim (2.725153ms)
+✖ absence of per-shard digests cannot become a verification success (1.907818ms)
+✔ non-allowlisted URLs, timeouts and HTTP failures fail closed (1.288346ms)
+✔ oversize and malformed metadata are rejected (1.158943ms)
+✖ reject stale mutable metadata and altered inventory sizes (1.873334ms)
+✖ mutable latest URL cannot silently select another checkpoint (5083.563649ms)
+✖ metadata deadline bounds a fetch that ignores AbortSignal (501.534089ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 3
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5740.259118
+
+✖ failing tests:
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:27:1
+✖ snapshot verification binds second read to immutable revision and remains zero-cost (48.782658ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:30:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:46:1
+✖ missing shard blocks declared integrity claim (2.725153ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:48:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /Not all 48/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:50:1
+✖ absence of per-shard digests cannot become a verification success (1.907818ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  48 !== 47
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:53:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 48,
+    expected: 47,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:69:1
+✖ reject stale mutable metadata and altered inventory sizes (1.873334ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:71:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /size/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:74:1
+✖ mutable latest URL cannot silently select another checkpoint (5083.563649ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /allowlisted/. Input:
+  
+  'TypeError: fetch failed'
+  
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:75:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [TypeError: fetch failed] {
+      [cause]: AggregateError [ECONNREFUSED]: 
+          at internalConnectMultiple (node:net:1339:18)
+          at internalConnectMultiple (node:net:1415:5)
+          at internalConnectMultiple (node:net:1415:5)
+          at internalConnectMultiple (node:net:1415:5)
+          at internalConnectMultiple (node:net:1415:5)
+          at internalConnectMultiple (node:net:1415:5)
+          at afterConnectMultiple (node:net:1942:7)
+    },
+    expected: /allowlisted/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-deepseek-hub-preflight.test.mjs:77:1
+✖ metadata deadline bounds a fetch that ignores AbortSignal (501.534089ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /metadata timeout/i. Input:
+  
+  'Error: TEST_FETCH_HUNG'
+  
+      at async TestContext.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:80:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: TEST_FETCH_HUNG
+        at Timeout.<anonymous> (file:///workspace/device-ai-deepseek-20261026/scripts/continuum-deepseek-hub-preflight.test.mjs:82:60)
+        at listOnTimeout (node:internal/timers:635:17)
+        at process.processTimers (node:internal/timers:571:7),
+    expected: /metadata timeout/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

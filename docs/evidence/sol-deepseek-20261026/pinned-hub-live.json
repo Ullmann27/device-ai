@@ -1,0 +1,119 @@
+{
+  "schema": "CONTINUUM_PINNED_DEEPSEEK_HUB_PREFLIGHT_V1",
+  "modelId": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  "metadataSource": "https://huggingface.co/api/models/deepseek-ai/DeepSeek-V4.1-Flash-1017/revision/1bae0e1088993b9b82de08f59de5be5a34e42170?blobs=true",
+  "revision": "1bae0e1088993b9b82de08f59de5be5a34e42170",
+  "declaredWeightBytes": 510296708312,
+  "shardsDeclared": 48,
+  "shardsWithPublishedLfsDigest": 0,
+  "actualWeightBytesDownloaded": 0,
+  "verifiedWeightBytes": 0,
+  "integrity": "METADATA_ONLY_NO_FILE_HASH_VERIFIED",
+  "downloadStatus": "NOT_STARTED",
+  "inferenceStatus": "NOT_STARTED",
+  "costIncurredByThisCommand": false,
+  "serverCapacity": {
+    "schema": "CONTINUUM_VIRTUAL_MODEL_FABRIC_CAPACITY_V2",
+    "repo": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    "pinnedRevision": "1bae0e1088993b9b82de08f59de5be5a34e42170",
+    "weightBytes": 510296708312,
+    "weightGiB": 475.2508442029357,
+    "weightIntegrity": "PUBLISHER_METADATA_ONLY_NO_LOCAL_SHARD_HASH_VERIFICATION",
+    "storagePolicy": {
+      "weightMultiplier": 1.25,
+      "additionalGiB": 100,
+      "isRuntimeRequirement": false
+    },
+    "recommendedVolumeGiB": 695,
+    "provisionedVolumeGiB": 768,
+    "reportedGpuNames": [],
+    "hostRamGiB": 0,
+    "runtimeCapacityVerified": false,
+    "memoryModel": {
+      "fullWeightResidencyGiB": 475.2508442029357,
+      "activeParameterCount": null,
+      "routedExperts": 384,
+      "activeRoutedExpertsPerToken": 6,
+      "sharedExperts": 1,
+      "architectureSource": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/blob/1bae0e1088993b9b82de08f59de5be5a34e42170/config.json",
+      "activeMoeComputeReducesStoredWeightBytes": false,
+      "cpuOffloadGiB": null,
+      "gpuResidencyGiB": null,
+      "kvCacheAndRuntimeGiB": null,
+      "storageCanReplaceRam": false,
+      "assumptions": [
+        "MoE routing reduces per-token expert compute; all checkpoint shards still need storage and accessible weight residency",
+        "CPU offload depends on supported kernels, DRAM bandwidth and CPU/GPU interconnect; no offload amount is measured",
+        "Quantized file bytes do not establish runtime allocation; conversion, scales, activations, KV cache and context/batch size add memory",
+        "Network/object storage cannot substitute for measured GPU/host RAM or a compatible serving topology"
+      ]
+    },
+    "transferScenarios": [
+      {
+        "bytes": 510296708312,
+        "gib": 475.2508442029357,
+        "bandwidthMbps": 100,
+        "utilization": 0.8,
+        "seconds": 51029.6708312,
+        "hours": 14.174908564222221,
+        "isMeasured": false,
+        "excludes": [
+          "protocol overhead beyond utilization",
+          "verification",
+          "retries",
+          "cache misses",
+          "model conversion"
+        ]
+      },
+      {
+        "bytes": 510296708312,
+        "gib": 475.2508442029357,
+        "bandwidthMbps": 1000,
+        "utilization": 0.8,
+        "seconds": 5102.96708312,
+        "hours": 1.4174908564222222,
+        "isMeasured": false,
+        "excludes": [
+          "protocol overhead beyond utilization",
+          "verification",
+          "retries",
+          "cache misses",
+          "model conversion"
+        ]
+      },
+      {
+        "bytes": 510296708312,
+        "gib": 475.2508442029357,
+        "bandwidthMbps": 10000,
+        "utilization": 0.8,
+        "seconds": 510.296708312,
+        "hours": 0.14174908564222222,
+        "isMeasured": false,
+        "excludes": [
+          "protocol overhead beyond utilization",
+          "verification",
+          "retries",
+          "cache misses",
+          "model conversion"
+        ]
+      }
+    ],
+    "steps": [
+      "Inspect the selected immutable 48-shard snapshot; metadata is not local file integrity",
+      "Obtain separate owner authorization and existing no-charge storage/compute capacity before a weight download",
+      "Verify each shard hash and source revision before model serving",
+      "Measure a supported pinned runtime recipe, conversion format, CPU/GPU topology, context/KV budget and throughput",
+      "Expose only authenticated HTTPS with immutable server identity and per-job consent/bounds",
+      "Keep local/offline chat available; do not implicitly upload owner memory or promote teacher replies into training"
+    ],
+    "blockers": [
+      "AUTHORIZED_DOWNLOAD_NOT_GRANTED",
+      "RUNTIME_MEMORY_AND_TOPOLOGY_NOT_MEASURED"
+    ],
+    "canDownloadWeights": "NO",
+    "canServeModel": "UNVERIFIED_REQUIRES_REAL_RUNTIME_SMOKE",
+    "createsComputeOrCharges": false,
+    "executesModel": false,
+    "storesWeightBytes": false
+  }
+}
