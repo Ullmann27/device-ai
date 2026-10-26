@@ -7,15 +7,17 @@ Review branch chatgpt/continuum-feedback-process-safety-20261026. This is a rese
 
 ## Gap and repair
 
-PR #175's monitor serializes threads inside one JVM, not independent worker processes. A second process could validate the same OBSERVED review digest before the first one persists CONFIRMED. The new ResearchFeedbackFileLock uses an OS file lock alongside its process-wide monitor for complete propose/review/read/fingerprint transactions. The existing FileLearningExperienceStore, status semantics, source/provenance tags and binary format remain unchanged. An internal unlocked candidate-list method avoids nested OS lock acquisition. On lock failure there is no fallback to unprotected access. Direct symlinks on root, feedback directory and lock file are refused.
+PR #175's monitor serializes threads inside one JVM, not independent worker processes. A second process could validate the same OBSERVED review digest before the first one persists CONFIRMED. The new ResearchFeedbackFileLock uses an OS file lock alongside its process-wide monitor for complete propose/review/read/fingerprint transactions. The existing FileLearningExperienceStore, status semantics, source/provenance tags and binary format remain unchanged. An internal unlocked candidate-list method avoids nested OS lock acquisition. On lock failure there is no fallback to unprotected access. Direct symlinks on root, feedback directory, lock file, primary ledger (experiences-v2.bin) and backup ledger (experiences-v2.lkg) are refused. Parent directory trust and all externally writable path components still require separate deployment-policy review.
 
 ## Regressions and observed limitations
 
 - New ResearchFeedbackMultiprocessTest: two genuine JVM children race on one candidate digest after a start barrier; exactly one confirmation must persist.
-- Additional checks: interruption releases the lock; root and directory symlinks cannot redirect the review ledger.
+- Additional checks: interruption releases the lock; root, directory, coordination lock file, primary ledger and backup ledger symlinks cannot redirect the review state. The child-process classpath now explicitly includes the actual Gradle-loaded app/test and Kotlin runtime code origins.
 - Existing scripts/continuum-feedback-review-jvm.sh now compiles both feedback sources and runs both JUnit classes with source hashes.
-- Development-host smoke: new helper compiled with installed Kotlin compiler; separate OS-process interleaving check PASS; exception-release PASS; symlink-root rejection PASS. This is a limited native test of the helper, not of the complete ledger.
-- Full updated JUnit source graph, Android Gradle, Fold7, Termux and APK signing: NOT_RUN here. No live owner feedback, no model weight training or unlearning was performed.
+- Development-host smoke: current helper compiled using Kotlin 1.9.0 on Java 21; two independent OS/JVM children serialized START/END events (PASS), exception-release PASS, symlink-root refusal PASS, primary/backup symlink refusal with untouched sentinels PASS. The corrected JVM classpath fragment compiled and executed. This is limited native verification of the helper, **not** the integrated ledger.
+- Local Node targeted evidence-gate research regression: 10/10 PASS, zero failures. This was not the full repository Node suite.
+- Added scripts/continuum-research-local-preflight.sh: refuses release/main branches, checks exact source hashes, runs relevant actual repo Node tests and optionally the full Kotlin JUnit source graph, records missing dependencies as NOT_RUN rather than green.
+- Full updated JUnit source graph, complete repository Node source-graph tests, Android Gradle, Fold7, Termux and APK signing: NOT_RUN here. No live owner feedback, no model weight training or unlearning was performed.
 
 ## Next verification gates
 
