@@ -61,3 +61,33 @@ test('syntax parser never runs code or confers execution/test authority',()=>{
   assert.equal(typeof op.execute,'undefined');
   assert.equal(typeof op.grantPermission,'undefined');
 });
+
+test('B3/B4/B5: same statement operator handles noise, pagination and legal length parameters',()=>{
+  const clamp=induceStructuredStatementOperator('clamp',
+    'function computePayable(price, voucher, maxCap) { return Math.min(price - voucher, maxCap); }',
+    'function computePayable(price, voucher, maxCap) { return Math.max(0, Math.min(price - voucher, maxCap)); }');
+  const b3=['function remainingThermalBudget(baseWatts, spikeWatts, ceilingWatts) {',
+    '  const scale = baseWatts * 1;',
+    '  const tag = [1, 2].slice(0, 1);',
+    '  return Math.min(baseWatts - spikeWatts, ceilingWatts);',
+    '}'].join('\n');
+  const c3=clamp.applyToCode(b3);
+  assert.equal(c3.status,'CANDIDATE_UNVERIFIED');
+  assert.match(c3.code,/return Math\.max\(0, Math\.min\(baseWatts - spikeWatts, ceilingWatts\)\);/);
+  const paginate=induceStructuredStatementOperator('page',
+    'function paginateCatalog(products, pageNo, pageSize) { const start = pageNo * pageSize; return products.slice(start, start + pageSize); }',
+    'function paginateCatalog(products, pageNo, pageSize) { const start = (pageNo - 1) * pageSize; return products.slice(start, start + pageSize); }');
+  const b4='function selectTelemetryWindow(packets, batchNo, width) { const start = batchNo * width; return packets.slice(start, start + width); }';
+  const c4=paginate.applyToCode(b4);
+  assert.equal(c4.status,'CANDIDATE_UNVERIFIED');
+  assert.match(c4.code,/const start = \(batchNo - 1\) \* width;/);
+  const slicing=induceStructuredStatementOperator('slice',
+    'function extractTokens(tokens, offset, count) { return tokens.slice(offset, offset + count - 1); }',
+    'function extractTokens(tokens, offset, count) { return tokens.slice(offset, offset + count); }');
+  const b5='function readScoreSubrange(scores, offset, length) { return scores.slice(offset, offset + length - 1); }';
+  const c5=slicing.applyToCode(b5);
+  assert.equal(c5.status,'CANDIDATE_UNVERIFIED');
+  assert.match(c5.code,/return scores\.slice\(offset, offset \+ length\);/);
+  assert.deepEqual(slicing.applyToCode('function maybe(arr, length) { return arr.length + length; }'),
+    {status:'REJECTED',code:null});
+});
