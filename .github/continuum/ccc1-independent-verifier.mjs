@@ -81,6 +81,17 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
        evidence.executed<1||evidence.passed+evidence.failed!==evidence.executed)
       throw Error('TEST_COUNT_EVIDENCE_INVALID');
   }
+  const identities=run=>run.tests.executedCaseHashes;
+  const baseIds=identities(baseline),candidateIds=identities(candidate);
+  for(const [test,ids] of [[baseline,baseIds],[candidate,candidateIds]]){
+    if(!Array.isArray(ids)||ids.length!==test.tests.executed||
+       ids.some(id=>typeof id!=='string'||!HEX64.test(id))||
+       new Set(ids).size!==ids.length)
+      throw Error('EXECUTED_TEST_IDENTITIES_INCOMPLETE');
+  }
+  const candidates=new Set(candidateIds);
+  if(baseIds.some(id=>!candidates.has(id)))
+    throw Error('EXECUTED_TEST_IDENTITY_MISSING');
   if(candidate.tests.executed<baseline.tests.executed)
     throw Error('EXECUTED_TEST_COVERAGE_REGRESSION');
   if(candidate.tests.skipped!==baseline.tests.skipped)
