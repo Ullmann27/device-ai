@@ -1,6 +1,9 @@
 # Sol — JARVIS-MO open integration handoff
 
-Status: **WIP / UNVERIFIED**, 2026-10-26. Repository: `Ullmann27/device-ai` only.
+Status: **OWNER-REQUESTED CLOSURE / RESEARCH REVIEW REQUIRED**, 2026-10-26.
+**Final entry point:** [SOL-JARVIS-FINAL-HANDOFF-20261026.md](SOL-JARVIS-FINAL-HANDOFF-20261026.md).
+This document retains chronological checkpoints; final test/status corrections
+and exact continuation are in that final handoff. Repository: `Ullmann27/device-ai` only.
 Branch: `sol/continuum-jarvis-open-fabric-20261026`.
 Pinned starting point: PR #168, `78ceeeb863a3806b0bc088a4a2c2544d96be24cd`.
 

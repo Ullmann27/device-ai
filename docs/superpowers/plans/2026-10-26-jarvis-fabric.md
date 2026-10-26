@@ -100,3 +100,16 @@ produces only the existing advisory plan plus explicit transport trust limitatio
 Scope honesty: broad scientific/Android/device acceptance requires real resources.
 Unrun experiments remain explicitly NOT_RUN; no quality or generalization score is
 inferred from parameter changes, protocol fixtures or passing unit tests.
+
+## Owner closure, 2026-10-26
+
+The owner reported approximately 20% remaining quota and explicitly ended new
+feature/experiment/delegation work. This overrides further plan execution.
+Tasks 1–3 delivered checked branch composition, registry fixes and shared native
+Kotlin→Node planning adapter. Task 4 delivered the optional consented bridge and
+actual public-development Docker A/B/C proofs, while real LLM inference remains
+NOT_RUN. Task 5 delivered the three independent audit reports and final native
+verification; Android/device and broad scientific acceptance remain OPEN.
+The unchecked original items are preserved as remaining work, not claimed complete.
+See `docs/research/omega/SOL-JARVIS-FINAL-HANDOFF-20261026.md` for final disposition,
+precise SHA, checks, open findings and the next bounded repair.
