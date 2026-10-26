@@ -9,7 +9,7 @@ import {CoinWmV3ShadowModel} from './coin-wm-v3-shadow-model.mjs';
 import {induceStructuredStatementOperator} from './structured-statement-translator.mjs';
 import {proposeShadowStructuredCandidates} from './coin-wm-v3-structured-shadow.mjs';
 import {validateCcc1CandidateBinding,validateCcc1ResearchRequest,
- runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
+ runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,assertCcc1TestEvidenceParity,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
 
 const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 const original='export const page = (number, size) => number * size;\n';
@@ -135,4 +135,41 @@ test('NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an execu
  assert.equal(binding.candidate.sourceSha256,sha(input));
  assert.equal(typeof binding.execute,'undefined');
  assert.equal(model.updatesCount,0);
+});
+
+function evidence(executed,failed=0,skipped=0,skippedCaseDigest=null){
+ return {results:[{profile:'node-continuum',testProfile:true,passed:failed===0,
+  tests:{executed,failed,passed:executed-failed,skipped,total:executed+skipped,
+    placeholders:0,...(skippedCaseDigest?{skippedCaseDigest}:{})}
+ }]};
+}
+
+test('CCC1: an apparent green with fewer executed tests than RED is NOT verified',()=>{
+ const red=evidence(120,1);
+ const green=evidence(119,0);
+ assert.throws(()=>assertCcc1TestEvidenceParity(red,green),/EXECUTED_TEST_COVERAGE_REGRESSION/);
+});
+
+test('CCC1: equal or increased executed coverage preserves same-profile evidence',()=>{
+ const red=evidence(120,1),green=evidence(120),fresh=evidence(125);
+ assert.equal(assertCcc1TestEvidenceParity(red,green).baselineExecuted,120);
+ assert.equal(assertCcc1TestEvidenceParity(green,fresh).candidateExecuted,125);
+});
+
+test('CCC1: skipped tests must remain identical across RED, GREEN and fresh run',()=>{
+ const digest='a'.repeat(64),changed='b'.repeat(64);
+ const baseline=evidence(10,1,1,digest);
+ assert.equal(assertCcc1TestEvidenceParity(baseline,evidence(10,0,1,digest)).skipped,1);
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,evidence(10,0,2,digest)),/SKIPPED_TEST_SET_CHANGED/);
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,evidence(10,0,1,changed)),/SKIPPED_TEST_IDENTITY_CHANGED/);
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,evidence(10,0,1)),/SKIPPED_TEST_IDENTITY_CHANGED/);
+});
+
+test('CCC1: no missing profile, zero executed tests or contradictory JUnit counts',()=>{
+ const baseline=evidence(3,1);
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,{results:[]}),/TEST_PROFILE_PARITY_INVALID/);
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,evidence(0)),/TEST_COUNT_EVIDENCE_INVALID/);
+ const bad=evidence(3);
+ bad.results[0].tests.passed=9;
+ assert.throws(()=>assertCcc1TestEvidenceParity(baseline,bad),/TEST_COUNT_EVIDENCE_INVALID/);
 });
