@@ -90,11 +90,33 @@ export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}=
   if(!isIsolatedExecutor(executor))throw Error('BRANDED_OS_EXECUTOR_REQUIRED');
   return validateCcc1CandidateBinding({typedTask,candidate,file});
 }
-export function runIndependentCcc1PatchVerification({typedTask,candidate,file,projectRoot,executor,deadline=Date.now()+900000}={}){
+/** Read the existing canonical CCC1 owner-approved task grant, not a model claim.
+ * stateDir must be the trusted worker's own configured state directory.
+ */
+export function verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask}={}){
+  const task=validateCodingTask(typedTask);
+  const state=ensureCcc1StateOutsideSource(projectRoot,stateDir);
+  const dir=path.join(state,'coding-grants');
+  if(fs.realpathSync(dir)!==dir)throw Error('OWNER_GRANT_DIR_UNSAFE');
+  const file=path.join(dir,task.id+'.json');
+  const stat=fs.lstatSync(file);
+  if(!stat.isFile()||stat.isSymbolicLink()||stat.size>16000||
+    fs.realpathSync(file)!==file)throw Error('OWNER_GRANT_FILE_UNSAFE');
+  const stored=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(stored?.task?.id!==task.id||
+    stored.fingerprint!==taskFingerprint(task)||
+    !/^t-[a-f0-9]{16}$/.test(stored.ccc1TaskId??'')||
+    taskFingerprint(validateCodingTask(stored.task))!==stored.fingerprint)
+    throw Error('OWNER_GRANT_MISMATCH');
+  return Object.freeze({taskId:task.id,fingerprint:stored.fingerprint,ccc1TaskId:stored.ccc1TaskId});
+}
+export function runIndependentCcc1PatchVerification({typedTask,candidate,file,projectRoot,stateDir,executor,deadline=Date.now()+900000}={}){
   const {task}=validateCcc1ResearchRequest({typedTask,candidate,file,executor});
   if(!Number.isSafeInteger(deadline)||deadline<=Date.now()||deadline>Date.now()+1200000)
     throw Error('INVALID_DEADLINE');
   const project=fs.realpathSync(projectRoot);
+  // Exact same owner-bound grant format as coding-orchestrator.mjs.
+  verifyCcc1OwnerGrant({projectRoot:project,stateDir,typedTask:task});
   if(!fs.statSync(project).isDirectory()||
      git(project,['rev-parse','HEAD']).stdout.trim()!==task.sourceCommit||
      git(project,['status','--porcelain','--untracked-files=no']).stdout.trim())
