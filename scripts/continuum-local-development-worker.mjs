@@ -5,7 +5,7 @@
  * calls an LLM, merges a PR, downloads software or executes a generated patch.
  */
 import {spawnSync} from 'node:child_process';
-import {readdirSync,mkdirSync,openSync,closeSync,unlinkSync,writeFileSync,renameSync} from 'node:fs';
+import {lstatSync,mkdirSync,openSync,closeSync,unlinkSync,writeFileSync,renameSync} from 'node:fs';
 import {resolve,join,dirname,sep} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
@@ -58,7 +58,16 @@ export function runOneCycle(outDirectory){
  if(resolve(repo)!==ROOT)throw Error('INCORRECT_REPOSITORY_ROOT');
  const branch=exactGit(['symbolic-ref','--quiet','--short','HEAD']);
  const dirty=exactGit(['status','--porcelain','--untracked-files=no']).length>0;
- const names=readdirSync(join(ROOT,'.github','continuum')).filter(x=>x.endsWith('.test.mjs'));
+ // Execute only tests tracked by Git at this exact clean HEAD. Never run an
+ // untracked injected *.test.mjs file or a tracked symlink out of the repo.
+ const tracked=exactGit(['ls-files','-z','--',':(glob).github/continuum/*.test.mjs'])
+   .split('\0').filter(Boolean);
+ const names=tracked.map(name=>{
+   if(!name.startsWith('.github/continuum/'))throw Error('UNEXPECTED_TRACKED_TEST');
+   const full=join(ROOT,name);
+   if(!lstatSync(full).isFile())throw Error('UNSAFE_TEST_FILE_TYPE');
+   return name.slice('.github/continuum/'.length);
+ });
  const {tests}=evaluateCheckout({branch,dirty,tests:names});
  const output=resolve(outDirectory);
  if(output===ROOT||output.startsWith(ROOT+sep))throw Error('OUTPUT_MUST_BE_OUTSIDE_REPO');
