@@ -48,6 +48,13 @@ internal class ResearchFeedbackFileLock(root: File) {
         if (!Files.isDirectory(directoryPath, LinkOption.NOFOLLOW_LINKS) ||
             Files.isSymbolicLink(directoryPath)
         ) throw IOException("Research feedback directory is unsafe")
+        // The existing ledger codec uses ordinary File APIs. Refuse externally
+        // redirected ledger paths before allowing any read or write transaction.
+        for (name in listOf("experiences-v2.bin", "experiences-v2.lkg")) {
+            if (Files.isSymbolicLink(File(directory, name).toPath())) {
+                throw IOException("Research feedback ledger path is a symbolic link")
+            }
+        }
     }
 
     companion object {
