@@ -119,3 +119,10 @@ The owner pasted a complete third iteration of the research prototype, arguing t
 Complete v3 runtime measurements and examples: `docs/evidence/coin-wm-v3-native-node-20261026/INDEPENDENT-RECONSTRUCTION.md`.
 
 **Next gate:** native `node --test` for both exact GitHub source/test blobs in an authorized full checkout, proper safe owner-approved isolated execution, reliable structured patch/AST translation, source-identical repaired fixtures, and a new sequestered adversarial benchmark with an explicit no-neural operator-only control. No automatic merge to `main`.
+
+
+### Additional static safety hardening
+
+Follow-up commit `f50f16850ae61683e6195c1490befe4197720d86` makes `status='RESEARCH_SHADOW'` and `promotionEligible=false` non-writable and non-configurable own properties on each `CoinWmV3ShadowModel` instance; commit `2bc4022c0c179ee19c066cd6a6b0624c3d718afd` adds a strict-ESM assignment rejection test. Exact production Git blob `55b6287abacd54f210b1ebad81f72b548bc03716` and test blob `23a00bb1086e8c336601c0671f1cf8234ebab063` re-fetched from GitHub. The five original test bodies all PASS in a V8 isolate with **ESM strict-mode semantics explicitly reproduced**. This corrects an initial overly-permissive non-strict host harness that silently swallowed assignment to the non-writable property: the normal source uses ESM and is strict. This is still not native `node --test`.
+
+The metadata lock is defensive only; it is NOT a permission system. A different runtime could construct its own object. Actual privileged operations are structurally absent from this research module.
