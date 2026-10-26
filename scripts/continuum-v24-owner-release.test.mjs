@@ -35,9 +35,13 @@ test('v24 remains one in-place owner package with exact older certificate and ro
  for(const number of [18,19,20,21,22,24])
   assert.match(router,new RegExp('^  '+number+'\\)','m'));
  assert.match(shell,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);
- assert.match(shell,/expected_previous_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"/);
+ assert.match(shell,/expected_previous_sha="1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8"/);
+ assert.match(shell,/expected_legacy_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"/);
+ assert.match(shell,/versionCode='\$rollback_code' versionName='\$rollback_version'/);
+ assert.match(shell,/for rollback in/);
  assert.match(shell,/versionCode='24' versionName='0\.3\.23'/);
- assert.match(shell,/versionCode='22' versionName='0\.3\.21'/);
+ assert.match(shell,/"23\|0\.3\.22\|\$expected_previous_sha"/);
+ assert.match(shell,/"22\|0\.3\.21\|\$expected_legacy_sha"/);
  for(const script of ['scripts/render-mentor-preview.sh','scripts/render-mentor-owner-update-v24.sh']){
   const check=spawnSync('bash',['-n',script],{cwd:root,encoding:'utf8',timeout:10000});
   assert.equal(check.status,0,check.stderr);
