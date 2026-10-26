@@ -1,5 +1,6 @@
 package at.heinz.deviceai.learning.interactive
 
+import at.heinz.deviceai.learning.LearningExperience
 import at.heinz.deviceai.learning.LearningStatus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -19,7 +20,24 @@ class ResearchFeedbackMultiprocessTest {
             val feedback = ResearchFeedback(root)
             val candidate = feedback.propose("Nein, gemeint war der Luftdruck.", "os-process")
             val javaExecutable = File(System.getProperty("java.home"), "bin/java").absolutePath
-            val classpath = System.getProperty("java.class.path")
+            // Gradle workers often expose only the worker launcher in java.class.path.
+            // Include code origins for the actual loaded Kotlin app/test classes.
+            val codeOrigins = listOf(
+                ResearchFeedbackReviewProbe::class.java,
+                ResearchFeedback::class.java,
+                LearningExperience::class.java,
+                kotlin.jvm.internal.Intrinsics::class.java
+            ).map { type ->
+                val url = requireNotNull(type.protectionDomain?.codeSource?.location) {
+                    "Missing JVM code source for ${type.name}"
+                }
+                File(url.toURI()).canonicalPath
+            }
+            val parentClasspath = System.getProperty("java.class.path").orEmpty()
+                .split(File.pathSeparator)
+                .filter { it.isNotBlank() }
+            val classpath = (codeOrigins + parentClasspath).distinct()
+                .joinToString(File.pathSeparator)
             val probe = ResearchFeedbackReviewProbe::class.java.name
 
             for (id in listOf("one", "two")) {
