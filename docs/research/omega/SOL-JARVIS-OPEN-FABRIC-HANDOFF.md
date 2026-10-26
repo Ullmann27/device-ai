@@ -140,6 +140,30 @@ The three obsolete source-string assertions and ledger fixture from the initial
 full-suite failures were aligned with current source binding/evidence requirements;
 **48/48 targeted tests PASS**. Full integrated rerun remains pending.
 
+## Checkpoint 5 — selective optional DeepSeek transport integration
+
+Compared #154's real source against common ancestor `c391b832` and current provider.
+Applied only transport/request-builder/CLI deltas and provider hunks AFTER its
+duplicate budget commit `31331293`; retained current durable reservations and
+newer diagnostics/source bindings. Added the bridge's `PINNED_REVISION` export to
+the existing tier planner without replacing its resource-manifest API.
+New files copied from the pinned #154 head are bridge source/tests and protocol
+documentation; existing files were integrated by checked diffs.
+
+**40/40 native tests PASS**: existing provider/budget/context tests, local request
+contract, remote consent/auth/identity/budget/timeouts, actual localhost TLS
+provider→CLI transport, and current fabric/tier-plan compatibility. TLS responses
+are synthetic protocol fixtures, **not DeepSeek inference**. No endpoint/operator
+configuration exists in this environment: **NOT_CONFIGURED** for real remote
+inference. Default provider stays local; remote use requires trusted caller's
+explicit `remoteTeacher` configuration and exact per-request owner consent.
+No implicit provider fallback or costs introduced.
+
+Native A/B/C evidence including source Git bundles and executed-test identity
+hashes is now under `docs/evidence/sol-jarvis-20261026/abc-native/`. These synthetic
+fixture repositories contain no owner data or credentials. The controller and
+all code are committed here; source bundles preserve the exact fixture commits.
+
 ## Next executable steps
 
 1. Run focused native model/numeric/translator/CCC1/A-B-C/fabric tests from complete

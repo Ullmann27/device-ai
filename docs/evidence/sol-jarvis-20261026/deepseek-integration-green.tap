@@ -1,0 +1,48 @@
+✔ remote seam needs explicit config, server credential and durable canonical job evidence (25.405266ms)
+✔ declined or mismatched per-request consent consumes no reservation and starts no child (69.251057ms)
+✔ approved remote proposal uses the fixed CLI and existing durable budget without leaking private contents (34.075552ms)
+✔ remote CLI failure cannot silently invoke a local or another remote model (35.250998ms)
+✔ fixed remote failure reason and offline fallback survive the canonical provider boundary (30.730199ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (39.773367ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (32.759307ms)
+✔ malformed model name is rejected before invoking the local child (60.920026ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (20.158117ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (48.767935ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (33.476213ms)
+✔ foreign or corrupt persisted requests block before another inference (31.429161ms)
+✔ local pinned fallback is advisory, not a fake 511GB inference (2.425878ms)
+✔ remote route requires separate internet and owner-compute consent (0.429171ms)
+✔ private memories never leave local site through this planner (0.448952ms)
+✔ remote model identity must match both exact model and pinned revision (0.223025ms)
+✔ reject unavailable, expired, unowned, oversized and overbudget compute (0.38739ms)
+✔ local selection is preferred, but never substitutes an unpinned model (0.335425ms)
+✔ reuses pinned 48-shard Hub manifest validator without downloading weights (0.866184ms)
+✔ malformed request, duplicate nodes and deadline fail closed (0.41142ms)
+✔ routing snapshots primitive offer data against later mutation (0.298714ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (29.526262ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (2.482734ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (50.652085ms)
+✔ no opt-in, wrong payload consent, secrets/memory/training or paid allowance never sends a request (5.774735ms)
+✔ endpoint, authentication and request bounds are validated before network (0.735729ms)
+✔ authenticated capability/identity/privacy preflight happens before the consented prompt (25.263072ms)
+✔ successful HTTPS transport reuses the untrusted canonical proposal contract (2.246182ms)
+✔ revision drift, replay, paid, truncated, tool and over-budget responses fail closed (5.283353ms)
+✔ HTTP errors and untrusted exception text are sanitized; no retry or private output (2.680919ms)
+✔ output byte limit is enforced on streamed bodies even without content-length (0.526459ms)
+✔ deadline bounds both a fetch and a body reader ignoring AbortSignal (260.978571ms)
+✔ real TLS CLI authenticates, binds revision/request and refuses no consent, bad identity, auth, TLS or deadline (1341.217309ms)
+✔ real existing provider -> fixed CLI -> authenticated TLS fixture -> canonical proposal and durable replay refusal (277.625475ms)
+✔ capacity planning is honest about verified requirements and no resource creation (1.064326ms)
+✔ virtual storage does not pretend to be GPU RAM or substitute for physical host (1.685998ms)
+✔ reject too-small volume, GPU count and host DRAM independently (0.207915ms)
+✔ immutable snapshot metadata validates all shard identities and size before use (0.758794ms)
+✔ reject moving refs, missing, duplicate, bad shard size or implausible metadata (0.768148ms)
+✔ CLI defaults to a read-only blocked plan when no GPU inventory is available (39.121874ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3001.17111

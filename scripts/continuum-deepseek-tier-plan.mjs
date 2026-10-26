@@ -3,6 +3,9 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export const MODEL_ID = "deepseek-ai/DeepSeek-V4.1-Flash-1017";
+// Selected revision for the optional #154 transport. Generic inventory inspection
+// below remains a read-only declaration and does not attest these weight bytes.
+export const PINNED_REVISION = "1bae0e1088993b9b82de08f59de5be5a34e42170";
 export const ESTIMATED_WEIGHT_BYTES = 511_000_000_000;
 export const ENGRAM_OFFLOAD_GIB = 183.1;
 const GiB = 1024 ** 3;
