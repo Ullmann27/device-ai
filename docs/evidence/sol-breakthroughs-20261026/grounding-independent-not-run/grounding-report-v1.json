@@ -1,0 +1,51 @@
+{
+  "schema": "CONTINUUM_INDEPENDENT_GROUNDING_REPORT_V1",
+  "status": "NOT_RUN_OWNER_STOP",
+  "reason": "Owner stop at approximately20 percent usage; freeze and source inspection completed, evaluation had not begun. No new experiments or review expansion after stop.",
+  "baselineSha": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+  "candidateSha": "4bf74b1b827aab56bbe03e032c21c03c508484c8",
+  "fixtureSha256": "6a1a414786b22eec0573e25dd7f8aaf1972f5f2a5916181173fc612265672c12",
+  "fixtureFile": "grounding-decision-fixtures-v1.json",
+  "generatorFile": "generate-fixtures.mjs",
+  "rawPredictionsFile": "grounding-raw-predictions-v1.json",
+  "authorshipIndependence": "All cases and expected decisions frozen and SHA recorded before candidate implementation was inspected. No candidate predictions or model inference read.",
+  "completedActions": [
+    "Authored60 synthetic cases with exact ID-set oracles and predeclared scope.",
+    "Validated generator output, unique IDs, known memory kinds and expected record IDs.",
+    "Frozen fixture, generator, checksum and provenance as read-only artifacts.",
+    "After freeze, read exact baseline/candidate dialogue-retrieval.mjs source using git show.",
+    "Read commit STAT summaries only for requested review commits; no substantive source review performed."
+  ],
+  "metrics": {
+    "totalCases": 60,
+    "inScopeCases": 48,
+    "challengeCases": 12,
+    "userFactCases": 30,
+    "sourceTextCases": 30,
+    "positiveCases": 14,
+    "mixedCases": 30,
+    "negativeCases": 16,
+    "baselineExecutedCases": 0,
+    "candidateExecutedCases": 0,
+    "baselineExactPasses": null,
+    "candidateExactPasses": null,
+    "baselineFalseHits": null,
+    "candidateFalseHits": null,
+    "positiveRetention": null,
+    "oldFullObjectScoreControlResults": null
+  },
+  "uncoveredFailures": "UNKNOWN; execution NOT_RUN, no success or failure inference is warranted.",
+  "sourceReview": {
+    "status": "NOT_RUN_OWNER_STOP",
+    "rootDialogueCommit": "cf96c19f",
+    "codingCommits": [
+      "216fa837",
+      "91dac7eb"
+    ],
+    "importantFindings": [],
+    "caveat": "Empty findings are not review clearance. Only git-show commit stats were read for these changes."
+  },
+  "repoMutations": "NONE",
+  "nativeModelInference": "NOT_RUN",
+  "publication": "LOCAL_ONLY / NOT_PUSHED; parent must publish artifacts on official research branch."
+}
