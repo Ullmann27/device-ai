@@ -68,6 +68,8 @@ class ResearchFeedbackMultiprocessTest {
             Files.createSymbolicLink(dir.toPath(), root.toPath())
             assertThrows(IOException::class.java) { ResearchFeedback(external).all() }
         } finally {
+            Files.deleteIfExists(File(root, "linked-root").toPath())
+            Files.deleteIfExists(File(external, "interactive-feedback-v1").toPath())
             root.deleteRecursively()
             external.deleteRecursively()
         }
