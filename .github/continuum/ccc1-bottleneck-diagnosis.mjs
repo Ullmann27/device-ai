@@ -14,6 +14,11 @@ const CASE_ID = /^[A-Za-z0-9_-]{1,80}$/;
 const hash = value => crypto.createHash('sha256').update(value, 'utf8').digest('hex');
 const freeze = value => Object.freeze(value);
 const ARMS = freeze(['REFERENCE_PATCH', 'GIVEN_OPERATOR', 'NEURAL_TOP1']);
+const VERIFIED_ORIGIN = new WeakSet();
+/** In-memory origin check only; not a signature or independent repair receipt. */
+export function isCcc1BottleneckObservation(value) {
+  return value !== null && typeof value === 'object' && VERIFIED_ORIGIN.has(value);
+}
 
 function snapshotHash(model) {
   const keys = ['encoder', 'encoderAtInit', 'encoderBias', 'policyBias',
@@ -118,7 +123,7 @@ export function diagnoseCcc1BottleneckCase({
     translate(ranking[0].operatorIndex, ARMS[2], 1)
   ]);
   if (snapshotHash(model) !== stateBefore) throw Error('MODEL_MUTATED_DURING_DIAGNOSIS');
-  return freeze({schema: 'continuum-bottleneck-diagnosis', version: 1,
+  const observation = freeze({schema: 'continuum-bottleneck-diagnosis', version: 1,
     status: 'RESEARCH_SHADOW', experimentalExecution: 'NOT_RUN',
     promotionEligible: false, learningEligible: false,
     experimentId, caseId, sourceCommit: task.sourceCommit,
@@ -128,4 +133,6 @@ export function diagnoseCcc1BottleneckCase({
     testManifestAttested: false,
     operatorDescriptorSha256: hash(JSON.stringify(operators.map(op => ({id: op.id, kind: op.kind})))),
     rawRanking, arms});
+  VERIFIED_ORIGIN.add(observation);
+  return observation;
 }
