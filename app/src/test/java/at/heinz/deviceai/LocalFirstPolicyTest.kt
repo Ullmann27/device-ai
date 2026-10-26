@@ -88,4 +88,25 @@ class LocalFirstPolicyTest {
             LocalFirstPolicy.modelUiState(LocalModelState.FAILED, hasInstalledModel = true, localMode = false)
         )
     }
+
+    @Test
+    fun quotedWordsAndLexicalDefinitionsDoNotTurnVerifiedRecallIntoModelClaims() {
+        val directRecall = listOf(
+            "Was habe ich über „analysiere“ gespeichert?",
+            "Was weißt du über \"warum\" aus meiner Erinnerung?",
+            "Wo steht 'plane' in meiner Notiz?",
+            "Was habe ich zu `vergleiche` gespeichert?",
+            "Was bedeutet das Wort analysiere?"
+        )
+        for (request in directRecall) {
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+        assertEquals(AssistantRoute.LOCAL_MODEL,
+            LocalFirstPolicy.afterMemory(true, true,
+                "Bitte analysiere den Widerspruch zur zitierten Frage „warum“." ))
+        assertEquals(AssistantRoute.LOCAL_MODEL,
+            LocalFirstPolicy.afterMemory(true, true,
+                "Warum ist die gespeicherte Zahl unplausibel?"))
+    }
 }
