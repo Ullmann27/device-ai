@@ -78,6 +78,8 @@ test('non-verified sessions retain their original failure diagnoses',()=>{
  source.outcome='NO_VERIFIED_REPAIR';
  source.verified=null;
  source.attempts[0].outcome='FAILED_TESTS';
+ source.attempts[0].tests[0].passed=false;
+ source.attempts[0].tests[0].tests.failed=1;
  const result=recordSession(emptyLedger(),source,{});
  assert.equal(result.sessions[0].outcome,'NO_VERIFIED_REPAIR');
  assert.equal(result.attempts[0].outcome,'FAILED_TESTS');
