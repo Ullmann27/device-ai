@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createNeuralState,exportWeights} from './neural-core.mjs';
+import {createNeuralState,exportWeights,trainRound,ingestPublicSources} from './neural-core.mjs';
 import {STEP_BUDGETS,characterizeStagnation,
  runShadowBudgetSweep} from './neural-shadow-budget-lab.mjs';
 
@@ -39,4 +39,25 @@ test('repeated semantic regression is reported, never reclassified as success',(
  assert.equal(diagnosis.lastTenValidationRegressions,10);
  assert.equal(diagnosis.repeatsMayBeUnproductive,true);
  assert.equal(diagnosis.accepted,2);
+});
+
+test('existing trainRound defaults are identical to explicit CONTROL policy',()=>{
+ const state=createNeuralState();
+ const original=trainRound(state,{steps:250,now:10});
+ const explicit=trainRound(state,{steps:250,now:10,
+   researchReplayEvery:8,researchReplayRate:.035});
+ assert.equal(original.report.candidateHash,explicit.report.candidateHash);
+ assert.equal(original.report.sourceUpdates,explicit.report.sourceUpdates);
+ assert.equal(original.report.selectedSteps,explicit.report.selectedSteps);
+ assert.equal(original.report.accepted,explicit.report.accepted);
+ assert.deepEqual(exportWeights(original.state),exportWeights(explicit.state));
+});
+test('research-disabled public replay produces exactly zero public gradients',()=>{
+ const source={source:'Wikipedia',url:'https://de.wikipedia.org/wiki/Forschung',
+   title:'Wissenschaftliche Vergleichsstudie',
+   text:'Diese Forschungszusammenfassung untersucht Unterschiede zwischen mehreren Lernverfahren und Validierungsmethoden.'};
+ const seeded=ingestPublicSources(createNeuralState(),[source],100);
+ assert.equal(seeded.replay.length,1);
+ const trial=trainRound(seeded,{steps:250,now:100,researchReplayEvery:0});
+ assert.equal(trial.report.sourceUpdates,0);
 });
