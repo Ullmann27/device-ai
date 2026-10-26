@@ -53,3 +53,44 @@ The research hypothesis itself is worth pursuing as **safe SHADOW ranker only**:
 5. No on-device model promotion until Node, Gradle, native Termux/Fold7 and sandbox gates pass.
 
 This audit branch contains no unsafe Argon original code or novel model activation. Keep it Draft and review-only.
+
+## 2026-10-26 follow-up: Argon's v2 response (new input, not the previous shared v1 link)
+
+The owner subsequently pasted a second, fully specified `continuum-coin-wm-v2.mjs` response into chat, which fixes the old asymmetrical contrastive sampling by all-pairs replay and separate per-operator policy/transition heads, and replaces the five hand-written patch rules with generic, alpha-normalized token-LCS edit scripts. **The v2 source is not published as an immutable original file**: the reviewer manually reconstructed its named function bodies and the ten stated fixture bodies into an independent Node22 local harness. All results below are **faithful-reconstruction measurements**, not original-file byte-identity certification. The reconstruction was isolated from the production GitHub repository and contained only the deliberately selected small benchmark functions.
+
+### Real native Node22 outcome
+
+- **EXP-1:** FAIL against v2's exact asserted triple `ZERO_MEMORY=0, EPISODIC_RETRIEVAL=0, COIN_WM=5`. Actual reconstructed benchmark counts: **0 / 2 / 5** respectively. That is an actual improvement over v1's observed 1/5 neural solution rate, but the baseline was not zero.
+- **EXP-2:** PASS. The explicitly marked infrastructure abort caused no neural update and no operator induction.
+- **EXP-3:** PASS. After five sequential learning phases all five current example tasks could be solved at Pass@1.
+- Neural policy's learned top-1 operator is the correct one in all five supplied v2 tasks; model update counter 990.
+- A simple **first applicable changed-code** ranker (without neural training) solves **3/5** on the same public fixtures, demonstrating that the operator edit mechanism alone already contributes transferable power; this is an informative informal ablation, *not* a tuned or statistically controlled research comparison.
+- `W_enc` remains byte-for-byte equal to its identity-like initialization after all 990 updates: the supplied `trainStep()` updates *only* per-operator policy and transition heads. Hence the shared state encoder is frozen, not learned as described, and the observed retention does not prove that EWC is causally required.
+
+### Additional independent negative controls (native Node22)
+
+Five specific tests reproduced:
+1. `runBoundedSandboxVerification` gives candidate code unrestricted `process` object access because it uses an in-process `new Function`. Direct function `return typeof process` passed with the expected `'object'`.
+2. `forbidInputMutation` only snapshots `clonedArgs[0]`; mutation to a *second* input parameter passes unobserved.
+3. The token regex drops quotes from JS string literals, so it is not a general JavaScript parser/AST normalizer.
+4. `ingestVerifiedDevelopmentExperience` trusts its `verifiedFixedCode` parameter and trains a *positive* policy label even for a deliberately incorrect purported fix: no independent execution of this claimed gold code before operator induction. Within the all-pairs loop `verifiedSuccess=(k===ep.opIndex)` is a match label, not the result of actual independent test execution on the selected operator.
+5. The shared encoder `W_enc` stays fixed after all learning steps.
+
+A short-lived child Node22 process attempted a supplied **valid but nonterminating** `function count(){for(;;);}` fixture: its loop is not recognized by the simple regex instrumentation; the separate external process was stopped by the reviewer's **700ms hard timeout**. This is a directly observed escape from the purported in-process `__gas` limit. No such code was run inside the application or in a long-lived agent process.
+
+### Implications
+
+- **Conditional scientific credit:** Argon's v2 prototype solves 5/5 *known public, designer-visible* samples in the independent native Node22 reconstruction, improves training order bias, and yields a plausible trainable per-operator ranking policy. It has not shown a new sealed holdout, robust AST transfer, statistically meaningful cross-family generalization, learnable shared world representation, or production-safe candidate execution.
+- **Absolutely do not import** `runBoundedSandboxVerification`, `new Function` evaluator, pseudo-gas injector, unsound trust in `verifiedFixedCode`, or v2 weight updates as core production authority. Use the existing reviewed CCC1 isolated executor and real signed test receipts; without a valid source/patch/test evidence chain no experience should train the neural policy.
+- **Operator taxonomy:** Token-LCS can induce candidate source-to-source edit scripts, but is not a real JavaScript parser and does not establish semantic causality. Repeated same-source occurrences, string/regex literals, scoping and alpha-renaming require negative controls and AST-level validation before reuse.
+- **v2 retest conclusion:** A promising research step with confirmed limitations, **not** a completed on-device continual-learning breakthrough, no new APK, no main merge.
+
+### New safe code integrated for the next phase
+
+Committed a standalone, side-effect-free research module:
+- `.github/continuum/coin-wm-shadow-scorecard.mjs` blob `8ed6c3f68f6a0c61151d0e394cf43410dc6d43fb`
+- `.github/continuum/coin-wm-shadow-scorecard.test.mjs` blob `11764ad9b2b665afab7515065ffcaaec5ff61a8b`.
+
+This module summarizes **four matched-budget arms** `ZERO_MEMORY`, `EPISODIC_RETRIEVAL`, `OPERATOR_ONLY`, `COIN_WM` with syntax checks for source/task/evidence SHA identifiers, nonzero executed tests, consistent pass/fail flags and duplicate cases. It contains **no patch execution, model training, model weights, access to owner state, or model promotion capability**. Its output always explicitly declares `status=RESEARCH_SHADOW`, `promotionEligible=false`, `needsIndependentEvidenceVerification=true`; a hash-shaped string is NOT attestation that the corresponding test actually ran. Its exact committed GitHub test callback bodies were executed directly in a fresh V8 isolate, **4/4 PASS**, after re-fetching production and test files by immutable Git blob. Full native Node for these exact GitHub files still needs to run in a synced checkout. This is the correct first low-risk integration step to prepare independent CCC1 evidence comparisons before any neural activation.
+
+Next research: audit actual `repair-ledger` schema in the checkout; add a *read-only* verified-CCC1-evidence adapter with explicit allowlists, immutable check-run identities and a sequestered holdout benchmark. Distinguish genuine test failures from compiler/generator/sandbox/infrastructure errors. Require robust operator-only controls and protection against proxy model outcomes that aren't real independent sandbox evaluations.
