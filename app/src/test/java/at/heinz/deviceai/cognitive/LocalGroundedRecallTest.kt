@@ -22,4 +22,20 @@ class LocalGroundedRecallTest {
         assertTrue(recall.failureAnswer().endsWith(raw))
         assertTrue(recall.failureAnswer().startsWith("Die zusätzliche Modellaufgabe konnte nicht abgeschlossen werden."))
     }
+    @Test fun boundedModelHandoffNeverDropsOrSilentlyTruncatesConfirmedRecall() {
+        val exactAnswer="A".repeat(4_000)
+        val exactProvenance="P".repeat(2_000)
+        val valid=LocalGroundedRecall.boundedOrNull(exactAnswer,exactProvenance)
+        assertNotNull(valid)
+        assertEquals(exactAnswer,valid!!.answer)
+        assertEquals(exactProvenance,valid.provenance)
+        assertNull(LocalGroundedRecall.boundedOrNull("A".repeat(4_001),exactProvenance))
+        assertNull(LocalGroundedRecall.boundedOrNull(exactAnswer,"P".repeat(2_001)))
+        assertNull(LocalGroundedRecall.boundedOrNull("",exactProvenance))
+        assertNull(LocalGroundedRecall.boundedOrNull("   ",exactProvenance))
+        assertNull(LocalGroundedRecall.boundedOrNull("gesicherte Erinnerung",""))
+        assertNull(LocalGroundedRecall.boundedOrNull("gesicherte Erinnerung","  "))
+        assertEquals("ORIGINAL",LocalGroundedRecall.boundedOrNull("ORIGINAL","Beleg")?.answer)
+    }
+
 }
