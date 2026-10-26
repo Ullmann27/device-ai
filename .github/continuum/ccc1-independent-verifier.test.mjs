@@ -60,6 +60,9 @@ test('forbid test tampering and unapproved paths independently of candidate labe
  const d=data();
  assert.throws(()=>validateCcc1CandidateBinding({...d,file:'test/pagination.test.mjs'}),/UNSUPPORTED_SCOPE/);
  assert.throws(()=>validateCcc1CandidateBinding({...d,file:'src/evil.mjs'}),/UNSUPPORTED_SCOPE/);
+ const disguised=validateCodingTask({...d.typedTask,allowedPaths:['src/disguised.spec.mjs']});
+ assert.throws(()=>validateCcc1CandidateBinding({typedTask:disguised,
+   file:'src/disguised.spec.mjs',candidate:d.candidate}),/UNSUPPORTED_SCOPE/);
  assert.throws(()=>validateCcc1CandidateBinding({
   ...d,typedTask:{...d.typedTask,sourceCommit:'a'.repeat(8)}
  }),/CODING_TASK_INVALID/);
