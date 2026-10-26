@@ -113,11 +113,13 @@ class ContinuumMobileBuilderActivity : Activity() {
             setOnClickListener {
                 val id = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)
                 val hash = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)
-                if(id == null || hash == null || preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)){
+                val commit = preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)
+                if(id == null || hash == null || commit == null || preferences.contains(ContinuumMobileBuildResultReceiver.JOB_ID)){
                     status.text="Kein bestätigter Coding-Auftrag bereit. Nichts gestartet."
                 } else AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
                     .setTitle("Lokales Coding-Modell jetzt ausführen?")
-                    .setMessage("Nur der zuvor gebundene Auftrag ${id.take(40)} / ${hash.take(16)}… wird gestartet. " +
+                    .setMessage("Nur der zuvor gebundene Auftrag ${id.take(40)} / ${hash.take(16)}… " +
+                        "mit Quell-Commit ${commit.take(12)} wird gestartet. " +
                         "CCC1, Testketten, Reparatur und unabhängige Prüfung bleiben unverändert. " +
                         "Dies kann längere Zeit dauern; kein Patch wird übernommen, keine APK installiert.")
                     .setNegativeButton("Nicht starten",null)
@@ -331,7 +333,8 @@ class ContinuumMobileBuilderActivity : Activity() {
         ).joinToString("\n").let { if (it.isEmpty()) "" else "\n$it" }
         typedRunButton.isEnabled = pending == null &&
             preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)!=null &&
-            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=null
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=null &&
+            preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)?.matches(Regex("[a-f0-9]{40}"))==true
         status.text = when {
             pending != null ->
                 "Ein Termux-Auftrag läuft oder wartet auf seine Rückmeldung. Gestartet: ${java.text.DateFormat.getDateTimeInstance().format(java.util.Date(started))}. Kein Erfolg bestätigt." +
@@ -366,12 +369,15 @@ class ContinuumMobileBuilderActivity : Activity() {
         }
         dispatchApprovedCommand(ContinuumTypedCodingBridge.Operation.PREPARE.callback,
             UUID.randomUUID().toString(),plan,
-            typedId=authorization.task.id,typedHash=authorization.taskSha256)
+            typedId=authorization.task.id,typedHash=authorization.taskSha256,
+            typedCommit=authorization.task.sourceCommit)
     }
 
     private fun dispatchTypedRun(id:String,hash:String) {
+        val commit=preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)
         if(preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)!=id ||
-           preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=hash) {
+           preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)!=hash ||
+           commit==null || !commit.matches(Regex("[a-f0-9]{40}"))) {
             status.text="Vorbereiteter Coding-Auftrag wurde geändert. Nichts ausgeführt."
             return
         }
@@ -381,7 +387,7 @@ class ContinuumMobileBuilderActivity : Activity() {
             return
         }
         dispatchApprovedCommand(ContinuumTypedCodingBridge.Operation.RUN.callback,
-            UUID.randomUUID().toString(),plan,typedId=id,typedHash=hash)
+            UUID.randomUUID().toString(),plan,typedId=id,typedHash=hash,typedCommit=commit)
     }
 
     /** CCC1 step: fixed operation, chain from the selector, this request id as idempotent order id. */
@@ -421,7 +427,8 @@ class ContinuumMobileBuilderActivity : Activity() {
         project: ContinuumOwnedProject? = null,
         abortTask: String? = null,
         typedId: String? = null,
-        typedHash: String? = null
+        typedHash: String? = null,
+        typedCommit: String? = null
     ) {
         // A confirmation belongs to its live Activity, never to an instance replaced by recreation.
         if (isFinishing || isDestroyed) return
@@ -453,6 +460,12 @@ class ContinuumMobileBuilderActivity : Activity() {
                         }
                         val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
                         if (slot == ResultSlot.CCC1_ABORT) edit.remove(ContinuumMobileBuildResultReceiver.ABORT_TASK)
+                        if (slot == ResultSlot.MAIN && ContinuumTypedCodingBridge.Operation.ofCallback(
+                                preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION,null) ?: "")!=null) {
+                            edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
+                                .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
+                                .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)
+                        }
                         slot.operationKey?.let { edit.remove(it) }
                         slot.projectKey?.let { edit.remove(it) }
                         edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
@@ -494,16 +507,19 @@ class ContinuumMobileBuilderActivity : Activity() {
             .putString(slot.idKey, requestId)
             .putLong(slot.startKey, System.currentTimeMillis())
         if(ContinuumTypedCodingBridge.Operation.ofCallback(operationName)!=null) {
-            if(typedId==null||typedHash==null) {
+            if(typedId==null||typedHash==null||typedCommit==null||
+               !typedCommit.matches(Regex("[a-f0-9]{40}"))) {
                 callback.cancel()
                 status.text="Coding-Auftragsbindung fehlt. Nichts gestartet."
                 return
             }
             pendingEdit.putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID,typedId)
                 .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA,typedHash)
+                .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT,typedCommit)
             if(operationName==ContinuumTypedCodingBridge.Operation.PREPARE.callback)
                 pendingEdit.remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA)
+                    .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT)
         }
         slot.operationKey?.let { pendingEdit.putString(it, operationName) }
         slot.projectKey?.let {
@@ -543,6 +559,7 @@ class ContinuumMobileBuilderActivity : Activity() {
             if (ContinuumTypedCodingBridge.Operation.ofCallback(preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION,null) ?: "")!=null) {
                 edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
+                    .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)
             }
             slot.operationKey?.let { edit.remove(it) }
             slot.projectKey?.let { edit.remove(it) }
