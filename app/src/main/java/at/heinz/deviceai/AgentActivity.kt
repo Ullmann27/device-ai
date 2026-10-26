@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.learning.NeuralDemoSandbox
 import at.heinz.deviceai.learning.NeuralCommand
 import at.heinz.deviceai.learning.NeuralCommandKind
 import at.heinz.deviceai.learning.NeuralCommandParser
