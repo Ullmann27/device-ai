@@ -1,0 +1,518 @@
+✖ location eligibility multi-id-wrong-second (USER_FACT) (7.371294ms)
+✖ location eligibility multi-id-wrong-second (SOURCE_TEXT) (0.974675ms)
+✔ location eligibility multi-id-positive (USER_FACT) (0.769906ms)
+✔ location eligibility multi-id-positive (SOURCE_TEXT) (0.299899ms)
+✖ location eligibility multi-id-wrong-short (USER_FACT) (0.416971ms)
+✖ location eligibility multi-id-wrong-short (SOURCE_TEXT) (0.345693ms)
+✔ location eligibility multi-id-positive-short (USER_FACT) (0.191444ms)
+✔ location eligibility multi-id-positive-short (SOURCE_TEXT) (0.386338ms)
+✖ location eligibility multi-id-wrong-third (USER_FACT) (0.5ms)
+✖ location eligibility multi-id-wrong-third (SOURCE_TEXT) (0.578296ms)
+✔ location eligibility multi-id-positive-third (USER_FACT) (0.36941ms)
+✔ location eligibility multi-id-positive-third (SOURCE_TEXT) (0.364904ms)
+✖ location eligibility unknown-name (USER_FACT) (0.350924ms)
+✔ location eligibility unknown-name (SOURCE_TEXT) (0.492245ms)
+✖ location eligibility wrong-relation (USER_FACT) (0.3445ms)
+✔ location eligibility wrong-relation (SOURCE_TEXT) (0.338885ms)
+✖ location eligibility wrong-relation-reverse (USER_FACT) (0.386859ms)
+✔ location eligibility wrong-relation-reverse (SOURCE_TEXT) (0.197897ms)
+✖ location eligibility wrong-subject-as-object (USER_FACT) (0.319706ms)
+✖ location eligibility wrong-subject-as-object (SOURCE_TEXT) (0.781183ms)
+✔ location eligibility exact-name (USER_FACT) (0.129557ms)
+✔ location eligibility exact-name (SOURCE_TEXT) (0.107529ms)
+✔ location eligibility work-location (USER_FACT) (0.098848ms)
+✔ location eligibility work-location (SOURCE_TEXT) (0.104292ms)
+✔ location eligibility work-employer (USER_FACT) (0.091807ms)
+✔ location eligibility work-employer (SOURCE_TEXT) (0.242498ms)
+✔ location eligibility residence-alias (USER_FACT) (0.232956ms)
+✔ location eligibility residence-alias (SOURCE_TEXT) (0.104595ms)
+✔ location eligibility residence-reverse-alias (USER_FACT) (0.097582ms)
+✔ location eligibility residence-reverse-alias (SOURCE_TEXT) (0.09846ms)
+✔ location eligibility residence-since (USER_FACT) (0.314603ms)
+✔ location eligibility residence-since (SOURCE_TEXT) (0.151736ms)
+✔ location eligibility residence-home (USER_FACT) (0.175988ms)
+✔ location eligibility residence-home (SOURCE_TEXT) (0.151251ms)
+✔ location eligibility residence-moved (USER_FACT) (0.24896ms)
+✔ location eligibility residence-moved (SOURCE_TEXT) (0.240083ms)
+✔ location eligibility inverted-id (USER_FACT) (0.178636ms)
+✔ location eligibility inverted-id (SOURCE_TEXT) (0.21054ms)
+✔ location eligibility repeated-id (USER_FACT) (0.206937ms)
+✔ location eligibility repeated-id (SOURCE_TEXT) (0.160885ms)
+✔ location eligibility quoted-name (USER_FACT) (0.122195ms)
+✔ location eligibility quoted-name (SOURCE_TEXT) (0.886726ms)
+✔ location eligibility mixed-case (USER_FACT) (0.137298ms)
+✔ location eligibility mixed-case (SOURCE_TEXT) (0.102101ms)
+✔ location eligibility plural-name (USER_FACT) (0.135807ms)
+✔ location eligibility plural-name (SOURCE_TEXT) (0.124451ms)
+✖ location eligibility plural-name-missing (USER_FACT) (0.422095ms)
+✔ location eligibility plural-name-missing (SOURCE_TEXT) (0.31172ms)
+✔ location eligibility single-in-plural (USER_FACT) (0.118543ms)
+✔ location eligibility single-in-plural (SOURCE_TEXT) (0.102448ms)
+✖ location eligibility negated-location (USER_FACT) (0.413971ms)
+✖ location eligibility negated-location (SOURCE_TEXT) (0.221095ms)
+✖ location eligibility work-role-is-not-place (USER_FACT) (0.175104ms)
+✖ location eligibility work-role-is-not-place (SOURCE_TEXT) (0.219572ms)
+✖ location eligibility incidental-id (USER_FACT) (0.166501ms)
+✖ location eligibility incidental-id (SOURCE_TEXT) (0.167321ms)
+✔ location eligibility no-id-golden-project (USER_FACT) (0.143543ms)
+✔ location eligibility no-id-golden-project (SOURCE_TEXT) (0.103123ms)
+✔ location eligibility no-id-golden-compound (USER_FACT) (0.168571ms)
+✔ location eligibility no-id-golden-compound (SOURCE_TEXT) (0.211335ms)
+ℹ tests 60
+ℹ suites 0
+ℹ pass 42
+ℹ fail 18
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 131.799564
+
+✖ failing tests:
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-second (USER_FACT) (7.371294ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-second (SOURCE_TEXT) (0.974675ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-short (USER_FACT) (0.416971ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-short (SOURCE_TEXT) (0.345693ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-third (USER_FACT) (0.5ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility multi-id-wrong-third (SOURCE_TEXT) (0.578296ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility unknown-name (USER_FACT) (0.350924ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility wrong-relation (USER_FACT) (0.3445ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility wrong-relation-reverse (USER_FACT) (0.386859ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility wrong-subject-as-object (USER_FACT) (0.319706ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility wrong-subject-as-object (SOURCE_TEXT) (0.781183ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility plural-name-missing (USER_FACT) (0.422095ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility negated-location (USER_FACT) (0.413971ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility negated-location (SOURCE_TEXT) (0.221095ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility work-role-is-not-place (USER_FACT) (0.175104ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility work-role-is-not-place (SOURCE_TEXT) (0.219572ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility incidental-id (USER_FACT) (0.166501ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
+✖ location eligibility incidental-id (SOURCE_TEXT) (0.167321ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + [
+  +   'evidence'
+  + ]
+  - []
+
+      at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'evidence' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

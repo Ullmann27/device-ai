@@ -1,0 +1,13 @@
+JUnit version 4.13.2
+..E
+Time: 0.524
+There was 1 failure:
+1) mirroredLocationCasesSelectOnlySupportedSubjectRelationsWithoutMutation(at.heinz.deviceai.learning.ContinuumLocationGroundingTest)
+java.lang.AssertionError: unicode-space-subject source=false expected:<[]> but was:<[lx-3beb7c3ac52cba8f0f2e442f]>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.learning.ContinuumLocationGroundingTest.mirroredLocationCasesSelectOnlySupportedSubjectRelationsWithoutMutation(ContinuumLocationGroundingTest.kt:26)
+
+FAILURES!!!
+Tests run: 2,  Failures: 1

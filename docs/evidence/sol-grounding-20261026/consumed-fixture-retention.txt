@@ -1,0 +1,35 @@
+{
+  "baseline": "c391b83244bd2cc945a1b37bcdd829da27e15ba6",
+  "fixtureId": "independent-after-freeze-20261025-v1",
+  "fixtureStatus": "PREVIOUSLY_CONSUMED_REGRESSION_ONLY_NOT_NEW_HOLDOUT",
+  "identifier": {
+    "positiveCases": 96,
+    "baselineAccepted": 74,
+    "candidateRetained": 74
+  },
+  "goldenUnchanged": 8,
+  "goldenTotal": 8,
+  "relations": [
+    {
+      "split": "train",
+      "positiveCases": 204,
+      "baselineAccepted": 136,
+      "candidateRetained": 136,
+      "regressions": []
+    },
+    {
+      "split": "dev",
+      "positiveCases": 62,
+      "baselineAccepted": 46,
+      "candidateRetained": 46,
+      "regressions": []
+    },
+    {
+      "split": "test",
+      "positiveCases": 76,
+      "baselineAccepted": 62,
+      "candidateRetained": 62,
+      "regressions": []
+    }
+  ]
+}

@@ -41,7 +41,7 @@ export function wordEvidence(query,text){
   return best;
 }
 /** Conservative, source-only lexical anchor gate. This does not prove factual truth.
- * It never changes ranking rules for OWNER_CONFIRMED memory records.
+ * The extra distinctive-term policy applies only to source observations.
  * A source has to contain ALL distinctive terms of the question. Long technical
  * terms and exact letter-digit identifiers are mandatory; if there are none,
  * short domain words are anchored rather than silently bypassed. */
@@ -51,13 +51,59 @@ const SOURCE_DIGIT=/\p{Nd}/u;
 const SOURCE_LETTER=/\p{L}/u;
 
 // Preserve original identifier spelling before contentWords drops short numbers.
-// This gate covers one distinct explicit identifier, not comparison entailment.
-function singleIdentifierEvidence(query,text){
+// Every explicit ID must occur in the same candidate; this is not entailment.
+function identifierEvidence(query,text){
   const identifiers=value=>[...new Set((value.normalize('NFC').toLowerCase()
     .match(/[\p{L}\p{N}]+(?:[-._][\p{L}\p{N}]+)*/gu)??[])
     .filter(token=>SOURCE_LETTER.test(token)&&SOURCE_DIGIT.test(token)))];
   const required=identifiers(query);
-  return required.length!==1||identifiers(text).includes(required[0]);
+  const present=new Set(identifiers(text));
+  return required.every(id=>present.has(id));
+}
+
+// Bounded subject/relation eligibility, following the anchored CSX1 baseline
+// and LCT1's exact subject+relation requirement. This does not establish truth
+// or activate either research reasoner. Other question forms keep their policy.
+const LOCATION_VERBS='wohnt|wohnen|lebt|leben|arbeitet|arbeiten';
+const LOCATION_PREPOSITIONS='in|im|bei|am|an|auf';
+const LOCATION_QUESTION=new RegExp(`^wo (${LOCATION_VERBS}) (.{1,160}?)\\s*[?!.]*$`,'u');
+const LOCATION_CLAIM=new RegExp(`^(.{1,120}?) (${LOCATION_VERBS}) (.{1,180})$`,'u');
+const LOCATION_INVERTED=new RegExp(`^(?:${LOCATION_PREPOSITIONS}) (.{1,160}?) (${LOCATION_VERBS}) (.{1,120})$`,'u');
+const LOCATION_TAIL=new RegExp(`^(?:seit [\\p{L}\\p{N} ]{1,40} )?(?:${LOCATION_PREPOSITIONS}) [\\p{L}\\p{N}][\\p{L}\\p{N} ._'’"-]{0,159}$`,'u');
+const LOCATION_NEGATION=/(?:^|[^\p{L}\p{N}])(?:nicht|kein(?:e|en|em|er|es)?|weder|nirgends)(?=$|[^\p{L}\p{N}])/u;
+// Spell out JavaScript whitespace so JVM regex defaults cannot bypass the gate.
+const LOCATION_SPACE=/[\u0009-\u000d\u0020\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/gu;
+function locationQuestionEvidence(query,text){
+  const normalize=value=>value.normalize('NFC').toLowerCase().replace(LOCATION_SPACE,' ').trim();
+  const question=LOCATION_QUESTION.exec(normalize(query));
+  if(!question)return true;
+  const subjects=value=>{
+    const names=value.split(/\s*,\s*|\s+und\s+/u).map(part=>part.trim()
+      .replace(/^["“”'‘’]+|["“”'‘’]+$/gu,'').replace(/^(?:der )?roboter /u,'')
+      .replace(/^["“”'‘’]+|["“”'‘’]+$/gu,'').trim());
+    if(names.some(name=>!name||name.length>120||
+      !/^[\p{L}\p{N}][\p{L}\p{N} ._'’-]*$/u.test(name)||
+      /(?:^| )(?:was|wie|warum|wieso|weshalb|darüber|dazu|damit|weiter)(?:$| )/u.test(name)))return null;
+    return new Set(names);
+  };
+  const requested=subjects(question[2]);
+  // Resolved follow-ups and other unsupported query syntax are outside this gate.
+  if(!requested)return true;
+  const relation=verb=>verb.startsWith('arbeit')?'work':'residence';
+  const supports=(phrase,verb,place)=>{
+    const claimed=subjects(phrase);
+    return claimed&&relation(verb)===relation(question[1])&&!LOCATION_NEGATION.test(place)&&
+      [...requested].every(name=>claimed.has(name));
+  };
+  const claim=normalize(text).replace(/[.!?]+$/u,'').trim();
+  const direct=LOCATION_CLAIM.exec(claim);
+  if(direct&&LOCATION_TAIL.test(direct[3])&&supports(direct[1],direct[2],direct[3]))return true;
+  const inverted=LOCATION_INVERTED.exec(claim);
+  if(inverted&&supports(inverted[3],inverted[2],inverted[1]))return true;
+  const home=/^(?:das )?zuhause von (.{1,120}?) ist (.{1,180})$/u.exec(claim);
+  if(home&&LOCATION_TAIL.test(home[2])&&supports(home[1],'wohnt',home[2]))return true;
+  const moved=/^(.{1,120}?) ist nach (.{1,160}) gezogen$/u.exec(claim);
+  return !!(moved&&supports(moved[1],'wohnt',moved[2]));
 }
 
 /** Directional compound policy: "Schlüssel" may occur in "Haustürschlüssel",
@@ -76,7 +122,7 @@ export function sourceWordMatch(needle,word) {
 }
 export function sourceTermEvidence(query,text){
   if(typeof query!=="string"||typeof text!=="string"||query.length>4096||text.length===0)return false;
-  if(!singleIdentifierEvidence(query,text))return false;
+  if(!identifierEvidence(query,text)||!locationQuestionEvidence(query,text))return false;
   const terms=[...new Set(contentWords(query.normalize("NFC")))]
     .filter(term=>!SOURCE_QUERY_OPERATORS.has(term));
   const source=[...new Set(contentWords(text.normalize("NFC")))];
@@ -95,7 +141,7 @@ export function rankMemories(query,memories,{semantic=null,limit=3}={}){
   const qv=weigh(wordGrams(q),idf);
   return memories.map(m=>{
     const text=String(m.text).slice(0,1000);
-    if(!singleIdentifierEvidence(q,text))return null;
+    if(!identifierEvidence(q,text)||!locationQuestionEvidence(q,text))return null;
     if((m.kind==='SOURCE_TEXT'||m.type==='SOURCE_TEXT')&&!sourceTermEvidence(q,text))return null;
     const evidence=wordEvidence(q,text);
     if(evidence<EVIDENCE_THRESHOLD)return null;

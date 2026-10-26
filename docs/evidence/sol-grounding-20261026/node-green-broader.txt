@@ -1,0 +1,24 @@
+✔ DEV-only selector produces bounded conservative policies and deterministic results (3133.094686ms)
+✔ hybrid does not add an unknown-name answer or bypass evidence (74.787719ms)
+✔ historical TEST comparison reports measurements but never releases experimental model (33883.181995ms)
+✔ cached query views preserve uncached CRE1 retrieval decisions exactly (16.179437ms)
+✔ neural abstention is never overridden even by perfect lexical evidence (0.220657ms)
+✔ hybrid can only re-rank answered queries, not add answers (0.271767ms)
+✔ only explicitly named UNSAFE_RESCUE_ABLATION can revive an unanswered query (0.695953ms)
+✔ baseline CRE1 is invariant to reordered identical words (42.332904ms)
+✔ directional shadow preserves normalized bounded features and same-text equality (46.017726ms)
+✔ one-content-word input preserves the CRE1 lexical representation (0.539005ms)
+✔ shadow cannot mutate or promote original CRE1 weights (101.60891ms)
+✔ greetings do not cite incidental memory and preserve an established topic (202.635485ms)
+✔ unanswered new topic removes stale conversational reference (141.091475ms)
+✔ only explicitly cited observations and owner lessons are eligible for retrieval (88.487579ms)
+✔ audits the actual lexical production retriever versus two neural scores (2548.893625ms)
+✔ handwritten rewordings are separate and independently checked (1010.430624ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42809.400597
