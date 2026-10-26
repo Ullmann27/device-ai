@@ -37,11 +37,13 @@ internal class ResearchFeedbackFileLock(root: File) {
         val directoryPath = directory.toPath()
         if (Files.isSymbolicLink(rootPath))
             throw IOException("Research feedback root cannot be a symbolic link")
-        if (!Files.exists(rootPath, LinkOption.NOFOLLOW_LINKS) && !rootDirectory.mkdirs())
+        if (!Files.exists(rootPath, LinkOption.NOFOLLOW_LINKS) &&
+            !rootDirectory.mkdirs() && !Files.isDirectory(rootPath, LinkOption.NOFOLLOW_LINKS))
             throw IOException("Cannot create research feedback root")
         if (!Files.isDirectory(rootPath, LinkOption.NOFOLLOW_LINKS))
             throw IOException("Research feedback root is not a directory")
-        if (!Files.exists(directoryPath, LinkOption.NOFOLLOW_LINKS) && !directory.mkdir())
+        if (!Files.exists(directoryPath, LinkOption.NOFOLLOW_LINKS) &&
+            !directory.mkdir() && !Files.isDirectory(directoryPath, LinkOption.NOFOLLOW_LINKS))
             throw IOException("Cannot create research feedback directory")
         if (!Files.isDirectory(directoryPath, LinkOption.NOFOLLOW_LINKS) ||
             Files.isSymbolicLink(directoryPath)
