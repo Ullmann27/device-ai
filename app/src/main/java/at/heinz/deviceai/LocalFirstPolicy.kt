@@ -24,9 +24,23 @@ object LocalFirstPolicy {
         else -> AssistantRoute.LOCAL_CORE
     }
 
-    /** The memory engine accepts only512 characters; that is not the model's task limit. */
-    fun localModelQuestion(original: String, scopedRecallPrompt: String): String =
-        if (original.length > 512) original else scopedRecallPrompt
+    /**
+     * The memory engine accepts only 512 characters; that is not the model's
+     * task limit. If this session already has a successful local model reply,
+     * the chat prompt includes its bounded, untrusted conversation history.
+     * Do not replace a contextual follow-up with a separate memory runtime's
+     * "ambiguous pronoun" instruction. Confirmed memory keeps its own
+     * scoped, evidence-first path and no model text gains owner authority.
+     */
+    fun localModelQuestion(
+        original: String,
+        scopedRecallPrompt: String,
+        hasSameSessionLocalTurn: Boolean = false,
+        grounded: Boolean = false
+    ): String =
+        if (original.length > 512 || (hasSameSessionLocalTurn && !grounded))
+            original
+        else scopedRecallPrompt
 
     // An explicit, bounded intent rule, not a semantic-understanding claim.
     // Nouns such as "Vergleich" in a direct definition are deliberately excluded.
