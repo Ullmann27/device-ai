@@ -1,0 +1,14 @@
+✔ the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget (3.518537ms)
+✔ an interrupted repair is never repeated without the owner; recovery classifies it like any coding job (60.687038ms)
+✔ envelopes are strict about fields, roles, versions and payload shapes (3.635042ms)
+✔ the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once (7.72607ms)
+✔ the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget (3.476647ms)
+✔ the verifier checks a receipt against the real patch bytes, runs, profile and the exact order (1.23605ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 292.828165

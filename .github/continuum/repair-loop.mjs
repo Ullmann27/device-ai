@@ -252,7 +252,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
   const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&
     (!testProfile||tests.executed>0&&tests.evidenceComplete)&&!stoppedByOwner;
-  return {profile:name,passed,testProfile,...(executor?{isolation:r.isolation}:{}),exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
+  return {profile:name,passed,testProfile,...(executor?{isolation:r.isolation}:{}),exitCode:r.status,
+    signal:r.signal??null,error:r.error??null,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
     outputTail:text.slice(-3000),...(stoppedByOwner?{stoppedByOwner}:{})};
 }
 

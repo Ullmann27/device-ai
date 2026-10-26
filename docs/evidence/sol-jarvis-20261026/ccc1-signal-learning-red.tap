@@ -1,0 +1,47 @@
+✔ diagnostic cap cannot truncate executed coverage or hide disappearing failed tests (7.352922ms)
+✔ oversized XML cannot be silently treated as complete executed evidence (4.338133ms)
+✔ parity rejects explicitly incomplete coverage even if identities and counts match (0.381224ms)
+✔ JUnit directory cannot silently omit an oversized or linked report (21.352369ms)
+✔ incomplete failing report cannot become negative strategy training evidence (1.889914ms)
+✔ a concurrent HEAD change cannot hide behind a one-file patch diff (34.756479ms)
+✔ signal, process error or absent exit code cannot be a reproduced RED baseline (0.696374ms)
+✖ interrupted process metadata survives ledger sanitization and cannot train a negative (2.011002ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 175.286822
+
+✖ failing tests:
+
+test at .github/continuum/ccc1-native-evidence-integrity.test.mjs:86:1
+✖ interrupted process metadata survives ledger sanitization and cannot train a negative (2.011002ms)
+  AssertionError [ERR_ASSERTION]: {"signal":"SIGKILL"}
+  + actual - expected
+  
+  + [
+  +   {
+  +     failures: 1,
+  +     kind: 'TEST_FAILURE|REFERENCE_REPAIR',
+  +     successes: 0
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/ccc1-native-evidence-integrity.test.mjs:93:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ { kind: 'TEST_FAILURE|REFERENCE_REPAIR', successes: 0, failures: 1 } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

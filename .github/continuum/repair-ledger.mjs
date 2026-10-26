@@ -102,7 +102,9 @@ export function recordSession(ledger,report,meta={}){
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
       executed:t.tests?.executed??0,skipped:t.tests?.skipped??0,
-      ...(t.tests?.evidenceComplete!==undefined?{evidenceComplete:t.tests.evidenceComplete}:{})})),
+      ...(t.tests?.evidenceComplete!==undefined?{evidenceComplete:t.tests.evidenceComplete}:{}),
+      ...(t.signal!==undefined?{signal:t.signal}:{}),...(t.error!==undefined?{error:t.error}:{}),
+      ...(t.exitCode!==undefined?{exitCode:t.exitCode}:{}),...(t.timedOut!==undefined?{timedOut:t.timedOut}:{})})),
     patchSha256:a.outcome==='VERIFIED'?acceptedPatch?.patchSha256??null:null,
     proposalCommit:a.outcome==='VERIFIED'?meta.proposalCommit??null:null,
     proposalBranch:a.outcome==='VERIFIED'?meta.branch??null:null,pullRequest:a.outcome==='VERIFIED'?meta.pullRequest??null:null}));
@@ -117,7 +119,8 @@ export function recordSession(ledger,report,meta={}){
   // infrastructure incident, not a strategy-quality observation. Preserve its
   // attempt for audit, but never turn it into a negative learning signal.
   const hasExecutedFailedTests=a=>(a.tests??[]).some(t=>{
-    if(t.passed!==false||t.evidenceComplete===false)return false;
+    if(t.passed!==false||t.evidenceComplete===false||t.signal||t.error||t.timedOut||
+       t.exitCode!==undefined&&![0,1].includes(t.exitCode))return false;
     const total=t.total,executed=t.executed,failed=t.failed,skipped=t.skipped;
     return [total,executed,failed,skipped].every(Number.isSafeInteger)&&
       executed>0&&failed>0&&failed<=executed&&
