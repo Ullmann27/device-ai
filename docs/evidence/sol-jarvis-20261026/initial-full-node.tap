@@ -1,0 +1,1788 @@
+✔ no new Flutter dependency and existing native layout remains authoritative (1.04529ms)
+✔ scanline effect runs in draw pass, never as an input-intercepting view (0.24951ms)
+✔ background glows behind live cards, do not obscure labels or inflate telemetry (0.15201ms)
+✔ all existing cockpit destinations remain connected to owner callbacks (0.430375ms)
+✔ system gauges show only measured values and explain unknown GPU (0.229673ms)
+✔ device storage legend does not present unidentified data as measured system bytes (0.130828ms)
+✔ positive measured event deltas use green in both form factors (0.298245ms)
+✔ both phone and Fold storage cards show compact legend without losing measured category names (0.214431ms)
+✔ persistent ALWAYS_ON is explicit, revocable and uses the existing web gate (2.760432ms)
+✔ local model receives web policy and keeps bounded tool requests (0.939588ms)
+✔ orb states follow real work and Android TTS callbacks (1.459198ms)
+✔ Device AI quick actions are exclusive to Continuum and not to unrelated apps (1.014899ms)
+✔ Every cockpit shortcut is connected to a usable UI or command (0.263215ms)
+✔ Cockpit shortcuts remain accessible on narrow phones and folding displays (0.144362ms)
+✔ transparent native 3D hero has no network, model execution or fake status (1.988762ms)
+✔ reference start screen reaches all seven real Android feature paths (0.878429ms)
+✔ responsive dashboard retains chat composer, updates and keyboard visibility (0.313056ms)
+✔ reference-style composer keeps real model/web/file actions and truthful idle state (0.603119ms)
+✔ large text scales the drawn start screen in a bounded range instead of cropping (0.27879ms)
+✔ start screen never manufactures ready model or internet state (1.546471ms)
+✔ widget is a genuine native Android launcher widget, not an Activity demo (1.205159ms)
+✔ only real telemetry events and registered Android jobs drive widget statuses (0.220183ms)
+✔ notification requires user permission and follows real FAILED result only (0.204826ms)
+✔ safe signing and increased signed preview version are unchanged except monotonic revision (0.133559ms)
+✖ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (3.930621ms)
+✖ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (0.890238ms)
+✔ background consolidation records failure without losing interrupted source trials (0.383877ms)
+✔ experimental module is inspectable and not on any automatic model promotion path (0.322277ms)
+✔ activity request codes are unique and every one has a result handler (5.02472ms)
+✔ scheduled offline job names the JobService declared in the manifest (0.309326ms)
+✔ user-visible texts contain line breaks, not a literal backslash-n (8.185082ms)
+✔ learning-core and research store I/O stays off the UI thread in dialogs and chat input (1.724495ms)
+✔ neural weights are saved by compare-and-swap and foreground practice can be stopped (0.394659ms)
+✔ startup bootstrap training stops with the activity and is retried later (0.451784ms)
+✔ startup I/O off the UI thread and shell commands stop with their activity (0.925123ms)
+✔ local language model path is reachable: model center, loading, chat escalation and reasoning chain (1.122152ms)
+✔ every area has a center reachable from the start screen; no demo buttons; experiments marked (1.732325ms)
+✔ Teamleader Android UI reports status without false success (0.206233ms)
+✔ live model status does not revert the beginner cockpit to English (0.418188ms)
+✔ model setup stays usable for beginners while preserving SHA-256 integrity (0.618053ms)
+✔ new visual start screen is local, accessible and honest about capabilities (0.906485ms)
+✔ neural training failures expose bounded diagnostics without claiming saved weights (1.839994ms)
+✔ Wikipedia article research uses bounded authentic extracts and original citations (0.318452ms)
+✔ Android-first Teamleader is scheduled, observable and serialized across background and chat (1.62228ms)
+✔ explicit M5 project planning command reaches reviewed builder without bypassing approval (3.946428ms)
+✔ public research is internet-enabled via cellular with no charger or system-low-battery constraint (1.025508ms)
+✔ unplugged research deferral does not falsify attempts or source counts (0.357969ms)
+✔ SWB1 offline training uses exact 20% locally enforced threshold (0.14217ms)
+✔ explicitly opted-in neural practice migrates away from the legacy charging gate (0.131337ms)
+✔ widget migrates saved charging-only jobs without replacing identical running jobs repeatedly (0.137223ms)
+✔ all public research permissions remain restricted and no source commands become executable (0.173866ms)
+✔ classifies failing Kotlin source but never copies raw details or secrets (2.69278ms)
+✔ recognizes exhausted local storage before generic compiler failure (0.330141ms)
+✔ recognizes exhausted memory without claiming a Kotlin repair (1.202015ms)
+✔ distinguishes missing SDK/toolchain from source compiler errors (0.275522ms)
+✔ distinguishes missing Gradle dependency from source compiler errors (0.269871ms)
+✔ classifies JUnit failure by real failed test count (0.149143ms)
+✔ missing JUnit execution evidence is not a successful baseline (0.250534ms)
+✔ a timed out operation is not silently retried or promoted (0.16817ms)
+✔ untrusted diagnostic labels are ignored and no arbitrary log line escapes (0.359125ms)
+✔ empty or malformed evidence remains incomplete and outputs bounded enums (0.5321ms)
+✔ omitted reason uses canonical failed Android baseline instead of generic fallback (0.187062ms)
+✔ omitted reason preserves missing unit-test evidence in a nominally green chain (0.1168ms)
+✔ three successful but unidentifiable JUnit skips explain ANSK baseline block (0.893536ms)
+✔ lab rejects traversal and foreign file types before reading a Git checkout (4.189684ms)
+✔ lab refuses to operate on production main even when git tree is clean (54.64357ms)
+✔ lab refuses dirty checkout in an experimental branch and does not alter it (40.688765ms)
+✔ lab has a finite non-configurable research budget and no automatic background loop (0.452012ms)
+✔ command-line execution rejects unknown operations before touching the checkout (140.232754ms)
+✔ research module never installs APK, promotes model or registers generated tools (1.16162ms)
+✔ lab cannot start a worktree or Gradle chain while another local worker holds the shared lease (48.381422ms)
+✔ failed baseline reports actionable metadata without disclosing Gradle logs or secrets (2.171428ms)
+✔ a zero-JUnit baseline remains blocked and exposes which phase lacked evidence (0.464083ms)
+✔ positive triple-phase lab observation yields only a quarantined shadow recipe (2.347171ms)
+✔ source path and import name must be fixed Kotlin production files (0.581225ms)
+✔ baseline with zero tests, skips or failing checks never qualifies (0.392419ms)
+✔ mutation must genuinely fail at compile with exactly the expected diagnostic (0.231481ms)
+✔ primary and independent phases require all profiles and unreduced test coverage (0.240382ms)
+✔ no source, mutated, patch or independent hash ambiguity passes (0.196621ms)
+✔ only approved, observed deterministic import strategy is eligible (0.212167ms)
+✔ no caller-owned observation is mutated and schema hash is deterministic (0.58194ms)
+✔ Gradle profiles remain unchanged on non-Termux hardware (0.900976ms)
+✔ fake or missing pinned Termux toolchain fails closed rather than switching to desktop (0.66093ms)
+✔ structural results cannot grant trust to imported JSON or authorize model training (0.198558ms)
+✔ real Samsung-style baseline accepts three identified skips with 632 executed tests (0.466059ms)
+✔ ANSK rejects missing skip identities even if Gradle and 632 executed tests pass (0.187431ms)
+✔ ANSK rejects swapped skipped tests even when all counts remain unchanged (0.160916ms)
+✔ ANSK forbids extra skips or fewer executed tests in independent validation (0.1099ms)
+✔ integrity-checked research receipt is only a quarantined shadow hint (1.934213ms)
+✔ a recipe can propose a minimal import on an unseen file without writing it (4.065117ms)
+✔ receipt tampering is rejected, including attempted privilege escalation (0.774865ms)
+✔ replay never admits unsafe files or reuses a receipt against its own source (0.336042ms)
+✔ replay requires a matching diagnostic and a real symbol in Kotlin code (0.513726ms)
+✔ already imported symbol and ineligible receipt never generate modifications (0.245508ms)
+✔ repeat replay produces deterministic id and the same hunk without learning (1.758396ms)
+✔ Android-compatible exclusive copy saves verified receipt without hardlink() (4.528562ms)
+✔ writing a second identical receipt is idempotent, preserves inode and content (2.142524ms)
+✔ a poisoned receipt at the hash path is not silently overwritten (1.144016ms)
+✔ a symlinked recipe destination cannot be followed or overwrite its target (0.699107ms)
+✔ a symlinked shadow-recipes directory is rejected before storing any bytes (0.678395ms)
+✔ invalid or modified shadow receipts cannot be stored (0.365379ms)
+✔ non-absolute state path is rejected and checkout files remain untouched (0.216948ms)
+✔ a denied exclusive copy is an explicit failure and cannot leave a success receipt (0.653759ms)
+✔ paired orchestration uses fresh serial worktrees, fixed reruns and write-once shadow reports (mock toolchain) (696.619944ms)
+✔ independent coverage loss prevents verified transfer while still measuring control (mock toolchain) (652.336759ms)
+✔ control-first records execution order without consuming the recipe in control (mock toolchain) (623.586303ms)
+✔ missing/corrupt receipts and dirty source fail before any compiler invocation (201.970828ms)
+✔ reader rejects symlinked, world-readable, oversized and misaddressed receipts (22.626546ms)
+✔ CLI requires explicit one-shot parameters, never an arbitrary command (1.022851ms)
+✔ transfer gate rejects missing independent runs and unchanged mutation hashes (0.338499ms)
+✔ exactly five owner-visible work areas remain in fixed order (3.446753ms)
+✔ phone bottom navigation stays outside conversation pane and above system bar (0.537227ms)
+✔ all navigation taps route to existing trusted screens (0.426419ms)
+✔ home work areas are reachable without expert-only controls (0.729785ms)
+✔ Fold rail offers the five work areas without a second bottom bar (0.358184ms)
+✔ existing chat, learning monitoring and owner permission boundaries remain (0.37824ms)
+✔ Fold rail and start screen reach all actions at short heights (0.411993ms)
+✔ start screen adapts to large fonts, rotated compact screens and the unfolded Fold (0.608898ms)
+✔ recreated activity preserves chat selection and draft without persistent More selection (0.675288ms)
+✔ design acceptance snapshot is owner-triggered, needs no permission and records the layout metrics (0.676335ms)
+✔ identifier parts split camelCase, digits and module paths (2.819505ms)
+✔ documentation links German words to identifier parts; receipts teach only with a verdict; rollback is exact (2.953913ms)
+✔ retrieval-only orthography never becomes a command or a memory write (1.201761ms)
+✔ local direct smoke is distinct from tool-free thinking smoke (0.484806ms)
+✔ research counter reflects durable archive not just mentor insertion (0.266636ms)
+✔ baseline repair writes independently reviewed evidence to the persistent backlog (1.204606ms)
+✔ repair metadata cannot advertise local generative inference that did not run (0.261354ms)
+✔ local model keeps isolated thinking resource until close and rejects cross-chunk tools (0.215524ms)
+✔ mandatory Android parity and separate repair E2E gate remain enforced (0.157789ms)
+✔ zero-paid-service worker repairs/checks each immutable head once and then idles (48.267541ms)
+✔ teamleader refuses symlinked state directory pointing back into source checkout (1.282827ms)
+✔ owner-accepted repair runs before baseline and only records an independently verified patch (4.501899ms)
+✔ two distinct accepted owner repairs run in consecutive local cycles on one unchanged HEAD (7.77872ms)
+✔ accepted owner TEST is dispatched before baseline and a verified new contract is review-only (7.025113ms)
+✔ owner TEST cannot falsely claim DONE without increasing or independently checking tests (2.143709ms)
+✔ failed owner TEST also leaves the immutable HEAD eligible for one real baseline (10.162025ms)
+✔ owner REPAIR retains priority over TEST and both finish on the same HEAD (6.593961ms)
+✔ retry is bounded by caller and cannot preempt accepted Owner REPAIR or TEST (1.923246ms)
+✔ owner repair evidence cannot be faked by a driver claiming DONE (1.928255ms)
+✔ READY read-only INVESTIGATE is handled once; no write or deployment (8.458369ms)
+✔ Teamleader refuses fabricated DONE when no tests actually executed (3.256744ms)
+✔ verified repair is a PROPOSAL only; never described as applied (2.594764ms)
+✔ an internally passing repair without an independent proof is NOT verified (1.999517ms)
+✔ a failed second-worktree check vetoes an otherwise passing repair (1.596337ms)
+✔ failed or interrupted work is preserved, never marked successful (3.769799ms)
+✔ tampered state, invalid accepted task, and an existing lock fail closed (9.963781ms)
+✔ unexpected stop remains INTERRUPTED and no duplicate patch attempt occurs (2.608844ms)
+✔ old lock of a definitively dead same-host process recovers automatically (2.545978ms)
+✔ repeat checking a proven head requires explicit manual retry (4.141211ms)
+✔ CLI budget, command and retry flags are validated before execution (0.616549ms)
+✔ idle unchanged source HEAD receives exactly one structural discovery, new HEAD re-enables scan (33.881144ms)
+✔ crashed discovery records a failure and never hot-loops on the same HEAD (4.169298ms)
+✔ Teamleader can read older version-1 states that lack discoveryHeads (5.347149ms)
+✔ measured progress distinguishes real completed tasks, proposed patch and failed checks (2.785517ms)
+✔ discovery heads counter counts analysis only, not hourly idle loops (10.934773ms)
+✔ state policy rejects malformed heads and never schedules unauthorised actions (0.25159ms)
+✔ unverified repair is redacted consistently without modifying the audit original (0.260561ms)
+✔ successful independent second-worktree result keeps verified proposal intact (0.086456ms)
+✔ legacy internal VERIFIED without independent observation cannot leak success (0.064581ms)
+✔ a running Android build blocks teamleader before any repair and releases local state lock (4.849504ms)
+✔ auto-discovered titles can reach only the official MediaWiki API (0.821237ms)
+✔ bounded topic frontier persists discoveries and avoids duplicate processing (0.286459ms)
+✔ provider rate limits are obeyed, and background work remains finite (0.142569ms)
+✔ archive capacity grows without deleting sources or exhausting phone storage (0.121016ms)
+✔ training rejection identifies each failing holdout and does not promote unsafe candidates (0.295645ms)
+✔ owner facts win, and retrieval is clearly labelled a non-verified excerpt (0.305443ms)
+✔ research and legal backup menu indices match their action labels (0.191397ms)
+✔ baby extracts interaction structure and constraints (3.557762ms)
+✔ baby turns evidence into bounded beliefs and epistemic goals (5.482161ms)
+✔ goal policy balances priority reward and exploration (1.325174ms)
+✔ public web guard blocks local and reserved addresses (7.308422ms)
+✔ html extraction strips active content and preserves public links (3.187468ms)
+✔ legacy overconfident beliefs are downgraded until revalidated (0.680722ms)
+✔ interaction profile and explicit owner rules learn without becoming web beliefs (1.299628ms)
+✔ weak skills autonomously create curriculum goals and competent skills close them (2.321127ms)
+✔ memory retrieval ranks explicit owner rules and grounded beliefs without treating episodes as facts (1.604452ms)
+✔ deep research plan uses distinct focused search queries for interaction and metacognition (0.593891ms)
+✔ html extraction removes navigation chrome before learning (0.441756ms)
+✔ baby memory migration removes navigation noise and merges citation-marker duplicates (0.5428ms)
+✔ memory retrieval reward depends on relevance quality rather than raw hit count (0.460667ms)
+✔ retrospective audit quarantines unrelated historical research without destroying provenance (0.644934ms)
+✔ new off-topic content stays quarantined even with several citation markers (0.403647ms)
+✔ uncited attribution and invalid evidence URLs cannot promote a claim (0.479996ms)
+✔ duplicate consolidation keeps explicitly grounded provenance isolated from legacy rows (1.371044ms)
+✔ grounded duplicate cannot inherit confidence, identity or citations from provisional row (0.931611ms)
+✔ evidence ingestion never grafts unverified citations onto verified same-claim support (1.169655ms)
+✔ backlog CLI: a human task is DONE only after verify ran the fixed checks on the submitted patch (210.862358ms)
+✔ backlog CLI: a patch that fails the checks records failing evidence and returns the task (174.407343ms)
+✔ backlog CLI rejects path traversal and unknown commands (0.37861ms)
+✔ state branch: backlog is saved with compare-and-swap, reloaded, and unreadable state fails closed (199.915125ms)
+✔ public CLI can propose then accept a task conforming to the Kotlin/Node scalar subject schema (44.15422ms)
+✔ CLI refuses noncanonical array objects and uncontrolled shell-shaped operations (22.356038ms)
+✔ Kotlin IMPLEMENT CLI persists only scalar v2 owner oracle and requires separate owner acceptance (29.936355ms)
+✔ Kotlin IMPLEMENT CLI blocks unsupported types, paths and object-valued case specs (22.515638ms)
+✔ process death after persisting investigation verdict cannot strand green checks in VERIFYING (271.385592ms)
+✔ process death after persisting investigation verdict cannot strand red checks in VERIFYING (258.335197ms)
+✔ scheduler recovers an expired investigation claim and honours the remaining attempt budget (48.132754ms)
+✔ scheduler keeps a live investigation claim and its token intact (28.286267ms)
+✔ direct investigation worker recovers an expired claim before selecting its exact task (180.223852ms)
+✔ investigation rejects source report before changing source or claim state (35.83322ms)
+✔ investigation rejects symlink report before changing source or claim state (33.218161ms)
+✔ investigation rejects source backlog before changing source or claim state (28.681106ms)
+✔ investigation rejects symlink backlog before changing source or claim state (27.785915ms)
+✔ INVESTIGATE worker reproduces findings but never invents wiring patches (1.443598ms)
+✔ INVESTIGATE declines changes for findings no longer present (0.175831ms)
+✔ only accepted structural INVESTIGATE tasks are eligible (0.568862ms)
+✔ empty or failed test chain cannot complete backlog investigation (0.206146ms)
+✔ worker honours Teamleader-selected task and never skips backlog dependencies (3.588047ms)
+✔ owner independent evidence rejects silent test-count and skipped-test regressions (1.604299ms)
+✔ expired execution budget fails closed before launching fixed subprocesses (3.460174ms)
+✔ an unrelated automatic REPAIR task cannot starve an accepted owner task (3.441156ms)
+✔ eligible owner selection cannot be starved by stale HEAD or higher priority (2.145692ms)
+✔ owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE (776.684227ms)
+✔ an owner cancel during the session stops at the next step boundary and is never DONE (274.227025ms)
+✔ an owner cancel during a running check step ends that step within seconds and is never DONE (936.071313ms)
+✔ passing fixture is not reported as successful code development (781.321486ms)
+✔ stale owner claim is recovered after worker crash without faking success (252.169201ms)
+✔ unapproved task, incorrect HEAD, foreign source and unknown chain fail closed (40.011366ms)
+✔ corrupted backlog never executes repair, and original Git checkout remains intact (29.79192ms)
+✔ further inputs are deterministic, primitive, new and bounded (2.131062ms)
+✔ observations are typed and printed text cannot pass as one (109.759182ms)
+✔ candidates that differ beyond the examples are ambiguous; identical ones are not (158.754151ms)
+✔ the reasoner asks instead of proposing when the probe finds an ambiguity; lexical reasoning is unchanged (350.703803ms)
+✔ end to end with the real coding job: question first, nothing confirmed; the answer confirms the intended function (1025.69169ms)
+✔ a comparable candidate the probe cannot run travels with the decision instead of disappearing (188.457068ms)
+✔ candidates are called on the examples in a separate process; siblings import, results are compared exactly (174.615629ms)
+✔ a candidate that writes is stopped by the permission model and leaves no file behind (92.623149ms)
+✔ process-spawning modules are not probed, and a hanging candidate only costs its own module (1593.304623ms)
+✔ the probe core ranks a candidate that meets every example first and keeps the base order otherwise (304.38079ms)
+✔ text a candidate prints cannot pass as a probe result (83.606496ms)
+✔ a module that imports from elsewhere in the repository is probed: read access covers the repository (78.495063ms)
+✔ network use reached through repository imports is refused at run time and never reaches the network (497.001051ms)
+✔ a module path outside the repository is not probed (0.564983ms)
+✔ a candidate cannot signal other processes; existence checks still work (319.10327ms)
+✔ finite interpreter executes nested arithmetic and rejects executable text, excessive ASTs and overflow (1.512731ms)
+✔ grammar construction is deterministic, bounded, target-free and contains composed functions (61.874444ms)
+✔ counterexample acquisition eliminates actual candidates and respects oracle budget (2.233561ms)
+✔ passive baseline executes its own queries and outside-grammar tasks cannot acquire a false proof (1.588035ms)
+✔ split gate rejects family, seed, ID overlap and renamed identical source/evidence (15.309623ms)
+✔ memory executes evidence, keeps caller inputs unchanged, and stores only shadow hints (1.836346ms)
+✔ corruption, self-rehashed proof and holdout provenance cannot enter verified memory (1.537704ms)
+✔ fresh replay verifies transfer and rejects wrong remembered hints before fallback (1.949764ms)
+✔ revocation blocks saved receipt, reimport, stale context IDs and mutation of exposed copies (3.541211ms)
+✔ repair verifier abstains on unavailable operation rather than accepting nearest remembered hint (2.068287ms)
+✔ SWB1 committee uses a restored NEURON snapshot without changing bytes or state (20.17903ms)
+✔ context baselines execute rankings and all selectors respect byte-cost budget without duplicate IDs (47.355873ms)
+✔ restricted numeric proposal passes the existing actual validator and grants no authority (3.202856ms)
+✔ report executes all three prototypes with deterministic raw outcomes and no promotion (736.288846ms)
+✔ three arms share source binding but never claim executed or verified fixes (11.548659ms)
+✔ neural pass@1 does not fall back to a later applicable operator (3.355668ms)
+✔ forged operator, mismatched paths and unsupported manifests fail closed (1.616083ms)
+✔ ranking cannot mutate research model parameters during a diagnosis (2.674423ms)
+✔ pagination case: A reference, B forced operator and C top-1 produce same source-bound hypothesis (8.581698ms)
+✔ the bridge accepts only the fixed CCC1 operations with validated values (3.494919ms)
+✔ owner chain over the bridge: real regression -> verified patch for review; replays never run again (2177.471941ms)
+✔ a worker crash before execution is never a success; the owner cancels the pending order cleanly (1250.926446ms)
+✔ refusals are data with exit code 2: protected branch, dirty tree, state in or linked into the checkout, damaged journal (785.665107ms)
+✔ Android speaks the same fixed CCC1 operations and stores only validated summaries (1.587232ms)
+✔ read-only binding checks the canonical typed task and all four identities (6.399691ms)
+✔ invalid source, task or patch hash cannot cross the research binding (2.55533ms)
+✔ forbid test tampering and unapproved paths independently of candidate label (0.945178ms)
+✔ a fake executor or a caller-supplied sandbox cannot issue a dual-run claim (0.917224ms)
+✔ existing CCC1 owner grant must be valid, canonical and fully prepared (3.904059ms)
+✔ NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain (2.977367ms)
+✔ CCC1: an apparent green with fewer executed tests than RED is NOT verified (0.751674ms)
+✔ CCC1: equal or increased executed coverage preserves same-profile evidence (1.616208ms)
+✔ CCC1: skipped tests must remain identical across RED, GREEN and fresh run (0.630058ms)
+✔ CCC1: no missing profile, zero executed tests or contradictory JUnit counts (0.41075ms)
+✔ CCC1: same number of tests but a replaced testcase cannot fake equal coverage (0.336166ms)
+✔ CCC1: missing, duplicate or malformed executed identities never attest repairs (0.353982ms)
+✔ read-only clean isolated local preflight is not an execution authorization (3.854304ms)
+✔ rejects source-internal state including symlink redirections (1.177875ms)
+✔ rejects main branch, dirty tree and absent CCC1 CLI (0.99844ms)
+✔ rejects invalid state path and non-directory parent (1.216244ms)
+✔ every preflight finding gets one owner hint with the concrete next step, codes are never dropped (3.523199ms)
+✔ CCC1 rejects repo-local state, even when path hides behind symlinked ancestors (3.706441ms)
+✔ CCC1 refuses file targets and malformed state paths (0.846051ms)
+✔ protocol v2: repair goals, hypotheses and requests are strict; v1 journals stay valid; foreign hashes do not (4.520035ms)
+✔ the gate allows a repair only for a chain the owner granted, within deadline, rounds and CPU budget (0.886671ms)
+✔ the verifier confirms a repair only from real artifacts: failing baseline, passing candidate and independent run (3.227102ms)
+✔ CCC1 repairs a real regression end to end and records it once for the owner to review (1099.389111ms)
+✔ a passing chain is reported as nothing to repair, never as a repair (706.809968ms)
+✔ repair orders refuse invalid input, dirty checkouts, reused job ids and stale bases; replays never execute again (384.10736ms)
+✔ an interrupted repair is never repeated without the owner; recovery classifies it like any coding job (55.851556ms)
+✔ every orchestrator outcome maps to a known loop outcome; only real progress is not a failure (1.529578ms)
+✔ a submitted goal is confirmed by the real job, reported for review and recorded once (1055.443088ms)
+✔ an ambiguous goal becomes an owner question without a job, recorded as an investigation (288.681747ms)
+✔ the existing local loop drives CCC1 cycles with its durable checkpoint (1346.748989ms)
+✔ damaged journals are reported, never repaired, and stop the worker; the experience log detects edits (19.11271ms)
+✔ the CLI keeps its state outside the repository and lists tasks (49.104054ms)
+✔ an idle cycle refreshes the code index only when asked, and probes again only what changed (194.78626ms)
+✔ the task compiler answers before any task or coding job: ready, ambiguous, no match, needs the owner (768.920034ms)
+✔ tasks are bound to the real repository, never to a placeholder (60.336486ms)
+✔ submit runs the CCC1 preflight: no task on a production branch, a dirty checkout or without the runtime (134.485698ms)
+✔ envelopes are strict about fields, roles, versions and payload shapes (3.894916ms)
+✔ the journal detects edits, forged trusted senders, broken chains and binding changes; duplicates apply once (9.719572ms)
+✔ the gate allows only owner-granted, critic-approved requests within deadline, rounds and budget (3.42811ms)
+✔ the verifier checks a receipt against the real patch bytes, runs, profile and the exact order (1.381172ms)
+✔ the interpreter abstains without verifiable examples and reads them from German text (1.161872ms)
+✔ end to end: refute, revise, confirm with the real coding job; source untouched (1259.105605ms)
+✔ a reasoner that contradicts its receipt fails the task; nothing is recorded as confirmed (526.029934ms)
+✔ manipulated job receipts never confirm; a receipt forged into the journal stops the task (778.399427ms)
+✔ duplicate deliveries are applied once; a conflicting duplicate is a protocol violation (779.500644ms)
+✔ a moved checkout aborts the task as STALE_BASE before anything runs (57.530527ms)
+✔ unauthorized actions: protected modules fail the task; ungranted modules wait for the owner (924.174698ms)
+✔ repair loops are bounded: the round limit ends in an abstention, the turn limit in a pause (1593.91214ms)
+✔ kills: SIGKILL before or after execution and during a journal write resume without a second execution (2851.723083ms)
+✔ an interrupted job is never repeated without the owner; with approval the task still ends verified (1624.554514ms)
+✔ large CDX1 curriculum supplies 576 fictional pairs with 50 untouched audit cases (0.832926ms)
+✔ a CDX1 candidate must pass novel AND historic audits before checkpoint promotion (0.301957ms)
+✔ CDX1 large rounds are owner-approved and persisted only on completed evaluation (0.348885ms)
+✔ Android UI offers a clearly separated CDX1 large-lab action and reporting (0.482166ms)
+✔ developer checkpoint is outside repo, initially absent and created by CAS only (111.410644ms)
+✔ CAS refuses overwrites with obsolete SHA and preserves original checkpoint (364.180801ms)
+✔ refuses unapproved promotions, mismatched bytes and corrupt checkpoint (39.227058ms)
+✔ rejects checkpoint path inside the working Git repository and symlinked target (0.722208ms)
+✔ concurrent lock rejects writes and does not overwrite trusted weights (155.543218ms)
+✔ promoting a new developer model keeps the previous verified bytes as last-known-good (212.7344ms)
+✔ rollback requires the exact active checkpoint SHA, and refuses tampered LKG (268.143534ms)
+✔ an explicitly SHA-matched corrupted active generation restores valid LKG (237.763037ms)
+✔ independent CEFR execution reproduces failure, applies patch, runs actual tests (533.588178ms)
+✔ a clean passing base cannot be called an independently reproduced repair (186.617409ms)
+✔ modified patch bytes cannot authorize even the first test process (30.964756ms)
+✔ a dirty source checkout or mismatched HEAD is rejected before execution (31.969464ms)
+✔ deadline and untrusted checkout paths are never accepted (26.762301ms)
+✔ a report claiming VERIFIED cannot train without an independent worktree verifier (84.148888ms)
+✔ a publisher-valid self-report is rejected if trusted independent verification fails (77.589636ms)
+✔ tampered patch is rejected before independent checks (83.204496ms)
+✔ empty and contaminated holdout corpora never allow training (98.043391ms)
+✔ candidate-only training never changes baseline bytes or original optimizer state (229.689077ms)
+✔ CEFR only observes: production ranking and irreversible safety tiers stay unchanged (56.242017ms)
+✔ holdout metric requires explicit independently labeled correctIndex (7.308491ms)
+✔ a failed strategy named only in the source report is not a training label (70.738329ms)
+✔ research cycle verifies actual failing and repaired checkouts but defaults to no promotion (711.740367ms)
+✔ a missing holdout does not even open an independent repair worktree (39.869569ms)
+✔ a forged patch hash cannot trigger neural promotion (79.733784ms)
+✔ only after independent worktree proof: evaluate actual winner in both candidate orders (2.160756ms)
+✔ no positive audit for self-reported patch, failed independent checks or zero tests (0.269608ms)
+✔ invalid shadow, duplicated candidate or winner not observed is never an audit (0.221237ms)
+✔ cohort MRR is a ranking proxy and never grants an executable promotion (0.451863ms)
+✔ small cohort cannot be mistaken for a validated gain (0.223307ms)
+✔ duplicate data and mixed model versions fail closed (0.578026ms)
+✔ malformed or tampered rank result cannot be counted as a proxy (0.285681ms)
+✔ invalid cohort size rejects before calculating metrics (0.145423ms)
+✔ neural CEFR shadow may rerank within tiers without changing real production order (1.954631ms)
+✔ a corrupted shadow rank cannot elevate destructive full-file revert (0.355738ms)
+✔ observer exceptions, duplicates and invented candidates fail closed (0.730681ms)
+✔ shadow receives cloned inputs and cannot poison real proposal edits or ledger stats (0.262978ms)
+✔ absent observer changes no report contract (0.324904ms)
+✔ a checked worker report creates an advisory-only offline cohort (5.554931ms)
+✔ a tampered winner or independent check cannot be silently counted (1.75351ms)
+✔ a symlinked report cannot redirect the offline evaluator to other files (0.724214ms)
+✔ symlinked report directory is refused rather than followed (0.606641ms)
+✔ oversized report rejected before parsing (2.48565ms)
+✔ CLI requires a fixed option and absolute state directory (0.987578ms)
+✔ an autonomous CEGIS proposal cannot edit gate, receipt, intake or launcher sources (4.325649ms)
+✔ ordinary JavaScript production fixes remain eligible for independent verification (0.827289ms)
+✔ a generated coding candidate must not alter previously existing tests (0.38262ms)
+✔ accepts Sol handoff shape but never executes source or updates Git HEAD (610.600643ms)
+✔ rejects existing repair-core changes (57.717637ms)
+✔ rejects symlink, executable modules and syntax errors (228.709325ms)
+✔ rejects unexpected file and unclean baseline (120.442193ms)
+✔ SSRF: rejects mapped, local, reserved and transition IPv6 targets (6.138572ms)
+✔ critic counts only two distant edits (2.196224ms)
+✔ critic catches new danger even with unchanged existing URL (1.178013ms)
+✔ Kotlin lexer does not consume following code after a raw string (2.089632ms)
+✔ explicit Kotlin return types retain method call-graph scope (1.584399ms)
+✔ finds candidate orphan but not referenced class (6.230844ms)
+✔ ignores non-Kotlin sources (0.179725ms)
+✔ enforces source limit (0.820465ms)
+✔ indexes a large app entry point instead of silently losing its references (24.155513ms)
+✔ oversized UTF-8 sources fail explicitly instead of producing incomplete findings (0.987449ms)
+✔ lexer ignores comments and string text but sees template references (4.4514ms)
+✔ imports resolve the right declaration when simple names collide (0.557896ms)
+✔ constructor properties and header lambdas stay inside their class (0.408393ms)
+✔ reachability separates production, test-only and unreferenced code (13.136952ms)
+✔ call chains follow real references from an entry point (0.832564ms)
+✔ manifest entry points resolve relative component names (0.528851ms)
+✔ repository analysis reaches the learning core from the chat activity (1368.342343ms)
+✔ pools and arities are fixed and deterministic (1.381733ms)
+✔ the import closure follows relative imports through the repository and names builtins (1.247156ms)
+✔ fingerprints separate behaviour, find indistinguishable exports and near duplicates, and link tests (746.023298ms)
+✔ modules that import each other keep their own results (624.138344ms)
+✔ the cache probes only modules whose import closure changed (570.085251ms)
+✔ the CLI keeps the index outside the repository (531.138906ms)
+✔ coding agent has one integrated entry from Android home, no second app (2.875031ms)
+✔ developer speech uses actual German Android recognizer and a unique callback (1.523218ms)
+✔ voice text is always previewed; neither recognition nor chat command executes code (0.85875ms)
+✔ existing mobile builder remains opt-in, not falsely labelled an app generator (0.49567ms)
+✔ retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies (154.944087ms)
+✔ reads committed blobs even when working sources are changed or symlinked (44.418752ms)
+✔ indexes JavaScript literal imports and symbols without executing repository code (60.12088ms)
+✔ does not resolve import text from comments, quoted strings or template literals (49.140517ms)
+✔ fails closed for stale commits and abbreviated or option-shaped commit selectors (56.4702ms)
+✔ rejects grants outside the repository or protected control and secret paths (38.616583ms)
+✔ rejects tracked symlink grants and skips symlinks from wider inventory (82.715872ms)
+✔ wider inventory excludes signing, workflow and secret files without leaking content (51.446972ms)
+✔ keeps the complete JSON within the hard budget and prioritizes diagnostic lines (693.887468ms)
+✔ rejects overlarge granted sources before reading their full contents (40.741083ms)
+✔ query and diagnostics remain inert data and cannot redirect source paths (39.586854ms)
+✔ search operates on serializable bounded ranges and enforces its result cap (48.428157ms)
+✔ rejects an exhausted retrieval deadline before invoking Git (29.613057ms)
+✔ limits returned source ranges even when many declarations match the query (189.242277ms)
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (979.20592ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (47.442698ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (39.925359ms)
+✔ malformed model name is rejected before invoking the local child (64.102969ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (25.184876ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (61.919301ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (41.040726ms)
+✔ foreign or corrupt persisted requests block before another inference (51.581965ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (44.229083ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (45.087299ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (397.040875ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (234.290188ms)
+✔ unknown provider errors never leak their message to the durable report (195.470299ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (2.017939ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (33.337248ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (379.806915ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (389.997946ms)
+✔ typed task pins scope, source, acceptance and resource bounds (21.686582ms)
+✔ structured proposal is data only and cannot widen task scope (1.675734ms)
+✔ five alleged successes cannot automatically promote model (1.516331ms)
+✔ operator-only ablation reveals whether the neural head adds any value (0.266637ms)
+✔ reject duplicate cases, fabricated evidence identifiers and zero-test outcomes (0.904777ms)
+✔ larger scorecards remain explicitly non-causal, without invented significance (0.945266ms)
+✔ reject finite but unsafe feature magnitudes without mutation (4.396632ms)
+✔ reject negative transition target without mutation (0.916715ms)
+✔ reject transition target greater than one without mutation (1.500561ms)
+✔ score refuses preexisting nonfinite model state (0.26037ms)
+✔ overflowing staged update leaves all live weights unchanged (1.110878ms)
+✔ malformed transition head cannot partially update the model (0.518138ms)
+✔ valid endpoint targets and research authority remain unchanged (1.074957ms)
+✔ invalid update counter fails closed without model mutation (0.488974ms)
+✔ overflow after intermediate policy updates rolls back the entire checkpoint (3.14047ms)
+✔ research-only model updates shared encoder but can never grant authority (69.352018ms)
+✔ research inputs must have complete finite shapes and capped update policy (1.35653ms)
+✔ state, operator and label scoring are deterministic without external model or sandbox (1.156833ms)
+✔ no untrusted-code executor, host primitives or production adapter is present (0.163154ms)
+✔ shadow and promotion policy cannot be overwritten by a caller (0.185179ms)
+✔ NTW1 shadow ranking produces unverified atomic candidate without executing it (3.934169ms)
+✔ forged operator cannot run as injected executable callback (0.555116ms)
+✔ invalid ranker, invalid state and budgets fail before any candidate (0.773033ms)
+✔ a research patch cannot be detached from its approved source identity (0.390787ms)
+✔ only repository owner comments may trigger learning and memory mutations (0.837423ms)
+✔ evidence quality counters distinguish raw source attribution from explicit citations (7.116728ms)
+✔ home dashboard source total is grounded in real content-addressed archive (0.805536ms)
+✔ archive scans are capped instead of repeated every five seconds (0.148105ms)
+✔ real drawn Canvas frames are counted separately from animation callbacks (0.9409ms)
+✔ Fold7 owner can run a 1.6s diagnostic without changing animation preferences (0.45891ms)
+✔ 1,632 diverse training examples are partitioned into twelve nonoverlapping balanced stages (2.995889ms)
+✔ stage acceptance protects new, old, owner and previously introduced independent audits (0.280546ms)
+✔ owner-controlled recurrent public research has finite allowed sources and limits (0.428389ms)
+✔ citation archive and Android UI preserve verification, provenance and explicit consent (0.862062ms)
+✔ single hologram frame callback advances phase independently of Canvas onDraw (0.745758ms)
+✔ Android window visibility and focus can restore orbital clock without cached view visibility (0.17994ms)
+✔ foreground lifecycle explicitly pauses, cancels, and resumes hologram (0.208263ms)
+✔ local model prompt never reads a profile-wide old dialogue after session change (0.214037ms)
+✔ each AgentActivity chat turn captures only its session-scoped local-model topic (0.530263ms)
+✔ Cayley inversion rejects singular inputs without guessing a solver (3.425679ms)
+✔ Cayley proof preserves E and rejects holdout leakage, without asserting 2ms or success (167.883905ms)
+✔ lexical micro-mutations are proposals, never unreviewed writes or test green claims (3.090327ms)
+✔ proof consolidation never merges paraphrases or differing source hashes (0.775137ms)
+✔ bimodal synapse is 16-dimensional, finite and depends on CRE1 evidence (33.49744ms)
+✔ Qwen chat validates replies without unconditional 0.8 success (1.198416ms)
+✔ context is bounded, clearly untrusted, and never authorizes tools or factual memories (0.789479ms)
+✔ low cost evaluator refuses mechanical repeats but cannot claim truth (0.171868ms)
+✔ living hologram schedules subsequent visible frames and stops callbacks on detach (1.517649ms)
+✔ orbital rings use visible phase movement, not the old near-static factor (0.348381ms)
+✔ header and the six orbital text labels are fitted to their real drawing boxes (0.255542ms)
+✔ battery, app CPU, RAM and GPU measurements remain honestly distinguished (0.224913ms)
+✔ CCC1 integrated in same owner-app source without changing private app identity (0.40124ms)
+✔ existing on-device learning state and protected independent training are never reset by launch (0.228394ms)
+✔ new same-package release script parses in bash (8.96779ms)
+✔ v18 release fails before any build without explicit owner approval (3.630331ms)
+✔ historical v18 script remains intact and current owner build advances beyond published code23 (0.661857ms)
+✔ Astra source and exact commit gates precede signing operations (0.426136ms)
+✔ existing signed owner 0.3.16 remains the immutable rollback, not the new output (0.516242ms)
+✔ v21 is separate and earlier owner release recipes stay available (1.382754ms)
+✔ unknown owner or wrong approved revision cannot invoke signer (18.357857ms)
+✔ inventory approval is separate from builder SHA approval (55.424807ms)
+✔ signing recipe checks exact owner gate before reading private signer bytes (0.353598ms)
+✔ shell recipes are parseable without executing Gradle or signing (7.01595ms)
+✔ local pinned fallback is advisory, not a fake 511GB inference (3.720196ms)
+✔ remote route requires separate internet and owner-compute consent (0.468897ms)
+✔ private memories never leave local site through this planner (0.321076ms)
+✔ remote model identity must match both exact model and pinned revision (0.291978ms)
+✔ reject unavailable, expired, unowned, oversized and overbudget compute (0.681541ms)
+✔ local selection is preferred, but never substitutes an unpinned model (0.396663ms)
+✔ reuses pinned 48-shard Hub manifest validator without downloading weights (1.23841ms)
+✔ malformed request, duplicate nodes and deadline fail closed (0.650625ms)
+✔ routing snapshots primitive offer data against later mutation (0.473921ms)
+✔ workshop accepts only explicit bounded modes and options (1.502194ms)
+✔ capability discovery never authorizes unreviewed Flutter or Godot exports (23.07666ms)
+✔ private worker state stays outside checkout and refuses a dirty source before a cycle (40.943722ms)
+✔ worker status does not hallucinate a running PC worker (39.055838ms)
+✔ real Teamleader FSM runs with an injected bounded safe driver, no merge (73.070789ms)
+✔ one-cycle cadence persists bounded heartbeat and never claims automatic merge (47.676738ms)
+✔ explicit virtual Atlas research mode cannot start arbitrary commands or merge code (66.236361ms)
+✔ only exact deterministic source rendered from bounded owner cases passes the critic (4.810657ms)
+✔ cannot overwrite an existing contract or any pre-existing test (0.484261ms)
+✔ invalid cases, non-primitive values and arbitrary module paths cannot be rendered (0.4102ms)
+✔ automatic repair candidates cannot rewrite contract-template, backlog or teamleader authority (0.64268ms)
+✔ actual noisy-view experiments are not mistakenly promoted (419.879894ms)
+✔ strong synthetic evidence yields review only, never automatic promotion (1.18271ms)
+✔ failing protected tasks reject even if holdout scores rise (0.269761ms)
+✔ malformed, duplicate and incomplete evidence fails closed (0.289649ms)
+✔ multi-seed audit is reproducible, finite and separates its lexical corpora (315.981242ms)
+✔ pretrained intent and semantic knowledge is measured across independent contrastive adaptation (456.403741ms)
+✔ contrastive view scores are deterministic, bounded and do not need network (16.789639ms)
+✔ train uses the existing encoder and does not mutate baseline (123.658705ms)
+✔ cancellation and invalid training settings fail safely (5.818422ms)
+✔ v2 challenge is disjoint from all prior synthetic splits and internally consistent (3.865586ms)
+✔ CRE1 unseen-name gate uses exact normalized words, never 16k hash buckets (16.940548ms)
+✔ CRE1 trained checkpoint remains isolated from SWB1/SWB2 and invalid checksums (90.214418ms)
+✔ CRE1 rejects correctly hashed snapshots containing NaN, infinity or invalid step count (103.741136ms)
+✔ DEV-only selector produces bounded conservative policies and deterministic results (1433.418151ms)
+✔ hybrid does not add an unknown-name answer or bypass evidence (7.216698ms)
+✔ historical TEST comparison reports measurements but never releases experimental model (14210.383759ms)
+✔ cached query views preserve uncached CRE1 retrieval decisions exactly (7.560479ms)
+✔ neural abstention is never overridden even by perfect lexical evidence (0.326382ms)
+✔ hybrid can only re-rank answered queries, not add answers (0.276898ms)
+✔ only explicitly named UNSAFE_RESCUE_ABLATION can revive an unanswered query (0.236979ms)
+✔ baseline CRE1 is invariant to reordered identical words (18.336234ms)
+✔ directional shadow preserves normalized bounded features and same-text equality (15.049698ms)
+✔ one-content-word input preserves the CRE1 lexical representation (0.196238ms)
+✔ shadow cannot mutate or promote original CRE1 weights (101.494836ms)
+✔ bounded CRE1 SGD changes model weights and restores versioned checkpoint (211.905294ms)
+✔ analytic CRE1 SGD gradients agree with finite-difference InfoNCE (13.776596ms)
+✔ invalid CRE1 SGD steps reject before mutating weights (107.546347ms)
+✔ cached forward loss and projection gradients agree with unmodified CRE1 (60.115627ms)
+✔ Gram penalty matches a central finite-difference derivative (12.921147ms)
+✔ frozen E stays byte-exact after cached optimization; dimensions remain healthy (120.123058ms)
+✔ anisotropy correction is opt-in, changes only existing P matrices (8.227568ms)
+✔ sibling negatives require disambiguating questions; no train/audit source leakage (15.023422ms)
+✔ numeric and negation canaries stay outside training and veto unsafe ranking (40.284472ms)
+✔ rejected candidate returns exact baseline bytes (102.203719ms)
+✔ detects failed unit tests without reading or executing logs (1.931443ms)
+✔ successful and pending runs remain separate (0.463801ms)
+✔ invalid run IDs fail closed (0.202902ms)
+✔ watch: a failed head unknown to ledger and backlog requests one repair (13.937558ms)
+✔ watch: a head the backlog already tracks or a running repair is not repaired again (6.520936ms)
+✔ watch: a manually retried FAILED repair is eligible again exactly while READY (4.595825ms)
+✔ watch: unreadable or corrupt state fails instead of looking empty (1.035225ms)
+✔ conformance vectors: every step and final state as recorded (shared with Kotlin) (115.470737ms)
+✔ committed fixtures are exactly what the current rules produce (162.058893ms)
+✔ stability backlog completion rejects a backend profile with zero executed tests (0.972468ms)
+✔ documents round-trip byte-identically and unknown fields survive operations (21.833468ms)
+✔ invalid documents fail with the shared error codes (4.546304ms)
+✔ development-planner output (schema 1) migrates without losing data (3.346866ms)
+✔ a task is never DONE without matching executed-test evidence, also when forged in a file (3.10651ms)
+✔ canonical JSON escaping and ordering equal JSON.stringify for valid strings (0.505438ms)
+✔ store writes atomically, keeps a backup and does not rewrite unchanged content (2.706211ms)
+✔ a corrupt backlog is recovered from the backup and quarantined, never deleted (3.062987ms)
+✔ without a valid backup a corrupt backlog fails closed and nothing is touched (1.294452ms)
+✔ revision conflicts and rejected batches write nothing; lenient batches report every rejection (1.605975ms)
+✔ a fresh foreign lock times out, a stale one is broken; interrupted writes are cleaned (203.279882ms)
+✔ stale backlog lock is not stolen while same-host PID is still alive (146.812384ms)
+✔ concurrent writer processes lose no update (308.108745ms)
+✔ a planner v1 file is migrated on the first write and the original is kept (7.743069ms)
+✔ round-trip verifier accepts a correct Kotlin half and rejects a missing or wrong one (25.424212ms)
+✔ prioritizes high-impact integration findings deterministically (3.174149ms)
+✔ rejects malformed findings input (2.339385ms)
+✔ creates project backlog without altering sources (1159.288527ms)
+✔ analyzer findings become proposals once; vanished proposals are withdrawn, human decisions kept (4.622836ms)
+✔ a verified repair session completes its REPAIR task with the evidence that verified it, exactly once (2.941286ms)
+✔ independent worktree check is recorded rather than first-pass evidence (1.025094ms)
+✔ failed repair sessions spend the attempt budget and then stop (2.581468ms)
+✔ CDX1 is strictly opt-in and bounded by existing JobScheduler budget (1.02689ms)
+✔ The UI presents explicit enable and disable actions (1.658482ms)
+✔ Research-only CDX1 events never authorize productive chat (0.297445ms)
+✔ The CDX1 auto-study policy does not introduce tools, network or separate schedules (0.224106ms)
+✔ SWB2 hybrid is opt-in, rejects SWB1, returns no fabricated claim of generalization (29.316907ms)
+✔ calibration gates operate on actual trained embeddings, never supplied mock scores (97.873371ms)
+✔ unfold reflows from actual laid out root window width, not stale screenWidthDp (0.874468ms)
+✔ reflow preserves the active agent, user draft, conversation views and dashboard telemetry (0.832941ms)
+✔ Fold rail and phone navigation are mutually exclusive after a reflow (1.499862ms)
+✔ keyboard-only height change does not recreate the Fold dashboard (0.242414ms)
+✔ mentor access remains encrypted on-device between app restarts (0.840772ms)
+✔ one 401 may renew a previously owner-approved pairing, never auto-enrol a new device (1.460369ms)
+✔ retry of pairing probe is bounded and never silently duplicates Groq questions (0.414832ms)
+✔ a new backend URL cannot inherit the previous backend bearer credential (0.140439ms)
+✔ development center gives an optional coding mentor with explicit question confirmation (0.959704ms)
+✔ responses and HTTP connections close without retrying failed work and secrets (0.3818ms)
+✔ external mentor has an explicit per-request consent UI (2.121471ms)
+✔ Android only sends bounded question text to the private backend (0.487809ms)
+✔ server never accepts mentor request without owner grant and bearer authentication (1.434706ms)
+✔ external reply is labelled unverified and cannot write memory or perform tools (0.809306ms)
+✔ confirmed recall remains exact when supplementary model context is not representable (1.001055ms)
+✔ frozen CDX1 probe set includes exactly 20 evidence-supported and five missing-fact questions (1.393508ms)
+✔ answer scoring requires literal evidence rather than loss improvement or training counters (0.471877ms)
+✔ existing core lock protects the full read-only inference audit (0.413724ms)
+✔ Android monitor audit is opt-in and off-main-thread, never marked as trained (0.233625ms)
+✔ research audit never invents an offline result from a missing model (0.260081ms)
+✔ read-only inverse import planner produces unique, reversible hunks and content hashes (3.244142ms)
+✔ plain strings and comments are not mistaken for real Kotlin symbol usage (0.365179ms)
+✔ unsafe destinations and invalid source are rejected without writes (1.529099ms)
+✔ ambiguous imports, aliases, missing imports and unknown mappings yield no mutation (0.265007ms)
+✔ planner handles CRLF while preserving exact bytes and remaining read only (0.609095ms)
+✔ untrusted executor objects cannot grant execution rights (1.039732ms)
+✔ mutable images and unbounded resource policies are rejected before daemon access (0.562135ms)
+✔ receipts with network, privilege, missing limits or missing snapshot are invalid (0.377476ms)
+✔ configuration cannot supply shell commands or symlinked owner data (0.765165ms)
+✔ broad model reports never become learned success even with a true independent flag (1.559946ms)
+✔ strict Kotlin integer acceptance cases reject untrusted code-shaped JSON (1.643772ms)
+﹣ generated Kotlin code must compile RED before and GREEN after, then compute two expected outputs (0.197703ms) # SKIP
+﹣ wrong independent expected output rejects a compiling patch (0.087604ms) # SKIP
+﹣ an arbitrary red baseline is never accepted as proof of the requested missing method (0.08519ms) # SKIP
+✔ owner specification yields a critic-approved production-only Kotlin patch (5.347671ms)
+✔ unaccepted, foreign, forged and unsupported tasks do not generate patches (0.427225ms)
+✔ existing methods, overloaded delegates, unsupported headers and test paths fail closed (0.684292ms)
+﹣ new method compiles and computes a nontrivial result with real kotlinc (0.189835ms) # SKIP
+✔ both layouts display the same measured journal series and native painter (1.309184ms)
+✔ missing or zero measurements render no fabricated decorative peaks (0.1815ms)
+✔ new-sample highlights are finite, foreground-bound and never edit measurements (0.385683ms)
+✔ local provider rejects unsafe scope and authentication before any subprocess (2.789759ms)
+✔ provider sends bounded source data only through a fixed non-shell child (1.47539ms)
+✔ timeouts and a model changing its allowed file fail closed (0.687326ms)
+✔ model-derived recipe replay retains its review and risk boundary (2.666307ms)
+✔ actual authenticated HTTP candidate is tested in an isolated Git worktree (1099.328062ms)
+✔ no state cannot be confused with successful build or repair (1.466087ms)
+✔ historical builder claims cannot advertise a verified installation (2.32432ms)
+✔ malformed or symlinked builder report fails closed (0.720742ms)
+✔ build lease is reported but process liveness is never fabricated (2.1195ms)
+✔ ANSK files remain research-only and are not counted as verified repairs (0.560293ms)
+✔ unsafe ANSK file names and symlinked directories are rejected (0.736515ms)
+✔ source and state arguments are absolute paths only (0.708904ms)
+✔ stored ANSK baseline diagnosis is explicitly historical, not an approved repair (0.733719ms)
+✔ corrupt, symlinked and forged ANSK baseline reports never become accepted evidence (1.255939ms)
+✔ rejects malformed expected SHA (24.766543ms)
+✔ rejects wrong Git HEAD (28.709312ms)
+✔ rejects dirty Git checkout (50.7042ms)
+✔ rejects absent Android SDK (70.983256ms)
+✔ rejects evidence location within checkout before creating files (98.997822ms)
+✔ rejects incompatible JDK (102.331798ms)
+✔ rejects incompatible Gradle (43.757599ms)
+✔ runs M4 and proof verification after validated preflight (135.454288ms)
+✔ M4 wrapper verifier contract green (152.136132ms)
+✔ M4 wrapper verifier contract red (149.830951ms)
+✔ M4 wrapper verifier contract wrong-head (171.82012ms)
+✔ M4 wrapper verifier contract invalid-but-ready (143.024809ms)
+✔ M4 wrapper verifier contract wrong-proof (145.749151ms)
+✔ M4 wrapper verifier contract malformed (139.58588ms)
+✔ explicit owner command has precedence over all alternate chat routing (1.611159ms)
+✔ diagnostic uses isolated LiteRT-LM generation and preserves the real agent pipeline (0.339035ms)
+✔ the diagnostic requires a loaded model, blocks empty responses and surfaces failures (0.183201ms)
+✔ restricted numeric language accepts arithmetic, comparisons, conditions and bounded parameters (17.155653ms)
+✔ model code cannot acquire file, network, environment or test-mutation capabilities (6.507925ms)
+✔ model recipes never replay in deterministic mode and retain review after explicit opt-in (4.166734ms)
+✔ small expression limits and malformed grammar fail closed (15.764254ms)
+✔ opt-in local candidate uses the existing critic and real fixed tests (1394.078458ms)
+✔ a plausible but overfitted local patch loses against negative holdouts (449.843663ms)
+✔ canonical owner backlog requires a fresh independent worktree for local candidates (1560.47658ms)
+✔ outside writes and test monkeypatching are rejected before candidate execution (496.897739ms)
+✔ three local cycles pace on a fixed one-hour schedule and persist honest heartbeat (3.039106ms)
+✔ failures stay failed, sleep with increasing backoff and eventually recover (0.82974ms)
+✔ signal stopping terminates without another cycle or artificial success (0.44924ms)
+✔ invalid intervals, cycle limits and CLI mode combinations are rejected (1.293479ms)
+✔ unverified repair and interruption increment failure counters, not successes (4.035971ms)
+✔ unknown or unfinished worker result must fail closed (1.197445ms)
+✔ signal while waiting persists terminal STOPPED heartbeat (0.726151ms)
+✔ one-shot CLI exits nonzero for failed, unverified or unknown outcomes (0.374232ms)
+✔ failure backoff never retries before a user configured interval (0.849651ms)
+✔ a failing baseline without a code diagnostic remains a failed worker cycle (3.991629ms)
+✔ scheduler wait failure persists terminal ERROR rather than false WAITING (1.106962ms)
+✔ saved status validates legitimate heartbeats and rejects spoofed or corrupt states (1.745572ms)
+✔ durable restart retains total cycle budget and pending backoff (128.152223ms)
+✔ durable cancellation during work records interruption and a stopped session (57.635288ms)
+✔ pre-aborted durable run writes STOPPED without executing work (37.973049ms)
+✔ durable state fails closed on corruption, changed budgets and changed source (84.762278ms)
+✔ durable scheduling requires a finite budget and state outside source (38.114897ms)
+✔ durable integrity validation rejects plausible counter edits (51.909032ms)
+✔ source drift while waiting terminates the saved cadence before another cycle (61.186538ms)
+✔ source drift during a cycle cannot retain its reported verification success (56.795968ms)
+✔ durable loop rejects a competing scheduler before its work executes (54.980101ms)
+✔ SIGKILL leaves RUNNING and restart consumes the crashed attempt without replay (157.553745ms)
+✔ M4 quality gate certifies the preview variant and lint in one Gradle execution (1.093444ms)
+✔ M4 wrapper emits a proof location only after independent release verification (0.314852ms)
+✔ Android release uses precisely the certified APK, never silently rebuilds another (0.370008ms)
+✔ Both production launchers pass shell syntax checks (17.529891ms)
+✔ M4 release gate requires the three actual repairs to have executed (4.011055ms)
+✔ M4 release gate refuses a missing repair regression despite otherwise green JUnit (1.109271ms)
+✔ M4 release gate refuses a skipped repair or a fake file-only pass (1.952992ms)
+✔ M4 accepts only actually executed, successful Node testcases (10.685279ms)
+✔ M4 refuses absent, malformed, empty, skipped, failing, or symlinked reports (2.620145ms)
+✔ M4 verifies a real Node 22 JUnit reporter output (162.299192ms)
+✔ M4 accepts genuine Node 22 nested test suites and excludes skipped cases (152.098612ms)
+✔ M4 classifies genuine Node 22 TODO tests independently of skipped tests (150.196423ms)
+✔ in-memory and file JUnit parsers agree on a real Node 22 report (148.051689ms)
+✔ in-memory JUnit parsing handles nested and skipped Node reporter cases (127.375154ms)
+✔ malformed totals and Buffer input are rejected consistently (0.687276ms)
+✔ comments cannot fabricate executed JUnit cases or parent suites (1.560189ms)
+✔ CDATA and malformed comment delimiters cannot spoof executed cases (0.720353ms)
+✔ three-profile M4 acceptance reads its mandatory receipt only once (129.012559ms)
+✔ valid-looking JUnit testcase tags nested inside system-out are not real tests (0.348688ms)
+✔ structural XML verifier rejects duplicate roots and mismatched closing tags (0.612163ms)
+✔ stabilization gate refuses downstream execution after incomplete or failed upstream tests (1.936767ms)
+✔ gate cannot certify zero tests or failed APK as successful (1.954855ms)
+✔ reloaded local gate proof rejects forged completion and never upgrades NODE_ONLY (1.985207ms)
+✔ APK hashing uses a bounded stream and rejects links or invalid source files (2.373815ms)
+✔ release proof verifies retained APK bytes, path and corruption without executing it (5.964016ms)
+✔ gate CLI rejects unknown arguments, duplicates, and invalid time budgets (0.743814ms)
+✔ real standalone Git fixture produces an immutable Node test proof (552.60255ms)
+✔ broken Git fixture stays red and still preserves a failure proof (317.512418ms)
+✔ broken actual Node fixture skips Android and APK before Gradle is invoked (347.273597ms)
+✔ green Node/backend suites without repair files cannot authorize Android (309.179979ms)
+✔ gate refuses dirty source and repository-contained proof output (26.398849ms)
+✔ persisted release summary rejects forged green flags when commands failed (0.503741ms)
+✔ M4 always rejects a green Node run without an actual repair E2E receipt (1.452033ms)
+✔ M4 accepts only exactly shaped mandatory repair receipts (0.579984ms)
+✔ old version-1 M4 release documents cannot silently bypass mandatory repair proof (2.837263ms)
+✔ Android M4 stage prepares three parity contracts, supplies env and verifies outputs (3.513521ms)
+✔ parity verification failure vetoes Android certification and restores prior env (1.885082ms)
+✔ a failed Android profile never advertises successful parity verification (0.84355ms)
+✔ missing parity preparation blocks the Kotlin runner entirely (0.411772ms)
+✔ mandatory E2E cases execute in a separate Node process and produce a tamper-evident proof (228.416548ms)
+✔ missing, skipped or renamed mandatory E2E cases fail closed (644.427909ms)
+✔ nested repair test processes cannot reset recursion depth (0.65159ms)
+✔ symlinked parent evidence directory cannot validate a release proof (261.599075ms)
+✔ repair receipt verifier parses exactly the same JUnit bytes it hashes (734.434995ms)
+✔ symlinked proof and forged result counters are rejected (317.585564ms)
+✔ a comment-only JUnit forgery never counts as three actual mandatory repairs (0.635032ms)
+✔ JUnit cases nested in a logging element cannot impersonate mandatory repairs (0.509503ms)
+✔ M4 workflow runs the isolated real repair acceptance before broad regressions (1.226435ms)
+✔ M4 workflow keeps backend changes covered and uploads executable evidence (0.371095ms)
+✔ v0.3.12 updates the installed Mentor Pair package rather than creating a new app (1.046914ms)
+✔ existing-owner signing identity is mandatory before publishing update (0.344438ms)
+✔ update retains package-local data and never runs installer commands (0.426518ms)
+✔ requires owner grant for Termux command permission (1.959165ms)
+✔ local build launcher is preview-gated, production disabled (0.214561ms)
+✔ fixed Termux command entrypoint with no raw chat or shell (0.260339ms)
+✔ requires explicit owner confirmation before expensive build (0.236858ms)
+✔ does not claim successful build or installation just for dispatching (0.227957ms)
+✔ existing Shizuku and device tools stay available (no replacement with parallel toolgate) (1.880706ms)
+✔ mobile builder is added to existing worker chat routing (0.265908ms)
+✔ builder stays in the existing agent UI and opens only an allowlisted Android activity (0.68446ms)
+✔ primary AI dashboard remains the only Android launcher, preview builder stays owner-operated (0.571934ms)
+✔ builder is a subpage with explicit return to the original AI dashboard (0.476853ms)
+✔ the old inaccurate PC-only guidance has been removed (0.855795ms)
+✔ callback target is explicit, preview-only and not exported (0.975138ms)
+✔ only one local job can be outstanding; callback binds id and operation (0.257018ms)
+✔ result requires official Termux bundle including real exit and error (0.151655ms)
+✔ user receives a receipt only, no installation or private build log persisted (0.281312ms)
+✔ live Android APK build still requires independent device check (0.267331ms)
+✔ only successful verified builds may report a fixed owner installation folder (0.248362ms)
+✔ Android callback keeps request identity in URI and verifies build provenance (0.261899ms)
+✔ coding job is owner-confirmed and arguments stay within the fixed Node/Termux plan (3.281226ms)
+✔ coding and existing builder operations share immutable callback identity and one owner lease (0.45427ms)
+✔ a coding result never enters the APK-build success policy or persists raw stdout (0.47836ms)
+✔ existing build remains explicitly gated, and coding cannot install or merge (0.621627ms)
+✔ running coding job exposes a selectable UUID for explicit Termux cancellation (0.329226ms)
+✔ a rejected import cannot relabel the independently loaded runtime as failed (5.02388ms)
+✔ smoke result names the captured catalog identity and rejects a model swap (0.705337ms)
+✔ real console persists training, pause and compatible export across processes (1964.106193ms)
+✔ gradient updates change shared weights and survive checksummed restore (196.350637ms)
+✔ curriculum, selection validation and audit have disjoint normalized texts (2.265501ms)
+✔ bounded training is persistent, multitask gated and rollback is byte exact (332.708625ms)
+✔ public replay rejects generated/private content, bounds and deduplicates sources (53.994241ms)
+✔ dialogue resolves follow-up context and never trains or exports owner secrets (54.024317ms)
+✔ later rounds can select an earlier safe checkpoint without dropping semantic retention (658.762034ms)
+✔ source replay is consumed by gradients and corrupt persistence fails closed (205.724164ms)
+✔ current JavaScript inference still matches committed Kotlin interchange fixture (4.352161ms)
+✔ neural curiosity proposes a source-bound question without inventing beliefs (17.440388ms)
+✔ every persisted dialogue turn identifies the exact immutable model used (9.596106ms)
+✔ greetings do not cite incidental memory and preserve an established topic (46.70251ms)
+✔ unanswered new topic removes stale conversational reference (39.81108ms)
+✔ only explicitly cited observations and owner lessons are eligible for retrieval (17.170981ms)
+SWB2 diagnostic distributions: {"before":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.500019},{"id":"motor","semantic":0.500065},{"id":"garden","semantic":0.500016},{"id":"bread","semantic":0.500072}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.500075},{"id":"motor","semantic":0.500048},{"id":"garden","semantic":0.500032},{"id":"bread","semantic":0.500071}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.500142},{"id":"motor","semantic":0.50017},{"id":"garden","semantic":0.500057},{"id":"bread","semantic":0.500031}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.50007},{"id":"motor","semantic":0.500244},{"id":"garden","semantic":0.500005},{"id":"bread","semantic":0.500121}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.500152},{"id":"motor","semantic":0.499966},{"id":"garden","semantic":0.50007},{"id":"bread","semantic":0.500004}]}],"after":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.500174},{"id":"motor","semantic":0.500194},{"id":"garden","semantic":0.500127},{"id":"bread","semantic":0.500098}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.500201},{"id":"motor","semantic":0.500192},{"id":"garden","semantic":0.500142},{"id":"bread","semantic":0.500129}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.500286},{"id":"motor","semantic":0.500305},{"id":"garden","semantic":0.500194},{"id":"bread","semantic":0.500074}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.500194},{"id":"motor","semantic":0.500344},{"id":"garden","semantic":0.500112},{"id":"bread","semantic":0.50015}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.500246},{"id":"motor","semantic":0.500047},{"id":"garden","semantic":0.500145},{"id":"bread","semantic":0.500036}]}]}
+SWB2 optimizer comparison: {"sgdHits":1,"adamHits":1,"adamFalsePositives":0,"adamEligible":false,"adamRaw":[{"id":"solar-1","scores":[{"id":"solar","semantic":0.999665},{"id":"motor","semantic":0.999338},{"id":"garden","semantic":0.999891},{"id":"bread","semantic":0.955132}]},{"id":"motor-1","scores":[{"id":"solar","semantic":0.999423},{"id":"motor","semantic":0.999019},{"id":"garden","semantic":0.99979},{"id":"bread","semantic":0.947269}]},{"id":"plants-1","scores":[{"id":"solar","semantic":0.997649},{"id":"motor","semantic":0.995226},{"id":"garden","semantic":0.999063},{"id":"bread","semantic":0.904081}]},{"id":"other-1","scores":[{"id":"solar","semantic":0.997141},{"id":"motor","semantic":0.994592},{"id":"garden","semantic":0.998805},{"id":"bread","semantic":0.899146}]},{"id":"other-2","scores":[{"id":"solar","semantic":0.996764},{"id":"motor","semantic":0.994156},{"id":"garden","semantic":0.998606},{"id":"bread","semantic":0.896061}]}]}
+✔ SWB2 holdout audit uses real training and separates exact training texts from evaluation (851.871926ms)
+✔ the five beginner destinations stay reachable from the reference start screen (2.198882ms)
+✔ start-screen routes use real existing Android screens, not placeholder success actions (0.535468ms)
+✔ advanced routes remain available from the start screen, its rail and the More sheet (0.350863ms)
+✔ Nexus keeps real hologram and voice entry tied to Android speech and system state (0.533426ms)
+✔ fold, small display and enlarged-font behaviour are expressed by a pure policy (0.279661ms)
+✔ personalisation is a real choice and cannot silently train models or install apps (0.312173ms)
+✔ start screen and chat never overlap after leaving or returning from chat (0.63072ms)
+✔ canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and synthesizes exact tests (7.177497ms)
+✔ unsupported higher-priority TEST operations cannot starve supported owner contracts (2.39075ms)
+✔ fresh generated contract runs real Node tests and incorrect expected output fails (274.47125ms)
+✔ forged foreign, unaccepted and unsupported tasks are refused (0.781742ms)
+✔ existing contract tests cannot be overwritten and critic preserves older tests (0.87839ms)
+✔ Continuum developer dialog exposes its own model-free worker separately from optional generative model (3.289775ms)
+✔ worker diagnostic route uses existing allowlisted build Activity, not executable model output (3.492356ms)
+✔ generative coding remains constrained and model-agnostic with review-only outputs (0.372666ms)
+✔ a complete M4 TEST task passes baseline, adds meaningful tests, independently checks patch and finishes DONE (744.047773ms)
+✔ a false owner-supplied expected value stays FAILED and never produces DONE (416.288489ms)
+✔ red baseline is not laundered into a DONE synthetic test job (201.698231ms)
+✔ synthetic fake test totals and non-increasing test counts cannot pass evidence gate (0.814658ms)
+✔ no unaccepted task is executed and paths cannot point back into source (27.936357ms)
+﹣ owner Kotlin IMPLEMENT generates real reviewable Git patch with two independent JVM oracles (1.154331ms) # SKIP
+﹣ false owner output cannot create a verified Kotlin preview (0.227286ms) # SKIP
+✔ output symlink back into checkout is rejected before Kotlin compilation (39.443909ms)
+✔ phone root fills the viewport, with an explicitly bottom-anchored navigation rail (1.041598ms)
+✔ home dashboard remains in a scrolling viewport, not hidden behind the navigation (0.328984ms)
+✔ keyboard hides phone navigation and frees the same reserved space (1.465403ms)
+✔ activity alone never becomes a model improvement claim (1.304417ms)
+✔ watcher samples are bounded and repeated status generations are deduplicated (8.615976ms)
+✔ a coverage gain is named only as data quality and requires enough evidence (0.603233ms)
+✔ historical baseline is not mistaken for progress (0.188715ms)
+✔ snapshot gate rejects missing holdout provenance, leaks and mismatched fixtures (0.555632ms)
+✔ forgetting regression blocks promotion even if intent dramatically improves (0.193663ms)
+✔ valid accuracy improvement only becomes eligible for review, never auto-promoted (0.144447ms)
+✔ synthetic intent corpus balances 72 training and 24 unseen examples (1.512351ms)
+✔ semantic corpus has balanced nonoverlapping 32 training plus 12 audit pairs (0.354496ms)
+✔ owner, old holdouts, new audits, snapshots and cancellation gate promotions (0.346423ms)
+✔ Android entrypoints are unique and export uses owner-controlled system picker (0.732652ms)
+✔ unavailable encyclopedia extracts are explicitly classified and never learned (0.958268ms)
+✔ failure reports identify safe operation and may not become accepted after separate stage (0.303495ms)
+✔ research attempts and pending topics remain truthful when a source has failed (1.013335ms)
+✔ issue #76: an interrupt flag never loses the cycle audit, and a failed write carries a fixed cause (0.280028ms)
+✔ safety budget, source isolation and holdout gate are unchanged (0.242324ms)
+✔ message bodies are typed, bounded and role-bound (6.362968ms)
+✔ the journal detects edits, broken chains, wrong roles and forged receipts (3.956302ms)
+✔ receipt verification uses real artifacts and the exact order (0.838314ms)
+✔ goal examples are read from German text and candidates are indexed with arity (24.447417ms)
+✔ end to end: a refuted hypothesis is revised and the next one is confirmed by the real coding job (1218.003738ms)
+✔ a reasoner that misreports a receipt is stopped before anything is recorded as confirmed (607.093033ms)
+✔ a crash after execution resumes from the journal without running the job twice (746.342878ms)
+✔ round limit ends in an honest abstention (498.776904ms)
+✔ actual repairSession finalizes both clean and non-actionable baselines (338.838297ms)
+✔ repair module rejects poisoned nested-depth environment before session starts (199.857032ms)
+✔ repair depth is zero only when unset or precisely zero (2.18392ms)
+✔ repair depth denies malformed values that bypassed the positive-depth guard (0.685546ms)
+✔ all bounded repair outcomes include a completion timestamp (0.203896ms)
+✔ triple-phase validator accepts structurally consistent green-red-green and a failed competing candidate (1.933978ms)
+✔ no baseline green or zero executed tests means no training tuple (0.397223ms)
+✔ undetected mutation and mismatched diagnostic file are discarded (0.30265ms)
+✔ unsafe or non-Kotlin mutation targets cannot enter research data (0.434254ms)
+✔ successful repair requires a separate matching second-run observation (0.383453ms)
+✔ fewer executed tests or new skipped tests in repaired candidate are rejected (0.264285ms)
+✔ a critic rejection without executed checks is NOT a refuted strategy (0.288599ms)
+✔ compiler failures are acceptable as provisional negatives only with a localized diagnostic (0.436106ms)
+✔ the selected winner must be unique, paired with a real negative (0.139662ms)
+✔ duplicate strategies, invalid candidate IDs or fabricated profile statuses are rejected (0.132878ms)
+✔ mismatched check chains and failing independently executed tests never pass (1.350969ms)
+✔ prototype does not mutate its input reports or train a model (0.417094ms)
+✔ per-profile regression cannot be hidden by extra executions in another profile (0.241413ms)
+✔ JUnit ReferenceError from Node v20.20.0 is a code diagnostic at the faulty line (4.291978ms)
+✔ TAP module-load ReferenceError from Node v20.20.0 is located in the loaded module (1.75662ms)
+✔ a test file that crashes while loading under Node v20.20.0 is named by its repository path (0.62614ms)
+✔ JUnit ReferenceError from Node v22.16.0 is a code diagnostic at the faulty line (0.437965ms)
+✔ TAP module-load ReferenceError from Node v22.16.0 is located in the loaded module (0.368096ms)
+✔ a test file that crashes while loading under Node v22.16.0 is named by its repository path (0.454846ms)
+✔ JUnit ReferenceError from Node v22.22.0 is a code diagnostic at the faulty line (0.315741ms)
+✔ TAP module-load ReferenceError from Node v22.22.0 is located in the loaded module (0.250762ms)
+✔ a test file that crashes while loading under Node v22.22.0 is named by its repository path (0.296115ms)
+✔ a crashed test file outside the repository gets no re-runnable path (0.33368ms)
+✔ the same fault yields one fingerprint regardless of the Node release (0.400417ms)
+✔ header variants and nested causes are recognized (1.123582ms)
+✔ classification is not over-generous (0.325722ms)
+✔ an error without its own repository frame cannot borrow the next error's frame (0.515553ms)
+✔ skipped JUnit cases are fingerprinted without copying their names (0.407507ms)
+✔ a skipped JUnit case without stable testcase identity cannot be accepted (0.107688ms)
+✔ JUnit directory combines stable hashes from multiple Gradle XML suites (0.993513ms)
+✔ identifies known Kotlin set/list error without modifying source (0.869411ms)
+✔ does not suggest changes to unrelated source (0.881543ms)
+✔ rule table is immutable (0.281987ms)
+✔ learns outcomes of repeated repair attempts (1.583091ms)
+✔ rejects malformed history (0.350591ms)
+✔ failed independent patch check records a negative learning signal without fake success (3.838845ms)
+✔ independently verified patch keeps legitimate positive experience (1.909661ms)
+✔ unverified teamleader calls never create positive or negative learning labels (0.474127ms)
+✔ explicit independent rejection is negative, not an unknown outcome (0.424085ms)
+✔ non-verified sessions retain their original failure diagnoses (0.542119ms)
+✔ optional scoped task identity survives ledger serialization and rejects malformed bindings (1.529701ms)
+✔ unverified session cannot poison history through claimed failed alternatives (0.635245ms)
+✔ invalid syntax is retained as negative repair experience without fabricated test execution (0.5868ms)
+✔ syntax checker errors remain audit evidence without becoming failed-strategy labels (0.895764ms)
+✔ an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed (4.034982ms)
+✔ infrastructure-only repair failures stay auditable without poisoning strategy learning (1.485397ms)
+✔ kotlin compiler output becomes structured, repository-relative diagnostics (3.412591ms)
+✔ JUnit with ">" in attributes and Node load errors are parsed (2.634297ms)
+✔ strategies generate exact, unique, replayable hunks (4.761786ms)
+✔ critic blocks protected paths, test edits, weakening and dangerous code (3.462227ms)
+✖ ledger learns per diagnostic kind and strategy and skips proven failures (2.999371ms)
+✔ a whole-file revert never outranks minimal patches even with a misleading success history (0.490295ms)
+✔ syntax gate parses changed JavaScript only, rejecting malformed code without executing it (71.935284ms)
+✔ check profiles are fixed and unknown chains fail closed (0.565198ms)
+✔ Continuum profile cannot auto-discover unrelated tests if required suite is absent (0.650578ms)
+✔ release-only backend test profile executes real Node assertions or fails closed (178.252597ms)
+✔ repair worktree guard excludes symlinks, parent escapes and null path components (1.068603ms)
+✔ end-to-end: injected fault is reproduced, repaired in isolation, verified and committed (438.465586ms)
+✔ a checkpoint runs before and after every check step and a throwing checkpoint stops the session (586.224625ms)
+✔ hunk revert handles modification, insertion and deletion hunks exactly (0.288399ms)
+✔ baseline passing count excludes crashed test files and failures (0.130086ms)
+✔ success requires executed tests that do not shrink against the baseline (0.84944ms)
+✔ a test profile without executed tests is not a pass (143.73509ms)
+✔ regression search reverts only the culprit hunk and keeps unrelated changes (453.526088ms)
+✔ a module that crashes while loading is located and gets its missing import back (497.275697ms)
+✔ invalid Git revision cleans allocated repair worktree and registration (44.054203ms)
+✔ repair cleanup refuses unmanaged paths and does not delete user files (24.151176ms)
+✔ repair cleanup cannot silently ignore a failed Git worktree removal (49.367566ms)
+✔ a test inside the Continuum suite cannot start the suite again (no recursive suite runs) (66.599026ms)
+✔ optional research verification leaves the default path unchanged (2.497538ms)
+✔ research verification requires exact source, suite and complete positive checks (5.151161ms)
+✔ exceptions, promises and elapsed deadlines never turn into verification (1.634321ms)
+✔ a numeric counterexample is bounded data and cannot carry arbitrary diagnostics (1.1486ms)
+✔ Android 14+ background network jobs declare ACCESS_NETWORK_STATE (1.317976ms)
+✔ persisted source research job is registered but never exported (0.408024ms)
+✔ owner consent, cellular network and measured 20pct resource gates remain required (0.424054ms)
+✔ metadata/LLM summaries cannot masquerade as extractive source training (8.820524ms)
+✔ same original source never leaks into both training and sealed audit (52.088439ms)
+✔ numbered near-duplicate claims cannot supply contrastive negatives (1.405189ms)
+✔ training is research-only, leaves frozen E unchanged and rejects holdout failures (276.232483ms)
+✔ signed CRE1 research package binds model, audit, publisher and canonical manifest (151.345236ms)
+✔ PEM keys remain compatible and unsupported signing algorithms are rejected (241.664107ms)
+✔ no training or signing occurs without enough independent original spans (28.485298ms)
+✔ arXiv entries are parsed with versionless ids, authors, DOI and categories; ids are stable (4.715313ms)
+✔ categories follow transparent rules; BETTER and REPRODUCED only with recorded local evidence (1.709771ms)
+✔ the schedule runs nothing unless the owner enabled and approved it and a run is due (0.457745ms)
+✔ a scan deduplicates across topics and versions, waits between requests and survives network errors (1.623196ms)
+✔ proposals only PROPOSE in the backlog, carry the six questions and are made once (15.638905ms)
+✔ findings from a web search are validated, merged with scanned papers by arXiv id and keep their provenance (1.606015ms)
+✔ public metadata may trigger a check but cannot alone train an autonomous model (1.356939ms)
+✔ worker requires a successful research event and a local approved bundle (0.6872ms)
+✔ insufficient original documents are persisted as rejected, never promoted (60.502503ms)
+✔ bad source hashes do not replace existing CRE1 and leave no stale owned lock (66.174952ms)
+✔ concurrent or stale unknown locks fail closed; no forced takeover (0.945472ms)
+✔ opt-in verifier rejects a test-passing constant and feeds the counterexample into the same repair loop (1123.994912ms)
+✔ independent research veto blocks completion even after primary tests passed (768.222635ms)
+✔ a throwing optional verifier exhausts the fixed proposal budget without publishing a patch (863.775427ms)
+✔ audits the actual lexical production retriever versus two neural scores (757.472594ms)
+✔ published retrieval benchmark is reproducible from code and frozen data (1116.294181ms)
+✔ adopted ranking beats the previous production ranking on DEV and on report-only TEST (971.613106ms)
+✔ benchmark queries never appear among candidate passages (0.456162ms)
+✔ retrieval requires word evidence and never invents a memory (0.605882ms)
+✔ German compound noun retrieval recognizes heads in personal memories (6.593046ms)
+✔ German compound suffixes work symmetrically for common family questions (0.261647ms)
+✔ substring fragments below five characters cannot become compound evidence (0.116692ms)
+✔ unrelated queries do not force an invented matching memory (0.668475ms)
+✔ fabricated mixed letter-digit topic must abstain on real but unrelated source topics (15.503912ms)
+✔ exact technical term retrieves only relevant citation and not loosely shared Fehler (3.074075ms)
+✔ explicit owner memories retain compound matches without source-only guard (0.447725ms)
+✔ German near-inflection and complete compound suffix remain retrievable (0.2418ms)
+✔ compound technical questions require every distinctive source anchor (2.961616ms)
+✔ technical IDs reject near-identical but different digits in source excerpts (0.426126ms)
+✔ common long question verbs do not suppress valid technical citations (2.510649ms)
+✔ Argon audit: short-source anchors and exact directional compounds (0.868312ms)
+✔ Argon audit: normalisation, invalid input and repeated question operators (0.874864ms)
+✔ single identifier ORION-47 remains retrievable but ORION-48 cannot use its evidence (8.111988ms)
+✔ single identifier R1 remains retrievable but R2 cannot use its evidence (3.720643ms)
+✔ single identifier A-7 remains retrievable but A-8 cannot use its evidence (0.948658ms)
+✔ single identifier SN_15 remains retrievable but SN_16 cannot use its evidence (1.001079ms)
+✔ single identifier PRJ-04 remains retrievable but PRJ-4 cannot use its evidence (1.124488ms)
+✔ single identifier V4.1 remains retrievable but V4.2 cannot use its evidence (0.880072ms)
+✔ unrelated short identifier cannot borrow a generic shared verb (0.335519ms)
+✔ identifier boundaries are literal rather than substring matches (0.624704ms)
+✔ handwritten rewordings are separate and independently checked (554.851053ms)
+✔ owner worker refuses a supplied untrusted executor before claim or checks (66.901053ms)
+✔ scoped task identity and commit are checked before claiming the owner task (100.416817ms)
+✔ scoped revision receives actual failed diagnostics and bounded history then verifies independently (1440.936756ms)
+✔ repeated scoped patch is rejected without a second candidate check (429.619367ms)
+✔ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (591.98484ms)
+✔ durable scoped diagnostics never cross task authorization or source boundaries (1505.178042ms)
+✔ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (490.896127ms)
+✔ scoped proposals cannot edit outside task grants or change context commit (353.268942ms)
+✔ scoped pure numeric changes can cover two files on the host (352.555831ms)
+✔ general scoped source is blocked before executing candidate code without isolation (174.404569ms)
+✔ new coding and isolation control files stay protected by the critic (0.727867ms)
+✔ general scoped proposals cannot mutate test APIs or write their own reports (0.329453ms)
+✔ scoped successes remain owner-review evidence without automatic learning (0.676865ms)
+✔ scoped provider failures count against the fixed model-call budget (207.101208ms)
+✔ total scoped candidate limit bounds revisions even when model budget remains (361.776215ms)
+✔ local teamleader forwards the scoped provider through the canonical owner worker (623.089233ms)
+✔ infrastructure failures without executed failed tests do not blacklist a candidate after restart (814.686809ms)
+✔ semantic optimizer agrees with finite-difference gradients on shared/overlapping buckets (22.037046ms)
+✔ semantic SGD moves candidate without touching old SWB1 snapshot (10.894182ms)
+✔ one atomic lease excludes simultaneous workers and can be reacquired (138.138385ms)
+✔ an unclean process exit retains the lock and cannot be stolen by a timer (65.659044ms)
+✔ rejects symlinked state root and checkout-local state (0.436984ms)
+✔ release never deletes a tampered lock (0.584366ms)
+✔ independent source roots have independent leases (0.699005ms)
+✔ only a provably dead holder on this host can be released, and only through the explicit owner step (52.483925ms)
+✔ a watched step passes streams, exit code and ending signal through unchanged (390.722819ms)
+✔ a spawnSync timeout still reads as a timeout and also ends the detached grandchild (1801.606259ms)
+✔ an owner abort ends a running step and its detached grandchild within seconds (894.855124ms)
+✔ a task aborted before the step starts never runs the command (60.136547ms)
+✔ a watched step stops when the waiting parent is gone (911.753554ms)
+✔ the watchdog refuses incomplete or relative arguments (322.180157ms)
+✔ an abort watch ends a running check profile and the chain never uses its result (871.117689ms)
+✔ reject learned property names that collide with local bindings (1.923756ms)
+✔ reject function-name property collisions instead of alpha-renaming a literal property (0.406512ms)
+✔ ordinary noncolliding properties and local renaming remain supported (1.912946ms)
+✔ B1: atomic immutable sort keeps preceding compound statements intact (3.089817ms)
+✔ B2: zero denominator guard stays complete before existing return (1.968319ms)
+✔ unsupported source forms fail closed without half-patch (2.010794ms)
+✔ syntax parser never runs code or confers execution/test authority (0.462261ms)
+✔ B3/B4/B5: same statement operator handles noise, pagination and legal length parameters (1.252265ms)
+✔ SWB2 adaptive gradients reduce supervised loss and preserve source snapshot (194.083253ms)
+✔ legacy SWB1 magic, features and snapshot roundtrip remain unchanged (25.977994ms)
+✔ SWB2 snapshot explicitly versioned, normalized and not silently upgraded (23.623909ms)
+✔ SWB2 intent and semantic gradients agree with central finite differences (16.018527ms)
+✔ experimental neural token decoder has real loss updates, checkpoint and forbidden-token mask (31.825272ms)
+✔ separate positive and unrelated semantic examples provide measurable, explicitly experimental learning (46.377045ms)
+✔ actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch (623.74211ms)
+✔ scheduled owner task completes full real Git repair and independent verification (805.932425ms)
+✔ actual passing Git fixture generates no fake repair, patch, or changed source (183.557337ms)
+✔ actual offline Teamleader completes a priority investigation with real Git checks and evidence (376.045737ms)
+✔ clean baseline ends after analyst with truthful stop, not fake repair (2.732106ms)
+✔ verified repair needs real critic + isolated patch + executed tests (0.785996ms)
+✔ fabricated tests, missing evidence, rejected critic cannot approve patch (1.851369ms)
+✔ reviewer rejection does not lead to edits or test execution (0.59698ms)
+✔ syntax-rejected candidates retain handoffs without claiming executed tests (0.967952ms)
+✔ syntax rejection cannot replace critic approval or claim full test evidence (0.575772ms)
+✔ unrecognized or oversized role payloads fail without execution (0.507045ms)
+✔ real offline Teamleader keeps a syntax rejection before an independently verified proposal (1740.781808ms)
+✔ activation failure rolls back units and a following attempt can succeed (126.276119ms)
+✔ dangling systemd unit symlink is preserved and rejected (43.479315ms)
+✔ SIGTERM during hourly timer activation removes only installer-owned units (96.723981ms)
+✔ activation rollback never deletes a foreign replacement service (62.945132ms)
+✔ user-owned hourly timer supports a linked Git worktree and refuses overwrites (113.469817ms)
+✔ empty status offers review only and does not authorize execution (0.935751ms)
+✔ real historical ANSK baseline takes priority over an unverified old repair (0.351821ms)
+✔ build lease blocks automatic recommendation to run more Gradle work (0.15584ms)
+✔ VERIFIED result is never treated as authorization to merge or publish (1.230396ms)
+✔ old APK report is not a claim of a currently verified installed package (0.185556ms)
+✔ invalid and attacker-controlled text does not escape to the handoff packet (0.31883ms)
+✔ the packet size remains bounded even with huge arbitrary status (0.350577ms)
+✔ canonical Teamleader status CLI embeds advisory packet without running repair (82.579521ms)
+✔ Android Termux development-worker wrapper is valid Bash (6.353249ms)
+✔ Termux uses same Node Teamleader, never a competing agent implementation (0.599054ms)
+✔ unattended Termux loop has real battery and heat gates and no implicit wake-lock (0.336046ms)
+✔ Termux CCC1 commands use the app bridge and CLI, and never fetch, reset, delete or apply (0.855439ms)
+✔ Termux CCC1 check and prepare behave as documented on a throw-away checkout (1001.568553ms)
+✔ owner can open the native live monitor without exported Android access (1.399881ms)
+✔ visualisation differentiates actual weight training, research and recent completion (0.260988ms)
+✔ training state is persisted by channel and stale starts are not shown as live (0.19762ms)
+✔ public research records the real source and audit lifecycle and keeps the 15-minute plan (0.333923ms)
+✔ offline job records deferral, failures and interrupts without rewriting model weights (0.226244ms)
+✔ CDX1 audits are separate and the signed mentor update advances to code 15 without changing main (0.363731ms)
+✔ Android confirmed task is passed only to the existing in-app Termux Builder (4.614412ms)
+✖ existing protected Android Termux receiver binds both callback identity and reviewed task digest (2.608673ms)
+✔ Node Termux accepts fixed operations and never promotes an unevidenced success status (1.695307ms)
+✔ approved task source commit stays bound through Android prepare, run, callback and restart (12.379211ms)
+✔ academy distinguishes testable coding practice from unavailable iOS and regulated domains (1.147611ms)
+✔ only bounded, fixed tests are executed, with source and test digests (43.856004ms)
+✔ repeated autonomous runs rotate to the next subject and do not rewrite source (57.767495ms)
+✔ zero executed tests, failure and timeout never become acquired skills (49.615526ms)
+✔ corrupt evidence, concurrent lock, symlink lessons and dirty checkouts fail closed (55.479098ms)
+✔ academy CLI cannot accept commands, scripts or arbitrary tests (0.349006ms)
+✔ trusted naming describes publisher origin only, never fact truth (2.562931ms)
+✔ exact source substring and cryptographic document match are mandatory (1.410092ms)
+✔ two different source domains are corroboration, never verified truth (2.356156ms)
+✔ potential version or negation conflicts get review flags, not silent supersession (13.575477ms)
+✔ active-counterexample search plans are bounded descriptions, not executable requests (4.654154ms)
+✔ invalid input and malformed graph fail closed (0.983712ms)
+✔ Atlas only stores verified-structure public HTTPS references, no copied documents (47.644328ms)
+✔ Atlas enforces cooldown, one fixed topic per cycle and no arbitrary remote searches (43.211208ms)
+✔ Atlas rejects malformed sources and never imports private, non-HTTPS or local references (44.047983ms)
+✔ failed public research is persisted for cooldown, not converted to verified knowledge (41.703898ms)
+✔ tampered index, dirty source, repository-located state and invalid queries fail closed (52.275763ms)
+✔ platform selection chooses a primary expert plus mandatory judges (2.638625ms)
+✔ approved draft never pretends to be compiled, tested or merged (3.068372ms)
+✔ banking restrictions trigger exactly one review iteration (1.649132ms)
+✔ cleartext and forbidden manifests never enter verified build state (1.799467ms)
+✔ test absence and path traversal fail closed (1.097179ms)
+✔ world model keeps hypotheses provisional until independent support arrives (5.794785ms)
+✔ independent contradictory evidence makes a hypothesis disputed (0.611614ms)
+✔ repeating the same source domains in a second cycle does not promote a hypothesis (0.926305ms)
+✔ migration recalibrates a legacy one-cycle supported hypothesis back to provisional (0.384007ms)
+✔ held-out arithmetic examples expose overfitted candidates without executing model code (1.68192ms)
+✔ evidence filter abstains on unaudited or self-supported claims (0.263794ms)
+✔ context packer respects exact budget and never invents extra items (0.72758ms)
+✔ all three shadow experiments report independently scored frozen holdouts (0.767178ms)
+✔ coding loopback uses bounded structured schema and accepts relevant larger context (33.575031ms)
+✔ coding output cannot add tools, duplicate paths, unknown files or blank hunks (2.065013ms)
+✔ coding CLI UTF-8 transport accommodates the character-bounded multilingual context (73.406706ms)
+✔ snapshot verification binds second read to immutable revision and remains zero-cost (38.785001ms)
+✔ reject mutable identity and inconsistent pinned response (3.051303ms)
+✔ missing shard blocks declared integrity claim (2.986646ms)
+✔ absence of per-shard digests cannot become a verification success (1.292196ms)
+✔ non-allowlisted URLs, timeouts and HTTP failures fail closed (0.862163ms)
+✔ oversize and malformed metadata are rejected (1.04475ms)
+✔ reject stale mutable metadata and altered inventory sizes (1.13697ms)
+✔ capacity planning is honest about verified requirements and no resource creation (0.903526ms)
+✔ virtual storage does not pretend to be GPU RAM or substitute for physical host (1.412566ms)
+✔ reject too-small volume, GPU count and host DRAM independently (0.168263ms)
+✔ immutable snapshot metadata validates all shard identities and size before use (0.576072ms)
+✔ reject moving refs, missing, duplicate, bad shard size or implausible metadata (0.689935ms)
+✔ CLI defaults to a read-only blocked plan when no GPU inventory is available (38.609257ms)
+✔ finished experiment review is reachable in primary learning center (0.913454ms)
+✔ CTX3 test is discoverable and stays confined to existing nonexported lab (0.194276ms)
+✔ Orion personal memory is not mistaken for an entity definition (0.198848ms)
+✔ parses real GGUF v2/v3 structure and bounded tensor bytes (3.296339ms)
+✔ rejects magic, endian and unsupported versions (0.59359ms)
+✔ rejects truncation and oversized counts before iteration or allocation (0.395179ms)
+✔ rejects duplicate metadata, prototype keys, invalid UTF-8 and unknown values (0.594381ms)
+✔ skips tokenizer arrays without retaining tokens or evaluating templates (0.534477ms)
+✔ rejects nested arrays, enormous array/string lengths and invalid alignment (0.620279ms)
+✔ rejects wrong metadata scalar types, non-finite floats and booleans (0.412829ms)
+✔ rejects tensor overflow, out-of-file ranges, overlap and misalignment (0.519256ms)
+✔ rejects unsupported quantization, malformed rows, duplicate tensor names and zero dimensions (0.384053ms)
+✔ computes quantized row storage from audited block sizes (0.290362ms)
+✔ rejects bounded header exhaustion and missing/unsafe architecture metadata (0.311846ms)
+✔ file admission hashes actual bytes and records identity without model trust (22.184605ms)
+✔ admission rejects links, writable files, directories and malformed provenance (3.142552ms)
+✔ file admission enforces caller resource and cancellation bounds (1.712491ms)
+✔ real Linux namespaces deny host files, environment, file writes and networking (722.439918ms)
+✔ unsafe stage location and symlink candidates are refused before running (49.477779ms)
+✔ sandbox returns candidate failures, without treating them as successful repairs (277.476212ms)
+✔ fixed Linux runner produces a bounded receipt but never validates a repair (668.589929ms)
+✔ a failed candidate never upgrades to a successful verified result (231.698846ms)
+✔ stage escapes and symlinks fail closed without executing anything (1.549874ms)
+✔ oversized stdout does not become success (218.314524ms)
+✔ candidate text cannot forge a trusted execution verdict (215.21247ms)
+✔ chat only contacts fixed localhost and returns text as untrusted data (5.869572ms)
+✔ rejects missing authentication, unverified facts and external configuration (1.222521ms)
+✔ patch proposal is schema constrained, validated and never applied (14.622931ms)
+✔ server errors and overly long outputs fail closed (1.262672ms)
+✔ health never transmits authorization and discriminates loading/unavailable (1.106487ms)
+✔ actual Node HTTP loopback fixture exercises an end-to-end POST (32.756693ms)
+✔ local structured patch request sends nested schema to real loopback HTTP endpoint (12.837644ms)
+✔ schema-compatible server response still cannot smuggle authority or unsafe file edits (1.140192ms)
+✔ context plan uses a bounded byte estimate and reserves actual client output (2.206852ms)
+✔ context truncates Unicode and JSON escape-heavy input within the real serialized budget (3.498748ms)
+✔ diagnostics precede source under pressure and omitted context is reported (2.52644ms)
+✔ rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths (0.711867ms)
+✔ preserves the complete goal or refuses instead of silently truncating its meaning (0.332529ms)
+✔ diagnosis requires a matching admission identity and never labels input as verified facts (0.924135ms)
+✔ local diagnosis uses the existing fixed-loopback client with no tool or promotion rights (33.293066ms)
+✔ injected source remains quoted data and model instructions cannot select shell tools (1.140245ms)
+✔ M6 QA rejects unpinned, mismatched and dirty source before starting (158.786275ms)
+✔ M6 QA rejects another branch and preserves owner checkout (40.360664ms)
+✔ M6 QA allows an explicitly pinned research branch but never main (161.388653ms)
+✔ M6 QA writes fail-closed nonrelease evidence outside the source tree (133.224334ms)
+✔ Termux Binder interface matches the exact existing AIDL descriptor and stable wire IDs (9.204594ms)
+✔ both binder methods preserve argument, return and exception marshalling (0.367443ms)
+✔ desktop and production configurations retain canonical AIDL generation (2.166314ms)
+✔ only the bounded mobile builder activates the alternative, never changes source or tools (2.567249ms)
+✔ Shizuku user service, endpoint and shell gate keep their original IPC types (0.270886ms)
+✔ CLI supports only explicitly approved commands and flags (2.317531ms)
+✔ Android runner requires Termux ARM64 (0.149894ms)
+✔ doctor without native toolchain reports unavailable (1.013977ms)
+✔ state directory may not be inside source (1.440278ms)
+✔ unavailable tools prevent Gradle invocation (4.535214ms)
+✔ uncommitted source blocks build before running Gradle (2.769999ms)
+✔ synthetic Gradle failure is not a successful build (2.241045ms)
+✔ unverified artifact is rejected and not published (3.299375ms)
+✔ synthetic signed output saves a distinct hash-tied copy; not proof of an on-device build (12.129719ms)
+✔ owner Android build automatically publishes a hash-checked APK in the dedicated Download folder (11.699775ms)
+✔ owner file created during a publication race is never overwritten (2.055375ms)
+✔ a corrupted final Download copy is reported without deleting owner files (2.682284ms)
+✔ missing owner Download storage never fakes a published installer copy (2.623082ms)
+✔ unsafe symlink install folder is rejected without modifying the source project (2.776032ms)
+✔ pre-existing conflicting APK is never overwritten by automatic publication (2.873012ms)
+✔ rejected signature never generates an owner Download installation APK (1.502015ms)
+✔ Gradle failure reports only fresh failing JVM tests, never a false build success (2.176486ms)
+✔ JUnit diagnostics ignore stale files and symlinks (0.426702ms)
+✔ a changed HEAD during Gradle blocks APK publication (1.399439ms)
+✔ a dirty checkout produced during Gradle blocks APK publication (1.338144ms)
+✔ signature parser recognizes legacy and modern apksigner certificates only (0.136618ms)
+✔ modern apksigner result is accepted only after executable verification succeeds (7.542894ms)
+✔ genuine apksigner rejection persists diagnostic without publishing APK (2.773087ms)
+✔ Termux RUN_COMMAND uses pinned on-device Java, Gradle, SDK and ARM64 aapt2 paths (0.212529ms)
+✔ ambient Termux Java 21 is replaced by installed pinned Java 17 for RUN_COMMAND (0.171777ms)
+✔ real Samsung JAVA_HOME with trailing slash selects pinned Java 17 (0.090426ms)
+✔ extra trailing separators do not prevent known Termux Java 21 normalization (0.076998ms)
+✔ Termux Java 21 remains a visible doctor failure if pinned Java 17 is absent (0.066993ms)
+✔ owner Java 17 is always first in PATH even if it appears after Java 21 (0.184556ms)
+✔ missing Termux tools remain unavailable; never synthesize nonexistent binaries (0.098195ms)
+✔ explicit owner toolchain settings are preserved, even when defaults exist (0.092951ms)
+✔ non-Termux and non-ARM64 environments do not receive Android paths (0.093876ms)
+✔ mobile build forwards resolved environment to doctor and Gradle without a shell (6.878146ms)
+✔ status CLI returns successful query exit for historical failed or blocked build reports (291.80665ms)
+✔ status CLI fails closed for corrupt report schema; missing report is a successful query (110.419938ms)
+✔ a live ANSK or teamleader lease blocks the mobile APK builder before invoking tools (2.202465ms)
+✔ a correctly signed APK for the wrong package cannot be published as a Continuum preview (2.434606ms)
+✔ malformed or failed package inspection cannot publish an APK (4.569453ms)
+✔ Android coding job runs the canonical owner TEST pipeline and returns a verifiable receipt (1196.640467ms)
+✔ a wrong owner expectation is reported as a failed coding job without patch (591.506738ms)
+✔ invalid orders, unclean checkouts, busy workers, cancel and stale bases fail closed (125.78094ms)
+✔ builder CLI accepts coding values only for the fixed coding operations (0.957617ms)
+✔ model-center QA rejects absent, malformed and wrong pins before toolchain side effects (59.83704ms)
+✔ model-center QA accepts its exact pin without an unrelated SHA variable (43.256391ms)
+✔ model-center QA refuses dirty source even when HEAD matches (104.339499ms)
+✔ model-center QA rejects another branch without changing its checkout (112.324434ms)
+✔ owner-selected Gemma metadata is byte-identical to repository model selection (3.793179ms)
+✔ existing owner model center shows choices without automatically downloading (2.333464ms)
+✔ selected model has a live status binding and never grants shell rights (0.685532ms)
+✔ the recorded checkpoint is the exact live-pinned DeepSeek snapshot (1.552615ms)
+✔ metadata inspection never implies installed weights, available compute or owner approval (0.347447ms)
+✔ teacher examples are only candidates and declared review never becomes verified (15.693543ms)
+✔ split is deterministic, input-order independent and prevents group leakage (1.945642ms)
+✔ duplicate prompts with conflicting answers or disjoint groups fail closed (2.468978ms)
+✔ reject unsupported reviews, bad source IDs, secrets and personally identifying emails (0.623518ms)
+✔ file pipeline writes distinct frozen candidate splits without overwriting files (13.130111ms)
+✔ independent examples and metamorphic relations reject constant pseudo-repairs (71.861412ms)
+✔ a bounded exact distance passes all four frozen checks reproducibly (124.467645ms)
+✔ metamorphic failure supplies the distinguishing pair (100.026766ms)
+✔ non-finite values, foreign exports and capability-bearing code never pass (249.335451ms)
+✔ suite mutation, malformed cases, unbounded inputs and empty verification are rejected (62.636564ms)
+✔ controlled replay measures actual accepted patch in separate scoring worktree (2052.16584ms)
+✔ benchmark repetition count is bounded (0.518029ms)
+✔ model patches cannot rewrite OMEGA evaluators or benchmark definitions (0.293496ms)
+✔ unmanifested build input is rejected: buildSrc/build.gradle.kts (10.477568ms)
+✔ unmanifested build input is rejected: app/src/debug/AndroidManifest.xml (2.335967ms)
+✔ unmanifested build input is rejected: app/src/main/java/Injected.kt (6.632395ms)
+✔ unmanifested build input is rejected: init.gradle (1.738566ms)
+✔ unmanifested build input is rejected: app/extra.gradle.kts (1.953021ms)
+✔ oversized source is rejected before reading it into memory (2.907224ms)
+✔ Gradle project cache cannot redirect writes outside the project (3.133623ms)
+✔ changing private staged bytes between independent APK checks blocks publication (9.573168ms)
+✔ Gradle exit zero without fresh JUnit and lint evidence never certifies an APK (3.992182ms)
+✔ an already cancelled project build never probes or starts tools (1.839975ms)
+✔ a linked report directory is refused before Gradle can write through it (2.094831ms)
+✔ unconfirmed process termination retains the shared lease for owner inspection (2.783341ms)
+✔ ENOSPC while saving a log cannot release an unconfirmed process lease (3.521613ms)
+✔ M4 creates an isolated app with two screens and offline local persistence (7.360172ms)
+✔ source manifest binds every created source file to a digest (2.251113ms)
+✔ repeat create refuses replacement and does not touch owner notes (2.178052ms)
+✔ empty project query blocks (0.316589ms)
+✔ corrupted template is never promoted as verified (1.317322ms)
+✔ removed file is never verified (1.987007ms)
+✔ symlink source cannot escape trusted project (1.903408ms)
+✔ external symbolic project destination is never accepted (0.959963ms)
+✔ symbolic home or parent is rejected (1.026055ms)
+✔ relative paths are forbidden (0.383505ms)
+✔ build reports unavailable when recipe not created (1.259026ms)
+✔ toolchain unavailable cannot call build tool (5.314738ms)
+✔ failing Gradle tests prevent any APK claim (10.732704ms)
+✔ a disappearing APK is never reported successful (5.560689ms)
+✔ false signature is rejected (7.897508ms)
+✔ foreign package is rejected even if signed (6.704196ms)
+✔ source change during Gradle is blocked and not saved (4.620446ms)
+✔ successful mock Gradle, real SHA verification and signed receipt - not device success (13.07483ms)
+✔ corrupt preexisting artifact blocks overwrites (7.744889ms)
+✔ build never starts a package installer, app signature and source are validated (10.61436ms)
+✔ symlinked existing project parent is refused before source reading (1.146002ms)
+✔ symlinked nested source ancestors are rejected before build (1.446429ms)
+✔ symbolic state parent never receives an APK artifact (2.941013ms)
+✔ M4 refuses a symlinked Gradle build output before running Gradle (3.443237ms)
+✔ M4 refuses a symlinked nested APK output before running Gradle (3.505426ms)
+✔ M4 refuses a redirected output appearing during a Gradle run (5.887052ms)
+✔ M4 identity checker reads exactly the same private staged APK as apksigner (26.181943ms)
+✔ changing the original Gradle APK after staged signature check cannot alter published bytes (9.045628ms)
+✔ failed signature validation leaves no private verification-stage residue (7.541811ms)
+✔ lost callback can recover a verified historical receipt but never changed APK bytes (15.609253ms)
+✔ CCC1 independently rejects forged plan, source, execution, evidence and device claims (25.145102ms)
+✔ actual Gradle JUnit shape requires each planned test and ignores CDATA log tags (11.314732ms)
+✔ lint errors, fake nested issues and malformed XML are never passing evidence (0.472969ms)
+✔ fresh reports are bound to exact paths; stale and symlinked evidence fails closed (3.561661ms)
+✔ bounded process executes argv directly and reports its actual exit (61.229757ms)
+✔ timeout kills the process group and never reports success (472.250105ms)
+✔ owner cancellation is asynchronous and cannot become a successful exit (392.635801ms)
+✔ the signal that ended the direct child is reported, an exit code is not (77.776875ms)
+✔ oversized process logs are bounded and fail closed (325.187249ms)
+✔ cancellation also stops a child that detached like the Gradle daemon (676.016592ms)
+✔ inherited run identity catches a rapidly orphaned detached child on linux (329.375742ms)
+✔ inherited run identity catches a rapidly orphaned detached child on android (328.156603ms)
+✔ an unreadable process older than the run (container init, Termux app) does not block confirmed cleanup (37.980429ms)
+✔ an unreadable process younger than the run blocks a confirmed cleanup (48.579431ms)
+✔ unreadable proc stat is not confused with an exited process (44.5936ms)
+✔ denied proc access still stops its direct child and returns a bounded unconfirmed timeout (392.552273ms)
+✔ owner candidate advances beyond published 0.3.22/code23 without a new application ID (1.797251ms)
+✔ release uses existing signer, pinned source, and refuses dirty or unapproved code (0.251646ms)
+✔ release never replaces the old APK without byte-checked 0.3.17 rollback (0.291207ms)
+✔ relevant UI and CCC1 source blobs are explicitly attested (0.132624ms)
+✔ owner release executes the optional Android widget and lifecycle test source set (0.364695ms)
+✔ v20 uses identical owner certificate and requires 0.3.18 byte-valid rollback (0.159823ms)
+✔ v20 attests all prior thirty-two sources and pixel-motion/widget tests (0.442878ms)
+✔ verified state produces a local APK with exact digest (8.84503ms)
+✔ all failed or unverified status reports fail closed (3.795905ms)
+✔ unrelated path and replaced APK bytes cannot be served (4.905413ms)
+✔ symlinks and wrong signer format are refused (1.246553ms)
+✔ loopback Chrome downloads actual APK with content-disposition and no cache (24.174785ms)
+✔ server rejects non-loopback Host, unrelated routes and POST (7.331579ms)
+✔ tampering after startup blocks subsequent download (3.95195ms)
+✔ full multi-megabyte APK survives request lifecycle without truncation (58.272568ms)
+✔ counter plan creates a distinct private Android project and sources (9.522922ms)
+✔ unknown or traversal project plans never create any project (1.078157ms)
+✔ notes and counter plans coexist without replacement or data crossover (6.385997ms)
+✔ host SDK profile is explicit and does not imply a Termux toolchain (1.553749ms)
+✔ plan permissions, versions, budgets, routes and test contracts cannot be loosened (2.967333ms)
+✔ reviewed lexical source is only an untrusted, byte-bounded model suggestion (4.637281ms)
+✔ rejects unreviewed, revoked, corrupted, and unanchored candidates (0.654013ms)
+✔ limits excerpt bytes and rejects oversized or malformed inputs (1.28481ms)
+✔ training studio is versioned, bounded, and has all 18 meaningful categories (1.152699ms)
+✔ copy-only studio is safe: inputs are small and expected results explicit (2.227528ms)
+✔ human dialogue, Austrian everyday speech, grammar and typos have independent tracks (0.222672ms)
+✔ syntax-specific memory and logic facts are ordered and explicitly revocable (0.398246ms)
+✔ ungraded open-ended dialogue exercises do not claim to train weights (0.948432ms)
+✔ owner UI explicitly copies text and persists only a navigation cursor (3.458063ms)
+✔ Android confirmed task is passed only to the existing in-app Termux Builder (5.396876ms)
+✖ existing protected Android Termux receiver binds both callback identity and reviewed task digest (2.310205ms)
+✔ Node Termux accepts fixed operations and never promotes an unevidenced success status (1.831898ms)
+✔ approved task source commit stays bound through Android prepare, run, callback and restart (0.925725ms)
+✔ fixed command grammar rejects arbitrary CLI paths, shell and unbound run (0.354779ms)
+✔ strict canonical JSON and SHA binding prevent duplicate-key/changed-authorization replay (6.288187ms)
+✔ prepared confirmation is separate from execution; same bound task is idempotent (1.361271ms)
+✔ run requires saved exact fingerprint and cannot claim installation (3.399324ms)
+✔ archived real Qwen repair receipt stays reviewable only with explicit bound chain (0.575066ms)
+✔ failed host runtime redacts unexpected exception text (0.762908ms)
+✔ actual CCC1 preparation and execution through typed Termux boundary preserve fail-closed verification (132.427893ms)
+✔ trusted isolation configuration is mandatory and unsafe paths are rejected (0.438937ms)
+✔ sandbox absence blocks before any entrusted run callback and does not claim verified repair (0.247721ms)
+✔ the protected runner receives an explicit strict-isolation requirement (0.485517ms)
+✔ all five bottom destinations open their own category (5.384453ms)
+✔ Fold rail has actual click targets for every visible category (0.475037ms)
+✔ dashboard cards open the matching owner-controlled centers (0.242262ms)
+✔ category center buttons invoke real handlers and CCC1 has a direct development entry (0.727064ms)
+✔ signed owner package uses its own builder Activity, not a missing external preview (0.305557ms)
+✔ unchanged 32 source pins pass (273.341207ms)
+✔ changed protected source fails closed (265.376359ms)
+✔ report-only does not turn a mismatch into approval (264.089565ms)
+✔ symlink is never accepted as an attested regular source (280.790514ms)
+✔ duplicate release pins fail before reporting (154.446381ms)
+✔ symlinked ancestor cannot launder an unchanged file hash into a trusted path (270.436344ms)
+✔ the report names why each attested source changed, its review role and unattested new APK sources (370.579672ms)
+✔ release commands preserve every continued test file, Android task and build option (323.091126ms)
+✔ v22 is strictly an owner in-place update and leaves historical releases intact (13.379944ms)
+✔ missing or wrong exact SHA cannot reach owner signer (36.65385ms)
+✔ a v22 source proposal is never mistaken for signed authorization (194.729563ms)
+✔ exact approved source blob inventory is internally complete (CI simulation, NEVER signs) (132.096071ms)
+✔ default signing entrypoint retains v18 (33.070749ms)
+✔ explicit v19 requires owner-approved pinned exact commit (58.210481ms)
+✔ unknown release version always fails closed (29.701966ms)
+✔ non-code values cannot override the source pin guard (32.486606ms)
+✔ v20 is impossible without both independently pinned SHA variables (63.30669ms)
+ℹ tests 1317
+ℹ suites 0
+ℹ pass 1306
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 6
+ℹ todo 0
+ℹ duration_ms 79010.584722
+
+✖ failing tests:
+
+test at .github/continuum/android-integration-wiring.test.mjs:17:1
+✖ learning core, retained sources, developer backlog, dialogue and diagnostic are reachable from Android (3.930621ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: local model receives only grounded same-session context for referential followups
+      at ensure (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:49:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/android-integration-wiring.test.mjs:69:1
+✖ cognitive runtime owns the single chat path, privacy boundaries and background diagnostics (0.890238ms)
+  AssertionError [ERR_ASSERTION]: Disconnected or unsupported code path: local model context is separate from user-authorized memory input
+      at ensure (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:16:34)
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/android-integration-wiring.test.mjs:76:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .github/continuum/repair-loop.test.mjs:70:1
+✖ ledger learns per diagnostic kind and strategy and skips proven failures (2.999371ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      'REFERENCE_ERROR|JS_MISSING_IMPORT': [
+        1,
+        0
+      ],
+  -   'REFERENCE_ERROR|JS_TYPO_REFERENCE': [
+  -     0,
+  -     1
+  -   ]
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/repair-loop.test.mjs:76:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { 'REFERENCE_ERROR|JS_MISSING_IMPORT': [ 1, 0 ] },
+    expected: { 'REFERENCE_ERROR|JS_MISSING_IMPORT': [ 1, 0 ], 'REFERENCE_ERROR|JS_TYPO_REFERENCE': [ 0, 1 ] },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/typed-android-coding-wiring.test.mjs:21:1
+✖ existing protected Android Termux receiver binds both callback identity and reviewed task digest (2.608673ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /if\(result\?\.prepared==true\)/. Input:
+  
+  'package at.heinz.deviceai\n' +
+    '\n' +
+    'import android.content.BroadcastReceiver\n' +
+    'import android.content.Context\n' +
+    'import android.content.Intent\n' +
+    'import org.json.JSONObject\n' +
+    '\n' +
+    '/**\n' +
+    ' * Explicit, non-exported callback target for Termux RUN_COMMAND_PENDING_INTENT.\n' +
+    ' * We store only a small structured receipt in app-private preferences (never full logs).\n' +
+    ' */\n' +
+    'class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {\n' +
+    '    companion object {\n' +
+    '        const val PREFERENCES = "continuum_mobile_build_v1"\n' +
+    '        const val JOB_ID = "job_id"\n' +
+    '        const val JOB_OPERATION = "job_operation"\n' +
+    '        const val JOB_PROJECT = "job_project_v1"\n' +
+    '        const val JOB_START = "job_start"\n' +
+    '        /** Read-only recovery must remain available while a build callback is missing. */\n' +
+    '        const val STATUS_JOB_ID = "project_status_job_id_v1"\n' +
+    '        const val STATUS_JOB_START = "project_status_job_start_v1"\n' +
+    '        const val STATUS_PROJECT = "project_status_project_v1"\n' +
+    '        const val STATUS_MESSAGE = "project_status_message_v1"\n' +
+    '        const val LAST_MESSAGE = "last_message"\n' +
+    '        const val LAST_SHA = "last_sha"\n' +
+    '        const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"\n' +
+    '        const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"\n' +
+    '        const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"\n' +
+    '        const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"\n' +
+    '        const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"\n' +
+    '        const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"\n' +
+    '        /** CCC1 task the owner can cancel next (validated id only). */\n' +
+    '        const val CCC1_TASK = "ccc1_task"\n' +
+    "        /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */\n" +
+    '        const val ABORT_JOB_ID = "ccc1_abort_job_id"\n' +
+    '        const val ABORT_JOB_START = "ccc1_abort_job_start"\n' +
+    '        const val ABORT_TASK = "ccc1_abort_task_v1"\n' +
+    '        const val ABORT_MESSAGE = "ccc1_abort_message"\n' +
+    '        const val RESULT_BUNDLE = "result"\n' +
+    '        const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onReceive(context: Context, intent: Intent?) {\n' +
+    '        if (intent == null) return\n' +
+    '        val prefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)\n' +
+    '        val id = intent.getStringExtra(JOB_ID) ?: return\n' +
+    '        val operationName = intent.getStringExtra(JOB_OPERATION) ?: return\n' +
+    '\n' +
+    '        val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)\n' +
+    '        val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT\n' +
+    '        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name\n' +
+    '        if (abortSlot) {\n' +
+    '            if (id != prefs.getString(ABORT_JOB_ID, null)) return\n' +
+    '        } else if (projectStatusSlot) {\n' +
+    '            if (id != prefs.getString(STATUS_JOB_ID, null)) return\n' +
+    '        } else if (id != prefs.getString(JOB_ID, null) ||\n' +
+    '            operationName != prefs.getString(JOB_OPERATION, null)\n' +
+    '        ) return\n' +
+    '\n' +
+    '        val codingOrder = operationName == "CODE_TEST"\n' +
+    '        val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)\n' +
+    '        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {\n' +
+    '            ContinuumMobileBuildPlan.Operation.valueOf(operationName)\n' +
+    '        } catch (_: IllegalArgumentException) {\n' +
+    '            return\n' +
+    '        }\n' +
+    '        // Verify immutable routing identity in addition to the fillable\n' +
+    '        // extras: a Termux result cannot silently substitute operation/id.\n' +
+    '        val callbackData = intent.data ?: return\n' +
+    '        if (callbackData.scheme != "continuum" ||\n' +
+    '            callbackData.authority != "termux-callback" ||\n' +
+    '            callbackData.pathSegments != listOf(operationName, id)\n' +
+    '        ) return\n' +
+    '\n' +
+    '        val bundle = intent.getBundleExtra(RESULT_BUNDLE)\n' +
+    '        val hasResult = bundle != null && bundle.containsKey("exitCode") && bundle.containsKey("err")\n' +
+    '        val exitCode = if (hasResult) bundle?.getInt("exitCode") else null\n' +
+    '        val errorCode = if (hasResult) bundle?.getInt("err") else null\n' +
+    '\n' +
+    '        val stdout = bundle?.getString("stdout") ?: ""\n' +
+    '        val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()\n' +
+    '        val truncated = originalLength == null || originalLength > stdout.length.toLong()\n' +
+    '\n' +
+    '        if (ccc1 != null) {\n' +
+    '            // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.\n' +
+    '            val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,\n' +
+    '                bundle?.getString("stderr"))\n' +
+    '            val expectedAbortTask = if (abortSlot) prefs.getString(ABORT_TASK, null) else null\n' +
+    '            // evaluate already strictly validated/bounded this JSON. Bind its task as well as its callback id.\n' +
+    '            val abortTargetMatches = !abortSlot || (expectedAbortTask != null &&\n' +
+    '                evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {\n' +
+    '                    JSONObject(stdout).getJSONObject("result").getString("taskId") == expectedAbortTask\n' +
+    '                }.getOrDefault(false))\n' +
+    '            val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)\n' +
+    '                evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = "INVALID_RESULT",\n' +
+    '                    message = "Keine auftragsgebundene CCC1-Abbruchrückmeldung; nichts bestätigt.", taskId = null)\n' +
+    '                else evaluated\n' +
+    '            // Only the validated summary, the task id and a verified patch hash; never Termux output or code.\n' +
+    '            val editor = prefs.edit()\n' +
+    '            if (abortSlot) {\n' +
+    '                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).remove(ABORT_TASK).putString(ABORT_MESSAGE, result.message)\n' +
+    '            } else {\n' +
+    '                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n' +
+    '                    .putString(LAST_MESSAGE, result.message)\n' +
+    '                if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)\n' +
+    '            }\n' +
+    '            // A late abort(A) must not replace/clear B reported by a newer MAIN status callback.\n' +
+    '            if (!abortSlot || (abortTargetMatches && prefs.getString(CCC1_TASK, null) == expectedAbortTask)) {\n' +
+    '                if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)\n' +
+    '                else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&\n' +
+    '                    (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)\n' +
+    '                ) editor.remove(CCC1_TASK)\n' +
+    '            }\n' +
+    '            editor.commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        if (typed != null) {\n' +
+    '            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)\n' +
+    '            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)\n' +
+    '            val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)\n' +
+    '            val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)\n' +
+    '                ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,\n' +
+    '                    exitCode,errorCode,if(truncated)null else stdout,expectedCommit)\n' +
+    '                else null\n' +
+    '            val message=result?.message ?:\n' +
+    '                "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."\n' +
+    '            val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)\n' +
+    '                .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n' +
+    '                .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)\n' +
+    '                .putString(LAST_MESSAGE,message)\n' +
+    '            if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {\n' +
+    '                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)\n' +
+    '                if(result?.prepared==true && expectedCommit!=null)\n' +
+    '                    editor.putString(TYPED_PREPARED_ID,result.id)\n' +
+    '                        .putString(TYPED_PREPARED_SHA,result.hash)\n' +
+    '                        .putString(TYPED_PREPARED_COMMIT,expectedCommit)\n' +
+    '            }\n' +
+    '            if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)\n' +
+    '            editor.commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        if (codingOrder) {\n' +
+    '            val receipt = ContinuumMobileCodingJob.evaluate(\n' +
+    '                id, exitCode, errorCode, if (truncated) null else stdout\n' +
+    '            )\n' +
+    '            // Keep only the strictly validated summary; never persist raw Termux output,\n' +
+    '            // generated code, arbitrary paths or the full candidate patch.\n' +
+    '            prefs.edit()\n' +
+    '                .remove(JOB_ID)\n' +
+    '                .remove(JOB_OPERATION)\n' +
+    '                .remove(JOB_PROJECT)\n' +
+    '                .remove(JOB_START)\n' +
+    '                .remove(LAST_SHA)\n' +
+    '                .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))\n' +
+    '                .commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        val payload = if (!truncated && stdout.length <= 32_768) {\n' +
+    '            try { JSONObject(stdout) } catch (_: Exception) { null }\n' +
+    '        } else null\n' +
+    '        val reportedStatus = payload?.optString("status")\n' +
+    '        val artifactHash = payload?.optString("apkSha256")\n' +
+    '        val signerHash = payload?.optString("signerSha256")\n' +
+    '        val sourceCommit = payload?.optString("commit")\n' +
+    '        val sourceSha256 = payload?.optString("sourceSha256")\n' +
+    '        val planSha256 = payload?.optString("planSha256")\n' +
+    '        val recipeId = payload?.optString("recipe")\n' +
+    '        val expectedProject = ContinuumOwnedProject.ofId(prefs.getString(if (projectStatusSlot) STATUS_PROJECT else JOB_PROJECT, null))\n' +
+    '            ?: ContinuumOwnedProject.NOTES\n' +
+    '        val profile = payload?.optString("toolchainProfile")\n' +
+    '        val verification = payload?.optJSONObject("verification")?.optString("verdict")\n' +
+    '            ?: payload?.optString("verification")\n' +
+    '        val buildStatus = payload?.optString("buildSt'... 3911 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/typed-android-coding-wiring.test.mjs:30:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `package at.heinz.deviceai\n\nimport android.content.BroadcastReceiver\nimport android.content.Context\nimport android.content.Intent\nimport org.json.JSONObject\n\n/**\n * Explicit, non-exported callback target for Termux RUN_COMMAND_PENDING_INTENT.\n * We store only a small structured receipt in app-private preferences (never full logs).\n */\nclass ContinuumMobileBuildResultReceiver : BroadcastReceiver() {\n    companion object {\n        const val PREFERENCES = "continuum_mobile_build_v1"\n        const val JOB_ID = "job_id"\n        const val JOB_OPERATION = "job_operation"\n        const val JOB_PROJECT = "job_project_v1"\n        const val JOB_START = "job_start"\n        /** Read-only recovery must remain available while a build callback is missing. */\n        const val STATUS_JOB_ID = "project_status_job_id_v1"\n        const val STATUS_JOB_START = "project_status_job_start_v1"\n        const val STATUS_PROJECT = "project_status_project_v1"\n        const val STATUS_MESSAGE = "project_status_message_v1"\n        const val LAST_MESSAGE = "last_message"\n        const val LAST_SHA = "last_sha"\n        const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"\n        const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"\n        const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"\n        const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"\n        const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"\n        const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"\n        /** CCC1 task the owner can cancel next (validated id only). */\n        const val CCC1_TASK = "ccc1_task"\n        /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */\n        const val ABORT_JOB_ID = "ccc1_abort_job_id"\n        const val ABORT_JOB_START = "ccc1_abort_job_start"\n        const val ABORT_TASK = "ccc1_abort_task_v1"\n        const val ABORT_MESSAGE = "ccc1_abort_message"\n        const val RESULT_BUNDLE = "result"\n        const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"\n    }\n\n    override fun onReceive(context: Context, intent: Intent?) {\n        if (intent == null) return\n        val prefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)\n        val id = intent.getStringExtra(JOB_ID) ?: return\n        val operationName = intent.getStringExtra(JOB_OPERATION) ?: return\n\n        val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)\n        val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT\n        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name\n        if (abortSlot) {\n            if (id != prefs.getString(ABORT_JOB_ID, null)) return\n        } else if (projectStatusSlot) {\n            if (id != prefs.getString(STATUS_JOB_ID, null)) return\n        } else if (id != prefs.getString(JOB_ID, null) ||\n            operationName != prefs.getString(JOB_OPERATION, null)\n        ) return\n\n        val codingOrder = operationName == "CODE_TEST"\n        val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)\n        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {\n            ContinuumMobileBuildPlan.Operation.valueOf(operationName)\n        } catch (_: IllegalArgumentException) {\n            return\n        }\n        // Verify immutable routing identity in addition to the fillable\n        // extras: a Termux result cannot silently substitute operation/id.\n        val callbackData = intent.data ?: return\n        if (callbackData.scheme != "continuum" ||\n            callbackData.authority != "termux-callback" ||\n            callbackData.pathSegments != listOf(operationName, id)\n        ) return\n\n        val bundle = intent.getBundleExtra(RESULT_BUNDLE)\n        val hasResult = bundle != null && bundle.containsKey("exitCode") && bundle.containsKey("err")\n        val exitCode = if (hasResult) bundle?.getInt("exitCode") else null\n        val errorCode = if (hasResult) bundle?.getInt("err") else null\n\n        val stdout = bundle?.getString("stdout") ?: ""\n        val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()\n        val truncated = originalLength == null || originalLength > stdout.length.toLong()\n\n        if (ccc1 != null) {\n            // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.\n            val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,\n                bundle?.getString("stderr"))\n            val expectedAbortTask = if (abortSlot) prefs.getString(ABORT_TASK, null) else null\n            // evaluate already strictly validated/bounded this JSON. Bind its task as well as its callback id.\n            val abortTargetMatches = !abortSlot || (expectedAbortTask != null &&\n                evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {\n                    JSONObject(stdout).getJSONObject("result").getString("taskId") == expectedAbortTask\n                }.getOrDefault(false))\n            val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)\n                evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = "INVALID_RESULT",\n                    message = "Keine auftragsgebundene CCC1-Abbruchrückmeldung; nichts bestätigt.", taskId = null)\n                else evaluated\n            // Only the validated summary, the task id and a verified patch hash; never Termux output or code.\n            val editor = prefs.edit()\n            if (abortSlot) {\n                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).remove(ABORT_TASK).putString(ABORT_MESSAGE, result.message)\n            } else {\n                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n                    .putString(LAST_MESSAGE, result.message)\n                if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)\n            }\n            // A late abort(A) must not replace/clear B reported by a newer MAIN status callback.\n            if (!abortSlot || (abortTargetMatches && prefs.getString(CCC1_TASK, null) == expectedAbortTask)) {\n                if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)\n                else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&\n                    (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)\n                ) editor.remove(CCC1_TASK)\n            }\n            editor.commit()\n            return\n        }\n\n        if (typed != null) {\n            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)\n            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)\n            val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)\n            val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)\n                ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,\n                    exitCode,errorCode,if(truncated)null else stdout,expectedCommit)\n                else null\n            val message=result?.message ?:\n                "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."\n            val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)\n                .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n                .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)\n                .putString(LAST_MESSAGE,message)\n            if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {\n                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)\n                if(result?.prepared==true && expectedCommit!=null)\n                    editor.putString(TYPED_PREPARED_ID,result.id)\n                        .putString(TYPED_PREPARED_SHA,result.hash)\n                        .putString(TYPED_PREPARED_COMMIT,expectedCommit)\n            }\n            if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)\n            editor.commit()\n            return\n        }\n\n        if (codingOrder) {\n            val receipt = ContinuumMobileCodingJob.evaluate(\n                id, exitCode, errorCode, if (truncated) null else stdout\n            )\n            // Keep only the strictly validated summary; never persist raw Termux output,\n            // generated code, arbitrary paths or the full candidate patch.\n            prefs.edit()\n                .remove(JOB_ID)\n                .remove(JOB_OPERATION)\n                .remove(JOB_PROJECT)\n                .remove(JOB_START)\n                .remove(LAST_SHA)\n                .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))\n                .commit()\n            return\n        }\n\n        val payload = if (!truncated && stdout.length <= 32_768) {\n            try { JSONObject(stdout) } catch (_: Exception) { null }\n        } else null\n        val reportedStatus = payload?.optString("status")\n        val artifactHash = payload?.optString("apkSha256")\n        val signerHash = payload?.optString("signerSha256")\n        val sourceCommit = payload?.optString("commit")\n        val sourceSha256 = payload?.optString("sourceSha256")\n        val planSha256 = payload?.optString("planSha256")\n        val recipeId = payload?.optString("recipe")\n        val expectedProject = ContinuumOwnedProject.ofId(prefs.getString(if (projectStatusSlot) STATUS_PROJECT else JOB_PROJECT, null))\n            ?: ContinuumOwnedProject.NOTES\n        val profile = payload?.optString("toolchainProfile")\n        val verification = payload?.optJSONObject("verification")?.optString("verdict")\n            ?: payload?.optString("verification")\n        val buildStatus = payload?.optString("buildSt`... 3911 more characters,
+    expected: /if\(result\?\.prepared==true\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at .github/continuum/typed-android-coding-wiring.test.mjs:21:1
+✖ existing protected Android Termux receiver binds both callback identity and reviewed task digest (2.310205ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /if\(result\?\.prepared==true\)/. Input:
+  
+  'package at.heinz.deviceai\n' +
+    '\n' +
+    'import android.content.BroadcastReceiver\n' +
+    'import android.content.Context\n' +
+    'import android.content.Intent\n' +
+    'import org.json.JSONObject\n' +
+    '\n' +
+    '/**\n' +
+    ' * Explicit, non-exported callback target for Termux RUN_COMMAND_PENDING_INTENT.\n' +
+    ' * We store only a small structured receipt in app-private preferences (never full logs).\n' +
+    ' */\n' +
+    'class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {\n' +
+    '    companion object {\n' +
+    '        const val PREFERENCES = "continuum_mobile_build_v1"\n' +
+    '        const val JOB_ID = "job_id"\n' +
+    '        const val JOB_OPERATION = "job_operation"\n' +
+    '        const val JOB_PROJECT = "job_project_v1"\n' +
+    '        const val JOB_START = "job_start"\n' +
+    '        /** Read-only recovery must remain available while a build callback is missing. */\n' +
+    '        const val STATUS_JOB_ID = "project_status_job_id_v1"\n' +
+    '        const val STATUS_JOB_START = "project_status_job_start_v1"\n' +
+    '        const val STATUS_PROJECT = "project_status_project_v1"\n' +
+    '        const val STATUS_MESSAGE = "project_status_message_v1"\n' +
+    '        const val LAST_MESSAGE = "last_message"\n' +
+    '        const val LAST_SHA = "last_sha"\n' +
+    '        const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"\n' +
+    '        const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"\n' +
+    '        const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"\n' +
+    '        const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"\n' +
+    '        const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"\n' +
+    '        const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"\n' +
+    '        /** CCC1 task the owner can cancel next (validated id only). */\n' +
+    '        const val CCC1_TASK = "ccc1_task"\n' +
+    "        /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */\n" +
+    '        const val ABORT_JOB_ID = "ccc1_abort_job_id"\n' +
+    '        const val ABORT_JOB_START = "ccc1_abort_job_start"\n' +
+    '        const val ABORT_TASK = "ccc1_abort_task_v1"\n' +
+    '        const val ABORT_MESSAGE = "ccc1_abort_message"\n' +
+    '        const val RESULT_BUNDLE = "result"\n' +
+    '        const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"\n' +
+    '    }\n' +
+    '\n' +
+    '    override fun onReceive(context: Context, intent: Intent?) {\n' +
+    '        if (intent == null) return\n' +
+    '        val prefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)\n' +
+    '        val id = intent.getStringExtra(JOB_ID) ?: return\n' +
+    '        val operationName = intent.getStringExtra(JOB_OPERATION) ?: return\n' +
+    '\n' +
+    '        val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)\n' +
+    '        val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT\n' +
+    '        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name\n' +
+    '        if (abortSlot) {\n' +
+    '            if (id != prefs.getString(ABORT_JOB_ID, null)) return\n' +
+    '        } else if (projectStatusSlot) {\n' +
+    '            if (id != prefs.getString(STATUS_JOB_ID, null)) return\n' +
+    '        } else if (id != prefs.getString(JOB_ID, null) ||\n' +
+    '            operationName != prefs.getString(JOB_OPERATION, null)\n' +
+    '        ) return\n' +
+    '\n' +
+    '        val codingOrder = operationName == "CODE_TEST"\n' +
+    '        val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)\n' +
+    '        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {\n' +
+    '            ContinuumMobileBuildPlan.Operation.valueOf(operationName)\n' +
+    '        } catch (_: IllegalArgumentException) {\n' +
+    '            return\n' +
+    '        }\n' +
+    '        // Verify immutable routing identity in addition to the fillable\n' +
+    '        // extras: a Termux result cannot silently substitute operation/id.\n' +
+    '        val callbackData = intent.data ?: return\n' +
+    '        if (callbackData.scheme != "continuum" ||\n' +
+    '            callbackData.authority != "termux-callback" ||\n' +
+    '            callbackData.pathSegments != listOf(operationName, id)\n' +
+    '        ) return\n' +
+    '\n' +
+    '        val bundle = intent.getBundleExtra(RESULT_BUNDLE)\n' +
+    '        val hasResult = bundle != null && bundle.containsKey("exitCode") && bundle.containsKey("err")\n' +
+    '        val exitCode = if (hasResult) bundle?.getInt("exitCode") else null\n' +
+    '        val errorCode = if (hasResult) bundle?.getInt("err") else null\n' +
+    '\n' +
+    '        val stdout = bundle?.getString("stdout") ?: ""\n' +
+    '        val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()\n' +
+    '        val truncated = originalLength == null || originalLength > stdout.length.toLong()\n' +
+    '\n' +
+    '        if (ccc1 != null) {\n' +
+    '            // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.\n' +
+    '            val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,\n' +
+    '                bundle?.getString("stderr"))\n' +
+    '            val expectedAbortTask = if (abortSlot) prefs.getString(ABORT_TASK, null) else null\n' +
+    '            // evaluate already strictly validated/bounded this JSON. Bind its task as well as its callback id.\n' +
+    '            val abortTargetMatches = !abortSlot || (expectedAbortTask != null &&\n' +
+    '                evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {\n' +
+    '                    JSONObject(stdout).getJSONObject("result").getString("taskId") == expectedAbortTask\n' +
+    '                }.getOrDefault(false))\n' +
+    '            val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)\n' +
+    '                evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = "INVALID_RESULT",\n' +
+    '                    message = "Keine auftragsgebundene CCC1-Abbruchrückmeldung; nichts bestätigt.", taskId = null)\n' +
+    '                else evaluated\n' +
+    '            // Only the validated summary, the task id and a verified patch hash; never Termux output or code.\n' +
+    '            val editor = prefs.edit()\n' +
+    '            if (abortSlot) {\n' +
+    '                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).remove(ABORT_TASK).putString(ABORT_MESSAGE, result.message)\n' +
+    '            } else {\n' +
+    '                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n' +
+    '                    .putString(LAST_MESSAGE, result.message)\n' +
+    '                if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)\n' +
+    '            }\n' +
+    '            // A late abort(A) must not replace/clear B reported by a newer MAIN status callback.\n' +
+    '            if (!abortSlot || (abortTargetMatches && prefs.getString(CCC1_TASK, null) == expectedAbortTask)) {\n' +
+    '                if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)\n' +
+    '                else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&\n' +
+    '                    (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)\n' +
+    '                ) editor.remove(CCC1_TASK)\n' +
+    '            }\n' +
+    '            editor.commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        if (typed != null) {\n' +
+    '            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)\n' +
+    '            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)\n' +
+    '            val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)\n' +
+    '            val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)\n' +
+    '                ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,\n' +
+    '                    exitCode,errorCode,if(truncated)null else stdout,expectedCommit)\n' +
+    '                else null\n' +
+    '            val message=result?.message ?:\n' +
+    '                "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."\n' +
+    '            val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)\n' +
+    '                .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n' +
+    '                .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)\n' +
+    '                .putString(LAST_MESSAGE,message)\n' +
+    '            if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {\n' +
+    '                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)\n' +
+    '                if(result?.prepared==true && expectedCommit!=null)\n' +
+    '                    editor.putString(TYPED_PREPARED_ID,result.id)\n' +
+    '                        .putString(TYPED_PREPARED_SHA,result.hash)\n' +
+    '                        .putString(TYPED_PREPARED_COMMIT,expectedCommit)\n' +
+    '            }\n' +
+    '            if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)\n' +
+    '            editor.commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        if (codingOrder) {\n' +
+    '            val receipt = ContinuumMobileCodingJob.evaluate(\n' +
+    '                id, exitCode, errorCode, if (truncated) null else stdout\n' +
+    '            )\n' +
+    '            // Keep only the strictly validated summary; never persist raw Termux output,\n' +
+    '            // generated code, arbitrary paths or the full candidate patch.\n' +
+    '            prefs.edit()\n' +
+    '                .remove(JOB_ID)\n' +
+    '                .remove(JOB_OPERATION)\n' +
+    '                .remove(JOB_PROJECT)\n' +
+    '                .remove(JOB_START)\n' +
+    '                .remove(LAST_SHA)\n' +
+    '                .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))\n' +
+    '                .commit()\n' +
+    '            return\n' +
+    '        }\n' +
+    '\n' +
+    '        val payload = if (!truncated && stdout.length <= 32_768) {\n' +
+    '            try { JSONObject(stdout) } catch (_: Exception) { null }\n' +
+    '        } else null\n' +
+    '        val reportedStatus = payload?.optString("status")\n' +
+    '        val artifactHash = payload?.optString("apkSha256")\n' +
+    '        val signerHash = payload?.optString("signerSha256")\n' +
+    '        val sourceCommit = payload?.optString("commit")\n' +
+    '        val sourceSha256 = payload?.optString("sourceSha256")\n' +
+    '        val planSha256 = payload?.optString("planSha256")\n' +
+    '        val recipeId = payload?.optString("recipe")\n' +
+    '        val expectedProject = ContinuumOwnedProject.ofId(prefs.getString(if (projectStatusSlot) STATUS_PROJECT else JOB_PROJECT, null))\n' +
+    '            ?: ContinuumOwnedProject.NOTES\n' +
+    '        val profile = payload?.optString("toolchainProfile")\n' +
+    '        val verification = payload?.optJSONObject("verification")?.optString("verdict")\n' +
+    '            ?: payload?.optString("verification")\n' +
+    '        val buildStatus = payload?.optString("buildSt'... 3911 more characters
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/typed-android-coding-wiring.test.mjs:30:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `package at.heinz.deviceai\n\nimport android.content.BroadcastReceiver\nimport android.content.Context\nimport android.content.Intent\nimport org.json.JSONObject\n\n/**\n * Explicit, non-exported callback target for Termux RUN_COMMAND_PENDING_INTENT.\n * We store only a small structured receipt in app-private preferences (never full logs).\n */\nclass ContinuumMobileBuildResultReceiver : BroadcastReceiver() {\n    companion object {\n        const val PREFERENCES = "continuum_mobile_build_v1"\n        const val JOB_ID = "job_id"\n        const val JOB_OPERATION = "job_operation"\n        const val JOB_PROJECT = "job_project_v1"\n        const val JOB_START = "job_start"\n        /** Read-only recovery must remain available while a build callback is missing. */\n        const val STATUS_JOB_ID = "project_status_job_id_v1"\n        const val STATUS_JOB_START = "project_status_job_start_v1"\n        const val STATUS_PROJECT = "project_status_project_v1"\n        const val STATUS_MESSAGE = "project_status_message_v1"\n        const val LAST_MESSAGE = "last_message"\n        const val LAST_SHA = "last_sha"\n        const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"\n        const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"\n        const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"\n        const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"\n        const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"\n        const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"\n        /** CCC1 task the owner can cancel next (validated id only). */\n        const val CCC1_TASK = "ccc1_task"\n        /** Own one-shot slot of a CCC1 abort, so it can reach a running step without dropping that step's result. */\n        const val ABORT_JOB_ID = "ccc1_abort_job_id"\n        const val ABORT_JOB_START = "ccc1_abort_job_start"\n        const val ABORT_TASK = "ccc1_abort_task_v1"\n        const val ABORT_MESSAGE = "ccc1_abort_message"\n        const val RESULT_BUNDLE = "result"\n        const val COMMAND_PENDING_INTENT = "com.termux.RUN_COMMAND_PENDING_INTENT"\n    }\n\n    override fun onReceive(context: Context, intent: Intent?) {\n        if (intent == null) return\n        val prefs = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)\n        val id = intent.getStringExtra(JOB_ID) ?: return\n        val operationName = intent.getStringExtra(JOB_OPERATION) ?: return\n\n        val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)\n        val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT\n        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name\n        if (abortSlot) {\n            if (id != prefs.getString(ABORT_JOB_ID, null)) return\n        } else if (projectStatusSlot) {\n            if (id != prefs.getString(STATUS_JOB_ID, null)) return\n        } else if (id != prefs.getString(JOB_ID, null) ||\n            operationName != prefs.getString(JOB_OPERATION, null)\n        ) return\n\n        val codingOrder = operationName == "CODE_TEST"\n        val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)\n        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {\n            ContinuumMobileBuildPlan.Operation.valueOf(operationName)\n        } catch (_: IllegalArgumentException) {\n            return\n        }\n        // Verify immutable routing identity in addition to the fillable\n        // extras: a Termux result cannot silently substitute operation/id.\n        val callbackData = intent.data ?: return\n        if (callbackData.scheme != "continuum" ||\n            callbackData.authority != "termux-callback" ||\n            callbackData.pathSegments != listOf(operationName, id)\n        ) return\n\n        val bundle = intent.getBundleExtra(RESULT_BUNDLE)\n        val hasResult = bundle != null && bundle.containsKey("exitCode") && bundle.containsKey("err")\n        val exitCode = if (hasResult) bundle?.getInt("exitCode") else null\n        val errorCode = if (hasResult) bundle?.getInt("err") else null\n\n        val stdout = bundle?.getString("stdout") ?: ""\n        val originalLength = bundle?.getString("stdout_original_length")?.toLongOrNull()\n        val truncated = originalLength == null || originalLength > stdout.length.toLong()\n\n        if (ccc1 != null) {\n            // stderr only feeds fixed diagnosis patterns (old Termux checkout, missing Node); it is never stored or shown.\n            val evaluated = ContinuumCcc1Bridge.evaluate(ccc1, exitCode, errorCode, if (truncated) null else stdout,\n                bundle?.getString("stderr"))\n            val expectedAbortTask = if (abortSlot) prefs.getString(ABORT_TASK, null) else null\n            // evaluate already strictly validated/bounded this JSON. Bind its task as well as its callback id.\n            val abortTargetMatches = !abortSlot || (expectedAbortTask != null &&\n                evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && runCatching {\n                    JSONObject(stdout).getJSONObject("result").getString("taskId") == expectedAbortTask\n                }.getOrDefault(false))\n            val result = if (abortSlot && evaluated.outcome == ContinuumCcc1Bridge.Outcome.OK && !abortTargetMatches)\n                evaluated.copy(outcome = ContinuumCcc1Bridge.Outcome.INVALID_RESULT, status = "INVALID_RESULT",\n                    message = "Keine auftragsgebundene CCC1-Abbruchrückmeldung; nichts bestätigt.", taskId = null)\n                else evaluated\n            // Only the validated summary, the task id and a verified patch hash; never Termux output or code.\n            val editor = prefs.edit()\n            if (abortSlot) {\n                editor.remove(ABORT_JOB_ID).remove(ABORT_JOB_START).remove(ABORT_TASK).putString(ABORT_MESSAGE, result.message)\n            } else {\n                editor.remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n                    .putString(LAST_MESSAGE, result.message)\n                if (result.verifiedPatchSha256 != null) editor.putString(LAST_SHA, result.verifiedPatchSha256)\n            }\n            // A late abort(A) must not replace/clear B reported by a newer MAIN status callback.\n            if (!abortSlot || (abortTargetMatches && prefs.getString(CCC1_TASK, null) == expectedAbortTask)) {\n                if (result.taskId != null) editor.putString(CCC1_TASK, result.taskId)\n                else if (result.outcome == ContinuumCcc1Bridge.Outcome.OK &&\n                    (ccc1 == ContinuumCcc1Bridge.Operation.STATUS || ccc1 == ContinuumCcc1Bridge.Operation.ABORT)\n                ) editor.remove(CCC1_TASK)\n            }\n            editor.commit()\n            return\n        }\n\n        if (typed != null) {\n            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)\n            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)\n            val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)\n            val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)\n                ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,\n                    exitCode,errorCode,if(truncated)null else stdout,expectedCommit)\n                else null\n            val message=result?.message ?:\n                "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."\n            val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)\n                .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)\n                .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)\n                .putString(LAST_MESSAGE,message)\n            if(typed==ContinuumTypedCodingBridge.Operation.PREPARE) {\n                editor.remove(TYPED_PREPARED_ID).remove(TYPED_PREPARED_SHA).remove(TYPED_PREPARED_COMMIT)\n                if(result?.prepared==true && expectedCommit!=null)\n                    editor.putString(TYPED_PREPARED_ID,result.id)\n                        .putString(TYPED_PREPARED_SHA,result.hash)\n                        .putString(TYPED_PREPARED_COMMIT,expectedCommit)\n            }\n            if(result?.patchSha256!=null)editor.putString(LAST_SHA,result.patchSha256)\n            editor.commit()\n            return\n        }\n\n        if (codingOrder) {\n            val receipt = ContinuumMobileCodingJob.evaluate(\n                id, exitCode, errorCode, if (truncated) null else stdout\n            )\n            // Keep only the strictly validated summary; never persist raw Termux output,\n            // generated code, arbitrary paths or the full candidate patch.\n            prefs.edit()\n                .remove(JOB_ID)\n                .remove(JOB_OPERATION)\n                .remove(JOB_PROJECT)\n                .remove(JOB_START)\n                .remove(LAST_SHA)\n                .putString(LAST_MESSAGE, ContinuumMobileCodingJob.explanation(receipt))\n                .commit()\n            return\n        }\n\n        val payload = if (!truncated && stdout.length <= 32_768) {\n            try { JSONObject(stdout) } catch (_: Exception) { null }\n        } else null\n        val reportedStatus = payload?.optString("status")\n        val artifactHash = payload?.optString("apkSha256")\n        val signerHash = payload?.optString("signerSha256")\n        val sourceCommit = payload?.optString("commit")\n        val sourceSha256 = payload?.optString("sourceSha256")\n        val planSha256 = payload?.optString("planSha256")\n        val recipeId = payload?.optString("recipe")\n        val expectedProject = ContinuumOwnedProject.ofId(prefs.getString(if (projectStatusSlot) STATUS_PROJECT else JOB_PROJECT, null))\n            ?: ContinuumOwnedProject.NOTES\n        val profile = payload?.optString("toolchainProfile")\n        val verification = payload?.optJSONObject("verification")?.optString("verdict")\n            ?: payload?.optString("verification")\n        val buildStatus = payload?.optString("buildSt`... 3911 more characters,
+    expected: /if\(result\?\.prepared==true\)/,
+    operator: 'match',
+    diff: 'simple'
+  }

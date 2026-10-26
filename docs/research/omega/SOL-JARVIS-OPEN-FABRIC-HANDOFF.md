@@ -35,6 +35,33 @@ availability not yet established. No Android/model/owner-signing capabilities
 declared by cloud runtime. Tests on this branch: **NOT_RUN at initial checkpoint**.
 Historical V8 or native reports are upstream evidence, not this checkout's results.
 
+## Checkpoint 2 — native audit and registry repair
+
+- PR: https://github.com/Ullmann27/device-ai/pull/169. Reviewed #167's six-file
+  delta against #166; merged sibling ancestry on this own branch, no shared ref edit.
+- Native Node 24 on complete checkout `4e4abc61ffb9d9a7e9d6db351c306d1105baf2fe`:
+  focused **58/58 PASS**, full **1306 PASS / 5 FAIL / 6 SKIP** (1317 tests).
+  Exact command, SHA and raw outputs: `docs/evidence/sol-jarvis-20261026/`.
+  Five failures: two outdated Android source-string expectations, one ledger
+  fixture missing executed negative-test evidence, two executions of the same
+  outdated typed callback assertion. No blanket green-suite claim.
+- After #167 integration, scorecard/export native real module graph **9/9 PASS**.
+- Three actual ComputeFabric regressions reproduced with Kotlin 2.2.0 / JVM 21:
+  mutable signed sets escalated rights, future-issued manifests accepted,
+  explicit assigned node silently substituted. RED **3/12 failed**, GREEN **12/12**.
+  Registry now snapshots unmodifiable sets before verifying, checks issue/expiry,
+  serializes registry operations, scheduler respects explicit assignment.
+- Moved unchanged `DeviceToolExecutorRunner` into its own Android adapter file to
+  compile real platform-independent contracts without device-executor doubles.
+  Kotlin check uses real android-all framework dependency for CommandInterpreter;
+  no app dependency stubs, no Gradle/Android build/device claim. Full reproduction
+  script accompanies the forthcoming shared-contract slice.
+- Docker 28.4.0 local daemon is healthy. Pinned busybox 1.37.0 image ID
+  `sha256:30ecbe1509090b38ef3260f3609d64d8261230464eaa4d235901db496e9647fb`.
+  First nonroot/read-only/no-network/cap-drop container probe exits 0. This is
+  infrastructure availability, not a repair proof or model inference.
+- Fabric adapter/shared fixture work is in progress; not yet Android product wiring.
+
 ## Next executable steps
 
 1. Run focused native model/numeric/translator/CCC1/A-B-C/fabric tests from complete

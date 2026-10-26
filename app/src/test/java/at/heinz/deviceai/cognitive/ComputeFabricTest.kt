@@ -9,6 +9,48 @@ import org.junit.Test
 
 class ComputeFabricTest {
     @Test
+    fun mutatingSignedCollectionsCannotEscalateRegisteredCapabilities() {
+        val types = mutableSetOf(ComputeTaskType.VERIFY)
+        val backends = mutableSetOf(ComputeBackend.CPU)
+        val registry = registry()
+        val signed = manifest("mutable").copy(taskTypes = types, backends = backends)
+        registry.register(SignedNodeCapabilityManifest(signed, byteArrayOf(1)))
+        types += ComputeTaskType.REASONING
+        backends += ComputeBackend.GPU
+        assertNull(ComputeScheduler(registry) { 1_500 }.select(task()))
+        assertEquals(setOf(ComputeTaskType.VERIFY), registry.get(signed.nodeId)!!.taskTypes)
+        assertEquals(setOf(ComputeBackend.CPU), registry.get(signed.nodeId)!!.backends)
+        // Returned values also must not expose a mutable internal permission set.
+        assertThrows(UnsupportedOperationException::class.java) {
+            (registry.get(signed.nodeId)!!.taskTypes as MutableSet).add(ComputeTaskType.REASONING)
+        }
+    }
+
+    @Test
+    fun futureIssuedManifestCannotBeRegisteredOrUsedAfterClockRollback() {
+        var now = 1_500L
+        val registry = ComputeNodeRegistry(NodeManifestSignatureVerifier { true }) { now }
+        assertThrows(IllegalArgumentException::class.java) {
+            registry.register(SignedNodeCapabilityManifest(manifest("future").copy(issuedAtMillis = 1_600), byteArrayOf(1)))
+        }
+        registry.register(SignedNodeCapabilityManifest(manifest("past"), byteArrayOf(1)))
+        now = 900L
+        assertNull(registry.get(ComputeNodeId("past")))
+        assertTrue(registry.authorized().isEmpty())
+    }
+
+    @Test
+    fun schedulerCannotSubstituteAnExplicitlyAssignedNode() {
+        val registry = registry()
+        registry.register(SignedNodeCapabilityManifest(manifest("node-a"), byteArrayOf(1)))
+        registry.register(SignedNodeCapabilityManifest(manifest("node-b"), byteArrayOf(1)))
+        assertEquals(ComputeNodeId("node-b"), ComputeScheduler(registry) { 1_500 }
+            .select(task().copy(assignedNodeId = ComputeNodeId("node-b")))!!.nodeId)
+        assertNull(ComputeScheduler(registry) { 1_500 }
+            .select(task().copy(assignedNodeId = ComputeNodeId("missing"))))
+    }
+
+    @Test
     fun onlyVerifiedAuthorizedCompatibleNodeIsScheduled() {
         val registry = registry()
         val manifest = manifest("node-a")

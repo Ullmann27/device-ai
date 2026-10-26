@@ -1,6 +1,7 @@
 package at.heinz.deviceai.cognitive
 
 import java.util.concurrent.ConcurrentHashMap
+import java.util.Collections
 
 @JvmInline
 value class ComputeNodeId(val value: String) {
@@ -66,28 +67,46 @@ class ComputeNodeRegistry(
     private val manifests = ConcurrentHashMap<ComputeNodeId, NodeCapabilityManifest>()
     private val revoked = ConcurrentHashMap.newKeySet<ComputeNodeId>()
 
+    @Synchronized
     fun register(envelope: SignedNodeCapabilityManifest): NodeCapabilityManifest {
-        require(verifier.verify(envelope)) { "Compute node capability signature verification failed." }
-        val manifest = envelope.manifest
-        require(manifest.expiresAtMillis > nowMillis()) { "Compute node capability manifest is expired." }
+        // Verify exactly the immutable values retained by the registry. Kotlin Set
+        // is only read-only at the type level; retaining caller-owned sets lets a
+        // valid signature become permission to mutate capabilities afterwards.
+        val manifest = envelope.manifest.copy(
+            taskTypes = Collections.unmodifiableSet(HashSet(envelope.manifest.taskTypes)),
+            backends = Collections.unmodifiableSet(HashSet(envelope.manifest.backends))
+        )
+        val snapshot = SignedNodeCapabilityManifest(manifest, envelope.signature.copyOf())
+        require(verifier.verify(snapshot)) { "Compute node capability signature verification failed." }
+        val now = nowMillis()
+        require(manifest.issuedAtMillis <= now && manifest.expiresAtMillis > now) {
+            "Compute node capability manifest is not currently valid."
+        }
         require(manifest.nodeId !in revoked) { "Compute node is revoked." }
         manifests[manifest.nodeId] = manifest
         return manifest
     }
 
-    fun revoke(nodeId: ComputeNodeId) {
+    @Synchronized fun revoke(nodeId: ComputeNodeId) {
         revoked += nodeId
         manifests.remove(nodeId)
     }
 
-    fun isRevoked(nodeId: ComputeNodeId): Boolean = nodeId in revoked
+    @Synchronized fun isRevoked(nodeId: ComputeNodeId): Boolean = nodeId in revoked
 
-    fun authorized(): List<NodeCapabilityManifest> =
-        manifests.values.filter { it.nodeId !in revoked && it.expiresAtMillis > nowMillis() }
-            .sortedBy { it.nodeId.value }
+    @Synchronized fun authorized(): List<NodeCapabilityManifest> {
+        val now = nowMillis()
+        return manifests.values.filter {
+            it.nodeId !in revoked && it.issuedAtMillis <= now && it.expiresAtMillis > now
+        }.sortedBy { it.nodeId.value }
+    }
 
-    fun get(nodeId: ComputeNodeId): NodeCapabilityManifest? =
-        manifests[nodeId]?.takeIf { nodeId !in revoked && it.expiresAtMillis > nowMillis() }
+    @Synchronized fun get(nodeId: ComputeNodeId): NodeCapabilityManifest? {
+        val now = nowMillis()
+        return manifests[nodeId]?.takeIf {
+            nodeId !in revoked && it.issuedAtMillis <= now && it.expiresAtMillis > now
+        }
+    }
 }
 
 data class ComputeTask(
@@ -127,6 +146,7 @@ class ComputeScheduler(
     fun select(task: ComputeTask): NodeCapabilityManifest? {
         if (task.deadlineMillis <= nowMillis()) return null
         return registry.authorized().asSequence()
+            .filter { task.assignedNodeId == null || task.assignedNodeId == it.nodeId }
             .filter { task.type in it.taskTypes }
             .filter { task.requiredBackend == null || task.requiredBackend in it.backends }
             .filter { task.requiredRamMb <= it.maxRamMb }
