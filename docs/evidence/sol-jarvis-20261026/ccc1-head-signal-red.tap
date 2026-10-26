@@ -1,0 +1,53 @@
+✔ diagnostic cap cannot truncate executed coverage or hide disappearing failed tests (6.960072ms)
+✔ oversized XML cannot be silently treated as complete executed evidence (3.077466ms)
+✔ parity rejects explicitly incomplete coverage even if identities and counts match (0.346964ms)
+✔ JUnit directory cannot silently omit an oversized or linked report (10.717934ms)
+✔ incomplete failing report cannot become negative strategy training evidence (1.62334ms)
+✖ a concurrent HEAD change cannot hide behind a one-file patch diff (42.458258ms)
+✖ signal, process error or absent exit code cannot be a reproduced RED baseline (0.72092ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 5
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 169.045069
+
+✖ failing tests:
+
+test at .github/continuum/ccc1-native-evidence-integrity.test.mjs:60:1
+✖ a concurrent HEAD change cannot hide behind a one-file patch diff (42.458258ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/ccc1-native-evidence-integrity.test.mjs:70:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /SOURCE_COMMIT_DRIFT/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/ccc1-native-evidence-integrity.test.mjs:73:1
+✖ signal, process error or absent exit code cannot be a reproduced RED baseline (0.72092ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/ccc1-native-evidence-integrity.test.mjs:82:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /TEST_RUN_INTERRUPTED/,
+    operator: 'throws',
+    diff: 'simple'
+  }

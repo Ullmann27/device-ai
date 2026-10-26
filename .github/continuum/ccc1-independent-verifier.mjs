@@ -22,10 +22,15 @@ export const CCC1_RESEARCH_OUTCOMES=Object.freeze({
 function report(status,reason,ids={},before=null,after=null,fresh=null){
   const slim=v=>Object.freeze((v?.results??[]).map(t=>Object.freeze({
     profile:t.profile,passed:t.passed,executed:t.tests?.executed??0,
-    failed:t.tests?.failed??0,skipped:t.tests?.skipped??0
+    failed:t.tests?.failed??0,skipped:t.tests?.skipped??0,
+    evidenceComplete:t.tests?.evidenceComplete===true,
+    executedCaseHashes:Object.freeze([...(t.tests?.executedCaseHashes??[])]),
+    skippedCaseDigest:t.tests?.skippedCaseDigest??null,
+    sourceSnapshotSha256:t.isolation?.sourceSha256??null,exitCode:t.exitCode
   })));
   return Object.freeze({status,reason,verifiedSuccess:false,learningEligible:false,
-    promotionEligible:false,ownerReviewRequired:true,...ids,
+    promotionEligible:false,ownerReviewRequired:true,
+    testEvidenceAuthenticated:false,semanticRepairVerified:false,...ids,
     before:slim(before),after:slim(after),fresh:slim(fresh)});
 }
 function testDigests(wt){
@@ -46,19 +51,21 @@ function clean(wt,base){
   if(git(wt,['rev-parse','HEAD']).stdout.trim()!==base)throw Error('SOURCE_COMMIT_DRIFT');
   if(git(wt,['status','--porcelain','--untracked-files=no']).stdout.trim())throw Error('WORKTREE_NOT_CLEAN');
 }
-function changedOnly(wt,file){
+export function assertCcc1WorktreePatchScope(wt,file,base){
+  if(git(wt,['rev-parse','HEAD']).stdout.trim()!==base)throw Error('SOURCE_COMMIT_DRIFT');
   const changed=git(wt,['diff','--name-only','-z','HEAD']).stdout.split('\0').filter(Boolean);
   if(changed.length!==1||changed[0]!==file||
      git(wt,['diff','--cached','--name-only','-z']).stdout.trim())throw Error('PATCH_SCOPE_INVALID');
 }
-function measured(run){
+export function assertCcc1RunMeasurement(run){
   if(run?.results?.length!==1)throw Error('TEST_RUN_INCOMPLETE');
   const t=run.results[0];
   if(t.profile!=='node-continuum'||!validIsolationEvidence(t.isolation,t.profile))
     throw Error('ISOLATION_EVIDENCE_MISSING');
   if(!Number.isSafeInteger(t.tests?.executed)||t.tests.executed<1||
      !Number.isSafeInteger(t.tests?.failed)||t.tests.failed<0||
-     t.timedOut||t.stoppedByOwner||[137,143].includes(t.exitCode))
+     ![0,1].includes(t.exitCode)||t.signal||t.error||
+     t.tests.evidenceComplete===false||t.timedOut||t.stoppedByOwner)
     throw Error('TEST_RUN_INTERRUPTED');
   return t;
 }
@@ -77,7 +84,7 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
     throw Error('TEST_PROFILE_PARITY_INVALID');
   const required=['executed','failed','skipped','passed','total','placeholders'];
   for(const evidence of [baseline.tests,candidate.tests]){
-    if(!evidence||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
+    if(!evidence||evidence.evidenceComplete===false||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
        evidence.executed<1||evidence.passed+evidence.failed!==evidence.executed)
       throw Error('TEST_COUNT_EVIDENCE_INVALID');
   }
@@ -107,12 +114,12 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
     candidateExecuted:candidate.tests.executed,skipped:baseline.tests.skipped
   });
 }
-function apply(wt,file,originalDigest,text){
+function apply(wt,file,originalDigest,text,base){
   const full=boundedWorktreeFile(wt,file),current=fs.readFileSync(full);
   if(sha256(current)!==originalDigest)throw Error('SOURCE_BYTES_CHANGED');
   if(current.toString('utf8')===text)throw Error('NO_OP_PATCH');
   fs.writeFileSync(full,text);
-  changedOnly(wt,file);
+  assertCcc1WorktreePatchScope(wt,file,base);
 }
 /** Data binding only. Never grants execution permission or verifies a patch. */
 export function validateCcc1CandidateBinding({typedTask,candidate,file}={}){
@@ -184,28 +191,29 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
     out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-independent-verify-'));
     red=runChain('node',primary,out,{deadline,executor});
     testsUnchanged(primary,testSet);clean(primary,task.sourceCommit);
-    const before=measured(red);
+    const before=assertCcc1RunMeasurement(red);
     if(before.passed||before.tests.failed<1)
       return report(CCC1_RESEARCH_OUTCOMES.REJECTED,'NO_REPRODUCED_BASELINE_FAILURE',ids,red);
-    apply(primary,file,approved.sourceSha256,approved.code);
+    apply(primary,file,approved.sourceSha256,approved.code,task.sourceCommit);
     green=runChain('node',primary,out,{deadline,executor});
-    testsUnchanged(primary,testSet);changedOnly(primary,file);
-    const primaryEvidence=measured(green);
+    testsUnchanged(primary,testSet);assertCcc1WorktreePatchScope(primary,file,task.sourceCommit);
+    const primaryEvidence=assertCcc1RunMeasurement(green);
     assertCcc1TestEvidenceParity(red,green);
     if(!primaryEvidence.passed||!evidenceSufficient(red.results,green.results).sufficient)
       return report(CCC1_RESEARCH_OUTCOMES.FAILED,'CANDIDATE_NOT_GREEN',ids,red,green);
     fresh=createWorktree(project,task.sourceCommit);
     ensureCcc1StateOutsideSource(project,fresh);
     clean(fresh,task.sourceCommit);testsUnchanged(fresh,testSet);
-    apply(fresh,file,approved.sourceSha256,approved.code);
+    apply(fresh,file,approved.sourceSha256,approved.code,task.sourceCommit);
     second=runChain('node',fresh,out,{deadline,executor});
-    testsUnchanged(fresh,testSet);changedOnly(fresh,file);
-    const verified=measured(second),first=measured(green);
+    testsUnchanged(fresh,testSet);assertCcc1WorktreePatchScope(fresh,file,task.sourceCommit);
+    const verified=assertCcc1RunMeasurement(second),first=assertCcc1RunMeasurement(green);
     assertCcc1TestEvidenceParity(red,second);
     assertCcc1TestEvidenceParity(green,second);
     if(!verified.passed||!evidenceSufficient(red.results,second.results).sufficient||
        verified.tests.executed<first.tests.executed||verified.tests.skipped>first.tests.skipped)
       return report(CCC1_RESEARCH_OUTCOMES.FAILED,'FRESH_RUN_NOT_GREEN',ids,red,green,second);
+    clean(project,task.sourceCommit);
     return report(CCC1_RESEARCH_OUTCOMES.PASS,'DUAL_RUN_REVIEW_REQUIRED',ids,red,green,second);
   }catch(error){
     return report(CCC1_RESEARCH_OUTCOMES.INTERRUPTED,

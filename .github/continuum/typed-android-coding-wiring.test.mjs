@@ -27,7 +27,7 @@ test('existing protected Android Termux receiver binds both callback identity an
  assert.match(activity,/putString\(ContinuumMobileBuildResultReceiver\.TYPED_EXPECTED_ID,typedId\)/);
  assert.match(callback,/id != prefs\.getString\(JOB_ID, null\)/);
  assert.match(callback,/ContinuumTypedCodingBridge\.evaluate\(typed,expectedId,expectedHash,/);
- assert.match(callback,/if\(result\?\.prepared==true\)/);
+ assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null\)/);
  assert.match(callback,/if\(result\?\.patchSha256!=null\)/);
  assert.match(bridge,/o\["approvedForMerge"\]!=false\|\|o\["installed"\]!=false\|\|o\["deviceVerified"\]!=false/);
  assert.match(bridge,/private const val SCRIPT=ContinuumMobileBuildPlan\.PROJECT_DIR/);

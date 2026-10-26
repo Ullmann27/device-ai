@@ -47,7 +47,8 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
  ensure('unanswered turn alone reaches local model',
    bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
  ensure('local model receives only grounded same-session context for referential followups',
-   activity.includes('runLocal(request,localPrompt)') &&
+   activity.includes('LocalFirstPolicy.localModelQuestion(request,localPrompt)') &&
+   activity.includes('runLocal(request,modelQuestion)') &&
    activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic') &&
    runtime.includes('val currentContext=if(followUp && scopedPrevious!=null)') &&
    !runtime.includes('Vorherige Gesprächsfrage: ') &&
@@ -74,8 +75,9 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue.includes('val requestSessionId=sessionId') &&
    dialogue.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
  ensure('local model context is separate from user-authorized memory input',
-   dialogue?.includes('runLocal(request,localPrompt)') &&
-   activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text)') &&
+   dialogue?.includes('runLocal(request,modelQuestion)') &&
+   dialogue.includes('runLocal(request,modelQuestion,recall)') &&
+   activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
    activity.includes('val agentTask = resolvedQuestion.take(7_900)') &&
    activity.includes('persistRequestedMemory(text, run.experience?.evaluation)'));
  ensure('only explicit confirmed fact can retry unanswered turn',

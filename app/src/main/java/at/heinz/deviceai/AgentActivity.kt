@@ -6069,8 +6069,7 @@ class AgentActivity : Activity() {
             // Recorded in the backlog before the first model call: if the app dies
             // mid-job the task is visibly IN_PROGRESS and returns to READY when its
             // lease ends, instead of being lost.
-            val backlogToken = runCatching { devBacklog.startJob(task) }
-            val outcome = coordinator.run(task) { state ->
+            val (backlogToken, outcome) = coordinator.runWithBacklog(task, { devBacklog.startJob(task) }) { state ->
                 runOnUiThread {
                     if (!isFinishing && !isDestroyed) {
                         devController.onJobState(state)

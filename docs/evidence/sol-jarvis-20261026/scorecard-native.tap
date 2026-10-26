@@ -1,0 +1,17 @@
+✔ write immutable redacted research-only observation with digest and owner mode (9.01416ms)
+✔ same content cannot be silently overwritten or double-counted (4.881715ms)
+✔ no export into repository, public directory or unprepared state (3.193211ms)
+✔ symlinked report directory is refused (2.972857ms)
+✔ same unverified patch is not misclassified as a verified repair (7.159297ms)
+✔ wrong neural rank one reports local ranking review, not hidden rank two fallback (3.163014ms)
+✔ scorecard is redacted and cannot contain raw candidate source (2.717556ms)
+✔ untrusted serialized or fabricated observation does not gain a trusted origin (3.146632ms)
+✔ the scorecard does not execute or train while summarizing (3.579877ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 232.334862

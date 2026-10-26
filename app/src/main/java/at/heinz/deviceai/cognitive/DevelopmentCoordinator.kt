@@ -19,6 +19,22 @@ class DevelopmentCoordinator(
         runCatching(cancelRuntime)
     }
 
+    /** The durable claim and model work share one ordered entry point. */
+    fun runWithBacklog(
+        task: DevelopmentTask,
+        claim: () -> String,
+        onState: (DevelopmentJobState) -> Unit = {}
+    ): Pair<Result<String>, DevelopmentOutcome> {
+        val token = runCatching(claim)
+        if (token.isFailure) {
+            runCatching { onState(DevelopmentJobState.FAILED) }
+            return token to DevelopmentOutcome(DevelopmentJobState.FAILED, null,
+                DevelopmentFailure(DevelopmentFailureKind.POLICY_REJECTED,
+                    "Durable backlog claim failed. No model work was started."), 0)
+        }
+        return token to run(task, onState)
+    }
+
     fun run(task: DevelopmentTask, onState: (DevelopmentJobState) -> Unit = {}): DevelopmentOutcome {
         check(used.compareAndSet(false, true)) { "A coordinator runs exactly one job; create a new one." }
         val limits = task.limits

@@ -1,0 +1,27 @@
+JUnit version 4.13.2
+...E.E.....E...
+Time: 0.132
+There were 3 failures:
+1) mutatingSignedCollectionsCannotEscalateRegisteredCapabilities(at.heinz.deviceai.cognitive.ComputeFabricTest)
+java.lang.AssertionError: expected null, but was:<NodeCapabilityManifest(nodeId=mutable, ownerBinding=owner:test, taskTypes=[VERIFY, REASONING], backends=[CPU, GPU], maxRamMb=8192, maxRuntimeMillis=60000, maxOutputBytes=16000, issuedAtMillis=1000, expiresAtMillis=10000)>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotNull(Assert.java:756)
+	at org.junit.Assert.assertNull(Assert.java:738)
+	at org.junit.Assert.assertNull(Assert.java:748)
+	at at.heinz.deviceai.cognitive.ComputeFabricTest.mutatingSignedCollectionsCannotEscalateRegisteredCapabilities(ComputeFabricTest.kt:20)
+2) futureIssuedManifestCannotBeRegisteredOrUsedAfterClockRollback(at.heinz.deviceai.cognitive.ComputeFabricTest)
+java.lang.AssertionError: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown
+	at org.junit.Assert.assertThrows(Assert.java:1028)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at at.heinz.deviceai.cognitive.ComputeFabricTest.futureIssuedManifestCannotBeRegisteredOrUsedAfterClockRollback(ComputeFabricTest.kt:33)
+3) schedulerCannotSubstituteAnExplicitlyAssignedNode(at.heinz.deviceai.cognitive.ComputeFabricTest)
+java.lang.AssertionError: expected:<node-b> but was:<node-a>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.cognitive.ComputeFabricTest.schedulerCannotSubstituteAnExplicitlyAssignedNode(ComputeFabricTest.kt:47)
+
+FAILURES!!!
+Tests run: 12,  Failures: 3
+

@@ -1,0 +1,629 @@
+{
+  "schema": "continuum-native-development-proof",
+  "version": 1,
+  "node": "v24.19.0",
+  "status": "DEVELOPMENT_MEASUREMENT_REVIEW_REQUIRED",
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 512,
+    "pids": 128,
+    "cpus": 1,
+    "timeoutMs": 30000
+  },
+  "results": [
+    {
+      "caseId": "sort",
+      "task": {
+        "acceptance": [
+          "Both regression and separately authored behavior oracle must pass in two fresh worktrees."
+        ],
+        "allowedPaths": [
+          "src/sort.mjs"
+        ],
+        "chain": "node",
+        "goal": "Sort numbers without changing the caller array.",
+        "id": "owner-development-sort",
+        "kind": "BUGFIX",
+        "limits": {
+          "maxContextChars": 2048,
+          "maxModelCalls": 1
+        },
+        "schema": "continuum-coding-task",
+        "sourceCommit": "ad5490b3256a46cdded1ba2399a328565deb516b",
+        "version": 1
+      },
+      "grant": {
+        "id": "owner-development-sort",
+        "ccc1TaskId": "t-7313648934d59966",
+        "fingerprint": "c41985661be524cc566fa909baec29155ee8303619d149086c13348bfabde2cd",
+        "replayed": false
+      },
+      "testManifest": {
+        "regression.test.mjs": "c1a7e2d926dca7ad7504495de32f2d4cee5bdfe981df40d9f4bd6cbb0dec2c02",
+        "independent-oracle.test.mjs": "f5f414326b49d2a9ac034114be2026915c3edaa06759fefbd240c23f1bc9fb99"
+      },
+      "scorecard": {
+        "schema": "continuum-bottleneck-scorecard",
+        "version": 1,
+        "status": "ANALYSIS_ONLY",
+        "experimentId": "NATIVE_ABC_20261026",
+        "caseId": "sort",
+        "sourceCommit": "ad5490b3256a46cdded1ba2399a328565deb516b",
+        "taskSha256": "c41985661be524cc566fa909baec29155ee8303619d149086c13348bfabde2cd",
+        "sourceSha256": "233f8f1452c9b613db3cfa4ad2c0041434f6638c3b12b3815d7a104e62cb3afe",
+        "observedModelStateSha256": "69ed4e6062aaabd225f78a8bedbc624da554ea298ec477376b079cb95aa99e9d",
+        "declaredCheckpointSha256": "60afbc41c5059b70b7b481c4de19af8ce8c66a65b51d4e2a1b063b2a14fea405",
+        "declaredTestManifestSha256": "e19bb8356c877ed7e354cfb00a51d17105d9cdd7840d3a1dbfc4d0f9bd3cf629",
+        "checkpointAttested": false,
+        "testManifestAttested": false,
+        "operatorDescriptorSha256": "562200ef353475d97d9fb6409551e1de4882aa19c3e9214e0450cfc446c27494",
+        "top1OperatorId": "STRUCT_OP_sort",
+        "top1Rank": 1,
+        "top1Score": 0.5,
+        "operatorCount": 2,
+        "arms": [
+          {
+            "variant": "REFERENCE_PATCH",
+            "selectedOperatorId": null,
+            "selectedOperatorIndex": null,
+            "selectedRank": null,
+            "operatorAttempts": 0,
+            "translationStatus": "REFERENCE_UNVERIFIED",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "hasBoundedCandidate": true
+          },
+          {
+            "variant": "GIVEN_OPERATOR",
+            "selectedOperatorId": "STRUCT_OP_sort",
+            "selectedOperatorIndex": 0,
+            "selectedRank": null,
+            "operatorAttempts": 1,
+            "translationStatus": "CANDIDATE_UNVERIFIED",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "hasBoundedCandidate": true
+          },
+          {
+            "variant": "NEURAL_TOP1",
+            "selectedOperatorId": "STRUCT_OP_sort",
+            "selectedOperatorIndex": 0,
+            "selectedRank": 1,
+            "operatorAttempts": 1,
+            "translationStatus": "CANDIDATE_UNVERIFIED",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "hasBoundedCandidate": true
+          }
+        ],
+        "observedNeuralRankCalls": 1,
+        "observedOperatorTranslationAttempts": 2,
+        "observedExternalModelCalls": 0,
+        "observedOsExecutionAttempts": 0,
+        "observationFinding": "BOTH_ARMS_SAME_UNVERIFIED_PATCH",
+        "nextLocalGate": "VERIFY_REFERENCE_FIRST_THEN_BOTH_CANDIDATES",
+        "optionalLargeSpecialist": "NOT_REQUESTED",
+        "requiresOwnerAuthorization": true,
+        "baselineStatus": "NOT_RUN",
+        "independentVerification": "NOT_RUN",
+        "generalizationProven": false,
+        "verifiedSuccess": false,
+        "learningEligible": false,
+        "promotionEligible": false
+      },
+      "arms": [
+        {
+          "variant": "REFERENCE_PATCH",
+          "translationStatus": "REFERENCE_UNVERIFIED",
+          "selectedOperatorId": null,
+          "operatorAttempts": 0,
+          "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+          "result": {
+            "status": "DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED",
+            "reason": "DUAL_RUN_REVIEW_REQUIRED",
+            "verifiedSuccess": false,
+            "learningEligible": false,
+            "promotionEligible": false,
+            "ownerReviewRequired": true,
+            "testEvidenceAuthenticated": false,
+            "semanticRepairVerified": false,
+            "sourceCommit": "ad5490b3256a46cdded1ba2399a328565deb516b",
+            "taskSha256": "c41985661be524cc566fa909baec29155ee8303619d149086c13348bfabde2cd",
+            "sourceSha256": "233f8f1452c9b613db3cfa4ad2c0041434f6638c3b12b3815d7a104e62cb3afe",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "before": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "executed": 4,
+                "failed": 3,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "85937a43104448e49d62a0e194c6721fdcac6fab47ed2a8b6235ced1cd5f7304",
+                "exitCode": 1
+              }
+            ],
+            "after": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ],
+            "fresh": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ]
+          }
+        },
+        {
+          "variant": "GIVEN_OPERATOR",
+          "translationStatus": "CANDIDATE_UNVERIFIED",
+          "selectedOperatorId": "STRUCT_OP_sort",
+          "operatorAttempts": 1,
+          "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+          "result": {
+            "status": "DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED",
+            "reason": "DUAL_RUN_REVIEW_REQUIRED",
+            "verifiedSuccess": false,
+            "learningEligible": false,
+            "promotionEligible": false,
+            "ownerReviewRequired": true,
+            "testEvidenceAuthenticated": false,
+            "semanticRepairVerified": false,
+            "sourceCommit": "ad5490b3256a46cdded1ba2399a328565deb516b",
+            "taskSha256": "c41985661be524cc566fa909baec29155ee8303619d149086c13348bfabde2cd",
+            "sourceSha256": "233f8f1452c9b613db3cfa4ad2c0041434f6638c3b12b3815d7a104e62cb3afe",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "before": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "executed": 4,
+                "failed": 3,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "85937a43104448e49d62a0e194c6721fdcac6fab47ed2a8b6235ced1cd5f7304",
+                "exitCode": 1
+              }
+            ],
+            "after": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ],
+            "fresh": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ]
+          }
+        },
+        {
+          "variant": "NEURAL_TOP1",
+          "translationStatus": "CANDIDATE_UNVERIFIED",
+          "selectedOperatorId": "STRUCT_OP_sort",
+          "operatorAttempts": 1,
+          "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+          "result": {
+            "status": "DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED",
+            "reason": "DUAL_RUN_REVIEW_REQUIRED",
+            "verifiedSuccess": false,
+            "learningEligible": false,
+            "promotionEligible": false,
+            "ownerReviewRequired": true,
+            "testEvidenceAuthenticated": false,
+            "semanticRepairVerified": false,
+            "sourceCommit": "ad5490b3256a46cdded1ba2399a328565deb516b",
+            "taskSha256": "c41985661be524cc566fa909baec29155ee8303619d149086c13348bfabde2cd",
+            "sourceSha256": "233f8f1452c9b613db3cfa4ad2c0041434f6638c3b12b3815d7a104e62cb3afe",
+            "candidateSha256": "8ae83c634e0a7bfb067f9b9a4b3b57fffe72e1f654a1be47d41739b1162f5fcc",
+            "before": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "executed": 4,
+                "failed": 3,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "85937a43104448e49d62a0e194c6721fdcac6fab47ed2a8b6235ced1cd5f7304",
+                "exitCode": 1
+              }
+            ],
+            "after": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ],
+            "fresh": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "0f8cae3f8bf820a7339d2d0eafc2cd3895784abf28a2b375990ef8e788f01ac3",
+                  "3e8d647bbe2b0438ad7faccc9b9ddcce002d48cab35cea710f88a0db4531ea7f",
+                  "68e7905a5746fff476cd1560e1323aab582d501bfbfe48998d5d513aed0c4f3f",
+                  "cdcea2bb3b720344012482d3cd20c034eac1fcb84b45faba67b092d28d47c4dc"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "5bf556390451db360e0e7e30aace28a4ddf85953305b15607b3ca598ba6ffcad",
+                "exitCode": 0
+              }
+            ]
+          }
+        }
+      ],
+      "sourceUnchanged": true,
+      "modelUpdates": 0
+    },
+    {
+      "caseId": "pagination",
+      "task": {
+        "acceptance": [
+          "Both regression and separately authored behavior oracle must pass in two fresh worktrees."
+        ],
+        "allowedPaths": [
+          "src/pagination.mjs"
+        ],
+        "chain": "node",
+        "goal": "Use one-based page numbers and preserve the caller array.",
+        "id": "owner-development-pagination",
+        "kind": "BUGFIX",
+        "limits": {
+          "maxContextChars": 2048,
+          "maxModelCalls": 1
+        },
+        "schema": "continuum-coding-task",
+        "sourceCommit": "37882752ac528f22ad1687182eb89ed5d8a17faa",
+        "version": 1
+      },
+      "grant": {
+        "id": "owner-development-pagination",
+        "ccc1TaskId": "t-b67bec4037be6058",
+        "fingerprint": "86851050e231e908ab11970e6e3f7f7fef6b3c338ac1e1b859a275adbaaab633",
+        "replayed": false
+      },
+      "testManifest": {
+        "regression.test.mjs": "b1025f837660d473c188e99261b81a2905c28370f2f66f9a3ce4b95944739510",
+        "independent-oracle.test.mjs": "759cc6be557d6a08ef9ca59fff4ba358ee6a66435a7c16e8bd858c56c2403cea"
+      },
+      "scorecard": {
+        "schema": "continuum-bottleneck-scorecard",
+        "version": 1,
+        "status": "ANALYSIS_ONLY",
+        "experimentId": "NATIVE_ABC_20261026",
+        "caseId": "pagination",
+        "sourceCommit": "37882752ac528f22ad1687182eb89ed5d8a17faa",
+        "taskSha256": "86851050e231e908ab11970e6e3f7f7fef6b3c338ac1e1b859a275adbaaab633",
+        "sourceSha256": "18924c5912888914048e189d7b0ae4422032a60bad2643212d39aff3f9449b02",
+        "observedModelStateSha256": "69ed4e6062aaabd225f78a8bedbc624da554ea298ec477376b079cb95aa99e9d",
+        "declaredCheckpointSha256": "60afbc41c5059b70b7b481c4de19af8ce8c66a65b51d4e2a1b063b2a14fea405",
+        "declaredTestManifestSha256": "f855437556b122b35815f81e90af4773056419203ba29f37bb317b08f4e56dc4",
+        "checkpointAttested": false,
+        "testManifestAttested": false,
+        "operatorDescriptorSha256": "562200ef353475d97d9fb6409551e1de4882aa19c3e9214e0450cfc446c27494",
+        "top1OperatorId": "STRUCT_OP_sort",
+        "top1Rank": 1,
+        "top1Score": 0.5,
+        "operatorCount": 2,
+        "arms": [
+          {
+            "variant": "REFERENCE_PATCH",
+            "selectedOperatorId": null,
+            "selectedOperatorIndex": null,
+            "selectedRank": null,
+            "operatorAttempts": 0,
+            "translationStatus": "REFERENCE_UNVERIFIED",
+            "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+            "hasBoundedCandidate": true
+          },
+          {
+            "variant": "GIVEN_OPERATOR",
+            "selectedOperatorId": "STRUCT_OP_pagination",
+            "selectedOperatorIndex": 1,
+            "selectedRank": null,
+            "operatorAttempts": 1,
+            "translationStatus": "CANDIDATE_UNVERIFIED",
+            "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+            "hasBoundedCandidate": true
+          },
+          {
+            "variant": "NEURAL_TOP1",
+            "selectedOperatorId": "STRUCT_OP_sort",
+            "selectedOperatorIndex": 0,
+            "selectedRank": 1,
+            "operatorAttempts": 1,
+            "translationStatus": "NOT_APPLICABLE",
+            "candidateSha256": null,
+            "hasBoundedCandidate": false
+          }
+        ],
+        "observedNeuralRankCalls": 1,
+        "observedOperatorTranslationAttempts": 2,
+        "observedExternalModelCalls": 0,
+        "observedOsExecutionAttempts": 0,
+        "observationFinding": "TOP1_NOT_TRANSLATABLE_WHILE_FORCED_TRANSLATES",
+        "nextLocalGate": "VERIFY_REFERENCE_THEN_REVIEW_NEURAL_RANKING",
+        "optionalLargeSpecialist": "NOT_REQUESTED",
+        "requiresOwnerAuthorization": true,
+        "baselineStatus": "NOT_RUN",
+        "independentVerification": "NOT_RUN",
+        "generalizationProven": false,
+        "verifiedSuccess": false,
+        "learningEligible": false,
+        "promotionEligible": false
+      },
+      "arms": [
+        {
+          "variant": "REFERENCE_PATCH",
+          "translationStatus": "REFERENCE_UNVERIFIED",
+          "selectedOperatorId": null,
+          "operatorAttempts": 0,
+          "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+          "result": {
+            "status": "DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED",
+            "reason": "DUAL_RUN_REVIEW_REQUIRED",
+            "verifiedSuccess": false,
+            "learningEligible": false,
+            "promotionEligible": false,
+            "ownerReviewRequired": true,
+            "testEvidenceAuthenticated": false,
+            "semanticRepairVerified": false,
+            "sourceCommit": "37882752ac528f22ad1687182eb89ed5d8a17faa",
+            "taskSha256": "86851050e231e908ab11970e6e3f7f7fef6b3c338ac1e1b859a275adbaaab633",
+            "sourceSha256": "18924c5912888914048e189d7b0ae4422032a60bad2643212d39aff3f9449b02",
+            "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+            "before": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "executed": 4,
+                "failed": 4,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "8032488c7884a6a55e9ed8ef6900250f5ee69f0d7c060cf51351b0f7798b88cd",
+                "exitCode": 1
+              }
+            ],
+            "after": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "c1192fb83be3f8e66c3031218124344be5c7a23b9642f51e6ec848827f14cbf1",
+                "exitCode": 0
+              }
+            ],
+            "fresh": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "c1192fb83be3f8e66c3031218124344be5c7a23b9642f51e6ec848827f14cbf1",
+                "exitCode": 0
+              }
+            ]
+          }
+        },
+        {
+          "variant": "GIVEN_OPERATOR",
+          "translationStatus": "CANDIDATE_UNVERIFIED",
+          "selectedOperatorId": "STRUCT_OP_pagination",
+          "operatorAttempts": 1,
+          "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+          "result": {
+            "status": "DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED",
+            "reason": "DUAL_RUN_REVIEW_REQUIRED",
+            "verifiedSuccess": false,
+            "learningEligible": false,
+            "promotionEligible": false,
+            "ownerReviewRequired": true,
+            "testEvidenceAuthenticated": false,
+            "semanticRepairVerified": false,
+            "sourceCommit": "37882752ac528f22ad1687182eb89ed5d8a17faa",
+            "taskSha256": "86851050e231e908ab11970e6e3f7f7fef6b3c338ac1e1b859a275adbaaab633",
+            "sourceSha256": "18924c5912888914048e189d7b0ae4422032a60bad2643212d39aff3f9449b02",
+            "candidateSha256": "ae61b6fd96c038e0ba799110738c209864400946397ea80fb908e8453090cedb",
+            "before": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "executed": 4,
+                "failed": 4,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "8032488c7884a6a55e9ed8ef6900250f5ee69f0d7c060cf51351b0f7798b88cd",
+                "exitCode": 1
+              }
+            ],
+            "after": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "c1192fb83be3f8e66c3031218124344be5c7a23b9642f51e6ec848827f14cbf1",
+                "exitCode": 0
+              }
+            ],
+            "fresh": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "executed": 4,
+                "failed": 0,
+                "skipped": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "2f7ec796d459300464a2a582fb09ec7c8084abebda4808c47407f8307d815573",
+                  "3bcdd9dd893d9d1001eee25c98207c2b9de4af4844576c91810e4a10174d250f",
+                  "5743c63c527fd364905fb41b6eac53304b152883b947e701dfd07f9644718eae",
+                  "eabc3878d6f2c085ddd53c2c3f849d6ff8cd62ed243c436cc2f7ae827240af41"
+                ],
+                "skippedCaseDigest": null,
+                "sourceSnapshotSha256": "c1192fb83be3f8e66c3031218124344be5c7a23b9642f51e6ec848827f14cbf1",
+                "exitCode": 0
+              }
+            ]
+          }
+        },
+        {
+          "variant": "NEURAL_TOP1",
+          "translationStatus": "NOT_APPLICABLE",
+          "selectedOperatorId": "STRUCT_OP_sort",
+          "operatorAttempts": 1,
+          "candidateSha256": null,
+          "result": null
+        }
+      ],
+      "sourceUnchanged": true,
+      "modelUpdates": 0
+    }
+  ],
+  "sealedHoldout": false,
+  "model": "ACTUAL_NTW1_UNTRAINED_ZERO_FEATURE_STATE",
+  "realLanguageModelInference": false,
+  "trainingPerformed": false,
+  "learningEligible": false,
+  "ownerMemoryWritten": false
+}
