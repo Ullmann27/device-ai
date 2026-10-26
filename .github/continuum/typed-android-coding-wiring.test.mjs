@@ -47,3 +47,29 @@ test('Node Termux accepts fixed operations and never promotes an unevidenced suc
  assert.equal(result.patchSha256,null);
  assert.equal(result.approvedForMerge,false);
 });
+
+test('approved task source commit stays bound through Android prepare, run, callback and restart',()=>{
+ const activity=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuilderActivity.kt');
+ const callback=read('app/src/main/java/at/heinz/deviceai/ContinuumMobileBuildResultReceiver.kt');
+ const bridge=read('app/src/main/java/at/heinz/deviceai/ContinuumTypedCodingBridge.kt');
+ const tests=read('app/src/test/java/at/heinz/deviceai/ContinuumTypedCodingBridgeTest.kt');
+ // Only the reviewed source is accepted for PREPARE.
+ assert.match(activity,/typedCommit=authorization\.task\.sourceCommit/);
+ // RUN binds to a prepared record from the same private storage, not mutable model stdout.
+ assert.match(activity,/val commit=preferences\.getString\(ContinuumMobileBuildResultReceiver\.TYPED_PREPARED_COMMIT,null\)/);
+ assert.match(activity,/typedId=id,typedHash=hash,typedCommit=commit/);
+ assert.match(activity,/TYPED_EXPECTED_COMMIT,typedCommit/);
+ assert.match(activity,/TYPED_PREPARED_COMMIT\)/);
+ assert.match(callback,/const val TYPED_EXPECTED_COMMIT =/);
+ assert.match(callback,/const val TYPED_PREPARED_COMMIT =/);
+ assert.match(callback,/val expectedCommit=prefs\.getString\(TYPED_EXPECTED_COMMIT,null\)/);
+ assert.match(callback,/if\(expectedId!=null && expectedHash!=null && expectedCommit!=null\)/);
+ assert.match(callback,/if\(result\?\.prepared==true && expectedCommit!=null\)/);
+ assert.match(callback,/putString\(TYPED_PREPARED_COMMIT,expectedCommit\)/);
+ assert.match(callback,/remove\(TYPED_EXPECTED_COMMIT\)/);
+ // A matching SHA task-id pair cannot silently endorse any other well-formed Git SHA.
+ assert.match(bridge,/if\(!COMMIT\.matches\(expectedSourceCommit\)\|\|source!=expectedSourceCommit\)return invalid\(\)/);
+ assert.match(tests,/foreignGitCommitCannotBecomeApprovedCodingEvidence/);
+ // Neither Android callback nor model can promote/install an APK.
+ assert.match(bridge,/o\["approvedForMerge"\]!=false\|\|o\["installed"\]!=false\|\|o\["deviceVerified"\]!=false/);
+});
