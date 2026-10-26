@@ -9,3 +9,11 @@ Plan: audit actual PR151–158 sources and dependencies; reproduce the first dia
 Current tests: NOT_RUN. Physical Fold7 access, Android SDK, local models and OS sandbox capabilities not yet established. No capability or breakthrough claim.
 
 Resume: fetch this official branch, read this handoff and source manifest, inspect git status and real remote heads, then audit the PR source diffs. Recover from this commit; rollback subsequent source changes with targeted revert commits on a review branch, never reset shared branches.
+
+## Checkpoint 2: source audit and validation setup
+
+Draft PR #159; initial remote commit `a58d1f873c96bf30b37694a7636c70e9394aa9e8` and handoff file independently fetched through GitHub. Complete PR path/merge-base snapshot and preliminary component dependency graph are machine-readable in the source manifest. Two independent read-only source reviews are in progress. PR158 cannot overwrite the newer Baby Core: explicit-citation provenance rules must be preserved.
+
+PR157 actual test file imported FIRST against unchanged parent routing to obtain real Gradle RED evidence; test outcome pending. Official checksum-verified SDK commandline tools and Gradle8.11.1 are configured outside the repository, no signing/build/install action. Host is Linux x86_64, cgroup2CPU/8GiB, Node24.19.0, JDK21.0.12.1; managed Docker28.4.0 reachable. No cached native language model or physical phone connection found.
+
+PR152 frozen research sources/configurations imported byte-for-byte, still UNTRAINED/UNVERIFIED and disconnected from production. Existing independent CDXA1 test labels remain unopened. No tuning on consumed grounding60. Remaining candidate source integration awaits tests/review.
