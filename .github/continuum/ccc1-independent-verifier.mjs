@@ -84,7 +84,12 @@ export function validateCcc1CandidateBinding({typedTask,candidate,file}={}){
      typeof candidate.code!=='string'||candidate.code.length<1||candidate.code.length>16000||
      sha256(candidate.code)!==candidate.candidateSha256)
     throw Error('CANDIDATE_IDENTITY_MISMATCH');
-  return Object.freeze({task,candidate,file});
+  const immutableCandidate=Object.freeze({
+    status:'CANDIDATE_UNVERIFIED',sourceCommit:candidate.sourceCommit,
+    taskSha256:candidate.taskSha256,sourceSha256:candidate.sourceSha256,
+    candidateSha256:candidate.candidateSha256,code:candidate.code
+  });
+  return Object.freeze({task,candidate:immutableCandidate,file});
 }
 export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}={}){
   if(!isIsolatedExecutor(executor))throw Error('BRANDED_OS_EXECUTOR_REQUIRED');
@@ -111,7 +116,7 @@ export function verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask}={}){
   return Object.freeze({taskId:task.id,fingerprint:stored.fingerprint,ccc1TaskId:stored.ccc1TaskId});
 }
 export function runIndependentCcc1PatchVerification({typedTask,candidate,file,projectRoot,stateDir,executor,deadline=Date.now()+900000}={}){
-  const {task}=validateCcc1ResearchRequest({typedTask,candidate,file,executor});
+  const {task,candidate:approved}=validateCcc1ResearchRequest({typedTask,candidate,file,executor});
   if(!Number.isSafeInteger(deadline)||deadline<=Date.now()||deadline>Date.now()+1200000)
     throw Error('INVALID_DEADLINE');
   const project=fs.realpathSync(projectRoot);
@@ -121,14 +126,14 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
      git(project,['rev-parse','HEAD']).stdout.trim()!==task.sourceCommit||
      git(project,['status','--porcelain','--untracked-files=no']).stdout.trim())
     throw Error('UNSAFE_SOURCE_CHECKOUT');
-  const ids={sourceCommit:task.sourceCommit,taskSha256:candidate.taskSha256,
-    sourceSha256:candidate.sourceSha256,candidateSha256:candidate.candidateSha256};
+  const ids={sourceCommit:task.sourceCommit,taskSha256:approved.taskSha256,
+    sourceSha256:approved.sourceSha256,candidateSha256:approved.candidateSha256};
   let primary=null,fresh=null,out=null,red=null,green=null,second=null;
   try{
     primary=createWorktree(project,task.sourceCommit);
     ensureCcc1StateOutsideSource(project,primary);
     clean(primary,task.sourceCommit);
-    if(sha256(fs.readFileSync(boundedWorktreeFile(primary,file)))!==candidate.sourceSha256)
+    if(sha256(fs.readFileSync(boundedWorktreeFile(primary,file)))!==approved.sourceSha256)
       throw Error('SOURCE_DIGEST_MISMATCH');
     const testSet=testDigests(primary);
     out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-independent-verify-'));
@@ -137,7 +142,7 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
     const before=measured(red);
     if(before.passed||before.tests.failed<1)
       return report(CCC1_RESEARCH_OUTCOMES.REJECTED,'NO_REPRODUCED_BASELINE_FAILURE',ids,red);
-    apply(primary,file,candidate.sourceSha256,candidate.code);
+    apply(primary,file,approved.sourceSha256,approved.code);
     green=runChain('node',primary,out,{deadline,executor});
     testsUnchanged(primary,testSet);changedOnly(primary,file);
     if(!measured(green).passed||!evidenceSufficient(red.results,green.results).sufficient)
@@ -145,7 +150,7 @@ export function runIndependentCcc1PatchVerification({typedTask,candidate,file,pr
     fresh=createWorktree(project,task.sourceCommit);
     ensureCcc1StateOutsideSource(project,fresh);
     clean(fresh,task.sourceCommit);testsUnchanged(fresh,testSet);
-    apply(fresh,file,candidate.sourceSha256,candidate.code);
+    apply(fresh,file,approved.sourceSha256,approved.code);
     second=runChain('node',fresh,out,{deadline,executor});
     testsUnchanged(fresh,testSet);changedOnly(fresh,file);
     const verified=measured(second),first=measured(green);
