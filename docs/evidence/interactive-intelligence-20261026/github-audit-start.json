@@ -1,0 +1,178 @@
+[
+  {
+    "number": 173,
+    "title": "fix(dialogue): stop irrelevant archive hijack on Fold7 Mars follow-ups",
+    "head": "review/continuum-followup-archive-gate-20261026",
+    "head_sha": "b1d9556c74df9aa3c6e05defc9b4fb7d94181f17",
+    "base": "release/continuum-owner-v24-candidate-20261026",
+    "base_sha": "c26bb25c11bdea1eab69084e0a15881ccf4aff4d",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/173"
+  },
+  {
+    "number": 172,
+    "title": "review(grounding): port PR153 subject/relation gates with exact matching to v24 code",
+    "head": "review/continuum-grounding-port-v24-20261026",
+    "head_sha": "ad15aab98e62bc894b425bdaf8b8587bfe4d8787",
+    "base": "integration/continuum-owner-0323-review-20261026",
+    "base_sha": "38f978e29e345c49f4f50adffe1e940074926a26",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/172"
+  },
+  {
+    "number": 171,
+    "title": "integration(owner-v24): consolidate advanced branches and prepare same-package 0.3.23 APK",
+    "head": "integration/continuum-owner-0323-review-20261026",
+    "head_sha": "b1d9556c74df9aa3c6e05defc9b4fb7d94181f17",
+    "base": "chatgpt/continuum-ccc1-evidence-completeness-20261026",
+    "base_sha": "83fc4a16f9fff7f37b9b27576b1abab293c956d7",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/171"
+  },
+  {
+    "number": 170,
+    "title": "review(ccc1): require explicit complete test evidence before independent parity proof",
+    "head": "chatgpt/continuum-ccc1-evidence-completeness-20261026",
+    "head_sha": "83fc4a16f9fff7f37b9b27576b1abab293c956d7",
+    "base": "sol/continuum-jarvis-open-fabric-20261026",
+    "base_sha": "b09bef1c122e0cfd4f26674cc46be3b04386dabf",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/170"
+  },
+  {
+    "number": 169,
+    "title": "integration(fabric): nativer Registry-Anschluss, Coding-Bridge und echte CCC1-Prüfbelege",
+    "head": "sol/continuum-jarvis-open-fabric-20261026",
+    "head_sha": "b09bef1c122e0cfd4f26674cc46be3b04386dabf",
+    "base": "research/continuum-virtual-model-fabric-20261026",
+    "base_sha": "78ceeeb863a3806b0bc088a4a2c2544d96be24cd",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/169"
+  },
+  {
+    "number": 168,
+    "title": "research(fabric): Android-first zero-cost virtual model route planner with pinned identities",
+    "head": "research/continuum-virtual-model-fabric-20261026",
+    "head_sha": "78ceeeb863a3806b0bc088a4a2c2544d96be24cd",
+    "base": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+    "base_sha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/168"
+  },
+  {
+    "number": 167,
+    "title": "research(ccc1): local-first A/B/C scorecard, owner-only evidence export, Sol 6.1 handoff",
+    "head": "research/continuum-bottleneck-scorecard-local-escalation-20261026",
+    "head_sha": "9a4f0632af2ef6d5ecc017eee009fccfe6969172",
+    "base": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+    "base_sha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/167"
+  },
+  {
+    "number": 166,
+    "title": "research(ccc1): measure reference, forced operator, and strict neural Pass@1 separately",
+    "head": "research/continuum-bottleneck-diagnosis-a-b-c-20261026",
+    "head_sha": "736aa0d67f8045d055e15098a5c414525a6660fd",
+    "base": "integration/continuum-sol-numeric-binding-20261026",
+    "base_sha": "da81db718612aa6f12ba27bd6db043e57c739e5f",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/166"
+  },
+  {
+    "number": 165,
+    "title": "integration(brain): apply Sol native-tested NTW1 numeric safety and statement binding guards",
+    "head": "integration/continuum-sol-numeric-binding-20261026",
+    "head_sha": "da81db718612aa6f12ba27bd6db043e57c739e5f",
+    "base": "review/continuum-ccc1-test-parity-20261026",
+    "base_sha": "f763c5491290555228ae385c54e8fad9e91b392c",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/165"
+  },
+  {
+    "number": 164,
+    "title": "fix(ccc1): reject disappearing executed tests in dual-worktree repair proofs",
+    "head": "review/continuum-ccc1-test-parity-20261026",
+    "head_sha": "f763c5491290555228ae385c54e8fad9e91b392c",
+    "base": "research/continuum-coin-wm-independent-audit-20261026",
+    "base_sha": "2b824792487a36c99efecf190a02f0bcf7724bbb",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/164"
+  },
+  {
+    "number": 163,
+    "title": "research(brain): independent COIN-WM transfer falsification and safe experiment plan",
+    "head": "research/continuum-coin-wm-independent-audit-20261026",
+    "head_sha": "2b824792487a36c99efecf190a02f0bcf7724bbb",
+    "base": "integration/continuum-grounded-recall-fallback-20261026",
+    "base_sha": "cafc337a14eca01dc49e38eea3dd299034460552",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/163"
+  },
+  {
+    "number": 162,
+    "title": "integration(brain): preserve confirmed recall when model context exceeds bounds",
+    "head": "integration/continuum-grounded-recall-fallback-20261026",
+    "head_sha": "cafc337a14eca01dc49e38eea3dd299034460552",
+    "base": "integration/continuum-typed-source-identity-20261026",
+    "base_sha": "4b569515bb3f43abccf008e1889eac68d570a105",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/162"
+  },
+  {
+    "number": 161,
+    "title": "integration(android): bind approved source commit through typed coding callback",
+    "head": "integration/continuum-typed-source-identity-20261026",
+    "head_sha": "4b569515bb3f43abccf008e1889eac68d570a105",
+    "base": "review/continuum-repair-learning-evidence-gate-20261026",
+    "base_sha": "bc424dfe208e2b06ae3c12a4adf7abb02ec79b05",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/161"
+  },
+  {
+    "number": 160,
+    "title": "review(coding): prevent infrastructure failures from poisoning repair-strategy learning",
+    "head": "review/continuum-repair-learning-evidence-gate-20261026",
+    "head_sha": "bc424dfe208e2b06ae3c12a4adf7abb02ec79b05",
+    "base": "astra/continuum-brain-integration-20261026",
+    "base_sha": "301fe804700189ee99533662ce57be96c29ae450",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/160"
+  },
+  {
+    "number": 159,
+    "title": "Continuum: audited brain and coding integration with reproducible evidence",
+    "head": "astra/continuum-brain-integration-20261026",
+    "head_sha": "301fe804700189ee99533662ce57be96c29ae450",
+    "base": "sol/continuum-brain-breakthroughs-20261026",
+    "base_sha": "9d66813419f08468ba99bd7e45ae38ff6c0e6b99",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/159"
+  },
+  {
+    "number": 158,
+    "title": "review(brain): preserve evidence provenance and repair Baby Core state migration tests",
+    "head": "review/continuum-baby-memory-migration-20261026",
+    "head_sha": "4cff5abda4f71bcb46795323e468cf0e0fb3429a",
+    "base": "main",
+    "base_sha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+    "state": "open",
+    "draft": true,
+    "url": "https://github.com/Ullmann27/device-ai/pull/158"
+  }
+]

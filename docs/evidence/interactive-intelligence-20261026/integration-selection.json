@@ -1,0 +1,18 @@
+{
+  "branch": "integration/continuum-feedback-review-20261026",
+  "pr": 175,
+  "head": "08bfe94f21a9741a2144e9e4bae72b341fa68332",
+  "base": "b1d9556c74df9aa3c6e05defc9b4fb7d94181f17",
+  "selectedSource": "app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedback.kt",
+  "sourceBlob": "989fae5b8ba5cd80e24dab614ea3366162bee1be",
+  "byteIdenticalToFrozenCandidate": true,
+  "files": [
+    "app/src/main/java/at/heinz/deviceai/learning/interactive/ResearchFeedback.kt",
+    "app/src/test/java/at/heinz/deviceai/learning/interactive/ResearchFeedbackTest.kt",
+    "docs/evidence/interactive-feedback-review-20261026/compile.txt",
+    "docs/evidence/interactive-feedback-review-20261026/junit.txt",
+    "docs/evidence/interactive-feedback-review-20261026/source-blobs.sha256",
+    "docs/research/omega/SOL-INTERACTIVE-FEEDBACK-INTEGRATION-20261026.md",
+    "scripts/continuum-feedback-review-jvm.sh"
+  ]
+}

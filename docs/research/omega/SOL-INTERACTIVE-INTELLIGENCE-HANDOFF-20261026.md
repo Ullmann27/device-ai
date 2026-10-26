@@ -1,3 +1,13 @@
+# Aktuelle Übergabe — experimentelle Intelligenz
+
+**Maßgeblicher Abschluss:** [Ergebnisse, Grenzen, Prüfungen und Fortsetzung](SOL-INTERACTIVE-INTELLIGENCE-RESULT-20261026.md). PR174 enthält die komplette Forschung; PR175 (`08bfe94f21a9741a2144e9e4bae72b341fa68332`) nur den ausgewählten synthetischen Feedback-Lebenszyklus. Geprüfter Kandidat d7df7a45ea8002d8adaf2b45745b373416ae96dd. A v1 ist wegen4falscher adversarialer Bezüge abgelehnt. Kein neuraler Genauigkeitsgewinn, keine produktive Aktivierung. Finale Retention mit tatsächlich erforderlicher Prämisse72/84→84/84; frühere156/168-Summen zählen auch Fälle ohne Prämissenanforderung.
+
+Native Prüfungen:15Labor+21bestehende+4Feedback-JUnitprüfungen PASS; Node1361PASS/1FAIL/8SKIP. Der FAIL ist die erwartete Freigabesperre des eingefrorenen v25-Release-Manifests. Kein vollständiger Android-/Gemma-/Gerätenachweis. Alle24Snapshots, Quellen und Gegenbeispiele sind veröffentlicht. Nächster Schritt: B-Review und neue unabhängige Sammlung für A, keine Nachoptimierung auf dem bereits geöffneten Holdout.
+
+Nachfolgend das ursprüngliche chronologische Protokoll, dessen frühere Zwischenwerte durch den Abschlussbericht eingeordnet werden.
+
+---
+
 # Interactive intelligence laboratory — recoverable start
 
 Status: START_CHECKPOINT / RESEARCH_SHADOW. Owner-requested branch `research/continuum-interactive-intelligence-lab-20261026`; audited starting SHA `b1d9556c74df9aa3c6e05defc9b4fb7d94181f17` (also current PR173 head). No release/source inventory edits or production activation.

@@ -36,7 +36,9 @@
         "notApplicable": 0,
         "abstain": 156,
         "wrong": 0,
-        "retained": 156,
+        "retentionIncludingNotRequired": 156,
+        "requiredPremises": 84,
+        "premisesRetained": 72,
         "p50Microseconds": 104.299,
         "p95Microseconds": 361.534,
         "maxContextBytes": 363
@@ -49,7 +51,9 @@
         "notApplicable": 168,
         "abstain": 48,
         "wrong": 0,
-        "retained": 156,
+        "retentionIncludingNotRequired": 156,
+        "requiredPremises": 84,
+        "premisesRetained": 72,
         "p50Microseconds": 252.823,
         "p95Microseconds": 2169.73,
         "maxContextBytes": 363
@@ -60,7 +64,9 @@
         "notApplicable": 0,
         "abstain": 48,
         "wrong": 0,
-        "retained": 168,
+        "retentionIncludingNotRequired": 168,
+        "requiredPremises": 84,
+        "premisesRetained": 84,
         "p50Microseconds": 258.207,
         "p95Microseconds": 2639.447,
         "maxContextBytes": 471
@@ -71,7 +77,9 @@
         "notApplicable": 0,
         "abstain": 48,
         "wrong": 0,
-        "retained": 168,
+        "retentionIncludingNotRequired": 168,
+        "requiredPremises": 84,
+        "premisesRetained": 84,
         "p50Microseconds": 267.244,
         "p95Microseconds": 3386.49,
         "maxContextBytes": 834
