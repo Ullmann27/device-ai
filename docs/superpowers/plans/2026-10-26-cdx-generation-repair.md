@@ -34,18 +34,18 @@ research alternatives remain host-only and individually documented.
 
 - [x] Inspect real decoder, encoder, bridge, train loops and archived checkpoint.
 - [x] Compile diagnostic source against actual SDK classes and module ABI.
-- [ ] Execute from committed source; reproduce original6000 training hash and
+- [x] Execute from committed source; reproduce original6000 training hash and
   all generations; archive30 derivative comparisons and conditioner ablations.
-- [ ] Commit/push exact commands, results and limitations.
+- [x] Commit/push exact commands, results and limitations.
 
 ## Task2: controlled conditioner repair
 
-- [ ] Use original4 pairs, seed91, rate.035, stages0/6000/30000/120000.
-- [ ] Implement standalone probe loading the frozen protocol; compare raw,
+- [x] Use original4 pairs, seed91, rate.035, stages0/6000/30000/120000.
+- [x] Implement standalone probe loading the frozen protocol; compare raw,
   L2-unit and train-input-mean-centered×32/clipped conditioners.
-- [ ] Save every stage under its arm, perform bounded fixed-step training,
+- [x] Save every stage under its arm, perform bounded fixed-step training,
   assert generation leaves model bytes unchanged. Report exact+EOS by stratum.
-- [ ] Choose candidate only by preregistered DEV criterion; report raw matched
+- [x] Choose candidate only by preregistered DEV criterion; report raw matched
   budget even if it beats the candidate. Commit/push before TEST.
 
 ## Task3: independent evaluation and handoff
@@ -61,3 +61,7 @@ research alternatives remain host-only and individually documented.
 Ruling: no extra approval round because the parent task and owner continuation
 explicitly authorized bounded research decisions. The cost of a wrong research
 choice is a recorded negative experiment, never an activated model.
+
+Owner stop: Task3 remains NOT_RUN. One separately approved CDXA1 architecture
+and pre-prediction data/protocol are secured UNTRAINED; see
+`experimental/brain/CDXA1-RESUME.md`. No independent test was opened or consumed.

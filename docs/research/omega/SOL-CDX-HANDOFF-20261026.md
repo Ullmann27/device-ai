@@ -1,6 +1,8 @@
 # CDX generation repair — 2026-10-26
 
-Status: **PARTIALLY_MEASURED / RESEARCH_SHADOW**, EXP-05; no runtime activation.
+Status: **OWNER_STOPPED / PARTIALLY_MEASURED / RESEARCH_SHADOW**, EXP-05;
+no runtime activation. Owner requested secure stop at20%usage; no further
+training/inference/comparison job was started after that instruction.
 
 Official base: `c391b832`, branch `sol/cdx-generation-repair-20261026`,
 integration target `sol/continuum-brain-breakthroughs-20261026`. Work is isolated
@@ -55,3 +57,30 @@ independent cases only after final source/model freeze.
 
 Next entry: freeze narrow pointer task, protocol and architecture before training. Rollback by
 reverting individual research commits; prior source and checkpoints remain.
+
+## Clean stop and exact continuation boundary
+
+All measured conditioner results, diagnostics and12 checkpoints were pushed in
+`b9ece28c`; frozen executable comparison source is
+`1f18e6bc008508225216f58fbaaa7c0f5d192f40`. Protocol is`f2406ff6`.
+Selected centered×32/30000 binarySHA:
+`7097efec621f81fcd35ef58561489ecbbc9e72e9f6f9da54efde359c4be5cc76`.
+
+Separate CDXA1 data/protocol/tests were pushed at`01c828ed` before any quality
+prediction. Pending model source is now secured by this closure commit.
+**CDXA1 UNTRAINED / UNVERIFIED**, no weights or quality results exist.
+Seven unit/numerical checks passed in0.051s before stop; captured output is in
+`docs/evidence/sol-cdx-20261026/cdxa1-unit-checks.txt`. They cover48 finite-
+difference comparisons, exact Unicode source chunks, read-only generation,
+serialization/limits and zero weights repeating token0 (no forced next/EOS).
+No new unit run, training, inference benchmark, comparator or production work
+was undertaken after the stop instruction. No model process remains active.
+
+`experimental/brain/CDXA1-RESUME.md` gives the exact architecture, commands,
+unsupported tasks, still-missing fair CSX/CDX comparators and next steps.
+The separately authored NEW32in-family+8challenge independent fixture remains
+**UNOPENED / UNCONSUMED** by this agent; no test-based selection/tuning happened.
+Its announcedSHA is`58bcb0d6393b10f9af0f064692a71458f1ff8978759fb9b5e86d1b8b0a4e0e7c`.
+
+No source file under`app/`, deployed resource, owner data or existing model
+checkpoint was modified. No main merge, signing, installation or promotion.
