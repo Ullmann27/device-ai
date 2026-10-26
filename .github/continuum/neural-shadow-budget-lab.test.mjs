@@ -11,8 +11,11 @@ test('two short experiments preserve exact original model bytes, rounds and hist
  assert.equal(result.promoted,false);assert.equal(result.weightsWritten,false);
  assert.equal(result.requiresFreshUnseenHoldout,true);
  assert.equal(result.auditSelectionForbidden,true);
+ assert.equal(result.transferSelectionForbidden,true);
+ assert.equal(result.transferSemanticTotal,32);
  assert.deepEqual(result.profiles.map(x=>x.stepsRequested),[250,500]);
  assert.ok(result.profiles.every(x=>x.auditUsedForSelection===false));
+ assert.ok(result.profiles.every(x=>x.transferUsedForSelection===false));
  assert.equal(JSON.stringify(original),initial);
  assert.deepEqual(exportWeights(original),bytes);
  assert.ok(Object.isFrozen(result));assert.ok(Object.isFrozen(result.profiles));
@@ -69,6 +72,7 @@ test('default research sweep is strictly bounded to nine non-promotable trials',
  assert.deepEqual(result.profiles.map(x=>x.policy),
    REPLAY_ABLATIONS.map(x=>x.name));
  assert.ok(result.profiles.every(x=>x.auditUsedForSelection===false));
+ assert.ok(result.profiles.every(x=>x.transferUsedForSelection===false));
  assert.equal(result.weightsWritten,false);
 });
 test('oversized ablation grid rejected before training',()=>{
