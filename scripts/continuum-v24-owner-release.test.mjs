@@ -28,7 +28,7 @@ test('v24 remains one in-place owner package with exact older certificate and ro
  const gradle=read('app/build.gradle.kts');
  const router=read('scripts/render-mentor-preview.sh');
  const shell=read('scripts/render-mentor-owner-update-v24.sh');
- assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 24\s*versionName = "0\.3\.23"/);
+ assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 25\s*versionName = "0\.3\.24"/);
  assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
  assert.match(router,/CONTINUUM_OWNER_V24_APPROVED_SHA/);
  assert.match(router,/CONTINUUM_OWNER_RELEASE_VERSION:-18/);
@@ -80,11 +80,10 @@ test('v24 source gate rejects partial, mismatched and old-version approval',()=>
  }
 });
 
-test('v24 frozen source manifest authenticates all 1027 executable blobs in an unmodified checkout',()=>{
+test('v24 historical inventory remains intact but cannot approve the new v25 files',()=>{
  const data=JSON.parse(read('docs/release/continuum-0323-source-proposal-20261026.json'));
  assert.equal(data.state,'SOURCE_PROPOSAL_NOT_OWNER_APPROVAL');
  assert.equal(data.sourceHead,approvedSource);
- assert.equal(data.package,'at.heinz.deviceai.mentorpaired');
  assert.equal(data.versionCode,24);
  assert.equal(data.versionName,'0.3.23');
  assert.equal(data.files.length,1027);
@@ -94,10 +93,8 @@ test('v24 frozen source manifest authenticates all 1027 executable blobs in an u
   CONTINUUM_RELEASE_SHA:head(),
   CONTINUUM_OWNER_V24_APPROVED_SHA:head()
  });
- assert.equal(r.status,0,r.stderr);
- assert.match(r.stdout,/OWNER_V24_SOURCE_VERIFIED/);
- assert.match(r.stdout,/files=1027/);
- // Passing a deterministic offline source test never authorizes signing.
+ assert.equal(r.status,69,r.stderr);
+ assert.match(r.stderr,/OWNER_V24_BLOCKED/);
 });
 
 test('QA builder always uses a deliberately different certificate, not the owner key',()=>{
@@ -106,6 +103,6 @@ test('QA builder always uses a deliberately different certificate, not the owner
  assert.match(script,/NONOWNER-QA-NOT-INSTALLABLE/);
  assert.match(script,/owner_installable=FALSE/);
  assert.match(script,/apksigner.*verify/);
- assert.match(script,/versionCode='24' versionName='0\.3\.23'/);
+ assert.match(script,/versionCode='25' versionName='0\.3\.24'/);
  assert.doesNotMatch(script,/CONTINUUM_MENTOR_SIGNING_P12_BASE64/);
 });

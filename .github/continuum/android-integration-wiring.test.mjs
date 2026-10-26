@@ -46,8 +46,11 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    !runtime.includes('trainExperimentalCre1('));
  ensure('unanswered turn alone reaches local model',
    bodyOf(activity,'private fun runContinuumDialogue(').includes('LocalFirstPolicy.afterMemory('));
- ensure('local model receives only grounded same-session context for referential followups',
-   activity.includes('LocalFirstPolicy.localModelQuestion(request,localPrompt)') &&
+ ensure('same-session bounded local-model context is separate from grounded memory-scoped followups',
+   activity.includes('LocalFirstPolicy.localModelQuestion(') &&
+   activity.includes('hasSameSessionLocalTurn=localConversationContext') &&
+   activity.includes('.render(requestSessionId).isNotBlank()') &&
+   activity.includes('grounded=grounded') &&
    activity.includes('runLocal(request,modelQuestion)') &&
    activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic') &&
    runtime.includes('val currentContext=if(followUp && scopedPrevious!=null)') &&

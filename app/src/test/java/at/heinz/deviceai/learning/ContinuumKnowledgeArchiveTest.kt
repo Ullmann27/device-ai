@@ -83,6 +83,49 @@ class ContinuumKnowledgeArchiveTest {
         } finally { base.deleteRecursively() }
     }
 
+    @Test fun genericWikipediaTitleWordCannotHijackMarsFollowUp() {
+        val temp=Files.createTempDirectory("continuum-mars-follow-up").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(temp)
+            val economics=archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Alfred-Nobel-Gedächtnispreis für Wirtschaftswissenschaften",
+                "https://de.wikipedia.org/wiki/Alfred-Nobel-Gedächtnispreis_für_Wirtschaftswissenschaften",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Der Alfred-Nobel-Gedächtnispreis wird jährlich für die Wirtschaftswissenschaften vergeben.")
+            val question="Welche Folgen hat das für Menschen, die dort leben möchten?"
+            val lexicalHits=archive.search(question,limit=20)
+            assertTrue("Regression setup must reproduce the old generic-title-word hit",
+                lexicalHits.any { it.score>=5 && it.source.id==economics.id })
+            assertNull("A follow-up without a self-contained topic must reach dialogue context",
+                ContinuumArchiveAnswerPolicy.select(question,lexicalHits))
+            assertEquals(1,archive.stats()[ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT])
+        } finally { temp.deleteRecursively() }
+    }
+
+    @Test fun directArchiveQuestionNeedsAnExplicitSourceTitleTopic() {
+        val temp=Files.createTempDirectory("continuum-archive-topic-gate").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(temp)
+            val mars=archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Mars","https://de.wikipedia.org/wiki/Mars",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Der Mars besitzt eine dünne Atmosphäre und gilt als Planet unseres Sonnensystems.")
+            archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Alfred-Nobel-Gedächtnispreis für Wirtschaftswissenschaften",
+                "https://de.wikipedia.org/wiki/Alfred-Nobel-Gedächtnispreis_für_Wirtschaftswissenschaften",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Dieser Wirtschaftspreis zeichnet Arbeiten im Bereich der Wirtschaftswissenschaften aus.")
+            val direct="Was ist der Mars?"
+            val selected=ContinuumArchiveAnswerPolicy.select(direct,archive.search(direct,limit=20))
+            assertEquals(mars.id,selected?.source?.id)
+            assertNull(ContinuumArchiveAnswerPolicy.select(
+                "Was folgt daraus?",archive.search("Was folgt daraus?",limit=20)))
+            assertNull(ContinuumArchiveAnswerPolicy.select(
+                "Warum ist Mars anders?",archive.search("Wirtschaftswissenschaften",limit=20)))
+            assertEquals(2,archive.stats()[ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT])
+        } finally { temp.deleteRecursively() }
+    }
+
     @Test fun legalArchiveIsNotMisreportedAsLegalValidity() {
         val temp=Files.createTempDirectory("continuum-ris-source").toFile()
         try {
