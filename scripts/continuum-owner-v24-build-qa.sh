@@ -5,7 +5,7 @@ umask 077
 trap 'code=$?; echo "CONTINUUM_QA_EXIT=$code"; exit "$code"' EXIT
 
 cd "$(git rev-parse --show-toplevel)"
-expected_ref="integration/continuum-owner-0323-review-20261026"
+expected_ref="integration/continuum-owner-0324-review-20261026"
 head_sha="$(git rev-parse --verify HEAD)"
 [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]] || { echo "QA: invalid Git HEAD" >&2; exit 69; }
 if [[ -n "${CONTINUUM_QA_SOURCE_SHA:-}" && "$head_sha" != "$CONTINUUM_QA_SOURCE_SHA" ]]; then
@@ -18,10 +18,10 @@ if [[ -n "$branch" && "$branch" != "$expected_ref" ]]; then
   exit 69
 fi
 echo "CONTINUUM_QA_SOURCE=$head_sha"
-echo "CONTINUUM_QA_MODE=OWNER_V24_BUILD_QA_WITH_EPHEMERAL_NONOWNER_TEST_CERT"
+echo "CONTINUUM_QA_MODE=OWNER_V25_BUILD_QA_WITH_EPHEMERAL_NONOWNER_TEST_CERT"
 out="$PWD/continuum-owner-v24-qa"
 mkdir -p "$out"
-printf 'CONTINUUM 0.3.22 OWNER SOURCE PREFLIGHT ONLY; NOT A SIGNED APK.\nsource_sha=%s\n' "$head_sha" > "$out/QA-INFO.txt"
+printf 'CONTINUUM 0.3.24 QA BUILD ONLY; NOT A SIGNED APK.\nsource_sha=%s\n' "$head_sha" > "$out/QA-INFO.txt"
 workspace="$PWD/.continuum-render-build"
 mkdir -p "$workspace"
 export JAVA_HOME="$workspace/jdk17"
@@ -60,7 +60,7 @@ mkdir -p "$GRADLE_USER_HOME"
 gradle --version
 node --version
 
-# Owner v24 QA: ephemeral independently generated test key; NEVER owner signing or release.
+# Owner v25 QA: ephemeral independently generated test key; NEVER owner signing or release.
 # Run the actual merged PR133+PR135 sources and historical owner safety regressions.
 export CONTINUUM_OWNER_V23_QA=1
 env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 .github/continuum/*.test.mjs scripts/*.test.mjs > "$out/NODE-TESTS.log" 2>&1 || {
@@ -71,7 +71,7 @@ env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 backend/test/*.test.js
 # Use an ephemeral QA-only certificate so Gradle can compile exactly the v24
 # owner package/version. This certificate deliberately differs from the installed app.
 # The resulting artifact MUST NOT be used as an in-place owner update.
-qa_key="$workspace/continuum-v24-qa-only.p12"
+qa_key="$workspace/continuum-v25-qa-only.p12"
 qa_password="$(head -c 48 /dev/urandom | base64 | tr -d '\n')"
 keytool -genkeypair -alias deviceai-mentor -keyalg RSA -keysize 3072 \
   -validity 2 -dname 'CN=Continuum NONOWNER QA Certificate,OU=QA,O=Continuum,C=AT' \
@@ -89,19 +89,19 @@ gradle --no-daemon --max-workers=2 --console=plain \
 apk="app/build/outputs/apk/debug/app-debug.apk"
 test -s "$apk" || { echo "V24 QA APK missing" >&2; exit 69; }
 "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > "$out/APK-SIGNATURE-QA.txt"
-"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='24' versionName='0.3.23'" > "$out/APK-PACKAGE-QA.txt"
+"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='25' versionName='0.3.24'" > "$out/APK-PACKAGE-QA.txt"
 # This must never accidentally carry the original owner certificate.
 if grep -qi '2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc' "$out/APK-SIGNATURE-QA.txt"; then
  echo "QA key unexpectedly matches owner certificate; aborting" >&2; exit 69
 fi
 apk_sha256="$(sha256sum "$apk" | cut -d' ' -f1)"
-artifact="CONTINUUM-0323-NONOWNER-QA-NOT-INSTALLABLE-${head_sha:0:12}.apk"
+artifact="CONTINUUM-0324-NONOWNER-QA-NOT-INSTALLABLE-${head_sha:0:12}.apk"
 cp "$apk" "$out/$artifact"
 printf '%s  %s\n' "$apk_sha256" "$artifact" > "$out/SHA256SUMS"
 (cd "$out"; sha256sum --check --status SHA256SUMS)
 rm -f "$qa_key"
 unset CONTINUUM_MENTOR_SIGNING_FILE CONTINUUM_MENTOR_SIGNING_PASSWORD qa_password
-printf 'source_sha=%s\nstatus=V24_QA_APK_BUILT_TEST_CERT_NOT_OWNER_UPDATE\npackage=at.heinz.deviceai.mentorpaired\nversion_code=24\nversion_name=0.3.23\napk_sha256=%s\nowner_installable=FALSE\n' "$head_sha" "$apk_sha256" > "$out/STATUS.txt"
-echo '<!doctype html><title>Continuum 0.3.23 NONOWNER QA</title><pre>QA-only APK. Wrong signing certificate; DO NOT INSTALL over the owner app. See STATUS.txt and test logs.</pre>' > "$out/index.html"
+printf 'source_sha=%s\nstatus=V25_QA_APK_BUILT_TEST_CERT_NOT_OWNER_UPDATE\npackage=at.heinz.deviceai.mentorpaired\nversion_code=25\nversion_name=0.3.24\napk_sha256=%s\nowner_installable=FALSE\n' "$head_sha" "$apk_sha256" > "$out/STATUS.txt"
+echo '<!doctype html><title>Continuum 0.3.24 NONOWNER QA</title><pre>QA-only APK. Wrong signing certificate; DO NOT INSTALL over the owner app. See STATUS.txt and test logs.</pre>' > "$out/index.html"
 printf 'User-agent: *\nDisallow: /\n' > "$out/robots.txt"
-echo "CONTINUUM_OWNER_V24_QA_PASSED=$head_sha"
+echo "CONTINUUM_OWNER_V25_QA_PASSED=$head_sha"
