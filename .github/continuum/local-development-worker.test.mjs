@@ -36,3 +36,14 @@ test('missing summary, timeout, failed case or invalid totals are never green',(
  assert.equal(classifyNativeTestRun({exitCode:0,stdout:tap({...ok,pass:2,fail:1})}).status,'FAILED');
  assert.equal(classifyNativeTestRun({exitCode:0,stdout:tap({...ok,tests:4})}).status,'FAILED');
 });
+
+test('native worker refuses untracked test injection and symlinked test entrypoints',async()=>{
+ const {readFileSync}=await import('node:fs');
+ const {fileURLToPath}=await import('node:url');
+ const {resolve,dirname}=await import('node:path');
+ const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
+ const source=readFileSync(resolve(root,'scripts/continuum-local-development-worker.mjs'),'utf8');
+ assert.match(source,/ls-files','-z'/);
+ assert.match(source,/lstatSync\(full\)\.isFile\(\)/);
+ assert.doesNotMatch(source,/readdirSync\(/);
+});
