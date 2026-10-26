@@ -90,6 +90,31 @@ class LocalFirstPolicyTest {
     }
 
     @Test
+    fun unquotedReasoningWordsAsRecallSubjectsMustNotTriggerModelSynthesis() {
+        val directRecall = listOf(
+            "Was habe ich über analysiere gespeichert?",
+            "Was habe ich zu vergleiche notiert?",
+            "Was weißt du über warum aus meiner Erinnerung?",
+            "Wo steht plane in meiner Notiz?",
+            "Wo steht bewerte in meinen Notizen?",
+            "Wann habe ich analysiere geschrieben?"
+        )
+        for (request in directRecall) {
+            assertEquals(request, AssistantRoute.LOCAL_CORE,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+        val realSynthesis = listOf(
+            "Was habe ich über analysiere gespeichert und warum ist es relevant?",
+            "Bitte analysiere, was ich über warum gespeichert habe.",
+            "Was habe ich zu plane notiert? Vergleiche es mit meiner letzten Notiz."
+        )
+        for (request in realSynthesis) {
+            assertEquals(request, AssistantRoute.LOCAL_MODEL,
+                LocalFirstPolicy.afterMemory(grounded = true, localModelReady = true, request = request))
+        }
+    }
+
+    @Test
     fun quotedWordsAndLexicalDefinitionsDoNotTurnVerifiedRecallIntoModelClaims() {
         val directRecall = listOf(
             "Was habe ich über „analysiere“ gespeichert?",
