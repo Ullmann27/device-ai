@@ -5,7 +5,7 @@
  * calls an LLM, merges a PR, downloads software or executes a generated patch.
  */
 import {spawnSync} from 'node:child_process';
-import {lstatSync,mkdirSync,openSync,closeSync,unlinkSync,writeFileSync,renameSync} from 'node:fs';
+import {existsSync,lstatSync,realpathSync,mkdirSync,openSync,closeSync,unlinkSync,writeFileSync,renameSync} from 'node:fs';
 import {resolve,join,dirname,sep} from 'node:path';
 import {setTimeout as delay} from 'node:timers/promises';
 import {fileURLToPath} from 'node:url';
@@ -72,22 +72,43 @@ export function runOneCycle(outDirectory){
  const output=resolve(outDirectory);
  if(output===ROOT||output.startsWith(ROOT+sep))throw Error('OUTPUT_MUST_BE_OUTSIDE_REPO');
  mkdirSync(output,{recursive:true,mode:0o700});
- const lock=join(output,'worker.lock');
+ const canonicalOutput=realpathSync(output);
+ if(canonicalOutput===ROOT||canonicalOutput.startsWith(ROOT+sep))
+   throw Error('OUTPUT_SYMLINK_TO_REPO_REFUSED');
+ const lock=join(canonicalOutput,'worker.lock');
  const fd=openSync(lock,'wx',0o600);
  try{
    const sourceSha=exactGit(['rev-parse','--verify','HEAD']);
    const started=new Date().toISOString();
-   const run=command(process.execPath,['--test','--test-concurrency=2',
-     ...tests.map(x=>join('.github','continuum',x))],TIMEOUT_MS);
-   const result=classifyNativeTestRun({exitCode:run.status,stdout:run.stdout,
-     stderr:run.stderr,error:run.signal??null});
+   let result;
+   try {
+     const run=command(process.execPath,['--test','--test-concurrency=2',
+       ...tests.map(x=>join('.github','continuum',x))],TIMEOUT_MS);
+     result=classifyNativeTestRun({exitCode:run.status,stdout:run.stdout,
+       stderr:run.stderr,error:run.signal??null});
+   }catch(e) {
+     // A timeout, maxBuffer overflow, or missing binary must yield FAILED
+     // evidence, not kill an otherwise healthy scheduler silently.
+     result=classifyNativeTestRun({exitCode:null,stdout:'',
+       error:e?.code||e?.message||'SUBPROCESS_ERROR'});
+   }
+   let sourceUnchanged=false;
+   try {
+     sourceUnchanged=exactGit(['rev-parse','--verify','HEAD'])===sourceSha &&
+       exactGit(['symbolic-ref','--quiet','--short','HEAD'])===branch &&
+       exactGit(['status','--porcelain','--untracked-files=no']).length===0;
+   }catch {sourceUnchanged=false;}
+   if(!sourceUnchanged)result={...result,status:'FAILED',
+     error:'CHECKOUT_DRIFT_DURING_TEST'};
    // No read-only worker action ever constitutes a repair or learning receipt.
    const report={schema:'continuum-local-worker-v1',branch,sourceSha,started,
-     completed:new Date().toISOString(),...result,
+     completed:new Date().toISOString(),sourceUnchanged,...result,
      candidatePromoted:false,patchApplied:false,weightsUpdated:false,
      ownerReviewRequired:true};
-   const target=join(output,'latest.json'),tmp=join(output,'latest.partial.json');
-   writeFileSync(tmp,JSON.stringify(report,null,2)+'\n',{encoding:'utf8',mode:0o600});
+   const target=join(canonicalOutput,'latest.json'),tmp=join(canonicalOutput,'latest.partial.json');
+   if(existsSync(tmp)||existsSync(target)&&!lstatSync(target).isFile())
+     throw Error('UNSAFE_REPORT_PATH');
+   writeFileSync(tmp,JSON.stringify(report,null,2)+'\n',{encoding:'utf8',mode:0o600,flag:'wx'});
    renameSync(tmp,target);
    return report;
  }finally{closeSync(fd);unlinkSync(lock);}
@@ -97,9 +118,20 @@ async function main(){
    throw Error('USAGE: node scripts/continuum-local-development-worker.mjs --once|--loop /external/status-folder');
  const mode=process.argv[2],out=process.argv[3];
  do{
-   const report=runOneCycle(out);
-   console.log(JSON.stringify(report));
-   if(mode==='--once')break;
+   try {
+     const report=runOneCycle(out);
+     console.log(JSON.stringify(report));
+     // CLI exits nonzero whenever a test failed, was skipped, or its
+     // source changed; never allow an orchestrator to confuse it for success.
+     if(mode==='--once'){
+       if(report.status!=='ALL_EXECUTED_PASS')process.exitCode=1;
+       break;
+     }
+   }catch(error){
+     console.error('LOCAL_WORKER_CYCLE_FAILED: '+String(error?.message||error).slice(0,300));
+     if(mode==='--once'){process.exitCode=1;break;}
+     // In autonomous mode, a failed cycle must not terminate future checks.
+   }
    await delay(MIN_INTERVAL_MS);
  }while(true);
 }
