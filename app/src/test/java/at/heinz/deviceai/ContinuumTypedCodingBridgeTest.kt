@@ -43,6 +43,8 @@ class ContinuumTypedCodingBridgeTest {
             assertNull(rejected.patchSha256)
             assertEquals("INVALID", ContinuumTypedCodingBridge.evaluate(
                 operation, id, hash, 0, -1, payload, expectedSourceCommit = "b".repeat(40)).status)
+            assertEquals("INVALID", ContinuumTypedCodingBridge.evaluate(
+                operation, id, hash, 0, -1, payload, expectedSourceCommit = "not-a-commit").status)
         }
     }
 
