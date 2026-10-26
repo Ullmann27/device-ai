@@ -104,3 +104,19 @@ test('falsification scorecard: naive status-only check misses 12 of 13 corruptio
  }
  assert.equal(changes.length,13);assert.equal(naive,12);assert.equal(strict,0);
 });
+
+test('metamorphic positive controls preserve the same tests across order changes and additions',()=>{
+ const x=baseline(),hash=H(33);
+ x.after[0].executedCaseHashes.reverse();
+ x.fresh[0].executedCaseHashes.reverse();
+ assert.equal(review(x).status,'RESEARCH_REVIEW_REQUIRED');
+ x.after[0].executedCaseHashes.push(hash);x.after[0].executed=4;
+ x.fresh[0].executedCaseHashes.push(hash);x.fresh[0].executed=4;
+ assert.equal(review(x).status,'RESEARCH_REVIEW_REQUIRED');
+ for(const phase of ['before','after','fresh']){
+  x[phase][0].skipped=1;x[phase][0].skippedCaseDigest=H(44);
+ }
+ assert.equal(review(x).status,'RESEARCH_REVIEW_REQUIRED');
+ x.fresh[0].skippedCaseDigest=H(45);
+ assert.equal(review(x).status,'RESEARCH_EVIDENCE_BLOCKED');
+});
