@@ -16,11 +16,11 @@ Related research: PR #133 (VH-SR verifier) and PR #169 (CCC1 independent checks)
 
 ## Actual measured research
 
-Local Node.js v22.16.0, isolated research module/test source: **9/9 tests passed, no failures**. The ninth test evaluates 13 deliberately mutated CCC1 receipt fixtures against two controls:
+Local Node.js v22.16.0, isolated research module/test source: **10/10 tests passed, no failures**. One test evaluates 13 deliberately mutated CCC1 receipt fixtures against two controls:
 - Simple status-only gate incorrectly accepts 12 of 13 manipulated specimens.
 - The strict research gate accepts 0 of 13 manipulated specimens.
 - A properly formed synthetic RED/GREEN/fresh + VH-SR-PASS specimen results only in RESEARCH_REVIEW_REQUIRED, with learningEligible=false, autoApply=false and ownerReviewRequired=true.
-These are deterministic synthetic mutations, deliberately chosen to exercise new checks. They do not measure real model accuracy, code-repair success or independent adversarial generalization.
+A tenth metamorphic test verifies legitimate test-order permutation, additional executed test cases and matching skipped-test hashes remain reviewable, while mismatched skipped-test identities are blocked. These are deterministic synthetic mutations, deliberately chosen to exercise new checks. They do not measure real model accuracy, code-repair success or independent adversarial generalization.
 
 New Kotlin feedback lock helper was recompiled locally with kotlinc and Java 21; two actual separate JVM child processes serialized critical sections, exception release and symlink-root refusal: smoke checks PASS. The complete updated Kotlin feedback/JUnit tests are NOT_RUN here.
 
