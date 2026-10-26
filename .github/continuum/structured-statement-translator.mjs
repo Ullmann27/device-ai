@@ -5,7 +5,7 @@
 import vm from 'node:vm';
 const ID=/^[A-Za-z_$][A-Za-z0-9_$]*$/;
 const TOK=/\s+|\d+(?:\.\d+)?|[A-Za-z_$][A-Za-z0-9_$]*|===|!==|=>|<=|>=|\.\.\.|&&|\|\||[+\-*/%<>!&|^~?:=,.;()[\]{}]/gy;
-const RESERVED=new Set(['function','const','let','var','return','if','else','for','while','Math','Number','Array','Object','String','Boolean','true','false','null','undefined','sort','slice','length','min','max']);
+const RESERVED=new Set(['function','const','let','var','return','if','else','for','while','Math','Number','Array','Object','String','Boolean','true','false','null','undefined','sort','slice','min','max']);
 function tokenize(source){
   if(typeof source!=='string'||source.length===0||source.length>16384)throw Error('SOURCE_SIZE');
   if(source.includes('//')||source.includes('/*')||source.includes('*/'))throw Error('UNSUPPORTED_COMMENT');
@@ -37,7 +37,11 @@ function parse(source){
   }
   if(params.length>12||new Set(params).size!==params.length)throw Error('PARAMETER_COUNT');
   const open=close+1;
-  if(v.slice(open+1,-1).some(t=>t==='{'||t==='}'))throw Error('NESTED_BLOCK');
+  // A formal parameter named 'length' is legal, but do not mistake a
+  // property name after '.' for a renamed variable in this limited grammar.
+  const body=v.slice(open+1,-1);
+  if(params.some(p=>body.some((t,i)=>t===p&&body[i-1]==='.')))throw Error('PARAMETER_PROPERTY_COLLISION');
+  if(body.some(t=>t==='{'||t==='}'))throw Error('NESTED_BLOCK');
   const forward=new Map([[v[1],'__FN__']]),reverse=new Map([['__FN__',v[1]]]);
   params.forEach((p,i)=>{forward.set(p,'__P'+i+'__');reverse.set('__P'+i+'__',p);});
   let localIndex=0;
