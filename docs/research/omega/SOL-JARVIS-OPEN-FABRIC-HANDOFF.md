@@ -88,6 +88,58 @@ The existing ComputeFabric had no production registry enrollment/transport calle
 in the inspected source; this slice provides a real tested API connection, not a
 claim of enrolled phone nodes or UI-to-provider operation.
 
+## Checkpoint 4 — CCC1 native execution and evidence repair
+
+Real Docker executor now ran both public development cases, A then B then C:
+
+| Case | A reference | B forced | C actual NTW1 top1 |
+|---|---|---|---|
+| Sort | RED 4 executed / 3 fail → GREEN 4 → fresh GREEN 4 | same | same |
+| Pagination | RED 4 / 4 fail → GREEN 4 → fresh GREEN 4 | same | NOT_APPLICABLE; no rank2 attempt |
+
+Each profile contains 2 regression and 2 separately authored behavior-oracle
+cases; unchanged tests and executed identities are checked in genuine fresh
+worktrees. Original fixture sources remain clean. NTW1 is **untrained**, zero
+feature state, seed 20261026, no updates. These are public development tasks,
+not sealed unknown holdouts or real language-model code generation. A/B 2/2,
+untrained C 1/2 establishes a measurable ranking gap, not a learning benefit.
+
+Found an additional actual false-parity bug: JUnit enumeration stopped after
+60 failure diagnostics. A 100-failure RED was recorded as only 60 executed
+tests, allowing later disappearance to be hidden. New native RED tests reproduce
+it. Enumeration now continues while diagnostics stay capped. Oversized/truncated
+or linked/omitted directory reports are explicitly incomplete; incomplete reports
+cannot pass or create negative strategy labels. Raw tests: **68/68 PASS** on the
+affected parser/ledger/repair/verifier graph after RED reproduction.
+
+Reports now preserve hashed executed identities, source snapshot hash, exit code
+and completeness; explicitly `testEvidenceAuthenticated:false` and
+`semanticRepairVerified:false`. Even a genuine dual run remains review-only.
+Candidate-controlled runtime assertions/reporting are not an authenticated
+semantic oracle; no production learning or automatic model promotion is allowed.
+
+Executor setup: build the EXISTING `scripts/continuum-isolation.Dockerfile`;
+actual empty runtime image ID
+`sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8`.
+Earlier busybox attempt could not resolve the mounted dynamic loader; a custom
+diagnostic image had 0700 copied directories. Both aborted before tests and were
+not training signals. No sandbox restriction was relaxed. Use the existing image.
+
+Reproduce with an external private config (`createIsolatedExecutor` policy) and
+NEW external evidence directory:
+
+```
+node scripts/continuum-bottleneck-local-proof.mjs \
+  --owner-approved-development-fixtures /absolute/isolation.json /new/external/evidence
+```
+
+The command uses canonical `prepareCodingTask`, current genuine CCC1 verifier,
+strict A/B/C diagnosis and existing scorecard, saves each arm and source bundle,
+and performs no paid call, model promotion, source merge or memory update.
+The three obsolete source-string assertions and ledger fixture from the initial
+full-suite failures were aligned with current source binding/evidence requirements;
+**48/48 targeted tests PASS**. Full integrated rerun remains pending.
+
 ## Next executable steps
 
 1. Run focused native model/numeric/translator/CCC1/A-B-C/fabric tests from complete

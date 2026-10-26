@@ -22,10 +22,15 @@ export const CCC1_RESEARCH_OUTCOMES=Object.freeze({
 function report(status,reason,ids={},before=null,after=null,fresh=null){
   const slim=v=>Object.freeze((v?.results??[]).map(t=>Object.freeze({
     profile:t.profile,passed:t.passed,executed:t.tests?.executed??0,
-    failed:t.tests?.failed??0,skipped:t.tests?.skipped??0
+    failed:t.tests?.failed??0,skipped:t.tests?.skipped??0,
+    evidenceComplete:t.tests?.evidenceComplete===true,
+    executedCaseHashes:Object.freeze([...(t.tests?.executedCaseHashes??[])]),
+    skippedCaseDigest:t.tests?.skippedCaseDigest??null,
+    sourceSnapshotSha256:t.isolation?.sourceSha256??null,exitCode:t.exitCode
   })));
   return Object.freeze({status,reason,verifiedSuccess:false,learningEligible:false,
-    promotionEligible:false,ownerReviewRequired:true,...ids,
+    promotionEligible:false,ownerReviewRequired:true,
+    testEvidenceAuthenticated:false,semanticRepairVerified:false,...ids,
     before:slim(before),after:slim(after),fresh:slim(fresh)});
 }
 function testDigests(wt){
@@ -58,7 +63,7 @@ function measured(run){
     throw Error('ISOLATION_EVIDENCE_MISSING');
   if(!Number.isSafeInteger(t.tests?.executed)||t.tests.executed<1||
      !Number.isSafeInteger(t.tests?.failed)||t.tests.failed<0||
-     t.timedOut||t.stoppedByOwner||[137,143].includes(t.exitCode))
+     t.tests.evidenceComplete===false||t.timedOut||t.stoppedByOwner||[137,143].includes(t.exitCode))
     throw Error('TEST_RUN_INTERRUPTED');
   return t;
 }
@@ -77,7 +82,7 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
     throw Error('TEST_PROFILE_PARITY_INVALID');
   const required=['executed','failed','skipped','passed','total','placeholders'];
   for(const evidence of [baseline.tests,candidate.tests]){
-    if(!evidence||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
+    if(!evidence||evidence.evidenceComplete===false||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
        evidence.executed<1||evidence.passed+evidence.failed!==evidence.executed)
       throw Error('TEST_COUNT_EVIDENCE_INVALID');
   }

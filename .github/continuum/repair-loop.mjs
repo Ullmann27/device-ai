@@ -196,10 +196,11 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   const localize=text=>executor?text.replaceAll('/work/',wt+'/'):text;
   const text=localize(r.stdout+'\n'+r.stderr);
   const diagnostics=p.kotlin?parseKotlinDiagnostics(text,wt):[];
-  const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0};
+  const tests={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,evidenceComplete:true};
   const skippedCaseHashes=[],executedCaseHashes=[];
   let completeSkipIdentities=true,completeExecutedIdentities=true;
   const addTests=j=>{
+    if(j.evidenceComplete===false)tests.evidenceComplete=false;
     for(const k of ['total','failed','skipped','placeholders','executed','passed'])tests[k]+=j[k]??0;
     diagnostics.push(...j.diagnostics);
     if(j.executed>0){
@@ -249,7 +250,8 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
   // A test profile passes only with executed evidence: exit 0 with no real test
   // run (missing report, only file placeholders or skips) is not a pass.
   const testProfile=Boolean(p.junitFiles||p.junitDirs);
-  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&(!testProfile||tests.executed>0)&&!stoppedByOwner;
+  const passed=r.status===0&&tests.failed===0&&!r.error&&!r.signal&&
+    (!testProfile||tests.executed>0&&tests.evidenceComplete)&&!stoppedByOwner;
   return {profile:name,passed,testProfile,...(executor?{isolation:r.isolation}:{}),exitCode:r.status,timedOut:r.signal==='SIGTERM'||r.error==='ETIMEDOUT',ms:r.ms,tests,diagnostics,
     outputTail:text.slice(-3000),...(stoppedByOwner?{stoppedByOwner}:{})};
 }
@@ -263,9 +265,11 @@ export function runProfile(name,wt,out,{deadline=null,forceRerun=false,executor=
 export function evidenceSufficient(baselineResults,candidateResults){
   const reasons=[];
   for(const r of candidateResults){
+    if(r.tests?.evidenceComplete===false){reasons.push(r.profile+' has incomplete test evidence');continue;}
     if(!r.passed){reasons.push(r.profile+' did not pass');continue;}
     if(!r.testProfile)continue;
     const before=baselineResults.find(b=>b.profile===r.profile);
+    if(before?.tests?.evidenceComplete===false)reasons.push(r.profile+' baseline evidence incomplete');
     if(r.tests.executed<=0)reasons.push(r.profile+' executed no tests');
     if(before?.tests){
       const passingBefore=Math.max(0,before.tests.passed??before.tests.executed-before.tests.failed);

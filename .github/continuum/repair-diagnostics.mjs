@@ -100,7 +100,8 @@ export function parseJsError(text,root){
 /** JUnit XML (Gradle and `node --test --test-reporter=junit`). */
 export function parseJUnit(xml,root){
   const out=[],skippedCaseHashes=[],executedCaseHashes=[];let total=0,failed=0,skipped=0,placeholders=0,crashed=0;
-  const text=String(xml).slice(0,MAX_TEXT);
+  const raw=String(xml),text=raw.slice(0,MAX_TEXT);
+  const evidenceComplete=raw.length<=MAX_TEXT;
   const attr=(src,name)=>xmlDecode((src.match(new RegExp('\\b'+name+'="([^"]*)"'))??[])[1]??'');
   for(const m of text.matchAll(/<testcase\b((?:[^>"]|"[^"]*")*?)(\/>|>([\s\S]*?)<\/testcase>)/g)){
     total++;
@@ -145,13 +146,15 @@ export function parseJUnit(xml,root){
     const d={tool:'junit',severity:'error',test:(classname?classname+'.':'')+name,file,line,col,message,kind,symbol};
     if(placeholder){const testFile=relativeInside(root,name);if(testFile)d.testFile=testFile;}
     d.fingerprint=fingerprint(d);
-    out.push(d);
-    if(out.length>=MAX_DIAGNOSTICS)break;
+    // Diagnostic verbosity and executed-test coverage have different budgets.
+    // Never stop enumerating cases after the first 60 failures: doing so lets
+    // a candidate drop later failed tests while apparently preserving parity.
+    if(out.length<MAX_DIAGNOSTICS)out.push(d);
   }
   // executed = real test cases that ran (not skipped, not file placeholders);
   // passed = executed test cases without failure (a crashed file is not a test)
   const executed=total-skipped-placeholders;
-  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out,skippedCaseHashes,executedCaseHashes};
+  return {total,failed,skipped,placeholders,executed,passed:executed-(failed-crashed),diagnostics:out,skippedCaseHashes,executedCaseHashes,evidenceComplete};
 }
 
 /** Node error text (stderr or TAP comments) for modules that fail while loading. */
@@ -184,12 +187,16 @@ export function parseJsErrorText(text,root){
 }
 
 export function readJUnitDirectory(dir,root){
-  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[],skippedCaseHashes:[],executedCaseHashes:[]};
+  const result={total:0,failed:0,skipped:0,placeholders:0,executed:0,passed:0,diagnostics:[],skippedCaseHashes:[],executedCaseHashes:[],evidenceComplete:true};
   if(!fs.existsSync(dir))return result;
-  for(const name of fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort().slice(0,2000)){
+  const names=fs.readdirSync(dir).filter(n=>n.endsWith('.xml')).sort();
+  if(names.length>2000)result.evidenceComplete=false;
+  for(const name of names.slice(0,2000)){
     const file=path.join(dir,name);
-    if(fs.statSync(file).size>5_000_000)continue;
+    const stat=fs.lstatSync(file);
+    if(!stat.isFile()||stat.isSymbolicLink()||stat.size>MAX_TEXT){result.evidenceComplete=false;continue;}
     const part=parseJUnit(fs.readFileSync(file,'utf8'),root);
+    if(!part.evidenceComplete)result.evidenceComplete=false;
     for(const k of ['total','failed','skipped','placeholders','executed','passed'])result[k]+=part[k];
     result.diagnostics.push(...part.diagnostics.slice(0,MAX_DIAGNOSTICS-result.diagnostics.length));
     result.skippedCaseHashes.push(...part.skippedCaseHashes);
