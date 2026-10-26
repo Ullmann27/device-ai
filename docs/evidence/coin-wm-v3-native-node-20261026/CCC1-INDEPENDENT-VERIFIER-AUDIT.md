@@ -51,3 +51,17 @@ Host Node \`v22.16.0\` is available, but **Docker is not installed** in the inde
 
 ### Rollback
 Revert only the CCC1 verifier and test commits from PR #163; preserve the base research model/translator and PRs #159–#162. Never touch main in this research phase.
+
+
+## Additional end-to-end source wiring and TOCTOU guard
+
+Subsequent exact-source commits improved the research contract:
+- Source module current Git blob \`b4af0c54fbbd1df613f44fed5feb6bd5c553b647\`, test blob \`84f0e29513394b36b1931b6afbd1cf019aa90a71\`.
+- A single combined test constructs a genuine NTW1-v3 research ranker, a branded induced atomic statement operator, a research-only SHA-bound candidate, then passes the candidate to the **actual canonical CCC1 typed-task schema validator** and the CCC1 identity-binding function. The candidate is never executed.
+- Before reading Git, worktrees or the executor, the approved primitive candidate fields are copied into an **immutable snapshot**. A later caller-side mutation of the source string cannot change the approved proposal inside this run.
+- The recognized test/fixture set includes test, tests, specs, fixtures and test/spec suffixes, even when placed in a normally allowed source tree.
+- All **6/6 exact GitHub test callback bodies PASS** in a fresh V8 isolate with the actual original \`coding-task.mjs\` production validator and the actual neural, structured translator, shadow adapter, CCC1 verifier, and test-source bodies. Only the host fs, crypto hash, VM syntax parser and actual OS executor were replaced by declared test-only shims.
+- The test-only hash shim is **not SHA-256**. It checks internal binding and changed-data rejection, not real cryptographic integrity. The production module calls Node \`crypto.createHash('sha256')\`.
+- Native host Node.js 22 is available, but the real Docker-based isolation capability required for the candidate's Red -> Green -> Fresh Green still is not. **Do not claim dual worktree green, positive strategy learning, real independent test receipt, or approved patch.**
+
+The human-owned deployment branch remains untouched. Verification is opt-in with a complete owner grant and a real \`createIsolatedExecutor\` capability. The research-only module *does not* offer a no-Docker fallback.
