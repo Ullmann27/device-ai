@@ -29,3 +29,13 @@ node scripts/continuum-swb1-shadow-run.mjs /external/state.json /tmp/continuum-s
 - Analyze whether the 10 repeated `VALIDATION_REGRESSION` results derive from excessive positive-only public-source replay, learning-rate imbalance, or saturation; never silently relax semantic no-regression checks.
 - Review GitHub Actions billing/runner availability using owner account UI. The workflow produced **no steps**; editing the Python/Node script alone cannot prove a fix to provisioning.
 - No automatic write to `main`, `continuum-state`, released Android weights, or owner APK. No new cloud charges.
+
+## Post-publication bounded GitHub Actions retry and worker hardening
+
+An authorized **single-job** rerun of failed Watch job 121799420830 was triggered using GitHub's retry operation. Rerun attempt **#2**, run 40387465683, started 2026-10-26T20:18:08Z, ended ~20:18:14Z with FAILED. New Watch job ID **121823529657** again exposes **zero steps** through GitHub's job-step API; its job-log download again returned **404 BlobNotFound**. Repair and publish remain SKIPPED. This independently corroborates a pre-step GitHub Actions failure; it does **not** establish which account, billing, runner, permission or GitHub-side condition caused it. No more blind retries recommended.
+
+The local fallback was also hardened: test discovery now uses **only Git-tracked files** from `git ls-files -z`, and verifies each is a regular file with `lstatSync`; untracked `*.test.mjs` injections and symlinked tests are refused. The owner must still trust the tracked repository's tests: Node's test runner is **not a security sandbox**, tests can invoke system APIs, and no model-generated arbitrary code must be fed to it. Never run in a sensitive or untrusted checkout.
+
+**Executed host validation:** 11/11 deterministic cases passed with the exact extracted GitHub worker helper functions evaluated in isolated V8: green TAP, skip/TODO non-green status, invalid TAP/timeout/failed test rejection, valid owner branch, protected main/release refusal, dirty checkout refusal and test path traversal refusal. Exact source blob `9a7af122ee1cbe5436ccd447c310f2c7eaada2aa`. This does **not** verify full Node integration, child spawning, checkout Git availability or the scheduled system-level background job.
+
+**Actual SWB1 model experiment:** SHA-checked source and baseline evaluated in V8 (three 1,000-step profiles). Two passed existing validation without increased correct answers; original published 2/12 remains untouched. Full report in `SWB1-REAL-BASELINE-SHADOW-EXPERIMENT-20261026.md`.
