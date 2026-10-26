@@ -4,8 +4,9 @@
  * Never returns a promotable model, updates a state file, or uses the report-only
  * AUDIT suite to select a training candidate.
  */
-import {restoreNeuralState,trainRound,exportWeights} from './neural-core.mjs';
-import {sha256} from './portable-subword.mjs';
+import {restoreNeuralState,trainRound,exportWeights,evaluateSuite} from './neural-core.mjs';
+import {sha256,SubwordEncoder} from './portable-subword.mjs';
+import {TRANSFER_SUITE_V1} from './neural-fresh-transfer-20261026.mjs';
 
 export const STEP_BUDGETS=Object.freeze([250,500,1000,2000,4000,8000,12000]);
 export const REPLAY_ABLATIONS=Object.freeze([
@@ -43,6 +44,9 @@ export function runShadowBudgetSweep(input,{budgets=[250,500,1000],
  const snapshotJson=JSON.stringify(initial);
  const baselineBytes=exportWeights(initial);
  if(sha256(baselineBytes)!==originalHash)throw Error('SHADOW_BASELINE_INVALID');
+ // This fixed transfer set was committed before it was first evaluated.
+ // Reporting only: never use it for candidate selection or weight promotion.
+ const transferBefore=evaluateSuite(SubwordEncoder.restore(baselineBytes),TRANSFER_SUITE_V1);
  const reports=[];
  for(const policy of replayAblations)for(const steps of budgets){
    if(cancelled())break;
@@ -55,6 +59,7 @@ export function runShadowBudgetSweep(input,{budgets=[250,500,1000],
        (!report.accepted&&state.modelHash!==originalHash)||
        (report.accepted&&report.steps!==steps))
      throw Error('SHADOW_CHANGED_ORIGINAL_WEIGHTS');
+   const transferAfter=evaluateSuite(SubwordEncoder.restore(exportWeights(state)),TRANSFER_SUITE_V1);
    reports.push(Object.freeze({
      policy:policy.name,publicSourceUpdates:report.sourceUpdates,
      stepsRequested:steps,stepsCompleted:report.steps,selectedSteps:report.selectedSteps,
@@ -69,7 +74,12 @@ export function runShadowBudgetSweep(input,{budgets=[250,500,1000],
      auditIntentAfter:report.auditAfter.intent.correct,
      auditSemanticBefore:report.auditBefore.semantic.correct,
      auditSemanticAfter:report.auditAfter.semantic.correct,
-     auditUsedForSelection:report.auditUsedForSelection
+     auditUsedForSelection:report.auditUsedForSelection,
+     transferIntentAfter:transferAfter.intent.correct,
+     transferSemanticAfter:transferAfter.semantic.correct,
+     transferIntentLossAfter:transferAfter.intent.loss,
+     transferSemanticLossAfter:transferAfter.semantic.loss,
+     transferUsedForSelection:false
    }));
  }
  if(initial.modelHash!==originalHash||JSON.stringify(initial)!==snapshotJson||
@@ -78,7 +88,11 @@ export function runShadowBudgetSweep(input,{budgets=[250,500,1000],
  return Object.freeze({
    schema:'continuum-swb1-budget-shadow-v1',status:'RESEARCH_ONLY_NOT_PROMOTABLE',
    startingModelHash:originalHash,startingRounds:rounds,startingAccepted:accepted,
-   preservedBaseline:true,auditSelectionForbidden:true,
+   preservedBaseline:true,auditSelectionForbidden:true,transferSelectionForbidden:true,
+   transferIntentBefore:transferBefore.intent.correct,
+   transferSemanticBefore:transferBefore.semantic.correct,
+   transferIntentTotal:transferBefore.intent.total,
+   transferSemanticTotal:transferBefore.semantic.total,
    diagnosis:characterizeStagnation(initial),profiles:Object.freeze(reports),
    promoted:false,weightsWritten:false,requiresFreshUnseenHoldout:true
  });
