@@ -5,6 +5,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
+import {CoinWmV3ShadowModel} from './coin-wm-v3-shadow-model.mjs';
+import {induceStructuredStatementOperator} from './structured-statement-translator.mjs';
+import {proposeShadowStructuredCandidates} from './coin-wm-v3-structured-shadow.mjs';
 import {validateCcc1CandidateBinding,validateCcc1ResearchRequest,
  runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
 
@@ -103,4 +106,29 @@ test('existing CCC1 owner grant must be valid, canonical and fully prepared',()=
   assert.throws(()=>verifyCcc1OwnerGrant({projectRoot,stateDir:projectRoot,typedTask}),
     /CCC1_STATE_INSIDE_SOURCE/);
  }finally{fs.rmSync(base,{recursive:true,force:true});}
+});
+
+test('NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain',()=>{
+ const t=task();
+ const operator=induceStructuredStatementOperator('sort',
+  'function rankScores(scores) { return scores.sort((a, b) => a - b); }',
+  'function rankScores(scores) { return [...scores].sort((a, b) => a - b); }');
+ const input='function sortVisible(items) { return items.sort((a, b) => a - b); }';
+ const model=new CoinWmV3ShadowModel(1);
+ const shadow=proposeShadowStructuredCandidates({
+  model,operators:[operator],state16:new Float64Array(16),
+  source:input,sourceCommit:t.sourceCommit,taskSha256:taskFingerprint(t),maxCandidates:1
+ });
+ assert.equal(shadow.status,'RESEARCH_SHADOW');
+ assert.equal(shadow.promotionEligible,false);
+ assert.equal(shadow.candidates.length,1);
+ const candidate=shadow.candidates[0];
+ const binding=validateCcc1CandidateBinding({
+  typedTask:t,candidate,file:'src/pagination.mjs'
+ });
+ assert.equal(binding.candidate.status,'CANDIDATE_UNVERIFIED');
+ assert.equal(binding.candidate.candidateSha256,sha(binding.candidate.code));
+ assert.equal(binding.candidate.sourceSha256,sha(input));
+ assert.equal(typeof binding.execute,'undefined');
+ assert.equal(model.updatesCount,0);
 });
