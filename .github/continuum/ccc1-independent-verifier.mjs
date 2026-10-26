@@ -69,8 +69,8 @@ function apply(wt,file,originalDigest,text){
   fs.writeFileSync(full,text);
   changedOnly(wt,file);
 }
-export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}={}){
-  if(!isIsolatedExecutor(executor))throw Error('BRANDED_OS_EXECUTOR_REQUIRED');
+/** Data binding only. Never grants execution permission or verifies a patch. */
+export function validateCcc1CandidateBinding({typedTask,candidate,file}={}){
   const task=validateCodingTask(typedTask);
   if(task.chain!=='node'||task.kind!=='BUGFIX'||task.allowedPaths.length!==1||
      task.allowedPaths[0]!==file||!isCodingPath(file)||isTestFile(file))
@@ -80,10 +80,15 @@ export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}=
      candidate.taskSha256!==taskFingerprint(task)||
      !HEX64.test(candidate.sourceSha256??'')||
      !HEX64.test(candidate.candidateSha256??'')||
+     candidate.sourceSha256===candidate.candidateSha256||
      typeof candidate.code!=='string'||candidate.code.length<1||candidate.code.length>16000||
      sha256(candidate.code)!==candidate.candidateSha256)
     throw Error('CANDIDATE_IDENTITY_MISMATCH');
   return Object.freeze({task,candidate,file});
+}
+export function validateCcc1ResearchRequest({typedTask,candidate,file,executor}={}){
+  if(!isIsolatedExecutor(executor))throw Error('BRANDED_OS_EXECUTOR_REQUIRED');
+  return validateCcc1CandidateBinding({typedTask,candidate,file});
 }
 export function runIndependentCcc1PatchVerification({typedTask,candidate,file,projectRoot,executor,deadline=Date.now()+900000}={}){
   const {task}=validateCcc1ResearchRequest({typedTask,candidate,file,executor});
