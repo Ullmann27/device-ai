@@ -1,0 +1,557 @@
+{
+  "schema": "CDX1_CAUSAL_DIAGNOSIS_V1",
+  "conditionDistances": [
+    {
+      "a": 0,
+      "b": 1,
+      "l2": 0.05498463077373266
+    },
+    {
+      "a": 0,
+      "b": 2,
+      "l2": 0.09727399808933113
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "l2": 0.032483748005005565
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "l2": 0.049755642033529196
+    },
+    {
+      "a": 1,
+      "b": 3,
+      "l2": 0.07857331568085775
+    },
+    {
+      "a": 2,
+      "b": 3,
+      "l2": 0.11852150808214179
+    }
+  ],
+  "encoderSha256": "4947838b85557eb35b4fe12c88b7eb6b1bf1393833b5f5bfd60bd0e797c50462",
+  "decoderSha256": "9662f026df9d65d05d91f3d49539111c469149f8c8e007af6a4a68e0065e8145",
+  "finiteDifferences": [
+    {
+      "absoluteError": 3.1450540088906465E-11,
+      "array": "embedding",
+      "index": 258,
+      "finiteDifference": -0.02882125844649863,
+      "sgdDerivative": -0.02882125847794917
+    },
+    {
+      "absoluteError": 1.6306400674181987E-11,
+      "array": "embedding",
+      "index": 929,
+      "finiteDifference": 0.0185697052845768,
+      "sgdDerivative": 0.018569705268270398
+    },
+    {
+      "absoluteError": 7.355227538141662E-12,
+      "array": "embedding",
+      "index": 916,
+      "finiteDifference": -0.017802121110577218,
+      "sgdDerivative": -0.01780212110322199
+    },
+    {
+      "absoluteError": 2.4173371637736807E-11,
+      "array": "embedding",
+      "index": 888,
+      "finiteDifference": -0.016505427424817753,
+      "sgdDerivative": -0.016505427400644382
+    },
+    {
+      "absoluteError": 1.6583956430338276E-11,
+      "array": "embedding",
+      "index": 886,
+      "finiteDifference": 0.016201540820048876,
+      "sgdDerivative": 0.016201540836632833
+    },
+    {
+      "absoluteError": 2.4355515867990896E-11,
+      "array": "embedding",
+      "index": 893,
+      "finiteDifference": -0.015592856694723876,
+      "sgdDerivative": -0.01559285667036836
+    },
+    {
+      "absoluteError": 2.8796418374832378E-12,
+      "array": "hiddenWeights",
+      "index": 412,
+      "finiteDifference": 0.006201487989798692,
+      "sgdDerivative": 0.006201487992678334
+    },
+    {
+      "absoluteError": 2.8796418374832378E-12,
+      "array": "hiddenWeights",
+      "index": 444,
+      "finiteDifference": 0.006201487989798692,
+      "sgdDerivative": 0.006201487992678334
+    },
+    {
+      "absoluteError": 1.8318679038953345E-11,
+      "array": "hiddenWeights",
+      "index": 1212,
+      "finiteDifference": 0.006156207854601802,
+      "sgdDerivative": 0.006156207836283123
+    },
+    {
+      "absoluteError": 1.8388067977992417E-11,
+      "array": "hiddenWeights",
+      "index": 1244,
+      "finiteDifference": 0.006156207854601802,
+      "sgdDerivative": 0.006156207836213734
+    },
+    {
+      "absoluteError": 3.469455625570994E-13,
+      "array": "hiddenWeights",
+      "index": 443,
+      "finiteDifference": 0.006117911333092251,
+      "sgdDerivative": 0.006117911333439197
+    },
+    {
+      "absoluteError": 3.1225109303756327E-13,
+      "array": "hiddenWeights",
+      "index": 411,
+      "finiteDifference": 0.006117911333092251,
+      "sgdDerivative": 0.006117911333404502
+    },
+    {
+      "absoluteError": 3.947003834881002E-11,
+      "array": "hiddenBias",
+      "index": 5,
+      "finiteDifference": -0.07912734458770387,
+      "sgdDerivative": -0.07912734454823384
+    },
+    {
+      "absoluteError": 7.215519848280394E-12,
+      "array": "hiddenBias",
+      "index": 15,
+      "finiteDifference": -0.07854959633846192,
+      "sgdDerivative": -0.07854959634567744
+    },
+    {
+      "absoluteError": 2.550681887925066E-12,
+      "array": "hiddenBias",
+      "index": 0,
+      "finiteDifference": -0.07447513206138012,
+      "sgdDerivative": -0.07447513205882944
+    },
+    {
+      "absoluteError": 5.845318673536326E-11,
+      "array": "hiddenBias",
+      "index": 7,
+      "finiteDifference": 0.07428283828048166,
+      "sgdDerivative": 0.07428283822202847
+    },
+    {
+      "absoluteError": 1.302848107176402E-11,
+      "array": "hiddenBias",
+      "index": 4,
+      "finiteDifference": -0.07040525491497363,
+      "sgdDerivative": -0.0704052549280021
+    },
+    {
+      "absoluteError": 3.937929149433472E-11,
+      "array": "hiddenBias",
+      "index": 13,
+      "finiteDifference": 0.06601860849109187,
+      "sgdDerivative": 0.06601860853047116
+    },
+    {
+      "absoluteError": 4.440888629053674E-12,
+      "array": "outputWeights",
+      "index": 3947,
+      "finiteDifference": 0.028994239631430215,
+      "sgdDerivative": 0.028994239626989327
+    },
+    {
+      "absoluteError": 1.08940668985813E-11,
+      "array": "outputWeights",
+      "index": 2915,
+      "finiteDifference": 0.02453017442505256,
+      "sgdDerivative": 0.024530174435946628
+    },
+    {
+      "absoluteError": 2.1510571102112408E-11,
+      "array": "outputWeights",
+      "index": 1109,
+      "finiteDifference": 0.017111968197980332,
+      "sgdDerivative": 0.017111968219490903
+    },
+    {
+      "absoluteError": 1.790234627208065E-11,
+      "array": "outputWeights",
+      "index": 3173,
+      "finiteDifference": -0.015803729613850237,
+      "sgdDerivative": -0.01580372959594789
+    },
+    {
+      "absoluteError": 1.4554331698168887E-11,
+      "array": "outputWeights",
+      "index": 851,
+      "finiteDifference": 0.013214041372222594,
+      "sgdDerivative": 0.013214041386776926
+    },
+    {
+      "absoluteError": 4.232727016106885E-12,
+      "array": "outputWeights",
+      "index": 1625,
+      "finiteDifference": 0.013166398682429302,
+      "sgdDerivative": 0.013166398686662029
+    },
+    {
+      "absoluteError": 3.3146485556301286E-11,
+      "array": "outputBias",
+      "index": 77,
+      "finiteDifference": -0.996135868325254,
+      "sgdDerivative": -0.9961358682921075
+    },
+    {
+      "absoluteError": 5.6647977975110564E-11,
+      "array": "outputBias",
+      "index": 251,
+      "finiteDifference": 0.003921719970989557,
+      "sgdDerivative": 0.003921720027637535
+    },
+    {
+      "absoluteError": 6.916254895183993E-12,
+      "array": "outputBias",
+      "index": 94,
+      "finiteDifference": 0.003917909952022569,
+      "sgdDerivative": 0.003917909945106314
+    },
+    {
+      "absoluteError": 2.4917651275657704E-11,
+      "array": "outputBias",
+      "index": 220,
+      "finiteDifference": 0.003915046020708246,
+      "sgdDerivative": 0.003915046045625897
+    },
+    {
+      "absoluteError": 3.047207104700522E-11,
+      "array": "outputBias",
+      "index": 34,
+      "finiteDifference": 0.003912401247418984,
+      "sgdDerivative": 0.003912401216946913
+    },
+    {
+      "absoluteError": 2.2727804881161884E-11,
+      "array": "outputBias",
+      "index": 155,
+      "finiteDifference": 0.0039109337102161135,
+      "sgdDerivative": 0.003910933687488309
+    }
+  ],
+  "maxAbsoluteDerivativeError": 5.845318673536326E-11,
+  "observations": [
+    {
+      "contextTail": "ntwort: ",
+      "loss": 0.21330723634333748,
+      "evidence": "Mira wohnt in Graz.",
+      "question": "Wo wohnt Mira?",
+      "conditionerNorm": 0.168509463872778,
+      "teacherForcedLossMatchesInferenceForward": true,
+      "conditionVsZeroMaxProbabilityDifference": 2.9916833652823827E-4,
+      "generations": [
+        {
+          "condition": "correct",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "zero",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "wrongPair",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "amplified32",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        }
+      ],
+      "conditioner": [
+        0.07280354407340558,
+        -0.027938984117073636,
+        0.06686124374419908,
+        -0.02123743879783742,
+        0.05047233843866112,
+        0.03107532214875161,
+        -0.010364501201808042,
+        0.0699723118511378,
+        0.06408978994435506,
+        0.011789146850561927,
+        -0.01777959154298568,
+        0.010241180026674424,
+        -0.022095559184024824,
+        0.05016212374368962,
+        0.015830274921183392,
+        -0.03088415652406458
+      ],
+      "topFirstTokens": [
+        {
+          "probability": 0.2884104701380352,
+          "token": 78
+        },
+        {
+          "probability": 0.23741251097605037,
+          "token": 76
+        },
+        {
+          "probability": 0.1981144187259544,
+          "token": 80
+        },
+        {
+          "probability": 0.17597831990358828,
+          "token": 77
+        },
+        {
+          "probability": 0.026243691497097998,
+          "token": 71
+        }
+      ]
+    },
+    {
+      "contextTail": "ntwort: ",
+      "loss": 0.20662643542201348,
+      "evidence": "Lea wohnt in Linz.",
+      "question": "Wo wohnt Lea?",
+      "conditionerNorm": 0.11784881790236161,
+      "teacherForcedLossMatchesInferenceForward": true,
+      "conditionVsZeroMaxProbabilityDifference": 2.133627470445043E-4,
+      "generations": [
+        {
+          "condition": "correct",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "zero",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "wrongPair",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "amplified32",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        }
+      ],
+      "conditioner": [
+        0.05321135164088836,
+        -0.014634762841803404,
+        0.05381354209863893,
+        -0.00970324507243474,
+        0.03948942472326403,
+        0.01565248338361795,
+        -0.004375091557062231,
+        0.04664609344736319,
+        0.04271507026100294,
+        -0.0011403641733732713,
+        -0.011874699657129149,
+        0.0070687408531170965,
+        -0.011971478501315615,
+        0.030081248228747855,
+        0.013930688188935364,
+        -0.024374985167346347
+      ],
+      "topFirstTokens": [
+        {
+          "probability": 0.2884216282753566,
+          "token": 78
+        },
+        {
+          "probability": 0.23732670538656664,
+          "token": 76
+        },
+        {
+          "probability": 0.1981337821856444,
+          "token": 80
+        },
+        {
+          "probability": 0.17600984830647728,
+          "token": 77
+        },
+        {
+          "probability": 0.02623761518538552,
+          "token": 71
+        }
+      ]
+    },
+    {
+      "contextTail": "ntwort: ",
+      "loss": 0.19715053782568293,
+      "evidence": "Nora arbeitet als Ärztin.",
+      "question": "Was arbeitet Nora?",
+      "conditionerNorm": 0.0744943468359855,
+      "teacherForcedLossMatchesInferenceForward": true,
+      "conditionVsZeroMaxProbabilityDifference": 1.3791435448939904E-4,
+      "generations": [
+        {
+          "condition": "correct",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "zero",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "wrongPair",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "amplified32",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        }
+      ],
+      "conditioner": [
+        0.030360425329517347,
+        -0.007814894543838078,
+        0.03394581190340654,
+        -0.006420699833347802,
+        0.020509503698695003,
+        0.011797627805977482,
+        -0.007950182057993081,
+        0.025896632167013604,
+        0.030895322425480064,
+        0.00489655219158479,
+        -8.756760875962302E-4,
+        -0.0032125439132853623,
+        -0.016095418230082457,
+        0.02603340958715977,
+        0.006333209775050664,
+        -0.010624339620458221
+      ],
+      "topFirstTokens": [
+        {
+          "probability": 0.28842499812010675,
+          "token": 78
+        },
+        {
+          "probability": 0.23725125699401153,
+          "token": 76
+        },
+        {
+          "probability": 0.19815630387445962,
+          "token": 80
+        },
+        {
+          "probability": 0.17603249358815673,
+          "token": 77
+        },
+        {
+          "probability": 0.026232471168829787,
+          "token": 71
+        }
+      ]
+    },
+    {
+      "contextTail": "ntwort: ",
+      "loss": 0.36133510970465127,
+      "evidence": "Paul trägt einen Helm.",
+      "question": "Was trägt Paul?",
+      "conditionerNorm": 0.18933791040393877,
+      "teacherForcedLossMatchesInferenceForward": true,
+      "conditionVsZeroMaxProbabilityDifference": 2.8211229723129616E-4,
+      "generations": [
+        {
+          "condition": "correct",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "zero",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "wrongPair",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        },
+        {
+          "condition": "amplified32",
+          "bytes": 17,
+          "ended": true,
+          "text": "Nora ist Ärztin."
+        }
+      ],
+      "conditioner": [
+        0.07980099865190986,
+        -0.03059272389020001,
+        0.0745656360433641,
+        -0.02181813132935312,
+        0.05250969079195642,
+        0.023485398505565854,
+        0.001497280624791371,
+        0.08248939348396249,
+        0.07725874019381598,
+        0.01923139755348788,
+        -0.026452518120454287,
+        0.004776723889264614,
+        -0.024524644107665004,
+        0.06317866870180956,
+        0.015297775127361241,
+        -0.022466755879408967
+      ],
+      "topFirstTokens": [
+        {
+          "probability": 0.28840939900764884,
+          "token": 78
+        },
+        {
+          "probability": 0.23739545493675343,
+          "token": 76
+        },
+        {
+          "probability": 0.19812438544573596,
+          "token": 80
+        },
+        {
+          "probability": 0.17597948352577103,
+          "token": 77
+        },
+        {
+          "probability": 0.02623642028010417,
+          "token": 71
+        }
+      ]
+    }
+  ],
+  "productionPromotion": false,
+  "ownerWeightsModified": false,
+  "sourceCommit": "1f18e6bc008508225216f58fbaaa7c0f5d192f40",
+  "updates": 6000,
+  "status": "MEASURED_HOST_ONLY"
+}

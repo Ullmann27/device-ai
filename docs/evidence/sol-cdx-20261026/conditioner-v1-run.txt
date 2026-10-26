@@ -1,0 +1,12 @@
+raw/0: train=0/4 dev=0/20
+raw/6000: train=1/4 dev=2/20
+raw/30000: train=1/4 dev=2/20
+raw/120000: train=1/4 dev=2/20
+unit_l2/0: train=0/4 dev=0/20
+unit_l2/6000: train=1/4 dev=2/20
+unit_l2/30000: train=1/4 dev=2/20
+unit_l2/120000: train=2/4 dev=2/20
+train_mean_centered_x32/0: train=0/4 dev=0/20
+train_mean_centered_x32/6000: train=3/4 dev=2/20
+train_mean_centered_x32/30000: train=4/4 dev=4/20
+train_mean_centered_x32/120000: train=4/4 dev=4/20
