@@ -89,11 +89,11 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
        new Set(ids).size!==ids.length)
       throw Error('EXECUTED_TEST_IDENTITIES_INCOMPLETE');
   }
+  if(candidate.tests.executed<baseline.tests.executed)
+    throw Error('EXECUTED_TEST_COVERAGE_REGRESSION');
   const candidates=new Set(candidateIds);
   if(baseIds.some(id=>!candidates.has(id)))
     throw Error('EXECUTED_TEST_IDENTITY_MISSING');
-  if(candidate.tests.executed<baseline.tests.executed)
-    throw Error('EXECUTED_TEST_COVERAGE_REGRESSION');
   if(candidate.tests.skipped!==baseline.tests.skipped)
     throw Error('SKIPPED_TEST_SET_CHANGED');
   if(baseline.tests.skipped>0){
