@@ -9,7 +9,7 @@ import {CoinWmV3ShadowModel} from './coin-wm-v3-shadow-model.mjs';
 import {induceStructuredStatementOperator} from './structured-statement-translator.mjs';
 import {proposeShadowStructuredCandidates} from './coin-wm-v3-structured-shadow.mjs';
 import {validateCcc1CandidateBinding,validateCcc1ResearchRequest,
- runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,assertCcc1TestEvidenceParity,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
+ runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,assertCcc1RunMeasurement,assertCcc1TestEvidenceParity,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
 
 const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 const original='export const page = (number, size) => number * size;\n';
@@ -140,10 +140,42 @@ test('NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an execu
 function evidence(executed,failed=0,skipped=0,skippedCaseDigest=null){
  return {results:[{profile:'node-continuum',testProfile:true,passed:failed===0,
   tests:{executed,failed,passed:executed-failed,skipped,total:executed+skipped,
-    placeholders:0,executedCaseHashes:Array.from({length:executed},(_,i)=>i.toString(16).padStart(64,'0')),
+    placeholders:0,evidenceComplete:true,executedCaseHashes:Array.from({length:executed},(_,i)=>i.toString(16).padStart(64,'0')),
     ...(skippedCaseDigest?{skippedCaseDigest}:{})}
  }]};
 }
+
+test('CCC1: omitted or non-true evidenceComplete cannot establish RED/GREEN/fresh parity',()=>{
+ const goodRed=evidence(3,1),goodGreen=evidence(3);
+ assert.equal(assertCcc1TestEvidenceParity(goodRed,goodGreen).candidateExecuted,3);
+ for(const value of [undefined,null,false,0,'true']){
+  for(const phase of ['baseline','candidate']){
+   const red=evidence(3,1),green=evidence(3);
+   const target=(phase==='baseline'?red:green).results[0].tests;
+   if(value===undefined)delete target.evidenceComplete;
+   else target.evidenceComplete=value;
+   assert.throws(()=>assertCcc1TestEvidenceParity(red,green),/TEST_COUNT_EVIDENCE_INVALID/,
+    String(phase)+' '+String(value));
+  }
+ }
+});
+
+test('CCC1: run measurement requires explicit complete XML evidence',()=>{
+ const isolation={
+  schema:'continuum-isolation-v1',image:'sha256:'+'a'.repeat(64),network:'none',
+  user:'1000:1000',readOnly:true,noNewPrivileges:true,capabilities:[],
+  profile:'node-continuum',sourceSha256:'b'.repeat(64),untrustedReports:true,
+  memoryMb:512,pids:128,cpus:1,timeoutMs:30000
+ };
+ const run=value=>({results:[{profile:'node-continuum',testProfile:true,
+  passed:true,exitCode:0,isolation,tests:{executed:1,failed:0,
+   ...(value!==undefined?{evidenceComplete:value}:{})}}]});
+ assert.equal(assertCcc1RunMeasurement(run(true)).tests.executed,1);
+ for(const value of [undefined,null,false,0,'true'])
+  assert.throws(()=>assertCcc1RunMeasurement(run(value)),/TEST_RUN_INTERRUPTED/,
+   String(value));
+ // This fixture only checks receipt-shape validation; no OS isolation or tests run here.
+});
 
 test('CCC1: an apparent green with fewer executed tests than RED is NOT verified',()=>{
  const red=evidence(120,1);
