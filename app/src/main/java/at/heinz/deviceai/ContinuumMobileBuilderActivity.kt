@@ -118,7 +118,8 @@ class ContinuumMobileBuilderActivity : Activity() {
                     status.text="Kein bestätigter Coding-Auftrag bereit. Nichts gestartet."
                 } else AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
                     .setTitle("Lokales Coding-Modell jetzt ausführen?")
-                    .setMessage("Nur der zuvor gebundene Auftrag ${id.take(40)} / ${hash.take(16)}… wird gestartet. " +
+                    .setMessage("Nur der zuvor gebundene Auftrag ${id.take(40)} / ${hash.take(16)}… " +
+                        "mit Quell-Commit ${commit.take(12)} wird gestartet. " +
                         "CCC1, Testketten, Reparatur und unabhängige Prüfung bleiben unverändert. " +
                         "Dies kann längere Zeit dauern; kein Patch wird übernommen, keine APK installiert.")
                     .setNegativeButton("Nicht starten",null)
@@ -459,6 +460,12 @@ class ContinuumMobileBuilderActivity : Activity() {
                         }
                         val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
                         if (slot == ResultSlot.CCC1_ABORT) edit.remove(ContinuumMobileBuildResultReceiver.ABORT_TASK)
+                        if (slot == ResultSlot.MAIN && ContinuumTypedCodingBridge.Operation.ofCallback(
+                                preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION,null) ?: "")!=null) {
+                            edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
+                                .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
+                                .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)
+                        }
                         slot.operationKey?.let { edit.remove(it) }
                         slot.projectKey?.let { edit.remove(it) }
                         edit.putString(ContinuumMobileBuildResultReceiver.LAST_MESSAGE,
