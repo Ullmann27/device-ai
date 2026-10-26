@@ -29,6 +29,12 @@ Host-only bounded single-core experiments are authorized. No Android/phone
 quality, training, installation, promotion or production benefit is claimed.
 Checkpoint this branch on GitHub every meaningful step or about5–10minutes.
 
-Next entry: inspect actual `TinyContextDecoder`, training and baseline harness;
-archive diagnostic/reproduction evidence before modifications. Rollback by
+Diagnostic source: `experimental/brain/Cdx1CausalDiagnosis.kt` compiles against
+the real SDK classes with module `DeviceAI_app_debug`, target17. It compares
+teacher forcing with the inference forward function, ablates conditioner
+vectors, and finite-differences30 nonzero parameter derivatives across every
+weight array. **WIP:** scratch run completed; repeat from this committed source
+before archiving measured results. No app code has changed.
+
+Next entry: archive pinned diagnostic/reproduction evidence before modifications. Rollback by
 reverting individual research commits; prior source and checkpoints remain.
