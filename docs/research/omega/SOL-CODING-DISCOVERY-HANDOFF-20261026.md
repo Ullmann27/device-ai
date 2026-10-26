@@ -79,8 +79,9 @@ Backend initial run: 53 PASS / 7 FAIL, all seven API-integration hooks could not
 import express because the isolated worktree had no installed dependencies.
 The raw failure is preserved as backend-missing-deps.tap. After comparing the
 unchanged package-lock.json and using the already installed official-checkout
-node_modules through an ignored local symlink (no install/download), the same
-backend command passed 60/60 in 1.237s. No backend source changed.
+node_modules through a temporary local symlink (no install/download), the same
+backend command passed 60/60 in 1.237s. The symlink was removed after testing;
+no backend source changed.
 
 Local model files and llama-server are absent on this host. No neural model
 download or inference was attempted. Do not conflate the injected candidate
