@@ -36,3 +36,13 @@ Implemented exact selected revision and 48-shard/510296708312-byte inventory val
 `node --test scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deepseek-hub-preflight.test.mjs`: **16 PASS**, raw output `capacity-hub-green.txt`. No inference, resource creation or weight download.
 
 Actual coding seam is `.github/continuum/coding-provider.mjs` -> `scripts/continuum-local-brain-cli.mjs` -> `queryLocalCodingBrain` in `scripts/continuum-local-brain.mjs`; the earlier intended `local-coding-brain.mjs` filename does not exist. Backend Groq mentor already has separate authenticated pairing and per-request consent, but is text-only and not a DeepSeek coding bridge. Reuse the existing canonical proposal/repair contract, not that route's tool permissions.
+
+## Transport unit checkpoint
+
+New `scripts/continuum-deepseek-bridge.mjs` is disabled by absence of an explicitly supplied endpoint/request/consent/key. It shares the existing pure coding request/schema and proposal parser extracted from `continuum-local-brain.mjs`; local inference stays fixed-loopback. `node --test scripts/continuum-coding-brain.test.mjs .github/continuum/coding-rejection-feedback.test.mjs`: **12 PASS** after extraction.
+
+Bridge contract unit tests: **8 PASS** (`bridge-unit-green.txt`; initial absence `bridge-red.txt`). HTTPS only, no URL credentials/query/redirect, pinned model/revision, exact prompt/body/job/source/deadline digest consent, no owner-memory/secrets/training permission, zero-cost declaration, preflight identity/privacy/capacity before POST, byte/token/time bounds, one POST/no retries, fixed sanitized errors and `KEEP_OFFLINE_LOCAL` fallback. Capability declarations and response identities are authenticated server assertions, not independent weight/inference or financial proof.
+
+The first direct Node live metadata attempt failed `BLOCKED_HUB_METADATA: fetch failed` (raw `pinned-hub-live-first-failure.txt`). No inference/weights were attempted. The managed runtime uses inherited HTTP proxy/CA settings; Node's environment-proxy support must be enabled for network metadata requests in this executor.
+
+`coding-provider.mjs` is concurrently owned by the coding-discovery task for durable reservations. Coordinate its minimal optional remote seam with that owner before editing. Real local TLS integration and existing CLI entrypoint still `NOT_RUN` at this checkpoint.

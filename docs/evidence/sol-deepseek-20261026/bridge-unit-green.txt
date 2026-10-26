@@ -1,0 +1,16 @@
+✔ no opt-in, wrong payload consent, secrets/memory/training or paid allowance never sends a request (9.751163ms)
+✔ endpoint, authentication and request bounds are validated before network (1.001685ms)
+✔ authenticated capability/identity/privacy preflight happens before the consented prompt (34.566959ms)
+✔ successful HTTPS transport reuses the untrusted canonical proposal contract (3.38679ms)
+✔ revision drift, replay, paid, truncated, tool and over-budget responses fail closed (8.2243ms)
+✔ HTTP errors and untrusted exception text are sanitized; no retry or private output (4.708609ms)
+✔ output byte limit is enforced on streamed bodies even without content-length (0.792732ms)
+✔ deadline bounds both a fetch and a body reader ignoring AbortSignal (261.384959ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 414.319485
