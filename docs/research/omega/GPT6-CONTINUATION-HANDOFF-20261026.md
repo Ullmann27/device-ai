@@ -15,3 +15,9 @@ Immediate duties, in priority order:
 SOL source: Parent PR151 `9d668134`; PR152 `e53c9140`, PR153 `b41408b3`, PR154 `2fb60460`, PR155 `d08d6396`, PR156 `df4b395f` (heads should be refreshed before integration). Prior source tests and Gemma 18/20 host-only are historical results, not new tests.
 
 Rollback: revert only this branch's new commits. Research states/checkpoints and owner data remain untouched.
+
+## Completed independent dialogue routing repair
+
+The initial source review found a new PR151 defect: a *quoted* synthesis keyword inside a direct recall question could send owner recall through unverified language-model synthesis. Added negative/positive tests, fixed only the intent detection in `LocalFirstPolicy.kt`, and recorded reproducible host Kotlin compilation / RED+GREEN cases in `docs/evidence/gpt6-brain-routing-20261026/README.md`. Code blob `123d1d795df408db23a6d2cf1b3d8d17743de94b` compiles; 19/19 focused Kotlin smoke cases pass. New Android JUnit cases are committed but **NOT_RUN** under Gradle on this environment; do not claim full Android source/SDK or device acceptance.
+
+**Integration remains blocked on proper Android/PR156 verification and independent PR153 grounding results.** No sibling changes merged; keep original code/weights/main intact. A subsequent agent should run `bash scripts/continuum-dialogue-routing-smoke.sh` then `./gradlew :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin` using the real authorized SDK, and examine conflicting edits with PR156 before selective cherry-pick.
