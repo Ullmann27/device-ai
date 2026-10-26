@@ -65,7 +65,7 @@ export function assertCcc1RunMeasurement(run){
   if(!Number.isSafeInteger(t.tests?.executed)||t.tests.executed<1||
      !Number.isSafeInteger(t.tests?.failed)||t.tests.failed<0||
      ![0,1].includes(t.exitCode)||t.signal||t.error||
-     t.tests.evidenceComplete===false||t.timedOut||t.stoppedByOwner)
+     t.tests.evidenceComplete!==true||t.timedOut||t.stoppedByOwner)
     throw Error('TEST_RUN_INTERRUPTED');
   return t;
 }
@@ -84,7 +84,7 @@ export function assertCcc1TestEvidenceParity(baselineRun,candidateRun){
     throw Error('TEST_PROFILE_PARITY_INVALID');
   const required=['executed','failed','skipped','passed','total','placeholders'];
   for(const evidence of [baseline.tests,candidate.tests]){
-    if(!evidence||evidence.evidenceComplete===false||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
+    if(!evidence||evidence.evidenceComplete!==true||required.some(k=>!Number.isSafeInteger(evidence[k])||evidence[k]<0)||
        evidence.executed<1||evidence.passed+evidence.failed!==evidence.executed)
       throw Error('TEST_COUNT_EVIDENCE_INVALID');
   }
