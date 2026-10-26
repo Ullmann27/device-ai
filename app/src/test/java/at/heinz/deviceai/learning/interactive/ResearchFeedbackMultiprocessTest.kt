@@ -91,6 +91,16 @@ class ResearchFeedbackMultiprocessTest {
             assertEquals("untouched", externalLockTarget.readText())
             Files.deleteIfExists(lockPath)
 
+            // Both ledger generations must be ordinary files; an injected link
+            // must not permit reading or training on an outside file.
+            for (ledgerName in listOf("experiences-v2.bin", "experiences-v2.lkg")) {
+                val ledgerLink = File(File(root, "interactive-feedback-v1"), ledgerName).toPath()
+                Files.createSymbolicLink(ledgerLink, externalLockTarget.toPath())
+                assertThrows(IOException::class.java) { ResearchFeedback(root).all() }
+                assertEquals("untouched", externalLockTarget.readText())
+                Files.deleteIfExists(ledgerLink)
+            }
+
             val link = File(root, "linked-root")
             Files.createSymbolicLink(link.toPath(), external.toPath())
             assertThrows(IOException::class.java) { ResearchFeedback(link).all() }
