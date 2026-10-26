@@ -62,6 +62,32 @@ Historical V8 or native reports are upstream evidence, not this checkout's resul
   infrastructure availability, not a repair proof or model inference.
 - Fabric adapter/shared fixture work is in progress; not yet Android product wiring.
 
+## Checkpoint 3 — real cross-language planning connection
+
+`VirtualModelFabricSnapshotExporter` consumes the existing registry and calls the
+existing scheduler with explicit per-node assignment. It exports no context,
+owner binding, signature, model identity or endpoint. The Node
+`planVirtualModelRouteFromRegistry` validates the versioned bounded snapshot and
+task/input/output/deadline binding, filters incompatible capabilities, then calls
+the existing planner. JSON transport is explicitly **not authenticated**; all
+plans remain non-executable. No parallel grant or scheduling authority added.
+
+Native selected actual Kotlin graph: **15/15 PASS**, real ephemeral Ed25519 signing
+and tamper rejection. Actual JVM output then passed byte-for-byte to Node:
+**9/9 PASS / 0 SKIP**. No project dependency doubles. Reproduce:
+
+```
+CONTINUUM_FABRIC_JVM_DEPS=/path/to/official/jars \
+  bash scripts/continuum-fabric-jvm-check.sh /tmp/continuum-fabric-check
+```
+
+Dependency SHA-256 inventory, raw compiler/JUnit/Node output and shared JSON are
+in `docs/evidence/sol-jarvis-20261026/fabric-*`. Kotlin 2.2.0 CLI / JVM target 17
+on Java 21; Gradle's configured Kotlin 2.4.0 and Android APK build are NOT_RUN.
+The existing ComputeFabric had no production registry enrollment/transport caller
+in the inspected source; this slice provides a real tested API connection, not a
+claim of enrolled phone nodes or UI-to-provider operation.
+
 ## Next executable steps
 
 1. Run focused native model/numeric/translator/CCC1/A-B-C/fabric tests from complete
