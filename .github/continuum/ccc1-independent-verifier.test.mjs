@@ -140,7 +140,8 @@ test('NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an execu
 function evidence(executed,failed=0,skipped=0,skippedCaseDigest=null){
  return {results:[{profile:'node-continuum',testProfile:true,passed:failed===0,
   tests:{executed,failed,passed:executed-failed,skipped,total:executed+skipped,
-    placeholders:0,...(skippedCaseDigest?{skippedCaseDigest}:{})}
+    placeholders:0,executedCaseHashes:Array.from({length:executed},(_,i)=>i.toString(16).padStart(64,'0')),
+    ...(skippedCaseDigest?{skippedCaseDigest}:{})}
  }]};
 }
 
@@ -172,4 +173,22 @@ test('CCC1: no missing profile, zero executed tests or contradictory JUnit count
  const bad=evidence(3);
  bad.results[0].tests.passed=9;
  assert.throws(()=>assertCcc1TestEvidenceParity(baseline,bad),/TEST_COUNT_EVIDENCE_INVALID/);
+});
+
+
+test('CCC1: same number of tests but a replaced testcase cannot fake equal coverage',()=>{
+ const red=evidence(10,1);
+ const fake=evidence(10,0);
+ fake.results[0].tests.executedCaseHashes[8]='f'.repeat(64);
+ assert.throws(()=>assertCcc1TestEvidenceParity(red,fake),/EXECUTED_TEST_IDENTITY_MISSING/);
+});
+
+test('CCC1: missing, duplicate or malformed executed identities never attest repairs',()=>{
+ const red=evidence(4,1);
+ const bad=evidence(4);
+ delete bad.results[0].tests.executedCaseHashes;
+ assert.throws(()=>assertCcc1TestEvidenceParity(red,bad),/EXECUTED_TEST_IDENTITIES_INCOMPLETE/);
+ const duplicate=evidence(4);
+ duplicate.results[0].tests.executedCaseHashes[1]=duplicate.results[0].tests.executedCaseHashes[0];
+ assert.throws(()=>assertCcc1TestEvidenceParity(red,duplicate),/EXECUTED_TEST_IDENTITIES_INCOMPLETE/);
 });
