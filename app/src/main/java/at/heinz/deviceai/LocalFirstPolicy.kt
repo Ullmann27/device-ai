@@ -44,7 +44,7 @@ object LocalFirstPolicy {
 
     private val QUOTED_DATA = Regex("\"[^\"\\r\\n]*\"|„[^“\\r\\n]*“|'[^'\\r\\n]*'|`[^`\\r\\n]*`")
     private val SINGLE_WORD_DEFINITION = Regex(
-        "(?iu)^was\\s+(?:bedeutet|heißt)\\s+(?:das\\s+)?(?:wort|begriff|ausdruck)\\s+[\\p{L}\\p{M}-]+\\?\\s*$"
+        "(?iu)^was\\s+(?:bedeutet|heißt)\\s+(?:das\\s+)?(?:wort|begriff|ausdruck)\\s+[\\\p{L}\\\p{M}-]+\\?\\s*$"
     )
 
     fun modelUiState(runtimeState: LocalModelState, hasInstalledModel: Boolean, localMode: Boolean): LocalModelUiState =
