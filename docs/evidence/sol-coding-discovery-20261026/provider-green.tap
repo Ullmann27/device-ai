@@ -1,0 +1,24 @@
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (47.555851ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (37.324139ms)
+✔ malformed model name is rejected before invoking the local child (60.024849ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (24.982976ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (92.733555ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (31.900428ms)
+✔ foreign or corrupt persisted requests block before another inference (33.21405ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (46.088207ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (43.685382ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (411.693319ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (213.180882ms)
+✔ unknown provider errors never leak their message to the durable report (206.38361ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (2.626888ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (34.06974ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (353.366952ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (343.800194ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2185.860676

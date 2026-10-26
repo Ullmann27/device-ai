@@ -1,0 +1,20 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "coding-isolation-proof-20261026",
+  "sourceCommit": "be78953197ec5af21db3ef472389105edb16f983",
+  "kind": "BUGFIX",
+  "goal": "Normalize tags to lower case, remove empty entries and deduplicate after normalization.",
+  "allowedPaths": [
+    "lib/tags.mjs"
+  ],
+  "acceptance": [
+    "Case variants produce one canonical lower-case tag.",
+    "Whitespace-only entries are omitted."
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 2,
+    "maxContextChars": 6000
+  }
+}

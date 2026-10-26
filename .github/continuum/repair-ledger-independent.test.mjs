@@ -84,6 +84,18 @@ test('non-verified sessions retain their original failure diagnoses',()=>{
  assert.equal(result.experiences[0].failures,1);
 });
 
+test('optional scoped task identity survives ledger serialization and rejects malformed bindings',()=>{
+ const source=report();
+ source.coding={taskFingerprint:'d'.repeat(64)};
+ source.attempts[0].strategy='LOCAL_SCOPED_PATCH';
+ source.outcome='NO_VERIFIED_REPAIR';source.verified=null;source.attempts[0].outcome='FAILED_TESTS';
+ const saved=recordSession(emptyLedger(),source);
+ assert.equal(verifyLedger(JSON.parse(JSON.stringify(saved))).attempts[0].taskFingerprint,'d'.repeat(64));
+ assert.deepEqual(saved.experiences,[]);
+ const invalid=structuredClone(saved);invalid.attempts[0].taskFingerprint='not-owner-authorized';
+ assert.throws(()=>verifyLedger(invalid),/Invalid ledger task fingerprint/);
+});
+
 test('unverified session cannot poison history through claimed failed alternatives',()=>{
  const pending=report();
  pending.attempts.unshift({

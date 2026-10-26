@@ -1,0 +1,40 @@
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (48.830828ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (35.138352ms)
+✔ malformed model name is rejected before invoking the local child (57.590589ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (21.589289ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (45.44266ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (29.647715ms)
+✔ foreign or corrupt persisted requests block before another inference (31.964555ms)
+✔ failed independent patch check records a negative learning signal without fake success (2.592955ms)
+✔ independently verified patch keeps legitimate positive experience (0.288475ms)
+✔ unverified teamleader calls never create positive or negative learning labels (1.608292ms)
+✔ explicit independent rejection is negative, not an unknown outcome (0.358688ms)
+✔ non-verified sessions retain their original failure diagnoses (0.312942ms)
+✔ unverified session cannot poison history through claimed failed alternatives (0.518042ms)
+✔ invalid syntax is retained as negative repair experience without fabricated test execution (0.516784ms)
+✔ syntax checker errors remain audit evidence without becoming failed-strategy labels (0.392492ms)
+✔ an edit too large for the ledger is recorded by digest, keeps the session record and is never replayed (4.986514ms)
+✔ owner worker refuses a supplied untrusted executor before claim or checks (27.638169ms)
+✔ scoped task identity and commit are checked before claiming the owner task (84.155066ms)
+✔ scoped revision receives actual failed diagnostics and bounded history then verifies independently (1036.801035ms)
+✔ repeated scoped patch is rejected without a second candidate check (391.000898ms)
+✔ same owner task reuses durable failed-candidate diagnostics instead of testing the same patch again (679.228017ms)
+✔ durable scoped diagnostics never cross task authorization or source boundaries (1691.234851ms)
+✔ exhausted or corrupt durable model budgets retain explicit codes and stop revision retries (496.659736ms)
+✔ scoped proposals cannot edit outside task grants or change context commit (364.776728ms)
+✔ scoped pure numeric changes can cover two files on the host (391.8773ms)
+✔ general scoped source is blocked before executing candidate code without isolation (173.608704ms)
+✔ new coding and isolation control files stay protected by the critic (0.605837ms)
+✔ general scoped proposals cannot mutate test APIs or write their own reports (0.222197ms)
+✔ scoped successes remain owner-review evidence without automatic learning (0.590739ms)
+✔ scoped provider failures count against the fixed model-call budget (220.574911ms)
+✔ total scoped candidate limit bounds revisions even when model budget remains (351.740621ms)
+✔ local teamleader forwards the scoped provider through the canonical owner worker (735.564678ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7210.254396

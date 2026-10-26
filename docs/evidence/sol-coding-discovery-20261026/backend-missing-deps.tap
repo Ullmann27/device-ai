@@ -1,0 +1,629 @@
+TAP version 13
+# Subtest: web tools are exact bounded Android function proposals, never hosted browsing
+ok 1 - web tools are exact bounded Android function proposals, never hosted browsing
+  ---
+  duration_ms: 2.000758
+  type: 'test'
+  ...
+# Subtest: disabled discovery advertises no web capability; new calls do not share mutable schemas
+ok 2 - disabled discovery advertises no web capability; new calls do not share mutable schemas
+  ---
+  duration_ms: 0.821546
+  type: 'test'
+  ...
+# Subtest: actual server advertises Android proposals and removes hosted web-search bypass
+ok 3 - actual server advertises Android proposals and removes hosted web-search bypass
+  ---
+  duration_ms: 4.694397
+  type: 'test'
+  ...
+# Subtest: health reports disabled hosted research without exposing credentials
+not ok 4 - health reports disabled hosted research without exposing credentials
+  ---
+  duration_ms: 80.074516
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:149:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: continuum status enforces bearer authentication
+not ok 5 - continuum status enforces bearer authentication
+  ---
+  duration_ms: 0.761171
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:159:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: unauthorized or invalid agent turns never call upstream
+not ok 6 - unauthorized or invalid agent turns never call upstream
+  ---
+  duration_ms: 0.196249
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:172:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: agent turn maps mock Responses API to Android reply contract
+not ok 7 - agent turn maps mock Responses API to Android reply contract
+  ---
+  duration_ms: 0.227562
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:185:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: tool-result continuation reuses session and limits the forwarded result count
+not ok 8 - tool-result continuation reuses session and limits the forwarded result count
+  ---
+  duration_ms: 0.124891
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:224:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: oversized payload is rejected before upstream forwarding
+not ok 9 - oversized payload is rejected before upstream forwarding
+  ---
+  duration_ms: 0.099522
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:239:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: upstream HTTP and JSON failures are bounded and do not leak secrets
+not ok 10 - upstream HTTP and JSON failures are bounded and do not leak secrets
+  ---
+  duration_ms: 0.153644
+  type: 'test'
+  location: '/workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:249:1'
+  failureType: 'hookFailed'
+  error: |-
+    Backend exited: node:internal/modules/package_json_reader:301
+      throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+            ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'express' imported from /workspace/device-ai-coding-20261026/backend/src/server.js
+        at Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+        at packageResolve (node:internal/modules/esm/resolve:768:81)
+        at moduleResolve (node:internal/modules/esm/resolve:859:18)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+      code: 'ERR_MODULE_NOT_FOUND'
+    }
+    
+    Node.js v24.19.0
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    Object.getPackageJSONURL (node:internal/modules/package_json_reader:301:9)
+    packageResolve (node:internal/modules/esm/resolve:768:81)
+    moduleResolve (node:internal/modules/esm/resolve:859:18)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33) {
+    TestContext.<anonymous> (file:///workspace/device-ai-coding-20261026/backend/test/api-integration.test.js:123:42)
+    async TestHook.run (node:internal/test_runner/test:1389:7)
+  ...
+# Subtest: dataset prioritizes gaps, low coverage and uncertain observations
+ok 11 - dataset prioritizes gaps, low coverage and uncertain observations
+  ---
+  duration_ms: 19.181914
+  type: 'test'
+  ...
+# Subtest: dataset includes recent failed cycles as recovery benchmarks
+ok 12 - dataset includes recent failed cycles as recovery benchmarks
+  ---
+  duration_ms: 2.051241
+  type: 'test'
+  ...
+# Subtest: immutable governance cannot be mutated by challenger
+ok 13 - immutable governance cannot be mutated by challenger
+  ---
+  duration_ms: 0.721052
+  type: 'test'
+  ...
+# Subtest: brain registry is checksummed and recovers last-known-good
+ok 14 - brain registry is checksummed and recovers last-known-good
+  ---
+  duration_ms: 2.409332
+  type: 'test'
+  ...
+# Subtest: factory promotes only objectively better grounded safe challenger
+ok 15 - factory promotes only objectively better grounded safe challenger
+  ---
+  duration_ms: 4.300735
+  type: 'test'
+  ...
+# Subtest: factory refuses promotion when safety or grounding regress
+ok 16 - factory refuses promotion when safety or grounding regress
+  ---
+  duration_ms: 1.91352
+  type: 'test'
+  ...
+# Subtest: state persists with integrity and last-known-good recovery
+ok 17 - state persists with integrity and last-known-good recovery
+  ---
+  duration_ms: 7.167776
+  type: 'test'
+  ...
+# Subtest: observation requires citations and creates research gaps without authority
+ok 18 - observation requires citations and creates research gaps without authority
+  ---
+  duration_ms: 1.464445
+  type: 'test'
+  ...
+# Subtest: planner prioritizes unresolved gap and changes query strategy after failures
+ok 19 - planner prioritizes unresolved gap and changes query strategy after failures
+  ---
+  duration_ms: 10.238021
+  type: 'test'
+  ...
+# Subtest: daemon learns cited observation, persists gaps and respects interval budget
+ok 20 - daemon learns cited observation, persists gaps and respects interval budget
+  ---
+  duration_ms: 9.809317
+  type: 'test'
+  ...
+# Subtest: failed research is recorded and alternative strategy becomes available
+ok 21 - failed research is recorded and alternative strategy becomes available
+  ---
+  duration_ms: 5.396728
+  type: 'test'
+  ...
+# Subtest: public memory retrieval respects query, citations and epistemic boundaries
+ok 22 - public memory retrieval respects query, citations and epistemic boundaries
+  ---
+  duration_ms: 3.72343
+  type: 'test'
+  ...
+# Subtest: unverified research is never silently promoted to trusted memory
+ok 23 - unverified research is never silently promoted to trusted memory
+  ---
+  duration_ms: 0.397819
+  type: 'test'
+  ...
+# Subtest: oversized queries and limits are rejected
+ok 24 - oversized queries and limits are rejected
+  ---
+  duration_ms: 2.427597
+  type: 'test'
+  ...
+# Subtest: Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+ok 25 - Groq browser UI never embeds API credentials, persists device token, or loads third-party scripts
+  ---
+  duration_ms: 1.257781
+  type: 'test'
+  ...
+# Subtest: every real model request requires a new owner checkbox consent
+ok 26 - every real model request requires a new owner checkbox consent
+  ---
+  duration_ms: 0.28321
+  type: 'test'
+  ...
+# Subtest: render only serves local UI assets; mentor POST keeps auth and owner consent
+ok 27 - render only serves local UI assets; mentor POST keeps auth and owner consent
+  ---
+  duration_ms: 0.172356
+  type: 'test'
+  ...
+# Subtest: mentor is opt-in disabled and never invokes external fetch without key
+ok 28 - mentor is opt-in disabled and never invokes external fetch without key
+  ---
+  duration_ms: 5.30718
+  type: 'test'
+  ...
+# Subtest: one authorized message is bounded and contains no tools, memory or device context
+ok 29 - one authorized message is bounded and contains no tools, memory or device context
+  ---
+  duration_ms: 37.510562
+  type: 'test'
+  ...
+# Subtest: input length validation happens before network and before quota consumption
+ok 30 - input length validation happens before network and before quota consumption
+  ---
+  duration_ms: 0.700723
+  type: 'test'
+  ...
+# Subtest: daily quota is isolated by UTC day and refuses concurrent calls
+ok 31 - daily quota is isolated by UTC day and refuses concurrent calls
+  ---
+  duration_ms: 1.169983
+  type: 'test'
+  ...
+# Subtest: upstream errors do not expose API response contents or key
+ok 32 - upstream errors do not expose API response contents or key
+  ---
+  duration_ms: 0.617437
+  type: 'test'
+  ...
+# Subtest: Groq throttling and malformed output are non-tool error responses
+ok 33 - Groq throttling and malformed output are non-tool error responses
+  ---
+  duration_ms: 1.141743
+  type: 'test'
+  ...
+# Subtest: oversized responses are rejected without parsing or logging private contents
+ok 34 - oversized responses are rejected without parsing or logging private contents
+  ---
+  duration_ms: 0.864438
+  type: 'test'
+  ...
+# Subtest: mentor ignores whitespace around environment key and never follows a redirect
+ok 35 - mentor ignores whitespace around environment key and never follows a redirect
+  ---
+  duration_ms: 0.870639
+  type: 'test'
+  ...
+# Subtest: provider rejects unknown models and invalid requests without exposing response bodies
+ok 36 - provider rejects unknown models and invalid requests without exposing response bodies
+  ---
+  duration_ms: 2.938005
+  type: 'test'
+  ...
+# Subtest: exhausted reasoning-only response retries same consented question once
+ok 37 - exhausted reasoning-only response retries same consented question once
+  ---
+  duration_ms: 1.077642
+  type: 'test'
+  ...
+# Subtest: empty response after a bounded retry has a specific reason, no reasoning text leaks
+ok 38 - empty response after a bounded retry has a specific reason, no reasoning text leaks
+  ---
+  duration_ms: 12.725625
+  type: 'test'
+  ...
+# Subtest: other model names do not get unsupported gpt-oss reasoning options
+ok 39 - other model names do not get unsupported gpt-oss reasoning options
+  ---
+  duration_ms: 0.650245
+  type: 'test'
+  ...
+# Subtest: hypotheses are explicitly non-authoritative
+ok 40 - hypotheses are explicitly non-authoritative
+  ---
+  duration_ms: 2.885994
+  type: 'test'
+  ...
+# Subtest: invented evidence references cannot enter a tournament
+ok 41 - invented evidence references cannot enter a tournament
+  ---
+  duration_ms: 3.395048
+  type: 'test'
+  ...
+# Subtest: tournament store is integrity checked with LKG recovery
+ok 42 - tournament store is integrity checked with LKG recovery
+  ---
+  duration_ms: 1.739438
+  type: 'test'
+  ...
+# Subtest: generation reflection Elo tournament evolution and research questions form a closed loop
+ok 43 - generation reflection Elo tournament evolution and research questions form a closed loop
+  ---
+  duration_ms: 3.151052
+  type: 'test'
+  ...
+# Subtest: daily tournament budget prevents runaway agent loops
+ok 44 - daily tournament budget prevents runaway agent loops
+  ---
+  duration_ms: 11.36854
+  type: 'test'
+  ...
+# Subtest: long Groq answers are preserved beyond old 1800 character limit
+ok 45 - long Groq answers are preserved beyond old 1800 character limit
+  ---
+  duration_ms: 55.741973
+  type: 'test'
+  ...
+# Subtest: table markdown becomes plain, legible text without losing values
+ok 46 - table markdown becomes plain, legible text without losing values
+  ---
+  duration_ms: 0.583204
+  type: 'test'
+  ...
+# Subtest: oversized answers end at a boundary and explicitly signal shortening
+ok 47 - oversized answers end at a boundary and explicitly signal shortening
+  ---
+  duration_ms: 0.482704
+  type: 'test'
+  ...
+# Subtest: provider token-limit completion is explicitly marked as incomplete
+ok 48 - provider token-limit completion is explicitly marked as incomplete
+  ---
+  duration_ms: 0.590181
+  type: 'test'
+  ...
+# Subtest: unverified mentor has no current device or repo state
+ok 49 - unverified mentor has no current device or repo state
+  ---
+  duration_ms: 0.781819
+  type: 'test'
+  ...
+# Subtest: unapproved device cannot redeem; no credentials are exposed
+ok 50 - unapproved device cannot redeem; no credentials are exposed
+  ---
+  duration_ms: 4.544242
+  type: 'test'
+  ...
+# Subtest: owner-approved device receives only revocable mentor token
+ok 51 - owner-approved device receives only revocable mentor token
+  ---
+  duration_ms: 2.750025
+  type: 'test'
+  ...
+# Subtest: expired, forged, tampered, and replayable altered challenges are rejected
+ok 52 - expired, forged, tampered, and replayable altered challenges are rejected
+  ---
+  duration_ms: 1.999689
+  type: 'test'
+  ...
+# Subtest: wrong elliptic curve and missing owner token fail closed
+ok 53 - wrong elliptic curve and missing owner token fail closed
+  ---
+  duration_ms: 2.257796
+  type: 'test'
+  ...
+# Subtest: rotated backend token is recovered only by fresh signed owner-approved pairing
+ok 54 - rotated backend token is recovered only by fresh signed owner-approved pairing
+  ---
+  duration_ms: 4.793178
+  type: 'test'
+  ...
+# Subtest: zero-cost autonomous daemon persists public source observations across restarts
+ok 55 - zero-cost autonomous daemon persists public source observations across restarts
+  ---
+  duration_ms: 72.416113
+  type: 'test'
+  ...
+# Subtest: free research collects deduplicated cited metadata without a paid API
+ok 56 - free research collects deduplicated cited metadata without a paid API
+  ---
+  duration_ms: 62.118926
+  type: 'test'
+  ...
+# Subtest: one unavailable source does not stop other public sources
+ok 57 - one unavailable source does not stop other public sources
+  ---
+  duration_ms: 2.245358
+  type: 'test'
+  ...
+# Subtest: empty results never become made-up observations
+ok 58 - empty results never become made-up observations
+  ---
+  duration_ms: 2.770645
+  type: 'test'
+  ...
+# Subtest: unsafe citation URLs and oversized metadata responses are rejected
+ok 59 - unsafe citation URLs and oversized metadata responses are rejected
+  ---
+  duration_ms: 8.888725
+  type: 'test'
+  ...
+# Subtest: query/output bounds and timeout input validation stay enforced
+ok 60 - query/output bounds and timeout input validation stay enforced
+  ---
+  duration_ms: 2.31532
+  type: 'test'
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 53
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 844.873879

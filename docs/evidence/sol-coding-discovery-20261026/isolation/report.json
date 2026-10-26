@@ -1,0 +1,314 @@
+{
+  "schemaVersion": 1,
+  "base": "be78953197ec5af21db3ef472389105edb16f983",
+  "chain": "node",
+  "startedAt": "2026-10-26T02:41:02.802Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 1,
+    "verifiedModelExecution": false,
+    "candidateStatus": "PROPOSED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "5c65b11a824fc26a",
+        "outcome": "VERIFIED",
+        "diagnostic": "3d1cb598924f61c9",
+        "hypothesis": "Case normalization must precede uniqueness."
+      }
+    ],
+    "rejections": [],
+    "reason": "Provider calls do not independently establish model execution"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "cb97876d90ac8d80a108ebffe555611d5a0034e80166921d9e6141f2257e4ac5",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 7,
+          "failed": 2,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 7,
+          "passed": 5
+        },
+        "diagnostics": 2
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.mixed case",
+        "file": ".github/continuum/tags.test.mjs",
+        "line": 4,
+        "col": 30,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'BETA',\n    'alpha',\n-   'beta'\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "3d1cb598924f61c9"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.duplicate canonical values",
+        "file": ".github/continuum/tags.test.mjs",
+        "line": 5,
+        "col": 46,
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'A',\n+   'B',\n-   'a',\n    'b'\n  ]",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "c1ee840ba5e6b650"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "5c65b11a824fc26a",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "3d1cb598924f61c9",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "Case normalization must precede uniqueness.",
+      "plan": [
+        "Normalize before deduplicating"
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/tags.mjs",
+          "oldText": "export function canonicalTags(items){return items.map(x=>x.trim()).filter(Boolean).sort();}\n",
+          "newText": "export function canonicalTags(items){return [...new Set(items.map(x=>x.trim().toLowerCase()).filter(Boolean))].sort();}\n"
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/tags.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 0,
+          "tests": {
+            "total": 7,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 7,
+            "passed": 7
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 512,
+            "pids": 32,
+            "cpus": 1,
+            "timeoutMs": 30000,
+            "sourceSha256": "9e3956fceac8cd98004203687ade832739f408032fb7110495285da0cf4ef065",
+            "profile": "node-continuum",
+            "untrustedReports": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "5c65b11a824fc26a",
+    "strategy": "LOCAL_SCOPED_PATCH",
+    "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+    "patch": "diff --git a/lib/tags.mjs b/lib/tags.mjs\nindex 4436db9..1a70f22 100644\n--- a/lib/tags.mjs\n+++ b/lib/tags.mjs\n@@ -1 +1 @@\n-export function canonicalTags(items){return items.map(x=>x.trim()).filter(Boolean).sort();}\n+export function canonicalTags(items){return [...new Set(items.map(x=>x.trim().toLowerCase()).filter(Boolean))].sort();}\n",
+    "patchSha256": "fece49426c98480071cbafb4b89503666aa4e4c1fdbcd4102e0eb3a985f94f3a",
+    "files": [
+      "lib/tags.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 0,
+        "tests": {
+          "total": 7,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 7,
+          "passed": 7
+        },
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "9e3956fceac8cd98004203687ade832739f408032fb7110495285da0cf4ef065",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        }
+      }
+    ],
+    "reviewRequired": true,
+    "confidence": 0.266
+  },
+  "outcome": "VERIFIED",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "coding": {
+    "taskId": "mob-3bfc9e4cf59f0ea3",
+    "taskFingerprint": "a16b542841e1246fc4d1e3dbc4733bfe8a896229ff371a0774fd2dff7b0cc902",
+    "sourceCommit": "be78953197ec5af21db3ef472389105edb16f983",
+    "allowedPaths": [
+      "lib/tags.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_VERIFIED",
+      "INDEPENDENT_VERIFIED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "2b48d97b8f56b86f3fa5a6efad703db4b253f5d470cdcb6dcbefdd7afd5bb865"
+  },
+  "finishedAt": "2026-10-26T02:41:03.870Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "be78953197ec5af21db3ef472389105edb16f983",
+    "chain": "node",
+    "conclusion": "VERIFIED",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 2,
+        "proof": "eaf3ca516c8dba4c2be455721e8362cc6e319c69d15110090cc78869841e9a2e"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "12877d1e3132d0cc",
+        "approved": true,
+        "proof": "03bfd608cd3407ac606e34eda115f65236a9dba81166de98c5e9ef1cb933a93a"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "12877d1e3132d0cc",
+        "editedFiles": 1,
+        "proof": "4acd6faa855c30d5f41e0cb9f7614352ea7be094848959542f51da606ece1d38"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "12877d1e3132d0cc",
+        "passed": true,
+        "executed": true,
+        "profiles": 1,
+        "proof": "2d01c88c58ab75a82e92a0642966c13d83a0c9c015b394c6bb1b8966a588fb2f"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "PATCH_PENDING_REVIEW",
+        "patchSha256": "fece49426c98480071cbafb4b89503666aa4e4c1fdbcd4102e0eb3a985f94f3a",
+        "approvedForMerge": false,
+        "proof": "4814f44ce47a665d3fe7cde39ea4409ee72264952f1b3875675f198c495081d2"
+      }
+    ],
+    "integrity": "83a3c60f3e18c08cc38e551cab8a3b2bee2e6c50e4aafc7bdc36162c793c4e60"
+  },
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "9e3956fceac8cd98004203687ade832739f408032fb7110495285da0cf4ef065",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        }
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  }
+}
