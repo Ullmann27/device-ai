@@ -5,12 +5,12 @@ import {readFileSync,lstatSync} from 'node:fs';
 import {join,resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const SOURCE='3c2c43f263a3bc2501f9aab5942d7c33fd7322dc';
+const SOURCE='097c3448b28e8ac82b44ff4b1abf34eaec38f8cc';
 const MANIFEST='docs/release/continuum-0324-source-proposal-20261026.json';
-const MANIFEST_BLOB='1633cf1a3d494239072df93793a4633509d8d1a8';
+const MANIFEST_BLOB='78590258b0056b528c667c0358b969c8f8ae016d';
 const PACKAGE='at.heinz.deviceai.mentorpaired';
 const CERT='2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc';
-const CODE=25, NAME='0.3.24',COUNT=1032;
+const CODE=25, NAME='0.3.24',COUNT=1034;
 const fail=x=>{process.stderr.write('OWNER_V25_BLOCKED: '+x+'\n');process.exit(69);};
 const git=(...args)=>execFileSync('git',args,{cwd:root,encoding:'utf8',timeout:25000,stdio:['ignore','pipe','pipe']}).trim();
 const included=p=>p.startsWith('app/src/')||p==='app/build.gradle.kts'||
