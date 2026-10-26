@@ -167,3 +167,21 @@ All useful source, raw red/green/final logs, synthetic fixture reproducer and
 receipts are in the official repository branch/PR #155; no transient private
 fixture or unpublished candidate exists. No coding proof container remains
 active; the temporary backend dependency symlink was removed.
+
+## Quick restart — owner 10% limit, source review only
+
+Reviewed the actual provider reservation, scoped repair history and ledger code
+at `fd6d96ee239a5c48ca562d1837146dcd5a6319a3`. No additional important fail-open
+or request-budget defect was confirmed, so no production source changed.
+Reservations remain exclusive and fsynced before inference; persisted pending
+slots consume budget; corrupt/foreign slots block; history matches the full
+owner-task fingerprint, exact source and chain; reused records are negative
+diagnostics only and do not authorize code replay or learning.
+
+Targeted existing checks only: provider + scoped repair + independent ledger,
+33/33 PASS, 0 skips, 19.447s under the parent's concurrent SDK workload. Raw log:
+`docs/evidence/sol-coding-discovery-20261026/quick-review.tap`. This is not a new
+full-suite run or formal concurrency/power-loss proof. The optional DeepSeek
+sibling seam is not present on this branch and was not reviewed in this pass.
+No model, Gradle, full regression, new feature or source experiment started.
+Neural/APK/device status remains `NOT_RUN`; retain the prior stop boundary.
