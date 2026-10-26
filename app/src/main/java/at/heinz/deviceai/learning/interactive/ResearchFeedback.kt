@@ -26,16 +26,11 @@ object FeedbackSpeechAct {
  * explicit review outside this adapter before calling review; text cannot do that.
  */
 class ResearchFeedback(root:File) {
- private val store:FileLearningExperienceStore
- init {
-  require(!java.nio.file.Files.isSymbolicLink(root.toPath()))
-  val directory=File(root,"interactive-feedback-v1")
-  require(!java.nio.file.Files.isSymbolicLink(directory.toPath()))
-  store=FileLearningExperienceStore(directory)
- }
+ private val processLock=ResearchFeedbackFileLock(root)
+ private val store=FileLearningExperienceStore(processLock.directory)
  enum class Review { CONFIRM, REJECT, REVOKE }
  data class Candidate(val experience:LearningExperience,val reviewDigest:String)
- fun propose(correction:String,sourceTurn:String,version:Int=1,now:Long=1):Candidate = synchronized(LOCK) {
+ fun propose(correction:String,sourceTurn:String,version:Int=1,now:Long=1):Candidate = processLock.guard {
   require(FeedbackSpeechAct.classify(correction)==FeedbackSpeechAct.Kind.CORRECTION)
   require(sourceTurn.matches(Regex("[A-Za-z0-9._:-]{1,120}")) && version in 1..100000)
   val e=LearningExperienceFactory.create(LearningExperienceType.USER_FEEDBACK,
@@ -44,7 +39,7 @@ class ResearchFeedback(root:File) {
   store.append(e)
   candidate(store.all().single { it.id==e.id })
  }
- fun review(id:String,digest:String,action:Review,now:Long):Candidate = synchronized(LOCK) {
+ fun review(id:String,digest:String,action:Review,now:Long):Candidate = processLock.guard {
   val old=store.all().single { it.id==id }
   require(old.sourceRef?.startsWith("interactive:")==true && old.type==LearningExperienceType.USER_FEEDBACK)
   require(candidate(old).reviewDigest==digest && now>old.updatedAt) { "Stale or mismatched review" }
@@ -55,21 +50,20 @@ class ResearchFeedback(root:File) {
   }
   check(store.updateStatus(id,next,now));candidate(store.all().single { it.id==id })
  }
- fun all():List<Candidate> = synchronized(LOCK) { store.all().map(::candidate) }
+ fun all():List<Candidate> = processLock.guard { store.all().map(::candidate) }
  /** Checkpoint consumers must match this live fingerprint before any reuse. Revocation
   * invalidates derived research checkpoints; it does not claim weight unlearning. */
- fun trainingFingerprint():String = synchronized(LOCK) {
-  val canonical=trainingCandidates().sortedBy{it.id}.joinToString("\n"){"${it.id}|${it.contentHash}|${it.updatedAt}"}
+ fun trainingFingerprint():String = processLock.guard {
+  val canonical=trainingCandidatesUnlocked().sortedBy{it.id}.joinToString("\n"){"${it.id}|${it.contentHash}|${it.updatedAt}"}
   MessageDigest.getInstance("SHA-256").digest(canonical.toByteArray()).joinToString(""){"%02x".format(it)}
  }
- fun trainingCandidates():List<LearningExperience> = synchronized(LOCK) {
+ fun trainingCandidates():List<LearningExperience> = processLock.guard { trainingCandidatesUnlocked() }
+ private fun trainingCandidatesUnlocked():List<LearningExperience> =
   store.all().filter { it.type==LearningExperienceType.USER_FEEDBACK && it.status==LearningStatus.CONFIRMED &&
    it.provenance==LearningProvenance.SYNTHETIC_FIXTURE && it.sourceRef?.startsWith("interactive:")==true }
    // Multiple confirmed revisions of one turn are unresolved, not two positive labels.
    .groupBy{it.sourceRef!!.substringBeforeLast(":v")}.values.filter{it.size==1}.flatten()
- }
  companion object {
-  private val LOCK=Any()
   private fun candidate(e:LearningExperience):Candidate {
    val data="${e.id}|${e.contentHash}|${e.status}|${e.updatedAt}"
    return Candidate(e,MessageDigest.getInstance("SHA-256").digest(data.toByteArray()).joinToString(""){"%02x".format(it)})
