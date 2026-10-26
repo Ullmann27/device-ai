@@ -180,12 +180,15 @@ fi
   | grep -F "package: name='at.heinz.deviceai.mentorpaired' versionCode='24' versionName='0.3.23'"
 
 
-# Fail closed unless the actually installed owner APK is independently recoverable.
+# Preserve both previously signed owner builds before publishing a new one.
+# The current public owner endpoint now serves 0.3.22, not 0.3.21.
+# Both artifacts must retain the exact installed-app package and owner signer.
 output="$render_publisher_root/mentor-build-output"
 mkdir -p "$output"
 signer="$expected_signer"
 old_base_url="https://device-ai-mentor-apk-preview.onrender.com"
-expected_previous_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"
+expected_previous_sha="1df868434643cfe28181c73526d0b5d0f4ced3d8017312cccb06292a5b1195e8"
+expected_legacy_sha="f02130ab6ab733f458bef7e7c351702574040c7f7d065eea2965a2189d6319b0"
 old_metadata="$workspace/prior-build-info.txt"
 curl --fail --silent --show-error --location --retry 2 --max-time 120 \
   "$old_base_url/BUILD-INFO.txt" -o "$old_metadata" || die "Prior release metadata unavailable"
@@ -193,22 +196,29 @@ prior_code="$(sed -n 's/^version_code=//p' "$old_metadata" | head -1)"
 prior_package="$(sed -n 's/^package=//p' "$old_metadata" | head -1)"
 prior_sha="$(sed -n 's/^apk_sha256=//p' "$old_metadata" | head -1)"
 prior_apk="$(sed -n 's/^artifact=//p' "$old_metadata" | head -1)"
-[[ "$prior_code" == "22" && "$prior_package" == "at.heinz.deviceai.mentorpaired" &&
+[[ "$prior_code" == "23" && "$prior_package" == "at.heinz.deviceai.mentorpaired" &&
    "$prior_sha" == "$expected_previous_sha" &&
-   "$prior_apk" == "DeviceAI-Continuum-v0.3.21-$prior_sha.apk" ]] ||
-  die "Prior release is not the installed owner identity"
-curl --fail --silent --show-error --location --retry 2 --max-time 240 \
-  "$old_base_url/$prior_apk" -o "$workspace/$prior_apk" ||
-  die "Missing actual signed owner rollback APK"
-printf '%s  %s\n' "$prior_sha" "$workspace/$prior_apk" | sha256sum --check --status ||
-  die "Wrong prior APK SHA256"
-"$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$workspace/$prior_apk" |
-  grep -qiF "$signer" || die "Wrong prior APK signing cert"
-"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$workspace/$prior_apk" |
-  grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='22' versionName='0.3.21'" ||
-  die "Wrong prior APK package/version"
-cp "$workspace/$prior_apk" "$output/$prior_apk"
-printf '%s  %s\n' "$prior_sha" "$output/$prior_apk" | sha256sum --check --status
+   "$prior_apk" == "DeviceAI-Continuum-v0.3.22-$prior_sha.apk" ]] ||
+  die "Prior signed v23 release identity mismatch"
+for rollback in \
+  "23|0.3.22|$expected_previous_sha" \
+  "22|0.3.21|$expected_legacy_sha"; do
+  IFS='|' read -r rollback_code rollback_version rollback_sha <<< "$rollback"
+  rollback_apk="DeviceAI-Continuum-v$rollback_version-$rollback_sha.apk"
+  curl --fail --silent --show-error --location --retry 2 --max-time 240 \
+    "$old_base_url/$rollback_apk" -o "$workspace/$rollback_apk" ||
+    die "Missing signed rollback APK code $rollback_code"
+  printf '%s  %s\n' "$rollback_sha" "$workspace/$rollback_apk" |
+    sha256sum --check --status || die "Rollback SHA256 mismatch code $rollback_code"
+  "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$workspace/$rollback_apk" |
+    grep -qiF "$signer" || die "Rollback certificate mismatch code $rollback_code"
+  "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$workspace/$rollback_apk" |
+    grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='$rollback_code' versionName='$rollback_version'" ||
+    die "Rollback package/version mismatch code $rollback_code"
+  cp "$workspace/$rollback_apk" "$output/$rollback_apk"
+  printf '%s  %s\n' "$rollback_sha" "$output/$rollback_apk" |
+    sha256sum --check --status || die "Copied rollback mismatch code $rollback_code"
+done
 
 apk_sha256="$(sha256sum "$apk" | awk '{print $1}')"
 [[ "$apk_sha256" =~ ^[a-f0-9]{64}$ ]] || { echo "Invalid APK SHA-256"; exit 69; }
