@@ -25,7 +25,7 @@ export function characterizeStagnation(input){
    repeatsMayBeUnproductive:recent.length>=3&&validationRegressions>=3,
    noGeneralIntelligenceClaim:true});
 }
-export function runShadowBudgetSweep(input,{budgets=STEP_BUDGETS,
+export function runShadowBudgetSweep(input,{budgets=[250,500,1000],
  replayAblations=REPLAY_ABLATIONS,now=1,maxMillis=30000,cancelled=()=>false}={}){
  if(!Array.isArray(budgets)||budgets.length<1||budgets.length>STEP_BUDGETS.length||
    budgets.some(x=>!STEP_BUDGETS.includes(x))||new Set(budgets).size!==budgets.length||
@@ -35,10 +35,14 @@ export function runShadowBudgetSweep(input,{budgets=STEP_BUDGETS,
    replayAblations.some(x=>!REPLAY_ABLATIONS.some(allowed=>
      allowed.name===x?.name && allowed.researchReplayEvery===x.researchReplayEvery &&
      allowed.researchReplayRate===x.researchReplayRate))||
-   new Set(replayAblations.map(x=>x.name)).size!==replayAblations.length)
+   new Set(replayAblations.map(x=>x.name)).size!==replayAblations.length||
+   budgets.length*replayAblations.length>9)
    throw Error('INVALID_SHADOW_BUDGET');
  const initial=restoreNeuralState(input);
  const originalHash=initial.modelHash,rounds=initial.rounds,accepted=initial.accepted;
+ const snapshotJson=JSON.stringify(initial);
+ const baselineBytes=exportWeights(initial);
+ if(sha256(baselineBytes)!==originalHash)throw Error('SHADOW_BASELINE_INVALID');
  const reports=[];
  for(const policy of replayAblations)for(const steps of budgets){
    if(cancelled())break;
@@ -46,8 +50,10 @@ export function runShadowBudgetSweep(input,{budgets=STEP_BUDGETS,
      researchReplayEvery:policy.researchReplayEvery,
      researchReplayRate:policy.researchReplayRate});
    if(initial.modelHash!==originalHash||initial.rounds!==rounds||
-       initial.accepted!==accepted||exportWeights(initial).equals(exportWeights(state))===false&&
-       !report.accepted&&state.modelHash!==originalHash)
+       initial.accepted!==accepted||JSON.stringify(initial)!==snapshotJson||
+       !exportWeights(initial).equals(baselineBytes)||
+       (!report.accepted&&state.modelHash!==originalHash)||
+       (report.accepted&&report.steps!==steps))
      throw Error('SHADOW_CHANGED_ORIGINAL_WEIGHTS');
    reports.push(Object.freeze({
      policy:policy.name,publicSourceUpdates:report.sourceUpdates,
@@ -66,7 +72,8 @@ export function runShadowBudgetSweep(input,{budgets=STEP_BUDGETS,
      auditUsedForSelection:report.auditUsedForSelection
    }));
  }
- if(initial.modelHash!==originalHash||sha256(exportWeights(initial))!==originalHash)
+ if(initial.modelHash!==originalHash||JSON.stringify(initial)!==snapshotJson||
+    sha256(exportWeights(initial))!==originalHash)
    throw Error('SHADOW_BASELINE_CHANGED');
  return Object.freeze({
    schema:'continuum-swb1-budget-shadow-v1',status:'RESEARCH_ONLY_NOT_PROMOTABLE',
