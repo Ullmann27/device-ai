@@ -1,0 +1,205 @@
+--- a/.github/continuum/coin-wm-v3-shadow-model.mjs
++++ b/.github/continuum/coin-wm-v3-shadow-model.mjs
+@@ -7,6 +7,8 @@
+  */
+ const SD=16,HD=12,TD=8,MAX_OP=12;
+ const finiteVector=(v,n)=>v instanceof Float64Array&&v.length===n&&v.every(Number.isFinite);
++// Numerical admission cap, not a semantic feature-normalization schema.
++const MAX_STATE_ABS=1_000_000;
+ const sigmoid=x=>1/(1+Math.exp(-Math.max(-20,Math.min(20,x))));
+ export class CoinWmV3ShadowModel{
+   constructor(maxOperators=5,seed=20261026){
+@@ -28,8 +30,23 @@
+     this.anchorPolicy=Array.from({length:maxOperators},()=>null);
+     this.updatesCount=0;
+   }
++  #assertNumericState(){
++    const vector=(v,n)=>finiteVector(v,n);
++    const bank=(v,n,k)=>Array.isArray(v)&&v.length===n&&v.every(x=>vector(x,k));
++    const anchors=(v,n,k)=>Array.isArray(v)&&v.length===n&&v.every(x=>x===null||vector(x,k));
++    if(!Number.isSafeInteger(this.maxOperators)||this.maxOperators<1||this.maxOperators>MAX_OP||
++       !Number.isSafeInteger(this.updatesCount)||this.updatesCount<0||this.updatesCount>100000||
++       !vector(this.encoder,HD*SD)||!vector(this.encoderAtInit,HD*SD)||
++       !vector(this.encoderBias,HD)||!vector(this.policyBias,this.maxOperators)||
++       !bank(this.policy,this.maxOperators,HD)||!bank(this.transitions,this.maxOperators,TD*HD)||
++       !vector(this.fisherEnc,HD*SD)||this.fisherEnc.some(v=>v<0)||
++       !bank(this.fisherPolicy,this.maxOperators,HD)||this.fisherPolicy.some(v=>v.some(x=>x<0))||
++       !(this.anchorEnc===null||vector(this.anchorEnc,HD*SD))||
++       !anchors(this.anchorPolicy,this.maxOperators,HD))throw Error('INVALID_MODEL_STATE');
++  }
+   #validate(state,op){
+-    if(!finiteVector(state,SD))throw Error('INVALID_STATE');
++    this.#assertNumericState();
++    if(!finiteVector(state,SD)||state.some(v=>Math.abs(v)>MAX_STATE_ABS))throw Error('INVALID_STATE');
+     if(!Number.isSafeInteger(op)||op<0||op>=this.maxOperators)throw Error('INVALID_OPERATOR');
+   }
+   #forward(state,op){
+@@ -38,15 +55,18 @@
+     for(let r=0;r<HD;r++){
+       let v=this.encoderBias[r];
+       for(let c=0;c<SD;c++)v+=this.encoder[r*SD+c]*state[c];
++      if(!Number.isFinite(v))throw Error('NUMERIC_OVERFLOW');
+       h[r]=Math.tanh(v);
+     }
+     let logit=this.policyBias[op];
+     for(let i=0;i<HD;i++)logit+=this.policy[op][i]*h[i];
++    if(!Number.isFinite(logit))throw Error('NUMERIC_OVERFLOW');
+     const p=sigmoid(logit);
+     const residual=new Float64Array(TD);
+     for(let t=0;t<TD;t++){
+       let v=0;
+       for(let i=0;i<HD;i++)v+=this.transitions[op][t*HD+i]*h[i];
++      if(!Number.isFinite(v))throw Error('NUMERIC_OVERFLOW');
+       residual[t]=sigmoid(v);
+     }
+     return {h,p,residual};
+@@ -63,8 +83,28 @@
+     let sum=0;for(let i=0;i<this.encoder.length;i++){const d=this.encoder[i]-this.encoderAtInit[i];sum+=d*d;}return Math.sqrt(sum);
+   }
+   /** Simulated research labels only, NOT a proof of external execution. */
+-  trainResearchSample({state16,operatorIndex,success,observedNext8,learningRate=0.25,ewcLambda=1.2}){
+-    if(typeof success!=='boolean'||!finiteVector(observedNext8,TD))throw Error('INVALID_RESEARCH_LABEL');
++  /** Stage every update so rejection never leaves a partial live checkpoint.
++   * This is research numerics only: no receipt admission or weight promotion.
++   */
++  trainResearchSample(input){
++    this.#assertNumericState();
++    const staged=new CoinWmV3ShadowModel(this.maxOperators,0);
++    const vectors=['encoder','encoderAtInit','encoderBias','policyBias','fisherEnc'];
++    const banks=['policy','transitions','fisherPolicy'];
++    for(const key of vectors)staged[key]=new Float64Array(this[key]);
++    for(const key of banks)staged[key]=this[key].map(v=>new Float64Array(v));
++    staged.anchorEnc=this.anchorEnc===null?null:new Float64Array(this.anchorEnc);
++    staged.anchorPolicy=this.anchorPolicy.map(v=>v===null?null:new Float64Array(v));
++    staged.updatesCount=this.updatesCount;
++    const result=staged.#trainResearchSampleInPlace(input);
++    staged.#assertNumericState();
++    for(const key of vectors)this[key].set(staged[key]);
++    for(const key of banks)for(let i=0;i<this.maxOperators;i++)this[key][i].set(staged[key][i]);
++    this.updatesCount=staged.updatesCount;
++    return result;
++  }
++  #trainResearchSampleInPlace({state16,operatorIndex,success,observedNext8,learningRate=0.25,ewcLambda=1.2}){
++    if(typeof success!=='boolean'||!finiteVector(observedNext8,TD)||observedNext8.some(v=>v<0||v>1))throw Error('INVALID_RESEARCH_LABEL');
+     if(!Number.isFinite(learningRate)||learningRate<=0||learningRate>0.3||
+       !Number.isFinite(ewcLambda)||ewcLambda<0||ewcLambda>5)throw Error('INVALID_HYPERPARAMETER');
+     if(this.updatesCount>=100000)throw Error('UPDATE_BUDGET_EXHAUSTED');
+@@ -100,6 +140,7 @@
+     return Object.freeze({updated:true,status:'RESEARCH_SHADOW',promotionEligible:false});
+   }
+   consolidateEwcAnchors(activeCount=this.maxOperators){
++    this.#assertNumericState();
+     if(!Number.isSafeInteger(activeCount)||activeCount<1||activeCount>this.maxOperators)throw Error('INVALID_ACTIVE_COUNT');
+     this.anchorEnc=new Float64Array(this.encoder);
+     for(let i=0;i<activeCount;i++)this.anchorPolicy[i]=new Float64Array(this.policy[i]);
+--- a/.github/continuum/structured-statement-translator.mjs
++++ b/.github/continuum/structured-statement-translator.mjs
+@@ -56,6 +56,10 @@
+       forward.set(name,alias);reverse.set(alias,name);
+     }
+   }
++  // Property names are literals, not lexical variable bindings.
++  // This restricted grammar rejects collisions instead of guessing scope.
++  if([...forward.keys()].some(name=>body.some((t,i)=>t===name&&body[i-1]==='.')))
++    throw Error('BINDING_PROPERTY_COLLISION');
+   const statements=[];
+   let start=open+1,paren=0,bracket=0;
+   for(let i=open+1;i<v.length-1;i++){
+--- /dev/null
++++ b/.github/continuum/coin-wm-v3-numeric-safety.test.mjs
+@@ -0,0 +1,68 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {CoinWmV3ShadowModel} from './coin-wm-v3-shadow-model.mjs';
++const sample=()=>({state16:Float64Array.from({length:16},(_,i)=>i===0?1:0),operatorIndex:0,success:true,observedNext8:new Float64Array(8)});
++const snapshot=m=>JSON.stringify(m,(_,v)=>v instanceof Float64Array?Array.from(v):v);
++
++test('reject finite but unsafe feature magnitudes without mutation',()=>{
++ const m=new CoinWmV3ShadowModel(2),before=snapshot(m),row=sample();
++ row.state16.fill(Number.MAX_VALUE);
++ assert.throws(()=>m.trainResearchSample(row),/INVALID_STATE/);
++ assert.equal(snapshot(m),before);
++});
++
++test('reject negative transition target without mutation',()=>{
++ const m=new CoinWmV3ShadowModel(2),before=snapshot(m),row=sample();
++ row.observedNext8[0]=-1;
++ assert.throws(()=>m.trainResearchSample(row),/INVALID_RESEARCH_LABEL/);
++ assert.equal(snapshot(m),before);
++});
++
++test('reject transition target greater than one without mutation',()=>{
++ const m=new CoinWmV3ShadowModel(2),before=snapshot(m),row=sample();
++ row.observedNext8[0]=2;
++ assert.throws(()=>m.trainResearchSample(row),/INVALID_RESEARCH_LABEL/);
++ assert.equal(snapshot(m),before);
++});
++
++test('score refuses preexisting nonfinite model state',()=>{
++ const m=new CoinWmV3ShadowModel(2);m.policy[0][0]=NaN;
++ assert.throws(()=>m.score(sample().state16,0),/INVALID_MODEL_STATE/);
++});
++
++test('overflowing staged update leaves all live weights unchanged',()=>{
++ const m=new CoinWmV3ShadowModel(2),row=sample();
++ m.policy[0].fill(1e308);
++ const before=snapshot(m);
++ assert.throws(()=>m.trainResearchSample(row),/NUMERIC_OVERFLOW|INVALID_MODEL_STATE/);
++ assert.equal(snapshot(m),before);
++});
++
++test('malformed transition head cannot partially update the model',()=>{
++ const m=new CoinWmV3ShadowModel(2);m.transitions[0]=new Float64Array(1);
++ const before=snapshot(m);
++ assert.throws(()=>m.trainResearchSample(sample()),/INVALID_MODEL_STATE/);
++ assert.equal(snapshot(m),before);
++});
++
++test('valid endpoint targets and research authority remain unchanged',()=>{
++ const m=new CoinWmV3ShadowModel(2),row=sample();
++ row.observedNext8.fill(1);m.trainResearchSample(row);
++ assert.equal(m.updatesCount,1);assert.equal(m.promotionEligible,false);
++ assert.ok(m.rank(row.state16).every(v=>Number.isFinite(v.score)));
++});
++
++test('invalid update counter fails closed without model mutation',()=>{
++ const m=new CoinWmV3ShadowModel(2);m.updatesCount=-1;
++ const before=snapshot(m);
++ assert.throws(()=>m.trainResearchSample(sample()),/INVALID_MODEL_STATE/);
++ assert.equal(snapshot(m),before);
++});
++
++test('overflow after intermediate policy updates rolls back the entire checkpoint',()=>{
++ const m=new CoinWmV3ShadowModel(2);
++ m.consolidateEwcAnchors();m.anchorEnc.fill(-1e308);m.fisherEnc.fill(1e308);
++ const before=snapshot(m);
++ assert.throws(()=>m.trainResearchSample(sample()),/NUMERIC_OVERFLOW|INVALID_MODEL_STATE/);
++ assert.equal(snapshot(m),before);
++});
+--- /dev/null
++++ b/.github/continuum/structured-binding-safety.test.mjs
+@@ -0,0 +1,24 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {induceStructuredStatementOperator} from './structured-statement-translator.mjs';
++
++test('reject learned property names that collide with local bindings',()=>{
++ const before='function f(obj) { const value = 1; return obj.foo + value; }';
++ const after='function f(obj) { const value = 1; return obj.value + value; }';
++ assert.throws(()=>induceStructuredStatementOperator('property-collision',before,after),/BINDING_PROPERTY_COLLISION/);
++});
++
++test('reject function-name property collisions instead of alpha-renaming a literal property',()=>{
++ const before='function f(obj) { return obj.foo; }';
++ const after='function f(obj) { return obj.f; }';
++ assert.throws(()=>induceStructuredStatementOperator('function-property-collision',before,after),/BINDING_PROPERTY_COLLISION/);
++});
++
++test('ordinary noncolliding properties and local renaming remain supported',()=>{
++ const op=induceStructuredStatementOperator('local-rewrite',
++  'function f(obj) { const value = 1; return obj.foo + value; }',
++  'function f(obj) { const value = 1; return obj.foo + value + 1; }');
++ const result=op.applyToCode('function g(record) { const amount = 1; return record.foo + amount; }');
++ assert.equal(result.status,'CANDIDATE_UNVERIFIED');
++ assert.match(result.code,/return record\.foo \+ amount \+ 1;/);
++});
