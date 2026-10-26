@@ -45,6 +45,7 @@ export function verifyLedger(data){
     if(a.syntaxReason!==undefined&&a.syntaxReason!==null&&
        (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
       throw Error('Invalid ledger syntax reason');
+    if(a.taskFingerprint!==undefined&&!SHA256.test(a.taskFingerprint))throw Error('Invalid ledger task fingerprint');
   }
   for(const x of data.experiences)if(!x||typeof x.kind!=='string'||x.kind.length>80||!Number.isSafeInteger(x.successes)||!Number.isSafeInteger(x.failures)||x.successes<0||x.failures<0)
     throw Error('Invalid ledger experience');
@@ -94,6 +95,8 @@ export function recordSession(ledger,report,meta={}){
     return a;
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
+    ...(a.strategy==='LOCAL_SCOPED_PATCH'&&SHA256.test(report.coding?.taskFingerprint??'')?
+      {taskFingerprint:report.coding.taskFingerprint}:{}),
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
     outcome:a.outcome,edits:(a.edits??[]).map(ledgerEdit),confidence:a.score??null,
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,

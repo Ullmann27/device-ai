@@ -12,7 +12,7 @@ import {checkCandidateKotlinSyntax as inspectKotlinSyntax} from './candidate-kot
 import {isTermuxArm64,resolveTermuxEnvironment} from '../../scripts/continuum-mobile-builder.mjs';
 import {isIsolatedExecutor,validIsolationEvidence} from './isolated-executor.mjs';
 import {isLocalNumericPatch} from './local-numeric-patch.mjs';
-import {validateCodingTask,validateCodingProposal} from './coding-task.mjs';
+import {validateCodingTask,validateCodingProposal,taskFingerprint} from './coding-task.mjs';
 import {runCandidateVerifier} from './repair-research-verifier.mjs';
 
 /**
@@ -493,8 +493,23 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 
 /** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
  * Every revision is applied to base, never on top of a failed candidate. */
-function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
-  const scope=new Set(taskSpec.allowedPaths),seen=new Set(),history=[],rejectedResponses=new Set();
+function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
+  const fingerprint=taskFingerprint(taskSpec);
+  // Resume only this exact owner task/source. This is negative diagnostic reuse,
+  // never automatic patch replay or a learned success label for model code.
+  const previous=(ledger.attempts??[]).filter(a=>a.strategy==='LOCAL_SCOPED_PATCH'&&
+    a.baseCommit===base&&a.chain===chain&&a.taskFingerprint===fingerprint&&
+    (a.outcome==='FAILED_TESTS'&&(a.tests??[]).some(t=>
+      Object.hasOwn(PROFILES,t.profile)&&t.passed===false&&
+      Number.isSafeInteger(t.executed)&&t.executed>0&&t.executed<=1_000_000&&
+      Number.isSafeInteger(t.failed)&&t.failed>0&&t.failed<=t.executed)||
+     a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')).slice(-3);
+  const scope=new Set(taskSpec.allowedPaths),seen=new Set(previous.map(a=>a.candidate)),rejectedResponses=new Set();
+  const history=previous.map(a=>({candidate:a.candidate,outcome:a.outcome,hypothesis:'',
+    diagnostic:a.outcome==='FAILED_SYNTAX'?'INVALID_JS_SYNTAX':(a.tests??[])
+      .filter(t=>Object.hasOwn(PROFILES,t.profile)&&['executed','failed','skipped'].every(k=>
+        Number.isSafeInteger(t[k])&&t[k]>=0&&t[k]<=1_000_000))
+      .map(t=>`${t.profile} executed=${t.executed} failed=${t.failed} skipped=${t.skipped}`).join('; ').slice(0,1000)}));
   const readFile=file=>{
     if(!scope.has(file))return null;
     try{const full=boundedWorktreeFile(wt,file);return fs.statSync(full).size<=750_000?fs.readFileSync(full,'utf8'):null;}
@@ -502,8 +517,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
   };
   report.inference={mode:'LOCAL_CANDIDATE_PROVIDER',modelId:null,modelInvocations:null,
     localRequests:0,verifiedModelExecution:false,candidateStatus:'NOT_REQUESTED',
-    repeatedCandidates:0,history:[],rejections:[],reason:'Provider calls do not independently establish model execution'};
-  report.coding={taskId:taskSpec.id,sourceCommit:base,allowedPaths:[...scope],
+    repeatedCandidates:0,history:structuredClone(history),rejections:[],reason:'Provider calls do not independently establish model execution'};
+  report.coding={taskId:taskSpec.id,taskFingerprint:fingerprint,sourceCommit:base,allowedPaths:[...scope],
     milestones:['BASELINE_FAILED'],candidateCount:0,contextSha256:null};
   let diagnostics=actionable;
   const boundedDiagnostics=items=>items.slice(0,10).map(d=>({...d,message:String(d.message??'').slice(0,1000)}));
@@ -515,7 +530,11 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
   const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PATCH_NOT_EXACT','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
     'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE',
     'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
-    'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH']);
+    'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH',
+    'CODING_EVIDENCE_INVALID','CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
+  const terminalCodes=new Set(['CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
+    'CODING_CONTEXT_DEADLINE','CODING_TASK_BINDING_MISMATCH','CODING_EVIDENCE_INVALID',
+    'CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
   const rejectModel=(code,rawFingerprint=null)=>{
     const fingerprint=typeof rawFingerprint==='string'&&/^[a-f0-9]{64}$/.test(rawFingerprint)?rawFingerprint:null;
     const repeated=fingerprint!==null&&rejectedResponses.has(fingerprint);
@@ -580,7 +599,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     }
     beforeStep('provided');
     if(Date.now()>=deadline)break;
-    if(!candidate){if(repeatedRejected)break;continue;}
+    if(!candidate){if(repeatedRejected||terminalCodes.has(report.inference.lastRejectCode))break;continue;}
     const c=candidate;
     if(seen.has(c.id)){
       report.inference.repeatedCandidates++;
@@ -692,7 +711,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     report.baselineTail=baseline.results.at(-1)?.outputTail;
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
-  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
+  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
   const ctx=context(wt,base,ledger.attempts);
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.

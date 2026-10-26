@@ -106,3 +106,53 @@ test('unsafe evidence paths fail before dirtying the source checkout',t=>{
  assert.equal(fs.existsSync(valid),true);
  assert.deepEqual(provider.taskSpec.allowedPaths,['lib/pages.mjs']);
 });
+
+test('same canonical job resumes its request budget without repeating evidence slots',t=>{
+ const {root,task}=fixture(),evidenceDir=fs.mkdtempSync(path.join(os.tmpdir(),'coding-resume-'));
+ t.after(()=>{fs.rmSync(root,{recursive:true,force:true});fs.rmSync(evidenceDir,{recursive:true,force:true});});
+ let actualCalls=0;
+ const options={root,task,evidenceDir,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
+  run:()=>{actualCalls++;return {status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal})};}};
+ const invoke=provider=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10_000});
+ invoke(createCodingCandidateProvider(options));
+ const first=fs.readFileSync(path.join(evidenceDir,'request-1.json'),'utf8');
+ assert.doesNotThrow(()=>invoke(createCodingCandidateProvider(options)));
+ assert.equal(actualCalls,2);
+ assert.equal(fs.readFileSync(path.join(evidenceDir,'request-1.json'),'utf8'),first);
+ assert.equal(JSON.parse(fs.readFileSync(path.join(evidenceDir,'request-2.json'),'utf8')).request,2);
+ assert.throws(()=>invoke(createCodingCandidateProvider(options)),/CODING_MODEL_BUDGET_EXHAUSTED/);
+ assert.equal(actualCalls,2);
+});
+
+test('request reservation is durable before inference and interrupted calls consume the budget',t=>{
+ const {root,task}=fixture(),evidenceDir=fs.mkdtempSync(path.join(os.tmpdir(),'coding-interrupted-'));
+ t.after(()=>{fs.rmSync(root,{recursive:true,force:true});fs.rmSync(evidenceDir,{recursive:true,force:true});});
+ const oneCall={...task,limits:{...task.limits,maxModelCalls:1}};
+ let observedReservation=false,actualCalls=0;
+ const options={root,task:oneCall,evidenceDir,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},run:()=>{
+  actualCalls++;
+  const file=path.join(evidenceDir,'request-1.json');
+  observedReservation=fs.existsSync(file)&&JSON.parse(fs.readFileSync(file,'utf8')).status==='RESERVED';
+  throw Error('simulated child failure');
+ }};
+ const invoke=()=>createCodingCandidateProvider(options)({base:task.sourceCommit,chain:'node',deadline:Date.now()+10_000});
+ assert.throws(invoke);
+ assert.equal(observedReservation,true);
+ assert.throws(invoke,/CODING_MODEL_BUDGET_EXHAUSTED/);
+ assert.equal(actualCalls,1);
+});
+
+test('foreign or corrupt persisted requests block before another inference',t=>{
+ const {root,task}=fixture(),evidenceDir=fs.mkdtempSync(path.join(os.tmpdir(),'coding-foreign-evidence-'));
+ t.after(()=>{fs.rmSync(root,{recursive:true,force:true});fs.rmSync(evidenceDir,{recursive:true,force:true});});
+ let actualCalls=0;
+ const options={root,task,evidenceDir,env:{CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40)},
+  run:()=>{actualCalls++;return {status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal})};}};
+ const invoke=provider=>provider({base:task.sourceCommit,chain:'node',deadline:Date.now()+10_000});
+ invoke(createCodingCandidateProvider(options));
+ assert.throws(()=>invoke(createCodingCandidateProvider({...options,task:{...task,goal:'Different owner authorization'}})),/CODING_EVIDENCE_BINDING_MISMATCH/);
+ assert.equal(actualCalls,1);
+ fs.writeFileSync(path.join(evidenceDir,'request-1.json'),'{partial');
+ assert.throws(()=>invoke(createCodingCandidateProvider(options)),/CODING_EVIDENCE_INVALID/);
+ assert.equal(actualCalls,1);
+});
