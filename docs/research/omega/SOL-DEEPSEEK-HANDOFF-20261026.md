@@ -60,3 +60,15 @@ The optional `remoteTeacher` argument on the EXISTING provider requires an owner
 - Read-only live selected Hub metadata succeeds with `NODE_USE_ENV_PROXY=1` using inherited proxy/CA: selected revision, 48 shards / 510296708312 bytes, zero LFS digests advertised, **zero downloaded/verified bytes**, inference `NOT_STARTED`. `pinned-hub-live.json` supersedes the recorded first direct-fetch failure.
 
 Full setup/protocol, provenance/train-audit reuse and missing-resource requirements: `docs/CONTINUUM-DEEPSEEK-BRIDGE-20261026.md`. No endpoint/backend deployment, Android UI/runtime test, native training, owner memory or signing changes. Missing resources: separately authorized no-charge compute/storage, verified full checkpoint bytes, supported pinned runtime/conversion/kernels/topology, authenticated operator endpoint with capability/revision/privacy/billing enforcement, owner-reviewed per-job integration. No financial or inference success inferred from an authenticated server assertion.
+
+## Final focused verification
+
+The provider now retains only whitelisted remote failure codes in its hash-only trace and `error.remoteCode`, while preserving the canonical `CODING_MODEL_UNAVAILABLE` code and explicit offline fallback. Malformed/untrusted stderr collapses to `REMOTE_UNAVAILABLE`; no provider text is copied. Capacity rejects fabricated alternate weight-byte counts under the pinned selected identity.
+
+Fresh command on the final source content:
+
+```sh
+node --test scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deepseek-hub-preflight.test.mjs scripts/continuum-deepseek-bridge.test.mjs scripts/continuum-deepseek-https.test.mjs scripts/continuum-local-brain.test.mjs scripts/continuum-coding-brain.test.mjs .github/continuum/coding-provider.test.mjs .github/continuum/coding-provider-remote.test.mjs .github/continuum/coding-rejection-feedback.test.mjs
+```
+
+**59 PASS / 0 FAIL**, `docs/evidence/sol-deepseek-20261026/scoped-final-green.txt`; `git diff --check` PASS. Runtime Node `v24.19.0`, OpenSSL `3.5.7`. Full repository Node and Android/native suites are not claimed for this checkpoint; root owns integrated verification. Actual model inference, capacity/runtime performance, owner UI/device/training remain `NOT_RUN / BLOCKED`.

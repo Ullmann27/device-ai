@@ -68,7 +68,7 @@ export function buildStoragePlan({
   hostRamGiB = 0
 } = {}) {
   const safeGiB = n => Number.isSafeInteger(n) && n >= 0 && Number.isSafeInteger(n * GiB);
-  if (!Number.isSafeInteger(weightBytes) || weightBytes <= 0 ||
+  if (!Number.isSafeInteger(weightBytes) || weightBytes !== DECLARED_WEIGHT_BYTES ||
       !Number.isSafeInteger(Math.ceil(weightBytes * 1.25 + 100 * GiB)) ||
       !safeGiB(networkVolumeGiB) || !safeGiB(hostRamGiB) ||
       !Array.isArray(gpuNames) || gpuNames.length > 64 ||

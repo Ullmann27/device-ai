@@ -21,10 +21,10 @@ const sha = text => createHash('sha256').update(text).digest('hex');
 const exact=(v,keys)=>v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const REQUEST_KEYS=['schema','endpoint','jobId','taskFingerprint','sourceCommit','requestIndex','deadline','userPrompt','allowedTrackedPaths'];
 const CONSENT_KEYS=['schema','requestSha256','expiresAt','allowExternal','allowRepositoryContext','allowOwnerMemory','allowSecrets','allowTraining','maxCostMicrousd'];
-const FALLBACK = Object.freeze({mode:'KEEP_OFFLINE_LOCAL',externalRetry:false,toolCalls:Object.freeze([]),memoryWritten:false,trainingWritten:false});
+export const DEEPSEEK_OFFLINE_FALLBACK = Object.freeze({mode:'KEEP_OFFLINE_LOCAL',externalRetry:false,toolCalls:Object.freeze([]),memoryWritten:false,trainingWritten:false});
 
 function blocked(code) {
-  const error=Error(code); error.code=code; error.fallback=FALLBACK; return error;
+  const error=Error(code); error.code=code; error.fallback=DEEPSEEK_OFFLINE_FALLBACK; return error;
 }
 
 function endpointUrl(endpoint) {
@@ -154,7 +154,7 @@ export async function queryDeepSeekCodingBrain({request,consent,apiKey,fetchImpl
       identityEvidence:'AUTHENTICATED_SERVER_ASSERTION_NOT_WEIGHT_VERIFICATION',
       costMicrousd:0,memoryWritten:false,trainingWritten:false};
   } catch(error) {
-    if(error?.fallback===FALLBACK)throw error;
+    if(error?.fallback===DEEPSEEK_OFFLINE_FALLBACK)throw error;
     throw blocked(controller.signal.aborted?'REMOTE_DEADLINE_EXCEEDED':'REMOTE_UNAVAILABLE');
   } finally {clearTimeout(timer);controller.abort();}
 }

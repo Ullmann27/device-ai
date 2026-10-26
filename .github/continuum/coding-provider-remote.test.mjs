@@ -86,7 +86,21 @@ test('remote CLI failure cannot silently invoke a local or another remote model'
   const p=createCodingCandidateProvider({...f,run:()=>{calls++;return {status:1,
     stderr:'REMOTE_MODEL_UNAVAILABLE_OR_INVALID: REMOTE_AUTH_REJECTED PRIVATE_SENTINEL',stdout:''};}});
   assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+10000}),error=>{
-    assert.equal(error.code,'CODING_MODEL_UNAVAILABLE');assert.equal(error.message.includes('PRIVATE_SENTINEL'),false);return true;
+    assert.equal(error.code,'CODING_MODEL_UNAVAILABLE');assert.equal(error.message.includes('PRIVATE_SENTINEL'),false);
+    assert.equal(error.remoteCode,'REMOTE_UNAVAILABLE');assert.equal(error.fallback.mode,'KEEP_OFFLINE_LOCAL');return true;
   });
   assert.equal(calls,1);
+});
+
+test('fixed remote failure reason and offline fallback survive the canonical provider boundary',t=>{
+  const f=fixture(t);
+  const p=createCodingCandidateProvider({...f,run:()=>({status:1,
+    stderr:'REMOTE_MODEL_UNAVAILABLE_OR_INVALID: REMOTE_AUTH_REJECTED\n',stdout:''})});
+  assert.throws(()=>p({base:f.task.sourceCommit,chain:'node',deadline:Date.now()+10000}),error=>{
+    assert.equal(error.code,'CODING_MODEL_UNAVAILABLE');assert.equal(error.remoteCode,'REMOTE_AUTH_REJECTED');
+    assert.equal(error.fallback.mode,'KEEP_OFFLINE_LOCAL');assert.equal(error.fallback.externalRetry,false);
+    assert.equal(error.fallback.memoryWritten,false);return true;
+  });
+  const record=JSON.parse(fs.readFileSync(path.join(f.evidenceDir,'request-1.json'),'utf8'));
+  assert.equal(record.remoteFailureCode,'REMOTE_AUTH_REJECTED');
 });

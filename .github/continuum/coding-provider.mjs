@@ -3,7 +3,7 @@ import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'n
 import {validateCodingTask,taskFingerprint,validateCodingProposal} from './coding-task.mjs';
 import {buildRepositoryContext} from './coding-context.mjs';
 import {sha256Hex,parseStrict} from './development-backlog.mjs';
-import {describeDeepSeekCodingRequest,validateDeepSeekConsent} from '../../scripts/continuum-deepseek-bridge.mjs';
+import {describeDeepSeekCodingRequest,validateDeepSeekConsent,REMOTE_FAILURE_CODES,DEEPSEEK_OFFLINE_FALLBACK} from '../../scripts/continuum-deepseek-bridge.mjs';
 import {MODEL_ID,PINNED_REVISION} from '../../scripts/continuum-deepseek-tier-plan.mjs';
 const CLI=fileURLToPath(new URL('../../scripts/continuum-local-brain-cli.mjs',import.meta.url));
 function rejectedModelOutput(code,responseSha256=null) {
@@ -140,12 +140,20 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   const response=run(process.execPath,[CLI,command],{shell:false,encoding:'utf8',input:JSON.stringify(input),
    env:childEnv,timeout:timeoutMs+500,maxBuffer:40_000});
   trace.elapsedMs=Date.now()-started;trace.exitCode=response.status??null;
+  const remoteFailure=remoteTeacher&&/^REMOTE_MODEL_UNAVAILABLE_OR_INVALID: (REMOTE_[A-Z_]+)$/
+   .exec(String(response.stderr??'').trim());
+  const remoteFailureCode=REMOTE_FAILURE_CODES.includes(remoteFailure?.[1])?remoteFailure[1]:'REMOTE_UNAVAILABLE';
+  if(remoteTeacher&&(response.status!==0||response.error||response.signal))trace.remoteFailureCode=remoteFailureCode;
   // Raw code context and model output remain transient. Diagnostic evidence
   // retains hashes and byte counts, never the potentially private contents.
   const responseText=String(response.stdout??'');
   if(evidence)writeTrace(number,{...trace,status:'RESPONDED',responseSha256:sha256Hex(responseText),
     responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false});
   if(response.status!==0||response.error||response.signal){
+   if(remoteTeacher){
+    const error=rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
+    error.remoteCode=remoteFailureCode;error.fallback=DEEPSEEK_OFFLINE_FALLBACK;throw error;
+   }
    // The trusted local CLI reports only a fixed rejection code and SHA-256,
    // never the unsafe model response, prompt, token or arbitrary stderr text.
    const rejected=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/

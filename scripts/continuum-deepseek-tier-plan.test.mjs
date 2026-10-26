@@ -77,7 +77,7 @@ test("transfer lower bound uses decimal Mbps, GiB bytes and explicit utilization
 
 test("capacity rejects arithmetic overflow and independently reports storage policy", () => {
   assert.ok(tier.buildStoragePlan({networkVolumeGiB:512}).blockers.includes("PERSISTENT_VOLUME_TOO_SMALL"));
-  for (const bad of [{networkVolumeGiB:-1},{hostRamGiB:Number.MAX_SAFE_INTEGER},
+  for (const bad of [{weightBytes:1},{networkVolumeGiB:-1},{hostRamGiB:Number.MAX_SAFE_INTEGER},
     {networkVolumeGiB:Number.MAX_SAFE_INTEGER},{weightBytes:Number.MAX_SAFE_INTEGER}])
     assert.throws(()=>tier.buildStoragePlan(bad), /Invalid/);
 });
