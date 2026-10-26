@@ -150,3 +150,20 @@ acceptance tests. A feature on green baseline and generated APK bridge remain
 separate reviewable work. Android/Termux isolation/callback/Fold7 acceptance is
 still open. Rollback is a revert of this branch's two source commits; existing
 legacy local deterministic repairs and owner APK/signing paths are unchanged.
+
+## Owner stop / resume boundary
+
+The parent authorized planning a bounded actual Gemma-generated repair through
+the existing provider/CCC1/Docker path, then relayed the owner's 20% limit and
+immediate STOP before any of that follow-up began. No new fixture, invoker,
+server, model call, model download or source experiment was created or started.
+That follow-up is `NOT_RUN`, not a failed model-quality result. Resume requires
+the next authorized session and resource coordination with the parent.
+
+The completed evidence above remains limited to the durable retry/diagnostic
+repairs, full Node/backend checks, and the injected-candidate actual Docker
+pipeline proof. Neural repair and APK/device execution are still `NOT_RUN`.
+All useful source, raw red/green/final logs, synthetic fixture reproducer and
+receipts are in the official repository branch/PR #155; no transient private
+fixture or unpublished candidate exists. No coding proof container remains
+active; the temporary backend dependency symlink was removed.
