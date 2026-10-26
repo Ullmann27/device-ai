@@ -39,3 +39,28 @@ GitHub Hourly Watch run `40387465683` failed with **zero reported steps**, with 
 2. Build a *new*, sealed multi-topic, out-of-distribution semantic set before choosing a replay policy, against candidate and saved model; no peek/retune.
 3. Only then decide if the **next** training round can be accepted. Record the new round honestly as potentially 3/13, **not** magically 3/12, with comparison to fixed baseline and owner-approved state write.
 4. Provision owner-local worker on powered machine and run one real full suite; investigate GitHub Actions account-level status for no-step runs, without making risky `main` changes.
+
+## Post-freeze transfer falsification (new authored suite, SHA pinned)
+
+After the original three-arm 1,000-step results had been frozen, a new balanced `TRANSFER_SUITE_V1` was authored and committed as a separate file before its first model evaluation. Source: `.github/continuum/neural-fresh-transfer-20261026.mjs`, GitHub blob **`cd09e9dc8be70b6b36628beb2659ddba4503e102`**. It contains 20 fresh intent queries (10 greetings/10 questions) and 32 new paraphrase/mismatch judgements (16 positive/16 paired counterexamples) across software, devices, utilities and daily-life topics. The exact source audit confirmed **zero** prior TRAIN/VALIDATION/AUDIT/ANDROID_VALIDATION phrase collisions and **zero** duplicate evaluation pairs. This is an **authored, once-used probe**, not externally audited hidden science; subsequent tuning must not use it for selection and still requires separate sealed evaluation.
+
+With the **same real accepted model hash**, baseline transfer was **18/20 intent, 16/32 semantic**, losses 0.2812700307345184 / 0.6938738915626814. The three 1,000-step variants were rerun using actual fetched mathematical source and test-only V8 adapters. Results:
+
+| Model | Fresh intent | Fresh semantic | Fresh intent loss | Fresh semantic loss | Previously accepted on original validation |
+|---|---:|---:|---:|---:|---|
+| Original, unchanged | 18/20 | 16/32 | .2812700307 | .6938738916 | saved 2/12 |
+| CONTROL 1k | **18/20** | **16/32** | .2795461610 | .6938626745 | yes, current bounded gate |
+| LOW_REPLAY 1k | **18/20** | **16/32** | .2812700307 | .6938738916 | no; model retained baseline |
+| NO_REPLAY 1k | **18/20** | **16/32** | .2800976034 | .6938468597 | yes, current bounded gate |
+
+**Conclusion:** No increase in correct answers; semantic transfer on this balanced probe is at 16/32 and loss near .693, compatible with chance-like discrimination. This indicates the existing semantic representation is not robust, rather than proving that more rounds are useful. No accepted weights published and no training state changed. **Do not claim 3/12 or general reasoning progress.**
+
+The new shadow runner reports this exact fixed transfer suite separately under `transferIntentBefore/After` and `transferSemanticBefore/After`; each profile declares `transferUsedForSelection:false` and the whole report `transferSelectionForbidden:true`. This supports observation, not model promotion. Tests enforce fixture balance, no sample reuse, and no transfer-based acceptance.
+
+## Implementation safety review correction
+
+The first shadow test inadvertently expected two output rows after the default had grown to three policy arms. Test fixed to explicitly request one policy. The total default research grid is now limited to **nine trials (3 step budgets x 3 bounded replay arms)**, and all calls verify exact baseline JSON, model hash and weights before/after. The full 7-step budget grid remains an allowlist but combinations above nine are refused. This prevents runaway local CPU use. All production-default math was verified unchanged relative to the pinned original via a source-reversion comparison.
+
+The local developer worker now continues scheduling after individual cycle exceptions rather than stopping forever, returns nonzero exit codes for failed/incomplete single-run tests, checks checkout integrity at both ends, rejects output-directory redirection into the repository, and refuses symlinked/unsafe report paths. A fatal process kill can still leave a stale lock requiring a controlled manual cleanup; no unsafe automatic lock takeover was added.
+
+**Remaining mandatory native gates**: official Node.js full actual checkout, Android tests, owner-computer worker lifecycle and true held-out language benchmarks. These GitHub changes are review-only; the existing published APK and `continuum-state` remain untouched.
