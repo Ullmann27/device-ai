@@ -25,6 +25,8 @@ out=$(cd "$out" && pwd -P)
 }
 node --version > "$out/node-version.txt"
 paths=(
+  scripts/continuum-research-tap-summary.mjs
+  scripts/continuum-research-tap-summary.test.mjs
   .github/continuum/research-evidence-gate.mjs
   .github/continuum/research-evidence-gate.test.mjs
   .github/continuum/research-repair-bridge.mjs
@@ -37,6 +39,7 @@ paths=(
 )
 sha256sum "${paths[@]}" > "$out/checked-source-sha256.txt"
 tests=(
+  scripts/continuum-research-tap-summary.test.mjs
   .github/continuum/research-evidence-gate.test.mjs
   .github/continuum/research-repair-bridge.test.mjs
   .github/continuum/repair-research-verifier.test.mjs
@@ -44,7 +47,15 @@ tests=(
   .github/continuum/scoped-repair-pipeline.test.mjs
 )
 if env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 "${tests[@]}" > "$out/node-tests.txt" 2>&1; then
-  node_status=PASS
+  node scripts/continuum-research-tap-summary.mjs "$out/node-tests.txt" > "$out/node-summary.txt" || {
+    echo "NODE_TAP_EVIDENCE_INVALID; output=$out/node-tests.txt" >&2
+    exit 1
+  }
+  node_status=$(sed -n 's/^status=//p' "$out/node-summary.txt")
+  [[ "$node_status" == ALL_EXECUTED_PASS || "$node_status" == PASS_WITH_UNEXECUTED_CASES ]] || {
+    echo "NODE_TAP_EVIDENCE_INVALID: missing bounded status" >&2
+    exit 1
+  }
 else
   echo "NODE_TESTS_FAILED; output=$out/node-tests.txt" >&2
   tail -n 70 "$out/node-tests.txt" >&2
