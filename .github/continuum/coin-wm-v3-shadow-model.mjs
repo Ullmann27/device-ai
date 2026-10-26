@@ -11,8 +11,8 @@ const sigmoid=x=>1/(1+Math.exp(-Math.max(-20,Math.min(20,x))));
 export class CoinWmV3ShadowModel{
   constructor(maxOperators=5,seed=20261026){
     if(!Number.isSafeInteger(maxOperators)||maxOperators<1||maxOperators>MAX_OP)throw Error('INVALID_OPERATOR_COUNT');
-    this.status='RESEARCH_SHADOW';
-    this.promotionEligible=false;
+    Object.defineProperty(this,'status',{value:'RESEARCH_SHADOW',writable:false,configurable:false});
+    Object.defineProperty(this,'promotionEligible',{value:false,writable:false,configurable:false});
     this.maxOperators=maxOperators;
     let s=seed>>>0;
     const rand=()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return (s/4294967296-0.5)*0.35;};
