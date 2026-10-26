@@ -1,5 +1,11 @@
 # Sol 6.1 — JARVIS-MO Abschluss und unmittelbare Fortsetzung
 
+> **Besitzer-Folgeauftrag bei 10%: Nachtrag maßgeblich:**
+> [SOL-JARVIS-URGENT-FIXES-20261026.md](SOL-JARVIS-URGENT-FIXES-20261026.md).
+> Der Android-Backlog-Startfehler und das stille Android-Reportlimit werden dort
+> mit neuen RED/GREEN-Belegen geschlossen. Die folgenden Abschlussmessungen
+> bleiben an ihren ursprünglichen Code-Commit gebunden und werden nicht umetikettiert.
+
 Stand: 26.10.2026. **Auf ausdrücklichen Besitzerauftrag bei gemeldeten etwa 20%
 Restkontingent kontrolliert beendet. Keine neuen Experimente oder Agentenaufträge
 nach diesem Stopp. Gesamtmission NICHT abgeschlossen; Forschungsstand zur Prüfung.**

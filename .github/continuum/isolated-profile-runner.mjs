@@ -37,7 +37,9 @@ if(profile.startsWith('node-')){
   if(result.stdout?.length>3*1024*1024)throw Error('REPORT_TOO_LARGE');
   reports.push(result.stdout??'');
 }else if(reportDir&&fs.existsSync(reportDir)){
-  for(const name of fs.readdirSync(reportDir).filter(x=>/^TEST-[A-Za-z0-9_.$-]+\.xml$/.test(x)).slice(0,400)){
+  const reportNames=fs.readdirSync(reportDir).filter(x=>/^TEST-[A-Za-z0-9_.$-]+\.xml$/.test(x)).sort();
+  if(reportNames.length>400)throw Error('ISOLATED_REPORT_COUNT_EXCEEDED');
+  for(const name of reportNames){
     const file=path.join(reportDir,name),stat=fs.lstatSync(file);
     if(!stat.isFile()||stat.isSymbolicLink()||stat.size>2*1024*1024)throw Error('UNSAFE_ISOLATED_REPORT');
     reports.push(fs.readFileSync(file,'utf8'));

@@ -1,0 +1,27 @@
+✖ fixed isolated Android runner rejects 401 reports instead of returning a green subset (383.341132ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 463.675096
+
+✖ failing tests:
+
+test at .github/continuum/isolated-report-cap.test.mjs:11:1
+✖ fixed isolated Android runner rejects 401 reports instead of returning a green subset (383.341132ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/isolated-report-cap.test.mjs:37:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /ISOLATION_EXECUTION_FAILED.*|ISOLATION_INVALID_RESULT/,
+    operator: 'throws',
+    diff: 'simple'
+  }

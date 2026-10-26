@@ -13,13 +13,14 @@ out=$(cd "$out" && pwd -P)
 cp=$(find "$deps" -maxdepth 1 -name '*.jar' -type f -printf '%p:' | sort)
 sources=()
 for name in ComputeFabric ContinuumState ContinuumSeed ProofCarryingMemory MemoryEcology SelfModel \
-    CognitiveGenome CognitiveCore IdentityState BehaviorProfile BehaviorUpdate IdentityUpdateValidator IdentityDrift VirtualModelFabric; do
+    CognitiveGenome CognitiveCore IdentityState BehaviorProfile BehaviorUpdate IdentityUpdateValidator IdentityDrift VirtualModelFabric \
+    ContinuumIntelligence Deliberation DevelopmentTypes DevelopmentProtocol DevelopmentUiController DevelopmentCoordinator; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/$name.kt")
 done
 for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/$name.kt")
 done
-for name in ComputeFabricTest ComputeResultVerifierTest VirtualModelFabricTest; do
+for name in ComputeFabricTest ComputeResultVerifierTest VirtualModelFabricTest DevelopmentClaimGateTest; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/$name.kt")
 done
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -version > "$out/compiler.txt" 2>&1
@@ -29,7 +30,8 @@ cd "$root"
 java -cp "$out/classes:$cp" org.junit.runner.JUnitCore \
     at.heinz.deviceai.cognitive.ComputeFabricTest \
     at.heinz.deviceai.cognitive.ComputeResultVerifierTest \
-    at.heinz.deviceai.cognitive.VirtualModelFabricTest | tee "$out/junit.txt"
+    at.heinz.deviceai.cognitive.VirtualModelFabricTest \
+    at.heinz.deviceai.cognitive.DevelopmentClaimGateTest | tee "$out/junit.txt"
 java -cp "$out/classes:$cp" at.heinz.deviceai.cognitive.VirtualModelFabricFixtureMain > "$out/registry-snapshot.json"
 CONTINUUM_FABRIC_SNAPSHOT_FILE="$out/registry-snapshot.json" node --test \
     .github/continuum/compute-fabric-model-adapter.test.mjs | tee "$out/node-contract.txt"
