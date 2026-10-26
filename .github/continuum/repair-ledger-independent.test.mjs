@@ -188,3 +188,41 @@ test('an edit too large for the ledger is recorded by digest, keeps the session 
  short.attempts[0].edits[0].omitted.oldLength=1;short.attempts[0].edits[0].omitted.newLength=1;
  assert.throws(()=>verifyLedger(short),/Invalid ledger edits/);
 });
+
+test('infrastructure-only repair failures stay auditable without poisoning strategy learning',()=>{
+ const base=report();
+ base.outcome='NO_VERIFIED_REPAIR';
+ base.verified=null;
+ base.attempts[0].outcome='FAILED_TESTS';
+ const nonEvidence=[
+  [],
+  [{profile:'node-continuum',passed:false,tests:{total:0,executed:0,failed:0,skipped:0}}],
+  [{profile:'node-continuum',passed:false,tests:{total:7,executed:7,failed:0,skipped:7}}],
+  [{profile:'node-continuum',passed:false,tests:{total:7,executed:0,failed:1,skipped:0}}],
+  [{profile:'node-continuum',passed:true,tests:{total:7,executed:7,failed:1,skipped:0}}],
+  [{profile:'node-continuum',passed:false,tests:{total:2,executed:1,failed:2,skipped:0}}],
+  [{profile:'node-continuum',passed:false,tests:{total:3,executed:3,failed:1,skipped:3}}]
+ ];
+ for(const entries of nonEvidence){
+  const source=structuredClone(base);
+  source.attempts[0].tests=entries;
+  const saved=recordSession(emptyLedger(),source);
+  assert.equal(saved.attempts[0].outcome,'FAILED_TESTS','preserve audit label');
+  assert.deepEqual(saved.experiences,[],'no evidenced failing tests means no negative strategy reinforcement');
+ }
+ const actual=structuredClone(base);
+ actual.attempts[0].tests=[
+  {profile:'node-continuum',passed:false,tests:{total:5,executed:5,failed:1,skipped:0}}
+ ];
+ const accepted=recordSession(emptyLedger(),actual);
+ assert.equal(accepted.experiences.length,1);
+ assert.equal(accepted.experiences[0].failures,1);
+ const interruptedSyntax=structuredClone(base);
+ interruptedSyntax.attempts[0].outcome='FAILED_SYNTAX';
+ interruptedSyntax.attempts[0].syntaxReason='SYNTAX_CHECK_INTERRUPTED';
+ interruptedSyntax.attempts[0].tests=[];
+ assert.deepEqual(recordSession(emptyLedger(),interruptedSyntax).experiences,[]);
+ const brokenSyntax=structuredClone(interruptedSyntax);
+ brokenSyntax.attempts[0].syntaxReason='INVALID_JS_SYNTAX';
+ assert.equal(recordSession(emptyLedger(),brokenSyntax).experiences[0].failures,1);
+});
