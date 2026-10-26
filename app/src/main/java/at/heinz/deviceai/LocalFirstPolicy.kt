@@ -20,7 +20,7 @@ object LocalFirstPolicy {
      * the local model, whose conclusions never acquire memory/fact authority.
      */
     fun afterMemory(grounded: Boolean, localModelReady: Boolean, request: String = ""): AssistantRoute = when {
-        localModelReady && (!grounded || SYNTHESIS.containsMatchIn(request)) -> AssistantRoute.LOCAL_MODEL
+        localModelReady && (!grounded || explicitlyRequestsSynthesis(request)) -> AssistantRoute.LOCAL_MODEL
         else -> AssistantRoute.LOCAL_CORE
     }
 
@@ -32,6 +32,20 @@ object LocalFirstPolicy {
     // Nouns such as "Vergleich" in a direct definition are deliberately excluded.
     private val SYNTHESIS = Regex("(?iu)\\b(warum|wieso|weshalb|begründe|begründen|vergleiche|vergleichen|" +
         "analysiere|analysieren|plane|bewerte|bewerten|schlussfolgere)\\b|\\bleite\\b.{0,80}\\bab\\b")
+
+    // The user may ask to recall a word that coincides with a model command.
+    // Quoted data cannot authorize a different answer path. This is a narrow
+    // routing guard, not a semantic parser and not an authority escalation.
+    private fun explicitlyRequestsSynthesis(request: String): Boolean {
+        val outsideQuotes = QUOTED_DATA.replace(request, " ")
+        if (SINGLE_WORD_DEFINITION.matches(outsideQuotes.trim())) return false
+        return SYNTHESIS.containsMatchIn(outsideQuotes)
+    }
+
+    private val QUOTED_DATA = Regex("\"[^\"\\r\\n]*\"|„[^“\\r\\n]*“|'[^'\\r\\n]*'|`[^`\\r\\n]*`")
+    private val SINGLE_WORD_DEFINITION = Regex(
+        "(?iu)^was\\s+(?:bedeutet|heißt)\\s+(?:das\\s+)?(?:wort|begriff|ausdruck)\\s+[^?]{1,100}\\?\\s*$"
+    )
 
     fun modelUiState(runtimeState: LocalModelState, hasInstalledModel: Boolean, localMode: Boolean): LocalModelUiState =
         when (runtimeState) {
