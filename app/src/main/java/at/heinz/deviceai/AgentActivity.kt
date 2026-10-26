@@ -2587,9 +2587,19 @@ class AgentActivity : Activity() {
                             localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
                         val modelQuestion=LocalFirstPolicy.localModelQuestion(request,localPrompt)
                         if(grounded) {
-                            addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")
-                            runLocal(request,modelQuestion,
-                                at.heinz.deviceai.cognitive.LocalGroundedRecall(answer,evidence))
+                            val recall=at.heinz.deviceai.cognitive.LocalGroundedRecall
+                                .boundedOrNull(answer,evidence)
+                            if(recall==null) {
+                                // A confirmed retrieval must remain exact. If it cannot fit
+                                // the model's bounded evidence envelope, do not truncate it,
+                                // throw from the UI callback or synthesize on incomplete facts.
+                                addAssistantMessage(answer)
+                                addToolActivity(evidence.take(2_000)+
+                                    " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")
+                            } else {
+                                addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")
+                                runLocal(request,modelQuestion,recall)
+                            }
                         } else {
                             addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
                             if(modelQuestion==request)runLocal(request)
