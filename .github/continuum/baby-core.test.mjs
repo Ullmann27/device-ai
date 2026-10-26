@@ -152,3 +152,40 @@ test("memory retrieval reward depends on relevance quality rather than raw hit c
   assert.ok(evaluateMemoryRetrieval(good)>evaluateMemoryRetrieval(weak));
   assert.ok(evaluateMemoryRetrieval([])<5);
 });
+
+test("grounded duplicate cannot inherit confidence, identity or citations from provisional row",()=>{
+  const claim="Experience replay can reduce catastrophic forgetting during continual learning when older examples are rehearsed.";
+  const unverified={
+    id:"provisional-high",text:claim,confidence:.94,uncertainty:.06,
+    status:"PROVISIONAL",citationUrls:["https://unverified.example/claim"],
+    supportCount:1,sourceDiversity:0,contradictionIds:[],createdAt:100,lastValidatedAt:100
+  };
+  const supported={
+    id:"grounded-verified",text:"[1] "+claim,confidence:.73,uncertainty:.27,
+    status:"GROUNDED_OBSERVATION",citationUrls:["https://publisher.example/paper"],
+    supportCount:2,sourceDiversity:2,contradictionIds:[],createdAt:120,lastValidatedAt:120
+  };
+  for(const beliefs of [[unverified,supported],[supported,unverified]]){
+    const state=createBabyState(90);
+    state.beliefs=structuredClone(beliefs);
+    const snapshot=structuredClone(state);
+    const migrated=migrateBabyState(state,140);
+    assert.equal(migrated.beliefs.length,1);
+    const belief=migrated.beliefs[0];
+    assert.equal(belief.status,"GROUNDED_OBSERVATION");
+    assert.equal(belief.id,"grounded-verified");
+    assert.equal(belief.confidence,.73);
+    assert.deepEqual(belief.citationUrls,["https://publisher.example/paper"]);
+    assert.equal(belief.supportCount,2);
+    assert.equal(belief.sourceDiversity,2);
+    assert.equal(belief.createdAt,120);
+    assert.equal(belief.lastValidatedAt,120);
+    assert.deepEqual(state,snapshot,"migration must not change its input");
+  }
+
+  const onlyProvisional=createBabyState(90);
+  onlyProvisional.beliefs=[unverified,{...unverified,id:"provisional-second",confidence:.42}];
+  const deduplicated=migrateBabyState(onlyProvisional,140).beliefs;
+  assert.equal(deduplicated.length,1);
+  assert.equal(deduplicated[0].status,"PROVISIONAL");
+});
