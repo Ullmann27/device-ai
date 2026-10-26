@@ -72,3 +72,11 @@ node --test scripts/continuum-deepseek-tier-plan.test.mjs scripts/continuum-deep
 ```
 
 **59 PASS / 0 FAIL**, `docs/evidence/sol-deepseek-20261026/scoped-final-green.txt`; `git diff --check` PASS. Runtime Node `v24.19.0`, OpenSSL `3.5.7`. Full repository Node and Android/native suites are not claimed for this checkpoint; root owns integrated verification. Actual model inference, capacity/runtime performance, owner UI/device/training remain `NOT_RUN / BLOCKED`.
+
+## Owner stop / secured continuation
+
+Owner requested STOP at the reported 20% session limit. Development and tests ended; no further experiments/full suites were started. Final verified implementation commit: `a1d62830967b8a223eaa064d1b02fdd7eb2f8abb` (59 focused tests PASS immediately before commit; source unchanged afterward). This closure is documentation only. Draft PR: https://github.com/Ullmann27/device-ai/pull/154 . No unreviewed integration/merge.
+
+Integration order: `2aa878c16f0333d7531b6e2958c2b28247fe319c`, `f0d05435`, `7599d525`, original canonical reservation `216fa837ee8d40b8bb5c32b7ca374d21045a0553`, then `4a606b3c211a9b32584fc058c6fbb075840b9e77`, `a1d62830967b8a223eaa064d1b02fdd7eb2f8abb` and this closure. **Skip duplicate reservation cherry-pick `31331293`** when the original is already integrated. Root must source-review and run combined checks; this branch claims only its focused coverage.
+
+Process inspection found no running DeepSeek/TLS fixture/local-brain CLI process. No services, compute, paid API, device changes or owner-state mutation were performed. Branch remains accessible in the official private repository. Next AI should read this handoff and protocol, compare actual remote HEAD, review consent/operator-adapter requirements and measured compute blockers; do not infer real inference from the local protocol fixture.
