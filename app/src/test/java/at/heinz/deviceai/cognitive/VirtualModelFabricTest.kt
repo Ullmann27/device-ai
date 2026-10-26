@@ -4,13 +4,15 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.security.KeyPairGenerator
 import java.security.Signature
-import java.io.File
 
 class VirtualModelFabricTest {
     @Test fun signedRegistryExportsTheSharedNodeContractWithoutPrivateContext() {
         val fixture = VirtualFabricFixture()
         val exported = fixture.exporter.export(fixture.task, "a".repeat(64))
-        assertEquals(File("app/src/test/resources/compute-fabric-planning-v1.json").readText().trim(), exported)
+        val expected = javaClass.getResourceAsStream("/compute-fabric-planning-v1.json")
+            ?.bufferedReader(Charsets.UTF_8)?.use { it.readText().trim() }
+            ?: error("Missing compute-fabric-planning-v1.json on the test classpath")
+        assertEquals(expected, exported)
         assertFalse(exported.contains("owner:test"))
         assertFalse(exported.contains("bounded context"))
         assertFalse(exported.contains("signature"))
