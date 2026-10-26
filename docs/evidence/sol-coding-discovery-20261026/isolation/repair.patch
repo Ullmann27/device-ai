@@ -1,0 +1,7 @@
+diff --git a/lib/tags.mjs b/lib/tags.mjs
+index 4436db9..1a70f22 100644
+--- a/lib/tags.mjs
++++ b/lib/tags.mjs
+@@ -1 +1 @@
+-export function canonicalTags(items){return items.map(x=>x.trim()).filter(Boolean).sort();}
++export function canonicalTags(items){return [...new Set(items.map(x=>x.trim().toLowerCase()).filter(Boolean))].sort();}

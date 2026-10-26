@@ -1,0 +1,31 @@
+{
+  "schema": "continuum-coding-discovery-isolation-proof",
+  "version": 1,
+  "implementationCommit": "91dac7eb78426ab43a02aed52d202b701d8f28f6",
+  "fixtureCommit": "be78953197ec5af21db3ef472389105edb16f983",
+  "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+  "actualModelUsed": false,
+  "injectedCandidate": true,
+  "status": "PATCH_PENDING_OWNER_REVIEW",
+  "providerCalls": 1,
+  "baselineFailed": 2,
+  "candidateExecuted": 7,
+  "independentExecuted": 7,
+  "sandboxAssertions": [
+    "nonroot uid1000",
+    "zero effective capabilities",
+    "no-new-privileges",
+    "read-only source",
+    "host private state unavailable",
+    "network loopback only"
+  ],
+  "sameTaskReplay": true,
+  "canonicalBacklogState": "DONE",
+  "ownerSourceUnchanged": true,
+  "patchSha256": "fece49426c98480071cbafb4b89503666aa4e4c1fdbcd4102e0eb3a985f94f3a",
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralGeneration": "NOT_RUN",
+  "apkBuild": "NOT_RUN",
+  "installation": "NOT_RUN"
+}

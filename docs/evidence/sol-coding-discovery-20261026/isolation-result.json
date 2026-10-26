@@ -1,0 +1,100 @@
+{
+  "schema": "continuum-coding-task-result",
+  "version": 1,
+  "id": "coding-isolation-proof-20261026",
+  "ccc1TaskId": "t-45b9fb68ed34b656",
+  "taskFingerprint": "44b951b4fd77ffd5362db863644b0ef2639fb9635f61249a9a13761ec2681269",
+  "sourceCommit": "be78953197ec5af21db3ef472389105edb16f983",
+  "chain": "node",
+  "status": "PATCH_PENDING_OWNER_REVIEW",
+  "receiptJobs": [
+    "bd9fc558-df86-49ae-8382-361ef77abe44"
+  ],
+  "receipts": [
+    {
+      "schema": "continuum-mobile-coding-receipt",
+      "version": 1,
+      "job": "bd9fc558-df86-49ae-8382-361ef77abe44",
+      "operation": "code-repair",
+      "taskId": "mob-3bfc9e4cf59f0ea3",
+      "commit": "be78953197ec5af21db3ef472389105edb16f983",
+      "toolchain": {
+        "node": "v24.19.0",
+        "platform": "linux",
+        "arch": "x64",
+        "git": "git version 2.52.0"
+      },
+      "order": {
+        "chain": "node"
+      },
+      "status": "REPAIR_PATCH_VERIFIED_PENDING_REVIEW",
+      "teamleaderOutcome": "VERIFIED_PATCH_PENDING_REVIEW",
+      "patch": {
+        "sha256": "fece49426c98480071cbafb4b89503666aa4e4c1fdbcd4102e0eb3a985f94f3a",
+        "path": "/workspace/continuum-coding-proof-20261026/state/teamleader/reports/owner-repair/mob-3bfc9e4cf59f0ea3-be78953197ec-1792982462786-4cdff486/repair.patch",
+        "bytes": 335
+      },
+      "evidence": {
+        "verificationSha256": "55f00eb1766470d5b184ab6349d5ff405e47c39120d32743355236e47a9449b6",
+        "baselineFailed": 2,
+        "baselineExecuted": 7,
+        "candidateExecuted": 7,
+        "independentExecuted": 7,
+        "evidenceSufficient": true
+      },
+      "commands": [
+        {
+          "phase": "baseline",
+          "exitCode": 1,
+          "passed": false,
+          "executed": 7,
+          "failed": 2,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "candidate",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 7,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        },
+        {
+          "phase": "independent",
+          "exitCode": 0,
+          "passed": true,
+          "executed": 7,
+          "failed": 0,
+          "timedOut": false,
+          "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+        }
+      ],
+      "failure": null,
+      "backlog": {
+        "state": "DONE",
+        "attempts": 1,
+        "maxAttempts": 3,
+        "error": null
+      },
+      "approvedForMerge": false,
+      "apk": null,
+      "installed": false,
+      "deviceVerified": false,
+      "createdAt": "2026-10-26T02:41:02.744Z",
+      "repair": {
+        "outcome": "VERIFIED",
+        "strategy": "LOCAL_SCOPED_PATCH",
+        "files": [
+          "lib/tags.mjs"
+        ],
+        "diagnostics": 2,
+        "attempts": 1
+      }
+    }
+  ],
+  "approvedForMerge": false,
+  "deviceVerified": false,
+  "neuralTraining": false
+}

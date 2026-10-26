@@ -1,0 +1,66 @@
+{
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "baseline": [
+    {
+      "profile": "node-continuum",
+      "passed": false,
+      "tests": {
+        "total": 7,
+        "failed": 2,
+        "skipped": 0,
+        "placeholders": 0,
+        "executed": 7,
+        "passed": 5
+      },
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000,
+        "sourceSha256": "cb97876d90ac8d80a108ebffe555611d5a0034e80166921d9e6141f2257e4ac5",
+        "profile": "node-continuum",
+        "untrustedReports": true
+      }
+    }
+  ],
+  "independent": {
+    "passed": true,
+    "profiles": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "executed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:635ac4bd326bd4059588042faeae80654dbe1f950894f3ce4005e4380d3e3b4b",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "9e3956fceac8cd98004203687ade832739f408032fb7110495285da0cf4ef065",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        }
+      }
+    ],
+    "evidenceSufficient": true,
+    "reasons": []
+  }
+}
