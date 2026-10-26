@@ -71,3 +71,34 @@ test('ranking cannot mutate research model parameters during a diagnosis',()=>{
  model.rank=(...params)=>{model.policyBias[0]+=0.1;return original(...params);};
  assert.throws(()=>diagnoseCcc1BottleneckCase(args(model)),/MODEL_MUTATED_DURING_DIAGNOSIS/);
 });
+
+
+test('pagination case: A reference, B forced operator and C top-1 produce same source-bound hypothesis',()=>{
+ const buggy='function paginateCatalog(products, pageNo, pageSize) { const start = pageNo * pageSize; return products.slice(start, start + pageSize); }';
+ const corrected='function paginateCatalog(products, pageNo, pageSize) { const start = (pageNo - 1) * pageSize; return products.slice(start, start + pageSize); }';
+ const op=induceStructuredStatementOperator('pagination',buggy,corrected);
+ const target='function selectTelemetryWindow(packets, batchNo, width) { const start = batchNo * width; return packets.slice(start, start + width); }';
+ const reference='function selectTelemetryWindow(packets, batchNo, width) { const start = (batchNo - 1) * width; return packets.slice(start, start + width); }';
+ const paginationTask=validateCodingTask({
+  schema:'continuum-coding-task',version:1,id:'diagnosis-pagination-01',
+  sourceCommit:'a'.repeat(40),kind:'BUGFIX',chain:'node',
+  goal:'Fix the zero offset for one-indexed pagination without changing test sources.',
+  acceptance:['All existing pagination tests must pass after independently approved repair.'],
+  allowedPaths:['src/pagination.mjs'],limits:{maxModelCalls:1,maxContextChars:2048}
+ });
+ const model=new CoinWmV3ShadowModel(1);
+ const r=diagnoseCcc1BottleneckCase({
+  experimentId:'DIAG-001',caseId:'PAGINATION-001',
+  typedTask:paginationTask,source:target,file:'src/pagination.mjs',
+  referenceCode:reference,operators:[op],referenceOperatorIndex:0,model,
+  state16:new Float64Array(16),
+  modelCheckpointSha256:'b'.repeat(64),testManifestSha256:'c'.repeat(64)
+ });
+ assert.equal(r.arms.length,3);
+ for(const a of r.arms){
+  assert.equal(a.candidate?.code,reference);
+  assert.equal(a.primaryStatus,'NOT_RUN');
+  assert.equal(a.verifiedSuccess,false);
+ }
+ assert.equal(r.arms[2].selectedOperatorId,'STRUCT_OP_pagination');
+});
