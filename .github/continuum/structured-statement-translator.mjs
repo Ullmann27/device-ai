@@ -3,6 +3,8 @@
  * Unsupported syntax, nonunique anchors and partial edits fail closed.
  */
 import vm from 'node:vm';
+const OPERATORS=new WeakSet();
+export function isStructuredStatementOperator(value){return value!==null&&typeof value==='object'&&OPERATORS.has(value);}
 const ID=/^[A-Za-z_$][A-Za-z0-9_$]*$/;
 const TOK=/\s+|\d+(?:\.\d+)?|[A-Za-z_$][A-Za-z0-9_$]*|===|!==|=>|<=|>=|\.\.\.|&&|\|\||[+\-*/%<>!&|^~?:=,.;()[\]{}]/gy;
 const RESERVED=new Set(['function','const','let','var','return','if','else','for','while','Math','Number','Array','Object','String','Boolean','true','false','null','undefined','sort','slice','min','max']);
@@ -111,7 +113,7 @@ export function induceStructuredStatementOperator(taskId,buggyCode,fixedCode){
   }
   if(plans.length!==1)throw Error('AMBIGUOUS_EDIT');
   const plan=plans[0];
-  return Object.freeze({id:'STRUCT_OP_'+taskId,kind:plan.kind,applyToCode(source){
+  const operator=Object.freeze({id:'STRUCT_OP_'+taskId,kind:plan.kind,applyToCode(source){
     try{
       if(!syntax(source))throw Error('SOURCE_SYNTAX');
       const target=parse(source),matches=target.statements.filter(s=>s.key===plan.anchor);
@@ -126,4 +128,6 @@ export function induceStructuredStatementOperator(taskId,buggyCode,fixedCode){
       return Object.freeze({status:'CANDIDATE_UNVERIFIED',code:candidate});
     }catch{return Object.freeze({status:'REJECTED',code:null});}
   }});
+  OPERATORS.add(operator);
+  return operator;
 }
