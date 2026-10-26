@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
 import {validateCcc1CandidateBinding,validateCcc1ResearchRequest,
- runIndependentCcc1PatchVerification,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
+ runIndependentCcc1PatchVerification,verifyCcc1OwnerGrant,CCC1_RESEARCH_OUTCOMES} from './ccc1-independent-verifier.mjs';
 
 const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 const original='export const page = (number, size) => number * size;\n';
@@ -74,4 +77,27 @@ test('a fake executor or a caller-supplied sandbox cannot issue a dual-run claim
  }),/BRANDED_OS_EXECUTOR_REQUIRED/);
  assert.equal(launched,false);
  assert.equal(CCC1_RESEARCH_OUTCOMES.PASS,'DUAL_WORKTREE_CHECKS_PASS_REVIEW_REQUIRED');
+});
+
+test('existing CCC1 owner grant must be valid, canonical and fully prepared',()=>{
+ const base=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-ccc1-grant-'));
+ try{
+  const projectRoot=path.join(base,'repo'),stateDir=path.join(base,'state');
+  fs.mkdirSync(projectRoot);fs.mkdirSync(path.join(stateDir,'coding-grants'),{recursive:true});
+  const typedTask=task(),fingerprint=taskFingerprint(typedTask);
+  const file=path.join(stateDir,'coding-grants',typedTask.id+'.json');
+  const original={task:typedTask,fingerprint,ccc1TaskId:'t-'+'b'.repeat(16)};
+  fs.writeFileSync(file,JSON.stringify(original));
+  const grant=verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask});
+  assert.equal(grant.fingerprint,fingerprint);
+  assert.equal(grant.ccc1TaskId,original.ccc1TaskId);
+  assert.ok(Object.isFrozen(grant));
+  fs.writeFileSync(file,JSON.stringify({...original,ccc1TaskId:null}));
+  assert.throws(()=>verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask}),/OWNER_GRANT_MISMATCH/);
+  fs.writeFileSync(file,JSON.stringify({...original,fingerprint:'0'.repeat(64)}));
+  assert.throws(()=>verifyCcc1OwnerGrant({projectRoot,stateDir,typedTask}),/OWNER_GRANT_MISMATCH/);
+  fs.writeFileSync(file,JSON.stringify(original));
+  assert.throws(()=>verifyCcc1OwnerGrant({projectRoot,stateDir:projectRoot,typedTask}),
+    /CCC1_STATE_INSIDE_SOURCE/);
+ }finally{fs.rmSync(base,{recursive:true,force:true});}
 });
