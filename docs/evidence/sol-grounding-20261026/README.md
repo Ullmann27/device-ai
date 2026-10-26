@@ -18,6 +18,8 @@ Reproduce host Kotlin using the actual PR150 Android-compiled class dependencies
 bash docs/evidence/sol-grounding-20261026/run-kotlin-focused.sh "$PWD" /tmp/deviceai-grounding-kotlin /workspace/device-ai/app/build/tmp/kotlin-classes/debug
 ```
 
+`kotlin-green.txt`:42/42 PASS across5 classes, exit0.
+
 The script compiles current `ContinuumMemoryDialogue.kt` and five real test classes at JVM17 with module identity `DeviceAI_app_debug`, then executes JUnit. The base classes must be available locally; otherwise this standalone check is UNAVAILABLE. Root integration owns the new full Gradle build/check.
 
 Scope limits: exact original-text ID presence is mandatory for every explicit queried ID. A separate grammar recognizes direct `Wo wohnt/wohnen/lebt/leben/arbeitet/arbeiten …?` questions and bounded anchored declarations. Requested subjects must occupy the declaration's subject role under the matching residence/work relation; negated location and work-role-only declarations cannot prove a place. Existing location aliases/inversion preserve prior measured positives. Other query forms retain previous policy; this is not general semantics, free-form proof verification, time-aware consistency or multi-record inference. Source-only lexical anchoring still applies after eligibility. No corpus IDF, weights, facts, ledger schema, revocation, CRE1 pool identity or model routing changed.
