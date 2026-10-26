@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.learning.NeuralDemoSandbox
 import at.heinz.deviceai.learning.NeuralCommand
 import at.heinz.deviceai.learning.NeuralCommandKind
 import at.heinz.deviceai.learning.NeuralCommandParser
@@ -2757,9 +2758,9 @@ class AgentActivity : Activity() {
             NeuralCommandKind.RESET, NeuralCommandKind.PRACTICE)
         if (!changes) { runNeuralCommand(command); return }
         val description = when (command.kind) {
-            NeuralCommandKind.DEMO -> "Trainiert ein kleines Netz auf 16 künstlichen Gruß-/Frage-Beispielen, prüft 8 getrennte Testsätze. " +
-                "Maximal 4000 Schritte und 2 Sekunden Training. Keine privaten Chatverläufe, keine Gerätewerkzeuge. " +
-                "Bestehende neuronale Beispiele werden nicht überschrieben."
+            NeuralCommandKind.DEMO -> "Startet ein vollständig getrenntes, temporäres Netz mit 16 künstlichen Gruß-/Frage-Beispielen und 8 Testsätzen. " +
+                "Maximal 4000 Trainingsschritte. Es werden keine privaten Chatverläufe, Gerätewerkzeuge oder vorhandenen Gewichte verwendet. " +
+                "Das Demo-Netz wird anschließend verworfen; dein bisheriges Training bleibt unverändert."
             NeuralCommandKind.PRACTICE -> "Übt mit deinen bereits bestätigten Sprachbeispielen in einem " +
                 "begrenzten Durchgang mit maximal 200 neuronalen Aktualisierungen. " +
                 "Unabhängige Prüfaufgaben entscheiden, ob die neuen Gewichte übernommen werden. " +
@@ -2791,7 +2792,8 @@ class AgentActivity : Activity() {
                 }
                 // the stored state this run starts from; saving later is a compare-and-swap against it
                 val original = bootstrapMemory.neuralSnapshot()
-                val lab = if (command.kind == NeuralCommandKind.RESET) NeuralDialogue() else
+                val lab = if (command.kind == NeuralCommandKind.RESET ||
+                    command.kind == NeuralCommandKind.DEMO) NeuralDialogue() else
                     original?.let(NeuralDialogue::restore) ?: NeuralDialogue()
                 var save = false
                 var measurement: String? = null
@@ -2900,24 +2902,19 @@ class AgentActivity : Activity() {
                         measurement!!
                     }
                     NeuralCommandKind.DEMO -> {
-                        if (lab.lessonCount() > 0) {
-                            // Existing confirmed lessons must never be reset just
-                            // to run the old synthetic demonstration.
-                            "NEURON · DEMO nicht gestartet: Bereits trainierte Beispiele sind vorhanden. " +
-                                "Diese Sicherheitsprüfung schützt deine gespeicherten Gewichte. " +
-                                "Für einen Vergleich ohne Überschreiben nutze „Neuron Sprachlabor“ " +
-                                "oder „Neuron Härtetest“. Kein Experiment wurde zurückgesetzt."
+                        // Synthetic demonstration always runs in disposable memory.
+                        // No owner snapshot is restored into the demo and save remains false.
+                        val measured = NeuralDemoSandbox.run(cancellation::get, progressCallback)
+                        if (measured.training.stoppedEarly || cancellation.get()) {
+                            "NEURON · DEMO abgebrochen. Kein Trainingsstand wurde verändert."
                         } else {
-                            val measured = lab.trainDemo(true, cancellation::get, progressCallback)
-                            save = !measured.training.stoppedEarly
-                            measurement = if (!save) "Training abgebrochen; Gewichte nicht übernommen." else
-                                "Neuronales Gesprächsexperiment (synthetischer Test):\n" +
+                            "NEURON · ISOLIERTE DEMO (keine Gewichte gespeichert):\n" +
                                 "Trainingsverlust: %.5f → %.5f\n".format(Locale.ROOT, measured.before.loss, measured.after.loss) +
                                 "Getrennte Testsätze: ${measured.holdoutBefore.correct}/${measured.holdout.total} → ${measured.holdout.correct}/${measured.holdout.total}.\n" +
                                 "Unbekannter Wortschatz: ${measured.unfamiliarBefore.correct}/${measured.unfamiliarBefore.total} → ${measured.unfamiliarAfter.correct}/${measured.unfamiliarAfter.total}.\n" +
-                                "Gewichtsaktualisierungen: ${measured.training.steps}; Training: ${measured.training.elapsedNanos / 1_000_000} ms.\n" +
-                                "Kein Nachweis allgemeiner Sprachintelligenz. Probiere: Neuron: Hallo"
-                            measurement!!
+                                "Gewichtsaktualisierungen nur im temporären Demo-Netz: ${measured.training.steps}.\n" +
+                                "Deine zuvor trainierten Gewichte und bestätigten Beispiele wurden nicht geändert. " +
+                                "Dies ist ein synthetischer Klassifikationstest, kein Nachweis allgemeiner Sprachintelligenz."
                         }
                     }
                 }
