@@ -73,12 +73,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-second (USER_FACT) (7.371294ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -96,12 +96,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-second (SOURCE_TEXT) (0.974675ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -121,12 +121,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-short (USER_FACT) (0.416971ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -146,12 +146,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-short (SOURCE_TEXT) (0.345693ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -171,12 +171,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-third (USER_FACT) (0.5ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -196,12 +196,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility multi-id-wrong-third (SOURCE_TEXT) (0.578296ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -221,12 +221,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility unknown-name (USER_FACT) (0.350924ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -246,12 +246,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility wrong-relation (USER_FACT) (0.3445ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -271,12 +271,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility wrong-relation-reverse (USER_FACT) (0.386859ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -296,12 +296,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility wrong-subject-as-object (USER_FACT) (0.319706ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -321,12 +321,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility wrong-subject-as-object (SOURCE_TEXT) (0.781183ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -346,12 +346,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility plural-name-missing (USER_FACT) (0.422095ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -371,12 +371,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility negated-location (USER_FACT) (0.413971ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -396,12 +396,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility negated-location (SOURCE_TEXT) (0.221095ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -421,12 +421,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility work-role-is-not-place (USER_FACT) (0.175104ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -446,12 +446,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility work-role-is-not-place (SOURCE_TEXT) (0.219572ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -471,12 +471,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility incidental-id (USER_FACT) (0.166501ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)
@@ -496,12 +496,12 @@ test at .github/continuum/retrieval-location-grounding.test.mjs:11:3
 ✖ location eligibility incidental-id (SOURCE_TEXT) (0.167321ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'evidence'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (file:///workspace/device-ai-memory-20261026/.github/continuum/retrieval-location-grounding.test.mjs:14:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1382:25)

@@ -11,4 +11,3 @@ java.lang.AssertionError: unicode-space-subject source=false expected:<[]> but w
 
 FAILURES!!!
 Tests run: 2,  Failures: 1
-
