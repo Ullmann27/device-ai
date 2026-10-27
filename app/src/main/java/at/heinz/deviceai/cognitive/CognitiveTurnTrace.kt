@@ -11,7 +11,7 @@ enum class TraceStage {
     MODEL_NOT_READY, GATED_FALLBACK, LOCAL_MODEL_SYNTHESIS, TOOL_PROPOSED, TOOL_EXECUTED,
     CORRECTION_SCOPE, CLARIFICATION, TEST_DOUBLE_CALL
 }
-enum class TraceOutcome { MEMORY_EXACT, MODEL_INTERPRETATION, ACTION_VERIFIED, BLOCKED, FAILED, CANCELLED, CLARIFY }
+enum class TraceOutcome { MEMORY_EXACT, MODEL_INTERPRETATION, ACTION_VERIFIED, BLOCKED, FAILED, CANCELLED, CLARIFY, WORKING_CONTEXT }
 enum class TraceFeedback { NONE, CONFIRMED, CORRECTED, REVOKED }
 data class CognitiveTraceEvent(val stage: TraceStage, val referenceHash: String? = null,
     val toolStatus: ToolExecutionStatus? = null) {

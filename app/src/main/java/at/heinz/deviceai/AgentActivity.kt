@@ -2373,6 +2373,28 @@ class AgentActivity : Activity() {
             return
         }
 
+        // Explicit discourse control is ephemeral; it neither writes owner facts nor grants tools.
+        localConversationContext.inspectRequest(sessionId,request)?.let { control ->
+            input.text.clear();addUserMessage(request)
+            val trace=CognitiveTurnTrace(sessionId)
+            val answer=when(control.kind) {
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.SCOPE_UPDATED ->
+                    "Ich beziehe mich jetzt auf „${control.focus}“. Das ist vorläufiger Gesprächskontext, keine neue gespeicherte Tatsache."
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.CLARIFY_SCOPE ->
+                    "Welches konkrete Thema meinst du? Ich habe den bisherigen Bezug verworfen, statt ihn zu erraten."
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.CONTEXT_REPORT -> control.focus?.let {
+                    "Du hast den Gesprächsfokus auf „$it“ korrigiert. Das habe ich als vorläufigen Kontext verstanden; dauerhaftes Wissen wurde dadurch nicht geändert."
+                } ?: "Mir fehlt ein eindeutiger aktueller Bezug. Welches konkrete Thema meinst du?"
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.MEMORY_LITERAL_REQUIRED ->
+                    "Welchen genauen Satz möchtest du speichern? Bitte bestätige ihn ausdrücklich mit „Merke dir: …“. Ich übernehme die unklare Entscheidung nicht automatisch."
+            }
+            val clarify=control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.CLARIFY_SCOPE ||
+                control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.MEMORY_LITERAL_REQUIRED || control.focus==null
+            trace.event(if(clarify)TraceStage.CLARIFICATION else TraceStage.CORRECTION_SCOPE)
+            publishCognitiveTrace(trace,if(clarify)TraceOutcome.CLARIFY else TraceOutcome.WORKING_CONTEXT)
+            addAssistantMessage(answer,preserveLocalContext=true)
+            return
+        }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {

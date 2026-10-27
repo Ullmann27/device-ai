@@ -1,0 +1,16 @@
+case=0	expected=SCOPE_UPDATED	baseline=PASS_THROUGH	candidate=SCOPE_UPDATED
+case=1	expected=SCOPE_UPDATED	baseline=PASS_THROUGH	candidate=SCOPE_UPDATED
+case=2	expected=MEMORY_LITERAL_REQUIRED	baseline=PASS_THROUGH	candidate=MEMORY_LITERAL_REQUIRED
+case=3	expected=CONTEXT_REPORT	baseline=PASS_THROUGH	candidate=CONTEXT_REPORT
+case=4	expected=SCOPE_UPDATED	baseline=PASS_THROUGH	candidate=SCOPE_UPDATED
+case=5	expected=CLARIFY_SCOPE	baseline=PASS_THROUGH	candidate=CLARIFY_SCOPE
+case=6	expected=CLARIFY_SCOPE	baseline=PASS_THROUGH	candidate=CLARIFY_SCOPE
+case=7	expected=PASS_THROUGH	baseline=PASS_THROUGH	candidate=PASS_THROUGH
+total=8
+baselineCorrect=1
+candidateCorrect=8
+falseScope=0
+llmInvocations=0
+ownerFactsWritten=0
+weightsUpdated=false
+classification=OFFLINE_DIRECTIVE_HANDLING_NOT_NEURAL_GENERALIZATION

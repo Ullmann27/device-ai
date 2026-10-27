@@ -12,7 +12,7 @@ cp=$(find "$deps" -maxdepth 1 -name '*.jar' -type f -printf '%p:')
 sources=()
 for name in ComputeFabric ContinuumState ContinuumSeed ContinuumSeedStore ProofCarryingMemory MemoryEcology SelfModel \
     CognitiveGenome CognitiveCore IdentityState BehaviorProfile BehaviorUpdate IdentityUpdateValidator IdentityDrift \
-    CognitivePersistence ContinuumRuntimeStore Deliberation BoundedAgent AgentCheckpointStore HybridMemoryRetriever ExperienceCompiler ReadOnlyToolPlan CognitiveTurnTrace; do
+    CognitivePersistence ContinuumRuntimeStore Deliberation BoundedAgent AgentCheckpointStore HybridMemoryRetriever ExperienceCompiler ReadOnlyToolPlan CognitiveTurnTrace LocalConversationContext; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/$name.kt")
 done
 for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter BootstrapBrain BootstrapTraining DeviceStorageProbe ShellExecution BoundedShellProcess; do
@@ -22,7 +22,7 @@ for name in LearningSnapshot TinyNeuralNetwork NeuralDialogue StructuredKnowledg
     sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt")
 done
 tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegressionTest ReadOnlyToolPlanTest
-    AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest CognitiveTurnTraceTest)
+    AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest CognitiveTurnTraceTest ConversationControlTest)
 for name in "${tests[@]}"; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/$name.kt")
 done
