@@ -1,0 +1,22 @@
+{
+  "selectedBeforeFinal": "FROZEN_INTENT_SWB2",
+  "baseline": {
+    "intent": {
+      "loss": 0.37125599985229785,
+      "correct": 17,
+      "total": 20
+    },
+    "semantic": {
+      "loss": 0.6945970798417105,
+      "correct": 26,
+      "total": 60
+    },
+    "falseSimilar": 28,
+    "missedSimilar": 6,
+    "dialogueCorrect": 3
+  },
+  "allThreeSeedsStrictlyImproveSemanticsWithoutIntentLoss": false,
+  "decision": "REJECT_NO_STABLE_FINAL_GAIN",
+  "productionPromotion": false,
+  "newAcceptedProductiveRounds": 0
+}

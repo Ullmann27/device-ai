@@ -32,6 +32,7 @@ function transaction(action,file,payload){
   return {recovered:Boolean(old)};
  }
  if(!old||old.token!==payload.token)throw Error('WORKER_LEASE_LOST');
+ if(action==='check')return {};
  if(action==='child')fs.writeFileSync(file,JSON.stringify({...old,child:payload.child}),{mode:0o600});
  else if(action==='release')fs.unlinkSync(file);
  else throw Error('INVALID_LEASE_ACTION');
@@ -46,7 +47,7 @@ export function workerLease(gitDirectory){
   if(r.status!==0)throw Error('WORKER_LOCK_REFUSED: '+(r.stderr||r.stdout).trim().slice(-200));
   return JSON.parse(r.stdout);
  };
- const info=act('acquire');return {recovered:info.recovered,child:pid=>act('child',{child:processIdentity(pid)}),release:()=>act('release')};
+ const info=act('acquire');return {recovered:info.recovered,check:()=>act('check'),child:pid=>act('child',{child:processIdentity(pid)}),release:()=>act('release')};
 }
 if(process.argv[1]&&resolve(process.argv[1])===SELF){
  try{const [action,file,json]=process.argv.slice(2);console.log(JSON.stringify(transaction(action,file,JSON.parse(json))));}
