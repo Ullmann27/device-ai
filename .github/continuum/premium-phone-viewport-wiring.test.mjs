@@ -32,6 +32,9 @@ test('home dashboard remains in a scrolling viewport, not hidden behind the navi
 
 test('keyboard hides phone navigation and frees the same reserved space', () => {
   assert.match(buildUi, /val showNavigation = ContinuumWorkAreaNavigationSpec\.showBottomBar/);
-  assert.match(buildUi, /val requiredMargin = if \(showNavigation\) phoneNavHeight else 0/);
-  assert.match(buildUi, /phonePane\.layoutParams = paneParams/);
+  // Fold portrait and the phone share the same keyboard-safe margin policy,
+  // retaining phoneNavHeight for phones and portraitNavHeight for the Fold dock.
+  assert.match(buildUi, /val navigationPane = phonePane \\?: if \\(portraitFold\\) widePane else null/);
+  assert.match(buildUi, /if \\(portraitFold\\) portraitNavHeight else phoneNavHeight/);
+  assert.match(buildUi, /navigationPane\\.layoutParams = paneParams/);
 });
