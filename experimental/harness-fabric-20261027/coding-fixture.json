@@ -1,0 +1,8 @@
+{
+  "schema": "continuum-frozen-coding-fixture-v1",
+  "seed": 20261027,
+  "source": "export function applyAdjustment(balance, adjustment) {\n  if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {\n    throw new RangeError('safe integer inputs required');\n  }\n  return balance - adjustment;\n}\n",
+  "regression": "import test from 'node:test';import assert from 'node:assert/strict';import {applyAdjustment} from '../../lib/ledger.mjs';\nfor(const [a,b,gold] of [[10,3,13],[10,-3,7],[0,7,7],[-8,-2,-10],[2,0,2]])test('signed '+a+','+b,()=>assert.equal(applyAdjustment(a,b),gold));\nfor(const [a,b] of [[1.2,1],[1,NaN],[Infinity,1]])test('invalid '+a+','+b,()=>assert.throws(()=>applyAdjustment(a,b),RangeError));\n",
+  "independentOracle": "import test from 'node:test';import assert from 'node:assert/strict';import {applyAdjustment} from '../../lib/ledger.mjs';\nfor(const [a,b,gold] of [[354, 952, 1306], [821, -18, 803], [-178, -965, -1143], [293, -44, 249], [-952, -995, -1947], [807, -193, 614], [617, 932, 1549], [278, 516, 794], [818, 5, 823], [-314, -404, -718], [387, -356, 31], [-541, -154, -695], [-920, -177, -1097], [-335, 988, 653], [813, -904, -91], [-366, 75, -291]])test('oracle '+a+','+b,()=>assert.equal(applyAdjustment(a,b),gold));\n",
+  "dataNature": "synthetic developer-authored; frozen before inference; not proof of model pretraining independence"
+}
