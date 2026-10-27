@@ -78,8 +78,11 @@ internal object ContinuumCdx1ChatShadow {
         val before = runCatching { currentStatus() }.getOrNull()
             ?: return Observation(Observation.State.NO_CURRENT_CHECKPOINT)
         if (!before.available || before.updates <= 0 || before.sha256 == null ||
-            before.conditioningState != "PINNED_CURRENT")
+            before.conditioningState !in setOf("PINNED_CURRENT", "PINNED_PREVIOUS"))
             return Observation(Observation.State.NO_CURRENT_CHECKPOINT)
+        // PINNED_PREVIOUS is allowed in shadow-only research: the existing
+        // decoder restores its saved, matching encoder snapshot. This never
+        // promotes stale weights or feeds the result into production chat.
         val result = runCatching { infer(hit.text, question) }.getOrNull()
         val after = runCatching { currentStatus() }.getOrNull()
         if (after == null || !after.available || after.sha256 != before.sha256 ||
