@@ -235,3 +235,49 @@ class PortraitSystemStatus(textScale: Float = 1f) : ContinuumElement(textScale) 
         ", CPU "+ContinuumDashboardState.percent(s.system.appCpuPercent)+
         ", Netzwerk "+s.system.networkLabel
 }
+
+/**
+ * Fold portrait places the existing real system measurements beneath the six
+ * chart cards rather than compressing the orb and six buttons with a side tower.
+ * The CPU donut and activity wave remain live, not synthesized UI data.
+ */
+class PortraitSystemStatusStrip(textScale: Float = 1f) : ContinuumElement(textScale) {
+    override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
+        ContinuumSurfaces.glassCard(p, 0f, 0f, w, h, 15f)
+        p.drawText("SYSTEMSTATUS", 15f, 25f, t(700, 13f), Fill.Solid(ContinuumTheme.TEXT))
+        val online = s.system.networkOnline
+        val networkPill = when (online) { true -> "Online"; false -> "Offline"; null -> UNKNOWN }
+        ContinuumSurfaces.pill(p, w - 16f, 8f, 17f, networkPill, t(500, 9f),
+            when (online) { true -> ContinuumTheme.GREEN; false -> ContinuumTheme.RED; null -> ContinuumTheme.AMBER },
+            alignRight = true)
+        val cpuX = 69f
+        Donut.draw(p, cpuX, 82f, 36f, 8f, s.system.appCpuPercent, emptyList())
+        p.drawText(ContinuumDashboardState.percent(s.system.appCpuPercent), cpuX, 85f,
+            t(650, 15f), Fill.Solid(ContinuumTheme.TEXT), TextAlign.CENTER)
+        p.drawText("App-CPU", cpuX, 101f, t(400, 8f),
+            Fill.Solid(ContinuumTheme.TEXT_SECONDARY), TextAlign.CENTER)
+        p.drawText("AKTIVITÄT", 143f, 56f, t(650, 9f), Fill.Solid(ContinuumTheme.CYAN_SOFT))
+        WaveChart.draw(p, 142f, 68f, w * .64f, h - 16f, s.system.activity)
+        val data = listOf(
+            "Netzwerk" to s.system.networkLabel,
+            "Quellen" to (s.storage.activeSources?.toString() ?: UNKNOWN),
+            "Kontext" to (s.model.context ?: UNKNOWN),
+            "RAM" to ContinuumDashboardState.percent(s.system.memoryPercent)
+        )
+        val x = w * .68f
+        val valueWidth = w * .14f
+        for ((index, item) in data.withIndex()) {
+            val y = 49f + index * 23f
+            p.drawText(item.first, x, y, t(450, 9f),
+                Fill.Solid(ContinuumTheme.TEXT_SECONDARY))
+            val style = fittedTitle(p, item.second, 550, 9f, valueWidth)
+            p.drawText(ContinuumSurfaces.fit(p, item.second, style, valueWidth), w - 15f, y,
+                style, Fill.Solid(ContinuumTheme.CYAN_SOFT), TextAlign.RIGHT)
+        }
+    }
+
+    override fun describe(s: ContinuumDashboardState) =
+        "Systemstatus: " + s.system.overallSpoken +
+            ", CPU " + ContinuumDashboardState.percent(s.system.appCpuPercent) +
+            ", Netzwerk " + s.system.networkLabel
+}
