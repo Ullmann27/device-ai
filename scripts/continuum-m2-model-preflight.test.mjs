@@ -102,6 +102,21 @@ test('production coding CLI refuses silent unspecified-model fallback even with 
     input:JSON.stringify({userPrompt:'Fix',allowedTrackedPaths:['lib/foo.mjs'],timeoutMs:1500}),
     encoding:'utf8',timeout:10000,env});
   assert.equal(child.status,1,child.stderr);
-  assert.match(child.stderr,/ALTERNATE_MODEL_CONSENT_REQUIRED/);
+  assert.match(child.stderr,/MODEL_ID_UNSPECIFIED/);
+  assert.equal(child.stdout,'');
+});
+
+test('harness coding CLI cannot bypass the selected Gemma format gate',()=>{
+  const harness=resolve(dirname(fileURLToPath(import.meta.url)),'continuum-harness-coding-cli.mjs');
+  const env={...process.env,
+    CONTINUUM_LOCAL_BRAIN_MODEL:OWNER_GEMMA_ID,
+    CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',
+    CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'a'.repeat(64),
+    CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:OWNER_ALTERNATE_CONSENT
+  };
+  const child=spawnSync(process.execPath,[harness],{input:'{}',encoding:'utf8',
+    timeout:10000,env});
+  assert.equal(child.status,1,child.stderr);
+  assert.match(child.stderr,/LOCAL_MODEL_UNAVAILABLE_OR_INVALID/);
   assert.equal(child.stdout,'');
 });
