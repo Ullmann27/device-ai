@@ -27,3 +27,11 @@ test('structured proposal is data only and cannot widen task scope',async()=>{
   {command:'node anything'},{plan:[]},{patches:[p.patches[0],p.patches[0]]},
   {patches:[{...p.patches[0],oldText:''}]}])assert.throws(()=>validateCodingProposal({...p,...change},task));
 });
+
+test('autonomous candidates cannot modify the new Harness or encrypted-storage control boundary',async()=>{
+ const {isCodingPath}=await import('./coding-task.mjs');const {critique}=await import('./repair-critic.mjs');
+ for(const file of ['.github/continuum/harness-coding-provider.mjs','.github/continuum/storage-fabric.mjs','.github/continuum/storage-fabric-catalog.mjs']){
+  assert.equal(isCodingPath(file),false,file);
+  assert.equal(critique({strategy:'LOCAL_SCOPED_PATCH',edits:[{file,oldText:'const flag = false;',newText:'const flag = true;'}]}).approved,false,file);
+ }
+});

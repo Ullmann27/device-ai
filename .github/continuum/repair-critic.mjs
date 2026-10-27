@@ -9,7 +9,7 @@ export const LIMITS=Object.freeze({maxFiles:3,maxChangedLines:40});
 
 const FORBIDDEN_PATHS=[
   /^experimental\/omega\//,
-  /^\.github\/continuum\/(?:coding-|isolated-)/,
+  /^\.github\/continuum\/(?:harness-coding-|storage-fabric|coding-|isolated-)/,
   /^\.github\/continuum\/(?:local-brain-repair|local-numeric-patch)\.mjs$/,
   /^\.github\/workflows\//,/^\.github\/continuum\/(repair-|developer-agent|code-analyzer|kotlin-tokenizer)/,
   // M4 release gates, proof validators, Sol handoff and local launchers are
