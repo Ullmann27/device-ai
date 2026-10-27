@@ -2300,6 +2300,14 @@ class AgentActivity : Activity() {
             Toast.makeText(this, "Schreib zuerst einen Auftrag.", Toast.LENGTH_SHORT).show()
             return
         }
+        // Research uses the existing cognitive conversation, never a parallel fact store.
+        val cdxQuestion=at.heinz.deviceai.learning.ContinuumCdx1ChatShadow.questionOrNull(request)
+        if (cdxQuestion!=null) {
+            input.text.clear()
+            addUserMessage(request)
+            runContinuumDialogue(cdxQuestion, shadowResearch=true)
+            return
+        }
         // Explicit, tool-free diagnostic for the imported local LiteRT-LM engine.
         if (request.equals("Continuum Modelltest", true) ||
             request.equals("Continuum Modelltest Direkt", true)) {
