@@ -4,6 +4,7 @@ package at.heinz.deviceai
 sealed class ContinuumWorkerChatCommand {
     data object Status : ContinuumWorkerChatCommand()
     data object Help : ContinuumWorkerChatCommand()
+    data object RepairHelp : ContinuumWorkerChatCommand()
     data object Backlog : ContinuumWorkerChatCommand()
     data object DevelopmentCenter : ContinuumWorkerChatCommand()
     data object MobileBuilder : ContinuumWorkerChatCommand()
@@ -25,6 +26,12 @@ object ContinuumWorkerChatRouter {
             """(?:bitte\s+)?((?:erstelle|baue|entwickle|programmiere)\s+.{1,390})$""",
         RegexOption.IGNORE_CASE
     )
+    // Match only an explicit request about CCC1 / the repair agent. Never
+    // interpret such a question as permission to run a repair or execute a shell.
+    private val repairHelpPattern = Regex(
+        """^(?:(?:und|bitte)\s+)?(?:(?:wie\s+(?:aktiviere|starte|nutze|öffne)\s+ich\s+(?:den\s+)?)|(?:wo\s+(?:finde|öffne)\s+ich\s+(?:den\s+)?))?(?:ccc1[ -]?)?reparatur[ -]?agent(?:en)?(?:\s+(?:aktivieren|starten|öffnen|nutzen))?$""",
+        RegexOption.IGNORE_CASE
+    )
     private val projectPlanDraftPattern = Regex(
         """^(?:worker|baumeister|coding[ -]?agent)\s+projektplan\s*:\s*(.{1,400})$""",
         setOf(RegexOption.IGNORE_CASE, RegexOption.DOT_MATCHES_ALL)
@@ -39,7 +46,9 @@ object ContinuumWorkerChatRouter {
                 request.none { it.code < 0x20 }) ContinuumWorkerChatCommand.ProjectPlanDraft(request)
             else null
         }
-        return when (text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')) {
+        val normalized = text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')
+        if (repairHelpPattern.matches(normalized)) return ContinuumWorkerChatCommand.RepairHelp
+        return when (normalized) {
             "worker", "baumeister", "coding agent", "coding-agent", "programmierer",
             "worker hilfe", "baumeister hilfe", "coding agent hilfe" ->
                 ContinuumWorkerChatCommand.Help
