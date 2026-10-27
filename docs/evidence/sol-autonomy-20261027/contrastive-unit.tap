@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: head-orthogonal semantic step removes first-order intent-direction interference
+ok 1 - head-orthogonal semantic step removes first-order intent-direction interference
+  ---
+  duration_ms: 27.964389
+  type: 'test'
+  ...
+# Subtest: projection rejects invalid rate without altering a model checkpoint
+ok 2 - projection rejects invalid rate without altering a model checkpoint
+  ---
+  duration_ms: 10.787404
+  type: 'test'
+  ...
+# Subtest: native contrastive trials preserve original state and deterministic schedule snapshots
+ok 3 - native contrastive trials preserve original state and deterministic schedule snapshots
+  ---
+  duration_ms: 124.006483
+  type: 'test'
+  ...
+# Subtest: interruption produces no promotable checkpoint and no negative learning signal
+ok 4 - interruption produces no promotable checkpoint and no negative learning signal
+  ---
+  duration_ms: 14.099413
+  type: 'test'
+  ...
+# Subtest: new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+ok 5 - new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+  ---
+  duration_ms: 5.043641
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 404.958114
