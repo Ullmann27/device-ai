@@ -60,7 +60,7 @@ class ContinuumGemmaRestorePolicyTest {
     }
 
     @Test fun neverCreateSecondNativeEngineDuringActiveLifecycle() {
-        for (state in LocalModelState.entries.filter { it != LocalModelState.EMPTY }) {
+        for (state in LocalModelState.values().filter { it != LocalModelState.EMPTY }) {
             assertNull(ContinuumGemmaRestorePolicy.candidate(
                 true, state, null, listOf(original())
             ))
