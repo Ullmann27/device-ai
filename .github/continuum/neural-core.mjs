@@ -41,8 +41,13 @@ export function ingestPublicSources(value,sources,now=Date.now()){
   return state;
 }
 function noRegression(before,after){return ['intent','semantic'].every(k=>after[k].correct>=before[k].correct&&after[k].loss<=before[k].loss+.015);}
-export function trainRound(value,{steps=12000,now=Date.now(),cancelled=()=>false,maxMillis=25000}={}){
+export function trainRound(value,{steps=12000,now=Date.now(),cancelled=()=>false,maxMillis=25000,
+  researchReplayEvery=8,researchReplayRate=.035}={}){
   if(!Number.isInteger(steps)||steps<1||steps>24000||!Number.isInteger(maxMillis)||maxMillis<1||maxMillis>30000)throw Error('Invalid training budget');
+  // Defaults are byte-for-byte compatible with the existing public-source learning path.
+  // Nondefault values are research-only; the shadow runner never publishes weights.
+  if(![0,8,16,32,64].includes(researchReplayEvery)||
+     ![.035,.015,.0075].includes(researchReplayRate))throw Error('Invalid research replay policy');
   const state=restoreNeuralState(value),baseline=SubwordEncoder.restore(exportWeights(state)),candidate=SubwordEncoder.restore(baseline.save());
   const androidBefore=evaluateSuite(baseline,ANDROID_VALIDATION);
   const validationBefore=evaluateSuite(baseline,VALIDATION),retentionBefore=evaluateSuite(baseline,TRAIN);
@@ -54,9 +59,9 @@ export function trainRound(value,{steps=12000,now=Date.now(),cancelled=()=>false
   for(;completed<steps&&!state.paused&&!cancelled()&&performance.now()-start<maxMillis;completed++){
     const n=Math.floor(completed/2)+offset;
     if(completed%2===0)candidate.updateIntent(TRAIN.intent[n%TRAIN.intent.length]);
-    else if(state.replay.length&&n%8===7){
+    else if(state.replay.length&&researchReplayEvery>0&&n%researchReplayEvery===researchReplayEvery-1){
       const e=state.replay[Math.floor(n/8)%state.replay.length];
-      candidate.updateSemantic({left:e.left,right:e.right,similar:true},.035);sourceUpdates++;
+      candidate.updateSemantic({left:e.left,right:e.right,similar:true},researchReplayRate);sourceUpdates++;
       replayCounts.set(e.id,(replayCounts.get(e.id)??0)+1);
     }else candidate.updateSemantic(TRAIN.semantic[n%TRAIN.semantic.length]);
     // Selection sees validation only. Report-only audit is evaluated after selection.
