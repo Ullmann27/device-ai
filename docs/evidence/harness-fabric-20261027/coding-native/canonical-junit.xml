@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="oracle 354,952" time="0.002864" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-598 !== 1306&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-598 !== 1306">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-598 !== 1306
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -598 !== 1306
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -598,
+    expected: 1306,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 821,-18" time="0.000437" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;839 !== 803&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;839 !== 803">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+839 !== 803
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  839 !== 803
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 839,
+    expected: 803,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -178,-965" time="0.000558" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;787 !== -1143&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;787 !== -1143">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+787 !== -1143
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  787 !== -1143
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 787,
+    expected: -1143,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 293,-44" time="0.000248" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;337 !== 249&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;337 !== 249">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+337 !== 249
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  337 !== 249
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 337,
+    expected: 249,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -952,-995" time="0.000408" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;43 !== -1947&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;43 !== -1947">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+43 !== -1947
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  43 !== -1947
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 43,
+    expected: -1947,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 807,-193" time="0.000478" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;1000 !== 614&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;1000 !== 614">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+1000 !== 614
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1000 !== 614
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1000,
+    expected: 614,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 617,932" time="0.000226" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-315 !== 1549&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-315 !== 1549">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-315 !== 1549
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -315 !== 1549
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -315,
+    expected: 1549,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 278,516" time="0.000387" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-238 !== 794&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-238 !== 794">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-238 !== 794
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -238 !== 794
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -238,
+    expected: 794,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 818,5" time="0.000325" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;813 !== 823&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;813 !== 823">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+813 !== 823
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  813 !== 823
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 813,
+    expected: 823,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -314,-404" time="0.000444" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;90 !== -718&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;90 !== -718">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+90 !== -718
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  90 !== -718
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 90,
+    expected: -718,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 387,-356" time="0.000268" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;743 !== 31&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;743 !== 31">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+743 !== 31
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  743 !== 31
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 743,
+    expected: 31,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -541,-154" time="0.000284" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-387 !== -695&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-387 !== -695">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-387 !== -695
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -387 !== -695
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -387,
+    expected: -695,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -920,-177" time="0.000202" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-743 !== -1097&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-743 !== -1097">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-743 !== -1097
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -743 !== -1097
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -743,
+    expected: -1097,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -335,988" time="0.000228" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-1323 !== 653&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-1323 !== 653">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-1323 !== 653
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -1323 !== 653
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -1323,
+    expected: 653,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle 813,-904" time="0.000212" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;1717 !== -91&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;1717 !== -91">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+1717 !== -91
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1717 !== -91
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1717,
+    expected: -91,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="oracle -366,75" time="0.000266" classname="test" file="/work/.github/continuum/independent.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-441 !== -291&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-441 !== -291">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-441 !== -291
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -441 !== -291
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/independent.test.mjs:2:354)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -441,
+    expected: -291,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed 10,3" time="0.003554" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;7 !== 13&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;7 !== 13">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+7 !== 13
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  7 !== 13
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:2:109)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 7,
+    expected: 13,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed 10,-3" time="0.000590" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;13 !== 7&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;13 !== 7">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+13 !== 7
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  13 !== 7
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:2:109)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 13,
+    expected: 7,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed 0,7" time="0.000406" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-7 !== 7&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-7 !== 7">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-7 !== 7
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -7 !== 7
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:2:109)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -7,
+    expected: 7,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed -8,-2" time="0.000243" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;-6 !== -10&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;-6 !== -10">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+-6 !== -10
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -6 !== -10
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:2:109)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -6,
+    expected: -10,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="signed 2,0" time="0.001813" classname="test" file="/work/.github/continuum/regression.test.mjs"/>
+	<testcase name="invalid 1.2,1" time="0.001238" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+		<failure type="testCodeFailure" message="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+[Error [ERR_TEST_FAILURE]: The error is expected to be an instance of "RangeError". Received "TypeError"
+
+Error message:
+
+safe integer inputs required] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The error is expected to be an instance of "RangeError". Received "TypeError"
+  
+  Error message:
+  
+  safe integer inputs required
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: safe integer inputs required
+        at applyAdjustment (file:///work/lib/ledger.mjs:3:11)
+        at file:///work/.github/continuum/regression.test.mjs:3:97
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    operator: 'throws',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="invalid 1,NaN" time="0.000327" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+		<failure type="testCodeFailure" message="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+[Error [ERR_TEST_FAILURE]: The error is expected to be an instance of "RangeError". Received "TypeError"
+
+Error message:
+
+safe integer inputs required] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The error is expected to be an instance of "RangeError". Received "TypeError"
+  
+  Error message:
+  
+  safe integer inputs required
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: safe integer inputs required
+        at applyAdjustment (file:///work/lib/ledger.mjs:3:11)
+        at file:///work/.github/continuum/regression.test.mjs:3:97
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    operator: 'throws',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="invalid Infinity,1" time="0.000194" classname="test" file="/work/.github/continuum/regression.test.mjs" failure="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+		<failure type="testCodeFailure" message="The error is expected to be an instance of &amp;quot;RangeError&amp;quot;. Received &amp;quot;TypeError&amp;quot;&#10;&#10;Error message:&#10;&#10;safe integer inputs required">
+[Error [ERR_TEST_FAILURE]: The error is expected to be an instance of "RangeError". Received "TypeError"
+
+Error message:
+
+safe integer inputs required] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: The error is expected to be an instance of "RangeError". Received "TypeError"
+  
+  Error message:
+  
+  safe integer inputs required
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: safe integer inputs required
+        at applyAdjustment (file:///work/lib/ledger.mjs:3:11)
+        at file:///work/.github/continuum/regression.test.mjs:3:97
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.&lt;anonymous> (file:///work/.github/continuum/regression.test.mjs:3:86)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    operator: 'throws',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<!-- tests 24 -->
+	<!-- suites 0 -->
+	<!-- pass 1 -->
+	<!-- fail 23 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 231.3787 -->
+</testsuites>

@@ -1,0 +1,19 @@
+{
+  "schema": "continuum-coding-model-request",
+  "version": 1,
+  "taskId": "mob-a818b69f0ad52f35",
+  "taskFingerprint": "5344579dd832923867067f5bab0ac8351e034a0e5ae1e9403b7b40bade84e480",
+  "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+  "request": 1,
+  "startedAt": "2026-10-27T10:02:19.954Z",
+  "elapsedMs": 46955,
+  "configuredModel": "continuum-research-qwen-1.5b",
+  "verifiedModelExecution": false,
+  "contextSha256": "eb14defccc403e1a6d5849c36e7aa8b4c5f47a3ffb0921ec48a349815fae30b6",
+  "promptSha256": "0c48b6e5dd968d93361a8052933141a948bf5d3dc1f83add00c8db56c95f03d0",
+  "exitCode": 0,
+  "status": "RESPONDED",
+  "responseSha256": "6b72d3b260f2a8767e7fe66cdb2d04c8e54fd4cdb1f440fcfb1f56a2fd7bc75a",
+  "responseBytes": 857,
+  "rawContentStored": false
+}
