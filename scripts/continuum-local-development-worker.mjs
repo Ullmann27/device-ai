@@ -48,7 +48,7 @@ function execute(args,config,{out,id,signal,lease}){
  return new Promise((resolveRun,reject)=>{
   const env={...process.env,GIT_TERMINAL_PROMPT:'0'};delete env.NODE_TEST_CONTEXT;
   const child=spawn(process.execPath,[`--max-old-space-size=${config.heapMb}`,...args],{cwd:ROOT,shell:false,env,detached:true,stdio:['ignore','pipe','pipe']});
-  let stdout='',stderr='',error=null;let killed=false,killTimer;
+  const stdoutParts=[],stderrParts=[];let storedBytes=0,error=null,killed=false,killTimer;
   const tap=join(out,'cycles',id+'.tap'),err=join(out,'cycles',id+'.stderr');
   const tapFd=fs.openSync(tap,'wx',0o600),errFd=fs.openSync(err,'wx',0o600);
   const kill=reason=>{if(killed)return;killed=true;error=reason;try{process.kill(-child.pid,'SIGTERM');}catch(e){if(e.code!=='ESRCH')error='SIGNAL_ERROR';}killTimer=setTimeout(()=>{try{process.kill(-child.pid,'SIGKILL');}catch{}},500);};
@@ -56,22 +56,26 @@ function execute(args,config,{out,id,signal,lease}){
   child.on('spawn',()=>{try{lease.child(child.pid);}catch(e){kill('LEASE_CHILD_BIND_FAILED');}if(signal?.aborted)onAbort();});
   const timer=setTimeout(()=>kill('TIMEOUT'),config.timeoutMs);
   const stopPoll=setInterval(()=>{if(fs.existsSync(join(out,'STOP')))onAbort();},100);
-  const take=(chunk,which)=>{fs.writeSync(which==='out'?tapFd:errFd,chunk);if(which==='out')stdout+=chunk;else stderr+=chunk;if(stdout.length+stderr.length>2*1024*1024)kill('OUTPUT_LIMIT');};
+  const take=(chunk,which)=>{const remaining=2*1024*1024-storedBytes;const kept=chunk.subarray(0,Math.max(0,remaining));fs.writeSync(which==='out'?tapFd:errFd,kept);(which==='out'?stdoutParts:stderrParts).push(kept);storedBytes+=kept.length;if(chunk.length>remaining)kill('OUTPUT_LIMIT');};
   child.stdout.on('data',b=>take(b,'out'));child.stderr.on('data',b=>take(b,'err'));
   child.on('error',e=>{error=e.code||'SPAWN_ERROR';});
   child.on('close',(code,termination)=>{
    clearTimeout(timer);clearTimeout(killTimer);clearInterval(stopPoll);signal?.removeEventListener('abort',onAbort);
    fs.closeSync(tapFd);fs.closeSync(errFd);
-   resolveRun({exitCode:code,stdout,stderr,error:error||termination||null,signal:termination,stdoutHash:digest(stdout),stderrHash:digest(stderr)});
+   const stdout=Buffer.concat(stdoutParts),stderr=Buffer.concat(stderrParts);
+   resolveRun({exitCode:code,stdout:stdout.toString('utf8'),stderr:stderr.toString('utf8'),error:error||termination||null,signal:termination,stdoutHash:digest(stdout),stderrHash:digest(stderr)});
   });
  });
 }
-export async function runOneCycle(outDirectory,{signal,...supplied}={}){
+async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
  const config=options(supplied),out=directory(outDirectory),before=checkout();
- const lease=workerLease(git(['rev-parse','--absolute-git-dir']));
+ const lease=heldLease??workerLease(git(['rev-parse','--absolute-git-dir']));
  const id=new Date().toISOString().replace(/[:.]/g,'-')+'-'+crypto.randomUUID();
- fs.mkdirSync(join(out,'cycles'),{recursive:true,mode:0o700});
  try{
+  const cyclesDir=join(out,'cycles');
+  if(fs.existsSync(cyclesDir)&&(!fs.lstatSync(cyclesDir).isDirectory()||fs.lstatSync(cyclesDir).isSymbolicLink()))throw Error('UNSAFE_REPORT_DIRECTORY');
+  fs.mkdirSync(cyclesDir,{recursive:true,mode:0o700});
+  if(lease.recovered&&fs.existsSync(join(out,'running.json')))event(out,'ABANDONED_CYCLE_RECOVERED',{previous:JSON.parse(fs.readFileSync(join(out,'running.json'),'utf8')).id});
   const started=new Date().toISOString();const running={id,sourceSha:before.sourceSha,branch:before.branch,started,pid:process.pid,recoveredLease:lease.recovered};
   atomic(join(out,'running.json'),running);event(out,'CYCLE_STARTED',running);
   const run=await execute(['--test','--test-reporter=tap',`--test-concurrency=${config.testConcurrency}`,...before.tests.map(x=>join('.github','continuum',x))],config,{out,id,signal,lease});
@@ -81,17 +85,26 @@ export async function runOneCycle(outDirectory,{signal,...supplied}={}){
   if(run.error==='OWNER_INTERRUPTED')result={...result,status:'INTERRUPTED'};
   const report={schema:'continuum-local-worker-v2',id,branch:before.branch,sourceSha:before.sourceSha,sourceTree:before.tree,inventoryHash:before.inventoryHash,inventoryCount:before.tests.length,started,completed:new Date().toISOString(),sourceUnchanged,...result,signal:run.signal,stdoutHash:run.stdoutHash,stderrHash:run.stderrHash,limits:config,recoveredLease:lease.recovered,candidatePromoted:false,patchApplied:false,weightsUpdated:false,ownerReviewRequired:true};
   atomic(join(out,'cycles',id+'.json'),report);atomic(join(out,'latest.json'),report);event(out,'CYCLE_COMPLETED',{id,status:report.status});return report;
- }finally{fs.rmSync(join(out,'running.json'),{force:true});lease.release();}
+ }finally{fs.rmSync(join(out,'running.json'),{force:true});if(!heldLease)lease.release();}
 }
+export async function runOneCycle(outDirectory,config={}){return runCycle(outDirectory,config);}
 export async function runWorker(outDirectory,{signal,...supplied}={}){
  const config=options(supplied),out=directory(outDirectory);let cycles=0;
- while(!signal?.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
-  try{const report=await runOneCycle(out,{...config,signal});console.log(JSON.stringify(report));}
-  catch(e){event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);}
-  cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
-  try{await delay(config.intervalMs,undefined,{signal});}catch(e){if(e.name!=='AbortError')throw e;}
+ const stop=new AbortController();const combined=signal?AbortSignal.any([signal,stop.signal]):stop.signal;
+ const poll=setInterval(()=>{if(fs.existsSync(join(out,'STOP')))stop.abort();},100);
+ let lease;
+ try{
+  lease=workerLease(git(['rev-parse','--absolute-git-dir']));
+  while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
+   try{const report=await runCycle(out,{...config,signal:combined},lease);console.log(JSON.stringify(report));}
+   catch(e){event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);}
+   cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
+   try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
+  }
+ }finally{
+  clearInterval(poll);if(lease)lease.release();event(out,'WORKER_STOPPED',{cycles,ownerStopped:combined.aborted||fs.existsSync(join(out,'STOP'))});
  }
- event(out,'WORKER_STOPPED',{cycles,ownerStopped:signal?.aborted||fs.existsSync(join(out,'STOP'))});return {cycles};
+ return {cycles};
 }
 async function main(){
  const [mode,out,flag,file]=process.argv.slice(2);
