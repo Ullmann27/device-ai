@@ -1,6 +1,6 @@
 # Continuum – wiederholbar lokal eine echte Haupt-App-APK bauen (ohne CI- oder Render-Build-Minuten)
 
-**Status 27.10.2026:** Der Quellstand von PR #193 (Gemma-Wiederherstellung) und PR #194 (Belegzuordnung) wurde auf einem isolierten Haupt-App-Build-Zweig zusammengeführt. Der Script-Buildweg wurde erstellt; ein kompletter Android-Build oder eine neue signierte APK **wurde noch nicht ausgeführt**. Render hat keine Pipeline-Minuten; GitHub Actions ist ebenfalls erschöpft und wird **nicht mehr benutzt**.
+**Status 27.10.2026, PR #196:** PR #193 (Gemma-Wiederherstellung) und PR #194 (Belegzuordnung) sind bereits in PR #195 enthalten. Die anschließende lokale Linux-Prüfung mit JDK17/Gradle8.11.1/SDK36 besteht: Kotlin-Kompilierung, 1094 JUnit-Tests (0 Fehler, 3 übersprungen), konfigurierte NewApi-Lint-Prüfung und separat die Termux-AIDL-Ersatzquellen im Offline-Modus. **Keine neue signierte APK:** Der private Originalkeystore ist hier nicht verfügbar. Fold7-Build und Geräteabnahme bleiben offen. Render/GitHub-Actions-Budgets werden nicht verwendet.
 
 ## Nachhaltige Lösung: vorhandene lokale Android-Hardware
 
@@ -80,6 +80,6 @@ Eine Datei wird **nur nach diesen Prüfungen** unter `$HOME/.local/state/device-
 
 ### Aktueller Stand und reale Einschränkung
 
-Die aktuell publizierte Eigentümer-APK 0.3.24/code25 wurde von einem älteren Commit erzeugt. Der neue lokale Builder verwendet, nach erfolgreichen Prüfungen, automatisch zunächst **0.3.25/code26**. Er kombiniert die Arbeit zu Gemma-Reopen und SWB1-Belegwechsel; er wurde noch **nicht vollständig mit Android SDK/Gradle ausgeführt**, weil in der Werkzeugumgebung dieses Chats weder Android SDK, Gradle noch Zugriff auf den privaten Besitzerkeystore vorhanden sind.
+Die aktuell publizierte Eigentümer-APK 0.3.24/code25 wurde von einem älteren Commit erzeugt. Der neue lokale Builder verwendet, nach erfolgreichen Prüfungen, zunächst **0.3.25/code26**. Die tatsächliche Android-Kompilierung, JUnit- und Lint-Prüfung auf Linux besteht nun. Der vollständige signierte Build wird ohne private Original-P12 weiterhin vor Gradle abgewiesen; diese Datei kann nicht aus der alten APK rekonstruiert werden. Die geprüfte Quellkompatibilität ersetzt weder Originalsignatur noch den nativen Fold7-Lauf.
 
 Dies ist ein unabhängiger, wiederholbarer lokaler Workflow, kein kostenloser Cloud-Build. **Der einmalige lokale Werkzeug- und Signierschlüsseltransfer ist unvermeidbar.** Kein neues Modell, keine externe KI-API, keine GitHub Actions, keine Render-Pipeline, kein Merge nach `main` und keine Neben-App.

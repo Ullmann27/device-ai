@@ -1,0 +1,29 @@
+{
+  "testedCodeCheckpoint": "6c835307cb840461ad22ebee33e7be6649cd5de0",
+  "appTreeIdenticalToPR195": true,
+  "pr195Head": "8b75080cbfb40e8e6a284ee95f65b8700d9105a8",
+  "appTreeListingSha256": "1f2797667fb90d25f1bf0c53b93d26fd6a6d1d5c2fb4d7878b2272f93853b139",
+  "node": {
+    "passed": 1540,
+    "failed": 0,
+    "skipped": 13,
+    "files": 238
+  },
+  "backend": {
+    "passed": 60,
+    "failed": 0
+  },
+  "android": {
+    "tests": 1094,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "compile": "PASS",
+    "lintConfiguredNewApi": "PASS"
+  },
+  "termuxReplacementSourceCompileOnLinux": "PASS",
+  "arm64DeviceExecution": "NOT_RUN",
+  "ownerSignedApk": "BLOCKED_ORIGINAL_KEY_UNAVAILABLE",
+  "apkGenerated": false,
+  "newInferenceCalls": 0
+}

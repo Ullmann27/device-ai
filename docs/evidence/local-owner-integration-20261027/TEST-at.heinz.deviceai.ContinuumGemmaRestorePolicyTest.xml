@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:40" hostname="7b281259906f" time="0.005">
+  <properties/>
+  <testcase name="noImportMeansNoDownloadAndNoRestoreCandidate" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.003"/>
+  <testcase name="neverCreateSecondNativeEngineDuringActiveLifecycle" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.001"/>
+  <testcase name="persistedOwnerChoiceHasFixedPrivateKeys" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.0"/>
+  <testcase name="explicitUnloadPreferenceWinsOverImportedOriginal" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.001"/>
+  <testcase name="doNotUseDifferentModelDespiteMatchingDisplayName" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.0"/>
+  <testcase name="correctOriginalSelectedEvenWhenForeignFileAppearsFirst" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.0"/>
+  <testcase name="reopenOriginalOnlyWhenEnabledEmptyAndNotYetLoaded" classname="at.heinz.deviceai.ContinuumGemmaRestorePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

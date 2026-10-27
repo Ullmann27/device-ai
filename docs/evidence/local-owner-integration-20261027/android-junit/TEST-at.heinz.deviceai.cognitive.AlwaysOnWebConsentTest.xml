@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:41" hostname="7b281259906f" time="0.165">
+  <properties/>
+  <testcase name="everyModeChangeRevokesExistingAndPendingSessions" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.003"/>
+  <testcase name="completedEvidenceRemainsUsableOnlyUntilConsentIsRevoked" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.042"/>
+  <testcase name="alwaysOnStillUsesTheCommonToolGateAndDoesNotPermitReplay" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.097"/>
+  <testcase name="cancellationDuringSynthesisNeverPublishesDossier" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.005"/>
+  <testcase name="alwaysOnIssuesExactOneShotSessionsWithoutAnAskTicket" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.003"/>
+  <testcase name="alwaysOnPreservesQueryAndPublicHttpsValidation" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.001"/>
+  <testcase name="askAndOffNeverIssueAutomaticSessions" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.0"/>
+  <testcase name="switchingOffWhileReadIsInFlightDiscardsItsResult" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.008"/>
+  <testcase name="laterRequestsRetainEarlierEvidenceButExplicitRevocationInvalidatesAll" classname="at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

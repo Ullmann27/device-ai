@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:24:07" hostname="7b281259906f" time="0.444">
+  <properties/>
+  <testcase name="legacyV1CheckpointRestoresWithPr61Features" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" time="0.006"/>
+  <testcase name="defaultVariantIsBitIdenticalToPr61Predictions" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" time="0.02"/>
+  <testcase name="gradientsMatchFiniteDifferencesForEveryVariantBeforeAndAfterTraining" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" time="0.377"/>
+  <testcase name="unknownOrContradictoryFlagsAreRejected" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" time="0.001"/>
+  <testcase name="checkpointV2KeepsVariantAndEveryParameter" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest" time="0.04"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

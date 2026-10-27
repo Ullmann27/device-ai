@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:59" hostname="7b281259906f" time="0.003">
+  <properties/>
+  <testcase name="weightedFeaturesAreNormalizedAndVersioned" classname="at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

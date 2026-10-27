@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:53" hostname="7b281259906f" time="0.018">
+  <properties/>
+  <testcase name="httpFailuresHaveSafeDistinctCodesAndNeverFollowRedirects" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.005"/>
+  <testcase name="optionalDiscoveryCannotTreatInvalidResponseAsValidEmptyLinks" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.0"/>
+  <testcase name="validResponseIsBoundedHasDigestAndDisconnects" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.002"/>
+  <testcase name="emptyArticleIsUnavailableButMalformedApiDataIsFailure" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.001"/>
+  <testcase name="cancellationBeforeAndDuringReadStopsWithoutAnArticle" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.0"/>
+  <testcase name="rateLimitsRespectSecondsAndHttpDateAndHaveNoImmediateRetry" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.006"/>
+  <testcase name="declaredAndStreamingByteLimitsBothFailClosed" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.002"/>
+  <testcase name="transportAndTimeoutAreNotMissingArticles" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.0"/>
+  <testcase name="observedAsilomarMissingResponseIsUnavailableWithoutFalseLearning" classname="at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

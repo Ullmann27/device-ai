@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:44" hostname="7b281259906f" time="0.211">
+  <properties/>
+  <testcase name="routesUseOnlyPrevalidatedAddressesWithoutReresolvingOrSharingConnections" classname="at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest" time="0.211"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

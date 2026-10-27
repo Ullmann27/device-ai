@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.LearningExperienceStoreTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:55" hostname="7b281259906f" time="2.426">
+  <properties/>
+  <testcase name="checksumAndContentHashRejectTampering" classname="at.heinz.deviceai.learning.LearningExperienceStoreTest" time="0.001"/>
+  <testcase name="persistentTypedReplayIsBoundedAndDeduplicated" classname="at.heinz.deviceai.learning.LearningExperienceStoreTest" time="0.001"/>
+  <testcase name="storeKeepsOnlyNewestBoundedReplayWindow" classname="at.heinz.deviceai.learning.LearningExperienceStoreTest" time="2.38"/>
+  <testcase name="fullOwnerLedgerRefusesLowTrustChurnAndFailsBeforeLosingConfirmedRecords" classname="at.heinz.deviceai.learning.LearningExperienceStoreTest" time="0.044"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

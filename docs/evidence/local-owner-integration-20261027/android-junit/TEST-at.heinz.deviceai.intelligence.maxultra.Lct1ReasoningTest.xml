@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:45" hostname="7b281259906f" time="0.945">
+  <properties/>
+  <testcase name="everyVariantIsAnsweredOrRefusedCorrectlyAndTheVerifierAgrees" classname="at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest" time="0.501"/>
+  <testcase name="theGuideLearnsWithTheUpdateRuleOfEphemeralFastWeightCore" classname="at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest" time="0.115"/>
+  <testcase name="generationIsDeterministicAndExcludedNamesNeverReturn" classname="at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest" time="0.328"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

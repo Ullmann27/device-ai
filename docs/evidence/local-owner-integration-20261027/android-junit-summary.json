@@ -1,0 +1,1741 @@
+{
+  "status": "PASS",
+  "sourceCheckpoint": "6c835307cb840461ad22ebee33e7be6649cd5de0",
+  "totals": {
+    "tests": 1094,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "suites": [
+    {
+      "file": "TEST-at.heinz.deviceai.AgentToolLayerTest.xml",
+      "sha256": "f2805bd1455226b7f78bba61826f236cf4b0b8f941f069883986cef087c385df",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.BootstrapBrainTest.xml",
+      "sha256": "c13c57495f15260a7e1f8fe98d66b3a449a11a0fc50dc306aa90766e79f142b6",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.BoundedIoTest.xml",
+      "sha256": "e89f2a222227b0c4f387551806ddf24128f54f056ce3dafd162de57bafe92367",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.CheckedShellCallDispatcherTest.xml",
+      "sha256": "451e318d791b230e1ed3e32eb01c19d601e039846a5634e79353e4e901fb4166",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ComposerReflowDraftTest.xml",
+      "sha256": "013e927afd2408b539714534a3f01349b225a92136557393c3b05631d16360dc",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ComposerUiPolicyTest.xml",
+      "sha256": "206625c3334529da08a12ba5c354099e5054dba1af197bcc1eaba7abf60c34c1",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumCcc1BridgeTest.xml",
+      "sha256": "62689d6f3f311fd65292df88b625be9bce7fbdd0b76ef2b447bd82db4011abbb",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumCodingConversationTest.xml",
+      "sha256": "43ef228a96ccf50798fc63857ac2d47c6bd588d4aec3b98da70e715ef844d029",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumCodingPreparationReviewTest.xml",
+      "sha256": "4a98f3b93a7618f77808e7efdf2b7348f3240b73e7407b7025572cb325d8f2d6",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumCodingTaskTest.xml",
+      "sha256": "6e1c33b7889258437860be4d12835c7914702e76eae2f9a9b0b9083777b988b4",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumDialogueSessionResetTest.xml",
+      "sha256": "e5c6a0c2e2dbeb43a0665399604de5b011077448a9da56656c705aa1e01e863f",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumGemmaRestorePolicyTest.xml",
+      "sha256": "df39de9ce9763321e6a95c426885ed0e29774ec57d0177ce27dee2d197811e5a",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumM2StatusTest.xml",
+      "sha256": "b1bf3e8954c4e1df01f98c097ebbffb375941704b1bcdebf6af60b9e8f91b3f5",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumMobileBuildPlanTest.xml",
+      "sha256": "abe490c765f0d5837a36d1a3d272d848b089209cd61c993051f7890a3d473403",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumMobileBuilderRouteTest.xml",
+      "sha256": "27418411bf023749be61e1fde3b12106abccb9ab2f7c90f60c02bf71062aa812",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumMobileCodingJobTest.xml",
+      "sha256": "47b0e34f86282c8464400eea6fe0f14b7b62543ebdd939cb22e2dc069d833bc8",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumMobileResultPolicyTest.xml",
+      "sha256": "4c277cfa294e768559702d45cc90b85a2f298b828a32830da3a132fc5023c669",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumNexusHomeSpecTest.xml",
+      "sha256": "25f90a3df6c10809b31249b912d67318606cbf5c01ab6fde048d65057f027a02",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumOwnedAppContractTest.xml",
+      "sha256": "4d2ac8d7cf2b53036fc151e22a164fbf3ed31de6ddb521f936e8c55a60f1f702",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumOwnedProjectPlanTest.xml",
+      "sha256": "3ae4a948da44ca0bf95733fdce2d1893bcf0ae55348e425374741a95ee4ab6ec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumSelectedModelsTest.xml",
+      "sha256": "3ed571379314744fb9680e336319636895350bf48ede982177312800350e4d23",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumStatusExcerptTest.xml",
+      "sha256": "801433ceb71fb57690e9ae74c2fb941d8b43aec0c33305d0ff5360fcd6c3f69c",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumTypedCodingBridgeTest.xml",
+      "sha256": "cc511b8400a9c4474c642b80804af9badd0c7bb9c3cdff36e5e494e59524d880",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumUiCopyTest.xml",
+      "sha256": "043db26b28b34d9d4fafe4381bd99339e25cad51f5e906f1973a6cc66433131e",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumWorkAreaNavigationSpecTest.xml",
+      "sha256": "a0b8a56a4caca944dda9f00e6784ca3df4f068d7b7e68662d7ac2c193dc46553",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ContinuumWorkerChatRouterTest.xml",
+      "sha256": "3adcc6c1a40b0fcf9f00163249a47ff09091ebc04220dfab8a709d7a68e5ceef",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.Ctx3ContextTest.xml",
+      "sha256": "d277d3ce5ce32c28cf84d86b62d25e445487ff2a734958540e7adb30689d29e0",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.Ctx3SessionTest.xml",
+      "sha256": "d7b6eeeb1c065e6a5cd8829adb2310bbad889493c954444c7ed0c57929df46ec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.Ctx3ShadowTest.xml",
+      "sha256": "793e9b4b242e7b3f481c66ed86088c2fd98e3d7ffc676bea7d06e5298148b085",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.DeviceToolExecutorRunnerTest.xml",
+      "sha256": "96d5ead333f70db55bfac432e92b200c302947f28f130c164a92cd5d0b3bc4ca",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.GroqInvocationRouterTest.xml",
+      "sha256": "3d12e5100d403e064e6c1269aa801a65ebea645814c56a3c86ba2052aa2f6a65",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.HologramAudioTest.xml",
+      "sha256": "5a3dd699310fccae1dedcc111afa022546ea231e9ba19c0beaf11bec9f4b55e0",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.LocalFirstPolicyTest.xml",
+      "sha256": "e9b6b9991ba566b75ecc48f94b05173e4370a56e0469a76801564c72afc66d74",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.NeuralSnapshotCasTest.xml",
+      "sha256": "a2c747ec14e4d898c17b54702f167b34618af696dec08e45da23e532b06d32d0",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ShellExecutionTest.xml",
+      "sha256": "4439dc7c1a704d5aa3425a60b4c94d20249e0d4f1b11a8dbdfc5b9dd1878f246",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ToolExecutionReceiptStoreTest.xml",
+      "sha256": "0c4c56007b70de6d7260203e95ed25773911347987bdeb902980f7434a05677b",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ToolRegistryTest.xml",
+      "sha256": "c66bc440f8ef467601788b7fb9d37665b9c06652c5b28b737d02bca5fcdef146",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ToolReplayGuardTest.xml",
+      "sha256": "75e421e44ec6b30cf5b7b6f12fe7292ab9135187dae1100ee0eb0ffa9f43b379",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.TtsHologramSignalTest.xml",
+      "sha256": "afa8cf1d60fdcec61aec7ba332818c902b4c38ff81a540ef57d4ff2e7d7e6d38",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.benchmark.BenchmarkRunnerTest.xml",
+      "sha256": "7ca3a275dd903c6f59bf2c267fd69cb9d6ffd592e7ed4f0a9f4fe97421b09a46",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.AdaptiveIdentityTest.xml",
+      "sha256": "f4349a1b0c46c420c4bfbd9b7749923a2c8e2abf1258210f3c360981c6dad2cb",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.AgentCancellationRegressionTest.xml",
+      "sha256": "beff7a96624b35a8cb51d80721c1dcb23a4c2d1c6e9c121359a0eb6626f86032",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.AgentCheckpointStoreTest.xml",
+      "sha256": "74f420f6db9caf7c55843bf74ee816f97a121147f1d5389f63bcaba4330d07fb",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.AiContextCompilerTest.xml",
+      "sha256": "8293989605b2509a4079d03d381d2c2633217fb08cbebaf1ff8e915ba75f4ad8",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.AlwaysOnWebConsentTest.xml",
+      "sha256": "c85d4e8da4add16cb57d8a45670ef92f56e4038e7d57bba698acd3f20b78cc47",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ApprovedWebToolGateTest.xml",
+      "sha256": "77ab18152f79ae166c260b479fa07d0087e07930f06ba020f762f57a80fe1e38",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.BoundedAgentOutcomeEvidenceTest.xml",
+      "sha256": "6579627d91aa7d1e8259a631c26cf6411336ab24d2a21b99633a966cab9dfad1",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.BoundedAgentTest.xml",
+      "sha256": "b3471656fa1cd93c877a65400887dabae4929327a3f846da60d3b1ad7ec2f27c",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ChatReasoningRouterTest.xml",
+      "sha256": "1041702f53714427d0943eb1e867eaee4915f5441617412eb6922bb5b4660c82",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml",
+      "sha256": "567d922635ba579f94c1a0736d87fb44450607bda8619b0d79610671c71366e4",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.CognitivePersistenceTest.xml",
+      "sha256": "09544f4143202f7c40935b3517a57db4c806b0dddfddfe8c4129b2bba6570a8c",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.CognitiveRaidTest.xml",
+      "sha256": "0785b2e34bb805c622e4b2910b2ffac86c8d757c6fb2a5f2d4910efd54b54580",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.CognitiveTurnTraceTest.xml",
+      "sha256": "96cb4e03277e887d2632fbb181b6092c194b74be1a07d99b5e74a3df8b404cb2",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ComputeFabricTest.xml",
+      "sha256": "76771ffed0f919db1acf03d9f99245d960b25e2152d97f6c28f9e72b7135bb9e",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ComputeResultVerifierTest.xml",
+      "sha256": "a3adbf19a42d0f63e234e617ae5cef97b02edf56e24f8bb7e5e8bb3c4a1e6084",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumBenchmarkTest.xml",
+      "sha256": "a002810e189c1719c888545ea77d6a38181c4155c4b92d1444d415e384b396bb",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumDnaGuardianTest.xml",
+      "sha256": "0d1061f4b2a4ef96348d5e9ecca0575614df99c198080f222006c2edcd3094af",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumEvidenceSwitchProbeTest.xml",
+      "sha256": "902b9a0677dbc090cd5f640df1471d38b1a0f68944f07f014014ce709578414c",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml",
+      "sha256": "9657b9f058b756533bd55f08f58ae9d44fd049e11425b7db8977c4f5fefda818",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest.xml",
+      "sha256": "0b1346e58740145b4933a763f8a66f9da45f51b0106fe1908586d25a2a3aade8",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumRuntimeStoreTest.xml",
+      "sha256": "a289772a801c3547a8accaab3d57101e636115b7d42584dab4b9dad2db6d39f8",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumSeedStoreTest.xml",
+      "sha256": "e7bc678411ea76c5d479b83fc47e3dda7aa33087850549391ad8a5bdea997c1e",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumSeedTest.xml",
+      "sha256": "30a07a078a78689fc74574f4d5d0bdc36ac79b3eeaf27500d007a3ba4b3ae368",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumStateTest.xml",
+      "sha256": "742b671c6ccb9c5fdf110d59173197882be8dc5e6d7f64293a9c084d58ee80f2",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ContinuumTaskClassifierWordBoundaryTest.xml",
+      "sha256": "0650b6e5ee819e368696354fea5c66020ba7dd6f69a70936590ef274bf1d011d",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ConversationControlTest.xml",
+      "sha256": "fb051475d5b87042db0a2d656cca08c4048a5b0f4f82449e451674e68ccf455b",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DeliberationTest.xml",
+      "sha256": "5a2f8ebfa0b6a5892eb8c3c733e47f66d8cde272ca58740e37fcbdf022d655a4",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogRoundtripTest.xml",
+      "sha256": "00bca0df83df6ce77a82c043b679144134ef679a9c6962f88ab565ac5acc0353",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentBacklogTest.xml",
+      "sha256": "d58f7e680d322e3286f19c9cc729a138382832d17718075ca1c9c5a81d3c5f92",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentClaimGateTest.xml",
+      "sha256": "00f425e73ffccfd5db66ab300dfb1e494b037886bdfa90a1f53c652cc7e4c197",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentCoordinatorTest.xml",
+      "sha256": "12385872d6bb503ff5f2eb8895b3a30712549e6c6f8795c406a4ef6dd694efc5",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentFakeModelDemonstrationTest.xml",
+      "sha256": "f0fa9e73d3dc4507459e3f31f5e05a2d8dd7a32546a5a183f74df23c46158e2e",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest.xml",
+      "sha256": "8a8802ece82984e845254067628ea92221caa84c2fbf1dc35019ff6869b01854",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentSharedHashTest.xml",
+      "sha256": "7df4d00f337dc0d331a5a9d2603f56363c3bb72f865cd4ff4bc7e3da7793c26d",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DevelopmentUiControllerTest.xml",
+      "sha256": "a0cb90418dc94abf6bb5e3688e39665d440e566bdfb761fbec45f3fa4b58bb45",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest.xml",
+      "sha256": "4519bf20ca2a75b64d102f72c3633edcbe928da4cbce8b3efd54fb8e7c3dd8ce",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.DeviceTeamleaderTest.xml",
+      "sha256": "a7ba6fe03718295d954d9588f3243c5b725336463191b7ddec5fe29c825d231f",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml",
+      "sha256": "21affc68ec677915cee521eaac09a8d6054efd3f7786b824099c0947740c7658",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.GeneralWebDiscoveryProviderTest.xml",
+      "sha256": "5baa57142d8b097df8e2dfee7612b5090099d8dff8aae4f56dc3dec8a222cbac",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.GroundedWebRecallTest.xml",
+      "sha256": "e91c699b3380dc194f915c73b53fa46593b8e414bcfad6076deec638cbc38afd",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.HybridMemoryRetrieverTest.xml",
+      "sha256": "659472a5f2d0fd4f8a15b207683e1aa86a731a7ab28d94cc4d00ad4478f980ae",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.IdentityStateTest.xml",
+      "sha256": "83758c29c782049d7cb67711dbdd1c9c2c02022627827c117c2baf2df05fd59c",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.InternetConsentPolicyTest.xml",
+      "sha256": "0eceb90041a154bf0756f4abe2a7a207ce09f50dba773a4ad9349347bbc33952",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest.xml",
+      "sha256": "2247297debfb28d3808531faab955b468a6d512c70b7c3278eca040723818caf",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.LocalGroundedRecallTest.xml",
+      "sha256": "9b58dbefcb5d6f9b6a31131a24739ae306be2753a50238be7ff5a3408e7d4efd",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.LocalIntelligenceIntegrationTest.xml",
+      "sha256": "8f32cf1b6ab6e06b85ea9a783b7da7d48c61671d9a67c19dc4344e8c08e2f093",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.LocalModelReasoningAdapterTest.xml",
+      "sha256": "cf8807d018c6865e2e3c7426e036dd33fe75c7ac3dc86039e6991279d142c05c",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.LocalReasoningBoundaryRegressionTest.xml",
+      "sha256": "484d0c657432f2586bac49c68b6b134e0c254cb4d37d2cb8d947f7a90c4937ff",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.MemoryEcologyTest.xml",
+      "sha256": "d5a14544af3712a30747f34473a6fb8d2a689dcec417696fc8eeedbad0fa2e99",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.PinnedResearchHttpsConnectionTest.xml",
+      "sha256": "b6173bdd7dd6b852a36a84bb04c0487656675f6add3881b552dce1f99f4a597f",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ReadOnlyMultiStepTest.xml",
+      "sha256": "4f4f0a457c9b5350bfe504b5803c253ce88baecd0d8a1fd4d977cb665f592043",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml",
+      "sha256": "db0513f55453d548f02e0cc5f96991241780e29edf8cd9eaf828a79d4b80a035",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ResearchEngineTest.xml",
+      "sha256": "fcdbad88d17d13c4f5eb583e855111c2add030da7bf68caf7c03780aef2f0edc",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ResearchHttpTransportTest.xml",
+      "sha256": "e2cd940ffe8ed686a5d5a992ebfa0d012a3e71eb219314384570ec58a24fc3da",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ResearchSanitizerBudgetTest.xml",
+      "sha256": "420d38ad66971917610042d5fec344a845b50483800f31314b7d4392c214ad53",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ResearchSanitizerEdgeCaseTest.xml",
+      "sha256": "2d62f3b2ee0382515fa3ca9be0d5a2fceea3a83e66a2dc57bfbe7d2d4648e706",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.ResearchTest.xml",
+      "sha256": "383f0a403dcb416a2663c8a9eae1eb870ec7a4b4f940896077af0db67599d46a",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.UntrustedResearchEvidenceTest.xml",
+      "sha256": "1e56853fdc737edaae7b25a5d265f14a10f82da6c4f19aac1116809cfcaf3053",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.VirtualModelFabricTest.xml",
+      "sha256": "ce37defed51c3cafe7a2f5dfee05a3a97a049bf4921adc331b3cc76080b79e95",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.WebLearningInboxTest.xml",
+      "sha256": "b0b660eaffde4103edc5d7260212cd6de0809ce4a6e12116c0e7a0357241232f",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.WebResearchIntegrationTest.xml",
+      "sha256": "0d97a07e3bd7bd1df2829c43f7e5ba536ff6ac9860f6d24cf36f6d3f30628cb9",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.WikipediaExtractResearchProviderTest.xml",
+      "sha256": "b8ebe00a6ffbcc4741722f2b34ccb6167b126a2875daef99ab13c5ac6b77ce7c",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest.xml",
+      "sha256": "fd1ea6b64cd8f1afbf8cc307fe285dd4ae12f7641a8b792c112a6fa12fea95d8",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.diagnostics.ContinuumDiagnosticsTest.xml",
+      "sha256": "513fde7119850aa6dd90ab1f0ead2677b82ad7f3ed3c3afab8a441efbad21080",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest.xml",
+      "sha256": "bcb5b027fea8f51496f0c0d1ca9c842339d34320f16acc2467bfdab1eaa78939",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest.xml",
+      "sha256": "c9bcdd11a50d179db58ed661870e78be6ba1c1e17cbf551477e689820409f112",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexPipelineTest.xml",
+      "sha256": "dba272080e9296030d8643faa10ae6c7883311fba09f79ec60d998849cb1fb0f",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.ContinuumCortexShadowTest.xml",
+      "sha256": "b4427da77fa18f8f52bda8f186273d844b5f0e7cad6b353b643d01881fcaad98",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx1DialogueContextTest.xml",
+      "sha256": "cc4028213e287bb3f4ed183a0585326d1282b1a3604a808ef3535ba2cd214a09",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest.xml",
+      "sha256": "8c6f63d71509a169a5d6ac0f00d0537da2733261a402548f6f4f4aedb815c401",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Ctx2NegationTest.xml",
+      "sha256": "ac68b68846b39e6b9cfc9b194196be9733c05476343c52e36c7e01c43ed030f8",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Lct1ReasoningTest.xml",
+      "sha256": "8177989a57075a93e0d1b9b4e09af86e1326e6b0109e55acfd829ebe70350aaa",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest.xml",
+      "sha256": "1ecd3a5d1fc1b5e470ccaf1716190905771ba342297c7079e3e19de0c9c645c6",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.intelligence.maxultra.Wsc1ConsolidationTest.xml",
+      "sha256": "7bb35d7e2a396f569f07c803ada6e762d95251a79f9961cbaa9dfff61e9c1ad2",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cdx1PatchAnomalyExperimentTest.xml",
+      "sha256": "7d2397beb6b6c6828b70f5acbf0938387c3875c3f9eab3d760d4f3024813b889",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cdx1PatchShadowStudyTest.xml",
+      "sha256": "340b6f86d4f1ec7fa4de0e70c15a0b68a92eadda2a1f49dd044f40bab783ea14",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumAtomicPairedBundleStoreTest.xml",
+      "sha256": "0e1cac78b358187beff33fa2a845584dffa9d540bbe7300f4548d6b902e70557",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueCurriculumTest.xml",
+      "sha256": "927f00701cf7a5c8f116fb6ddf1689788f5433a4ba8c99e8fdf67cb01dddca5f",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumAutoDialogueLabTest.xml",
+      "sha256": "8fd30256b1890a0a44ff6048d13d5ff72c663437b4286b27ec0c14e5dbcacede",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumAutonomousSchedulerTest.xml",
+      "sha256": "34bc3e9f4d0f6fa85b00a4c21797e62a48647c9e998a978db202daac3b0c65e6",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumBimodalConditionerTest.xml",
+      "sha256": "14b49a222b2410c3b2a7a2913566118e779e2e9ea962dd2a3f1102e56c40e032",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumCycleTest.xml",
+      "sha256": "3299e81af6981e4b9f17940d01d3a6bf5e8edae8873803c569f102bae032ab07",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumCdxLargeCurriculumTest.xml",
+      "sha256": "c58fd4e5bbd72685b2f09e09254b8cf82a8116a2d917614f9592d50539281ed4",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml",
+      "sha256": "73463ac62b6d6cbe4213a050c3fef7fb8422250667ebfd73182d72ffddfdaefd",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveGateTest.xml",
+      "sha256": "3dd3e6a5554a57d6eeb575ef69c44b4d6dc3c448dc42eea34ac963b1ca8a849d",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveParityTest.xml",
+      "sha256": "2e5130b51cdc0304e402a1f26fa4d31cd690c38ca359d2d3c40925115d227e04",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumContrastiveViewsTest.xml",
+      "sha256": "e6e95ccd5560bc15f5d1c6f019de969c6a1cb254640514fe0a003758e61c003d",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDecoderBridgeTest.xml",
+      "sha256": "c3fd6f12983f5f2afbcd626a96e6e2396217b6ddd95aab790326149255565447",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDecoderCoreIntegrationTest.xml",
+      "sha256": "62e22001fb7f2efab1a652c567b72abbe4625032acd1737341579fa04889ff76",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDeviceTeamleaderSchedulerTest.xml",
+      "sha256": "e02c6c1cd8a5ab2439109930233a4ab907b6650bf7dc72450c3c91cba0e0933b",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDialogueAuditTest.xml",
+      "sha256": "7958023e99e823bcbb3a4be4ece99f60865c5fde60b8deeeb2a626857b02fb14",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDialogueConversationBindingTest.xml",
+      "sha256": "6e95d4e0bba3ea07bd87f7a4873ce79422973b3babad70a083aa70911b51dbd5",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumDualCoreAutoStudyTest.xml",
+      "sha256": "8299e4f9d0632365d1c65b211b5aabdac1f10347d2bd5ebda9d7a22ac3534d6d",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumEvidenceSpanProbeTest.xml",
+      "sha256": "705b45d6224e2fa557a9d99bf4d03b1c4d261d57ad4afb8b293df030655c150f",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest.xml",
+      "sha256": "83f50f891ed6d71b874062caeba36e3f900fdfe608c391b2e1e93e5859dfcdd9",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumIdentifierGroundingTest.xml",
+      "sha256": "cc712e706b7143394f65b527b1eda26ca3e4f0bfe102ab54a289e1a2cd87a59c",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumIntelligenceAuditTest.xml",
+      "sha256": "ecc0e66a3ea781c84f050cdb95587b6a71b48202c56fff158e48c44de9e1ae08",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest.xml",
+      "sha256": "b6836f69c118d01c7fcffd3621e2513f0f2c45ce76d510429b2984839bd8aae1",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumLearningCoreTest.xml",
+      "sha256": "5b6787840a9ace99b60ecb1ac2626cf61e1288fcc4fd8db320fff5f22b0751f4",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest.xml",
+      "sha256": "a7e112588402d8f6cf93f648a46f54741fc7819d7f1c0c27ed1d700cd7876fca",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumMemoryDialogueTest.xml",
+      "sha256": "d4d48efcc11bf7c892edc36ff10b2018b0d20661403cc4c4ab778b8d6455b574",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumOfflineLearningBudgetTest.xml",
+      "sha256": "e9360998719d2d0f3eb4c4aca71e50887fc9b888cf2f0212f05faccc5fbaacbf",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumOrthographyProbeTest.xml",
+      "sha256": "51cac04e01f36257b450a12a165e9e3a05bdbabd652b80e049cd48ad7d0a00ca",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumOwnerFactTest.xml",
+      "sha256": "34c21f2a8e1b980c97efce0eb19192502341db493eee8fba9b683f12d4b07904",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumPublicCurriculumTest.xml",
+      "sha256": "1346c6c439eff34a0443c9bb9fd1c68c766680353dedf43f2e4376cf724885fe",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumPublicModelPackageTest.xml",
+      "sha256": "ffaa2778182bef028a59cd5fdf4cbe443526cd2b888e06badae841720afb7994",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyCycleResultTest.xml",
+      "sha256": "6bfa88d349d389c015a1fe9bb8c250712f88ab3413a3170a4054be17d5d1d927",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyFetchTest.xml",
+      "sha256": "8d4c1506869dab7cf5e791637dbca199d5ae6c43c14ab41ebeedf7ceb901d846",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumPublicStudyPolicyTest.xml",
+      "sha256": "cee8e07c98310a8e1a9f8f9d88f8d0f7e95417513da47fe8735d9bbd3e390d74",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumRuntimeEventJournalTest.xml",
+      "sha256": "18f71f732d2f81ab3fa87bb072025618050e3757eb0c5f88125a2b5546ab8bac",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest.xml",
+      "sha256": "1fa02977c014937d8a431f9894d63b19f4bb7c47a72b6b6f3af779e36b971feb",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumSourceNoveltyTest.xml",
+      "sha256": "f8d80fc451e87bbd6c79e30a9e87a90cebdc7bbd7f582dd3a36782b07726ad6c",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest.xml",
+      "sha256": "c0eacd5882b0c486f66ffbd05c2ac7953d7ceec2a3dae848fc6f72fa7133e0bc",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumSwb2DecoderResearchTest.xml",
+      "sha256": "2ef33f81d847be30c3771d65fed0b7a8f9fbd07725cde3411aaeca22bfe7e085",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ContinuumTopicFrontierTest.xml",
+      "sha256": "bab5390e9fbc5d88a8ec47fcacd79aad7642a1f49c21c98e381c09e83927c5f3",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cre1FrozenBenchmarkTest.xml",
+      "sha256": "00586dceb9682736137b417e3cd06fafe006a03656d17a13819bd55676b2cf27",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cre1InferenceEncoderTest.xml",
+      "sha256": "080cc64722a664fdaf5171711a4b848ebeb71b2256d8098fda122050c3e44513",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cre1PromotionAuditTest.xml",
+      "sha256": "32a4a63229651745f8e8ce397dc0c9fdb3d82e788936aed0f3cfe6d1a3b4cfba",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cre1PromotionGateTest.xml",
+      "sha256": "07139df7646e74d0d5f4643630765533813d7ef4732ede268585af8328525ab2",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Cre1ResearchLabTest.xml",
+      "sha256": "64a28f1f086fe1a9e0b619e1783c826eaa9d8347eb08af17b25715f08820dedb",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.KnowledgeDialogueTest.xml",
+      "sha256": "a94d9086dbd630cb0e49a6cfdf6a9ba403ec5792e3a59f880bf0c9e97b2c71a5",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.KnowledgeReasoningTest.xml",
+      "sha256": "073c4559207760a0909c91ded4feb6cd56dbfccd4b9c94ba6bd6443d3624801b",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.LearningExperienceStoreTest.xml",
+      "sha256": "06a3c6b39b7f589f10f0dd41c9dd1e3dabfcf298d802115d56617c8cb65e9c2b",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.LearningIntegrationTest.xml",
+      "sha256": "9b86d6d7154007b8a68228991f8b6d058df0414d7a57c7791d2e870d289b393a",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.MentorConceptNetworkTest.xml",
+      "sha256": "6c37992346603d240a4dbf96b68fa4d9f8c6b37b1abafe537cfa490a15890780",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.MentorCuriosityPlannerTest.xml",
+      "sha256": "a0c51fcb495491a518947f0547395ed2baca29104f438e3d00b48dce47b5124a",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.MentorCurriculumTest.xml",
+      "sha256": "5f7b587fa1e6e409e87f8eb4dd7e68f3414e8cf6c2706c8118ed6405970ebad3",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.MentorRecallTest.xml",
+      "sha256": "3c92a4d65a204a0f216dba26f8511c8f42a04ffafa9f1725e0eab2d1e64bbddf",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.MentorSemanticModelTest.xml",
+      "sha256": "3c8a120cf0cfc45c69eb97483ca1b18269fba2d01062db28677cc237ed68df1e",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.ModelCheckpointStoreTest.xml",
+      "sha256": "ddf1b76dcf3034243ed341c0fd481a694101327df44b7c1a885799dca11c5c91",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralCommandParserTest.xml",
+      "sha256": "7b1df73e8974cf5107537b3f035a3069725c821a144504fbf6a22ece27207db5",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralCuriosityRadarTest.xml",
+      "sha256": "addd4caf1377cf26ef7ae16d87883ce6b5bdaef5927a1980302d3c644ffdfaab",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralDemoSandboxTest.xml",
+      "sha256": "2b97b4387ab7295f56bc5a1813c1efa2cfbaa58ccde5f98e5de8775f18d224ea",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralDialogueTest.xml",
+      "sha256": "eb1ea3884f751d6a88d940a6b2880dc76daf89d1f297451709ab21f7a97c3458",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralGeneralizationComparisonTest.xml",
+      "sha256": "64480ce31c648ef1ef4bf7405966394686dadd38550cf77e55434565601055aa",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralGradientTest.xml",
+      "sha256": "b574708ad8c6c81ddf6d2cff6524b39131e7332d435146ef3e39d7470c1c94cb",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralLearningCoachTest.xml",
+      "sha256": "a404e29128316d70cced55d74f8e923b5e9e9dbee00434a21a6a15260082b2bc",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralPracticeTest.xml",
+      "sha256": "8f2b2897f51bf6de969e948e51220efb63588802989812b77192f1954f05481f",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralSnapshotImportTest.xml",
+      "sha256": "b3963ade9c4dec2c0e0827680bd656ffebdfd34cfbfe314297fd28a3b6eeda7b",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralTeachingAuditTest.xml",
+      "sha256": "55d4b2f07105abaf91ab08fd2e0cac0fd7769b43045c1d417e7b7eb98e0dd3de",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.NeuralTransferExperimentTest.xml",
+      "sha256": "01813272f7e45c5eb97ecbbf02bb4f48cbaa657621ce5ab04b5d554e5484cc02",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.OnlineNaiveBayesTest.xml",
+      "sha256": "4da9c0993c9078022c7cc492d73e8f059ff0095ae889fc2093f34f3fae07b049",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.RetrievalBenchmarkTest.xml",
+      "sha256": "f24f02b35a3f6a52a09bab7f97d4176033f90c8e069b21008c79429af05d1f05",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.StrictJsonTest.xml",
+      "sha256": "e370bf3e351ab2c7da4660cbd0b538a56b02a4b38e54c99e7542d3f6b078fd7c",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.Swb2ExperimentalEncoderTest.xml",
+      "sha256": "6cc9a3f37db531bfa2992eaca7634b9c8b3edee01288fb5593d35b5f10897b1d",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.TinyContextDecoderTest.xml",
+      "sha256": "b96bf1173194b9427080c968fca56da856189248eb32c9659144fdc7a050fdb1",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.TinyNeuralNetworkTest.xml",
+      "sha256": "8be600a87a29557ad0f557f9ec42ef811712dd845688c58da28fe58373876639",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.TrainableSubwordEncoderTest.xml",
+      "sha256": "9f5b917ce06a6a22f7edec476a372fed2b2d1282f8ed6db32c4543cce88a9636",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackMultiprocessTest.xml",
+      "sha256": "1f47bcd0cdf5a136fba1381cf5855935a6b9f4a99dceb23a3540ff716b3d27c3",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.interactive.ResearchFeedbackTest.xml",
+      "sha256": "a70d17fb3ff970902c43925b6625103b29b9ad505895d2da6a47d57515916acf",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.lm.LmCoreTest.xml",
+      "sha256": "bd1065fefdf52b3a7fc26c5d7f45dde6261cdce91db9fdd9d52722a7e7fc811a",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.lm.LmRuntimeTest.xml",
+      "sha256": "e03b0d40e79b251b3050c632ae507d761949fe443f0dd9277ed5aa7d7b958772",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.lm.LmStep7Test.xml",
+      "sha256": "36f73868ae831fa983b38cbf16a64a3f17ae1e5b6c37ba5d3131ccf3111c6c13",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.nf.NfCoreTest.xml",
+      "sha256": "12553868bf355baf801ca9ac99e802dbe75c83bea078d343418937a0196b4099",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.nf.NfHybridTest.xml",
+      "sha256": "5ca369cb6b2100409339a445a742d0b6c1e33bd09cafd4bb58bc0db84d642727",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.nf.NfResidualTest.xml",
+      "sha256": "86df1cdbaedcb414188ce8a161129f53bd2c55e9d0d1e12833f1328b68853665",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumCertifiedAbstentionTest.xml",
+      "sha256": "1354422cf7839f7da6c33800a2667b2590e9a41245792b9b991b62ef8d6fd1c3",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreSpanTest.xml",
+      "sha256": "74c893d79759d6bb11503efbdf3bd513b33d04979835fa3c3725a57954df9583",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest.xml",
+      "sha256": "89398289d97b527c6015832962f5f7028dcd019a68e70a21faa24a52ea89e449",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreVariantsTest.xml",
+      "sha256": "0cb2670550adbc8e8292977f3f286314b51cf423515f39b07dc95ce89896573a",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest.xml",
+      "sha256": "647644b2ca45a13c295f17447fd08a0c6d8891e8735f17121e4e21482f4b58f5",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest.xml",
+      "sha256": "fb416219aa2646057e0852d916e470dc863062d56ddb0b9d06896fa65547d741",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalConversationBoundaryTest.xml",
+      "sha256": "2d094289c60b59bca8748fddf6936d961411b3e8e8a4e5f68ba1631bd296f4bb",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalModelCatalogTest.xml",
+      "sha256": "80e2ddd1e8c230b2b4aff9128cf201868f79260403ae149ccdcb8fdc0c3fc56b",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalModelGenerationPolicyTest.xml",
+      "sha256": "c0273a235596bc69889d76f3feb8bc3cf095158d4ff8dd003743e09dc6d2e793",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalModelLifecycleFakeRuntimeTest.xml",
+      "sha256": "539c36c9df82dd57d74ee2930c375517d1d3b3406ce18bd319eae9cb14c1177d",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalQwenPromptPolicyTest.xml",
+      "sha256": "676aa6e79e2c46c469cf24f953ce1d3957114cf81e8ca05ff83efe737bf9a6e7",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.localmodel.LocalToolTurnGateTest.xml",
+      "sha256": "afb55eabe79508ffa7030dd150d58e9723307311447dc8b4fd6a3d9a50be64b3",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumCoreMirrorTest.xml",
+      "sha256": "7ba004278a172ee14f19c8addd0a68883baa47119c7d173fb78c5fe3ad99e0c9",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumDashboardMathTest.xml",
+      "sha256": "f116541c7f660325f83fbff4cac092558cfe6a06082e313e8ace620dea84af83",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumGridPolicyTest.xml",
+      "sha256": "c57e7a043d10a64de08d4cbb833d55d529cc8a79b944f8d35df29574b4b8ce2b",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumHologramPlexusTest.xml",
+      "sha256": "13bfac578a2c8c99896613fe2f3a14e1ca8369e9fcffef32d32f37f4b65f31e5",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumHomeLayoutTest.xml",
+      "sha256": "fdc5ce2c9148dc65043a8e7a2520b1dd5dd92d3067c184aabc9dcdd4b9e5736a",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.ContinuumOrbitalRingTest.xml",
+      "sha256": "51821ad176399023cad312051b70fe8cc99630c218cc65c58100bae3de12ddea",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.RidgeChartTest.xml",
+      "sha256": "fdb1eb7e26029d373a377b5834098d6b1bbd5419916ff14f8b43cd9c7628b24a",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "TEST-at.heinz.deviceai.ui.WaveChartMarkerTest.xml",
+      "sha256": "c2b84c911648d9501b9bcd03528f4f05186772a97f7ed0c43a36b87988be8e07",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "profile": "Linux x64, JDK17, Gradle8.11.1, SDK36; mentorpaired compilation/unit/lint only; no owner signing or APK; native Fold7/Gemma NOT_RUN"
+}

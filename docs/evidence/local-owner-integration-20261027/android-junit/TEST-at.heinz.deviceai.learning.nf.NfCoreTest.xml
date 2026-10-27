@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.nf.NfCoreTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:24:03" hostname="7b281259906f" time="1.522">
+  <properties/>
+  <testcase name="carriedMemoryEqualsOneLongPass" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.007"/>
+  <testcase name="deltaWritesAreExactlyReversible" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.0"/>
+  <testcase name="everyMixerHasExactEndToEndGradients" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.105"/>
+  <testcase name="byteLatentModelHasExactGradientsAndStaysCausal" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.069"/>
+  <testcase name="researchOperationsHaveExactGradients" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.004"/>
+  <testcase name="everyMixerLearnsAndIsDeterministic" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="1.297"/>
+  <testcase name="adapterTrainingLeavesTheBaseBitIdentical" classname="at.heinz.deviceai.learning.nf.NfCoreTest" time="0.039"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

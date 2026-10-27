@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ToolExecutionReceiptStoreTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:41" hostname="7b281259906f" time="0.049">
+  <properties/>
+  <testcase name="deniedCallIsTerminalAndCannotBeReplayedAsApproval" classname="at.heinz.deviceai.ToolExecutionReceiptStoreTest" time="0.003"/>
+  <testcase name="receiptCodecRejectsTamperedDataAndNeverPersistsRawArgumentStrings" classname="at.heinz.deviceai.ToolExecutionReceiptStoreTest" time="0.035"/>
+  <testcase name="gatePersistsSuccessfulReceiptAndSuppressesDuplicateAfterRestart" classname="at.heinz.deviceai.ToolExecutionReceiptStoreTest" time="0.003"/>
+  <testcase name="callIdCannotBeReusedForDifferentArguments" classname="at.heinz.deviceai.ToolExecutionReceiptStoreTest" time="0.002"/>
+  <testcase name="startedReceiptSurvivesRestartAndBlocksAmbiguousReplay" classname="at.heinz.deviceai.ToolExecutionReceiptStoreTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
