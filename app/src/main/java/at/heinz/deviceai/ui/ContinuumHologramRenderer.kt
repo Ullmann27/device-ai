@@ -54,6 +54,12 @@ class ContinuumHologramRenderer {
                 wall = .33f, brand = 1.545f, tagline = 1.685f, marks = 1.795f)
             val FOLD = Geometry(centerY = .495f, radiusOfWidth = .2366f, radiusOfHeight = .3334f, pad = .99f,
                 wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null, flat = .62f, sphere = 1.04f, haloNodes = 72, aura = .35f, bloom = 1f)
+            // Tall unfolded inner screen: reference orb ~274 design dp diameter,
+            // drawn behind the enlarged action buttons in its own, wider stage.
+            // Landscape and cover-display geometry remain byte-for-byte unchanged.
+            val FOLD_PORTRAIT = Geometry(centerY = .42f, radiusOfWidth = .375f, radiusOfHeight = .37f,
+                pad = .99f, wall = .1f, brand = 1.27f, tagline = 1.42f, marks = null,
+                flat = .62f, sphere = 1.04f, haloNodes = 72, aura = .35f, bloom = 1f)
         }
     }
 
