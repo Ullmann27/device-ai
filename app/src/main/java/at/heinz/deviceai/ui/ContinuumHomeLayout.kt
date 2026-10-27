@@ -127,10 +127,13 @@ object ContinuumHomeLayout {
         val requestedHeight = heightDp / u
         val frame = requestedHeight.coerceAtLeast(800f)
         val extra = (frame - 886f).coerceAtLeast(0f)
-        val heroExtra = (extra * .35f).coerceAtMost(125f)
+        // Image-registered portrait proportions: taller canvases grow the hero gently
+        // and retain the reference's lower starfield margin, not giant stretched panels.
+        val heroExtra = (extra * .22f).coerceAtMost(100f)
         val top = 400f + heroExtra
         val gap = 12f
-        val cardHeight = ((frame - top - 12f - gap) / 2f).coerceAtLeast(183f)
+        val bottomMargin = 12f + extra * .46f
+        val cardHeight = ((frame - top - bottomMargin - gap) / 2f).coerceAtLeast(196f)
         val row2 = top + cardHeight + gap
         val positions = linkedMapOf(
             Slot.BRAND to Box(16f, 5f, 355f, 62f),
