@@ -5,7 +5,17 @@ umask 077
 trap 'code=$?; echo "CONTINUUM_QA_EXIT=$code"; exit "$code"' EXIT
 
 cd "$(git rev-parse --show-toplevel)"
+# A separate disposable Render QA site may check this exact review branch.
+# It cannot use the owner signing gate, modify main or authorize a release.
 expected_ref="integration/continuum-owner-v26-live-candidate-20261027"
+if [[ -n "${CONTINUUM_QA_REVIEW_BRANCH:-}" ]]; then
+  case "${CONTINUUM_QA_REVIEW_BRANCH}" in
+    chatgpt/continuum-fold7-usable-navigation-20261027)
+      expected_ref="$CONTINUUM_QA_REVIEW_BRANCH" ;;
+    *)
+      echo "QA: disallowed review branch" >&2; exit 69 ;;
+  esac
+fi
 head_sha="$(git rev-parse --verify HEAD)"
 [[ "$head_sha" =~ ^[a-f0-9]{40}$ ]] || { echo "QA: invalid Git HEAD" >&2; exit 69; }
 if [[ -n "${CONTINUUM_QA_SOURCE_SHA:-}" && "$head_sha" != "$CONTINUUM_QA_SOURCE_SHA" ]]; then
@@ -76,15 +86,35 @@ grep -q 'OWNER_V25_BLOCKED' "$out/OLD-RELEASE-GATE.log" || {
   echo "ERROR: legacy gate did not reject for an identifiable release reason" >&2
   exit 69
 }
-# The old historical-owner-v25 release test necessarily expects its immutable
-# 2026-10-26 source HEAD. EXCLUDE ONLY THAT obsolete positive approval test from
-# fresh integration QA; DO NOT delete/change it or weaken a production gate.
-# Report the selection to reviewers and require a NEW immutable owner inventory
-# before any signed APK is authorized.
-mapfile -d '' tests < <(find .github/continuum scripts -type f -name '*.test.mjs' \
-  ! -name 'continuum-v25-owner-release.test.mjs' -print0)
-printf 'qa_new_source=%s\\nlegacy_release_test=NOT_APPLICABLE_OLD_FROZEN_SHA\\nnew_release_inventory=NOT_APPROVED\\n' \
-  "$head_sha" > "$out/TEST-SCOPE.txt"
+# Both pre-existing *positive* release-manifest tests apply ONLY to their
+# original immutable inventories, not to a later changed owner review branch.
+# NEVER change these tests, never relabel them green for changed source.
+# The real release gates must still reject without fresh owner approval.
+if [[ "$expected_ref" == "chatgpt/continuum-fold7-usable-navigation-20261027" ]]; then
+  echo "CURRENT_0324_MANIFEST=SUPERSEDED_NOT_APPROVED"
+  if env -u CONTINUUM_OWNER_0324_LIVE_APPROVED_SOURCE_SHA \
+     -u CONTINUUM_OWNER_0324_LIVE_APPROVED_MANIFEST_BLOB \
+     -u CONTINUUM_OWNER_0324_LIVE_APPROVED_BUILDER_SHA \
+     -u CONTINUUM_RELEASE_SHA \
+     node scripts/continuum-0324-live-source-gate.mjs > "$out/OLD-0324-RELEASE-GATE.log" 2>&1; then
+    echo "ERROR: stale 0.3.24 source gate accepted unsigned source" >&2
+    exit 69
+  fi
+  grep -q 'OWNER_0324_LIVE_BLOCKED' "$out/OLD-0324-RELEASE-GATE.log" || {
+    echo "ERROR: current release gate did not fail closed with identifiable status" >&2
+    exit 69
+  }
+  mapfile -d '' tests < <(find .github/continuum scripts -type f -name '*.test.mjs' \
+    ! -name 'continuum-v25-owner-release.test.mjs' \
+    ! -name 'continuum-0324-live-source-gate.test.mjs' -print0)
+  printf 'qa_new_source=%s\nlegacy_release_test=NOT_APPLICABLE_OLD_FROZEN_SHA\nprior_0324_release_test=NOT_APPLICABLE_STALE_SOURCE_MANIFEST\nlegacy_gates=REJECTED_WITHOUT_OWNER_APPROVAL\nnew_release_inventory=NOT_APPROVED\n' \
+    "$head_sha" > "$out/TEST-SCOPE.txt"
+else
+  mapfile -d '' tests < <(find .github/continuum scripts -type f -name '*.test.mjs' \
+    ! -name 'continuum-v25-owner-release.test.mjs' -print0)
+  printf 'qa_new_source=%s\nlegacy_release_test=NOT_APPLICABLE_OLD_FROZEN_SHA\nnew_release_inventory=NOT_APPROVED\n' \
+    "$head_sha" > "$out/TEST-SCOPE.txt"
+fi
 env -u NODE_TEST_CONTEXT node --test --test-concurrency=2 "${tests[@]}" > "$out/NODE-TESTS.log" 2>&1 || {
   tail -n 100 "$out/NODE-TESTS.log"; exit 69
 }
