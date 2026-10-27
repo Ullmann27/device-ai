@@ -23,11 +23,21 @@ class ContinuumEvidenceSwitchProbeTest {
         val elapsed=(System.nanoTime()-time).coerceAtLeast(0L)/1_000_000L
         val ids=answer.turn.dialogue.memoryIds.toSet()
         val authorized=core.activeOwnerFacts().single { it.content==expected }.id
+        val cre1Proposed=answer.turn.observations
+            .sortedWith(compareByDescending<at.heinz.deviceai.learning.ContinuumShadowScore> {
+                it.semanticScore
+            }.thenBy { it.memoryId }).map { it.memoryId }
+        val gate=if(answer.turn.cre1State==ContinuumCre1State.UNTRAINED_SHADOW)
+            "BLOCKED_NO_APPROVED_MANIFEST" else "REQUIRES_QUALIFIED_MANIFEST"
         println("EVIDENCE_PAIR session=$session ms=$elapsed gemma=NOT_RUN gemmaCalls=0 " +
             "cre1=${answer.turn.cre1State} ids=${ids.sorted()} " +
+            "cre1ProposedOrder=${cre1Proposed} gate=$gate " +
+            "swb1Hash=${answer.turn.dialogue.modelHash} " +
             "modelId=NOT_RUN answer=${answer.finalAnswer.replace("\n"," ").take(240)}")
         assertEquals("Exactly one authorized source ID",setOf(authorized),ids)
         assertEquals(ids,answer.evidenceHits.map{it.id}.toSet())
+        assertTrue("Only owner-confirmed provenance may authorize facts",
+            answer.evidenceHits.all { it.kind=="Bestätigte Nutzererinnerung" })
         assertTrue(answer.turn.grounded)
         assertTrue("Correct approved statement missing",answer.finalAnswer.contains(expected))
         assertFalse("Stale/foreign answer persisted",answer.finalAnswer.contains(forbidden))
