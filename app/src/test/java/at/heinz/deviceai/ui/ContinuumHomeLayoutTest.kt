@@ -75,6 +75,21 @@ class ContinuumHomeLayoutTest {
             assertTrue(l.boxes[Slot.RAIL]==null)
             assertTrue(l.boxes[Slot.MODEL_PILL]==null)
             assertTrue(l.boxes.getValue(Slot.HERO).bottom<=first[0].top)
+            val hero = l.boxes.getValue(Slot.HERO)
+            val leftActions = listOf(Slot.LABEL_CONNECTED, Slot.LABEL_LEARNING, Slot.LABEL_DEVELOPING)
+            val rightActions = listOf(Slot.LABEL_THINKING, Slot.LABEL_ANALYSING, Slot.LABEL_EVOLVING)
+            for ((leftSlot, rightSlot) in leftActions.zip(rightActions)) {
+                val left = l.boxes.getValue(leftSlot)
+                val right = l.boxes.getValue(rightSlot)
+                assertEquals("equal portrait action widths", left.width, right.width, .001f)
+                assertTrue("no action overlaps hologram", left.right < hero.left && hero.right < right.left)
+                assertEquals("mirrored action margins", left.left, w - right.right, .001f)
+            }
+            val status = l.boxes.getValue(Slot.SYSTEM_STATUS)
+            assertTrue("system chart is below the main dashboard", status.top >= second[0].bottom)
+            assertTrue("all live data is scroll reachable", status.bottom <= l.contentHeight)
+            assertEquals("system strip aligned to grid", first[0].left, status.left, .001f)
+            assertEquals("system strip right edge", first[2].right, status.right, .001f)
             for ((left,right) in listOf(
                 Slot.LABEL_CONNECTED to Slot.LABEL_THINKING,
                 Slot.LABEL_LEARNING to Slot.LABEL_ANALYSING,
