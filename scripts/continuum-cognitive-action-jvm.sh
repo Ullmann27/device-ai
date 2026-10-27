@@ -15,7 +15,7 @@ for name in ComputeFabric ContinuumState ContinuumSeed ContinuumSeedStore ProofC
     CognitivePersistence ContinuumRuntimeStore Deliberation BoundedAgent AgentCheckpointStore HybridMemoryRetriever ExperienceCompiler ReadOnlyToolPlan; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/cognitive/$name.kt")
 done
-for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter BootstrapBrain BootstrapTraining DeviceStorageProbe; do
+for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter BootstrapBrain BootstrapTraining DeviceStorageProbe ShellExecution BoundedShellProcess; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/$name.kt")
 done
 for name in LearningSnapshot TinyNeuralNetwork NeuralDialogue StructuredKnowledge OnlineNaiveBayes; do
@@ -26,7 +26,7 @@ tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegres
 for name in "${tests[@]}"; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/$name.kt")
 done
-toolTests=(AgentToolLayerTest ToolRegistryTest ToolReplayGuardTest ToolExecutionReceiptStoreTest)
+toolTests=(AgentToolLayerTest ToolRegistryTest ToolReplayGuardTest ToolExecutionReceiptStoreTest ShellExecutionTest)
 for name in "${toolTests[@]}"; do sources+=("$root/app/src/test/java/at/heinz/deviceai/$name.kt"); done
 sha256sum "${sources[@]}" > "$out/source-blobs.sha256"
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -version > "$out/compiler.txt" 2>&1
