@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "base": "dbe38e7ffee5d65a65012166ba5716bf152e6cb6",
+  "chain": "node",
+  "startedAt": "2026-10-27T14:14:43.658Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 3,
+    "verifiedModelExecution": false,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "provider-rejection",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_MODEL_UNAVAILABLE",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "6b55d67c9a9067fc",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_PATCH_NOT_EXACT",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "provider-rejection",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_MODEL_UNAVAILABLE",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_MODEL_UNAVAILABLE",
+        "repeated": false
+      },
+      {
+        "code": "CODING_PATCH_NOT_EXACT",
+        "repeated": false,
+        "responseSha256": "6b55d67c9a9067fcb17ff284a573808891025a7e2b975753f5dbae82320ca22d"
+      },
+      {
+        "code": "CODING_MODEL_UNAVAILABLE",
+        "repeated": false
+      }
+    ],
+    "reason": "Provider calls do not independently establish model execution",
+    "lastRejectCode": "CODING_MODEL_UNAVAILABLE"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "b42655133ecd4bb589f7b0f937c6ced71e0546275eb0f5ad625ff320bff6368e",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 14,
+          "failed": 9,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 14,
+          "passed": 5,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "34d567f360d2bd16aa9a0d31f35ec7959ed05d9086cac9d3a567360190a284c6",
+            "50776f9bd82ce73465c114227b5eb18975bc130c769bc9a2eb12c0c6f49ec50b",
+            "81c2999558509369002d50d04813bd3b1312c7965e135a108872f6336ba52d71",
+            "8777611075f1d496018572fae03575fa916e8af2df2e07472a4f1c5119807174",
+            "9a3d0f1b2b4eb292ad2827ca6b1838cafbc301c67ae2cdac4ddfac41e5141dae",
+            "b99be66b26453ba1134786eac6797cf11e9263e8011622c194d288c3bfb341e5",
+            "c7f849f634d468f89ae9bde4a7c2b97e48ce00942ff4e4ed4777d5610f3802a3",
+            "d55443e92b935ae87f9e1572e34b19799610b6ea7c08c578cd75999d854277a8",
+            "d9d0daa3060a5949c9bcdac204e3209ce53a748dea46e9d85aeb072b83ac622e",
+            "db6afb02948ff1001d3e0821952d17840af6fa4907fb1dec8ee472a4ba8de3a2",
+            "dfca16dbdec5bf0b3be7e7f773738a46a13b92ff128adc7667cdedf15a261cf6",
+            "ea01778bcb7504882f17a5354c14eeb689ad80f8beb6adccc8a10a1f8adc707d",
+            "f2ce9cf0ed7fc6e9e79e524e2e6b49fb1dc049ff039929252c9ddc4b3125d1c6",
+            "fa9d73c3e4c49b20442abc98b8ff22112e3d0aba0eef727ffb61aa5922aacd06"
+          ]
+        },
+        "diagnostics": 9
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.backtick code",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```js\\nliteral\\nliteral\\nx: y\\n```'\n- '```js\\n**literal**\\n### literal\\n| x | y |\\n```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "71448c9087381435"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.tilde code",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~text\\nliteral\\nliteral\\nx: y\\n~~~'\n- '~~~text\\n**literal**\\n### literal\\n| x | y |\\n~~~'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "7eb3cda122c75ece"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.long fence with shorter interior run",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '````md\\n```\\nliteral\\n````'\n- '````md\\n```\\n**literal**\\n````'\n                ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "72a0658d6562683d"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.wrong fence character inside",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n~~~\\nliteral\\n```'\n- '```text\\n~~~\\n**literal**\\n```'\n                 ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "54fc3af50dfea9f5"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.nonclosing suffix",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n```not-a-close\\nliteral\\n```'\n- '```text\\n```not-a-close\\n**literal**\\n```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "31d1d5a9c655cf11"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.blank lines and trailing spaces",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```\\n  x\\n\\n  y\\n```'\n- '```\\n  x  \\n\\n\\n\\n  **y**  \\n```'\n           ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "2a7d8a1c58f7a7bf"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.unclosed fence",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~\\nliteral\\nliteral'\n- '~~~\\n**literal**\\n### literal'\n        ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "68caebdedd018f7f"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.indented fence",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```txt\\nliteral\\n   ```'\n- '   ```txt\\n**literal**\\n   ```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "05c8ac6ee14d0a98"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.format prose on both sides of a code block",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 18,
+        "col": 9,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Heading\\nbefore\\n```\\nliteral\\n```\\nafter'\n- 'Heading\\nbefore\\n```\\n**literal**\\n```\\nafter'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "b12ed6c0bb1c9bd5"
+      }
+    ]
+  },
+  "attempts": [],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "coding": {
+    "taskId": "mob-d23e8d7fcbffc449",
+    "taskFingerprint": "d871574d76c0bb09942e2e5c85aa2818bb721e7b3fa2d2ca8a1aba853c2e85f9",
+    "sourceCommit": "dbe38e7ffee5d65a65012166ba5716bf152e6cb6",
+    "allowedPaths": [
+      "backend/src/mentor-answer-format.js"
+    ],
+    "milestones": [
+      "BASELINE_FAILED"
+    ],
+    "candidateCount": 0,
+    "contextSha256": null
+  },
+  "finishedAt": "2026-10-27T14:17:43.342Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "dbe38e7ffee5d65a65012166ba5716bf152e6cb6",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 9,
+        "proof": "b5b475a8eb2a5f3e8214aa380fa33a6eeb084b2ef7ce42277d9e7dff1c52f7dc"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "0aaeaa6ee91db907696924f7c5f5d53cfbaa7f4df467a2e4301b1e3915de3274"
+  }
+}

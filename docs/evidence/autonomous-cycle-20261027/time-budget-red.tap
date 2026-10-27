@@ -1,0 +1,112 @@
+✖ explicit slow local CPU budget is bounded by the caller deadline and recorded (91.290289ms)
+✖ invalid configured model time budgets fail before any request (18.064274ms)
+✖ local inference abort produces a typed timeout without leaking transport error text (101.663238ms)
+✖ long local budget does not weaken response validation or maximum deadline (1.125442ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 386.718531
+
+✖ failing tests:
+
+test at .github/continuum/coding-time-budget.test.mjs:14:1
+✖ explicit slow local CPU budget is bounded by the caller deadline and recorded (91.290289ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /CODING_MODEL_TIMEOUT/. Input:
+  
+  'Error: CODING_MODEL_UNAVAILABLE'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:18:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: CODING_MODEL_UNAVAILABLE
+        at rejectedModelOutput (file:///workspace/device-ai/.github/continuum/coding-provider.mjs:10:14)
+        at provider (file:///workspace/device-ai/.github/continuum/coding-provider.mjs:175:10)
+        at file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:18:20
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:18:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.start (node:internal/test_runner/test:1242:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: /CODING_MODEL_TIMEOUT/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-time-budget.test.mjs:23:1
+✖ invalid configured model time budgets fail before any request (18.064274ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:25:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CODING_MODEL_TIME_BUDGET_INVALID/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-time-budget.test.mjs:28:1
+✖ local inference abort produces a typed timeout without leaking transport error text (101.663238ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /^Error: CODING_TIMEOUT$/. Input:
+  
+  'Error: PRIVATE_TRANSPORT_SENTINEL'
+  
+      at async TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:30:2)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: PRIVATE_TRANSPORT_SENTINEL
+        at o.signal.addEventListener.once (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:31:44)
+        at [nodejs.internal.kHybridDispatch] (node:internal/event_target:856:20)
+        at AbortSignal.dispatchEvent (node:internal/event_target:789:26)
+        at runAbort (node:internal/abort_controller:547:10)
+        at abortSignal (node:internal/abort_controller:518:3)
+        at AbortController.abort (node:internal/abort_controller:566:5)
+        at Timeout.<anonymous> (file:///workspace/device-ai/scripts/continuum-local-brain.mjs:227:73)
+        at listOnTimeout (node:internal/timers:635:17)
+        at process.processTimers (node:internal/timers:571:7),
+    expected: /^Error: CODING_TIMEOUT$/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at .github/continuum/coding-time-budget.test.mjs:33:1
+✖ long local budget does not weaken response validation or maximum deadline (1.125442ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /CODING_RESPONSE_INVALID/. Input:
+  
+  'Error: INVALID_CODING_BOUNDS'
+  
+      at async TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:35:2)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: INVALID_CODING_BOUNDS
+        at queryLocalCodingBrain (file:///workspace/device-ai/scripts/continuum-local-brain.mjs:225:77)
+        at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-time-budget.test.mjs:35:23)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: /CODING_RESPONSE_INVALID/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

@@ -1,0 +1,32 @@
+✔ timeout is a durable FAILED/TIMEOUT, never a successful model response or a free retry (42.365821ms)
+✔ typed no-op rejection is recorded, not a repair success (29.164408ms)
+✔ valid exit but broken JSON is INVALID_OUTPUT, not RESPONDED (27.534409ms)
+✔ validated model proposal is RESPONDED, never claimed verified repair (30.068968ms)
+✔ abrupt child exception retains RESERVED as UNKNOWN; no unearned second call (31.509032ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (39.394168ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (29.36259ms)
+✔ malformed model name is rejected before invoking the local child (54.23355ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (17.079562ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (45.791525ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (28.674366ms)
+✔ foreign or corrupt persisted requests block before another inference (29.614055ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (36.307859ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (35.275581ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (299.860384ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (188.363458ms)
+✔ unknown provider errors never leak their message to the durable report (178.886852ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (1.584111ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (28.440983ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (279.225192ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (273.747118ms)
+✔ unknown or symlinked SDK installation cannot be silently substituted (1.30312ms)
+﹣ real Harness service preserves the existing strict wire schema without mounting tools (0.098042ms) # NOT_RUN: configure actual reviewed Harness SDK
+﹣ authority smuggling, no-op and HTTP failure remain rejected without hidden retries (0.075809ms) # NOT_RUN: actual SDK required
+ℹ tests 24
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 2
+ℹ todo 0
+ℹ duration_ms 2026.1307

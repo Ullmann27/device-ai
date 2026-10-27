@@ -222,7 +222,7 @@ export function parseCodingResponse(payload,paths) {
 /** Generative task seam; data only. Rights and exact-source hunks are checked again by the worker. */
 export async function queryLocalCodingBrain({userPrompt,allowedTrackedPaths,apiKey,model='local',timeoutMs=60_000,fetchImpl=globalThis.fetch}={}){
  if(typeof apiKey!=='string'||!/^[A-Za-z0-9_-]{32,128}$/.test(apiKey))throw Error('LOCAL_AUTH_REQUIRED');
- if(!Number.isSafeInteger(timeoutMs)||timeoutMs<100||timeoutMs>60_000)throw Error('INVALID_CODING_BOUNDS');
+ if(!Number.isSafeInteger(timeoutMs)||timeoutMs<100||timeoutMs>300_000)throw Error('INVALID_CODING_BOUNDS');
  const {body,paths}=buildCodingRequest({userPrompt,allowedTrackedPaths,model});
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
  try{
@@ -230,5 +230,8 @@ export async function queryLocalCodingBrain({userPrompt,allowedTrackedPaths,apiK
    method:'POST',redirect:'error',cache:'no-store',signal:controller.signal,
    headers:{'content-type':'application/json',authorization:'Bearer '+apiKey},body:JSON.stringify(body)});
   return parseCodingResponse(await boundedJsonResponse(response),paths);
+ }catch(error){
+  if(controller.signal.aborted)throw Error('CODING_TIMEOUT');
+  throw error;
  }finally{clearTimeout(timer);controller.abort();}
 }

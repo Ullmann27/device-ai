@@ -546,11 +546,11 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     history.push(entry);report.inference.history=structuredClone(history.slice(-3));
   };
   const knownCodes=new Set(['CODING_RESPONSE_INVALID','CODING_NOOP_PATCH','CODING_PATCH_NOT_EXACT','CODING_REPLY_INVALID','CODING_PROPOSAL_INVALID',
-    'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE',
+    'CODING_PROPOSAL_CONTEXT_INVALID','LOCAL_PATCH_NOT_EXACT','CODING_MODEL_UNAVAILABLE','CODING_MODEL_TIMEOUT',
     'LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
     'CODING_CONTEXT_DEADLINE','CODING_CONTEXT_BUDGET_GRANTS','CODING_TASK_BINDING_MISMATCH',
     'CODING_EVIDENCE_INVALID','CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
-  const terminalCodes=new Set(['CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
+  const terminalCodes=new Set(['CODING_MODEL_TIMEOUT','CODING_MODEL_UNAVAILABLE','LOCAL_PROVIDER_UNAVAILABLE','CODING_MODEL_BUDGET_EXHAUSTED','CODING_DEADLINE_EXHAUSTED',
     'CODING_CONTEXT_DEADLINE','CODING_TASK_BINDING_MISMATCH','CODING_EVIDENCE_INVALID',
     'CODING_EVIDENCE_UNSAFE','CODING_EVIDENCE_BINDING_MISMATCH']);
   const rejectModel=(code,rawFingerprint=null)=>{
@@ -566,6 +566,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
        code==='CODING_NOOP_PATCH'?'The previous patch replaced a source span with identical bytes. Propose a genuine change to a uniquely matching allowed source span.':
        code==='CODING_RESPONSE_INVALID'?'The previous JSON patch was invalid. Provide exact valid JSON with distinct oldText/newText replacements.':
       code==='CODING_REPEATED_PATCH'?'The same previously rejected candidate was returned again. Produce a different change.':
+      code==='CODING_MODEL_TIMEOUT'?'Local inference exhausted its time budget. Stop; inspect the measured runtime before a separately budgeted attempt.':
       code==='CODING_MODEL_UNAVAILABLE'||code==='LOCAL_PROVIDER_UNAVAILABLE'?
         'The previous local model invocation was unavailable. No patch was accepted or executed.':
       'The previous proposal was rejected by the coding safety or schema gate: '+code+'. Correct the proposal.';

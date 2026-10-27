@@ -44,6 +44,7 @@ if(operation==='prepare'){
  const started=Date.now();
  const result=await runCodingTask({project:root,stateDir,id:task.id,expectedTaskFingerprint:taskFingerprint(task),executor,
   executorAbortMode:'CHECKPOINT_BOUNDARY_ONLY',requireIsolation:true,providerFactory:options=>createCodingCandidateProvider({...options,
+   modelTimeoutMs:JSON.parse(fs.readFileSync(path.join(out,'freeze.json'),'utf8')).spec.limits.modelTimeoutMs,
    run:(binary,args,opts)=>{
     // Research-only explicit capture: this source has no personal data or secrets. Never record env/auth headers.
     const n=++calls;fs.writeFileSync(path.join(out,`model-${n}-input.json`),opts.input,{flag:'wx',mode:0o600});

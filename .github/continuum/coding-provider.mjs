@@ -12,7 +12,11 @@ function rejectedModelOutput(code,responseSha256=null) {
  return error;
 }
 
-export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null,remoteTeacher=null}={}){
+export function createCodingCandidateProvider({root,task,env=process.env,run=spawnSync,evidenceDir=null,remoteTeacher=null,modelTimeoutMs=60_000}={}){
+ // Trusted caller budget, never an instruction supplied by a model. The task's
+ // remaining overall deadline and durable call count still take precedence.
+ if(!Number.isSafeInteger(modelTimeoutMs)||modelTimeoutMs<100||modelTimeoutMs>300_000)
+  throw Error('CODING_MODEL_TIME_BUDGET_INVALID');
  const spec=validateCodingTask(task),fingerprint=taskFingerprint(spec);
  // Remote use is an explicit trusted-caller choice, never an environment-only fallback.
  if(remoteTeacher!==null){
@@ -93,7 +97,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    history:history.slice(-3).map(h=>({candidate:String(h.candidate??'').slice(0,64),outcome:String(h.outcome??'').slice(0,48),
     hypothesis:String(h.hypothesis??'').slice(0,600),diagnostic:String(h.diagnostic??'').slice(0,1000)})),context});
   if(userPrompt.length>28000)throw Error('CODING_PROMPT_BOUNDS');
-  const timeoutMs=Math.min(60_000,deadline-Date.now()-500);
+  const timeoutMs=Math.min(remoteTeacher?60_000:modelTimeoutMs,deadline-Date.now()-500);
   if(timeoutMs<100)throw Error('CODING_DEADLINE_EXHAUSTED');
   // The child receives only this transport's credentials. The HTTPS transport
   // also preserves the configured proxy and CA trust, without Git/owner secrets.
@@ -133,7 +137,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   const trace={schema:'continuum-coding-model-request',version:1,taskId:spec.id,taskFingerprint:fingerprint,sourceCommit:base,
    request:number,startedAt:new Date(started).toISOString(),elapsedMs:0,
    configuredModel:model,verifiedModelExecution:false,contextSha256:context.contextSha256,
-   promptSha256:sha256Hex(userPrompt),exitCode:null};
+   promptSha256:sha256Hex(userPrompt),modelTimeoutMs:timeoutMs,exitCode:null};
   if(remoteDisclosure)Object.assign(trace,{transport:'AUTHENTICATED_HTTPS_TEACHER',modelRevision:PINNED_REVISION,
    consentRequestSha256:remoteDisclosure.requestSha256,maxCostMicrousd:0});
   if(evidence)writeTrace(number,{...trace,status:'RESERVED',rawContentStored:false},{reserve:true});
@@ -162,7 +166,8 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    const rejected=!remoteTeacher&&
     /^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
      .exec(String(response.stderr??'').trim());
-   const failureKind=response.error?.code==='ETIMEDOUT'?'TIMEOUT':
+   const localTimeout=!remoteTeacher&&String(response.stderr??'').trim()==='LOCAL_MODEL_UNAVAILABLE_OR_INVALID: CODING_TIMEOUT';
+   const failureKind=response.error?.code==='ETIMEDOUT'||localTimeout?'TIMEOUT':
     response.error?'PROCESS_ERROR':response.signal?'SIGNALLED':
     rejected?.[1]==='CODING_NOOP_PATCH'?'NOOP_PATCH':
     rejected?.[1]==='CODING_RESPONSE_INVALID'?'INVALID_MODEL_RESPONSE':'CHILD_EXIT_NONZERO';
@@ -171,6 +176,7 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
     const error=rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
     error.remoteCode=remoteFailureCode;error.fallback=DEEPSEEK_OFFLINE_FALLBACK;throw error;
    }
+   if(localTimeout)throw rejectedModelOutput('CODING_MODEL_TIMEOUT');
    if(rejected)throw rejectedModelOutput(rejected[1],rejected[2]);
    throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
   }

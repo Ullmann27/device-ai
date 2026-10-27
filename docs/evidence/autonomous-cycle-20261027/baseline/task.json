@@ -1,0 +1,22 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "mentor-fenced-code",
+  "sourceCommit": "dbe38e7ffee5d65a65012166ba5716bf152e6cb6",
+  "kind": "BUGFIX",
+  "goal": "Fix real mentor-answer formatting corruption: fenced code blocks must remain literal while headings, emphasis and tables outside fences retain their current plain-text rendering. Preserve the 4200-character limit, truncation/incomplete notices and empty-input behavior.",
+  "allowedPaths": [
+    "backend/src/mentor-answer-format.js"
+  ],
+  "acceptance": [
+    "Fences start with 3 or more consecutive backticks or tildes, preceded by at most 3 spaces; opening fences may have an info string.",
+    "Only the same character repeated at least the opening length, with at most 3 leading spaces and only trailing whitespace, closes a fence.",
+    "Keep fence lines and interior text exactly after CRLF normalization, including Markdown symbols, blank lines and trailing spaces. Unclosed fences protect all remaining lines.",
+    "Keep existing prose formatting, blank-line collapsing outside code, empty-input behavior, output length limit and notice text. No other files, dependencies, tests, gates or commands may change."
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 3,
+    "maxContextChars": 6000
+  }
+}

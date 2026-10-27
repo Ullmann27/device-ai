@@ -1,0 +1,44 @@
+✖ small granted files include complete helper bodies instead of disconnected declaration windows (39.642555ms)
+✔ retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies (63.490947ms)
+✔ reads committed blobs even when working sources are changed or symlinked (30.095221ms)
+✔ indexes JavaScript literal imports and symbols without executing repository code (37.865129ms)
+✔ does not resolve import text from comments, quoted strings or template literals (35.424389ms)
+✔ fails closed for stale commits and abbreviated or option-shaped commit selectors (31.516412ms)
+✔ rejects grants outside the repository or protected control and secret paths (30.235482ms)
+✔ rejects tracked symlink grants and skips symlinks from wider inventory (47.993054ms)
+✔ wider inventory excludes signing, workflow and secret files without leaking content (31.041391ms)
+✔ keeps the complete JSON within the hard budget and prioritizes diagnostic lines (758.71744ms)
+✔ rejects overlarge granted sources before reading their full contents (77.260267ms)
+✔ query and diagnostics remain inert data and cannot redirect source paths (35.513091ms)
+✔ search operates on serializable bounded ranges and enforces its result cap (41.85322ms)
+✔ rejects an exhausted retrieval deadline before invoking Git (23.548137ms)
+✔ limits returned source ranges even when many declarations match the query (174.380197ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 14
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1561.553919
+
+✖ failing tests:
+
+test at .github/continuum/coding-context.test.mjs:27:1
+✖ small granted files include complete helper bodies instead of disconnected declaration windows (39.642555ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-context.test.mjs:35:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

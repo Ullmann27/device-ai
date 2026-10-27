@@ -1,0 +1,32 @@
+{
+  "spec": {
+    "schema": "continuum-autonomous-experiment-v1",
+    "caseId": "mentor-fenced-code",
+    "sourceCommit": "54d9de3cde4a4f72f61e2f6c4e62a6dc9bd5439e",
+    "sourceFile": "backend/src/mentor-answer-format.js",
+    "goal": "Fix real mentor-answer formatting corruption: fenced code blocks must remain literal while headings, emphasis and tables outside fences retain their current plain-text rendering. Preserve the 4200-character limit, truncation/incomplete notices and empty-input behavior.",
+    "acceptance": [
+      "Fences start with 3 or more consecutive backticks or tildes, preceded by at most 3 spaces; opening fences may have an info string.",
+      "Only the same character repeated at least the opening length, with at most 3 leading spaces and only trailing whitespace, closes a fence.",
+      "Keep fence lines and interior text exactly after CRLF normalization, including Markdown symbols, blank lines and trailing spaces. Unclosed fences protect all remaining lines.",
+      "Keep existing prose formatting, blank-line collapsing outside code, empty-input behavior, output length limit and notice text. No other files, dependencies, tests, gates or commands may change."
+    ],
+    "maxModelCalls": 3,
+    "maxContextChars": 6000,
+    "limits": {
+      "modelTimeoutMs": 60000,
+      "totalMinutes": 20,
+      "modelThreads": 3,
+      "modelWeightBytesMax": 2100000000,
+      "testMemoryMb": 512,
+      "testCpus": 1,
+      "testTimeoutMs": 30000,
+      "networkForTests": "none"
+    },
+    "origin": "Exact existing production Git blob; defect not injected. Developer supplies tests and infrastructure only. Model must supply the repair. No training."
+  },
+  "sourceSha256": "e3b4c169c1f7010979013de6fad84eecca13a024135ab2258058c279c469a996",
+  "holdoutSha256": "9f53f826f696119fb8f413bb85bbacbb8bff8974f702d8fc6bb5982172570c25",
+  "testSha256": "c266302a77712ec538d4185aa6880e98066be8b0065dd218f122faa78a4a97ec",
+  "implementationCommit": "addb594ecf3fa1f2fdddd2a365596618d5e94867"
+}
