@@ -33,7 +33,7 @@ object ContinuumHomeScreen {
             map[Slot.LEARNING] = PortraitLearningCard(textScale)
             map[Slot.STORAGE] = PortraitStorageCard(textScale)
             map[Slot.DEVELOPMENT] = PortraitDevelopmentCard(textScale)
-            map[Slot.SYSTEM_STATUS] = PortraitSystemStatus(textScale)
+            map[Slot.SYSTEM_STATUS] = PortraitSystemStatusStrip(textScale)
             map[Slot.SYSTEM_ACTIVITY] = PortraitActivityCard(textScale)
             map[Slot.WORKERS] = PortraitWorkersCard(textScale)
             // The portrait reference has NO legacy left rail, top model pill or phone bar.
