@@ -43,10 +43,15 @@ fi
     > "$out/javac.txt" 2>&1
 sources=()
 for name in AgentToolLayer ToolRegistry AgentProtocol ToolExecutionReceiptStore CommandInterpreter \
-    DeviceStorageProbe ShellExecution BoundedShellProcess DeviceToolExecutor DeviceToolExecutorRunner ShizukuBridge ShellUserService; do
+    DeviceStorageProbe ShellExecution BoundedShellProcess DeviceToolExecutor DeviceToolExecutorRunner CheckedShellCallDispatcher ShizukuBridge ShellUserService; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/$name.kt")
+done
+for name in DeviceToolExecutorRunnerTest CheckedShellCallDispatcherTest; do
+    sources+=("$root/app/src/test/java/at/heinz/deviceai/$name.kt")
 done
 sha256sum "${sources[@]}" "$root/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java" > "$out/source-blobs.sha256"
 java -Xmx512m -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -no-reflect \
     -classpath "$out/classes:$cp" -jvm-target 17 -d "$out/classes" "${sources[@]}" > "$out/compile.txt" 2>&1
 echo 'ANDROID_SHELL_ADAPTER_COMPILE_PASS (host; no APK/device execution)'
+java -cp "$out/classes:$cp" org.junit.runner.JUnitCore \
+    at.heinz.deviceai.DeviceToolExecutorRunnerTest at.heinz.deviceai.CheckedShellCallDispatcherTest | tee "$out/junit.txt"
