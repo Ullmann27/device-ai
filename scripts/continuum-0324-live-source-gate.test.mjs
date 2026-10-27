@@ -9,8 +9,8 @@ import {fileURLToPath} from 'node:url';
 // production signing, alters Render settings or touches owner credentials.
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const head=()=>execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
-const expectedSource='39008eaffb42a092b40aebd295df6b66f2cada61';
-const expectedBlob='402e8e24cb514627802ce7cf5b64db52b989ec7c';
+const expectedSource='5270202e0699764b0eac5d4dd3e6a587b982ae05';
+const expectedBlob='441e667cb1c8b48106e1227df0c50a37b5b53399';
 const path='docs/release/continuum-0324-live-source-proposal-20261027.json';
 const key=['CONTINUUM_OWNER_0324_LIVE_APPROVED_SOURCE_SHA',
  'CONTINUUM_OWNER_0324_LIVE_APPROVED_MANIFEST_BLOB',
