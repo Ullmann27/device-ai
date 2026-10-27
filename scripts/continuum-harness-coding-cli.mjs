@@ -18,6 +18,8 @@ let raw='';try{
  process.stdout.write(JSON.stringify(reply)+'\n');
 }catch(error){
  const message=String(error?.message??'');
- const safe=/^(CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):[a-f0-9]{64}$/.test(message)?message:'HARNESS_UNAVAILABLE_OR_INVALID';
+ const safe=/^(CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):[a-f0-9]{64}$/.test(message)
+  ?message:/^(MODEL_ID_REQUIRED|MODEL_ID_UNSPECIFIED|UNSUPPORTED_CODING_TRANSPORT|GEMMA_LITERTLM_NOT_GGUF|EXPLICIT_GGUF_FORMAT_REQUIRED|EXPLICIT_GGUF_DIGEST_REQUIRED|GEMMA_DIGEST_FORMAT_MISMATCH|ALTERNATE_MODEL_CONSENT_REQUIRED)$/.test(message)
+  ?message:'HARNESS_UNAVAILABLE_OR_INVALID';
  process.stderr.write('LOCAL_MODEL_UNAVAILABLE_OR_INVALID: '+safe+'\n');process.exitCode=1;
 }
