@@ -49,7 +49,7 @@ const expectations=[
  ['26 no model caller can edit Git in the preflight',()=>assert.doesNotMatch(guard,/from 'node:child_process'|from 'node:fs'|fetch\(|spawnSync\(|execSync\(/)],
  ['27 original CCC1 still protects test identities',()=>assert.match(verifier,/EXECUTED_TEST_IDENTITY_MISSING/)],
  ['28 original CCC1 still protects source patch scope',()=>assert.match(verifier,/PATCH_SCOPE_INVALID/)],
- ['29 CCC1 task keeps explicit owner permission',()=>assert.match(agent,/permissions:\[REPAIR_CAPABILITY\+':'+chain\]/)],
+ ['29 CCC1 task keeps explicit owner permission',()=>assert.ok(agent.includes("permissions:[REPAIR_CAPABILITY+':'+chain]"))],
  ['30 model status is exposed as text without training',()=>assert.doesNotMatch(m2,/\.train\(|trainStep\(|saveExperienceFile\(|writeFileSync\(/)]
 ];
 for(const [name,assertion] of expectations)test('M2 contract '+name,assertion);
