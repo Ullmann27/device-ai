@@ -27,6 +27,8 @@ export function inspectCodingModelPreflight({
   if(typeof model!=='string'||!model.trim()||model.length>128||
      /[\x00-\x1f\x7f]/.test(model)) return refusal('MODEL_ID_REQUIRED','Explicit checked local model name required');
   const id=model.trim();
+  if(['local','default','auto'].includes(id.toLowerCase()))
+    return refusal('MODEL_ID_UNSPECIFIED','A generic model alias is not an explicit model identity');
   if(runtime!=='llama.cpp') return refusal('UNSUPPORTED_CODING_TRANSPORT','Existing coding adapter uses local llama.cpp only');
   if(id===OWNER_GEMMA_ID||/\.litertlm$/i.test(id)||format==='litertlm')
     return refusal('GEMMA_LITERTLM_NOT_GGUF','Original selected Gemma requires LiteRT-LM, not the llama.cpp coding adapter');
