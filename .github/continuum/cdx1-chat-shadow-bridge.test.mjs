@@ -42,7 +42,7 @@ test('experimental output is appended as UNVERIFIED to canonical answer',()=>{
 });
 test('no unapproved knowledge sources, checkpoints or weights can be used',()=>{
  assert.match(shadow,/it\.kind == "Bestätigte Nutzererinnerung"/);
- assert.match(shadow,/before\.conditioningState != "PINNED_CURRENT"/);
+ assert.match(shadow,/before\.conditioningState !in setOf\("PINNED_CURRENT", "PINNED_PREVIOUS"\)/);
  assert.match(shadow,/after\.sha256 != before\.sha256/);
  assert.match(shadow,/after\.updates != before\.updates/);
  assert.match(shadow,/toByteArray\(Charsets\.UTF_8\)\.size <= 160/);
