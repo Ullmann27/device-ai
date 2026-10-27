@@ -5,6 +5,8 @@ sealed class ContinuumWorkerChatCommand {
     data object Status : ContinuumWorkerChatCommand()
     data object Help : ContinuumWorkerChatCommand()
     data object RepairHelp : ContinuumWorkerChatCommand()
+    data object MilestoneStatus : ContinuumWorkerChatCommand()
+    data object MilestoneModelTest : ContinuumWorkerChatCommand()
     data object Backlog : ContinuumWorkerChatCommand()
     data object DevelopmentCenter : ContinuumWorkerChatCommand()
     data object MobileBuilder : ContinuumWorkerChatCommand()
@@ -49,6 +51,11 @@ object ContinuumWorkerChatRouter {
         val normalized = text.lowercase(java.util.Locale.ROOT).trimEnd('?', '.', '!')
         if (repairHelpPattern.matches(normalized)) return ContinuumWorkerChatCommand.RepairHelp
         return when (normalized) {
+            "meilenstein status", "continuum meilenstein", "meilenstein zwei",
+            "meilenstein 2", "continuum status meilenstein" ->
+                ContinuumWorkerChatCommand.MilestoneStatus
+            "meilenstein modelltest", "continuum gemma test", "gemma modelltest" ->
+                ContinuumWorkerChatCommand.MilestoneModelTest
             "worker", "baumeister", "coding agent", "coding-agent", "programmierer",
             "worker hilfe", "baumeister hilfe", "coding agent hilfe" ->
                 ContinuumWorkerChatCommand.Help
