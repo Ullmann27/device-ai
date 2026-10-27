@@ -280,6 +280,20 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // Inspect original text before contentWords drops short numeric suffixes.
         // One explicit identifier is required literally; comparison entailment is separate.
         private val IDENTIFIER_TOKEN=Regex("[\\p{L}\\p{N}]+(?:[-._][\\p{L}\\p{N}]+)*")
+        // Names followed by a separate numeric suffix are also identifiers.
+        // Without this guard, "Gerät Kappa 7" can cite "Gerät Kappa 70"
+        // although the existing alphanumeric-token rule rejects Kappa7/70.
+        // Only an explicit two-word name + number is considered, rather
+        // than arbitrary year references such as "Jahr 2024".
+        private val SPLIT_NAME_NUMBER=Regex(
+            """(?iu)\\b[\\p{L}]{3,35}\\s+([\\p{L}]{3,35})[ \\t-]+([0-9]{1,5})\\b"""
+        )
+        private fun splitNameNumberIds(value:String):Set<String> =
+            SPLIT_NAME_NUMBER.findAll(
+                java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFC)
+                    .lowercase(Locale.ROOT)
+            ).map { it.groupValues[1]+"#"+it.groupValues[2] }.toSet()
+
         private fun singleIdentifierEvidence(query:String,text:String):Boolean {
             fun identifiers(value:String):Set<String> = IDENTIFIER_TOKEN.findAll(
                 java.text.Normalizer.normalize(value,java.text.Normalizer.Form.NFC)
@@ -288,7 +302,9 @@ class ContinuumMemoryDialogue(private val directory:File) {
                     token.any(Char::isLetter)&&token.any(Char::isDigit)
                 }.toSet()
             val required=identifiers(query)
-            return required.size!=1||required.single() in identifiers(text)
+            if(required.size==1 && required.single() !in identifiers(text))return false
+            val splitIds=splitNameNumberIds(query)
+            return splitIds.isEmpty() || splitIds.all { it in splitNameNumberIds(text) }
         }
 
         internal fun sourceWordMatch(needle:String,word:String):Boolean {
