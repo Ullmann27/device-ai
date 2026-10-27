@@ -22,7 +22,9 @@ test('v18 release fails before any build without explicit owner approval', () =>
   assert.match(r.stderr,/CONTINUUM_RELEASE_SHA|unbound variable/);
 });
 test('historical v18 script remains intact and current owner build advances beyond published code23', () => {
-  assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 25\s*versionName = "0\.3\.24"/);
+  // Current owner build keeps the historical default and explicitly opts into 26+.
+  assert.match(gradle,/versionCode = continuumOwnerLocalVersion \?: 25/);
+  assert.match(gradle,/versionName = if \(continuumOwnerLocalVersion != null\) "0\.3\.\$\{continuumOwnerLocalVersion - 1\}" else "0\.3\.24"/);
   assert.match(script,/versionCode='18' versionName='0\.3\.17'/);
   assert.match(script,/at\.heinz\.deviceai\.mentorpaired/);
   assert.match(script,/expected_signer="2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc"/);

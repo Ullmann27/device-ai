@@ -24,6 +24,19 @@ function repository(t,files){
 }
 const options=f=>({...f,allowedPaths:['src/subject.mjs']});
 
+test('small granted files include complete helper bodies instead of disconnected declaration windows',t=>{
+ const source=['export const LIMIT = 42;',...Array.from({length:14},(_,i)=>`// before ${i}`),
+  'function helper(value) {',...Array.from({length:16},(_,i)=>`  // body ${i}`),
+  '  return value.split("|").join(":");','}',...Array.from({length:14},(_,i)=>`// after ${i}`),
+  'export function subject(value) { return helper(value); }'].join('\n');
+ const f=repository(t,{'src/subject.mjs':source});
+ const context=buildRepositoryContext({...options(f),maxChars:6000,query:'subject'});
+ const ranges=context.ranges.filter(r=>r.file==='src/subject.mjs');
+ assert.equal(ranges.length,1);assert.equal(ranges[0].startLine,1);
+ assert.equal(ranges[0].text,source);assert.equal(ranges[0].sha256,sha(source));
+ assert.ok(JSON.stringify(context).length<=6000);
+});
+
 test('retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies',t=>{
  const lines=['package example','import example.Support',...Array.from({length:1500},(_,i)=>`// filler ${i}`),
   'class Large {','  fun calculate() = Support().value()','}'];

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:53" hostname="7b281259906f" time="0.396">
+  <properties/>
+  <testcase name="modelAndAuditTamperingAreRejected" classname="at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest" time="0.099"/>
+  <testcase name="wrongKeyAndModifiedSignedManifestAreRejected" classname="at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest" time="0.169"/>
+  <testcase name="unsignedOrWrongFormatCannotEnterResearchVerification" classname="at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest" time="0.03"/>
+  <testcase name="signedResearchOnlyCre1PackageVerifiesWithoutPromotion" classname="at.heinz.deviceai.learning.ContinuumSignedCre1PackageTest" time="0.097"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

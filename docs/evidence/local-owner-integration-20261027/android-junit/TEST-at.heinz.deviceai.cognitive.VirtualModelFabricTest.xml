@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.VirtualModelFabricTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:44" hostname="7b281259906f" time="0.027">
+  <properties/>
+  <testcase name="signedRegistryExportsTheSharedNodeContractWithoutPrivateContext" classname="at.heinz.deviceai.cognitive.VirtualModelFabricTest" time="0.008"/>
+  <testcase name="revokedExpiredIncompatibleAndUnassignedNodesCannotBeExported" classname="at.heinz.deviceai.cognitive.VirtualModelFabricTest" time="0.011"/>
+  <testcase name="tamperedSignatureAndBadTaskIdentityCannotCrossExporter" classname="at.heinz.deviceai.cognitive.VirtualModelFabricTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

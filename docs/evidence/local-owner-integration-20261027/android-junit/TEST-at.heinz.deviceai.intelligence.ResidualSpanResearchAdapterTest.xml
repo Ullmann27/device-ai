@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:44" hostname="7b281259906f" time="0.007">
+  <properties/>
+  <testcase name="respectsExplicitResearchThresholdAndSpineSourceIntegrity" classname="at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest" time="0.003"/>
+  <testcase name="limitsRespectRealCxs3ByteBoundariesAndDoNotInventSpans" classname="at.heinz.deviceai.intelligence.ResidualSpanResearchAdapterTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

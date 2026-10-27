@@ -28,7 +28,9 @@ test('v24 remains one in-place owner package with exact older certificate and ro
  const gradle=read('app/build.gradle.kts');
  const router=read('scripts/render-mentor-preview.sh');
  const shell=read('scripts/render-mentor-owner-update-v24.sh');
- assert.match(gradle,/if \(deviceAiOwnerSignedUpdate\) \{[\s\S]*?versionCode = 25\s*versionName = "0\.3\.24"/);
+ // Current owner build keeps the historical default and explicitly opts into 26+.
+ assert.match(gradle,/versionCode = continuumOwnerLocalVersion \?: 25/);
+ assert.match(gradle,/versionName = if \(continuumOwnerLocalVersion != null\) "0\.3\.\$\{continuumOwnerLocalVersion - 1\}" else "0\.3\.24"/);
  assert.match(gradle,/applicationIdSuffix = "\.mentorpaired"/);
  assert.match(router,/CONTINUUM_OWNER_V24_APPROVED_SHA/);
  assert.match(router,/CONTINUUM_OWNER_RELEASE_VERSION:-18/);

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCcc1BridgeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-27T19:23:39" hostname="7b281259906f" time="0.071">
+  <properties/>
+  <testcase name="realBridgeAnswersKeepTheirMeaning" classname="at.heinz.deviceai.ContinuumCcc1BridgeTest" time="0.061"/>
+  <testcase name="nothingUnverifiedOrForeignIsAccepted" classname="at.heinz.deviceai.ContinuumCcc1BridgeTest" time="0.004"/>
+  <testcase name="commandsAreFixedArgvWithValidatedValues" classname="at.heinz.deviceai.ContinuumCcc1BridgeTest" time="0.002"/>
+  <testcase name="termuxProblemsAreExplainedWithoutShowingTermuxText" classname="at.heinz.deviceai.ContinuumCcc1BridgeTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

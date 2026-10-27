@@ -29,7 +29,7 @@ export async function queryHarnessCodingBrain(input,{runtimeDirectory,fetchImpl=
  const [{Context},{default:LlmRuntime,LlmAdapter,attributionHeaders}]=await Promise.all([
   import(pathToFileURL(runtime.entries['@deepseek-ai/cordis']).href),import(pathToFileURL(runtime.entries['@deepseek-ai/dsh-llm']).href)]);
  const ctx=new Context(),controller=new AbortController();
- if(!Number.isSafeInteger(input.timeoutMs)||input.timeoutMs<100||input.timeoutMs>60000)throw Error('INVALID_CODING_BOUNDS');
+ if(!Number.isSafeInteger(input.timeoutMs)||input.timeoutMs<100||input.timeoutMs>300000)throw Error('INVALID_CODING_BOUNDS');
  const timer=setTimeout(()=>controller.abort(),input.timeoutMs);let raw='',finished=false;
  try {
   await ctx.plugin(LlmRuntime);
