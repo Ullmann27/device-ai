@@ -77,9 +77,9 @@ object MemoryRetrievalResearchGate {
         semanticScorer: ((String, MemoryRecord) -> Double)? = null,
         nanoClock: () -> Long = System::nanoTime
     ): MemoryResearchSummary {
-        require(probes.size in 1..512) { "Provide between 1 and 512 bounded memory probes" }
+        require(probes.size in 1..64) { "Provide between 1 and 64 bounded memory probes" }
         require(probes.map { it.id }.distinct().size == probes.size) { "Duplicate probe identifiers" }
-        require(records.size <= 10_000) { "Oversized local benchmark corpus" }
+        require(records.size <= 2_000) { "Oversized local benchmark corpus" }
         require(limit in 1..32)
         require(nowMillis >= 0L)
         require(allowedPrivacy.isNotEmpty())
