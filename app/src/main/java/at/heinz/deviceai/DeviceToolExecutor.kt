@@ -20,6 +20,13 @@ class DeviceToolExecutor(
             callback("TOOL_VALIDATION_ERROR: $it")
             return
         }
+        // App-volume statistics need neither Shizuku nor access to personal files.
+        // Exceptions propagate to the existing ToolGate as FAILED, never as a
+        // successful string containing an error. This is the only caller path.
+        if (call.name == "get_storage_info") {
+            callback(DeviceStorageProbe.read(context.filesDir))
+            return
+        }
         if (!bridge.isReady()) {
             callback("SHIZUKU_NOT_READY: Shizuku ist nicht verbunden.")
             return
@@ -48,10 +55,6 @@ class DeviceToolExecutor(
                     "echo ABI: $(getprop ro.product.cpu.abi)"
 
             "get_battery_info" -> "dumpsys battery | head -60"
-
-            "get_storage_info" ->
-                "df -h /data /sdcard 2>/dev/null; echo; " +
-                    "du -sh /sdcard/Download /sdcard/Documents /sdcard/DCIM /sdcard/Pictures 2>/dev/null"
 
             "list_installed_apps" -> {
                 val userOnly = boolArg(call, "userOnly", true)

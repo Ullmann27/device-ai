@@ -21,14 +21,18 @@ done
 for name in LearningSnapshot TinyNeuralNetwork NeuralDialogue StructuredKnowledge OnlineNaiveBayes; do
     sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt")
 done
-tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegressionTest ReadOnlyToolPlanTest)
+tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegressionTest ReadOnlyToolPlanTest
+    AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest)
 for name in "${tests[@]}"; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/$name.kt")
 done
+toolTests=(AgentToolLayerTest ToolRegistryTest ToolReplayGuardTest ToolExecutionReceiptStoreTest)
+for name in "${toolTests[@]}"; do sources+=("$root/app/src/test/java/at/heinz/deviceai/$name.kt"); done
 sha256sum "${sources[@]}" > "$out/source-blobs.sha256"
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -version > "$out/compiler.txt" 2>&1
 java -Xmx768m -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -no-reflect \
     -classpath "$cp" -jvm-target 17 -d "$out/classes" "${sources[@]}" > "$out/compile.txt" 2>&1
 classes=()
 for name in "${tests[@]}"; do classes+=("at.heinz.deviceai.cognitive.$name"); done
+for name in "${toolTests[@]}"; do classes+=("at.heinz.deviceai.$name"); done
 java -Xmx512m -Dcontinuum.action.evidenceDir="$out" -cp "$out/classes:$cp" org.junit.runner.JUnitCore "${classes[@]}" | tee "$out/junit.txt"

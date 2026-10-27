@@ -2398,7 +2398,7 @@ class AgentActivity : Activity() {
         val decision = BootstrapBrain.decide(
             request, bootstrapMemory.facts(), bootstrapMemory.learnedCommands()
         )
-        if (decision.kind == BootstrapKind.DEVICE_TOOL && !bridge.isReady()) {
+        if (decision.kind == BootstrapKind.DEVICE_TOOL && decision.tool != "get_storage_info" && !bridge.isReady()) {
             addToolActivity("GERÄTEZUGRIFF NICHT BEREIT · Auftrag nicht ausgeführt")
             addAssistantMessage(ContinuumUiCopy.deviceBridgeMissing())
             return
@@ -2427,7 +2427,7 @@ class AgentActivity : Activity() {
                 addAssistantMessage("Danke. Ich habe die negative Rückmeldung erfasst. Sie verbessert mich nicht automatisch, " +
                     "hilft aber beim gezielten Auswerten meiner Antworten.")
             }
-            BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(decision)
+            BootstrapKind.DEVICE_TOOL -> executeBootstrapReadOnly(request, decision)
             BootstrapKind.TRAIN -> confirmBootstrapTraining(decision)
             BootstrapKind.REPLY -> if(decision.allowNeuralRecall)runContinuumDialogue(request)
                 else addAssistantMessage(decision.message)
@@ -2969,7 +2969,7 @@ class AgentActivity : Activity() {
 
     private enum class NeuralSave { NOT_NEEDED, SAVED, CANCELLED, CHANGED_MEANWHILE, FAILED }
 
-    private fun executeBootstrapReadOnly(decision: BootstrapDecision) {
+    private fun executeBootstrapReadOnly(request: String, decision: BootstrapDecision) {
         val name = checkNotNull(decision.tool)
         if (ToolRegistry.risk(name) != Risk.READ_ONLY) {
             addAssistantMessage("Sicherheitsprüfung: Geräteaktion nicht freigegeben.")
@@ -2978,31 +2978,50 @@ class AgentActivity : Activity() {
         activeLocalRequest = true
         setBusy(true)
         addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
-        val id = "bootstrap-" + UUID.randomUUID().toString()
+        val actionSessionId = sessionId
+        val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
+        val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan(ToolProposal(name, decision.arguments))
         val gate = createToolGate()
+        val orchestrator = BoundedAgentOrchestrator(
+            model = plan,
+            memories = { memoryStore.all() + ownerFactMemories() },
+            toolGate = gate,
+            evaluator = plan,
+            experienceStore = experienceStore,
+            // Only the fixed local filesystem probe has a typed native outcome.
+            // Legacy Shizuku strings must not become successful skill evidence.
+            evaluationConfirmsOutcome = name == "get_storage_info",
+            limits = at.heinz.deviceai.cognitive.AgentLimits(maxSteps = 16, maxToolCalls = 1, maxRetries = 0),
+            checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
+            callIdPrefix = "bootstrap-" + UUID.randomUUID().toString(),
+            cancellation = cancellation
+        )
         activeBootstrapGate = gate
+        activeChatCancellation = cancellation
+        activeOrchestrator = orchestrator
         localAgentExecutor.execute {
-            val result = runCatching {
-                val proposal = ToolProposal(name, decision.arguments)
-                require(proposal.validate() == null)
-                gate.execute(proposal.invocation(id))
-            }
+            val result = runCatching { orchestrator.run(request) }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
-                if (activeBootstrapGate !== gate) return@runOnUiThread
+                if (activeBootstrapGate !== gate || activeChatCancellation !== cancellation) return@runOnUiThread
                 activeBootstrapGate = null
+                activeChatCancellation = null
+                activeOrchestrator = null
                 activeLocalRequest = false
                 setBusy(false)
+                if (sessionId != actionSessionId) return@runOnUiThread
                 val value = result.fold(
                     onSuccess = { item ->
-                        if (item.record.status == ToolExecutionStatus.SUCCEEDED)
-                            "${ToolRegistry.label(name)}:\n" + (item.output ?: "Kein Ergebnis.")
-                        else "Geräteaktion nicht abgeschlossen: ${item.record.decisionReason}"
+                        checkpointContinuumAsync()
+                        if (item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) {
+                            addToolActivity("CONTINUUM · frische Messung belegt · Episode zur Sicherung vorgemerkt · kein Gewichtstraining")
+                        }
+                        item.response
                     },
                     onFailure = { "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
                 )
                 addAssistantMessage(value.take(3_000))
-                addToolActivity("STARTKERN · Geräteprüfung beendet")
+                addToolActivity("CONTINUUM · begrenzte Geräteprüfung beendet")
             }
         }
     }
