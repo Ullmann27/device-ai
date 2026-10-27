@@ -117,6 +117,6 @@ test('harness coding CLI cannot bypass the selected Gemma format gate',()=>{
   const child=spawnSync(process.execPath,[harness],{input:'{}',encoding:'utf8',
     timeout:10000,env});
   assert.equal(child.status,1,child.stderr);
-  assert.match(child.stderr,/LOCAL_MODEL_UNAVAILABLE_OR_INVALID/);
+  assert.match(child.stderr,/LOCAL_MODEL_UNAVAILABLE_OR_INVALID: GEMMA_LITERTLM_NOT_GGUF/);
   assert.equal(child.stdout,'');
 });
