@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: baseline CRE1 is invariant to reordered identical words
+ok 1 - baseline CRE1 is invariant to reordered identical words
+  ---
+  duration_ms: 28.215311
+  type: 'test'
+  ...
+# Subtest: directional shadow preserves normalized bounded features and same-text equality
+ok 2 - directional shadow preserves normalized bounded features and same-text equality
+  ---
+  duration_ms: 19.94339
+  type: 'test'
+  ...
+# Subtest: one-content-word input preserves the CRE1 lexical representation
+ok 3 - one-content-word input preserves the CRE1 lexical representation
+  ---
+  duration_ms: 0.175819
+  type: 'test'
+  ...
+# Subtest: shadow cannot mutate or promote original CRE1 weights
+ok 4 - shadow cannot mutate or promote original CRE1 weights
+  ---
+  duration_ms: 92.283136
+  type: 'test'
+  ...
+# Subtest: canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and synthesizes exact tests
+ok 5 - canonical Kotlin/Node v2 backlog accepts a scalar-only owner contract and synthesizes exact tests
+  ---
+  duration_ms: 7.404022
+  type: 'test'
+  ...
+# Subtest: unsupported higher-priority TEST operations cannot starve supported owner contracts
+ok 6 - unsupported higher-priority TEST operations cannot starve supported owner contracts
+  ---
+  duration_ms: 1.986356
+  type: 'test'
+  ...
+# Subtest: fresh generated contract runs real Node tests and incorrect expected output fails
+ok 7 - fresh generated contract runs real Node tests and incorrect expected output fails
+  ---
+  duration_ms: 246.397337
+  type: 'test'
+  ...
+# Subtest: forged foreign, unaccepted and unsupported tasks are refused
+ok 8 - forged foreign, unaccepted and unsupported tasks are refused
+  ---
+  duration_ms: 0.810674
+  type: 'test'
+  ...
+# Subtest: existing contract tests cannot be overwritten and critic preserves older tests
+ok 9 - existing contract tests cannot be overwritten and critic preserves older tests
+  ---
+  duration_ms: 1.367752
+  type: 'test'
+  ...
+# Subtest: kotlin compiler output becomes structured, repository-relative diagnostics
+ok 10 - kotlin compiler output becomes structured, repository-relative diagnostics
+  ---
+  duration_ms: 3.746704
+  type: 'test'
+  ...
+# Subtest: JUnit with ">" in attributes and Node load errors are parsed
+ok 11 - JUnit with ">" in attributes and Node load errors are parsed
+  ---
+  duration_ms: 2.254734
+  type: 'test'
+  ...
+# Subtest: strategies generate exact, unique, replayable hunks
+ok 12 - strategies generate exact, unique, replayable hunks
+  ---
+  duration_ms: 3.405127
+  type: 'test'
+  ...
+# Subtest: critic blocks protected paths, test edits, weakening and dangerous code
+ok 13 - critic blocks protected paths, test edits, weakening and dangerous code
+  ---
+  duration_ms: 2.180746
+  type: 'test'
+  ...
+# Subtest: ledger learns per diagnostic kind and strategy and skips proven failures
+ok 14 - ledger learns per diagnostic kind and strategy and skips proven failures
+  ---
+  duration_ms: 1.287924
+  type: 'test'
+  ...
+# Subtest: a whole-file revert never outranks minimal patches even with a misleading success history
+ok 15 - a whole-file revert never outranks minimal patches even with a misleading success history
+  ---
+  duration_ms: 0.249218
+  type: 'test'
+  ...
+# Subtest: syntax gate parses changed JavaScript only, rejecting malformed code without executing it
+ok 16 - syntax gate parses changed JavaScript only, rejecting malformed code without executing it
+  ---
+  duration_ms: 76.522857
+  type: 'test'
+  ...
+# Subtest: check profiles are fixed and unknown chains fail closed
+ok 17 - check profiles are fixed and unknown chains fail closed
+  ---
+  duration_ms: 0.379075
+  type: 'test'
+  ...
+# Subtest: Continuum profile cannot auto-discover unrelated tests if required suite is absent
+ok 18 - Continuum profile cannot auto-discover unrelated tests if required suite is absent
+  ---
+  duration_ms: 1.143077
+  type: 'test'
+  ...
+# Subtest: release-only backend test profile executes real Node assertions or fails closed
+ok 19 - release-only backend test profile executes real Node assertions or fails closed
+  ---
+  duration_ms: 137.317685
+  type: 'test'
+  ...
+# Subtest: repair worktree guard excludes symlinks, parent escapes and null path components
+ok 20 - repair worktree guard excludes symlinks, parent escapes and null path components
+  ---
+  duration_ms: 0.951506
+  type: 'test'
+  ...
+# Subtest: end-to-end: injected fault is reproduced, repaired in isolation, verified and committed
+ok 21 - end-to-end: injected fault is reproduced, repaired in isolation, verified and committed
+  ---
+  duration_ms: 386.081382
+  type: 'test'
+  ...
+# Subtest: hunk revert handles modification, insertion and deletion hunks exactly
+ok 22 - hunk revert handles modification, insertion and deletion hunks exactly
+  ---
+  duration_ms: 0.266861
+  type: 'test'
+  ...
+# Subtest: baseline passing count excludes crashed test files and failures
+ok 23 - baseline passing count excludes crashed test files and failures
+  ---
+  duration_ms: 0.192736
+  type: 'test'
+  ...
+# Subtest: success requires executed tests that do not shrink against the baseline
+ok 24 - success requires executed tests that do not shrink against the baseline
+  ---
+  duration_ms: 0.511609
+  type: 'test'
+  ...
+# Subtest: a test profile without executed tests is not a pass
+ok 25 - a test profile without executed tests is not a pass
+  ---
+  duration_ms: 156.34492
+  type: 'test'
+  ...
+# Subtest: regression search reverts only the culprit hunk and keeps unrelated changes
+ok 26 - regression search reverts only the culprit hunk and keeps unrelated changes
+  ---
+  duration_ms: 452.765328
+  type: 'test'
+  ...
+# Subtest: a module that crashes while loading is located and gets its missing import back
+ok 27 - a module that crashes while loading is located and gets its missing import back
+  ---
+  duration_ms: 425.706737
+  type: 'test'
+  ...
+# Subtest: invalid Git revision cleans allocated repair worktree and registration
+ok 28 - invalid Git revision cleans allocated repair worktree and registration
+  ---
+  duration_ms: 37.485124
+  type: 'test'
+  ...
+# Subtest: repair cleanup refuses unmanaged paths and does not delete user files
+ok 29 - repair cleanup refuses unmanaged paths and does not delete user files
+  ---
+  duration_ms: 25.115493
+  type: 'test'
+  ...
+# Subtest: repair cleanup cannot silently ignore a failed Git worktree removal
+ok 30 - repair cleanup cannot silently ignore a failed Git worktree removal
+  ---
+  duration_ms: 44.01357
+  type: 'test'
+  ...
+# Subtest: actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch
+ok 31 - actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch
+  ---
+  duration_ms: 339.937106
+  type: 'test'
+  ...
+# Subtest: scheduled owner task completes full real Git repair and independent verification
+ok 32 - scheduled owner task completes full real Git repair and independent verification
+  ---
+  duration_ms: 485.800857
+  type: 'test'
+  ...
+# Subtest: actual passing Git fixture generates no fake repair, patch, or changed source
+ok 33 - actual passing Git fixture generates no fake repair, patch, or changed source
+  ---
+  duration_ms: 193.07464
+  type: 'test'
+  ...
+# Subtest: actual offline Teamleader completes a priority investigation with real Git checks and evidence
+ok 34 - actual offline Teamleader completes a priority investigation with real Git checks and evidence
+  ---
+  duration_ms: 324.298447
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3833.79663

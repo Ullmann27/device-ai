@@ -9,3 +9,8 @@ Persisted SWB1 state must remain untouched: known public snapshot hash5e577c21b2
 GitHub Actions current read-only evidence again reports failed watch job121823529657, zero steps, repair/publish skipped, log404BlobNotFound. Root cause UNKNOWN; account/runner APIs will be checked if available, no blind retries or billing changes.
 
 Next: reproduce/fix native worker report parsing, process interruption and durable lock/restart behavior; true failed→successful cycles; investigate positive-only replay with source-compatible gradients and independent new evaluation. No main/release/state/owner/APK/production-weight changes. No paid APIs or new model downloads.
+
+## First native repairs checkpoint
+Four initial full-suite failures reproduced: duplicate runProfile import, needless CRE1 single-word re-normalization rounding, inherited NODE_TEST_CONTEXT suppressing nested reporter output, and Node-only Teamleader discovery trying absent app/src. Exact targeted rerun34PASS. Native worker process RED reproduced failure counters missing and duplicate summaries accepted; implementation now explicitly requests TAP, removes inherited parent context, records raw/hash-bound evidence, handles SIGTERM and OS-flock-serialized persistent process identities. First9helper/process checks PASS (real failed→successful fixture cycles and signal restart). Further scheduler-idle lease, timeout, STOP and crash tests pending; not yet a full lifecycle acceptance.
+
+Actions read-only check annotations now identify an account-level start block: recent payments failed OR spending limit needs increase. This disjunction is GitHub's exact message; which case applies remains unknown. Self-hosted runner listing403(integration scope). No billing changes or retrigger. Raw annotations saved.
