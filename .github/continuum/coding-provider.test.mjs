@@ -3,6 +3,19 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawnSync} from 'node:child_process';
 import {createCodingCandidateProvider} from './coding-provider.mjs';
 const proposal={plan:['Inspect pages','Correct rounding'],hypothesis:'Integer rounding loses the final page',patches:[{file:'lib/pages.mjs',oldText:'a/b',newText:'(a+b-1)/b'}]};
+test('canonical provider preserves explicit model admission metadata without forwarding unrelated credentials',()=>{
+ const {root,task}=fixture();let child;
+ const metadata={CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',
+  CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'b'.repeat(64),CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'};
+ try{
+  const p=createCodingCandidateProvider({root,task,env:{...metadata,CONTINUUM_LOCAL_BRAIN_API_KEY:'a'.repeat(40),
+   CONTINUUM_LOCAL_BRAIN_MODEL:'explicit-owner-selected-model',GITHUB_TOKEN:'DO_NOT_FORWARD'},
+   run:(_b,_a,o)=>{child=o.env;return {status:0,stdout:JSON.stringify({mode:'LOCAL_CODING_PATCH_PROPOSAL_V1',trusted:false,autoApply:false,proposal})};}});
+  p({base:task.sourceCommit,chain:'node',deadline:Date.now()+10000});
+  for(const [key,value] of Object.entries(metadata))assert.equal(child[key],value,key);
+  assert.equal(child.GITHUB_TOKEN,undefined);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
 function fixture(){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'coding-provider-'));fs.mkdirSync(path.join(root,'lib'));fs.writeFileSync(path.join(root,'lib/pages.mjs'),'export function pages(a,b){return a/b;}\n');
  const git=(...args)=>{const p=spawnSync('git',args,{cwd:root,encoding:'utf8'});assert.equal(p.status,0,p.stderr);return p.stdout.trim();};
