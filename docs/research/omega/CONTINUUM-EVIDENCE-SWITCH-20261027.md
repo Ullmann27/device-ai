@@ -54,7 +54,7 @@ Inspection of `ContinuumMemoryDialogue.singleIdentifierEvidence` found a concret
 ### Executed local bounded smoke (NOT the complete repository test suite)
 
 - Command: `kotlinc /mnt/data/gemma_guard_check/Main.kt -include-runtime -d /mnt/data/gemma_guard_check/guard.jar && java -jar /mnt/data/gemma_guard_check/guard.jar`
-- Observed output: `PASS 6/6`, isolated JVM name/number matcher, including Kappa 7/70, Orion 5/50, year and hyphen. The snippet mirrors the exact committed Kotlin regex logic, but **is not a compilation of the complete original Android source**.
+- Observed output: initial `PASS 6/6`, then extended and rerun with Unicode `Äther 4/40`: **`PASS 8/8`**, isolated JVM name/number matcher, including Kappa 7/70, Orion 5/50, year and hyphen. The snippet mirrors the exact committed Kotlin regex logic, but **is not a compilation of the complete original Android source**.
 - Command: `node --test /mnt/data/gemma_guard_check/identifier.mjs`
 - Observed output: `tests 8; pass 8; fail 0` on isolated Node matcher, including Unicode `Äther 4/40`. The snippet mirrors the changed committed Node regex logic, but **is not the complete checked-in Node integration test**.
 
