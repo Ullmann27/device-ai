@@ -15,6 +15,8 @@ Der bisherige Haupt-App-Builder `scripts/continuum-local-owner-apk.sh` verlangt 
 
 Zuerst über Sols vorhandenen, geprüften HTTPS-Helfer den privaten Quellstand abrufen. GitHub-Login und Quellcodeprüfung sind einmalige Voraussetzungen, nicht für den eigentlichen Offline-Build.
 
+**Fold7-Hinweis bei steckengebliebener Login-Rückfrage:** `gh auth login` kann bei „Authenticate Git with your GitHub credentials? Yes“ auf eine Terminalantwort warten. In Termux zuerst mit **CTRL+C** abbrechen und anschließend für die einmalige Browser-Geräteanmeldung `GH_PROMPT_DISABLED=1 GH_BROWSER=termux-open-url timeout --foreground 300 gh auth login --hostname github.com --git-protocol https --web` verwenden. Die Anzeige des Gerätecodes ist **kein Zugangstoken**; dennoch nur im eigenen Browser eingeben, niemals hier teilen. Danach `bash scripts/continuum-github-https.sh setup` erneut ausführen. Ob dieser Weg auf dem Besitzer-Fold7 funktioniert, ist ausdrücklich **NOT_RUN**.
+
 ```bash
 cd ~/device-ai
 bash scripts/continuum-github-https.sh setup
