@@ -161,12 +161,12 @@ no_signing_env node --test \
 # EXACT integration commit. The QA static site publishes diagnostics only.
 qa_url="${CONTINUUM_OWNER_0324_LIVE_QA_STATUS_URL:-}"
 qa_sha="${CONTINUUM_OWNER_0324_LIVE_APPROVED_QA_STATUS_SHA256:-}"
-[[ "$qa_url" =~ ^https://[a-zA-Z0-9._/-]+/STATUS\\.txt$ && "$qa_sha" =~ ^[a-f0-9]{64}$ ]] ||
+[[ "$qa_url" =~ ^https://[a-zA-Z0-9._/-]+/STATUS\.txt$ && "$qa_sha" =~ ^[a-f0-9]{64}$ ]] ||
  die "Owner-approved exact QA status URL and SHA256 absent"
 qa_report="$repo_root/.continuum-render-build/owner-approved-qa-status.txt"
 curl --fail --silent --show-error --location --max-time 90 "$qa_url" -o "$qa_report" ||
  die "Approved QA proof inaccessible"
-printf '%s  %s\\n' "$qa_sha" "$qa_report" | sha256sum --check --status ||
+printf '%s  %s\n' "$qa_sha" "$qa_report" | sha256sum --check --status ||
  die "Approved QA proof checksum mismatch"
 grep -Fxq "source_sha=$commit" "$qa_report" || die "QA proof source differs from builder"
 grep -Fxq "status=V25_INTEGRATED_QA_NONOWNER_BUILD_PASSED" "$qa_report" || die "No successful QA build attested"
