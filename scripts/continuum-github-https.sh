@@ -14,7 +14,7 @@ case "$origin" in
  *) die 'Origin is not the official Ullmann27/device-ai repository; unchanged' ;;
 esac
 if ! timeout --foreground 15 gh auth status --hostname github.com >/dev/null 2>&1; then
- die 'GitHub authentication unavailable. In your PRIVATE Termux terminal run: timeout --foreground 300 gh auth login --hostname github.com --git-protocol https --web ; then rerun setup. Do not paste credentials into chat or Git URLs.'
+ die 'GitHub authentication unavailable. In your PRIVATE Termux terminal run: GH_PROMPT_DISABLED=1 GH_BROWSER=termux-open-url timeout --foreground 300 gh auth login --hostname github.com --git-protocol https --web ; complete device authorization privately, then rerun setup. Do not paste credentials into chat or Git URLs.'
 fi
 url='https://github.com/Ullmann27/device-ai.git'
 # Bypass stale SSH/credential-helper configuration for this read-only check.
