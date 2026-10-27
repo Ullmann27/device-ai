@@ -1,5 +1,7 @@
 # CONTINUUM J.A.R.V.I.S. — Abschluss und unmittelbare Fortsetzung, 27.10.2026
 
+**Neuere Reparaturfortsetzung:** siehe SOL-REPAIR-RESULT-20261027.md (geprüfter Code a4fee812; die folgenden Ergebnisse bleiben historisch korrekt).
+
 Status: **Forschungsintegration / Besitzerreview erforderlich. Kein Android-Release.**
 
 ## GitHub und unveränderliche Quellen
