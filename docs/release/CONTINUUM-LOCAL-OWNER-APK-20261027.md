@@ -1,5 +1,7 @@
 # Continuum – wiederholbar lokal eine echte Haupt-App-APK bauen (ohne CI- oder Render-Build-Minuten)
 
+**Für einen älteren Fold7-Checkout ohne neuen HTTPS-Helfer zuerst:** [abschließende Drei-Schritte-Anleitung und Signiermetadaten](CONTINUUM-FOLD7-FINAL-BOOTSTRAP-20261027.md). Sie löst die Bootstrap-Reihenfolge auf und verwendet den bereits geprüften Programm-Commit aus PR #196.
+
 **Status 27.10.2026, PR #196:** PR #193 (Gemma-Wiederherstellung) und PR #194 (Belegzuordnung) sind bereits in PR #195 enthalten. Die anschließende lokale Linux-Prüfung mit JDK17/Gradle8.11.1/SDK36 besteht: Kotlin-Kompilierung, 1094 JUnit-Tests (0 Fehler, 3 übersprungen), konfigurierte NewApi-Lint-Prüfung und separat die Termux-AIDL-Ersatzquellen im Offline-Modus. **Keine neue signierte APK:** Der private Originalkeystore ist hier nicht verfügbar. Fold7-Build und Geräteabnahme bleiben offen. Render/GitHub-Actions-Budgets werden nicht verwendet.
 
 ## Nachhaltige Lösung: vorhandene lokale Android-Hardware
