@@ -93,3 +93,11 @@ object ShellExecutionWire {
         }
     }
 }
+
+/** Caller still enforces its path allowlist. Preserve ls's actual exit status;
+ * output/deadline limits belong to BoundedShellProcess, never a masking pipeline.
+ */
+internal fun checkedDirectoryListingCommand(path:String):String {
+    require(path.startsWith('/') && '\u0000' !in path)
+    return "ls -lah -- '"+path.replace("'","'\\''")+"'"
+}

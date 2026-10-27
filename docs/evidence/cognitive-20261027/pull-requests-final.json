@@ -1,0 +1,92 @@
+[
+  {
+    "number": 169,
+    "url": "https://github.com/Ullmann27/device-ai/pull/169",
+    "head": "b09bef1c122e0cfd4f26674cc46be3b04386dabf",
+    "branch": "sol/continuum-jarvis-open-fabric-20261026",
+    "base": "78ceeeb863a3806b0bc088a4a2c2544d96be24cd",
+    "baseBranch": "research/continuum-virtual-model-fabric-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 174,
+    "url": "https://github.com/Ullmann27/device-ai/pull/174",
+    "head": "fe838399ce31f266594d331886f1b2fab0ea3925",
+    "branch": "research/continuum-interactive-intelligence-lab-20261026",
+    "base": "b1d9556c74df9aa3c6e05defc9b4fb7d94181f17",
+    "baseBranch": "review/continuum-followup-archive-gate-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 175,
+    "url": "https://github.com/Ullmann27/device-ai/pull/175",
+    "head": "08bfe94f21a9741a2144e9e4bae72b341fa68332",
+    "branch": "integration/continuum-feedback-review-20261026",
+    "base": "b1d9556c74df9aa3c6e05defc9b4fb7d94181f17",
+    "baseBranch": "review/continuum-followup-archive-gate-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 176,
+    "url": "https://github.com/Ullmann27/device-ai/pull/176",
+    "head": "3585d99cc71b9f9d238db317256e7461f2110c6d",
+    "branch": "chatgpt/continuum-feedback-process-safety-20261026",
+    "base": "08bfe94f21a9741a2144e9e4bae72b341fa68332",
+    "baseBranch": "integration/continuum-feedback-review-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 178,
+    "url": "https://github.com/Ullmann27/device-ai/pull/178",
+    "head": "056b9e1f562f6380e9b3a0de414ff9dba3226c12",
+    "branch": "sol/continuum-autonomy-contrastive-20261027",
+    "base": "e736664abb91542da7e6cc7dba91e1b1473ebb3e",
+    "baseBranch": "chatgpt/continuum-local-worker-learning-lab-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 179,
+    "url": "https://github.com/Ullmann27/device-ai/pull/179",
+    "head": "7ca4702d1012a5dceb6c2bb8efebe8c8534b0ff7",
+    "branch": "integration/continuum-autonomy-learning-20261027",
+    "base": "3585d99cc71b9f9d238db317256e7461f2110c6d",
+    "baseBranch": "chatgpt/continuum-feedback-process-safety-20261026",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 180,
+    "url": "https://github.com/Ullmann27/device-ai/pull/180",
+    "head": "fce3171055a611f9329076cb6febebf0349b3bf7",
+    "branch": "chatgpt/continuum-checked-shell-bounds-20261027",
+    "base": "7ca4702d1012a5dceb6c2bb8efebe8c8534b0ff7",
+    "baseBranch": "integration/continuum-autonomy-learning-20261027",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 181,
+    "url": "https://github.com/Ullmann27/device-ai/pull/181",
+    "head": "51ea6b7664dded2979552c5eca59f5d3349389c3",
+    "branch": "chatgpt/continuum-jarvis-research-connection-audit-20261027",
+    "base": "7ca4702d1012a5dceb6c2bb8efebe8c8534b0ff7",
+    "baseBranch": "integration/continuum-autonomy-learning-20261027",
+    "state": "open",
+    "draft": true
+  },
+  {
+    "number": 182,
+    "url": "https://github.com/Ullmann27/device-ai/pull/182",
+    "head": "38da0aac329071f44c6a6dfa71f8c44c31176fe1",
+    "branch": "sol/continuum-cognitive-evidence-20261027",
+    "base": "fce3171055a611f9329076cb6febebf0349b3bf7",
+    "baseBranch": "chatgpt/continuum-checked-shell-bounds-20261027",
+    "state": "open",
+    "draft": true
+  }
+]

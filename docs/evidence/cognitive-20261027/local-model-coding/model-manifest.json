@@ -1,0 +1,25 @@
+{
+  "modelId": "Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF",
+  "revision": "ebb2015119c907b064c512bf053e945850b5875f",
+  "license": "apache-2.0",
+  "files": [
+    {
+      "rfilename": "qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+      "blobId": "950ad865ccb1a7a0f30a578037df731752d7e194",
+      "size": 491400064,
+      "lfs": {
+        "sha256": "1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
+        "size": 491400064,
+        "pointerSize": 134
+      }
+    }
+  ],
+  "sha256": "1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
+  "bytes": 491400064,
+  "downloadSeconds": 39.01297378540039,
+  "downloadUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF/resolve/ebb2015119c907b064c512bf053e945850b5875f/qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+  "runtime": "llama.cpp b11861 73adf89e3",
+  "host": "CPU only;2 threads;4096 context;1 parallel slot;127.0.0.1 authenticated;no GPU/no paid service",
+  "privateDataUsed": false,
+  "ownerWeightsModified": false
+}
