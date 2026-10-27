@@ -69,9 +69,10 @@ class ContinuumCoreMirrorTest {
     }
 
     /**
-     * New owner reference is ASYMMETRIC in portrait: left buttons are wider.
-     * A mirrored-landscape test must not accidentally reject the reference.
-     * Retain explicit dimensions, aligned y positions, gaps, and painter order.
+     * The owner corrected the Fold portrait reference after device inspection:
+     * both action columns must now have exactly equal width and height, with
+     * the large animated orb visible between the columns. Keep actual geometry
+     * and chart alignment under test rather than relying on stale screenshot values.
      */
     @Test fun portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror() {
         for ((w,h) in listOf(656f to 690f, 750f to 790f, 840f to 1010f)) {
@@ -80,14 +81,18 @@ class ContinuumCoreMirrorTest {
             val hero=layout.boxes.getValue(Slot.HERO)
             val left=layout.boxes.getValue(Slot.LABEL_CONNECTED)
             val right=layout.boxes.getValue(Slot.LABEL_THINKING)
-            assertEquals(228f*u,left.width,.002f)
-            assertEquals(163f*u,right.width,.002f)
-            assertEquals(86f*u,left.height,.002f)
+            assertEquals(216f*u,left.width,.002f)
+            assertEquals(216f*u,right.width,.002f)
+            assertEquals(82f*u,left.height,.002f)
+            assertEquals(left.width,right.width,.002f)
+            assertEquals(w-left.left,right.right,.002f)
             assertEquals(left.top,right.top,.002f)
             assertEquals(left.bottom,right.bottom,.002f)
             assertTrue("both buttons outside the orb center",left.right<hero.left+hero.width/2f &&
                 right.left>hero.left+hero.width/2f)
-            assertTrue("reference requires a gap between action columns",right.left-left.right>=200f*u)
+            assertTrue("new owner layout keeps an unobstructed orb gap",right.left-left.right>=370f*u)
+            assertTrue("left control does not overlap hero stage",left.right<hero.left)
+            assertTrue("right control does not overlap hero stage",right.left>hero.right)
             assertTrue("full-width card grid must not use landscape rail",layout.boxes[Slot.RAIL]==null)
             val upper=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map{layout.boxes.getValue(it)}
             val lower=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map{layout.boxes.getValue(it)}
