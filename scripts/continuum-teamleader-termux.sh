@@ -150,6 +150,23 @@ case "${1:-once}" in
     ccc1-status)
         exec node "$CCC1_CLI" status --state "$CCC1_STATE"
         ;;
+    mainapp-qa)
+        # Reuses the ONE existing local Android QA builder. Exact HEAD approval
+        # and a clean worktree are enforced there; no owner P12, no install.
+        if [[ $# -gt 2 || ( $# -eq 2 && "$2" != --offline ) ]]; then
+            echo 'Usage: bash scripts/continuum-teamleader-termux.sh mainapp-qa [--offline]' >&2
+            exit 2
+        fi
+        if [[ ! -f "$ROOT/scripts/continuum-local-mainapp-qa.sh" ]]; then
+            echo 'Aktueller Haupt-App-QA-Builder fehlt; Checkout aktualisieren.' >&2
+            exit 1
+        fi
+        printf '%s\\n' 'Haupt-App-Qualitätsbuild: separates Testzertifikat, NIEMALS über die installierte Continuum-App installieren.'
+        if [[ $# -eq 2 ]]; then
+            exec bash "$ROOT/scripts/continuum-local-mainapp-qa.sh" --offline
+        fi
+        exec bash "$ROOT/scripts/continuum-local-mainapp-qa.sh"
+        ;;
     ccc1-review)
         # Shows the newest verified repair patch for the owner's review; applying it stays a separate owner decision.
         node "$CCC1_CLI" status --state "$CCC1_STATE" --format json | node -e '
@@ -163,7 +180,7 @@ case "${1:-once}" in
             });'
         ;;
     *)
-        printf '%s\n' 'Usage: bash scripts/continuum-teamleader-termux.sh [once|status|loop|ccc1-check [--full]|ccc1-prepare|ccc1-once|ccc1-status|ccc1-review]' >&2
+        printf '%s\n' 'Usage: bash scripts/continuum-teamleader-termux.sh [once|status|loop|ccc1-check [--full]|ccc1-prepare|ccc1-once|ccc1-status|ccc1-review|mainapp-qa [--offline]]' >&2
         exit 2
         ;;
 esac
