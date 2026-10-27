@@ -31,6 +31,9 @@ class ShellExecutionTest {
             assertEquals(command, ShellOutcome.TIMED_OUT, r.outcome)
             assertTrue("deadline was bypassed: $elapsed ms", elapsed < 900)
             assertNull(r.exitCode)
+            System.getProperty("continuum.action.evidenceDir")?.let {
+                java.io.File(it, "shell-bounds.tsv").appendText("deadline\t100\t$elapsed\t${r.outcome}\n")
+            }
         }
     }
 
@@ -74,5 +77,37 @@ class ShellExecutionTest {
         val gate = ToolGate(ToolPolicy(readOnlyEnabled = true), ToolRunner { result.checkedOutput() })
         assertEquals(ToolExecutionStatus.TIMED_OUT,
             gate.execute(ToolProposal("get_device_info", emptyMap()).invocation("timeout")).record.status)
+    }
+
+    @Test fun oversizedGateOutputIsNotCertifiedAsComplete() {
+        val dir = java.nio.file.Files.createTempDirectory("shell-gate-output-limit").toFile()
+        try {
+            val receipts = FileToolExecutionReceiptStore(dir)
+            val gate = ToolGate(ToolPolicy(readOnlyEnabled = true, maxOutputCharacters = 4),
+                ToolRunner { "123456" }, receiptStore = receipts)
+            val result = gate.execute(ToolProposal("get_device_info", emptyMap()).invocation("oversize"))
+            assertEquals(ToolExecutionStatus.FAILED, result.record.status)
+            assertEquals("1234", result.output)
+            assertEquals(ToolReceiptState.FAILED, receipts.get("oversize")!!.state)
+            assertNull(receipts.get("oversize")!!.outputSha256)
+        } finally { dir.deleteRecursively() }
+    }
+
+    @Test fun versionedRequestIsANoopWhenAnOldServiceTreatsItAsShellText() {
+        val wire = ShellExecutionWire.encodeRequest(ShellExecutionRequest("printf unintended-action", 1000))
+        val oldService = BoundedShellProcess.execute(ShellExecutionRequest(wire, 1000))
+        assertEquals(0, oldService.exitCode)
+        assertEquals("", oldService.output)
+        // No retry or raw-command downgrade when the peer cannot prove its result format.
+        assertThrows(IllegalArgumentException::class.java) { ShellExecutionWire.decodeResult("Fertig.") }
+    }
+
+    @Test fun invalidUtf8AndEmptyRepliesRetainExplicitStatus() {
+        val invalid = BoundedShellProcess.execute(ShellExecutionRequest("printf '\\377'", 1000))
+        assertEquals(ShellOutcome.FAILED, invalid.outcome)
+        for (result in listOf(ShellExecutionResult(ShellOutcome.COMPLETED, 0, ""),
+            ShellExecutionResult(ShellOutcome.FAILED, null, ""))) {
+            assertEquals(result, ShellExecutionWire.decodeResult(ShellExecutionWire.encodeResult(result)))
+        }
     }
 }

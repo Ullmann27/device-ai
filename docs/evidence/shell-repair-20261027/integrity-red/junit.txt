@@ -1,0 +1,22 @@
+JUnit version 4.13.2
+...............................................................E.E....
+Time: 0.862
+There were 2 failures:
+1) oversizedGateOutputIsNotCertifiedAsComplete(at.heinz.deviceai.ShellExecutionTest)
+java.lang.AssertionError: expected:<FAILED> but was:<SUCCEEDED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ShellExecutionTest.oversizedGateOutputIsNotCertifiedAsComplete(ShellExecutionTest.kt:89)
+2) versionedRequestIsANoopWhenAnOldServiceTreatsItAsShellText(at.heinz.deviceai.ShellExecutionTest)
+java.lang.AssertionError: expected:<0> but was:<127>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ShellExecutionTest.versionedRequestIsANoopWhenAnOldServiceTreatsItAsShellText(ShellExecutionTest.kt:99)
+
+FAILURES!!!
+Tests run: 68,  Failures: 2
+

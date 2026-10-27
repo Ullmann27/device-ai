@@ -43,22 +43,25 @@ data class ShellExecutionResult(val outcome: ShellOutcome, val exitCode: Int?, v
  */
 object ShellExecutionWire {
     const val MAX_OUTPUT_BYTES = 120_000
-    private const val REQUEST = "DEVICE_AI_SHELL_REQUEST_V1"
+    // An old service executes this as the POSIX no-op ':' followed by a comment.
+    // It never executes the embedded command; checked clients reject its plain reply.
+    private const val REQUEST = ": #DEVICE_AI_SHELL_REQUEST_V1 "
     private const val RESULT = "DEVICE_AI_SHELL_RESULT_V1"
 
     fun encodeRequest(value: ShellExecutionRequest): String =
-        "$REQUEST\n${value.timeoutMillis}\n${encode(value.command)}"
+        "$REQUEST${value.timeoutMillis} ${encode(value.command)}"
 
     fun decodeRequest(raw: String): ShellExecutionRequest {
         require(raw.length <= 24_000)
-        val fields = raw.split('\n')
-        require(fields.size == 3 && fields[0] == REQUEST)
-        val timeout = fields[1].toLongOrNull()
-        require(timeout != null && timeout.toString() == fields[1])
-        return ShellExecutionRequest(decode(fields[2], 16_384), timeout)
+        require(raw.startsWith(REQUEST))
+        val fields = raw.removePrefix(REQUEST).split(' ')
+        require(fields.size == 2)
+        val timeout = fields[0].toLongOrNull()
+        require(timeout != null && timeout.toString() == fields[0])
+        return ShellExecutionRequest(decode(fields[1], 16_384), timeout)
     }
 
-    fun isFramedRequest(raw: String): Boolean = raw.startsWith("DEVICE_AI_SHELL_REQUEST_")
+    fun isFramedRequest(raw: String): Boolean = raw.startsWith(": #DEVICE_AI_SHELL_REQUEST_")
 
     fun encodeResult(value: ShellExecutionResult): String =
         "$RESULT\n${value.outcome.name}\n${value.exitCode ?: "-"}\n${encode(value.output)}"

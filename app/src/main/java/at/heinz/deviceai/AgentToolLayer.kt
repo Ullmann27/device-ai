@@ -295,6 +295,12 @@ class ToolGate(
                     if (saved) "Task cancelled." else "Cancellation outcome is ambiguous; operator review is required.",
                     output.take(policy.maxOutputCharacters)
                 )
+            } else if (output.length > policy.maxOutputCharacters) {
+                val saved = persistTerminal(ToolReceiptState.FAILED, null)
+                result(ToolExecutionStatus.FAILED,
+                    if (saved) "Tool output exceeded the limit; observation is incomplete."
+                    else "Output exceeded the limit and receipt is ambiguous; operator review is required.",
+                    output.take(policy.maxOutputCharacters))
             } else {
                 val limited = output.take(policy.maxOutputCharacters)
                 val saved = persistTerminal(ToolReceiptState.SUCCEEDED, limited)

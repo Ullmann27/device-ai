@@ -116,10 +116,32 @@ class ShizukuBridge(
         }
 
         Thread {
-            val result = runCatching { service.execute(command) }
-                .getOrElse { "Fehler: ${it.message ?: it.javaClass.simpleName}" }
+            val result = runCatching {
+                val raw = service.execute(command)
+                if (raw.startsWith("DEVICE_AI_SHELL_RESULT_")) ShellExecutionWire.decodeResult(raw).display()
+                else raw // legacy human console display only; tools never use this fallback
+            }.getOrElse { "Fehler: ${it.message ?: it.javaClass.simpleName}" }
             mainHandler.post { callback(result) }
         }.start()
+    }
+
+    /** Checked tools do not depend on the UI thread to finish. A stale service,
+     * unknown result version or failed exit never becomes a successful string.
+     */
+    fun executeChecked(command: String, callback: (Result<String>) -> Unit) {
+        val request = runCatching { ShellExecutionRequest(command, 15_000) }
+        if (request.isFailure) { callback(Result.failure(request.exceptionOrNull()!!)); return }
+        val service = shell
+        if (service == null) { callback(Result.failure(IllegalStateException("Shizuku not ready."))); return }
+        Thread({
+            val result = runCatching {
+                check(shell === service && isReady()) { "Shizuku service changed." }
+                val raw = service.execute(ShellExecutionWire.encodeRequest(request.getOrThrow()))
+                check(shell === service) { "Shizuku service was stopped." }
+                ShellExecutionWire.decodeResult(raw).checkedOutput()
+            }
+            callback(result)
+        }, "device-ai-checked-shell").apply { isDaemon = true; start() }
     }
 
     private fun ensurePermissionAndBind(forceRequest: Boolean = false) {

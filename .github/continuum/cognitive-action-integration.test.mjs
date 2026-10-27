@@ -27,6 +27,24 @@ test('Android source routes bootstrap actions through the existing cognitive age
 });
 
 const deps = process.env.CONTINUUM_FABRIC_JVM_DEPS;
+test('actual Android shell adapters compile against official APIs and the unchanged Binder contract', {
+  skip: deps && process.env.CONTINUUM_SHELL_ANDROID_DEPS ? false : 'NOT_RUN: configure official Kotlin and Shizuku/annotation jars',
+  timeout: 120_000
+}, t => {
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'continuum-shell-compile-'));
+  try {
+    const result = spawnSync('bash', [path.join(root, 'scripts/continuum-shell-android-compile.sh'), out], {
+      cwd: root, env: process.env, encoding: 'utf8', timeout: 110_000, maxBuffer: 1024 * 1024
+    });
+    const log = ['javac.txt', 'compile.txt'].map(name => fs.existsSync(path.join(out, name)) ?
+      fs.readFileSync(path.join(out, name), 'utf8') : '').join('\n');
+    assert.equal(result.error, undefined, result.error?.message);
+    assert.equal(result.status, 0, (result.stdout + result.stderr + log).slice(-8_000));
+    assert.match(result.stdout, /ANDROID_SHELL_ADAPTER_COMPILE_PASS/);
+    t.diagnostic(result.stdout.trim());
+  } finally { fs.rmSync(out, {recursive:true,force:true}); }
+});
+
 test('native natural request → actual tool → receipt → persisted episode, with negative regressions', {
   skip: deps ? false : 'NOT_RUN: set CONTINUUM_FABRIC_JVM_DEPS to run the real Kotlin graph',
   timeout: 120_000
