@@ -31,7 +31,7 @@ const expectations=[
  ['11 diagnostic rejects blank generated text',()=>assert.match(smoke,/check\(generated\.response\.isNotBlank\(\)\)/)],
  ['12 diagnostic never executes tool proposals',()=>assert.match(smoke,/generated\.proposal == null && generated\.rejectedToolResponses\.isEmpty\(\)/)],
  ['13 measured response tied to chosen original SHA',()=>assert.match(smoke,/testedModel\.sha256 == ContinuumSelectedModels\.LOCAL_SHA256/)],
- ['14 fresh attempt revokes stale evidence',()=>assert.match(smoke,/if \\(direct\\) resetM2NativeProof\\(\\)/)],
+ ['14 fresh attempt revokes stale evidence',()=>assert.match(smoke,/if \(direct\) resetM2NativeProof\(\)/)],
  ['15 readiness never claims offline test from native reply',()=>assert.match(m2,/Offline-Test bei abgeschaltetem Internet: NICHT NACHGEWIESEN/)],
  ['16 readiness never claims authentic model patch by metadata',()=>assert.match(m2,/Modellgenerierter CCC1-Patch: NICHT NACHGEWIESEN/)],
  ['17 readiness requires independent RED and fresh GREEN',()=>assert.match(m2,/RED → GREEN → frischer unabhängiger Test: NICHT NACHGEWIESEN/)],
@@ -59,8 +59,8 @@ const expectations=[
     assert.ok(guardPos>0 && modelPos>guardPos);
  }],
  ['33 harness safely redacts arbitrary errors',()=>assert.match(harnessCli,/HARNESS_UNAVAILABLE_OR_INVALID/)],
- ['34 model load always resets stale session proof',()=>assert.match(app,/private fun loadModel\\(model: ImportedLocalModel\\) \\{[\\s\\S]*?resetM2NativeProof\\(\\)/)],
- ['35 model unload always resets stale session proof',()=>assert.match(app,/private fun unloadModel\\(\\) \\{[\\s\\S]*?resetM2NativeProof\\(\\)/)],
- ['36 model import always resets stale session proof',()=>assert.match(app,/private fun importModel\\(uri: Uri\\) \\{[\\s\\S]*?resetM2NativeProof\\(\\)/)]
+ ['34 model load always resets stale session proof',()=>assert.match(app,/private fun loadModel\(model: ImportedLocalModel\) \{[\s\S]*?resetM2NativeProof\(\)/)],
+ ['35 model unload always resets stale session proof',()=>assert.match(app,/private fun unloadModel\(\) \{[\s\S]*?resetM2NativeProof\(\)/)],
+ ['36 model import always resets stale session proof',()=>assert.match(app,/private fun importModel\(uri: Uri\) \{[\s\S]*?resetM2NativeProof\(\)/)]
 ];
 for(const [name,assertion] of expectations)test('M2 contract '+name,assertion);
