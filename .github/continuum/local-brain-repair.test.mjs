@@ -10,7 +10,11 @@ import {createWorktree,removeWorktree,repairSession} from './repair-loop.mjs';
 import {proposeCandidates} from './repair-strategies.mjs';
 import {critique} from './repair-critic.mjs';
 
-const env={...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'A'.repeat(48)};
+// Explicitly authorized protocol fixture. No weights or actual inference.
+const env={...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'A'.repeat(48),
+ CONTINUUM_LOCAL_BRAIN_MODEL:'protocol-fixture',CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',
+ CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'b'.repeat(64),
+ CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'};
 const patch={file:'lib/math.mjs',oldText:'return a-b;',newText:'return a>b?a-b:b-a;'};
 const reply={mode:'LOCAL_LOOPBACK_PATCH_SHADOW',trusted:false,autoApply:false,patch};
 const input={deadline:Date.now()+60_000,diagnostics:[{kind:'TEST_FAILURE',message:'expected distance',fingerprint:'a1b2'}],readFile:()=> 'export function distance(a,b){return a-b;}\n'};

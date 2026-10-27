@@ -19,11 +19,14 @@ fi
 url='https://github.com/Ullmann27/device-ai.git'
 # Bypass stale SSH/credential-helper configuration for this read-only check.
 # No token is expanded: Git asks the installed gh helper through stdin/stdout.
-if ! GIT_TERMINAL_PROMPT=0 timeout --foreground 30 git -c credential.helper= -c 'credential.helper=!gh auth git-credential' ls-remote --exit-code "$url" HEAD >/dev/null 2>&1; then
+if ! GIT_TERMINAL_PROMPT=0 timeout --foreground 30 git -c "url.$url.insteadOf=$url" -c credential.helper= -c 'credential.helper=!gh auth git-credential' ls-remote --exit-code "$url" HEAD >/dev/null 2>&1; then
  die 'Authenticated HTTPS read failed (network, account access or credential helper). Origin unchanged.'
 fi
 if [[ "$mode" == setup ]]; then
  timeout --foreground 15 gh auth setup-git --hostname github.com >/dev/null 2>&1 || die 'Cannot configure gh credential helper'
+ # An exact repository-local identity mapping wins over a broader historical
+ # HTTPS -> SSH insteadOf rule without deleting the owner's global Git setup.
+ git -C "$root" config --local "url.$url.insteadOf" "$url"
  git -C "$root" remote set-url origin "$url"
 fi
 printf 'CONTINUUM_HTTPS=READ_VERIFIED\nrepository=Ullmann27/device-ai\nmode=%s\nremote_transport=%s\n' "$mode" "$( [[ "$mode" == setup || "$origin" == https:* ]] && echo HTTPS || echo SSH_UNCHANGED_RUN_SETUP )"

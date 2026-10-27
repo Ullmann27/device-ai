@@ -1,0 +1,14 @@
+[
+  {
+    "script": "scripts/continuum-v25-source-gate.mjs",
+    "exitCode": 69,
+    "status": "EXPECTED_REFUSAL",
+    "output": "OWNER_V25_BLOCKED: Owner source/inventory approval absent or mismatched\n"
+  },
+  {
+    "script": "scripts/continuum-0324-live-source-gate.mjs",
+    "exitCode": 69,
+    "status": "EXPECTED_REFUSAL",
+    "output": "OWNER_0324_LIVE_BLOCKED: Owner source/inventory approval absent or mismatched\n"
+  }
+]

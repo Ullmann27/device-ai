@@ -13,7 +13,9 @@ const manifest = read("app/src/main/AndroidManifest.xml");
 const expectedSigner = "2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc";
 
 test("owner candidate advances beyond published 0.3.22/code23 without a new application ID", () => {
-  assert.match(gradle, /if \(deviceAiOwnerSignedUpdate\)\s*\{[\s\S]*?versionCode = 25\s*versionName = "0\.3\.24"/);
+  // Current owner build keeps the historical default and explicitly opts into 26+.
+  assert.match(gradle,/versionCode = continuumOwnerLocalVersion \?: 25/);
+  assert.match(gradle,/versionName = if \(continuumOwnerLocalVersion != null\) "0\.3\.\$\{continuumOwnerLocalVersion - 1\}" else "0\.3\.24"/);
   assert.match(gradle, /applicationId = "at\.heinz\.deviceai"/);
   assert.match(gradle, /applicationIdSuffix = "\.mentorpaired"/);
   assert.match(manifest, /android:enabled="\$\{mobileBuilderEnabled\}"/);

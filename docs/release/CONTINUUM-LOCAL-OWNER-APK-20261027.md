@@ -25,7 +25,7 @@ Der Builder verwendet jetzt das vollständige `JAVA_HOME` samt `javac` und `keyt
 Der vorhandene `scripts/continuum-mobile-builder.mjs build` ist für eine **andere Preview-App** ausgelegt und kann die installierte Eigentümer-App nicht aktualisieren. Das neue `scripts/continuum-local-owner-apk.sh` baut dagegen mit der bestehenden Gradle-Anwendung `at.heinz.deviceai.mentorpaired`. Nach einmaliger Einrichtung sind keine externen Build-Dienste, Cloud-Konten, Pipelines oder Download-Aktionen im Skript notwendig.
 
 Kompatible Wege:
-- **Direkt auf dem Fold7 mit Termux/ARM64:** vorhandenes Termux, Node 20/22, JDK17, Gradle 8.11.1, Android SDK 36, ARM64-`aapt2` und `apksigner`; vorhandener `-PdeviceAiMobileAidlFallback=true` Android-Quellpfad wird benutzt. Keine Emulator- oder zweite App erforderlich.
+- **Direkt auf dem Fold7 mit Termux/ARM64:** vorhandenes Termux, Node-LTS 20/22/24, vollständiges JDK17, Gradle 8.11.1, Android SDK 36, ARM64-`aapt2` und `apksigner`; vorhandener `-PdeviceAiMobileAidlFallback=true` Android-Quellpfad wird benutzt. Keine Emulator- oder zweite App erforderlich.
 - **Auf einem eigenen Linux-x64-Rechner:** dieselben Android/Gradle/JDK-Werkzeuge, offizieller Android SDK-36-Compiler und Build-Tools 35.0.0. Nach lokalem Build APK via USB/Datei auf Fold7 bringen.
 - **Offline-Betrieb:** wenn SDK, JDK, Gradle, Maven-/Android-Artefakte bereits lokal vorliegen: `build --offline`. Die erstmalige Installation und das Auffüllen des Gradle-Caches benötigen eventuell einmalig Netzwerkzugang. Dies hat **keine monatliche Build-Minutengrenze**, benötigt aber Speicher, CPU, RAM und ggf. Strom.
 
@@ -69,7 +69,7 @@ Falls ausschließlich die Gradle-Abhängigkeiten noch nicht im Cache sind, **bei
 
 Das Skript scheitert ohne:
 1. Vollständigen, sauberen Git-Checkout und explizit bestätigten Git HEAD;
-2. JDK 17, Gradle 8.11.1, Node 20/22, Android SDK 36 sowie plattformspezifisches echtes `aapt2` und `apksigner`;
+2. vollständiges JDK 17, Gradle 8.11.1, Node-LTS 20/22/24, Android SDK 36 sowie plattformspezifisches echtes `aapt2` und `apksigner`;
 3. bereits lokal vorhandenen Original-P12-Datei und passendem Kennwort;
 4. vor dem Build mit `keytool` übereinstimmendem Original-Signer-SHA;
 5. erfolgreichen echten `:app:testDebugUnitTest`, `:app:lintDebug`, `:app:assembleDebug`;

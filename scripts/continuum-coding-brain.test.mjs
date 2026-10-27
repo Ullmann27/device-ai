@@ -23,6 +23,9 @@ test('coding output cannot add tools, duplicate paths, unknown files or blank hu
 test('coding CLI UTF-8 transport accommodates the character-bounded multilingual context',()=>{
  const input=JSON.stringify({userPrompt:'汉'.repeat(14000),allowedTrackedPaths:['lib/pages.mjs'],timeoutMs:100});
  const r=spawnSync(process.execPath,[new URL('./continuum-local-brain-cli.mjs',import.meta.url).pathname,'coding'],{
-  input,encoding:'utf8',env:{...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:''},timeout:2000,shell:false});
+  input,encoding:'utf8',env:{...process.env,CONTINUUM_LOCAL_BRAIN_API_KEY:'',
+   CONTINUUM_LOCAL_BRAIN_MODEL:'utf8-protocol-fixture',CONTINUUM_LOCAL_BRAIN_RUNTIME:'llama.cpp',
+   CONTINUUM_LOCAL_BRAIN_MODEL_FORMAT:'gguf',CONTINUUM_LOCAL_BRAIN_MODEL_SHA256:'b'.repeat(64),
+   CONTINUUM_ALLOW_ALTERNATE_CODING_MODEL:'OWNER_APPROVED_ALTERNATE_GGUF'},timeout:2000,shell:false});
  assert.match(r.stderr,/LOCAL_AUTH_REQUIRED/);assert.doesNotMatch(r.stderr,/TOO_LARGE/);
 });

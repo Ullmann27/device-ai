@@ -17,6 +17,7 @@ test('HTTPS setup verifies access first, converts only official origin and redac
  const doctor=run('doctor');assert.equal(doctor.status,0,doctor.stderr);assert.match(doctor.stdout,/SSH_UNCHANGED_RUN_SETUP/);
  assert.match(f.git('remote','get-url','origin'),/^git@/);
  const denied=run('setup',{TEST_READ_EXIT:'1'});assert.equal(denied.status,69);assert.match(f.git('remote','get-url','origin'),/^git@/);
+ f.git('config','url.ssh://git@github.com/.insteadOf','https://github.com/');
  const setup=run('setup');assert.equal(setup.status,0,setup.stderr);assert.equal(f.git('remote','get-url','origin'),'https://github.com/Ullmann27/device-ai.git');
  for(const r of [doctor,denied,setup])assert.equal((r.stdout+r.stderr).includes('PRIVATE_AUTH_SENTINEL'),false);
  f.git('remote','set-url','origin','git@github.com:someone/other.git');assert.equal(run('setup').status,69);
