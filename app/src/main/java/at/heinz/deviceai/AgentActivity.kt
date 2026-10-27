@@ -3021,7 +3021,7 @@ class AgentActivity : Activity() {
         val actionSessionId = sessionId
         val turnTrace = CognitiveTurnTrace(actionSessionId)
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
-        val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan(ToolProposal(name, decision.arguments))
+        val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
         val gate = createToolGate()
         val orchestrator = BoundedAgentOrchestrator(
             model = plan,
@@ -3032,7 +3032,7 @@ class AgentActivity : Activity() {
             // Only the fixed local filesystem probe has a typed native outcome.
             // Legacy Shizuku strings must not become successful skill evidence.
             evaluationConfirmsOutcome = name == "get_storage_info",
-            limits = at.heinz.deviceai.cognitive.AgentLimits(maxSteps = 16, maxToolCalls = 1, maxRetries = 0),
+            limits = at.heinz.deviceai.cognitive.AgentLimits(maxSteps = 24, maxToolCalls = plan.stepCount, maxRetries = 0),
             checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
             callIdPrefix = "bootstrap-" + UUID.randomUUID().toString(),
             cancellation = cancellation,

@@ -1,0 +1,33 @@
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:22:39: error: unresolved reference 'forRequest'.
+            val plan=ReadOnlyToolPlan.forRequest(request,ToolProposal(decision.tool!!,decision.arguments))
+                                      ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:57:35: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        val plan=ReadOnlyToolPlan(steps)
+                                  ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:65:62: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        val result=BoundedAgentOrchestrator(ReadOnlyToolPlan(steps),{ emptyList() },
+                                                             ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:67:30: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+            ReadOnlyToolPlan(steps),InMemoryExperienceStore(),limits=AgentLimits(maxRetries=0,maxToolCalls=2)).run("synthetic failure")
+                             ^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:77:53: error: unresolved reference 'forRequest'.
+            assertEquals(request,1,ReadOnlyToolPlan.forRequest(request,fallback).stepCount)
+                                                    ^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:79:79: error: cannot infer type for this parameter. Specify it explicitly.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(emptyList()) }
+                                                                              ^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:79:79: error: argument type mismatch: actual type is 'List<uninferred T (of fun <T> emptyList)>', but 'ToolProposal' was expected.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(emptyList()) }
+                                                                              ^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:80:79: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(List(4) { steps[0] }) }
+                                                                              ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:81:79: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(listOf(steps[0],steps[0])) }
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:82:79: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(listOf(steps[0],ToolProposal("delete_file",mapOf("path" to "/sdcard/Download/x")))) }
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyMultiStepTest.kt:83:41: error: argument type mismatch: actual type is 'List<ToolProposal>', but 'ToolProposal' was expected.
+        val deniedPlan=ReadOnlyToolPlan(steps);var executions=0
+                                        ^^^^^

@@ -25,3 +25,10 @@ test('model reply quality never authorizes an owner-memory write (source boundar
  assert.match(activity,/BootstrapKind.REMEMBER -> rememberOwnerFact/);
  assert.match(read('cognitive/CognitiveDecisionBridge.kt'),/private val reasoningAdapter: ContinuumReasoningAdapter\?/);
 });
+
+test('bounded multi-step request keeps the existing gate and never promotes legacy shell strings',()=>{
+ assert.match(activity,/ReadOnlyToolPlan\.forRequest\(request, ToolProposal\(name, decision.arguments\)\)/);
+ assert.match(activity,/maxToolCalls = plan.stepCount, maxRetries = 0/);
+ assert.match(activity,/evaluationConfirmsOutcome = name == "get_storage_info"/);
+ assert.match(activity,/decision.tool != "get_storage_info" && !bridge.isReady\(\)/);
+});

@@ -22,7 +22,7 @@ for name in LearningSnapshot TinyNeuralNetwork NeuralDialogue StructuredKnowledg
     sources+=("$root/app/src/main/java/at/heinz/deviceai/learning/$name.kt")
 done
 tests=(BoundedAgentTest BoundedAgentOutcomeEvidenceTest ExperienceEvidenceRegressionTest ReadOnlyToolPlanTest
-    AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest CognitiveTurnTraceTest ConversationControlTest)
+    AgentCheckpointStoreTest CognitivePersistenceTest ContinuumRuntimeStoreTest HybridMemoryRetrieverTest MemoryEcologyTest CognitiveTurnTraceTest ConversationControlTest ReadOnlyMultiStepTest)
 for name in "${tests[@]}"; do
     sources+=("$root/app/src/test/java/at/heinz/deviceai/cognitive/$name.kt")
 done
