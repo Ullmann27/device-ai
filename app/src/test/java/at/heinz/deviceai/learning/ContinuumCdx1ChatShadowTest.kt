@@ -77,13 +77,12 @@ class ContinuumCdx1ChatShadowTest {
         assertEquals(0,calls)
     }
 
-    @Test fun onlySameCurrentPairedCheckpointCanBeObserved() {
+    @Test fun onlyBoundedPairedCheckpointCanBeObserved() {
         var calls=0
         for (status in listOf(
             pinned.copy(available=false),
             pinned.copy(sha256=null),
             pinned.copy(updates=0),
-            pinned.copy(conditioningState="PINNED_PREVIOUS"),
             pinned.copy(conditioningState="RECOVERED_LKG"),
             pinned.copy(conditioningState="CORRUPT")
         )) {
@@ -93,6 +92,11 @@ class ContinuumCdx1ChatShadowTest {
             assertEquals(ContinuumCdx1ChatShadow.Observation.State.NO_CURRENT_CHECKPOINT,result.state)
         }
         assertEquals(0,calls)
+        val prior=ContinuumCdx1ChatShadow.observe("Test?",true,
+            setOf("owner-memory-01"),listOf(hit()),
+            {pinned.copy(conditioningState="PINNED_PREVIOUS")},{_,_->calls++; "Nur Forschung"})
+        assertEquals(ContinuumCdx1ChatShadow.Observation.State.SHADOW_GENERATED,prior.state)
+        assertEquals(1,calls)
     }
 
     @Test fun changedWeightsDiscardUnverifiedGeneration() {
