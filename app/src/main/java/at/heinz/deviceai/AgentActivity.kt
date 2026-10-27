@@ -523,9 +523,9 @@ class AgentActivity : Activity() {
             // for a quick reopen while this process survives. If Android kills
             // the process, restoreOriginalGemmaOnOpen reopens the saved file.
             // Explicit MODELL ENTLADEN always takes precedence.
-            val retainGemma = ContinuumGemmaRestorePolicy.isSelectedOriginalOrFalse(
-                localRuntime.loadedModel
-            ) && gemmaRestorePreferences().getBoolean(
+            val retainGemma =
+                localRuntime.loadedModel?.let(ContinuumGemmaRestorePolicy::isSelectedOriginal) == true &&
+                gemmaRestorePreferences().getBoolean(
                 ContinuumGemmaRestorePolicy.KEY_ENABLED, true
             )
             if (!isChangingConfigurations && !retainGemma &&
