@@ -64,6 +64,9 @@ else
 fi
 [[ -n "$signer_bin" && -x "$signer_bin" ]] || die 'Android apksigner unavailable'
 expected_signer='2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc'
+owner_code="${CONTINUUM_OWNER_NEXT_VERSION_CODE:-26}"
+[[ "$owner_code" =~ ^(2[6-9]|[3-9][0-9]|[1-9][0-9]{2,3})$ ]] && (( owner_code <= 9999 )) || die 'Owner versionCode must be a canonical number from 26 through 9999'
+owner_name="0.3.$((owner_code - 1))"
 app_package='at.heinz.deviceai.mentorpaired'
 head="$(git -C "$root" rev-parse HEAD 2>/dev/null)" || die 'Missing Git HEAD'
 [[ "$head" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git HEAD'
@@ -94,12 +97,12 @@ flags=(--no-daemon --max-workers=2 --console=plain
   -Pkotlin.compiler.execution.strategy=in-process
   -PdeviceAiMentorPreview=true
   -PdeviceAiOwnerSignedUpdate=true
-  -PcontinuumOwnerLocalVersion26=true)
+  "-PcontinuumOwnerLocalVersionCode=$owner_code")
 if [[ "$is_termux" == true ]]; then
   flags+=("-Pandroid.aapt2FromMavenOverride=$aapt2_bin" -PdeviceAiMobileAidlFallback=true)
 fi
 if [[ "$offline" == true ]]; then flags+=(--offline); fi
-printf 'CONTINUUM_LOCAL_BUILD_START source=%s package=%s code26 offline=%s\n' "$head" "$app_package" "$offline"
+printf 'CONTINUUM_LOCAL_BUILD_START source=%s package=%s versionCode=%s offline=%s\n' "$head" "$app_package" "$owner_code" "$offline"
 cd "$root"
 "$gradle_bin" "${flags[@]}" :app:testDebugUnitTest :app:lintDebug :app:assembleDebug || die 'Gradle test/lint/build failed'
 [[ "$(git rev-parse HEAD)" == "$head" && -z "$(git status --porcelain --untracked-files=normal)" ]] || die 'Source mutated while building'
@@ -109,15 +112,15 @@ apk="$root/app/build/outputs/apk/debug/app-debug.apk"
 apk_fp="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$output_dir/SIGNATURE-$head.txt" | head -n 1 | tr '[:upper:]' '[:lower:]')"
 [[ "$apk_fp" == "$expected_signer" ]] || die 'APK has wrong signer'
 "$aapt2_bin" dump badging "$apk" > "$output_dir/PACKAGE-$head.txt" || die 'Cannot inspect APK package'
-grep -Fq "package: name='$app_package' versionCode='26' versionName='0.3.25'" "$output_dir/PACKAGE-$head.txt" || die 'APK package/version does not match existing Continuum update'
+grep -Fq "package: name='$app_package' versionCode='$owner_code' versionName='$owner_name'" "$output_dir/PACKAGE-$head.txt" || die 'APK package/version does not match existing Continuum update'
 digest="$(sha256sum "$apk" | cut -d' ' -f1)"
 [[ "$digest" =~ ^[a-f0-9]{64}$ ]] || die 'Invalid APK SHA-256'
-dest="$output_dir/DeviceAI-Continuum-v0.3.25-$digest.apk"
+dest="$output_dir/DeviceAI-Continuum-v$owner_name-$digest.apk"
 if [[ -e "$dest" ]]; then
   [[ -f "$dest" && ! -L "$dest" && "$(sha256sum "$dest" | cut -d' ' -f1)" == "$digest" ]] || die 'Existing output file differs'
 else
   cp -- "$apk" "$dest"
   [[ "$(sha256sum "$dest" | cut -d' ' -f1)" == "$digest" ]] || die 'APK copy SHA mismatch'
 fi
-printf 'source_sha=%s\npackage=%s\nversion_code=26\nversion_name=0.3.25\nowner_signer_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=SIGNED_NOT_DEVICE_INSTALLED\n' "$head" "$app_package" "$expected_signer" "$digest" "$dest" > "$output_dir/BUILD-INFO-$head.txt"
+printf 'source_sha=%s\npackage=%s\nversion_code=%s\nversion_name=%s\nowner_signer_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=SIGNED_NOT_DEVICE_INSTALLED\n' "$head" "$app_package" "$owner_code" "$owner_name" "$expected_signer" "$digest" "$dest" > "$output_dir/BUILD-INFO-$head.txt"
 printf 'CONTINUUM_OWNER_APK=%s\nCONTINUUM_APK_SHA256=%s\nSOURCE_SHA=%s\n' "$dest" "$digest" "$head"
