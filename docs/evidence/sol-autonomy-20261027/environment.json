@@ -1,0 +1,12 @@
+{
+  "node": true,
+  "kotlinCompiler": "official2.2.0embeddable, native launcher verified",
+  "java": true,
+  "gradle": false,
+  "adb": false,
+  "apksigner": false,
+  "androidSdkConfigured": false,
+  "deviceTest": "NOT_RUN",
+  "ownerCertificateAccessed": false,
+  "paidServicesUsed": false
+}
