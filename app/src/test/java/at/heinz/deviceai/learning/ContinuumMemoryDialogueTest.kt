@@ -206,6 +206,38 @@ class ContinuumMemoryDialogueTest {
             "Vergleiche SWB1 und CDX1","SWB1 und CDX1 sind getrennte Lernkerne."))
     }
 
+    @Test fun spacedDeviceIdentifierRejectsKappa70AndPreservesKappa7() {
+        // Distinct name-plus-number identifiers must be exact even when the
+        // numeral is separated by a space or dash (unlike generic year text).
+        val q="Wo steht Gerät Kappa 7?"
+        val valid="Gerät Kappa 7 steht in Raum Silber."
+        val hyphen="Gerät Kappa-7 steht in Raum Silber."
+        val wrong="Gerät Kappa 70 steht in Raum Gold."
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(q,valid))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(q,hyphen))
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(q,wrong))
+        val records=listOf(valid,wrong).map {
+            LearningExperienceFactory.create(
+                LearningExperienceType.USER_FACT,
+                LearningProvenance.USER_CONFIRMED,
+                LearningTrustClass.OWNER_CONFIRMED,
+                LearningStatus.CONFIRMED,it,now=1L
+            )
+        }
+        val hits=ContinuumMemoryDialogue.rank(fixture(),q,records)
+        assertEquals("Wrong device must never become a cited owner fact",1,hits.size)
+        assertEquals(valid,hits.single().text)
+        assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wo steht Projekt Orion 5?",
+            "Projekt Orion 50 steht im Labor."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Wo steht Projekt Orion 5?",
+            "Projekt Orion 5 steht im Labor."))
+        assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
+            "Was geschah im Jahr 2024?",
+            "Im Jahr 2024 geschah ein Ereignis."))
+    }
+
     @Test fun longQuestionVerbsCannotBlockValidSourceEvidence() {
         val citation="Backpropagation heißt auch Fehlerrückführung."
         for (query in listOf(
