@@ -11,6 +11,7 @@ const selected=read('app/src/main/java/at/heinz/deviceai/ContinuumSelectedModels
 const m2=read('app/src/main/java/at/heinz/deviceai/ContinuumM2Status.kt');
 const route=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkerChatRouter.kt');
 const cli=read('scripts/continuum-local-brain-cli.mjs');
+const harnessCli=read('scripts/continuum-harness-coding-cli.mjs');
 const guard=read('scripts/continuum-m2-model-preflight.mjs');
 const verifier=read('.github/continuum/ccc1-independent-verifier.mjs');
 const agent=read('.github/continuum/ccc1-worker.mjs');
@@ -50,6 +51,14 @@ const expectations=[
  ['27 original CCC1 still protects test identities',()=>assert.match(verifier,/EXECUTED_TEST_IDENTITY_MISSING/)],
  ['28 original CCC1 still protects source patch scope',()=>assert.match(verifier,/PATCH_SCOPE_INVALID/)],
  ['29 CCC1 task keeps explicit owner permission',()=>assert.ok(agent.includes("permissions:[REPAIR_CAPABILITY+':'+chain]"))],
- ['30 model status is exposed as text without training',()=>assert.doesNotMatch(m2,/\.train\(|trainStep\(|saveExperienceFile\(|writeFileSync\(/)]
+ ['30 model status is exposed as text without training',()=>assert.doesNotMatch(m2,/\.train\(|trainStep\(|saveExperienceFile\(|writeFileSync\(/)],
+ ['31 harness coding CLI enforces same owner model preflight',()=>assert.match(harnessCli,/requireCodingModelPreflight\(\{/)],
+ ['32 harness CLI rejects format mismatch before generation',()=>{
+    const guardPos=harnessCli.indexOf('requireCodingModelPreflight({');
+    const modelPos=harnessCli.indexOf('const reply=await queryHarnessCodingBrain(');
+    assert.ok(guardPos>0 && modelPos>guardPos);
+ }],
+ ['33 harness safely redacts arbitrary errors',()=>assert.match(harnessCli,/HARNESS_UNAVAILABLE_OR_INVALID/)]
+
 ];
 for(const [name,assertion] of expectations)test('M2 contract '+name,assertion);
