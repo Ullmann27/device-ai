@@ -54,4 +54,8 @@ test('split-number rule mirrors android without breaking ordinary years',()=>{
     'Projekt Orion 5 steht im Labor.'),true);
   assert.equal(sourceTermEvidence('Was geschah im Jahr 2024?',
     'Im Jahr 2024 geschah ein Ereignis.'),true);
+  assert.deepEqual(rankMemories('Wo steht Gerät Äther 4?',[
+    {id:'incorrect',kind:'USER_FACT',text:'Gerät Äther 40 steht im Labor.'},
+    {id:'correct',kind:'USER_FACT',text:'Gerät Äther 4 steht im Labor.'}
+  ]).map(h=>h.id),['correct']);
 });
