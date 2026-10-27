@@ -1,0 +1,19 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    ".github/continuum/storage-fabric.test.mjs",
+    ".github/continuum/continuum-virtual-model-fabric.test.mjs"
+  ],
+  "exitCode": 0,
+  "nodeVersion": "v24.19.0",
+  "baseline": "9b730b3e742effd05280a34ab568858af659e9b6",
+  "atUtc": "2026-10-27T10:04:28.193772+00:00",
+  "sourceSha256": {
+    ".github/continuum/storage-fabric.mjs": "79fcdebac590779b5dd9fe5cb9edae4d13581d67f87245fb85a0434edc7f9388",
+    ".github/continuum/storage-fabric-catalog.mjs": "04bcf4659d507ca9d2d832ea4c77262d92b4b31c6e36fec688984e7a3457a542",
+    ".github/continuum/storage-fabric.test.mjs": "933f2184601244ead592a1246486b6e799d78a321015d4c7602eb15bb27d67d8",
+    "scripts/continuum-storage-fabric-node.mjs": "25b49256b6f6b50176006b5419b5268ba25810c24fb8b2fd4563f2e549559a34"
+  }
+}
