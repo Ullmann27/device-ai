@@ -22,7 +22,11 @@ object ContinuumPreviewMain {
         ContinuumHomeScreen.drawBackground(p, layout.width, heightDp, layout)
         layout[ContinuumHomeLayout.Slot.HERO]?.let { box ->
             val renderer = ContinuumHologramRenderer()
-            renderer.geometry = if (layout.wide) ContinuumHologramRenderer.Geometry.FOLD else ContinuumHologramRenderer.Geometry.PHONE
+            renderer.geometry = when {
+                layout[ContinuumHomeLayout.Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+                layout.wide -> ContinuumHologramRenderer.Geometry.FOLD
+                else -> ContinuumHologramRenderer.Geometry.PHONE
+            }
             renderer.layout(box.width, box.height)
             p.save(); p.translate(box.left, box.top)
             // the hologram is a child view on the device and is clipped to its box

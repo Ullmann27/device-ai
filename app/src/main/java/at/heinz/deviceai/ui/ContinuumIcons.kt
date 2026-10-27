@@ -11,7 +11,7 @@ import kotlin.math.sin
 object ContinuumIcons {
     enum class Icon {
         GLOBE, BRAIN, BOOK, CODE, CHART_UP, ATOM, SEARCH, BELL, HOME, CHAT, DOTS_VERTICAL, DOTS_HORIZONTAL, DATABASE, GEAR,
-        PULSE, CHEVRON_RIGHT, CHEVRON_DOWN, ARROW_UP, CPU, WIFI, DOCUMENT, BOLT, CLOCK, MODE, REFRESH, CHECK_CIRCLE, CUBE
+        PULSE, CHEVRON_RIGHT, CHEVRON_DOWN, ARROW_UP, CPU, WIFI, DOCUMENT, BOLT, CLOCK, MODE, REFRESH, CHECK_CIRCLE, CUBE, USERS
     }
 
     private val path = VectorPath()
@@ -155,6 +155,11 @@ object ContinuumIcons {
             Icon.CUBE -> {
                 poly(12f, 2.8f, 20.5f, 7.4f, 20.5f, 16.6f, 12f, 21.2f, 3.5f, 16.6f, 3.5f, 7.4f, closed = true)
                 poly(3.5f, 7.4f, 12f, 12f, 20.5f, 7.4f); line(12f, 12f, 12f, 21.2f)
+            }
+            Icon.USERS -> {
+                circle(12f, 7.8f, 3.1f); circle(4.5f, 9.2f, 2.2f); circle(19.5f, 9.2f, 2.2f)
+                arc(5.5f, 11.2f, 18.5f, 23f, 195f, 150f)
+                arc(0f, 12.2f, 9f, 22f, 190f, 120f); arc(15f, 12.2f, 24f, 22f, 230f, 120f)
             }
         }
     }

@@ -50,21 +50,56 @@ class ContinuumHomeLayoutTest {
         assertEquals(76f, ContinuumHomeLayout.railWidthDp(840f), 0f)
     }
 
-    @Test fun anUprightFoldIsFilledAndTheCardsKeepTheirShape() {
-        for ((w, h) in listOf(750f to 790f, 656f to 690f, 832f to 708f, 840f to 649f, 1000f to 1400f)) {
-            val ref = ContinuumHomeLayout.wide(w)
-            val l = ContinuumHomeLayout.wide(w, h)
-            for ((slot, box) in l.boxes) assertTrue("$w x $h $slot inside the width", box.left >= -1e-3f && box.right <= w + 1e-3f)
-            for (c in cards) {
-                assertEquals("$c width", ref.boxes.getValue(c).width, l.boxes.getValue(c).width, 1e-3f)
-                assertEquals("$c height", ref.boxes.getValue(c).height, l.boxes.getValue(c).height, 1e-3f)
+    @Test fun unfoldedPortraitKeepsExactThreeByTwoCardAlignment() {
+        for ((w,h) in listOf(750f to 790f, 656f to 690f, 840f to 1010f, 1000f to 1400f)) {
+            assertTrue(ContinuumHomeLayout.isPortraitFold(w,h))
+            val l=ContinuumHomeLayout.wide(w,h)
+            val first=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map { l.boxes.getValue(it) }
+            val second=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map { l.boxes.getValue(it) }
+            val scale=l.scale
+            // All six glass cards have EXACTLY the same size, gap and column boundaries.
+            for(i in 0..2){
+                assertEquals("column $i x",first[i].left,second[i].left,.001f)
+                assertEquals("column $i width",first[i].width,second[i].width,.001f)
+                assertEquals("column $i height",first[i].height,second[i].height,.001f)
             }
-            val rows = listOf(Slot.MODEL, Slot.DEVELOPMENT).map { l.boxes.getValue(it) }
-            assertTrue("rows do not overlap", rows[0].bottom <= rows[1].top)
-            assertTrue("hero ends above the cards (reference overlap 0.1 dp)", l.boxes.getValue(Slot.HERO).bottom <= l.boxes.getValue(Slot.MODEL).top + .5f)
-            if (h / l.scale <= 649f + 420f) assertTrue("$w x $h fills the window", l.contentHeight >= h - 1f)
-            assertTrue("$w x $h never taller than the window when the window is tall enough", l.contentHeight <= maxOf(h, 649f * l.scale) + 1e-3f)
-            assertTrue("hologram never smaller", l.boxes.getValue(Slot.HERO).width >= ref.boxes.getValue(Slot.HERO).width - 1e-3f)
+            for(box in first+second){
+                assertEquals(first[0].width,box.width,.001f)
+                assertEquals(first[0].height,box.height,.001f)
+                assertTrue(box.left>=0f && box.right<=w+.001f)
+                assertTrue(box.bottom<=l.contentHeight+.001f)
+            }
+            assertEquals(12f*scale,first[0].left,.001f)
+            assertEquals(12f*scale,second[0].left,.001f)
+            assertEquals(first[0].bottom+12f*scale,second[0].top,.001f)
+            assertTrue(l.boxes[Slot.RAIL]==null)
+            assertTrue(l.boxes[Slot.MODEL_PILL]==null)
+            assertTrue(l.boxes.getValue(Slot.HERO).bottom<=first[0].top)
+            for ((left,right) in listOf(
+                Slot.LABEL_CONNECTED to Slot.LABEL_THINKING,
+                Slot.LABEL_LEARNING to Slot.LABEL_ANALYSING,
+                Slot.LABEL_DEVELOPING to Slot.LABEL_EVOLVING
+            )) {
+                val a=l.boxes.getValue(left);val b=l.boxes.getValue(right)
+                assertEquals(a.top,b.top,.001f)
+                assertEquals(a.height,b.height,.001f)
+                assertTrue("portrait controls are larger than legacy wide controls",a.height>=75f*scale)
+                assertTrue("left action exceeds 200 reference dp",a.width>=200f*scale)
+            }
+        }
+    }
+
+    @Test fun landscapeStillKeepsItsExistingRailAndLegacyCards() {
+        for ((w,h) in listOf(832f to 708f,840f to 649f)) {
+            assertFalse(ContinuumHomeLayout.isPortraitFold(w,h))
+            val reference=ContinuumHomeLayout.wide(w)
+            val full=ContinuumHomeLayout.wide(w,h)
+            for(c in cards) {
+                assertEquals(reference.boxes.getValue(c).width,full.boxes.getValue(c).width,.001f)
+                assertEquals(reference.boxes.getValue(c).height,full.boxes.getValue(c).height,.001f)
+            }
+            assertTrue(full.boxes[Slot.RAIL]!=null)
+            assertTrue(full.boxes[Slot.WORKERS]==null)
         }
     }
 }

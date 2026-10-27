@@ -11,7 +11,7 @@ object ContinuumHomeLayout {
     enum class Slot {
         BRAND, SEARCH, NOTIFICATIONS, PROFILE, MODEL_PILL, HERO,
         LABEL_CONNECTED, LABEL_LEARNING, LABEL_DEVELOPING, LABEL_THINKING, LABEL_ANALYSING, LABEL_EVOLVING,
-        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, NAV, RAIL
+        MODEL, LEARNING, STORAGE, DEVELOPMENT, SYSTEM_STATUS, SYSTEM_ACTIVITY, WORKERS, NAV, RAIL
     }
 
     data class Box(val left: Float, val top: Float, val right: Float, val bottom: Float) {
@@ -52,6 +52,10 @@ object ContinuumHomeLayout {
      * zoom (owner decision, 22.10.2026), tablets; phone otherwise (also the Fold cover display).
      */
     fun isWide(widthDp: Float, heightDp: Float) = widthDp >= 600f && heightDp >= 480f
+
+    /** Unfolded Fold7 held upright: use the owner's 3-by-2 reference, never the landscape rail raster. */
+    fun isPortraitFold(widthDp: Float, heightDp: Float): Boolean =
+        isWide(widthDp, heightDp) && heightDp >= widthDp * 1.02f
 
     // Centerline of the hologram is 206 dp. Opposing controls use equal widths and mirrored x-coordinates.
     private val phoneReference = mapOf(
@@ -110,6 +114,52 @@ object ContinuumHomeLayout {
     private val SECOND_ROW = setOf(Slot.DEVELOPMENT, Slot.SYSTEM_ACTIVITY)
 
     /**
+     * Owner's supplied portrait reference: large left/right action cards around the orb,
+     * a narrow status column, and two IDENTICAL three-column dashboard rows.
+     * Reference canvas: 840 x 886 dp (content/window dimensions, excluding system bars).
+     * Larger upright windows add height to the hero and both dashboard rows; compact
+     * Fold7 display zoom retains the same horizontal card boundaries and scrolls
+     * instead of clipping information. No rail exists in this composition.
+     */
+    fun portraitFold(widthDp: Float, heightDp: Float): Layout {
+        require(widthDp > 0f && heightDp > 0f)
+        val u = widthDp / WIDE_REFERENCE_WIDTH
+        val requestedHeight = heightDp / u
+        val frame = requestedHeight.coerceAtLeast(800f)
+        val extra = (frame - 886f).coerceAtLeast(0f)
+        // Image-registered portrait proportions: taller canvases grow the hero gently
+        // and retain the reference's lower starfield margin, not giant stretched panels.
+        val heroExtra = (extra * .22f).coerceAtMost(100f)
+        val top = 400f + heroExtra
+        val gap = 12f
+        val bottomMargin = 12f + extra * .46f
+        val cardHeight = ((frame - top - bottomMargin - gap) / 2f).coerceAtLeast(196f)
+        val row2 = top + cardHeight + gap
+        val positions = linkedMapOf(
+            Slot.BRAND to Box(2f, 5f, 341f, 62f),
+            Slot.SEARCH to Box(557f, 16f, 585f, 48f),
+            Slot.NOTIFICATIONS to Box(600f, 16f, 628f, 48f),
+            Slot.PROFILE to Box(640f, 15f, 670f, 49f),
+            Slot.HERO to Box(185f, 60f, 540f, 390f + heroExtra),
+            Slot.LABEL_CONNECTED to Box(14f, 77f, 242f, 163f),
+            Slot.LABEL_LEARNING to Box(14f, 177f, 242f, 263f),
+            Slot.LABEL_DEVELOPING to Box(14f, 277f, 242f, 369f),
+            Slot.LABEL_THINKING to Box(491f, 77f, 654f, 163f),
+            Slot.LABEL_ANALYSING to Box(491f, 177f, 654f, 263f),
+            Slot.LABEL_EVOLVING to Box(491f, 277f, 654f, 369f),
+            Slot.SYSTEM_STATUS to Box(663f, 61f, 809f, 392f + heroExtra),
+            Slot.MODEL to Box(12f, top, 276f, top + cardHeight),
+            Slot.LEARNING to Box(288f, top, 552f, top + cardHeight),
+            Slot.STORAGE to Box(564f, top, 828f, top + cardHeight),
+            Slot.DEVELOPMENT to Box(12f, row2, 276f, row2 + cardHeight),
+            Slot.SYSTEM_ACTIVITY to Box(288f, row2, 552f, row2 + cardHeight),
+            Slot.WORKERS to Box(564f, row2, 828f, row2 + cardHeight)
+        )
+        val finalHeight = maxOf(frame, row2 + cardHeight + 12f)
+        return Layout(true, widthDp, u, finalHeight * u, positions.mapValues { it.value.scaled(u) })
+    }
+
+    /**
      * Wide composition for a [widthDp] x [heightDp] window, scaled uniformly with the width like the reference
      * (840 x 649 dp, landscape). A window that is taller than that proportion – the Fold7 main display held upright is
      * almost square – would otherwise end in an empty band. The extra height first enlarges the hero stage: the hologram
@@ -119,6 +169,7 @@ object ContinuumHomeLayout {
      */
     fun wide(widthDp: Float, heightDp: Float = 0f): Layout {
         require(widthDp > 0f)
+        if (heightDp > 0f && isPortraitFold(widthDp, heightDp)) return portraitFold(widthDp, heightDp)
         val u = widthDp / WIDE_REFERENCE_WIDTH
         val extra = if (heightDp > 0f) (heightDp / u - WIDE_REFERENCE_HEIGHT).coerceIn(0f, 420f) else 0f
         val hero = wideReference.getValue(Slot.HERO)

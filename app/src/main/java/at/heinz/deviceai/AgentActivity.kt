@@ -561,9 +561,13 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
-            wideContent.addView(buildRail(), LinearLayout.LayoutParams(
-                railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
-            ))
+            // The unfolded portrait reference is full bleed: no left navigation rail.
+            // Fold landscape retains its tested sidebar and the same work-area handling.
+            if (!at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidthDp, windowHeightDp)) {
+                wideContent.addView(buildRail(), LinearLayout.LayoutParams(
+                    railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
+                ))
+            }
             wideContent.addView(buildConversationPane(wide = true), LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
             ))
@@ -728,8 +732,10 @@ class AgentActivity : Activity() {
         }
         val windowWidth = renderedWindowWidthDp ?: resources.configuration.screenWidthDp.toFloat()
         // The offset is the rail's real drawn width, so the dashboard starts exactly where the rail ends.
-        home.configure(windowWidth, wide, railOffset = if (wide) railWidthPx() / resources.displayMetrics.density else 0f,
-            windowHeightDp = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat())
+        val windowHeight = renderedWindowHeightDp ?: resources.configuration.screenHeightDp.toFloat()
+        val sideRail = wide && !at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidth, windowHeight)
+        home.configure(windowWidth, wide, railOffset = if (sideRail) railWidthPx() / resources.displayMetrics.density else 0f,
+            windowHeightDp = windowHeight)
         home.setForegroundActive(foregroundLearningActive)
         homeView = home
         dashboard.addView(home, matchWidth())
@@ -888,6 +894,7 @@ class AgentActivity : Activity() {
                 if (homeView?.wide == true && heightDp > 0f && y / heightDp > .47f) showDevelopmentBacklog() else showDevelopmentCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_STATUS -> showSystemCenter()
             at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.SYSTEM_ACTIVITY -> showDiagnosticsCenter()
+            at.heinz.deviceai.ui.ContinuumHomeLayout.Slot.WORKERS -> showDevelopmentBacklog()
             else -> Unit
         }
     }

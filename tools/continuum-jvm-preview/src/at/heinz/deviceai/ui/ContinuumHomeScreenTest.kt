@@ -13,12 +13,13 @@ class ContinuumHomeScreenTest {
     private val assets = listOf(File("src/main/assets"), File("app/src/main/assets")).first { it.isDirectory }
 
     @Test fun layoutsKeepEverySlotOnScreenAndCardsDoNotOverlap() {
-        for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.phone(360f), ContinuumHomeLayout.wide(840f), ContinuumHomeLayout.wide(1000f))) {
+        for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.phone(360f), ContinuumHomeLayout.wide(840f), ContinuumHomeLayout.wide(1000f),
+            ContinuumHomeLayout.wide(840f,1010f), ContinuumHomeLayout.wide(750f,790f))) {
             for ((slot, box) in layout.boxes) {
                 assertTrue("$slot inside width", box.left >= 0f && box.right <= layout.width + .01f)
                 assertTrue("$slot positive", box.width > 0f && box.height > 0f)
             }
-            val cards = listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY).mapNotNull { layout[it] }
+            val cards = listOf(Slot.MODEL, Slot.LEARNING, Slot.STORAGE, Slot.DEVELOPMENT, Slot.SYSTEM_STATUS, Slot.SYSTEM_ACTIVITY, Slot.WORKERS).mapNotNull { layout[it] }
             for (i in cards.indices) for (j in i + 1 until cards.size) {
                 val a = cards[i]; val b = cards[j]
                 assertFalse("cards overlap", a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom)
@@ -31,8 +32,8 @@ class ContinuumHomeScreenTest {
 
     @Test fun freshInstallShowsDashesNeverExampleNumbers() {
         val empty = ContinuumDashboardState()
-        for (wide in listOf(false, true)) {
-            val layout = if (wide) ContinuumHomeLayout.wide(840f) else ContinuumHomeLayout.phone(412f)
+        for (layout in listOf(ContinuumHomeLayout.phone(412f), ContinuumHomeLayout.wide(840f),
+            ContinuumHomeLayout.wide(840f,1010f))) {
             for ((slot, element) in ContinuumHomeScreen.elements(layout, 1f)) {
                 val text = element.describe(empty)
                 for (example in listOf("98%", "320 ms", "1M Tokens", "Continuum Ultra", "247", "432 GB", "Kontinuierlich", "Globale Ressourcen"))
@@ -47,7 +48,8 @@ class ContinuumHomeScreenTest {
 
     @Test fun hologramDrawsEveryRealStateWithoutInventedSpeech() {
         val renderer = ContinuumHologramRenderer()
-        for (geometry in listOf(ContinuumHologramRenderer.Geometry.PHONE, ContinuumHologramRenderer.Geometry.FOLD)) {
+        for (geometry in listOf(ContinuumHologramRenderer.Geometry.PHONE,
+            ContinuumHologramRenderer.Geometry.FOLD, ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT)) {
             renderer.geometry = geometry
             renderer.layout(412f, 307f)
             for (mode in ContinuumHologramRenderer.Mode.entries) {

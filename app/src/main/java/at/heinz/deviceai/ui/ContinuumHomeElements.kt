@@ -106,10 +106,29 @@ class CoreLabelElement(
     private val status: (ContinuumDashboardState) -> String,
     textScale: Float = 1f,
     private val boxed: Boolean = false,
-    val mirrored: Boolean = false
+    val mirrored: Boolean = false,
+    /** Fold7 portrait reference has significantly larger tiles and icons on BOTH sides. */
+    private val portrait: Boolean = false
 ) : ContinuumElement(textScale) {
     override fun draw(p: ContinuumPainter, w: Float, h: Float, s: ContinuumDashboardState) {
         val cy = h / 2f
+        if (portrait) {
+            // In the portrait reference the icon precedes text on both sides;
+            // the right-hand cards must not mirror their glyphs or captions.
+            val discX = 35f
+            val textX = 70f
+            val room = (w - textX - 14f).coerceAtLeast(1f)
+            ContinuumSurfaces.raisedControlCard(p, 0f, 0f, w, h, 14f)
+            ContinuumSurfaces.iconDisc(p, icon, discX, cy, 56f, 29f)
+            val titleStyle = fittedTitle(p, title, 700, 15.5f, room)
+            val statusStyle = t(400, 9f)
+            p.drawText(ContinuumSurfaces.fit(p, title, titleStyle, room),
+                textX, cy - 5.4f, titleStyle, solid(ContinuumTheme.LABEL_CYAN))
+            p.drawText(ContinuumSurfaces.fit(p, status(s), statusStyle, room),
+                textX, cy + 15f, statusStyle, solid(ContinuumTheme.TEXT_SECONDARY))
+            ContinuumSurfaces.chevron(p, w - 8.8f, cy, 10f)
+            return
+        }
         val discCenter = if (mirrored) w - 18f else 18f
         val textAnchor = if (mirrored) w - 40f else 40f
         val available = (w - 46f).coerceAtLeast(1f)
