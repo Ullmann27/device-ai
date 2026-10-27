@@ -1,0 +1,6 @@
+baselineIntent=0.9602550413005676
+baselineSimilarity=0.5006450671892122
+sidecarIntent=0.9622959115533204
+sidecarSimilarity=0.5078048780593183
+roundTripBytes=32960,32960
+productiveSwb1RejectsSwb2=true

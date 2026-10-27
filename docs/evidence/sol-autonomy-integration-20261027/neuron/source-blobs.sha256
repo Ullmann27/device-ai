@@ -1,0 +1,5 @@
+602c3ec18c710ad2d52074241712d94ee6dcacc5a3f471e1be92d3f68a58143a  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/LearningSnapshot.kt
+1d82f6642cbc2800e7ddda6eb00a5b56090b517c68b3b373e877add18ba452d8  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/TinyNeuralNetwork.kt
+ea9a19118c98e2259eeed7ab5e3b4b97bc3c8ebe52ca1c54fb91349cd015b021  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/NeuralDialogue.kt
+ee7f07f59993bdfeb861c626c3858bd9a4be149e6a5fd71b63e5be29f33b80e7  /workspace/device-ai-autonomy-integration/app/src/main/java/at/heinz/deviceai/learning/NeuralDemoSandbox.kt
+0dade606fa8ccb9e0ca2c8e794c49a07fb936528853734609d6c5ec29f396db5  /workspace/device-ai-autonomy-integration/app/src/test/java/at/heinz/deviceai/learning/NeuralDemoSandboxTest.kt

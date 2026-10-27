@@ -40,8 +40,8 @@ function checkout(){
  return {branch,sourceSha,tree:git(['rev-parse','HEAD^{tree}']),tests,inventoryHash:digest(JSON.stringify(tests.map(name=>({name,sha256:digest(fs.readFileSync(join(ROOT,'.github/continuum',name)))}))))};
 }
 function options(o={}){
- const value={timeoutMs:360000,heapMb:256,testConcurrency:2,intervalMs:3600000,maxCycles:null,...o};
- if(Object.keys(value).some(k=>!['timeoutMs','heapMb','testConcurrency','intervalMs','maxCycles'].includes(k))||!Number.isInteger(value.timeoutMs)||value.timeoutMs<100||value.timeoutMs>360000||!Number.isInteger(value.heapMb)||value.heapMb<64||value.heapMb>512||![1,2].includes(value.testConcurrency)||!Number.isInteger(value.intervalMs)||value.intervalMs<100||value.intervalMs>86400000||value.maxCycles!==null&&(!Number.isInteger(value.maxCycles)||value.maxCycles<1||value.maxCycles>1000))throw Error('INVALID_WORKER_BUDGET');
+ const value={timeoutMs:360000,heapMb:256,testConcurrency:2,maxEvidenceMb:64,intervalMs:3600000,maxCycles:null,...o};
+ if(Object.keys(value).some(k=>!['timeoutMs','heapMb','testConcurrency','maxEvidenceMb','intervalMs','maxCycles'].includes(k))||!Number.isInteger(value.timeoutMs)||value.timeoutMs<100||value.timeoutMs>360000||!Number.isInteger(value.heapMb)||value.heapMb<64||value.heapMb>512||!Number.isInteger(value.maxEvidenceMb)||value.maxEvidenceMb<4||value.maxEvidenceMb>512||![1,2].includes(value.testConcurrency)||!Number.isInteger(value.intervalMs)||value.intervalMs<100||value.intervalMs>86400000||value.maxCycles!==null&&(!Number.isInteger(value.maxCycles)||value.maxCycles<1||value.maxCycles>1000))throw Error('INVALID_WORKER_BUDGET');
  return value;
 }
 function execute(args,config,{out,id,signal,lease}){
@@ -75,6 +75,8 @@ async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
   const cyclesDir=join(out,'cycles');
   if(fs.existsSync(cyclesDir)&&(!fs.lstatSync(cyclesDir).isDirectory()||fs.lstatSync(cyclesDir).isSymbolicLink()))throw Error('UNSAFE_REPORT_DIRECTORY');
   fs.mkdirSync(cyclesDir,{recursive:true,mode:0o700});
+  const used=fs.readdirSync(cyclesDir).reduce((n,name)=>{const st=fs.lstatSync(join(cyclesDir,name));if(!st.isFile())throw Error('UNSAFE_REPORT_FILE');return n+st.size;},0);
+  if(used+2*1024*1024+131072>config.maxEvidenceMb*1024*1024)throw Error('EVIDENCE_BUDGET_EXHAUSTED');
   if(lease.recovered&&fs.existsSync(join(out,'running.json')))event(out,'ABANDONED_CYCLE_RECOVERED',{previous:JSON.parse(fs.readFileSync(join(out,'running.json'),'utf8')).id});
   const started=new Date().toISOString();const running={id,sourceSha:before.sourceSha,branch:before.branch,started,pid:process.pid,recoveredLease:lease.recovered};
   atomic(join(out,'running.json'),running);event(out,'CYCLE_STARTED',running);
@@ -83,7 +85,8 @@ async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
   try{const after=checkout();sourceUnchanged=JSON.stringify(after)===JSON.stringify(before);}catch{}
   if(!sourceUnchanged)result={...result,status:'FAILED',error:'CHECKOUT_DRIFT_DURING_TEST'};
   if(run.error==='OWNER_INTERRUPTED')result={...result,status:'INTERRUPTED'};
-  const report={schema:'continuum-local-worker-v2',id,branch:before.branch,sourceSha:before.sourceSha,sourceTree:before.tree,inventoryHash:before.inventoryHash,inventoryCount:before.tests.length,started,completed:new Date().toISOString(),sourceUnchanged,...result,signal:run.signal,stdoutHash:run.stdoutHash,stderrHash:run.stderrHash,limits:config,recoveredLease:lease.recovered,candidatePromoted:false,patchApplied:false,weightsUpdated:false,ownerReviewRequired:true};
+  let leaseHeld=true;try{lease.check();}catch{leaseHeld=false;result={...result,status:'FAILED',error:'WORKER_LEASE_LOST'};}
+  const report={schema:'continuum-local-worker-v2',id,branch:before.branch,sourceSha:before.sourceSha,sourceTree:before.tree,inventoryHash:before.inventoryHash,inventoryCount:before.tests.length,started,completed:new Date().toISOString(),sourceUnchanged,leaseHeld,...result,signal:run.signal,stdoutHash:run.stdoutHash,stderrHash:run.stderrHash,limits:config,recoveredLease:lease.recovered,candidatePromoted:false,patchApplied:false,weightsUpdated:false,ownerReviewRequired:true};
   atomic(join(out,'cycles',id+'.json'),report);atomic(join(out,'latest.json'),report);event(out,'CYCLE_COMPLETED',{id,status:report.status});return report;
  }finally{fs.rmSync(join(out,'running.json'),{force:true});if(!heldLease)lease.release();}
 }
@@ -97,7 +100,7 @@ export async function runWorker(outDirectory,{signal,...supplied}={}){
   lease=workerLease(git(['rev-parse','--absolute-git-dir']));
   while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
    try{const report=await runCycle(out,{...config,signal:combined},lease);console.log(JSON.stringify(report));}
-   catch(e){event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);}
+   catch(e){event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
    cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
    try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
   }

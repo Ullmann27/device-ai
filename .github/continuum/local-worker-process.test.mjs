@@ -11,7 +11,7 @@ const env=()=>{const e={...process.env};delete e.NODE_TEST_CONTEXT;return e;};
 function fixture(){
  const top=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-worker-process-'));const repo=path.join(top,'repo');fs.mkdirSync(path.join(repo,'scripts'),{recursive:true});fs.mkdirSync(path.join(repo,'.github/continuum'),{recursive:true});
  for(const name of ['continuum-local-development-worker.mjs','continuum-worker-lease.mjs'])if(fs.existsSync(path.join(root,'scripts',name)))fs.copyFileSync(path.join(root,'scripts',name),path.join(repo,'scripts',name));
- fs.writeFileSync(path.join(repo,'.github/continuum/probe.test.mjs'),"import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';test('controlled probe',async()=>{if(process.env.PROBE_OUTPUT)console.log('x'.repeat(+process.env.PROBE_OUTPUT));if(process.env.PROBE_WAIT)await new Promise(r=>setTimeout(r,+process.env.PROBE_WAIT));assert.equal(process.env.PROBE_FAIL,'0');});\n");
+ fs.writeFileSync(path.join(repo,'.github/continuum/probe.test.mjs'),"import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';test('controlled probe',async()=>{if(process.env.PROBE_SWITCH_FILE&&fs.existsSync(process.env.PROBE_SWITCH_FILE))throw Error('controlled cycle failure');if(process.env.PROBE_OUTPUT)console.log('x'.repeat(+process.env.PROBE_OUTPUT));if(process.env.PROBE_WAIT)await new Promise(r=>setTimeout(r,+process.env.PROBE_WAIT));assert.equal(process.env.PROBE_FAIL,'0');});\n");
  for(const args of [['init','-q','-b','test/worker'],['add','.'],['-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture']])assert.equal(spawnSync('git',args,{cwd:repo}).status,0);
  return {top,repo,script:path.join(repo,'scripts/continuum-local-development-worker.mjs'),out:path.join(top,'out')};
 }
@@ -68,4 +68,35 @@ test('excess test output is stopped and raw evidence storage stays bounded',{tim
 });
 test('a redirected cycles directory never writes test output into source',{timeout:12000},()=>{
  const f=fixture();try{fs.mkdirSync(f.out,{recursive:true});fs.mkdirSync(path.join(f.repo,'leak'));fs.symlinkSync(path.join(f.repo,'leak'),path.join(f.out,'cycles'));const r=run(f);assert.equal(r.status,1);assert.deepEqual(fs.readdirSync(path.join(f.repo,'leak')),[]);}finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('the same live scheduler automatically continues from a failed cycle to a healthy cycle',{timeout:15000},async()=>{
+ const f=fixture();let child;try{
+  const fault=path.join(f.top,'injected-fault');fs.writeFileSync(fault,'controlled failure');
+  child=spawn(process.execPath,[f.script,'--loop',f.out,...budget(f,{intervalMs:500})],{cwd:f.repo,env:{...env(),PROBE_FAIL:'0',PROBE_SWITCH_FILE:fault},stdio:'ignore'});
+  const done=new Promise(resolve=>child.once('exit',resolve));
+  await waitFor(()=>fs.existsSync(path.join(f.out,'latest.json')));
+  assert.equal(JSON.parse(fs.readFileSync(path.join(f.out,'latest.json'))).status,'FAILED');
+  fs.unlinkSync(fault);await done;
+  const receipts=fs.readdirSync(path.join(f.out,'cycles')).filter(x=>x.endsWith('.json')).sort().map(x=>JSON.parse(fs.readFileSync(path.join(f.out,'cycles',x))));
+  assert.deepEqual(receipts.map(x=>x.status),['FAILED','ALL_EXECUTED_PASS']);assert.equal(receipts[0].sourceSha,receipts[1].sourceSha);assert.equal(receipts[0].inventoryHash,receipts[1].inventoryHash);
+ }finally{child?.kill('SIGKILL');fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('loss of the checkout lease cannot leave a green completion receipt',{timeout:12000},async()=>{
+ const f=fixture();let child;try{
+  child=spawn(process.execPath,[f.script,'--once',f.out],{cwd:f.repo,env:{...env(),PROBE_FAIL:'0',PROBE_WAIT:'1000'},stdio:'ignore'});
+  const lock=path.join(f.repo,'.git','continuum-health-worker.json');
+  await waitFor(()=>{try{return Boolean(JSON.parse(fs.readFileSync(lock)).child);}catch{return false;}});
+  const old=JSON.parse(fs.readFileSync(lock));fs.writeFileSync(lock,JSON.stringify({...old,token:'different-owner-token'}));
+  await new Promise(r=>child.once('exit',r));
+  const report=JSON.parse(fs.readFileSync(path.join(f.out,'latest.json')));assert.equal(report.status,'FAILED');assert.equal(report.error,'WORKER_LEASE_LOST');
+ }finally{child?.kill('SIGKILL');fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('evidence disk budget pauses before tests and preserves existing receipts',{timeout:12000},()=>{
+ const f=fixture();try{
+  const folder=path.join(f.out,'cycles');fs.mkdirSync(folder,{recursive:true});const old=path.join(folder,'previous.tap');fs.writeFileSync(old,Buffer.alloc(3*1024*1024,65));
+  const r=run(f,{},budget(f,{maxEvidenceMb:4}));assert.equal(r.status,1);assert.match(r.stderr,/EVIDENCE_BUDGET_EXHAUSTED/);assert.equal(fs.statSync(old).size,3*1024*1024);assert.equal(fs.readdirSync(folder).length,1);
+ }finally{fs.rmSync(f.top,{recursive:true,force:true});}
 });
