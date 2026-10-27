@@ -75,3 +75,20 @@ test('Termux CCC1 check and prepare behave as documented on a throw-away checkou
   assert.match(run('ccc1-review').stdout,/Kein geprüfter Reparatur-Patch vorhanden/);
  }finally{fs.rmSync(base,{recursive:true,force:true});}
 });
+
+test('existing local Termux teamleader offers mainapp-qa without a second scheduler',()=>{
+ assert.match(source,/^    mainapp-qa\)$/m);
+ assert.match(source,/exec bash "\$ROOT\/scripts\/continuum-local-mainapp-qa\.sh" --offline/);
+ assert.match(source,/exec bash "\$ROOT\/scripts\/continuum-local-mainapp-qa\.sh"/);
+ assert.match(source,/mainapp-qa \[--offline\]/);
+ assert.doesNotMatch(source,/adb install|pm install|\bgh workflow run\b/);
+});
+
+test('mainapp-qa rejects extra parameters, preserves SHA binding in underlying builder',()=>{
+ const code=fs.readFileSync('scripts/continuum-local-mainapp-qa.sh','utf8');
+ assert.match(source,/\[\[ \$# -gt 2 \|\| \( \$# -eq 2 && "\$2" != --offline \) \]\]/);
+ assert.match(code,/CONTINUUM_LOCAL_QA_APPROVED_SHA/);
+ assert.match(code,/CONTINUUM_MAINAPP_QA_NOT_OWNER_INSTALLABLE=TRUE/);
+ assert.match(code,/CONTINUUM_MENTOR_SIGNING_PASSWORD/);
+ assert.doesNotMatch(code,/-PdeviceAiOwnerSignedUpdate=true/);
+});

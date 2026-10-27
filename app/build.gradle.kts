@@ -32,6 +32,14 @@ val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
 // Owner-requested in-place update of the EXISTING signed Mentor Pair app. Never used by disposable previews.
 val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate").orNull == "true"
+// Source-identical same-package MAIN APP QA only. Uses Android's disposable
+// debug certificate; its APK is never an installable owner update.
+val continuumOwnerLocalQa = providers.gradleProperty("continuumOwnerLocalQa").orNull == "true"
+require(!continuumOwnerLocalQa ||
+    (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
+        mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank())) {
+    "Owner local QA requires mentorpaired without owner credentials, never the signing/release lane."
+}
 // Persistent owner-local builds can increase versionCode for each genuine
 // updated source while retaining the original package and owner certificate.
 val continuumOwnerLocalVersionText = providers.gradleProperty("continuumOwnerLocalVersionCode").orNull
@@ -39,8 +47,11 @@ val continuumOwnerLocalVersion = continuumOwnerLocalVersionText?.toIntOrNull()
 require(continuumOwnerLocalVersionText == null ||
     (continuumOwnerLocalVersion != null && continuumOwnerLocalVersion in 26..9999 &&
         continuumOwnerLocalVersionText == continuumOwnerLocalVersion.toString() &&
-        deviceAiOwnerSignedUpdate)) {
+        (deviceAiOwnerSignedUpdate || continuumOwnerLocalQa))) {
     "Owner-local versionCode must be a canonical integer 26..9999 with original owner signing."
+}
+require(!continuumOwnerLocalQa || continuumOwnerLocalVersion != null) {
+    "Main-app QA requires explicit source-candidate versionCode; no accidental old APK."
 }
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
@@ -57,8 +68,8 @@ require(!deviceAiOwnerSignedUpdate || (deviceAiMentorPreview && !mentorSigningPa
 
 android {
     signingConfigs {
-        if (deviceAiMentorPreview && !mentorSigningPath.isNullOrBlank() &&
-            !mentorSigningPassword.isNullOrBlank()
+        if (deviceAiMentorPreview && !continuumOwnerLocalQa &&
+            !mentorSigningPath.isNullOrBlank() && !mentorSigningPassword.isNullOrBlank()
         ) {
             create("mentorPreview") {
                 storeFile = file(mentorSigningPath)
@@ -80,8 +91,9 @@ android {
         // as an update. Main/production keeps its existing version.
         versionCode = if (deviceAiFeaturePreview) 9 else if (deviceAiDesignPreview) 7 else if (deviceAiMentorPreview) 15 else if (deviceAiPreview) 6 else 4
         versionName = if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
-        if (deviceAiOwnerSignedUpdate) {
-            // Next in-place owner update: same package/signer, strictly higher version.
+        if (deviceAiOwnerSignedUpdate || continuumOwnerLocalQa) {
+            // Same-package source QA and owner updates share exact version identity.
+            // Only the owner update ever uses the original signing certificate.
             versionCode = continuumOwnerLocalVersion ?: 25
             versionName = if (continuumOwnerLocalVersion != null) "0.3.${continuumOwnerLocalVersion - 1}" else "0.3.24"
         }
@@ -90,6 +102,7 @@ android {
         manifestPlaceholders["appLabel"] = when {
             deviceAiFeaturePreview -> "Device AI Continuum Test"
             deviceAiDesignPreview -> "Device AI Design"
+            continuumOwnerLocalQa -> "Continuum QA NICHT INSTALLIEREN"
             deviceAiOwnerSignedUpdate -> "Continuum"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
