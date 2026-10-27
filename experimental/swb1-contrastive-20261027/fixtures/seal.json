@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "authoredSynthetic": true,
+  "privateChatData": false,
+  "independentlyBlinded": false,
+  "seeds": [
+    73,
+    101,
+    211
+  ],
+  "legacy52SelectionForbidden": true,
+  "decisionThreshold": 0.5,
+  "profiles": [
+    "CONTROL_REPLAY",
+    "VERIFIED_BALANCED",
+    "HEAD_ORTHOGONAL",
+    "SEMANTIC_ONLY",
+    "SWB2_SHADOW"
+  ],
+  "updatesPerTrial": 8000,
+  "checkpointEvery": 1000,
+  "maxMillisPerTrial": 30000,
+  "gate": "new validation semantics +2; no count regression on new intent or legacy TRAIN/VALIDATION/ANDROID; loss tolerance0.015; no production promotion",
+  "files": {
+    "train": {
+      "sha256": "b25765e9e77f2b1f00245c8e395c10ec472908fd85ee50796d779d7cb623a42f",
+      "intent": 20,
+      "semantic": 72,
+      "dialogue": 2
+    },
+    "validation": {
+      "sha256": "69848cbb94c809c743092660a8c93d56c74089ed212f945147f993258e8ec5c2",
+      "intent": 12,
+      "semantic": 36,
+      "dialogue": 2
+    },
+    "final": {
+      "sha256": "0d2efcf68fd0529293393b5c8182346bbe44acc8daa16ad907eef7d158e84c6d",
+      "intent": 20,
+      "semantic": 60,
+      "dialogue": 6
+    }
+  }
+}
