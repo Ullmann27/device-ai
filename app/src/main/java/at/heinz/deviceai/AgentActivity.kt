@@ -313,6 +313,10 @@ class AgentActivity : Activity() {
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
     private var modelUnloading = false
+    // Session-scoped genuine native inference evidence, never restored or
+    // inferred from import/configuration. Read and written on the UI thread.
+    private var m2DirectProofModelSha: String? = null
+    private var m2DirectProofElapsedMs: Long? = null
     @Volatile private var localRuntimeError: String? = null
     // A rejected candidate does not invalidate an independently loaded, verified runtime.
     private var localImportError: String? = null
@@ -1705,6 +1709,26 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Grounded M2 status: never claim Gemma, tools or repairs from a catalogue entry. */
+    private fun showM2MilestoneStatus() {
+        val loaded = localRuntime.loadedModel
+        val selected = loaded?.id == ContinuumSelectedModels.LOCAL_ID &&
+            loaded.sha256 == ContinuumSelectedModels.LOCAL_SHA256
+        val imported = installedModels.any { model ->
+            model.id == ContinuumSelectedModels.LOCAL_ID &&
+                model.sha256 == ContinuumSelectedModels.LOCAL_SHA256
+        }
+        val ready = selected && localRuntime.state == LocalModelState.READY
+        val proof = ready && m2DirectProofModelSha == loaded?.sha256
+        addAssistantMessage(ContinuumM2Status.render(ContinuumM2Status.Snapshot(
+            modelImported = imported,
+            modelLoaded = selected,
+            modelRuntimeReady = ready,
+            directInferenceObserved = proof,
+            directInferenceMillis = if (proof) m2DirectProofElapsedMs else null
+        )))
+    }
+
     private fun showDeviceTeamleaderChatStatus() {
         onBacklog({
             at.heinz.deviceai.cognitive.DeviceTeamleader(filesDir).status()?.display()
@@ -2313,6 +2337,8 @@ class AgentActivity : Activity() {
                     )
                     showDevelopmentCenter()
                 }
+                ContinuumWorkerChatCommand.MilestoneStatus -> showM2MilestoneStatus()
+                ContinuumWorkerChatCommand.MilestoneModelTest -> runLocalSmokeTest(direct = true)
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
@@ -5481,6 +5507,12 @@ class AgentActivity : Activity() {
      * No network, speech capture or autonomous training can start here.
      */
     private fun runLocalSmokeTest(direct:Boolean=false) {
+        // A new diagnostic revokes any prior same-session success until this
+        // attempt completes. Nothing survives a restart or different model SHA.
+        if (direct) {
+            m2DirectProofModelSha = null
+            m2DirectProofElapsedMs = null
+        }
         if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
             refreshLocalModelUi()
@@ -5520,6 +5552,13 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 result.fold(
                     onSuccess = { answer ->
+                        if (direct && testedModel.id == ContinuumSelectedModels.LOCAL_ID &&
+                            testedModel.sha256 == ContinuumSelectedModels.LOCAL_SHA256 &&
+                            localRuntime.loadedModel == testedModel &&
+                            localRuntime.state == LocalModelState.READY) {
+                            m2DirectProofModelSha = testedModel.sha256
+                            m2DirectProofElapsedMs = elapsed
+                        }
                         addAssistantMessage("MODELLTEST "+
                             (if(direct)"DIREKT" else "THINKING")+
                             " ERFOLGREICH · ${elapsed} ms\nGeprüfte Katalogidentität: $identity\n\n" + answer)
