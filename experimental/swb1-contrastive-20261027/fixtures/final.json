@@ -1,0 +1,583 @@
+{
+  "split": "final",
+  "intent": [
+    {
+      "id": "final-i0-0",
+      "text": "Einen sonnigen Tagesbeginn wünsche ich dir.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-1",
+      "text": "Servus, ich freue mich über unser Wiedersehen.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-2",
+      "text": "Herzlich gegrüßt an diesem ruhigen Abend.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-3",
+      "text": "Willkommen, mein lieber Gesprächspartner.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-4",
+      "text": "Moin, schön dass ihr vorbeischaut.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-5",
+      "text": "Hallo, meine besten Abendgrüße.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-6",
+      "text": "Guten Tag, ich begrüße dich erneut.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-7",
+      "text": "Freundliche Grüße vom heutigen Morgen.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-8",
+      "text": "Sei ganz herzlich bei uns willkommen.",
+      "label": 0
+    },
+    {
+      "id": "final-i0-9",
+      "text": "Ein schöner Abendgruß geht an euch.",
+      "label": 0
+    },
+    {
+      "id": "final-i1-0",
+      "text": "Weshalb ist das Lawinenfeld gesperrt?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-1",
+      "text": "Wer hat auf der Strecke überholt?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-2",
+      "text": "Unter welchen Bedingungen öffnet die Schleuse?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-3",
+      "text": "Ist der Sensor unabhängig kontrolliert worden?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-4",
+      "text": "Auf welchem Konto kam das Guthaben an?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-5",
+      "text": "Woran erkennt man eine Entladung?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-6",
+      "text": "Enthält das Archiv einen Widerruf?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-7",
+      "text": "Welchen Körper umkreist der Satellit?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-8",
+      "text": "Wie wurde der Probenbehälter versiegelt?",
+      "label": 1
+    },
+    {
+      "id": "final-i1-9",
+      "text": "Welche Annahme ist noch nicht bestätigt?",
+      "label": 1
+    }
+  ],
+  "semantic": [
+    {
+      "id": "final-s0-0",
+      "left": "Das Lawinenfeld ist gesperrt.",
+      "right": "Das Betreten dieses Lawinenfeldes ist verboten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s0-1",
+      "left": "Das Lawinenfeld ist nicht gesperrt.",
+      "right": "Das Betreten des Lawinenfeldes ist erlaubt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s0-2",
+      "left": "Das Betreten dieses Lawinenfeldes ist verboten.",
+      "right": "Das Lawinenfeld darf nicht betreten werden.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s0-3",
+      "left": "Das Lawinenfeld ist gesperrt.",
+      "right": "Das Lawinenfeld ist nicht gesperrt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s0-4",
+      "left": "Das Betreten dieses Lawinenfeldes ist verboten.",
+      "right": "Das Betreten des Lawinenfeldes ist erlaubt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s0-5",
+      "left": "Das Lawinenfeld ist gesperrt.",
+      "right": "Das Lawinenfeld ist zum Betreten freigegeben.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-0",
+      "left": "Nele überholt Bosse.",
+      "right": "Bosse wird von Nele überholt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-1",
+      "left": "Nele überholt Bosse nicht.",
+      "right": "Bosse wird nicht von Nele überholt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-2",
+      "left": "Bosse wird von Nele überholt.",
+      "right": "Nele zieht an Bosse vorbei.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-3",
+      "left": "Nele überholt Bosse.",
+      "right": "Nele überholt Bosse nicht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-4",
+      "left": "Bosse wird von Nele überholt.",
+      "right": "Bosse wird nicht von Nele überholt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s1-5",
+      "left": "Nele überholt Bosse.",
+      "right": "Bosse überholt Nele.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-0",
+      "left": "Die Schleuse lässt ein Schiff passieren.",
+      "right": "Ein Schiff fährt durch die Schleuse.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-1",
+      "left": "Die Schleuse lässt kein Schiff passieren.",
+      "right": "Für Schiffe ist die Schleuse geschlossen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-2",
+      "left": "Ein Schiff fährt durch die Schleuse.",
+      "right": "Die Schleuse ermöglicht eine Schiffsdurchfahrt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-3",
+      "left": "Die Schleuse lässt ein Schiff passieren.",
+      "right": "Die Schleuse lässt kein Schiff passieren.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-4",
+      "left": "Ein Schiff fährt durch die Schleuse.",
+      "right": "Für Schiffe ist die Schleuse geschlossen.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s2-5",
+      "left": "Die Schleuse lässt ein Schiff passieren.",
+      "right": "Schiffe können diese Schleuse nicht durchfahren.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-0",
+      "left": "Der Sensor wurde unabhängig geprüft.",
+      "right": "Eine separate Kontrolle des Sensors fand statt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-1",
+      "left": "Der Sensor wurde nicht unabhängig geprüft.",
+      "right": "Eine separate Kontrolle des Sensors fehlt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-2",
+      "left": "Eine separate Kontrolle des Sensors fand statt.",
+      "right": "Eine unabhängige Stelle hat den Sensor kontrolliert.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-3",
+      "left": "Der Sensor wurde unabhängig geprüft.",
+      "right": "Der Sensor wurde nicht unabhängig geprüft.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-4",
+      "left": "Eine separate Kontrolle des Sensors fand statt.",
+      "right": "Eine separate Kontrolle des Sensors fehlt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s3-5",
+      "left": "Der Sensor wurde unabhängig geprüft.",
+      "right": "Die angebliche Prüfung ist nur eine Selbstaussage.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-0",
+      "left": "Das Guthaben wurde auf Konto Nord gebucht.",
+      "right": "Konto Nord hat die Gutschrift erhalten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-1",
+      "left": "Das Guthaben wurde nicht auf Konto Nord gebucht.",
+      "right": "Konto Nord hat keine Gutschrift erhalten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-2",
+      "left": "Konto Nord hat die Gutschrift erhalten.",
+      "right": "Die Gutschrift befindet sich auf Konto Nord.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-3",
+      "left": "Das Guthaben wurde auf Konto Nord gebucht.",
+      "right": "Das Guthaben wurde nicht auf Konto Nord gebucht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-4",
+      "left": "Konto Nord hat die Gutschrift erhalten.",
+      "right": "Konto Nord hat keine Gutschrift erhalten.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s4-5",
+      "left": "Das Guthaben wurde auf Konto Nord gebucht.",
+      "right": "Die Gutschrift ging ausschließlich an Konto Süd.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-0",
+      "left": "Der Akku gibt elektrische Energie ab.",
+      "right": "Der Akkumulator wird gerade entladen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-1",
+      "left": "Der Akku gibt keine elektrische Energie ab.",
+      "right": "Aus dem Akkumulator fließt gerade keine Energie heraus.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-2",
+      "left": "Der Akkumulator wird gerade entladen.",
+      "right": "Aus dem Akku wird elektrische Energie entnommen.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-3",
+      "left": "Der Akku gibt elektrische Energie ab.",
+      "right": "Der Akku gibt keine elektrische Energie ab.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-4",
+      "left": "Der Akkumulator wird gerade entladen.",
+      "right": "Aus dem Akkumulator fließt gerade keine Energie heraus.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s5-5",
+      "left": "Der Akku gibt elektrische Energie ab.",
+      "right": "Der Akku nimmt ausschließlich elektrische Energie auf.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-0",
+      "left": "Das Archiv enthält einen Widerruf.",
+      "right": "Im Archiv wurde eine Rücknahme festgehalten.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-1",
+      "left": "Das Archiv enthält keinen Widerruf.",
+      "right": "Im Archiv ist keine Rücknahme dokumentiert.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-2",
+      "left": "Im Archiv wurde eine Rücknahme festgehalten.",
+      "right": "Eine Rücknahme ist im Archiv vermerkt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-3",
+      "left": "Das Archiv enthält einen Widerruf.",
+      "right": "Das Archiv enthält keinen Widerruf.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-4",
+      "left": "Im Archiv wurde eine Rücknahme festgehalten.",
+      "right": "Im Archiv ist keine Rücknahme dokumentiert.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s6-5",
+      "left": "Das Archiv enthält einen Widerruf.",
+      "right": "Im Archiv fehlt jede Rücknahme.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-0",
+      "left": "Ein Satellit umkreist den Mond.",
+      "right": "Der Satellit befindet sich auf einer Mondumlaufbahn.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-1",
+      "left": "Ein Satellit umkreist den Mond nicht.",
+      "right": "Der Satellit ist nicht auf einer Mondumlaufbahn.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-2",
+      "left": "Der Satellit befindet sich auf einer Mondumlaufbahn.",
+      "right": "Der Mond wird von diesem Satelliten umrundet.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-3",
+      "left": "Ein Satellit umkreist den Mond.",
+      "right": "Ein Satellit umkreist den Mond nicht.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-4",
+      "left": "Der Satellit befindet sich auf einer Mondumlaufbahn.",
+      "right": "Der Satellit ist nicht auf einer Mondumlaufbahn.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s7-5",
+      "left": "Ein Satellit umkreist den Mond.",
+      "right": "Der Mond umkreist den Satelliten.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-0",
+      "left": "Die Probe wurde versiegelt.",
+      "right": "Der Probenbehälter hat ein ungebrochenes Siegel.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-1",
+      "left": "Die Probe wurde nicht versiegelt.",
+      "right": "Am Probenbehälter fehlt ein Siegel.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-2",
+      "left": "Der Probenbehälter hat ein ungebrochenes Siegel.",
+      "right": "Die Probe ist durch ein Siegel geschützt.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-3",
+      "left": "Die Probe wurde versiegelt.",
+      "right": "Die Probe wurde nicht versiegelt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-4",
+      "left": "Der Probenbehälter hat ein ungebrochenes Siegel.",
+      "right": "Am Probenbehälter fehlt ein Siegel.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s8-5",
+      "left": "Die Probe wurde versiegelt.",
+      "right": "Der Probenbehälter steht offen und unversiegelt.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-0",
+      "left": "Die Quelle kennzeichnet die Aussage als Vermutung.",
+      "right": "Die Quelle bezeichnet die Aussage als nicht gesichert.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-1",
+      "left": "Die Quelle kennzeichnet die Aussage nicht als Vermutung.",
+      "right": "Die Quelle stellt die Aussage als gesichert dar.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-2",
+      "left": "Die Quelle bezeichnet die Aussage als nicht gesichert.",
+      "right": "Die Quelle nennt eine unbestätigte Annahme.",
+      "similar": true,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-3",
+      "left": "Die Quelle kennzeichnet die Aussage als Vermutung.",
+      "right": "Die Quelle kennzeichnet die Aussage nicht als Vermutung.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-4",
+      "left": "Die Quelle bezeichnet die Aussage als nicht gesichert.",
+      "right": "Die Quelle stellt die Aussage als gesichert dar.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    },
+    {
+      "id": "final-s9-5",
+      "left": "Die Quelle kennzeichnet die Aussage als Vermutung.",
+      "right": "Die Quelle behauptet eine bestätigte Tatsache.",
+      "similar": false,
+      "labelSource": "AUTHORED_LOGICAL_FIXTURE"
+    }
+  ],
+  "dialogue": [
+    {
+      "id": "final-d0",
+      "turns": [
+        "Nutzer: Route A führt über den Pass.",
+        "Nutzer: Nein, ich meine Route B durch den Tunnel."
+      ],
+      "claim": "Gemeint ist Route B durch den Tunnel.",
+      "consistent": true
+    },
+    {
+      "id": "final-d1",
+      "turns": [
+        "Nutzer: Die Notiz war bestätigt.",
+        "Nutzer: Ich widerrufe die Notiz ausdrücklich."
+      ],
+      "claim": "Die Notiz ist weiterhin bestätigt.",
+      "consistent": false
+    },
+    {
+      "id": "final-d2",
+      "turns": [
+        "Nutzer: Wer hat den Sensor geprüft?",
+        "Modell: Ich weiß es ohne Prüfbericht nicht."
+      ],
+      "claim": "Eine unabhängige Prüfung des Sensors ist belegt.",
+      "consistent": false
+    },
+    {
+      "id": "final-d3",
+      "turns": [
+        "Nutzer: Das Konto Nord ist gemeint.",
+        "Nutzer: Nein, nicht Nord, sondern Süd."
+      ],
+      "claim": "Gemeint ist das Konto Süd.",
+      "consistent": true
+    },
+    {
+      "id": "final-d4",
+      "turns": [
+        "Nutzer: Der Akku liefert Strom.",
+        "Nutzer: Ist das wirklich gemessen worden?"
+      ],
+      "claim": "Die zweite Äußerung bestätigt eine Messung.",
+      "consistent": false
+    },
+    {
+      "id": "final-d5",
+      "turns": [
+        "Nutzer: Diese Annahme ist noch unsicher.",
+        "Nutzer: Bitte noch nicht als Tatsache speichern."
+      ],
+      "claim": "Die Aussage ist unbestätigt.",
+      "consistent": true
+    }
+  ]
+}
