@@ -65,3 +65,52 @@ test('synthetic exact approval exercises inventory verifier but authorizes NO re
  assert.equal(result.status,0,result.stderr);
  assert.match(result.stdout,/OWNER_0324_LIVE_SOURCE_VERIFIED/);
 });
+
+test('live signing recipe is syntactically valid but does not self-authorize an APK',()=>{
+ const p=spawnSync('bash',['-n','scripts/render-mentor-owner-update-v25-live.sh'],{
+  cwd:root,encoding:'utf8',timeout:30000,env:base
+ });
+ assert.equal(p.status,0,p.stderr);
+ const script=readFileSync(resolve(root,'scripts/render-mentor-owner-update-v25-live.sh'),'utf8');
+ assert.match(script,/scripts\/continuum-0324-live-source-gate\.mjs/);
+ assert.match(script,/CONTINUUM_OWNER_0324_LIVE_APPROVED_QA_STATUS_SHA256/);
+ assert.match(script,/CONTINUUM_OWNER_0324_LIVE_APPROVED_BUILDER_SHA/);
+ assert.match(script,/CONTINUUM_MENTOR_SIGNING_P12_BASE64/);
+ assert.match(script,/2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc/);
+ assert.doesNotMatch(script,/node scripts\/continuum-v25-source-gate\.mjs/);
+});
+test('live signer refuses even a matching branch and dummy keystore without owner approvals',()=>{
+ const env={...base,
+  CONTINUUM_RELEASE_SHA:head(),
+  CONTINUUM_ASTRA_UI_SHA:'811803138c86a5c1a7a2a2b9cd196580a574a4a1',
+  CONTINUUM_MENTOR_SIGNING_P12_BASE64:'INTENTIONALLY_INVALID_NOT_A_PRIVATE_KEY',
+  CONTINUUM_MENTOR_SIGNING_PASSWORD:'INTENTIONALLY_INVALID'
+ };
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_SOURCE_SHA;
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_MANIFEST_BLOB;
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_BUILDER_SHA;
+ delete env.CONTINUUM_OWNER_0324_LIVE_QA_STATUS_URL;
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_QA_STATUS_SHA256;
+ const p=spawnSync('bash',['scripts/render-mentor-owner-update-v25-live.sh'],{
+  cwd:root,encoding:'utf8',timeout:30000,env
+ });
+ assert.equal(p.status,69,p.stderr);
+ assert.match(p.stderr,/Unapproved live code25 builder SHA/);
+ assert.doesNotMatch(p.stdout,/VERIFIED .* OWNER IN-PLACE UPDATE/);
+});
+test('even with synthetic exact builder approval, missing owner source/manifest blocks signing',()=>{
+ const env={...base,
+  CONTINUUM_RELEASE_SHA:head(),
+  CONTINUUM_OWNER_0324_LIVE_APPROVED_BUILDER_SHA:head(),
+  CONTINUUM_ASTRA_UI_SHA:'811803138c86a5c1a7a2a2b9cd196580a574a4a1',
+  CONTINUUM_MENTOR_SIGNING_P12_BASE64:'INTENTIONALLY_INVALID',
+  CONTINUUM_MENTOR_SIGNING_PASSWORD:'INTENTIONALLY_INVALID'
+ };
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_SOURCE_SHA;
+ delete env.CONTINUUM_OWNER_0324_LIVE_APPROVED_MANIFEST_BLOB;
+ const p=spawnSync('bash',['scripts/render-mentor-owner-update-v25-live.sh'],{
+  cwd:root,encoding:'utf8',timeout:30000,env
+ });
+ assert.equal(p.status,69,p.stderr);
+ assert.match(p.stderr,/Live source inventory or exact owner authorization failed/);
+});
