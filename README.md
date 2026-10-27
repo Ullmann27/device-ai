@@ -1,5 +1,7 @@
 # Device AI Continuum
 
+> **Neuer Forschungs-/Integrationsauftrag vom 27.10.2026:** Internationale Open-Source-Projekte und US-Forschungsquellen werden systematisch auf das **bestehende Continuum-Gehirn** abgebildet. [Verbindliches Register mit 15 Quellen, Code-Einstiegspunkten und Abnahmegates](docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md), [M4-Draft-PR #198](https://github.com/Ullmann27/device-ai/pull/198) (gestapelt auf [PR #197](https://github.com/Ullmann27/device-ai/pull/197)). Bereits eingebautes `HybridMemoryRetriever`-Gedächtnis und `MemoryGraph` bleiben kanonisch; erster neuer Shadow-Baustein `MemoryRetrievalResearchGate.kt`. Keine fremde Software pauschal kopiert, keine produktive Modell-/Gedächtnisumschaltung oder neue APK behauptet. Die untenstehende ältere Chronik vom 23.10. ist **historisch**, nicht aktueller Release-Status. Originalsigniertes 0.3.25/code26-Update bleibt durch private Original-P12 blockiert.
+
 Eigenständiger, persönlicher Android-Assistent. **Forschungsziel:** einen lernfähigen Assistenten mit langlebiger Identität, überprüfbarer Erinnerung, kontrollierter Webrecherche und sicherer Geräteinteraktion schrittweise selbst aufbauen – ohne vorausgesetzten Cloud-Server oder extern importierte KI-Gewichte.
 
 ## Aktueller Entwicklungsstand – 23. Oktober 2026
