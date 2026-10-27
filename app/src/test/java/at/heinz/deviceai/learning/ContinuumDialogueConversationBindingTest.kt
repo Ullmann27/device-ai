@@ -6,6 +6,33 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ContinuumDialogueConversationBindingTest {
+    @Test fun explicitCorrectionResetsGroundedTopicButNeverFactsOrWeights() {
+        val dir=Files.createTempDirectory("continuum-correction-reset").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Projekt Saphir verwendet lokale Belege.")
+            val facts=core.activeOwnerFacts();val weights=core.modelSnapshot()
+            val context=at.heinz.deviceai.cognitive.LocalConversationContext()
+            assertTrue(core.replyFromMemory("Was verwendet Projekt Saphir?","same-chat").grounded)
+            context.record("same-chat","Was verwendet Projekt Saphir?","Lokale Belege")
+            val correction=context.inspectRequest("same-chat","Nein, ich meinte Projekt Kobalt.")!!
+            assertTrue(correction.resetsGroundedContext)
+            assertFalse(context.render("same-chat").contains("Saphir"))
+            assertTrue(core.resetDialogueConversation("same-chat"))
+            val reopened=ContinuumLearningCore(dir)
+            val next=reopened.replyFromMemory("und wie?","same-chat")
+            assertFalse(next.grounded)
+            assertEquals("und wie?",next.resolvedQuery)
+            assertEquals(facts,reopened.activeOwnerFacts())
+            assertArrayEquals(weights,reopened.modelSnapshot())
+            assertEquals("Projekt Kobalt",context.inspectRequest("same-chat","Was hast du dadurch verstanden?")!!.focus)
+            assertFalse(context.inspectRequest("same-chat","Merke dir diese Entscheidung.")!!.resetsGroundedContext)
+            assertEquals(facts,reopened.activeOwnerFacts())
+            assertNull(at.heinz.deviceai.cognitive.LocalConversationContext().inspectRequest("same-chat","Was hast du dadurch verstanden?")!!.focus)
+            assertTrue(context.inspectRequest("same-chat","Nein, ich meinte nicht Projekt Kobalt.")!!.resetsGroundedContext)
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun anotherExplicitConversationCannotBorrowThePreviousTopic() {
         val dir = Files.createTempDirectory("continuum-bound-topic").toFile()
         try {

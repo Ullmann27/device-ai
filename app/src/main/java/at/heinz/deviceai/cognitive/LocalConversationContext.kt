@@ -3,7 +3,9 @@ package at.heinz.deviceai.cognitive
 /** Ephemeral context for the existing local agent, never a second memory store.
  * No model text gains fact status or tool authority. Session changes invalidate all turns. */
 enum class ContextDirectiveKind { SCOPE_UPDATED, CLARIFY_SCOPE, CONTEXT_REPORT, MEMORY_LITERAL_REQUIRED }
-data class ContextDirective(val kind:ContextDirectiveKind,val focus:String?=null)
+data class ContextDirective(val kind:ContextDirectiveKind,val focus:String?=null) {
+    val resetsGroundedContext:Boolean get()=kind==ContextDirectiveKind.SCOPE_UPDATED || kind==ContextDirectiveKind.CLARIFY_SCOPE
+}
 
 class LocalConversationContext {
     private data class Turn(val request: String, val response: String)
@@ -27,6 +29,7 @@ class LocalConversationContext {
         if(Regex("(?iu)^was hast du (?:(?:dadurch|jetzt|daraus) )?verstanden[?!.]?$").matches(text))
             return ContextDirective(ContextDirectiveKind.CONTEXT_REPORT,explicitFocus)
         val correction=Regex("(?iu)^(?:nein[,!:]?\\s+)?(?:ich (?:meinte|meine)|gemeint war)\\s+(.+)$").matchEntire(text)?:return null
+        turns.clear() // The corrected scope must not retain stale model dialogue.
         val focus=correction.groupValues[1].trim().trimEnd('.','!')
             .replace(Regex("(?iu)^(den|dem|der|die|das)\\s+"),"")
         val ambiguous=Regex("(?iu)\\b(sie|er|ihn|ihm|das|diese|dieses|nicht|kein|keine|oder|und|meine|mein|meinen|andere[nmrs]?|vorherige[nmrs]?|lösche|installiere|starte|ignoriere)\\b")

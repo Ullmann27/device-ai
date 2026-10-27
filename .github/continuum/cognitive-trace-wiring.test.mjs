@@ -32,3 +32,14 @@ test('bounded multi-step request keeps the existing gate and never promotes lega
  assert.match(activity,/evaluationConfirmsOutcome = name == "get_storage_info"/);
  assert.match(activity,/decision.tool != "get_storage_info" && !bridge.isReady\(\)/);
 });
+
+test('explicit scope correction invalidates grounded and model context before acknowledgement (source boundary)',()=>{
+ const control=activity.slice(activity.indexOf('localConversationContext.inspectRequest'),activity.indexOf('// Only knowledge questions'));
+ assert.match(control,/if\(control.resetsGroundedContext\)/);
+ assert.match(control,/scopedLocalPromptSession=null/);
+ assert.match(control,/onLearningIo\(/);
+ assert.match(control,/resetDialogueConversation\(correctionSession\)/);
+ assert.match(control,/if\(reset.getOrNull\(\)==true\)acknowledge\(\)/);
+ assert.match(control,/sessionResetLifetime.get\(\)/);
+ assert.match(control,/TraceOutcome.FAILED/);
+});

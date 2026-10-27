@@ -2391,8 +2391,30 @@ class AgentActivity : Activity() {
             val clarify=control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.CLARIFY_SCOPE ||
                 control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.MEMORY_LITERAL_REQUIRED || control.focus==null
             trace.event(if(clarify)TraceStage.CLARIFICATION else TraceStage.CORRECTION_SCOPE)
-            publishCognitiveTrace(trace,if(clarify)TraceOutcome.CLARIFY else TraceOutcome.WORKING_CONTEXT)
-            addAssistantMessage(answer,preserveLocalContext=true)
+            val acknowledge = {
+                publishCognitiveTrace(trace,if(clarify)TraceOutcome.CLARIFY else TraceOutcome.WORKING_CONTEXT)
+                addAssistantMessage(answer,preserveLocalContext=true)
+            }
+            if(control.resetsGroundedContext) {
+                val correctionSession=sessionId
+                scopedLocalPromptSession=null
+                setBusy(true)
+                onLearningIo({
+                    ContinuumLearningCore(filesDir).resetDialogueConversation(correctionSession) {
+                        sessionResetLifetime.get()
+                    }
+                }) { reset ->
+                    setBusy(false)
+                    if(sessionId==correctionSession) {
+                        if(reset.getOrNull()==true)acknowledge()
+                        else {
+                            localConversationContext.clear()
+                            publishCognitiveTrace(trace,TraceOutcome.FAILED)
+                            addAssistantMessage("Der alte Gesprächsbezug konnte nicht sicher zurückgesetzt werden. Bitte starte eine neue Sitzung; ich bestätige die Korrektur noch nicht.")
+                        }
+                    }
+                }
+            } else acknowledge()
             return
         }
         // Only knowledge questions reach the local source retrieval. Never use
