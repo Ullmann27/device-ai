@@ -13,15 +13,21 @@ if (( $# == 2 )); then offline=true; fi
 
 root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 [[ -d "$root/app/src/main" && -f "$root/app/build.gradle.kts" && -f "$root/settings.gradle.kts" ]] || die 'Full main-app checkout required'
-for tool in git node sha256sum keytool java; do
+for tool in git node sha256sum; do
   command -v "$tool" >/dev/null 2>&1 || die "Missing local executable: $tool"
 done
 is_termux=false
 if [[ "${PREFIX:-}" == /data/data/com.termux/files/usr* ]]; then is_termux=true; fi
 if [[ "$is_termux" == true && -z "${JAVA_HOME:-}" && -x "${PREFIX}/lib/jvm/java-17-openjdk/bin/java" ]]; then
   export JAVA_HOME="${PREFIX}/lib/jvm/java-17-openjdk"
+fi
+if [[ -n "${JAVA_HOME:-}" ]]; then
+  [[ -x "$JAVA_HOME/bin/java" && -x "$JAVA_HOME/bin/javac" && -x "$JAVA_HOME/bin/keytool" ]] || die 'Full JDK 17 required, including javac and keytool'
+  # Gradle, keytool and preflight must use the SAME JDK, even with a different
+  # system Java on PATH. A JRE-only installation cannot compile this app.
   export PATH="$JAVA_HOME/bin:$PATH"
 fi
+for tool in java javac keytool; do command -v "$tool" >/dev/null 2>&1 || die "Full JDK 17 required: missing $tool"; done
 if [[ -z "${ANDROID_HOME:-}" ]]; then
   if [[ -n "${ANDROID_SDK_ROOT:-}" ]]; then
     export ANDROID_HOME="$ANDROID_SDK_ROOT"
@@ -39,6 +45,8 @@ if [[ -n "${JAVA_HOME:-}" ]]; then
 fi
 java_banner="$("$java_bin" -version 2>&1 | head -n 1)"
 [[ "$java_banner" =~ \"17([.\"]|$) ]] || die 'JDK 17 required'
+javac_banner="$(javac -version 2>&1)" || die 'Java compiler unavailable'
+[[ "$javac_banner" == 'javac 17.'* ]] || die 'javac 17 required; Java toolchains must agree'
 if [[ -n "${CONTINUUM_GRADLE_PATH:-}" ]]; then
   gradle_bin="$CONTINUUM_GRADLE_PATH"
 elif command -v gradle >/dev/null 2>&1; then
@@ -50,13 +58,14 @@ fi
 gradle_version="$("$gradle_bin" --version 2>&1)" || die 'Gradle startup failed'
 [[ "$gradle_version" == *'Gradle 8.11.1'* ]] || die 'Gradle 8.11.1 required'
 node_major="$(node -p 'Number(process.versions.node.split(".")[0])')"
-[[ "$node_major" == 20 || "$node_major" == 22 ]] || die 'Node 20/22 required'
+[[ "$node_major" == 20 || "$node_major" == 22 || "$node_major" == 24 ]] || die 'Node LTS 20/22/24 required'
 if [[ "$is_termux" == true ]]; then
   aapt2_bin="${CONTINUUM_AAPT2_PATH:-$PREFIX/bin/aapt2}"
 else
   aapt2_bin="${CONTINUUM_AAPT2_PATH:-$ANDROID_HOME/build-tools/35.0.0/aapt2}"
 fi
 [[ -x "$aapt2_bin" ]] || die 'Native local aapt2 missing'
+"$aapt2_bin" version >/dev/null 2>&1 || die 'Local aapt2 cannot execute on this CPU/Android environment'
 if [[ -x "$ANDROID_HOME/build-tools/35.0.0/apksigner" ]]; then
   signer_bin="$ANDROID_HOME/build-tools/35.0.0/apksigner"
 else
@@ -83,7 +92,7 @@ fi
 [[ "${CONTINUUM_OWNER_LOCAL_APPROVED_SHA:-}" == "$head" ]] || die 'Owner approval of exact Git HEAD required'
 [[ -n "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -f "$CONTINUUM_MENTOR_SIGNING_FILE" && ! -L "$CONTINUUM_MENTOR_SIGNING_FILE" ]] || die 'Original owner P12 key missing'
 [[ -n "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] || die 'Owner signing password missing'
-key_info="$(keytool -list -v -storetype PKCS12 -keystore "$CONTINUUM_MENTOR_SIGNING_FILE" -alias deviceai-mentor -storepass:env CONTINUUM_MENTOR_SIGNING_PASSWORD 2>/dev/null)" || die 'Owner P12 password or alias invalid'
+key_info="$(keytool -list -v -storetype PKCS12 -J-Duser.language=en -J-Duser.country=US -keystore "$CONTINUUM_MENTOR_SIGNING_FILE" -alias deviceai-mentor -storepass:env CONTINUUM_MENTOR_SIGNING_PASSWORD 2>/dev/null)" || die 'Owner P12 password or alias invalid'
 key_fp="$(printf '%s\n' "$key_info" | sed -n 's/^[[:space:]]*SHA256: //p' | head -n 1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
 unset key_info
 [[ "$key_fp" == "$expected_signer" ]] || die 'Original owner signing certificate does not match'
@@ -97,9 +106,10 @@ flags=(--no-daemon --max-workers=2 --console=plain
   -Pkotlin.compiler.execution.strategy=in-process
   -PdeviceAiMentorPreview=true
   -PdeviceAiOwnerSignedUpdate=true
+  "-Pandroid.aapt2FromMavenOverride=$aapt2_bin"
   "-PcontinuumOwnerLocalVersionCode=$owner_code")
 if [[ "$is_termux" == true ]]; then
-  flags+=("-Pandroid.aapt2FromMavenOverride=$aapt2_bin" -PdeviceAiMobileAidlFallback=true)
+  flags+=(-PdeviceAiMobileAidlFallback=true)
 fi
 if [[ "$offline" == true ]]; then flags+=(--offline); fi
 printf 'CONTINUUM_LOCAL_BUILD_START source=%s package=%s versionCode=%s offline=%s\n' "$head" "$app_package" "$owner_code" "$offline"
@@ -108,11 +118,11 @@ cd "$root"
 [[ "$(git rev-parse HEAD)" == "$head" && -z "$(git status --porcelain --untracked-files=normal)" ]] || die 'Source mutated while building'
 apk="$root/app/build/outputs/apk/debug/app-debug.apk"
 [[ -f "$apk" && ! -L "$apk" && -s "$apk" ]] || die 'Build yielded no APK'
-"$signer_bin" verify --verbose --print-certs "$apk" > "$output_dir/SIGNATURE-$head.txt" || die 'APK signature invalid'
-apk_fp="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$output_dir/SIGNATURE-$head.txt" | head -n 1 | tr '[:upper:]' '[:lower:]')"
+"$signer_bin" verify --verbose --print-certs "$apk" > "$output_dir/SIGNATURE-$head-$owner_code.txt" || die 'APK signature invalid'
+apk_fp="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' "$output_dir/SIGNATURE-$head-$owner_code.txt" | head -n 1 | tr '[:upper:]' '[:lower:]')"
 [[ "$apk_fp" == "$expected_signer" ]] || die 'APK has wrong signer'
-"$aapt2_bin" dump badging "$apk" > "$output_dir/PACKAGE-$head.txt" || die 'Cannot inspect APK package'
-grep -Fq "package: name='$app_package' versionCode='$owner_code' versionName='$owner_name'" "$output_dir/PACKAGE-$head.txt" || die 'APK package/version does not match existing Continuum update'
+"$aapt2_bin" dump badging "$apk" > "$output_dir/PACKAGE-$head-$owner_code.txt" || die 'Cannot inspect APK package'
+grep -Fq "package: name='$app_package' versionCode='$owner_code' versionName='$owner_name'" "$output_dir/PACKAGE-$head-$owner_code.txt" || die 'APK package/version does not match existing Continuum update'
 digest="$(sha256sum "$apk" | cut -d' ' -f1)"
 [[ "$digest" =~ ^[a-f0-9]{64}$ ]] || die 'Invalid APK SHA-256'
 dest="$output_dir/DeviceAI-Continuum-v$owner_name-$digest.apk"
@@ -122,5 +132,5 @@ else
   cp -- "$apk" "$dest"
   [[ "$(sha256sum "$dest" | cut -d' ' -f1)" == "$digest" ]] || die 'APK copy SHA mismatch'
 fi
-printf 'source_sha=%s\npackage=%s\nversion_code=%s\nversion_name=%s\nowner_signer_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=SIGNED_NOT_DEVICE_INSTALLED\n' "$head" "$app_package" "$owner_code" "$owner_name" "$expected_signer" "$digest" "$dest" > "$output_dir/BUILD-INFO-$head.txt"
+printf 'source_sha=%s\npackage=%s\nversion_code=%s\nversion_name=%s\nowner_signer_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=SIGNED_NOT_DEVICE_INSTALLED\n' "$head" "$app_package" "$owner_code" "$owner_name" "$expected_signer" "$digest" "$dest" > "$output_dir/BUILD-INFO-$head-$owner_code.txt"
 printf 'CONTINUUM_OWNER_APK=%s\nCONTINUUM_APK_SHA256=%s\nSOURCE_SHA=%s\n' "$dest" "$digest" "$head"

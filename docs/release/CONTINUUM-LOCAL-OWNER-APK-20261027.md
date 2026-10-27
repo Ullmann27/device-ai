@@ -4,6 +4,24 @@
 
 ## Nachhaltige Lösung: vorhandene lokale Android-Hardware
 
+Aktueller Abschlusszweig: `sol/continuum-local-owner-integration-20261027` / PR #196, auf PR #195 aufgebaut. Gemma-Reopen und Belegzuordnung sind bereits enthalten. Die endgültigen Prüfresultate und SHAs stehen in `docs/research/omega/SOL-LOCAL-OWNER-HANDOFF-20261027.md`.
+
+### Privaten GitHub-Zugang einmalig auf HTTPS umstellen
+
+Im vorhandenen Checkout ausführen:
+
+```sh
+bash scripts/continuum-github-https.sh doctor
+bash scripts/continuum-github-https.sh setup
+git fetch origin sol/continuum-local-owner-integration-20261027
+git switch sol/continuum-local-owner-integration-20261027
+git pull --ff-only
+```
+
+Der Helfer verwendet ausschließlich die bereits authentifizierte `gh`-Anmeldung. Er prüft den privaten HTTPS-Lesezugriff, richtet `gh auth git-credential` ein und ersetzt nur den bekannten offiziellen SSH-Remote. Bei fehlender Anmeldung bleibt der Remote unverändert. Eine hängende Browseranmeldung kann im privaten Termux-Terminal mit `timeout --foreground 300 gh auth login --hostname github.com --git-protocol https --web` zeitlich begrenzt neu begonnen werden. Die Geräteanmeldung muss am Gerät abgeschlossen werden. Keine Tokens in URLs, Chat, Git-Konfiguration oder Build-Logs kopieren; `gh` verwaltet die Zugangsdaten in seinem lokalen privaten Speicher.
+
+Der Builder verwendet jetzt das vollständige `JAVA_HOME` samt `javac` und `keytool` konsistent, akzeptiert Node-LTS 20/22/24 und prüft, ob das native `aapt2` tatsächlich startet. SDK/Gradle/Original-P12 bleiben lokale Voraussetzungen. Nachweise desselben Quellstands mit verschiedenen Versionscodes erhalten eigene Dateinamen.
+
 Der vorhandene `scripts/continuum-mobile-builder.mjs build` ist für eine **andere Preview-App** ausgelegt und kann die installierte Eigentümer-App nicht aktualisieren. Das neue `scripts/continuum-local-owner-apk.sh` baut dagegen mit der bestehenden Gradle-Anwendung `at.heinz.deviceai.mentorpaired`. Nach einmaliger Einrichtung sind keine externen Build-Dienste, Cloud-Konten, Pipelines oder Download-Aktionen im Skript notwendig.
 
 Kompatible Wege:
