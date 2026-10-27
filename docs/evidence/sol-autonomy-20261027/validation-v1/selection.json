@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "codeSha": "ce353040ca2d440a9aae27ff75ca30c7eb3cbbf3",
+  "baselineHash": "5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1",
+  "fixtureSeal": {
+    "train": {
+      "sha256": "b25765e9e77f2b1f00245c8e395c10ec472908fd85ee50796d779d7cb623a42f",
+      "intent": 20,
+      "semantic": 72,
+      "dialogue": 2
+    },
+    "validation": {
+      "sha256": "69848cbb94c809c743092660a8c93d56c74089ed212f945147f993258e8ec5c2",
+      "intent": 12,
+      "semantic": 36,
+      "dialogue": 2
+    },
+    "final": {
+      "sha256": "0d2efcf68fd0529293393b5c8182346bbe44acc8daa16ad907eef7d158e84c6d",
+      "intent": 20,
+      "semantic": 60,
+      "dialogue": 6
+    }
+  },
+  "models": [
+    {
+      "name": "CONTROL_REPLAY-73",
+      "hash": "d372be2ae237329ed3f82213060316265db2428ac402feee197da127d83f9d16",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "CONTROL_REPLAY-101",
+      "hash": "d372be2ae237329ed3f82213060316265db2428ac402feee197da127d83f9d16",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "CONTROL_REPLAY-211",
+      "hash": "d372be2ae237329ed3f82213060316265db2428ac402feee197da127d83f9d16",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "VERIFIED_BALANCED-73",
+      "hash": "c4ce6cb276c73faa229c30544aa9ea58f680246fcaccd6018da39a68ef41ccae",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "VERIFIED_BALANCED-101",
+      "hash": "34c1d7fe993c83fa8df0b795fc794f29d0046f5effff0759fdb430ba770c8797",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "VERIFIED_BALANCED-211",
+      "hash": "46806403523a5901ff9664cd9f55c8f816a6f9510a67eec68f2ab2e395f44e6f",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "HEAD_ORTHOGONAL-73",
+      "hash": "4ab83c0598305494d36b4a8f9f7c5b0e8e8ecfb46e211b6d33ff849d44c109a2",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "HEAD_ORTHOGONAL-101",
+      "hash": "38b21350b8e2378f5d604461189c690563388436dcec58dc5e8bac8371b0961d",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "HEAD_ORTHOGONAL-211",
+      "hash": "3c9fbaead9ab4815d5a2969502e5e41b941ddde94657aadf69750f266891741b",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "SEMANTIC_ONLY-73",
+      "hash": "e46e221dbefb49e638f9304f5f9d49325f6e3b2c70c8519b36683c94a3c025de",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "SEMANTIC_ONLY-101",
+      "hash": "2df76ea22b8c9845fc038bfee91b80613b1d602f476236fbcbb97d0b2e1fb5c1",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "SEMANTIC_ONLY-211",
+      "hash": "506182bc50d22c9560bb4ef17549ab97ad4a648a2773218b0eced6dc52e9e234",
+      "researchGatePassed": false,
+      "format": "SWB1"
+    },
+    {
+      "name": "SWB2_SHADOW-73",
+      "hash": "10ff0e36c27ce946c650a291d7b75cc7e2c356cc525e258fb4337978bedde78a",
+      "researchGatePassed": false,
+      "format": "SWB2"
+    },
+    {
+      "name": "SWB2_SHADOW-101",
+      "hash": "37d5b90a0f72b7700f9644348b9719a39dbd71bebe788ba259ef0a3ff2fef2b7",
+      "researchGatePassed": false,
+      "format": "SWB2"
+    },
+    {
+      "name": "SWB2_SHADOW-211",
+      "hash": "9d1e1045efe65ebbc43412481b2cf1ef751f90348ea51e5cb64957a1ff1187a9",
+      "researchGatePassed": false,
+      "format": "SWB2"
+    }
+  ],
+  "selectedPolicy": null,
+  "rule": "all3seeds pass; highest median validation semantic count; SWB1 only",
+  "finalOpened": false,
+  "productionPromotion": false
+}

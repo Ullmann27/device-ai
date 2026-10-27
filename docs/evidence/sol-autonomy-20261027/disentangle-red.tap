@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: head-orthogonal semantic step removes first-order intent-direction interference
+ok 1 - head-orthogonal semantic step removes first-order intent-direction interference
+  ---
+  duration_ms: 21.998086
+  type: 'test'
+  ...
+# Subtest: projection rejects invalid rate without altering a model checkpoint
+ok 2 - projection rejects invalid rate without altering a model checkpoint
+  ---
+  duration_ms: 11.230768
+  type: 'test'
+  ...
+# Subtest: native contrastive trials preserve original state and deterministic schedule snapshots
+ok 3 - native contrastive trials preserve original state and deterministic schedule snapshots
+  ---
+  duration_ms: 123.953944
+  type: 'test'
+  ...
+# Subtest: interruption produces no promotable checkpoint and no negative learning signal
+ok 4 - interruption produces no promotable checkpoint and no negative learning signal
+  ---
+  duration_ms: 28.390225
+  type: 'test'
+  ...
+# Subtest: new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+ok 5 - new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+  ---
+  duration_ms: 14.29239
+  type: 'test'
+  ...
+# Subtest: a changing semantic sidecar cannot alter the frozen original intent predictions
+not ok 6 - a changing semantic sidecar cannot alter the frozen original intent predictions
+  ---
+  duration_ms: 13.213879
+  type: 'test'
+  location: '/workspace/device-ai-autonomy/.github/continuum/swb1-contrastive-lab.test.mjs:41:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 0.64899080624944
+    - 0.5000941718027893
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0.5000941718027893
+  actual: 0.64899080624944
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy/.github/continuum/swb1-contrastive-lab.test.mjs:47:56)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 353.340993

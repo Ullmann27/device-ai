@@ -1,0 +1,2207 @@
+{
+  "schema": "continuum-contrastive-shadow-v1",
+  "policy": "VERIFIED_BALANCED",
+  "seed": 73,
+  "stepsRequested": 8000,
+  "stepsCompleted": 8000,
+  "millis": 135.15825200000006,
+  "status": "COMPLETED",
+  "startingModelHash": "5e577c21b22c6b31ff71274640d45f8900ca646e370bef6179ab608ffb992cd1",
+  "initialParameterHash": "37e96f0df3e5f46901395eb4fca2c645f999066b8f92af495680ce0c5a1fd4a6",
+  "outputModelHash": "c4ce6cb276c73faa229c30544aa9ea58f680246fcaccd6018da39a68ef41ccae",
+  "format": "SWB1",
+  "publicSourceUpdates": 0,
+  "before": {
+    "intent": {
+      "loss": 0.2665599241452456,
+      "correct": 12,
+      "total": 12
+    },
+    "semantic": {
+      "loss": 0.6995596515538772,
+      "correct": 15,
+      "total": 36
+    },
+    "falseSimilar": 18,
+    "missedSimilar": 3,
+    "predictions": [
+      {
+        "id": "validation-s0-0",
+        "expected": true,
+        "probability": 0.5005416911094198
+      },
+      {
+        "id": "validation-s0-1",
+        "expected": true,
+        "probability": 0.5038829901685714
+      },
+      {
+        "id": "validation-s0-2",
+        "expected": true,
+        "probability": 0.5005342720437315
+      },
+      {
+        "id": "validation-s0-3",
+        "expected": false,
+        "probability": 0.503873612660059
+      },
+      {
+        "id": "validation-s0-4",
+        "expected": false,
+        "probability": 0.5006060898853937
+      },
+      {
+        "id": "validation-s0-5",
+        "expected": false,
+        "probability": 0.5010204420248059
+      },
+      {
+        "id": "validation-s1-0",
+        "expected": true,
+        "probability": 0.5326023618078064
+      },
+      {
+        "id": "validation-s1-1",
+        "expected": true,
+        "probability": 0.5183265277722806
+      },
+      {
+        "id": "validation-s1-2",
+        "expected": true,
+        "probability": 0.5174754936801298
+      },
+      {
+        "id": "validation-s1-3",
+        "expected": false,
+        "probability": 0.5684529877275422
+      },
+      {
+        "id": "validation-s1-4",
+        "expected": false,
+        "probability": 0.5089885568874057
+      },
+      {
+        "id": "validation-s1-5",
+        "expected": false,
+        "probability": 0.5378555863672235
+      },
+      {
+        "id": "validation-s2-0",
+        "expected": true,
+        "probability": 0.5043790483022
+      },
+      {
+        "id": "validation-s2-1",
+        "expected": true,
+        "probability": 0.5126437171780005
+      },
+      {
+        "id": "validation-s2-2",
+        "expected": true,
+        "probability": 0.5059408707846857
+      },
+      {
+        "id": "validation-s2-3",
+        "expected": false,
+        "probability": 0.5058026778961934
+      },
+      {
+        "id": "validation-s2-4",
+        "expected": false,
+        "probability": 0.5096605243052181
+      },
+      {
+        "id": "validation-s2-5",
+        "expected": false,
+        "probability": 0.5036334039974819
+      },
+      {
+        "id": "validation-s3-0",
+        "expected": true,
+        "probability": 0.49651605522136955
+      },
+      {
+        "id": "validation-s3-1",
+        "expected": true,
+        "probability": 0.48991598379042656
+      },
+      {
+        "id": "validation-s3-2",
+        "expected": true,
+        "probability": 0.4985472994346604
+      },
+      {
+        "id": "validation-s3-3",
+        "expected": false,
+        "probability": 0.5209172620319444
+      },
+      {
+        "id": "validation-s3-4",
+        "expected": false,
+        "probability": 0.5028333488553051
+      },
+      {
+        "id": "validation-s3-5",
+        "expected": false,
+        "probability": 0.5160866632407675
+      },
+      {
+        "id": "validation-s4-0",
+        "expected": true,
+        "probability": 0.5042043973641278
+      },
+      {
+        "id": "validation-s4-1",
+        "expected": true,
+        "probability": 0.5130656056468088
+      },
+      {
+        "id": "validation-s4-2",
+        "expected": true,
+        "probability": 0.506675823822971
+      },
+      {
+        "id": "validation-s4-3",
+        "expected": false,
+        "probability": 0.5060701439454929
+      },
+      {
+        "id": "validation-s4-4",
+        "expected": false,
+        "probability": 0.5090326898644107
+      },
+      {
+        "id": "validation-s4-5",
+        "expected": false,
+        "probability": 0.505393161020876
+      },
+      {
+        "id": "validation-s5-0",
+        "expected": true,
+        "probability": 0.5014813731658625
+      },
+      {
+        "id": "validation-s5-1",
+        "expected": true,
+        "probability": 0.5090782866886396
+      },
+      {
+        "id": "validation-s5-2",
+        "expected": true,
+        "probability": 0.5011020049780079
+      },
+      {
+        "id": "validation-s5-3",
+        "expected": false,
+        "probability": 0.508198072180227
+      },
+      {
+        "id": "validation-s5-4",
+        "expected": false,
+        "probability": 0.5016438874267818
+      },
+      {
+        "id": "validation-s5-5",
+        "expected": false,
+        "probability": 0.511964907165632
+      }
+    ]
+  },
+  "protectedBefore": [
+    {
+      "intent": {
+        "loss": 0.011850280485930124,
+        "correct": 40,
+        "total": 40
+      },
+      "semantic": {
+        "loss": 0.687333049643259,
+        "correct": 21,
+        "total": 32
+      }
+    },
+    {
+      "intent": {
+        "loss": 0.14535574038800006,
+        "correct": 19,
+        "total": 20
+      },
+      "semantic": {
+        "loss": 0.6942719897359286,
+        "correct": 13,
+        "total": 20
+      }
+    },
+    {
+      "intent": {
+        "loss": 0.2977136541443479,
+        "correct": 7,
+        "total": 8
+      },
+      "semantic": {
+        "loss": 0.6970323183530261,
+        "correct": 3,
+        "total": 6
+      }
+    }
+  ],
+  "checkpoints": [
+    {
+      "steps": 1000,
+      "modelHash": "703336aa0f6157ac921dc8f03cb89723cba09053118a3c0b3268e86c9e703f09",
+      "newValidation": {
+        "intent": {
+          "loss": 0.24916299576171486,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6987131551601339,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5000355167461557
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.5024371313195284
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5000652570012798
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.502442946405035
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5000929383048579
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5005833524506553
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5257533843014252
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5129983836092464
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5131089208453257
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5588166774440262
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5060241945316634
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.531660210055151
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5025558652442242
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5089322095617757
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5039158873798351
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5034437559928407
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5066385271641656
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5021834374711377
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.4955448105871909
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.4897223247615677
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.49822702206118347
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.515484332335964
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5044363613839902
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5119589999782809
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5020462339303511
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5095863292449169
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5036274855634977
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5034925763084176
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5053253780496166
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5028961798531137
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5002391898189822
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5060557812139401
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5003730563449347
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.505075641208643
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5002380054448533
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5078063893300201
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.014118386554129225,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.687293362542759,
+            "correct": 24,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.2153158719450028,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6945148127758244,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.4396445148620661,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6970269220846342,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 2000,
+      "modelHash": "9ea61ce425fbef188136ced2b105fbde2d4cf4ef116558428415ba15d947b1d7",
+      "newValidation": {
+        "intent": {
+          "loss": 0.23345469898577784,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6986825307054679,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5001171843527576
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.5028903003746599
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.500069938587937
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5028041874091419
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5001604086455907
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5009960569679189
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5264742574597391
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5142934283411598
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5137961301016183
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5598021159987656
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5066750874256781
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5332762207684774
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5029618079699925
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5097190121792449
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.504605393433623
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5037925880976023
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5076186249658926
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5026463444586633
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.49619632412426196
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.49066599763660007
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.49839480174562034
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5159176861309168
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.503684672289245
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5128185294778416
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5021251368743287
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5105935702358478
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.50353830547532
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.503948179683833
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5053220065852688
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5031848100147014
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5003365314345073
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5064405865556594
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5004312404598944
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5051949620668204
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5003479926250047
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5078589064689936
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.012713092408302712,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6866379981443654,
+            "correct": 26,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.21072713459114004,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6943279923549867,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.43397136795273183,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6972804339293016,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 3000,
+      "modelHash": "2453a3c2a8960b7866e7c1cfc5063a819072876c424810a4f61a857303e717a4",
+      "newValidation": {
+        "intent": {
+          "loss": 0.21740929663218336,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6987308314346335,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5002331775979983
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.503411357749221
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.500153721138356
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5032491975161808
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.500280378618093
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5014659338753354
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5275828153044745
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5159270487092581
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5147660315412943
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5615716209591354
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5074959016906594
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5353325106228722
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5034410095408026
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5106314996109398
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5053751524261366
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5042448181702583
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5086621258312668
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5031923604557427
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.49685237187348014
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.4915430425560463
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.4986192162547508
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5166123186950791
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.503020420376305
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5138334022698727
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5022882380036342
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5117529641036799
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5035805708730042
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5045862361173411
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5054315192590987
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.503620933392772
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5004711183320488
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5069789983947679
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5005231908757989
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5054852523710041
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5005133782105302
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5081259212619352
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.011181043181873917,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.685927757020202,
+            "correct": 24,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.20170655610588883,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6941588933890724,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.41941090265490516,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6975715032455091,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 4000,
+      "modelHash": "ee0d08bc357c25d3e6b8519158d6db5320c942460c42bd8f78c219867403a0e9",
+      "newValidation": {
+        "intent": {
+          "loss": 0.20979117149517632,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6986791097356299,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5002867815939791
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.503674554921448
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5001751089296185
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5034723308501511
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5003385744538248
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5018133574231237
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5277615297060525
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5166393308044156
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5150985323232377
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5619589451211444
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5078399353875604
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5362756398909402
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5036465589823329
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5109684655424486
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5058024015464622
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5043594284089724
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5092132992135479
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5034730601478785
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.497249539946411
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.4921708561146078
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.49878281675233016
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5165427791781678
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5027569545730799
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.514147646492004
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5022382015167839
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5123327807774576
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5033709522090729
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5048504194896009
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5051544051183289
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5037289336827052
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5004825225518175
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5070957498033537
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5005443803140284
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5054102929027994
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5005194688268153
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5079205997347587
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.010522460769596243,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6852208644718465,
+            "correct": 24,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.20438041630742934,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6940205969613771,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.42670830705941276,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6977757728198956,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 5000,
+      "modelHash": "b1dfa6ab163fb7805a2999fdab7948a1401e23c98c1706c0313f9755a4cd78e6",
+      "newValidation": {
+        "intent": {
+          "loss": 0.19368366932959633,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6988397211500649,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5005197740205609
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.5043517685863005
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5004426410736633
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5040835227826732
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5005936212892731
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5024370384779515
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5295044225648465
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5185513680368388
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5163943328862112
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5647035798062642
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.508859304106624
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5390095544196065
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5043782280750337
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5122863763994647
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5069159766711163
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5050560244128369
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5106970050138442
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5042352408984936
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.49794675684015444
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.49302465095649656
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.49913801185905643
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5176741594797729
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5022440853514418
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5155648605618426
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5025589442381689
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.513804363503584
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5036602936456621
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5057519550538684
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.505593491717869
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5043911685399267
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5006872933067525
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5078517337570505
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5007070042907223
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5058949187842108
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5007857026148637
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5084017375582538
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.009019295184151855,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6843686746852596,
+            "correct": 23,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.18967854570625137,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6938567187846749,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.4002096959349668,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6982592458667033,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 6000,
+      "modelHash": "12b51c69bba19e50524bed01f97850c2ed91b8613c8b09c92bb0112ce2c048ee",
+      "newValidation": {
+        "intent": {
+          "loss": 0.1859603020159372,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6988891923055011,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5006002771639855
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.5046569523433518
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5005250984069165
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5043254589772694
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5006828157855947
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5028063042203835
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5300737796750195
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5193609945086738
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5168439193894874
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5658125545185665
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5092704896118517
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5402931138361847
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.5047004785522352
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5126524076532246
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5074831254592
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5052420298426468
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5114154443954234
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5045830306084533
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.49825527007757076
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.49351854438311477
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.4992964214580667
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.517871022292403
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5021089883423735
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5160898927213541
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5025578365482499
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5143044491283157
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5035485242858421
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5060262770703493
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5054474633983812
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5045509162914814
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5007104811249905
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5079937010386696
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5007398733989579
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5058800753511731
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5008088419414674
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5083099138731046
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.008321556727931135,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6835716200113364,
+            "correct": 25,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.18853444878247894,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6938142148418276,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.3998943711885661,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6985978332573665,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 7000,
+      "modelHash": "e5fd207d456866960f228363e712c28eb6bcc73e6737d950ef8c8ede7dbc61db",
+      "newValidation": {
+        "intent": {
+          "loss": 0.17814933079393577,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6989769125341677,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5007641223974687
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.505069917656029
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5007185866661171
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5046912260211756
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5008643439766889
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5032623433311995
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5310361286922543
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5205281497587252
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5175932184181028
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5674638593778244
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5098971703373805
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5418874148769258
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.505183682289382
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5133156960479934
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5082603293599061
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5056036880986451
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5123981064654977
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5050887190971097
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.4986226186813929
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.4940127309481211
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.4995174845506029
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5183005659809781
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5019905843250113
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5167894879417992
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5026672412042922
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5150729610625701
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5035912290593656
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5064870108395046
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.5054982637127318
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5048678448305267
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5008042441065927
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5082954276051773
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5008320882713259
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5060479289040419
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5009204034370623
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5084237588166436
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.007621803065634899,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6827060283103276,
+            "correct": 26,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.18514762578764654,
+            "correct": 17,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6937508058074464,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.3947347780163999,
+            "correct": 5,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6989521624482743,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    },
+    {
+      "steps": 8000,
+      "modelHash": "c4ce6cb276c73faa229c30544aa9ea58f680246fcaccd6018da39a68ef41ccae",
+      "newValidation": {
+        "intent": {
+          "loss": 0.17146224821996695,
+          "correct": 12,
+          "total": 12
+        },
+        "semantic": {
+          "loss": 0.6990544096299085,
+          "correct": 15,
+          "total": 36
+        },
+        "falseSimilar": 18,
+        "missedSimilar": 3,
+        "predictions": [
+          {
+            "id": "validation-s0-0",
+            "expected": true,
+            "probability": 0.5008862109275319
+          },
+          {
+            "id": "validation-s0-1",
+            "expected": true,
+            "probability": 0.5054326629472136
+          },
+          {
+            "id": "validation-s0-2",
+            "expected": true,
+            "probability": 0.5008658664384785
+          },
+          {
+            "id": "validation-s0-3",
+            "expected": false,
+            "probability": 0.5049628826563569
+          },
+          {
+            "id": "validation-s0-4",
+            "expected": false,
+            "probability": 0.5010003789506752
+          },
+          {
+            "id": "validation-s0-5",
+            "expected": false,
+            "probability": 0.5036672660626299
+          },
+          {
+            "id": "validation-s1-0",
+            "expected": true,
+            "probability": 0.5319203512819605
+          },
+          {
+            "id": "validation-s1-1",
+            "expected": true,
+            "probability": 0.5215027479227466
+          },
+          {
+            "id": "validation-s1-2",
+            "expected": true,
+            "probability": 0.5182468028345744
+          },
+          {
+            "id": "validation-s1-3",
+            "expected": false,
+            "probability": 0.5689404296493631
+          },
+          {
+            "id": "validation-s1-4",
+            "expected": false,
+            "probability": 0.5104359771094847
+          },
+          {
+            "id": "validation-s1-5",
+            "expected": false,
+            "probability": 0.5433557397054792
+          },
+          {
+            "id": "validation-s2-0",
+            "expected": true,
+            "probability": 0.505610539753228
+          },
+          {
+            "id": "validation-s2-1",
+            "expected": true,
+            "probability": 0.5137881677145619
+          },
+          {
+            "id": "validation-s2-2",
+            "expected": true,
+            "probability": 0.5089820322588678
+          },
+          {
+            "id": "validation-s2-3",
+            "expected": false,
+            "probability": 0.5058542375180363
+          },
+          {
+            "id": "validation-s2-4",
+            "expected": false,
+            "probability": 0.5133155381692648
+          },
+          {
+            "id": "validation-s2-5",
+            "expected": false,
+            "probability": 0.5055216453320704
+          },
+          {
+            "id": "validation-s3-0",
+            "expected": true,
+            "probability": 0.4989249456492192
+          },
+          {
+            "id": "validation-s3-1",
+            "expected": true,
+            "probability": 0.4944367441196902
+          },
+          {
+            "id": "validation-s3-2",
+            "expected": true,
+            "probability": 0.49970618221320046
+          },
+          {
+            "id": "validation-s3-3",
+            "expected": false,
+            "probability": 0.5186044718287959
+          },
+          {
+            "id": "validation-s3-4",
+            "expected": false,
+            "probability": 0.5019116395727696
+          },
+          {
+            "id": "validation-s3-5",
+            "expected": false,
+            "probability": 0.5173728851948092
+          },
+          {
+            "id": "validation-s4-0",
+            "expected": true,
+            "probability": 0.5027209392465327
+          },
+          {
+            "id": "validation-s4-1",
+            "expected": true,
+            "probability": 0.5156670860150149
+          },
+          {
+            "id": "validation-s4-2",
+            "expected": true,
+            "probability": 0.5035730930520098
+          },
+          {
+            "id": "validation-s4-3",
+            "expected": false,
+            "probability": 0.5068195404001963
+          },
+          {
+            "id": "validation-s4-4",
+            "expected": false,
+            "probability": 0.505475730246243
+          },
+          {
+            "id": "validation-s4-5",
+            "expected": false,
+            "probability": 0.5050750203562697
+          },
+          {
+            "id": "validation-s5-0",
+            "expected": true,
+            "probability": 0.5008749032507726
+          },
+          {
+            "id": "validation-s5-1",
+            "expected": true,
+            "probability": 0.5085098051161716
+          },
+          {
+            "id": "validation-s5-2",
+            "expected": true,
+            "probability": 0.5009041035638375
+          },
+          {
+            "id": "validation-s5-3",
+            "expected": false,
+            "probability": 0.5061445730965943
+          },
+          {
+            "id": "validation-s5-4",
+            "expected": false,
+            "probability": 0.5010044312258602
+          },
+          {
+            "id": "validation-s5-5",
+            "expected": false,
+            "probability": 0.5084600409264767
+          }
+        ]
+      },
+      "protectedAfter": [
+        {
+          "intent": {
+            "loss": 0.007015273615180643,
+            "correct": 40,
+            "total": 40
+          },
+          "semantic": {
+            "loss": 0.6817932388905038,
+            "correct": 26,
+            "total": 32
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.1827210502533018,
+            "correct": 18,
+            "total": 20
+          },
+          "semantic": {
+            "loss": 0.6937239690602842,
+            "correct": 13,
+            "total": 20
+          }
+        },
+        {
+          "intent": {
+            "loss": 0.39152158732586817,
+            "correct": 6,
+            "total": 8
+          },
+          "semantic": {
+            "loss": 0.6993014741406486,
+            "correct": 3,
+            "total": 6
+          }
+        }
+      ],
+      "retained": false,
+      "validationGain": false,
+      "researchGatePassed": false
+    }
+  ],
+  "selectedSteps": null,
+  "researchGatePassed": false,
+  "productionEligible": false,
+  "promoted": false,
+  "weightsWritten": false,
+  "baselinePreserved": true,
+  "finalSetUsed": false,
+  "legacyReport": null,
+  "codeSha": "ce353040ca2d440a9aae27ff75ca30c7eb3cbbf3",
+  "fixtureSeal": {
+    "train": {
+      "sha256": "b25765e9e77f2b1f00245c8e395c10ec472908fd85ee50796d779d7cb623a42f",
+      "intent": 20,
+      "semantic": 72,
+      "dialogue": 2
+    },
+    "validation": {
+      "sha256": "69848cbb94c809c743092660a8c93d56c74089ed212f945147f993258e8ec5c2",
+      "intent": 12,
+      "semantic": 36,
+      "dialogue": 2
+    },
+    "final": {
+      "sha256": "0d2efcf68fd0529293393b5c8182346bbe44acc8daa16ad907eef7d158e84c6d",
+      "intent": 20,
+      "semantic": 60,
+      "dialogue": 6
+    }
+  }
+}
