@@ -42,3 +42,22 @@ Every test turn logs real deterministic answer, source IDs, CRE1 state and propo
 Capture unedited JUnit XML and complete stdout `EVIDENCE_PAIR` lines; check exactly eight turns and four pairs, no mock native model success. Investigate and repair any FAIL before changing production retrieval. Do not interpret the same published fixture as a fresh unseen holdout.
 
 **Result:** Test harness and bounded provenance gate prepared; genuine per-turn outcomes remain **NOT_RUN**. No neural or language-understanding improvement is claimed.
+
+## 27 October follow-up: corrected a real name-number evidence boundary
+
+Inspection of `ContinuumMemoryDialogue.singleIdentifierEvidence` found a concrete subject-matching limitation: existing exact alphanumeric-ID protection covered `Kappa7` versus `Kappa70` but **not** space-separated `Kappa 7` and `Kappa 70`. That could allow a similarly named confirmed fact into the candidate set and make the deliberately strict lookalike test FAIL. The change is substantive production retrieval code, not a weakened test assertion.
+
+- Android `ContinuumMemoryDialogue.kt` now requires exact identity for a bounded two-word name followed by a separated numeric suffix; preserves the established single-token alphanumeric-ID filter and other source provenance gates. Example: `Gerät Kappa 7` ≠ `Gerät Kappa 70`; hyphenated `Kappa-7` is accepted for `Kappa 7`. Ordinary year questions do not create a new identity requirement.
+- GitHub Node retrieval mirror `.github/continuum/dialogue-retrieval.mjs` implements the same check with Unicode-aware boundaries. This keeps Android/Node behavior aligned.
+- New Kotlin JUnit regression checks both `sourceTermEvidence` and the actual `ContinuumMemoryDialogue.rank` with `OWNER_CONFIRMED` experiences. New Node regression checks both public retrieval functions, wrong/correct identifiers, and unrelated year text. Existing four-pair SWB1/CRE1 suite retains **hard FAIL** assertions, never weakened to mask this bug.
+
+### Executed local bounded smoke (NOT the complete repository test suite)
+
+- Command: `kotlinc /mnt/data/gemma_guard_check/Main.kt -include-runtime -d /mnt/data/gemma_guard_check/guard.jar && java -jar /mnt/data/gemma_guard_check/guard.jar`
+- Observed output: `PASS 6/6`, isolated JVM name/number matcher, including Kappa 7/70, Orion 5/50, year and hyphen. The snippet mirrors the exact committed Kotlin regex logic, but **is not a compilation of the complete original Android source**.
+- Command: `node --test /mnt/data/gemma_guard_check/identifier.mjs`
+- Observed output: `tests 8; pass 8; fail 0` on isolated Node matcher, including Unicode `Äther 4/40`. The snippet mirrors the changed committed Node regex logic, but **is not the complete checked-in Node integration test**.
+
+**Remaining critical blocker:** The eight actual synthetic `CognitiveDecisionBridge.respond` turns and the full Node/JUnit suite are still **NOT_RUN** in an authorized complete checkout; no verified per-turn answers or CRE1 scores can honestly be reported. The real Gemma 4 LiteRT-LM model is not accessible to this JVM/container session, so actual Gemma model invocations remain **0 / NOT_RUN**. The prior Android QA for the older integration commit cannot be reused.
+
+The revision is on PR #194 only, **not** in `main`, installed Android app, owner data, real memory or any model checkpoint. No automatic promotion, no CDX1 merge.
