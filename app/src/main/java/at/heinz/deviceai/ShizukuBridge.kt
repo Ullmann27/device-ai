@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import rikka.shizuku.Shizuku
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ShizukuBridge(
     private val context: Context,
@@ -20,6 +21,9 @@ class ShizukuBridge(
     private val mainHandler = Handler(Looper.getMainLooper())
     // written on the main thread, read on tool worker threads
     @Volatile private var shell: IDeviceShell? = null
+    // A timed-out Binder call may remain alive in the remote service.
+    // Do not start another checked request until the preceding Binder call returns.
+    private val checkedCallInFlight = AtomicBoolean(false)
     private var listenersRegistered = false
 
     private val binderReceived = Shizuku.OnBinderReceivedListener {
@@ -133,15 +137,32 @@ class ShizukuBridge(
         if (request.isFailure) { callback(Result.failure(request.exceptionOrNull()!!)); return }
         val service = shell
         if (service == null) { callback(Result.failure(IllegalStateException("Shizuku not ready."))); return }
-        Thread({
-            val result = runCatching {
-                check(shell === service && isReady()) { "Shizuku service changed." }
-                val raw = service.execute(ShellExecutionWire.encodeRequest(request.getOrThrow()))
-                check(shell === service) { "Shizuku service was stopped." }
-                ShellExecutionWire.decodeResult(raw).checkedOutput()
-            }
-            callback(result)
-        }, "device-ai-checked-shell").apply { isDaemon = true; start() }
+        if (!checkedCallInFlight.compareAndSet(false, true)) {
+            callback(Result.failure(IllegalStateException(
+                "A previous checked Shizuku call is still in flight; operator review required."
+            )))
+            return
+        }
+        try {
+            Thread({
+                try {
+                    val result = runCatching {
+                        check(shell === service && isReady()) { "Shizuku service changed." }
+                        val raw = service.execute(ShellExecutionWire.encodeRequest(request.getOrThrow()))
+                        check(shell === service) { "Shizuku service was stopped." }
+                        ShellExecutionWire.decodeResult(raw).checkedOutput()
+                    }
+                    callback(result)
+                } finally {
+                    // A ToolGate timeout or bridge.stop() does not terminate an
+                    // in-flight Binder transaction. Only its return releases this slot.
+                    checkedCallInFlight.set(false)
+                }
+            }, "device-ai-checked-shell").apply { isDaemon = true; start() }
+        } catch (e: RuntimeException) {
+            checkedCallInFlight.set(false)
+            callback(Result.failure(e))
+        }
     }
 
     private fun ensurePermissionAndBind(forceRequest: Boolean = false) {
