@@ -1,0 +1,6 @@
+{
+  "status": 0,
+  "stdout": "{\"status\":\"ABSTAIN\",\"checks\":0,\"counterexample\":null}\n",
+  "stderr": "OMEGA_VM_TIMEOUT\n",
+  "error": null
+}

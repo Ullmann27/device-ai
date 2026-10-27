@@ -91,6 +91,11 @@ data class ToolExecutionRecord(
 
 data class ToolExecutionResult(val output: String?, val record: ToolExecutionRecord)
 
+/** A trusted backend can narrow an outcome to failure, never assert success. */
+class ToolBackendFailure(val status: ToolExecutionStatus, message: String) : RuntimeException(message) {
+    init { require(status in setOf(ToolExecutionStatus.FAILED, ToolExecutionStatus.TIMED_OUT, ToolExecutionStatus.CANCELLED)) }
+}
+
 data class ToolPolicy(
     val readOnlyEnabled: Boolean = false,
     val destructiveEnabled: Boolean = false,
@@ -290,6 +295,12 @@ class ToolGate(
                     if (saved) "Task cancelled." else "Cancellation outcome is ambiguous; operator review is required.",
                     output.take(policy.maxOutputCharacters)
                 )
+            } else if (output.length > policy.maxOutputCharacters) {
+                val saved = persistTerminal(ToolReceiptState.FAILED, null)
+                result(ToolExecutionStatus.FAILED,
+                    if (saved) "Tool output exceeded the limit; observation is incomplete."
+                    else "Output exceeded the limit and receipt is ambiguous; operator review is required.",
+                    output.take(policy.maxOutputCharacters))
             } else {
                 val limited = output.take(policy.maxOutputCharacters)
                 val saved = persistTerminal(ToolReceiptState.SUCCEEDED, limited)
@@ -310,6 +321,16 @@ class ToolGate(
         } catch (_: TimeoutException) {
             persistTerminal(ToolReceiptState.TIMED_OUT, null)
             result(ToolExecutionStatus.TIMED_OUT, "Tool execution timed out.")
+        } catch (e: java.util.concurrent.ExecutionException) {
+            val status = (e.cause as? ToolBackendFailure)?.status ?: ToolExecutionStatus.FAILED
+            val state = when (status) {
+                ToolExecutionStatus.TIMED_OUT -> ToolReceiptState.TIMED_OUT
+                ToolExecutionStatus.CANCELLED -> ToolReceiptState.CANCELLED
+                else -> ToolReceiptState.FAILED
+            }
+            val saved = persistTerminal(state, null)
+            result(status, if (saved) "Backend reported $status."
+                else "Backend outcome is ambiguous; operator review is required.")
         } catch (_: Exception) {
             persistTerminal(ToolReceiptState.FAILED, null)
             result(ToolExecutionStatus.FAILED, "Tool execution failed.")

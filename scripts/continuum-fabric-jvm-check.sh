@@ -27,11 +27,12 @@ java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -version > "$out/compi
 java -cp "$cp" org.jetbrains.kotlin.cli.jvm.K2JVMCompiler -no-stdlib -no-reflect -classpath "$cp" \
     -jvm-target 17 -d "$out/classes" "${sources[@]}" > "$out/compile.txt" 2>&1
 cd "$root"
-java -cp "$out/classes:$cp" org.junit.runner.JUnitCore \
+runtimeCp="$out/classes:$root/app/src/test/resources:$cp"
+java -cp "$runtimeCp" org.junit.runner.JUnitCore \
     at.heinz.deviceai.cognitive.ComputeFabricTest \
     at.heinz.deviceai.cognitive.ComputeResultVerifierTest \
     at.heinz.deviceai.cognitive.VirtualModelFabricTest \
     at.heinz.deviceai.cognitive.DevelopmentClaimGateTest | tee "$out/junit.txt"
-java -cp "$out/classes:$cp" at.heinz.deviceai.cognitive.VirtualModelFabricFixtureMain > "$out/registry-snapshot.json"
+java -cp "$runtimeCp" at.heinz.deviceai.cognitive.VirtualModelFabricFixtureMain > "$out/registry-snapshot.json"
 CONTINUUM_FABRIC_SNAPSHOT_FILE="$out/registry-snapshot.json" node --test \
     .github/continuum/compute-fabric-model-adapter.test.mjs | tee "$out/node-contract.txt"

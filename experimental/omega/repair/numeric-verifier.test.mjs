@@ -19,6 +19,14 @@ test('a bounded exact distance passes all four frozen checks reproducibly',()=>{
  const a=check(source),b=check(source);
  assert.equal(a.status,'PASS');assert.equal(a.checks,4);assert.deepEqual(a,b);
 });
+test('maximum frozen suite completes all 384 checks within the existing subprocess budget',()=>{
+ const s=suite();
+ s.cases=Array.from({length:256},(_,i)=>({id:'case-'+i,args:[i,i+(i%2)],expected:i%2}));
+ s.relations=Array.from({length:128},(_,i)=>({id:'relation-'+i,left:[i,i+1],right:[i+10,i+11],relation:'equal'}));
+ const r=check('export function distance(a,b){return a>b?a-b:b-a;}',s);
+ assert.equal(r.status,'PASS');assert.equal(r.checks,384);
+ for(const value of [0,1])assert.equal(check('export function distance(a,b){return '+value+';}',s).status,'FAIL');
+});
 test('metamorphic failure supplies the distinguishing pair',()=>{
  const s=suite();s.cases=[{id:'example',args:[3,8],expected:5}];
  const r=check('export function distance(a,b){return b-a;}',s);

@@ -1,0 +1,37 @@
+----------
+1. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+Type java.lang.String is indirectly referenced from required .class files but cannot be resolved since the declaring package java.lang exported from module java.base conflicts with a package accessible from module <unnamed>
+----------
+2. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+3. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+4. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+5. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+6. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+7. ERROR in /workspace/device-ai-autonomy-integration/app/src/termux/java/at/heinz/deviceai/IDeviceShell.java (at line 1)
+	package at.heinz.deviceai;
+	^
+The type java.lang.String cannot be resolved. It is indirectly referenced from required type android.os.ShellCallback
+----------
+7 problems (7 errors)

@@ -1,0 +1,15 @@
+JUnit version 4.13.2
+...............................................................E...
+Time: 0.85
+There was 1 failure:
+1) backendTimeoutReachesGateAndCannotBeMisclassifiedAsGreen(at.heinz.deviceai.ShellExecutionTest)
+java.lang.AssertionError: expected:<TIMED_OUT> but was:<FAILED>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at at.heinz.deviceai.ShellExecutionTest.backendTimeoutReachesGateAndCannotBeMisclassifiedAsGreen(ShellExecutionTest.kt:75)
+
+FAILURES!!!
+Tests run: 66,  Failures: 1
+

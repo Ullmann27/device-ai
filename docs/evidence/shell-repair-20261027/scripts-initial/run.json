@@ -1,0 +1,207 @@
+{
+  "sourceSha": "3c0ca70afaed18b029f162960619e26f7a21f355",
+  "command": [
+    "node",
+    "--max-old-space-size=256",
+    "--test",
+    "--test-reporter=tap",
+    "--test-concurrency=1",
+    "scripts/continuum-capability-research.test.mjs",
+    "scripts/continuum-coding-brain.test.mjs",
+    "scripts/continuum-deepseek-bridge.test.mjs",
+    "scripts/continuum-deepseek-https.test.mjs",
+    "scripts/continuum-deepseek-hub-preflight.test.mjs",
+    "scripts/continuum-deepseek-tier-plan.test.mjs",
+    "scripts/continuum-experiment-integration.test.mjs",
+    "scripts/continuum-gguf.test.mjs",
+    "scripts/continuum-isolated-node.test.mjs",
+    "scripts/continuum-isolation-receipt.test.mjs",
+    "scripts/continuum-local-brain.test.mjs",
+    "scripts/continuum-local-context.test.mjs",
+    "scripts/continuum-m6-review-qa.test.mjs",
+    "scripts/continuum-mobile-aidl-compat.test.mjs",
+    "scripts/continuum-mobile-builder.test.mjs",
+    "scripts/continuum-mobile-coding.test.mjs",
+    "scripts/continuum-model-center-qa.test.mjs",
+    "scripts/continuum-model-center.test.mjs",
+    "scripts/continuum-model-selection.test.mjs",
+    "scripts/continuum-native-corpus.test.mjs",
+    "scripts/continuum-omega.test.mjs",
+    "scripts/continuum-owned-app-security.test.mjs",
+    "scripts/continuum-owned-app.test.mjs",
+    "scripts/continuum-owned-evidence.test.mjs",
+    "scripts/continuum-owned-process.test.mjs",
+    "scripts/continuum-owner-v19-release.test.mjs",
+    "scripts/continuum-preview-chrome-download.test.mjs",
+    "scripts/continuum-project-plan.test.mjs",
+    "scripts/continuum-research-tap-summary.test.mjs",
+    "scripts/continuum-reviewed-context-shadow.test.mjs",
+    "scripts/continuum-training-studio.test.mjs",
+    "scripts/continuum-typed-coding-bridge.test.mjs",
+    "scripts/continuum-ui-routing.test.mjs",
+    "scripts/continuum-v19-pin-audit.test.mjs",
+    "scripts/continuum-v22-owner-release.test.mjs",
+    "scripts/continuum-v24-owner-release.test.mjs",
+    "scripts/continuum-v25-owner-release.test.mjs",
+    "scripts/render-mentor-preview-dispatch.test.mjs"
+  ],
+  "startedUnix": 1793080467.2338977,
+  "inventory": [
+    {
+      "path": "scripts/continuum-capability-research.test.mjs",
+      "sha256": "f468e143a697032736e601dadeadaabaa3ba41ecd396c9f66b41be6b90399c3b"
+    },
+    {
+      "path": "scripts/continuum-coding-brain.test.mjs",
+      "sha256": "13b4bea4aa1de9ee9ac273cdd79ef12d92ad8a0edb9a27ec1a50346f3fcaaa14"
+    },
+    {
+      "path": "scripts/continuum-deepseek-bridge.test.mjs",
+      "sha256": "a39ad3306517d1bf4da1364c582c9d229b3e15475e88bbcc285e2c84c3ccc6d4"
+    },
+    {
+      "path": "scripts/continuum-deepseek-https.test.mjs",
+      "sha256": "7f79157c11fcfa3d79a74d2c27bcc7a846a029748249853970a72a7cc9766ad0"
+    },
+    {
+      "path": "scripts/continuum-deepseek-hub-preflight.test.mjs",
+      "sha256": "ef18b3f3895431b555cac3eabbc85330b5acfa4f6f7bd11c8f5fce8ef1d2091e"
+    },
+    {
+      "path": "scripts/continuum-deepseek-tier-plan.test.mjs",
+      "sha256": "0be8c480e8e8e52c72bdc525021e861c5e1d36f39687a3d22c9ccc3b5843ccba"
+    },
+    {
+      "path": "scripts/continuum-experiment-integration.test.mjs",
+      "sha256": "6b5ba2304b0c2c681ade7efc329c3275b50ec558d60bf5376e4395c4e187855d"
+    },
+    {
+      "path": "scripts/continuum-gguf.test.mjs",
+      "sha256": "2ef8a2729eca758fa3cdf98cb08b5d03879757672235cce66e3d7b523c5d13df"
+    },
+    {
+      "path": "scripts/continuum-isolated-node.test.mjs",
+      "sha256": "72cdee05b2ed5f896c5ac41594191d16f256b5fa43df75eda7db2134946cfc18"
+    },
+    {
+      "path": "scripts/continuum-isolation-receipt.test.mjs",
+      "sha256": "8e57d2ce9a28120bb41c7bb079258bf1aa43b7a945dabc544ab595c9a1225898"
+    },
+    {
+      "path": "scripts/continuum-local-brain.test.mjs",
+      "sha256": "e0782d708eb1c9829ad923d457d26f482f11dd9250ed00cd822e39a780932eae"
+    },
+    {
+      "path": "scripts/continuum-local-context.test.mjs",
+      "sha256": "b34e9520363ed5b2ea7fd667c2b65eb9832cc8b3a0ea5c84e25f5bf8458cf66f"
+    },
+    {
+      "path": "scripts/continuum-m6-review-qa.test.mjs",
+      "sha256": "da21f45ffbc6c8ae18848db6290d09fbf004ef096aa14aa28f71c7d3648543da"
+    },
+    {
+      "path": "scripts/continuum-mobile-aidl-compat.test.mjs",
+      "sha256": "de447d8de25f64130925f2a0a829b1d1bd23a068a018f7af6e39a6e1ce6d82dc"
+    },
+    {
+      "path": "scripts/continuum-mobile-builder.test.mjs",
+      "sha256": "7895085fd127f81038fdd337980fba0c4047787f1df57f49a468dcae61de6700"
+    },
+    {
+      "path": "scripts/continuum-mobile-coding.test.mjs",
+      "sha256": "7224b345137f62d44b0519a742487e0455828ae1fc6975c2780589be854a5a96"
+    },
+    {
+      "path": "scripts/continuum-model-center-qa.test.mjs",
+      "sha256": "2b775b7824e04c634e094a1edbed43bc86f4df8fb051ea31ae108e8551637d4a"
+    },
+    {
+      "path": "scripts/continuum-model-center.test.mjs",
+      "sha256": "dce6e8b78ddc00ce21904f23f5542be72779b726ed2bb4a9bf9b89a8f20df0ca"
+    },
+    {
+      "path": "scripts/continuum-model-selection.test.mjs",
+      "sha256": "8c427756608db36c93ac195b6eb2ea372197d768563cc1034525979bb2d1beaa"
+    },
+    {
+      "path": "scripts/continuum-native-corpus.test.mjs",
+      "sha256": "aaed840fc383c60459afd65b29296f5de83bba864acc7f31cd5288d071e1e51b"
+    },
+    {
+      "path": "scripts/continuum-omega.test.mjs",
+      "sha256": "f6b2df43303f4fd7382bd66cef58c6cac053ecd291b22fdf4cbfd83b6ff9c062"
+    },
+    {
+      "path": "scripts/continuum-owned-app-security.test.mjs",
+      "sha256": "bbe8cd95e15d31901b44a08ecee6cf0f585a48007e7ca1b017abcad57f460d40"
+    },
+    {
+      "path": "scripts/continuum-owned-app.test.mjs",
+      "sha256": "d1d061f57ec83be8c649fcceb50197721bbed19432d0dfc835a9fd3b2fb7ddc5"
+    },
+    {
+      "path": "scripts/continuum-owned-evidence.test.mjs",
+      "sha256": "5ff0402354fa88dbf4b8f00f77625c9a4a1e46e3d6bd4a5eca9e74a7ad5c09b3"
+    },
+    {
+      "path": "scripts/continuum-owned-process.test.mjs",
+      "sha256": "c3ec2c400e246c9b777e086f8747a8479393bf3735395f26abda029b0a822a86"
+    },
+    {
+      "path": "scripts/continuum-owner-v19-release.test.mjs",
+      "sha256": "c137f1ac97dc4d1150b26bf74bf4f379492d932d1378df9f401b3b2b8d2a8d5e"
+    },
+    {
+      "path": "scripts/continuum-preview-chrome-download.test.mjs",
+      "sha256": "d2cc9ba4bb1648b5f74886fcb07a4ebf9112375e966cdf263f2ca4db87424811"
+    },
+    {
+      "path": "scripts/continuum-project-plan.test.mjs",
+      "sha256": "130bb74417f2e5d1c4dd18244ab258883913c9d63ce19e57e2531a6e8a811b8b"
+    },
+    {
+      "path": "scripts/continuum-research-tap-summary.test.mjs",
+      "sha256": "8796f46a670b17fee7c4bdb1a2cbdfa9ef395cfea31407a43336d91dca9bb019"
+    },
+    {
+      "path": "scripts/continuum-reviewed-context-shadow.test.mjs",
+      "sha256": "faf545cfe70030edfefd1964010d8bcb7dbaf39b4499a5b5e55b553319fa30ce"
+    },
+    {
+      "path": "scripts/continuum-training-studio.test.mjs",
+      "sha256": "0374f7a390eaa77cda8dbb9520ee131d27598417fd94e38be4829c22140fe689"
+    },
+    {
+      "path": "scripts/continuum-typed-coding-bridge.test.mjs",
+      "sha256": "83fe5170dd2733d5bddbcc253748e7152834b4486ec8e2255772f2e1aa6afaba"
+    },
+    {
+      "path": "scripts/continuum-ui-routing.test.mjs",
+      "sha256": "30217fcc4268cdc1d9ebdfd687bd572340ba854ea9e7406e8091891bc6288dd0"
+    },
+    {
+      "path": "scripts/continuum-v19-pin-audit.test.mjs",
+      "sha256": "9b01b44150226bb12e4435f0e0e3fc3a81468160ed5379546cb907b1b75581a3"
+    },
+    {
+      "path": "scripts/continuum-v22-owner-release.test.mjs",
+      "sha256": "ea5e676086492c95d6c1ff659e44f9ec3c66eb10f219a7d6759dfd887b0388f8"
+    },
+    {
+      "path": "scripts/continuum-v24-owner-release.test.mjs",
+      "sha256": "11824841ae33c46c1f7c110cd01a64209e07203139e6bd50b3b484993b94a69f"
+    },
+    {
+      "path": "scripts/continuum-v25-owner-release.test.mjs",
+      "sha256": "5d43d99f0e68f486b54d5f0ceeb4cc16cc38cccfba79488ba76db15af637fda1"
+    },
+    {
+      "path": "scripts/render-mentor-preview-dispatch.test.mjs",
+      "sha256": "9e06221f752daa7acea46bd328d2a7e5365b8ef68d00a3355b845809af99e595"
+    }
+  ],
+  "exitCode": 1,
+  "elapsedSeconds": 36.94656443595886,
+  "tapSha256": "2184e6d69cc0ae662eccad265a903720735115dfa1a6dbd5f3fc3ca6b1045aa6",
+  "sourceUnchanged": true
+}

@@ -1,0 +1,280 @@
+TAP version 13
+# Subtest: checks nonproductive clean branch and bounded verified inventory
+ok 1 - checks nonproductive clean branch and bounded verified inventory
+  ---
+  duration_ms: 2.562135
+  type: 'test'
+  ...
+# Subtest: refuses main, release, dirty and invalid inventories
+ok 2 - refuses main, release, dirty and invalid inventories
+  ---
+  duration_ms: 1.164958
+  type: 'test'
+  ...
+# Subtest: real node TAP success does not imply a patch was approved
+ok 3 - real node TAP success does not imply a patch was approved
+  ---
+  duration_ms: 0.737163
+  type: 'test'
+  ...
+# Subtest: skipped and TODO mean incomplete quality gate
+ok 4 - skipped and TODO mean incomplete quality gate
+  ---
+  duration_ms: 1.89894
+  type: 'test'
+  ...
+# Subtest: missing summary, timeout, failed case or invalid totals are never green
+ok 5 - missing summary, timeout, failed case or invalid totals are never green
+  ---
+  duration_ms: 0.390632
+  type: 'test'
+  ...
+# Subtest: native worker refuses untracked test injection and symlinked test entrypoints
+ok 6 - native worker refuses untracked test injection and symlinked test entrypoints
+  ---
+  duration_ms: 1.196387
+  type: 'test'
+  ...
+# Subtest: actual worker captures native TAP counters and keeps immutable failed then successful receipts
+ok 7 - actual worker captures native TAP counters and keeps immutable failed then successful receipts
+  ---
+  duration_ms: 1305.937711
+  type: 'test'
+  ...
+# Subtest: duplicate top-level native summaries are incomplete evidence
+ok 8 - duplicate top-level native summaries are incomplete evidence
+  ---
+  duration_ms: 0.929509
+  type: 'test'
+  ...
+# Subtest: SIGTERM during a real test stops children and permits a fresh process restart
+ok 9 - SIGTERM during a real test stops children and permits a fresh process restart
+  ---
+  duration_ms: 1906.98235
+  type: 'test'
+  ...
+# Subtest: real timeout retains failure evidence and subsequent healthy cycle succeeds
+ok 10 - real timeout retains failure evidence and subsequent healthy cycle succeeds
+  ---
+  duration_ms: 1892.438351
+  type: 'test'
+  ...
+# Subtest: idle scheduler retains the lease and STOP cancels its wait
+ok 11 - idle scheduler retains the lease and STOP cancels its wait
+  ---
+  duration_ms: 561.782467
+  type: 'test'
+  ...
+# Subtest: SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+ok 12 - SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+  ---
+  duration_ms: 587.713316
+  type: 'test'
+  ...
+# Subtest: excess test output is stopped and raw evidence storage stays bounded
+ok 13 - excess test output is stopped and raw evidence storage stays bounded
+  ---
+  duration_ms: 347.154191
+  type: 'test'
+  ...
+# Subtest: a redirected cycles directory never writes test output into source
+ok 14 - a redirected cycles directory never writes test output into source
+  ---
+  duration_ms: 191.711945
+  type: 'test'
+  ...
+# Subtest: two short experiments preserve exact original model bytes, rounds and history
+ok 15 - two short experiments preserve exact original model bytes, rounds and history
+  ---
+  duration_ms: 119.912933
+  type: 'test'
+  ...
+# Subtest: malformed budgets fail before any research training
+ok 16 - malformed budgets fail before any research training
+  ---
+  duration_ms: 1.733242
+  type: 'test'
+  ...
+# Subtest: cancellation leaves baseline unchanged
+ok 17 - cancellation leaves baseline unchanged
+  ---
+  duration_ms: 12.966574
+  type: 'test'
+  ...
+# Subtest: repeated semantic regression is reported, never reclassified as success
+ok 18 - repeated semantic regression is reported, never reclassified as success
+  ---
+  duration_ms: 3.110981
+  type: 'test'
+  ...
+# Subtest: existing trainRound defaults are identical to explicit CONTROL policy
+ok 19 - existing trainRound defaults are identical to explicit CONTROL policy
+  ---
+  duration_ms: 34.185908
+  type: 'test'
+  ...
+# Subtest: research-disabled public replay produces exactly zero public gradients
+ok 20 - research-disabled public replay produces exactly zero public gradients
+  ---
+  duration_ms: 17.066671
+  type: 'test'
+  ...
+# Subtest: default research sweep is strictly bounded to nine non-promotable trials
+ok 21 - default research sweep is strictly bounded to nine non-promotable trials
+  ---
+  duration_ms: 74.605896
+  type: 'test'
+  ...
+# Subtest: oversized ablation grid rejected before training
+ok 22 - oversized ablation grid rejected before training
+  ---
+  duration_ms: 2.928782
+  type: 'test'
+  ...
+# Subtest: legacy model hash and every baseline byte survive research measurements
+ok 23 - legacy model hash and every baseline byte survive research measurements
+  ---
+  duration_ms: 30.81403
+  type: 'test'
+  ...
+# Subtest: actual Android DEMO arm only starts temporary sandbox and never persists
+ok 24 - actual Android DEMO arm only starts temporary sandbox and never persists
+  ---
+  duration_ms: 1.176886
+  type: 'test'
+  ...
+# Subtest: real isolated helper never accepts restored production state or persists weights
+ok 25 - real isolated helper never accepts restored production state or persists weights
+  ---
+  duration_ms: 0.289165
+  type: 'test'
+  ...
+# Subtest: native regression sources protect trained, empty and interrupted model states
+ok 26 - native regression sources protect trained, empty and interrupted model states
+  ---
+  duration_ms: 0.206584
+  type: 'test'
+  ...
+# Subtest: full synthetic RED GREEN fresh and counterexample PASS remain review-only
+ok 27 - full synthetic RED GREEN fresh and counterexample PASS remain review-only
+  ---
+  duration_ms: 1.999726
+  type: 'test'
+  ...
+# Subtest: default absent verifier abstains even if CCC1 is complete
+ok 28 - default absent verifier abstains even if CCC1 is complete
+  ---
+  duration_ms: 1.280467
+  type: 'test'
+  ...
+# Subtest: independent counterexample defeats apparently green code
+ok 29 - independent counterexample defeats apparently green code
+  ---
+  duration_ms: 0.499431
+  type: 'test'
+  ...
+# Subtest: malformed and replayed verifier evidence fails closed
+ok 30 - malformed and replayed verifier evidence fails closed
+  ---
+  duration_ms: 0.689526
+  type: 'test'
+  ...
+# Subtest: missing, substituted and skipped tests cannot turn into CCC1 success
+ok 31 - missing, substituted and skipped tests cannot turn into CCC1 success
+  ---
+  duration_ms: 0.548252
+  type: 'test'
+  ...
+# Subtest: review is not an owner confirmation, even with a matching feedback fingerprint
+ok 32 - review is not an owner confirmation, even with a matching feedback fingerprint
+  ---
+  duration_ms: 0.207061
+  type: 'test'
+  ...
+# Subtest: empty or mutated bound identities fail closed
+ok 33 - empty or mutated bound identities fail closed
+  ---
+  duration_ms: 0.504522
+  type: 'test'
+  ...
+# Subtest: no caller input is ever mutated
+ok 34 - no caller input is ever mutated
+  ---
+  duration_ms: 0.531651
+  type: 'test'
+  ...
+# Subtest: falsification scorecard: naive status-only check misses 12 of 13 corruptions
+ok 35 - falsification scorecard: naive status-only check misses 12 of 13 corruptions
+  ---
+  duration_ms: 0.798326
+  type: 'test'
+  ...
+# Subtest: metamorphic positive controls preserve the same tests across order changes and additions
+ok 36 - metamorphic positive controls preserve the same tests across order changes and additions
+  ---
+  duration_ms: 1.675166
+  type: 'test'
+  ...
+# Subtest: bad task/candidate cannot request OS execution or reach trusted verifier
+ok 37 - bad task/candidate cannot request OS execution or reach trusted verifier
+  ---
+  duration_ms: 6.306925
+  type: 'test'
+  ...
+# Subtest: typed research path never substitutes an unbranded host executor
+ok 38 - typed research path never substitutes an unbranded host executor
+  ---
+  duration_ms: 1.639819
+  type: 'test'
+  ...
+# Subtest: missing executor fails closed, including when feedback fingerprint is supplied
+ok 39 - missing executor fails closed, including when feedback fingerprint is supplied
+  ---
+  duration_ms: 0.921947
+  type: 'test'
+  ...
+# Subtest: head-orthogonal semantic step removes first-order intent-direction interference
+ok 40 - head-orthogonal semantic step removes first-order intent-direction interference
+  ---
+  duration_ms: 14.424294
+  type: 'test'
+  ...
+# Subtest: projection rejects invalid rate without altering a model checkpoint
+ok 41 - projection rejects invalid rate without altering a model checkpoint
+  ---
+  duration_ms: 4.267918
+  type: 'test'
+  ...
+# Subtest: native contrastive trials preserve original state and deterministic schedule snapshots
+ok 42 - native contrastive trials preserve original state and deterministic schedule snapshots
+  ---
+  duration_ms: 69.368965
+  type: 'test'
+  ...
+# Subtest: interruption produces no promotable checkpoint and no negative learning signal
+ok 43 - interruption produces no promotable checkpoint and no negative learning signal
+  ---
+  duration_ms: 12.766128
+  type: 'test'
+  ...
+# Subtest: new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+ok 44 - new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+  ---
+  duration_ms: 4.34878
+  type: 'test'
+  ...
+# Subtest: a changing semantic sidecar cannot alter the frozen original intent predictions
+ok 45 - a changing semantic sidecar cannot alter the frozen original intent predictions
+  ---
+  duration_ms: 3.629361
+  type: 'test'
+  ...
+1..45
+# tests 45
+# suites 0
+# pass 45
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7986.674724

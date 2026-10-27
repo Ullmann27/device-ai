@@ -1,0 +1,115 @@
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:10:17: error: unresolved reference 'BoundedShellProcess'.
+        val r = BoundedShellProcess.execute(ShellExecutionRequest("printf 'SUCCEEDED'; exit 37", 1000))
+                ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:10:45: error: unresolved reference 'ShellExecutionRequest'.
+        val r = BoundedShellProcess.execute(ShellExecutionRequest("printf 'SUCCEEDED'; exit 37", 1000))
+                                            ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:11:22: error: unresolved reference 'ShellOutcome'.
+        assertEquals(ShellOutcome.COMPLETED, r.outcome)
+                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:18:23: error: unresolved reference 'ShellExecutionRequest'.
+        val request = ShellExecutionRequest("printf 'Grüße vom Gerät'", 1000)
+                      ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:19:31: error: unresolved reference 'ShellExecutionWire'.
+        assertEquals(request, ShellExecutionWire.decodeRequest(ShellExecutionWire.encodeRequest(request)))
+                              ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:19:64: error: unresolved reference 'ShellExecutionWire'.
+        assertEquals(request, ShellExecutionWire.decodeRequest(ShellExecutionWire.encodeRequest(request)))
+                                                               ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:20:22: error: unresolved reference 'BoundedShellProcess'.
+        val result = BoundedShellProcess.execute(request)
+                     ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:22:30: error: unresolved reference 'ShellExecutionWire'.
+        assertEquals(result, ShellExecutionWire.decodeResult(ShellExecutionWire.encodeResult(result)))
+                             ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:22:62: error: unresolved reference 'ShellExecutionWire'.
+        assertEquals(result, ShellExecutionWire.decodeResult(ShellExecutionWire.encodeResult(result)))
+                                                             ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:29:21: error: unresolved reference 'BoundedShellProcess'.
+            val r = BoundedShellProcess.execute(ShellExecutionRequest(command, 100))
+                    ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:29:49: error: unresolved reference 'ShellExecutionRequest'.
+            val r = BoundedShellProcess.execute(ShellExecutionRequest(command, 100))
+                                                ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:31:35: error: unresolved reference 'ShellOutcome'.
+            assertEquals(command, ShellOutcome.TIMED_OUT, r.outcome)
+                                  ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:39:22: error: unresolved reference 'BoundedShellProcess'.
+        val result = BoundedShellProcess.execute(ShellExecutionRequest("while :; do printf '012345678901234567890123456789'; done", 2000))
+                     ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:39:50: error: unresolved reference 'ShellExecutionRequest'.
+        val result = BoundedShellProcess.execute(ShellExecutionRequest("while :; do printf '012345678901234567890123456789'; done", 2000))
+                                                 ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:40:22: error: unresolved reference 'ShellOutcome'.
+        assertEquals(ShellOutcome.OUTPUT_LIMIT, result.outcome)
+                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:41:48: error: unresolved reference 'size'.
+        assertTrue(result.output.toByteArray().size <= ShellExecutionWire.MAX_OUTPUT_BYTES)
+                                               ^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:41:56: error: unresolved reference 'ShellExecutionWire'.
+        assertTrue(result.output.toByteArray().size <= ShellExecutionWire.MAX_OUTPUT_BYTES)
+                                                       ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:9: error: cannot infer type for this parameter. Specify it explicitly.
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+        ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:22: error: unresolved reference 'ToolBackendFailure'.
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+                     ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:22: error: argument type mismatch: actual type is 'Class<uninferred T (of val <T> KClass<T>.java)>', but 'Class<uninferred T! (of fun <T : Throwable!> assertThrows)>!' was expected.
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:48: error: cannot infer type for this parameter. Specify it explicitly.
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+                                               ^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:48: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+val <T> KClass<T>.java: Class<T>
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+                                               ^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:43:54: error: argument type mismatch: actual type is 'Function0<Unit>', but 'Function0<Unit>!' was expected.
+        assertThrows(ToolBackendFailure::class.java) { result.checkedOutput() }
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:49:66: error: unresolved reference 'ShellExecutionWire'.
+            assertThrows(IllegalArgumentException::class.java) { ShellExecutionWire.decodeResult(raw) }
+                                                                 ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:51:18: error: unresolved reference 'ShellExecutionWire'.
+        val ok = ShellExecutionWire.encodeResult(ShellExecutionResult(ShellOutcome.COMPLETED, 0, "ok"))
+                 ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:51:50: error: unresolved reference 'ShellExecutionResult'.
+        val ok = ShellExecutionWire.encodeResult(ShellExecutionResult(ShellOutcome.COMPLETED, 0, "ok"))
+                                                 ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:51:71: error: unresolved reference 'ShellOutcome'.
+        val ok = ShellExecutionWire.encodeResult(ShellExecutionResult(ShellOutcome.COMPLETED, 0, "ok"))
+                                                                      ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:52:62: error: unresolved reference 'ShellExecutionWire'.
+        assertThrows(IllegalArgumentException::class.java) { ShellExecutionWire.decodeResult(ok + "\nforged") }
+                                                             ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:53:62: error: unresolved reference 'ShellExecutionRequest'.
+        assertThrows(IllegalArgumentException::class.java) { ShellExecutionRequest("x\u0000y", 100) }
+                                                             ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:54:62: error: unresolved reference 'ShellExecutionRequest'.
+        assertThrows(IllegalArgumentException::class.java) { ShellExecutionRequest("id", Long.MAX_VALUE) }
+                                                             ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:58:29: error: unresolved reference 'BoundedShellProcess'.
+        assertEquals("eof", BoundedShellProcess.execute(ShellExecutionRequest("cat >/dev/null; printf eof", 1000)).checkedOutput())
+                            ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:58:57: error: unresolved reference 'ShellExecutionRequest'.
+        assertEquals("eof", BoundedShellProcess.execute(ShellExecutionRequest("cat >/dev/null; printf eof", 1000)).checkedOutput())
+                                                        ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:60:22: error: unresolved reference 'ShellOutcome'.
+        var outcome: ShellOutcome? = null
+                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:63:23: error: unresolved reference 'BoundedShellProcess'.
+            outcome = BoundedShellProcess.execute(ShellExecutionRequest("exec sleep 2", 1000)).outcome
+                      ^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:63:51: error: unresolved reference 'ShellExecutionRequest'.
+            outcome = BoundedShellProcess.execute(ShellExecutionRequest("exec sleep 2", 1000)).outcome
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:69:22: error: unresolved reference 'ShellOutcome'.
+        assertEquals(ShellOutcome.CANCELLED, outcome)
+                     ^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:73:22: error: unresolved reference 'ShellExecutionResult'.
+        val result = ShellExecutionResult(ShellOutcome.TIMED_OUT, null, "")
+                     ^^^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/ShellExecutionTest.kt:73:43: error: unresolved reference 'ShellOutcome'.
+        val result = ShellExecutionResult(ShellOutcome.TIMED_OUT, null, "")
+                                          ^^^^^^^^^^^^

@@ -1,0 +1,96 @@
+TAP version 13
+# Subtest: independent examples and metamorphic relations reject constant pseudo-repairs
+not ok 1 - independent examples and metamorphic relations reject constant pseudo-repairs
+  ---
+  duration_ms: 275.904951
+  type: 'test'
+  location: '/workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'ABSTAIN' !== 'FAIL'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'FAIL'
+  actual: 'ABSTAIN'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy-integration/experimental/omega/repair/numeric-verifier.test.mjs:15:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: a bounded exact distance passes all four frozen checks reproducibly
+ok 2 - a bounded exact distance passes all four frozen checks reproducibly
+  ---
+  duration_ms: 258.230269
+  type: 'test'
+  ...
+# Subtest: metamorphic failure supplies the distinguishing pair
+ok 3 - metamorphic failure supplies the distinguishing pair
+  ---
+  duration_ms: 141.828478
+  type: 'test'
+  ...
+# Subtest: non-finite values, foreign exports and capability-bearing code never pass
+ok 4 - non-finite values, foreign exports and capability-bearing code never pass
+  ---
+  duration_ms: 487.801957
+  type: 'test'
+  ...
+# Subtest: suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+ok 5 - suite mutation, malformed cases, unbounded inputs and empty verification are rejected
+  ---
+  duration_ms: 114.840041
+  type: 'test'
+  ...
+# Subtest: controlled replay measures actual accepted patch in separate scoring worktree
+not ok 6 - controlled replay measures actual accepted patch in separate scoring worktree
+  ---
+  duration_ms: 5932.401747
+  type: 'test'
+  location: '/workspace/device-ai-autonomy-integration/experimental/omega/benchmarks/controlled-repair.test.mjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy-integration/experimental/omega/benchmarks/controlled-repair.test.mjs:9:9)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: benchmark repetition count is bounded
+ok 7 - benchmark repetition count is bounded
+  ---
+  duration_ms: 0.40149
+  type: 'test'
+  ...
+# Subtest: model patches cannot rewrite OMEGA evaluators or benchmark definitions
+ok 8 - model patches cannot rewrite OMEGA evaluators or benchmark definitions
+  ---
+  duration_ms: 0.269299
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 6
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7566.515908

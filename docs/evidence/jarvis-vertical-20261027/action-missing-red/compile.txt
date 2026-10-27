@@ -1,0 +1,33 @@
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:20:24: error: unresolved reference 'ReadOnlyToolPlan'.
+            val plan = ReadOnlyToolPlan(ToolProposal(checkNotNull(decision.tool), decision.arguments))
+                       ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:47:21: error: unresolved reference 'DeviceStorageProbe'.
+                    DeviceStorageProbe.read(dir).also { actualOutput = it }
+                    ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:98:28: error: unresolved reference 'ReadOnlyToolPlan'.
+                val plan = ReadOnlyToolPlan(proposal)
+                           ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:100:91: error: unresolved reference 'DeviceStorageProbe'.
+                    ToolGate(ToolPolicy(readOnlyEnabled = enabled), ToolRunner { calls++; DeviceStorageProbe.read(dir) }, receiptStore = receipts),
+                                                                                          ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:118:66: error: unresolved reference 'DeviceStorageProbe'.
+            assertThrows(IllegalArgumentException::class.java) { DeviceStorageProbe.read(File(dir, "missing")) }
+                                                                 ^^^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:119:24: error: unresolved reference 'ReadOnlyToolPlan'.
+            val plan = ReadOnlyToolPlan(ToolProposal("get_storage_info", emptyMap()))
+                       ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:138:62: error: unresolved reference 'ReadOnlyToolPlan'.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(ToolProposal("delete_file", mapOf("path" to "/sdcard/Download/x"))) }
+                                                             ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:139:62: error: unresolved reference 'ReadOnlyToolPlan'.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(ToolProposal("run_shell", mapOf("command" to "id"))) }
+                                                             ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:140:62: error: unresolved reference 'ReadOnlyToolPlan'.
+        assertThrows(IllegalArgumentException::class.java) { ReadOnlyToolPlan(ToolProposal("get_storage_info", mapOf("path" to "/private"))) }
+                                                             ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:141:20: error: unresolved reference 'ReadOnlyToolPlan'.
+        val plan = ReadOnlyToolPlan(ToolProposal("get_storage_info", emptyMap()))
+                   ^^^^^^^^^^^^^^^^
+app/src/test/java/at/heinz/deviceai/cognitive/ReadOnlyToolPlanTest.kt:144:56: error: cannot infer type for this parameter. Specify it explicitly.
+        val response = plan.generate("Prüfe Speicher", emptyList(), null,
+                                                       ^^^^^^^^^

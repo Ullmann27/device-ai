@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "project": "Ullmann27/device-ai",
-  "updated": "2026-10-26",
+  "updated": "2026-10-27",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
   "integrationPolicy": {
@@ -27,7 +27,7 @@
       "id": "EXP-01",
       "title": "Bounded night workshop",
       "status": "SOURCE_INTEGRATED",
-      "present": "Same phone Termux teamleader and recovery",
+      "present": "Same phone Termux teamleader and recovery Sol2026-10-27 PR178/179: corrected owner-local health worker with native TAP, per-checkout OS flock lease across idle scheduling, PID/start/boot crash recovery, bounded output/heap/concurrency/time/evidence, STOP/signal shutdown and11retained actual process events. Full Node-only source331PASS0SKIP; integrated graph1424PASS1release-source refusal2explicit skips. Health monitoring is read-only, not an autonomous patch publisher; Fold7/Termux service NOT_RUN. Final tested integration8cf8c05f: actual existing worker1146/1146PASS0SKIP,190trackedfiles, sourceUnchanged/leaseHeld true; full Node1427PASS1retained-owner-release refusal1configuration skip. The Docker report test later separatelyPASS and ran in the worker. See docs/research/omega/SOL-JARVIS-HANDOFF-20261027.md. Follow-up a4fee812: checked Shizuku wire/results, bounded IO, incomplete output veto; actual adapter host compilation and69JUnit. Worker1147PASS0SKIP plus scripts283PASS1retained-owner-release-freezeFAIL0SKIP; Node aggregate1430PASS1FAIL. Numeric verifier batches the same frozen checks in one bounded context;10maximum-suite repetitions under loadPASS. See docs/research/omega/SOL-REPAIR-RESULT-20261027.md. Device/APK NOT_RUN; no model promotion.",
       "entry": "scripts/continuum-teamleader-termux.sh",
       "depends": "Termux Node20/Git, battery/thermal conditions",
       "gate": "Actual repeated device cycles, resume and cancellation"
@@ -54,7 +54,7 @@
       "id": "EXP-04",
       "title": "SWB1/CRE1 shadow learning",
       "status": "RESEARCH_SHADOW",
-      "present": "Frozen weights, model provenance and holdout gates 2026-10-24 Sol PR116: existing opt-in auto-dialogue CRE1 round exercised on real SDK-compiled host classes at074fa807:32 steps, separate audit loss0.804442→0.801303; SWB1/facts unchanged. Durable cursor/link and interruption gates tested. Research-only; no general language or device-quality promotion. SolPR1532026-10-26 frozen4bf74b1b implements bounded all-ID/location-subject-relation eligibility, not changed SWB/CRE weights or research activation.91focused+16broaderNode/42Kotlinpass, independent60-case evaluationNOT_RUN_OWNER_STOP; preserved separately, not silently merged intoPR151.",
+      "present": "Frozen weights, model provenance and holdout gates 2026-10-24 Sol PR116: existing opt-in auto-dialogue CRE1 round exercised on real SDK-compiled host classes at074fa807:32 steps, separate audit loss0.804442→0.801303; SWB1/facts unchanged. Durable cursor/link and interruption gates tested. Research-only; no general language or device-quality promotion. SolPR1532026-10-26 frozen4bf74b1b implements bounded all-ID/location-subject-relation eligibility, not changed SWB/CRE weights or research activation.91focused+16broaderNode/42Kotlinpass, independent60-case evaluationNOT_RUN_OWNER_STOP; preserved separately, not silently merged intoPR151. Sol2026-10-27: immutable5e577c21checkpoint12rounds2accepted13000updates;33native trial runs with new separated synthetic data and frozen final selection. Shared-gradient variants regress; frozen original intent plus SWB2 semantic sidecar validation15/36to19/36, final26/26/27of60versus26baseline, no stable gain, REJECTED. Four order-invariant negative role collisions measured. No weight/format promotion; native Android codecs round-trip but original SWB1 rejects SWB2. See SOL-AUTONOMY-RESULT-20261027.md in PR178.",
       "entry": "docs/CONTINUUM-RESEARCH-LEARNING-GATE.md",
       "depends": "Separate train/audit and signed weights",
       "gate": "Out-of-distribution negative/number/negation battery"
@@ -117,7 +117,7 @@
       "id": "EXP-11",
       "title": "Specialist orchestrator",
       "status": "RESEARCH_SHADOW",
-      "present": "Single backlog, typed specialists 2026-10-24: typed task adapter demonstrably reaches existing CCC1, mobile job, canonical backlog, teamleader, repair and fresh-worktree verifier; no parallel agent framework. Scoped patches review-only and excluded from automatic strategy learning/replay.",
+      "present": "Single backlog, typed specialists 2026-10-24: typed task adapter demonstrably reaches existing CCC1, mobile job, canonical backlog, teamleader, repair and fresh-worktree verifier; no parallel agent framework. Scoped patches review-only and excluded from automatic strategy learning/replay. Sol2026-10-27: normal main-chat bootstrap now reuses BoundedAgentOrchestrator, confirmed retrieval, ToolGate, actual Java File storage probe, receipt-bound episode and existing signed checkpoint.59native cognitiveJUnit/17FabricJUnit/9NodePASS; Android main-chat SOURCE_INTEGRATED, device/SDK/APKNOT_RUN. Denied/replayed calls cannot produce positive episodes/reputation; no model promotion. See docs/research/omega/SOL-JARVIS-HANDOFF-20261027.md. Follow-up a4fee812: checked Shizuku wire/results, bounded IO, incomplete output veto; actual adapter host compilation and69JUnit. Worker1147PASS0SKIP plus scripts283PASS1retained-owner-release-freezeFAIL0SKIP; Node aggregate1430PASS1FAIL. Numeric verifier batches the same frozen checks in one bounded context;10maximum-suite repetitions under loadPASS. See docs/research/omega/SOL-REPAIR-RESULT-20261027.md. Device/APK NOT_RUN; no model promotion.",
       "entry": "docs/ASTRA-BAUMEISTER-ATLAS.md",
       "depends": "One shared policy/review gate",
       "gate": "Multiple specialist proposals, independent adjudication"

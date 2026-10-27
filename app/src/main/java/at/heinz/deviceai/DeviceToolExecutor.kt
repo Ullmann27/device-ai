@@ -15,25 +15,30 @@ class DeviceToolExecutor(
         "/sdcard/Movies"
     )
 
-    fun execute(call: ToolCallRequest, callback: (String) -> Unit) {
+    fun execute(call: ToolCallRequest, callback: (Result<String>) -> Unit) {
         ToolRegistry.validate(call)?.let {
-            callback("TOOL_VALIDATION_ERROR: $it")
+            callback(Result.failure(IllegalArgumentException(it)))
+            return
+        }
+        // App-volume statistics need neither Shizuku nor access to personal files.
+        // Exceptions propagate to the existing ToolGate as FAILED, never as a
+        // successful string containing an error. The runner consumes Result explicitly.
+        if (call.name == "get_storage_info") {
+            callback(runCatching { DeviceStorageProbe.read(context.filesDir) })
             return
         }
         if (!bridge.isReady()) {
-            callback("SHIZUKU_NOT_READY: Shizuku ist nicht verbunden.")
+            callback(Result.failure(IllegalStateException("Shizuku ist nicht verbunden.")))
             return
         }
 
         val command = runCatching { buildCommand(call) }
             .getOrElse {
-                callback("TOOL_ARGUMENT_ERROR: ${it.message ?: it.javaClass.simpleName}")
+                callback(Result.failure(it))
                 return
             }
 
-        bridge.execute(command) { result ->
-            callback(limitOutput(result))
-        }
+        bridge.executeChecked(command, callback)
     }
 
     private fun buildCommand(call: ToolCallRequest): String =
@@ -48,10 +53,6 @@ class DeviceToolExecutor(
                     "echo ABI: $(getprop ro.product.cpu.abi)"
 
             "get_battery_info" -> "dumpsys battery | head -60"
-
-            "get_storage_info" ->
-                "df -h /data /sdcard 2>/dev/null; echo; " +
-                    "du -sh /sdcard/Download /sdcard/Documents /sdcard/DCIM /sdcard/Pictures 2>/dev/null"
 
             "list_installed_apps" -> {
                 val userOnly = boolArg(call, "userOnly", true)
@@ -274,6 +275,4 @@ class DeviceToolExecutor(
     private fun shellQuote(value: String): String =
         "'" + value.replace("'", "'\\''") + "'"
 
-    private fun limitOutput(value: String): String =
-        if (value.length <= 60_000) value else value.take(60_000) + "\n… Ausgabe gekürzt …"
 }
