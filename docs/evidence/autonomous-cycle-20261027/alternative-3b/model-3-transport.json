@@ -1,0 +1,15 @@
+{
+  "binary": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "args": [
+    "--import",
+    "/workspace/device-ai/scripts/continuum-autonomous-model-capture.mjs",
+    "/workspace/device-ai/scripts/continuum-local-brain-cli.mjs",
+    "coding"
+  ],
+  "elapsedBoundMs": 300500,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "inputSha256": "e5d66e96d0694e4e0ecf37e050594b3b84dd6cd1c84fb60c945db91572d48c3b",
+  "outputSha256": "31d5d9918c86a5dde755f206ca0edfdd751e63818eb862041ffc41e0d20d917d"
+}

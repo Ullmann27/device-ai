@@ -1,0 +1,5 @@
+{
+  "status": "INTERRUPTED_BY_OWNER_PRIORITY_CHANGE",
+  "at": "2026-10-27T19:14:33.776482+00:00",
+  "reason": "New owner instruction: stop large experiments; prioritize local main-app APK builder. Existing evidence retained."
+}

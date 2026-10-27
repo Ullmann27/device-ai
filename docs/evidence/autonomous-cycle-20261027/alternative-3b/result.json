@@ -1,0 +1,80 @@
+{
+  "implementationCommit": "aafc382e8ebc58810aa384bd1eb93f9c8474b900",
+  "elapsedMs": 662248,
+  "calls": 3,
+  "result": {
+    "schema": "continuum-coding-task-result",
+    "version": 1,
+    "id": "mentor-fenced-code",
+    "ccc1TaskId": "t-70cada831556c9b1",
+    "taskFingerprint": "4ecf832f1b23d8fcb3d02fb2443188ff2b9b3bec7533aaec1805c0b19142ca11",
+    "sourceCommit": "6a04c7b8153111f9d1dbf5e5ce73f8d8c30ab472",
+    "chain": "node",
+    "status": "ABSTAINED",
+    "receiptJobs": [
+      "3ecebbfb-02e1-405f-86a9-086d1b859802"
+    ],
+    "receipts": [
+      {
+        "schema": "continuum-mobile-coding-receipt",
+        "version": 1,
+        "job": "3ecebbfb-02e1-405f-86a9-086d1b859802",
+        "operation": "code-repair",
+        "taskId": "mob-b2bc99f3dbb5b1ce",
+        "commit": "6a04c7b8153111f9d1dbf5e5ce73f8d8c30ab472",
+        "toolchain": {
+          "node": "v24.19.0",
+          "platform": "linux",
+          "arch": "x64",
+          "git": "git version 2.52.0"
+        },
+        "order": {
+          "chain": "node"
+        },
+        "status": "FAILED_REPAIR",
+        "teamleaderOutcome": "NO_VERIFIED_REPAIR",
+        "patch": null,
+        "evidence": null,
+        "commands": [
+          {
+            "phase": "baseline",
+            "exitCode": 1,
+            "passed": false,
+            "executed": 14,
+            "failed": 9,
+            "timedOut": false,
+            "command": "node --test --test-reporter=junit .github/continuum/*.test.mjs (fixed profile node-continuum, isolated git worktree)"
+          }
+        ],
+        "failure": {
+          "code": "NO_VERIFIED_REPAIR",
+          "message": "Repair ended NO_VERIFIED_REPAIR"
+        },
+        "backlog": {
+          "state": "READY",
+          "attempts": 1,
+          "maxAttempts": 3,
+          "error": {
+            "code": "NO_VERIFIED_REPAIR",
+            "message": "NO_VERIFIED_REPAIR"
+          }
+        },
+        "approvedForMerge": false,
+        "apk": null,
+        "installed": false,
+        "deviceVerified": false,
+        "createdAt": "2026-10-27T14:29:47.499Z",
+        "repair": {
+          "outcome": "NO_VERIFIED_REPAIR",
+          "strategy": null,
+          "files": [],
+          "diagnostics": 9,
+          "attempts": 1
+        }
+      }
+    ],
+    "approvedForMerge": false,
+    "deviceVerified": false,
+    "neuralTraining": false
+  }
+}

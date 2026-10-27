@@ -26,6 +26,9 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         const val TYPED_EXPECTED_ID = "typed_coding_expected_id_v1"
         const val TYPED_EXPECTED_SHA = "typed_coding_expected_sha_v1"
         const val TYPED_EXPECTED_COMMIT = "typed_coding_expected_commit_v1"
+        const val TYPED_STATUS_ID = "typed_coding_status_id_v1"
+        const val TYPED_STATUS_SHA = "typed_coding_status_sha_v1"
+        const val TYPED_STATUS_COMMIT = "typed_coding_status_commit_v1"
         const val TYPED_PREPARED_ID = "typed_coding_prepared_id_v1"
         const val TYPED_PREPARED_SHA = "typed_coding_prepared_sha_v1"
         const val TYPED_PREPARED_COMMIT = "typed_coding_prepared_commit_v1"
@@ -48,7 +51,8 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
 
         val ccc1 = ContinuumCcc1Bridge.Operation.ofJobOperation(operationName)
         val abortSlot = ccc1 == ContinuumCcc1Bridge.Operation.ABORT
-        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name
+        val typedStatusSlot = operationName == ContinuumTypedCodingBridge.Operation.STATUS.callback
+        val projectStatusSlot = operationName == ContinuumMobileBuildPlan.Operation.PROJECT_STATUS.name || typedStatusSlot
         if (abortSlot) {
             if (id != prefs.getString(ABORT_JOB_ID, null)) return
         } else if (projectStatusSlot) {
@@ -116,15 +120,25 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
         }
 
         if (typed != null) {
-            val expectedId=prefs.getString(TYPED_EXPECTED_ID,null)
-            val expectedHash=prefs.getString(TYPED_EXPECTED_SHA,null)
-            val expectedCommit=prefs.getString(TYPED_EXPECTED_COMMIT,null)
+            val expectedId=prefs.getString(if(typedStatusSlot)TYPED_STATUS_ID else TYPED_EXPECTED_ID,null)
+            val expectedHash=prefs.getString(if(typedStatusSlot)TYPED_STATUS_SHA else TYPED_EXPECTED_SHA,null)
+            val expectedCommit=prefs.getString(if(typedStatusSlot)TYPED_STATUS_COMMIT else TYPED_EXPECTED_COMMIT,null)
             val result=if(expectedId!=null && expectedHash!=null && expectedCommit!=null)
                 ContinuumTypedCodingBridge.evaluate(typed,expectedId,expectedHash,
                     exitCode,errorCode,if(truncated)null else stdout,expectedCommit)
                 else null
             val message=result?.message ?:
                 "Coding-Auftragsbindung fehlte. Keine Modell- oder Patch-Freigabe bestätigt."
+            if(typedStatusSlot) {
+                // This read-only callback must never consume the running job's
+                // identity or its owner authorization, including after rotation.
+                val current=expectedId==prefs.getString(TYPED_PREPARED_ID,null)&&
+                    expectedHash==prefs.getString(TYPED_PREPARED_SHA,null)&&expectedCommit==prefs.getString(TYPED_PREPARED_COMMIT,null)
+                prefs.edit().remove(STATUS_JOB_ID).remove(STATUS_JOB_START)
+                    .remove(TYPED_STATUS_ID).remove(TYPED_STATUS_SHA).remove(TYPED_STATUS_COMMIT)
+                    .putString(STATUS_MESSAGE,if(current)message else "Statusabfrage gehört zu einem früheren Auftrag.").commit()
+                return
+            }
             val editor=prefs.edit().remove(JOB_ID).remove(JOB_OPERATION)
                 .remove(JOB_PROJECT).remove(JOB_START).remove(LAST_SHA)
                 .remove(TYPED_EXPECTED_ID).remove(TYPED_EXPECTED_SHA).remove(TYPED_EXPECTED_COMMIT)

@@ -20,7 +20,8 @@ internal object ContinuumTypedCodingBridge {
     private val limitFields = setOf("maxModelCalls","maxContextChars")
     enum class Operation(val wire:String,val callback:String) {
         PREPARE("prepare","TYPED_CODING_PREPARE"),
-        RUN("run","TYPED_CODING_RUN");
+        RUN("run","TYPED_CODING_RUN"),
+        STATUS("status","TYPED_CODING_STATUS");
         companion object {
             fun ofCallback(name:String):Operation? = entries.firstOrNull { it.callback==name }
         }
@@ -104,6 +105,21 @@ internal object ContinuumTypedCodingBridge {
         return ContinuumMobileBuildPlan.Command(ContinuumMobileBuildPlan.NODE_EXECUTABLE,
             listOf(SCRIPT,"run",id,hash),ContinuumMobileBuildPlan.PROJECT_DIR)
     }
+    fun commandStatus(id:String,hash:String):ContinuumMobileBuildPlan.Command {
+        require(ID.matches(id)&&SHA.matches(hash))
+        return ContinuumMobileBuildPlan.Command(ContinuumMobileBuildPlan.NODE_EXECUTABLE,
+            listOf(SCRIPT,"status",id,hash),ContinuumMobileBuildPlan.PROJECT_DIR)
+    }
+    private val phases=mapOf(
+        "TASK_ACCEPTED" to "Auftrag angenommen", "CHECKING_BASELINE" to "Ausgangsstand wird geprüft",
+        "BASELINE_FAILED" to "Ursprünglicher Fehler bestätigt", "BASELINE_PASSED" to "Kein Ausgangsfehler gefunden",
+        "MODEL_WORKING" to "Modell arbeitet", "PLAN_CREATED" to "Plan erstellt",
+        "PATCH_PROPOSED" to "Patch vorgeschlagen", "PROPOSAL_REJECTED" to "Vorschlag abgewiesen",
+        "CHECKING_PATCH" to "Prüfung läuft", "CHECK_FAILED" to "Prüfung fehlgeschlagen",
+        "CORRECTING" to "Korrekturversuch", "PATCH_CHECKS_PASSED" to "Patch-Prüfungen bestanden",
+        "CHECKING_INDEPENDENT" to "Unabhängiger Frischlauf", "INDEPENDENT_VERIFIED" to "Unabhängig verifiziert",
+        "INDEPENDENT_FAILED" to "Unabhängige Prüfung fehlgeschlagen", "BLOCKED" to "Unterbrochen oder blockiert"
+    )
     /** Callback never trusts model text or arbitrary Termux stdout. */
     fun evaluate(operation:Operation,id:String,hash:String,exitCode:Int?,termuxError:Int?,stdout:String?,expectedSourceCommit:String):Result {
         fun invalid()=Result(operation,id,hash,"INVALID","Coding-Rückmeldung ungültig. Kein Erfolg bestätigt.")
@@ -123,6 +139,31 @@ internal object ContinuumTypedCodingBridge {
         if(exitCode!=0||o["taskSha256"]!=hash)return invalid()
         val source=(o["sourceCommit"] as? String)?.takeIf { COMMIT.matches(it) }?:return invalid()
         if(!COMMIT.matches(expectedSourceCommit)||source!=expectedSourceCommit)return invalid()
+        if(operation==Operation.STATUS&&status=="PROGRESS_REPORTED") {
+            val phase=o["phase"] as? String ?: return invalid()
+            val events=o["progress"] as? List<*> ?: return invalid()
+            val ready=o["reviewReady"] as? Boolean ?: return invalid()
+            val patch=(o["patchSha256"] as? String)?.takeIf { SHA.matches(it) }
+            if(o["observationOnly"]!=true||phase !in phases||events.size>48||
+                (ready&&(patch==null||phase!="INDEPENDENT_VERIFIED"))||(!ready&&o["patchSha256"]!=null))return invalid()
+            val observed=mutableListOf<String>()
+            for(event in events) {
+                val e=event as? Map<*,*> ?: return invalid()
+                val p=e["phase"] as? String ?: return invalid()
+                val at=e["at"] as? String ?: return invalid()
+                val attempt=e["attempt"] as? Long ?: return invalid()
+                if(e.keys!=setOf("phase","at","attempt")||p !in phases||attempt !in 0L..3L||
+                    !Regex("\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d{3}Z").matches(at))return invalid()
+                observed.add("${at.substring(11,19)} · ${phases[p]} · Versuch $attempt")
+            }
+            if(ready&&(events.lastOrNull() as? Map<*,*>)?.get("phase")!="INDEPENDENT_VERIFIED")return invalid()
+            return Result(operation,id,hash,status,
+                "Zuletzt belegter Stand: ${phases[phase]}.\n"+
+                "Zeitpunkte sind gespeicherte Beobachtungen; kein Live-Heartbeat.\n"+
+                observed.joinToString("\n")+
+                if(ready)"\nZur Besitzerprüfung bereit. Keine automatische Übernahme." else "\nKein freigegebener Patch.",
+                patchSha256=if(ready)patch else null)
+        }
         if(operation==Operation.PREPARE && status=="PREPARED_NOT_EXECUTED") {
             if(!CCC1.matches(o["ccc1TaskId"] as? String ?: "" ) || o["replayed"] !is Boolean)return invalid()
             return Result(operation,id,hash,status,

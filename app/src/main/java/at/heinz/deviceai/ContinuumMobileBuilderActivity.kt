@@ -128,6 +128,19 @@ class ContinuumMobileBuilderActivity : Activity() {
             }
         }
         column.addView(typedRunButton,LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,px(56)))
+        column.addView(Button(this).apply {
+            text = "Coding-Arbeitsstand auslesen"
+            isAllCaps = false
+            setOnClickListener {
+                val id=preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID,null)
+                val hash=preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA,null)
+                val commit=preferences.getString(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_COMMIT,null)
+                if(id==null||hash==null||commit==null)status.text="Kein gebundener Coding-Auftrag vorhanden."
+                else dispatchApprovedCommand(ContinuumTypedCodingBridge.Operation.STATUS.callback,
+                    UUID.randomUUID().toString(),ContinuumTypedCodingBridge.commandStatus(id,hash),
+                    slot=ResultSlot.PROJECT_STATUS,typedId=id,typedHash=hash,typedCommit=commit)
+            }
+        },LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,px(56)))
         selectedProject = ContinuumOwnedProject.ofId(preferences.getString("selected_m4_project_v1", null))
             ?: ContinuumOwnedProject.NOTES
         // The M5 handoff is a one-shot selection: applied on the first creation only and stored like a manual choice.
@@ -513,9 +526,10 @@ class ContinuumMobileBuilderActivity : Activity() {
                 status.text="Coding-Auftragsbindung fehlt. Nichts gestartet."
                 return
             }
-            pendingEdit.putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID,typedId)
-                .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA,typedHash)
-                .putString(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT,typedCommit)
+            val readOnly=operationName==ContinuumTypedCodingBridge.Operation.STATUS.callback
+            pendingEdit.putString(if(readOnly)ContinuumMobileBuildResultReceiver.TYPED_STATUS_ID else ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID,typedId)
+                .putString(if(readOnly)ContinuumMobileBuildResultReceiver.TYPED_STATUS_SHA else ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA,typedHash)
+                .putString(if(readOnly)ContinuumMobileBuildResultReceiver.TYPED_STATUS_COMMIT else ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT,typedCommit)
             if(operationName==ContinuumTypedCodingBridge.Operation.PREPARE.callback)
                 pendingEdit.remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_ID)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_PREPARED_SHA)
@@ -556,7 +570,7 @@ class ContinuumMobileBuilderActivity : Activity() {
         if (id == preferences.getString(slot.idKey, null)) {
             val edit = preferences.edit().remove(slot.idKey).remove(slot.startKey)
             if (slot == ResultSlot.CCC1_ABORT) edit.remove(ContinuumMobileBuildResultReceiver.ABORT_TASK)
-            if (ContinuumTypedCodingBridge.Operation.ofCallback(preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION,null) ?: "")!=null) {
+            if (slot == ResultSlot.MAIN && ContinuumTypedCodingBridge.Operation.ofCallback(preferences.getString(ContinuumMobileBuildResultReceiver.JOB_OPERATION,null) ?: "")!=null) {
                 edit.remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_ID)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_SHA)
                     .remove(ContinuumMobileBuildResultReceiver.TYPED_EXPECTED_COMMIT)

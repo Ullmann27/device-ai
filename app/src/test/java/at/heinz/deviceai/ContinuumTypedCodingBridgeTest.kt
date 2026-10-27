@@ -26,6 +26,24 @@ class ContinuumTypedCodingBridgeTest {
             operation, id, hash, exitCode, termuxError, stdout, expectedSourceCommit = task().sourceCommit
         )
 
+    @Test fun statusIsBoundedReadOnlyAndRequiresRealPhaseData() {
+        val a=auth()
+        val command=ContinuumTypedCodingBridge.commandStatus(a.task.id,a.taskSha256)
+        assertEquals("status",command.args[1])
+        assertEquals(ContinuumMobileBuildPlan.NODE_EXECUTABLE,command.executable)
+        val extra=""","phase":"CHECK_FAILED","observationOnly":true,"reviewReady":false,"patchSha256":null,"progress":[{"phase":"CHECK_FAILED","at":"2026-10-27T14:20:00.000Z","attempt":1}]"""
+        val payload=report("status","PROGRESS_REPORTED",extra)
+        val result=evaluateBound(ContinuumTypedCodingBridge.Operation.STATUS,a.task.id,a.taskSha256,0,-1,payload)
+        assertEquals("PROGRESS_REPORTED",result.status)
+        assertTrue(result.message.contains("Prüfung fehlgeschlagen"))
+        assertTrue(result.message.contains("kein Live-Heartbeat"))
+        assertNull(result.patchSha256)
+        for(bad in listOf(payload.replace("CHECK_FAILED","FAKE_SUCCESS"),payload.replace("\"observationOnly\":true","\"observationOnly\":false"),
+            payload.replace("\"attempt\":1","\"attempt\":99"),payload.replace("\"reviewReady\":false","\"reviewReady\":true")))
+            assertEquals("INVALID",evaluateBound(ContinuumTypedCodingBridge.Operation.STATUS,a.task.id,a.taskSha256,0,-1,bad).status)
+        assertEquals("INVALID",evaluateBound(ContinuumTypedCodingBridge.Operation.RUN,a.task.id,a.taskSha256,0,-1,payload).status)
+    }
+
     @Test fun foreignGitCommitCannotBecomeApprovedCodingEvidence() {
         val id = task().id
         val hash = task().fingerprint()
