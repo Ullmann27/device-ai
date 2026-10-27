@@ -286,7 +286,7 @@ class ContinuumMemoryDialogue(private val directory:File) {
         // Only an explicit two-word name + number is considered, rather
         // than arbitrary year references such as "Jahr 2024".
         private val SPLIT_NAME_NUMBER=Regex(
-            """(?iu)\\b[\\p{L}]{3,35}\\s+([\\p{L}]{3,35})[ \\t-]+([0-9]{1,5})\\b"""
+            """(?iu)\b[\p{L}]{3,35}\s+([\p{L}]{3,35})[ \t-]+([0-9]{1,5})\b"""
         )
         private fun splitNameNumberIds(value:String):Set<String> =
             SPLIT_NAME_NUMBER.findAll(
