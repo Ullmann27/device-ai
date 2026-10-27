@@ -14,14 +14,15 @@ class ContinuumCoreMirrorTest {
         Slot.LABEL_DEVELOPING to Slot.LABEL_EVOLVING
     )
 
+    /** Original symmetry contract stays MANDATORY for phone and the old landscape geometry. */
     @Test fun allSixControlsHaveEqualAndReflectedBounds() {
         val layouts = listOf(
             ContinuumHomeLayout.phone(360f),
             ContinuumHomeLayout.phone(411f),
             ContinuumHomeLayout.phone(412f),
-            ContinuumHomeLayout.wide(656f, 690f),
-            ContinuumHomeLayout.wide(750f, 790f),
-            ContinuumHomeLayout.wide(840f, 649f)
+            ContinuumHomeLayout.wide(840f, 649f),
+            ContinuumHomeLayout.wide(832f, 708f),
+            ContinuumHomeLayout.wide(840f, 840f)
         )
         layouts.forEach { layout ->
             val hero = layout.boxes.getValue(Slot.HERO)
@@ -45,12 +46,10 @@ class ContinuumCoreMirrorTest {
     @Test fun foldOrbDoesNotObscureMirroredLabelsWhenHeroGrows() {
         val fold = ContinuumHologramRenderer.Geometry.FOLD
         val layouts = listOf(
-            ContinuumHomeLayout.wide(656f, 690f),
-            ContinuumHomeLayout.wide(750f, 790f),
             ContinuumHomeLayout.wide(840f, 649f),
+            ContinuumHomeLayout.wide(832f, 708f),
             ContinuumHomeLayout.wide(840f, 840f),
-            ContinuumHomeLayout.wide(840f, 1040f),
-            ContinuumHomeLayout.wide(920f, 1080f)
+            ContinuumHomeLayout.wide(920f, 730f)
         )
         layouts.forEach { layout ->
             val hero = layout.boxes.getValue(Slot.HERO)
@@ -65,6 +64,37 @@ class ContinuumCoreMirrorTest {
                 val right = layout.boxes.getValue(rightSlot)
                 assertTrue("$leftSlot sphere collision", left.right + clearance <= centerX - sphereRadius + .01f)
                 assertTrue("$rightSlot sphere collision", centerX + sphereRadius + clearance <= right.left + .01f)
+            }
+        }
+    }
+
+    /**
+     * New owner reference is ASYMMETRIC in portrait: left buttons are wider.
+     * A mirrored-landscape test must not accidentally reject the reference.
+     * Retain explicit dimensions, aligned y positions, gaps, and painter order.
+     */
+    @Test fun portraitFoldButtonsFollowMeasuredReferenceInsteadOfLegacyMirror() {
+        for ((w,h) in listOf(656f to 690f, 750f to 790f, 840f to 1010f)) {
+            val layout=ContinuumHomeLayout.wide(w,h)
+            val u=w/840f
+            val hero=layout.boxes.getValue(Slot.HERO)
+            val left=layout.boxes.getValue(Slot.LABEL_CONNECTED)
+            val right=layout.boxes.getValue(Slot.LABEL_THINKING)
+            assertEquals(228f*u,left.width,.002f)
+            assertEquals(163f*u,right.width,.002f)
+            assertEquals(86f*u,left.height,.002f)
+            assertEquals(left.top,right.top,.002f)
+            assertEquals(left.bottom,right.bottom,.002f)
+            assertTrue("both buttons outside the orb center",left.right<hero.left+hero.width/2f &&
+                right.left>hero.left+hero.width/2f)
+            assertTrue("reference requires a gap between action columns",right.left-left.right>=200f*u)
+            assertTrue("full-width card grid must not use landscape rail",layout.boxes[Slot.RAIL]==null)
+            val upper=listOf(Slot.MODEL,Slot.LEARNING,Slot.STORAGE).map{layout.boxes.getValue(it)}
+            val lower=listOf(Slot.DEVELOPMENT,Slot.SYSTEM_ACTIVITY,Slot.WORKERS).map{layout.boxes.getValue(it)}
+            for(i in 0..2){
+                assertEquals(upper[i].left,lower[i].left,.002f)
+                assertEquals(upper[i].width,lower[i].width,.002f)
+                assertEquals(upper[i].height,lower[i].height,.002f)
             }
         }
     }
