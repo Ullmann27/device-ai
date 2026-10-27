@@ -123,7 +123,11 @@ class ContinuumHomeView(context: Context, val hologram: ContinuumHologramView, p
         offset = railOffset
         views.values.forEach { removeView(it) }
         views.clear()
-        hologram.setGeometry(if (spec.wide) ContinuumHologramRenderer.Geometry.FOLD else ContinuumHologramRenderer.Geometry.PHONE)
+        hologram.setGeometry(when {
+            spec[Slot.WORKERS] != null -> ContinuumHologramRenderer.Geometry.FOLD_PORTRAIT
+            spec.wide -> ContinuumHologramRenderer.Geometry.FOLD
+            else -> ContinuumHologramRenderer.Geometry.PHONE
+        })
         for ((slot, element) in ContinuumHomeScreen.elements(spec, textScale)) {
             if (slot == Slot.NAV && !includeNavigation) continue
             if (slot == Slot.RAIL) continue
