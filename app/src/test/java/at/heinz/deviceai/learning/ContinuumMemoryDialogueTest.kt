@@ -228,14 +228,14 @@ class ContinuumMemoryDialogueTest {
         assertEquals("Wrong device must never become a cited owner fact",1,hits.size)
         assertEquals(valid,hits.single().text)
         assertFalse(ContinuumMemoryDialogue.sourceTermEvidence(
-            "Welchen Standort hat Projekt Orion 5?",
+            "Wo steht Projekt Orion 5?",
             "Projekt Orion 50 steht im Labor."))
         assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
-            "Welchen Standort hat Projekt Orion 5?",
+            "Wo steht Projekt Orion 5?",
             "Projekt Orion 5 steht im Labor."))
         assertTrue(ContinuumMemoryDialogue.sourceTermEvidence(
             "Was geschah im Jahr 2024?",
-            "Im Jahr 2024 entstand das Projekt."))
+            "Im Jahr 2024 geschah ein Ereignis."))
     }
 
     @Test fun longQuestionVerbsCannotBlockValidSourceEvidence() {
