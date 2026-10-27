@@ -2755,7 +2755,23 @@ class AgentActivity : Activity() {
                 val fallback=if(legacyFallback)
                     GroundedWebRecall.answer(request,reviewedNotes)
                 else null
-                val answer=archiveAnswer ?: fallback ?: decision.finalAnswer
+                val shadowObservation=if(shadowResearch)
+                    at.heinz.deviceai.learning.ContinuumCdx1ChatShadow.observe(
+                        question=request,
+                        grounded=turn.grounded,
+                        memoryIds=turn.memoryIds.toSet(),
+                        authorizedHits=decision.evidenceHits,
+                        currentStatus={ core.pairedDecoderStatus() },
+                        infer={ evidence,query ->
+                            core.experimentalPairedDecoderContinuation(evidence,query,maxBytes=48)?.text
+                        }
+                    )
+                    else null
+                // Research is always a visible, clearly unconfirmed appendix;
+                // the canonical SWB1 answer is never replaced by CDX1 output.
+                val answer=if(shadowResearch)
+                    decision.finalAnswer+"\n\n"+shadowObservation!!.display()
+                    else archiveAnswer ?: fallback ?: decision.finalAnswer
                 val evidence=(if(archiveAnswer!=null)
                     "QUELLENABRUF · lokal archivierter, nicht bestätigter Beleg"
                     else if(legacyFallback)
