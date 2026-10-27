@@ -166,7 +166,7 @@ class PortraitActivityCard(textScale: Float = 1f) : PortraitDashboardCard(textSc
     override fun describe(s: ContinuumDashboardState)=SystemActivityElement().describe(s)
 }
 
-class PortraitWorkersCard(textScale: Float = 1f) : PortraitDashboardCard(textScale,"Aufgaben & Worker",Icon.CODE) {
+class PortraitWorkersCard(textScale: Float = 1f) : PortraitDashboardCard(textScale,"Aufgaben & Worker",Icon.USERS) {
     override fun draw(p: ContinuumPainter,w: Float,h: Float,s: ContinuumDashboardState) {
         frame(p,w,h)
         val d=s.development
@@ -201,8 +201,11 @@ class PortraitSystemStatus(textScale: Float = 1f) : ContinuumElement(textScale) 
     override fun draw(p: ContinuumPainter,w: Float,h: Float,s: ContinuumDashboardState) {
         ContinuumSurfaces.glassCard(p,0f,0f,w,h,14f)
         p.drawText("Systemstatus",12f,25f,t(650,12.1f),Fill.Solid(ContinuumTheme.TEXT))
-        ContinuumSurfaces.pill(p,w-10f,34f,17f,s.system.overall,t(500,7f),
-            if(s.system.openIssues==0)ContinuumTheme.GREEN else ContinuumTheme.AMBER,alignRight=true)
+        val online = s.system.networkOnline
+        val networkPill = when (online) { true -> "Online"; false -> "Offline"; null -> UNKNOWN }
+        ContinuumSurfaces.pill(p,w-10f,34f,17f,networkPill,t(500,7f),
+            when (online) { true -> ContinuumTheme.GREEN; false -> ContinuumTheme.RED; null -> ContinuumTheme.AMBER },
+            alignRight=true)
         Donut.draw(p,w/2f,111f,55f,12f,s.system.appCpuPercent,emptyList())
         p.drawText(ContinuumDashboardState.percent(s.system.appCpuPercent),w/2f,115f,
             t(600,22f),Fill.Solid(ContinuumTheme.TEXT),TextAlign.CENTER)
