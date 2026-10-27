@@ -1,5 +1,12 @@
 # Arbeitsanweisungen für Device AI Continuum (alle Agenten)
 
+## PRIORITÄT 27.10.2026: BESTEHENDE FORSCHUNGS-CODEPROJEKTE SYSTEMATISCH INS CONTINUUM-GEHIRN INTEGRIEREN (M4)
+
+**Expliziter Besitzerauftrag:** Internationale Forschungsprojekte und offene Codesammlungen (Google AI Edge Gallery, Jandal, LocalChat, Mem0, A-MEM, sqlite-vec, LongMemEval-V2, mini-SWE-agent, Aider, OpenHands und ARM64-Build-Tools) dürfen bei späteren Entwicklungsrunden **nicht vergessen werden**. Zentrale, mit Quellcode-Links und tatsächlichen Zielpfaden versehene Übergabe: [`docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md`](docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md). Neueste M4-Draft-Integration **PR #198** auf **PR #197**. Nach jeder weiteren Quelle den Katalog pflegen, Quell-Lizenz/Commit prüfen, vorhandene Architektur zuerst abgleichen, dann kleinen isolierten Kotlin/Node-Adapter mit echten Negativ-/Holdout-/Datenschutztests in den bestehenden Gehirn- und CCC1-Aufrufpfad führen. **Nicht** sämtlichen Fremdcode kopieren oder Integrations- und Funktionserfolg behaupten, bevor echte Build-, Geräte- und Qualitätsbelege vorliegen.
+
+**Kanonischer Ist-Stand:** `cognitive/HybridMemoryRetriever.kt` besitzt bereits lexikalische/semantische Suche, `cognitive/MemoryEcology.kt` bereits einen Graphen. `MemoryRetrievalResearchGate.kt` ist das erste reine schreibgeschützte LongMemEval-inspirierte Forschungsmodul und ruft **den bestehenden** Retriever auf; keine zweite Memory-DB, kein automatischer Faktenimport, kein CRE1/CDX-Upgrade. Bestehenden SWB1/Gemma4/LiteRT-LM-Kern, Besitzer-ToolGate, CCC1 und Original-P12 nicht umgehen. Kein neues Cloud-LLM, GitHub Actions, Render-Buildzwang, Main-Merge oder Branch-Löschen. Jede externe Komponente bleibt explizit `AUDIT_REQUIRED`, `RESEARCH_SHADOW` oder nach **wirklichen** Tests `SOURCE_INTEGRATED`.
+
+
 ## PRIORITÄT 25.10.2026: VERBINDLICHER GITHUB-FIRST-ARBEITSMODUS (Astra, Sol, alle Agenten)
 
 **Besitzeranweisung:** Kein Agent darf neue oder reparierte Quellen, Tests, Trainingskonfigurationen oder Integrationsänderungen exklusiv in einem kurzlebigen Chat-/Research-/Cloud-Workspace halten. Das private Repository `Ullmann27/device-ai` bleibt das **offizielle, für berechtigte Mitarbeitende zugängliche System of Record**. Ein lokaler Workspace darf zum Experimentieren verwendet werden, aber **niemals als einziger Speicherort einer brauchbaren Entwicklungsarbeit**. Keine fremden geheimen Branches, nicht erreichbaren Forks oder ausschließlich in Chat-Nachrichten abgelegten Quellstände.
