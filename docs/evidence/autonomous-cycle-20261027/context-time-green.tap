@@ -1,0 +1,48 @@
+✔ small granted files include complete helper bodies instead of disconnected declaration windows (37.306347ms)
+✔ retrieves a diagnostic beyond line 1400 with exact source hashes and Kotlin cross-file dependencies (49.665135ms)
+✔ reads committed blobs even when working sources are changed or symlinked (34.956035ms)
+✔ indexes JavaScript literal imports and symbols without executing repository code (33.41119ms)
+✔ does not resolve import text from comments, quoted strings or template literals (34.262685ms)
+✔ fails closed for stale commits and abbreviated or option-shaped commit selectors (30.926786ms)
+✔ rejects grants outside the repository or protected control and secret paths (24.848981ms)
+✔ rejects tracked symlink grants and skips symlinks from wider inventory (47.917478ms)
+✔ wider inventory excludes signing, workflow and secret files without leaking content (28.7049ms)
+✔ keeps the complete JSON within the hard budget and prioritizes diagnostic lines (427.523757ms)
+✔ rejects overlarge granted sources before reading their full contents (28.53427ms)
+✔ query and diagnostics remain inert data and cannot redirect source paths (31.020057ms)
+✔ search operates on serializable bounded ranges and enforces its result cap (36.048359ms)
+✔ rejects an exhausted retrieval deadline before invoking Git (22.716117ms)
+✔ limits returned source ranges even when many declarations match the query (163.433766ms)
+✔ timeout is a durable FAILED/TIMEOUT, never a successful model response or a free retry (36.880004ms)
+✔ typed no-op rejection is recorded, not a repair success (31.71199ms)
+✔ valid exit but broken JSON is INVALID_OUTPUT, not RESPONDED (28.841211ms)
+✔ validated model proposal is RESPONDED, never claimed verified repair (29.924689ms)
+✔ abrupt child exception retains RESERVED as UNKNOWN; no unearned second call (35.171654ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (35.412295ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (28.216847ms)
+✔ malformed model name is rejected before invoking the local child (49.752024ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (16.596412ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (43.333714ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (27.695066ms)
+✔ foreign or corrupt persisted requests block before another inference (27.158431ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (26.93066ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (38.921833ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (270.793723ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (148.243906ms)
+✔ unknown provider errors never leak their message to the durable report (155.198495ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (1.467244ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (27.197069ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (274.991574ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (278.242868ms)
+✔ explicit slow local CPU budget is bounded by the caller deadline and recorded (37.088854ms)
+✔ invalid configured model time budgets fail before any request (14.286285ms)
+✔ local inference abort produces a typed timeout without leaking transport error text (103.162637ms)
+✔ long local budget does not weaken response validation or maximum deadline (25.635928ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3192.972168

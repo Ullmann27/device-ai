@@ -227,6 +227,19 @@ export function buildRepositoryContext({root,commit,allowedPaths,maxChars=12000,
   }
   if(!added&&!existed){result.inventory.splice(result.inventory.indexOf(row),1);inventoryRows.delete(file.file);}
  }
+ // A small granted file often fits in full. Declaration windows alone can
+ // omit the actual helper implementation even with unused context capacity.
+ // Upgrade only when the entire serialized context still fits; retain ranked
+ // diagnostic windows for large files. Never widen path grants or execute code.
+ for(const name of allowedPaths){
+  checkDeadline();
+  const file=files.get(name),text=file.lines.join('\n');
+  if(text.length>maxChars)continue;
+  const previous=result.ranges;
+  result.ranges=[{file:name,startLine:1,endLine:file.lines.length,text,sha256:sha(text)},
+   ...previous.filter(row=>row.file!==name)];
+  if(result.ranges.length>24||!fits())result.ranges=previous;
+ }
  // Dependency provenance and relevant declarations share the same hard budget.
  for(const file of ranked){
   checkDeadline();

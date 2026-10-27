@@ -1,0 +1,33 @@
+✔ timeout is a durable FAILED/TIMEOUT, never a successful model response or a free retry (40.553301ms)
+✔ typed no-op rejection is recorded, not a repair success (31.884881ms)
+✔ valid exit but broken JSON is INVALID_OUTPUT, not RESPONDED (30.276534ms)
+✔ validated model proposal is RESPONDED, never claimed verified repair (27.132999ms)
+✔ abrupt child exception retains RESERVED as UNKNOWN; no unearned second call (29.372674ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (38.561784ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (30.362457ms)
+✔ malformed model name is rejected before invoking the local child (56.597709ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (19.416839ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (46.061102ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (32.815117ms)
+✔ foreign or corrupt persisted requests block before another inference (31.776594ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (22.328894ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (36.682596ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (277.190538ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (148.830526ms)
+✔ unknown provider errors never leak their message to the durable report (143.465601ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (1.566466ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (26.776792ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (284.22769ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (279.753512ms)
+✔ explicit slow local CPU budget is bounded by the caller deadline and recorded (67.839539ms)
+✔ invalid configured model time budgets fail before any request (27.118431ms)
+✔ local inference abort produces a typed timeout without leaking transport error text (100.456224ms)
+✔ long local budget does not weaken response validation or maximum deadline (20.94837ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2146.675454

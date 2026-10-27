@@ -1,0 +1,39 @@
+✔ infrastructure timeout stops after one call; repeating a prompt is not correction (602.306583ms)
+✖ progress checkpoint retains real failed checks before an interruption (1052.142071ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (40.821596ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (109.396291ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (886.293739ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (581.774681ms)
+✔ unknown provider errors never leak their message to the durable report (535.421522ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (2.504063ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (93.674471ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (969.517187ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (939.877722ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6099.014668
+
+✖ failing tests:
+
+test at .github/continuum/coding-rejection-feedback.test.mjs:57:1
+✖ progress checkpoint retains real failed checks before an interruption (1052.142071ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai/.github/continuum/coding-rejection-feedback.test.mjs:61:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /PROCESS_INTERRUPTION_TEST/,
+    operator: 'throws',
+    diff: 'simple'
+  }

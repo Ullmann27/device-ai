@@ -1,0 +1,31 @@
+✔ owner independent evidence rejects silent test-count and skipped-test regressions (1.984128ms)
+✔ expired execution budget fails closed before launching fixed subprocesses (7.9745ms)
+✔ an unrelated automatic REPAIR task cannot starve an accepted owner task (3.143969ms)
+✔ eligible owner selection cannot be starved by stale HEAD or higher priority (5.97905ms)
+✔ owner task executes red -> isolated repair -> independent green -> reviewable PATCH and DONE (1501.982939ms)
+✔ an owner cancel during the session stops at the next step boundary and is never DONE (697.704959ms)
+✔ an owner cancel during a running check step ends that step within seconds and is never DONE (1175.74346ms)
+✔ passing fixture is not reported as successful code development (1719.497356ms)
+✔ stale owner claim is recovered after worker crash without faking success (474.340928ms)
+✔ unapproved task, incorrect HEAD, foreign source and unknown chain fail closed (51.010147ms)
+✔ corrupted backlog never executes repair, and original Git checkout remains intact (58.707644ms)
+✔ typed task reaches CCC1, canonical teamleader, repair and fresh verifier without modifying owner source (1920.433125ms)
+✔ infrastructure timeout stops after one call; repeating a prompt is not correction (257.409586ms)
+✔ progress checkpoint retains real failed checks before an interruption (772.185286ms)
+✔ invalid model output carries SHA-256 only, not discarded raw source (83.221042ms)
+✔ provider transports recognized rejection fingerprint without raw stderr (118.426639ms)
+✔ rejection diagnostics and fingerprint reach the next model revision (987.893623ms)
+✔ identical invalid model response stops after second rejection without running candidate checks (306.229856ms)
+✔ unknown provider errors never leak their message to the durable report (237.07553ms)
+✔ no-op coding response is distinct from malformed model JSON, both with redacted digest (1.359313ms)
+✔ no-op fingerprint crosses fixed local CLI only, never arbitrary stderr (55.558812ms)
+✔ no-op model rejection is used in second candidate without raw output or host writes (807.35644ms)
+✔ an unmatched oldText gives exact-baseline diagnostics and then repairs safely (1111.275881ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13075.884112

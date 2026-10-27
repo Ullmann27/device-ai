@@ -2,19 +2,23 @@
 import fs from 'node:fs';import path from 'node:path';
 import {validateCodingTask,taskFingerprint} from './coding-task.mjs';
 import {createCodingCandidateProvider} from './coding-provider.mjs';
-import {startTask,runTask} from './ccc1-orchestrator.mjs';
+import {startTask,runTask,taskState} from './ccc1-orchestrator.mjs';
 import {Ccc1Reasoner} from './ccc1-interpreter.mjs';
 import {REPAIR_CAPABILITY} from './ccc1-envelope.mjs';
 import {repositoryOf} from './ccc1-worker.mjs';
 import {ensureCcc1StateOutsideSource} from './ccc1-path-policy.mjs';
 import {runMobileRepairJob,jobTaskId,readReceipt} from '../../scripts/continuum-mobile-coding.mjs';
-import {builderStateOf} from './ccc1-recovery.mjs';
+import {builderStateOf,jobIdFor} from './ccc1-recovery.mjs';
+import {DurableTaskJournal} from './ccc1-journal.mjs';
 import {localTeamleaderDriver} from './autonomous-teamleader.mjs';
 import {git} from './repair-loop.mjs';
 import {isIsolatedExecutor} from './isolated-executor.mjs';
 import {ExperienceLog,experienceOf} from './ccc1-experience.mjs';
 
 const ID=/^[a-z][a-z0-9-]{2,63}$/;
+export const CODING_PHASES=Object.freeze(['TASK_ACCEPTED','CHECKING_BASELINE','BASELINE_FAILED','BASELINE_PASSED',
+ 'MODEL_WORKING','PLAN_CREATED','PATCH_PROPOSED','PROPOSAL_REJECTED','CHECKING_PATCH','CHECK_FAILED',
+ 'CORRECTING','PATCH_CHECKS_PASSED','CHECKING_INDEPENDENT','INDEPENDENT_VERIFIED','INDEPENDENT_FAILED','BLOCKED']);
 function grantFile(project,stateDir,id){
  if(!ID.test(id??''))throw Error('CODING_TASK_ID_INVALID');
  const state=ensureCcc1StateOutsideSource(project,stateDir);
@@ -27,6 +31,50 @@ function readGrant(file){
  const task=validateCodingTask(grant.task);
  if(taskFingerprint(task)!==grant.fingerprint||typeof grant.ccc1TaskId!=='string')throw Error('CODING_GRANT_CORRUPT');
  return {...grant,task};
+}
+/** Read-only view of the SAME grant, authenticated CCC1 journal and canonical
+ * report. Phase means last observed, never a heartbeat or execution authority.
+ * This deliberately does not call runTask/recover or create a runtime key.
+ */
+export function readCodingTaskStatus({project,stateDir,id,expectedTaskFingerprint}={}){
+ const grant=readGrant(grantFile(project,stateDir,id));
+ if(grant.task.id!==id||grant.fingerprint!==expectedTaskFingerprint)throw Error('CODING_TASK_BINDING_MISMATCH');
+ if(!/^t-[a-f0-9]{16}$/.test(grant.ccc1TaskId))throw Error('CODING_GRANT_CORRUPT');
+ const safeRead=(file,limit)=>{
+  const s=fs.lstatSync(file);
+  if(!s.isFile()||s.isSymbolicLink()||fs.realpathSync(file)!==file||s.size>limit)throw Error('CODING_EVIDENCE_UNSAFE');
+  return fs.readFileSync(file);
+ };
+ const key=safeRead(path.join(stateDir,'ccc1-runtime.key'),32);
+ const journalFile=path.join(stateDir,'tasks',grant.ccc1TaskId+'.jsonl');safeRead(journalFile,2_000_000);
+ const entries=new DurableTaskJournal(journalFile,key).entries();
+ if(entries[0]?.baseCommitSha!==grant.task.sourceCommit)throw Error('CODING_TASK_BINDING_MISMATCH');
+ const state=taskState(entries),receiptJobs=[...new Set(entries.filter(e=>e.kind==='RECEIPT').map(e=>e.payload.job).filter(Boolean))];
+ const receipts=receiptJobs.map(job=>readReceipt(builderStateOf(stateDir),job)).filter(Boolean);
+ const jobs=entries.filter(e=>e.kind==='TEST_REQUEST').map(e=>jobIdFor(grant.ccc1TaskId,e.messageId));
+ const reportRoot=path.join(stateDir,'teamleader/reports/owner-repair');let progress=[];
+ if(fs.existsSync(reportRoot)){
+  if(fs.realpathSync(reportRoot)!==reportRoot)throw Error('CODING_EVIDENCE_UNSAFE');
+  for(const job of jobs){
+   const prefix=jobTaskId(job)+'-'+grant.task.sourceCommit.slice(0,12)+'-';
+   const names=fs.readdirSync(reportRoot).filter(n=>n.startsWith(prefix)&&/^mob-[a-f0-9]{16}-[a-f0-9]{12}-\d{13}-[a-f0-9]{8}$/.test(n)).sort();
+   if(names.length>32)throw Error('CODING_EVIDENCE_INVALID');
+   for(const name of names){
+    const file=path.join(reportRoot,name,'report.json');if(!fs.existsSync(file))continue;
+    const r=JSON.parse(safeRead(file,2_000_000));
+    if(r.base!==grant.task.sourceCommit||r.coding?.taskFingerprint!==taskFingerprint({...grant.task,id:jobTaskId(job)}))continue;
+    if(!Array.isArray(r.progress)||r.progress.length>48||r.progress.some(p=>!CODING_PHASES.includes(p.phase)||
+      typeof p.at!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(p.at)||
+      !Number.isSafeInteger(p.attempt)||p.attempt<0||p.attempt>3))throw Error('CODING_EVIDENCE_INVALID');
+    progress=r.progress.map(({phase,at,attempt})=>({phase,at,attempt}));
+   }
+  }
+ }
+ const phase=state.terminal&&state.state!=='COMPLETED'?'BLOCKED':progress.at(-1)?.phase??'TASK_ACCEPTED';
+ return {schema:'continuum-coding-task-result',version:1,id,ccc1TaskId:grant.ccc1TaskId,
+  taskFingerprint:grant.fingerprint,sourceCommit:grant.task.sourceCommit,chain:grant.task.chain,
+  status:state.state==='COMPLETED'?'PATCH_PENDING_OWNER_REVIEW':state.state,
+  phase,progress,observationOnly:true,receiptJobs,receipts,approvedForMerge:false,deviceVerified:false,neuralTraining:false};
 }
 export function prepareCodingTask({project,stateDir,task}){
  const spec=validateCodingTask(task),fingerprint=taskFingerprint(spec);

@@ -127,24 +127,31 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
     if(store.read().doc.tasks.find(t=>t.id===task.id)?.state==='ABORTED')throw Error('TASK_ABORTED_BY_OWNER');
   };
   const abortWatch={backlog:backlogPath,taskId:task.id};
+  // The existing report is also the interruption checkpoint. Atomic replacement
+  // preserves either the previous complete snapshot or the new one; never a
+  // truncated JSON file. It conveys observations, not backlog authority.
+  const writeReport=report=>{
+    const target=path.join(reportDir,'report.json');
+    const pending=target+'.tmp-'+process.pid+'-'+crypto.randomBytes(6).toString('hex');
+    let fd;
+    try{
+      fd=fs.openSync(pending,'wx',0o600);
+      fs.writeFileSync(fd,JSON.stringify(report,null,2)+'\n');fs.fsyncSync(fd);
+      fs.closeSync(fd);fd=undefined;fs.renameSync(pending,target);
+      const dir=fs.openSync(reportDir,'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+    }finally{if(fd!==undefined)fs.closeSync(fd);fs.rmSync(pending,{force:true});}
+  };
   try{
     fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
     const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
-      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,checkpoint,abortWatch,executor,executorAbortMode});
+      out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,checkpoint,abortWatch,executor,executorAbortMode,
+      onProgress:writeReport});
     report.handoffs=summarizeRepairHandoffs(report);
     if(!verifyRepairHandoffs(report.handoffs))throw Error('Invalid multi-agent handoff receipts');
-    const writeReport=()=>{
-      const target=path.join(reportDir,'report.json');
-      const pending=target+'.tmp-'+process.pid+'-'+crypto.randomBytes(6).toString('hex');
-      try{
-        fs.writeFileSync(pending,JSON.stringify(report,null,2)+'\n',{flag:'wx',mode:0o600});
-        fs.renameSync(pending,target);
-      }finally{fs.rmSync(pending,{force:true});}
-    };
-    writeReport();
+    writeReport(report);
     checkpoint();
     if(report.outcome!=='VERIFIED'||!report.verified){
       outcome={status:'FAILED',head,taskId:task.id,reason:report.outcome,
@@ -164,6 +171,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
       git(independent,['apply','--binary',patchFile]);
       const independentOut=path.join(reportDir,'independent-check');
       fs.mkdirSync(independentOut,{recursive:true,mode:0o700});
+      if(report.progress)report.progress.push({phase:'CHECKING_INDEPENDENT',at:new Date().toISOString(),attempt:report.inference.localRequests});
+      writeReport(report);
       const verified=runChain(task.subject.chain,independent,independentOut,{deadline,checkpoint,abortWatch,executor,executorAbortMode});
       const assessment=assessIndependentOwnerEvidence(report.baseline.results,verified);
       const {profiles,actualTests}=assessment;
@@ -187,7 +196,8 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
         evidenceSufficient:assessment.evidenceSufficient,reasons:assessment.reasons,
         ...(candidateVerifier!==null?{researchVerification}:{})};
       // Persist the independent verdict before the backlog can become DONE.
-      writeReport();
+      if(report.progress)report.progress.push({phase:independentlyPassed?'INDEPENDENT_VERIFIED':'INDEPENDENT_FAILED',at:new Date().toISOString(),attempt:report.inference.localRequests});
+      writeReport(report);
       const independentReceipt=path.join(independentOut,'verification.json');
       const receipt={
         schemaVersion:1,head,taskId:task.id,patchSha256:patchHash,execution:report.execution,

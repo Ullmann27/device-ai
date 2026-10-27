@@ -10,7 +10,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {canonical,sha256Hex,parseStrict} from '../.github/continuum/development-backlog.mjs';
 import {validateCodingTask,taskFingerprint} from '../.github/continuum/coding-task.mjs';
-import {prepareCodingTask,runCodingTask} from '../.github/continuum/coding-orchestrator.mjs';
+import {prepareCodingTask,runCodingTask,readCodingTaskStatus} from '../.github/continuum/coding-orchestrator.mjs';
 import {loadIsolationConfig,createIsolatedExecutor} from '../.github/continuum/isolated-executor.mjs';
 import {JOB_RE,jobTaskId,RECEIPT_SCHEMA,RECEIPT_VERSION} from './continuum-mobile-coding.mjs';
 
@@ -68,7 +68,7 @@ export function decodePreparedTask(encoded,hash){
 export function fixedArgs(argv){
  const [op,...args]=argv;
  if(op==='prepare'&&args.length===2)return {op,encoded:args[0],hash:args[1]};
- if(op==='run'&&args.length===2&&ID.test(args[0])&&SHA.test(args[1]))
+ if(['run','status'].includes(op)&&args.length===2&&ID.test(args[0])&&SHA.test(args[1]))
   return {op,id:args[0],hash:args[1]};
  throw Error('CODING_BRIDGE_COMMAND_INVALID');
 }
@@ -139,10 +139,22 @@ export function reviewPatchStillAvailable(result,hash,stateDir){
 }
 export async function executeTypedBridge(command,{
  project=DEFAULT_ROOT,stateDir=DEFAULT_STATE,
- prepare=prepareCodingTask,run=runCodingTask,
+ prepare=prepareCodingTask,run=runCodingTask,inspect=readCodingTaskStatus,
  isolationLoader=ownerCodingExecutor
 }={}){
  const {op,id,hash,encoded}=command;
+ if(op==='status'){
+  if(!ID.test(id??'')||!SHA.test(hash??''))return blocked('status',null,'INVALID_RUN_BINDING');
+  try{
+   const r=inspect({project,stateDir,id,expectedTaskFingerprint:hash});
+   if(r.id!==id||r.taskFingerprint!==hash)return blocked('status',id,'RUN_BINDING_MISMATCH');
+   const patch=verifiedCodingReviewReceipt(r),reviewable=patch!==null&&reviewPatchStillAvailable(r,patch,stateDir);
+   return {schema:BRIDGE_SCHEMA,version:BRIDGE_VERSION,operation:'status',id,sourceCommit:r.sourceCommit,taskSha256:hash,
+    status:'PROGRESS_REPORTED',phase:r.phase,progress:r.progress,observationOnly:true,
+    reviewReady:reviewable,patchSha256:reviewable?patch:null,
+    approvedForMerge:false,installed:false,deviceVerified:false};
+  }catch(e){return blocked('status',id,ERROR_CODES.has(e?.message)?e.message:'STATUS_UNAVAILABLE');}
+ }
  if(op==='prepare'){
   let task;
   try{task=decodePreparedTask(encoded,hash);}catch{return blocked('prepare',null,'INVALID_TASK');}

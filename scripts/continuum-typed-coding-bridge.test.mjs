@@ -28,6 +28,16 @@ test('fixed command grammar rejects arbitrary CLI paths, shell and unbound run',
   ['prepare','a','sha','--root','/tmp'],['execute','ls','-la'],['run','job-bridge-test','a'.repeat(64),'more']])
   assert.throws(()=>fixedArgs(bad),/CODING_BRIDGE_COMMAND_INVALID/);
 });
+test('status reads bound observations without loading an executor or running a task',async()=>{
+ const hash='b'.repeat(64),id='job-bridge-test';let reads=0;
+ const args=fixedArgs(['status',id,hash]);
+ const r=await executeTypedBridge(args,{inspect:input=>{
+  reads++;assert.equal(input.expectedTaskFingerprint,hash);
+  return {id,taskFingerprint:hash,sourceCommit:SOURCE,status:'APPROVED',phase:'MODEL_WORKING',progress:[],receipts:[]};
+ },run:()=>{throw Error('MUST_NOT_RUN');},isolationLoader:()=>{throw Error('MUST_NOT_LOAD');}});
+ assert.equal(reads,1);assert.equal(r.status,'PROGRESS_REPORTED');assert.equal(r.observationOnly,true);
+ assert.equal(r.phase,'MODEL_WORKING');assert.equal(r.reviewReady,false);assert.equal(r.patchSha256,null);
+});
 test('strict canonical JSON and SHA binding prevent duplicate-key/changed-authorization replay',()=>{
  const args=prepareArgs();
  assert.equal(decodePreparedTask(args.encoded,args.hash).id,'job-bridge-test');

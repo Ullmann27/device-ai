@@ -1,0 +1,548 @@
+{
+  "schemaVersion": 1,
+  "base": "6a04c7b8153111f9d1dbf5e5ce73f8d8c30ab472",
+  "chain": "node",
+  "startedAt": "2026-10-27T14:29:47.545Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 3,
+    "verifiedModelExecution": false,
+    "candidateStatus": "PROPOSED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "af9edd830d4b29f8",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_NOOP_PATCH",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "d9d795dee84c37c6",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_NOOP_PATCH",
+        "hypothesis": ""
+      },
+      {
+        "candidate": "582af3b32bc0d572",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/acceptance.test.mjs Expected values to be strictly equal:\n+ actual - expected\n\n+ '```js\\nliteral\\nliteral\\nx: y\\n```'\n- '```js\\n**literal**\\n### literal\\n| x | y |\\n```'\nTEST_FAILURE .github/continuum/acceptance.test.mjs Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~text\\nliteral\\nliteral\\nx: y\\n~~~'\n- '~~~text\\n**literal**\\n### literal\\n| x | y |\\n~~~'\nTEST_FAILURE .github/continuum/acceptance.test.mjs Expected values to be strictly equal:\n+ actual - expected\n\n+ '````md\\n```\\nliteral\\n````'\n- '````md\\n```\\n**literal**\\n````'\n                ^\nTEST_FAILURE .github/continuum/acceptance.test.mjs Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n~~~\\nliteral\\n```'\n- '```text\\n~~~\\n**literal**\\n```'\n                 ^\nTEST_FAILURE .github/continuum/acceptance.test.mjs Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n```not-a-close\\nliteral\\n```'\n- '```text\\n```not-a-close\\n**literal**\\n```'\nTEST_FA",
+        "hypothesis": "The corruption is due to the `normalizeMarkdown` function not correctly handling the formatting of fenced code blocks."
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_NOOP_PATCH",
+        "repeated": false,
+        "responseSha256": "af9edd830d4b29f8f748898c60704866776f291b43598f09b58030dad0c65d7a"
+      },
+      {
+        "code": "CODING_NOOP_PATCH",
+        "repeated": false,
+        "responseSha256": "d9d795dee84c37c690ef1c4175a161635d1ef813a48a97672906380e924590b4"
+      }
+    ],
+    "reason": "Provider calls do not independently establish model execution",
+    "lastRejectCode": "CODING_NOOP_PATCH"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "b42655133ecd4bb589f7b0f937c6ced71e0546275eb0f5ad625ff320bff6368e",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 14,
+          "failed": 9,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 14,
+          "passed": 5,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "34d567f360d2bd16aa9a0d31f35ec7959ed05d9086cac9d3a567360190a284c6",
+            "50776f9bd82ce73465c114227b5eb18975bc130c769bc9a2eb12c0c6f49ec50b",
+            "81c2999558509369002d50d04813bd3b1312c7965e135a108872f6336ba52d71",
+            "8777611075f1d496018572fae03575fa916e8af2df2e07472a4f1c5119807174",
+            "9a3d0f1b2b4eb292ad2827ca6b1838cafbc301c67ae2cdac4ddfac41e5141dae",
+            "b99be66b26453ba1134786eac6797cf11e9263e8011622c194d288c3bfb341e5",
+            "c7f849f634d468f89ae9bde4a7c2b97e48ce00942ff4e4ed4777d5610f3802a3",
+            "d55443e92b935ae87f9e1572e34b19799610b6ea7c08c578cd75999d854277a8",
+            "d9d0daa3060a5949c9bcdac204e3209ce53a748dea46e9d85aeb072b83ac622e",
+            "db6afb02948ff1001d3e0821952d17840af6fa4907fb1dec8ee472a4ba8de3a2",
+            "dfca16dbdec5bf0b3be7e7f773738a46a13b92ff128adc7667cdedf15a261cf6",
+            "ea01778bcb7504882f17a5354c14eeb689ad80f8beb6adccc8a10a1f8adc707d",
+            "f2ce9cf0ed7fc6e9e79e524e2e6b49fb1dc049ff039929252c9ddc4b3125d1c6",
+            "fa9d73c3e4c49b20442abc98b8ff22112e3d0aba0eef727ffb61aa5922aacd06"
+          ]
+        },
+        "diagnostics": 9
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.backtick code",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```js\\nliteral\\nliteral\\nx: y\\n```'\n- '```js\\n**literal**\\n### literal\\n| x | y |\\n```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "71448c9087381435"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.tilde code",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~text\\nliteral\\nliteral\\nx: y\\n~~~'\n- '~~~text\\n**literal**\\n### literal\\n| x | y |\\n~~~'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "7eb3cda122c75ece"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.long fence with shorter interior run",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '````md\\n```\\nliteral\\n````'\n- '````md\\n```\\n**literal**\\n````'\n                ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "72a0658d6562683d"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.wrong fence character inside",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n~~~\\nliteral\\n```'\n- '```text\\n~~~\\n**literal**\\n```'\n                 ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "54fc3af50dfea9f5"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.nonclosing suffix",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n```not-a-close\\nliteral\\n```'\n- '```text\\n```not-a-close\\n**literal**\\n```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "31d1d5a9c655cf11"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.blank lines and trailing spaces",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```\\n  x\\n\\n  y\\n```'\n- '```\\n  x  \\n\\n\\n\\n  **y**  \\n```'\n           ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "2a7d8a1c58f7a7bf"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.unclosed fence",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~\\nliteral\\nliteral'\n- '~~~\\n**literal**\\n### literal'\n        ^",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "68caebdedd018f7f"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.indented fence",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 15,
+        "col": 57,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```txt\\nliteral\\n   ```'\n- '   ```txt\\n**literal**\\n   ```'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "05c8ac6ee14d0a98"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.format prose on both sides of a code block",
+        "file": ".github/continuum/acceptance.test.mjs",
+        "line": 18,
+        "col": 9,
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Heading\\nbefore\\n```\\nliteral\\n```\\nafter'\n- 'Heading\\nbefore\\n```\\n**literal**\\n```\\nafter'",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "b12ed6c0bb1c9bd5"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "582af3b32bc0d572",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "a07ed1c19882c08e",
+      "diagnosticKind": "CODING_REJECTED_OUTPUT",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The corruption is due to the `normalizeMarkdown` function not correctly handling the formatting of fenced code blocks.",
+      "plan": [
+        "Identify the specific line in `backend/src/mentor-answer-format.js` where the formatting corruption occurs."
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.378,
+        "reasons": [],
+        "changedLines": 11,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "backend/src/mentor-answer-format.js",
+          "oldText": "/**\n * Bounded, tool-free presentation of unverified external mentor text.\n * Formatting is display-only; it never executes Markdown, HTML or model output.\n */\nexport const MAX_MENTOR_ANSWER_CHARS = 4200;\nconst TRUNCATION_NOTICE = \"\\n\\n[Antwort gekürzt. Bitte frage nach einem einzelnen Teilthema.]\";\nconst INCOMPLETE_NOTICE = \"\\n\\n[Die Modellausgabe endete am Tokenlimit. Für den fehlenden Teil bitte nachfragen.]\";\n\nfunction normalizeMarkdown(text) {\n  const normalized = text.replace(/\\r\\n?/g, \"\\n\");\n  const lines = normalized.split(\"\\n\").map(line => {\n    const trimmed = line.trim();\n    // Android intentionally renders text, not Markdown. Preserve table values.\n    if (trimmed.startsWith(\"|\") && trimmed.endsWith(\"|\") && trimmed.length > 2) {\n      const cells = trimmed.slice(1, -1).split(\"|\")\n        .map(cell => cell.trim().replace(/\\*\\*([^*\\n]+)\\*\\*/g, \"$1\"));\n      if (cells.every(cell => /^:?-{3,}:?$/.test(cell))) return \"\";\n      if (cells.length >= 2) return cells[0] + \": \" + cells.slice(1).join(\" — \");\n    }\n    return line.replace(/^\\s{0,3}#{1,6}\\s+/u, \"\")\n      .replace(/\\*\\*([^*\\n]+)\\*\\*/g, \"$1\")\n      .trimEnd();\n  });\n  return lines.join(\"\\n\").replace(/\\n{3,}/g, \"\\n\\n\").trim();\n}\n\nexport function formatMentorAnswer(value, { incomplete = false } = {}) {\n  if (typeof value !== \"string\" || !value.trim()) return \"\";\n  const text = normalizeMarkdown(value);\n  const notice = incomplete ? INCOMPLETE_NOTICE : \"\";\n  if (text.length + notice.length <= MAX_MENTOR_ANSWER_CHARS) return text + notice;\n\n  const marker = incomplete ? INCOMPLETE_NOTICE : TRUNCATION_NOTICE;\n  const length = MAX_MENTOR_ANSWER_CHARS - marker.length;\n  const candidate = text.slice(0, length);\n  const min = Math.max(0, length - 450);\n  let boundary = -1;\n  for (let i = min; i < candidate.length - 1; i++) {\n    if (/[.!?]/.test(candidate[i]) && /\\s/.test(candidate[i + 1])) boundary = i + 1;\n  }\n  if (boundary < min) {\n    boundary = candidate.lastIndexOf(\" \");\n    if (boundary < min) boundary = length;\n  }\n  return candidate.slice(0, boundary).trimEnd() + marker;\n}\n",
+          "newText": "/**\n * Bounded, tool-free presentation of unverified external mentor text.\n * Formatting is display-only; it never executes Markdown, HTML or model output.\n */\nexport const MAX_MENTOR_ANSWER_CHARS = 4200;\nconst TRUNCATION_NOTICE = \"\\n\\n[Antwort gekürzt. Bitte frage nach einem einzelnen Teilthema.]\";\nconst INCOMPLETE_NOTICE = \"\\n\\n[Die Modellausgabe endete am Tokenlimit. Für den fehlenden Teil bitte nachfragen.]\";\n\nfunction normalizeMarkdown(text) {\n  const normalized = text.replace(/\\r\\n?/g, \"\\n\");\n  const lines = normalized.split(\"\\n\").map(line => {\n    const trimmed = line.trim();\n    // Android intentionally renders text, not Markdown. Preserve table values.\n    if (trimmed.startsWith(\"|\") && trimmed.endsWith(\"|\") && trimmed.length > 2) {\n      const cells = trimmed.slice(1, -1).split(\"|\")\n        .map(cell => cell.trim().replace(/\\*\\*([^*\\n]+)\\*\\*/g, \"$1\"));\n      if (cells.every(cell => /^:?-{3,}:?$/.test(cell))) return \"\";\n      if (cells.length >= 2) return cells[0] + \": \" + cells.slice(1).join(\" — \");\n    } else if (trimmed.startsWith(\"```\")) {\n      const lines = trimmed.split(\"\\n\").map(line => line.trim());\n      return lines.join(\"\\n\");\n    }\n    return line.replace(/^\\s{0,3}#{1,6}\\s+/u, \"\")\n      .replace(/\\*\\*([^*\\n]+)\\*\\*/g, \"$1\")\n      .trimEnd();\n  });\n  return lines.join(\"\\n\").replace(/\\n{3,}/g, \"\\n\\n\").trim();\n}\n\nexport function formatMentorAnswer(value, { incomplete = false } = {}) {\n  if (typeof value !== \"string\" || !value.trim()) return \"\";\n  const text = normalizeMarkdown(value);\n  const notice = incomplete ? INCOMPLETE_NOTICE : \"\";\n  if (text.length + notice.length <= MAX_MENTOR_ANSWER_CHARS) return text + notice;\n\n  const marker = incomplete ? INCOMPLETE_NOTICE : TRUNCATION_NOTICE;\n  const length = MAX_MENTOR_ANSWER_CHARS - marker.length;\n  const candidate = text.slice(0, length);\n  const min = Math.max(0, length - 450);\n  let boundary = -1;\n  for (let i = min; i < candidate.length - 1; i++) {\n    if (/[.!?]/.test(candidate[i]) && /\\s/.test(candidate[i + 1])) boundary = i + 1;\n  }\n  if (boundary < min) {\n    boundary = candidate.lastIndexOf(\" \");\n    if (boundary < min) boundary = length;\n  }\n  return candidate.slice(0, boundary).trimEnd() + marker;\n}\n"
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "backend/src/mentor-answer-format.js"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 14,
+            "failed": 9,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 14,
+            "passed": 5,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "34d567f360d2bd16aa9a0d31f35ec7959ed05d9086cac9d3a567360190a284c6",
+              "50776f9bd82ce73465c114227b5eb18975bc130c769bc9a2eb12c0c6f49ec50b",
+              "81c2999558509369002d50d04813bd3b1312c7965e135a108872f6336ba52d71",
+              "8777611075f1d496018572fae03575fa916e8af2df2e07472a4f1c5119807174",
+              "9a3d0f1b2b4eb292ad2827ca6b1838cafbc301c67ae2cdac4ddfac41e5141dae",
+              "b99be66b26453ba1134786eac6797cf11e9263e8011622c194d288c3bfb341e5",
+              "c7f849f634d468f89ae9bde4a7c2b97e48ce00942ff4e4ed4777d5610f3802a3",
+              "d55443e92b935ae87f9e1572e34b19799610b6ea7c08c578cd75999d854277a8",
+              "d9d0daa3060a5949c9bcdac204e3209ce53a748dea46e9d85aeb072b83ac622e",
+              "db6afb02948ff1001d3e0821952d17840af6fa4907fb1dec8ee472a4ba8de3a2",
+              "dfca16dbdec5bf0b3be7e7f773738a46a13b92ff128adc7667cdedf15a261cf6",
+              "ea01778bcb7504882f17a5354c14eeb689ad80f8beb6adccc8a10a1f8adc707d",
+              "f2ce9cf0ed7fc6e9e79e524e2e6b49fb1dc049ff039929252c9ddc4b3125d1c6",
+              "fa9d73c3e4c49b20442abc98b8ff22112e3d0aba0eef727ffb61aa5922aacd06"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 512,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 30000,
+            "sourceSha256": "6b6df5f5309680265d635fd8e8dd600239068a944360722d03d5cbfdc065f08d",
+            "profile": "node-continuum",
+            "untrustedReports": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.backtick code",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```js\\nliteral\\nliteral\\nx: y\\n```'\n- '```js\\n**literal**\\n### literal\\n| x | y |\\n```'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "71448c9087381435"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.tilde code",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~text\\nliteral\\nliteral\\nx: y\\n~~~'\n- '~~~text\\n**literal**\\n### literal\\n| x | y |\\n~~~'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "7eb3cda122c75ece"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.long fence with shorter interior run",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '````md\\n```\\nliteral\\n````'\n- '````md\\n```\\n**literal**\\n````'\n                ^",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "72a0658d6562683d"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.wrong fence character inside",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n~~~\\nliteral\\n```'\n- '```text\\n~~~\\n**literal**\\n```'\n                 ^",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "54fc3af50dfea9f5"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.nonclosing suffix",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```text\\n```not-a-close\\nliteral\\n```'\n- '```text\\n```not-a-close\\n**literal**\\n```'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "31d1d5a9c655cf11"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.blank lines and trailing spaces",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```\\n  x\\n\\n  y\\n```'\n- '```\\n  x  \\n\\n\\n\\n  **y**  \\n```'\n           ^",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "2a7d8a1c58f7a7bf"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.unclosed fence",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '~~~\\nliteral\\nliteral'\n- '~~~\\n**literal**\\n### literal'\n        ^",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "68caebdedd018f7f"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.indented fence",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 15,
+          "col": 57,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '```txt\\nliteral\\n```'\n- '   ```txt\\n**literal**\\n   ```'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "6ab7a6e6086b4d81"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.format prose on both sides of a code block",
+          "file": ".github/continuum/acceptance.test.mjs",
+          "line": 18,
+          "col": 9,
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'Heading\\nbefore\\n```\\nliteral\\n```\\nafter'\n- 'Heading\\nbefore\\n```\\n**literal**\\n```\\nafter'",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "b12ed6c0bb1c9bd5"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "progress": [
+    {
+      "phase": "CHECKING_BASELINE",
+      "at": "2026-10-27T14:29:47.545Z",
+      "attempt": 0
+    },
+    {
+      "phase": "BASELINE_FAILED",
+      "at": "2026-10-27T14:29:48.282Z",
+      "attempt": 0
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-10-27T14:29:48.293Z",
+      "attempt": 1
+    },
+    {
+      "phase": "PROPOSAL_REJECTED",
+      "at": "2026-10-27T14:33:31.524Z",
+      "attempt": 1
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-10-27T14:33:31.539Z",
+      "attempt": 1
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-10-27T14:33:31.540Z",
+      "attempt": 2
+    },
+    {
+      "phase": "PROPOSAL_REJECTED",
+      "at": "2026-10-27T14:38:02.854Z",
+      "attempt": 2
+    },
+    {
+      "phase": "CORRECTING",
+      "at": "2026-10-27T14:38:02.879Z",
+      "attempt": 2
+    },
+    {
+      "phase": "MODEL_WORKING",
+      "at": "2026-10-27T14:38:02.880Z",
+      "attempt": 3
+    },
+    {
+      "phase": "PLAN_CREATED",
+      "at": "2026-10-27T14:40:47.874Z",
+      "attempt": 3
+    },
+    {
+      "phase": "PATCH_PROPOSED",
+      "at": "2026-10-27T14:40:47.877Z",
+      "attempt": 3
+    },
+    {
+      "phase": "CHECKING_PATCH",
+      "at": "2026-10-27T14:40:47.946Z",
+      "attempt": 3
+    },
+    {
+      "phase": "CHECK_FAILED",
+      "at": "2026-10-27T14:40:49.635Z",
+      "attempt": 3
+    }
+  ],
+  "coding": {
+    "taskId": "mob-b2bc99f3dbb5b1ce",
+    "taskFingerprint": "2f144d79b4275d255b0b93645ba92cf3afdfaa5685f14f630681fb36802c2368",
+    "sourceCommit": "6a04c7b8153111f9d1dbf5e5ce73f8d8c30ab472",
+    "allowedPaths": [
+      "backend/src/mentor-answer-format.js"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "64f09a7b568f883f9dd90fd747145903db62fcaf57f9aa5ffc5a832261c87c85",
+    "plan": [
+      "Identify the specific line in `backend/src/mentor-answer-format.js` where the formatting corruption occurs."
+    ]
+  },
+  "finishedAt": "2026-10-27T14:40:49.649Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "6a04c7b8153111f9d1dbf5e5ce73f8d8c30ab472",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 9,
+        "proof": "b5b475a8eb2a5f3e8214aa380fa33a6eeb084b2ef7ce42277d9e7dff1c52f7dc"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "6ec5b557dc5d3476",
+        "approved": true,
+        "proof": "692d75e9cb757a5dbdd309368cd6dc8da4ce7e835affdcff3180054c27304531"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "6ec5b557dc5d3476",
+        "editedFiles": 1,
+        "proof": "f4b506e2d4f045121154ca43e38ae1e92d5c442acb6a4f8842600c8d4e0c71fe"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "6ec5b557dc5d3476",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "744bc961e41ebd358af40da04b84d88317643c8963fb25c3e9f94b10cce5c2b1"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "df1d4b94e3cae527e64658a01b996e25e234caac19acd8af551fd1f8dcc5e43e"
+  }
+}

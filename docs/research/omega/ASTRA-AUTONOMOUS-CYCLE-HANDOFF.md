@@ -1,0 +1,22 @@
+# Continuum autonomous cycle — live research handoff
+
+Status: WIP / UNVERIFIED, 2026-10-27. Official repository only.
+
+Branch: `astra/continuum-autonomous-cycle-20261027`.
+Base: `54d9de3cde4a4f72f61e2f6c4e62a6dc9bd5439e`, verified with GitHub PR #187 and commit API, and authenticated Git checkout. PR #187 is open/draft, not merged. No PR numbered above #187 existed at intake. `main` remains `190f5eab`. PR #187 contains the #182 → #183 → #186 ancestry and the three coding-journal blobs from #185. #184 is a separate storage prototype, not a newer integrated app. Historical PR prose is not a build proof or release authorization.
+
+Scope: EXP-01/02/05/07/08/11/12. Extend the canonical CodingProvider → CCC1 → mobile coding job → teamleader → isolated repair → independent verifier; do not create another agent/backlog or app. A model candidate is always untrusted. No release, signing, installation, main merge, forced update, weight training or owner-memory promotion is authorized by this branch.
+
+Plan: (1) reproduce and freeze one real software defect and acceptance oracle; (2) execute a real local model through the existing provider; (3) improve error-driven correction/recovery where measurements show missing information; (4) run fresh independent verification and a separate unseen case; (5) connect actual progress through the existing typed Android bridge and publish raw evidence. No target repair may be authored by the infrastructure developer and attributed to the model. Provider outages and rejected candidates remain failures.
+
+Current findings: existing loop already supports scoped multi-file proposals, test diagnostics, up to three model calls, durable request reservations, CCC1 journals, isolation branding, owner review and fresh-worktree proof. Prior Qwen attempts include both a single early pagination success and subsequent invalid/no-op/incorrect failures. This task must therefore demonstrate a new, reproducible capability, not claim the first ever patch.
+
+Measured checkpoint: unchanged production `backend/src/mentor-answer-format.js` corrupts fenced code. Frozen baseline: 14 tests, 9 failures, 5 existing behaviors pass; holdout sealed separately before inference. First actual 1.5B Qwen run: 3 requests, two timeouts and one nonmatching hunk, CCC1 ABSTAINED, zero executed candidates. Sources were only 24/47 lines despite budget. Commit `4e0338fc` upgrades complete small-file context (47/47 now), explicitly bounded slow-CPU inference (default remains 60s; caller may select <=300s), typed timeout diagnostics and no automatic retry on transport unavailability. Focused new/context/provider regression: 40/40 pass. Original failed evidence is in `docs/evidence/autonomous-cycle-20261027/original-provider/`.
+
+Next checkpoint adds actual phase snapshots to the canonical repair report, fsync + atomic replacement after each observed phase, no new scheduler/journal. Interruption control observes real failed tests before stopping; 23 focused repair/CCC1/worker tests passed. This is infrastructure evidence, NOT a neural capability claim. The ongoing full-context 1.5B run has invalid model responses so far. A final 3B research-only local alternative will capture unmodified raw HTTP responses for precise format diagnosis. No paid external inference. Maximum primary experiment budget: 3 original + 3 full-context + 3 alternative model calls; each round <=20 minutes; 3B weights <=2.2 GB. Three-B weights use Qwen Research License, are not distributed or promoted into the app.
+
+Next entry: `.github/continuum/repair-loop.mjs` (`scopedRepairSession`), `coding-provider.mjs`, `coding-orchestrator.mjs`, `scripts/continuum-typed-coding-bridge.mjs`, and their tests. Tests at this initial checkpoint: NOT_RUN. Android/device/APK: NOT_RUN. Rollback: discard this unmerged branch; base and all historical artifacts remain unchanged.
+
+## Owner priority change / safe stop
+
+Owner superseded this research task with the local main-app APK integration task (7% weekly budget remaining). Model server stopped; no further inference authorized by the current work plan. Uncommitted read-only Android status integration is preserved here as WIP, not selected for release: latest wiring regression FAIL (existing static test assumes old exact field-access text); Android compiler NOT_RUN successfully (host JRE lacks javac). The latest reviewed core checkpoint remains aafc382e; do not blindly merge the WIP status UI. Raw 3B responses and final/interrupt metadata are retained in alternative-3b. No formatter repair is claimed.
