@@ -36,6 +36,14 @@ node --test scripts/continuum-local-mainapp-qa.test.mjs
 bash scripts/continuum-local-mainapp-qa.sh --offline
 ```
 
+**Alternativ über den schon vorhandenen Continuum-Teamleiter**, nach identischer expliziter Quellfreigabe und ohne zusätzliche Worker-Architektur:
+
+```bash
+bash scripts/continuum-teamleader-termux.sh mainapp-qa --offline
+```
+
+Dieser neue Teamleiter-Befehl führt nur den vorhandenen sicheren QA-Builder aus. Er benötigt weiterhin einen sauberen Git-Stand sowie `CONTINUUM_LOCAL_QA_APPROVED_SHA`, startet **keinen** eigenständigen Scheduler und veröffentlicht **kein** Besitzerupdate.
+
 Wenn Gradle-Abhängigkeiten erstmals fehlen: einmal ohne `--offline` ausführen. Diese erstmalige Cache-Befüllung ist **nicht** an CI- oder Render-Minuten gebunden.
 
 Die QA-Datei liegt danach ausschließlich unter `$HOME/.local/state/device-ai-continuum/mainapp-qa/`. **Nicht installieren.** Eine mit Android-Debugzertifikat signierte APK könnte die installierte Eigentümer-App nicht aktualisieren. Eine Deinstallation würde deren private Daten gefährden und ist ausdrücklich nicht Teil dieses Plans.
