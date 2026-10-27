@@ -552,6 +552,11 @@ class AgentActivity : Activity() {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
+        val portraitFold = wide && at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(
+            windowWidthDp, windowHeightDp
+        )
+        val portraitNavHeight = if (portraitFold) dp(74) else 0
+        var widePane: View? = null
         val phonePane: View?
         val phoneNavHeight: Int
         if (wide) {
@@ -561,9 +566,10 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
+            widePane = wideContent
             // The unfolded portrait reference is full bleed: no left navigation rail.
             // Fold landscape retains its tested sidebar and the same work-area handling.
-            if (!at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidthDp, windowHeightDp)) {
+            if (!portraitFold) {
                 wideContent.addView(buildRail(), LinearLayout.LayoutParams(
                     railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
                 ))
@@ -574,7 +580,14 @@ class AgentActivity : Activity() {
             root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT
-            ))
+            ).apply { bottomMargin = portraitNavHeight })
+            if (portraitFold) {
+                root.addView(buildPortraitWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                    portraitNavHeight,
+                    Gravity.BOTTOM
+                ))
+            }
         } else {
             val navScale = windowWidthDp /
                 at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
@@ -610,15 +623,18 @@ class AgentActivity : Activity() {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
                 val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
-                    wide, viewport.compactDashboard
+                    wide, viewport.compactDashboard, portraitFold
                 )
                 bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                if (phonePane != null) {
-                    val paneParams = phonePane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                val navigationPane = phonePane ?: if (portraitFold) widePane else null
+                if (navigationPane != null) {
+                    val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
+                    val requiredMargin = if (showNavigation) {
+                        if (portraitFold) portraitNavHeight else phoneNavHeight
+                    } else 0
                     if (paneParams.bottomMargin != requiredMargin) {
                         paneParams.bottomMargin = requiredMargin
-                        phonePane.layoutParams = paneParams
+                        navigationPane.layoutParams = paneParams
                     }
                 }
                 if (keyboardCompact != viewport.compactDashboard) {
@@ -765,6 +781,12 @@ class AgentActivity : Activity() {
         val dashboardScroll = ScrollView(this).apply {
             isFillViewport = false
             clipToPadding = false
+            isVerticalScrollBarEnabled = true
+            isScrollbarFadingEnabled = false
+            scrollBarSize = dp(5)
+            scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+            isSmoothScrollingEnabled = true
+            contentDescription = "Continuum-Cockpit, vertikal scrollbar: sechs Diagrammkarten und Systemstatus"
         }
         dashboardScroll.addView(dashboard, matchWidth())
         dashboardSection = dashboardScroll
@@ -1126,6 +1148,62 @@ class AgentActivity : Activity() {
 
         applyModeStyles()
         return card
+    }
+
+    /**
+     * Fold7 portrait has no side rail. Keep the original neon hero, its live
+     * animation and all cockpit diagrams, but expose the REAL existing work
+     * areas with a fixed one-tap dock instead of hiding chat off-screen.
+     * The dock is only presentation; permissions and model routing are unchanged.
+     */
+    private fun buildPortraitWorkAreaBar(): View {
+        val dock = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(dp(9), dp(6), dp(9), dp(7))
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.rgb(4, 15, 36))
+                setStroke(dp(1), Color.rgb(51, 112, 188))
+                cornerRadius = dp(17).toFloat()
+            }
+            contentDescription = "Continuum-Navigation: Start, Chat, Lernen, Entwickeln, Mehr"
+        }
+        for ((index, destination) in ContinuumWorkAreaNavigationSpec.destinations.withIndex()) {
+            val selectedSurface = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(12).toFloat()
+                setColor(Color.rgb(17, 48, 89))
+                setStroke(dp(1), Color.rgb(50, 179, 239))
+            }
+            val normalSurface = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(12).toFloat()
+                setColor(Color.TRANSPARENT)
+            }
+            val cell = TextView(this).apply {
+                text = destination.symbol + "\n" + destination.title
+                textSize = 12f
+                gravity = Gravity.CENTER
+                setTypeface(typeface, Typeface.BOLD)
+                setTextColor(android.content.res.ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
+                    intArrayOf(CYAN, MUTED)
+                ))
+                background = android.graphics.drawable.StateListDrawable().apply {
+                    addState(intArrayOf(android.R.attr.state_selected), selectedSurface)
+                    addState(intArrayOf(), normalSurface)
+                }
+                contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                tag = destination
+                isClickable = true
+                isFocusable = true
+                minimumHeight = dp(49)
+                setOnClickListener { navigateWorkArea(destination) }
+            }
+            dock.addView(cell, LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ).apply { if (index != 0) marginStart = dp(3) })
+        }
+        bottomWorkAreaBar = dock
+        refreshWorkAreaSelection()
+        return dock
     }
 
     private fun buildBottomWorkAreaBar(): View {
