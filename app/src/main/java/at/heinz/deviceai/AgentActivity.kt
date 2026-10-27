@@ -2697,7 +2697,7 @@ class AgentActivity : Activity() {
         }
     }
 
-    private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false) {
+    private fun runContinuumDialogue(request:String,sourceFallback:Boolean=false,shadowResearch:Boolean=false) {
         if(busy || localAgentExecutor.isShutdown)return
         val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()
         val requestSessionId=sessionId
@@ -2732,7 +2732,7 @@ class AgentActivity : Activity() {
                 // title-level match may supply a plainly labelled public quote.
                 // Confirmed owner memory always wins and source observations never
                 // grant model tools, device authority or Owner-Fact privileges.
-                val archiveHit=if(!turn.grounded && request.length in 6..240 &&
+                val archiveHit=if(!shadowResearch && !turn.grounded && request.length in 6..240 &&
                     (request.contains("?") || request.startsWith("Was ist ",true) ||
                         request.startsWith("Erkläre ",true))) {
                     runCatching {
@@ -2782,7 +2782,7 @@ class AgentActivity : Activity() {
                     val (answer,evidence,grounded)=dialogueResult
                     // Direct recall remains exact. Explicit synthesis uses the existing
                     // local agent; its conclusions acquire no confirmed-memory authority.
-                    if(LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
+                    if(!shadowResearch && LocalFirstPolicy.afterMemory(grounded,localRuntime.state==LocalModelState.READY &&
                             localRuntime.loadedModel!=null, request)==AssistantRoute.LOCAL_MODEL) {
                         val modelQuestion=LocalFirstPolicy.localModelQuestion(
                             request,localPrompt,
