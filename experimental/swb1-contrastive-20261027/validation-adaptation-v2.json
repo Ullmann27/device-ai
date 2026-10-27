@@ -1,0 +1,13 @@
+{
+ "schemaVersion":1,
+ "dataFilesChanged":false,
+ "finalEvaluated":false,
+ "reason":"Initial validation: SWB2 semantic19/36 versus15/36 baseline with original semantic counts retained at8000steps, but intent18/20 versus19/20. Investigate a frozen original intent view rather than relaxing retention gates.",
+ "additionalPolicy":"FROZEN_INTENT_SWB2",
+ "budgetsChanged":false,
+ "selectionThresholdsChanged":false,
+ "trainingInputsChanged":false,
+ "gradientSchedule":"Same SWB2_SHADOW training; separate frozen original SWB1 for intent predictions",
+ "checkpointContract":"existingSWB1 baseline plus existingSWB2 sidecar; explicit research-only manifest; no Android loader or productive promotion",
+ "finalComparison":"Select using new validation only, freeze all outputs before opening final; report every failed profile as well"
+}

@@ -37,3 +37,12 @@ test('new frozen split does not reuse old curriculum or the observed 52 transfer
  const old=new Set([TRAIN,VALIDATION,AUDIT,TRANSFER_SUITE_V1].flatMap(texts));const all=new Set();
  for(const split of ['train','validation','final']){const bytes=fs.readFileSync(new URL(split+'.json',dir));assert.equal(sha256(bytes),seal.files[split].sha256);const s=JSON.parse(bytes);assert.equal(s.semantic.filter(x=>x.similar).length,s.semantic.length/2);const current=new Set(texts(s));for(const t of current){assert.equal(old.has(t),false,t);assert.equal(all.has(t),false,t);}for(const t of current)all.add(t);}
 });
+
+test('a changing semantic sidecar cannot alter the frozen original intent predictions',async()=>{
+ const {frozenIntentView}=await import('../../experimental/swb1-contrastive-20261027/contrastive-lab.mjs');
+ const original=new SubwordEncoder(73),semantic=SubwordEncoder.restore(original.save());
+ const question='Warum fehlt der Beleg?';const before=original.intentScore(question);
+ for(let i=0;i<12;i++)semantic.updateIntent({text:question,label:1});
+ assert.notEqual(semantic.intentScore(question),before);
+ const view=frozenIntentView(original,semantic);assert.equal(view.intentScore(question),before);assert.equal(view.similarity('Ein Beleg','Ein Bericht'),semantic.similarity('Ein Beleg','Ein Bericht'));
+});
