@@ -140,7 +140,7 @@ object ContinuumHomeLayout {
             Slot.SEARCH to Box(557f, 16f, 585f, 48f),
             Slot.NOTIFICATIONS to Box(600f, 16f, 628f, 48f),
             Slot.PROFILE to Box(640f, 15f, 670f, 49f),
-            Slot.HERO to Box(229f, 60f, 491f, 390f + heroExtra),
+            Slot.HERO to Box(185f, 60f, 540f, 390f + heroExtra),
             Slot.LABEL_CONNECTED to Box(14f, 77f, 242f, 163f),
             Slot.LABEL_LEARNING to Box(14f, 177f, 242f, 263f),
             Slot.LABEL_DEVELOPING to Box(14f, 277f, 242f, 369f),
