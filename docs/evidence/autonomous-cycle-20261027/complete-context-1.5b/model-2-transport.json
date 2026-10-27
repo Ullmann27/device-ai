@@ -1,0 +1,13 @@
+{
+  "binary": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "args": [
+    "/workspace/device-ai/scripts/continuum-local-brain-cli.mjs",
+    "coding"
+  ],
+  "elapsedBoundMs": 240500,
+  "status": 1,
+  "signal": null,
+  "error": null,
+  "inputSha256": "e35cd9f4991d4466baad6bb3554bfafd630bcd566b317e13c27f60a4ccbd2f22",
+  "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

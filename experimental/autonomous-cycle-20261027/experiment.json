@@ -12,7 +12,7 @@
   ],
   "maxModelCalls": 3,
   "maxContextChars": 6000,
-  "limits": {"modelTimeoutMs":240000,"totalMinutes":20,"modelThreads":3,"modelWeightBytesMax":2100000000,"testMemoryMb":512,"testCpus":1,"testTimeoutMs":30000,"networkForTests":"none"},
+  "limits": {"modelTimeoutMs":300000,"totalMinutes":20,"modelThreads":3,"modelWeightBytesMax":2200000000,"testMemoryMb":512,"testCpus":1,"testTimeoutMs":30000,"networkForTests":"none"},
   "budgetRevision": "First frozen run retained separately: 3 calls, 2 timeouts and one nonexistent-source hunk. Native CPU prefill 35s and generation 6-8 tokens/s require an explicit bounded 240s call budget. No automatic timeout retry.",
   "origin": "Exact existing production Git blob; defect not injected. Developer supplies tests and infrastructure only. Model must supply the repair. No training."
 }

@@ -78,10 +78,14 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
    const dir=fs.openSync(evidence,'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
   }else{
    const pending=file+'.tmp-'+process.pid;
+   let fd;
    try{
-    fs.writeFileSync(pending,JSON.stringify(record,null,2)+'\n',{flag:'wx',mode:0o600});
+    fd=fs.openSync(pending,'wx',0o600);
+    fs.writeFileSync(fd,JSON.stringify(record,null,2)+'\n');fs.fsyncSync(fd);
+    fs.closeSync(fd);fd=undefined;
     fs.renameSync(pending,file);
-   }finally{fs.rmSync(pending,{force:true});}
+    const dir=fs.openSync(evidence,'r');try{fs.fsyncSync(dir);}finally{fs.closeSync(dir);}
+   }finally{if(fd!==undefined)fs.closeSync(fd);fs.rmSync(pending,{force:true});}
   }
  };
  const provider=({base,chain,deadline,diagnostics=[],history=[]}={})=>{

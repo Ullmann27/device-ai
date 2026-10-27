@@ -46,6 +46,29 @@ function validProposal(f){
   plan:['Correct negative distance'],hypothesis:'Subtraction has the wrong sign for reversed positions',
   patches:[{file:'lib/math.mjs',oldText:'return a-b;',newText:'return a>b?a-b:b-a;'}]};
 }
+test('infrastructure timeout stops after one call; repeating a prompt is not correction',()=>{
+ const f=fixture();let calls=0;
+ try{
+  const report=runSession(f,()=>{calls++;const e=Error('CODING_MODEL_TIMEOUT');e.code=e.message;throw e;});
+  assert.equal(calls,1);assert.equal(report.outcome,'NO_VERIFIED_REPAIR');
+  assert.equal(report.inference.lastRejectCode,'CODING_MODEL_TIMEOUT');
+ }finally{fs.rmSync(f.dir,{recursive:true,force:true});}
+});
+test('progress checkpoint retains real failed checks before an interruption',()=>{
+ const f=fixture(),wt=createWorktree(f.root,f.head);let snapshot;
+ try{
+  const provider=Object.assign(()=>({...validProposal(f),patches:[{file:'lib/math.mjs',oldText:'a-b',newText:'a+b'}]}),{taskSpec:f.task});
+  assert.throws(()=>repairSession({wt,base:f.head,chain:'node',out:path.join(f.state,'checkpoint'),candidateProvider:provider,
+   onProgress:report=>{if(report.progress?.at(-1)?.phase==='CHECK_FAILED'){
+    snapshot=report;throw Error('PROCESS_INTERRUPTION_TEST');
+   }}}),/PROCESS_INTERRUPTION_TEST/);
+  assert.equal(snapshot.attempts.length,1);assert.equal(snapshot.attempts[0].outcome,'FAILED_TESTS');
+  assert.ok(snapshot.attempts[0].tests[0].tests.failed>0);
+  assert.equal(snapshot.outcome,null);assert.equal(snapshot.verified,null);
+  assert.deepEqual(snapshot.progress.map(x=>x.phase),['CHECKING_BASELINE','BASELINE_FAILED','MODEL_WORKING','PLAN_CREATED','PATCH_PROPOSED','CHECKING_PATCH','CHECK_FAILED']);
+  assert.equal(fs.readFileSync(path.join(f.root,'lib/math.mjs'),'utf8'),moduleText);
+ }finally{removeWorktree(f.root,wt);fs.rmSync(f.dir,{recursive:true,force:true});}
+});
 test('invalid model output carries SHA-256 only, not discarded raw source',async()=>{
  const p={plan:['Change sign'],hypothesis:'Wrong sign',
   patches:[{file:'lib/math.mjs',oldText:'return a-b;',newText:'return a-b;'}]};

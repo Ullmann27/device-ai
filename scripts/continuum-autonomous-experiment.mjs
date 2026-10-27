@@ -48,9 +48,12 @@ if(operation==='prepare'){
    run:(binary,args,opts)=>{
     // Research-only explicit capture: this source has no personal data or secrets. Never record env/auth headers.
     const n=++calls;fs.writeFileSync(path.join(out,`model-${n}-input.json`),opts.input,{flag:'wx',mode:0o600});
-    const response=spawnSync(binary,args,opts);
+    const capture=path.join(implementation,'scripts/continuum-autonomous-model-capture.mjs');
+    const actualArgs=['--import',capture,...args];
+    const response=spawnSync(binary,actualArgs,{...opts,env:{...opts.env,
+     CONTINUUM_EXPERIMENT_RAW_RESPONSE:path.join(out,`model-${n}-raw-http.json`)}});
     fs.writeFileSync(path.join(out,`model-${n}-output.json`),response.stdout??'',{flag:'wx',mode:0o600});
-    write(`model-${n}-transport.json`,{binary,args,elapsedBoundMs:opts.timeout,status:response.status,signal:response.signal,error:response.error?.code??null,
+    write(`model-${n}-transport.json`,{binary,args:actualArgs,elapsedBoundMs:opts.timeout,status:response.status,signal:response.signal,error:response.error?.code??null,
      inputSha256:sha(opts.input),outputSha256:sha(response.stdout??'')});
     return response;
    }})});

@@ -511,7 +511,7 @@ export function runRepairShadowObserver(observer,candidates,ranked,stats,failedI
 
 /** Task-scoped candidates use the same critic, syntax and fixed test gates as legacy repairs.
  * Every revision is applied to base, never on top of a failed candidate. */
-function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log}){
+function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress}){
   const fingerprint=taskFingerprint(taskSpec);
   // Resume only this exact owner task/source. This is negative diagnostic reuse,
   // never automatic patch replay or a learned success label for model code.
@@ -580,8 +580,10 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
   for(let revision=0;revision<taskSpec.limits.maxModelCalls&&report.coding.candidateCount<maxCandidates&&Date.now()<deadline;revision++){
     resetWorktree(wt,base);
     beforeStep('provider');
+    if(revision>0)progress('CORRECTING');
     let candidate,repeatedRejected=false;
     report.inference.localRequests++;
+    progress('MODEL_WORKING');
     try{
       if(typeof candidateProvider!=='function')throw Error('LOCAL_PROVIDER_UNAVAILABLE');
       const raw=candidateProvider({wt,base,chain,deadline,readFile,
@@ -610,12 +612,15 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
       report.coding.contextSha256=raw.context.contextSha256;
       report.inference.candidateStatus='PROPOSED';
       report.coding.milestones.push('LOCAL_PROPOSAL_RECEIVED');
+      report.coding.plan=[...proposal.plan];
     }catch(error){
       report.inference.candidateStatus='UNAVAILABLE_OR_REJECTED';
       const claimedCode=error?.code??error?.message;
       const code=knownCodes.has(claimedCode)?claimedCode:'CODING_PROVIDER_ERROR';
       repeatedRejected=rejectModel(code,error?.responseSha256);
+      progress(terminalCodes.has(code)?'BLOCKED':'PROPOSAL_REJECTED');
     }
+    if(candidate){progress('PLAN_CREATED');progress('PATCH_PROPOSED');}
     beforeStep('provided');
     if(Date.now()>=deadline)break;
     if(!candidate){if(repeatedRejected||terminalCodes.has(report.inference.lastRejectCode))break;continue;}
@@ -633,7 +638,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
     const verdict=critique(c);
     const attempt={candidate:c.id,strategy:c.strategy,diagnostic:c.diagnostic,diagnosticKind:c.diagnosticKind,
       description:c.description,hypothesis:c.hypothesis,plan:c.plan,score:c.score,critic:verdict,edits:c.edits};
-    const record=()=>{report.attempts.push(attempt);remember(attempt);log(c.strategy+' -> '+attempt.outcome);};
+    const record=()=>{report.attempts.push(attempt);remember(attempt);log(c.strategy+' -> '+attempt.outcome);
+      progress(attempt.outcome==='VERIFIED'?'PATCH_CHECKS_PASSED':attempt.outcome==='FAILED_TESTS'||attempt.outcome==='FAILED_SYNTAX'?'CHECK_FAILED':'PROPOSAL_REJECTED');};
     if(!verdict.approved){attempt.outcome='REJECTED_BY_CRITIC';record();continue;}
     report.coding.milestones.push('CANDIDATE_CRITIC_APPROVED');
     // A worktree is not an OS sandbox. Only the already-reviewed numeric grammar
@@ -659,6 +665,7 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
         fingerprint:sha256(c.id+'\0'+syntax.reason).slice(0,16)}];
       attempt.outcome='FAILED_SYNTAX';record();continue;
     }
+    progress('CHECKING_PATCH');
     const check=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch,executor,executorAbortMode});
     attempt.tests=check.results.map(r=>({profile:r.profile,passed:r.passed,testProfile:r.testProfile,
       exitCode:r.exitCode,ms:r.ms,tests:r.tests,...(r.isolation?{isolation:r.isolation}:{})}));
@@ -702,7 +709,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
  * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
  * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null}){
+  if(onProgress!==null&&typeof onProgress!=='function')throw Error('INVALID_PROGRESS_OBSERVER');
   validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
   if(taskSpec&&(taskSpec.sourceCommit!==base||taskSpec.chain!==chain))throw Error('CODING_TASK_BINDING_MISMATCH');
@@ -719,18 +727,28 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     inference:{mode:'DETERMINISTIC_ONLY',modelId:null,modelInvocations:0,
       reason:'No generative model is invoked by this repair pipeline'},
     baseline:null,attempts:[],verified:null,outcome:null};
+  const progress=phase=>{
+    if(!taskSpec)return;
+    report.progress??=[];
+    report.progress.push({phase,at:new Date().toISOString(),attempt:report.inference.localRequests??0});
+    // Caller is the trusted worker; a model never gets this callback. Persist
+    // observed facts before the next side effect, without claiming completion.
+    if(onProgress)onProgress(structuredClone(report));
+  };
   report.execution={mode:executor?'OS_ISOLATED':'HOST_LEGACY',cancellation:executor&&abortWatch?'CHECKPOINT_BOUNDARY_ONLY':abortWatch?'STEP_WATCHDOG':'NONE'};
+  progress('CHECKING_BASELINE');
   const baseline=runChain(chain,wt,out,{deadline,checkpoint:beforeStep,abortWatch,executor,executorAbortMode});
   report.baseline={passed:baseline.passed,results:baseline.results.map(({outputTail,diagnostics,...r})=>({...r,diagnostics:diagnostics.length})),
     diagnostics:baseline.diagnostics};
   log(`baseline ${baseline.passed?'PASS':'FAIL'} with ${baseline.diagnostics.length} diagnostics`);
+  progress(baseline.passed?'BASELINE_PASSED':'BASELINE_FAILED');
   if(baseline.passed)return finishRepairReport(report,'NO_FAILURE');
   const actionable=baseline.diagnostics.filter(d=>d.file);
   if(!actionable.length){
     report.baselineTail=baseline.results.at(-1)?.outputTail;
     return finishRepairReport(report,'NO_CODE_DIAGNOSTIC');
   }
-  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log});
+  if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress});
   const ctx=context(wt,base,ledger.attempts);
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.
