@@ -1,0 +1,26 @@
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (51.899994ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (37.046551ms)
+✔ malformed model name is rejected before invoking the local child (72.63363ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (22.579833ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (56.923766ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (34.160434ms)
+✔ foreign or corrupt persisted requests block before another inference (49.454117ms)
+✔ unknown or symlinked SDK installation cannot be silently substituted (2.517519ms)
+✔ real Harness service preserves the existing strict wire schema without mounting tools (57.022391ms)
+✔ authority smuggling, no-op and HTTP failure remain rejected without hidden retries (14.670068ms)
+✔ chat only contacts fixed localhost and returns text as untrusted data (13.363837ms)
+✔ rejects missing authentication, unverified facts and external configuration (1.175151ms)
+✔ patch proposal is schema constrained, validated and never applied (8.199128ms)
+✔ server errors and overly long outputs fail closed (3.09511ms)
+✔ health never transmits authorization and discriminates loading/unavailable (1.619627ms)
+✔ actual Node HTTP loopback fixture exercises an end-to-end POST (47.264182ms)
+✔ local structured patch request sends nested schema to real loopback HTTP endpoint (11.424384ms)
+✔ schema-compatible server response still cannot smuggle authority or unsafe file edits (1.509943ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 850.085115

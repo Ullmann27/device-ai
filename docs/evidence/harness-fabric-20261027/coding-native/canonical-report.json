@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "base": "0006ddf699445d77c45201e173918c0e7ec902bb",
+  "chain": "node",
+  "startedAt": "2026-10-27T10:02:19.186Z",
+  "inference": {
+    "mode": "LOCAL_CANDIDATE_PROVIDER",
+    "modelId": null,
+    "modelInvocations": null,
+    "localRequests": 2,
+    "verifiedModelExecution": false,
+    "candidateStatus": "UNAVAILABLE_OR_REJECTED",
+    "repeatedCandidates": 0,
+    "history": [
+      {
+        "candidate": "b96fd7d10504a6a3",
+        "outcome": "FAILED_TESTS",
+        "diagnostic": "TEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n-598 !== 1306\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n839 !== 803\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n787 !== -1143\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n337 !== 249\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n43 !== -1947\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n1000 !== 614\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n-315 !== 1549\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n-238 !== 794\nTEST_FAILURE .github/continuum/independent.test.mjs Expected values to be strictly equal:\n\n813 !== 823\nTEST_FAILURE .github/continuum/independent.test.mjs Expected val",
+        "hypothesis": "The issue is caused by the incorrect handling of non-safe-integer input in the `applyAdjustment` function."
+      },
+      {
+        "candidate": "provider-rejection",
+        "outcome": "REJECTED_MODEL_OUTPUT",
+        "diagnostic": "CODING_MODEL_UNAVAILABLE",
+        "hypothesis": ""
+      }
+    ],
+    "rejections": [
+      {
+        "code": "CODING_MODEL_UNAVAILABLE",
+        "repeated": false
+      }
+    ],
+    "reason": "Provider calls do not independently establish model execution",
+    "lastRejectCode": "CODING_MODEL_UNAVAILABLE"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 64,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "915351641105171b5820f64d225b3f54d2761c5160e32809f568bf9d92f7e983",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 24,
+          "failed": 20,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 24,
+          "passed": 4,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "030e356ca847cc1ab5130d21988ada3fcf294a39ce1d80d689ff38eff36589f2",
+            "0549d68c82af46f2e60ce08f2122c473f2a6d9d05fdf55aec6b8eac28e9dffe7",
+            "0c12a94690717e3a87dfa7714525ae17fbc32d6c83711a28907c4a41d1a671b8",
+            "0f6cadf5c152ed08a096fe091bf11bb1b497daf96f15e5bdd3e6be6f462d0788",
+            "18283731a28c2d021ce95dde664178270c62031111faf71f756d438bb6c3f370",
+            "1db9f047927e2f7eb7470dc92e5554381a13d3f14af1bfa5dac4c0a2dd9e7583",
+            "29c91c05bb65d2a1042fb4ed3edaabbe7d27604e2a257173cc3bafd849c9d335",
+            "323b7eb938c2ec639d1cdc9632dc5f5c1a729234fb6747e17aadc964a031e3e4",
+            "35e9ffb06400f880466b477ce55553461723f53ab874ebf7c043fc56b1282034",
+            "5ad849db1f95d48249ee22717258c2fcc78b1130a722d796c301cc2ca5695b2f",
+            "5df88f557686fd340eaa7052719383ee7b0835caf9c39f4997db00eac381d5d6",
+            "61e6dde36a010659f1972309ba3cc92c2ef5da25866a631737bfd3197a54ece5",
+            "6251097e2b34f9062996b47d06f7a6dcfc06355c98e188402749fe8c21c0cea9",
+            "6d97a5f297478d7241604cc03220754b2ade1214e7e32694e4cd9602c8dec433",
+            "740e276c797911011bffc232b26585c49e613fa62d2d5dcf5c483a52c7fd98cc",
+            "76c9c20996af6119045d0b5fab7a4b840a06869cc26dfd50cf980f900d14151e",
+            "83b78e88d86b7ed510d92f96ffd17e8cd54fe32a0025c3400158afc3594a4494",
+            "8ca49143f75415c87c12e19ce5008245374060cf4862c1bdbdfe9fd04ef19037",
+            "969c9b0770d606d9f305a94479503a9952625ee034736f3bd16accbddead8d6c",
+            "9b37f3b9dc9ba1f4dc25060d302739b167fde9abdc74cee5396919a6101e188c",
+            "c9dfc7d26b8a872befff4307cd58e327ff3ace1434b0701e410a477c3404f1f1",
+            "d60abc5f244b984ae3044ec90382602563539b8ae90088051ea44f88ea848599",
+            "f0df7be893564eda855cebff6befdae6f8567c9dc7e36e0e5958518715fba9c8",
+            "f7f21a1a89146bc4711f5ae08c30f2d4f442380a3a1ab2b940c8782e5b564d38"
+          ]
+        },
+        "diagnostics": 20
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 354,952",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-598 !== 1306",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "fcc5f0a029570c1e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 821,-18",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n839 !== 803",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0866294152f79389"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -178,-965",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n787 !== -1143",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "d8c722a035504a43"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 293,-44",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n337 !== 249",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0866294152f79389"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -952,-995",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n43 !== -1947",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "d8c722a035504a43"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 807,-193",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n1000 !== 614",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0866294152f79389"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 617,932",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-315 !== 1549",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "fcc5f0a029570c1e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 278,516",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-238 !== 794",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "fcc5f0a029570c1e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 818,5",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n813 !== 823",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0866294152f79389"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -314,-404",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n90 !== -718",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "d8c722a035504a43"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 387,-356",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n743 !== 31",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "0866294152f79389"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -541,-154",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-387 !== -695",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "41c93e163239595e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -920,-177",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-743 !== -1097",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "41c93e163239595e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -335,988",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-1323 !== 653",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "fcc5f0a029570c1e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle 813,-904",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n1717 !== -91",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "d8c722a035504a43"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.oracle -366,75",
+        "file": ".github/continuum/independent.test.mjs",
+        "line": 2,
+        "col": 354,
+        "message": "Expected values to be strictly equal:\n\n-441 !== -291",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "41c93e163239595e"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.signed 10,3",
+        "file": ".github/continuum/regression.test.mjs",
+        "line": 2,
+        "col": 109,
+        "message": "Expected values to be strictly equal:\n\n7 !== 13",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "8e66d85abd184675"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.signed 10,-3",
+        "file": ".github/continuum/regression.test.mjs",
+        "line": 2,
+        "col": 109,
+        "message": "Expected values to be strictly equal:\n\n13 !== 7",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "8e66d85abd184675"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.signed 0,7",
+        "file": ".github/continuum/regression.test.mjs",
+        "line": 2,
+        "col": 109,
+        "message": "Expected values to be strictly equal:\n\n-7 !== 7",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "e6028104581900e0"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.signed -8,-2",
+        "file": ".github/continuum/regression.test.mjs",
+        "line": 2,
+        "col": 109,
+        "message": "Expected values to be strictly equal:\n\n-6 !== -10",
+        "kind": "TEST_FAILURE",
+        "fingerprint": "4ee0b3f3c2ed3e73"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "b96fd7d10504a6a3",
+      "strategy": "LOCAL_SCOPED_PATCH",
+      "diagnostic": "fcc5f0a029570c1e",
+      "diagnosticKind": "TEST_FAILURE",
+      "description": "Task-scoped local proposal; fixed tests and independent owner review required",
+      "hypothesis": "The issue is caused by the incorrect handling of non-safe-integer input in the `applyAdjustment` function.",
+      "plan": [
+        "Identify the issue in the code by examining the test failures.",
+        "Analyze the code to understand the logic and identify the problem.",
+        "Determine the cause of the issue by examining the test failures and the code.",
+        "Create a patch to fix the issue.",
+        "Test the patch to ensure it works as expected."
+      ],
+      "score": 0.38,
+      "critic": {
+        "approved": true,
+        "risk": 0.253,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": true
+      },
+      "edits": [
+        {
+          "file": "lib/ledger.mjs",
+          "oldText": "export function applyAdjustment(balance, adjustment) {\n  if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {\n    throw new RangeError('safe integer inputs required');\n  }\n  return balance - adjustment;\n}\n",
+          "newText": "export function applyAdjustment(balance, adjustment) {\n  if (!Number.isSafeInteger(balance) || !Number.isSafeInteger(adjustment)) {\n    throw new TypeError('safe integer inputs required');\n  }\n  return balance - adjustment;\n}\n"
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          "lib/ledger.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 24,
+            "failed": 23,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 24,
+            "passed": 1,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "030e356ca847cc1ab5130d21988ada3fcf294a39ce1d80d689ff38eff36589f2",
+              "0549d68c82af46f2e60ce08f2122c473f2a6d9d05fdf55aec6b8eac28e9dffe7",
+              "0c12a94690717e3a87dfa7714525ae17fbc32d6c83711a28907c4a41d1a671b8",
+              "0f6cadf5c152ed08a096fe091bf11bb1b497daf96f15e5bdd3e6be6f462d0788",
+              "18283731a28c2d021ce95dde664178270c62031111faf71f756d438bb6c3f370",
+              "1db9f047927e2f7eb7470dc92e5554381a13d3f14af1bfa5dac4c0a2dd9e7583",
+              "29c91c05bb65d2a1042fb4ed3edaabbe7d27604e2a257173cc3bafd849c9d335",
+              "323b7eb938c2ec639d1cdc9632dc5f5c1a729234fb6747e17aadc964a031e3e4",
+              "35e9ffb06400f880466b477ce55553461723f53ab874ebf7c043fc56b1282034",
+              "5ad849db1f95d48249ee22717258c2fcc78b1130a722d796c301cc2ca5695b2f",
+              "5df88f557686fd340eaa7052719383ee7b0835caf9c39f4997db00eac381d5d6",
+              "61e6dde36a010659f1972309ba3cc92c2ef5da25866a631737bfd3197a54ece5",
+              "6251097e2b34f9062996b47d06f7a6dcfc06355c98e188402749fe8c21c0cea9",
+              "6d97a5f297478d7241604cc03220754b2ade1214e7e32694e4cd9602c8dec433",
+              "740e276c797911011bffc232b26585c49e613fa62d2d5dcf5c483a52c7fd98cc",
+              "76c9c20996af6119045d0b5fab7a4b840a06869cc26dfd50cf980f900d14151e",
+              "83b78e88d86b7ed510d92f96ffd17e8cd54fe32a0025c3400158afc3594a4494",
+              "8ca49143f75415c87c12e19ce5008245374060cf4862c1bdbdfe9fd04ef19037",
+              "969c9b0770d606d9f305a94479503a9952625ee034736f3bd16accbddead8d6c",
+              "9b37f3b9dc9ba1f4dc25060d302739b167fde9abdc74cee5396919a6101e188c",
+              "c9dfc7d26b8a872befff4307cd58e327ff3ace1434b0701e410a477c3404f1f1",
+              "d60abc5f244b984ae3044ec90382602563539b8ae90088051ea44f88ea848599",
+              "f0df7be893564eda855cebff6befdae6f8567c9dc7e36e0e5958518715fba9c8",
+              "f7f21a1a89146bc4711f5ae08c30f2d4f442380a3a1ab2b940c8782e5b564d38"
+            ]
+          },
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:695fb07716de18118c92d0e613fe8b7413f86c27dc2b5fd5faa4e8fca51d29f8",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 512,
+            "pids": 64,
+            "cpus": 1,
+            "timeoutMs": 30000,
+            "sourceSha256": "c149bd82c5c4f049ca1640e92cb19d4759405588964626eeac892b574770135c",
+            "profile": "node-continuum",
+            "untrustedReports": true
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 354,952",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n-598 !== 1306",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "fcc5f0a029570c1e"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 821,-18",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n839 !== 803",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "0866294152f79389"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle -178,-965",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n787 !== -1143",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "d8c722a035504a43"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 293,-44",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n337 !== 249",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "0866294152f79389"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle -952,-995",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n43 !== -1947",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "d8c722a035504a43"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 807,-193",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n1000 !== 614",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "0866294152f79389"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 617,932",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n-315 !== 1549",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "fcc5f0a029570c1e"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 278,516",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n-238 !== 794",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "fcc5f0a029570c1e"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle 818,5",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n813 !== 823",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "0866294152f79389"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.oracle -314,-404",
+          "file": ".github/continuum/independent.test.mjs",
+          "line": 2,
+          "col": 354,
+          "message": "Expected values to be strictly equal:\n\n90 !== -718",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "d8c722a035504a43"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "CHECKPOINT_BOUNDARY_ONLY"
+  },
+  "coding": {
+    "taskId": "mob-a818b69f0ad52f35",
+    "taskFingerprint": "5344579dd832923867067f5bab0ac8351e034a0e5ae1e9403b7b40bade84e480",
+    "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+    "allowedPaths": [
+      "lib/ledger.mjs"
+    ],
+    "milestones": [
+      "BASELINE_FAILED",
+      "LOCAL_PROPOSAL_RECEIVED",
+      "CANDIDATE_CRITIC_APPROVED",
+      "CANDIDATE_TESTS_FAILED"
+    ],
+    "candidateCount": 1,
+    "contextSha256": "eb14defccc403e1a6d5849c36e7aa8b4c5f47a3ffb0921ec48a349815fae30b6"
+  },
+  "finishedAt": "2026-10-27T10:04:07.707Z",
+  "handoffs": {
+    "schema": "continuum-repair-handoffs",
+    "version": 1,
+    "base": "0006ddf699445d77c45201e173918c0e7ec902bb",
+    "chain": "node",
+    "conclusion": "NO_VERIFIED_REPAIR",
+    "messages": [
+      {
+        "role": "ANALYST",
+        "event": "BASELINE_CHECKED",
+        "passed": false,
+        "profiles": 1,
+        "diagnosed": 20,
+        "proof": "db04f3078ce143e8e4c0ec3cdb0ea54d7d00a5d51c3a0ed23a6f2ff91f9ddc91"
+      },
+      {
+        "role": "CRITIC",
+        "event": "REVIEWED",
+        "candidateHash": "bcbcfe905660d36d",
+        "approved": true,
+        "proof": "558bff3733a399d2dafa70b292205b9dd9d4212f151c5179b675b4657b455765"
+      },
+      {
+        "role": "PATCHER",
+        "event": "ISOLATED_EDIT_ATTEMPTED",
+        "candidateHash": "bcbcfe905660d36d",
+        "editedFiles": 1,
+        "proof": "47f0732eb22bd2d69de3ce47781a7c2a7a7eaf3d5c54db954511f3021bf2030b"
+      },
+      {
+        "role": "TESTER",
+        "event": "FIXED_TEST_CHAIN",
+        "candidateHash": "bcbcfe905660d36d",
+        "passed": false,
+        "executed": true,
+        "profiles": 1,
+        "proof": "6c0960665dafd271006883898c62bf5991433b9bde41159edce2545116fec1e2"
+      },
+      {
+        "role": "TEAMLEADER",
+        "event": "NO_AUTOMATIC_MERGE",
+        "outcome": "NO_VERIFIED_REPAIR",
+        "approvedForMerge": false,
+        "proof": "002b7ec5cc192a22e716d0e8429c1678d46968ab641821cca6af54cf7b17e41d"
+      }
+    ],
+    "integrity": "047e3c034bd26dbcd45d48200a9686df0d6bc02db0bbf031cc69ccd79540088a"
+  }
+}

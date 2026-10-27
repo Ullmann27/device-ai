@@ -11,7 +11,7 @@ export function isCodingPath(file){
   /^(?:lib\/|src\/|backend\/src\/|app\/src\/main\/java\/|\.github\/continuum\/)[A-Za-z0-9_./-]+\.(?:mjs|js|kt)$/.test(file)&&
   !file.split('/').some(p=>!p||p==='.'||p==='..')&&
   !/(^|\/)(?:node_modules|build|dist|secrets?|credentials?|private|owner-data)(\/|\.)/i.test(file)&&
-  !/^\.github\/continuum\/(?:coding-|ccc1-|isolated-|local-brain|local-numeric|step-watchdog|behaviour-probe|contract-|teamleader-|owner-|backlog-|development-|autonomous-)/.test(file)&&
+  !/^\.github\/continuum\/(?:harness-coding-|storage-fabric|coding-|ccc1-|isolated-|local-brain|local-numeric|step-watchdog|behaviour-probe|contract-|teamleader-|owner-|backlog-|development-|autonomous-)/.test(file)&&
   critique({strategy:'LOCAL_SCOPE_CHECK',edits:[{file,oldText:'a',newText:'b'}]}).approved;
 }
 export function validateCodingTask(input){

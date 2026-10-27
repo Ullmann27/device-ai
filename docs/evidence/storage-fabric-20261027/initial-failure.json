@@ -1,0 +1,8 @@
+{
+  "command": "node --test .github/continuum/storage-fabric.test.mjs",
+  "pass": 2,
+  "fail": 5,
+  "skip": 0,
+  "cause": "Request body resumed before asynchronous iterator; fixed by leaving paused until iteration.",
+  "rawTranscriptAvailable": "tool transcript; exact original raw TAP not captured to file"
+}

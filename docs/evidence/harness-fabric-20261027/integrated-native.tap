@@ -1,0 +1,48 @@
+✔ read-only binding checks the canonical typed task and all four identities (6.388963ms)
+✔ invalid source, task or patch hash cannot cross the research binding (2.766238ms)
+✔ forbid test tampering and unapproved paths independently of candidate label (0.895908ms)
+✔ a fake executor or a caller-supplied sandbox cannot issue a dual-run claim (1.005485ms)
+✔ existing CCC1 owner grant must be valid, canonical and fully prepared (4.074423ms)
+✔ NTW1 rank -> atomic translator -> CCC1 typed candidate binding is an executable-free chain (3.304293ms)
+✔ CCC1: omitted or non-true evidenceComplete cannot establish RED/GREEN/fresh parity (1.032818ms)
+✔ CCC1: run measurement requires explicit complete XML evidence (0.594138ms)
+✔ CCC1: an apparent green with fewer executed tests than RED is NOT verified (0.699925ms)
+✔ CCC1: equal or increased executed coverage preserves same-profile evidence (1.080205ms)
+✔ CCC1: skipped tests must remain identical across RED, GREEN and fresh run (0.616861ms)
+✔ CCC1: no missing profile, zero executed tests or contradictory JUnit counts (0.216596ms)
+✔ CCC1: same number of tests but a replaced testcase cannot fake equal coverage (0.202662ms)
+✔ CCC1: missing, duplicate or malformed executed identities never attest repairs (0.35855ms)
+✔ provider binds task, retrieves source, retains bounded revision history and calls only fixed CLI (48.845399ms)
+✔ model child receives only local credentials and durable trace excludes raw source/model output (35.278379ms)
+✔ malformed model name is rejected before invoking the local child (68.190852ms)
+✔ unsafe evidence paths fail before dirtying the source checkout (21.189171ms)
+✔ same canonical job resumes its request budget without repeating evidence slots (51.152661ms)
+✔ request reservation is durable before inference and interrupted calls consume the budget (33.857331ms)
+✔ foreign or corrupt persisted requests block before another inference (36.931224ms)
+✔ local pinned fallback is advisory, not a fake 511GB inference (2.49398ms)
+✔ remote route requires separate internet and owner-compute consent (0.437469ms)
+✔ private memories never leave local site through this planner (0.200274ms)
+✔ remote model identity must match both exact model and pinned revision (0.150184ms)
+✔ reject unavailable, expired, unowned, oversized and overbudget compute (0.433699ms)
+✔ local selection is preferred, but never substitutes an unpinned model (0.260934ms)
+✔ reuses pinned 48-shard Hub manifest validator without downloading weights (0.986293ms)
+✔ malformed request, duplicate nodes and deadline fail closed (0.449517ms)
+✔ routing snapshots primitive offer data against later mutation (0.340253ms)
+✔ unknown or symlinked SDK installation cannot be silently substituted (1.458504ms)
+✔ real Harness service preserves the existing strict wire schema without mounting tools (50.074323ms)
+✔ authority smuggling, no-op and HTTP failure remain rejected without hidden retries (16.901621ms)
+✔ AES-GCM envelope validates ciphertext digest, plaintext digest, key and auth tag (8.214779ms)
+✔ real two-process replication, corruption failover, repair, unavailable node, cache and restart (628.427743ms)
+✔ versions survive restart; tombstone commits before unavailable replica deletion and reconciles recovery (330.05201ms)
+✔ real HTTP rejects absent/wrong/scoped tokens, traversal, wrong namespace, malformed hash and oversized body (193.738975ms)
+✔ real disk/quota limits reject new writes without committing object or claiming synthetic capacity (196.433895ms)
+✔ root/block/cache symlinks and catalog HMAC tampering fail closed; untrusted bytes are data only (208.422296ms)
+✔ bounded encrypted cache evicts within quota and does not replace object/tombstone checks (191.016641ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2548.887995

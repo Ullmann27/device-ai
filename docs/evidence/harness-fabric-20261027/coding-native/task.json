@@ -1,0 +1,21 @@
+{
+  "schema": "continuum-coding-task",
+  "version": 1,
+  "id": "harness-signed-adjustment-20261027",
+  "sourceCommit": "0006ddf699445d77c45201e173918c0e7ec902bb",
+  "kind": "BUGFIX",
+  "goal": "Apply a signed integer ledger adjustment to the balance correctly; preserve existing safe-integer input rejection.",
+  "allowedPaths": [
+    "lib/ledger.mjs"
+  ],
+  "acceptance": [
+    "Positive adjustments increase the balance; negative adjustments decrease it.",
+    "Zero preserves balance.",
+    "Non-safe-integer input must still throw RangeError."
+  ],
+  "chain": "node",
+  "limits": {
+    "maxModelCalls": 2,
+    "maxContextChars": 4096
+  }
+}
