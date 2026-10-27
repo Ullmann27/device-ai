@@ -248,7 +248,11 @@ class BoundedAgentOrchestrator(
         val usedTools = mutableListOf<String>()
         val failures = mutableListOf<String>()
         val toolObservations = mutableListOf<AgentToolObservation>()
+        val toolEvidence = mutableListOf<String>()
         val modelIds = mutableListOf<String>()
+        fun hasFreshToolOutcomes(): Boolean = toolObservations.all {
+            it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
+        }
 
         fun transition(state: AgentState, detail: String) {
             cancellation.throwIfCancelled()
@@ -309,6 +313,14 @@ class BoundedAgentOrchestrator(
                                 approval.destructiveConfirmed
                             )
                             lastRecord = execution.record
+                            // A replayed receipt deliberately returns no output. It is not
+                            // a new observation and cannot establish new learning evidence.
+                            if (lastRecord.status == ToolExecutionStatus.SUCCEEDED && !execution.output.isNullOrBlank()) {
+                                val digest = MessageDigest.getInstance("SHA-256")
+                                    .digest(execution.output.toByteArray(Charsets.UTF_8))
+                                    .joinToString("") { "%02x".format(it) }
+                                toolEvidence += "tool-call:${lastRecord.callId}:sha256:$digest"
+                            }
                             transition(AgentState.OBSERVE_RESULT, "Tool result status: ${lastRecord.status}.")
                             toolObservations += AgentToolObservation(
                                 proposal.toolName, execution.record.status, execution.output
@@ -323,7 +335,7 @@ class BoundedAgentOrchestrator(
                 transition(AgentState.EVALUATE, "Result evaluated.")
                 lastEvaluation = evaluator.evaluate(lastOutput, lastRecord)
                 cancellation.throwIfCancelled()
-                modelReputation?.updateAfterEvaluation(
+                modelReputation?.takeIf { evaluationConfirmsOutcome && hasFreshToolOutcomes() }?.updateAfterEvaluation(
                     chosen.modelId,
                     ModelCapability.TOOL_USE,
                     "agent",
@@ -357,6 +369,7 @@ class BoundedAgentOrchestrator(
                 taskType = "agent_task",
                 requestSummary = task.take(512),
                 memoryIds = retrieved.map { it.id },
+                sourceIds = toolEvidence.toList(),
                 modelIds = modelIds.distinct(),
                 toolIds = usedTools.distinct(),
                 planSummary = "Bounded model response with registered tools only.",
@@ -368,7 +381,7 @@ class BoundedAgentOrchestrator(
                 confidenceAfter = lastEvaluation.score,
                 outcome = when {
                     !lastEvaluation.success -> ExperienceOutcome.FAILURE
-                    evaluationConfirmsOutcome -> ExperienceOutcome.SUCCESS
+                    evaluationConfirmsOutcome && hasFreshToolOutcomes() -> ExperienceOutcome.SUCCESS
                     else -> ExperienceOutcome.PARTIAL
                 },
                 startedAt = startedAt,
