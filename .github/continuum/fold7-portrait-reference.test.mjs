@@ -54,8 +54,15 @@ test('six equal live cards and the separate status strip are aligned without cli
 
 test('mirrored controls do not cover the hologram; real renderer and all diagrams survive',()=>{
  const portrait=layout.split('fun portraitFold(')[1].split('fun wide(')[0];
- for(const row of ['81f, 163f','177f, 259f','273f, 355f']){
-  assert.ok(portrait.includes(row),'missing symmetrical action row '+row);
+ for(const [left,right,top,bottom] of [
+  ['LABEL_CONNECTED','LABEL_THINKING',81,163],
+  ['LABEL_LEARNING','LABEL_ANALYSING',177,259],
+  ['LABEL_DEVELOPING','LABEL_EVOLVING',273,355]
+ ]){
+  assert.ok(portrait.includes('Slot.'+left+' to Box(14f, '+top+'f, 230f, '+bottom+'f)'),
+    'missing left action: '+left);
+  assert.ok(portrait.includes('Slot.'+right+' to Box(610f, '+top+'f, 826f, '+bottom+'f)'),
+    'missing mirrored right action: '+right);
  }
  assert.match(portrait,/Slot\.HERO to Box\(240f, 60f, 600f, heroBottom\)/);
  for(const name of ['PortraitModelCard','PortraitLearningCard','PortraitStorageCard',
