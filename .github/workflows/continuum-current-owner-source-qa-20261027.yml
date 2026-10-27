@@ -1,0 +1,135 @@
+name: Continuum Current Main-App Source QA
+
+on:
+  push:
+    branches:
+      - chatgpt/continuum-owner-current-qa-apk-20261027
+    paths:
+      - app/**
+      - backend/**
+      - scripts/**
+      - .github/continuum/**
+      - .github/workflows/continuum-current-owner-source-qa-20261027.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-current-mainapp-qa
+  cancel-in-progress: false
+
+jobs:
+  current-mainapp-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - name: Checkout exactly requested main-app source (no credentials retained)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Android 36 SDK and 35.0.0 build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-36' 'build-tools;35.0.0'
+
+      - name: Real cross-runtime retrieval, model admission and brain source contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=2 \
+            .github/continuum/retrieval-identifiers.test.mjs \
+            scripts/continuum-m2-model-preflight.test.mjs \
+            .github/continuum/m2-owner-brain-contract.test.mjs
+
+      - name: Actual Android unit tests, lint and Kotlin
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx2200m -XX:MaxMetaspaceSize=600m" \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PcontinuumUiWidgetTests=true \
+            :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin --stacktrace
+
+      - name: Generate disposable QA certificate, never owner identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          keytool -genkeypair -noprompt -alias deviceai-mentor \
+            -keyalg EC -groupname secp256r1 -validity 2 \
+            -dname 'CN=Continuum Disposable QA, O=Independent QA, C=AT' \
+            -storetype PKCS12 -keystore "$RUNNER_TEMP/continuum-qa.p12" \
+            -storepass 'Continuum-QA-Public-Disposable-20261027' \
+            -keypass 'Continuum-QA-Public-Disposable-20261027'
+          echo "CONTINUUM_MENTOR_SIGNING_FILE=$RUNNER_TEMP/continuum-qa.p12" >> "$GITHUB_ENV"
+          echo 'CONTINUUM_MENTOR_SIGNING_PASSWORD=Continuum-QA-Public-Disposable-20261027' >> "$GITHUB_ENV"
+
+      - name: Compile real same-package Continuum 0.3.24 QA binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx2200m -XX:MaxMetaspaceSize=600m" \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true \
+            -PdeviceAiOwnerSignedUpdate=true \
+            :app:assembleDebug --stacktrace
+
+      - name: Independently verify exact source, package and non-owner APK signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          mkdir -p qa-apk
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          "$tools/apksigner" verify --verbose --print-certs "$apk" > qa-apk/SIGNATURE-INFO.txt
+          "$tools/aapt" dump badging "$apk" > qa-apk/PACKAGE-INFO.txt
+          grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='25' versionName='0.3.24'" qa-apk/PACKAGE-INFO.txt
+          grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' qa-apk/SIGNATURE-INFO.txt
+          if grep -Fqi '2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc' qa-apk/SIGNATURE-INFO.txt; then
+            echo 'FATAL: unexpected owner signer in disposable QA lane' >&2
+            exit 69
+          fi
+          cp "$apk" qa-apk/Continuum-0.3.24-Current-QA-NOT-INSTALLABLE-OVER-OWNER.apk
+          (cd qa-apk && sha256sum Continuum-0.3.24-Current-QA-NOT-INSTALLABLE-OVER-OWNER.apk > SHA256SUMS.txt)
+          printf 'source_sha=%s\npackage=at.heinz.deviceai.mentorpaired\nversion_code=25\nversion_name=0.3.24\nowner_signed=FALSE\nowner_installable=FALSE\nrelease_authorized=FALSE\n' "$GITHUB_SHA" > qa-apk/STATUS.txt
+
+      - name: Upload real compiled QA APK (NOT owner-installable)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-Current-Main-App-QA-NOT-OWNER-INSTALLABLE
+          path: qa-apk/
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Preserve real failing test evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-Current-Android-QA-Failure-Evidence
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.html
+            app/build/outputs/apk/debug/
+          if-no-files-found: ignore
