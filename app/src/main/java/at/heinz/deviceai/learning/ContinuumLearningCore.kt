@@ -804,19 +804,22 @@ class ContinuumLearningCore(
 
     fun replyWithEvidenceInConversation(
         input:String,conversationId:String,
+        trace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null,
         rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?=null
-    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithEvidenceScoped(input,conversationId,rerank)
+    ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> = replyWithEvidenceScoped(input,conversationId,rerank,trace)
 
     private fun replyWithEvidenceScoped(
         input:String,conversationId:String?,
-        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?
+        rerank:((String,List<ContinuumMemoryHit>)->List<ContinuumMemoryHit>)?,
+        trace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null
     ):Pair<ContinuumDialogueTurn,List<ContinuumMemoryHit>> =
         synchronized(CORE_LOCK) {
             ContinuumMemoryDialogue.requireConversationId(conversationId)
             val snapshot=loadModel().save()
             val experiences=store.all()
+            trace?.event(at.heinz.deviceai.cognitive.TraceStage.MEMORY_LOOKUP)
             val turn=dialogue.replyInConversation(snapshot,experiences,input,nowMillis(),conversationId,rerank)
-            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId?:defaultContextConversation) }
+            runCatching { at.heinz.deviceai.learning.context.Ctx3Shadow.evaluate(directory,snapshot,experiences,input,turn.memoryIds,conversationId?:defaultContextConversation,trace) }
             val hits=if(turn.grounded) {
                 val byId=ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)
                     .associateBy { it.id }

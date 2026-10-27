@@ -14,7 +14,8 @@ class LocalModelReasoningAdapter(
     private val modelIdProvider: () -> String? = {
         runtime.loadedModel?.let { "${it.id}@${it.version}" }
     },
-    private val nowNanos: () -> Long = System::nanoTime
+    private val nowNanos: () -> Long = System::nanoTime,
+    private val turnTrace: CognitiveTurnTrace? = null
 ) : ContinuumReasoningAdapter {
 
     @Volatile private var cancelled = false
@@ -84,12 +85,15 @@ class LocalModelReasoningAdapter(
                 if (done) return
                 done = true
                 failure = error
+                turnTrace?.event(if (error == null) TraceStage.MODEL_COMPLETED else TraceStage.MODEL_FAILED)
             }
             latch.countDown()
         }
 
         try {
             gate()
+            turnTrace?.event(TraceStage.MODEL_ADVISORY_INVOKED)
+            runtime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF, it.sha256) }
             runtime.streamThinking(request.prompt, LocalInferenceCallback { event ->
                 when (event) {
                     is LocalInferenceEvent.TextDelta -> synchronized(lock) {

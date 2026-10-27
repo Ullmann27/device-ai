@@ -30,9 +30,11 @@ object Ctx3Shadow {
  @Synchronized fun events(dir:File,conversationId:String):List<Event> = sessions[key(dir,conversationId)]?.events?.toList().orEmpty()
  /** Owner-local diagnostics only; never used as context for another conversation. */
  @Synchronized fun recentEvents(dir:File):List<Event> = sessions.filterKeys {it.directory==dir.canonicalPath}.values.flatMap {it.events}.takeLast(32)
- @Synchronized fun evaluate(dir:File,bytes:ByteArray,experiences:List<LearningExperience>,input:String,baseline:List<String>,conversationId:String) {
+ @Synchronized fun evaluate(dir:File,bytes:ByteArray,experiences:List<LearningExperience>,input:String,baseline:List<String>,conversationId:String,
+  trace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null) {
   val key=key(dir,conversationId)
-  if(!enabled(dir))return
+  if(!enabled(dir)){trace?.event(at.heinz.deviceai.cognitive.TraceStage.CTX3_OFF);return}
+  trace?.event(at.heinz.deviceai.cognitive.TraceStage.CTX3_SHADOW)
   val now=System.nanoTime()
   sessions.entries.removeAll {now-it.value.touched>15*60*1_000_000_000L}
   val s=sessions.remove(key)?:Session()

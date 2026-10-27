@@ -8,6 +8,40 @@ import org.junit.Test
  * CRE1 scores are observations only and never create an owner fact.
  */
 class ContinuumCognitiveRuntimeTest {
+    @Test fun realMemoryTurnTracesItsSourcesAndActualShadowModeWithoutPretendingLLMInference() {
+        val dir=Files.createTempDirectory("trace-memory-runtime").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Projekt Saphir verwendet lokale Belege.")
+            val trace=at.heinz.deviceai.cognitive.CognitiveTurnTrace("trace-session")
+            val turn=ContinuumCognitiveRuntime(dir,core,"trace-session",turnTrace=trace)
+                .reply("Was verwendet Projekt Saphir?")
+            assertTrue(turn.grounded)
+            val snapshot=trace.finish(at.heinz.deviceai.cognitive.TraceOutcome.MEMORY_EXACT)
+            assertEquals(0,snapshot.modelInvocations)
+            assertTrue(snapshot.events.any { it.stage==at.heinz.deviceai.cognitive.TraceStage.CTX3_OFF })
+            assertTrue(snapshot.events.any { it.stage==at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF })
+            val row=at.heinz.deviceai.cognitive.CognitiveTraceCodec.encode(snapshot)
+            assertFalse(row.contains("Saphir"));assertFalse(row.contains("Belege"))
+            ContinuumRuntimeEventJournal(dir).recordTrace(snapshot)
+            assertEquals(snapshot,ContinuumRuntimeEventJournal(dir).traces().single())
+        } finally {dir.deleteRecursively()}
+    }
+
+    @Test fun actualOptInCtx3CallIsRecordedAsShadowNotAnActiveAnswerReplacement() {
+        val dir=Files.createTempDirectory("trace-ctx3-runtime").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            core.confirmOwnerFact("Mira wohnt in Linz.")
+            at.heinz.deviceai.learning.context.Ctx3Shadow.configure(java.io.File(dir,"learning-core-v2"),true)
+            val trace=at.heinz.deviceai.cognitive.CognitiveTurnTrace("trace-ctx3")
+            ContinuumCognitiveRuntime(dir,core,"trace-ctx3",turnTrace=trace).reply("Wo wohnt Mira?")
+            val snapshot=trace.finish(at.heinz.deviceai.cognitive.TraceOutcome.MEMORY_EXACT)
+            assertTrue(snapshot.events.any { it.stage==at.heinz.deviceai.cognitive.TraceStage.CTX3_SHADOW })
+            assertEquals(0,snapshot.modelInvocations)
+            assertEquals(1,at.heinz.deviceai.learning.context.Ctx3Shadow.events(java.io.File(dir,"learning-core-v2"),"trace-ctx3").size)
+        } finally {dir.deleteRecursively()}
+    }
     @Test fun confirmedFactIsRetrievedAndBothNeuralKernelsAreObserved() {
         val dir=Files.createTempDirectory("continuum-runtime").toFile()
         try {

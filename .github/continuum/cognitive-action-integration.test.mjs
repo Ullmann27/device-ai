@@ -67,3 +67,19 @@ test('native natural request → actual tool → receipt → persisted episode, 
     t.diagnostic(receipt.trim().replaceAll('\n', ' | '));
   } finally { fs.rmSync(out, {recursive: true, force: true}); }
 });
+
+
+test('actual memory, CRE1 and CTX3 graph preserves provenance and emits content-free traces', {
+  skip: deps ? false : 'NOT_RUN: configure official Kotlin/JUnit jars', timeout:180_000
+}, t=>{
+ const out=fs.mkdtempSync(path.join(os.tmpdir(),'continuum-dialogue-native-'));
+ try {
+  const r=spawnSync('bash',[path.join(root,'scripts/continuum-dialogue-jvm.sh'),out],{
+   cwd:root,env:process.env,encoding:'utf8',timeout:170_000,maxBuffer:1024*1024});
+  const log=path.join(out,'compile.txt');
+  assert.equal(r.error,undefined,r.error?.message);
+  assert.equal(r.status,0,(r.stdout+r.stderr+(fs.existsSync(log)?fs.readFileSync(log,'utf8'):'')).slice(-8000));
+  assert.match(r.stdout,/OK \([1-9]\d* tests\)/);
+  t.diagnostic(r.stdout.trim().replaceAll('\n',' '));
+ }finally{fs.rmSync(out,{recursive:true,force:true});}
+});

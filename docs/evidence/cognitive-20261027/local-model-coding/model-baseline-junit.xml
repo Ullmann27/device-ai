@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="pages 0/7" time="0.001112" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="pages 1/7" time="0.000917" classname="test" file="/work/.github/continuum/pagination.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;0 !== 1&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;0 !== 1">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+0 !== 1
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/pagination.test.mjs:5:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="pages 7/7" time="0.001168" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="pages 8/7" time="0.000330" classname="test" file="/work/.github/continuum/pagination.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;1 !== 2&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;1 !== 2">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+1 !== 2
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 2
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/pagination.test.mjs:5:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="pages 401/23" time="0.000203" classname="test" file="/work/.github/continuum/pagination.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;17 !== 18&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;17 !== 18">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+17 !== 18
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  17 !== 18
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/pagination.test.mjs:5:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 17,
+    expected: 18,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="pages 46/23" time="0.000103" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="pages 1024/100" time="0.000132" classname="test" file="/work/.github/continuum/pagination.test.mjs" failure="Expected values to be strictly equal:&#10;&#10;10 !== 11&#10;">
+		<failure type="testCodeFailure" message="Expected values to be strictly equal:&#10;&#10;10 !== 11">
+[Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:
+
+10 !== 11
+] {
+  code: 'ERR_TEST_FAILURE',
+  failureType: 'testCodeFailure',
+  cause: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  10 !== 11
+  
+      at TestContext.&lt;anonymous> (file:///work/.github/continuum/pagination.test.mjs:5:42)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 10,
+    expected: 11,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+}
+		</failure>
+	</testcase>
+	<testcase name="invalid -1/7" time="0.000569" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="invalid 1/0" time="0.000190" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="invalid 1/-1" time="0.000245" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="invalid 1/0.5" time="0.000229" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<testcase name="invalid 0.5/1" time="0.000098" classname="test" file="/work/.github/continuum/pagination.test.mjs"/>
+	<!-- tests 12 -->
+	<!-- suites 0 -->
+	<!-- pass 8 -->
+	<!-- fail 4 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+	<!-- duration_ms 77.929072 -->
+</testsuites>

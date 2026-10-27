@@ -120,7 +120,7 @@ class DeviceToolExecutor(
 
             "list_files" -> {
                 val path = safeSharedPath(requiredString(call, "path"))
-                "ls -lah -- ${shellQuote(path)} 2>/dev/null | head -180"
+                checkedDirectoryListingCommand(path)
             }
 
             "find_files" -> {

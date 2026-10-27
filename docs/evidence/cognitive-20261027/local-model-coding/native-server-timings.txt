@@ -1,0 +1,11 @@
+0.02.418.656 I srv  llama_server: model loaded
+0.02.418.678 I srv  llama_server: listening on http://127.0.0.1:8089
+2.25.890.591 I slot print_timing: id  0 | task 0 | prompt eval time =    7449.04 ms /   832 tokens (    8.95 ms per token,   111.69 tokens per second)
+2.25.890.635 I slot print_timing: id  0 | task 0 |        eval time =   11069.10 ms /   243 tokens (   45.74 ms per token,    21.86 tokens per second)
+2.25.890.644 I slot print_timing: id  0 | task 0 |       total time =   18518.14 ms /  1075 tokens
+2.40.608.717 I slot print_timing: id  0 | task 244 | prompt eval time =    4411.46 ms /   697 tokens (    6.33 ms per token,   158.00 tokens per second)
+2.40.608.760 I slot print_timing: id  0 | task 244 |        eval time =   10160.93 ms /   240 tokens (   42.51 ms per token,    23.52 tokens per second)
+2.40.608.768 I slot print_timing: id  0 | task 244 |       total time =   14572.39 ms /   937 tokens
+2.57.972.448 I slot print_timing: id  0 | task 485 | prompt eval time =    6858.80 ms /   736 tokens (    9.32 ms per token,   107.31 tokens per second)
+2.57.972.465 I slot print_timing: id  0 | task 485 |        eval time =   10319.92 ms /   253 tokens (   40.95 ms per token,    24.42 tokens per second)
+2.57.972.466 I slot print_timing: id  0 | task 485 |       total time =   17178.72 ms /   989 tokens

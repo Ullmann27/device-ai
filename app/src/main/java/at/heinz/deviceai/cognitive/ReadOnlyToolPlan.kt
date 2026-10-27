@@ -6,43 +6,60 @@ import at.heinz.deviceai.ToolExecutionStatus
 import at.heinz.deviceai.ToolProposal
 import at.heinz.deviceai.ToolRegistry
 
-/** Adapts an already-typed bootstrap decision to the SAME orchestrator used by
- * local generation. This is a deterministic one-tool plan, never neural inference.
- * Memories cannot add actions; the response must reproduce the fresh observation.
+/** Same bounded orchestrator and ToolGate, deterministic (never neural inference).
+ * A failed, replayed or unknown observation stops the sequence without retry.
+ * ToolGate receipts remain authoritative; this plan grants no permissions.
  */
-class ReadOnlyToolPlan(private val proposal: ToolProposal) : AgentModel, AgentEvaluator {
-    private var observed: AgentToolObservation? = null
+class ReadOnlyToolPlan(proposals: List<ToolProposal>) : AgentModel, AgentEvaluator {
+    private val steps=proposals.map { it.copy(arguments=it.arguments.toMap()) }
+    constructor(proposal:ToolProposal):this(listOf(proposal))
+    val stepCount:Int get()=steps.size
+    private var observed:List<AgentToolObservation> = emptyList()
 
     init {
-        require(proposal.validate() == null) { "Invalid registered-tool plan." }
-        require(ToolRegistry.get(proposal.toolName)?.risk == Risk.READ_ONLY) { "Only read-only tools are permitted." }
-    }
-
-    override fun generate(
-        task: String, memories: List<MemoryRecord>, reflection: AgentReflection?,
-        toolObservations: List<AgentToolObservation>
-    ): AgentModelOutput {
-        observed = toolObservations.singleOrNull()?.takeIf {
-            it.toolName == proposal.toolName && it.status == ToolExecutionStatus.SUCCEEDED && !it.output.isNullOrBlank()
-        }
-        return when {
-            toolObservations.isEmpty() -> AgentModelOutput(MODEL_ID, "", proposal)
-            observed != null -> AgentModelOutput(MODEL_ID, render(checkNotNull(observed).output!!))
-            else -> AgentModelOutput(MODEL_ID, "Kein frisches, erfolgreiches Geräteergebnis vorhanden.")
+        require(steps.size in 1..3) { "Only one to three read-only steps are permitted." }
+        require(steps.map { it.toolName }.distinct().size==steps.size) { "Duplicate tools are not permitted." }
+        steps.forEach {
+            require(it.validate()==null) { "Invalid registered-tool plan." }
+            require(ToolRegistry.get(it.toolName)?.risk==Risk.READ_ONLY) { "Only read-only tools are permitted." }
         }
     }
 
-    override fun evaluate(response: String, toolRecord: ToolExecutionRecord?): Evaluation {
-        val output = observed?.output
-        val verified = output != null && toolRecord?.toolName == proposal.toolName &&
-            toolRecord.risk == Risk.READ_ONLY && toolRecord.status == ToolExecutionStatus.SUCCEEDED &&
-            toolRecord.outputLength == output.length && response == render(output)
-        return Evaluation(verified, if (verified) 1.0 else 0.0,
-            if (verified) "Antwort entspricht der frischen Tool-Beobachtung."
-            else "Kein passendes frisches Tool-Ergebnis; Aktion nicht bestätigt.")
+    override fun generate(task:String,memories:List<MemoryRecord>,reflection:AgentReflection?,
+        toolObservations:List<AgentToolObservation>):AgentModelOutput {
+        observed=emptyList()
+        val valid=toolObservations.size<=steps.size && toolObservations.withIndex().all { (i,item) ->
+            item.toolName==steps[i].toolName && item.status==ToolExecutionStatus.SUCCEEDED && !item.output.isNullOrBlank()
+        }
+        if(!valid)return AgentModelOutput(MODEL_ID,"Kein frisches, erfolgreiches Geräteergebnis vorhanden; weitere Schritte abgebrochen.")
+        if(toolObservations.size<steps.size)return AgentModelOutput(MODEL_ID,"",steps[toolObservations.size])
+        observed=toolObservations.toList()
+        return AgentModelOutput(MODEL_ID,render(observed))
     }
 
-    private fun render(output: String): String = "${ToolRegistry.label(proposal.toolName)}:\n$output"
+    override fun evaluate(response:String,toolRecord:ToolExecutionRecord?):Evaluation {
+        val last=observed.lastOrNull()
+        val verified=observed.size==steps.size && last!=null && toolRecord?.toolName==steps.last().toolName &&
+            toolRecord.risk==Risk.READ_ONLY && toolRecord.status==ToolExecutionStatus.SUCCEEDED &&
+            toolRecord.outputLength==last.output?.length && response==render(observed)
+        return Evaluation(verified,if(verified)1.0 else 0.0,
+            if(verified)"Antwort entspricht allen frischen Tool-Beobachtungen."
+            else "Kein vollständiges frisches Tool-Ergebnis; Aktion nicht bestätigt.")
+    }
 
-    companion object { const val MODEL_ID = "deterministic-read-only-plan-v1" }
+    private fun render(items:List<AgentToolObservation>):String=items.joinToString("\n\n") {
+        "${ToolRegistry.label(it.toolName)}:\n${it.output}"
+    }
+
+    companion object {
+        const val MODEL_ID="deterministic-read-only-plan-v1"
+        /** Narrow explicit owner request only. Questions, quotes, negations and role
+         * headers cannot expand an existing single-tool decision into extra actions. */
+        fun forRequest(request:String,fallback:ToolProposal):ReadOnlyToolPlan {
+            val combined=Regex("(?iu)^(?:continuum[,!]?\\s+)?(?:prüfe|überprüfe)\\s+(?:bitte\\s+)?(?:den\\s+)?(?:freien\\s+)?speicher\\s+und\\s+(?:die\\s+)?downloads[.!]?$")
+            return if(fallback.toolName=="list_files" && fallback.arguments==mapOf("path" to "/sdcard/Download") && combined.matches(request.trim()))
+                ReadOnlyToolPlan(listOf(ToolProposal("get_storage_info",emptyMap()),fallback))
+            else ReadOnlyToolPlan(fallback)
+        }
+    }
 }

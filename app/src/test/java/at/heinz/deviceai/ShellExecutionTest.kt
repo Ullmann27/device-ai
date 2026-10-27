@@ -6,6 +6,26 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ShellExecutionTest {
+    @Test fun directoryListingCannotHideFailureBehindASuccessfulHeadPipeline() {
+        val dir=java.nio.file.Files.createTempDirectory("checked-listing-").toFile()
+        try {
+            val path=java.io.File(dir,"missing-directory").absolutePath
+            // Reproduce old command: ls fails but POSIX pipeline reports head's zero.
+            val old=BoundedShellProcess.execute(ShellExecutionRequest("ls -lah -- '$path' 2>/dev/null | head -180",1000))
+            assertEquals(0,old.exitCode)
+            val fixed=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(path),1000))
+            assertNotEquals(0,fixed.exitCode)
+            assertThrows(ToolBackendFailure::class.java) { fixed.checkedOutput() }
+            val file=java.io.File(dir,"public-synthetic.txt").also { it.writeText("fixture") }
+            val good=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(dir.absolutePath),1000))
+            assertTrue(good.checkedOutput().contains(file.name))
+            val quoted=java.io.File(dir,"quote'; touch unexpected; '").also { it.mkdir() }
+            val safe=BoundedShellProcess.execute(ShellExecutionRequest(checkedDirectoryListingCommand(quoted.absolutePath),1000))
+            assertEquals(0,safe.exitCode)
+            assertFalse(java.io.File(dir,"unexpected").exists())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun actualExitStatusCannotBeForgedByPrintedSuccessText() {
         val r = BoundedShellProcess.execute(ShellExecutionRequest("printf 'SUCCEEDED'; exit 37", 1000))
         assertEquals(ShellOutcome.COMPLETED, r.outcome)

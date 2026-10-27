@@ -1,0 +1,20 @@
+[
+  {
+    "input": "Nein, ich meinte Projekt Aster.",
+    "kind": "SCOPE_UPDATED",
+    "focus": "Projekt Aster"
+  },
+  {
+    "input": "Nein, ich meinte den neuronalen Lernkern.",
+    "kind": "SCOPE_UPDATED",
+    "focus": "neuronalen Lernkern"
+  },
+  {
+    "input": "Merke dir diese Entscheidung.",
+    "kind": "MEMORY_LITERAL_REQUIRED"
+  },
+  {
+    "input": "Was hast du dadurch verstanden?",
+    "kind": "CONTEXT_REPORT"
+  }
+]

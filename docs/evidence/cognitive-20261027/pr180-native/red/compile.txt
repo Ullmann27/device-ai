@@ -1,0 +1,3 @@
+app/src/main/java/at/heinz/deviceai/ShizukuBridge.kt:27:32: error: unresolved reference 'CheckedShellCallDispatcher'.
+    private val checkedCalls = CheckedShellCallDispatcher()
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^

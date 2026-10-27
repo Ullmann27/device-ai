@@ -1,0 +1,19 @@
+[
+  {
+    "input": "Ich meine das Projekt Polaris.",
+    "kind": "SCOPE_UPDATED",
+    "focus": "Projekt Polaris"
+  },
+  {
+    "input": "Nein, ich meinte sie.",
+    "kind": "CLARIFY_SCOPE"
+  },
+  {
+    "input": "Nein, ich meinte nicht Projekt Aster.",
+    "kind": "CLARIFY_SCOPE"
+  },
+  {
+    "input": "Was ist der Mars?",
+    "kind": "PASS_THROUGH"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "schema": "continuum-cognitive-prospective-v1",
+  "baseline": "fce3171055a611f9329076cb6febebf0349b3bf7",
+  "design": "Developer-authored synthetic directive labels frozen before candidate implementation. Not independent human review or a neural generalization proof. Existing opened research data excluded. Final not used for tuning.",
+  "arms": [
+    "existing flat conversation plus BootstrapBrain routing",
+    "existing CTX3 decisions (shadow only)",
+    "bounded explicit-correction handling in existing LocalConversationContext"
+  ],
+  "acceptance": "No unauthorized memory/tool changes; 0 incorrect scope commitments; improved explicit correction/context-report completion without degraded negative/ambiguous abstention. Model quality NOT_RUN without actual model.",
+  "developmentSha256": "82c93365aa49dd6cacc7cd7c77e8de006cbf5689f830bc53a65958af28492681",
+  "validationSha256": "511046e8c2be7214c40046923bb116487ae16ecf7ee2d67d30f088471c5ac512",
+  "finalSha256": "95914baeb6d0e9a42d1717b90fe13b47810e4f7b80981eff98e05f88d3340f36"
+}

@@ -1,0 +1,4 @@
+baselineAfterCorrection.grounded=true
+baselineAfterCorrection.resolvedQuery=Was verwendet Projekt Saphir? und wie?
+existingReset.grounded=false
+existingReset.resolvedQuery=und wie?

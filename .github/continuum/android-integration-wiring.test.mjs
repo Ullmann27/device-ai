@@ -25,7 +25,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    activity.includes('val turn=cognitive.dialogue') &&
    !bodyOf(activity,'private fun runContinuumDialogue(').includes('core.replyFromMemory('));
  ensure('SWB1 evidence and CRE1 reranking share one locked snapshot and persisted order',
-   runtime.includes('core.replyWithEvidenceInConversation(input,conversationId)') &&
+   runtime.includes('core.replyWithEvidenceInConversation(input,conversationId,turnTrace)') &&
    core.includes('fun replyWithEvidence(') &&
    core.includes('dialogue.replyInConversation(snapshot,experiences,input,nowMillis(),conversationId,rerank)') &&
    core.includes('ContinuumMemoryDialogue.requireConversationId(conversationId)') &&
@@ -33,7 +33,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    core.includes('ContinuumMemoryDialogue.rank(snapshot,turn.resolvedQuery,experiences)') &&
    core.includes('turn.memoryIds.mapNotNull(byId::get)'));
  ensure('CRE1 cannot expand the SWB1 evidence pool or alter hit provenance',
-   runtime.includes('val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId)') &&
+   runtime.includes('val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId,turnTrace)') &&
    memory.includes('reordered.toSet()==hits.toSet()') &&
    memory.includes('reordered.map { it.id }.distinct().size==hits.size') &&
    cre1Gate.includes('semanticById.keys!=swb1.map { it.id }.toSet()'));
@@ -51,7 +51,7 @@ test('learning core, retained sources, developer backlog, dialogue and diagnosti
    activity.includes('hasSameSessionLocalTurn=localConversationContext') &&
    activity.includes('.render(requestSessionId).isNotBlank()') &&
    activity.includes('grounded=grounded') &&
-   activity.includes('runLocal(request,modelQuestion)') &&
+   activity.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
    activity.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic') &&
    runtime.includes('val currentContext=if(followUp && scopedPrevious!=null)') &&
    !runtime.includes('Vorherige Gesprächsfrage: ') &&
@@ -78,11 +78,11 @@ test('cognitive runtime owns the single chat path, privacy boundaries and backgr
    dialogue.includes('val requestSessionId=sessionId') &&
    dialogue.includes('scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic'));
  ensure('local model context is separate from user-authorized memory input',
-   dialogue?.includes('runLocal(request,modelQuestion)') &&
-   dialogue.includes('runLocal(request,modelQuestion,recall)') &&
+   dialogue?.includes('runLocal(request,modelQuestion,turnTrace=turnTrace)') &&
+   dialogue.includes('runLocal(request,modelQuestion,recall,turnTrace)') &&
    activity.includes('private fun runLocal(text: String, resolvedQuestion: String = text,') &&
    activity.includes('val agentTask = resolvedQuestion.take(7_900)') &&
-   activity.includes('persistRequestedMemory(text, run.experience?.evaluation)'));
+   !activity.includes('persistRequestedMemory(') && !bodyOf(activity,'private fun runLocal(text:').includes('memoryStore.put('));
  ensure('only explicit confirmed fact can retry unanswered turn',
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('core.confirmOwnerFact(fact)') &&
    bodyOf(activity,'private fun rememberOwnerFact(')?.includes('if(resolved?.grounded==true)'));
@@ -245,9 +245,9 @@ test('local language model path is reachable: model center, loading, chat escala
  ensure('one runtime per process',bodyOf(activity,'override fun onCreate(').includes('LocalModelHost.get(this)'));
  ensure('rotation keeps the loaded model',bodyOf(activity,'override fun onDestroy(').includes('!isChangingConfigurations'));
  const dialogue=bodyOf(activity,'private fun runContinuumDialogue(');
- ensure('unanswered memory turn escalates to the language model',dialogue.includes('LocalFirstPolicy.afterMemory(')&&dialogue.includes('runLocal(request)'));
+ ensure('unanswered memory turn escalates to the language model',dialogue.includes('LocalFirstPolicy.afterMemory(')&&dialogue.includes('runLocal(request,turnTrace=turnTrace)'));
  const local=bodyOf(activity,'private fun runLocal(');
- ensure('reasoning chain in the local path',local.includes('ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime)'));
+ ensure('reasoning chain in the local path',local.includes('ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace)'));
  ensure('language model sees the confirmed owner facts',local.includes('ownerFactMemories()'));
  ensure('model list read off the UI thread',bodyOf(activity,'private fun reloadInstalledModels(').includes('onLearningIo('));
  ensure('no catalog read in the UI refresh',!bodyOf(activity,'private fun refreshLocalModelUi(').includes('modelCatalog.all()'));

@@ -60,6 +60,9 @@ import at.heinz.deviceai.cognitive.AiContextCompiler
 import at.heinz.deviceai.cognitive.AiContextInput
 import at.heinz.deviceai.cognitive.AiContextPolicy
 import at.heinz.deviceai.cognitive.AndroidKeystoreIdentitySigner
+import at.heinz.deviceai.cognitive.CognitiveTurnTrace
+import at.heinz.deviceai.cognitive.TraceStage
+import at.heinz.deviceai.cognitive.TraceOutcome
 import at.heinz.deviceai.cognitive.BoundedAgentOrchestrator
 import at.heinz.deviceai.cognitive.ChatReasoningRouter
 import at.heinz.deviceai.cognitive.LocalModelReasoningAdapter
@@ -321,6 +324,7 @@ class AgentActivity : Activity() {
     private val memoryStore = InMemoryMemoryStore()
     private val experienceStore = InMemoryExperienceStore()
     private var activeOrchestrator: BoundedAgentOrchestrator? = null
+    private var lastVisibleCognitiveTrace: Pair<String,String>? = null
     private var activeChatCancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null
     @Volatile private var activeReasoningRouter: ChatReasoningRouter? = null
     private val devController = DevelopmentUiController { "dev-" + UUID.randomUUID() }
@@ -2369,6 +2373,50 @@ class AgentActivity : Activity() {
             return
         }
 
+        // Explicit discourse control is ephemeral; it neither writes owner facts nor grants tools.
+        localConversationContext.inspectRequest(sessionId,request)?.let { control ->
+            input.text.clear();addUserMessage(request)
+            val trace=CognitiveTurnTrace(sessionId)
+            val answer=when(control.kind) {
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.SCOPE_UPDATED ->
+                    "Ich beziehe mich jetzt auf „${control.focus}“. Das ist vorläufiger Gesprächskontext, keine neue gespeicherte Tatsache."
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.CLARIFY_SCOPE ->
+                    "Welches konkrete Thema meinst du? Ich habe den bisherigen Bezug verworfen, statt ihn zu erraten."
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.CONTEXT_REPORT -> control.focus?.let {
+                    "Du hast den Gesprächsfokus auf „$it“ korrigiert. Das habe ich als vorläufigen Kontext verstanden; dauerhaftes Wissen wurde dadurch nicht geändert."
+                } ?: "Mir fehlt ein eindeutiger aktueller Bezug. Welches konkrete Thema meinst du?"
+                at.heinz.deviceai.cognitive.ContextDirectiveKind.MEMORY_LITERAL_REQUIRED ->
+                    "Welchen genauen Satz möchtest du speichern? Bitte bestätige ihn ausdrücklich mit „Merke dir: …“. Ich übernehme die unklare Entscheidung nicht automatisch."
+            }
+            val clarify=control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.CLARIFY_SCOPE ||
+                control.kind==at.heinz.deviceai.cognitive.ContextDirectiveKind.MEMORY_LITERAL_REQUIRED || control.focus==null
+            trace.event(if(clarify)TraceStage.CLARIFICATION else TraceStage.CORRECTION_SCOPE)
+            val acknowledge = {
+                publishCognitiveTrace(trace,if(clarify)TraceOutcome.CLARIFY else TraceOutcome.WORKING_CONTEXT)
+                addAssistantMessage(answer,preserveLocalContext=true)
+            }
+            if(control.resetsGroundedContext) {
+                val correctionSession=sessionId
+                scopedLocalPromptSession=null
+                setBusy(true)
+                onLearningIo({
+                    ContinuumLearningCore(filesDir).resetDialogueConversation(correctionSession) {
+                        sessionResetLifetime.get()
+                    }
+                }) { reset ->
+                    setBusy(false)
+                    if(sessionId==correctionSession) {
+                        if(reset.getOrNull()==true)acknowledge()
+                        else {
+                            localConversationContext.clear()
+                            publishCognitiveTrace(trace,TraceOutcome.FAILED)
+                            addAssistantMessage("Der alte Gesprächsbezug konnte nicht sicher zurückgesetzt werden. Bitte starte eine neue Sitzung; ich bestätige die Korrektur noch nicht.")
+                        }
+                    }
+                }
+            } else acknowledge()
+            return
+        }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -2419,10 +2467,18 @@ class AgentActivity : Activity() {
             }
             BootstrapKind.FORGET -> showConfirmForget()
             BootstrapKind.FEEDBACK_POSITIVE -> {
+                lastVisibleCognitiveTrace?.takeIf { it.first==sessionId }?.let { previous ->
+                    onLearningIo({ at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                        .reviewTrace(previous.second,at.heinz.deviceai.cognitive.TraceFeedback.CONFIRMED) }) { _ -> }
+                }
                 bootstrapMemory.recordFeedback(true)
                 addAssistantMessage("Danke. Die positive Rückmeldung wurde als lokales Feedback erfasst.")
             }
             BootstrapKind.FEEDBACK_NEGATIVE -> {
+                lastVisibleCognitiveTrace?.takeIf { it.first==sessionId }?.let { previous ->
+                    onLearningIo({ at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
+                        .reviewTrace(previous.second,at.heinz.deviceai.cognitive.TraceFeedback.CORRECTED) }) { _ -> }
+                }
                 bootstrapMemory.recordFeedback(false)
                 addAssistantMessage("Danke. Ich habe die negative Rückmeldung erfasst. Sie verbessert mich nicht automatisch, " +
                     "hilft aber beim gezielten Auswerten meiner Antworten.")
@@ -2507,6 +2563,7 @@ class AgentActivity : Activity() {
         if(busy || localAgentExecutor.isShutdown)return
         val cancellation=at.heinz.deviceai.cognitive.DeliberationCancellation()
         val requestSessionId=sessionId
+        val turnTrace=CognitiveTurnTrace(requestSessionId)
         val priorScopedTopic=scopedLocalPromptSession?.takeIf { it.id==requestSessionId }?.groundedTopic
         activeChatCancellation=cancellation
         activeLocalRequest=true
@@ -2524,7 +2581,7 @@ class AgentActivity : Activity() {
                 }.map { at.heinz.deviceai.learning.ReviewedWebObservation(it.text,it.sourceUrl,it.sourceHash) })
                 val decision=at.heinz.deviceai.cognitive.CognitiveDecisionBridge(
                     at.heinz.deviceai.learning.ContinuumCognitiveRuntime(filesDir,core,
-                        conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic),
+                        conversationId=requestSessionId,priorScopedGroundedQuestion=priorScopedTopic,turnTrace=turnTrace),
                     // Confirmed facts retain their exact deterministic meaning. Lexical
                     // anchors cannot prove that a model paraphrase is entailed.
                     null
@@ -2602,23 +2659,28 @@ class AgentActivity : Activity() {
                                 // A confirmed retrieval must remain exact. If it cannot fit
                                 // the model's bounded evidence envelope, do not truncate it,
                                 // throw from the UI callback or synthesize on incomplete facts.
+                                turnTrace.event(TraceStage.GATED_FALLBACK)
+                                publishCognitiveTrace(turnTrace,TraceOutcome.MEMORY_EXACT)
                                 addAssistantMessage(answer)
                                 addToolActivity(evidence.take(2_000)+
                                     " · Zusatzanalyse nicht gestartet: Abruf überschreitet sichere Modellgrenzen.")
                             } else {
                                 addToolActivity(evidence+" · Zusatzaufgabe → lokale Modellschlussfolgerung, nicht bestätigt")
-                                runLocal(request,modelQuestion,recall)
+                                runLocal(request,modelQuestion,recall,turnTrace)
                             }
                         } else {
                             addToolActivity(evidence+" · keine passende Erinnerung → lokales Sprachmodell")
-                            if(modelQuestion==request)runLocal(request)
-                            else runLocal(request,modelQuestion)
+                            if(modelQuestion==request)runLocal(request,turnTrace=turnTrace)
+                            else runLocal(request,modelQuestion,turnTrace=turnTrace)
                         }
                         return@onSuccess
                     }
+                    turnTrace.event(if(grounded)TraceStage.MEMORY_EXACT else TraceStage.GATED_FALLBACK)
+                    publishCognitiveTrace(turnTrace,if(grounded)TraceOutcome.MEMORY_EXACT else TraceOutcome.BLOCKED)
                     addAssistantMessage(answer)
                     addToolActivity(evidence)
                 }.onFailure {
+                    publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)
                     addAssistantMessage("Continuum-Gedächtnis nicht lesbar: "+(it.message ?: "Prüfung fehlgeschlagen")+". Bestehende Lernstände bleiben erhalten.")
                 }
             }
@@ -2979,8 +3041,9 @@ class AgentActivity : Activity() {
         setBusy(true)
         addToolActivity("Prüfe ${ToolRegistry.label(name)} …")
         val actionSessionId = sessionId
+        val turnTrace = CognitiveTurnTrace(actionSessionId)
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
-        val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan(ToolProposal(name, decision.arguments))
+        val plan = at.heinz.deviceai.cognitive.ReadOnlyToolPlan.forRequest(request, ToolProposal(name, decision.arguments))
         val gate = createToolGate()
         val orchestrator = BoundedAgentOrchestrator(
             model = plan,
@@ -2991,10 +3054,11 @@ class AgentActivity : Activity() {
             // Only the fixed local filesystem probe has a typed native outcome.
             // Legacy Shizuku strings must not become successful skill evidence.
             evaluationConfirmsOutcome = name == "get_storage_info",
-            limits = at.heinz.deviceai.cognitive.AgentLimits(maxSteps = 16, maxToolCalls = 1, maxRetries = 0),
+            limits = at.heinz.deviceai.cognitive.AgentLimits(maxSteps = 24, maxToolCalls = plan.stepCount, maxRetries = 0),
             checkpointStore = FileAgentCheckpointStore(java.io.File(filesDir, "agent-checkpoints")),
             callIdPrefix = "bootstrap-" + UUID.randomUUID().toString(),
-            cancellation = cancellation
+            cancellation = cancellation,
+            turnTrace = turnTrace
         )
         activeBootstrapGate = gate
         activeChatCancellation = cancellation
@@ -3013,12 +3077,13 @@ class AgentActivity : Activity() {
                 val value = result.fold(
                     onSuccess = { item ->
                         checkpointContinuumAsync()
+                        publishCognitiveTrace(turnTrace,if(item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) TraceOutcome.ACTION_VERIFIED else TraceOutcome.BLOCKED)
                         if (item.experience?.outcome == at.heinz.deviceai.cognitive.ExperienceOutcome.SUCCESS) {
                             addToolActivity("CONTINUUM · frische Messung belegt · Episode zur Sicherung vorgemerkt · kein Gewichtstraining")
                         }
                         item.response
                     },
-                    onFailure = { "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
+                    onFailure = { publishCognitiveTrace(turnTrace,TraceOutcome.FAILED); "Geräteprüfung fehlgeschlagen: ${it.message ?: "unbekannter Fehler"}" }
                 )
                 addAssistantMessage(value.take(3_000))
                 addToolActivity("CONTINUUM · begrenzte Geräteprüfung beendet")
@@ -5379,18 +5444,22 @@ class AgentActivity : Activity() {
     }
 
     private fun runLocal(text: String, resolvedQuestion: String = text,
-                         groundedRecall: at.heinz.deviceai.cognitive.LocalGroundedRecall? = null) {
+                         groundedRecall: at.heinz.deviceai.cognitive.LocalGroundedRecall? = null,
+                         turnTrace: CognitiveTurnTrace = CognitiveTurnTrace(sessionId)) {
         val localSessionId = sessionId
         val previousLocalReply = lastLocalReply?.takeIf { it.sessionId == localSessionId }
         val conversationContext = localConversationContext.render(localSessionId)
         val imported = localRuntime.loadedModel
         if (imported == null || localRuntime.state != LocalModelState.READY) {
+            turnTrace.event(TraceStage.MODEL_NOT_READY)
+            publishCognitiveTrace(turnTrace,TraceOutcome.BLOCKED)
             setBusy(false)
             addAssistantMessage(groundedRecall?.failureAnswer() ?:
                 "Kein lokales Modell ist bereit. Importiere und lade zuerst eine kompatible .litertlm-Datei.")
             refreshLocalModelUi()
             return
         }
+        turnTrace.event(TraceStage.LOCAL_MODEL_SYNTHESIS)
         activeLocalRequest = true
         localRuntimeError = null
         val cancellation = at.heinz.deviceai.cognitive.DeliberationCancellation()
@@ -5428,10 +5497,10 @@ class AgentActivity : Activity() {
                     }.getOrNull()
                 }
                 val advisory = if (observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
-                    ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime), { localRuntime.cancel() })
+                    ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
                         .also { activeReasoningRouter = it }
                         .advise("chat-$turnId", task, compiledContext?.text ?: task)
-                        .also { activeReasoningRouter = null }
+                        .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()
                 val promptTail = "\nRequest at most one registered structured tool, or answer the user.\n" +
@@ -5487,7 +5556,7 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
-                var generation = generateLocal(cancellation) { callback ->
+                var generation = generateLocal(cancellation,turnTrace) { callback ->
                     if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
                     else localRuntime.respondToTools(toolResponses, callback)
                 }
@@ -5498,7 +5567,7 @@ class AgentActivity : Activity() {
                         error("The model repeated a rejected tool request; no tool was executed.")
                     }
                     val rejected = generation.rejectedToolResponses
-                    generation = generateLocal(cancellation) { callback -> localRuntime.respondToTools(rejected, callback) }
+                    generation = generateLocal(cancellation,turnTrace) { callback -> localRuntime.respondToTools(rejected, callback) }
                     generation.failure?.let { error(it) }
                 }
                 AgentModelOutput(
@@ -5520,6 +5589,7 @@ class AgentActivity : Activity() {
             },
             experienceStore = experienceStore,
             evaluationConfirmsOutcome = false,
+            turnTrace = turnTrace,
             approvalProvider = AgentToolApprovalProvider { proposal, risk ->
                 cancellation.throwIfCancelled()
                 if (risk == Risk.READ_ONLY) return@AgentToolApprovalProvider AgentToolApproval(false)
@@ -5571,6 +5641,7 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val successful=run.blocker==null && run.response.isNotBlank()
+                    publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
                             .recordLocalOutcome(successful)
@@ -5588,10 +5659,10 @@ class AgentActivity : Activity() {
                         lastLocalReply = LocalReplySnapshot(localSessionId, text.take(512), run.response.take(2_000))
                         localConversationContext.record(localSessionId, text, run.response)
                     }
-                    persistRequestedMemory(text, run.experience?.evaluation)
                     checkpointContinuumAsync()
                     addToolActivity(if (run.blocker == null) "Lokal fertig · Experience evaluiert" else "Lokal beendet · ${run.blocker}")
                 }.onFailure { error ->
+                    publishCognitiveTrace(turnTrace,TraceOutcome.FAILED)
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
                             .recordLocalOutcome(false)
@@ -5606,6 +5677,20 @@ class AgentActivity : Activity() {
                 setBusy(false)
                 refreshLocalModelUi()
             }
+        }
+    }
+
+    /** Owner-local metadata only; telemetry is never memory or execution authority. */
+    private fun publishCognitiveTrace(trace:CognitiveTurnTrace,outcome:TraceOutcome) {
+        val snapshot=trace.finish(outcome)
+        lastVisibleCognitiveTrace=sessionId to snapshot.id
+        onLearningIo({
+            at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir).recordTrace(snapshot)
+        }) { result ->
+            if(result.isSuccess)addToolActivity("TRACE · "+snapshot.id.take(8)+" · "+snapshot.outcome.name+
+                " · Modellaufrufe "+snapshot.modelInvocations+"/"+snapshot.completedModelCalls+
+                " · Zusatzaufrufe "+snapshot.advisoryCalls+" · "+snapshot.elapsedMillis+" ms")
+            else addToolActivity("TRACE · Metadaten nicht gespeichert; keine neue Faktenautorität")
         }
     }
 
@@ -5625,40 +5710,6 @@ class AgentActivity : Activity() {
             )
         }
     }.getOrDefault(emptyList())
-
-    private fun persistRequestedMemory(request: String, evaluation: Evaluation?) {
-        val explicit = Regex("\\b(remember|memorize|merke dir|merk dir)\\b", RegexOption.IGNORE_CASE)
-            .containsMatchIn(request)
-        val sensitive = Regex("password|token|secret|credential|api[-_ ]?key", RegexOption.IGNORE_CASE)
-            .containsMatchIn(request)
-        val confidence = evaluation?.score ?: 0.0
-        val decision = MemoryWritePolicy().decide(
-            MemoryWriteContext(
-                memoryType = MemoryType.SEMANTIC,
-                provenance = ProvenanceType.USER_PROVIDED,
-                confidence = confidence,
-                explicitlyRequested = explicit,
-                containsPersonalInformation = true,
-                containsSensitiveInformation = sensitive
-            )
-        )
-        if (!decision.shouldWrite || sensitive || evaluation?.success != true) return
-        val now = System.currentTimeMillis()
-        runCatching {
-            memoryStore.put(
-                MemoryRecord(
-                    id = "user-${UUID.randomUUID()}",
-                    type = MemoryType.SEMANTIC,
-                    content = request.take(2_048),
-                    provenance = ProvenanceType.USER_PROVIDED,
-                    confidence = confidence,
-                    createdAt = now,
-                    updatedAt = now,
-                    privacyClass = decision.privacyClass
-                )
-            )
-        }
-    }
 
     /**
      * Keystore access (key generation on first run) and the verified archive read
@@ -6181,6 +6232,7 @@ class AgentActivity : Activity() {
 
     private fun generateLocal(
         cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null,
+        turnTrace: CognitiveTurnTrace? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
         cancellation?.throwIfCancelled()
@@ -6212,11 +6264,13 @@ class AgentActivity : Activity() {
                         )
                         is LocalInferenceEvent.ToolBatchRejected -> rejectedResponses += event.responses
                         is LocalInferenceEvent.Failed -> {
+                            turnTrace?.event(TraceStage.MODEL_FAILED)
                             failure = event.message
                             terminalEventReceived = true
                             completed.countDown()
                         }
                         LocalInferenceEvent.Cancelled -> {
+                            turnTrace?.event(TraceStage.MODEL_FAILED)
                             // A native cancellation alone does not prove a timeout,
                             // a thinking-template problem or an OOM. Do not guess.
                             val elapsedMillis = (System.nanoTime() -
@@ -6229,6 +6283,7 @@ class AgentActivity : Activity() {
                             completed.countDown()
                         }
                         is LocalInferenceEvent.Completed -> {
+                            turnTrace?.event(TraceStage.MODEL_COMPLETED)
                             terminalEventReceived = true
                             completed.countDown()
                         }
@@ -6236,7 +6291,7 @@ class AgentActivity : Activity() {
                 }
             }
         }
-        val started = runCatching { cancellation?.throwIfCancelled(); start(callback) }
+        val started = runCatching { cancellation?.throwIfCancelled(); turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED); localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF,it.sha256) }; start(callback) }
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
         val generationDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
         while (!completed.await(10, TimeUnit.MILLISECONDS)) {
