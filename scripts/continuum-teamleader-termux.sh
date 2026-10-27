@@ -161,7 +161,7 @@ case "${1:-once}" in
             echo 'Aktueller Haupt-App-QA-Builder fehlt; Checkout aktualisieren.' >&2
             exit 1
         fi
-        printf '%s\\n' 'Haupt-App-Qualitätsbuild: separates Testzertifikat, NIEMALS über die installierte Continuum-App installieren.'
+        printf '%s\n' 'Haupt-App-Qualitätsbuild: separates Testzertifikat, NIEMALS über die installierte Continuum-App installieren.'
         if [[ $# -eq 2 ]]; then
             exec bash "$ROOT/scripts/continuum-local-mainapp-qa.sh" --offline
         fi
