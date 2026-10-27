@@ -1,0 +1,29 @@
+[
+  {
+    "ref": "origin/opus/continuum-synapse-v2-20261022",
+    "sha": "79a3079efb1de80e0fd648e2192882bc3d4c1ed4",
+    "missingExecutablePaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbe.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseV2Reasoner.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadowTest.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbeTest.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveShadowBenchmark.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV1ReviewDiagnostics.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2Bench.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2Experiment.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseV2ReasonerTest.kt"
+    ]
+  },
+  {
+    "ref": "origin/experiment/continuum-synapse-zero-20261022",
+    "sha": "2b58ed17861de986d97c756be4205993e1233f32",
+    "missingExecutablePaths": [
+      "app/src/main/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadow.kt",
+      "app/src/main/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbe.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/ContinuumSynapseZeroShadowTest.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveRoleProbeTest.kt",
+      "app/src/test/java/at/heinz/deviceai/learning/synapse/SynapseContrastiveShadowBenchmark.kt"
+    ]
+  }
+]

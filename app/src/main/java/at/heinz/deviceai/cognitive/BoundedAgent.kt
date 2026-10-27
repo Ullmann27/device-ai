@@ -174,7 +174,8 @@ class BoundedAgentOrchestrator(
     private val cancellation: DeliberationCancellation = DeliberationCancellation(),
     // Trusted caller declares the evaluator's scope; model output cannot set this.
     // Form-only checks may allow a reply but never establish a successful skill example.
-    private val evaluationConfirmsOutcome: Boolean = true
+    private val evaluationConfirmsOutcome: Boolean = true,
+    private val turnTrace: CognitiveTurnTrace? = null
 ) {
     init {
         require(callIdPrefix.matches(Regex("[A-Za-z0-9._:-]{1,64}")))
@@ -239,6 +240,7 @@ class BoundedAgentOrchestrator(
             nowMillis = startedAt
         ).map { it.memory }
         val currentRun = runIndex++
+        retrieved.forEach { turnTrace?.reference(TraceStage.MEMORY_REF, it.id) }
         var currentReflection: AgentReflection? = null
         var lastOutput = ""
         var lastRecord: ToolExecutionRecord? = null
@@ -275,6 +277,7 @@ class BoundedAgentOrchestrator(
                 transition(AgentState.VALIDATE, "Response and optional proposal validated.")
                 val proposal = chosen.proposal
                 if (proposal != null) {
+                    turnTrace?.event(TraceStage.TOOL_PROPOSED)
                     transition(AgentState.TOOL_PROPOSAL, "Registered tool proposal received.")
                     if (calls >= limits.maxToolCalls) {
                         lastRecord = ToolExecutionRecord(
@@ -313,6 +316,9 @@ class BoundedAgentOrchestrator(
                                 approval.destructiveConfirmed
                             )
                             lastRecord = execution.record
+                            turnTrace?.reference(TraceStage.CALL_REF, lastRecord.callId)
+                            turnTrace?.event(if (lastRecord.status == ToolExecutionStatus.SUCCEEDED && execution.output != null)
+                                TraceStage.TOOL_EXECUTED else TraceStage.GATED_FALLBACK, lastRecord.status)
                             // A replayed receipt deliberately returns no output. It is not
                             // a new observation and cannot establish new learning evidence.
                             if (lastRecord.status == ToolExecutionStatus.SUCCEEDED && !execution.output.isNullOrBlank()) {

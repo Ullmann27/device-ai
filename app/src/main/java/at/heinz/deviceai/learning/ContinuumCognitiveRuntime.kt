@@ -39,7 +39,8 @@ class ContinuumCognitiveRuntime(
     private val appDirectory:File,
     private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),
     private val conversationId:String=java.util.UUID.randomUUID().toString(),
-    priorScopedGroundedQuestion:String?=null
+    priorScopedGroundedQuestion:String?=null,
+    private val turnTrace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null
 ) {
     // Persisted retrieval is conversation-bound. Model prompts still use only the
     // explicitly carried, bounded topic of this runtime/session (defence in depth).
@@ -78,7 +79,7 @@ class ContinuumCognitiveRuntime(
         }
         var shadow=emptyList<ContinuumShadowScore>()
         var didRerank=false
-        val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId) { resolved,candidates ->
+        val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId,turnTrace) { resolved,candidates ->
             // The callback runs before the dialogue file is written. It may
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.
@@ -103,6 +104,9 @@ class ContinuumCognitiveRuntime(
         }
         val byId=shadow.associateBy { it.memoryId }
         val scores=ranked.mapNotNull { byId[it.id] }
+        turn.memoryIds.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF,it) }
+        ranked.mapNotNull { it.sourceRef }.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.SOURCE_REF,it) }
+        if(scores.isNotEmpty())turnTrace?.event(if(didRerank)at.heinz.deviceai.cognitive.TraceStage.CRE1_ACTIVE else at.heinz.deviceai.cognitive.TraceStage.CRE1_SHADOW)
         // Only a grounded question already seen by THIS conversation runtime can
         // contextualize a later follow-up. The core's resolvedQuery may contain
         // an inferred retrieval topic; model context keeps its own explicit session boundary.
