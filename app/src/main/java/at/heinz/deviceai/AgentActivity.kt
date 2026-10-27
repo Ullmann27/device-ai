@@ -1709,6 +1709,12 @@ class AgentActivity : Activity() {
         }
     }
 
+    /** Every model lifecycle transition invalidates previous session inference proof. */
+    private fun resetM2NativeProof() {
+        m2DirectProofModelSha = null
+        m2DirectProofElapsedMs = null
+    }
+
     /** Grounded M2 status: never claim Gemma, tools or repairs from a catalogue entry. */
     private fun showM2MilestoneStatus() {
         val loaded = localRuntime.loadedModel
@@ -5509,10 +5515,7 @@ class AgentActivity : Activity() {
     private fun runLocalSmokeTest(direct:Boolean=false) {
         // A new diagnostic revokes any prior same-session success until this
         // attempt completes. Nothing survives a restart or different model SHA.
-        if (direct) {
-            m2DirectProofModelSha = null
-            m2DirectProofElapsedMs = null
-        }
+        if (direct) resetM2NativeProof()
         if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
             refreshLocalModelUi()
@@ -6579,6 +6582,7 @@ class AgentActivity : Activity() {
 
     private fun loadModel(model: ImportedLocalModel) {
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
+        resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
         scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
@@ -6598,6 +6602,7 @@ class AgentActivity : Activity() {
     }
 
     private fun unloadModel() {
+        resetM2NativeProof()
         localRuntimeError = null
         modelUnloading = true
         localRuntime.cancel()
@@ -6627,6 +6632,7 @@ class AgentActivity : Activity() {
     private fun importModel(uri: Uri) {
         val metadata = pendingModelImport ?: return
         pendingModelImport = null
+        resetM2NativeProof()
         modelImportActive = true
         localImportError = null
         refreshLocalModelUi()
