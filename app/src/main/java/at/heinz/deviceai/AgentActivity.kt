@@ -2300,6 +2300,19 @@ class AgentActivity : Activity() {
                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
                         "sofern sie installiert und freigegeben sind. Der PC ist optional."
                 )
+                ContinuumWorkerChatCommand.RepairHelp -> {
+                    addAssistantMessage(
+                        "CCC1 · Reparatur-Agent: Öffne 'Entwickeln' und wähle " +
+                            "'CCC1 · Reparatur-Agent (Termux)'. Dieser Eintrag führt zum " +
+                            "bestehenden Handy-Builder, sofern er auf deinem Gerät verfügbar ist. " +
+                            "Ob der lokale Reparaturdienst wirklich eingerichtet und erreichbar ist, " +
+                            "muss dort geprüft werden. Der Agent darf keine produktive Änderung " +
+                            "ohne deine ausdrückliche Freigabe übernehmen. Mit 'Worker Status' " +
+                            "kannst du zuerst den vorhandenen Teamleiter prüfen. " +
+                            "Diese Erklärung startet noch keinen Reparaturauftrag."
+                    )
+                    showDevelopmentCenter()
+                }
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
