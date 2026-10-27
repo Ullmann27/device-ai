@@ -61,7 +61,7 @@ function singleIdentifierEvidence(query,text){
   // The Android twin also rejects separated identifiers such as Kappa 7
   // being answered by Kappa 70. Do not turn generic year text into an ID.
   const splitIds=value=>new Set([...value.normalize('NFC').toLowerCase().matchAll(
-    /\b[\p{L}]{3,35}\s+([\p{L}]{3,35})[ \t-]+([0-9]{1,5})\b/giu
+    /(?<![\p{L}\p{N}])[\p{L}]{3,35}\s+([\p{L}]{3,35})[ \t-]+([0-9]{1,5})(?![\p{L}\p{N}])/giu
   )].map(m=>m[1]+'#'+m[2]));
   const requested=splitIds(query);
   const offered=splitIds(text);
