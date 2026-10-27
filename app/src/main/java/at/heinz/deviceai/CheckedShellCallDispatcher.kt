@@ -26,12 +26,14 @@ internal class CheckedShellCallDispatcher(
         }
         try {
             threadFactory(Runnable {
-                try {
-                    callback(runCatching { task() })
+                val outcome = try {
+                    runCatching { task() }
                 } finally {
-                    // Only the actual end of this thread's operation releases it.
+                    // Release when the Binder call actually returns, before the
+                    // completion callback starts a legitimate following action.
                     inFlight.set(false)
                 }
+                callback(outcome)
             }).start()
         } catch (error: RuntimeException) {
             inFlight.set(false)
