@@ -147,30 +147,57 @@ export function createCodingCandidateProvider({root,task,env=process.env,run=spa
   // Raw code context and model output remain transient. Diagnostic evidence
   // retains hashes and byte counts, never the potentially private contents.
   const responseText=String(response.stdout??'');
-  if(evidence)writeTrace(number,{...trace,status:'RESPONDED',responseSha256:sha256Hex(responseText),
+  const responseSha256=sha256Hex(responseText);
+  // The reservation consumed a call even if the process died. Persist a typed
+  // result without raw stderr/output so the next worker can diagnose it, but
+  // never turn an unknown execution into a success or automatic retry.
+  const finishTrace=(status,extras={})=>{
+   if(evidence)writeTrace(number,{...trace,status,...extras,responseSha256,
     responseBytes:Buffer.byteLength(responseText,'utf8'),rawContentStored:false});
-  if(response.status!==0||response.error||response.signal){
+  };
+  const failed=response.status!==0||response.error||response.signal;
+  if(failed){
+   // Only exact codes from our fixed local CLI are diagnostic data. Never
+   // persist untrusted stderr or treat an exit code as successful inference.
+   const rejected=!remoteTeacher&&
+    /^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
+     .exec(String(response.stderr??'').trim());
+   const failureKind=response.error?.code==='ETIMEDOUT'?'TIMEOUT':
+    response.error?'PROCESS_ERROR':response.signal?'SIGNALLED':
+    rejected?.[1]==='CODING_NOOP_PATCH'?'NOOP_PATCH':
+    rejected?.[1]==='CODING_RESPONSE_INVALID'?'INVALID_MODEL_RESPONSE':'CHILD_EXIT_NONZERO';
+   finishTrace('FAILED',{failureKind});
    if(remoteTeacher){
     const error=rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
     error.remoteCode=remoteFailureCode;error.fallback=DEEPSEEK_OFFLINE_FALLBACK;throw error;
    }
-   // The trusted local CLI reports only a fixed rejection code and SHA-256,
-   // never the unsafe model response, prompt, token or arbitrary stderr text.
-   const rejected=/^LOCAL_MODEL_UNAVAILABLE_OR_INVALID: (CODING_RESPONSE_INVALID|CODING_NOOP_PATCH):([a-f0-9]{64})$/
-    .exec(String(response.stderr??'').trim());
    if(rejected)throw rejectedModelOutput(rejected[1],rejected[2]);
    throw rejectedModelOutput('CODING_MODEL_UNAVAILABLE');
   }
-  const responseSha256=sha256Hex(String(response.stdout??''));
-  let result;try{result=JSON.parse(response.stdout);}catch{throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);}
-  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false)
+  let result;
+  try{result=JSON.parse(responseText);}
+  catch{
+   finishTrace('INVALID_OUTPUT',{failureKind:'INVALID_JSON'});
    throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);
+  }
+  if(result?.mode!=='LOCAL_CODING_PATCH_PROPOSAL_V1'||result.trusted!==false||result.autoApply!==false){
+   finishTrace('INVALID_OUTPUT',{failureKind:'WIRE_SCHEMA_INVALID'});
+   throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);
+  }
   if(remoteDisclosure&&(result.transport!=='AUTHENTICATED_HTTPS_TEACHER'||result.modelId!==MODEL_ID||
-   result.modelRevision!==PINNED_REVISION||result.requestSha256!==remoteDisclosure.requestSha256||result.verifiedModelExecution!==false))
+   result.modelRevision!==PINNED_REVISION||result.requestSha256!==remoteDisclosure.requestSha256||result.verifiedModelExecution!==false)){
+   finishTrace('INVALID_OUTPUT',{failureKind:'REMOTE_IDENTITY_INVALID'});
    throw rejectedModelOutput('CODING_REPLY_INVALID',responseSha256);
+  }
   let proposal;
   try{proposal=validateCodingProposal(result.proposal,spec);}
-  catch{throw rejectedModelOutput('CODING_PROPOSAL_INVALID',responseSha256);}
+  catch{
+   finishTrace('INVALID_OUTPUT',{failureKind:'PROPOSAL_REJECTED'});
+   throw rejectedModelOutput('CODING_PROPOSAL_INVALID',responseSha256);
+  }
+  // Syntactically bounded proposal, not a verified code repair. The existing
+  // branded CCC1 gate remains solely responsible for execution and proof.
+  finishTrace('RESPONDED',{proposalAccepted:true});
   return {mode:result.mode,trusted:false,autoApply:false,...proposal,localRequests:1,
    context:{commit:base,contextSha256:context.contextSha256,ranges:context.ranges.map(({text,...r})=>r)},trace};
  };
