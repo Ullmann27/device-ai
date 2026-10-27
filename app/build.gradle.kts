@@ -32,6 +32,13 @@ val deviceAiFeaturePreview = providers.gradleProperty("deviceAiFeaturePreview").
 val deviceAiMentorPreview = providers.gradleProperty("deviceAiMentorPreview").orNull == "true"
 // Owner-requested in-place update of the EXISTING signed Mentor Pair app. Never used by disposable previews.
 val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpdate").orNull == "true"
+ // Local, owner-signed main-app update: versionCode 26 is strictly newer
+ // than the already installed signed code25 and retains the original package.
+val continuumOwnerLocalVersion26 =
+    providers.gradleProperty("continuumOwnerLocalVersion26").orNull == "true"
+require(!continuumOwnerLocalVersion26 || deviceAiOwnerSignedUpdate) {
+    "Local versionCode 26 requires the original owner-signed update variant."
+}
 // Only the owner's Termux ARM64 preview build bypasses the Linux-x86 AIDL compiler.
 val deviceAiMobileAidlFallback = providers.gradleProperty("deviceAiMobileAidlFallback").orNull == "true"
 // Preserve the original two-variant invariant and enforce mutual exclusion for all previews.
@@ -72,8 +79,8 @@ android {
         versionName = if (deviceAiFeaturePreview) "0.3.14-dev" else if (deviceAiDesignPreview) "0.3.13-ui" else if (deviceAiMentorPreview) "0.3.12" else if (deviceAiPreview) "0.3.3" else "0.3.1"
         if (deviceAiOwnerSignedUpdate) {
             // Next in-place owner update: same package/signer, strictly higher version.
-            versionCode = 25
-            versionName = "0.3.24"
+            versionCode = if (continuumOwnerLocalVersion26) 26 else 25
+            versionName = if (continuumOwnerLocalVersion26) "0.3.25" else "0.3.24"
         }
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
