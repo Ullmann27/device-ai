@@ -112,7 +112,8 @@ test('scheduled owner task completes full real Git repair and independent verifi
   assert.equal(createHash('sha256').update(patch).digest('hex'),report.verified.patchSha256);
   assert.deepEqual(fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs')),original);
   assert.equal(f.git('status','--porcelain'),'');
-  assert.equal(runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver}).outcome,'IDLE');
+  const after=runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver});
+  assert.equal(after.outcome,'IDLE',JSON.stringify(after));
  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
 

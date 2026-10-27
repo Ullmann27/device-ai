@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: checks nonproductive clean branch and bounded verified inventory
+ok 1 - checks nonproductive clean branch and bounded verified inventory
+  ---
+  duration_ms: 1.518597
+  type: 'test'
+  ...
+# Subtest: refuses main, release, dirty and invalid inventories
+ok 2 - refuses main, release, dirty and invalid inventories
+  ---
+  duration_ms: 0.694035
+  type: 'test'
+  ...
+# Subtest: real node TAP success does not imply a patch was approved
+ok 3 - real node TAP success does not imply a patch was approved
+  ---
+  duration_ms: 0.511477
+  type: 'test'
+  ...
+# Subtest: skipped and TODO mean incomplete quality gate
+ok 4 - skipped and TODO mean incomplete quality gate
+  ---
+  duration_ms: 2.081378
+  type: 'test'
+  ...
+# Subtest: missing summary, timeout, failed case or invalid totals are never green
+ok 5 - missing summary, timeout, failed case or invalid totals are never green
+  ---
+  duration_ms: 0.451051
+  type: 'test'
+  ...
+# Subtest: native worker refuses untracked test injection and symlinked test entrypoints
+ok 6 - native worker refuses untracked test injection and symlinked test entrypoints
+  ---
+  duration_ms: 0.730006
+  type: 'test'
+  ...
+# Subtest: actual worker captures native TAP counters and keeps immutable failed then successful receipts
+ok 7 - actual worker captures native TAP counters and keeps immutable failed then successful receipts
+  ---
+  duration_ms: 660.069135
+  type: 'test'
+  ...
+# Subtest: duplicate top-level native summaries are incomplete evidence
+ok 8 - duplicate top-level native summaries are incomplete evidence
+  ---
+  duration_ms: 0.569213
+  type: 'test'
+  ...
+# Subtest: SIGTERM during a real test stops children and permits a fresh process restart
+ok 9 - SIGTERM during a real test stops children and permits a fresh process restart
+  ---
+  duration_ms: 586.10937
+  type: 'test'
+  ...
+# Subtest: real timeout retains failure evidence and subsequent healthy cycle succeeds
+ok 10 - real timeout retains failure evidence and subsequent healthy cycle succeeds
+  ---
+  duration_ms: 1532.820474
+  type: 'test'
+  ...
+# Subtest: idle scheduler retains the lease and STOP cancels its wait
+ok 11 - idle scheduler retains the lease and STOP cancels its wait
+  ---
+  duration_ms: 554.847719
+  type: 'test'
+  ...
+# Subtest: SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+ok 12 - SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+  ---
+  duration_ms: 523.525573
+  type: 'test'
+  ...
+# Subtest: excess test output is stopped and raw evidence storage stays bounded
+ok 13 - excess test output is stopped and raw evidence storage stays bounded
+  ---
+  duration_ms: 368.22664
+  type: 'test'
+  ...
+# Subtest: a redirected cycles directory never writes test output into source
+ok 14 - a redirected cycles directory never writes test output into source
+  ---
+  duration_ms: 199.130043
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4592.173246

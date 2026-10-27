@@ -1,0 +1,26 @@
+✔ checks nonproductive clean branch and bounded verified inventory (1.391461ms)
+✔ refuses main, release, dirty and invalid inventories (1.549224ms)
+✔ real node TAP success does not imply a patch was approved (0.473707ms)
+✔ skipped and TODO mean incomplete quality gate (0.253242ms)
+✔ missing summary, timeout, failed case or invalid totals are never green (0.208164ms)
+✔ native worker refuses untracked test injection and symlinked test entrypoints (0.682306ms)
+✔ transfer inventory is balanced, frozen, and not a training or selection fixture (0.80151ms)
+✔ transfer phrases do not duplicate pre-existing train/validation/audit samples (4.966884ms)
+✔ semantic positive-negative pairs share the same premise but have distinct conclusions (0.491492ms)
+✔ two short experiments preserve exact original model bytes, rounds and history (119.541162ms)
+✔ malformed budgets fail before any research training (1.649504ms)
+✔ cancellation leaves baseline unchanged (9.647079ms)
+✔ repeated semantic regression is reported, never reclassified as success (2.835372ms)
+✔ existing trainRound defaults are identical to explicit CONTROL policy (30.603826ms)
+✔ research-disabled public replay produces exactly zero public gradients (16.268412ms)
+✔ default research sweep is strictly bounded to nine non-promotable trials (64.163028ms)
+✔ oversized ablation grid rejected before training (1.280864ms)
+✔ legacy model hash and every baseline byte survive research measurements (27.758233ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 474.107809

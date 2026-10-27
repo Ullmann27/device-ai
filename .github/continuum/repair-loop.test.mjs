@@ -254,7 +254,7 @@ test('end-to-end: injected fault is reproduced, repaired in isolation, verified 
  }finally{fs.rmSync(dir,{recursive:true,force:true});fs.rmSync(out,{recursive:true,force:true});}
 });
 
-import {evidenceSufficient,runProfile,parseUnifiedZeroHunks} from './repair-loop.mjs';
+import {evidenceSufficient,parseUnifiedZeroHunks} from './repair-loop.mjs';
 import {revertHunk} from './repair-strategies.mjs';
 
 test('hunk revert handles modification, insertion and deletion hunks exactly',()=>{

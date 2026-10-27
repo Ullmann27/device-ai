@@ -357,6 +357,8 @@ export async function localTeamleaderDriver(){
     {actor:'continuum-teamleader'}).read().doc,['INVESTIGATE']);
   },
   prepareSafeInvestigation(root,stateDir){
+   // Node-only owned projects have no Kotlin capability to scan.
+   if(!fsApi.existsSync(path.join(root,'app/src')))return null;
    const backlog=new BacklogStore(path.join(stateDir,'development-backlog.json'),
     {actor:'continuum-teamleader'});
    const {index:_index,...report}=analyzeRepository(root);

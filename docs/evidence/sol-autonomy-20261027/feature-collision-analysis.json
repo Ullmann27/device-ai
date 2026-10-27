@@ -1,0 +1,51 @@
+{
+  "model": "FROZEN_INTENT_SWB2-73",
+  "scope": "post-final readonly failure analysis, no training or policy selection",
+  "cause": "The weighted SWB2 token-gram map lacks word order below its feature cap. Identical representations have nonnegative self dot product, sigmoid score at least0.5; these negative role reversals cannot be separated by more same-architecture training.",
+  "collisions": [
+    {
+      "split": "train",
+      "id": "train-s0-5",
+      "left": "Mara unterstützt Levin.",
+      "right": "Levin unterstützt Mara.",
+      "expectedSimilar": false,
+      "featureCount": 54,
+      "maxFeatureWeightDifference": 0,
+      "embeddingDistance": 1.8940984025941262e-17,
+      "similarity": 0.5013668137521674
+    },
+    {
+      "split": "train",
+      "id": "train-s10-5",
+      "left": "Rico leiht Jana ein Fahrrad.",
+      "right": "Jana leiht Rico ein Fahrrad.",
+      "expectedSimilar": false,
+      "featureCount": 56,
+      "maxFeatureWeightDifference": 0,
+      "embeddingDistance": 2.2964620300647496e-17,
+      "similarity": 0.5007781052145003
+    },
+    {
+      "split": "validation",
+      "id": "validation-s1-5",
+      "left": "Tessa informiert Arno.",
+      "right": "Arno informiert Tessa.",
+      "expectedSimilar": false,
+      "featureCount": 52,
+      "maxFeatureWeightDifference": 0,
+      "embeddingDistance": 1.0744087957649545e-16,
+      "similarity": 0.5641218041549158
+    },
+    {
+      "split": "final",
+      "id": "final-s1-5",
+      "left": "Nele überholt Bosse.",
+      "right": "Bosse überholt Nele.",
+      "expectedSimilar": false,
+      "featureCount": 45,
+      "maxFeatureWeightDifference": 0,
+      "embeddingDistance": 7.21691095249442e-17,
+      "similarity": 0.5058007713277982
+    }
+  ]
+}

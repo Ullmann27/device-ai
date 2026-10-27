@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: actual worker captures native TAP counters and keeps immutable failed then successful receipts
+ok 1 - actual worker captures native TAP counters and keeps immutable failed then successful receipts
+  ---
+  duration_ms: 731.241916
+  type: 'test'
+  ...
+# Subtest: duplicate top-level native summaries are incomplete evidence
+ok 2 - duplicate top-level native summaries are incomplete evidence
+  ---
+  duration_ms: 0.952863
+  type: 'test'
+  ...
+# Subtest: SIGTERM during a real test stops children and permits a fresh process restart
+ok 3 - SIGTERM during a real test stops children and permits a fresh process restart
+  ---
+  duration_ms: 703.200823
+  type: 'test'
+  ...
+# Subtest: real timeout retains failure evidence and subsequent healthy cycle succeeds
+ok 4 - real timeout retains failure evidence and subsequent healthy cycle succeeds
+  ---
+  duration_ms: 1592.096561
+  type: 'test'
+  ...
+# Subtest: idle scheduler retains the lease and STOP cancels its wait
+ok 5 - idle scheduler retains the lease and STOP cancels its wait
+  ---
+  duration_ms: 634.168784
+  type: 'test'
+  ...
+# Subtest: SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+ok 6 - SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+  ---
+  duration_ms: 663.881225
+  type: 'test'
+  ...
+# Subtest: excess test output is stopped and raw evidence storage stays bounded
+ok 7 - excess test output is stopped and raw evidence storage stays bounded
+  ---
+  duration_ms: 374.051384
+  type: 'test'
+  ...
+# Subtest: a redirected cycles directory never writes test output into source
+ok 8 - a redirected cycles directory never writes test output into source
+  ---
+  duration_ms: 201.44171
+  type: 'test'
+  ...
+# Subtest: the same live scheduler automatically continues from a failed cycle to a healthy cycle
+ok 9 - the same live scheduler automatically continues from a failed cycle to a healthy cycle
+  ---
+  duration_ms: 1042.664823
+  type: 'test'
+  ...
+# Subtest: loss of the checkout lease cannot leave a green completion receipt
+not ok 10 - loss of the checkout lease cannot leave a green completion receipt
+  ---
+  duration_ms: 1344.25838
+  type: 'test'
+  location: '/workspace/device-ai-autonomy/.github/continuum/local-worker-process.test.mjs:86:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'ALL_EXECUTED_PASS'
+    - 'FAILED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'FAILED'
+  actual: 'ALL_EXECUTED_PASS'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy/.github/continuum/local-worker-process.test.mjs:93:83)
+    process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7370.013252

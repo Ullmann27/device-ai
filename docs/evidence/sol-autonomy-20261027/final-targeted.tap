@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: checks nonproductive clean branch and bounded verified inventory
+ok 1 - checks nonproductive clean branch and bounded verified inventory
+  ---
+  duration_ms: 1.571192
+  type: 'test'
+  ...
+# Subtest: refuses main, release, dirty and invalid inventories
+ok 2 - refuses main, release, dirty and invalid inventories
+  ---
+  duration_ms: 0.637419
+  type: 'test'
+  ...
+# Subtest: real node TAP success does not imply a patch was approved
+ok 3 - real node TAP success does not imply a patch was approved
+  ---
+  duration_ms: 0.477273
+  type: 'test'
+  ...
+# Subtest: skipped and TODO mean incomplete quality gate
+ok 4 - skipped and TODO mean incomplete quality gate
+  ---
+  duration_ms: 1.510479
+  type: 'test'
+  ...
+# Subtest: missing summary, timeout, failed case or invalid totals are never green
+ok 5 - missing summary, timeout, failed case or invalid totals are never green
+  ---
+  duration_ms: 0.257003
+  type: 'test'
+  ...
+# Subtest: native worker refuses untracked test injection and symlinked test entrypoints
+ok 6 - native worker refuses untracked test injection and symlinked test entrypoints
+  ---
+  duration_ms: 579.652321
+  type: 'test'
+  ...
+# Subtest: actual worker captures native TAP counters and keeps immutable failed then successful receipts
+ok 7 - actual worker captures native TAP counters and keeps immutable failed then successful receipts
+  ---
+  duration_ms: 834.145979
+  type: 'test'
+  ...
+# Subtest: duplicate top-level native summaries are incomplete evidence
+ok 8 - duplicate top-level native summaries are incomplete evidence
+  ---
+  duration_ms: 0.627595
+  type: 'test'
+  ...
+# Subtest: SIGTERM during a real test stops children and permits a fresh process restart
+ok 9 - SIGTERM during a real test stops children and permits a fresh process restart
+  ---
+  duration_ms: 765.541461
+  type: 'test'
+  ...
+# Subtest: real timeout retains failure evidence and subsequent healthy cycle succeeds
+ok 10 - real timeout retains failure evidence and subsequent healthy cycle succeeds
+  ---
+  duration_ms: 1738.22256
+  type: 'test'
+  ...
+# Subtest: idle scheduler retains the lease and STOP cancels its wait
+ok 11 - idle scheduler retains the lease and STOP cancels its wait
+  ---
+  duration_ms: 716.37765
+  type: 'test'
+  ...
+# Subtest: SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+ok 12 - SIGKILL abandoned worker is recovered by identity and its residual test process is stopped
+  ---
+  duration_ms: 664.726524
+  type: 'test'
+  ...
+# Subtest: excess test output is stopped and raw evidence storage stays bounded
+ok 13 - excess test output is stopped and raw evidence storage stays bounded
+  ---
+  duration_ms: 502.984721
+  type: 'test'
+  ...
+# Subtest: a redirected cycles directory never writes test output into source
+ok 14 - a redirected cycles directory never writes test output into source
+  ---
+  duration_ms: 261.079096
+  type: 'test'
+  ...
+# Subtest: the same live scheduler automatically continues from a failed cycle to a healthy cycle
+ok 15 - the same live scheduler automatically continues from a failed cycle to a healthy cycle
+  ---
+  duration_ms: 1535.463688
+  type: 'test'
+  ...
+# Subtest: loss of the checkout lease cannot leave a green completion receipt
+ok 16 - loss of the checkout lease cannot leave a green completion receipt
+  ---
+  duration_ms: 1414.848939
+  type: 'test'
+  ...
+# Subtest: evidence disk budget pauses before tests and preserves existing receipts
+ok 17 - evidence disk budget pauses before tests and preserves existing receipts
+  ---
+  duration_ms: 219.507031
+  type: 'test'
+  ...
+# Subtest: head-orthogonal semantic step removes first-order intent-direction interference
+ok 18 - head-orthogonal semantic step removes first-order intent-direction interference
+  ---
+  duration_ms: 10.669029
+  type: 'test'
+  ...
+# Subtest: projection rejects invalid rate without altering a model checkpoint
+ok 19 - projection rejects invalid rate without altering a model checkpoint
+  ---
+  duration_ms: 3.418575
+  type: 'test'
+  ...
+# Subtest: native contrastive trials preserve original state and deterministic schedule snapshots
+ok 20 - native contrastive trials preserve original state and deterministic schedule snapshots
+  ---
+  duration_ms: 73.848698
+  type: 'test'
+  ...
+# Subtest: interruption produces no promotable checkpoint and no negative learning signal
+ok 21 - interruption produces no promotable checkpoint and no negative learning signal
+  ---
+  duration_ms: 12.744157
+  type: 'test'
+  ...
+# Subtest: new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+ok 22 - new frozen split does not reuse old curriculum or the observed 52 transfer phrases
+  ---
+  duration_ms: 4.282258
+  type: 'test'
+  ...
+# Subtest: a changing semantic sidecar cannot alter the frozen original intent predictions
+ok 23 - a changing semantic sidecar cannot alter the frozen original intent predictions
+  ---
+  duration_ms: 4.435834
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9652.158455

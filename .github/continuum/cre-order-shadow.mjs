@@ -18,6 +18,8 @@ const WEIGHTS=Object.freeze({base:0.70,bigrams:0.20,first:0.05,last:0.05});
 export function orderShadowFeatures(text){
  const base=features(text);
  const terms=tokens(text).filter(t=>!FUNCTION_WORDS.has(t));
+ // Already checked upstream on PR176: with one word, preserve exact original rounding.
+ if(terms.length===1)return base;
  const acc=new Map();
  const add=(id,weight)=>acc.set(id,(acc.get(id)??0)+weight);
  for(const {id,w} of base)add(id,w*WEIGHTS.base);

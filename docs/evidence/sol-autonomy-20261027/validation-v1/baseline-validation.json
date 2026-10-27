@@ -1,0 +1,196 @@
+{
+  "intent": {
+    "loss": 0.2665599241452456,
+    "correct": 12,
+    "total": 12
+  },
+  "semantic": {
+    "loss": 0.6995596515538772,
+    "correct": 15,
+    "total": 36
+  },
+  "falseSimilar": 18,
+  "missedSimilar": 3,
+  "predictions": [
+    {
+      "id": "validation-s0-0",
+      "expected": true,
+      "probability": 0.5005416911094198
+    },
+    {
+      "id": "validation-s0-1",
+      "expected": true,
+      "probability": 0.5038829901685714
+    },
+    {
+      "id": "validation-s0-2",
+      "expected": true,
+      "probability": 0.5005342720437315
+    },
+    {
+      "id": "validation-s0-3",
+      "expected": false,
+      "probability": 0.503873612660059
+    },
+    {
+      "id": "validation-s0-4",
+      "expected": false,
+      "probability": 0.5006060898853937
+    },
+    {
+      "id": "validation-s0-5",
+      "expected": false,
+      "probability": 0.5010204420248059
+    },
+    {
+      "id": "validation-s1-0",
+      "expected": true,
+      "probability": 0.5326023618078064
+    },
+    {
+      "id": "validation-s1-1",
+      "expected": true,
+      "probability": 0.5183265277722806
+    },
+    {
+      "id": "validation-s1-2",
+      "expected": true,
+      "probability": 0.5174754936801298
+    },
+    {
+      "id": "validation-s1-3",
+      "expected": false,
+      "probability": 0.5684529877275422
+    },
+    {
+      "id": "validation-s1-4",
+      "expected": false,
+      "probability": 0.5089885568874057
+    },
+    {
+      "id": "validation-s1-5",
+      "expected": false,
+      "probability": 0.5378555863672235
+    },
+    {
+      "id": "validation-s2-0",
+      "expected": true,
+      "probability": 0.5043790483022
+    },
+    {
+      "id": "validation-s2-1",
+      "expected": true,
+      "probability": 0.5126437171780005
+    },
+    {
+      "id": "validation-s2-2",
+      "expected": true,
+      "probability": 0.5059408707846857
+    },
+    {
+      "id": "validation-s2-3",
+      "expected": false,
+      "probability": 0.5058026778961934
+    },
+    {
+      "id": "validation-s2-4",
+      "expected": false,
+      "probability": 0.5096605243052181
+    },
+    {
+      "id": "validation-s2-5",
+      "expected": false,
+      "probability": 0.5036334039974819
+    },
+    {
+      "id": "validation-s3-0",
+      "expected": true,
+      "probability": 0.49651605522136955
+    },
+    {
+      "id": "validation-s3-1",
+      "expected": true,
+      "probability": 0.48991598379042656
+    },
+    {
+      "id": "validation-s3-2",
+      "expected": true,
+      "probability": 0.4985472994346604
+    },
+    {
+      "id": "validation-s3-3",
+      "expected": false,
+      "probability": 0.5209172620319444
+    },
+    {
+      "id": "validation-s3-4",
+      "expected": false,
+      "probability": 0.5028333488553051
+    },
+    {
+      "id": "validation-s3-5",
+      "expected": false,
+      "probability": 0.5160866632407675
+    },
+    {
+      "id": "validation-s4-0",
+      "expected": true,
+      "probability": 0.5042043973641278
+    },
+    {
+      "id": "validation-s4-1",
+      "expected": true,
+      "probability": 0.5130656056468088
+    },
+    {
+      "id": "validation-s4-2",
+      "expected": true,
+      "probability": 0.506675823822971
+    },
+    {
+      "id": "validation-s4-3",
+      "expected": false,
+      "probability": 0.5060701439454929
+    },
+    {
+      "id": "validation-s4-4",
+      "expected": false,
+      "probability": 0.5090326898644107
+    },
+    {
+      "id": "validation-s4-5",
+      "expected": false,
+      "probability": 0.505393161020876
+    },
+    {
+      "id": "validation-s5-0",
+      "expected": true,
+      "probability": 0.5014813731658625
+    },
+    {
+      "id": "validation-s5-1",
+      "expected": true,
+      "probability": 0.5090782866886396
+    },
+    {
+      "id": "validation-s5-2",
+      "expected": true,
+      "probability": 0.5011020049780079
+    },
+    {
+      "id": "validation-s5-3",
+      "expected": false,
+      "probability": 0.508198072180227
+    },
+    {
+      "id": "validation-s5-4",
+      "expected": false,
+      "probability": 0.5016438874267818
+    },
+    {
+      "id": "validation-s5-5",
+      "expected": false,
+      "probability": 0.511964907165632
+    }
+  ]
+}

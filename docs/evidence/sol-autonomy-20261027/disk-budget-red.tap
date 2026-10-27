@@ -1,0 +1,36 @@
+TAP version 13
+# Subtest: evidence disk budget pauses before tests and preserves existing receipts
+not ok 1 - evidence disk budget pauses before tests and preserves existing receipts
+  ---
+  duration_ms: 77.693484
+  type: 'test'
+  location: '/workspace/device-ai-autonomy/.github/continuum/local-worker-process.test.mjs:97:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /EVIDENCE_BUDGET_EXHAUSTED/. Input:
+    
+    'LOCAL_WORKER_FAILED: INVALID_WORKER_BUDGET\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    LOCAL_WORKER_FAILED: INVALID_WORKER_BUDGET
+    
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/device-ai-autonomy/.github/continuum/local-worker-process.test.mjs:100:81)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 161.869426

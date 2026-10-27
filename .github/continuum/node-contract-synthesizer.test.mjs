@@ -79,8 +79,9 @@ test('fresh generated contract runs real Node tests and incorrect expected outpu
   fs.writeFileSync(path.join(home,'math-utils.mjs'),SOURCE);
   const generated=path.join(home,'math-utils.contract.test.mjs');
   fs.writeFileSync(generated,r.candidate.edits[0].newText);
-  const run=()=>spawnSync(process.execPath,['--test',generated],{
-   cwd:tmp,encoding:'utf8',timeout:20000});
+  const {NODE_TEST_CONTEXT: _parentRunner,...childEnv}=process.env;
+  const run=()=>spawnSync(process.execPath,['--test','--test-reporter=tap',generated],{
+   cwd:tmp,encoding:'utf8',timeout:20000,env:childEnv});
   const green=run();
   assert.equal(green.status,0,green.stdout+'\n'+green.stderr);
   assert.match(green.stdout,/# pass 2/);

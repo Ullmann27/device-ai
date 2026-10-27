@@ -1,0 +1,21 @@
+{
+  "schema": "continuum-local-worker-v1",
+  "branch": "sol/continuum-autonomy-contrastive-20261027",
+  "sourceSha": "e736664abb91542da7e6cc7dba91e1b1473ebb3e",
+  "started": "2026-10-27T02:44:52.830Z",
+  "completed": "2026-10-27T02:45:15.193Z",
+  "sourceUnchanged": true,
+  "status": "FAILED",
+  "tests": null,
+  "pass": null,
+  "failed": null,
+  "skipped": null,
+  "todo": null,
+  "exitCode": 1,
+  "error": null,
+  "stderrTail": "",
+  "candidatePromoted": false,
+  "patchApplied": false,
+  "weightsUpdated": false,
+  "ownerReviewRequired": true
+}
