@@ -1,0 +1,34 @@
+{
+  "validatedCode": "656b11afd00d96b063e6bc6be2b2d9db229847fa",
+  "base": "fce3171055a611f9329076cb6febebf0349b3bf7",
+  "commits": [
+    {
+      "sha": "2ae1ce1d025742ca82651d72543e4bc37bf0bce9",
+      "subject": "docs(cognitive): pin PR180 safety baseline and corrected research integration audit"
+    },
+    {
+      "sha": "c783a2e066804fc771d8a8becad5ecddd3991840",
+      "subject": "fix(integration): compile PR180 dispatcher and run all eleven native safety tests"
+    },
+    {
+      "sha": "73164a3b90e3a7523cc9f43c75df830aa4c535a1",
+      "subject": "feat(cognitive): trace actual brain paths without content or implicit model-authorized memory"
+    },
+    {
+      "sha": "0b8e5a997d58522a5469ee36832e06904f7afd89",
+      "subject": "feat(context): handle explicit corrections without inventing persistent owner facts"
+    },
+    {
+      "sha": "38da0aac329071f44c6a6dfa71f8c44c31176fe1",
+      "subject": "feat(agent): execute bounded read-only sequences through existing gate and receipts"
+    },
+    {
+      "sha": "dd04c13727138d0dd0dfd893e8b7b0c5c8ef826b",
+      "subject": "fix(evidence): preserve directory listing failures and publish real local model negative control"
+    },
+    {
+      "sha": "656b11afd00d96b063e6bc6be2b2d9db229847fa",
+      "subject": "fix(context): reset stale grounded scope before acknowledging explicit corrections"
+    }
+  ]
+}
