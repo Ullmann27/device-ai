@@ -1,0 +1,64 @@
+[
+  {
+    "repo": "seaweedfs/seaweedfs",
+    "commit": "af77406cf9513b41197d08210a3aa972debba19e",
+    "commitUrl": "https://github.com/seaweedfs/seaweedfs/commit/af77406cf9513b41197d08210a3aa972debba19e",
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/LICENSE",
+        "file": "seaweedfs-seaweedfs-LICENSE",
+        "sha256": "d789d433cc11da163273d1e39be2e8fa67642f9a58ef220d3f258fa9c14ef613",
+        "bytes": 11337
+      },
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/README.md",
+        "file": "seaweedfs-seaweedfs-README.md",
+        "sha256": "66935667e2f5c7106a44129d1eaf18a91f3bced4f4d394b6f76f538a988d65b2",
+        "bytes": 33651
+      },
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/weed/server/filer_server_handlers_write.go",
+        "file": "seaweedfs-seaweedfs-filer_server_handlers_write.go",
+        "bytes": 12581,
+        "sha256": "90b48693465ac148b6f15447190f51e777b68b3c6b70833ee25227d25b5da8bb"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/weed/server/filer_server_handlers_read.go",
+        "file": "seaweedfs-seaweedfs-filer_server_handlers_read.go",
+        "bytes": 17688,
+        "sha256": "edd5d4e4825a0faec826a80e1890f4d42be7d60a70dd683d65369acd7208f89f"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/weed/server/filer_server.go",
+        "file": "seaweedfs-seaweedfs-filer_server.go",
+        "bytes": 28528,
+        "sha256": "01127a73afa291a64342086a1831091244a2c86bcbf7ce05a2a40650263052ab"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/seaweedfs/seaweedfs/af77406cf9513b41197d08210a3aa972debba19e/REST_API.md",
+        "file": "seaweedfs-seaweedfs-REST_API.md",
+        "bytes": 11840,
+        "sha256": "91a7e1c921debef6d1eb2a0226850445b1e641de245c8a30b44e739006fd2c7d"
+      }
+    ]
+  },
+  {
+    "repo": "juicedata/juicefs",
+    "commit": "d5d80841103174106923a1a2f26503466140ee8e",
+    "commitUrl": "https://github.com/juicedata/juicefs/commit/d5d80841103174106923a1a2f26503466140ee8e",
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/juicedata/juicefs/d5d80841103174106923a1a2f26503466140ee8e/LICENSE",
+        "file": "juicedata-juicefs-LICENSE",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+        "bytes": 11358
+      },
+      {
+        "url": "https://raw.githubusercontent.com/juicedata/juicefs/d5d80841103174106923a1a2f26503466140ee8e/README.md",
+        "file": "juicedata-juicefs-README.md",
+        "sha256": "3879fa8e1def7ebf587144513cc3001760ab8cf86920967cc2bf5ee97908a047",
+        "bytes": 14781
+      }
+    ]
+  }
+]
