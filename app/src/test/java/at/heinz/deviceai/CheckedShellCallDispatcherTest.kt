@@ -98,15 +98,9 @@ class CheckedShellCallDispatcherTest {
         val observed = AtomicReference<Result<String>?>(null)
         dispatcher.execute({ error("transport failed") }, { observed.set(it); failed.countDown() })
         assertTrue(failed.await(1, TimeUnit.SECONDS))
-        // The callback is delivered just before the slot is released; allow the
-        // already-running worker to finish before testing the next admission.
-        val start = System.nanoTime()
-        var resumed = false
-        while (!resumed && TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 1_000) {
-            dispatcher.execute({ "recovered" }) {
-                if (it.isSuccess) { resumed = true; finished.countDown() }
-            }
-            if (!resumed) Thread.yield()
+        // Completion is delivered only after the previous Binder slot is free.
+        dispatcher.execute({ "recovered" }) {
+            if (it.isSuccess) finished.countDown()
         }
         assertTrue(finished.await(1, TimeUnit.SECONDS))
         assertTrue(observed.get()!!.isFailure)
