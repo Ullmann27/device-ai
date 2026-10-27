@@ -57,7 +57,15 @@ function singleIdentifierEvidence(query,text){
     .match(/[\p{L}\p{N}]+(?:[-._][\p{L}\p{N}]+)*/gu)??[])
     .filter(token=>SOURCE_LETTER.test(token)&&SOURCE_DIGIT.test(token)))];
   const required=identifiers(query);
-  return required.length!==1||identifiers(text).includes(required[0]);
+  if(required.length===1&&!identifiers(text).includes(required[0]))return false;
+  // The Android twin also rejects separated identifiers such as Kappa 7
+  // being answered by Kappa 70. Do not turn generic year text into an ID.
+  const splitIds=value=>new Set([...value.normalize('NFC').toLowerCase().matchAll(
+    /\b[\p{L}]{3,35}\s+([\p{L}]{3,35})[ \t-]+([0-9]{1,5})\b/giu
+  )].map(m=>m[1]+'#'+m[2]));
+  const requested=splitIds(query);
+  const offered=splitIds(text);
+  return [...requested].every(id=>offered.has(id));
 }
 
 /** Directional compound policy: "Schlüssel" may occur in "Haustürschlüssel",
