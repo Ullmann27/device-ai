@@ -15,19 +15,29 @@ object ContinuumHomeScreen {
 
     fun elements(layout: ContinuumHomeLayout.Layout, textScale: Float): Map<Slot, ContinuumElement> {
         val wide = layout.wide
+        val portrait = wide && layout[Slot.WORKERS] != null
         val map = linkedMapOf<Slot, ContinuumElement>(
             Slot.BRAND to HeaderBrandElement(textScale, large = wide),
             Slot.SEARCH to HeaderButtonElement(HeaderButtonElement.Kind.SEARCH, textScale),
             Slot.NOTIFICATIONS to HeaderButtonElement(HeaderButtonElement.Kind.NOTIFICATIONS, textScale),
             Slot.PROFILE to HeaderButtonElement(HeaderButtonElement.Kind.PROFILE, textScale),
-            Slot.LABEL_CONNECTED to CoreLabelElement(Icon.GLOBE, "VERBUNDEN", { it.core.connected }, textScale, wide),
-            Slot.LABEL_LEARNING to CoreLabelElement(Icon.BOOK, "LERNEN", { it.core.learning }, textScale, wide),
-            Slot.LABEL_DEVELOPING to CoreLabelElement(Icon.CODE, "ENTWICKELN", { it.core.developing }, textScale, wide),
-            Slot.LABEL_THINKING to CoreLabelElement(Icon.BRAIN, "DENKEN", { it.core.thinking }, textScale, wide, mirrored = true),
-            Slot.LABEL_ANALYSING to CoreLabelElement(Icon.CHART_UP, "ANALYSIEREN", { it.core.analysing }, textScale, wide, mirrored = true),
-            Slot.LABEL_EVOLVING to CoreLabelElement(Icon.ATOM, "EVOLVIEREN", { it.core.evolving }, textScale, wide, mirrored = true)
+            Slot.LABEL_CONNECTED to CoreLabelElement(Icon.GLOBE, "VERBUNDEN", { it.core.connected }, textScale, wide, portrait = portrait),
+            Slot.LABEL_LEARNING to CoreLabelElement(Icon.BOOK, "LERNEN", { it.core.learning }, textScale, wide, portrait = portrait),
+            Slot.LABEL_DEVELOPING to CoreLabelElement(Icon.CODE, "ENTWICKELN", { it.core.developing }, textScale, wide, portrait = portrait),
+            Slot.LABEL_THINKING to CoreLabelElement(Icon.BRAIN, "DENKEN", { it.core.thinking }, textScale, wide, mirrored = true, portrait = portrait),
+            Slot.LABEL_ANALYSING to CoreLabelElement(Icon.CHART_UP, "ANALYSIEREN", { it.core.analysing }, textScale, wide, mirrored = true, portrait = portrait),
+            Slot.LABEL_EVOLVING to CoreLabelElement(Icon.ATOM, "EVOLVIEREN", { it.core.evolving }, textScale, wide, mirrored = true, portrait = portrait)
         )
-        if (wide) {
+        if (portrait) {
+            map[Slot.MODEL] = PortraitModelCard(textScale)
+            map[Slot.LEARNING] = PortraitLearningCard(textScale)
+            map[Slot.STORAGE] = PortraitStorageCard(textScale)
+            map[Slot.DEVELOPMENT] = PortraitDevelopmentCard(textScale)
+            map[Slot.SYSTEM_STATUS] = PortraitSystemStatus(textScale)
+            map[Slot.SYSTEM_ACTIVITY] = PortraitActivityCard(textScale)
+            map[Slot.WORKERS] = PortraitWorkersCard(textScale)
+            // The portrait reference has NO legacy left rail, top model pill or phone bar.
+        } else if (wide) {
             map[Slot.MODEL] = WideModelCardElement(textScale)
             map[Slot.LEARNING] = WideLearningCardElement(textScale)
             map[Slot.STORAGE] = WideStorageCardElement(textScale)
