@@ -452,6 +452,10 @@ class AgentActivity : Activity() {
         bridge.start()
         updateCloudBadge()
         reloadInstalledModels()
+        // Imported original Gemma survives process death as an on-disk model,
+        // not as a live engine. Reopen it once, asynchronously and only when
+        // the original SHA-256 is the selected catalog entry.
+        restoreOriginalGemmaOnOpen()
         showPendingReceiptReview()
         addHomeGreeting(
             "Hallo! Ich bin Device AI. Mein eigener Startkern läuft ohne Modellimport und ohne Cloud. " +
@@ -514,9 +518,20 @@ class AgentActivity : Activity() {
             activeDevCoordinator?.cancel()
             activeResearchCancellation?.cancel()
             localRuntime.cancel()
-            // the runtime is process-wide: only a finishing activity unloads the model
-            if (!isChangingConfigurations &&
-                localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.LOADING) {
+            // LocalModelHost is process-wide. A finished Activity is not a
+            // model-unload request: keep the verified Gemma engine available
+            // for a quick reopen while this process survives. If Android kills
+            // the process, restoreOriginalGemmaOnOpen reopens the saved file.
+            // Explicit MODELL ENTLADEN always takes precedence.
+            val retainGemma =
+                localRuntime.loadedModel?.let(ContinuumGemmaRestorePolicy::isSelectedOriginal) == true &&
+                gemmaRestorePreferences().getBoolean(
+                ContinuumGemmaRestorePolicy.KEY_ENABLED, true
+            )
+            if (!isChangingConfigurations && !retainGemma &&
+                localRuntime.state != LocalModelState.EMPTY &&
+                localRuntime.state != LocalModelState.LOADING &&
+                localRuntime.state != LocalModelState.UNLOADING) {
                 runCatching { localRuntime.unload() }
             }
         }
@@ -6580,6 +6595,36 @@ class AgentActivity : Activity() {
             .show()
     }
 
+    private fun gemmaRestorePreferences() = getSharedPreferences(
+        ContinuumGemmaRestorePolicy.PREFERENCES,
+        android.content.Context.MODE_PRIVATE
+    )
+
+    /**
+     * Initial startup only: no timers, downloads, foreground service, repeated
+     * model calls or synthetic readiness labels. The callback runs on the main
+     * thread; LocalModelRuntime performs its expensive file/hash/engine work
+     * on its own background executor.
+     */
+    private fun restoreOriginalGemmaOnOpen() {
+        if (!gemmaRestorePreferences().getBoolean(
+                ContinuumGemmaRestorePolicy.KEY_ENABLED, true
+            )) return
+        onLearningIo({ modelCatalog.all() }) { result ->
+            if (isFinishing || isDestroyed || modelImportActive || modelUnloading) return@onLearningIo
+            val candidate = ContinuumGemmaRestorePolicy.candidate(
+                enabled = gemmaRestorePreferences().getBoolean(
+                    ContinuumGemmaRestorePolicy.KEY_ENABLED, true
+                ),
+                state = localRuntime.state,
+                loaded = localRuntime.loadedModel,
+                imported = result.getOrDefault(emptyList())
+            ) ?: return@onLearningIo
+            addToolActivity("Gemma 4 · Bereits importiertes Original wird lokal wieder geladen")
+            loadModel(candidate)
+        }
+    }
+
     private fun loadModel(model: ImportedLocalModel) {
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
         resetM2NativeProof()
@@ -6592,9 +6637,21 @@ class AgentActivity : Activity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onFailure {
                     localRuntimeError = it.message ?: "Model compatibility could not be verified."
+                    // A broken/incompatible model is not retried endlessly at
+                    // every launch. Owner can always manually retry and review.
+                    if (ContinuumGemmaRestorePolicy.isSelectedOriginal(model)) {
+                        gemmaRestorePreferences().edit()
+                            .putBoolean(ContinuumGemmaRestorePolicy.KEY_ENABLED, false).apply()
+                    }
                     Toast.makeText(this, ContinuumUiCopy.modelFailure(it.message), Toast.LENGTH_LONG).show()
                 }
-                if (result.isSuccess) localRuntimeError = null
+                result.onSuccess { loaded ->
+                    localRuntimeError = null
+                    gemmaRestorePreferences().edit().putBoolean(
+                        ContinuumGemmaRestorePolicy.KEY_ENABLED,
+                        ContinuumGemmaRestorePolicy.isSelectedOriginal(loaded)
+                    ).apply()
+                }
                 refreshLocalModelUi()
             }
         }
@@ -6602,6 +6659,10 @@ class AgentActivity : Activity() {
     }
 
     private fun unloadModel() {
+        // The owner explicitly chose to unload. Do not silently re-enable
+        // Gemma on the next launch until a new successful manual load.
+        gemmaRestorePreferences().edit()
+            .putBoolean(ContinuumGemmaRestorePolicy.KEY_ENABLED, false).apply()
         resetM2NativeProof()
         localRuntimeError = null
         modelUnloading = true
