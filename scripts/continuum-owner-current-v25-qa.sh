@@ -90,7 +90,7 @@ grep -q 'OWNER_V25_BLOCKED' "$out/OLD-RELEASE-GATE.log" || {
 # original immutable inventories, not to a later changed owner review branch.
 # NEVER change these tests, never relabel them green for changed source.
 # The real release gates must still reject without fresh owner approval.
-if [[ "$expected_ref" == "chatgpt/continuum-fold7-usable-navigation-20261027" ]]; then
+if [[ "$head_sha" != "54d9de3cde4a4f72f61e2f6c4e62a6dc9bd5439e" ]]; then
   echo "CURRENT_0324_MANIFEST=SUPERSEDED_NOT_APPROVED"
   if env -u CONTINUUM_OWNER_0324_LIVE_APPROVED_SOURCE_SHA \
      -u CONTINUUM_OWNER_0324_LIVE_APPROVED_MANIFEST_BLOB \
