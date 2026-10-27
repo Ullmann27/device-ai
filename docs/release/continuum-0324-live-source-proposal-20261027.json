@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "state": "SOURCE_PROPOSAL_NOT_OWNER_APPROVAL",
-  "sourceHead": "39008eaffb42a092b40aebd295df6b66f2cada61",
+  "sourceHead": "5270202e0699764b0eac5d4dd3e6a587b982ae05",
   "package": "at.heinz.deviceai.mentorpaired",
   "versionCode": 25,
   "versionName": "0.3.24",
@@ -3401,7 +3401,7 @@
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumCoreMirrorTest.kt",
-      "blob": "c63e0780549e7c0c561b72844751051bcd6c5c8b"
+      "blob": "56ed70db68ca7a3e92e7b74599d0697a729bd781"
     },
     {
       "path": "app/src/test/java/at/heinz/deviceai/ui/ContinuumDashboardMathTest.kt",
