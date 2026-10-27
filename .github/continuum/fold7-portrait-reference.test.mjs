@@ -14,68 +14,94 @@ const core=read(ui+'ContinuumHomeElements.kt');
 const orb=read(ui+'ContinuumHologramRenderer.kt');
 const view=read(ui+'ContinuumHomeView.kt');
 const activity=read('app/src/main/java/at/heinz/deviceai/AgentActivity.kt');
+const navigation=read('app/src/main/java/at/heinz/deviceai/ContinuumWorkAreaNavigationSpec.kt');
 const preview=read('tools/continuum-jvm-preview/src/at/heinz/deviceai/ui/ContinuumPreviewMain.kt');
 
-test('Fold7 portrait uses its own geometry and full-screen app shell, while landscape retains rail',()=>{
+test('portrait selection keeps actual Fold window threshold and separate landscape rail',()=>{
  assert.match(layout,/fun isPortraitFold\(widthDp: Float, heightDp: Float\)/);
  assert.match(layout,/isWide\(widthDp, heightDp\) && heightDp >= widthDp \* 1\.02f/);
  assert.match(layout,/if \(heightDp > 0f && isPortraitFold\(widthDp, heightDp\)\) return portraitFold/);
- assert.match(activity,/if \(!at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isPortraitFold\(windowWidthDp, windowHeightDp\)\)/);
+ assert.match(activity,/val portraitFold = wide &&/);
+ assert.match(activity,/if \(!portraitFold\) \{/);
  assert.match(activity,/val sideRail = wide && !at\.heinz\.deviceai\.ui\.ContinuumHomeLayout\.isPortraitFold/);
  assert.match(activity,/if \(sideRail\) railWidthPx\(\)/);
  assert.match(home,/val portrait = wide && layout\[Slot\.WORKERS\] != null/);
  assert.doesNotMatch(layout.split('fun portraitFold(')[1].split('fun wide(')[0],/Slot\.RAIL to Box/);
 });
 
-test('exact 3 x 2 same-sized source rectangles, anchored to reference image',()=>{
+test('six equal live cards and the separate status strip are aligned without clipping',()=>{
  const portrait=layout.split('fun portraitFold(')[1].split('fun wide(')[0];
- const exact=[
-  'Slot.MODEL to Box(12f, top, 276f, top + cardHeight)',
-  'Slot.LEARNING to Box(288f, top, 552f, top + cardHeight)',
-  'Slot.STORAGE to Box(564f, top, 828f, top + cardHeight)',
-  'Slot.DEVELOPMENT to Box(12f, row2, 276f, row2 + cardHeight)',
-  'Slot.SYSTEM_ACTIVITY to Box(288f, row2, 552f, row2 + cardHeight)',
-  'Slot.WORKERS to Box(564f, row2, 828f, row2 + cardHeight)'
- ];
- for(const rect of exact)assert.ok(portrait.includes(rect),'missing identical grid cell '+rect);
- const sourceArea=portrait.indexOf('val row2 = top + cardHeight + gap');
- assert.ok(sourceArea>=0);
- assert.ok(portrait.includes('val gap = 12f'));
- for(const shape of [[750,790],[656,690],[840,1010],[1000,1400]]){
-  const [w,h]=shape,u=w/840;
-  const frame=Math.max(800,h/u),extra=Math.max(0,frame-886);
-  const grow=Math.min(extra*.22,100),top=400+grow;
-  const gap=12,pad=12+extra*.46;
-  const ch=Math.max((frame-top-pad-gap)/2,196),last=top+ch+gap+ch;
-  assert.ok(ch>=196);
-  assert.ok(last<=Math.max(frame,last+12),'within scroll content '+shape);
-  assert.ok(828*u<w,'card fits '+shape);
-  assert.ok(top>390+grow,'hero/card clearance '+shape);
+ for(const rect of [
+  'Slot.MODEL to Box(12f, firstTop, 276f, firstTop + cardHeight)',
+  'Slot.LEARNING to Box(288f, firstTop, 552f, firstTop + cardHeight)',
+  'Slot.STORAGE to Box(564f, firstTop, 828f, firstTop + cardHeight)',
+  'Slot.DEVELOPMENT to Box(12f, secondTop, 276f, secondTop + cardHeight)',
+  'Slot.SYSTEM_ACTIVITY to Box(288f, secondTop, 552f, secondTop + cardHeight)',
+  'Slot.WORKERS to Box(564f, secondTop, 828f, secondTop + cardHeight)',
+  'Slot.SYSTEM_STATUS to Box(12f, statusTop, 828f, statusTop + 130f)'
+ ])assert.ok(portrait.includes(rect),'missing aligned rectangle '+rect);
+ assert.match(portrait,/val secondTop = firstTop \+ cardHeight \+ gap/);
+ assert.match(portrait,/val statusTop = secondTop \+ cardHeight \+ 16f/);
+ for(const [w,h] of [[750,790],[656,690],[840,1010],[1000,1400]]){
+  const u=w/840,frame=Math.max(800,h/u),heroExtra=Math.min(Math.max(0,frame-886)*.12,45);
+  const bottom=384+heroExtra,top=bottom+16,card=216,second=top+card+12;
+  const status=second+card+16,content=Math.max(frame,status+142);
+  assert.ok(status+130<=content, 'status reachable with scrollbar');
+  assert.ok(828*u<w, 'right aligned card fits available viewport');
+  assert.ok(bottom<top, 'unobstructed hero / chart clearance');
  }
 });
 
-test('larger actions, ACTUAL large orb and sixth tap target are wired to production',()=>{
- for(const s of ['PortraitModelCard','PortraitLearningCard','PortraitStorageCard',
-   'PortraitDevelopmentCard','PortraitActivityCard','PortraitWorkersCard','PortraitSystemStatus']){
-  assert.match(elements,new RegExp('class '+s+'\\b'));
-  assert.match(home,new RegExp(s+'\\(textScale\\)'));
+test('mirrored controls do not cover the hologram; real renderer and all diagrams survive',()=>{
+ const portrait=layout.split('fun portraitFold(')[1].split('fun wide(')[0];
+ for(const [left,right,top,bottom] of [
+  ['LABEL_CONNECTED','LABEL_THINKING',81,163],
+  ['LABEL_LEARNING','LABEL_ANALYSING',177,259],
+  ['LABEL_DEVELOPING','LABEL_EVOLVING',273,355]
+ ]){
+  assert.ok(portrait.includes('Slot.'+left+' to Box(14f, '+top+'f, 230f, '+bottom+'f)'),
+    'missing left action: '+left);
+  assert.ok(portrait.includes('Slot.'+right+' to Box(610f, '+top+'f, 826f, '+bottom+'f)'),
+    'missing mirrored right action: '+right);
  }
- for(const s of ['LABEL_CONNECTED','LABEL_LEARNING','LABEL_DEVELOPING','LABEL_THINKING','LABEL_ANALYSING','LABEL_EVOLVING'])
-  assert.match(layout,new RegExp('Slot\\.'+s+' to Box\\('));
+ assert.match(portrait,/Slot\.HERO to Box\(240f, 60f, 600f, heroBottom\)/);
+ for(const name of ['PortraitModelCard','PortraitLearningCard','PortraitStorageCard',
+  'PortraitDevelopmentCard','PortraitActivityCard','PortraitWorkersCard','PortraitSystemStatusStrip']){
+  assert.match(elements,new RegExp('class '+name+'\\b'));
+  assert.match(home,new RegExp(name+'\\(textScale\\)'));
+ }
+ assert.match(elements,/class PortraitSystemStatusStrip[\s\S]*Donut\.draw/);
+ assert.match(elements,/class PortraitSystemStatusStrip[\s\S]*WaveChart\.draw/);
+ assert.match(elements,/s\.system\.appCpuPercent/);
  assert.match(core,/ContinuumSurfaces\.iconDisc\(p, icon, discX, cy, 56f, 29f\)/);
  assert.match(orb,/val FOLD_PORTRAIT = Geometry\(centerY = \.42f, radiusOfWidth = \.375f/);
  assert.match(view,/Geometry\.FOLD_PORTRAIT/);
  assert.match(preview,/Geometry\.FOLD_PORTRAIT/);
  assert.match(activity,/Slot\.WORKERS -> showDevelopmentBacklog\(\)/);
- assert.match(elements,/val figures=listOf\(ContinuumDashboardState\.count\(d\.runningTasks\)/);
  assert.doesNotMatch(elements,/\b(435 gespeicherte|129 Lernereignisse|aktive Worker.{0,5}3)\b/);
 });
 
-test('legacy smartphone and Fold landscape geometries are not overwritten',()=>{
+test('Fold portrait exposes a fixed navigable Chat tab and discoverable scrolling',()=>{
+ assert.match(activity,/private fun buildPortraitWorkAreaBar\(\): View/);
+ assert.match(activity,/root\.addView\(buildPortraitWorkAreaBar\(\)/);
+ assert.match(activity,/ContinuumWorkAreaNavigationSpec\.destinations\.withIndex\(\)/);
+ assert.match(activity,/setOnClickListener \{ navigateWorkArea\(destination\) \}/);
+ assert.match(activity,/bottomWorkAreaBar = dock/);
+ assert.match(activity,/isVerticalScrollBarEnabled = true/);
+ assert.match(activity,/isScrollbarFadingEnabled = false/);
+ assert.match(activity,/scrollBarSize = dp\(5\)/);
+ assert.match(activity,/ContinuumWorkArea\.CHAT -> focusChatComposer\(\)/);
+ assert.match(activity,/navigationPane\.layoutParams = paneParams/);
+ assert.match(navigation,/\(!wide \|\| portraitFold\) && !keyboardVisible/);
+});
+
+test('phone / Fold landscape and hologram lifecycle are unchanged',()=>{
  assert.match(layout,/private val phoneReference = mapOf\(/);
  assert.match(layout,/private val wideReference = mapOf\(/);
  assert.match(orb,/val PHONE = Geometry\(/);
  assert.match(orb,/val FOLD = Geometry\(/);
  assert.match(home,/else if \(wide\) \{/);
  assert.match(activity,/wideContent\.addView\(buildRail\(\), LinearLayout\.LayoutParams/);
+ assert.match(activity,/it\.setForegroundActive\(foregroundLearningActive\)/);
+ assert.match(view,/sciFiEffects\.drawScanlines/);
 });

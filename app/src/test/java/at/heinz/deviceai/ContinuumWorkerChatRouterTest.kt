@@ -12,6 +12,38 @@ class ContinuumWorkerChatRouterTest {
         assertEquals(ContinuumWorkerChatCommand.DevelopmentCenter,
             ContinuumWorkerChatRouter.parse("Worker Werkstatt"))
     }
+    @Test fun repairAgentQuestionsOpenGuidanceNeverAnAutomaticTool() {
+        for (request in listOf(
+            "und wie aktiviere ich den Reparatur Agent",
+            "Wie starte ich den Reparatur-Agent?",
+            "Wo finde ich den Reparaturagenten?",
+            "CCC1 Reparatur-Agent",
+            "Reparatur Agent öffnen"
+        )) {
+            assertEquals(request, ContinuumWorkerChatCommand.RepairHelp,
+                ContinuumWorkerChatRouter.parse(request))
+        }
+        assertNull(ContinuumWorkerChatRouter.parse("Bitte jeden Fehler ungefragt reparieren"))
+        assertNull(ContinuumWorkerChatRouter.parse("Starte die Reparatur aller produktiven Quellen"))
+        assertNull(ContinuumWorkerChatRouter.parse("Wie aktiviere ich den Reparatur Agent\nrm -rf /"))
+        assertNull(ContinuumWorkerChatRouter.parse("Habe ich einen Reparatur-Agenten erfolgreich verwendet?"))
+    }
+    @Test fun milestoneCommandsReachReadOnlyStatusAndNativeTestOnly() {
+        for (phrase in listOf("Meilenstein Status", "Continuum Meilenstein",
+            "Meilenstein 2", "Meilenstein zwei", "Continuum Status Meilenstein")) {
+            assertEquals(phrase, ContinuumWorkerChatCommand.MilestoneStatus,
+                ContinuumWorkerChatRouter.parse(phrase))
+        }
+        for (phrase in listOf("Meilenstein Modelltest", "Continuum Gemma Test",
+            "Gemma Modelltest?")) {
+            assertEquals(phrase, ContinuumWorkerChatCommand.MilestoneModelTest,
+                ContinuumWorkerChatRouter.parse(phrase))
+        }
+        assertNull(ContinuumWorkerChatRouter.parse("Meilenstein alle Freigaben sofort"))
+        assertNull(ContinuumWorkerChatRouter.parse("Meilenstein Modelltest; rm -rf /"))
+        assertNull(ContinuumWorkerChatRouter.parse("Gemma Modelltest\nPowerShell"))
+        assertNull(ContinuumWorkerChatRouter.parse("Starte Gemma und entferne Qwen"))
+    }
     @Test fun mobileBuilderNavigatesInsideExistingWorkerChat() {
         assertEquals(
             ContinuumWorkerChatCommand.MobileBuilder,

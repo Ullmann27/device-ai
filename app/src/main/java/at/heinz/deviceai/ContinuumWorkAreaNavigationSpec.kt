@@ -33,8 +33,8 @@ object ContinuumWorkAreaNavigationSpec {
     fun selectionAfterTap(current: ContinuumWorkArea, tapped: ContinuumWorkArea): ContinuumWorkArea =
         if (tapped == ContinuumWorkArea.MEHR) current else tapped
 
-    fun showBottomBar(wide: Boolean, keyboardVisible: Boolean): Boolean =
-        !wide && !keyboardVisible
+    fun showBottomBar(wide: Boolean, keyboardVisible: Boolean, portraitFold: Boolean = false): Boolean =
+        (!wide || portraitFold) && !keyboardVisible
 
     fun accessibilityLabel(destination: ContinuumWorkArea): String =
         destination.title + " – " + destination.explanation

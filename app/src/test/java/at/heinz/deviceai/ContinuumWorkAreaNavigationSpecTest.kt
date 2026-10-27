@@ -50,10 +50,12 @@ class ContinuumWorkAreaNavigationSpecTest {
         ))
     }
 
-    @Test fun bottomBarIsMobileOnlyAndHiddenWhileKeyboardIsVisible() {
+    @Test fun bottomBarStaysAvailableInFoldPortraitButAvoidsTheKeyboard() {
         assertTrue(ContinuumWorkAreaNavigationSpec.showBottomBar(false, false))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(false, true))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, false))
         assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, true))
+        assertTrue(ContinuumWorkAreaNavigationSpec.showBottomBar(true, false, portraitFold = true))
+        assertFalse(ContinuumWorkAreaNavigationSpec.showBottomBar(true, true, portraitFold = true))
     }
 }

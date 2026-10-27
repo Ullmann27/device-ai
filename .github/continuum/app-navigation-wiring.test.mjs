@@ -21,7 +21,7 @@ test('exactly five owner-visible work areas remain in fixed order', () => {
     assert.match(spec, new RegExp('\\b' + name + '\\("'));
     assert.match(spec, new RegExp('ContinuumWorkArea\\.' + name));
   }
-  assert.match(spec, /fun showBottomBar\(wide: Boolean, keyboardVisible: Boolean\): Boolean/);
+  assert.match(spec, /fun showBottomBar\(wide: Boolean, keyboardVisible: Boolean, portraitFold: Boolean = false\): Boolean/);
 });
 
 test('phone bottom navigation stays outside conversation pane and above system bar', () => {
@@ -60,7 +60,9 @@ test('Fold rail offers the five work areas without a second bottom bar', () => {
     assert.match(rail, new RegExp('navigateWorkArea\\(ContinuumWorkArea\\.' + area + '\\)'));
   assert.match(rail, /showMoreWorkAreas\(\)/);
   assert.match(activity, /buildRail\(\),/);
-  assert.match(spec, /!wide && !keyboardVisible/);
+  assert.match(spec, /\(!wide \|\| portraitFold\) && !keyboardVisible/);
+  // The landscape rail remains the only work-area control in wide landscape.
+  assert.match(activity, /if \(!portraitFold\) \{\s*wideContent\.addView\(buildRail\(\)/);
 });
 
 test('existing chat, learning monitoring and owner permission boundaries remain', () => {

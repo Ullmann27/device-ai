@@ -313,6 +313,10 @@ class AgentActivity : Activity() {
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
     private var modelUnloading = false
+    // Session-scoped genuine native inference evidence, never restored or
+    // inferred from import/configuration. Read and written on the UI thread.
+    private var m2DirectProofModelSha: String? = null
+    private var m2DirectProofElapsedMs: Long? = null
     @Volatile private var localRuntimeError: String? = null
     // A rejected candidate does not invalidate an independently loaded, verified runtime.
     private var localImportError: String? = null
@@ -552,6 +556,11 @@ class AgentActivity : Activity() {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT
             )
         }
+        val portraitFold = wide && at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(
+            windowWidthDp, windowHeightDp
+        )
+        val portraitNavHeight = if (portraitFold) dp(74) else 0
+        var widePane: View? = null
         val phonePane: View?
         val phoneNavHeight: Int
         if (wide) {
@@ -561,9 +570,10 @@ class AgentActivity : Activity() {
                 orientation = LinearLayout.HORIZONTAL
                 setBackgroundColor(BG)
             }
+            widePane = wideContent
             // The unfolded portrait reference is full bleed: no left navigation rail.
             // Fold landscape retains its tested sidebar and the same work-area handling.
-            if (!at.heinz.deviceai.ui.ContinuumHomeLayout.isPortraitFold(windowWidthDp, windowHeightDp)) {
+            if (!portraitFold) {
                 wideContent.addView(buildRail(), LinearLayout.LayoutParams(
                     railWidthPx(), LinearLayout.LayoutParams.MATCH_PARENT
                 ))
@@ -574,7 +584,14 @@ class AgentActivity : Activity() {
             root.addView(wideContent, android.widget.FrameLayout.LayoutParams(
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
                 android.widget.FrameLayout.LayoutParams.MATCH_PARENT
-            ))
+            ).apply { bottomMargin = portraitNavHeight })
+            if (portraitFold) {
+                root.addView(buildPortraitWorkAreaBar(), android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                    portraitNavHeight,
+                    Gravity.BOTTOM
+                ))
+            }
         } else {
             val navScale = windowWidthDp /
                 at.heinz.deviceai.ui.ContinuumHomeLayout.PHONE_REFERENCE_WIDTH
@@ -610,15 +627,18 @@ class AgentActivity : Activity() {
                     view.setPadding(bars.left, viewport.top, bars.right, viewport.bottom)
                 }
                 val showNavigation = ContinuumWorkAreaNavigationSpec.showBottomBar(
-                    wide, viewport.compactDashboard
+                    wide, viewport.compactDashboard, portraitFold
                 )
                 bottomWorkAreaBar?.visibility = if (showNavigation) View.VISIBLE else View.GONE
-                if (phonePane != null) {
-                    val paneParams = phonePane.layoutParams as android.widget.FrameLayout.LayoutParams
-                    val requiredMargin = if (showNavigation) phoneNavHeight else 0
+                val navigationPane = phonePane ?: if (portraitFold) widePane else null
+                if (navigationPane != null) {
+                    val paneParams = navigationPane.layoutParams as android.widget.FrameLayout.LayoutParams
+                    val requiredMargin = if (showNavigation) {
+                        if (portraitFold) portraitNavHeight else phoneNavHeight
+                    } else 0
                     if (paneParams.bottomMargin != requiredMargin) {
                         paneParams.bottomMargin = requiredMargin
-                        phonePane.layoutParams = paneParams
+                        navigationPane.layoutParams = paneParams
                     }
                 }
                 if (keyboardCompact != viewport.compactDashboard) {
@@ -765,6 +785,12 @@ class AgentActivity : Activity() {
         val dashboardScroll = ScrollView(this).apply {
             isFillViewport = false
             clipToPadding = false
+            isVerticalScrollBarEnabled = true
+            isScrollbarFadingEnabled = false
+            scrollBarSize = dp(5)
+            scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+            isSmoothScrollingEnabled = true
+            contentDescription = "Continuum-Cockpit, vertikal scrollbar: sechs Diagrammkarten und Systemstatus"
         }
         dashboardScroll.addView(dashboard, matchWidth())
         dashboardSection = dashboardScroll
@@ -1126,6 +1152,62 @@ class AgentActivity : Activity() {
 
         applyModeStyles()
         return card
+    }
+
+    /**
+     * Fold7 portrait has no side rail. Keep the original neon hero, its live
+     * animation and all cockpit diagrams, but expose the REAL existing work
+     * areas with a fixed one-tap dock instead of hiding chat off-screen.
+     * The dock is only presentation; permissions and model routing are unchanged.
+     */
+    private fun buildPortraitWorkAreaBar(): View {
+        val dock = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(dp(9), dp(6), dp(9), dp(7))
+            background = android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.rgb(4, 15, 36))
+                setStroke(dp(1), Color.rgb(51, 112, 188))
+                cornerRadius = dp(17).toFloat()
+            }
+            contentDescription = "Continuum-Navigation: Start, Chat, Lernen, Entwickeln, Mehr"
+        }
+        for ((index, destination) in ContinuumWorkAreaNavigationSpec.destinations.withIndex()) {
+            val selectedSurface = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(12).toFloat()
+                setColor(Color.rgb(17, 48, 89))
+                setStroke(dp(1), Color.rgb(50, 179, 239))
+            }
+            val normalSurface = android.graphics.drawable.GradientDrawable().apply {
+                cornerRadius = dp(12).toFloat()
+                setColor(Color.TRANSPARENT)
+            }
+            val cell = TextView(this).apply {
+                text = destination.symbol + "\n" + destination.title
+                textSize = 12f
+                gravity = Gravity.CENTER
+                setTypeface(typeface, Typeface.BOLD)
+                setTextColor(android.content.res.ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
+                    intArrayOf(CYAN, MUTED)
+                ))
+                background = android.graphics.drawable.StateListDrawable().apply {
+                    addState(intArrayOf(android.R.attr.state_selected), selectedSurface)
+                    addState(intArrayOf(), normalSurface)
+                }
+                contentDescription = ContinuumWorkAreaNavigationSpec.accessibilityLabel(destination)
+                tag = destination
+                isClickable = true
+                isFocusable = true
+                minimumHeight = dp(49)
+                setOnClickListener { navigateWorkArea(destination) }
+            }
+            dock.addView(cell, LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ).apply { if (index != 0) marginStart = dp(3) })
+        }
+        bottomWorkAreaBar = dock
+        refreshWorkAreaSelection()
+        return dock
     }
 
     private fun buildBottomWorkAreaBar(): View {
@@ -1625,6 +1707,32 @@ class AgentActivity : Activity() {
                 .setPositiveButton("Schließen", null)
                 .show()
         }
+    }
+
+    /** Every model lifecycle transition invalidates previous session inference proof. */
+    private fun resetM2NativeProof() {
+        m2DirectProofModelSha = null
+        m2DirectProofElapsedMs = null
+    }
+
+    /** Grounded M2 status: never claim Gemma, tools or repairs from a catalogue entry. */
+    private fun showM2MilestoneStatus() {
+        val loaded = localRuntime.loadedModel
+        val selected = loaded?.id == ContinuumSelectedModels.LOCAL_ID &&
+            loaded.sha256 == ContinuumSelectedModels.LOCAL_SHA256
+        val imported = installedModels.any { model ->
+            model.id == ContinuumSelectedModels.LOCAL_ID &&
+                model.sha256 == ContinuumSelectedModels.LOCAL_SHA256
+        }
+        val ready = selected && localRuntime.state == LocalModelState.READY
+        val proof = ready && m2DirectProofModelSha == loaded?.sha256
+        addAssistantMessage(ContinuumM2Status.render(ContinuumM2Status.Snapshot(
+            modelImported = imported,
+            modelLoaded = selected,
+            modelRuntimeReady = ready,
+            directInferenceObserved = proof,
+            directInferenceMillis = if (proof) m2DirectProofElapsedMs else null
+        )))
     }
 
     private fun showDeviceTeamleaderChatStatus() {
@@ -2222,6 +2330,21 @@ class AgentActivity : Activity() {
                         "kann mit echten lokalen Werkzeugen auf dem Handy bauen, " +
                         "sofern sie installiert und freigegeben sind. Der PC ist optional."
                 )
+                ContinuumWorkerChatCommand.RepairHelp -> {
+                    addAssistantMessage(
+                        "CCC1 · Reparatur-Agent: Öffne 'Entwickeln' und wähle " +
+                            "'CCC1 · Reparatur-Agent (Termux)'. Dieser Eintrag führt zum " +
+                            "bestehenden Handy-Builder, sofern er auf deinem Gerät verfügbar ist. " +
+                            "Ob der lokale Reparaturdienst wirklich eingerichtet und erreichbar ist, " +
+                            "muss dort geprüft werden. Der Agent darf keine produktive Änderung " +
+                            "ohne deine ausdrückliche Freigabe übernehmen. Mit 'Worker Status' " +
+                            "kannst du zuerst den vorhandenen Teamleiter prüfen. " +
+                            "Diese Erklärung startet noch keinen Reparaturauftrag."
+                    )
+                    showDevelopmentCenter()
+                }
+                ContinuumWorkerChatCommand.MilestoneStatus -> showM2MilestoneStatus()
+                ContinuumWorkerChatCommand.MilestoneModelTest -> runLocalSmokeTest(direct = true)
                 ContinuumWorkerChatCommand.Status -> showDeviceTeamleaderChatStatus()
                 ContinuumWorkerChatCommand.Backlog -> showDevelopmentBacklog()
                 ContinuumWorkerChatCommand.DevelopmentCenter -> showDevelopmentDialog()
@@ -5390,6 +5513,9 @@ class AgentActivity : Activity() {
      * No network, speech capture or autonomous training can start here.
      */
     private fun runLocalSmokeTest(direct:Boolean=false) {
+        // A new diagnostic revokes any prior same-session success until this
+        // attempt completes. Nothing survives a restart or different model SHA.
+        if (direct) resetM2NativeProof()
         if (localRuntime.loadedModel == null || localRuntime.state != LocalModelState.READY) {
             addAssistantMessage("MODELLTEST · Kein geladenes Modell im Zustand BEREIT.")
             refreshLocalModelUi()
@@ -5429,6 +5555,13 @@ class AgentActivity : Activity() {
                 activeLocalRequest = false
                 result.fold(
                     onSuccess = { answer ->
+                        if (direct && testedModel.id == ContinuumSelectedModels.LOCAL_ID &&
+                            testedModel.sha256 == ContinuumSelectedModels.LOCAL_SHA256 &&
+                            localRuntime.loadedModel == testedModel &&
+                            localRuntime.state == LocalModelState.READY) {
+                            m2DirectProofModelSha = testedModel.sha256
+                            m2DirectProofElapsedMs = elapsed
+                        }
                         addAssistantMessage("MODELLTEST "+
                             (if(direct)"DIREKT" else "THINKING")+
                             " ERFOLGREICH · ${elapsed} ms\nGeprüfte Katalogidentität: $identity\n\n" + answer)
@@ -6449,6 +6582,7 @@ class AgentActivity : Activity() {
 
     private fun loadModel(model: ImportedLocalModel) {
         if (localRuntime.state != LocalModelState.EMPTY && localRuntime.state != LocalModelState.FAILED) return
+        resetM2NativeProof()
         localRuntimeError = null
         refreshLocalModelUi()
         scheduleLifecycleTimeout("Model initialization exceeded 120 seconds; the native runtime may still be working.")
@@ -6468,6 +6602,7 @@ class AgentActivity : Activity() {
     }
 
     private fun unloadModel() {
+        resetM2NativeProof()
         localRuntimeError = null
         modelUnloading = true
         localRuntime.cancel()
@@ -6497,6 +6632,7 @@ class AgentActivity : Activity() {
     private fun importModel(uri: Uri) {
         val metadata = pendingModelImport ?: return
         pendingModelImport = null
+        resetM2NativeProof()
         modelImportActive = true
         localImportError = null
         refreshLocalModelUi()
