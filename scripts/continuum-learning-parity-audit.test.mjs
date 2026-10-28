@@ -26,7 +26,7 @@ test('hash equality alone is insufficient to claim complete migration',()=>{
   const sha='a'.repeat(64);
   const r=compareContinuumLearningStates({...prior,swb1Sha256:sha},{...newApp,swb1Sha256:sha});
   assert.equal(r.swb1WeightHashEqual,true);
-  assert.equal(r.verifiedModelWeightMigration,true);
+  assert.equal(r.verifiedModelWeightMigration,false);
   assert.equal(r.verifiedFullMigration,false);
 });
 test('invalid or confused app identities are rejected',()=>{
