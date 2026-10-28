@@ -138,6 +138,21 @@ class MemoryRetrievalResearchGateTest {
         } catch (_: IllegalArgumentException) {}
     }
 
+    @Test fun duplicateRecordIdsDoNotCountAsIndependentEvidence() {
+        val duplicated = record("same", "Gemma runs offline")
+        try {
+            MemoryRetrievalResearchGate.evaluate(
+                listOf(probe("dupe", "Gemma", setOf("same"))),
+                listOf(duplicated, duplicated.copy(content = "Gemma does not run offline")),
+                setOf(PrivacyClass.PUBLIC),
+                nowMillis = 1_000L
+            )
+            fail("Ambiguous duplicate memory IDs were accepted")
+        } catch (expected: IllegalArgumentException) {
+            assertTrue(expected.message!!.contains("Duplicate memory identifiers"))
+        }
+    }
+
     @Test fun noModelTrainingToolAuthorityOrExternalDataInReport() {
         val secretText = "confidential benchmark memory"
         val item = record("private", secretText, PrivacyClass.PRIVATE)
