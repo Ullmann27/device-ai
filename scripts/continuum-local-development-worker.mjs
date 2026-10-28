@@ -92,22 +92,22 @@ async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
 }
 export async function runOneCycle(outDirectory,config={}){return runCycle(outDirectory,config);}
 export async function runWorker(outDirectory,{signal,...supplied}={}){
- const config=options(supplied),out=directory(outDirectory);let cycles=0;
+ const config=options(supplied),out=directory(outDirectory);let cycles=0,failures=0;
  const stop=new AbortController();const combined=signal?AbortSignal.any([signal,stop.signal]):stop.signal;
  const poll=setInterval(()=>{if(fs.existsSync(join(out,'STOP')))stop.abort();},100);
  let lease;
  try{
   lease=workerLease(git(['rev-parse','--absolute-git-dir']));
   while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
-   try{const report=await runCycle(out,{...config,signal:combined},lease);console.log(JSON.stringify(report));}
-   catch(e){event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
+   try{const report=await runCycle(out,{...config,signal:combined},lease);if(report.status!=='ALL_EXECUTED_PASS')failures++;console.log(JSON.stringify(report));}
+   catch(e){failures++;event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
    cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
    try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
   }
  }finally{
   clearInterval(poll);if(lease)lease.release();event(out,'WORKER_STOPPED',{cycles,ownerStopped:combined.aborted||fs.existsSync(join(out,'STOP'))});
  }
- return {cycles};
+ return {cycles,failures};
 }
 async function main(){
  const [mode,out,flag,file]=process.argv.slice(2);
@@ -115,6 +115,6 @@ async function main(){
  const config=options(file?JSON.parse(fs.readFileSync(file,'utf8')):{});const ctrl=new AbortController();
  for(const sig of ['SIGINT','SIGTERM'])process.once(sig,()=>ctrl.abort());
  if(mode==='--once'){const report=await runOneCycle(out,{...config,signal:ctrl.signal});console.log(JSON.stringify(report));if(report.status!=='ALL_EXECUTED_PASS')process.exitCode=1;}
- else await runWorker(out,{...config,signal:ctrl.signal});
+ else {const summary=await runWorker(out,{...config,signal:ctrl.signal});if(summary.failures>0)process.exitCode=1;}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error('LOCAL_WORKER_FAILED: '+e.message);process.exitCode=1;});
