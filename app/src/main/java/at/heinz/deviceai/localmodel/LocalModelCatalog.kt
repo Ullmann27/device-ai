@@ -137,6 +137,9 @@ class LocalModelCatalog(
                 }
                 output.fd.sync()
             }
+            if (Thread.currentThread().isInterrupted) {
+                throw java.io.InterruptedIOException("Model import cancelled after copy.")
+            }
             require(total > 0) { "Model file is empty." }
             val hash = digest.digest().toHex()
             require(MessageDigest.isEqual(hash.toByteArray(), expectedSha256.toByteArray())) {
@@ -144,6 +147,9 @@ class LocalModelCatalog(
                     "Expected: $expectedSha256; actual: $hash; bytes: $total."
             }
             val capabilities = inspector.inspect(temporary)
+            if (Thread.currentThread().isInterrupted) {
+                throw java.io.InterruptedIOException("Model import cancelled during inspection.")
+            }
             require(capabilities.text && LocalModelBackend.CPU in capabilities.supportedBackends) {
                 "Only text models with CPU support can be imported."
             }
