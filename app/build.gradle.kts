@@ -62,6 +62,16 @@ require(!continuumLocalStandaloneQa ||
         continuumStandaloneVersion != null)) {
     "Disposable Continuum Lokal QA needs mentor features, a version and no owner signer."
 }
+// Fail closed before task execution: the QA package may only compile/test/lint.
+// It must never be used to assemble any debug/release APK or bundle.
+require(!continuumLocalStandaloneQa ||
+    (gradle.startParameter.taskNames.isNotEmpty() &&
+        gradle.startParameter.taskNames.all { requested ->
+            requested.substringAfterLast(':') in
+                setOf("testDebugUnitTest", "lintDebug", "compileDebugKotlin")
+        })) {
+    "Disposable Continuum Lokal QA allows only debug unit tests, lint and compilation."
+}
 require(!continuumLocalStandalone ||
     (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
         !continuumOwnerLocalQa &&
