@@ -26,6 +26,34 @@ class ContinuumCdxLargeCurriculumTest {
         assertThrows(IllegalArgumentException::class.java) {corpus.trainingStage(12)}
     }
 
+    @Test fun laterStagesRehearsePreviousTrainingWithoutEverSeeingFrozenAudits() {
+        val corpus=ContinuumCdxLargeCurriculum
+        val heldOut=corpus.protectedAudit().pairs.map { it.conditionerText() }.toSet()
+        val frozenNew=corpus.audit.pairs.map { it.conditionerText() }.toSet()
+        assertEquals(50,heldOut.size)
+        for(stage in 0 until corpus.STAGES) {
+            val first=corpus.trainingStageWithReplay(stage)
+            val second=corpus.trainingStageWithReplay(stage)
+            assertEquals(DecoderSplit.TRAIN,first.split)
+            assertEquals(first.pairs,second.pairs)
+            assertEquals(if(stage==0)48 else 64,first.pairs.size)
+            assertEquals(corpus.trainingStage(stage).pairs,first.pairs.take(48))
+            val input=first.pairs.map { it.conditionerText() }
+            assertEquals(input.size,input.toSet().size)
+            assertTrue(input.none { it in heldOut || it in frozenNew })
+            if(stage==0)continue
+            val previous=corpus.train.take(stage*corpus.PAIRS_PER_STAGE).toSet()
+            val old=first.pairs.subList(48,56)
+            val complete=first.pairs.subList(56,64)
+            assertTrue(old.all { it in previous })
+            assertEquals(8,old.distinct().size)
+            assertTrue(complete.all { it.answer.endsWith(".") && it.answer.contains(" ") })
+            assertTrue(complete.all { "Forschungsperson F" in it.evidence })
+            assertTrue(complete.none { it in previous })
+            assertTrue(complete.none { it in corpus.historicAudit })
+        }
+    }
+
     @Test fun danglingStageCursorLinkIsRejectedWithoutResettingTheTrainingProgress() {
         val dir=Files.createTempDirectory("continuum-cdx-cursor-link").toFile()
         try {
