@@ -3428,12 +3428,16 @@ class AgentActivity : Activity() {
                     val publicRegistered = runCatching {
                         getSystemService(android.app.job.JobScheduler::class.java)
                             ?.getPendingJob(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler.JOB_ID) != null
-                    }.getOrDefault(false)
+                    }.getOrNull()
                     val publicPrefs = getSharedPreferences("continuum-public-study-v1", android.content.Context.MODE_PRIVATE)
                     append("Öffentliche Forschung: ")
                         .append(if (publicStudy.enabled) "freigegeben" else "aus")
                         .append(" · Android-Job: ")
-                        .append(if (publicRegistered) "registriert" else "nicht registriert")
+                        .append(when (publicRegistered) {
+                            true -> "registriert"
+                            false -> "nicht registriert"
+                            null -> "nicht prüfbar"
+                        })
                         .append(" · Versuche: ").append(publicPrefs.getLong("attempts", 0L))
                         .append(" · neue Quellen: ").append(publicPrefs.getLong("sources", 0L))
                         .append(" · akzeptierte SWB1-Runden: ").append(publicPrefs.getLong("accepted", 0L))
