@@ -17,6 +17,15 @@ internal object ContinuumArchiveAnswerPolicy {
     private val demonstrativeFollowUp = Regex(
         "(?iu)\\b(?:das|dies|diese|dieser|es)\\s*(?:[?!.,;:]|$|\\b(?:für|bedeutet|heißt|ist|war|hat|macht|kann|wäre|soll|kostet)\\b)"
     )
+    // A matching article title is not an answer to a capability question, a
+    // how-to request or a reasoning task. Keep these turns on the normal
+    // conversation/model route; public excerpts remain unverified evidence.
+    // This protects both model-ready and model-unavailable paths from a
+    // misleading citation-only response.
+    private val generativeRequest = Regex(
+        "(?iu)\\b(?:wie|warum|wieso|weshalb|wozu|wann|kannst|könntest|würdest|" +
+            "hilfst|helfen|unterstützen|plane|planen|vergleiche|analysiere|bewerte)\\b"
+    )
     private val nonTopics = setOf(
         "aber", "alle", "allen", "alles", "auch", "beim", "bitte", "dann", "dass",
         "deine", "deinen", "deiner", "dies", "diese", "diesem", "diesen", "dieser",
@@ -40,7 +49,8 @@ internal object ContinuumArchiveAnswerPolicy {
         if (question.length !in 6..240 ||
             unresolvedReference.containsMatchIn(question) ||
             continuation.containsMatchIn(question) ||
-            demonstrativeFollowUp.containsMatchIn(question)
+            demonstrativeFollowUp.containsMatchIn(question) ||
+            generativeRequest.containsMatchIn(question)
         ) return null
 
         val topic = topicTerms(question)
