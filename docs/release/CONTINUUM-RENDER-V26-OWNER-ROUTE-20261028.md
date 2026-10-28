@@ -1,0 +1,27 @@
+# Render v26 – Besitzer-Update ohne veraltete Version-25-Sperren
+
+Stand: 28.10.2026. Dies ist ein **neuer, isolierter GitHub-Buildweg** in Draft-PR #205. Weder `main` noch der aktive Render-Dienst, die installierte Version 25 oder seine bisherige Buildanweisung wurden verändert.
+
+## Verifizierte Fakten
+
+- Die historische Render-Veröffentlichung vom 27.10.2026 um 13:18 UTC (`dep-dbga5iuc6qcc73eqsisg`, Code-Commit `54d9de3cde4a4f72f61e2f6c4e62a6dc9bd5439e`) endete mit `BUILD SUCCESSFUL in 5m 41s` und der Meldung `VERIFIED ... OWNER IN-PLACE UPDATE: signed package, code25`. APK-v2-Signaturprüfung erfolgreich; digest `f415e7858e8aeb278e1da9a70098db4827dbd55226376f0d127a1f3d231feeac`.
+- Aktuell ist der Render-Dienst `device-ai-mentor-apk-preview` auf `integration/continuum-owner-v26-live-candidate-20261027`, Build-Befehl `bash scripts/render-mentor-owner-update-v25-live.sh`, Auto-Deploy **off** eingestellt. Trotz Branchnamen ist das nachweislich **ein Version-25-Builder**. Er erzwingt `versionCode = 25`, den alten Freigabe-SHA und alte Baselines.
+- Die Haupt-App im Fold7 hat Paket `at.heinz.deviceai.mentorpaired`, installierten `versionCode:25`. Der lokale Fold7-QA-Lauf mit PR-#205-Quell-SHA `198bf9ef9f04d8d9131fedb7ea82ab2c56b1b47c` bestand nach künstlichen Paritätsfixtures 1125/1125 JUnit und echte Haupt-App-Assembly; erzeugte APK ist **NICHT OWNER INSTALLABLE**.
+- Der Besitzer berichtet, dass die zwei ursprünglichen Render-Variablen `CONTINUUM_MENTOR_SIGNING_P12_BASE64` und `CONTINUUM_MENTOR_SIGNING_PASSWORD` im Environment-Bereich des bisherigen Dienstes fehlen. **Das ist noch kein Nachweis, dass alle verknüpften Environment Groups leer sind.** Ungeprüft sind insbesondere historische Gruppen/Secret Files und deren ursprüngliche Backups.
+
+## Neuer v26-Einstieg
+
+`scripts/render-continuum-v26-owner-release.sh` verwendet den erprobten JDK17-/SDK36-/Gradle8.11.1-Installationsabschnitt des historischen Render-Skripts, aber im privaten Build-Cache außerhalb des Git-Checkouts. Er akzeptiert **keine** fest hinterlegte v25-Branch-/Version-25-Baseline, stattdessen den exakten `CONTINUUM_OWNER_V26_APPROVED_SHA` für den neuesten geprüften vollständigen Git-HEAD. Der Quellcode muss unverändert sein.
+
+Er dekodiert nur innerhalb des privaten Render-Builds die **bereits existierende Original-P12** in einen temporären Modus-600-Pfad und entfernt die Datei beim Shell-Exit. Der vorhandene `scripts/continuum-local-owner-apk.sh build` testet Kotlin/JUnit und Lint, erzeugt nur bei tatsächlich vorhandener Originalsignatur das Paket `at.heinz.deviceai.mentorpaired` VersionCode **26** / VersionName **0.3.25** und verifiziert gegen den bewährten Zertifikats-SHA256 `2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc`. Vor Veröffentlichung muss die vorherige Code25-APK mit fest gepinntem SHA256 sowie derselben Paket-/Signaturidentität als Rollback bewahrt werden.
+
+**Fail closed, keine Fallback-Signatur:** Sind die Original-P12 oder das Kennwort nicht vorhanden, endet der neue Weg ausdrücklich `CONTINUUM_RENDER_V26_BLOCKED`. Kein Ersatzschlüssel, kein Debug-Update, kein Datenverlust, kein automatisches Installieren. Der Code ist erstellt; die neu hinzugefügten neun Node-/Bash-Eingangstests in `scripts/render-continuum-v26-owner-release.test.mjs` sind noch **nicht ausgeführt**. Statische Quellstrukturkontrolle 9/9 in der GitHub-Verbindung, nicht gleichbedeutend mit einem Bash- oder echten Render-Build.
+
+## Zuerst: Signierquelle klären (ohne Schlüsselwerte zu übertragen)
+
+1. Im bisherigen Render-Dienst `device-ai-mentor-apk-preview` > **Environment** > **Linked Environment Groups** prüfen, ob eine Gruppe verbunden ist. Unter **Workspace > Environment Groups** prüfen, ob passende Schlüsselnamen existieren. In Render können Environment Groups Variablen enthalten, obwohl die direkten Servicevariablen leer erscheinen.
+2. Wenn dort keine Original-P12 und kein Passwort existieren, den vertrauenswürdigen ursprünglichen sicheren Signier-Speicher oder eine offline gesicherte P12 wiederherstellen. **Nicht** die vorhandene APK als Quelle für den privaten Schlüssel betrachten, keine Schlüssel/Passwörter an ChatGPT schicken, nicht in GitHub speichern.
+3. Erst nach erfolgreicher Wiederbeschaffung der originalen P12 im geschützten Render-Dienst und nachvollziehbarer Besitzerfreigabe: Render **Settings > Build & Deploy > Branch** auf den geprüften PR-#205-Branch `chatgpt/continuum-german-research-contradiction-20261028` setzen, Build-Befehl auf `bash scripts/render-continuum-v26-owner-release.sh` stellen, Publish Directory `mentor-build-output` belassen, und `CONTINUUM_OWNER_V26_APPROVED_SHA` auf den **dann aktuellen und erneut geprüften** PR-HEAD setzen. Autodeploy ausgeschaltet lassen. **Keinen Deploy vorher starten.**
+4. Die APK nur dann zur Installation anbieten, wenn der Render-Build selbst `CONTINUUM_RENDER_V26_SIGNED_READY` meldet, die statischen SHA256-Werte verifiziert wurden und dieselbe Originalsignatur verwendet wurde. Andernfalls bleibt die heute getestete lokale Version 26 als QA-Artefakt erhalten, aber nicht installierbar.
+
+**Wichtig:** Der frühere erfolgreiche Fold7-Test prüfte den alten Quell-HEAD (noch ohne neues Render-Skript). Releasefreigabe für einen späteren HEAD braucht erneute evidenzgestützte Tests. Der aktuelle Render-Dienst darf nicht blind umgeschaltet werden: Ein fehlgeschlagener Build auf einer wichtigen Live-Publikation ist vermeidbar.

@@ -106,6 +106,30 @@ class ResearchEngineTest {
     }
 
     @Test
+    fun deepResearchFlagsGermanNegationAsContradictionAcrossIndependentDomains() {
+        val yes = document(
+            "https://alpha.example.org/charging", "alpha.example.org",
+            "Das Gerät unterstützt kabelloses Laden.", 1
+        )
+        val no = document(
+            "https://beta.example.org/charging", "beta.example.org",
+            "Das Gerät unterstützt kabelloses Laden nicht.", 2
+        )
+        val provider = SimulatedResearchProvider(
+            mapOf(yes.url to yes, no.url to no),
+            mapOf(yes.url to listOf(yes.url, no.url))
+        )
+        val dossier = DeepResearchEngine(
+            discovery = SeedUrlResearchDiscoveryProvider(listOf(yes.url)),
+            provider = provider, now = { 100L }, validateTarget = {}
+        ).research("kabelloses Laden", ResearchMode.QUICK)
+        assertEquals(2, dossier.sources.size)
+        assertTrue(dossier.graph.relationships.any { it.relation == ClaimRelation.CONTRADICTS })
+        assertTrue(dossier.graph.claims.any { it.validationState == ValidationState.CONTRADICTED })
+        assertTrue(dossier.graph.claims.none { it.validationState == ValidationState.VERIFIED })
+    }
+
+    @Test
     fun promptBoundaryTreatsPageTextAsUntrustedAndNoSearchIsHonest() {
         val plan = DeterministicResearchPlanner().plan("battery", ResearchMode.QUICK)
         val hostile = ResearchSynthesisInput(

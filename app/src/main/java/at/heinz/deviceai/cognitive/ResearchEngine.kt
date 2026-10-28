@@ -992,9 +992,7 @@ class DeepResearchEngine(
     private fun applicabilityDate(text: String): String? =
         Regex("\\b(?:20\\d{2}-\\d{2}-\\d{2}|20\\d{2})\\b").find(text)?.value?.take(128)
     private fun contradictory(a: String, b: String): Boolean {
-        val negative = setOf("not", "no", "never", "false", "cannot", "isn't", "doesn't", "cannot")
-        val ta = tokens(a); val tb = tokens(b)
-        return lexicalOverlap(a, b) >= 0.45 && ta.intersect(negative).isEmpty() != tb.intersect(negative).isEmpty()
+        return lexicalOverlap(a, b) >= 0.45 && ResearchNegationSignals.hasOppositePolarity(a, b)
     }
     private fun tokens(text: String) = text.lowercase(Locale.ROOT)
         .split(Regex("[^\\p{L}\\p{N}']+")).filter(String::isNotBlank).toSet()

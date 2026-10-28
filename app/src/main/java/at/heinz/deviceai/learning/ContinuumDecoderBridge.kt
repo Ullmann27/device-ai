@@ -140,8 +140,10 @@ class ContinuumDecoderBridge(private val directory: File) {
         encoderSnapshot:ByteArray,
         steps:Int=600,
         cancelled:()->Boolean={false},
-        protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
+        protectedAudits:List<DecoderEvidenceCorpus> = emptyList(),
+        learningRate:Double=.035
     ):DecoderExperimentResult {
+        require(learningRate.isFinite() && learningRate in .0001.. .08)
         require(train.split==DecoderSplit.TRAIN && audit.split==DecoderSplit.AUDIT)
         require(protectedAudits.size<=4 && protectedAudits.all { it.split==DecoderSplit.AUDIT })
         val trainingInputs=train.pairs.map { it.conditionerText() }.toSet()
@@ -174,7 +176,8 @@ class ContinuumDecoderBridge(private val directory: File) {
         val auditBefore=baseline.evaluateEvidencePairs(audit,conditionFor)
         val protectedBefore=protectedAudits.map { baseline.evaluateEvidencePairs(it,conditionFor) }
         val result=candidate.trainEvidencePairs(train,steps=steps,
-            conditionerFor=conditionFor,cancelled=cancelled,maxMillis=5000)
+            learningRate=learningRate,conditionerFor=conditionFor,
+            cancelled=cancelled,maxMillis=5000)
         val auditAfter=candidate.evaluateEvidencePairs(audit,conditionFor)
         val protectedAfter=protectedAudits.map { candidate.evaluateEvidencePairs(it,conditionFor) }
         val protectedSafe=protectedAfter.zip(protectedBefore).all { (now,old) ->

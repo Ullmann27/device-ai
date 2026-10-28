@@ -360,8 +360,10 @@ class ResearchPipeline(
             if (aSource != null && bSource != null && aSource.domain != bSource.domain) {
                 val similarity = similarity(a.text, b.text)
                 when {
-                    similarity >= 0.7 -> relationships += ClaimRelationship(a.id, b.id, ClaimRelation.SUPPORTS)
+                    // Conflict evidence must take precedence over lexical similarity:
+                    // "supports charging" and "supports charging nicht" overlap heavily.
                     contradicts(a.text, b.text) -> relationships += ClaimRelationship(a.id, b.id, ClaimRelation.CONTRADICTS)
+                    similarity >= 0.7 -> relationships += ClaimRelationship(a.id, b.id, ClaimRelation.SUPPORTS)
                 }
             }
         }
@@ -420,10 +422,8 @@ class ResearchPipeline(
     }
 
     private fun contradicts(first: String, second: String): Boolean {
-        val a = tokens(first)
-        val b = tokens(second)
-        val negations = setOf("not", "no", "never", "false", "cannot", "isn't", "doesn't")
-        return similarity(first, second) >= 0.45 && a.intersect(negations).isEmpty() != b.intersect(negations).isEmpty()
+        return similarity(first, second) >= 0.45 &&
+            ResearchNegationSignals.hasOppositePolarity(first, second)
     }
 
     private fun tokens(text: String) = text.lowercase(Locale.ROOT)

@@ -111,9 +111,24 @@ class LocalModelCatalog(
             FileOutputStream(temporary).use { output ->
                 input.use { source ->
                     val buffer = ByteArray(COPY_BUFFER_SIZE)
+                    var emptyReads = 0
                     while (true) {
+                        if (Thread.currentThread().isInterrupted) {
+                            throw java.io.InterruptedIOException("Model import cancelled between reads.")
+                        }
                         val count = source.read(buffer)
+                        if (Thread.currentThread().isInterrupted) {
+                            throw java.io.InterruptedIOException("Model import cancelled after read.")
+                        }
                         if (count < 0) break
+                        if (count == 0) {
+                            emptyReads++
+                            if (emptyReads >= 16) {
+                                throw IOException("Model input made no progress after 16 reads.")
+                            }
+                            continue
+                        }
+                        emptyReads = 0
                         require(total <= maxModelBytes - count) { "Model exceeds the configured import limit." }
                         total += count
                         digest.update(buffer, 0, count)
@@ -122,6 +137,9 @@ class LocalModelCatalog(
                 }
                 output.fd.sync()
             }
+            if (Thread.currentThread().isInterrupted) {
+                throw java.io.InterruptedIOException("Model import cancelled after copy.")
+            }
             require(total > 0) { "Model file is empty." }
             val hash = digest.digest().toHex()
             require(MessageDigest.isEqual(hash.toByteArray(), expectedSha256.toByteArray())) {
@@ -129,6 +147,9 @@ class LocalModelCatalog(
                     "Expected: $expectedSha256; actual: $hash; bytes: $total."
             }
             val capabilities = inspector.inspect(temporary)
+            if (Thread.currentThread().isInterrupted) {
+                throw java.io.InterruptedIOException("Model import cancelled during inspection.")
+            }
             require(capabilities.text && LocalModelBackend.CPU in capabilities.supportedBackends) {
                 "Only text models with CPU support can be imported."
             }

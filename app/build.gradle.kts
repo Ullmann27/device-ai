@@ -24,6 +24,19 @@ if (continuumUiWidgetTests) tasks.withType<org.gradle.api.tasks.testing.Test>().
 
 val mentorSigningPath = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_FILE").orNull
 val mentorSigningPassword = providers.environmentVariable("CONTINUUM_MENTOR_SIGNING_PASSWORD").orNull
+// A FULL local main-app, independently signed and side-by-side installable.
+// It never reuses the owner's historic Mentor Pair package or private signer.
+val continuumLocalStandalone = providers.gradleProperty("continuumLocalStandalone").orNull == "true"
+val continuumLocalSigningPath = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_FILE").orNull
+val continuumLocalSigningPassword = providers.environmentVariable("CONTINUUM_LOCAL_SIGNING_PASSWORD").orNull
+val continuumStandaloneVersionText = providers.gradleProperty("continuumStandaloneVersionCode").orNull
+val continuumStandaloneVersion = continuumStandaloneVersionText?.toIntOrNull()
+require(continuumStandaloneVersionText == null ||
+    (continuumLocalStandalone && continuumStandaloneVersion != null &&
+        continuumStandaloneVersion in 26..9999 &&
+        continuumStandaloneVersionText == continuumStandaloneVersion.toString())) {
+    "Standalone main-app versionCode must be 26..9999 and specified only in local mode."
+}
 
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
@@ -35,6 +48,15 @@ val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpd
 // Source-identical same-package MAIN APP QA only. Uses Android's disposable
 // debug certificate; its APK is never an installable owner update.
 val continuumOwnerLocalQa = providers.gradleProperty("continuumOwnerLocalQa").orNull == "true"
+require(!continuumLocalStandalone ||
+    (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
+        !continuumOwnerLocalQa &&
+        mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank() &&
+        !continuumLocalSigningPath.isNullOrBlank() && !continuumLocalSigningPassword.isNullOrBlank() &&
+        continuumStandaloneVersion != null)) {
+    "Standalone local main-app requires its own protected signer and isolated Mentor Pair feature set."
+}
+
 require(!continuumOwnerLocalQa ||
     (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
         mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank())) {
@@ -68,6 +90,15 @@ require(!deviceAiOwnerSignedUpdate || (deviceAiMentorPreview && !mentorSigningPa
 
 android {
     signingConfigs {
+        if (continuumLocalStandalone) {
+            create("continuumLocal") {
+                storeFile = file(requireNotNull(continuumLocalSigningPath))
+                storePassword = requireNotNull(continuumLocalSigningPassword)
+                keyAlias = "continuum-local"
+                keyPassword = requireNotNull(continuumLocalSigningPassword)
+                storeType = "PKCS12"
+            }
+        }
         if (deviceAiMentorPreview && !continuumOwnerLocalQa &&
             !mentorSigningPath.isNullOrBlank() && !mentorSigningPassword.isNullOrBlank()
         ) {
@@ -84,7 +115,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "at.heinz.deviceai"
+        applicationId = if (continuumLocalStandalone) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
@@ -97,12 +128,17 @@ android {
             versionCode = continuumOwnerLocalVersion ?: 25
             versionName = if (continuumOwnerLocalVersion != null) "0.3.${continuumOwnerLocalVersion - 1}" else "0.3.24"
         }
+        if (continuumLocalStandalone) {
+            versionCode = requireNotNull(continuumStandaloneVersion)
+            versionName = "0.3.${requireNotNull(continuumStandaloneVersion) - 1}"
+        }
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
         manifestPlaceholders["appLabel"] = when {
             deviceAiFeaturePreview -> "Device AI Continuum Test"
             deviceAiDesignPreview -> "Device AI Design"
             continuumOwnerLocalQa -> "Continuum QA NICHT INSTALLIEREN"
+            continuumLocalStandalone -> "Continuum Lokal"
             deviceAiOwnerSignedUpdate -> "Continuum"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
@@ -112,7 +148,9 @@ android {
 
     buildTypes {
         getByName("debug") {
-            if (deviceAiFeaturePreview) {
+            if (continuumLocalStandalone) {
+                signingConfig = signingConfigs.getByName("continuumLocal")
+            } else if (deviceAiFeaturePreview) {
                 applicationIdSuffix = ".featurepreview"
             } else if (deviceAiDesignPreview) {
                 // Fresh, independent installation; never alters owner or earlier preview data.
@@ -126,6 +164,12 @@ android {
             } else if (deviceAiPreview) {
                 applicationIdSuffix = ".preview"
             }
+        }
+    }
+
+    buildTypes.getByName("release") {
+        if (continuumLocalStandalone) {
+            signingConfig = signingConfigs.getByName("continuumLocal")
         }
     }
 
