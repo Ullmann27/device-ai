@@ -37,14 +37,6 @@ require(continuumStandaloneVersionText == null ||
         continuumStandaloneVersionText == continuumStandaloneVersion.toString())) {
     "Standalone main-app versionCode must be 26..9999 and specified only in local mode."
 }
-require(!continuumLocalStandalone ||
-    (deviceAiMentorPreview && !providers.gradleProperty("deviceAiOwnerSignedUpdate").orNull.equals("true") &&
-        !providers.gradleProperty("continuumOwnerLocalQa").orNull.equals("true") &&
-        mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank() &&
-        !continuumLocalSigningPath.isNullOrBlank() && !continuumLocalSigningPassword.isNullOrBlank() &&
-        continuumStandaloneVersion != null)) {
-    "Standalone local main-app requires its own protected signer and isolated Mentor Pair feature set."
-}
 
 // Installable QA variant: isolated package avoids debug-signature conflicts with an existing app.
 val deviceAiPreview = providers.gradleProperty("deviceAiPreview").orNull == "true"
@@ -56,6 +48,15 @@ val deviceAiOwnerSignedUpdate = providers.gradleProperty("deviceAiOwnerSignedUpd
 // Source-identical same-package MAIN APP QA only. Uses Android's disposable
 // debug certificate; its APK is never an installable owner update.
 val continuumOwnerLocalQa = providers.gradleProperty("continuumOwnerLocalQa").orNull == "true"
+require(!continuumLocalStandalone ||
+    (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
+        !continuumOwnerLocalQa &&
+        mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank() &&
+        !continuumLocalSigningPath.isNullOrBlank() && !continuumLocalSigningPassword.isNullOrBlank() &&
+        continuumStandaloneVersion != null)) {
+    "Standalone local main-app requires its own protected signer and isolated Mentor Pair feature set."
+}
+
 require(!continuumOwnerLocalQa ||
     (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate &&
         mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank())) {
