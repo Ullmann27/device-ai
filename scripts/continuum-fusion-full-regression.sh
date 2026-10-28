@@ -65,20 +65,26 @@ case "$out" in "$root"|"$root"/*) fail 'Evidence must remain outside source chec
 [[ ! -e "$out/summary.json" && ! -e "$out/sha256-manifest.json" ]] || fail 'Prior run evidence exists; use a fresh evidence directory'
 cd "$root"
 args=(--offline --no-daemon --console=plain --max-workers=2 --rerun-tasks
-  -PdeviceAiMentorPreview=true "-Pandroid.aapt2FromMavenOverride=$aapt2")
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true
+  -PcontinuumStandaloneVersionCode=27 "-Pandroid.aapt2FromMavenOverride=$aapt2")
 if [[ "$termux" == true ]]; then args+=(-PdeviceAiMobileAidlFallback=true); fi
 started="$(node -p 'Date.now()')"
 printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out/command.txt"
 printf 'GRADLE_COMMAND=' >> "$out/command.txt"
 printf ' %q' "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug >> "$out/command.txt"
-printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs\n' >> "$out/command.txt"
+printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs\n' >> "$out/command.txt"
 set +e
 "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug > "$out/gradle-full-suite.log" 2>&1
 gradle_exit=$?
 node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-experiment-integration.test.mjs \
   scripts/continuum-local-context.test.mjs \
-  scripts/continuum-fusion-regression-report.test.mjs > "$out/node-contracts.log" 2>&1
+  scripts/continuum-fusion-regression-report.test.mjs \
+  scripts/continuum-coding-bridge.test.mjs \
+  scripts/continuum-selfhosted-coding.test.mjs \
+  scripts/continuum-integration-source-gate.test.mjs \
+  scripts/continuum-sol-max-readiness.test.mjs \
+  scripts/continuum-standalone-qa-variant.test.mjs > "$out/node-contracts.log" 2>&1
 node_exit=$?
 set -e
 printf 'GRADLE_EXIT=%s\nNODE_EXIT=%s\n' "$gradle_exit" "$node_exit" >> "$out/command.txt"
