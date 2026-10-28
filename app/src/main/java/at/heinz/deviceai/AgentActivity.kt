@@ -144,6 +144,10 @@ class AgentActivity : Activity() {
         private const val SWB1_BYTES = 32_960
         private const val COMPOSER_DRAFT_KEY = "device_ai_composer_draft"
         private const val WORK_AREA_STATE_KEY = "continuum_work_area_state"
+        // Public catalog metadata only, never private model bytes or credentials.
+        private const val MODEL_IMPORT_ID_STATE_KEY = "continuum_model_import_id_v1"
+        private const val MODEL_IMPORT_VERSION_STATE_KEY = "continuum_model_import_version_v1"
+        private const val MODEL_IMPORT_SHA256_STATE_KEY = "continuum_model_import_sha256_v1"
         private val BG = Color.rgb(5, 8, 23)
         private val PANEL = Color.rgb(12, 17, 40)
         private val PANEL_2 = Color.rgb(18, 23, 57)
@@ -362,6 +366,20 @@ class AgentActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Android can recreate this activity while the system document picker is
+        // in front. Without restoring these three fields the returned URI is
+        // silently dropped and the owner sees only the home screen.
+        savedInstanceState?.let { state ->
+            val id = state.getString(MODEL_IMPORT_ID_STATE_KEY)
+            val version = state.getString(MODEL_IMPORT_VERSION_STATE_KEY)
+            val sha = state.getString(MODEL_IMPORT_SHA256_STATE_KEY)
+            if (id != null && version != null && sha != null &&
+                id.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) &&
+                version.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,63}")) &&
+                sha.matches(Regex("[a-f0-9]{64}"))) {
+                pendingModelImport = Triple(id, version, sha)
+            }
+        }
         savedInstanceState?.getString("ctx3_chat_id_v1")?.takeIf {
             Regex("[a-f0-9-]{36}").matches(it)
         }?.let { sessionId = it }
@@ -498,6 +516,11 @@ class AgentActivity : Activity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        pendingModelImport?.let { (id, version, sha) ->
+            outState.putString(MODEL_IMPORT_ID_STATE_KEY, id)
+            outState.putString(MODEL_IMPORT_VERSION_STATE_KEY, version)
+            outState.putString(MODEL_IMPORT_SHA256_STATE_KEY, sha)
+        }
         if (::input.isInitialized) outState.putString(COMPOSER_DRAFT_KEY, input.text.toString())
         outState.putString(
             WORK_AREA_STATE_KEY,
@@ -6724,12 +6747,19 @@ class AgentActivity : Activity() {
     }
 
     private fun importModel(uri: Uri) {
-        val metadata = pendingModelImport ?: return
+        val metadata = pendingModelImport
+        if (metadata == null) {
+            localImportError = "Die Dateiauswahl wurde ohne Modellangaben zurückgegeben. Bitte den Import erneut öffnen."
+            Toast.makeText(this, "Gemma-Import abgebrochen: Modellangaben fehlen.", Toast.LENGTH_LONG).show()
+            refreshLocalModelUi()
+            return
+        }
         pendingModelImport = null
         resetM2NativeProof()
         modelImportActive = true
         localImportError = null
         refreshLocalModelUi()
+        Toast.makeText(this, "Modelldatei wird lokal geprüft. Status unter Modellverwaltung.", Toast.LENGTH_LONG).show()
         scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.", forImport = true)
         localAgentExecutor.execute {
             val result = runCatching {
@@ -6744,10 +6774,14 @@ class AgentActivity : Activity() {
                 result.onSuccess { model ->
                     localImportError = null
                     addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
+                    Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()
                     reloadInstalledModels()
                     loadModel(model)
                 }.onFailure { error ->
                     localImportError = error.message ?: "Model import failed."
+                    Toast.makeText(this,
+                        "Modellimport fehlgeschlagen. Grund unter Modellstatus oder Chat.",
+                        Toast.LENGTH_LONG).show()
                     addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
                         ContinuumUiCopy.modelFailure(error.message) + "\n" + (error.message ?: "Import fehlgeschlagen.") +
                         "\n" + (localRuntime.loadedModel?.let { "Weiterhin geladen: ${it.id} · ${it.version} · SHA-256 ${it.sha256}" }
@@ -7476,8 +7510,19 @@ class AgentActivity : Activity() {
             }
             MODEL_IMPORT_REQUEST -> {
                 val uri = data?.data
-                if (resultCode == RESULT_OK && uri != null) importModel(uri)
-                else pendingModelImport = null
+                when {
+                    resultCode != RESULT_OK -> {
+                        pendingModelImport = null
+                        // User cancellation is not a model failure.
+                    }
+                    uri == null -> {
+                        pendingModelImport = null
+                        localImportError = "Dateiauswahl ohne lesbare Datei zurückgegeben."
+                        Toast.makeText(this, "Keine lesbare Modelldatei ausgewählt.", Toast.LENGTH_LONG).show()
+                        refreshLocalModelUi()
+                    }
+                    else -> importModel(uri)
+                }
             }
             DEV_SOURCE_REQUEST -> if (resultCode == RESULT_OK && data != null) {
                 val uris = mutableListOf<Uri>()
