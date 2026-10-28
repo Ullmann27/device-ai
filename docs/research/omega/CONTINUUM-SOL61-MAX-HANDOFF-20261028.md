@@ -67,3 +67,16 @@ Der letzte Befehl **muss aktuell mit exit 69 blockieren**, solange der korrekte 
 Erstelle einen präzisen Bericht IMPLEMENTIERT / TESTED / BLOCKED_DEVICE / OPEN, mit exact SHA, real gelaufenen Befehlen, ursprünglichen Fehlversuchen, Ergebnissen und noch offenen Punkten. Nur ein neuer isolierter Draft-PR, nicht mergen; bei fehlender Fähigkeit zur Änderung vollständige Übergabe ohne Erfolgsbehauptung. Rücksetzweg: neuen Draft schließen, keine produktiven Bestandteile und keine Besitzerdateien ändern.
 
 **Hinweis:** Dieses Dokument ist die übergabefertige Aufgabenbasis. Sol 6.1 kann durch Chattext nicht automatisch als eigenes Modell gestartet oder im Hintergrund aufgerufen werden.
+
+
+## Aktualisierung nach Handoff-Erstellung – M1-Implementierung als überprüfbarer Kandidat
+
+Noch im selben isolierten Draft-Branch wurde B1 nun **im Quellcode vorbereitet**, nicht mehr nur dokumentiert:
+
+- app/build.gradle.kts: neue opt-in Eigenschaft continuumLocalStandaloneQa; für QA gilt die Standalone-Haupt-App-Basiskennung, aber Debug hat absichtlich den anderen Paketnamen at.heinz.deviceai.continuumlocal.qa. Originaler Continuum- und alter Mentor-Signer werden im QA-Modus durch require verboten, und die originale Standalone-Signierung bleibt unverändert. QA und echte Standalone-Freigabe sind gegenseitig ausgeschlossen.
+- Das Gradle-QA-Gate erlaubt ausschließlich testDebugUnitTest, lintDebug und compileDebugKotlin als Startaufträge. Assembly/Bundle/Release dürfen nicht als unsignierte Besitzer-APK ausgegeben werden.
+- scripts/continuum-fusion-full-regression.sh setzt nun zusätzlich -PcontinuumLocalStandaloneQa=true und -PcontinuumStandaloneVersionCode=27; die bisherige Mentor-Feature-Flag bleibt nur für die vorhandene Funktionsauswahl. Der Runner ruft zudem die fünf neuen Node-Schutztestdateien auf. Diese Testvariante ist getrennt von dem original signierten Fold7-Releasemodus.
+- scripts/continuum-integration-source-gate.mjs akzeptiert die historisch geprüfte reine Standalone- und die neue ausdrücklich QA-gebundene Gradle-Bedingung, ohne einen falschen Paketnamen zuzulassen.
+- Neu: scripts/continuum-standalone-qa-variant.test.mjs mit sechs prüfenden Source-Contracts. 6/6 mit **synthetischen Gradle-Quellfragmenten** bestanden. Gegen die tatsächlich von GitHub gelesenen Gradle-/Release-Dateien wurden acht separate direkte Quellbedingungen erfolgreich geprüft. Bestehende 45/45 Node-Tests nach Gate-Anpassung erneut bestanden. Ein gemeinsamer lokaler **51/51**-Lauf enthielt für die sechs neuen Source-Contracts ausschließlich simulierte Gradle-Dateien – **kein** echter Android-Gradle-Test.
+
+**NEUER STATUS VON M1:** SOURCE_IMPLEMENTED, SOURCE_CHECKED, GRADLE_COMPILE_NOT_RUN, ANDROID_JUNIT_NOT_RUN, FOLD7_NOT_RUN, RELEASE_BLOCKED. Sol muss diesen konkreten Kotlin-DSL-/AGP-Kandidaten in der wirklichen JDK17/SDK36/Gradle8.11.1-Umgebung kompilieren, testDebugUnitTest und lintDebug ausführen, mögliche Konfigurationsfehler beheben und das echte Ergebnis protokollieren. Bis dahin weder PR mergen noch ein Owner-Release auslösen. Die neuen Skripte allein belegen keine vollumfänglich geprüfte APK.
