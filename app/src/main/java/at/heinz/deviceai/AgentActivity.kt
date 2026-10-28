@@ -3443,9 +3443,13 @@ class AgentActivity : Activity() {
                 Toast.makeText(this, "Status noch nicht gelesen. Bitte erneut öffnen.", Toast.LENGTH_LONG).show()
             } else {
                 val clipboard = getSystemService(android.content.ClipboardManager::class.java)
-                clipboard?.setPrimaryClip(android.content.ClipData.newPlainText(
-                    "Continuum Lokal · technischer Lernstatus", text))
-                Toast.makeText(this, "Technischer Lernstatus kopiert – ohne private Inhalte.", Toast.LENGTH_SHORT).show()
+                if (clipboard == null) {
+                    Toast.makeText(this, "Zwischenablage nicht verfügbar.", Toast.LENGTH_LONG).show()
+                } else {
+                    clipboard.setPrimaryClip(android.content.ClipData.newPlainText(
+                        "Continuum Lokal · technischer Lernstatus", text))
+                    Toast.makeText(this, "Technischer Lernstatus kopiert – ohne private Inhalte.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "AKTIONEN") { _, _ ->
