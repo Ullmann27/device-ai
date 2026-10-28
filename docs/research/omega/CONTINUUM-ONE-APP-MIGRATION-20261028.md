@@ -55,3 +55,14 @@ Die neue App hat im bestehenden \`ContinuumLearningCore\` bereits den Trainingsm
 5. Kontrolliere Release-Signatur, Paketnamen und Versionscode, sichere bestehende Installationen und Lernstände; APK nur für \`at.heinz.deviceai.continuumlocal\`, kein fünftes Testpaket.
 
 **Sicherheit:** Protokolliere nur nicht geheime Code-SHA, Quellzahlen, Zeit/Phasen und Testresultate. Persönliche Texte, private Checkpoints, OAuth, P12, Modellbytes und Geheimnisse niemals in GitHub oder Logs.
+
+
+## Neueste UI- und Testkorrekturen im selben PR
+
+Die Modellverwaltung zeigt jetzt bei laufendem Import die tatsächlich erreichte Importphase, \`copiedBytes\` in MiB und monoton gemessene Sekunden. Der Callback aktualisiert die Oberfläche nur bei Phasenwechsel oder pro 64-MiB-Kopierfortschritt; keine Dauerflut von UI-Events. Der starre 120-Sekunden-Importtimeout wurde in einen Fortschritts-Watchdog verwandelt: sichtbarer Fortschritt startet die Prüfperiode neu, fehlender Fortschritt wird als **Warnung** protokolliert statt den Import sofort als fehlgeschlagen auszuweisen. Dies beseitigt noch nicht das mögliche \`AgentActivity.onDestroy → localAgentExecutor.shutdownNow()\`-Risiko; für einen lebenszyklusfesten Großimport sind echte Android-Reproduktions- und Reparaturtests nötig.
+
+Die Haupt-App-Umzugszentrale bietet außerdem **explizit einen isolierten nativen Gemma-Direkttest** ohne Gerätewerkzeuge. Dessen Testantwort muss tatsächlich vom laufenden LiteRT-Modell kommen; die UI darf aus Modell-Hash, SWB1-Zähler oder Quellenzahl keine native Sprachgenerierung ableiten.
+
+\`scripts/continuum-one-app-contract.test.mjs\` enthält nun 19 automatisch auszuführende Node-Quellverträge. Die Live-GitHub-Quelltexte wurden zusätzlich unabhängig gegen 25 direkt formulierte statische Quellbedingungen geprüft (25/25 PASS). Die vollständige **81/81 Node-Kernregression** wurde danach lokal nochmals auf den bereits verfügbaren isolierten Modulen ausgeführt (0 Fehlversuche); sie ersetzt weder die neuen 19 One-App-Node-Vertragstests noch die aktuellen Android-Gradle/JUnit-Tests.
+
+**Achtung:** Sol darf für die reale Archivmigration weder den bisherigen 81er-Kernlauf noch die statische Live-Prüfung als bestandene Kotlin-JUnit-Regressionssuite ausgeben. Neue Kotlin-Tests: 3 Tests (später defekte ZIP-Quelle, spätere unsichere ZIP-Quelle, beschädigte bestehende Kollision). Zusätzlich existieren die 7 ursprünglichen Archivtests; Vollprüfung ist auf JDK17/SDK36/Gradle8.11.1 auszuführen, vor APK-Merge verpflichtend.
