@@ -69,6 +69,53 @@ object ContinuumCdxLargeCurriculum {
             DecoderSplit.TRAIN)
     }
 
+    /**
+     * Each later stage still trains its 48 *new* research cases, plus a small
+     * deterministic rehearsal set: 8 earlier TRAIN cases and 8 independent
+     * full-sentence TRAIN examples. Neither frozen audit is ever a gradient.
+     *
+     * The added evidence/question IDs are fictional and disjoint from the
+     * historic Tim/Eva tests and from the four unseen audit robots.
+     * 64 examples stay within TinyContextDecoder's memory/input budget.
+     */
+    fun trainingStageWithReplay(stage:Int):DecoderEvidenceCorpus {
+        val current=trainingStage(stage)
+        if(stage==0)return current
+        val previous=train.subList(0,stage*PAIRS_PER_STAGE)
+        val shortReplay=(0 until 8).map { index ->
+            previous[(stage*17+index*29)%previous.size]
+        }
+        val professions=listOf("Mechanikerin","Tischler","Gärtnerin","Elektriker",
+            "Technikerin","Schlosser","Maurerin","Köchin")
+        val sentenceReplay=(0 until 8).map { index ->
+            val number=stage*8+index+1
+            val person="Forschungsperson F"+number.toString().padStart(3,'0')
+            if(index%2==0) {
+                val city=cities[(number+5)%cities.size]
+                DecoderEvidencePair(
+                    "$person wohnt in $city.",
+                    "Wo wohnt $person?",
+                    "$person wohnt in $city."
+                )
+            } else {
+                val job=professions[(number+3)%professions.size]
+                DecoderEvidencePair(
+                    "$person ist $job.",
+                    "Was arbeitet $person?",
+                    "$person ist $job."
+                )
+            }
+        }
+        val pairs=current.pairs+shortReplay+sentenceReplay
+        val trainingInputs=pairs.map { it.conditionerText() }
+        require(trainingInputs.size==64 && trainingInputs.distinct().size==64)
+        val frozenInputs=protectedAudit().pairs.map { it.conditionerText() }.toSet()
+        require(trainingInputs.none { it in frozenInputs }) {
+            "Rehearsal may not train on frozen CDX1 audit examples"
+        }
+        return DecoderEvidenceCorpus(pairs,DecoderSplit.TRAIN)
+    }
+
     /** Frozen audit combines new unknown persons and existing legacy checks. */
     fun protectedAudit():DecoderEvidenceCorpus =
         DecoderEvidenceCorpus(audit.pairs+historicAudit,DecoderSplit.AUDIT)
