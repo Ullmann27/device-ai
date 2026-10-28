@@ -1,0 +1,70 @@
+{
+  "final-pass/TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "a45640bd4b8fa684a44d8f42b554564881f3a25488865925313b3f0af0136a28",
+    "bytes": 1399
+  },
+  "final-pass/TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "750ee8efb30de01526644beb3bb76fd6a8d8bc632a93e70d0b2f9ec0452bcc6a",
+    "bytes": 1806
+  },
+  "final-pass/TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "95e3783c59734329b07f438ffb9b872c6abe9778a3f334eae3ffed7e305242e1",
+    "bytes": 1138
+  },
+  "final-pass/TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "38bf795b68e996f78a8dd88717dd21014ac869ab70dde39cc3bd11934bcad8cb",
+    "bytes": 1775
+  },
+  "final-pass/TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "8920c1551a6b23bd99c9ee98d1a0af7c6d5c5a3d740ca7f2a712fb233c1ad448",
+    "bytes": 2642
+  },
+  "final-pass/gradle-junit-lint.txt": {
+    "sha256": "87d34278e8ef36e1b47a11fedfb54eb8cc6c8e2da0a1a8c90c47023c11226272",
+    "bytes": 2933
+  },
+  "final-pass/lint-results-debug.txt": {
+    "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+    "bytes": 17
+  },
+  "final-pass/lint-results-debug.xml": {
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "bytes": 87
+  },
+  "final-pass/node-contract.txt": {
+    "sha256": "c25a4e26480b5d03ed64eac9d74ec4cd0c39dbea02098eb265ae4317bf73a348",
+    "bytes": 575
+  },
+  "initial-fail/TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "1987a778b1e169e40cbc91fdbfa1c663c00129890a57e0123129c48a2f912b8a",
+    "bytes": 1403
+  },
+  "initial-fail/TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "d879b46820ad40efcd4ef2c46369309a082ecce3418ca14e34a90287207817aa",
+    "bytes": 6299
+  },
+  "initial-fail/TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "77d6eefc3d40ef7ea0e140304ef725a63f8b7df951434823525d3bac7eba7a0b",
+    "bytes": 1140
+  },
+  "initial-fail/TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "4c3ad20c8a09dac73965f5f9293d197d2eee9c14dc94696c7dd3c4f0ded4b903",
+    "bytes": 1775
+  },
+  "initial-fail/TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "a3cb5750ec4f259fe3e2cb813e29700567b45c5c33f3df3bcac4413049b9051c",
+    "bytes": 2639
+  },
+  "initial-fail/gradle-junit-lint.txt": {
+    "sha256": "135fff3167370a7e9225ff6acd112a8bb45a2029d1cd8fa444d98b5a749bf7b8",
+    "bytes": 2969
+  },
+  "summary.json": {
+    "sha256": "d461beff099fb6375a74029bc5d4f922fef8cff8d9b66058d2cedf4ab44e4342",
+    "bytes": 2501
+  },
+  "tested-source-sha256.json": {
+    "sha256": "4e8be4789c083dd55ef222e5260045990453822282319350d11fbd3bdc29c340",
+    "bytes": 300
+  }
+}

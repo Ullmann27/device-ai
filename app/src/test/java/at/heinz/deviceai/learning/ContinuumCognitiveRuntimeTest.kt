@@ -72,6 +72,8 @@ class ContinuumCognitiveRuntimeTest {
                 .reply("Welche Farbe hat das nicht gespeicherte Fahrrad?")
             assertFalse(result.grounded)
             assertTrue(result.observations.isEmpty())
+            assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                result.hybridShadow.status)
             assertEquals(ContinuumCre1State.UNTRAINED_SHADOW,result.cre1State)
             assertTrue(result.answer.contains("keine passende bestätigte Erinnerung"))
             assertTrue(core.dialogueHistory().single().memoryIds.isEmpty())
@@ -127,6 +129,8 @@ class ContinuumCognitiveRuntimeTest {
             val turn=ContinuumCognitiveRuntime(dir,core).reply("Wo wohnt Leo?")
             assertTrue(turn.grounded)
             assertEquals(ContinuumCre1State.INVALID_SNAPSHOT,turn.cre1State)
+            assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                turn.hybridShadow.status)
             assertTrue(turn.observations.isEmpty())
             assertArrayEquals(damaged,file.readBytes())
         } finally { dir.deleteRecursively() }
@@ -232,6 +236,41 @@ class ContinuumCognitiveRuntimeTest {
             assertTrue(continued.contains("nicht unabhängig bestätigt"))
             assertEquals("Wie geht es dir?",runtime.localPrompt("Wie geht es dir?","Wie geht es dir?"))
         } finally {dir.deleteRecursively()}
+    }
+
+
+    @Test fun hybridShadowTraversesRealConversationButCannotResurrectRevokedOwnerFact() {
+        val dir=Files.createTempDirectory("continuum-hybrid-revocation").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val fact="Projekt Saphir verwendet lokale Belege."
+            core.confirmOwnerFact(fact)
+            val before=core.modelHash()
+            val first=ContinuumCognitiveRuntime(dir,core,"hybrid-session")
+                .reply("Was verwendet Projekt Saphir?")
+            assertTrue(first.grounded)
+            assertEquals(first.dialogue.memoryIds,first.evidenceHits.map { it.id })
+            assertEquals(1,first.hybridShadow.authorizedCount)
+            assertTrue(first.hybridShadow.status in setOf(
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.COMPARED_WITH_CRE1
+            ))
+            assertEquals(before,core.modelHash())
+            assertFalse(first.hybridShadow.toString().contains("Saphir"))
+
+            core.revokeOwnerFact(fact)
+            val after=ContinuumCognitiveRuntime(dir,core,"hybrid-session")
+                .reply("Was verwendet Projekt Saphir?")
+            assertFalse(after.grounded)
+            assertTrue(after.evidenceHits.isEmpty())
+            assertEquals(
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                after.hybridShadow.status
+            )
+            assertFalse(after.answer.contains(fact))
+            assertEquals(0,after.hybridShadow.authorizedCount)
+            assertEquals(before,core.modelHash())
+        } finally { dir.deleteRecursively() }
     }
 
 }

@@ -1,0 +1,62 @@
+{
+  "TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "8d040b6d1a675f4c8a6391ca461629f3a33b4a9e3111c22b24e3520da43bc12f",
+    "bytes": 1403
+  },
+  "TEST-at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest.xml": {
+    "sha256": "947fbbcf0e2e7d28734882253becab356e84af42365d181cadacace1900bec9b",
+    "bytes": 1806
+  },
+  "TEST-at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test.xml": {
+    "sha256": "f45fd3f3cb4c00234c7b982648ce4c182e670a85a0490d782eea1df5c12bd282",
+    "bytes": 1128
+  },
+  "TEST-at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest.xml": {
+    "sha256": "872a51de7a3b464f742e255a472596363c86ed021a1b0aea311552f5c7db17ad",
+    "bytes": 1555
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "64740c2b2fa80a4288977859324d9c2f65bd04758b3b59b0e6471085f74d9922",
+    "bytes": 1318
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "81cf9d068bd98b90338275ccf6f4eecb5155d9f93873ad98fbbcf2d1ea4f51f8",
+    "bytes": 1779
+  },
+  "TEST-at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest.xml": {
+    "sha256": "e8b1a96d59726a9f37f6c13c6008d3dcdea45f7c84514a1ae5fd227ac9afeba0",
+    "bytes": 971
+  },
+  "TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "49f9ee1bcd83af414ed08537c3066825b4949f9bb986d2ab3e61ba1367673e69",
+    "bytes": 2637
+  },
+  "commands.txt": {
+    "sha256": "275ffc13b09066fbc744dc37ce04de98e8781d09c2e4d411d53393c36c27f031",
+    "bytes": 1178
+  },
+  "gradle-junit-lint.txt": {
+    "sha256": "8c94d5671ead0ad0cfed71157ffd39a9b1a658255657134e7c374665d74cae21",
+    "bytes": 4458
+  },
+  "lint-results-debug.txt": {
+    "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+    "bytes": 17
+  },
+  "lint-results-debug.xml": {
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "bytes": 87
+  },
+  "node-contracts.txt": {
+    "sha256": "303f2f267e280c148a1248704f996f4f5b86edfee0fbff28d6645fe105c6676c",
+    "bytes": 830
+  },
+  "summary.json": {
+    "sha256": "947fe84936a2452ce7bfe77df7dbb35d1590851bd9bb08f2cc0eade0def8c227",
+    "bytes": 1777
+  },
+  "tested-source-sha256.json": {
+    "sha256": "1d7878b7c03f829f4dedb36d2850863640ee015d151b992d9e30c8923d714459",
+    "bytes": 439
+  }
+}

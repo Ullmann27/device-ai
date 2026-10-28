@@ -1,0 +1,7 @@
+export JAVA_HOME=/workspace/continuum-tools/jdk17
+export PATH="$JAVA_HOME/bin:$PATH"
+export ANDROID_HOME=/workspace/continuum-tools/android-sdk
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export GRADLE_USER_HOME=/workspace/continuum-tools/gradle-cache
+/workspace/continuum-tools/gradle/gradle-8.11.1/bin/gradle --offline --no-daemon --console=plain -PdeviceAiMentorPreview=true -Pandroid.aapt2FromMavenOverride=/workspace/continuum-tools/android-sdk/build-tools/35.0.0/aapt2 :app:testDebugUnitTest --tests 'at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest' --tests 'at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest' --tests 'at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest' --tests 'at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest' --tests 'at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest' --tests 'at.heinz.deviceai.cognitive.ContinuumIntelligencePhase2Test' --tests 'at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest' --tests 'at.heinz.deviceai.cognitive.ReadOnlyToolPlanTest' :app:lintDebug
+node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs

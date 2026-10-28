@@ -1,0 +1,70 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :app
+WARNING: The option setting 'android.aapt2FromMavenOverride=/workspace/continuum-tools/android-sdk/build-tools/35.0.0/aapt2' is experimental.
+w: ⚠️ Deprecated Gradle Version
+The used Gradle version (Gradle 8.11.1) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+Solution: Please update the Gradle version to at least Gradle 8.14.4.
+
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:compileDebugKotlin
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:369:16 'var statusBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:370:16 'var navigationBarColor: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:372:60 'static field SOFT_INPUT_ADJUST_RESIZE: Int' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:629:20 'fun setDecorFitsSystemWindows(p0: Boolean): Unit' is deprecated. Deprecated in Java.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:1775:61 Unnecessary safe call on a non-null receiver of type 'ImportedLocalModel'.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3097:128 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3112:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:3141:36 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///workspace/device-ai-fusion/app/src/main/java/at/heinz/deviceai/AgentActivity.kt:5228:89 Unnecessary safe call on a non-null receiver of type 'ResearchPlan'.
+
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:testDebugUnitTest
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintReportDebug UP-TO-DATE
+> Task :app:lintDebug
+[Incubating] Problems report is available at: file:///workspace/device-ai-fusion/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2m 21s
+35 actionable tasks: 12 executed, 23 up-to-date
+EXIT_CODE=0

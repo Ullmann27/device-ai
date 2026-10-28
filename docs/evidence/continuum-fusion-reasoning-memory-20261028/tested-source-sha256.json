@@ -1,0 +1,5 @@
+{
+  "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "09bd2c0fe403f26c1dd1199d1b105984ef12c28b159df744fa893f8bca5e819c",
+  "app/src/main/java/at/heinz/deviceai/cognitive/ChatReasoningRouter.kt": "12b55bee5a5a0e3a8a4271f3b16ce0d8cc7fb8710058235365fe8ed609e7c074",
+  "app/src/test/java/at/heinz/deviceai/cognitive/ChatReasoningRouterTest.kt": "97662716c50cc7e6ab5521affc9f4a7bd6b6b82eba0de9946a2c544e092a02a4"
+}

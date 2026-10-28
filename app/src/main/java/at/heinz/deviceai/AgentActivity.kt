@@ -1503,6 +1503,9 @@ class AgentActivity : Activity() {
             CenterAction("ANLEITUNG · ERSTES LERNEN") { showLearningGuide() }
         ),
         experimental = listOf(
+            CenterAction("GEDÄCHTNIS · SYNTHETISCHER SELBSTTEST (NUR LESEN)") {
+                showMemoryResearchSelfCheck()
+            },
             CenterAction("CRE1 · EIGENES TRAINING (EXPERIMENTELL)") { showCre1ResearchLab() },
             CenterAction("AUTO-DIALOGE · HINTERGRUNDFORSCHUNG EIN/AUS") { showAutoDialogueResearchDialog() },
             CenterAction("CDX1 · BELEG + FRAGE → ANTWORT (LABOR)") { showPairedDecoderLab() },
@@ -1519,6 +1522,35 @@ class AgentActivity : Activity() {
             CenterAction("NEURON · HÄRTETEST") { handleNeuralRequest("Neuron Härtetest") }
         )
     )
+
+    private fun showMemoryResearchSelfCheck() {
+        onLearningIo({
+            val check = at.heinz.deviceai.cognitive.MemoryResearchShadowComparator.syntheticSelfCheck()
+            val baseline = check.holdoutBaseline
+            val candidate = check.holdoutCandidate
+            val passed = baseline.results.all { it.correctTopOneOrAbstention } &&
+                candidate.results.all { it.correctTopOneOrAbstention } &&
+                check.developmentBaseline.results.all { it.correctTopOneOrAbstention } &&
+                check.developmentCandidate.results.all { it.correctTopOneOrAbstention } &&
+                check.noPerProbeRegression && !check.eligibleForOwnerReview
+            "SYNTHETISCHER MODUL-SELBSTTEST · " + (if (passed) "BESTANDEN" else "FEHLGESCHLAGEN") +
+                "\nGetrennte Entwicklungsproben: " + check.developmentBaseline.count +
+                "\nFeste Kontrollproben: " + baseline.count +
+                "\nKorrekte Kontrollantworten/Abstinenz: " +
+                baseline.results.count { it.correctTopOneOrAbstention } + "/" + baseline.count +
+                "\nRanking-Verschlechterung: " + (if (check.noPerProbeRegression) "nein" else "ja") +
+                "\n\nNur erfundene, öffentliche Testdaten; keine Besitzererinnerungen, Modelle oder Werkzeuge. " +
+                "Kein Nachweis besserer Gedächtnisqualität und keine automatische Freigabe."
+        }) { result ->
+            AlertDialog.Builder(this)
+                .setTitle("Continuum · Gedächtnis-Selbsttest")
+                .setMessage(result.getOrElse {
+                    "Selbsttest nicht verfügbar (" + failureName(it) + "). Keine Freigabe."
+                })
+                .setPositiveButton("Schließen", null)
+                .show()
+        }
+    }
 
     /**
      * Read-only inventory of real research runtime hooks and a bounded owner-review
@@ -5654,7 +5686,8 @@ class AgentActivity : Activity() {
                 val advisory = if (observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
                     ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
                         .also { activeReasoningRouter = it }
-                        .advise("chat-$turnId", task, compiledContext?.text ?: task)
+                        .advise("chat-$turnId", task, compiledContext?.text ?: task,
+                            groundedRecall = groundedRecall)
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()

@@ -1,6 +1,9 @@
 package at.heinz.deviceai.learning
 
 import java.io.File
+import at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadow
+import at.heinz.deviceai.cognitive.AuthorizedHybridShadowReport
+import at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus
 import java.security.MessageDigest
 
 /** One transparent, side-effect-bounded conversation turn through the existing
@@ -26,7 +29,11 @@ data class ContinuumCognitiveTurn(
     /** Authorized raw evidence selected in this exact dialogue turn. */
     val evidenceHits:List<ContinuumMemoryHit> = emptyList(),
     /** Only a grounded topic from this runtime; never a retrieved profile-global subject. */
-    val nextScopedGroundedQuestion:String?=null
+    val nextScopedGroundedQuestion:String?=null,
+    /** Local-only aggregate diagnostics; never changes the authorized answer. */
+    val hybridShadow:AuthorizedHybridShadowReport = AuthorizedHybridShadowReport(
+        AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE
+    )
 ) {
     val grounded:Boolean get()=dialogue.grounded
     val answer:String get()=dialogue.answer
@@ -78,11 +85,16 @@ class ContinuumCognitiveRuntime(
             else -> ContinuumCre1State.UNTRAINED_SHADOW
         }
         var shadow=emptyList<ContinuumShadowScore>()
+        // Exact SWB1-authorized candidate objects from the in-turn CRE1 callback.
+        // The core later reconstructs hits by ID; compare the entire objects
+        // before letting the hybrid observer see that reconstructed view.
+        var authorizedCandidates=emptyList<ContinuumMemoryHit>()
         var didRerank=false
         val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId,turnTrace) { resolved,candidates ->
             // The callback runs before the dialogue file is written. It may
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.
+            authorizedCandidates=candidates.toList()
             val observer=snapshot?.first ?: if(state!=ContinuumCre1State.INVALID_SNAPSHOT)
                 UNTRAINED_SHADOW_ENCODER else null
             shadow=candidates.mapNotNull { hit ->
@@ -104,6 +116,22 @@ class ContinuumCognitiveRuntime(
         }
         val byId=shadow.associateBy { it.memoryId }
         val scores=ranked.mapNotNull { byId[it.id] }
+        // Observe only the exact evidence returned by this SWB1 turn. CRE1 scores
+        // are already computed locally; no second model call or memory lookup.
+        // Failures never block the existing answer or export private content.
+        val candidateById=authorizedCandidates.associateBy { it.id }
+        val exactSameTurnEvidence=!turn.grounded || (
+            authorizedCandidates.map { it.id }.toSet().size==authorizedCandidates.size &&
+                ranked.isNotEmpty() &&
+                ranked.all { candidateById[it.id]==it }
+        )
+        val hybridShadow=runCatching {
+            if(exactSameTurnEvidence)
+                AuthorizedConversationMemoryShadow.observe(turn,ranked,scores)
+            else AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.REJECTED_EVIDENCE_IDENTITY)
+        }.getOrElse {
+            AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.EVALUATION_FAILED)
+        }
         turn.memoryIds.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF,it) }
         ranked.mapNotNull { it.sourceRef }.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.SOURCE_REF,it) }
         if(scores.isNotEmpty())turnTrace?.event(if(didRerank)at.heinz.deviceai.cognitive.TraceStage.CRE1_ACTIVE else at.heinz.deviceai.cognitive.TraceStage.CRE1_SHADOW)
@@ -132,10 +160,14 @@ class ContinuumCognitiveRuntime(
                 else if(approved!=null)"CRE1_GATED_SWB1_ORDER"
                 else "CRE1_SHADOW"
             )
+            // AgentActivity already displays this trace beside the answer.
+            // Only aggregate shadow diagnostics; never evidence or authority.
+            append(" · Hybrid-Shadow=").append(hybridShadow.status.name)
+            append(" · autorisiert=").append(hybridShadow.authorizedCount)
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
-            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion)
+            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion,hybridShadow)
     }
 
     /**

@@ -7,6 +7,24 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 class MemoryResearchShadowComparatorTest {
+    @Test fun mainAppSyntheticSelfCheckCoversFiveAbilitiesWithoutClaimingImprovement() {
+        val check = MemoryResearchShadowComparator.syntheticSelfCheck()
+        assertEquals(1, check.developmentBaseline.count)
+        assertEquals(5, check.holdoutBaseline.count)
+        assertEquals(MemoryResearchAbility.values().toSet(),
+            check.holdoutBaseline.results.map { it.ability }.toSet())
+        assertTrue(check.developmentBaseline.results.all { it.correctTopOneOrAbstention })
+        assertTrue(check.developmentCandidate.results.all { it.correctTopOneOrAbstention })
+        assertTrue(check.holdoutBaseline.results.all { it.correctTopOneOrAbstention })
+        assertTrue(check.holdoutCandidate.results.all { it.correctTopOneOrAbstention })
+        assertTrue(check.holdoutBaseline.results.single { it.expectedAbstention }
+            .correctTopOneOrAbstention)
+        assertTrue(check.noPerProbeRegression)
+        assertFalse(check.developmentImproved)
+        assertFalse(check.holdoutImproved)
+        assertFalse(check.eligibleForOwnerReview)
+    }
+
     private fun memory(
         id: String,
         content: String,

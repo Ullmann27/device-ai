@@ -1,0 +1,25 @@
+✔ finished experiment review is reachable in primary learning center (1.333213ms)
+✔ CTX3 test is discoverable and stays confined to existing nonexported lab (0.267105ms)
+✔ Orion personal memory is not mistaken for an entity definition (0.292685ms)
+✔ permanent research catalog belongs to canonical Continuum experiment registry (1.916136ms)
+✔ all 15 upstream candidates are anchored to source links and local interfaces (0.759827ms)
+✔ all developer entrypoints preserve integration mission (0.446634ms)
+✔ research evaluation uses existing brain retrieval, never writes or runs tools (0.474587ms)
+✔ the historical owner release gates have not been weakened by research files (0.318481ms)
+✔ context plan uses a bounded byte estimate and reserves actual client output (4.839605ms)
+✔ context truncates Unicode and JSON escape-heavy input within the real serialized budget (5.345743ms)
+✔ diagnostics precede source under pressure and omitted context is reported (33.47265ms)
+✔ rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths (1.692101ms)
+✔ preserves the complete goal or refuses instead of silently truncating its meaning (0.594982ms)
+✔ diagnosis requires a matching admission identity and never labels input as verified facts (2.129074ms)
+✔ local diagnosis uses the existing fixed-loopback client with no tool or promotion rights (56.094849ms)
+✔ injected source remains quoted data and model instructions cannot select shell tools (33.77915ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 525.330856
+EXIT_CODE=0
