@@ -88,3 +88,25 @@ test('migration cannot be mistaken for complete transfer of revoked owner facts'
   assert.match(body,/Private App-Speicher sind getrennt/);
   assert.match(body,/Datei-Auswahl/);
 });
+
+test('Gemma multi-gigabyte import displays actual progress instead of only LÄDT',()=>{
+  assert.match(ui,/Kopiert:.*1024L \* 1024L/);
+  assert.match(ui,/snapshot\.elapsedMs \/ 1000L/);
+  assert.match(ui,/snapshot\.phase/);
+});
+test('Gemma import UI is throttled to every 64 MiB or phase change',()=>{
+  assert.match(ui,/lastUiBucket = -1L/);
+  assert.match(ui,/snapshot\.copiedBytes \/ \(64L \* 1024L \* 1024L\)/);
+  assert.match(ui,/snapshot\.phase != at\.heinz\.deviceai\.localmodel\.LocalModelImportPhase\.COPYING/);
+});
+test('import timeout is a progress watchdog and never claims false 120-second failure',()=>{
+  const timeout=ui.split('private fun scheduleLifecycleTimeout(')[1]?.split('private fun clearLifecycleTimeout()')[0]??'';
+  assert.match(timeout,/current\.copiedBytes > earlier\.copiedBytes/);
+  assert.match(timeout,/scheduleLifecycleTimeout\(message, forImport = true\)/);
+  assert.doesNotMatch(timeout,/if \(forImport\) localImportError = message/);
+});
+test('real native direct smoke test is a manual explicit action',()=>{
+  assert.match(body,/runLocalSmokeTest\(direct = true\)/);
+  assert.match(ui,/generated\.response\.isNotBlank\(\)/);
+  assert.match(ui,/m2DirectProofModelSha = testedModel\.sha256/);
+});
