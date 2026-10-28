@@ -21,7 +21,8 @@ internal object ContinuumMobileBuilderRoute {
 
     fun destination(currentApplicationId: String): Destination {
         val internal = currentApplicationId == PREVIEW_PACKAGE ||
-            currentApplicationId == MENTOR_PREVIEW_PACKAGE
+            currentApplicationId == MENTOR_PREVIEW_PACKAGE ||
+            currentApplicationId == LOCAL_MAINAPP_PACKAGE
         return Destination(
             packageName = if (internal) currentApplicationId else PREVIEW_PACKAGE,
             className = BUILDER_ACTIVITY,
