@@ -49,7 +49,25 @@ test('native worker refuses untracked test injection and symlinked test entrypoi
   fs.writeFileSync(evil,"import fs from 'node:fs';fs.writeFileSync("+JSON.stringify(marker)+",'bad');throw Error('untracked test injection');\n");
   const env={...process.env};delete env.NODE_TEST_CONTEXT;
   const run=()=>spawnSync(process.execPath,[path.join(repo,'scripts/continuum-local-development-worker.mjs'),'--once',path.join(top,'out')],{cwd:repo,env,encoding:'utf8',timeout:10000});
-  const allowed=run();assert.equal(allowed.status,0,allowed.stderr);assert.equal(fs.existsSync(marker),false);
-  fs.unlinkSync(good);fs.symlinkSync(evil,good);const denied=run();assert.equal(denied.status,1);assert.match(denied.stderr,/UNSAFE_TEST_FILE_TYPE/);assert.equal(fs.existsSync(marker),false);
+  const rejectedUntrackedTest=run();
+  assert.equal(rejectedUntrackedTest.status,1,rejectedUntrackedTest.stderr);
+  assert.match(rejectedUntrackedTest.stderr,/UNSAFE_CHECKOUT/);
+  assert.equal(fs.existsSync(marker),false);
+  fs.unlinkSync(evil);
+  const helper=path.join(repo,'injected-helper.mjs');
+  fs.writeFileSync(helper,"throw Error('untracked helper must not execute');\n");
+  const rejectedUntrackedHelper=run();
+  assert.equal(rejectedUntrackedHelper.status,1,rejectedUntrackedHelper.stderr);
+  assert.match(rejectedUntrackedHelper.stderr,/UNSAFE_CHECKOUT/);
+  fs.unlinkSync(helper);
+  const allowed=run();
+  assert.equal(allowed.status,0,allowed.stderr);
+  assert.equal(fs.existsSync(marker),false);
+  fs.unlinkSync(good);
+  fs.symlinkSync(path.join(repo,'scripts/continuum-worker-lease.mjs'),good);
+  const denied=run();
+  assert.equal(denied.status,1,denied.stderr);
+  assert.match(denied.stderr,/UNSAFE_TEST_FILE_TYPE/);
+  assert.equal(fs.existsSync(marker),false);
  }finally{fs.rmSync(top,{recursive:true,force:true});}
 });
