@@ -56,6 +56,19 @@ test('copies real XML and hashes reports outside the checkout', () => fixture(({
   assert.match(manifest['summary.json'], /^[0-9a-f]{64}$/);
 }));
 
+test('keeps malformed JUnit XML as evidence while reporting FAIL', () => fixture(({ project, output, xmlDir }) => {
+  const broken = '<testsuite name="unit" tests="2" failures="0" errors="0" skipped="0"><testcase name="a"/>';
+  fs.writeFileSync(path.join(xmlDir, 'TEST-unit.xml'), broken);
+  const summary = collectRun({ output, project, commit: head, gradleExit: 0, nodeExit: 0,
+    startedMillis: Date.now() - 100 });
+  assert.equal(summary.status, 'FAIL');
+  assert.equal(summary.counts.tests, 0);
+  assert.equal(summary.errors.length, 1);
+  assert.equal(fs.readFileSync(path.join(output, 'junit-xml/TEST-unit.xml'), 'utf8'), broken);
+  const manifest = JSON.parse(fs.readFileSync(path.join(output, 'sha256-manifest.json'), 'utf8'));
+  assert.match(manifest['junit-xml/TEST-unit.xml'], /^[0-9a-f]{64}$/);
+}));
+
 test('rejects stale XML left over from an earlier filtered test run', () => fixture(({ project, output, xmlDir }) => {
   const target = path.join(xmlDir, 'TEST-unit.xml');
   fs.writeFileSync(target, goodXml);
