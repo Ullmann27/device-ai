@@ -111,9 +111,24 @@ class LocalModelCatalog(
             FileOutputStream(temporary).use { output ->
                 input.use { source ->
                     val buffer = ByteArray(COPY_BUFFER_SIZE)
+                    var emptyReads = 0
                     while (true) {
+                        if (Thread.currentThread().isInterrupted) {
+                            throw java.io.InterruptedIOException("Model import cancelled between reads.")
+                        }
                         val count = source.read(buffer)
+                        if (Thread.currentThread().isInterrupted) {
+                            throw java.io.InterruptedIOException("Model import cancelled after read.")
+                        }
                         if (count < 0) break
+                        if (count == 0) {
+                            emptyReads++
+                            if (emptyReads >= 16) {
+                                throw IOException("Model input made no progress after 16 reads.")
+                            }
+                            continue
+                        }
+                        emptyReads = 0
                         require(total <= maxModelBytes - count) { "Model exceeds the configured import limit." }
                         total += count
                         digest.update(buffer, 0, count)
