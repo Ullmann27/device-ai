@@ -56,3 +56,9 @@ Jeder Eintrag wird erst nach nachvollziehbaren Commits und Tests von `AUDIT_REQU
 ## Handoff
 
 Integrationsbasis: PR #197 `77e429f6d2f0eebfe697244a467f2b0565e7eb68`. M4-Arbeitszweig: `chatgpt/continuum-research-integration-memory-m4-20261027`. Beim Fortsetzen immer frischen HEAD prüfen. Falls der Kotlin/Gradle-Lauf nicht tatsächlich durchgeführt wurde, `NOT_RUN` berichten; die vorhandenen 1.094 JUnit-Passbelege gelten ausschließlich Sols älterem HEAD. Rollback: M4-Draft-PR unangetastet lassen oder im Testcheckout auf seinen vorherigen Commit wechseln, niemals produktive Daten/Branches zurücksetzen.
+
+## Weiterführung 28.10.2026 – echter Gesprächspfad, weiterhin Shadow
+
+[Draft-PR #203](https://github.com/Ullmann27/device-ai/pull/203) auf #198 führt den neuen `AuthorizedConversationMemoryShadow.kt` **nach** der autoritativen SWB1-/CRE1-Auswahl in `learning/ContinuumCognitiveRuntime.reply()` aus. Die Diagnose bekommt ausschließlich die für denselben Zug ausgewählten Belege und bereits berechnete CRE1-Scores; der Runtime-Adapter prüft zusätzlich die vollständige `ContinuumMemoryHit`-Objektidentität gegen die originalen Kandidaten des CRE1-Callbacks. Der bestehende `HybridMemoryRetriever` wertet diese Belege nur temporär als `DEVICE_LOCAL_ONLY` und `UNVERIFIED` aus. Es werden nur Zähler/Boolesche Indikatoren zurückgegeben, **keine neuen Belege in Prompt, Antwort, Log oder Memory-Store**.
+
+Kotlin-Unit-/Runtime-Negativtests und die Verbindung zu `MemoryRetrievalResearchGate`/`MemoryResearchShadowComparator` liegen im PR. **JUnit/Android/Device: NOT_RUN** in dieser Sitzung; ausgeführte JS-Quellstrukturkontrollen sind kein Ersatz. Daher kein belegter Qualitätsgewinn und keine Aktivierung einer neuen produktiven Retrieval-Reihenfolge. Vollständige fünf-Kern-Zuordnung: `docs/research/omega/CONTINUUM-FUSION-FIVE-CORE-ARCHITECTURE-20261028.md`. Alle 15 externen Referenzen unten bleiben erhalten, ohne Quellcodeübernahme.
