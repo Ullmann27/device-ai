@@ -316,6 +316,7 @@ class AgentActivity : Activity() {
     private var agentLoops = 0
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
+    @Volatile private var latestModelImportSnapshot: at.heinz.deviceai.localmodel.LocalModelImportSnapshot? = null
     private var modelUnloading = false
     // Session-scoped genuine native inference evidence, never restored or
     // inferred from import/configuration. Read and written on the UI thread.
@@ -6786,6 +6787,7 @@ class AgentActivity : Activity() {
         pendingModelImport = null
         resetM2NativeProof()
         modelImportActive = true
+        latestModelImportSnapshot = null
         localImportError = null
         refreshLocalModelUi()
         Toast.makeText(this, "Modelldatei wird lokal geprüft. Status unter Modellverwaltung.", Toast.LENGTH_LONG).show()
@@ -6794,7 +6796,10 @@ class AgentActivity : Activity() {
             val result = runCatching {
                 val source = contentResolver.openInputStream(uri)
                     ?: error("Dokument kann nicht geöffnet werden.")
-                source.use { modelCatalog.import(metadata.first, metadata.second, it, metadata.third) }
+                source.use {
+                    modelCatalog.import(metadata.first, metadata.second, it, metadata.third,
+                        onProgress = { snapshot -> latestModelImportSnapshot = snapshot })
+                }
             }
             runOnUiThread {
                 clearLifecycleTimeout()
@@ -6802,12 +6807,18 @@ class AgentActivity : Activity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onSuccess { model ->
                     localImportError = null
-                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
+                    val importProof = latestModelImportSnapshot
+                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +
+                        (importProof?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" }
+                            ?: ""))
                     Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()
                     reloadInstalledModels()
                     loadModel(model)
                 }.onFailure { error ->
-                    localImportError = error.message ?: "Model import failed."
+                    val lastImport = latestModelImportSnapshot
+                    localImportError = (error.message ?: "Model import failed.") +
+                        (lastImport?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" }
+                            ?: " · Importphase nicht verfügbar")
                     // A chat-only error is easy to miss after Android's document
                     // picker returns to the start screen. Show a bounded, readable
                     // explanation without exposing any model bytes or credentials.
