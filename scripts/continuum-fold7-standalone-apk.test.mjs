@@ -55,7 +55,7 @@ test('new private signer stays outside repository and release uses it persistent
 test('release is compiled for real complete app not QA/demo or unsigned APK', () => {
   assert.match(shell, /:app:lintRelease :app:assembleRelease/);
   assert.match(shell, /:app:testDebugUnitTest/);
-  assert.match(shell, /:app\/build\/outputs\/apk\/release\/app-release\.apk/);
+  assert.match(shell, /app\/build\/outputs\/apk\/release\/app-release\.apk/);
   assert.match(shell, /verify --verbose --print-certs/);
   assert.match(shell, /apk_fp.*actual_fp/);
   assert.match(shell, /versionCode='\$version' versionName='\$version_name'/);
