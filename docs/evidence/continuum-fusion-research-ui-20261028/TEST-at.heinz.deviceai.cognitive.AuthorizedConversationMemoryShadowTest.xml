@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T05:04:06" hostname="b50d54a1ac03" time="0.099">
+  <properties/>
+  <testcase name="privateOwnerTextAndSourceUrlNeverEnterDiagnosticReport" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.085"/>
+  <testcase name="unknownOrUngroundedQuestionsCannotAcquireEvidenceFromTheObserver" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.0"/>
+  <testcase name="forgedOrPartialCre1ScoresCannotInfluenceEvenShadowRanking" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.001"/>
+  <testcase name="missingExtraReorderedDuplicateAndUnrecognizedHitsFailClosed" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.001"/>
+  <testcase name="lexicalAndCre1CompareOnlyAlreadyAuthorizedHitsWithoutReorderingAnswer" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.003"/>
+  <testcase name="syntheticResearchGateAndFrozenHoldoutCannotPromoteAConversationShadow" classname="at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
