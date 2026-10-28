@@ -1649,7 +1649,7 @@ class AgentActivity : Activity() {
         val learning = ContinuumLearningCore(filesDir)
         val core = learning.status()
         append("Lernkern: ").append(core.experiences.total).append(" Experiences · ")
-            .append(core.modelUpdates).append(" Gewichtsupdates\n")
+            .append(core.modelUpdates).append(" SWB1-Encoder-Updates (nicht Gemma 4)\n")
         append("Holdouts: Intent ").append(core.intentHoldout.correct).append("/").append(core.intentHoldout.total)
             .append(" · Semantik ").append(core.semanticHoldout.correct).append("/").append(core.semanticHoldout.total).append("\n")
         val practice = NeuralPracticeScheduler(this@AgentActivity)
@@ -3403,6 +3403,8 @@ class AgentActivity : Activity() {
             onSuccess={ core ->
                 buildString {
                     append("Persistenter gemeinsamer Lernkern v2\n\n")
+                    append("App-ID: ").append(BuildConfig.APPLICATION_ID).append("\n")
+                    append("Speicherbereich: ausschließlich diese App-ID. Ein anderes installiertes Continuum-Paket hat getrennte private Daten; Quellen-, Lern- und Gewichtsübernahme erfolgen nicht automatisch.\n\n")
                     append("Experiences: ").append(core.experiences.total).append("/256\n")
                     append("Bestätigte Intent-Lektionen: ").append(core.experiences.intentLabels).append("\n")
                     append("Owner-Fakten: ").append(core.experiences.userFacts).append("\n")
@@ -3413,7 +3415,34 @@ class AgentActivity : Activity() {
                     append("Replay ausstehend: ").append(core.experiences.replayPending).append("\n")
                     append("Als gelernt markiert: ").append(core.experiences.learned).append("\n\n")
                     append("Trainierbarer Subword-Encoder: ").append(core.parameters).append(" Parameter\n")
-                    append("Gewichtsupdates: ").append(core.modelUpdates).append("\n")
+                    append("Gewichtsupdates (SWB1-Subword-Encoder): ").append(core.modelUpdates).append("\n")
+                    append("Diese Updates sind keine Gemma-4-Gewichtsupdates und kein Nachweis besserer Antworten.\n")
+                    val archiveSources = runCatching {
+                        at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir).stats().values.sum()
+                    }.getOrNull()
+                    append("Wissensarchiv (separater Speicher): ")
+                        .append(archiveSources?.toString() ?: "nicht lesbar").append(" Quellen\n")
+                    append("Experience-Protokoll: ").append(core.experiences.total)
+                        .append("/256 aktuell gespeicherte Einträge, keine unbegrenzte Trainingschronik\n")
+                    val publicStudy = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this@AgentActivity)
+                    val publicRegistered = runCatching {
+                        getSystemService(android.app.job.JobScheduler::class.java)
+                            ?.getPendingJob(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler.JOB_ID) != null
+                    }.getOrNull()
+                    val publicPrefs = getSharedPreferences("continuum-public-study-v1", android.content.Context.MODE_PRIVATE)
+                    append("Öffentliche Forschung: ")
+                        .append(if (publicStudy.enabled) "freigegeben" else "aus")
+                        .append(" · Android-Job: ")
+                        .append(when (publicRegistered) {
+                            true -> "registriert"
+                            false -> "nicht registriert"
+                            null -> "nicht prüfbar"
+                        })
+                        .append(" · Versuche: ").append(publicPrefs.getLong("attempts", 0L))
+                        .append(" · neue Quellen: ").append(publicPrefs.getLong("sources", 0L))
+                        .append(" · akzeptierte SWB1-Runden: ").append(publicPrefs.getLong("accepted", 0L))
+                        .append("\n")
+                    append("Für einen Alt/Neu-Abgleich müssen App-ID, Modellhash, SWB1-Updates, Quellen und Lern-Audits jeweils separat verglichen werden. Keine automatische Gewichtsübernahme.\n")
                     append("Aktives SWB1-Modell: ").append(learning.modelHash().take(16)).append("\n")
                     append("Persistente Dialogzüge: ").append(runCatching { learning.dialogueHistory().size.toString() }
                         .getOrElse { "unlesbar (wird beim nächsten Gespräch gesichert und neu begonnen)" }).append("/8\n")
