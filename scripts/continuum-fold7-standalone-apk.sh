@@ -16,7 +16,7 @@ cd "$root"
   die 'Build only a clean, reviewed Git checkout'
 sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || die 'Invalid Git source SHA'
-[[ -z "$CONTINUUM_MENTOR_SIGNING_FILE" && -z "$CONTINUUM_MENTOR_SIGNING_PASSWORD" ]] 2>/dev/null ||
+[[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] ||
   die 'Do not load historic owner-signing credentials into the standalone build'
 
 [[ "$PREFIX" == /data/data/com.termux/files/usr* ]] ||
