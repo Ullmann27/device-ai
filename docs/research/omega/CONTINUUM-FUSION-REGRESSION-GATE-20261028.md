@@ -26,3 +26,11 @@ Actual local validation: **6/6 Node tests PASS**; `bash -n` PASS; scripted prefl
 **After actual full-suite PASS**, plan a separate real device/Gemma quality gate: same installed signed main-app build, same model SHA, measured repeated prompts, fixed source-verified research tasks, permission-denial and missing-evidence cases, latency/peak-RAM/thermal observations, baseline/candidate comparison. Do not call it an improvement unless data support it. Device, original-P12 signing, live Gemma model, Fold7 and autonomous web-research benchmarks remain `NOT_RUN` and cannot be executed by the present GitHub-only connection.
 
 Rollback: leave Draft PR #204 unmerged or revert the isolated QA-script commits; no changes to #203's production source, no owner fact reads, no repo branch deletion or forced updates.
+
+## Zusätzliche Validierung des geschützten Regression-Runners
+
+Auf dem weiteren isolierten Prüfcontainer wurden die GitHub-Blobs `5e4280ff34db5b84a85c464c67817046a17aab6d`, `1bfeecd6633906a6122d9a1909e5f418a9ec2383`, `5b196959a73e4a3cda25dac97b89fbd74e9f993b` erneut byte-identisch gelesen und lokal geprüft. `node --test scripts/continuum-fusion-regression-report.test.mjs` bestand **7/7 echte Node-Tests**, `bash -n scripts/continuum-fusion-full-regression.sh` **PASS**. Neuer Negativfall: beschädigte JUnit-XML wird trotzdem als Originalkopie mit Hash aufbewahrt und bleibt explizit `FAIL`.
+
+Der Shell-Läufer nutzt jetzt auch die bereits im Projekt vorgesehenen Termux-JDK17-/SDK36-/AAPT2-Pfade und `deviceAiMobileAidlFallback`, ohne neue Tools zu installieren. **Keine native ARM64-Ausführung wurde vorgetäuscht.** Die alten sechs Testfälle sind weiterhin erhalten, ergänzt um genau einen neuen. Vollständiger Beleg: [`local-verifier-extension.md`](../../evidence/continuum-fusion-regression-gate-20261028/local-verifier-extension.md). Die frühere sechs-Test-Evidenz ist eine historische Zwischenstufe, nicht der aktuelle Stand.
+
+**Nächste unerledigte Messung bleibt unverändert:** die echte, vollständige, ungefilterte `:app:testDebugUnitTest`-Suite auf einem sauberen Checkout von PR #204 mit JDK17/SDK36/Gradle8.11.1. Danach erst echte Fold7-/Gemma- und unabhängige Webrecherche-Qualitätstests. Bis dahin `NOT_RUN / NOT_PROVEN`. PR #203, `main` und das installierte Besitzer-APK sind unberührt.
