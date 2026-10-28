@@ -3723,11 +3723,15 @@ class AgentActivity : Activity() {
         onLearningIo({
             val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
             if(import) {
-                val count=contentResolver.openInputStream(uri)?.use { input ->
+                val before=archive.stats().values.sum()
+                val entries=contentResolver.openInputStream(uri)?.use { input ->
                     archive.importZip(input)
                 } ?: error("Backup konnte nicht geöffnet werden")
-                "WISSENSARCHIV · "+count+" geprüfte Quellen aus Backup gelesen. "+
-                    "Keine Besitzerfakten oder Berechtigungen geändert."
+                val after=archive.stats().values.sum()
+                val added=after-before
+                "WISSENSARCHIV · "+entries+" ZIP-Einträge geprüft · "+
+                    added+" wirklich neue Quellen · "+after+" insgesamt. "+
+                    "Vorhandene Quellen, Besitzerfakten und Berechtigungen nicht gelöscht."
             } else {
                 val count=contentResolver.openOutputStream(uri,"wt")?.use { output ->
                     archive.exportZip(output)
