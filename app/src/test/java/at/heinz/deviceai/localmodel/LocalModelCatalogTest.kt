@@ -71,6 +71,57 @@ class LocalModelCatalogTest {
         } finally { directory.deleteRecursively() }
     }
 
+    @Test fun explicitRetryRecoversMatchingOrphanBytesAfterMetadataCommitWasInterrupted() {
+        val directory = Files.createTempDirectory("model-orphan-recovery").toFile()
+        try {
+            var inspections = 0
+            val catalog = LocalModelCatalog(directory, LocalModelInspector {
+                inspections++
+                capabilities
+            })
+            val bytes = "validated interrupted model".toByteArray()
+            val expected = contentHash(bytes.decodeToString())
+            val original = catalog.import("gemma-fixture", "v1", ByteArrayInputStream(bytes), expected)
+            val originalFile = catalog.modelFile(original)
+            assertTrue(directory.listFiles()!!.single { it.extension == "meta" }.delete())
+            assertTrue(originalFile.isFile)
+            assertNull(catalog.get(original.id, original.version))
+            assertTrue(catalog.all().isEmpty())
+
+            val recovered = catalog.import("gemma-fixture", "v1", ByteArrayInputStream(bytes), expected)
+            assertEquals(original, recovered)
+            assertEquals(recovered, catalog.get(recovered.id, recovered.version))
+            assertTrue(originalFile.readBytes().contentEquals(bytes))
+            assertEquals(2, inspections)
+            assertEquals(1, directory.listFiles()!!.count { it.extension == "litertlm" })
+            assertThrows(IllegalArgumentException::class.java) {
+                catalog.import("gemma-fixture", "v1", ByteArrayInputStream(bytes), expected)
+            }
+        } finally { directory.deleteRecursively() }
+    }
+
+    @Test fun mismatchingOrphanIsPreservedAndCannotAcquireVerifiedMetadata() {
+        val directory = Files.createTempDirectory("model-orphan-mismatch").toFile()
+        try {
+            val catalog = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            val bytes = "verified selected model".toByteArray()
+            val expected = contentHash(bytes.decodeToString())
+            val original = catalog.import("fixture", "v1", ByteArrayInputStream(bytes), expected)
+            val originalFile = catalog.modelFile(original)
+            assertTrue(directory.listFiles()!!.single { it.extension == "meta" }.delete())
+            originalFile.writeText("different interrupted bytes")
+            val before = originalFile.readBytes()
+            val failure = assertThrows(IllegalArgumentException::class.java) {
+                catalog.import("fixture", "v1", ByteArrayInputStream(bytes), expected)
+            }
+            assertTrue(failure.message!!.contains("existing bytes preserved"))
+            assertTrue(originalFile.readBytes().contentEquals(before))
+            assertNull(catalog.get("fixture", "v1"))
+            assertFalse(directory.listFiles()!!.any { it.extension == "meta" })
+            assertFalse(directory.listFiles()!!.any { it.name.startsWith("model-import-") })
+        } finally { directory.deleteRecursively() }
+    }
+
     @Test
     fun importRejectsBadHashesOversizedAndUnsupportedModelsWithoutCataloging() {
         val directory = Files.createTempDirectory("device-ai-models-invalid").toFile()

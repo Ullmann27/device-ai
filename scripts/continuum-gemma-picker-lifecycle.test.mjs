@@ -45,7 +45,7 @@ test('User can see that an actual large file import has started', () => {
   assert.match(part, /Modelldatei wird lokal geprüft/);
   assert.match(part, /Modelldatei geprüft\. Gemma wird jetzt geladen/);
   assert.match(part, /setTitle\("Gemma-Import fehlgeschlagen"\)/);
-  assert.match(part, /Technischer Grund:/);
+  assert.match(part, /operation\.failureType/);
   assert.match(part, /\.setPositiveButton\("VERSTANDEN", null\)/);
 });
 
@@ -62,8 +62,16 @@ test('Canceled Android document picker leaves old model intact', () => {
   assert.doesNotMatch(part, /\.delete\(\)|clearData\(/);
 });
 
-test('Gemma import still verifies SHA-256 and CPU support; no direct owner writes', () => {
-  assert.match(src, /modelCatalog\.import\(metadata\.first, metadata\.second, it, metadata\.third\)/);
-  assert.match(src, /localAgentExecutor\.execute/);
-  assert.doesNotMatch(src.slice(src.indexOf('private fun importModel(uri: Uri)'), src.indexOf('private fun reloadInstalledModels()')), /\bpm uninstall\b|\bpm clear\b/);
+test('Gemma import uses the process-owned catalog job and detaches Activity observers', () => {
+  const host = readFileSync(resolve(root, 'app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt'), 'utf8');
+  const coordinator = readFileSync(resolve(root, 'app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt'), 'utf8');
+  const part = src.slice(src.indexOf('private fun importModel(uri: Uri)'), src.indexOf('private fun reloadInstalledModels()'));
+  assert.match(host, /val imports = LocalModelImportCoordinator\(catalog\)/);
+  assert.match(part, /modelImports\.start\(metadata\.first, metadata\.second, metadata\.third\)/);
+  assert.match(part, /applicationContext\.contentResolver/);
+  assert.doesNotMatch(part, /localAgentExecutor\.execute/);
+  assert.match(src, /modelImportObservation\?\.close\(\)/);
+  assert.match(coordinator, /catalog\.import\(id, version, source, expectedSha256\)/);
+  assert.match(coordinator, /claimResultForLoading/);
+  assert.doesNotMatch(part, /\bpm uninstall\b|\bpm clear\b/);
 });
