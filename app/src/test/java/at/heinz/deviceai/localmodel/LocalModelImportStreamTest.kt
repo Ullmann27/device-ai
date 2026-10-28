@@ -80,6 +80,31 @@ class LocalModelImportStreamTest {
         } finally { Thread.interrupted(); dir.deleteRecursively() }
     }
 
+    @Test fun interruptedNativeInspectionNeverPublishesModel() {
+        val dir = Files.createTempDirectory("model-inspector-cancel-").toFile()
+        val bytes = "verified synthetic bytes".toByteArray()
+        try {
+            val catalog = LocalModelCatalog(dir, LocalModelInspector {
+                Thread.currentThread().interrupt()
+                caps
+            })
+            try {
+                assertThrows(InterruptedIOException::class.java) {
+                    catalog.import("sample", "v1", ByteArrayInputStream(bytes), sha(bytes))
+                }
+                assertTrue(Thread.currentThread().isInterrupted)
+            } finally {
+                Thread.interrupted()
+            }
+            assertTrue(catalog.all().isEmpty())
+            assertNull(catalog.get("sample", "v1"))
+            noTemporaryFiles(dir)
+        } finally {
+            Thread.interrupted()
+            dir.deleteRecursively()
+        }
+    }
+
     @Test fun transientEmptyReadsAreToleratedAndHashIsPreserved() {
         val dir = Files.createTempDirectory("model-transient-").toFile()
         val bytes = "valid synthetic bytes".toByteArray()
