@@ -744,12 +744,13 @@ class ContinuumLearningCore(
         audit:DecoderEvidenceCorpus,
         steps:Int=600,
         cancelled:()->Boolean={false},
-        protectedAudits:List<DecoderEvidenceCorpus> = emptyList()
+        protectedAudits:List<DecoderEvidenceCorpus> = emptyList(),
+        learningRate:Double=.035
     ):DecoderExperimentResult=synchronized(CORE_LOCK) {
         emitTrainingPhase("TRAIN_WEIGHTS")
         try {
             ContinuumDecoderBridge(directory).trainPairedExperiment(
-                training,audit,loadModel().save(),steps,cancelled,protectedAudits
+                training,audit,loadModel().save(),steps,cancelled,protectedAudits,learningRate
             )
         } finally {
             emitTrainingPhase("AUDIT")
