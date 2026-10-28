@@ -73,7 +73,7 @@ started="$(node -p 'Date.now()')"
 printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out/command.txt"
 printf 'GRADLE_COMMAND=' >> "$out/command.txt"
 printf ' %q' "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug >> "$out/command.txt"
-printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs\n' >> "$out/command.txt"
+printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs scripts/continuum-gemma-picker-lifecycle.test.mjs scripts/continuum-fold7-standalone-apk.test.mjs\n' >> "$out/command.txt"
 # Deterministic public Node/Kotlin parity fixtures are required by three real
 # JUnit methods. Generate them locally, never skip them or fetch model weights.
 export CONTINUUM_CRE1_PARITY_DIR="$out/cre1-parity"
@@ -95,7 +95,9 @@ node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-learning-parity-audit.test.mjs \
   scripts/continuum-ccc1-review-gate.test.mjs \
   scripts/continuum-release-host-preflight.test.mjs \
-  scripts/continuum-one-app-contract.test.mjs > "$out/node-contracts.log" 2>&1
+  scripts/continuum-one-app-contract.test.mjs \
+  scripts/continuum-gemma-picker-lifecycle.test.mjs \
+  scripts/continuum-fold7-standalone-apk.test.mjs > "$out/node-contracts.log" 2>&1
 node_exit=$?
 node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" > "$out/parity-verify.log" 2>&1 || node_exit=1
 node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$out/parity-verify.log" 2>&1 || node_exit=1
