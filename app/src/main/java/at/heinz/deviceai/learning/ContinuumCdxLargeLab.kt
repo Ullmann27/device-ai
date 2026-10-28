@@ -32,7 +32,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
                      val after:Double,val auditBefore:Double,
                      val auditAfter:Double,val oldAuditBefore:Double,
                      val oldAuditAfter:Double,val hash:String,
-                     val finalized:Boolean) {
+                     val finalized:Boolean,val attempts:Int=1) {
         fun description():String = buildString {
             append("CDX1 · GROSSES BELEG-ANTWORT-ARCHIV\n")
             append("Stufe ").append(stage).append("/").append(total)
@@ -48,6 +48,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
                 .append(loss(oldAuditBefore)).append(" → ").append(loss(oldAuditAfter))
             append("\nModell-Hash: ").append(hash.take(16))
             if(stage>1)append("\nTRAIN-Rehearsal: 8 ältere Übungsfälle + 8 vollständige Beispielsätze; beide Audits bleiben nur Prüfmaterial.")
+            if(attempts==2)append("\nZweiter Versuch mit geringerer Lernrate; auch er muss beide Schutzprüfungen bestehen.")
             append("\nSWB1 unverändert; CDX1-Checkpoint separat; Chatfreigabe NEIN.")
             append("\nForschungsantworten sind nicht automatisch verifizierte Tatsachen.")
         }
@@ -63,19 +64,32 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
             observeTraining(phaseObserver)
         }
         val protected=DecoderEvidenceCorpus(curriculum.historicAudit,DecoderSplit.AUDIT)
+        val training=curriculum.trainingStageWithReplay(index)
         val swbBefore=core.modelHash()
-        val report=core.trainExperimentalPairedDecoder(
-            curriculum.trainingStageWithReplay(index),curriculum.audit,
+        // Each experiment begins from the same persisted checkpoint if rejected;
+        // the bridge commits ONLY after both frozen audit sets pass. No rewind.
+        val first=core.trainExperimentalPairedDecoder(
+            training,curriculum.audit,
             steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
             protectedAudits=listOf(protected))
+        val retry=index>0 && !first.accepted &&
+            first.completedSteps==curriculum.TRAIN_STEPS && !cancelled()
+        val second=if(retry)core.trainExperimentalPairedDecoder(
+            training,curriculum.audit,
+            steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
+            protectedAudits=listOf(protected),learningRate=.012
+        ) else null
+        val report=second ?: first
         check(core.modelHash()==swbBefore) { "SWB1 was changed during CDX1 laboratory" }
         val finished=report.completedSteps==curriculum.TRAIN_STEPS && !cancelled()
         if(finished)writeStage(index+1)
-        Round(index+1,curriculum.STAGES,report.accepted,report.completedSteps,
-            curriculum.TRAIN_STEPS,report.trainingBefore,report.trainingAfter,
+        Round(index+1,curriculum.STAGES,report.accepted,
+            first.completedSteps+(second?.completedSteps ?: 0),
+            curriculum.TRAIN_STEPS*(if(second==null)1 else 2),
+            report.trainingBefore,report.trainingAfter,
             report.auditBefore,report.auditAfter,
             report.protectedBefore.single(),report.protectedAfter.single(),
-            report.activeSha256,finished)
+            report.activeSha256,finished,if(second==null)1 else 2)
     }
 
     private fun readStage():Int {
