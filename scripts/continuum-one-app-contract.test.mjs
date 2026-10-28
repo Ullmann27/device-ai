@@ -91,7 +91,7 @@ test('migration cannot be mistaken for complete transfer of revoked owner facts'
 
 test('Gemma multi-gigabyte import displays actual progress instead of only LÄDT',()=>{
   assert.match(ui,/Kopiert:.*1024L \* 1024L/);
-  assert.match(ui,/snapshot\.elapsedMs \/ 1000L/);
+  assert.match(ui,/it\.elapsedMs \/ 1000L/);
   assert.match(ui,/snapshot\.phase/);
 });
 test('Gemma import UI is throttled to every 64 MiB or phase change',()=>{
