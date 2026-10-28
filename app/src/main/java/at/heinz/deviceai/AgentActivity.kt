@@ -5946,7 +5946,22 @@ class AgentActivity : Activity() {
                     // Current task/evidence precede optional history under the prompt cap.
                     append(conversationContext)
                 }
-                val prompt = ChatReasoningRouter.composePrompt(promptBody, advisory, promptTail, 15_500)
+                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                    task = task,
+                    hasMemories = memories.isNotEmpty(),
+                    hasConversationContext = conversationContext.isNotBlank(),
+                    hasGroundedEvidence = groundedRecall != null,
+                    hasObservations = observations.isNotEmpty(),
+                    hasReflection = reflection != null
+                )
+                val briefInstruction = if (promptCap ==
+                    at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
+                    "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
+                        "Keine zusätzlichen internen Denkschritte behaupten."
+                else ""
+                val prompt = ChatReasoningRouter.composePrompt(
+                    promptBody, advisory, promptTail + briefInstruction, promptCap
+                )
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 val toolResponses = newObservations.take(4).map {
@@ -5958,7 +5973,7 @@ class AgentActivity : Activity() {
                             .toString()
                     )
                 }
-                var generation = generateLocal(cancellation,turnTrace) { callback ->
+                var generation = generateLocal(cancellation,turnTrace,prompt.length) { callback ->
                     if (toolResponses.isEmpty()) localRuntime.stream(prompt, callback)
                     else localRuntime.respondToTools(toolResponses, callback)
                 }
@@ -6635,6 +6650,7 @@ class AgentActivity : Activity() {
     private fun generateLocal(
         cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation? = null,
         turnTrace: CognitiveTurnTrace? = null,
+        promptCharacters: Int? = null,
         start: (at.heinz.deviceai.localmodel.LocalInferenceCallback) -> Unit
     ): LocalGeneration {
         cancellation?.throwIfCancelled()
@@ -6647,12 +6663,14 @@ class AgentActivity : Activity() {
         var failure: String? = null
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
+        var firstTextNanos: Long? = null
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
                 if (!terminalEventReceived) {
                     when (event) {
                         is LocalInferenceEvent.TextDelta -> if (response.length < 8_000) {
+                            if (firstTextNanos == null) firstTextNanos = System.nanoTime()
                             streamedChunks++
                             response.append(event.text.take(8_000 - response.length))
                         }
@@ -6699,10 +6717,20 @@ class AgentActivity : Activity() {
         while (!completed.await(10, TimeUnit.MILLISECONDS)) {
             cancellation?.throwIfCancelled()
             if (System.nanoTime() < generationDeadline) continue
+            val diagnostic = synchronized(eventLock) {
+                terminalEventReceived = true
+                val firstTextMillis = firstTextNanos?.let {
+                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                }
+                "Local generation exceeded its 120-second limit. " +
+                    "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
+                    ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
+                    "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms."
+            }
             localRuntime.cancel()
-            localRuntimeError = "Local generation exceeded its 120-second limit."
+            localRuntimeError = diagnostic
             runOnUiThread { refreshLocalModelUi() }
-            return LocalGeneration("", null, emptyList(), "Local generation exceeded its 120-second limit.")
+            return LocalGeneration("", null, emptyList(), diagnostic)
         }
         cancellation?.throwIfCancelled()
         val readyDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(2)

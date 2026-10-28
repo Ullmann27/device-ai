@@ -220,6 +220,38 @@ class ContinuumKnowledgeArchiveTest {
         } finally { temp.deleteRecursively() }
     }
 
+    @Test fun archivedAndroidTitleCannotReplaceAGenerativeCodingHelpRequest() {
+        val temp=Files.createTempDirectory("continuum-archive-coding-intent").toFile()
+        try {
+            val archive=ContinuumKnowledgeArchive(temp)
+            val android=archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Android (Betriebssystem)", "https://de.wikipedia.org/wiki/Android_(Betriebssystem)",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Android ist ein mobiles Betriebssystem auf Basis eines Linux-Kernels.")
+            val userQuestion="Erkläre mir in zwei Sätzen, wie du mir beim Programmieren einer Android-App helfen kannst."
+            val candidates=archive.search(userQuestion,limit=20)
+            assertTrue("Reproduce the real title-level Android false positive",
+                candidates.any { it.source.id==android.id && it.score>=5 })
+            for(question in listOf(
+                userQuestion,
+                "Kannst du mir beim Programmieren einer Android-App helfen?",
+                "Wie entwickle ich eine Android-App?",
+                "Was ist Android und wie entwickle ich damit eine App?",
+                "Warum ist Android für meine App geeignet?",
+                "Erkläre mir, wie Android funktioniert."
+            )) {
+                assertNull("A help, how-to or reasoning request is not answered by a raw excerpt: $question",
+                    ContinuumArchiveAnswerPolicy.select(question,archive.search(question,limit=20)))
+            }
+            for(question in listOf("Was ist Android?", "Erkläre Android kurz.")) {
+                assertEquals("Direct factual archive lookups must continue to work: $question",
+                    android.id,
+                    ContinuumArchiveAnswerPolicy.select(question,archive.search(question,limit=20))?.source?.id)
+            }
+            assertEquals(1,archive.stats()[ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT])
+        } finally { temp.deleteRecursively() }
+    }
+
     @Test fun legalArchiveIsNotMisreportedAsLegalValidity() {
         val temp=Files.createTempDirectory("continuum-ris-source").toFile()
         try {
