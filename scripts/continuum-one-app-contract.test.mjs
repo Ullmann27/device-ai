@@ -110,3 +110,18 @@ test('real native direct smoke test is a manual explicit action',()=>{
   assert.match(ui,/generated\.response\.isNotBlank\(\)/);
   assert.match(ui,/m2DirectProofModelSha = testedModel\.sha256/);
 });
+
+test('user must explicitly tap to copy a status after a successful local read',()=>{
+  assert.match(body,/BUTTON_POSITIVE, "STATUS KOPIEREN"/);
+  assert.match(body,/copiedStatus = result\.getOrNull\(\)/);
+  assert.match(body,/if \(text\.isNullOrBlank\(\)\)/);
+});
+test('only the short main-app status is copied, never private owner facts',()=>{
+  assert.match(body,/ClipboardManager::class\.java/);
+  assert.match(body,/ClipData\.newPlainText/);
+  assert.doesNotMatch(body,/activeOwnerFacts\(|modelSnapshot\(|getSharedPreferences\(".*password|FileInputStream/);
+});
+test('clipboard success must not be reported when platform clipboard is missing',()=>{
+  assert.match(body,/if \(clipboard == null\)/);
+  assert.match(body,/Zwischenablage nicht verfügbar/);
+});
