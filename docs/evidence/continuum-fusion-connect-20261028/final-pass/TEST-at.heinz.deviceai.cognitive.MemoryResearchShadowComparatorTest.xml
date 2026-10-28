@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T04:56:29" hostname="b50d54a1ac03" time="0.036">
+  <properties/>
+  <testcase name="identicalDevelopmentAndHoldoutQuestionsAreRejected" classname="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" time="0.002"/>
+  <testcase name="contradictedOrPrivateGoldClaimsAreNotAllowed" classname="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" time="0.001"/>
+  <testcase name="incompleteHoldoutOrDuplicateRecordIdsFailClosed" classname="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" time="0.0"/>
+  <testcase name="betterLocalSemanticRecallStillRequiresManualReview" classname="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" time="0.002"/>
+  <testcase name="semanticOverRetrievalIsRejectedWhenAbstentionRegresses" classname="at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

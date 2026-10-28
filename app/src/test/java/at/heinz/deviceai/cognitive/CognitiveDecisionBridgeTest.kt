@@ -31,8 +31,11 @@ class CognitiveDecisionBridgeTest {
             assertFalse(first.turn.trace.contains(first.evidenceHits.single().id))
             assertFalse(first.usedLocalModel)
             assertEquals(modelHash, core.modelHash())
+            assertEquals(1, core.dialogueHistory().size)
 
             core.revokeOwnerFact(fact)
+            // Revocation deliberately clears old dialogue context as well.
+            assertTrue(core.dialogueHistory().isEmpty())
             val revoked = bridge.respond("Was verwendet Projekt Saphir?")
             assertFalse(revoked.turn.grounded)
             assertEquals(revoked.turn.answer, revoked.finalAnswer)
@@ -41,7 +44,8 @@ class CognitiveDecisionBridgeTest {
                 revoked.turn.hybridShadow.status)
             assertTrue(revoked.turn.trace.contains("Hybrid-Shadow=NO_AUTHORIZED_EVIDENCE"))
             assertFalse(revoked.finalAnswer.contains(fact))
-            assertEquals(2, core.dialogueHistory().size)
+            assertEquals(1, core.dialogueHistory().size)
+            assertTrue(core.dialogueHistory().single().memoryIds.isEmpty())
             assertEquals(modelHash, core.modelHash())
         } finally { dir.deleteRecursively() }
     }

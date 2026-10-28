@@ -1,0 +1,103 @@
+{
+  "base_commit": "a6fe9466c1970755257a62a8f116cae0fdad383a",
+  "production_change_commit": "f86847cff0a8145d5e7f9623fcdbea43d5d692e5",
+  "source_hashes": "tested-source-sha256.json",
+  "initial": {
+    "suites": [
+      {
+        "name": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+        "tests": 9,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "totals": {
+      "tests": 43,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "final": {
+    "suites": [
+      {
+        "name": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "totals": {
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "exit_codes": {
+    "initial_gradle": 1,
+    "final_gradle_junit_lint": 0,
+    "node_contract": 0
+  },
+  "device_execution": "NOT_RUN",
+  "quality_gain": "NOT_PROVEN",
+  "observer_exception_injection": "NOT_RUN"
+}
