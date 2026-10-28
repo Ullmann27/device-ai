@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-28T05:10:08" hostname="b50d54a1ac03" time="0.1">
+  <properties/>
+  <testcase name="easyAndToolTasksMakeNoCalls" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.003"/>
+  <testcase name="adapterFailureAndToolProposalFailClosed" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.017"/>
+  <testcase name="cancelStopsChain" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.002"/>
+  <testcase name="oversizedRecallOrCombinedContextSkipsAdvisoryBeforeAnyModelCall" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.044"/>
+  <testcase name="hostileAdvisoryStaysLabelledContext" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.013"/>
+  <testcase name="hardTaskCallsAreBounded" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.002"/>
+  <testcase name="oversizedAdvisoryIsTruncatedAndPromptStaysWithinCap" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.007"/>
+  <testcase name="timeoutReturnsNullAndCancelsRuntime" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.003"/>
+  <testcase name="sameTurnRecallReachesEveryInternalPassAsDataAlongsideGovernance" classname="at.heinz.deviceai.cognitive.ChatReasoningRouterTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

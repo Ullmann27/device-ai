@@ -1,0 +1,69 @@
+{
+  "verified_source_commit": "46222914dcff3551c1be99c833ca245cf1de1628",
+  "platform": "Linux x86_64",
+  "junit_suites": [
+    {
+      "name": "at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.ChatReasoningRouterTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.CognitiveDecisionBridgeTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.LocalGroundedRecallTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "junit_totals": {
+    "tests": 56,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_codes": {
+    "gradle_junit_lint": 0,
+    "node_tests": 0
+  },
+  "node_tests": 16,
+  "real_model_inference": "NOT_RUN",
+  "device_execution": "NOT_RUN",
+  "quality_gain": "NOT_PROVEN"
+}
