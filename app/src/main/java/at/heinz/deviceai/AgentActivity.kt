@@ -3397,6 +3397,8 @@ class AgentActivity : Activity() {
      * storage is never accessed or claimed to be migrated automatically.
      */
     private fun showOneAppMigrationCenter() {
+        // Only public status counters; no owner memories or model bytes leave filesDir.
+        var copiedStatus: String? = null
         val dialog = AlertDialog.Builder(this)
             .setTitle("EINE HAUPT-APP · CONTINUUM LOKAL")
             .setMessage("Lokaler Lernstand wird geprüft …")
@@ -3427,11 +3429,23 @@ class AgentActivity : Activity() {
                 }
             }) { result ->
                 if (dialog.isShowing && !isFinishing && !isDestroyed) {
+                    copiedStatus = result.getOrNull()
                     dialog.setMessage(result.getOrElse {
                         "Status momentan nicht lesbar. Daten wurden nicht geändert. " +
                             "Die sichere Übernahme erfolgt weiterhin über Dateiauswahl."
                     })
                 }
+            }
+        }
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "STATUS KOPIEREN") { _, _ ->
+            val text = copiedStatus
+            if (text.isNullOrBlank()) {
+                Toast.makeText(this, "Status noch nicht gelesen. Bitte erneut öffnen.", Toast.LENGTH_LONG).show()
+            } else {
+                val clipboard = getSystemService(android.content.ClipboardManager::class.java)
+                clipboard?.setPrimaryClip(android.content.ClipData.newPlainText(
+                    "Continuum Lokal · technischer Lernstatus", text))
+                Toast.makeText(this, "Technischer Lernstatus kopiert – ohne private Inhalte.", Toast.LENGTH_SHORT).show()
             }
         }
         dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "AKTIONEN") { _, _ ->
