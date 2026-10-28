@@ -25,6 +25,13 @@ class ContinuumMobileBuilderRouteTest {
         assertFalse(destination.externalPackage)
     }
 
+    @Test fun localMainAppOpensItsOwnBuilderWithoutContactingLegacyPackage() {
+        val destination = ContinuumMobileBuilderRoute.destination("at.heinz.deviceai.continuumlocal")
+        assertEquals("at.heinz.deviceai.continuumlocal", destination.packageName)
+        assertEquals("at.heinz.deviceai.ContinuumMobileBuilderActivity", destination.className)
+        assertFalse(destination.externalPackage)
+    }
+
     @Test fun similarOrUntrustedApplicationIdsNeverRedirectToOtherPackages() {
         for (untrusted in listOf(
             "at.heinz.deviceai.preview.evil",
