@@ -172,9 +172,9 @@ class ContinuumKnowledgeArchiveTest {
         } finally {old.deleteRecursively();target.deleteRecursively()}
     }
 
-    @Test fun duplicateZipEntryNamesNeverWritePreviouslyValidatedRecords() {
-        val old=Files.createTempDirectory("continuum-duplicate-old").toFile()
-        val target=Files.createTempDirectory("continuum-duplicate-target").toFile()
+    @Test fun unsafeLaterZipNameCannotCommitEarlierValidatedSources() {
+        val old=Files.createTempDirectory("continuum-unsafe-old").toFile()
+        val target=Files.createTempDirectory("continuum-unsafe-target").toFile()
         try {
             val archive=ContinuumKnowledgeArchive(old)
             archive.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
@@ -183,21 +183,22 @@ class ContinuumKnowledgeArchiveTest {
                 "Physik beschäftigt sich mit Materie und Wechselwirkungen in der Natur.")
             val original=java.io.ByteArrayOutputStream()
             archive.exportZip(original)
-            val duplicate=java.io.ByteArrayOutputStream()
+            val combined=java.io.ByteArrayOutputStream()
             java.util.zip.ZipInputStream(java.io.ByteArrayInputStream(original.toByteArray())).use { input ->
                 val item=input.nextEntry!!
                 val bytes=input.readBytes()
-                java.util.zip.ZipOutputStream(duplicate).use { out ->
-                    repeat(2) {
-                        out.putNextEntry(java.util.zip.ZipEntry(item.name))
-                        out.write(bytes)
-                        out.closeEntry()
-                    }
+                java.util.zip.ZipOutputStream(combined).use { out ->
+                    out.putNextEntry(java.util.zip.ZipEntry(item.name))
+                    out.write(bytes)
+                    out.closeEntry()
+                    out.putNextEntry(java.util.zip.ZipEntry("../outside.rec"))
+                    out.write(byteArrayOf(1,2,3))
+                    out.closeEntry()
                 }
             }
             val destination=ContinuumKnowledgeArchive(target)
             org.junit.Assert.assertThrows(IllegalArgumentException::class.java) {
-                destination.importZip(java.io.ByteArrayInputStream(duplicate.toByteArray()))
+                destination.importZip(java.io.ByteArrayInputStream(combined.toByteArray()))
             }
             assertTrue(destination.stats().values.all { it==0 })
         } finally {old.deleteRecursively();target.deleteRecursively()}
