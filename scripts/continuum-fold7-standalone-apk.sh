@@ -4,10 +4,14 @@
 set -Eeuo pipefail
 umask 077
 die() { printf 'CONTINUUM_STANDALONE_BLOCKED: %s\n' "$*" >&2; exit 69; }
-[[ $# -eq 1 && "$1" == "build" ]] || {
-  printf 'Usage: bash scripts/continuum-fold7-standalone-apk.sh build\n' >&2
+[[ $# -ge 1 && $# -le 2 && "$1" == "build" ]] || {
+  printf 'Usage: bash scripts/continuum-fold7-standalone-apk.sh build [versionCode>=26]\n' >&2
   exit 64
 }
+version="${2:-26}"
+[[ "$version" =~ ^(2[6-9]|[3-9][0-9]|[1-9][0-9]{2,3})$ ]] &&
+  (( version <= 9999 )) || die 'Version code must be 26..9999'
+version_name="0.3.$((version - 1))"
 root="$(cd -- "$(dirname -- "$0")/.." && pwd -P)"
 cd "$root"
 [[ -f app/build.gradle.kts && -f app/src/main/AndroidManifest.xml ]] ||
@@ -54,6 +58,12 @@ if [[ -e "$keyfile" ]]; then
 else
   [[ ! -e "$fingerprint" ]] ||
     die 'Signer fingerprint exists but original local P12 is missing; restore backup, do not rotate'
+  if command -v cmd >/dev/null 2>&1; then
+    if cmd package path at.heinz.deviceai.continuumlocal 2>/dev/null |
+         grep -q '^package:'; then
+      die 'Local Continuum is installed but its signing P12 is missing; restore P12 backup'
+    fi
+  fi
   printf 'Erster lokaler Continuum-Build: eine dauerhafte P12 erzeugen.\n'
   IFS= read -r -s -p 'Neues Signierpasswort (mindestens 12 Zeichen): ' pass
   printf '\n'
@@ -98,7 +108,6 @@ else
 fi
 
 # Full existing Android app sources, native Android production release.
-version=26
 flags=(--offline --no-daemon --console=plain --max-workers=2
   -Dorg.gradle.jvmargs='-Xmx1600m -XX:MaxMetaspaceSize=512m'
   -Pkotlin.compiler.execution.strategy=in-process
@@ -129,14 +138,14 @@ grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' \
   "$state/SIGNATURE-$sha.txt" || die 'Android v2 signature verification missing'
 "$aapt2" dump badging "$apk" > "$state/PACKAGE-$sha.txt" ||
   die 'APK identity cannot be inspected'
-grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='26' versionName='0.3.25'" \
+grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='$version' versionName='$version_name'" \
   "$state/PACKAGE-$sha.txt" || die 'App package/version does not match local main-app release'
 hash="$(sha256sum "$apk" | cut -d ' ' -f1)"
 [[ "$hash" =~ ^[a-f0-9]{64}$ ]] || die 'Invalid APK checksum'
 output="$HOME/storage/downloads/Continuum_back_up"
 [[ -d "$HOME/storage/downloads" ]] || die 'Termux storage unavailable; original owner files untouched'
 mkdir -p "$output"
-name="Continuum-Lokal-v0.3.25-$hash.apk"
+name="Continuum-Lokal-v$version_name-$hash.apk"
 dest="$output/$name"
 if [[ -e "$dest" ]]; then
   [[ -f "$dest" && ! -L "$dest" &&
@@ -147,8 +156,8 @@ else
 fi
 [[ "$(sha256sum "$dest" | cut -d ' ' -f1)" == "$hash" ]] ||
   die 'Downloaded APK verification failed'
-printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=26\nversion_name=0.3.25\nsigner_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=LOCAL_RELEASE_SIGNED_NOT_DEVICE_INSTALLED\n' \
-  "$sha" "$actual_fp" "$hash" "$dest" > "$state/BUILD-INFO-$sha.txt"
+printf 'source_sha=%s\npackage=at.heinz.deviceai.continuumlocal\nversion_code=%s\nversion_name=%s\nsigner_sha256=%s\napk_sha256=%s\nartifact=%s\nstatus=LOCAL_RELEASE_SIGNED_NOT_DEVICE_INSTALLED\n' \
+  "$sha" "$version" "$version_name" "$actual_fp" "$hash" "$dest" > "$state/BUILD-INFO-$sha-$version.txt"
 printf 'CONTINUUM_LOCAL_APK_READY=%s\nCONTINUUM_LOCAL_SIGNER=%s\n' "$dest" "$actual_fp"
 printf 'WICHTIG: Die P12 unter ~/.local/share/device-ai-continuum/signing/ sicher OFFLINE auf zweitem Medium sichern.\n'
 printf 'ALTE CONTINUUM-V25-APP NICHT DEINSTALLIEREN. Kein Import ungepruefter Besitzer-Daten.\n'
