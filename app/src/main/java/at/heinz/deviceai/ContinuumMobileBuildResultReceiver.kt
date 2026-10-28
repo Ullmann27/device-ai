@@ -59,7 +59,8 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
 
         val codingOrder = operationName == "CODE_TEST"
         val typed = ContinuumTypedCodingBridge.Operation.ofCallback(operationName)
-        val operation = if (codingOrder || ccc1 != null || typed != null) null else try {
+        val microAgentAudit = operationName == ContinuumMicroAgentBridge.CALLBACK
+        val operation = if (codingOrder || ccc1 != null || typed != null || microAgentAudit) null else try {
             ContinuumMobileBuildPlan.Operation.valueOf(operationName)
         } catch (_: IllegalArgumentException) {
             return
@@ -112,6 +113,18 @@ class ContinuumMobileBuildResultReceiver : BroadcastReceiver() {
                 ) editor.remove(CCC1_TASK)
             }
             editor.commit()
+            return
+        }
+
+        if (microAgentAudit) {
+            val report = ContinuumMicroAgentBridge.evaluate(
+                exitCode, errorCode, if (truncated) null else stdout
+            )
+            prefs.edit()
+                .remove(JOB_ID).remove(JOB_OPERATION).remove(JOB_PROJECT)
+                .remove(JOB_START).remove(LAST_SHA)
+                .putString(LAST_MESSAGE, report.summary)
+                .commit()
             return
         }
 
