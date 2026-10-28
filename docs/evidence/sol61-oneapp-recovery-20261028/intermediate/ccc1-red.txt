@@ -1,0 +1,51 @@
+✔ accepted synthetic preview is review only; never grants CCC1 authority (1.866582ms)
+✔ unknown report schema fails (1.339453ms)
+✔ real checkout cannot be reported as synthetic (0.19671ms)
+✔ reported checkout access fails (0.106381ms)
+✔ reported patch application fails (0.166986ms)
+✔ claimed owner approval is explicitly refused (0.139701ms)
+✔ unknown remote transport fails (0.106024ms)
+✔ unsuffixed Fable and Astra cloud IDs fail (0.114524ms)
+✔ valid free cloud ID still cannot grant repository rights (0.243712ms)
+✔ local model must have local identity (0.374565ms)
+✔ valid local advertisement still requires independent model evidence (0.353416ms)
+✔ missing tool proof fails (0.119163ms)
+✔ missing read path fails (0.117189ms)
+✔ spurious path cannot replace one of two permitted reads (0.118843ms)
+✔ baseline falsely all green fails (0.069462ms)
+✔ candidate not all green fails (0.198469ms)
+✔ plain-text proposal fails (0.111036ms)
+✔ file traversal proposal fails (0.132907ms)
+✔ arbitrary code cannot be promoted through a JSON patch (0.09718ms)
+✔ extra proposal fields fail (0.095388ms)
+✔ missing proposal is refused (0.079751ms)
+✖ missing or mistyped owner-review requirement fails closed (0.836322ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 21
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.227522
+
+✖ failing tests:
+
+test at scripts/continuum-ccc1-review-gate.test.mjs:48:1
+✖ missing or mistyped owner-review requirement fails closed (0.836322ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at fails (file:///workspace/device-ai-sol-max/scripts/continuum-ccc1-review-gate.test.mjs:11:28)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-ccc1-review-gate.test.mjs:49:50)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /UNAUTHORIZED_WRITE_REPORTED/,
+    operator: 'throws',
+    diff: 'simple'
+  }

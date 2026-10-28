@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:28" hostname="b50d54a1ac03" time="0.101">
+  <properties/>
+  <testcase name="theFastWeightUpdateIsTheExactGradientStep" classname="at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest" time="0.021"/>
+  <testcase name="theThreeMemoriesBehaveAsSpecified" classname="at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest" time="0.016"/>
+  <testcase name="normBoundFiniteInputsAndResetOfTheRealCore" classname="at.heinz.deviceai.intelligence.maxultra.Ttt1WorkingMemoryTest" time="0.064"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

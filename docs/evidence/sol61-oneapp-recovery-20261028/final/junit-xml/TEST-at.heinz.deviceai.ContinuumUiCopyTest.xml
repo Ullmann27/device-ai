@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumUiCopyTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.002">
+  <properties/>
+  <testcase name="corruptDecoderIsNotMisdiagnosedAsMissingOrSentToTraining" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.001"/>
+  <testcase name="sourceErrorsStayUnderstandableAndUnverified" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.0"/>
+  <testcase name="commonModelErrorsArePlainGermanAndSuggestNextAction" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.0"/>
+  <testcase name="showsReadinessWithoutClaimingAutomaticExecution" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.0"/>
+  <testcase name="showsPlainLanguageMissingPrerequisites" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.0"/>
+  <testcase name="interruptionsAndPermissionsExplainNextAction" classname="at.heinz.deviceai.ContinuumUiCopyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

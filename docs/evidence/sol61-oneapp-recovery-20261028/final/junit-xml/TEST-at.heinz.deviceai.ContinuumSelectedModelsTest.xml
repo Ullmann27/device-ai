@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumSelectedModelsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.003">
+  <properties/>
+  <testcase name="modelChoiceDoesNotClaimModelIsInstalledOrServing" classname="at.heinz.deviceai.ContinuumSelectedModelsTest" time="0.002"/>
+  <testcase name="originalModelIdentityAndHashArePresent" classname="at.heinz.deviceai.ContinuumSelectedModelsTest" time="0.0"/>
+  <testcase name="importedAndLoadedStatusAreDifferent" classname="at.heinz.deviceai.ContinuumSelectedModelsTest" time="0.0"/>
+  <testcase name="aDifferentLoadedVersionDoesNotTurnVerifiedImportIntoLoadedOriginal" classname="at.heinz.deviceai.ContinuumSelectedModelsTest" time="0.0"/>
+  <testcase name="catalogNameAloneCannotImpersonateSelectedGemmaBytes" classname="at.heinz.deviceai.ContinuumSelectedModelsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

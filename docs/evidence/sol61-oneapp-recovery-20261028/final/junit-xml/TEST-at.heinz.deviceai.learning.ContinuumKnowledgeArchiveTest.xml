@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:36" hostname="b50d54a1ac03" time="0.092">
+  <properties/>
+  <testcase name="uncommittedStagingIsDiscardedWithoutPublishingOrRemovingExistingSources" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.006"/>
+  <testcase name="interruptedCommitResumesOnReopenAndRetryDoesNotDuplicateOrOverwriteOldSource" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.052"/>
+  <testcase name="unsafeZipNamesAreRejectedWithoutWritingAnyRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="legalArchiveIsNotMisreportedAsLegalValidity" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="unsafeLaterZipNameCannotCommitEarlierValidatedSources" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="directArchiveQuestionNeedsAnExplicitSourceTitleTopic" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="indexedOfflineArchiveStoresCitationsAndRevisions" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.004"/>
+  <testcase name="existingDamagedCollisionBlocksImportWithoutAddingEarlierRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="invalidDomainsAndUnsafeReferencesAreRejected" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="zipRoundTripPersistsAndVerifiesOriginalCitationRecords" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="genericWikipediaTitleWordCannotHijackMarsFollowUp" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.002"/>
+  <testcase name="corruptedLaterZipRecordCannotPartiallyMigrateAnEarlierValidSource" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.003"/>
+  <testcase name="unknownPendingFilesFailClosedAndAreNeverAutomaticallyDeleted" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.001"/>
+  <testcase name="pendingRecoveryValidatesAllRemainingRecordsBeforePublishingAnyMore" classname="at.heinz.deviceai.learning.ContinuumKnowledgeArchiveTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

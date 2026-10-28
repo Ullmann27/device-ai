@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Full Continuum Android main app, independently signed and built locally.
 # Does not install, remove, downgrade or overwrite the historic Mentor Pair owner app.
+set +x
 set -Eeuo pipefail
 umask 077
 die() { printf 'CONTINUUM_STANDALONE_BLOCKED: %s\n' "$*" >&2; exit 69; }
@@ -23,7 +24,7 @@ sha="$(git rev-parse --verify HEAD)" || die 'Git source identity unavailable'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] ||
   die 'Do not load historic owner-signing credentials into the standalone build'
 
-[[ "$PREFIX" == /data/data/com.termux/files/usr* ]] ||
+[[ "${PREFIX:-}" == /data/data/com.termux/files/usr* ]] ||
   die 'This signing/build entry point is for the local Fold7 Termux toolchain'
 export JAVA_HOME="$PREFIX/lib/jvm/java-17-openjdk"
 export PATH="$JAVA_HOME/bin:$PATH"
@@ -41,54 +42,30 @@ for cmd in git keytool sha256sum node; do command -v "$cmd" >/dev/null || die "M
   die 'Gradle 8.11.1 required'
 
 keydir="$HOME/.local/share/device-ai-continuum/signing"
-mkdir -p -- "$keydir"
-chmod 700 "$keydir"
-[[ ! -L "$keydir" ]] || die 'Signing directory cannot be a symlink'
+[[ -d "$keydir" && ! -L "$keydir" ]] || die 'Original signing directory missing or unsafe; restore backup'
 keyfile="$keydir/continuum-local.p12"
 fingerprint="$keydir/continuum-local-cert-sha256.txt"
-[[ ! -L "$keyfile" && ! -L "$fingerprint" ]] ||
-  die 'Signing key or fingerprint cannot be a symlink'
+expected_fp='6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23'
+[[ -s "$keyfile" && -s "$fingerprint" && ! -L "$keyfile" && ! -L "$fingerprint" ]] ||
+  die 'Original local P12 and fingerprint required; restore backup, never create a replacement'
+trusted_fp="$(cat "$fingerprint")"
+[[ "$trusted_fp" == "$expected_fp" ]] || die 'Trusted signer differs from original Continuum Lokal certificate'
+chmod 700 "$keydir"
+chmod 600 "$keyfile"
+qa_base="$HOME/.local/state/device-ai-continuum/standalone-qa"
+mkdir -p -- "$qa_base"
+qa_evidence="$(mktemp -d "$qa_base/pre-sign-$version-XXXXXX")"
+env -u CONTINUUM_LOCAL_SIGNING_FILE -u CONTINUUM_LOCAL_SIGNING_PASSWORD \
+  CONTINUUM_FUSION_REGRESSION_OUTPUT="$qa_evidence" \
+  bash scripts/continuum-fusion-full-regression.sh "$sha" || die 'Full unsigned standalone regression failed; signing not started'
 [[ -t 0 ]] || die 'Interactive password input required; never enter secrets in chat'
-if [[ -e "$keyfile" ]]; then
-  [[ -s "$keyfile" && -s "$fingerprint" ]] ||
-    die 'Signing key exists but trusted fingerprint is absent; never replace it'
-  printf 'Vorhandenen lokalen Signierschluessel verwenden.\n'
-  IFS= read -r -s -p 'Lokales Signierpasswort: ' pass
-  printf '\n'
-else
-  [[ ! -e "$fingerprint" ]] ||
-    die 'Signer fingerprint exists but original local P12 is missing; restore backup, do not rotate'
-  if command -v cmd >/dev/null 2>&1; then
-    if cmd package path at.heinz.deviceai.continuumlocal 2>/dev/null |
-         grep -q '^package:'; then
-      die 'Local Continuum is installed but its signing P12 is missing; restore P12 backup'
-    fi
-  fi
-  printf 'Erster lokaler Continuum-Build: eine dauerhafte P12 erzeugen.\n'
-  IFS= read -r -s -p 'Neues Signierpasswort (mindestens 12 Zeichen): ' pass
-  printf '\n'
-  [[ "$pass" != *$'\n'* && "${#pass}" -ge 12 ]] ||
-    die 'Signing password too short or invalid'
-  IFS= read -r -s -p 'Passwort nochmals eingeben: ' confirmation
-  printf '\n'
-  [[ "$pass" == "$confirmation" ]] || die 'Password confirmation differs'
-  unset confirmation
-fi
+IFS= read -r -s -p 'Lokales Signierpasswort: ' pass
+printf '\n'
 [[ -n "$pass" ]] || die 'Signing password empty'
 export CONTINUUM_LOCAL_SIGNING_PASSWORD="$pass"
 unset pass
 trap 'unset CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE' EXIT
 export CONTINUUM_LOCAL_SIGNING_FILE="$keyfile"
-if [[ ! -e "$keyfile" ]]; then
-  keytool -genkeypair -noprompt \
-    -alias continuum-local -keyalg RSA -keysize 3072 -validity 10000 \
-    -dname 'CN=Continuum Local Owner, O=Device AI, C=AT' \
-    -storetype PKCS12 -keystore "$keyfile" \
-    -storepass:env CONTINUUM_LOCAL_SIGNING_PASSWORD \
-    -keypass:env CONTINUUM_LOCAL_SIGNING_PASSWORD ||
-    die 'Cannot create persistent original local key'
-  chmod 600 "$keyfile"
-fi
 keyinfo="$(keytool -list -v -storetype PKCS12 \
   -J-Duser.language=en -J-Duser.country=US \
   -alias continuum-local -keystore "$keyfile" \
@@ -98,14 +75,8 @@ actual_fp="$(printf '%s\n' "$keyinfo" | sed -n 's/^[[:space:]]*SHA256: //p' |
   head -n 1 | tr -d ':' | tr '[:upper:]' '[:lower:]')"
 unset keyinfo
 [[ "$actual_fp" =~ ^[a-f0-9]{64}$ ]] || die 'Cannot read key certificate SHA256'
-if [[ ! -e "$fingerprint" ]]; then
-  printf '%s\n' "$actual_fp" > "$fingerprint"
-  chmod 600 "$fingerprint"
-else
-  trusted_fp="$(cat "$fingerprint")"
-  [[ "$trusted_fp" == "$actual_fp" ]] ||
-    die 'Local signing certificate changed; restore the original P12'
-fi
+[[ "$actual_fp" == "$expected_fp" && "$trusted_fp" == "$actual_fp" ]] ||
+  die 'Local signing certificate changed; restore the original P12'
 
 # Full existing Android app sources, native Android production release.
 flags=(--offline --no-daemon --console=plain --max-workers=2
@@ -117,9 +88,7 @@ flags=(--offline --no-daemon --console=plain --max-workers=2
   -PdeviceAiMobileAidlFallback=true
   "-Pandroid.aapt2FromMavenOverride=$aapt2")
 printf 'CONTINUUM_LOCAL_RELEASE_START source=%s versionCode=%s\n' "$sha" "$version"
-"$gradle" "${flags[@]}" :app:testDebugUnitTest \
-  --tests at.heinz.deviceai.ContinuumMobileBuilderRouteTest \
-  :app:lintRelease :app:assembleRelease ||
+"$gradle" "${flags[@]}" :app:lintRelease :app:assembleRelease ||
   die 'Local main-app Android test/lint/release assembly failed'
 [[ "$sha" == "$(git rev-parse HEAD)" &&
    -z "$(git status --porcelain --untracked-files=normal)" ]] ||

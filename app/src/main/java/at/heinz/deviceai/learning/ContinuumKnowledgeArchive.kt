@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.zip.ZipEntry
@@ -12,6 +13,9 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
+import java.nio.file.LinkOption
+import java.nio.channels.FileChannel
 import java.security.MessageDigest
 import java.text.Normalizer
 import java.util.Locale
@@ -23,12 +27,17 @@ import java.util.Locale
  */
 class ContinuumKnowledgeArchive(rootDirectory:File) {
     private val root=File(rootDirectory,"continuum-knowledge-v1")
-    private val gate=Any()
+    private val gate=ARCHIVE_MONITOR
+    private val pendingImport=File(root,".import-pending-v1")
+
+    /** Fault boundary for JVM filesystem regression tests, never an external callback. */
+    internal var beforeImportPublish:((Int)->Unit)?=null
 
     init {
         require(!root.isSymbolicLink()) { "Knowledge archive must not be a symlink" }
-        if(!root.exists())check(root.mkdirs()) { "Cannot create knowledge archive" }
+        if(!root.exists())check(root.mkdirs() || root.isDirectory) { "Cannot create knowledge archive" }
         require(root.isDirectory && !root.isSymbolicLink())
+        transaction { Unit } // Complete a previously validated import after process death.
     }
 
     enum class Kind { WIKIPEDIA_EXCERPT, RIS_LEGISLATION, RIS_CASE_LAW }
@@ -50,7 +59,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
     /** Caller must confirm the licence/usage policy before import. */
     fun save(kind:Kind,title:String,url:String,attribution:String,
              text:String,collectedAt:Long=System.currentTimeMillis(),
-             sourceDate:String?=null):SourceRecord = synchronized(gate) {
+             sourceDate:String?=null):SourceRecord = transaction {
         require(title.length in 3..160 && title.none { it.isISOControl() })
         require(attribution.length in 3..160 && attribution.none { it.isISOControl() })
         require(text.length in 20..6_000 && text.none { it=='\u0000' })
@@ -75,45 +84,43 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         if(target.exists()) {
             val old=readFile(target)
             require(old.id==id && old.sha256==contentHash) { "Existing revision mismatch" }
-            return@synchronized old
+            return@transaction old
         }
         require(root.usableSpace>=MIN_FREE_BYTES) {
             "Not enough free storage to archive more public sources"
         }
         val files=files()
         require(files.size<MAX_RECORDS) { "Archive capacity reached; do not erase older citations" }
-        val out=ByteArrayOutputStream()
-        DataOutputStream(out).use { dest ->
-            dest.writeInt(MAGIC)
-            dest.writeInt(1)
-            dest.writeUTF(id)
-            dest.writeUTF(kind.name)
-            dest.writeUTF(title)
-            dest.writeUTF(url)
-            dest.writeUTF(attribution)
-            dest.writeLong(collectedAt)
-            dest.writeBoolean(sourceDate!=null)
-            if(sourceDate!=null)dest.writeUTF(sourceDate)
-            dest.writeUTF(contentHash)
-            dest.writeUTF(clean)
-        }
-        val payload=out.toByteArray()
-        require(payload.size<=MAX_RECORD_BYTES)
+        val payload=encodePayload(record)
         val temp=File.createTempFile("knowledge-",".tmp",root)
         try {
-            temp.writeBytes(payload)
-            try {
-                Files.move(temp.toPath(),target.toPath(),
-                    StandardCopyOption.ATOMIC_MOVE)
-            } catch (_:java.nio.file.AtomicMoveNotSupportedException) {
-                Files.move(temp.toPath(),target.toPath())
-            }
+            writeDurably(temp,payload)
+            moveNew(temp,target)
         } finally { temp.delete() }
         record
     }
 
+    private fun encodePayload(record:SourceRecord):ByteArray {
+        val out=ByteArrayOutputStream()
+        DataOutputStream(out).use { dest ->
+            dest.writeInt(MAGIC)
+            dest.writeInt(1)
+            dest.writeUTF(record.id)
+            dest.writeUTF(record.kind.name)
+            dest.writeUTF(record.title)
+            dest.writeUTF(record.url)
+            dest.writeUTF(record.attribution)
+            dest.writeLong(record.collectedAt)
+            dest.writeBoolean(record.sourceDate!=null)
+            if(record.sourceDate!=null)dest.writeUTF(record.sourceDate)
+            dest.writeUTF(record.sha256)
+            dest.writeUTF(record.text)
+        }
+        return out.toByteArray().also { require(it.size<=MAX_RECORD_BYTES) }
+    }
+
     /** Local lexical retrieval with exact source and date metadata; no text generation. */
-    fun search(query:String,kind:Kind?=null,limit:Int=8):List<Hit> = synchronized(gate) {
+    fun search(query:String,kind:Kind?=null,limit:Int=8):List<Hit> = transaction {
         require(query.length in 2..240 && limit in 1..20)
         val terms=tokens(query).distinct().take(16)
         require(terms.isNotEmpty())
@@ -133,12 +140,12 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             .take(limit).toList()
     }
 
-    fun stats():Map<Kind,Int> = synchronized(gate) {
+    fun stats():Map<Kind,Int> = transaction {
         val records=files().mapNotNull { runCatching { readFile(it) }.getOrNull() }
         Kind.entries.associateWith { k -> records.count { it.kind==k } }
     }
 
-    fun latest(kind:Kind,limit:Int=8):List<SourceRecord> = synchronized(gate) {
+    fun latest(kind:Kind,limit:Int=8):List<SourceRecord> = transaction {
         require(limit in 1..20)
         files().mapNotNull { runCatching { readFile(it) }.getOrNull() }
             .filter { it.kind==kind }.sortedByDescending {it.collectedAt}.take(limit)
@@ -149,7 +156,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
      * Cloud export requires the user to explicitly select a cloud-backed
      * Android DocumentsProvider in the system picker.
      */
-    fun exportZip(destination:OutputStream):Int = synchronized(gate) {
+    fun exportZip(destination:OutputStream):Int = transaction {
         val existing=files()
         ZipOutputStream(destination).use { zip ->
             for(file in existing) {
@@ -166,10 +173,11 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
     /**
      * One-app migration gate: parse and validate ALL ZIP entries before the
      * first permanent archive write. Corrupt later entries must not produce
-     * an earlier partial import. Storage errors during the later commit may
-     * still leave validated records present, never delete existing records.
+     * an earlier partial import. New records are durably staged before a
+     * commit manifest is published. A failed/interrupted commit is resumed by
+     * the next archive operation, never overwriting or deleting older records.
      */
-    fun importZip(input:InputStream):Int = synchronized(gate) {
+    fun importZip(input:InputStream):Int = transaction {
         val names=mutableSetOf<String>()
         val staged=ArrayList<SourceRecord>()
         var uncompressed=0L
@@ -224,11 +232,116 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
                 }
             }
         }
-        staged.forEach { record ->
-            save(record.kind,record.title,record.url,record.attribution,
-                record.text,record.collectedAt,record.sourceDate)
+        val additions=staged.filter { !File(root,"${it.id}.rec").exists() }
+        if(additions.isNotEmpty()) {
+            check(pendingImport.mkdir()) { "Cannot stage verified archive import" }
+            additions.forEach { record ->
+                writeDurably(File(pendingImport,"${record.id}.rec"),encodePayload(record))
+            }
+            val manifest=buildString {
+                append("1\n")
+                additions.forEach { append(it.id).append(".rec\n") }
+            }.toByteArray(Charsets.US_ASCII)
+            val temporary=File(pendingImport,"manifest.tmp")
+            writeDurably(temporary,manifest)
+            moveNew(temporary,File(pendingImport,"manifest.v1"))
+            recoverPendingImport()
         }
         staged.size
+    }
+
+    /** Shared monitor plus OS lock prevent two archive instances/processes from
+     * racing a save or recovering the same import. Reads cannot expose a partial
+     * committed migration: recovery either finishes first or fails visibly.
+     */
+    private fun <T> transaction(action:()->T):T=synchronized(gate) {
+        require(root.isDirectory && !root.isSymbolicLink())
+        val lock=File(root,".archive.lock")
+        FileChannel.open(lock.toPath(),StandardOpenOption.CREATE,StandardOpenOption.WRITE,
+            LinkOption.NOFOLLOW_LINKS).use { channel ->
+            channel.lock().use {
+                recoverPendingImport()
+                action()
+            }
+        }
+    }
+
+    private fun recoverPendingImport() {
+        require(!pendingImport.isSymbolicLink()) { "Unsafe pending archive import" }
+        if(!pendingImport.exists())return
+        require(pendingImport.isDirectory)
+        val children=pendingImport.listFiles() ?: error("Pending import is not readable")
+        require(children.all { !it.isSymbolicLink() && it.isFile &&
+            (it.name.matches(RECORD_NAME) || it.name in setOf("manifest.tmp","manifest.v1")) }) {
+            "Unrecognized pending archive import data"
+        }
+        val manifest=File(pendingImport,"manifest.v1")
+        if(!manifest.exists()) {
+            // No commit intent: every staged file is private and was never published.
+            discardPendingImport(children)
+            return
+        }
+        require(manifest.length() in 3L..(MAX_RECORDS*69L+2L))
+        val lines=manifest.readText(Charsets.US_ASCII).split('\n')
+        require(lines.first()=="1" && lines.last().isEmpty())
+        val names=lines.drop(1).dropLast(1)
+        require(names.size in 1..MAX_RECORDS && names.distinct().size==names.size &&
+            names.all { it.matches(RECORD_NAME) }) { "Invalid archive import manifest" }
+        require(children.filter { it.name.matches(RECORD_NAME) }.all { it.name in names })
+        // Validate the complete recovery set before the first further write.
+        names.forEach { name ->
+            val target=File(root,name)
+            val staged=File(pendingImport,name)
+            val record=if(target.exists()) readFile(target) else {
+                readPendingRecord(staged,name)
+            }
+            validateImportedRecord(record)
+            if(staged.exists()) {
+                val pending=readPendingRecord(staged,name)
+                validateImportedRecord(pending)
+                require(pending.id==record.id && pending.sha256==record.sha256)
+            }
+        }
+        val absent=names.count { !File(root,it).exists() }
+        require(files().size<=MAX_RECORDS-absent) { "Archive capacity reached during recovery" }
+        names.forEachIndexed { index,name ->
+            val target=File(root,name)
+            if(!target.exists()) {
+                beforeImportPublish?.invoke(index)
+                moveNew(File(pendingImport,name),target)
+            }
+        }
+        discardPendingImport(pendingImport.listFiles() ?: error("Pending import is not readable"))
+    }
+
+    private fun readPendingRecord(file:File,name:String):SourceRecord {
+        require(file.parentFile?.canonicalPath==pendingImport.canonicalPath &&
+            !file.isSymbolicLink() && file.isFile &&
+            file.length() in 50L..MAX_RECORD_BYTES.toLong())
+        return decodePayload(file.readBytes(),name)
+    }
+
+    private fun discardPendingImport(children:Array<File>) {
+        // Delete only this transaction's staged files; never an existing source.
+        children.filter { it.name!="manifest.v1" }.forEach {
+            check(it.delete()) { "Cannot remove completed archive staging file" }
+        }
+        val manifest=File(pendingImport,"manifest.v1")
+        if(manifest.exists())check(manifest.delete()) { "Cannot clear archive import manifest" }
+        check(pendingImport.delete()) { "Cannot clear archive staging directory" }
+    }
+
+    private fun writeDurably(file:File,bytes:ByteArray) {
+        FileOutputStream(file).use { output -> output.write(bytes);output.fd.sync() }
+    }
+
+    private fun moveNew(source:File,target:File) {
+        require(!target.exists() && !target.isSymbolicLink()) { "Archive target already exists" }
+        try {
+            Files.move(source.toPath(),target.toPath(),StandardCopyOption.ATOMIC_MOVE)
+        } catch (_:java.nio.file.AtomicMoveNotSupportedException) {
+            Files.move(source.toPath(),target.toPath())
+        }
     }
 
     private fun validateImportedRecord(record:SourceRecord) {
@@ -303,5 +416,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         const val MAX_RECORD_BYTES=40_000
         private const val MAX_IMPORT_UNCOMPRESSED_BYTES=64L * 1024L * 1024L
         private const val MAGIC=0x434B4131
+        private val ARCHIVE_MONITOR=Any()
+        private val RECORD_NAME=Regex("[0-9a-f]{64}\\.rec")
     }
 }

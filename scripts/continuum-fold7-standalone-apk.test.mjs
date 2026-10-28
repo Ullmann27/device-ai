@@ -27,7 +27,7 @@ test('reject any unsupported command or versionCode before using private signing
 });
 
 test('new app ID is distinct from original and is stable across debug and release', () => {
-  assert.match(gradle, /applicationId = if \(continuumLocalStandalone\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"/);
+  assert.match(gradle, /applicationId = if \(continuumLocalStandalone \|\| continuumLocalStandaloneQa\) "at\.heinz\.deviceai\.continuumlocal" else "at\.heinz\.deviceai"/);
   assert.match(gradle, /signingConfig = signingConfigs\.getByName\("continuumLocal"\)/);
   assert.match(gradle, /buildTypes\.getByName\("release"\)/);
   assert.equal(/applicationIdSuffix = "\.continuumlocal"/.test(gradle), false);
@@ -40,7 +40,7 @@ test('standalone build cannot reuse old owner credentials', () => {
   assert.match(gradle, /keyAlias = "continuum-local"/);
   assert.match(shell, /Do not load historic owner-signing credentials/);
   assert.match(shell, /-storepass:env CONTINUUM_LOCAL_SIGNING_PASSWORD/);
-  assert.match(shell, /-keypass:env CONTINUUM_LOCAL_SIGNING_PASSWORD/);
+  assert.doesNotMatch(shell, /-genkeypair/);
 });
 
 test('new private signer stays outside repository and release uses it persistently', () => {
@@ -54,7 +54,8 @@ test('new private signer stays outside repository and release uses it persistent
 
 test('release is compiled for real complete app not QA/demo or unsigned APK', () => {
   assert.match(shell, /:app:lintRelease :app:assembleRelease/);
-  assert.match(shell, /:app:testDebugUnitTest/);
+  assert.match(shell, /continuum-fusion-full-regression\.sh "\$sha"/);
+  assert.doesNotMatch(shell, /--tests /);
   assert.match(shell, /app\/build\/outputs\/apk\/release\/app-release\.apk/);
   assert.match(shell, /verify --verbose --print-certs/);
   assert.match(shell, /apk_fp.*actual_fp/);
@@ -75,4 +76,12 @@ test('complete app exposes local builder and separated data store', () => {
   assert.match(gradle, /mobileBuilderEnabled/);
   assert.match(gradle, /continuumLocalStandalone -> "Continuum Lokal"/);
   assert.match(route, /currentApplicationId == LOCAL_MAINAPP_PACKAGE/);
+});
+
+test('established Continuum Lokal certificate cannot be replaced by a local fingerprint file', () => {
+  assert.match(shell, /expected_fp='6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23'/);
+  assert.match(shell, /actual_fp.*expected_fp/);
+  assert.doesNotMatch(shell, /-genkeypair|Neues Signierpasswort/);
+  assert.ok(shell.indexOf('continuum-fusion-full-regression.sh') < shell.indexOf('Lokales Signierpasswort:'));
+  assert.match(shell, /env -u CONTINUUM_LOCAL_SIGNING_FILE -u CONTINUUM_LOCAL_SIGNING_PASSWORD/);
 });

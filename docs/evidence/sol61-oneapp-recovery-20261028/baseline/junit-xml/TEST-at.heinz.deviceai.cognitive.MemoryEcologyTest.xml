@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.MemoryEcologyTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:21" hostname="b50d54a1ac03" time="0.15">
+  <properties/>
+  <testcase name="sourceTrustIsGradualAndDomainAware" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.006"/>
+  <testcase name="adaptersAreDeterministicAndProviderNeutral" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.001"/>
+  <testcase name="writePolicyAvoidsEphemeralMemoryAndPreservesPrivateClasses" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.0"/>
+  <testcase name="modelReputationUpdatesGraduallyOnlyAfterEvaluation" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.0"/>
+  <testcase name="contentHashIsNotAnIdentitySignature" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.083"/>
+  <testcase name="provenanceAndValidationStateArePreserved" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.0"/>
+  <testcase name="experienceStoreRetrievesSimilarTasks" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.004"/>
+  <testcase name="routerExplainsChoiceAndSelfModelInfluencesStrategy" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.012"/>
+  <testcase name="memoryValidationStoreRetrievalAndGraphAreDeterministic" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.042"/>
+  <testcase name="claimsKeepEvidenceAndRelationsExplicit" classname="at.heinz.deviceai.cognitive.MemoryEcologyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

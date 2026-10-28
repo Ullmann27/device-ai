@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ShellExecutionTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:21" hostname="b50d54a1ac03" time="0.428">
+  <properties/>
+  <testcase name="silentAndOpenPipeCommandsRespectTheWholeDeadline" classname="at.heinz.deviceai.ShellExecutionTest" time="0.202"/>
+  <testcase name="outputFloodIsBoundedAndNeverCountedAsSuccessfulCompletion" classname="at.heinz.deviceai.ShellExecutionTest" time="0.02"/>
+  <testcase name="actualExitStatusCannotBeForgedByPrintedSuccessText" classname="at.heinz.deviceai.ShellExecutionTest" time="0.017"/>
+  <testcase name="oversizedGateOutputIsNotCertifiedAsComplete" classname="at.heinz.deviceai.ShellExecutionTest" time="0.053"/>
+  <testcase name="versionedRequestIsANoopWhenAnOldServiceTreatsItAsShellText" classname="at.heinz.deviceai.ShellExecutionTest" time="0.009"/>
+  <testcase name="backendTimeoutReachesGateAndCannotBeMisclassifiedAsGreen" classname="at.heinz.deviceai.ShellExecutionTest" time="0.009"/>
+  <testcase name="malformedLegacyAndOversizedResponsesFailClosedWithoutRetry" classname="at.heinz.deviceai.ShellExecutionTest" time="0.004"/>
+  <testcase name="directoryListingCannotHideFailureBehindASuccessfulHeadPipeline" classname="at.heinz.deviceai.ShellExecutionTest" time="0.088"/>
+  <testcase name="invalidUtf8AndEmptyRepliesRetainExplicitStatus" classname="at.heinz.deviceai.ShellExecutionTest" time="0.005"/>
+  <testcase name="stdinIsClosedAndInterruptedProcessDoesNotReportSuccess" classname="at.heinz.deviceai.ShellExecutionTest" time="0.015"/>
+  <testcase name="successfulGermanOutputRoundTripsThroughStrictVersionedWire" classname="at.heinz.deviceai.ShellExecutionTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

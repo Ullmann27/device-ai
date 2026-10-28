@@ -1,0 +1,23 @@
+{
+  "app/src/main/java/at/heinz/deviceai/AgentActivity.kt": "913a07d164afaf474e4135989e8fd126379c814bba7505946dbf3d0e9ffdd6cb",
+  "app/src/main/java/at/heinz/deviceai/cognitive/Research.kt": "f7325bdee6df0e530479ffa5b8c9ca59a0dc52d004f93d1d7fce62ad4525d045",
+  "app/src/main/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchive.kt": "ac9a6be5cd90eceb406f859fac4b64bd319117247c92ee2bebc81387610cb74c",
+  "app/src/main/java/at/heinz/deviceai/learning/PersonalLearningTransfer.kt": "a84d6f799afb8d8007fa2947b3fda2b67e8d7bbd15002a3f53c121181f91f7bd",
+  "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt": "7ce2f65791ebbe8fe16a0483ad65d8f91006fa8d650264b293b9e02bf4ea9e4e",
+  "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelHost.kt": "5f6aa42991d3b772d8da325f9dfe0f980116034997583e92ed46487275439e68",
+  "app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt": "d3c27e04ba81785c4cda6a7e1d81dd03e5e9fee8ba4f280730eb7f8f48fd68d4",
+  "app/src/test/java/at/heinz/deviceai/cognitive/ResearchTest.kt": "473ba46b0855b85f2e100ceeec5970a7f1b8ef946cae2a2913b4866b897fc862",
+  "app/src/test/java/at/heinz/deviceai/learning/ContinuumKnowledgeArchiveTest.kt": "baa6679967d516204dc4a74164e4d03a23360ad954320ea70c831da9603ed4a8",
+  "app/src/test/java/at/heinz/deviceai/learning/PersonalLearningTransferTest.kt": "27976c57cad5ea1939295c5cbefe89a470b99e70df17eb7ed1b12cfd0dc97113",
+  "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelCatalogTest.kt": "e8c7873aafd9f1fdfe74009a476c2a0053894d6df1efaec4c5ef8f8e367adbc9",
+  "app/src/test/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinatorTest.kt": "c6beef93d61fbf513bc6de1c695ae8514e2aed4243c8b45cecd139309f06e0d8",
+  "scripts/continuum-ccc1-review-gate.mjs": "bbfa228725361ec041efd010bb94b2e4a18d1517b42ed3492e781b39eba14b3e",
+  "scripts/continuum-ccc1-review-gate.test.mjs": "d24a114a8911373cc90219f27f159c532ab4c1842546caa71885614e13800068",
+  "scripts/continuum-coding-bridge.mjs": "343c10e787c41629ce78f7b5bd1bf62304ddabe53dc0ed9e99a61b139fedc775",
+  "scripts/continuum-fold7-standalone-apk.sh": "08593401b5d1fef6a5d0ecf3ffbe8c1aaaf819a1e060f689bfa4752423b27304",
+  "scripts/continuum-fold7-standalone-apk.test.mjs": "e3cf52f9a6800610e6bdb74866234e4392c67d6e112e61383383e5cf4946cc5c",
+  "scripts/continuum-fusion-full-regression.sh": "abae6f460d353f234ed75e9ce98d47161a97e394fbc3873ef370ab8c0d0167aa",
+  "scripts/continuum-gemma-picker-lifecycle.test.mjs": "1b25f329c9e1b172a627a1567fabf865620f09c15d1b56282d71b0d8ce2d48eb",
+  "scripts/continuum-integration-source-gate.mjs": "df028940b25b3b70e359eb2bd47418012368d986b62927ee2a1b2035534bb311",
+  "scripts/continuum-one-app-contract.test.mjs": "dfcb02a4fe4cf0dc2ee02df8e39dc17b0a6398781a7ee324faf3b295e78e5ce5"
+}

@@ -138,6 +138,8 @@ class AgentActivity : Activity() {
         private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218
         private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219
         private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220
+        private const val PERSONAL_LEARNING_EXPORT_REQUEST = 2231
+        private const val PERSONAL_LEARNING_PREVIEW_REQUEST = 2232
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -316,6 +318,10 @@ class AgentActivity : Activity() {
     private var agentLoops = 0
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
+    private lateinit var modelImports: at.heinz.deviceai.localmodel.LocalModelImportCoordinator
+    private var modelImportObservation: AutoCloseable? = null
+    private var displayedImportToken = -1L
+    private var displayedImportRevision = -1L
     @Volatile private var latestModelImportSnapshot: at.heinz.deviceai.localmodel.LocalModelImportSnapshot? = null
     private var modelUnloading = false
     // Session-scoped genuine native inference evidence, never restored or
@@ -406,6 +412,7 @@ class AgentActivity : Activity() {
         at.heinz.deviceai.localmodel.LocalModelHost.get(this).let { host ->
             modelCatalog = host.catalog
             localRuntime = host.runtime
+            modelImports = host.imports
         }
         receiptStore = FileToolExecutionReceiptStore(java.io.File(filesDir, "tool-receipts"))
         initializeContinuum()
@@ -471,6 +478,9 @@ class AgentActivity : Activity() {
         bridge.start()
         updateCloudBadge()
         reloadInstalledModels()
+        modelImportObservation = modelImports.observe { operation ->
+            runOnUiThread { if (!isFinishing && !isDestroyed) displayModelImport(operation) }
+        }
         // Imported original Gemma survives process death as an on-disk model,
         // not as a live engine. Reopen it once, asynchronously and only when
         // the original SHA-256 is the selected catalog entry.
@@ -532,6 +542,8 @@ class AgentActivity : Activity() {
     }
 
     override fun onDestroy() {
+        modelImportObservation?.close()
+        modelImportObservation = null
         sessionResetLifetime.set(false)
         foregroundLearningActive = false
         mainHandler.removeCallbacks(foregroundLearningCheck)
@@ -3396,6 +3408,49 @@ class AgentActivity : Activity() {
      * existing SAF import/export actions. A second installed app's private
      * storage is never accessed or claimed to be migrated automatically.
      */
+    private fun choosePersonalLearningDocument(export: Boolean) {
+        val intent = if (export) Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            type = "application/octet-stream"
+            putExtra(Intent.EXTRA_TITLE, "continuum-personal-learning-v1.bin")
+        } else Intent(Intent.ACTION_OPEN_DOCUMENT).apply { type = "*/*" }
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        runCatching { startActivityForResult(intent,
+            if (export) PERSONAL_LEARNING_EXPORT_REQUEST else PERSONAL_LEARNING_PREVIEW_REQUEST) }
+            .onFailure { Toast.makeText(this, "Dateiauswahl nicht verfügbar.", Toast.LENGTH_LONG).show() }
+    }
+
+    private fun personalLearningDocument(uri: Uri, export: Boolean) {
+        onLearningIo({
+            val store = at.heinz.deviceai.learning.FileLearningExperienceStore(
+                java.io.File(filesDir, "learning-core-v2"))
+            if (export) {
+                val bytes = at.heinz.deviceai.learning.PersonalLearningTransfer.export(packageName, store)
+                (contentResolver.openOutputStream(uri) ?: error("Sicherungsdatei nicht schreibbar"))
+                    .use { it.write(bytes) }
+                "Lernprotokoll gesichert. Enthalten sind Erfahrungen und Widerrufe dieses Lernkerns. " +
+                    "Chats, Einstellungen und Modellgewichte sind separat zu sichern."
+            } else {
+                val bytes = (contentResolver.openInputStream(uri) ?: error("Datei nicht lesbar")).use { input ->
+                    at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(input)
+                }
+                val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.preview(bytes, store)
+                "ÜBERNAHMEPRÜFUNG · KEINE DATEN GESCHRIEBEN" +
+                    "\nNeue Datensätze zur Einzelprüfung: " + plan.additionsForReview.size +
+                    "\nWiderrufe zur Prüfung: " + plan.revocationsForReview.size +
+                    "\nDuplikate: " + plan.duplicateCount +
+                    "\nGeschützte bestehende Widerrufe: " + plan.blockedReactivations.size +
+                    "\nIdentitätskonflikte: " + plan.identityConflicts.size +
+                    "\nKapazitätsgrenze überschritten: " + plan.capacityExceeded +
+                    "\nWeitere protokollierte Datensätze: " + plan.reviewOnlyCount +
+                    "\n\nEine Prüfsumme bestätigt keine Herkunft. Jeder persönliche Fakt benötigt deine eigene Bestätigung."
+            }
+        }) { result ->
+            AlertDialog.Builder(this).setTitle("Persönliches Lernprotokoll")
+                .setMessage(result.getOrElse { "Vorgang nicht abgeschlossen: " + failureName(it) })
+                .setPositiveButton("Schließen", null).show()
+        }
+    }
+
     private fun showOneAppMigrationCenter() {
         // Only public status counters; no owner memories or model bytes leave filesDir.
         var copiedStatus: String? = null
@@ -3463,7 +3518,9 @@ class AgentActivity : Activity() {
                 "7 · Lernkern und Holdout-Ergebnisse ansehen",
                 "8 · Öffentliche Forschung kontrolliert konfigurieren",
                 "9 · Öffentliches Offline-Lernpaket ausdrücklich starten",
-                "10 · Lokales Auto-Üben konfigurieren"
+                "10 · Lokales Auto-Üben konfigurieren",
+                "11 · Persönliches Lernprotokoll als Datei sichern",
+                "12 · Lernprotokoll-Übernahme nur prüfen"
             )
             AlertDialog.Builder(this)
                 .setTitle("CONTINUUM · EINE HAUPT-APP")
@@ -3479,6 +3536,8 @@ class AgentActivity : Activity() {
                         7 -> showPublicStudyControls()
                         8 -> showPublicCurriculumDialog()
                         9 -> showNeuralPracticeDialog()
+                    10 -> choosePersonalLearningDocument(true)
+                    11 -> choosePersonalLearningDocument(false)
                     }
                 }
                 .setNegativeButton("SCHLIESSEN", null)
@@ -6892,71 +6951,54 @@ class AgentActivity : Activity() {
         latestModelImportSnapshot = null
         localImportError = null
         refreshLocalModelUi()
-        Toast.makeText(this, "Modelldatei wird lokal geprüft. Status unter Modellverwaltung.", Toast.LENGTH_LONG).show()
-        scheduleLifecycleTimeout(
+        // The process-owned job captures only the application resolver and URI.
+        // Activity destruction stops observation, never this multi-GB import.
+        val resolver = applicationContext.contentResolver
+        val started = modelImports.start(metadata.first, metadata.second, metadata.third) {
+            resolver.openInputStream(uri) ?: error("Dokument kann nicht geöffnet werden.")
+        }
+        Toast.makeText(this, if (started) "Modelldatei wird lokal geprüft. Status unter Modellverwaltung."
+            else "Ein Modellimport läuft bereits. Sein Fortschritt bleibt sichtbar.", Toast.LENGTH_LONG).show()
+        if (modelImports.snapshot()?.running == true) scheduleLifecycleTimeout(
             "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",
             forImport = true
         )
-        localAgentExecutor.execute {
-            val result = runCatching {
-                val source = contentResolver.openInputStream(uri)
-                    ?: error("Dokument kann nicht geöffnet werden.")
-                var lastUiBucket = -1L
-                source.use {
-                    modelCatalog.import(metadata.first, metadata.second, it, metadata.third,
-                        onProgress = { snapshot ->
-                            latestModelImportSnapshot = snapshot
-                            val bucket = snapshot.copiedBytes / (64L * 1024L * 1024L)
-                            if (snapshot.phase != at.heinz.deviceai.localmodel.LocalModelImportPhase.COPYING ||
-                                bucket > lastUiBucket) {
-                                lastUiBucket = bucket
-                                runOnUiThread {
-                                    if (!isFinishing && !isDestroyed && modelImportActive) {
-                                        refreshLocalModelUi()
-                                    }
-                                }
-                            }
-                        })
-                }
-            }
-            runOnUiThread {
-                clearLifecycleTimeout()
-                modelImportActive = false
-                if (isFinishing || isDestroyed) return@runOnUiThread
-                result.onSuccess { model ->
-                    localImportError = null
-                    val importProof = latestModelImportSnapshot
-                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +
-                        (importProof?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" }
-                            ?: ""))
-                    Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()
-                    reloadInstalledModels()
-                    loadModel(model)
-                }.onFailure { error ->
-                    val lastImport = latestModelImportSnapshot
-                    localImportError = (error.message ?: "Model import failed.") +
-                        (lastImport?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" }
-                            ?: " · Importphase nicht verfügbar")
-                    // A chat-only error is easy to miss after Android's document
-                    // picker returns to the start screen. Show a bounded, readable
-                    // explanation without exposing any model bytes or credentials.
-                    AlertDialog.Builder(this)
-                        .setTitle("Gemma-Import fehlgeschlagen")
-                        .setMessage(
-                            ContinuumUiCopy.modelFailure(error.message) +
-                                "\n\nTechnischer Grund: " +
-                                (error.message ?: "Unbekannter Importfehler").take(320)
-                        )
-                        .setPositiveButton("VERSTANDEN", null)
-                        .show()
-                    addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
-                        ContinuumUiCopy.modelFailure(error.message) + "\n" + (error.message ?: "Import fehlgeschlagen.") +
-                        "\n" + (localRuntime.loadedModel?.let { "Weiterhin geladen: ${it.id} · ${it.version} · SHA-256 ${it.sha256}" }
-                            ?: "Kein Modell geladen."))
-                    refreshLocalModelUi()
-                }
-            }
+    }
+
+    private fun displayModelImport(operation: at.heinz.deviceai.localmodel.LocalModelImportOperation) {
+        if (operation.token < displayedImportToken ||
+            operation.token == displayedImportToken && operation.revision <= displayedImportRevision) return
+        val wasRunning = modelImportActive
+        displayedImportToken = operation.token
+        displayedImportRevision = operation.revision
+        modelImportActive = operation.running
+        latestModelImportSnapshot = operation.progress
+        if (operation.running) {
+            if (!wasRunning) scheduleLifecycleTimeout(
+                "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Vorgang läuft weiter.", forImport = true)
+            refreshLocalModelUi()
+            return
         }
+        clearLifecycleTimeout()
+        val model = operation.model
+        if (model != null) {
+            localImportError = null
+            addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +
+                (operation.progress?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" } ?: ""))
+            reloadInstalledModels()
+            if ((localRuntime.state == LocalModelState.EMPTY || localRuntime.state == LocalModelState.FAILED) &&
+                modelImports.claimResultForLoading(operation.token)) {
+                Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()
+                loadModel(model)
+            }
+        } else {
+            localImportError = "Modellimport fehlgeschlagen: " + (operation.failureType ?: "ImportFailure") +
+                (operation.progress?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" } ?: "")
+            AlertDialog.Builder(this).setTitle("Gemma-Import fehlgeschlagen")
+                .setMessage(localImportError).setPositiveButton("VERSTANDEN", null).show()
+            addToolActivity(localImportError.orEmpty())
+        }
+        refreshLocalModelUi()
     }
 
     private fun reloadInstalledModels() {
@@ -7659,6 +7701,11 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            PERSONAL_LEARNING_EXPORT_REQUEST, PERSONAL_LEARNING_PREVIEW_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null)
+                    personalLearningDocument(uri, requestCode == PERSONAL_LEARNING_EXPORT_REQUEST)
             }
             CONTINUUM_ARCHIVE_EXPORT_REQUEST -> {
                 val uri=data?.data

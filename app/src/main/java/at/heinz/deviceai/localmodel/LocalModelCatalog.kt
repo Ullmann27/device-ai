@@ -19,6 +19,16 @@ import java.security.MessageDigest
 
 enum class LocalModelBackend { CPU, GPU, NPU }
 
+/** Public diagnostic codes contain no file URI, private path or model payload. */
+enum class LocalModelImportRejection {
+    SIZE_LIMIT, EMPTY_FILE, SHA256_MISMATCH, CPU_UNSUPPORTED, ORPHAN_INVALID, ORPHAN_MISMATCH
+}
+
+class LocalModelImportRejectedException(
+    val rejection: LocalModelImportRejection,
+    message: String
+) : IllegalArgumentException(message)
+
 data class LocalModelCapabilities(
     val text: Boolean,
     val vision: Boolean,
@@ -76,8 +86,9 @@ class NativeLiteRtModelInspector : LocalModelInspector {
                 }.toSet()
             )
         }.also {
-            require(it.text && LocalModelBackend.CPU in it.supportedBackends) {
-                "Model must support text input on the CPU backend."
+            if (!it.text || LocalModelBackend.CPU !in it.supportedBackends) {
+                throw LocalModelImportRejectedException(LocalModelImportRejection.CPU_UNSUPPORTED,
+                    "Model must support text input on the CPU backend.")
             }
         }
 }
@@ -102,7 +113,16 @@ class LocalModelCatalog(
         if (!directory.exists() && !directory.mkdirs()) throw IOException("Cannot create local model directory.")
         val modelFile = modelFile(id, version)
         val metadataFile = metadataFile(id, version)
-        require(!modelFile.exists() && !metadataFile.exists()) { "Model version is already imported." }
+        require(!metadataFile.exists()) { "Model version is already imported." }
+        // A process may die after moving validated bytes but before committing
+        // metadata. An explicit retry must re-copy/inspect its selected input and
+        // prove the existing bytes identical; never overwrite an orphan silently.
+        val recoveringOrphan = modelFile.exists()
+        if (recoveringOrphan && (!modelFile.isFile || Files.isSymbolicLink(modelFile.toPath()) ||
+                modelFile.length() !in 1..maxModelBytes)) {
+            throw LocalModelImportRejectedException(LocalModelImportRejection.ORPHAN_INVALID,
+                "Existing interrupted import is not a bounded regular model file.")
+        }
         require(directory.listFiles { file -> file.isFile && file.name.endsWith(METADATA_SUFFIX) }
             .orEmpty().size < MAX_CATALOG_ENTRIES) { "Local model catalog is full." }
         val temporary = File.createTempFile("model-import-", ".litertlm", directory)
@@ -139,7 +159,10 @@ class LocalModelCatalog(
                             continue
                         }
                         emptyReads = 0
-                        require(total <= maxModelBytes - count) { "Model exceeds the configured import limit." }
+                        if (total > maxModelBytes - count) {
+                            throw LocalModelImportRejectedException(LocalModelImportRejection.SIZE_LIMIT,
+                                "Model exceeds the configured import limit.")
+                        }
                         total += count
                         digest.update(buffer, 0, count)
                         output.write(buffer, 0, count)
@@ -151,31 +174,41 @@ class LocalModelCatalog(
                 }
                 output.fd.sync()
             }
+            if (total <= 0) {
+                throw LocalModelImportRejectedException(LocalModelImportRejection.EMPTY_FILE,
+                    "Model file is empty.")
+            }
             report(LocalModelImportPhase.COPY_COMPLETED)
             if (Thread.currentThread().isInterrupted) {
                 throw java.io.InterruptedIOException("Model import cancelled after copy.")
             }
-            require(total > 0) { "Model file is empty." }
             val hash = digest.digest().toHex()
-            require(MessageDigest.isEqual(hash.toByteArray(), expectedSha256.toByteArray())) {
-                "Model SHA-256 does not match the expected digest. " +
-                    "Expected: $expectedSha256; actual: $hash; bytes: $total."
+            if (!MessageDigest.isEqual(hash.toByteArray(), expectedSha256.toByteArray())) {
+                throw LocalModelImportRejectedException(LocalModelImportRejection.SHA256_MISMATCH,
+                    "Model SHA-256 does not match the expected digest. " +
+                        "Expected: $expectedSha256; actual: $hash; bytes: $total.")
             }
             report(LocalModelImportPhase.HASH_VERIFIED)
             val capabilities = inspector.inspect(temporary)
             if (Thread.currentThread().isInterrupted) {
                 throw java.io.InterruptedIOException("Model import cancelled during inspection.")
             }
-            require(capabilities.text && LocalModelBackend.CPU in capabilities.supportedBackends) {
-                "Only text models with CPU support can be imported."
+            if (!capabilities.text || LocalModelBackend.CPU !in capabilities.supportedBackends) {
+                throw LocalModelImportRejectedException(LocalModelImportRejection.CPU_UNSUPPORTED,
+                    "Only text models with CPU support can be imported.")
             }
             report(LocalModelImportPhase.INSPECTED)
             val record = ImportedLocalModel(id, version, hash, total, capabilities)
-            moveAtomically(temporary, modelFile)
+            if (recoveringOrphan) {
+                if (modelFile.length() != total || sha256(modelFile) != hash) {
+                    throw LocalModelImportRejectedException(LocalModelImportRejection.ORPHAN_MISMATCH,
+                        "Existing interrupted import differs from the verified input; existing bytes preserved.")
+                }
+            } else moveAtomically(temporary, modelFile)
             try {
                 writeMetadata(metadataFile, record)
             } catch (e: Exception) {
-                modelFile.delete()
+                if (!recoveringOrphan) modelFile.delete()
                 throw e
             }
             report(LocalModelImportPhase.COMMITTED)

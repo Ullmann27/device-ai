@@ -60,8 +60,10 @@ test('archive validates all source records before permanent writes',()=>{
   const i=archive.indexOf('fun importZip(input:InputStream)');
   const staged=archive.indexOf('staged.add(record)',i);
   const checked=archive.indexOf('validateImportedRecord(record)',i);
-  const saved=archive.indexOf('staged.forEach { record ->\n            save(',i);
+  const saved=archive.indexOf('writeDurably(File(pendingImport',i);
   assert.ok(i>0 && checked>i && staged>checked && saved>staged);
+  const manifest=archive.indexOf('moveNew(temporary,File(pendingImport,"manifest.v1"))',saved);
+  assert.ok(manifest>saved && archive.indexOf('recoverPendingImport()',manifest)>manifest);
   assert.match(archive,/MAX_IMPORT_UNCOMPRESSED_BYTES=64L \* 1024L \* 1024L/);
 });
 test('archive checks existing on-device collisions before any new source commit',()=>{
@@ -92,12 +94,15 @@ test('migration cannot be mistaken for complete transfer of revoked owner facts'
 test('Gemma multi-gigabyte import displays actual progress instead of only LÄDT',()=>{
   assert.match(ui,/Kopiert:.*1024L \* 1024L/);
   assert.match(ui,/it\.elapsedMs \/ 1000L/);
-  assert.match(ui,/snapshot\.phase/);
+  assert.match(ui,/operation\.progress/);
 });
-test('Gemma import UI is throttled to every 64 MiB or phase change',()=>{
-  assert.match(ui,/lastUiBucket = -1L/);
-  assert.match(ui,/snapshot\.copiedBytes \/ \(64L \* 1024L \* 1024L\)/);
-  assert.match(ui,/snapshot\.phase != at\.heinz\.deviceai\.localmodel\.LocalModelImportPhase\.COPYING/);
+test('Gemma process import observation is throttled to every 64 MiB or phase change',()=>{
+  const coordinator=source('app/src/main/java/at/heinz/deviceai/localmodel/LocalModelImportCoordinator.kt');
+  assert.match(coordinator,/64L \* 1024L \* 1024L/);
+  assert.match(coordinator,/value\.progress\?\.phase != lastPhase/);
+  assert.match(coordinator,/bucket != lastBucket/);
+  assert.match(ui,/modelImports\.observe/);
+  assert.match(ui,/modelImportObservation\?\.close/);
 });
 test('import timeout is a progress watchdog and never claims false 120-second failure',()=>{
   const timeout=ui.split('private fun scheduleLifecycleTimeout(')[1]?.split('private fun clearLifecycleTimeout()')[0]??'';

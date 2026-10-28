@@ -5,6 +5,100 @@ import org.junit.Test
 import java.nio.file.Files
 
 class ContinuumKnowledgeArchiveTest {
+    private fun publicRecord(archive:ContinuumKnowledgeArchive,topic:String) = archive.save(
+        ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,topic,
+        "https://de.wikipedia.org/wiki/$topic","Wikipedia-Mitwirkende · CC BY-SA 4.0",
+        "Der synthetische Quellenauszug behandelt $topic und nachprüfbare Grundlagen."
+    )
+
+    @Test fun interruptedCommitResumesOnReopenAndRetryDoesNotDuplicateOrOverwriteOldSource() {
+        val source=Files.createTempDirectory("archive-recovery-source").toFile()
+        val target=Files.createTempDirectory("archive-recovery-target").toFile()
+        try {
+            val origin=ContinuumKnowledgeArchive(source)
+            publicRecord(origin,"Astronomie")
+            publicRecord(origin,"Biologie")
+            publicRecord(origin,"Chemie")
+            val bytes=java.io.ByteArrayOutputStream().also { origin.exportZip(it) }.toByteArray()
+            val destination=ContinuumKnowledgeArchive(target)
+            val original=publicRecord(destination,"Astronomie")
+            val root=java.io.File(target,"continuum-knowledge-v1")
+            val originalBytes=java.io.File(root,"${original.id}.rec").readBytes()
+            destination.beforeImportPublish={ index ->
+                if(index==1)throw java.io.IOException("Injected second-publish interruption")
+            }
+            assertThrows(java.io.IOException::class.java) {
+                destination.importZip(java.io.ByteArrayInputStream(bytes))
+            }
+            assertTrue(java.io.File(root,".import-pending-v1/manifest.v1").isFile)
+            assertEquals(2,root.listFiles()!!.count { it.name.endsWith(".rec") })
+
+            val reopened=ContinuumKnowledgeArchive(target)
+            assertEquals(3,reopened.stats().values.sum())
+            assertFalse(java.io.File(root,".import-pending-v1").exists())
+            assertArrayEquals(originalBytes,java.io.File(root,"${original.id}.rec").readBytes())
+            val before=root.listFiles()!!.filter { it.name.endsWith(".rec") }
+                .associate { it.name to it.readBytes().toList() }
+            assertEquals(3,reopened.importZip(java.io.ByteArrayInputStream(bytes)))
+            assertEquals(before,root.listFiles()!!.filter { it.name.endsWith(".rec") }
+                .associate { it.name to it.readBytes().toList() })
+        } finally {source.deleteRecursively();target.deleteRecursively()}
+    }
+
+    @Test fun pendingRecoveryValidatesAllRemainingRecordsBeforePublishingAnyMore() {
+        val source=Files.createTempDirectory("archive-recovery-corrupt-source").toFile()
+        val target=Files.createTempDirectory("archive-recovery-corrupt-target").toFile()
+        try {
+            val origin=ContinuumKnowledgeArchive(source)
+            listOf("Astronomie","Biologie","Chemie").forEach { publicRecord(origin,it) }
+            val bytes=java.io.ByteArrayOutputStream().also { origin.exportZip(it) }.toByteArray()
+            val destination=ContinuumKnowledgeArchive(target)
+            destination.beforeImportPublish={ index ->
+                if(index==1)throw java.io.IOException("Injected interrupted filesystem commit")
+            }
+            assertThrows(java.io.IOException::class.java) {
+                destination.importZip(java.io.ByteArrayInputStream(bytes))
+            }
+            val root=java.io.File(target,"continuum-knowledge-v1")
+            val pending=java.io.File(root,".import-pending-v1")
+            val remaining=pending.listFiles()!!.filter { it.name.endsWith(".rec") }
+            assertEquals(2,remaining.size)
+            remaining.last().writeBytes(byteArrayOf(1,2,3))
+            assertThrows(IllegalArgumentException::class.java) { ContinuumKnowledgeArchive(target) }
+            assertEquals("No later item is published before all staged records validate",
+                1,root.listFiles()!!.count { it.name.endsWith(".rec") })
+            assertTrue(java.io.File(pending,"manifest.v1").exists())
+        } finally {source.deleteRecursively();target.deleteRecursively()}
+    }
+
+    @Test fun uncommittedStagingIsDiscardedWithoutPublishingOrRemovingExistingSources() {
+        val target=Files.createTempDirectory("archive-recovery-uncommitted").toFile()
+        try {
+            val existing=publicRecord(ContinuumKnowledgeArchive(target),"Astronomie")
+            val root=java.io.File(target,"continuum-knowledge-v1")
+            val existingFile=java.io.File(root,"${existing.id}.rec")
+            val before=existingFile.readBytes()
+            val pending=java.io.File(root,".import-pending-v1").also { assertTrue(it.mkdir()) }
+            java.io.File(pending,"a".repeat(64)+".rec").writeBytes(byteArrayOf(1,2,3))
+            java.io.File(pending,"manifest.tmp").writeText("incomplete staging")
+            val reopened=ContinuumKnowledgeArchive(target)
+            assertEquals(1,reopened.stats().values.sum())
+            assertArrayEquals(before,existingFile.readBytes())
+            assertFalse(pending.exists())
+        } finally {target.deleteRecursively()}
+    }
+
+    @Test fun unknownPendingFilesFailClosedAndAreNeverAutomaticallyDeleted() {
+        val target=Files.createTempDirectory("archive-recovery-unknown").toFile()
+        try {
+            ContinuumKnowledgeArchive(target)
+            val pending=java.io.File(target,"continuum-knowledge-v1/.import-pending-v1")
+                .also { assertTrue(it.mkdir()) }
+            val unknown=java.io.File(pending,"owner-export.json").also { it.writeText("synthetic") }
+            assertThrows(IllegalArgumentException::class.java) { ContinuumKnowledgeArchive(target) }
+            assertTrue(unknown.exists())
+        } finally {target.deleteRecursively()}
+    }
     @Test fun indexedOfflineArchiveStoresCitationsAndRevisions() {
         val temp=Files.createTempDirectory("continuum-archive").toFile()
         try {

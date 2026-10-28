@@ -11,7 +11,11 @@ import java.io.File
  * is really finishing.
  */
 object LocalModelHost {
-    class Host(val catalog: LocalModelCatalog, val runtime: LiteRtLmLocalModelRuntime)
+    class Host(val catalog: LocalModelCatalog, val runtime: LiteRtLmLocalModelRuntime) {
+        // Activity executors may be interrupted on rotation/folding; a multi-GB
+        // import belongs to the same process lifetime as this catalog/runtime.
+        val imports = LocalModelImportCoordinator(catalog)
+    }
 
     @Volatile private var host: Host? = null
 

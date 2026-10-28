@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.TinyContextDecoderTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:32" hostname="b50d54a1ac03" time="0.8">
+  <properties/>
+  <testcase name="deterministicTrainingGenerationAndChecksummedSnapshotRoundTrip" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.294"/>
+  <testcase name="conditioningAcceptsSharedEncoderRepresentationAndBudgetsBoundWork" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.005"/>
+  <testcase name="committedOwnTrainedSnapshotRestoresAnActualLearnedContinuation" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.002"/>
+  <testcase name="byteSurprisalsAreTheReadOnlyTermsOfTheAuditLoss" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.033"/>
+  <testcase name="learnsNextBytesAndImprovesUntrainedAuditWithoutPretrainedWeights" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.417"/>
+  <testcase name="fileSnapshotsKeepExactLastKnownGoodWeights" classname="at.heinz.deviceai.learning.TinyContextDecoderTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

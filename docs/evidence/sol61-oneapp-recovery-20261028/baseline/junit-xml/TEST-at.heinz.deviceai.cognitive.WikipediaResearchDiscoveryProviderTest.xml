@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:23" hostname="b50d54a1ac03" time="0.061">
+  <properties/>
+  <testcase name="fakeApiYieldsNetworkFreeDiscoveryTests" classname="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" time="0.024"/>
+  <testcase name="parsesMainNamespaceAndDeduplicatesResults" classname="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" time="0.035"/>
+  <testcase name="ordinaryResponseParsesWithoutRequiringXercesSpecificFeatureSupport" classname="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" time="0.002"/>
+  <testcase name="rejectsDoctypeAndDoesNotExpandExternalEntities" classname="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" time="0.0"/>
+  <testcase name="fixedHttpsApiRequestAndEncodedQuery" classname="at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProviderTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

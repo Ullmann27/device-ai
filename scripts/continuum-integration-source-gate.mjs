@@ -8,7 +8,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 
 const BRIDGES=Object.freeze({
-  'scripts/continuum-coding-bridge.mjs':'f9d9a5c7426552a051f884a7597a737e4b0f3c19',
+  'scripts/continuum-coding-bridge.mjs':'fc1da698f9548a0df64a58d7926955b9cd55b70a',
   'scripts/continuum-coding-bridge.test.mjs':'ae33c281f623f7a4782d3a16aacd4421022eb4db',
   'scripts/continuum-selfhosted-coding.mjs':'b2d9259bbbd62137cd55ddeabdf43fe8534a7383',
   'scripts/continuum-selfhosted-coding.test.mjs':'fa6f712d6c5121d20a85985a4a22745795f48b08'
@@ -52,7 +52,7 @@ export function assessContinuumIntegration(root){
      !gate.includes('CONTINUUM_OWNER_LOCAL_APPROVED_SHA'))
     throw Error('MAIN_APP_GATE_MISSING_OR_LEGACY');
   const catalog=ownedFile(absolute,'app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt').toString('utf8');
-  if(!catalog.includes('com.google.ai.edge.litertlm')||!catalog.includes('Model SHA-256 does not match'))
+  if(!catalog.includes('com.google.ai.edge.litertlm')||!(catalog.includes('Model SHA-256 does not match') || catalog.includes('SHA256_MISMATCH')))
     throw Error('ORIGINAL_LITERT_MODEL_CATALOG_MISSING');
   return Object.freeze({schema:'continuum-source-integration-gate-v1',
     sourceIdentity:'CONTINUUM_LOCAL_STANDALONE_CANDIDATE',

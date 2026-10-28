@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.Cre1PromotionAuditTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:29" hostname="b50d54a1ac03" time="0.063">
+  <properties/>
+  <testcase name="positiveAbsenceCannotBeHiddenByPretendNeuralAbstentionOrInvention" classname="at.heinz.deviceai.learning.Cre1PromotionAuditTest" time="0.041"/>
+  <testcase name="rejectsDuplicateAndInvalidCaseIdsOrOutOfRangeFusion" classname="at.heinz.deviceai.learning.Cre1PromotionAuditTest" time="0.004"/>
+  <testcase name="correctlyProducesBoundManifestOnlyFromPairedIndividualCases" classname="at.heinz.deviceai.learning.Cre1PromotionAuditTest" time="0.009"/>
+  <testcase name="exactMcNemarHandlesDiscordanceAndTiesWithoutNormalApproximation" classname="at.heinz.deviceai.learning.Cre1PromotionAuditTest" time="0.0"/>
+  <testcase name="aSingleFalseAttributionOrUnprovenImprovementCannotPromote" classname="at.heinz.deviceai.learning.Cre1PromotionAuditTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

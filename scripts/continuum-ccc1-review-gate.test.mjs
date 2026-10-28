@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {assessCcc1BridgeProposal} from './continuum-ccc1-review-gate.mjs';
 const PATCH=JSON.stringify({path:'src/add.mjs',old:'return Math.abs(a) + Math.abs(b);',replacement:'return a + b;'});
 const good=()=>({schema:'continuum-optional-coding-bridge-v1',mode:'SYNTHETIC_ONLY',
-  repositoryAccess:false,patchApplied:false,transportKind:'MOCKED_OFFLINE',
+  repositoryAccess:false,patchApplied:false,ownerReviewRequired:true,transportKind:'MOCKED_OFFLINE',
   model:'claude-fable-5.1:free',completed:true,proposalVerifiedOnIsolatedCopy:true,
   observedTestCall:true,observedReadCalls:['src/add.mjs','test/add.test.mjs'],
   testResult:{tests:3,pass:2,fail:1,exitCode:1},
@@ -44,3 +44,7 @@ test('file traversal proposal fails',()=>fails({proposal:JSON.stringify({path:'.
 test('arbitrary code cannot be promoted through a JSON patch',()=>fails({proposal:JSON.stringify({path:'src/add.mjs',old:'return Math.abs(a) + Math.abs(b);',replacement:'process.exit(0)'})},/OUT_OF_SCOPE_PATCH/));
 test('extra proposal fields fail',()=>fails({proposal:JSON.stringify({...JSON.parse(PATCH),tool:'bash'})},/OUT_OF_SCOPE_PATCH/));
 test('missing proposal is refused',()=>fails({proposal:null},/INVALID_PROPOSAL_BYTES/));
+
+test('missing or mistyped owner-review requirement fails closed',()=>{
+  for (const value of [undefined,null,1,'true']) fails({ownerReviewRequired:value},/UNAUTHORIZED_WRITE_REPORTED/);
+});

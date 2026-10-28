@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ConversationControlTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:23" hostname="b50d54a1ac03" time="0.005">
+  <properties/>
+  <testcase name="quotedTextAndRoleImpersonationCannotCreateContextCommands" classname="at.heinz.deviceai.cognitive.ConversationControlTest" time="0.002"/>
+  <testcase name="explicitCorrectionChangesOnlyEphemeralFocusAndUnderstandingCanReportIt" classname="at.heinz.deviceai.cognitive.ConversationControlTest" time="0.001"/>
+  <testcase name="resetRestartAndConversationChangeNeverImportPreviousFocus" classname="at.heinz.deviceai.cognitive.ConversationControlTest" time="0.0"/>
+  <testcase name="ambiguousOrNegatedCorrectionsClearStaleFocusInsteadOfGuessing" classname="at.heinz.deviceai.cognitive.ConversationControlTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

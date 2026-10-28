@@ -317,18 +317,25 @@ data class CorroborationPolicy(val minimumIndependentSources: Int = 2) {
     ): List<Claim> {
         val supportedIds = relationships.filter { it.relation == ClaimRelation.SUPPORTS }
             .flatMap { listOf(it.fromId, it.toId) }.toSet()
+        val contestedIds = relationships.filter { it.relation == ClaimRelation.CONTRADICTS }
+            .flatMap { listOf(it.fromId, it.toId) }.toSet()
         return claims.map { claim ->
+            if (claim.id in contestedIds) return@map claim.copy(
+                validationState = ValidationState.CONTRADICTED,
+                validationEvidenceReferences = emptyList()
+            )
             val related = relationships.filter {
                 it.relation == ClaimRelation.SUPPORTS && (it.fromId == claim.id || it.toId == claim.id)
             }.flatMap { listOf(it.fromId, it.toId) }.filterNot { it == claim.id }.toSet()
             val independent = (claim.sourceReferences.mapNotNull(sourcesByUrl::get) +
-                claims.filter { it.id in related }.flatMap { relatedClaim ->
+                claims.filter { it.id in related && it.id !in contestedIds }.flatMap { relatedClaim ->
                     relatedClaim.sourceReferences.mapNotNull(sourcesByUrl::get)
                 }).distinctBy { it.domain }
             if (claim.id in supportedIds && independent.size >= minimumIndependentSources) {
                 claim.validated(
                     ValidationState.VERIFIED,
-                    (claim.sourceReferences + claims.filter { it.id in related }.flatMap { it.sourceReferences }).distinct()
+                    (claim.sourceReferences + claims.filter { it.id in related && it.id !in contestedIds }
+                        .flatMap { it.sourceReferences }).distinct()
                 )
             } else claim
         }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:37" hostname="b50d54a1ac03" time="0.074">
+  <properties/>
+  <testcase name="cancellationDoesNotReplaceWeightsOrClaimCompletion" classname="at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest" time="0.011"/>
+  <testcase name="publicDiagnosticRunsWithoutChangingProductionSnapshot" classname="at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest" time="0.062"/>
+  <testcase name="jobStatusDisplayDistinguishesUnscheduledAndFailure" classname="at.heinz.deviceai.learning.ContinuumLocalContrastiveProbeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
