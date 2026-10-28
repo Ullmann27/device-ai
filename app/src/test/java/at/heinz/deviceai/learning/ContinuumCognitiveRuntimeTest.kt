@@ -234,4 +234,39 @@ class ContinuumCognitiveRuntimeTest {
         } finally {dir.deleteRecursively()}
     }
 
+
+    @Test fun hybridShadowTraversesRealConversationButCannotResurrectRevokedOwnerFact() {
+        val dir=Files.createTempDirectory("continuum-hybrid-revocation").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val fact="Projekt Saphir verwendet lokale Belege."
+            core.confirmOwnerFact(fact)
+            val before=core.modelHash()
+            val first=ContinuumCognitiveRuntime(dir,core,"hybrid-session")
+                .reply("Was verwendet Projekt Saphir?")
+            assertTrue(first.grounded)
+            assertEquals(first.dialogue.memoryIds,first.evidenceHits.map { it.id })
+            assertEquals(1,first.hybridShadow.authorizedCount)
+            assertTrue(first.hybridShadow.status in setOf(
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.COMPARED_WITH_CRE1
+            ))
+            assertEquals(before,core.modelHash())
+            assertFalse(first.hybridShadow.toString().contains("Saphir"))
+
+            core.revokeOwnerFact(fact)
+            val after=ContinuumCognitiveRuntime(dir,core,"hybrid-session")
+                .reply("Was verwendet Projekt Saphir?")
+            assertFalse(after.grounded)
+            assertTrue(after.evidenceHits.isEmpty())
+            assertEquals(
+                at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                after.hybridShadow.status
+            )
+            assertFalse(after.answer.contains(fact))
+            assertEquals(0,after.hybridShadow.authorizedCount)
+            assertEquals(before,core.modelHash())
+        } finally { dir.deleteRecursively() }
+    }
+
 }
