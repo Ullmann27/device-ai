@@ -74,7 +74,8 @@ test('same task, goal, or receipt replay cannot count as two independent acquisi
     /TRANSFER_SOURCES_NOT_INDEPENDENT/);
   assert.throws(()=>freezeResearchSkill({...cfg(),experiences:[first,{...second,goalSha256:first.goalSha256}]}),
     /TRANSFER_SOURCES_NOT_INDEPENDENT/);
-  assert.throws(()=>freezeResearchSkill({...cfg(),experiences:[first,{...second,hypotheses:first.hypotheses}]}),
+  assert.throws(()=>freezeResearchSkill({...cfg(),experiences:[first,{...second,
+    hypotheses:[{...second.hypotheses[0],receiptSha256:first.hypotheses[0].receiptSha256}]}]}),
     /TRANSFER_SOURCES_NOT_INDEPENDENT/);
 });
 test('synthetic candidate cannot silently grant permissions or be rewritten after freeze',()=>{
