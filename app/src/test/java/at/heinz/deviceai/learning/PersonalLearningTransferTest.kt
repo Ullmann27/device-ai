@@ -8,6 +8,23 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class PersonalLearningTransferTest {
+    @Test fun documentReaderBoundsEmptyReadsSizeAndInterruption() {
+        val stalled = object : java.io.InputStream() {
+            override fun read(): Int = 0
+            override fun read(bytes: ByteArray, offset: Int, length: Int): Int = 0
+        }
+        failure { PersonalLearningTransfer.readBackup(stalled) }
+        failure { PersonalLearningTransfer.readBackup(java.io.ByteArrayInputStream(
+            ByteArray(PersonalLearningTransfer.MAX_BYTES + 1))) }
+        try {
+            Thread.currentThread().interrupt()
+            try {
+                PersonalLearningTransfer.readBackup(java.io.ByteArrayInputStream(byteArrayOf(1)))
+                fail("Interrupted read continued")
+            } catch (_: java.io.InterruptedIOException) { }
+        } finally { Thread.interrupted() }
+    }
+
     private val source = "at.heinz.deviceai.mentorpaired"
     private fun fact(text: String, status: LearningStatus = LearningStatus.CONFIRMED, now: Long = 100L) =
         LearningExperienceFactory.create(LearningExperienceType.USER_FACT,

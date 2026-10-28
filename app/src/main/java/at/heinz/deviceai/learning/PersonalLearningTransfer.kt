@@ -1,5 +1,7 @@
 package at.heinz.deviceai.learning
 
+import java.io.InputStream
+import java.io.InterruptedIOException
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
@@ -43,6 +45,22 @@ object PersonalLearningTransfer {
     private const val MAGIC = 0x434c5054 // CLPT
     private const val DIGEST_BYTES = 32
     private const val MAX_FIELD_BYTES = 8192
+
+    fun readBackup(input: InputStream): ByteArray {
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(8192)
+        var emptyReads = 0
+        while (true) {
+            if (Thread.currentThread().isInterrupted) throw InterruptedIOException("Transfer interrupted")
+            val count = input.read(buffer)
+            if (count < 0) break
+            if (count == 0) { require(++emptyReads <= 16) { "Transfer source made no progress" }; continue }
+            emptyReads = 0
+            require(out.size().toLong() + count <= MAX_BYTES) { "Transfer source exceeds limit" }
+            out.write(buffer, 0, count)
+        }
+        return out.toByteArray()
+    }
 
     fun export(sourcePackage: String, store: FileLearningExperienceStore): ByteArray =
         encode(sourcePackage, store.all())

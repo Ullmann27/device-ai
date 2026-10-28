@@ -3431,23 +3431,16 @@ class AgentActivity : Activity() {
                     "Chats, Einstellungen und Modellgewichte sind separat zu sichern."
             } else {
                 val bytes = (contentResolver.openInputStream(uri) ?: error("Datei nicht lesbar")).use { input ->
-                    val output = java.io.ByteArrayOutputStream()
-                    val buffer = ByteArray(8192)
-                    while (true) {
-                        val count = input.read(buffer)
-                        if (count < 0) break
-                        require(output.size().toLong() + count <=
-                            at.heinz.deviceai.learning.PersonalLearningTransfer.MAX_BYTES) { "Datei zu groß" }
-                        output.write(buffer, 0, count)
-                    }
-                    output.toByteArray()
+                    at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(input)
                 }
                 val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.preview(bytes, store)
                 "ÜBERNAHMEPRÜFUNG · KEINE DATEN GESCHRIEBEN" +
-                    "\nNeue Fakten zur Einzelprüfung: " + plan.additionsForReview.size +
+                    "\nNeue Datensätze zur Einzelprüfung: " + plan.additionsForReview.size +
                     "\nWiderrufe zur Prüfung: " + plan.revocationsForReview.size +
                     "\nDuplikate: " + plan.duplicateCount +
                     "\nGeschützte bestehende Widerrufe: " + plan.blockedReactivations.size +
+                    "\nIdentitätskonflikte: " + plan.identityConflicts.size +
+                    "\nKapazitätsgrenze überschritten: " + plan.capacityExceeded +
                     "\nWeitere protokollierte Datensätze: " + plan.reviewOnlyCount +
                     "\n\nEine Prüfsumme bestätigt keine Herkunft. Jeder persönliche Fakt benötigt deine eigene Bestätigung."
             }
