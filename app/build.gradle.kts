@@ -130,7 +130,7 @@ android {
         }
         if (continuumLocalStandalone) {
             versionCode = requireNotNull(continuumStandaloneVersion)
-            versionName = "0.3.${versionCode - 1}"
+            versionName = "0.3.${requireNotNull(continuumStandaloneVersion) - 1}"
         }
         testInstrumentationRunner = "at.heinz.deviceai.ContinuumVisualInstrumentation"
         manifestPlaceholders["mobileBuilderEnabled"] = deviceAiPreview || deviceAiMentorPreview || deviceAiDesignPreview || deviceAiFeaturePreview
