@@ -31,3 +31,25 @@ Tests: `scripts/continuum-learning-parity-readout.test.mjs` enthält fünf Node-
 `scripts/continuum-fold7-owner-update-gate.sh` benutzt derzeit den historischen Besitzer-Pfad, der `at.heinz.deviceai.mentorpaired` baut, **nicht** die neue lokale Haupt-App. Diesen Gate-Einstieg nicht für die nächste Continuum-Lokal-APK verwenden. Die vorhandene separate `scripts/continuum-fold7-standalone-apk.sh` adressiert `at.heinz.deviceai.continuumlocal`, die vorhandene lokale P12 und Versionscode 27. Benutzung erst nach vollständigen Tests, verifiziertem Signer und ausdrücklicher Besitzerfreigabe; keine automatische Installation.
 
 Dieser Branch basiert auf PR #205, ersetzt keine PR-#207/#208-Komponenten, enthält keinen Merge und verändert kein Main/Production.
+
+## Fortsetzung: ausgeführter Lernstandsvergleich und sichere APK-Grenze
+
+### Ausführbare read-only Vergleichslogik
+`scripts/continuum-learning-parity-audit.mjs` akzeptiert zwei ausdrücklich zugeordnete, optional unvollständige JSON-Messprotokolle und vergleicht ausschließlich berichtete Zähler und Prüfsummen. Unbekannte Werte bleiben `null`. Gleiche SHA-256-Herkunft beweist weder den historischen Importprozess noch vollständige Migration; deshalb bleiben `verifiedModelWeightMigration`, `verifiedFullMigration` und `verifiedGemmaInference` immer `false`. Ein Holdout-Vergleich erfolgt nur bei ausdrücklich übereinstimmender Benchmark-ID und identischen Fallzahlen; die unabhängige Echtheit der Eingaben ist damit noch nicht bewiesen. Externe APIs und Datenänderungen existieren nicht.
+
+`scripts/continuum-learning-parity-audit.test.mjs` enthält 5 kontrollierte Node-Tests, die am 28.10.2026 in einer isolierten Node-22-Laufzeit wirklich bestanden wurden (5/5).
+
+### Reale Fehlerkorrektur am Fold7-Release-Gate
+`scripts/continuum-fold7-owner-update-gate.sh` adressierte bislang das historische `mentorpaired`-Paket und seine Signierumgebung. Der isolierte Fix verwendet nur den vorhandenen `continuum-fold7-standalone-apk.sh`-Pfad für `at.heinz.deviceai.continuumlocal`. Er verlangt exakten SHA/sauberen Entwicklungbranch/offiziellen Origin; prüft Paketidentität, nur originale lokale P12 mit gepinntem Zertifikat und v27+; verzichtet auf automatische Installation, Pull, Secret-Upload und Main-Änderungen. QA verwendet keine Signier-Secrets. Jede Regression erhält ein neues getrenntes privates Evidence-Verzeichnis.
+
+Wichtiger nachgewiesener Shell-Fehler: Eine fehlgeschlagene Vollregression in einer `( ... ) || blocked`-Gruppe konnte durch einen danach erfolgreichen Node-Test überdeckt werden. Beide Teilbefehle haben jetzt eigene `|| exit 69`-Schranken. Die Tests prüfen explizit diese Fehlerverdeckung und verweigern dann die APK-Freigabe.
+
+`scripts/continuum-fold7-owner-update-gate.test.mjs` enthält 14 in isolierten Git-Fixtures ausgeführte Node-Tests, zuletzt **14/14 PASS** (nicht Signierung auf einem echten Telefon). Zusammen mit den fünf Vergleichstests **19/19 PASS**, ohne Android-SDK oder Fold7. Shell `bash -n` PASS. Das ist `UNIT_TESTED` für die Node-/Bash-Gates, nicht `ANDROID_BUILT` oder `DEVICE_VERIFIED`.
+
+### Exakte verifizierte Git-Blobs (von GitHub zurücklesbar)
+- Release-Gate: `73e122b6aaac4210664668426233d5787dfa7991`.
+- Release-Gate-Tests: `181c473a20606039599eb881255bad7b73c60dbb`.
+- Lernvergleich: `6dd6384763b628919ffd3d6d057feb59a593ac38`.
+- Lernvergleich-Tests: `ffb3f07a072454b60945b1ad3540daa091446280`.
+
+Keine Besitzer-Signatur, keine App-Daten, kein Modell und kein Produktionsbranch wurden verändert. Das veraltete `scripts/continuum-fold7-update.sh` ist als gesonderter, fest an PR205 gebundener Pfad nicht der aktuelle sichere Freigabeeinstieg. Für neue APKs ist bis zur späteren Endfreigabe ausschließlich das korrigierte SHA-gepinnte Gate als Kandidat vorgesehen; es wurde hier nicht auf Fold7 ausgeführt.
