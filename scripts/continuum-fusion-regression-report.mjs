@@ -56,8 +56,10 @@ export function collectRun({ output, project, commit, gradleExit, nodeExit, star
       if (!stat.isFile() || stat.isSymbolicLink()) throw new Error('Not a regular report file');
       if (stat.mtimeMs < startedMillis - 2000) stale = true;
       const contents = fs.readFileSync(file, 'utf8');
-      suites.push(assessJUnitXml(contents));
+      // Preserve the original report even when it is corrupt or truncated.
+      // Evidence must not disappear merely because parsing rejects it.
       fs.writeFileSync(path.join(destination, name), contents, { mode: 0o600, flag: 'wx' });
+      suites.push(assessJUnitXml(contents));
     } catch (error) {
       errors.push(name + ': ' + error.message);
     }
