@@ -1,0 +1,150 @@
+name: Continuum v26 - GitHub Hauptapp Build
+
+on:
+  push:
+    branches:
+      - chatgpt/continuum-german-research-contradiction-20261028
+    paths:
+      - .github/workflows/continuum-v26-github-hauptapp.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-v26-github-mainapp-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  mainapp-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Buildbeginn belegen
+        run: echo "CONTINUUM_GITHUB_RUNNER_STARTED=${{ github.run_id }}"
+
+      - name: Exakten Branch auschecken
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Android SDK 36 und Build Tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+
+      - name: V26 Render-Buildskript lokal ohne Originalschluessel testen
+        run: |
+          set -euo pipefail
+          bash -n scripts/render-continuum-v26-owner-release.sh
+          node --test scripts/render-continuum-v26-owner-release.test.mjs
+
+      - name: Vollstaendige Kotlin-Node-Paritaetsdaten vorbereiten
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/continuum-cre1" "$RUNNER_TEMP/continuum-contrastive"
+          node .github/continuum/cre-parity.mjs prepare "$RUNNER_TEMP/continuum-cre1"
+          node .github/continuum/contrastive-parity.mjs prepare "$RUNNER_TEMP/continuum-contrastive"
+          echo "CONTINUUM_CRE1_PARITY_DIR=$RUNNER_TEMP/continuum-cre1" >> "$GITHUB_ENV"
+          echo "CONTINUUM_CONTRASTIVE_PARITY_DIR=$RUNNER_TEMP/continuum-contrastive" >> "$GITHUB_ENV"
+          echo "CONTINUUM_FUSION_REGRESSION_OUTPUT=$RUNNER_TEMP/continuum-fusion-regression" >> "$GITHUB_ENV"
+          echo "CONTINUUM_GRADLE_PATH=$(command -v gradle)" >> "$GITHUB_ENV"
+
+      - name: Hauptapp Volltest Lint Kotlin und reale APK kompilieren
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/continuum-fold7-owner-update-gate.sh qa "$GITHUB_SHA"
+          node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR"
+          node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR"
+
+      - name: Hauptapp-Paket Version und Fremdsignatur unabhaengig pruefen
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+          mkdir -p github-mainapp-qa
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > github-mainapp-qa/SIGNATURE.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" > github-mainapp-qa/PACKAGE.txt
+          grep -Fq "package: name='at.heinz.deviceai.mentorpaired' versionCode='26' versionName='0.3.25'" github-mainapp-qa/PACKAGE.txt
+          grep -Fq 'Verified using v2 scheme (APK Signature Scheme v2): true' github-mainapp-qa/SIGNATURE.txt
+          if grep -qiF '2b05fa9de378fb6c6c5376143774a573897dc9c9151305f1c44010275c76a9cc' github-mainapp-qa/SIGNATURE.txt; then
+            echo 'Unexpectet original owner certificate in GitHub QA. Refusing.' >&2
+            exit 69
+          fi
+          cp "$apk" github-mainapp-qa/Continuum-v26-HAUPTAPP-QA-NICHT-INSTALLIEREN.apk
+          (cd github-mainapp-qa && sha256sum Continuum-v26-HAUPTAPP-QA-NICHT-INSTALLIEREN.apk > SHA256SUMS.txt)
+          printf 'source_sha=%s\npackage=at.heinz.deviceai.mentorpaired\nversion_code=26\nversion_name=0.3.25\nowner_signed=FALSE\nowner_installable=FALSE\nstatus=GITHUB_MAINAPP_QA_VERIFIED\n' "$GITHUB_SHA" > github-mainapp-qa/STATUS.txt
+          echo 'CONTINUUM_GITHUB_MAINAPP_QA_VERIFIED_NOT_OWNER_INSTALLABLE'
+
+      - name: Neue echte Hauptapp-QA-APK mit Pruefbelegen speichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-v26-Hauptapp-QA-NICHT-INSTALLIEREN
+          path: github-mainapp-qa/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Buildfehler ohne Schluessel sichern
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-v26-GitHub-Fehlerberichte
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.html
+          if-no-files-found: ignore
+          retention-days: 7
+
+  alte-debug-apks-entfernen:
+    needs: mainapp-build
+    if: success()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Nur alte GitHub-Debug-Artefakte nach erfolgreichem Neubuild entfernen
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const staleNames = new Set([
+              'DeviceAI-v0.3-debug-apk',
+              'DeviceAI-v0.3.1-preview-debug-apk'
+            ]);
+            const artifacts = await github.paginate(github.rest.actions.listArtifactsForRepo, {
+              owner, repo, per_page: 100
+            });
+            let removed = 0;
+            for (const a of artifacts) {
+              if (!staleNames.has(a.name)) continue;
+              if (a.workflow_run?.id === context.runId) continue;
+              await github.rest.actions.deleteArtifact({
+                owner, repo, artifact_id: a.id
+              });
+              removed++;
+            }
+            core.info('Deleted obsolete *debug* APK artifacts only: ' + removed);
+            core.info('Preserved owner-signed releases, rollback packages and v26 QA artifact.');
