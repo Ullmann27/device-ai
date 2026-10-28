@@ -17,7 +17,7 @@ export function assessCcc1BridgeProposal(report) {
   if (!isObject(report) || report.schema !== 'continuum-optional-coding-bridge-v1' ||
       report.mode !== 'SYNTHETIC_ONLY') throw Error('UNTRUSTED_BRIDGE_REPORT');
   if (report.repositoryAccess !== false || report.patchApplied !== false ||
-      report.ownerReviewRequired === false) throw Error('UNAUTHORIZED_WRITE_REPORTED');
+      report.ownerReviewRequired !== true) throw Error('UNAUTHORIZED_WRITE_REPORTED');
   if (!['MOCKED_OFFLINE','SELF_HOSTED_LOOPBACK','EXPERIENTIAL_FREE_ONLY'].includes(report.transportKind))
     throw Error('UNKNOWN_TRANSPORT');
   if (report.transportKind === 'EXPERIENTIAL_FREE_ONLY' && !FREE.has(report.model))

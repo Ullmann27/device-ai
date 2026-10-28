@@ -246,7 +246,7 @@ export async function runSyntheticCodingTrial({workspace,model='claude-fable-5.1
   const result=Object.freeze({schema:'continuum-optional-coding-bridge-v1',
     model:selected,mode:'SYNTHETIC_ONLY',transportKind,fixtureSha256:before.fixtureSha256,
     observedReadCalls:[...seen].sort(),observedTestCall:testResult!==null,
-    testResult,patchApplied:false,repositoryAccess:false,credentialLogged:false,
+    testResult,patchApplied:false,repositoryAccess:false,ownerReviewRequired:true,credentialLogged:false,
     completed:completedTools&&review?.accepted===true&&turns<8,
     proposalVerifiedOnIsolatedCopy:review?.accepted===true,proposalReview:review,
     providerReportedModels:[...new Set(reportedModels)],
