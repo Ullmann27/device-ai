@@ -40,7 +40,7 @@ export function assessContinuumIntegration(root){
     actual[p]=hash;
   }
   const gradle=ownedFile(absolute,'app/build.gradle.kts').toString('utf8');
-  if(!/applicationId\s*=\s*if\s*\(continuumLocalStandalone\)\s*"at\.heinz\.deviceai\.continuumlocal"\s*else\s*"at\.heinz\.deviceai"/.test(gradle))
+  if(!/applicationId\s*=\s*if\s*\(continuumLocalStandalone(?:\s*\|\|\s*continuumLocalStandaloneQa)?\)\s*"at\.heinz\.deviceai\.continuumlocal"\s*else\s*"at\.heinz\.deviceai"/.test(gradle))
     throw Error('MAIN_APP_PACKAGE_IDENTITY_MISSING');
   const standalone=ownedFile(absolute,'scripts/continuum-fold7-standalone-apk.sh').toString('utf8');
   if(!standalone.includes('-PcontinuumLocalStandalone=true')||
