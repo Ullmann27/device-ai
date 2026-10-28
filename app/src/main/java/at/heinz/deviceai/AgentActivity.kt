@@ -3440,9 +3440,12 @@ class AgentActivity : Activity() {
                 "2 · Wissensarchiv-ZIP importieren/exportieren",
                 "3 · SWB1-Gewichte dieser App sichern",
                 "4 · Trainingsmonitor mit echten Messwerten",
-                "5 · Gemma 4 laden und echten Modelltest prüfen",
-                "6 · Lernkern und Holdout-Ergebnisse ansehen",
-                "7 · Öffentliche Forschung kontrolliert konfigurieren"
+                "5 · Gemma 4 · ECHTEN Direkt-Test ausführen",
+                "6 · Gemma 4 verwalten und laden",
+                "7 · Lernkern und Holdout-Ergebnisse ansehen",
+                "8 · Öffentliche Forschung kontrolliert konfigurieren",
+                "9 · Öffentliches Offline-Lernpaket ausdrücklich starten",
+                "10 · Lokales Auto-Üben konfigurieren"
             )
             AlertDialog.Builder(this)
                 .setTitle("CONTINUUM · EINE HAUPT-APP")
@@ -3452,9 +3455,12 @@ class AgentActivity : Activity() {
                         1 -> showArchiveBackupMenu()
                         2 -> exportCoreWeights()
                         3 -> startActivity(Intent(this, ContinuumTrainingMonitorActivity::class.java))
-                        4 -> showModelCenter()
-                        5 -> showContinuumLearningDashboard()
-                        6 -> showPublicStudyControls()
+                        4 -> runLocalSmokeTest(direct = true)
+                        5 -> showModelCenter()
+                        6 -> showContinuumLearningDashboard()
+                        7 -> showPublicStudyControls()
+                        8 -> showPublicCurriculumDialog()
+                        9 -> showNeuralPracticeDialog()
                     }
                 }
                 .setNegativeButton("SCHLIESSEN", null)
