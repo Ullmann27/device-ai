@@ -228,6 +228,45 @@ class ContinuumDecoderBridgeTest {
         } finally { dir.deleteRecursively() }
     }
 
+    @Test fun conservativeResearchRetryCannotBypassProtectedAuditsOrCommitOnCancellation() {
+        val dir=Files.createTempDirectory("continuum-cdx-retry-guard").toFile()
+        try {
+            val bridge=ContinuumDecoderBridge(dir)
+            val training=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Person P11 wohnt in Graz.","Wo wohnt P11?","P11 wohnt in Graz.")
+            ),DecoderSplit.TRAIN)
+            val audit=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Person Q21 wohnt in Linz.","Wo wohnt Q21?","Q21 wohnt in Linz.")
+            ),DecoderSplit.AUDIT)
+            val protected=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair("Person Z31 ist Tischlerin.","Was arbeitet Z31?","Z31 ist Tischlerin.")
+            ),DecoderSplit.AUDIT)
+            val encoder=TrainableSubwordEncoder().save()
+            val illegalRates=listOf(Double.NaN,Double.POSITIVE_INFINITY,0.0,0.081)
+            illegalRates.forEach { rate ->
+                assertThrows(IllegalArgumentException::class.java) {
+                    bridge.trainPairedExperiment(training,audit,encoder,steps=8,
+                        protectedAudits=listOf(protected),learningRate=rate)
+                }
+            }
+            val leaked=DecoderEvidenceCorpus(listOf(
+                DecoderEvidencePair(training.pairs.first().evidence,
+                    training.pairs.first().question,"geheim")
+            ),DecoderSplit.AUDIT)
+            assertThrows(IllegalArgumentException::class.java) {
+                bridge.trainPairedExperiment(training,audit,encoder,steps=8,
+                    protectedAudits=listOf(leaked),learningRate=.012)
+            }
+            val stopped=bridge.trainPairedExperiment(training,audit,encoder,
+                steps=8,cancelled={true},protectedAudits=listOf(protected),
+                learningRate=.012)
+            assertFalse(stopped.accepted)
+            assertEquals(0,stopped.completedSteps)
+            assertFalse(bridge.pairedStatus(encoder).available)
+            assertFalse(File(dir,"context-decoder-paired.bundle").exists())
+        } finally {dir.deleteRecursively()}
+    }
+
     @Test fun oldCheckpointBackupIsReadableOnlyAndNeverSilentlyPromoted() {
         val dir=Files.createTempDirectory("continuum-legacy-recovery").toFile()
         try {
