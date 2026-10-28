@@ -1,6 +1,9 @@
 package at.heinz.deviceai.learning
 
 import java.io.File
+import at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadow
+import at.heinz.deviceai.cognitive.AuthorizedHybridShadowReport
+import at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus
 import java.security.MessageDigest
 
 /** One transparent, side-effect-bounded conversation turn through the existing
@@ -26,7 +29,11 @@ data class ContinuumCognitiveTurn(
     /** Authorized raw evidence selected in this exact dialogue turn. */
     val evidenceHits:List<ContinuumMemoryHit> = emptyList(),
     /** Only a grounded topic from this runtime; never a retrieved profile-global subject. */
-    val nextScopedGroundedQuestion:String?=null
+    val nextScopedGroundedQuestion:String?=null,
+    /** Local-only aggregate diagnostics; never changes the authorized answer. */
+    val hybridShadow:AuthorizedHybridShadowReport = AuthorizedHybridShadowReport(
+        AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE
+    )
 ) {
     val grounded:Boolean get()=dialogue.grounded
     val answer:String get()=dialogue.answer
@@ -104,6 +111,14 @@ class ContinuumCognitiveRuntime(
         }
         val byId=shadow.associateBy { it.memoryId }
         val scores=ranked.mapNotNull { byId[it.id] }
+        // Observe only the exact evidence returned by this SWB1 turn. CRE1 scores
+        // are already computed locally; no second model call or memory lookup.
+        // Failures never block the existing answer or export private content.
+        val hybridShadow=runCatching {
+            AuthorizedConversationMemoryShadow.observe(turn,ranked,scores)
+        }.getOrElse {
+            AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.EVALUATION_FAILED)
+        }
         turn.memoryIds.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF,it) }
         ranked.mapNotNull { it.sourceRef }.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.SOURCE_REF,it) }
         if(scores.isNotEmpty())turnTrace?.event(if(didRerank)at.heinz.deviceai.cognitive.TraceStage.CRE1_ACTIVE else at.heinz.deviceai.cognitive.TraceStage.CRE1_SHADOW)
@@ -135,7 +150,7 @@ class ContinuumCognitiveRuntime(
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
-            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion)
+            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion,hybridShadow)
     }
 
     /**
