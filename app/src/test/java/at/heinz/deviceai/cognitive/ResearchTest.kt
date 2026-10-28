@@ -8,6 +8,26 @@ import org.junit.Test
 import java.net.URI
 
 class ResearchTest {
+    @Test fun twoSupportingSourcesCannotOutvoteAnExplicitContradiction() {
+        val texts = listOf("Das Gerät unterstützt kabelloses Laden.",
+            "Das Gerät unterstützt kabelloses Laden.",
+            "Das Gerät unterstützt kabelloses Laden nicht.")
+        val docs = texts.mapIndexed { i, text ->
+            document("https://source$i.example/report", "source$i.example", text, 1L)
+        }
+        for (ordered in listOf(docs, docs.reversed())) {
+            val first = ordered.first()
+            val result = ResearchPipeline(SimulatedResearchProvider(
+                ordered.associateBy { it.url }, mapOf(first.url to ordered.map { it.url })
+            ), BaselineClaimExtractor { 2L }).research(ResearchRequest("Laden", first.url))
+            assertEquals(3, result.claims.size)
+            assertTrue(result.relationships.any { it.relation == ClaimRelation.SUPPORTS })
+            assertTrue(result.relationships.any { it.relation == ClaimRelation.CONTRADICTS })
+            assertFalse(result.claims.any { it.validationState == ValidationState.VERIFIED })
+            assertTrue(result.claims.all { it.validationEvidenceReferences.isEmpty() })
+        }
+    }
+
     @Test
     fun urlPolicyRejectsUnsafeSchemesPrivateTargetsAndRedirects() {
         assertThrows(IllegalArgumentException::class.java) {
