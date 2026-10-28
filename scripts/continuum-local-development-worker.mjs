@@ -36,7 +36,7 @@ function checkout(){
  const branch=git(['symbolic-ref','--quiet','--short','HEAD']);const sourceSha=git(['rev-parse','HEAD']);
  const tracked=git(['ls-files','-z','--',':(glob).github/continuum/*.test.mjs']).split('\0').filter(Boolean);
  const names=tracked.map(name=>{let full=ROOT;for(const part of name.split('/')){full=join(full,part);if(fs.lstatSync(full).isSymbolicLink())throw Error('UNSAFE_TEST_FILE_TYPE');}if(!fs.lstatSync(full).isFile())throw Error('UNSAFE_TEST_FILE_TYPE');return name.slice('.github/continuum/'.length);});
- const {tests}=evaluateCheckout({branch,dirty:git(['status','--porcelain','--untracked-files=no']).length>0,tests:names});
+ const {tests}=evaluateCheckout({branch,dirty:git(['status','--porcelain=v1','--untracked-files=all']).length>0,tests:names});
  return {branch,sourceSha,tree:git(['rev-parse','HEAD^{tree}']),tests,inventoryHash:digest(JSON.stringify(tests.map(name=>({name,sha256:digest(fs.readFileSync(join(ROOT,'.github/continuum',name)))}))))};
 }
 function options(o={}){
