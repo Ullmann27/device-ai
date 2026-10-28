@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumContrastiveGateTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:26" hostname="b50d54a1ac03" time="0.002">
+  <properties/>
+  <testcase name="goodEvidenceOnlyPermitsReview" classname="at.heinz.deviceai.learning.ContinuumContrastiveGateTest" time="0.001"/>
+  <testcase name="forgettingCannotBeOverriddenByGoodHoldout" classname="at.heinz.deviceai.learning.ContinuumContrastiveGateTest" time="0.0"/>
+  <testcase name="unchangedHoldoutRejectsCandidate" classname="at.heinz.deviceai.learning.ContinuumContrastiveGateTest" time="0.001"/>
+  <testcase name="duplicateOrMissingEvidenceRejected" classname="at.heinz.deviceai.learning.ContinuumContrastiveGateTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

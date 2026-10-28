@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ResearchNegationSignalsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:22" hostname="b50d54a1ac03" time="0.002">
+  <properties/>
+  <testcase name="explicitGermanNegationContrastsOtherwiseMatchingClaims" classname="at.heinz.deviceai.cognitive.ResearchNegationSignalsTest" time="0.001"/>
+  <testcase name="simpleNichtNurPhraseDoesNotClaimAContradiction" classname="at.heinz.deviceai.cognitive.ResearchNegationSignalsTest" time="0.0"/>
+  <testcase name="unchangedOrSamePolarityCannotInventOpposition" classname="at.heinz.deviceai.cognitive.ResearchNegationSignalsTest" time="0.0"/>
+  <testcase name="englishSignalsRemainAvailable" classname="at.heinz.deviceai.cognitive.ResearchNegationSignalsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

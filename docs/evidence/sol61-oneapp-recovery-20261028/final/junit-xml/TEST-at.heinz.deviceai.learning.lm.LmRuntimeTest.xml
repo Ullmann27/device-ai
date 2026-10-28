@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.lm.LmRuntimeTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:48" hostname="b50d54a1ac03" time="1.223">
+  <properties/>
+  <testcase name="anIncompleteCharacterAtTheEndIsDropped" classname="at.heinz.deviceai.learning.lm.LmRuntimeTest" time="0.002"/>
+  <testcase name="limitsStopGenerationAndAreReported" classname="at.heinz.deviceai.learning.lm.LmRuntimeTest" time="0.205"/>
+  <testcase name="damagedForeignOrUnexpectedCheckpointsAreRejected" classname="at.heinz.deviceai.learning.lm.LmRuntimeTest" time="0.089"/>
+  <testcase name="greedyGenerationMatchesTheResearchGeneratorAndSamplingIsReproducible" classname="at.heinz.deviceai.learning.lm.LmRuntimeTest" time="0.796"/>
+  <testcase name="stepwiseMinGruGivesBitIdenticalLogitsToTheFullForwardPass" classname="at.heinz.deviceai.learning.lm.LmRuntimeTest" time="0.131"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

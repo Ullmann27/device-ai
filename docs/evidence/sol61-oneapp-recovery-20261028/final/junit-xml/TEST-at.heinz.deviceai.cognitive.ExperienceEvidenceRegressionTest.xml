@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:25" hostname="b50d54a1ac03" time="0.009">
+  <properties/>
+  <testcase name="destructiveSequenceRemainsBlocked" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.002"/>
+  <testcase name="candidateCannotCarryDuplicatedEvidenceIds" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.002"/>
+  <testcase name="uniqueExperiencesRemainEligibleButAlwaysRequireOwnerReview" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.002"/>
+  <testcase name="conflictingIdentityFailsClosedBeforeEligibilityFiltering" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.001"/>
+  <testcase name="candidateCannotDisableOwnerApproval" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.0"/>
+  <testcase name="candidateIdentityDoesNotDependOnDeviceLocale" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.001"/>
+  <testcase name="replayDoesNotInflateSuccessRateOrMeanScore" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.0"/>
+  <testcase name="replayedSuccessCannotMeetOccurrenceThreshold" classname="at.heinz.deviceai.cognitive.ExperienceEvidenceRegressionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

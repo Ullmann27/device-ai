@@ -1,0 +1,319 @@
+✔ accepted synthetic preview is review only; never grants CCC1 authority (3.405786ms)
+✔ unknown report schema fails (0.425618ms)
+✔ real checkout cannot be reported as synthetic (0.108736ms)
+✔ reported checkout access fails (0.089333ms)
+✔ reported patch application fails (0.462482ms)
+✔ claimed owner approval is explicitly refused (0.130461ms)
+✔ unknown remote transport fails (0.122347ms)
+✔ unsuffixed Fable and Astra cloud IDs fail (0.174405ms)
+✔ valid free cloud ID still cannot grant repository rights (0.322847ms)
+✔ local model must have local identity (0.332493ms)
+✔ valid local advertisement still requires independent model evidence (0.308019ms)
+✔ missing tool proof fails (0.160051ms)
+✔ missing read path fails (0.073683ms)
+✔ spurious path cannot replace one of two permitted reads (0.267486ms)
+✔ baseline falsely all green fails (0.152209ms)
+✔ candidate not all green fails (0.671507ms)
+✔ plain-text proposal fails (0.190119ms)
+✔ file traversal proposal fails (0.088465ms)
+✔ arbitrary code cannot be promoted through a JSON patch (0.096959ms)
+✔ extra proposal fields fail (0.071602ms)
+✔ missing proposal is refused (0.045179ms)
+✔ missing or mistyped owner-review requirement fails closed (0.201523ms)
+✔ free-only allowlist is precise; paid aliases cannot be selected (4.950626ms)
+✔ real synthetic file-read calls, fixed local Node test and proposal, no file patch (218.75111ms)
+✔ matching Fable-style dry-run is not a verified remote inference (207.128818ms)
+✔ tool path traversal and arbitrary shell are refused before execution (5.024263ms)
+✔ symlinked file, mutated fixture, hidden added entries all fail closed (2.023746ms)
+✔ Git checkout cannot be processed as synthetic workspace (0.613131ms)
+✔ response cannot silently charge, switch BYOK, or claim completed missing tools (1.486775ms)
+✔ live transport refuses missing key and fixed URI is exact (0.717094ms)
+✔ real CLI denies network before explicit approval; does not print key (38.792278ms)
+✔ preparing a populated location is refused without modifying it (0.8459ms)
+✔ offline CLI proves fixture tooling without any provider key or internet (229.508614ms)
+✔ only pinned one-line patch may be executed on disposable synthetic copy (96.649281ms)
+✔ a model response claiming different identity is refused (0.724127ms)
+✔ finished experiment review is reachable in primary learning center (0.815809ms)
+✔ CTX3 test is discoverable and stays confined to existing nonexported lab (0.17091ms)
+✔ Orion personal memory is not mistaken for an entity definition (0.130966ms)
+✔ permanent research catalog belongs to canonical Continuum experiment registry (1.100961ms)
+✔ all 15 upstream candidates are anchored to source links and local interfaces (0.365233ms)
+✔ all developer entrypoints preserve integration mission (0.26048ms)
+✔ research evaluation uses existing brain retrieval, never writes or runs tools (0.218519ms)
+✔ the historical owner release gates have not been weakened by research files (0.346646ms)
+✔ parses authentic-style nonempty JUnit counts (1.467857ms)
+✔ rejects truncated, missing or contradictory JUnit reports (0.43491ms)
+✔ forbids PASS after failed, skipped, missing or outdated tests (0.307291ms)
+✔ copies real XML and hashes reports outside the checkout (1.907109ms)
+✔ keeps malformed JUnit XML as evidence while reporting FAIL (0.79917ms)
+✔ rejects stale XML left over from an earlier filtered test run (0.705451ms)
+✔ rejects missing XML even when the underlying Gradle exit is zero (0.461534ms)
+✖ the two inherited bridges have exact tested original Git blobs (2.358737ms)
+✖ old 0.3.0 root package source is not the new Android app (1.897212ms)
+✖ historic mentorpaired release lane is refused (2.037722ms)
+✖ missing standalone build identity is refused (0.84138ms)
+✔ a changed bridge byte is not accepted as previously tested code (1.214481ms)
+✔ symlinked source file cannot escape checkout (0.665653ms)
+✖ LiteRT-LM remains original native model format (1.063334ms)
+✖ read-only CLI fails closed without any path or owner-secret exposure (36.205207ms)
+✔ observed number comparison is deterministic without claiming intelligence (0.935852ms)
+✔ unknown values remain unknown, not zero (1.239908ms)
+✔ hash equality alone is insufficient to claim complete migration (0.286265ms)
+✔ invalid or confused app identities are rejected (0.435807ms)
+✔ holdout quality only comparable on explicitly matching frozen benchmark ID and test size (0.323423ms)
+✔ matching benchmark labels without frozen question hashes are not sufficient (0.133372ms)
+✔ same benchmark label with altered question set SHA fails closed (0.158455ms)
+✔ malformed frozen benchmark hash is refused before comparing scores (0.16565ms)
+✔ context plan uses a bounded byte estimate and reserves actual client output (1.884276ms)
+✔ context truncates Unicode and JSON escape-heavy input within the real serialized budget (5.055698ms)
+✔ diagnostics precede source under pressure and omitted context is reported (2.585528ms)
+✔ rejects out-of-bounds contexts, unbounded inputs and unsafe fragment paths (0.720202ms)
+✔ preserves the complete goal or refuses instead of silently truncating its meaning (0.173253ms)
+✔ diagnosis requires a matching admission identity and never labels input as verified facts (0.81765ms)
+✔ local diagnosis uses the existing fixed-loopback client with no tool or promotion rights (24.488338ms)
+✔ injected source remains quoted data and model instructions cannot select shell tools (1.07636ms)
+✔ single owner app ID is the standalone continuumlocal package (0.993146ms)
+✔ a separate no-install QA suffix is not the owner package (0.198926ms)
+✔ one-app migration is a first-class existing learning-centre action (0.360605ms)
+✔ migration centre contains a real current-app status, not a fixed pretend success number (0.118334ms)
+✔ migration status distinguishes training counter from actual Gemma load (0.32666ms)
+✔ public research consent and scheduler state are presented (0.124342ms)
+✔ existing owner weight, archive and export flows are reused, not bypassed (0.248557ms)
+✔ single-app centre exposes real local direct inference and training measurements (0.098832ms)
+✔ no auto-collection of another app private data or surprise uninstall (0.275087ms)
+✔ archive validates all source records before permanent writes (0.300409ms)
+✔ archive checks existing on-device collisions before any new source commit (0.723109ms)
+✔ archive import tells owner how many new records were actually saved (0.279789ms)
+✔ SWB1 weight-import evaluation protects local user lessons (0.102853ms)
+✔ original P12 and exact owner source stay behind release gate (0.083643ms)
+✔ migration cannot be mistaken for complete transfer of revoked owner facts (0.049551ms)
+✔ Gemma multi-gigabyte import displays actual progress instead of only LÄDT (0.694642ms)
+✔ Gemma process import observation is throttled to every 64 MiB or phase change (0.179067ms)
+✔ import timeout is a progress watchdog and never claims false 120-second failure (0.193641ms)
+✔ real native direct smoke test is a manual explicit action (0.407075ms)
+✔ user must explicitly tap to copy a status after a successful local read (0.078445ms)
+✔ only the short main-app status is copied, never private owner facts (0.144765ms)
+✔ clipboard success must not be reported when platform clipboard is missing (0.052426ms)
+✔ valid sources grant only permission to attempt the QA build (1.973389ms)
+✔ wrong exact source HEAD fails (0.304546ms)
+✔ dirty checkout fails (0.217561ms)
+✔ main, production and release branch variants fail (2.393629ms)
+✔ untrusted or missing remote fails (0.239492ms)
+✔ old app package fails (0.135446ms)
+✔ QA without sign exclusion fails (0.168609ms)
+✔ runner without actual QA flag fails (0.15874ms)
+✔ wrong signing release lane fails (0.199539ms)
+✔ host without JDK17, SDK36, Gradle, AAPT2 is blocked without downloads (1.905068ms)
+✔ host with existing incompatible Java detects JDK17 requirement (169.11364ms)
+✔ read-only admission accepts a clean synthetic Git checkout with exact SHA (41.724509ms)
+✔ read-only admission reports dirty synthetic checkout (34.245623ms)
+✔ refuses symlinked release source (25.74214ms)
+✔ refuses parent directory rather than exact repository root (26.466094ms)
+✔ strict loopback allowlist refuses DNS, nonloopback, credentials and arbitrary URL (1.635414ms)
+✔ local model identity is never passed as Fable/Astra (0.387479ms)
+✔ real local HTTP protocol reads public files and executes baseline+retrospective patch tests (264.653113ms)
+✔ local model GET /v1/models must advertise exact requested model (10.414875ms)
+✔ HTTP 307 cannot redirect even from 127.0.0.1 to remote network (10.188314ms)
+✔ server that reports another model is rejected before acceptance (8.359532ms)
+✔ billable-use indication rejects even the local loopback mode (8.211671ms)
+✔ missing approval makes local CLI exit before contacting or altering files (37.815587ms)
+✔ response size, content type and model parameter are bounded (2.031624ms)
+✔ milestone 1: source gate selects actual Continuum Lokal rather than historical Android main (0.961829ms)
+✔ milestone 1: legacy Gradle test flag may not be advertised as standalone regression (0.241983ms)
+✔ milestone 1: failing package, signer or regression checks are explicit blockers (0.921266ms)
+✔ milestone 2: import phase evidence never converts picker/file hash into native inference (0.868807ms)
+✔ milestone 2: genuine reply report remains unverified without independent device source (0.226879ms)
+✔ milestone 2: reordered phases, suspicious byte counts and foreign paths are refused (0.579611ms)
+✔ milestone 3: isolated installed app counters cannot prove migration or Gemma training (0.228318ms)
+✔ milestone 3: identical checkpoint hashes still cannot authorize data transfer (0.20947ms)
+✔ milestone 3: swapped apps, negative counters and false evidence fields fail (0.273464ms)
+✔ milestone 4: simulated local bridge can prove fixture protocol, never private repo access (0.323024ms)
+✔ milestone 4: unsuffixed paid Cloud model is rejected (0.165031ms)
+✔ milestone 4: model reports touching actual repo or external paths are refused (0.132353ms)
+✔ milestone 5: source CLI checks exact bounded source and exits 69 for release blockers (35.748378ms)
+✔ milestone 5: symlink source and missing root fail closed without path leakage (33.769416ms)
+✔ milestone 5: invalid import report cannot contain credentials or arbitrary keys (0.149064ms)
+✔ standalone QA is opt-in and explicitly exclusive with signed owner lane (0.909657ms)
+✔ source builds new continuumlocal app base ID under QA but uses a separate package suffix (0.341474ms)
+✔ owner and historical mentor signing credentials are prohibited for QA (0.274523ms)
+✔ QA rejects assembly/bundle or release tasks before Gradle runs them (0.176954ms)
+✔ full regression targets QA source with correct package and no owner signer (0.189031ms)
+✔ owner release still uses independently signed standalone build with original package (0.423468ms)
+ℹ tests 141
+ℹ suites 0
+ℹ pass 135
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2379.551823
+
+✖ failing tests:
+
+test at scripts/continuum-integration-source-gate.test.mjs:32:1
+✖ the two inherited bridges have exact tested original Git blobs (2.358737ms)
+  Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs
+      at assessContinuumIntegration (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.mjs:39:30)
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:33:11
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:32:75)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at scripts/continuum-integration-source-gate.test.mjs:40:1
+✖ old 0.3.0 root package source is not the new Android app (1.897212ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /MAIN_APP_PACKAGE_IDENTITY_MISSING/. Input:
+  
+  'Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs'
+  
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:42:10
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:40:69)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs
+        at assessContinuumIntegration (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.mjs:39:30)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:42:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:42:10
+        at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+        at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:40:69)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: /MAIN_APP_PACKAGE_IDENTITY_MISSING/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-integration-source-gate.test.mjs:44:1
+✖ historic mentorpaired release lane is refused (2.037722ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /MAIN_APP_GATE_MISSING_OR_LEGACY/. Input:
+  
+  'Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs'
+  
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:46:10
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:44:58)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs
+        at assessContinuumIntegration (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.mjs:39:30)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:46:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:46:10
+        at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+        at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:44:58)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: /MAIN_APP_GATE_MISSING_OR_LEGACY/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-integration-source-gate.test.mjs:48:1
+✖ missing standalone build identity is refused (0.84138ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /MAIN_APP_RELEASE_LANE_MISSING/. Input:
+  
+  'Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs'
+  
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:50:10
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:48:57)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs
+        at assessContinuumIntegration (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.mjs:39:30)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:50:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:50:10
+        at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+        at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:48:57)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: /MAIN_APP_RELEASE_LANE_MISSING/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-integration-source-gate.test.mjs:61:1
+✖ LiteRT-LM remains original native model format (1.063334ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /ORIGINAL_LITERT_MODEL_CATALOG_MISSING/. Input:
+  
+  'Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs'
+  
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:63:10
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:61:59)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: BRIDGE_SOURCE_DRIFT_continuum_coding_bridge_mjs
+        at assessContinuumIntegration (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.mjs:39:30)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:63:21
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:63:10
+        at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+        at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:61:59)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: /ORIGINAL_LITERT_MODEL_CATALOG_MISSING/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts/continuum-integration-source-gate.test.mjs:65:1
+✖ read-only CLI fails closed without any path or owner-secret exposure (36.205207ms)
+  AssertionError [ERR_ASSERTION]: CONTINUUM_INTEGRATION_BLOCKED=READ_ONLY_GATE_FAILED
+  
+  
+  69 !== 0
+  
+      at file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:67:10
+      at fixture (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:29:12)
+      at TestContext.<anonymous> (file:///workspace/device-ai-sol-max/scripts/continuum-integration-source-gate.test.mjs:65:81)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 69,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

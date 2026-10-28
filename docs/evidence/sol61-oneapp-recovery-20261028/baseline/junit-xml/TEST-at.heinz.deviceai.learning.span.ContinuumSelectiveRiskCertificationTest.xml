@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:47" hostname="b50d54a1ac03" time="7.4">
+  <properties/>
+  <testcase name="marginalCertificatePassesWhileHalfOfTheAnswersAreWrong" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.01"/>
+  <testcase name="jointModeAlsoRequiresTheMarginalBound" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.003"/>
+  <testcase name="certificateIsBoundToTheExactCheckpoint" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.014"/>
+  <testcase name="tooFewAnswersFailClosed" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.0"/>
+  <testcase name="guaranteeHoldsInSimulation" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="4.239"/>
+  <testcase name="holmIsStepDownAndStopsAtTheFirstFailure" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.001"/>
+  <testcase name="clopperPearsonUpperBoundIsExact" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.039"/>
+  <testcase name="pValueTestAndClopperPearsonBoundMakeTheSameDecision" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="0.215"/>
+  <testcase name="naiveThresholdSelectionViolatesFarMoreOftenThanDelta" classname="at.heinz.deviceai.learning.span.ContinuumSelectiveRiskCertificationTest" time="2.876"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

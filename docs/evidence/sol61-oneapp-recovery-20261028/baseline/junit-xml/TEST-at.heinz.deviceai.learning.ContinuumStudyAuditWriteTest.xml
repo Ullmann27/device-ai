@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:28" hostname="b50d54a1ac03" time="0.047">
+  <properties/>
+  <testcase name="anInterruptThatIsNoStopRequestKeepsTheAuditAndCountsNothingTwice" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.002"/>
+  <testcase name="anInterruptFlagMakesAnAlreadyFinishedAndroidCommitReportFalse" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.0"/>
+  <testcase name="aStopDuringTheRetryOfAFailedWriteIsAnInterruptionNotADiskFault" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.001"/>
+  <testcase name="aRealStopIsReportedAsStoppedAndNotRetried" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.0"/>
+  <testcase name="aStopArrivingDuringTheWriteKeepsTheWrittenAuditOnce" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.0"/>
+  <testcase name="aWriteThatKeepsFailingGetsAFixedCause" classname="at.heinz.deviceai.learning.ContinuumStudyAuditWriteTest" time="0.042"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

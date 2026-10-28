@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:25" hostname="b50d54a1ac03" time="0.18">
+  <properties/>
+  <testcase name="corruptLocalBacklogIsRecoveredFromBackupAndReported" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.028"/>
+  <testcase name="jobIdsMapToValidBacklogIds" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.0"/>
+  <testcase name="operationLogIsExactlyOnceAndImportRebasesLocalWork" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.061"/>
+  <testcase name="humanDecisionsUseTheSharedRulesAndReportRejections" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.005"/>
+  <testcase name="importRejectsTamperedFilesAndKeepsLocalState" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.011"/>
+  <testcase name="jobInterruptedByAppDeathIsRecoveredWhenItsLeaseEnds" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.005"/>
+  <testcase name="failedAndCancelledJobsKeepTheirReasonAndBudget" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.059"/>
+  <testcase name="completedJobWaitsForTestEvidenceInsteadOfBeingDone" classname="at.heinz.deviceai.cognitive.DeviceDevelopmentBacklogTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

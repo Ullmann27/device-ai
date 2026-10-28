@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.RetrievalBenchmarkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:44" hostname="b50d54a1ac03" time="0.722">
+  <properties/>
+  <testcase name="benchmarkSplitsDoNotLeakIntoCandidates" classname="at.heinz.deviceai.learning.RetrievalBenchmarkTest" time="0.002"/>
+  <testcase name="unknownTopicsAreMostlyDeclinedInsteadOfAnsweredWithAWrongMemory" classname="at.heinz.deviceai.learning.RetrievalBenchmarkTest" time="0.404"/>
+  <testcase name="kotlinRankingMatchesCurrentFrozenFixture" classname="at.heinz.deviceai.learning.RetrievalBenchmarkTest" time="0.316"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

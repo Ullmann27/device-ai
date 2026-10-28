@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-28T16:50:54" hostname="b50d54a1ac03" time="0.382">
+  <properties/>
+  <testcase name="frozenTestSetIsUnchanged" classname="at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest" time="0.017"/>
+  <testcase name="everyTrainableGoldIsAUniqueCandidateOfTheRealModel" classname="at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest" time="0.187"/>
+  <testcase name="splitsShareNoEntityAndNoAnswerValue" classname="at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest" time="0.015"/>
+  <testcase name="multiwordGoldsAreUniqueExactOffsetSpansOnlyWithMultiTokenSpans" classname="at.heinz.deviceai.learning.span.ContinuumSpanAbstentionBenchTest" time="0.16"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

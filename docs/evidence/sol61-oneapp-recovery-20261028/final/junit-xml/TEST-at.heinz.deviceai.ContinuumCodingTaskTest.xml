@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ContinuumCodingTaskTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-28T17:13:20" hostname="b50d54a1ac03" time="0.117">
+  <properties/>
+  <testcase name="canonicalTaskFingerprintBindsEveryGrantAndUsesExistingBacklogCanonicalization" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.015"/>
+  <testcase name="mutableCallerListsCannotChangeAReviewSnapshot" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.002"/>
+  <testcase name="completeTypedTaskIsOnlyADraftUntilSeparateExplicitConfirmation" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.006"/>
+  <testcase name="everyKindIsRepresentedWithoutInventingExecutionCapability" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.011"/>
+  <testcase name="invalidCommitPathsAcceptanceAndResourceLimitsAreRejected" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.073"/>
+  <testcase name="changedRequirementsAndUnrelatedYesCannotReuseAnOldConfirmation" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.009"/>
+  <testcase name="sourceChainMustMatchSelectedModules" classname="at.heinz.deviceai.ContinuumCodingTaskTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
