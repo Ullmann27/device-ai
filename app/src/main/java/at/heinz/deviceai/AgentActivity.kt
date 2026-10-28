@@ -1649,7 +1649,7 @@ class AgentActivity : Activity() {
         val learning = ContinuumLearningCore(filesDir)
         val core = learning.status()
         append("Lernkern: ").append(core.experiences.total).append(" Experiences · ")
-            .append(core.modelUpdates).append(" Gewichtsupdates\n")
+            .append(core.modelUpdates).append(" SWB1-Encoder-Updates (nicht Gemma 4)\n")
         append("Holdouts: Intent ").append(core.intentHoldout.correct).append("/").append(core.intentHoldout.total)
             .append(" · Semantik ").append(core.semanticHoldout.correct).append("/").append(core.semanticHoldout.total).append("\n")
         val practice = NeuralPracticeScheduler(this@AgentActivity)
