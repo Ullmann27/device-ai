@@ -3399,7 +3399,7 @@ class AgentActivity : Activity() {
     private fun showOneAppMigrationCenter() {
         val dialog = AlertDialog.Builder(this)
             .setTitle("EINE HAUPT-APP · CONTINUUM LOKAL")
-            .setMessage("Lokalen Lernstand wird geprüft …")
+            .setMessage("Lokaler Lernstand wird geprüft …")
             .setNegativeButton("SCHLIESSEN", null)
             .create()
         dialog.setOnShowListener {
@@ -3412,18 +3412,18 @@ class AgentActivity : Activity() {
                 val registered = getSystemService(android.app.job.JobScheduler::class.java)
                     ?.getPendingJob(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler.JOB_ID) != null
                 buildString {
-                    append("Aktive Haupt-App: ").append(BuildConfig.APPLICATION_ID).append("\\n")
+                    append("Aktive Haupt-App: ").append(BuildConfig.APPLICATION_ID).append("\n")
                     append("SWB1-Updates: ").append(status.modelUpdates)
                     append(" · Erfahrungen: ").append(status.experiences.total)
-                    append(" · Quellen: ").append(archive).append("\\n")
+                    append(" · Quellen: ").append(archive).append("\n")
                     append("Forschung: ").append(if (study.enabled) "freigegeben" else "aus")
                     append(" · Job: ").append(if (registered) "registriert" else "nicht registriert")
-                    append("\\nGemma: ").append(if (localRuntime.state == LocalModelState.READY &&
+                    append("\nGemma: ").append(if (localRuntime.state == LocalModelState.READY &&
                         localRuntime.loadedModel != null) "geladen" else "nicht nachgewiesen bereit")
-                    append("\\n\\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
+                    append("\n\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
                         "Anschließend in dieser App einzeln prüfen und importieren. " +
                         "Private App-Speicher sind getrennt; keine automatische Übernahme ohne Datei-Auswahl.")
-                    append("\\n\\nNichts deinstallieren, bis die Ergebnisse überprüft sind.")
+                    append("\n\nNichts deinstallieren, bis die Ergebnisse überprüft sind.")
                 }
             }) { result ->
                 if (dialog.isShowing && !isFinishing && !isDestroyed) {
