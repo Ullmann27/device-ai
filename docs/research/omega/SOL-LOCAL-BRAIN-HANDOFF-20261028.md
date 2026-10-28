@@ -18,3 +18,13 @@ On an authenticated existing JDK17/SDK36/Gradle8.11.1 checkout verify current ba
 
 ## Source hashes
 Candidate catalog SHA256 0ca6cdff28632835f60185ef4339957c9cd5dc1a3395dbb697a7257ea2e284de. Test SHA256 3c2ff45b841f2c1806fd81c67552cfef9c2a6b57af1690332a45c8662d98dfcf. Before publication no source commit existed; use the actual returned commit/PR identity, never invent one. All files remain plain editable UTF-8. Rollback this research patch only; no reset/force-push or changes to existing owner data.
+
+## Follow-up integration on the same Draft PR (28 October 2026)
+
+This report's earlier "candidate only" wording describes the ORIGINAL WIP commit, not the current integrated branch. Later authorized commits applied a reviewed bounded streaming patch directly to `app/src/main/java/at/heinz/deviceai/localmodel/LocalModelCatalog.kt` (without changing catalog IDs, the SHA-256 gate, native `ModelInfo` inspection, or atomic metadata persistence). The Kotlin tests were added under the actual Android JUnit source set `app/src/test/java/at/heinz/deviceai/localmodel/LocalModelImportStreamTest.kt`.
+
+Two additional interruption checks now reject cancellation after the stream-copy phase and after native inspection, before the immutable accepted model is committed; a ninth Kotlin test checks that an interrupted native-inspection result never publishes a model. The original isolated patch artifact and eight-JUnit research fixture remain unchanged for auditability and are **not** the current release source of truth.
+
+A separate local-update entry point was added: `scripts/continuum-fold7-update.sh` with `scripts/continuum-fold7-update.test.mjs`. Its checks cover non-production branches, Git fast-forward only, an existing local P12 and certificate, cross-runtime parity and full Android unit/lint regression before using the signed local APK builder. **Actual local test execution:** all eight Node wrapper tests passed on a separate Linux shell with Node 22.16 and Bash, after Git blob-hash comparison of both downloaded-exact source texts (`0eddc65508e5cff1341cf97eddd8e8deea5e5bbb` and `b6e73a33de9384957886723b5acf56cb3a120253`). This validates wrapper control flow and Bash syntax, **not** an Android build.
+
+**Remaining NOT_RUN as of this report:** 9 Kotlin/JUnit stream tests, Android Kotlin compilation, full Fold7 regression for the changed code, local APK version 27 release, native LiteRT-LM import, and genuine Gemma inference. No Android installation or model/owner data has been touched. The Draft PR MUST remain unmerged until the device-run gates pass. The real Fold7 picker problem's root cause remains unproven.
