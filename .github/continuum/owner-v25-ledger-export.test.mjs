@@ -38,10 +38,13 @@ test('full current ledger export includes revocation, is read back, and does not
 });
 
 test('one unique request code and no personal content in diagnostics', () => {
-  const matches = [...source.matchAll(/const val ([A-Z_]+_REQUEST) = (\d+)/g)]
-    .map(m => [m[1], m[2]]);
-  assert.equal(new Set(matches.map(m => m[1])).size, matches.length);
-  assert.equal(new Set(matches.map(m => m[2])).size, matches.length);
+  const requests = [...source.matchAll(/const\s+val\s+(\w+_REQUEST)\s*=\s*(\d+)/g)]
+    .map(m => ({ name: m[1], code: Number(m[2]) }));
+  assert.ok(requests.length >= 12, 'request-code inventory incomplete');
+  assert.equal(new Set(requests.map(r => r.name)).size, requests.length);
+  assert.equal(new Set(requests.map(r => r.code)).size, requests.length);
+  const resultHandler = section('override fun onActivityResult(', 'private fun exportBacklogDocument(');
+  assert.match(resultHandler, /PERSONAL_LEDGER_EXPORT_REQUEST\s*->\s*\{/);
   const exportCode = section('private fun writePersonalLedger(', 'private fun exportCoreWeights(');
   assert.doesNotMatch(exportCode, /\.content\b|\.annotation\b|\.sourceRef\b/);
   assert.match(exportCode, /Lernprotokoll-Sicherung nicht abschließend bestätigt/);
