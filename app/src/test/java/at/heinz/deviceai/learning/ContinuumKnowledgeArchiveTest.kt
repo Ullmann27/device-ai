@@ -204,4 +204,32 @@ class ContinuumKnowledgeArchiveTest {
         } finally {old.deleteRecursively();target.deleteRecursively()}
     }
 
+    @Test fun existingDamagedCollisionBlocksImportWithoutAddingEarlierRecords() {
+        val old=Files.createTempDirectory("continuum-old-two").toFile()
+        val target=Files.createTempDirectory("continuum-target-corrupt").toFile()
+        try {
+            val src=ContinuumKnowledgeArchive(old)
+            val a=src.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Astronomie","https://de.wikipedia.org/wiki/Astronomie",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Astronomie ist die Wissenschaft der Gestirne und ihrer Bewegungen.")
+            val b=src.save(ContinuumKnowledgeArchive.Kind.WIKIPEDIA_EXCERPT,
+                "Biologie","https://de.wikipedia.org/wiki/Biologie",
+                "Wikipedia-Mitwirkende · CC BY-SA 4.0",
+                "Biologie untersucht Lebewesen und grundlegende Prozesse des Lebens.")
+            val exported=java.io.ByteArrayOutputStream()
+            src.exportZip(exported)
+            val destination=ContinuumKnowledgeArchive(target)
+            val archiveRoot=java.io.File(target,"continuum-knowledge-v1")
+            java.io.File(archiveRoot,b.id+".rec").writeBytes(byteArrayOf(8,7,6))
+            org.junit.Assert.assertThrows(IllegalArgumentException::class.java) {
+                destination.importZip(java.io.ByteArrayInputStream(exported.toByteArray()))
+            }
+            assertFalse("No valid first record may be imported before a later corrupt collision",
+                java.io.File(archiveRoot,a.id+".rec").exists())
+            assertTrue("Never erase the original malformed record automatically",
+                java.io.File(archiveRoot,b.id+".rec").exists())
+        } finally {old.deleteRecursively();target.deleteRecursively()}
+    }
+
 }
