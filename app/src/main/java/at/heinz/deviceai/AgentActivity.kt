@@ -5686,7 +5686,8 @@ class AgentActivity : Activity() {
                 val advisory = if (observations.isEmpty() && reflection == null && submittedToolObservationCount == 0) {
                     ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
                         .also { activeReasoningRouter = it }
-                        .advise("chat-$turnId", task, compiledContext?.text ?: task)
+                        .advise("chat-$turnId", task, compiledContext?.text ?: task,
+                            groundedRecall = groundedRecall)
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()

@@ -8,6 +8,32 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ChatReasoningRouterTest {
+    @Test fun sameTurnRecallReachesEveryInternalPassAsDataAlongsideGovernance() {
+        val prompts = mutableListOf<String>()
+        val adapter = ContinuumReasoningAdapter { request ->
+            prompts += request.prompt
+            ReasoningPassResult("unit-fixture", "advice", 1)
+        }
+        val recall = LocalGroundedRecall("Projekt Saphir verwendet lokale Belege.", "SWB1 test fixture")
+        val governance = "Owner approval remains required; tools forbidden."
+        assertNotNull(router(adapter).advise("recall", hardTask, governance, recall))
+        assertTrue(prompts.isNotEmpty())
+        assertTrue(prompts.size <= 4)
+        assertTrue(prompts.all { it.contains(governance) && it.contains(recall.render()) })
+        assertEquals("Projekt Saphir verwendet lokale Belege.", recall.answer)
+    }
+
+    @Test fun oversizedRecallOrCombinedContextSkipsAdvisoryBeforeAnyModelCall() {
+        val fake = Fake()
+        val r = router(fake)
+        val recall = LocalGroundedRecall("A".repeat(4_000), "test fixture")
+        assertNull(r.advise("oversized-evidence", hardTask, "governance", recall))
+        assertNull(r.advise("oversized-context", hardTask, "G".repeat(2_500),
+            LocalGroundedRecall("exact evidence", "test fixture")))
+        assertEquals(0, fake.calls)
+        assertEquals(4_000, recall.answer.length)
+    }
+
     private val hardTask = "Bitte mache einen Vergleich mehrerer Konzepte mit Widerspruch und Bedingung. " + "x".repeat(700)
     private val easyTask = "Hallo"
     private val toolTask = "Öffne die App und zeige den Akku"

@@ -35,12 +35,24 @@ class ChatReasoningRouter(
     }
 
     /** Returns a bounded, unverified advisory for hard tool-free tasks, or null (never throws). */
-    fun advise(taskId: String, task: String, context: String): String? {
+    fun advise(taskId: String, task: String, context: String,
+               groundedRecall: LocalGroundedRecall? = null): String? {
         return try {
             val assessment = ContinuumTaskClassifier.classify(task)
             if (assessment.expectedToolUse || assessment.taskClass == IntelligenceTaskClass.DEVICE) return null
             val strategy = ReasoningStrategySelector.select(assessment.strategyProfile())
             if (strategy != ReasoningStrategy.DEEP && strategy != ReasoningStrategy.MULTI_CANDIDATE) return null
+
+            // The final answer already receives this same-turn recall. Internal
+            // candidate/critic/verifier passes need the same evidence as data.
+            // Do not clip either governance context or the exact retrieved text.
+            val baseContext = context.ifBlank { task }
+            val reasoningContext = if (groundedRecall != null) {
+                val evidence = groundedRecall.render()
+                if (baseContext.length.toLong() + 2L + evidence.length > config.maxContextChars)
+                    return null
+                baseContext + "\n\n" + evidence
+            } else baseContext.take(config.maxContextChars)
 
             val deadline = nowMillis() + config.totalDeadlineMillis
             var calls = 0
@@ -59,7 +71,7 @@ class ChatReasoningRouter(
             val request = ContinuumIntelligenceRequest(
                 taskId = taskId,
                 userRequest = task.take(config.maxTaskChars),
-                compiledContext = context.ifBlank { task }.take(config.maxContextChars),
+                compiledContext = reasoningContext,
                 requestedStrategy = ReasoningStrategy.STANDARD
             )
             val result = ContinuumIntelligenceCoordinator(bounded, nowMillis).run(request, cancellation)
