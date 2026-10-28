@@ -138,6 +138,7 @@ class AgentActivity : Activity() {
         private const val CONTINUUM_CORE_EXPORT_REQUEST = 2218
         private const val CONTINUUM_ARCHIVE_EXPORT_REQUEST = 2219
         private const val CONTINUUM_ARCHIVE_IMPORT_REQUEST = 2220
+        private const val PERSONAL_LEDGER_EXPORT_REQUEST = 2222
         private const val CONTINUUM_PACKAGE_MODEL_REQUEST = 2212
         private const val CONTINUUM_PACKAGE_MANIFEST_REQUEST = 2213
         private const val DEV_MAX_SOURCE_READ_BYTES = 4_000
@@ -1491,6 +1492,9 @@ class AgentActivity : Activity() {
             CenterAction("TRAININGSSTAND · PRÜFEN") { showBootstrapTraining() },
             CenterAction("SWB1 · ÖFFENTLICHES OFFLINE-LERNPAKET") { showPublicCurriculumDialog() },
             CenterAction("SWB1 · EIGENE GEWICHTE EXPORTIEREN") { exportCoreWeights() },
+            CenterAction("PERSÖNLICHES LERNPROTOKOLL · SICHERN", accent = true) {
+                confirmPersonalLedgerExport()
+            },
             CenterAction("AUTONOME INTERNETFORSCHUNG · EIN/AUS") { showPublicStudyControls() },
             CenterAction("WISSENSARCHIV · QUELLEN SUCHEN") { showKnowledgeArchiveSearch() },
             CenterAction("RIS · AMTLICHE QUELLE ABLEGEN") { showRisArchiveImport() },
@@ -3741,6 +3745,81 @@ class AgentActivity : Activity() {
     }
 
     /** Owner-only SAF export of exactly the active 32,960-byte SWB1 snapshot. */
+    /**
+     * Historical owner package: export the full current (max. 256 entries)
+     * learning ledger through a user-selected Android document provider.
+     * No export to a server, no training, no ledger writes and no APK migration.
+     * BootstrapMemoryStore, Keystore identity, model files and settings are
+     * separate and explicitly NOT part of this document.
+     */
+    private fun confirmPersonalLedgerExport() {
+        AlertDialog.Builder(this)
+            .setTitle("Privates Continuum-Lernprotokoll sichern")
+            .setMessage(
+                "Dieses Dokument enthält alle derzeit gespeicherten Erfahrungen " +
+                "(höchstens 256), darunter ausdrücklich gemerkte Inhalte, " +
+                "abgelehnte und widerrufene Einträge, sowie Quellennotizen und " +
+                "Trainingsprüfungen. Die Datei kann persönliche Angaben enthalten. " +
+                "Wähle ausschließlich einen vertrauenswürdigen Speicherort. " +
+                "Der Export verändert keine Lerngewichte und keine Erfahrungen. " +
+                "Startkern-Fakten, Identität, Berechtigungen, Modellgewichte und " +
+                "Chatverläufe werden damit NICHT vollständig gesichert."
+            )
+            .setNegativeButton("ABBRECHEN", null)
+            .setPositiveButton("DATEI SICHERN") { _, _ ->
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "application/octet-stream"
+                    putExtra(Intent.EXTRA_TITLE, "continuum-v25-owner-learning-ledger.bin")
+                }
+                runCatching {
+                    startActivityForResult(intent, PERSONAL_LEDGER_EXPORT_REQUEST)
+                }.onFailure {
+                    Toast.makeText(this, "Dateiauswahl nicht möglich; Daten unverändert.",
+                        Toast.LENGTH_LONG).show()
+                }
+            }
+            .show()
+    }
+
+    private fun writePersonalLedger(uri: Uri) {
+        onLearningIo({
+            val store = at.heinz.deviceai.learning.FileLearningExperienceStore(
+                java.io.File(filesDir, "learning-core-v2")
+            )
+            val bytes = at.heinz.deviceai.learning.PersonalLearningTransfer.export(
+                packageName, store
+            )
+            val inspected = at.heinz.deviceai.learning.PersonalLearningTransfer.inspect(bytes)
+            require(inspected.claimedSourcePackage == packageName)
+            val output = contentResolver.openOutputStream(uri, "wt")
+                ?: throw java.io.IOException("Sicherungsziel nicht beschreibbar")
+            output.use { stream ->
+                stream.write(bytes)
+                stream.flush()
+            }
+            val verify = contentResolver.openInputStream(uri)
+                ?: throw java.io.IOException("Sicherung geschrieben, aber nicht rücklesbar")
+            val actual = verify.use {
+                at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(it)
+            }
+            require(java.security.MessageDigest.isEqual(bytes, actual)) {
+                "Rückgelesene Datei unterscheidet sich von der Sicherung"
+            }
+            "LERNPROTOKOLL-BACKUP BESTÄTIGT · " + inspected.records.size +
+                " Erfahrungen · " + bytes.size + " Bytes · SHA-256 " + inspected.sha256 +
+                "\nWiderrufe und Trainings-Audits erhalten. " +
+                "Kein Modell, keine Startkern-Fakten oder Geräteidentität enthalten. " +
+                "Die Datei enthält möglicherweise private Angaben und ist vertraulich."
+        }) { result ->
+            addAssistantMessage(result.getOrElse {
+                "Lernprotokoll-Sicherung nicht abschließend bestätigt (" +
+                    it.javaClass.simpleName + "). Quelldaten unverändert. " +
+                    "Zieldatei vor weiterer Verwendung unabhängig prüfen."
+            })
+        }
+    }
+
     private fun exportCoreWeights() {
         val create = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -7401,6 +7480,10 @@ class AgentActivity : Activity() {
                         }
                     }
                 }
+            }
+            PERSONAL_LEDGER_EXPORT_REQUEST -> {
+                val uri = data?.data
+                if (resultCode == RESULT_OK && uri != null) writePersonalLedger(uri)
             }
             CONTINUUM_ARCHIVE_EXPORT_REQUEST -> {
                 val uri=data?.data
