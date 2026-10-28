@@ -80,6 +80,9 @@ object MemoryRetrievalResearchGate {
         require(probes.size in 1..64) { "Provide between 1 and 64 bounded memory probes" }
         require(probes.map { it.id }.distinct().size == probes.size) { "Duplicate probe identifiers" }
         require(records.size <= 2_000) { "Oversized local benchmark corpus" }
+        require(records.map { it.id }.toSet().size == records.size) {
+            "Duplicate memory identifiers make benchmark results ambiguous"
+        }
         require(limit in 1..32)
         require(nowMillis >= 0L)
         require(allowedPrivacy.isNotEmpty())
