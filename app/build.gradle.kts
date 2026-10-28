@@ -114,7 +114,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "at.heinz.deviceai"
+        applicationId = if (continuumLocalStandalone) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
@@ -148,7 +148,6 @@ android {
     buildTypes {
         getByName("debug") {
             if (continuumLocalStandalone) {
-                applicationIdSuffix = ".continuumlocal"
                 signingConfig = signingConfigs.getByName("continuumLocal")
             } else if (deviceAiFeaturePreview) {
                 applicationIdSuffix = ".featurepreview"
@@ -164,6 +163,12 @@ android {
             } else if (deviceAiPreview) {
                 applicationIdSuffix = ".preview"
             }
+        }
+    }
+
+    buildTypes.getByName("release") {
+        if (continuumLocalStandalone) {
+            signingConfig = signingConfigs.getByName("continuumLocal")
         }
     }
 
