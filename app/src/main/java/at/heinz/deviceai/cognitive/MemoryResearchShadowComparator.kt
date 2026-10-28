@@ -24,6 +24,48 @@ data class MemoryResearchShadowComparison(
 )
 
 object MemoryResearchShadowComparator {
+    /** Fixed synthetic plumbing check, never a measurement of owner-memory recall
+     * or learned semantic quality. No owner store, network, model or tool access.
+     * Zero candidate scores deliberately cannot earn promotion/review eligibility.
+     */
+    fun syntheticSelfCheck(): MemoryResearchShadowComparison {
+        val records = listOf(
+            "static" to "synthetic battery capacity",
+            "dynamic" to "synthetic engine version changed",
+            "workflow" to "synthetic approve tool execution",
+            "environment" to "synthetic thermal device limit"
+        ).map { (id, content) ->
+            MemoryRecord(
+                id = id, type = MemoryType.SEMANTIC, content = content,
+                provenance = ProvenanceType.DIRECT_OBSERVATION, confidence = 0.9,
+                createdAt = 1_000L, updatedAt = 1_000L,
+                privacyClass = PrivacyClass.PUBLIC,
+                validationState = ValidationState.VERIFIED,
+                validationEvidenceReferences = listOf("synthetic-fixture:$id")
+            )
+        }
+        return compare(
+            developmentProbes = listOf(MemoryResearchProbe(
+                "selfcheck-dev", MemoryResearchAbility.STATIC_RECALL,
+                "battery", setOf("static")
+            )),
+            frozenHoldoutProbes = listOf(
+                MemoryResearchProbe("selfcheck-static", MemoryResearchAbility.STATIC_RECALL,
+                    "battery capacity", setOf("static")),
+                MemoryResearchProbe("selfcheck-dynamic", MemoryResearchAbility.DYNAMIC_STATE,
+                    "engine version", setOf("dynamic")),
+                MemoryResearchProbe("selfcheck-workflow", MemoryResearchAbility.WORKFLOW,
+                    "approve tool", setOf("workflow")),
+                MemoryResearchProbe("selfcheck-environment", MemoryResearchAbility.ENVIRONMENT_GOTCHA,
+                    "thermal device", setOf("environment")),
+                MemoryResearchProbe("selfcheck-unknown", MemoryResearchAbility.PREMISE_AWARENESS,
+                    "unrelatedwombat", emptySet())
+            ),
+            records = records, allowedPrivacy = setOf(PrivacyClass.PUBLIC),
+            candidateSemanticScorer = { _, _ -> 0.0 }, nowMillis = 1_000L
+        )
+    }
+
     fun compare(
         developmentProbes: List<MemoryResearchProbe>,
         frozenHoldoutProbes: List<MemoryResearchProbe>,
