@@ -47,6 +47,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
             append("\nHistorische Prüfbeispiele: ")
                 .append(loss(oldAuditBefore)).append(" → ").append(loss(oldAuditAfter))
             append("\nModell-Hash: ").append(hash.take(16))
+            if(stage>1)append("\nTRAIN-Rehearsal: 8 ältere Übungsfälle + 8 vollständige Beispielsätze; beide Audits bleiben nur Prüfmaterial.")
             append("\nSWB1 unverändert; CDX1-Checkpoint separat; Chatfreigabe NEIN.")
             append("\nForschungsantworten sind nicht automatisch verifizierte Tatsachen.")
         }
@@ -64,7 +65,7 @@ class ContinuumCdxLargeLab(private val filesDir:File) {
         val protected=DecoderEvidenceCorpus(curriculum.historicAudit,DecoderSplit.AUDIT)
         val swbBefore=core.modelHash()
         val report=core.trainExperimentalPairedDecoder(
-            curriculum.trainingStage(index),curriculum.audit,
+            curriculum.trainingStageWithReplay(index),curriculum.audit,
             steps=curriculum.TRAIN_STEPS,cancelled=cancelled,
             protectedAudits=listOf(protected))
         check(core.modelHash()==swbBefore) { "SWB1 was changed during CDX1 laboratory" }
