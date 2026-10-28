@@ -10,7 +10,7 @@
 - **Gedächtnis:** `cognitive/HybridMemoryRetriever.kt` hat bereits BM25-artige Lexik, optionales Semantik-Scoring, Entitäts-/Zeit-/Provenienz-/Vertrauensbewertung und Datenschutzfilter. `MemoryEcology.kt` hat bereits `MemoryGraph`, PrivacyClass und ValidationState. `ProofCarryingMemory.kt` enthält signierbare Mutationsevidenz. Eine zweite konkurrierende Memory-DB wäre ein Rückschritt.
 - **Werkzeuge:** vorhandenes ToolGate/Owner Approval, Shizuku- und Termux-Brücken. Skills sind nur Daten/Pläne; Modelltext allein darf keine neue Android-Berechtigung erzeugen.
 - **Autonomie:** existierender CCC1-/CEGIS-Reparaturprozess und ein lokaler Teamleiter mit Zeit-, Akku- und Temperaturgrenzen. Keine zweite Worker-Schleife, keine Fremd-Shellbefehle aus Modelltext.
-- **APK:** PR #197 führt lokale Haupt-App-QA ohne Original-P12 ein. **Nur die Original-P12** signiert ein echtes Update für `at.heinz.deviceai.mentorpaired`. Termux-Fold7-Reallauf und Original-P12 bleiben offen.
+- **APK:** PR #197 führt lokale Haupt-App-QA ohne Original-P12 ein. Der vorhandene Owner-Buildweg ist [`scripts/continuum-local-owner-apk.sh`](../../scripts/continuum-local-owner-apk.sh). **Nur die Original-P12** signiert ein echtes Update für `at.heinz.deviceai.mentorpaired`. Termux-Fold7-Reallauf und Original-P12 bleiben offen.
 
 ## Umsetzungsregister – Quellcode, Nutzen, verbindlicher Eintrittspunkt
 

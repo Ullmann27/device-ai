@@ -1,5 +1,7 @@
 # GPT-6 Continuum Fusion – GitHub-Handoff (28.10.2026)
 
+> **Aktueller Abschlussstand:** siehe „SOL-Abschlussprüfung“ am Ende. Die ursprünglichen `NOT_RUN`-Angaben und Fortsetzungsvorschläge unten dokumentieren den damaligen Stand und werden durch diesen Nachlauf ersetzt.
+
 ## GitHub-Identität und unveränderte Sicherheitsgrenzen
 
 Repository: `Ullmann27/device-ai` (privat).
@@ -59,3 +61,47 @@ Nach bestandenem gezielten Lauf: vollständige `:app:testDebugUnitTest`-Suite un
 - **Rollback:** PR #203 Draft lassen oder gezielten Revert im neuen Branch; #198/#197/#196 und `main` nicht verändern, kein Force-Push, kein Löschen, keine Besitzer-P12 auslesen.
 
 **Status:** `SOURCE_INTEGRATED / RESEARCH_SHADOW` für den produktiven Aufrufanschluss, `NOT_RUN` für Kotlin-JUnit/Android, `BLOCKED` für Original-P12-/Fold7-Abnahme. **Keine belegte Verbesserung der Antwortqualität**.
+
+## SOL-Abschlussprüfung – 28.10.2026
+
+**Geprüfter Quellcommit:** [`63beedbb04ec35fc1ad55af60ba53562dae79cd4`](https://github.com/Ullmann27/device-ai/commit/63beedbb04ec35fc1ad55af60ba53562dae79cd4), bei Einstieg identisch mit GitHub-HEAD von [Draft-PR #203](https://github.com/Ullmann27/device-ai/pull/203); Basis #198 unverändert `34acc378ac77e915b8d322bf02e46af77288bcf0`. Sauberer isolierter Worktree `/workspace/device-ai-fusion`. Keine anderen lokalen Worktrees verändert. Der abschließende SHA steht im PR; der finale Dokumentationscommit ist zusätzlich mit `git log -1 --format=%H -- docs/research/omega/GPT6-CONTINUUM-FUSION-HANDOFF-20261028.md` eindeutig bestimmbar. Programm- und Testquellen bleiben bytegleich zum geprüften Commit.
+
+**Vorhandene Toolchain, unverändert:** Linux x86_64; Temurin JDK17.0.21+9; Gradle8.11.1; Projekt-Kotlin-Plugin2.4.0 (Gradles eingebettetes Kotlin2.0.20); AGP8.10.0; SDK API36 Revision2; Build Tools35.0.0 / aapt2 2.19-11948202; Node24.19.0. Keine Installation und kein Versionswechsel. Projektwarnungen sind in den Rohlogs erhalten.
+
+| Tatsächlicher Lauf | Status / Exitcode |
+|---|---|
+| Zuerst angeforderter `./gradlew`-Aufruf mit den vier Testfiltern | FAIL / 127: Wrapper fehlt im Repository. Umgebungs-/Startfehler, kein Kotlin-/JUnit-Befund. Originalausgabe erhalten. |
+| Derselbe gezielte Lauf mit vorhandenem Gradle und realen Projektklassen | PASS / 0; BUILD SUCCESSFUL in 2m6s; 34 Tests, 0 Failures, 0 Errors, 0 SKIP. |
+| `AuthorizedConversationMemoryShadowTest` | PASS 6/6. |
+| `ContinuumCognitiveRuntimeTest` | PASS 14/14. |
+| `MemoryRetrievalResearchGateTest` | PASS 9/9. |
+| `MemoryResearchShadowComparatorTest` | PASS 5/5. |
+| `:app:compileDebugKotlin :app:lintDebug` | PASS / 0; BUILD SUCCESSFUL in 1m33s. Kotlin hier UP-TO-DATE nach frischer Kompilierung im gezielten Lauf. Lint unverändert auf `NewApi` begrenzt, keine vollständige Lint-Abdeckung. |
+| Node-Vertrag vor Korrektur | FAIL / 1; 4 PASS, 1 FAIL: im Katalog fehlte der lokale Builder-Verweis. |
+| Node-Vertrag nach Korrektur | PASS / 0; 5/5, 0 SKIP. Tests unverändert. |
+
+**Tatsächlich verwendete Befehle:** zunächst `git rev-parse HEAD` und der oben dokumentierte vollständige `./gradlew`-Aufruf; anschließend mit der vorhandenen Toolchain:
+
+```bash
+export JAVA_HOME=/workspace/continuum-tools/jdk17
+export PATH="$JAVA_HOME/bin:$PATH"
+export ANDROID_HOME=/workspace/continuum-tools/android-sdk
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export GRADLE_USER_HOME=/workspace/continuum-tools/gradle-cache
+gradle_bin=/workspace/continuum-tools/gradle/gradle-8.11.1/bin/gradle
+gradle_args=(--offline --no-daemon --console=plain -PdeviceAiMentorPreview=true -Pandroid.aapt2FromMavenOverride=/workspace/continuum-tools/android-sdk/build-tools/35.0.0/aapt2)
+"$gradle_bin" "${gradle_args[@]}" :app:testDebugUnitTest --tests 'at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest' --tests 'at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest' --tests 'at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest' --tests 'at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest'
+"$gradle_bin" "${gradle_args[@]}" :app:compileDebugKotlin :app:lintDebug
+node --test scripts/continuum-external-research-contract.test.mjs
+# Letzteren Befehl nach der Dokumentationskorrektur identisch wiederholt.
+```
+
+**Tatsächlich geänderte Dateien:** `docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md` (einziger reparierter Fehler: Link auf den bestehenden `scripts/continuum-local-owner-apk.sh` im APK-Absatz); diese bestehende Handoff-Datei; Rohbelege unter [`docs/evidence/continuum-fusion-final-20261028/`](../../evidence/continuum-fusion-final-20261028/). Keine Änderungen an Kotlin, Tests, Gradle oder Schutzbedingungen. Das Hashmanifest listet jede Belegdatei; beide ursprünglichen FAIL-Ausgaben bleiben erhalten.
+
+**Schutzprüfung:** Die echten JUnit-Läufe prüfen exakte Belegidentität, gefälschte/partielle CRE1-Scores, Abstinenz, Widerruf, private Diagnoseinhalte und unveränderten Modellhash. Der korrupte CRE1-Snapshot lässt die bestätigte normale Antwort zu und fällt auf `LEXICAL_ONLY` zurück. Der Ausnahmefang des neuen Hybrid-Observers (`runCatching` → `EVALUATION_FAILED`) wurde im Quellcode geprüft; eine gezielt injizierte Observer-Ausnahme ist **NOT_RUN**, kein behaupteter Laufzeitnachweis dieses speziellen Fehlerpfads. Der bestehende CRE1-Unit-Test erzeugt ausschließlich einen synthetischen Snapshot in seinem temporären Testverzeichnis; keine produktiven Gewichte verwendet oder verändert.
+
+**NOT_RUN / offene Nachweise:** volle Unit-Regressionssuite; injizierter Observer-Ausnahmefall; Android-Instrumentation/Gerät/Fold7/Termux ARM64 (hier nicht zugänglich); Gemma-Inferenz, APK, Original-P12-Signierung, Installation, Laufzeit-/RAM-/Thermik-/Energie-/Qualitätsvergleich. Die Linux-Pfade oben sind kein Termux-Rezept. Keine Stubs, keine neue Toolchain, kein Modell-Download, kein Provider-/Trainingsexperiment und kein kostenpflichtiger Dienst. Die anfänglichen 26 Source-Checks bleiben Source-Checks; 34 Unit-Tests beweisen keinen Geräteerfolg oder verbesserten Recall bisher übersehener Erinnerungen. SWB1/CRE1/CDX1/Gemma, Besitzerbelege, ToolGate, Signierschlüssel, installierte APK und `main` bleiben unberührt; keine Integrationen oder Merges.
+
+**Genau ein nächster ausführbarer Schritt:** mit der oben gesetzten vorhandenen Linux-Umgebung die vollständige bestehende Unit-Suite ausführen: `"$gradle_bin" "${gradle_args[@]}" :app:testDebugUnitTest`. Keine neue Forschung beginnen. PR #203 bleibt Draft; alle Entwicklungszweige und Verläufe bleiben erhalten.
+
+**Aktueller Status:** `SOURCE_INTEGRATED / RESEARCH_SHADOW`; gezielte echte Kotlin-/JUnit-Prüfung **34/34 PASS**, Compile/Lint **PASS**, Node-Vertrag **5/5 PASS**. Geräte- und Qualitätsgewinn **NICHT NACHGEWIESEN**.

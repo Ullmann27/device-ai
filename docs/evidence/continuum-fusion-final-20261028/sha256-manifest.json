@@ -1,0 +1,54 @@
+{
+  "01-requested-wrapper.log": {
+    "sha256": "9f210ddd0028c1eff57c4bc48a1bc48d515345f1b0a72ae990b8341ad18af6e0",
+    "bytes": 111
+  },
+  "02-targeted-junit.log": {
+    "sha256": "4454698c2022f9d59335f3a9f5830a0da56aef4b422b2ec065e94b06b542f903",
+    "bytes": 11749
+  },
+  "03-compile-lint.log": {
+    "sha256": "cb97df3c6bdb267082a65b30d2b0c36b300e7c9133aff179027d3453f8338784",
+    "bytes": 2577
+  },
+  "04-node-contract.log": {
+    "sha256": "12a68e8503a7cafb4f25f7a81f4b8a953de323d08bd97cab42c2bd53edf1c66d",
+    "bytes": 1488
+  },
+  "05-node-contract-after-doc-fix.log": {
+    "sha256": "832124aee452dde84269cd7a70fa590f0f3163595a9eefeb91d5f4d013a626db",
+    "bytes": 576
+  },
+  "TEST-at.heinz.deviceai.cognitive.AuthorizedConversationMemoryShadowTest.xml": {
+    "sha256": "cee3a9ca4daaca3b678945e660e8598c56ebcf142e074e4d00399c59ae58a46e",
+    "bytes": 1403
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryResearchShadowComparatorTest.xml": {
+    "sha256": "56b0262603754bfca9c0bc732c93e2524a2fce8ba6bda8b8abf0385a25d48387",
+    "bytes": 1138
+  },
+  "TEST-at.heinz.deviceai.cognitive.MemoryRetrievalResearchGateTest.xml": {
+    "sha256": "aeefec47d53f6481542ba866abdda2cfda3377a47961cc82736289bde1c6e057",
+    "bytes": 1775
+  },
+  "TEST-at.heinz.deviceai.learning.ContinuumCognitiveRuntimeTest.xml": {
+    "sha256": "b2028936f5fbbc980d13960e59e73311c3c9ce21faac179d8d9b2306de29ba15",
+    "bytes": 2639
+  },
+  "lint-results-debug.txt": {
+    "sha256": "a69ecb171bea9d40de22744c85220b4a4ea12f5a25ce7976d67f2c88c9195334",
+    "bytes": 17
+  },
+  "lint-results-debug.xml": {
+    "sha256": "e6fe77f081e2bddb248f2189b93a8312a1106a3dd73e73e081cad1a64a5b9809",
+    "bytes": 87
+  },
+  "summary.json": {
+    "sha256": "91a0ac57b826937405353442ae7f954c86b612ca72260ffcd2a5d360d4a24353",
+    "bytes": 1244
+  },
+  "tool-versions.log": {
+    "sha256": "8f63bc97ba3e64261bf945ad2a057e58fad8bb67525781e178896593ba1c2e7d",
+    "bytes": 827
+  }
+}
