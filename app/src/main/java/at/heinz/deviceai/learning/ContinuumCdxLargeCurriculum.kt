@@ -85,11 +85,12 @@ object ContinuumCdxLargeCurriculum {
         val shortReplay=(0 until 8).map { index ->
             previous[(stage*17+index*29)%previous.size]
         }
+        val firstNames=listOf("Mila","Lara","Ben","Nora","Aron","Sara","Lea","Omar")
         val professions=listOf("Mechanikerin","Tischler","Gärtnerin","Elektriker",
             "Technikerin","Schlosser","Maurerin","Köchin")
         val sentenceReplay=(0 until 8).map { index ->
             val number=stage*8+index+1
-            val person="Forschungsperson F"+number.toString().padStart(3,'0')
+            val person=firstNames[index]+number.toString().padStart(2,'0')
             if(index%2==0) {
                 val city=cities[(number+5)%cities.size]
                 DecoderEvidencePair(
