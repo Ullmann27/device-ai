@@ -85,11 +85,16 @@ class ContinuumCognitiveRuntime(
             else -> ContinuumCre1State.UNTRAINED_SHADOW
         }
         var shadow=emptyList<ContinuumShadowScore>()
+        // Exact SWB1-authorized candidate objects from the in-turn CRE1 callback.
+        // The core later reconstructs hits by ID; compare the entire objects
+        // before letting the hybrid observer see that reconstructed view.
+        var authorizedCandidates=emptyList<ContinuumMemoryHit>()
         var didRerank=false
         val (turn,ranked)=core.replyWithEvidenceInConversation(input,conversationId,turnTrace) { resolved,candidates ->
             // The callback runs before the dialogue file is written. It may
             // ONLY permute currently authorized SWB1 hits; the memory engine
             // independently enforces set equality and byte-identical content.
+            authorizedCandidates=candidates.toList()
             val observer=snapshot?.first ?: if(state!=ContinuumCre1State.INVALID_SNAPSHOT)
                 UNTRAINED_SHADOW_ENCODER else null
             shadow=candidates.mapNotNull { hit ->
@@ -114,8 +119,16 @@ class ContinuumCognitiveRuntime(
         // Observe only the exact evidence returned by this SWB1 turn. CRE1 scores
         // are already computed locally; no second model call or memory lookup.
         // Failures never block the existing answer or export private content.
+        val candidateById=authorizedCandidates.associateBy { it.id }
+        val exactSameTurnEvidence=!turn.grounded || (
+            authorizedCandidates.map { it.id }.toSet().size==authorizedCandidates.size &&
+                ranked.isNotEmpty() &&
+                ranked.all { candidateById[it.id]==it }
+        )
         val hybridShadow=runCatching {
-            AuthorizedConversationMemoryShadow.observe(turn,ranked,scores)
+            if(exactSameTurnEvidence)
+                AuthorizedConversationMemoryShadow.observe(turn,ranked,scores)
+            else AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.REJECTED_EVIDENCE_IDENTITY)
         }.getOrElse {
             AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.EVALUATION_FAILED)
         }
