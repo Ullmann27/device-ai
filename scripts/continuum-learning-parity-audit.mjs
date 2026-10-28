@@ -46,6 +46,8 @@ function normalize(value, id) {
     archiveSources: optionalInt(value.archiveSources, 'ARCHIVE_SOURCES'),
     learningEventsToday: optionalInt(value.learningEventsToday, 'EVENTS_TODAY'),
     benchmarkId,
+    // Name and case count alone cannot establish identical frozen questions.
+    benchmarkSha256: optionalHash(value.benchmarkSha256, 'BENCHMARK_SHA'),
     intentHoldout: holdout(value.intentHoldout, 'INTENT_HOLDOUT'),
     semanticHoldout: holdout(value.semanticHoldout, 'SEMANTIC_HOLDOUT'),
     publicStudy: Object.freeze({enabled:optionalBool(study.enabled,'STUDY_ENABLED'),
@@ -59,6 +61,7 @@ export function compareContinuumLearningStates(previous, current) {
   const sameWeights = old.swb1Sha256 && next.swb1Sha256
     ? old.swb1Sha256 === next.swb1Sha256 : null;
   const comparable = old.benchmarkId !== null && old.benchmarkId === next.benchmarkId &&
+    old.benchmarkSha256 !== null && old.benchmarkSha256 === next.benchmarkSha256 &&
     old.intentHoldout !== null && next.intentHoldout !== null &&
     old.semanticHoldout !== null && next.semanticHoldout !== null &&
     old.intentHoldout.total === next.intentHoldout.total &&
@@ -79,6 +82,8 @@ export function compareContinuumLearningStates(previous, current) {
     researchEnabledNew:next.publicStudy.enabled,
     researchScheduledNew:next.publicStudy.registered,
     holdoutComparable:comparable,
+    benchmarkSha256Equal: old.benchmarkSha256 !== null && next.benchmarkSha256 !== null
+      ? old.benchmarkSha256 === next.benchmarkSha256 : null,
     holdoutCorrectDifference:comparable ? currentScore - previousScore : null,
     verifiedModelWeightMigration:false,
     verifiedFullMigration:false,
@@ -89,8 +94,8 @@ export function compareContinuumLearningStates(previous, current) {
       sameWeights === null ? 'SWB1-Modellhash nicht in beiden Apps gemessen; Gewichtsgleichheit unbestimmt.'
         : sameWeights ? 'SWB1-Modellhash identisch; daraus folgt kein Beleg eines tatsächlichen Migrationsvorgangs.'
           : 'SWB1-Modellhash unterscheidet sich; keinen fremden Checkpoint ohne Holdout-Freigabe erzwingen.',
-      comparable ? 'Gleiche ausdrücklich bestätigte Benchmark-Identität und Fallzahl; Korrektzahlen verglichen.'
-        : 'Unabhängige Qualität nicht vergleichbar: Benchmark-Identität oder vollständige Messwerte fehlen.',
+      comparable ? 'Gleiche Benchmark-ID, SHA-256 des eingefrorenen Fragensatzes und Fallzahl; Korrektzahlen verglichen.'
+        : 'Unabhängige Qualität nicht vergleichbar: identischer eingefrorener SHA-256-Fragensatz, Benchmark-ID oder vollständige Messwerte fehlen.',
       next.publicStudy.enabled === false ? 'Öffentliche Forschung in der neuen App deaktiviert; nur nach Besitzerfreigabe aktivieren.'
         : next.publicStudy.registered === false ? 'Kein registrierter Forschungsjob in der neuen App nachgewiesen.'
           : next.publicStudy.registered === null ? 'JobScheduler-Status nicht gemessen.'
