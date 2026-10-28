@@ -94,7 +94,8 @@ class LocalModelCatalog(
         id: String,
         version: String,
         input: InputStream,
-        expectedSha256: String
+        expectedSha256: String,
+        onProgress: ((LocalModelImportSnapshot) -> Unit)? = null
     ): ImportedLocalModel {
         require(isSafeIdentifier(id) && isSafeIdentifier(version))
         require(expectedSha256.matches(Regex("[a-f0-9]{64}")))
@@ -105,9 +106,18 @@ class LocalModelCatalog(
         require(directory.listFiles { file -> file.isFile && file.name.endsWith(METADATA_SUFFIX) }
             .orEmpty().size < MAX_CATALOG_ENTRIES) { "Local model catalog is full." }
         val temporary = File.createTempFile("model-import-", ".litertlm", directory)
+        val progress = LocalModelImportProgress()
+        var total = 0L
+        fun report(phase: LocalModelImportPhase) {
+            val snapshot = progress.record(phase, total)
+            // An optional diagnostic observer must never break a valid model import.
+            runCatching { onProgress?.invoke(snapshot) }
+        }
         try {
+            report(LocalModelImportPhase.STREAM_OPENED)
             val digest = MessageDigest.getInstance("SHA-256")
-            var total = 0L
+            report(LocalModelImportPhase.COPYING)
+            var nextProgressBytes = 8L * 1024 * 1024
             FileOutputStream(temporary).use { output ->
                 input.use { source ->
                     val buffer = ByteArray(COPY_BUFFER_SIZE)
@@ -133,10 +143,15 @@ class LocalModelCatalog(
                         total += count
                         digest.update(buffer, 0, count)
                         output.write(buffer, 0, count)
+                        if (total >= nextProgressBytes) {
+                            report(LocalModelImportPhase.COPYING)
+                            nextProgressBytes = total + 8L * 1024 * 1024
+                        }
                     }
                 }
                 output.fd.sync()
             }
+            report(LocalModelImportPhase.COPY_COMPLETED)
             if (Thread.currentThread().isInterrupted) {
                 throw java.io.InterruptedIOException("Model import cancelled after copy.")
             }
@@ -146,6 +161,7 @@ class LocalModelCatalog(
                 "Model SHA-256 does not match the expected digest. " +
                     "Expected: $expectedSha256; actual: $hash; bytes: $total."
             }
+            report(LocalModelImportPhase.HASH_VERIFIED)
             val capabilities = inspector.inspect(temporary)
             if (Thread.currentThread().isInterrupted) {
                 throw java.io.InterruptedIOException("Model import cancelled during inspection.")
@@ -153,6 +169,7 @@ class LocalModelCatalog(
             require(capabilities.text && LocalModelBackend.CPU in capabilities.supportedBackends) {
                 "Only text models with CPU support can be imported."
             }
+            report(LocalModelImportPhase.INSPECTED)
             val record = ImportedLocalModel(id, version, hash, total, capabilities)
             moveAtomically(temporary, modelFile)
             try {
@@ -161,7 +178,11 @@ class LocalModelCatalog(
                 modelFile.delete()
                 throw e
             }
+            report(LocalModelImportPhase.COMMITTED)
             return record
+        } catch (error: Exception) {
+            runCatching { report(LocalModelImportPhase.FAILED) }
+            throw error
         } finally {
             temporary.delete()
         }

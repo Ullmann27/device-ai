@@ -36,7 +36,7 @@ test('invalid or confused app identities are rejected',()=>{
   assert.throws(()=>compareContinuumLearningStates({...prior,swb1Sha256:'fake'},newApp),/INVALID_/);
 });
 test('holdout quality only comparable on explicitly matching frozen benchmark ID and test size',()=>{
-  const m={benchmarkId:'frozen-2026-v1',intentHoldout:{correct:7,total:10},semanticHoldout:{correct:5,total:10}};
+  const m={benchmarkId:'frozen-2026-v1',benchmarkSha256:'d'.repeat(64),intentHoldout:{correct:7,total:10},semanticHoldout:{correct:5,total:10}};
   const yes=compareContinuumLearningStates({...prior,...m},{...newApp,...m,semanticHoldout:{correct:6,total:10}});
   assert.equal(yes.holdoutComparable,true);
   assert.equal(yes.holdoutCorrectDifference,1);
@@ -45,4 +45,23 @@ test('holdout quality only comparable on explicitly matching frozen benchmark ID
   assert.equal(no.holdoutCorrectDifference,null);
   const invalid=()=>compareContinuumLearningStates({...prior,...m,intentHoldout:{correct:11,total:10}},newApp);
   assert.throws(invalid,/INVALID_INTENT_HOLDOUT/);
+});
+
+test('matching benchmark labels without frozen question hashes are not sufficient',()=>{
+  const scores={benchmarkId:'frozen-2026-v1',intentHoldout:{correct:7,total:10},semanticHoldout:{correct:6,total:10}};
+  const missing=compareContinuumLearningStates({...prior,...scores},{...newApp,...scores});
+  assert.equal(missing.holdoutComparable,false);
+  assert.equal(missing.holdoutCorrectDifference,null);
+  assert.equal(missing.benchmarkSha256Equal,null);
+});
+test('same benchmark label with altered question set SHA fails closed',()=>{
+  const scores={benchmarkId:'frozen-2026-v1',intentHoldout:{correct:7,total:10},semanticHoldout:{correct:6,total:10}};
+  const a=compareContinuumLearningStates({...prior,...scores,benchmarkSha256:'a'.repeat(64)},
+    {...newApp,...scores,benchmarkSha256:'b'.repeat(64)});
+  assert.equal(a.benchmarkSha256Equal,false);
+  assert.equal(a.holdoutComparable,false);
+  assert.equal(a.holdoutCorrectDifference,null);
+});
+test('malformed frozen benchmark hash is refused before comparing scores',()=>{
+  assert.throws(()=>compareContinuumLearningStates({...prior,benchmarkSha256:'not-a-sha'},newApp),/INVALID_BENCHMARK_SHA/);
 });

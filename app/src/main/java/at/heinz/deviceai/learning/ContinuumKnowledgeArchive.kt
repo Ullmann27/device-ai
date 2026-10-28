@@ -164,13 +164,15 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
     }
 
     /**
-     * Import accepts only validated content-addressed records, never filenames
-     * from a ZIP path as destination paths. A partial import is reported as an
-     * exception; successfully imported prior records remain intact.
+     * One-app migration gate: parse and validate ALL ZIP entries before the
+     * first permanent archive write. Corrupt later entries must not produce
+     * an earlier partial import. Storage errors during the later commit may
+     * still leave validated records present, never delete existing records.
      */
     fun importZip(input:InputStream):Int = synchronized(gate) {
         val names=mutableSetOf<String>()
-        var count=0
+        val staged=ArrayList<SourceRecord>()
+        var uncompressed=0L
         ZipInputStream(input).use { zip ->
             while(true) {
                 val entry=zip.nextEntry ?: break
@@ -182,21 +184,74 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
                 }
                 val buffer=ByteArray(4096)
                 val out=ByteArrayOutputStream()
+                var emptyReads=0
                 while(true) {
                     val n=zip.read(buffer)
                     if(n<0)break
-                    if(n==0)continue
-                    require(out.size()+n<=MAX_RECORD_BYTES) { "Oversize archived source" }
+                    if(n==0) {
+                        if(++emptyReads>=16)throw java.io.IOException("Backup stream made no progress")
+                        continue
+                    }
+                    emptyReads=0
+                    require(n<=MAX_RECORD_BYTES-out.size()) { "Oversize archived source" }
+                    require(uncompressed<=MAX_IMPORT_UNCOMPRESSED_BYTES-n) {
+                        "Backup expands beyond safe migration limit"
+                    }
+                    uncompressed+=n
                     out.write(buffer,0,n)
                 }
                 val record=decodePayload(out.toByteArray(),entry.name)
-                save(record.kind,record.title,record.url,record.attribution,
-                    record.text,record.collectedAt,record.sourceDate)
-                count++
+                validateImportedRecord(record)
+                staged.add(record)
                 zip.closeEntry()
             }
         }
-        count
+        val newEntries=staged.count { !File(root,"${it.id}.rec").exists() }
+        require(files().size<=MAX_RECORDS-newEntries) {
+            "Archive capacity reached; do not remove existing citations"
+        }
+        if(newEntries>0)require(root.usableSpace>=MIN_FREE_BYTES+uncompressed) {
+            "Not enough free storage for verified import"
+        }
+        // Verify all colliding on-device records before committing any new
+        // records, so one damaged existing item cannot create partial results.
+        staged.forEach { record ->
+            val existing=File(root,"${record.id}.rec")
+            if(existing.exists()) {
+                val current=readFile(existing)
+                require(current.id==record.id && current.sha256==record.sha256) {
+                    "Existing archived source differs from verified backup"
+                }
+            }
+        }
+        staged.forEach { record ->
+            save(record.kind,record.title,record.url,record.attribution,
+                record.text,record.collectedAt,record.sourceDate)
+        }
+        staged.size
+    }
+
+    private fun validateImportedRecord(record:SourceRecord) {
+        require(record.title.length in 3..160 && record.title.none { it.isISOControl() })
+        require(record.attribution.length in 3..160 && record.attribution.none { it.isISOControl() })
+        require(record.text.length in 20..6_000 && record.text.none { it=='\u0000' })
+        require(record.collectedAt>0 && record.collectedAt<=System.currentTimeMillis()+86_400_000L)
+        require(record.sourceDate==null ||
+            record.sourceDate.matches(Regex("\\d{4}-\\d{2}-\\d{2}")))
+        require(record.url.length in 15..700)
+        val uri=java.net.URI(record.url)
+        require(uri.scheme=="https" && uri.userInfo==null &&
+            uri.fragment==null && uri.port==-1 &&
+            uri.rawQuery?.length.orEmptyLength()<=600)
+        require(uri.host in when(record.kind) {
+            Kind.WIKIPEDIA_EXCERPT -> setOf("de.wikipedia.org")
+            Kind.RIS_LEGISLATION,Kind.RIS_CASE_LAW ->
+                setOf("ris.bka.gv.at","www.ris.bka.gv.at","data.bka.gv.at")
+        })
+        val canonical=record.text.replace(Regex("\\s+")," ").trim()
+        require(canonical==record.text && canonical.length in 20..6_000)
+        require(digest(canonical)==record.sha256)
+        require(digest(record.kind.name+"\u0000"+record.url+"\u0000"+record.sha256)==record.id)
     }
 
     private fun readFile(file:File):SourceRecord {
@@ -246,6 +301,7 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         const val MAX_RECORDS=4096
         const val MIN_FREE_BYTES=128L * 1024L * 1024L
         const val MAX_RECORD_BYTES=40_000
+        private const val MAX_IMPORT_UNCOMPRESSED_BYTES=64L * 1024L * 1024L
         private const val MAGIC=0x434B4131
     }
 }

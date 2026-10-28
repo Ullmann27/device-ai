@@ -316,6 +316,7 @@ class AgentActivity : Activity() {
     private var agentLoops = 0
     private var pendingModelImport: Triple<String, String, String>? = null
     private var modelImportActive = false
+    @Volatile private var latestModelImportSnapshot: at.heinz.deviceai.localmodel.LocalModelImportSnapshot? = null
     private var modelUnloading = false
     // Session-scoped genuine native inference evidence, never restored or
     // inferred from import/configuration. Read and written on the UI thread.
@@ -1501,6 +1502,7 @@ class AgentActivity : Activity() {
             "wiederherstellbare Stände (MODELLE · VERSIONEN).",
         learningIoStatus { learningCenterStatus() },
         listOf(
+            CenterAction("EINE HAUPT-APP · LERNSTAND UND DATENÜBERNAHME", accent = true) { showOneAppMigrationCenter() },
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
             CenterAction("KONTEXT-TRAINING · MEHRSTUFIGE ÜBUNGEN", accent = true) { showContextTrainingGuide() },
             CenterAction("TRAINING · NÄCHSTE VORLAGE KOPIEREN") { copyNextContextTrainingStep() },
@@ -3388,6 +3390,103 @@ class AgentActivity : Activity() {
             }.show()
     }
 
+
+    /**
+     * Owner-visible consolidation: one NEW Continuum Lokal application, with
+     * existing SAF import/export actions. A second installed app's private
+     * storage is never accessed or claimed to be migrated automatically.
+     */
+    private fun showOneAppMigrationCenter() {
+        // Only public status counters; no owner memories or model bytes leave filesDir.
+        var copiedStatus: String? = null
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("EINE HAUPT-APP · CONTINUUM LOKAL")
+            .setMessage("Lokaler Lernstand wird geprüft …")
+            .setNegativeButton("SCHLIESSEN", null)
+            .create()
+        dialog.setOnShowListener {
+            onLearningIo({
+                val core = ContinuumLearningCore(filesDir)
+                val status = core.status()
+                val archive = at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                    .stats().values.sum()
+                val study = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this@AgentActivity)
+                val registered = getSystemService(android.app.job.JobScheduler::class.java)
+                    ?.getPendingJob(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler.JOB_ID) != null
+                buildString {
+                    append("Aktive Haupt-App: ").append(BuildConfig.APPLICATION_ID).append("\n")
+                    append("SWB1-Updates: ").append(status.modelUpdates)
+                    append(" · Erfahrungen: ").append(status.experiences.total)
+                    append(" · Quellen: ").append(archive).append("\n")
+                    append("Forschung: ").append(if (study.enabled) "freigegeben" else "aus")
+                    append(" · Job: ").append(if (registered) "registriert" else "nicht registriert")
+                    append("\nGemma: ").append(if (localRuntime.state == LocalModelState.READY &&
+                        localRuntime.loadedModel != null) "geladen" else "nicht nachgewiesen bereit")
+                    append("\n\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
+                        "Anschließend in dieser App einzeln prüfen und importieren. " +
+                        "Private App-Speicher sind getrennt; keine automatische Übernahme ohne Datei-Auswahl.")
+                    append("\n\nNichts deinstallieren, bis die Ergebnisse überprüft sind.")
+                }
+            }) { result ->
+                if (dialog.isShowing && !isFinishing && !isDestroyed) {
+                    copiedStatus = result.getOrNull()
+                    dialog.setMessage(result.getOrElse {
+                        "Status momentan nicht lesbar. Daten wurden nicht geändert. " +
+                            "Die sichere Übernahme erfolgt weiterhin über Dateiauswahl."
+                    })
+                }
+            }
+        }
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "STATUS KOPIEREN") { _, _ ->
+            val text = copiedStatus
+            if (text.isNullOrBlank()) {
+                Toast.makeText(this, "Status noch nicht gelesen. Bitte erneut öffnen.", Toast.LENGTH_LONG).show()
+            } else {
+                val clipboard = getSystemService(android.content.ClipboardManager::class.java)
+                if (clipboard == null) {
+                    Toast.makeText(this, "Zwischenablage nicht verfügbar.", Toast.LENGTH_LONG).show()
+                } else {
+                    clipboard.setPrimaryClip(android.content.ClipData.newPlainText(
+                        "Continuum Lokal · technischer Lernstatus", text))
+                    Toast.makeText(this, "Technischer Lernstatus kopiert – ohne private Inhalte.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "AKTIONEN") { _, _ ->
+            val choices = arrayOf(
+                "1 · Alte SWB1-Datei prüfen und importieren",
+                "2 · Wissensarchiv-ZIP importieren/exportieren",
+                "3 · SWB1-Gewichte dieser App sichern",
+                "4 · Trainingsmonitor mit echten Messwerten",
+                "5 · Gemma 4 · ECHTEN Direkt-Test ausführen",
+                "6 · Gemma 4 verwalten und laden",
+                "7 · Lernkern und Holdout-Ergebnisse ansehen",
+                "8 · Öffentliche Forschung kontrolliert konfigurieren",
+                "9 · Öffentliches Offline-Lernpaket ausdrücklich starten",
+                "10 · Lokales Auto-Üben konfigurieren"
+            )
+            AlertDialog.Builder(this)
+                .setTitle("CONTINUUM · EINE HAUPT-APP")
+                .setItems(choices) { _, index ->
+                    when (index) {
+                        0 -> confirmWeightsImport()
+                        1 -> showArchiveBackupMenu()
+                        2 -> exportCoreWeights()
+                        3 -> startActivity(Intent(this, ContinuumTrainingMonitorActivity::class.java))
+                        4 -> runLocalSmokeTest(direct = true)
+                        5 -> showModelCenter()
+                        6 -> showContinuumLearningDashboard()
+                        7 -> showPublicStudyControls()
+                        8 -> showPublicCurriculumDialog()
+                        9 -> showNeuralPracticeDialog()
+                    }
+                }
+                .setNegativeButton("SCHLIESSEN", null)
+                .show()
+        }
+        dialog.show()
+    }
+
     private fun showContinuumLearningDashboard() {
         onLearningIo({ continuumDashboardText() }) { result ->
             showContinuumLearningDashboardDialog(result.getOrElse {
@@ -3648,11 +3747,15 @@ class AgentActivity : Activity() {
         onLearningIo({
             val archive=at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
             if(import) {
-                val count=contentResolver.openInputStream(uri)?.use { input ->
+                val before=archive.stats().values.sum()
+                val entries=contentResolver.openInputStream(uri)?.use { input ->
                     archive.importZip(input)
                 } ?: error("Backup konnte nicht geöffnet werden")
-                "WISSENSARCHIV · "+count+" geprüfte Quellen aus Backup gelesen. "+
-                    "Keine Besitzerfakten oder Berechtigungen geändert."
+                val after=archive.stats().values.sum()
+                val added=after-before
+                "WISSENSARCHIV · "+entries+" ZIP-Einträge geprüft · "+
+                    added+" wirklich neue Quellen · "+after+" insgesamt. "+
+                    "Vorhandene Quellen, Besitzerfakten und Berechtigungen nicht gelöscht."
             } else {
                 val count=contentResolver.openOutputStream(uri,"wt")?.use { output ->
                     archive.exportZip(output)
@@ -6786,15 +6889,35 @@ class AgentActivity : Activity() {
         pendingModelImport = null
         resetM2NativeProof()
         modelImportActive = true
+        latestModelImportSnapshot = null
         localImportError = null
         refreshLocalModelUi()
         Toast.makeText(this, "Modelldatei wird lokal geprüft. Status unter Modellverwaltung.", Toast.LENGTH_LONG).show()
-        scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.", forImport = true)
+        scheduleLifecycleTimeout(
+            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",
+            forImport = true
+        )
         localAgentExecutor.execute {
             val result = runCatching {
                 val source = contentResolver.openInputStream(uri)
                     ?: error("Dokument kann nicht geöffnet werden.")
-                source.use { modelCatalog.import(metadata.first, metadata.second, it, metadata.third) }
+                var lastUiBucket = -1L
+                source.use {
+                    modelCatalog.import(metadata.first, metadata.second, it, metadata.third,
+                        onProgress = { snapshot ->
+                            latestModelImportSnapshot = snapshot
+                            val bucket = snapshot.copiedBytes / (64L * 1024L * 1024L)
+                            if (snapshot.phase != at.heinz.deviceai.localmodel.LocalModelImportPhase.COPYING ||
+                                bucket > lastUiBucket) {
+                                lastUiBucket = bucket
+                                runOnUiThread {
+                                    if (!isFinishing && !isDestroyed && modelImportActive) {
+                                        refreshLocalModelUi()
+                                    }
+                                }
+                            }
+                        })
+                }
             }
             runOnUiThread {
                 clearLifecycleTimeout()
@@ -6802,12 +6925,18 @@ class AgentActivity : Activity() {
                 if (isFinishing || isDestroyed) return@runOnUiThread
                 result.onSuccess { model ->
                     localImportError = null
-                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt")
+                    val importProof = latestModelImportSnapshot
+                    addToolActivity("Import geprüft · SHA-256 und CPU-Fähigkeit bestätigt" +
+                        (importProof?.let { " · Phase: ${it.phase.name} · Bytes: ${it.copiedBytes} · ms: ${it.elapsedMs}" }
+                            ?: ""))
                     Toast.makeText(this, "Modelldatei geprüft. Gemma wird jetzt geladen.", Toast.LENGTH_LONG).show()
                     reloadInstalledModels()
                     loadModel(model)
                 }.onFailure { error ->
-                    localImportError = error.message ?: "Model import failed."
+                    val lastImport = latestModelImportSnapshot
+                    localImportError = (error.message ?: "Model import failed.") +
+                        (lastImport?.let { " · Phase: ${it.phase.name}, Bytes: ${it.copiedBytes}, ms: ${it.elapsedMs}" }
+                            ?: " · Importphase nicht verfügbar")
                     // A chat-only error is easy to miss after Android's document
                     // picker returns to the start screen. Show a bounded, readable
                     // explanation without exposing any model bytes or credentials.
@@ -6879,7 +7008,15 @@ class AgentActivity : Activity() {
                 "Das Sprachmodell kann derzeit nicht verwendet werden.\n" +
                     ContinuumUiCopy.modelFailure(localRuntimeError) +
                     "\nTechnischer Hinweis: " + localRuntimeError!!.take(160)
-            modelImportActive -> "Die Modelldatei wird geprüft und sicher importiert. Bitte warten …"
+            modelImportActive -> {
+                val snapshot = latestModelImportSnapshot
+                "Gemma-Import läuft lokal. Keine Daten an Cloud-KI gesendet.\n" +
+                    (snapshot?.let {
+                        "Phase: " + it.phase.name +
+                            " · Kopiert: " + (it.copiedBytes / (1024L * 1024L)) + " MiB" +
+                            " · Laufzeit: " + (it.elapsedMs / 1000L) + " s"
+                    } ?: "Dateizugriff wird vorbereitet.")
+            }
             modelUnloading -> "Das Modell wird beendet. Bitte einen Moment warten …"
             loaded == null && models.isEmpty() ->
                 "Es ist noch kein Sprachmodell vorhanden.\n" +
@@ -6906,9 +7043,25 @@ class AgentActivity : Activity() {
 
     private fun scheduleLifecycleTimeout(message: String, forImport: Boolean = false) {
         clearLifecycleTimeout()
+        val earlier = if (forImport) latestModelImportSnapshot else null
         lifecycleTimeout = Runnable {
-            if (forImport) localImportError = message else localRuntimeError = message
-            refreshLocalModelUi()
+            if (forImport) {
+                if (!modelImportActive) return@Runnable
+                val current = latestModelImportSnapshot
+                if (current != null &&
+                    (earlier == null || current.copiedBytes > earlier.copiedBytes ||
+                        current.phase != earlier.phase)) {
+                    // The multi-gigabyte model is making measurable progress.
+                    // A fixed two-minute total import deadline would report false failure.
+                    scheduleLifecycleTimeout(message, forImport = true)
+                } else {
+                    addToolActivity(message)
+                    refreshLocalModelUi()
+                }
+            } else {
+                localRuntimeError = message
+                refreshLocalModelUi()
+            }
         }.also { mainHandler.postDelayed(it, 120_000) }
     }
 
