@@ -5946,7 +5946,22 @@ class AgentActivity : Activity() {
                     // Current task/evidence precede optional history under the prompt cap.
                     append(conversationContext)
                 }
-                val prompt = ChatReasoningRouter.composePrompt(promptBody, advisory, promptTail, 15_500)
+                val promptCap = at.heinz.deviceai.cognitive.LocalChatPromptBudget.limit(
+                    task = task,
+                    hasMemories = memories.isNotEmpty(),
+                    hasConversationContext = conversationContext.isNotBlank(),
+                    hasGroundedEvidence = groundedRecall != null,
+                    hasObservations = observations.isNotEmpty(),
+                    hasReflection = reflection != null
+                )
+                val briefInstruction = if (promptCap ==
+                    at.heinz.deviceai.cognitive.LocalChatPromptBudget.BRIEF_FIRST_TURN_CHARACTERS)
+                    "\nKurze Einstiegsfrage: Antworte möglichst direkt in höchstens drei kurzen Sätzen. " +
+                        "Keine zusätzlichen internen Denkschritte behaupten."
+                else ""
+                val prompt = ChatReasoningRouter.composePrompt(
+                    promptBody, advisory, promptTail + briefInstruction, promptCap
+                )
                 val newObservations = observations.drop(submittedToolObservationCount)
                 if (newObservations.isNotEmpty()) submittedToolObservationCount = observations.size
                 val toolResponses = newObservations.take(4).map {
