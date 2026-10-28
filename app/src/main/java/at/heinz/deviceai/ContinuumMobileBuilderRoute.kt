@@ -10,6 +10,7 @@ package at.heinz.deviceai
 internal object ContinuumMobileBuilderRoute {
     const val PREVIEW_PACKAGE = "at.heinz.deviceai.preview"
     const val MENTOR_PREVIEW_PACKAGE = "at.heinz.deviceai.mentorpaired"
+    const val LOCAL_MAINAPP_PACKAGE = "at.heinz.deviceai.continuumlocal"
     const val BUILDER_ACTIVITY = "at.heinz.deviceai.ContinuumMobileBuilderActivity"
 
     data class Destination(
