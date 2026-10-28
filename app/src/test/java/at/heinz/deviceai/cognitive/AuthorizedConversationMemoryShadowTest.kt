@@ -133,4 +133,61 @@ class AuthorizedConversationMemoryShadowTest {
         assertFalse(result.toString().contains(firstId))
         assertFalse(result.toString().contains(url))
     }
+
+    @Test fun syntheticResearchGateAndFrozenHoldoutCannotPromoteAConversationShadow() {
+        val synthetic = MemoryRecord(
+            id = firstId,
+            type = MemoryType.SEMANTIC,
+            content = "Gemma engine",
+            provenance = ProvenanceType.DIRECT_OBSERVATION,
+            confidence = 0.9,
+            createdAt = 0L,
+            updatedAt = 0L,
+            privacyClass = PrivacyClass.DEVICE_LOCAL_ONLY,
+            validationState = ValidationState.VERIFIED,
+            validationEvidenceReferences = listOf("synthetic-test-evidence")
+        )
+        val allowed = setOf(PrivacyClass.DEVICE_LOCAL_ONLY)
+        val lexical = MemoryRetrievalResearchGate.evaluate(
+            probes = listOf(MemoryResearchProbe(
+                "synthetic", MemoryResearchAbility.STATIC_RECALL,
+                "Gemma engine", setOf(firstId)
+            )),
+            records = listOf(synthetic),
+            allowedPrivacy = allowed,
+            nowMillis = 1_000L
+        )
+        val observer = AuthorizedConversationMemoryShadow.observe(
+            turn(listOf(firstId)), listOf(hit(firstId))
+        )
+        assertEquals(lexical.results.single().anyExpectedWithinLimit, observer.lexicalReturned > 0)
+
+        val development = listOf(MemoryResearchProbe(
+            "dev", MemoryResearchAbility.STATIC_RECALL, "Gemma", setOf(firstId)
+        ))
+        val holdout = listOf(
+            MemoryResearchProbe("h-static", MemoryResearchAbility.STATIC_RECALL,
+                "Gemma engine", setOf(firstId)),
+            MemoryResearchProbe("h-dynamic", MemoryResearchAbility.DYNAMIC_STATE,
+                "Gemma state", setOf(firstId)),
+            MemoryResearchProbe("h-workflow", MemoryResearchAbility.WORKFLOW,
+                "Gemma workflow", setOf(firstId)),
+            MemoryResearchProbe("h-environment", MemoryResearchAbility.ENVIRONMENT_GOTCHA,
+                "Gemma device", setOf(firstId)),
+            MemoryResearchProbe("h-unknown", MemoryResearchAbility.PREMISE_AWARENESS,
+                "unrelatedwombat", emptySet())
+        )
+        val comparison = MemoryResearchShadowComparator.compare(
+            developmentProbes = development,
+            frozenHoldoutProbes = holdout,
+            records = listOf(synthetic),
+            allowedPrivacy = allowed,
+            candidateSemanticScorer = { _, _ -> 0.0 },
+            nowMillis = 1_000L
+        )
+        assertFalse(comparison.eligibleForOwnerReview)
+        assertFalse(comparison.developmentImproved)
+        assertFalse(comparison.holdoutImproved)
+    }
+
 }
