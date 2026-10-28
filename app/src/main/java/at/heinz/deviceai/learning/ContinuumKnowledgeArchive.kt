@@ -213,6 +213,17 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
         if(newEntries>0)require(root.usableSpace>=MIN_FREE_BYTES+uncompressed) {
             "Not enough free storage for verified import"
         }
+        // Verify all colliding on-device records before committing any new
+        // records, so one damaged existing item cannot create partial results.
+        staged.forEach { record ->
+            val existing=File(root,"${record.id}.rec")
+            if(existing.exists()) {
+                val current=readFile(existing)
+                require(current.id==record.id && current.sha256==record.sha256) {
+                    "Existing archived source differs from verified backup"
+                }
+            }
+        }
         staged.forEach { record ->
             save(record.kind,record.title,record.url,record.attribution,
                 record.text,record.collectedAt,record.sourceDate)
