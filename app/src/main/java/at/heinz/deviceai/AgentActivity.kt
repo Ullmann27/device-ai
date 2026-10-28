@@ -1502,6 +1502,7 @@ class AgentActivity : Activity() {
             "wiederherstellbare Stände (MODELLE · VERSIONEN).",
         learningIoStatus { learningCenterStatus() },
         listOf(
+            CenterAction("EINE HAUPT-APP · LERNSTAND UND DATENÜBERNAHME", accent = true) { showOneAppMigrationCenter() },
             CenterAction("LERN-GESPRÄCH · BEISPIEL BESTÄTIGEN", accent = true) { beginNeuralCoach() },
             CenterAction("KONTEXT-TRAINING · MEHRSTUFIGE ÜBUNGEN", accent = true) { showContextTrainingGuide() },
             CenterAction("TRAINING · NÄCHSTE VORLAGE KOPIEREN") { copyNextContextTrainingStep() },
@@ -3387,6 +3388,79 @@ class AgentActivity : Activity() {
                         }) { result -> addAssistantMessage(result.getOrElse { "Nicht gelöscht: ${failureName(it)}." }) }
                     }.show()
             }.show()
+    }
+
+
+    /**
+     * Owner-visible consolidation: one NEW Continuum Lokal application, with
+     * existing SAF import/export actions. A second installed app's private
+     * storage is never accessed or claimed to be migrated automatically.
+     */
+    private fun showOneAppMigrationCenter() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("EINE HAUPT-APP · CONTINUUM LOKAL")
+            .setMessage("Lokalen Lernstand wird geprüft …")
+            .setNegativeButton("SCHLIESSEN", null)
+            .create()
+        dialog.setOnShowListener {
+            onLearningIo({
+                val core = ContinuumLearningCore(filesDir)
+                val status = core.status()
+                val archive = at.heinz.deviceai.learning.ContinuumKnowledgeArchive(filesDir)
+                    .stats().values.sum()
+                val study = at.heinz.deviceai.learning.ContinuumPublicStudyScheduler(this@AgentActivity)
+                val registered = getSystemService(android.app.job.JobScheduler::class.java)
+                    ?.getPendingJob(at.heinz.deviceai.learning.ContinuumPublicStudyScheduler.JOB_ID) != null
+                buildString {
+                    append("Aktive Haupt-App: ").append(BuildConfig.APPLICATION_ID).append("\\n")
+                    append("SWB1-Updates: ").append(status.modelUpdates)
+                    append(" · Erfahrungen: ").append(status.experiences.total)
+                    append(" · Quellen: ").append(archive).append("\\n")
+                    append("Forschung: ").append(if (study.enabled) "freigegeben" else "aus")
+                    append(" · Job: ").append(if (registered) "registriert" else "nicht registriert")
+                    append("\\nGemma: ").append(if (localRuntime.state == LocalModelState.READY &&
+                        localRuntime.loadedModel != null) "geladen" else "nicht nachgewiesen bereit")
+                    append("\\n\\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
+                        "Anschließend in dieser App einzeln prüfen und importieren. " +
+                        "Private App-Speicher sind getrennt; keine automatische Übernahme ohne Datei-Auswahl.")
+                    append("\\n\\nNichts deinstallieren, bis die Ergebnisse überprüft sind.")
+                }
+            }) { result ->
+                if (dialog.isShowing && !isFinishing && !isDestroyed) {
+                    dialog.setMessage(result.getOrElse {
+                        "Status momentan nicht lesbar. Daten wurden nicht geändert. " +
+                            "Die sichere Übernahme erfolgt weiterhin über Dateiauswahl."
+                    })
+                }
+            }
+        }
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "AKTIONEN") { _, _ ->
+            val choices = arrayOf(
+                "1 · Alte SWB1-Datei prüfen und importieren",
+                "2 · Wissensarchiv-ZIP importieren/exportieren",
+                "3 · SWB1-Gewichte dieser App sichern",
+                "4 · Trainingsmonitor mit echten Messwerten",
+                "5 · Gemma 4 laden und echten Modelltest prüfen",
+                "6 · Lernkern und Holdout-Ergebnisse ansehen",
+                "7 · Öffentliche Forschung kontrolliert konfigurieren"
+            )
+            AlertDialog.Builder(this)
+                .setTitle("CONTINUUM · EINE HAUPT-APP")
+                .setItems(choices) { _, index ->
+                    when (index) {
+                        0 -> confirmWeightsImport()
+                        1 -> showArchiveBackupMenu()
+                        2 -> exportCoreWeights()
+                        3 -> startActivity(Intent(this, ContinuumTrainingMonitorActivity::class.java))
+                        4 -> showModelCenter()
+                        5 -> showContinuumLearningDashboard()
+                        6 -> showPublicStudyControls()
+                    }
+                }
+                .setNegativeButton("SCHLIESSEN", null)
+                .show()
+        }
+        dialog.show()
     }
 
     private fun showContinuumLearningDashboard() {
