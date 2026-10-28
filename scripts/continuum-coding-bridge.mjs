@@ -185,7 +185,9 @@ export function createExperientialTransport({key,fetcher=fetch,timeoutMs=30000}=
   };
 }
 export async function runSyntheticCodingTrial({workspace,model='claude-fable-5.1:free',transport,transportKind='INJECTED_NOT_VERIFIED'}) {
-  const selected=validateModel(model);
+  const selected=transportKind==='SELF_HOSTED_LOOPBACK'
+    ? (/^local\/[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(model) ? model : (() => {throw Error('INVALID_LOCAL_MODEL_LABEL');})())
+    : validateModel(model);
   if (typeof transport !== 'function') throw Error('TRANSPORT_REQUIRED');
   const before=inspectSyntheticWorkspace(workspace);
   const messages=[
@@ -198,7 +200,7 @@ export async function runSyntheticCodingTrial({workspace,model='claude-fable-5.1
     const message=response?.choices?.[0]?.message;
     if (!isPlain(message) || message.role && message.role!=='assistant') throw Error('PROVIDER_MESSAGE_INVALID');
     if (typeof response?.model==='string') {
-      if (response.model!==selected && response.model!==selected.slice(0,-5))
+      if (response.model!==selected && !(transportKind!=='SELF_HOSTED_LOOPBACK' && response.model===selected.slice(0,-5)))
         throw Error('UNEXPECTED_PROVIDER_MODEL');
       reportedModels.push(response.model);
     }
