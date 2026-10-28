@@ -44,7 +44,9 @@ test('User can see that an actual large file import has started', () => {
   assert.match(part, /modelImportActive = true/);
   assert.match(part, /Modelldatei wird lokal geprüft/);
   assert.match(part, /Modelldatei geprüft\. Gemma wird jetzt geladen/);
-  assert.match(part, /Modellimport fehlgeschlagen\. Grund unter Modellstatus oder Chat/);
+  assert.match(part, /setTitle\("Gemma-Import fehlgeschlagen"\)/);
+  assert.match(part, /Technischer Grund:/);
+  assert.match(part, /\.setPositiveButton\("VERSTANDEN", null\)/);
 });
 
 test('Canceled Android document picker leaves old model intact', () => {
