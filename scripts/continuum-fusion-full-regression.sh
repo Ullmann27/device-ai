@@ -65,7 +65,8 @@ case "$out" in "$root"|"$root"/*) fail 'Evidence must remain outside source chec
 [[ ! -e "$out/summary.json" && ! -e "$out/sha256-manifest.json" ]] || fail 'Prior run evidence exists; use a fresh evidence directory'
 cd "$root"
 args=(--offline --no-daemon --console=plain --max-workers=2 --rerun-tasks
-  -PdeviceAiMentorPreview=true "-Pandroid.aapt2FromMavenOverride=$aapt2")
+  -PdeviceAiMentorPreview=true -PcontinuumLocalStandaloneQa=true
+  -PcontinuumStandaloneVersionCode=27 "-Pandroid.aapt2FromMavenOverride=$aapt2")
 if [[ "$termux" == true ]]; then args+=(-PdeviceAiMobileAidlFallback=true); fi
 started="$(node -p 'Date.now()')"
 printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out/command.txt"
