@@ -139,6 +139,27 @@ class ResearchTest {
     }
 
     @Test
+    fun highlySimilarGermanOppositesAreNeverPromotedAsIndependentSupport() {
+        val positive = "Das Gerät unterstützt kabelloses Laden."
+        val negative = "Das Gerät unterstützt kabelloses Laden nicht."
+        val first = document("https://one.example/charging", "one.example", positive, 1L)
+        val second = document("https://two.example/charging", "two.example", negative, 2L)
+        val pipeline = ResearchPipeline(
+            SimulatedResearchProvider(
+                mapOf(first.url to first, second.url to second),
+                mapOf(first.url to listOf(first.url, second.url))
+            ),
+            BaselineClaimExtractor { 3L }
+        )
+        val result = pipeline.research(ResearchRequest("kabelloses Laden", first.url))
+        assertEquals(2, result.documents.size)
+        assertEquals(2, result.claims.size)
+        assertTrue(result.relationships.any { it.relation == ClaimRelation.CONTRADICTS })
+        assertFalse(result.relationships.any { it.relation == ClaimRelation.SUPPORTS })
+        assertTrue(result.claims.none { it.validationState == ValidationState.VERIFIED })
+    }
+
+    @Test
     fun responseSizesAreBoundedByProviderRequest() {
         val oversized = document(
             "https://example.test/large",
