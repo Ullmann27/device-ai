@@ -72,6 +72,8 @@ class ContinuumCognitiveRuntimeTest {
                 .reply("Welche Farbe hat das nicht gespeicherte Fahrrad?")
             assertFalse(result.grounded)
             assertTrue(result.observations.isEmpty())
+            assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                result.hybridShadow.status)
             assertEquals(ContinuumCre1State.UNTRAINED_SHADOW,result.cre1State)
             assertTrue(result.answer.contains("keine passende bestätigte Erinnerung"))
             assertTrue(core.dialogueHistory().single().memoryIds.isEmpty())
@@ -127,6 +129,8 @@ class ContinuumCognitiveRuntimeTest {
             val turn=ContinuumCognitiveRuntime(dir,core).reply("Wo wohnt Leo?")
             assertTrue(turn.grounded)
             assertEquals(ContinuumCre1State.INVALID_SNAPSHOT,turn.cre1State)
+            assertEquals(at.heinz.deviceai.cognitive.AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                turn.hybridShadow.status)
             assertTrue(turn.observations.isEmpty())
             assertArrayEquals(damaged,file.readBytes())
         } finally { dir.deleteRecursively() }
