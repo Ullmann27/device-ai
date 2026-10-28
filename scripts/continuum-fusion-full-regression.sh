@@ -14,7 +14,8 @@ for tool in git node sha256sum; do command -v "$tool" >/dev/null 2>&1 || fail "M
 head="$(git -C "$root" rev-parse --verify HEAD 2>/dev/null)" || fail 'Git HEAD unavailable'
 [[ "$head" == "$expected" ]] || fail "Refusing different SHA: actual $head, approved $expected"
 [[ -z "$(git -C "$root" status --porcelain --untracked-files=normal)" ]] || fail 'Uncommitted source changes; preserve evidence first'
-[[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] || fail 'Signing secrets must not be loaded for unit tests'
+[[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" &&
+   -z "${CONTINUUM_LOCAL_SIGNING_FILE:-}" && -z "${CONTINUUM_LOCAL_SIGNING_PASSWORD:-}" ]] || fail 'Signing secrets must not be loaded for unit tests'
 termux=false
 if [[ "${PREFIX:-}" == /data/data/com.termux/files/usr* ]]; then
   termux=true
@@ -73,6 +74,12 @@ printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out
 printf 'GRADLE_COMMAND=' >> "$out/command.txt"
 printf ' %q' "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug >> "$out/command.txt"
 printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs\n' >> "$out/command.txt"
+# Deterministic public Node/Kotlin parity fixtures are required by three real
+# JUnit methods. Generate them locally, never skip them or fetch model weights.
+export CONTINUUM_CRE1_PARITY_DIR="$out/cre1-parity"
+export CONTINUUM_CONTRASTIVE_PARITY_DIR="$out/contrastive-parity"
+node .github/continuum/cre-parity.mjs prepare "$CONTINUUM_CRE1_PARITY_DIR" > "$out/parity-prepare.log" 2>&1 || fail 'CRE1 parity preparation failed'
+node .github/continuum/contrastive-parity.mjs prepare "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$out/parity-prepare.log" 2>&1 || fail 'SWB1/SWB2 parity preparation failed'
 set +e
 "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug > "$out/gradle-full-suite.log" 2>&1
 gradle_exit=$?
@@ -90,6 +97,8 @@ node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-release-host-preflight.test.mjs \
   scripts/continuum-one-app-contract.test.mjs > "$out/node-contracts.log" 2>&1
 node_exit=$?
+node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" > "$out/parity-verify.log" 2>&1 || node_exit=1
+node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$out/parity-verify.log" 2>&1 || node_exit=1
 set -e
 printf 'GRADLE_EXIT=%s\nNODE_EXIT=%s\n' "$gradle_exit" "$node_exit" >> "$out/command.txt"
 node scripts/continuum-fusion-regression-report.mjs \
