@@ -4,6 +4,20 @@
   "updated": "2026-10-27",
   "ownerPriority": "ANDROID_DEVICE_BUILDER",
   "anchor": "https://github.com/Ullmann27/device-ai/issues/41",
+  "externalResearchIntegration": {
+    "ownerRequested": true,
+    "catalog": "docs/research/CONTINUUM-EXTERNAL-CODE-INTEGRATION-20261027.md",
+    "reviewPullRequest": 198,
+    "parentReviewPullRequest": 197,
+    "upstreamSourcesMapped": 15,
+    "firstShadowEvaluator": "app/src/main/java/at/heinz/deviceai/cognitive/MemoryRetrievalResearchGate.kt",
+    "directCodeImport": false,
+    "allExternalRuntimeIntegrationsVerified": false,
+    "ownerMemoryPromotionAllowed": false,
+    "mergeToMainAuthorized": false,
+    "originalSignerNeededForOwnerUpdate": true,
+    "relevantExperiments": ["EXP-00", "EXP-02", "EXP-04", "EXP-05", "EXP-06", "EXP-07", "EXP-09", "EXP-11"]
+  },
   "integrationPolicy": {
     "canonicalBacklog": true,
     "canonicalRepairGate": true,
