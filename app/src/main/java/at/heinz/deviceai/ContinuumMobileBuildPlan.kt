@@ -17,7 +17,7 @@ internal object ContinuumMobileBuildPlan {
     const val TERMUX_ACTION = "com.termux.RUN_COMMAND"
     const val TERMUX_PERMISSION = "com.termux.permission.RUN_COMMAND"
     const val NODE_EXECUTABLE = "/data/data/com.termux/files/usr/bin/node"
-    const val PROJECT_DIR = "/data/data/com.termux/files/home/device-ai"
+    const val PROJECT_DIR = "/data/data/com.termux/files/home/device-ai-fold7-candidate"
     const val BUILDER_SCRIPT = "$PROJECT_DIR/scripts/continuum-mobile-builder.mjs"
 
     data class Command(val executable: String, val args: List<String>, val workDir: String)

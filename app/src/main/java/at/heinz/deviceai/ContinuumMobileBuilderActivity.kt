@@ -60,7 +60,7 @@ class ContinuumMobileBuilderActivity : Activity() {
             setOnClickListener { startActivity(Intent(this@ContinuumMobileBuilderActivity, ContinuumM5LabActivity::class.java)) }
         })
         paragraph("Continuum · Android Builder", true)
-        paragraph("Entwicklung direkt auf diesem Smartphone. Termux und ein geprüfter Device-AI-Checkout unter ~/device-ai sind erforderlich.")
+        paragraph("Entwicklung direkt auf diesem Fold7. Termux verwendet den geprüften Continuum-Checkout unter ~/device-ai-fold7-candidate.")
         status = paragraph("Noch kein mobiler Geräte-Build bestätigt.")
         status.setTextIsSelectable(true)
         paragraph("AUTONOMER CODING-AGENT · TYPISIERTER AUFTRAG",true)
@@ -128,6 +128,29 @@ class ContinuumMobileBuilderActivity : Activity() {
             }
         }
         column.addView(typedRunButton,LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,px(56)))
+        paragraph("LOKALES KI-TEAM · KOSTENFREIE PRÜF-AGENTEN",true)
+        paragraph("Fünf kleine Spezialisten prüfen Gemma, DeepSeek, CCC1-Coding, Erfahrungstransfer und den Fold7-Build. " +
+            "Sie verwenden bestehende Node-Vertragstests, keine kostenpflichtige KI-API. " +
+            "Dies ist noch kein selbstständiges Programmieren und führt kein Gemma-/DeepSeek-Modell aus.")
+        column.addView(Button(this).apply {
+            text = "5 LOKALE PRÜF-AGENTEN STARTEN"
+            isAllCaps = false
+            setOnClickListener {
+                AlertDialog.Builder(this@ContinuumMobileBuilderActivity)
+                    .setTitle("Lokale Spezialisten ausführen?")
+                    .setMessage("Termux führt fünf festgelegte Testbereiche nacheinander auf dem vorhandenen " +
+                        "Continuum-Quellstand aus. Kein Modell-Download, kein Schreibzugriff auf Code, " +
+                        "keine APK-Installation und keine Verwendung der privaten Signatur.")
+                    .setNegativeButton("Abbrechen",null)
+                    .setPositiveButton("Prüfungen starten") { _, _ ->
+                        dispatchApprovedCommand(
+                            ContinuumMicroAgentBridge.CALLBACK,
+                            UUID.randomUUID().toString(),
+                            ContinuumMicroAgentBridge.command()
+                        )
+                    }.show()
+            }
+        },LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,px(56)))
         selectedProject = ContinuumOwnedProject.ofId(preferences.getString("selected_m4_project_v1", null))
             ?: ContinuumOwnedProject.NOTES
         // The M5 handoff is a one-shot selection: applied on the first creation only and stored like a manual choice.
