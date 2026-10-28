@@ -80,14 +80,14 @@ export function compareContinuumLearningStates(previous, current) {
     researchScheduledNew:next.publicStudy.registered,
     holdoutComparable:comparable,
     holdoutCorrectDifference:comparable ? currentScore - previousScore : null,
-    verifiedModelWeightMigration:sameWeights === true,
+    verifiedModelWeightMigration:false,
     verifiedFullMigration:false,
     verifiedGemmaInference:false,
     interpretation:Object.freeze([
       'Updatezahlen des SWB1-Encoders messen keine Gemma-4-Parameter oder allgemeine Sprachintelligenz.',
       'Archivierte Quellen sind nicht gleichbedeutend mit migrierten SWB1-Gewichten oder Experience-Protokollen.',
       sameWeights === null ? 'SWB1-Modellhash nicht in beiden Apps gemessen; Gewichtsgleichheit unbestimmt.'
-        : sameWeights ? 'SWB1-Modellhash identisch; weitere Speicherbereiche weiterhin unbestimmt.'
+        : sameWeights ? 'SWB1-Modellhash identisch; daraus folgt kein Beleg eines tatsächlichen Migrationsvorgangs.'
           : 'SWB1-Modellhash unterscheidet sich; keinen fremden Checkpoint ohne Holdout-Freigabe erzwingen.',
       comparable ? 'Gleiche ausdrücklich bestätigte Benchmark-Identität und Fallzahl; Korrektzahlen verglichen.'
         : 'Unabhängige Qualität nicht vergleichbar: Benchmark-Identität oder vollständige Messwerte fehlen.',
