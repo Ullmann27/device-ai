@@ -15,6 +15,13 @@ head="$(git -C "$root" rev-parse --verify HEAD 2>/dev/null)" || fail 'Git HEAD u
 [[ "$head" == "$expected" ]] || fail "Refusing different SHA: actual $head, approved $expected"
 [[ -z "$(git -C "$root" status --porcelain --untracked-files=normal)" ]] || fail 'Uncommitted source changes; preserve evidence first'
 [[ -z "${CONTINUUM_MENTOR_SIGNING_FILE:-}" && -z "${CONTINUUM_MENTOR_SIGNING_PASSWORD:-}" ]] || fail 'Signing secrets must not be loaded for unit tests'
+termux=false
+if [[ "${PREFIX:-}" == /data/data/com.termux/files/usr* ]]; then
+  termux=true
+  if [[ -z "${JAVA_HOME:-}" && -x "$PREFIX/lib/jvm/java-17-openjdk/bin/java" ]]; then
+    export JAVA_HOME="$PREFIX/lib/jvm/java-17-openjdk"
+  fi
+fi
 if [[ -z "${JAVA_HOME:-}" && -x /workspace/continuum-tools/jdk17/bin/java ]]; then
   export JAVA_HOME=/workspace/continuum-tools/jdk17
 fi
@@ -24,16 +31,30 @@ export PATH="$JAVA_HOME/bin:$PATH"
 [[ "$(javac -version 2>&1)" == 'javac 17.'* ]] || fail 'javac 17 required'
 if [[ -z "${ANDROID_HOME:-}" && -f /workspace/continuum-tools/android-sdk/platforms/android-36/android.jar ]]; then
   export ANDROID_HOME=/workspace/continuum-tools/android-sdk
+elif [[ -z "${ANDROID_HOME:-}" && -f "$HOME/android-sdk/platforms/android-36/android.jar" ]]; then
+  export ANDROID_HOME="$HOME/android-sdk"
 fi
 [[ -n "${ANDROID_HOME:-}" && -f "$ANDROID_HOME/platforms/android-36/android.jar" ]] || fail 'Existing Android SDK36 required'
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 if [[ -z "${GRADLE_USER_HOME:-}" && -d /workspace/continuum-tools/gradle-cache ]]; then
   export GRADLE_USER_HOME=/workspace/continuum-tools/gradle-cache
 fi
-gradle_bin="${CONTINUUM_GRADLE_PATH:-/workspace/continuum-tools/gradle/gradle-8.11.1/bin/gradle}"
+if [[ -n "${CONTINUUM_GRADLE_PATH:-}" ]]; then
+  gradle_bin="$CONTINUUM_GRADLE_PATH"
+elif [[ -x /workspace/continuum-tools/gradle/gradle-8.11.1/bin/gradle ]]; then
+  gradle_bin=/workspace/continuum-tools/gradle/gradle-8.11.1/bin/gradle
+elif command -v gradle >/dev/null 2>&1; then
+  gradle_bin="$(command -v gradle)"
+else
+  gradle_bin="$HOME/continuum-toolchains/gradle-8.11.1/bin/gradle"
+fi
 [[ -x "$gradle_bin" ]] || fail 'Existing Gradle8.11.1 required; never download a replacement'
 [[ "$("$gradle_bin" --version 2>&1)" == *'Gradle 8.11.1'* ]] || fail 'Wrong Gradle version'
-aapt2="${CONTINUUM_AAPT2_PATH:-$ANDROID_HOME/build-tools/35.0.0/aapt2}"
+if [[ "$termux" == true ]]; then
+  aapt2="${CONTINUUM_AAPT2_PATH:-$PREFIX/bin/aapt2}"
+else
+  aapt2="${CONTINUUM_AAPT2_PATH:-$ANDROID_HOME/build-tools/35.0.0/aapt2}"
+fi
 [[ -x "$aapt2" ]] || fail 'Existing build-tools/35.0.0/aapt2 required'
 node_major="$(node -p 'parseInt(process.versions.node.split(".")[0],10)')"
 [[ "$node_major" == 20 || "$node_major" == 22 || "$node_major" == 24 ]] || fail 'Supported Node LTS 20/22/24 required'
@@ -45,6 +66,7 @@ case "$out" in "$root"|"$root"/*) fail 'Evidence must remain outside source chec
 cd "$root"
 args=(--offline --no-daemon --console=plain --max-workers=2 --rerun-tasks
   -PdeviceAiMentorPreview=true "-Pandroid.aapt2FromMavenOverride=$aapt2")
+if [[ "$termux" == true ]]; then args+=(-PdeviceAiMobileAidlFallback=true); fi
 started="$(node -p 'Date.now()')"
 printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out/command.txt"
 printf 'GRADLE_COMMAND=' >> "$out/command.txt"
