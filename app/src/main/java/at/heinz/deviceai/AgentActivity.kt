@@ -6875,14 +6875,30 @@ class AgentActivity : Activity() {
         localImportError = null
         refreshLocalModelUi()
         Toast.makeText(this, "Modelldatei wird lokal geprüft. Status unter Modellverwaltung.", Toast.LENGTH_LONG).show()
-        scheduleLifecycleTimeout("Model import exceeded 120 seconds; the document provider may still be reading.", forImport = true)
+        scheduleLifecycleTimeout(
+            "Import ohne neuen Fortschrittsnachweis seit 120 Sekunden; Dateianbieter oder Modellinspektion möglicherweise noch beschäftigt.",
+            forImport = true
+        )
         localAgentExecutor.execute {
             val result = runCatching {
                 val source = contentResolver.openInputStream(uri)
                     ?: error("Dokument kann nicht geöffnet werden.")
+                var lastUiBucket = -1L
                 source.use {
                     modelCatalog.import(metadata.first, metadata.second, it, metadata.third,
-                        onProgress = { snapshot -> latestModelImportSnapshot = snapshot })
+                        onProgress = { snapshot ->
+                            latestModelImportSnapshot = snapshot
+                            val bucket = snapshot.copiedBytes / (64L * 1024L * 1024L)
+                            if (snapshot.phase != at.heinz.deviceai.localmodel.LocalModelImportPhase.COPYING ||
+                                bucket > lastUiBucket) {
+                                lastUiBucket = bucket
+                                runOnUiThread {
+                                    if (!isFinishing && !isDestroyed && modelImportActive) {
+                                        refreshLocalModelUi()
+                                    }
+                                }
+                            }
+                        })
                 }
             }
             runOnUiThread {
@@ -6974,7 +6990,15 @@ class AgentActivity : Activity() {
                 "Das Sprachmodell kann derzeit nicht verwendet werden.\n" +
                     ContinuumUiCopy.modelFailure(localRuntimeError) +
                     "\nTechnischer Hinweis: " + localRuntimeError!!.take(160)
-            modelImportActive -> "Die Modelldatei wird geprüft und sicher importiert. Bitte warten …"
+            modelImportActive -> {
+                val snapshot = latestModelImportSnapshot
+                "Gemma-Import läuft lokal. Keine Daten an Cloud-KI gesendet.\n" +
+                    (snapshot?.let {
+                        "Phase: " + it.phase.name +
+                            " · Kopiert: " + (it.copiedBytes / (1024L * 1024L)) + " MiB" +
+                            " · Laufzeit: " + (it.elapsedMs / 1000L) + " s"
+                    } ?: "Dateizugriff wird vorbereitet.")
+            }
             modelUnloading -> "Das Modell wird beendet. Bitte einen Moment warten …"
             loaded == null && models.isEmpty() ->
                 "Es ist noch kein Sprachmodell vorhanden.\n" +
@@ -7001,9 +7025,25 @@ class AgentActivity : Activity() {
 
     private fun scheduleLifecycleTimeout(message: String, forImport: Boolean = false) {
         clearLifecycleTimeout()
+        val earlier = if (forImport) latestModelImportSnapshot else null
         lifecycleTimeout = Runnable {
-            if (forImport) localImportError = message else localRuntimeError = message
-            refreshLocalModelUi()
+            if (forImport) {
+                if (!modelImportActive) return@Runnable
+                val current = latestModelImportSnapshot
+                if (current != null &&
+                    (earlier == null || current.copiedBytes > earlier.copiedBytes ||
+                        current.phase != earlier.phase)) {
+                    // The multi-gigabyte model is making measurable progress.
+                    // A fixed two-minute total import deadline would report false failure.
+                    scheduleLifecycleTimeout(message, forImport = true)
+                } else {
+                    addToolActivity(message)
+                    refreshLocalModelUi()
+                }
+            } else {
+                localRuntimeError = message
+                refreshLocalModelUi()
+            }
         }.also { mainHandler.postDelayed(it, 120_000) }
     }
 
