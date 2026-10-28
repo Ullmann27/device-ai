@@ -94,6 +94,35 @@ class ContinuumCdxLargeCurriculumTest {
         } finally {dir.deleteRecursively()}
     }
 
+    @Test fun cancellationAfterAcceptedCheckpointDoesNotRepeatCompletedStage() {
+        val dir=Files.createTempDirectory("continuum-cdx-late-cancel").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val swbBefore=core.modelHash()
+            var cancelAfterCommit=false
+            val runner=ContinuumCdxLargeLab(dir)
+            // The core emits AUDIT from its finally block after the bridge has
+            // returned and any accepted checkpoint has already been committed.
+            runner.observeTraining { phase ->
+                if(phase=="AUDIT")cancelAfterCommit=true
+            }
+            val round=checkNotNull(runner.next { cancelAfterCommit })
+            assertTrue("Synthetic baseline must reach the accepted-commit path",round.accepted)
+            assertEquals(ContinuumCdxLargeCurriculum.TRAIN_STEPS,round.completed)
+            assertTrue(cancelAfterCommit)
+            assertTrue("A committed complete stage must not remain repeatable",round.finalized)
+            assertEquals(1,round.attempts)
+            assertEquals("1",java.io.File(dir,"learning-core-v2/cdx-pairs-v1-stage.txt").readText())
+            val reopened=ContinuumCdxLargeLab(dir)
+            val status=reopened.status()
+            assertEquals(1,status.completed)
+            assertEquals(round.hash,status.decoderHash)
+            assertEquals(swbBefore,core.modelHash())
+            assertThrows(IllegalStateException::class.java) { reopened.next { true } }
+            assertEquals(status,reopened.status())
+        } finally {dir.deleteRecursively()}
+    }
+
     @Test fun legacyAuditCannotBeReusedAsTrainingInputOrSilentlyPromoted() {
         val dir=Files.createTempDirectory("continuum-cdx-big-overlap").toFile()
         try {

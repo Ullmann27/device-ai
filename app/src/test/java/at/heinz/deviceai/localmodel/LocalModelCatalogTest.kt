@@ -9,6 +9,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.nio.file.Files
 
 class LocalModelCatalogTest {
@@ -22,6 +23,69 @@ class LocalModelCatalogTest {
         minimumRuntimeVersion = "0.18.0",
         supportedBackends = setOf(LocalModelBackend.CPU)
     )
+
+    @Test fun retryRecoversVerifiedModelAfterProcessDeathBetweenDataAndMetadataCommit() {
+        val directory = Files.createTempDirectory("model-import-commit-recovery").toFile()
+        try {
+            val bytes = "complete model bytes before interrupted metadata commit".toByteArray()
+            val first = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            val imported = first.import("gemma", "v1", ByteArrayInputStream(bytes), contentHash(bytes.decodeToString()))
+            val file = first.modelFile(imported)
+            // Exact persistent state after the data rename but before metadata publication.
+            assertTrue(directory.listFiles()!!.single { it.name.endsWith(".meta") }.delete())
+            val reopened = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            assertTrue(reopened.all().isEmpty())
+            var closed = false
+            val unread = object : InputStream() {
+                override fun read(): Int = error("Recovery must not copy the multi-GB model again")
+                override fun close() { closed = true }
+            }
+            val recovered = reopened.import("gemma", "v1", unread, imported.sha256)
+            assertTrue(closed)
+            assertEquals(imported, recovered)
+            assertEquals(listOf(imported), reopened.all())
+            assertEquals(imported, reopened.get("gemma", "v1"))
+            assertTrue(bytes.contentEquals(file.readBytes()))
+        } finally { directory.deleteRecursively() }
+    }
+
+    @Test fun orphanRecoveryRejectsDifferentExpectedBytesWithoutOverwritingExistingFile() {
+        val directory = Files.createTempDirectory("model-import-orphan-mismatch").toFile()
+        try {
+            val bytes = "existing complete model".toByteArray()
+            val catalog = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            val original = catalog.import("gemma", "v1", ByteArrayInputStream(bytes), contentHash(bytes.decodeToString()))
+            val file = catalog.modelFile(original)
+            assertTrue(directory.listFiles()!!.single { it.name.endsWith(".meta") }.delete())
+            val failure = assertThrows(IllegalArgumentException::class.java) {
+                catalog.import("gemma", "v1", ByteArrayInputStream("different".toByteArray()), "0".repeat(64))
+            }
+            assertTrue(failure.message!!.contains("SHA-256"))
+            assertTrue(bytes.contentEquals(file.readBytes()))
+            assertTrue(catalog.all().isEmpty())
+            assertFalse(directory.listFiles()!!.any { it.name.endsWith(".meta") })
+        } finally { directory.deleteRecursively() }
+    }
+
+    @Test fun orphanRecoveryRechecksCpuCompatibilityBeforePublishingMetadata() {
+        val directory = Files.createTempDirectory("model-import-orphan-capability").toFile()
+        try {
+            val bytes = "existing model".toByteArray()
+            val catalog = LocalModelCatalog(directory, LocalModelInspector { capabilities })
+            val original = catalog.import("gemma", "v1", ByteArrayInputStream(bytes), contentHash(bytes.decodeToString()))
+            val file = catalog.modelFile(original)
+            assertTrue(directory.listFiles()!!.single { it.name.endsWith(".meta") }.delete())
+            val unsupported = LocalModelCatalog(directory, LocalModelInspector {
+                capabilities.copy(supportedBackends = setOf(LocalModelBackend.GPU))
+            })
+            val failure = assertThrows(IllegalArgumentException::class.java) {
+                unsupported.import("gemma", "v1", ByteArrayInputStream(bytes), original.sha256)
+            }
+            assertTrue(failure.message!!.contains("CPU"))
+            assertTrue(bytes.contentEquals(file.readBytes()))
+            assertTrue(unsupported.all().isEmpty())
+        } finally { directory.deleteRecursively() }
+    }
 
     @Test
     fun importCatalogAndIntegrityChecksAreBoundedAndVersioned() {
