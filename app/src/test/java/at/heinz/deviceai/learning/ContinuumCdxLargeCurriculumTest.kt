@@ -48,7 +48,7 @@ class ContinuumCdxLargeCurriculumTest {
             assertTrue(old.all { it in previous })
             assertEquals(8,old.distinct().size)
             assertTrue(complete.all { it.answer.endsWith(".") && it.answer.contains(" ") })
-            assertTrue(complete.all { "Forschungsperson F" in it.evidence })
+            assertTrue(complete.all { it.evidence == it.answer })
             assertTrue(complete.none { it in previous })
             assertTrue(complete.none { it in corpus.historicAudit })
         }
