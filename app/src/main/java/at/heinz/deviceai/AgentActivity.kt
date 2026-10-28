@@ -6779,9 +6779,18 @@ class AgentActivity : Activity() {
                     loadModel(model)
                 }.onFailure { error ->
                     localImportError = error.message ?: "Model import failed."
-                    Toast.makeText(this,
-                        "Modellimport fehlgeschlagen. Grund unter Modellstatus oder Chat.",
-                        Toast.LENGTH_LONG).show()
+                    // A chat-only error is easy to miss after Android's document
+                    // picker returns to the start screen. Show a bounded, readable
+                    // explanation without exposing any model bytes or credentials.
+                    AlertDialog.Builder(this)
+                        .setTitle("Gemma-Import fehlgeschlagen")
+                        .setMessage(
+                            ContinuumUiCopy.modelFailure(error.message) +
+                                "\n\nTechnischer Grund: " +
+                                (error.message ?: "Unbekannter Importfehler").take(320)
+                        )
+                        .setPositiveButton("VERSTANDEN", null)
+                        .show()
                     addAssistantMessage("Der Modellimport war nicht erfolgreich. " +
                         ContinuumUiCopy.modelFailure(error.message) + "\n" + (error.message ?: "Import fehlgeschlagen.") +
                         "\n" + (localRuntime.loadedModel?.let { "Weiterhin geladen: ${it.id} · ${it.version} · SHA-256 ${it.sha256}" }
