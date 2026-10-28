@@ -105,3 +105,13 @@ node --test scripts/continuum-external-research-contract.test.mjs
 **Genau ein nächster ausführbarer Schritt:** mit der oben gesetzten vorhandenen Linux-Umgebung die vollständige bestehende Unit-Suite ausführen: `"$gradle_bin" "${gradle_args[@]}" :app:testDebugUnitTest`. Keine neue Forschung beginnen. PR #203 bleibt Draft; alle Entwicklungszweige und Verläufe bleiben erhalten.
 
 **Aktueller Status:** `SOURCE_INTEGRATED / RESEARCH_SHADOW`; gezielte echte Kotlin-/JUnit-Prüfung **34/34 PASS**, Compile/Lint **PASS**, Node-Vertrag **5/5 PASS**. Geräte- und Qualitätsgewinn **NICHT NACHGEWIESEN**.
+
+## Nachlauf: vorhandenen Fusion-Pfad bis zur Haupt-App-Diagnose schließen
+
+Besitzerauftrag nach dem Abschluss: vorhandene Gehirnverbindungen mit knappem Restbudget fertigstellen. EXP-04/06/07; Vertrag und aktuelles Issue #41 gelesen. Ausgangs-HEAD `a6fe9466c1970755257a62a8f116cae0fdad383a`, sauber und identisch mit Remote; keine weiteren Integrationen.
+
+Die Haupt-App nutzt bereits `CognitiveDecisionBridge.respond()` → `ContinuumCognitiveRuntime.reply()` → autorisierten SWB1-/CRE1-Zug → `AuthorizedConversationMemoryShadow.observe()`. `AgentActivity.runContinuumDialogue()` zeigt `cognitive.trace` über die vorhandene Toolaktivität an. Der neue Shadow-Bericht fehlte bisher in genau dieser Diagnoseanzeige. `ContinuumCognitiveRuntime.kt` ergänzt ausschließlich Status und autorisierte Anzahl in den bestehenden Trace, keine Inhalte/IDs, keine zusätzliche Retrieval- oder Modellanfrage, keine Antwort- oder Berechtigungsänderung.
+
+`CognitiveDecisionBridgeTest.kt` erhält einen echten Projektkern-Test für denselben App-Brückenaufruf: bestätigter Treffer, identische Antwort und Belegkette, begrenzte Diagnose, unveränderter Modellhash, danach Widerruf und notwendige Abstinenz ohne Wiederbelebung des Belegs. Kein neuer Adapter oder Inferenzprovider.
+
+**WIP / UNVERIFIED für diese Ergänzung:** Der Offline-Gradle-Lauf mit der vorhandenen unveränderten Toolchain läuft; alle vier bisherigen Klassen plus `CognitiveDecisionBridgeTest`, anschließend `:app:lintDebug`. Resultate und Rohbelege werden im nächsten Commit in dieser Handoff-Datei ergänzt. Die älteren 34 PASS gelten bis dahin ausschließlich dem vorherigen Quellstand. Der native Fold7-/Gerätenachweis und bessere Retrieval-Qualität bleiben NOT_RUN/NOT_PROVEN. Alle Forschungs-/Freigabegrenzen bleiben erhalten.

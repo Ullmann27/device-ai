@@ -7,6 +7,45 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class CognitiveDecisionBridgeTest {
+    @Test fun fusionReachesMainAppBridgeDiagnosticsWithoutChangingAnswerOrRevivingRevokedFact() {
+        val dir = Files.createTempDirectory("continuum-bridge-fusion").toFile()
+        try {
+            val core = ContinuumLearningCore(dir)
+            val fact = "Projekt Saphir verwendet lokale Belege."
+            core.confirmOwnerFact(fact)
+            val modelHash = core.modelHash()
+            val bridge = CognitiveDecisionBridge(
+                ContinuumCognitiveRuntime(dir, core, "fusion-bridge-session"), null
+            )
+            val first = bridge.respond("Was verwendet Projekt Saphir?")
+            assertTrue(first.turn.grounded)
+            assertEquals(first.turn.answer, first.finalAnswer)
+            assertEquals(first.turn.dialogue.memoryIds, first.evidenceHits.map { it.id })
+            assertEquals(1, first.turn.hybridShadow.authorizedCount)
+            assertTrue(first.turn.hybridShadow.status in setOf(
+                AuthorizedHybridShadowStatus.LEXICAL_ONLY,
+                AuthorizedHybridShadowStatus.COMPARED_WITH_CRE1
+            ))
+            assertTrue(first.turn.trace.contains("Hybrid-Shadow=" + first.turn.hybridShadow.status.name))
+            assertFalse(first.turn.trace.contains("Saphir"))
+            assertFalse(first.turn.trace.contains(first.evidenceHits.single().id))
+            assertFalse(first.usedLocalModel)
+            assertEquals(modelHash, core.modelHash())
+
+            core.revokeOwnerFact(fact)
+            val revoked = bridge.respond("Was verwendet Projekt Saphir?")
+            assertFalse(revoked.turn.grounded)
+            assertEquals(revoked.turn.answer, revoked.finalAnswer)
+            assertTrue(revoked.evidenceHits.isEmpty())
+            assertEquals(AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE,
+                revoked.turn.hybridShadow.status)
+            assertTrue(revoked.turn.trace.contains("Hybrid-Shadow=NO_AUTHORIZED_EVIDENCE"))
+            assertFalse(revoked.finalAnswer.contains(fact))
+            assertEquals(2, core.dialogueHistory().size)
+            assertEquals(modelHash, core.modelHash())
+        } finally { dir.deleteRecursively() }
+    }
+
     @Test fun modelPreservesRawOwnerFactWithoutRepeatingUiBoilerplateOrDialogueTurn() {
         val dir = Files.createTempDirectory("continuum-bridge-grounded").toFile()
         try {

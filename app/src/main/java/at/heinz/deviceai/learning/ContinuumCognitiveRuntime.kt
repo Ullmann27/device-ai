@@ -160,6 +160,10 @@ class ContinuumCognitiveRuntime(
                 else if(approved!=null)"CRE1_GATED_SWB1_ORDER"
                 else "CRE1_SHADOW"
             )
+            // AgentActivity already displays this trace beside the answer.
+            // Only aggregate shadow diagnostics; never evidence or authority.
+            append(" · Hybrid-Shadow=").append(hybridShadow.status.name)
+            append(" · autorisiert=").append(hybridShadow.authorizedCount)
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
