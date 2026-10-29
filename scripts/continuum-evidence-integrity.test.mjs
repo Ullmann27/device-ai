@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
 import {verifyEvidenceManifest} from './continuum-evidence-integrity.mjs';
 const sha=x=>createHash('sha256').update(x).digest('hex');
 const files=['qa-summary.json','tested-source-manifest.json','final-qa/summary.json'];
@@ -47,4 +48,15 @@ test('rejects symlinks and parent traversal',()=>{
   fs.rmSync(outside,{force:true});
   fs.rmSync(f.root,{recursive:true,force:true});
  }
+});
+
+test('FIFO masquerading as a log is rejected without blocking',
+ {skip:process.platform!=='linux'},t=>{
+  const f=fixture();
+  try{
+   fs.rmSync(path.join(f.root,files[0]));
+   const status=spawnSync('mkfifo',[path.join(f.root,files[0])],{timeout:1500});
+   if(status.status!==0)return t.skip('mkfifo unavailable');
+   assert.throws(()=>verifyEvidenceManifest(f.root,{minFiles:3}),/UNSAFE_EVIDENCE_FILE/);
+  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
