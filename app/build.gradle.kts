@@ -30,6 +30,7 @@ val continuumLocalStandalone = providers.gradleProperty("continuumLocalStandalon
 // Opt-in QA for new Continuum Lokal: debug package gets .qa suffix and never
 // consumes the owner's original signing key. The signed release lane is unchanged.
 val continuumLocalStandaloneQa = providers.gradleProperty("continuumLocalStandaloneQa").orNull == "true"
+val continuumLocalRenderUnsigned = providers.gradleProperty("continuumLocalRenderUnsigned").orNull == "true"
 require(!(continuumLocalStandalone && continuumLocalStandaloneQa)) {
     "Standalone owner release and disposable QA cannot be enabled together."
 }
