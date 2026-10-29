@@ -169,9 +169,13 @@ class ContinuumBrainBridgeTest {
         assertTrue(followUp.outcome.answer.contains("Anna spielt Cello."))
         // another conversation has no referent for "sie"
         val other=ContinuumBrainBridge.decide(dir,core,"conv-b","Was spielt sie?",none)
+        assertEquals("new conversation must not guess who \"sie\" is",ContinuumBrainStatus.ON_KEPT_BASELINE,other.status)
+        assertSame(none,other.outcome)
         assertFalse(other.outcome.answer.contains("Anna spielt Cello."))
         ContinuumBrainBridge.forget("conv-a")
         val forgotten=ContinuumBrainBridge.decide(dir,core,"conv-a","Was spielt sie?",none)
+        assertEquals("forgotten conversation must have no referent",ContinuumBrainStatus.ON_KEPT_BASELINE,forgotten.status)
+        assertSame(none,forgotten.outcome)
         assertFalse(forgotten.outcome.answer.contains("Anna spielt Cello."))
     }
 
