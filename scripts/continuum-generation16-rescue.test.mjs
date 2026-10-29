@@ -17,10 +17,13 @@ const int = value => { const b = Buffer.alloc(4); b.writeInt32BE(value); return 
 const long = value => { const b = Buffer.alloc(8); b.writeBigInt64BE(BigInt(value)); return b; };
 const ascii = value => { const b = Buffer.from(value); const n = Buffer.alloc(2); n.writeUInt16BE(b.length); return Buffer.concat([n, b]); };
 const text = value => { const b = Buffer.from(value); return Buffer.concat([int(b.length), b]); };
-function ledger(count = 256, mutateRecord = false) {
+function ledger(count = 256, mutateRecord = false, mixed = false) {
   const chunks = [int(0x4c455832), int(count)];
   for (let index = 0; index < count; index++) {
-    const tags = ['USER_FACT', 'USER_CONFIRMED', 'OWNER_CONFIRMED', index === 0 ? 'REVOKED' : 'CONFIRMED'];
+    const tags = mixed && index === 1 ? ['USER_FACT', 'MENTOR_WIKIPEDIA', 'SOURCE_OBSERVATION', 'CONFIRMED'] :
+      mixed && index === 2 ? ['TRAINING_AUDIT', 'LOCAL_TRAINING', 'SYSTEM_MEASUREMENT', 'LEARNED'] :
+      mixed && index === 3 ? ['INTENT_LABEL', 'USER_CONFIRMED', 'OWNER_CONFIRMED', 'CONFIRMED'] :
+      ['USER_FACT', 'USER_CONFIRMED', 'OWNER_CONFIRMED', index === 0 ? 'REVOKED' : 'CONFIRMED'];
     const content = SECRET + ' ' + index + ' Ü 😃';
     const digest = crypto.createHash('sha256');
     for (const value of [...tags.slice(0, 3), content, '', '']) digest.update(value).update(Buffer.from([0]));
@@ -156,12 +159,31 @@ test('two process captures validate all 256 records without exposing contents or
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.metadata.status, 'CAPTURED_VALIDATED');
   assert.equal(result.metadata.recordCount, 256);
+  assert.deepEqual(result.metadata.auditCounts.ownerUserFacts, { total: 256, confirmed: 255, revoked: 1 });
+  assert.equal(result.metadata.auditCounts.byType.USER_FACT, 256);
+  assert.equal(result.metadata.auditCounts.byType.TRAINING_AUDIT, 0);
+  assert.equal(result.metadata.auditCounts.byStatus.CONFIRMED, 255);
+  assert.equal(result.metadata.auditCounts.byStatus.REVOKED, 1);
+  assert.match(result.stdout, /owner_user_facts_confirmed=255 owner_user_facts_revoked=1 revoked_records=1/);
   assert.equal(result.metadata.capturesByteEqual, true);
   assert.equal(result.metadata.ledgerChecksumValid, true);
   assert.equal(result.metadata.sha256, sha(ledger()));
   assert.equal(result.captures.length, 2);
   assert.deepEqual(result.captures[0], result.captures[1]);
   assert.equal(result.calls.filter(args => args.includes('exec-out')).length, 2);
+});
+test('safe counts distinguish canonical owner facts from source observations and other record types', async () => {
+  const result = await runCase({ bytes: ledger(256, false, true) });
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.metadata.auditCounts.ownerUserFacts, { total: 253, confirmed: 252, revoked: 1 });
+  assert.equal(result.metadata.auditCounts.byType.USER_FACT, 254);
+  assert.equal(result.metadata.auditCounts.byType.TRAINING_AUDIT, 1);
+  assert.equal(result.metadata.auditCounts.byType.INTENT_LABEL, 1);
+  assert.equal(result.metadata.auditCounts.byStatus.CONFIRMED, 254);
+  assert.equal(result.metadata.auditCounts.byStatus.LEARNED, 1);
+  assert.equal(result.metadata.auditCounts.byStatus.REVOKED, 1);
+  assert.equal(Object.values(result.metadata.auditCounts.byType).reduce((a, b) => a + b, 0), 256);
+  assert.equal(Object.values(result.metadata.auditCounts.byStatus).reduce((a, b) => a + b, 0), 256);
 });
 test('multiple devices require explicit selection', async () => {
   failed(await runCase({ devices: 'FAKE_USB device\nSECOND_USB device\n' }), 'DEVICE_NOT_UNIQUE');
