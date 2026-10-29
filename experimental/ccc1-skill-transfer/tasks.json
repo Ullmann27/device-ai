@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "training": {
+    "id": "A", "file": "invoice.mjs", "local": "charge", "missing": "change",
+    "source": "const charge=7;\nexport function amount(){return change*3;}\n",
+    "other": "export const change=100;\n", "expected": 21
+  },
+  "evaluation": [
+    {"id":"B1","file":"warehouse.mjs","local":"counts","missing":"count","source":"const counts=11;\nexport function amount(){return count+5;}\n","other":"export const count=100;\n","expected":16},
+    {"id":"B2","file":"pricing.mjs","local":"prices","missing":"price","source":"const prices=17;\nexport function amount(){return price*4;}\n","other":"export const price=200;\n","expected":68},
+    {"id":"C1","file":"display.mjs","local":"format","missing":"formats","source":"function format(x){return x+1;}\nexport function amount(){return formats(8);}\n","other":"export function formats(x){return x*2;}\n","expected":16},
+    {"id":"C2","file":"dispatch.mjs","local":"parse","missing":"parses","source":"function parse(x){return x-1;}\nexport function amount(){return parses(9);}\n","other":"export function parses(x){return x*3;}\n","expected":27}
+  ]
+}
