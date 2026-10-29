@@ -5262,7 +5262,7 @@ class AgentActivity : Activity() {
                 if (neuralCoach.isActive()) handleNeuralCoachInput(note.text.take(320))
             }
             .setPositiveButton("Als Quellenhinweis merken") { _, _ ->
-                val stored = runCatching { WebLearningJournal(this).approve(note) }.getOrDefault(false)
+                val stored = runCatching { (!fromModelResearch || modelWebLearningReview.canReview(note)) && WebLearningJournal(this).approve(note) }.getOrDefault(false)
                 addAssistantMessage(if (stored)
                     "Quellenhinweis mit URL und Inhalts-Hash gespeichert. Noch keine bestätigte Wahrheit. " +
                         "Öffne INTERNET · LERNSTOFF PRÜFEN für weitere Kandidaten."
