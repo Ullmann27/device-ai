@@ -5213,7 +5213,7 @@ class AgentActivity : Activity() {
         // Render the clickable list alone; the detail dialog explains consent.
         AlertDialog.Builder(this)
             .setTitle("Internet-Lernstoff · ${candidates.size} Quellen · ${learned.getOrNull().orEmpty().size}/24 gespeichert")
-            .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which]) }
+            .setItems(titles) { _, which -> showWebLearningCandidate(candidates[which], candidates[which] in liveCandidates) }
             .setNegativeButton("Schließen", null)
             .setNeutralButton("Gespeicherte Notizen") { _, _ -> showSavedWebNotes() }
             .show()
