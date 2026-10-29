@@ -2,6 +2,8 @@ package at.heinz.deviceai.cognitive
 
 import at.heinz.deviceai.ToolRegistry
 import at.heinz.deviceai.localmodel.ImportedLocalModel
+import java.time.Instant
+import java.time.ZoneId
 
 data class AiContextPolicy(
     val maxBytes: Int = 16_000,
@@ -55,15 +57,17 @@ data class CompiledAiContext(
 
 class AiContextCompiler(
     private val policy: AiContextPolicy = AiContextPolicy(),
-    private val nowMillis: () -> Long = System::currentTimeMillis
+    private val nowMillis: () -> Long = System::currentTimeMillis,
+    private val zoneIdProvider: () -> ZoneId = ZoneId::systemDefault
 ) {
     fun compile(input: AiContextInput): CompiledAiContext {
+        val now = nowMillis()
         val buffer = StringBuilder()
         val includedMemoryIds = mutableListOf<String>()
         val includedSources = mutableListOf<String>()
         var truncated = false
 
-        fun appendSection(title: String, raw: String, required: Boolean = false) {
+        fun appendSection(title: String, raw: String, required: Boolean = false, complete: Boolean = false) {
             if (raw.isBlank()) return
             val sanitized = redactSecrets(raw)
             val prefix = if (buffer.length == 0) "" else "\n\n"
@@ -78,6 +82,7 @@ class AiContextCompiler(
                 buffer.append(candidate)
                 return
             }
+            if (complete) error("Mandatory Continuum date context does not fit configured budget.")
             val header = prefix + "## " + title + "\n"
             if (utf8Size(header) >= remaining) {
                 truncated = true
@@ -108,12 +113,14 @@ class AiContextCompiler(
         )
 
         appendSection("USER REQUEST", input.userRequest, required = true)
+        appendSection("CURRENT DEVICE DATE", deviceDateAnchor(now, zoneIdProvider()),
+            required = true, complete = true)
 
         val scored = HybridMemoryRetriever.retrieve(
             query = input.userRequest,
             records = input.memories,
             limit = policy.memoryLimit,
-            nowMillis = nowMillis(),
+            nowMillis = now,
             allowedPrivacy = policy.allowedPrivacy
         )
         if (scored.isNotEmpty()) {
@@ -203,6 +210,19 @@ class AiContextCompiler(
             includedResearchSourceUrls = includedSources,
             truncated = truncated
         )
+    }
+
+    companion object {
+        /** Device clock context only; it neither validates sources nor grants authority. */
+        fun deviceDateAnchor(
+            nowMillis: Long = System.currentTimeMillis(),
+            zoneId: ZoneId = ZoneId.systemDefault()
+        ): String {
+            require(nowMillis >= 0L)
+            val date = Instant.ofEpochMilli(nowMillis).atZone(zoneId).toLocalDate()
+            return "date=$date\ntime_zone=${zoneId.id}\n" +
+                "Device clock only; not proof of current external facts."
+        }
     }
 
     private fun redactSecrets(text: String): String {

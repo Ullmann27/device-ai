@@ -1,10 +1,45 @@
 package at.heinz.deviceai.cognitive
 
+import java.time.Instant
+import java.time.ZoneId
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AiContextCompilerTest {
+    @Test
+    fun dateAnchorRespectsTheInjectedZoneAcrossMidnight() {
+        val now = Instant.parse("2026-10-29T23:30:00Z").toEpochMilli()
+        val state = setup(now)
+        val compiler = AiContextCompiler(nowMillis = { now }, zoneIdProvider = { ZoneId.of("Europe/Vienna") })
+        val compiled = compiler.compile(AiContextInput(state.seed, state.genome, state.identity, "Wann ist morgen?"))
+        assertTrue(compiled.text.contains("date=2026-10-30"))
+        assertTrue(compiled.text.contains("time_zone=Europe/Vienna"))
+        assertTrue(AiContextCompiler.deviceDateAnchor(now, ZoneId.of("America/New_York"))
+            .contains("date=2026-10-29"))
+    }
+
+    @Test
+    fun deviceDateUsesTheInjectedClockAndDoesNotClaimFreshExternalEvidence() {
+        val now = Instant.parse("2026-10-29T12:00:00Z").toEpochMilli()
+        val state = setup(now)
+        var clockReads = 0
+        val compiled = AiContextCompiler(
+            AiContextPolicy(maxBytes = 6_000),
+            nowMillis = { clockReads++; now }
+        ).compile(AiContextInput(state.seed, state.genome, state.identity, "Welcher Tag ist heute?"))
+
+        assertTrue(compiled.text.contains("CURRENT DEVICE DATE"))
+        val expectedDate = Instant.ofEpochMilli(now).atZone(ZoneId.systemDefault()).toLocalDate()
+        assertTrue(compiled.text.contains("date=$expectedDate"))
+        assertTrue(compiled.text.contains("time_zone=" + ZoneId.systemDefault().id))
+        assertTrue(compiled.text.contains("not proof of current external facts"))
+        assertTrue(compiled.text.contains("operator_authority=operator_is_highest_authority"))
+        assertTrue(compiled.text.contains("Welcher Tag ist heute?"))
+        assertEquals("One clock snapshot for date and retrieval", 1, clockReads)
+    }
+
     @Test
     fun identityAndGovernanceSurviveTruncationWhileSecretsAreRedacted() {
         val now = 100_000L

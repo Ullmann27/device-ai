@@ -6142,6 +6142,7 @@ class AgentActivity : Activity() {
                     if (compiledContext != null) {
                         append(compiledContext.text)
                     } else {
+                        append(AiContextCompiler.deviceDateAnchor()).append('\n')
                         append("User task:\n").append(task.take(7_900))
                         append(at.heinz.deviceai.cognitive.LocalConversationContext.renderMemories(memories))
                         reflection?.let { append("\n\nCorrection: ").append(it.correction.take(512)) }
