@@ -167,6 +167,9 @@ object ContinuumBrainBridge {
     private var indexKey:String?=null
     private var index:Ewm1SourceIndex?=null
 
+    /** Fault boundary for JVM regression tests (a revocation racing the turn), never an external callback. */
+    internal var beforeRevocationCheck:(()->Unit)?=null
+
     fun decide(
         appDirectory:File,
         core:ContinuumLearningCore,
@@ -232,6 +235,7 @@ object ContinuumBrainBridge {
         if(answer.decision=="QUERY" && answer.route=="MEMORY") {
             val ids=answer.cited
             // Revocation protection: read the active facts again; a fact revoked meanwhile is never shown.
+            beforeRevocationCheck?.invoke()
             val active=core.activeOwnerFacts().associate { it.id to it.content }
             if(ids.isEmpty() || ids.any { it !in active })
                 return ContinuumBrainResult(baseline,on,ContinuumBrainStatus.FALLBACK_REVOKED)
