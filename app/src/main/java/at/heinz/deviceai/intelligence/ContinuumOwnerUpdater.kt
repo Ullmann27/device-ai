@@ -113,7 +113,7 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
             endpoint.host.equals(ContinuumOwnerUpdateCatalog.HOST, ignoreCase = true) &&
             endpoint.port in listOf(-1, 443) &&
             endpoint.path == expectedPath && endpoint.query == null && endpoint.ref == null &&
-            endpoint.userInfo == null) { "Unzulässiger Update-Server" }
+            java.net.URI(url).userInfo == null) { "Unzulässiger Update-Server" }
         return (endpoint.openConnection() as HttpsURLConnection).apply {
             instanceFollowRedirects = false
             connectTimeout = 12_000
@@ -240,6 +240,8 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
             throw error
         }
     }
+
+    fun close() { worker.shutdownNow() }
 
     fun requiredInstallSetting(): Intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
         Uri.parse("package:${context.packageName}"))
