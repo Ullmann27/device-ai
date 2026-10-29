@@ -1,0 +1,61 @@
+{
+  "swb1": {
+    "bytes": 32960,
+    "sha256": "5ba8ba7e22efc19a099148d224ab000dcd21953bb74b5d6504f49621fe56b2b6",
+    "expectedSha256Match": true,
+    "parameters": 4113,
+    "updates": 335150,
+    "gen16": {
+      "intentHoldout": "6\/8",
+      "intentHoldoutLoss": 0.5409069243199498,
+      "semanticHoldout": "3\/6",
+      "semanticHoldoutLoss": 1.880392525109422,
+      "intentTrain": "12\/12",
+      "semanticTrain": "6\/6"
+    },
+    "frozenPublic": {
+      "intentHoldout": "7\/8",
+      "intentHoldoutLoss": 0.3040216276831461,
+      "semanticHoldout": "3\/6",
+      "semanticHoldoutLoss": 0.6972354357293695,
+      "intentTrain": "12\/12",
+      "semanticTrain": "4\/6"
+    },
+    "fresh": {
+      "intentHoldout": "4\/8",
+      "intentHoldoutLoss": 0.6931840320832243,
+      "semanticHoldout": "3\/6",
+      "semanticHoldoutLoss": 0.6930862517894424,
+      "intentTrain": "5\/12",
+      "semanticTrain": "3\/6"
+    },
+    "productionGateOnFreshCore": {
+      "accepted": false,
+      "reason": "Import verworfen: lokaler Semantik-Holdout verschlechtert"
+    }
+  },
+  "archive": {
+    "bytes": 374748,
+    "sha256": "92e95ac2708d192bd2596cd649db7491fc66ab59481d8861ef906ac2d91c24dc",
+    "expectedSha256Match": true,
+    "recordsValidatedByProductionImport": 556,
+    "kinds": {
+      "WIKIPEDIA_EXCERPT": 556
+    },
+    "classes": {
+      "ARTICLE": 491,
+      "DISAMBIGUATION": 7,
+      "CALENDAR_DAY": 30,
+      "YEAR": 13,
+      "VERY_SHORT": 15
+    },
+    "identicalTextGroups": 4,
+    "truncatedExcerpts": 390,
+    "withSourceDate": 0,
+    "licences": {
+      "Wikipedia-Mitwirkende · CC BY-SA 4.0": 556
+    },
+    "collectedFromMs": 1792525272070,
+    "collectedToMs": 1793214390312
+  }
+}
