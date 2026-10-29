@@ -293,6 +293,9 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
                 f.tokens.getOrNull(i + 1)?.lower?.let { n -> n.length in 1..3 && n.all(Char::isDigit) } == true &&
                 f.tokens.getOrNull(i + 2)?.lower.let { it == null || it == "und" } }) return true
         if (Ewm1Lexicon.TIME_SYNONYMS.any { a in it && f.tokens.any { t -> t.lower in it } }) return true
+        // "Wo steht unser Kachelofen?" ← "Wir haben einen Kachelofen im Wohnzimmer.": a locative phrase states where it stands
+        if ("standort" in groups && f.tokens.withIndex().any { (i, t) -> t.lower in LOCATIVE &&
+                f.tokens.getOrNull(i + 1)?.let { n -> n.capitalized || n.lower in Ewm1Lexicon.ARTICLES } == true }) return true
         if ("heissen" in groups && f.mentions.any { it.end > it.start && it.qualifier != null && stem(it.qualifier) in questionStems }) return true
         return f.tokens.any { t ->
             val w = t.lower
@@ -302,6 +305,8 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
                 (a.length >= 4 && stem(a) == stem(w)) || groups.any { g -> g in Ewm1Lexicon.groupsOf(w) }
         }
     }
+
+    private val LOCATIVE = setOf("im", "in", "am", "auf", "neben", "hinter", "vor", "unter", "über", "zwischen", "beim")
 
     private fun acceptable(f: Ewm1Fact, strongAttr: List<String>, type: String, targets: List<Set<String>> = emptyList()): Boolean =
         (strongAttr.isEmpty() || strongAttr.any { supports(f, it) }) && (type !in HARD_TYPES || typeOk(f, type, targets))
@@ -315,7 +320,9 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
         "KIND" -> f.tokens.withIndex().any { (i, t) -> (t.lower == "ist" || t.lower == "sind") &&
             f.tokens.getOrNull(i + 1)?.lower in setOf("ein", "eine") } || f.tokens.any { it.lower in setOf("heißt", "namens") }
         "DEFINITION" -> targets.isEmpty() || f.mentions.firstOrNull()?.let { m -> targets.any { m.key in it } &&
-            f.tokens.getOrNull(m.end + 1)?.lower in setOf("ist", "sind") } == true
+            f.tokens.getOrNull(m.end + 1)?.lower in setOf("ist", "sind") } == true ||
+            // "Wer ist Anna?" ← "Meine Schwester heißt Anna.": the fact that introduces the name says who it is
+            memory.aliases.values.any { links -> targets.any { keys -> keys.any { links[it] == f.id } } }
         "TIME" -> f.tokens.any { it.lower in Ewm1Lexicon.TIME || it.lower.any(Char::isDigit) || it.lower in setOf("bis", "ab") }
         "NUMBER" -> f.tokens.any { it.lower.any(Char::isDigit) || it.lower in Ewm1Lexicon.NUMBER_WORDS.keys - setOf("ein", "eine") }
         "COLOR" -> f.tokens.any { t -> Ewm1Lexicon.isColor(t.lower) }
