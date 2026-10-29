@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.IdentityStateTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T09:50:48" hostname="9d1c4dd98fa0" time="0.034">
+  <properties/>
+  <testcase name="evolutionKeepsOldGenerations" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.001"/>
+  <testcase name="genomeHashStableAndSensitive" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.0"/>
+  <testcase name="genomeRejectsForbiddenCapabilities" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.03"/>
+  <testcase name="exportContainsAllGenerations" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.001"/>
+  <testcase name="initialStateIsMinimal" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.001"/>
+  <testcase name="tamperingIsDetected" classname="at.heinz.deviceai.cognitive.IdentityStateTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

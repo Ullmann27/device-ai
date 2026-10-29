@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-10-29T13:49:13" hostname="9d1c4dd98fa0" time="0.69">
+  <properties/>
+  <testcase name="exactGermanTechnicalTermKeepsItsSourceWithoutOtherErrorTexts" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.267"/>
+  <testcase name="onlyCurrentTrustedMemoryIsRankedAndScoresMatchJavascriptContract" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.014"/>
+  <testcase name="reviewedWebNotesJoinTheSameDialogueLedgerAsObservationsWithoutTrainingWeights" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.101"/>
+  <testcase name="repeatedCorruptionKeepsOnlyTheNewestQuarantinedFiles" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.07"/>
+  <testcase name="longQuestionVerbsCannotBlockValidSourceEvidence" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.001"/>
+  <testcase name="inventedAlphanumericTermMustNotRetrieveUnrelatedWikipediaSources" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.006"/>
+  <testcase name="actualImportedModelAnswersFromPersonalMemoryAndSurvivesRestartWithoutWeightUpdates" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.031"/>
+  <testcase name="residenceQuestionWithIncidentalBirthdayMentionKeepsResidenceEvidence" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.003"/>
+  <testcase name="birthdayQuestionMustNotUseIncidentalBirthMentionInResidence" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.003"/>
+  <testcase name="orion47RecallKeepsExactDigitsButDoesNotInventDefinition" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.01"/>
+  <testcase name="boundedDialogueAndCorruptionDoNotSilentlyEraseMemory" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.094"/>
+  <testcase name="germanCompoundSuffixRetrievalKeepsKotlinAndNodeEvidenceContract" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.005"/>
+  <testcase name="spacedDeviceIdentifierRejectsKappa70AndPreservesKappa7" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.043"/>
+  <testcase name="technicalMultiTermQuestionsCannotBorrowOnlyOneSourceAnchor" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.005"/>
+  <testcase name="definitionMatchesOwnerFactSubjectNotIncidentalMention" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.006"/>
+  <testcase name="sourceOnlyArgonAnchorRegressionAndDirectionalCompounds" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.003"/>
+  <testcase name="revocationClearsConversationContextAndCannotBeResurrectedByFollowUp" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.005"/>
+  <testcase name="identifiersWithDigitsDemandExactSourceEvidence" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.002"/>
+  <testcase name="birthdayQuestionMustNotCiteUnrelatedResidenceFact" classname="at.heinz.deviceai.learning.ContinuumMemoryDialogueTest" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

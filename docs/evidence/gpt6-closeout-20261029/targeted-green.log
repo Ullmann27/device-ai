@@ -1,0 +1,47 @@
+✔ actual worker captures native TAP counters and keeps immutable failed then successful receipts (619.328234ms)
+✔ duplicate top-level native summaries are incomplete evidence (0.400675ms)
+✔ SIGTERM during a real test stops children and permits a fresh process restart (1077.587921ms)
+✔ real timeout retains failure evidence and subsequent healthy cycle succeeds (1998.750605ms)
+✔ idle scheduler retains the lease and STOP cancels its wait (407.232748ms)
+✔ SIGKILL abandoned worker is recovered by identity and its residual test process is stopped (475.175352ms)
+✔ excess test output is stopped and raw evidence storage stays bounded (849.506284ms)
+✔ a redirected cycles directory never writes test output into source (166.102556ms)
+✔ scheduler stops at the first failed cycle even if the fixture is later repaired (636.511769ms)
+✔ finite scheduler returns zero only when its single full cycle passed (576.913343ms)
+✔ loss of the checkout lease cannot leave a green completion receipt (1366.288123ms)
+✔ evidence disk budget pauses before tests and preserves existing receipts (206.576274ms)
+✔ SIGTERM removes a descendant that ignores SIGTERM before restart (1180.423602ms)
+✔ TIMEOUT removes a descendant that ignores SIGTERM before restart (6009.213134ms)
+✔ STOP_FILE refuses a cycle before test intent or child launch (53.482196ms)
+✔ ABORTED_SIGNAL refuses a cycle before test intent or child launch (50.099359ms)
+✔ dangling continuum-health-worker.json cannot create an external lease target (108.05432ms)
+✔ dangling continuum-health-worker.json.mutex cannot create an external lease target (69.497081ms)
+✔ a dangling lease-directory parent is refused without creating its target (48.648201ms)
+✔ pre-start STOP preserves another live checkout lease (165.134877ms)
+✔ STOP_FILE prevents loop lease acquisition and preserves a live owner (166.118976ms)
+✔ ABORTED_SIGNAL prevents loop lease acquisition and preserves a live owner (167.951846ms)
+✔ local release script is syntactically valid Bash (5.417828ms)
+✔ reject any unsupported command or versionCode before using private signing key (12.877393ms)
+✔ new app ID is distinct from original and is stable across debug and release (0.256576ms)
+✔ standalone build cannot reuse old owner credentials (0.172624ms)
+✔ new private signer stays outside repository and release uses it persistently (0.241036ms)
+✔ release is compiled for real complete app not QA/demo or unsigned APK (0.13401ms)
+✔ no installer, no app-data erasure, no arbitrary artifacts or source writes (0.23454ms)
+✔ complete app exposes local builder and separated data store (0.139473ms)
+✔ established Continuum Lokal certificate cannot be replaced by a local fingerprint file (1.12978ms)
+✔ unchanged exact source with ignored build output is accepted (24.376528ms)
+✔ tracked source drift is refused without diff output (21.042698ms)
+✔ staged source drift is refused without diff output (24.209553ms)
+✔ untracked source drift is refused without diff output (21.154357ms)
+✔ a different clean HEAD is refused (29.817089ms)
+✔ invalid identity and missing Git checkout fail closed (20.804201ms)
+✔ standalone QA uses the same pinned Gradle and native aapt2 (0.343252ms)
+✔ full QA checks exact source again before publishing its report (0.129307ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 39
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16730.722833

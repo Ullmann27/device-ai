@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.MentorCurriculumTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-29T13:49:34" hostname="9d1c4dd98fa0" time="0.0">
+  <properties/>
+  <testcase name="coversThirtyIndependentTopicAreas" classname="at.heinz.deviceai.learning.MentorCurriculumTest" time="0.0"/>
+  <testcase name="onlyPublicResearchQueriesAreInFixedCurriculum" classname="at.heinz.deviceai.learning.MentorCurriculumTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

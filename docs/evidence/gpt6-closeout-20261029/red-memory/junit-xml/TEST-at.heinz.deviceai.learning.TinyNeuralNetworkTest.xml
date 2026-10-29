@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.TinyNeuralNetworkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T09:51:07" hostname="9d1c4dd98fa0" time="0.01">
+  <properties/>
+  <testcase name="learnsNonlinearHoldoutAndActuallyChangesWeights" classname="at.heinz.deviceai.learning.TinyNeuralNetworkTest" time="0.008"/>
+  <testcase name="zeroBudgetAndCancellationDoNotTrain" classname="at.heinz.deviceai.learning.TinyNeuralNetworkTest" time="0.001"/>
+  <testcase name="invalidNumbersDimensionsAndCorruptedSnapshotsAreRejected" classname="at.heinz.deviceai.learning.TinyNeuralNetworkTest" time="0.001"/>
+  <system-out><![CDATA[NEURAL_XOR training=NeuralEvaluation(loss=0.7122959282199403, correct=8, total=16) -> NeuralEvaluation(loss=0.005050814221387972, correct=16, total=16) holdout=NeuralEvaluation(loss=0.06743839499672162, correct=16, total=16) bytes=320 steps=4000
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

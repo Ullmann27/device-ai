@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.interactive.ResearchFeedbackTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T13:49:38" hostname="9d1c4dd98fa0" time="0.022">
+  <properties/>
+  <testcase name="candidateNeedsExactReviewAndRevocationInvalidatesLineageAcrossRestart" classname="at.heinz.deviceai.learning.interactive.ResearchFeedbackTest" time="0.008"/>
+  <testcase name="rejectionAndContradictoryRevisionsCannotEnterTraining" classname="at.heinz.deviceai.learning.interactive.ResearchFeedbackTest" time="0.002"/>
+  <testcase name="eightConcurrentStaleReviewsAdmitExactlyOnce" classname="at.heinz.deviceai.learning.interactive.ResearchFeedbackTest" time="0.011"/>
+  <testcase name="naturalLanguageClassificationNeverGrantsPermission" classname="at.heinz.deviceai.learning.interactive.ResearchFeedbackTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

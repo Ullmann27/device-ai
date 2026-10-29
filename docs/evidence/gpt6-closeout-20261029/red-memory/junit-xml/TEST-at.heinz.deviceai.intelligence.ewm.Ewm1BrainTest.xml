@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T09:50:50" hostname="9d1c4dd98fa0" time="0.14">
+  <properties/>
+  <testcase name="theOwnersPersonOrOwnNamedThingOutranksANamesakeSource" classname="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" time="0.07"/>
+  <testcase name="aDefinitionQuestionWithoutSourceIsNotAnsweredByAMereMention" classname="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" time="0.01"/>
+  <testcase name="aSourceNeverBecomesAnOwnerFact" classname="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" time="0.008"/>
+  <testcase name="aTrailingIndefiniteTakesUpTheLastNoun" classname="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" time="0.006"/>
+  <testcase name="generalQuestionsGoToSourcesAndPersonalOnesToMemory" classname="at.heinz.deviceai.intelligence.ewm.Ewm1BrainTest" time="0.045"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

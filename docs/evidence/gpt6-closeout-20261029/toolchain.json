@@ -1,0 +1,13 @@
+{
+  "os": "Linux x86_64",
+  "java": "Temurin 17.0.21+9",
+  "gradle": "8.11.1",
+  "sdk": "Android API 36",
+  "aapt2": "2.19-11948202 (build-tools 35.0.0)",
+  "node": "24.19.0",
+  "git": "2.52.0",
+  "lint": "existing checkOnly NewApi, abortOnError=true",
+  "deviceTests": "NOT_RUN",
+  "nativeGemma": "NOT_RUN",
+  "apkBuild": "NOT_RUN"
+}
