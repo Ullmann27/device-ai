@@ -94,6 +94,16 @@ if ! gradle "${flags[@]}" :app:testDebugUnitTest :app:lintDebug :app:compileDebu
   tail -n 65 "$out/android-tests.log" >&2
   fail "Android test or compilation failed"
 fi
+printf '%s\n' 'Starting isolated CCC1 repair-ledger, replay, and repair-loop regressions'
+if ! node --test --test-concurrency=2 \
+  .github/continuum/repair-ledger-independent.test.mjs \
+  .github/continuum/repair-loop.test.mjs \
+  .github/continuum/repair-experience.test.mjs \
+  .github/continuum/repair-cycle-safety.test.mjs \
+  > "$out/node-ccc1-regressions.log" 2>&1; then
+  tail -n 70 "$out/node-ccc1-regressions.log" >&2
+  fail "CCC1 independently verified repair regression failed"
+fi
 printf '%s\n' 'Starting Node regression suite'
 if ! node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-experiment-integration.test.mjs \
