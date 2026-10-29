@@ -5801,7 +5801,9 @@ class AgentActivity : Activity() {
         }, "device-ai-cloud-tool").apply { isDaemon = true; start() }
     }
 
-    private fun createToolGate() = ToolGate(
+    private fun createToolGate(
+        onWebCompleted:(ApprovedWebResearchToolRunner)->Unit={}
+    ) = ToolGate(
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
         ToolRunner { request ->
             if(request.name in setOf("web_search","web_read")) {
@@ -5812,8 +5814,12 @@ class AgentActivity : Activity() {
                     HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
                         totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
                 runOnUiThread { modelWebActive = true; refreshHologramState() }
-                try { runner.execute(request).also { session.checkAuthorized() } }
-                finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
+                try {
+                    runner.execute(request).also {
+                        session.checkAuthorized()
+                        onWebCompleted(runner)
+                    }
+                } finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
             } else DeviceToolExecutorRunner(executor).execute(request)
         },receiptStore=receiptStore
     )
@@ -6021,6 +6027,9 @@ class AgentActivity : Activity() {
         var submittedToolObservationCount = 0
         var modelWebCalls = 0
         val modelWebSessions = java.util.concurrent.CopyOnWriteArrayList<at.heinz.deviceai.cognitive.ApprovedWebResearchSession>()
+        val modelWebResults = java.util.concurrent.CopyOnWriteArrayList<ApprovedWebResearchToolRunner>()
+        var publishedWebCandidates = 0
+        var webPublishError = false
         val orchestrator = BoundedAgentOrchestrator(
             model = AgentModel { task, memories, reflection, observations ->
                 cancellation.throwIfCancelled()
@@ -6147,7 +6156,7 @@ class AgentActivity : Activity() {
             },
             // the same confirmed owner facts the chat answers from, plus the agent's own memories
             memories = { memoryStore.all() + ownerFactMemories() },
-            toolGate = createToolGate(),
+            toolGate = createToolGate { modelWebResults.add(it) },
             evaluator = AgentEvaluator { response, _ ->
                 LocalDialogueQualityGate.evaluate(
                     request = text,
@@ -6193,9 +6202,21 @@ class AgentActivity : Activity() {
         activeOrchestrator = orchestrator
         localAgentExecutor.execute {
             val result = runCatching {
-                orchestrator.run(agentTask).also {
-                    modelWebSessions.forEach { session -> session.checkAuthorized() }
+                val run = orchestrator.run(agentTask)
+                modelWebSessions.forEach { session -> session.checkAuthorized() }
+                if (run.blocker == null && run.response.isNotBlank()) {
+                    // Review-only source dossier; an actual SUCCEEDED ToolGate
+                    // receipt and a still-active owner grant are checked again
+                    // by the publisher. Do not promote claims or train a model.
+                    modelWebResults.lastOrNull()?.let { web ->
+                        runCatching {
+                            web.publishForReview(receiptStore,
+                                FileResearchDossierStore(java.io.File(filesDir, "research")))
+                        }.onSuccess { count -> publishedWebCandidates = count }
+                            .onFailure { webPublishError = true }
+                    }
                 }
+                run
             }
             runOnUiThread {
                 if (isFinishing || isDestroyed) return@runOnUiThread
@@ -6210,6 +6231,10 @@ class AgentActivity : Activity() {
                         return@onSuccess
                     }
                     val successful=run.blocker==null && run.response.isNotBlank()
+                    if (publishedWebCandidates > 0) addToolActivity(
+                        "WEB · ${publishedWebCandidates} Quellen-Lernkandidaten bereit unter INTERNET · LERNSTOFF PRÜFEN; nichts automatisch gelernt")
+                    if (webPublishError) addToolActivity(
+                        "WEB · Quellenübergabe nicht bestätigt; keine automatische Übernahme")
                     publishCognitiveTrace(turnTrace,if(successful)TraceOutcome.MODEL_INTERPRETATION else TraceOutcome.FAILED)
                     onLearningIo({
                         at.heinz.deviceai.learning.ContinuumRuntimeEventJournal(filesDir)
