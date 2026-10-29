@@ -68,7 +68,10 @@ class DialogStateKernel(
             if (lower in setOf("das", "dies") && !demonstrativeUse(tokens, index)) continue
             if (lower == "sie" && index > 0 && w == "Sie") continue          // polite "Sie" addresses the assistant
             if (lower in setOf("ihr", "ihre", "ihren", "ihrem", "ihrer") && index == 0) continue
-            val pool = candidates(lower, wanted)
+            // "Was macht sie beruflich?", "Wo wohnt er?": a person predicate prefers people over "die Antwort"
+            val personPredicate = tokens.any { t -> Ewm1Lexicon.lower(t).let { it in Ewm1Lexicon.PERSON_VERBS || it in PERSON_WORDS } }
+            val pool = candidates(lower, wanted).let { all ->
+                if (personPredicate && all.any { it.kind == Kind.PERSON }) all.filter { it.kind == Kind.PERSON } else all }
             when {
                 // "Wie spät ist es?", "Es regnet.", "Wann war das?": impersonal/event readings need no referent
                 pool.isEmpty() && lower in setOf("es", "das", "dies") -> continue
@@ -76,7 +79,7 @@ class DialogStateKernel(
                     val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false, "NO_REFERENT:$lower")
                     remember(text, ms.drop(applied), r); return r
                 }
-                pool.size > 1 && score(pool[0]) - score(pool[1]) < MARGIN -> {
+                pool.size > 1 && score(pool[0], lower) - score(pool[1], lower) < MARGIN -> {
                     val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false,
                         "AMBIGUOUS:$lower:" + pool.take(2).joinToString("/") { it.label })
                     remember(text, ms.drop(applied), r); return r
@@ -160,10 +163,13 @@ class DialogStateKernel(
                 // "er/sie" for a thing needs the article's gender; an unknown-gender thing is not a person referent
                 !(e.kind == Kind.THING && gender != null && e.gender == null) &&
                 turn - e.lastTurn <= WINDOW
-        }.sortedByDescending { score(it) }
+        }.sortedByDescending { score(it, word) }
     }
 
     private fun score(e: EntityRef): Double = 1.0 / (1 + turn - e.lastTurn) + 0.05 * minOf(e.mentions, 4)
+
+    /** A referent whose gender is known from a role or article outranks one whose gender is only "not excluded". */
+    private fun score(e: EntityRef, word: String): Double = score(e) + if (e.gender != null && word in GENDERED) 0.5 else 0.0
 
     private data class Mention(val key: String, val label: String, val kind: Kind, val gender: Char?, val index: Int = -1)
 
@@ -185,16 +191,24 @@ class DialogStateKernel(
                 if (known != null) out += Mention(lower, w, known.kind, known.gender, i)
                 // ... but not the verb of a verb-first question ("Funktioniert er jetzt?", "Wohnt sie dort?")
                 else if (tokens.getOrNull(1)?.first()?.isLowerCase() == true && !questionText &&
-                    Ewm1Lexicon.lower(tokens[1]) !in PRONOUNS) out += Mention(lower, w, Kind.PERSON, null, i)
+                    Ewm1Lexicon.lower(tokens[1]) !in PRONOUNS && Ewm1Lexicon.lower(tokens[1]) !in OBJECT_PRONOUNS &&
+                    Ewm1Lexicon.lower(tokens[1]) !in Ewm1Lexicon.FUNCTION && !nounShaped(lower))
+                    out += Mention(lower, w, Kind.PERSON, null, i)
                 continue
             }
             val before = tokens.getOrNull(i - 1)
             val roleBefore = before?.let { roleGender(Ewm1Lexicon.lower(it)) }
+            val prev2 = tokens.getOrNull(i - 2)?.let(Ewm1Lexicon::lower)
             when {
                 roleBefore != null -> out += Mention(lower, w, Kind.PERSON, roleBefore, i)
+                entities[lower] != null -> out += Mention(lower, w, entities.getValue(lower).kind, entities.getValue(lower).gender, i)
                 prev in PLACE_PREPOSITIONS -> out += Mention(lower, w, Kind.PLACE, null, i)
                 prev in ARTICLE_GENDER.keys -> out += Mention(lower, w, Kind.THING, ARTICLE_GENDER[prev], i)
-                entities[lower] != null -> out += Mention(lower, w, entities.getValue(lower).kind, entities.getValue(lower).gender, i)
+                // "einen kurzen Witz", "ein gutes Frühstück": article, adjective, noun
+                prev2 in ARTICLE_GENDER.keys && prev != null && prev.first().isLowerCase() -> out += Mention(lower, w, Kind.THING, ARTICLE_GENDER[prev2], i)
+                // "ruhige Musik", "gegen Müdigkeit", "Photosynthese": bare nouns are things, not people
+                prev != null && (prev in NOUN_PREPOSITIONS || ADJECTIVE_ENDING.matches(prev)) || nounShaped(lower) ->
+                    out += Mention(lower, w, Kind.THING, null, i)
                 else -> out += Mention(lower, w, Kind.PERSON, null, i)
             }
         }
@@ -289,6 +303,15 @@ class DialogStateKernel(
         private val ARTICLE_GENDER = mapOf("der" to 'm', "den" to 'm', "dem" to 'm', "die" to 'f', "das" to 'n',
             "ein" to 'n', "eine" to 'f', "einen" to 'm', "mein" to 'n', "meine" to 'f', "meinen" to 'm', "unser" to 'n', "unsere" to 'f')
         private val PLACE_PREPOSITIONS = setOf("in", "nach", "aus", "bei", "im")
+        private val NOUN_PREPOSITIONS = setOf("gegen", "für", "über", "ohne", "um", "durch", "zum", "zur", "vom")
+        private val OBJECT_PRONOUNS = setOf("mir", "mich", "dir", "dich", "uns", "euch", "bitte", "mal", "doch")
+        private val ADJECTIVE_ENDING = Regex("\\p{Ll}{2,}(e|en|er|es|em)")
+        private val NOUN_SUFFIX = Regex(".{3,}(ung|heit|keit|schaft|ion|tät|nis|ismus|ment|ik|ie|ur|ei|ese|enz|anz)")
+        private val PERSON_WORDS = setOf("beruflich", "besucht", "besuchen", "erzählt", "gesagt", "kommt", "fährt", "arbeitet",
+            "lebt", "heißt", "geboren", "alt", "geht", "ruft", "schreibt", "denkt", "meint", "mag")
+        private val GENDERED = setOf("er", "ihn", "ihm", "sie", "ihr", "ihre", "ihren", "ihrem", "ihrer", "deren",
+            "sein", "seine", "seinen", "seinem", "seiner", "dessen")
+        private fun nounShaped(word: String) = NOUN_SUFFIX.matches(word)
         private val NON_REFERENTS = setOf("bitte", "danke", "hallo", "ja", "nein", "okay", "gemeint", "thema", "woche", "monat",
             "jahr", "tag", "uhr", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag")
         private val TOPIC_SWITCH = Regex("(?iu)^(anderes|neues) thema\\b")
