@@ -194,7 +194,8 @@ object ContinuumBrainBridge {
         // The owner may switch the brain OFF while this turn is being evaluated.
         // Never publish an ON result after that revocation of the owner's opt-in.
         val stillEnabled=settings.mode()
-        return if(stillEnabled==ContinuumBrainMode.ON)evaluated
+        return if(evaluated.status==ContinuumBrainStatus.FALLBACK_REVOKED)evaluated
+            else if(stillEnabled==ContinuumBrainMode.ON)evaluated
             else ContinuumBrainResult(baseline,stillEnabled,
                 if(stillEnabled==ContinuumBrainMode.OFF)ContinuumBrainStatus.OFF
                 else ContinuumBrainStatus.SHADOW)
