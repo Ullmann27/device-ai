@@ -210,6 +210,11 @@ class AgentActivity : Activity() {
     // Current chat only; model text has no owner-fact authority and is never stored as a memory.
     private var lastLocalReply: LocalReplySnapshot? = null
     private val localConversationContext = at.heinz.deviceai.cognitive.LocalConversationContext()
+    // Presentation only: native text is an unverified draft until the existing
+    // orchestrator/quality checks complete. Never speak or save this preview.
+    private var activeLocalStreamToken: Any? = null
+    private var localStreamPreviewRow: LinearLayout? = null
+    private var localStreamPreviewText: TextView? = null
     private var modelWebActive = false
     private var learningVisualActive = false
     private var voiceSpeaking = false
@@ -6677,6 +6682,17 @@ class AgentActivity : Activity() {
         val generationStartedNanos = System.nanoTime()
         var streamedChunks = 0
         var firstTextNanos: Long? = null
+        var lastPreviewNanos = generationStartedNanos
+        val previewToken = Any()
+        runOnUiThread {
+            if (!isFinishing && !isDestroyed && activeChatCancellation === cancellation) {
+                localStreamPreviewRow?.let { chatContainer.removeView(it) }
+                localStreamPreviewRow = null
+                localStreamPreviewText = null
+                activeLocalStreamToken = previewToken
+            }
+        }
+        try {
         runOnUiThread { if (!isFinishing && !isDestroyed) refreshLocalModelUi() }
         val callback = at.heinz.deviceai.localmodel.LocalInferenceCallback { event ->
             synchronized(eventLock) {
@@ -6686,6 +6702,20 @@ class AgentActivity : Activity() {
                             if (firstTextNanos == null) firstTextNanos = System.nanoTime()
                             streamedChunks++
                             response.append(event.text.take(8_000 - response.length))
+                            val now = System.nanoTime()
+                            if (streamedChunks == 1 ||
+                                now - lastPreviewNanos >= TimeUnit.MILLISECONDS.toNanos(250)) {
+                                lastPreviewNanos = now
+                                val draft = response.toString()
+                                val chunks = streamedChunks
+                                val elapsed = (now - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L
+                                val first = firstTextNanos?.let {
+                                    (it - generationStartedNanos).coerceAtLeast(0L) / 1_000_000L }
+                                runOnUiThread {
+                                    updateLocalStreamPreview(previewToken, cancellation,
+                                        draft, chunks, elapsed, first)
+                                }
+                            }
                         }
                         is LocalInferenceEvent.ToolProposal -> proposalGuard.observe(event.proposal)
                         is LocalInferenceEvent.ToolProposalRejected -> rejectedResponses += LocalToolResponse(
@@ -6764,6 +6794,43 @@ class AgentActivity : Activity() {
             )
         }
         return LocalGeneration(response.toString(), accepted, rejectedResponses.toList(), failure)
+        } finally {
+            runOnUiThread { clearLocalStreamPreview(previewToken) }
+        }
+    }
+
+    private fun updateLocalStreamPreview(
+        token: Any,
+        cancellation: at.heinz.deviceai.cognitive.DeliberationCancellation?,
+        draft: String, chunks: Int, elapsedMillis: Long, firstTextMillis: Long?
+    ) {
+        if (isFinishing || isDestroyed || activeLocalStreamToken !== token ||
+            activeChatCancellation !== cancellation) return
+        val text = localStreamPreviewText ?: textView("", 14.5f, TEXT).also { preview ->
+            preview.setPadding(dp(13), dp(10), dp(13), dp(10))
+            preview.setTextIsSelectable(true)
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                background = rounded(ASSISTANT_BUBBLE, 18, BORDER)
+                addView(preview, matchWidth())
+            }
+            localStreamPreviewRow = row
+            localStreamPreviewText = preview
+            chatContainer.addView(row, matchWidth(top = 8))
+        }
+        text.text = "GEMMA · ANTWORTENTWURF · NOCH UNGEPRÜFT" +
+            "\nErster Text: " + (firstTextMillis?.toString() ?: "—") + " ms" +
+            " · Laufzeit: " + elapsedMillis + " ms · Textblöcke: " + chunks +
+            "\n\n" + draft.take(8_000)
+        scrollToBottom()
+    }
+
+    private fun clearLocalStreamPreview(token: Any) {
+        if (activeLocalStreamToken !== token) return
+        localStreamPreviewRow?.let { chatContainer.removeView(it) }
+        localStreamPreviewRow = null
+        localStreamPreviewText = null
+        activeLocalStreamToken = null
     }
 
     private fun renderCloudPlan(calls: List<ToolCallRequest>) {
