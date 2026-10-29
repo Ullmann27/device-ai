@@ -70,6 +70,8 @@ class DialogStateKernel(
             if (lower in setOf("ihr", "ihre", "ihren", "ihrem", "ihrer") && index == 0) continue
             val pool = candidates(lower, wanted)
             when {
+                // "Wie spät ist es?", "Es regnet.", "Wann war das?": impersonal/event readings need no referent
+                pool.isEmpty() && lower in setOf("es", "das", "dies") -> continue
                 pool.isEmpty() -> {
                     val r = Resolution(text, text, Decision.CLARIFY, bindings, time, false, "NO_REFERENT:$lower")
                     remember(text, ms.drop(applied), r); return r
