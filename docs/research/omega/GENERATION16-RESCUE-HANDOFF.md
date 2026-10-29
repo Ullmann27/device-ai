@@ -5,7 +5,7 @@ EXP-12 (continuity), EXP-00 / EXP-09 (Termux recipe).
 Baseline: b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6 (PR #216, includes #215).
 Isolated branch: codex/generation16-readonly-rescue-20261029.
 Draft: https://github.com/Ullmann27/device-ai/pull/219
-Source/test checkpoint: 6f7bb04290009a42f4f66388b57e952198007c5c.
+Source/test checkpoint: 62201ed05b9dd2bd1c8cacd6a12bea972d9ffc01.
 No main merge, app/Kotlin changes, APK build, installation, or phone access.
 
 ## Scope and existing schema
@@ -28,9 +28,17 @@ Environment overrides for remote ADB servers and implicit devices are removed.
 No serial selects exactly one listed device; --serial explicitly selects one listed authorized device.
 USB/emulator identifiers and owner-connected loopback transports are accepted.
 Non-loopback network and mDNS device serials are conservatively refused.
+Thus customary Termux _adb-tls-connect._tcp and 192.168.* wireless endpoints are unsupported
+even when the owner paired them earlier. An owner-authorized USB connection or an already
+connected loopback adbd endpoint must appear in the local server's device list. The helper
+never converts mDNS/WiFi transports or runs adb connect/pair on the owner's behalf.
 The server socket probe and later adb call are separate operations, not an atomic server lease.
 
 run-as is an OS permission boundary: a non-debuggable package is expected to fail.
+Successful run-as establishes permitted sandbox/debuggable access, not original signing identity.
+This preservation-only helper does not verify an APK signing fingerprint and cannot authenticate
+the historical package publisher. No APK replacement is attempted or required.
+Android Keystore identity, signing material and device-bound keys are neither read nor exported.
 Fixed adb commands probe run-as PACKAGE id -u, pwd and stat; run-as starts in the
 package private directory, so files/... is relative to that sandbox.
 Probe requires application uid, the historical package private cwd, two real directories
@@ -38,6 +46,12 @@ and a regular source file. No shell -c or user-provided remote command is constr
 Two exec-out run-as PACKAGE cat PATH captures are bounded (512KiB plus one byte, 15s per call),
 retained privately, compared byte-for-byte, and independently parsed against the actual LEX2 layout.
 Success requires the file trailer checksum, every record hash/ID and the expected256 records.
+Content-free auditCounts metadata records all type/status totals plus canonical-shaped owner
+USER_FACT totals/CONFIRMED/REVOKED counts. Owner facts require USER_CONFIRMED + OWNER_CONFIRMED,
+no annotation/sourceRef, and CONFIRMED/LEARNED/REPLAY_PENDING/REVOKED status, matching the
+existing PersonalLearningTransfer review filter. These remain unauthenticated claimed labels,
+not restored owner consent. Console prints only aggregate confirmed-owner/revoked counts,
+record/byte totals, checksum and private output directory; it never prints facts or record IDs.
 Strict UTF8 / null flags may conservatively refuse malformed historical archives; captured bytes survive.
 
 The current user must be non-root and HOME an owned private directory.
@@ -64,10 +78,10 @@ NOT_RUN / environment UNAVAILABLE:
 - node --test scripts/continuum-generation16-rescue.test.mjs
 - real adb/run-as, Samsung/Termux, APK, import and restore checks.
 
-The synthetic process suite uses a strict fake-adb command allowlist and a fake loopback listener.
+The 24-case synthetic process suite uses a strict fake-adb command allowlist and a fake loopback listener.
 It checks256-record success, device selection/authorization, nonlocal serial refusal, run-as failure,
 uid/cwd/symlink probes, partial/mismatching/truncated/oversized output, checksum and record identity,
-wrong record count, private output permissions, no content leakage and unchanged primary/older backup.
+wrong record count, mixed record/status/owner eligibility counts, private output permissions, no content leakage and unchanged primary/older backup.
 Root-running CI drops child uid/gid to65534; it must be allowed to execute its Node binary.
 The suite never falls back to real adb. Test HOME is an isolated child environment fixture.
 Next reviewer runs the exact commands above in a clean isolated checkout with Bash/Node20+.
