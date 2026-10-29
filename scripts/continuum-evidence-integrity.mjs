@@ -26,9 +26,13 @@ export function verifyEvidenceManifest(directory,{minFiles=500,maxFiles=1500}={}
    path.posix.normalize(name)!==name)throw Error('INVALID_EVIDENCE_ENTRY');
   const candidate=path.join(root,name),resolved=fs.realpathSync(candidate);
   if(!resolved.startsWith(root+path.sep)||resolved!==candidate)throw Error('UNSAFE_EVIDENCE_PATH');
-  const stat=fs.lstatSync(candidate);
-  if(!stat.isFile()||stat.size>3_000_000)throw Error('UNSAFE_EVIDENCE_FILE');
-  const data=fs.readFileSync(candidate);
+  const fd=fs.openSync(candidate,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW|fs.constants.O_NONBLOCK);
+  let data;
+  try{
+   const stat=fs.fstatSync(fd);
+   if(!stat.isFile()||stat.size>3_000_000)throw Error('UNSAFE_EVIDENCE_FILE');
+   data=fs.readFileSync(fd);
+  }finally{fs.closeSync(fd);}
   if(digest(data)!==expected)throw Error('EVIDENCE_HASH_MISMATCH: '+name);
   totalBytes+=data.length;
  }
