@@ -73,7 +73,7 @@ function serverAvailable(port) {
 }
 function localSerial(serial) {
   // USB serials/emulators or an owner-connected loopback wireless transport only.
-  return /^[A-Za-z0-9_-]{1,200}$/.test(serial) ||
+  return /^[A-Za-z0-9][A-Za-z0-9_-]{0,199}$/.test(serial) ||
     /^(127\.0\.0\.1|localhost):[0-9]{1,5}$/.test(serial) ||
     /^\[::1\]:[0-9]{1,5}$/.test(serial);
 }
