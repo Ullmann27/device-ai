@@ -48,10 +48,10 @@ function execute(args,config,{out,id,signal,lease}){
  return new Promise((resolveRun,reject)=>{
   const env={...process.env,GIT_TERMINAL_PROMPT:'0'};delete env.NODE_TEST_CONTEXT;
   const child=spawn(process.execPath,[`--max-old-space-size=${config.heapMb}`,...args],{cwd:ROOT,shell:false,env,detached:true,stdio:['ignore','pipe','pipe']});
-  const stdoutParts=[],stderrParts=[];let storedBytes=0,error=null,killed=false,killTimer;
+  const stdoutParts=[],stderrParts=[];let storedBytes=0,error=null,killed=false,shutdown=null;
   const tap=join(out,'cycles',id+'.tap'),err=join(out,'cycles',id+'.stderr');
   const tapFd=fs.openSync(tap,'wx',0o600),errFd=fs.openSync(err,'wx',0o600);
-  const kill=reason=>{if(killed)return;killed=true;error=reason;try{process.kill(-child.pid,'SIGTERM');}catch(e){if(e.code!=='ESRCH')error='SIGNAL_ERROR';}killTimer=setTimeout(()=>{try{process.kill(-child.pid,'SIGKILL');}catch{}},500);};
+  const kill=reason=>{if(killed)return;killed=true;error=reason;try{process.kill(-child.pid,'SIGTERM');}catch(e){if(e.code!=='ESRCH')error='SIGNAL_ERROR';}shutdown=new Promise(done=>setTimeout(()=>{try{process.kill(-child.pid,'SIGKILL');}catch{}finally{done();}},500));};
   const onAbort=()=>kill('OWNER_INTERRUPTED');signal?.addEventListener('abort',onAbort,{once:true});
   child.on('spawn',()=>{try{lease.child(child.pid);}catch(e){kill('LEASE_CHILD_BIND_FAILED');}if(signal?.aborted)onAbort();});
   const timer=setTimeout(()=>kill('TIMEOUT'),config.timeoutMs);
@@ -59,8 +59,11 @@ function execute(args,config,{out,id,signal,lease}){
   const take=(chunk,which)=>{const remaining=2*1024*1024-storedBytes;const kept=chunk.subarray(0,Math.max(0,remaining));fs.writeSync(which==='out'?tapFd:errFd,kept);(which==='out'?stdoutParts:stderrParts).push(kept);storedBytes+=kept.length;if(chunk.length>remaining)kill('OUTPUT_LIMIT');};
   child.stdout.on('data',b=>take(b,'out'));child.stderr.on('data',b=>take(b,'err'));
   child.on('error',e=>{error=e.code||'SPAWN_ERROR';});
-  child.on('close',(code,termination)=>{
-   clearTimeout(timer);clearTimeout(killTimer);clearInterval(stopPoll);signal?.removeEventListener('abort',onAbort);
+  child.on('close',async(code,termination)=>{
+   clearTimeout(timer);clearInterval(stopPoll);signal?.removeEventListener('abort',onAbort);
+   // Ignored-stdio descendants can outlive runner close. Keep the lease until
+   // the already requested process-group escalation has run.
+   if(shutdown)await shutdown;
    fs.closeSync(tapFd);fs.closeSync(errFd);
    const stdout=Buffer.concat(stdoutParts),stderr=Buffer.concat(stderrParts);
    resolveRun({exitCode:code,stdout:stdout.toString('utf8'),stderr:stderr.toString('utf8'),error:error||termination||null,signal:termination,stdoutHash:digest(stdout),stderrHash:digest(stderr)});
