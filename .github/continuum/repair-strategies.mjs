@@ -224,7 +224,10 @@ export function proposeCandidates(diagnostics,ctx){
   for(const d of diagnostics.slice(0,12)){
     // experience replay: a verified hunk for the same problem identity
     for(const past of ctx.experience??[]){
-      if(past.outcome!=='VERIFIED'||past.diagnostic!==d.fingerprint||past.edits.some(edit=>edit.omitted)||
+      // Ledger receipts without an independently accepted patch digest are
+      // diagnostic history, not reusable code. Never replay pending/forged wins.
+      if(past.outcome!=='VERIFIED'||!/^[a-f0-9]{64}$/.test(past.patchSha256??'')||
+         past.diagnostic!==d.fingerprint||past.edits.some(edit=>edit.omitted)||
          (past.strategy==='LOCAL_MODEL_PATCH'&&(ctx.allowLocalModelPatches!==true||
            !past.edits.every(edit=>ctx.allowedLocalPaths?.includes(edit.file)))))continue;
       if(past.strategy==='LOCAL_MODEL_PATCH'&&(past.edits.length!==1||
