@@ -2645,6 +2645,14 @@ class AgentActivity : Activity() {
             } else acknowledge()
             return
         }
+        // Explicit self-architecture questions are answered with honest local
+        // diagnostics; they never imply live Git access or authorization to repair.
+        if (ContinuumSelfInspectionQuery.matches(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            showContinuumWeaknessSummary()
+            return
+        }
         // Only knowledge questions reach the local source retrieval. Never use
         // sources as executable plans, tools or independent factual authority.
         if (GroundedWebRecall.topicOf(request) != null) {
@@ -2725,6 +2733,31 @@ class AgentActivity : Activity() {
     /** Explicit local self-diagnostic command. No model inference, network,
      * repository mutation or automatic code execution is involved.
      */
+    private fun showContinuumWeaknessSummary() {
+        val model = localRuntime.loadedModel
+        val liveStatus = localRuntime.state
+        addAssistantMessage(buildString {
+            append("CONTINUUM LOKAL · Eigene Systemgrenzen (keine Git-Codeprüfung)\\n\\n")
+            append("Ich bin die installierte Continuum-Lokal-App. ") 
+            append("Ich kann hier meinen tatsächlichen Modellstatus und lokale Diagnosen anzeigen, ") 
+            append("aber aus dem normalen Chat keinen aktuellen GitHub-Quellcode, ") 
+            append("keine PR-Diffs und keine fremden Branches unabhängig prüfen.\\n\\n")
+            append("Lokales Sprachmodell: ")
+            append(model?.let { "${it.id} ${it.version}" } ?: "nicht geladen")
+            append(" · Laufzeitstatus: ").append(liveStatus.name).append(".\\n")
+            append("SWB1 ist ein kleiner trainierbarer Klassifikator, kein frei generierender Sprachkern. ")
+            append("Ein erfolgreicher Lernschritt ist kein Nachweis für besseres allgemeines Denken.\\n")
+            append("Webquellen und gespeicherte Erinnerungen benötigen unabhängige Belege. ")
+            append("Ein nicht bereites Sprachmodell kann nur eine begrenzte Ersatzantwort ermöglichen.\\n\\n")
+            append("Für reale lokale Prüfergebnisse schreibe 'Continuum Status' ")
+            append("oder 'Teamleiter Status'. 'Teamleiter prüfen' startet nur nach ") 
+            append("deinem ausdrücklichen Auftrag die vorhandene lokale Prüfung. ")
+            append("Eine aktuelle Schwachstellenanalyse des Repositorys braucht einen ") 
+            append("gesondert zugelassenen Quellcodezugriff und Tests.")
+        })
+        addToolActivity("CONTINUUM · ehrliche read-only Selbstauskunft, keine Repository-Analyse")
+    }
+
     private fun isContinuumSelfCheck(request:String):Boolean =
         request.trim().lowercase(Locale.ROOT).trimEnd('?', '.', '!') in setOf(
             "continuum, überprüfe deinen lernkern",
@@ -3160,20 +3193,27 @@ class AgentActivity : Activity() {
                     }
                     NeuralCommandKind.RESET -> { save = true; measurement = "Neuronales Experiment zurückgesetzt."; measurement!! }
                     NeuralCommandKind.PRACTICE -> {
-                        val practice = lab.practice(
-                            steps = 200, cancelled = cancellation::get, onProgress = progressCallback
-                        )
-                        save = practice.accepted
-                        measurement = "Neuronaler Wiederholungszyklus: " +
-                            "${practice.completedSteps}/200 Gewichtsaktualisierungen; " +
-                            "Trainingsverlust %.5f → %.5f. ".format(
-                                Locale.ROOT, practice.trainingLossBefore, practice.trainingLossAfter
-                            ) +
-                            "Unbekannte Prüfbeispiele: ${practice.unfamiliarBefore.correct}/12 → " +
-                            "${practice.unfamiliarAfter.correct}/12. " +
-                            (if (save) "Verbesserte Gewichte zur Speicherung vorbereitet. "
-                            else "Bisherige Gewichte beibehalten. ") + practice.reason
-                        measurement!!
+                        if (lab.approvedExampleCount() == 0) {
+                            "NEURON · Üben nicht gestartet: Es fehlen bestätigte Sprachbeispiele, " +
+                                "nicht eine laufende Unterhaltung. Öffne 'Neuron Tutor' und bestätige " +
+                                "mindestens ein geeignetes Beispiel. 'Neuron Demo' nutzt unabhängig davon " +
+                                "künstliche Daten und verändert deine gespeicherten Gewichte nicht."
+                        } else {
+                            val practice = lab.practice(
+                                steps = 200, cancelled = cancellation::get, onProgress = progressCallback
+                            )
+                            save = practice.accepted
+                            measurement = "Neuronaler Wiederholungszyklus: " +
+                                "${practice.completedSteps}/200 Gewichtsaktualisierungen; " +
+                                "Trainingsverlust %.5f → %.5f. ".format(
+                                    Locale.ROOT, practice.trainingLossBefore, practice.trainingLossAfter
+                                ) +
+                                "Unbekannte Prüfbeispiele: ${practice.unfamiliarBefore.correct}/12 → " +
+                                "${practice.unfamiliarAfter.correct}/12. " +
+                                (if (save) "Verbesserte Gewichte zur Speicherung vorbereitet. "
+                                else "Bisherige Gewichte beibehalten. ") + practice.reason
+                            measurement!!
+                        }
                     }
                     NeuralCommandKind.TEACH -> {
                         val audit = lab.teachWithAudit(
