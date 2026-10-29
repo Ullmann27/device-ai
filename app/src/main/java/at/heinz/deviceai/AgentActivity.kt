@@ -98,6 +98,7 @@ import at.heinz.deviceai.cognitive.ResearchSynthesisOutput
 import at.heinz.deviceai.cognitive.ResearchSynthesizer
 import at.heinz.deviceai.cognitive.WikipediaResearchDiscoveryProvider
 import at.heinz.deviceai.cognitive.WebLearningInbox
+import at.heinz.deviceai.cognitive.AuthorizedWebLearningReviewInbox
 import at.heinz.deviceai.cognitive.WebLearningJournal
 import at.heinz.deviceai.cognitive.WebLearningCandidate
 import at.heinz.deviceai.cognitive.GroundedWebRecall
@@ -317,6 +318,7 @@ class AgentActivity : Activity() {
     private val webToolGate = at.heinz.deviceai.cognitive.ApprovedWebToolGate(internetConsent)
     private val approvedModelWebSession = java.util.concurrent.atomic.AtomicReference<at.heinz.deviceai.cognitive.ApprovedWebResearchSession?>()
     private var activeWebResearchSession:at.heinz.deviceai.cognitive.ApprovedWebResearchSession?=null
+    private val modelWebLearningReview = AuthorizedWebLearningReviewInbox()
     private var researchArmed = false
     private var researchResumeRequested = false
     private var researchMode = ResearchMode.STANDARD
