@@ -5814,7 +5814,7 @@ class AgentActivity : Activity() {
                     HttpReadOnlyResearchProvider(ResearchProviderPolicy(maxBytes=budget.maxBytesPerSource,
                         totalTimeoutMillis=budget.totalDeadlineMillis.toInt(),maxRedirects=budget.maxRedirects),accessCheck=session::checkActive))
                 runOnUiThread { modelWebActive = true; refreshHologramState() }
-                try { runner.execute(request).also { session.checkAuthorized() } }
+                try { runner.execute(request).also { session.checkAuthorized(); runner.dossier?.let { modelWebLearningReview.publish(it, session::isAuthorized) } } }
                 finally { runOnUiThread { modelWebActive = false; refreshHologramState() } }
             } else DeviceToolExecutorRunner(executor).execute(request)
         },receiptStore=receiptStore
