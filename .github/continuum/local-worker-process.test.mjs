@@ -6,6 +6,7 @@ import path from 'node:path';
 import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {classifyNativeTestRun} from '../../scripts/continuum-local-development-worker.mjs';
+import {processIdentity} from '../../scripts/continuum-worker-lease.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const env=()=>{const e={...process.env};delete e.NODE_TEST_CONTEXT;return e;};
 function fixture(){
@@ -117,4 +118,36 @@ test('evidence disk budget pauses before tests and preserves existing receipts',
   const folder=path.join(f.out,'cycles');fs.mkdirSync(folder,{recursive:true});const old=path.join(folder,'previous.tap');fs.writeFileSync(old,Buffer.alloc(3*1024*1024,65));
   const r=run(f,{},budget(f,{maxEvidenceMb:4}));assert.equal(r.status,1);assert.match(r.stderr,/EVIDENCE_BUDGET_EXHAUSTED/);assert.equal(fs.statSync(old).size,3*1024*1024);assert.equal(fs.readdirSync(folder).length,1);
  }finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+for(const stopMode of ['SIGTERM','TIMEOUT'])test(stopMode+' removes a descendant that ignores SIGTERM before restart',{timeout:20000},async()=>{
+ const f=fixture();let child,descendant=null;
+ const marker=path.join(f.top,'descendant.json');
+ const stillRunning=()=>{
+  if(!descendant||JSON.stringify(processIdentity(descendant.pid))!==JSON.stringify(descendant))return false;
+  try{const stat=fs.readFileSync('/proc/'+descendant.pid+'/stat','utf8');return !['Z','X'].includes(stat.slice(stat.lastIndexOf(')')+2).split(' ')[0]);}catch{return false;}
+ };
+ try{
+  const resistant="import fs from 'node:fs';import {processIdentity} from "+JSON.stringify(path.join(f.repo,'scripts/continuum-worker-lease.mjs'))+";process.on('SIGTERM',()=>{});fs.writeFileSync(process.env.PROBE_DESCENDANT_MARKER,JSON.stringify(processIdentity()));setInterval(()=>{},1000);";
+  const probe="import test from 'node:test';import {spawn} from 'node:child_process';test('controlled descendant',async()=>{if(process.env.PROBE_DESCENDANT_MARKER){spawn(process.execPath,['--input-type=module','-e',"+JSON.stringify(resistant)+"],{stdio:'ignore'});await new Promise(()=>{});}});\n";
+  fs.writeFileSync(path.join(f.repo,'.github/continuum/probe.test.mjs'),probe);
+  for(const args of [['add','.'],['-c','user.name=fixture','-c','user.email=fixture@example.invalid','commit','-qm','resistant descendant fixture']])assert.equal(spawnSync('git',args,{cwd:f.repo}).status,0);
+  child=spawn(process.execPath,[f.script,'--once',f.out,...budget(f,{timeoutMs:5000})],{cwd:f.repo,env:{...env(),PROBE_FAIL:'0',PROBE_DESCENDANT_MARKER:marker},stdio:'ignore'});
+  const done=new Promise(resolve=>child.once('exit',(code,signal)=>resolve({code,signal})));
+  await waitFor(()=>fs.existsSync(marker));
+  descendant=JSON.parse(fs.readFileSync(marker,'utf8'));
+  assert.ok(stillRunning(),'the resistant descendant must actually have started');
+  if(stopMode==='SIGTERM')child.kill('SIGTERM');
+  const ended=await done;
+  assert.equal(ended.code,1);
+  const report=JSON.parse(fs.readFileSync(path.join(f.out,'latest.json'),'utf8'));
+  assert.equal(report.status,stopMode==='SIGTERM'?'INTERRUPTED':'FAILED');
+  assert.equal(report.error,stopMode==='SIGTERM'?'OWNER_INTERRUPTED':'TIMEOUT');
+  await waitFor(()=>!stillRunning(),3000);
+  assert.equal(run(f).status,0,'a new cycle may start after the old descendant stopped');
+ }finally{
+  child?.kill('SIGKILL');
+  if(stillRunning())try{process.kill(descendant.pid,'SIGKILL');}catch{}
+  fs.rmSync(f.top,{recursive:true,force:true});
+ }
 });
