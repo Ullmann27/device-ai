@@ -146,6 +146,19 @@ class ContinuumBrainBridgeTest {
         assertTrue(raced.outcome.memoryIds.isEmpty())
     }
 
+    @Test fun switchingBrainOffDuringAnInFlightAnswerKeepsTheBaseline() {
+        val (dir,core)=app(*family)
+        val settings=ContinuumBrainSettings(dir)
+        settings.set(ContinuumBrainMode.ON)
+        val today=ContinuumChatOutcome("Bisherige Antwort","Bisheriger Beleg","trace",
+            false,ContinuumBaselineSource.NONE)
+        ContinuumBrainBridge.beforeRevocationCheck={ settings.set(ContinuumBrainMode.OFF) }
+        val result=ContinuumBrainBridge.decide(dir,core,"conv-mode-off","Wo wohnt Anna?",today)
+        assertEquals(ContinuumBrainMode.OFF,settings.mode())
+        assertEquals(ContinuumBrainStatus.OFF,result.status)
+        assertSame(today,result.outcome)
+    }
+
     @Test fun sessionStateBelongsToOneConversationAndCanBeForgotten() {
         // two women: without this conversation's focus "sie" has no unique referent
         val (dir,core)=app(*family,"Meine Nachbarin Rita spielt Geige.")
