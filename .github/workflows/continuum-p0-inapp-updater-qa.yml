@@ -1,0 +1,117 @@
+name: Continuum Lokal P0 Updater - GitHub isolated QA APK
+
+on:
+  push:
+    branches:
+      - feature/continuum-p0-inapp-owner-updater-20261029
+    paths:
+      - "app/**"
+      - "scripts/continuum-owner-update-manifest.mjs"
+      - ".github/workflows/continuum-p0-inapp-updater-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuum-p0-inapp-updater-qa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  updater-android-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout isolated source, no GitHub token retained
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Gradle 8.11.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: Android SDK 36
+        shell: bash
+        run: |
+          set -euo pipefail
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+
+      - name: Original main app sources - isolated QA compiler tests and lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --console=plain --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiMentorPreview=true \
+            -PcontinuumLocalStandaloneQa=true \
+            -PcontinuumStandaloneVersionCode=29 \
+            :app:testDebugUnitTest :app:lintDebug :app:compileDebugKotlin
+
+      - name: Build separately installable disposable GitHub QA APK (NOT OWNER UPDATE)
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle --no-daemon --console=plain --max-workers=2 \
+            -Dorg.gradle.jvmargs="-Xmx1600m -XX:MaxMetaspaceSize=512m" \
+            -Pkotlin.compiler.execution.strategy=in-process \
+            -PdeviceAiPreview=true :app:assembleDebug
+
+      - name: Verify preview APK is NOT owner signed or same package
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          mkdir -p continuum-p0-updater-qa
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$apk" > continuum-p0-updater-qa/SIGNATURE.txt
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$apk" > continuum-p0-updater-qa/PACKAGE.txt
+          grep -Fq "package: name='at.heinz.deviceai.preview'" continuum-p0-updater-qa/PACKAGE.txt
+          if grep -qiF '6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23' continuum-p0-updater-qa/SIGNATURE.txt; then
+            echo 'Unsafe owner signing identity in QA APK' >&2
+            exit 69
+          fi
+          cp "$apk" continuum-p0-updater-qa/Continuum-P0-Update-Button-QA-NICHT-ALS-UPDATE-INSTALLIEREN.apk
+          (cd continuum-p0-updater-qa && sha256sum Continuum-P0-Update-Button-QA-NICHT-ALS-UPDATE-INSTALLIEREN.apk > SHA256SUMS.txt)
+          {
+            echo "source_sha=$GITHUB_SHA"
+            echo "package=at.heinz.deviceai.preview"
+            echo "owner_signed=FALSE"
+            echo "owner_installable=FALSE"
+            echo "status=QA_BUILD_NOT_OWNER_BOOTSTRAP"
+            echo "Original signer stays exclusively on Fold7"
+          } > continuum-p0-updater-qa/STATUS.txt
+
+      - name: Publish actual tested QA APK to GitHub Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-P0-Updater-QA-APK-NICHT-INSTALLIEREN
+          path: continuum-p0-updater-qa/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Preserve Android failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Continuum-P0-Updater-Android-Fehlerberichte
+          path: |
+            app/build/test-results/testDebugUnitTest/
+            app/build/reports/lint-results-debug.html
+            app/build/outputs/logs/
+          if-no-files-found: ignore
+          retention-days: 14
