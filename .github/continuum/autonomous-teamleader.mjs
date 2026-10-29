@@ -17,6 +17,7 @@ import {executeInvestigation} from './backlog-investigator.mjs';
 import {summarizeRepairHandoffs} from './teamleader-handoffs.mjs';
 import {resolveOutputDestination} from './backlog-repair-worker.mjs';
 import {acquireContinuumBuildLease} from './shared-build-lease.mjs';
+import {summarizeDevLoopShadow,runDevLoopShadow} from './dev-loop-shadow.mjs';
 
 const HEAD=/^[0-9a-f]{40}$/;
 const OUTCOMES=new Set([
@@ -325,8 +326,9 @@ export function runTeamleaderCycle({
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
 export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null,
- contextualExperience=false}={}){
+ contextualExperience=false,devLoopObserver=summarizeDevLoopShadow}={}){
  if(typeof contextualExperience!=='boolean')throw Error('Invalid contextual experience option');
+ if(devLoopObserver!==null&&typeof devLoopObserver!=='function')throw Error('Invalid dev-loop observer');
  const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
   {loadLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
@@ -474,8 +476,11 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
     const audit=auditCefrShadowWinner({report:result,independent:result.independent});
     if(audit.status==='RANKING_PROXY_ONLY')result.cefrShadowAudit=audit;
    }
-   const publicReport=publicTeamleaderRepairReport(result);
+   const publicReport={...publicTeamleaderRepairReport(result)};
    publicReport.handoffs=summarizeRepairHandoffs(publicReport);
+   // ARGON F3 observes the existing report only. It neither reranks candidates nor teaches the ledger.
+   const devLoopShadow=runDevLoopShadow(devLoopObserver,publicReport,ledger.experiences);
+   if(devLoopShadow!==null)publicReport.devLoopShadow=devLoopShadow;
    // A first-worktree patch must never become a DONE backlog task without
    // the independently verified second worktree. publicReport redacts it.
    if(publicReport.outcome==='VERIFIED'&&publicReport.independent?.passed!==true)
@@ -509,6 +514,7 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
     'Model invocations: '+(publicReport.inference?.modelInvocations??0),
     'Patch SHA-256: '+(publicReport.verified?.patchSha256??'none'),
     'Independent check: '+(publicReport.independent?.passed===true?'PASSED':'NOT VERIFIED'),
+    'ARGON F3: '+(devLoopShadow?.status??'OFF')+' (shadow only; no ranking or learning authority)',
     'Backlog: '+backlogSync.status,
     'Automatic merge: NEVER',
     ''
