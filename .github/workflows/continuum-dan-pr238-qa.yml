@@ -1,0 +1,56 @@
+name: Continuum DAN PR238 isolated regression
+
+on:
+  push:
+    branches:
+      - "sol/continuum-dan-evidence-loop-20261029"
+    paths:
+      - ".github/continuum/**"
+      - "app/src/main/java/**"
+      - "app/src/test/java/**"
+      - ".github/workflows/continuum-dan-pr238-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Node regression suite and CCC1 safety cases
+        run: node --test --test-concurrency=2 --test-reporter=junit --test-reporter-destination="$RUNNER_TEMP/dan-node.xml" .github/continuum/*.test.mjs
+      - name: Install Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+      - name: Prepare Android SDK 36
+        shell: bash
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
+      - name: Android Kotlin/Java JUnit tests
+        run: gradle :app:testDebugUnitTest --stacktrace
+      - name: Android configured lint
+        run: gradle :app:lintDebug --stacktrace
+      - name: Preserve complete test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: continuum-dan-pr238-tests
+          path: |
+            ${{ runner.temp }}/dan-node.xml
+            app/build/test-results/testDebugUnitTest/TEST-*.xml
+            app/build/reports/lint-results-debug.html
+          if-no-files-found: warn
