@@ -1,0 +1,88 @@
+<section class="cover">
+  <div class="badge">FORSCHUNGSGUTACHTEN · ARGON 4</div>
+  <h1>CONTINUUM / JARVIS</h1>
+  <p class="sub">Professorengutachten zu drei Forschungsfragen: Gedächtnis &amp; Dialogintelligenz · virtueller Rechenraum · autonomer Entwickler</p>
+  <p class="lead">Nicht neu erfinden. Präzise korrigieren. Messbar erforschen.</p>
+  <table class="meta">
+    <tr><th>Gutachter</th><td>Opus 5.5 (Rolle: unabhängiger Principal AI Researcher)</td></tr>
+    <tr><th>Prüfgegenstand</th><td><code>Ullmann27/device-ai</code> exakt <code>a3fdc17958d4e552bd3b74cf611c9fd40480f269</code> (Kopf PR #238)</td></tr>
+    <tr><th>Forschungszweig</th><td><code>opus/argon4-research-20261029</code>, Draft-PR #240 (nicht mergen)</td></tr>
+    <tr><th>Stand</th><td>29.10.2026</td></tr>
+    <tr><th>Belegstatus</th><td>Quellcode gelesen · Prototypen implementiert · JVM/Node/Python getestet · <b>auf dem Fold7 nichts bestätigt</b></td></tr>
+  </table>
+  <div class="note">Abweichend von der Annahme im Auftrag hatte der Gutachter echten Lesezugriff auf das Repository. Alle Ist-Aussagen
+  beziehen sich auf gelesene Dateien am genannten Commit (Datei:Zeile). Wo eine Signatur nicht belegt ist, steht <b>UNBEKANNT</b>.</div>
+</section>
+
+<section>
+<h2 id="inhalt">Inhalt</h2>
+<ol class="toc">
+  <li>A · Akademischer Befund – was angeschlossen ist, was nur geplant ist</li>
+  <li>B · Rotstift-Anmerkungen – Ist → Problem → Patch → Begründung → Tests</li>
+  <li>C · Korrigierte visuelle Architektur</li>
+  <li>D · Variantenatlas A/B/C/D</li>
+  <li>E · Forschungsfrage 1 – Das Gehirn, das mehr versteht, als es speichert</li>
+  <li>F · Forschungsfrage 2 – Das unmögliche Rechenzentrum</li>
+  <li>G · Forschungsfrage 3 – Der Jarvis, der sich selbst weiterentwickelt</li>
+  <li>H · Implementierungsanhang (vollständige Listings mit Zeilennummern)</li>
+  <li>I · Test- und Forschungsprotokoll</li>
+  <li>J · Priorisierte Entscheidungen, Entscheidungsmatrix, Schlussentscheidung</li>
+</ol>
+</section>
+
+<section>
+<h2>A · Akademischer Befund</h2>
+<div class="scene"><b>Dan-Szene.</b> Dan legt dem Professor drei Ordner auf den Tisch: „Gedächtnis“, „Rechenleistung“, „Selbstentwicklung“.
+Der Professor öffnet keinen davon. Er öffnet das Terminal, tippt <code>git show a3fdc179</code> und sagt: „Erst lesen, was wirklich läuft.
+Dann reden wir über das, was fehlt.“</div>
+
+<h3>A.1 Was im Produktpfad tatsächlich verbunden ist (gelesen am Commit)</h3>
+<table>
+<tr><th>Baustein</th><th>Belegter Zustand</th><th>Datei:Zeile</th><th>Lesart</th></tr>
+<tr><td>Belegorientierter Dialog</td><td><code>runContinuumDialogue</code> → <code>CognitiveDecisionBridge(ContinuumCognitiveRuntime(…), null)</code>; Reasoning-Adapter ist <code>null</code></td><td>AgentActivity.kt ~2801; CognitiveDecisionBridge.kt 32–41</td><td>verbunden, deterministisch</td></tr>
+<tr><td>EWM2-Gehirn</td><td><code>ContinuumBrainBridge.decide</code> mit OFF/SHADOW/ON (Standard OFF) im Chatpfad; Produktklassen <code>intelligence/ewm</code></td><td>learning/ContinuumBrain.kt; AgentActivity.kt</td><td>verbunden, aber standardmäßig AUS</td></tr>
+<tr><td>Generativer Chat</td><td><code>runLocal</code> → <code>BoundedAgentOrchestrator</code> → <code>AiContextCompiler.compile</code> → <code>ChatReasoningRouter.advise</code> → Gemma</td><td>AgentActivity.kt 6043–6110</td><td>verbunden</td></tr>
+<tr><td>Gesprächskontext für Gemma</td><td>4 Turn-Paare, Nutzer 300 / Modell 350 Zeichen</td><td>LocalConversationContext.kt 43–48</td><td>verbunden, sehr kurz</td></tr>
+<tr><td>Semantisches Scoring</td><td><code>HybridMemoryRetriever.retrieve(...)</code> <b>ohne</b> <code>semanticScorer</code> im Kontextcompiler und im Agenten</td><td>AiContextCompiler.kt 112–118; BoundedAgent.kt 236–241</td><td>vorgesehen, <b>im Produkt 0</b></td></tr>
+<tr><td>Zusatz-Denkpässe</td><td>bis 4 Gemma-Aufrufe, ausgelöst über <code>ambiguity = complexity</code>, die überwiegend aus der <b>Textlänge</b> stammt</td><td>ChatReasoningRouter.kt 12–19; ContinuumIntelligence.kt 30–32, 83–92</td><td>verbunden, Heuristik</td></tr>
+<tr><td>Datum im Gemma-Prompt</td><td>kein aktuelles Datum in Compiler-Abschnitten oder <code>promptBody</code></td><td>AiContextCompiler.kt (Abschnitte 110–168); AgentActivity.kt 6115–6140</td><td><b>fehlt</b></td></tr>
+<tr><td>Gemma-Backend</td><td><code>EngineConfig(…, backend = Backend.CPU(), …)</code>; GPU/NPU der API ungenutzt</td><td>LiteRtLmLocalModelRuntime.kt 125–136</td><td>nur CPU</td></tr>
+<tr><td>CCC1</td><td>Ledger mit unabhängiger Zweit-Worktree-Prüfung; Strategien Laplace-gerankt innerhalb von Risikostufen</td><td>repair-ledger.mjs 67–150; repair-loop.mjs 459–477</td><td>verbunden (Node/Termux/PC)</td></tr>
+<tr><td>Lokaler Worker</td><td>reine Test-Gesundheitszyklen mit Lease, STOP, sicheren Zweigen; repariert nichts</td><td>scripts/continuum-local-development-worker.mjs</td><td>verbunden, nur Prüfung</td></tr>
+<tr><td>Virtuelle Compute-Fabric</td><td>schreibgeschützte Planungsprojektion, <code>"executable":false</code></td><td>VirtualModelFabric.kt 9–60</td><td>Plan, keine Inferenz</td></tr>
+</table>
+
+<h3>A.2 Kernannahmen und ihre Unsicherheit</h3>
+<ul>
+<li><b>Fold7-Hardware</b>: 12/16 GB LPDDR5X, Snapdragon 8 Elite for Galaxy, UFS 4.0 (Datenblätter). 84,8 GB/s ist die theoretische Spitzenbandbreite; alle Planungswerte verwenden <i>angenommene effektive</i> Werte als benannte Variablen (Kapitel F).</li>
+<li><b>Gemma 4 E4B</b>: Schicht-/Parameterdetails wurden nicht geprüft (UNBEKANNT). Aussagen beziehen sich nur auf die Größenordnung „~4 B aktiv pro Token“.</li>
+<li><b>Benchmarks</b> in diesem Gutachten sind synthetisch, von einem Autor geschrieben, und liefen auf JVM/Node/Python im Cloud-Host. Gemma und Fold7 waren hier nicht verfügbar.</li>
+<li><b>Gradle/Lint</b>: In der Cloud-Umgebung blockiert die Netzwerkrichtlinie <code>dl.google.com</code> (403). Statt dessen lief der bestehende Kotlin-Unit-Harness ohne Gradle (<code>scripts/android-kotlin-unit-check.sh</code>).</li>
+</ul>
+
+<h3>A.3 Die zentrale Diagnose in einem Satz</h3>
+<p class="thesis">Continuum fehlt kein weiteres Modul. Es fehlen drei <b>Verbindungen</b>: (1) der Gesprächszustand reicht nicht über vier kurze Paare
+und kennt kein Datum, (2) das belegte Wissen des Gehirns erreicht Gemma nicht als Pflichtbeleg, und Rechenaufwand wird nach Textlänge
+statt nach Unsicherheit verteilt, (3) die Selbstverbesserung von CCC1 wird nicht gegen eine eingefrorene Kontrollgruppe gemessen.</p>
+</section>
+
+<section>
+<h2>B · Rotstift-Anmerkungen</h2>
+<p>Jede Zeile folgt dem verlangten Schema: Ist-Code → nachgewiesenes Problem → minimaler Patch → warum besser → Regressionsrisiko → Test → Integration → Rückfall.
+„Nachgewiesen“ heißt: durch gelesenen Code, Messung oder fehlschlagenden Test belegt, nicht vermutet.</p>
+<table class="small">
+<tr><th>ID</th><th>Ist (Datei)</th><th>Nachgewiesenes Problem</th><th>Minimaler Eingriff</th><th>Test / Rückfall</th><th>Status</th></tr>
+<tr><td>R1</td><td>LocalConversationContext.kt 43–48</td><td>Bezug nach 5 Füllzügen verloren: 0/12 (DEV) bzw. 0/12 (Holdout) Referenten noch im Kontext</td><td>Zusätzlich gerenderter, ≤600 Zeichen langer Gesprächszustand (<code>DialogStateKernel.render</code>); die 4 Paare bleiben</td><td>Argon4DialogBenchmark; Schalter AUS → heutiger Prompt</td><td>Prototyp, gemessen (JVM)</td></tr>
+<tr><td>R2</td><td>AgentActivity.kt 6115–6140, AiContextCompiler</td><td>Kein Datum im Prompt: „gestern“ ist für Gemma nicht verankerbar (TEMPORAL 0/12 im Kontext)</td><td>Eine Zeile „Heute ist …“ (Patch K1)</td><td>A/B auf Fold7 mit 60 Zeitfragen; Rückfall: Zeile entfernen</td><td>Patch-Datei, nicht angewendet</td></tr>
+<tr><td>R3</td><td>AiContextCompiler.kt 112; BoundedAgent.kt 236</td><td><code>semanticScorer</code> fehlt → Semantik-Anteil 0,25 des Scores ist immer 0</td><td><b>Keinen neuen Encoder installieren.</b> Zuerst CRE1-Scores über das vorhandene <code>MemoryRetrievalResearchGate</code> im Shadow messen (Hit@k, MRR)</td><td>Eingefrorener Belegsatz; Stop bei keinem Gewinn</td><td>Experiment E1.5</td></tr>
+<tr><td>R4</td><td>ChatReasoningRouter / ContinuumTaskClassifier</td><td>Lange, belegte Frage → 4 Zusatzpässe (Test <code>theExistingRouterBuysFourPassesForALongGroundedQuestion</code>)</td><td>Nutzen-Router (<code>ComputeAllocationPolicy</code>) zuerst im Shadow, Kontrolle = heutiger Selektor</td><td>Unit 6 Tests; Shadow-Log</td><td>Prototyp</td></tr>
+<tr><td>R5</td><td>CognitiveDecisionBridge (Adapter null); runLocal</td><td>Belegpaket des EWM2-Gehirns erreicht Gemma nicht; Aussagenprüfer (<code>Ewm1ClaimCheck</code>, H4 48/49) prüft Gemma-Antworten nicht</td><td>AP-5 aus dem Architektenauftrag: <code>Answer.render()</code> als einzige Evidenz + ClaimCheck nach Generierung</td><td>Fold7: falsche Details je Antwort</td><td>offen (nächster Schritt)</td></tr>
+<tr><td>R6</td><td>LiteRtLmLocalModelRuntime.kt 132–136</td><td>Nur <code>Backend.CPU()</code>, obwohl die LiteRT-LM-Kotlin-API GPU/NPU anbietet</td><td>Besitzergesteuerter GPU-Versuch mit CPU-Rückfall (Patch K2, kompiliert gegen Stub)</td><td>Sols Profiler (Dispatch/erstes Token) vorher/nachher</td><td>Patch-Datei</td></tr>
+<tr><td>R7</td><td>repair-loop.mjs 469–477</td><td>Strategie-Rangfolge lernt „im Betrieb“ (Laplace) ohne Kontrollgruppe → Verbesserung nicht messbar</td><td>Strategie-Änderungen nur als vorregistrierte Experimente (Thompson vs eingefrorene Laplace-Kontrolle, McNemar)</td><td>dev-loop-kernel.test.mjs (11)</td><td>Prototyp</td></tr>
+<tr><td>R8</td><td>local-development-worker.mjs</td><td>Worker prüft nur; Zyklus Auftrag→Patch→Zweitprüfung→Review ist nicht als ein Zustandsautomat mit Journal gebunden</td><td>Kernzustandsmaschine mit Hashketten-Journal, die vorhandene Schritte verbindet</td><td>Manipulations-, Abbruch-, Rollback-Tests</td><td>Prototyp</td></tr>
+<tr><td>R9</td><td>VirtualModelFabric.kt</td><td>Plan ohne physikalische Machbarkeitsprüfung</td><td>Bandbreitenmodell als Gate: Plan ablehnen, wenn <code>t ≥ B/W</code> das Antwortbudget sprengt</td><td>test_argon4_f2.py</td><td>Prototyp (Python)</td></tr>
+<tr><td>R10</td><td>Ewm1Workspace (Produktkopie)</td><td>Pronomen ohne Vorgänger zitierte globalen Fakt</td><td>in #237 bereits behoben (<code>50aa65f7</code>); unabhängig bestätigt durch Harness-Befund (1217/1218)</td><td>BrainBridge-Sitzungstest</td><td>erledigt</td></tr>
+</table>
+<p><b>Ausdrücklich unnötig</b> (Rotstift): ein zweiter Speicher neben LearningCore/MemoryEcology, ein neues Agenten-Framework neben BoundedAgent/CCC1,
+ein neuer Scheduler neben JobScheduler/Worker, parallele große LLMs im RAM, ein neuer Vektor-Encoder vor dem Ergebnis von E1.5.</p>
+</section>
