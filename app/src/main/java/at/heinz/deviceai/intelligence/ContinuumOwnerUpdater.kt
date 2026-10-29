@@ -33,6 +33,7 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
 
     sealed interface Check {
         data object Current : Check
+        data object NoRelease : Check
         data class Available(val release: ContinuumOwnerUpdateRelease) : Check
         data class Rejected(val explanation: String) : Check
     }
@@ -43,7 +44,8 @@ internal class ContinuumOwnerUpdater(private val context: Context) {
             val signer = installedSignerSha256()
             val json = readText(ContinuumOwnerUpdateCatalog.MANIFEST_URL,
                 ContinuumOwnerUpdateCatalog.MAX_JSON_BYTES)
-            val release = ContinuumOwnerUpdateCatalog.parse(json)
+            val release = ContinuumOwnerUpdateCatalog.parseAvailable(json)
+                ?: return@submit Check.NoRelease
             if (release.descriptor.versionCode <= version) return@submit Check.Current
             val policy = ContinuumSignedUpdatePolicy.check(
                 context.packageName, version, signer,
