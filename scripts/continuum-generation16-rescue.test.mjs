@@ -171,6 +171,9 @@ test('two process captures validate all 256 records without exposing contents or
   assert.equal(result.metadata.ledgerChecksumValid, true);
   assert.equal(result.metadata.sha256, sha(ledger()));
   assert.equal(result.captures.length, 2);
+  assert.equal(result.metadata.captureDetails.length, 2);
+  assert.ok(result.metadata.captureDetails.every(capture => !capture.truncated &&
+    capture.returnedBytes === capture.retainedBytes && capture.retainedBytes === ledger().length));
   assert.deepEqual(result.captures[0], result.captures[1]);
   assert.equal(result.calls.filter(args => args.includes('exec-out')).length, 2);
 });
@@ -267,6 +270,10 @@ test('oversized subprocess output fails with bounded capture', async () => {
   assert.ok(result.captures[0].every(byte => byte === 65));
   assert.equal(result.captures.length, 1);
   assert.equal(result.metadata.status, 'FAILED');
+  assert.equal(result.metadata.failureCode, 'CAPTURE_1_FAILED');
+  assert.equal(result.metadata.captureDetails[0].truncated, true);
+  assert.equal(result.metadata.captureDetails[0].retainedBytes, 512 * 1024 + 1);
+  assert.ok(result.metadata.captureDetails[0].returnedBytes > result.metadata.captureDetails[0].retainedBytes);
 });
 test('identical corrupt checksums never give success', async () => {
   const bytes = ledger(); bytes[bytes.length - 1] ^= 1;
