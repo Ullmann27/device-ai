@@ -34,3 +34,12 @@ test('native text deltas preserve standalone whitespace while ignoring empty chu
   assert.match(runtime, /text\.text\.isEmpty\(\) \|\| finished\.get\(\)/);
   assert.doesNotMatch(runtime, /text\.text\.isBlank\(\)/);
 });
+
+test('invocation time consumes the same generation budget and safe profile reaches existing status', () => {
+  const generate = activity.split('private fun generateLocal(')[1].split('private fun updateLocalStreamPreview(')[0];
+  const deadline = generate.indexOf('val generationDeadline = generationStartedNanos');
+  const invoke = generate.indexOf('start(callback)');
+  assert.ok(deadline >= 0 && invoke > deadline);
+  assert.match(generate, /if \(completed\.await\(10, TimeUnit\.MILLISECONDS\)\) break/);
+  assert.match(activity, /localRuntime\.inferenceProfiles\.lastOrNull\(\)\?\.safeSummary\(\)/);
+});

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:00:03" hostname="9d1c4dd98fa0" time="0.012">
+  <properties/>
+  <testcase name="emptyEditsCannotBeRecommended" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.004"/>
+  <testcase name="sourceBudgetIsEnforcedDuringSelectionInUtf8Bytes" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.001"/>
+  <testcase name="actualReplacementAndTestDescriptionsReachReviewers" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.0"/>
+  <testcase name="rejectionCanStillProduceAnExplicitReviewOnlyReport" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.001"/>
+  <testcase name="mutableSourceListCannotChangeTheActiveSnapshot" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.0"/>
+  <testcase name="observerExceptionsDoNotLeaveAnUnfinishedJob" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.001"/>
+  <testcase name="changingInputsInvalidatesPreviousExport" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.0"/>
+  <testcase name="cancellationFromStateObserverPreventsFirstModelCall" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.001"/>
+  <testcase name="monotonicDeadlineSurvivesWallClockRollback" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.003"/>
+  <testcase name="recommendationCannotOverrideCriticRejectOrRevise" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.0"/>
+  <testcase name="acceptedVerdictWithBlockerCannotBeRecommended" classname="at.heinz.deviceai.cognitive.DevelopmentReviewRegressionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

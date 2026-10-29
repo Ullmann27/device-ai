@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.nf.NfHybridTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:00:24" hostname="9d1c4dd98fa0" time="0.18">
+  <properties/>
+  <testcase name="foldsAreDeterministicAndBothUsed" classname="at.heinz.deviceai.learning.nf.NfHybridTest" time="0.001"/>
+  <testcase name="ngramDetailMatchesItsBits" classname="at.heinz.deviceai.learning.nf.NfHybridTest" time="0.003"/>
+  <testcase name="aGateWithoutSlopeIsTheFixedMixture" classname="at.heinz.deviceai.learning.nf.NfHybridTest" time="0.0"/>
+  <testcase name="fittingTheGateNeverWorsensTheFittedData" classname="at.heinz.deviceai.learning.nf.NfHybridTest" time="0.176"/>
+  <testcase name="fixedMixtureLimitsAreTheComponents" classname="at.heinz.deviceai.learning.nf.NfHybridTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

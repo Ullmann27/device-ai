@@ -71,7 +71,11 @@ function execute(args,config,{out,id,signal,lease}){
  });
 }
 async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
- const config=options(supplied),out=directory(outDirectory),before=checkout();
+ const config=options(supplied),out=directory(outDirectory);
+ // Cancellation before launch is not a completed test cycle. Do not acquire
+ // a lease, write a running intent or start Node for an already stopped job.
+ if(signal?.aborted||fs.existsSync(join(out,'STOP')))throw Error('OWNER_INTERRUPTED_BEFORE_START');
+ const before=checkout();
  const lease=heldLease??workerLease(git(['rev-parse','--absolute-git-dir']));
  const id=new Date().toISOString().replace(/[:.]/g,'-')+'-'+crypto.randomUUID();
  try{
@@ -100,17 +104,18 @@ export async function runWorker(outDirectory,{signal,...supplied}={}){
  const poll=setInterval(()=>{if(fs.existsSync(join(out,'STOP')))stop.abort();},100);
  let lease;
  try{
+  if(combined.aborted||fs.existsSync(join(out,'STOP')))return {cycles,failures,interrupted:true};
   lease=workerLease(git(['rev-parse','--absolute-git-dir']));
   while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
    try{const report=await runCycle(out,{...config,signal:combined},lease);if(report.status!=='ALL_EXECUTED_PASS')failures++;console.log(JSON.stringify(report));}
-   catch(e){failures++;event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
+   catch(e){failures++;event(out,e.message==='OWNER_INTERRUPTED_BEFORE_START'?'CYCLE_INTERRUPTED':'CYCLE_REJECTED',{error:e.message,...(e.message==='OWNER_INTERRUPTED_BEFORE_START'?{started:false}:{})});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
    cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
    try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
   }
  }finally{
   clearInterval(poll);if(lease)lease.release();event(out,'WORKER_STOPPED',{cycles,ownerStopped:combined.aborted||fs.existsSync(join(out,'STOP'))});
  }
- return {cycles,failures};
+ return {cycles,failures,interrupted:combined.aborted||fs.existsSync(join(out,'STOP'))};
 }
 async function main(){
  const [mode,out,flag,file]=process.argv.slice(2);
@@ -118,6 +123,6 @@ async function main(){
  const config=options(file?JSON.parse(fs.readFileSync(file,'utf8')):{});const ctrl=new AbortController();
  for(const sig of ['SIGINT','SIGTERM'])process.once(sig,()=>ctrl.abort());
  if(mode==='--once'){const report=await runOneCycle(out,{...config,signal:ctrl.signal});console.log(JSON.stringify(report));if(report.status!=='ALL_EXECUTED_PASS')process.exitCode=1;}
- else {const summary=await runWorker(out,{...config,signal:ctrl.signal});if(summary.failures>0)process.exitCode=1;}
+ else {const summary=await runWorker(out,{...config,signal:ctrl.signal});if(summary.failures>0||summary.interrupted)process.exitCode=1;}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error('LOCAL_WORKER_FAILED: '+e.message);process.exitCode=1;});

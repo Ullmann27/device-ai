@@ -1,0 +1,45 @@
+{
+  "sourceHead": "c8ea465f3ff6cd87feb763df7f83d8dfc8d70a6a",
+  "files": [
+    {
+      "path": "scripts/continuum-generation16-rescue.sh",
+      "gitBlob": "b6483cc78fce9b52662888fabaabc37ab7e8abe6"
+    },
+    {
+      "path": "scripts/continuum-generation16-rescue.test.mjs",
+      "gitBlob": "728a45eb352999effa618c221db745a5fc125b1d"
+    },
+    {
+      "path": "scripts/continuum-local-development-worker.mjs",
+      "gitBlob": "2e19f6fd1c024214db73408e4ea2b31e227e55eb"
+    },
+    {
+      "path": "scripts/continuum-worker-lease.mjs",
+      "gitBlob": "10306e1ac5ba3b762a2e1e9a139cd70f1a5ea2c5"
+    },
+    {
+      "path": ".github/continuum/local-worker-process.test.mjs",
+      "gitBlob": "5247993ac6a952405ad05a45d779f1ca968c9c2d"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LocalInferenceProfile.kt",
+      "gitBlob": "c1b78bb2710d9e1d458390872f800abf97edc220"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt",
+      "gitBlob": "5d993b960a78cfba4765811a57217e119ed4c3fa"
+    },
+    {
+      "path": "app/src/test/java/at/heinz/deviceai/localmodel/LocalInferenceProfileTest.kt",
+      "gitBlob": "a30056cc715e57b97d0818d96ebc79861a725c89"
+    },
+    {
+      "path": "scripts/continuum-local-chat-streaming.test.mjs",
+      "gitBlob": "765c78e5e317b45ed3caefc5afba6c805c48f4b3"
+    },
+    {
+      "path": "app/src/main/java/at/heinz/deviceai/AgentActivity.kt",
+      "gitBlob": "70405a9188d7b8fef34caa40eeb30f88fb09050d"
+    }
+  ]
+}

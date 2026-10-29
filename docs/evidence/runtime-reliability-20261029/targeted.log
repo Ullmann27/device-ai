@@ -1,0 +1,93 @@
+✔ checks nonproductive clean branch and bounded verified inventory (2.385424ms)
+✔ refuses main, release, dirty and invalid inventories (1.121665ms)
+✔ real node TAP success does not imply a patch was approved (1.115799ms)
+✔ skipped and TODO mean incomplete quality gate (1.960439ms)
+✔ missing summary, timeout, failed case or invalid totals are never green (0.361944ms)
+✔ native worker refuses untracked test injection and symlinked test entrypoints (620.785226ms)
+✔ actual worker captures native TAP counters and keeps immutable failed then successful receipts (826.655898ms)
+✔ duplicate top-level native summaries are incomplete evidence (0.61803ms)
+✔ SIGTERM during a real test stops children and permits a fresh process restart (1172.672264ms)
+✔ real timeout retains failure evidence and subsequent healthy cycle succeeds (2101.371228ms)
+✔ idle scheduler retains the lease and STOP cancels its wait (578.207228ms)
+✔ SIGKILL abandoned worker is recovered by identity and its residual test process is stopped (587.736085ms)
+✔ excess test output is stopped and raw evidence storage stays bounded (800.882296ms)
+✔ a redirected cycles directory never writes test output into source (147.307875ms)
+✔ the same live scheduler automatically continues from a failed cycle to a healthy cycle (950.621173ms)
+✔ finite scheduler returns zero only when its single full cycle passed (569.928089ms)
+✔ loss of the checkout lease cannot leave a green completion receipt (1343.86683ms)
+✔ evidence disk budget pauses before tests and preserves existing receipts (279.125698ms)
+✔ SIGTERM removes a descendant that ignores SIGTERM before restart (1671.664013ms)
+✔ TIMEOUT removes a descendant that ignores SIGTERM before restart (6709.071649ms)
+✔ STOP_FILE refuses a cycle before test intent or child launch (97.368988ms)
+✔ ABORTED_SIGNAL refuses a cycle before test intent or child launch (88.457835ms)
+✔ dangling continuum-health-worker.json cannot create an external lease target (153.850367ms)
+✔ dangling continuum-health-worker.json.mutex cannot create an external lease target (97.764201ms)
+✔ a dangling lease-directory parent is refused without creating its target (80.485788ms)
+✔ pre-start STOP preserves another live checkout lease (232.815736ms)
+✔ STOP_FILE prevents loop lease acquisition and preserves a live owner (265.617548ms)
+✔ ABORTED_SIGNAL prevents loop lease acquisition and preserves a live owner (226.011824ms)
+✔ two process captures validate all 256 records without exposing contents or changing originals (345.279463ms)
+✔ safe counts distinguish canonical owner facts from source observations and other record types (230.356578ms)
+✔ a valid Kotlin ledger retains a leading UTF8 BOM in its record identity (208.844661ms)
+✔ preserving BOM data retains strict malformed UTF8 refusal (243.264276ms)
+✔ multiple devices require explicit selection (91.131432ms)
+✔ explicit selection stays bound to one listed local device (282.334349ms)
+✔ no device is failure (94.398266ms)
+✔ unauthorized device is rejected before run-as (85.932821ms)
+✔ offline device is rejected before run-as (70.397743ms)
+✔ nonlocal wireless device is rejected (70.88763ms)
+✖ owner-selected remote or injected serial never reaches adb (150.796504ms)
+✔ owner-connected loopback transport is supported without connect/pair (217.091687ms)
+✔ nondebuggable package fails without trying root or permissions (102.952163ms)
+✔ run-as must return an application uid (102.223441ms)
+✔ run-as must start inside the historical private package (128.028104ms)
+✔ symlink source is rejected before captures (152.304105ms)
+✔ failed partial capture is retained and never reported as rescued (176.818646ms)
+✔ changing source across captures fails and retains both copies (226.35446ms)
+✔ truncated identical captures fail schema validation (251.735839ms)
+✔ oversized subprocess output fails with bounded capture (237.13559ms)
+✔ identical corrupt checksums never give success (279.579374ms)
+✔ valid archive checksum cannot hide a forged record identity (248.549543ms)
+✔ count metadata cannot silently accept a different generation (286.28142ms)
+✔ output-parent symlink is rejected (57.315728ms)
+✔ shared home permissions are rejected before reading device data (57.130842ms)
+✔ unknown arguments are rejected before touching adb (57.851854ms)
+✔ original ledger review reaches existing codec and never invents source identity (0.909346ms)
+✔ SAF export requires byte-identical bounded readback before reporting success (0.577282ms)
+✔ personal review shows whole source counts separately from eligible fact proposals (0.470366ms)
+✔ native delta preview is throttled, bounded and tied to the active request (1.527877ms)
+✔ stream completion removes only its own transient row (0.411349ms)
+✔ Stop clears preview synchronously and queued rendering checks cancellation state (0.540529ms)
+✔ native text deltas preserve standalone whitespace while ignoring empty chunks (1.445165ms)
+✔ invocation time consumes the same generation budget and safe profile reaches existing status (0.540336ms)
+ℹ tests 62
+ℹ suites 0
+ℹ pass 61
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19127.331331
+
+✖ failing tests:
+
+test at scripts/continuum-generation16-rescue.test.mjs:234:1
+✖ owner-selected remote or injected serial never reaches adb (150.796504ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /FAILED NON_LOCAL_DEVICE/. Input:
+  
+  'FAILED DEVICE_NOT_UNIQUE\n' +
+    'Private partial output retained: /tmp/continuum-rescue-test-rKopkc/home/.continuum-generation16-rescue/capture-RFKCuR\n' +
+    'Source package was not modified. No rescue success is claimed.\n'
+  
+      at failed (file:///workspace/device-ai-runtime-reliability/scripts/continuum-generation16-rescue.test.mjs:154:10)
+      at TestContext.<anonymous> (file:///workspace/device-ai-runtime-reliability/scripts/continuum-generation16-rescue.test.mjs:237:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'FAILED DEVICE_NOT_UNIQUE\nPrivate partial output retained: /tmp/continuum-rescue-test-rKopkc/home/.continuum-generation16-rescue/capture-RFKCuR\nSource package was not modified. No rescue success is claimed.\n',
+    expected: /FAILED NON_LOCAL_DEVICE/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -73,7 +73,7 @@ function serverAvailable(port) {
 }
 function localSerial(serial) {
   // USB serials/emulators or an owner-connected loopback wireless transport only.
-  return /^[A-Za-z0-9_-]{1,200}$/.test(serial) ||
+  return /^[A-Za-z0-9][A-Za-z0-9_-]{0,199}$/.test(serial) ||
     /^(127\.0\.0\.1|localhost):[0-9]{1,5}$/.test(serial) ||
     /^\[::1\]:[0-9]{1,5}$/.test(serial);
 }
@@ -107,7 +107,9 @@ function readLedger(bytes) {
     if ([...value].some(byte => byte < 0x20 || byte > 0x7e)) fail('LEDGER_ASCII_FIELD');
     return value.toString('ascii');
   }
-  const decoder = new TextDecoder('utf-8', { fatal: true });
+  // Kotlin's UTF8 String decoder preserves U+FEFF at the start of a field.
+  // In TextDecoder, ignoreBOM:true keeps those bytes as field data for identity hashing.
+  const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   function text() {
     const size = int();
     if (size < 0 || size > 8192) fail('LEDGER_TEXT_SIZE');
@@ -178,7 +180,7 @@ async function main() {
   fs.chmodSync(output, 0o700);
   metadata = { schemaVersion: 1, status: 'UNVERIFIED', package: PACKAGE, sourcePath: SOURCE,
     expectedRecordCount: EXPECTED_RECORDS, createdAt: new Date().toISOString(), sourceWrites: false,
-    captureFiles: [] };
+    captureFiles: [], captureDetails: [] };
   writeMetadata(metadata);
   await serverAvailable(options.port);
   const devices = checked(adb(options, null, ['devices', '-l']), 'ADB_LIST_FAILED').toString('utf8');
@@ -213,8 +215,12 @@ async function main() {
     const name = 'capture-' + index + '.unverified.bin';
     // Keep even a failed/partial local capture; nothing is removed or written on the source device.
     if (Buffer.isBuffer(result.stdout)) {
-      save(name, result.stdout);
+      // spawnSync checks maxBuffer after appending a chunk: bound the retained prefix explicitly.
+      const retained = result.stdout.subarray(0, MAX_BYTES + 1);
+      save(name, retained);
       metadata.captureFiles.push(name);
+      metadata.captureDetails.push({ file: name, returnedBytes: result.stdout.length,
+        retainedBytes: retained.length, truncated: retained.length < result.stdout.length });
       writeMetadata(metadata);
     }
     captures.push(checked(result, 'CAPTURE_' + index + '_FAILED'));

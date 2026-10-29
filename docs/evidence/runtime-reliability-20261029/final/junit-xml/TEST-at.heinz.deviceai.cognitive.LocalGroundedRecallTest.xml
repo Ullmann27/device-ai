@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LocalGroundedRecallTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:00:03" hostname="9d1c4dd98fa0" time="0.0">
+  <properties/>
+  <testcase name="retrievalIsEscapedDataWithUncertaintyAndNoPromotion" classname="at.heinz.deviceai.cognitive.LocalGroundedRecallTest" time="0.0"/>
+  <testcase name="boundedModelHandoffNeverDropsOrSilentlyTruncatesConfirmedRecall" classname="at.heinz.deviceai.cognitive.LocalGroundedRecallTest" time="0.0"/>
+  <testcase name="failedSynthesisKeepsOriginalRecallAndNeverClaimsCompletedReasoning" classname="at.heinz.deviceai.cognitive.LocalGroundedRecallTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
