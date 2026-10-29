@@ -1,6 +1,7 @@
 package at.heinz.deviceai
 
 import at.heinz.deviceai.learning.NeuralDialogue
+import at.heinz.deviceai.learning.NeuralTutorBatchHint
 import at.heinz.deviceai.learning.NeuralDemoSandbox
 import at.heinz.deviceai.learning.NeuralCommand
 import at.heinz.deviceai.learning.NeuralCommandKind
@@ -2563,6 +2564,20 @@ class AgentActivity : Activity() {
             input.text.clear()
             addUserMessage(request)
             handleNeuralRequest(request)
+            return
+        }
+        // A pasted training batch outside an active Tutor must never be
+        // interpreted as an unrelated Android device-inspection request.
+        if (!neuralCoach.isActive() && NeuralTutorBatchHint.isInactiveTutorPaste(request)) {
+            input.text.clear()
+            addUserMessage(request)
+            addAssistantMessage(
+                "NEURON · Diese Trainingssätze wurden NICHT übernommen: " +
+                    "Das Lern-Gespräch ist beendet. Schreibe zuerst 'Neuron Tutor', " +
+                    "warte auf 'LERN-GESPRÄCH AKTIV' und füge dann die Sätze erneut ein. " +
+                    "Beantworte jede Zuordnung einzeln mit 'Frage' oder 'Gruß' " +
+                    "und bestätige jeden Lernschritt. Keine Gerätedaten abgefragt."
+            )
             return
         }
         if (MentorSemanticRecall.topic(request) != null) {
