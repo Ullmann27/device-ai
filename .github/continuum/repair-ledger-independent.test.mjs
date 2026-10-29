@@ -7,7 +7,7 @@ function report(){
   schemaVersion:1,base:'a'.repeat(40),chain:'node',
   outcome:'VERIFIED',finishedAt:'2026-10-16T00:00:00.000Z',
   baseline:{passed:false,diagnostics:[{message:'failed'}]},
-  verified:{strategy:'JS_TYPO_REFERENCE',patchSha256:'f'.repeat(64)},
+  verified:{candidate:'1'.repeat(16),strategy:'JS_TYPO_REFERENCE',patchSha256:'f'.repeat(64)},
   attempts:[{
    candidate:'1'.repeat(16),diagnostic:'2'.repeat(16),
    diagnosticKind:'JS_UNRESOLVED',strategy:'JS_TYPO_REFERENCE',
@@ -227,4 +227,42 @@ test('infrastructure-only repair failures stay auditable without poisoning strat
  const brokenSyntax=structuredClone(interruptedSyntax);
  brokenSyntax.attempts[0].syntaxReason='INVALID_JS_SYNTAX';
  assert.equal(recordSession(emptyLedger(),brokenSyntax).experiences[0].failures,1);
+});
+
+test('unmatched or unsubstantiated success never becomes trusted repair experience',()=>{
+ const mismatch=report();
+ mismatch.verified.candidate='9'.repeat(16);
+ const unmatched=recordSession(emptyLedger(),mismatch,{independentPass:true});
+ assert.equal(unmatched.sessions[0].outcome,'PENDING_INDEPENDENT_VERIFICATION');
+ assert.equal(unmatched.attempts[0].outcome,'NOT_APPLICABLE');
+ assert.deepEqual(unmatched.experiences,[]);
+
+ const noDigest=report();
+ delete noDigest.verified.patchSha256;
+ const missing=recordSession(emptyLedger(),noDigest,{independentPass:true});
+ assert.equal(missing.sessions[0].outcome,'PENDING_INDEPENDENT_VERIFICATION');
+ assert.deepEqual(missing.experiences,[]);
+
+ const noFinalSuccess=report();
+ noFinalSuccess.outcome='NO_VERIFIED_REPAIR';
+ noFinalSuccess.verified=null;
+ const abandoned=recordSession(emptyLedger(),noFinalSuccess,{independentPass:true});
+ assert.equal(abandoned.sessions[0].outcome,'NO_VERIFIED_REPAIR');
+ assert.equal(abandoned.attempts[0].outcome,'NOT_APPLICABLE');
+ assert.deepEqual(abandoned.experiences,[]);
+});
+
+test('candidate replay requires an independently confirmed patch digest',async()=>{
+ const {proposeCandidates}=await import('./repair-strategies.mjs');
+ const diagnostic={fingerprint:'2'.repeat(16),kind:'JS_UNRESOLVED'};
+ const prior={outcome:'VERIFIED',diagnostic:diagnostic.fingerprint,strategy:'JS_TYPO_REFERENCE',
+   edits:[{file:'a.mjs',oldText:'ab',newText:'ac',line:1}],baseCommit:'a'.repeat(40)};
+ const context={readFile:()=>'ab',experience:[prior],jsSiblings:new Map(),changedInBase:[]};
+ const without=proposeCandidates([diagnostic],context);
+ assert.equal(without.some(c=>c.strategy==='EXPERIENCE_REPLAY'),false);
+ const trusted=recordSession(emptyLedger(),{
+   ...report(),attempts:[{...report().attempts[0],edits:prior.edits}]
+ },{independentPass:true});
+ const withDigest=proposeCandidates([diagnostic],{...context,experience:trusted.attempts});
+ assert.equal(withDigest.filter(c=>c.strategy==='EXPERIENCE_REPLAY').length,1);
 });
