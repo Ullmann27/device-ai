@@ -38,12 +38,15 @@ export function validateObservation(r) {
 export function learnConservativeGuards(observations,minimumCases=2) {
  if(!Array.isArray(observations)||observations.length>500||!Number.isSafeInteger(minimumCases)||
   minimumCases<2||minimumCases>20)throw Error('INVALID_GUARD_INPUT');
- const grouped=new Map(),seen=new Set();
+ const grouped=new Map(),seen=new Set(),sourceByTask=new Map();
  for(const record of observations) {
   validateObservation(record);
   const unique=record.task+'|'+record.strategy;
   if(seen.has(unique))throw Error('DUPLICATE_ORACLE_RECORD');
   seen.add(unique);
+  if(sourceByTask.has(record.task)&&sourceByTask.get(record.task)!==record.sourceSha256)
+   throw Error('PAIR_SOURCE_MISMATCH');
+  sourceByTask.set(record.task,record.sourceSha256);
   const key=record.contextKey+'|'+record.feature;
   if(!grouped.has(key))grouped.set(key,new Map());
   const byTask=grouped.get(key);
