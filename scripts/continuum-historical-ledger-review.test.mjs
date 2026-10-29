@@ -24,6 +24,6 @@ test('personal review shows whole source counts separately from eligible fact pr
   const part = activity.split('private fun personalLearningDocument(')[1].split('private fun showOneAppMigrationCenter')[0];
   assert.match(part, /plan\.backup\.records\.size/);
   assert.match(part, /LearningStatus\.REVOKED/);
-  assert.match(part, /unverified\.legacy/);
+  assert.match(part, /ByteBuffer\.wrap\(bytes, 0, 4\)\.int == 0x4c455832/);
   assert.match(part, /Identität.*nicht enthalten/);
 });
