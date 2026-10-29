@@ -107,9 +107,10 @@ export async function runWorker(outDirectory,{signal,...supplied}={}){
   if(combined.aborted||fs.existsSync(join(out,'STOP')))return {cycles,failures,interrupted:true};
   lease=workerLease(git(['rev-parse','--absolute-git-dir']));
   while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
-   try{const report=await runCycle(out,{...config,signal:combined},lease);if(report.status!=='ALL_EXECUTED_PASS')failures++;console.log(JSON.stringify(report));}
-   catch(e){failures++;event(out,e.message==='OWNER_INTERRUPTED_BEFORE_START'?'CYCLE_INTERRUPTED':'CYCLE_REJECTED',{error:e.message,...(e.message==='OWNER_INTERRUPTED_BEFORE_START'?{started:false}:{})});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
-   cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
+   let failedCycle=false;
+   try{const report=await runCycle(out,{...config,signal:combined},lease);if(report.status!=='ALL_EXECUTED_PASS'){failures++;failedCycle=true;}console.log(JSON.stringify(report));}
+   catch(e){failures++;failedCycle=true;event(out,e.message==='OWNER_INTERRUPTED_BEFORE_START'?'CYCLE_INTERRUPTED':'CYCLE_REJECTED',{error:e.message,...(e.message==='OWNER_INTERRUPTED_BEFORE_START'?{started:false}:{})});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);}
+   cycles++;if(failedCycle||(config.maxCycles!==null&&cycles>=config.maxCycles))break;
    try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
   }
  }finally{

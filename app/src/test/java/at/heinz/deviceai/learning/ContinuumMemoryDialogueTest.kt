@@ -361,6 +361,37 @@ class ContinuumMemoryDialogueTest {
         }
     }
 
+    @Test fun birthdayQuestionMustNotUseIncidentalBirthMentionInResidence() {
+        val dir=Files.createTempDirectory("continuum-birthday-incidental-birth").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val residence="Nela wohnt seit ihrer Geburt in Graz."
+            core.recordOwnerFact(residence)
+            val reply=core.replyFromMemory("Wann hat Nela Geburtstag?")
+            assertFalse("Residence since birth supplies no birth date",reply.grounded)
+            assertTrue(reply.memoryIds.isEmpty())
+            assertEquals(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,reply.answer)
+            assertFalse(reply.answer.contains(residence))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test fun residenceQuestionWithIncidentalBirthdayMentionKeepsResidenceEvidence() {
+        val dir=Files.createTempDirectory("continuum-residence-incidental-birthday").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val residence="Nela wohnt in Graz."
+            core.recordOwnerFact(residence)
+            val reply=core.replyFromMemory("Wo wohnt Nela, unabhängig von ihrem Geburtstag?")
+            assertTrue("An incidental birthday mention must not veto residence evidence",reply.grounded)
+            assertEquals(1,reply.memoryIds.size)
+            assertTrue(reply.answer.contains(residence))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
     @Test fun definitionMatchesOwnerFactSubjectNotIncidentalMention() {
         val dir=Files.createTempDirectory("continuum-definition-subject").toFile()
         try {

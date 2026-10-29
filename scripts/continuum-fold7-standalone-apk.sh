@@ -15,6 +15,7 @@ version="${2:-26}"
 version_name="0.3.$((version - 1))"
 root="$(cd -- "$(dirname -- "$0")/.." && pwd -P)"
 cd "$root"
+source "$root/scripts/continuum-source-state.sh"
 [[ -f app/build.gradle.kts && -f app/src/main/AndroidManifest.xml ]] ||
   die 'Existing complete Continuum main app source missing'
 [[ -z "$(git status --porcelain --untracked-files=normal)" ]] ||
@@ -56,12 +57,15 @@ qa_base="$HOME/.local/state/device-ai-continuum/standalone-qa"
 mkdir -p -- "$qa_base"
 qa_evidence="$(mktemp -d "$qa_base/pre-sign-$version-XXXXXX")"
 env -u CONTINUUM_LOCAL_SIGNING_FILE -u CONTINUUM_LOCAL_SIGNING_PASSWORD \
+  CONTINUUM_GRADLE_PATH="$gradle" CONTINUUM_AAPT2_PATH="$aapt2" \
   CONTINUUM_FUSION_REGRESSION_OUTPUT="$qa_evidence" \
   bash scripts/continuum-fusion-full-regression.sh "$sha" || die 'Full unsigned standalone regression failed; signing not started'
+continuum_require_source_state "$root" "$sha" || die 'Source changed during QA; signing not started'
 [[ -t 0 ]] || die 'Interactive password input required; never enter secrets in chat'
 IFS= read -r -s -p 'Lokales Signierpasswort: ' pass
 printf '\n'
 [[ -n "$pass" ]] || die 'Signing password empty'
+continuum_require_source_state "$root" "$sha" || die 'Source changed before key access'
 export CONTINUUM_LOCAL_SIGNING_PASSWORD="$pass"
 unset pass
 trap 'unset CONTINUUM_LOCAL_SIGNING_PASSWORD CONTINUUM_LOCAL_SIGNING_FILE' EXIT
