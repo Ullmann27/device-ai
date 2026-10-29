@@ -3425,16 +3425,29 @@ class AgentActivity : Activity() {
                 java.io.File(filesDir, "learning-core-v2"))
             if (export) {
                 val bytes = at.heinz.deviceai.learning.PersonalLearningTransfer.export(packageName, store)
-                (contentResolver.openOutputStream(uri) ?: error("Sicherungsdatei nicht schreibbar"))
-                    .use { it.write(bytes) }
-                "Lernprotokoll gesichert. Enthalten sind Erfahrungen und Widerrufe dieses Lernkerns. " +
-                    "Chats, Einstellungen und Modellgewichte sind separat zu sichern."
+                val inspected = at.heinz.deviceai.learning.PersonalLearningTransfer.inspect(bytes)
+                (contentResolver.openOutputStream(uri, "wt") ?: error("Sicherungsdatei nicht schreibbar"))
+                    .use { it.write(bytes); it.flush() }
+                val verified = (contentResolver.openInputStream(uri) ?: error("Sicherung nicht rücklesbar"))
+                    .use { at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(it) }
+                require(java.security.MessageDigest.isEqual(bytes, verified)) { "Sicherungsprüfung fehlgeschlagen" }
+                "Lernprotokoll gesichert und bytegleich rückgelesen: " + inspected.records.size +
+                    " Einträge · " + bytes.size + " Bytes · SHA-256 " + inspected.sha256 +
+                    "\nDie Datei kann private Angaben enthalten. Chats, Startkern-Fakten, Einstellungen, " +
+                    "Modellgewichte und gerätegebundene Identität sind nicht enthalten."
             } else {
                 val bytes = (contentResolver.openInputStream(uri) ?: error("Datei nicht lesbar")).use { input ->
                     at.heinz.deviceai.learning.PersonalLearningTransfer.readBackup(input)
                 }
-                val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.preview(bytes, store)
+                val plan = at.heinz.deviceai.learning.PersonalLearningTransfer.previewDocument(bytes, store)
                 "ÜBERNAHMEPRÜFUNG · KEINE DATEN GESCHRIEBEN" +
+                    "\nQuelldatensätze insgesamt: " + plan.backup.records.size +
+                    "\nWiderrufene Quelldatensätze: " + plan.backup.records.count {
+                        it.status == at.heinz.deviceai.learning.LearningStatus.REVOKED } +
+                    "\nDatei-SHA-256: " + plan.backup.sha256 +
+                    "\nFormat: " + (if (plan.backup.claimedSourcePackage == "unverified.legacy")
+                        "Originales LEX2-Lernprotokoll · Herkunft nicht authentifiziert"
+                    else "Portabler Lernexport · Herkunftsangabe nicht authentifiziert") +
                     "\nNeue Datensätze zur Einzelprüfung: " + plan.additionsForReview.size +
                     "\nWiderrufe zur Prüfung: " + plan.revocationsForReview.size +
                     "\nDuplikate: " + plan.duplicateCount +
@@ -3446,7 +3459,7 @@ class AgentActivity : Activity() {
             }
         }) { result ->
             AlertDialog.Builder(this).setTitle("Persönliches Lernprotokoll")
-                .setMessage(result.getOrElse { "Vorgang nicht abgeschlossen: " + failureName(it) })
+                .setMessage(result.getOrElse { "Vorgang nicht bestätigt: " + failureName(it) + ". Quelldaten unverändert; Zieldatei unabhängig prüfen." })
                 .setPositiveButton("Schließen", null).show()
         }
     }
