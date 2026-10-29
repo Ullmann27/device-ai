@@ -71,7 +71,7 @@ test('a redirected cycles directory never writes test output into source',{timeo
  const f=fixture();try{fs.mkdirSync(f.out,{recursive:true});fs.mkdirSync(path.join(f.repo,'leak'));fs.symlinkSync(path.join(f.repo,'leak'),path.join(f.out,'cycles'));const r=run(f);assert.equal(r.status,1);assert.deepEqual(fs.readdirSync(path.join(f.repo,'leak')),[]);}finally{fs.rmSync(f.top,{recursive:true,force:true});}
 });
 
-test('the same live scheduler automatically continues from a failed cycle to a healthy cycle',{timeout:15000},async()=>{
+test('scheduler stops at the first failed cycle even if the fixture is later repaired',{timeout:15000},async()=>{
  const f=fixture();let child;try{
   const fault=path.join(f.top,'injected-fault');fs.writeFileSync(fault,'controlled failure');
   child=spawn(process.execPath,[f.script,'--loop',f.out,...budget(f,{intervalMs:500})],{cwd:f.repo,env:{...env(),PROBE_FAIL:'0',PROBE_SWITCH_FILE:fault},stdio:'ignore'});
@@ -80,9 +80,9 @@ test('the same live scheduler automatically continues from a failed cycle to a h
   assert.equal(JSON.parse(fs.readFileSync(path.join(f.out,'latest.json'))).status,'FAILED');
   fs.unlinkSync(fault);
   const exitCode=await done;
-  assert.equal(exitCode,1,'a later successful cycle must not conceal an earlier failure');
+  assert.equal(exitCode,1,'the first failed cycle must exit with failure');
   const receipts=fs.readdirSync(path.join(f.out,'cycles')).filter(x=>x.endsWith('.json')).sort().map(x=>JSON.parse(fs.readFileSync(path.join(f.out,'cycles',x))));
-  assert.deepEqual(receipts.map(x=>x.status),['FAILED','ALL_EXECUTED_PASS']);assert.equal(receipts[0].sourceSha,receipts[1].sourceSha);assert.equal(receipts[0].inventoryHash,receipts[1].inventoryHash);
+  assert.deepEqual(receipts.map(x=>x.status),['FAILED'],'a failed cycle must stop before any automatic follow-up');assert.equal(run(f).status,0,'owner may explicitly start a healthy cycle after repair');
  }finally{child?.kill('SIGKILL');fs.rmSync(f.top,{recursive:true,force:true});}
 });
 
