@@ -28,6 +28,17 @@ class ContinuumOwnerUpdateCatalogTest {
         return obj.toString()
     }
 
+    @Test fun explicitNoReleaseIsNotAnInstallableUpdate() {
+        assertEquals(null, ContinuumOwnerUpdateCatalog.parseAvailable(
+            """{"schema":1,"available":false}"""
+        ))
+        assertThrows(IllegalArgumentException::class.java) {
+            ContinuumOwnerUpdateCatalog.parseAvailable(
+                """{"schema":1,"available":false,"apkUrl":"http://bad.example/test.apk"}"""
+            )
+        }
+    }
+
     @Test fun acceptsExactTypedManifestWithOwnerApproval() {
         val release = ContinuumOwnerUpdateCatalog.parse(json())
         assertEquals(30, release.descriptor.versionCode)
