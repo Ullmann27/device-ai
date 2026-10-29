@@ -1,0 +1,30 @@
+[
+{"id":"dev5-01","facts":["Unser Hund heißt Bello.","Bello ist ein Labrador.","Bello ist 6 Jahre alt.","Meine Nachbarin heißt Prof. Steiner.","Prof. Steiner wohnt neben uns."],
+ "sources":[{"title":"Labrador Retriever","text":"Der Labrador Retriever ist eine von der FCI anerkannte britische Hunderasse."},{"title":"Retriever","text":"Retriever sind Jagdhunde, die geschossenes Wild apportieren."}],
+ "turns":[
+{"text":"Was ist ein Labrador Retriever?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Labrador Retriever"]},
+{"text":"Wie alt ist Bello?","expected":"QUERY","kind":"MEMORY","gold":["Bello ist 6 Jahre alt."]},
+{"text":"Wo wohnt Prof. Steiner?","expected":"QUERY","kind":"ABBREVIATION","gold":["Prof. Steiner wohnt neben uns."]},
+{"text":"Wo wohnt Prof. Huber?","expected":"ABSTAIN","kind":"ABBREVIATION_UNKNOWN","gold":[]},
+{"text":"Was ist ein Pudel?","expected":"ABSTAIN","kind":"NEITHER","gold":[]},
+{"text":"Was ist Bellos Lieblingsspielzeug?","expected":"ABSTAIN","kind":"ATTRIBUTE_NOUN","gold":[]}]},
+{"id":"dev5-02","facts":["Meine Tochter Klara ist 29.","Klara wohnt in Wels.","Klara fährt jedes Jahr nach Kreta.","Klaras Hobby ist Klettern."],
+ "sources":[{"title":"Kreta","text":"Kreta ist die größte griechische Insel und liegt im Mittelmeer."},{"title":"Klettern","text":"Klettern ist die Fortbewegung in steilem Gelände mit Händen und Füßen."}],
+ "turns":[
+{"text":"Wie alt ist Klara?","expected":"QUERY","kind":"BARE_NUMBER","gold":["Meine Tochter Klara ist 29."]},
+{"text":"Was ist ihr Hobby?","expected":"QUERY","kind":"ATTRIBUTE_NOUN","gold":["Klaras Hobby ist Klettern."]},
+{"text":"Was ist Klettern eigentlich?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Klettern"]},
+{"text":"Wohin fährt sie jedes Jahr?","expected":"QUERY","kind":"MEMORY","gold":["Klara fährt jedes Jahr nach Kreta."]},
+{"text":"Was weißt du über Kreta?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Kreta"]},
+{"text":"Fährt Klara auch nach Rhodos?","expected":"ABSTAIN","kind":"PLACE_UNKNOWN","gold":[]},
+{"text":"Was ist Klaras Beruf?","expected":"ABSTAIN","kind":"ATTRIBUTE_NOUN","gold":[]}]},
+{"id":"dev5-03","facts":["Mein Auto ist ein Opel Astra.","Der Astra wurde 2019 gebaut.","Der Astra hat eine Anhängerkupplung."],
+ "sources":[{"title":"Anhängerkupplung","text":"Eine Anhängerkupplung ist eine Vorrichtung zum Verbinden eines Zugfahrzeugs mit einem Anhänger."},{"title":"Opel Astra","text":"Der Opel Astra ist ein Pkw-Modell der Kompaktklasse von Opel."}],
+ "turns":[
+{"text":"Wann wurde mein Auto gebaut?","expected":"QUERY","kind":"MEMORY","gold":["Der Astra wurde 2019 gebaut."]},
+{"text":"Was ist eine Anhängerkupplung?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Anhängerkupplung"]},
+{"text":"Hat mein Auto eine?","expected":"QUERY","kind":"MEMORY","gold":["Der Astra hat eine Anhängerkupplung."]},
+{"text":"Was ist der Opel Astra?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Opel Astra"]},
+{"text":"Welche Farbe hat mein Auto?","expected":"ABSTAIN","kind":"MEMORY_UNKNOWN","gold":[]},
+{"text":"Was ist ein Opel Corsa?","expected":"ABSTAIN","kind":"NEITHER","gold":[]}]}
+]

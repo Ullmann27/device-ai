@@ -1,0 +1,49 @@
+{
+  "experiment": "EWM2",
+  "split": "TEST5",
+  "corpusSha256": "06bc2184d1e92f59d9d05c406df732e39ea8490800d6777d7421b2dd79776839",
+  "commit": "e1669271a74f06071750a96fa65bc871532e0600",
+  "systems": {
+    "K0": {
+      "CORRECT": 30,
+      "kind:ABBREVIATION:CORRECT": 3,
+      "kind:MEMORY:CORRECT": 16,
+      "kind:SOURCE:CORRECT": 10,
+      "WRONG": 18,
+      "kind:SOURCE:WRONG": 3,
+      "kind:ABBREVIATION_UNKNOWN:WRONG": 2,
+      "ABSTAINED": 10,
+      "kind:NEITHER:ABSTAINED": 6,
+      "kind:BARE_NUMBER:CORRECT": 1,
+      "MISSED": 3,
+      "kind:ATTRIBUTE_NOUN:MISSED": 2,
+      "kind:PLACE_UNKNOWN:WRONG": 4,
+      "kind:ATTRIBUTE_NOUN:ABSTAINED": 2,
+      "kind:MEMORY:WRONG": 2,
+      "kind:ATTRIBUTE_NOUN:WRONG": 3,
+      "kind:NEITHER:WRONG": 1,
+      "kind:BARE_NUMBER:MISSED": 1,
+      "kind:MEMORY_UNKNOWN:WRONG": 1,
+      "kind:BARE_NUMBER:WRONG": 2,
+      "kind:MEMORY_UNKNOWN:ABSTAINED": 2
+    },
+    "K1": {
+      "CORRECT": 39,
+      "kind:ABBREVIATION:CORRECT": 3,
+      "kind:MEMORY:CORRECT": 17,
+      "kind:SOURCE:CORRECT": 13,
+      "ABSTAINED": 21,
+      "kind:ABBREVIATION_UNKNOWN:ABSTAINED": 2,
+      "kind:NEITHER:ABSTAINED": 7,
+      "kind:BARE_NUMBER:CORRECT": 4,
+      "kind:ATTRIBUTE_NOUN:CORRECT": 2,
+      "kind:PLACE_UNKNOWN:ABSTAINED": 4,
+      "kind:ATTRIBUTE_NOUN:ABSTAINED": 5,
+      "MISSED": 1,
+      "kind:MEMORY:MISSED": 1,
+      "kind:MEMORY_UNKNOWN:ABSTAINED": 3
+    }
+  },
+  "k1MillisMedian": 1.121651,
+  "k1MillisP95": 5.114502
+}

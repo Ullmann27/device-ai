@@ -1,0 +1,449 @@
+[
+ {
+  "id": "test5-01",
+  "facts": [
+   "Meine Hausärztin ist Dr. Brandl.",
+   "Dr. Brandl hat die Praxis in Leonding.",
+   "Dr. Brandl hat mir Ibuprofen verschrieben."
+  ],
+  "turns": [
+   {
+    "text": "Wo hat Dr. Brandl die Praxis?",
+    "expected": "QUERY",
+    "kind": "ABBREVIATION",
+    "gold": [
+     "Dr. Brandl hat die Praxis in Leonding."
+    ]
+   },
+   {
+    "text": "Was hat sie mir verschrieben?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Dr. Brandl hat mir Ibuprofen verschrieben."
+    ]
+   },
+   {
+    "text": "Wo hat Dr. Pichler die Praxis?",
+    "expected": "ABSTAIN",
+    "kind": "ABBREVIATION_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist Paracetamol?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-02",
+  "facts": [
+   "Mein Sohn Tobias ist 41.",
+   "Tobias lebt in Zürich.",
+   "Tobias' Hobby ist Segeln.",
+   "Tobias fliegt im Mai nach Lissabon."
+  ],
+  "turns": [
+   {
+    "text": "Wie alt ist Tobias?",
+    "expected": "QUERY",
+    "kind": "BARE_NUMBER",
+    "gold": [
+     "Mein Sohn Tobias ist 41."
+    ]
+   },
+   {
+    "text": "Wo lebt er?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Tobias lebt in Zürich."
+    ]
+   },
+   {
+    "text": "Was ist sein Hobby?",
+    "expected": "QUERY",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": [
+     "Tobias' Hobby ist Segeln."
+    ]
+   },
+   {
+    "text": "Wohin fliegt Tobias im Mai?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Tobias fliegt im Mai nach Lissabon."
+    ]
+   },
+   {
+    "text": "Fliegt Tobias auch nach Porto?",
+    "expected": "ABSTAIN",
+    "kind": "PLACE_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist der Beruf von Tobias?",
+    "expected": "ABSTAIN",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": []
+   },
+   {
+    "text": "Was ist Kitesurfen?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-03",
+  "facts": [
+   "Unsere Katze heißt Luna.",
+   "Luna ist eine Maine Coon.",
+   "Luna wiegt 7 Kilo.",
+   "Luna frisst nur Nassfutter."
+  ],
+  "turns": [
+   {
+    "text": "Welche Rasse ist Luna?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Luna ist eine Maine Coon."
+    ]
+   },
+   {
+    "text": "Wie viel wiegt unsere Katze?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Luna wiegt 7 Kilo."
+    ]
+   },
+   {
+    "text": "Was frisst sie?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Luna frisst nur Nassfutter."
+    ]
+   },
+   {
+    "text": "Welches Lieblingsspielzeug hat Luna?",
+    "expected": "ABSTAIN",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": []
+   },
+   {
+    "text": "Was ist eine Perserkatze?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-04",
+  "facts": [
+   "Meine Bank ist die Raiffeisenbank Ried.",
+   "Mein Berater dort heißt Mag. Haider.",
+   "Mag. Haider ist dienstags nicht im Büro."
+  ],
+  "turns": [
+   {
+    "text": "Wie heißt mein Berater?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Mein Berater dort heißt Mag. Haider."
+    ]
+   },
+   {
+    "text": "Wann ist Mag. Haider nicht im Büro?",
+    "expected": "QUERY",
+    "kind": "ABBREVIATION",
+    "gold": [
+     "Mag. Haider ist dienstags nicht im Büro."
+    ]
+   },
+   {
+    "text": "Wann ist Mag. Wimmer im Büro?",
+    "expected": "ABSTAIN",
+    "kind": "ABBREVIATION_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist eine Volksbank?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-05",
+  "facts": [
+   "Ich fahre einen Toyota Yaris.",
+   "Der Yaris ist ein Hybrid.",
+   "Der Yaris braucht 4 Liter auf 100 Kilometer.",
+   "Die Werkstatt ist in Gmunden."
+  ],
+  "turns": [
+   {
+    "text": "Was für ein Auto fahre ich?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Ich fahre einen Toyota Yaris."
+    ]
+   },
+   {
+    "text": "Wie viel braucht der Yaris?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Der Yaris braucht 4 Liter auf 100 Kilometer."
+    ]
+   },
+   {
+    "text": "Wo ist die Werkstatt?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Die Werkstatt ist in Gmunden."
+    ]
+   },
+   {
+    "text": "Welche Marke hat die Werkstatt?",
+    "expected": "ABSTAIN",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": []
+   },
+   {
+    "text": "Was ist ein Toyota Corolla?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-06",
+  "facts": [
+   "Meine Freundin Sieglinde ist 67.",
+   "Sieglinde wohnt in St. Wolfgang.",
+   "Sieglinde singt im Kirchenchor."
+  ],
+  "turns": [
+   {
+    "text": "Wo wohnt Sieglinde?",
+    "expected": "QUERY",
+    "kind": "ABBREVIATION",
+    "gold": [
+     "Sieglinde wohnt in St. Wolfgang."
+    ]
+   },
+   {
+    "text": "Wie alt ist sie?",
+    "expected": "QUERY",
+    "kind": "BARE_NUMBER",
+    "gold": [
+     "Meine Freundin Sieglinde ist 67."
+    ]
+   },
+   {
+    "text": "Wo singt sie?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Sieglinde singt im Kirchenchor."
+    ]
+   },
+   {
+    "text": "Wohnt Sieglinde in Bad Ischl?",
+    "expected": "ABSTAIN",
+    "kind": "PLACE_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist Sieglindes Lieblingslied?",
+    "expected": "ABSTAIN",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-07",
+  "facts": [
+   "Unser Garten hat einen Teich.",
+   "Im Teich leben fünf Goldfische.",
+   "Der Teich ist 2 Meter tief."
+  ],
+  "turns": [
+   {
+    "text": "Wie tief ist der Teich?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Der Teich ist 2 Meter tief."
+    ]
+   },
+   {
+    "text": "Wie viele Fische leben darin?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Im Teich leben fünf Goldfische."
+    ]
+   },
+   {
+    "text": "Leben im Teich auch Kois?",
+    "expected": "ABSTAIN",
+    "kind": "MEMORY_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist ein Schwimmteich?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-08",
+  "facts": [
+   "Mein Enkel Moritz ist 12.",
+   "Moritz spielt Fußball beim SV Ried.",
+   "Moritz' Lieblingsfach ist Mathematik.",
+   "Moritz wohnt in Ried."
+  ],
+  "turns": [
+   {
+    "text": "Wie alt ist Moritz?",
+    "expected": "QUERY",
+    "kind": "BARE_NUMBER",
+    "gold": [
+     "Mein Enkel Moritz ist 12."
+    ]
+   },
+   {
+    "text": "Bei welchem Verein spielt er?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Moritz spielt Fußball beim SV Ried."
+    ]
+   },
+   {
+    "text": "Was ist sein Lieblingsfach?",
+    "expected": "QUERY",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": [
+     "Moritz' Lieblingsfach ist Mathematik."
+    ]
+   },
+   {
+    "text": "Wer ist sein Trainer?",
+    "expected": "ABSTAIN",
+    "kind": "MEMORY_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Spielt Moritz auch in Braunau?",
+    "expected": "ABSTAIN",
+    "kind": "PLACE_UNKNOWN",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-09",
+  "facts": [
+   "Ich gehe jeden Freitag ins Hallenbad Vöcklabruck.",
+   "Das Hallenbad hat ein 25-Meter-Becken.",
+   "Die Jahreskarte kostet 290 Euro."
+  ],
+  "turns": [
+   {
+    "text": "Wann gehe ich schwimmen?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Ich gehe jeden Freitag ins Hallenbad Vöcklabruck."
+    ]
+   },
+   {
+    "text": "Was kostet die Jahreskarte?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Die Jahreskarte kostet 290 Euro."
+    ]
+   },
+   {
+    "text": "Welche Öffnungszeiten hat die Sauna?",
+    "expected": "ABSTAIN",
+    "kind": "MEMORY_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Was ist Attnang-Puchheim?",
+    "expected": "ABSTAIN",
+    "kind": "NEITHER",
+    "gold": []
+   }
+  ]
+ },
+ {
+  "id": "test5-10",
+  "facts": [
+   "Meine Schwägerin heißt Renate.",
+   "Renate ist 58.",
+   "Renate arbeitet als Hebamme.",
+   "Renate fährt im Juni nach Triest."
+  ],
+  "turns": [
+   {
+    "text": "Wie alt ist meine Schwägerin?",
+    "expected": "QUERY",
+    "kind": "BARE_NUMBER",
+    "gold": [
+     "Renate ist 58."
+    ]
+   },
+   {
+    "text": "Was arbeitet sie?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Renate arbeitet als Hebamme."
+    ]
+   },
+   {
+    "text": "Wohin fährt Renate im Juni?",
+    "expected": "QUERY",
+    "kind": "MEMORY",
+    "gold": [
+     "Renate fährt im Juni nach Triest."
+    ]
+   },
+   {
+    "text": "Fährt Renate auch nach Venedig?",
+    "expected": "ABSTAIN",
+    "kind": "PLACE_UNKNOWN",
+    "gold": []
+   },
+   {
+    "text": "Welches Hobby hat Renate?",
+    "expected": "ABSTAIN",
+    "kind": "ATTRIBUTE_NOUN",
+    "gold": []
+   }
+  ]
+ }
+]

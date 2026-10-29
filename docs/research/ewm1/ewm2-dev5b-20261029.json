@@ -1,0 +1,43 @@
+[
+{"id":"dev5b-01","facts":["Meine Schwester heißt Anna.","Anna wohnt in Linz.","Anna spielt Cello.","Annas Hund heißt Struppi."],
+ "sources":[{"title":"Linz","text":"Linz ist die Landeshauptstadt von Oberösterreich."},{"title":"Anna","text":"Anna ist ein weiblicher Vorname hebräischer Herkunft."},{"title":"Struppi","text":"Struppi ist der Hund von Tim in den Comics von Hergé."}],
+ "turns":[
+{"text":"Wer ist Anna?","expected":"QUERY","kind":"OWNER_VS_SOURCE","gold":["Meine Schwester heißt Anna."]},
+{"text":"Was ist Linz?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Linz"]},
+{"text":"Was spielt sie?","expected":"QUERY","kind":"MEMORY","gold":["Anna spielt Cello."]},
+{"text":"Was ist ein Cello?","expected":"ABSTAIN","kind":"DEFINITION_MEMORY_MENTION","gold":[]},
+{"text":"Wer ist Struppi?","expected":"QUERY","kind":"OWNER_VS_SOURCE","gold":["Annas Hund heißt Struppi."]},
+{"text":"Was weißt du über Linz?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Linz"]}]},
+{"id":"dev5b-02","facts":["Das Projekt Lichtblick ist eine Lern-App für Kinder.","Lichtblick startet im März."],
+ "sources":[{"title":"Lichtblick","text":"Lichtblick ist ein deutscher Energieversorger."}],
+ "turns":[
+{"text":"Was ist Lichtblick?","expected":"QUERY","kind":"OWNER_VS_SOURCE","gold":["Das Projekt Lichtblick ist eine Lern-App für Kinder."]},
+{"text":"Wann startet Lichtblick?","expected":"QUERY","kind":"MEMORY","gold":["Lichtblick startet im März."]},
+{"text":"Was ist ein Energieversorger?","expected":"ABSTAIN","kind":"NEITHER","gold":[]}]},
+{"id":"dev5b-03","facts":["Unsere Katze heißt Minka.","Minka ist eine Siamkatze.","Minka frisst gern Thunfisch."],
+ "sources":[{"title":"Siamkatze","text":"Die Siamkatze ist eine Katzenrasse aus Thailand."},{"title":"Thunfisch","text":"Thunfische sind große Raubfische der Hochsee."}],
+ "turns":[
+{"text":"Was ist eine Siamkatze?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Siamkatze"]},
+{"text":"Was frisst Minka gern?","expected":"QUERY","kind":"MEMORY","gold":["Minka frisst gern Thunfisch."]},
+{"text":"Was ist Minka?","expected":"QUERY","kind":"OWNER_DEFINES","gold":["Minka ist eine Siamkatze."]},
+{"text":"Was ist Thunfisch?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Thunfisch"]},
+{"text":"Was ist ein Perserkater?","expected":"ABSTAIN","kind":"NEITHER","gold":[]},
+{"text":"Wie alt ist Minka?","expected":"ABSTAIN","kind":"MEMORY_UNKNOWN","gold":[]}]},
+{"id":"dev5b-04","facts":["Mein Arzt ist Dr. Berger.","Dr. Berger hat seine Praxis in Steyr.","Ich nehme Ramipril gegen Bluthochdruck."],
+ "sources":[{"title":"Ramipril","text":"Ramipril ist ein Arzneistoff aus der Gruppe der ACE-Hemmer."},{"title":"Steyr","text":"Steyr ist eine Stadt in Oberösterreich."}],
+ "turns":[
+{"text":"Wo hat Dr. Berger seine Praxis?","expected":"QUERY","kind":"ABBREVIATION","gold":["Dr. Berger hat seine Praxis in Steyr."]},
+{"text":"Was ist Ramipril?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Ramipril"]},
+{"text":"Was nehme ich gegen Bluthochdruck?","expected":"QUERY","kind":"MEMORY","gold":["Ich nehme Ramipril gegen Bluthochdruck."]},
+{"text":"Wer ist mein Arzt?","expected":"QUERY","kind":"MEMORY","gold":["Mein Arzt ist Dr. Berger."]},
+{"text":"Was weißt du über Steyr?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Steyr"]},
+{"text":"Wo hat Dr. Hofer seine Praxis?","expected":"ABSTAIN","kind":"ABBREVIATION_UNKNOWN","gold":[]}]},
+{"id":"dev5b-05","facts":["Wir haben einen Kachelofen im Wohnzimmer.","Mein Bruder Paul hat eine Wärmepumpe."],
+ "sources":[{"title":"Kachelofen","text":"Ein Kachelofen ist ein Ofen mit einer Verkleidung aus Ofenkacheln."},{"title":"Wärmepumpe","text":"Eine Wärmepumpe ist eine Maschine, die Wärme auf ein höheres Temperaturniveau pumpt."}],
+ "turns":[
+{"text":"Was ist eine Wärmepumpe?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Wärmepumpe"]},
+{"text":"Hat Paul eine?","expected":"QUERY","kind":"CARRY_OVER","gold":["Mein Bruder Paul hat eine Wärmepumpe."]},
+{"text":"Was ist ein Kachelofen?","expected":"QUERY","kind":"SOURCE","gold":["SOURCE:Kachelofen"]},
+{"text":"Wo steht unser Kachelofen?","expected":"QUERY","kind":"MEMORY","gold":["Wir haben einen Kachelofen im Wohnzimmer."]},
+{"text":"Hat Paul auch einen?","expected":"ABSTAIN","kind":"CARRY_OVER_UNKNOWN","gold":[]}]}
+]

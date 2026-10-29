@@ -1,0 +1,4691 @@
+{
+  "experiment": "EWM1",
+  "split": "TEST4",
+  "corpusSha256": "fbe484ac0cc03bedb952d101479d04a7497279e4a4c537c20f733f751c828bfa",
+  "commit": "0d2b021b6a2ad661707459912172d0eece787998",
+  "systems": {
+    "B0": {
+      "CORRECT": 76,
+      "kind:DIRECT:CORRECT": 33,
+      "MISSED": 10,
+      "kind:PRONOUN:MISSED": 6,
+      "kind:HOP2:CORRECT": 12,
+      "NOT_COVERED": 6,
+      "WRONG": 58,
+      "kind:UPDATE:WRONG": 7,
+      "CURRENT_FAIL": 7,
+      "COVERED": 11,
+      "kind:UNKNOWN_ATTRIBUTE:WRONG": 17,
+      "kind:UNKNOWN:WRONG": 17,
+      "kind:PRONOUN:WRONG": 4,
+      "kind:PRONOUN:CORRECT": 20,
+      "kind:SWITCH:CORRECT": 8,
+      "ABSTAINED": 5,
+      "kind:UNKNOWN:ABSTAINED": 3,
+      "kind:SWITCH:WRONG": 2,
+      "kind:MULTI:MISSED": 1,
+      "kind:AMBIGUOUS:WRONG": 1,
+      "kind:CORRECTION:CORRECT": 1,
+      "kind:MULTI:CORRECT": 2,
+      "kind:SWITCH:MISSED": 1,
+      "kind:UNKNOWN_ATTRIBUTE:ABSTAINED": 2,
+      "kind:DIRECT:WRONG": 6,
+      "kind:FOLLOWUP:MISSED": 1,
+      "kind:FOLLOWUP:WRONG": 1,
+      "kind:MULTI:WRONG": 2,
+      "kind:DIRECT:MISSED": 1,
+      "kind:CORRECTION:WRONG": 1
+    },
+    "EWM": {
+      "CORRECT": 96,
+      "kind:DIRECT:CORRECT": 33,
+      "kind:PRONOUN:CORRECT": 27,
+      "kind:HOP2:CORRECT": 12,
+      "COVERED": 14,
+      "kind:UPDATE:CORRECT": 7,
+      "CURRENT_OK": 7,
+      "ABSTAINED": 34,
+      "kind:UNKNOWN_ATTRIBUTE:ABSTAINED": 16,
+      "kind:UNKNOWN:ABSTAINED": 18,
+      "kind:SWITCH:CORRECT": 9,
+      "kind:MULTI:CORRECT": 5,
+      "NOT_COVERED": 3,
+      "WRONG": 11,
+      "kind:AMBIGUOUS:WRONG": 1,
+      "kind:CORRECTION:CORRECT": 2,
+      "kind:UNKNOWN:WRONG": 2,
+      "kind:UNKNOWN_ATTRIBUTE:WRONG": 3,
+      "kind:DIRECT:WRONG": 3,
+      "MISSED": 8,
+      "kind:DIRECT:MISSED": 4,
+      "kind:FOLLOWUP:CORRECT": 1,
+      "kind:FOLLOWUP:WRONG": 1,
+      "kind:SWITCH:MISSED": 2,
+      "kind:PRONOUN:MISSED": 2,
+      "kind:PRONOUN:WRONG": 1
+    }
+  },
+  "extra": {
+    "ewmMillisMedian": 1.198189,
+    "ewmMillisP95": 3.962963,
+    "b0MillisMedian": 1.929649,
+    "b0MillisP95": 3.431581,
+    "claims": {
+      "EWM:faithful:PASSED": 49,
+      "G0:faithful:PASSED": 49,
+      "N0:faithful:PASSED": 37,
+      "EWM:unfaithful:FLAGGED": 48,
+      "G0:unfaithful:PASSED": 49,
+      "N0:unfaithful:PASSED": 10,
+      "N0:unfaithful:FLAGGED": 39,
+      "N0:faithful:FLAGGED": 12,
+      "EWM:unfaithful:PASSED": 1
+    },
+    "turns": [
+      {
+        "dialog": "test4-01",
+        "turn": 0,
+        "input": "Wie alt ist Rosi?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Rosi ist 71 Jahre alt."
+        ],
+        "B0": {
+          "cited": [
+            "Rosi ist 71 Jahre alt.",
+            "Meine Tante heißt Rosi.",
+            "Rosi wohnt in Gmunden."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Rosi ist 71 Jahre alt."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "rosi"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 1,
+        "input": "Hat sie Haustiere?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Rosi hat einen Kater namens Felix."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Rosi hat einen Kater namens Felix."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "rosi",
+          "kater",
+          "felix"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 2,
+        "input": "Welche Farbe hat der Kater?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Rosi hat einen Kater namens Felix.",
+          "Felix ist schwarz-weiß."
+        ],
+        "B0": {
+          "cited": [
+            "Rosi hat einen Kater namens Felix."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Felix ist schwarz-weiß.",
+            "Rosi hat einen Kater namens Felix."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "felix",
+          "rosi",
+          "kater"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 3,
+        "input": "Wo wohnt Rosi heute?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Rosi ist im Juli nach Vöcklabruck umgezogen."
+        ],
+        "B0": {
+          "cited": [
+            "Rosi wohnt in Gmunden.",
+            "Rosi ist 71 Jahre alt.",
+            "Meine Tante heißt Rosi."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Rosi ist im Juli nach Vöcklabruck umgezogen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "rosi",
+          "vöcklabruck",
+          "felix",
+          "kater"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 4,
+        "input": "Wie alt ist meine Tante?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Meine Tante heißt Rosi.",
+          "Rosi ist 71 Jahre alt."
+        ],
+        "B0": {
+          "cited": [
+            "Meine Tante heißt Rosi.",
+            "Rosi ist 71 Jahre alt."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Rosi ist 71 Jahre alt.",
+            "Meine Tante heißt Rosi."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "rosi",
+          "vöcklabruck",
+          "felix",
+          "kater"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 5,
+        "input": "Wie alt ist Felix?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Rosi ist 71 Jahre alt.",
+            "Felix ist schwarz-weiß.",
+            "Rosi hat einen Kater namens Felix."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "felix",
+          "rosi",
+          "vöcklabruck",
+          "kater"
+        ]
+      },
+      {
+        "dialog": "test4-01",
+        "turn": 6,
+        "input": "Wo wohnt Onkel Herbert?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Rosi wohnt in Gmunden."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Onkel,Herbert",
+        "ewmFocus": [
+          "?Onkel",
+          "felix",
+          "rosi",
+          "vöcklabruck",
+          "kater"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 0,
+        "input": "Was studiert Jakob?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Jakob, mein Neffe, studiert Informatik in Graz."
+        ],
+        "B0": {
+          "cited": [
+            "Jakob, mein Neffe, studiert Informatik in Graz.",
+            "Paul, Jakobs Freund, studiert Medizin in Wien.",
+            "Jakob spielt Schlagzeug in einer Band."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Jakob, mein Neffe, studiert Informatik in Graz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "jakob",
+          "neffe",
+          "informatik",
+          "graz"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 1,
+        "input": "Welches Instrument spielt er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Jakob spielt Schlagzeug in einer Band."
+        ],
+        "B0": {
+          "cited": [
+            "Paul spielt Gitarre.",
+            "Jakob spielt Schlagzeug in einer Band."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Jakob spielt Schlagzeug in einer Band."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "jakob",
+          "schlagzeug",
+          "band",
+          "neffe",
+          "informatik",
+          "graz"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 2,
+        "input": "Wie heißt seine Band?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Die Band heißt Nachtfalter."
+        ],
+        "B0": {
+          "cited": [
+            "Die Band heißt Nachtfalter.",
+            "Jakob spielt Schlagzeug in einer Band."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Band heißt Nachtfalter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "nachtfalter",
+          "band",
+          "jakob",
+          "schlagzeug",
+          "neffe",
+          "informatik",
+          "graz"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 3,
+        "input": "Und sein Freund Paul, was studiert der?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Paul, Jakobs Freund, studiert Medizin in Wien."
+        ],
+        "B0": {
+          "cited": [
+            "Paul, Jakobs Freund, studiert Medizin in Wien.",
+            "Jakob, mein Neffe, studiert Informatik in Graz.",
+            "Paul spielt Gitarre."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Paul, Jakobs Freund, studiert Medizin in Wien."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "paul",
+          "jakob",
+          "freund",
+          "medizin",
+          "wien",
+          "nachtfalter",
+          "band",
+          "schlagzeug"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 4,
+        "input": "Welches Instrument spielt er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Paul spielt Gitarre."
+        ],
+        "B0": {
+          "cited": [
+            "Paul spielt Gitarre.",
+            "Jakob spielt Schlagzeug in einer Band."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Paul spielt Gitarre."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "paul",
+          "gitarre",
+          "jakob",
+          "freund",
+          "medizin",
+          "wien",
+          "nachtfalter",
+          "band"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 5,
+        "input": "Was studiert mein Neffe?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Jakob, mein Neffe, studiert Informatik in Graz."
+        ],
+        "B0": {
+          "cited": [
+            "Jakob, mein Neffe, studiert Informatik in Graz.",
+            "Paul, Jakobs Freund, studiert Medizin in Wien."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Jakob, mein Neffe, studiert Informatik in Graz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "jakob",
+          "neffe",
+          "informatik",
+          "graz",
+          "paul",
+          "gitarre",
+          "freund",
+          "medizin"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 6,
+        "input": "Spielt Paul auch in der Band?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Paul spielt Gitarre.",
+            "Jakob spielt Schlagzeug in einer Band.",
+            "Die Band heißt Nachtfalter."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_FACT_LINKS_ALL",
+        "ewmFocus": [
+          "nachtfalter",
+          "paul",
+          "jakob",
+          "neffe",
+          "informatik",
+          "graz",
+          "gitarre",
+          "freund"
+        ]
+      },
+      {
+        "dialog": "test4-02",
+        "turn": 7,
+        "input": "Was studiert Lena?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Jakob, mein Neffe, studiert Informatik in Graz.",
+            "Paul, Jakobs Freund, studiert Medizin in Wien."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Lena",
+        "ewmFocus": [
+          "?Lena",
+          "nachtfalter",
+          "paul",
+          "jakob",
+          "neffe",
+          "informatik",
+          "graz",
+          "gitarre"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 0,
+        "input": "Welche Farbe hat Pippo?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Pippo ist blau."
+        ],
+        "B0": {
+          "cited": [
+            "Pippo ist blau.",
+            "Bei uns lebt ein Wellensittich namens Pippo.",
+            "Pippo bekommt jeden Morgen frische Hirse."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Pippo ist blau."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "pippo"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 1,
+        "input": "Was bekommt er in der Früh?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Pippo bekommt jeden Morgen frische Hirse."
+        ],
+        "B0": {
+          "cited": [
+            "Pippo bekommt jeden Morgen frische Hirse."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Pippo bekommt jeden Morgen frische Hirse."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "pippo",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 2,
+        "input": "Wie groß ist das Aquarium?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Unser Aquarium hat 120 Liter."
+        ],
+        "B0": {
+          "cited": [
+            "Unser Aquarium hat 120 Liter.",
+            "Im Aquarium schwimmen acht Neonfische."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Unser Aquarium hat 120 Liter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "aquarium",
+          "pippo",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 3,
+        "input": "Wie viele Fische sind darin?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Im Aquarium schwimmen acht Neonfische."
+        ],
+        "B0": {
+          "cited": [
+            "Im Aquarium schwimmen acht Neonfische.",
+            "Pippo bekommt jeden Morgen frische Hirse."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Im Aquarium schwimmen acht Neonfische."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "aquarium",
+          "neonfische",
+          "pippo",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 4,
+        "input": "Welche Farbe hat unser Wellensittich?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Bei uns lebt ein Wellensittich namens Pippo.",
+          "Pippo ist blau."
+        ],
+        "B0": {
+          "cited": [
+            "Bei uns lebt ein Wellensittich namens Pippo.",
+            "Unser Aquarium hat 120 Liter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Pippo ist blau.",
+            "Bei uns lebt ein Wellensittich namens Pippo."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "pippo",
+          "aquarium",
+          "neonfische",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 5,
+        "input": "Wie alt ist der Wellensittich?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Bei uns lebt ein Wellensittich namens Pippo."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "pippo",
+          "aquarium",
+          "neonfische",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-03",
+        "turn": 6,
+        "input": "Was frisst Coco?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Coco",
+        "ewmFocus": [
+          "?Coco",
+          "pippo",
+          "aquarium",
+          "neonfische",
+          "hirse"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 0,
+        "input": "Wo wohnt Sabine?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Sabine wohnt in Leonding."
+        ],
+        "B0": {
+          "cited": [
+            "Sabine wohnt in Leonding.",
+            "Monika wohnt in Traun.",
+            "Sabine fährt einen grünen Škoda."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Sabine wohnt in Leonding."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "sabine",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 1,
+        "input": "Was für ein Auto fährt sie?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Sabine fährt einen grünen Škoda."
+        ],
+        "B0": {
+          "cited": [
+            "Monika fährt einen weißen Fiat.",
+            "Sabine fährt einen grünen Škoda."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Sabine fährt einen grünen Škoda."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "sabine",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 2,
+        "input": "Und Monika?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Monika fährt einen weißen Fiat."
+        ],
+        "B0": {
+          "cited": [
+            "Monika wohnt in Traun.",
+            "Monika fährt einen weißen Fiat.",
+            "Sabine und Monika gehen jeden Donnerstag schwimmen."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Monika fährt einen weißen Fiat."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "monika",
+          "fiat",
+          "sabine",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 3,
+        "input": "Wo wohnen die zwei?",
+        "expected": "QUERY",
+        "kind": "MULTI",
+        "gold": [
+          "Sabine wohnt in Leonding.",
+          "Monika wohnt in Traun."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Monika wohnt in Traun."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "monika",
+          "fiat",
+          "traun",
+          "sabine",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 4,
+        "input": "Wo wohnt sie?",
+        "expected": "CLARIFY",
+        "kind": "AMBIGUOUS",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Monika wohnt in Traun.",
+            "Sabine wohnt in Leonding."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Monika wohnt in Traun."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "monika",
+          "traun",
+          "fiat",
+          "sabine",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 5,
+        "input": "Ich meine Monika, nicht Sabine. Wo wohnt sie?",
+        "expected": "QUERY",
+        "kind": "CORRECTION",
+        "gold": [
+          "Monika wohnt in Traun."
+        ],
+        "B0": {
+          "cited": [
+            "Monika wohnt in Traun.",
+            "Sabine wohnt in Leonding.",
+            "Sabine und Monika gehen jeden Donnerstag schwimmen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Monika wohnt in Traun."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "monika",
+          "traun",
+          "fiat",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 6,
+        "input": "Wann gehen die beiden schwimmen?",
+        "expected": "QUERY",
+        "kind": "MULTI",
+        "gold": [
+          "Sabine und Monika gehen jeden Donnerstag schwimmen."
+        ],
+        "B0": {
+          "cited": [
+            "Sabine und Monika gehen jeden Donnerstag schwimmen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Sabine und Monika gehen jeden Donnerstag schwimmen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "monika",
+          "fiat",
+          "sabine",
+          "traun",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-04",
+        "turn": 7,
+        "input": "Welche Farbe hat Gabis Auto?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Gabis,Auto",
+        "ewmFocus": [
+          "?Gabis",
+          "monika",
+          "fiat",
+          "sabine",
+          "traun",
+          "škoda",
+          "leonding"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 0,
+        "input": "Wer ist meine Hausärztin?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Meine Hausärztin ist Dr. Leitner."
+        ],
+        "B0": {
+          "cited": [
+            "Meine Hausärztin ist Dr. Leitner."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Meine Hausärztin ist Dr. Leitner."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hausärztin",
+          "leitner"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 1,
+        "input": "Wo ist ihre Praxis?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12."
+        ],
+        "B0": {
+          "cited": [
+            "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 2,
+        "input": "Wann hat die Ordination offen?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Ordination hat montags bis freitags von 8 bis 12 Uhr offen."
+        ],
+        "B0": {
+          "cited": [
+            "Die Ordination hat montags bis freitags von 8 bis 12 Uhr offen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Ordination hat montags bis freitags von 8 bis 12 Uhr offen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ordination",
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 3,
+        "input": "Wann nehme ich mein Blutdruckmittel?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Seit September nehme ich Ramipril am Abend."
+        ],
+        "B0": {
+          "cited": [
+            "Mein Blutdruckmittel heißt Ramipril.",
+            "Ich nehme Ramipril jeden Morgen.",
+            "Seit September nehme ich Ramipril am Abend."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Seit September nehme ich Ramipril am Abend.",
+            "Mein Blutdruckmittel heißt Ramipril."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ramipril",
+          "ordination",
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 4,
+        "input": "Wie heißt das Mittel?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Mein Blutdruckmittel heißt Ramipril."
+        ],
+        "B0": {
+          "cited": [
+            "Mein Blutdruckmittel heißt Ramipril."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Mein Blutdruckmittel heißt Ramipril."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ramipril",
+          "blutdruckmittel",
+          "ordination",
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 5,
+        "input": "Wo ist die Praxis meiner Hausärztin?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Meine Hausärztin ist Dr. Leitner.",
+          "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12."
+        ],
+        "B0": {
+          "cited": [
+            "Meine Hausärztin ist Dr. Leitner.",
+            "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Praxis von Dr. Leitner ist in der Bahnhofstraße 12.",
+            "Meine Hausärztin ist Dr. Leitner."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße",
+          "ramipril",
+          "blutdruckmittel",
+          "ordination"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 6,
+        "input": "Wie hoch ist mein Blutdruck?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Mein Blutdruckmittel heißt Ramipril."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Blutdruck",
+        "ewmFocus": [
+          "?Blutdruck",
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße",
+          "ramipril",
+          "blutdruckmittel",
+          "ordination"
+        ]
+      },
+      {
+        "dialog": "test4-05",
+        "turn": 7,
+        "input": "Wann hat Dr. Wagner Ordination?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Die Ordination hat montags bis freitags von 8 bis 12 Uhr offen."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Die Ordination hat montags bis freitags von 8 bis 12 Uhr offen."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ordination",
+          "?Blutdruck",
+          "hausärztin",
+          "praxis",
+          "leitner",
+          "bahnhofstraße",
+          "ramipril",
+          "blutdruckmittel"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 0,
+        "input": "Wie viele Kilometer hat der Touran?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Touran hat 148.000 Kilometer."
+        ],
+        "B0": {
+          "cited": [
+            "Der Touran hat 148.000 Kilometer.",
+            "Unser Auto ist ein VW Touran.",
+            "Das Pickerl für den Touran läuft im März ab."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Touran hat 148.000 Kilometer.",
+            "Unser Auto ist ein VW Touran."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "touran"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 1,
+        "input": "Wann läuft sein Pickerl ab?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Das Pickerl für den Touran läuft im März ab."
+        ],
+        "B0": {
+          "cited": [
+            "Das Pickerl für den Touran läuft im März ab."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Das Pickerl für den Touran läuft im März ab."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "touran",
+          "pickerl"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 2,
+        "input": "Wo sind die Winterreifen?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Winterreifen liegen im Keller."
+        ],
+        "B0": {
+          "cited": [
+            "Die Winterreifen liegen im Keller."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Winterreifen liegen im Keller."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "winterreifen",
+          "keller",
+          "touran",
+          "pickerl"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 3,
+        "input": "Wo steht die Vespa?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Die Vespa steht in der Garage."
+        ],
+        "B0": {
+          "cited": [
+            "Die Vespa steht in der Garage.",
+            "Das Motorrad ist eine Vespa."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Vespa steht in der Garage.",
+            "Das Motorrad ist eine Vespa."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "vespa",
+          "garage",
+          "winterreifen",
+          "keller",
+          "touran",
+          "pickerl"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 4,
+        "input": "Wie viele Kilometer hat unser Auto?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Unser Auto ist ein VW Touran.",
+          "Der Touran hat 148.000 Kilometer."
+        ],
+        "B0": {
+          "cited": [
+            "Unser Auto ist ein VW Touran.",
+            "Der Touran hat 148.000 Kilometer."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Touran hat 148.000 Kilometer.",
+            "Unser Auto ist ein VW Touran."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "touran",
+          "vespa",
+          "garage",
+          "winterreifen",
+          "keller",
+          "pickerl"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 5,
+        "input": "Wann läuft das Pickerl der Vespa ab?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Das Pickerl für den Touran läuft im März ab.",
+            "Das Motorrad ist eine Vespa.",
+            "Die Vespa steht in der Garage."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_FACT_LINKS_ALL",
+        "ewmFocus": [
+          "pickerl",
+          "vespa",
+          "touran",
+          "garage",
+          "winterreifen",
+          "keller"
+        ]
+      },
+      {
+        "dialog": "test4-06",
+        "turn": 6,
+        "input": "Wo steht der Traktor?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Die Vespa steht in der Garage."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Traktor",
+        "ewmFocus": [
+          "?Traktor",
+          "pickerl",
+          "vespa",
+          "touran",
+          "garage",
+          "winterreifen",
+          "keller"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 0,
+        "input": "Wo arbeitet Erwin?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Erwin arbeitet bei der Voestalpine."
+        ],
+        "B0": {
+          "cited": [
+            "Erwin arbeitet bei der Voestalpine.",
+            "Petra arbeitet als Apothekerin.",
+            "Erwin ist mit meiner Schwester Petra verheiratet."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Erwin arbeitet bei der Voestalpine."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "erwin",
+          "voestalpine"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 1,
+        "input": "Mit wem ist er verheiratet?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Erwin ist mit meiner Schwester Petra verheiratet."
+        ],
+        "B0": {
+          "cited": [
+            "Erwin ist mit meiner Schwester Petra verheiratet."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Erwin ist mit meiner Schwester Petra verheiratet."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "erwin",
+          "schwester",
+          "petra",
+          "voestalpine"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 2,
+        "input": "Was arbeitet sie?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Petra arbeitet als Apothekerin."
+        ],
+        "B0": {
+          "cited": [
+            "Erwin arbeitet bei der Voestalpine.",
+            "Petra arbeitet als Apothekerin."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Petra arbeitet als Apothekerin."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "petra",
+          "apothekerin",
+          "erwin",
+          "schwester",
+          "voestalpine"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 3,
+        "input": "Wo wohnen die beiden?",
+        "expected": "QUERY",
+        "kind": "MULTI",
+        "gold": [
+          "Erwin und Petra wohnen in Ansfelden."
+        ],
+        "B0": {
+          "cited": [
+            "Erwin und Petra wohnen in Ansfelden."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Erwin und Petra wohnen in Ansfelden."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "petra",
+          "apothekerin",
+          "erwin",
+          "ansfelden",
+          "schwester",
+          "voestalpine"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 4,
+        "input": "Was ist das Hobby von Erwin?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Erwins Hobby ist Fischen."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Erwins Hobby ist Fischen."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "erwin",
+          "fischen",
+          "petra",
+          "apothekerin",
+          "ansfelden",
+          "schwester",
+          "voestalpine"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 5,
+        "input": "Wo arbeitet mein Schwager?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Mein Schwager heißt Erwin.",
+          "Erwin arbeitet bei der Voestalpine."
+        ],
+        "B0": {
+          "cited": [
+            "Mein Schwager heißt Erwin.",
+            "Erwin arbeitet bei der Voestalpine.",
+            "Petra arbeitet als Apothekerin."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Erwin arbeitet bei der Voestalpine.",
+            "Mein Schwager heißt Erwin."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "erwin",
+          "voestalpine",
+          "fischen",
+          "petra",
+          "apothekerin",
+          "ansfelden",
+          "schwester"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 6,
+        "input": "Was ist Petras Hobby?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "EWM": {
+          "cited": [
+            "Erwin und Petra wohnen in Ansfelden."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "petra",
+          "erwin",
+          "ansfelden",
+          "voestalpine",
+          "fischen",
+          "apothekerin",
+          "schwester"
+        ]
+      },
+      {
+        "dialog": "test4-07",
+        "turn": 7,
+        "input": "Wo arbeitet Bernhard?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Erwin arbeitet bei der Voestalpine.",
+            "Petra arbeitet als Apothekerin."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Bernhard",
+        "ewmFocus": [
+          "?Bernhard",
+          "petra",
+          "erwin",
+          "ansfelden",
+          "voestalpine",
+          "fischen",
+          "apothekerin",
+          "schwester"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 0,
+        "input": "Wie heißt unser WLAN?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Das WLAN zuhause heißt Ullmann-Netz."
+        ],
+        "B0": {
+          "cited": [
+            "Das Gäste-WLAN heißt Ullmann-Gast.",
+            "Das WLAN zuhause heißt Ullmann-Netz."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Das Gäste-WLAN heißt Ullmann-Gast."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ullmann-gast",
+          "gäste-wlan"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 1,
+        "input": "Wo steht der Router?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Router steht im Vorzimmer."
+        ],
+        "B0": {
+          "cited": [
+            "Der Router steht im Vorzimmer.",
+            "Der Router ist eine FritzBox 7590."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Router steht im Vorzimmer.",
+            "Der Router ist eine FritzBox 7590."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "router",
+          "vorzimmer",
+          "ullmann-gast",
+          "gäste-wlan"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 2,
+        "input": "Welches Modell ist das?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Der Router ist eine FritzBox 7590."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Der Router ist eine FritzBox 7590."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "router",
+          "fritzbox",
+          "vorzimmer",
+          "ullmann-gast",
+          "gäste-wlan"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 3,
+        "input": "Und wie heißt das Netz für Gäste?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Das Gäste-WLAN heißt Ullmann-Gast."
+        ],
+        "B0": {
+          "cited": [
+            "Das Gäste-WLAN heißt Ullmann-Gast.",
+            "Das WLAN zuhause heißt Ullmann-Netz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_FACT_LINKS_ALL",
+        "ewmFocus": [
+          "ullmann-netz",
+          "gäste",
+          "router",
+          "fritzbox",
+          "vorzimmer",
+          "ullmann-gast",
+          "gäste-wlan"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 4,
+        "input": "Welcher Drucker steht im Büro?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Drucker im Büro ist ein Brother HL-L2350."
+        ],
+        "B0": {
+          "cited": [
+            "Der Drucker im Büro ist ein Brother HL-L2350.",
+            "Der Router steht im Vorzimmer."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_FACT_LINKS_ALL",
+        "ewmFocus": [
+          "drucker",
+          "büro",
+          "ullmann-netz",
+          "gäste",
+          "router",
+          "fritzbox",
+          "vorzimmer",
+          "ullmann-gast"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 5,
+        "input": "Wie lautet das WLAN-Passwort?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Das Gäste-WLAN heißt Ullmann-Gast.",
+            "Das WLAN zuhause heißt Ullmann-Netz."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Das Gäste-WLAN heißt Ullmann-Gast."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ullmann-gast",
+          "gäste-wlan",
+          "drucker",
+          "büro",
+          "ullmann-netz",
+          "gäste",
+          "router",
+          "fritzbox"
+        ]
+      },
+      {
+        "dialog": "test4-08",
+        "turn": 6,
+        "input": "Wo steht der Fernseher?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Der Router steht im Vorzimmer."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Fernseher",
+        "ewmFocus": [
+          "?Fernseher",
+          "ullmann-gast",
+          "gäste-wlan",
+          "drucker",
+          "büro",
+          "ullmann-netz",
+          "gäste",
+          "router"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 0,
+        "input": "In welche Klasse geht Lukas?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Lukas geht in die dritte Klasse Volksschule."
+        ],
+        "B0": {
+          "cited": [
+            "Lukas geht in die dritte Klasse Volksschule.",
+            "Lukas hat am 14. Februar Geburtstag.",
+            "Lukas wünscht sich ein Fahrrad."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Lukas geht in die dritte Klasse Volksschule."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "klasse",
+          "lukas",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 1,
+        "input": "Wie heißt seine Lehrerin?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Lukas' Lehrerin heißt Frau Mayr."
+        ],
+        "B0": {
+          "cited": [
+            "Lukas' Lehrerin heißt Frau Mayr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Lukas' Lehrerin heißt Frau Mayr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "frau",
+          "lukas",
+          "lehrerin",
+          "mayr",
+          "klasse",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 2,
+        "input": "Wann hat er Geburtstag?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Lukas hat am 14. Februar Geburtstag."
+        ],
+        "B0": {
+          "cited": [
+            "Lukas hat am 14. Februar Geburtstag."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Lukas hat am 14. Februar Geburtstag."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lukas",
+          "frau",
+          "lehrerin",
+          "mayr",
+          "klasse",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 3,
+        "input": "Was wünscht er sich jetzt?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Lukas wünscht sich inzwischen lieber einen Roller."
+        ],
+        "B0": {
+          "cited": [
+            "Lukas wünscht sich ein Fahrrad.",
+            "Lukas wünscht sich inzwischen lieber einen Roller."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Lukas wünscht sich inzwischen lieber einen Roller."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lukas",
+          "roller",
+          "frau",
+          "lehrerin",
+          "mayr",
+          "klasse",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 4,
+        "input": "Wann hat mein Enkel Geburtstag?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Lukas ist mein Enkel.",
+          "Lukas hat am 14. Februar Geburtstag."
+        ],
+        "B0": {
+          "cited": [
+            "Lukas hat am 14. Februar Geburtstag.",
+            "Lukas ist mein Enkel."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Lukas hat am 14. Februar Geburtstag.",
+            "Lukas ist mein Enkel."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lukas",
+          "roller",
+          "frau",
+          "lehrerin",
+          "mayr",
+          "klasse",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 5,
+        "input": "Welche Lieblingsfarbe hat Lukas?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Lukas wünscht sich inzwischen lieber einen Roller.",
+            "Lukas ist mein Enkel.",
+            "Lukas wünscht sich ein Fahrrad."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "lukas",
+          "roller",
+          "frau",
+          "lehrerin",
+          "mayr",
+          "klasse",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-09",
+        "turn": 6,
+        "input": "In welche Klasse geht Sophie?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Lukas geht in die dritte Klasse Volksschule."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "klasse",
+          "lukas",
+          "roller",
+          "frau",
+          "lehrerin",
+          "mayr",
+          "volksschule"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 0,
+        "input": "Wann spiele ich Tarock?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+        ],
+        "B0": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch.",
+            "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "tarock",
+          "gasthaus",
+          "hirsch"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 1,
+        "input": "Wo genau?",
+        "expected": "QUERY",
+        "kind": "FOLLOWUP",
+        "gold": [
+          "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "tarock",
+          "gasthaus",
+          "hirsch"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 2,
+        "input": "Wer spielt mit?",
+        "expected": "QUERY",
+        "kind": "FOLLOWUP",
+        "gold": [
+          "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+        ],
+        "B0": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "tarock",
+          "gasthaus",
+          "hirsch"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 3,
+        "input": "Was hat Fritz früher gearbeitet?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Fritz ist pensionierter Lehrer."
+        ],
+        "B0": {
+          "cited": [
+            "Fritz ist pensionierter Lehrer.",
+            "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "fritz",
+          "tarock",
+          "gasthaus",
+          "hirsch"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 4,
+        "input": "Und Hans?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Hans hat eine Tischlerei in Wels."
+        ],
+        "B0": {
+          "cited": [
+            "Hans hat eine Tischlerei in Wels.",
+            "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "hans",
+          "fritz",
+          "tarock",
+          "gasthaus",
+          "hirsch"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 5,
+        "input": "Wo wohnt Walter?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Walter wohnt direkt neben dem Gasthaus Hirsch."
+        ],
+        "B0": {
+          "cited": [
+            "Walter wohnt direkt neben dem Gasthaus Hirsch.",
+            "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Walter wohnt direkt neben dem Gasthaus Hirsch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "walter",
+          "hirsch",
+          "hans",
+          "fritz",
+          "tarock",
+          "gasthaus"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 6,
+        "input": "Wo wohnt Fritz?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Walter wohnt direkt neben dem Gasthaus Hirsch.",
+            "Fritz ist pensionierter Lehrer.",
+            "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "fritz",
+          "walter",
+          "hirsch",
+          "hans",
+          "tarock",
+          "gasthaus"
+        ]
+      },
+      {
+        "dialog": "test4-10",
+        "turn": 7,
+        "input": "Spielt Kurt auch mit?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Ich spiele jeden Dienstag Tarock im Gasthaus Hirsch."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Kurt",
+        "ewmFocus": [
+          "?Kurt",
+          "fritz",
+          "walter",
+          "hirsch",
+          "hans",
+          "tarock",
+          "gasthaus"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 0,
+        "input": "Wie groß ist der Garten?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Mein Garten ist 600 Quadratmeter groß."
+        ],
+        "B0": {
+          "cited": [
+            "Mein Garten ist 600 Quadratmeter groß.",
+            "Die Gartenhütte ist aus Lärchenholz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Mein Garten ist 600 Quadratmeter groß."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 1,
+        "input": "Was wächst im Hochbeet?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Im Hochbeet wachsen Tomaten und Zucchini."
+        ],
+        "B0": {
+          "cited": [
+            "Im Hochbeet wachsen Tomaten und Zucchini."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Im Hochbeet wachsen Tomaten und Zucchini."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hochbeet",
+          "tomaten",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 2,
+        "input": "Welche Sorte sind die Tomaten?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Tomatensorte heißt Ochsenherz."
+        ],
+        "B0": {
+          "cited": [
+            "Die Tomatensorte heißt Ochsenherz.",
+            "Im Hochbeet wachsen Tomaten und Zucchini."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Im Hochbeet wachsen Tomaten und Zucchini."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "tomaten",
+          "hochbeet",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 3,
+        "input": "Wo steht der Kompost?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Kompost steht hinter der Hütte."
+        ],
+        "B0": {
+          "cited": [
+            "Der Kompost steht hinter der Hütte."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Kompost steht hinter der Hütte."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "kompost",
+          "hütte",
+          "tomaten",
+          "hochbeet",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 4,
+        "input": "Woraus ist die Hütte?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Gartenhütte ist aus Lärchenholz."
+        ],
+        "B0": {
+          "cited": [
+            "Der Kompost steht hinter der Hütte.",
+            "Die Gartenhütte ist aus Lärchenholz."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Der Kompost steht hinter der Hütte."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hütte",
+          "kompost",
+          "tomaten",
+          "hochbeet",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 5,
+        "input": "Wie viele Paprika wachsen im Hochbeet?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Im Hochbeet wachsen Tomaten und Zucchini."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "hochbeet",
+          "hütte",
+          "kompost",
+          "tomaten",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-11",
+        "turn": 6,
+        "input": "Wo steht der Pool?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Der Kompost steht hinter der Hütte."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Pool",
+        "ewmFocus": [
+          "?Pool",
+          "hochbeet",
+          "hütte",
+          "kompost",
+          "tomaten",
+          "zucchini",
+          "garten",
+          "quadratmeter"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 0,
+        "input": "Wie heißt Martins Hund?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Martin hat einen Schäferhund namens Arko."
+        ],
+        "B0": {
+          "cited": [
+            "Martins Frau heißt Claudia.",
+            "Martin hat einen Schäferhund namens Arko.",
+            "Martin ist mein Nachbar."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Martin hat einen Schäferhund namens Arko."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "martin",
+          "arko",
+          "schäferhund"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 1,
+        "input": "Wann bellt er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Arko bellt oft in der Nacht."
+        ],
+        "B0": {
+          "cited": [
+            "Arko bellt oft in der Nacht."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Arko bellt oft in der Nacht."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "arko",
+          "martin",
+          "schäferhund"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 2,
+        "input": "Wie heißt Martins Frau?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Martins Frau heißt Claudia."
+        ],
+        "B0": {
+          "cited": [
+            "Martins Frau heißt Claudia.",
+            "Martin ist mein Nachbar.",
+            "Martin hat einen Schäferhund namens Arko."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Martins Frau heißt Claudia."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "martin",
+          "claudia",
+          "frau",
+          "arko",
+          "schäferhund"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 3,
+        "input": "Wo arbeitet sie?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Claudia arbeitet in einer Bank in Linz."
+        ],
+        "B0": {
+          "cited": [
+            "Claudia arbeitet in einer Bank in Linz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Claudia arbeitet in einer Bank in Linz."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "claudia",
+          "bank",
+          "linz",
+          "martin",
+          "frau",
+          "arko",
+          "schäferhund"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 4,
+        "input": "Wie heißt der Hund meines Nachbarn?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Martin ist mein Nachbar.",
+          "Martin hat einen Schäferhund namens Arko."
+        ],
+        "B0": {
+          "cited": [
+            "Martin ist mein Nachbar.",
+            "Martins Frau heißt Claudia."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Martin hat einen Schäferhund namens Arko.",
+            "Martin ist mein Nachbar."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "martin",
+          "arko",
+          "schäferhund",
+          "claudia",
+          "bank",
+          "linz",
+          "frau"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 5,
+        "input": "Wo arbeitet Martin?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Claudia arbeitet in einer Bank in Linz.",
+            "Martin ist mein Nachbar.",
+            "Martin hat einen Schäferhund namens Arko."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "martin",
+          "arko",
+          "schäferhund",
+          "claudia",
+          "bank",
+          "linz",
+          "frau"
+        ]
+      },
+      {
+        "dialog": "test4-12",
+        "turn": 6,
+        "input": "Wie heißt Jürgens Hund?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Martins Frau heißt Claudia."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Jürgens",
+        "ewmFocus": [
+          "?Jürgens",
+          "martin",
+          "arko",
+          "schäferhund",
+          "claudia",
+          "bank",
+          "linz",
+          "frau"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 0,
+        "input": "Wohin geht der Urlaub?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Unser Urlaub 2026 geht nach Kroatien."
+        ],
+        "B0": {
+          "cited": [
+            "Unser Urlaub 2026 geht nach Kroatien."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Unser Urlaub 2026 geht nach Kroatien."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 1,
+        "input": "Wann fahren wir los?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Wir fahren statt am 2. August erst am 9. August los."
+        ],
+        "B0": {
+          "cited": [
+            "Wir fahren am 2. August los.",
+            "Wir fahren statt am 2. August erst am 9. August los."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Wir fahren statt am 2. August erst am 9. August los."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 2,
+        "input": "Wo wohnen wir dort?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Die Unterkunft ist ein Apartment in Poreč."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 3,
+        "input": "Was kostet die Fähre nach Cres?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Fähre zur Insel Cres kostet 45 Euro."
+        ],
+        "B0": {
+          "cited": [
+            "Die Fähre zur Insel Cres kostet 45 Euro.",
+            "Unser Urlaub 2026 geht nach Kroatien."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Fähre zur Insel Cres kostet 45 Euro."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "fähre",
+          "cres",
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 4,
+        "input": "Wie lange bleiben wir?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_EVIDENCE",
+        "ewmFocus": [
+          "fähre",
+          "cres",
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-13",
+        "turn": 5,
+        "input": "Was kostet die Fähre nach Krk?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Die Fähre zur Insel Cres kostet 45 Euro.",
+            "Unser Urlaub 2026 geht nach Kroatien."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Die Fähre zur Insel Cres kostet 45 Euro."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "fähre",
+          "cres",
+          "urlaub",
+          "kroatien"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 0,
+        "input": "Seit wann lerne ich Italienisch?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Ich lerne seit Jänner Italienisch."
+        ],
+        "B0": {
+          "cited": [
+            "Ich lerne seit Jänner Italienisch.",
+            "Mein Italienischkurs ist am Mittwochabend in der Volkshochschule."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ich lerne seit Jänner Italienisch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "italienisch"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 1,
+        "input": "Wann ist der Kurs?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Mein Italienischkurs ist am Mittwochabend in der Volkshochschule."
+        ],
+        "B0": {
+          "cited": [
+            "Der Kurs kostet 180 Euro pro Semester."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Mein Italienischkurs ist am Mittwochabend in der Volkshochschule."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "italienischkurs",
+          "mittwochabend",
+          "volkshochschule",
+          "italienisch"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 2,
+        "input": "Wie heißt die Kursleiterin?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Meine Kursleiterin heißt Giulia."
+        ],
+        "B0": {
+          "cited": [
+            "Meine Kursleiterin heißt Giulia."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Meine Kursleiterin heißt Giulia."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "giulia",
+          "kursleiterin",
+          "italienischkurs",
+          "mittwochabend",
+          "volkshochschule",
+          "italienisch"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 3,
+        "input": "Woher kommt sie?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Giulia kommt aus Bologna."
+        ],
+        "B0": {
+          "cited": [
+            "Giulia kommt aus Bologna."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Giulia kommt aus Bologna."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "giulia",
+          "bologna",
+          "kursleiterin",
+          "italienischkurs",
+          "mittwochabend",
+          "volkshochschule",
+          "italienisch"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 4,
+        "input": "Was kostet der Kurs?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Kurs kostet 180 Euro pro Semester."
+        ],
+        "B0": {
+          "cited": [
+            "Der Kurs kostet 180 Euro pro Semester."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Kurs kostet 180 Euro pro Semester."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "italienischkurs",
+          "kurs",
+          "semester",
+          "giulia",
+          "bologna",
+          "kursleiterin",
+          "mittwochabend",
+          "volkshochschule"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 5,
+        "input": "Woher kommt meine Kursleiterin?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Meine Kursleiterin heißt Giulia.",
+          "Giulia kommt aus Bologna."
+        ],
+        "B0": {
+          "cited": [
+            "Meine Kursleiterin heißt Giulia.",
+            "Giulia kommt aus Bologna."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Giulia kommt aus Bologna.",
+            "Meine Kursleiterin heißt Giulia."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "giulia",
+          "bologna",
+          "italienischkurs",
+          "kurs",
+          "semester",
+          "kursleiterin",
+          "mittwochabend",
+          "volkshochschule"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 6,
+        "input": "Wie viele Leute sind im Kurs?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Der Kurs kostet 180 Euro pro Semester."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Der Kurs kostet 180 Euro pro Semester."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "italienischkurs",
+          "kurs",
+          "semester",
+          "giulia",
+          "bologna",
+          "kursleiterin",
+          "mittwochabend",
+          "volkshochschule"
+        ]
+      },
+      {
+        "dialog": "test4-14",
+        "turn": 7,
+        "input": "Woher kommt Marco?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Giulia kommt aus Bologna."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Marco",
+        "ewmFocus": [
+          "?Marco",
+          "italienischkurs",
+          "kurs",
+          "semester",
+          "giulia",
+          "bologna",
+          "kursleiterin",
+          "mittwochabend"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 0,
+        "input": "Wie alt ist Florian?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Florian ist 38 und lebt in München."
+        ],
+        "B0": {
+          "cited": [
+            "Florian und Daniel sind meine Söhne.",
+            "Florian ist 38 und lebt in München.",
+            "Florian arbeitet als Ingenieur bei BMW."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "florian"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 1,
+        "input": "Und was macht er beruflich?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Florian arbeitet als Ingenieur bei BMW."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Florian arbeitet als Ingenieur bei BMW."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "florian",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 2,
+        "input": "Wo lebt Daniel?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Daniel ist 35 und lebt in Innsbruck."
+        ],
+        "B0": {
+          "cited": [
+            "Daniel ist 35 und lebt in Innsbruck.",
+            "Florian ist 38 und lebt in München.",
+            "Florian und Daniel sind meine Söhne."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Daniel ist 35 und lebt in Innsbruck."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "daniel",
+          "innsbruck",
+          "florian",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 3,
+        "input": "Was arbeitet er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Daniel ist Bergführer."
+        ],
+        "B0": {
+          "cited": [
+            "Florian arbeitet als Ingenieur bei BMW."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Daniel ist Bergführer."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "daniel",
+          "bergführer",
+          "innsbruck",
+          "florian",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 4,
+        "input": "Wie alt ist er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Daniel ist 35 und lebt in Innsbruck."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "daniel",
+          "bergführer",
+          "innsbruck",
+          "florian",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 5,
+        "input": "Wo leben meine Söhne?",
+        "expected": "QUERY",
+        "kind": "MULTI",
+        "gold": [
+          "Florian ist 38 und lebt in München.",
+          "Daniel ist 35 und lebt in Innsbruck."
+        ],
+        "B0": {
+          "cited": [
+            "Florian und Daniel sind meine Söhne."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Daniel ist 35 und lebt in Innsbruck."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "florian",
+          "daniel",
+          "innsbruck",
+          "bergführer",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 6,
+        "input": "Hat Daniel Kinder?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Daniel ist Bergführer.",
+            "Florian und Daniel sind meine Söhne.",
+            "Daniel ist 35 und lebt in Innsbruck."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Kinder",
+        "ewmFocus": [
+          "?Kinder",
+          "florian",
+          "daniel",
+          "innsbruck",
+          "bergführer",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-15",
+        "turn": 7,
+        "input": "Wo lebt Tobias?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Florian ist 38 und lebt in München.",
+            "Daniel ist 35 und lebt in Innsbruck."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Tobias",
+        "ewmFocus": [
+          "?Tobias",
+          "?Kinder",
+          "florian",
+          "daniel",
+          "innsbruck",
+          "bergführer",
+          "ingenieur",
+          "bmw"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 0,
+        "input": "Was für eine Heizung haben wir?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Die Heizung ist eine Wärmepumpe von Ochsner."
+        ],
+        "B0": {
+          "cited": [
+            "Die Heizung ist eine Wärmepumpe von Ochsner."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Heizung ist eine Wärmepumpe von Ochsner."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 1,
+        "input": "Wann wird sie gewartet?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Die Wärmepumpe wird jedes Jahr im Oktober gewartet."
+        ],
+        "B0": {
+          "cited": [
+            "Die Wärmepumpe wird jedes Jahr im Oktober gewartet."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Die Wärmepumpe wird jedes Jahr im Oktober gewartet."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 2,
+        "input": "Was kostet die Wartung?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Die Wartung kostet ab heuer 260 Euro."
+        ],
+        "B0": {
+          "cited": [
+            "Die Wartung kostet 220 Euro.",
+            "Die Wartung kostet ab heuer 260 Euro."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Die Wartung kostet ab heuer 260 Euro."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "wartung",
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 3,
+        "input": "Wie heißt der Installateur?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Der Installateur heißt Gruber."
+        ],
+        "B0": {
+          "cited": [
+            "Der Installateur heißt Gruber."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Der Installateur heißt Gruber."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "gruber",
+          "installateur",
+          "wartung",
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 4,
+        "input": "Welche Nummer hat er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Gruber hat die Telefonnummer 0732 456789."
+        ],
+        "B0": {
+          "cited": [
+            "Gruber hat die Telefonnummer 0732 456789."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Gruber hat die Telefonnummer 0732 456789."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "gruber",
+          "installateur",
+          "wartung",
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 5,
+        "input": "Welche Nummer hat der Installateur?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Der Installateur heißt Gruber.",
+          "Gruber hat die Telefonnummer 0732 456789."
+        ],
+        "B0": {
+          "cited": [
+            "Der Installateur heißt Gruber.",
+            "Gruber hat die Telefonnummer 0732 456789."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Gruber hat die Telefonnummer 0732 456789.",
+            "Der Installateur heißt Gruber."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "gruber",
+          "installateur",
+          "wartung",
+          "heizung",
+          "wärmepumpe",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 6,
+        "input": "Wie alt ist die Wärmepumpe?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Die Heizung ist eine Wärmepumpe von Ochsner.",
+            "Die Wärmepumpe wird jedes Jahr im Oktober gewartet."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "wärmepumpe",
+          "gruber",
+          "installateur",
+          "wartung",
+          "heizung",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-16",
+        "turn": 7,
+        "input": "Welche Nummer hat der Rauchfangkehrer?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Gruber hat die Telefonnummer 0732 456789."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_THING:Rauchfangkehrer",
+        "ewmFocus": [
+          "?Rauchfangkehrer",
+          "wärmepumpe",
+          "gruber",
+          "installateur",
+          "wartung",
+          "heizung",
+          "ochsner"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 0,
+        "input": "Wo wohnt Ingrid?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Ingrid wohnt in Freistadt."
+        ],
+        "B0": {
+          "cited": [
+            "Ingrid wohnt in Freistadt.",
+            "Ingrid ist meine beste Freundin.",
+            "Ingrid isst kein Fleisch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ingrid wohnt in Freistadt."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ingrid",
+          "freistadt"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 1,
+        "input": "Trinkt sie Wein?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Ingrid trinkt keinen Alkohol."
+        ],
+        "B0": {
+          "cited": [
+            "Ingrid trinkt keinen Alkohol."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ingrid trinkt keinen Alkohol."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ingrid",
+          "alkohol",
+          "freistadt"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 2,
+        "input": "Isst sie Fleisch?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Ingrid isst kein Fleisch."
+        ],
+        "B0": {
+          "cited": [
+            "Ingrid isst kein Fleisch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ingrid isst kein Fleisch."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ingrid",
+          "fleisch",
+          "alkohol",
+          "freistadt"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 3,
+        "input": "Wo treffen wir uns?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Ingrid und ich treffen uns einmal im Monat im Café Traxlmayr."
+        ],
+        "B0": {
+          "cited": [
+            "Ingrid und ich treffen uns einmal im Monat im Café Traxlmayr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ingrid und ich treffen uns einmal im Monat im Café Traxlmayr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ingrid",
+          "traxlmayr",
+          "fleisch",
+          "alkohol",
+          "freistadt"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 4,
+        "input": "Wo wohnt meine beste Freundin?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Ingrid ist meine beste Freundin.",
+          "Ingrid wohnt in Freistadt."
+        ],
+        "B0": {
+          "cited": [
+            "Ingrid ist meine beste Freundin.",
+            "Ingrid wohnt in Freistadt."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Ingrid wohnt in Freistadt.",
+            "Ingrid ist meine beste Freundin."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "ingrid",
+          "freistadt",
+          "traxlmayr",
+          "fleisch",
+          "alkohol"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 5,
+        "input": "Wann hat Ingrid Geburtstag?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Ingrid wohnt in Freistadt.",
+            "Ingrid ist meine beste Freundin.",
+            "Ingrid isst kein Fleisch."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "ingrid",
+          "freistadt",
+          "traxlmayr",
+          "fleisch",
+          "alkohol"
+        ]
+      },
+      {
+        "dialog": "test4-17",
+        "turn": 6,
+        "input": "Wo wohnt Brigitte?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Ingrid wohnt in Freistadt."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Brigitte",
+        "ewmFocus": [
+          "?Brigitte",
+          "ingrid",
+          "freistadt",
+          "traxlmayr",
+          "fleisch",
+          "alkohol"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 0,
+        "input": "Was ist Lichtblick?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Das Projekt Lichtblick ist eine Lern-App für Kinder."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Das Projekt Lichtblick ist eine Lern-App für Kinder."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lichtblick",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 1,
+        "input": "Wann soll es fertig werden?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Lichtblick soll jetzt erst im Februar fertig werden."
+        ],
+        "B0": {
+          "cited": [
+            "Lichtblick soll im Dezember fertig werden.",
+            "Lichtblick soll jetzt erst im Februar fertig werden."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Lichtblick soll jetzt erst im Februar fertig werden."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lichtblick",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 2,
+        "input": "Mit welcher Technik arbeite ich dafür?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Für Lichtblick arbeite ich mit Kotlin und Jetpack Compose."
+        ],
+        "B0": {
+          "cited": [
+            "Für Lichtblick arbeite ich mit Kotlin und Jetpack Compose."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Für Lichtblick arbeite ich mit Kotlin und Jetpack Compose."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "lichtblick",
+          "kotlin",
+          "compose",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 3,
+        "input": "Und was ist Wurzelwerk?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Das Projekt Wurzelwerk ist ein Familienstammbaum."
+        ],
+        "B0": {
+          "cited": [
+            "Wurzelwerk liegt seit dem Sommer auf Eis.",
+            "Das Projekt Wurzelwerk ist ein Familienstammbaum."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "wurzelwerk",
+          "lichtblick",
+          "kotlin",
+          "compose",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 4,
+        "input": "Wie ist da der Stand?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Wurzelwerk liegt seit dem Sommer auf Eis."
+        ],
+        "B0": {
+          "cited": [],
+          "outcome": "MISSED"
+        },
+        "EWM": {
+          "cited": [
+            "Das Projekt Wurzelwerk ist ein Familienstammbaum."
+          ],
+          "outcome": "WRONG"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "wurzelwerk",
+          "familienstammbaum",
+          "lichtblick",
+          "kotlin",
+          "compose",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 5,
+        "input": "Mit welcher Technik arbeite ich für Wurzelwerk?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Für Lichtblick arbeite ich mit Kotlin und Jetpack Compose.",
+            "Wurzelwerk liegt seit dem Sommer auf Eis.",
+            "Das Projekt Wurzelwerk ist ein Familienstammbaum."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "wurzelwerk",
+          "familienstammbaum",
+          "lichtblick",
+          "kotlin",
+          "compose",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-18",
+        "turn": 6,
+        "input": "Was ist das Projekt Sternstaub?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Sternstaub",
+        "ewmFocus": [
+          "?Sternstaub",
+          "wurzelwerk",
+          "familienstammbaum",
+          "lichtblick",
+          "kotlin",
+          "compose",
+          "lern-app",
+          "kinder"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 0,
+        "input": "Wo wohnt Hannes?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Hannes wohnt in Ebensee."
+        ],
+        "B0": {
+          "cited": [
+            "Hannes wohnt in Ebensee.",
+            "Gerald wohnt in Bad Goisern.",
+            "Hannes und Gerald sind meine Wanderfreunde."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Hannes wohnt in Ebensee."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hannes",
+          "ebensee"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 1,
+        "input": "Und Gerald?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Gerald wohnt in Bad Goisern."
+        ],
+        "B0": {
+          "cited": [
+            "Gerald wohnt in Bad Goisern.",
+            "Hannes und Gerald sind meine Wanderfreunde."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Gerald wohnt in Bad Goisern."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "gerald",
+          "goisern",
+          "hannes",
+          "ebensee"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 2,
+        "input": "Wohin geht die nächste Wanderung?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Unsere nächste Wanderung geht auf den Feuerkogel."
+        ],
+        "B0": {
+          "cited": [
+            "Unsere nächste Wanderung geht auf den Feuerkogel.",
+            "Hannes und Gerald sind meine Wanderfreunde."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Unsere nächste Wanderung geht auf den Feuerkogel."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "wanderung",
+          "feuerkogel",
+          "gerald",
+          "goisern",
+          "hannes",
+          "ebensee"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 3,
+        "input": "Wer hatte Knieoperationen?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Hannes hat zwei Knieoperationen hinter sich."
+        ],
+        "B0": {
+          "cited": [
+            "Hannes hat zwei Knieoperationen hinter sich."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Hannes hat zwei Knieoperationen hinter sich."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "knieoperationen",
+          "hannes",
+          "wanderung",
+          "feuerkogel",
+          "gerald",
+          "goisern",
+          "ebensee"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 4,
+        "input": "Wo wohnt er?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Hannes wohnt in Ebensee."
+        ],
+        "B0": {
+          "cited": [
+            "Hannes wohnt in Ebensee.",
+            "Gerald wohnt in Bad Goisern."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Hannes wohnt in Ebensee."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hannes",
+          "ebensee",
+          "knieoperationen",
+          "wanderung",
+          "feuerkogel",
+          "gerald",
+          "goisern"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 5,
+        "input": "Wo wohnen meine Wanderfreunde?",
+        "expected": "QUERY",
+        "kind": "MULTI",
+        "gold": [
+          "Gerald wohnt in Bad Goisern.",
+          "Hannes wohnt in Ebensee."
+        ],
+        "B0": {
+          "cited": [
+            "Hannes und Gerald sind meine Wanderfreunde.",
+            "Unsere nächste Wanderung geht auf den Feuerkogel."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Hannes wohnt in Ebensee."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "hannes",
+          "ebensee",
+          "knieoperationen",
+          "wanderung",
+          "feuerkogel",
+          "gerald",
+          "goisern"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 6,
+        "input": "Welche Schuhgröße hat Gerald?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Gerald wohnt in Bad Goisern.",
+            "Hannes und Gerald sind meine Wanderfreunde."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_ATTRIBUTE",
+        "ewmFocus": [
+          "gerald",
+          "hannes",
+          "ebensee",
+          "knieoperationen",
+          "wanderung",
+          "feuerkogel",
+          "goisern"
+        ]
+      },
+      {
+        "dialog": "test4-19",
+        "turn": 7,
+        "input": "Wo wohnt Reinhard?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Hannes wohnt in Ebensee.",
+            "Gerald wohnt in Bad Goisern."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Reinhard",
+        "ewmFocus": [
+          "?Reinhard",
+          "gerald",
+          "hannes",
+          "ebensee",
+          "knieoperationen",
+          "wanderung",
+          "feuerkogel",
+          "goisern"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 0,
+        "input": "Wo arbeitet Elena?",
+        "expected": "QUERY",
+        "kind": "DIRECT",
+        "gold": [
+          "Elena arbeitet im Therapiezentrum Urfahr."
+        ],
+        "B0": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Elena arbeitet im Therapiezentrum Urfahr.",
+            "Mein nächster Termin bei Elena ist am Freitag um 10 Uhr."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "elena",
+          "urfahr"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 1,
+        "input": "Wann ist mein nächster Termin bei ihr?",
+        "expected": "QUERY",
+        "kind": "UPDATE",
+        "gold": [
+          "Der Termin bei Elena wurde auf Montag um 8 Uhr vorverlegt."
+        ],
+        "B0": {
+          "cited": [
+            "Mein nächster Termin bei Elena ist am Freitag um 10 Uhr.",
+            "Der Termin bei Elena wurde auf Montag um 8 Uhr vorverlegt."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Der Termin bei Elena wurde auf Montag um 8 Uhr vorverlegt."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "termin",
+          "elena",
+          "urfahr"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 2,
+        "input": "Wo arbeitet Kathrin?",
+        "expected": "QUERY",
+        "kind": "SWITCH",
+        "gold": [
+          "Kathrin arbeitet in Puchenau."
+        ],
+        "B0": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Kathrin ist meine Masseurin.",
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "kathrin",
+          "puchenau",
+          "termin",
+          "elena",
+          "urfahr"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 3,
+        "input": "Wo arbeitet sie?",
+        "expected": "QUERY",
+        "kind": "PRONOUN",
+        "gold": [
+          "Kathrin arbeitet in Puchenau."
+        ],
+        "B0": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "kathrin",
+          "puchenau",
+          "termin",
+          "elena",
+          "urfahr"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 4,
+        "input": "Nicht Kathrin, sondern Elena: Wo arbeitet sie?",
+        "expected": "QUERY",
+        "kind": "CORRECTION",
+        "gold": [
+          "Elena arbeitet im Therapiezentrum Urfahr."
+        ],
+        "B0": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Kathrin ist meine Masseurin.",
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "elena",
+          "urfahr",
+          "puchenau",
+          "termin"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 5,
+        "input": "Wo arbeitet meine Masseurin?",
+        "expected": "QUERY",
+        "kind": "HOP2",
+        "gold": [
+          "Kathrin ist meine Masseurin.",
+          "Kathrin arbeitet in Puchenau."
+        ],
+        "B0": {
+          "cited": [
+            "Kathrin ist meine Masseurin.",
+            "Kathrin arbeitet in Puchenau.",
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "CORRECT"
+        },
+        "EWM": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Kathrin ist meine Masseurin."
+          ],
+          "outcome": "CORRECT"
+        },
+        "ewmDecision": "QUERY",
+        "ewmReason": "SUPPORTED",
+        "ewmFocus": [
+          "kathrin",
+          "puchenau",
+          "elena",
+          "urfahr",
+          "termin"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 6,
+        "input": "Wann ist der Termin bei Kathrin?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN_ATTRIBUTE",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Kathrin ist meine Masseurin.",
+            "Kathrin arbeitet in Puchenau.",
+            "Mein nächster Termin bei Elena ist am Freitag um 10 Uhr."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "NO_FACT_LINKS_ALL",
+        "ewmFocus": [
+          "termin",
+          "kathrin",
+          "puchenau",
+          "elena",
+          "urfahr"
+        ]
+      },
+      {
+        "dialog": "test4-20",
+        "turn": 7,
+        "input": "Wo arbeitet Doris?",
+        "expected": "ABSTAIN",
+        "kind": "UNKNOWN",
+        "gold": [],
+        "B0": {
+          "cited": [
+            "Kathrin arbeitet in Puchenau.",
+            "Elena arbeitet im Therapiezentrum Urfahr."
+          ],
+          "outcome": "WRONG"
+        },
+        "EWM": {
+          "cited": [],
+          "outcome": "ABSTAINED"
+        },
+        "ewmDecision": "ABSTAIN",
+        "ewmReason": "UNKNOWN_NAME:Doris",
+        "ewmFocus": [
+          "?Doris",
+          "termin",
+          "kathrin",
+          "puchenau",
+          "elena",
+          "urfahr"
+        ]
+      }
+    ]
+  }
+}

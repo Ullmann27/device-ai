@@ -1,0 +1,12 @@
+# EWM2 mutation list for scripts/continuum-ewm-jvm.sh mutants: id<TAB>file (in intelligence/ewm1)<TAB>exact text (once)<TAB>replacement
+# A mutant SURVIVES when all EWM unit tests still pass with it. Anyone may add lines; keep each anchor unique in its file.
+R1-no-personal-guard	Ewm1Brain.kt	if (topic != null && !personal && !ownerDefines	if (topic != null && !ownerDefines
+R1b-frame-counts-as-personal	Ewm1Brain.kt	val personal = PERSONAL.containsMatchIn(topic ?: question)	val personal = PERSONAL.containsMatchIn(question)
+R2-no-owner-entity	Ewm1Brain.kt	&& !ownerEntity(topic, question)) {	) {
+R3-no-definitional-abstain	Ewm1Brain.kt	            if (simple(topic)) {	            if (false) {
+R4-no-carry-over	Ewm1Brain.kt	val rewritten = lastNoun?.takeIf { TRAILING_INDEFINITE.containsMatchIn(question) }	val rewritten = lastNoun?.takeIf { false }
+R5-last-noun-not-updated	Ewm1Brain.kt	?.text ?: lastNoun	?.let { lastNoun }
+R6-apostrophe-genitive-ignored	Ewm1Brain.kt	it.trimEnd('\'', '’') in keys && it.last() in "'’" ||	false ||
+R7-kin-only-in-who-questions	Ewm1Brain.kt	return kin || named && WHO.containsMatchIn(question)	return named && WHO.containsMatchIn(question)
+W1-no-locative-support	Ewm1Workspace.kt	if ("standort" in groups && f.tokens	if (false && f.tokens
+W2-no-name-introducing-definition	Ewm1Workspace.kt	memory.aliases.values.any { links -> targets.any { keys -> keys.any { links[it] == f.id } } }	false
