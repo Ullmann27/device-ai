@@ -153,7 +153,9 @@ function readLedger(bytes) {
     ids.add(id);
     counts.byType[tags[0]]++;
     counts.byStatus[tags[3]]++;
-    if (tags[0] === 'USER_FACT' && tags[1] === 'USER_CONFIRMED' && tags[2] === 'OWNER_CONFIRMED') {
+    if (tags[0] === 'USER_FACT' && tags[1] === 'USER_CONFIRMED' && tags[2] === 'OWNER_CONFIRMED' &&
+        annotation === null && sourceRef === null &&
+        ['CONFIRMED', 'LEARNED', 'REPLAY_PENDING', 'REVOKED'].includes(tags[3])) {
       counts.ownerUserFacts.total++;
       if (tags[3] === 'CONFIRMED') counts.ownerUserFacts.confirmed++;
       if (tags[3] === 'REVOKED') counts.ownerUserFacts.revoked++;
