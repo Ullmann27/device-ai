@@ -30,6 +30,10 @@ val continuumLocalStandalone = providers.gradleProperty("continuumLocalStandalon
 // Opt-in QA for new Continuum Lokal: debug package gets .qa suffix and never
 // consumes the owner's original signing key. The signed release lane is unchanged.
 val continuumLocalStandaloneQa = providers.gradleProperty("continuumLocalStandaloneQa").orNull == "true"
+val continuumLocalRenderUnsigned = providers.gradleProperty("continuumLocalRenderUnsigned").orNull == "true"
+require(listOf(continuumLocalStandalone, continuumLocalStandaloneQa, continuumLocalRenderUnsigned).count { it } <= 1) {
+    "Owner signing, QA, and unsigned transport modes are mutually exclusive."
+}
 require(!(continuumLocalStandalone && continuumLocalStandaloneQa)) {
     "Standalone owner release and disposable QA cannot be enabled together."
 }
@@ -38,7 +42,7 @@ val continuumLocalSigningPassword = providers.environmentVariable("CONTINUUM_LOC
 val continuumStandaloneVersionText = providers.gradleProperty("continuumStandaloneVersionCode").orNull
 val continuumStandaloneVersion = continuumStandaloneVersionText?.toIntOrNull()
 require(continuumStandaloneVersionText == null ||
-    ((continuumLocalStandalone || continuumLocalStandaloneQa) && continuumStandaloneVersion != null &&
+    ((continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) && continuumStandaloneVersion != null &&
         continuumStandaloneVersion in 26..9999 &&
         continuumStandaloneVersionText == continuumStandaloneVersion.toString())) {
     "Standalone main-app versionCode must be 26..9999 and specified only in local mode."
@@ -61,6 +65,16 @@ require(!continuumLocalStandaloneQa ||
         continuumLocalSigningPath.isNullOrBlank() && continuumLocalSigningPassword.isNullOrBlank() &&
         continuumStandaloneVersion != null)) {
     "Disposable Continuum Lokal QA needs mentor features, a version and no owner signer."
+}
+require(!continuumLocalRenderUnsigned ||
+    (deviceAiMentorPreview && !deviceAiOwnerSignedUpdate && !continuumOwnerLocalQa &&
+        mentorSigningPath.isNullOrBlank() && mentorSigningPassword.isNullOrBlank() &&
+        continuumLocalSigningPath.isNullOrBlank() && continuumLocalSigningPassword.isNullOrBlank() &&
+        continuumStandaloneVersion != null && gradle.startParameter.taskNames.isNotEmpty() &&
+        gradle.startParameter.taskNames.all {
+            it.substringAfterLast(':') == "assembleRelease"
+        })) {
+    "Render unsigned transport permits only assembleRelease without any owner credentials."
 }
 // Fail closed before task execution: the QA package may only compile/test/lint.
 // It must never be used to assemble any debug/release APK or bundle.
@@ -139,7 +153,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = if (continuumLocalStandalone || continuumLocalStandaloneQa) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
+        applicationId = if (continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) "at.heinz.deviceai.continuumlocal" else "at.heinz.deviceai"
         minSdk = 26
         targetSdk = 36
         // Preview variants only: ensure Samsung recognises the new artifact
@@ -152,7 +166,7 @@ android {
             versionCode = continuumOwnerLocalVersion ?: 25
             versionName = if (continuumOwnerLocalVersion != null) "0.3.${continuumOwnerLocalVersion - 1}" else "0.3.24"
         }
-        if (continuumLocalStandalone || continuumLocalStandaloneQa) {
+        if (continuumLocalStandalone || continuumLocalStandaloneQa || continuumLocalRenderUnsigned) {
             versionCode = requireNotNull(continuumStandaloneVersion)
             versionName = "0.3.${requireNotNull(continuumStandaloneVersion) - 1}"
         }
@@ -164,6 +178,7 @@ android {
             continuumOwnerLocalQa -> "Continuum QA NICHT INSTALLIEREN"
             continuumLocalStandaloneQa -> "Continuum Lokal QA NICHT INSTALLIEREN"
             continuumLocalStandalone -> "Continuum Lokal"
+            continuumLocalRenderUnsigned -> "Continuum Lokal"
             deviceAiOwnerSignedUpdate -> "Continuum"
             deviceAiMentorPreview -> "Device AI Mentor Pair"
             deviceAiPreview -> "Device AI Preview"
@@ -196,6 +211,9 @@ android {
     }
 
     buildTypes.getByName("release") {
+        if (continuumLocalRenderUnsigned) {
+            signingConfig = null
+        }
         if (continuumLocalStandalone) {
             signingConfig = signingConfigs.getByName("continuumLocal")
         }

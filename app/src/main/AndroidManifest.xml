@@ -88,6 +88,14 @@
             android:name=".ContinuumTrainingMonitorActivity"
             android:exported="false" />
 
+        <!-- Owner update UX is private and only opened from Continuum Lokal. -->
+        <activity
+            android:name=".ContinuumOwnerUpdateActivity"
+            android:exported="false" />
+        <receiver
+            android:name=".ContinuumOwnerUpdateReceiver"
+            android:exported="false" />
+
         <activity
             android:name=".AgentActivity"
             android:exported="true"

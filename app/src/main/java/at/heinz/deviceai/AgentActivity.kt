@@ -1931,6 +1931,9 @@ class AgentActivity : Activity() {
             CenterAction("INTERNET · FREIGABEN") { showInternetSettings() },
             CenterAction("CLOUD-BACKEND · EINSTELLUNGEN") { showCloudSettings() },
             CenterAction("KI-MENTOR · GROQ (EINMALIG)") { showGroqMentorDialog() },
+            CenterAction("AUF UPDATES PRÜFEN", accent = true) {
+                startActivity(Intent(this, ContinuumOwnerUpdateActivity::class.java))
+            },
             CenterAction("MODELLVERWALTUNG") { showModelCenter() },
             CenterAction("GERÄTE-SCHNELLZUGRIFFE") { showQuickActionsDialog() },
             CenterAction("HOLOGRAMM · LIVE-FRAMES PRÜFEN", accent = true) { showHologramMotionAudit() }
