@@ -15,6 +15,7 @@ import at.heinz.deviceai.learning.ContinuumLearningCore
 import at.heinz.deviceai.learning.ContinuumKnowledgeArchive
 import at.heinz.deviceai.learning.ContinuumPublicStudyScheduler
 import at.heinz.deviceai.learning.LearningExperienceType
+import at.heinz.deviceai.learning.LearningStatus
 import at.heinz.deviceai.learning.LearningProvenance
 import at.heinz.deviceai.ui.Argb
 import at.heinz.deviceai.ui.ContinuumDashboardMath
@@ -66,7 +67,7 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
             guard("Lernkern", "LEARNING_STATUS", "Lernkern-Status nicht lesbar", "Lernzentrum öffnen; bleibt der Fehler, Diagnose exportieren.") { core.status() }
         }
         val timeline = learningCore?.let { core ->
-            guard("Lernkern", "LEARNING_TIMELINE", "Lernverlauf nicht lesbar", "Lernzentrum öffnen und Status prüfen.") { core.experienceTimeline() }
+            guard("Lernkern", "LEARNING_TIMELINE", "Lernverlauf nicht lesbar", "Lernzentrum öffnen und Status prüfen.") { core.experienceTimelineWithStatus() }
         }.orEmpty()
 
         // Quality = measured holdout accuracy of the learning core (intent + semantic cases).
@@ -77,11 +78,15 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         val qualityHistory = runCatching { history.record(now, quality) }.getOrDefault(emptyList())
         val delta = ContinuumDashboardMath.delta24h(qualityHistory, now, quality)
 
-        val times = timeline.map { it.third }
+        val times = timeline.map { it.createdAt }
         val today = if (status != null) ContinuumDashboardMath.countToday(times, now) else null
         val yesterday = ContinuumDashboardMath.countYesterday(times, now)
-        val recent = timeline.sortedByDescending { it.third }.take(4).map { (type, provenance, at) ->
-            Event(eventTitle(type, provenance), ContinuumDashboardState.ago(now - at), type.ordinal)
+        val recent = timeline.sortedByDescending { it.createdAt }.take(4).map { activity ->
+            Event(
+                eventTitle(activity.type, activity.provenance, activity.status),
+                ContinuumDashboardState.ago(now - activity.createdAt),
+                activity.type.ordinal
+            )
         }
 
         val backlog = guard("Entwicklung", "BACKLOG_READ", "Entwicklungs-Backlog nicht lesbar",
@@ -261,11 +266,15 @@ class ContinuumDashboardCollector(private val context: Context, private val diag
         null
     }
 
-    private fun eventTitle(type: LearningExperienceType, provenance: LearningProvenance) = when (type) {
+    private fun eventTitle(type: LearningExperienceType, provenance: LearningProvenance, status: LearningStatus) = when (type) {
         LearningExperienceType.INTENT_LABEL -> "Absicht gelernt"
         LearningExperienceType.SOURCE_TEXT -> if (provenance == LearningProvenance.MENTOR_WIKIPEDIA) "Quelle beobachtet (Wikipedia)" else "Quelle beobachtet"
         LearningExperienceType.SEMANTIC_PAIR -> "Bedeutungspaar gelernt"
-        LearningExperienceType.TRAINING_AUDIT -> "Training geprüft"
+        LearningExperienceType.TRAINING_AUDIT -> when (status) {
+            LearningStatus.LEARNED -> "Gewichte übernommen"
+            LearningStatus.REJECTED -> "Gewichte verworfen"
+            else -> "Training geprüft"
+        }
         LearningExperienceType.USER_FACT -> "Erinnerung bestätigt"
         LearningExperienceType.COMMAND_MAPPING -> "Befehl zugeordnet"
         LearningExperienceType.USER_FEEDBACK -> "Rückmeldung gelernt"
