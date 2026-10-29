@@ -9,6 +9,7 @@ fail() { printf 'CONTINUUM_FULL_REGRESSION_BLOCKED: %s\n' "$*" >&2; exit 69; }
 }
 expected="$1"
 root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+source "$root/scripts/continuum-source-state.sh"
 [[ -f "$root/app/build.gradle.kts" && -f "$root/settings.gradle.kts" ]] || fail 'Full Android checkout required'
 for tool in git node sha256sum; do command -v "$tool" >/dev/null 2>&1 || fail "Missing $tool"; done
 head="$(git -C "$root" rev-parse --verify HEAD 2>/dev/null)" || fail 'Git HEAD unavailable'
@@ -73,7 +74,7 @@ started="$(node -p 'Date.now()')"
 printf 'APPROVED_SOURCE_HEAD=%s\nSTART_EPOCH_MS=%s\n' "$head" "$started" > "$out/command.txt"
 printf 'GRADLE_COMMAND=' >> "$out/command.txt"
 printf ' %q' "$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug >> "$out/command.txt"
-printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs scripts/continuum-gemma-picker-lifecycle.test.mjs scripts/continuum-fold7-standalone-apk.test.mjs scripts/continuum-historical-ledger-review.test.mjs scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-generation16-rescue.test.mjs .github/continuum/local-development-worker.test.mjs .github/continuum/local-worker-process.test.mjs\n' >> "$out/command.txt"
+printf '\nNODE_COMMAND=node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs scripts/continuum-gemma-picker-lifecycle.test.mjs scripts/continuum-fold7-standalone-apk.test.mjs scripts/continuum-historical-ledger-review.test.mjs scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-source-state.test.mjs scripts/continuum-generation16-rescue.test.mjs .github/continuum/local-development-worker.test.mjs .github/continuum/local-worker-process.test.mjs\n' >> "$out/command.txt"
 # Deterministic public Node/Kotlin parity fixtures are required by three real
 # JUnit methods. Generate them locally, never skip them or fetch model weights.
 export CONTINUUM_CRE1_PARITY_DIR="$out/cre1-parity"
@@ -99,7 +100,7 @@ node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-gemma-picker-lifecycle.test.mjs \
   scripts/continuum-fold7-standalone-apk.test.mjs \
   scripts/continuum-historical-ledger-review.test.mjs \
-  scripts/continuum-local-chat-streaming.test.mjs \
+  scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-source-state.test.mjs \
   scripts/continuum-generation16-rescue.test.mjs \
   .github/continuum/local-development-worker.test.mjs \
   .github/continuum/local-worker-process.test.mjs > "$out/node-contracts.log" 2>&1
@@ -108,5 +109,6 @@ node .github/continuum/cre-parity.mjs verify "$CONTINUUM_CRE1_PARITY_DIR" > "$ou
 node .github/continuum/contrastive-parity.mjs verify "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$out/parity-verify.log" 2>&1 || node_exit=1
 set -e
 printf 'GRADLE_EXIT=%s\nNODE_EXIT=%s\n' "$gradle_exit" "$node_exit" >> "$out/command.txt"
+continuum_require_source_state "$root" "$head" || fail 'Source changed during full regression'
 node scripts/continuum-fusion-regression-report.mjs \
   "$out" "$root" "$head" "$gradle_exit" "$node_exit" "$started"
