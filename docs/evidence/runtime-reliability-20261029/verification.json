@@ -1,0 +1,36 @@
+{
+  "sourceHead": "c8ea465f3ff6cd87feb763df7f83d8dfc8d70a6a",
+  "hostVerification": "PASS",
+  "junit": 1185,
+  "suites": 227,
+  "junitFailures": 0,
+  "junitErrors": 0,
+  "junitSkips": 0,
+  "nodePass": 218,
+  "nodeFail": 0,
+  "nodeSkips": 0,
+  "gradleExit": 0,
+  "nodeExit": 0,
+  "originalTargeted": {
+    "pass": 61,
+    "fail": 1
+  },
+  "red218baseline": {
+    "pass": 1,
+    "fail": 9,
+    "exit": 1
+  },
+  "rescueAfterSerialFix": {
+    "pass": 26,
+    "fail": 0,
+    "exit": 0
+  },
+  "deviceVerification": "NOT_RUN",
+  "GemmaInference": "NOT_RUN",
+  "Generation16PrivateData": "NOT_ACCESSED",
+  "apkProduced": false,
+  "opusFilesModified": false,
+  "TEST4ContentAccessed": false,
+  "Ewm1AdapterImplemented": false,
+  "newModelCodingProof": false
+}
