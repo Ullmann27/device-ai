@@ -49,6 +49,21 @@ class WebLearningInboxTest {
         }
     }
 
+    @Test fun modelChatEvidenceFailsClosedWithoutTheOriginalLiveGrant() {
+        val s = source("https://example.org/chat", "f".repeat(64))
+        val sourceDossier = dossier(
+            listOf(claim("Nur für eine freigegebene Prüfung sichtbare Behauptung.", listOf(s.canonicalUrl))),
+            listOf(s)
+        )
+        val stored = sourceDossier.copy()
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored, null))
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored,
+            sourceDossier.copy(updatedAt = sourceDossier.updatedAt + 1)))
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored,
+            sourceDossier.copy(sources = emptyList(), completedSourceHashes = emptySet())))
+        assertEquals(stored, WebLearningInbox.eligibleModelChatDossier(stored, sourceDossier))
+    }
+
     @Test fun retrievalPreservesCitationsAndNeverClaimsWorldTruth() {
         val s = WebLearningCandidate("e".repeat(64), "https://study.example.org/a",
             "c".repeat(64), "Eine nachprüfbare Beispielaussage.", 1, false)
