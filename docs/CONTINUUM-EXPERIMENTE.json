@@ -16,7 +16,16 @@
     "ownerMemoryPromotionAllowed": false,
     "mergeToMainAuthorized": false,
     "originalSignerNeededForOwnerUpdate": true,
-    "relevantExperiments": ["EXP-00", "EXP-02", "EXP-04", "EXP-05", "EXP-06", "EXP-07", "EXP-09", "EXP-11"]
+    "relevantExperiments": [
+      "EXP-00",
+      "EXP-02",
+      "EXP-04",
+      "EXP-05",
+      "EXP-06",
+      "EXP-07",
+      "EXP-09",
+      "EXP-11"
+    ]
   },
   "integrationPolicy": {
     "canonicalBacklog": true,
@@ -171,6 +180,15 @@
       "entry": "experimental/omega/repair/numeric-verifier.mjs",
       "depends": "Existing CCC1 owner backlog, coding task, exact patches, repair tests and receipts; Node and Git for host experiment",
       "gate": "Controlled synthetic replay archived: 2/10 versus 8/10 correct, zero model calls, higher actual verifier compute; not a blind generalization result. Real-model fixed-budget holdout and Fold7 execution NOT_RUN. See docs/research/omega/ASTRA-HANDOFF.md."
+    },
+    {
+      "id": "EXP-16",
+      "title": "EWM1 evidence workspace between memory, sources and Gemma",
+      "status": "RESEARCH_SHADOW",
+      "present": "Test source set only (intelligence/ewm1). Preregistered 3e41bb8b/99cbf953, single TEST runs 2026-10-29: H1 discourse PASSED (TEST4 wrong 11 vs B0 58, correct 96 vs 76), H2 linking FAILED (14/17 covered vs required 2x B0 11), H3 recency PASSED (7/7 vs 0/7), H4 claim check PASSED (48/49 flagged, 0/49 false alarms), H5 source retrieval on the owner's Gen16 archive PASSED (98.4% vs 72.5%, wrong 5 vs 79). Gen16 SWB1 rejected by the production holdout gate. No Gemma or device run.",
+      "entry": "docs/research/ewm1/EWM1-RESULT-20261029.md",
+      "depends": "Owner approval; switch default OFF; new sealed TEST5 for further changes",
+      "gate": "Fewer wrong citations than B0 without losing correct ones; claim check false alarms <= 15%; never promote sources to owner facts"
     }
   ]
 }

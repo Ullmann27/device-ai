@@ -14,10 +14,19 @@ deterministischer Aussagenprüfer für Modellantworten. Ruft den unveränderten 
 - `docs/research/ewm1/EWM1-ARCHITEKTUR-BESTAND-20261029.md` – Bestandsaufnahme des echten Chatpfads
 - `docs/research/ewm1/ewm1-dev4-20261029.json` (DEV), `ewm1-test4-20261029.json` (TEST, versiegelt `fbe484ac…`)
 - `app/src/test/java/at/heinz/deviceai/intelligence/ewm1/` – `Ewm1Lexicon`, `Ewm1EvidenceWorkspace` (Fakten, Graph),
-  `Ewm1Workspace` (Diskurs/Entscheidung/Evidenzpaket), `Ewm1ClaimCheck` (Aussagenprüfer), `Ewm1Experiment` (Runner)
+  `Ewm1Workspace` (Diskurs/Entscheidung/Evidenzpaket), `Ewm1ClaimCheck` (Aussagenprüfer), `Ewm1Experiment` (Runner),
+  `Ewm1SourceIndex` + `Ewm1SourceExperiment` (H5 Quellen), `Ewm1Gen16ImportCheck` (Trockenlauf der Besitzer-Sicherungen),
+  Tests `Ewm1WorkspaceTest`, `Ewm1SourceIndexTest` (14/14; 9 Mutationen alle erkannt)
 
-## Stand (Entwicklung, nur DEV-Daten; TEST4 noch NICHT gelaufen)
-Zwischenstand der laufenden Entwicklung, ständig aktualisiert; maßgeblich sind die Commits.
+## Stand 29.10.2026 – Ergebnisse (je ein TEST-Lauf, Details `docs/research/ewm1/EWM1-RESULT-20261029.md`)
+- H1 Diskurs **BESTANDEN** (TEST4 falsch 11 vs B0 58, richtig 96 vs 76), H2 Verknüpfung **NICHT BESTANDEN** (14/17 vs 2×B0 gefordert),
+  H3 Aktualität **BESTANDEN** (7/7 vs 0/7), H4 Aussagenprüfer **BESTANDEN** (48/49, 0 Fehlalarme), H5 Quellenabruf auf dem
+  Gen16-Archiv **BESTANDEN** (98,4 % vs 72,5 %). Register: EXP-16 (RESEARCH_SHADOW).
+- Gen16-Dateien (Besitzer, nur lokal in `$SCRATCH/gen16`, nie im Repo): SWB1 vom Produktions-Holdout-Gate verworfen,
+  Archiv 556/556 gültig. Wiederholbar mit `Ewm1Gen16ImportCheck <swb1.bin> <archive.zip> <report.json>`.
+- TEST4 und H5-TEST sind verbraucht; jede weitere Methodenänderung braucht ein neues versiegeltes TEST5.
+- Nächster Einstieg: Fehlerliste im Ergebnisdokument (Abkürzungspunkt, Ort nach Präposition, Merkmalsnomen) auf DEV-Daten
+  beheben, dann TEST5 vorab versiegeln; Integrationsschalter für Codex (Ergebnisdokument, Abschnitt Integrationsstellen).
 
 ## Testbefehle
 Kotlin-Harness (Basis): `scripts/android-kotlin-unit-check.sh <out>` – an `b47f4fac` 1 173 JUnit-Tests, 2 Fehlschläge
