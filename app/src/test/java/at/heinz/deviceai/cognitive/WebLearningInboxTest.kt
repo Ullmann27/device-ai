@@ -39,6 +39,9 @@ class WebLearningInboxTest {
             assertEquals(ownerSource.contentHash, ownerStore.loadLatest()!!.sources.single().contentHash)
             assertEquals(chatSource.contentHash, chatStore.loadLatest()!!.sources.single().contentHash)
             assertEquals(chatSource.contentHash,
+                WebLearningInbox.eligibleModelChatDossier(chatStore.loadLatest(), chat)!!
+                    .sources.single().contentHash)
+            assertEquals(chatSource.contentHash,
                 WebLearningInbox.selectLatestReviewDossier(ownerStore.loadLatest(), chatStore.loadLatest())!!
                     .sources.single().contentHash)
             assertEquals(ownerSource.contentHash,
