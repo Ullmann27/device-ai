@@ -1,0 +1,44 @@
+{
+  "sourceCommit": "4c697c8f04fbb5b0477ae5e48b3d052cce383d34",
+  "inputCodeCommit": "4c697c8f04fbb5b0477ae5e48b3d052cce383d34",
+  "status": "PASS",
+  "first": {
+    "phase": "first",
+    "pid": 116542,
+    "result": {
+      "head": "82f6e28f876b45dbb3f25bcab17155c501082f2a",
+      "kind": "BASELINE_REPAIR",
+      "outcome": "VERIFIED_PATCH_PENDING_REVIEW",
+      "detail": "JS_TYPO_REFERENCE",
+      "elapsedMs": 6317,
+      "artifact": "/workspace/continuum-runs/skill-transfer-20261029/release-cycle/state/reports/repair-82f6e28f876b/report.json",
+      "statePath": "/workspace/continuum-runs/skill-transfer-20261029/release-cycle/state/teamleader-state.json",
+      "taskId": null
+    },
+    "firstStrategy": "JS_TYPO_REFERENCE",
+    "attempts": 1,
+    "independentPassed": true,
+    "ledgerBefore": "c73330a9b93f434ee280543c824b7c1f6a6684184b9082f9e5c0e4046e1cf055",
+    "ledgerAfter": "c5c28d9bb41b6c7825afc8aa5bc79332683f4efd759ba93abfaed756b50cbbfa",
+    "sourceUnchanged": true
+  },
+  "restarted": {
+    "phase": "restarted",
+    "pid": 116951,
+    "result": {
+      "head": "82f6e28f876b45dbb3f25bcab17155c501082f2a",
+      "kind": "IDLE",
+      "outcome": "IDLE",
+      "statePath": "/workspace/continuum-runs/skill-transfer-20261029/release-cycle/state/teamleader-state.json"
+    },
+    "firstStrategy": null,
+    "attempts": 0,
+    "independentPassed": false,
+    "ledgerBefore": "c5c28d9bb41b6c7825afc8aa5bc79332683f4efd759ba93abfaed756b50cbbfa",
+    "ledgerAfter": "c5c28d9bb41b6c7825afc8aa5bc79332683f4efd759ba93abfaed756b50cbbfa",
+    "sourceUnchanged": true
+  },
+  "originalTrainingLedgerUnchanged": true,
+  "releaseOrMergeAuthorized": false,
+  "modelInference": false
+}

@@ -1,0 +1,102 @@
+{
+ "schemaVersion": 2,
+ "attempts": [
+  {
+   "at": "2026-10-29T19:31:31.955Z",
+   "baseCommit": "715dcd8d421ef1615e17676b857310161e264ef1",
+   "chain": "node",
+   "diagnostic": "feb5b16f4e1bcdba",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "2f37bc63295b2e32",
+   "strategy": "JS_MISSING_IMPORT",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": ".github/continuum/invoice.mjs",
+     "oldText": "const charge=7;",
+     "newText": "import {change} from './helper.mjs';\nconst charge=7;",
+     "line": 1
+    }
+   ],
+   "confidence": 0.54,
+   "syntaxReason": null,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": false,
+     "total": 2,
+     "failed": 2,
+     "executed": 2,
+     "skipped": 0,
+     "evidenceComplete": true,
+     "exitCode": 1
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-29T19:31:31.955Z",
+   "baseCommit": "715dcd8d421ef1615e17676b857310161e264ef1",
+   "chain": "node",
+   "diagnostic": "feb5b16f4e1bcdba",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "175fb98657c065a7",
+   "strategy": "JS_TYPO_REFERENCE",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/invoice.mjs",
+     "oldText": "export function amount(){return change*3;}",
+     "newText": "export function amount(){return charge*3;}",
+     "line": 2
+    }
+   ],
+   "confidence": 0.43,
+   "syntaxReason": null,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 2,
+     "failed": 0,
+     "executed": 2,
+     "skipped": 0,
+     "evidenceComplete": true,
+     "exitCode": 0
+    }
+   ],
+   "patchSha256": "01d9c089bb050c57a41cb47b17ce65d12b5a34effec3e753b0104f9b83456b1b",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  }
+ ],
+ "experiences": [
+  {
+   "kind": "REFERENCE_ERROR|JS_TYPO_REFERENCE",
+   "successes": 1,
+   "failures": 0
+  },
+  {
+   "kind": "REFERENCE_ERROR|JS_MISSING_IMPORT",
+   "successes": 0,
+   "failures": 1
+  }
+ ],
+ "sessions": [
+  {
+   "at": "2026-10-29T19:31:31.955Z",
+   "base": "715dcd8d421ef1615e17676b857310161e264ef1",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 2,
+   "verifiedStrategy": "JS_TYPO_REFERENCE",
+   "patchSha256": "01d9c089bb050c57a41cb47b17ce65d12b5a34effec3e753b0104f9b83456b1b",
+   "trigger": null
+  }
+ ]
+}

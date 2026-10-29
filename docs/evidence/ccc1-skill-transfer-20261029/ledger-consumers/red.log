@@ -1,0 +1,106 @@
+✖ local driver rejects nonboolean contextual experience options (10.321724ms)
+✖ local baseline repair refuses a dangling ledger before executing checks (390.481836ms)
+✖ local owner repair refuses a dangling ledger before executing checks (533.589226ms)
+✖ real baseline driver scopes learning only with explicit contextual opt-in (1059.394449ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2080.892152
+
+✖ failing tests:
+
+test at .github/continuum/teamleader-end-to-end.test.mjs:140:1
+✖ local driver rejects nonboolean contextual experience options (10.321724ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:142:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /contextual experience option/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at .github/continuum/teamleader-end-to-end.test.mjs:145:44
+✖ local baseline repair refuses a dangling ledger before executing checks (390.481836ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + Comparison {}
+  - Comparison {
+  -   code: 'ELOOP'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:165:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Invalid repair ledger file
+        at saveLedger (file:///workspace/device-ai-skill-transfer/.github/continuum/repair-ledger.mjs:79:45)
+        at Object.repair (file:///workspace/device-ai-skill-transfer/.github/continuum/autonomous-teamleader.mjs:516:4)
+        at work (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:164:25)
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:165:10)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'ELOOP' },
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/teamleader-end-to-end.test.mjs:145:44
+✖ local owner repair refuses a dangling ledger before executing checks (533.589226ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + Comparison {}
+  - Comparison {
+  -   code: 'ELOOP'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:165:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Invalid repair ledger file
+        at saveLedger (file:///workspace/device-ai-skill-transfer/.github/continuum/repair-ledger.mjs:79:45)
+        at executeOwnerRepairTask (file:///workspace/device-ai-skill-transfer/.github/continuum/backlog-repair-worker.mjs:233:5)
+        at Object.ownerRepair (file:///workspace/device-ai-skill-transfer/.github/continuum/autonomous-teamleader.mjs:374:11)
+        at work (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:163:20)
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:165:10)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: { code: 'ELOOP' },
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .github/continuum/teamleader-end-to-end.test.mjs:177:1
+✖ real baseline driver scopes learning only with explicit contextual opt-in (1059.394449ms)
+  AssertionError [ERR_ASSERTION]: enabled
+  + actual - expected
+  
+  + undefined
+  - 'node.js.call'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/teamleader-end-to-end.test.mjs:191:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'node.js.call',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

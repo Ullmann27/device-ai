@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/display.mjs b/.github/continuum/display.mjs
+index 39dc85e..90e3c84 100644
+--- a/.github/continuum/display.mjs
++++ b/.github/continuum/display.mjs
+@@ -1,2 +1,3 @@
++import {formats} from './helper.mjs';
+ function format(x){return x+1;}
+ export function amount(){return formats(8);}

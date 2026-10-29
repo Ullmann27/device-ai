@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/dispatch.mjs b/.github/continuum/dispatch.mjs
+index d0881f9..d091464 100644
+--- a/.github/continuum/dispatch.mjs
++++ b/.github/continuum/dispatch.mjs
+@@ -1,2 +1,3 @@
++import {parses} from './helper.mjs';
+ function parse(x){return x-1;}
+ export function amount(){return parses(9);}

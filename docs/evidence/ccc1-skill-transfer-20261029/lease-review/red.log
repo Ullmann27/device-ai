@@ -1,0 +1,28 @@
+✖ concurrent dead-holder recovery cannot move a live successor and admit another build (90.764289ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 153.32484
+
+✖ failing tests:
+
+test at .github/continuum/shared-build-lease.test.mjs:97:1
+✖ concurrent dead-holder recovery cannot move a live successor and admit another build (90.764289ms)
+  AssertionError [ERR_ASSERTION]: a paused recoverer must never expose a window for another build
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.test.mjs:163:9)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/invoice.mjs b/.github/continuum/invoice.mjs
+index da759a3..390d74c 100644
+--- a/.github/continuum/invoice.mjs
++++ b/.github/continuum/invoice.mjs
+@@ -1,2 +1,2 @@
+ const charge=7;
+-export function amount(){return change*3;}
++export function amount(){return charge*3;}
