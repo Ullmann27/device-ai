@@ -1,0 +1,34 @@
+✔ real generated candidates carry source-derived call/value preconditions only on opt-in node chain (12.337952ms)
+✔ a source location missing the reference does not invent a context (0.378635ms)
+✖ commented and optional calls never inherit value-reference history (0.746828ms)
+✔ call candidates ignore value and broad contradictory histories (1.192185ms)
+✔ contextual ledger is backward compatible and retains matching independent winner only (2.689646ms)
+✔ counterexamples affect only their context and do not lower whole-file revert safety (0.233627ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102.358101
+
+✖ failing tests:
+
+test at .github/continuum/repair-context-experience.test.mjs:27:1
+✖ commented and optional calls never inherit value-reference history (0.746828ms)
+  AssertionError [ERR_ASSERTION]: count /* note */ (5)
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/repair-context-experience.test.mjs:31:37)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

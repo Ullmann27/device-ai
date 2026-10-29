@@ -1,0 +1,152 @@
+{
+ "schemaVersion": 2,
+ "attempts": [
+  {
+   "at": "2026-10-29T19:23:49.234Z",
+   "baseCommit": "8909079a83f72ff35291983aa162140492e5e3b9",
+   "chain": "node",
+   "diagnostic": "feb5b16f4e1bcdba",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "2f37bc63295b2e32",
+   "strategy": "JS_MISSING_IMPORT",
+   "contextKey": "node.js.value",
+   "outcome": "FAILED_TESTS",
+   "edits": [
+    {
+     "file": ".github/continuum/invoice.mjs",
+     "oldText": "const charge=7;",
+     "newText": "import {change} from './helper.mjs';\nconst charge=7;",
+     "line": 1
+    }
+   ],
+   "confidence": 0.54,
+   "syntaxReason": null,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": false,
+     "total": 2,
+     "failed": 2,
+     "executed": 2,
+     "skipped": 0,
+     "evidenceComplete": true,
+     "exitCode": 1
+    }
+   ],
+   "patchSha256": null,
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-29T19:23:49.234Z",
+   "baseCommit": "8909079a83f72ff35291983aa162140492e5e3b9",
+   "chain": "node",
+   "diagnostic": "feb5b16f4e1bcdba",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "175fb98657c065a7",
+   "strategy": "JS_TYPO_REFERENCE",
+   "contextKey": "node.js.value",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/invoice.mjs",
+     "oldText": "export function amount(){return change*3;}",
+     "newText": "export function amount(){return charge*3;}",
+     "line": 2
+    }
+   ],
+   "confidence": 0.43,
+   "syntaxReason": null,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 2,
+     "failed": 0,
+     "executed": 2,
+     "skipped": 0,
+     "evidenceComplete": true,
+     "exitCode": 0
+    }
+   ],
+   "patchSha256": "01d9c089bb050c57a41cb47b17ce65d12b5a34effec3e753b0104f9b83456b1b",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  },
+  {
+   "at": "2026-10-29T19:27:43.010Z",
+   "baseCommit": "4355d38f6248d403ad656c3b0effae5397521f25",
+   "chain": "node",
+   "diagnostic": "b7c836c6355492be",
+   "diagnosticKind": "REFERENCE_ERROR",
+   "candidate": "1c487a35bacfbf2c",
+   "strategy": "JS_TYPO_REFERENCE",
+   "contextKey": "node.js.value",
+   "outcome": "VERIFIED",
+   "edits": [
+    {
+     "file": ".github/continuum/warehouse.mjs",
+     "oldText": "export function amount(){return count+5;}",
+     "newText": "export function amount(){return counts+5;}",
+     "line": 2
+    }
+   ],
+   "confidence": 0.53,
+   "syntaxReason": null,
+   "tests": [
+    {
+     "profile": "node-continuum",
+     "passed": true,
+     "total": 2,
+     "failed": 0,
+     "executed": 2,
+     "skipped": 0,
+     "evidenceComplete": true,
+     "exitCode": 0
+    }
+   ],
+   "patchSha256": "84cd6d6d5198fb4ca34760aa56b61da91bec536850c51a90fdac8bb1962aa0da",
+   "proposalCommit": null,
+   "proposalBranch": null,
+   "pullRequest": null
+  }
+ ],
+ "experiences": [
+  {
+   "kind": "REFERENCE_ERROR|JS_TYPO_REFERENCE|node.js.value",
+   "successes": 2,
+   "failures": 0
+  },
+  {
+   "kind": "REFERENCE_ERROR|JS_MISSING_IMPORT|node.js.value",
+   "successes": 0,
+   "failures": 1
+  }
+ ],
+ "sessions": [
+  {
+   "at": "2026-10-29T19:23:49.234Z",
+   "base": "8909079a83f72ff35291983aa162140492e5e3b9",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 2,
+   "verifiedStrategy": "JS_TYPO_REFERENCE",
+   "patchSha256": "01d9c089bb050c57a41cb47b17ce65d12b5a34effec3e753b0104f9b83456b1b",
+   "trigger": null
+  },
+  {
+   "at": "2026-10-29T19:27:43.010Z",
+   "base": "4355d38f6248d403ad656c3b0effae5397521f25",
+   "chain": "node",
+   "outcome": "VERIFIED",
+   "diagnostics": 2,
+   "attempts": 1,
+   "verifiedStrategy": "JS_TYPO_REFERENCE",
+   "patchSha256": "84cd6d6d5198fb4ca34760aa56b61da91bec536850c51a90fdac8bb1962aa0da",
+   "trigger": "local-teamleader"
+  }
+ ]
+}

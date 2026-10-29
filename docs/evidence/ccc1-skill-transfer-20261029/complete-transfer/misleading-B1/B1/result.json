@@ -1,0 +1,275 @@
+{
+  "task": "B1",
+  "mode": "misleading",
+  "pid": 96124,
+  "sourceCommit": "b2815947a3d37c4cb181a627dc52fd198de803ae",
+  "sourceUnchanged": true,
+  "verified": true,
+  "attempts": 1,
+  "firstStrategy": "JS_TYPO_REFERENCE",
+  "strategies": [
+    "JS_TYPO_REFERENCE"
+  ],
+  "elapsedMs": 2302.090779,
+  "driverCpuMicros": 46755,
+  "containerCpuMeasured": false,
+  "independentPatch": "84cd6d6d5198fb4ca34760aa56b61da91bec536850c51a90fdac8bb1962aa0da",
+  "patchSha256": "84cd6d6d5198fb4ca34760aa56b61da91bec536850c51a90fdac8bb1962aa0da",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 512,
+    "pids": 32,
+    "cpus": 1,
+    "timeoutMs": 30000
+  },
+  "report": {
+    "schemaVersion": 1,
+    "base": "b2815947a3d37c4cb181a627dc52fd198de803ae",
+    "chain": "node",
+    "startedAt": "2026-10-29T19:29:13.555Z",
+    "inference": {
+      "mode": "DETERMINISTIC_ONLY",
+      "modelId": null,
+      "modelInvocations": 0,
+      "reason": "No generative model is invoked by this repair pipeline"
+    },
+    "baseline": {
+      "passed": false,
+      "results": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 512,
+            "pids": 32,
+            "cpus": 1,
+            "timeoutMs": 30000,
+            "sourceSha256": "7009bf2ec6cad190b09267fd5fd76fd554db8a20367f87a53003523b6139f9c5",
+            "profile": "node-continuum",
+            "untrustedReports": true
+          },
+          "exitCode": 1,
+          "signal": null,
+          "error": null,
+          "timedOut": false,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 2,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 0,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          },
+          "diagnostics": 2
+        }
+      ],
+      "diagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen acceptance",
+          "file": ".github/continuum/warehouse.mjs",
+          "line": 2,
+          "col": 26,
+          "message": "count is not defined",
+          "kind": "REFERENCE_ERROR",
+          "symbol": "count",
+          "fingerprint": "b7c836c6355492be"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.repeated call",
+          "file": ".github/continuum/warehouse.mjs",
+          "line": 2,
+          "col": 26,
+          "message": "count is not defined",
+          "kind": "REFERENCE_ERROR",
+          "symbol": "count",
+          "fingerprint": "b7c836c6355492be"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "candidate": "1c487a35bacfbf2c",
+        "strategy": "JS_TYPO_REFERENCE",
+        "diagnostic": "b7c836c6355492be",
+        "diagnosticKind": "REFERENCE_ERROR",
+        "contextKey": "node.js.value",
+        "description": "Replace unresolved 'count' with nearby name 'counts'",
+        "score": 0.53,
+        "critic": {
+          "approved": true,
+          "risk": 0.215,
+          "reasons": [],
+          "changedLines": 1,
+          "reviewRequired": false
+        },
+        "edits": [
+          {
+            "file": ".github/continuum/warehouse.mjs",
+            "oldText": "export function amount(){return count+5;}",
+            "newText": "export function amount(){return counts+5;}",
+            "line": 2
+          }
+        ],
+        "kotlinSyntax": {
+          "passed": true,
+          "checked": [],
+          "failedFile": null,
+          "reason": null
+        },
+        "syntax": {
+          "passed": true,
+          "checked": [
+            ".github/continuum/warehouse.mjs"
+          ],
+          "failedFile": null,
+          "reason": null
+        },
+        "tests": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "testProfile": true,
+            "exitCode": 0,
+            "ms": 0,
+            "tests": {
+              "total": 2,
+              "failed": 0,
+              "skipped": 0,
+              "placeholders": 0,
+              "executed": 2,
+              "passed": 2,
+              "evidenceComplete": true,
+              "executedCaseHashes": [
+                "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+              ]
+            }
+          }
+        ],
+        "remainingDiagnostics": [],
+        "evidence": {
+          "sufficient": true,
+          "reasons": []
+        },
+        "outcome": "VERIFIED"
+      }
+    ],
+    "verified": {
+      "candidate": "1c487a35bacfbf2c",
+      "strategy": "JS_TYPO_REFERENCE",
+      "description": "Replace unresolved 'count' with nearby name 'counts'",
+      "patch": "diff --git a/.github/continuum/warehouse.mjs b/.github/continuum/warehouse.mjs\nindex f19778f..341cac3 100644\n--- a/.github/continuum/warehouse.mjs\n+++ b/.github/continuum/warehouse.mjs\n@@ -1,2 +1,2 @@\n const counts=11;\n-export function amount(){return count+5;}\n+export function amount(){return counts+5;}\n",
+      "patchSha256": "84cd6d6d5198fb4ca34760aa56b61da91bec536850c51a90fdac8bb1962aa0da",
+      "files": [
+        ".github/continuum/warehouse.mjs"
+      ],
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 2,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          }
+        }
+      ],
+      "reviewRequired": false,
+      "confidence": 0.53
+    },
+    "outcome": "VERIFIED",
+    "execution": {
+      "mode": "OS_ISOLATED",
+      "cancellation": "NONE"
+    },
+    "finishedAt": "2026-10-29T19:29:15.103Z"
+  },
+  "independent": {
+    "passed": true,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "4e6cc0a8c12b39fd406fb4a1bb64751c60d1dd9a51ca1bba7fef5dfd0645f9ec",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 0,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 2,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        },
+        "diagnostics": [],
+        "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"frozen acceptance\" time=\"0.000693\" classname=\"test\" file=\"/tmp/continuum-repair-wt-N7dnIO/.github/continuum/check.test.mjs\"/>\n\t<testcase name=\"repeated call\" time=\"0.000116\" classname=\"test\" file=\"/tmp/continuum-repair-wt-N7dnIO/.github/continuum/check.test.mjs\"/>\n\t<!-- tests 2 -->\n\t<!-- suites 0 -->\n\t<!-- pass 2 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 52.783926 -->\n</testsuites>\n\n\n"
+      }
+    ],
+    "diagnostics": []
+  }
+}

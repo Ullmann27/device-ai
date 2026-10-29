@@ -1,0 +1,17 @@
+✔ real generated candidates carry source-derived call/value preconditions only on opt-in node chain (14.942289ms)
+✔ a source location missing the reference does not invent a context (0.259104ms)
+✔ call candidates ignore value and broad contradictory histories (1.006507ms)
+✔ contextual ledger is backward compatible and retains matching independent winner only (2.569792ms)
+✔ counterexamples affect only their context and do not lower whole-file revert safety (0.314363ms)
+✔ old schema2 data roundtrips with private mode and unique temporary files (3.584082ms)
+✔ dangling and live symlink checkpoints fail closed without touching their targets (0.789795ms)
+✔ malformed UTF8 and invalid JSON checkpoints do not become empty history (0.632089ms)
+✔ real SIGKILL before file fsync preserves last committed checkpoint and allows restart (50.90391ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 228.484818

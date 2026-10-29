@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/warehouse.mjs b/.github/continuum/warehouse.mjs
+index f19778f..341cac3 100644
+--- a/.github/continuum/warehouse.mjs
++++ b/.github/continuum/warehouse.mjs
+@@ -1,2 +1,2 @@
+ const counts=11;
+-export function amount(){return count+5;}
++export function amount(){return counts+5;}

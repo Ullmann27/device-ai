@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "base": "151d24ae760153e3d6fe155f87d3cdc18357ecf2",
+  "chain": "node",
+  "startedAt": "2026-10-29T19:24:33.111Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "4cb167c01619cc43a51034db140939847b0d9f711fdb42770fa231025644ee1f",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 2,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 0,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        },
+        "diagnostics": 2
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen acceptance",
+        "file": ".github/continuum/display.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "formats is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "formats",
+        "fingerprint": "f60b1f1792ec169f"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.repeated call",
+        "file": ".github/continuum/display.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "formats is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "formats",
+        "fingerprint": "f60b1f1792ec169f"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "86662aa04633478c",
+      "strategy": "JS_TYPO_REFERENCE",
+      "diagnostic": "f60b1f1792ec169f",
+      "diagnosticKind": "REFERENCE_ERROR",
+      "description": "Replace unresolved 'formats' with nearby name 'format'",
+      "score": 0.53,
+      "critic": {
+        "approved": true,
+        "risk": 0.215,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": false
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/display.mjs",
+          "oldText": "export function amount(){return formats(8);}",
+          "newText": "export function amount(){return format(8);}",
+          "line": 2
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/display.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 2,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 0,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen acceptance",
+          "file": ".github/continuum/check.test.mjs",
+          "line": 2,
+          "col": 37,
+          "message": "Expected values to be strictly equal:\n\n9 !== 16",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "6c4327969af45e74"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.repeated call",
+          "file": ".github/continuum/check.test.mjs",
+          "line": 3,
+          "col": 33,
+          "message": "Expected values to be strictly equal:\n\n9 !== 16",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "6c4327969af45e74"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    }
+  ],
+  "verified": null,
+  "outcome": "NO_VERIFIED_REPAIR",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "NONE"
+  },
+  "finishedAt": "2026-10-29T19:24:36.220Z"
+}

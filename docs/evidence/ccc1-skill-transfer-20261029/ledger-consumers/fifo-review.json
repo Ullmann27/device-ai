@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "c67bc08e24c1604e53bfc23c638dfa86b986ce64",
+  "path": ".github/continuum/repair-ledger.mjs:60",
+  "input": "FIFO at repair-ledger.json with no writer",
+  "result": {
+    "status": null,
+    "signal": "SIGTERM",
+    "error": "ETIMEDOUT"
+  },
+  "interpretation": "O_RDONLY open blocks on FIFO before fstat can reject nonregular input; external timeout terminated the process. Review-only finding; no source changes."
+}

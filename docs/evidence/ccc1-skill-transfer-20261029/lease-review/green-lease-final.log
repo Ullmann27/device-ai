@@ -1,0 +1,18 @@
+✔ one atomic lease excludes simultaneous workers and can be reacquired (59.04288ms)
+✔ an unclean process exit retains the lock and cannot be stolen by a timer (48.702975ms)
+✔ rejects symlinked state root and checkout-local state (2.434927ms)
+✔ release never deletes a tampered lock (6.658687ms)
+✔ independent source roots have independent leases (8.562016ms)
+✔ only a provably dead holder on this host can be released, and only through the explicit owner step (57.175655ms)
+✔ concurrent dead-holder recovery cannot move a live successor and admit another build (142.18203ms)
+✔ SIGKILL during recovery releases its kernel guard while retaining the dead build lease (94.467229ms)
+✔ missing flock refuses lease acquisition and dead-holder recovery without changing the lease (121.593389ms)
+✔ a dangling transaction mutex cannot create or follow an external target (5.006889ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 609.63972

@@ -1,0 +1,228 @@
+{
+  "pid": 57917,
+  "mode": "baseline",
+  "ledgerBytes": 64,
+  "ledgerHash": "b98cd8a9cf7a9ec5eded15503f53adc7bf511745792af66760ec64f385965e21",
+  "rows": [
+    {
+      "task": "B2",
+      "mode": "baseline",
+      "pid": 57917,
+      "sourceCommit": "d1b6464f322bc7a4b26d2cd0720ca3719629b018",
+      "sourceUnchanged": true,
+      "verified": false,
+      "attempts": 1,
+      "firstStrategy": "JS_MISSING_IMPORT",
+      "strategies": [
+        "JS_MISSING_IMPORT"
+      ],
+      "elapsedMs": 3273.622565,
+      "driverCpuMicros": 29815,
+      "containerCpuMeasured": false,
+      "independentPatch": null,
+      "patchSha256": null,
+      "inference": {
+        "mode": "DETERMINISTIC_ONLY",
+        "modelId": null,
+        "modelInvocations": 0,
+        "reason": "No generative model is invoked by this repair pipeline"
+      },
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000
+      },
+      "report": {
+        "schemaVersion": 1,
+        "base": "d1b6464f322bc7a4b26d2cd0720ca3719629b018",
+        "chain": "node",
+        "startedAt": "2026-10-29T19:13:43.145Z",
+        "inference": {
+          "mode": "DETERMINISTIC_ONLY",
+          "modelId": null,
+          "modelInvocations": 0,
+          "reason": "No generative model is invoked by this repair pipeline"
+        },
+        "baseline": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "isolation": {
+                "schema": "continuum-isolation-v1",
+                "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+                "network": "none",
+                "user": "1000:1000",
+                "readOnly": true,
+                "noNewPrivileges": true,
+                "capabilities": [],
+                "memoryMb": 512,
+                "pids": 32,
+                "cpus": 1,
+                "timeoutMs": 30000,
+                "sourceSha256": "d5b1c4f7b22182f0583cb92f8c1826884cc1e8d60466845928162917205f316b",
+                "profile": "node-continuum",
+                "untrustedReports": true
+              },
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 0,
+              "tests": {
+                "total": 2,
+                "failed": 2,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                  "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+                ]
+              },
+              "diagnostics": 2
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.frozen acceptance",
+              "file": ".github/continuum/pricing.mjs",
+              "line": 2,
+              "col": 26,
+              "message": "price is not defined",
+              "kind": "REFERENCE_ERROR",
+              "symbol": "price",
+              "fingerprint": "824c814ef23a9eb3"
+            },
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.repeated call",
+              "file": ".github/continuum/pricing.mjs",
+              "line": 2,
+              "col": 26,
+              "message": "price is not defined",
+              "kind": "REFERENCE_ERROR",
+              "symbol": "price",
+              "fingerprint": "824c814ef23a9eb3"
+            }
+          ]
+        },
+        "attempts": [
+          {
+            "candidate": "cd08539bf1184e82",
+            "strategy": "JS_MISSING_IMPORT",
+            "diagnostic": "824c814ef23a9eb3",
+            "diagnosticKind": "REFERENCE_ERROR",
+            "description": "Import price from ./helper.mjs",
+            "score": 0.54,
+            "critic": {
+              "approved": true,
+              "risk": 0.133,
+              "reasons": [],
+              "changedLines": 1,
+              "reviewRequired": false
+            },
+            "edits": [
+              {
+                "file": ".github/continuum/pricing.mjs",
+                "oldText": "const prices=17;",
+                "newText": "import {price} from './helper.mjs';\nconst prices=17;",
+                "line": 1
+              }
+            ],
+            "kotlinSyntax": {
+              "passed": true,
+              "checked": [],
+              "failedFile": null,
+              "reason": null
+            },
+            "syntax": {
+              "passed": true,
+              "checked": [
+                ".github/continuum/pricing.mjs"
+              ],
+              "failedFile": null,
+              "reason": null
+            },
+            "tests": [
+              {
+                "profile": "node-continuum",
+                "passed": false,
+                "testProfile": true,
+                "exitCode": 1,
+                "ms": 0,
+                "tests": {
+                  "total": 2,
+                  "failed": 2,
+                  "skipped": 0,
+                  "placeholders": 0,
+                  "executed": 2,
+                  "passed": 0,
+                  "evidenceComplete": true,
+                  "executedCaseHashes": [
+                    "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                    "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+                  ]
+                }
+              }
+            ],
+            "remainingDiagnostics": [
+              {
+                "tool": "junit",
+                "severity": "error",
+                "test": "test.frozen acceptance",
+                "file": ".github/continuum/check.test.mjs",
+                "line": 2,
+                "col": 37,
+                "message": "Expected values to be strictly equal:\n\n800 !== 68",
+                "kind": "TEST_FAILURE",
+                "fingerprint": "6c4327969af45e74"
+              },
+              {
+                "tool": "junit",
+                "severity": "error",
+                "test": "test.repeated call",
+                "file": ".github/continuum/check.test.mjs",
+                "line": 3,
+                "col": 33,
+                "message": "Expected values to be strictly equal:\n\n800 !== 68",
+                "kind": "TEST_FAILURE",
+                "fingerprint": "6c4327969af45e74"
+              }
+            ],
+            "evidence": {
+              "sufficient": false,
+              "reasons": [
+                "node-continuum did not pass"
+              ]
+            },
+            "outcome": "FAILED_TESTS"
+          }
+        ],
+        "verified": null,
+        "outcome": "NO_VERIFIED_REPAIR",
+        "execution": {
+          "mode": "OS_ISOLATED",
+          "cancellation": "NONE"
+        },
+        "finishedAt": "2026-10-29T19:13:46.403Z"
+      },
+      "independent": null
+    }
+  ]
+}

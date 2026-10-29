@@ -1,0 +1,13 @@
+✔ old schema2 data roundtrips with private mode and unique temporary files (2.86827ms)
+✔ dangling and live symlink checkpoints fail closed without touching their targets (0.79391ms)
+✔ malformed UTF8 and invalid JSON checkpoints do not become empty history (0.730382ms)
+✔ a FIFO checkpoint without a writer is refused within a bounded child process (38.810145ms)
+✔ real SIGKILL before file fsync preserves last committed checkpoint and allows restart (55.41114ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 160.143068

@@ -1,0 +1,84 @@
+{
+  "codeCommit": "4c697c8f04fbb5b0477ae5e48b3d052cce383d34",
+  "os": "Linux x86_64",
+  "node": "24.19.0",
+  "git": "2.52.0",
+  "dockerClientAndServer": "28.4.0",
+  "flock": "util-linux2.41.5",
+  "regression": {
+    "status": "PASS",
+    "tests": 371,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0,
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=2",
+      ".github/continuum/repair-context-experience.test.mjs",
+      ".github/continuum/repair-cycle-safety.integration.test.mjs",
+      ".github/continuum/repair-cycle-safety.test.mjs",
+      ".github/continuum/repair-diagnostics.test.mjs",
+      ".github/continuum/repair-engine.test.mjs",
+      ".github/continuum/repair-experience.test.mjs",
+      ".github/continuum/repair-ledger-durability.test.mjs",
+      ".github/continuum/repair-ledger-independent.test.mjs",
+      ".github/continuum/repair-loop.test.mjs",
+      ".github/continuum/repair-research-verifier.test.mjs",
+      ".github/continuum/ccc1-bottleneck-diagnosis.test.mjs",
+      ".github/continuum/ccc1-bottleneck-evidence-export.test.mjs",
+      ".github/continuum/ccc1-bottleneck-scorecard.test.mjs",
+      ".github/continuum/ccc1-bridge.test.mjs",
+      ".github/continuum/ccc1-independent-verifier.test.mjs",
+      ".github/continuum/ccc1-local-preflight.test.mjs",
+      ".github/continuum/ccc1-native-evidence-integrity.test.mjs",
+      ".github/continuum/ccc1-path-policy.test.mjs",
+      ".github/continuum/ccc1-repair.test.mjs",
+      ".github/continuum/ccc1-worker.test.mjs",
+      ".github/continuum/ccc1.test.mjs",
+      ".github/continuum/autonomous-teamleader.test.mjs",
+      ".github/continuum/teamleader-end-to-end.test.mjs",
+      ".github/continuum/backlog-repair-worker.test.mjs",
+      ".github/continuum/local-teamleader-loop.test.mjs",
+      ".github/continuum/local-worker-process.test.mjs",
+      ".github/continuum/shared-build-lease.test.mjs",
+      ".github/continuum/coding-orchestrator.test.mjs",
+      ".github/continuum/ansk-import-lab.test.mjs",
+      ".github/continuum/ansk-transfer-lab.test.mjs",
+      ".github/continuum/local-integration-status.test.mjs",
+      "scripts/continuum-mobile-builder.test.mjs",
+      "scripts/continuum-owned-app.test.mjs"
+    ]
+  },
+  "transfer": {
+    "status": "SELECTED_TASK_TRANSFER_PASS",
+    "uniqueEvaluationTasks": 4,
+    "childProcesses": 19,
+    "taskRuns": 21,
+    "exit": 0
+  },
+  "teamleaderCycle": {
+    "status": "PASS",
+    "exit": 0,
+    "first": "VERIFIED_PATCH_PENDING_REVIEW",
+    "restarted": "IDLE"
+  },
+  "android": "NOT_RUN",
+  "fold7": "NOT_RUN",
+  "modelInference": "NOT_RUN",
+  "mainAppApk": "NOT_BUILT",
+  "earlierOrchestrationAnomaly": {
+    "capturedNodeExit": 0,
+    "transportReportedExit": 1,
+    "repeatedAtSameCodeWithLoginDisabled": {
+      "capturedNodeExit": 0,
+      "transportExit": 0
+    }
+  },
+  "notes": [
+    "trial-1 is retained unsupported Node forceRerun driver error; no learned record",
+    "trial-2 is a WIP diagnostic run with changed source, not acceptance evidence",
+    "old final/fresh-repeat ledgerBytes fields are COMPACT JSON bytes, not on-disk bytes; later storedLedger* fields correct this",
+    "independent-audit predates later fixes; handoff identifies corrected findings"
+  ]
+}

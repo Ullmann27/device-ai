@@ -1,0 +1,285 @@
+{
+  "pid": 112891,
+  "mode": "misleading",
+  "rankingStateBytes": 2151,
+  "rankingStateHash": "82d5ea5325ee25ec5fdaccd387ca7a3e4f1fa0c86366dfe6cdb695bf122e0090",
+  "storedLedgerBytes": 2507,
+  "storedLedgerSha256": "c73330a9b93f434ee280543c824b7c1f6a6684184b9082f9e5c0e4046e1cf055",
+  "rows": [
+    {
+      "task": "B2",
+      "mode": "misleading",
+      "pid": 112891,
+      "sourceCommit": "f659be1630b97b427642fd262dce82bb4df54858",
+      "sourceUnchanged": true,
+      "verified": true,
+      "attempts": 1,
+      "firstStrategy": "JS_TYPO_REFERENCE",
+      "strategies": [
+        "JS_TYPO_REFERENCE"
+      ],
+      "elapsedMs": 4629.384298,
+      "driverCpuMicros": 42946,
+      "containerCpuMeasured": false,
+      "independentPatch": "1fcd6f7545a5031bf1ec39fd712314cec84dd1d7a1e4ce41a5b2b0aa4b164abf",
+      "patchSha256": "1fcd6f7545a5031bf1ec39fd712314cec84dd1d7a1e4ce41a5b2b0aa4b164abf",
+      "inference": {
+        "mode": "DETERMINISTIC_ONLY",
+        "modelId": null,
+        "modelInvocations": 0,
+        "reason": "No generative model is invoked by this repair pipeline"
+      },
+      "isolation": {
+        "schema": "continuum-isolation-v1",
+        "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+        "network": "none",
+        "user": "1000:1000",
+        "readOnly": true,
+        "noNewPrivileges": true,
+        "capabilities": [],
+        "memoryMb": 512,
+        "pids": 32,
+        "cpus": 1,
+        "timeoutMs": 30000
+      },
+      "report": {
+        "schemaVersion": 1,
+        "base": "f659be1630b97b427642fd262dce82bb4df54858",
+        "chain": "node",
+        "startedAt": "2026-10-29T19:32:23.574Z",
+        "inference": {
+          "mode": "DETERMINISTIC_ONLY",
+          "modelId": null,
+          "modelInvocations": 0,
+          "reason": "No generative model is invoked by this repair pipeline"
+        },
+        "baseline": {
+          "passed": false,
+          "results": [
+            {
+              "profile": "node-continuum",
+              "passed": false,
+              "testProfile": true,
+              "isolation": {
+                "schema": "continuum-isolation-v1",
+                "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+                "network": "none",
+                "user": "1000:1000",
+                "readOnly": true,
+                "noNewPrivileges": true,
+                "capabilities": [],
+                "memoryMb": 512,
+                "pids": 32,
+                "cpus": 1,
+                "timeoutMs": 30000,
+                "sourceSha256": "d5b1c4f7b22182f0583cb92f8c1826884cc1e8d60466845928162917205f316b",
+                "profile": "node-continuum",
+                "untrustedReports": true
+              },
+              "exitCode": 1,
+              "signal": null,
+              "error": null,
+              "timedOut": false,
+              "ms": 0,
+              "tests": {
+                "total": 2,
+                "failed": 2,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 0,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                  "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+                ]
+              },
+              "diagnostics": 2
+            }
+          ],
+          "diagnostics": [
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.frozen acceptance",
+              "file": ".github/continuum/pricing.mjs",
+              "line": 2,
+              "col": 26,
+              "message": "price is not defined",
+              "kind": "REFERENCE_ERROR",
+              "symbol": "price",
+              "fingerprint": "824c814ef23a9eb3"
+            },
+            {
+              "tool": "junit",
+              "severity": "error",
+              "test": "test.repeated call",
+              "file": ".github/continuum/pricing.mjs",
+              "line": 2,
+              "col": 26,
+              "message": "price is not defined",
+              "kind": "REFERENCE_ERROR",
+              "symbol": "price",
+              "fingerprint": "824c814ef23a9eb3"
+            }
+          ]
+        },
+        "attempts": [
+          {
+            "candidate": "d6a9162d1cadbc5a",
+            "strategy": "JS_TYPO_REFERENCE",
+            "diagnostic": "824c814ef23a9eb3",
+            "diagnosticKind": "REFERENCE_ERROR",
+            "contextKey": "node.js.value",
+            "description": "Replace unresolved 'price' with nearby name 'prices'",
+            "score": 0.53,
+            "critic": {
+              "approved": true,
+              "risk": 0.215,
+              "reasons": [],
+              "changedLines": 1,
+              "reviewRequired": false
+            },
+            "edits": [
+              {
+                "file": ".github/continuum/pricing.mjs",
+                "oldText": "export function amount(){return price*4;}",
+                "newText": "export function amount(){return prices*4;}",
+                "line": 2
+              }
+            ],
+            "kotlinSyntax": {
+              "passed": true,
+              "checked": [],
+              "failedFile": null,
+              "reason": null
+            },
+            "syntax": {
+              "passed": true,
+              "checked": [
+                ".github/continuum/pricing.mjs"
+              ],
+              "failedFile": null,
+              "reason": null
+            },
+            "tests": [
+              {
+                "profile": "node-continuum",
+                "passed": true,
+                "testProfile": true,
+                "exitCode": 0,
+                "ms": 0,
+                "tests": {
+                  "total": 2,
+                  "failed": 0,
+                  "skipped": 0,
+                  "placeholders": 0,
+                  "executed": 2,
+                  "passed": 2,
+                  "evidenceComplete": true,
+                  "executedCaseHashes": [
+                    "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                    "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+                  ]
+                }
+              }
+            ],
+            "remainingDiagnostics": [],
+            "evidence": {
+              "sufficient": true,
+              "reasons": []
+            },
+            "outcome": "VERIFIED"
+          }
+        ],
+        "verified": {
+          "candidate": "d6a9162d1cadbc5a",
+          "strategy": "JS_TYPO_REFERENCE",
+          "description": "Replace unresolved 'price' with nearby name 'prices'",
+          "patch": "diff --git a/.github/continuum/pricing.mjs b/.github/continuum/pricing.mjs\nindex 3f80997..bdc82f8 100644\n--- a/.github/continuum/pricing.mjs\n+++ b/.github/continuum/pricing.mjs\n@@ -1,2 +1,2 @@\n const prices=17;\n-export function amount(){return price*4;}\n+export function amount(){return prices*4;}\n",
+          "patchSha256": "1fcd6f7545a5031bf1ec39fd712314cec84dd1d7a1e4ce41a5b2b0aa4b164abf",
+          "files": [
+            ".github/continuum/pricing.mjs"
+          ],
+          "tests": [
+            {
+              "profile": "node-continuum",
+              "passed": true,
+              "testProfile": true,
+              "exitCode": 0,
+              "ms": 0,
+              "tests": {
+                "total": 2,
+                "failed": 0,
+                "skipped": 0,
+                "placeholders": 0,
+                "executed": 2,
+                "passed": 2,
+                "evidenceComplete": true,
+                "executedCaseHashes": [
+                  "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                  "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+                ]
+              }
+            }
+          ],
+          "reviewRequired": false,
+          "confidence": 0.53
+        },
+        "outcome": "VERIFIED",
+        "execution": {
+          "mode": "OS_ISOLATED",
+          "cancellation": "NONE"
+        },
+        "finishedAt": "2026-10-29T19:32:25.837Z"
+      },
+      "independent": {
+        "passed": true,
+        "results": [
+          {
+            "profile": "node-continuum",
+            "passed": true,
+            "testProfile": true,
+            "isolation": {
+              "schema": "continuum-isolation-v1",
+              "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+              "network": "none",
+              "user": "1000:1000",
+              "readOnly": true,
+              "noNewPrivileges": true,
+              "capabilities": [],
+              "memoryMb": 512,
+              "pids": 32,
+              "cpus": 1,
+              "timeoutMs": 30000,
+              "sourceSha256": "94a9e000c0a39ad9938889ebda5f7b15f01b92b2690413bd56373dbb6c5b0724",
+              "profile": "node-continuum",
+              "untrustedReports": true
+            },
+            "exitCode": 0,
+            "signal": null,
+            "error": null,
+            "timedOut": false,
+            "ms": 0,
+            "tests": {
+              "total": 2,
+              "failed": 0,
+              "skipped": 0,
+              "placeholders": 0,
+              "executed": 2,
+              "passed": 2,
+              "evidenceComplete": true,
+              "executedCaseHashes": [
+                "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+              ]
+            },
+            "diagnostics": [],
+            "outputTail": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<testsuites>\n\t<testcase name=\"frozen acceptance\" time=\"0.000736\" classname=\"test\" file=\"/tmp/continuum-repair-wt-m8Bps8/.github/continuum/check.test.mjs\"/>\n\t<testcase name=\"repeated call\" time=\"0.000162\" classname=\"test\" file=\"/tmp/continuum-repair-wt-m8Bps8/.github/continuum/check.test.mjs\"/>\n\t<!-- tests 2 -->\n\t<!-- suites 0 -->\n\t<!-- pass 2 -->\n\t<!-- fail 0 -->\n\t<!-- cancelled 0 -->\n\t<!-- skipped 0 -->\n\t<!-- todo 0 -->\n\t<!-- duration_ms 80.599334 -->\n</testsuites>\n\n\n"
+          }
+        ],
+        "diagnostics": []
+      }
+    }
+  ]
+}
