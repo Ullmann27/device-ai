@@ -3495,6 +3495,8 @@ class AgentActivity : Activity() {
                     append(" · Job: ").append(if (registered) "registriert" else "nicht registriert")
                     append("\nGemma: ").append(if (localRuntime.state == LocalModelState.READY &&
                         localRuntime.loadedModel != null) "geladen" else "nicht nachgewiesen bereit")
+                    append("\n\nLetztes numerisches Laufzeitprofil (keine Prompts/Antworten):\n")
+                        .append(localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Noch kein Modellaufruf profiliert.")
                     append("\n\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
                         "Anschließend in dieser App einzeln prüfen und importieren. " +
                         "Private App-Speicher sind getrennt; keine automatische Übernahme ohne Datei-Auswahl.")
@@ -6763,12 +6765,15 @@ class AgentActivity : Activity() {
                 }
             }
         }
+        val generationDeadline = generationStartedNanos + TimeUnit.SECONDS.toNanos(120)
         val started = runCatching { cancellation?.throwIfCancelled(); turnTrace?.event(TraceStage.MODEL_PRIMARY_INVOKED); localRuntime.loadedModel?.let { turnTrace?.reference(TraceStage.MODEL_REF,it.sha256) }; start(callback) }
         if (started.isFailure) return LocalGeneration("", null, emptyList(), started.exceptionOrNull()?.message)
-        val generationDeadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(120)
-        while (!completed.await(10, TimeUnit.MILLISECONDS)) {
+        while (true) {
             cancellation?.throwIfCancelled()
-            if (System.nanoTime() < generationDeadline) continue
+            if (System.nanoTime() < generationDeadline) {
+                if (completed.await(10, TimeUnit.MILLISECONDS)) break
+                continue
+            }
             val diagnostic = synchronized(eventLock) {
                 terminalEventReceived = true
                 val firstTextMillis = firstTextNanos?.let {
@@ -6777,7 +6782,9 @@ class AgentActivity : Activity() {
                 "Local generation exceeded its 120-second limit. " +
                     "Diagnose: Eingabezeichen=" + (promptCharacters?.toString() ?: "unbekannt") +
                     ", Textblöcke=$streamedChunks, Ausgabezeichen=${response.length}, " +
-                    "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms."
+                    "erster Text nach=" + (firstTextMillis?.toString() ?: "keinem") + " ms." +
+                    "\nLetztes numerisches Laufzeitprofil:\n" +
+                    (localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Nicht verfügbar.")
             }
             localRuntime.cancel()
             localRuntimeError = diagnostic
