@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "date": "2026-10-29",
+  "source": "Owner text reply in this development session",
+  "lastOwnerReportedInstalledCommit": "b2b2277162e346688da3eef551414108615f3cad",
+  "lastOwnerReportedApp": "Continuum Lokal 0.3.27 (28)",
+  "installedIdentityReadBackInThisSession": false,
+  "question": "Warum dehnt sich Wasser beim Gefrieren aus?",
+  "answer": "Das ist eine spannende Frage! Wasser dehnt sich beim Gefrieren aus, weil sich die Wassermoleküle im festen Eis anders anordnen als in flüssigem Wasser. Im flüssigen Zustand sind die Moleküle eher ungeordnet, während sie im Eis in einer regelmäßigen, hexagonalen Kristallstruktur gefangen sind. Diese Struktur benötigt mehr Platz als das ungeordnete Wasser, weshalb das Eis voluminöser ist als das flüssige Wasser.",
+  "result": "OWNER_REPORTED_NORMAL_CHAT_RESPONSE",
+  "review": "Central explanation is scientifically consistent with the open hydrogen-bonded structure of ordinary hexagonal ice; one public question, not a general quality benchmark.",
+  "nativeGemmaProvenance": "UNVERIFIED_NO_INFERENCE_PROFILE",
+  "timeToFirstTokenMillis": null,
+  "totalLatencyMillis": null,
+  "inferenceProfileReceived": false,
+  "offlineModeVerified": false,
+  "proofOfDraft237OnDevice": false,
+  "privateOwnerDataIncluded": false
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumPublicCurriculumTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T14:07:53" hostname="9d1c4dd98fa0" time="0.366">
+  <properties/>
+  <testcase name="corpusHasDisjointBalancedSyntheticTrainAndAuditSets" classname="at.heinz.deviceai.learning.ContinuumPublicCurriculumTest" time="0.001"/>
+  <testcase name="interruptionDoesNotWriteAuditsOrWeightsAndCanRetry" classname="at.heinz.deviceai.learning.ContinuumPublicCurriculumTest" time="0.148"/>
+  <testcase name="labIsOptInRunsAtMostOnceAndNeverCreatesOwnerFacts" classname="at.heinz.deviceai.learning.ContinuumPublicCurriculumTest" time="0.129"/>
+  <testcase name="ownerFactsAreNeverPromotedOrDeletedBySyntheticCorpus" classname="at.heinz.deviceai.learning.ContinuumPublicCurriculumTest" time="0.087"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,20 @@
+{
+  "productionCode": "fc8112ca573f67356867900178d829d7c88de975",
+  "compile": [
+    "/workspace/continuum-tools/jdk17/bin/javac",
+    "-cp",
+    "/workspace/device-ai-dialog-integration/app/build/tmp/kotlin-classes/debug:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar",
+    "-d",
+    "/workspace/continuum-runs/dialog-integration-20261029/explanation-red/classes",
+    "app/src/test/java/at/heinz/deviceai/LocalExplanationRouteTest.java"
+  ],
+  "compileExit": 0,
+  "junit": [
+    "/workspace/continuum-tools/jdk17/bin/java",
+    "-cp",
+    "/workspace/continuum-runs/dialog-integration-20261029/explanation-red/classes:/workspace/device-ai-dialog-integration/app/build/tmp/kotlin-classes/debug:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar",
+    "org.junit.runner.JUnitCore",
+    "at.heinz.deviceai.LocalExplanationRouteTest"
+  ],
+  "junitExit": 1
+}
