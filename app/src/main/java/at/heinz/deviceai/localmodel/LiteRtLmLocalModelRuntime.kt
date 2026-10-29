@@ -296,7 +296,9 @@ class LiteRtLmLocalModelRuntime(
                                 deliver(callback, event)
                             }
                             message.contents.contents.filterIsInstance<Content.Text>().forEach { text ->
-                                if (text.text.isBlank() || finished.get() || terminalOverrideRequested.get())
+                                // Native callbacks are deltas; standalone spaces/newlines
+                                // must survive or prose and generated code are corrupted.
+                                if (text.text.isEmpty() || finished.get() || terminalOverrideRequested.get())
                                     return@forEach
                                 if (responseCharacters[0] + text.text.length > MAX_RESPONSE_CHARACTERS) {
                                     if (outputLimitReached.compareAndSet(false, true)) {
