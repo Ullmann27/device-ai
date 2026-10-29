@@ -1,0 +1,30 @@
+✖ a FIFO checkpoint without a writer is refused within a bounded child process (1010.471986ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1077.047684
+
+✖ failing tests:
+
+test at .github/continuum/repair-ledger-durability.test.mjs:23:1
+✖ a FIFO checkpoint without a writer is refused within a bounded child process (1010.471986ms)
+  AssertionError [ERR_ASSERTION]: invalid FIFO must fail before blocking open: ETIMEDOUT
+  
+  null !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/repair-ledger-durability.test.mjs:29:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

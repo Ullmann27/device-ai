@@ -1,5 +1,7 @@
 import fs from 'node:fs';
-import {mergeExperiences} from './repair-experience.mjs';
+import path from 'node:path';
+import {randomBytes} from 'node:crypto';
+import {mergeExperiences,repairExperienceKey} from './repair-experience.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 
 /**
@@ -46,6 +48,7 @@ export function verifyLedger(data){
        (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
       throw Error('Invalid ledger syntax reason');
     if(a.taskFingerprint!==undefined&&!SHA256.test(a.taskFingerprint))throw Error('Invalid ledger task fingerprint');
+    if(a.contextKey!==undefined&&!/^node\.js\.(?:call|value)$/.test(a.contextKey))throw Error('Invalid repair context');
   }
   for(const x of data.experiences)if(!x||typeof x.kind!=='string'||x.kind.length>80||!Number.isSafeInteger(x.successes)||!Number.isSafeInteger(x.failures)||x.successes<0||x.failures<0)
     throw Error('Invalid ledger experience');
@@ -53,17 +56,37 @@ export function verifyLedger(data){
 }
 
 export function loadLedger(file){
-  if(!file||!fs.existsSync(file))return emptyLedger();
-  const raw=fs.readFileSync(file,'utf8');
-  if(raw.length>4_000_000)throw Error('Repair ledger too large');
-  return verifyLedger(JSON.parse(raw));
+  if(!file)return emptyLedger();
+  let fd;
+  try{fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW|fs.constants.O_NONBLOCK);}
+  catch(error){if(error.code==='ENOENT'){
+    // A dangling link is an invalid checkpoint, never an empty learning history.
+    try{fs.lstatSync(file);}catch(missing){if(missing.code==='ENOENT')return emptyLedger();throw missing;}
+  }throw error;}
+  try{
+    const stat=fs.fstatSync(fd);
+    if(!stat.isFile()||stat.size>4_000_000)throw Error('Invalid repair ledger file');
+    const raw=fs.readFileSync(fd);
+    if(raw.length>4_000_000)throw Error('Repair ledger too large');
+    return verifyLedger(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));
+  }finally{fs.closeSync(fd);}
 }
 
 export function saveLedger(file,ledger){
   verifyLedger(ledger);
-  const tmp=file+'.tmp-'+process.pid;
-  fs.writeFileSync(tmp,JSON.stringify(ledger,null,1)+'\n');
-  fs.renameSync(tmp,file);
+  const bytes=Buffer.from(JSON.stringify(ledger,null,1)+'\n');
+  if(bytes.length>4_000_000)throw Error('Repair ledger too large');
+  try{if(!fs.lstatSync(file).isFile())throw Error('Invalid repair ledger file');}
+  catch(error){if(error.code!=='ENOENT')throw error;}
+  const tmp=file+'.tmp-'+process.pid+'-'+randomBytes(8).toString('hex');
+  let fd;
+  try{
+    fd=fs.openSync(tmp,'wx',0o600);fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);
+    fs.closeSync(fd);fd=undefined;
+    fs.renameSync(tmp,file);
+    const directory=fs.openSync(path.dirname(path.resolve(file)),fs.constants.O_RDONLY);
+    try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
+  }finally{if(fd!==undefined)fs.closeSync(fd);fs.rmSync(tmp,{force:true});}
 }
 
 /** Fold one session report into the ledger (returns a new object). */
@@ -105,6 +128,7 @@ export function recordSession(ledger,report,meta={}){
     ...(a.strategy==='LOCAL_SCOPED_PATCH'&&SHA256.test(report.coding?.taskFingerprint??'')?
       {taskFingerprint:report.coding.taskFingerprint}:{}),
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
+    ...(a.contextKey!==undefined?{contextKey:a.contextKey}:{}),
     outcome:a.outcome,edits:(a.edits??[]).map(ledgerEdit),confidence:a.score??null,
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
@@ -139,7 +163,7 @@ export function recordSession(ledger,report,meta={}){
     (a.outcome==='FAILED_TESTS'&&hasExecutedFailedTests(a))||
     (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
-    kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
+    kind:repairExperienceKey(a.diagnosticKind,a.strategy,a.contextKey??null),
     status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'
   })));
   next.sessions=[...next.sessions,{at:report.finishedAt??new Date().toISOString(),base:report.base,chain:report.chain,

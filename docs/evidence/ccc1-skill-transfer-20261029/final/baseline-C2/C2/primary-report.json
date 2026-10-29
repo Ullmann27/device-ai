@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "base": "ad611bc4b05c9ce23582d338504f4db0e9d67edc",
+  "chain": "node",
+  "startedAt": "2026-10-29T19:12:01.435Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "1326c0086f9e5c84c853e84774b8683b1104257ac8e87da741874a1bc2a3b46d",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 2,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 0,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        },
+        "diagnostics": 2
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen acceptance",
+        "file": ".github/continuum/dispatch.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "parses is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "parses",
+        "fingerprint": "c4add3dfb4ca7eed"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.repeated call",
+        "file": ".github/continuum/dispatch.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "parses is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "parses",
+        "fingerprint": "c4add3dfb4ca7eed"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "5b877098b2744388",
+      "strategy": "JS_MISSING_IMPORT",
+      "diagnostic": "c4add3dfb4ca7eed",
+      "diagnosticKind": "REFERENCE_ERROR",
+      "description": "Import parses from ./helper.mjs",
+      "score": 0.54,
+      "critic": {
+        "approved": true,
+        "risk": 0.133,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": false
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/dispatch.mjs",
+          "oldText": "function parse(x){return x-1;}",
+          "newText": "import {parses} from './helper.mjs';\nfunction parse(x){return x-1;}",
+          "line": 1
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/dispatch.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 2,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "5b877098b2744388",
+    "strategy": "JS_MISSING_IMPORT",
+    "description": "Import parses from ./helper.mjs",
+    "patch": "diff --git a/.github/continuum/dispatch.mjs b/.github/continuum/dispatch.mjs\nindex d0881f9..d091464 100644\n--- a/.github/continuum/dispatch.mjs\n+++ b/.github/continuum/dispatch.mjs\n@@ -1,2 +1,3 @@\n+import {parses} from './helper.mjs';\n function parse(x){return x-1;}\n export function amount(){return parses(9);}\n",
+    "patchSha256": "5cb5605168bfaa91bfddfb446df562eede8cfedbfe610d7c8e93c524a49c88ba",
+    "files": [
+      ".github/continuum/dispatch.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 2,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        }
+      }
+    ],
+    "reviewRequired": false,
+    "confidence": 0.54
+  },
+  "outcome": "VERIFIED",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "NONE"
+  },
+  "finishedAt": "2026-10-29T19:12:05.414Z"
+}

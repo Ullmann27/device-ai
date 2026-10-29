@@ -1,0 +1,8 @@
+diff --git a/.github/continuum/pricing.mjs b/.github/continuum/pricing.mjs
+index 3f80997..bdc82f8 100644
+--- a/.github/continuum/pricing.mjs
++++ b/.github/continuum/pricing.mjs
+@@ -1,2 +1,2 @@
+ const prices=17;
+-export function amount(){return price*4;}
++export function amount(){return prices*4;}

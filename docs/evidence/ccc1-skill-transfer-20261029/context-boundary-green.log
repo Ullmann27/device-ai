@@ -1,0 +1,15 @@
+✔ real generated candidates carry source-derived call/value preconditions only on opt-in node chain (10.690696ms)
+✔ a source location missing the reference does not invent a context (0.251553ms)
+✔ commented and optional calls never inherit value-reference history (0.539508ms)
+✔ bounded or unsupported call suffixes remain unknown instead of becoming value history (0.662447ms)
+✔ call candidates ignore value and broad contradictory histories (1.03363ms)
+✔ contextual ledger is backward compatible and retains matching independent winner only (2.625435ms)
+✔ counterexamples affect only their context and do not lower whole-file revert safety (0.303822ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.463516

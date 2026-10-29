@@ -1,0 +1,25 @@
+✖ dead-holder recovery refuses nonregular or oversized locks before reading their content (9.992171ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.967405
+
+✖ failing tests:
+
+test at .github/continuum/shared-build-lease.test.mjs:67:1
+✖ dead-holder recovery refuses nonregular or oversized locks before reading their content (9.992171ms)
+  Error: UNSAFE_CONTENT_READ
+      at fs.readFileSync (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.test.mjs:79:26)
+      at file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.mjs:58:52
+      at withLeaseMutation (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.mjs:43:12)
+      at releaseDeadContinuumBuildLease (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.mjs:56:10)
+      at file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.test.mjs:82:21
+      at fixture (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.test.mjs:14:13)
+      at TestContext.<anonymous> (file:///workspace/device-ai-skill-transfer/.github/continuum/shared-build-lease.test.mjs:68:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)

@@ -1,0 +1,220 @@
+{
+  "task": "C2",
+  "mode": "broad",
+  "pid": 99913,
+  "sourceCommit": "371471db855e4abeef10bfed669f08f088f146fb",
+  "sourceUnchanged": true,
+  "verified": false,
+  "attempts": 1,
+  "firstStrategy": "JS_TYPO_REFERENCE",
+  "strategies": [
+    "JS_TYPO_REFERENCE"
+  ],
+  "elapsedMs": 3356.5490409999998,
+  "driverCpuMicros": 31559,
+  "containerCpuMeasured": false,
+  "independentPatch": null,
+  "patchSha256": null,
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "isolation": {
+    "schema": "continuum-isolation-v1",
+    "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+    "network": "none",
+    "user": "1000:1000",
+    "readOnly": true,
+    "noNewPrivileges": true,
+    "capabilities": [],
+    "memoryMb": 512,
+    "pids": 32,
+    "cpus": 1,
+    "timeoutMs": 30000
+  },
+  "report": {
+    "schemaVersion": 1,
+    "base": "371471db855e4abeef10bfed669f08f088f146fb",
+    "chain": "node",
+    "startedAt": "2026-10-29T19:29:53.145Z",
+    "inference": {
+      "mode": "DETERMINISTIC_ONLY",
+      "modelId": null,
+      "modelInvocations": 0,
+      "reason": "No generative model is invoked by this repair pipeline"
+    },
+    "baseline": {
+      "passed": false,
+      "results": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "isolation": {
+            "schema": "continuum-isolation-v1",
+            "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+            "network": "none",
+            "user": "1000:1000",
+            "readOnly": true,
+            "noNewPrivileges": true,
+            "capabilities": [],
+            "memoryMb": 512,
+            "pids": 32,
+            "cpus": 1,
+            "timeoutMs": 30000,
+            "sourceSha256": "1326c0086f9e5c84c853e84774b8683b1104257ac8e87da741874a1bc2a3b46d",
+            "profile": "node-continuum",
+            "untrustedReports": true
+          },
+          "exitCode": 1,
+          "signal": null,
+          "error": null,
+          "timedOut": false,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 2,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 0,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          },
+          "diagnostics": 2
+        }
+      ],
+      "diagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen acceptance",
+          "file": ".github/continuum/dispatch.mjs",
+          "line": 2,
+          "col": 26,
+          "message": "parses is not defined",
+          "kind": "REFERENCE_ERROR",
+          "symbol": "parses",
+          "fingerprint": "c4add3dfb4ca7eed"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.repeated call",
+          "file": ".github/continuum/dispatch.mjs",
+          "line": 2,
+          "col": 26,
+          "message": "parses is not defined",
+          "kind": "REFERENCE_ERROR",
+          "symbol": "parses",
+          "fingerprint": "c4add3dfb4ca7eed"
+        }
+      ]
+    },
+    "attempts": [
+      {
+        "candidate": "b988c6109072e8bd",
+        "strategy": "JS_TYPO_REFERENCE",
+        "diagnostic": "c4add3dfb4ca7eed",
+        "diagnosticKind": "REFERENCE_ERROR",
+        "description": "Replace unresolved 'parses' with nearby name 'parse'",
+        "score": 0.53,
+        "critic": {
+          "approved": true,
+          "risk": 0.215,
+          "reasons": [],
+          "changedLines": 1,
+          "reviewRequired": false
+        },
+        "edits": [
+          {
+            "file": ".github/continuum/dispatch.mjs",
+            "oldText": "export function amount(){return parses(9);}",
+            "newText": "export function amount(){return parse(9);}",
+            "line": 2
+          }
+        ],
+        "kotlinSyntax": {
+          "passed": true,
+          "checked": [],
+          "failedFile": null,
+          "reason": null
+        },
+        "syntax": {
+          "passed": true,
+          "checked": [
+            ".github/continuum/dispatch.mjs"
+          ],
+          "failedFile": null,
+          "reason": null
+        },
+        "tests": [
+          {
+            "profile": "node-continuum",
+            "passed": false,
+            "testProfile": true,
+            "exitCode": 1,
+            "ms": 0,
+            "tests": {
+              "total": 2,
+              "failed": 2,
+              "skipped": 0,
+              "placeholders": 0,
+              "executed": 2,
+              "passed": 0,
+              "evidenceComplete": true,
+              "executedCaseHashes": [
+                "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+                "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+              ]
+            }
+          }
+        ],
+        "remainingDiagnostics": [
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.frozen acceptance",
+            "file": ".github/continuum/check.test.mjs",
+            "line": 2,
+            "col": 37,
+            "message": "Expected values to be strictly equal:\n\n8 !== 27",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "6c4327969af45e74"
+          },
+          {
+            "tool": "junit",
+            "severity": "error",
+            "test": "test.repeated call",
+            "file": ".github/continuum/check.test.mjs",
+            "line": 3,
+            "col": 33,
+            "message": "Expected values to be strictly equal:\n\n8 !== 27",
+            "kind": "TEST_FAILURE",
+            "fingerprint": "6c4327969af45e74"
+          }
+        ],
+        "evidence": {
+          "sufficient": false,
+          "reasons": [
+            "node-continuum did not pass"
+          ]
+        },
+        "outcome": "FAILED_TESTS"
+      }
+    ],
+    "verified": null,
+    "outcome": "NO_VERIFIED_REPAIR",
+    "execution": {
+      "mode": "OS_ISOLATED",
+      "cancellation": "NONE"
+    },
+    "finishedAt": "2026-10-29T19:29:56.485Z"
+  },
+  "independent": null
+}

@@ -1,0 +1,16 @@
+{
+  "phase": "restarted",
+  "pid": 85985,
+  "result": {
+    "head": "4355d38f6248d403ad656c3b0effae5397521f25",
+    "kind": "IDLE",
+    "outcome": "IDLE",
+    "statePath": "/workspace/continuum-runs/skill-transfer-20261029/teamleader-cycle/state/teamleader-state.json"
+  },
+  "firstStrategy": null,
+  "attempts": 0,
+  "independentPassed": false,
+  "ledgerBefore": "ae83435713f6080afd9d6dddc25435293cc8b0204d27dd5ae81dc3ecc5c101ed",
+  "ledgerAfter": "ae83435713f6080afd9d6dddc25435293cc8b0204d27dd5ae81dc3ecc5c101ed",
+  "sourceUnchanged": true
+}

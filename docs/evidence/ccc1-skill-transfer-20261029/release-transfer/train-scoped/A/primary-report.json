@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "base": "d6a14a433f8452d59ab9b806a6bd58be0b91bb69",
+  "chain": "node",
+  "startedAt": "2026-10-29T19:31:43.290Z",
+  "inference": {
+    "mode": "DETERMINISTIC_ONLY",
+    "modelId": null,
+    "modelInvocations": 0,
+    "reason": "No generative model is invoked by this repair pipeline"
+  },
+  "baseline": {
+    "passed": false,
+    "results": [
+      {
+        "profile": "node-continuum",
+        "passed": false,
+        "testProfile": true,
+        "isolation": {
+          "schema": "continuum-isolation-v1",
+          "image": "sha256:8da84df25d28176be84164040cd45e128c6b4c6a80b7d7cbe17fe2b9f198efc2",
+          "network": "none",
+          "user": "1000:1000",
+          "readOnly": true,
+          "noNewPrivileges": true,
+          "capabilities": [],
+          "memoryMb": 512,
+          "pids": 32,
+          "cpus": 1,
+          "timeoutMs": 30000,
+          "sourceSha256": "202af3778cdc907c3b69768b9975707ea59235a847b3b3f3405aeaf0d3318e67",
+          "profile": "node-continuum",
+          "untrustedReports": true
+        },
+        "exitCode": 1,
+        "signal": null,
+        "error": null,
+        "timedOut": false,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 2,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 0,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        },
+        "diagnostics": 2
+      }
+    ],
+    "diagnostics": [
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.frozen acceptance",
+        "file": ".github/continuum/invoice.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "change is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "change",
+        "fingerprint": "feb5b16f4e1bcdba"
+      },
+      {
+        "tool": "junit",
+        "severity": "error",
+        "test": "test.repeated call",
+        "file": ".github/continuum/invoice.mjs",
+        "line": 2,
+        "col": 26,
+        "message": "change is not defined",
+        "kind": "REFERENCE_ERROR",
+        "symbol": "change",
+        "fingerprint": "feb5b16f4e1bcdba"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "candidate": "2f37bc63295b2e32",
+      "strategy": "JS_MISSING_IMPORT",
+      "diagnostic": "feb5b16f4e1bcdba",
+      "diagnosticKind": "REFERENCE_ERROR",
+      "contextKey": "node.js.value",
+      "description": "Import change from ./helper.mjs",
+      "score": 0.54,
+      "critic": {
+        "approved": true,
+        "risk": 0.133,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": false
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/invoice.mjs",
+          "oldText": "const charge=7;",
+          "newText": "import {change} from './helper.mjs';\nconst charge=7;",
+          "line": 1
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/invoice.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": false,
+          "testProfile": true,
+          "exitCode": 1,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 2,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 0,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.frozen acceptance",
+          "file": ".github/continuum/check.test.mjs",
+          "line": 2,
+          "col": 37,
+          "message": "Expected values to be strictly equal:\n\n300 !== 21",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "6c4327969af45e74"
+        },
+        {
+          "tool": "junit",
+          "severity": "error",
+          "test": "test.repeated call",
+          "file": ".github/continuum/check.test.mjs",
+          "line": 3,
+          "col": 33,
+          "message": "Expected values to be strictly equal:\n\n300 !== 21",
+          "kind": "TEST_FAILURE",
+          "fingerprint": "6c4327969af45e74"
+        }
+      ],
+      "evidence": {
+        "sufficient": false,
+        "reasons": [
+          "node-continuum did not pass"
+        ]
+      },
+      "outcome": "FAILED_TESTS"
+    },
+    {
+      "candidate": "175fb98657c065a7",
+      "strategy": "JS_TYPO_REFERENCE",
+      "diagnostic": "feb5b16f4e1bcdba",
+      "diagnosticKind": "REFERENCE_ERROR",
+      "contextKey": "node.js.value",
+      "description": "Replace unresolved 'change' with nearby name 'charge'",
+      "score": 0.43,
+      "critic": {
+        "approved": true,
+        "risk": 0.215,
+        "reasons": [],
+        "changedLines": 1,
+        "reviewRequired": false
+      },
+      "edits": [
+        {
+          "file": ".github/continuum/invoice.mjs",
+          "oldText": "export function amount(){return change*3;}",
+          "newText": "export function amount(){return charge*3;}",
+          "line": 2
+        }
+      ],
+      "kotlinSyntax": {
+        "passed": true,
+        "checked": [],
+        "failedFile": null,
+        "reason": null
+      },
+      "syntax": {
+        "passed": true,
+        "checked": [
+          ".github/continuum/invoice.mjs"
+        ],
+        "failedFile": null,
+        "reason": null
+      },
+      "tests": [
+        {
+          "profile": "node-continuum",
+          "passed": true,
+          "testProfile": true,
+          "exitCode": 0,
+          "ms": 0,
+          "tests": {
+            "total": 2,
+            "failed": 0,
+            "skipped": 0,
+            "placeholders": 0,
+            "executed": 2,
+            "passed": 2,
+            "evidenceComplete": true,
+            "executedCaseHashes": [
+              "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+              "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+            ]
+          }
+        }
+      ],
+      "remainingDiagnostics": [],
+      "evidence": {
+        "sufficient": true,
+        "reasons": []
+      },
+      "outcome": "VERIFIED"
+    }
+  ],
+  "verified": {
+    "candidate": "175fb98657c065a7",
+    "strategy": "JS_TYPO_REFERENCE",
+    "description": "Replace unresolved 'change' with nearby name 'charge'",
+    "patch": "diff --git a/.github/continuum/invoice.mjs b/.github/continuum/invoice.mjs\nindex da759a3..390d74c 100644\n--- a/.github/continuum/invoice.mjs\n+++ b/.github/continuum/invoice.mjs\n@@ -1,2 +1,2 @@\n const charge=7;\n-export function amount(){return change*3;}\n+export function amount(){return charge*3;}\n",
+    "patchSha256": "01d9c089bb050c57a41cb47b17ce65d12b5a34effec3e753b0104f9b83456b1b",
+    "files": [
+      ".github/continuum/invoice.mjs"
+    ],
+    "tests": [
+      {
+        "profile": "node-continuum",
+        "passed": true,
+        "testProfile": true,
+        "exitCode": 0,
+        "ms": 0,
+        "tests": {
+          "total": 2,
+          "failed": 0,
+          "skipped": 0,
+          "placeholders": 0,
+          "executed": 2,
+          "passed": 2,
+          "evidenceComplete": true,
+          "executedCaseHashes": [
+            "991771c1326f2f66480505d608bf38620c9800a970863f2f9c8b53dcd47fcaa1",
+            "d5714c6906bb0350534c27c7b9d921213545d294e0c8fd2fa1a659ea15ba4a79"
+          ]
+        }
+      }
+    ],
+    "reviewRequired": false,
+    "confidence": 0.43
+  },
+  "outcome": "VERIFIED",
+  "execution": {
+    "mode": "OS_ISOLATED",
+    "cancellation": "NONE"
+  },
+  "finishedAt": "2026-10-29T19:31:50.612Z"
+}

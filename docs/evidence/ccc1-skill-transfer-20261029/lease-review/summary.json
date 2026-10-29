@@ -1,0 +1,33 @@
+{
+  "status": "LOCAL_ONLY / NOT_PUSHED; parent owns integration",
+  "baselineHead": "927015a1451c118e780802a2c92cc437939ca51d",
+  "currentHead": "3e71172a63bea46f3a8c54a337575b0247a9f5e0",
+  "scope": [
+    ".github/continuum/shared-build-lease.mjs",
+    ".github/continuum/shared-build-lease.test.mjs"
+  ],
+  "sha256": {
+    ".github/continuum/shared-build-lease.mjs": "4cca96a59dda994d704ce24b3f0597eb501632c7507219d8f01183d1002a3d8d",
+    ".github/continuum/shared-build-lease.test.mjs": "18a4dfa5f8ff30b4d6b93a71c0f6c75174bc3aeb72c204f2306c4e59d1497553"
+  },
+  "issue": "Stale dead-holder recoverer could rename away a newly acquired live lock and admit a second build before rollback.",
+  "fix": "Kernel flock transaction on a persistent per-checkout mutex serializes acquisition, explicit dead-holder recovery, and normal ownership-checked release. FD ownership remains in Node until finally/termination.",
+  "red": {
+    "command": "node --test --test-concurrency=1 --test-name-pattern='concurrent dead-holder recovery|SIGKILL during recovery|missing flock' /workspace/continuum-runs/skill-transfer-20261029/lease-review/shared-build-lease.test.mjs",
+    "result": "0 PASS / 3 FAIL / 0 SKIP against external original source snapshot",
+    "log": "red-process-and-backend.log"
+  },
+  "green": {
+    "command": "node --test --test-concurrency=1 .github/continuum/shared-build-lease.test.mjs .github/continuum/local-teamleader-loop.test.mjs .github/continuum/autonomous-teamleader.test.mjs .github/continuum/local-worker-process.test.mjs .github/continuum/ansk-import-lab.test.mjs .github/continuum/ansk-transfer-lab.test.mjs .github/continuum/local-integration-status.test.mjs .github/continuum/ccc1.test.mjs .github/continuum/ccc1-worker.test.mjs scripts/continuum-mobile-builder.test.mjs scripts/continuum-owned-app.test.mjs",
+    "result": "203 PASS / 0 FAIL / 0 SKIP; 33.956 seconds",
+    "log": "green-consumers-process.log"
+  },
+  "finalLease": "10 PASS / 0 FAIL / 0 SKIP after whitespace cleanup; green-lease-final.log",
+  "limitations": [
+    "Linux/Termux compatible flock FD mode required; missing/failed backend refuses mutations.",
+    "Do not unlink or replace persistent mutex files while workers can run.",
+    "All cooperating acquisition/recovery/release clients must use the updated protocol.",
+    "Crash releases only transaction flock; retained or malformed build lease still requires existing explicit owner recovery or manual inspection.",
+    "No Android device, APK or model-quality claim; no sealed tests or model files touched."
+  ]
+}

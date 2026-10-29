@@ -1,0 +1,1 @@
+{"pid":101487,"mode":"train-broad","rows":[{"task":"A","verified":true,"attempts":2,"firstStrategy":"JS_MISSING_IMPORT"},{"task":"B1","verified":true,"attempts":1,"firstStrategy":"JS_TYPO_REFERENCE"}]}
