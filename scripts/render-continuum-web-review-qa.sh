@@ -95,17 +95,7 @@ if ! gradle "${flags[@]}" :app:testDebugUnitTest :app:lintDebug :app:compileDebu
   fail "Android test or compilation failed"
 fi
 printf '%s\n' 'Starting Node regression suite'
-if ! node --test scripts/continuum-external-research-contract.test.mjs scripts/continuum-experiment-integration.test.mjs scripts/continuum-local-context.test.mjs scripts/continuum-fusion-regression-report.test.mjs scripts/continuum-coding-bridge.test.mjs scripts/continuum-selfhosted-coding.test.mjs scripts/continuum-integration-source-gate.test.mjs scripts/continuum-sol-max-readiness.test.mjs scripts/continuum-standalone-qa-variant.test.mjs scripts/continuum-learning-parity-audit.test.mjs scripts/continuum-ccc1-review-gate.test.mjs scripts/continuum-release-host-preflight.test.mjs scripts/continuum-one-app-contract.test.mjs scripts/continuum-gemma-picker-lifecycle.test.mjs scripts/continuum-fold7-standalone-apk.test.mjs scripts/continuum-historical-ledger-review.test.mjs scripts/continuum-local-chat-streaming.test.mjs scripts/continuum-source-state.test.mjs scripts/continuum-generation16-rescue.test.mjs .github/continuum/local-development-worker.test.mjs .github/continuum/local-worker-process.test.mjs\n' >> "$out/command.txt"
-# Deterministic public Node/Kotlin parity fixtures are required by three real
-# JUnit methods. Generate them locally, never skip them or fetch model weights.
-export CONTINUUM_CRE1_PARITY_DIR="$out/cre1-parity"
-export CONTINUUM_CONTRASTIVE_PARITY_DIR="$out/contrastive-parity"
-node .github/continuum/cre-parity.mjs prepare "$CONTINUUM_CRE1_PARITY_DIR" > "$out/parity-prepare.log" 2>&1 || fail 'CRE1 parity preparation failed'
-node .github/continuum/contrastive-parity.mjs prepare "$CONTINUUM_CONTRASTIVE_PARITY_DIR" >> "$out/parity-prepare.log" 2>&1 || fail 'SWB1/SWB2 parity preparation failed'
-set +e
-"$gradle_bin" "${args[@]}" :app:testDebugUnitTest :app:lintDebug > "$out/gradle-full-suite.log" 2>&1
-gradle_exit=$?
-node --test scripts/continuum-external-research-contract.test.mjs \
+if ! node --test scripts/continuum-external-research-contract.test.mjs \
   scripts/continuum-experiment-integration.test.mjs \
   scripts/continuum-local-context.test.mjs \
   scripts/continuum-fusion-regression-report.test.mjs \
