@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:49:49" hostname="9d1c4dd98fa0" time="0.082">
+  <properties/>
+  <testcase name="claimCheckFlagsChangedDetailsButPassesParaphrases" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.001"/>
+  <testcase name="aLaterStatementOutranksTheOlderOneWhichStaysMarkedNotDeleted" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.004"/>
+  <testcase name="pronounsFollowTheReferentAndAnExplicitNameSwitchesIt" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.046"/>
+  <testcase name="aCompoundIsNamedByItsHead" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.001"/>
+  <testcase name="aRoleWordReachesThePersonAndCitesTheLinkingFact" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.005"/>
+  <testcase name="thePackIsDataWithRolesAndOutdatedEvidence" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.002"/>
+  <testcase name="sameNameForTwoThingsIsKeptApartByItsClassWord" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.007"/>
+  <testcase name="anUnknownNameOrAMissingAttributeAbstainsInsteadOfCitingSomething" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.007"/>
+  <testcase name="twoEquallyRecentPeopleMakeAPronounAmbiguousAndACorrectionResolvesIt" classname="at.heinz.deviceai.intelligence.ewm.Ewm1WorkspaceTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

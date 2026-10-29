@@ -7,7 +7,9 @@ data class ContextDirective(val kind:ContextDirectiveKind,val focus:String?=null
     val resetsGroundedContext:Boolean get()=kind==ContextDirectiveKind.SCOPE_UPDATED || kind==ContextDirectiveKind.CLARIFY_SCOPE
 }
 
-class LocalConversationContext {
+class LocalConversationContext(
+    private val argonShadow: Argon4ConversationShadow = Argon4ConversationShadow()
+) {
     private data class Turn(val request: String, val response: String)
     private var session: String? = null
     private val turns = ArrayDeque<Turn>()
@@ -19,6 +21,7 @@ class LocalConversationContext {
     @Synchronized fun inspectRequest(sessionId:String,request:String):ContextDirective? {
         require(sessionId.isNotBlank())
         if(session!=sessionId){clear();session=sessionId}
+        argonShadow.observeUser(sessionId,request)
         val text=request.trim()
         if(text.length>512)return null
         if(Regex("(?iu)^(anderes thema|neues thema)\\b").containsMatchIn(text)) {
@@ -43,11 +46,14 @@ class LocalConversationContext {
     @Synchronized fun record(sessionId: String, request: String, response: String) {
         require(sessionId.isNotBlank() && request.isNotBlank() && response.isNotBlank())
         if (session != sessionId) { clear(); session = sessionId }
+        argonShadow.observeAnswer(sessionId,response)
         turns.addLast(Turn(data(request, 300), data(response, 350)))
         while (turns.size > 4) turns.removeFirst()
     }
 
-    @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null }
+    @Synchronized fun clear() { turns.clear(); session = null;explicitFocus=null;argonShadow.clear() }
+
+    @Synchronized fun argonShadowReport(): Argon4ShadowReport = argonShadow.report()
 
     @Synchronized fun render(sessionId: String): String {
         if (session != sessionId || turns.isEmpty() && explicitFocus==null) return ""

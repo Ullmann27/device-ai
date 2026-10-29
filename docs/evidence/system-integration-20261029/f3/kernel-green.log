@@ -1,0 +1,21 @@
+✔ a previous independently verified patch never credits a later failed patch or abort (3.785987ms)
+✔ a read-only cycle cannot patch or execute tests by omitting capability metadata (0.787691ms)
+✔ a full cycle ends in an owner decision with an intact hash-chained journal (1.17216ms)
+✔ the agent never targets a protected branch, never merges and never widens its capabilities (1.501443ms)
+✔ an own test is never an independent verification, and evidence must match base and patch (0.679207ms)
+✔ red local tests cannot reach independent verification; budget and deadline stop the loop (0.587846ms)
+✔ abort and rollback work from the middle; rollback must restore the base; terminal states are final (1.787179ms)
+✔ a tampered, reordered or truncated journal is detected after a crash (1.158623ms)
+✔ only independent verification teaches success; executed red tests teach failure; infrastructure is neutral (0.719045ms)
+✔ Thompson ranking is reproducible, keeps the safety tiers and is a different arm than the frozen control (6.01951ms)
+✔ a strategy change is a preregistered experiment: sealed holdout, one run, exact paired test, kept if negative (1.194117ms)
+✔ the exact McNemar p-value matches the binomial tail (0.108551ms)
+✔ weak strategies in the real CCC1 ledger become research questions, never automatic changes (2.459922ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 304.382382

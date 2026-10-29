@@ -83,6 +83,13 @@ test('actual offline Teamleader repairs a broken Git fixture and retains only a 
    reason:'No generative model is invoked by this repair pipeline'
   },'a deterministic repair must not masquerade as local language-model inference');
   assert.equal(saved.independent.passed,true);
+  assert.equal(saved.devLoopShadow.mode,'SHADOW');
+  assert.equal(saved.devLoopShadow.status,'OBSERVED');
+  assert.equal(saved.devLoopShadow.currentVerification,'SUMMARY_MATCH');
+  assert.equal(saved.devLoopShadow.executedPrimaryTests,1);
+  assert.equal(saved.devLoopShadow.executedIndependentTests,1);
+  assert.equal(saved.devLoopShadow.positiveLearningAllowed,false);
+  assert.equal(saved.devLoopShadow.strategyRankingChanged,false);
   assert.equal(saved.backlogSync.status,'RECORDED');
   const backlog=new BacklogStore(path.join(f.stateDir,'development-backlog.json'),{
    actor:'continuum-teamleader'});
@@ -140,6 +147,41 @@ test('scheduled owner task completes full real Git repair and independent verifi
 test('local driver rejects nonboolean contextual experience options',async()=>{
  for(const contextualExperience of [null,0,1,'false','true',{},[]])
   await assert.rejects(localTeamleaderDriver({contextualExperience}),/contextual experience option/i);
+});
+
+test('F3 observer exceptions and attempted report mutation cannot alter real repair or learning',
+ {skip:nested,timeout:180000},async()=>{
+ const f=fixture({broken:true});
+ try{
+  for(const [name,observer] of [
+   ['throw',()=>{throw Error('private text must not escape')}],
+   ['mutation',input=>{input.report.outcome='VERIFIED_FAKE';input.report.verified.patchSha256='f'.repeat(64);
+     input.experiences.push({kind:'REFERENCE_ERROR|JS_MISSING_IMPORT',successes:999,failures:0});return {mode:'ON'};}]
+  ]){
+   const state=path.join(f.root,name);
+   const driver=await localTeamleaderDriver({devLoopObserver:observer});
+   const result=driver.repair(f.home,state,f.head,{budgetMinutes:1});
+   assert.equal(result.outcome,'VERIFIED');
+   assert.equal(result.independent.passed,true);
+   assert.equal(result.verified.strategy,'JS_TYPO_REFERENCE');
+   assert.equal(result.devLoopShadow.status,'ERROR');
+   assert.equal(result.devLoopShadow.positiveLearningAllowed,false);
+   assert.equal(result.devLoopShadow.strategyRankingChanged,false);
+   const ledger=loadLedger(path.join(state,'repair-ledger.json'));
+   assert.equal(ledger.experiences.length,1);
+   assert.equal(ledger.experiences[0].kind,'REFERENCE_ERROR|JS_TYPO_REFERENCE');
+   assert.equal(ledger.experiences[0].successes,1);
+   assert.equal(JSON.stringify(result.devLoopShadow).includes('private'),false);
+  }
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(f.git('worktree','list','--porcelain').match(/^worktree /gm).length,1);
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('F3 observer is explicitly disableable and invalid options are refused',async()=>{
+ for(const devLoopObserver of [false,0,'shadow',{},[]])
+  await assert.rejects(localTeamleaderDriver({devLoopObserver}),/dev.loop observer/i);
+ assert.ok(await localTeamleaderDriver({devLoopObserver:null}));
 });
 
 for(const consumer of ['baseline','owner'])test(

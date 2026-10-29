@@ -1,0 +1,554 @@
+{
+ "schema": "argon4-f2-expert-cache-sim-v1",
+ "synthetic": true,
+ "trace": {
+  "tokens": 3000,
+  "experts": 256,
+  "k": 8,
+  "topics": 12,
+  "zipf": 1.1,
+  "drift": 0.02
+ },
+ "rows": [
+  {
+   "policy": "LRU",
+   "capacity": 8,
+   "hit_rate": 0.2521,
+   "fetches_per_token": 5.983,
+   "stall_fetches_per_token": 5.983,
+   "persistence": 0.0,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LFU",
+   "capacity": 8,
+   "hit_rate": 0.2521,
+   "fetches_per_token": 5.983,
+   "stall_fetches_per_token": 5.983,
+   "persistence": 0.0,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 8,
+   "hit_rate": 0.2521,
+   "fetches_per_token": 5.983,
+   "stall_fetches_per_token": 5.983,
+   "persistence": 0.0,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 8,
+   "hit_rate": 0.2521,
+   "fetches_per_token": 5.983,
+   "stall_fetches_per_token": 5.983,
+   "persistence": 0.0,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LRU",
+   "capacity": 12,
+   "hit_rate": 0.3297,
+   "fetches_per_token": 5.362,
+   "stall_fetches_per_token": 5.362,
+   "persistence": 0.0,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LFU",
+   "capacity": 12,
+   "hit_rate": 0.4004,
+   "fetches_per_token": 4.797,
+   "stall_fetches_per_token": 4.797,
+   "persistence": 0.0,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 12,
+   "hit_rate": 0.3673,
+   "fetches_per_token": 9.057,
+   "stall_fetches_per_token": 5.062,
+   "persistence": 0.0,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 12,
+   "hit_rate": 0.463,
+   "fetches_per_token": 4.296,
+   "stall_fetches_per_token": 4.296,
+   "persistence": 0.0,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LRU",
+   "capacity": 25,
+   "hit_rate": 0.4791,
+   "fetches_per_token": 4.167,
+   "stall_fetches_per_token": 4.167,
+   "persistence": 0.0,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LFU",
+   "capacity": 25,
+   "hit_rate": 0.5843,
+   "fetches_per_token": 3.326,
+   "stall_fetches_per_token": 3.326,
+   "persistence": 0.0,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 25,
+   "hit_rate": 0.5386,
+   "fetches_per_token": 7.683,
+   "stall_fetches_per_token": 3.691,
+   "persistence": 0.0,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 25,
+   "hit_rate": 0.6707,
+   "fetches_per_token": 2.634,
+   "stall_fetches_per_token": 2.634,
+   "persistence": 0.0,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LRU",
+   "capacity": 64,
+   "hit_rate": 0.7044,
+   "fetches_per_token": 2.365,
+   "stall_fetches_per_token": 2.365,
+   "persistence": 0.0,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LFU",
+   "capacity": 64,
+   "hit_rate": 0.7662,
+   "fetches_per_token": 1.87,
+   "stall_fetches_per_token": 1.87,
+   "persistence": 0.0,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 64,
+   "hit_rate": 0.7426,
+   "fetches_per_token": 6.028,
+   "stall_fetches_per_token": 2.059,
+   "persistence": 0.0,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 64,
+   "hit_rate": 0.8451,
+   "fetches_per_token": 1.239,
+   "stall_fetches_per_token": 1.239,
+   "persistence": 0.0,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LRU",
+   "capacity": 128,
+   "hit_rate": 0.8559,
+   "fetches_per_token": 1.153,
+   "stall_fetches_per_token": 1.153,
+   "persistence": 0.0,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "LFU",
+   "capacity": 128,
+   "hit_rate": 0.8788,
+   "fetches_per_token": 0.97,
+   "stall_fetches_per_token": 0.97,
+   "persistence": 0.0,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 128,
+   "hit_rate": 0.8728,
+   "fetches_per_token": 4.918,
+   "stall_fetches_per_token": 1.018,
+   "persistence": 0.0,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 128,
+   "hit_rate": 0.9356,
+   "fetches_per_token": 0.515,
+   "stall_fetches_per_token": 0.515,
+   "persistence": 0.0,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "LRU",
+   "capacity": 8,
+   "hit_rate": 0.4725,
+   "fetches_per_token": 4.22,
+   "stall_fetches_per_token": 4.22,
+   "persistence": 0.35,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LFU",
+   "capacity": 8,
+   "hit_rate": 0.4725,
+   "fetches_per_token": 4.22,
+   "stall_fetches_per_token": 4.22,
+   "persistence": 0.35,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 8,
+   "hit_rate": 0.4725,
+   "fetches_per_token": 4.22,
+   "stall_fetches_per_token": 4.22,
+   "persistence": 0.35,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 8,
+   "hit_rate": 0.4725,
+   "fetches_per_token": 4.22,
+   "stall_fetches_per_token": 4.22,
+   "persistence": 0.35,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LRU",
+   "capacity": 12,
+   "hit_rate": 0.5315,
+   "fetches_per_token": 3.748,
+   "stall_fetches_per_token": 3.748,
+   "persistence": 0.35,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LFU",
+   "capacity": 12,
+   "hit_rate": 0.585,
+   "fetches_per_token": 3.32,
+   "stall_fetches_per_token": 3.32,
+   "persistence": 0.35,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 12,
+   "hit_rate": 0.5572,
+   "fetches_per_token": 7.538,
+   "stall_fetches_per_token": 3.543,
+   "persistence": 0.35,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 12,
+   "hit_rate": 0.6305,
+   "fetches_per_token": 2.956,
+   "stall_fetches_per_token": 2.956,
+   "persistence": 0.35,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LRU",
+   "capacity": 25,
+   "hit_rate": 0.6402,
+   "fetches_per_token": 2.878,
+   "stall_fetches_per_token": 2.878,
+   "persistence": 0.35,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LFU",
+   "capacity": 25,
+   "hit_rate": 0.711,
+   "fetches_per_token": 2.312,
+   "stall_fetches_per_token": 2.312,
+   "persistence": 0.35,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 25,
+   "hit_rate": 0.684,
+   "fetches_per_token": 6.519,
+   "stall_fetches_per_token": 2.528,
+   "persistence": 0.35,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 25,
+   "hit_rate": 0.7715,
+   "fetches_per_token": 1.828,
+   "stall_fetches_per_token": 1.828,
+   "persistence": 0.35,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LRU",
+   "capacity": 64,
+   "hit_rate": 0.7954,
+   "fetches_per_token": 1.637,
+   "stall_fetches_per_token": 1.637,
+   "persistence": 0.35,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LFU",
+   "capacity": 64,
+   "hit_rate": 0.8322,
+   "fetches_per_token": 1.342,
+   "stall_fetches_per_token": 1.342,
+   "persistence": 0.35,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 64,
+   "hit_rate": 0.8212,
+   "fetches_per_token": 5.4,
+   "stall_fetches_per_token": 1.431,
+   "persistence": 0.35,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 64,
+   "hit_rate": 0.891,
+   "fetches_per_token": 0.872,
+   "stall_fetches_per_token": 0.872,
+   "persistence": 0.35,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LRU",
+   "capacity": 128,
+   "hit_rate": 0.8983,
+   "fetches_per_token": 0.814,
+   "stall_fetches_per_token": 0.814,
+   "persistence": 0.35,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "LFU",
+   "capacity": 128,
+   "hit_rate": 0.9107,
+   "fetches_per_token": 0.714,
+   "stall_fetches_per_token": 0.714,
+   "persistence": 0.35,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 128,
+   "hit_rate": 0.9082,
+   "fetches_per_token": 4.634,
+   "stall_fetches_per_token": 0.734,
+   "persistence": 0.35,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 128,
+   "hit_rate": 0.954,
+   "fetches_per_token": 0.368,
+   "stall_fetches_per_token": 0.368,
+   "persistence": 0.35,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "LRU",
+   "capacity": 8,
+   "hit_rate": 0.7363,
+   "fetches_per_token": 2.109,
+   "stall_fetches_per_token": 2.109,
+   "persistence": 0.7,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LFU",
+   "capacity": 8,
+   "hit_rate": 0.7363,
+   "fetches_per_token": 2.109,
+   "stall_fetches_per_token": 2.109,
+   "persistence": 0.7,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 8,
+   "hit_rate": 0.7363,
+   "fetches_per_token": 2.109,
+   "stall_fetches_per_token": 2.109,
+   "persistence": 0.7,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 8,
+   "hit_rate": 0.7363,
+   "fetches_per_token": 2.109,
+   "stall_fetches_per_token": 2.109,
+   "persistence": 0.7,
+   "cache_share": 0.01
+  },
+  {
+   "policy": "LRU",
+   "capacity": 12,
+   "hit_rate": 0.7714,
+   "fetches_per_token": 1.829,
+   "stall_fetches_per_token": 1.829,
+   "persistence": 0.7,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LFU",
+   "capacity": 12,
+   "hit_rate": 0.801,
+   "fetches_per_token": 1.592,
+   "stall_fetches_per_token": 1.592,
+   "persistence": 0.7,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 12,
+   "hit_rate": 0.7838,
+   "fetches_per_token": 5.721,
+   "stall_fetches_per_token": 1.73,
+   "persistence": 0.7,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 12,
+   "hit_rate": 0.8228,
+   "fetches_per_token": 1.417,
+   "stall_fetches_per_token": 1.417,
+   "persistence": 0.7,
+   "cache_share": 0.05
+  },
+  {
+   "policy": "LRU",
+   "capacity": 25,
+   "hit_rate": 0.8305,
+   "fetches_per_token": 1.356,
+   "stall_fetches_per_token": 1.356,
+   "persistence": 0.7,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LFU",
+   "capacity": 25,
+   "hit_rate": 0.8632,
+   "fetches_per_token": 1.094,
+   "stall_fetches_per_token": 1.094,
+   "persistence": 0.7,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 25,
+   "hit_rate": 0.8485,
+   "fetches_per_token": 5.19,
+   "stall_fetches_per_token": 1.212,
+   "persistence": 0.7,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 25,
+   "hit_rate": 0.8912,
+   "fetches_per_token": 0.87,
+   "stall_fetches_per_token": 0.87,
+   "persistence": 0.7,
+   "cache_share": 0.1
+  },
+  {
+   "policy": "LRU",
+   "capacity": 64,
+   "hit_rate": 0.899,
+   "fetches_per_token": 0.808,
+   "stall_fetches_per_token": 0.808,
+   "persistence": 0.7,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LFU",
+   "capacity": 64,
+   "hit_rate": 0.9137,
+   "fetches_per_token": 0.691,
+   "stall_fetches_per_token": 0.691,
+   "persistence": 0.7,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 64,
+   "hit_rate": 0.9112,
+   "fetches_per_token": 4.63,
+   "stall_fetches_per_token": 0.71,
+   "persistence": 0.7,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 64,
+   "hit_rate": 0.9453,
+   "fetches_per_token": 0.438,
+   "stall_fetches_per_token": 0.438,
+   "persistence": 0.7,
+   "cache_share": 0.25
+  },
+  {
+   "policy": "LRU",
+   "capacity": 128,
+   "hit_rate": 0.9477,
+   "fetches_per_token": 0.419,
+   "stall_fetches_per_token": 0.419,
+   "persistence": 0.7,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "LFU",
+   "capacity": 128,
+   "hit_rate": 0.9519,
+   "fetches_per_token": 0.385,
+   "stall_fetches_per_token": 0.385,
+   "persistence": 0.7,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "PREFETCH",
+   "capacity": 128,
+   "hit_rate": 0.9518,
+   "fetches_per_token": 4.121,
+   "stall_fetches_per_token": 0.385,
+   "persistence": 0.7,
+   "cache_share": 0.5
+  },
+  {
+   "policy": "BELADY",
+   "capacity": 128,
+   "hit_rate": 0.9739,
+   "fetches_per_token": 0.209,
+   "stall_fetches_per_token": 0.209,
+   "persistence": 0.7,
+   "cache_share": 0.5
+  }
+ ]
+}

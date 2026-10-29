@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.TrainableSubwordEncoderTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:49:57" hostname="9d1c4dd98fa0" time="0.037">
+  <properties/>
+  <testcase name="snapshotIsDeterministicAndTamperEvident" classname="at.heinz.deviceai.learning.TrainableSubwordEncoderTest" time="0.001"/>
+  <testcase name="characterSubwordsShareFeaturesAcrossUnseenVariants" classname="at.heinz.deviceai.learning.TrainableSubwordEncoderTest" time="0.001"/>
+  <testcase name="semanticTrainingPullsRelatedTextTogetherAndSeparatesNegativePair" classname="at.heinz.deviceai.learning.TrainableSubwordEncoderTest" time="0.023"/>
+  <testcase name="intentTrainingChangesSharedLearnedRepresentation" classname="at.heinz.deviceai.learning.TrainableSubwordEncoderTest" time="0.012"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

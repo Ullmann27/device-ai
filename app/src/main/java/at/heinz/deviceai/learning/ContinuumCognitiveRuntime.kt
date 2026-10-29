@@ -33,7 +33,9 @@ data class ContinuumCognitiveTurn(
     /** Local-only aggregate diagnostics; never changes the authorized answer. */
     val hybridShadow:AuthorizedHybridShadowReport = AuthorizedHybridShadowReport(
         AuthorizedHybridShadowStatus.NO_AUTHORIZED_EVIDENCE
-    )
+    ),
+    val argonShadow:at.heinz.deviceai.cognitive.Argon4ShadowReport =
+        at.heinz.deviceai.cognitive.Argon4ShadowReport(at.heinz.deviceai.cognitive.Argon4ShadowStatus.NO_TURN)
 ) {
     val grounded:Boolean get()=dialogue.grounded
     val answer:String get()=dialogue.answer
@@ -47,7 +49,9 @@ class ContinuumCognitiveRuntime(
     private val core:ContinuumLearningCore=ContinuumLearningCore(appDirectory),
     private val conversationId:String=java.util.UUID.randomUUID().toString(),
     priorScopedGroundedQuestion:String?=null,
-    private val turnTrace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null
+    private val turnTrace:at.heinz.deviceai.cognitive.CognitiveTurnTrace?=null,
+    private val argonShadowMode:at.heinz.deviceai.cognitive.Argon4ShadowMode=
+        at.heinz.deviceai.cognitive.Argon4ShadowMode.SHADOW
 ) {
     // Persisted retrieval is conversation-bound. Model prompts still use only the
     // explicitly carried, bounded topic of this runtime/session (defence in depth).
@@ -132,6 +136,10 @@ class ContinuumCognitiveRuntime(
         }.getOrElse {
             AuthorizedHybridShadowReport(AuthorizedHybridShadowStatus.EVALUATION_FAILED)
         }
+        val argonShadow=if(exactSameTurnEvidence)
+            at.heinz.deviceai.cognitive.Argon4EvidenceShadow.observe(turn,ranked,argonShadowMode)
+        else at.heinz.deviceai.cognitive.Argon4ShadowReport(
+            at.heinz.deviceai.cognitive.Argon4ShadowStatus.REJECTED_EVIDENCE)
         turn.memoryIds.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.MEMORY_REF,it) }
         ranked.mapNotNull { it.sourceRef }.forEach { turnTrace?.reference(at.heinz.deviceai.cognitive.TraceStage.SOURCE_REF,it) }
         if(scores.isNotEmpty())turnTrace?.event(if(didRerank)at.heinz.deviceai.cognitive.TraceStage.CRE1_ACTIVE else at.heinz.deviceai.cognitive.TraceStage.CRE1_SHADOW)
@@ -164,10 +172,12 @@ class ContinuumCognitiveRuntime(
             // Only aggregate shadow diagnostics; never evidence or authority.
             append(" · Hybrid-Shadow=").append(hybridShadow.status.name)
             append(" · autorisiert=").append(hybridShadow.authorizedCount)
+            append(" · ARGON4=").append(argonShadow.status.name)
+            append(" · Ableitungen-unbestätigt=").append(argonShadow.derivedUnconfirmed)
             if(turn.contextReset)append(" · Kontext wiederhergestellt")
         }
         return ContinuumCognitiveTurn(turn,state,snapshot?.second,
-            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion,hybridShadow)
+            scores,contextPrompt,trace,ranked,lastScopedGroundedQuestion,hybridShadow,argonShadow)
     }
 
     /**

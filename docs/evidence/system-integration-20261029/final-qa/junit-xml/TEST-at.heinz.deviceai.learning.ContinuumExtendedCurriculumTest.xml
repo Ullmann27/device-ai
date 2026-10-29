@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:59:13" hostname="9d1c4dd98fa0" time="0.189">
+  <properties/>
+  <testcase name="interruptedStageDoesNotChangeWeightsOrConsumeStage" classname="at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest" time="0.083"/>
+  <testcase name="trainingAndFrozenAuditsNeverOverlap" classname="at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest" time="0.003"/>
+  <testcase name="finishedStageIsAuditedAndRespectsProtectedData" classname="at.heinz.deviceai.learning.ContinuumExtendedCurriculumTest" time="0.103"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

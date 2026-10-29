@@ -1,0 +1,138 @@
+<section>
+<h2>H · Implementierungsanhang</h2>
+<p>Alle Listings sind vollständig und mit Zeilennummern aus dem Zweig <code>opus/argon4-research-20261029</code> erzeugt. Nichts ist gesperrt oder
+verschleiert. Jede KI und jeder Mensch kann jede Datei lesen, ändern und neu prüfen. Die Kotlin-Prototypen liegen bewusst unter <code>app/src/test</code>:
+Sie sind Forschungscode, ändern das APK nicht und können mit dem vorhandenen Harness ohne Gradle geprüft werden. Die Produktübernahme erfolgt
+erst nach Fold7-Messung als eigener, kleiner Commit (Kapitel J).</p>
+<table class="small">
+<tr><th>Listing</th><th>Datei</th><th>Rolle</th><th>Prüfung</th></tr>
+<tr><td>H.1</td><td>research/argon4/DialogStateKernel.kt</td><td>Gesprächszustand (F1)</td><td>Argon4F1PrototypeTest</td></tr>
+<tr><td>H.2</td><td>research/argon4/ComputeAllocationPolicy.kt</td><td>Nutzen-Router (F1)</td><td>Argon4F1PrototypeTest</td></tr>
+<tr><td>H.3</td><td>research/argon4/JustifiedRelationStore.kt</td><td>Begründungsgedächtnis (F1)</td><td>Argon4F1PrototypeTest</td></tr>
+<tr><td>H.4</td><td>research/argon4/Argon4DialogBenchmark.kt (+Test)</td><td>Benchmark mit Kontrollgruppen und Holdout</td><td>Argon4DialogBenchmarkTest</td></tr>
+<tr><td>H.5</td><td>research/argon4/Argon4F1PrototypeTest.kt</td><td>21 Unit-Tests</td><td>Kotlin-Harness</td></tr>
+<tr><td>H.6</td><td>scripts/argon4/*.py</td><td>Bandbreitenmodell, Streaming-Benchmark, Cache-Simulation, Tests</td><td>test_argon4_f2.py</td></tr>
+<tr><td>H.7</td><td>.github/continuum/dev-loop-kernel.mjs (+Test)</td><td>Entwicklungsschleifen-Kern (F3)</td><td>node --test</td></tr>
+<tr><td>H.8</td><td>docs/research/argon4/patches/K1, K2</td><td>vorgeschlagene Produkt-Patches (nicht angewendet)</td><td>K2 gegen Stub kompiliert</td></tr>
+</table>
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/DialogStateKernel.kt-->
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/ComputeAllocationPolicy.kt-->
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/JustifiedRelationStore.kt-->
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/Argon4DialogBenchmark.kt-->
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/Argon4DialogBenchmarkTest.kt-->
+<!--CODE:app/src/test/java/at/heinz/deviceai/research/argon4/Argon4F1PrototypeTest.kt-->
+<!--CODE:scripts/argon4/bandwidth_model.py-->
+<!--CODE:scripts/argon4/expert_cache_sim.py-->
+<!--CODE:scripts/argon4/stream_bench.py-->
+<!--CODE:scripts/argon4/test_argon4_f2.py-->
+<!--CODE:.github/continuum/dev-loop-kernel.mjs-->
+<!--CODE:.github/continuum/dev-loop-kernel.test.mjs-->
+<!--CODE:docs/research/argon4/patches/K1-date-anchor.patch-->
+<!--CODE:docs/research/argon4/patches/K2-gpu-backend-trial.patch-->
+</section>
+
+<section>
+<h2>I · Test- und Forschungsprotokoll</h2>
+<h3>I.1 Statustrennung (verbindlich)</h3>
+<table>
+<tr><th>Ergebnis</th><th>analysiert</th><th>implementiert</th><th>getestet</th><th>auf dem Fold7 bestätigt</th></tr>
+<tr><td>Ist-Pfad am Commit a3fdc179 (Kapitel A)</td><td>ja</td><td>—</td><td>—</td><td>nein</td></tr>
+<tr><td>DialogStateKernel, Nutzen-Router, Begründungsgedächtnis</td><td>ja</td><td>ja (Testquellen)</td><td>ja, JVM</td><td>nein</td></tr>
+<tr><td>F1-Benchmark DEV + versiegelter Holdout</td><td>ja</td><td>ja</td><td>ja, JVM, synthetisch</td><td>nein</td></tr>
+<tr><td>F2 Bandbreitenmodell, Cache-Simulation</td><td>ja</td><td>ja</td><td>ja, Python</td><td>nein (Modell, keine Inferenz)</td></tr>
+<tr><td>F2 Streaming-Benchmark</td><td>ja</td><td>ja</td><td>Cloud-Host gemessen</td><td>nein</td></tr>
+<tr><td>F3 Entwicklungsschleifen-Kern</td><td>ja</td><td>ja</td><td>ja, Node</td><td>nein</td></tr>
+<tr><td>Patch K1 Datumsanker</td><td>ja</td><td>als Patch-Datei</td><td>nein</td><td>nein</td></tr>
+<tr><td>Patch K2 GPU-Versuch</td><td>ja</td><td>als Patch-Datei</td><td>gegen Stub kompiliert (0 Fehler)</td><td>nein</td></tr>
+<tr><td>Gradle-Build / Android-Lint</td><td>—</td><td>—</td><td><b>SDK_UNAVAILABLE</b> (dl.google.com 403 in dieser Umgebung)</td><td>nein</td></tr>
+</table>
+
+<h3>I.2 Ausgeführte Prüfungen</h3>
+<!--PROTOCOL-->
+
+<h3>I.3 Forschungsdisziplin, wie angewendet</h3>
+<ul class="small">
+<li><b>Holdout vor Reparatur versiegelt:</b> Lauf 1 zeigte LONG_RANGE 0/4/8 (richtig/falsch/Rückfrage). Der Holdout-Text wurde mit SHA-256
+<code>82ad1bbfa8262a568ab21b962ae52b7ceee5a75d4a03fc4f5f193f49bae0d466</code> festgeschrieben, dann repariert und anschließend genau einmal ausgeführt.</li>
+<li><b>Fehlgeschlagene Reparatur dokumentiert:</b> Die erste Korrektur verschlechterte LONG_RANGE, weil „meine Antwort“ als weibliche Sache galt.
+Die zweite Korrektur filtert nach Personenprädikaten.</li>
+<li><b>Fehlgeschlagene Simulation dokumentiert:</b> PREFETCH war zunächst identisch mit LRU. Der Markov-Ersatz erzeugt mehr Verkehr. Beide Ergebnisse bleiben stehen.</li>
+<li><b>Test, der zunächst nichts bewies:</b> Die McNemar-Testdaten ergaben INCONCLUSIVE statt FAILED. Die Daten wurden korrigiert, und der Fall
+„zu wenig diskordante Paare“ ist jetzt ein eigener Test.</li>
+<li><b>Grenzen:</b> Prototyp, Benchmark und Holdout stammen von einem Autor. Unabhängige Testsätze (TEST6) müssen von einer anderen Instanz geschrieben werden.</li>
+</ul>
+</section>
+
+<section>
+<h2>J · Priorisierte Entscheidungen</h2>
+<div class="scene"><b>Dan-Szene.</b> Am Ende legt der Professor drei Karten auf den Tisch: <i>Korrigieren</i>, <i>Messen</i>, <i>Wagen</i>.
+„Wer alles gleichzeitig baut, misst nichts. Drei Korrekturen sofort, drei Experimente danach, drei Wetten mit Stop-Regel. Und alles andere: nicht bauen.“</div>
+
+<h3>J.1 Entscheidungsmatrix</h3>
+<p>Bewertung 1–5 (5 = am besten; bei Kosten und Risiko heißt 5 „niedrig“). Priorität = (2·Nutzen + Belegstärke + Kosten + Risiko) / 5.</p>
+<table class="small">
+<tr><th>Option</th><th>Nutzen</th><th>Belegstärke</th><th>Kosten</th><th>Risiko</th><th>Priorität</th><th>Entscheidung</th></tr>
+<tr><td>K1 Datumsanker im Prompt</td><td>4</td><td>4</td><td>5</td><td>5</td><td><b>4,4</b></td><td>sofort</td></tr>
+<tr><td>K3 Belegpaket + ClaimCheck an Gemma (AP-5)</td><td>5</td><td>4</td><td>3</td><td>4</td><td><b>4,2</b></td><td>sofort (Shadow → ON)</td></tr>
+<tr><td>E1.1 Gesprächszustand (Shadow)</td><td>4</td><td>4</td><td>4</td><td>5</td><td><b>4,2</b></td><td>sofort im Shadow</td></tr>
+<tr><td>K2 GPU-Versuch mit CPU-Rückfall</td><td>4</td><td>2</td><td>5</td><td>4</td><td><b>3,8</b></td><td>sofort als Besitzerversuch</td></tr>
+<tr><td>E1.3 Nutzen-Router</td><td>4</td><td>3</td><td>4</td><td>4</td><td><b>3,8</b></td><td>Experiment</td></tr>
+<tr><td>E3.1 Thompson vs Laplace</td><td>3</td><td>3</td><td>4</td><td>5</td><td><b>3,6</b></td><td>Experiment</td></tr>
+<tr><td>E1.4 Begründungsgedächtnis</td><td>4</td><td>3</td><td>3</td><td>3</td><td><b>3,4</b></td><td>Experiment</td></tr>
+<tr><td>E2.8 Antwortcache mit Herkunftsbindung</td><td>3</td><td>2</td><td>4</td><td>3</td><td><b>3,0</b></td><td>riskante Hypothese</td></tr>
+<tr><td>E1.6 Temporale Graphwelle</td><td>3</td><td>2</td><td>3</td><td>3</td><td><b>2,8</b></td><td>riskante Hypothese</td></tr>
+<tr><td>E2.5 Split-MoE Fold7+PC</td><td>3</td><td>2</td><td>1</td><td>2</td><td><b>2,2</b></td><td>riskante Hypothese</td></tr>
+<tr><td>Dichtes 500 B / mmap als RAM / neuer Speicher / neues Agenten-Framework</td><td>1</td><td>5 (widerlegt)</td><td>1</td><td>1</td><td>—</td><td><b>nicht bauen</b></td></tr>
+</table>
+
+<h3>J.2 Top-3-Durchbruchsplan</h3>
+<ol>
+<li><b>Woche 1 – „Gemma bekommt Wahrheit und Zeit“:</b> K1 + K3 (Belegpaket + ClaimCheck) im SHADOW auf dem Fold7. Messung auf TEST6-Teilmenge:
+falsche Details pro Antwort, Latenz. Danach Besitzerfreigabe für ON.</li>
+<li><b>Woche 2 – „Gemma vergisst nicht mehr nach vier Zügen“:</b> Gesprächszustand im Prompt (E1.1) und Nutzen-Router im Shadow-Log (E1.3) gegen den heutigen Pfad.
+Kalibrierung nur aus verifizierten Ergebnissen.</li>
+<li><b>Woche 3 – „Der Entwickler misst sich selbst“:</b> Dev-Loop-Kern bindet Worker und CCC1. EXP-DL1 (Thompson vs Laplace) wird vorregistriert, der Holdout
+versiegelt und einmal ausgeführt. Parallel K2 GPU-Profil mit Sols Profiler.</li>
+</ol>
+
+<h3>J.3 Behalten · Ersetzen · Testen · Nicht bauen</h3>
+<table class="small">
+<tr><th>Behalten</th><th>Ersetzen</th><th>Testen</th><th>Nicht bauen</th></tr>
+<tr><td>EWM2-Gehirn, LearningCore, BoundedAgent, ToolGate, CCC1, Worker, DeviceTeamleader, ResearchEngine, Gemma 4 E4B</td>
+<td>Längenheuristik der Zusatzpässe → Nutzen-Router (nach E1.3); Laplace-Online-Lernen → vorregistrierte Strategieexperimente</td>
+<td>Gesprächszustand, Begründungsgedächtnis, CRE1-Semantik, GPU-Backend, Split-MoE mit echten Spuren</td>
+<td>zweiten Speicher, zweites Agenten-Framework, neuen Scheduler, parallele große LLMs, dichtes 500 B auf dem Fold7, mmap als „RAM“, Prefetch ohne Spuren, Agent mit main-Zugriff</td></tr>
+</table>
+
+<h3>J.4 Schlussentscheidung</h3>
+<h4>Drei sofortige Korrekturen</h4>
+<table class="small">
+<tr><th></th><th>Belegstatus</th><th>Patch-Ort</th><th>Risiko</th><th>Test</th><th>Stop-Regel</th></tr>
+<tr><td><b>K1</b> Datumsanker „Heute ist …“</td><td>Fehlen im Code belegt; Wirkung auf Gemma nicht gemessen</td><td>AgentActivity.kt runLocal, vor „Vorherige Modellantworten…“ (~6132); Patch K1</td><td>sehr gering (eine Zeile, ~40 Token)</td><td>60 Zeitfragen A/B auf dem Fold7</td><td>keine Verbesserung oder mehr Fehler bei zeitfreien Fragen → Zeile entfernen</td></tr>
+<tr><td><b>K2</b> GPU-Versuch mit CPU-Rückfall</td><td>API vorhanden (Backend.GPU), Nutzen UNBEKANNT</td><td>LiteRtLmLocalModelRuntime.kt 125–136; Patch K2, Standard <code>preferGpu=false</code></td><td>Treiberabsturz, RAM-Spitze</td><td>Sols Profiler: Zeit bis erstes Token, Token/s, Temperatur, 20 Läufe je Backend</td><td>Absturz, langsamer oder &gt; 10 % mehr Energie → aus</td></tr>
+<tr><td><b>K3</b> Belegpaket + ClaimCheck an Gemma (AP-5)</td><td>EWM2 0 falsch auf TEST5; ClaimCheck 48/49 (H4); Verbindung fehlt im Code</td><td>runLocal: <code>ContinuumBrainResult.answer.render()</code> als Pflichtbeleg; <code>Ewm1ClaimCheck.check</code> nach Generierung</td><td>weniger flüssige Antworten, ein Zusatzschritt</td><td>falsche Details/Antwort, McNemar einseitig gegen heutigen Pfad</td><td>mehr falsche Details oder ein Widerspruch zu einem belegten Besitzerfakt → zurück zu SHADOW</td></tr>
+</table>
+<h4>Drei weitere Experimente</h4>
+<table class="small">
+<tr><th></th><th>Belegstatus</th><th>Patch-Ort</th><th>Risiko</th><th>Test</th><th>Stop-Regel</th></tr>
+<tr><td><b>E1.3</b> Nutzen-Router</td><td>Prototyp + 7 Unit-Tests; Fehlentscheidung des heutigen Routers per Test belegt</td><td>vor <code>ChatReasoningRouter.advise</code>; erst Shadow-Log</td><td>zu wenig Denken bei schweren Fragen</td><td>Nicht-Unterlegenheit 2 pp, ≥ 50 % weniger Zusatzaufrufe</td><td>Grenze des einseitigen 95-%-Intervalls jenseits der Marge</td></tr>
+<tr><td><b>E1.4</b> Begründungsgedächtnis</td><td>Prototyp + Tests (Widerruf, Erklärung, Widerspruch)</td><td>neben <code>ContinuumLearningCore.activeOwnerFacts()</code>, nur Anzeige „abgeleitet“</td><td>falsche Ableitung wirkt wie Wissen</td><td>Zwei-Schritt-Abdeckung vs 14/17; veraltete Schlüsse nach Widerruf</td><td>ein einziger veralteter angezeigter Schluss → aus</td></tr>
+<tr><td><b>E3.1</b> Thompson vs eingefrorene Laplace-Kontrolle</td><td>Mechanik getestet (11 Node-Tests); echter Lauf offen</td><td>dev-loop-kernel.mjs + repair-loop.mjs (frozenRank)</td><td>Fehlanreiz zu riskanten Strategien (durch Risikostufen ausgeschlossen)</td><td>EXP-DL1: versiegelter Holdout ≥ 10 Aufgaben, exakter McNemar</td><td>FAILED oder INCONCLUSIVE → Laplace bleibt, Ergebnis wird archiviert</td></tr>
+</table>
+<h4>Drei riskante Hypothesen</h4>
+<table class="small">
+<tr><th></th><th>Belegstatus</th><th>Patch-Ort</th><th>Risiko</th><th>Test</th><th>Stop-Regel</th></tr>
+<tr><td><b>E2.5</b> Split-MoE Fold7+PC</td><td>nur Modell (1,4–4,6 Token/s Obergrenze)</td><td>neuer PC-Worker-Pfad über Sols Fabric; nie Produktabhängigkeit</td><td>Datenschutz (Aktivierungen verlassen das Gerät), Latenz</td><td>zuerst OLMoE/Mixtral mit echten Spuren auf PC + Fold7</td><td>&lt; 1 Token/s gemessen oder private Daten nötig → abbrechen</td></tr>
+<tr><td><b>E2.8</b> Antwortcache mit Herkunftsbindung</td><td>entworfen; Grundlage: View-Wartung in Datenbanken</td><td>hinter EWM2-Gehirn, Schlüssel = Frage-Normalform + Hash der Belegfakten</td><td>veraltete Antwort nach Widerruf</td><td>Widerruf-Fuzzing: 1 000 Zufallsfolgen</td><td>eine einzige veraltete Antwort → aus</td></tr>
+<tr><td><b>E1.6</b> Temporale Graphwelle</td><td>Hypothese; Vorarbeit HippoRAG/Zep</td><td>nur Kandidatengenerator für EWM2, nie Antwortquelle</td><td>Rauschkandidaten verdrängen richtige</td><td>Recall@5 auf Mehrschritt-Teil von TEST6 vs EWM2</td><td>kein Recall-Gewinn oder p95 &gt; +20 ms → verwerfen</td></tr>
+</table>
+<h4>Unerwartete Alternative</h4>
+<p><b>Evidenzinversion statt größeres Modell.</b> Die stärkste Verbesserung für Dans Alltag kommt nach diesem Gutachten nicht aus mehr Rechenleistung.
+Sie entsteht, wenn sich die Rollen umkehren: Der symbolische Kern (EWM2, Gesprächszustand, Begründungsgedächtnis) entscheidet, <i>was</i> wahr ist und
+<i>ob</i> nachgedacht werden muss. Gemma formuliert nur noch, und der ClaimCheck prüft jede Aussage gegen die Belege. Das ist Hypothese H-A. Sie ist
+billig, lokal, datenschutzfreundlich und mit K1–K3 sofort testbar. Ob sie hält, entscheidet allein die Fold7-Messung.</p>
+
+<div class="note"><b>Abschlusserklärung.</b> Dieses Gutachten behauptet keine Gerätevalidierung, keine erfolgreiche Gradle-Kompilierung und keine historische
+Neuheit. Es wurden keine Modellgewichte, keine privaten Daten und keine Schlüssel verwendet oder hochgeladen. Generation 16 und das versiegelte TEST4
+blieben unberührt. Es gab keine Änderung an <code>main</code>, kein Force-Push und keine Aktivierung von EWM2 ohne Besitzerfreigabe.</div>
+</section>

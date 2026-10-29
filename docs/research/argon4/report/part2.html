@@ -1,0 +1,162 @@
+<section>
+<h2>C · Korrigierte visuelle Architektur</h2>
+<p>Linkes Bild: tatsächlicher Pfad am Commit (vereinfacht). Rot markiert sind die nachgewiesenen Lücken. Rechtes Bild: derselbe Pfad mit den
+eingezeichneten Korrekturen. <b>Neue Bausteine sind gestrichelt und arbeiten zuerst nur im Shadow-Modus.</b> Es entsteht kein neuer Stack,
+kein zweiter Speicher und kein zweiter Agent.</p>
+<svg viewBox="0 0 1000 560" class="diagram" role="img" aria-label="Ist- und Soll-Architektur">
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3a5068"/></marker>
+  <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#c0392b"/></marker></defs>
+  <text x="250" y="22" class="dh">IST · a3fdc179</text>
+  <text x="750" y="22" class="dh">SOLL · nur korrigierte Verbindungen</text>
+  <line x1="500" y1="10" x2="500" y2="550" stroke="#ccd6e0" stroke-dasharray="4 4"/>
+  <!-- IST -->
+  <g class="box"><rect x="160" y="40" width="180" height="40"/><text x="250" y="65">AgentActivity</text></g>
+  <g class="box"><rect x="20" y="110" width="210" height="50"/><text x="125" y="132">Belegdialog</text><text x="125" y="150" class="s">CognitiveRuntime · Adapter=null</text></g>
+  <g class="box"><rect x="270" y="110" width="210" height="50"/><text x="375" y="132">Generativer Chat</text><text x="375" y="150" class="s">BoundedAgent → Gemma (CPU)</text></g>
+  <g class="box"><rect x="20" y="190" width="210" height="50"/><text x="125" y="212">EWM2-Gehirn</text><text x="125" y="230" class="s">Standard OFF</text></g>
+  <g class="box"><rect x="270" y="190" width="210" height="50"/><text x="375" y="212">AiContextCompiler</text><text x="375" y="230" class="s">semanticScorer = 0</text></g>
+  <g class="box"><rect x="270" y="270" width="210" height="50"/><text x="375" y="292">ChatReasoningRouter</text><text x="375" y="310" class="s">bis 4 Pässe nach Länge</text></g>
+  <g class="box"><rect x="270" y="350" width="210" height="50"/><text x="375" y="372">LocalConversationContext</text><text x="375" y="390" class="s">4 Paare · kein Datum</text></g>
+  <g class="box"><rect x="20" y="430" width="210" height="50"/><text x="125" y="452">Worker (nur Tests)</text><text x="125" y="470" class="s">kein Zyklus-Journal</text></g>
+  <g class="box"><rect x="270" y="430" width="210" height="50"/><text x="375" y="452">CCC1 Ledger</text><text x="375" y="470" class="s">Laplace ohne Kontrolle</text></g>
+  <path d="M220,80 L125,110" class="ln" marker-end="url(#ar)"/><path d="M280,80 L375,110" class="ln" marker-end="url(#ar)"/>
+  <path d="M125,160 L125,190" class="ln" marker-end="url(#ar)"/><path d="M375,160 L375,190" class="ln" marker-end="url(#ar)"/>
+  <path d="M375,240 L375,270" class="ln" marker-end="url(#ar)"/><path d="M375,320 L375,350" class="ln" marker-end="url(#ar)"/>
+  <path d="M230,215 L270,215" class="lr" marker-end="url(#arr)"/><text x="250" y="262" class="red">kein Beleg</text><text x="250" y="276" class="red">an Gemma</text>
+  <path d="M230,455 L270,455" class="lr" marker-end="url(#arr)"/><text x="250" y="500" class="red">nicht als ein Zyklus</text>
+  <!-- SOLL -->
+  <g class="box"><rect x="660" y="40" width="180" height="40"/><text x="750" y="65">AgentActivity</text></g>
+  <g class="new"><rect x="530" y="100" width="210" height="46"/><text x="635" y="120">Gesprächszustand</text><text x="635" y="137" class="s">DialogStateKernel · Datum</text></g>
+  <g class="box"><rect x="770" y="100" width="210" height="46"/><text x="875" y="120">EWM2-Gehirn</text><text x="875" y="137" class="s">Belegpaket (vorhanden)</text></g>
+  <g class="new"><rect x="530" y="170" width="210" height="46"/><text x="635" y="190">Begründungsgedächtnis</text><text x="635" y="207" class="s">abgeleitet, nie Besitzerfakt</text></g>
+  <g class="new"><rect x="650" y="240" width="220" height="46"/><text x="760" y="260">Rechenrouter (Nutzen)</text><text x="760" y="277" class="s">Kontrolle: heutiger Selektor</text></g>
+  <g class="box"><rect x="520" y="320" width="140" height="46"/><text x="590" y="340">Direkter Beleg</text><text x="590" y="357" class="s">0 Modellaufrufe</text></g>
+  <g class="box"><rect x="680" y="320" width="150" height="46"/><text x="755" y="340">Gemma + Prüfer</text><text x="755" y="357" class="s">GPU-Versuch · ClaimCheck</text></g>
+  <g class="box"><rect x="850" y="320" width="130" height="46"/><text x="915" y="340">Rückfrage /</text><text x="915" y="357" class="s">Recherche (ToolGate)</text></g>
+  <g class="box"><rect x="530" y="430" width="200" height="50"/><text x="630" y="452">Worker + CCC1</text><text x="630" y="470" class="s">vorhanden</text></g>
+  <g class="new"><rect x="760" y="430" width="220" height="50"/><text x="870" y="452">Dev-Loop-Kern</text><text x="870" y="470" class="s">Journal · Experimente · Kontrolle</text></g>
+  <path d="M720,80 L635,100" class="ln" marker-end="url(#ar)"/><path d="M780,80 L875,100" class="ln" marker-end="url(#ar)"/>
+  <path d="M635,146 L635,170" class="ln" marker-end="url(#ar)"/><path d="M740,123 L770,123" class="ln" marker-end="url(#ar)"/>
+  <path d="M635,216 L720,240" class="ln" marker-end="url(#ar)"/><path d="M875,146 L800,240" class="ln" marker-end="url(#ar)"/>
+  <path d="M720,286 L590,320" class="ln" marker-end="url(#ar)"/><path d="M760,286 L755,320" class="ln" marker-end="url(#ar)"/><path d="M800,286 L915,320" class="ln" marker-end="url(#ar)"/>
+  <path d="M730,455 L760,455" class="ln" marker-end="url(#ar)"/>
+  <text x="750" y="530" class="s">gestrichelt = neu, zuerst SHADOW · durchgezogen = vorhanden</text>
+</svg>
+</section>
+
+<section>
+<h2>D · Variantenatlas A/B/C/D</h2>
+<table>
+<tr><th>Variante</th><th>Eingriff</th><th>Zusatz-RAM</th><th>Zusatzlatenz p95 (geschätzt)</th><th>Aufwand</th><th>Erfolgschance</th><th>Risiko / Stop-Regel</th></tr>
+<tr><td><b>A · konservativ</b></td><td>K1 Datum, Gesprächszustand im Shadow, Shadow-Logs für Router und CRE1-Semantik</td><td>&lt; 1 MB</td><td>&lt; 2 ms (JVM ~1 ms/Dialog gemessen)</td><td>2–3 PT</td><td>hoch</td><td>gering · Stop bei jeder Antwortänderung im Shadow</td></tr>
+<tr><td><b>B · modular</b></td><td>A + Belegpaket an Gemma + ClaimCheck (AP-5) + Nutzen-Router aktiv + GPU-Versuch K2</td><td>&lt; 5 MB (+ GPU-Treiberspeicher UNBEKANNT)</td><td>Router spart Pässe; GPU muss gemessen werden</td><td>6–10 PT</td><td>mittel–hoch</td><td>mittel · Stop bei Fakten-Widerspruch, Absturz, Mehrverbrauch</td></tr>
+<tr><td><b>C · Forschung</b></td><td>Begründungsgedächtnis (TMS), temporale Graphwelle als Kandidatengenerator, Antwortcache mit Herkunftsbindung</td><td>~2–20 MB je nach Faktenzahl</td><td>+5–20 ms Ableitung (beschränkt)</td><td>10–20 PT</td><td>mittel</td><td>Halluzinationsrisiko über falsche Kanten · Stop bei 1 falsch angezeigter Ableitung</td></tr>
+<tr><td><b>D · radikal</b></td><td>Split-MoE Fold7+PC, Expertenstreaming, spekulative Dekodierung, PC-Fabric</td><td>4–8 GB auf dem Fold7</td><td>0,5–5 s/Token (modelliert)</td><td>&gt; 30 PT</td><td>gering für Alltag</td><td>hoch · nie Produktabhängigkeit; Daten zum PC nur mit Besitzerfreigabe</td></tr>
+</table>
+<p><b>Pareto-Lesart.</b> A dominiert bei Risiko und Kosten. B liefert den größten erwarteten Qualitätsgewinn pro Personentag, weil es vorhandene
+gemessene Stärken (EWM2: 0 falsch auf TEST5, ClaimCheck 48/49) mit dem generativen Pfad verbindet. C ist erst sinnvoll, wenn B gemessen ist.
+D ist Forschung über Hardwaregrenzen und darf nie den Alltagspfad tragen.</p>
+</section>
+
+<section>
+<h2>E · Forschungsfrage 1 – Das Gehirn, das mehr versteht, als es speichert</h2>
+<div class="scene"><b>Dan-Szene.</b> „Was habe ich gestern mit Anna besprochen?“, fragt Dan. Das Gerät antwortet flüssig und falsch: Es weiß
+nicht, welcher Tag heute ist, und Anna war vor sechs Nachrichten zuletzt erwähnt, also längst aus seinem Vier-Paare-Fenster gefallen. Der Professor
+nimmt keinen größeren Prozessor aus dem Regal. Er schreibt zwei Zeilen an die Tafel: <i>„Wissen, worüber gesprochen wird“</i> und
+<i>„Wissen, wann man nachdenken muss.“</i></div>
+
+<h3>E.1 Antwort auf die zentrale Architekturfrage</h3>
+<table>
+<tr><th>Station</th><th>Status</th><th>Begründung</th></tr>
+<tr><td><b>Neu, bringt echte Verbesserung</b></td><td>Gesprächszustand (Referenten, Korrekturen, absolute Zeit, offene Fragen)</td><td>Gemessen (JVM, Holdout, 108 Sonden): Kernel 96 richtig / 0 falsch / 12 Rückfragen vs Bezug noch im Kontext 60 / 24 / 0 (24 nicht anwendbar); Zeit 12/12 vs 0/12</td></tr>
+<tr><td><b>Neu, bringt echte Verbesserung</b></td><td>Nutzen-Router (Wert der Berechnung)</td><td>Ersetzt eine Längenheuristik; verhindert 4 Zusatzpässe bei belegten Fragen; verhindert Modellantworten auf unbelegte persönliche Fragen</td></tr>
+<tr><td><b>Neu, experimentell</b></td><td>Begründungsgedächtnis (TMS + Warum-Herkunft)</td><td>Zielt auf EWM1-H2 (Zwei-Schritt 14/17); Widerruf nimmt Schlüsse automatisch zurück</td></tr>
+<tr><td><b>Nur richtig verbinden</b></td><td>EWM2-Gehirn → Gemma (AP-5), ClaimCheck nach Generierung, CRE1-Scores als <code>semanticScorer</code> (nach Messung)</td><td>alles vorhanden, im Produktpfad getrennt</td></tr>
+<tr><td><b>Unnötige Rechenlast</b></td><td>Zusatzpässe nach Länge; Selbstkritik desselben Modells ohne neue Information; Multi-Candidate auf belegten Fakten</td><td>derselbe Gemma-Kern prüft sich selbst nicht unabhängig (Auftrag §10)</td></tr>
+</table>
+
+<h3>E.2 Forschungsstand (Vorarbeiten, nachprüfbar) und was davon für Continuum neu ist</h3>
+<table class="small">
+<tr><th>Arbeit</th><th>Kernidee</th><th>Übertragung auf Continuum</th></tr>
+<tr><td>MemGPT (Packer et al., 2023, arXiv:2310.08560)</td><td>hierarchischer Kontext, Paging zwischen Kontext und Speicher</td><td>Idee „Zustand statt Abschrift“; wir paginieren nicht, sondern rendern einen ≤600-Zeichen-Zustand</td></tr>
+<tr><td>Generative Agents (Park et al., 2023)</td><td>Erinnerungsstrom, Reflexion, Abruf nach Rezenz/Relevanz/Wichtigkeit</td><td>Rezenz+Salienz-Score im DialogStateKernel</td></tr>
+<tr><td>A-MEM (Xu et al., 2025, arXiv:2502.12110)</td><td>agentisches Zettelkasten-Gedächtnis mit dynamischen Links</td><td>Links nur als <i>abgeleitet, nicht bestätigt</i> (JustifiedRelationStore), nie als Wahrheit</td></tr>
+<tr><td>HippoRAG (Gutiérrez et al., NeurIPS 2024, arXiv:2405.14831); HippoRAG 2 (2025, arXiv:2502.14802)</td><td>Wissensgraph + Personalized PageRank für Mehrschritt-Abruf</td><td>Experiment E1.6 als Kandidatengenerator; Antwort bleibt belegpflichtig</td></tr>
+<tr><td>Mem0 (Chhikara et al., 2025, arXiv:2504.19413)</td><td>Extraktion/Update/Löschen von Fakten für Langzeitagenten</td><td>Continuum hat strengere Besitzerregeln: keine automatische Faktextraktion</td></tr>
+<tr><td>GraphRAG (Edge et al., 2024, arXiv:2404.16130)</td><td>Community-Zusammenfassungen über einem Graph</td><td>für ~10<sup>2</sup>–10<sup>3</sup> Besitzerfakten überdimensioniert → verworfen</td></tr>
+<tr><td>Zep/Graphiti (Rasmussen et al., 2025, arXiv:2501.13956)</td><td>temporaler Wissensgraph mit Gültigkeitsintervallen</td><td>Gültigkeit/Supersession existiert bereits in EWM (UPDATE 7/7); zeitliche Kanten nur für E1.6</td></tr>
+<tr><td>LongMemEval (Wu et al., ICLR 2025, arXiv:2410.10813); LoCoMo (Maharana et al., ACL 2024, arXiv:2402.17753)</td><td>Benchmarks für Langzeit-Dialoggedächtnis</td><td>Kategorien (zeitlich, Update, Mehrsitzung, Enthaltung) für TEST6 übernehmen, deutsche Neuformulierung</td></tr>
+<tr><td>Self-RAG (Asai et al., 2023); CRAG (Yan et al., 2024); Adaptive-RAG (Jeong et al., NAACL 2024)</td><td>Abruf- und Selbstprüfungsentscheidungen</td><td>Rechenrouter wählt Abruf/Prüfung nach <i>gemessenem</i> Beleg statt Modell-Selbsteinschätzung</td></tr>
+<tr><td>Snell et al. (2024, arXiv:2408.03314); FrugalGPT (Chen et al., 2023); RouteLLM (Ong et al., 2024)</td><td>Test-Time-Compute optimal verteilen; Kaskaden/Router</td><td>dieselbe Frage auf einem Gerät mit einem Modell: Rechenzeit statt Modellwahl verteilen</td></tr>
+<tr><td>Russell &amp; Wefald (1991), „Principles of Metareasoning“</td><td>Wert der Berechnung</td><td>formale Grundlage des Nutzen-Routers</td></tr>
+<tr><td>Doyle (1979) TMS; de Kleer (1986) ATMS; Green/Karvounarakis/Tannen (PODS 2007) Provenance Semirings</td><td>Begründungsverwaltung, Herkunftspolynome</td><td>Warum-Herkunft je abgeleiteter Relation; Widerruf = Löschen aller Zeugenmengen mit dem Fakt</td></tr>
+<tr><td>McClelland, McNaughton &amp; O'Reilly (1995), Complementary Learning Systems</td><td>schnelles episodisches + langsames semantisches Lernen</td><td>episodisch = Ledger/EWM, langsam = SWB1/CRE1 nur mit Holdout-Gates (bereits so gebaut)</td></tr>
+</table>
+<p><b>Neuheitsgrenze (ehrlich):</b> Jede Einzelidee hat Vorarbeiten. Neu für Continuum und unseres Wissens in dieser Kombination nicht
+veröffentlicht (nicht weltweit geprüft): (i) TMS-Warum-Herkunft gekoppelt an <i>Besitzerwiderruf</i> mit Anzeigepflicht „abgeleitet, nicht bestätigt“,
+(ii) ein Nutzen-Router, dessen Kalibrierung nur aus <i>unabhängig verifizierten</i> Ergebnissen (Besitzer, ClaimCheck, Tests) lernt,
+(iii) ein Gesprächszustand, der Korrekturen als <i>Ausschluss</i> eines Referenten speichert statt als neuen Fakt.</p>
+
+<h3>E.3 Drei eigene Architekturhypothesen (falsifizierbar)</h3>
+<ol>
+<li><b>H-A Evidenzinversion.</b> Bei unverändertem Modell steigt die Faktentreue stärker, wenn der symbolische Kern entscheidet und Gemma nur
+formuliert, gefolgt von einer Aussagenprüfung, als durch zusätzliche Denkpässe desselben Modells. <i>Falsifiziert</i>, wenn auf dem
+Fold7-TEST die Variante „4 Zusatzpässe“ weniger falsche Details pro Antwort hat als „Beleg + 1 Pass + ClaimCheck“.</li>
+<li><b>H-B Begründete Relationen statt Graph-Wahrheit.</b> Ein TMS mit Warum-Herkunft beantwortet Zwei-Schritt-Fragen mindestens so oft
+richtig wie Graph-Aktivierung (HippoRAG-artig), mit <b>null</b> nach einem Widerruf noch angezeigten Schlüssen. <i>Falsifiziert</i> bei
+≥ 1 veraltetem angezeigtem Schluss oder schlechterer Zwei-Schritt-Abdeckung als 14/17 (EWM1-Referenz) auf TEST6.</li>
+<li><b>H-C Kalibrierte Rechenzuteilung.</b> Ein aus verifizierten Ergebnissen kalibrierter Nutzen-Router spart ≥ 50 % der
+Gemma-Zusatzaufrufe ohne schlechtere Korrektheit (Nicht-Unterlegenheitsmarge 2 Prozentpunkte). <i>Falsifiziert</i> durch die
+Grenze des einseitigen 95-%-Intervalls jenseits der Marge.</li>
+</ol>
+
+<h3>E.4 Außergewöhnliche Experimente (mindestens sechs)</h3>
+<table class="small">
+<tr><th>ID</th><th>Experiment</th><th>Kontrollgruppe</th><th>Metrik</th><th>Kosten</th><th>Entscheidung</th></tr>
+<tr><td>E1.1</td><td>Gesprächszustand-Kernel im Prompt (Shadow → ON)</td><td>LocalConversationContext allein</td><td>Referenzkorrektheit, Rückfragequote, p95</td><td>&lt;1 MB, ~1 ms</td><td><b>übernehmen</b> (Shadow zuerst)</td></tr>
+<tr><td>E1.2</td><td>Datumsanker (Patch K1)</td><td>ohne Datum</td><td>richtige Zeitbezüge in 60 Fragen mit Gemma</td><td>0</td><td><b>übernehmen</b></td></tr>
+<tr><td>E1.3</td><td>Nutzen-Router mit Kalibrierung aus verifizierten Ergebnissen</td><td>ReasoningStrategySelector</td><td>richtig, Halluzinationen (ClaimCheck), Modellaufrufe, Energie</td><td>gering</td><td>experimentell prüfen</td></tr>
+<tr><td>E1.4</td><td>Begründungsgedächtnis für Zwei-Schritt-Fragen</td><td>EWM2 allein</td><td>Abdeckung, veraltete Schlüsse nach Widerruf (muss 0 sein)</td><td>2–20 MB</td><td>experimentell prüfen</td></tr>
+<tr><td>E1.5</td><td>CRE1-Scores als semanticScorer (Shadow-Gate)</td><td>lexikalisch (heute)</td><td>Hit@3, MRR, falsche Person</td><td>vorhandene Scores</td><td>experimentell prüfen</td></tr>
+<tr><td>E1.6</td><td>Temporale Graphwelle: Aktivierung mit Zerfall, Widerspruchskanten hemmen</td><td>EWM2-Kandidaten</td><td>Recall@5 bei Mehrschritt; nie Antwortquelle</td><td>~5 ms</td><td>riskant, später</td></tr>
+<tr><td>E1.7</td><td>Belegpaket + 1 Pass + ClaimCheck (AP-5)</td><td>Gemma frei + 4 Pässe</td><td>falsche Details/Antwort, Latenz</td><td>1 Pass</td><td><b>übernehmen</b> nach Fold7</td></tr>
+<tr><td>E1.8</td><td>Prozedurale Wiederverwendung erfolgreicher Lösungswege (ExperienceCompiler) nach Aufgabenklasse</td><td>ohne</td><td>Erfolg bei wiederkehrenden Aufgaben</td><td>gering</td><td>experimentell</td></tr>
+<tr><td>E1.9</td><td>Selbstkonsistenz nur bei Unsicherheit (2 Proben, Prüfer entscheidet)</td><td>immer 4 Pässe</td><td>Korrektheit pro Joule</td><td>bedingt</td><td>experimentell</td></tr>
+</table>
+
+<h3>E.5 Mathematische Entscheidung: direkte Antwort, Denken, Recherche, Werkzeug</h3>
+<div class="formula">EU(a | s) = p(a,s)·V − h(a,s)·R<sub>persönlich|allgemein</sub> − L(s)·[λ<sub>t</sub>·t(a) + λ<sub>e</sub>·e(a)],&nbsp;&nbsp; a* = argmax<sub>a ∈ zulässig(s)</sub> EU(a|s)</div>
+<p>p und h sind Beta-Posteriori je (Aktion, Signalfach), Signalfach = Belegentscheidung × Abdeckung × ClaimCheck-Markierung × offener Bezug.
+L(s) verdoppelt die Kosten bei Drosselung oder niedrigem Akku. <b>Zulässigkeit ist hart, nicht verhandelbar:</b> kein Modell ohne Modell,
+keine Recherche ohne Freigabe oder bei persönlichen Fragen, kein Werkzeug aus Chattext, Modellpässe gesperrt bei offenem Bezug.
+Lernen geschieht nur über <code>observe()</code> mit verifizierten Ergebnissen. Ein weiterer Pass lohnt sich genau dann, wenn
+Δp·V + Δh·R &gt; L·(λ<sub>t</sub>Δt + λ<sub>e</sub>Δe).</p>
+
+<h3>E.6 Datenmodelle und Integrationsschnittstellen</h3>
+<table class="small">
+<tr><th>Neu (Prototyp)</th><th>Bindet an (vorhanden, belegt)</th><th>Benötigte Signatur</th></tr>
+<tr><td><code>DialogStateKernel.observeUser/observeAnswer/render</code></td><td><code>LocalConversationContext.record(sessionId, request, response)</code>; <code>runLocal</code> promptBody</td><td>vorhanden; Einbau: Zeile nach <code>append(conversationContext)</code></td></tr>
+<tr><td><code>ComputeAllocationPolicy.choose(Signals)</code></td><td><code>ContinuumBrainResult.status</code>, <code>Ewm1ClaimCheck.check</code>, <code>LocalFirstPolicy.afterMemory</code></td><td>Signals aus vorhandenen Werten; Einbau vor <code>ChatReasoningRouter.advise</code></td></tr>
+<tr><td><code>JustifiedRelationStore</code></td><td><code>ContinuumLearningCore.activeOwnerFacts()</code> (id, content)</td><td>vorhanden; Anzeige nur mit „abgeleitet, nicht bestätigt“</td></tr>
+<tr><td>Kalibrierungs-Rückmeldung</td><td>Besitzer-Feedback im Chat: <b>UNBEKANNT</b> (kein einheitlicher Daumen-Hoch/Runter-Endpunkt gefunden)</td><td>neu nötig: inhaltsfreies Ergebnisereignis je Zug</td></tr>
+</table>
+
+<h3>E.7 Gemessene Ergebnisse (JVM, synthetisch, ein Autor)</h3>
+<p>Benchmark <code>Argon4DialogBenchmark</code>: 9 Kategorien × 12 = 108 Sonden, identische Dialoge für alle Systeme. Lauf 1 deckte eine echte Kernel-Schwäche auf
+(LONG_RANGE 0 richtig / 4 falsch / 8 Rückfragen). Darauf wurde ein Holdout mit anderem Vokabular <b>vor</b> der Reparatur versiegelt
+(SHA-256 <code>82ad1bbf…</code>) und nach der Reparatur genau einmal ausgeführt.</p>
+<!--F1TABLE-->
+<p><b>Lesart:</b> CTRL-A misst, ob der Bezug überhaupt noch im Gemma-Kontext steht. Das ist notwendig, aber nicht hinreichend, damit das Modell richtig auflöst.
+Die 12 Rückfragen des Kernels betreffen Namen ohne Geschlechtshinweis. Das ist eine bewusste Grenze: kein Raten von Geschlecht aus Vornamen.
+<b>Nicht belegt:</b> die Wirkung auf echte Gemma-Antworten. Dafür ist E1.1 auf dem Fold7 nötig.</p>
+
+<h3>E.8 Benchmarkplan mit Kontrollgruppe (Fold7)</h3>
+<ol>
+<li><b>TEST6</b>: 150–200 deutsche Dialoge, geschrieben von einer <i>anderen</i> Instanz (Codex/Sol), Kategorien nach LongMemEval/LoCoMo
+(Referenz, Korrektur, Zeit, Update, Mehrschritt, Enthaltung). Der SHA-256 wird vor jedem Code-Freeze committet.</li>
+<li><b>Arme</b>: K0 = heutiger Pfad; K1 = K0 + Datum + Zustand; K2 = K1 + Belegpaket + ClaimCheck; K3 = K2 + Nutzen-Router.</li>
+<li><b>Metriken</b>: richtige Antworten, falsche Details je Antwort (ClaimCheck + Besitzerlabel), Rückfragequote, Gemma-Aufrufe, p50/p95-Latenz, Energie (Batteriezähler), RAM-Spitze.</li>
+<li><b>Entscheidung</b>: K2 vor K1 nur bei weniger falschen Details (McNemar einseitig, α = 0,05); K3 nur bei Nicht-Unterlegenheit und ≥ 50 % weniger Aufrufen.</li>
+<li><b>Kill-Switch</b>: jeder Widerspruch zu einem belegten Besitzerfakt, jede Anzeige eines widerrufenen Fakts oder ein Absturz → Variante bleibt isoliert.</li>
+</ol>
+</section>

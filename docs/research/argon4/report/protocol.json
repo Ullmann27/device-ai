@@ -1,0 +1,20 @@
+{
+  "schema": "argon4-test-protocol-v1",
+  "date": "2026-10-29",
+  "environment": "Claude Code cloud container (Linux x86_64, Node 22, Python 3, kotlinc JUnit harness); no Android SDK, no Gemma, no Fold7",
+  "codeState": "0f264987 (later commits on the branch change only docs/research/argon4/report)",
+  "runs": [
+    {"check": "Kotlin unit harness without Gradle", "command": "scripts/android-kotlin-unit-check.sh", "result": "classes=237 checks=4, JUnit OK (1257 tests), KOTLIN_UNIT_TESTS_CHECKED, exit 0", "status": "PASSED"},
+    {"check": "F1 prototypes", "command": "Argon4F1PrototypeTest (inside the harness)", "result": "21/21", "status": "PASSED"},
+    {"check": "F1 dialog benchmark, DEV run 1 (before repair)", "command": "Argon4DialogBenchmark main(out)", "result": "kernel 84 correct / 4 wrong / 20 clarify; weakness LONG_RANGE found", "status": "RECORDED"},
+    {"check": "F1 holdout sealed before repair", "command": "Argon4DialogBenchmark main(out, HOLDOUT_SHA)", "result": "sha256 82ad1bbfa8262a568ab21b962ae52b7ceee5a75d4a03fc4f5f193f49bae0d466", "status": "SEALED"},
+    {"check": "F1 holdout, single run after repair", "command": "Argon4DialogBenchmark main(out, HOLDOUT)", "result": "kernel 96/0/12, CTRL-A 60/24/0 (24 n/a), CTRL-B 24/84/0", "status": "RECORDED"},
+    {"check": "F2 Python tests", "command": "python3 -I scripts/argon4/test_argon4_f2.py", "result": "Ran 10 tests, OK, exit 0", "status": "PASSED"},
+    {"check": "F2 storage benchmark (cloud host, 2048 MiB)", "command": "python3 -I scripts/argon4/stream_bench.py 2048 out.json", "result": "see F.5; must be repeated on the Fold7", "status": "HOST_ONLY"},
+    {"check": "Node suites incl. F3 kernel, worker, repair loop and ledger (23 files)", "command": "node --test <23 files, see PR #240>", "result": "tests 265, pass 265, fail 0", "status": "PASSED"},
+    {"check": "F3 dev-loop kernel", "command": "node --test .github/continuum/dev-loop-kernel.test.mjs", "result": "11/11", "status": "PASSED"},
+    {"check": "Patch K2 against the LiteRT-LM stub", "command": "kotlinc (harness classpath) with patched LiteRtLmLocalModelRuntime.kt", "result": "0 errors", "status": "COMPILED_STUB_ONLY"},
+    {"check": "Gradle assemble / Android Lint", "command": "./gradlew :app:testDebugUnitTest lint", "result": "dl.google.com blocked (HTTP 403) by the environment network policy", "status": "SDK_UNAVAILABLE"},
+    {"check": "Fold7 device validation", "command": "-", "result": "no device in this environment", "status": "NOT_RUN"}
+  ]
+}

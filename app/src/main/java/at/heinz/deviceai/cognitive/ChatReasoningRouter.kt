@@ -6,7 +6,8 @@ class ChatReasoningRouter(
     private val adapter: ContinuumReasoningAdapter,
     private val cancelRuntime: () -> Unit,
     private val config: Config = Config(),
-    private val nowMillis: () -> Long = System::currentTimeMillis
+    private val nowMillis: () -> Long = System::currentTimeMillis,
+    private val argonShadowMode: Argon4ShadowMode = Argon4ShadowMode.SHADOW
 ) {
     data class Config(
         val maxExtraCalls: Int = 4,
@@ -27,6 +28,9 @@ class ChatReasoningRouter(
     }
 
     private val cancellation = DeliberationCancellation()
+    /** Uncalibrated proposal only; never changes calls, deadlines, tools or answers. */
+    var argonShadowChoice: at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.Action? = null
+        private set
 
     fun cancel() {
         cancellation.cancel()
@@ -36,9 +40,23 @@ class ChatReasoningRouter(
 
     /** Returns a bounded, unverified advisory for hard tool-free tasks, or null (never throws). */
     fun advise(taskId: String, task: String, context: String,
-               groundedRecall: LocalGroundedRecall? = null): String? {
+               groundedRecall: LocalGroundedRecall? = null, modelReady: Boolean = false): String? {
         return try {
             val assessment = ContinuumTaskClassifier.classify(task)
+            argonShadowChoice = if (argonShadowMode == Argon4ShadowMode.SHADOW) runCatching {
+                val p = at.heinz.deviceai.research.argon4.ComputeAllocationPolicy()
+                p.choose(at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.Signals(
+                    evidence = if (groundedRecall == null)
+                        at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.EvidenceDecision.NONE
+                    else at.heinz.deviceai.research.argon4.ComputeAllocationPolicy.EvidenceDecision.QUERY,
+                    // Attribute coverage/claim-check verdicts are not exposed by
+                    // this path. Do not fabricate full coverage or a verified answer.
+                    coverage = 0.0, claimFlags = 0, unresolvedReference = false,
+                    freshnessNeeded = false, toolIntent = assessment.expectedToolUse,
+                    personal = groundedRecall != null, modelReady = modelReady,
+                    internetAllowed = false, remainingModelCalls = config.maxExtraCalls
+                )).action
+            }.getOrNull() else null
             if (assessment.expectedToolUse || assessment.taskClass == IntelligenceTaskClass.DEVICE) return null
             val strategy = ReasoningStrategySelector.select(assessment.strategyProfile())
             if (strategy != ReasoningStrategy.DEEP && strategy != ReasoningStrategy.MULTI_CANDIDATE) return null

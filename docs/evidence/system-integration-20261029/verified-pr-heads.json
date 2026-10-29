@@ -1,0 +1,182 @@
+[
+  {
+    "pr": 242,
+    "head": "integration/continuum-brain-system-20261029",
+    "sha": "e06e17a4e8ba12a1dce3d5308e5eb455cda30b6d",
+    "base": "research/sol61-ccc1-skill-transfer",
+    "baseSha": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 241,
+    "head": "research/sol61-ccc1-skill-transfer",
+    "sha": "39772c9b544a9625c7c8ffc0e6aaaedb36cc5192",
+    "base": "sol/continuum-dan-evidence-loop-20261029",
+    "baseSha": "a3fdc17958d4e552bd3b74cf611c9fd40480f269",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 240,
+    "head": "opus/argon4-research-20261029",
+    "sha": "67888e3323f5f30964202e901034cdf80dddb456",
+    "base": "main",
+    "baseSha": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 239,
+    "head": "feature/continuum-model-web-learning-review-20261029",
+    "sha": "30fbef96182ed83ee55a1e6ec732d1c533df4a51",
+    "base": "sol/continuum-dan-evidence-loop-20261029",
+    "baseSha": "76aafc1dfdbdaca8f5f57f68a760b00bc4a02693",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 238,
+    "head": "sol/continuum-dan-evidence-loop-20261029",
+    "sha": "a3fdc17958d4e552bd3b74cf611c9fd40480f269",
+    "base": "sol/continuum-dialog-integration-20261029",
+    "baseSha": "f54327b906a67d4f40862b5dd25a6b72e6015bc7",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 237,
+    "head": "sol/continuum-dialog-integration-20261029",
+    "sha": "f54327b906a67d4f40862b5dd25a6b72e6015bc7",
+    "base": "sol/continuum-gpt6-closeout-20261029",
+    "baseSha": "9fbd377f2511a72ef669fad9928b07593eeb81a2",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 236,
+    "head": "feature/continuum-p0-inapp-owner-updater-20261029",
+    "sha": "6bc54545adcef83e801003f5559d377f3a20d9ba",
+    "base": "review/ewm2-revocation-race-20261029",
+    "baseSha": "b2b2277162e346688da3eef551414108615f3cad",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 234,
+    "head": "fix/continuum-dashboard-evidence-labels-20261029",
+    "sha": "d5af54e18a2694de78b0a125c5f83e73da930cdf",
+    "base": "review/ewm2-revocation-race-20261029",
+    "baseSha": "b2b2277162e346688da3eef551414108615f3cad",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 233,
+    "head": "fix/continuum-self-awareness-neuron-command-20261029",
+    "sha": "316c55543f2e1e84a52c5ace437c572791e1936d",
+    "base": "review/ewm2-revocation-race-20261029",
+    "baseSha": "b2b2277162e346688da3eef551414108615f3cad",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 232,
+    "head": "research/continuum-language-core-update-contract-20261029",
+    "sha": "fe871cb685bd3cd42347ce80ca2373319c11da96",
+    "base": "review/ewm2-revocation-race-20261029",
+    "baseSha": "b2b2277162e346688da3eef551414108615f3cad",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 230,
+    "head": "sol/continuum-gpt6-closeout-20261029",
+    "sha": "9fbd377f2511a72ef669fad9928b07593eeb81a2",
+    "base": "review/continuum-memory-attribute-guard-20261029",
+    "baseSha": "a16e45c8bb43a38143ed729b5e0501337adc8eb5",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 229,
+    "head": "review/continuum-memory-attribute-guard-20261029",
+    "sha": "a16e45c8bb43a38143ed729b5e0501337adc8eb5",
+    "base": "review/ewm2-revocation-race-20261029",
+    "baseSha": "b2b2277162e346688da3eef551414108615f3cad",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 228,
+    "head": "review/ewm2-revocation-race-20261029",
+    "sha": "b2b2277162e346688da3eef551414108615f3cad",
+    "base": "opus/continuum-ewm2-integration-20261029",
+    "baseSha": "f5881a7b5ba6894f36df38eb28f897cb4da1cda5",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 227,
+    "head": "opus/continuum-ewm2-integration-20261029",
+    "sha": "05db7e38d70d886b305a547b5b5b628272c5ddfa",
+    "base": "sol/continuum-runtime-reliability-20261029",
+    "baseSha": "33cc4d6404aac8423a924f1aff226eb8dc017a4d",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 226,
+    "head": "research/gemma-monotonic-profile-20261029",
+    "sha": "2885bc0db50ad027b94d624f3778b7b8509e56e2",
+    "base": "sol/continuum-generation16-gemma-20261029",
+    "baseSha": "0b2a9dddfe172eac82923092fcdaa974afc6e25a",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 225,
+    "head": "codex/worker-prestart-lease-path-20261029",
+    "sha": "add0faa4af145a49f0f67207a11e00bd7a0cbd03",
+    "base": "sol/continuum-generation16-gemma-20261029",
+    "baseSha": "0b2a9dddfe172eac82923092fcdaa974afc6e25a",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 224,
+    "head": "opus/continuum-brain-research-20261029",
+    "sha": "d49fbfea587ac18bead8f5ad30f244ca4250d796",
+    "base": "research/continuum-worker-untracked-gate-20261028",
+    "baseSha": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 223,
+    "head": "sol/continuum-runtime-reliability-20261029",
+    "sha": "de8f759b1be9f56d1c7d4efc3b52cf8a07ee82cb",
+    "base": "sol/continuum-generation16-gemma-20261029",
+    "baseSha": "0b2a9dddfe172eac82923092fcdaa974afc6e25a",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 222,
+    "head": "codex/generation16-rescue-bom-bound-20261029",
+    "sha": "40b58a7e691ce3a3fefe198743dcfc1d4d4febda",
+    "base": "sol/continuum-generation16-gemma-20261029",
+    "baseSha": "0b2a9dddfe172eac82923092fcdaa974afc6e25a",
+    "draft": true,
+    "state": "open"
+  },
+  {
+    "pr": 221,
+    "head": "research/gemma-stream-callback-lifecycle-20261029",
+    "sha": "3a5c91446ca3cc13e5f311ef13d9983978705ed1",
+    "base": "research/continuum-worker-untracked-gate-20261028",
+    "baseSha": "b47f4fac043b2124a9ef4dd1cfb469a3fde88bc6",
+    "draft": true,
+    "state": "open"
+  }
+]
