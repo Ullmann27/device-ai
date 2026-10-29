@@ -132,7 +132,9 @@ class ContinuumBrainBridgeTest {
         assertFalse(after.outcome.answer.contains("Anna wohnt in Linz."))
         // If a fact is revoked after baseline rendering, the baseline can contain that fact.
         // Never display the stale baseline even when the brain notices the revocation.
-        val today=baseline(dir,core,"conv-race","Was spielt Anna?")
+        val today=ContinuumChatOutcome("Dazu finde ich in meinem Gedächtnis:\n\nAnna spielt Cello.",
+            "CONTINUUM · Modell x","trace",true,ContinuumBaselineSource.MEMORY,
+            listOf(idOf(core,"Anna spielt Cello.")))
         assertTrue("pre-revocation baseline cites Cello",today.answer.contains("Anna spielt Cello."))
         ContinuumBrainBridge.beforeRevocationCheck={ core.revokeOwnerFact("Anna spielt Cello.") }
         val raced=ContinuumBrainBridge.decide(dir,core,"conv-race","Was spielt Anna?",today)
