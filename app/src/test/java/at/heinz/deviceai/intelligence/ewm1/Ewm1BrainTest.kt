@@ -18,7 +18,7 @@ class Ewm1BrainTest {
 
     private fun Ewm1Brain.text(a: Ewm1Brain.Answer) = a.cited.map { if (it.startsWith("SOURCE:")) it else workspace.memory.byId.getValue(it).text }
 
-    private val facts = listOf("Mein Neffe heißt Jonas.", "Jonas wohnt in Gmunden.", "Jonas spielt Posaune.", "Das Projekt Nordlicht ist eine Wanderkarte.")
+    private val facts = listOf("Jonas wohnt in Gmunden.", "Jonas spielt Posaune.", "Mein Neffe heißt Jonas.", "Das Projekt Nordlicht ist eine Wanderkarte.")
 
     @Test fun generalQuestionsGoToSourcesAndPersonalOnesToMemory() {
         val b = brain(facts, "Gmunden" to "Gmunden ist eine Stadt am Traunsee.")
@@ -26,6 +26,9 @@ class Ewm1BrainTest {
         assertEquals("SOURCE", general.route)
         assertTrue(general.cited.single().startsWith("SOURCE:"))
         assertEquals(listOf("Jonas wohnt in Gmunden."), b.text(b.ask("Wo wohnt mein Neffe?")).take(1))
+        // the frame's "mir" does not make a general question personal
+        assertEquals("SOURCE", b.ask("Kannst du mir etwas über Gmunden sagen?").route)
+        assertEquals("SOURCE", b.ask("Erzähl mir etwas über Gmunden.").route)
     }
 
     @Test fun theOwnersPersonOrOwnNamedThingOutranksANamesakeSource() {
@@ -34,6 +37,9 @@ class Ewm1BrainTest {
         assertEquals("MEMORY", who.route)
         assertEquals("Mein Neffe heißt Jonas.", b.text(who).first())
         assertEquals("Das Projekt Nordlicht ist eine Wanderkarte.", b.text(b.ask("Was ist Nordlicht?")).first())
+        // kin outranks the namesake in every frame, not only in "wer"-questions
+        val what = b.ask("Was ist Jonas?")
+        assertTrue(what.route != "SOURCE" && what.memory != null)
     }
 
     @Test fun aDefinitionQuestionWithoutSourceIsNotAnsweredByAMereMention() {
@@ -48,11 +54,11 @@ class Ewm1BrainTest {
     }
 
     @Test fun aTrailingIndefiniteTakesUpTheLastNoun() {
-        val b = brain(listOf("Meine Tante Rosa hat eine Nähmaschine.", "Wir haben einen Rasenmäher."),
+        val b = brain(listOf("Meine Tante Rosa hat eine Nähmaschine.", "Wir haben einen Rasenmäher im Schuppen."),
             "Nähmaschine" to "Eine Nähmaschine ist ein Gerät zum Nähen.")
         assertEquals("SOURCE", b.ask("Was ist eine Nähmaschine?").route)
         assertEquals(listOf("Meine Tante Rosa hat eine Nähmaschine."), b.text(b.ask("Hat Rosa eine?")))
-        b.ask("Wo ist unser Rasenmäher?")
+        assertEquals(listOf("Wir haben einen Rasenmäher im Schuppen."), b.text(b.ask("Wo steht unser Rasenmäher?")))
         assertEquals("ABSTAIN", b.ask("Hat Rosa auch einen?").decision)
     }
 

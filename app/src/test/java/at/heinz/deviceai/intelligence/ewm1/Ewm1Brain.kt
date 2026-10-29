@@ -31,7 +31,8 @@ class Ewm1Brain(facts: List<Pair<String, String>>, private val sources: Ewm1Sour
 
     fun ask(question: String): Answer {
         val topic = Ewm1SourceIndex.topicOf(question)
-        val personal = PERSONAL.containsMatchIn(question)
+        // "Kannst du mir etwas über Kreta sagen?": the frame's "mir" is not personal, only the topic counts
+        val personal = PERSONAL.containsMatchIn(topic ?: question)
         if (topic != null && !personal && !ownerDefines(topic) && !ownerEntity(topic, question)) {
             val pack = sources.retrieve(question)
             if (pack.decision != "ABSTAIN") {
