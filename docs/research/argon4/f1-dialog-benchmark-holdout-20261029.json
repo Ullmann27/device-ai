@@ -1,0 +1,193 @@
+{
+  "benchmark": "ARGON4-F1-dialog",
+  "split": "HOLDOUT",
+  "seed": 20261029,
+  "probes": 108,
+  "kernel": {
+    "DIRECT": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "LONG_RANGE": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "GENDER_COMPETITOR": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "SAME_SENTENCE_AMBIGUOUS": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "CORRECTION": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "PLACE": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "TOPIC_SWITCH": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "NO_GENDER_CUE": {
+      "correct": 0,
+      "wrong": 0,
+      "clarify": 12,
+      "notApplicable": 0
+    },
+    "TEMPORAL": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    }
+  },
+  "kernelTotal": {
+    "correct": 96,
+    "wrong": 0,
+    "clarify": 12,
+    "notApplicable": 0
+  },
+  "ctrlA_localConversationContext": {
+    "DIRECT": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "LONG_RANGE": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "GENDER_COMPETITOR": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "SAME_SENTENCE_AMBIGUOUS": {
+      "correct": 0,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 12
+    },
+    "CORRECTION": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "PLACE": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "TOPIC_SWITCH": {
+      "correct": 0,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 12
+    },
+    "NO_GENDER_CUE": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "TEMPORAL": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    }
+  },
+  "ctrlA_total": {
+    "correct": 60,
+    "wrong": 24,
+    "clarify": 0,
+    "notApplicable": 24
+  },
+  "ctrlB_naiveRecency": {
+    "DIRECT": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "LONG_RANGE": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "GENDER_COMPETITOR": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "SAME_SENTENCE_AMBIGUOUS": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "CORRECTION": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "PLACE": {
+      "correct": 12,
+      "wrong": 0,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "TOPIC_SWITCH": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "NO_GENDER_CUE": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    },
+    "TEMPORAL": {
+      "correct": 0,
+      "wrong": 12,
+      "clarify": 0,
+      "notApplicable": 0
+    }
+  },
+  "ctrlB_total": {
+    "correct": 24,
+    "wrong": 84,
+    "clarify": 0,
+    "notApplicable": 0
+  },
+  "kernelMicrosPerDialog": 1036.0303425925927
+}

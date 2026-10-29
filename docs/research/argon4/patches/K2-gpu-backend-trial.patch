@@ -1,0 +1,52 @@
+diff --git a/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt b/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt
+index 5d993b96..da412cf6 100644
+--- a/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt
++++ b/app/src/main/java/at/heinz/deviceai/localmodel/LiteRtLmLocalModelRuntime.kt
+@@ -79,7 +79,9 @@ interface LocalModelRuntime {
+ class LiteRtLmLocalModelRuntime(
+     private val catalog: LocalModelCatalog,
+     private val cacheDirectory: File,
+-    private val systemPrompt: String = "You are Device AI, an on-device assistant."
++    private val systemPrompt: String = "You are Device AI, an on-device assistant.",
++    /** K2 (ARGON4): owner switch for a measured GPU trial; default keeps today's CPU-only path. */
++    private val preferGpu: Boolean = false
+ ) : LocalModelRuntime {
+     private val background = Executors.newSingleThreadExecutor { runnable ->
+         Thread(runnable, "device-ai-local-model").apply { isDaemon = true }
+@@ -128,7 +130,13 @@ class LiteRtLmLocalModelRuntime(
+                 if (!cacheDirectory.exists() && !cacheDirectory.mkdirs()) {
+                     error("Cannot create LiteRT-LM cache directory.")
+                 }
+-                val newEngine = Engine(
++                // K2 (ARGON4): GPU only when the owner enabled it and the model declares GPU support; any GPU
++                // initialisation failure (driver, OpenCL) falls back to the unchanged CPU engine.
++                val gpuEngine = if (preferGpu && LocalModelBackend.GPU in capabilities.supportedBackends) runCatching {
++                    Engine(EngineConfig(modelPath = file.absolutePath, backend = Backend.GPU(),
++                        cacheDir = cacheDirectory.absolutePath)).also { it.initialize() }
++                }.getOrNull() else null
++                val newEngine = gpuEngine ?: Engine(
+                     EngineConfig(
+                         modelPath = file.absolutePath,
+                         backend = Backend.CPU(),
+@@ -136,7 +144,7 @@ class LiteRtLmLocalModelRuntime(
+                     )
+                 )
+                 try {
+-                    newEngine.initialize()
++                    if (gpuEngine == null) newEngine.initialize()
+                     val newConversation = newEngine.createConversation(
+                         ConversationConfig(
+                             systemInstruction = Contents.of(systemPrompt),
+diff --git a/scripts/android-jvm-stubs/LiteRtLmCompileStub.kt b/scripts/android-jvm-stubs/LiteRtLmCompileStub.kt
+index 52334c22..eb313fc3 100644
+--- a/scripts/android-jvm-stubs/LiteRtLmCompileStub.kt
++++ b/scripts/android-jvm-stubs/LiteRtLmCompileStub.kt
+@@ -5,7 +5,7 @@ package com.google.ai.edge.litertlm
+ 
+ enum class BackendType { CPU, GPU, NPU }
+ enum class Modality { TEXT, VISION, AUDIO }
+-sealed class Backend { class CPU : Backend() }
++sealed class Backend { class CPU : Backend(); class GPU : Backend() }
+ sealed class Content {
+     class Text(val text: String) : Content()
+     class ToolResponse(val name: String, val response: Any?) : Content()

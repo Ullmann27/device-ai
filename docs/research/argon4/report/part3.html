@@ -1,0 +1,184 @@
+<section>
+<h2>F · Forschungsfrage 2 – Das unmögliche Rechenzentrum</h2>
+<div class="scene"><b>Dan-Szene.</b> Dan hält eine Festplatte hoch. „Fünfhundert Gigabyte. Ein Modell wie DeepSeek. Und hier“, er legt das Fold7
+daneben, „zwölf Gigabyte RAM.“ Der Professor schreibt nur eine Ungleichung an die Tafel: <i>t ≥ B / W</i>. „Jedes Byte, das für ein Token gebraucht
+wird und nicht schon im schnellen Speicher liegt, muss durch die langsamste Leitung. Daran ändert kein Trick etwas. Wir suchen also nicht nach
+Magie, sondern nach Bytes, die wir <u>nicht</u> bewegen müssen.“</div>
+
+<h3>F.1 Begriffsdisziplin (Pflicht für jedes Ergebnis in diesem Kapitel)</h3>
+<table>
+<tr><th>Kategorie</th><th>Bedeutung</th><th>Beispiele</th></tr>
+<tr><td><b>Echte Rechenleistung</b></td><td>mehr FLOP/s oder mehr Bandbreite auf derselben Hardware</td><td>GPU/NPU-Backend statt CPU (K2), bessere Kernels</td></tr>
+<tr><td><b>Simulation</b></td><td>Modell oder Spur, keine echte Inferenz</td><td>Bandbreitenmodell, Expertencache-Simulation (synthetische Routing-Spuren)</td></tr>
+<tr><td><b>Auslagerung</b></td><td>ein anderes Gerät rechnet; das Fold7 ist Terminal oder Teilrechner</td><td>Split-MoE mit PC, PC-Worker, Sols Compute-Fabric</td></tr>
+<tr><td><b>Verlustbehaftete Kompression</b></td><td>weniger Bits, weniger Information, messbarer Qualitätsverlust</td><td>2–4-Bit-Quantisierung, Destillation, Pruning</td></tr>
+<tr><td><b>Scheinbarer Gewinn</b></td><td>verschiebt Wartezeit oder vermeidet Arbeit, erzeugt keine Rechenleistung</td><td>virtueller Speicher/mmap/Swap („RAM Plus“), Antwortcache, Prefetching mit Mehrverkehr</td></tr>
+</table>
+<p><b>Zwei Grundsätze, die dieses Gutachten nicht verletzt:</b> Virtueller Speicher erzeugt keine physische Rechenleistung, sondern verlagert Bytes auf einen
+langsameren Pfad. Und 500 GB lassen sich ohne Zusatzinformation nicht verlustfrei beliebig verkleinern. Verlustfreie Kodierung trainierter Gewichte
+erreicht nach Angaben der Autoren grob 70 % der BF16-Größe (DFloat11, Zhang et al. 2025, arXiv:2504.11651; ZipNN, Hershcovitch et al. 2024,
+arXiv:2411.05239), weil vor allem die Exponentenbits redundant sind. Alles darunter ist verlustbehaftet.</p>
+
+<h3>F.2 Physik in Formeln</h3>
+<div class="formula">Speicher: S = N<sub>gesamt</sub> · b/8 &nbsp;·&nbsp; Bytes/Token (dicht): B = N<sub>aktiv</sub> · b/8 &nbsp;·&nbsp;
+MoE: B = B<sub>resident</sub> + B<sub>experten</sub>·(1−h)<br>
+t<sub>Token</sub> ≥ max( B<sub>Fehltreffer</sub>/W<sub>Flash|Link</sub> , B<sub>RAM</sub>/W<sub>DRAM</sub> , 2·N<sub>aktiv</sub>/FLOP/s )
+&nbsp;·&nbsp; E<sub>Token</sub> ≈ t<sub>IO</sub>·P<sub>IO</sub> + t<sub>Rechnen</sub>·P<sub>Rechnen</sub></div>
+<p>DeepSeek-V3-Klasse (arXiv:2412.19437): 671 Mrd. Parameter, 37 Mrd. aktiv je Token, davon 20,4 Mrd. in 8 von 256 gerouteten Experten je MoE-Schicht (58 Schichten).
+Ein „500-GB-DeepSeek“ ist genau diese Architektur bei ~6 Bit/Gewicht (503 GB). KV-Cache mit MLA: 70 272 B/Token → 0,29 GB bei 4 096 Token Kontext.
+<b>Alle Hardwarewerte sind benannte Annahmen</b> (Skript <code>scripts/argon4/bandwidth_model.py</code>): Fold7 6 GB für das Modell verfügbar, 50 GB/s
+effektives DRAM (84,8 GB/s Spitze), 3 GB/s effektiver UFS-4.0-Blocklesevorgang, ~2 TFLOP/s effektiv, 2 W I/O, 3 W Rechnen; Akku 4 400 mAh ≈ 61,5 kJ.</p>
+
+<h3>F.3 Rechentabelle (analytische Untergrenzen, keine Messung)</h3>
+<!--F2TABLE-->
+<p><b>Lesart.</b> Alle Zeilen sind I/O-gebunden. Rechenleistung ist nicht der Engpass: 37 Mrd. aktive Parameter brauchen ~0,04 s Rechenzeit, aber 7 s
+Lesezeit aus dem Flash (6 Bit). Erst bei 2 Bit passt der residente Teil (4,1 GB) in die 6 GB. Ein Expertencache wird dann überhaupt möglich, und die Untergrenze
+steigt auf ~3 Token/s bei 80 % Trefferquote. Diese Trefferquote ist eine Annahme, und die Qualität bei 2 Bit ist für dieses Modell <b>UNBEKANNT</b>.
+Ein dichtes 500-Mrd.-Modell ist auf dem Fold7 physikalisch ausgeschlossen (≈ 40 s/Token schon bei 2 Bit).</p>
+<p><b>Überraschender Befund:</b> Der PC als „Festplatte“ über USB (1 GB/s effektiv) ist <i>langsamer</i> als der eigene UFS-Speicher (3 GB/s):
+0,046 statt 0,138 Token/s bei 6 Bit. Der PC hilft nur, wenn er <b>rechnet</b> und nur Aktivierungen über die Leitung gehen.</p>
+
+<h3>F.4 Split-MoE: Fold7 + PC, nur Aktivierungen über die Leitung (Modell)</h3>
+<!--F2SPLIT-->
+<p>Pro Token wandern 58 × 2 × 7 168 × 2 B = <b>1,66 MB</b> Aktivierungen, keine Gewichte. Die Rundlaufzeit pro MoE-Schicht multipliziert sich mit 58.
+Bei 3 ms RTT (WLAN) sind das allein 0,17 s/Token. <b>Ehrlich eingeordnet:</b> Bei 6 Bit passt der residente Teil (12,4 GB) nicht in die 6 GB des
+Fold7. Dann rechnet der PC praktisch alles, also <i>Auslagerung</i>. Nur bei 2 Bit wird das Fold7 echter Teilrechner, und die Qualität ist dort ungeprüft.</p>
+
+<h3>F.5 Messung auf dem Cloud-Host (nicht Fold7)</h3>
+<!--F2STREAM-->
+<p>Großblockiges sequenzielles Lesen ist hier ~43× schneller als zufällige 4-KiB-Lesevorgänge und ~56× schneller als zufällige Seitenfehler über mmap.
+Genau das passiert, wenn man ein Modell „einfach mmappt“ und der Zugriff gestreut ist. Das Skript <code>scripts/argon4/stream_bench.py</code> läuft
+unverändert in Termux. <b>Vor jeder Planung muss es auf dem Fold7 wiederholt werden</b>, weil UFS-4.0-Werte und Kernel-Verhalten abweichen.</p>
+
+<h3>F.6 Expertencache-Simulation (synthetische Spur, 256 Experten, k = 8)</h3>
+<!--F2CACHE-->
+<p><b>Fehlgeschlagenes Experiment (bleibt dokumentiert).</b> Ein Markov-Prefetcher (Übergangstabelle Experte→nächster Experte) senkt die
+Wartefälle nur wenig, verursacht aber das 2- bis 6-fache an Gesamtverkehr. Beispiel: 10 % Cache, Persistenz 0,35 ergibt 2,53 statt 2,88 Wartelesevorgänge,
+aber 6,52 statt 2,88 Gesamtlesevorgänge je Token. Auf einem bandbreitengebundenen Telefon ist das ein Verlust. Die erste PREFETCH-Version war mit LRU
+identisch (Prädiktor ohne Wirkung). Das wurde entdeckt, verworfen und ersetzt. <b>Die Lücke LRU→Belady ist die Obergrenze jedes Vorhersagers.</b> Bei 25 % Cache
+und Persistenz 0,35 liegt sie bei 1,64 → 0,87 Lesevorgängen. Mehr als ~2× ist mit keiner Cache-Politik zu holen, ohne echte Router-Spuren zu kennen.</p>
+
+<h3>F.7 Experimente (mindestens zehn, davon mindestens drei interdisziplinär)</h3>
+<table class="small">
+<tr><th>ID</th><th>Experiment</th><th>Kategorie</th><th>Status</th><th>Ergebnis / Erwartung</th><th>Entscheidung</th></tr>
+<tr><td>E2.1</td><td>Bandbreiten-Untergrenzen als Machbarkeits-Gate für VirtualModelFabric</td><td>Simulation</td><td>implementiert, 10/10 Python-Tests</td><td>verwirft dichte 500 B und 6-Bit-MoE auf dem Fold7</td><td><b>übernehmen</b> (Gate)</td></tr>
+<tr><td>E2.2</td><td>Speicher-Streaming-Benchmark (seq/Experte/4K/mmap)</td><td>Messung</td><td>Cloud-Host gemessen; Fold7 offen</td><td>seq 2,64 GB/s, mmap 0,047 GB/s (Host)</td><td>auf Fold7 wiederholen</td></tr>
+<tr><td>E2.3</td><td>Expertencache LRU/LFU/Belady</td><td>Simulation</td><td>implementiert</td><td>LFU &gt; LRU um 10–25 % weniger Lesevorgänge; Belady-Grenze ≈ 2×</td><td>nur mit echten Spuren</td></tr>
+<tr><td>E2.4</td><td>Markov-Prefetch</td><td>Simulation</td><td><b>gescheitert</b></td><td>mehr Verkehr als Gewinn</td><td>verworfen</td></tr>
+<tr><td>E2.5</td><td>Split-MoE Fold7 (resident) + PC (Experten)</td><td>Auslagerung</td><td>modelliert</td><td>1,4–4,6 Token/s Obergrenze; nur 2 Bit passt aufs Fold7</td><td>riskante Hypothese, Messung mit OLMoE/Mixtral zuerst</td></tr>
+<tr><td>E2.6</td><td>Dichtes 500-B-Modell auf dem Fold7</td><td>Simulation</td><td><b>gescheitert (Physik)</b></td><td>0,003–0,025 Token/s</td><td>nicht bauen</td></tr>
+<tr><td>E2.7</td><td>mmap/Swap als „RAM-Erweiterung“</td><td>scheinbarer Gewinn</td><td>Host gemessen</td><td>~56× langsamer als Blocklesen</td><td>nicht bauen</td></tr>
+<tr><td>E2.8</td><td><b>Interdisziplinär (Datenbanken):</b> Antwortcache mit Herkunftsbindung. Gültig nur, solange alle Belegfakten unverändert sind (inkrementelle View-Wartung).</td><td>scheinbarer Gewinn (vermiedene Arbeit)</td><td>entworfen</td><td>0 Modellaufrufe bei Wiederholung; Widerruf invalidiert sofort</td><td>riskante Hypothese</td></tr>
+<tr><td>E2.9</td><td><b>Interdisziplinär (Rechnerarchitektur, Sprungvorhersage):</b> spekulative Dekodierung mit Gemma als Entwurfsmodell, großes Modell auf dem PC prüft k Tokens in einem Durchlauf (Leviathan et al. 2023, arXiv:2211.17192; Chen et al. 2023, arXiv:2302.01318)</td><td>Auslagerung + echte Beschleunigung</td><td>geplant</td><td>verlustfrei bezüglich der Verteilung des großen Modells; Gewinn hängt von der Akzeptanzrate ab</td><td>nach E2.5</td></tr>
+<tr><td>E2.10</td><td><b>Interdisziplinär (Regelungstechnik/Thermodynamik):</b> PI-Regler auf Token-Rate mit Gehäusetemperatur und Akku als Regelgrößen statt fester Drosselstufen</td><td>echte Effizienz</td><td>geplant</td><td>gleiche Antwortzeit bei weniger Drosselungsabbrüchen</td><td>experimentell auf Fold7</td></tr>
+<tr><td>E2.11</td><td><b>Interdisziplinär (Logistik, ABC-Lagerhaltung):</b> Experten nach Ko-Aktivierung zusammenhängend im Flash ablegen, damit Fehltreffer sequenziell statt gestreut gelesen werden</td><td>echte Bandbreite</td><td>geplant</td><td>bis zu 2× (seq 2,64 vs Expertenblock 1,32 GB/s, Host)</td><td>nach echten Spuren</td></tr>
+<tr><td>E2.12</td><td>Quantisierung 2–3 Bit (QuIP#, arXiv:2402.04396; AQLM, arXiv:2401.06118)</td><td>verlustbehaftet</td><td>Literatur</td><td>macht 2-Bit-Residenz möglich; Qualitätsverlust modellabhängig</td><td>nur mit Qualitäts-Holdout</td></tr>
+<tr><td>E2.13</td><td>GPU-Backend für das vorhandene Gemma (K2)</td><td>echte Rechenleistung</td><td>Patch kompiliert gegen Stub</td><td>UNBEKANNT bis Fold7-Profil</td><td><b>übernehmen</b> als Besitzerversuch</td></tr>
+</table>
+<p><b>Verwandte Arbeiten:</b> LLM in a Flash (Alizadeh et al. 2023, arXiv:2312.11514: Windowing, Zeilen-Spalten-Bündelung), PowerInfer
+(Song et al. 2023, arXiv:2312.12456) und PowerInfer-2 (2024, arXiv:2406.06282: Smartphone, heiße/kalte Neuronen), MoE-Offloading
+(Eliseev &amp; Mazur 2023, arXiv:2312.17238), EdgeMoE (Yi et al. 2023, arXiv:2308.14352), Belady (1966) als Optimalitätsgrenze.</p>
+
+<h3>F.8 Prototypen (Kotlin/C++/Python)</h3>
+<p>Python, implementiert und getestet: <code>bandwidth_model.py</code>, <code>stream_bench.py</code>, <code>expert_cache_sim.py</code>,
+<code>test_argon4_f2.py</code> (Anhang H). Kotlin: Patch K2 (GPU-Versuch mit CPU-Rückfall), kompiliert gegen den LiteRT-Stub. <b>C++:</b> Ein
+Expert-Streaming-Kernel lohnt sich erst, wenn E2.2 auf dem Fold7 und echte Router-Spuren (E2.3) vorliegen. Vorher wäre jede C++-Zeile eine Optimierung
+ohne Messgrundlage. Der Entwurf bleibt deshalb bewusst eine Schnittstelle:</p>
+<pre class="code">// expert_stream.h – Entwurf, NICHT implementiert (Voraussetzung: E2.2 auf Fold7, echte Spuren)
+struct ExpertRef { uint32_t layer, expert; uint64_t offset, bytes; };       // Lage im Gewichts-Blob (ABC-Layout, E2.11)
+class ExpertStream {
+ public:
+  explicit ExpertStream(int fd, size_t cacheBytes);                          // O_DIRECT/pread, kein mmap (E2.7)
+  const void* acquire(const ExpertRef&amp; r);                                  // Treffer: RAM; Fehltreffer: ein Blocklesen
+  void hint(std::span&lt;const ExpertRef&gt; nextLayer);                          // nur wenn E2.3 echte Lücke zu Belady zeigt
+  Stats stats() const;                                                        // Treffer, Lesebytes, Wartezeit → Gate
+};</pre>
+
+<h3>F.9 Rangfolge der Ansätze</h3>
+<table>
+<tr><th>Rang</th><th>Ansatz</th><th>Kategorie</th><th>Warum</th></tr>
+<tr><td>1</td><td>Rechenarbeit vermeiden: Belegrouter (E1.3) + Antwortcache mit Herkunftsbindung (E2.8)</td><td>scheinbarer Gewinn, aber real wirksam</td><td>die billigste Inferenz ist die nicht nötige</td></tr>
+<tr><td>2</td><td>GPU-Backend für Gemma (K2, E2.13)</td><td>echte Rechenleistung</td><td>ein Konfigurationspfad in vorhandener API</td></tr>
+<tr><td>3</td><td>PC als Rechner für seltene, tiefe Fragen (E2.5/E2.9), nur mit Besitzerfreigabe und ohne private Daten</td><td>Auslagerung</td><td>einziger Weg zu Modellen &gt; 100 GB mit &gt; 1 Token/s</td></tr>
+<tr><td>4</td><td>Expertenstreaming auf dem Fold7 allein</td><td>Forschung</td><td>nur bei 2 Bit plausibel; Qualität unbekannt</td></tr>
+<tr><td>—</td><td>Dichtes 500 B, mmap als RAM, Prefetch ohne Spuren</td><td>verworfen</td><td>physikalisch oder gemessen widerlegt</td></tr>
+</table>
+</section>
+
+<section>
+<h2>G · Forschungsfrage 3 – Der Jarvis, der sich selbst weiterentwickelt</h2>
+<div class="scene"><b>Dan-Szene.</b> „Kann er sich nicht einfach selbst verbessern?“, fragt Dan. Der Professor zeigt auf das Ledger von CCC1: „Er lernt schon,
+welche Reparaturstrategie öfter klappt. Aber er weiß nicht, ob er dadurch <i>besser geworden</i> ist. Er hat keine Kontrollgruppe, und er darf sich
+keine Prüfung selbst ausstellen.“ Dann zeichnet er einen Kreis mit acht Stationen und schreibt darüber: <i>„Kein Schritt ohne Beleg vom gleichen Commit.“</i></div>
+
+<h3>G.1 Was es schon gibt (gelesen)</h3>
+<table class="small">
+<tr><th>Baustein</th><th>Ort</th><th>Rolle im Zielbild</th></tr>
+<tr><td><code>BoundedAgentOrchestrator.run(task)</code></td><td>cognitive/BoundedAgent.kt 160–197</td><td>begrenzter Agent im App-Chat; bleibt Chat, wird kein Entwickler</td></tr>
+<tr><td><code>ToolGate(policy, runner, …, receiptStore)</code></td><td>AgentToolLayer.kt 115</td><td>Werkzeugrechte mit Quittungen; Vorbild für Capability-Prüfung</td></tr>
+<tr><td><code>DeviceTeamleader.runOnce(cancelled)</code> + <code>ContinuumDeviceTeamleaderScheduler</code></td><td>cognitive/DeviceTeamleader.kt 123–193; learning/…Scheduler.kt</td><td>Taktgeber auf dem Gerät (JobScheduler, Abbruch, Zurückstellen)</td></tr>
+<tr><td>CCC1 (interpreter, gate, journal, verifier, independent-verifier, recovery, worker)</td><td>.github/continuum/ccc1-*.mjs</td><td>Auftrag → Patch → unabhängige Zweitprüfung</td></tr>
+<tr><td><code>repair-loop.mjs</code> / <code>repair-ledger.mjs</code></td><td>.github/continuum</td><td>Strategien mit Risikostufen; Erfolgsstatistik (Laplace)</td></tr>
+<tr><td>Lokaler Worker + Lease</td><td>continuum-local-development-worker.mjs, continuum-worker-lease.mjs</td><td>erkennt rote Tests, sichere Zweige, STOP</td></tr>
+<tr><td><code>DeepResearchEngine</code>, <code>research-radar.mjs</code></td><td>cognitive/ResearchEngine.kt; .github/continuum</td><td>Recherche mit Budget und Freigabe; Radar priorisiert Quellen</td></tr>
+<tr><td><code>code-index.mjs</code></td><td>.github/continuum</td><td>Code-Index mit Verhaltens-Fingerabdrücken für Diagnose</td></tr>
+</table>
+
+<h3>G.2 Zielarchitektur: ein Kern, der die vorhandenen Teile bindet</h3>
+<svg viewBox="0 0 1000 300" class="diagram" role="img" aria-label="Sicherer Entwicklungszyklus">
+  <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3a5068"/></marker></defs>
+  <g class="box"><rect x="10" y="30" width="110" height="46"/><text x="65" y="50">QUEUED</text><text x="65" y="67" class="s">Worker/Radar</text></g>
+  <g class="box"><rect x="135" y="30" width="110" height="46"/><text x="190" y="50">DIAGNOSED</text><text x="190" y="67" class="s">code-index</text></g>
+  <g class="box"><rect x="260" y="30" width="110" height="46"/><text x="315" y="50">PLANNED</text><text x="315" y="67" class="s">Strategie (TS)</text></g>
+  <g class="box"><rect x="385" y="30" width="110" height="46"/><text x="440" y="50">PATCHED</text><text x="440" y="67" class="s">nur Worktree</text></g>
+  <g class="box"><rect x="510" y="30" width="120" height="46"/><text x="570" y="50">LOCAL_TESTED</text><text x="570" y="67" class="s">eigene Tests</text></g>
+  <g class="new"><rect x="645" y="30" width="150" height="46"/><text x="720" y="50">INDEP._VERIFIED</text><text x="720" y="67" class="s">Zweit-Worktree</text></g>
+  <g class="box"><rect x="810" y="30" width="110" height="46"/><text x="865" y="50">CRITIQUED</text><text x="865" y="67" class="s">Diff-Kritik</text></g>
+  <g class="box"><rect x="810" y="120" width="110" height="46"/><text x="865" y="140">REVIEW_OPEN</text><text x="865" y="157" class="s">Draft-PR</text></g>
+  <g class="box"><rect x="640" y="120" width="150" height="46"/><text x="715" y="140">OWNER_ACCEPTED</text><text x="715" y="157" class="s">nur Heinz</text></g>
+  <g class="box"><rect x="470" y="120" width="150" height="46"/><text x="545" y="140">OWNER_REJECTED</text><text x="545" y="157" class="s">Lernsignal</text></g>
+  <g class="lrbox"><rect x="10" y="120" width="420" height="46"/><text x="220" y="140">FAILED · ABORTED · ROLLED_BACK</text><text x="220" y="157" class="s">jederzeit erreichbar, Basis wird wiederhergestellt</text></g>
+  <path d="M120,53 L135,53" class="ln" marker-end="url(#a3)"/><path d="M245,53 L260,53" class="ln" marker-end="url(#a3)"/>
+  <path d="M370,53 L385,53" class="ln" marker-end="url(#a3)"/><path d="M495,53 L510,53" class="ln" marker-end="url(#a3)"/>
+  <path d="M630,53 L645,53" class="ln" marker-end="url(#a3)"/><path d="M795,53 L810,53" class="ln" marker-end="url(#a3)"/>
+  <path d="M865,76 L865,120" class="ln" marker-end="url(#a3)"/><path d="M810,143 L790,143" class="ln" marker-end="url(#a3)"/>
+  <path d="M840,166 C840,210 545,210 545,166" class="ln" marker-end="url(#a3)"/>
+  <text x="500" y="240" class="s">Jeder Übergang wird als Ereignis mit vorherigem Hash ins Journal geschrieben (SHA-256-Kette). Belege müssen an Basis-Commit und Patch-Digest gebunden sein.</text>
+  <text x="500" y="262" class="s">Invarianten: kein Ziel main/master/release · keine Rechte-Erweiterung · kein Agenten-Merge · eigener Test ≠ unabhängige Prüfung.</text>
+  <text x="500" y="284" class="s">Strategieänderungen am Agenten selbst = vorregistriertes Experiment (versiegelter Holdout, eingefrorene Kontrolle, exakter McNemar, 1 Lauf).</text>
+</svg>
+
+<h3>G.3 Der vollständige sichere Zyklus</h3>
+<ol class="small">
+<li><b>Auftrag</b> aus Worker (roter Test), Radar (bewerteter Hinweis) oder Besitzer. Er wird mit Ziel, Basis-Commit, sicherem Zweig, Rechten aus
+<code>CAPABILITIES</code>, Versuchsbudget und Frist angelegt (<code>createCycle</code>).</li>
+<li><b>Diagnose</b> über code-index und Testausgabe. <b>Plan</b>: Kandidaten aus repair-loop. Die Rangfolge wählt das <i>aktive</i> Strategie-Experiment
+(Thompson oder eingefrorene Laplace-Kontrolle), immer innerhalb der Risikostufen: Ein destruktives Zurücksetzen überholt nie einen lokalen Fix.</li>
+<li><b>Patch</b> nur im Worktree, <b>lokale Tests</b>. Rote Tests können die unabhängige Prüfung nicht erreichen.</li>
+<li><b>Unabhängige Prüfung</b> im Zweit-Worktree (CCC1 independent-verifier). Der Beleg muss Basis und Patch-Digest exakt tragen.</li>
+<li><b>Kritik</b> des Diffs. <b>Draft-PR</b>, nie Merge. <b>Besitzerentscheidung</b> ist der einzige Weg zu „angenommen“.</li>
+<li><b>Lernen</b> (<code>creditOutcome</code>): Nur unabhängige Prüfung lehrt Erfolg. Ausgeführte rote Tests lehren Misserfolg. Infrastrukturfehler sind neutral.</li>
+<li><b>Schwächen</b> (<code>mineWeaknesses</code>) werden zu Forschungsfragen, nie zu automatischen Änderungen.</li>
+<li><b>Abbruch/Rollback</b> von jedem Zustand. Nach einem Absturz prüft <code>verifyJournal</code> Kette, Reihenfolge und Vollständigkeit.</li>
+</ol>
+
+<h3>G.4 Experimente (mindestens fünf)</h3>
+<table class="small">
+<tr><th>ID</th><th>Experiment</th><th>Kontrolle</th><th>Metrik</th><th>Status</th></tr>
+<tr><td>E3.1</td><td>Thompson-Strategierangfolge (EXP-DL1)</td><td>eingefrorene Laplace-Rangfolge</td><td>unabhängig verifizierte Reparaturen auf versiegeltem Holdout (≥ 10 Aufgaben), McNemar einseitig</td><td>Mechanik implementiert und getestet; echter Lauf offen</td></tr>
+<tr><td>E3.2</td><td>Hashketten-Journal gegen Manipulation/Absturz</td><td>heutiges JSON-Journal</td><td>erkannte Manipulation, Kürzung, Umordnung</td><td>Unit-Test grün (synthetisch)</td></tr>
+<tr><td>E3.3</td><td>Schwächen-Mining aus dem CCC1-Ledger</td><td>keins</td><td>Anteil der Fragen, die zu einem vorregistrierten Experiment werden</td><td>Mechanik getestet mit dem echten Ledger-Modul, synthetische Einträge</td></tr>
+<tr><td>E3.4</td><td>Diff-Kritik durch eine andere Instanz (Codex/Sol) vor Draft-PR</td><td>ohne Kritik</td><td>vom Besitzer abgelehnte PRs</td><td>geplant</td></tr>
+<tr><td>E3.5</td><td>Mutationsprüfung als Qualitätsgate für Agenten-Patches (vorhandenes Mutanten-Werkzeug)</td><td>nur Testgrün</td><td>getötete Mutanten im geänderten Code</td><td>geplant</td></tr>
+<tr><td>E3.6</td><td>Fold7-Taktung: DeviceTeamleader startet Zyklen nur bei Laden + kühlem Gerät</td><td>fester Takt</td><td>abgeschlossene Zyklen pro Akkuprozent</td><td>geplant</td></tr>
+<tr><td>E3.7</td><td>Recherche nur mit Einwilligung (<code>web_research_with_consent</code>) über DeepResearchEngine</td><td>ohne Recherche</td><td>Diagnosequote bei unbekannten Fehlern</td><td>geplant</td></tr>
+</table>
+
+<h3>G.5 Was nicht gebaut werden darf</h3>
+<ul class="small">
+<li>Kein Agent mit Schreibrecht auf <code>main</code>, kein Agenten-Merge, keine automatische Rechte-Erweiterung, kein Zugriff auf Besitzerzertifikat, P12 oder Keystore.</li>
+<li>Kein Selbstlob: Ein vom Agenten selbst geschriebener Test zählt nie als unabhängige Prüfung.</li>
+<li>Kein Online-Lernen der eigenen Strategie ohne Kontrollgruppe. Kein „Erfolg“ ohne versiegelten Holdout.</li>
+<li>Kein Export privater Daten an Recherchequellen. Kein zweites Agenten-Framework neben BoundedAgent und CCC1. Kein neuer Scheduler neben DeviceTeamleader und Worker.</li>
+</ul>
+</section>

@@ -1,0 +1,12 @@
+{
+ "size_mib": 2048,
+ "platform": "Linux x86_64",
+ "note": "host measurement; repeat on the Fold7 (Termux) before using any number for planning",
+ "seq_8m_gbps": 2.644,
+ "seq_8m_warm_cache_gbps": 6.757,
+ "expert_22m_gbps": 1.318,
+ "rand_4k_gbps": 0.062,
+ "rand_4k_iops": 15144,
+ "mmap_touch_gbps": 0.0468,
+ "mmap_faults_per_s": 11436
+}
