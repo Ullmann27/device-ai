@@ -1,0 +1,81 @@
+{
+  "experiment": "EWM2-H7",
+  "corpus": "docs/research/ewm1/ewm2-test5-memory-derivative-20261029.json",
+  "corpusSha256": "6f6fe7dca9102c0d810adaaf3201d07791c42a4df7787442126d368a44aed6df",
+  "derivedFrom": "06bc2184d1e92f59d9d05c406df732e39ea8490800d6777d7421b2dd79776839",
+  "E1": {
+    "commit": "0d2b021b",
+    "note": "frozen EWM1, built from git archive 0d2b021b, Ewm1Experiment DEV on the derivative",
+    "EWM": {
+      "CORRECT": 22,
+      "kind:ABBREVIATION:CORRECT": 3,
+      "kind:MEMORY:CORRECT": 17,
+      "ABSTAINED": 15,
+      "kind:ABBREVIATION_UNKNOWN:ABSTAINED": 2,
+      "kind:NEITHER:ABSTAINED": 4,
+      "MISSED": 5,
+      "kind:BARE_NUMBER:MISSED": 4,
+      "kind:ATTRIBUTE_NOUN:CORRECT": 2,
+      "kind:PLACE_UNKNOWN:ABSTAINED": 4,
+      "WRONG": 6,
+      "kind:ATTRIBUTE_NOUN:WRONG": 3,
+      "kind:ATTRIBUTE_NOUN:ABSTAINED": 2,
+      "kind:NEITHER:WRONG": 3,
+      "kind:MEMORY:MISSED": 1,
+      "kind:MEMORY_UNKNOWN:ABSTAINED": 3
+    },
+    "B0": {
+      "CORRECT": 20,
+      "kind:ABBREVIATION:CORRECT": 3,
+      "kind:MEMORY:CORRECT": 16,
+      "WRONG": 14,
+      "kind:ABBREVIATION_UNKNOWN:WRONG": 2,
+      "ABSTAINED": 11,
+      "kind:NEITHER:ABSTAINED": 7,
+      "kind:BARE_NUMBER:CORRECT": 1,
+      "MISSED": 3,
+      "kind:ATTRIBUTE_NOUN:MISSED": 2,
+      "kind:PLACE_UNKNOWN:WRONG": 4,
+      "kind:ATTRIBUTE_NOUN:ABSTAINED": 2,
+      "kind:MEMORY:WRONG": 2,
+      "kind:ATTRIBUTE_NOUN:WRONG": 3,
+      "kind:BARE_NUMBER:MISSED": 1,
+      "kind:MEMORY_UNKNOWN:WRONG": 1,
+      "kind:BARE_NUMBER:WRONG": 2,
+      "kind:MEMORY_UNKNOWN:ABSTAINED": 2
+    }
+  },
+  "K1": {
+    "source": "docs/research/ewm1/ewm2-test5-report-20261029.json (full TEST5 dialogs, commit e1669271)"
+  },
+  "K1WorkspaceOnlyOnDerivative": {
+    "commit": "e1669271",
+    "note": "additional, not part of the decision rule",
+    "EWM": {
+      "CORRECT": 26,
+      "kind:ABBREVIATION:CORRECT": 3,
+      "kind:MEMORY:CORRECT": 17,
+      "ABSTAINED": 18,
+      "kind:ABBREVIATION_UNKNOWN:ABSTAINED": 2,
+      "kind:NEITHER:ABSTAINED": 4,
+      "kind:BARE_NUMBER:CORRECT": 4,
+      "kind:ATTRIBUTE_NOUN:CORRECT": 2,
+      "kind:PLACE_UNKNOWN:ABSTAINED": 4,
+      "kind:ATTRIBUTE_NOUN:ABSTAINED": 5,
+      "WRONG": 3,
+      "kind:NEITHER:WRONG": 3,
+      "MISSED": 1,
+      "kind:MEMORY:MISSED": 1,
+      "kind:MEMORY_UNKNOWN:ABSTAINED": 3
+    }
+  },
+  "decision": {
+    "errorClassTurns": 20,
+    "solvedK1": 20,
+    "solvedE1": 13,
+    "required": 18,
+    "wrongOtherK1": 0,
+    "wrongOtherE1": 3,
+    "H7": "PASSED"
+  }
+}
