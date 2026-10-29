@@ -6,7 +6,7 @@ import path from 'node:path';
 import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {classifyNativeTestRun} from '../../scripts/continuum-local-development-worker.mjs';
-import {processIdentity} from '../../scripts/continuum-worker-lease.mjs';
+import {processIdentity,workerLease} from '../../scripts/continuum-worker-lease.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const env=()=>{const e={...process.env};delete e.NODE_TEST_CONTEXT;return e;};
 function fixture(){
@@ -201,7 +201,24 @@ test('a dangling lease-directory parent is refused without creating its target',
   fs.writeFileSync(driver,"import {workerLease} from "+JSON.stringify(path.join(f.repo,'scripts/continuum-worker-lease.mjs'))+";workerLease("+JSON.stringify(parent)+");\n");
   const result=spawnSync(process.execPath,[driver],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
   assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/ENOENT/);
   assert.equal(fs.existsSync(missing),false);
   assert.equal(fs.lstatSync(parent).isSymbolicLink(),true);
  }finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('pre-start STOP preserves another live checkout lease',{timeout:12000},()=>{
+ const f=fixture();let owner;
+ try{
+  owner=workerLease(path.join(f.repo,'.git'));
+  const file=path.join(f.repo,'.git','continuum-health-worker.json');
+  const before=fs.readFileSync(file,'utf8');
+  fs.mkdirSync(f.out,{recursive:true});fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
+  const result=run(f);
+  assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/OWNER_INTERRUPTED_BEFORE_START/);
+  assert.equal(fs.readFileSync(file,'utf8'),before,'no acquire, child bind or release may alter the active owner');
+  owner.check();
+  assert.equal(fs.existsSync(path.join(f.out,'running.json')),false);
+ }finally{owner?.release();fs.rmSync(f.top,{recursive:true,force:true});}
 });

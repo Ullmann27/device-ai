@@ -71,7 +71,11 @@ function execute(args,config,{out,id,signal,lease}){
  });
 }
 async function runCycle(outDirectory,{signal,...supplied}={},heldLease=null){
- const config=options(supplied),out=directory(outDirectory),before=checkout();
+ const config=options(supplied),out=directory(outDirectory);
+ // Cancellation before launch is not a completed test cycle. Do not acquire
+ // a lease, write a running intent or start Node for an already stopped job.
+ if(signal?.aborted||fs.existsSync(join(out,'STOP')))throw Error('OWNER_INTERRUPTED_BEFORE_START');
+ const before=checkout();
  const lease=heldLease??workerLease(git(['rev-parse','--absolute-git-dir']));
  const id=new Date().toISOString().replace(/[:.]/g,'-')+'-'+crypto.randomUUID();
  try{
@@ -103,7 +107,7 @@ export async function runWorker(outDirectory,{signal,...supplied}={}){
   lease=workerLease(git(['rev-parse','--absolute-git-dir']));
   while(!combined.aborted&&!fs.existsSync(join(out,'STOP'))&&(config.maxCycles===null||cycles<config.maxCycles)){
    try{const report=await runCycle(out,{...config,signal:combined},lease);if(report.status!=='ALL_EXECUTED_PASS')failures++;console.log(JSON.stringify(report));}
-   catch(e){failures++;event(out,'CYCLE_REJECTED',{error:e.message});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
+   catch(e){failures++;event(out,e.message==='OWNER_INTERRUPTED_BEFORE_START'?'CYCLE_INTERRUPTED':'CYCLE_REJECTED',{error:e.message,...(e.message==='OWNER_INTERRUPTED_BEFORE_START'?{started:false}:{})});console.error('LOCAL_WORKER_CYCLE_FAILED: '+e.message);if(e.message==='EVIDENCE_BUDGET_EXHAUSTED')break;}
    cycles++;if(config.maxCycles!==null&&cycles>=config.maxCycles)break;
    try{await delay(config.intervalMs,undefined,{signal:combined});}catch(e){if(e.name!=='AbortError')throw e;}
   }
