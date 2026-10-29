@@ -8,6 +8,12 @@ on:
       - "app/**"
       - "scripts/continuum-owner-update-manifest.mjs"
       - ".github/workflows/continuum-p0-inapp-updater-qa.yml"
+  pull_request:
+    branches:
+      - review/ewm2-revocation-race-20261029
+    paths:
+      - "app/**"
+      - ".github/workflows/continuum-p0-inapp-updater-qa.yml"
   workflow_dispatch:
 
 permissions:
