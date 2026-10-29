@@ -6,7 +6,7 @@ import path from 'node:path';
 import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {classifyNativeTestRun} from '../../scripts/continuum-local-development-worker.mjs';
-import {processIdentity} from '../../scripts/continuum-worker-lease.mjs';
+import {processIdentity,workerLease} from '../../scripts/continuum-worker-lease.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const env=()=>{const e={...process.env};delete e.NODE_TEST_CONTEXT;return e;};
 function fixture(){
@@ -150,4 +150,100 @@ for(const stopMode of ['SIGTERM','TIMEOUT'])test(stopMode+' removes a descendant
   if(stillRunning())try{process.kill(descendant.pid,'SIGKILL');}catch{}
   fs.rmSync(f.top,{recursive:true,force:true});
  }
+});
+
+/** WIP/NOT_RUN source checkpoint against PR218 0b2a9ddd; no process result is claimed. */
+for(const stoppedBy of ['STOP_FILE','ABORTED_SIGNAL'])test(stoppedBy+' refuses a cycle before test intent or child launch',{timeout:12000},()=>{
+ const f=fixture();
+ try{
+  fs.mkdirSync(f.out,{recursive:true});
+  let result;
+  if(stoppedBy==='STOP_FILE'){
+   fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
+   result=run(f);
+  }else{
+   const driver=path.join(f.top,'pre-aborted.mjs');
+   fs.writeFileSync(driver,"import {runOneCycle} from "+JSON.stringify(f.script)+";const stop=new AbortController();stop.abort();await runOneCycle("+JSON.stringify(f.out)+",{signal:stop.signal});\n");
+   result=spawnSync(process.execPath,[driver],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
+  }
+  assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/OWNER_INTERRUPTED_BEFORE_START/);
+  assert.equal(fs.existsSync(path.join(f.out,'cycles')),false,'no test evidence or completion may be fabricated for an unlaunched cycle');
+  assert.equal(fs.existsSync(path.join(f.out,'running.json')),false);
+  assert.equal(fs.existsSync(path.join(f.out,'latest.json')),false);
+  assert.equal(fs.existsSync(path.join(f.repo,'.git','continuum-health-worker.json')),false,'pre-start cancellation must not acquire a checkout lease');
+ }finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+for(const entry of ['continuum-health-worker.json','continuum-health-worker.json.mutex'])test('dangling '+entry+' cannot create an external lease target',{timeout:12000},()=>{
+ const f=fixture();
+ try{
+  const external=path.join(f.top,'must-not-be-created');
+  const file=path.join(f.repo,'.git',entry);
+  fs.symlinkSync(external,file);
+  const result=run(f);
+  assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/UNSAFE_LEASE_PATH/);
+  assert.equal(fs.existsSync(external),false,'lease and flock must not follow a dangling entry');
+  assert.equal(fs.lstatSync(file).isSymbolicLink(),true,'refusal leaves the original entry intact');
+  assert.equal(fs.existsSync(path.join(f.out,'running.json')),false);
+  assert.equal(fs.existsSync(path.join(f.out,'latest.json')),false);
+ }finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('a dangling lease-directory parent is refused without creating its target',{timeout:12000},()=>{
+ const f=fixture();
+ try{
+  const missing=path.join(f.top,'missing-git-parent');
+  const parent=path.join(f.top,'git-parent-link');
+  fs.symlinkSync(missing,parent);
+  const driver=path.join(f.top,'dangling-parent.mjs');
+  fs.writeFileSync(driver,"import {workerLease} from "+JSON.stringify(path.join(f.repo,'scripts/continuum-worker-lease.mjs'))+";workerLease("+JSON.stringify(parent)+");\n");
+  const result=spawnSync(process.execPath,[driver],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
+  assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/ENOENT/);
+  assert.equal(fs.existsSync(missing),false);
+  assert.equal(fs.lstatSync(parent).isSymbolicLink(),true);
+ }finally{fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+test('pre-start STOP preserves another live checkout lease',{timeout:12000},()=>{
+ const f=fixture();let owner;
+ try{
+  owner=workerLease(path.join(f.repo,'.git'));
+  const file=path.join(f.repo,'.git','continuum-health-worker.json');
+  const before=fs.readFileSync(file,'utf8');
+  fs.mkdirSync(f.out,{recursive:true});fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
+  const result=run(f);
+  assert.equal(result.status,1,result.stderr);
+  assert.match(result.stderr,/OWNER_INTERRUPTED_BEFORE_START/);
+  assert.equal(fs.readFileSync(file,'utf8'),before,'no acquire, child bind or release may alter the active owner');
+  owner.check();
+  assert.equal(fs.existsSync(path.join(f.out,'running.json')),false);
+ }finally{owner?.release();fs.rmSync(f.top,{recursive:true,force:true});}
+});
+
+for(const mode of ['STOP_FILE','ABORTED_SIGNAL'])test(mode+' prevents loop lease acquisition and preserves a live owner',{timeout:12000},()=>{
+ const f=fixture();let owner;
+ try{
+  owner=workerLease(path.join(f.repo,'.git'));
+  const file=path.join(f.repo,'.git','continuum-health-worker.json');
+  const before=fs.readFileSync(file,'utf8');
+  fs.mkdirSync(f.out,{recursive:true});let result;
+  if(mode==='STOP_FILE'){
+   fs.writeFileSync(path.join(f.out,'STOP'),'owner stop');
+   result=spawnSync(process.execPath,[f.script,'--loop',f.out],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
+   assert.equal(result.status,1,result.stderr);
+  }else{
+   const driver=path.join(f.top,'loop-aborted.mjs');
+   fs.writeFileSync(driver,"import assert from 'node:assert/strict';import {runWorker} from "+JSON.stringify(f.script)+";const stop=new AbortController();stop.abort();assert.deepEqual(await runWorker("+JSON.stringify(f.out)+",{signal:stop.signal}),{cycles:0,failures:0,interrupted:true});\n");
+   result=spawnSync(process.execPath,[driver],{cwd:f.repo,env:env(),encoding:'utf8',timeout:10000});
+   assert.equal(result.status,0,result.stderr);
+  }
+  assert.equal(fs.readFileSync(file,'utf8'),before);
+  owner.check();
+  assert.equal(fs.existsSync(path.join(f.out,'running.json')),false);
+  assert.equal(fs.existsSync(path.join(f.out,'cycles')),false);
+  assert.equal(fs.existsSync(path.join(f.out,'latest.json')),false);
+ }finally{owner?.release();fs.rmSync(f.top,{recursive:true,force:true});}
 });
