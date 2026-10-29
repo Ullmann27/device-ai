@@ -2737,18 +2737,18 @@ class AgentActivity : Activity() {
         val model = localRuntime.loadedModel
         val liveStatus = localRuntime.state
         addAssistantMessage(buildString {
-            append("CONTINUUM LOKAL · Eigene Systemgrenzen (keine Git-Codeprüfung)\\n\\n")
+            append("CONTINUUM LOKAL · Eigene Systemgrenzen (keine Git-Codeprüfung)\n\n")
             append("Ich bin die installierte Continuum-Lokal-App. ") 
             append("Ich kann hier meinen tatsächlichen Modellstatus und lokale Diagnosen anzeigen, ") 
             append("aber aus dem normalen Chat keinen aktuellen GitHub-Quellcode, ") 
-            append("keine PR-Diffs und keine fremden Branches unabhängig prüfen.\\n\\n")
+            append("keine PR-Diffs und keine fremden Branches unabhängig prüfen.\n\n")
             append("Lokales Sprachmodell: ")
             append(model?.let { "${it.id} ${it.version}" } ?: "nicht geladen")
-            append(" · Laufzeitstatus: ").append(liveStatus.name).append(".\\n")
+            append(" · Laufzeitstatus: ").append(liveStatus.name).append(".\n")
             append("SWB1 ist ein kleiner trainierbarer Klassifikator, kein frei generierender Sprachkern. ")
-            append("Ein erfolgreicher Lernschritt ist kein Nachweis für besseres allgemeines Denken.\\n")
+            append("Ein erfolgreicher Lernschritt ist kein Nachweis für besseres allgemeines Denken.\n")
             append("Webquellen und gespeicherte Erinnerungen benötigen unabhängige Belege. ")
-            append("Ein nicht bereites Sprachmodell kann nur eine begrenzte Ersatzantwort ermöglichen.\\n\\n")
+            append("Ein nicht bereites Sprachmodell kann nur eine begrenzte Ersatzantwort ermöglichen.\n\n")
             append("Für reale lokale Prüfergebnisse schreibe 'Continuum Status' ")
             append("oder 'Teamleiter Status'. 'Teamleiter prüfen' startet nur nach ") 
             append("deinem ausdrücklichen Auftrag die vorhandene lokale Prüfung. ")
