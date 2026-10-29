@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:50:01" hostname="9d1c4dd98fa0" time="0.176">
+  <properties/>
+  <testcase name="residualPointerGradientsCheckpointsCounterfactualsAndTrainingExecute" classname="at.heinz.deviceai.learning.span.ContinuumResidualSpanCoreTest" time="0.176"/>
+  <system-out><![CDATA[PASS residual gradient checks=38 maximumError=1.5443709852624998E-10
+PASS missing/ambiguous gold targets rejected without updates
+PASS checked synthetic counterfactual and negative leakage guards
+PASS checkpoint roundtrip, exact size and SHA-256 corruption gates
+PASS cancellation and preflight fail-before-first-update
+MEASURED synthetic DEV accuracy: 2/5 -> 3/5
+MEASURED training: 300 steps, loss 1.2136851176488221 -> 0.6067638047117935, interrupted=false
+CASE expected=Salzburg, predicted=Salzburg
+CASE expected=XZ-902, predicted=XZ-902
+CASE expected=Zange, predicted=Zange
+CASE expected=ABSTAIN, predicted=Salzburg
+CASE expected=ABSTAIN, predicted=XZ-902
+PASS executable JVM test finished; public dev cases are not a blind holdout.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

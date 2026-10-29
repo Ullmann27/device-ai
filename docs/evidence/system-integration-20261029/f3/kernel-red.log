@@ -1,0 +1,62 @@
+✖ a previous independently verified patch never credits a later failed patch or abort (31.596039ms)
+✖ a read-only cycle cannot patch or execute tests by omitting capability metadata (0.794436ms)
+✔ a full cycle ends in an owner decision with an intact hash-chained journal (1.193064ms)
+✔ the agent never targets a protected branch, never merges and never widens its capabilities (0.9795ms)
+✔ an own test is never an independent verification, and evidence must match base and patch (0.686388ms)
+✔ red local tests cannot reach independent verification; budget and deadline stop the loop (1.67978ms)
+✔ abort and rollback work from the middle; rollback must restore the base; terminal states are final (1.215632ms)
+✔ a tampered, reordered or truncated journal is detected after a crash (1.630643ms)
+✔ only independent verification teaches success; executed red tests teach failure; infrastructure is neutral (0.570133ms)
+✔ Thompson ranking is reproducible, keeps the safety tiers and is a different arm than the frozen control (6.134377ms)
+✔ a strategy change is a preregistered experiment: sealed holdout, one run, exact paired test, kept if negative (1.89739ms)
+✔ the exact McNemar p-value matches the binomial tail (0.144117ms)
+✔ weak strategies in the real CCC1 ledger become research questions, never automatic changes (2.813033ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 207.254737
+
+✖ failing tests:
+
+test at .github/continuum/dev-loop-kernel.test.mjs:15:1
+✖ a previous independently verified patch never credits a later failed patch or abort (31.596039ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'COMPILES'
+  - 'NEUTRAL'
+  
+      at TestContext.<anonymous> (file:///workspace/device-ai-system-integration/.github/continuum/dev-loop-kernel.test.mjs:18:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'COMPILES',
+    expected: 'NEUTRAL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at .github/continuum/dev-loop-kernel.test.mjs:34:1
+✖ a read-only cycle cannot patch or execute tests by omitting capability metadata (0.794436ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/device-ai-system-integration/.github/continuum/dev-loop-kernel.test.mjs:38:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CAPABILITY_ESCALATION_REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }

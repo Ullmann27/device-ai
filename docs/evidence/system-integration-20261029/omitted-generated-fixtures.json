@@ -1,0 +1,57 @@
+[
+  {
+    "path": "android-baseline-red-xml/binary/output.bin",
+    "sha256": "0bb36d190f8d2a06e5fbacceeb35cff12b1a5374efbafe4e928a6696da904840",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "android-baseline-red-xml/binary/output.bin.idx",
+    "sha256": "a18984d802127335f5d1762e04227b8cb65dc482f28274539b1734e5170c73b3",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "android-baseline-red-xml/binary/results.bin",
+    "sha256": "70101480d82066ea82f8b48fe7c59aa945642e76ebf540cb20a484a814638565",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/contrastive-parity/kotlin-candidate.swb1",
+    "sha256": "7ddb6959004cc6944206c740b57cbe23ebd5363cc80291464b33249f01bd288a",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/contrastive-parity/kotlin-swb2.swb2",
+    "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/contrastive-parity/node-candidate.swb1",
+    "sha256": "40b28cccd1932e24d465ed86a9909ee0534a220f67c7bc20fcf82e7ea62abb42",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/contrastive-parity/node-swb2.swb2",
+    "sha256": "2530545ba55acab64fa6a37822b468a17e85379df1c756b16176a727d9e64a54",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/cre1-parity/kotlin-sgd.cre1",
+    "sha256": "e89fce20debd648646787cb6ecca36ddfeb1f1aebe4f6a1da9e5f4fffd232b43",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/cre1-parity/node-cre1.cre1",
+    "sha256": "2290194d25cc98cf6cc42e6b57f5ddcb2105ba14115e2e5295ad50c906f10db6",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/cre1-parity/node-seed73.cre1",
+    "sha256": "57ddcc0b3eee6902ae6610719ca8237543e5d2576c2fed5cb4441331f7ff3031",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  },
+  {
+    "path": "final-qa/cre1-parity/node-sgd.cre1",
+    "sha256": "2cfed4ff1d48401dc493941342823c0a27c8b8eff1002344a7094b8a16981a89",
+    "reason": "Generated deterministic public parity fixture; regenerate with the recorded canonical commands. No binary model/checkpoint copied to repository."
+  }
+]

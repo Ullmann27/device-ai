@@ -1,0 +1,67 @@
+{
+  "testedCode": "e06e17a4e8ba12a1dce3d5308e5eb455cda30b6d",
+  "mainUnchanged": "190f5eabaa60fc59292b2b80d3086aafd7743a80",
+  "pr": 242,
+  "android": {
+    "commit": "e06e17a4e8ba12a1dce3d5308e5eb455cda30b6d",
+    "status": "PASS",
+    "counts": {
+      "tests": 1268,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": 240,
+    "stale": false,
+    "errors": [],
+    "gradleExit": 0,
+    "nodeExit": 0,
+    "fullSuiteCommand": ":app:testDebugUnitTest (no --tests filter)",
+    "executedOnDevice": false,
+    "modelInferenceVerified": false,
+    "qualityImprovementProven": false
+  },
+  "workerNode": {
+    "pass": 390,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "canonicalNode": {
+    "pass": 226,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "python": {
+    "pass": 10,
+    "fail": 0,
+    "exit": 0
+  },
+  "originalAndroidRed": {
+    "tests": 1240,
+    "fail": 1,
+    "errors": 0,
+    "skips": 0,
+    "exit": 1,
+    "cause": "Missing device date assertion"
+  },
+  "selectorInvocation": {
+    "status": "BLOCKED_BEFORE_TESTS",
+    "exit": 1,
+    "cause": "Existing standalone QA task allowlist refuses --tests selector arguments; complete canonical task used instead without changing the guard."
+  },
+  "notRun": [
+    "Fold7",
+    "native Gemma inference",
+    "instrumentation",
+    "APK/build/sign/install",
+    "F2 hardware backend/cache/performance activation",
+    "new-source repeat of PR241 Docker restart experiment"
+  ],
+  "limits": [
+    "Node gates overlap: do not add counts as distinct tests.",
+    "No measured intelligence, answer quality, latency or hardware gain.",
+    "ARGON and F3 policies remain non-authoritative SHADOW."
+  ]
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.CheckedShellCallDispatcherTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:58:59" hostname="9d1c4dd98fa0" time="0.075">
+  <properties/>
+  <testcase name="sessionInvalidationBeforeBinderReplyForcesFailure" classname="at.heinz.deviceai.CheckedShellCallDispatcherTest" time="0.009"/>
+  <testcase name="failedTaskReleasesTheSingleFlightSlot" classname="at.heinz.deviceai.CheckedShellCallDispatcherTest" time="0.007"/>
+  <testcase name="blockedBinderNeverStartsASecondCheckedCommand" classname="at.heinz.deviceai.CheckedShellCallDispatcherTest" time="0.046"/>
+  <testcase name="repeatedOverlappingCallsCannotCreateUnboundedWorkerThreads" classname="at.heinz.deviceai.CheckedShellCallDispatcherTest" time="0.009"/>
+  <testcase name="threadCreationFailureIsRejectedAndSlotIsReclaimed" classname="at.heinz.deviceai.CheckedShellCallDispatcherTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

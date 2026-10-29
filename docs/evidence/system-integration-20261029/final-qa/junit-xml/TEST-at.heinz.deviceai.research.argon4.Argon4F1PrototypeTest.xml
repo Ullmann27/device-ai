@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:59:37" hostname="9d1c4dd98fa0" time="0.011">
+  <properties/>
+  <testcase name="claimCheckFlagsBuyExactlyOneVerificationPass" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="placesAndThingsUseTheirOwnReferences" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="anOwnerCorrectionRebindsAndExcludesTheWrongReferent" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="groundedEvidenceIsAnsweredDirectlyWithoutAnyModelCall" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="politeSieAddressesTheAssistantNotAPerson" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="twoStepRelationsAreDerivedWithTheirReasonAndNeverConfirmed" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="aCorrectionWithoutAPriorQuestionAsksBack" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="anUnresolvedReferenceAsksBackAndBlocksModelPasses" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="verifiedOutcomesMoveTheDecisionAndThrottlingNeverBuysMoreCompute" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="aGeneralQuestionUsesTheModelOrConsentedResearchButNeverResearchWithoutConsent" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="sameGenderInOneSentenceAsksBackAndNoReferentAsksBack" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="theExistingRouterBuysFourPassesForALongGroundedQuestion" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="invalidSignalsAreRejected" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="unsafeRulesAreRejected" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="aTopicSwitchForgetsAllReferentsAndTheStateStaysBounded" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="pronounsFollowGenderAndRecencyAcrossMoreThanFourTurns" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="chainsAreBoundedAndContradictionsAreReportedNotResolved" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.002"/>
+  <testcase name="anUnsupportedPersonalQuestionIsNotHandedToTheModel" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.0"/>
+  <testcase name="siblingsAreNotDerivedFromThemselvesAndUnparsableTextIsIgnored" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="timeExpressionsBecomeAbsoluteDatesAndCarryIntoFollowUps" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <testcase name="revokingASupportRetractsTheConclusionButAnAlternativeWitnessKeepsIt" classname="at.heinz.deviceai.research.argon4.Argon4F1PrototypeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

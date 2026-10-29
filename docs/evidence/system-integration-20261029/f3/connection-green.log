@@ -1,0 +1,11 @@
+✔ actual offline Teamleader repairs a broken Git fixture and retains only a reviewable patch (1123.262247ms)
+✔ F3 observer exceptions and attempted report mutation cannot alter real repair or learning (1929.914074ms)
+✔ F3 observer is explicitly disableable and invalid options are refused (1.823905ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3168.028634

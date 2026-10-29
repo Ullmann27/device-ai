@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:49:48" hostname="9d1c4dd98fa0" time="0.034">
+  <properties/>
+  <testcase name="sessionIsolationMustBeDoneByCallerNotEvaluator" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.001"/>
+  <testcase name="emptyAndPureEchoAreFailures" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="repeatedClosingSentenceFromFold7FieldTestIsNotMarkedSuccessful" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="admittingUncertaintyIsNotPunishedOrMadeIntoAnOwnerFact" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="repeatingWholeAnswerOnDifferentQuestionTriggersRetry" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.032"/>
+  <testcase name="qualityGateDoesNotClaimToVerifyPhysics" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="explicitRequestToRepeatPriorAnswerIsRespected" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="answeringSameQuestionTwiceMayBeIdentical" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.0"/>
+  <testcase name="correctDistinctFollowUpPassesOnlyAsStructurallyAcceptable" classname="at.heinz.deviceai.cognitive.LocalDialogueQualityGateTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

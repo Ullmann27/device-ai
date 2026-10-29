@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.ui.ContinuumOrbitalRingTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-29T19:50:05" hostname="9d1c4dd98fa0" time="0.004">
+  <properties/>
+  <testcase name="deterministicPerspectiveHasTwoContinuousBoundedDepthHalves" classname="at.heinz.deviceai.ui.ContinuumOrbitalRingTest" time="0.002"/>
+  <testcase name="readyHasIndependentSpatialMotionAndBoundedFloatWithoutTelemetry" classname="at.heinz.deviceai.ui.ContinuumOrbitalRingTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
