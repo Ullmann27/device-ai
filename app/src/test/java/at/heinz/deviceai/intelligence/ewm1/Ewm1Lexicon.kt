@@ -31,7 +31,7 @@ internal object Ewm1Lexicon {
 
     /** Attribute, time and unit nouns: they ask for a property, they never name the thing asked about. */
     val GENERIC = setOf(
-        "farbe", "alter", "jahre", "jahr", "name", "namen", "beruf", "arbeit", "job", "hobby", "nummer", "telefonnummer",
+        "farbe", "alter", "jahre", "jahr", "name", "namen", "arbeit", "nummer", "telefonnummer",
         "adresse", "größe", "gewicht", "preis", "kosten", "euro", "cent", "uhr", "uhrzeit", "zeit", "datum", "tag", "tage",
         "woche", "wochen", "monat", "monate", "wochenende", "morgen", "früh", "vormittag", "mittag", "nachmittag",
         "abend", "nacht", "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",

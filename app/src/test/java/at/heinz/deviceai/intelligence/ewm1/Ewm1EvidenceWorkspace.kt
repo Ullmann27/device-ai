@@ -11,6 +11,7 @@ internal data class Ewm1Token(val text: String, val lower: String, val index: In
 internal object Ewm1Tokens {
     private val WORD = Regex("[\\p{L}\\p{N}]+(?:[-.,][\\p{L}\\p{N}]+)*['’]?")
     private val BREAK = Regex("[.!?:;–]\\s*$")
+    private val ABBREVIATIONS = setOf("dr", "prof", "mag", "st", "ing", "dipl", "nr", "ca", "bzw", "hr", "fr", "di", "sr")
 
     fun of(text: String): List<Ewm1Token> {
         val out = ArrayList<Ewm1Token>()
@@ -18,11 +19,14 @@ internal object Ewm1Tokens {
         var sentence = 0
         for (m in WORD.findAll(text)) {
             val before = text.substring(previousEnd, m.range.first)
-            val initial = out.isEmpty() || (BREAK.containsMatchIn(before) && !before.trim().startsWith(","))
+            // "Dr. Brandl", "St. Wolfgang", "Mag. Haider": the dot of an abbreviation ends no sentence
+            val abbreviationDot = out.isNotEmpty() && out.last().lower in ABBREVIATIONS && before.trim() == "."
+            val initial = out.isEmpty() || (!abbreviationDot && BREAK.containsMatchIn(before) && !before.trim().startsWith(","))
             if (initial && out.isNotEmpty()) sentence++
             val raw = m.value.trimEnd('\'', '’')
             out += Ewm1Token(raw, lower(raw), out.size, raw.first().isUpperCase(), initial,
-                breakBefore = initial || before.any { it in ",;:()–—\"„“" }, apostrophe = raw.length < m.value.length, sentence = sentence)
+                breakBefore = initial || (!abbreviationDot && before.any { it in ",;:()–—\"„“" }), apostrophe = raw.length < m.value.length,
+                sentence = sentence)
             previousEnd = m.range.last + 1
         }
         return out

@@ -111,7 +111,9 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
             val nameSlot = before == null || before == "und" || before == "von" && m.determiner == null ||
                 tokens[k].text.endsWith(",") || (before !in Ewm1Lexicon.ARTICLES && before !in Ewm1Lexicon.QUANTIFIERS &&
                 before !in Ewm1Lexicon.FUNCTION && !Regex("(e|en|er|es|em)$").containsMatchIn(before)) ||
-                before in setOf("ist", "heißt", "wohnt", "arbeitet", "lebt", "hat", "macht", "spielt", "eigentlich", "auch", "mit")
+                before in setOf("ist", "heißt", "wohnt", "arbeitet", "lebt", "hat", "macht", "spielt", "eigentlich", "auch", "mit") ||
+                // "nach Porto", "in Venedig", "aus Krk": a capitalised word straight after a preposition names a place
+                (before in setOf("nach", "in", "aus", "von", "bei", "über") && m.determiner == null)
             val genitiveName = headToken.lower.endsWith("s") && m.determiner == null && m.end == m.start &&
                 tokens.getOrNull(m.end + 1)?.capitalized == true
             val namedInstanceOfKnownClass = m.end > m.start && memory.resolve(tokens[m.start].text).isNotEmpty()
@@ -278,7 +280,7 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
         return out
     }
 
-    private val HARD_TYPES = setOf("COLOR", "NUMBER", "TIME")
+    private val HARD_TYPES = setOf("COLOR", "NUMBER", "TIME", "KIND")
 
     /** Relation support, plus one point when the fact has the expected answer type (soft types rank, never exclude). */
     private fun relation(f: Ewm1Fact, attr: List<String>): Int = attr.count { a -> supports(f, a) }
@@ -286,6 +288,10 @@ class Ewm1Workspace(rawFacts: List<Pair<String, String>>, private val b0Rank: (S
     private fun supports(f: Ewm1Fact, a: String): Boolean {
         val groups = Ewm1Lexicon.groupsOf(a)
         if ("arbeiten" in groups && occupation(f)) return true
+        // "Renate ist 58.", "Florian ist 38 und lebt …": an age given as a bare number
+        if ("alter" in groups && f.tokens.withIndex().any { (i, t) -> t.lower == "ist" &&
+                f.tokens.getOrNull(i + 1)?.lower?.let { n -> n.length in 1..3 && n.all(Char::isDigit) } == true &&
+                f.tokens.getOrNull(i + 2)?.lower.let { it == null || it == "und" } }) return true
         if (Ewm1Lexicon.TIME_SYNONYMS.any { a in it && f.tokens.any { t -> t.lower in it } }) return true
         if ("heissen" in groups && f.mentions.any { it.end > it.start && it.qualifier != null && stem(it.qualifier) in questionStems }) return true
         return f.tokens.any { t ->
