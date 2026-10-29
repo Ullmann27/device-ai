@@ -127,3 +127,47 @@ artifact=$name
 EOF
 printf 'CONTINUUM_P0_QA_APK_READY=%s/%s\n' "$out" "$name"
 printf 'Original signer not used; do not install over Continuum Lokal\n'
+
+# Separate original-package RELEASE assembly, deliberately with NO signer.
+# The approved ORIGINAL P12 is used only on the Fold7 after a byte-for-byte
+# hash comparison with build evidence, never in the Render environment.
+printf '%s\n' 'Building unsigned Continuum Lokal v0.3.28 transport artifact'
+gradle "${flags[@]}" \
+  -PdeviceAiMentorPreview=true \
+  -PcontinuumLocalRenderUnsigned=true \
+  -PcontinuumStandaloneVersionCode=29 \
+  :app:assembleRelease ||
+    fail "Unsigned main-app release assembly failed"
+unsigned="app/build/outputs/apk/release/app-release-unsigned.apk"
+[[ -s "$unsigned" && ! -L "$unsigned" ]] ||
+  fail "Android did not produce an unsigned main-app APK"
+"$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$unsigned" > "$out/UNSIGNED-PACKAGE.txt" ||
+  fail "Unsigned APK package unreadable"
+grep -Fq "package: name='at.heinz.deviceai.continuumlocal' versionCode='29' versionName='0.3.28'" \
+  "$out/UNSIGNED-PACKAGE.txt" ||
+  fail "Unsigned transport APK identity/version mismatch"
+if "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify "$unsigned" >/dev/null 2>&1; then
+  fail "Transport APK unexpectedly has a valid signing identity"
+fi
+"$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -p 4 "$unsigned" >/dev/null ||
+  fail "Unsigned APK is not correctly zipaligned"
+unsigned_sha="$(sha256sum "$unsigned" | cut -d ' ' -f 1)"
+[[ "$unsigned_sha" =~ ^[a-f0-9]{64}$ ]] || fail "Bad unsigned APK digest"
+unsigned_name="Continuum-Lokal-0.3.28-V29-UNSIGNIERT-${unsigned_sha}.apk"
+cp "$unsigned" "$out/$unsigned_name"
+( cd "$out" && sha256sum "$unsigned_name" > UNSIGNED-SHA256SUMS.txt &&
+  sha256sum --check --status UNSIGNED-SHA256SUMS.txt )
+cat > "$out/UNSIGNED-STATUS.txt" <<EOF
+source_commit=$source_sha
+package=at.heinz.deviceai.continuumlocal
+version_code=29
+version_name=0.3.28
+owner_signed=FALSE
+owner_installable=FALSE
+status=UNSIGNED_OWNER_PACKAGE_FOR_LOCAL_ORIGINAL_P12_SIGNING
+sha256=$unsigned_sha
+artifact=$unsigned_name
+EOF
+printf 'CONTINUUM_UNSIGNED_OWNER_APK_READY=%s/%s\n' "$out" "$unsigned_name"
+printf 'Local Fold7 original P12 signature required before installation.\n'
+
