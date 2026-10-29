@@ -68,14 +68,16 @@ class Ewm1SourceIndex(records: List<ContinuumKnowledgeArchive.SourceRecord>) {
             Regex("(?iu)^\\s*erkläre?\\s+(?:mir\\s+)?(?:bitte\\s+)?(.+?)\\s*[?.!]*\\s*$"),
             Regex("(?iu)^\\s*erzähl(?:e)?\\s+(?:mir\\s+)?(?:etwas\\s+|was\\s+)?(?:über|von)\\s+(.+?)\\s*[?.!]*\\s*$"),
             Regex("(?iu)^\\s*was\\s+bedeutet\\s+(.+?)\\s*[?.!]*\\s*$"),
+            Regex("(?iu)^\\s*was\\s+(?:macht|tut)\\s+(?:ein|eine|der|die|das)\\s+(.+?)\\s*[?.!]*\\s*$"),
             Regex("(?iu)^\\s*(?:was|wer)\\s+(?:ist|sind|war|waren)\\s+(.+?)\\s*[?.!]*\\s*$")
         )
+        private val TRAILING = Regex("(?iu)\\s+(?:eigentlich|denn|genau|nochmal|noch einmal|bitte)$")
         private val LEADING = Regex("(?iu)^(?:der|die|das|den|dem|des|ein|eine|einen|einem|eines|einer)\\s+")
 
         fun topicOf(question: String): String? {
             if (question.length !in 4..240) return null
             for (f in FRAMES) f.find(question)?.let { m ->
-                val t = m.groupValues[1].replace(LEADING, "").trim().trim('„', '“', '"', '\'')
+                val t = m.groupValues[1].replace(TRAILING, "").replace(LEADING, "").trim().trim('„', '“', '"', '\'')
                 return t.takeIf { it.length in 2..120 && it.split(Regex("\\s+")).size <= 8 }
             }
             return null
