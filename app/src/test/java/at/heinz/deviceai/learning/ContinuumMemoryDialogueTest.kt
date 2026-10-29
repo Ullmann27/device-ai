@@ -330,6 +330,37 @@ class ContinuumMemoryDialogueTest {
         }
     }
 
+    @Test fun birthdayQuestionMustNotCiteUnrelatedResidenceFact() {
+        val dir=Files.createTempDirectory("continuum-birthday-evidence").toFile()
+        try {
+            val core=ContinuumLearningCore(dir)
+            val residence="Die fiktive Testfigur Nela wohnt in Graz."
+            core.recordOwnerFact(residence)
+            val birthday=core.replyFromMemory("Wann hat Nela Geburtstag?")
+            assertFalse("A residence fact does not establish a birthday",birthday.grounded)
+            assertTrue(birthday.memoryIds.isEmpty())
+            assertEquals(ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,birthday.answer)
+            assertFalse(birthday.answer.contains(residence))
+
+            val born=core.replyFromMemory("Wann wurde Nela geboren?")
+            assertFalse(born.grounded)
+            assertTrue(born.memoryIds.isEmpty())
+
+            val location=core.replyFromMemory("Wo wohnt Nela?")
+            assertTrue("The existing supported residence question must still work",location.grounded)
+            assertTrue(location.answer.contains(residence))
+
+            val birthdayFact="Nela hat am 12. Mai Geburtstag."
+            core.recordOwnerFact(birthdayFact)
+            val supported=core.replyFromMemory("Wann hat Nela Geburtstag?")
+            assertTrue("A confirmed birthday fact must remain retrievable",supported.grounded)
+            assertTrue(supported.answer.contains(birthdayFact))
+            assertFalse(supported.answer.contains(residence))
+        } finally {
+            dir.deleteRecursively()
+        }
+    }
+
     @Test fun definitionMatchesOwnerFactSubjectNotIncidentalMention() {
         val dir=Files.createTempDirectory("continuum-definition-subject").toFile()
         try {
