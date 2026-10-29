@@ -140,6 +140,24 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
             .take(limit).toList()
     }
 
+    /** Bounded, read-only view for the EWM source index: the archive state and at most [limit]
+     * valid records with their text cut to [maxTextChars]. Damaged files are skipped exactly as in
+     * [search]; nothing is written. Record ids are content addressed, so the sorted file names
+     * identify the archive state ([indexState]) without reading any record. */
+    fun indexSnapshot(limit:Int=MAX_RECORDS,maxTextChars:Int=INDEX_TEXT_CHARS):IndexSnapshot = transaction {
+        require(limit in 1..MAX_RECORDS && maxTextChars in 120..6_000)
+        val chosen=files().take(limit)
+        IndexSnapshot(stateOf(chosen),chosen.mapNotNull { f -> runCatching { readFile(f) }.getOrNull() }
+            .map { if(it.text.length>maxTextChars)it.copy(text=it.text.take(maxTextChars)) else it })
+    }
+
+    /** Cheap change check for a cached index: hashes the sorted record file names only. */
+    fun indexState():String = transaction { stateOf(files().take(MAX_RECORDS)) }
+
+    data class IndexSnapshot(val state:String,val records:List<SourceRecord>)
+
+    private fun stateOf(chosen:List<File>):String=digest(chosen.joinToString("\n") { it.name })
+
     fun stats():Map<Kind,Int> = transaction {
         val records=files().mapNotNull { runCatching { readFile(it) }.getOrNull() }
         Kind.entries.associateWith { k -> records.count { it.kind==k } }
@@ -412,6 +430,8 @@ class ContinuumKnowledgeArchive(rootDirectory:File) {
 
     companion object {
         const val MAX_RECORDS=4096
+        /** Text kept per record in the EWM source index (the answer shows 350 characters). */
+        const val INDEX_TEXT_CHARS=800
         const val MIN_FREE_BYTES=128L * 1024L * 1024L
         const val MAX_RECORD_BYTES=40_000
         private const val MAX_IMPORT_UNCOMPRESSED_BYTES=64L * 1024L * 1024L
