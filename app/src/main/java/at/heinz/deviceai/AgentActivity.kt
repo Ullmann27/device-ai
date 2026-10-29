@@ -3576,6 +3576,8 @@ class AgentActivity : Activity() {
                         localRuntime.loadedModel != null) "geladen" else "nicht nachgewiesen bereit")
                     append("\n\nLetztes numerisches Laufzeitprofil (keine Prompts/Antworten):\n")
                         .append(localRuntime.inferenceProfiles.lastOrNull()?.safeSummary() ?: "Noch kein Modellaufruf profiliert.")
+                    append("\nARGON4 Gespräch · SHADOW (keine Antwortfreigabe): ")
+                        .append(localConversationContext.argonShadowReport())
                     append("\n\nFür Daten aus einer früheren App: Dort zuerst SWB1-Backup und Wissensarchiv exportieren. " +
                         "Anschließend in dieser App einzeln prüfen und importieren. " +
                         "Private App-Speicher sind getrennt; keine automatische Übernahme ohne Datei-Auswahl.")
@@ -6102,7 +6104,8 @@ class AgentActivity : Activity() {
                     ChatReasoningRouter(LocalModelReasoningAdapter(localRuntime,turnTrace=turnTrace), { localRuntime.cancel() })
                         .also { activeReasoningRouter = it }
                         .advise("chat-$turnId", task, compiledContext?.text ?: task,
-                            groundedRecall = groundedRecall)
+                            groundedRecall = groundedRecall,
+                            modelReady = localRuntime.state == LocalModelState.READY)
                         .also { activeReasoningRouter = null; if(it!=null)turnTrace.event(TraceStage.ROUTER_ADVISORY) }
                 } else null
                 cancellation.throwIfCancelled()

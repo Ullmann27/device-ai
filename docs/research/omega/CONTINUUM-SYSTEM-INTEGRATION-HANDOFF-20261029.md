@@ -18,3 +18,9 @@ Verified source snapshots on entry: PR227 `05db7e38d70d886b305a547b5b5b628272c5d
 8. Commit/push each coherent tested block to this official branch, keep a Draft PR, append final source identities/evidence/results here. Leave unsafe, incompatible or unverified features explicitly SHADOW/OFF with their exact blocker.
 
 Current status: source integration NOT_YET_TESTED. The owner has explicitly requested autonomous implementation and parallel specialist work; no additional design approval is needed for these reversible isolated changes. Agents have disjoint file ownership. Original branches and the old dirty local checkout are retained untouched.
+
+## Checkpoint before final verification
+
+PR242 is open. PR241 documentation/evidence is now published at `39772c9b544a9625c7c8ffc0e6aaaedb36cc5192`; integration retains its byte-identical documentation. F2's ten existing Python tests executed PASS; editable offline scripts/reports are preserved, no runtime/backend activation. A complete real standalone-QA Gradle unit run reproduced the missing-date assertion (original XML/log retained). The `--tests` invocation was refused by the existing QA task allowlist before execution; the full task runs without altering that safety gate.
+
+Code inspection corrected the initial PR227 hypothesis: current PR238 already has a stronger unresolved-pronoun abstention, so no older runtime hunk is applied. Additional regression preserves that behavior. ARGON F1 now has one canonical main-source implementation; existing conversation state owns a bounded ephemeral diagnostic kernel, same-turn SWB1 evidence feeds fresh bounded unconfirmed relation diagnostics, and the existing reasoning router computes a non-operative proposal. Product context/answers/tool authority and extra-call budgets remain unchanged. This checkpoint is **WIP/UNVERIFIED** until the final combined Kotlin/Node gates complete.
