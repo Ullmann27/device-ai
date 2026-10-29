@@ -1,0 +1,14 @@
+JUnit version 4.13.2
+...E
+Time: 0.022
+There was 1 failure:
+1) explicitExplanationUsesReadyModelWithRetrievedEvidence(at.heinz.deviceai.LocalExplanationRouteTest)
+java.lang.AssertionError: Erkläre Quantencomputer anhand der vorhandenen Quellen. expected:<LOCAL_MODEL> but was:<LOCAL_CORE>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.LocalExplanationRouteTest.explicitExplanationUsesReadyModelWithRetrievedEvidence(LocalExplanationRouteTest.java:16)
+
+FAILURES!!!
+Tests run: 3,  Failures: 1
+

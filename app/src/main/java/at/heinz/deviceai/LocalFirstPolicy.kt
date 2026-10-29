@@ -44,7 +44,7 @@ object LocalFirstPolicy {
 
     // An explicit, bounded intent rule, not a semantic-understanding claim.
     // Nouns such as "Vergleich" in a direct definition are deliberately excluded.
-    private val SYNTHESIS = Regex("(?iu)\\b(warum|wieso|weshalb|begründe|begründen|vergleiche|vergleichen|" +
+    private val SYNTHESIS = Regex("(?iu)\\b(erkläre|erklär|erklären|erläutere|erläutern|warum|wieso|weshalb|begründe|begründen|vergleiche|vergleichen|" +
         "analysiere|analysieren|plane|bewerte|bewerten|schlussfolgere)\\b|\\bleite\\b.{0,80}\\bab\\b")
 
     // The user may ask to recall a word that coincides with a model command.

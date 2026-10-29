@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T14:07:45" hostname="9d1c4dd98fa0" time="0.063">
+  <properties/>
+  <testcase name="duplicateObjectWritesDoNotCreateAdditionalObjects" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.001"/>
+  <testcase name="missingCommittedSeedOrStateRootFailsClosed" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.047"/>
+  <testcase name="tamperedIdentityHashCannotBeReconciledAsValidRuntimeState" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.003"/>
+  <testcase name="olderSeedStateFormatIsRejectedEvenWhenResigned" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.001"/>
+  <testcase name="modelSwapPersistsWithoutChangingIdentity" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.008"/>
+  <testcase name="objectStoreRejectsCorruptAndTruncatedFilesAndIgnoresMissingObjects" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.001"/>
+  <testcase name="tamperedSeedSignatureCannotCreateReplacementIdentity" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.001"/>
+  <testcase name="olderManifestSchemaIsRejected" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.001"/>
+  <testcase name="unrenamedSeedTempFileIsIgnoredAfterInterruptedWrite" classname="at.heinz.deviceai.cognitive.ContinuumPersistenceFailureTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,17 @@
+JUnit version 4.13.2
+.......E......
+Time: 0.091
+There was 1 failure:
+1) computerLearningSentencesNeverTriggerPhoneStorageInspection(at.heinz.deviceai.BootstrapBrainTest)
+java.lang.AssertionError: Frage:„Wie verarbeitet ein Computer Informationen?“
+„Warum benötigt ein Prozessor Arbeitsspeicher?“
+„Welche Aufgaben übernimmt ein Betriebssystem?“
+„Wie kann künstliche Intelligenz aus Beispielen lernen?“ expected:<REPLY> but was:<DEVICE_TOOL>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at at.heinz.deviceai.BootstrapBrainTest.computerLearningSentencesNeverTriggerPhoneStorageInspection(BootstrapBrainTest.kt:82)
+
+FAILURES!!!
+Tests run: 13,  Failures: 1
+

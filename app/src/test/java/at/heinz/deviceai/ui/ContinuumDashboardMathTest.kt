@@ -31,6 +31,8 @@ class ContinuumDashboardMathTest {
         assertNull("no base, no percentage", ContinuumDashboardMath.changePercent(5, 0))
         assertEquals(-50, ContinuumDashboardMath.changePercent(5, 10))
         assertEquals(25, ContinuumDashboardMath.changePercent(5, 4))
+        assertEquals("21 logged activities vs 2 yesterday are +950 percent activity, not model quality",
+            950, ContinuumDashboardMath.changePercent(21, 2))
         assertNull(ContinuumDashboardMath.qualityPercent(0, 0))
         assertEquals(67, ContinuumDashboardMath.qualityPercent(2, 3))
         assertNull(ContinuumDashboardMath.median(emptyList()))

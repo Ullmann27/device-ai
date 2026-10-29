@@ -2,6 +2,36 @@
 
 Stand 2026-10-29. **Host-verifiziert; keine neue APK oder Geräte-/Gemma-Inferenzprüfung.** Offizielles privates Repository: `Ullmann27/device-ai`.
 
+
+## Aktueller Integrationsabschluss — PR237
+
+**Geprüfter zusammenhängender Code:** `771529a3c2602db02f5255a748d16b2ce9205957`, Branch `sol/continuum-dialog-integration-20261029`, [Draft PR237](https://github.com/Ullmann27/device-ai/pull/237) auf vollständig gesichertem PR230 `9fbd377f2511a72ef669fad9928b07593eeb81a2`. Der abschließende Abgleich mit PR230 betrifft ausschließlich dessen Dokumentation/Belege; der Programmcode bleibt identisch zum geprüften Commit. Endgültiger Commit steht im PR; `git rev-parse HEAD` liefert den lokalen HEAD. **Installiert bleibt laut letzter Besitzerangabe b2b2277, nicht diese Fassung.**
+
+Gezielt übernommene, vorab geprüfte Dateiunterschiede:
+
+- `5ff7fe77` aus PR233 `316c55543f2e1e84a52c5ace437c572791e1936d`: `AgentActivity.kt`, `BootstrapBrain.kt`, `ContinuumSelfInspectionQuery.kt`, `learning/NeuralDialogue.kt`, `learning/NeuralTutorBatchHint.kt` und vier Testdateien. Keine blinde Branch-Zusammenführung; einzige Abweichung zur übernommenen Differenz waren fünf abschließende Leerzeichen. Geräte-Speicherintention enger erkannt; inaktiver Tutor nimmt keine Beispiele an; Demo-Aliase bleiben bestätigungspflichtig. Ohne bestätigte Beispiele wird kein Üben gestartet. Der bestehende Gemma-Prompt kennt die tatsächliche App-Identität, behauptet aber keinen Live-Git-Zugriff. Die lokale Selbstauskunft ist ausdrücklich regelbasiert und keine bewiesene Gemma-Antwort.
+- `fc8112ca573f67356867900178d829d7c88de975` aus PR234 `d5af54e18a2694de78b0a125c5f83e73da930cdf`: `ContinuumDashboardCollector.kt`, `learning/ContinuumLearningCore.kt`, `ui/ContinuumHomeElements.kt`, `ContinuumLearningActivityTest.kt`, `ContinuumDashboardMathTest.kt`. Inhaltsfreie Statusprojektion unterscheidet übernommene/verworfene Gewichte. Anzeige benennt SWB1-Tests und Aktivitätsänderung statt vermeintlicher Intelligenzsteigerung. Keine Änderung der Lernmechanik, gespeicherter Erfahrungen oder Gewichte. Alle Grafik-/UI-Quellen bleiben editierbar.
+
+**Erste Integrationsregression (`fc8112ca`):** PASS, Exit0, **1231 Android-JUnit-Tests in235 Suiten und226 Node-Tests**,0fail/0errors/0skip; Kotlin-/Java-Kompilierung, bestehendes **NewApi-only** Lint und lokale CRE1/SWB-Parität. Vorhandene JDK17/Gradle8.11.1/SDK36-Toolchain, Linux x86_64. Volle Suite ohne `--tests`-Filter. Befehl/Logs/JUnit-XML/Prüfsummen: [`../evidence/dialog-integration-20261029/full`](../evidence/dialog-integration-20261029/full). APK-/Fold7-/Widget-/native Sprach-/Gemma-Gerätetests: **NOT_RUN**.
+
+**Vorher/nachher:** Derselbe kompilierte `BootstrapBrainTest` aus237 wurde mit den echten, von Gradle kompilierten Produktionsklassen aus230 und237 per JUnitCore ausgeführt. 13 Tests: vorher1FAIL (Lerntext wird DEVICE_TOOL), nachher13PASS; explizite Geräteaufträge funktionieren weiterhin. Das ursprüngliche `BootstrapBrain.kt` aus230 entspricht dem installierten b2b2277. Keine Gerätetools wurden in diesem JVM-Vergleich ausgeführt. Rohlogs, Klassen-Hashes und exakte Java-Aufrufe: `baseline-routing.log`, `integrated-routing.log`, `routing-comparison.json` im gleichen Evidenzordner. Das ist ein Routinggewinn, kein Nachweis allgemeiner Intelligenz oder nativer Inferenz.
+
+PR232/236 bleiben **separat**, inklusive unveränderter Original-Branches; kein neuer Updater/Render-Build oder Preview-APK. PR224/EWM-Forschung und versiegelte Daten unverändert. Auch die Guard-Reparaturen aus230 sind vollständig enthalten. Alle unten stehenden230-Ergebnisse bleiben als eigene Baseline erhalten.
+
+**Zusätzliche belegte Dialogreparatur:** `fee7188a` ergänzt `app/src/test/java/at/heinz/deviceai/LocalExplanationRouteTest.java`; reale JUnit-Ausführung gegen die kompilierten Produktionsklassen von `fc8112ca` ergab 1FAIL/3Tests: „Erkläre Quantencomputer anhand der vorhandenen Quellen.“ blieb trotz bereitem Modell bei LOCAL_CORE. Negative Kontrollen für exakten Abruf und fehlendes Modell bestanden. `771529a3c2602db02f5255a748d16b2ce9205957` erweitert ausschließlich die vorhandene Syntheserouting-Regel in `LocalFirstPolicy.kt` um erkläre/erklär/erklären/erläutere/erläutern. Vorhandenes `runLocal`/`LocalGroundedRecall` übergibt die Belege begrenzt an das lokale Modell; direkte Erinnerungsfragen und zitierte Wörter bleiben beim exakten Abruf, kein Fakten-/Toolrecht entsteht.
+
+**Endgültige vollständige Regression auf `771529a3`: PASS / Exit0, 1234 Android-JUnit in236 Suiten,226 Node,0fail/0errors/0skip; Kotlin/Java, NewApi-only lint und Parität PASS.** Alle drei neuen Erklärungstests bestehen jetzt innerhalb der echten Android-Projektsuite. Rohbelege: [`full-final`](../evidence/dialog-integration-20261029/full-final); ursprünglicher Fehler einschließlich javac-/JUnit-Aufruf in [`explanation-red`](../evidence/dialog-integration-20261029/explanation-red). Vorherige erfolgreiche Suite bleibt als Vergleich erhalten; keine Tests abgeschwächt. Der abschließende Commit nach771529a3 enthält ausschließlich Belege und diese Übergabe, keine Programmänderungen.
+
+**Neu eingegangener Fold7-Besitzerbeleg:** Auf die öffentliche Normalchat-Frage „Warum dehnt sich Wasser beim Gefrieren aus?“ hat der Besitzer eine zusammenhängende Antwort über die platzbeanspruchende hexagonale Eisstruktur zurückgemeldet. Die Kernaussage ist fachlich plausibel. Originaltext und genaue Beleggrenzen stehen in [`fold7-owner-normal-chat.json`](../evidence/dialog-integration-20261029/fold7-owner-normal-chat.json). Status OWNER_REPORTED_NORMAL_CHAT_RESPONSE; kein numerisches Inferenzprofil, keine TTFT-/Gesamtzeit, kein Offline-/Neustartnachweis. Native Gemma-Herkunft bleibt daher unbestätigt; dies ist kein Gerätebeleg für den noch nicht installierten Draft237.
+
+**Nächster ausführbarer Prüfschritt:** Im autorisierten, sauberen Fold7-Checkout von `771529a3c2602db02f5255a748d16b2ce9205957` (nach normalem Fetch/isoliertem Checkout, bestehende Arbeitsbäume nicht überschreiben):
+
+```bash
+bash scripts/continuum-fusion-full-regression.sh 771529a3c2602db02f5255a748d16b2ce9205957
+```
+
+Der vorhandene Runner übernimmt Termux-native Pfade/AIDL-Flag. Kein Signieren/Installieren. Danach bleibt als nächster Entwicklungsblock die prozessweite Download-/Installationssession von236 mit echten Abbruch-/Neustarttests zu prüfen, bevor der Updater in diesen Stand aufgenommen wird. Nicht auf Verdacht andere Haupt-App- oder Grafikzweige mergen.
+
 ## Installiert versus Draft
 
 | Stand | Exakte Quelle / Branch | Einordnung |
@@ -9,7 +39,7 @@ Stand 2026-10-29. **Host-verifiziert; keine neue APK oder Geräte-/Gemma-Inferen
 | Besitzerangabe Fold7 | PR228 `b2b2277162e346688da3eef551414108615f3cad`, `review/ewm2-revocation-race-20261029` | Installiert: Continuum Lokal0.3.27/code28, `at.heinz.deviceai.continuumlocal`; Gemma E4B geladen, EWM2 AN, 548 Quellen. 1218 Android-/218 Node-Tests laut Besitzer. Kein Fernzugriff dieser Sitzung. |
 | Gedächtnis-Vorläufer | PR229 `a16e45c8bb43a38143ed729b5e0501337adc8eb5`, `review/continuum-memory-attribute-guard-20261029` | Auf PR228; Geburtstagsschutz. Nicht als installiert belegt. |
 | Diese Reparaturen | [Draft PR230](https://github.com/Ullmann27/device-ai/pull/230), `sol/continuum-gpt6-closeout-20261029`; geprüfter Code `07f3431309861562b53ca28a2ae1b94309d68739` | Auf PR229; vollständige Testergebnisse unten. Nachfolgender Abschlusscommit enthält nur Dokumentation/Rohbelege; endgültiger HEAD im PR bzw. `git rev-parse HEAD`. |
-| Anschlussrunde | [Draft PR237](https://github.com/Ullmann27/device-ai/pull/237), `sol/continuum-dialog-integration-20261029` | Auf PR230; PR233/234 werden gesondert geprüft. Kein Ergebnis vorweggenommen. |
+| Anschlussrunde | [Draft PR237](https://github.com/Ullmann27/device-ai/pull/237), `sol/continuum-dialog-integration-20261029` | Auf PR230; PR233/234 host-geprüft integriert, siehe aktuellen Abschluss oben. |
 | Opus-Forschung | PR224 `d49fbfea587ac18bead8f5ad30f244ca4250d796`, `opus/continuum-brain-research-20261029` | Keine Forschungsänderung und kein Zugriff auf versiegelte TEST4/TEST5. |
 
 PR228 basiert auf PR227 `f5881a7b5ba6894f36df38eb28f897cb4da1cda5` (`opus/continuum-ewm2-integration-20261029`). Laufzeitreparaturen aus PR223, Code `c8ea465f3ff6cd87feb763df7f83d8dfc8d70a6a`, sind bereits Vorfahren des installierten Codes. Deren Rohlog-Commit `de8f759b1be9f56d1c7d4efc3b52cf8a07ee82cb` bleibt separat zugänglich.
@@ -57,7 +87,7 @@ Gemma-Nachweis auf Fold7: öffentliche normale Frage, ausgewählter Gemma-Hash, 
 
 Generation16 `at.heinz.deviceai.mentorpaired` bleibt unverändert. Das persönliche256-Einträge-Protokoll und alte Identität sind weiterhin nicht vollständig als gerettet belegt. Keine Besitzerdateien, Quellen, Gewichte, Berechtigungen oder Schlüssel angefasst. Originale Lokal-Zertifikats-SHA256: `6354e91dc0ca8df9173885f32402fd817f46e798f369206d4fd710ff3d03ee23`; historisches Mentor-Zertifikat ist anders. Nur der vorhandene Fold7-P12 darf später dieselbe Haupt-App signieren. Keine neue APK in dieser Runde.
 
-## Unmittelbarer nächster Schritt
+## Reproduktion der vorherigen230-Baseline
 
 Auf dem autorisierten Fold7-Checkout des geprüften Code-Commits `07f3431309861562b53ca28a2ae1b94309d68739` die vollständige QA ausführen, ohne Signierung/Installation:
 

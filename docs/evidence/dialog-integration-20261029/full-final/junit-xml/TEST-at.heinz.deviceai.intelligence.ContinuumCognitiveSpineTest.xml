@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-29T14:07:47" hostname="9d1c4dd98fa0" time="0.003">
+  <properties/>
+  <testcase name="failClosedEvidenceOwnerAndCodingDecisions" classname="at.heinz.deviceai.intelligence.ContinuumCognitiveSpineTest" time="0.003"/>
+  <system-out><![CDATA[PASS: isolated cognitive decision assertions
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
