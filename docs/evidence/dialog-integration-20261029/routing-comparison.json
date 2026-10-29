@@ -1,0 +1,32 @@
+[
+  {
+    "label": "baseline",
+    "productionCodeCommit": "07f3431309861562b53ca28a2ae1b94309d68739",
+    "testCodeCommit": "fc8112ca573f67356867900178d829d7c88de975",
+    "testClassSha256": "98e2758059327b95de9a85dec6fcdfc345f2039a81fde12f37631a8a94c7fc85",
+    "productionBrainClassSha256": "20d98234507fffbd6914e214b9588bb1b3885ad528ab633d3261e5fd39743c4e",
+    "command": [
+      "/workspace/continuum-tools/jdk17/bin/java",
+      "-cp",
+      "/workspace/device-ai-gpt6-closeout/app/build/tmp/kotlin-classes/debug:/workspace/device-ai-gpt6-closeout/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes:/workspace/device-ai-dialog-integration/app/build/tmp/kotlin-classes/debugUnitTest:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.BootstrapBrainTest"
+    ],
+    "exit": 1
+  },
+  {
+    "label": "integrated",
+    "productionCodeCommit": "fc8112ca573f67356867900178d829d7c88de975",
+    "testCodeCommit": "fc8112ca573f67356867900178d829d7c88de975",
+    "testClassSha256": "98e2758059327b95de9a85dec6fcdfc345f2039a81fde12f37631a8a94c7fc85",
+    "productionBrainClassSha256": "69ea2d66523d19c0482b392babe096069e377700ebc1e49944000e499a74c977",
+    "command": [
+      "/workspace/continuum-tools/jdk17/bin/java",
+      "-cp",
+      "/workspace/device-ai-dialog-integration/app/build/tmp/kotlin-classes/debug:/workspace/device-ai-dialog-integration/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes:/workspace/device-ai-dialog-integration/app/build/tmp/kotlin-classes/debugUnitTest:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.4.0/4e9f4b531dce5c7dee58ed2de9a8b9a763c8dc6c/kotlin-stdlib-2.4.0.jar:/workspace/continuum-tools/gradle-cache/caches/modules-2/files-2.1/org.json/json/20240303/ebb88e8fb5122b7506d5cf1d69f1ccdb790d22a/json-20240303.jar",
+      "org.junit.runner.JUnitCore",
+      "at.heinz.deviceai.BootstrapBrainTest"
+    ],
+    "exit": 0
+  }
+]

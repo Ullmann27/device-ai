@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T09:50:51" hostname="9d1c4dd98fa0" time="0.061">
+  <properties/>
+  <testcase name="aTurnWhoseOnlyMentionsAreNegatedNoLongerCrashesEitherVariant" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.003"/>
+  <testcase name="b2CallsOnlyANameNoMemoryContainsUnknown" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.039"/>
+  <testcase name="ctx1MissesStoredPeopleItsPatternsDoNotKnowButB2FindsThem" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.0"/>
+  <testcase name="b2ResolvesPronounsOverTheNewPhrasings" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.001"/>
+  <testcase name="b2ReadsGenderFromPossessivesArticlesAndPronounsOfTheKnownPhrasings" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.0"/>
+  <testcase name="ctx2CorpusRewritesTheIntroducingFactsAndKeepsGoldStored" classname="at.heinz.deviceai.intelligence.maxultra.Ctx2FactPhrasingTest" time="0.017"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

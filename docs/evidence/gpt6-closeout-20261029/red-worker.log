@@ -1,0 +1,33 @@
+✖ scheduler stops at the first failed cycle even if the fixture is later repaired (993.980377ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1058.7362
+
+✖ failing tests:
+
+test at ../continuum-runs/gpt6-closeout-20261029/red-worker/.github/continuum/local-worker-process.test.mjs:74:1
+✖ scheduler stops at the first failed cycle even if the fixture is later repaired (993.980377ms)
+  AssertionError [ERR_ASSERTION]: a failed cycle must stop before any automatic follow-up
+  + actual - expected
+  
+    [
+      'FAILED',
+  +   'ALL_EXECUTED_PASS'
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/continuum-runs/gpt6-closeout-20261029/red-worker/.github/continuum/local-worker-process.test.mjs:85:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'FAILED', 'ALL_EXECUTED_PASS' ],
+    expected: [ 'FAILED' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
