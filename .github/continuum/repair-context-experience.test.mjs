@@ -24,6 +24,13 @@ test('real generated candidates carry source-derived call/value preconditions on
 test('a source location missing the reference does not invent a context',()=>{
  assert.ok(candidates('const total=2;\nexport function amount(){return total;}').every(c=>c.contextKey===undefined));
 });
+test('commented and optional calls never inherit value-reference history',()=>{
+ for(const expression of ['count /* note */ (5)','count?.(5)','count // note\n (5)']){
+  const source='const counts=x=>x;\nexport function amount(){return '+expression+';}\n';
+  const result=candidates(source);
+  assert.ok(result.length>0);assert.ok(result.every(c=>c.contextKey==='node.js.call'),expression);
+ }
+});
 test('call candidates ignore value and broad contradictory histories',()=>{
  const source='function counts(x){return x+1;}\nexport function amount(){return count(5);}\n';
  const input=candidates(source),neutral=rankCandidates(input).map(c=>c.id);

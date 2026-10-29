@@ -166,6 +166,30 @@ function replaceTokenAt(line,symbol,col){
   return m?[m.index+m[1].length,m.index+m[1].length+symbol.length]:null;
 }
 
+function jsReferenceRole(text,d){
+  const rows=text.split('\n'),line=rows[d.line-1];
+  const span=line&&d.symbol?replaceTokenAt(line,d.symbol,d.col):null;
+  if(!span)return null;
+  let suffix=[line.slice(span[1]),...rows.slice(d.line)].join('\n').slice(0,4096);
+  const skipTrivia=()=>{
+    for(let i=0;i<128;i++){
+      suffix=suffix.trimStart();
+      if(suffix.startsWith('/*')){
+        const end=suffix.indexOf('*/',2);if(end<0)return false;
+        suffix=suffix.slice(end+2);
+      }else if(suffix.startsWith('//')){
+        const end=suffix.indexOf('\n');if(end<0)return false;
+        suffix=suffix.slice(end+1);
+      }else return true;
+    }
+    return false;
+  };
+  if(!skipTrivia())return null;
+  if(suffix.startsWith('?.')){suffix=suffix.slice(2);if(!skipTrivia())return null;}
+  if(suffix.startsWith('`'))return null; // Tagged templates are outside this small policy.
+  return suffix.startsWith('(')?'call':'value';
+}
+
 function typoReference(d,text,index,language){
   const line=lineAt(text,d.line);if(line==null||!d.symbol)return [];
   const span=replaceTokenAt(line,d.symbol,d.col);if(!span)return [];
@@ -249,12 +273,10 @@ export function proposeCandidates(diagnostics,ctx){
     }
     if(isKotlin&&d.kind==='TYPE_MISMATCH')kotlinNullableString(d,text).forEach(add);
     if(isJs&&d.kind==='REFERENCE_ERROR'){
-      const line=lineAt(text,d.line);
-      const span=line&&d.symbol?replaceTokenAt(line,d.symbol,d.col):null;
+      const role=ctx.contextualExperience===true&&ctx.chain==='node'?jsReferenceRole(text,d):null;
       // Opt-in ranking precondition from the actual diagnostic location. Unknown
       // locations keep the old policy. This is not a semantic cause classifier.
-      const contextKey=ctx.contextualExperience===true&&ctx.chain==='node'&&span?
-        'node.js.'+(/^\s*\(/.test(line.slice(span[1]))?'call':'value'):null;
+      const contextKey=role?'node.js.'+role:null;
       const scoped=c=>contextKey?{...c,contextKey}:c;
       const imports=jsMissingImport(d,text,ctx.jsSiblings??new Map());imports.map(scoped).forEach(add);
       typoReference(d,text,null,'js').map(c=>scoped(imports.length?{...c,prior:c.prior*0.5}:c)).forEach(add);

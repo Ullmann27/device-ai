@@ -27,7 +27,9 @@ const count=(mode,prefix)=>table.filter(r=>r.mode===mode&&r.task.startsWith(pref
 if(sourceState()!==sourceCommit)throw Error('EXPERIMENT_SOURCE_CHANGED');
 const report={schema:1,sourceCommit,
  tasksSha256:createHash('sha256').update(fs.readFileSync(new URL('./tasks.json',import.meta.url))).digest('hex'),
- table,childProcesses:children.map(c=>({pid:c.pid,mode:c.mode,ledgerBytes:c.ledgerBytes,ledgerHash:c.ledgerHash})),
- outcome:count('scoped','B')>count('baseline','B')&&count('scoped','C')===count('baseline','C')?'SELECTED_TASK_TRANSFER_PASS':'SELECTED_TASK_TRANSFER_NOT_PROVEN',
+ table,childProcesses:children.map(c=>({pid:c.pid,mode:c.mode,rankingStateBytes:c.rankingStateBytes,rankingStateHash:c.rankingStateHash,
+  storedLedgerBytes:c.storedLedgerBytes,storedLedgerSha256:c.storedLedgerSha256})),
+ outcome:count('scoped','B')===2&&count('scoped','B')>count('baseline','B')&&
+  count('scoped','C')===2&&count('baseline','C')===2?'SELECTED_TASK_TRANSFER_PASS':'SELECTED_TASK_TRANSFER_NOT_PROVEN',
  limitations:['Deterministic strategy preference, no neural or model training','Two selected similar tasks, not broad generalization','Driver CPU excludes container CPU; no speedup claim','Forged matching-context statistics can still misrank; fixed independent tests remain mandatory','Default runtime unchanged; explicit research opt-in only']};
 fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

@@ -64,6 +64,9 @@ if(mode.startsWith('train-')){
  const task=tasks.evaluation.find(t=>t.id===id);if(!task)throw Error('UNKNOWN_FROZEN_TASK');
  rows.push(runTask(task,ledger,1,id));
 }
-const summary={pid:process.pid,mode,ledgerBytes:Buffer.byteLength(JSON.stringify(ledger)),ledgerHash:sha256(JSON.stringify(ledger)),rows};
+const savedFile=mode.startsWith('train-')?path.join(out,'learned.json'):ledgerFile||null;
+const savedBytes=savedFile?fs.readFileSync(savedFile):null;
+const summary={pid:process.pid,mode,rankingStateBytes:Buffer.byteLength(JSON.stringify(ledger)),rankingStateHash:sha256(JSON.stringify(ledger)),
+ storedLedgerBytes:savedBytes?.length??0,storedLedgerSha256:savedBytes?sha256(savedBytes):null,rows};
 fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify(summary,null,2)+'\n');
 console.log(JSON.stringify({pid:process.pid,mode,rows:rows.map(({task,verified,attempts,firstStrategy})=>({task,verified,attempts,firstStrategy}))}));
