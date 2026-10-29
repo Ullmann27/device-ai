@@ -20,6 +20,20 @@ data class BootstrapDecision(
 )
 
 object BootstrapBrain {
+    // Device tools require a real device-oriented query. Never match a fragment
+    // such as "speicher" inside "Arbeitsspeicher" in a quoted learning exercise.
+    private val storageNoun = Regex("""\\b(?:speicher|speicherplatz|gerätespeicher|datenspeicher)\\b""")
+    private val storageIntent = Regex("""\\b(?:prüf(?:e|en)?|überprüf(?:e|en)?|zeig(?:e|en)?|kontrollier(?:e|en)?|wieviel|wie viel|frei|verfügbar|belegt)\\b""")
+
+    private fun requestsDeviceStorage(low: String): Boolean {
+        val q = low.trim().trimEnd('.', '!', '?').trim()
+        if (q in setOf("speicher", "speicherplatz", "gerätespeicher",
+                "speicher prüfen", "speicherplatz prüfen", "gerätespeicher prüfen")) return true
+        if (q.length > 140 || q.contains('\\n') || q.contains('„') ||
+            q.contains('“') || q.contains('"') || low.count { it == '?' } > 1) return false
+        return storageNoun.containsMatchIn(q) && storageIntent.containsMatchIn(q)
+    }
+
     private val unsafe = Regex(
         "(?i)\\b(passwort|password|kennwort|pin|iban|bic|kreditkarte|api[ _-]?key|secret|token|tanf?nummer|zugangscode)\\b"
     )
@@ -131,7 +145,7 @@ object BootstrapBrain {
             mapOf("path" to "/sdcard/Download"))
         if ("akku" in low || "batterie" in low || "ladezustand" in low)
             return tool("get_battery_info")
-        if ("speicher" in low || "große dateien" in low) return tool("get_storage_info")
+        if (requestsDeviceStorage(low) || low.trim() == "große dateien") return tool("get_storage_info")
         if ("installierte apps" in low || "alle apps" in low) return tool("list_installed_apps")
         if ("gerät" in low && ("info" in low || "prüf" in low)) return tool("get_device_info")
         if ("netzwerk" in low || "internetverbindung" in low) return tool("get_network_summary")
