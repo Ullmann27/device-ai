@@ -128,6 +128,11 @@ function readLedger(bytes) {
   const count = int();
   if (count < 0 || count > 256) fail('LEDGER_RECORD_COUNT');
   const ids = new Set();
+  const counts = {
+    byType: Object.fromEntries([...allowed[0]].map(value => [value, 0])),
+    byStatus: Object.fromEntries([...allowed[3]].map(value => [value, 0])),
+    ownerUserFacts: { total: 0, confirmed: 0, revoked: 0 }
+  };
   for (let index = 0; index < count; index++) {
     const id = ascii();
     const tags = allowed.map(values => {
@@ -146,9 +151,16 @@ function readLedger(bytes) {
     }
     if (hash.digest('hex') !== contentHash || id !== 'lx-' + contentHash.slice(0, 24)) fail('LEDGER_IDENTITY');
     ids.add(id);
+    counts.byType[tags[0]]++;
+    counts.byStatus[tags[3]]++;
+    if (tags[0] === 'USER_FACT' && tags[1] === 'USER_CONFIRMED' && tags[2] === 'OWNER_CONFIRMED') {
+      counts.ownerUserFacts.total++;
+      if (tags[3] === 'CONFIRMED') counts.ownerUserFacts.confirmed++;
+      if (tags[3] === 'REVOKED') counts.ownerUserFacts.revoked++;
+    }
   }
   if (cursor !== payload.length) fail('LEDGER_TRAILING_BYTES');
-  return count;
+  return { recordCount: count, counts };
 }
 async function main() {
   const options = parseArgs();
@@ -206,8 +218,10 @@ async function main() {
     captures.push(checked(result, 'CAPTURE_' + index + '_FAILED'));
   }
   if (!captures[0].equals(captures[1])) fail('CAPTURES_DIFFER');
-  const recordCount = readLedger(captures[0]);
+  const audit = readLedger(captures[0]);
+  const recordCount = audit.recordCount;
   metadata.recordCount = recordCount;
+  metadata.auditCounts = audit.counts;
   metadata.bytes = captures[0].length;
   metadata.sha256 = sha(captures[0]);
   if (recordCount !== EXPECTED_RECORDS) fail('EXPECTED_256_RECORDS');
@@ -215,7 +229,9 @@ async function main() {
     ledgerChecksumValid: true, completedAt: new Date().toISOString() };
   writeMetadata(metadata);
   process.stdout.write('CAPTURED_VALIDATED records=' + recordCount + ' bytes=' + metadata.bytes +
-    ' sha256=' + metadata.sha256 + '\nPrivate output: ' + output + '\n');
+    ' sha256=' + metadata.sha256 + '\nowner_user_facts_confirmed=' + audit.counts.ownerUserFacts.confirmed +
+    ' owner_user_facts_revoked=' + audit.counts.ownerUserFacts.revoked +
+    ' revoked_records=' + audit.counts.byStatus.REVOKED + '\nPrivate output: ' + output + '\n');
 }
 main().catch(error => {
   const code = /^[A-Z][A-Z0-9_]+$/.test(error.code || '') ? error.code : 'LOCAL_IO_FAILED';
