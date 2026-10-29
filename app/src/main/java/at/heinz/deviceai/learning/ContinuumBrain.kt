@@ -237,8 +237,22 @@ object ContinuumBrainBridge {
             // Revocation protection: read the active facts again; a fact revoked meanwhile is never shown.
             beforeRevocationCheck?.invoke()
             val active=core.activeOwnerFacts().associate { it.id to it.content }
-            if(ids.isEmpty() || ids.any { it !in active })
-                return ContinuumBrainResult(baseline,on,ContinuumBrainStatus.FALLBACK_REVOKED)
+            if(ids.isEmpty() || ids.any { it !in active }) {
+                // The baseline was rendered before the revocation check and may itself cite a
+                // now-revoked owner fact. Never fall back to that already-rendered text.
+                // Return a neutral answer instead of reactivating the revoked information.
+                return ContinuumBrainResult(
+                    ContinuumChatOutcome(
+                        ContinuumMemoryDialogue.NO_EVIDENCE_ANSWER,
+                        "CONTINUUM · EWM2-Gehirn · Erinnerung während der Antwort widerrufen",
+                        baseline.trace,
+                        false,
+                        ContinuumBaselineSource.NONE
+                    ),
+                    on,
+                    ContinuumBrainStatus.FALLBACK_REVOKED
+                )
+            }
             val text=("Dazu finde ich in meinem Gedächtnis:"+ids.joinToString("") {
                 "\n\n"+active.getValue(it).take(250)+"\n(Bestätigte Nutzererinnerung)"
             }).take(1000)
