@@ -16,16 +16,7 @@
     "ownerMemoryPromotionAllowed": false,
     "mergeToMainAuthorized": false,
     "originalSignerNeededForOwnerUpdate": true,
-    "relevantExperiments": [
-      "EXP-00",
-      "EXP-02",
-      "EXP-04",
-      "EXP-05",
-      "EXP-06",
-      "EXP-07",
-      "EXP-09",
-      "EXP-11"
-    ]
+    "relevantExperiments": ["EXP-00", "EXP-02", "EXP-04", "EXP-05", "EXP-06", "EXP-07", "EXP-09", "EXP-11"]
   },
   "integrationPolicy": {
     "canonicalBacklog": true,
