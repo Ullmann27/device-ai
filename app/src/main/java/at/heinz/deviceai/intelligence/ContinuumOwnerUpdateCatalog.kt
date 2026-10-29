@@ -48,6 +48,7 @@ internal object ContinuumOwnerUpdateCatalog {
     }
 
     fun parse(json: String): ContinuumOwnerUpdateRelease {
+        try {
         require(json.toByteArray(Charsets.UTF_8).size in 1..MAX_JSON_BYTES) {
             "Manifestgröße ungültig"
         }
@@ -84,5 +85,8 @@ internal object ContinuumOwnerUpdateCatalog {
             versionName,
             notes
         )
+        } catch (error: org.json.JSONException) {
+            throw IllegalArgumentException("Release-Manifest ist unvollständig oder ungültig", error)
+        }
     }
 }
