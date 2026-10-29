@@ -8,7 +8,7 @@
  *   <signed-apk> <approved-https-url> <source-git-sha> <output-json>
  */
 import { createHash } from 'node:crypto';
-import { readFileSync, statSync, writeFileSync, realpathSync } from 'node:fs';
+import { createReadStream, statSync, writeFileSync, realpathSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, join } from 'node:path';
 
@@ -43,7 +43,7 @@ function packageIdentity(apk, aapt2) {
   return { code, name };
 }
 
-function generate(args) {
+async function generate(args) {
   if (args.length !== 4) rejected('Usage: <signed-apk> <approved-https-url> <source-git-sha> <output-json>');
   const [rawApk, rawUrl, sourceCommit, outputJson] = args;
   if (!HEX40.test(sourceCommit)) rejected('source commit is not a canonical SHA-1 identifier');
@@ -51,7 +51,9 @@ function generate(args) {
   const size = statSync(apk);
   if (!size.isFile() || size.size < 1_000_000 || size.size > 2_000_000_000)
     rejected('APK file size is outside approved bounds');
-  const digest = createHash('sha256').update(readFileSync(apk)).digest('hex');
+  const sha = createHash('sha256');
+  for await (const chunk of createReadStream(apk, { highWaterMark: 1024*1024 })) sha.update(chunk);
+  const digest = sha.digest('hex');
   if (!HEX64.test(digest)) rejected('invalid APK digest');
   const url = new URL(rawUrl);
   if (url.protocol !== 'https:' || url.hostname !== HOST || url.port !== '' ||
@@ -84,8 +86,7 @@ function generate(args) {
     ' apk_sha256=' + digest + ' source_sha=' + sourceCommit + '\n');
 }
 
-try { generate(process.argv.slice(2)); }
-catch (error) {
+generate(process.argv.slice(2)).catch((error) => {
   process.stderr.write(String(error.message || error).slice(0,300) + '\n');
   process.exitCode = 69;
-}
+});
