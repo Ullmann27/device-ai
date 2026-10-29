@@ -101,6 +101,8 @@ class ContinuumOwnerUpdateActivity : Activity() {
                     when (check) {
                         ContinuumOwnerUpdater.Check.Current ->
                             setMessage("Continuum Lokal ist auf dem freigegebenen aktuellen Stand.")
+                        ContinuumOwnerUpdater.Check.NoRelease ->
+                            setMessage("Der Updatekanal ist erreichbar. Es gibt noch keine originalsignierte und freigegebene neue Continuum-Lokal-Version.")
                         is ContinuumOwnerUpdater.Check.Rejected ->
                             setMessage("Update nicht freigegeben: " + check.explanation)
                         is ContinuumOwnerUpdater.Check.Available -> {
