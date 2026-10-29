@@ -186,7 +186,7 @@ function jsReferenceRole(text,d){
   };
   if(!skipTrivia())return null;
   if(suffix.startsWith('?.')){suffix=suffix.slice(2);if(!skipTrivia())return null;}
-  if(suffix.startsWith('`'))return null; // Tagged templates are outside this small policy.
+  if(!suffix||suffix.startsWith('`'))return null; // Exhausted scan / tagged template: unknown.
   return suffix.startsWith('(')?'call':'value';
 }
 

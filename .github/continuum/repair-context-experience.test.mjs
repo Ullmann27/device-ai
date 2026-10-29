@@ -31,6 +31,12 @@ test('commented and optional calls never inherit value-reference history',()=>{
   assert.ok(result.length>0);assert.ok(result.every(c=>c.contextKey==='node.js.call'),expression);
  }
 });
+test('bounded or unsupported call suffixes remain unknown instead of becoming value history',()=>{
+ for(const expression of ['count'+' '.repeat(4096)+'(5)','count`text`','count /*'+'x'.repeat(4096)+'*/(5)']){
+  const source='const counts=x=>x;\nexport function amount(){return '+expression+';}\n';
+  assert.ok(candidates(source).every(c=>c.contextKey===undefined));
+ }
+});
 test('call candidates ignore value and broad contradictory histories',()=>{
  const source='function counts(x){return x+1;}\nexport function amount(){return count(5);}\n';
  const input=candidates(source),neutral=rankCandidates(input).map(c=>c.id);
