@@ -5197,7 +5197,7 @@ class AgentActivity : Activity() {
             AlertDialog.Builder(this).setTitle("Internet-Lernstoff")
                 .setMessage("Noch keine gespeicherten Recherche-Aussagen vorhanden. " +
                     "Tippe auf WEB RECHERCHE, wähle einen Suchmodus und gib ein Thema ein. " +
-                    "Device AI kann dazu deutschsprachige Wikipedia-Artikel suchen, ohne dass du eine URL kennen musst. " +
+                    "Die autorisierte Webrecherche kann unterschiedliche öffentliche Quellen durchsuchen; Wikipedia ist nur ein möglicher Rückfall. " +
                     "Bereits gespeicherte Quellenhinweise: ${learned.getOrNull().orEmpty().size}. " +
                     "Internetquellen werden erst nach deiner ausdrücklichen Freigabe als Notizen übernommen.")
                 .setPositiveButton("Schließen", null)
