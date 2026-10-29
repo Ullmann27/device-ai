@@ -13,7 +13,9 @@ Scope: EXP-05 local inference; EXP-11 existing main-chat lane; EXP-12 conversati
 - Main-chat history is manually bounded through LocalConversationContext; no change to persistent memory or owner facts is proposed.
 
 ## Plan/checkpoint
-Tests are authored before implementation against a proposed internal callback arbitration helper in the existing runtime file. This helper is not another runtime or inference path. It will preserve nonempty whitespace chunks, suppress late output, preserve first terminal cause and hold lifecycle ownership until native terminal callbacks. The existing native Engine, model identity/hash checks, ToolRegistry, automaticToolCalling=false and explicit ToolGate remain.
+Test-first checkpoint: a6f8e436143a98bea7ae8be9820434c3a77f82c6 (Draft PR #221). The follow-up implements LocalInferenceCallbackGate within LiteRtLmLocalModelRuntime.kt and wires the actual MessageCallback/cancel/unload path through it. It preserves nonempty whitespace chunks, suppresses late output, preserves the first terminal cause and holds lifecycle ownership until native terminal callbacks. Tool replies require a successful preceding native terminal; cancelled/failed conversations are replaced only by the existing fresh full-prompt path. The existing native Engine, model identity/hash checks, ToolRegistry, automaticToolCalling=false and explicit ToolGate remain.
+
+The six JUnit cases cover whitespace/newlines, cancellation versus native completion, reentrant cancellation preserving the original failure, cancellation before native dispatch, late callbacks after success and repeated cancellation. These exercise the same production arbitration helper with controlled native callback boundaries; they do not execute JNI or prove physical-device behavior.
 
 ## Verification
 Status: WIP / UNVERIFIED. Kotlin/JUnit, Android compilation, lint, APK and physical-device execution: NOT_RUN / execution environment UNAVAILABLE. No red/green run was possible; no test pass is claimed.
@@ -22,4 +24,10 @@ Planned command:
 Then existing debug compilation/lint/suite under the project-approved QA variant. No GitHub Actions or model downloads.
 
 ## Handoff / rollback
-Continue by reading the exact branch HEAD and the runtime file, implement only this callback fix, review API0.18.0 signatures, then run real tests when an environment exists. AgentActivity is owned by the parent agent; visible streaming and main-chat timeout changes belong there. Device latency root cause remains UNCONFIRMED: source findings do not prove why the real phone hit 120 seconds. Roll back by dropping this isolated branch or reverting its selected commits. Never merge main or install an APK as part of this checkpoint.
+Continue by reading the exact branch HEAD and reviewing the runtime diff, then run real tests when an environment exists. Native API signatures and callback/poisoning documentation were inspected at upstream v0.18.0; no third-party source code was copied. AgentActivity is owned by the parent agent; visible streaming and main-chat timeout changes belong there. Device latency root cause remains UNCONFIRMED: source findings do not prove why the real phone hit 120 seconds. Roll back by dropping this isolated branch or reverting its selected commits. Never merge main or install an APK as part of this checkpoint.
+
+## Parent integration notes
+- AgentActivity.generateLocal must wire TextDelta to an explicitly unverified preview while preserving final quality checks and tool authorization. Current baseline only accumulates response text until terminal.
+- Its 120s deadline starts after start(callback) returns, although start can synchronously create/close a conversation and native SendMessageAsync does synchronous prompt conversion. Source diagnostics alone do not establish which stage consumed the phone's time. Measure invocation/prefill/first-text/terminal separately, without logging private prompt text.
+- Existing LocalConversationContext contributes at most four truncated turns as unverified data; fresh native conversation is deliberate isolation, not implicit persistent chat history.
+- No prompt budget, thinking template, token limit, backend or model changes belong to this patch.
