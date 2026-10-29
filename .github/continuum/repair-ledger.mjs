@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import path from 'node:path';
+import {randomBytes} from 'node:crypto';
 import {mergeExperiences,repairExperienceKey} from './repair-experience.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 
@@ -54,17 +56,37 @@ export function verifyLedger(data){
 }
 
 export function loadLedger(file){
-  if(!file||!fs.existsSync(file))return emptyLedger();
-  const raw=fs.readFileSync(file,'utf8');
-  if(raw.length>4_000_000)throw Error('Repair ledger too large');
-  return verifyLedger(JSON.parse(raw));
+  if(!file)return emptyLedger();
+  let fd;
+  try{fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);}
+  catch(error){if(error.code==='ENOENT'){
+    // A dangling link is an invalid checkpoint, never an empty learning history.
+    try{fs.lstatSync(file);}catch(missing){if(missing.code==='ENOENT')return emptyLedger();throw missing;}
+  }throw error;}
+  try{
+    const stat=fs.fstatSync(fd);
+    if(!stat.isFile()||stat.size>4_000_000)throw Error('Invalid repair ledger file');
+    const raw=fs.readFileSync(fd);
+    if(raw.length>4_000_000)throw Error('Repair ledger too large');
+    return verifyLedger(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw)));
+  }finally{fs.closeSync(fd);}
 }
 
 export function saveLedger(file,ledger){
   verifyLedger(ledger);
-  const tmp=file+'.tmp-'+process.pid;
-  fs.writeFileSync(tmp,JSON.stringify(ledger,null,1)+'\n');
-  fs.renameSync(tmp,file);
+  const bytes=Buffer.from(JSON.stringify(ledger,null,1)+'\n');
+  if(bytes.length>4_000_000)throw Error('Repair ledger too large');
+  try{if(!fs.lstatSync(file).isFile())throw Error('Invalid repair ledger file');}
+  catch(error){if(error.code!=='ENOENT')throw error;}
+  const tmp=file+'.tmp-'+process.pid+'-'+randomBytes(8).toString('hex');
+  let fd;
+  try{
+    fd=fs.openSync(tmp,'wx',0o600);fs.writeFileSync(fd,bytes);fs.fsyncSync(fd);
+    fs.closeSync(fd);fd=undefined;
+    fs.renameSync(tmp,file);
+    const directory=fs.openSync(path.dirname(path.resolve(file)),fs.constants.O_RDONLY);
+    try{fs.fsyncSync(directory);}finally{fs.closeSync(directory);}
+  }finally{if(fd!==undefined)fs.closeSync(fd);fs.rmSync(tmp,{force:true});}
 }
 
 /** Fold one session report into the ledger (returns a new object). */

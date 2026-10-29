@@ -1,6 +1,15 @@
 import fs from 'node:fs';import path from 'node:path';import {spawnSync} from 'node:child_process';import {fileURLToPath} from 'node:url';import {createHash} from 'node:crypto';
 const script=fileURLToPath(new URL('./worker.mjs',import.meta.url));
+const source=path.resolve(path.dirname(script),'../..');
+function sourceState(){
+ const head=spawnSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'});
+ const dirty=spawnSync('git',['status','--porcelain','--untracked-files=normal'],{cwd:source,encoding:'utf8'});
+ if(head.status!==0||dirty.status!==0||dirty.stdout.trim())throw Error('CLEAN_COMMITTED_EXPERIMENT_SOURCE_REQUIRED');
+ return head.stdout.trim();
+}
+const sourceCommit=sourceState();
 const out=path.resolve(process.argv[2]??'');if(process.argv.length!==3||fs.existsSync(out))throw Error('FRESH_EXTERNAL_OUTPUT_REQUIRED');
+if(out===source||out.startsWith(source+path.sep))throw Error('EXTERNAL_OUTPUT_REQUIRED');
 fs.mkdirSync(out,{recursive:true});const deadline=Date.now()+600_000,children=[];
 function child(mode,id='',ledger=''){
  const target=path.join(out,mode+(id?'-'+id:''));
@@ -15,7 +24,8 @@ for(const id of ['B1','B2','C1','C2'])for(const mode of ['baseline','broad','sco
 child('forged-matching','B1',path.join(scoped,'learned.json'));
 const table=children.flatMap(c=>c.rows.map(r=>({mode:c.mode,task:r.task,pid:r.pid,verified:r.verified,attempts:r.attempts,firstStrategy:r.firstStrategy,elapsedMs:r.elapsedMs,driverCpuMicros:r.driverCpuMicros,patchSha256:r.patchSha256})));
 const count=(mode,prefix)=>table.filter(r=>r.mode===mode&&r.task.startsWith(prefix)&&r.verified).length;
-const report={schema:1,sourceCommit:spawnSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).stdout.trim(),
+if(sourceState()!==sourceCommit)throw Error('EXPERIMENT_SOURCE_CHANGED');
+const report={schema:1,sourceCommit,
  tasksSha256:createHash('sha256').update(fs.readFileSync(new URL('./tasks.json',import.meta.url))).digest('hex'),
  table,childProcesses:children.map(c=>({pid:c.pid,mode:c.mode,ledgerBytes:c.ledgerBytes,ledgerHash:c.ledgerHash})),
  outcome:count('scoped','B')>count('baseline','B')&&count('scoped','C')===count('baseline','C')?'SELECTED_TASK_TRANSFER_PASS':'SELECTED_TASK_TRANSFER_NOT_PROVEN',
