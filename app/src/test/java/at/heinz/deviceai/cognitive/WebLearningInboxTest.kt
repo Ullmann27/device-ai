@@ -23,6 +23,50 @@ class WebLearningInboxTest {
         "fact-1",text,ProvenanceType.EXTERNAL_SOURCE,urls,createdAt=12345678L
     )
 
+    @Test fun independentResearchStoresDoNotOverwriteOwnerDossier() {
+        val root = java.nio.file.Files.createTempDirectory("continuum-research-separate-").toFile()
+        try {
+            val ownerSource = source("https://example.org/owner", "a".repeat(64))
+            val chatSource = source("https://www.nasa.gov/chat", "b".repeat(64))
+            val owner = dossier(listOf(claim("Besitzerrecherche zeigt öffentlich zugängliche Messwerte.",
+                listOf(ownerSource.canonicalUrl))), listOf(ownerSource))
+            val chat = dossier(listOf(claim("Chatrecherche zeigt zusätzlich andere Messdaten.",
+                listOf(chatSource.canonicalUrl))), listOf(chatSource)).copy(updatedAt = 12345679L)
+            val ownerStore = FileResearchDossierStore(java.io.File(root, "research"))
+            val chatStore = FileResearchDossierStore(java.io.File(root, "model-chat-research"))
+            ownerStore.save(owner)
+            chatStore.save(chat)
+            assertEquals(ownerSource.contentHash, ownerStore.loadLatest()!!.sources.single().contentHash)
+            assertEquals(chatSource.contentHash, chatStore.loadLatest()!!.sources.single().contentHash)
+            assertEquals(chatSource.contentHash,
+                WebLearningInbox.eligibleModelChatDossier(chatStore.loadLatest(), chat)!!
+                    .sources.single().contentHash)
+            assertEquals(chatSource.contentHash,
+                WebLearningInbox.selectLatestReviewDossier(ownerStore.loadLatest(), chatStore.loadLatest())!!
+                    .sources.single().contentHash)
+            assertEquals(ownerSource.contentHash,
+                WebLearningInbox.selectLatestReviewDossier(ownerStore.loadLatest(), null)!!
+                    .sources.single().contentHash)
+        } finally {
+            root.deleteRecursively()
+        }
+    }
+
+    @Test fun modelChatEvidenceFailsClosedWithoutTheOriginalLiveGrant() {
+        val s = source("https://example.org/chat", "f".repeat(64))
+        val sourceDossier = dossier(
+            listOf(claim("Nur für eine freigegebene Prüfung sichtbare Behauptung.", listOf(s.canonicalUrl))),
+            listOf(s)
+        )
+        val stored = sourceDossier.copy()
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored, null))
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored,
+            sourceDossier.copy(updatedAt = sourceDossier.updatedAt + 1)))
+        assertNull(WebLearningInbox.eligibleModelChatDossier(stored,
+            sourceDossier.copy(sources = emptyList(), completedSourceHashes = emptySet())))
+        assertEquals(stored, WebLearningInbox.eligibleModelChatDossier(stored, sourceDossier))
+    }
+
     @Test fun retrievalPreservesCitationsAndNeverClaimsWorldTruth() {
         val s = WebLearningCandidate("e".repeat(64), "https://study.example.org/a",
             "c".repeat(64), "Eine nachprüfbare Beispielaussage.", 1, false)

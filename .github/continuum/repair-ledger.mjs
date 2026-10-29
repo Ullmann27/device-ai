@@ -82,16 +82,23 @@ export function recordSession(ledger,report,meta={}){
   // model code from a green local report, even if a caller passes a true flag.
   const isolatedReview=provisional&&['LOCAL_ISOLATED_PATCH','LOCAL_SCOPED_PATCH'].includes(report.verified?.strategy);
   const independentRejected=provisional&&meta.independentPass===false;
-  const independentPending=provisional&&meta.independentPass!==true&&
-    meta.independentPass!==false||isolatedReview;
-  const acceptedPatch=provisional&&meta.independentPass===true&&!isolatedReview?report.verified:null;
+  // Bind the independent verifier's green verdict to exactly the winning
+  // candidate and a digest. An unrelated VERIFIED trial is never a win.
+  const winningAttempt=provisional&&(report.attempts??[]).some(a=>
+    a.outcome==='VERIFIED'&&a.candidate===report.verified?.candidate&&
+    a.strategy===report.verified?.strategy);
+  const independentlyVerified=meta.independentPass===true&&winningAttempt&&
+    SHA256.test(report.verified?.patchSha256??'');
+  const independentPending=provisional&&!independentRejected&&
+    (!independentlyVerified||isolatedReview);
+  const acceptedPatch=provisional&&independentlyVerified&&!isolatedReview?report.verified:null;
   const finalOutcome=isolatedReview?'PENDING_OWNER_REVIEW':independentRejected?'NO_VERIFIED_REPAIR':
     independentPending?'PENDING_INDEPENDENT_VERIFICATION':report.outcome;
   const attempts=(report.attempts??[]).filter(a=>OUTCOMES.has(a.outcome)).map(a=>{
-    if(a.outcome==='VERIFIED'&&independentRejected)
-      return {...a,outcome:'INSUFFICIENT_EVIDENCE'};
-    if(a.outcome==='VERIFIED'&&independentPending)
-      return {...a,outcome:'NOT_APPLICABLE'};
+    if(a.outcome!=='VERIFIED')return a;
+    if(independentRejected)return {...a,outcome:'INSUFFICIENT_EVIDENCE'};
+    if(!acceptedPatch||a.candidate!==acceptedPatch.candidate||
+       a.strategy!==acceptedPatch.strategy)return {...a,outcome:'NOT_APPLICABLE'};
     return a;
   }).map(a=>({
     at:report.finishedAt??new Date().toISOString(),baseCommit:report.base,chain:report.chain,
