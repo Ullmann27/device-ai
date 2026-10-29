@@ -5173,8 +5173,10 @@ class AgentActivity : Activity() {
 
     private fun showWebLearningInbox() {
         onLearningIo({
-            runCatching { FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest() }.getOrNull() to
-                runCatching { WebLearningJournal(this).notes() }
+            WebLearningInbox.selectLatestReviewDossier(
+                runCatching { FileResearchDossierStore(java.io.File(filesDir, "research")).loadLatest() }.getOrNull(),
+                runCatching { FileResearchDossierStore(java.io.File(filesDir, "model-chat-research")).loadLatest() }.getOrNull()
+            ) to runCatching { WebLearningJournal(this).notes() }
         }) { result ->
             val (dossier, learned) = result.getOrElse { null to Result.failure(it) }
             showWebLearningInboxDialog(dossier, learned)
@@ -6212,7 +6214,7 @@ class AgentActivity : Activity() {
                     // model turn. A later empty/failed dossier must not hide
                     // earlier valid evidence. The inbox stores one review
                     // dossier, so prefer the newest eligible source set.
-                    val reviewStore = FileResearchDossierStore(java.io.File(filesDir, "research"))
+                    val reviewStore = FileResearchDossierStore(java.io.File(filesDir, "model-chat-research"))
                     for (web in modelWebResults.asReversed()) {
                         val staged = runCatching { web.publishForReview(receiptStore, reviewStore) }
                             .onFailure { webPublishError = true }.getOrDefault(0)
