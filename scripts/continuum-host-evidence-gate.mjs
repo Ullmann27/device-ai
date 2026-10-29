@@ -1,6 +1,7 @@
 /** Host-evidence consistency check, NOT an APK signature or device acceptance. */
 import fs from 'node:fs';
 import path from 'node:path';
+import {verifyEvidenceManifest} from './continuum-evidence-integrity.mjs';
 const HASH=/^[a-f0-9]{40}$/,HASH256=/^[a-f0-9]{64}$/;
 export function checkHostEvidence({expectedSha,qa,full,manifest}) {
  if(!HASH.test(expectedSha??'')||!qa||!full||!manifest||
@@ -37,8 +38,10 @@ export function checkHostEvidence({expectedSha,qa,full,manifest}) {
 export function readHostEvidence(root,expectedSha){
  const base=path.resolve(root);
  const read=rel=>JSON.parse(fs.readFileSync(path.join(base,rel),'utf8'));
- return checkHostEvidence({expectedSha,qa:read('qa-summary.json'),
+ const result=checkHostEvidence({expectedSha,qa:read('qa-summary.json'),
   full:read('final-qa/summary.json'),manifest:read('tested-source-manifest.json')});
+ const integrity=verifyEvidenceManifest(base);
+ return {...result,evidenceIntegrity:integrity};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===path.resolve(new URL(import.meta.url).pathname)){
  try {
