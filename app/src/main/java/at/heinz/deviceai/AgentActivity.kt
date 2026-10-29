@@ -5258,8 +5258,10 @@ class AgentActivity : Activity() {
             .setNeutralButton("Neuron-Coach") { _, _ ->
                 // Safe bridge: external text is *only* a user-reviewed lesson proposal,
                 // never a system instruction, an automatic label or a device action.
-                beginNeuralCoach()
-                if (neuralCoach.isActive()) handleNeuralCoachInput(note.text.take(320))
+                if (!fromModelResearch || modelWebLearningReview.canReview(note)) {
+                    beginNeuralCoach()
+                    if (neuralCoach.isActive()) handleNeuralCoachInput(note.text.take(320))
+                } else addAssistantMessage("Internetfreigabe widerrufen; Lernvorlage nicht übernommen.")
             }
             .setPositiveButton("Als Quellenhinweis merken") { _, _ ->
                 val stored = runCatching { (!fromModelResearch || modelWebLearningReview.canReview(note)) && WebLearningJournal(this).approve(note) }.getOrDefault(false)
