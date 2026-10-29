@@ -1,6 +1,9 @@
 package at.heinz.deviceai.cognitive
 
 import at.heinz.deviceai.ApprovedWebResearchToolRunner
+import at.heinz.deviceai.FileToolExecutionReceiptStore
+import at.heinz.deviceai.ToolExecutionReceipt
+import at.heinz.deviceai.ToolExecutionReceiptStore
 import at.heinz.deviceai.ToolExecutionStatus
 import at.heinz.deviceai.ToolGate
 import at.heinz.deviceai.ToolPolicy
