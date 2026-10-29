@@ -5849,6 +5849,9 @@ class AgentActivity : Activity() {
         ToolPolicy(readOnlyEnabled=true,destructiveEnabled=true,timeoutMillis=20000),
         ToolRunner { request ->
             if(request.name in setOf("web_search","web_read")) {
+                // A fresh model-initiated web attempt replaces the old review authority,
+                // including when this attempt is denied, cancelled, or fails.
+                modelWebReviewRunner = null
                 val session=approvedModelWebSession.getAndSet(null)?:error("Keine einmalige Internetfreigabe")
                 val budget=ResearchBudgetPolicy.forMode(session.mode)
                 val runner=ApprovedWebResearchToolRunner(session,
