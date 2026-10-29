@@ -12,7 +12,7 @@ import {
 import {
   git, createWorktree, removeWorktree, repairSession, runChain, evidenceSufficient, CHAINS, validateRepairExecutor, boundedWorktreeFile
 } from './repair-loop.mjs';
-import {emptyLedger, loadLedger, saveLedger, recordSession} from './repair-ledger.mjs';
+import {loadLedger, saveLedger, recordSession} from './repair-ledger.mjs';
 import {summarizeRepairHandoffs, verifyRepairHandoffs} from './teamleader-handoffs.mjs';
 import {validateVerifiedReport} from './repair-publish.mjs';
 import {validateCodingTask} from './coding-task.mjs';
@@ -144,7 +144,7 @@ export function executeOwnerRepairTask({root,file,out,id=null,budgetMinutes=20,a
   try{
     fs.mkdirSync(reportDir,{recursive:true,mode:0o700});
     const ledgerFile=path.join(path.dirname(backlogPath),'repair-ledger.json');
-    const ledger=fs.existsSync(ledgerFile)?loadLedger(ledgerFile):emptyLedger();
+    const ledger=loadLedger(ledgerFile);
     wt=createWorktree(source,head);
     const report=repairSession({wt,base:head,chain:task.subject.chain,
       out:reportDir,ledger,maxCandidates:3,deadline,candidateProvider,candidateVerifier,checkpoint,abortWatch,executor,executorAbortMode,

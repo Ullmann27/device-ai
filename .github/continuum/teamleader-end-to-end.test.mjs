@@ -11,6 +11,7 @@ import {verifyRepairHandoffs} from './teamleader-handoffs.mjs';
 import {BacklogStore} from './development-backlog.mjs';
 import {analyzeRepository} from './code-analyzer.mjs';
 import {syncBacklogOps} from './development-planner.mjs';
+import {loadLedger} from './repair-ledger.mjs';
 
 const nested=Boolean(process.env.CONTINUUM_REPAIR_DEPTH);
 function fixture({broken}) {
@@ -112,13 +113,15 @@ test('scheduled owner task completes full real Git repair and independent verifi
      reason:'owner explicitly accepted this immutable repair task'}
   ]);
   const original=fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs'));
-  const driver=await localTeamleaderDriver();
+  const driver=await localTeamleaderDriver({contextualExperience:true});
   const result=runTeamleaderCycle({root:f.home,stateDir:f.stateDir,
    driver,budgetMinutes:2});
   assert.equal(result.kind,'OWNER_REPAIR');
   assert.equal(result.outcome,'VERIFIED_PATCH_PENDING_REVIEW',result.detail);
   assert.ok(result.artifact);
   const report=JSON.parse(fs.readFileSync(result.artifact,'utf8'));
+  assert.ok(report.attempts.every(attempt=>attempt.contextKey===undefined),
+   'baseline contextual opt-in must not expand the owner repair scope');
   assert.equal(report.baseline.passed,false,'original fixture must reproduce its failure');
   assert.equal(report.outcome,'VERIFIED');
   assert.equal(verifyRepairHandoffs(report.handoffs),true);
@@ -131,6 +134,67 @@ test('scheduled owner task completes full real Git repair and independent verifi
   assert.deepEqual(fs.readFileSync(path.join(f.home,'.github/continuum/math.mjs')),original);
   assert.equal(f.git('status','--porcelain'),'');
   assert.equal(runTeamleaderCycle({root:f.home,stateDir:f.stateDir,driver}).outcome,'IDLE');
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('local driver rejects nonboolean contextual experience options',async()=>{
+ for(const contextualExperience of [null,0,1,'false','true',{},[]])
+  await assert.rejects(localTeamleaderDriver({contextualExperience}),/contextual experience option/i);
+});
+
+for(const consumer of ['baseline','owner'])test(
+ 'local '+consumer+' repair refuses a dangling ledger before executing checks',
+ {timeout:30000},async()=>{
+ const f=fixture({broken:true});
+ try{
+  fs.mkdirSync(f.stateDir,{recursive:true});
+  const ledger=path.join(f.stateDir,'repair-ledger.json');
+  const target=path.join(f.stateDir,'missing-ledger.json');
+  fs.symlinkSync(target,ledger);
+  const driver=await localTeamleaderDriver();
+  let work;
+  if(consumer==='owner'){
+   const backlog=new BacklogStore(path.join(f.stateDir,'development-backlog.json'),{actor:'owner'});
+   backlog.apply([
+    {op:'propose',actor:'owner',at:1,task:{id:'owner-invalid-ledger',title:'Repair fixture',
+     kind:'REPAIR',source:'owner',subject:{base:f.head,chain:'node'}}},
+    {op:'accept',actor:'owner',at:2,id:'owner-invalid-ledger'}
+   ]);
+   work=()=>driver.ownerRepair(f.home,f.stateDir,f.head,'owner-invalid-ledger',{budgetMinutes:1});
+  }else work=()=>driver.repair(f.home,f.stateDir,f.head,{budgetMinutes:1});
+  assert.throws(work,{code:'ELOOP'});
+  assert.equal(fs.readlinkSync(ledger),target);
+  assert.equal(fs.existsSync(target),false);
+  const reports=path.join(f.stateDir,'reports');
+  if(fs.existsSync(reports))assert.equal(fs.readdirSync(reports,{recursive:true})
+   .filter(file=>fs.lstatSync(path.join(reports,file)).isFile()).length,0,
+   'invalid prior learning must fail before tests, patch or result artifacts');
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(f.git('worktree','list','--porcelain').match(/^worktree /gm).length,1);
+ }finally{fs.rmSync(f.root,{recursive:true,force:true});}
+});
+
+test('real baseline driver scopes learning only with explicit contextual opt-in',
+ {skip:nested,timeout:180000},async()=>{
+ const f=fixture({broken:true});
+ try{
+  for(const [label,options,scoped] of [
+   ['default',{},false],['disabled',{contextualExperience:false},false],
+   ['enabled',{contextualExperience:true},true]
+  ]){
+   const state=path.join(f.root,label);
+   const driver=await localTeamleaderDriver(options);
+   const report=driver.repair(f.home,state,f.head,{budgetMinutes:1});
+   assert.equal(report.outcome,'VERIFIED',label);
+   assert.equal(report.independent.passed,true,label);
+   const winner=report.attempts.find(attempt=>attempt.candidate===report.verified.candidate);
+   assert.equal(winner.contextKey,scoped?'node.js.call':undefined,label);
+   const ledger=loadLedger(path.join(state,'repair-ledger.json'));
+   assert.ok(ledger.experiences.some(entry=>entry.kind===(scoped?
+    'REFERENCE_ERROR|JS_TYPO_REFERENCE|node.js.call':'REFERENCE_ERROR|JS_TYPO_REFERENCE')),label);
+  }
+  assert.equal(f.git('status','--porcelain'),'');
+  assert.equal(f.git('worktree','list','--porcelain').match(/^worktree /gm).length,1);
  }finally{fs.rmSync(f.root,{recursive:true,force:true});}
 });
 

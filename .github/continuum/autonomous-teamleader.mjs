@@ -324,9 +324,11 @@ export function runTeamleaderCycle({
 }
 
 /** No external services: actual git worktree, static analyzer and fixed tests. */
-export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null}={}){
+export async function localTeamleaderDriver({candidateProvider=null,executor=null,executorAbortMode=null,
+ contextualExperience=false}={}){
+ if(typeof contextualExperience!=='boolean')throw Error('Invalid contextual experience option');
  const [{git,createWorktree,removeWorktree,repairSession,runChain,evidenceSufficient},
-  {loadLedger,emptyLedger,recordSession,saveLedger},
+  {loadLedger,recordSession,saveLedger},
   {BacklogStore,nextEligible},
   {analyzeRepository},
   {syncBacklogOps,repairSessionOps},
@@ -413,7 +415,7 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
   },
   repair(root,stateDir,head,{budgetMinutes}){
    const ledgerPath=path.join(stateDir,'repair-ledger.json');
-   const ledger=fsApi.existsSync(ledgerPath)?loadLedger(ledgerPath):emptyLedger();
+   const ledger=loadLedger(ledgerPath);
    const out=path.join(stateDir,'reports','repair-'+head.slice(0,12));
    fsApi.mkdirSync(out,{recursive:true});
    const wt=createWorktree(root,head);
@@ -433,7 +435,7 @@ export async function localTeamleaderDriver({candidateProvider=null,executor=nul
    const deadline=Date.now()+budgetMinutes*60_000;
    try{
     result=repairSession({wt,base:head,chain:'node',out,ledger,
-      maxCandidates:3,deadline,shadowObserver,executor,executorAbortMode});
+      maxCandidates:3,deadline,shadowObserver,executor,executorAbortMode,contextualExperience});
     // The first successful worktree is not an independent verdict.
     // Reapply the patch to a fresh second worktree and rerun the fixed checks.
     if(result.outcome==='VERIFIED'){
