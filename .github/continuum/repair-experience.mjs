@@ -1,5 +1,10 @@
 import fs from 'node:fs';
 
+export function repairExperienceKey(kind,strategy,contextKey=null) {
+ if(contextKey!==null&&!/^node\.js\.(?:call|value)$/.test(contextKey))throw Error('Invalid repair context');
+ return (kind+'|'+strategy+(contextKey===null?'':'|'+contextKey)).slice(0,80);
+}
+
 /** A measured paired trial is a research observation, never a training signal.
  * Compiler/test times include validation; planning is reported separately.
  * One success is not an estimated generalization rate or a speedup claim.

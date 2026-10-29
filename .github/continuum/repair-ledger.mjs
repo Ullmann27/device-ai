@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {mergeExperiences} from './repair-experience.mjs';
+import {mergeExperiences,repairExperienceKey} from './repair-experience.mjs';
 import {sha256} from './repair-diagnostics.mjs';
 
 /**
@@ -46,6 +46,7 @@ export function verifyLedger(data){
        (typeof a.syntaxReason!=='string'||!/^[A-Z][A-Z0-9_]{0,79}$/.test(a.syntaxReason)))
       throw Error('Invalid ledger syntax reason');
     if(a.taskFingerprint!==undefined&&!SHA256.test(a.taskFingerprint))throw Error('Invalid ledger task fingerprint');
+    if(a.contextKey!==undefined&&!/^node\.js\.(?:call|value)$/.test(a.contextKey))throw Error('Invalid repair context');
   }
   for(const x of data.experiences)if(!x||typeof x.kind!=='string'||x.kind.length>80||!Number.isSafeInteger(x.successes)||!Number.isSafeInteger(x.failures)||x.successes<0||x.failures<0)
     throw Error('Invalid ledger experience');
@@ -105,6 +106,7 @@ export function recordSession(ledger,report,meta={}){
     ...(a.strategy==='LOCAL_SCOPED_PATCH'&&SHA256.test(report.coding?.taskFingerprint??'')?
       {taskFingerprint:report.coding.taskFingerprint}:{}),
     diagnostic:a.diagnostic,diagnosticKind:a.diagnosticKind,candidate:a.candidate,strategy:a.strategy,
+    ...(a.contextKey!==undefined?{contextKey:a.contextKey}:{}),
     outcome:a.outcome,edits:(a.edits??[]).map(ledgerEdit),confidence:a.score??null,
     syntaxReason:a.syntax?.reason??a.syntaxReason??null,
     tests:(a.tests??[]).map(t=>({profile:t.profile,passed:t.passed,total:t.tests?.total??0,failed:t.tests?.failed??0,
@@ -139,7 +141,7 @@ export function recordSession(ledger,report,meta={}){
     (a.outcome==='FAILED_TESTS'&&hasExecutedFailedTests(a))||
     (a.outcome==='FAILED_SYNTAX'&&a.syntaxReason==='INVALID_JS_SYNTAX')));
   next.experiences=mergeExperiences(next.experiences,learned.map(a=>({
-    kind:(a.diagnosticKind+'|'+a.strategy).slice(0,80),
+    kind:repairExperienceKey(a.diagnosticKind,a.strategy,a.contextKey??null),
     status:a.outcome==='VERIFIED'?'COMPILES':'REJECTED'
   })));
   next.sessions=[...next.sessions,{at:report.finishedAt??new Date().toISOString(),base:report.base,chain:report.chain,

@@ -14,6 +14,7 @@ import {isIsolatedExecutor,validIsolationEvidence} from './isolated-executor.mjs
 import {isLocalNumericPatch} from './local-numeric-patch.mjs';
 import {validateCodingTask,validateCodingProposal,taskFingerprint} from './coding-task.mjs';
 import {runCandidateVerifier} from './repair-research-verifier.mjs';
+import {repairExperienceKey} from './repair-experience.mjs';
 
 /**
  * Test verifier and orchestrator of one repair session:
@@ -469,7 +470,8 @@ export function repairCandidateRiskTier(strategy){
 export function rankCandidates(candidates,stats=[],failedIds=new Set()){
   const byKey=new Map(stats.map(s=>[s.kind,s]));
   return candidates.filter(c=>!failedIds.has(c.diagnostic+':'+c.id)).map(c=>{
-    const s=byKey.get((c.diagnosticKind+'|'+c.strategy).slice(0,80));
+    // Explicit contextual candidates never inherit broad or another role's history.
+    const s=byKey.get(repairExperienceKey(c.diagnosticKind,c.strategy,c.contextKey??null));
     const learned=s?(s.successes+1)/(s.successes+s.failures+2):0.5;
     return {...c,score:Number((0.6*learned+0.4*(c.prior??0.5)).toFixed(4))};
   }).sort((a,b)=>repairCandidateRiskTier(a.strategy)-repairCandidateRiskTier(b.strategy)||
@@ -709,7 +711,8 @@ function scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskS
  * candidate); when it throws, the session ends with that error and leaves no report (the caller removes the worktree).
  * `abortWatch` (see runChain) also ends a check profile that is running when the owner task is aborted.
  */
-export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null}){
+export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences:[]},maxCandidates=4,deadline=Date.now()+25*60000,log=()=>{},shadowObserver=null,candidateProvider=null,candidateVerifier=null,checkpoint=null,abortWatch=null,executor=null,executorAbortMode=null,onProgress=null,contextualExperience=false}){
+  if(typeof contextualExperience!=='boolean')throw Error('Invalid contextual experience option');
   if(onProgress!==null&&typeof onProgress!=='function')throw Error('INVALID_PROGRESS_OBSERVER');
   validateRepairExecutor(executor,{abortWatch,executorAbortMode});
   const taskSpec=candidateProvider?.taskSpec==null?null:validateCodingTask(candidateProvider.taskSpec);
@@ -750,6 +753,8 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
   }
   if(taskSpec)return scopedRepairSession({wt,base,chain,out,report,baseline,actionable,taskSpec,ledger,candidateProvider,candidateVerifier,maxCandidates,deadline,beforeStep,abortWatch,executor,executorAbortMode,log,progress});
   const ctx=context(wt,base,ledger.attempts);
+  ctx.chain=chain;
+  ctx.contextualExperience=contextualExperience;
   // Parser infrastructure failures retain audit history, but do not prove
   // that a candidate is invalid. Only an actual syntax rejection suppresses it.
   const failedIds=new Set(ledger.attempts.filter(a=>a.outcome!=='VERIFIED'&&
@@ -806,6 +811,7 @@ export function repairSession({wt,base,chain,out,ledger={attempts:[],experiences
     perStrategy.set(family,(perStrategy.get(family)??0)+1);
     const verdict=critique(c);
     const attempt={candidate:c.id,strategy:c.strategy,diagnostic:c.diagnostic,diagnosticKind:c.diagnosticKind,
+      ...(c.contextKey!==undefined?{contextKey:c.contextKey}:{}),
       description:c.description,score:c.score,critic:verdict,edits:c.edits};
     if(!verdict.approved){attempt.outcome='REJECTED_BY_CRITIC';report.attempts.push(attempt);log('critic rejected '+c.strategy+': '+verdict.reasons.join('; '));continue;}
     resetWorktree(wt,base);

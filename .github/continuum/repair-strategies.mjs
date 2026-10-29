@@ -249,8 +249,15 @@ export function proposeCandidates(diagnostics,ctx){
     }
     if(isKotlin&&d.kind==='TYPE_MISMATCH')kotlinNullableString(d,text).forEach(add);
     if(isJs&&d.kind==='REFERENCE_ERROR'){
-      const imports=jsMissingImport(d,text,ctx.jsSiblings??new Map());imports.forEach(add);
-      typoReference(d,text,null,'js').map(c=>imports.length?{...c,prior:c.prior*0.5}:c).forEach(add);
+      const line=lineAt(text,d.line);
+      const span=line&&d.symbol?replaceTokenAt(line,d.symbol,d.col):null;
+      // Opt-in ranking precondition from the actual diagnostic location. Unknown
+      // locations keep the old policy. This is not a semantic cause classifier.
+      const contextKey=ctx.contextualExperience===true&&ctx.chain==='node'&&span?
+        'node.js.'+(/^\s*\(/.test(line.slice(span[1]))?'call':'value'):null;
+      const scoped=c=>contextKey?{...c,contextKey}:c;
+      const imports=jsMissingImport(d,text,ctx.jsSiblings??new Map());imports.map(scoped).forEach(add);
+      typoReference(d,text,null,'js').map(c=>scoped(imports.length?{...c,prior:c.prior*0.5}:c)).forEach(add);
     }
   }
   // Regression culprit search, smallest unit first: undo ONE hunk of the failing
