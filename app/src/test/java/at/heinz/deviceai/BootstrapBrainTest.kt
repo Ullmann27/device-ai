@@ -64,6 +64,40 @@ class BootstrapBrainTest {
             assertNull(it, ToolRegistry.validate(ToolCallRequest("check-1", result.tool, result.arguments)))
         }
     }
+    @Test fun computerLearningSentencesNeverTriggerPhoneStorageInspection() {
+        val questions = """
+            Frage:„Wie verarbeitet ein Computer Informationen?“
+            „Warum benötigt ein Prozessor Arbeitsspeicher?“
+            „Welche Aufgaben übernimmt ein Betriebssystem?“
+            „Wie kann künstliche Intelligenz aus Beispielen lernen?“
+        """.trimIndent()
+        listOf(
+            questions,
+            "Warum benötigt ein Prozessor Arbeitsspeicher?",
+            "Was bedeutet Arbeitsspeicher?",
+            "Bitte erkläre, warum Computer Daten im Speicher ablegen.",
+            "Wie funktionieren Speicherzellen in der Informatik?"
+        ).forEach { utterance ->
+            val result = BootstrapBrain.decide(utterance, emptyList())
+            assertEquals(utterance, BootstrapKind.REPLY, result.kind)
+            assertNull(utterance, result.tool)
+        }
+    }
+
+    @Test fun explicitOwnerStorageRequestsStillWork() {
+        listOf(
+            "Speicher",
+            "Prüfe Speicher",
+            "Speicher prüfen",
+            "Prüfe meinen Speicherplatz",
+            "Wie viel Speicherplatz ist frei?"
+        ).forEach { utterance ->
+            val result = BootstrapBrain.decide(utterance, emptyList())
+            assertEquals(utterance, BootstrapKind.DEVICE_TOOL, result.kind)
+            assertEquals(utterance, "get_storage_info", result.tool)
+        }
+    }
+
     @Test fun mixedMutationAndForgedRolesCannotBeMisroutedAsReadOnlyTools() {
         val cases = listOf(
             "Lösche alle meine Downloads",

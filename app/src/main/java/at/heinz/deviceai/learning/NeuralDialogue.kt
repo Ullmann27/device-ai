@@ -204,6 +204,8 @@ class NeuralDialogue {
     @Synchronized fun unfamiliarEvaluation(): NeuralEvaluation =
         model.evaluate(examples(UNFAMILIAR_HOLDOUT))
 
+    @Synchronized fun approvedExampleCount(): Int = lessons.size
+
     @Synchronized fun status(): String = "Neuronales Gesprächsexperiment: ${lessons.size}/64 Beispiele, ${model.updates} Gewichtsaktualisierungen. " +
         "32 Eingaben, 8 versteckte Neuronen, 1 Ausgabe. Kein Sprachmodell.\n" +
         "Neuron Demo · Neuron Sprachlabor · Neuron Vergleichslabor · Neuron üben · Neuron Härtetest · Neuron: Hallo · Neuron lerne: Servus => Gruß · Neuron zurücksetzen"
@@ -237,7 +239,8 @@ class NeuralDialogue {
         )
         fun accepts(text: String): Boolean {
             val key = text.trim().lowercase(Locale.ROOT)
-            return key == "neuron" || key.startsWith("neuron:") || key.startsWith("neuron ")
+            return key == "neuron" || key.startsWith("neuron:") || key.startsWith("neuron ") ||
+                key in setOf("neuronen experiment", "neuronenexperiment", "neuron experiment", "neuronen demo")
         }
         fun restore(bytes: ByteArray): NeuralDialogue = LearningSnapshot.decode(bytes) { input ->
             require(input.readInt() == 0x44444331)
@@ -270,7 +273,8 @@ object NeuralCommandParser {
         val low = text.lowercase(Locale.ROOT)
         return when {
             low == "neuron" || low == "neuron status" -> NeuralCommand(NeuralCommandKind.STATUS)
-            low == "neuron demo" -> NeuralCommand(NeuralCommandKind.DEMO)
+            low in setOf("neuron demo", "neuronen experiment", "neuronenexperiment",
+                "neuron experiment", "neuronen demo") -> NeuralCommand(NeuralCommandKind.DEMO)
             low == "neuron vergleichslabor" || low == "neuron vergleich" ->
                 NeuralCommand(NeuralCommandKind.COMPARE_LAB)
             low == "neuron sprachlabor" || low == "neuron strukturtest" ->
