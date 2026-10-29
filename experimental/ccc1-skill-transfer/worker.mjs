@@ -27,12 +27,13 @@ function runTask(task,ledger,maxCandidates,label){
  try{
   report=repairSession({wt,base,chain:'node',out:path.join(dir,'primary'),ledger,maxCandidates,
    deadline:Date.now()+120_000,executor,contextualExperience:scoped});
+  fs.writeFileSync(path.join(dir,'primary-report.json'),JSON.stringify(report,null,2)+'\n');
   if(report.verified){
    const fresh=createWorktree(repo,base);
    try{
     for(const [file,text] of applyEdits(f=>fs.readFileSync(path.join(fresh,f),'utf8'),report.attempts.find(a=>a.candidate===report.verified.candidate).edits))fs.writeFileSync(path.join(fresh,file),text);
     independentPatch=sha256(git(fresh,['diff','--binary',base]).stdout);
-    independent=runChain('node',fresh,path.join(dir,'independent'),{deadline:Date.now()+60_000,forceRerun:true,executor});
+    independent=runChain('node',fresh,path.join(dir,'independent'),{deadline:Date.now()+60_000,executor});
    }finally{removeWorktree(repo,fresh);}
   }
  }finally{removeWorktree(repo,wt);}
