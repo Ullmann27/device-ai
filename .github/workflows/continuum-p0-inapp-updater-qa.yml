@@ -56,6 +56,16 @@ jobs:
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0"
 
+      - name: Verify owner release publisher syntax and fail-closed missing input
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/continuum-owner-update-manifest.mjs
+          if node scripts/continuum-owner-update-manifest.mjs; then
+            echo 'Publisher accepted missing signed release inputs' >&2
+            exit 69
+          fi
+
       - name: Original main app sources - isolated QA compiler tests and lint
         shell: bash
         run: |
