@@ -17,14 +17,14 @@ const int = value => { const b = Buffer.alloc(4); b.writeInt32BE(value); return 
 const long = value => { const b = Buffer.alloc(8); b.writeBigInt64BE(BigInt(value)); return b; };
 const ascii = value => { const b = Buffer.from(value); const n = Buffer.alloc(2); n.writeUInt16BE(b.length); return Buffer.concat([n, b]); };
 const text = value => { const b = Buffer.from(value); return Buffer.concat([int(b.length), b]); };
-function ledger(count = 256, mutateRecord = false, mixed = false) {
+function ledger(count = 256, mutateRecord = false, mixed = false, leadingBom = false) {
   const chunks = [int(0x4c455832), int(count)];
   for (let index = 0; index < count; index++) {
     const tags = mixed && index === 1 ? ['USER_FACT', 'MENTOR_WIKIPEDIA', 'SOURCE_OBSERVATION', 'CONFIRMED'] :
       mixed && index === 2 ? ['TRAINING_AUDIT', 'LOCAL_TRAINING', 'SYSTEM_MEASUREMENT', 'LEARNED'] :
       mixed && index === 3 ? ['INTENT_LABEL', 'USER_CONFIRMED', 'OWNER_CONFIRMED', 'CONFIRMED'] :
       ['USER_FACT', 'USER_CONFIRMED', 'OWNER_CONFIRMED', index === 0 ? 'REVOKED' : 'CONFIRMED'];
-    const content = SECRET + ' ' + index + ' Ü 😃';
+    const content = (leadingBom && index === 0 ? '\uFEFF' : '') + SECRET + ' ' + index + ' Ü 😃';
     const annotation = mixed && index === 4 ? 'noncanonical annotation' : null;
     const digest = crypto.createHash('sha256');
     for (const value of [...tags.slice(0, 3), content, annotation ?? '', '']) digest.update(value).update(Buffer.from([0]));
@@ -171,6 +171,9 @@ test('two process captures validate all 256 records without exposing contents or
   assert.equal(result.metadata.ledgerChecksumValid, true);
   assert.equal(result.metadata.sha256, sha(ledger()));
   assert.equal(result.captures.length, 2);
+  assert.equal(result.metadata.captureDetails.length, 2);
+  assert.ok(result.metadata.captureDetails.every(capture => !capture.truncated &&
+    capture.returnedBytes === capture.retainedBytes && capture.retainedBytes === ledger().length));
   assert.deepEqual(result.captures[0], result.captures[1]);
   assert.equal(result.calls.filter(args => args.includes('exec-out')).length, 2);
 });
@@ -186,6 +189,27 @@ test('safe counts distinguish canonical owner facts from source observations and
   assert.equal(result.metadata.auditCounts.byStatus.REVOKED, 1);
   assert.equal(Object.values(result.metadata.auditCounts.byType).reduce((a, b) => a + b, 0), 256);
   assert.equal(Object.values(result.metadata.auditCounts.byStatus).reduce((a, b) => a + b, 0), 256);
+});
+test('a valid Kotlin ledger retains a leading UTF8 BOM in its record identity', async () => {
+  const bytes = ledger(256, false, false, true);
+  const result = await runCase({ bytes });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.metadata.status, 'CAPTURED_VALIDATED');
+  assert.equal(result.metadata.recordCount, 256);
+  assert.equal(result.metadata.sha256, sha(bytes));
+  assert.deepEqual(result.captures[0], bytes);
+  assert.deepEqual(result.captures[1], bytes);
+});
+test('preserving BOM data retains strict malformed UTF8 refusal', async () => {
+  const original = ledger();
+  const payload = Buffer.from(original.subarray(0, -32));
+  const contentStart = payload.indexOf(Buffer.from(SECRET));
+  assert.ok(contentStart >= 0);
+  payload[contentStart] = 0xff;
+  const bytes = Buffer.concat([payload, crypto.createHash('sha256').update(payload).digest()]);
+  const result = await runCase({ bytes });
+  failed(result, 'LEDGER_TEXT_ENCODING');
+  assert.equal(result.captures.length, 2);
 });
 test('multiple devices require explicit selection', async () => {
   failed(await runCase({ devices: 'FAKE_USB device\nSECOND_USB device\n' }), 'DEVICE_NOT_UNIQUE');
@@ -242,7 +266,14 @@ test('truncated identical captures fail schema validation', async () => {
 test('oversized subprocess output fails with bounded capture', async () => {
   const result = await runCase({ mode: 'oversized' });
   failed(result, 'CAPTURE_1_FAILED');
-  assert.ok(result.captures[0].length < 600000);
+  assert.equal(result.captures[0].length, 512 * 1024 + 1);
+  assert.ok(result.captures[0].every(byte => byte === 65));
+  assert.equal(result.captures.length, 1);
+  assert.equal(result.metadata.status, 'FAILED');
+  assert.equal(result.metadata.failureCode, 'CAPTURE_1_FAILED');
+  assert.equal(result.metadata.captureDetails[0].truncated, true);
+  assert.equal(result.metadata.captureDetails[0].retainedBytes, 512 * 1024 + 1);
+  assert.ok(result.metadata.captureDetails[0].returnedBytes > result.metadata.captureDetails[0].retainedBytes);
 });
 test('identical corrupt checksums never give success', async () => {
   const bytes = ledger(); bytes[bytes.length - 1] ^= 1;
