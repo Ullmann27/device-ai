@@ -39,7 +39,7 @@ internal object Ewm1Lexicon {
         "november", "dezember", "frühling", "sommer", "herbst", "winter", "kilometer", "meter", "liter", "prozent",
         "stunden", "minuten", "sorte", "art", "modell", "marke", "typ", "rasse", "stand", "status", "technik", "sprache",
         "ort", "stadt", "land", "leute", "personen", "mal", "rolle", "grund", "frage", "antwort", "heuer", "geburtstag",
-        "leistung", "kapazität", "menge", "anzahl", "stück", "wh", "kwh", "kwp", "gb", "mb"
+        "leistung", "kapazität", "menge", "anzahl", "stück", "wh", "kwh", "kwp", "gb", "mb", "farblich"
     )
 
     val TIME = setOf(
@@ -86,6 +86,12 @@ internal object Ewm1Lexicon {
         "zeitpunkt" to setOf("wann", "termin", "uhr", "datum", "zeit", "uhrzeit"),
         "oeffnung" to setOf("offen", "geöffnet", "geschlossen", "ordination", "öffnungszeiten", "öffnet", "schließt"),
         "speicher" to setOf("arbeitsspeicher", "ram", "speicher", "gb"),
+        "beginn" to setOf("beginnt", "beginnen", "beginn", "fängt", "anfangen", "startet", "starten", "start", "los", "losgehen"),
+        "urheber" to setOf("erstellt", "geschrieben", "gemacht", "stammt", "entwickelt", "verfasst", "gebaut", "programmiert",
+            "erstellen", "angelegt"),
+        "leitung" to setOf("leitet", "geleitet", "leiten", "zuständig", "verantwortlich", "leiter", "leiterin", "chef", "chefin"),
+        "besorgen" to setOf("holt", "holen", "kauft", "kaufen", "besorgt", "besorgen", "bekommt", "bezieht"),
+        "muster" to setOf("muster", "kariert", "gestreift", "gepunktet", "geblümt", "einfarbig", "gemustert"),
         "verwandt" to setOf("kinder", "kind", "sohn", "söhne", "tochter", "töchter", "enkel", "bruder", "schwester",
             "verheiratet", "frau", "mann", "partner", "partnerin")
     )

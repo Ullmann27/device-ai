@@ -5,7 +5,8 @@ import at.heinz.deviceai.intelligence.ewm1.Ewm1Lexicon.stem
 
 /** One surface token of a fact or question. */
 internal data class Ewm1Token(val text: String, val lower: String, val index: Int, val capitalized: Boolean,
-                              val sentenceInitial: Boolean)
+                              val sentenceInitial: Boolean, val breakBefore: Boolean = false, val apostrophe: Boolean = false,
+                              val sentence: Int = 0)
 
 internal object Ewm1Tokens {
     private val WORD = Regex("[\\p{L}\\p{N}]+(?:[-.,][\\p{L}\\p{N}]+)*['’]?")
@@ -14,11 +15,14 @@ internal object Ewm1Tokens {
     fun of(text: String): List<Ewm1Token> {
         val out = ArrayList<Ewm1Token>()
         var previousEnd = 0
+        var sentence = 0
         for (m in WORD.findAll(text)) {
             val before = text.substring(previousEnd, m.range.first)
             val initial = out.isEmpty() || (BREAK.containsMatchIn(before) && !before.trim().startsWith(","))
+            if (initial && out.isNotEmpty()) sentence++
             val raw = m.value.trimEnd('\'', '’')
-            out += Ewm1Token(raw, lower(raw), out.size, raw.first().isUpperCase(), initial)
+            out += Ewm1Token(raw, lower(raw), out.size, raw.first().isUpperCase(), initial,
+                breakBefore = initial || before.any { it in ",;:()–—\"„“" }, apostrophe = raw.length < m.value.length, sentence = sentence)
             previousEnd = m.range.last + 1
         }
         return out
@@ -52,7 +56,8 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
                 val t = tokens[i]
                 if (!isNominal(t)) { i++; continue }
                 var j = i
-                while (j + 1 < tokens.size && isNominal(tokens[j + 1]) && !tokens[j + 1].sentenceInitial && !isRole(tokens[j].lower)) j++
+                while (j + 1 < tokens.size && isNominal(tokens[j + 1]) && !tokens[j + 1].breakBefore && !isRole(tokens[j].lower) &&
+                    !isGenitive(tokens[j])) j++
                 val run = tokens.subList(i, j + 1)
                 val head = run.last()
                 val determiner = tokens.getOrNull(i - 1)?.lower?.takeIf { it in Ewm1Lexicon.ARTICLES }
@@ -65,6 +70,9 @@ internal class Ewm1Fact(val id: String, val text: String, val order: Int, geniti
             }
             return out
         }
+
+        /** "Nikos Hund", "Lukas' Lehrerin", "Alex Bergers Fahrrad": the possessor is its own referent. */
+        fun isGenitive(t: Ewm1Token): Boolean = t.apostrophe || (t.lower.length >= 4 && t.lower.endsWith("s") && !t.lower.endsWith("ss"))
 
         fun isRole(word: String): Boolean = (Ewm1Lexicon.ROLE_M + Ewm1Lexicon.ROLE_F).any { word == it || (word.length > it.length + 2 && word.endsWith(it)) }
 
@@ -119,6 +127,8 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
 
     private fun cue(entity: String, g: Char) { gender.getOrPut(entity) { linkedSetOf() } += g }
 
+    private fun isGenitiveQualifier(t: List<Ewm1Token>, m: Ewm1Mention) = false
+
     private fun roleGender(role: String): Char? = when {
         role in Ewm1Lexicon.ROLE_M || Ewm1Lexicon.ROLE_M.any { role.length > it.length + 2 && role.endsWith(it) } -> 'm'
         role in Ewm1Lexicon.ROLE_F || Ewm1Lexicon.ROLE_F.any { role.length > it.length + 2 && role.endsWith(it) } -> 'f'
@@ -135,8 +145,11 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
                 "die" -> cue(m.key, 'f')
                 "das" -> cue(m.key, 'n')
                 "eine", "einer", "meine", "meiner", "unsere", "unserer" -> cue(m.key, 'f')
-                null -> if (!m.place) names += m.key
             }
+            // A name is the head of "class + name", or an article-less subject; bare plurals ("speichert Lesezeichen") are not.
+            val subject = m.start == 0 || t.subList(0, m.start).all { it.lower in Ewm1Lexicon.FUNCTION || !it.capitalized && it.lower in setOf("bei", "uns") }
+            if (m.end > m.start && m.qualifier != null && !isGenitiveQualifier(t, m)) names += m.key
+            else if (m.determiner == null && !m.place && (subject || Ewm1Fact.isGenitive(t[m.end]) || t[m.end].apostrophe)) names += m.key
             roleGender(m.key)?.let { cue(m.key, it) }
         }
         for ((idx, m) in ms.withIndex()) {
@@ -161,8 +174,8 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
                 }
             }
             // "Meine Schwester Lisa wohnt …" / "mit meiner Schwester Petra" / "Die Katze Mimi …" (role directly before name)
-            if (between.isEmpty() && next.determiner == null && m.end + 1 == next.start) {
-                link(m.key, next.key, f.id); roleGender(m.key)?.let { cue(next.key, it) }
+            if (between.isEmpty() && next.determiner == null && m.end + 1 == next.start && Ewm1Fact.isRole(m.key)) {
+                link(m.key, next.key, f.id); roleGender(m.key)?.let { cue(next.key, it) }; names += next.key
             }
         }
         // Appositions: NAME , (mein|meine|NAMEs) ROLE ,
@@ -174,10 +187,11 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
         // Groups: "Florian und Daniel sind meine Söhne." / "Meine Tarockrunde besteht aus Fritz, Hans und Walter."
         Regex("^(\\p{Lu}[\\p{L}-]+) und (\\p{Lu}[\\p{L}-]+) sind (?:meine|unsere) (\\p{Lu}[\\p{L}-]+)").find(commaText)?.let { r ->
             groups.getOrPut(lower(r.groupValues[3])) { linkedSetOf() } += listOf(lower(r.groupValues[1]), lower(r.groupValues[2]))
+            names += listOf(lower(r.groupValues[1]), lower(r.groupValues[2]))
         }
         Regex("^(?:Meine|Mein|Unsere|Unser) (\\p{Lu}[\\p{L}-]+) besteht aus (.+)\\.$").find(commaText)?.let { r ->
             val members = Regex("\\p{Lu}[\\p{L}-]+").findAll(r.groupValues[2]).map { lower(it.value) }.toList()
-            if (members.size >= 2) groups.getOrPut(lower(r.groupValues[1])) { linkedSetOf() } += members
+            if (members.size >= 2) { groups.getOrPut(lower(r.groupValues[1])) { linkedSetOf() } += members; names += members }
         }
         // Possessive pronoun after the subject: "Dr. Huber hat ihre Praxis …", "… wegen seiner Zähne"
         f.subject?.let { s ->
@@ -210,9 +224,21 @@ internal class Ewm1Memory(rawFacts: List<Pair<String, String>>) {
         if (q.length >= 4 && q.endsWith("s") && q.dropLast(1) == key) return true
         if (q.length >= 4 && key.length >= 4 && stem(q) == stem(key)) return true
         if (' ' in key && matches(q, key.substringAfter(' '))) return true
-        if (q.length >= 4 && key.length >= 4 && (key.endsWith(q) || q.endsWith(key) || q.startsWith(key) || key.startsWith(q)))
-            return key.length - q.length <= 12 && q.length - key.length <= 12
+        // German compounds name their head last: a "Schäferhund" is a Hund, a "Kursgebühr" is no Kurs.
+        if (q.length >= 3 && key.length >= q.length + 3 && key.endsWith(q)) return key.length - q.length <= 12
+        if (key.length >= 4 && q.length >= key.length + 3 && q.endsWith(key)) return q.length - key.length <= 12
         return false
+    }
+
+    /** "Alex" with "Alex Berger" and "Alex Kern", "Morgenstern" with "Morgenstern-Nord/-Süd": one word, several things. */
+    fun ambiguousName(word: String): Boolean {
+        val w = lower(word)
+        val heads = facts.flatMap { it.mentions }.map { it.key }.toSet()
+        if (heads.any { it == w || it.substringAfter(' ') == w }) return false
+        val partOf = facts.flatMap { it.mentions }.filter { m -> m.end > m.start && m.determiner == null &&
+            m.label.split(' ').dropLast(1).any { lower(it).trimEnd('s', '\'', '’') == w || lower(it) == w } }.map { it.key }.toSet()
+        val prefixOf = heads.filter { it.startsWith("$w-") }.toSet()
+        return partOf.size >= 2 || prefixOf.size >= 2
     }
 
     fun factsMentioning(entity: String): List<Ewm1Fact> =
