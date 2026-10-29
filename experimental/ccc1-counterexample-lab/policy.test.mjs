@@ -55,3 +55,13 @@ test('holdout summary refuses changed identity and repeated cases',()=>{
  assert.throws(()=>summarizeTrial(rows,digest,sha256('changed')),/UNSEALED/);
  assert.throws(()=>summarizeTrial([rows[0],rows[0],...rows.slice(2)],digest,digest),/UNSEALED/);
 });
+
+test('paired strategies must be checked against the same original source',()=>{
+ const a=obs(sample,'JS_TYPO_REFERENCE',true);
+ const b={...obs(sample,'JS_MISSING_IMPORT',false),sourceSha256:'f'.repeat(64)};
+ assert.throws(()=>learnConservativeGuards([a,b]),/PAIR_SOURCE_MISMATCH/);
+});
+test('source-derived features reject forged import availability',()=>{
+ const altered={...sample,feature:'BOTH_AVAILABLE'};
+ assert.throws(()=>guardedShadowChoice(altered,ranked,{}),/FORGED_SOURCE_FEATURE/);
+});
