@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawn} from 'node:child_process';
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawn,spawnSync} from 'node:child_process';
 import {once} from 'node:events';import {setTimeout as delay} from 'node:timers/promises';
 import {emptyLedger,loadLedger,saveLedger} from './repair-ledger.mjs';
 const moduleUrl=new URL('./repair-ledger.mjs',import.meta.url).href;
@@ -19,6 +19,14 @@ test('dangling and live symlink checkpoints fail closed without touching their t
 });
 test('malformed UTF8 and invalid JSON checkpoints do not become empty history',t=>{
  const f=fixture(t);for(const bytes of [Buffer.from([0xff]),Buffer.from('{partial')]){fs.writeFileSync(f.file,bytes);assert.throws(()=>loadLedger(f.file));}
+});
+test('a FIFO checkpoint without a writer is refused within a bounded child process',t=>{
+ const f=fixture(t);
+ const created=spawnSync('mkfifo',[f.file],{encoding:'utf8',timeout:2000});assert.equal(created.status,0,created.stderr);
+ const code=`import {loadLedger} from ${JSON.stringify(moduleUrl)};
+ try{loadLedger(process.argv[1]);process.exitCode=3;}catch(error){process.exitCode=error.message==='Invalid repair ledger file'?0:2;}`;
+ const checked=spawnSync(process.execPath,['--input-type=module','-e',code,f.file],{encoding:'utf8',timeout:1000,killSignal:'SIGKILL'});
+ assert.equal(checked.status,0,'invalid FIFO must fail before blocking open: '+checked.error?.code);
 });
 test('real SIGKILL before file fsync preserves last committed checkpoint and allows restart',{timeout:10000},async t=>{
  const f=fixture(t);saveLedger(f.file,emptyLedger());const original=fs.readFileSync(f.file);

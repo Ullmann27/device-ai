@@ -58,7 +58,7 @@ export function verifyLedger(data){
 export function loadLedger(file){
   if(!file)return emptyLedger();
   let fd;
-  try{fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);}
+  try{fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW|fs.constants.O_NONBLOCK);}
   catch(error){if(error.code==='ENOENT'){
     // A dangling link is an invalid checkpoint, never an empty learning history.
     try{fs.lstatSync(file);}catch(missing){if(missing.code==='ENOENT')return emptyLedger();throw missing;}
