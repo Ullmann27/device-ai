@@ -72,7 +72,7 @@ if (equal(['exec-out', 'run-as', cfg.package, 'cat', cfg.source])) {
   if (cfg.mode === 'captures-differ' && n === 1) { bytes = Buffer.from(bytes); bytes[20] ^= 1; }
   if (cfg.mode === 'truncated') bytes = bytes.subarray(0, 20);
   if (cfg.mode === 'oversized') bytes = Buffer.alloc(600000, 65);
-  process.stdout.write(bytes); process.exit(0);
+  fs.writeFileSync(1, bytes); process.exit(0);
 }
 // This fake is deliberately a command allowlist: an added write/install/pair/restore is rejected.
 process.exit(92);
